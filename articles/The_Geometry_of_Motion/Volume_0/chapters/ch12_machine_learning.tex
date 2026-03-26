@@ -66,7 +66,7 @@ for all $\mathbf{x} \in [0,1]^n$.
 \section{Neural Networks as Function Approximators}
 % ==========================================================================
 
-At its core, a Neural Network is a composition of parameterized linear transformations and element-wise nonlinearities. The simplest form is the feedforward network.
+At its core, a Neural Network \cite{goodfellow2016} is a composition of parameterized linear transformations and element-wise nonlinearities. The simplest form is the feedforward network.
 
 Suppose we want a control policy $\pi$ that maps state $\mathbf{s} \in \mathbb{R}^{n_s}$ (joint positions, velocities, sensor readings) to an action $\mathbf{a} \in \mathbb{R}^{n_a}$ (motor torques):
 
@@ -333,7 +333,7 @@ Reinforcement learning operates on \textbf{Markov Decision Processes}, a mathema
 
 \subsection{Formal Definition}
 
-An MDP is a tuple $(\mathcal{S}, \mathcal{A}, P, R, \gamma)$:
+An MDP \cite{sutton2018} is a tuple $(\mathcal{S}, \mathcal{A}, P, R, \gamma)$:
 
 \begin{itemize}
     \item $\mathcal{S}$: state space (joint angles, velocities, sensor readings)
@@ -383,7 +383,7 @@ This expresses the value of a state as the immediate reward plus the discounted 
 
 \subsection{REINFORCE Algorithm}
 
-\textbf{REINFORCE} is a basic policy gradient method that learns a policy $\pi_{\boldsymbol{\theta}}(a|s)$ parametrized by $\boldsymbol{\theta}$ (e.g., neural network weights).
+\textbf{REINFORCE} \cite{sutton2018} is a basic policy gradient method that learns a policy $\pi_{\boldsymbol{\theta}}(a|s)$ parametrized by $\boldsymbol{\theta}$ (e.g., neural network weights).
 
 The key insight is the \textbf{policy gradient theorem}:
 
@@ -489,7 +489,7 @@ Actor-Critic has significantly lower variance than REINFORCE because:
 \section{Proximal Policy Optimization (PPO)}
 % ==========================================================================
 
-\textbf{Proximal Policy Optimization (PPO)} (Schulman et al., 2017) is a modern policy gradient algorithm that trades off sample efficiency, stability, and ease of implementation.
+\textbf{Proximal Policy Optimization (PPO)} \cite{schulman2017} is a modern policy gradient algorithm that trades off sample efficiency, stability, and ease of implementation.
 
 \subsection{Problem with Large Policy Updates}
 
@@ -623,7 +623,7 @@ For control with known Lagrangian dynamics:
 
 $$\mathcal{L}_{\text{physics}} = \left\|\mathbf{M}(\mathbf{x})\ddot{\mathbf{x}} + \mathbf{C}(\mathbf{x},\dot{\mathbf{x}})\dot{\mathbf{x}} + \mathbf{G}(\mathbf{x}) - \mathbf{u}\right\|^2$$
 
-\textbf{Benefit:} Encoder known physics greatly reduces data requirements and improves generalization to unseen configurations.
+\textbf{Benefit:} Encoding known physics greatly reduces data requirements and improves generalization to unseen configurations. This approach directly bridges Chapter~\ref{ch:lagrangian}'s Lagrangian equations of motion with data-driven learning: the analytical structure $\mathbf{M}\ddot{\mathbf{q}} + \mathbf{C}\dot{\mathbf{q}} + \mathbf{G} = \boldsymbol{\tau}$ derived from energy principles becomes a differentiable constraint that guides the network toward physically consistent predictions.
 
 % ==========================================================================
 \section{Neural ODEs and Adjoint Method}
@@ -655,7 +655,7 @@ This avoids storing intermediate activations (memory-efficient) and allows effic
 \section{Sim-to-Real Transfer and Domain Randomization}
 % ==========================================================================
 
-Policies trained in simulation often fail on real robots due to:
+Policies trained in simulation---typically using physics engines such as MuJoCo \cite{todorov2012}---often fail on real robots due to:
 \begin{itemize}
     \item Unmodeled friction and damping
     \item Sensor noise and delays
@@ -677,7 +677,7 @@ Policies trained in simulation often fail on real robots due to:
 \EndFor
 \end{algorithmic}
 
-If the policy learns to succeed across this distribution of tasks, it becomes robust to a wide range of real-world variation.
+If the policy learns to succeed across this distribution of tasks, it becomes robust to a wide range of real-world variation. Domain randomization was popularized by Tobin et al.\ (2017) for visual transfer and extended by OpenAI's Dactyl project for dexterous manipulation, demonstrating that sufficiently diverse simulation can substitute for real-world data collection.
 
 \textbf{Intuition:} The policy learns invariant strategies rather than exploiting precise nominal parameters. This improves real-world performance.
 
@@ -1016,6 +1016,34 @@ Lagrangian mechanics (Chapter 11) and neural network learning (Chapter 12) are c
     \item Use \textbf{Neural networks} when models are uncertain or too complex—let data guide the policy
     \item Use \textbf{both together}: incorporate Lagrangian constraints as PINN losses, use learned policies to optimize Lagrangian parameters
 \end{itemize}
+
+% ==========================================================================
+\subsection{Connection to Prior Chapters}
+% ==========================================================================
+
+The machine learning methods presented in this chapter do not exist in isolation---they derive much of their power from the analytical structures developed throughout this volume. Understanding these connections is essential for the modern roboticist, who must fluidly combine model-based and data-driven approaches.
+
+\textbf{Lagrangian Structure as Physics-Informed Loss (Chapter~\ref{ch:lagrangian}).} The standard form $\mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})\dot{\mathbf{q}} + \mathbf{G}(\mathbf{q}) = \boldsymbol{\tau}$ derived in Chapter~\ref{ch:lagrangian} provides a powerful physics-informed loss function for neural network training. Rather than learning dynamics from scratch, one can penalize violations of the Euler-Lagrange equations, dramatically reducing sample complexity. The energy conservation property ($\frac{d}{dt}(T+V) = 0$ for unforced systems) serves as an additional regularizer, ensuring that learned models respect fundamental thermodynamic constraints.
+
+\textbf{Differentiable Kinematics via Product of Exponentials (Chapter 9).} The Product of Exponentials (PoE) formula expresses forward kinematics as a composition of matrix exponentials, each differentiable with respect to joint angles. This enables end-to-end gradient computation from task-space objectives (e.g., reach a target) through the kinematic chain to joint-space policy parameters. Modern differentiable robotics libraries exploit this structure to train manipulation policies with analytical Jacobians rather than finite-difference approximations.
+
+\textbf{Differentiable Dynamics from the Articulated Body Algorithm (Chapter 10).} The Articulated Body Algorithm (ABA) computes forward dynamics---mapping torques to accelerations---in $O(n)$ time. When implemented in autodifferentiation frameworks (e.g., JAX, PyTorch), ABA provides exact, efficient gradients of accelerations with respect to torques, masses, and inertial parameters. This is the computational engine behind model-based reinforcement learning: the agent can ``imagine'' trajectories by differentiating through the physics, using the gradient to optimize control inputs directly.
+
+\textbf{Emerging Frontiers.} Several active research directions sit at the intersection of geometric mechanics and deep learning. \textbf{Lagrangian Neural Networks} (LNNs) parameterize the Lagrangian $\mathcal{L}(\mathbf{q}, \dot{\mathbf{q}})$ as a neural network and recover equations of motion via automatic differentiation of the Euler-Lagrange equations, guaranteeing energy conservation by construction. \textbf{Hamiltonian Neural Networks} (HNNs) similarly parameterize the Hamiltonian $H(\mathbf{q}, \mathbf{p})$ and evolve dynamics through Hamilton's equations, preserving symplectic structure. These architectures represent a principled fusion of the variational principles from Chapter~\ref{ch:lagrangian} with the function approximation machinery of this chapter, and they consistently outperform generic neural network dynamics models on long-horizon prediction tasks.
+
+% ==========================================================================
+\section{Further Reading and References}
+% ==========================================================================
+
+The material in this chapter draws from several foundational texts and research programs. For a comprehensive treatment of deep learning foundations---including network architectures, activation functions, backpropagation, and optimization---Goodfellow, Bengio, and Courville \cite{goodfellow2016} remains the definitive reference. Their treatment of regularization, generalization theory, and practical training methodology provides essential context for anyone applying neural networks to control problems.
+
+The reinforcement learning framework, including Markov Decision Processes, value functions, and policy gradient theory, is developed rigorously in Sutton and Barto \cite{sutton2018}. Their text covers the full spectrum from tabular methods to function approximation, and their presentation of the policy gradient theorem is the mathematical foundation for the REINFORCE algorithm and its descendants.
+
+For modern policy optimization, the reader should consult Schulman et al.\ \cite{schulman2015} for the trust region perspective (TRPO) that motivated the development of PPO, and Schulman et al.\ \cite{schulman2017} for the proximal policy optimization algorithm itself. These papers establish the theoretical basis for stable policy updates that has become the standard in continuous control.
+
+Physics simulation for reinforcement learning training relies heavily on efficient contact dynamics engines. Todorov, Erez, and Tassa \cite{todorov2012} introduced MuJoCo, which has become the most widely used simulator for benchmarking RL algorithms in locomotion and manipulation tasks. For the physical principles underlying legged locomotion control, Raibert \cite{raibert1986} provides foundational insights on balance, gait generation, and dynamic stability that continue to inform reward shaping and curriculum design in modern RL.
+
+Several rapidly evolving research areas extend the material presented here. \textbf{Model-based RL} (Deisenroth et al., PILCO; Chua et al., PETS) learns explicit dynamics models to improve sample efficiency. \textbf{Safe RL} (Garc\'{i}a and Fern\'{a}ndez, 2015) constrains exploration to avoid catastrophic failures, critical for real hardware. \textbf{Sim-to-real transfer} continues to advance through improved domain randomization, system identification, and adaptive methods. \textbf{Inverse RL} (Ng and Russell, 2000; Ziebart et al., 2008) recovers reward functions from expert demonstrations, enabling imitation learning without hand-crafted reward engineering. The reader interested in the intersection of geometric mechanics and learning should explore Lagrangian Neural Networks (Cranmer et al., 2020) and Hamiltonian Neural Networks (Greydanus et al., 2019), which embed the variational structure of Chapter~\ref{ch:lagrangian} directly into neural network architectures.
 
 % ==========================================================================
 \section{Exercises}

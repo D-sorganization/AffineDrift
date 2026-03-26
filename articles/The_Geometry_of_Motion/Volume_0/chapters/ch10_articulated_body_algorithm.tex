@@ -198,7 +198,7 @@ This is precisely Equation \ref{eq:articulated_inertia}. The \textbf{bias force}
 \section{The Articulated Body Algorithm: Three Passes}
 \label{sec:aba_three_passes}
 
-The complete ABA consists of three sequential passes through the kinematic tree:
+The complete ABA, as formalized by Featherstone \cite{Featherstone2008}, consists of three sequential passes through the kinematic tree:
 
 \subsection{Pass 1: Outward Pass (Velocity and Bias Forces)}
 \label{subsec:pass1_outward}
@@ -434,7 +434,7 @@ This slightly increases the denominator in Equation \ref{eq:aba_joint_accelerati
 \section{ABA vs. CRBA: When to Use Which}
 \label{sec:aba_vs_crba}
 
-The \textbf{Composite Rigid Body Algorithm (CRBA)} is an alternative approach that constructs the inertia matrix $\mathbf{M}(\mathbf{q})$ in $O(N)$ time (instead of the naive $O(N^3)$) by compositing inertias of rigid bodies, then solves via matrix inversion. This is useful when:
+The \textbf{Composite Rigid Body Algorithm (CRBA)} \cite{Featherstone2008} is an alternative approach that constructs the inertia matrix $\mathbf{M}(\mathbf{q})$ in $O(N)$ time (instead of the naive $O(N^3)$) by compositing inertias of rigid bodies, then solves via matrix inversion. This is useful when:
 
 \begin{itemize}
   \item \textbf{Multiple Forward Dynamics Calls with Same $\mathbf{q}$:} If you need to solve $\mathbf{M}(\mathbf{q}) \ddot{\mathbf{q}} = \boldsymbol{\tau}_1$, $\ddot{\mathbf{q}} = \boldsymbol{\tau}_2$, etc., with different torques but same configuration, CRBA computes $\mathbf{M}$ once ($O(N)$) and solves multiple RHS ($O(N^3)$ total for all). ABA solves each independently ($O(N)$ each, $O(N^2)$ total).
@@ -767,6 +767,21 @@ print("Updated joint velocities:", np.round(dq_new, 4))
 print("Updated joint positions:", np.round(q_new, 4))
 \end{lstlisting}
 
+\subsection{Connection to Simulation Frameworks}
+\label{subsec:simulation_frameworks}
+
+The Articulated Body Algorithm is not merely a textbook exercise---it is the computational backbone of virtually every modern robotics and physics simulation framework. Understanding how ABA maps onto production software clarifies both its practical importance and the directions in which the field has evolved.
+
+\textbf{MuJoCo} \cite{todorov2012}, developed by Emanuel Todorov and now maintained by DeepMind, implements a highly optimized variant of ABA as its core forward dynamics engine. MuJoCo extends the basic algorithm with sophisticated contact handling based on convex optimization, enabling stable simulation of complex multi-body systems with frictional contacts. It has become the de facto standard for reinforcement learning research in robotics, where millions of forward dynamics evaluations per training run demand the $O(N)$ efficiency that ABA provides.
+
+\textbf{Drake}, developed at MIT and maintained by the Toyota Research Institute, provides a C++ implementation of ABA within a broader model-based design framework. Drake emphasizes mathematical rigor and supports both continuous and hybrid (contact-switching) dynamics, making it particularly suited for manipulation research and trajectory optimization.
+
+\textbf{Pinocchio}, developed by INRIA and LAAS-CNRS, is a high-performance C++ library that implements ABA alongside the Recursive Newton-Euler Algorithm (RNEA) and CRBA. Pinocchio is notable for its support of analytical derivatives of the dynamics---computing $\partial \ddot{\mathbf{q}} / \partial \mathbf{q}$, $\partial \ddot{\mathbf{q}} / \partial \dot{\mathbf{q}}$, and $\partial \ddot{\mathbf{q}} / \partial \boldsymbol{\tau}$ efficiently---which is critical for optimal control and estimation algorithms.
+
+All three frameworks layer contact dynamics on top of ABA. The unconstrained forward dynamics (ABA) produces joint accelerations assuming no contact; a separate contact solver then computes constraint forces (normal forces, friction) and corrects the accelerations to satisfy non-penetration and friction-cone constraints. This two-stage architecture---ABA followed by contact resolution---is the dominant paradigm in modern simulation.
+
+For the definitive theoretical treatment of articulated-body dynamics, including extensions to floating-base systems, closed kinematic loops, and the relationship between ABA and sparse matrix factorizations, the reader is referred to Featherstone \cite{Featherstone2008}. His monograph remains the single most comprehensive reference on recursive multibody dynamics algorithms.
+
 \section{Contact Forces and Impact Dynamics}
 \label{sec:contact_impact}
 
@@ -807,6 +822,15 @@ The Articulated Body Algorithm is a revolutionary approach to forward dynamics:
 
   \item \textbf{Real-Time Capability:} ABA powers all modern physics engines, game engines, and robot simulators.
 \end{enumerate}
+
+\section{Further Reading and References}
+\label{sec:ch10_further_reading}
+
+The Articulated Body Algorithm was first proposed by Featherstone in his landmark 1983 paper \cite{featherstone1983}, which demonstrated that forward dynamics for an $N$-joint serial chain could be solved in $O(N)$ time rather than the $O(N^3)$ required by direct matrix inversion. Featherstone subsequently extended and refined the algorithm in his doctoral work \cite{featherstone1987}, addressing branching kinematic trees and more general joint types. The definitive and most comprehensive treatment of ABA---including its relationship to sparse matrix factorizations, extensions to floating-base systems, and closed kinematic loops---is found in Featherstone's monograph \textit{Rigid Body Dynamics Algorithms} \cite{Featherstone2008}, which remains the essential reference for anyone implementing or extending recursive dynamics algorithms.
+
+For readers seeking to connect ABA to the broader framework of Lie group mechanics and screw theory developed in earlier chapters of this textbook, Murray, Li, and Sastry \cite{Murray1994} provide the mathematical foundations linking spatial algebra to the equations of motion, while Lynch and Park \cite{lynch2017} offer an accessible modern treatment that integrates forward and inverse dynamics within the PoE formalism.
+
+On the simulation and implementation side, Todorov et al.\ \cite{todorov2012} describe the architecture of MuJoCo, illustrating how ABA is combined with contact dynamics solvers based on convex optimization to produce a high-performance physics engine suitable for reinforcement learning and control research. For contact dynamics specifically---including complementarity formulations, friction models, and impact laws---the reader should consult the relevant chapters of \cite{Featherstone2008} as well as the extensive literature on time-stepping schemes for non-smooth dynamics. Floating-base extensions of ABA, essential for humanoid and legged robot simulation, are treated in detail by Featherstone \cite{Featherstone2008} and are implemented in frameworks such as Pinocchio and Drake.
 
 \section{Exercises}
 \label{sec:ch10_exercises}

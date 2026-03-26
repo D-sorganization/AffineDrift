@@ -48,7 +48,7 @@ Lagrangian mechanics solves this by working exclusively with \textbf{generalized
 \section{Hamilton's Principle and the Calculus of Variations}
 % ==========================================================================
 
-\textbf{Hamilton's Principle} states that among all conceivable paths $\mathbf{q}(t)$ connecting two configurations $\mathbf{q}(t_1)$ and $\mathbf{q}(t_2)$ at fixed times, the \emph{actual} physical path satisfies:
+\textbf{Hamilton's Principle} \cite{goldstein2002,arnold1989} states that among all conceivable paths $\mathbf{q}(t)$ connecting two configurations $\mathbf{q}(t_1)$ and $\mathbf{q}(t_2)$ at fixed times, the \emph{actual} physical path satisfies:
 
 \begin{equation}
 \delta \mathcal{S} = \delta \int_{t_1}^{t_2} \mathcal{L}(\mathbf{q}, \dot{\mathbf{q}}, t) \, dt = 0
@@ -169,7 +169,7 @@ $$\mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})\dot{\mathbf{q}} = \frac{d\mathbf{M}}{
 Define the \textbf{gravity vector}:
 $$\mathbf{G}(\mathbf{q}) = \frac{\partial V}{\partial \mathbf{q}}$$
 
-This yields the \textbf{standard form}:
+This yields the \textbf{standard form} \cite{siciliano2009,Spong2006}:
 
 \begin{equation}
 \mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})\dot{\mathbf{q}} + \mathbf{G}(\mathbf{q}) = \boldsymbol{\tau}
@@ -290,11 +290,13 @@ $$\frac{dT}{dt} = -\frac{dV}{dt}$$
 
 $$\frac{d}{dt}(T + V) = 0$$
 
-Thus total energy is conserved. This is the mechanical manifestation of Noether's theorem (Section \ref{sec:noether}).
+Thus total energy is conserved. This is the mechanical manifestation of Noether's theorem (Section \ref{sec:noether}) \cite{marsden1999}.
 
 % ==========================================================================
 \section{Hamiltonian Mechanics}
 % ==========================================================================
+
+The energy conservation result above reveals something profound: the total energy $H = T + V$ is not merely a convenient bookkeeping device but a \emph{generating function} for the dynamics themselves. Once we recognize that a single scalar quantity---the total energy---is preserved along every physical trajectory, a natural question arises: can we reformulate the entire dynamics using energy as the fundamental object, rather than the Lagrangian? The answer is yes, and the resulting framework---Hamiltonian mechanics---replaces second-order equations in $(q, \dot{q})$ with first-order equations in $(q, p)$, where $p$ is the conjugate momentum. This reformulation is not merely aesthetic. The Hamiltonian viewpoint exposes the \emph{symplectic geometry} of phase space, provides canonical transformations that simplify otherwise intractable problems, and underpins modern developments in geometric integration, optimal control, and quantum mechanics \cite{goldstein2002,arnold1989}.
 
 While Lagrangian mechanics uses $(q, \dot{q})$ as the fundamental variables, there is a mathematically equivalent formulation using $(q, p)$, where $p$ is the conjugate momentum.
 
@@ -327,7 +329,7 @@ These are a set of $2n$ first-order ODEs (compared to $n$ second-order Lagrangia
 \label{sec:noether}
 % ==========================================================================
 
-\textbf{Emmy Noether's Theorem} (1918) establishes a deep connection between symmetries of the Lagrangian and conservation laws in the equations of motion.
+\textbf{Emmy Noether's Theorem} (1918) establishes a deep connection between symmetries of the Lagrangian and conservation laws in the equations of motion \cite{marsden1999}.
 
 \textbf{Theorem (Noether):} If the Lagrangian $\mathcal{L}(\mathbf{q}, \dot{\mathbf{q}})$ is invariant under a continuous one-parameter transformation group $\mathbf{q} \to \mathbf{q}(\epsilon)$ where $\mathbf{q}(0) = \mathbf{q}$ and $\frac{d\mathbf{q}}{d\epsilon}\big|_{\epsilon=0} = \boldsymbol{\xi}(\mathbf{q})$ is the infinitesimal generator, then the quantity:
 
@@ -382,7 +384,7 @@ The multipliers $\boldsymbol{\lambda}$ are determined by enforcing $\ddot{\bolds
 \section{D'Alembert's Principle and Virtual Work}
 % ==========================================================================
 
-An alternative derivation of Lagrangian mechanics begins with \textbf{D'Alembert's Principle}, which unifies constraints and dynamics.
+An alternative derivation of Lagrangian mechanics begins with \textbf{D'Alembert's Principle} \cite{goldstein2002}, which unifies constraints and dynamics.
 
 Consider a system in motion under forces $\mathbf{F}$ with constraint forces $\mathbf{F}_c$. Newton's second law is:
 $$m\mathbf{a} = \mathbf{F} + \mathbf{F}_c$$
@@ -405,7 +407,7 @@ Since the $\delta q_i$ are arbitrary (independent), each coefficient must vanish
 \section{Christoffel Symbols and the Geometry of $\mathbf{M}$}
 % ==========================================================================
 
-The mass matrix $\mathbf{M}(\mathbf{q})$ defines a Riemannian metric on configuration space. The Christoffel symbols $\Gamma^i_{jk}$ of this metric are:
+The mass matrix $\mathbf{M}(\mathbf{q})$ defines a Riemannian metric on configuration space \cite{Murray1994}. The Christoffel symbols $\Gamma^i_{jk}$ of this metric are:
 
 $$\Gamma^i_{jk} = \frac{1}{2}g^{im}\left(\frac{\partial g_{mj}}{\partial q_k} + \frac{\partial g_{mk}}{\partial q_j} - \frac{\partial g_{jk}}{\partial q_m}\right)$$
 
@@ -717,6 +719,16 @@ In control theory (Volume I), Lagrangian mechanics enables:
     \item \textbf{Contraction Metrics}: Prove stability using the metric structure.
     \item \textbf{Port-Hamiltonian Systems}: Preserve structure under interconnection.
 \end{itemize}
+
+% ==========================================================================
+\section{Further Reading and References}
+% ==========================================================================
+
+The foundations of Lagrangian and Hamiltonian mechanics are treated with exceptional depth in Goldstein, Poole, and Safko \cite{goldstein2002}, which remains the standard graduate reference for classical mechanics. Their treatment of variational principles, canonical transformations, and Hamilton-Jacobi theory provides the analytical backbone for everything presented in this chapter. For a more mathematically rigorous and geometrically oriented perspective, Arnold \cite{arnold1989} develops classical mechanics from the standpoint of differential geometry and symplectic topology, making explicit the manifold structure that underlies configuration space and phase space.
+
+The geometric mechanics perspective---viewing the mass matrix as a Riemannian metric and Coriolis forces as geodesic deviations---is developed systematically in Marsden and Ratiu \cite{marsden1999}. Their treatment of Noether's theorem, momentum maps, and reduction theory provides the mathematical language for understanding symmetry and conservation in mechanical systems at a level far beyond what we have space for here. Readers interested in the Lie group structure of rigid body mechanics and its interplay with Lagrangian dynamics should consult Murray, Li, and Sastry \cite{Murray1994}, who unify the geometric and control-theoretic viewpoints.
+
+For computational dynamics and the connection between Lagrangian formulations and recursive algorithms (bridging this chapter with Chapter 10), Featherstone \cite{Featherstone2008} provides an authoritative treatment of how the $\mathbf{M}$, $\mathbf{C}$, and $\mathbf{G}$ matrices can be assembled efficiently using spatial algebra. The control-theoretic applications of the standard form $\mathbf{M}\ddot{\mathbf{q}} + \mathbf{C}\dot{\mathbf{q}} + \mathbf{G} = \boldsymbol{\tau}$---including feedback linearization, computed torque control, and impedance control---are covered extensively by Siciliano et al.\ \cite{siciliano2009} and by Spong, Hutchinson, and Vidyasagar \cite{Spong2006}. Both texts demonstrate how the properties proved in this chapter (positive-definiteness of $\mathbf{M}$, skew-symmetry of $\dot{\mathbf{M}} - 2\mathbf{C}$) are directly exploited in Lyapunov-based stability proofs for robot controllers.
 
 % ==========================================================================
 \section{Exercises}

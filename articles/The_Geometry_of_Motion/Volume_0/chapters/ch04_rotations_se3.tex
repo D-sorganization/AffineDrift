@@ -129,7 +129,7 @@ Each elementary matrix satisfies $\mathbf{R}^T \mathbf{R} = \mathbf{I}$ and $\de
 \subsection{SO(3) as a Group}
 
 \begin{definition}{The Group \texorpdfstring{$\SO(3)$}{SO(3)}}{SO3_group}
-The \textbf{Special Orthogonal Group} $\SO(3)$ is the set of all $3 \times 3$ real matrices satisfying:
+The \textbf{Special Orthogonal Group} $\SO(3)$~\cite{Murray1994} is the set of all $3 \times 3$ real matrices satisfying:
 \begin{equation}
 \SO(3) = \{\mathbf{R} \in \Reals^{3 \times 3} : \mathbf{R}^T \mathbf{R} = \mathbf{I}, \, \det(\mathbf{R}) = 1\}
 \end{equation}
@@ -448,7 +448,7 @@ A unit quaternion $\mathbf{q} = [q_w, q_x, q_y, q_z]^T$ with $q_w^2 + q_x^2 + q_
 \end{theorem}
 
 \begin{derivation}
-A rotation by angle $\theta$ about unit axis $\hat{\boldsymbol{\omega}} = [\omega_x, \omega_y, \omega_z]^T$ can be expressed via the Rodrigues formula:
+A rotation by angle $\theta$ about unit axis $\hat{\boldsymbol{\omega}} = [\omega_x, \omega_y, \omega_z]^T$ can be expressed via the Rodrigues formula~\cite{rodrigues1840}:
 \begin{equation}
 \mathbf{R} = \mathbf{I} + \sin\theta \, [\hat{\boldsymbol{\omega}}]_\times + (1 - \cos\theta) \, [\hat{\boldsymbol{\omega}}]_\times^2.
 \end{equation}
@@ -638,6 +638,42 @@ This chapter has developed the complete mathematical framework for 3D rotations:
 \end{itemize}
 
 These tools eliminate the singularities of Euler angles while providing efficient computational representations. The next chapter combines rotation matrices with translation vectors into the full rigid body transformation group $\SE(3)$.
+
+% ------------------------------------------------------------------
+\section{Further Reading}
+\label{sec:ch4_further_reading}
+% ------------------------------------------------------------------
+
+The rotation group $\SO(3)$ and its extension to rigid-body transformations
+$\SE(3)$ are treated in depth by Murray, Li, and Sastry~\cite{Murray1994},
+whose Chapter~2 develops the group-theoretic and differential-geometric
+foundations that underpin this chapter. Lynch and Park~\cite{lynch2017},
+Chapters~3--4, provide a complementary modern treatment with numerous worked
+examples of rotation matrices, homogeneous transformation matrices, and
+their application to serial kinematic chains.
+
+The Lie group structure of $\SO(3)$ and its Lie algebra $\so(3)$ are part of
+a much larger mathematical framework. Hall~\cite{hall2015} offers a
+self-contained introduction to Lie groups and Lie algebras accessible to
+engineers with the linear algebra background developed in Chapter~1 of this
+text. For the geometric and symplectic perspective on rotation groups and
+their role in mechanics, Marsden and Ratiu~\cite{marsden1999} provide the
+definitive reference.
+
+The Rodrigues rotation formula derived in this chapter has a distinguished
+history: it was first published by Olinde Rodrigues in
+1840~\cite{rodrigues1840}, predating the modern matrix formalism by nearly a
+century. Rodrigues' original derivation used purely geometric reasoning; the
+matrix exponential form $e^{[\hat{\boldsymbol{\omega}}]_\times \theta}$
+that we derive in Chapter~6 provides the modern algebraic counterpart.
+
+Finally, readers implementing rotation representations in software should be
+aware that quaternion arithmetic is the \emph{de facto} standard in modern
+robotics and game-engine frameworks (e.g., Eigen, ROS~tf2, Unity) precisely
+because it avoids the gimbal-lock singularity and requires only four
+parameters with a single unit-norm constraint. The SLERP algorithm
+presented in this chapter is the core interpolation primitive in all of
+these libraries.
 
 \begin{exercises}{Rotations, Quaternions, and SO(3)}{exercises:ch4}
 

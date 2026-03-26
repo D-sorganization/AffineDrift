@@ -33,7 +33,7 @@ Today, every simulation framework discussed in this text series---from MuJoCo's 
 \label{sec:vectors_matrices}
 % ------------------------------------------------------------------
 
-Before mapping physics, we must understand the fundamental data structures of control theory: vectors and matrices. More importantly, we must understand the abstract \emph{space} in which these objects live, because the geometry of that space dictates everything about how physical systems behave.
+Before mapping physics, we must understand the fundamental data structures of control theory: vectors and matrices. More importantly, we must understand the abstract \emph{space} in which these objects live, because the geometry of that space dictates everything about how physical systems behave. Readers seeking a comprehensive undergraduate treatment of these ideas will find Strang's textbook~\cite{strang2019} an excellent companion to this chapter.
 
 \subsection{Vectors}
 
@@ -644,7 +644,7 @@ In this section we meet a complementary idea: building matrices up
 from the simplest possible pieces, called \emph{dyads}.
 This viewpoint is not merely algebraic; it is the language that
 mechanics has used for over a century to describe inertia, stress,
-and stiffness without ever choosing a coordinate frame.
+and stiffness without ever choosing a coordinate frame~\cite{Murray1994}.
 
 % ------------------------------------------------------------------
 \subsection{What Is a Dyad?}
@@ -961,6 +961,38 @@ print("Verify L @ L^T = M, error:", np.linalg.norm(M - L @ L.T))
     \item The \textbf{SVD} decomposes any matrix into rotation-stretch-rotation. It reveals the manipulability ellipsoid of a robot and quantifies proximity to singularities via the condition number.
 \end{enumerate}
 \end{principle}
+
+% ------------------------------------------------------------------
+\section{Further Reading}
+\label{sec:ch1_further_reading}
+% ------------------------------------------------------------------
+
+The material in this chapter draws on a long tradition of textbooks at the
+intersection of linear algebra and applied mathematics. For a comprehensive
+undergraduate treatment that emphasizes geometric intuition alongside
+computational technique, Strang~\cite{strang2019} remains the standard
+reference; his ``four fundamental subspaces'' perspective directly informs
+the rank-nullity discussion presented here.
+
+In the robotics context, Chapter~2 of Murray, Li, and
+Sastry~\cite{Murray1994} develops the specific linear-algebraic tools---rotation
+matrices, skew-symmetric operators, and the Lie bracket---that recur throughout
+the rest of this textbook. Readers who wish to pursue the numerical aspects of
+linear algebra, particularly iterative solvers and the role of condition numbers
+in optimization, will find Nocedal and Wright~\cite{nocedal2006} an invaluable
+companion.
+
+The dyadic and tensor-product viewpoint introduced in
+Section~\ref{sec:dyads-dyadics} connects directly to continuum mechanics, where
+stress and strain are second-order tensors built from exactly the same outer-product
+construction. Students interested in these connections should consult any
+graduate text on continuum mechanics or tensor analysis.
+
+Finally, the eigenvalue structures and matrix exponentials that close this
+chapter are the first hints of \emph{Lie theory}. Hall~\cite{hall2015} provides
+a mathematically rigorous bridge from linear algebra to Lie groups and Lie
+algebras, foreshadowing the rotation groups ($\SO(3)$) and rigid-body
+transformation groups ($\SE(3)$) that appear in Chapters~4 and~5.
 
 % ------------------------------------------------------------------
 \section{Exercises}

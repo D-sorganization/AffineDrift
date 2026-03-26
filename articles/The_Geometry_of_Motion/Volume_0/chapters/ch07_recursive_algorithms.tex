@@ -21,9 +21,9 @@
 
 The computational efficiency crisis in robotics was born in the 1970s. As robotic arms grew from simple planar mechanisms to fully 6-DOF industrial manipulators, researchers faced a brutal truth: the Lagrangian equations of motion, when expanded symbolically, produced expressions so massive they literally filled computers' memory banks.
 
-In the early 1980s, \textbf{Orin}, \textbf{McGhee}, and \textbf{Luh} independently developed recursive formulations of robot dynamics. Instead of solving the global inverse dynamics problem as a monolithic matrix equation, they recognized that the sequential tree structure of a kinematic chain could be exploited: each joint only directly interacts with its immediate neighbors. Their key insight was that by organizing calculations to respect this local structure, one could reduce the computational complexity from $O(N^3)$ (matrix inversion) or even $O(N^4)$ (symbolic algebra) down to $O(N)$ (linear in the number of joints).
+In the early 1980s, \textbf{Orin}, \textbf{McGhee}, and \textbf{Luh} \cite{luh1980} independently developed recursive formulations of robot dynamics. Instead of solving the global inverse dynamics problem as a monolithic matrix equation, they recognized that the sequential tree structure of a kinematic chain could be exploited: each joint only directly interacts with its immediate neighbors. Their key insight was that by organizing calculations to respect this local structure, one could reduce the computational complexity from $O(N^3)$ (matrix inversion) or even $O(N^4)$ (symbolic algebra) down to $O(N)$ (linear in the number of joints).
 
-In 1987, \textbf{Roy Featherstone} completed this revolution. His reformulation using spatial vector algebra (Chapter \ref{ch:spatial_algebra}) and adjoint transformations made recursive dynamics not merely efficient, but \emph{elegant}. The Recursive Newton-Euler Algorithm (RNEA) became the standard approach used in every modern physics engine: MuJoCo, PyBullet, Drake, Gazebo, and UpstreamDrift all rely fundamentally on Featherstone's recursive framework, executed as purely numerical matrix operations rather than symbolic manipulation.
+In 1987, \textbf{Roy Featherstone} completed this revolution \cite{Featherstone2008}. His reformulation using spatial vector algebra (Chapter \ref{ch:spatial_algebra}) and adjoint transformations made recursive dynamics not merely efficient, but \emph{elegant}. The Recursive Newton-Euler Algorithm (RNEA) became the standard approach used in every modern physics engine: MuJoCo, PyBullet, Drake, Gazebo, and UpstreamDrift all rely fundamentally on Featherstone's recursive framework, executed as purely numerical matrix operations rather than symbolic manipulation.
 
 \section{The Curse of Dimensionality in Dynamics}
 
@@ -294,7 +294,7 @@ This matrix is symmetric and positive definite, encoding the complete resistance
 
 Inverse Dynamics asks: If we know the trajectory the robot is currently taking ($\mathbf{q}, \dot{\mathbf{q}}, \ddot{\mathbf{q}}$), how much torque $\boldsymbol{\tau}$ must the motors output at this exact millisecond to execute it?
 
-This is solved by the crowning jewel of computational mechanics: the \textbf{Recursive Newton-Euler Algorithm (RNEA)}. It executes in exactly two sweeps.
+This is solved by the crowning jewel of computational mechanics: the \textbf{Recursive Newton-Euler Algorithm (RNEA)} \cite{luh1980, Featherstone2008}. It executes in exactly two sweeps.
 
 \subsection{The Outward Pass: Velocity and Acceleration Propagation}
 
@@ -769,6 +769,19 @@ In this chapter, we learned:
 \end{enumerate}
 
 Throughout the subsequent volumes of \textit{The Geometry of Motion}, physical phenomena like Contraction Metrics, Sums-of-Squares Programming, and LQR-Trees are discussed dynamically. Behind the curtain of those advanced trajectory optimizations, the physics engines governing the simulated bodies are invariably relying on Quaternions to map their angles, Adjoints to shift their coordinates, and Recursive Algorithms to execute their algebraic realities in $O(N)$ time.
+
+\section{Further Reading}
+\label{sec:further_reading_ch7}
+
+The original computational Newton-Euler formulation for robot manipulators was presented by Luh, Walker, and Paul \cite{luh1980}, who demonstrated that recursive structure could reduce the cost of inverse dynamics from $O(N^3)$ to $O(N)$. Their paper remains a landmark in computational robotics and is essential reading for understanding the historical development of real-time robot control.
+
+The definitive modern treatment of recursive dynamics is Featherstone \cite{Featherstone2008}, which develops the RNEA, the Articulated Body Algorithm (ABA), and the Composite Rigid Body Algorithm within a unified spatial vector framework. Featherstone's monograph is the primary reference for anyone implementing multi-body dynamics from scratch and contains detailed pseudocode, complexity proofs, and numerical considerations that go well beyond our presentation here.
+
+Lynch and Park \cite{lynch2017}, Chapter~8, present inverse dynamics within the product of exponentials framework, offering a complementary geometric perspective to Featherstone's spatial vector approach. Their treatment emphasizes the connection between the Lie-algebraic formulation of kinematics (Chapters~\ref{ch:screw_axes}--\ref{ch:exponential_coordinates}) and the recursive dynamics algorithms developed here.
+
+For practical implementation considerations---including numerical conditioning, joint friction models, and real-time scheduling---Siciliano et al.\ \cite{siciliano2009} provide an engineering-oriented treatment with extensive discussion of industrial applications.
+
+The forward dynamics problem, which is the computational inverse of the RNEA, requires the more sophisticated Articulated Body Algorithm developed in Chapter~\ref{ch:articulated_body}. Readers eager to understand how physics engines like MuJoCo, Drake, and PyBullet actually simulate forward in time should proceed to that chapter after mastering the RNEA presented here.
 
 \section{Exercises}
 

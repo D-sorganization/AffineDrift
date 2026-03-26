@@ -157,7 +157,7 @@ The hand position can be specified by 3 Cartesian coordinates $(x, y, z)$ and th
 
 The collection of all valid configurations a system can possibly achieve---accounting for all of its physical constraints, linkages, pins, and bearings---is called its \textbf{Configuration Space}, mathematically denoted by the symbol $\mathcal{Q}$.
 
-Like state space, configuration space is an abstract, multi-dimensional geometric surface. It is, strictly speaking, a mathematical \textbf{manifold}. The number of dimensions of this space is exactly equal to the system's Degrees of Freedom.
+Like state space, configuration space is an abstract, multi-dimensional geometric surface. It is, strictly speaking, a mathematical \textbf{manifold}~\cite{Murray1994}. The number of dimensions of this space is exactly equal to the system's Degrees of Freedom.
 
 \begin{definition}{Topological Manifold}{topological_manifold}
 A \emph{topological manifold} of dimension $n$ is a topological space $\mathcal{M}$ such that:
@@ -411,7 +411,7 @@ The forward kinematics map is $f_{kin}(q_1, q_2) = [x(q_1, q_2), y(q_1, q_2)]^T$
 \section{The Jacobian Matrix and the Kinematic Derivative}
 \label{sec:jacobian}
 
-To study the instantaneous kinematic relationship between joint velocities $\dot{\mathbf{q}}$ and end-effector velocities $\dot{\mathbf{p}}$, we differentiate the forward kinematics.
+To study the instantaneous kinematic relationship between joint velocities $\dot{\mathbf{q}}$ and end-effector velocities $\dot{\mathbf{p}}$, we differentiate the forward kinematics~\cite{siciliano2009}.
 
 \begin{definition}{Jacobian Matrix of Forward Kinematics}{jacobian_kin}
 The Jacobian matrix of $f_{kin} : \mathcal{Q} \to \Reals^m$ at a configuration $\mathbf{q}$ is:
@@ -789,6 +789,41 @@ The output shows that the 2-link arm can reach any point in the annulus $0 \le r
   \item Pfaffian constraints encode velocity restrictions algebraically: $\mathbf{A}(\mathbf{q}) \dot{\mathbf{q}} = \mathbf{0}$.
 \end{itemize}
 \end{principle}
+
+% ==========================================================================
+\section{Further Reading}
+\label{sec:ch3_further_reading}
+% ==========================================================================
+
+The configuration-space perspective developed in this chapter has its roots in
+differential geometry. Chapters~2--3 of Murray, Li, and
+Sastry~\cite{Murray1994} provide a rigorous treatment of configuration
+manifolds, tangent spaces, and the kinematic maps that connect joint space to
+task space, all within the robotics context. Their development of
+Gr\"{u}bler's formula and the topology of common joint types directly
+complements the material presented here.
+
+Lynch and Park~\cite{lynch2017} offer a modern, self-contained treatment of
+configuration-space analysis with extensive worked examples for serial and
+parallel mechanisms. Their textbook is particularly strong on workspace
+computation and kinematic singularities.
+
+For Jacobian analysis, velocity kinematics, and workspace characterization,
+Siciliano et al.~\cite{siciliano2009} provide detailed algorithms and
+case studies drawn from industrial manipulators. Their treatment of
+singularity classification is especially useful for practical applications.
+
+Bullo and Lewis~\cite{BulloLewis2004} develop geometric control theory on
+configuration manifolds, extending the ideas of this chapter into the realm
+of controllability and motion planning on curved spaces. Their framework
+unifies the holonomic and non-holonomic constraint analysis introduced in
+Section~\ref{sec:constraints} with modern tools from differential geometry.
+
+More broadly, the configuration manifolds studied here are special cases of
+the smooth manifolds treated in any graduate text on differential geometry.
+Readers seeking mathematical depth beyond the robotics context will find that
+the manifold, chart, and atlas concepts introduced in this chapter transfer
+directly to the general theory.
 
 % ==========================================================================
 \section{Exercises}

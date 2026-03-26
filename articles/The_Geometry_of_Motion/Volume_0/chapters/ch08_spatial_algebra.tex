@@ -21,11 +21,11 @@
 
 The roots of spatial algebra reach deep into classical geometry. In the 1860s, \textbf{Julius Plücker} studied lines in 3D space as geometric objects, discovering that a line can be represented as a 6-dimensional vector satisfying certain constraints. This \textbf{Plücker coordinate} representation remained mostly a curiosity in algebraic geometry for over a century.
 
-In 1900, Sir \textbf{Robert Stawell Ball} developed the theory of "screws"—geometric objects unifying rotation and translation—and showed that Plücker's coordinates naturally describe instantaneous screw motions. Ball's work connected to mechanics through the wrench (force + torque) dual to the twist (angular + linear velocity).
+In 1900, Sir \textbf{Robert Stawell Ball} \cite{ball1900} developed the theory of ``screws''—geometric objects unifying rotation and translation—and showed that Plücker's coordinates naturally describe instantaneous screw motions. Ball's work connected to mechanics through the wrench (force + torque) dual to the twist (angular + linear velocity).
 
-However, the true synthesis came when \textbf{Roy Featherstone}, in the 1980s and 1990s, recognized that Ball's geometric screws and Plücker's algebraic coordinates could be married with Lie algebra to create a unified computational framework for multi-body dynamics. Featherstone's \textbf{Spatial Vector Algebra} standardized the representation, showed how to compose inertias of linked chains (composite rigid body algorithm), and proved that careful use of spatial algebra enables $O(N)$ inverse dynamics.
+However, the true synthesis came when \textbf{Roy Featherstone}, in the 1980s and 1990s, recognized that Ball's geometric screws and Plücker's algebraic coordinates could be married with Lie algebra to create a unified computational framework for multi-body dynamics. Featherstone's \textbf{Spatial Vector Algebra} \cite{Featherstone2008} standardized the representation, showed how to compose inertias of linked chains (composite rigid body algorithm), and proved that careful use of spatial algebra enables $O(N)$ inverse dynamics.
 
-Modern robotics and physics engines (MuJoCo, Drake, UpstreamDrift) are built entirely on Featherstone's spatial framework.
+Modern robotics and physics engines (MuJoCo \cite{todorov2012}, Drake, UpstreamDrift) are built entirely on Featherstone's spatial framework.
 
 \section{Plücker Coordinates and Lines in 3D}
 \label{sec:plucker}
@@ -633,6 +633,19 @@ In this chapter, we developed Spatial Vector Algebra—the mathematical language
 \end{enumerate}
 
 With Spatial Vector Algebra in hand, the Recursive Newton-Euler Algorithm of Chapter \ref{ch:recursive_algorithms} becomes a straightforward loop of matrix multiplications, without a single transcendental function or explicit cross product in sight. This unity—where complex nonlinear dynamics reduce to structured linear algebra—is the deep beauty of modern computational mechanics.
+
+\section{Further Reading}
+\label{sec:further_reading_ch8}
+
+The primary reference for spatial vector algebra is Featherstone \cite{Featherstone2008}, whose monograph develops the full $6 \times 6$ framework from first principles and demonstrates its application to recursive multi-body dynamics algorithms. Featherstone's treatment of spatial inertia, the motion and force cross products, and the composite rigid body algorithm is definitive, and readers seeking to implement spatial algebra in production code should consult his detailed pseudocode and numerical recipes.
+
+The mathematical foundations connecting spatial vectors to the Lie algebra $\se(3)$ and its dual $\se^*(3)$ are developed rigorously by Murray, Li, and Sastry \cite{Murray1994}. Their perspective clarifies why twists and wrenches live in dual vector spaces and why the adjoint and coadjoint representations have the specific transformation properties used throughout this chapter.
+
+For the classical treatment of rigid body dynamics, inertia tensors, and the parallel axis theorem in their traditional $3 \times 3$ form, Goldstein, Poole, and Safko \cite{goldstein2002} remains the standard graduate-level reference. Comparing their development with the $6 \times 6$ spatial inertia formulation of this chapter illuminates how spatial algebra unifies and streamlines results that classically require separate angular and translational analyses.
+
+Marsden and Ratiu \cite{marsden1999} place spatial algebra within the broader framework of geometric mechanics, connecting spatial inertia to momentum maps and showing how the Euler equations for rigid body motion arise naturally from reduction on $\SE(3)$. Their treatment is more abstract but reveals the deep geometric structures underlying the computational framework.
+
+It is worth emphasizing that spatial algebra is the computational backbone of modern physics engines. MuJoCo \cite{todorov2012}, in particular, implements spatial vector arithmetic as its core computational primitive, using the $6 \times 6$ framework to achieve real-time simulation of complex contact-rich robotic systems. Understanding the material in this chapter is therefore essential not only for theoretical mechanics but for practical work with any modern simulation platform.
 
 \section{Exercises}
 
