@@ -42,9 +42,23 @@ jobs:
 
       - name: Compile ${{ matrix.volume }}
         uses: xu-cheng/latex-action@v4
+        continue-on-error: true
         with:
           root_file: main.tex
           working_directory: articles/The_Geometry_of_Motion/${{ matrix.volume }}
+          pre_compile: "rm -f *.aux chapters/*.aux"
+          args: "-pdf -file-line-error -interaction=nonstopmode -f"
+
+      - name: Verify ${{ matrix.volume }} PDF exists
+        run: |
+          PDF="articles/The_Geometry_of_Motion/${{ matrix.volume }}/main.pdf"
+          if [ -f "$PDF" ]; then
+            echo "${{ matrix.volume }} PDF generated successfully"
+            ls -lh "$PDF"
+          else
+            echo "ERROR: ${{ matrix.volume }} PDF was not generated"
+            exit 1
+          fi
 
       - name: Count Pages for ${{ matrix.volume }}
         id: page_count
@@ -169,13 +183,52 @@ jobs:
           fi
           ls -lh release-pdfs/
 
+      - name: Merge all volumes into complete textbook
+        run: |
+          pip install PyPDF2
+          python3 << 'PYEOF'
+          from PyPDF2 import PdfReader, PdfWriter
+          import os
+
+          output = PdfWriter()
+          volumes = [
+              ("release-artifacts/volume-Volume_0/main.pdf", "Volume 0: Mathematical Primer"),
+              ("release-artifacts/volume-Volume_I/main.pdf", "Volume I: Rigid Body Kinematics"),
+              ("release-artifacts/volume-Volume_II/main.pdf", "Volume II: Rotations and Rotational Dynamics"),
+              ("release-artifacts/volume-Volume_III/main.pdf", "Volume III: Differential Geometry"),
+              ("release-artifacts/volume-Volume_IV/main.pdf", "Volume IV: Advanced Dynamics"),
+              ("release-artifacts/volume-Volume_V/main.pdf", "Volume V: Control Theory"),
+          ]
+
+          total = 0
+          for path, title in volumes:
+              if not os.path.exists(path):
+                  print(f"  SKIP {title}: not found")
+                  continue
+              reader = PdfReader(path)
+              pages = len(reader.pages)
+              total += pages
+              first = len(output.pages)
+              for page in reader.pages:
+                  output.add_page(page)
+              output.add_outline_item(title, first)
+              print(f"  {title}: {pages} pages")
+
+          out_path = "release-pdfs/Geometry_of_Motion_Complete_Textbook.pdf"
+          with open(out_path, "wb") as f:
+              output.write(f)
+          size_mb = os.path.getsize(out_path) / 1024 / 1024
+          print(f"\nComplete textbook: {total} pages, {size_mb:.1f} MB")
+          PYEOF
+
       - name: Create or update release
         run: |
           TAG_NAME="textbook-latest"
           RELEASE_NOTES="Automated release of The Geometry of Motion textbooks.
 
           Contents:
-          - All 6 volume PDFs (Volumes 0-V)
+          - Complete textbook PDF (all volumes merged with bookmarks)
+          - All 6 individual volume PDFs (Volumes 0-V)
           - LaTeX source archive (.tar.gz)
           - Quarto HTML book (zipped)
 

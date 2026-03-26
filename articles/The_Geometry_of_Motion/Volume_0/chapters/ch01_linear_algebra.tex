@@ -10,7 +10,7 @@
 }{}
 
 \begin{laymansbox}{Context \& Use Case: Why Linear Algebra is the Language of Motion}{context_box}
-\textbf{The Math You Will See:} We will cover Vectors ($\mathbf{v}$), Matrices ($\mathbf{M}$), Vector Spaces and their axioms, Linear Independence and Basis, Eigenvalues/Eigenvectors ($\lambda, \mathbf{v}$), the Singular Value Decomposition (SVD), Quadratic Forms ($\mathbf{x}^T \mathbf{M} \mathbf{x}$), and Positive Definiteness.
+\textbf{The Math You Will See:} We will cover Vectors ($\mathbf{v}$), Matrices ($\mathbf{M}$), Vector Spaces and their axioms, Linear Independence and Basis, Eigenvalues/Eigenvectors ($\lambda, \mathbf{v}$), the Singular Value Decomposition (SVD), Quadratic Forms ($\mathbf{x}^T \mathbf{M} \mathbf{x}$), Positive Definiteness, and Dyads/Dyadics (the tensor products that underpin inertia, stress, and stiffness).
 
 \textbf{Why We Need It:} A robot's joints or a car's velocity don't exist as single numbers; they exist as large arrays of interacting numbers. Linear algebra is the mathematics of these arrays. If you want to know if a drone will crash into the ground, you don't track every single rotor separately; you assemble the entire system into a single matrix and look at its eigenvalues.
 
@@ -630,6 +630,261 @@ In robotics, the Jacobian matrix $\mathbf{J}(\mathbf{q})$ maps joint velocities 
 
 Conversely, the \textbf{Force Manipulability Ellipsoid} has axes proportional to $1/\sigma_i$. Where the robot is fastest ($\sigma_i$ large), it is mechanically weakest. Where it is slowest (near singularities, $\sigma_i$ small), it can exert enormous force---a consequence of the conservation of mechanical power.
 \end{example}
+
+% ==================================================================
+%  Section: Dyads, Dyadics, and Tensor Products
+% ==================================================================
+
+\section{Dyads, Dyadics, and Tensor Products}
+\label{sec:dyads-dyadics}
+
+The matrix decompositions we have studied so far---eigendecomposition,
+SVD---break a matrix into pieces that reveal its geometric action.
+In this section we meet a complementary idea: building matrices up
+from the simplest possible pieces, called \emph{dyads}.
+This viewpoint is not merely algebraic; it is the language that
+mechanics has used for over a century to describe inertia, stress,
+and stiffness without ever choosing a coordinate frame.
+
+% ------------------------------------------------------------------
+\subsection{What Is a Dyad?}
+\label{subsec:dyad-definition}
+
+\begin{definition}{\texorpdfstring{Dyad (Outer Product)}{Dyad (Outer Product)}}{dyad}
+Given two vectors $\mathbf{a}\in\Reals^{m}$ and
+$\mathbf{b}\in\Reals^{n}$, the \textbf{dyad}\index{dyad}
+(or \textbf{outer product}\index{outer product}) is the
+$m\times n$ matrix
+\[
+  \mathbf{D} \;=\; \mathbf{a}\,\mathbf{b}^{T}.
+\]
+This matrix has rank at most one: every column is a scalar multiple
+of $\mathbf{a}$, and every row is a scalar multiple of $\mathbf{b}^{T}$.
+\end{definition}
+
+A dyad encodes \emph{two} directions simultaneously.
+When it acts on a vector $\mathbf{v}$,
+\[
+  \mathbf{D}\,\mathbf{v}
+  \;=\;
+  \bigl(\mathbf{a}\,\mathbf{b}^{T}\bigr)\mathbf{v}
+  \;=\;
+  \mathbf{a}\,\inner{\mathbf{b}}{\mathbf{v}},
+\]
+it first \emph{senses} how much $\mathbf{v}$ aligns with $\mathbf{b}$
+(via the inner product $\inner{\mathbf{b}}{\mathbf{v}}$) and then
+\emph{responds} along the direction $\mathbf{a}$, scaled by that
+alignment.
+
+\begin{laymansbox}{Dyads: Direction of Action and Direction of Sensitivity}{dyad_intuition}
+Imagine a spring that is stiff in one direction but compliant in
+another---say, a car suspension that resists vertical bumps but
+allows lateral flex.  The relationship ``sense displacement in
+direction $\mathbf{b}$, produce force along direction $\mathbf{a}$''
+is exactly a dyad $\mathbf{a}\,\mathbf{b}^{T}$.
+
+Think of it as a \emph{cause-and-effect pair}: the vector $\mathbf{b}$
+is the ``listening direction'' (what the spring feels) and
+$\mathbf{a}$ is the ``acting direction'' (how the spring pushes
+back). A single dyad can only do one such pairing, which is why
+its matrix has rank one---it has only one independent
+cause-to-effect channel.
+\end{laymansbox}
+
+\begin{example}{A Rank-1 Force Model}{dyad_force}
+Let $\mathbf{a} = \begin{bmatrix}0\\1\\0\end{bmatrix}$ (vertical)
+and $\mathbf{b} = \begin{bmatrix}1\\0\\0\end{bmatrix}$ (horizontal).
+Then
+\[
+  \mathbf{D}
+  = \mathbf{a}\,\mathbf{b}^{T}
+  = \begin{bmatrix}0\\1\\0\end{bmatrix}
+    \begin{bmatrix}1&0&0\end{bmatrix}
+  = \begin{bmatrix}0&0&0\\1&0&0\\0&0&0\end{bmatrix}.
+\]
+Applied to a displacement
+$\mathbf{v}=\begin{bmatrix}3\\5\\2\end{bmatrix}$:
+\[
+  \mathbf{D}\,\mathbf{v}
+  = \begin{bmatrix}0\\3\\0\end{bmatrix}.
+\]
+The dyad extracts the horizontal component ($3$) and produces a
+purely vertical response---exactly the one-channel behaviour
+described above.
+\end{example}
+
+% ------------------------------------------------------------------
+\subsection{From Dyads to Dyadics}
+\label{subsec:dyadics}
+
+A single dyad is rank one, but real physical relationships---stiffness,
+inertia, stress---have full rank.  We get there by \emph{summing} dyads.
+
+\begin{definition}{\texorpdfstring{Dyadic (Tensor Product Expansion)}{Dyadic (Tensor Product Expansion)}}{dyadic}
+A \textbf{dyadic}\index{dyadic} is a finite sum of dyads:
+\[
+  \mathbf{T}
+  \;=\;
+  \sum_{k=1}^{r} \mathbf{a}_{k}\,\mathbf{b}_{k}^{T}.
+\]
+Every $m\times n$ matrix can be written in this form with
+$r\leq\min(m,n)$ terms.
+\end{definition}
+
+This is not a new fact---it is the column--row factorisation you
+already know from the SVD\@.  If
+$\mathbf{A}=\mathbf{U}\boldsymbol{\Sigma}\mathbf{V}^{T}$, then
+\[
+  \mathbf{A}
+  \;=\;
+  \sum_{k=1}^{r}\sigma_{k}\,\mathbf{u}_{k}\,\mathbf{v}_{k}^{T},
+\]
+which is a dyadic with $r$ terms (the rank of $\mathbf{A}$).  The SVD
+merely chooses the \emph{orthogonal} dyad decomposition; infinitely
+many other decompositions exist.
+
+The connection to abstract algebra: the space $\Reals^{m}\otimes\Reals^{n}$
+(the \textbf{tensor product}\index{tensor product}) is isomorphic to
+$\Reals^{m\times n}$.  A dyad $\mathbf{a}\,\mathbf{b}^{T}$ corresponds
+to the elementary tensor $\mathbf{a}\otimes\mathbf{b}$, and a general
+element of the tensor product space is a sum of such elementary tensors---a
+dyadic.
+
+% ------------------------------------------------------------------
+\subsection{Physical Meaning in Mechanics}
+\label{subsec:dyadics-mechanics}
+
+The power of the dyadic viewpoint is that it names the two ``slots''
+of a matrix: input direction and output direction.  Three central
+objects in mechanics are dyadics.
+
+\paragraph{The inertia tensor.}\index{inertia tensor}
+The rotational inertia of a rigid body maps angular velocity to
+angular momentum:
+\begin{equation}\label{eq:inertia-dyadic-map}
+  \mathbf{L} \;=\; \mathbf{I}\,\boldsymbol{\omega}.
+\end{equation}
+Here $\boldsymbol{\omega}$ is the ``input'' (the axis and rate of
+spin) and $\mathbf{L}$ is the ``output'' (the direction and magnitude
+of angular momentum).  Unless the body has special symmetry,
+$\mathbf{L}$ and $\boldsymbol{\omega}$ point in different directions;
+the inertia tensor is the dyadic that encodes this directional coupling.
+
+\paragraph{The stress tensor.}\index{stress tensor}
+The Cauchy stress tensor $\boldsymbol{\sigma}$ maps a surface-normal
+direction $\hat{\mathbf{n}}$ to the traction (force per unit area)
+$\mathbf{t}$ acting on that surface:
+\[
+  \mathbf{t} \;=\; \boldsymbol{\sigma}\,\hat{\mathbf{n}}.
+\]
+Input: the orientation of a small area element.  Output: the force
+that the material on one side exerts on the other.
+
+\paragraph{The stiffness matrix.}\index{stiffness matrix}
+In structural mechanics, the stiffness matrix $\mathbf{K}$ maps a
+displacement vector $\mathbf{u}$ to a force vector $\mathbf{f}$:
+$\mathbf{f}=\mathbf{K}\,\mathbf{u}$.  For a truss with $N$ members,
+each member contributes a rank-1 dyad (stiffness along its axis),
+and the global stiffness matrix is the sum:
+\[
+  \mathbf{K}
+  \;=\;
+  \sum_{e=1}^{N} k_{e}\,\hat{\mathbf{n}}_{e}\,\hat{\mathbf{n}}_{e}^{T},
+\]
+a dyadic built from the member directions $\hat{\mathbf{n}}_{e}$
+and axial stiffnesses $k_{e}$.
+
+\begin{laymansbox}{Why Engineers Say ``Tensor''}{tensor_word}
+When a mechanical engineer refers to the ``inertia tensor'' or
+``stress tensor,'' they almost always mean a $3\times3$ symmetric
+matrix that represents a dyadic.  The word \emph{tensor} signals
+that the object transforms in a specific, predictable way under
+changes of coordinate frame.
+It is not just a bag of nine numbers; it is a physical machine that
+takes one vector in and produces another vector out, regardless of
+how you choose your axes.
+\end{laymansbox}
+
+% ------------------------------------------------------------------
+\subsection{The Coordinate-Free Perspective}
+\label{subsec:coordinate-free}
+
+\index{coordinate-free formulation}
+A dyadic is a geometric object that lives in the space of linear maps
+$\Reals^{n}\to\Reals^{m}$.  Choosing a basis gives it a matrix
+representation, but the underlying map does not depend on that choice.
+
+\begin{example}{Inertia Tensor of a Point Mass}{point_mass_inertia}
+A point mass $m$ at position $\mathbf{r}$ from the centre of mass has
+inertia tensor
+\begin{equation}\label{eq:point-mass-inertia}
+  \mathbf{I}
+  \;=\;
+  m\bigl(\norm{\mathbf{r}}^{2}\,\mathbf{1}
+         - \mathbf{r}\,\mathbf{r}^{T}\bigr),
+\end{equation}
+where $\mathbf{1}$ is the $3\times3$ identity.  Notice that no
+basis vectors appear---$\mathbf{r}\,\mathbf{r}^{T}$ is a dyad
+formed from the position vector with itself, and $\mathbf{1}$
+is the identity map. This expression is \emph{coordinate-free}: it is valid in every
+frame simultaneously.
+\end{example}
+
+When we change from a body-fixed frame $\{B\}$ to a world frame
+$\{W\}$ via a rotation $\mathbf{R}\in\SO$, the matrix
+representation of the inertia tensor transforms by the
+\textbf{congruence transformation}\index{congruence transformation}:
+\begin{equation}\label{eq:congruence}
+  \mathbf{I}^{W}
+  \;=\;
+  \mathbf{R}\,\mathbf{I}^{B}\,\mathbf{R}^{T}.
+\end{equation}
+The congruence form $\mathbf{R}\,(\cdot)\,\mathbf{R}^{T}$
+rotates both the input slot and the output slot of the dyadic.  It
+preserves symmetry, positive-definiteness, and---for rotations---eigenvalues
+(the principal moments of inertia).
+
+% ------------------------------------------------------------------
+\subsection{Connection to the Rest of This Book}
+\label{subsec:dyadic-connections}
+
+The dyadic point of view recurs throughout our study of rigid-body
+mechanics:
+
+\begin{itemize}
+  \item \textbf{Screw axes and wrenches (Chapter~5).}
+    A wrench combines a force and a moment into a single six-dimensional
+    object.  The mapping from a twist (generalised velocity) to a wrench
+    (generalised force) is a $6\times6$ dyadic---the \emph{spatial
+    inertia}.
+
+  \item \textbf{Spatial algebra (Chapter~8).}
+    The $6\times6$ spatial inertia matrix is a dyadic on the space of
+    twists.  Its coordinate-free formulation uses the same
+    $m(\norm{\mathbf{r}}^{2}\,\mathbf{1}-\mathbf{r}\,\mathbf{r}^{T})$
+    building block we saw in
+    Example~\ref{ex:point_mass_inertia}, extended to six dimensions.
+
+  \item \textbf{The mass matrix (Chapter~11).}
+    The joint-space mass matrix $\mathbf{M}(\mathbf{q})$ that appears
+    in the manipulator equation
+    $\mathbf{M}\ddot{\mathbf{q}}+\mathbf{c}=\boldsymbol{\tau}$
+    is a configuration-dependent dyadic on joint-velocity space.
+    Each link contributes a term built from Jacobians and spatial
+    inertias---a sum of dyads, assembled exactly as we sum member
+    stiffnesses in a truss.
+
+  \item \textbf{The articulated-body algorithm (Chapter~10).}
+    Featherstone's algorithm propagates \emph{articulated-body inertias}
+    through a kinematic tree.  These are $6\times6$ dyadics that
+    account for the coupling between a link's motion and the
+    reactions of all its descendants.
+\end{itemize}
+
+Understanding that all these objects are dyadics---linear maps built
+from sums of outer products---provides a unifying thread: the same
+algebraic structure appears whether we are analysing a truss, spinning
+a gyroscope, or computing the forward dynamics of a humanoid robot.
 
 % ------------------------------------------------------------------
 \section{Worked Example: Eigenvalue and SVD Analysis in Python}
