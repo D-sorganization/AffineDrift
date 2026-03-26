@@ -154,8 +154,7 @@ A function $T: V \to W$ between two vector spaces is called a \emph{linear trans
 
 The fundamental connection between linear transformations and matrices is this: \emph{every linear transformation between finite-dimensional vector spaces can be represented by a matrix, and every matrix represents a linear transformation.} Specifically, if $T: \Reals^m \to \Reals^n$ is linear, then there exists a unique $n \times m$ matrix $\mathbf{M}$ such that $T(\mathbf{v}) = \mathbf{M}\mathbf{v}$ for all $\mathbf{v} \in \Reals^m$. The columns of $\mathbf{M}$ are simply $T(\mathbf{e}_1), T(\mathbf{e}_2), \ldots, T(\mathbf{e}_m)$---the images of the standard basis vectors.
 
-\begin{theorem}
-\label{thm:matrix_is_linear}
+\begin{theorem}{Matrix Multiplication is Linear}{matrix_is_linear}
 Let $\mathbf{M} \in \Reals^{n \times m}$. Then the function $T(\mathbf{v}) = \mathbf{M}\mathbf{v}$ is a linear transformation from $\Reals^m$ to $\Reals^n$.
 \end{theorem}
 
@@ -203,8 +202,7 @@ For a square matrix $\mathbf{M} \in \Reals^{n \times n}$, the \emph{determinant}
 
 Now we arrive at one of the most important structural results in linear algebra:
 
-\begin{theorem}[Rank-Nullity Theorem\index{Rank-Nullity Theorem}]
-\label{thm:rank_nullity}
+\begin{theorem}{Rank-Nullity Theorem\index{Rank-Nullity Theorem}}{rank_nullity}
 For any $n \times m$ matrix $\mathbf{M}$:
 \begin{equation}
     \underbrace{\text{rank}(\mathbf{M})}_{\text{dimension of range}} + \underbrace{\dim\bigl(\mathcal{N}(\mathbf{M})\bigr)}_{\text{dimension of null space}} = m \quad (\text{number of columns})
@@ -440,8 +438,7 @@ In $n$ dimensions, a symmetric matrix transforms a hypersphere into a hyperellip
 
 Among all matrices, \emph{symmetric} matrices ($\mathbf{M} = \mathbf{M}^T$) occupy a privileged position. They arise naturally throughout mechanics (mass matrices, stiffness matrices, inertia tensors) and control theory (cost matrices, Lyapunov functions).
 
-\begin{theorem}[The Spectral Theorem\index{Spectral Theorem}]
-\label{thm:spectral}
+\begin{theorem}{The Spectral Theorem\index{Spectral Theorem}}{spectral}
 If $\mathbf{M} \in \Reals^{n \times n}$ is symmetric ($\mathbf{M} = \mathbf{M}^T$), then:
 \begin{enumerate}[label=(\roman*)]
     \item All eigenvalues of $\mathbf{M}$ are real.
@@ -556,8 +553,7 @@ The Cholesky factor $\mathbf{L}$ also provides a constructive test for positive 
 
 What if a matrix is not square? What if it does not have a full set of eigenvectors? The \textbf{Singular Value Decomposition}\index{Singular Value Decomposition} (SVD) is the ultimate, universal factorization of \emph{any} matrix $\mathbf{M} \in \Reals^{n \times m}$, regardless of its shape or rank.
 
-\begin{theorem}[The Singular Value Decomposition]
-\label{thm:svd}
+\begin{theorem}{The Singular Value Decomposition}{svd}
 Every matrix $\mathbf{M} \in \Reals^{n \times m}$ can be factored as:
 \begin{equation}
     \mathbf{M} = \mathbf{U} \boldsymbol{\Sigma} \mathbf{V}^T
