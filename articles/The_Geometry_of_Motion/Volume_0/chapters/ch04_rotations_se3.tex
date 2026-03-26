@@ -305,6 +305,81 @@ Whenever you hear \textbf{Lie Group} (like $\SO(3)$ or $\SE(3)$), think of the c
 Whenever you hear \textbf{Lie Algebra} (like $\so(3)$ or $\se(3)$), think of the perfectly flat, linear tangent space of \emph{Velocities}. We can do standard linear control math in the Lie Algebra, but we map the results back onto the curved Lie Group using the \emph{Exponential Map} (covered next) to actually rotate the physical robot.
 \end{laymansbox}
 
+% ==========================================================================
+\section{Rodrigues' Rotation Formula: Full Derivation}
+\label{sec:rodrigues}
+\index{Rodrigues' rotation formula}
+\index{matrix exponential!rotation}
+
+We now prove the celebrated \textbf{Rodrigues' rotation formula}\index{Rodrigues' rotation formula}, which gives a closed-form expression for the matrix exponential of a skew-symmetric matrix. This result, first obtained by Olinde Rodrigues in 1840~\cite{rodrigues1840}, is the computational backbone of the exponential map for $\SO(3)$.
+
+\subsection{The Key Identity: \texorpdfstring{$[\hat{\omega}]^3 = -[\hat{\omega}]$}{[omega-hat]\^{}3 = -[omega-hat]}}
+
+Let $\hat{\boldsymbol{\omega}} \in \Reals^3$ be a unit vector ($\norm{\hat{\boldsymbol{\omega}}} = 1$) and $[\hat{\omega}] \in \so(3)$ the corresponding skew-symmetric matrix. We first establish a crucial algebraic identity.
+
+\begin{theorem}{Cyclic Property of Skew-Symmetric Matrices}{skew_cubic}
+For any unit vector $\hat{\boldsymbol{\omega}}$ with skew-symmetric matrix $[\hat{\omega}]$:
+\begin{equation}
+\label{eq:skew_cubic}
+[\hat{\omega}]^3 = -[\hat{\omega}].
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Recall that for a skew-symmetric matrix, the action $[\hat{\omega}]\mathbf{v} = \hat{\boldsymbol{\omega}} \times \mathbf{v}$. Thus:
+\begin{equation}
+[\hat{\omega}]^2 \mathbf{v} = \hat{\boldsymbol{\omega}} \times (\hat{\boldsymbol{\omega}} \times \mathbf{v}).
+\end{equation}
+By the vector triple product identity $\mathbf{a} \times (\mathbf{a} \times \mathbf{v}) = \mathbf{a}(\mathbf{a} \cdot \mathbf{v}) - \mathbf{v}(\mathbf{a} \cdot \mathbf{a})$ with $\norm{\hat{\boldsymbol{\omega}}} = 1$:
+\begin{equation}
+\label{eq:skew_squared}
+[\hat{\omega}]^2 = \hat{\boldsymbol{\omega}}\hat{\boldsymbol{\omega}}^T - \mathbf{I}.
+\end{equation}
+Therefore:
+\begin{equation}
+[\hat{\omega}]^3 = [\hat{\omega}](\hat{\boldsymbol{\omega}}\hat{\boldsymbol{\omega}}^T - \mathbf{I}) = [\hat{\omega}]\hat{\boldsymbol{\omega}}\hat{\boldsymbol{\omega}}^T - [\hat{\omega}].
+\end{equation}
+Since $[\hat{\omega}]\hat{\boldsymbol{\omega}} = \hat{\boldsymbol{\omega}} \times \hat{\boldsymbol{\omega}} = \mathbf{0}$, we obtain $[\hat{\omega}]^3 = -[\hat{\omega}]$.
+\end{proof}
+
+This identity implies that all higher powers of $[\hat{\omega}]$ reduce to either $[\hat{\omega}]$ or $[\hat{\omega}]^2$:
+\begin{equation}
+\label{eq:skew_power_cycle}
+[\hat{\omega}]^4 = -[\hat{\omega}]^2, \quad [\hat{\omega}]^5 = [\hat{\omega}], \quad [\hat{\omega}]^6 = [\hat{\omega}]^2, \quad \ldots
+\end{equation}
+
+\subsection{Taylor Expansion and Regrouping}
+
+The matrix exponential is defined by its Taylor series:
+\begin{equation}
+\label{eq:exp_taylor}
+e^{[\hat{\omega}]\theta} = \mathbf{I} + \theta[\hat{\omega}] + \frac{\theta^2}{2!}[\hat{\omega}]^2 + \frac{\theta^3}{3!}[\hat{\omega}]^3 + \frac{\theta^4}{4!}[\hat{\omega}]^4 + \cdots
+\end{equation}
+
+Substituting $[\hat{\omega}]^3 = -[\hat{\omega}]$, $[\hat{\omega}]^4 = -[\hat{\omega}]^2$, $[\hat{\omega}]^5 = [\hat{\omega}]$, etc., and grouping by powers of $[\hat{\omega}]$:
+\begin{equation}
+e^{[\hat{\omega}]\theta} = \mathbf{I} + \underbrace{\left(\theta - \frac{\theta^3}{3!} + \frac{\theta^5}{5!} - \cdots\right)}_{\sin\theta}[\hat{\omega}] + \underbrace{\left(\frac{\theta^2}{2!} - \frac{\theta^4}{4!} + \frac{\theta^6}{6!} - \cdots\right)}_{1 - \cos\theta}[\hat{\omega}]^2.
+\end{equation}
+
+The odd-power series is exactly $\sin\theta$ and the even-power series is exactly $1 - \cos\theta$.
+
+\begin{theorem}{Rodrigues' Rotation Formula}{rodrigues_formula}
+\index{Rodrigues' rotation formula}
+For a unit axis $\hat{\boldsymbol{\omega}} \in \Reals^3$ and angle $\theta \in \Reals$, the rotation matrix is:
+\begin{equation}
+\label{eq:rodrigues}
+\boxed{e^{[\hat{\omega}]\theta} = \mathbf{I} + \sin\theta\,[\hat{\omega}] + (1 - \cos\theta)\,[\hat{\omega}]^2.}
+\end{equation}
+Equivalently, using~\eqref{eq:skew_squared}, the action on a vector $\mathbf{v}$ is:
+\begin{equation}
+\label{eq:rodrigues_vector}
+\mathbf{R}\mathbf{v} = \mathbf{v}\cos\theta + (\hat{\boldsymbol{\omega}} \times \mathbf{v})\sin\theta + \hat{\boldsymbol{\omega}}(\hat{\boldsymbol{\omega}} \cdot \mathbf{v})(1 - \cos\theta).
+\end{equation}
+\end{theorem}
+
+The vector form~\eqref{eq:rodrigues_vector} has a geometric interpretation: decompose $\mathbf{v}$ into a component along $\hat{\boldsymbol{\omega}}$ (unchanged by rotation) and a component perpendicular to $\hat{\boldsymbol{\omega}}$ (rotated by $\theta$ in the plane normal to $\hat{\boldsymbol{\omega}}$). See \cite{rodrigues1840} for the original derivation and \cite{Murray1994} for the modern Lie-theoretic perspective.
+
+% ==========================================================================
 \index{quaternion!definition}
 \index{quaternion!algebra}
 \section{Quaternion Algebra}
@@ -474,6 +549,40 @@ q_z &= \frac{R_{21} - R_{12}}{4 q_w}.
 \end{theorem}
 
 For numerical stability, a more robust algorithm selects the largest diagonal element to compute first, then back-solves for the others.
+
+% --------------------------------------------------------------------------
+\subsection{Rotation Representation Comparison}
+\label{sec:rotation_comparison}
+\index{rotation representations!comparison}
+
+Having introduced four rotation representations, we now compare their properties systematically. The choice of representation has significant practical consequences for storage, computation, and numerical stability.
+
+\begin{table}[htbp]
+\centering
+\caption{Comparison of rotation representations in $\Reals^3$.}
+\label{tab:rotation_comparison}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Property} & \textbf{Rotation Matrix} & \textbf{Euler Angles} & \textbf{Axis-Angle} & \textbf{Quaternion} \\
+\midrule
+Parameters & 9 & 3 & 3 & 4 \\
+Constraints & 6 (orthonormality) & 0 & 0 & 1 (unit norm) \\
+Singularities & None & Gimbal lock & $\theta = \pi$ & None \\
+Composition & Matrix multiply & Complex & Via exp map & Quaternion multiply \\
+Interpolation & Difficult & Nonuniform & Via exp map & SLERP \\
+Storage cost & High & Low & Low & Low \\
+Unique & Yes & No (periodic) & No ($\theta > \pi$) & No ($\pm\mathbf{q}$) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{When to use each representation:}
+\begin{itemize}
+  \item \textbf{Rotation matrices} are the natural choice for \emph{composing} transformations (chain of rigid-body transforms) and for direct application to vectors. Their $9$-parameter redundancy is the cost of a singularity-free, algebraically closed representation.
+  \item \textbf{Euler angles} remain useful for \emph{human interpretation} (roll, pitch, yaw) and low-DOF joints, but gimbal lock (Section~\ref{sec:gimbal_lock}) makes them unsuitable for general-purpose computation.
+  \item \textbf{Axis-angle} (equivalently, exponential coordinates) is the natural parameterisation of the Lie algebra $\so(3)$ and is essential for optimisation on $\SO(3)$, perturbation analysis, and control.
+  \item \textbf{Quaternions} offer the best trade-off for \emph{interpolation} (via SLERP, Section~\ref{sec:slerp}), \emph{storage} (4 parameters, 1 constraint), and \emph{numerical stability} (no singularities, cheap renormalisation). Modern simulation frameworks---including MuJoCo, Drake, and Bullet---typically store orientations as unit quaternions internally and convert to rotation matrices only when matrix operations are required.
+\end{itemize}
 
 \index{SLERP}
 \section{Spherical Linear Interpolation (SLERP)}

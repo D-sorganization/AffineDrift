@@ -403,6 +403,54 @@ When a floating-base robot makes contact with the environment (e.g., a humanoid'
 
 Modern simulators (MuJoCo, PyBullet) implement sophisticated contact handling on top of ABA, but the core algorithm remains unchanged.
 
+\section{Floating-Base Dynamics for Humanoid Robots}
+\label{sec:floating_base_humanoid}
+\index{floating-base dynamics}
+\index{humanoid robot!dynamics}
+
+The ABA as presented above assumes a \emph{fixed} base link rigidly attached to the world. Humanoid robots, quadrupeds, and free-flying spacecraft violate this assumption: their base link has six unactuated degrees of freedom (three translational, three rotational). Handling this floating base correctly is essential for simulating any robot that is not bolted to the floor \cite{Featherstone2008}.
+
+\begin{laymansbox}{Why Floating Base Matters}{floating_base_motivation}
+\textbf{Fixed-base robots} (e.g., a factory arm bolted to a table) have a known, immovable anchor point. \textbf{Floating-base robots} (humanoids, quadrupeds, drones) do not---their ``root'' link accelerates freely under gravity, contact forces, and internal joint torques. This is how Boston Dynamics' Atlas and every MuJoCo humanoid simulation works: the base is treated as a virtual 6-DOF joint connecting the robot to an inertial reference frame.
+\end{laymansbox}
+
+\subsection{Virtual Joint Formulation}
+\label{subsec:virtual_joint}
+\index{virtual joint}
+
+The standard approach introduces a \textbf{virtual 6-DOF joint} at the root. The robot's generalized coordinates become $\mathbf{q} = (\mathbf{q}_0, q_1, \ldots, q_N)$ where $\mathbf{q}_0 \in \Reals^3 \times \SO(3)$ represents the base position and orientation. The generalized velocity is $\dot{\mathbf{q}} = (\mathcal{V}_0, \dot{q}_1, \ldots, \dot{q}_N)$ where $\mathcal{V}_0 \in \Reals^6$ is the spatial velocity of the base.
+
+\subsection{Base Acceleration from Articulated Inertia}
+\label{subsec:base_acceleration}
+\index{articulated inertia!floating base}
+
+In the standard ABA (Pass~3), the base acceleration is set to $\dot{\mathcal{V}}_0 = -\mathbf{g}$ (gravity only, no motion). For a floating base, the base link is free to accelerate, and its acceleration is determined by Newton--Euler applied at the root:
+\begin{equation}
+  \label{eq:floating_base_accel}
+  \dot{\mathcal{V}}_0 = \mathcal{I}_{0}^{A^{-1}}\bigl(\mathcal{F}_{\text{ext},0} - \mathbf{p}_0^A\bigr)
+\end{equation}
+where $\mathcal{I}_0^A \in \Reals^{6 \times 6}$ is the \textbf{articulated inertia of the entire robot} as seen from the base, $\mathcal{F}_{\text{ext},0}$ includes gravity and any external forces on the base, and $\mathbf{p}_0^A$ is the articulated bias force accumulated during the inward pass. The $6 \times 6$ inverse $\mathcal{I}_{0}^{A^{-1}}$ is computed once per timestep---an $O(1)$ operation that does not affect the overall $O(N)$ complexity.
+
+\subsection{Centroidal Momentum and Whole-Body Dynamics}
+\label{subsec:centroidal_momentum}
+\index{centroidal momentum}
+
+For control of floating-base robots, it is often useful to express the dynamics in terms of \textbf{centroidal momentum}\index{centroidal momentum}: the aggregate linear and angular momentum of the entire robot about its center of mass (CoM). The centroidal momentum matrix $\mathbf{A}_G(\mathbf{q}) \in \Reals^{6 \times (6+N)}$ maps generalized velocities to centroidal momentum:
+\begin{equation}
+  \label{eq:centroidal_momentum}
+  \mathbf{h}_G = \mathbf{A}_G(\mathbf{q})\,\dot{\mathbf{q}} = \begin{bmatrix} m\,\dot{\mathbf{r}}_{\text{CoM}} \\ \mathbf{L}_G \end{bmatrix}
+\end{equation}
+where $m$ is the total mass, $\dot{\mathbf{r}}_{\text{CoM}}$ is the CoM velocity, and $\mathbf{L}_G$ is the angular momentum about the CoM. The rate of change of centroidal momentum equals the net external wrench (gravity plus contact forces), providing a powerful abstraction for balance control of humanoids and legged robots.
+
+\begin{theorem}[Centroidal Dynamics]
+\label{thm:centroidal_dynamics}
+For a floating-base robot with external contact forces $\mathbf{f}_k$ at contact points $\mathbf{r}_k$:
+\begin{equation}
+  \dot{\mathbf{h}}_G = \begin{bmatrix} m\,\mathbf{g} + \sum_k \mathbf{f}_k \\ \sum_k (\mathbf{r}_k - \mathbf{r}_{\text{CoM}}) \times \mathbf{f}_k \end{bmatrix}.
+\end{equation}
+This is independent of the internal joint configuration---only external forces change centroidal momentum.
+\end{theorem}
+
 \section{Joint Friction and Motor Inertia}
 \label{sec:friction_motor_inertia}
 
@@ -797,7 +845,77 @@ When a link collides with an obstacle (e.g., a foot striking the ground), an imp
   \item \textbf{Continuation:} Run ABA with the updated velocities for the next timestep.
 \end{enumerate}
 
-The mathematical framework involves solving a complementarity problem (contact force must be non-negative, and the contact constraint—zero relative acceleration—must hold). Modern solvers use interior-point methods or the Lemke algorithm to solve these efficiently.
+The mathematical framework involves solving a complementarity problem (contact force must be non-negative, and the contact constraint---zero relative acceleration---must hold). Modern solvers use interior-point methods or the Lemke algorithm to solve these efficiently.
+
+\section{Contact Dynamics and the Linear Complementarity Problem}
+\label{sec:contact_lcp}
+\index{contact dynamics}
+\index{linear complementarity problem}
+
+Contact between a robot and its environment---a foot on the ground, a hand grasping an object---introduces \emph{inequality} constraints into the dynamics. Unlike joint constraints (which are always active), contact constraints switch on and off as the robot makes and breaks contact. This section formalizes the resulting mathematical structure \cite{Featherstone2008, todorov2012}.
+
+\subsection{Non-Penetration and Complementarity}
+\label{subsec:complementarity}
+\index{complementarity condition}
+
+Let $\phi(\mathbf{q}) \in \Reals$ denote the signed distance (gap function) between a contact pair (e.g., foot and ground). The fundamental constraints are:
+
+\begin{definition}[Signorini Complementarity Conditions]
+\label{def:signorini}
+\index{Signorini conditions}
+For a unilateral contact with normal force $\lambda$:
+\begin{equation}
+  \label{eq:complementarity}
+  \phi(\mathbf{q}) \geq 0, \quad \lambda \geq 0, \quad \lambda\,\phi(\mathbf{q}) = 0.
+\end{equation}
+The surface cannot be penetrated ($\phi \geq 0$), the contact force is repulsive ($\lambda \geq 0$), and force can only be exerted \emph{when} contact is active ($\lambda\phi = 0$). These three conditions together define a \textbf{complementarity problem}.
+\end{definition}
+
+\subsection{Friction Cone Constraint}
+\label{subsec:friction_cone}
+\index{friction cone}
+\index{Coulomb friction}
+
+At a contact point, the tangential (friction) force $\mathbf{f}_t \in \Reals^2$ is bounded by the Coulomb friction law:
+\begin{equation}
+  \label{eq:coulomb_friction}
+  \norm{\mathbf{f}_t} \leq \mu\,\lambda
+\end{equation}
+where $\mu$ is the coefficient of friction. Geometrically, the total contact wrench must lie inside a \textbf{friction cone}\index{friction cone} with half-angle $\arctan(\mu)$. For computational efficiency, simulators often approximate this cone by a \textbf{polyhedral friction cone} (a pyramid with $k$ faces), converting the nonlinear constraint into a set of linear inequalities.
+
+\subsection{The LCP Formulation}
+\label{subsec:lcp_formulation}
+\index{LCP|see {linear complementarity problem}}
+
+Combining the equations of motion with contact constraints yields a \textbf{Linear Complementarity Problem} (LCP). The unconstrained dynamics are:
+\begin{equation}
+  \label{eq:constrained_dynamics}
+  \mathbf{M}(\mathbf{q})\,\ddot{\mathbf{q}} + \mathbf{h}(\mathbf{q}, \dot{\mathbf{q}}) = \boldsymbol{\tau} + \mathbf{J}_c^T\,\boldsymbol{\lambda}
+\end{equation}
+where $\mathbf{J}_c = \partial\phi/\partial\mathbf{q}$ is the contact Jacobian and $\boldsymbol{\lambda}$ is the vector of contact forces. The acceleration-level non-penetration constraint is $\mathbf{J}_c\,\ddot{\mathbf{q}} + \dot{\mathbf{J}}_c\,\dot{\mathbf{q}} \geq \mathbf{0}$. Together with complementarity, the full LCP is:
+\begin{equation}
+  \label{eq:lcp}
+  \mathbf{0} \leq \boldsymbol{\lambda} \perp \mathbf{J}_c\,\ddot{\mathbf{q}} + \dot{\mathbf{J}}_c\,\dot{\mathbf{q}} \geq \mathbf{0}
+\end{equation}
+where $\mathbf{a} \perp \mathbf{b}$ denotes $\mathbf{a}^T\mathbf{b} = 0$ (complementarity). Substituting the equations of motion, this reduces to an LCP in $\boldsymbol{\lambda}$ alone:
+\begin{equation}
+  \mathbf{0} \leq \boldsymbol{\lambda} \perp \bigl(\mathbf{J}_c \mathbf{M}^{-1} \mathbf{J}_c^T\bigr)\boldsymbol{\lambda} + \mathbf{J}_c \mathbf{M}^{-1}(\boldsymbol{\tau} - \mathbf{h}) + \dot{\mathbf{J}}_c\dot{\mathbf{q}} \geq \mathbf{0}.
+\end{equation}
+
+\begin{laymansbox}{What the LCP Means Physically}{lcp_intuition}
+The LCP asks: ``Find contact forces that are just large enough to prevent penetration, but no larger.'' If a foot is in the air ($\phi > 0$), the force is zero. If the foot is on the ground ($\phi = 0$), the force is whatever is needed to keep it from going through the floor. This is exactly the physics of rigid contact---formalized as a mathematical program.
+\end{laymansbox}
+
+\subsection{Time-Stepping Methods}
+\label{subsec:time_stepping}
+\index{time-stepping methods}
+
+Acceleration-level LCPs can be ill-posed when contacts open and close within a single timestep. Modern simulators therefore use \textbf{velocity-level (implicit Euler) time-stepping} \cite{todorov2012}:
+\begin{equation}
+  \label{eq:time_stepping}
+  \mathbf{M}(\dot{\mathbf{q}}^{+} - \dot{\mathbf{q}}^{-}) = \Delta t\,(\boldsymbol{\tau} - \mathbf{h}) + \mathbf{J}_c^T\,\boldsymbol{\Lambda}
+\end{equation}
+where $\dot{\mathbf{q}}^{+}$ and $\dot{\mathbf{q}}^{-}$ are the post- and pre-step velocities and $\boldsymbol{\Lambda} = \Delta t\,\boldsymbol{\lambda}$ is the contact impulse. The implicit Euler formulation provides numerical stability even with stiff contacts and is the basis of MuJoCo's convex optimization-based contact solver. The complementarity condition is enforced at the velocity level, avoiding the need to detect the exact instant of contact transition.
 
 \section{Chapter Summary}
 \label{sec:ch10_summary}

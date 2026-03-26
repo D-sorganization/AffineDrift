@@ -411,6 +411,65 @@ For numerical implementation, the inverse of the V matrix is:
 
 (and for $\theta \to 0$, use L'Hôpital's rule or series approximations to avoid numerical issues).
 
+%% ─────────────────────────────────────────────────────────────────────
+%%  Numerical Stability of the Matrix Logarithm
+%% ─────────────────────────────────────────────────────────────────────
+\subsection{Numerical Stability of the Matrix Logarithm}
+\label{sec:log_numerical_stability}
+\index{Matrix Logarithm!numerical stability}
+
+The closed-form logarithm derived in Section~\ref{sec:matrix_log_so3} is
+exact in infinite precision but requires care in floating-point arithmetic at
+two boundary regimes.
+
+\medskip\noindent\textbf{Near $\theta = 0$ (identity rotation).}
+For $\theta \ll 1$, the general formula
+$[\hat{\boldsymbol{\omega}}] = \frac{\theta}{2\sin\theta}(\mathbf{R} - \mathbf{R}^T)$
+suffers because both $\theta$ and $\sin\theta$ approach zero. However their
+ratio is well-behaved: $\theta/\sin\theta \to 1$. In practice, use the
+first-order Taylor expansion
+\begin{equation}
+  \log(\mathbf{R}) \approx \mathbf{R} - \mathbf{I}
+  \qquad (\theta \ll 1),
+  \label{eq:log_taylor}
+\end{equation}
+which is the skew-symmetric part of $\mathbf{R}$ and avoids all division by
+small quantities.
+
+\medskip\noindent\textbf{Near $\theta = \pi$ ($180^\circ$ rotation).}
+The standard axis-extraction formula
+\begin{equation}
+  \hat{\boldsymbol{\omega}}
+    = \frac{1}{2\sin\theta}
+      \begin{bmatrix} R_{32}-R_{23} \\ R_{13}-R_{31} \\ R_{21}-R_{12}
+      \end{bmatrix}
+\end{equation}
+has a $1/\sin\theta$ singularity as $\theta \to \pi$, because
+$\sin\pi = 0$. Near this boundary the axis must instead be extracted from the
+\emph{eigenvector} of $\mathbf{R}$ corresponding to eigenvalue $+1$. A
+robust approach is to compute
+$\mathbf{S} = \mathbf{R} + \mathbf{I}$ and take the column of $\mathbf{S}$
+with largest norm as $\hat{\boldsymbol{\omega}}$ (after normalization).
+
+\medskip\noindent\textbf{Condition number.}
+The condition number of the logarithm map at angle $\theta$ scales as
+\begin{equation}
+  \kappa(\theta) \approx \frac{\theta}{\sin\theta},
+  \label{eq:log_condition}
+\end{equation}
+which equals $1$ at $\theta = 0$ and diverges as $\theta \to \pi$.
+Consequently, the logarithm is inherently ill-conditioned near half-turns:
+small perturbations in $\mathbf{R}$ can produce large changes in the
+recovered axis.
+
+\begin{laymansbox}{Practical Recommendation}{log_practical}
+  For maximum robustness, use an \texttt{atan2}-based extraction of $\theta$
+  (avoiding the $\arccos$ whose derivative diverges at $\pm 1$) and switch to
+  eigenvector-based axis recovery when $\sin\theta$ drops below a threshold
+  (e.g.\ $10^{-6}$). Modern libraries such as \texttt{scipy.spatial.transform}
+  implement these guards automatically.
+\end{laymansbox}
+
 \section{The Baker-Campbell-Hausdorff Formula}
 \label{sec:bch}
 
@@ -447,6 +506,68 @@ The full BCH formula (for arbitrary elements) is an infinite series:
 \end{equation}
 
 In practice, the first-order approximation is sufficient for small perturbations. A thorough development of the BCH formula and its convergence properties can be found in Hall \cite{hall2015}.
+
+%% ─────────────────────────────────────────────────────────────────────
+%%  BCH: Higher-Order Terms
+%% ─────────────────────────────────────────────────────────────────────
+\subsection{The Baker-Campbell-Hausdorff Formula: Higher-Order Terms}
+\label{sec:bch_higher_order}
+\index{Baker-Campbell-Hausdorff!higher-order terms}
+
+The first-order BCH approximation
+$\log(e^{\mathbf{A}} e^{\mathbf{B}}) \approx \mathbf{A} + \mathbf{B}
+ + \tfrac{1}{2}[\mathbf{A},\mathbf{B}]$
+is adequate when both $\mathbf{A}$ and $\mathbf{B}$ are small. For larger
+rotations the higher-order Lie-bracket terms become significant. The full
+expansion to third order reads \cite{hall2015}:
+
+\begin{theorem}{BCH Formula to Third Order}{bch_third_order}
+  For $\mathbf{A}, \mathbf{B}$ in a Lie algebra $\mathfrak{g}$,
+  \begin{equation}
+    \log\!\bigl(e^{\mathbf{A}} e^{\mathbf{B}}\bigr)
+      = \mathbf{A} + \mathbf{B}
+        + \frac{1}{2}[\mathbf{A},\mathbf{B}]
+        + \frac{1}{12}\bigl(
+            [\mathbf{A},[\mathbf{A},\mathbf{B}]]
+          + [\mathbf{B},[\mathbf{B},\mathbf{A}]]\bigr)
+        + O(\lVert\cdot\rVert^4),
+    \label{eq:bch_third_order}
+  \end{equation}
+  where $[\cdot,\cdot]$ denotes the Lie bracket and the remainder collects
+  terms involving four or more nested brackets.
+\end{theorem}
+
+\noindent\textbf{Convergence.}
+For the rotation group $\SO(3)$, the BCH series converges absolutely whenever
+$\norm{\mathbf{A}}, \norm{\mathbf{B}} < \pi$, i.e.\ whenever both rotation
+angles are less than $180^\circ$. Outside this radius the series may diverge
+because the exponential map on $\SO(3)$ is not globally injective---rotations
+by $\theta$ and $\theta + 2\pi$ are indistinguishable. More precisely, the
+convergence radius is set by the injectivity radius of the exponential map,
+which equals $\pi$ for $\SO(3)$.
+
+\medskip\noindent\textbf{Physical meaning.}
+The BCH formula quantifies how much two sequential rotations about different
+axes \emph{interact}. The first-order bracket term
+$\tfrac{1}{2}[\mathbf{A},\mathbf{B}]$ captures the leading coupling between
+the two rotation axes. The second-order terms
+$\tfrac{1}{12}[\mathbf{A},[\mathbf{A},\mathbf{B}]]$ and
+$\tfrac{1}{12}[\mathbf{B},[\mathbf{B},\mathbf{A}]]$ describe how each
+rotation axis ``precesses'' the other---an effect that grows with the
+magnitude of the rotations.
+
+\begin{principle}{Small-Angle Approximation from BCH}{bch_small_angle}
+  For small angles ($\norm{\mathbf{A}}, \norm{\mathbf{B}} \ll 1$), all
+  bracket terms are negligible and
+  \begin{equation}
+    e^{\mathbf{A}}\,e^{\mathbf{B}} \approx e^{\mathbf{A} + \mathbf{B}}.
+  \end{equation}
+  Rotations therefore ``add like vectors'' in the small-angle regime. For
+  large angles the Lie bracket terms become significant: a $90^\circ$
+  rotation about $x$ followed by a $90^\circ$ rotation about $y$ differs
+  from the reverse order by a $90^\circ$ rotation about $z$---a dramatic
+  non-commutativity fully predicted by the BCH series.
+\end{principle}
 
 \section{Numerical Computation of Matrix Exponentials}
 \label{sec:numerical_exp}
@@ -493,6 +614,100 @@ A \textbf{geodesic} is the shortest path between two points on a curved surface.
   The geodesic distance on $\SO(3)$ is defined by the Riemannian metric inherited from the tangent space. The exponential map is a local isometry, meaning it preserves distances: the Euclidean distance in the tangent space $\so(3)$ equals the geodesic distance on the manifold $\SO(3)$ (at least locally).
 
   A straight line in the tangent space—parameterized by $t \cdot \mathbf{v}$ for a direction $\mathbf{v}$—has minimal length. Exponentiating this line gives the geodesic on the manifold.
+\end{proof}
+
+%% ─────────────────────────────────────────────────────────────────────
+%%  Geodesics on SO(3): Proof via Riemannian Geometry
+%% ─────────────────────────────────────────────────────────────────────
+\subsection{Geodesics on \texorpdfstring{$\SO(3)$}{SO(3)}: Proof via Riemannian Geometry}
+\label{sec:geodesic_riemannian_proof}
+\index{geodesics!Riemannian proof}
+\index{Riemannian metric!SO(3)}
+
+The informal argument above appeals to intuition; we now give a more rigorous
+derivation grounded in Riemannian geometry \cite{marsden1999}.
+
+\begin{definition}{Bi-Invariant Metric on \texorpdfstring{$\SO(3)$}{SO(3)}}{bi_invariant_metric}
+  The \textbf{bi-invariant Riemannian metric} on $\SO(3)$ is defined at the
+  identity by the inner product on $\so(3)$:
+  \begin{equation}
+    \langle \mathbf{A}, \mathbf{B} \rangle
+      = -\frac{1}{2}\operatorname{tr}(\mathbf{A}\mathbf{B}),
+    \qquad \mathbf{A}, \mathbf{B} \in \so(3).
+    \label{eq:bi_invariant_metric}
+  \end{equation}
+  This metric is extended to the entire group by left (or right) translation:
+  for tangent vectors $\mathbf{V}, \mathbf{W}$ at $\mathbf{R} \in \SO(3)$,
+  \begin{equation}
+    \langle \mathbf{V}, \mathbf{W} \rangle_{\mathbf{R}}
+      = -\frac{1}{2}\operatorname{tr}\!\bigl(
+          (\mathbf{R}^{-1}\mathbf{V})(\mathbf{R}^{-1}\mathbf{W})\bigr).
+  \end{equation}
+  The metric is \emph{bi-invariant}: unchanged under both left and right
+  multiplication by any group element.
+\end{definition}
+
+\begin{theorem}{One-Parameter Subgroups Are Geodesics}{geodesic_subgroups}
+  With respect to the bi-invariant metric~\eqref{eq:bi_invariant_metric},
+  the geodesics through the identity $\mathbf{I} \in \SO(3)$ are exactly the
+  one-parameter subgroups
+  \begin{equation}
+    \gamma(t) = e^{t\,[\hat{\boldsymbol{\omega}}]\theta},
+    \qquad [\hat{\boldsymbol{\omega}}]\theta \in \so(3).
+    \label{eq:geodesic_subgroup}
+  \end{equation}
+\end{theorem}
+
+\begin{proof}
+  A curve $\gamma(t)$ on $\SO(3)$ is a geodesic if and only if it satisfies the
+  Euler--Lagrange equation for length-minimizing curves. For a bi-invariant
+  metric this equation reduces to the condition that the \textbf{body velocity}
+  is constant:
+  \begin{equation}
+    \dot{\gamma}(t)\,\gamma(t)^{-1} = \text{const} \in \so(3).
+    \label{eq:geodesic_condition}
+  \end{equation}
+  For the one-parameter subgroup $\gamma(t) = e^{t\mathbf{A}}$ with
+  $\mathbf{A} \in \so(3)$, we compute
+  \begin{equation}
+    \dot{\gamma}(t) = \mathbf{A}\,e^{t\mathbf{A}},
+    \qquad
+    \dot{\gamma}(t)\,\gamma(t)^{-1}
+      = \mathbf{A}\,e^{t\mathbf{A}}\,e^{-t\mathbf{A}}
+      = \mathbf{A},
+  \end{equation}
+  which is manifestly constant. Hence every one-parameter subgroup is a
+  geodesic. Conversely, any solution of~\eqref{eq:geodesic_condition} with
+  $\gamma(0) = \mathbf{I}$ and $\dot{\gamma}(0) = \mathbf{A}$ must satisfy
+  $\gamma(t) = e^{t\mathbf{A}}$ by uniqueness of ODE solutions. Therefore the
+  geodesics through $\mathbf{I}$ are \emph{precisely} the one-parameter
+  subgroups.
+\end{proof}
+
+\begin{theorem}{Geodesic Distance on \texorpdfstring{$\SO(3)$}{SO(3)}}{geodesic_distance}
+  The geodesic distance between two rotations $\mathbf{R}_1, \mathbf{R}_2 \in
+  \SO(3)$ under the bi-invariant metric is
+  \begin{equation}
+    d(\mathbf{R}_1, \mathbf{R}_2)
+      = \norm{\log(\mathbf{R}_1^T \mathbf{R}_2)}
+      = \theta,
+    \label{eq:geodesic_distance}
+  \end{equation}
+  where $\theta \in [0, \pi]$ is the angle of the relative rotation
+  $\mathbf{R}_1^T \mathbf{R}_2$ and the norm is
+  $\norm{\mathbf{A}} = \sqrt{\langle \mathbf{A}, \mathbf{A} \rangle}
+   = \sqrt{-\tfrac{1}{2}\operatorname{tr}(\mathbf{A}^2)}$.
+\end{theorem}
+
+\begin{proof}
+  By left-invariance of the metric, $d(\mathbf{R}_1, \mathbf{R}_2)
+  = d(\mathbf{I}, \mathbf{R}_1^T \mathbf{R}_2)$. The geodesic from
+  $\mathbf{I}$ to $\mathbf{R}_1^T \mathbf{R}_2$ is
+  $\gamma(t) = e^{t\log(\mathbf{R}_1^T \mathbf{R}_2)}$, whose length is
+  $\norm{\log(\mathbf{R}_1^T \mathbf{R}_2)}$. For
+  $\mathbf{A} = [\hat{\boldsymbol{\omega}}]\theta \in \so(3)$, we have
+  $\norm{\mathbf{A}} = \theta$, confirming that the geodesic distance is
+  the rotation angle.
 \end{proof}
 
 \section{SLERP: Spherical Linear Interpolation as Geodesic Interpolation}

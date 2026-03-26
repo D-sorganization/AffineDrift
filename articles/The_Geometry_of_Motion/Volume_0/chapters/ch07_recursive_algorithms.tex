@@ -483,6 +483,176 @@ For an intermediate link $i$ with one child $j$:
 
 This allows the algorithm to compute the joint torques needed not just to move the robot, but to support external loads.
 
+% ------------------------------------------------------------------
+\section{RNEA Equivalence to the Lagrangian Equations}
+\label{sec:rnea_lagrangian_equivalence}
+\index{RNEA!Lagrangian equivalence}
+\index{Lagrangian mechanics!RNEA equivalence}
+% ------------------------------------------------------------------
+
+The Lagrangian formulation of manipulator dynamics writes the joint
+torques as
+\[
+  \boldsymbol{\tau}
+  = \mathbf{M}(\mathbf{q})\,\ddot{\mathbf{q}}
+  + \mathbf{C}(\mathbf{q},\dot{\mathbf{q}})\,\dot{\mathbf{q}}
+  + \mathbf{G}(\mathbf{q}),
+\]
+where $\mathbf{M}$ is the mass matrix, $\mathbf{C}\dot{\mathbf{q}}$
+collects Coriolis and centrifugal terms, and $\mathbf{G}$ is the gravity
+vector.  Computing $\mathbf{M}$ explicitly costs $O(N^3)$; for a
+30-DOF humanoid this is prohibitive at real-time rates.
+
+\begin{theorem}{RNEA Computes the Lagrangian Inverse Dynamics}{rnea_lagrangian}
+Let $\mathrm{RNEA}(\mathbf{q},\dot{\mathbf{q}},\ddot{\mathbf{q}})$
+denote the output of the Recursive Newton--Euler Algorithm\index{RNEA}
+with gravity acceleration included in the base boundary condition.
+Then
+\[
+  \mathrm{RNEA}(\mathbf{q},\dot{\mathbf{q}},\ddot{\mathbf{q}})
+  = \mathbf{M}(\mathbf{q})\,\ddot{\mathbf{q}}
+    + \mathbf{C}(\mathbf{q},\dot{\mathbf{q}})\,\dot{\mathbf{q}}
+    + \mathbf{G}(\mathbf{q}).
+\]
+That is, the RNEA computes
+$\boldsymbol{\tau} = \mathbf{M}\ddot{\mathbf{q}} + \mathbf{C}\dot{\mathbf{q}} + \mathbf{G}$
+without ever assembling $\mathbf{M}$, $\mathbf{C}$, or $\mathbf{G}$
+explicitly.
+\end{theorem}
+
+\textbf{Proof sketch.}
+Because the RNEA is \emph{linear} in $\ddot{\mathbf{q}}$ (the
+acceleration appears only in the outward pass and propagates linearly
+through the inward pass), we can decompose its output via three
+evaluations:
+\begin{enumerate}
+  \item \textbf{Gravity vector.}
+        Set $\dot{\mathbf{q}} = \mathbf{0}$ and
+        $\ddot{\mathbf{q}} = \mathbf{0}$:
+        \[
+          \mathbf{G}(\mathbf{q})
+          = \mathrm{RNEA}(\mathbf{q},\,\mathbf{0},\,\mathbf{0}).
+        \]
+        All velocity-dependent terms vanish; only the gravitational
+        wrench propagates inward.
+
+  \item \textbf{Coriolis and centrifugal terms.}
+        Set $\ddot{\mathbf{q}} = \mathbf{0}$:
+        \[
+          \mathbf{C}(\mathbf{q},\dot{\mathbf{q}})\,\dot{\mathbf{q}}
+          = \mathrm{RNEA}(\mathbf{q},\,\dot{\mathbf{q}},\,\mathbf{0})
+            - \mathbf{G}(\mathbf{q}).
+        \]
+
+  \item \textbf{Inertial torques.}
+        The remainder is the mass-matrix contribution:
+        \[
+          \mathbf{M}(\mathbf{q})\,\ddot{\mathbf{q}}
+          = \mathrm{RNEA}(\mathbf{q},\,\dot{\mathbf{q}},\,\ddot{\mathbf{q}})
+            - \mathbf{C}\dot{\mathbf{q}} - \mathbf{G}.
+        \]
+\end{enumerate}
+
+\textbf{Column-by-column extraction of $\mathbf{M}$.}\index{mass matrix!column extraction}
+Because the RNEA is linear in $\ddot{\mathbf{q}}$, column~$j$ of
+$\mathbf{M}$ can be obtained as
+\[
+  \mathbf{M}(\mathbf{q})\,\mathbf{e}_j
+  = \mathrm{RNEA}(\mathbf{q},\,\mathbf{0},\,\mathbf{e}_j)
+    - \mathbf{G}(\mathbf{q}),
+\]
+where $\mathbf{e}_j$ is the $j$-th standard basis vector.  This gives
+the full $N \times N$ mass matrix in $N+1$ calls to the $O(N)$ RNEA,
+yielding an $O(N^2)$ algorithm for $\mathbf{M}$---the best possible
+without exploiting sparsity~\cite{Featherstone2008}.
+
+\begin{laymansbox}{\texorpdfstring{Why Not Just Build $\mathbf{M}$ Directly?}{Why Not Just Build M Directly?}}{why_not_build_M}
+For a single inverse-dynamics query (``given $\mathbf{q}$,
+$\dot{\mathbf{q}}$, $\ddot{\mathbf{q}}$, what torques are needed?''),
+one RNEA call at $O(N)$ suffices.  Forming the entire mass matrix
+$\mathbf{M}$ and then multiplying $\mathbf{M}\ddot{\mathbf{q}}$ would
+be slower ($O(N^2)$) and wasteful.  The Lagrangian form is primarily
+useful for analysis---stability proofs, passivity arguments---while
+the RNEA is the workhorse for simulation and control~\cite{lynch2017}.
+\end{laymansbox}
+
+% ------------------------------------------------------------------
+\section{Contact Forces and Constraint Handling}
+\label{sec:contact_constraint_handling}
+\index{contact forces}
+\index{constraint handling}
+% ------------------------------------------------------------------
+
+Real robots do not float in free space.  Walking, grasping, and
+assembly all involve contact, and modelling contact correctly is one of
+the hardest problems in robot simulation.
+
+\subsection{Bilateral Constraints}
+\label{sec:bilateral_constraints}
+\index{bilateral constraints}
+
+A \emph{bilateral}\index{constraint!bilateral} constraint removes
+degrees of freedom permanently.  For example, if a foot is bolted to
+the ground, the spatial velocity of that link is zero.  In the RNEA
+framework this amounts to modifying the base boundary condition:
+\[
+  \mathcal{V}_{\text{foot}} = \mathbf{0}, \qquad
+  \dot{\mathcal{V}}_{\text{foot}} = \mathbf{0}.
+\]
+The algorithm then propagates \emph{outward} from the pinned foot
+(which temporarily acts as the base) and the ground reaction wrench
+$\mathcal{F}_{\text{grf}}$ emerges from the inward pass as the
+``joint torque'' at the virtual fixed joint.
+
+\subsection{Unilateral Constraints and Friction}
+\label{sec:unilateral_constraints}
+\index{unilateral constraints}
+\index{Coulomb friction}
+
+Contact with the ground or with objects is \emph{unilateral}: the
+surface can push but not pull.  Denote the contact normal force by
+$f_n$ and the tangential (friction) force by
+$\mathbf{f}_t \in \Reals^2$.  The fundamental constraints are:
+\begin{itemize}
+  \item \textbf{Non-penetration:} the signed gap $\phi \geq 0$.
+  \item \textbf{Compressive normal force:} $f_n \geq 0$ (the ground
+        pushes up, never pulls down).
+  \item \textbf{Complementarity:} $\phi \cdot f_n = 0$ (force is zero
+        when not in contact, gap is zero when in contact).
+  \item \textbf{Coulomb friction cone\index{friction cone}:}
+        $\norm{\mathbf{f}_t} \leq \mu\, f_n$, where $\mu$ is the
+        coefficient of friction.
+\end{itemize}
+
+\begin{definition}{Linear Complementarity Problem (LCP)}{lcp_def}
+\index{Linear Complementarity Problem}
+Given $\mathbf{A} \in \Reals^{k \times k}$ and
+$\mathbf{b} \in \Reals^k$, find $\mathbf{f} \in \Reals^k$ such that
+\[
+  \mathbf{f} \geq \mathbf{0}, \qquad
+  \mathbf{A}\mathbf{f} + \mathbf{b} \geq \mathbf{0}, \qquad
+  \mathbf{f}^T (\mathbf{A}\mathbf{f} + \mathbf{b}) = 0.
+\]
+The matrix $\mathbf{A}$ encodes the coupled dynamics of all contacts;
+$\mathbf{b}$ captures the ``free'' accelerations from the RNEA in the
+absence of contact forces~\cite{Featherstone2008}.
+\end{definition}
+
+Modern physics engines---MuJoCo~\cite{todorov2012}, Bullet, and
+Drake---solve a variant of the LCP (or a convex relaxation of it) at
+every simulation timestep.  The RNEA supplies the $O(N)$ inverse
+dynamics needed to build the LCP data, making the overall cost
+dominated by the number of active contacts, not the number of joints.
+
+\begin{laymansbox}{Why Contact is Hard}{contact_hard_box}
+Contact is the hardest part of robot simulation.  A walking robot must
+solve, at every millisecond: Am I touching the ground?  How hard?  In
+what direction?  Is the foot sliding or stuck?  All of these questions
+couple together---the force depends on the motion, but the motion
+depends on the force---and must be answered simultaneously within one
+simulation timestep.
+\end{laymansbox}
+
 \section{Worked Example: 3-Link Planar Arm}
 \label{sec:example_3link}
 

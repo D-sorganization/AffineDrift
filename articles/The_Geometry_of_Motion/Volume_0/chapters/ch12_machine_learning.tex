@@ -735,6 +735,131 @@ After training, the policy learns to:
 This is a \textbf{learned strategy} that the algorithm discovered from reward signals, not explicit programming.
 
 % ==========================================================================
+\section{Value-Based Methods: DQN and Beyond}
+\label{sec:value_based_methods}
+\index{value-based methods}\index{DQN}\index{Deep Q-Network}
+% ==========================================================================
+
+While policy gradient methods (such as PPO) directly optimize the policy, an alternative family of algorithms learns the \textbf{value} of state-action pairs and derives the policy from these values.
+
+\textbf{Q-Learning.}\index{Q-learning} The classical tabular algorithm maintains a table $Q(s,a)$ and updates it via temporal difference:
+\begin{equation}
+Q(s,a) \leftarrow Q(s,a) + \alpha\bigl[r + \gamma \max_{a'} Q(s', a') - Q(s,a)\bigr]
+\label{eq:q_learning}
+\end{equation}
+where $\alpha$ is the learning rate, $\gamma$ the discount factor, $r$ the reward, and $s'$ the successor state.
+
+\textbf{Deep Q-Networks (DQN).}\index{DQN} For high-dimensional state spaces, $Q$ is approximated by a neural network $Q(s,a;\boldsymbol{\theta})$ \cite{sutton2018}. Two key innovations stabilize training:
+\begin{itemize}
+    \item \textbf{Experience replay}\index{experience replay}: transitions $(s,a,r,s')$ are stored in a buffer and sampled uniformly for mini-batch updates, breaking temporal correlations.
+    \item \textbf{Target network}\index{target network}: a slowly-updated copy $Q(s,a;\boldsymbol{\theta}^-)$ provides stable targets, preventing oscillation.
+\end{itemize}
+
+The loss function is:
+\begin{equation}
+L(\boldsymbol{\theta}) = \mathbb{E}_{(s,a,r,s') \sim \mathcal{D}}\Bigl[\bigl(r + \gamma \max_{a'} Q(s', a'; \boldsymbol{\theta}^-) - Q(s, a; \boldsymbol{\theta})\bigr)^2\Bigr]
+\label{eq:dqn_loss}
+\end{equation}
+
+\textbf{Continuous Actions: DDPG.}\index{DDPG}\index{Deep Deterministic Policy Gradient} DQN requires a discrete $\max_{a'}$ operation, which is intractable for continuous action spaces (e.g., joint torques). \textbf{Deep Deterministic Policy Gradient} (DDPG) resolves this by maintaining a separate \textbf{actor} $\mu(s;\boldsymbol{\theta}^\mu)$ that directly outputs the action maximizing $Q$:
+\begin{equation}
+\nabla_{\boldsymbol{\theta}^\mu} J = \mathbb{E}_s\Bigl[\nabla_a Q(s, a; \boldsymbol{\theta}^Q)\big|_{a=\mu(s)} \cdot \nabla_{\boldsymbol{\theta}^\mu} \mu(s;\boldsymbol{\theta}^\mu)\Bigr]
+\label{eq:ddpg_gradient}
+\end{equation}
+
+\textbf{TD3: Twin Delayed DDPG.}\index{TD3} DDPG suffers from overestimation bias (the $\max$ operation systematically inflates $Q$-values). TD3 addresses this with:
+\begin{enumerate}
+    \item \textbf{Twin critics}: two independent $Q$-networks; the minimum of the two is used as the target.
+    \item \textbf{Delayed policy updates}: the actor is updated less frequently than the critics.
+    \item \textbf{Target policy smoothing}: noise is added to the target action to prevent exploitation of $Q$-function errors.
+\end{enumerate}
+
+\textbf{SAC: Soft Actor-Critic.}\index{SAC}\index{Soft Actor-Critic}\index{maximum entropy} SAC incorporates an entropy bonus into the objective, encouraging exploration:
+\begin{equation}
+J(\pi) = \mathbb{E}\!\left[\sum_{t=0}^{\infty} \gamma^t \bigl(r_t + \alpha\,\mathcal{H}(\pi(\cdot|s_t))\bigr)\right]
+\label{eq:sac_objective}
+\end{equation}
+where $\mathcal{H}(\pi(\cdot|s_t)) = -\mathbb{E}_{a \sim \pi}[\log \pi(a|s_t)]$ is the entropy of the policy. The temperature $\alpha$ can be automatically tuned.
+
+\begin{center}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Algorithm} & \textbf{Sample Efficiency} & \textbf{Stability} & \textbf{Action Space} \\
+\hline
+DQN & Moderate & Moderate & Discrete only \\
+DDPG & High & Low & Continuous \\
+TD3 & High & Moderate & Continuous \\
+SAC & High & High & Continuous \\
+PPO & Low & High & Both \\
+\hline
+\end{tabular}
+\end{center}
+
+% ==========================================================================
+\section{Structure-Preserving Neural Networks}
+\label{sec:structure_preserving_nn}
+\index{structure-preserving neural networks}
+% ==========================================================================
+
+Standard neural networks used as dynamics models $\dot{\mathbf{x}} = f_{\boldsymbol{\theta}}(\mathbf{x})$ make no guarantees about conserving physical invariants such as energy or momentum. \textbf{Structure-preserving neural networks} embed physical laws directly into the network architecture.
+
+\textbf{Hamiltonian Neural Networks (HNN).}\index{Hamiltonian Neural Network}\index{HNN} An HNN learns a scalar function $H_{\boldsymbol{\theta}}(\mathbf{q}, \mathbf{p})$ and derives the dynamics via Hamilton's equations:
+\begin{align}
+\dot{\mathbf{q}} &= \frac{\partial H_{\boldsymbol{\theta}}}{\partial \mathbf{p}}, &
+\dot{\mathbf{p}} &= -\frac{\partial H_{\boldsymbol{\theta}}}{\partial \mathbf{q}}
+\label{eq:hnn_dynamics}
+\end{align}
+
+Because the dynamics are generated by a Hamiltonian, the learned system \emph{automatically conserves energy by construction}---the time derivative $\frac{dH}{dt} = \frac{\partial H}{\partial \mathbf{q}}\dot{\mathbf{q}} + \frac{\partial H}{\partial \mathbf{p}}\dot{\mathbf{p}} = 0$ vanishes identically.
+
+\textbf{Lagrangian Neural Networks (LNN).}\index{Lagrangian Neural Network}\index{LNN} An LNN learns a Lagrangian $\mathcal{L}_{\boldsymbol{\theta}}(\mathbf{q}, \dot{\mathbf{q}})$ and derives the equations of motion through the Euler-Lagrange equations via automatic differentiation \cite{goodfellow2016}:
+\begin{equation}
+\frac{d}{dt}\frac{\partial \mathcal{L}_{\boldsymbol{\theta}}}{\partial \dot{\mathbf{q}}} - \frac{\partial \mathcal{L}_{\boldsymbol{\theta}}}{\partial \mathbf{q}} = \boldsymbol{\tau}
+\label{eq:lnn_euler_lagrange}
+\end{equation}
+
+Expanding the time derivative yields the familiar manipulator equation $\mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})\dot{\mathbf{q}} + \mathbf{G}(\mathbf{q}) = \boldsymbol{\tau}$, where $\mathbf{M}$, $\mathbf{C}$, and $\mathbf{G}$ are implicitly defined by $\mathcal{L}_{\boldsymbol{\theta}}$.
+
+\begin{laymansbox}{From Analytical to Learned Lagrangians}{learned_lagrangian}
+The Lagrangian structure we derived analytically in Chapter 11 can be \emph{learned from data} when the analytical model is unavailable. This is especially valuable for systems with complex geometry, friction, or flexible components where first-principles modeling is prohibitively difficult.
+\end{laymansbox}
+
+\textbf{Deep Lagrangian Networks (DeLaN).}\index{Deep Lagrangian Networks}\index{DeLaN} DeLaN parameterizes the mass matrix as a neural network $\mathbf{M}_{\boldsymbol{\theta}}(\mathbf{q})$ constrained to be symmetric positive definite via Cholesky decomposition\index{Cholesky decomposition}:
+\begin{equation}
+\mathbf{M}_{\boldsymbol{\theta}}(\mathbf{q}) = \mathbf{L}_{\boldsymbol{\theta}}(\mathbf{q})\,\mathbf{L}_{\boldsymbol{\theta}}(\mathbf{q})^\top + \epsilon\,\mathbf{I}
+\label{eq:delan_mass}
+\end{equation}
+where $\mathbf{L}_{\boldsymbol{\theta}}$ is a lower-triangular matrix output by the network and $\epsilon > 0$ ensures strict positive definiteness. The potential energy $V_{\boldsymbol{\theta}}(\mathbf{q})$ is learned by a separate network. Together, the Lagrangian is $\mathcal{L} = \frac{1}{2}\dot{\mathbf{q}}^\top \mathbf{M}_{\boldsymbol{\theta}}(\mathbf{q})\,\dot{\mathbf{q}} - V_{\boldsymbol{\theta}}(\mathbf{q})$, and the equations of motion are obtained by differentiating through the Euler-Lagrange equations using automatic differentiation \cite{sutton2018, goodfellow2016}.
+
+% ==========================================================================
+\subsection{Exploration Strategies}
+\label{sec:exploration_strategies}
+\index{exploration strategies}
+% ==========================================================================
+
+A central challenge in reinforcement learning is the \textbf{exploration-exploitation tradeoff}\index{exploration-exploitation tradeoff}: the agent must try new actions to discover better strategies while also exploiting known good actions to accumulate reward.
+
+\textbf{Epsilon-Greedy.}\index{epsilon-greedy} The simplest strategy: with probability $\epsilon$ take a uniformly random action, otherwise take the greedy action $a^* = \arg\max_a Q(s,a)$. Typically $\epsilon$ is annealed from a high value (e.g., 1.0) to a small value (e.g., 0.01) over the course of training.
+
+\textbf{Entropy Regularization.}\index{entropy regularization} Rather than injecting random noise externally, SAC adds an entropy term directly to the objective:
+\begin{equation}
+J(\pi) = \mathbb{E}\!\left[\sum_t r_t + \alpha\,\mathcal{H}(\pi(\cdot|s_t))\right]
+\label{eq:entropy_exploration}
+\end{equation}
+This encourages the policy to remain stochastic in proportion to $\alpha$, providing structured exploration that is more sample-efficient than random noise.
+
+\textbf{Curiosity-Driven Exploration.}\index{curiosity-driven exploration} The agent receives an \textbf{intrinsic reward}\index{intrinsic reward} proportional to the prediction error of a learned forward model:
+\begin{equation}
+r^{\text{intrinsic}}_t = \norm{\hat{s}_{t+1} - s_{t+1}}^2
+\label{eq:curiosity_reward}
+\end{equation}
+where $\hat{s}_{t+1}$ is the model's prediction of the next state. Novel states produce high prediction error and thus high reward, driving the agent toward unexplored regions of the state space.
+
+\begin{laymansbox}{Why Exploration Is Critical for Robotics}{exploration_robotics}
+Real robots are expensive to operate and can be damaged by unsafe actions. Sample-efficient exploration is therefore essential: every interaction with the physical world must yield maximum information. Safe exploration---avoiding damage while learning---is an active research area combining reinforcement learning with control-theoretic safety constraints such as control barrier functions and Lyapunov stability.
+\end{laymansbox}
+
+% ==========================================================================
 \section{Python Worked Example: Backpropagation from Scratch}
 % ==========================================================================
 
