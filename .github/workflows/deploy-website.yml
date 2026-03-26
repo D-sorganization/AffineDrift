@@ -34,9 +34,6 @@ jobs:
       - name: Install Python dependencies
         run: pip install -r requirements.txt
 
-      - name: Sync frontend assets
-        run: python3 scripts/sync_frontend_assets.py
-
       - name: Verify Quarto Render Coverage
         run: python3 scripts/check_quarto_render_coverage.py
 
@@ -86,6 +83,9 @@ jobs:
           to: html
 
       - name: Verify frontend asset sync
+        # docs/css/ and docs/js/ are populated by Quarto render above.
+        # Running --check here validates that canonical sources match their
+        # generated mirrors — any genuine drift will correctly fail the build.
         run: python3 scripts/sync_frontend_assets.py --check
 
       - name: Post-build Health Check

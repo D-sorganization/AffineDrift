@@ -129,6 +129,35 @@ class MATLABQualityChecker:
             logger.error(f"Error running MATLAB quality checks: {e}")
             return {"error": str(e)}
 
+    def _build_matlab_commands(self, script_path: Path) -> list[list[str]]:
+        """Return ordered list of MATLAB/Octave commands to attempt."""
+        return [
+            ["matlab", "-batch", f"run('{script_path}')"],
+            ["matlab", "-nosplash", "-nodesktop", "-batch", f"run('{script_path}')"],
+            ["octave", "--no-gui", "--eval", f"run('{script_path}')"],
+        ]
+
+    def _try_matlab_command(self, cmd: list[str]) -> dict[str, object] | None:
+        """Try a single MATLAB command. Returns result dict on success, None on failure."""
+        try:
+            logger.info(f"Trying command: {' '.join(cmd)}")
+            result = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                cwd=self.matlab_dir,
+                timeout=MATLAB_SCRIPT_TIMEOUT_SECONDS,
+                check=False,
+            )
+            if result.returncode == 0:
+                logger.info("MATLAB quality checks completed successfully")
+                return {"success": True, "output": result.stdout, "method": "matlab_script"}
+            logger.warning(f"Command failed with return code {result.returncode}")
+            logger.debug(f"stderr: {result.stderr}")
+            return None
+        except (subprocess.TimeoutExpired, FileNotFoundError):
+            return None
+
     def _run_matlab_script(self, script_path: Path) -> dict[str, object]:
         """Attempt to run MATLAB script from command line.
 
@@ -139,51 +168,12 @@ class MATLABQualityChecker:
             Dictionary containing script results
         """
         try:
-            # Try different ways to run MATLAB
-            commands = [
-                ["matlab", "-batch", f"run('{script_path}')"],
-                [
-                    "matlab",
-                    "-nosplash",
-                    "-nodesktop",
-                    "-batch",
-                    f"run('{script_path}')",
-                ],
-                ["octave", "--no-gui", "--eval", f"run('{script_path}')"],
-            ]
-
-            for cmd in commands:
-                try:
-                    logger.info(f"Trying command: {' '.join(cmd)}")
-                    result = subprocess.run(
-                        cmd,
-                        capture_output=True,
-                        text=True,
-                        cwd=self.matlab_dir,
-                        timeout=MATLAB_SCRIPT_TIMEOUT_SECONDS,
-                        check=False,
-                    )
-
-                    if result.returncode == 0:
-                        logger.info("MATLAB quality checks completed successfully")
-                        return {
-                            "success": True,
-                            "output": result.stdout,
-                            "method": "matlab_script",
-                        }
-                    else:
-                        logger.warning(
-                            f"Command failed with return code {result.returncode}",
-                        )
-                        logger.debug(f"stderr: {result.stderr}")
-
-                except (subprocess.TimeoutExpired, FileNotFoundError):
-                    continue
-
-            # If all commands fail, fall back to static analysis
+            for cmd in self._build_matlab_commands(script_path):
+                result = self._try_matlab_command(cmd)
+                if result is not None:
+                    return result
             logger.info("All MATLAB commands failed, falling back to static analysis")
             return self._static_matlab_analysis()
-
         except (FileNotFoundError, PermissionError, OSError, UnicodeDecodeError) as e:
             logger.error(f"Error running MATLAB script: {e}")
             return {"error": str(e)}
@@ -268,6 +258,33 @@ class MATLABQualityChecker:
         return self.results
 
 
+def _print_text_results(results: dict[str, object]) -> None:
+    """Print MATLAB quality check results in human-readable text format.
+
+    Logs a formatted summary including timestamp, file count, pass/fail status,
+    summary message, and an enumerated list of any issues found.
+
+    Args:
+        results: Results dictionary as returned by ``MATLABQualityChecker.run_all_checks``.
+    """
+    logger.info("\n" + "=" * 60)
+    logger.info("MATLAB QUALITY CHECK RESULTS")
+    logger.info("=" * 60)
+    logger.info(f"Timestamp: {results.get('timestamp', 'N/A')}")
+    logger.info(f"Total Files: {results.get('total_files', 0)}")
+    logger.info(f"Status: {'PASSED' if results.get('passed', False) else 'FAILED'}")
+    logger.info(f"Summary: {results.get('summary', 'N/A')}")
+
+    issues_raw = results.get("issues", [])
+    issues: list[str] = issues_raw if isinstance(issues_raw, list) else []
+    if issues:
+        logger.info(f"\nIssues Found ({len(issues)}):")
+        for i, issue in enumerate(issues, 1):
+            logger.info(f"  {i}. {issue}")
+
+    logger.info("\n" + "=" * 60)
+
+
 def main() -> None:
     """Main entry point for the MATLAB quality check script."""
     parser = argparse.ArgumentParser(description="MATLAB Code Quality Checker")
@@ -287,45 +304,21 @@ def main() -> None:
 
     args = parser.parse_args()
 
-    # Get project root
     project_root = Path(args.project_root).resolve()
     if not project_root.exists():
         logger.error(f"Project root does not exist: {project_root}")
         sys.exit(1)
 
-    # Initialize and run quality checks
     checker = MATLABQualityChecker(project_root)
     results = checker.run_all_checks()
 
-    # Output results
     if args.output_format == "json":
         logger.info(json.dumps(results, indent=2, default=str))
     else:
-        logger.info("\n" + "=" * 60)
-        logger.info("MATLAB QUALITY CHECK RESULTS")
-        logger.info("=" * 60)
-        logger.info(f"Timestamp: {results.get('timestamp', 'N/A')}")
-        logger.info(f"Total Files: {results.get('total_files', 0)}")
-        logger.info(
-            f"Status: {'PASSED' if results.get('passed', False) else 'FAILED'}",
-        )
-        logger.info(f"Summary: {results.get('summary', 'N/A')}")
+        _print_text_results(results)
 
-        issues_raw = results.get("issues", [])
-        issues: list[str] = issues_raw if isinstance(issues_raw, list) else []
-        if issues:
-            logger.info(f"\nIssues Found ({len(issues)}):")
-            for i, issue in enumerate(issues, 1):
-                logger.info(f"  {i}. {issue}")
-
-        logger.info("\n" + "=" * 60)
-
-    # Exit with appropriate code
-    # In strict mode, fail if any issues are found; otherwise fail only if checks didn't pass
     passed = results.get("passed", False)
     has_issues = bool(results.get("issues"))
-
-    # Strict mode: fail if any issues found; normal: fail only if checks didn't pass
     exit_code = (0 if (passed and not has_issues) else 1) if args.strict else (0 if passed else 1)
 
     sys.exit(exit_code)

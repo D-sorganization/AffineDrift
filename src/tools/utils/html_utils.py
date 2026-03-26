@@ -168,6 +168,29 @@ def fix_relative_paths(template: str, depth: int = 1) -> str:
     return template
 
 
+def _apply_template_transforms(
+    template: str,
+    title: str,
+    description: str,
+    body_html: str,
+    page_type: str,
+    fix_paths: bool,
+    path_depth: int,
+) -> str:
+    """Apply all template transformation steps in sequence.
+
+    Returns the fully transformed template string.
+    """
+    template = update_metadata(template, title, description)
+    if fix_paths:
+        template = fix_relative_paths(template, path_depth)
+    template = update_title_block(template, title, description)
+    template = replace_content_section(template, body_html)
+    if page_type != "articles":
+        template = remove_articles_scripts(template)
+    return template
+
+
 def create_html_page(
     title: str,
     description: str,
@@ -179,9 +202,6 @@ def create_html_page(
     path_depth: int = 1,
 ) -> bool:
     """Create a complete HTML page from a template.
-
-    This is the main function for generating HTML pages from templates.
-    It handles metadata updates, content replacement, and path fixes.
 
     Args:
         title: Page title.
@@ -195,44 +215,14 @@ def create_html_page(
 
     Returns:
         True if successful, False otherwise.
-
-    Example:
-        success = create_html_page(
-            title="My Article",
-            description="A great article",
-            body_html="<p>Content</p>",
-            output_file=Path("docs/articles/my-article.html"),
-            template_content=template,
-            page_type="articles",
-            fix_paths=True,
-            path_depth=1,
-        )
     """
     require(len(title) > 0, "page title must not be empty")
     require(output_file is not None, "output_file must not be None")
     if not template_content:
         return False
-
-    template = template_content
-
-    # Update metadata
-    template = update_metadata(template, title, description)
-
-    # Fix paths if needed (for subdirectory pages)
-    if fix_paths:
-        template = fix_relative_paths(template, path_depth)
-
-    # Update visible title and description
-    template = update_title_block(template, title, description)
-
-    # Replace main content
-    template = replace_content_section(template, body_html)
-
-    # Remove articles-specific scripts for non-articles pages
-    if page_type != "articles":
-        template = remove_articles_scripts(template)
-
-    # Write output
+    template = _apply_template_transforms(
+        template_content, title, description, body_html, page_type, fix_paths, path_depth
+    )
     output_file.parent.mkdir(parents=True, exist_ok=True)
     output_file.write_text(template)
     return True

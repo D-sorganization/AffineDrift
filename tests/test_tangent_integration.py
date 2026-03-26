@@ -102,11 +102,15 @@ class TestResidualMonitorPipeline:
     """Test the full residual monitoring workflow."""
 
     def test_monitor_transitions_on_large_residuals(self) -> None:
-        """Monitor should transition to MPC_FULL through MPC_WARN on large residuals."""
+        """Monitor should transition to MPC_FULL when residuals exceed threshold.
+
+        With the three-state machine (LQR -> MPC_WARN -> MPC_FULL), reaching MPC_FULL
+        requires 2 * n_hysteresis critical-residual updates.
+        """
         monitor = ResidualMonitor(eps_warning=0.1, eps_critical=0.5, n_hysteresis=3)
         seen_warning = False
 
-        # Feed large residuals
+        # Feed large residuals: 6 = 2 * n_hysteresis to reach MPC_FULL
         for _ in range(6):
             mode, r_est = monitor.update(
                 x_meas=np.array([1.0, 0.0]),
@@ -119,10 +123,14 @@ class TestResidualMonitorPipeline:
         assert seen_warning
 
     def test_monitor_returns_to_lqr_on_small_residuals(self) -> None:
-        """Monitor should return to LQR when residuals drop below warning threshold."""
+        """Monitor should return to LQR when residuals drop below warning threshold.
+
+        With the three-state machine, recovery follows MPC_FULL -> MPC_WARN -> LQR,
+        each requiring n_hysteresis low-residual updates.
+        """
         monitor = ResidualMonitor(eps_warning=0.1, eps_critical=0.5, n_hysteresis=2)
 
-        # First drive to MPC_FULL
+        # Drive to MPC_FULL: requires 2 * n_hysteresis = 4 critical updates
         for _ in range(4):
             monitor.update(
                 x_meas=np.array([1.0, 0.0]),
@@ -130,7 +138,7 @@ class TestResidualMonitorPipeline:
             )
         assert monitor.mode == "MPC_FULL"
 
-        # Now feed small residuals
+        # Recover to LQR: requires 2 * n_hysteresis = 4 low-residual updates
         for _ in range(4):
             mode, r_est = monitor.update(
                 x_meas=np.array([0.01, 0.0]),

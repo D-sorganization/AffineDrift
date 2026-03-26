@@ -112,6 +112,22 @@ class TestReadQmdWithFrontmatter:
         with pytest.raises((ContractViolationError, TypeError, AttributeError)):
             read_qmd_with_frontmatter(None)  # type: ignore[arg-type]
 
+    def test_falls_back_to_empty_dict_on_value_error(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """read_qmd_with_frontmatter falls back to {} when parse_frontmatter_dict raises."""
+        from unittest.mock import patch
+
+        qmd = tmp_path / "test.qmd"
+        qmd.write_text("---\ntitle: Test\n---\ncontent", encoding="utf-8")
+        with patch(
+            "src.tools.utils.content_utils.parse_frontmatter_dict",
+            side_effect=ValueError("test"),
+        ):
+            content, fm = read_qmd_with_frontmatter(qmd)
+        assert isinstance(fm, dict)
+        assert fm == {}
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 # file_utils tests
