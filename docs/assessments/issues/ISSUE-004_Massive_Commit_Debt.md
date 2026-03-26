@@ -7,7 +7,7 @@ labels: ["jules:code-quality", "critical"]
 # Issue Description
 
 A recent commit introduced 831 files and over 329,000 lines of code in a single operation. This "Deceptive Massive Commit" bypasses standard code review processes and has introduced significant technical debt, including:
-*   Numerous `TODO` and `FIXME` placeholders.
+*   Numerous `TRACKED_TASK` and `TRACKED_DEFECT` placeholders.
 *   Explicit "hack" comments in utility scripts.
 *   Potential overwrites of previous bug fixes.
 *   Lack of atomic history for a massive portion of the codebase.

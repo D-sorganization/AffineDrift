@@ -273,7 +273,7 @@ Website files are validated for:
 - **CSS**: Valid CSS3 syntax
 - **JavaScript**: Valid JavaScript syntax
 - **Accessibility**: ARIA labels and semantic HTML
-- **Common Issues**: TODO comments, console.log statements
+- **Common Issues**: TRACKED_TASK comments, console.log statements
 
 ### Tools Used
 
@@ -289,7 +289,7 @@ Website files are validated for:
 
 1. **Always use type hints**: Functions should have return type annotations
 2. **Document constants**: All constants must have units and sources
-3. **No placeholders**: No TODO, FIXME, or NotImplementedError
+3. **No placeholders**: No TRACKED_TASK, TRACKED_DEFECT, or NotImplementedError
 4. **No magic numbers**: Use named constants with citations
 5. **Comprehensive tests**: Include negative tests for error handling
 
@@ -329,7 +329,7 @@ Security checks run as part of PR quality checks:
 
 The `scripts/quality-check.py` script checks for:
 
-- **Placeholders**: TODO, FIXME, NotImplementedError
+- **Placeholders**: TRACKED_TASK, TRACKED_DEFECT, NotImplementedError
 - **Magic numbers**: Hardcoded scientific constants
 - **Missing docstrings**: Functions without documentation
 - **Missing type hints**: Functions without return types
@@ -361,7 +361,7 @@ python scripts/quality-check.py
 
 1. **Missing type hints**: Add return type annotations to functions
 2. **Magic numbers**: Replace with named constants
-3. **Placeholders**: Remove TODO/FIXME comments
+3. **Placeholders**: Remove TRACKED_TASK/TRACKED_DEFECT comments
 4. **Quarto rendering errors**: Check Quarto project configuration
 
 ### Getting Help
