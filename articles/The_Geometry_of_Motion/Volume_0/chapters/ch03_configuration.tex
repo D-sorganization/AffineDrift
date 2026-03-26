@@ -588,6 +588,58 @@ For a 2-link arm with $L_1 = L_2 = 1$:
 \end{itemize}
 
 % ==========================================================================
+\section{The Frobenius Theorem and Integrability}
+\label{sec:frobenius}
+\index{Frobenius theorem}
+\index{integrability}
+\index{distribution!smooth}
+
+A central question in constraint analysis is: \emph{when does a velocity constraint actually reduce the reachable configuration space?} The answer lies in the \textbf{Frobenius Theorem}\index{Frobenius theorem}, which provides an algebraic test for \emph{integrability} of a set of velocity constraints.
+
+\begin{definition}{Smooth Distribution}{smooth_distribution}
+A \emph{smooth distribution}\index{distribution!smooth} $\Delta$ on a manifold $\mathcal{Q}$ assigns to each point $\mathbf{q} \in \mathcal{Q}$ a linear subspace $\Delta(\mathbf{q}) \subseteq T_{\mathbf{q}}\mathcal{Q}$ of the tangent space. If $\dim \Delta(\mathbf{q}) = k$ for all $\mathbf{q}$, the distribution has \emph{rank} $k$. A distribution is \emph{integrable} if there exists a foliation of $\mathcal{Q}$ into $k$-dimensional submanifolds (leaves) whose tangent spaces coincide with $\Delta$.
+\end{definition}
+
+Intuitively, a distribution collects the ``allowed velocity directions'' at every configuration. If the distribution is integrable, those allowed velocities confine the system to a lower-dimensional surface---the constraint genuinely eliminates degrees of freedom. If the distribution is \emph{not} integrable, the system can eventually reach any configuration despite the instantaneous velocity restriction.
+
+\begin{theorem}{Frobenius Theorem}{frobenius}
+A smooth distribution $\Delta$ is integrable if and only if it is \emph{involutive}: for every pair of smooth vector fields $X, Y$ belonging to $\Delta$, their Lie bracket\index{Lie bracket} also belongs to $\Delta$:
+\begin{equation}
+\label{eq:frobenius_condition}
+X, Y \in \Delta \quad \Longrightarrow \quad [X, Y] \in \Delta.
+\end{equation}
+\end{theorem}
+
+When the Frobenius condition \emph{fails}---that is, when there exist vector fields $X, Y \in \Delta$ whose Lie bracket $[X,Y] \notin \Delta$---the distribution is non-integrable. In mechanical terms, this means the velocity constraint is genuinely \textbf{non-holonomic}\index{non-holonomic constraint}: it restricts instantaneous motion but does \emph{not} reduce the reachable set of configurations.
+
+\begin{example}{The Car: A Non-Integrable Constraint}{car_frobenius}
+Consider a car on the plane with configuration $\mathbf{q} = (x, y, \theta) \in \Reals^2 \times S^1$. The no-lateral-slip constraint is:
+\begin{equation}
+\label{eq:car_constraint_frobenius}
+\dot{y}\cos\theta - \dot{x}\sin\theta = 0.
+\end{equation}
+This defines a rank-2 distribution $\Delta$ spanned by the vector fields:
+\begin{equation}
+X_1 = \cos\theta\,\frac{\partial}{\partial x} + \sin\theta\,\frac{\partial}{\partial y}, \qquad X_2 = \frac{\partial}{\partial \theta}.
+\end{equation}
+Computing the Lie bracket:
+\begin{equation}
+[X_1, X_2] = -\sin\theta\,\frac{\partial}{\partial x} + \cos\theta\,\frac{\partial}{\partial y}.
+\end{equation}
+Since $[X_1, X_2]$ is \emph{not} a linear combination of $X_1$ and $X_2$, the Frobenius condition fails. Therefore the constraint is \textbf{non-integrable}: despite the velocity restriction, the car can reach \emph{any} configuration $(x, y, \theta)$ in $\Reals^2 \times S^1$.
+\end{example}
+
+\begin{example}{A Rigid Rod: An Integrable Constraint}{rod_frobenius}
+Consider two particles in $\Reals^3$ connected by a rigid rod of length $L$. The constraint $\norm{\mathbf{r}_1 - \mathbf{r}_2}^2 = L^2$ depends only on positions (not velocities). Differentiating yields a velocity constraint, but this velocity constraint \emph{is} integrable---the original position-level equation defines a submanifold of the full configuration space. The Frobenius condition is satisfied, and the constraint permanently reduces the DOF from 6 to 5.
+\end{example}
+
+\begin{laymansbox}{Parallel Parking and Reachability}{laymans_frobenius}
+A car can parallel park into any spot despite only being able to drive forward/backward and turn---non-holonomic constraints restrict velocity but not reachability. The Frobenius theorem makes this precise: because the car's velocity constraint is non-integrable, repeated manoeuvres (sequences of steering and driving) generate motion in \emph{every} direction of configuration space. This is why parallel parking works, even though you cannot slide the car sideways.
+\end{laymansbox}
+
+The Frobenius theorem thus provides the rigorous dividing line between constraints that reduce configuration space dimension (holonomic, integrable) and those that merely shape the geometry of feasible paths (non-holonomic, non-integrable). For a comprehensive treatment, see \cite{Murray1994} Chapter~8 and \cite{BulloLewis2004}.
+
+% ==========================================================================
 \section{Holonomic and Non-Holonomic Constraints}
 \label{sec:constraints}
 

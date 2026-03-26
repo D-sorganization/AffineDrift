@@ -614,6 +614,79 @@ Substitute into the output equation:
 
 **Conversion from transfer function to state space** is not unique—there are many valid state representations. The most common choice is the controllable canonical form (the companion matrix form from Section~\ref{sec:ode_conversion}).
 
+% ==================================================================
+%  Section: Discrete-Time State Space
+% ==================================================================
+
+\subsection{Discrete-Time State Space}
+\label{sec:discrete_time}
+
+\index{discrete-time systems}
+Every modern robot controller is implemented on a digital processor that
+reads sensors and writes actuator commands at a fixed sample rate
+$f_s=1/T_s$.  Between samples the controller holds its output constant
+(zero-order hold).  We therefore need a \emph{discrete-time} counterpart
+of the continuous state-space model.
+
+\begin{definition}{\texorpdfstring{Discrete-Time State-Space Model}{Discrete-Time State-Space Model}}{discrete_ss}
+A linear discrete-time system is
+\begin{align}
+  \label{eq:discrete_state}
+  \mathbf{x}[k+1] &= \mathbf{A}_d\,\mathbf{x}[k]
+                     + \mathbf{B}_d\,\mathbf{u}[k], \\
+  \mathbf{y}[k]   &= \mathbf{C}\,\mathbf{x}[k]
+                     + \mathbf{D}\,\mathbf{u}[k],
+\end{align}
+where $k\in\{0,1,2,\ldots\}$ indexes the sample instants
+$t_k = k\,T_s$.
+\end{definition}
+
+\paragraph{Exact discretization (zero-order hold).}
+\index{zero-order hold}
+Given the continuous system $\dot{\mathbf{x}}=\mathbf{A}\mathbf{x}
++\mathbf{B}\mathbf{u}$ and a sampling period $T_s$, the exact
+discrete-time matrices are
+\begin{align}
+  \label{eq:exact_discretization}
+  \mathbf{A}_d &= e^{\mathbf{A}\,T_s}, &
+  \mathbf{B}_d &= \int_{0}^{T_s} e^{\mathbf{A}\,\tau}\,\mathbf{B}
+                  \;\dd\tau
+               = \mathbf{A}^{-1}\!\bigl(e^{\mathbf{A}\,T_s}
+                 - \mathbf{I}\bigr)\mathbf{B},
+\end{align}
+where the closed-form expression for $\mathbf{B}_d$ holds when
+$\mathbf{A}$ is invertible.  The matrix exponential
+$e^{\mathbf{A}\,T_s}$ connects directly to
+Theorem~\ref{thm:matrix_exponential_solution}: the free response
+over one sample period is simply propagated by $\mathbf{A}_d$.
+
+\begin{theorem}{Discrete-Time Stability Criterion}{discrete_stability}
+\index{stability!discrete-time}
+The equilibrium $\mathbf{x}^{*}=\mathbf{0}$ of the autonomous
+discrete-time system $\mathbf{x}[k+1]=\mathbf{A}_d\,\mathbf{x}[k]$ is
+asymptotically stable if and only if every eigenvalue of $\mathbf{A}_d$
+lies strictly inside the unit circle:
+\begin{equation}
+  \label{eq:discrete_stability}
+  |\lambda_i(\mathbf{A}_d)| < 1 \quad \forall\; i.
+\end{equation}
+This is the discrete analogue of requiring all eigenvalues of
+$\mathbf{A}$ to have negative real parts in continuous time
+(Theorem~\ref{thm:stability_classification}).
+\end{theorem}
+
+\begin{laymansbox}{All Robot Controllers Are Discrete}{discrete_practical}
+All modern robot controllers run in discrete time at sample rates of
+1--10\,kHz.  The continuous-time model $\dot{\mathbf{x}}=\mathbf{A}
+\mathbf{x}+\mathbf{B}\mathbf{u}$ is the physicist's description of
+reality; the discrete-time model
+$\mathbf{x}[k{+}1]=\mathbf{A}_d\mathbf{x}[k]+\mathbf{B}_d
+\mathbf{u}[k]$ is what actually executes on the real-time processor.
+A control design that ignores this distinction---for example, by using
+too low a sample rate so that eigenvalues migrate outside the unit
+circle---will destabilise an otherwise stable system.
+\end{laymansbox}
+
 \section{Nonlinear Systems and Phase Portraits}
 \label{sec:nonlinear_phase}
 
@@ -724,6 +797,133 @@ For any equilibrium point $\mathbf{x}^*$:
 \textbf{9. Observability (Dual of Controllability):} The system is observable iff $\text{rank}([\mathbf{C}^T, \mathbf{A}^T\mathbf{C}^T, \ldots, (\mathbf{A}^T)^{n-1}\mathbf{C}^T]^T) = n$. If not observable, some state variables cannot be inferred from measurements.
 
 \textbf{10. Duality:} A system is controllable iff its dual (with $\mathbf{A}^T$, $\mathbf{C}^T$, $\mathbf{B}^T$) is observable. This duality underpins Kalman filter design.
+\end{principle}
+
+% ==================================================================
+%  Section: Lyapunov Stability Theory
+% ==================================================================
+
+\section{Lyapunov Stability Theory}
+\label{sec:lyapunov}
+
+\index{Lyapunov stability}
+The eigenvalue-based stability analysis of
+Theorem~\ref{thm:stability_classification} is powerful but inherently
+\emph{local}: it applies only in a neighbourhood of an equilibrium where
+the linearization is valid.  For nonlinear systems, we need a theory
+that can certify stability over large---possibly global---regions of
+state space.  \textbf{Lyapunov's direct method} provides exactly this
+by replacing spectral analysis with an energy-like argument.
+
+Linearization tells us about local stability.  Lyapunov theory works
+globally.
+
+\begin{definition}{\texorpdfstring{Lyapunov Function $V(\mathbf{x})$}{Lyapunov Function}}{lyapunov_function}
+\index{Lyapunov function}
+Consider the autonomous system $\dot{\mathbf{x}}=f(\mathbf{x})$ with
+an equilibrium at $\mathbf{x}^{*}=\mathbf{0}$.  A continuously
+differentiable function $V:\Reals^n\to\Reals$ is called a
+\textbf{Lyapunov function candidate} if
+\begin{enumerate}
+  \item $V(\mathbf{0})=0$ (zero at the equilibrium),
+  \item $V(\mathbf{x})>0$ for all $\mathbf{x}\neq\mathbf{0}$ in a
+        neighbourhood of the origin (\emph{positive definite}).
+\end{enumerate}
+Its time derivative along trajectories of the system is
+\begin{equation}
+  \label{eq:lyapunov_derivative}
+  \dot{V}(\mathbf{x})
+  = \frac{\partial V}{\partial \mathbf{x}}\,f(\mathbf{x})
+  = \nabla V(\mathbf{x})^{T} f(\mathbf{x}).
+\end{equation}
+\end{definition}
+
+\begin{theorem}{Lyapunov's Direct Method (Second Method)}{lyapunov_direct}
+\index{Lyapunov!direct method}
+Let $\mathbf{x}^{*}=\mathbf{0}$ be an equilibrium of
+$\dot{\mathbf{x}}=f(\mathbf{x})$ and let $V(\mathbf{x})$ be a
+Lyapunov function candidate in a domain $\mathcal{D}$ containing the
+origin.
+\begin{enumerate}
+  \item If $\dot{V}(\mathbf{x})\leq 0$ in $\mathcal{D}$, the
+        equilibrium is \textbf{stable} (in the sense of Lyapunov).
+  \item If $\dot{V}(\mathbf{x})<0$ for all $\mathbf{x}\neq\mathbf{0}$
+        in $\mathcal{D}$, the equilibrium is
+        \textbf{asymptotically stable}.
+  \item If the conditions above hold with
+        $\mathcal{D}=\Reals^n$ and, in addition,
+        $V(\mathbf{x})\to\infty$ as
+        $\norm{\mathbf{x}}\to\infty$ (\emph{radially unbounded}),
+        the equilibrium is \textbf{globally asymptotically stable}.
+\end{enumerate}
+\end{theorem}
+
+The power of the theorem lies in the fact that we never need to solve
+the differential equation---we only need to find a single scalar
+function $V$ with the right properties.
+
+\begin{example}{Pendulum with Damping}{lyapunov_pendulum}
+\index{pendulum!Lyapunov analysis}
+Consider a simple pendulum of mass $m$ and length $\ell$ with viscous
+damping $b>0$:
+\begin{equation}
+  \label{eq:damped_pendulum}
+  m\ell^{2}\ddot{\theta} + b\dot{\theta} + mg\ell\sin\theta = 0.
+\end{equation}
+The state is
+$\mathbf{x}=(\theta,\;\dot{\theta})^{T}$
+and the downward equilibrium is $\mathbf{x}^{*}=\mathbf{0}$.
+
+Choose the total mechanical energy as a Lyapunov candidate:
+\begin{equation}
+  \label{eq:pendulum_lyapunov}
+  V(\theta,\dot{\theta})
+  = \underbrace{\tfrac{1}{2}\,m\ell^{2}\,\dot{\theta}^{2}}_{\text{kinetic}}
+  + \underbrace{mg\ell\,(1-\cos\theta)}_{\text{potential}}.
+\end{equation}
+Clearly $V(\mathbf{0})=0$ and $V>0$ for
+$(\theta,\dot{\theta})\neq\mathbf{0}$ with $|\theta|<\pi$.
+
+Differentiating along trajectories:
+\begin{equation}
+  \label{eq:pendulum_Vdot}
+  \dot{V}
+  = m\ell^{2}\,\dot{\theta}\,\ddot{\theta}
+    + mg\ell\,\sin\theta\;\dot{\theta}
+  = \dot{\theta}\bigl(m\ell^{2}\ddot{\theta}+mg\ell\sin\theta\bigr)
+  = \dot{\theta}\bigl(-b\dot{\theta}\bigr)
+  = -b\,\dot{\theta}^{2}
+  \;\leq\; 0.
+\end{equation}
+Since $\dot{V}\leq 0$, the equilibrium is stable.  Because
+$\dot{V}=0$ only on the set $\{\dot{\theta}=0\}$ and no trajectory
+other than the equilibrium can stay there forever (by LaSalle's
+invariance principle), the equilibrium is in fact
+\textbf{asymptotically stable}.
+
+Physically, the damper dissipates energy at rate $b\dot{\theta}^{2}$,
+and the total energy $V$ is a non-increasing ``altitude'' that the
+system rolls down until it reaches the bottom of the energy
+landscape~\cite{Khalil2002}.
+\end{example}
+
+\begin{laymansbox}{Lyapunov Functions Are Like Altitude}{lyapunov_altitude}
+Lyapunov functions are like altitude---if you can prove you are always
+going downhill, you must eventually reach the valley.  The function
+$V(\mathbf{x})$ measures how ``high'' the state is above the
+equilibrium, and the condition $\dot{V}\leq 0$ guarantees that the
+system never climbs.  Finding a good Lyapunov function is an art:
+energy is often the first candidate, but there are systematic
+construction methods for certain system classes~\cite{SlotineLi1991}.
+\end{laymansbox}
+
+\begin{principle}{Lyapunov Theory as Foundation}{lyapunov_foundation}
+Lyapunov stability theory is the foundation of virtually all stability
+proofs in modern control.  Every adaptive controller, every robust
+controller, and every learning-based stability certificate in
+Chapters~11--12 ultimately relies on constructing a Lyapunov (or
+Lyapunov-like) function and showing that its derivative is
+non-positive along closed-loop trajectories.
 \end{principle}
 
 % ------------------------------------------------------------------

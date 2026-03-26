@@ -364,6 +364,57 @@ $$H = \frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}} \cdot \dot{\mathbf{
 is conserved. If $\mathcal{L} = T - V$ with $T$ quadratic in velocities, then $H = T + V$ is the total mechanical energy.
 
 % ==========================================================================
+\subsection{Rigorous Proof of Noether's Theorem}
+\label{sec:noether_proof}
+\index{Noether's theorem!rigorous proof}
+% ==========================================================================
+
+We now present a complete proof of Noether's theorem following \cite{marsden1999} and \cite{arnold1989}.
+
+\textbf{Setup.} Let $\Phi_\epsilon : \mathcal{Q} \to \mathcal{Q}$ be a one-parameter family of diffeomorphisms\index{diffeomorphism} with $\Phi_0 = \mathrm{id}$. Define the \textbf{infinitesimal generator}\index{infinitesimal generator} of the transformation:
+\begin{equation}
+\xi(\mathbf{q}) = \frac{d}{d\epsilon}\Phi_\epsilon(\mathbf{q})\bigg|_{\epsilon=0}
+\label{eq:noether_generator}
+\end{equation}
+
+Under $\Phi_\epsilon$, a trajectory $\mathbf{q}(t)$ maps to $\tilde{\mathbf{q}}(t) = \Phi_\epsilon(\mathbf{q}(t))$, and its velocity transforms as $\dot{\tilde{\mathbf{q}}} = D\Phi_\epsilon(\mathbf{q})\,\dot{\mathbf{q}}$, where $D\Phi_\epsilon$ denotes the Jacobian of $\Phi_\epsilon$.
+
+\textbf{Symmetry Condition.} The Lagrangian is \textbf{invariant} under $\Phi_\epsilon$ if:
+\begin{equation}
+\mathcal{L}\bigl(\Phi_\epsilon(\mathbf{q}),\; D\Phi_\epsilon\,\dot{\mathbf{q}}\bigr) = \mathcal{L}(\mathbf{q}, \dot{\mathbf{q}}) \qquad \text{for all } \epsilon
+\label{eq:noether_symmetry}
+\end{equation}
+
+\textbf{Noether Charge.} Define the conserved quantity (the \textbf{Noether charge}\index{Noether charge}):
+\begin{equation}
+I(\mathbf{q}, \dot{\mathbf{q}}) = \frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}} \cdot \xi(\mathbf{q})
+\label{eq:noether_charge}
+\end{equation}
+
+\textbf{Proof.} Differentiate the symmetry condition \eqref{eq:noether_symmetry} with respect to $\epsilon$ at $\epsilon = 0$:
+\begin{equation}
+\frac{\partial \mathcal{L}}{\partial \mathbf{q}} \cdot \xi(\mathbf{q}) + \frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}} \cdot \frac{d}{d\epsilon}\bigl(D\Phi_\epsilon\,\dot{\mathbf{q}}\bigr)\bigg|_{\epsilon=0} = 0
+\label{eq:noether_diff}
+\end{equation}
+
+Now compute $\frac{d}{dt}I$ along a solution of the Euler-Lagrange equations:
+\begin{align}
+\frac{d}{dt}I &= \frac{d}{dt}\!\left(\frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}}\right) \cdot \xi(\mathbf{q}) + \frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}} \cdot \frac{d}{dt}\xi(\mathbf{q}) \nonumber \\
+&= \frac{\partial \mathcal{L}}{\partial \mathbf{q}} \cdot \xi(\mathbf{q}) + \frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}} \cdot \frac{\partial \xi}{\partial \mathbf{q}}\dot{\mathbf{q}}
+\label{eq:noether_dIdt}
+\end{align}
+where the first term uses the Euler-Lagrange equation $\frac{d}{dt}\frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}} = \frac{\partial \mathcal{L}}{\partial \mathbf{q}}$. Noting that $\frac{d}{d\epsilon}(D\Phi_\epsilon\,\dot{\mathbf{q}})\big|_{\epsilon=0} = \frac{\partial \xi}{\partial \mathbf{q}}\dot{\mathbf{q}}$, equation \eqref{eq:noether_diff} shows that \eqref{eq:noether_dIdt} equals zero. Hence $\frac{d}{dt}I = 0$, and $I$ is conserved. $\square$
+
+\begin{laymansbox}{Noether's Theorem in Practice}{noether_practice}
+Every continuous symmetry yields a conserved quantity that constrains the motion. In robotics, these conservation laws provide powerful checks on simulation accuracy and enable reduction of the equations of motion:
+\begin{itemize}
+    \item \textbf{Translation symmetry} $\Rightarrow$ \textbf{linear momentum} is conserved (free-floating satellite).
+    \item \textbf{Rotation symmetry} $\Rightarrow$ \textbf{angular momentum} is conserved (spacecraft attitude).
+    \item \textbf{Time-translation symmetry} $\Rightarrow$ \textbf{energy} $H = T + V$ is conserved (unactuated systems).
+\end{itemize}
+\end{laymansbox}
+
+% ==========================================================================
 \section{Lagrangian for Constrained Systems}
 % ==========================================================================
 
@@ -560,6 +611,44 @@ Both formulations yield identical equations of motion, but traverse different co
 \end{center}
 
 For a 2-DOF arm, both methods agree perfectly. For a 15-DOF golf swing, the Recursive Newton-Euler algorithm computes torques hundreds of times faster than inverting the full $15 \times 15$ mass matrix.
+
+% ==========================================================================
+\section{Symplectic Integrators}
+\label{sec:symplectic_integrators}
+\index{symplectic integrator}
+% ==========================================================================
+
+Standard ODE solvers such as forward Euler and classical Runge-Kutta (RK4) do not respect the geometric structure of Hamiltonian systems. Over long simulations, they introduce systematic energy drift: trajectories slowly spiral inward or outward in phase space, producing non-physical behavior \cite{arnold1989}.
+
+\textbf{Symplectic integrators}\index{symplectic integrator} are numerical methods that exactly preserve the \textbf{symplectic form}\index{symplectic form}:
+\begin{equation}
+\omega = d\mathbf{p} \wedge d\mathbf{q}
+\label{eq:symplectic_form}
+\end{equation}
+
+This means that the discrete-time map $(\mathbf{q}_k, \mathbf{p}_k) \mapsto (\mathbf{q}_{k+1}, \mathbf{p}_{k+1})$ is a canonical transformation, preserving phase-space volume and the qualitative structure of orbits.
+
+\textbf{Symplectic Euler Method.}\index{symplectic Euler} The simplest symplectic integrator updates momenta first, then positions using the new momenta:
+\begin{align}
+\mathbf{p}_{k+1} &= \mathbf{p}_k - h\,\frac{\partial H}{\partial \mathbf{q}}(\mathbf{q}_k, \mathbf{p}_k) \label{eq:symp_euler_p} \\
+\mathbf{q}_{k+1} &= \mathbf{q}_k + h\,\frac{\partial H}{\partial \mathbf{p}}(\mathbf{q}_k, \mathbf{p}_{k+1}) \label{eq:symp_euler_q}
+\end{align}
+
+This is first-order accurate but already exhibits bounded energy error.
+
+\textbf{St\"{o}rmer-Verlet (Leapfrog) Method.}\index{Stormer-Verlet}\index{leapfrog integrator} A second-order, time-reversible, symplectic scheme:
+\begin{align}
+\mathbf{p}_{k+1/2} &= \mathbf{p}_k - \frac{h}{2}\,\frac{\partial H}{\partial \mathbf{q}}(\mathbf{q}_k) \label{eq:verlet_half_p} \\
+\mathbf{q}_{k+1} &= \mathbf{q}_k + h\,\frac{\partial H}{\partial \mathbf{p}}(\mathbf{p}_{k+1/2}) \label{eq:verlet_q} \\
+\mathbf{p}_{k+1} &= \mathbf{p}_{k+1/2} - \frac{h}{2}\,\frac{\partial H}{\partial \mathbf{q}}(\mathbf{q}_{k+1}) \label{eq:verlet_p}
+\end{align}
+
+\textbf{Key Property: Bounded Energy Error.}\index{energy error!bounded} Unlike non-symplectic methods where energy error grows linearly (or worse) with time, symplectic integrators produce energy errors that \emph{oscillate} about the true value without secular drift. Formally, the numerical solution exactly solves a \emph{nearby} Hamiltonian $\tilde{H} = H + O(h^p)$, where $p$ is the order of the method. The energy of the original system therefore remains bounded:
+$$|H(\mathbf{q}_k, \mathbf{p}_k) - H(\mathbf{q}_0, \mathbf{p}_0)| \leq C\,h^p \qquad \text{for exponentially long times}$$
+
+\begin{laymansbox}{Why Symplectic Integrators Matter for Robotics}{symplectic_robotics}
+For long-horizon robot simulations---such as gait optimization over thousands of steps, or orbital mechanics for space robots---symplectic integrators prevent the slow energy drift that causes non-physical behavior. A standard RK4 solver may show a pendulum gradually gaining energy until it rotates faster and faster; a symplectic solver keeps the energy oscillating near its true value indefinitely.
+\end{laymansbox}
 
 % ==========================================================================
 \section{Python Worked Example: Double Pendulum Dynamics}

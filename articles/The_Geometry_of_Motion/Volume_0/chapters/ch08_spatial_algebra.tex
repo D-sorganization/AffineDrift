@@ -459,6 +459,82 @@ The $6 \times 6$ spatial inertia matrix has a clear physical meaning for each bl
   \item \textbf{Bottom-right} ($3 \times 3$): Mass matrix ($m\mathbf{I}_{3 \times 3}$). It relates linear acceleration of the origin to the force required.
 \end{itemize}
 
+% ------------------------------------------------------------------
+\subsection{Kinetic Energy and the Origin of Spatial Inertia}
+\label{sec:kinetic_energy_spatial_inertia}
+\index{kinetic energy!spatial form}
+\index{spatial inertia!kinetic energy derivation}
+% ------------------------------------------------------------------
+
+The $6 \times 6$ spatial inertia matrix is not an arbitrary packaging of
+mass properties.  It is the \emph{unique} object that makes kinetic
+energy a quadratic form in spatial velocity.  We now prove this from
+first principles.
+
+\textbf{Classical kinetic energy.}
+For a rigid body with mass $m$, centre-of-mass velocity
+$\mathbf{v}_{cm}$, angular velocity $\boldsymbol{\omega}$, and
+rotational inertia $\mathbf{I}_c$ about the centre of mass:
+\[
+  T = \frac{1}{2}\,m\,\norm{\mathbf{v}_{cm}}^2
+    + \frac{1}{2}\,\boldsymbol{\omega}^T \mathbf{I}_c\,\boldsymbol{\omega}.
+\]
+
+\textbf{Re-express about a body-fixed frame origin.}
+Let the body frame origin $O$ be offset from the centre of mass by
+$\mathbf{c} \in \Reals^3$.  Then the centre-of-mass velocity is
+\[
+  \mathbf{v}_{cm}
+  = \mathbf{v}_O + \boldsymbol{\omega} \times \mathbf{c},
+\]
+where $\mathbf{v}_O$ is the linear velocity of $O$.  Substituting into
+$T$ and expanding:
+\begin{align*}
+  T &= \frac{1}{2}\,m\,\norm{\mathbf{v}_O + \boldsymbol{\omega} \times \mathbf{c}}^2
+     + \frac{1}{2}\,\boldsymbol{\omega}^T \mathbf{I}_c\,\boldsymbol{\omega} \\
+    &= \frac{1}{2}\,m\,\mathbf{v}_O^T \mathbf{v}_O
+     + m\,\mathbf{v}_O^T (\boldsymbol{\omega} \times \mathbf{c})
+     + \frac{1}{2}\,m\,(\boldsymbol{\omega} \times \mathbf{c})^T
+       (\boldsymbol{\omega} \times \mathbf{c})
+     + \frac{1}{2}\,\boldsymbol{\omega}^T \mathbf{I}_c\,\boldsymbol{\omega}.
+\end{align*}
+
+Using the skew-symmetric matrix $[\mathbf{c}]_\times$ so that
+$\boldsymbol{\omega} \times \mathbf{c} = [\mathbf{c}]_\times^T \boldsymbol{\omega}$,
+and collecting the angular and linear components into the spatial
+velocity $\mathcal{V} = (\boldsymbol{\omega},\, \mathbf{v}_O)^T$, we
+obtain:
+
+\begin{theorem}{Kinetic Energy as a Spatial Quadratic Form}{ke_spatial_quadratic}
+\index{spatial inertia!quadratic form}
+The kinetic energy of a rigid body equals
+\[
+  T = \frac{1}{2}\,\mathcal{V}^T \mathcal{I}\, \mathcal{V},
+\]
+where the $6 \times 6$ \textbf{spatial inertia matrix}\index{spatial inertia} is
+\[
+  \mathcal{I}
+  = \begin{pmatrix}
+      \mathbf{I}_c + m\,[\mathbf{c}]_\times [\mathbf{c}]_\times^T
+        & m\,[\mathbf{c}]_\times \\[4pt]
+      m\,[\mathbf{c}]_\times^T
+        & m\,\mathbf{I}_{3 \times 3}
+    \end{pmatrix}.
+\]
+\end{theorem}
+
+This derivation proves that $\mathcal{I}$ is the \emph{correct} inertial
+object for spatial dynamics: it is determined entirely by the requirement
+that kinetic energy be a quadratic form in $\mathcal{V}$.
+
+The \textbf{off-diagonal blocks} $m[\mathbf{c}]_\times$ encode the
+cross-coupling between rotation and translation that arises whenever the
+centre of mass does not coincide with the frame origin ($\mathbf{c} \neq
+\mathbf{0}$).  When the frame is placed at the centre of mass
+($\mathbf{c} = \mathbf{0}$), these blocks vanish and the spatial inertia
+becomes block-diagonal---rotational and translational energies
+decouple~\cite{Featherstone2008}.
+
 \section{Python Implementation}
 \label{sec:python_spatial_algebra}
 

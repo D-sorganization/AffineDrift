@@ -886,6 +886,159 @@ from sums of outer products---provides a unifying thread: the same
 algebraic structure appears whether we are analysing a truss, spinning
 a gyroscope, or computing the forward dynamics of a humanoid robot.
 
+% ==================================================================
+%  Section: Matrix Norms and Conditioning
+% ==================================================================
+
+\section{Matrix Norms and Conditioning}
+\label{sec:matrix_norms}
+
+\index{matrix norm}
+Having decomposed matrices via the eigendecomposition and SVD, we now turn
+to a fundamental practical question: \emph{how large is a matrix, and how
+sensitive is a linear system to perturbations?}  Matrix norms quantify the
+first question; the \emph{condition number} answers the second.
+
+\begin{definition}{\texorpdfstring{Frobenius Norm $\norm{\mathbf{A}}_F$}{Frobenius Norm}}{frobenius_norm}
+The \textbf{Frobenius norm}\index{Frobenius norm} of a matrix
+$\mathbf{A}\in\Reals^{m\times n}$ is
+\begin{equation}
+  \label{eq:frobenius_norm}
+  \norm{\mathbf{A}}_F
+  \;=\; \sqrt{\sum_{i=1}^{m}\sum_{j=1}^{n} a_{ij}^{2}}
+  \;=\; \sqrt{\operatorname{tr}\!\bigl(\mathbf{A}^{T}\mathbf{A}\bigr)}
+  \;=\; \sqrt{\sigma_1^{2}+\sigma_2^{2}+\cdots+\sigma_{\min(m,n)}^{2}}.
+\end{equation}
+The last equality follows directly from the SVD\@.  The Frobenius norm
+treats the matrix as a long vector and computes its Euclidean length.
+\end{definition}
+
+\begin{definition}{\texorpdfstring{Spectral Norm $\norm{\mathbf{A}}_2$}{Spectral Norm}}{spectral_norm}
+The \textbf{spectral norm}\index{spectral norm} (also called the
+\emph{operator 2-norm} or \emph{induced 2-norm}) is
+\begin{equation}
+  \label{eq:spectral_norm}
+  \norm{\mathbf{A}}_2
+  \;=\; \max_{\norm{\mathbf{x}}_2=1} \norm{\mathbf{A}\mathbf{x}}_2
+  \;=\; \sigma_{\max}(\mathbf{A}).
+\end{equation}
+This is the maximum factor by which $\mathbf{A}$ can stretch a unit
+vector---exactly the length of the longest semi-axis of the image
+ellipsoid from the SVD's geometric interpretation
+(Section~\ref{sec:svd_geometric}).
+\end{definition}
+
+\begin{definition}{\texorpdfstring{Condition Number $\kappa(\mathbf{A})$}{Condition Number}}{condition_number}
+\index{condition number}
+For a matrix $\mathbf{A}$ with $\sigma_{\min}>0$, the
+\textbf{condition number} with respect to the 2-norm is
+\begin{equation}
+  \label{eq:condition_number}
+  \kappa(\mathbf{A})
+  \;=\; \frac{\sigma_{\max}}{\sigma_{\min}}.
+\end{equation}
+When $\sigma_{\min}=0$ (i.e., $\mathbf{A}$ is singular), we define
+$\kappa(\mathbf{A})=\infty$.
+A well-conditioned matrix has $\kappa\approx 1$; an ill-conditioned
+matrix has $\kappa\gg 1$.
+\end{definition}
+
+\paragraph{Physical interpretation: Jacobian conditioning near singularities.}
+\index{singularity!Jacobian conditioning}
+Consider the manipulator Jacobian $\mathbf{J}(\mathbf{q})$ from the
+SVD example (Example~\ref{ex:svd_jacobian}).  When the robot approaches
+a kinematic singularity, one or more singular values $\sigma_i\to 0$
+while others remain bounded.  The condition number $\kappa(\mathbf{J})$
+therefore grows without bound.  Because the solution to
+$\dot{\mathbf{q}}=\mathbf{J}^{-1}\mathbf{v}$ amplifies input errors by
+a factor proportional to $\kappa$, even tiny errors in the desired
+Cartesian velocity $\mathbf{v}$ produce enormous joint velocities.
+This is why real robots exhibit jerky, unstable motion near singular
+configurations~\cite{strang2019}.
+
+\begin{laymansbox}{Why Does Your Robot Arm Shake Near Singularities?}{singularity_shaking}
+Why does your robot arm shake near singularities?  Because the condition
+number of the Jacobian explodes.  When $\kappa(\mathbf{J})$ is huge, the
+inverse mapping from Cartesian velocity to joint velocity amplifies every
+small measurement error, rounding error, and servo lag into wild joint
+commands.  Monitoring $\kappa(\mathbf{J})$ in real time is standard
+practice in industrial controllers: when the condition number exceeds a
+threshold, the controller switches to a damped pseudo-inverse to keep the
+motion smooth.
+\end{laymansbox}
+
+% ==================================================================
+%  Section: Matrix Decompositions for Computation
+% ==================================================================
+
+\section{Matrix Decompositions for Computation}
+\label{sec:matrix_decompositions_computation}
+
+\index{matrix decomposition}
+The eigendecomposition and SVD reveal geometric structure.  This section
+surveys three additional decompositions whose primary purpose is
+\emph{computational efficiency} when solving the linear systems that
+arise throughout dynamics and control.
+
+\subsection{LU Decomposition}
+\label{subsec:lu_decomposition}
+\index{LU decomposition}
+
+Any invertible matrix $\mathbf{A}\in\Reals^{n\times n}$ can (with row
+permutations) be factored as
+\begin{equation}
+  \label{eq:lu_decomposition}
+  \mathbf{P}\mathbf{A} = \mathbf{L}\mathbf{U},
+\end{equation}
+where $\mathbf{P}$ is a permutation matrix, $\mathbf{L}$ is unit lower
+triangular, and $\mathbf{U}$ is upper triangular.  Solving
+$\mathbf{A}\mathbf{x}=\mathbf{b}$ then reduces to two triangular
+solves (forward and back substitution), each costing $O(n^{2})$ after
+the $O(n^{3})$ factorization.  When multiple right-hand sides share
+the same $\mathbf{A}$, LU is the workhorse: factor once, solve many
+times.
+
+\subsection{QR Decomposition}
+\label{subsec:qr_decomposition}
+\index{QR decomposition}
+
+For any $\mathbf{A}\in\Reals^{m\times n}$ with $m\geq n$,
+\begin{equation}
+  \label{eq:qr_decomposition}
+  \mathbf{A} = \mathbf{Q}\mathbf{R},
+\end{equation}
+where $\mathbf{Q}\in\Reals^{m\times m}$ is orthogonal and
+$\mathbf{R}\in\Reals^{m\times n}$ is upper triangular.
+QR is the preferred method for solving least-squares problems
+$\min_{\mathbf{x}}\norm{\mathbf{A}\mathbf{x}-\mathbf{b}}_2$ because,
+unlike the normal equations $\mathbf{A}^{T}\mathbf{A}\mathbf{x}=
+\mathbf{A}^{T}\mathbf{b}$, it avoids squaring the condition number
+($\kappa(\mathbf{A}^{T}\mathbf{A})=\kappa(\mathbf{A})^{2}$) and is
+therefore far more numerically stable.
+
+\subsection{Cholesky Decomposition}
+\label{subsec:cholesky_decomposition}
+\index{Cholesky decomposition}
+
+If $\mathbf{M}\in\Reals^{n\times n}$ is symmetric positive definite
+(SPD), then there exists a unique lower-triangular matrix $\mathbf{L}$
+with positive diagonal entries such that
+\begin{equation}
+  \label{eq:cholesky_decomposition}
+  \mathbf{M} = \mathbf{L}\mathbf{L}^{T}.
+\end{equation}
+Cholesky costs roughly half the flops of LU and is always numerically
+stable for SPD matrices---no pivoting is needed.
+
+\begin{principle}{Cholesky and the Mass Matrix}{cholesky_mass_matrix}
+The generalized mass matrix $\mathbf{M}(\mathbf{q})$ that appears in
+the manipulator equation of motion (Chapter~11) is always symmetric
+positive definite.  Therefore the Cholesky decomposition is the
+preferred solver for the forward-dynamics equation
+$\mathbf{M}\ddot{\mathbf{q}}=\boldsymbol{\tau}-
+\mathbf{C}\dot{\mathbf{q}}-\mathbf{g}$~\cite{nocedal2006}.
+\end{principle}
+
 % ------------------------------------------------------------------
 \section{Worked Example: Eigenvalue and SVD Analysis in Python}
 \label{sec:python_example}

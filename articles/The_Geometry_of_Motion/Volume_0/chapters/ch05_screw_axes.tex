@@ -473,6 +473,101 @@ torque for each link). The wrench formalism reduces this to 6 equations in 6D---
 conceptual and computational simplification that becomes essential for real-time control.
 \end{laymansbox}
 
+%% ─────────────────────────────────────────────────────────────────────
+%%  Proof of Chasles' Theorem (formal)
+%% ─────────────────────────────────────────────────────────────────────
+\section{Proof of Chasles' Theorem}
+\label{sec:chasles_proof}
+\index{Chasles' theorem!proof}
+
+The informal proof sketch given in Section~\ref{sec:chasles_theorem} established the
+geometric plausibility of Chasles' theorem. Here we present a rigorous constructive
+proof that extracts the screw parameters from an arbitrary rigid body displacement
+\cite{ball1900,Murray1994}.
+
+\begin{theorem}{Chasles' Theorem (Formal Statement)}{chasles_formal}
+  Every rigid body displacement $\mathbf{T} = (\mathbf{R}, \mathbf{p}) \in \SE(3)$
+  can be uniquely represented as a screw motion: a rotation by angle $\theta$ about a
+  line $\ell$ in space combined with a translation $d = h\theta$ along that same line,
+  where $h$ is the pitch of the screw.
+\end{theorem}
+
+\begin{proof}
+  Let $\mathbf{T} = \begin{bmatrix} \mathbf{R} & \mathbf{p} \\ \mathbf{0}^T & 1
+  \end{bmatrix} \in \SE(3)$.
+
+  \medskip\noindent\textbf{Case 1: $\mathbf{R} = \mathbf{I}$ (Pure Translation).}
+  When $\mathbf{R} = \mathbf{I}$ and $\mathbf{p} \neq \mathbf{0}$, the displacement is
+  a pure translation along $\hat{\mathbf{s}} = \mathbf{p}/\norm{\mathbf{p}}$. This
+  corresponds to a screw motion with rotation angle $\theta = 0$ and pitch
+  $h \to \infty$; the screw axis is a line at infinity in the direction
+  $\hat{\mathbf{s}}$. The displacement is $d = \norm{\mathbf{p}}$.
+
+  \medskip\noindent\textbf{Case 2: $\mathbf{R} \neq \mathbf{I}$ (General Displacement).}
+  By Euler's rotation theorem, every rotation $\mathbf{R} \in \SO(3)$,
+  $\mathbf{R} \neq \mathbf{I}$, possesses an eigenvector $\hat{\boldsymbol{\omega}}$
+  with eigenvalue $1$:
+  \begin{equation}
+    \mathbf{R}\,\hat{\boldsymbol{\omega}} = \hat{\boldsymbol{\omega}},
+    \qquad \norm{\hat{\boldsymbol{\omega}}} = 1.
+  \end{equation}
+  The associated rotation angle $\theta \in (0, \pi]$ satisfies
+  $\operatorname{tr}(\mathbf{R}) = 1 + 2\cos\theta$.
+
+  \medskip\noindent\textit{Step 1 --- Decompose the translation.}
+  Project $\mathbf{p}$ onto $\hat{\boldsymbol{\omega}}$ and its orthogonal complement:
+  \begin{equation}
+    \mathbf{p}_{\parallel}
+      = (\hat{\boldsymbol{\omega}}^T \mathbf{p})\,\hat{\boldsymbol{\omega}},
+    \qquad
+    \mathbf{p}_{\perp}
+      = \mathbf{p} - \mathbf{p}_{\parallel}.
+  \end{equation}
+  The pitch is determined by the parallel component:
+  \begin{equation}
+    h = \frac{\hat{\boldsymbol{\omega}}^T \mathbf{p}}{\theta}.
+    \label{eq:chasles_pitch}
+  \end{equation}
+
+  \medskip\noindent\textit{Step 2 --- Locate the screw axis.}
+  We seek a point $\mathbf{q}$ on the screw axis such that the perpendicular
+  displacement $\mathbf{p}_{\perp}$ arises purely from the rotation about the line
+  through $\mathbf{q}$ parallel to $\hat{\boldsymbol{\omega}}$. The fixed-point
+  condition for the perpendicular motion gives:
+  \begin{equation}
+    \mathbf{p}_{\perp} = (\mathbf{I} - \mathbf{R})\,\mathbf{q}.
+  \end{equation}
+  Because $(\mathbf{I} - \mathbf{R})$ is singular along $\hat{\boldsymbol{\omega}}$
+  (precisely the eigenvector with eigenvalue $1$), we restrict to the plane
+  perpendicular to $\hat{\boldsymbol{\omega}}$ and solve:
+  \begin{equation}
+    \mathbf{q}
+      = \hat{\boldsymbol{\omega}} \times
+        \frac{(\mathbf{I} - \mathbf{R})^{-1}_{\perp}\,\mathbf{p}_{\perp}}{1}
+      = \frac{1}{2}\,\mathbf{p}_{\perp}
+        + \frac{1}{2\tan(\theta/2)}\,
+          \hat{\boldsymbol{\omega}} \times \mathbf{p}_{\perp},
+    \label{eq:chasles_axis_point}
+  \end{equation}
+  where we used the identity
+  $(\mathbf{I} - \mathbf{R})^{-1}_{\perp}
+   = \frac{1}{2}\mathbf{I}_{\perp}
+     + \frac{1}{2\tan(\theta/2)}\,[\hat{\boldsymbol{\omega}}]$,
+  valid on the subspace perpendicular to $\hat{\boldsymbol{\omega}}$.
+
+  \medskip\noindent\textit{Step 3 --- Uniqueness.}
+  The screw axis direction $\hat{\boldsymbol{\omega}}$ is unique up to sign (fixed by
+  the convention $\theta > 0$). The point $\mathbf{q}$ is unique modulo translation
+  along $\hat{\boldsymbol{\omega}}$; choosing $\mathbf{q}$ as the point closest to the
+  origin removes this ambiguity. The pitch $h$ is uniquely determined by
+  Eq.~\eqref{eq:chasles_pitch}. Therefore the screw axis, angle, and pitch are unique.
+\end{proof}
+
+\begin{laymansbox}{Chasles' Theorem in One Sentence}{chasles_one_sentence}
+  Every rigid body motion---no matter how complex---is equivalent to twisting a
+  screw. Finding that screw is Chasles' theorem.
+\end{laymansbox}
+
 \section{Mechanical Work and the Virtual Power Principle}
 \label{sec:virtual_power}
 
