@@ -1,0 +1,98 @@
+name: Compile Golf Physics Textbook
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "articles/The_Physics_of_Golf/**"
+  pull_request:
+    paths:
+      - "articles/The_Physics_of_Golf/**"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build_golf_textbook:
+    if: github.repository == 'D-sorganization/AffineDrift'
+    runs-on: ubuntu-latest
+    name: Build Golf Physics PDF
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Compile LaTeX → PDF
+        uses: xu-cheng/latex-action@v3
+        continue-on-error: true
+        with:
+          root_file: main.tex
+          working_directory: articles/The_Physics_of_Golf
+          pre_compile: "rm -f *.aux chapters/*.aux *.idx *.ind *.ilg *.toc *.lof *.lot *.bbl *.blg"
+          args: "-pdf -file-line-error -interaction=nonstopmode -f"
+          # Run twice for cross-references, index, and bibliography
+          post_compile: |
+            cd articles/The_Physics_of_Golf && \
+            makeindex main.idx && \
+            bibtex main && \
+            latexmk -pdf -file-line-error -interaction=nonstopmode -f main.tex
+
+      - name: Verify PDF exists
+        id: verify
+        run: |
+          if [ -f articles/The_Physics_of_Golf/main.pdf ]; then
+            echo "PDF generated successfully"
+            ls -lh articles/The_Physics_of_Golf/main.pdf
+            echo "pdf_exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "WARNING: PDF was not generated"
+            echo "pdf_exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Count pages
+        if: steps.verify.outputs.pdf_exists == 'true'
+        run: |
+          apt-get update -qq && apt-get install -y -qq poppler-utils 2>/dev/null
+          pages=$(pdfinfo articles/The_Physics_of_Golf/main.pdf | grep Pages | awk '{print $2}')
+          echo "## Golf Physics Textbook: $pages pages" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Rename PDF for release
+        if: steps.verify.outputs.pdf_exists == 'true'
+        run: |
+          cp articles/The_Physics_of_Golf/main.pdf articles/The_Physics_of_Golf/The_Physics_of_Golf.pdf
+
+      - name: Upload PDF artifact
+        if: steps.verify.outputs.pdf_exists == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: The_Physics_of_Golf
+          path: articles/The_Physics_of_Golf/The_Physics_of_Golf.pdf
+          retention-days: 90
+
+  publish_on_merge:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: build_golf_textbook
+    runs-on: ubuntu-latest
+    name: Publish Golf Physics PDF
+
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: The_Physics_of_Golf
+
+      - name: Create or update release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: golf-textbook-latest
+          name: "The Physics of Golf — Latest Build"
+          body: |
+            Automatically generated PDF of *The Physics of Golf: Force, Drift, and Control in the Golf Swing*.
+
+            Built from the latest `main` branch commit.
+          files: The_Physics_of_Golf.pdf
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

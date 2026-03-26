@@ -1,0 +1,104 @@
+\chapter*{Nomenclature}
+\addcontentsline{toc}{chapter}{Nomenclature}
+
+Throughout this book, we use the following notation conventions and symbol definitions.
+Every equation in the text uses only symbols defined here or introduced explicitly in the
+surrounding paragraph.
+
+\section*{General Conventions}
+\begin{itemize}
+    \item Scalars are lowercase Roman or Greek letters: $m, t, \theta, \omega$.
+    \item Vectors are bold lowercase: $\bm{x}, \bm{u}, \bm{q}, \bm{v}$.
+    \item Matrices are bold uppercase: $\bm{A}, \bm{B}, \bm{M}, \bm{J}$.
+    \item Sets and manifolds are script or blackboard bold: $\mathcal{Q}, \mathcal{M}, \mathbb{R}$.
+    \item A dot above a symbol denotes a time derivative: $\dot{\bm{q}} = \frac{\dd \bm{q}}{\dd t}$.
+    \item Subscript ``drift'' or ``nat'' denotes passive/natural components; ``act'' or ``ctrl'' denotes active/muscular components.
+    \item Subscript ``head'' refers to the clubhead; ``hand'' to the grip/handle point.
+\end{itemize}
+
+\section*{Coordinates and Kinematics}
+\begin{description}
+    \item[$\bm{q} \in \mathbb{R}^n$] Generalized coordinate vector (joint angles, shaft modes, etc.).
+    \item[$\dot{\bm{q}}, \ddot{\bm{q}}$] Generalized velocity and acceleration.
+    \item[$\bm{x} \in \mathbb{R}^{n_x}$] Full state vector; $\bm{x} = [\bm{q}^T, \dot{\bm{q}}^T]^T$ for rigid systems, or $\bm{x} = [\bm{q}^T, \dot{\bm{q}}^T, \bm{\eta}^T, \dot{\bm{\eta}}^T]^T$ when including shaft flexibility.
+    \item[$n$] Number of rigid-body degrees of freedom.
+    \item[$m$] Number of flexible shaft modal coordinates.
+    \item[$\theta_1, \theta_2, \ldots$] Joint angles (shoulder, elbow, wrist, etc.).
+    \item[$\bm{p}_{\mathrm{head}} \in \mathbb{R}^3$] Position of the clubhead center of mass.
+    \item[$\bm{v}_{\mathrm{head}} \in \mathbb{R}^3$] Velocity of the clubhead.
+    \item[$\bm{p}_{\mathrm{hand}} \in \mathbb{R}^3$] Position of the grip/hand point.
+\end{description}
+
+\section*{Dynamics and Forces}
+\begin{description}
+    \item[$\bm{M}(\bm{q}) \in \mathbb{R}^{n \times n}$] Mass (inertia) matrix, symmetric positive definite.
+    \item[$\bm{C}(\bm{q}, \dot{\bm{q}}) \in \mathbb{R}^{n \times n}$] Coriolis and centrifugal force matrix.
+    \item[$\bm{g}(\bm{q}) \in \mathbb{R}^n$] Gravitational torque vector.
+    \item[$\bm{d}(\bm{q}, \dot{\bm{q}}) \in \mathbb{R}^n$] Dissipative (damping/friction) forces.
+    \item[$\bm{u} \in \mathbb{R}^p$] Control input vector (joint torques applied by muscles/actuators).
+    \item[$\bm{B} \in \mathbb{R}^{n \times p}$] Input selection matrix ($p \leq n$).
+    \item[$\boldsymbol{\tau}_{\mathrm{total}}$] Total generalized force at a joint.
+    \item[$\boldsymbol{\tau}_{\mathrm{drift}}$] Drift (passive) component of generalized force.
+    \item[$\boldsymbol{\tau}_{\mathrm{input}}$] Active (muscular) component of generalized force.
+    \item[$\boldsymbol{\lambda}$] Constraint force vector (Lagrange multipliers).
+\end{description}
+
+\section*{Affine Control Decomposition}
+\begin{description}
+    \item[$f(\bm{x})$] Drift vector field: what the system does with zero applied torque.
+    \item[$G(\bm{x})$] Input (control) matrix field.
+    \item[$G(\bm{x})\bm{u}$] Control vector field: the effect of muscular effort.
+    \item[$\dot{\bm{x}} = f(\bm{x}) + G(\bm{x})\bm{u}$] The control-affine system equation.
+    \item[$\bm{x}^{\mathrm{ZTCF}}(t)$] Zero-Torque Counterfactual trajectory ($\bm{u} = \bm{0}$).
+    \item[$\bm{x}^{\mathrm{ZVCF}}(t)$] Zero-Velocity Counterfactual state ($\dot{\bm{q}} = \bm{0}$).
+    \item[$\mathrm{DCR}(t)$] Drift-to-Control Ratio: $\norm{f(\bm{x}(t))}/\norm{G(\bm{x}(t))\bm{u}(t)}$.
+\end{description}
+
+\section*{Constraint Mechanics}
+\begin{description}
+    \item[$\bm{\Phi}(\bm{q}) = \bm{0}$] Holonomic constraint equations.
+    \item[$\bm{J}_c(\bm{q})$] Constraint Jacobian: $\bm{J}_c = \frac{\partial \bm{\Phi}}{\partial \bm{q}}$.
+    \item[$\bm{J}_{\mathrm{loop}}$] Loop-closure Jacobian for parallel mechanisms.
+    \item[$\boldsymbol{\lambda}$] Constraint forces (Lagrange multipliers).
+    \item[$\mathcal{N}(\bm{J}_c)$] Null space of the constraint Jacobian (feasible motion directions).
+    \item[$\mathcal{R}(\bm{J}_c^T)$] Range of $\bm{J}_c^T$ (directions in which constraints exert force).
+\end{description}
+
+\section*{Shaft and Flexibility}
+\begin{description}
+    \item[$\bm{\eta} \in \mathbb{R}^m$] Shaft modal coordinates (flexible deformation modes).
+    \item[$\dot{\bm{\eta}}$] Shaft modal velocities.
+    \item[$K_s$] Shaft bending stiffness (or modal stiffness matrix).
+    \item[$D_s$] Shaft damping coefficient (or modal damping matrix).
+    \item[$EI$] Shaft flexural rigidity (Young's modulus $\times$ second moment of area).
+\end{description}
+
+\section*{Energy and Power}
+\begin{description}
+    \item[$T(\bm{q}, \dot{\bm{q}})$] Kinetic energy: $T = \frac{1}{2}\dot{\bm{q}}^T \bm{M}(\bm{q})\dot{\bm{q}}$.
+    \item[$V(\bm{q})$] Potential energy (gravitational + elastic).
+    \item[$P_{\mathrm{drift}}(t)$] Power delivered by drift (passive) forces.
+    \item[$P_{\mathrm{input}}(t)$] Power delivered by active (muscular) forces: $P_{\mathrm{input}} = \bm{u}^T \dot{\bm{q}}$.
+    \item[$P_{\mathrm{constraint}}(t)$] Power associated with constraint forces (identically zero for ideal constraints).
+    \item[$W$] Work (time-integrated power).
+\end{description}
+
+\section*{Biomechanics and Tissue}
+\begin{description}
+    \item[{$a_i \in [0, 1]$}] Muscle activation level for muscle $i$.
+    \item[$F^M_i$] Muscle force for muscle $i$.
+    \item[$\ell^M_i$] Muscle fiber length.
+    \item[$v^M_i$] Muscle fiber contraction velocity.
+    \item[$K_{\mathrm{tissue}}$] Tissue stiffness (for fascia, tendon, ligament).
+    \item[$\sigma$] Stress (force per unit area in tissue).
+    \item[$\varepsilon$] Strain (deformation per unit length in tissue).
+\end{description}
+
+\section*{Pendulum Models}
+\begin{description}
+    \item[$L_1, L_2, L_3$] Link lengths (proximal, medial, distal).
+    \item[$m_1, m_2, m_3$] Link masses.
+    \item[$I_1, I_2, I_3$] Link moments of inertia about their centers of mass.
+    \item[$\ell_1, \ell_2, \ell_3$] Distance from joint to center of mass for each link.
+    \item[$\tau_1, \tau_2, \tau_3$] Applied torques at each joint.
+\end{description}
