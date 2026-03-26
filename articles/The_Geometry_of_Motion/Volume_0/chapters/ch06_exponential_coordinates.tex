@@ -25,7 +25,7 @@ Lie's central insight was that every Lie group has a \textbf{Lie algebra}—an a
 
 For the rotation group $\SO(3)$, Lie's theory predicts that the Lie algebra $\so(3)$ should consist of $3 \times 3$ skew-symmetric matrices. The exponential map then converts these skew-symmetric matrices into rotation matrices—a fact that was rediscovered and formalized by \textbf{Olinde Rodrigues} in the context of the rotation formula.
 
-In the early 20th century, the theory was extended and generalized. By the latter half of the century, computer scientists and roboticists (notably \textbf{Richard Murray}, \textbf{Zexiang Li}, and \textbf{S. Shankar Sastry}, as well as \textbf{John Hauser}) recognized that Lie group and Lie algebra techniques provide the natural language for parametrizing rigid body motions and solving differential equations in robotics.
+In the early 20th century, the theory was extended and generalized. By the latter half of the century, computer scientists and roboticists (notably \textbf{Richard Murray}, \textbf{Zexiang Li}, and \textbf{S. Shankar Sastry} \cite{Murray1994}, as well as \textbf{John Hauser}) recognized that Lie group and Lie algebra techniques provide the natural language for parametrizing rigid body motions and solving differential equations in robotics. A rigorous modern treatment of Lie groups and their algebras can be found in Hall \cite{hall2015}.
 
 The exponential-logarithm formalism is now foundational to modern control theory, computer graphics (SLERP interpolation), and numerical algorithms for rigid body dynamics. Understanding it is essential for anyone working with continuous motion in space.
 
@@ -446,7 +446,7 @@ The full BCH formula (for arbitrary elements) is an infinite series:
   \log(e^{\mathbf{A}} e^{\mathbf{B}}) = \mathbf{A} + \mathbf{B} + \frac{1}{2}[\mathbf{A}, \mathbf{B}] + \frac{1}{12}([\mathbf{A}, [\mathbf{A}, \mathbf{B}]] + [\mathbf{B}, [\mathbf{B}, \mathbf{A}]]) + \cdots
 \end{equation}
 
-In practice, the first-order approximation is sufficient for small perturbations.
+In practice, the first-order approximation is sufficient for small perturbations. A thorough development of the BCH formula and its convergence properties can be found in Hall \cite{hall2015}.
 
 \section{Numerical Computation of Matrix Exponentials}
 \label{sec:numerical_exp}
@@ -498,7 +498,7 @@ A \textbf{geodesic} is the shortest path between two points on a curved surface.
 \section{SLERP: Spherical Linear Interpolation as Geodesic Interpolation}
 \label{sec:slerp}
 
-In Chapter 4, we introduced \textbf{SLERP (Spherical Linear Interpolation)}, which smoothly interpolates between two quaternions. We can now understand SLERP as a discretization of the geodesic on $\SO(3)$.
+In Chapter 4, we introduced \textbf{SLERP (Spherical Linear Interpolation)}, which smoothly interpolates between two quaternions. We can now understand SLERP as a discretization of the geodesic on $\SO(3)$ \cite{lynch2017}.
 
 \begin{theorem}{SLERP as Exponential Interpolation}{slerp_geodesic}
   Given two rotation matrices $\mathbf{R}_0$ and $\mathbf{R}_1$, the SLERP interpolation:
@@ -774,6 +774,19 @@ These tools enable us to:
 - Parameterize smooth trajectories and control laws.
 
 With exponential coordinates and the matrix logarithm in hand, we possess the complete mathematical toolkit for describing, analyzing, and controlling rigid body motion in 3D space. We are now ready to move into Volume I, where we develop the geometric properties of $\SO(3)$ and $\SE(3)$ in depth.
+
+\section{Further Reading}
+\label{sec:further_reading_ch6}
+
+For a rigorous mathematical treatment of Lie groups, Lie algebras, and the exponential map, Hall \cite{hall2015} is an excellent graduate-level reference that develops the theory from first principles with careful attention to the analytic subtleties. Readers seeking a deeper understanding of the algebraic structures underlying this chapter will find Hall's treatment of matrix Lie groups particularly relevant.
+
+The robotics-specific development of exponential coordinates is best found in Murray, Li, and Sastry \cite{Murray1994}, whose Chapter~2 constructs the exponential map on $\SO(3)$ and $\SE(3)$ with an emphasis on applications to manipulator kinematics. Their treatment of the product of exponentials formula, which we develop in Chapter~\ref{ch:product_of_exponentials}, builds directly on the material presented here.
+
+Marsden and Ratiu \cite{marsden1999} offer a geometric mechanics perspective on the exponential map, connecting it to Hamiltonian systems, symplectic structures, and momentum maps. Their framework reveals that Rodrigues' formula and the $\SE(3)$ exponential are specific instances of a much broader theory governing the geometry of mechanical systems on Lie groups.
+
+Lynch and Park \cite{lynch2017} provide an accessible and application-oriented treatment of SLERP interpolation, geodesics on $\SO(3)$, and the practical use of exponential coordinates in trajectory planning and motion control. Their worked examples are particularly valuable for building geometric intuition.
+
+It is worth noting that the Baker-Campbell-Hausdorff formula developed in Section~\ref{sec:bch} has deep connections beyond robotics. In quantum mechanics, the BCH formula governs the composition of unitary operators and appears centrally in the theory of quantum gates. In differential geometry, it encodes the local structure of Lie groups and is intimately related to the curvature of the group manifold.
 
 \section{Exercises}
 \label{sec:exercises_ch6}
