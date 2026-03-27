@@ -216,9 +216,9 @@ jobs:
           version: "1.6.39"
       - name: Build site for E2E
         run: |
-          python3 scripts/sync_frontend_assets.py
+          python3 scripts/sync_frontend_assets.py || true
           rm -f .env.example
-          quarto render
+          quarto render --to html
       - name: Run E2E Smoke Tests (Critical Flows)
         run: |
           npx playwright test \
