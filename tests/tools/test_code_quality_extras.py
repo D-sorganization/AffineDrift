@@ -54,23 +54,23 @@ class TestCheckBannedPatterns:
     """Tests for check_banned_patterns()."""
 
     def test_detects_todo(self, tmp_path: Path) -> None:
-        """Should detect TRACKED_TASK patterns."""
+        """Should detect TODO patterns (reported as TRACKED_TASK)."""
         f = tmp_path / "module.py"
-        lines = ["x = 1  # TRACKED_TASK: fix this\n"]
+        lines = ["x = 1  # TODO: fix this\n"]
         result = check_banned_patterns(lines, f)
         assert any("TRACKED_TASK" in msg for _, msg, _ in result)
 
     def test_detects_fixme(self, tmp_path: Path) -> None:
-        """Should detect TRACKED_DEFECT patterns."""
+        """Should detect FIXME patterns (reported as TRACKED_DEFECT)."""
         f = tmp_path / "module.py"
-        lines = ["# TRACKED_DEFECT: this is broken\n"]
+        lines = ["# FIXME: this is broken\n"]
         result = check_banned_patterns(lines, f)
         assert any("TRACKED_DEFECT" in msg for _, msg, _ in result)
 
     def test_skips_self_check_files(self, tmp_path: Path) -> None:
         """Should skip pattern_checker.py (self-check exclusion)."""
         f = tmp_path / "pattern_checker.py"
-        lines = ["x = 1  # TRACKED_TASK: fix this\n"]
+        lines = ["x = 1  # TODO: fix this\n"]
         result = check_banned_patterns(lines, f)
         assert result == []
 
@@ -141,7 +141,7 @@ class TestReportIssues:
 
     def test_writes_to_stderr(self, capsys: pytest.CaptureFixture[str]) -> None:
         """Should write output to stderr."""
-        issues = [(Path("module.py"), [(1, "TRACKED_TASK found", "x  # TRACKED_TASK")])]
+        issues = [(Path("module.py"), [(1, "TRACKED_TASK found", "x  # TODO")])]
         report_issues(issues)
         captured = capsys.readouterr()
         assert "module.py" in captured.err or "FAILED" in captured.err
