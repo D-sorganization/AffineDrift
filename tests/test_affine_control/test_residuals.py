@@ -48,11 +48,12 @@ class TestResiduals(unittest.TestCase):
 
     def test_monitor_switching(self) -> None:
         """
-        Test mode switching logic: LQR -> MPC_WARN, then stays MPC_WARN.
+        Test mode switching logic: LQR -> MPC_WARN -> MPC_FULL -> MPC_WARN -> LQR.
 
-        Due to the current state-machine implementation, MPC_WARN does not
-        escalate to MPC_FULL (the first MPC_WARN branch resets high_count
-        before the second branch can fire).
+        The three-state machine escalates from MPC_WARN to MPC_FULL when
+        high_count >= n_hysteresis while in MPC_WARN, then recovers via low
+        residuals: MPC_FULL -> MPC_WARN -> LQR (each transition requires
+        n_hysteresis=2 consecutive low-residual samples).
         """
         monitor = ResidualMonitor(eps_warning=0.1, eps_critical=0.5, n_hysteresis=2)
 
@@ -65,24 +66,29 @@ class TestResiduals(unittest.TestCase):
         monitor.update(np.array([0.6]), x_nom)
         self.assertEqual(monitor.mode, "LQR")
 
-        # 3. Critical error (0.6) for 2nd step -> Transition to MPC_WARN
+        # 3. Critical error (0.6) for 2nd step -> Transition to MPC_WARN (resets counters)
         monitor.update(np.array([0.6]), x_nom)
         self.assertEqual(monitor.mode, "MPC_WARN")
 
-        # 4. Critical error (0.6) for 1 step in MPC_WARN -> Still MPC_WARN
+        # 4. Critical error (0.6) for 1 step in MPC_WARN -> Still MPC_WARN (n=2 needed)
         monitor.update(np.array([0.6]), x_nom)
         self.assertEqual(monitor.mode, "MPC_WARN")
 
-        # 5. Critical error (0.6) for 2nd step in MPC_WARN -> Still MPC_WARN
-        #    (first MPC_WARN branch resets high_count, preventing escalation)
+        # 5. Critical error (0.6) for 2nd step in MPC_WARN -> Escalates to MPC_FULL
         monitor.update(np.array([0.6]), x_nom)
+        self.assertEqual(monitor.mode, "MPC_FULL")
+
+        # 6-7. Low errors in MPC_FULL: after 2 steps, recovers to MPC_WARN
+        monitor.update(np.array([0.05]), x_nom)
+        self.assertEqual(monitor.mode, "MPC_FULL")
+        monitor.update(np.array([0.05]), x_nom)
         self.assertEqual(monitor.mode, "MPC_WARN")
 
-        # 6-9. Low errors do not recover to LQR from MPC_WARN
-        #      (the recovery branch is in the shadowed second MPC_WARN elif)
-        for _ in range(4):
-            monitor.update(np.array([0.05]), x_nom)
+        # 8-9. Low errors in MPC_WARN: after 2 steps, recovers to LQR
+        monitor.update(np.array([0.05]), x_nom)
         self.assertEqual(monitor.mode, "MPC_WARN")
+        monitor.update(np.array([0.05]), x_nom)
+        self.assertEqual(monitor.mode, "LQR")
 
     def test_residual_bound_mismatched_M_traj_raises(self) -> None:
         """predict_residual_bound must raise when M_traj length differs from others."""
@@ -119,27 +125,27 @@ class TestResiduals(unittest.TestCase):
         self.assertEqual(monitor.mode, "MPC_WARN")
 
     def test_mpc_warn_to_lqr_direct(self) -> None:
-        """MPC_WARN stays MPC_WARN even when residual recovers.
+        """MPC_WARN recovers to LQR when residual drops below eps_warning.
 
-        The recovery branch (MPC_WARN -> LQR) is in the shadowed second
-        ``elif self.mode == "MPC_WARN"`` block, so it is unreachable.
+        With n_hysteresis=1, a single low-residual sample in MPC_WARN is
+        sufficient to trigger the MPC_WARN -> LQR recovery transition.
         """
         monitor = ResidualMonitor(eps_warning=0.1, eps_critical=0.5, n_hysteresis=1)
         x_nom = np.array([0.0])
 
-        # Enter MPC_WARN
+        # Enter MPC_WARN (counters reset on transition)
         monitor.update(np.array([0.6]), x_nom)
         self.assertEqual(monitor.mode, "MPC_WARN")
 
-        # Recovery does not trigger -- stays MPC_WARN
+        # One low-residual sample triggers MPC_WARN -> LQR recovery
         monitor.update(np.array([0.05]), x_nom)
-        self.assertEqual(monitor.mode, "MPC_WARN")
+        self.assertEqual(monitor.mode, "LQR")
 
     def test_all_modes_in_invariant(self) -> None:
-        """Test that reachable modes are LQR and MPC_WARN.
+        """Test that all three modes (LQR, MPC_WARN, MPC_FULL) are reachable.
 
-        MPC_FULL is unreachable in the current implementation because the
-        first ``elif self.mode == "MPC_WARN"`` branch shadows the second.
+        With n_hysteresis=1, a critical residual takes LQR -> MPC_WARN
+        and a second critical residual takes MPC_WARN -> MPC_FULL.
         """
         monitor = ResidualMonitor(eps_warning=0.1, eps_critical=0.5, n_hysteresis=1)
         x_nom = np.array([0.0])
@@ -151,9 +157,9 @@ class TestResiduals(unittest.TestCase):
         valid_modes.add(monitor.mode)  # MPC_WARN
 
         monitor.update(np.array([0.6]), x_nom)
-        valid_modes.add(monitor.mode)  # Still MPC_WARN (MPC_FULL unreachable)
+        valid_modes.add(monitor.mode)  # MPC_FULL (reachable via escalation)
 
-        self.assertEqual(valid_modes, {"LQR", "MPC_WARN"})
+        self.assertEqual(valid_modes, {"LQR", "MPC_WARN", "MPC_FULL"})
 
 
 if __name__ == "__main__":

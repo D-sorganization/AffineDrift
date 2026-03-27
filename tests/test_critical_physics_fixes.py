@@ -13,6 +13,9 @@ import numpy as np
 import pytest
 
 from src.affine_control.ddp import _resample_controls, adaptive_timestep_ddp_mock
+from src.affine_control.residuals import ResidualMonitor
+from src.affine_control.swing_optimizer import SwingOptimizationConfig, SwingOptimizer
+from src.core.contracts import ContractViolationError
 from src.tools.rl_funnel_benchmark import (
     PENDULUM_L1,
     PENDULUM_L2,
@@ -148,9 +151,8 @@ class TestMPCFullReachable:
         # Two more critical samples -> MPC_WARN -> MPC_FULL
         monitor.update(np.array([0.6]), x_nom)
         monitor.update(np.array([0.6]), x_nom)
-        assert (
-            monitor.mode == "MPC_FULL"
-        ), "MPC_FULL must be reachable; was unreachable due to duplicate elif"
+        msg = "MPC_FULL must be reachable; was unreachable due to duplicate elif"
+        assert monitor.mode == "MPC_FULL", msg
 
     def test_full_state_cycle(self) -> None:
         """Full cycle: LQR -> MPC_WARN -> MPC_FULL -> MPC_WARN -> LQR."""
@@ -210,9 +212,8 @@ class TestCentralDifferencesLinearization:
         ctr = (f(x0 + eps) - f(x0 - eps)) / (2 * eps)
 
         # Central should be closer to 3.0
-        assert abs(ctr - 3.0) < abs(
-            fwd - 3.0
-        ), f"Central ({ctr}) should be closer to 3.0 than forward ({fwd})"
+        msg = f"Central ({ctr}) should be closer to 3.0 than forward ({fwd})"
+        assert abs(ctr - 3.0) < abs(fwd - 3.0), msg
 
 
 # ---------------------------------------------------------------------------
@@ -231,9 +232,8 @@ class TestZeroOrderHoldResampling:
 
         u_resampled = _resample_controls(u_old, t_old, t_new)
         # At t=0.15, last preceding time is t=0.1 (index 1), so control should be u[1]=2.0
-        assert (
-            u_resampled[0, 0] == 2.0
-        ), f"Expected control 2.0 (from t=0.1), got {u_resampled[0, 0]}"
+        msg = f"Expected control 2.0 (from t=0.1), got {u_resampled[0, 0]}"
+        assert u_resampled[0, 0] == 2.0, msg
 
     def test_zoh_at_exact_grid_point(self) -> None:
         """At an exact grid point t_old[k], ZOH uses u_old[k] (the interval starting there)."""
@@ -243,9 +243,8 @@ class TestZeroOrderHoldResampling:
 
         u_resampled = _resample_controls(u_old, t_old, t_new)
         # At exactly t=0.1, searchsorted('right') returns 2, so idx=1 => u[1]=20.0
-        assert (
-            u_resampled[0, 0] == 20.0
-        ), f"At t=0.1 (grid point 1), ZOH should use u[1]=20.0, got {u_resampled[0, 0]}"
+        msg = f"At t=0.1 (grid point 1), ZOH should use u[1]=20.0, got {u_resampled[0, 0]}"
+        assert u_resampled[0, 0] == 20.0, msg
 
     def test_zoh_at_time_zero(self) -> None:
         """At t=0.0, should use first control."""
@@ -329,10 +328,8 @@ class TestDDPMaxIters:
         # we expect significantly more dynamics calls.
         # With 3 iterations it would be about ~300 calls.
         # With 10 iterations it should be about ~1000.
-        assert call_count > 400, (
-            f"Expected >400 dynamics calls with max_iters=10, got {call_count}. "
-            "Early termination bug may still be present."
-        )
+        msg = f"Expected >400 dynamics calls with max_iters=10, got {call_count}. Early termination bug may still be present."
+        assert call_count > 400, msg
 
     def test_max_iters_1_runs_once(self) -> None:
         """max_iters=1 should still produce valid output."""

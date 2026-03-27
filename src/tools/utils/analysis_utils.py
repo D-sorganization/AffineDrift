@@ -1,5 +1,3 @@
-from numba import jit
-
 """Utilities for analyzing Python code quality and structure.
 
 This module provides functions to extract metrics and assess various aspects
@@ -90,7 +88,6 @@ def get_python_metrics(filepath: Path) -> dict[str, int]:
     }
 
 
-@jit(nopython=True, fastmath=True)
 def collect_python_file_metrics(filepath: Path) -> PythonFileMetrics:
     """Extract structured metrics from a Python file using AST analysis.
 
@@ -163,7 +160,6 @@ def get_detailed_function_metrics(content: str) -> list[dict[str, Any]]:
     ]
 
 
-@jit(nopython=True, fastmath=True)
 def collect_function_details(content: str) -> list[FunctionDetail]:
     """Extract structured function details from Python source code.
 
