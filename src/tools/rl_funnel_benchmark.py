@@ -17,43 +17,15 @@ from scipy.linalg import solve_continuous_are
 from src.core.constants import GRAVITY_M_S2
 from src.core.contracts.definitions import require
 from src.core.contracts.validators import check_finite_array, check_positive
-
-
-def validate_state_vector(x: npt.NDArray[Any], name: str) -> None:
-    check_finite_array(x, name)
-
-
-def validate_weight_matrix(Q: npt.NDArray[Any], shape: tuple[int, int], name: str) -> None:
-    check_finite_array(Q, name)
+from src.tools.rl_funnel_support import (
+    double_pendulum_mass_matrix,
+    validate_state_vector,
+    validate_weight_matrix,
+)
 
 
 def format_results(results: list["BenchmarkResult"]) -> str:
     return "\n".join([f"{r.name}: error={r.tracking_error:.4f}" for r in results])
-
-
-def double_pendulum_mass_matrix(th1: float, th2: float) -> npt.NDArray[Any]:
-    """Compute the 2x2 mass matrix for a double pendulum.
-
-    Uses parameters PENDULUM_M1, PENDULUM_M2, PENDULUM_L1, PENDULUM_L2.
-    The mass matrix M(q) for a double pendulum is:
-        M[0,0] = (m1 + m2) * L1^2
-        M[0,1] = m2 * L1 * L2 * cos(th1 - th2)
-        M[1,0] = m2 * L1 * L2 * cos(th1 - th2)
-        M[1,1] = m2 * L2^2
-    """
-    c12 = np.cos(th1 - th2)
-    M = np.array([
-        [
-            (PENDULUM_M1 + PENDULUM_M2) * PENDULUM_L1**2,
-            PENDULUM_M2 * PENDULUM_L1 * PENDULUM_L2 * c12,
-        ],
-        [
-            PENDULUM_M2 * PENDULUM_L1 * PENDULUM_L2 * c12,
-            PENDULUM_M2 * PENDULUM_L2**2,
-        ],
-    ])
-    return M
-
 
 # Default control saturation limits for the double-pendulum benchmark (N*m).
 # The value 50 N*m is appropriate for a 1 kg, 0.5 m double pendulum; adjust
