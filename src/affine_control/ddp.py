@@ -1,5 +1,3 @@
-from numba import jit
-
 """Differential Dynamic Programming (DDP) with adaptive timestep for affine systems.
 
 Implements a mock DDP trajectory optimiser that adapts the integration timestep
@@ -223,7 +221,6 @@ def _compute_adaptive_timesteps(
     return cast(np.ndarray[Any, Any], np.clip(dt_adaptive, DT_CLIP_MIN, DT_CLIP_MAX))
 
 
-@jit(nopython=True, fastmath=True)
 def _simulate_trajectory(
     f: Callable[..., np.ndarray[Any, Any]],
     x0: np.ndarray[Any, Any],

@@ -1,5 +1,3 @@
-from numba import jit
-
 """Time-series plot functions for the Wrist Universal Joint model.
 
 This module contains matplotlib-based plotting functions:
@@ -209,7 +207,6 @@ def plot_acceleration(
     return fig
 
 
-@jit(nopython=True, fastmath=True)
 def _compute_transmission_sweep(
     phi_sweep_deg: np.ndarray[Any, Any],
     theta_grip_rad: float,
