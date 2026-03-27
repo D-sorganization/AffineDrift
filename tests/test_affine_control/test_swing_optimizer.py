@@ -325,7 +325,9 @@ class TestSwingOptimizerCost(unittest.TestCase):
 
     def test_terminal_cost_scales_with_terminal_weight(self) -> None:
         """Terminal cost should scale with terminal_weight."""
-        config_low = SwingOptimizationConfig(n_joints=2, target_velocity=10.0, terminal_weight=1.0, allow_mock_solver=True)
+        config_low = SwingOptimizationConfig(
+            n_joints=2, target_velocity=10.0, terminal_weight=1.0, allow_mock_solver=True
+        )
         config_high = SwingOptimizationConfig(
             n_joints=2, target_velocity=10.0, terminal_weight=100.0, allow_mock_solver=True
         )
