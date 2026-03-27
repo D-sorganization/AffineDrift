@@ -27,6 +27,7 @@ from src.tools.rl_funnel_support import (
 def format_results(results: list["BenchmarkResult"]) -> str:
     return "\n".join([f"{r.name}: error={r.tracking_error:.4f}" for r in results])
 
+
 # Default control saturation limits for the double-pendulum benchmark (N*m).
 # The value 50 N*m is appropriate for a 1 kg, 0.5 m double pendulum; adjust
 # for different systems by passing `control_limits` to run_benchmark().
@@ -187,8 +188,7 @@ def setpoint_lqr_controller(
         ej = np.zeros(n)
         ej[j] = eps
         A[:, j] = (
-            double_pendulum_drift(0.0, x_target + ej)
-            - double_pendulum_drift(0.0, x_target - ej)
+            double_pendulum_drift(0.0, x_target + ej) - double_pendulum_drift(0.0, x_target - ej)
         ) / (2 * eps)
 
     B0 = double_pendulum_B(x_target)
@@ -238,8 +238,7 @@ def _precompute_lqr_gains(
             ej = np.zeros(n)
             ej[j] = eps
             A[:, j] = (
-                double_pendulum_drift(t, x_ref_i + ej)
-                - double_pendulum_drift(t, x_ref_i - ej)
+                double_pendulum_drift(t, x_ref_i + ej) - double_pendulum_drift(t, x_ref_i - ej)
             ) / (2 * eps)
         B0 = double_pendulum_B(x_ref_i)
         try:
