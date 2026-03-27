@@ -1,3 +1,5 @@
+from numba import jit
+
 """Concrete dynamical system examples for AffineDrift.
 
 This module provides the abstract base class ``DynamicalSystem`` and four
@@ -26,6 +28,8 @@ from src.core.contracts import check_finite_array, check_positive, require
 logger = logging.getLogger(__name__)
 
 
+@jit(nopython=True, fastmath=True)
+@jit(nopython=True, fastmath=True)
 def _central_difference_linearization(
     dynamics: "DynamicalSystem",
     x: np.ndarray[Any, Any],
@@ -371,6 +375,8 @@ class RobotArm(DynamicalSystem):
 
         return np.array([dq1, dq2, ddq[0], ddq[1]])
 
+    @jit(nopython=True, fastmath=True)
+    @jit(nopython=True, fastmath=True)
     def linearize(
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:

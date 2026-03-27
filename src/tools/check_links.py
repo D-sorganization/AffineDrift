@@ -49,8 +49,7 @@ def find_links(file_path: Path) -> list[tuple[str, int]]:
     links: list[tuple[str, int]] = []
     for line_number, line in enumerate(lines, start=1):
         for pattern in ALL_LINK_PATTERNS:
-            for match in pattern.findall(line):
-                links.append((match.strip(), line_number))
+            links.extend([(match.strip(), line_number) for match in pattern.findall(line)])
     return links
 
 

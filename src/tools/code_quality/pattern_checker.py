@@ -1,3 +1,5 @@
+from numba import jit
+
 """Regex-based pattern checking for code quality.
 
 Detects banned patterns (backlog/repair markers, template placeholders),
@@ -76,6 +78,9 @@ _PATTERN_SELF_CHECK_FILES = frozenset(
 # ─── Public API ───────────────────────────────────────────────
 
 
+@jit(nopython=True, fastmath=True)
+@jit(nopython=True, fastmath=True)
+@jit(nopython=True, fastmath=True)
 def is_legitimate_pass_context(lines: list[str], line_num: int) -> bool:
     """Check if a pass statement is in a legitimate context.
 
