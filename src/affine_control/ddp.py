@@ -211,16 +211,13 @@ def _compute_adaptive_timesteps(
     m_traj = np.array(
         [compute_hessian_bound_func(f, x_traj[i], u_traj[i]) for i in range(len(u_traj))]
     )
-    delta_x_max = np.array(
-        [estimate_perturbation_size(x_traj[i], u_traj[i]) for i in range(len(u_traj))]
-    )
 
     # Avoid division by zero
-    delta_x_max = np.maximum(delta_x_max, EPSILON)
     m_traj = np.maximum(m_traj, EPSILON)
 
-    # Adaptive timestep: dt = sqrt( 2 * eps / (M * delta_x^2) )
-    dt_adaptive = np.sqrt(2 * eps_residual / (m_traj * delta_x_max**2))
+    # Adaptive timestep: dt = sqrt( 2 * eps / M )
+    # The residual bound is (M/2)*dt^2, so solving for dt gives sqrt(2*eps/M).
+    dt_adaptive = np.sqrt(2 * eps_residual / m_traj)
     return cast(np.ndarray[Any, Any], np.clip(dt_adaptive, DT_CLIP_MIN, DT_CLIP_MAX))
 
 

@@ -358,7 +358,11 @@ class RobotArm(DynamicalSystem):
         C2 = h * dq1**2
         C = np.array([C1, C2])
 
-        # Gravity
+        # Gravity — angles measured from horizontal (q=0 is horizontal).
+        # With this convention the gravitational potential energy is
+        # V = m*g*l*sin(q), so the gravity torque dV/dq = m*g*l*cos(q).
+        # If angles were measured from vertical (q=0 is straight down) the
+        # terms would use sin(q) instead of cos(q).
         G1 = (m1 + m2) * g * l1 * np.cos(q1) + m2 * g * l2 * np.cos(q1 + q2)
         G2 = m2 * g * l2 * np.cos(q1 + q2)
         G = np.array([G1, G2])
