@@ -1,3 +1,5 @@
+from numba import jit
+
 """Anatomical diagram drawing functions for the Wrist Universal Joint model.
 
 This module contains the forearm-hand-club diagram rendering:
@@ -114,6 +116,7 @@ def _draw_wrist_joint(ax: Any, wrist_x: float, wrist_y: float) -> None:
     )
 
 
+@jit(nopython=True, fastmath=True)
 def _draw_fingers(
     ax: Any,
     hand_center_x: float,
