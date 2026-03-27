@@ -263,11 +263,11 @@ def _render_signal_checkboxes(plot_type: str) -> dict[str, bool]:
 
 def _plot_torque_figure(
     params: dict[str, Any],
-    t: np.ndarray,  # type: ignore[type-arg]
-    input_torque: np.ndarray,  # type: ignore[type-arg]
+    t: npt.NDArray[Any],
+    input_torque: npt.NDArray[Any],
 ) -> Figure:
     """Create a torque vs time figure."""
-    return plot_torque(  # type: ignore[no-any-return]
+    return plot_torque(
         t,
         input_torque,
         params["grip_angle"],
@@ -283,11 +283,11 @@ def _plot_torque_figure(
 
 def _plot_acceleration_figure(
     params: dict[str, Any],
-    t: np.ndarray,  # type: ignore[type-arg]
-    input_torque: np.ndarray,  # type: ignore[type-arg]
+    t: npt.NDArray[Any],
+    input_torque: npt.NDArray[Any],
 ) -> Figure:
     """Create an angular acceleration vs time figure."""
-    return plot_acceleration(  # type: ignore[no-any-return]
+    return plot_acceleration(
         t,
         input_torque,
         params["grip_angle"],
@@ -301,7 +301,7 @@ def _plot_acceleration_figure(
 
 def _plot_transmission_figure(params: dict[str, Any]) -> Figure:
     """Create a transmission ratio sweep figure."""
-    return plot_transmission_sweep(  # type: ignore[no-any-return]
+    return plot_transmission_sweep(
         params["grip_angle"],
         params["wrist_angle"],
         params["I_alpha"],

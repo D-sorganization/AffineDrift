@@ -76,12 +76,12 @@ class GolfClub:
     @property
     def typical_spin_rad_s(self) -> float:
         """Typical backspin converted to rad/s."""
-        return self.typical_spin_rpm * 2.0 * np.pi / 60.0
+        return float(self.typical_spin_rpm * 2.0 * np.pi / 60.0)
 
     @property
     def typical_launch_rad(self) -> float:
         """Typical launch angle converted to radians."""
-        return np.radians(self.typical_launch_deg)
+        return float(np.radians(self.typical_launch_deg))
 
     @property
     def typical_distance_yards(self) -> float:
@@ -95,7 +95,7 @@ class GolfClub:
         g = 9.81
         drag_factor = 0.55  # Empirical correction for drag
         range_m = v**2 * np.sin(2.0 * angle) / g * drag_factor
-        return range_m * 1.09361  # meters to yards
+        return float(range_m * 1.09361)  # meters to yards
 
 
 @dataclass(frozen=True)

@@ -7,9 +7,10 @@ forward dynamics framework.
 
 from src.golf_simulation.ball_flight import BallFlightDynamics, BallFlightState
 from src.golf_simulation.clubs import ClubBag, ClubType, GolfClub, LaunchConditions
-from src.golf_simulation.course import GolfCourse, GolfHole, TerrainType
+from src.golf_simulation.course import GolfCourse, GolfHole
 from src.golf_simulation.putting import GreenSurface, PuttingSimulator
 from src.golf_simulation.round_simulator import RoundResult, RoundSimulator, ShotResult
+from src.golf_simulation.terrain import TerrainType
 
 __all__ = [
     "BallFlightDynamics",

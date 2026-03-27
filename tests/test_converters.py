@@ -193,9 +193,7 @@ class TestWrapFile:
     def test_already_wrapped_sidebar_not_double_wrapped(self) -> None:
         """A file already containing sidebar-sticky-content is not re-wrapped."""
         content = (
-            '<aside class="left-sidebar">'
-            '<div class="sidebar-sticky-content">Nav</div>'
-            "</aside>"
+            '<aside class="left-sidebar"><div class="sidebar-sticky-content">Nav</div></aside>'
         )
         with tempfile.NamedTemporaryFile(
             mode="w", suffix=".qmd", delete=False, encoding="utf-8"

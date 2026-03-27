@@ -221,7 +221,7 @@ def generate_sample_torque(
 
 def _build_polynomial_namespace(
     t: np.ndarray[Any, Any],
-) -> EvalWithCompoundTypes:
+) -> Any:
     """Build a safe evaluator with allowed names and functions for polynomial expressions."""
     return EvalWithCompoundTypes(
         names={"t": t, "pi": np.pi, "e": np.e},
