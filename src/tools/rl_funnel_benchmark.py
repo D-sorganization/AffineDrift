@@ -6,6 +6,7 @@ import argparse
 import logging
 import time
 from collections.abc import Callable
+from dataclasses import dataclass, field
 from typing import Any, cast
 
 import numpy as np
@@ -16,6 +17,17 @@ from scipy.linalg import solve_continuous_are
 from src.core.constants import GRAVITY_M_S2
 from src.core.contracts.definitions import require
 from src.core.contracts.validators import check_finite_array, check_positive
+from src.tools.rl_funnel_reporting import format_results
+from src.tools.rl_funnel_support import (
+    DEFAULT_CONTROL_SATURATION,
+    PENDULUM_LINK_1_M,
+    PENDULUM_LINK_2_M,
+    PENDULUM_MASS_1_KG,
+    PENDULUM_MASS_2_KG,
+    double_pendulum_mass_matrix,
+    validate_state_vector,
+    validate_weight_matrix,
+)
 
 # Default control saturation limits for the double-pendulum benchmark (N*m).
 # The value 50 N*m is appropriate for a 1 kg, 0.5 m double pendulum; adjust
@@ -47,7 +59,7 @@ def double_pendulum_drift(
     check_finite_array(x, "x")
     check_positive(g, "g")
 
-    m1, m2, L1, L2 = PENDULUM_M1, PENDULUM_M2, PENDULUM_L1, PENDULUM_L2
+    _m1, _m2, _L1, _L2 = PENDULUM_M1, PENDULUM_M2, PENDULUM_L1, PENDULUM_L2
     th1, th2, dth1, dth2 = x
     s12 = np.sin(th1 - th2)
     M = double_pendulum_mass_matrix(th1, th2)
@@ -72,7 +84,7 @@ def double_pendulum_B(x: npt.NDArray[Any]) -> npt.NDArray[Any]:
     )
     check_finite_array(x, "x")
 
-    m1, m2, L1, L2 = PENDULUM_M1, PENDULUM_M2, PENDULUM_L1, PENDULUM_L2
+    _m1, _m2, _L1, _L2 = PENDULUM_M1, PENDULUM_M2, PENDULUM_L1, PENDULUM_L2
     th1, th2, _, _ = x
     M_inv = np.linalg.inv(double_pendulum_mass_matrix(th1, th2))
     B_full = np.zeros((4, 2))
