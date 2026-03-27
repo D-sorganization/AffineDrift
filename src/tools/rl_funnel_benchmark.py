@@ -35,8 +35,25 @@ def format_results(results: list["BenchmarkResult"]) -> str:
 
 
 def double_pendulum_mass_matrix(th1: float, th2: float) -> npt.NDArray[Any]:
-    """Return the 2x2 mass matrix for a double pendulum at given joint angles."""
-    return np.eye(2)
+    """Compute the 2x2 mass (inertia) matrix for a double pendulum.
+
+    M = [[( m1 + m2 ) * L1^2,        m2 * L1 * L2 * cos(th1-th2)],
+         [m2 * L1 * L2 * cos(th1-th2),  m2 * L2^2               ]]
+    """
+    c12 = np.cos(th1 - th2)
+    M = np.array(
+        [
+            [
+                (PENDULUM_M1 + PENDULUM_M2) * PENDULUM_L1**2,
+                PENDULUM_M2 * PENDULUM_L1 * PENDULUM_L2 * c12,
+            ],
+            [
+                PENDULUM_M2 * PENDULUM_L1 * PENDULUM_L2 * c12,
+                PENDULUM_M2 * PENDULUM_L2**2,
+            ],
+        ]
+    )
+    return M
 
 
 # Default control saturation limits for the double-pendulum benchmark (N*m).
