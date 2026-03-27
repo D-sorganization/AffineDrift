@@ -1,8 +1,8 @@
+from __future__ import annotations
+
 from typing import Any, Callable, Tuple
 
-import numpy as np
-
-from .ilqr_solver import ILQRSolver, TrajectoryOptimizer
+from .ilqr_solver import ILQRSolver, NDArray, TrajectoryOptimizer
 
 
 def get_default_optimizer() -> TrajectoryOptimizer:
@@ -11,14 +11,14 @@ def get_default_optimizer() -> TrajectoryOptimizer:
 
 
 def ilqr_solver_wrapper(
-    f: Callable[[np.ndarray, np.ndarray], np.ndarray],
-    x0: np.ndarray,
-    xf: np.ndarray,
-    u_init: np.ndarray,
+    f: Callable[[NDArray, NDArray], NDArray],
+    x0: NDArray,
+    xf: NDArray,
+    u_init: NDArray,
     eps_residual: float = 1e-3,
     max_iters: int = 50,
     compute_hessian_bound_func: Any = None,
-) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+) -> Tuple[NDArray, NDArray, NDArray]:
     """
     Wrapper around ILQRSolver to match the DDP mock signature.
     """

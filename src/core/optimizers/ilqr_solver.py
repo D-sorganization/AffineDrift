@@ -1,26 +1,30 @@
-# We'll define the TrajectoryOptimizer protocol
+from __future__ import annotations
+
 from typing import Callable, Protocol, Tuple
 
 import numpy as np
+import numpy.typing as npt
+
+NDArray = npt.NDArray[np.float64]
 
 
 class TrajectoryOptimizer(Protocol):
     def optimize(
         self,
-        dynamics_fn: Callable[[np.ndarray, np.ndarray], np.ndarray],
-        x0: np.ndarray,
-        xf: np.ndarray,
-        u_init: np.ndarray,
+        dynamics_fn: Callable[[NDArray, NDArray], NDArray],
+        x0: NDArray,
+        xf: NDArray,
+        u_init: NDArray,
         dt: float = 0.01,
         max_iters: int = 20,
         tol: float = 1e-4,
-    ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]: ...
+    ) -> Tuple[NDArray, NDArray, NDArray]: ...
 
 
 class ILQRSolver:
     """Functional Iterative Linear Quadratic Regulator (iLQR) implementation."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the iLQR solver with default cost weights."""
         self.state_weight = 1.0
         self.terminal_weight = 100.0
@@ -28,14 +32,14 @@ class ILQRSolver:
 
     def optimize(
         self,
-        dynamics_fn: Callable[[np.ndarray, np.ndarray], np.ndarray],
-        x0: np.ndarray,
-        xf: np.ndarray,
-        u_init: np.ndarray,
+        dynamics_fn: Callable[[NDArray, NDArray], NDArray],
+        x0: NDArray,
+        xf: NDArray,
+        u_init: NDArray,
         dt: float = 0.01,
         max_iters: int = 50,
         tol: float = 1e-3,
-    ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    ) -> Tuple[NDArray, NDArray, NDArray]:
         """
         Runs the iLQR algorithm.
         Returns: x_traj, u_traj, t_traj
@@ -56,7 +60,7 @@ class ILQRSolver:
 
         # Since this is a basic interface matching DDP_mock,
         # we do finite differences for A and B.
-        def get_linearized(x, u):
+        def get_linearized(x: NDArray, u: NDArray) -> Tuple[NDArray, NDArray]:
             """Compute linearized dynamics A, B matrices via finite differences."""
             A = np.zeros((n_x, n_x))
             B = np.zeros((n_x, n_u))
@@ -146,10 +150,16 @@ class ILQRSolver:
             if max_k < tol:
                 break
 
-        t_traj = np.linspace(0, N * dt, N + 1)
+        t_traj: NDArray = np.asarray(np.linspace(0, N * dt, N + 1))
         return x_traj, u_traj, t_traj
 
-    def _rollout(self, dynamics_fn, x0, u_traj, dt):
+    def _rollout(
+        self,
+        dynamics_fn: Callable[[NDArray, NDArray], NDArray],
+        x0: NDArray,
+        u_traj: NDArray,
+        dt: float,
+    ) -> NDArray:
         """Simulate the system forward using Euler integration."""
         N = len(u_traj)
         x_traj = np.zeros((N + 1, len(x0)))
