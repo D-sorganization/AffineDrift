@@ -21,6 +21,7 @@ class ILQRSolver:
     """Functional Iterative Linear Quadratic Regulator (iLQR) implementation."""
 
     def __init__(self):
+        """Initialize the iLQR solver with default cost weights."""
         self.state_weight = 1.0
         self.terminal_weight = 100.0
         self.control_weight = 0.01
@@ -56,6 +57,7 @@ class ILQRSolver:
         # Since this is a basic interface matching DDP_mock,
         # we do finite differences for A and B.
         def get_linearized(x, u):
+            """Compute linearized dynamics A, B matrices via finite differences."""
             A = np.zeros((n_x, n_x))
             B = np.zeros((n_x, n_u))
             eps = 1e-5
@@ -148,6 +150,7 @@ class ILQRSolver:
         return x_traj, u_traj, t_traj
 
     def _rollout(self, dynamics_fn, x0, u_traj, dt):
+        """Simulate the system forward using Euler integration."""
         N = len(u_traj)
         x_traj = np.zeros((N + 1, len(x0)))
         x_traj[0] = x0
