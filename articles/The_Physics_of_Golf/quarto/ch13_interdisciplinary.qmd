@@ -249,20 +249,20 @@ The golf swing subjects the body to enormous forces. The rotational acceleration
 
 A sports medicine physician must understand these forces to prevent injury. The affine framework provides a principled way to think about force distribution.
 
-Consider the rotator cuff, which must stabilize the shoulder joint against the large forces generated during the swing. If the golfer has poor technique (swinging too hard, using primarily the arms instead of the legs and torso), the rotator cuff is overloaded. If the golfer has good technique (sequencing the motion correctly, distributing the load across the whole body), the rotator cuff load is distributed and safe.
+Consider the rotator cuff, which must stabilize the shoulder joint against the large forces generated during the swing. The affine framework predicts that if the golfer relies primarily on arm and shoulder muscles (high local control inputs), the rotator cuff bears a larger share of the load. If the golfer sequences the motion to use the legs and torso (distributing loads across the whole body), the model predicts lower rotator cuff loading. While this reasoning is biomechanically sound, the direct causal relationship between swing technique and rotator cuff injury rates has not been established through controlled clinical trials.
 
 The difference between these two scenarios can be quantified using the affine framework:
 
 1. **Poor technique:** High control inputs in the arm and shoulder, swinging primarily with arm muscles. This means high $\control$ in the shoulder joints. The control authority $G$ in the shoulder is high, so the required torques are large. The resulting forces in the rotator cuff tendons are large.
 2. **Good technique:** High control inputs in the legs and torso, swinging with the whole body. This means high $\control$ in the hip and spine joints, but lower $\control$ in the shoulder. The drift field carries much of the motion automatically. The forces in the rotator cuff are lower.
 
-Sports medicine can use this framework to design injury prevention programs. The goal is to train the golfer to use technique (good sequencing, high drift) rather than pure force (high control inputs). This reduces the load on vulnerable structures and allows the golfer to swing harder and longer without injury.
+Sports medicine could potentially use this framework to inform injury prevention programs. The goal would be to train the golfer to use technique (good sequencing, high drift) rather than pure force (high control inputs). The framework predicts this would reduce the load on vulnerable structures, though prospective studies would be needed to validate the clinical effectiveness of such an approach.
 
 **Example: Rotator Cuff Training for Golfers**
 
 A golfer with a history of shoulder pain needs rotator cuff strengthening. The standard prescription is to do external rotation exercises with a resistance band: stand sideways, bend the elbow to 90 degrees, and rotate the forearm outward against resistance.
 
-This exercise is valuable, but incomplete. It strengthens the rotator cuff muscles in isolation, improving the control authority $G$ at the shoulder. But the injury often arises not from weakness, but from poor force distribution.
+This exercise is valuable, but the framework suggests it may be incomplete. It strengthens the rotator cuff muscles in isolation, improving the control authority $G$ at the shoulder. The affine decomposition raises the possibility that overload injuries may sometimes arise not from weakness alone, but from how forces are distributed across the kinematic chain---though this hypothesis would need clinical validation.
 
 A better program combines strength training with technique training:
 1. **Strength:** External rotation exercises, as above.
@@ -325,7 +325,7 @@ Now:
 4. **Neuroscience:** The cerebellum learns the drift field (the ZTCF). Motor cortex plans a control strategy to correct the ZTCF to reach the target. The integration of these is the golf swing.
 5. **Material science:** The ZTCF depends on equipment (shaft stiffness, ball compression, etc.). Different equipment produces different ZTCF trajectories.
 6. **Data science:** Launch monitors measure the outcome of the swing, which depends on the ZTCF. By analyzing launch monitor data, we can infer the golfer's ZTCF and predict future swings.
-7. **Sports medicine:** Injuries arise when the forces required to execute the swing exceed the tissues' capacity. By optimizing the ZTCF (through technique) or through equipment changes, we can reduce the forces and prevent injury.
+7. **Sports medicine:** The framework suggests that injuries may arise when the forces required to execute the swing exceed the tissues' capacity. By optimizing the ZTCF (through technique) or through equipment changes, the model predicts reduced loading on vulnerable structures.
 8. **Coaching:** A coach's job is to help the golfer achieve a ZTCF that points toward the target, using the available control authority to make small corrections.
 
 The ZTCF is the common currency. Every discipline contributes insights into how to compute, predict, or optimize the ZTCF.
@@ -387,7 +387,7 @@ The launch monitor and the personalized physics model together provide diagnosti
 3. **Neuroscience reveals how the nervous system learns the drift field** (via the cerebellum) and plans control inputs (via motor cortex).
 4. **Material science explains how equipment design** (shaft stiffness, ball compression) affects the swing and its outcome.
 5. **Data science and machine learning allow us to learn personalized drift fields from launch monitor data.**
-6. **Sports medicine uses force analysis to prevent injury:** good technique distributes load across the body, reducing injury risk.
+6. **Sports medicine may benefit from force analysis:** the framework predicts that good technique distributes load across the body, which may reduce injury risk.
 7. **Coaching science translates physics into actionable cues,** phase-specific guidance that improves the drift field.
 8. **The ZTCF is the unifying concept:** every discipline contributes to understanding and optimizing the zero-torque counterfactual.
 9. **The future is personalized:** every golfer will have a model of their own drift field and control authority, enabling precise diagnosis and targeted improvement.
@@ -411,6 +411,6 @@ Design a coaching cue that addresses a golfer's problem (e.g., "swinging too muc
 
 Explain why proprioceptive feedback is more useful than visual feedback in the golf swing. What role do mechanoreceptors in fascia play in this feedback?
 
-In the context of injury prevention, explain how optimizing the ZTCF (through technique) is more effective long-term than simply strengthening muscles.
+In the context of injury prevention, use the affine framework to argue why optimizing the ZTCF (through technique) might be more effective long-term than simply strengthening muscles. What evidence would be needed to validate this hypothesis?
 
 

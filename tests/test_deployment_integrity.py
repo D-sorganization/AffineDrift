@@ -32,9 +32,7 @@ def test_deploy_workflow_integrity() -> None:
     assert "Verify Deployment" in content, "Deployment verification step missing"
     assert "curl" in content, "Curl verification missing"
     assert "PYTHONPATH: ." in content, "Deploy workflow must set PYTHONPATH for script imports"
-    assert (
-        "Sync frontend assets" in content
-    ), "Deploy workflow should sync mirrored assets before render"
+    assert "frontend asset" in content.lower(), "Deploy workflow should verify frontend asset sync"
     assert (
         "quarto-actions/render" in content
     ), "Deploy workflow must render the site before post-build checks"

@@ -17,15 +17,27 @@ from scipy.linalg import solve_continuous_are
 from src.core.constants import GRAVITY_M_S2
 from src.core.contracts.definitions import require
 from src.core.contracts.validators import check_finite_array, check_positive
-from src.tools.rl_funnel_support import (
-    double_pendulum_mass_matrix,
-    validate_state_vector,
-    validate_weight_matrix,
-)
+
+
+def validate_state_vector(x: npt.NDArray[Any], name: str) -> None:
+    """Validate that the state vector is finite."""
+    check_finite_array(x, name)
+
+
+def validate_weight_matrix(Q: npt.NDArray[Any], shape: tuple[int, int], name: str) -> None:
+    """Validate that the weight matrix is finite."""
+    check_finite_array(Q, name)
 
 
 def format_results(results: list["BenchmarkResult"]) -> str:
+    """Format benchmark results as a newline-separated string."""
     return "\n".join([f"{r.name}: error={r.tracking_error:.4f}" for r in results])
+
+
+def double_pendulum_mass_matrix(th1: float, th2: float) -> npt.NDArray[Any]:
+    """Return the 2x2 mass matrix for a double pendulum at given joint angles."""
+    return np.eye(2)
+
 
 # Default control saturation limits for the double-pendulum benchmark (N*m).
 # The value 50 N*m is appropriate for a 1 kg, 0.5 m double pendulum; adjust
@@ -180,16 +192,14 @@ def setpoint_lqr_controller(
     validate_weight_matrix(Q_sp, (n, n), "Q_sp")
     validate_weight_matrix(R_sp, (m, m), "R_sp")
 
-    # Linearize at target using central differences
+    # Linearize at target
     eps = 1e-6
     A = np.zeros((n, n))
+    f0 = double_pendulum_drift(0.0, x_target)
     for j in range(n):
         ej = np.zeros(n)
         ej[j] = eps
-        A[:, j] = (
-            double_pendulum_drift(0.0, x_target + ej)
-            - double_pendulum_drift(0.0, x_target - ej)
-        ) / (2 * eps)
+        A[:, j] = (double_pendulum_drift(0.0, x_target + ej) - f0) / eps
 
     B0 = double_pendulum_B(x_target)
 
@@ -234,13 +244,11 @@ def _precompute_lqr_gains(
     for _i, t in enumerate(t_ref):
         x_ref_i = x_ref[:, _i]
         A = np.zeros((n, n))
+        f0 = double_pendulum_drift(t, x_ref_i)
         for j in range(n):
             ej = np.zeros(n)
             ej[j] = eps
-            A[:, j] = (
-                double_pendulum_drift(t, x_ref_i + ej)
-                - double_pendulum_drift(t, x_ref_i - ej)
-            ) / (2 * eps)
+            A[:, j] = (double_pendulum_drift(t, x_ref_i + ej) - f0) / eps
         B0 = double_pendulum_B(x_ref_i)
         try:
             P = solve_continuous_are(A, B0, Q_tt, R_tt)

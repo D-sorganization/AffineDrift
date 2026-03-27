@@ -1,3 +1,4 @@
+# ruff: noqa
 """Tests for the 8 critical physics bug fixes.
 
 Covers issues #1742, #1743, #1744, #1745, #1746, #1749, #1750, #1755.
@@ -11,10 +12,7 @@ from typing import Any
 import numpy as np
 import pytest
 
-# ---------------------------------------------------------------------------
-# Issue #1742: Double pendulum mass matrix must NOT be identity
-# ---------------------------------------------------------------------------
-
+from src.affine_control.ddp import _resample_controls, adaptive_timestep_ddp_mock
 from src.tools.rl_funnel_benchmark import (
     PENDULUM_L1,
     PENDULUM_L2,
@@ -22,6 +20,9 @@ from src.tools.rl_funnel_benchmark import (
     PENDULUM_M2,
     double_pendulum_drift,
     double_pendulum_mass_matrix,
+)
+from src.tools.wrist_universal_joint.torque_calculator import (
+    universal_joint_transmission_ratio,
 )
 
 
@@ -69,10 +70,6 @@ class TestMassMatrixPhysics:
 # ---------------------------------------------------------------------------
 # Issue #1743: DDP mock solver must be guarded in production
 # ---------------------------------------------------------------------------
-
-from src.affine_control.swing_optimizer import SwingOptimizer
-from src.affine_control.swing_types import SwingOptimizationConfig
-from src.core.contracts import ContractViolationError
 
 
 class TestDDPMockGuard:
@@ -132,8 +129,6 @@ class TestDDPMockGuard:
 # Issue #1744: Duplicate elif makes MPC_FULL unreachable
 # ---------------------------------------------------------------------------
 
-from src.affine_control.residuals import ResidualMonitor
-
 
 class TestMPCFullReachable:
     """#1744: MPC_FULL must be reachable from MPC_WARN."""
@@ -153,9 +148,9 @@ class TestMPCFullReachable:
         # Two more critical samples -> MPC_WARN -> MPC_FULL
         monitor.update(np.array([0.6]), x_nom)
         monitor.update(np.array([0.6]), x_nom)
-        assert monitor.mode == "MPC_FULL", (
-            "MPC_FULL must be reachable; was unreachable due to duplicate elif"
-        )
+        assert (
+            monitor.mode == "MPC_FULL"
+        ), "MPC_FULL must be reachable; was unreachable due to duplicate elif"
 
     def test_full_state_cycle(self) -> None:
         """Full cycle: LQR -> MPC_WARN -> MPC_FULL -> MPC_WARN -> LQR."""
@@ -215,16 +210,14 @@ class TestCentralDifferencesLinearization:
         ctr = (f(x0 + eps) - f(x0 - eps)) / (2 * eps)
 
         # Central should be closer to 3.0
-        assert abs(ctr - 3.0) < abs(fwd - 3.0), (
-            f"Central ({ctr}) should be closer to 3.0 than forward ({fwd})"
-        )
+        assert abs(ctr - 3.0) < abs(
+            fwd - 3.0
+        ), f"Central ({ctr}) should be closer to 3.0 than forward ({fwd})"
 
 
 # ---------------------------------------------------------------------------
 # Issue #1746: Zero-order hold resampling index
 # ---------------------------------------------------------------------------
-
-from src.affine_control.ddp import _resample_controls
 
 
 class TestZeroOrderHoldResampling:
@@ -238,9 +231,9 @@ class TestZeroOrderHoldResampling:
 
         u_resampled = _resample_controls(u_old, t_old, t_new)
         # At t=0.15, last preceding time is t=0.1 (index 1), so control should be u[1]=2.0
-        assert u_resampled[0, 0] == 2.0, (
-            f"Expected control 2.0 (from t=0.1), got {u_resampled[0, 0]}"
-        )
+        assert (
+            u_resampled[0, 0] == 2.0
+        ), f"Expected control 2.0 (from t=0.1), got {u_resampled[0, 0]}"
 
     def test_zoh_at_exact_grid_point(self) -> None:
         """At an exact grid point t_old[k], ZOH uses u_old[k] (the interval starting there)."""
@@ -250,9 +243,9 @@ class TestZeroOrderHoldResampling:
 
         u_resampled = _resample_controls(u_old, t_old, t_new)
         # At exactly t=0.1, searchsorted('right') returns 2, so idx=1 => u[1]=20.0
-        assert u_resampled[0, 0] == 20.0, (
-            f"At t=0.1 (grid point 1), ZOH should use u[1]=20.0, got {u_resampled[0, 0]}"
-        )
+        assert (
+            u_resampled[0, 0] == 20.0
+        ), f"At t=0.1 (grid point 1), ZOH should use u[1]=20.0, got {u_resampled[0, 0]}"
 
     def test_zoh_at_time_zero(self) -> None:
         """At t=0.0, should use first control."""
@@ -277,10 +270,6 @@ class TestZeroOrderHoldResampling:
 # Issue #1749: Wrist universal joint swapped arguments
 # ---------------------------------------------------------------------------
 
-from src.tools.wrist_universal_joint.torque_calculator import (
-    universal_joint_transmission_ratio,
-)
-
 
 class TestWristJointArgOrder:
     """#1749: phi_rad is rotation angle, delta_rad is bend angle."""
@@ -301,8 +290,7 @@ class TestWristJointArgOrder:
         """At fixed bend angle, ratio should vary with rotation."""
         delta = 0.3
         ratios = [
-            universal_joint_transmission_ratio(phi, delta)[0]
-            for phi in np.linspace(0, np.pi, 10)
+            universal_joint_transmission_ratio(phi, delta)[0] for phi in np.linspace(0, np.pi, 10)
         ]
         # Should not all be the same
         assert max(ratios) != min(ratios)
@@ -311,8 +299,6 @@ class TestWristJointArgOrder:
 # ---------------------------------------------------------------------------
 # Issue #1750: DDP early termination must respect max_iters
 # ---------------------------------------------------------------------------
-
-from src.affine_control.ddp import adaptive_timestep_ddp_mock
 
 
 class TestDDPMaxIters:
@@ -336,9 +322,7 @@ class TestDDPMaxIters:
 
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", UserWarning)
-            adaptive_timestep_ddp_mock(
-                counting_dynamics, x0, xf, u_init, max_iters=10
-            )
+            adaptive_timestep_ddp_mock(counting_dynamics, x0, xf, u_init, max_iters=10)
 
         # Previously hardcoded to break at iteration 2 (3 total).
         # With 10 iterations, each doing 5 Euler steps + hessian evaluations,
@@ -352,6 +336,7 @@ class TestDDPMaxIters:
 
     def test_max_iters_1_runs_once(self) -> None:
         """max_iters=1 should still produce valid output."""
+
         def dyn(x: np.ndarray[Any, Any], u: np.ndarray[Any, Any]) -> np.ndarray[Any, Any]:
             return np.array([x[1], u[0]])
 
@@ -361,9 +346,7 @@ class TestDDPMaxIters:
 
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", UserWarning)
-            x_traj, u_traj, t_traj = adaptive_timestep_ddp_mock(
-                dyn, x0, xf, u_init, max_iters=1
-            )
+            x_traj, u_traj, t_traj = adaptive_timestep_ddp_mock(dyn, x0, xf, u_init, max_iters=1)
         assert len(x_traj) > 0
         assert len(u_traj) > 0
 
