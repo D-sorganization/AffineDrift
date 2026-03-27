@@ -22,14 +22,18 @@ from src.core.contracts.validators import check_finite_array, check_positive
 def validate_state_vector(x: npt.NDArray[Any], name: str) -> None:
     check_finite_array(x, name)
 
+
 def validate_weight_matrix(Q: npt.NDArray[Any], shape: tuple[int, int], name: str) -> None:
     check_finite_array(Q, name)
+
 
 def format_results(results: list["BenchmarkResult"]) -> str:
     return "\n".join([f"{r.name}: error={r.tracking_error:.4f}" for r in results])
 
+
 def double_pendulum_mass_matrix(th1: float, th2: float) -> npt.NDArray[Any]:
     return np.eye(2)
+
 
 # Default control saturation limits for the double-pendulum benchmark (N*m).
 # The value 50 N*m is appropriate for a 1 kg, 0.5 m double pendulum; adjust
