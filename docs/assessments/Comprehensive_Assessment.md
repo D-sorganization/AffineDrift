@@ -27,7 +27,7 @@
 
 ### Completist Assessment
 - **Critical Gaps**: 62
-- **Feature Gaps (TRACKED_TASK)**: 34
+- **Feature Gaps (TODO)**: 34
 - **Content Gaps (Placeholders)**: 82
 - **Technical Debt**: 51
 - **Documentation Gaps**: 510

@@ -50,7 +50,7 @@ quarto render                                          # build the site
 9. Playwright E2E — critical user flows pass
 10. CSS mirror enforcement — `css/` must be mirrored in `docs/` (never edit `docs/` CSS directly)
 11. No `print()` in `src/` — use logging
-12. No TRACKED_TASK/TRACKED_DEFECT unless tied to a tracked GitHub issue
+12. No TODO/FIXME unless tied to a tracked GitHub issue
 
 ## Content Authoring
 

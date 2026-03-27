@@ -10,7 +10,6 @@ meaningful. See: docs/assessments/issues/ISSUE_Completist_Critical_DDPMock_2026-
 """
 
 import logging
-import os
 import warnings
 from collections.abc import Callable
 from typing import Any, cast

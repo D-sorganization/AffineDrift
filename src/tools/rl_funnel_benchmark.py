@@ -6,7 +6,6 @@ import argparse
 import logging
 import time
 from collections.abc import Callable
-from dataclasses import dataclass, field
 from typing import Any, cast
 
 import numpy as np
@@ -18,23 +17,9 @@ from src.core.constants import GRAVITY_M_S2
 from src.core.contracts.definitions import require
 from src.core.contracts.validators import check_finite_array, check_positive
 
-
-def validate_state_vector(x: npt.NDArray[Any], name: str) -> None:
-    check_finite_array(x, name)
-
-def validate_weight_matrix(Q: npt.NDArray[Any], shape: tuple[int, int], name: str) -> None:
-    check_finite_array(Q, name)
-
-def format_results(results: list["BenchmarkResult"]) -> str:
-    return "\n".join([f"{r.name}: error={r.tracking_error:.4f}" for r in results])
-
-def double_pendulum_mass_matrix(th1: float, th2: float) -> npt.NDArray[Any]:
-    return np.eye(2)
-
 # Default control saturation limits for the double-pendulum benchmark (N*m).
 # The value 50 N*m is appropriate for a 1 kg, 0.5 m double pendulum; adjust
 # for different systems by passing `control_limits` to run_benchmark().
-DEFAULT_CONTROL_SATURATION = 50.0
 CONTROL_SATURATION_DEFAULT: tuple[float, float] = (-50.0, 50.0)
 
 # Double pendulum physical parameters (2-DoF golf swing proxy)
@@ -62,16 +47,16 @@ def double_pendulum_drift(
     check_finite_array(x, "x")
     check_positive(g, "g")
 
-    # m1, m2, L1, L2 unused
+    m1, m2, L1, L2 = PENDULUM_M1, PENDULUM_M2, PENDULUM_L1, PENDULUM_L2
     th1, th2, dth1, dth2 = x
     s12 = np.sin(th1 - th2)
     M = double_pendulum_mass_matrix(th1, th2)
     rhs = np.array(
         [
-            -PENDULUM_M2 * PENDULUM_L1 * PENDULUM_L2 * dth2**2 * s12
-            - (PENDULUM_M1 + PENDULUM_M2) * g * PENDULUM_L1 * np.sin(th1),
-            PENDULUM_M2 * PENDULUM_L1 * PENDULUM_L2 * dth1**2 * s12
-            - PENDULUM_M2 * g * PENDULUM_L2 * np.sin(th2),
+            -PENDULUM_MASS_2_KG * PENDULUM_LINK_1_M * PENDULUM_LINK_2_M * dth2**2 * s12
+            - (PENDULUM_MASS_1_KG + PENDULUM_MASS_2_KG) * g * PENDULUM_LINK_1_M * np.sin(th1),
+            PENDULUM_MASS_2_KG * PENDULUM_LINK_1_M * PENDULUM_LINK_2_M * dth1**2 * s12
+            - PENDULUM_MASS_2_KG * g * PENDULUM_LINK_2_M * np.sin(th2),
         ]
     )
     ddth = np.linalg.solve(M, rhs)
@@ -87,7 +72,7 @@ def double_pendulum_B(x: npt.NDArray[Any]) -> npt.NDArray[Any]:
     )
     check_finite_array(x, "x")
 
-    # m1, m2, L1, L2 unused
+    m1, m2, L1, L2 = PENDULUM_M1, PENDULUM_M2, PENDULUM_L1, PENDULUM_L2
     th1, th2, _, _ = x
     M_inv = np.linalg.inv(double_pendulum_mass_matrix(th1, th2))
     B_full = np.zeros((4, 2))

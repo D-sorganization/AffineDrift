@@ -19,6 +19,28 @@ confront the numerical challenges in computing it accurately.
 
 :::
 
+::: {.callout-note}
+
+Here is the key idea of this chapter in everyday language.
+
+Imagine you are a pilot following a planned flight path from New York to London.
+Before takeoff, you computed the exact route, the exact fuel burn, the exact timing.
+That is your **nominal trajectory**---the plan.
+
+Now, the real flight will not follow the plan exactly. Wind gusts push you off course.
+The question is: if you start slightly off-plan (maybe 100 meters north of where you
+expected to be), how does that error evolve over time? Does it grow? Shrink? Rotate?
+
+The **variational equation** answers this question precisely. It is a linear rule that
+tells you, at each instant, how small deviations from the plan evolve. The rule changes
+as you move along the flight path (different winds at different altitudes), but at each
+instant it is a simple, linear relationship: twice the error leads to twice the
+deviation, and errors in different directions combine by addition.
+
+This is enormously powerful. It means you can analyze the *sensitivity* of any trajectory
+without having to re-simulate the entire system for every possible perturbation.
+One matrix---the state transition matrix---captures all possible small deviations at once.
+:::
 
 
 ## From Global Nonlinearity to Local Linearity

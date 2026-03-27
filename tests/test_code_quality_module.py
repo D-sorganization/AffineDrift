@@ -190,7 +190,7 @@ def test_report_issues_shows_total_count(capsys: pytest.CaptureFixture[str]) -> 
 def test_check_banned_patterns_skips_self_check_files(tmp_path: Path) -> None:
     """check_banned_patterns should return empty for self-check files."""
     filepath = tmp_path / "pattern_checker.py"
-    lines = ["TRACKED_TASK: fix this\n"]
+    lines = ["TODO: fix this\n"]
     issues = check_banned_patterns(lines, filepath)
     assert issues == []
 

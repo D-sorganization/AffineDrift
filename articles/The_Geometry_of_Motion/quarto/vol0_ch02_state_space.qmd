@@ -45,6 +45,43 @@ Do we need to know acceleration ($\ddot{x}$) as part of the state? According to 
 :::
 
 
+### Position, Velocity, and Acceleration: What Lives Where?
+
+Here is a question that trips up even advanced students: if the state includes position and velocity, where does acceleration fit? And are all three of these things "the same kind of object," mathematically?
+
+The answer is no, and the distinction is beautiful.
+
+**Position** is a point on a surface. Imagine you are standing on the surface of the Earth. Your position is a *location*---a specific spot on the globe. It is not an arrow, not a direction, not a magnitude. It is just *where you are*. Mathematically, position lives on a **manifold**---a potentially curved surface. The surface of the Earth is curved. The set of all possible configurations of a robot arm (its joint angles) forms a curved surface too. Position is a point on that surface.
+
+**Velocity** is an arrow *at* a point. Now imagine you are walking north at 3 mph. Your velocity is a direction and a speed---an arrow pinned to your current location, pointing north, with length proportional to 3 mph. This arrow lives in the **tangent space** at your position. It does not live on the globe itself (you cannot "add" two locations on a globe in any meaningful way), but you *can* add two velocity arrows at the same point. If the wind pushes you east at 1 mph while you walk north at 3 mph, your combined velocity is the vector sum---an arrow pointing slightly east of north. This vector addition works because the tangent space is a genuine vector space.
+
+**Acceleration** is an arrow that tells the velocity arrow how to change. It too lives in the tangent space (or more precisely, in the tangent space of the tangent bundle, but for systems in $\mathbb{R}^n$, we can think of it as living in the same vector space as velocity). Newton's second law, $F = ma$, is the bridge: force (which you can apply) determines acceleration (which changes velocity), which in turn sweeps the position along the manifold.
+
+::: {.callout-tip}
+## The Hierarchy of Motion
+
+| Quantity | What it is | Where it lives | Can you add two of them? |
+|----------|-----------|---------------|------------------------|
+| Position $q$ | A point on a surface | The configuration manifold $\mathcal{Q}$ | **No** (adding two GPS coordinates is meaningless) |
+| Velocity $\dot{q}$ | An arrow at a point | The tangent space $T_q\mathcal{Q}$ | **Yes** (velocities add as vectors) |
+| Acceleration $\ddot{q}$ | How the arrow changes | The tangent space $T_q\mathcal{Q}$ | **Yes** (accelerations add as vectors) |
+
+This distinction matters enormously: **superposition** (adding things together) only works for velocities and accelerations, never for positions. This is why the entire machinery of linear control theory operates in tangent spaces, where addition is valid, rather than on the configuration manifold, where it is not.
+:::
+
+Think of it this way. If two friends live at different addresses, "adding" their addresses gives you nonsense. But if both are walking, you can absolutely add their walking speeds. Position is like an address. Velocity is like a walking speed and direction. The tangent space is the space of all possible walking speeds and directions at a given address.
+
+For our train on a track, this distinction is invisible because the track is a straight line ($\mathbb{R}^1$), and the tangent space to a straight line looks exactly like the line itself. But for a robot arm with joint angles wrapping around from $0°$ to $360°$, the distinction becomes critical. The joint angles live on a circle (a curved manifold), and the velocities live in the tangent line to that circle---a flat, infinite line where addition works perfectly.
+
+
+### Why Acceleration Is Not Part of the State
+
+This is worth repeating because it is so often confused. The state $\mathbf{x} = [q, \dot{q}]^T$ includes position and velocity but *not* acceleration. Why?
+
+Because acceleration is not free. It is completely determined by the current state plus the current forces. Newton tells us $\ddot{q} = F/m$, where $F$ is whatever force is acting right now. If you know the state (where you are and how fast you are going) and you know the forces (the control inputs plus gravity, friction, etc.), then acceleration is *computed*, not *remembered*.
+
+The state captures everything the system "remembers" about its past. Position and velocity are the memories. Acceleration is the consequence of the present moment---the force being applied *right now*. This is why the state space is $2n$-dimensional (n positions + n velocities), not $3n$-dimensional.
+
 
 ## State Space Representations
 
