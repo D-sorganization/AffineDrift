@@ -56,7 +56,7 @@ class ILQRSolver:
 
         # Since this is a basic interface matching DDP_mock,
         # we do finite differences for A and B.
-        def get_linearized(x, u):
+        def get_linearized(x: np.ndarray, u: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
             """Compute linearized dynamics matrices via finite differences."""
             A = np.zeros((n_x, n_x))
             B = np.zeros((n_x, n_u))
@@ -149,7 +149,13 @@ class ILQRSolver:
         t_traj = np.linspace(0, N * dt, N + 1)
         return x_traj, u_traj, t_traj
 
-    def _rollout(self, dynamics_fn, x0, u_traj, dt):
+    def _rollout(
+        self,
+        dynamics_fn: Callable[[np.ndarray, np.ndarray], np.ndarray],
+        x0: np.ndarray,
+        u_traj: np.ndarray,
+        dt: float,
+    ) -> np.ndarray:
         """Simulate the system forward using the given control trajectory."""
         N = len(u_traj)
         x_traj = np.zeros((N + 1, len(x0)))
