@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import sys
 import types
+import warnings
 from typing import Any
 from unittest.mock import MagicMock
 
@@ -318,7 +319,9 @@ class TestSelectBestTrajectory:
         from src.affine_control.swing_optimizer import SwingOptimizationConfig, SwingOptimizer
 
         config = SwingOptimizationConfig(n_joints=1, horizon_steps=5, max_iterations=3)
-        return SwingOptimizer(config)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", UserWarning)
+            return SwingOptimizer(config)
 
     def test_returns_new_when_lower_cost(self) -> None:
         optimizer = self._make_optimizer()

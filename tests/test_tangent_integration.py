@@ -102,10 +102,10 @@ class TestResidualMonitorPipeline:
     """Test the full residual monitoring workflow."""
 
     def test_monitor_transitions_on_large_residuals(self) -> None:
-        """Monitor should transition to MPC_WARN when residuals exceed threshold.
+        """Monitor should escalate through MPC_WARN to MPC_FULL with persistent critical residuals.
 
-        Due to a shadowed elif branch, the current implementation cannot
-        escalate beyond MPC_WARN to MPC_FULL.
+        With n_hysteresis=3 and 6 critical updates: LQR -> MPC_WARN (after 3),
+        then MPC_WARN -> MPC_FULL (after 3 more).
         """
         monitor = ResidualMonitor(eps_warning=0.1, eps_critical=0.5, n_hysteresis=3)
         seen_warning = False
@@ -118,34 +118,34 @@ class TestResidualMonitorPipeline:
             )
             seen_warning = seen_warning or mode == "MPC_WARN"
 
-        assert mode == "MPC_WARN"
+        assert mode == "MPC_FULL"
         assert r_est > 0.5
         assert seen_warning
 
     def test_monitor_returns_to_lqr_on_small_residuals(self) -> None:
-        """Monitor stays MPC_WARN even when residuals drop below warning threshold.
+        """Monitor recovers from MPC_FULL back through MPC_WARN to LQR on small residuals.
 
-        Due to the shadowed elif branch, the MPC_WARN -> LQR recovery path
-        is unreachable; the monitor cannot leave MPC_WARN once entered.
+        With n_hysteresis=2: 4 critical updates drive LQR -> MPC_WARN -> MPC_FULL,
+        then 4 small updates recover MPC_FULL -> MPC_WARN -> LQR.
         """
         monitor = ResidualMonitor(eps_warning=0.1, eps_critical=0.5, n_hysteresis=2)
 
-        # Drive to MPC_WARN: requires n_hysteresis = 2 critical updates
+        # Drive to MPC_FULL: 2 critical updates -> MPC_WARN, 2 more -> MPC_FULL
         for _ in range(4):
             monitor.update(
                 x_meas=np.array([1.0, 0.0]),
                 x_nom=np.array([0.0, 0.0]),
             )
-        assert monitor.mode == "MPC_WARN"
+        assert monitor.mode == "MPC_FULL"
 
-        # Low-residual updates do not recover to LQR
+        # Low-residual updates recover back to LQR: 2 steps -> MPC_WARN, 2 more -> LQR
         for _ in range(4):
             mode, r_est = monitor.update(
                 x_meas=np.array([0.01, 0.0]),
                 x_nom=np.array([0.0, 0.0]),
             )
 
-        assert mode == "MPC_WARN"
+        assert mode == "LQR"
         assert r_est < 0.1
 
     def test_hysteresis_prevents_oscillation(self) -> None:

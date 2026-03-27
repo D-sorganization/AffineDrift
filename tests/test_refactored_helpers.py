@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import ast
 import unittest
+import warnings
 from pathlib import Path
 from typing import Any
 from unittest.mock import patch
@@ -36,7 +37,9 @@ class TestSwingOptimizerHelpers(unittest.TestCase):
         from src.affine_control.swing_optimizer import SwingOptimizationConfig, SwingOptimizer
 
         cfg = SwingOptimizationConfig(n_joints=n_joints, horizon_steps=5, max_iterations=3)
-        return SwingOptimizer(cfg)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", UserWarning)
+            return SwingOptimizer(cfg)
 
     def test_build_initial_conditions_shapes(self) -> None:
         """_build_initial_conditions returns correctly shaped arrays."""
@@ -74,7 +77,9 @@ class TestSwingOptimizerHelpers(unittest.TestCase):
         from src.affine_control.swing_optimizer import SwingOptimizationConfig, SwingOptimizer
 
         cfg = SwingOptimizationConfig(n_joints=2, horizon_steps=5, max_iterations=2)
-        opt = SwingOptimizer(cfg)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", UserWarning)
+            opt = SwingOptimizer(cfg)
 
         # Construct trajectories that satisfy trajectory_cost constraints
         # (T+1 states for T controls)
