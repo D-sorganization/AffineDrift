@@ -114,13 +114,17 @@ class SwingOptimizer:
             type(config).__name__,
         )
         self._config = config
+        self._using_mock = ddp_solver is None
         if ddp_solver is None:
-            if not config.allow_mock_solver:
-                raise ValueError(
-                    "The default DDP solver is a non-functional mock. "
-                    "Either pass a real ddp_solver or set "
-                    "allow_mock_solver=True in SwingOptimizationConfig."
-                )
+            import warnings
+
+            warnings.warn(
+                "adaptive_timestep_ddp_mock is a non-functional mock solver. "
+                "Set allow_mock_solver=True in SwingOptimizationConfig to permit its use in "
+                "optimize(). For production, supply a real ddp_solver.",
+                UserWarning,
+                stacklevel=2,
+            )
             self._ddp_solver = adaptive_timestep_ddp_mock
         else:
             self._ddp_solver = ddp_solver
@@ -434,6 +438,11 @@ class SwingOptimizer:
         check_finite_array(initial_state, "initial_state")
         check_shape(initial_state, (self._config.state_dim,), "initial_state")
         require(callable(dynamics_fn), "dynamics_fn must be callable")
+        require(
+            not self._using_mock or self._config.allow_mock_solver,
+            "Mock DDP solver requires allow_mock_solver=True in config. "
+            "Pass a real solver or set allow_mock_solver=True for testing.",
+        )
 
         cfg = self._config
         logger.info(

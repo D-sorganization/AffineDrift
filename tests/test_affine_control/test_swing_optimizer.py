@@ -256,14 +256,17 @@ class TestSwingOptimizerCost(unittest.TestCase):
 
     def setUp(self) -> None:
         """Create a standard 2-joint optimizer for cost tests."""
+        import warnings
+
         self.config = SwingOptimizationConfig(
             n_joints=2,
             control_weight=1.0,
             target_velocity=10.0,
             terminal_weight=100.0,
-            allow_mock_solver=True,
         )
-        self.optimizer = SwingOptimizer(self.config)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", UserWarning)
+            self.optimizer = SwingOptimizer(self.config)
 
     def test_zero_control_zero_control_cost(self) -> None:
         """Zero control at target velocity should give zero cost."""
@@ -325,14 +328,16 @@ class TestSwingOptimizerCost(unittest.TestCase):
 
     def test_terminal_cost_scales_with_terminal_weight(self) -> None:
         """Terminal cost should scale with terminal_weight."""
-        config_low = SwingOptimizationConfig(
-            n_joints=2, target_velocity=10.0, terminal_weight=1.0, allow_mock_solver=True
-        )
+        import warnings
+
+        config_low = SwingOptimizationConfig(n_joints=2, target_velocity=10.0, terminal_weight=1.0)
         config_high = SwingOptimizationConfig(
-            n_joints=2, target_velocity=10.0, terminal_weight=100.0, allow_mock_solver=True
+            n_joints=2, target_velocity=10.0, terminal_weight=100.0
         )
-        opt_low = SwingOptimizer(config_low)
-        opt_high = SwingOptimizer(config_high)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", UserWarning)
+            opt_low = SwingOptimizer(config_low)
+            opt_high = SwingOptimizer(config_high)
 
         state = np.array([0.0, 0.0, 0.0, 0.0])  # far from target
         cost_low = opt_low.compute_terminal_cost(state)
@@ -483,10 +488,17 @@ class TestSwingOptimizerOptimize(unittest.TestCase):
         self.assertGreaterEqual(result.cost, 0.0)
 
     def test_optimize_rejects_mock_solver_without_opt_in(self) -> None:
-        """Optimizer raises ValueError when default mock solver is used without opt-in."""
+        """optimize() raises ContractViolationError when mock solver not opted-in."""
+        import warnings
+
+        from src.core.contracts import ContractViolationError
+
         config = SwingOptimizationConfig(n_joints=1, horizon_steps=5, max_iterations=1)
-        with self.assertRaises(ValueError):
-            SwingOptimizer(config)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", UserWarning)
+            optimizer = SwingOptimizer(config)
+        with self.assertRaises(ContractViolationError):
+            optimizer.optimize(np.zeros(2), double_integrator_1dof)
 
 
 # ── Property and accessor tests ─────────────────────────────────────────────
@@ -495,16 +507,28 @@ class TestSwingOptimizerOptimize(unittest.TestCase):
 class TestSwingOptimizerProperties(unittest.TestCase):
     """Tests for SwingOptimizer properties and accessors."""
 
+    def _make_optimizer(self, **kwargs: object) -> SwingOptimizer:
+        """Create a SwingOptimizer suppressing the mock-solver warning."""
+        import warnings
+
+        config = SwingOptimizationConfig(**kwargs)  # type: ignore[arg-type]
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", UserWarning)
+            return SwingOptimizer(config)
+
     def test_config_property(self) -> None:
         """Config should be accessible via property."""
-        config = SwingOptimizationConfig(n_joints=3, allow_mock_solver=True)
-        optimizer = SwingOptimizer(config)
+        config = SwingOptimizationConfig(n_joints=3)
+        import warnings
+
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", UserWarning)
+            optimizer = SwingOptimizer(config)
         self.assertIs(optimizer.config, config)
 
     def test_R_matrix_shape(self) -> None:
         """R matrix should be (control_dim x control_dim)."""
-        config = SwingOptimizationConfig(n_joints=3, control_weight=0.5, allow_mock_solver=True)
-        optimizer = SwingOptimizer(config)
+        optimizer = self._make_optimizer(n_joints=3, control_weight=0.5)
         R = optimizer.R
         self.assertEqual(R.shape, (3, 3))
         # Should be 0.5 * I
@@ -512,8 +536,7 @@ class TestSwingOptimizerProperties(unittest.TestCase):
 
     def test_Q_matrix_shape(self) -> None:
         """Q matrix should be (state_dim x state_dim)."""
-        config = SwingOptimizationConfig(n_joints=2, allow_mock_solver=True)
-        optimizer = SwingOptimizer(config)
+        optimizer = self._make_optimizer(n_joints=2)
         Q = optimizer.Q
         self.assertEqual(Q.shape, (4, 4))
         # Position block should be zero
@@ -523,20 +546,14 @@ class TestSwingOptimizerProperties(unittest.TestCase):
 
     def test_Q_f_matrix_is_scaled_Q(self) -> None:
         """Q_f should be terminal_weight * Q."""
-        config = SwingOptimizationConfig(
-            n_joints=2,
-            terminal_weight=50.0,
-            allow_mock_solver=True,
-        )
-        optimizer = SwingOptimizer(config)
+        optimizer = self._make_optimizer(n_joints=2, terminal_weight=50.0)
         Q = optimizer.Q
         Q_f = optimizer.Q_f
         np.testing.assert_array_almost_equal(Q_f, 50.0 * Q)
 
     def test_R_is_copy(self) -> None:
         """R property should return a copy (not a reference)."""
-        config = SwingOptimizationConfig(n_joints=2, allow_mock_solver=True)
-        optimizer = SwingOptimizer(config)
+        optimizer = self._make_optimizer(n_joints=2)
         R1 = optimizer.R
         R1[0, 0] = 999.0
         R2 = optimizer.R
@@ -544,8 +561,7 @@ class TestSwingOptimizerProperties(unittest.TestCase):
 
     def test_zero_control_weight_gives_zero_R(self) -> None:
         """control_weight=0 should produce a zero R matrix."""
-        config = SwingOptimizationConfig(n_joints=2, control_weight=0.0, allow_mock_solver=True)
-        optimizer = SwingOptimizer(config)
+        optimizer = self._make_optimizer(n_joints=2, control_weight=0.0)
         R = optimizer.R
         np.testing.assert_array_almost_equal(R, np.zeros((2, 2)))
 
