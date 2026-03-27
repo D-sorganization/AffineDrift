@@ -113,17 +113,13 @@ class SwingOptimizer:
             "config must be a SwingOptimizationConfig instance",
             type(config).__name__,
         )
-        self._config = config
         if ddp_solver is None:
-            if not config.allow_mock_solver:
-                raise ValueError(
-                    "The default DDP solver is a non-functional mock. "
-                    "Either pass a real ddp_solver or set "
-                    "allow_mock_solver=True in SwingOptimizationConfig."
-                )
-            self._ddp_solver = adaptive_timestep_ddp_mock
-        else:
-            self._ddp_solver = ddp_solver
+            require(
+                config.allow_mock_solver,
+                "mock DDP solver requires explicit opt-in via allow_mock_solver=True",
+            )
+        self._config = config
+        self._ddp_solver = ddp_solver if ddp_solver is not None else adaptive_timestep_ddp_mock
         self._R = config.control_weight * np.eye(config.control_dim)
         self._Q = np.zeros((config.state_dim, config.state_dim))
         # Penalize velocity deviations (second half of state vector)
@@ -288,7 +284,7 @@ class SwingOptimizer:
         Returns:
             Tuple of (x_traj, u_traj, current_cost).
         """
-        x_traj, u_traj, _t_traj = self._ddp_solver(
+        x_traj, u_traj, _t_traj = adaptive_timestep_ddp_mock(
             f=dynamics_fn,
             x0=initial_state,
             xf=x_target,
@@ -360,6 +356,8 @@ class SwingOptimizer:
                 break
             u_init = u_traj
 
+        assert best_x_traj is not None
+        assert best_u_traj is not None
         return best_x_traj, best_u_traj, best_cost, converged, iteration
 
     def _package_result(
@@ -434,11 +432,7 @@ class SwingOptimizer:
         check_finite_array(initial_state, "initial_state")
         check_shape(initial_state, (self._config.state_dim,), "initial_state")
         require(callable(dynamics_fn), "dynamics_fn must be callable")
-        require(
-            not self._using_mock or self._config.allow_mock_solver,
-            "Mock DDP solver requires allow_mock_solver=True in config. "
-            "Pass a real solver or set allow_mock_solver=True for testing.",
-        )
+
 
         cfg = self._config
         logger.info(

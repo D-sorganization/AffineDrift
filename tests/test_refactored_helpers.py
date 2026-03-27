@@ -35,7 +35,9 @@ class TestSwingOptimizerHelpers(unittest.TestCase):
         """Return a minimal SwingOptimizer for testing."""
         from src.affine_control.swing_optimizer import SwingOptimizationConfig, SwingOptimizer
 
-        cfg = SwingOptimizationConfig(n_joints=n_joints, horizon_steps=5, max_iterations=3)
+        cfg = SwingOptimizationConfig(
+            n_joints=n_joints, horizon_steps=5, max_iterations=3, allow_mock_solver=True
+        )
         return SwingOptimizer(cfg)
 
     def test_build_initial_conditions_shapes(self) -> None:
@@ -73,7 +75,9 @@ class TestSwingOptimizerHelpers(unittest.TestCase):
         """_package_result computes final velocity as L2 norm of velocity portion."""
         from src.affine_control.swing_optimizer import SwingOptimizationConfig, SwingOptimizer
 
-        cfg = SwingOptimizationConfig(n_joints=2, horizon_steps=5, max_iterations=2)
+        cfg = SwingOptimizationConfig(
+            n_joints=2, horizon_steps=5, max_iterations=2, allow_mock_solver=True
+        )
         opt = SwingOptimizer(cfg)
 
         # Construct trajectories that satisfy trajectory_cost constraints

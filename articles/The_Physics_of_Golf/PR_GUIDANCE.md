@@ -16,7 +16,7 @@ Before creating the PR, verify:
 - [ ] No `.aux`, `.log`, `.toc`, or other build artifacts in the directory tree
 - [ ] `golf_physics.bib`, `golf_physics.sty`, `nomenclature.tex` all present
 - [ ] Website navigation updated in `_quarto.yml` (Learn > Textbooks > The Physics of Golf)
-- [ ] Article listing updated in `resources/articles.qmd` (new section before Tangent-Space Methods)
+- [ ] Article listing updated in `resources/articles.qmd` (new section before Geometry of Motion)
 - [ ] GitHub Actions workflow exists at `.github/workflows/compile_golf_textbook.yml`
 
 ## Branch Strategy
@@ -168,7 +168,7 @@ Adds **The Physics of Golf: Force, Drift, and Control in the Golf Swing** — a 
 
 ### Website changes
 
-- `_quarto.yml`: Added "Textbooks" subsection under Learn menu with links to both Physics of Golf and Tangent-Space Methods
+- `_quarto.yml`: Added "Textbooks" subsection under Learn menu with links to both Physics of Golf and Geometry of Motion
 - `resources/articles.qmd`: Added new Physics of Golf section with accordion navigation for all 10 parts
 
 ### Test plan

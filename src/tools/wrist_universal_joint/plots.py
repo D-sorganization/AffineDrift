@@ -43,10 +43,10 @@ def _compute_torque_signals(
     """
     theta_grip_rad = np.radians(grip_angle_deg)
     phi_wrist_rad = np.radians(wrist_angle_deg)
-    _omega_ratio, tau_ratio = universal_joint_transmission_ratio(theta_grip_rad, phi_wrist_rad)
+    _omega_ratio, tau_ratio = universal_joint_transmission_ratio(phi_wrist_rad, theta_grip_rad)
     torque_transmitted = input_torque * tau_ratio
     torque_alpha, torque_gamma = distribute_torque_by_grip_angle(torque_transmitted, theta_grip_rad)
-    return torque_transmitted, torque_alpha, torque_gamma, tau_ratio
+    return torque_transmitted, torque_alpha, torque_gamma, float(tau_ratio)
 
 
 def _plot_torque_lines(
@@ -83,7 +83,7 @@ def _plot_torque_lines(
 
 # Cache figure generation to prevent expensive redraws
 # Limit entries to prevent OOM when sliding through many angles
-@st.cache_resource(max_entries=20)  # type: ignore[untyped-decorator]
+@st.cache_resource(max_entries=20)
 def plot_torque(
     t: np.ndarray[Any, Any],
     input_torque: np.ndarray[Any, Any],
@@ -154,7 +154,7 @@ def _compute_acceleration_signals(
 
 # Cache figure generation to prevent expensive redraws
 # Limit entries to prevent OOM when sliding through many angles
-@st.cache_resource(max_entries=20)  # type: ignore[untyped-decorator]
+@st.cache_resource(max_entries=20)
 def plot_acceleration(
     t: np.ndarray[Any, Any],
     input_torque: np.ndarray[Any, Any],
@@ -326,7 +326,7 @@ def _annotate_current_wrist_angle(
 
 # Cache figure generation to prevent expensive redraws
 # Limit entries to prevent OOM when sliding through many angles
-@st.cache_resource(max_entries=20)  # type: ignore[untyped-decorator]
+@st.cache_resource(max_entries=20)
 def plot_transmission_sweep(
     grip_angle_deg: float,
     wrist_angle_deg: float,

@@ -483,9 +483,9 @@ class TestSwingOptimizerOptimize(unittest.TestCase):
         self.assertGreaterEqual(result.cost, 0.0)
 
     def test_optimize_rejects_mock_solver_without_opt_in(self) -> None:
-        """Mock DDP should require explicit config opt-in at construction time."""
+        """Mock DDP should require explicit config opt-in."""
         config = SwingOptimizationConfig(n_joints=1, horizon_steps=5, max_iterations=1)
-        with self.assertRaises(ValueError, msg="mock solver without allow_mock_solver=True"):
+        with self.assertRaises(ContractViolationError):
             SwingOptimizer(config)
 
 

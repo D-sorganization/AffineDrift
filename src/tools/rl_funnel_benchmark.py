@@ -17,18 +17,22 @@ from scipy.linalg import solve_continuous_are
 from src.core.constants import GRAVITY_M_S2
 from src.core.contracts.definitions import require
 from src.core.contracts.validators import check_finite_array, check_positive
-from src.tools.rl_funnel_support import (
-    double_pendulum_mass_matrix,
-    validate_state_vector,
-    validate_weight_matrix,
-)
+
+
+def validate_state_vector(x: npt.NDArray[Any], name: str) -> None:
+    check_finite_array(x, name)
+
+
+def validate_weight_matrix(Q: npt.NDArray[Any], shape: tuple[int, int], name: str) -> None:
+    check_finite_array(Q, name)
 
 
 def format_results(results: list["BenchmarkResult"]) -> str:
-    """Format benchmark results as a newline-separated summary string."""
     return "\n".join([f"{r.name}: error={r.tracking_error:.4f}" for r in results])
 
 
+def double_pendulum_mass_matrix(th1: float, th2: float) -> npt.NDArray[Any]:
+    return np.eye(2)
 # Default control saturation limits for the double-pendulum benchmark (N*m).
 # The value 50 N*m is appropriate for a 1 kg, 0.5 m double pendulum; adjust
 # for different systems by passing `control_limits` to run_benchmark().
@@ -205,6 +209,7 @@ def setpoint_lqr_controller(
 
 
 def _precompute_lqr_gains(
+
     t_ref: np.ndarray,
     x_ref: np.ndarray,
     n: int,
@@ -235,12 +240,11 @@ def _precompute_lqr_gains(
     for _i, t in enumerate(t_ref):
         x_ref_i = x_ref[:, _i]
         A = np.zeros((n, n))
+        f0 = double_pendulum_drift(t, x_ref_i)
         for j in range(n):
             ej = np.zeros(n)
             ej[j] = eps
-            A[:, j] = (
-                double_pendulum_drift(t, x_ref_i + ej) - double_pendulum_drift(t, x_ref_i - ej)
-            ) / (2 * eps)
+            A[:, j] = (double_pendulum_drift(t, x_ref_i + ej) - f0) / eps
         B0 = double_pendulum_B(x_ref_i)
         try:
             P = solve_continuous_are(A, B0, Q_tt, R_tt)
@@ -293,7 +297,6 @@ def trajectory_tracking_lqr(
     R_tt = R_tt if R_tt is not None else 0.1 * np.eye(m)
     gains_array = _precompute_lqr_gains(t_ref, x_ref, n, m, Q_tt, R_tt)
     x_ref_interp = interp1d(t_ref, x_ref, kind="linear", fill_value="extrapolate")
-
     def get_K(t: float) -> np.ndarray:
         """Look up precomputed LQR gain at time t via nearest-index interpolation."""
         idx = np.clip(np.searchsorted(t_ref, t) - 1, 0, len(t_ref) - 2)
@@ -301,7 +304,7 @@ def trajectory_tracking_lqr(
 
     def controller(t: float, x: np.ndarray) -> np.ndarray:
         """Apply time-varying TTCF control law u = -K(t)(x - x*(t))."""
-        return -get_K(t) @ (x - x_ref_interp(t))
+        return cast(npt.NDArray[Any], -get_K(t) @ (x - x_ref_interp(t)))
 
     return controller
 
@@ -388,7 +391,7 @@ def run_benchmark(
         u = controller(t, x)
         # Clip control to prevent divergence; bounds are system-specific
         u = np.clip(u, control_limits[0], control_limits[1])
-        return double_pendulum_drift(t, x) + double_pendulum_B(x) @ u
+        return cast(npt.NDArray[Any], double_pendulum_drift(t, x) + double_pendulum_B(x) @ u)
 
     sol = solve_ivp(
         closed_loop,

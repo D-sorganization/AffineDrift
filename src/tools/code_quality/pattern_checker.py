@@ -15,8 +15,8 @@ logger = logging.getLogger(__name__)
 # ─── Configuration ────────────────────────────────────────────
 
 BANNED_PATTERNS = [
-    (re.compile(r"\bDEFERRED\b"), "DEFERRED placeholder found"),
-    (re.compile(r"\bREVIEW\b"), "REVIEW placeholder found"),
+    (re.compile(r"\bTODO\b"), "TRACKED_TASK placeholder found"),
+    (re.compile(r"\bFIXME\b"), "TRACKED_DEFECT placeholder found"),
     # (re.compile(r"^\s*\.\.\.\s*$"), "Ellipsis placeholder"), # Allow for abstract methods
     (re.compile(r"NotImplementedError"), "NotImplementedError placeholder"),
     # (re.compile(r"<.*>"), "Angle bracket placeholder"), # Too aggressive for HTML

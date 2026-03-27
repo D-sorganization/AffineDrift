@@ -177,7 +177,7 @@ pie title Issues by Module
 ## Technical Debt Register
 | File | Line | Issue | Type |
 |---|---|---|---|
-| `config/tech_debt_budget.json` | 25 | "FIXME": 13, | FIXME |
+| `config/tech_debt_budget.json` | 25 | "TRACKED_DEFECT": 13, | TRACKED_DEFECT |
 | `config/tech_debt_budget.json` | 26 | "HACK": 8, | HACK |
 | `config/tech_debt_budget.json` | 27 | "XXX": 10 | XXX |
 | `scripts/generate_completist_data.py` | 202 | markers = ["TOD" + "O", "FIX" + "ME", "XXX", "HACK", "TEMP"] | XXX |

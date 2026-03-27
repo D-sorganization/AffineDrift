@@ -263,8 +263,60 @@ def _render_signal_checkboxes(plot_type: str) -> dict[str, bool]:
 
 def _plot_torque_figure(
     params: dict[str, Any],
-    t: np.ndarray,  # type: ignore[type-arg]
-    input_torque: np.ndarray,  # type: ignore[type-arg]
+    t: npt.NDArray[Any],
+    input_torque: npt.NDArray[Any],
+) -> Figure:
+    """Create a torque vs time figure."""
+    return plot_torque(
+        t,
+        input_torque,
+        params["grip_angle"],
+        params["wrist_angle"],
+        params["I_alpha"],
+        params["I_gamma"],
+        params["show_input"],
+        params["show_transmitted"],
+        params["show_alpha"],
+        params["show_gamma"],
+    )
+
+
+def _plot_acceleration_figure(
+    params: dict[str, Any],
+    t: npt.NDArray[Any],
+    input_torque: npt.NDArray[Any],
+) -> Figure:
+    """Create an angular acceleration vs time figure."""
+    return plot_acceleration(
+        t,
+        input_torque,
+        params["grip_angle"],
+        params["wrist_angle"],
+        params["I_alpha"],
+        params["I_gamma"],
+        params["show_alpha"],
+        params["show_gamma"],
+    )
+
+
+def _plot_transmission_figure(params: dict[str, Any]) -> Figure:
+    """Create a transmission ratio sweep figure."""
+    return plot_transmission_sweep(
+        params["grip_angle"],
+        params["wrist_angle"],
+        params["I_alpha"],
+        params["I_gamma"],
+        params["show_transmission"],
+        params["show_velocity"],
+        params["show_accel_alpha"],
+        params["show_accel_gamma"],
+    )
+
+
+def _create_plot_figure(
+    params: dict[str, Any],
+    t: npt.NDArray[Any],
+    input_torque: npt.NDArray[Any],
 ) -> Figure:
     """Create a torque vs time figure."""
     return plot_torque(  # type: ignore[no-any-return]
@@ -382,7 +434,7 @@ def _compute_info_metrics(params: dict[str, Any], input_torque: Any) -> dict[str
     wrist_angle = params["wrist_angle"]
     theta_grip_rad = np.radians(grip_angle)
     phi_wrist_rad = np.radians(wrist_angle)
-    omega_ratio, tau_ratio = universal_joint_transmission_ratio(theta_grip_rad, phi_wrist_rad)
+    omega_ratio, tau_ratio = universal_joint_transmission_ratio(phi_wrist_rad, theta_grip_rad)
     torque_transmitted = np.mean(input_torque) * tau_ratio
     torque_alpha, torque_gamma = distribute_torque_by_grip_angle(torque_transmitted, theta_grip_rad)
     return {
@@ -406,21 +458,21 @@ def _render_info_markdown(params: dict[str, Any], info: dict[str, Any]) -> None:
         f"""
     ### Current Parameters
     - **Grip Angle (θ_grip):** {grip_angle}°
-    - **Wrist Deviation Angle (φ):** {wrist_angle}° ({info['deviation']} deviation)
+    - **Wrist Deviation Angle (φ):** {wrist_angle}° ({info["deviation"]} deviation)
 
     ### Transmission Ratios
-    - **Angular Velocity Ratio (ω_out/ω_in):** {info['omega_ratio']:.4f}
-    - **Torque Transmission Ratio (τ_out/τ_in):** {info['tau_ratio']:.4f}
+    - **Angular Velocity Ratio (ω_out/ω_in):** {info["omega_ratio"]:.4f}
+    - **Torque Transmission Ratio (τ_out/τ_in):** {info["tau_ratio"]:.4f}
 
     ### Torque Distribution (at mean input torque)
-    - **Torque to α-axis (higher MOI):** {info['torque_alpha']:.4f} N·m
-    ({info['pct_alpha']:.1f}% of transmitted)
-    - **Torque to γ-axis (lowest MOI):** {info['torque_gamma']:.4f} N·m
-    ({info['pct_gamma']:.1f}% of transmitted)
+    - **Torque to α-axis (higher MOI):** {info["torque_alpha"]:.4f} N·m
+    ({info["pct_alpha"]:.1f}% of transmitted)
+    - **Torque to γ-axis (lowest MOI):** {info["torque_gamma"]:.4f} N·m
+    ({info["pct_gamma"]:.1f}% of transmitted)
 
     ### Angular Acceleration (at mean torque)
-    - **α-axis acceleration:** {info['torque_alpha'] / i_alpha:.4f} rad/s²
-    - **γ-axis acceleration:** {info['torque_gamma'] / i_gamma:.4f} rad/s²
+    - **α-axis acceleration:** {info["torque_alpha"] / i_alpha:.4f} rad/s²
+    - **γ-axis acceleration:** {info["torque_gamma"] / i_gamma:.4f} rad/s²
 
     ### Model Assumptions
     - Universal joint (Hooke/Cardan) kinematics

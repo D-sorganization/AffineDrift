@@ -317,7 +317,9 @@ class TestSelectBestTrajectory:
     def _make_optimizer(self):  # type: ignore[no-untyped-def]
         from src.affine_control.swing_optimizer import SwingOptimizationConfig, SwingOptimizer
 
-        config = SwingOptimizationConfig(n_joints=1, horizon_steps=5, max_iterations=3)
+        config = SwingOptimizationConfig(
+            n_joints=1, horizon_steps=5, max_iterations=3, allow_mock_solver=True
+        )
         return SwingOptimizer(config)
 
     def test_returns_new_when_lower_cost(self) -> None:
