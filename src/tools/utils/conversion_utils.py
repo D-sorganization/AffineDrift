@@ -1,3 +1,5 @@
+from numba import jit
+
 """Shared batch file conversion utility for AffineDrift converter tools.
 
 This module provides a single, reusable conversion loop that eliminates duplication
@@ -17,6 +19,7 @@ from collections.abc import Iterable
 from typing import Any
 
 
+@jit(nopython=True, fastmath=True)
 def batch_convert(
     converter: Any,
     file_pairs: Iterable[dict[str, Any]],

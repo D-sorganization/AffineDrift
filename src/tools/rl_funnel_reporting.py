@@ -25,11 +25,12 @@ def format_results(results: list[BenchmarkResult]) -> str:
     lines = ["", "=" * 70]
     lines.append(f"{'Controller':<30} {'Tracking Error':>15} {'Control Effort':>15}")
     lines.append("=" * 70)
-    for result in results:
-        lines.append(
-            f"{result.name:<30} {result.tracking_error:>15.4f} "
-            f"{result.control_effort:>15.4f}  ({result.runtime_sec:.2f}s)"
-        )
+    lines.extend(
+        [
+            f"{result.name:<30} {result.tracking_error:>15.4f} {result.control_effort:>15.4f}  ({result.runtime_sec:.2f}s)"
+            for result in results
+        ]
+    )
     lines.append("=" * 70)
 
     if len(results) >= 2:

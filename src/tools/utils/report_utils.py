@@ -72,8 +72,7 @@ def generate_markdown_report(
         "## Recommendations",
     ]
 
-    for rec in recommendations:
-        content.append(f"- {rec}")
+    content.extend([f"- {rec}" for rec in recommendations])
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text("\n".join(content) + "\n", encoding="utf-8")
