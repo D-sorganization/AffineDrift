@@ -1,4 +1,4 @@
-"""Guardrails for shared Geometry of Motion LaTeX style integration."""
+"""Guardrails for shared Tangent-Space Methods LaTeX style integration."""
 
 from __future__ import annotations
 

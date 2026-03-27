@@ -1,4 +1,4 @@
-"""Reference audit helpers for Geometry of Motion citations."""
+"""Reference audit helpers for Tangent-Space Methods citations."""
 
 from __future__ import annotations
 

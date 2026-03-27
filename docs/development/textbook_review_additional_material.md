@@ -2,7 +2,7 @@
 
 **Date:** 2026-02-21
 **Reviewer:** Antigravity Agent
-**Textbook:** *Superposition, Contraction, and the Geometry of Motion*
+**Textbook:** *Tangent-Space Methods for Nonlinear Control and Biomechanics*
 
 ---
 

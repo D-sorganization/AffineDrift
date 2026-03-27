@@ -1,4 +1,4 @@
-# The Geometry of Motion — 5-Volume Book Series Architecture
+# Tangent-Space Methods for Nonlinear Control and Biomechanics — Book Series Architecture
 
 **Date:** 2026-02-22
 **Status:** Planning Phase
