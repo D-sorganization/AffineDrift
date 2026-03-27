@@ -1,10 +1,9 @@
 """Tests for the full round simulator."""
 
-from src.golf_simulation.round_simulator import RoundSimulator
-
 from src.golf_simulation.ball_flight import BallFlightDynamics
 from src.golf_simulation.clubs import ClubBag
 from src.golf_simulation.course import create_championship_course, create_par3_course
+from src.golf_simulation.round_simulator import RoundSimulator
 
 
 class TestRoundSimulator:

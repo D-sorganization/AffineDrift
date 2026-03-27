@@ -263,11 +263,11 @@ def _render_signal_checkboxes(plot_type: str) -> dict[str, bool]:
 
 def _plot_torque_figure(
     params: dict[str, Any],
-    t: np.ndarray,  # type: ignore[type-arg]
-    input_torque: np.ndarray,  # type: ignore[type-arg]
+    t: npt.NDArray[Any],
+    input_torque: npt.NDArray[Any],
 ) -> Figure:
     """Create a torque vs time figure."""
-    return plot_torque(  # type: ignore[no-any-return]
+    return plot_torque(
         t,
         input_torque,
         params["grip_angle"],
@@ -283,11 +283,11 @@ def _plot_torque_figure(
 
 def _plot_acceleration_figure(
     params: dict[str, Any],
-    t: np.ndarray,  # type: ignore[type-arg]
-    input_torque: np.ndarray,  # type: ignore[type-arg]
+    t: npt.NDArray[Any],
+    input_torque: npt.NDArray[Any],
 ) -> Figure:
     """Create an angular acceleration vs time figure."""
-    return plot_acceleration(  # type: ignore[no-any-return]
+    return plot_acceleration(
         t,
         input_torque,
         params["grip_angle"],
@@ -301,7 +301,7 @@ def _plot_acceleration_figure(
 
 def _plot_transmission_figure(params: dict[str, Any]) -> Figure:
     """Create a transmission ratio sweep figure."""
-    return plot_transmission_sweep(  # type: ignore[no-any-return]
+    return plot_transmission_sweep(
         params["grip_angle"],
         params["wrist_angle"],
         params["I_alpha"],
@@ -406,21 +406,21 @@ def _render_info_markdown(params: dict[str, Any], info: dict[str, Any]) -> None:
         f"""
     ### Current Parameters
     - **Grip Angle (θ_grip):** {grip_angle}°
-    - **Wrist Deviation Angle (φ):** {wrist_angle}° ({info['deviation']} deviation)
+    - **Wrist Deviation Angle (φ):** {wrist_angle}° ({info["deviation"]} deviation)
 
     ### Transmission Ratios
-    - **Angular Velocity Ratio (ω_out/ω_in):** {info['omega_ratio']:.4f}
-    - **Torque Transmission Ratio (τ_out/τ_in):** {info['tau_ratio']:.4f}
+    - **Angular Velocity Ratio (ω_out/ω_in):** {info["omega_ratio"]:.4f}
+    - **Torque Transmission Ratio (τ_out/τ_in):** {info["tau_ratio"]:.4f}
 
     ### Torque Distribution (at mean input torque)
-    - **Torque to α-axis (higher MOI):** {info['torque_alpha']:.4f} N·m
-    ({info['pct_alpha']:.1f}% of transmitted)
-    - **Torque to γ-axis (lowest MOI):** {info['torque_gamma']:.4f} N·m
-    ({info['pct_gamma']:.1f}% of transmitted)
+    - **Torque to α-axis (higher MOI):** {info["torque_alpha"]:.4f} N·m
+    ({info["pct_alpha"]:.1f}% of transmitted)
+    - **Torque to γ-axis (lowest MOI):** {info["torque_gamma"]:.4f} N·m
+    ({info["pct_gamma"]:.1f}% of transmitted)
 
     ### Angular Acceleration (at mean torque)
-    - **α-axis acceleration:** {info['torque_alpha'] / i_alpha:.4f} rad/s²
-    - **γ-axis acceleration:** {info['torque_gamma'] / i_gamma:.4f} rad/s²
+    - **α-axis acceleration:** {info["torque_alpha"] / i_alpha:.4f} rad/s²
+    - **γ-axis acceleration:** {info["torque_gamma"] / i_gamma:.4f} rad/s²
 
     ### Model Assumptions
     - Universal joint (Hooke/Cardan) kinematics

@@ -113,6 +113,11 @@ class SwingOptimizer:
             "config must be a SwingOptimizationConfig instance",
             type(config).__name__,
         )
+        if ddp_solver is None:
+            require(
+                config.allow_mock_solver,
+                "mock DDP solver requires explicit opt-in via allow_mock_solver=True",
+            )
         self._config = config
         self._ddp_solver = ddp_solver if ddp_solver is not None else adaptive_timestep_ddp_mock
         self._R = config.control_weight * np.eye(config.control_dim)
@@ -351,6 +356,8 @@ class SwingOptimizer:
                 break
             u_init = u_traj
 
+        assert best_x_traj is not None
+        assert best_u_traj is not None
         return best_x_traj, best_u_traj, best_cost, converged, iteration
 
     def _package_result(

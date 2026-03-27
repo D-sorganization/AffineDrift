@@ -56,14 +56,14 @@ class TestCheckBannedPatterns:
     def test_detects_todo(self, tmp_path: Path) -> None:
         """Should detect TRACKED_TASK patterns."""
         f = tmp_path / "module.py"
-        lines = ["x = 1  # TRACKED_TASK: fix this\n"]
+        lines = ["x = 1  # TODO: fix this\n"]
         result = check_banned_patterns(lines, f)
         assert any("TRACKED_TASK" in msg for _, msg, _ in result)
 
     def test_detects_fixme(self, tmp_path: Path) -> None:
         """Should detect TRACKED_DEFECT patterns."""
         f = tmp_path / "module.py"
-        lines = ["# TRACKED_DEFECT: this is broken\n"]
+        lines = ["# FIXME: this is broken\n"]
         result = check_banned_patterns(lines, f)
         assert any("TRACKED_DEFECT" in msg for _, msg, _ in result)
 

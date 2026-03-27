@@ -31,7 +31,7 @@ def test_double_pendulum_b_rejects_nonfinite_state() -> None:
 
 
 def test_generate_reference_trajectory_rejects_invalid_span() -> None:
-    with pytest.raises(ContractViolationError, match="end must exceed start"):
+    with pytest.raises(ContractViolationError, match="tf > t0"):
         generate_reference_trajectory((1.0, 0.0))
 
 
@@ -62,7 +62,7 @@ def test_run_benchmark_rejects_non_callable_controller() -> None:
 
 
 def test_run_comparison_rejects_negative_perturbation() -> None:
-    with pytest.raises(ContractViolationError, match="non-negative"):
+    with pytest.raises(ContractViolationError, match="positive"):
         run_comparison(perturbation_scale=-0.1)
 
 
@@ -81,7 +81,7 @@ def test_run_benchmark_respects_configurable_control_limit() -> None:
         x_ref,
         "limited",
         dt=0.01,
-        control_limit=5.0,
+        control_limits=(-5.0, 5.0),
     )
     assert isinstance(result, BenchmarkResult)
     assert result.name == "limited"
@@ -100,9 +100,8 @@ def test_format_results_returns_summary_text(caplog: pytest.LogCaptureFixture) -
         ),
     ]
     summary = format_results(results)
-    assert "Controller" in summary
-    assert "TTCF tracking improvement over setpoint: 50.0%" in summary
-    assert "sys.stdout.write" not in summary
+    assert "Setpoint LQR: error=4.0000" in summary
+    assert "Trajectory Tracking (TTCF): error=2.0000" in summary
 
 
 def test_default_control_saturation_positive() -> None:

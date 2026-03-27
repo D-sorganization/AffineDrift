@@ -298,4 +298,4 @@ class BallFlightDynamics(DynamicalSystem):
         k3 = self.dynamics(state_vec + 0.5 * dt * k2, u)
         k4 = self.dynamics(state_vec + dt * k3, u)
 
-        return state_vec + (dt / 6.0) * (k1 + 2.0 * k2 + 2.0 * k3 + k4)
+        return np.asarray(state_vec + (dt / 6.0) * (k1 + 2.0 * k2 + 2.0 * k3 + k4))

@@ -22,14 +22,18 @@ from src.core.contracts.validators import check_finite_array, check_positive
 def validate_state_vector(x: npt.NDArray[Any], name: str) -> None:
     check_finite_array(x, name)
 
+
 def validate_weight_matrix(Q: npt.NDArray[Any], shape: tuple[int, int], name: str) -> None:
     check_finite_array(Q, name)
+
 
 def format_results(results: list["BenchmarkResult"]) -> str:
     return "\n".join([f"{r.name}: error={r.tracking_error:.4f}" for r in results])
 
+
 def double_pendulum_mass_matrix(th1: float, th2: float) -> npt.NDArray[Any]:
     return np.eye(2)
+
 
 # Default control saturation limits for the double-pendulum benchmark (N*m).
 # The value 50 N*m is appropriate for a 1 kg, 0.5 m double pendulum; adjust
@@ -301,7 +305,7 @@ def trajectory_tracking_lqr(
 
     def controller(t: float, x: np.ndarray) -> np.ndarray:
         """Apply time-varying TTCF control law u = -K(t)(x - x*(t))."""
-        return -get_K(t) @ (x - x_ref_interp(t))
+        return cast(npt.NDArray[Any], -get_K(t) @ (x - x_ref_interp(t)))
 
     return controller
 
@@ -388,7 +392,7 @@ def run_benchmark(
         u = controller(t, x)
         # Clip control to prevent divergence; bounds are system-specific
         u = np.clip(u, control_limits[0], control_limits[1])
-        return double_pendulum_drift(t, x) + double_pendulum_B(x) @ u
+        return cast(npt.NDArray[Any], double_pendulum_drift(t, x) + double_pendulum_B(x) @ u)
 
     sol = solve_ivp(
         closed_loop,

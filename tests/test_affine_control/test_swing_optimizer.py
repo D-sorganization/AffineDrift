@@ -261,6 +261,7 @@ class TestSwingOptimizerCost(unittest.TestCase):
             control_weight=1.0,
             target_velocity=10.0,
             terminal_weight=100.0,
+            allow_mock_solver=True,
         )
         self.optimizer = SwingOptimizer(self.config)
 
@@ -324,9 +325,9 @@ class TestSwingOptimizerCost(unittest.TestCase):
 
     def test_terminal_cost_scales_with_terminal_weight(self) -> None:
         """Terminal cost should scale with terminal_weight."""
-        config_low = SwingOptimizationConfig(n_joints=2, target_velocity=10.0, terminal_weight=1.0)
+        config_low = SwingOptimizationConfig(n_joints=2, target_velocity=10.0, terminal_weight=1.0, allow_mock_solver=True)
         config_high = SwingOptimizationConfig(
-            n_joints=2, target_velocity=10.0, terminal_weight=100.0
+            n_joints=2, target_velocity=10.0, terminal_weight=100.0, allow_mock_solver=True
         )
         opt_low = SwingOptimizer(config_low)
         opt_high = SwingOptimizer(config_high)
@@ -482,9 +483,8 @@ class TestSwingOptimizerOptimize(unittest.TestCase):
     def test_optimize_rejects_mock_solver_without_opt_in(self) -> None:
         """Mock DDP should require explicit config opt-in."""
         config = SwingOptimizationConfig(n_joints=1, horizon_steps=5, max_iterations=1)
-        optimizer = SwingOptimizer(config)
         with self.assertRaises(ContractViolationError):
-            optimizer.optimize(np.zeros(2), double_integrator_1dof)
+            SwingOptimizer(config)
 
 
 # ── Property and accessor tests ─────────────────────────────────────────────
@@ -495,13 +495,13 @@ class TestSwingOptimizerProperties(unittest.TestCase):
 
     def test_config_property(self) -> None:
         """Config should be accessible via property."""
-        config = SwingOptimizationConfig(n_joints=3)
+        config = SwingOptimizationConfig(n_joints=3, allow_mock_solver=True)
         optimizer = SwingOptimizer(config)
         self.assertIs(optimizer.config, config)
 
     def test_R_matrix_shape(self) -> None:
         """R matrix should be (control_dim x control_dim)."""
-        config = SwingOptimizationConfig(n_joints=3, control_weight=0.5)
+        config = SwingOptimizationConfig(n_joints=3, control_weight=0.5, allow_mock_solver=True)
         optimizer = SwingOptimizer(config)
         R = optimizer.R
         self.assertEqual(R.shape, (3, 3))
@@ -510,7 +510,7 @@ class TestSwingOptimizerProperties(unittest.TestCase):
 
     def test_Q_matrix_shape(self) -> None:
         """Q matrix should be (state_dim x state_dim)."""
-        config = SwingOptimizationConfig(n_joints=2)
+        config = SwingOptimizationConfig(n_joints=2, allow_mock_solver=True)
         optimizer = SwingOptimizer(config)
         Q = optimizer.Q
         self.assertEqual(Q.shape, (4, 4))
@@ -524,6 +524,7 @@ class TestSwingOptimizerProperties(unittest.TestCase):
         config = SwingOptimizationConfig(
             n_joints=2,
             terminal_weight=50.0,
+            allow_mock_solver=True,
         )
         optimizer = SwingOptimizer(config)
         Q = optimizer.Q
@@ -532,7 +533,7 @@ class TestSwingOptimizerProperties(unittest.TestCase):
 
     def test_R_is_copy(self) -> None:
         """R property should return a copy (not a reference)."""
-        config = SwingOptimizationConfig(n_joints=2)
+        config = SwingOptimizationConfig(n_joints=2, allow_mock_solver=True)
         optimizer = SwingOptimizer(config)
         R1 = optimizer.R
         R1[0, 0] = 999.0
@@ -541,7 +542,7 @@ class TestSwingOptimizerProperties(unittest.TestCase):
 
     def test_zero_control_weight_gives_zero_R(self) -> None:
         """control_weight=0 should produce a zero R matrix."""
-        config = SwingOptimizationConfig(n_joints=2, control_weight=0.0)
+        config = SwingOptimizationConfig(n_joints=2, control_weight=0.0, allow_mock_solver=True)
         optimizer = SwingOptimizer(config)
         R = optimizer.R
         np.testing.assert_array_almost_equal(R, np.zeros((2, 2)))

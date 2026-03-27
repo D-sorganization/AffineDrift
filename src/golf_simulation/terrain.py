@@ -103,7 +103,7 @@ def compute_bounce(
         surface_normal = np.array([0.0, 0.0, 1.0])
     else:
         check_finite_array(surface_normal, "surface_normal")
-        norm = np.linalg.norm(surface_normal)
+        norm = float(np.linalg.norm(surface_normal))
         require(norm > 1e-10, "surface_normal must be non-zero")
         surface_normal = surface_normal / norm
 
