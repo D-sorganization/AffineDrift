@@ -282,4 +282,3 @@ class MockDDPSolver:
         return adaptive_timestep_ddp_mock(
             f=f, x0=x0, xf=xf, u_init=u_init, eps_residual=eps_residual, max_iters=max_iters
         )
-
