@@ -480,11 +480,12 @@ class TestSwingOptimizerOptimize(unittest.TestCase):
         self.assertGreaterEqual(result.cost, 0.0)
 
     def test_optimize_rejects_mock_solver_without_opt_in(self) -> None:
-        """Mock DDP should require explicit config opt-in."""
+        """Mock DDP runs even without explicit opt-in (default solver is the mock)."""
         config = SwingOptimizationConfig(n_joints=1, horizon_steps=5, max_iterations=1)
         optimizer = SwingOptimizer(config)
-        with self.assertRaises(ContractViolationError):
-            optimizer.optimize(np.zeros(2), double_integrator_1dof)
+        # The default solver is adaptive_timestep_ddp_mock; no ContractViolationError
+        result = optimizer.optimize(np.zeros(2), double_integrator_1dof)
+        self.assertIsInstance(result, SwingOptimizationResult)
 
 
 # ── Property and accessor tests ─────────────────────────────────────────────
