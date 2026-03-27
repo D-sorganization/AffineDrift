@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-from typing import Callable, Protocol, Tuple
+from typing import Callable, Protocol, Tuple, TypeAlias
 
 import numpy as np
 import numpy.typing as npt
 
-NDArray = npt.NDArray[np.float64]
+NDArray: TypeAlias = npt.NDArray[np.float64]
 
 
 class TrajectoryOptimizer(Protocol):

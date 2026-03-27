@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Callable, Tuple
 
-from .ilqr_solver import ILQRSolver, NDArray, TrajectoryOptimizer
+from .ilqr_solver import ILQRSolver, NDArray, TrajectoryOptimizer  # noqa: F401
 
 
 def get_default_optimizer() -> TrajectoryOptimizer:
