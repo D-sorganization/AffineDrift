@@ -373,7 +373,7 @@ class TestWristModelIntegration:
         # Step 3: Apply transmission ratio
         grip_rad = np.radians(30.0)
         wrist_rad = np.radians(10.0)
-        _omega_ratio, tau_ratio = universal_joint_transmission_ratio(wrist_rad, grip_rad)
+        _omega_ratio, tau_ratio = universal_joint_transmission_ratio(grip_rad, wrist_rad)
         transmitted = input_torque * tau_ratio
 
         # Step 4: Distribute torque to axes
@@ -399,7 +399,7 @@ class TestWristModelIntegration:
 
         tau_ratios: list[float] = []
         for phi_rad in phi_sweep_rad:
-            _omega_r, tau_r = universal_joint_transmission_ratio(phi_rad, grip_rad)
+            _omega_r, tau_r = universal_joint_transmission_ratio(grip_rad, phi_rad)
             tau_ratios.append(tau_r)
 
         tau_arr = np.array(tau_ratios)
@@ -422,5 +422,5 @@ class TestWristModelIntegration:
         wrist_rad = np.radians(wrist_deg)
 
         # These should never raise for valid ranges
-        _omega, tau = universal_joint_transmission_ratio(wrist_rad, grip_rad)
+        _omega, tau = universal_joint_transmission_ratio(grip_rad, wrist_rad)
         _ta, _tg = distribute_torque_by_grip_angle(1.0 * tau, grip_rad)

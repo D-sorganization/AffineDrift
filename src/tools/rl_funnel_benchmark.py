@@ -29,7 +29,27 @@ def format_results(results: list["BenchmarkResult"]) -> str:
     return "\n".join([f"{r.name}: error={r.tracking_error:.4f}" for r in results])
 
 def double_pendulum_mass_matrix(th1: float, th2: float) -> npt.NDArray[Any]:
-    return np.eye(2)
+    """Compute the 2x2 mass matrix for a double pendulum.
+
+    Uses parameters PENDULUM_M1, PENDULUM_M2, PENDULUM_L1, PENDULUM_L2.
+    The mass matrix M(q) for a double pendulum is:
+        M[0,0] = (m1 + m2) * L1^2
+        M[0,1] = m2 * L1 * L2 * cos(th1 - th2)
+        M[1,0] = m2 * L1 * L2 * cos(th1 - th2)
+        M[1,1] = m2 * L2^2
+    """
+    c12 = np.cos(th1 - th2)
+    M = np.array([
+        [
+            (PENDULUM_M1 + PENDULUM_M2) * PENDULUM_L1**2,
+            PENDULUM_M2 * PENDULUM_L1 * PENDULUM_L2 * c12,
+        ],
+        [
+            PENDULUM_M2 * PENDULUM_L1 * PENDULUM_L2 * c12,
+            PENDULUM_M2 * PENDULUM_L2**2,
+        ],
+    ])
+    return M
 
 # Default control saturation limits for the double-pendulum benchmark (N*m).
 # The value 50 N*m is appropriate for a 1 kg, 0.5 m double pendulum; adjust
@@ -184,14 +204,16 @@ def setpoint_lqr_controller(
     validate_weight_matrix(Q_sp, (n, n), "Q_sp")
     validate_weight_matrix(R_sp, (m, m), "R_sp")
 
-    # Linearize at target
+    # Linearize at target using central differences
     eps = 1e-6
     A = np.zeros((n, n))
-    f0 = double_pendulum_drift(0.0, x_target)
     for j in range(n):
         ej = np.zeros(n)
         ej[j] = eps
-        A[:, j] = (double_pendulum_drift(0.0, x_target + ej) - f0) / eps
+        A[:, j] = (
+            double_pendulum_drift(0.0, x_target + ej)
+            - double_pendulum_drift(0.0, x_target - ej)
+        ) / (2 * eps)
 
     B0 = double_pendulum_B(x_target)
 
@@ -236,11 +258,13 @@ def _precompute_lqr_gains(
     for _i, t in enumerate(t_ref):
         x_ref_i = x_ref[:, _i]
         A = np.zeros((n, n))
-        f0 = double_pendulum_drift(t, x_ref_i)
         for j in range(n):
             ej = np.zeros(n)
             ej[j] = eps
-            A[:, j] = (double_pendulum_drift(t, x_ref_i + ej) - f0) / eps
+            A[:, j] = (
+                double_pendulum_drift(t, x_ref_i + ej)
+                - double_pendulum_drift(t, x_ref_i - ej)
+            ) / (2 * eps)
         B0 = double_pendulum_B(x_ref_i)
         try:
             P = solve_continuous_are(A, B0, Q_tt, R_tt)
