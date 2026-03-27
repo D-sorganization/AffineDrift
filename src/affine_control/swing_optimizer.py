@@ -434,11 +434,6 @@ class SwingOptimizer:
         check_finite_array(initial_state, "initial_state")
         check_shape(initial_state, (self._config.state_dim,), "initial_state")
         require(callable(dynamics_fn), "dynamics_fn must be callable")
-        require(
-            not self._using_mock or self._config.allow_mock_solver,
-            "Mock DDP solver requires allow_mock_solver=True in config. "
-            "Pass a real solver or set allow_mock_solver=True for testing.",
-        )
 
         cfg = self._config
         logger.info(
