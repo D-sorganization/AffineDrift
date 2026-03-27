@@ -272,6 +272,7 @@ class ResidualMonitor(ContractChecker):
         else:
             self.low_count += 1
             self.high_count = 0
+            self.warn_count = 0
         # else: hysteresis zone (between eps_warning and eps_critical) — no counter changes
 
         # Three-state transitions: LQR <-> MPC_WARN <-> MPC_FULL
