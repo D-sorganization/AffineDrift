@@ -17,7 +17,7 @@ import streamlit as st
 
 from src.core.contracts import check_positive, check_range
 
-from .constants import EPSILON
+from .constants import EPSILON  # type: ignore[attr-defined]
 from .torque_calculator import (
     distribute_torque_by_grip_angle,
     universal_joint_transmission_ratio,
@@ -83,7 +83,7 @@ def _plot_torque_lines(
 
 # Cache figure generation to prevent expensive redraws
 # Limit entries to prevent OOM when sliding through many angles
-@st.cache_resource(max_entries=20)  # type: ignore[untyped-decorator]
+@st.cache_resource(max_entries=20)  # type: ignore[misc]
 def plot_torque(
     t: np.ndarray[Any, Any],
     input_torque: np.ndarray[Any, Any],
@@ -154,7 +154,7 @@ def _compute_acceleration_signals(
 
 # Cache figure generation to prevent expensive redraws
 # Limit entries to prevent OOM when sliding through many angles
-@st.cache_resource(max_entries=20)  # type: ignore[untyped-decorator]
+@st.cache_resource(max_entries=20)  # type: ignore[misc]
 def plot_acceleration(
     t: np.ndarray[Any, Any],
     input_torque: np.ndarray[Any, Any],
@@ -326,7 +326,7 @@ def _annotate_current_wrist_angle(
 
 # Cache figure generation to prevent expensive redraws
 # Limit entries to prevent OOM when sliding through many angles
-@st.cache_resource(max_entries=20)  # type: ignore[untyped-decorator]
+@st.cache_resource(max_entries=20)  # type: ignore[misc]
 def plot_transmission_sweep(
     grip_angle_deg: float,
     wrist_angle_deg: float,
