@@ -114,18 +114,16 @@ class SwingOptimizer:
             type(config).__name__,
         )
         self._config = config
-        self._using_mock = ddp_solver is None
         if ddp_solver is None:
-            import warnings
-
-            warnings.warn(
-                "No ddp_solver provided; falling back to adaptive_timestep_ddp_mock "
-                "which is a non-functional mock. Pass a real solver for production use.",
-                UserWarning,
-                stacklevel=2,
-            )
-            ddp_solver = adaptive_timestep_ddp_mock
-        self._ddp_solver = ddp_solver
+            if not config.allow_mock_solver:
+                raise ValueError(
+                    "The default DDP solver is a non-functional mock. "
+                    "Either pass a real ddp_solver or set "
+                    "allow_mock_solver=True in SwingOptimizationConfig."
+                )
+            self._ddp_solver = adaptive_timestep_ddp_mock
+        else:
+            self._ddp_solver = ddp_solver
         self._R = config.control_weight * np.eye(config.control_dim)
         self._Q = np.zeros((config.state_dim, config.state_dim))
         # Penalize velocity deviations (second half of state vector)
@@ -290,7 +288,7 @@ class SwingOptimizer:
         Returns:
             Tuple of (x_traj, u_traj, current_cost).
         """
-        x_traj, u_traj, _t_traj = adaptive_timestep_ddp_mock(
+        x_traj, u_traj, _t_traj = self._ddp_solver(
             f=dynamics_fn,
             x0=initial_state,
             xf=x_target,
