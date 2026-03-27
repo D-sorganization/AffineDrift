@@ -282,10 +282,6 @@ class ResidualMonitor(ContractChecker):
                 next_mode = "MPC_WARN"
         elif self.mode == "MPC_WARN":
             if self.high_count >= self.n:
-                next_mode = "MPC_WARN"
-                self.high_count = 0
-        elif self.mode == "MPC_WARN":
-            if self.high_count >= self.n:
                 next_mode = "MPC_FULL"
                 self.high_count = 0
             elif self.low_count >= self.n:
