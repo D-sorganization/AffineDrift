@@ -370,8 +370,7 @@ class RobotArm(DynamicalSystem):
         # M * ddq + C + G = tau
         # ddq = M_inv * (tau - C - G)
 
-        invM = np.linalg.inv(M)
-        ddq = invM @ (np.array([tau1, tau2]) - C - G)
+        ddq = np.linalg.solve(M, np.array([tau1, tau2]) - C - G)
 
         return np.array([dq1, dq2, ddq[0], ddq[1]])
 
