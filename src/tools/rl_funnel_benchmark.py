@@ -1,5 +1,3 @@
-from numba import jit
-
 """Benchmark classical setpoint control against trajectory-tracking control."""
 
 from __future__ import annotations
@@ -167,7 +165,6 @@ class BenchmarkResult:
     t_grid: np.ndarray = field(repr=False)
 
 
-@jit(nopython=True, fastmath=True)
 def setpoint_lqr_controller(
     x_target: npt.NDArray[Any],
     Q_sp: npt.NDArray[Any] | None = None,
@@ -216,8 +213,6 @@ def setpoint_lqr_controller(
     return controller
 
 
-@jit(nopython=True, fastmath=True)
-@jit(nopython=True, fastmath=True)
 def _precompute_lqr_gains(
     t_ref: np.ndarray,
     x_ref: np.ndarray,

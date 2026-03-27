@@ -1,5 +1,3 @@
-from numba import jit
-
 """Residual bound computation for affine drift control systems.
 
 Provides Hessian bound estimation and residual monitoring utilities used to
@@ -58,7 +56,6 @@ def compute_hessian_bound(
     return compute_hessian_norm(f, x, u, epsilon)
 
 
-@jit(nopython=True, fastmath=True)
 def _finite_diff_jacobian(
     f: Callable[[np.ndarray[Any, Any], np.ndarray[Any, Any]], np.ndarray[Any, Any]],
     x0: np.ndarray[Any, Any],
@@ -104,7 +101,6 @@ def _max_spectral_norm(H: np.ndarray[Any, Any]) -> float:
     return M
 
 
-@jit(nopython=True, fastmath=True)
 def compute_hessian_norm(
     f: Callable[[np.ndarray[Any, Any], np.ndarray[Any, Any]], np.ndarray[Any, Any]],
     x: np.ndarray[Any, Any],
@@ -167,7 +163,6 @@ def compute_hessian_norm(
     return _max_spectral_norm(H)
 
 
-@jit(nopython=True, fastmath=True)
 def predict_residual_bound(
     M_traj: np.ndarray[Any, Any], delta_x_traj: np.ndarray[Any, Any], dt_traj: np.ndarray[Any, Any]
 ) -> float:
