@@ -318,6 +318,58 @@ def _create_plot_figure(
     t: npt.NDArray[Any],
     input_torque: npt.NDArray[Any],
 ) -> Figure:
+    """Create a torque vs time figure."""
+    return plot_torque(  # type: ignore[no-any-return]
+        t,
+        input_torque,
+        params["grip_angle"],
+        params["wrist_angle"],
+        params["I_alpha"],
+        params["I_gamma"],
+        params["show_input"],
+        params["show_transmitted"],
+        params["show_alpha"],
+        params["show_gamma"],
+    )
+
+
+def _plot_acceleration_figure(
+    params: dict[str, Any],
+    t: np.ndarray,  # type: ignore[type-arg]
+    input_torque: np.ndarray,  # type: ignore[type-arg]
+) -> Figure:
+    """Create an angular acceleration vs time figure."""
+    return plot_acceleration(  # type: ignore[no-any-return]
+        t,
+        input_torque,
+        params["grip_angle"],
+        params["wrist_angle"],
+        params["I_alpha"],
+        params["I_gamma"],
+        params["show_alpha"],
+        params["show_gamma"],
+    )
+
+
+def _plot_transmission_figure(params: dict[str, Any]) -> Figure:
+    """Create a transmission ratio sweep figure."""
+    return plot_transmission_sweep(  # type: ignore[no-any-return]
+        params["grip_angle"],
+        params["wrist_angle"],
+        params["I_alpha"],
+        params["I_gamma"],
+        params["show_transmission"],
+        params["show_velocity"],
+        params["show_accel_alpha"],
+        params["show_accel_gamma"],
+    )
+
+
+def _create_plot_figure(
+    params: dict[str, Any],
+    t: npt.NDArray[Any],
+    input_torque: npt.NDArray[Any],
+) -> Figure:
     """Create the appropriate plot figure based on selected plot type.
 
     Args:

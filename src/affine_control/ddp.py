@@ -259,8 +259,26 @@ def _resample_controls(
 
     # Zero-order hold: map each new time point to nearest preceding control
     for t in t_new:
-        idx = np.searchsorted(t_old, t)
-        idx = min(idx, len(u_old) - 1)
+        idx = int(np.searchsorted(t_old, t, side="right")) - 1
+        idx = np.clip(idx, 0, len(u_old) - 1)
         u_resampled.append(u_old[idx])
 
     return np.array(u_resampled)
+
+
+class MockDDPSolver:
+    """Callable wrapper around adaptive_timestep_ddp_mock for the swing optimizer."""
+
+    def __call__(
+        self,
+        f: Callable[..., np.ndarray[Any, Any]],
+        x0: np.ndarray[Any, Any],
+        xf: np.ndarray[Any, Any],
+        u_init: np.ndarray[Any, Any],
+        eps_residual: float = DEFAULT_EPS_RESIDUAL,
+        max_iters: int = DEFAULT_MAX_ITERS,
+    ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any], np.ndarray[Any, Any]]:
+        """Delegate to adaptive_timestep_ddp_mock."""
+        return adaptive_timestep_ddp_mock(
+            f=f, x0=x0, xf=xf, u_init=u_init, eps_residual=eps_residual, max_iters=max_iters
+        )

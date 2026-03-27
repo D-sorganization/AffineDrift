@@ -3,6 +3,23 @@ title: "Lagrangian Mechanics"
 ---
 
 # Lagrangian Mechanics
+
+::: {.callout-note}
+
+Lagrangian mechanics is Newton's $F = ma$ in disguise---but a spectacularly useful
+disguise. Instead of tracking forces on every particle, you write down two numbers:
+the total kinetic energy $T$ (how fast things are moving) and the total potential
+energy $V$ (how much stored energy there is from gravity, springs, etc.). The
+difference $L = T - V$ is the Lagrangian, and from it, the equations of motion for
+*any* mechanical system fall out automatically.
+
+The magic is that you never need to compute internal forces---forces between links
+of a robot arm, constraint forces at hinges, reaction forces at joints. The
+Lagrangian handles them all implicitly. You just write down energies, take some
+derivatives, and the equations of motion appear. This is why every serious robotics
+textbook is built on Lagrangian mechanics.
+:::
+
 ## The Limitations of Newton
 
 
@@ -83,7 +100,7 @@ The spatial derivative of the Potential Energy naturally yields the exact vector
 ## Why Both Formulations Exist
 
 
-In *The Geometry of Motion*, as with all advanced robotics platforms, you will see both Euler-Lagrange and Newton-Euler used routinely, depending on the computational goal.
+In *Tangent-Space Methods*, as with all advanced robotics platforms, you will see both Euler-Lagrange and Newton-Euler used routinely, depending on the computational goal.
 
 \begin{itemize}
     \item We use **Euler-Lagrange** when we are analytically designing the control law (such as Contraction Metrics in Volume I). The elegant $M, C, G$ matrices allow us to explicitly cancel gravity conceptually or prove mathematical stability.

@@ -2,7 +2,7 @@
 
 ## Executive Summary
 - **Critical Gaps**: 62
-- **Feature Gaps (TRACKED_TASK)**: 34
+- **Feature Gaps (TODO)**: 34
 - **Content Gaps (Placeholders)**: 82
 - **Technical Debt**: 51
 - **Documentation Gaps**: 510
@@ -12,8 +12,8 @@
 ```mermaid
 pie title Completion Status
     "Impl Gaps (Critical)" : 62
-    "Feature Requests (TRACKED_TASK)" : 34
-    "Technical Debt (TRACKED_DEFECT)" : 51
+    "Feature Requests (TODO)" : 34
+    "Technical Debt (FIXME)" : 51
     "Doc Gaps" : 510
     "Content Gaps (Placeholders)" : 82
 ```
@@ -139,50 +139,50 @@ pie title Issues by Module
 ## Feature Gap Matrix
 | Module | Feature Gap | Type |
 |---|---|---|
-| `AGENTS.md` | - ❌ **DO NOT** leave `TRACKED_TASK`/`TRACKED_DEFECT` markers for more than one sprint. | TRACKED_TASK |
-| `AGENTS.md` | - **Read:** Codebase for TRACKED_TASK, TRACKED_DEFECT, NotImplementedError, pass statements | TRACKED_TASK |
-| `service-worker.js` | // TRACKED_TASK #1459: Replace hardcoded version with content-hash cache busting via build pipeline | TRACKED_TASK |
-| `config/tech_debt_budget.json` | "TRACKED_TASK": 20, | TRACKED_TASK |
-| `references/chicago-author-date.csl` | <!-- TRACKED_TASK: Replace with `part-number` label when CSL provides one --> | TRACKED_TASK |
-| `references/chicago-author-date.csl` | <!-- TRACKED_TASK: Replace with `part-number` label when CSL provides one --> | TRACKED_TASK |
-| `references/chicago-author-date.csl` | <!-- TRACKED_TASK: Replace with `supplement-number` label when CSL provides one --> | TRACKED_TASK |
-| `references/chicago-author-date.csl` | <!-- TRACKED_TASK: remove when Zotero fixes mapping of performer to `author` --> | TRACKED_TASK |
-| `references/chicago-author-date.csl` | <!-- TRACKED_TASK: remove conditional when Zotero stops double-mapping `event-place` and `publisher-place` - | TRACKED_TASK |
-| `references/chicago-author-date.csl` | <!-- TRACKED_TASK: use `container-genre` here once available to allow a custom description of the journal vo | TRACKED_TASK |
-| `references/chicago-author-date.csl` | <!-- TRACKED_TASK: If CSL adds `date-part` detection, add two further conditions to address CMOS18 14.74: de | TRACKED_TASK |
-| `references/chicago-author-date.csl` | <!-- TRACKED_TASK: when CSL provides date part detection, volume should be lowercase if there is a month, bu | TRACKED_TASK |
-| `references/chicago-author-date.csl` | <!-- TRACKED_TASK: use CSL term for `available-date` when available --> | TRACKED_TASK |
-| `references/chicago-author-date.csl` | <!-- TRACKED_TASK: To prevent Zotero from printing `event-place`, due to its double-mapping of `publisher-pl | TRACKED_TASK |
-| `references/chicago-author-date.csl` | <!-- TRACKED_TASK: We expect `event-title` to be used, but processors and applications may not be updated ye | TRACKED_TASK |
-| `references/chicago-author-date.csl` | <!-- TRACKED_TASK: We expect `event-title` to be used, but processors and applications may not be updated ye | TRACKED_TASK |
-| `references/chicago-author-date.csl` | <!-- TRACKED_TASK: `DOI` or `URL` detection is the only way to distinguish radio/TV from podcasts, but it is | TRACKED_TASK |
-| `references/chicago-author-date.csl` | <!-- TRACKED_TASK: remove conditional when Zotero fixes double-mapping of `event-place` --> | TRACKED_TASK |
-| `references/chicago-author-date.csl` | <!-- TRACKED_TASK: Is there a better CSL variable for a date of a multivolume work (CMOS18 14.21)? --> | TRACKED_TASK |
-| `references/chicago-author-date.csl` | <!-- TRACKED_TASK: remove this conditional when `page` parsing is fixed for different locator types --> | TRACKED_TASK |
-| `references/chicago-author-date.csl` | <!-- TRACKED_TASK: add variables for distributor and exhibitions if available in CSL --> | TRACKED_TASK |
-| `references/chicago-author-date.csl` | <!-- TRACKED_TASK: Add `proposed` date here if that becomes available --> | TRACKED_TASK |
-| `scripts/generate_completist_data.py` | """Scan files for completion markers (TRACKED_TASK, TRACKED_DEFECT, etc).""" | TRACKED_TASK |
-| `scripts/check_tech_debt_budget.py` | MARKERS = ("TRACKED_TASK", "TRACKED_DEFECT", "HACK", "XXX") | TRACKED_TASK |
-| `scripts/check_tech_debt_budget.py` | MARKER_RE = re.compile(r"\b(TRACKED_TASK\|TRACKED_DEFECT\|HACK\|XXX)\b", re.IGNORECASE) | TRACKED_TASK |
-| `src/tools/code_quality/pattern_checker.py` | (re.compile(r"\bTODO\b"), "TRACKED_TASK placeholder found"), | TRACKED_TASK |
-| `.agent/workflows/lint.md` | description: Run linting tools (ruff, black, mypy) and fix placeholder/TRACKED_TASK statements | TRACKED_TASK |
-| `.agent/workflows/lint.md` | grep -rn "TRACKED_TASK\\|TRACKED_DEFECT\\|XXX\\|HACK\\|NotImplementedError\\|pass$" --include="*.py" . | TRACKED_TASK |
-| `.agent/skills/lint/SKILL.md` | description: Run linting tools (ruff, black, mypy) and fix placeholder/TRACKED_TASK statements | TRACKED_TASK |
-| `.agent/skills/lint/SKILL.md` | - Search for `TRACKED_TASK`, `TRACKED_DEFECT`, `XXX`, `HACK` comments | TRACKED_TASK |
-| `.agent/skills/lint/SKILL.md` | grep -rn "TRACKED_TASK\\|TRACKED_DEFECT\\|XXX\\|HACK\\|NotImplementedError\\|pass$" --include="*.py" . | TRACKED_TASK |
-| `.claude/skills/lint/SKILL.md` | description: Run linting tools (ruff, black, mypy) and fix placeholder/TRACKED_TASK statements | TRACKED_TASK |
-| `.claude/skills/lint/SKILL.md` | - Search for `TRACKED_TASK`, `TRACKED_DEFECT`, `XXX`, `HACK` comments | TRACKED_TASK |
-| `.claude/skills/lint/SKILL.md` | grep -rn "TRACKED_TASK\\|TRACKED_DEFECT\\|XXX\\|HACK\\|NotImplementedError\\|pass$" --include="*.py" . | TRACKED_TASK |
+| `AGENTS.md` | - ❌ **DO NOT** leave `TODO`/`FIXME` markers for more than one sprint. | TODO |
+| `AGENTS.md` | - **Read:** Codebase for TODO, FIXME, NotImplementedError, pass statements | TODO |
+| `service-worker.js` | // TODO #1459: Replace hardcoded version with content-hash cache busting via build pipeline | TODO |
+| `config/tech_debt_budget.json` | "TODO": 20, | TODO |
+| `references/chicago-author-date.csl` | <!-- TODO: Replace with `part-number` label when CSL provides one --> | TODO |
+| `references/chicago-author-date.csl` | <!-- TODO: Replace with `part-number` label when CSL provides one --> | TODO |
+| `references/chicago-author-date.csl` | <!-- TODO: Replace with `supplement-number` label when CSL provides one --> | TODO |
+| `references/chicago-author-date.csl` | <!-- TODO: remove when Zotero fixes mapping of performer to `author` --> | TODO |
+| `references/chicago-author-date.csl` | <!-- TODO: remove conditional when Zotero stops double-mapping `event-place` and `publisher-place` - | TODO |
+| `references/chicago-author-date.csl` | <!-- TODO: use `container-genre` here once available to allow a custom description of the journal vo | TODO |
+| `references/chicago-author-date.csl` | <!-- TODO: If CSL adds `date-part` detection, add two further conditions to address CMOS18 14.74: de | TODO |
+| `references/chicago-author-date.csl` | <!-- TODO: when CSL provides date part detection, volume should be lowercase if there is a month, bu | TODO |
+| `references/chicago-author-date.csl` | <!-- TODO: use CSL term for `available-date` when available --> | TODO |
+| `references/chicago-author-date.csl` | <!-- TODO: To prevent Zotero from printing `event-place`, due to its double-mapping of `publisher-pl | TODO |
+| `references/chicago-author-date.csl` | <!-- TODO: We expect `event-title` to be used, but processors and applications may not be updated ye | TODO |
+| `references/chicago-author-date.csl` | <!-- TODO: We expect `event-title` to be used, but processors and applications may not be updated ye | TODO |
+| `references/chicago-author-date.csl` | <!-- TODO: `DOI` or `URL` detection is the only way to distinguish radio/TV from podcasts, but it is | TODO |
+| `references/chicago-author-date.csl` | <!-- TODO: remove conditional when Zotero fixes double-mapping of `event-place` --> | TODO |
+| `references/chicago-author-date.csl` | <!-- TODO: Is there a better CSL variable for a date of a multivolume work (CMOS18 14.21)? --> | TODO |
+| `references/chicago-author-date.csl` | <!-- TODO: remove this conditional when `page` parsing is fixed for different locator types --> | TODO |
+| `references/chicago-author-date.csl` | <!-- TODO: add variables for distributor and exhibitions if available in CSL --> | TODO |
+| `references/chicago-author-date.csl` | <!-- TODO: Add `proposed` date here if that becomes available --> | TODO |
+| `scripts/generate_completist_data.py` | """Scan files for completion markers (TODO, FIXME, etc).""" | TODO |
+| `scripts/check_tech_debt_budget.py` | MARKERS = ("TODO", "FIXME", "HACK", "XXX") | TODO |
+| `scripts/check_tech_debt_budget.py` | MARKER_RE = re.compile(r"\b(TODO\|FIXME\|HACK\|XXX)\b", re.IGNORECASE) | TODO |
+| `src/tools/code_quality/pattern_checker.py` | (re.compile(r"\bTODO\b"), "TODO placeholder found"), | TODO |
+| `.agent/workflows/lint.md` | description: Run linting tools (ruff, black, mypy) and fix placeholder/TODO statements | TODO |
+| `.agent/workflows/lint.md` | grep -rn "TODO\\|FIXME\\|XXX\\|HACK\\|NotImplementedError\\|pass$" --include="*.py" . | TODO |
+| `.agent/skills/lint/SKILL.md` | description: Run linting tools (ruff, black, mypy) and fix placeholder/TODO statements | TODO |
+| `.agent/skills/lint/SKILL.md` | - Search for `TODO`, `FIXME`, `XXX`, `HACK` comments | TODO |
+| `.agent/skills/lint/SKILL.md` | grep -rn "TODO\\|FIXME\\|XXX\\|HACK\\|NotImplementedError\\|pass$" --include="*.py" . | TODO |
+| `.claude/skills/lint/SKILL.md` | description: Run linting tools (ruff, black, mypy) and fix placeholder/TODO statements | TODO |
+| `.claude/skills/lint/SKILL.md` | - Search for `TODO`, `FIXME`, `XXX`, `HACK` comments | TODO |
+| `.claude/skills/lint/SKILL.md` | grep -rn "TODO\\|FIXME\\|XXX\\|HACK\\|NotImplementedError\\|pass$" --include="*.py" . | TODO |
 
 ## Technical Debt Register
 | File | Line | Issue | Type |
 |---|---|---|---|
-| `config/tech_debt_budget.json` | 25 | "TRACKED_DEFECT": 13, | TRACKED_DEFECT |
+| `config/tech_debt_budget.json` | 25 | "FIXME": 13, | FIXME |
 | `config/tech_debt_budget.json` | 26 | "HACK": 8, | HACK |
 | `config/tech_debt_budget.json` | 27 | "XXX": 10 | XXX |
 | `scripts/generate_completist_data.py` | 202 | markers = ["TOD" + "O", "FIX" + "ME", "XXX", "HACK", "TEMP"] | XXX |
 | `.hypothesis/constants/c893c2aeb23dac40` | 4 | [b'\x00', 1024, '  %s: %d', '"""', '%s', "'''", ')\\b', '*', '--output-dir', '--repo-root', '--verbo | XXX |
-| `src/tools/code_quality/pattern_checker.py` | 19 | (re.compile(r"\bFIXME\b"), "TRACKED_DEFECT placeholder found"), | TRACKED_DEFECT |
+| `src/tools/code_quality/pattern_checker.py` | 19 | (re.compile(r"\bFIXME\b"), "FIXME placeholder found"), | FIXME |
 | `.agent/workflows/issues-5-combined.md` | 44 | Closes #XXX, closes #XXX, closes #XXX, closes #XXX, closes #XXX | XXX |
 | `.agent/skills/update-issues/SKILL.md` | 132 | \| #XXX \| Title \| High \| assessment.md \| | XXX |
 | `.agent/skills/update-issues/SKILL.md` | 137 | \| #XXX \| Title \| Fixed in commit abc123 \| | XXX |

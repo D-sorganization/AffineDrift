@@ -11,6 +11,8 @@ import logging
 
 import numpy as np
 
+from src.core.constants import EPSILON  # noqa: F401 -- re-exported for backward compat
+
 logger = logging.getLogger(__name__)
 
 # Random seed for reproducibility
@@ -26,9 +28,6 @@ DEFAULT_CLUBHEAD_WEIGHT: float = 200.0  # grams
 DEFAULT_SHAFT_WEIGHT: float = 100.0  # grams
 DEFAULT_CLUB_LENGTH: float = 1.0  # meters
 DEFAULT_CLUBHEAD_CG_DISTANCE: float = 0.85  # meters
-
-# Numerical stability constants
-EPSILON: float = 1e-6
 
 # Maximum wrist angle before singularity protection (degrees)
 MAX_DELTA_DEGREES: float = 89.0

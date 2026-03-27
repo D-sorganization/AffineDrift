@@ -4,12 +4,16 @@ title: "Chapter 1: A Primer on Linear Algebra"
 
 # A Primer on Linear Algebra {#sec-linear-algebra}
 
-> *You cannot control a machine by staring at the machine. You control it by staring at the mathematical space that completely defines it.*
+> *The miracle is that nature can be described by mathematics at all. The deeper miracle is that the same mathematics describes everything from atoms to galaxies.* --- A recurring theme in physics
 
 ## Vectors and Matrices
 
 
 If I had to explain the single most important idea in applied mathematics to a first-year student, I would ask them this: **how would you describe a complicated motion using only simple pieces?** A robot arm with 15 joints doesn't move as one incomprehensible blob—it moves as a cascade of independent rotations, each contributing to the final position. A human throwing a baseball doesn't rotate one giant "throwing muscle"—the shoulder rotates, then the elbow, then the wrist, each adding their own angular velocity on top of the last. The miracle of linear algebra is that you can describe any complicated motion as a combination of simple ones. That is what vectors and matrices *are*—the science of combining simple things to understand complicated things.
+
+Let me put this even more simply. If you have ever mixed paint colors, you have done linear algebra. Red plus blue makes purple. Twice as much red makes a redder purple. The "space" of all possible colors you can mix from a set of base colors is a vector space. The base colors are your basis vectors. The proportions are your coefficients. That is literally all a vector space is: a collection of things you can scale and add together, where the results behave sensibly.
+
+Now, the vectors in this book will not be colors---they will be velocities, forces, and accelerations of mechanical systems. But the principle is identical: complicated motions are built from simple components, combined by addition and scaling. If you understand mixing paint, you understand the core idea of linear algebra.
 
 Before mapping physics, we must understand the fundamental data structures of control theory: vectors and matrices.
 
@@ -61,6 +65,10 @@ These magical vectors are called **Eigenvectors** ($\bm{v}$), and the amount the
 \begin{equation}
    M\bm{v} = \lambda\bm{v}
 \end{equation}
+
+Here is a physical picture that makes eigenvalues unforgettable. Imagine you are standing on a trampoline and someone pushes you. In most directions, you bounce off at some angle---the trampoline redirects your motion. But there are special directions (straight down, for instance) where you bounce right back the same way you came in, just higher or lower. Those special "bounce-back" directions are the eigenvectors. How much higher or lower you bounce is the eigenvalue.
+
+For a rotating gyroscope, the eigenvector of the angular momentum is the spin axis---the one direction that does not precess. For a vibrating guitar string, the eigenvectors are the harmonic modes---the shapes the string naturally wants to vibrate in. Eigenvalues and eigenvectors are not abstract mathematical curiosities; they are the skeleton of every physical system.
 
 Why do we care?
 If $M$ represents the mass and inertia of a car, its eigenvectors tell us the "Principal Axes"—the natural axes where the car is easiest and hardest to spin.

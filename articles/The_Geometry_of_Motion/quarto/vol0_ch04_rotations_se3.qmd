@@ -3,6 +3,26 @@ title: "Rotations, Quaternions, and SO(3)"
 ---
 
 # Rotations, Quaternions, and SO(3)
+
+::: {.callout-note}
+
+Rotations are everywhere in mechanics---every joint in a robot arm rotates, every
+satellite tumbles, every golf club sweeps through an arc. But rotations are
+mathematically strange in a way that catches everyone off guard the first time.
+
+Here is the surprise: **the order of rotations matters**. If you rotate a book 90
+degrees around the vertical axis, then 90 degrees around the horizontal axis, you get
+a different result than if you do those same two rotations in the opposite order. Try
+it right now with a book on your desk. This is not true for translations (walking 3
+steps north then 2 steps east ends up the same as 2 east then 3 north).
+
+This non-commutativity means rotations do not live in ordinary Euclidean space. They
+live on a curved surface called $SO(3)$---the group of all rotations. This chapter
+introduces that surface and its properties. The payoff is enormous: by respecting the
+geometry of rotations, we avoid the singularities and artifacts that plague simpler
+representations like Euler angles.
+:::
+
 ## The Coordinate Frame
 
 
@@ -78,7 +98,7 @@ A Unit Quaternion $q$ mathematically encodes these into 4 variables representing
 
 By simply enforcing that the sum of the squares of these 4 variables equals 1 ($q_0^2 + q_1^2 + q_2^2 + q_3^2 = 1$), a Unit Quaternion provides a singularity-free, ultra-fast algebraic mapping of $\SO$.
 
-Throughout *The Geometry of Motion*, specifically when interacting with the codebase bridges connecting algorithms like `Pinocchio` or `UpstreamDrift` (which natively uses MuJoCo physics engines), all 3D rotational mechanics explicitly bypass Euler Angles and map directly into Quaternions and $\SO$ Rotation Matrices.
+Throughout *Tangent-Space Methods*, specifically when interacting with the codebase bridges connecting algorithms like `Pinocchio` or `UpstreamDrift` (which natively uses MuJoCo physics engines), all 3D rotational mechanics explicitly bypass Euler Angles and map directly into Quaternions and $\SO$ Rotation Matrices.
 
 
 ## Numerical Stability: A Practical Consideration

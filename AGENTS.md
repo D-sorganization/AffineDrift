@@ -137,8 +137,8 @@ All code produced must adhere to the following design principles. These are eval
 #### 5a. DRY — Don't Repeat Yourself
 
 - ❌ **DO NOT** duplicate logic across modules, functions, or files.
-- ✅ **Extract** shared logic into utility functions, base classes, or shared libraries.
-- ✅ **Use** the `ud-tools` shared package for cross-repository utilities.
+- ✅ **Extract** shared logic into utility functions, base classes, or shared modules in `src/`.
+- ✅ **Extract** shared Quarto content into reusable `_includes/` partials or shared `.qmd` fragments.
 - **Threshold:** Any logic block >5 lines appearing in 2+ locations MUST be refactored.
 
 #### 5b. Design by Contract (DbC)
@@ -321,6 +321,51 @@ matlab_project/
 - Use clear comment blocks for function documentation.
 - Avoid `.asv` and `.m~` files in commits (add to `.gitignore`).
 - Use `functiontests` for testing.
+
+---
+
+## 📖 AffineDrift-Specific Standards
+
+AffineDrift is a **Quarto-based educational textbook**. The following standards apply in addition to the
+general Python standards above.
+
+### Toolchain (Non-Negotiable)
+
+- **Formatter:** Black with `--line-length 100`. **Never** run `ruff format` in this repo.
+- **Linter:** `ruff check` only (not `ruff format`).
+- **Python version:** 3.12. Always use `python3`.
+- **Tests:** `pytest --cov --cov-fail-under=50` (50% coverage minimum).
+
+### Quarto Authoring Standards
+
+- **Source files:** Author in `.qmd` (Quarto Markdown). Do not edit rendered `docs/` HTML directly.
+- **Code cells:** Use `{python}` or `{javascript}` fenced blocks for executable content.
+- **Cross-references:** Use `@sec-`, `@fig-`, `@eq-` syntax. Register new chapters in `_quarto.yml`.
+- **Bibliography:** Add entries to `references/` directory. Cite with `[@key]`. Validate with the
+  bibliography quality check CI gate.
+- **Images:** All `<img>` tags and Quarto figure blocks must have descriptive alt text.
+- **Math:** Use MathJax/KaTeX syntax. Prefer `$$...$$` for display math, `$...$` for inline.
+
+### CSS Discipline
+
+- **Edit CSS only in `css/`** — never in `docs/`. CI enforces mirroring; direct `docs/` CSS edits
+  will fail the CSS mirror enforcement gate.
+- **CSS budget:** Stylesheet sizes are enforced by CI. Do not bloat stylesheets.
+
+### Module Size & Complexity (AffineDrift)
+
+- **No inline complex Python in `.qmd` files.** Complex logic (>20 lines) MUST live in importable
+  modules under `src/`, with corresponding `tests/` coverage.
+- **File size limit:** 400 lines for `.py` files; >800 lines is a critical violation (same as §5d).
+
+### TDD for AffineDrift Python Utilities
+
+When adding new Python utilities (e.g., data loaders, figure generators, calculation helpers):
+
+1. Write the test in `tests/` first (RED phase).
+2. Implement the minimal code in `src/` to pass (GREEN phase).
+3. Refactor and ensure coverage does not drop below 50% (REFACTOR phase).
+4. New interactive JavaScript features require Jest tests in `tests/`.
 
 ---
 
@@ -609,21 +654,14 @@ powershell -Command "gh run view [RUN_ID]"
 
 ```bash
 # Python files - run ALL of these before committing:
-python3 -m ruff check .                          # Linting errors (E, F, W, I, B, UP rules)
+python3 -m ruff check .                          # Linting errors
 python3 -m ruff check --fix .                    # Auto-fix what can be fixed
-python3 -m black --line-length 100 .             # Format with Black (100-char line limit)
+# NOTE: Do NOT run ruff format in this repo — Black is the formatter
+python3 -m black --line-length 100 .             # Format code (Black, 100-char limit)
+python3 -m black --check --line-length 100 .     # Verify formatting is correct
 
-# Type checking (src and scripts only):
-mypy src/tools/ scripts/ --ignore-missing-imports
-
-# Run tests with coverage:
-python3 -m pytest tests/ --cov=src/tools --cov-fail-under=50 --timeout=60
-
-# JavaScript tests:
-npx jest
-
-# Verify no linting issues remain:
-python3 -m ruff check . && python3 -m black --check --line-length 100 . && echo "All checks passed"
+# Verify no issues remain:
+python3 -m ruff check . && echo "✓ All checks passed"
 ```
 
 ### Common Python Linting Issues to Avoid

@@ -1,0 +1,104 @@
+name: Quarto PDF Render
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "articles/**/*.qmd"
+      - "books/**/*.qmd"
+      - "_quarto.yml"
+      - ".github/workflows/quarto-pdf-render.yml"
+  pull_request:
+    branches: [main, staging]
+    paths:
+      - "articles/**/*.qmd"
+      - "books/**/*.qmd"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  render-quarto-pdf:
+    if: github.repository == 'D-sorganization/AffineDrift'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python dependencies
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install jupyter numpy matplotlib
+
+      - name: Install Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: "1.6.39"
+
+      - name: Install TinyTeX for PDF rendering
+        run: |
+          quarto install tinytex
+
+      - name: Render Quarto textbook chapters as PDF
+        run: |
+          mkdir -p _pdf_output
+
+          # Render the Geometry of Motion Quarto volumes as PDF
+          cd articles/The_Geometry_of_Motion/quarto
+
+          # Volume 0: Mathematical Primer
+          quarto render volume0.qmd --to pdf \
+            --output ../../../_pdf_output/GoM_Volume_0_Primer.pdf \
+            || echo "Volume 0 Quarto PDF render encountered issues"
+
+          # Volume 1: Foundations
+          quarto render volume1.qmd --to pdf \
+            --output ../../../_pdf_output/GoM_Volume_1_Foundations.pdf \
+            || echo "Volume 1 Quarto PDF render encountered issues"
+
+          # Volume 2: Trajectories
+          quarto render volume2.qmd --to pdf \
+            --output ../../../_pdf_output/GoM_Volume_2_Trajectories.pdf \
+            || echo "Volume 2 Quarto PDF render encountered issues"
+
+          cd ../../..
+
+          # Render the main theory articles as PDF
+          quarto render articles/theory-part1.qmd --to pdf \
+            --output _pdf_output/Theory_Part1.pdf \
+            || echo "Theory Part 1 PDF render encountered issues"
+
+      - name: Upload Quarto PDF artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: quarto-rendered-pdfs
+          path: _pdf_output/*.pdf
+          if-no-files-found: warn
+
+      - name: Publish Quarto PDFs to release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          TAG_NAME="textbook-pdfs-latest"
+          gh release view "$TAG_NAME" >/dev/null 2>&1 || \
+            gh release create "$TAG_NAME" \
+              --title "Textbook PDFs (Latest)" \
+              --notes "Automated PDFs — LaTeX volumes and Quarto-rendered chapters."
+          for pdf in _pdf_output/*.pdf; do
+            if [ -f "$pdf" ]; then
+              name=$(basename "$pdf")
+              gh release upload "$TAG_NAME" "${pdf}#Quarto_${name}" --clobber
+            fi
+          done

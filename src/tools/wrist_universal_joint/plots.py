@@ -231,7 +231,7 @@ def _compute_transmission_sweep(
     accel_gamma_ratios_list: list[float] = []
 
     for phi_rad in phi_sweep_rad:
-        omega_r, tau_r = universal_joint_transmission_ratio(phi_rad, theta_grip_rad)
+        omega_r, tau_r = universal_joint_transmission_ratio(theta_grip_rad, phi_rad)
         omega_ratios_list.append(omega_r)
         tau_ratios_list.append(tau_r)
 

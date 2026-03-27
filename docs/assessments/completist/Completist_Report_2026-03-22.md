@@ -2,7 +2,7 @@
 
 ## Executive Summary
 - **Critical Gaps**: 32
-- **Feature Gaps (TRACKED_TASK)**: 6
+- **Feature Gaps (TODO)**: 6
 - **Content Gaps (Placeholders)**: 32
 - **Technical Debt**: 3
 - **Documentation Gaps**: 447
@@ -12,8 +12,8 @@
 ```mermaid
 pie title Completion Status
     "Impl Gaps (Critical)" : 32
-    "Feature Requests (TRACKED_TASK)" : 6
-    "Technical Debt (TRACKED_DEFECT)" : 3
+    "Feature Requests (TODO)" : 6
+    "Technical Debt (FIXME)" : 3
     "Doc Gaps" : 447
     "Content Gaps (Placeholders)" : 32
 ```
@@ -103,12 +103,12 @@ pie title Issues by Module
 ## Feature Gap Matrix
 | Module | Feature Gap | Type |
 |---|---|---|
-| `AGENTS.md` | - ❌ **DO NOT** leave `TRACKED_TASK`/`TRACKED_DEFECT` markers for more than one sprint. | TRACKED_TASK |
-| `AGENTS.md` | - **Read:** Codebase for TRACKED_TASK, TRACKED_DEFECT, NotImplementedError, pass statements | TRACKED_TASK |
-| `AffineDrift_Adversarial_Review_2026-03-07.md` | Sixteen .qmd files contain placeholder text. Notable gaps include book-reviews.qmd (2 "coming soon"  | TRACKED_TASK |
-| `config/tech_debt_budget.json` | "TRACKED_TASK": 20, | TRACKED_TASK |
-| `scripts/check_tech_debt_budget.py` | MARKERS = ("TRACKED_TASK", "TRACKED_DEFECT", "HACK", "XXX") | TRACKED_TASK |
-| `scripts/check_tech_debt_budget.py` | MARKER_RE = re.compile(r"\b(TRACKED_TASK\|TRACKED_DEFECT\|HACK\|XXX)\b", re.IGNORECASE) | TRACKED_TASK |
+| `AGENTS.md` | - ❌ **DO NOT** leave `TODO`/`FIXME` markers for more than one sprint. | TODO |
+| `AGENTS.md` | - **Read:** Codebase for TODO, FIXME, NotImplementedError, pass statements | TODO |
+| `AffineDrift_Adversarial_Review_2026-03-07.md` | Sixteen .qmd files contain placeholder text. Notable gaps include book-reviews.qmd (2 "coming soon"  | TODO |
+| `config/tech_debt_budget.json` | "TODO": 20, | TODO |
+| `scripts/check_tech_debt_budget.py` | MARKERS = ("TODO", "FIXME", "HACK", "XXX") | TODO |
+| `scripts/check_tech_debt_budget.py` | MARKER_RE = re.compile(r"\b(TODO\|FIXME\|HACK\|XXX)\b", re.IGNORECASE) | TODO |
 
 ## Technical Debt Register
 | File | Line | Issue | Type |

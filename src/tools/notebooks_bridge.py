@@ -1,4 +1,4 @@
-"""Notebook bridge generation and validation for The Geometry of Motion."""
+"""Notebook bridge generation and validation for Tangent-Space Methods for Nonlinear Control and Biomechanics."""
 
 from __future__ import annotations
 
@@ -155,7 +155,7 @@ def _write_notebook(path: Path, notebook_data: dict[str, Any]) -> None:
 def _write_manifest(*, manifest_path: Path, entries: list[dict[str, Any]]) -> None:
     """Persist notebook bridge manifest in canonical schema."""
     manifest = {
-        "series": "The Geometry of Motion",
+        "series": "Tangent-Space Methods for Nonlinear Control and Biomechanics",
         "description": "Executable chapter bridge between textbook pages and Jupyter notebooks.",
         "entries": entries,
     }
