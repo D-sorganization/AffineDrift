@@ -25,6 +25,7 @@ from src.tools.rl_funnel_support import (
 
 
 def format_results(results: list["BenchmarkResult"]) -> str:
+    """Format benchmark results as a newline-separated summary string."""
     return "\n".join([f"{r.name}: error={r.tracking_error:.4f}" for r in results])
 
 
