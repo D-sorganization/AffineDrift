@@ -10,6 +10,7 @@ meaningful. See: docs/assessments/issues/ISSUE_Completist_Critical_DDPMock_2026-
 """
 
 import logging
+import os
 import warnings
 from collections.abc import Callable
 from typing import Any, cast
@@ -184,8 +185,6 @@ def adaptive_timestep_ddp_mock(
         u_traj, x_traj, t = _run_ddp_iteration(
             f, x0, x_traj, u_traj, t, eps_residual, compute_hessian_bound_func
         )
-        if iteration > 2:  # Break early for prototype
-            break
 
     return x_traj, u_traj, t
 
@@ -256,10 +255,28 @@ def _resample_controls(
     require(len(t_new) > 0, "t_new must not be empty")
     u_resampled = []
 
-    # Zero-order hold: map each new time point to nearest preceding control
+    # Zero-order hold: map each new time point to the last preceding control
     for t in t_new:
-        idx = np.searchsorted(t_old, t)
-        idx = min(idx, len(u_old) - 1)
+        idx = int(np.searchsorted(t_old, t, side="right")) - 1
+        idx = np.clip(idx, 0, len(u_old) - 1)
         u_resampled.append(u_old[idx])
 
     return np.array(u_resampled)
+
+
+class MockDDPSolver:
+    """Callable wrapper around adaptive_timestep_ddp_mock for the swing optimizer."""
+
+    def __call__(
+        self,
+        f: Callable[..., np.ndarray[Any, Any]],
+        x0: np.ndarray[Any, Any],
+        xf: np.ndarray[Any, Any],
+        u_init: np.ndarray[Any, Any],
+        eps_residual: float = DEFAULT_EPS_RESIDUAL,
+        max_iters: int = DEFAULT_MAX_ITERS,
+    ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any], np.ndarray[Any, Any]]:
+        """Delegate to adaptive_timestep_ddp_mock."""
+        return adaptive_timestep_ddp_mock(
+            f=f, x0=x0, xf=xf, u_init=u_init, eps_residual=eps_residual, max_iters=max_iters
+        )

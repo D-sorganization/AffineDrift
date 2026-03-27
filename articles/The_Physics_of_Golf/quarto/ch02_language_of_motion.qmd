@@ -1,0 +1,351 @@
+---
+title: "The Language of Motion"
+---
+
+# The Language of Motion
+
+::: {.callout-tip}
+## Why We Need a Language
+
+Before you can apply physics to the golf swing, you need a precise way to describe it. Not in words—in mathematics.
+
+When a coach says ``you're rotating your hips too early,'' that's imprecise. Rotate how much? At what point in the swing? How fast? A physicist would ask: what is the hip rotation angle at this instant? How is it changing with time?
+
+This chapter introduces the language physicists use to describe motion: **coordinates**, **state**, and **state space**. It looks abstract at first, but it's essential. Once you can describe a swing precisely, you can predict what will happen next, diagnose what went wrong, and understand the forces that shaped the motion.
+
+:::
+
+## Coordinates: Measuring Position
+
+The simplest place to start: how do we describe where your body is?
+
+### Cartesian Coordinates
+
+One way is Cartesian coordinates. Point your finger at the club head. In space, you can describe its location with three numbers: its distance east, its distance north, and its distance up (or any three perpendicular directions). These are $(x, y, z)$ coordinates.
+
+This works. But it's clumsy for describing a golf swing. Why? Because the club head is constrained by your arm. It can't move independently. You can't move it 10 feet to the left without moving your shoulder.
+
+### Generalized Coordinates
+
+Instead, physicists use **generalized coordinates**: a minimal set of numbers that fully describe the configuration of a system.
+
+::: {.callout-note}
+## Generalized Coordinates
+
+A set of independent variables $\bm{q} = [q_1, q_2, \ldots, q_n]$ such that:
+1. Every possible position of the system can be described by choosing a value for each $q_i$.
+2. Each $q_i$ is independent—you can change one without automatically changing the others.
+3. The number of variables $n$ equals the number of **degrees of freedom** (DOF).
+
+:::
+
+**Example: A Simple Pendulum**
+
+A mass hanging from a string can only move on a circle (the string doesn't stretch). Its position is completely described by one number: the angle $\theta$ from vertical.
+
+$\bm{q} = [\theta]$. There is 1 DOF.
+
+If you use Cartesian coordinates, you need two numbers: the $x$ and $y$ position of the mass. But these two numbers are not independent. If you change $x$, then $y$ must change too (to keep the string length fixed). Generalized coordinates eliminate this redundancy.
+
+For the golf swing, the natural choice is **joint angles**.
+
+::: {.callout-note}
+## Joint Angles in the Golf Swing
+
+- $q_1 = \theta_s$: the angle of the upper arm at the shoulder, measured from some reference (e.g., vertical).
+- $q_2 = \theta_e$: the angle of the forearm + club at the elbow, measured from the upper arm.
+
+For a two-link model (the double pendulum), we need exactly two numbers to describe the configuration.
+
+$$\bm{q} =  \theta_s \\ \theta_e $$
+
+:::
+
+::: {.callout-tip}
+## From Angles to Positions
+
+Once you've chosen generalized coordinates, you can compute the Cartesian position of any point.
+
+Suppose the upper arm has length $L_1$ and the forearm+club has length $L_2$. If the shoulder is at the origin:
+
+x_{\text{elbow}} &= L_1 \sin(\theta_s) \\
+y_{\text{elbow}} &= -L_1 \cos(\theta_s) \\
+x_{\text{clubhead}} &= L_1 \sin(\theta_s) + L_2 \sin(\theta_s + \theta_e) \\
+y_{\text{clubhead}} &= -L_1 \cos(\theta_s) - L_2 \cos(\theta_s + \theta_e)
+
+So from two numbers $[\theta_s, \theta_e]$ you can compute the full 3D position of every point on the arm. The constraint (that the links are rigid) is automatically satisfied.
+
+:::
+
+## State: Position and Velocity
+
+Knowing where your arm is right now doesn't tell you what will happen next. You also need to know how fast it's moving.
+
+::: {.callout-note}
+## Velocity in Generalized Coordinates
+
+The velocity of a joint angle is its time derivative:
+
+$$\dot{q}_i = \frac{dq_i}{dt}$$
+
+For example, $\dot{\theta}_s$ is the rate of rotation of the shoulder (in radians per second).
+
+:::
+
+**Example: Shoulder Rotation Speed**
+
+During the downswing, a golfer's shoulder might be rotating at $\dot{\theta}_s = 600 \text{ degrees/second} = 10.5 \text{ rad/s}$.
+
+What does this mean physically? If the shoulder could hold this rotation rate steady, the golfer would rotate a full 360 degrees in $360 \text{ degrees} / 600 \text{ deg/s} = 0.6 \text{ seconds}$.
+
+Actually, $\dot{\theta}_s$ varies throughout the swing—it's slow at the top (backswing winding up), then accelerates during transition, reaches peak during the downswing, and decreases toward impact. But at any given instant, $\dot{\theta}_s$ tells you the instantaneous rotation rate.
+
+Now we can define the full state:
+
+::: {.callout-note}
+## State of a System
+
+The **state** $\bm{x}$ is the complete information needed to predict the future motion. It includes both position and velocity:
+
+$$\bm{x} =  \bm{q} \\ \dot{\bm{q}}  =  q_1 \\ q_2 \\ \vdots \\ q_n \\ \dot{q}_1 \\ \dot{q}_2 \\ \vdots \\ \dot{q}_n $$
+
+For a double pendulum, the state has 4 components:
+
+$$\bm{x} =  \theta_s \\ \theta_e \\ \dot{\theta}_s \\ \dot{\theta}_e $$
+
+:::
+
+::: {.callout-tip}
+## Why State is Necessary
+
+Imagine you're at the top of the backswing. Your shoulder angle is $\theta_s = 90°$ (horizontal). That's your \state{position}. But is the downswing about to begin? You can't tell from position alone.
+
+If $\dot{\theta}_s = 0$ (you're not rotating), you're just about to start. If $\dot{\theta}_s = 500 \text{ deg/s}$ (you're already rotating fast), the downswing is well underway.
+
+Physics has a rule: the future motion is determined by the current *state*, not by the current position alone. Given $\bm{x}$ at this instant and the forces acting on the system, you can predict where you'll be a tiny fraction of a second later. Then use the new state to predict the next moment. And so on.
+
+:::
+
+## Phase Space: Where Every Swing Lives
+
+Once we have the concept of state, we can visualize it geometrically.
+
+::: {.callout-note}
+## Phase Space
+
+The space of all possible states. If there are $n$ degrees of freedom, phase space has $2n$ dimensions: $n$ for position and $n$ for velocity.
+
+For a double pendulum: 4 dimensions (2 angles, 2 angular velocities).
+
+:::
+
+At any instant during your swing, your arm is at some point in this 4D phase space. As you swing, that point traces out a path—a **trajectory**.
+
+::: {.callout-tip}
+## Thinking in 4 Dimensions
+
+Four dimensions is hard to visualize. But you can think of it as a 2D surface (the position, $\theta_s$ and $\theta_e$) with a velocity attached to each point.
+
+Imagine a piece of paper with $\theta_s$ on the horizontal axis and $\theta_e$ on the vertical axis. Every point on this paper is a possible configuration. Now, at each point, imagine a vector showing $[\dot{\theta}_s, \dot{\theta}_e]$—the direction and speed you're moving in state space.
+
+During the backswing, you might follow a path from $(90°, 0°)$ to $(150°, -50°)$ (shoulder opens, elbow closes relative to arm). As you move along this path, your velocity vector changes. At the top, you're still for a moment. Then you start the downswing.
+
+An entire golf swing is one continuous curve in this 4D space.
+
+:::
+
+Here's a key insight: **if you know the forces, you can predict the trajectory**.
+
+Given any state $\bm{x}$, the forces determine $\ddot{\bm{q}}$ (the acceleration). Newton's second law says: $\bm{F} = m \bm{a}$. So if you know the forces, you know the acceleration. And if you know the acceleration, you can predict where the state will be a moment later. This is how physicists predict motion.
+
+## Configuration Space: The Space of Positions
+
+Sometimes it's useful to focus just on position, ignoring velocity. This is called configuration space.
+
+::: {.callout-note}
+## Configuration Space
+
+The space of all possible positions (configurations) of the system. For $n$ degrees of freedom, configuration space has $n$ dimensions.
+
+For a double pendulum: 2 dimensions ($\theta_s, \theta_e$).
+
+:::
+
+During a golf swing, your configuration traces a path in configuration space. Your backswing, transition, downswing, and follow-through are all portions of this path.
+
+**Example: Configuration Space of a Double Pendulum**
+
+Imagine a plot with $\theta_s$ on the $x$-axis (from $-90°$ to $+150°$, full range of shoulder motion) and $\theta_e$ on the $y$-axis (from $-80°$ to $+80°$, full range of elbow angle).
+
+A typical golf swing path in this space might look like:
+- **Address**: $(\theta_s, \theta_e) = (0°, 0°)$ (arms at rest, pointing toward target).
+- **Backswing**: move to $(120°, -50°)$ (shoulder rotates, elbow closes).
+- **Top**: $(\theta_s, \theta_e) = (150°, -70°)$ (maximum wind-up).
+- **Downswing**: move through $(100°, -40°), (50°, -20°), \ldots$
+- **Impact**: $(0°, 0°)$ (back to address position).
+- **Follow-through**: $(−90°, +60°)$ (extended, relaxed position).
+
+This path is unique to each golfer. Tour professionals have slightly different paths. But all paths respect physical laws.
+
+## Constraints: Not All Configurations Are Allowed
+
+Here's an important limitation: not every point in configuration space is reachable.
+
+::: {.callout-note}
+## Constraints
+
+Physical limitations that restrict which configurations are possible. Common constraints in golf:
+- **Range of motion**: your shoulder can only rotate so far, your elbow can only bend so much.
+- **Rigidity**: your arm bones are rigid, so the elbow and shoulder positions are not independent.
+- **Friction**: your grip prevents the club from slipping relative to your hand.
+
+:::
+
+The set of reachable configurations forms a region in configuration space. Your swing must stay within this region. If you try to force your arm into an impossible configuration, something breaks (injury).
+
+{Constraints as Walls in Space}{box:ch02_constraints_walls}
+Think of configuration space as a room. Some regions are forbidden (your arm can't hyperextend). The boundary of the forbidden regions are the constraints.
+
+When you hit the boundary—when you reach maximum shoulder turn, for instance—a **constraint force** appears. Your arm doesn't magically go past the limit; instead, the tissues (muscles, tendons, bone) exert a force that keeps you at the boundary.
+
+This is crucial: constraint forces are not muscle forces. They're reactive. They appear automatically to enforce the constraint. We'll see later that they contribute to the total force in the equation of motion, but they're not part of your **control**.
+} = 0.25$m from the shoulder.
+- Forearm + club has length$L_2 = 1$m and mass$M_2 = 1$kg. Its center of mass is at distance$L_{2,\text{cm}} = 0.5$m from the elbow.
+- Generalized coordinates:$q_1 = \theta_s$(shoulder angle from vertical, in radians),$q_2 = \theta_e$(elbow angle from horizontal, in radians).
+
+### Position Kinematics
+
+The position of the elbow relative to the shoulder:
+
+\bm{r}_{\text{elbow}} &=  L_1 \sin(\theta_s) \\ -L_1 \cos(\theta_s)
+
+The position of the clubhead relative to the shoulder:
+
+\bm{r}_{\text{club}} &=  L_1 \sin(\theta_s) + L_2 \sin(\theta_s + \theta_e) \\ -L_1 \cos(\theta_s) - L_2 \cos(\theta_s + \theta_e)
+
+The center of mass of link 1:
+
+\bm{r}_{\text{cm},1} &=  L_{1,\text{cm}} \sin(\theta_s) \\ -L_{1,\text{cm}} \cos(\theta_s)
+
+The center of mass of link 2:
+
+\bm{r}_{\text{cm},2} &=  L_1 \sin(\theta_s) + L_{2,\text{cm}} \sin(\theta_s + \theta_e) \\ -L_1 \cos(\theta_s) - L_{2,\text{cm}} \cos(\theta_s + \theta_e)
+
+### Velocity Kinematics
+
+To find velocity, differentiate the positions:
+
+\dot{\bm{r}}_{\text{elbow}} &=  L_1 \cos(\theta_s) \dot{\theta}_s \\ L_1 \sin(\theta_s) \dot{\theta}_s  = L_1 \dot{\theta}_s  \cos(\theta_s) \\ \sin(\theta_s)
+
+\dot{\bm{r}}_{\text{club}} &=  L_1 \cos(\theta_s) \dot{\theta}_s + L_2 \cos(\theta_s + \theta_e) (\dot{\theta}_s + \dot{\theta}_e) \\ L_1 \sin(\theta_s) \dot{\theta}_s + L_2 \sin(\theta_s + \theta_e) (\dot{\theta}_s + \dot{\theta}_e)
+
+::: {.callout-tip}
+## Jacobian Intuition
+
+There's a beautiful relationship here. The velocities are linear in the angular velocities$\dot{\theta}_s$and$\dot{\theta}_e$. This relationship can be written compactly using the **Jacobian** matrix$\bm{J}(\bm{q})$:
+
+$$\dot{\bm{r}} = \bm{J}(\bm{q}) \dot{\bm{q}}$$
+
+The Jacobian depends on the current configuration $\bm{q}$. It maps angular velocities (the changes in angles) to linear velocities (the changes in Cartesian positions).
+
+This is why golfers talk about "leverage": at certain positions, small changes in $\dot{\theta}_s$ (shoulder rotation) produce large changes in the clubhead velocity. That's a large Jacobian. At other positions, the leverage is lower.
+
+:::
+
+### Angular Velocity
+
+The angular velocities are simpler—they're just the derivatives of the angles:
+
+\omega_1 &= \dot{\theta}_s \quad \text{(rotation rate of the upper arm)} \\
+\omega_2 &= \dot{\theta}_s + \dot{\theta}_e \quad \text{(rotation rate of the forearm + club)}
+
+Notice that $\omega_2$ depends on both $\dot{\theta}_s$ and $\dot{\theta}_e$. The forearm rotates at the shoulder rate plus the elbow rate. This is why the two joints are coupled.
+
+## Constraints in the Double Pendulum Model
+
+For the idealized double pendulum, there are no constraints other than rigidity (the links don't stretch). But in reality, the golf swing has constraints:
+
+{Real Constraints in Golf}{box:ch02_golf_constraints}
+- **Range limits**: $\theta_s \in [-90°, 150°]$, $\theta_e \in [-80°, 80°]$ (approximate).
+- **Grip constraint**: the club doesn't rotate freely at the wrist; it's held firmly. This reduces effective DOF.
+- **Friction at ground**: if you're standing (not moving), your feet don't slip. This constrains torso rotation.
+- **Inextensibility**: your arm length doesn't change (the links are rigid).
+
+For a first model, we ignore most of these. The double pendulum assumes rigid links and no joint limits. This makes the math tractable. Later, we'd add constraints back in.
+
+When a constraint is active (e.g., you hit the range limit of shoulder rotation), it creates a **constraint force**—a reactive force that prevents you from exceeding the limit. We'll see this in the force equations later.
+
+## Phase Space Portrait of a Swing
+
+Let's put this together and visualize what a swing looks like in phase space.
+
+**Example: A Swing Trajectory in Phase Space**
+
+Consider a golf swing with the double pendulum. At each instant $t$, the state is:
+
+$$\bm{x}(t) =  \theta_s(t) \\ \theta_e(t) \\ \dot{\theta}_s(t) \\ \dot{\theta}_e(t) $$
+
+The swing evolves in time:
+
+| **Phase** | $\theta_s$ | $\theta_e$ | $\dot{\theta}_s$ | $\dot{\theta}_e$ |
+| --- | --- | --- | --- | --- |
+| Address | $0°$ | $0°$ | $0$ | $0$ |
+| Backswing (mid) | $60°$ | $-30°$ | $50°/s$ | $0°/s$ |
+| Top | $150°$ | $-70°$ | $0°/s$ | $0°/s$ |
+| Transition | $140°$ | $-65°$ | $150°/s$ | $0°/s$ |
+| Downswing (mid) | $80°$ | $-30°$ | $500°/s$ | $100°/s$ |
+| Impact | $0°$ | $0°$ | $600°/s$ | $500°/s$ |
+| Follow-through | $-60°$ | $+30°$ | $200°/s$ | $100°/s$ |
+
+This swing is a path in 4D phase space. Notice:
+- At the top, both velocities are (nearly) zero. The swing is paused.
+- As the downswing progresses, both angular velocities increase dramatically.
+- At impact, the shoulder and elbow angles have returned to their starting position, but the velocities are massive.
+- After impact, the velocities decrease (energy is transferred to the ball).
+
+If you know the forces at each point in this trajectory, you can predict what the next instant will be.
+
+## From Coordinates to Forces
+
+Now that we have a language for describing motion (coordinates, state, phase space), we can ask the big question: what forces determine how the state evolves?
+
+That's the subject of the next chapters. But the setup is in place. We have:
+- A generalized coordinate system $\bm{q}$ that describes positions.
+- A state $\bm{x} = [\bm{q}, \dot{\bm{q}}]$ that describes position and velocity.
+- A phase space where every possible state lives.
+- A trajectory that traces the swing through phase space.
+
+From here, physics says: given the forces, the trajectory is determined. And given the trajectory, we can work backward to infer the forces.
+
+::: {.callout-important}
+## Key Takeaways
+
+1. **Generalized coordinates** $\bm{q}$ are the minimal set of numbers needed to describe the configuration of your system. For the golf swing, these are naturally joint angles.
+2. **Velocity** $\dot{\bm{q}}$ is the rate of change of position. High angular velocities at impact (e.g., $\dot{\theta}_s = 600°/s$) are huge and create large inertial forces.
+3. **State** $\bm{x} = [\bm{q}, \dot{\bm{q}}]$ is the complete information needed to predict future motion. It lives in phase space, a $2n$-dimensional space.
+4. **Configuration space** is the space of positions alone (dimension $n$). A golf swing is a path in configuration space.
+5. **Constraints** are limitations on which configurations are allowed. Constraint forces appear automatically to enforce them.
+6. **The Jacobian** relates changes in joint angles to changes in Cartesian positions. It varies with configuration, which is why "leverage" varies through the swing.
+7. Every swing, at every instant, is a point in phase space. The forces determine how that point moves.
+
+:::
+
+## Chapter Exercises
+
+1. **Degrees of Freedom**. For each of the following systems, count the degrees of freedom.
+
+2. A golf ball rolling on a table (assume no slipping).
+3. A single pendulum (one mass on a massless string).
+4. A double pendulum (two masses, two hinges).
+5. Your upper body during a golf swing (shoulder, elbow, wrist, assume torso is fixed).
+
+- **Configuration Space**. Sketch the configuration space of a double pendulum. On the axes, put $\theta_s$ (shoulder, horizontal axis) from $-90°$ to $+150°$ and $\theta_e$ (elbow, vertical axis) from $-80°$ to $+80°$. Mark the regions that are reachable (physically possible) and unreachable. Then sketch a typical golf swing path in this space.
+
+- **Velocity Calculation**. A golfer's shoulder rotates at $\dot{\theta}_s = 500°/s = 8.7 \text{ rad/s}$. The upper arm has length $L_1 = 0.5$ m. What is the linear speed of the elbow? (Hint: $v = r \omega$.)
+
+- **Jacobian Intuition**. At address, your shoulder angle is $\theta_s = 0°$ (arm vertical). At this position, is the clubhead moving mostly up/down or mostly left/right when you rotate your shoulder? What about when $\theta_s = 90°$ (arm horizontal)? Explain in terms of the Jacobian.
+
+- **Phase Space Trajectory**. Sketch a 2D "slice" of phase space: the $(\theta_s, \dot{\theta}_s)$ plane (ignoring the elbow for simplicity). Mark the location of address, top of backswing, and impact. Draw the swing trajectory connecting them. What does the trajectory look like? Does it ever loop back on itself?
+
+- **Constraints and Range**. Your shoulder can rotate from $\theta_s = -90°$ (fully across your body) to $\theta_s = +150°$ (fully behind you). What happens if you try to force $\theta_s = +160°$? Where does the force come from? Is it a muscle force or a constraint force?
+

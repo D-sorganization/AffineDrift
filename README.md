@@ -71,7 +71,7 @@ See [Repository Inventory](docs/development/repository_inventory.md) for mainten
 
 ## 📚 Documentation
 
-- **[Geometry of Motion Architecture](docs/development/geometry_of_motion_architecture.md)**: Series architecture and issue-to-deliverable tracking
+- **[Textbook Series Architecture](docs/development/geometry_of_motion_architecture.md)**: Series architecture and issue-to-deliverable tracking
 - **[Repository Inventory](docs/development/repository_inventory.md)**: Component inventory map with implementation status and known gaps
 - **[src/README.md](src/README.md)**: Python source-tree overview and status notes
 

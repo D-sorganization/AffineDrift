@@ -1,4 +1,4 @@
-# Geometry of Motion Notebooks
+# Tangent-Space Methods for Nonlinear Control and Biomechanics — Notebooks
 
 This directory hosts executable companion notebooks for the textbook series.
 

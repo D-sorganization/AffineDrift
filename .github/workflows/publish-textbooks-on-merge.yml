@@ -1,0 +1,254 @@
+name: Publish Textbooks on Merge
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "articles/The_Geometry_of_Motion/**"
+      - ".github/workflows/publish-textbooks-on-merge.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  compile-volumes:
+    if: github.repository == 'D-sorganization/AffineDrift'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        volume: [Volume_0, Volume_I, Volume_II, Volume_III, Volume_IV, Volume_V]
+        include:
+          - volume: Volume_0
+            title: "Mathematical Primer"
+          - volume: Volume_I
+            title: "Rigid Body Kinematics"
+          - volume: Volume_II
+            title: "Rotations and Rotational Dynamics"
+          - volume: Volume_III
+            title: "Differential Geometry"
+          - volume: Volume_IV
+            title: "Advanced Dynamics"
+          - volume: Volume_V
+            title: "Control Theory"
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Compile ${{ matrix.volume }}
+        uses: xu-cheng/latex-action@v4
+        continue-on-error: true
+        with:
+          root_file: main.tex
+          working_directory: articles/The_Geometry_of_Motion/${{ matrix.volume }}
+          pre_compile: "rm -f *.aux chapters/*.aux"
+          args: "-pdf -file-line-error -interaction=nonstopmode -f"
+
+      - name: Verify ${{ matrix.volume }} PDF exists
+        run: |
+          PDF="articles/The_Geometry_of_Motion/${{ matrix.volume }}/main.pdf"
+          if [ -f "$PDF" ]; then
+            echo "${{ matrix.volume }} PDF generated successfully"
+            ls -lh "$PDF"
+          else
+            echo "ERROR: ${{ matrix.volume }} PDF was not generated"
+            exit 1
+          fi
+
+      - name: Count Pages for ${{ matrix.volume }}
+        id: page_count
+        run: |
+          apt-get update && apt-get install -y poppler-utils || true
+          PDF_PATH="articles/The_Geometry_of_Motion/${{ matrix.volume }}/main.pdf"
+          if [ -f "$PDF_PATH" ]; then
+            pages=$(pdfinfo "$PDF_PATH" 2>/dev/null | grep Pages | awk '{print $2}' || echo "unknown")
+            echo "pages=$pages" >> $GITHUB_OUTPUT
+            echo "${{ matrix.volume }}: $pages pages"
+          else
+            echo "pages=0" >> $GITHUB_OUTPUT
+            echo "${{ matrix.volume }}: PDF not found"
+          fi
+
+      - name: Upload ${{ matrix.volume }} PDF
+        uses: actions/upload-artifact@v7
+        with:
+          name: volume-${{ matrix.volume }}
+          path: articles/The_Geometry_of_Motion/${{ matrix.volume }}/main.pdf
+          retention-days: 5
+
+  gather-latex-sources:
+    if: github.repository == 'D-sorganization/AffineDrift'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Create LaTeX source archive
+        run: |
+          cd articles/The_Geometry_of_Motion
+          tar --exclude='*.pdf' --exclude='*.aux' --exclude='*.log' --exclude='*.out' --exclude='*.toc' --exclude='*.fls' --exclude='*.fdb_latexmk' --exclude='*.synctex.gz' --exclude='*.bbl' --exclude='*.blg' -czf geometry-of-motion-latex-sources.tar.gz Volume_0 Volume_I Volume_II Volume_III Volume_IV Volume_V quarto geometry_of_motion.bib
+          ls -lh geometry-of-motion-latex-sources.tar.gz
+
+      - name: Upload LaTeX sources archive
+        uses: actions/upload-artifact@v7
+        with:
+          name: latex-sources
+          path: articles/The_Geometry_of_Motion/geometry-of-motion-latex-sources.tar.gz
+          retention-days: 5
+
+  render-quarto-book:
+    if: github.repository == 'D-sorganization/AffineDrift'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Set up Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: "1.6.39"
+
+      - name: Render Quarto Book (HTML)
+        working-directory: articles/The_Geometry_of_Motion/quarto
+        run: |
+          quarto render . --to html
+
+      - name: Render Quarto Book (PDF)
+        working-directory: articles/The_Geometry_of_Motion/quarto
+        run: |
+          quarto render . --to pdf || echo "PDF rendering optional, continuing with HTML"
+
+      - name: Upload Quarto HTML book
+        uses: actions/upload-artifact@v7
+        with:
+          name: quarto-html-book
+          path: articles/The_Geometry_of_Motion/quarto/_book/
+          retention-days: 5
+
+      - name: Upload Quarto PDF book (if exists)
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: quarto-pdf-book
+          path: articles/The_Geometry_of_Motion/quarto/_book/*.pdf
+          retention-days: 5
+
+  create-release:
+    if: github.repository == 'D-sorganization/AffineDrift'
+    needs: [compile-volumes, gather-latex-sources, render-quarto-book]
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v7
+        with:
+          path: release-artifacts
+
+      - name: Rename PDFs for release
+        run: |
+          mkdir -p release-pdfs
+
+          # Volume mappings with titles
+          declare -A volumes=( [Volume_0]="Geometry_of_Motion_Vol0_Mathematical_Primer" [Volume_I]="Geometry_of_Motion_Vol1_Rigid_Body_Kinematics" [Volume_II]="Geometry_of_Motion_Vol2_Rotations_and_Rotational_Dynamics" [Volume_III]="Geometry_of_Motion_Vol3_Differential_Geometry" [Volume_IV]="Geometry_of_Motion_Vol4_Advanced_Dynamics" [Volume_V]="Geometry_of_Motion_Vol5_Control_Theory" )
+
+          for vol_dir in Volume_0 Volume_I Volume_II Volume_III Volume_IV Volume_V; do
+            pdf_path="release-artifacts/volume-${vol_dir}/main.pdf"
+            if [ -f "$pdf_path" ]; then
+              cp "$pdf_path" "release-pdfs/${volumes[$vol_dir]}.pdf"
+              echo "Renamed $vol_dir PDF"
+            fi
+          done
+
+          ls -lh release-pdfs/
+
+      - name: Copy LaTeX sources archive
+        run: |
+          cp release-artifacts/latex-sources/*.tar.gz release-pdfs/ 2>/dev/null || echo "LaTeX archive not found"
+          ls -lh release-pdfs/
+
+      - name: Copy Quarto HTML book
+        run: |
+          if [ -d "release-artifacts/quarto-html-book" ]; then
+            zip -r release-pdfs/geometry-of-motion-quarto-html-book.zip release-artifacts/quarto-html-book/
+            echo "Created Quarto HTML book zip"
+          fi
+          ls -lh release-pdfs/
+
+      - name: Merge all volumes into complete textbook
+        run: |
+          pip install PyPDF2
+          python3 << 'PYEOF'
+          from PyPDF2 import PdfReader, PdfWriter
+          import os
+
+          output = PdfWriter()
+          volumes = [
+              ("release-artifacts/volume-Volume_0/main.pdf", "Volume 0: Mathematical Primer"),
+              ("release-artifacts/volume-Volume_I/main.pdf", "Volume I: Rigid Body Kinematics"),
+              ("release-artifacts/volume-Volume_II/main.pdf", "Volume II: Rotations and Rotational Dynamics"),
+              ("release-artifacts/volume-Volume_III/main.pdf", "Volume III: Differential Geometry"),
+              ("release-artifacts/volume-Volume_IV/main.pdf", "Volume IV: Advanced Dynamics"),
+              ("release-artifacts/volume-Volume_V/main.pdf", "Volume V: Control Theory"),
+          ]
+
+          total = 0
+          for path, title in volumes:
+              if not os.path.exists(path):
+                  print(f"  SKIP {title}: not found")
+                  continue
+              reader = PdfReader(path)
+              pages = len(reader.pages)
+              total += pages
+              first = len(output.pages)
+              for page in reader.pages:
+                  output.add_page(page)
+              output.add_outline_item(title, first)
+              print(f"  {title}: {pages} pages")
+
+          out_path = "release-pdfs/Geometry_of_Motion_Complete_Textbook.pdf"
+          with open(out_path, "wb") as f:
+              output.write(f)
+          size_mb = os.path.getsize(out_path) / 1024 / 1024
+          print(f"\nComplete textbook: {total} pages, {size_mb:.1f} MB")
+          PYEOF
+
+      - name: Create or update release
+        run: |
+          TAG_NAME="textbook-latest"
+          RELEASE_NOTES="Automated release of Tangent-Space Methods for Nonlinear Control and Biomechanics textbooks.
+
+          Contents:
+          - Complete textbook PDF (all volumes merged with bookmarks)
+          - All 6 individual volume PDFs (Volumes 0-V)
+          - LaTeX source archive (.tar.gz)
+          - Quarto HTML book (zipped)
+
+          Generated on: $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
+
+          if gh release view "$TAG_NAME" >/dev/null 2>&1; then
+            echo "Updating existing release..."
+            gh release delete "$TAG_NAME" --yes
+            gh release create "$TAG_NAME" \
+              --title "Textbook Latest (Tangent-Space Methods)" \
+              --notes "$RELEASE_NOTES" \
+              release-pdfs/*
+          else
+            echo "Creating new release..."
+            gh release create "$TAG_NAME" \
+              --title "Textbook Latest (Tangent-Space Methods)" \
+              --notes "$RELEASE_NOTES" \
+              release-pdfs/*
+          fi
+
+      - name: Verify release assets
+        run: |
+          gh release view textbook-latest --json assets --jq '.assets[] | .name' | sort

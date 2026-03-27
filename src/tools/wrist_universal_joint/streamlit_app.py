@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import logging
 from pathlib import Path
-from typing import Any, cast
+from typing import Any
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -29,7 +29,6 @@ from .constants import (
     DEFAULT_SHAFT_WEIGHT,
     DEFAULT_SIGNAL_LENGTH,
 )
-from .streamlit_bootstrap import configure_page, initialize_session_state, inject_custom_css
 from .torque_calculator import (
     calculate_moments_of_inertia,
     distribute_torque_by_grip_angle,
@@ -383,7 +382,7 @@ def _compute_info_metrics(params: dict[str, Any], input_torque: Any) -> dict[str
     wrist_angle = params["wrist_angle"]
     theta_grip_rad = np.radians(grip_angle)
     phi_wrist_rad = np.radians(wrist_angle)
-    omega_ratio, tau_ratio = universal_joint_transmission_ratio(phi_wrist_rad, theta_grip_rad)
+    omega_ratio, tau_ratio = universal_joint_transmission_ratio(theta_grip_rad, phi_wrist_rad)
     torque_transmitted = np.mean(input_torque) * tau_ratio
     torque_alpha, torque_gamma = distribute_torque_by_grip_angle(torque_transmitted, theta_grip_rad)
     return {

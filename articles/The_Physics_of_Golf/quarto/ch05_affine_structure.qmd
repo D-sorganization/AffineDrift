@@ -1,0 +1,488 @@
+---
+title: "The Affine Structure of Motion"
+---
+
+# The Affine Structure: Drift and Control
+
+::: {.callout-tip}
+## The Big Reveal
+
+We've been building toward this chapter for four chapters. Now it's time to reveal the structure that makes the golf swing work.
+
+The manipulator equation:
+
+\bm{M}(\bm{q}) \ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{\tau}
+
+can be rewritten in a form that separates passive physics from active control:
+
+\dot{\bm{x}} = \bm{f}(\bm{x}) + \bm{G}(\bm{x}) \bm{u}
+
+This is the **control-affine form**. It says:
+- The system evolves in state space ($\bm{x}$).
+- Left alone, the system follows the **drift** $\bm{f}(\bm{x})$.
+- Your muscles add a **control** term $\bm{G}(\bm{x}) \bm{u}$ on top.
+
+This decomposition is the key to understanding the golf swing. It's where drift and control become concrete.
+
+:::
+
+## From Equations of Motion to State Space
+
+To write the system in control-affine form, we need to convert the second-order manipulator equation into a first-order system in state space.
+
+### Defining State
+
+Recall from Chapter~\ref{ch:02_language_of_motion} that the state is:
+
+\bm{x} =  \bm{q} \\ \dot{\bm{q}}  =  \theta_1 \\ \theta_2 \\ \dot{\theta}_1 \\ \dot{\theta}_2
+
+The state evolves in time:
+
+\dot{\bm{x}} =  \dot{\bm{q}} \\ \ddot{\bm{q}}
+
+The first line is trivial: $\frac{d}{dt}[\theta_1, \theta_2]^T = [\dot{\theta}_1, \dot{\theta}_2]^T$.
+
+The second line requires us to solve for $\ddot{\bm{q}}$ from the manipulator equation.
+
+### Solving for Accelerations
+
+From:
+
+\bm{M}(\bm{q}) \ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{\tau}
+
+we get:
+
+\ddot{\bm{q}} = \bm{M}(\bm{q})^{-1} \left[ \bm{\tau} - \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} - \bm{g}(\bm{q}) \right]
+
+This is the full equation. Now separate the passive and active terms:
+
+\ddot{\bm{q}} &= \bm{M}(\bm{q})^{-1} \left[ - \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} - \bm{g}(\bm{q}) \right] + \bm{M}(\bm{q})^{-1} \bm{\tau} \\
+&= \underbrace{\bm{M}(\bm{q})^{-1} \left[ - \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} - \bm{g}(\bm{q}) \right]}_{\text{drift}} + \underbrace{\bm{M}(\bm{q})^{-1} \bm{\tau}}_{\text{control}}
+
+### The Control-Affine Form
+
+Let's define:
+- **Drift dynamics**: $\bm{f}(\bm{x}) =  \dot{\bm{q}} \\ \bm{M}(\bm{q})^{-1} \left[ - \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} - \bm{g}(\bm{q}) \right]$
+- **Control input**: $\bm{u} = \bm{\tau}$ (the applied torques).
+- **Control matrix**: $\bm{G}(\bm{x}) =  0 & 0 \\ 0 & 0 \\ M^{-1}(\bm{q})$ (all zeros in the top rows, $M^{-1}$ in the bottom).
+
+Then:
+
+\dot{\bm{x}} = \bm{f}(\bm{x}) + \bm{G}(\bm{x}) \bm{u}
+
+This is the **control-affine form**. It's called "affine" (not "linear") because the dependence on control is linear, but the dependence on state is not linear.
+
+::: {.callout-note}
+## Control-Affine Systems
+
+A system of the form:
+
+\dot{\bm{x}} = \bm{f}(\bm{x}) + \bm{G}(\bm{x}) \bm{u}
+
+where:
+- $\bm{f}(\bm{x})$ is the **drift vector field**: the system dynamics with no control.
+- $\bm{G}(\bm{x})$ is the **control matrix**: how the control input affects the state.
+- $\bm{u}$ is the **control input**.
+
+The term "affine" means the system is linear in the control but possibly nonlinear in the state.
+
+:::
+
+::: {.callout-tip}
+## Why "Affine" Matters
+
+Why is this form so important?
+
+Because it separates two different types of dynamics:
+
+1. **What the system wants to do on its own** ($\bm{f}$): gravity pulling down, inertia resisting, velocity-dependent forces coupling the joints.
+
+2. **What you add on top** ($\bm{G} \bm{u}$): muscular commands.
+
+This separation lets you reason about controllability, stability, optimal control, and learning.
+
+In robotics, this form is the starting point for designing controllers. In golf, it's the starting point for understanding what you actually control and what physics does for you.
+
+:::
+
+## Explicit Form for the Double Pendulum
+
+Let's write out the control-affine form explicitly for the double pendulum.
+
+### The Drift Vector Field
+
+\bm{f}(\bm{x}) =
+\dot{\theta}_1 \\
+\dot{\theta}_2 \\
+f_3(\bm{x}) \\
+f_4(\bm{x})
+
+where:
+
+f_3(\bm{x}) &= -M^{-1}_{11} \left[ \bm{C}_{12} \dot{\theta}_2 + g_1 \right] - M^{-1}_{12} \left[ \bm{C}_{22} \dot{\theta}_2 + g_2 \right] \\
+f_4(\bm{x}) &= -M^{-1}_{21} \left[ \bm{C}_{12} \dot{\theta}_2 + g_1 \right] - M^{-1}_{22} \left[ \bm{C}_{22} \dot{\theta}_2 + g_2 \right]
+
+These are complicated expressions, but they encode all the passive dynamics: gravity pulling, inertia resisting, and velocity-dependent coupling.
+
+The key insight: **$\bm{f**$ depends on the current state but does not depend on your muscular control.}
+
+### The Control Matrix
+
+\bm{G}(\bm{x}) =
+0 & 0 \\
+0 & 0 \\
+M^{-1}_{11}(\bm{q}) & M^{-1}_{12}(\bm{q}) \\
+M^{-1}_{21}(\bm{q}) & M^{-1}_{22}(\bm{q})
+
+where $\bm{M}^{-1}(\bm{q})$ is the inverse of the mass matrix.
+
+The control input is:
+
+\bm{u} =  \tau_1 \\ \tau_2
+
+So the full system is:
+
+ \dot{\theta}_1 \\ \dot{\theta}_2 \\ \ddot{\theta}_1 \\ \ddot{\theta}_2  = \bm{f}(\bm{x}) + \bm{G}(\bm{x})  \tau_1 \\ \tau_2
+
+## Drift as a Vector Field
+
+The drift $\bm{f}(\bm{x})$ is a vector field on state space. At each point $\bm{x}$, it specifies a direction and magnitude of motion.
+
+::: {.callout-note}
+## Vector Field
+
+A function that assigns a vector to each point in space. In our case, at each state $\bm{x}$ in phase space, $\bm{f}(\bm{x})$ tells you which direction the state is moving if there's no control.
+
+:::
+
+**Example: Drift in the Double Pendulum at Rest**
+
+Suppose you're at address ($\theta_1 = 0°, \theta_2 = 0°, \dot{\theta}_1 = 0, \dot{\theta}_2 = 0$) and you suddenly remove all muscular control ($\bm{\tau} = 0$).
+
+The drift says what happens next. Let's compute:
+- $\dot{\theta}_1 = 0$ (velocity doesn't change in this instant).
+- $\dot{\theta}_2 = 0$ (velocity doesn't change).
+- $\ddot{\theta}_1 = ?$ Determined by $\bm{f}$.
+- $\ddot{\theta}_2 = ?$ Determined by $\bm{f}$.
+
+At rest, there's no inertia acceleration (velocities are zero). The only terms in $\bm{f}$ are the gravity terms:
+
+\ddot{\theta}_1 &= \bm{M}^{-1}_{11} \cdot (-g_1) \\
+&= \bm{M}^{-1}_{11} \cdot (-(M_1 L_{1,cm} + M_2 L_1) g \sin(0°)) \\
+&= 0
+
+So the arm doesn't accelerate if it's at rest and perfectly vertical. That makes sense: gravity is balanced.
+
+Now suppose you're at an angle, say $\theta_1 = 45°$. Then:
+
+\ddot{\theta}_1 &= \bm{M}^{-1}_{11} \cdot (-(M_1 L_{1,cm} + M_2 L_1) g \sin(45°)) \\
+&= \bm{M}^{-1}_{11} \cdot (-(2.5 \times 0.175 + 2.5 \times 0.35) \times 9.81 \times 0.707) \\
+&\approx -20 \text{ N m} \times 0.45 \text{ kg m}^{-2} \\
+&\approx -9 \text{ rad/s}^2
+
+Negative means the arm wants to rotate back toward vertical. Gravity is pulling it down.
+
+### Flowing Along the Drift
+
+If you start at some state $\bm{x}_0$ and let the system drift with $\bm{\tau} = 0$, the state will flow along a trajectory determined by $\bm{f}$.
+
+This trajectory is called an **integral curve** or **orbit** of the vector field.
+
+In the golf swing, the drift is what happens if you let go of the club at any point. Gravity will pull it down. The momentum will carry it forward. The trajectory is set by $\bm{f}$.
+
+::: {.callout-tip}
+## Why Understanding Drift Matters
+
+Here's the profound thing: elite golfers understand the drift.
+
+When they release the club, they're not fighting the physics. They're timing the release so that gravity and momentum naturally accelerate the club toward impact.
+
+When they stop muscles at the top of the backswing, they're not "pausing"—they're *catching* the drift. The drift is already accelerating them down. They're just riding it.
+
+Novices, on the other hand, often fight the drift. They generate muscular torques that oppose the natural accelerations. This is exhausting and inconsistent.
+
+By understanding $\bm{f}(\bm{x})$, you can plan your muscular control ($\bm{u}$) to work *with* the drift, not against it.
+
+:::
+
+## Control as a Steering Input
+
+The control term $\bm{G}(\bm{x}) \bm{u}$ is what you add on top of drift. It's a steering input.
+
+Think of it like driving a car. The car naturally rolls forward due to gravity and rolling resistance. That's the drift. You turn the wheel to steer. That's the control. Together, they determine where the car goes.
+
+In the golf swing, the drift is the natural motion of your arm under gravity and inertia. Your muscles steer that motion toward the target.
+
+### The Control Matrix as Leverage
+
+The control matrix $\bm{G}(\bm{x})$ depends on the state (specifically, on the configuration $\bm{q}$). This is the leverage: how much does a given muscle torque affect the state acceleration?
+
+**Example: Control Leverage at Different Configurations**
+
+The inverse mass matrix $\bm{M}^{-1}(\bm{q})$ tells you the leverage.
+
+**At address** ($\theta_1 = 0°, \theta_2 = 0°$): the arm is extended. The moment of inertia is high ($M_{11} \approx 2.22$ kg m$^2$). So $M^{-1}_{11} \approx 0.45$ rad/s$^2$ per N m. A 50 N m torque produces $50 \times 0.45 = 22.5$ rad/s$^2$ of acceleration.
+
+**At the top of the backswing** ($\theta_1 = 150°, \theta_2 = -70°$): the arm is bent. The effective moment of inertia is lower. So $M^{-1}_{11}$ is higher. A given muscle torque produces a larger acceleration.
+
+Wait, that doesn't sound right. If the arm is shorter (bent), shouldn't it be harder to accelerate?
+
+Actually, no. The **moment of inertia** is lower (because the mass is closer to the axis). So $M^{-1}$ is higher (easier to accelerate). This is why it's easier to accelerate a bent arm than an extended one.
+
+## The Drift-to-Control Ratio (DCR)
+
+Here's a new concept: the **Drift-to-Control Ratio (DCR)**.
+
+::: {.callout-note}
+## Drift-to-Control Ratio
+
+At any point in the state space, the DCR is the relative magnitude of drift versus control:
+
+\text{DCR} = \frac{|\bm{f}(\bm{x})|}{|\bm{G}(\bm{x}) \bm{u}|}_{\text{during max muscular effort}}
+
+If DCR is high, drift dominates. Muscles contribute little.
+If DCR is low, muscles dominate. Drift contributes little.
+
+:::
+
+The DCR varies throughout the swing.
+
+### Address: Low DCR
+
+At address, the arm is static ($\dot{\bm{q}} = 0$). There's no velocity-dependent drift. Gravity is balanced (assuming vertical arm). The drift is small.
+
+To accelerate the backswing, you must generate a large muscular torque. DCR is low (muscles doing most of the work).
+
+### Top of Backswing: Transitioning DCR
+
+At the top, velocities are near zero. Gravity is pulling strongly ($\theta_1 = 150°$). The drift is moderate.
+
+As you initiate the downswing, you generate muscular torques. But gravity is already helping. DCR starts to increase (drift contributes more).
+
+### Downswing: High DCR
+
+During the rapid downswing, velocities are high. Gravity and centrifugal forces create large accelerations. Your muscular torques are now mostly steering, not accelerating.
+
+DCR is very high (drift is doing most of the work).
+
+### Impact and Beyond: Extremely High DCR
+
+At impact, the clubhead is accelerating at 180 $g$. This is primarily from:
+- Centrifugal force (from the high rotation speed): $\approx 50$ N m equivalent.
+- Gravity: $\approx 10$ N m equivalent.
+
+Your muscular contribution is maybe 20 N m. DCR is extremely high (passive forces dominating).
+
+::: {.callout-tip}
+## The Three Regimes
+
+We can characterize the golf swing by DCR:
+
+**Regime 1: Low DCR (Address, Backswing)**
+- Drift is minimal (arm at rest, gravity balanced or nearly so).
+- Muscles do most of the work.
+- Feel: effortful, conscious control.
+- What elite golfers do: smooth, controlled acceleration building tension.
+- What novices do: jerky, trying to generate force without understanding drift.
+
+**Regime 2: Medium DCR (Transition)**
+- Drift is ramping up (gravity pulling, velocities increasing).
+- Muscles and drift work together.
+- Feel: transitional, sensing acceleration.
+- What elite golfers do: smoothly integrate drift into the motion, "letting it happen."
+- What novices do: fight or ignore the drift, maintaining muscle-only control.
+
+**Regime 3: High DCR (Downswing, Impact, Follow-through)**
+- Drift is dominant (gravity, centrifugal forces accelerating the arm faster than muscles could alone).
+- Muscles mostly steer, not accelerate.
+- Feel: effortless, on autopilot, the club "taking over."
+- What elite golfers do: trust the drift, apply minimal corrective torques, let physics happen.
+- What novices do: continue to fight the drift, braking when they should accelerate, inconsistent results.
+
+:::
+
+## Riding the Drift: The Essence of Skill
+
+Here's the secret that elite golfers know (often intuitively, not necessarily consciously):
+
+**The best golf swing is one that maximizes DCR while maintaining control.**
+
+In other words:
+- Understand the drift (where gravity and momentum are pushing you).
+- Generate muscular torques that work *with* the drift.
+- Minimize muscular work by letting physics do what it wants to do.
+- Use muscles only to steer, not to force.
+
+This is what coaches mean by "let the club do the work," ``don't muscle the swing,'' "trust the process," and "flow with the motion."
+
+It's not mystical. It's physics.
+
+**Example: A Tour Pro Descending**
+
+A tour professional at the top of the backswing:
+
+1. **Recognizes** the state: $\theta_1 = 150°$, velocities near zero, gravity pulling with $\approx 30$ N m.
+
+2. **Initiates transition**: applies modest muscular torque at the transition, maybe 20 N m.
+
+3. **Feels the drift accelerating**: as the arm starts to rotate, centrifugal forces build. These add to gravity, accelerating the arm faster than the initial muscular torque would.
+
+4. **Modulates control**: instead of increasing muscular force, the pro *decreases* it or even applies a small braking force. The drift is already accelerating faster than desired.
+
+5. **Releases at impact**: at the optimal moment, applies a final muscular acceleration at the wrist (the release) to synchronize the clubhead speed with the target.
+
+6. **Follow-through**: after impact, gravity and momentum carry the club. No more muscular effort needed.
+
+Total muscular effort: maybe 60–80 N m generated over the whole swing, with a nice distribution that works with physics.
+
+Compare to a novice:
+
+1. At the top, applies 40 N m to start the downswing.
+2. Applies 40 N m throughout, fighting the increasing drift.
+3. At impact, applies 50 N m, overaccelerating.
+4. Total muscular effort: maybe 150+ N m, much more, and inconsistent because the novice is constantly fighting the passive forces instead of working with them.
+
+## The Geometry of the Golf Swing
+
+The control-affine form gives us a geometric picture of the golf swing.
+
+Phase space is a 4D manifold (for a 2-DOF arm). On this manifold:
+- The drift vector field $\bm{f}$ is "painted" at each point, showing the natural flow.
+- Your control $\bm{u}$ perturbs this flow locally via $\bm{G}(\bm{x})$.
+- A swing is a path through phase space from start (address) to impact and finish.
+
+Elite golfers have learned to follow a path that:
+1. Uses small control perturbations.
+2. Exploits high-DCR regimes where drift helps.
+3. Avoids fighting the vector field.
+
+{The Reachability Problem}{box:ch05_reachable}
+A key question: given a starting state (address) and control constraints (max muscle torque), what states are reachable?
+
+In control theory, this is the **reachability problem**. For the golf swing, it translates to: given my muscle strength, how far can I hit?
+
+The manipulator equation tells us that reach depends not just on max muscle torque, but also on how well we exploit the drift. An optimized swing that rides the drift reaches farther than one that fights it.
+
+This is why technique matters more than strength.
+
+## Optimal Control and the Swing
+
+In principle, you could pose the golf swing as an optimal control problem:
+
+**Problem**: Given the dynamics $\dot{\bm{x}} = \bm{f}(\bm{x}) + \bm{G}(\bm{x}) \bm{u}$ and constraints on $\bm{u}$ (muscle strength), find the control $\bm{u}^*(t)$ that maximizes distance (or minimizes dispersion, or achieves a target).
+
+**Solution**: Solve the Hamiltonian equations from optimal control theory.
+
+**Result**: An optimal control $\bm{u}^*(t)$ that tells you what torques to apply at each instant.
+
+::: {.callout-tip}
+## Why Brains Learn Better Than Equations
+
+In principle, we could compute $\bm{u}^*(t)$ exactly using optimal control theory. In practice, no golfer does this consciously.
+
+Instead, golfers learn through practice. Over thousands of reps, the nervous system implicitly solves the optimal control problem. Golfers develop a feel for the drift, for how to apply forces at the right time.
+
+This is why coaching and practice are valuable: they accelerate the learning of the implicit optimal control solution.
+
+But here's the thing: the physics—the equations $\bm{M}, \bm{C}, \bm{g}$—is the same for everyone. So while individual golfers vary in strength, flexibility, and body geometry, the fundamental structure of drift and control is universal.
+
+Understanding this structure is the shortcut to improvement. Instead of endless practice, you can understand what you're optimizing (DCR) and practice the specific things that maximize it.
+
+:::
+
+## Putting It All Together: The Unified Picture
+
+Let's step back and see the whole picture.
+
+### The System
+
+Your arm + club is a mechanical system described by:
+
+\bm{M}(\bm{q}) \ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{\tau}
+
+### The State Space
+
+The system evolves in 4D state space: two angles and two angular velocities. Every swing is a path in this space.
+
+### The Drift
+
+Without muscular control, the system follows the drift:
+
+\dot{\bm{x}} = \bm{f}(\bm{x})
+
+Drift encodes:
+- Gravity pulling the arm down.
+- Inertia resisting accelerations.
+- Velocity-dependent (Coriolis, centrifugal) forces coupling the joints.
+
+At high speeds, drift dominates. At low speeds, muscles must do most of the work.
+
+### The Control
+
+Your muscles generate torques $\bm{\tau}$ that perturb the drift:
+
+\dot{\bm{x}} = \bm{f}(\bm{x}) + \bm{G}(\bm{x}) \bm{u}
+
+Control is linear in the input but couples to state through $\bm{G}(\bm{x})$.
+
+### The Skill
+
+Elite golf is the art of choosing $\bm{u}(t)$ (the control trajectory) such that:
+1. The resulting swing path $\bm{x}(t)$ reaches impact with the desired orientation and speed.
+2. The control effort (sum of $|\bm{u}|$ over time) is minimized.
+3. The swing is robust to perturbations (small errors don't derail the outcome).
+
+All of this is encoded in understanding and exploiting the drift.
+
+::: {.callout-important}
+## Key Takeaways
+
+1. **Control-affine form** separates drift and control: $\dot{\bm{x}} = \bm{f}(\bm{x}) + \bm{G}(\bm{x}) \bm{u}$.
+2. **Drift $\bm{f**(\bm{x})$} is what the system does without control: gravity, inertia, and velocity-dependent forces.
+3. **Control $\bm{G**(\bm{x}) \bm{u}$} is what muscles add: steering, not accelerating (mostly).
+4. **The Drift-to-Control Ratio (DCR)** varies through the swing.
+
+8. **Elite golfers maximize DCR** by understanding and exploiting the drift.
+9. **The golf swing is an optimal control problem**. The nervous system implicitly solves it through learning and practice.
+10. **Technique is about riding the drift**. Strength helps, but technique (understanding $\bm{f}$ and choosing $\bm{u}$ wisely) matters more.
+11. **Physics is universal**. While individual golfers vary in geometry and strength, the fundamental structure (the equations $\bm{M}, \bm{C}, \bm{g}$) is the same.
+
+:::
+
+## Chapter Exercises
+
+1. **Drift at Address**. At address ($\theta_1 = 0°, \theta_2 = 0°, \dot{\theta}_1 = 0, \dot{\theta}_2 = 0$), compute the drift $\bm{f}(\bm{x})$. What are the resulting accelerations if you remove all muscular control?
+2. **Drift at the Top**. At the top of the backswing ($\theta_1 = 150°, \theta_2 = -70°, \dot{\theta}_1 = 0, \dot{\theta}_2 = 0$), compute the drift. Is the system accelerating? In which direction?
+3. **Drift During Downswing**. Compute the drift at the transition ($\theta_1 = 140°, \theta_2 = -60°, \dot{\theta}_1 = 5$ rad/s, $\dot{\theta}_2 = 0$). How much do Coriolis forces contribute compared to gravity?
+4. **DCR at Different Phases**. For each of the following states, estimate the drift magnitude and the control effect magnitude (assuming 30 N m muscular effort):
+
+5. Address (arm at rest, vertical)
+6. Top of backswing (arm up, at rest)
+7. Transition (arm rotating, accelerating)
+8. Impact (arm rotating fast, wrist releasing)
+
+What is the DCR in each phase?
+
+- **Optimal Control Intuition**. If you were solving the optimal control problem to maximize distance, when would you apply maximum muscular torque? Would it be early (backswing) or late (downswing)? Why?
+
+- **Weak vs. Strong Golfer**. A weak golfer has less max muscular torque (say, 30 N m vs. 50 N m for a strong golfer). How would this affect:
+1. The swing speed?
+2. The reliance on drift in the downswing?
+3. The optimal control strategy?
+
+- **Comparison to Throwing**. How is the control-affine structure of the golf swing similar to or different from the baseball throw? In both, you accelerate a mass. Are the regimes of DCR different?
+
+## Closing Thoughts: The Unity of Physics and Swing
+
+We've traveled from first principles through the double pendulum model to the control-affine structure that unifies drift and control.
+
+The takeaway is this: **the golf swing is not a mystery. It's mechanics.**
+
+Every great golfer, whether they know it in equations or in their bones, has internalized the structure we've described:
+
+1. Recognize where gravity and momentum are pushing.
+2. Generate muscular forces that work with this push, not against it.
+3. Time the application of force to exploit maximum DCR.
+4. Trust the physics to do what it's designed to do.
+
+This is the physics of golf. Now go apply it.
