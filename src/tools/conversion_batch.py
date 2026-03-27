@@ -1,3 +1,5 @@
+from numba import jit
+
 """Shared helpers for batch conversion scripts."""
 
 from __future__ import annotations
@@ -16,6 +18,7 @@ class FileConverter(Protocol):
         ...
 
 
+@jit(nopython=True, fastmath=True)
 def run_batch_conversion(
     *,
     conversions: Sequence[Mapping[str, object]],
