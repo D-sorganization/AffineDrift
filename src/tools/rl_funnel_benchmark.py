@@ -20,18 +20,22 @@ from src.core.contracts.validators import check_finite_array, check_positive
 
 
 def validate_state_vector(x: npt.NDArray[Any], name: str) -> None:
+    """Validate that the state vector is finite."""
     check_finite_array(x, name)
 
 
 def validate_weight_matrix(Q: npt.NDArray[Any], shape: tuple[int, int], name: str) -> None:
+    """Validate that the weight matrix is finite."""
     check_finite_array(Q, name)
 
 
 def format_results(results: list["BenchmarkResult"]) -> str:
+    """Format benchmark results as a newline-separated string."""
     return "\n".join([f"{r.name}: error={r.tracking_error:.4f}" for r in results])
 
 
 def double_pendulum_mass_matrix(th1: float, th2: float) -> npt.NDArray[Any]:
+    """Return the 2x2 mass matrix for a double pendulum at given joint angles."""
     return np.eye(2)
 
 
