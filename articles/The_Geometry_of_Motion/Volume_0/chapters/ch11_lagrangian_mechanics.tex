@@ -21,7 +21,7 @@
 The development of Lagrangian mechanics represents one of the most far-reaching intellectual shifts in the history of mechanics. Isaac Newton formulated motion through explicit forces acting on point masses: $\sum \mathbf{F} = m\mathbf{a}$. This framework dominated for over a century and remains the foundation of computational physics engines.
 
 However, in 1788, \textbf{Joseph-Louis Lagrange} published his \textit{M\'{e}canique Analytique}, introducing a radically different approach. Rather than tracking forces, Lagrange proposed that mechanical systems evolve along paths that extremize a single scalar function: the \textbf{action integral}
-$$\mathcal{S}[\mathbf{q}(t)] = \int_{t_1}^{t_2} \mathcal{L}(\mathbf{q}, \dot{\mathbf{q}}, t) \, dt$$
+\[\mathcal{S}[\mathbf{q}(t)] = \int_{t_1}^{t_2} \mathcal{L}(\mathbf{q}, \dot{\mathbf{q}}, t) \, dt\]
 where $\mathcal{L} = T - V$ is the Lagrangian. This became known as the \textbf{Principle of Least Action}, or equivalently, Hamilton's Principle.
 
 Nearly simultaneously, \textbf{Leonhard Euler} was developing the \textbf{calculus of variations}—the mathematics required to find functions that minimize or maximize functionals (functions of functions). The union of Euler's calculus of variations with Lagrange's mechanical insight created the Euler-Lagrange equations, which automatically derive equations of motion from any Lagrangian density.
@@ -85,20 +85,20 @@ This is not a minimum (as popularized, though not always accurate). It is a \tex
 
 To extract equations of motion from Hamilton's principle, we apply the calculus of variations. Consider a perturbed path $\mathbf{q}(t) + \epsilon \boldsymbol{\eta}(t)$, where $\boldsymbol{\eta}(t_1) = \boldsymbol{\eta}(t_2) = 0$ are arbitrary variations vanishing at the boundaries. The action becomes:
 
-$$\mathcal{S}[\epsilon] = \int_{t_1}^{t_2} \mathcal{L}(\mathbf{q} + \epsilon \boldsymbol{\eta}, \dot{\mathbf{q}} + \epsilon \dot{\boldsymbol{\eta}}, t) \, dt$$
+\[\mathcal{S}[\epsilon] = \int_{t_1}^{t_2} \mathcal{L}(\mathbf{q} + \epsilon \boldsymbol{\eta}, \dot{\mathbf{q}} + \epsilon \dot{\boldsymbol{\eta}}, t) \, dt\]
 
 The stationarity condition is:
-$$\frac{d\mathcal{S}}{d\epsilon}\bigg|_{\epsilon=0} = 0$$
+\[\frac{d\mathcal{S}}{d\epsilon}\bigg|_{\epsilon=0} = 0\]
 
 Taking the derivative:
-$$\int_{t_1}^{t_2} \left[ \frac{\partial \mathcal{L}}{\partial \mathbf{q}} \cdot \boldsymbol{\eta} + \frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}} \cdot \dot{\boldsymbol{\eta}} \right] dt = 0$$
+\[\int_{t_1}^{t_2} \left[ \frac{\partial \mathcal{L}}{\partial \mathbf{q}} \cdot \boldsymbol{\eta} + \frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}} \cdot \dot{\boldsymbol{\eta}} \right] dt = 0\]
 
 For the second term, integrate by parts:
-$$\int_{t_1}^{t_2} \frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}} \cdot \dot{\boldsymbol{\eta}} \, dt = \left[ \frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}} \cdot \boldsymbol{\eta} \right]_{t_1}^{t_2} - \int_{t_1}^{t_2} \frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}}\right) \cdot \boldsymbol{\eta} \, dt$$
+\[\int_{t_1}^{t_2} \frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}} \cdot \dot{\boldsymbol{\eta}} \, dt = \left[ \frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}} \cdot \boldsymbol{\eta} \right]_{t_1}^{t_2} - \int_{t_1}^{t_2} \frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}}\right) \cdot \boldsymbol{\eta} \, dt\]
 
 The boundary term vanishes because $\boldsymbol{\eta}(t_1) = \boldsymbol{\eta}(t_2) = 0$. Thus:
 
-$$\int_{t_1}^{t_2} \left[ \frac{\partial \mathcal{L}}{\partial \mathbf{q}} - \frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}}\right) \right] \cdot \boldsymbol{\eta} \, dt = 0$$
+\[\int_{t_1}^{t_2} \left[ \frac{\partial \mathcal{L}}{\partial \mathbf{q}} - \frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}}\right) \right] \cdot \boldsymbol{\eta} \, dt = 0\]
 
 Since this must hold for \emph{all} arbitrary variations $\boldsymbol{\eta}$, the integrand must vanish:
 
@@ -120,20 +120,20 @@ This is the \textbf{Euler-Lagrange Equation}, one of the most powerful equations
 
 \begin{laymansbox}{Kinetic vs. Potential Energy}{energy_intuition}
   \textbf{Kinetic Energy} ($T$) is the energy of motion. For a point mass $m$ moving at velocity $v$:
-  $$ T = \frac{1}{2}m v^2 \quad \text{or} \quad T = \frac{1}{2}m \mathbf{v}^T \mathbf{v} $$
+  \[ T = \frac{1}{2}m v^2 \quad \text{or} \quad T = \frac{1}{2}m \mathbf{v}^T \mathbf{v} \]
 
   For a rigid body with moment of inertia tensor $\mathbf{I}$ rotating at angular velocity $\boldsymbol{\omega}$:
-  $$ T_{\text{rot}} = \frac{1}{2}\boldsymbol{\omega}^T \mathbf{I} \boldsymbol{\omega} $$
+  \[ T_{\text{rot}} = \frac{1}{2}\boldsymbol{\omega}^T \mathbf{I} \boldsymbol{\omega} \]
 
   For a multi-body system with generalized coordinates $\mathbf{q}$:
-  $$ T(\mathbf{q}, \dot{\mathbf{q}}) = \frac{1}{2}\dot{\mathbf{q}}^T \mathbf{M}(\mathbf{q})\dot{\mathbf{q}} $$
+  \[ T(\mathbf{q}, \dot{\mathbf{q}}) = \frac{1}{2}\dot{\mathbf{q}}^T \mathbf{M}(\mathbf{q})\dot{\mathbf{q}} \]
   where $\mathbf{M}(\mathbf{q})$ is the \textbf{mass matrix} (symmetric positive-definite).
 
   \textbf{Potential Energy} ($V$) is stored energy. Gravitational potential near Earth's surface:
-  $$ V_{\text{grav}} = m g h $$
+  \[ V_{\text{grav}} = m g h \]
 
   Elastic potential energy in a spring with constant $k$ and deflection $x$:
-  $$ V_{\text{spring}} = \frac{1}{2}k x^2 $$
+  \[ V_{\text{spring}} = \frac{1}{2}k x^2 \]
 
   For a multi-body system, $V = V(\mathbf{q})$ depends only on configuration, not velocities.
 \end{laymansbox}
@@ -147,51 +147,51 @@ Lagrange defined the \textbf{Lagrangian} as:
 This is the difference between kinetic and potential energy. It encodes all the dynamics needed to recover Newton's laws, yet its form is independent of the choice of coordinate system (within the family of generalized coordinates).
 
 When we substitute $\mathcal{L}$ into the Euler-Lagrange equation:
-$$\frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}}\right) - \frac{\partial \mathcal{L}}{\partial \mathbf{q}} = \boldsymbol{\tau}$$
+\[\frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}}\right) - \frac{\partial \mathcal{L}}{\partial \mathbf{q}} = \boldsymbol{\tau}\]
 
 we obtain:
-$$\frac{d}{dt}\left(\frac{\partial T}{\partial \dot{\mathbf{q}}}\right) - \frac{\partial T}{\partial \mathbf{q}} + \frac{\partial V}{\partial \mathbf{q}} = \boldsymbol{\tau}$$
+\[\frac{d}{dt}\left(\frac{\partial T}{\partial \dot{\mathbf{q}}}\right) - \frac{\partial T}{\partial \mathbf{q}} + \frac{\partial V}{\partial \mathbf{q}} = \boldsymbol{\tau}\]
 
 The term $\mathbf{p} = \frac{\partial T}{\partial \dot{\mathbf{q}}}$ is the \textbf{generalized momentum}. For a system with kinetic energy $T = \frac{1}{2}\dot{\mathbf{q}}^T \mathbf{M}(\mathbf{q})\dot{\mathbf{q}}$:
 
-$$\mathbf{p} = \frac{\partial T}{\partial \dot{\mathbf{q}}} = \mathbf{M}(\mathbf{q})\dot{\mathbf{q}}$$
+\[\mathbf{p} = \frac{\partial T}{\partial \dot{\mathbf{q}}} = \mathbf{M}(\mathbf{q})\dot{\mathbf{q}}\]
 
 % ==========================================================================
 \section{Derivation of the Standard Form: $\mathbf{M}\ddot{\mathbf{q}} + \mathbf{C}\dot{\mathbf{q}} + \mathbf{G} = \boldsymbol{\tau}$}
 % ==========================================================================
 
 For a system whose kinetic energy is:
-$$T(\mathbf{q}, \dot{\mathbf{q}}) = \frac{1}{2}\dot{\mathbf{q}}^T \mathbf{M}(\mathbf{q})\dot{\mathbf{q}}$$
+\[T(\mathbf{q}, \dot{\mathbf{q}}) = \frac{1}{2}\dot{\mathbf{q}}^T \mathbf{M}(\mathbf{q})\dot{\mathbf{q}}\]
 
 and potential energy is $V(\mathbf{q})$, we compute each term of the Euler-Lagrange equation.
 
 \textbf{Step 1: Compute $\frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}}$}
 
-$$\frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}} = \frac{\partial T}{\partial \dot{\mathbf{q}}} = \mathbf{M}(\mathbf{q})\dot{\mathbf{q}}$$
+\[\frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}} = \frac{\partial T}{\partial \dot{\mathbf{q}}} = \mathbf{M}(\mathbf{q})\dot{\mathbf{q}}\]
 
 \textbf{Step 2: Compute $\frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}}\right)$}
 
-$$\frac{d}{dt}\left(\mathbf{M}(\mathbf{q})\dot{\mathbf{q}}\right) = \frac{d\mathbf{M}}{dt}\dot{\mathbf{q}} + \mathbf{M}(\mathbf{q})\ddot{\mathbf{q}}$$
+\[\frac{d}{dt}\left(\mathbf{M}(\mathbf{q})\dot{\mathbf{q}}\right) = \frac{d\mathbf{M}}{dt}\dot{\mathbf{q}} + \mathbf{M}(\mathbf{q})\ddot{\mathbf{q}}\]
 
 where $\frac{d\mathbf{M}}{dt} = \sum_{k} \frac{\partial \mathbf{M}}{\partial q_k}\dot{q}_k$ by the chain rule.
 
 \textbf{Step 3: Compute $\frac{\partial \mathcal{L}}{\partial \mathbf{q}}$}
 
-$$\frac{\partial \mathcal{L}}{\partial \mathbf{q}} = \frac{\partial T}{\partial \mathbf{q}} - \frac{\partial V}{\partial \mathbf{q}}$$
+\[\frac{\partial \mathcal{L}}{\partial \mathbf{q}} = \frac{\partial T}{\partial \mathbf{q}} - \frac{\partial V}{\partial \mathbf{q}}\]
 
 The gradient of kinetic energy requires careful differentiation:
-$$\frac{\partial T}{\partial q_i} = \frac{\partial}{\partial q_i}\left(\frac{1}{2}\dot{\mathbf{q}}^T \mathbf{M}(\mathbf{q})\dot{\mathbf{q}}\right) = \frac{1}{2}\dot{\mathbf{q}}^T \frac{\partial \mathbf{M}}{\partial q_i}\dot{\mathbf{q}}$$
+\[\frac{\partial T}{\partial q_i} = \frac{\partial}{\partial q_i}\left(\frac{1}{2}\dot{\mathbf{q}}^T \mathbf{M}(\mathbf{q})\dot{\mathbf{q}}\right) = \frac{1}{2}\dot{\mathbf{q}}^T \frac{\partial \mathbf{M}}{\partial q_i}\dot{\mathbf{q}}\]
 
 \textbf{Step 4: Apply the Euler-Lagrange equation}
 
-$$\frac{d\mathbf{M}}{dt}\dot{\mathbf{q}} + \mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} - \frac{1}{2}\dot{\mathbf{q}}^T \frac{\partial \mathbf{M}}{\partial \mathbf{q}}\dot{\mathbf{q}} + \frac{\partial V}{\partial \mathbf{q}} = \boldsymbol{\tau}$$
+\[\frac{d\mathbf{M}}{dt}\dot{\mathbf{q}} + \mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} - \frac{1}{2}\dot{\mathbf{q}}^T \frac{\partial \mathbf{M}}{\partial \mathbf{q}}\dot{\mathbf{q}} + \frac{\partial V}{\partial \mathbf{q}} = \boldsymbol{\tau}\]
 
 Define the \textbf{Coriolis and Centripetal matrix} $\mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})$ implicitly:
 
-$$\mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})\dot{\mathbf{q}} = \frac{d\mathbf{M}}{dt}\dot{\mathbf{q}} - \frac{1}{2}\frac{\partial}{\partial \mathbf{q}}\left(\dot{\mathbf{q}}^T \mathbf{M}(\mathbf{q})\dot{\mathbf{q}}\right)$$
+\[\mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})\dot{\mathbf{q}} = \frac{d\mathbf{M}}{dt}\dot{\mathbf{q}} - \frac{1}{2}\frac{\partial}{\partial \mathbf{q}}\left(\dot{\mathbf{q}}^T \mathbf{M}(\mathbf{q})\dot{\mathbf{q}}\right)\]
 
 Define the \textbf{gravity vector}:
-$$\mathbf{G}(\mathbf{q}) = \frac{\partial V}{\partial \mathbf{q}}$$
+\[\mathbf{G}(\mathbf{q}) = \frac{\partial V}{\partial \mathbf{q}}\]
 
 This yields the \textbf{standard form} \cite{siciliano2009,Spong2006}:
 
@@ -207,15 +207,15 @@ This yields the \textbf{standard form} \cite{siciliano2009,Spong2006}:
 \subsection{The Mass Matrix $\mathbf{M}(\mathbf{q})$}
 
 The mass matrix $\mathbf{M}$ is the Hessian of kinetic energy with respect to velocities:
-$$\mathbf{M}(\mathbf{q}) = \frac{\partial^2 T}{\partial \dot{\mathbf{q}}^2}$$
+\[\mathbf{M}(\mathbf{q}) = \frac{\partial^2 T}{\partial \dot{\mathbf{q}}^2}\]
 
 \textbf{Theorem:} $\mathbf{M}(\mathbf{q})$ is \textbf{Symmetric Positive-Definite} (SPD) for all valid configurations.
 
 \textbf{Proof of Symmetry:} Since $T = \frac{1}{2}\dot{\mathbf{q}}^T \mathbf{M}\dot{\mathbf{q}}$ is the kinetic energy (a physical observable), it must equal its own transpose. Thus:
-$$T = T^T \implies \mathbf{M} = \mathbf{M}^T$$
+\[T = T^T \implies \mathbf{M} = \mathbf{M}^T\]
 
 \textbf{Proof of Positive-Definiteness:} Kinetic energy is always non-negative. Moreover, $T = 0$ if and only if $\dot{\mathbf{q}} = 0$. Therefore:
-$$\dot{\mathbf{q}}^T \mathbf{M}\dot{\mathbf{q}} = 2T \geq 0, \quad \text{with equality iff } \dot{\mathbf{q}} = 0$$
+\[\dot{\mathbf{q}}^T \mathbf{M}\dot{\mathbf{q}} = 2T \geq 0, \quad \text{with equality iff } \dot{\mathbf{q}} = 0\]
 
 This is the definition of positive-definiteness. Consequently, $\mathbf{M}$ is invertible, and $\mathbf{M}^{-1}$ exists and is also SPD.
 
@@ -223,13 +223,13 @@ This is the definition of positive-definiteness. Consequently, $\mathbf{M}$ is i
 
 The Coriolis-Centripetal matrix is defined implicitly via the time derivative of momentum:
 
-$$\frac{d}{dt}(\mathbf{M}\dot{\mathbf{q}}) = \mathbf{M}\ddot{\mathbf{q}} + \mathbf{C}\dot{\mathbf{q}}$$
+\[\frac{d}{dt}(\mathbf{M}\dot{\mathbf{q}}) = \mathbf{M}\ddot{\mathbf{q}} + \mathbf{C}\dot{\mathbf{q}}\]
 
 where the $i$-th row of $\mathbf{C}$ is:
-$$\mathbf{C}_{i*}\dot{\mathbf{q}} = \sum_{j,k} \frac{1}{2}\left(\frac{\partial M_{ij}}{\partial q_k} + \frac{\partial M_{ik}}{\partial q_j} - \frac{\partial M_{jk}}{\partial q_i}\right)\dot{q}_j\dot{q}_k$$
+\[\mathbf{C}_{i*}\dot{\mathbf{q}} = \sum_{j,k} \frac{1}{2}\left(\frac{\partial M_{ij}}{\partial q_k} + \frac{\partial M_{ik}}{\partial q_j} - \frac{\partial M_{jk}}{\partial q_i}\right)\dot{q}_j\dot{q}_k\]
 
 Equivalently, the $(i,j)$-th entry is:
-$$C_{ij} = \frac{1}{2}\left(\frac{\partial M_{ij}}{\partial q_k} + \frac{\partial M_{ik}}{\partial q_j} - \frac{\partial M_{kj}}{\partial q_i}\right)$$
+\[C_{ij} = \frac{1}{2}\left(\frac{\partial M_{ij}}{\partial q_k} + \frac{\partial M_{ik}}{\partial q_j} - \frac{\partial M_{kj}}{\partial q_i}\right)\]
 
 summed over $k$, weighted by velocity pairs.
 
@@ -241,39 +241,25 @@ summed over $k$, weighted by velocity pairs.
 
 \textbf{Theorem:} The matrix $\mathbf{M} - 2\mathbf{C}$ is \textbf{skew-symmetric}, i.e., $(\mathbf{M} - 2\mathbf{C})^T = -(\mathbf{M} - 2\mathbf{C})$.
 
-\textbf{Proof:} Define the kinetic energy quadratic form. By definition:
-$$2T = \dot{\mathbf{q}}^T \mathbf{M}\dot{\mathbf{q}}$$
+\textbf{Proof:} The kinetic energy is $T = \frac{1}{2}\dot{\mathbf{q}}^T \mathbf{M}\dot{\mathbf{q}}$. Differentiating with respect to time:
+\[\frac{d}{dt}(2T) = \dot{\mathbf{q}}^T \dot{\mathbf{M}} \dot{\mathbf{q}} + 2\dot{\mathbf{q}}^T \mathbf{M} \ddot{\mathbf{q}}.\]
 
-Taking the time derivative:
-$$\frac{dT}{dt} = \dot{\mathbf{q}}^T\mathbf{M}\dot{\mathbf{q}} + \dot{\mathbf{q}}^T\frac{d\mathbf{M}}{dt}\dot{\mathbf{q}}$$
+From the equations of motion $\mathbf{M}\ddot{\mathbf{q}} + \mathbf{C}\dot{\mathbf{q}} + \mathbf{G} = \boldsymbol{\tau}$, the power balance $\dot{T} = \dot{\mathbf{q}}^T(\boldsymbol{\tau} - \mathbf{G})$ gives:
+\[\dot{\mathbf{q}}^T \mathbf{M} \ddot{\mathbf{q}} + \dot{\mathbf{q}}^T \mathbf{C} \dot{\mathbf{q}} = \dot{\mathbf{q}}^T(\boldsymbol{\tau} - \mathbf{G}).\]
 
-But also:
-$$\frac{dT}{dt} = \dot{\mathbf{q}}^T(\mathbf{M}\ddot{\mathbf{q}} + \mathbf{C}\dot{\mathbf{q}})$$
-
-by rearranging the Euler-Lagrange equations. Equating:
-$$\dot{\mathbf{q}}^T(\mathbf{M}\ddot{\mathbf{q}} + \mathbf{C}\dot{\mathbf{q}}) = \dot{\mathbf{q}}^T\mathbf{M}\dot{\mathbf{q}} + \dot{\mathbf{q}}^T\frac{d\mathbf{M}}{dt}\dot{\mathbf{q}}$$
-
-For this to hold for all $\dot{\mathbf{q}}$ and $\ddot{\mathbf{q}}$, we require:
-$$\mathbf{C} + \mathbf{C}^T = \frac{d\mathbf{M}}{dt}$$
-
-Therefore:
-$$(\mathbf{M} - 2\mathbf{C})^T = \mathbf{M}^T - 2\mathbf{C}^T = \mathbf{M} - 2\mathbf{C}^T$$
-
-and since $\mathbf{C}^T = \frac{d\mathbf{M}}{dt} - \mathbf{C}$:
-$$(\mathbf{M} - 2\mathbf{C})^T = \mathbf{M} - 2\left(\frac{d\mathbf{M}}{dt} - \mathbf{C}\right) = \mathbf{M} - \frac{d\mathbf{M}}{dt} - 2\mathbf{C} + 2\mathbf{M}$$
-
-Actually, the standard proof uses energy conservation more directly. The key fact is:
-$$\dot{\mathbf{q}}^T(\mathbf{M} - 2\mathbf{C})\dot{\mathbf{q}} = 0$$
-
-for all $\dot{\mathbf{q}}$, which implies $\mathbf{M} - 2\mathbf{C} + (\mathbf{M} - 2\mathbf{C})^T = 0$, i.e., skew-symmetry.
+Substituting the first expression for $\dot{\mathbf{q}}^T \mathbf{M} \ddot{\mathbf{q}}$ and simplifying yields:
+\[\dot{\mathbf{q}}^T (\dot{\mathbf{M}} - 2\mathbf{C}) \dot{\mathbf{q}} = 0\]
+for all trajectories $\dot{\mathbf{q}}$. Since this quadratic form vanishes for arbitrary $\dot{\mathbf{q}}$, the matrix $\dot{\mathbf{M}} - 2\mathbf{C}$ must be skew-symmetric:
+\[(\dot{\mathbf{M}} - 2\mathbf{C}) + (\dot{\mathbf{M}} - 2\mathbf{C})^T = \mathbf{0}.\]
+This is the celebrated \textbf{skew-symmetry property} of Lagrangian dynamics, which plays a central role in passivity-based and adaptive control design.
 
 \subsection{The Gravity Vector $\mathbf{G}(\mathbf{q})$}
 
 The gravity vector is simply the negative gradient of potential energy:
-$$\mathbf{G}(\mathbf{q}) = \frac{\partial V}{\partial \mathbf{q}}$$
+\[\mathbf{G}(\mathbf{q}) = \frac{\partial V}{\partial \mathbf{q}}\]
 
 For a rigid body system, each link $i$ contributes to potential energy based on its center-of-mass height and mass:
-$$V(\mathbf{q}) = \sum_i m_i g h_i(\mathbf{q})$$
+\[V(\mathbf{q}) = \sum_i m_i g h_i(\mathbf{q})\]
 
 The gravity vector element $G_i$ represents the torque (or force) that gravity exerts on joint $i$ due to the weight distribution of all distal links.
 
@@ -283,36 +269,36 @@ The gravity vector element $G_i$ represents the torque (or force) that gravity e
 
 \textbf{Theorem:} For a system with no external torques ($\boldsymbol{\tau} = 0$) and no time-dependent potential:
 
-$$\frac{d}{dt}(T + V) = 0$$
+\[\frac{d}{dt}(T + V) = 0\]
 
 that is, \textbf{total mechanical energy is conserved}.
 
 \textbf{Proof:} From the Euler-Lagrange equations with $\boldsymbol{\tau} = 0$:
-$$\frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}}\right) - \frac{\partial \mathcal{L}}{\partial \mathbf{q}} = 0$$
+\[\frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}}\right) - \frac{\partial \mathcal{L}}{\partial \mathbf{q}} = 0\]
 
 where $\mathcal{L} = T - V$. Rearranging:
-$$\frac{d}{dt}\left(\frac{\partial T}{\partial \dot{\mathbf{q}}}\right) = \frac{\partial T}{\partial \mathbf{q}} - \frac{\partial V}{\partial \mathbf{q}}$$
+\[\frac{d}{dt}\left(\frac{\partial T}{\partial \dot{\mathbf{q}}}\right) = \frac{\partial T}{\partial \mathbf{q}} - \frac{\partial V}{\partial \mathbf{q}}\]
 
 Taking the inner product with $\dot{\mathbf{q}}$:
-$$\dot{\mathbf{q}}^T \frac{d}{dt}\left(\frac{\partial T}{\partial \dot{\mathbf{q}}}\right) = \dot{\mathbf{q}}^T \frac{\partial T}{\partial \mathbf{q}} - \dot{\mathbf{q}}^T \frac{\partial V}{\partial \mathbf{q}}$$
+\[\dot{\mathbf{q}}^T \frac{d}{dt}\left(\frac{\partial T}{\partial \dot{\mathbf{q}}}\right) = \dot{\mathbf{q}}^T \frac{\partial T}{\partial \mathbf{q}} - \dot{\mathbf{q}}^T \frac{\partial V}{\partial \mathbf{q}}\]
 
 The left side is:
-$$\dot{\mathbf{q}}^T \frac{d}{dt}\left(\frac{\partial T}{\partial \dot{\mathbf{q}}}\right) = \frac{d}{dt}\left(\dot{\mathbf{q}}^T \frac{\partial T}{\partial \dot{\mathbf{q}}}\right) - \ddot{\mathbf{q}}^T \frac{\partial T}{\partial \dot{\mathbf{q}}}$$
+\[\dot{\mathbf{q}}^T \frac{d}{dt}\left(\frac{\partial T}{\partial \dot{\mathbf{q}}}\right) = \frac{d}{dt}\left(\dot{\mathbf{q}}^T \frac{\partial T}{\partial \dot{\mathbf{q}}}\right) - \ddot{\mathbf{q}}^T \frac{\partial T}{\partial \dot{\mathbf{q}}}\]
 
 For kinetic energy $T = \frac{1}{2}\dot{\mathbf{q}}^T\mathbf{M}\dot{\mathbf{q}}$:
-$$\dot{\mathbf{q}}^T \frac{\partial T}{\partial \dot{\mathbf{q}}} = \dot{\mathbf{q}}^T \mathbf{M}\dot{\mathbf{q}} = 2T$$
+\[\dot{\mathbf{q}}^T \frac{\partial T}{\partial \dot{\mathbf{q}}} = \dot{\mathbf{q}}^T \mathbf{M}\dot{\mathbf{q}} = 2T\]
 
 So the left side becomes:
-$$\frac{d}{dt}(2T) - \ddot{\mathbf{q}}^T \mathbf{M}\dot{\mathbf{q}} = 2\frac{dT}{dt} - \ddot{\mathbf{q}}^T \mathbf{M}\dot{\mathbf{q}}$$
+\[\frac{d}{dt}(2T) - \ddot{\mathbf{q}}^T \mathbf{M}\dot{\mathbf{q}} = 2\frac{dT}{dt} - \ddot{\mathbf{q}}^T \mathbf{M}\dot{\mathbf{q}}\]
 
 The right side uses $\dot{\mathbf{q}}^T \frac{\partial T}{\partial \mathbf{q}} = \frac{dT}{dt} - \ddot{\mathbf{q}}^T \frac{\partial T}{\partial \dot{\mathbf{q}}}$ and $\dot{\mathbf{q}}^T \frac{\partial V}{\partial \mathbf{q}} = \frac{dV}{dt}$:
 
-$$2\frac{dT}{dt} - \ddot{\mathbf{q}}^T\mathbf{M}\dot{\mathbf{q}} = \frac{dT}{dt} - \ddot{\mathbf{q}}^T\mathbf{M}\dot{\mathbf{q}} - \frac{dV}{dt}$$
+\[2\frac{dT}{dt} - \ddot{\mathbf{q}}^T\mathbf{M}\dot{\mathbf{q}} = \frac{dT}{dt} - \ddot{\mathbf{q}}^T\mathbf{M}\dot{\mathbf{q}} - \frac{dV}{dt}\]
 
 Simplifying:
-$$\frac{dT}{dt} = -\frac{dV}{dt}$$
+\[\frac{dT}{dt} = -\frac{dV}{dt}\]
 
-$$\frac{d}{dt}(T + V) = 0$$
+\[\frac{d}{dt}(T + V) = 0\]
 
 Thus total energy is conserved. This is the mechanical manifestation of Noether's theorem (Section \ref{sec:noether}) \cite{marsden1999}.
 
@@ -325,14 +311,14 @@ The energy conservation result above reveals something striking: the total energ
 While Lagrangian mechanics uses $(q, \dot{q})$ as the fundamental variables, there is a mathematically equivalent formulation using $(q, p)$, where $p$ is the conjugate momentum.
 
 Define:
-$$\mathbf{p} = \frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}} = \mathbf{M}(\mathbf{q})\dot{\mathbf{q}}$$
+\[\mathbf{p} = \frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}} = \mathbf{M}(\mathbf{q})\dot{\mathbf{q}}\]
 
 The \textbf{Hamiltonian} is obtained via a Legendre transform:
-$$H(\mathbf{q}, \mathbf{p}, t) = \mathbf{p} \cdot \dot{\mathbf{q}} - \mathcal{L}(\mathbf{q}, \dot{\mathbf{q}}, t)$$
+\[H(\mathbf{q}, \mathbf{p}, t) = \mathbf{p} \cdot \dot{\mathbf{q}} - \mathcal{L}(\mathbf{q}, \dot{\mathbf{q}}, t)\]
 
 Substituting $\mathcal{L} = T - V$ and noting $T = \frac{1}{2}\mathbf{p}^T\mathbf{M}^{-1}\mathbf{p}$ (after inverting the momentum relation):
 
-$$H = \mathbf{p}\cdot\dot{\mathbf{q}} - \frac{1}{2}\mathbf{p}^T\mathbf{M}^{-1}\mathbf{p} + V = \frac{1}{2}\mathbf{p}^T\mathbf{M}^{-1}\mathbf{p} + V$$
+\[H = \mathbf{p}\cdot\dot{\mathbf{q}} - \frac{1}{2}\mathbf{p}^T\mathbf{M}^{-1}\mathbf{p} + V = \frac{1}{2}\mathbf{p}^T\mathbf{M}^{-1}\mathbf{p} + V\]
 
 The Hamiltonian \textbf{is the total energy}: $H = T + V$.
 
@@ -357,7 +343,7 @@ These are a set of $2n$ first-order ODEs (compared to $n$ second-order Lagrangia
 
 \textbf{Theorem (Noether):} If the Lagrangian $\mathcal{L}(\mathbf{q}, \dot{\mathbf{q}})$ is invariant under a continuous one-parameter transformation group $\mathbf{q} \to \mathbf{q}(\epsilon)$ where $\mathbf{q}(0) = \mathbf{q}$ and $\frac{d\mathbf{q}}{d\epsilon}\big|_{\epsilon=0} = \boldsymbol{\xi}(\mathbf{q})$ is the infinitesimal generator, then the quantity:
 
-$$I = \frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}} \cdot \boldsymbol{\xi}(\mathbf{q})$$
+\[I = \frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}} \cdot \boldsymbol{\xi}(\mathbf{q})\]
 
 is \textbf{conserved} along trajectories satisfying the Euler-Lagrange equations.
 
@@ -367,7 +353,7 @@ is \textbf{conserved} along trajectories satisfying the Euler-Lagrange equations
 
 If the Lagrangian does not depend on a coordinate $q_i$ explicitly (called a \textbf{cyclic coordinate}), then $\frac{\partial \mathcal{L}}{\partial q_i} = 0$. The Euler-Lagrange equation gives:
 
-$$\frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \dot{q}_i}\right) = 0$$
+\[\frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \dot{q}_i}\right) = 0\]
 
 The \textbf{generalized momentum} $p_i = \frac{\partial \mathcal{L}}{\partial \dot{q}_i}$ is conserved.
 
@@ -377,13 +363,13 @@ For a particle moving in empty space with $\mathcal{L} = \frac{1}{2}m\mathbf{v}^
 
 If the Lagrangian is invariant under rotation, angular momentum is conserved. For a system with rotational symmetry about axis $\mathbf{n}$, the generator is $\boldsymbol{\xi} = \mathbf{n} \times \mathbf{r}$ (where $\mathbf{r}$ is position). The conserved quantity is:
 
-$$L = \mathbf{p} \cdot (\mathbf{n} \times \mathbf{r}) = \mathbf{n} \cdot (\mathbf{r} \times \mathbf{p}) = \mathbf{n} \cdot \mathbf{L}_{\text{ang}}$$
+\[L = \mathbf{p} \cdot (\mathbf{n} \times \mathbf{r}) = \mathbf{n} \cdot (\mathbf{r} \times \mathbf{p}) = \mathbf{n} \cdot \mathbf{L}_{\text{ang}}\]
 
 \textbf{3. Time Translation Symmetry (Energy Conservation)}
 
 If $\frac{\partial \mathcal{L}}{\partial t} = 0$ (the Lagrangian is time-independent), the \textbf{Hamiltonian}:
 
-$$H = \frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}} \cdot \dot{\mathbf{q}} - \mathcal{L}$$
+\[H = \frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}} \cdot \dot{\mathbf{q}} - \mathcal{L}\]
 
 is conserved. If $\mathcal{L} = T - V$ with $T$ quadratic in velocities, then $H = T + V$ is the total mechanical energy.
 
@@ -462,19 +448,19 @@ The multipliers $\boldsymbol{\lambda}$ are determined by enforcing $\ddot{\bolds
 An alternative derivation of Lagrangian mechanics begins with \textbf{D'Alembert's Principle} \cite{Goldstein2002}, which unifies constraints and dynamics.
 
 Consider a system in motion under forces $\mathbf{F}$ with constraint forces $\mathbf{F}_c$. Newton's second law is:
-$$m\mathbf{a} = \mathbf{F} + \mathbf{F}_c$$
+\[m\mathbf{a} = \mathbf{F} + \mathbf{F}_c\]
 
 D'Alembert introduced \textbf{inertial forces}: rewrite this as:
-$$\mathbf{F} + \mathbf{F}_c - m\mathbf{a} = 0$$
+\[\mathbf{F} + \mathbf{F}_c - m\mathbf{a} = 0\]
 
 Now define \textbf{virtual displacement} $\delta \mathbf{q}$—an infinitesimal displacement consistent with the constraints (i.e., $\nabla \boldsymbol{\phi} \cdot \delta \mathbf{q} = 0$ if constraints exist). The principle states that the virtual work done by inertial and applied forces vanishes:
 
-$$\delta W = (\mathbf{F} - m\mathbf{a}) \cdot \delta \mathbf{r} = 0$$
+\[\delta W = (\mathbf{F} - m\mathbf{a}) \cdot \delta \mathbf{r} = 0\]
 
 (Constraint forces do no virtual work by definition.)
 
 In generalized coordinates:
-$$\sum_i \left(\frac{\partial \mathcal{L}}{\partial q_i} - \frac{d}{dt}\frac{\partial \mathcal{L}}{\partial \dot{q}_i}\right) \delta q_i = 0$$
+\[\sum_i \left(\frac{\partial \mathcal{L}}{\partial q_i} - \frac{d}{dt}\frac{\partial \mathcal{L}}{\partial \dot{q}_i}\right) \delta q_i = 0\]
 
 Since the $\delta q_i$ are arbitrary (independent), each coefficient must vanish, recovering the Euler-Lagrange equations. This approach shows directly that Lagrangian mechanics is a direct consequence of Newton's laws when viewed through the lens of generalized coordinates and constraint-respecting displacements.
 
@@ -484,17 +470,17 @@ Since the $\delta q_i$ are arbitrary (independent), each coefficient must vanish
 
 The mass matrix $\mathbf{M}(\mathbf{q})$ defines a Riemannian metric on configuration space \cite{Murray1994}. The Christoffel symbols $\Gamma^i_{jk}$ of this metric are:
 
-$$\Gamma^i_{jk} = \frac{1}{2}g^{im}\left(\frac{\partial g_{mj}}{\partial q_k} + \frac{\partial g_{mk}}{\partial q_j} - \frac{\partial g_{jk}}{\partial q_m}\right)$$
+\[\Gamma^i_{jk} = \frac{1}{2}g^{im}\left(\frac{\partial g_{mj}}{\partial q_k} + \frac{\partial g_{mk}}{\partial q_j} - \frac{\partial g_{jk}}{\partial q_m}\right)\]
 
 where $g = \mathbf{M}$ and $g^{-1} = \mathbf{M}^{-1}$.
 
 These symbols encode how the metric (and thus the inertial properties) change over configuration space. They appear naturally in the Coriolis matrix:
 
-$$C_{ij} = \frac{1}{2}(\dot{M}_{ij} + \dot{M}_{ik}\dot{M}_{jk}^{-1})$$
+\[C_{ij} = \frac{1}{2}(\dot{M}_{ij} + \dot{M}_{ik}\dot{M}_{jk}^{-1})\]
 
 or more explicitly in terms of Christoffel symbols:
 
-$$C_{ij} = \Gamma^k_{ij}\dot{q}_k$$
+\[C_{ij} = \Gamma^k_{ij}\dot{q}_k\]
 
 This reveals a deep geometric truth: the Coriolis forces arise from geodesic deviation in the manifold defined by the mass matrix. A system moving "straight" in configuration space, when projected into Cartesian coordinates, experiences apparent Coriolis deflection because the natural metric of the system is curved.
 
@@ -507,65 +493,65 @@ This reveals a deep geometric truth: the Coriolis forces arise from geodesic dev
 A double pendulum consists of two rigid rods connected end-to-end, with a pivot at the origin. Link 1 has mass $m_1$, length $\ell_1$, and angle $q_1$ from vertical. Link 2 has mass $m_2$, length $\ell_2$, and angle $q_2$ from vertical.
 
 The center of mass of link 1 is at:
-$$\mathbf{r}_1 = \begin{pmatrix} \frac{\ell_1}{2}\sin q_1 \\ -\frac{\ell_1}{2}\cos q_1 \end{pmatrix}$$
+\[\mathbf{r}_1 = \begin{pmatrix} \frac{\ell_1}{2}\sin q_1 \\ -\frac{\ell_1}{2}\cos q_1 \end{pmatrix}\]
 
 The center of mass of link 2 is at:
-$$\mathbf{r}_2 = \begin{pmatrix} \ell_1 \sin q_1 + \frac{\ell_2}{2}\sin q_2 \\ -\ell_1 \cos q_1 - \frac{\ell_2}{2}\cos q_2 \end{pmatrix}$$
+\[\mathbf{r}_2 = \begin{pmatrix} \ell_1 \sin q_1 + \frac{\ell_2}{2}\sin q_2 \\ -\ell_1 \cos q_1 - \frac{\ell_2}{2}\cos q_2 \end{pmatrix}\]
 
 \subsection{Kinetic Energy}
 
 For link 1, treating it as a point mass at its center:
-$$v_1^2 = \dot{\mathbf{r}}_1 \cdot \dot{\mathbf{r}}_1$$
+\[v_1^2 = \dot{\mathbf{r}}_1 \cdot \dot{\mathbf{r}}_1\]
 
 Computing:
-$$\dot{\mathbf{r}}_1 = \frac{\ell_1}{2}\begin{pmatrix} \cos q_1 & 0 \\ \sin q_1 & 0 \end{pmatrix}\begin{pmatrix} \dot{q}_1 \\ \dot{q}_2 \end{pmatrix}$$
+\[\dot{\mathbf{r}}_1 = \frac{\ell_1}{2}\begin{pmatrix} \cos q_1 & 0 \\ \sin q_1 & 0 \end{pmatrix}\begin{pmatrix} \dot{q}_1 \\ \dot{q}_2 \end{pmatrix}\]
 
-$$v_1^2 = \frac{\ell_1^2}{4}\dot{q}_1^2$$
+\[v_1^2 = \frac{\ell_1^2}{4}\dot{q}_1^2\]
 
 For link 2:
-$$\dot{\mathbf{r}}_2 = \begin{pmatrix} \ell_1\cos q_1 \dot{q}_1 + \frac{\ell_2}{2}\cos q_2 \dot{q}_2 \\ \ell_1 \sin q_1 \dot{q}_1 + \frac{\ell_2}{2}\sin q_2 \dot{q}_2 \end{pmatrix}$$
+\[\dot{\mathbf{r}}_2 = \begin{pmatrix} \ell_1\cos q_1 \dot{q}_1 + \frac{\ell_2}{2}\cos q_2 \dot{q}_2 \\ \ell_1 \sin q_1 \dot{q}_1 + \frac{\ell_2}{2}\sin q_2 \dot{q}_2 \end{pmatrix}\]
 
-$$v_2^2 = \left(\ell_1\cos q_1 \dot{q}_1 + \frac{\ell_2}{2}\cos q_2 \dot{q}_2\right)^2 + \left(\ell_1\sin q_1 \dot{q}_1 + \frac{\ell_2}{2}\sin q_2 \dot{q}_2\right)^2$$
+\[v_2^2 = \left(\ell_1\cos q_1 \dot{q}_1 + \frac{\ell_2}{2}\cos q_2 \dot{q}_2\right)^2 + \left(\ell_1\sin q_1 \dot{q}_1 + \frac{\ell_2}{2}\sin q_2 \dot{q}_2\right)^2\]
 
-$$v_2^2 = \ell_1^2\dot{q}_1^2 + \frac{\ell_2^2}{4}\dot{q}_2^2 + \ell_1\ell_2(\cos q_1\cos q_2 + \sin q_1\sin q_2)\dot{q}_1\dot{q}_2$$
+\[v_2^2 = \ell_1^2\dot{q}_1^2 + \frac{\ell_2^2}{4}\dot{q}_2^2 + \ell_1\ell_2(\cos q_1\cos q_2 + \sin q_1\sin q_2)\dot{q}_1\dot{q}_2\]
 
-$$v_2^2 = \ell_1^2\dot{q}_1^2 + \frac{\ell_2^2}{4}\dot{q}_2^2 + \ell_1\ell_2\cos(q_1-q_2)\dot{q}_1\dot{q}_2$$
+\[v_2^2 = \ell_1^2\dot{q}_1^2 + \frac{\ell_2^2}{4}\dot{q}_2^2 + \ell_1\ell_2\cos(q_1-q_2)\dot{q}_1\dot{q}_2\]
 
 The total kinetic energy is:
-$$T = \frac{1}{2}m_1 v_1^2 + \frac{1}{2}m_2 v_2^2$$
+\[T = \frac{1}{2}m_1 v_1^2 + \frac{1}{2}m_2 v_2^2\]
 
-$$T = \frac{1}{2}m_1\frac{\ell_1^2}{4}\dot{q}_1^2 + \frac{1}{2}m_2\left[\ell_1^2\dot{q}_1^2 + \frac{\ell_2^2}{4}\dot{q}_2^2 + \ell_1\ell_2\cos(q_1-q_2)\dot{q}_1\dot{q}_2\right]$$
+\[T = \frac{1}{2}m_1\frac{\ell_1^2}{4}\dot{q}_1^2 + \frac{1}{2}m_2\left[\ell_1^2\dot{q}_1^2 + \frac{\ell_2^2}{4}\dot{q}_2^2 + \ell_1\ell_2\cos(q_1-q_2)\dot{q}_1\dot{q}_2\right]\]
 
-$$T = \frac{1}{2}\left[\left(\frac{m_1}{4} + m_2\right)\ell_1^2\dot{q}_1^2 + \frac{m_2\ell_2^2}{4}\dot{q}_2^2 + m_2\ell_1\ell_2\cos(q_1-q_2)\dot{q}_1\dot{q}_2\right]$$
+\[T = \frac{1}{2}\left[\left(\frac{m_1}{4} + m_2\right)\ell_1^2\dot{q}_1^2 + \frac{m_2\ell_2^2}{4}\dot{q}_2^2 + m_2\ell_1\ell_2\cos(q_1-q_2)\dot{q}_1\dot{q}_2\right]\]
 
 In matrix form: $T = \frac{1}{2}\begin{pmatrix} \dot{q}_1 & \dot{q}_2 \end{pmatrix} \mathbf{M} \begin{pmatrix} \dot{q}_1 \\ \dot{q}_2 \end{pmatrix}$
 
-$$\mathbf{M}(\mathbf{q}) = \begin{pmatrix} \left(\frac{m_1}{2} + m_2\right)\ell_1^2 & m_2\ell_1\ell_2\cos(q_1-q_2) \\ m_2\ell_1\ell_2\cos(q_1-q_2) & \frac{m_2\ell_2^2}{2} \end{pmatrix}$$
+\[\mathbf{M}(\mathbf{q}) = \begin{pmatrix} \left(\frac{m_1}{2} + m_2\right)\ell_1^2 & m_2\ell_1\ell_2\cos(q_1-q_2) \\ m_2\ell_1\ell_2\cos(q_1-q_2) & \frac{m_2\ell_2^2}{2} \end{pmatrix}\]
 
 \subsection{Potential Energy}
 
 Taking the pivot as the reference (zero potential energy at the pivot height):
 
-$$V = -m_1 g \frac{\ell_1}{2}\cos q_1 - m_2 g\left(\ell_1\cos q_1 + \frac{\ell_2}{2}\cos q_2\right)$$
+\[V = -m_1 g \frac{\ell_1}{2}\cos q_1 - m_2 g\left(\ell_1\cos q_1 + \frac{\ell_2}{2}\cos q_2\right)\]
 
-$$V = -\left(\frac{m_1}{2} + m_2\right)g\ell_1\cos q_1 - \frac{m_2 g\ell_2}{2}\cos q_2$$
+\[V = -\left(\frac{m_1}{2} + m_2\right)g\ell_1\cos q_1 - \frac{m_2 g\ell_2}{2}\cos q_2\]
 
 \subsection{Gravity Vector}
 
-$$\mathbf{G} = \frac{\partial V}{\partial \mathbf{q}} = \begin{pmatrix} \left(\frac{m_1}{2} + m_2\right)g\ell_1\sin q_1 \\ \frac{m_2 g\ell_2}{2}\sin q_2 \end{pmatrix}$$
+\[\mathbf{G} = \frac{\partial V}{\partial \mathbf{q}} = \begin{pmatrix} \left(\frac{m_1}{2} + m_2\right)g\ell_1\sin q_1 \\ \frac{m_2 g\ell_2}{2}\sin q_2 \end{pmatrix}\]
 
 \subsection{Coriolis/Centripetal Matrix}
 
 Computing $\frac{d\mathbf{M}}{dt}$:
 
-$$\frac{dM_{12}}{dt} = -m_2\ell_1\ell_2\sin(q_1-q_2)(\dot{q}_1 - \dot{q}_2)$$
+\[\frac{dM_{12}}{dt} = -m_2\ell_1\ell_2\sin(q_1-q_2)(\dot{q}_1 - \dot{q}_2)\]
 
 Using the formula for the Coriolis matrix (after careful computation):
 
-$$\mathbf{C}(\mathbf{q}, \dot{\mathbf{q}}) = \begin{pmatrix} -m_2\ell_1\ell_2\sin(q_1-q_2)\dot{q}_2 & -m_2\ell_1\ell_2\sin(q_1-q_2)(\dot{q}_1 + \dot{q}_2) \\ m_2\ell_1\ell_2\sin(q_1-q_2)\dot{q}_1 & 0 \end{pmatrix}$$
+\[\mathbf{C}(\mathbf{q}, \dot{\mathbf{q}}) = \begin{pmatrix} -m_2\ell_1\ell_2\sin(q_1-q_2)\dot{q}_2 & -m_2\ell_1\ell_2\sin(q_1-q_2)(\dot{q}_1 + \dot{q}_2) \\ m_2\ell_1\ell_2\sin(q_1-q_2)\dot{q}_1 & 0 \end{pmatrix}\]
 
 The complete equations of motion are:
-$$\mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})\dot{\mathbf{q}} + \mathbf{G}(\mathbf{q}) = \boldsymbol{\tau}$$
+\[\mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})\dot{\mathbf{q}} + \mathbf{G}(\mathbf{q}) = \boldsymbol{\tau}\]
 
 where $\boldsymbol{\tau}$ are the applied torques at each joint.
 
@@ -578,38 +564,38 @@ where $\boldsymbol{\tau}$ are the applied torques at each joint.
 A planar 2-link robot arm with joint angles $q_1, q_2$ (measured from horizontal). Each link has length $\ell_i$ and mass $m_i$ uniformly distributed. The arm operates under gravity.
 
 Pose of the end-effector:
-$$\mathbf{p} = \begin{pmatrix} \ell_1\cos q_1 + \ell_2\cos(q_1+q_2) \\ \ell_1\sin q_1 + \ell_2\sin(q_1+q_2) \end{pmatrix}$$
+\[\mathbf{p} = \begin{pmatrix} \ell_1\cos q_1 + \ell_2\cos(q_1+q_2) \\ \ell_1\sin q_1 + \ell_2\sin(q_1+q_2) \end{pmatrix}\]
 
 Jacobian (mapping joint velocities to end-effector velocities):
-$$\mathbf{J} = \begin{pmatrix} -\ell_1\sin q_1 - \ell_2\sin(q_1+q_2) & -\ell_2\sin(q_1+q_2) \\ \ell_1\cos q_1 + \ell_2\cos(q_1+q_2) & \ell_2\cos(q_1+q_2) \end{pmatrix}$$
+\[\mathbf{J} = \begin{pmatrix} -\ell_1\sin q_1 - \ell_2\sin(q_1+q_2) & -\ell_2\sin(q_1+q_2) \\ \ell_1\cos q_1 + \ell_2\cos(q_1+q_2) & \ell_2\cos(q_1+q_2) \end{pmatrix}\]
 
 \subsection{Kinetic Energy}
 
 For a uniform link $i$ rotating about its proximal joint, the kinetic energy is:
-$$T_i = \frac{1}{2}I_i\omega_i^2 + \frac{1}{2}m_i v_{c,i}^2$$
+\[T_i = \frac{1}{2}I_i\omega_i^2 + \frac{1}{2}m_i v_{c,i}^2\]
 
 where $I_i = \frac{1}{12}m_i\ell_i^2$ (moment of inertia about the center) and $v_{c,i}$ is the velocity of the center of mass.
 
 For link 1:
-$$v_{c,1} = \frac{\ell_1}{2}\dot{q}_1 \implies T_1 = \frac{1}{2}\left(\frac{1}{12}m_1\ell_1^2 + \frac{1}{4}m_1\ell_1^2\right)\dot{q}_1^2 = \frac{1}{6}m_1\ell_1^2\dot{q}_1^2$$
+\[v_{c,1} = \frac{\ell_1}{2}\dot{q}_1 \implies T_1 = \frac{1}{2}\left(\frac{1}{12}m_1\ell_1^2 + \frac{1}{4}m_1\ell_1^2\right)\dot{q}_1^2 = \frac{1}{6}m_1\ell_1^2\dot{q}_1^2\]
 
 For link 2, it rotates with angular velocity $\dot{q}_1 + \dot{q}_2$ about the global frame:
-$$T_2 = \frac{1}{2}I_2(\dot{q}_1+\dot{q}_2)^2 + \frac{1}{2}m_2 v_{c,2}^2$$
+\[T_2 = \frac{1}{2}I_2(\dot{q}_1+\dot{q}_2)^2 + \frac{1}{2}m_2 v_{c,2}^2\]
 
 where the center-of-mass velocity includes both rotation about joint 1 and rotation about joint 2:
-$$v_{c,2}^2 = (\ell_1\dot{q}_1)^2 + \left(\frac{\ell_2}{2}(\dot{q}_1+\dot{q}_2)\right)^2 + 2\ell_1\frac{\ell_2}{2}\dot{q}_1(\dot{q}_1+\dot{q}_2)\cos q_2$$
+\[v_{c,2}^2 = (\ell_1\dot{q}_1)^2 + \left(\frac{\ell_2}{2}(\dot{q}_1+\dot{q}_2)\right)^2 + 2\ell_1\frac{\ell_2}{2}\dot{q}_1(\dot{q}_1+\dot{q}_2)\cos q_2\]
 
 After simplification, the mass matrix is:
 
-$$\mathbf{M} = \begin{pmatrix} m_1\frac{\ell_1^2}{3} + m_2\ell_1^2 + m_2\frac{\ell_2^2}{3} + m_2\ell_1\ell_2\cos q_2 & m_2\frac{\ell_2^2}{6} + m_2\frac{\ell_1\ell_2}{2}\cos q_2 \\ m_2\frac{\ell_2^2}{6} + m_2\frac{\ell_1\ell_2}{2}\cos q_2 & m_2\frac{\ell_2^2}{3} \end{pmatrix}$$
+\[\mathbf{M} = \begin{pmatrix} m_1\frac{\ell_1^2}{3} + m_2\ell_1^2 + m_2\frac{\ell_2^2}{3} + m_2\ell_1\ell_2\cos q_2 & m_2\frac{\ell_2^2}{6} + m_2\frac{\ell_1\ell_2}{2}\cos q_2 \\ m_2\frac{\ell_2^2}{6} + m_2\frac{\ell_1\ell_2}{2}\cos q_2 & m_2\frac{\ell_2^2}{3} \end{pmatrix}\]
 
 \subsection{Potential Energy}
 
 With gravity acting downward:
-$$V = m_1 g \frac{\ell_1}{2}\sin q_1 + m_2 g\left(\ell_1\sin q_1 + \frac{\ell_2}{2}\sin(q_1+q_2)\right)$$
+\[V = m_1 g \frac{\ell_1}{2}\sin q_1 + m_2 g\left(\ell_1\sin q_1 + \frac{\ell_2}{2}\sin(q_1+q_2)\right)\]
 
 Gravity vector:
-$$\mathbf{G} = \begin{pmatrix} \left(\frac{m_1}{2} + m_2\right)g\ell_1\cos q_1 + \frac{m_2g\ell_2}{2}\cos(q_1+q_2) \\ \frac{m_2g\ell_2}{2}\cos(q_1+q_2) \end{pmatrix}$$
+\[\mathbf{G} = \begin{pmatrix} \left(\frac{m_1}{2} + m_2\right)g\ell_1\cos q_1 + \frac{m_2g\ell_2}{2}\cos(q_1+q_2) \\ \frac{m_2g\ell_2}{2}\cos(q_1+q_2) \end{pmatrix}\]
 
 These explicit forms are essential for control design (feedback linearization, trajectory optimization) and analysis (stability, reachability).
 
@@ -668,7 +654,7 @@ This is first-order accurate but already exhibits bounded energy error.
 \end{align}
 
 \textbf{Key Property: Bounded Energy Error.}\index{energy error!bounded} Unlike non-symplectic methods where energy error grows linearly (or worse) with time, symplectic integrators produce energy errors that \emph{oscillate} about the true value without secular drift. Formally, the numerical solution exactly solves a \emph{nearby} Hamiltonian $\tilde{H} = H + O(h^p)$, where $p$ is the order of the method. The energy of the original system therefore remains bounded:
-$$|H(\mathbf{q}_k, \mathbf{p}_k) - H(\mathbf{q}_0, \mathbf{p}_0)| \leq C\,h^p \qquad \text{for exponentially long times}$$
+\[|H(\mathbf{q}_k, \mathbf{p}_k) - H(\mathbf{q}_0, \mathbf{p}_0)| \leq C\,h^p \qquad \text{for exponentially long times}\]
 
 \begin{laymansbox}{Why Symplectic Integrators Matter for Robotics}{symplectic_robotics}
 For long-horizon robot simulations---such as gait optimization over thousands of steps, or orbital mechanics for space robots---symplectic integrators prevent the slow energy drift that causes non-physical behavior. A standard RK4 solver may show a pendulum gradually gaining energy until it rotates faster and faster; a symplectic solver keeps the energy oscillating near its true value indefinitely.
