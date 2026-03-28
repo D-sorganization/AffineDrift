@@ -78,18 +78,28 @@
 \theoremstyle{plain}
 \newtheorem{proposition}{Proposition}[chapter]
 
+% ──────────────────────────────────────────────
+% Notation Concordance — Volume V
+% ──────────────────────────────────────────────
+% This volume follows Volume 0 conventions:
+%   Vectors:    bold italic via \bm{}     e.g. \state = \bm{x}
+%   Reals:      \Reals  (alias \R also available via geometry_of_motion.sty)
+%
+% See geometry_of_motion.sty for the canonical fallback definitions.
+% ──────────────────────────────────────────────
+
 % Custom commands
-\newcommand{\state}{\bm{x}}
-\newcommand{\control}{\bm{u}}
-\newcommand{\traj}{\bm{\gamma}}
-\newcommand{\Reals}{\mathbb{R}}
-\newcommand{\dd}{\mathrm{d}}
-\newcommand{\dt}{\,\dd t}
+\renewcommand{\state}{\bm{x}}
+\renewcommand{\control}{\bm{u}}
+\renewcommand{\traj}{\bm{\gamma}}
+\renewcommand{\Reals}{\mathbb{R}}
+\renewcommand{\dd}{\mathrm{d}}
+\renewcommand{\dt}{\,\dd t}
 
 \DeclareMathOperator*{\argmin}{arg\,min}
 \DeclareMathOperator*{\argmax}{arg\,max}
 
-\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\renewcommand{\norm}[1]{\left\lVert #1 \right\rVert}
 
 % Chapter formatting
 \titleformat{\chapter}[display]
@@ -127,6 +137,13 @@
 \frontmatter
 \chapter*{Preface}
 \addcontentsline{toc}{chapter}{Preface}
+
+\begin{gomdraftnotice}
+This volume is under active development. All chapters are structural outlines
+with preliminary material that will be expanded in future editions. Exercises,
+worked examples, and backmatter (glossary, further reading) have not yet been
+written.
+\end{gomdraftnotice}
 
 This is a book about \emph{doing}. Volumes 0--IV developed the theory of motion: from
 differential geometry through nonlinear control, biomechanics, and motor control. This
