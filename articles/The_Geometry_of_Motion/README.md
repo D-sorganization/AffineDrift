@@ -1,24 +1,32 @@
-# The Geometry of Motion Manuscripts
+# The Geometry of Motion
 
-## Purpose
+Canonical LaTeX manuscript source for the six-volume textbook series *The Geometry of Motion*.
 
-Canonical LaTeX manuscript source for the multi-volume textbook series "The Geometry of Motion" (GoM).
+## Volumes
+
+| Volume | Title | Chapters |
+|--------|-------|----------|
+| **0** | Mathematical Foundations | Linear algebra through Lagrangian mechanics and machine learning |
+| **I** | Control Theory | Variational analysis, superposition, contraction, optimal control, duality |
+| **II** | Trajectory and Motor Control | Orbital stability, underactuation, trajectory optimization, stochastic control |
+| **III** | Biomechanics | Musculoskeletal modeling, muscle models, inverse problems, experimental methods |
+| **IV** | Neural Control | Degrees-of-freedom problem, neural architecture, internal models, motor learning |
+| **V** | Simulation | Engine comparison, model building, trajectory optimization, reinforcement learning |
 
 ## Directory Structure
 
 ```
 The_Geometry_of_Motion/
-├── Volume_0/             — Mathematical Primer (LaTeX source)
-├── Volume_I/             — Core mechanics (LaTeX source)
-│   └── chapters/         — Individual chapter .tex files (canonical)
-├── Volume_II/            — Advanced topics (LaTeX source)
-├── quarto/               — Quarto/website mirror of chapter content
-│   ├── index.qmd         — Book index page
-│   ├── ch01_foundations.qmd ... ch08_applications.qmd
-│   └── vol0_*.qmd        — Volume 0 chapters
+├── Volume_0/               — Mathematical Foundations (LaTeX source)
+├── Volume_I/               — Control Theory (LaTeX source)
+├── Volume_II/              — Trajectory and Motor Control (LaTeX source)
+├── Volume_III/             — Biomechanics (LaTeX source)
+├── Volume_IV/              — Neural Control (LaTeX source)
+├── Volume_V/               — Simulation (LaTeX source)
+├── quarto/                 — Website mirror (Quarto .qmd files)
 ├── geometry_of_motion.bib  — Shared bibliography
 ├── geometry_of_motion.sty  — Shared LaTeX style
-└── compile_series.bat    — Build script for full series
+└── compile_series.bat      — Build script for full series
 ```
 
 ## LaTeX vs. Quarto: Two Formats
