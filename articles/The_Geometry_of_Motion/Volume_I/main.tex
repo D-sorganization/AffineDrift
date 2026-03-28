@@ -299,6 +299,7 @@ A word on notation: we are deliberately explicit. Every matrix dimension, every 
 \include{chapters/ch01_foundations}
 \include{chapters/ch02_variational}
 \include{chapters/ch03_superposition}
+\include{chapters/ch03b_induced_acceleration_biomechanics}
 \include{chapters/ch04_contraction}
 \include{chapters/ch05_optimal_control}
 \include{chapters/ch06_duality}
@@ -621,42 +622,4 @@ trajectory optimization and model predictive control where linear solves dominat
 
 \begin{example}{Python Example: Sparse Solve with SciPy}{app-sparse-solve}
 \begin{lstlisting}[language=Python]
-import numpy as np
-import scipy.sparse as sp
-import scipy.sparse.linalg as spla
-
-n = 2000
-A = sp.diags([2*np.ones(n), -np.ones(n-1), -np.ones(n-1)], [0, -1, 1], format="csc")
-b = np.ones(n)
-x = spla.spsolve(A, b)
-\end{lstlisting}
-\end{example}
-
-\section{LMI Fundamentals}
-
-Linear matrix inequalities encode convex constraints such as Lyapunov stability:
-\[
-\mat{P}\succ 0,\qquad \mat{A}^T\mat{P}+\mat{P}\mat{A}\prec 0.
-\]
-Controller synthesis and contraction metric search can be cast as semidefinite programs.
-In practice, this is solved with CVX-family tools. A minimal Python workflow uses \texttt{cvxpy}.
-
-\begin{example}{Python Example: Lyapunov LMI in cvxpy}{app-lmi-cvxpy}
-\begin{lstlisting}[language=Python]
-import cvxpy as cp
-import numpy as np
-
-A = np.array([[0.0, 1.0], [-2.0, -0.4]])
-P = cp.Variable((2, 2), PSD=True)
-constraints = [A.T @ P + P @ A << -1e-3 * np.eye(2), P >> 1e-3 * np.eye(2)]
-problem = cp.Problem(cp.Minimize(cp.trace(P)), constraints)
-problem.solve(solver=cp.SCS)
-\end{lstlisting}
-\end{example}
-
-
-%% ---------- Bibliography ----------
-\bibliographystyle{plain}
-\bibliography{../geometry_of_motion}
-
-\end{document}
+import nu

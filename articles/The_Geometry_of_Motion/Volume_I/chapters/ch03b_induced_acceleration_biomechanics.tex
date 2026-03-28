@@ -1,0 +1,221 @@
+%% ==========================================================================
+%%  Chapter 3b: Induced Acceleration Analysis — Superposition in Biomechanics
+%%  Placed in Volume I after ch03_superposition
+%% ==========================================================================
+\chapter{Induced Acceleration Analysis: Superposition in the Biomechanics Literature}
+\label{ch:iaa_biomechanics}
+
+\begin{laymansbox}{A Parallel Discovery}{iaa_parallel}
+The superposition principle developed in the preceding chapter---that forces map linearly
+to accelerations at each frozen instant via the inverse mass matrix---was independently
+developed in the biomechanics community under the name \textbf{induced acceleration analysis}.
+This chapter traces that parallel development, examines the key results, and establishes
+the formal equivalence between the two frameworks. The story illustrates how the same
+mathematical structure, when encountered by different research communities addressing
+different questions, can lead to complementary insights that enrich both fields.
+\end{laymansbox}
+
+%% --------------------------------------------------------------------------
+\section{Historical Context and Motivation}
+\label{sec:iaa_history}
+
+The study of human movement has long grappled with a fundamental attribution problem: given that many muscles act simultaneously on a mechanically coupled kinematic chain, how does one determine the contribution of each muscle to the observed motion? Inverse dynamics can determine the \emph{net} joint torques required to produce observed accelerations, but it cannot decompose those torques into individual muscle contributions, nor can it determine the causal relationship between a torque at one joint and the acceleration at another joint.
+
+\citet{ZajacGordon1989} addressed this gap in a seminal review that established the theoretical basis for induced acceleration analysis in multi-articular movement. Their central observation was that in a multi-joint system, a muscle force produces torques at the joints it crosses, but through the dynamic coupling inherent in the equations of motion, these torques induce accelerations at \emph{every} joint in the chain. Moreover, the induced accelerations depend not only on the muscle's torque, but on the entire system's mass matrix $\bm{M}(\bm{q})$ and its inverse---precisely the quantities that encode the inertial coupling between segments.
+
+This observation motivated a research program spanning more than three decades, applying induced acceleration analysis to walking \citep{Zajac2002, Zajac2003, Neptune2001, Kepple1997}, clinical gait pathology \citep{RileyKerrigan1999, Silverman2014}, throwing \citep{Hirashima2007control, Hirashima2008kinetic, HirashimaOhtsuki2008}, cycling \citep{Schutte1993}, sit-to-stand transfers \citep{Caruthers2016}, and postural control \citep{Challis2011}.
+
+%% --------------------------------------------------------------------------
+\section{The Formal Framework}
+\label{sec:iaa_formal}
+
+\subsection{Equations of Motion and the Forward Problem}
+
+Consider a mechanical system with $n$ generalized coordinates $\bm{q} \in \mathbb{R}^n$. The equations of motion take the standard form:
+
+\begin{equation}
+\bm{M}(\bm{q}) \ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{\tau}
+\label{eq:ch3b:eom}
+\end{equation}
+
+where $\bm{M}(\bm{q}) \succ 0$ is the mass (inertia) matrix, $\bm{C}(\bm{q}, \dot{\bm{q}})\dot{\bm{q}}$ collects Coriolis and centrifugal terms, $\bm{g}(\bm{q})$ is the gravity vector, and $\bm{\tau}$ is the vector of generalized forces (joint torques from muscle activity, external forces, etc.).
+
+Solving for accelerations:
+
+\begin{equation}
+\ddot{\bm{q}} = \bm{M}^{-1}(\bm{q}) \left[ \bm{\tau} - \bm{C}(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} - \bm{g}(\bm{q}) \right]
+\label{eq:ch3b:forward}
+\end{equation}
+
+In the biomechanics literature, the convention is to move the velocity-dependent and gravity terms to the right side as positive contributions:
+
+\begin{equation}
+\ddot{\bm{q}} = \bm{M}^{-1}(\bm{q}) \left[ \bm{\tau}_{\text{muscle}} + \bm{V}(\bm{q}, \dot{\bm{q}}) + \bm{g}(\bm{q}) \right]
+\label{eq:ch3b:biomech_convention}
+\end{equation}
+
+where $\bm{V}(\bm{q}, \dot{\bm{q}}) = -\bm{C}(\bm{q}, \dot{\bm{q}})\dot{\bm{q}}$ collects the velocity-dependent torques (note the sign convention difference) and $\bm{g}(\bm{q})$ now represents the gravitational contribution with appropriate sign.
+
+\subsection{Induced Acceleration Decomposition}
+
+The core operation of induced acceleration analysis is the decomposition of the total acceleration into contributions from individual force sources:
+
+\begin{equation}
+\ddot{\bm{q}} = \underbrace{\sum_{k=1}^{m} \bm{M}^{-1}(\bm{q}) \bm{\tau}_k}_{\text{muscle-induced}} + \underbrace{\bm{M}^{-1}(\bm{q}) \bm{V}(\bm{q}, \dot{\bm{q}})}_{\text{velocity-induced}} + \underbrace{\bm{M}^{-1}(\bm{q}) \bm{g}(\bm{q})}_{\text{gravity-induced}}
+\label{eq:ch3b:iaa_decomp}
+\end{equation}
+
+where $\bm{\tau}_k$ is the torque vector produced by the $k$-th muscle (or the $k$-th generalized force source). Each term $\bm{M}^{-1}(\bm{q}) \bm{\tau}_k$ is the acceleration \emph{induced} by muscle $k$ acting alone at the current instant.
+
+\begin{theorem}{Equivalence with Control-Affine Superposition}{thm:iaa_equivalence}
+
+The induced acceleration decomposition (Equation~\ref{eq:ch3b:iaa_decomp}) is formally equivalent to the input superposition property of control-affine systems (Chapter~\ref{ch:superposition}, Section~\ref{sec:ch3:control-affine}).
+
+In the control-affine form $\dot{\bm{x}} = \bm{f}(\bm{x}) + \bm{G}(\bm{x})\bm{u}$:
+
+\begin{itemize}
+\item The drift $\bm{f}(\bm{x})$ corresponds to $\bm{M}^{-1}(\bm{q})[\bm{V}(\bm{q}, \dot{\bm{q}}) + \bm{g}(\bm{q})]$ (velocity-induced plus gravity-induced accelerations).
+\item The control columns $\bm{G}(\bm{x}) = [\bm{g}_1(\bm{x}), \ldots, \bm{g}_m(\bm{x})]$ correspond to $\bm{M}^{-1}(\bm{q}) \bm{B}$, where $\bm{B}$ maps control inputs to generalized forces.
+\item The muscle-induced acceleration $\bm{M}^{-1}(\bm{q}) \bm{\tau}_k$ equals $\bm{g}_k(\bm{x}) u_k$, the contribution of the $k$-th control input.
+\end{itemize}
+
+Both frameworks exploit the fact that $\bm{M}^{-1}(\bm{q})$ is a \emph{linear} operator: the mapping from forces to accelerations is linear at each frozen state, even though the system dynamics are globally nonlinear.
+
+\end{theorem}
+
+\begin{proof}
+Starting from the manipulator equation (Equation~\ref{eq:ch3:manipulator} in Chapter~\ref{ch:superposition}), solve for $\ddot{\bm{q}}$ by premultiplying by $\bm{M}^{-1}(\bm{q})$. This operation is linear in the right-hand side. Writing $\bm{\tau} = \sum_k \bm{\tau}_k$ and distributing $\bm{M}^{-1}$ over the sum yields Equation~\ref{eq:ch3b:iaa_decomp} directly. The state-space embedding into control-affine form follows by defining $\bm{x} = (\bm{q}, \dot{\bm{q}})$ and identifying the drift and control terms as in Section~\ref{sec:ch3:control-affine}.
+\end{proof}
+
+%% --------------------------------------------------------------------------
+\section{Instantaneous Effects, Cumulative Effects, and the Drift Field}
+\label{sec:iaa_inst_cum}
+
+One of the most significant conceptual contributions of the induced acceleration literature is the distinction between \textbf{instantaneous effects} and \textbf{cumulative effects}, developed most clearly by \citet{Hirashima2008kinetic} and \citet{Hirashima2011application}.
+
+\subsection{Instantaneous Effects}
+
+The muscle-induced acceleration $\bm{M}^{-1}(\bm{q}(t)) \bm{\tau}_k(t)$ is an \emph{instantaneous} quantity: it depends only on the current muscle force and the current configuration. If the muscle force were removed at time $t$, this contribution to the acceleration would vanish immediately. Instantaneous effects include:
+
+\begin{itemize}
+\item \textbf{Direct effects}: A joint torque accelerating its own joint (diagonal elements of $\bm{M}^{-1}$).
+\item \textbf{Remote effects}: A joint torque accelerating distant joints through dynamic coupling (off-diagonal elements of $\bm{M}^{-1}$).
+\end{itemize}
+
+\subsection{Cumulative Effects}
+
+The velocity-dependent acceleration $\bm{M}^{-1}(\bm{q}(t)) \bm{V}(\bm{q}(t), \dot{\bm{q}}(t))$ depends on the current angular velocities $\dot{\bm{q}}(t)$, which are the time-integrated result of all previous forces. This term therefore reflects the \emph{cumulative} consequence of the entire force history up to time $t$.
+
+\subsection{Mapping to the Drift-Control Decomposition}
+
+The correspondence is exact:
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{IAA Terminology} & \textbf{Control-Affine Terminology} \\
+\midrule
+Instantaneous muscle-induced acceleration & Control input $\bm{G}(\bm{x})\bm{u}$ \\
+Cumulative velocity-dependent acceleration & Drift field $\bm{f}(\bm{x})$ (velocity component) \\
+Gravity-induced acceleration & Drift field $\bm{f}(\bm{x})$ (gravity component) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The cumulative effect is the drift field: it is what the system would do if all control inputs were set to zero at the current instant. The instantaneous effects are the control inputs: they are what the muscles add on top of the drift at this instant.
+
+This mapping has practical significance. When the biomechanics community reports that velocity-dependent torques dominate the late phases of fast movements (throwing, kicking, swinging), they are observing the same phenomenon that control theory describes as ``drift dominance'': in fast movements, the drift field becomes large relative to the control authority, and the system is effectively on autopilot during the terminal phase.
+
+%% --------------------------------------------------------------------------
+\section{Applications of Induced Acceleration Analysis}
+\label{sec:iaa_applications}
+
+\subsection{Walking: The Zajac--Neptune Framework}
+
+The most comprehensive application of induced acceleration analysis has been to human walking. \citet{Zajac2002} (Part~I) and \citet{Zajac2003} (Part~II) provided a two-part review that established the methodological framework and derived coordination principles from dynamical simulations.
+
+Key findings include:
+
+\begin{enumerate}
+\item \textbf{Inverse dynamics is necessary but not sufficient.} Inverse dynamics computes the net joint torques required to produce observed motion, but cannot determine the causal contributions of individual muscles to segment accelerations. Induced acceleration analysis, applied to forward dynamics simulations, provides the missing causal information.
+
+\item \textbf{Energy flow between segments cannot be inferred from joint powers alone.} \citet{Zajac2002} demonstrated that the commonly used method of computing joint power ($P = \tau \cdot \dot{\theta}$) and segmental angular velocities does not correctly determine energy flow between segments, because constraint forces redistribute energy in complex ways. Only induced acceleration and power analysis, which tracks each muscle's contribution to each segment's energy, provides a correct account.
+
+\item \textbf{Biarticular muscles have complex, configuration-dependent roles.} Muscles crossing two joints (such as the gastrocnemius or rectus femoris) can have different---sometimes opposite---effects on the two joints they cross, and these effects change with posture.
+\end{enumerate}
+
+\citet{Neptune2001} applied this framework to the ankle plantar flexors during walking. Using a forward dynamics simulation driven by 15 individual muscle actuators, they decomposed the contributions of the soleus and gastrocnemius to trunk support (vertical center-of-mass acceleration), forward progression (horizontal center-of-mass acceleration), and swing initiation (mechanical energy delivered to the leg in pre-swing). Their results demonstrated that the soleus delivers its energy primarily to the trunk (providing support and forward progression), while the gastrocnemius delivers its energy primarily to the leg (initiating swing). This functional dissociation between two muscles at the same joint---invisible to inverse dynamics---exemplifies the power of the induced acceleration framework and the principle of superposition applied to individual force sources.
+
+\subsection{Overarm Throwing: The Hirashima Framework}
+
+\citet{Hirashima2007control} and \citet{Hirashima2008kinetic} extended induced acceleration analysis to three-dimensional, 13-degree-of-freedom models of baseball pitching. Their work introduced several methodological advances:
+
+\begin{enumerate}
+\item \textbf{Full 3D induced acceleration analysis.} By writing the equations of motion in generalized coordinates (joint angles) rather than segment coordinates, and premultiplying by the full $13 \times 13$ inverse mass matrix, \citet{Hirashima2008kinetic} computed the acceleration induced by each of the 13 generalized forces, plus the velocity-dependent torque, plus gravity, on each of the 13 degrees of freedom.
+
+\item \textbf{Decomposition of velocity-dependent torques.} \citet{Hirashima2008kinetic} further decomposed the velocity-dependent torque into contributions from the angular velocity of each individual segment, tracing the kinematic source of each cumulative effect. This allowed them to determine which segment's motion was the ``origin'' of the velocity-dependent torque acting at distant joints.
+
+\item \textbf{Correction of erroneous methods in the literature.} \citet{HirashimaOhtsuki2008} demonstrated that previous studies had incorrectly analyzed multi-joint dynamics by treating each segment's equation of motion independently (dividing by the diagonal inertia term) rather than solving the coupled system through the full inverse mass matrix. This error led to incorrect attributions of muscle function and is equivalent, in our framework, to neglecting the off-diagonal elements of $\bm{M}^{-1}$---that is, ignoring the dynamic coupling that is the very phenomenon induced acceleration analysis is designed to capture.
+\end{enumerate}
+
+The key finding from the throwing studies was that the kinetic chain operates through a conversion of instantaneous muscle effects (at proximal joints, in the early phase) into cumulative velocity-dependent effects (at distal joints, in the late phase). The proximal muscles create angular velocities that persist in the system as velocity-dependent torques, which then accelerate the distal joints without requiring large distal muscle forces. This is the kinetic chain reinterpreted through the lens of superposition: proximal forces create the drift field that drives the distal motion.
+
+\subsection{Postural Control and the Induced Acceleration Index}
+
+\citet{Challis2011} introduced the \textbf{induced acceleration index} (IAI), a dimensionless quantity that captures the configuration-dependent coupling potential between joints:
+
+\begin{equation}
+\text{IAI}_{j \to k} = \left| \bm{M}_{kk}^{-1} \bm{M}_{kj} \right|
+\end{equation}
+
+For a two-joint model of quiet standing (ankle and hip), the IAI revealed that the ankle has over 12 times the ability to accelerate the hip compared to the reverse. This asymmetry depends only on the system's inertial properties and configuration, not on the forces applied, and provides a structural explanation for the dominance of the ankle strategy in postural control.
+
+The IAI is a scalar summary of the off-diagonal structure of $\bm{M}^{-1}(\bm{q})$. In terms of the control-affine framework, it quantifies how the control authority at one joint propagates to other joints through the dynamic coupling. The IAI is useful for any application where the question is: ``given the current configuration, how effective is a torque at joint $A$ at producing acceleration at joint $B$?''
+
+\subsection{Clinical Applications}
+
+Induced acceleration analysis has been applied to clinical gait analysis, where it provides individualized diagnostic information about the sources of movement dysfunction:
+
+\begin{itemize}
+\item \textbf{Stiff-legged gait:} \citet{RileyKerrigan1999} showed that reduced knee flexion in swing-phase gait after stroke can result from impairments at the hip, knee, or ankle, with the specific cause varying between patients. Induced acceleration analysis, by decomposing knee acceleration into contributions from each joint's torque, identified the patient-specific impairment pattern and informed individualized rehabilitation protocols.
+
+\item \textbf{Sit-to-stand transfers:} \citet{Caruthers2016} used a 46-degree-of-freedom, 194-actuator musculoskeletal model to show that the quadriceps oppose forward center-of-mass acceleration during sit-to-stand, despite generating large forces. The gluteus maximus and soleus were the primary contributors to lifting and advancing the center of mass. This counterintuitive finding illustrates the importance of accounting for dynamic coupling ($\bm{M}^{-1}$) rather than reasoning from anatomy alone.
+
+\item \textbf{Electrical stimulation cycling:} \citet{Schutte1993} used a musculoskeletal model to analyze electrically stimulated leg cycling for spinal cord injury rehabilitation, identifying how seat configuration and stimulation timing affect the ability of stimulated muscles to produce the desired pedaling motion.
+\end{itemize}
+
+%% --------------------------------------------------------------------------
+\section{Methodological Considerations}
+\label{sec:iaa_methods}
+
+\subsection{Ground Contact and Constraint Forces}
+
+In movements involving ground contact (walking, standing, the golf stance), the ground reaction force must be included in the induced acceleration analysis. Because the ground reaction force is itself a constraint force that depends on all other forces in the system, decomposing it into individual muscle contributions requires special treatment. \citet{Neptune2001} addressed this by computing each muscle's contribution to the ground reaction force through a perturbation approach: remove one muscle force, re-integrate the equations of motion over one time step, and compare the resulting ground reaction force to the original.
+
+\citet{Silverman2014} reviewed the various computational approaches and their assumptions. The choice of ground contact model (rigid constraint, viscoelastic elements, rolling surface) affects the decomposition and must be reported and validated.
+
+\subsection{Model Dependence}
+
+\citet{Hirashima2008kinetic} noted that the results of induced acceleration analysis can depend on the number of segments and degrees of freedom in the model. Adding trunk motion or lower extremity dynamics can change the interpretation of upper extremity muscle function. The induced acceleration framework is exact given the model, but the model is always an approximation of the biological system. Validation against experimental kinematics (by integrating the induced accelerations forward and comparing to observed motion) is an essential step, as demonstrated by \citet{Hirashima2008kinetic} and \citet{RileyKerrigan1999}.
+
+%% --------------------------------------------------------------------------
+\section{Synthesis: Two Communities, One Mathematical Structure}
+\label{sec:iaa_synthesis}
+
+The induced acceleration framework in biomechanics and the control-affine decomposition in nonlinear control theory are parallel formalizations of the same physical fact: forces map linearly to accelerations at each instant through the inverse mass matrix. The biomechanics community developed induced acceleration analysis to answer the question ``what does each muscle do?'', while the control theory community developed the control-affine decomposition to answer the question ``what can the controller influence?'' The answers are mathematically identical.
+
+Recognizing this equivalence has several benefits:
+
+\begin{enumerate}
+\item \textbf{Terminology bridge.} Researchers in biomechanics can draw on the extensive control-theoretic literature on controllability, observability, and optimal control for affine systems. Researchers in control theory can draw on the rich experimental database of induced acceleration results for biological systems.
+
+\item \textbf{Conceptual unification.} The drift-control distinction in control theory provides a natural framework for organizing the biomechanical findings: instantaneous muscle effects are control inputs; cumulative velocity-dependent effects are the drift field; drift dominance in fast movements is a statement about the relative magnitudes of these two contributions.
+
+\item \textbf{Methodological rigor.} The control-affine framework's emphasis on the \emph{instantaneous} nature of superposition (Chapter~\ref{ch:superposition}) provides a clear warning against the trajectory-superposition errors identified by \citet{HirashimaOhtsuki2008} in the biomechanics literature.
+
+\item \textbf{Broader applicability.} The same mathematical structure applies to any multi-body mechanical system: robotic manipulators, prosthetic limbs, sports equipment, and any system governed by Lagrangian or Newtonian mechanics.
+\end{enumerate}
+
+\begin{warningbox}
+\textbf{Superposition is instantaneous, not global.} Induced acceleration analysis decomposes the \emph{acceleration at one instant} into individual contributions. It does not decompose the \emph{trajectory over time} into individual contributions, because the system dynamics are nonlinear. The cumulative effect (drift field) at time $t$ depends on the entire history of forces up to $t$, and there is no general way to attribute portions of the trajectory to individual muscles over extended time intervals.
+\end{warningbox}
