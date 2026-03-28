@@ -16,8 +16,6 @@ The answer is: it depends on how much damping you have and at which joints. Too 
 ## The Hidden Friction in Your Body
 
 
-
-
 When you flex your arm, you don't just move bone. You move synovial fluid, squeeze cartilage, deform tendons, compress muscle fibers, and shift skin and subcutaneous fat. Each of these structures resists motion. None of this resistance is dramatic — the shoulder joint doesn't *feel* stuck — but it's omnipresent, and at high speeds (like the downswing), it matters enormously.
 
 ::: {.callout-note}
@@ -42,8 +40,7 @@ The coefficient $c_{\text{fluid}}$ depends on joint geometry (larger joints have
 ### Muscle Viscosity and the Hill Model
 
 
-
-Recall from Chapter~\ref{ch:muscle-force-generation} that the Hill muscle model \citep{Hill1938} consists of an active contractile element (CE), a parallel elastic element (PE), and a series elastic element (SE). Crucially, the Hill model also includes a *dashpot* — a viscous element — in parallel with the contractile element. This dashpot represents the internal friction of muscle fiber sliding.
+Recall from Chapter @ch:muscle-force-generation that the Hill muscle model [@Hill1938] consists of an active contractile element (CE), a parallel elastic element (PE), and a series elastic element (SE). Crucially, the Hill model also includes a *dashpot* — a viscous element — in parallel with the contractile element. This dashpot represents the internal friction of muscle fiber sliding.
 
 The force-velocity relationship in muscle is fundamentally a damping law:
 $$
@@ -54,7 +51,6 @@ where $v$ is contraction velocity and $v_{\max}$ is maximum shortening velocity.
 When the downswing accelerates, muscles are lengthening (eccentric contraction) and simultaneously providing force. The internal friction of this process is substantial. A rough estimate: $c_m \approx 0.1$ to $0.3$ N$\cdot$s/m for a single muscle belly, which translates to a torque damping of $c_i \approx 0.02$ to $0.05$ Nm$\cdot$s/rad at a joint when all muscles are considered.
 
 ### Tendon Viscoelasticity and Hysteresis
-
 
 
 Tendons are not perfectly elastic springs. When you stretch and release a tendon, the energy you get back is slightly less than the energy you put in. This loss is captured in a *hysteresis loop* in the stress-strain curve.
@@ -70,7 +66,6 @@ where the magnitude-proportional term captures the energy-loss-per-cycle behavio
 ### Ligament Damping and Cartilage Deformation
 
 
-
 Ligaments stabilize joints but are not perfectly inextensible. When a joint moves quickly, ligaments resist with viscous forces. Articular cartilage deforms under load, and this deformation is partly inelastic — it absorbs and dissipates energy.
 
 These sources contribute smaller damping torques individually, but collectively they matter. Cartilage damping is especially important during impact, when large forces are applied suddenly.
@@ -78,25 +73,21 @@ These sources contribute smaller damping torques individually, but collectively 
 ### Soft Tissue Wobble Damping
 
 
-From Chapter~\ref{ch:soft_tissue_pliable}, we discussed the wobble of forearm soft tissue as the arm accelerates. This wobble involves the acceleration of skin, fat, and fascia relative to the skeleton, and internal friction within these tissues dissipates the kinetic energy of wobble. This damping is configuration-dependent and is often neglected in simple models, but becomes significant in high-acceleration maneuvers.
+From Chapter @ch:soft_tissue_pliable, we discussed the wobble of forearm soft tissue as the arm accelerates. This wobble involves the acceleration of skin, fat, and fascia relative to the skeleton, and internal friction within these tissues dissipates the kinetic energy of wobble. This damping is configuration-dependent and is often neglected in simple models, but becomes significant in high-acceleration maneuvers.
 
 ### Damping by Joint
 
 The table below provides typical damping coefficients for major joints involved in the golf swing:
 
 
-\begin{tabular}{lccc}
-\hline
-**Joint** & **Typical Range (Nm$\cdot$s/rad)** & **Primary Source** & **Notes** 
-\hline
-Shoulder (glenohumeral) & 0.5--2.0 & Synovial fluid + muscle & Large joint, high mobility 
-Shoulder (scapulothoracic) & 0.1--0.3 & Soft tissue friction & Articulation through muscle 
-Elbow & 0.15--0.5 & Synovial fluid + tendons & Tighter joint than shoulder 
-Wrist & 0.05--0.15 & Synovial fluid + ligaments & Small joint, complex kinematics 
-Trunk rotation & 2.0--5.0 & Intervertebral disc + muscle & Large muscles, distributed 
-Grip (fingers on club) & 0.02--0.1 & Skin friction + muscle & Highly variable with grip force 
-\hline
-\end{tabular}
+| **Joint** | **Typical Range (Nm$\cdot$s/rad)** | **Primary Source** | **Notes** 
+Shoulder (glenohumeral) | 0.5--2.0 | Synovial fluid + muscle | Large joint, high mobility 
+Shoulder (scapulothoracic) | 0.1--0.3 | Soft tissue friction | Articulation through muscle 
+Elbow | 0.15--0.5 | Synovial fluid + tendons | Tighter joint than shoulder 
+Wrist | 0.05--0.15 | Synovial fluid + ligaments | Small joint, complex kinematics 
+Trunk rotation | 2.0--5.0 | Intervertebral disc + muscle | Large muscles, distributed 
+Grip (fingers on club) | 0.02--0.1 | Skin friction + muscle | Highly variable with grip force |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 
 
 These values are approximate and vary widely based on age, fitness, flexibility, and injury history. A person with arthritis might have 2--3 times higher damping in the affected joint.
@@ -104,8 +95,7 @@ These values are approximate and vary widely based on age, fitness, flexibility,
 ## Adding Damping to the Equations of Motion
 
 
-
-Recall from Chapter~\ref{ch:parallel_mechanisms} that the unforced kinematic chain is governed by:
+Recall from Chapter @ch:parallel_mechanisms that the unforced kinematic chain is governed by:
 $$
 \massmat(\bm{q})\ddot{\bm{q}} + \cormat(\bm{q},\dot{\bm{q}})\dot{\bm{q}} + \gravvec(\bm{q}) = \bm{B}(\bm{q})\control + \bm{J}_c^T(\bm{q})\constraintforce
 $$
@@ -121,7 +111,6 @@ $$
 where $\bm{D}(\bm{q})$ is the *damping matrix*, typically diagonal or nearly diagonal, with entries $D_{ii} \geq 0$.
 
 :::
-
 
 
 The damping matrix $\bm{D}(\bm{q})$ has entries that represent the damping torque at joint $i$ per unit angular velocity. For a joint with pure viscous damping from synovial fluid and muscle, $\bm{D}$ is constant (independent of $\bm{q}$). But in reality, $\bm{D}$ depends on configuration:
@@ -165,20 +154,19 @@ For most of this chapter, we will use linear viscous damping because:
 ### Rewriting in Control-Affine Form
 
 
-In the control-affine setting, recall that the \ztcf is:
+In the control-affine setting, recall that the ZTCF is:
 $$
-\dot{\state} = f_0(\state) + \sum_{i=1}^m g_i(\state) u_i = f_0(\state) + G(\state)\control
+\dot{\mathbf{x}} = f_0(\mathbf{x}) + \sum_{i=1}^m g_i(\mathbf{x}) u_i = f_0(\mathbf{x}) + G(\mathbf{x})\control
 $$
 
-The undamped drift field is $f_0(\state)$. When we add damping, we modify the drift:
+The undamped drift field is $f_0(\mathbf{x})$. When we add damping, we modify the drift:
 $$
-\dot{\state} = f_0(\state) - \bm{D}_{\text{eff}}(\state)\dot{\bm{q}} + G(\state)\control
+\dot{\mathbf{x}} = f_0(\mathbf{x}) - \bm{D}_{\text{eff}}(\mathbf{x})\dot{\bm{q}} + G(\mathbf{x})\control
 $$
 
 The "effective damping" $\bm{D}_{\text{eff}}$ includes not just $\bm{D}(\bm{q})$ but also the implicit damping from the Coriolis terms, because changing velocity changes the Coriolis forces. This is a subtle point: damping is not simply additive; it modifies the entire vector field structure.
 
 ## How Damping Propagates Through a Chain
-
 
 
 This is the key insight. Damping at one joint does not affect only that joint. It propagates through the entire chain via the mass matrix coupling, Coriolis coupling, and constraint coupling.
@@ -192,7 +180,6 @@ $$
 This reduces the rate of change of $\dot{q}_i$ by an amount proportional to $D_{ii}$. No surprise here.
 
 ### Coupling Through the Mass Matrix
-
 
 
 Here is where it gets interesting. Rearranging the damped equation of motion:
@@ -252,7 +239,6 @@ In a serial kinematic chain, damping at proximal (root-side) joints dissipates e
 :::
 
 
-
 Why? Because the proximal joint has higher angular velocity (relative to body-fixed rates) and moves a larger inertia. The power dissipated by damping is $P_d = c \omega^2$. In a maximally extended arm, the shoulder rotates at $\sim 7000^\circ$/s (122 rad/s), whereas the wrist rotates at $\sim 3000^\circ$/s relative to the body. Even if both have the same damping coefficient $c$, the shoulder dissipates $\sim 17 \times$ more power.
 
 ### Constraint Coupling in Parallel Mechanisms
@@ -273,7 +259,6 @@ Now, if the left arm has damping and the right does not, the left arm "resists" 
 Concretely, if left arm damping causes the left hand to lag behind, the constraint forces increase to pull it back, and this pulling force increases the effective damping on the right hand. The two arms are no longer independent; they are coupled through the constraint mechanism.
 
 ## The Damping Paradox
-
 
 
 Here is the apparent paradox: damping dissipates energy, which is bad for distance. But damping also stabilizes motion, which is good for control. How can we reconcile this?
@@ -311,12 +296,11 @@ During the golf swing, underdamping of the wrist allows it to cock and uncock in
 ### Active Damping and Co-Contraction
 
 
-
 Your nervous system can increase damping without increasing stiffness. This is done by co-contracting antagonist muscles. When the biceps and triceps both contract simultaneously, they stiffen the joint (increase stiffness) but also increase the internal friction (increase damping). This is called *active damping* or *active impedance*.
 
 Why would the nervous system do this? For stability. During the transition from backswing to downswing, when the direction of motion reverses, damping helps prevent overshoot and wild oscillations. The brain increases co-contraction during this phase, sacrificing a bit of energy loss for a more controlled switch.
 
-This connects to impedance control \citep{hogan1985impedance} from Chapter~\ref{ch:passive_distributed_control}. Recall that you can write:
+This connects to impedance control [@hogan1985impedance] from Chapter @ch:passive_distributed_control. Recall that you can write:
 $$
 \bm{f} = \bm{K}(\bm{q} - \bm{q}_d) + \bm{D}(\dot{\bm{q}} - \dot{\bm{q}}_d)
 $$
@@ -333,8 +317,6 @@ A tighter grip (\to) higher damping (\to) more energy loss but better control. A
 The empirical data suggests that golfers find an intermediate grip pressure: tight enough to avoid the club slipping (which would be disastrous), but loose enough to allow some vibration that aids energy transfer. This is an implicit optimum balancing control and efficiency.
 
 ## Friction Models for Joints
-
-
 
 
 While damping typically refers to viscous resistance (proportional to velocity), *friction* typically refers to a dry contact force (direction-dependent, velocity-independent at leading order). The difference is subtle in practice: all joint friction has both viscous and dry components.
@@ -359,7 +341,6 @@ If static friction is very high, the joint becomes "sticky" — it resists initi
 Most human joints have $\mu_s - \mu_k$ that is small enough that the stiction effect is minimal. The transition from backswing to downswing is not a sudden "sticking" event; it's nearly continuous.
 
 ### The Stribeck Effect
-
 
 
 A more realistic friction model is the Stribeck effect, which captures the observation that friction decreases slightly with increasing velocity at very low speeds, before flattening out at higher speeds:
@@ -393,7 +374,6 @@ where $z$ represents an internal "bristle deflection" state. This model is accur
 ### Friction Criticality at the Transition
 
 
-
 The backswing-to-downswing transition is the moment when friction is most critical. At this moment:
 - The shoulder, elbow, and wrist are all at peak stretch (maximum elastic energy in muscles and tendons).
 - Velocities reverse, causing stiction effects to activate.
@@ -407,7 +387,6 @@ Empirically, most golfers find that their most consistent, repeatable swings occ
 ## Energy Dissipation Budget
 
 
-
 Let's add up the numbers. A typical amateur golfer generates approximately:
 - Total muscle energy per swing: 300--400 J
 - Kinetic energy at clubhead impact: 120--150 J
@@ -418,22 +397,17 @@ Where does this energy go?
 ### Sources of Dissipation
 
 
-\begin{tabular}{lrr}
-\hline
-**Dissipation Source** & **Energy (J)** & **% of Total** 
-\hline
-Joint damping (all joints) & 40--60 & 13--15% 
-Tendon hysteresis & 20--30 & 6--8% 
-Muscle internal friction & 30--50 & 10--13% 
-Body segment soft tissue & 15--25 & 5--8% 
-Aerodynamic drag (arm/torso) & 10--15 & 3--5% 
-Ground deformation / contact friction & 5--15 & 2--5% 
-Grip/hand friction losses & 5--10 & 2--3% 
-Swing-to-impact transition inefficiency & 20--40 & 7--10% 
-\hline
-**Total dissipation** & **145--245** & **48--65%** 
-\hline
-\end{tabular}
+| **Dissipation Source** | **Energy (J)** | **% of Total** 
+Joint damping (all joints) | 40--60 | 13--15% 
+Tendon hysteresis | 20--30 | 6--8% 
+Muscle internal friction | 30--50 | 10--13% 
+Body segment soft tissue | 15--25 | 5--8% 
+Aerodynamic drag (arm/torso) | 10--15 | 3--5% 
+Ground deformation / contact friction | 5--15 | 2--5% 
+Grip/hand friction losses | 5--10 | 2--3% 
+Swing-to-impact transition inefficiency | 20--40 | 7--10% 
+**Total dissipation** | **145--245** | **48--65%** |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 
 
 Note: These are rough estimates based on biomechanical studies. The exact breakdown varies widely with individual swing mechanics, body composition, and equipment.
@@ -455,7 +429,6 @@ Key observations:
 - The swing-to-impact transition is a hidden source of loss. The kinetic energy of the arms and trunk must be redirected and partially transferred to the club. This is not 100% efficient. Good technique minimizes this loss; poor technique (e.g., casting the club early, losing lag) amplifies it.
 
 ## Implications for Swing Modeling
-
 
 
 Most biomechanical and golf models in the literature ignore joint damping. They solve the undamped equations of motion and use only muscle forces and gravity. How bad is this simplification?
@@ -500,7 +473,7 @@ However, in a poorly timed swing, damping effects can amplify, especially if the
 ::: {.callout-warning}
 ## Practical Guidelines for Modeling Damping
 
-- **If modeling the full swing (address to follow-through)**: Include a constant damping matrix with values from the table in Section~\ref{sec:sources_damping}. Use linear viscous damping; the added complexity of nonlinear friction is not justified by the accuracy gain for most purposes.
+- **If modeling the full swing (address to follow-through)**: Include a constant damping matrix with values from the table in Section @sec:sources_damping. Use linear viscous damping; the added complexity of nonlinear friction is not justified by the accuracy gain for most purposes.
 
 - **If modeling only the downswing or impact**: Damping becomes more important. Use configuration-dependent damping $\bm{D}(\bm{q})$ with higher coefficients when joints are flexed deeply.
 
@@ -515,8 +488,7 @@ However, in a poorly timed swing, damping effects can amplify, especially if the
 ## Damping in the Shaft
 
 
-
-Recall from Chapter~\ref{ch:flexible_shaft} that the shaft is a distributed elastic beam. In addition to stiffness, shafts have material damping — the internal friction of the composite material itself.
+Recall from Chapter @ch:flexible_shaft that the shaft is a distributed elastic beam. In addition to stiffness, shafts have material damping — the internal friction of the composite material itself.
 
 ### Material Damping
 
@@ -569,16 +541,14 @@ Modern drivers use relatively low-damping graphite shafts precisely because the 
 ## The Control-Affine Perspective on Damping
 
 
-
-
 In the control-affine framework, damping modifies the drift field. Recall:
 $$
-\dot{\state} = f_0(\state) + G(\state)\control
+\dot{\mathbf{x}} = f_0(\mathbf{x}) + G(\mathbf{x})\control
 $$
 
 When we add damping, the drift field becomes:
 $$
-f_{\text{damped}}(\state) = f_0(\state) - \bm{D}_{\text{eff}} \dot{\bm{q}}
+f_{\text{damped}}(\mathbf{x}) = f_0(\mathbf{x}) - \bm{D}_{\text{eff}} \dot{\bm{q}}
 $$
 
 The effective damping $\bm{D}_{\text{eff}}$ is not simply the sum of viscous and Coulomb components. It includes:
@@ -590,7 +560,7 @@ The effective damping $\bm{D}_{\text{eff}}$ is not simply the sum of viscous and
 ## Damping as Drift Modification
 The drift field represents the "natural" motion of the system under gravity and inertia, without any muscular control. When damping is added, the drift field is damped: the velocity naturally decays, and extreme accelerations are limited. This is why damping stabilizes the system.
 
-Equivalently, the control field $G(\state)$ must work against the damping to accelerate the joints. The control inputs must provide enough torque to overcome damping. This is one reason why the transition from backswing to downswing requires a sudden increase in muscular effort: the brain must overcome damping forces to reverse the direction of motion.
+Equivalently, the control field $G(\mathbf{x})$ must work against the damping to accelerate the joints. The control inputs must provide enough torque to overcome damping. This is one reason why the transition from backswing to downswing requires a sudden increase in muscular effort: the brain must overcome damping forces to reverse the direction of motion.
 :::
 
 ## Summary: The Damping Principle

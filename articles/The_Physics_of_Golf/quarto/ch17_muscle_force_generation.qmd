@@ -5,14 +5,11 @@ title: "Muscle Force Generation: The Biological Engine"
 ::: {.callout-note}
 ## Why Muscle Biology Matters for Your Swing
 
-You've been told to ``stay strong through impact'' or ``accelerate down the line.'' But here's what physics reveals: your muscles have built-in speed limitations. The faster they contract, the *less* force they can produce. This isn't a flaw—it's a fundamental law written into the molecular structure of muscle. When you swing at your maximum speed, your muscles are actually at their weakest. This is why the drift-to-control ratio explodes at impact. Understanding muscle biology doesn't just explain your limitations; it shows you where your swing is most vulnerable to loss of control.
+You've been told to "stay strong through impact" or "accelerate down the line." But here's what physics reveals: your muscles have built-in speed limitations. The faster they contract, the *less* force they can produce. This isn't a flaw—it's a fundamental law written into the molecular structure of muscle. When you swing at your maximum speed, your muscles are actually at their weakest. This is why the drift-to-control ratio explodes at impact. Understanding muscle biology doesn't just explain your limitations; it shows you where your swing is most vulnerable to loss of control.
 
 :::
 
 ## Muscle Architecture: What a Muscle Actually Is
-
-
-
 
 
 To understand how muscles generate the forces that drive the golf swing, we must zoom from the whole muscle down to its molecular machinery. Every muscle is a hierarchical structure, and force generation happens at every level.
@@ -22,18 +19,14 @@ To understand how muscles generate the forces that drive the golf swing, we must
 
 A muscle is organized in nested layers:
 
-\begin{tabular}{ll}
-\toprule
-Level & Scale 
-\midrule
-Muscle (whole) & cm scale 
-Fascicle (bundle) & mm scale 
-Muscle fiber (cell) & $10$--$100$ $\mu$m diameter 
-Myofibril (protein filaments) & $1$--$2$ $\mu$m diameter 
-Sarcomere (force unit) & $2$--$3$ $\mu$m length 
-Actin--myosin complex & nm scale 
-\bottomrule
-\end{tabular}
+| Level | Scale 
+Muscle (whole) | cm scale 
+Fascicle (bundle) | mm scale 
+Muscle fiber (cell) | $10$--$100$ $\mu$m diameter 
+Myofibril (protein filaments) | $1$--$2$ $\mu$m diameter 
+Sarcomere (force unit) | $2$--$3$ $\mu$m length 
+Actin--myosin complex | nm scale |
+| --- | --- | --- | --- | --- | --- | --- | --- |
 
 The *sarcomere* is the fundamental force-generating unit. All voluntary muscle force is produced by trillions of sarcomeres contracting in parallel.
 
@@ -42,28 +35,22 @@ The *sarcomere* is the fundamental force-generating unit. All voluntary muscle f
 At the molecular level, two protein filaments—actin and myosin—interlock and pull past each other. Myosin heads act like molecular motors, powered by ATP hydrolysis. When activated, each myosin head attaches to an actin site, rotates (pulling actin along), detaches, and resets. Millions of these heads firing in sequence create the continuous force we feel as muscle contraction. This is the actin-myosin cross-bridge mechanism, and it is pure chemistry converted to mechanical work.
 
 
-
-
-
 Not all muscle fibers are created equal. The human body contains three main fiber types:
 
 ::: {.callout-important}
 ## Muscle Fiber Types and Their Roles
 
-\begin{description}
+
 - Type I (slow-twitch, oxidative) Low contraction speed ($\sim 50$ ms to peak force), high fatigue resistance, moderate force production. Power primarily from aerobic metabolism. Used for endurance, posture, smooth sustained effort. About 40--50% of most muscles.
 
 - Type IIa (fast-twitch oxidative) Intermediate speed ($\sim 40$ ms), high force production, moderate fatigue resistance. Oxidative capacity good. The *most powerful* fiber type. Used for athletic power movements. About 20--30% of muscles.
 
 - Type IIx (fast-twitch glycolytic) Fastest contraction ($\sim 20$ ms), highest force production, rapid fatigue. Power from anaerobic glycolysis. Most powerful for brief bursts. About 5--15% of untrained muscles (training can increase this).
-\end{description}
+
 
 Elite golfers have higher proportions of Type II fibers, especially IIa, which explains their ability to generate explosive power while maintaining some endurance for tournament play.
 
 :::
-
-
-
 
 
 Most muscles do not run straight from origin to insertion. Instead, muscle fibers attach to a tendon at an *angle*—the *pennation angle* $\alpha$. This angled architecture allows many more fibers to pack into a given space, increasing the muscle's force capacity. However, it introduces a geometric coupling: only the component of fiber force along the tendon direction contributes to the joint torque.
@@ -85,8 +72,6 @@ For example, the latissimus dorsi (primary force generator in the downswing) has
 ## The Force-Length Relationship
 
 
-
-
 The fundamental principle: muscle force depends on the length of the muscle. At certain lengths, all the actin--myosin overlap is optimal. At other lengths, fibers are overextended (poor overlap) or compressed (loss of overlap), producing less force. This is the *force-length relationship*.
 
 ::: {.callout-note}
@@ -97,10 +82,10 @@ Imagine stretching a rubber band. At first, as you stretch, the polymer chains a
 :::
 
 The active force-length relationship can be modeled as:
-\begin{equation}
+$$
 f_L(\tilde{\ell}) = \exp\left(-\left(\frac{\tilde{\ell} - 1}{\gamma}\right)^2\right)
-\label{eq:active-force-length}
-\end{equation}
+{#eq:active-force-length}
+$$
 where $\tilde{\ell} = \ell^M / \ell^M_{\mathrm{opt}}$ is the normalized fiber length, and $\gamma \approx 0.5$ is a width parameter. This bell-curve function captures the plateau region near optimal length and the declining force at shorter or longer lengths.
 
 The Gaussian is an approximation. In reality, the force-length curve is *asymmetric*: force drops off more steeply when the muscle is shorter than optimal (due to myosin-actin overlap geometry) than when it is stretched beyond optimal (where passive elastic elements in titin and connective tissue contribute additional force). For most golf-swing analyses, the symmetric Gaussian is adequate, but be aware that this simplification underestimates passive forces in highly stretched muscles---which matters for the trail shoulder external rotators at the top of the backswing.
@@ -110,28 +95,28 @@ The force-length curve has three distinct regions:
 ::: {.callout-important}
 ## Regions of the Force-Length Curve
 
-\begin{description}
+
 - Ascending limb ($\tilde{\ell} < 1$) Muscle shorter than optimal. Sarcomere overlap incomplete. Force increases with length. This is where muscles are weak because they cannot be fully recruited.
 
 - Plateau ($0.9 < \tilde{\ell} < 1.1$) Near optimal length. Force is constant and maximal. Minimal sensitivity to small length changes. Most powerful configuration.
 
 - Descending limb ($\tilde{\ell} > 1.1$) Muscle longer than optimal. Excessive stretch reduces sarcomere overlap. Passive elastic elements begin to dominate. Force decreases with further lengthening. At extreme stretch, passive force dominates.
-\end{description}
+
 
 :::
 
 Parallel to the active force-length curve, muscles exhibit *passive* force from connective tissue (collagen), which resists excessive stretch:
-\begin{equation}
+$$
 F_{\mathrm{passive}}(\tilde{\ell}) = F_0 \left[ \exp(k(\tilde{\ell} - 1)) - 1 \right]
-\label{eq:passive-force-length}
-\end{equation}
+{#eq:passive-force-length}
+$$
 where $k \approx 4$ sets the exponential growth rate. Passive force becomes significant at $\tilde{\ell} > 1.2$.
 
 The total force from a muscle is:
-\begin{equation}
+$$
 F = a \cdot F_0 \cdot f_L(\tilde{\ell}) + F_{\mathrm{passive}}(\tilde{\ell})
-\label{eq:total-muscle-force}
-\end{equation}
+{#eq:total-muscle-force}
+$$
 where $a \in [0,1]$ is the neural *activation level*.
 
 ::: {.callout-tip}
@@ -144,10 +129,6 @@ The latissimus dorsi, a major pulling muscle in the downswing, is longest (most 
 ## The Force-Velocity Relationship: Hill's Equation
 
 
-
-
-
-
 Here is the critical insight that links muscle biology to the drift-to-control ratio: *faster contraction produces less force*. This is the force-velocity relationship, discovered by A.V. Hill in 1938, and it remains one of the most important principles in biomechanics.
 
 ::: {.callout-note}
@@ -158,10 +139,10 @@ When a muscle fiber contracts, each myosin head must attach, rotate, and detach.
 :::
 
 Hill's hyperbolic relationship, in its normalized form for *concentric contraction* (shortening under load), is:
-\begin{equation}
+$$
 f_V(\tilde{v}) = \frac{1 - \tilde{v}/V_{\max}}{1 + \tilde{v}/(V_{\max} \cdot k)}
-\label{eq:hill-concentric}
-\end{equation}
+{#eq:hill-concentric}
+$$
 where:
 
 - $\tilde{v} = \dot{\ell}^M$ is the fiber shortening velocity (positive for shortening)
@@ -170,10 +151,10 @@ where:
 - $f_V$ ranges from 1 at zero velocity to 0 at $\tilde{v} = V_{\max}$
 
 For *eccentric contraction* (lengthening under load, e.g., a muscle applying brakes), force *increases* beyond $F_0$. Following the formulation of Thelen (2003), the eccentric force-velocity relationship asymptotes to a finite maximum rather than diverging:
-\begin{equation}
+$$
 f_V^{\mathrm{ecc}}(\tilde{v}) = F_{\mathrm{asym}} - (F_{\mathrm{asym}} - 1) \cdot \frac{1 + \tilde{v}/V_{\max}}{1 - k_{\mathrm{ecc}} \tilde{v}/V_{\max}}
-\label{eq:hill-eccentric}
-\end{equation}
+{#eq:hill-eccentric}
+$$
 where $F_{\mathrm{asym}} \approx 1.4$ is the asymptotic eccentric force (as a fraction of $F_0$), $k_{\mathrm{ecc}} \approx 0.25$, and $\tilde{v}$ is negative for lengthening. This formulation is physiologically realistic: eccentric contractions can produce approximately 1.2--1.5 times the isometric force but plateau at a finite value [@thelen2003adjustment].
 
 ::: {.callout-important}
@@ -187,7 +168,6 @@ where $F_{\mathrm{asym}} \approx 1.4$ is the asymptotic eccentric force (as a fr
 
 ::: {.callout-note}
 ## Why Drift Wins at Impact
-\begin{minipage}[t]{0.48\textwidth}
 **Drift (gravitational + inertial) forces:**
 
 - Scale as $\approx m v^2$ for inertial (quadratic in speed)
@@ -195,8 +175,7 @@ where $F_{\mathrm{asym}} \approx 1.4$ is the asymptotic eccentric force (as a fr
 - Peak at impact when clubhead speed $v_{\mathrm{club}} \approx 50$ m/s
 - Drift torque at wrist: $\sim 50$--$100$ N$\cdot$m
 
-\end{minipage}\hfill
-\begin{minipage}[t]{0.48\textwidth}
+
 **Muscle force capacity:**
 
 - Scales as $f_V(\tilde{v}) \approx (1 - \tilde{v}/V_{\max})$ (linear decrease)
@@ -205,7 +184,6 @@ where $F_{\mathrm{asym}} \approx 1.4$ is the asymptotic eccentric force (as a fr
 - Available force: $f_V \approx 0$ or negative (muscles cannot hold on)
 - Peak controllable torque: $\sim 5$--$10$ N$\cdot$m
 
-\end{minipage}
 
 **Result:** The drift-to-control ratio at impact is $\approx 5$--$10$:$1$, meaning inertial and gravitational forces dominate. No amount of muscular effort can overcome this—it is written into the physics of muscle tissue itself.
 :::
@@ -235,9 +213,6 @@ So at impact, the ECRB produces $\approx 80\%$ of its isometric force? No---this
 ## Muscle Activation Dynamics
 
 
-
-
-
 The force we computed above assumes instantaneous muscle activation. In reality, muscles have a *time lag* between the neural command and force production. This delay is called the *electromechanical delay* (EMD) and is a fundamental constraint on motor control.
 
 ::: {.callout-note}
@@ -248,14 +223,14 @@ When a nerve fires, it releases neurotransmitter chemicals at the muscle fiber m
 :::
 
 The standard model for muscle activation dynamics is a first-order linear system:
-\begin{equation}
+$$
 \dot{a} = \frac{u_{\mathrm{neural}} - a}{\tau_{\mathrm{act}}} \quad \text{if } u_{\mathrm{neural}} > a
-\label{eq:activation-rise}
-\end{equation}
-\begin{equation}
+{#eq:activation-rise}
+$$
+$$
 \dot{a} = \frac{u_{\mathrm{neural}} - a}{\tau_{\mathrm{deact}}} \quad \text{if } u_{\mathrm{neural}} \leq a
-\label{eq:activation-fall}
-\end{equation}
+{#eq:activation-fall}
+$$
 where:
 
 - $u_{\mathrm{neural}} \in [0, 1]$ is the normalized neural input (command to the muscle)
@@ -287,17 +262,13 @@ Suppose an elite golfer detects a swing error at $t = 100$ ms into the downswing
 - $t = 200$ ms: Neural command $u_{\mathrm{neural}} = 1$ is issued
 - $t = 230$ ms: Force begins to rise (synaptic + activation delay)
 - $t = 250$ ms: Force reaches 50% of maximum (rise phase)
-- $t = 300$ ms: Impact occurs; total downswing time ~300 ms
+- $t = 300$ ms: Impact occurs; total downswing time  300 ms
 
 In this scenario, the corrective force only reaches 50% of maximum *at impact*—too late to change anything. The muscle cannot respond fast enough to alter the impact event. This illustrates why the golf swing is so difficult: feedback control is essentially impossible during the downswing. The swing must be pre-programmed during the transition, before velocities become too high for active control to matter.
 
 :::
 
 ## The Hill-Type Muscle Model
-
-
-
-
 
 
 To predict how a muscle produces torque at a joint, we must integrate architecture, force-length, force-velocity, and activation dynamics into a single unified model. The standard tool is the *Hill-type muscle model*, which consists of three mechanical elements in a specific configuration.
@@ -312,95 +283,92 @@ To predict how a muscle produces torque at a joint, we must integrate architectu
 - **Parallel Elastic Element (PEE):** Passive tissue (aponeurosis, connective fascia). Develops force when the muscle is stretched beyond its optimal length, resisting extreme lengthening.
 
 The CE and SEE are in *series*; their forces are equal. The PEE is in *parallel* to the CE. The total muscle force is:
-\begin{equation}
+$$
 F^M = F_{\mathrm{CE}} + F_{\mathrm{PEE}}
-\label{eq:total-hill}
-\end{equation}
+{#eq:total-hill}
+$$
 
 :::
 
 The contractile element generates active force:
-\begin{equation}
+$$
 F_{\mathrm{CE}} = a(t) \cdot F_0 \cdot f_L(\ell_{\mathrm{CE}}) \cdot f_V(\dot{\ell}_{\mathrm{CE}})
-\label{eq:ce-force}
-\end{equation}
-where $a(t)$ evolves according to Eqs.~\eqref{eq:activation-rise}--\eqref{eq:activation-fall}.
+{#eq:ce-force}
+$$
+where $a(t)$ evolves according to Eqs. \eqref{eq:activation-rise}--\eqref{eq:activation-fall}.
 
 The series elastic element stores elastic energy and returns it during rebound. Its force-extension relationship is:
-\begin{equation}
+$$
 F^{\mathrm{SEE}} = F^{\mathrm{SEE}}_0 \left[ \exp(k_{\mathrm{SEE}} \varepsilon_{\mathrm{SEE}}) - 1 \right]
-\label{eq:see-force}
-\end{equation}
+{#eq:see-force}
+$$
 where $\varepsilon_{\mathrm{SEE}}$ is the tendon strain (fractional elongation). The tendon is *stiff*, with $k_{\mathrm{SEE}} \approx 20$--$50$, so it stretches only a few percent under full load but stores significant energy.
 
 The parallel elastic element resists lengthening:
-\begin{equation}
+$$
 F_{\mathrm{PEE}} = F_0 \left[ \exp(k_{\mathrm{PEE}}(\tilde{\ell}_{\mathrm{CE}} - 1)) - 1 \right] \quad \text{for } \tilde{\ell}_{\mathrm{CE}} > 1
-\label{eq:pee-force}
-\end{equation}
+{#eq:pee-force}
+$$
 with $k_{\mathrm{PEE}} \approx 3$--$5$. This force is zero (or negligible) when the muscle is at or shorter than its optimal length.
 
 ::: {.callout-important}
 ## Energy Storage and Release in the Tendon
 
-The series elastic element is crucial for athletic performance. When a muscle contracts against a stiff load (like at ground contact in running or the bottom of a squat), the muscle fibers shorten quickly, stretching the tendon and storing elastic potential energy. This energy is released in the subsequent rebound or upward phase, amplifying the mechanical output. In the golf swing, the tendons of the forearm muscles are stretched during the cocking phase and early downswing, then released at impact, contributing to clubhead acceleration. This energy storage is one reason why a ``whippy'' shaft and flexible wrists are advantageous—they encourage tendon loading and elastic recoil.
+The series elastic element is crucial for athletic performance. When a muscle contracts against a stiff load (like at ground contact in running or the bottom of a squat), the muscle fibers shorten quickly, stretching the tendon and storing elastic potential energy. This energy is released in the subsequent rebound or upward phase, amplifying the mechanical output. In the golf swing, the tendons of the forearm muscles are stretched during the cocking phase and early downswing, then released at impact, contributing to clubhead acceleration. This energy storage is one reason why a "whippy" shaft and flexible wrists are advantageous—they encourage tendon loading and elastic recoil.
 
 :::
 
 ## How Muscle Biology Maps to Control Theory
 
 
-
-
-
-
 Now we connect muscle biology to the control-affine mathematical framework. Recall from earlier chapters that the system dynamics are:
-\begin{equation}
+$$
 \dot{\bm{x}} = f(\bm{x}) + G(\bm{x})\bm{u}
-\label{eq:control-affine-remit}
-\end{equation}
+{#eq:control-affine-remit}
+$$
 
 In our golf model, $\bm{x} = (\bm{q}, \dot{\bm{q}})$ is the state (joint angles and angular velocities), $\bm{u}$ is nominally the joint torque vector, and:
-\begin{align}
-f(\bm{x}) &= \text{gravity, inertial, and dissipative forces (drift)} \\
+$$
+\begin{aligned}
+f(\bm{x}) &= \text{gravity, inertial, and dissipative forces (drift)} 
 G(\bm{x}) &= \text{control input gain (how control affects state)}
-\end{align}
+\end{aligned}
+$$
 
 But muscles do not directly produce joint torques—they produce *neural activation commands* $u_{\mathrm{neural}}(t)$. The chain from neural command to joint torque is:
 
 
-\begin{tabular}{ccccc}
-$u_{\mathrm{neural}}$ & $\to$ & $a(t)$ & $\to$ & $F_{\mathrm{muscle}}$ 
-neural command & activation dynamics & muscle force & moment arm & joint torque
-\end{tabular}
+| $u_{\mathrm{neural}}$ | $\to$ | $a(t)$ | $\to$ | $F_{\mathrm{muscle}}$ 
+neural command | activation dynamics | muscle force | moment arm | joint torque |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
 
 
 More precisely:
-\begin{equation}
+$$
 u_{\mathrm{neural}} \in \mathbb{R}^n \quad \text{(typically } n = 10\text{--}20 \text{ muscles per joint)}
-\label{eq:neural-command}
-\end{equation}
-\begin{equation}
+{#eq:neural-command}
+$$
+$$
 \dot{a}_i = \frac{u_{\mathrm{neural},i} - a_i}{\tau_i} \quad \text{(activation dynamics for each muscle)}
-\label{eq:activation-vector}
-\end{equation}
-\begin{equation}
+{#eq:activation-vector}
+$$
+$$
 F_i = a_i F_{0,i} f_{L,i} f_{V,i} \quad \text{(force for muscle } i \text{)}
-\label{eq:force-vector}
-\end{equation}
-\begin{equation}
+{#eq:force-vector}
+$$
+$$
 \tau_j = \sum_{i} r_{j,i}(\bm{q}) F_i \cos(\alpha_i) \quad \text{(net torque at joint } j \text{)}
-\label{eq:torque-from-muscles}
-\end{equation}
+{#eq:torque-from-muscles}
+$$
 
 where $r_{j,i}(\bm{q})$ is the moment arm of muscle $i$ about joint $j$ (which depends on configuration), and $\alpha_i$ is the pennation angle.
 
 The key insight: when we write the control-affine system as $\dot{\bm{x}} = f(\bm{x}) + G(\bm{x})\bm{u}$ and treat $\bm{u}$ as the control input, we are implicitly assuming that $\bm{u}$ is the *effective* joint torque. But the actual control is $u_{\mathrm{neural}}$, which is filtered through the entire chain above. This means:
 
-\begin{equation}
+$$
 G(\bm{x})\bm{u} = \sum_{i} r_{j,i}(\bm{q}) a_i(\bm{q}, \dot{\bm{q}}, u_{\mathrm{neural}}, t) F_{0,i} f_{L,i}(\tilde{\ell}_i(\bm{q})) f_{V,i}(\dot{\ell}_i(\bm{q}, \dot{\bm{q}})) \cos(\alpha_i)
-\label{eq:control-affine-full}
-\end{equation}
+{#eq:control-affine-full}
+$$
 
 ::: {.callout-note}
 ## Why the Control Gain Decreases at High Speed
@@ -420,14 +388,14 @@ Consider the wrist joint with activation $a = 1$ (fully recruited):
 - At maximum speed ($\dot{\theta}_{\mathrm{wrist}} = 100$ rad/s): $f_V \approx 0.1$, torque $\approx 2$ N·m
 
 The control gain has dropped by *an order of magnitude* from rest to impact. Meanwhile, the drift force (inertial torque from swinging the club) is:
-\begin{equation}
+$$
 \tau_{\mathrm{drift}} = I_{\mathrm{club}} \ddot{\theta} + \text{(centrifugal, Coriolis)}
-\label{eq:drift-torque}
-\end{equation}
+{#eq:drift-torque}
+$$
 At impact, $I_{\mathrm{club}} \ddot{\theta}$ can reach 50--100 N·m for deceleration of the club. So the ratio is:
-\begin{equation}
+$$
 \frac{\tau_{\mathrm{drift}}}{\tau_{\mathrm{control}}} \approx \frac{100}{6} \approx 17:1
-\end{equation}
+$$
 
 This is why the impact event is impossible to control precisely.
 
@@ -436,16 +404,12 @@ This is why the impact event is impossible to control precisely.
 ## Muscle Force in the Golf Swing: Realistic Numbers
 
 
-
-
-
-
 Let's put numbers on actual muscle forces and torques during a golf swing. These come from biomechanical studies using motion capture, force plates, and inverse dynamics.
 
 ::: {.callout-important}
 ## Peak Torques at Major Golf Joints
 
-\begin{description}
+
 - Shoulder (internal rotation): Peak torque $\approx 100$--$150$ N·m. This rotates the upper arm to accelerate the club. Generated primarily by the subscapularis and latissimus dorsi. Occurs around mid-downswing when acceleration is high but speed is still manageable.
 
 - Elbow (extension): Peak torque $\approx 50$--$80$ N·m. The triceps extends the arm to apply force to the club. Occurs late in downswing as the arm releases. At this point, the arm is moving fast, so force-velocity effects reduce available force.
@@ -454,7 +418,6 @@ Let's put numbers on actual muscle forces and torques during a golf swing. These
 
 - Hip (internal rotation): Peak torque $\approx 80$--$120$ N·m. The lower body initiates the downswing by rotating the hips, driving the torso. Large muscles (glutes, hip flexors) and favorable moment arms allow high torque despite high speeds.
 
-\end{description}
 
 Note: Peak torques vary with swing speed (professional vs. amateur), body composition, and training.
 
@@ -462,7 +425,6 @@ Note: Peak torques vary with swing speed (professional vs. amateur), body compos
 
 ::: {.callout-note}
 ## Where Muscles Are Strongest vs. Drift-Dominated
-\begin{minipage}[t]{0.48\textwidth}
 **Transition & early downswing:**
 
 - Angular velocities: $\lesssim 50$ rad/s
@@ -473,8 +435,7 @@ Note: Peak torques vary with swing speed (professional vs. amateur), body compos
 - Drift torque: MODERATE ($\sim 10$--$30$ N$\cdot$m)
 - Result: **CONTROL DOMINANT**
 
-\end{minipage}\hfill
-\begin{minipage}[t]{0.48\textwidth}
+
 **Late downswing & impact:**
 
 - Angular velocities: $\gtrsim 80$ rad/s
@@ -485,32 +446,30 @@ Note: Peak torques vary with swing speed (professional vs. amateur), body compos
 - Drift torque: DOMINANT ($\sim 50$--$150$ N$\cdot$m)
 - Result: **DRIFT DOMINANT**
 
-\end{minipage}
+
 :::
 
 This pattern explains the fundamental structure of the efficient golf swing:
 
 - **Address--Transition:** Passive setup. Muscles are mostly inactive ($a \approx 0$).
 - **Transition--Early Downswing:** Heavy muscle recruitment ($a \to 0.7$--$0.9$) in hip, torso, and shoulder to initiate acceleration. Control is available. Careful muscle sequencing: hips first, then torso, then arm.
-- **Late Downswing:** Arm muscles approach full activation, but force-velocity effects have reduced their effectiveness. Drift torques now dominate. The swing is coasting; muscles are ``holding on'' rather than accelerating.
+- **Late Downswing:** Arm muscles approach full activation, but force-velocity effects have reduced their effectiveness. Drift torques now dominate. The swing is coasting; muscles are "holding on" rather than accelerating.
 - **Impact:** Peak speeds. Muscle control is minimal. The wrist is nearly locked (isometric or eccentric). The only role muscles play is *damage control*—preventing catastrophic joint failure due to impact forces.
 
 ## Implications for Swing Mechanics and Training
 
 
-
-
 Understanding muscle force generation reveals why certain coaching cues are effective and others are counterintuitive.
 
 ::: {.callout-warning}
-## Myth: ``Accelerate the club all the way to impact''
-\begin{description}
+## Myth: "Accelerate the club all the way to impact"
+
 - **The Myth:** A golfer should produce maximum muscle torque all the way to impact. Bigger muscles = bigger torque = longer drive.
 
-- **The Reality:** At impact speeds ($v > 50$ m/s), muscle force-velocity limitations mean muscles produce $\lesssim 20\%$ of isometric force. Trying to ``accelerate into the ball'' at this point is both ineffective (muscles are weak) and risky (joints experience extreme reactive forces). The efficient swing accelerates heavily in the transition and early downswing (when muscles are capable) and then *coasts* (controlled descent of inertia) into impact. Deceleration forces at impact are controlled by eccentric muscle activation (muscles braking), not concentric acceleration.
+- **The Reality:** At impact speeds ($v > 50$ m/s), muscle force-velocity limitations mean muscles produce $\lesssim 20\%$ of isometric force. Trying to "accelerate into the ball" at this point is both ineffective (muscles are weak) and risky (joints experience extreme reactive forces). The efficient swing accelerates heavily in the transition and early downswing (when muscles are capable) and then *coasts* (controlled descent of inertia) into impact. Deceleration forces at impact are controlled by eccentric muscle activation (muscles braking), not concentric acceleration.
 
-- **Coaching Cue Reframe:** Instead of ``accelerate to impact,'' say ``accelerate the transition''—this is where muscles are most effective. The downswing should feel like release and flow, not continued muscular effort at the end.
-\end{description}
+- **Coaching Cue Reframe:** Instead of "accelerate to impact," say "accelerate the transition"—this is where muscles are most effective. The downswing should feel like release and flow, not continued muscular effort at the end.
+
 :::
 
 ::: {.callout-important}
@@ -531,15 +490,15 @@ Understanding muscle force generation reveals why certain coaching cues are effe
 :::
 
 ### Looking Ahead
-Muscle biology sets the envelope of what is physically possible: maximum forces, activation speeds, and the velocity--force tradeoff. But there is one more force we have not yet accounted for---aerodynamic drag. Chapter~\ref{ch:aerodynamic-drag} shows why drag is *not* negligible in the golf swing, and why omitting it leads to systematic errors in inverse dynamics calculations.
+Muscle biology sets the envelope of what is physically possible: maximum forces, activation speeds, and the velocity--force tradeoff. But there is one more force we have not yet accounted for---aerodynamic drag. Chapter @ch:aerodynamic-drag shows why drag is *not* negligible in the golf swing, and why omitting it leads to systematic errors in inverse dynamics calculations.
 
 ## Chapter Exercises
 
-- **Force-Length Curve.** A muscle at optimal length ($\tilde{\ell} = 1.0$) produces maximum isometric force $F_0 = 200$ N. Using Eq.~\eqref{eq:active-force-length} with $\gamma = 0.5$, compute $f_L(\tilde{\ell})$ at $\tilde{\ell} = 0.8, 1.0, 1.2$. Which configuration is strongest? Which produces zero force (theoretically)?
+- **Force-Length Curve.** A muscle at optimal length ($\tilde{\ell} = 1.0$) produces maximum isometric force $F_0 = 200$ N. Using Eq. \eqref{eq:active-force-length} with $\gamma = 0.5$, compute $f_L(\tilde{\ell})$ at $\tilde{\ell} = 0.8, 1.0, 1.2$. Which configuration is strongest? Which produces zero force (theoretically)?
 
-- **Hill's Equation.** The latissimus dorsi has $V_{\max} = 6$ m/s and $k = 0.4$. At a contraction velocity of $\dot{\ell}^M = 3$ m/s (mid-downswing pace), compute $f_V(\tilde{v})$ using Eq.~\eqref{eq:hill-concentric}. What fraction of maximum force is available?
+- **Hill's Equation.** The latissimus dorsi has $V_{\max} = 6$ m/s and $k = 0.4$. At a contraction velocity of $\dot{\ell}^M = 3$ m/s (mid-downswing pace), compute $f_V(\tilde{v})$ using Eq. \eqref{eq:hill-concentric}. What fraction of maximum force is available?
 
-- **Activation Dynamics.** A muscle with $\tau_{\mathrm{act}} = 25$ ms receives a step neural command $u_{\mathrm{neural}} = 1$ at $t = 0$. Solve Eq.~\eqref{eq:activation-rise} numerically (Euler method, $dt = 5$ ms) for $t = 0$ to $150$ ms. Sketch $a(t)$. At what time does activation reach 95% of steady-state?
+- **Activation Dynamics.** A muscle with $\tau_{\mathrm{act}} = 25$ ms receives a step neural command $u_{\mathrm{neural}} = 1$ at $t = 0$. Solve Eq. \eqref{eq:activation-rise} numerically (Euler method, $dt = 5$ ms) for $t = 0$ to $150$ ms. Sketch $a(t)$. At what time does activation reach 95% of steady-state?
 
 - **Muscle Torque Under Load.** The triceps has $F_0 = 350$ N, moment arm $r = 0.025$ m, and is at near-optimal length ($f_L \approx 0.95$). At elbow angular velocity $\dot{\theta} = 40$ rad/s, the muscle velocity is $\dot{\ell}^M = r \dot{\theta} = 1$ m/s. If $V_{\max} = 5$ m/s, compute the force and torque available. How much does this change if velocity doubles?
 

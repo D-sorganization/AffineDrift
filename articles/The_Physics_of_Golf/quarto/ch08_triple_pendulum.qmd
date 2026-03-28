@@ -3,13 +3,12 @@ title: "The Triple Pendulum"
 ---
 
 
-
 # The Triple Pendulum: Adding the Wrists
 
 ::: {.callout-tip}
 ## Why Two DOF Isn't Enough
 
-In Chapters~\ref{ch:zero_torque_counterfactual} and 7, we modeled the arm as a double pendulum: shoulder and elbow. This was useful for illustration, but it's incomplete.
+In Chapters @ch:zero_torque_counterfactual and 7, we modeled the arm as a double pendulum: shoulder and elbow. This was useful for illustration, but it's incomplete.
 
 In a real swing, there's a third crucial articulation: the wrist.
 
@@ -64,20 +63,20 @@ where $\bm{M}(\bm{q})$ is the $3 \times 3$ mass matrix, $\bm{C}(\bm{q}, \dot{\bm
 The mass matrix is:
 
 \bm{M}(\bm{q}) =
-M_{11} & M_{12} & M_{13} \\
-M_{12} & M_{22} & M_{23} \\
+M_{11} & M_{12} & M_{13} 
+M_{12} & M_{22} & M_{23} 
 M_{13} & M_{23} & M_{33}
 
 The diagonal entries are:
 
-M_{11} &= I_1 + m_1(L_1/2)^2 + I_2 + m_2(L_1^2 + L_1 L_2 \cos q_2) + I_3 + m_3(L_1^2 + L_1 L_2 \cos q_2 + L_2^2 + 2L_1 L_2 \cos q_2)\\
-M_{22} &= I_2 + m_2(L_2/2)^2 + I_3 + m_3(L_2^2 + L_1 L_2 \cos q_2)\\
+M_{11} &= I_1 + m_1(L_1/2)^2 + I_2 + m_2(L_1^2 + L_1 L_2 \cos q_2) + I_3 + m_3(L_1^2 + L_1 L_2 \cos q_2 + L_2^2 + 2L_1 L_2 \cos q_2)
+M_{22} &= I_2 + m_2(L_2/2)^2 + I_3 + m_3(L_2^2 + L_1 L_2 \cos q_2)
 M_{33} &= I_3 + m_3(L_3/2)^2
 
 The off-diagonal terms capture the coupling between segments:
 
-M_{12} &= I_2 + m_2 L_1 L_2 \cos q_2 + I_3 + m_3(L_2^2 + L_1 L_2 \cos q_2)\\
-M_{13} &= I_3 + m_3(L_2^2 + L_1 L_2 \cos q_2)\\
+M_{12} &= I_2 + m_2 L_1 L_2 \cos q_2 + I_3 + m_3(L_2^2 + L_1 L_2 \cos q_2)
+M_{13} &= I_3 + m_3(L_2^2 + L_1 L_2 \cos q_2)
 M_{23} &= I_3 + m_3(L_2^2/2)
 
 (These expressions simplify if we ignore the inertias of distal segments about proximal joints, which is reasonable for golf swings.)
@@ -108,8 +107,8 @@ Assume:
 At a downswing configuration where $q_2 = 90°$ (elbow straight, perpendicular to arm), the mass matrix is approximately:
 
 \bm{M} \approx
-0.5 & 0.15 & 0.10 \\
-0.15 & 0.08 & 0.05 \\
+0.5 & 0.15 & 0.10 
+0.15 & 0.08 & 0.05 
 0.10 & 0.05 & 0.02
  \text{ kg} \cdot \text{m}^2
 
@@ -118,8 +117,8 @@ The diagonal entries decrease as we move down (from shoulder to club). The off-d
 To see this more clearly, let's invert:
 
 \bm{M}^{-1} \approx
-15.0 & -20.0 & 10.0 \\
--20.0 & 50.0 & -10.0 \\
+15.0 & -20.0 & 10.0 
+-20.0 & 50.0 & -10.0 
 10.0 & -10.0 & 80.0
 
 The entry $(\bm{M}^{-1})_{33} = 80$ is much larger than $(\bm{M}^{-1})_{11} = 15$. This means the wrist (joint 3) is much easier to accelerate than the shoulder (joint 1). In other words, it takes far less torque to get the wrist spinning at high speed than to spin the shoulders.
@@ -234,18 +233,18 @@ The difference: by releasing late, the club inherits the arm's higher velocity, 
 
 Starting from a downswing configuration:
 
-q_1 &= 50° \quad \dot{q}_1 = 12 \text{ rad/s} \quad \tau_1 = 0\\
-q_2 &= 80° \quad \dot{q}_2 = 20 \text{ rad/s} \quad \tau_2 = 0\\
+q_1 &= 50° \quad \dot{q}_1 = 12 \text{ rad/s} \quad \tau_1 = 0
+q_2 &= 80° \quad \dot{q}_2 = 20 \text{ rad/s} \quad \tau_2 = 0
 q_3 &= 100° \quad \dot{q}_3 = 25 \text{ rad/s} \quad \tau_3 = 0
 
 Set $\bm{u} = \mathbf{0}$ (no muscle torques) and solve:
 
 \bm{M}(\bm{q}) \ddot{\bm{q}} = -\bm{C}(\bm{q}, \dot{\bm{q}}) - \bm{g}(\bm{q})
 
-Using a numerical solver with the mass matrix and Coriolis terms from Sections \ref{sec:triple_pendulum_mass_matrix} and \ref{sec:triple_pendulum_coriolis}, the accelerations are approximately:
+Using a numerical solver with the mass matrix and Coriolis terms from Sections @sec:triple_pendulum_mass_matrix and @sec:triple_pendulum_coriolis, the accelerations are approximately:
 
-\ddot{q}_1^{\text{ZTCF}} &\approx -2 \text{ rad/s}^2 \quad \text{(shoulder decelerating)}\\
-\ddot{q}_2^{\text{ZTCF}} &\approx 15 \text{ rad/s}^2 \quad \text{(elbow accelerating)}\\
+\ddot{q}_1^{\text{ZTCF}} &\approx -2 \text{ rad/s}^2 \quad \text{(shoulder decelerating)}
+\ddot{q}_2^{\text{ZTCF}} &\approx 15 \text{ rad/s}^2 \quad \text{(elbow accelerating)}
 \ddot{q}_3^{\text{ZTCF}} &\approx 40 \text{ rad/s}^2 \quad \text{(club accelerating rapidly)}
 
 **Interpretation:**
@@ -254,14 +253,14 @@ With no muscle torques, the shoulder decelerates slightly (gravity slowing the r
 
 Integrating this trajectory forward 0.05 seconds (50 ms, roughly late downswing), the ZTCF predicts:
 
-q_1(0.05) &\approx 50° + 12 \times 0.05 - 0.5 \times 2 \times 0.0025 \approx 50.6°\\
-q_2(0.05) &\approx 80° + 20 \times 0.05 + 0.5 \times 15 \times 0.0025 \approx 81.0°\\
+q_1(0.05) &\approx 50° + 12 \times 0.05 - 0.5 \times 2 \times 0.0025 \approx 50.6°
+q_2(0.05) &\approx 80° + 20 \times 0.05 + 0.5 \times 15 \times 0.0025 \approx 81.0°
 q_3(0.05) &\approx 100° + 25 \times 0.05 + 0.5 \times 40 \times 0.0025 \approx 102.9°
 
 And velocities:
 
-\dot{q}_1(0.05) &\approx 12 - 2 \times 0.05 = 11.9 \text{ rad/s}\\
-\dot{q}_2(0.05) &\approx 20 + 15 \times 0.05 = 20.75 \text{ rad/s}\\
+\dot{q}_1(0.05) &\approx 12 - 2 \times 0.05 = 11.9 \text{ rad/s}
+\dot{q}_2(0.05) &\approx 20 + 15 \times 0.05 = 20.75 \text{ rad/s}
 \dot{q}_3(0.05) &\approx 25 + 40 \times 0.05 = 27 \text{ rad/s}
 
 The club's angular velocity increased by 2 rad/s (from 25 to 27) in just 50 ms, with *zero* muscle torque. This is the whip effect: passive Coriolis acceleration at the club.
@@ -288,19 +287,14 @@ At the same instant, the wrist constraint couples the club to the arm. When rele
 
 **Numerical comparison:**
 
-[h]
-\centering
-{|l|c|c|}
-\hline
-& **Double Pendulum** & **Triple Pendulum** \\
-\hline
-Club velocity at 0.35 s & 35 rad/s & 25 rad/s (wrist locked) \\
-Club velocity at 0.40 s (post-release) & 35 rad/s (still 2 segments) & 40 rad/s (wrist free) \\
-DCR at 0.40 s & $\sim 20:1$ & $\sim 50:1$ \\
-Impact speed (linear, at club tip) & 70 mph & 90 mph \\
-\hline
+| | **Double Pendulum** | **Triple Pendulum** |
+| --- | --- | --- |
+| Club velocity at 0.35 s | 35 rad/s | 25 rad/s (wrist locked) |
+| Club velocity at 0.40 s (post-release) | 35 rad/s (still 2 segments) | 40 rad/s (wrist free) |
+| DCR at 0.40 s | $\sim 20:1$ | $\sim 50:1$ |
+| Impact speed (linear, at club tip) | 70 mph | 90 mph |
 
-\caption{Comparison of double vs. triple pendulum swing speeds.}
+*Comparison of double vs. triple pendulum swing speeds.*
 
 **Insight:** The triple pendulum model predicts higher club speeds because the wrist release creates an additional acceleration phase. The double pendulum saturates (the elbow can't accelerate any faster), but the triple pendulum still has room to accelerate the club via the wrist mechanism.
 
@@ -380,7 +374,7 @@ The Coriolis term at the club includes a cross term like $\frac{\partial M_{23}}
 3. Compare to a typical muscular torque at the wrist ($\sim 10$ Nm). Is the Coriolis term dominant?
 
 {Whip Effect}
-Simulate the triple pendulum ZTCF (no muscle torques) from the configuration given in Section \ref{sec:triple_pendulum_ztcf}.
+Simulate the triple pendulum ZTCF (no muscle torques) from the configuration given in Section @sec:triple_pendulum_ztcf.
 
 1. Integrate forward 50 ms and plot all three angles and angular velocities.
 2. At what time does the club angular velocity reach its maximum? Does it occur near the very end?

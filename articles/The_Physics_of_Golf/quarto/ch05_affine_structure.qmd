@@ -32,7 +32,7 @@ To write the system in control-affine form, we need to convert the second-order 
 
 ### Defining State
 
-Recall from Chapter~\ref{ch:02_language_of_motion} that the state is:
+Recall from Chapter @ch:02_language_of_motion that the state is:
 
 \bm{x} =  \bm{q} \\ \dot{\bm{q}}  =  \theta_1 \\ \theta_2 \\ \dot{\theta}_1 \\ \dot{\theta}_2
 
@@ -56,7 +56,7 @@ we get:
 
 This is the full equation. Now separate the passive and active terms:
 
-\ddot{\bm{q}} &= \bm{M}(\bm{q})^{-1} \left[ - \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} - \bm{g}(\bm{q}) \right] + \bm{M}(\bm{q})^{-1} \bm{\tau} \\
+\ddot{\bm{q}} &= \bm{M}(\bm{q})^{-1} \left[ - \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} - \bm{g}(\bm{q}) \right] + \bm{M}(\bm{q})^{-1} \bm{\tau} 
 &= \underbrace{\bm{M}(\bm{q})^{-1} \left[ - \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} - \bm{g}(\bm{q}) \right]}_{\text{drift}} + \underbrace{\bm{M}(\bm{q})^{-1} \bm{\tau}}_{\text{control}}
 
 ### The Control-Affine Form
@@ -112,14 +112,14 @@ Let's write out the control-affine form explicitly for the double pendulum.
 ### The Drift Vector Field
 
 \bm{f}(\bm{x}) =
-\dot{\theta}_1 \\
-\dot{\theta}_2 \\
-f_3(\bm{x}) \\
+\dot{\theta}_1 
+\dot{\theta}_2 
+f_3(\bm{x}) 
 f_4(\bm{x})
 
 where:
 
-f_3(\bm{x}) &= -M^{-1}_{11} \left[ \bm{C}_{12} \dot{\theta}_2 + g_1 \right] - M^{-1}_{12} \left[ \bm{C}_{22} \dot{\theta}_2 + g_2 \right] \\
+f_3(\bm{x}) &= -M^{-1}_{11} \left[ \bm{C}_{12} \dot{\theta}_2 + g_1 \right] - M^{-1}_{12} \left[ \bm{C}_{22} \dot{\theta}_2 + g_2 \right] 
 f_4(\bm{x}) &= -M^{-1}_{21} \left[ \bm{C}_{12} \dot{\theta}_2 + g_1 \right] - M^{-1}_{22} \left[ \bm{C}_{22} \dot{\theta}_2 + g_2 \right]
 
 These are complicated expressions, but they encode all the passive dynamics: gravity pulling, inertia resisting, and velocity-dependent coupling.
@@ -129,9 +129,9 @@ The key insight: **$\bm{f**$ depends on the current state but does not depend on
 ### The Control Matrix
 
 \bm{G}(\bm{x}) =
-0 & 0 \\
-0 & 0 \\
-M^{-1}_{11}(\bm{q}) & M^{-1}_{12}(\bm{q}) \\
+0 & 0 
+0 & 0 
+M^{-1}_{11}(\bm{q}) & M^{-1}_{12}(\bm{q}) 
 M^{-1}_{21}(\bm{q}) & M^{-1}_{22}(\bm{q})
 
 where $\bm{M}^{-1}(\bm{q})$ is the inverse of the mass matrix.
@@ -167,17 +167,17 @@ The drift says what happens next. Let's compute:
 
 At rest, there's no inertia acceleration (velocities are zero). The only terms in $\bm{f}$ are the gravity terms:
 
-\ddot{\theta}_1 &= \bm{M}^{-1}_{11} \cdot (-g_1) \\
-&= \bm{M}^{-1}_{11} \cdot (-(M_1 L_{1,cm} + M_2 L_1) g \sin(0°)) \\
+\ddot{\theta}_1 &= \bm{M}^{-1}_{11} \cdot (-g_1) 
+&= \bm{M}^{-1}_{11} \cdot (-(M_1 L_{1,cm} + M_2 L_1) g \sin(0°)) 
 &= 0
 
 So the arm doesn't accelerate if it's at rest and perfectly vertical. That makes sense: gravity is balanced.
 
 Now suppose you're at an angle, say $\theta_1 = 45°$. Then:
 
-\ddot{\theta}_1 &= \bm{M}^{-1}_{11} \cdot (-(M_1 L_{1,cm} + M_2 L_1) g \sin(45°)) \\
-&= \bm{M}^{-1}_{11} \cdot (-(2.5 \times 0.175 + 2.5 \times 0.35) \times 9.81 \times 0.707) \\
-&\approx -20 \text{ N m} \times 0.45 \text{ kg m}^{-2} \\
+\ddot{\theta}_1 &= \bm{M}^{-1}_{11} \cdot (-(M_1 L_{1,cm} + M_2 L_1) g \sin(45°)) 
+&= \bm{M}^{-1}_{11} \cdot (-(2.5 \times 0.175 + 2.5 \times 0.35) \times 9.81 \times 0.707) 
+&\approx -20 \text{ N m} \times 0.45 \text{ kg m}^{-2} 
 &\approx -9 \text{ rad/s}^2
 
 Negative means the arm wants to rotate back toward vertical. Gravity is pulling it down.
@@ -313,7 +313,7 @@ In other words:
 - Minimize muscular work by letting physics do what it wants to do.
 - Use muscles only to steer, not to force.
 
-This is what coaches mean by "let the club do the work," ``don't muscle the swing,'' "trust the process," and "flow with the motion."
+This is what coaches mean by "let the club do the work," "don't muscle the swing," "trust the process," and "flow with the motion."
 
 It's not mystical. It's physics.
 

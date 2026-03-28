@@ -2,7 +2,7 @@
 title: "The Kinetic Chain: Sequential Energy Flow in the Golf Swing"
 ---
 
-The kinetic chain in golf is not merely a biomechanical description of segment motion---it is a manifestation of the fundamental coupling between rotational dynamics, elastic energy storage, and the control of sequential momentum transfer. Unlike baseball or tennis, where explosiveness matters at the point of contact, golf requires the golfer to build and sustain a coherent motion sequence that concentrates energy at the clubhead. This chapter examines the kinetic chain from first principles: the differential equations governing coupled-segment motion, the role of constraint forces in energy redistribution, and how the drift field \ref{ch:zero_torque_counterfactual} naturally encodes proximal-to-distal sequencing. We will see that the kinetic chain is not imposed by conscious muscular control, but rather emerges from the structure of the equations of motion when properly coupled.
+The kinetic chain in golf is not merely a biomechanical description of segment motion---it is a manifestation of the fundamental coupling between rotational dynamics, elastic energy storage, and the control of sequential momentum transfer. Unlike baseball or tennis, where explosiveness matters at the point of contact, golf requires the golfer to build and sustain a coherent motion sequence that concentrates energy at the clubhead. This chapter examines the kinetic chain from first principles: the differential equations governing coupled-segment motion, the role of constraint forces in energy redistribution, and how the drift field @ch:zero_torque_counterfactual naturally encodes proximal-to-distal sequencing. We will see that the kinetic chain is not imposed by conscious muscular control, but rather emerges from the structure of the equations of motion when properly coupled.
 
 ::: {.callout-note}
 ## Understanding the Kinetic Chain: The Whip Analogy
@@ -17,12 +17,11 @@ The golf swing operates on the same principle. The golfer's body is that whip:
 
 By the time the club reaches impact, it has been accelerated through a *sequence* of torques, each applied at just the right moment. The result: club speeds of 80--160 mph emerge from body velocities of 5--20 mph. This is the kinetic chain, and it is a matter of *timing*, not raw muscular force.
 
-A common misconception is that the golfer ``drives the clubhead'' with muscular effort. In reality, beyond a certain point in the downswing, muscular effort would *slow down* the club. Instead, the golfer's muscles provide the timing signal and the initial torques; the whipping motion and the geometry of the body then concentrate velocity into the distal segments, culminating at the club.
+A common misconception is that the golfer "drives the clubhead" with muscular effort. In reality, beyond a certain point in the downswing, muscular effort would *slow down* the club. Instead, the golfer's muscles provide the timing signal and the initial torques; the whipping motion and the geometry of the body then concentrate velocity into the distal segments, culminating at the club.
 
 :::
 
 ## The Proximal-to-Distal Sequence
-
 
 
 The proximal-to-distal principle states that motion originates in the large, heavy segments (proximal) and propagates outward to the small, light segments (distal). Mathematically, this is encoded in the following observation:
@@ -35,15 +34,13 @@ In a coupled serial kinetic chain, *peak velocity* of each proximal segment prec
 :::
 
 
-
-
 To formalize this, consider a simplified kinetic chain with $n$ segments. Let $\theta_i$ be the rotation angle of segment $i$ (where $i=1$ is the hips, $i=n$ is the club), and let $I_i$ be the moment of inertia about the rotation axis. The torque balance at joint $i$ reads:
 
 $$
 I_i \ddot{\theta}_i = \tau_i^{(m)} + \tau_i^{(c)}
 $$
 
-where $\tau_i^{(m)}$ is the muscle torque applied at that joint and $\tau_i^{(c)}$ is the constraint torque (the reaction torque from the distal segment). Using the equations of motion from Chapter~\ref{ch:04_forces_and_torques}, the constraint torque at joint $i$ arises from the accelerations of the distal chain:
+where $\tau_i^{(m)}$ is the muscle torque applied at that joint and $\tau_i^{(c)}$ is the constraint torque (the reaction torque from the distal segment). Using the equations of motion from Chapter @ch:04_forces_and_torques, the constraint torque at joint $i$ arises from the accelerations of the distal chain:
 
 $$
 \tau_i^{(c)} = -\frac{\partial}{\partial \theta_i} \mathcal{L}_{\text{constraint}}
@@ -52,9 +49,6 @@ $$
 where the constraint Lagrangian encodes the coupling to distal segments.
 
 ### The Sequence: Hips $\to$ Torso $\to$ Shoulders $\to$ Arms $\to$ Wrists $\to$ Club
-
-
-
 
 
 In a well-executed golf swing, the following sequence occurs:
@@ -82,7 +76,6 @@ $$
 $$
 
 
-
 where $\omega_i$ is the natural frequency of the oscillation at joint $i$. Since distal segments typically have smaller mass and shorter moment arms, their $\omega_i$ values are larger, causing the time intervals to compress. This compression is part of what amplifies velocity down the chain.
 
 The *energy cascade* occurs because each segment, upon decelerating from its peak velocity, does work on the distal segment. The power delivered at joint $i$ is:
@@ -96,20 +89,16 @@ When $\dot{\theta}_i$ is large and $\tau_i^{(c)}$ is negative (the segment is be
 ::: {.callout-tip}
 ## Timing the Four Segments in a Real Swing
 
-Biomechanical data from high-speed video and marker tracking show the following approximate peak velocities (from \citep{Cheetham2001, Hume2005}):
+Biomechanical data from high-speed video and marker tracking show the following approximate peak velocities (from [@Cheetham2001, Hume2005]):
 
 
-\begin{tabular}{lcc}
-\toprule
-Segment & Peak Velocity (deg/s) & Percent of Downswing 
-\midrule
-Hips (internal rotation) & 320 & 55% 
-Torso (rotation) & 380 & 70% 
-Shoulders (rotation) & 420 & 80% 
-Lead Arm (elevation) & 650 & 85% 
-Club (rotation about grip) & 1200 & 95% 
-\bottomrule
-\end{tabular}
+| Segment | Peak Velocity (deg/s) | Percent of Downswing 
+Hips (internal rotation) | 320 | 55% 
+Torso (rotation) | 380 | 70% 
+Shoulders (rotation) | 420 | 80% 
+Lead Arm (elevation) | 650 | 85% 
+Club (rotation about grip) | 1200 | 95% |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 
 
 Note that the peak velocity increases dramatically down the chain (due to the decreasing moment of inertia and the geometry of the motion), yet each successive peak occurs later. This timing is the hallmark of a well-sequenced swing. A golfer with poor sequencing might accelerate the arms too early relative to the torso, in which case the constraint torque from the torso cannot effectively accelerate the arms, and the final club velocity suffers.
@@ -117,7 +106,6 @@ Note that the peak velocity increases dramatically down the chain (due to the de
 :::
 
 ### Mathematical Formulation: The Coupled Oscillator Model
-
 
 
 To gain intuition, consider a simplified two-segment model: hip rotation ($\theta_1$) and arm/club rotation ($\theta_2$). Suppose the segments are connected by a damped elastic coupling (representing the passive elastic tissues and the active muscles):
@@ -144,10 +132,7 @@ In a coupled kinetic chain, energy is transferred from proximal to distal segmen
 :::
 
 
-
 ## X-Factor and X-Factor Stretch
-
-
 
 
 One of the most important kinematic variables in the golf swing is the *X-factor*, a measure of the differential rotation between the shoulders and hips.
@@ -161,7 +146,7 @@ $$
 \alpha_X = \theta_{\text{shoulders}} - \theta_{\text{hips}}
 $$
 
-where $\theta$ is measured as the internal rotation from address. At the top of the backswing, the X-factor typically ranges from $40^{\circ}$ to $55^{\circ}$ in skilled golfers. A larger X-factor at the top indicates that the golfer has ``coiled'' the upper body against the lower body, storing elastic energy in the trunk muscles and passive tissues.
+where $\theta$ is measured as the internal rotation from address. At the top of the backswing, the X-factor typically ranges from $40^{\circ}$ to $55^{\circ}$ in skilled golfers. A larger X-factor at the top indicates that the golfer has "coiled" the upper body against the lower body, storing elastic energy in the trunk muscles and passive tissues.
 
 :::
 
@@ -181,7 +166,6 @@ $$
 The stretch magnitude is $\Delta \alpha_X^{\text{stretch}} = \alpha_X^{\text{max}} - \alpha_X(t_{\text{top}})$, typically $5^{\circ}$ to $10^{\circ}$ in skilled golfers.
 
 :::
-
 
 
 ### Elastic Energy Storage and the Coupled Oscillator Picture
@@ -207,8 +191,7 @@ Mathematically, the X-factor angle $\alpha_X(t) = \theta_2(t) - \theta_1(t)$ evo
 ### Empirical Evidence and Performance Correlations
 
 
-
-A landmark study by \citet{Cheetham2001} tracked X-factor and X-factor stretch in 15 golfers of varying skill levels using high-speed video. The results were striking: the magnitude of X-factor stretch showed a stronger correlation with driving distance than the static X-factor at the top of the backswing. Specifically:
+A landmark study by @Cheetham2001 tracked X-factor and X-factor stretch in 15 golfers of varying skill levels using high-speed video. The results were striking: the magnitude of X-factor stretch showed a stronger correlation with driving distance than the static X-factor at the top of the backswing. Specifically:
 
   - X-factor at top: $r = 0.41$ with carry distance
   - X-factor stretch: $r = 0.72$ with carry distance
@@ -231,9 +214,7 @@ Golfer B hits the ball farther because the trunk musculature and passive tissues
 ## Wrist Release Mechanics
 
 
-
-
-The wrist is perhaps the most misunderstood element of the kinetic chain. The common refrain ``hold the lag'' or ``lag the club'' suggests that the wrist should actively maintain a high lag angle (the angle between the lead forearm and the shaft) for as long as possible, then suddenly ``snap'' the wrist at impact. However, a careful biomechanical and mechanical analysis shows that the wrist release is not an active muscular snap, but rather a *cascade effect* arising from the kinematics and dynamics of the chain.
+The wrist is perhaps the most misunderstood element of the kinetic chain. The common refrain "hold the lag" or "lag the club" suggests that the wrist should actively maintain a high lag angle (the angle between the lead forearm and the shaft) for as long as possible, then suddenly "snap" the wrist at impact. However, a careful biomechanical and mechanical analysis shows that the wrist release is not an active muscular snap, but rather a *cascade effect* arising from the kinematics and dynamics of the chain.
 
 ::: {.callout-note}
 ## Lag Angle
@@ -251,10 +232,9 @@ where $\theta_{\text{club}}$ is the rotation of the club relative to the grip.
 :::
 
 
-
 ### Why the Wrist Cannot Drive the Club
 
-At first glance, it seems that the wrist should be a major power source: the wrist muscles are substantial, and a violent wrist snap seems to intuitively contribute to club speed. However, Chapter~\ref{ch:muscle-force-generation} showed that skeletal muscles operate under a fundamental constraint: they are weak at high speeds (Hill's force-velocity relation). By the time the club reaches near-impact speeds (say, 80 mph at the hands, which is $\sim 1200^{\circ}$/s in rotational terms), the muscle cannot exert much force.
+At first glance, it seems that the wrist should be a major power source: the wrist muscles are substantial, and a violent wrist snap seems to intuitively contribute to club speed. However, Chapter @ch:muscle-force-generation showed that skeletal muscles operate under a fundamental constraint: they are weak at high speeds (Hill's force-velocity relation). By the time the club reaches near-impact speeds (say, 80 mph at the hands, which is $\sim 1200^{\circ}$/s in rotational terms), the muscle cannot exert much force.
 
 Moreover, the wrist is a small, light segment at the distal end of the chain. For the wrist to actively drive the club, it would need to exert a torque $\tau_{\text{wrist}}$ on the club against the dynamic resistance (inertia and centrifugal effects) of the club. However, the work-energy theorem tells us:
 
@@ -270,8 +250,6 @@ For the wrist muscles to do significant work on the club at high speeds, they wo
 The wrist release is not an active drive of the club by the wrist muscles. Rather, it is the point at which the wrist muscles *cease to constrain* the club, allowing the club to accelerate under the constraint forces (coupling torques) from the arm. The optimal release timing is when the arm is still accelerating and the constraint torque from the arm to the club is maximum.
 
 :::
-
-
 
 
 ### Lag Angle Dynamics and the Constraint Model
@@ -357,28 +335,24 @@ $$
 \frac{\dot{\theta}_c^{\text{late}}}{\dot{\theta}_c^{\text{early}}} = \frac{\dot{\theta}_a(t_r) + \frac{a_0}{2} t_i}{\dot{\theta}_a(t_r) + \frac{a_0}{2} (0.7 t_i)} \approx 1.15 \text{ to } 1.30
 $$
 
-depending on the initial velocity. This implies that late release can yield club speeds 15--30% higher than early release, all else being equal. Of course, ``all else'' is *not* equal: a golfer with early release might have higher arm velocities at impact due to better sequencing, which could offset this disadvantage. However, the fundamental principle is clear: *holding the lag* (maintaining the constraint as long as possible) allows the arm to continue accelerating the club for a longer duration.
+depending on the initial velocity. This implies that late release can yield club speeds 15--30% higher than early release, all else being equal. Of course, "all else" is *not* equal: a golfer with early release might have higher arm velocities at impact due to better sequencing, which could offset this disadvantage. However, the fundamental principle is clear: *holding the lag* (maintaining the constraint as long as possible) allows the arm to continue accelerating the club for a longer duration.
 
 :::
 
 ### Why Conscious Wrist Uncocking Fails
 
 
-
-Many amateur golfers attempt to consciously ``snap'' the wrist at impact, thinking that an active wrist uncocking will add power. However, this usually results in poorer performance for several reasons:
+Many amateur golfers attempt to consciously "snap" the wrist at impact, thinking that an active wrist uncocking will add power. However, this usually results in poorer performance for several reasons:
 
   - **Loss of constraint force**: If the golfer actively uncocks the wrist before the arm has finished accelerating, the arm loses the opportunity to continue transmitting torque to the club. The club decelerates after the release.
 
   - **Kinematic mismatch**: The wrist, being a small and light joint, cannot accelerate the club much. Even if the wrist muscles contract maximally, the power delivered is limited by Hill's curve. Meanwhile, the arm, being heavier and driven by larger muscles, can deliver much more power to the club if the constraint remains intact.
 
-  - **Timing disruption**: Conscious muscular effort introduces variability in the timing of the release. A golfer trying to ``snap'' the wrist might release too early or too late, disrupting the carefully-timed kinetic chain sequence.
+  - **Timing disruption**: Conscious muscular effort introduces variability in the timing of the release. A golfer trying to "snap" the wrist might release too early or too late, disrupting the carefully-timed kinetic chain sequence.
 
 The lesson is that skilled golfers maintain a passive wrist position (neither cocked nor uncocked beyond the arm's natural motion) and let the constraint naturally release when the arm can no longer accelerate the club faster than the wrist can follow.
 
 ## Weight Transfer and Ground Reaction Force Sequencing
-
-
-
 
 
 The kinetic chain would not exist without the ground. The ground provides the only external torque about the vertical axis (the $z$-axis in a typical coordinate system) that can drive the hips' rotation. This ground reaction force (GRF) sequencing is intimately connected to the proximal-to-distal motion of the kinetic chain.
@@ -389,7 +363,6 @@ The kinetic chain would not exist without the ground. The ground provides the on
 In the golf swing, the hips rotate about the vertical axis. For this rotation to occur, an external torque must be applied. The only source of external torque about the vertical axis is the ground reaction force at the feet. Therefore, the GRF, not the muscles, is the primary driver of hip rotation. The muscles *control* the GRF by adjusting the stance and the direction of force application, but they do not create torque in the absence of ground contact.
 
 :::
-
 
 
 ### Center of Pressure Movement and Force Direction
@@ -407,7 +380,6 @@ The CoP movement is not arbitrary; it is tightly coordinated with hip and should
 ### Timing of Peak Ground Reaction Force
 
 
-
 High-speed force plate measurements reveal a characteristic pattern in the timing of GRF during the downswing. For a driver swing:
 
   - **Maximum vertical GRF (lead foot)**: Typically peaks 80--100 ms *before* impact. At this time, the golfer is pushing down hard to drive the hips and rotate the torso.
@@ -421,8 +393,7 @@ The fact that peak GRF precedes impact by a significant time interval is crucial
 ### The Push-Off and Rotational Momentum Transfer
 
 
-
-The ground provides both vertical and horizontal forces. The vertical component (the ``push-off'') can be understood to create rotational momentum via the geometry of the stance. If the golfer applies a downward force $F_z$ at the lead foot, which is displaced a distance $r$ from the vertical axis of hip rotation, the torque about the hip rotation axis is:
+The ground provides both vertical and horizontal forces. The vertical component (the "push-off") can be understood to create rotational momentum via the geometry of the stance. If the golfer applies a downward force $F_z$ at the lead foot, which is displaced a distance $r$ from the vertical axis of hip rotation, the torque about the hip rotation axis is:
 
 $$
 \tau = F_z \times r
@@ -480,8 +451,6 @@ This explains how the hips can rotate from a slow start at the top of the backsw
 ## Energy Flow Quantification
 
 
-
-
 To fully understand the kinetic chain, we must quantify how energy flows through the segments. The work-energy theorem provides the framework.
 
 ### Power and Work at Each Joint
@@ -507,7 +476,6 @@ $$
 Thus, the power delivered by a torque equals the rate of change of kinetic energy. If $P > 0$, the segment is being accelerated (increasing KE). If $P < 0$, the segment is being decelerated (decreasing KE). The decelerated segment is doing work on something else (in this case, the distal segments via constraint forces).
 
 ### The Power Flow Diagram
-
 
 
 In a kinetic chain, there are two types of torques acting on each segment:
@@ -546,29 +514,24 @@ The constraint forces redistribute energy among the segments: $P_i^{(c)}$ can be
 ### Energy Budget: A Typical Driver Swing
 
 
+Measurements of elite golfers reveal the following approximate energy distribution (from [@Hume2005, Sprigings2005]):
 
-Measurements of elite golfers reveal the following approximate energy distribution (from \citep{Hume2005, Sprigings2005}):
 
-
-\begin{tabular}{lcc}
-\toprule
-Segment & Peak KE (J) & % of Total KE at Impact 
-\midrule
-Hips and torso & 50--80 & 15--25% 
-Shoulders and arms & 40--60 & 15--20% 
-Wrists and forearms & 20--40 & 8--15% 
-Club & 200--300 & 50--60% 
-\bottomrule
-\end{tabular}
+| Segment | Peak KE (J) | % of Total KE at Impact 
+Hips and torso | 50--80 | 15--25% 
+Shoulders and arms | 40--60 | 15--20% 
+Wrists and forearms | 20--40 | 8--15% 
+Club | 200--300 | 50--60% |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 
 
 The club contains the majority of the kinetic energy at impact, even though it represents a small fraction of the body mass. This is the result of the velocity amplification produced by the kinetic chain: the body's segments transfer their kinetic energy progressively into smaller, faster-moving segments, with the final concentration in the club.
 
-The muscular power input occurs primarily during the backswing and the early downswing. By the time the club approaches impact, most of the muscles are acting eccentrically (decelerating), transmitting their kinetic energy forward. The muscles are not ``driving'' the club at impact; they are *restraining* the body while the club catches up.
+The muscular power input occurs primarily during the backswing and the early downswing. By the time the club approaches impact, most of the muscles are acting eccentrically (decelerating), transmitting their kinetic energy forward. The muscles are not "driving" the club at impact; they are *restraining* the body while the club catches up.
 
 ### Energy Efficiency and Muscular Contribution
 
-The ``efficiency'' of the kinetic chain is the ratio of the kinetic energy imparted to the club to the total muscular work done. In ideal terms:
+The "efficiency" of the kinetic chain is the ratio of the kinetic energy imparted to the club to the total muscular work done. In ideal terms:
 
 $$
 \eta = \frac{KE_{\text{club}}}{\int P^{(m)} dt}
@@ -581,9 +544,9 @@ For elite golfers, this efficiency ranges from 40% to 60%. The remaining 40%--60
 A golfer with better sequencing (sharper proximal-to-distal transitions) typically has higher efficiency: more of the muscular work is concentrated into the club velocity. Conversely, a golfer with poor sequencing (e.g., casting the club early, failing to transfer weight) dissipates more energy and achieves lower club speed for the same muscular effort.
 
 ::: {.callout-note}
-## Efficiency and the Illusion of ``Harder Swinging''
+## Efficiency and the Illusion of "Harder Swinging"
 
-Many golfers believe that they can hit the ball farther by swinging ``harder'' (more muscular effort). While additional muscular effort does increase the total power input, the efficiency also matters. A golfer who swings with poor sequencing might actually reduce their efficiency: the added muscular effort is not translated into club velocity because the chain is broken.
+Many golfers believe that they can hit the ball farther by swinging "harder" (more muscular effort). While additional muscular effort does increase the total power input, the efficiency also matters. A golfer who swings with poor sequencing might actually reduce their efficiency: the added muscular effort is not translated into club velocity because the chain is broken.
 
 A better approach is to improve sequencing and efficiency. A golfer with excellent sequencing can hit the ball farther *with the same muscular effort* than a golfer with poor sequencing, by virtue of higher efficiency. Many instruction programs focus on this: teaching golfers to move their hips first, then shoulders, then arms, in sequence, rather than trying to rotate everything at once or leading with the arms. The result is higher club speed, not from more muscular effort, but from better energy transfer.
 
@@ -592,15 +555,12 @@ A better approach is to improve sequencing and efficiency. A golfer with excelle
 ## The ZTCF Perspective: Kinetic Chain Emerges from the Dynamics
 
 
-
-
-One of the most profound insights from the ZTCF formalism (Chapter~\ref{ch:zero_torque_counterfactual}) is that the proximal-to-distal sequencing of the kinetic chain does *not* need to be programmed into the motor control system. Instead, it *emerges naturally* from the structure of the equations of motion when the body is modeled as a coupled kinetic chain with realistic mass, geometry, and stiffness parameters.
+One of the most profound insights from the ZTCF formalism (Chapter @ch:zero_torque_counterfactual) is that the proximal-to-distal sequencing of the kinetic chain does *not* need to be programmed into the motor control system. Instead, it *emerges naturally* from the structure of the equations of motion when the body is modeled as a coupled kinetic chain with realistic mass, geometry, and stiffness parameters.
 
 ### Natural Frequencies and Coupling
 
 
-
-Recall the coupled oscillator model introduced in Section~\ref{sec:x_factor}. Each joint has a natural frequency $\omega_i$ determined by the local stiffness and inertia. For a joint with moment of inertia $I_i$ and coupling stiffness $k_i$ (stiffness of the joint's passive and active structures):
+Recall the coupled oscillator model introduced in Section @sec:x_factor. Each joint has a natural frequency $\omega_i$ determined by the local stiffness and inertia. For a joint with moment of inertia $I_i$ and coupling stiffness $k_i$ (stiffness of the joint's passive and active structures):
 
 $$
 \omega_i \approx \sqrt{\frac{k_i}{I_i}}
@@ -613,14 +573,13 @@ When a muscular input is applied at the hip, the coupled system's response natur
 ### The Drift Field Encodes the Kinetic Chain
 
 
-
 In the ZTCF formalism, the dynamics of the coupled system are described by the drift field:
 
 $$
-\dot{\configvec} = \drift(\configvec, \configdot, \control)
+\dot{\mathbf{q}} = \drift(\mathbf{q}, \dot{\mathbf{q}}, \control)
 $$
 
-where $\configvec$ is the configuration vector (all joint angles), $\configdot$ is the configuration velocity, and $\control$ is the control input (muscle activations). The drift field incorporates the mass matrix $\massmat(\configvec)$, which encodes the coupling between segments.
+where $\mathbf{q}$ is the configuration vector (all joint angles), $\dot{\mathbf{q}}$ is the configuration velocity, and $\control$ is the control input (muscle activations). The drift field incorporates the mass matrix $\massmat(\mathbf{q})$, which encodes the coupling between segments.
 
 The mass matrix is block-diagonal-like in the joint space, but the inversion $\massmat^{-1}$ couples the segments: an acceleration demand at one joint back-couples to other joints via the mass matrix inversion. This coupling is what produces the constraint forces and the energy transfer.
 
@@ -650,7 +609,6 @@ Given these control inputs, the drift field automatically produces the proximal-
 ### The Role of Muscular Control: Timing and Synchronization
 
 
-
 If the kinetic chain sequence is a natural consequence of the dynamics, what role does muscular control play? The answer is: *timing and synchronization*.
 
 The drift field equation shows that the output depends on $\control(t)$, the temporal pattern of muscle activation. The specific timing of when muscles turn on and off determines whether the natural dynamics are exploited effectively.
@@ -665,13 +623,12 @@ For example, consider the transition from the backswing to the downswing. At the
 
 A golfer with poor timing might activate the arm muscles too early, or fail to deactivate the torso muscles in time, disrupting the sequence. A golfer with excellent timing synchronizes the muscle activations to match the natural frequencies and time scales of the coupled system.
 
-Interestingly, this is often *not* taught as explicit timing rules (e.g., ``activate hip muscles at 200 ms''), but rather as *feel* or *tempo*. A golfer might say, ``I feel the sequence'' or ``I establish a rhythm.'' This language suggests that the motor control system is learning to exploit the natural dynamics through practice, without necessarily building an explicit internal model.
+Interestingly, this is often *not* taught as explicit timing rules (e.g., "activate hip muscles at 200 ms"), but rather as *feel* or *tempo*. A golfer might say, "I feel the sequence" or "I establish a rhythm." This language suggests that the motor control system is learning to exploit the natural dynamics through practice, without necessarily building an explicit internal model.
 
 ### The DCR During the Kinetic Chain Sequence
 
 
-
-The Drift-Correction-Response (DCR, introduced in Chapter~\ref{ch:zero_torque_counterfactual}) describes how the golfer corrects deviations from the desired trajectory. During the kinetic chain sequence, the DCR is especially important because small timing errors can propagate down the chain.
+The Drift-Correction-Response (DCR, introduced in Chapter @ch:zero_torque_counterfactual) describes how the golfer corrects deviations from the desired trajectory. During the kinetic chain sequence, the DCR is especially important because small timing errors can propagate down the chain.
 
 For instance, if the hip rotation is slightly delayed, the constraint force that drives the torso will arrive slightly late. The torso will then accelerate slightly later, which cascades to the arms, and finally to the club. The result might be a slightly slower club speed, or a timing error that affects the strike quality.
 
@@ -682,27 +639,23 @@ Conversely, a golfer with a high DCR latency (slow correction) cannot adjust qui
 ## Practical Implications and Instruction
 
 
-
 The theoretical understanding of the kinetic chain has direct practical implications for golf instruction and swing improvement.
 
-### Why ``Faster Hips'' Does Not Mean Jerky Motion
+### Why "Faster Hips" Does Not Mean Jerky Motion
 
 
-
-A common instruction is to ``rotate the hips faster.'' However, many golfers interpret this as rotating the hips with a jerky or sudden motion, which often disrupts the sequence. The correct interpretation is that the hip *acceleration* should be high (but not the jerk, which is the rate of change of acceleration). High acceleration over a sustained interval produces smooth, continuous motion with high velocity, not jerky motion.
+A common instruction is to "rotate the hips faster." However, many golfers interpret this as rotating the hips with a jerky or sudden motion, which often disrupts the sequence. The correct interpretation is that the hip *acceleration* should be high (but not the jerk, which is the rate of change of acceleration). High acceleration over a sustained interval produces smooth, continuous motion with high velocity, not jerky motion.
 
 In the drift field formalism, smooth high acceleration corresponds to a smooth, ramped muscle input $\control(t)$ that ramps up over the early downswing. A jerky motion would correspond to a step function or impulse, which excites high-frequency vibrations and disrupts the natural coupling.
 
-### The Myth of ``Staying Behind the Ball''
+### The Myth of "Staying Behind the Ball"
 
 
-
-Another common instruction is to ``stay behind the ball'' or ``maintain forward lean'' at impact. The physics interpretation is that the golfer should maintain hip rotation velocity into impact, which keeps the hips ahead of the shoulders and maximizes the X-factor. However, the phrase ``staying behind'' can be misinterpreted as not transferring weight or not rotating the hips fully, which actually reduces power.
+Another common instruction is to "stay behind the ball" or "maintain forward lean" at impact. The physics interpretation is that the golfer should maintain hip rotation velocity into impact, which keeps the hips ahead of the shoulders and maximizes the X-factor. However, the phrase "staying behind" can be misinterpreted as not transferring weight or not rotating the hips fully, which actually reduces power.
 
 The correct interpretation is that the hips should *continue* to rotate all the way through impact and into the follow-through. The hips do not decelerate at impact; they continue accelerating until late in the follow-through. This sustained hip rotation keeps the shoulders and arms on a tighter rotational path, which effectively increases the X-factor and produces the whipping motion of the club.
 
 ### Training Proximal-to-Distal Sequencing
-
 
 
 If the kinetic chain sequence emerges naturally from the dynamics, how can a golfer improve their sequencing? The answer is to practice with proper kinematics so that the motor control system learns the correct timing pattern.
@@ -788,7 +741,7 @@ A golfer performs a swing in which the muscular work input is $W_{\text{muscle}}
 
   - (c) Compute the energy delivered to the ball: $E_{\text{ball}} = 0.5 \times KE_{\text{club}}$.
 
-  - (d) What is the overall ``ball efficiency'' $\eta_{\text{ball}} = E_{\text{ball}} / W_{\text{muscle}}$?
+  - (d) What is the overall "ball efficiency" $\eta_{\text{ball}} = E_{\text{ball}} / W_{\text{muscle}}$?
 
   - (e) If the golfer improves sequencing and increases the club kinetic energy to 220 J (with body KE decreasing to 100 J), what is the new overall efficiency? What is the new ball efficiency?
 
