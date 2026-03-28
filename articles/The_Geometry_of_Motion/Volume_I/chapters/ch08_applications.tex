@@ -1651,26 +1651,16 @@ performance and robustness from a single computation.
 \begin{center}
 \begin{tikzpicture}[scale=1.0, every node/.style={font=\small}]
   % Central system box
-  \draw[very thick, red, rounded rectangle, minimum width=3cm, minimum height=0.8cm]
-    (1.5, 2.5) to (4.5, 2.5);
-  \node[font=\small\bfseries, red] at (3, 2.5) {Nonlinear System};
+  \node[draw, very thick, red, rounded corners=4pt, minimum width=3cm, minimum height=0.8cm, font=\small\bfseries] at (3, 2.5) {Nonlinear System};
 
   % Four analytic tools radiating out
-  \draw[thick, blue, rounded rectangle, minimum width=2cm, minimum height=0.6cm]
-    (0, 4) to (1.5, 4);
-  \node[font=\small, blue, align=center] at (0.75, 4) {Tangent-space\\linearization};
+  \node[draw, thick, blue, rounded corners=3pt, minimum width=2cm, minimum height=0.6cm, font=\small, align=center] at (0.75, 4) {Tangent-space\\linearization};
 
-  \draw[thick, blue, rounded rectangle, minimum width=2cm, minimum height=0.6cm]
-    (4.5, 4) to (6, 4);
-  \node[font=\small, blue, align=center] at (5.25, 4) {Contraction\\metrics};
+  \node[draw, thick, blue, rounded corners=3pt, minimum width=2cm, minimum height=0.6cm, font=\small, align=center] at (5.25, 4) {Contraction\\metrics};
 
-  \draw[thick, blue, rounded rectangle, minimum width=2cm, minimum height=0.6cm]
-    (0, 1) to (1.5, 1);
-  \node[font=\small, blue, align=center] at (0.75, 1) {Optimal\\control};
+  \node[draw, thick, blue, rounded corners=3pt, minimum width=2cm, minimum height=0.6cm, font=\small, align=center] at (0.75, 1) {Optimal\\control};
 
-  \draw[thick, blue, rounded rectangle, minimum width=2cm, minimum height=0.6cm]
-    (4.5, 1) to (6, 1);
-  \node[font=\small, blue, align=center] at (5.25, 1) {Drift--input\\decomposition};
+  \node[draw, thick, blue, rounded corners=3pt, minimum width=2cm, minimum height=0.6cm, font=\small, align=center] at (5.25, 1) {Drift--input\\decomposition};
 
   % Arrows from system to tools
   \draw[<->, thick, black] (1.5, 2.5) -- (1.5, 4);
