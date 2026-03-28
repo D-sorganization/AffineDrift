@@ -126,21 +126,23 @@ For a link $i$ with spatial inertia $\mathcal{I}_i$ and child link $i+1$ with ar
 
 \begin{equation}
   \label{eq:articulated_inertia}
-  \mathcal{I}^A_i = \mathcal{I}_i + \mathcal{I}^A_{i+1} - \frac{(\mathcal{I}^A_{i+1} \mathcal{S}_{i+1}) (\mathcal{I}^A_{i+1} \mathcal{S}_{i+1})^T}{\mathcal{S}_{i+1}^T \mathcal{I}^A_{i+1} \mathcal{S}_{i+1}}
+  \mathcal{I}^A_i = \mathcal{I}_i + {}^{i}\mathbf{X}_{i+1}^{*}\left(\mathcal{I}^A_{i+1} - \frac{(\mathcal{I}^A_{i+1} \mathcal{S}_{i+1}) (\mathcal{I}^A_{i+1} \mathcal{S}_{i+1})^T}{\mathcal{S}_{i+1}^T \mathcal{I}^A_{i+1} \mathcal{S}_{i+1}}\right) {}^{i}\mathbf{X}_{i+1}^{*T}
 \end{equation}
+
+where ${}^{i}\mathbf{X}_{i+1}^{*}$ is the spatial force transform from frame $i+1$ to frame $i$ (the coadjoint of the spatial motion transform ${}^{i}\mathbf{X}_{i+1}$). This transform is essential: the child's articulated inertia is expressed in the child's frame and must be mapped to the parent's frame before addition \cite{Featherstone2008}.
 
 Breaking down each term:
 
 \begin{enumerate}
-  \item $\mathcal{I}_i$: The rigid-body spatial inertia of link $i$ itself.
-  \item $\mathcal{I}^A_{i+1}$: The articulated inertia of the child link (everything downstream).
+  \item $\mathcal{I}_i$: The rigid-body spatial inertia of link $i$ itself (in frame $i$).
+  \item ${}^{i}\mathbf{X}_{i+1}^{*} \mathcal{I}^A_{i+1} {}^{i}\mathbf{X}_{i+1}^{*T}$: The articulated inertia of the child link, transformed into frame $i$.
   \item $\mathcal{S}_{i+1}$: The screw axis of the joint connecting link $i$ to link $i+1$ (6D vector).
   \item $(\mathcal{I}^A_{i+1} \mathcal{S}_{i+1})$: The force required to accelerate the child chain along its screw axis.
   \item $\mathcal{S}_{i+1}^T \mathcal{I}^A_{i+1} \mathcal{S}_{i+1}$: A scalar—the effective inertia \textit{along} the joint's single degree of freedom (similar to $I \alpha$ in 1D dynamics).
   \item The fraction: Projects out the direction of motion along the joint; what remains is the inertia perpendicular to that motion (resistive to the parent).
 \end{enumerate}
 
-This is a rank-one update of the spatial inertia: we add the child's articulated inertia, then subtract the projection of that child onto the joint DOF.
+This is a rank-one update of the spatial inertia: we add the child's articulated inertia (after the frame transform), then subtract the projection of that child onto the joint DOF.
 
 \section{Derivation from First Principles}
 \label{sec:aba_derivation}
@@ -291,10 +293,10 @@ At a leaf (end-effector with no children), the articulated inertia equals the ri
 For each link $i$ with articulated inertia $\mathcal{I}^A_{i+1}$ of its child, update:
 \begin{equation}
   \label{eq:aba_inertia_recursion}
-  \mathcal{I}^A_i = \mathcal{I}_i + \mathcal{I}^A_{i+1} - \frac{(\mathcal{I}^A_{i+1} \mathcal{S}_{i+1}) (\mathcal{I}^A_{i+1} \mathcal{S}_{i+1})^T}{\mathcal{S}_{i+1}^T \mathcal{I}^A_{i+1} \mathcal{S}_{i+1}}
+  \mathcal{I}^A_i = \mathcal{I}_i + {}^{i}\mathbf{X}_{i+1}^{*}\left(\mathcal{I}^A_{i+1} - \frac{(\mathcal{I}^A_{i+1} \mathcal{S}_{i+1}) (\mathcal{I}^A_{i+1} \mathcal{S}_{i+1})^T}{\mathcal{S}_{i+1}^T \mathcal{I}^A_{i+1} \mathcal{S}_{i+1}}\right) {}^{i}\mathbf{X}_{i+1}^{*T}
 \end{equation}
 
-The denominator $\mathcal{S}_{i+1}^T \mathcal{I}^A_{i+1} \mathcal{S}_{i+1}$ is a scalar (the effective inertia along the joint's DOF) and is typically cached for use in Pass 3.
+The spatial force transform ${}^{i}\mathbf{X}_{i+1}^{*}$ maps the child's articulated inertia into the parent's coordinate frame. The denominator $\mathcal{S}_{i+1}^T \mathcal{I}^A_{i+1} \mathcal{S}_{i+1}$ is a scalar (the effective inertia along the joint's DOF) and is typically cached for use in Pass 3.
 
 \subsubsection{Bias Force Propagation (Optional)}
 \label{subsubsec:bias_propagation}
@@ -751,11 +753,21 @@ class ArticulatedBodyRobot:
         return V, p, S
 
     def pass2_articulated_inertias(self, S):
-        """Pass 2: Inward pass computing articulated inertias"""
+        """Pass 2: Inward pass computing articulated inertias.
+
+        NOTE: This simplified planar implementation expresses all
+        quantities in the world frame, so the spatial force transform
+        X* between parent and child frames is identity.  In the
+        general 3D case, the child's articulated inertia must be
+        transformed into the parent's frame via X* I_A X*^T before
+        addition (see Equation ref{eq:articulated_inertia}).
+        """
         I_A = [self.I_rigid[-1].copy()]  # Start with leaf inertia
 
         for i in range(self.n_links - 2, -1, -1):
             # Articulated inertia recursion
+            # In general: I_A_child_in_parent = X* @ I_child @ X*^T
+            # Here X* = I (planar, world-frame convention)
             I_child = I_A[0]
             S_i = S[i+1]
 

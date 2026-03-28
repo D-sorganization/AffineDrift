@@ -19,7 +19,7 @@
 \section{Historical Context: From Euler to Hamilton}
 \label{sec:rotation_history}
 
-The mathematics of 3D rotation has been refined over centuries by some of history's greatest mathematicians. In \textbf{1775}, Leonhard Euler published his groundbreaking \emph{Euler's Rotation Theorem}, establishing that any finite rotation in 3D space can be described as a single rotation about a fixed axis by some angle—a foundational geometric insight that remains the foundation of modern rotation calculus.
+The mathematics of 3D rotation has been refined over centuries by some of history's greatest mathematicians. In \textbf{1775}, Leonhard Euler published his groundbreaking \emph{Euler's Rotation Theorem}, establishing that any finite rotation in 3D space can be described as a single rotation about a fixed axis by some angle—a foundational geometric insight that remains central to modern rotation calculus.
 
 However, Euler's representation (axis-angle form) requires solving nonlinear equations and computing trigonometric functions. In \textbf{1843}, the Irish mathematician \textbf{William Rowan Hamilton} invented \textbf{Quaternions} ($\mathcal{H}$), an extension of complex numbers to four dimensions. Quaternions elegantly encode rotations as multiplication operations on 4-tuples, bypassing the singularities that plague other representations. Almost simultaneously, \textbf{Olinde Rodrigues} (1795–1853) derived the famous \textbf{Rodrigues rotation formula}, expressing how a vector rotates about an axis—a result that connects Euler's axis-angle theorem to matrix algebra.
 
@@ -62,7 +62,7 @@ To know where the Body Frame $\{b\}$ is relative to the absolute stationary univ
     \item The \textbf{rotation} of the axes of $\{b\}$ relative to the axes of $\{s\}$.
 \end{enumerate}
 
-Unlike the straightforward $(X, Y, Z)$ translation vector, rotation is fundamentally more mathematically demanding.
+Unlike the straightforward $(X, Y, Z)$ translation vector, rotation is mathematically subtle and surprisingly difficult to parameterize.
 
 \index{rotation matrix!definition}
 \section{Rotation Matrices: From First Principles}
@@ -262,7 +262,7 @@ The composite rotation is:
 \begin{laymansbox}{Gimbal Lock: Physical Intuition}{gimballock}
   If an airplane pitches perfectly $90^\circ$ straight up into the sky, its Roll axis (pointing out its nose) now perfectly aligns with its original Yaw axis (pointing perfectly down towards the Earth).
 
-  Mathematically, two independent degrees of freedom have become linearly dependent—they merged into the identical physical rotation axis. A degree of freedom is literally lost during the calculation. If you attempt to control the plane passing through this singularity, your matrices become non-invertible and your computer instantly crashes trying to compute a physical impossibility.
+  Mathematically, two independent degrees of freedom have become linearly dependent—they merged into the identical physical rotation axis. A degree of freedom is literally lost during the calculation. If you attempt to control the plane passing through this singularity, the Jacobian mapping Euler angle rates to angular velocity becomes singular, producing undefined or numerically unstable results (NaN values, wildly large rate commands).
 \end{laymansbox}
 
 \begin{theorem}{Gimbal Lock at \texorpdfstring{$\theta = \pm 90^\circ$}{theta = +/- 90 degrees}}{gimbal_lock_proof}
