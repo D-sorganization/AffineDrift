@@ -8,7 +8,7 @@ title: "The Articulated Body Algorithm"
 
 In Chapter 6, we introduced the Recursive Newton-Euler Algorithm. That algorithm solved the **Inverse Dynamics** problem: Given a desired trajectory ($\bm{q}, \dot{\bm{q}}, \ddot{\bm{q}}$), what forces $\bm{\tau}$ must the motors output to achieve it?
 
-However, when programming a simulator like MuJoCo or a physics engine for Reinforcement Learning training environments (as used in UpstreamDrift's simulation core), we face the exact opposite problem: **Forward Dynamics**. 
+However, when programming a simulator like MuJoCo or a physics engine for Reinforcement Learning training environments, we face the exact opposite problem: **Forward Dynamics**. 
 
 Given the current position ($\bm{q}$), current speed ($\dot{\bm{q}}$), and the forces currently being produced by the motors ($\bm{\tau}$), what will the resulting acceleration ($\ddot{\bm{q}}$) be?
 \begin{equation}

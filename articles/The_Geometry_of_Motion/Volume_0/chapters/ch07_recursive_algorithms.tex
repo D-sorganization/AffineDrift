@@ -23,7 +23,7 @@ The computational efficiency crisis in robotics was born in the 1970s. As roboti
 
 In the early 1980s, \textbf{Orin}, \textbf{McGhee}, and \textbf{Luh} \cite{luh1980} independently developed recursive formulations of robot dynamics. Instead of solving the global inverse dynamics problem as a monolithic matrix equation, they recognized that the sequential tree structure of a kinematic chain could be exploited: each joint only directly interacts with its immediate neighbors. Their key insight was that by organizing calculations to respect this local structure, one could reduce the computational complexity from $O(N^3)$ (matrix inversion) or even $O(N^4)$ (symbolic algebra) down to $O(N)$ (linear in the number of joints).
 
-In 1987, \textbf{Roy Featherstone} completed this revolution \cite{Featherstone2008}. His reformulation using spatial vector algebra (Chapter \ref{ch:spatial_algebra}) and adjoint transformations made recursive dynamics not merely efficient, but \emph{elegant}. The Recursive Newton-Euler Algorithm (RNEA) became the standard approach used in every modern physics engine: MuJoCo, PyBullet, Drake, Gazebo, and UpstreamDrift all rely fundamentally on Featherstone's recursive framework, executed as purely numerical matrix operations rather than symbolic manipulation.
+In 1987, \textbf{Roy Featherstone} completed this revolution \cite{Featherstone2008}. His reformulation using spatial vector algebra (Chapter \ref{ch:spatial_algebra}) and adjoint transformations made recursive dynamics not merely efficient, but \emph{elegant}. The Recursive Newton-Euler Algorithm (RNEA) became the standard approach used in every modern physics engine: MuJoCo, PyBullet, Drake, and Gazebo all rely fundamentally on Featherstone's recursive framework, executed as purely numerical matrix operations rather than symbolic manipulation. The companion software accompanying this textbook implements the same recursive algorithms.
 
 \section{The Curse of Dimensionality in Dynamics}
 
@@ -38,7 +38,7 @@ Here, $\mathbf{M}$ is the $N \times N$ mass matrix, $\mathbf{C}$ contains Coriol
 
 If you attempt to write the analytical Coriolis matrix explicitly for a 15-DOF human model on a piece of paper, the resulting trigonometric expansion ($\sin(\theta_1 + \theta_2)\cos(\theta_3)\dots$) will literally fill thousands of pages. Each entry in $\mathbf{C}$ is a sum of products of sines, cosines, and Denavit-Hartenberg parameters; for even a moderately complex chain, these expressions become unmaintainable.
 
-To control complex mechanisms in the real world at thousands of Hertz, modern engines (such as MuJoCo, Drake, Pinocchio, and UpstreamDrift) completely abandon building these massive equations explicitly. Instead, they rely entirely on \textbf{Recursive Algorithms} executing purely numerical matrix multiplications in $O(N)$ time.
+To control complex mechanisms in the real world at thousands of Hertz, modern engines (such as MuJoCo, Drake, and Pinocchio) completely abandon building these massive equations explicitly. Instead, they rely entirely on \textbf{Recursive Algorithms} executing purely numerical matrix multiplications in $O(N)$ time.
 
 \begin{figure}[htb]
 \centering
