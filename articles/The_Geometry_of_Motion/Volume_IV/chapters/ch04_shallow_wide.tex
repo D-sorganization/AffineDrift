@@ -113,31 +113,31 @@ through feedback loops that operate in parallel at multiple levels.
 \begin{tikzpicture}[scale=0.95]
   % Input
   \draw (0, 1.5) rectangle (0.8, 2.2);
-  \draw (0.4, 1.85) node[anchor=center, font=\tiny] {Input};
+  \draw (0.4, 1.85) node[align=center, anchor=center, font=\tiny] {Input};
 
   % Deep network (left)
-  \draw (0.4, 3.5) node[anchor=center, font=\small\bf] {Deep: 10 layers $\times$ 50 wide};
+  \draw (0.4, 3.5) node[align=center, anchor=center, font=\small\bf] {Deep: 10 layers $\times$ 50 wide};
   \for \i in {1, ..., 10} {
     \draw (1 + 0.4*\i, 1.5) circle (0.15);
   };
   \for \i in {1, ..., 10} {
     \draw (1.4 + 0.4*\i, 1.5) circle (0.15);
   };
-  \draw (6, 1.5) node[anchor=west, font=\tiny] {Latency: 50 ms};
+  \draw (6, 1.5) node[align=center, anchor=west, font=\tiny] {Latency: 50 ms};
 
   % Output layer
   \draw (8, 1.5) rectangle (8.8, 2.2);
-  \draw (8.4, 1.85) node[anchor=center, font=\tiny] {Output};
+  \draw (8.4, 1.85) node[align=center, anchor=center, font=\tiny] {Output};
 
   % Wide network (right)
-  \draw (0.4, -0.2) node[anchor=center, font=\small\bf] {Wide: 2 layers $\times$ 2000 wide};
+  \draw (0.4, -0.2) node[align=center, anchor=center, font=\small\bf] {Wide: 2 layers $\times$ 2000 wide};
   \fill[blue, opacity=0.2] (1, -1) rectangle (4.5, -0.4);
-  \draw (2.75, -0.7) node[anchor=center, font=\small] {Hidden layer (2000 neurons)};
-  \draw (6, -0.7) node[anchor=west, font=\tiny] {Latency: 10 ms};
+  \draw (2.75, -0.7) node[align=center, anchor=center, font=\small] {Hidden layer (2000 neurons)};
+  \draw (6, -0.7) node[align=center, anchor=west, font=\tiny] {Latency: 10 ms};
 
   % Arrow showing advantage
   \draw[->, thick, red] (6.2, 1.3) -- (6.2, -0.3);
-  \draw (6.5, 0.5) node[anchor=west, font=\small, color=red] {5x faster};
+  \draw (6.5, 0.5) node[align=center, anchor=west, font=\small, color=red] {5x faster};
 \end{tikzpicture}
 \caption{Shallow-wide architecture trades depth for width: a 2-layer network with 2000
 neurons per layer completes in 10 ms, while a 10-layer network with 50 neurons per

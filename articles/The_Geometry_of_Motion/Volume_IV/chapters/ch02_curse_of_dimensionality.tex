@@ -28,8 +28,8 @@ needed to solve many problems grow \emph{exponentially} with the state dimension
 \centering
 \begin{tikzpicture}[scale=1.0]
   % Axes
-  \draw[->, thick] (0, 0) -- (6, 0) node[anchor=north] {Dimension ($n$)};
-  \draw[->, thick] (0, 0) -- (0, 5) node[anchor=east, rotate=90] {Computational Cost};
+  \draw[->, thick] (0, 0) -- (6, 0) node[align=center, anchor=north] {Dimension ($n$)};
+  \draw[->, thick] (0, 0) -- (0, 5) node[align=center, anchor=east, rotate=90] {Computational Cost};
 
   % Grid-based (exponential)
   \draw[red, thick, smooth] plot coordinates {
@@ -42,13 +42,13 @@ needed to solve many problems grow \emph{exponentially} with the state dimension
   } node[anchor=west] {\small DDP: $O(n^3)$};
 
   % Synergy reduction (flat)
-  \draw[green, thick] (0, 0.3) -- (6, 0.3) node[anchor=west] {\small Synergies: $O(k^3)$};
+  \draw[green, thick] (0, 0.3) -- (6, 0.3) node[align=center, anchor=west] {\small Synergies: $O(k^3)$};
 
   % Shaded region (infeasible)
   \fill[red, opacity=0.1] (4, 5) -- (6, 5) -- (6, 0) -- (4, 0) -- cycle;
-  \draw (5, 3) node[anchor=center] {\small Curse\\ \small region};
+  \draw (5, 3) node[anchor=center, align=center] {\small Curse\\ \small region};
 
-  \draw (3, 4.2) node[anchor=center, font=\small] {Exponential growth};
+  \draw (3, 4.2) node[align=center, anchor=center, font=\small] {Exponential growth};
 \end{tikzpicture}
 \caption{The curse of dimensionality: computational cost grows exponentially with dimension
 for grid-based methods, cubically for DDP, and remains constant when using synergy-based

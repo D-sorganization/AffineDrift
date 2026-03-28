@@ -57,25 +57,25 @@ neural delays---\emph{in a quarter of a second}. This is the problem.
 \centering
 \begin{tikzpicture}[scale=1.2]
   % Task space (low-dim)
-  \draw[->, thick] (0, 0) -- (1, 0) node[anchor=north] {Task DOF = 6};
-  \draw[->, thick] (0, 0) -- (0, 1) node[anchor=east] {Position + Orientation};
+  \draw[->, thick] (0, 0) -- (1, 0) node[align=center, anchor=north] {Task DOF = 6};
+  \draw[->, thick] (0, 0) -- (0, 1) node[align=center, anchor=east] {Position + Orientation};
 
   % Mapping to configuration space
-  \draw (2.5, 0.5) ellipse (0.6 and 1.5) node[anchor=center] {\footnotesize Config};
+  \draw (2.5, 0.5) ellipse (0.6 and 1.5) node[align=center, anchor=center] {\footnotesize Config};
 
   % Null space visualization
   \draw (5, 0) ellipse (1.5 and 2);
-  \draw (5, 0.1) node[anchor=center] {Null space};
-  \draw (5, -0.8) node[anchor=center] {\footnotesize (task-irrelevant};
-  \draw (5, -1.2) node[anchor=center] {\footnotesize variability)};
+  \draw (5, 0.1) node[align=center, anchor=center] {Null space};
+  \draw (5, -0.8) node[align=center, anchor=center] {\footnotesize (task-irrelevant};
+  \draw (5, -1.2) node[align=center, anchor=center] {\footnotesize variability)};
 
   % Arrow showing redundancy
-  \draw[->, thick, dashed] (1.8, 0.5) -- (2.9, 0.5) node[anchor=south, midway] {\small redundant DOF};
+  \draw[->, thick, dashed] (1.8, 0.5) -- (2.9, 0.5) node[align=center, anchor=south, midway] {\small redundant DOF};
   \draw[->, thick] (3.2, 0.5) -- (3.5, 0.5);
 
   % Label
-  \draw (2.5, 2.5) node[anchor=center] {\textbf{Bernstein's DOF Problem}};
-  \draw (2.5, 2.1) node[anchor=center] {\small Many solutions satisfy the task constraints};
+  \draw (2.5, 2.5) node[align=center, anchor=center] {\textbf{Bernstein's DOF Problem}};
+  \draw (2.5, 2.1) node[align=center, anchor=center] {\small Many solutions satisfy the task constraints};
 \end{tikzpicture}
 \caption{The degrees-of-freedom problem: redundancy in configuration space allows
 task-irrelevant variability in the null space of the task Jacobian.}

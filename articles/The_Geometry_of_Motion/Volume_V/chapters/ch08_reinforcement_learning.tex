@@ -99,17 +99,17 @@ print(f"Random policy total reward: {total_reward:.1f}")
     \node[fill=green!20] (env) at (6, 2) {Environment};
 
     % Agent to Environment
-    \draw[->] (3.2, 2.2) -- (4.8, 2.2) node[above, midway, font=\tiny] {action $a_t$};
+    \draw[->] (3.2, 2.2) -- (4.8, 2.2) node[align=center, above, midway, font=\tiny] {action $a_t$};
 
     % Environment to Agent
-    \draw[->] (4.8, 1.8) -- (3.2, 1.8) node[below, midway, font=\tiny] {state $s_{t+1}$, reward $r_t$};
+    \draw[->] (4.8, 1.8) -- (3.2, 1.8) node[align=center, below, midway, font=\tiny] {state $s_{t+1}$, reward $r_t$};
 
     % State and reward processing
     \node[fill=yellow!20, below of=env] (sim) at (6, 0.3) {Forward Simulation};
     \node[fill=orange!20, below of=agent] (policy) at (2, 0.3) {Policy Network};
 
     % Agent learning loop
-    \draw[->] (1, 2) -- (1, 0.7) -- (2, 0.7) node[left, pos=0.5, font=\tiny] {experience};
+    \draw[->] (1, 2) -- (1, 0.7) -- (2, 0.7) node[align=center, left, pos=0.5, font=\tiny] {experience};
 
     \node[right, font=\tiny, fill=white] at (6.5, 0.5) {Computes next\\state via\\forward dynamics};
 

@@ -12,35 +12,35 @@
 \begin{tikzpicture}[scale=0.85]
   % Hierarchical levels
   \draw (0.5, 4) rectangle (2.5, 4.8);
-  \draw (1.5, 4.4) node[anchor=center, font=\small] {Task Planning};
-  \draw (1.5, 4.0) node[anchor=center, font=\tiny] {(Cortical, 100 ms)};
+  \draw (1.5, 4.4) node[align=center, anchor=center, font=\small] {Task Planning};
+  \draw (1.5, 4.0) node[align=center, anchor=center, font=\tiny] {(Cortical, 100 ms)};
 
   \draw[->, thick] (1.5, 4) -- (1.5, 3.5);
 
   \draw (0.5, 2.8) rectangle (2.5, 3.6);
-  \draw (1.5, 3.2) node[anchor=center, font=\small] {Trajectory};
-  \draw (1.5, 2.9) node[anchor=center, font=\tiny] {(Cerebellar, 50 ms)};
+  \draw (1.5, 3.2) node[align=center, anchor=center, font=\small] {Trajectory};
+  \draw (1.5, 2.9) node[align=center, anchor=center, font=\tiny] {(Cerebellar, 50 ms)};
 
   \draw[->, thick] (1.5, 2.8) -- (1.5, 2.3);
 
   \draw (0.5, 1.6) rectangle (2.5, 2.4);
-  \draw (1.5, 2.0) node[anchor=center, font=\small] {CPG Output};
-  \draw (1.5, 1.7) node[anchor=center, font=\tiny] {(Spinal, 10 ms)};
+  \draw (1.5, 2.0) node[align=center, anchor=center, font=\small] {CPG Output};
+  \draw (1.5, 1.7) node[align=center, anchor=center, font=\tiny] {(Spinal, 10 ms)};
 
   \draw[->, thick] (1.5, 1.6) -- (1.5, 1.1);
 
   \draw (0.5, 0.4) rectangle (2.5, 1.2);
-  \draw (1.5, 0.8) node[anchor=center, font=\small] {Joint Torques};
-  \draw (1.5, 0.5) node[anchor=center, font=\tiny] {(Motor neurons, 1 ms)};
+  \draw (1.5, 0.8) node[align=center, anchor=center, font=\small] {Joint Torques};
+  \draw (1.5, 0.5) node[align=center, anchor=center, font=\tiny] {(Motor neurons, 1 ms)};
 
   % Feedback paths (dashed)
   \draw[->, thick, dashed, red] (0.4, 0.8) -- (0.2, 0.8) -- (0.2, 2.0) -- (0.4, 2.0);
-  \draw (0.05, 1.4) node[anchor=east, font=\tiny, color=red] {error};
+  \draw (0.05, 1.4) node[align=center, anchor=east, font=\tiny, color=red] {error};
 
   % Title
-  \draw (4, 4.6) node[anchor=west, font=\small\bf] {Bio-Inspired Hierarchy};
-  \draw (4, 4.2) node[anchor=west, font=\tiny] {Shallow-wide at each level};
-  \draw (4, 3.85) node[anchor=west, font=\tiny] {Multi-timescale control};
+  \draw (4, 4.6) node[align=center, anchor=west, font=\small\bf] {Bio-Inspired Hierarchy};
+  \draw (4, 4.2) node[align=center, anchor=west, font=\tiny] {Shallow-wide at each level};
+  \draw (4, 3.85) node[align=center, anchor=west, font=\tiny] {Multi-timescale control};
 \end{tikzpicture}
 \caption{Hierarchical multi-timescale control architecture: each level shallow (1-2
 layers) but wide (thousands of parallel channels), operating at increasing timescales
