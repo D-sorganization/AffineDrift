@@ -246,7 +246,7 @@ Therefore, $(\mat{A} - \mat{A}')\vec{v} = 0$ for all $\vec{v}$, implying $\mat{A
 This uniqueness is the cornerstone of the book's philosophy. There is exactly one candidate
 for ``the infinitesimal structure'' of $f$ at $\bar\x$, and it is $\mat{A}$.
 
-\begin{axiombox}{Axiom 1: The Derivative is Exact}
+\begin{axiombox}{Principle 1: The Derivative is Exact}
 The linear map $\mat{A}$ is not an approximation to $f$. It \emph{is} the exact
 infinitesimal structure of $f$ at $\bar\x$. There is no ``better'' first-order
 description---$\mat{A}$ is unique by the definition of the Fréchet derivative.
@@ -331,19 +331,19 @@ Consider perturbations of increasing size. At equilibrium, $f(\bar\theta, 0, \ba
 For $\dx = (0.01, 0)$ (small angle perturbation):
 \begin{align}
 \text{True:} \quad f(\bar\theta + 0.01, 0, \bar{u}) &= \begin{pmatrix} 0 \\ -g(\sin(\pi/6 + 0.01) - \sin(\pi/6)) \end{pmatrix} \\
-&= \begin{pmatrix} 0 \\ -10(0.5145 - 0.5) \end{pmatrix} = \begin{pmatrix} 0 \\ -0.1450 \end{pmatrix}, \\
+&= \begin{pmatrix} 0 \\ -10(0.5087 - 0.5) \end{pmatrix} = \begin{pmatrix} 0 \\ -0.0867 \end{pmatrix}, \\
 \text{Linear:} \quad \mat{A}\,\dx &= \begin{pmatrix} 0 & 1 \\ -8.66 & -0.1 \end{pmatrix} \begin{pmatrix} 0.01 \\ 0 \end{pmatrix} = \begin{pmatrix} 0 \\ -0.0866 \end{pmatrix}, \\
-\text{Residual:} \quad r(\dx) &= \begin{pmatrix} 0 \\ -0.0584 \end{pmatrix}, \quad \norm{r(\dx)} = 0.0584, \quad \frac{\norm{r(\dx)}}{\norm{\dx}} = 5.84.
+\text{Residual:} \quad r(\dx) &= \begin{pmatrix} 0 \\ -0.0001 \end{pmatrix}, \quad \norm{r(\dx)} \approx 4.3 \times 10^{-4}, \quad \frac{\norm{r(\dx)}}{\norm{\dx}} = 0.043.
 \end{align}
 
 For $\dx = (0.001, 0)$ (one-tenth the size):
 \begin{align}
-\text{Residual:} \quad \norm{r(\dx)} &\approx 0.000585, \quad \frac{\norm{r(\dx)}}{\norm{\dx}} = 0.585.
+\text{Residual:} \quad \norm{r(\dx)} &\approx 4.3 \times 10^{-6}, \quad \frac{\norm{r(\dx)}}{\norm{\dx}} = 0.0043.
 \end{align}
 
 For $\dx = (0.0001, 0)$:
 \begin{align}
-\text{Residual:} \quad \norm{r(\dx)} &\approx 0.0000585, \quad \frac{\norm{r(\dx)}}{\norm{\dx}} = 0.0585.
+\text{Residual:} \quad \norm{r(\dx)} &\approx 4.3 \times 10^{-8}, \quad \frac{\norm{r(\dx)}}{\norm{\dx}} = 0.00043.
 \end{align}
 
 The ratio $\norm{r(\dx)}/\norm{\dx}$ decreases approximately as $\norm{\dx}$ (i.e., $o(\norm{\dx})$
@@ -420,7 +420,7 @@ equations in Chapter~\ref{ch:variational}.
 
 \subsection{Why Tangent Spaces Are the Natural Home of Superposition}
 
-\begin{axiombox}{Axiom 2: Superposition Lives in Tangent Spaces}
+\begin{axiombox}{Principle 2: Superposition Lives in Tangent Spaces}
 Vector addition $\dx_1 + \dx_2$ is only defined in vector spaces. Tangent spaces are
 vector spaces \emph{by construction}. Therefore, superposition of infinitesimal
 perturbations is exact---not because the nonlinear system is ``approximately linear,''
@@ -473,7 +473,7 @@ sharper bound holds via the mean-value form of Taylor's theorem:
 \label{eq:ch1:residual-bound}
 \end{equation}
 
-\begin{axiombox}{Axiom 3: Residuals Are Geometry, Not Error}
+\begin{axiombox}{Principle 3: Residuals Are Geometry, Not Error}
 The residual $r(\dx)$ measures how far the true dynamics deviate from the tangent-space
 prediction. This deviation comes from \emph{manifold curvature} (second-order geometry),
 not from ``our approximation being bad.'' A large residual at a point means the manifold
@@ -605,8 +605,11 @@ The Jacobian of this system with respect to a perturbation in angular velocity i
 \end{equation}
 
 This reveals a key point: perturbations to the angular velocity propagate through the system
-as skew-symmetric matrices, which is precisely the tangent space structure. The linear
-perturbation dynamics lives naturally in $\mathfrak{so}(3)$, the Lie algebra.
+as skew-symmetric matrices. More precisely, the tangent space at the identity
+$T_I\SO(3) = \mathfrak{so}(3)$ consists of skew-symmetric matrices. The tangent space at an
+arbitrary element $R \in \SO(3)$ is $T_R\SO(3) = \{R \cdot S : S \in \mathfrak{so}(3)\}$.
+The linear perturbation dynamics lives naturally in $\mathfrak{so}(3)$ when expressed in
+body-frame coordinates (i.e., left-trivialized).
 
 \subsubsection{Why SO(3) Matters}
 
@@ -693,7 +696,7 @@ real variables miss this structure.
 
 \subsection{Transport as Curved Geometry}
 
-\begin{axiombox}{Axiom 4: Transport Between Tangent Spaces}
+\begin{axiombox}{Principle 4: Transport Between Tangent Spaces}
 Moving along a trajectory from $\bar\x(t_0)$ to $\bar\x(t_1)$ means moving between
 tangent spaces $T_{\bar\x(t_0)}\mathcal{M}$ and $T_{\bar\x(t_1)}\mathcal{M}$. The
 connection between these spaces---parallel transport, Christoffel symbols in Riemannian

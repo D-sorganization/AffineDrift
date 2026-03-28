@@ -67,7 +67,7 @@ R_f(\dx) := \frac{1}{2}\int_0^1(1-\tau)\frac{\partial^2 f}{\partial\x^2}\bigg|_{
 \]
 Then
 \begin{equation}
-f(\bar\x+\dx) = f(\bar\x) + J_f(\bar\x))\dx + R_f(\dx), \quad \|R_f(\dx)\| = O(\|\dx\|^2).
+f(\bar\x+\dx) = f(\bar\x) + J_f(\bar\x)\dx + R_f(\dx), \quad \|R_f(\dx)\| = O(\|\dx\|^2).
 \label{eq:ch2:f-expanded}
 \end{equation}
 
@@ -248,20 +248,20 @@ For any $t_0 \leq t_1 \leq t_2$,
 \end{theorem}
 
 \begin{proof}
-Let $\Psi(t) := \Phi(t_2,t_1)\,\Phi(t_1,t_0)$. We compute
-\begin{align}
-\dot{\Psi}(t) &= \frac{\dd}{\dd t}\left[\Phi(t_2,t_1)\,\Phi(t_1,t_0)\right]\\
-&= \frac{\partial \Phi(t_2,t_1)}{\partial t}\,\Phi(t_1,t_0) + \Phi(t_2,t_1)\frac{\partial \Phi(t_1,t_0)}{\partial t}.
-\end{align}
+For any initial condition $\dx_0 \in \R^n$, define
+$\dx(t) := \Phi(t,t_0)\dx_0$, which is the unique solution to $\dot{\dx} = \mat{A}(t)\dx$
+with $\dx(t_0) = \dx_0$.
 
-For $t_0 \leq t \leq t_1$, the first term vanishes (since $\Phi(t_2,t_1)$ does not depend on $t$ when $t<t_1$),
-and the second term gives
-\begin{equation}
-\dot{\Psi}(t) = \Phi(t_2,t_1)\,\mat{A}(t)\,\Phi(t_1,t_0) = \mat{A}(t)\,\Psi(t).
-\end{equation}
+At time $t_1$, we have $\dx(t_1) = \Phi(t_1,t_0)\dx_0$.
+The solution on $[t_1, t_2]$ with initial condition $\dx(t_1)$ is, by definition,
+$\dx(t) = \Phi(t,t_1)\dx(t_1) = \Phi(t,t_1)\Phi(t_1,t_0)\dx_0$.
 
-At $t=t_0$, we have $\Psi(t_0) = \Phi(t_2,t_1)\,\Phi(t_1,t_0)|_{t_1=t_0} = \Phi(t_2,t_0)\,\mat{I}_n = \Phi(t_2,t_0)$.
-Thus $\Psi$ and $\Phi(\cdot,t_0)$ satisfy the same ODE with the same initial condition, hence they are equal.
+Evaluating at $t = t_2$:
+\[
+\dx(t_2) = \Phi(t_2,t_1)\,\Phi(t_1,t_0)\,\dx_0.
+\]
+But also $\dx(t_2) = \Phi(t_2,t_0)\dx_0$ by the definition of $\Phi(t_2,t_0)$.
+Since $\dx_0$ was arbitrary, $\Phi(t_2,t_0) = \Phi(t_2,t_1)\,\Phi(t_1,t_0)$.
 \end{proof}
 
 \begin{theorem}[Invertibility]
@@ -292,21 +292,17 @@ The determinant of the state transition matrix satisfies
 \end{theorem}
 
 \begin{proof}
-We use the matrix determinant lemma (also called Jacobi's formula):
+We use Jacobi's formula:
 \begin{equation}
-\frac{\dd}{\dd t}\det(\Phi(t,t_0)) = \trace\left(\text{adj}(\Phi)\,\frac{\dd\Phi}{\dd t}\right)\,\frac{1}{\det(\Phi)},
+\frac{\dd}{\dd t}\det(\Phi(t,t_0)) = \det(\Phi)\,\trace\!\left(\Phi^{-1}\,\frac{\dd\Phi}{\dd t}\right).
 \label{eq:ch2:jacobi}
 \end{equation}
-where $\text{adj}(\Phi)$ is the adjugate matrix. For a nonsingular matrix,
-$\text{adj}(\Phi) = \det(\Phi)\,\Phi^{-T}$, so
+Since $\dot{\Phi} = \mat{A}\,\Phi$, this gives
 \begin{align}
-\frac{\dd}{\dd t}\det(\Phi) &= \trace(\Phi^{-T}\,\dot{\Phi})\\
-&= \trace(\Phi^{-T}\,\mat{A}\,\Phi)\\
-&= \trace(\mat{A}\,\Phi\,\Phi^{-T})\\
-&= \trace(\mat{A}).
+\frac{\dd}{\dd t}\det(\Phi) &= \det(\Phi)\,\trace(\Phi^{-1}\,\mat{A}\,\Phi)\\
+&= \det(\Phi)\,\trace(\mat{A}),
 \end{align}
-
-Here we used the cyclic property of the trace: $\trace(ABC) = \trace(BCA) = \trace(CAB)$.
+where the last step uses the similarity invariance of the trace: $\trace(\Phi^{-1}\mat{A}\Phi) = \trace(\mat{A})$.
 
 Integrating from $t_0$ to $t$, with initial condition $\det(\Phi(t_0,t_0)) = \det(\mat{I}_n) = 1$:
 \begin{equation}
@@ -314,7 +310,7 @@ Integrating from $t_0$ to $t$, with initial condition $\det(\Phi(t_0,t_0)) = \de
 \end{equation}
 \end{proof}
 
-\begin{axiombox}{Axiom 5: Integration Preserves Exactness}
+\begin{axiombox}{Principle 5: Integration Preserves Exactness}
 The state transition matrix $\Phi(t,t_0)$ accumulates \emph{exact} infinitesimal linear
 contributions along the trajectory. Each infinitesimal step $\dd(\dx)=\mat{A}(t)\dx\,\dd t$
 is exact in its tangent space. The integral
@@ -661,13 +657,13 @@ linearized about the downward equilibrium.
 
 Consider a simple pendulum with mass $m$, length $\ell$, and a motor torque $\tau$ applied at the pivot:
 \begin{equation}
-\ddot\theta = \frac{g}{\ell}\sin\theta + \frac{\tau}{m\ell^2}.
+\ddot\theta = -\frac{g}{\ell}\sin\theta + \frac{\tau}{m\ell^2}.
 \label{eq:ch2:pend-ode}
 \end{equation}
 
 Writing this as a first-order system with $x_1 = \theta$ and $x_2 = \dot\theta$:
 \begin{equation}
-\begin{pmatrix}\dot x_1\\\dot x_2\end{pmatrix} = \begin{pmatrix}x_2\\\frac{g}{\ell}\sin x_1 + \frac{u}{m\ell^2}\end{pmatrix},
+\begin{pmatrix}\dot x_1\\\dot x_2\end{pmatrix} = \begin{pmatrix}x_2\\-\frac{g}{\ell}\sin x_1 + \frac{u}{m\ell^2}\end{pmatrix},
 \label{eq:ch2:pend-first}
 \end{equation}
 where $u = \tau$ is the control input.
@@ -680,20 +676,20 @@ Suppose the nominal trajectory is the equilibrium at the downward position with 
 \label{eq:ch2:pend-nominal}
 \end{equation}
 
-Verify: $\dot{\bar x}_1 = 0$, $\dot{\bar x}_2 = \frac{g}{\ell}\sin(0) + 0 = 0$. This is indeed a fixed point.
+Verify: $\dot{\bar x}_1 = 0$, $\dot{\bar x}_2 = -\frac{g}{\ell}\sin(0) + 0 = 0$. This is indeed a fixed point.
 
 \subsection{Jacobians}
 
 At the point $(\bar\x, \bar u) = (0,0)$:
 \begin{equation}
-\mat{A} = \frac{\partial}{\partial \x}\begin{pmatrix}x_2\\\frac{g}{\ell}\sin x_1\end{pmatrix}\bigg|_{(0,0)}
-= \begin{pmatrix}0 & 1\\\frac{g}{\ell}\cos(0) & 0\end{pmatrix}
-= \begin{pmatrix}0 & 1\\\frac{g}{\ell} & 0\end{pmatrix}.
+\mat{A} = \frac{\partial}{\partial \x}\begin{pmatrix}x_2\\-\frac{g}{\ell}\sin x_1\end{pmatrix}\bigg|_{(0,0)}
+= \begin{pmatrix}0 & 1\\-\frac{g}{\ell}\cos(0) & 0\end{pmatrix}
+= \begin{pmatrix}0 & 1\\-\frac{g}{\ell} & 0\end{pmatrix}.
 \label{eq:ch2:pend-A}
 \end{equation}
 
 \begin{equation}
-\mat{B} = \frac{\partial}{\partial u}\begin{pmatrix}x_2\\\frac{g}{\ell}\sin x_1 + \frac{u}{m\ell^2}\end{pmatrix}\bigg|_{(0,0)}
+\mat{B} = \frac{\partial}{\partial u}\begin{pmatrix}x_2\\-\frac{g}{\ell}\sin x_1 + \frac{u}{m\ell^2}\end{pmatrix}\bigg|_{(0,0)}
 = \begin{pmatrix}0\\\frac{1}{m\ell^2}\end{pmatrix}.
 \label{eq:ch2:pend-B}
 \end{equation}
@@ -701,7 +697,7 @@ At the point $(\bar\x, \bar u) = (0,0)$:
 The variational equation is thus
 \begin{equation}
 \begin{pmatrix}\delta\dot x_1\\\delta\dot x_2\end{pmatrix}
-= \begin{pmatrix}0 & 1\\\frac{g}{\ell} & 0\end{pmatrix}\begin{pmatrix}\delta x_1\\\delta x_2\end{pmatrix}
+= \begin{pmatrix}0 & 1\\-\frac{g}{\ell} & 0\end{pmatrix}\begin{pmatrix}\delta x_1\\\delta x_2\end{pmatrix}
 + \begin{pmatrix}0\\\frac{1}{m\ell^2}\end{pmatrix}\delta u.
 \label{eq:ch2:pend-variational}
 \end{equation}
@@ -710,7 +706,7 @@ The variational equation is thus
 
 For the time-invariant case, we compute the eigenvalues of $\mat{A}$:
 \begin{equation}
-\det(\lambda \mat{I} - \mat{A}) = \det\begin{pmatrix}\lambda & -1\\-\frac{g}{\ell} & \lambda\end{pmatrix}
+\det(\lambda \mat{I} - \mat{A}) = \det\begin{pmatrix}\lambda & -1\\\frac{g}{\ell} & \lambda\end{pmatrix}
 = \lambda^2 + \frac{g}{\ell} = 0.
 \end{equation}
 
@@ -727,17 +723,17 @@ The matrix exponential can be computed using the formula for a 2D system:
 Verify: $\frac{\dd}{\dd t}\Phi(t,0) = \begin{pmatrix}-\omega_0\sin(\omega_0 t) & \cos(\omega_0 t)\\\
 -\omega_0^2\cos(\omega_0 t) & -\omega_0\sin(\omega_0 t)\end{pmatrix}$. Comparing with $\mat{A}\Phi(t,0)$:
 \begin{equation}
-\begin{pmatrix}0 & 1\\\frac{g}{\ell} & 0\end{pmatrix}\begin{pmatrix}\cos(\omega_0 t) & \frac{\sin(\omega_0 t)}{\omega_0}\\
+\begin{pmatrix}0 & 1\\-\frac{g}{\ell} & 0\end{pmatrix}\begin{pmatrix}\cos(\omega_0 t) & \frac{\sin(\omega_0 t)}{\omega_0}\\
 -\omega_0\sin(\omega_0 t) & \cos(\omega_0 t)\end{pmatrix}
 = \begin{pmatrix}-\omega_0\sin(\omega_0 t) & \cos(\omega_0 t)\\
-\omega_0^2\cos(\omega_0 t) & \omega_0\sin(\omega_0 t)\end{pmatrix}.
+-\omega_0^2\cos(\omega_0 t) & -\omega_0\sin(\omega_0 t)\end{pmatrix}.
 \end{equation}
 
-Good (noting $\omega_0^2 = g/\ell$).
+Good (noting $-\omega_0^2 = -g/\ell$).
 
 \subsection{Numerical Example}
 
-For concreteness, let $\ell = 1$ m and $g = 10$ m/s$^2$, so $\omega_0 = \sqrt{10} \approx 3.162$ rad/s.
+For concreteness, let $\ell = 1$ m and $g = 10$ m/s$^2$ (rounded for clarity; other chapters use $g = 9.81$ m/s$^2$), so $\omega_0 = \sqrt{10} \approx 3.162$ rad/s.
 The natural period is $T = 2\pi/\omega_0 \approx 1.987$ s.
 
 At time $t = 0.5$ s:
@@ -850,6 +846,14 @@ The adjoint equation is
 }
 \label{eq:ch2:adjoint}
 \end{equation}
+
+\begin{remark}
+The sign convention $\lambda(T) = -\partial\ell/\partial\x|_{x(T)}$ follows from defining
+$\lambda$ as $\partial J/\partial \x$. An alternative convention used in Pontryagin's
+Maximum Principle defines $\lambda(T) = +\partial\ell/\partial\x|_{x(T)}$, which reverses
+the sign of the Hamiltonian. Both conventions are self-consistent; the reader should verify
+signs when consulting different references.
+\end{remark}
 
 This equation is integrated backward from $T$ to $t_0$. Once $\lambda(t)$ is known, the gradient is
 \begin{equation}

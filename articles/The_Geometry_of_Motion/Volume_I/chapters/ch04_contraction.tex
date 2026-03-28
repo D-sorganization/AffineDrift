@@ -402,18 +402,15 @@ giving
 \mat{A}^\T\mat{I} + \mat{I}\mat{A} = \begin{bmatrix} -4 & 1 \\ 1 & -6 \end{bmatrix}.
 \end{equation}
 
-For this to satisfy the contraction condition with rate $\lambda$:
-\begin{equation}
-\begin{bmatrix} -4 & 1 \\ 1 & -6 \end{bmatrix} \preceq -2\lambda \mat{I} = \begin{bmatrix} -2\lambda & 0 \\ 0 & -2\lambda \end{bmatrix}.
-\end{equation}
-
-The off-diagonal elements require $1 \leq 0$, which is false. However, the diagonal
-eigenvalues are approximately $-3.2$ and $-1.8$, suggesting $\lambda \approx 0.9$
-(half the smallest eigenvalue magnitude).
-
-For simplicity, if we use $\mat{M}=\mat{I}$ and check the eigenvalues of $\mat{A}^\T + \mat{A}$
-(scaled by 1/2), we get approximately $-1.79$ and $-3.21$, confirming $\lambda_{\max}(\sym(\mat{A})) \approx -1.79$.
-Thus the contraction rate is $\lambda \approx 1.79 / 2 \approx 0.895$ or roughly $\lambda = 1.79$ from the eigenvalue.
+The contraction condition $\mat{A}^\T\mat{M} + \mat{M}\mat{A} \preceq -2\lambda\mat{M}$ is a
+\emph{matrix inequality} (i.e., an eigenvalue condition), not an entry-wise condition.
+For $\mat{M} = \mat{I}$, we need the eigenvalues of $\mat{A}^\T + \mat{A}$ to satisfy
+$\lambda_{\max}(\mat{A}^\T + \mat{A}) \leq -2\lambda$. The eigenvalues of
+$\mat{A}^\T + \mat{A} = \begin{bmatrix} -4 & 1 \\ 1 & -6 \end{bmatrix}$
+are approximately $-1.79$ and $-3.21$ (computed in the symmetric part analysis above), both negative.
+Therefore the identity metric \emph{does} certify contraction, with rate
+$\lambda = |\lambda_{\max}(\sym(\mat{A}))| / 2 \approx 1.79 / 2 \approx 0.895$
+(since the condition requires $\lambda_{\max} \leq -2\lambda$).
 
 \begin{designbox}
 In practice, for linear systems, one solves the LMI \eqref{eq:ch4:example-LMI} using
@@ -695,6 +692,17 @@ For constant metrics $m_1 = a$, $m_2 = b$ (diagonal constants), the conditions r
 The second condition requires $\epsilon(1-x_1^2) \leq -\lambda$, which is violated when
 $|x_1| < 1$ (where the oscillator spends most of its time). Thus, a constant metric
 does not suffice.
+
+\begin{remark}[Why the Van der Pol oscillator is not globally contracting]
+The Van der Pol oscillator possesses a stable limit cycle, toward which all nonzero
+initial conditions converge. This means the system is \emph{not} globally contracting:
+global contraction would require all trajectories to converge to each other (and hence
+to a single trajectory), but the limit cycle is an attractor of dimension one, not zero.
+Instead, the system exhibits \emph{partial} contraction---trajectories converge to the
+limit cycle (contraction transverse to the cycle) while maintaining a phase offset along it.
+A state-dependent metric can certify contraction in the transverse direction, but no
+globally valid metric can certify contraction in all directions simultaneously.
+\end{remark}
 
 \subsection{Solution Strategy}
 

@@ -287,14 +287,15 @@ we arrive at the \textbf{backward Riccati recursion}:
 
 \subsection{The iLQR Simplification}
 
-\emph{Iterative Linear Quadratic Regulator} (iLQR) drops the cross-coupling term $\mat{N}_k$ and the second-order
-dynamics term $\mat{B}_k^\T\mat{S}_{k+1}\mat{A}_k$ from $Q_{k,\xu}$. This is valid when:
+\emph{Iterative Linear Quadratic Regulator} (iLQR) drops the cross-coupling term $\mat{N}_k$ from $Q_{k,\xu}$
+but \emph{retains} the dynamics coupling $\mat{B}_k^\T\mat{S}_{k+1}\mat{A}_k$. This is valid when:
 \begin{enumerate}
 \item The cost function has no explicit cross-coupling, i.e., $\ell_{k,\xu} = 0$.
-\item The effect of future cost on control via state dynamics is considered second-order and acceptable to ignore.
+\item The second-order dynamics terms in $Q_{k,\xx}$ and $Q_{k,\uu}$ are neglected (the Gauss--Newton
+      approximation), but the first-order coupling $\mat{B}_k^\T\mat{S}_{k+1}\mat{A}_k$ is kept.
 \end{enumerate}
 
-Under these assumptions, $Q_{k,\xu} \approx 0$, and the Riccati recursion simplifies to:
+Under these assumptions, $Q_{k,\xu} \approx \mat{B}_k^\T\mat{S}_{k+1}\mat{A}_k$, and the Riccati recursion simplifies to:
 \begin{align}
 \mat{K}_k &\approx (\mat{R}_k + \mat{B}_k^\T\mat{S}_{k+1}\mat{B}_k)^{-1}\mat{B}_k^\T\mat{S}_{k+1}\mat{A}_k, \label{eq:ch5:gain-ilqr}\\[4pt]
 \mat{S}_k &\approx \mat{Q}_{k,\xx} + \mat{A}_k^\T\mat{S}_{k+1}\mat{A}_k - \mat{A}_k^\T\mat{S}_{k+1}\mat{B}_k
