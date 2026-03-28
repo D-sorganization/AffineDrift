@@ -253,10 +253,10 @@ The Drift-Control Ratio is a \emph{control authority metric}. It asks: \textbf{H
 \begin{itemize}
 \item \textbf{Early backswing (DCR $\approx 0.5$--$1$):} Muscles and gravity are comparable. Active control is substantial.
 \item \textbf{Early downswing (DCR $\approx 2$--$5$):} Gravity and Coriolis start to dominate. Muscles apply restraint.
-\item \textbf{Late downswing (DCR $\approx 50$--$300$):} Passive dynamics overwhelm muscular control. The system is ballistically committed.
+\item \textbf{Late downswing (DCR $\approx 5$--$30$):} Passive dynamics substantially exceed muscular control. The system approaches ballistic commitment.
 \end{itemize}
 
-The late-downswing blow-up is the most shocking and revealing finding from ZTCF analysis.
+The increase in DCR during the late downswing is a notable feature of the ZTCF analysis.
 \end{constraintbox}
 
 \begin{example}{The DCR Blow-Up in a Typical Swing}{ex:dcr_blowup_numbers}
@@ -292,9 +292,9 @@ Now:
 \label{eq:dcr_example_late_ratio}
 \end{equation}
 
-By the time the club reaches impact, the Coriolis torque can exceed $500$ Nm, while muscles can only produce $10$--$20$ Nm. The DCR has reached \textbf{25--50:1 or higher}.
+By the time the club reaches impact, published inverse-dynamics studies report wrist Coriolis torques on the order of 10--50 Nm \citep{Nesbit2005}. With muscular torques of $\sim$10--20 Nm, the DCR at the wrist reaches approximately \textbf{5--25:1} in the late downswing.
 
-\textbf{Interpretation:} In the final 50 ms before impact, the golf swing is \emph{not controlled}. It's a ballistic process, unfolding under its own inertial dynamics with muscles acting as tiny corrections. You cannot "accelerate" the club at impact—it's already accelerating at 50 times the rate your muscles can push. All you can do is guide the direction and refine the timing.
+\textbf{Interpretation:} In the final phase before impact, the golf swing is largely ballistic. Passive dynamics dominate, and muscles provide relatively small corrections. The effective control window occurs earlier in the downswing when DCR is lower.
 \end{example}
 
 \begin{laymansbox}{Why the DCR Blows Up}{inplain:dcr_blowup_reason}
@@ -353,7 +353,7 @@ I_2 + m_2 L_1 (L_2/2) \cos(q_2) & I_2 + m_2 (L_2/2)^2
 Substituting values:
 \begin{equation}
 \bm{M} \approx \begin{bmatrix}
-0.05 + 0.2 + 0.01 + 0.2 \times 0.16 + 2 \times 0.2 \times 0.4 \times 0.15 \times \cos(70°) & 0.01 + 0.2 \times 0.4 \times 0.15 \times \cos(70°) \\
+0.05 + 0.08 + 0.01 + 0.2 \times 0.16 + 2 \times 0.2 \times 0.4 \times 0.15 \times \cos(70°) & 0.01 + 0.2 \times 0.4 \times 0.15 \times \cos(70°) \\
 0.01 + 0.2 \times 0.4 \times 0.15 \times \cos(70°) & 0.01 + 0.2 \times 0.0225
 \end{bmatrix}
 \label{eq:double_pend_mass_matrix_numerical}
@@ -362,8 +362,8 @@ Substituting values:
 Evaluating at $\cos(70°) \approx 0.342$:
 \begin{equation}
 \bm{M} \approx \begin{bmatrix}
-0.71 & 0.014 \\
-0.014 & 0.016
+0.180 & 0.014 \\
+0.014 & 0.015
 \end{bmatrix}
 \label{eq:double_pend_mass_numerical}
 \end{equation}
@@ -418,29 +418,29 @@ With $\bm{u} = \mathbf{0}$:
 Inverting the mass matrix:
 \begin{equation}
 \bm{M}^{-1} \approx \begin{bmatrix}
-1.45 & -1.27 \\
--1.27 & 64.1
+6.0 & -5.6 \\
+-5.6 & 71.9
 \end{bmatrix}
 \label{eq:mass_inverse}
 \end{equation}
 
 Thus:
 \begin{align}
-\ddot{q}_1^{\text{ZTCF}} &\approx 1.45 \times (-3.60) - 1.27 \times 0.27 \approx -5.22 - 0.34 \approx -5.56 \text{ rad/s}^2\\
-\ddot{q}_2^{\text{ZTCF}} &\approx -1.27 \times (-3.60) + 64.1 \times 0.27 \approx 4.57 + 17.3 \approx 21.9 \text{ rad/s}^2
+\ddot{q}_1^{\text{ZTCF}} &\approx 6.0 \times (-3.60) + (-5.6) \times 0.27 \approx -21.6 - 1.5 \approx -23.1 \text{ rad/s}^2\\
+\ddot{q}_2^{\text{ZTCF}} &\approx (-5.6) \times (-3.60) + 71.9 \times 0.27 \approx 20.2 + 19.4 \approx 39.6 \text{ rad/s}^2
 \end{align}
 
 \textbf{Interpretation:}
 
-The shoulder would decelerate at $5.56$ rad/s$^2$ (gravity is pulling the arm down). The elbow would accelerate at $21.9$ rad/s$^2$ (the club is extending under its own weight and Coriolis effects).
+The shoulder would decelerate at $23.1$ rad/s$^2$ (gravity and Coriolis). The elbow would accelerate at $39.6$ rad/s$^2$ (the club is extending under its own weight and Coriolis effects).
 
 Now compare to the actual swing. If the actual $\ddot{q}_1 = 2$ rad/s$^2$ and $\ddot{q}_2 = 8$ rad/s$^2$, then:
 \begin{align}
-\tau_{\text{input},1} &\approx 0.71 \times (2 - (-5.56)) = 0.71 \times 7.56 \approx 5.37 \text{ Nm}\\
-\tau_{\text{input},2} &\approx 0.016 \times (8 - 21.9) = 0.016 \times (-13.9) \approx -0.22 \text{ Nm}
+\tau_{\text{input},1} &\approx 0.180 \times (2 - (-23.1)) = 0.180 \times 25.1 \approx 4.5 \text{ Nm}\\
+\tau_{\text{input},2} &\approx 0.015 \times (8 - 39.6) = 0.015 \times (-31.6) \approx -0.47 \text{ Nm}
 \end{align}
 
-\textbf{Insight:} The shoulder requires a muscular torque of $5.37$ Nm to \emph{slow the natural acceleration} (gravity wants to accelerate it more). The elbow requires a \emph{braking} torque of $-0.22$ Nm to prevent the club from extending as fast as physics wants it to.
+\textbf{Insight:} The shoulder requires a muscular torque of $4.5$ Nm to \emph{slow the natural acceleration} (gravity wants to accelerate it more). The elbow requires a \emph{braking} torque of $-0.47$ Nm to prevent the club from extending as fast as physics wants it to.
 
 This is the hallmark of the downswing: muscles are mostly \emph{restraining}, not driving.
 \end{example}
@@ -486,7 +486,7 @@ However—and this is important—the ZTCF is still \emph{qualitatively} correct
 \label{sec:swing_ballistic_commitment}
 
 \begin{principle}{Ballistic Commitment in the Downswing}{principle:ballistic_commitment}
-The ZTCF analysis reveals a profound fact: \textbf{the downswing is ballistically committed well before impact}.
+The ZTCF analysis suggests: \textbf{the downswing becomes largely ballistic before impact}.
 
 Once you reach a certain velocity threshold—typically when the club speed exceeds 50 mph (22 m/s) and shoulder rotation reaches 8--10 rad/s—the Drift-Control Ratio becomes so large that active muscular control is negligible.
 
@@ -511,9 +511,9 @@ It also explains why trying to "add speed" or "accelerate through impact" with m
 \end{driftcontrol}
 
 \begin{example}{Impact Time and the Margin for Control}{ex:impact_control_margin}
-Assume the club head reaches $100$ mph (44.7 m/s) at impact, with an angular velocity of $50$ rad/s about the shoulder. The DCR at this moment is approximately $40:1$.
+Assume the club head reaches $100$ mph (44.7 m/s) at impact, with an angular velocity of $50$ rad/s about the shoulder. The DCR at this moment is on the order of 10--20:1.
 
-The only muscular torques available are perhaps $10$ Nm. The passive (Coriolis) torques are $400$ Nm.
+The only muscular torques available are perhaps $10$ Nm. The passive torques (Coriolis and centrifugal) are on the order of 20--50 Nm.
 
 If the golfer tries to make a 1° correction (0.0175 rad) in club face angle, this requires a tangential acceleration at the club head. But the club is already accelerating at $44.7 \times 50 = 2235$ m/s$^2$ (228 G's). Adding a 10% correction requires additional acceleration of 224 m/s$^2$.
 
@@ -537,7 +537,7 @@ But the timing window is brutal: the contact lasts only $0.5$ ms. To achieve a 1
 
 \item \textbf{The ZVCF refinement:} Further isolates gravity from velocity-dependent forces, revealing the role of initial momentum.
 
-\item \textbf{The DCR blow-up:} As velocity increases, passive torques grow as $v^2$, while muscular torques stay roughly constant. The Drift-Control Ratio explodes in late downswing, reaching 50:1 or higher.
+\item \textbf{The DCR blow-up:} As velocity increases, passive torques grow as $v^2$, while muscular torques stay roughly constant. The Drift-Control Ratio explodes in late downswing, reaching on the order of 5--30:1 depending on the model parameters.
 
 \item \textbf{Double pendulum example:} Showed concretely how gravity and Coriolis produce large torques, while muscles apply restraint and correction.
 

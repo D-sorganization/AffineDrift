@@ -142,24 +142,24 @@ Consider a golf shaft with parameters:
 - $L = 1.1$ m
 - $d_{\text{seg}} = 0.01$ m (1 cm diameter)
 - $C_D = 0.5$ (approximation for cylinder, transitional flow)
-- $\dot{\theta}_{\text{shoulder}} = 80$ rad/s (impact angular velocity)
+- $\dot{\theta}_{\text{shoulder}} = 25$ rad/s (impact angular velocity, approximately 1430 deg/s, consistent with published data [@zheng2008golf])
 - $\rho = 1.225$ kg/m$^3$
 
 Using Eq.~\eqref{eq:shaft-drag-torque}:
 \begin{equation}
-\tau_{\text{shaft}} = \frac{1}{2} \times 1.225 \times 0.5 \times 0.01 \times 80^2 \times \frac{1.1^4}{4}
+\tau_{\text{shaft}} = \frac{1}{2} \times 1.225 \times 0.5 \times 0.01 \times 25^2 \times \frac{1.1^4}{4}
 \end{equation}
 
 Computing step by step:
 \begin{align}
 \frac{1.1^4}{4} &= \frac{1.464}{4} = 0.366 \\
-80^2 &= 6400 \\
-\tau_{\text{shaft}} &= \frac{1}{2} \times 1.225 \times 0.5 \times 0.01 \times 6400 \times 0.366 \\
-&= 0.5 \times 1.225 \times 0.5 \times 0.01 \times 6400 \times 0.366 \\
-&\approx 7.1 \text{ N·m}
+25^2 &= 625 \\
+\tau_{\text{shaft}} &= \frac{1}{2} \times 1.225 \times 0.5 \times 0.01 \times 625 \times 0.366 \\
+&=  \\
+&\approx 0.70 \text{ N·m}
 \end{align}
 
-So the shaft alone produces a drag torque of about 7 N·m at the shoulder. For reference, the total shoulder torque at impact is typically 50--100 N·m, so shaft drag accounts for 7--14% of the total resistive effect.
+So the shaft alone produces a drag torque of about 0.7 N·m at the shoulder. For reference, the total shoulder torque at impact is typically 50--100 N·m, so shaft drag accounts for approximately 1% of the total resistive effect. While small for the shaft alone, the combined drag from the shaft and clubhead together is more significant (see below).
 
 :::
 
@@ -421,13 +421,13 @@ Drag depends on environmental conditions:
 
 For precision inverse dynamics analysis (research or high-level coaching), these effects should be accounted for. For practical swing instruction, drag is averaged or neglected.
 
-## Drag in the Zero-Torque Constraint Field (ZTCF)
+## Drag in the Zero-Torque Counterfactual (ZTCF)
 
 
 
 
 
-Recall that the Zero-Torque Constraint Field (ZTCF) describes the natural motion of the golf swing when all control inputs are zero: $\bm{u} = 0$. The equation of motion becomes:
+Recall that the Zero-Torque Counterfactual (ZTCF) describes the natural motion of the golf swing when all control inputs are zero: $\bm{u} = 0$. The equation of motion becomes:
 \begin{equation}
 \bm{M}(\bm{q})\ddot{\bm{q}} + \bm{C}(\bm{q},\dot{\bm{q}})\dot{\bm{q}} + \bm{g}(\bm{q}) + \bm{Q}_{\text{drag}}(\bm{q}, \dot{\bm{q}}) = \bm{J}_c^T \boldsymbol{\lambda}
 \label{eq:ztcf-with-drag}
@@ -580,7 +580,7 @@ Including drag makes the situation slightly worse (higher ratio), but the conclu
 
 :::
 
-\subsection*{Looking Ahead}
+### Looking Ahead
 With all external forces now catalogued---gravity, ground reaction, muscle torques, and aerodynamic drag---we face a fundamental question: given the observed motion, can we recover the muscle torques that produced it? Chapter~\ref{ch:inverse_dynamics_parallel} tackles this *inverse problem* and reveals a sobering limitation: when the body forms closed kinematic loops (as it does in a two-handed grip), the inverse problem becomes mathematically non-invertible.
 
 ## Chapter Exercises

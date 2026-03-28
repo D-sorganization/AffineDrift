@@ -369,16 +369,9 @@ P_{\text{arm, constraint}} &= \lambda \cdot \dot{q}_1 = 0.265 \times 8 = 2.12 \t
 P_{\text{club, constraint}} &= \lambda \cdot \dot{q}_2 = 0.265 \times 12 = 3.18 \text{ W}
 \end{align}
 
-Wait—these don't sum to zero! That's because I've made an error in the sign or interpretation. Let me reconsider.
+Note: these individual terms do not sum to zero. This is because the constraint velocity condition $\dot{q}_1 + \dot{q}_2 = 0$ must hold when the constraint is active. The initial velocities ($\dot{q}_1 = 8$, $\dot{q}_2 = 12$) do not satisfy this condition, indicating that the constraint was imposed on a state that was not on the constraint manifold. When the constraint is properly enforced, $P_{\text{constraint}} = \lambda(\dot{q}_1 + \dot{q}_2) = 0$, confirming zero net work.
 
-Actually, the constraint force on the arm is inward (negative, slowing its rotation), and the constraint force on the club is outward (positive, speeding its rotation). The power balance is:
-\begin{equation}
-P_{\text{arm}} + P_{\text{club}} = (-\lambda) \cdot \dot{q}_1 + \lambda \cdot \dot{q}_2 = \lambda(\dot{q}_2 - \dot{q}_1) = 0.265 \times (12 - 8) = 1.06 \text{ W}
-\end{equation}
-
-Hmm, still not zero. The discrepancy arises because I haven't accounted for all forces carefully. Let me restate the conclusion more conservatively:
-
-\textbf{Key Finding:} The constraint force is small ($\sim 0.3$ Nm) but its \emph{direction} is crucial: it acts to slow the shoulder and speed the club. Over the course of the downswing, integrated over time, these forces accumulate to produce the dramatic energy transfer from arm to club.
+\textbf{Key Finding:} The constraint force is small ($\sim 0.3$ Nm) but its \emph{role} is crucial: it couples the two joints, redistributing energy between them while doing zero net work on the system. Over the course of the downswing, these coupling forces accumulate to produce the energy transfer from arm to club.
 \end{example}
 
 \begin{laymansbox}{Why the Wrist Hinge Matters}{inplain:wrist_constraint_meaning}

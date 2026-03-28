@@ -178,6 +178,15 @@ The motion and force cross products are dual in the sense that:
 for any Twist $\mathcal{V}$, Twist-like vector $\mathcal{W}$, and Wrench $\mathcal{G}$. This ensures that the bilinear form (power) is preserved under transformations.
 \end{principle}
 
+\begin{principle}{$\text{Ad}$ vs.\ $\text{ad}$: Two Distinct Operators}{ad_vs_Ad}
+The notation in spatial algebra distinguishes two fundamentally different operators that are easily confused:
+\begin{itemize}
+  \item $[\text{Ad}_{\mathbf{T}}] \in \Reals^{6 \times 6}$: The \textbf{Adjoint} of a rigid body transform $\mathbf{T} \in \SE(3)$. This is a coordinate transformation that re-expresses a spatial velocity (or acceleration) measured in one frame into another frame. It depends on a \emph{pose} (position and orientation).
+  \item $[\text{ad}_{\mathcal{V}}] = [\mathcal{V} \times] \in \Reals^{6 \times 6}$: The \textbf{adjoint} (lowercase), also called the \emph{Lie bracket} or \emph{spatial motion cross product}. This maps a spatial velocity $\mathcal{V}$ to its cross-product operator, which computes Coriolis and centrifugal accelerations. It depends on a \emph{velocity}, not a pose.
+\end{itemize}
+In recursive dynamics algorithms such as the RNEA, both operators appear: $[\text{Ad}_{\mathbf{T}}]$ propagates velocities across frames (a coordinate change), while $[\text{ad}_{\mathcal{V}}] = [\mathcal{V} \times]$ computes the velocity-dependent acceleration terms (Coriolis). Confusing the two produces incorrect dynamics \cite{Featherstone2008, Murray1994}.
+\end{principle}
+
 \section{The Spatial Inertia Matrix}
 \label{sec:spatial_inertia}
 

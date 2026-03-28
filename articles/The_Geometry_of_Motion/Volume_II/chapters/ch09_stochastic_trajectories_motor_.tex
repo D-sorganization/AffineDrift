@@ -15,7 +15,7 @@ If you program a robot motor to apply 50 units of force, it applies exactly 50 u
 \section{Signal-Dependent Noise}
 % ══════════════════════════════════════════════
 
-When a roboticist specifies a torque of $50\text{ Nm}$, the motor delivers $50\text{ Nm}$ with a tiny, constant variance. Biological actuators do not work this way. Human muscles generate force by recruiting discrete motor units \cite{Henneman1957}. As higher forces are required, larger, more fast-twitch oriented motor units are recruited. This physiological reality manifests as a profound control challenge: \textbf{motor noise is proportional to the command signal} \cite{Harris1998}.
+When a roboticist specifies a torque of $50\text{ Nm}$, the motor delivers $50\text{ Nm}$ with a tiny, constant variance. Biological actuators do not work this way. Human muscles generate force by recruiting discrete motor units \cite{Henneman1957}. As higher forces are required, larger, more fast-twitch oriented motor units are recruited. This physiological reality manifests as a fundamental control challenge: \textbf{motor noise is proportional to the command signal} \cite{Harris1998}.
 
 \begin{definition}{Signal-Dependent Noise (SDN)}{sdn}
   A control input $\control(t)$ applied by a biological system is actually realized as a stochastic variable $\tilde{\control}(t)$:
@@ -91,7 +91,7 @@ Under SDN, the only way to minimize endpoint variance (ensure you actually grasp
 
 Fitts's Law \cite{Fitts1954} states that the faster you try to move to a target, the less accurate you become. In golf, we see the supreme manifestation of this phenomenon. The deterministic optimal control solution (Chapter 6) tells the solver to maximize input torque to achieve theoretically maximal clubhead speed. 
 
-However, if we introduce the Stochastic OCP (via Covariance Steering) from Chapter 6 and apply the realistic premise of SDN, the optimizer faces a profound tradeoff.
+However, if we introduce the Stochastic OCP (via Covariance Steering) from Chapter 6 and apply the realistic premise of SDN, the optimizer faces a stark tradeoff.
 
 Applying maximum $u_1$ torque during the downswing injects enormous variance into the kinematic state. The unactuated club ($\theta_2$) begins whipping through its zero dynamics, but its exact phase progression is now highly uncertain due to the noise flooding the arms. 
 

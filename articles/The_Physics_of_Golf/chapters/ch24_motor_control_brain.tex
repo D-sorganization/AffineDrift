@@ -37,7 +37,7 @@ This is not a simple problem. It is a \textit{nonlinear optimal control problem 
 
 \item \textbf{Sensory feedback delay:} Information about body position (proprioception) reaches the brain in 30--50 milliseconds. Visual feedback takes 80--150 milliseconds. For vestibular (balance) feedback: 10--20 milliseconds. The downswing lasts 300 milliseconds.
 
-\item \textbf{Noisy sensors:} Proprioceptive acuity varies by joint. At the wrist, you can detect a 1--2 degree change in angle. At the shoulder, it's 3--5 degrees. Vision has high acuity but slow feedback. The nervous system must work with uncertain, delayed measurements.
+\item \textbf{Noisy sensors:} Proprioceptive acuity varies by joint. Illustrative estimates suggest detection thresholds on the order of 1--2$^{\circ}$ at the wrist and 3--5$^{\circ}$ at the shoulder, though exact values depend on testing methodology \citep{proske2012proprioceptive}. Vision has high acuity but slow feedback. The nervous system must work with uncertain, delayed measurements.
 
 \item \textbf{Noisy actuators:} Muscle force variability is 5--10% even when you're trying to produce exactly the same torque twice. This is called \textit{signal-dependent noise} and increases with force level.
 
@@ -54,7 +54,7 @@ The downswing takes approximately 250--300~ms. Consider the delay budget:
 \item Neural transmission to muscles: $\sim$10--20~ms
 \item Electromechanical delay (muscle activation): $\sim$40--60~ms
 \end{itemize}
-Total round-trip delay: approximately 250--330~ms. This exceeds the entire downswing duration. The implication is stark: \textbf{no corrective feedback is possible during the downswing.} The entire downswing is a pre-programmed ballistic action. Every ``correction'' you feel yourself making was actually planned before the downswing began, triggered by predicted (not actual) sensory feedback.
+Total round-trip delay: approximately 250--330~ms. This exceeds the entire downswing duration. The implication is stark: \textbf{full cortical feedback correction is not possible during the downswing.} The downswing is predominantly a pre-programmed ballistic action. Spinal reflexes (with $\sim$30~ms latency) may contribute modest proprioceptive adjustments, but conscious, visually guided corrections cannot occur within the available time. Every ``correction'' you feel yourself making was most likely planned before the downswing began, triggered by predicted (not actual) sensory feedback.
 \end{example}
 
 \subsection{Feedforward vs. Feedback: A Crucial Distinction}
@@ -98,7 +98,7 @@ Why? The timescales don't work out. Suppose a visual feedback signal detected an
 
 Proprioceptive feedback is faster (30--50 ms) but still problematic. A proprioceptive error signal arrives in time for maybe one correction cycle. The elite golfer does not rely on this. Instead, the swing is executed as a \textit{ballistic} movement---once it starts, it unfolds according to a pre-planned motor program, with only minimal real-time adjustments.
 
-This realization has profound implications. It means the brain does its real work \textit{before} the swing starts: encoding the initial conditions, setting muscle stiffness, and preparing the motor program. The execution phase is largely deterministic.
+This realization has far-reaching implications. It means the brain does its real work \textit{before} the swing starts: encoding the initial conditions, setting muscle stiffness, and preparing the motor program. The execution phase is largely deterministic.
 
 \section{Internal Models: The Brain's Simulator}
 \label{sec:ch24_internal_models}
@@ -116,7 +116,7 @@ A forward model predicts the sensory consequences of a motor command. Given the 
 \hat{\bm{x}}(t+\Delta t) = \hat{f}(\bm{x}(t)) + \hat{G}(\bm{x}(t))\bm{u}(t)
 \end{equation}
 
-Mathematically, it IS solving the nonlinear dynamics equation. The brain becomes a physicist in practice, even if not in theory.
+Mathematically, this is analogous to solving the nonlinear dynamics equation. The neural implementation is of course very different from symbolic computation, but the functional result is similar: the brain generates predictions consistent with physical dynamics.
 \end{definition}
 
 \begin{definition}{Inverse Model}{def:ch24_inverse_model}
@@ -130,7 +130,7 @@ This is the inverse dynamics problem: ``What muscles do I fire to move the club 
 
 The forward and inverse models are intimately related. The brain learns them together. A forward model is easy to differentiate numerically to obtain an approximate inverse model: $\bm{u} \approx \hat{G}^{-1}(\bm{x}_d - \hat{f})$.
 
-\subsection{The Cerebellum as the Seat of Internal Models}
+\subsection{The Cerebellum as a Candidate Substrate for Internal Models}
 \label{subsec:ch24_cerebellum}
 
 \index{cerebellum}
@@ -208,7 +208,7 @@ For the golf swing, this framework explains several phenomena:
 \item \textbf{Lack of time for correction:} During a 300 ms downswing, the brain has time for maybe one or two prediction error cycles. Thus, most corrections cannot happen mid-swing. The brain relies on the prior learning.
 \end{enumerate}
 
-This framework has profound implications. It says that action is not fundamentally different from perception. Both work through prediction and error correction. The goal of a motor action is to make the actual sensory consequences match your predicted sensory consequences. For the golf swing, the predicted sensory consequence is the \textit{feeling} of a well-struck shot---the proprioceptive pattern that you've learned corresponds to good contact.
+This framework has far-reaching implications. It says that action is not fundamentally different from perception. Both work through prediction and error correction. The goal of a motor action is to make the actual sensory consequences match your predicted sensory consequences. For the golf swing, the predicted sensory consequence is the \textit{feeling} of a well-struck shot---the proprioceptive pattern that you've learned corresponds to good contact.
 
 \section{Ideomotor Theory: Think the Result, Not the Process}
 \label{sec:ch24_ideomotor}
@@ -221,8 +221,8 @@ William James, in his 1890 \textit{Principles of Psychology}, proposed a radical
 
 Modern ideomotor theory \cite{prinz2002perception, hommel2009theory} has formalized this insight:
 
-\begin{theorem}{Ideomotor Principle}{thm:ch24_ideomotor}
-An action is coded as a set of desired sensory consequences (the effect). When the action goal is activated, the motor system automatically retrieves the motor commands that, in the past, produced those consequences. The action is executed by commands designed to minimize discrepancy between the predicted sensory consequences and the desired consequences.
+\begin{theorem}{Ideomotor Principle (Theoretical Framework)}{thm:ch24_ideomotor}
+According to modern ideomotor theory---a framework with substantial experimental support but ongoing debate regarding its scope and mechanisms---an action is coded as a set of desired sensory consequences (the effect). When the action goal is activated, the motor system retrieves the motor commands that, in the past, produced those consequences. The action is executed by commands designed to minimize discrepancy between the predicted sensory consequences and the desired consequences.
 \end{theorem}
 
 The ideomotor principle connects to the drift field. In the ZTCF framework, the brain doesn't need to control every detail of the trajectory. Instead, it specifies the initial conditions and lets physics (the drift field) carry the system to the outcome. In ideomotor terms, the brain specifies the desired sensory consequence (impact with the ball, ball trajectory), and the motor system retrieves the commands that, given physics, produce that consequence.
@@ -284,7 +284,7 @@ To understand how the brain controls movement, we need to understand its hardwar
 \subsection{The Motor Cortex}
 \label{subsec:ch24_motor_cortex}
 
-The primary motor cortex (M1) is located in the frontal lobe, just in front of the central sulcus. It contains roughly 100,000 corticospinal neurons per hemisphere, each sending axons down through the spinal cord to synapse onto motor neurons.
+The primary motor cortex (M1) is located in the frontal lobe, just in front of the central sulcus. The corticospinal tract contains approximately one million fibers per hemisphere (estimates vary by source and methodology), with axons projecting down through the spinal cord to synapse onto motor neurons and interneurons.
 
 \begin{definition}{Corticospinal Tract}{def:ch24_corticospinal}
 The major pathway for voluntary motor control. Fibers originate in the motor cortex, travel through the brain and brainstem, cross the midline (decussate) in the medulla, and descend the spinal cord. Each M1 neuron controls the muscles on the \textit{opposite} side of the body.
@@ -346,7 +346,7 @@ When you hit a poor shot, dopamine neurons are quiet (no reward). The circuits t
 This is \textit{reinforcement learning} implemented in neural circuits.
 \end{example}
 
-Parkinson's disease, which damages dopamine neurons, produces profound difficulty in action selection. Patients know what they want to do, but they cannot initiate movement. They can stand frozen, unable to take a step. This illustrates how critical the basal ganglia are for movement initiation.
+Parkinson's disease, which damages dopamine neurons, produces severe difficulty in action selection. Patients know what they want to do, but they cannot initiate movement. They can stand frozen, unable to take a step. This illustrates how critical the basal ganglia are for movement initiation.
 
 \subsection{Motor Unit Recruitment: Henneman's Size Principle}
 \label{subsec:ch24_recruitment}
@@ -386,7 +386,7 @@ A fundamental constraint on any controller is its bandwidth---the rate at which 
 The maximum frequency at which a controller can detect errors and generate corrective responses. For the brain, the limiting factor is not neural transmission speed (which is fast---30--120 m/s) but the time taken to process information and compute responses.
 \end{definition}
 
-The conscious brain updates motor plans at roughly 4--10~Hz (one update every 100--250~ms). Visual flicker fusion occurs at $\sim$60~Hz, but conscious decision-making and motor replanning are far slower. This mismatch is critical: sensory data arrives faster than the brain can act on it.
+The conscious brain updates motor plans at roughly 4--10~Hz (one update every 100--250~ms). These values are illustrative estimates from reaction-time studies; the exact rate depends on task complexity and attentional demands. Visual flicker fusion occurs at $\sim$60~Hz, but conscious decision-making and motor replanning are far slower. This mismatch is critical: sensory data arrives faster than the conscious brain can act on it.
 
 \begin{example}{Flicker Fusion Frequency}{ex:ch24_flicker}
 A light flickering at 60 Hz appears steady to your eye, even though it's actually off half the time. This is because 60 Hz exceeds your conscious bandwidth. Each on--off cycle is too fast to perceive as distinct.
@@ -428,7 +428,7 @@ How much ``horsepower'' does the brain have for controlling movement?
 
 \item \textbf{Computational capacity:} Estimates of the brain's computational capacity vary widely depending on what counts as an `operation.' If each of the brain's $\sim 10^{14}$ synapses fires at $\sim$10~Hz, the brain performs roughly $10^{15}$ synaptic operations per second \citep{wolpert2011motor}. Under more liberal definitions (including subthreshold integration), estimates reach $10^{16}$--$10^{18}$. These numbers are uncertain, but the order of magnitude is instructive.
 
-\item \textbf{Per-neuron computation:} With ~100 billion neurons, this is about $10^5$ operations per neuron per second, or roughly 100 floating-point operations per action potential. This is much less than a CPU/GPU (which can do $10^9$ operations per cycle per core). The brain compensates with massive parallelism.
+\item \textbf{Per-neuron computation:} With $\sim$100 billion neurons, this yields roughly $10^4$--$10^5$ synaptic operations per neuron per second. Direct comparison with digital processors is misleading: neurons are analog, parallel, and asynchronous, while CPUs/GPUs perform discrete, clocked operations. The brain compensates for slower individual operations with massive parallelism ($\sim$100 billion units operating simultaneously).
 \end{itemize}
 \end{principle}
 
@@ -448,7 +448,7 @@ This distinction is fundamental to understanding biological motor control. The b
 \begin{enumerate}
 \item The golf swing is a feedforward, ballistic movement. Once initiated, it unfolds according to a pre-planned motor program. Sensory feedback is too slow to correct the swing trajectory in real time.
 
-\item The brain controls movement using internal models---forward models that predict sensory consequences, and inverse models that compute motor commands. The cerebellum is the likely neural substrate for these models.
+\item The brain controls movement using internal models---forward models that predict sensory consequences, and inverse models that compute motor commands. The cerebellum is the leading candidate neural substrate for these models, supported by substantial evidence from lesion studies and neuroimaging, though the full picture likely involves multiple brain regions.
 
 \item The brain operates as a predictive processing system. It constantly generates predictions and compares them to actual sensory input. Prediction errors drive learning.
 

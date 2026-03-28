@@ -169,12 +169,12 @@ where:
 - $k$ is a dimensionless parameter, typically $0.3$--$0.5$
 - $f_V$ ranges from 1 at zero velocity to 0 at $\tilde{v} = V_{\max}$
 
-For *eccentric contraction* (lengthening under load, e.g., a muscle applying brakes), Hill's equation is different and shows a counterintuitive result: force *increases* beyond $F_0$:
+For *eccentric contraction* (lengthening under load, e.g., a muscle applying brakes), force *increases* beyond $F_0$. Following the formulation of Thelen (2003), the eccentric force-velocity relationship asymptotes to a finite maximum rather than diverging:
 \begin{equation}
-f_V^{\mathrm{ecc}}(\tilde{v}) = 1 + \frac{a_{\mathrm{ecc}} |\tilde{v}|}{a_{\mathrm{ecc}} - k_{\mathrm{ecc}} |\tilde{v}|}
+f_V^{\mathrm{ecc}}(\tilde{v}) = F_{\mathrm{asym}} - (F_{\mathrm{asym}} - 1) \cdot \frac{1 + \tilde{v}/V_{\max}}{1 - k_{\mathrm{ecc}} \tilde{v}/V_{\max}}
 \label{eq:hill-eccentric}
 \end{equation}
-where $a_{\mathrm{ecc}} \approx 0.3$ and $k_{\mathrm{ecc}} \approx 0.8$. This gives $f_V^{\mathrm{ecc}} > 1$ for increasing velocity, meaning eccentric contractions can produce 1.2--1.5 times the isometric force.
+where $F_{\mathrm{asym}} \approx 1.4$ is the asymptotic eccentric force (as a fraction of $F_0$), $k_{\mathrm{ecc}} \approx 0.25$, and $\tilde{v}$ is negative for lengthening. This formulation is physiologically realistic: eccentric contractions can produce approximately 1.2--1.5 times the isometric force but plateau at a finite value [@thelen2003adjustment].
 
 ::: {.callout-important}
 ## Concentric vs. Eccentric: The Asymmetry
@@ -191,7 +191,7 @@ where $a_{\mathrm{ecc}} \approx 0.3$ and $k_{\mathrm{ecc}} \approx 0.8$. This gi
 **Drift (gravitational + inertial) forces:**
 
 - Scale as $\approx m v^2$ for inertial (quadratic in speed)
-- Grow as $\approx v^{1/2}$ for gravitational (sublinear)
+- Gravitational torque is $mg \cdot r \sin(\theta)$, which is independent of velocity (constant for a given configuration)
 - Peak at impact when clubhead speed $v_{\mathrm{club}} \approx 50$ m/s
 - Drift torque at wrist: $\sim 50$--$100$ N$\cdot$m
 
@@ -215,7 +215,7 @@ where $a_{\mathrm{ecc}} \approx 0.3$ and $k_{\mathrm{ecc}} \approx 0.8$. This gi
 
 Consider the extensor carpi radialis longus (ECRB), a wrist extensor involved in club control:
 
-- Maximum isometric force: $F_0 \approx 50$ N (small muscle, 5 cm PCSA at 10 N/cm$^2$)
+- Maximum isometric force: $F_0 \approx 50$ N (small muscle, PCSA $\approx 1.5$ cm$^2$ at $\sigma_{\max} \approx 33$ N/cm$^2$)
 - Maximum fiber velocity: $V_{\max} \approx 8$ m/s (fast-twitch dominant)
 - Moment arm about wrist: $r \approx 0.02$ m (2 cm)
 - Maximum isometric torque: $\tau_0 = F_0 \cdot r = 50 \times 0.02 = 1$ N$\cdot$m
@@ -530,7 +530,7 @@ Understanding muscle force generation reveals why certain coaching cues are effe
 
 :::
 
-\subsection*{Looking Ahead}
+### Looking Ahead
 Muscle biology sets the envelope of what is physically possible: maximum forces, activation speeds, and the velocity--force tradeoff. But there is one more force we have not yet accounted for---aerodynamic drag. Chapter~\ref{ch:aerodynamic-drag} shows why drag is *not* negligible in the golf swing, and why omitting it leads to systematic errors in inverse dynamics calculations.
 
 ## Chapter Exercises

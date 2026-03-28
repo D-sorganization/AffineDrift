@@ -865,12 +865,14 @@ def rnea(q, dq, ddq, links, joints, gravity=np.array([0, 0, -9.81])):
     """
     N = len(links)
 
-    # Build gravity in spatial form (angular, linear)
+    # Base link has zero velocity; gravity enters as a fictitious
+    # base acceleration (Featherstone convention: a_0 = -g so that
+    # the algorithm produces correct gravity-compensating torques).
     V = [np.zeros(6) for _ in range(N)]
-    V[0] = np.concatenate([np.zeros(3), gravity])
+    # V[0] remains zero -- the base is stationary
 
     dV = [np.zeros(6) for _ in range(N)]
-    dV[0] = np.concatenate([np.zeros(3), gravity])
+    dV[0] = np.concatenate([np.zeros(3), -gravity])
 
     # Outward pass: compute velocities and accelerations
     T = [np.eye(4) for _ in range(N)]
