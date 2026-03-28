@@ -8,13 +8,54 @@
 \epigraph{Golf is a microcosm where physics, engineering, neuroscience, and biomechanics all collide. Understanding the collision is understanding the game.}{---AffineDrift}
 
 % ─────────────────────────────────────────────────────────────────
-\begin{laymansbox}{Why Disciplines Matter}{laymans:ch13:disciplines}
-Throughout this book, we have developed a mathematical framework (control-affine dynamics) that describes the golf swing. But a complete understanding requires ideas from multiple disciplines, each contributing essential insights.
+\begin{laymansbox}{Multiple Disciplines, One Framework}{laymans:ch13:disciplines}
+Throughout this book, we have developed a mathematical framework (control-affine dynamics) that describes the golf swing. This framework connects multiple scientific disciplines, each contributing essential insights.
 
-Control theory teaches us how to decompose forces into drift and control. Biomechanics shows us how muscles, bones, and connective tissue work. Robotics reveals the deep parallels between human and machine motion. Neuroscience tells us how the nervous system orchestrates the swing. Material science explains why some shaft designs work better than others. Data science helps us learn the true drift field from measurements.
+Control theory provides the decomposition of forces into drift and control components. Biomechanics describes the mechanical properties of muscles, bones, and connective tissue. Robotics demonstrates analogous mathematical structures in human and engineered systems. Neuroscience describes how the nervous system encodes and executes motor commands. Material science characterizes the mechanical behavior of shafts and impact dynamics. Data science provides methods to estimate parameters of the drift field from measurements.
 
-In this chapter, we see how these disciplines intersect and reinforce each other. The affine framework is not just a physics idea; it is a language that engineers, neuroscientists, and biomechanists can all speak. When they do, remarkable insights emerge.
+The subsequent sections show how these disciplines connect through the affine framework. The framework provides a unifying language that can express concepts from engineering, biology, and neuroscience in consistent mathematical terms. This consistency enables precise comparison of phenomena across domains.
 \end{laymansbox}
+
+% ─────────────────────────────────────────────────────────────────
+\section{Interdisciplinary Connections: Overview}
+
+\index{interdisciplinary}
+
+The golf swing connects multiple scientific disciplines through shared mathematical structures. Figure~\ref{fig:ch13_interdisciplinary_map} illustrates how these fields intersect at the core dynamics $\dot{\state} = f(\state) + G(\state)\control$.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1.0]
+  % Central equation
+  \node[draw, rectangle, minimum width=4cm, minimum height=0.8cm, font=\small] (core) at (0,0) {$\dot{\state} = f(\state) + G(\state)\control$};
+
+  % Discipline nodes
+  \node[draw, circle, minimum width=1.2cm] (control) at (-4, 2) {Control\\Theory};
+  \node[draw, circle, minimum width=1.2cm] (biomech) at (-1.5, 2.5) {Biomechanics};
+  \node[draw, circle, minimum width=1.2cm] (robotics) at (1.5, 2.5) {Robotics};
+  \node[draw, circle, minimum width=1.2cm] (neuro) at (4, 2) {Neuroscience};
+  \node[draw, circle, minimum width=1.2cm] (materials) at (-2.5, -2) {Material\\Science};
+  \node[draw, circle, minimum width=1.2cm] (data) at (2.5, -2) {Data\\Science};
+
+  % Connection lines
+  \draw[-] (core) -- (control);
+  \draw[-] (core) -- (biomech);
+  \draw[-] (core) -- (robotics);
+  \draw[-] (core) -- (neuro);
+  \draw[-] (core) -- (materials);
+  \draw[-] (core) -- (data);
+
+  % Key contributions
+  \node[font=\small, right=0.3cm of control] {Drift/Control\\Decomposition};
+  \node[font=\small, right=0.3cm of biomech] {Force\\Generation};
+  \node[font=\small, left=0.3cm of robotics] {Hierarchical\\Structure};
+  \node[font=\small, left=0.3cm of neuro] {Motor\\Commands};
+  \node[font=\small, right=0.3cm of materials] {Elastic\\Properties};
+  \node[font=\small, left=0.3cm of data] {Parameter\\Estimation};
+\end{tikzpicture}
+\caption{The affine control framework provides a common language for multiple scientific disciplines, each contributing essential insights to understanding the golf swing.}
+\label{fig:ch13_interdisciplinary_map}
+\end{figure}
 
 % ─────────────────────────────────────────────────────────────────
 \section{Control Theory and Biomechanics: The Affine Bridge}
@@ -40,11 +81,11 @@ From a control theory perspective: the early downswing is a phase of high contro
 This perspective explains why the supraspinatus is most active early in the swing, not late---it is setting up the drift, not fighting it.
 \end{example}
 
-The affine framework provides a bridge between control theory and biomechanics. Both disciplines can now speak the same language: the language of drift $f(\state)$ and control $G(\state)\control$.
+The affine framework establishes mathematical correspondence between control theory and biomechanics through the shared structure: $\dot{\state} = f(\state) + G(\state)\control$.
 
-For control theorists, this language makes the biology explicit: the drift includes gravity, Coriolis forces, elastic energy in the shaft, and passive damping in connective tissue. The control is muscle torque, coordinated across many joints.
+For control theorists, this structure clarifies the biological instantiation: the drift $f(\state)$ comprises gravity, Coriolis forces, elastic forces in the shaft, and passive damping in connective tissue. The control field $G(\state)$ represents muscle torques distributed across multiple joints.
 
-For biomechanists, this language provides a principled way to organize the observations. Instead of cataloging muscle activations, they can ask: what is the control objective at each phase of the swing? And how do the observed muscle activations implement that objective?
+For biomechanists, this structure provides a principled organization of empirical observations. Rather than cataloging muscle activations as an unconnected sequence, the framework supports systematic inquiry: what control objectives does each swing phase present, and how do observed muscle activation patterns achieve these objectives?
 
 % ─────────────────────────────────────────────────────────────────
 \section{Robotics: What Golf Can Learn from Machines}
@@ -116,14 +157,14 @@ The human nervous system seems to plan in task space (where the hand should be) 
 
 The affine framework adds a third layer: control affine planning. Instead of specifying a complete trajectory, the golfer specifies an initial configuration (the backswing position) and a control strategy (which muscles to activate when). The drift field does much of the work automatically. The control inputs make corrections to keep on track.
 
-\begin{laymansbox}{Why Robots Teach Us About Muscles}{laymans:ch13:robot_lesson}
-A robot designer must explicitly specify everything: the kinematics (how joints connect), the dynamics (how torques produce motion), the control law (what torques to apply when). When the robot does not work, the designer must debug each component.
+\begin{laymansbox}{Robots as Mathematical Models}{laymans:ch13:robot_lesson}
+A robot designer must explicitly specify every system component: kinematics (joint configuration), dynamics (torque-to-motion mapping), and control law (torque-time sequences). Malfunction requires systematic debugging of each component.
 
-A human has inherited a similar structure, but refined by evolution. The kinematics are in the skeleton. The dynamics include muscles, tendons, and connective tissue. The control law is encoded in the nervous system, learned through practice.
+The human locomotor system exhibits analogous structure: skeleton defines kinematics; muscles, tendons, and connective tissue implement dynamics; the nervous system encodes control law (learned through practice and neural adaptation). The evolutionary refinement differs from engineering design, but the underlying mathematical structures are similar.
 
-By studying robots, we gain insight into how humans must organize their control. We can ask: what is the minimal information a golfer must specify? What is automatically handled by the body's physics? Where are the design constraints and trade-offs?
+Robotics provides formal methods for analyzing the design space: which system parameters must be specified explicitly? Which behaviors emerge automatically from physical structure? What design trade-offs relate kinematics to achievable control authority?
 
-These questions have no easy answers, but robotics provides a framework for asking them clearly.
+Robotics does not provide answers to these questions in the biological context, but it provides a formal framework within which the questions can be precisely formulated.
 \end{laymansbox}
 
 % ─────────────────────────────────────────────────────────────────
@@ -230,16 +271,14 @@ The COR depends on both the ball and the clubface:
 
 This is where ball fitting meets swing physics. A slower golfer (say, 80 mph swing speed) benefits from a softer ball with higher COR, because the softer ball deforms more, allowing the golfer to transfer more energy. A faster golfer (say, 100 mph) can use a harder ball with lower COR, gaining better control and tighter dispersion.
 
-\begin{example}{Ball Fitting for Swing Speed}{ex:ch13:ball_fitting}
-Consider two golfers: Alice (80 mph swing speed) and Bob (100 mph swing speed). They both hit balls with a 9-iron from 150 yards.
+\begin{example}{Coefficient of Restitution and Ball Compression}{ex:ch13:ball_fitting}
+The relationship between ball compression and coefficient of restitution can be expressed through the impact equations. For a rigid clubface striking a compressible ball, the COR depends on the elastic and damping properties of the ball material \cite{Penner2001}.
 
-Alice uses a soft ball (low compression, COR $\approx 0.82$). The impact dynamics transfer the energy efficiently, and the ball launches at a relatively high angle with low spin (due to the soft compression).
+Empirically, lower-compression balls exhibit higher COR (approximately 0.82) compared to higher-compression balls (approximately 0.78) when struck at comparable speeds \cite{Jorgensen1994}. This relationship arises from the nonlinear viscoelastic response of the rubber core: softer materials deform more readily and recover more completely from small deformations.
 
-Bob uses a harder ball (high compression, COR $\approx 0.78$). The impact dynamics are harsher, but Bob's higher clubhead speed means the ball still leaves the face at high speed. The harder ball produces a lower launch angle and higher spin, which Bob can use for control.
+The COR is also speed-dependent: faster impact speeds can increase the effective COR because the ball experiences greater deformation and the elastic recovery is more efficient. This speed-dependence reflects the frequency-dependent viscoelasticity of polymer materials.
 
-If Alice tried Bob's ball, she would lose distance (lower COR means less energy transfer). If Bob tried Alice's ball, he would gain too much carry distance and lose the control he gets from the higher compression ball.
-
-This is not magic; it is material science applied to the constraints of the swing.
+The material science of ball design thus determines the energy transfer coefficient $\mathrm{COR}$, which is one parameter in the impact model that relates clubhead velocity at impact to ball velocity after impact.
 \end{example}
 
 % ─────────────────────────────────────────────────────────────────
@@ -277,9 +316,9 @@ From the 100 data points, can we learn the drift field $f(\state)$?
 
 The answer is: partially, yes. We can use the pre-impact states and post-impact measurements to estimate how the state evolves over the swing. We can fit a model to the data and extract estimates of the drift field.
 
-More precisely, we can estimate the parameters of the drift field. The drift field has a known structure (it includes gravity, Coriolis forces, elastic forces from the shaft, etc.). We can measure or estimate most of these from the golfer's biomechanics and equipment. For the unknown parameters (like the shaft stiffness $\shaftstiff$ or the effective muscle damping), we can use the launch monitor data to infer the best values.
+More precisely, we can estimate unknown parameters of the drift field. The drift field structure is determined by physical principles: gravity, Coriolis forces, elastic forces from the shaft, and damping. Most of these can be computed from biomechanical measurements and material properties. For unknown parameters (such as shaft stiffness $K_s$ or tissue damping coefficients $D_s$), launch monitor data can constrain parameter estimates through inverse problems \cite{Nesbit2005}.
 
-This is machine learning in the service of physics: not a black-box neural network, but a physics-informed model that learns the unknown parameters.
+This approach uses data to inform a physics-based model, contrasting with purely empirical machine learning: a physics-informed parameter estimation method constrains the solution space using the known structure of the drift field.
 
 \subsection*{Predicting Ball Outcome from Swing Data}
 

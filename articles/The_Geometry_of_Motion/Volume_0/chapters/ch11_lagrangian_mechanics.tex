@@ -30,6 +30,30 @@ Later, in the early 1800s, \textbf{William Rowan Hamilton} reformulated Lagrange
 
 \textbf{Why This History Matters:} Lagrangian mechanics is not merely an alternative notation for Newton's laws. It encodes deep philosophical truth: nature does not "know" about forces. It only "knows" about energy. Systems evolve along extremal paths of action. This principle applies equally to light rays (Fermat's principle), quantum fields (path integrals), and relativistic gravity (Einstein's equations). By learning Lagrangian mechanics, you are learning the geometric language that unifies all modern physics.
 
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}[scale=1.1]
+  % Pendulum diagram
+  \draw[thick] (0,2) -- (0,0) node[pos=0.5,left,xshift=-0.3cm] {$L$};
+  \draw[fill=black] (0,2) circle (0.1);
+  \draw[fill=blue] (1.2,1) circle (0.15);
+
+  % Angle
+  \draw[->,dashed] (0,2) -- (0,1) node[midway,right,xshift=-0.1cm] {$\theta$};
+  \draw[arc] (0,2) arc(-90:-60:1) node[below,xshift=0.3cm] {$\theta$};
+
+  % Velocity
+  \draw[->,thick,red] (1.2,1) -- (1.8,1.2) node[anchor=west] {$\dot{\theta}$ (velocity)};
+
+  % Energy labels
+  \node[below] at (1.2,0.3) {Kinetic: $T = \frac{1}{2}mL^2\dot{\theta}^2$};
+  \node[below] at (1.2,-0.1) {Potential: $V = mgL(1-\cos\theta)$};
+  \node[below] at (1.2,-0.5) {Lagrangian: $\mathcal{L} = T - V$};
+\end{tikzpicture}
+\caption{Example of Lagrangian mechanics: A pendulum system. The motion is fully determined by the difference between kinetic and potential energy (the Lagrangian), not by explicitly tracking forces. The Euler-Lagrange equations automatically yield the equations of motion without computing constraint forces.}
+\label{fig:lagrangian_pendulum}
+\end{figure}
+
 % ==========================================================================
 \section{The Limitations of Newton}
 % ==========================================================================

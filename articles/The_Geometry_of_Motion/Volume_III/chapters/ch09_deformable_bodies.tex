@@ -19,7 +19,38 @@ The rigid-body model fails when:
 \section{Beam Models for Long Bones and Shafts}
 
 When deformation is small and the body is slender (length $\gg$ diameter), beam
-theory provides an efficient model. For a Euler-Bernoulli beam:
+theory provides an efficient model. A schematic representation of the finite element
+beam model is shown in Figure~\ref{fig:ch9:beam-fem}.
+
+\begin{center}
+\begin{tikzpicture}[scale=0.85, >=Stealth]
+  % Continuous beam
+  \draw[very thick] (0, 2) -- (6, 2.3) node[right] {Euler-Bernoulli beam};
+  \filldraw (0, 2) circle (3pt);
+  \node[below] at (0, 2) {Clamped};
+
+  % Distributed load
+  \draw[->, thick, red] (1.5, 2.8) -- (1.5, 2.2) node[right] {$f(x,t)$};
+  \draw[->, thick, red] (3, 2.9) -- (3, 2.2);
+  \draw[->, thick, red] (4.5, 2.8) -- (4.5, 2.2);
+
+  % Finite elements
+  \node at (3, 0.8) {\textbf{Discretization into FE elements}};
+  \filldraw (0, 0) circle (2pt);
+  \filldraw (1.5, 0.1) circle (2pt);
+  \filldraw (3, 0) circle (2pt);
+  \filldraw (4.5, 0.05) circle (2pt);
+  \filldraw (6, 0.2) circle (2pt);
+
+  \draw (0, 0) -- (1.5, 0.1) -- (3, 0) -- (4.5, 0.05) -- (6, 0.2);
+
+  % Deformation
+  \draw[dashed, gray] (0, 2) -- (0, 0);
+  \draw[dashed, gray] (6, 2.3) -- (6, 0.2);
+\end{tikzpicture}
+\end{center}
+
+For a Euler-Bernoulli beam:
 \begin{equation}
   EI \frac{\partial^4 w}{\partial x^4} + \rho A \frac{\partial^2 w}{\partial t^2} = f(x, t),
   \label{eq:ch9:euler-bernoulli}

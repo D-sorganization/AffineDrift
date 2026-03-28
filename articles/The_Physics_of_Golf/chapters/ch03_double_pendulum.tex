@@ -4,13 +4,13 @@
 \epigraph{``The goal of physics is not to describe how nature is but to figure out how to simplify what nature does.''}{}
 
 \begin{laymansbox}{Why This Model?}{box:ch03_why_model}
-A full model of the human body has 40+ degrees of freedom. Your spine bends. Your hips rotate. Your knees flex. Your ankles adjust. Even just the arm has many possible movements.
+A complete model of the human body in motion would involve many degrees of freedom: the spine, hips, knees, ankles, and the various joints of the arm all move during a golf swing.
 
-Yet the golf swing has a surprising structure: most of the action happens in two places: shoulder rotation and elbow bend. The torso twists, yes, but it rotates about a fixed vertical axis. The hips move, but mostly to stabilize. The wrist cocks and releases, but its effect on the clubhead is small compared to the arm's rotation.
+However, the golf swing exhibits a hierarchical structure where the primary motion driving club head velocity comes from the shoulder and elbow joints. The torso rotation provides the base motion, and higher-order joints (wrist, fingers) contribute secondary effects. This motivates a reduced model focused on the dominant degrees of freedom.
 
-So we model the arm as a double pendulum: two rigid links hinged together, hanging from a fixed point (the shoulder). This is a radical simplification. But here's the magic: almost all of the essential physics of the golf swing shows up in this simple model. And because it's simple, we can \textbf{solve it}—find exact equations, compute forces, understand the dynamics completely.
+The double pendulum---two rigid links connected by a hinge and driven from a fixed pivot---captures the essential dynamical structure of the arm-club system. This simplification is useful because (1) it is analytically tractable, allowing us to derive and solve the equations of motion explicitly, and (2) it preserves the key nonlinear effects (coupling, velocity-dependent forces, gravity) that characterize multi-link systems. The physics revealed by studying this simple model applies qualitatively to more complex systems as well.
 
-Once you understand the double pendulum, adding complexity (more joints, torso rotation, etc.) is straightforward.
+Once the double pendulum model is thoroughly understood, it provides a foundation for understanding more realistic models that incorporate additional degrees of freedom.
 \end{laymansbox}
 
 \section{The Double Pendulum: Physical Setup}
@@ -37,6 +37,53 @@ Generalized coordinates:
 
 where $\theta_1$ is the angle of link 1 (measured from some reference, say vertical), and $\theta_2$ is the \textbf{relative} angle of link 2 with respect to link 1.
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=2]
+  % Vertical reference line
+  \draw[dashed,thin,gray] (0,0) -- (0,-2.5);
+
+  % Pivot point (shoulder)
+  \draw[fill=black] (0,0) circle (0.08);
+  \node[above=0.2cm] at (0,0) {\small Shoulder};
+
+  % Link 1 (upper arm)
+  \draw[line width=2.5pt,blue] (0,0) -- (1.2,-1.4);
+  \node[midway,left=0.15cm,blue] {\small $L_1, M_1$};
+
+  % Elbow
+  \draw[fill=black] (1.2,-1.4) circle (0.08);
+  \node[right=0.15cm] at (1.2,-1.4) {\small Elbow};
+
+  % Link 2 (forearm + club)
+  \draw[line width=3pt,red] (1.2,-1.4) -- (2.3,-2.6);
+  \node[midway,right=0.15cm,red] {\small $L_2, M_2$};
+
+  % Club head
+  \draw[fill=red] (2.3,-2.6) circle (0.1);
+  \node[right=0.15cm,red] at (2.3,-2.6) {\small Club};
+
+  % Angle $\theta_1$
+  \draw[->] (0,-0.5) arc(-90:-60:0.5);
+  \node[left=0.1cm,below=0.1cm] at (-0.35,-0.65) {\small $\theta_1$};
+
+  % Angle $\theta_2$
+  \draw[->] (1.2,-1.4) arc(180:140:0.5);
+  \node[left=0.15cm] at (0.8,-1.5) {\small $\theta_2$};
+
+  % Center of mass markers
+  \draw[fill=blue,opacity=0.3] (0.6,-0.7) circle (0.1);
+  \draw[fill=red,opacity=0.3] (1.75,-2) circle (0.1);
+
+  % Dimension annotations
+  \draw[thin,<->] (-0.5,-1.4) -- (-0.5,0) node[midway,left=0.05cm,font=\small] {$L_{1,\mathrm{cm}}$};
+  \draw[thin,<->] (1.7,-2.6) -- (2.3,-2.6) node[midway,below=0.05cm,font=\small] {$L_{2,\mathrm{cm}}$};
+
+\end{tikzpicture}
+\caption{Double pendulum model of the golf swing. Link 1 (upper arm, blue) rotates about the shoulder with angle $\theta_1$ measured from vertical. Link 2 (forearm + club, red) rotates about the elbow with relative angle $\theta_2$. The blue and red circles mark the centers of mass of each link. The absolute angle of link 2 is $\theta_1 + \theta_2$.}
+\label{fig:ch03_double_pendulum}
+\end{figure}
+
 \begin{laymansbox}{Absolute vs. Relative Angles}{box:ch03_absolute_relative}
 There are two conventions for defining $\theta_2$:
 \begin{enumerate}
@@ -47,9 +94,9 @@ There are two conventions for defining $\theta_2$:
 In this book, we use relative angles. So $\theta_2 = 0$ means the two links are aligned (arm fully extended). $\theta_2 = -90°$ means the forearm is bent perpendicular to the upper arm.
 \end{laymansbox}
 
-\subsection*{Numerical Parameters (Realistic Golf)}
+\subsection*{Numerical Parameters for Illustration}
 
-Let's use numbers that match an actual golfer:
+To make the analysis concrete, we use representative parameters chosen to be typical for an adult golfer. These values are illustrative; actual parameters vary significantly with body size, club length, and individual differences.
 
 \begin{center}
 \begin{tabular}{|l|r|r|}
@@ -58,13 +105,13 @@ Let's use numbers that match an actual golfer:
 \hline
 Length $L$ & 0.35 m & 1.0 m \\
 Mass $M$ & 2.5 kg & 1.5 kg \\
-CM distance from hinge & 0.175 m & 0.5 m \\
+Center of mass distance from hinge & 0.175 m & 0.5 m \\
 Moment of inertia $I$ & 0.015 kg m$^2$ & 0.4 kg m$^2$ \\
 \hline
 \end{tabular}
 \end{center}
 
-These are approximate values for a typical golfer. Golfers with larger bodies or longer clubs will have different values, but the physics is the same.
+These representative values allow us to compute explicit examples and develop intuition for the magnitude of forces and accelerations that appear during a golf swing. The physics governing the motion remains the same regardless of the specific parameter values.
 
 \begin{laymansbox}{Roadmap: Deriving the Equations of Motion}{box:ch03_roadmap}
 We are about to derive the equations that govern the double pendulum. Here is the strategy:
@@ -396,51 +443,52 @@ Let's plug in numbers and see what the forces actually are.
 
 \subsection*{At Impact}
 
-Suppose at impact, the arm is nearly extended:
+Consider a representative impact condition where the arm is nearly extended. These are representative values typical of moderate swing speeds:
 \begin{itemize}
-\item $\theta_1 = 0°$ (arm pointing toward target)
-\item $\theta_2 = -5°$ (slight wrist bend)
-\item $\dot{\theta}_1 = 600°/s = 10.47 \text{ rad/s}$ (shoulder rotation speed)
-\item $\dot{\theta}_2 = 500°/s = 8.73 \text{ rad/s}$ (elbow/wrist straightening speed)
+\item $\theta_1 = 0°$ (arm aligned with the reference direction)
+\item $\theta_2 = -5°$ (small negative angle, indicating the forearm is bent slightly from full extension)
+\item $\dot{\theta}_1 \approx 10 \text{ rad/s}$ (shoulder rotation angular velocity, typical range 8-12 rad/s from biomechanical studies \citep{Nesbit2005})
+\item $\dot{\theta}_2 \approx 9 \text{ rad/s}$ (relative elbow/wrist angular velocity)
 \end{itemize}
 
 The mass matrix at this configuration:
 \begin{align}
-M_{11} &\approx 0.015 + 2.5 \cdot 0.35^2 + 2.5 \cdot 0.5^2 + 0.4 + 2 \cdot 2.5 \cdot 0.35 \cdot 0.5 \cos(-5°) \\
+M_{11} &= I_1 + M_2 L_1^2 + M_2 L_{2,\text{cm}}^2 + I_2 + 2 M_2 L_1 L_{2,\text{cm}} \cos \theta_2 \\
+&\approx 0.015 + 2.5 \cdot (0.35)^2 + 2.5 \cdot (0.5)^2 + 0.4 + 2 \cdot 2.5 \cdot 0.35 \cdot 0.5 \cos(-5°) \\
 &\approx 0.015 + 0.306 + 0.625 + 0.4 + 0.872 \\
 &\approx 2.22 \text{ kg m}^2
 \end{align}
 
-(This is the effective moment of inertia of the entire arm+club system about the shoulder.)
+This represents the effective moment of inertia of the coupled arm+club system about the shoulder at this configuration.
 
-The gravitational torques:
+The gravitational torques are found from the gravity vector:
 \begin{align}
-g_1 &= (2.5 \cdot 0.175 + 2.5 \cdot 0.35) \cdot 9.81 \cdot \sin(0°) + 2.5 \cdot 9.81 \cdot 0.5 \cdot \sin(-5°) \\
-&\approx 0 - 10.6 \text{ N m} \\
-&\approx -10.6 \text{ N m}
+g_1 &= (M_1 L_{1,\text{cm}} + M_2 L_1) g \sin \theta_1 + M_2 g L_{2,\text{cm}} \sin(\theta_1 + \theta_2) \\
+&= (2.5 \cdot 0.175 + 2.5 \cdot 0.35) \cdot 9.81 \cdot \sin(0°) + 2.5 \cdot 9.81 \cdot 0.5 \cdot \sin(-5°) \\
+&\approx 0 + 12.25 \cdot (-0.087) \\
+&\approx -1.1 \text{ N m}
 \end{align}
 
-(Negative means gravity is pulling the arm downward/backward.)
-
-The Coriolis term at the elbow:
+The Coriolis/centrifugal term at the elbow (from Equation \ref{eq:ch03_coriolis_matrix}):
 \begin{align}
-C_{21} \dot{\theta}_1 &= M_2 L_1 L_{2,\text{cm}} \dot{\theta}_1^2 \sin \theta_2 \\
-&= 2.5 \cdot 0.35 \cdot 0.5 \cdot 10.47^2 \cdot \sin(-5°) \\
-&\approx 2.5 \cdot 0.35 \cdot 0.5 \cdot 109.6 \cdot (-0.087) \\
-&\approx -6.6 \text{ N m}
+C_{21}(\dot{\theta}_1) &= M_2 L_1 L_{2,\text{cm}} \dot{\theta}_1^2 \sin \theta_2 \\
+&= 2.5 \cdot 0.35 \cdot 0.5 \cdot (10)^2 \cdot \sin(-5°) \\
+&= 2.5 \cdot 0.35 \cdot 0.5 \cdot 100 \cdot (-0.087) \\
+&\approx -3.8 \text{ N m}
 \end{align}
 
-\begin{laymansbox}{What These Numbers Mean}{box:ch03_forces_meaning}
-At impact:
+\begin{laymansbox}{Interpretation of the Force Components}{box:ch03_forces_meaning}
+The numerical values at impact show the magnitude of various terms in the equations of motion:
+
 \begin{itemize}
-\item The total mass/inertia of the arm+club is about 2.22 kg m$^2$.
-\item Gravity is pulling with a torque of 10.6 N m.
-\item The centrifugal force (from the high shoulder rotation) is creating a torque of 6.6 N m trying to straighten the elbow.
+\item The effective inertia $M_{11} \approx 2.22$ kg m$^2$ determines how much acceleration results from a given applied torque.
+\item The gravitational torque $g_1 \approx -1.1$ N m acts to rotate the system back toward the downward position (negative indicates restoring direction).
+\item The centrifugal term $C_{21} \approx -3.8$ N m arises from the high rotational velocity and acts to influence the relative joint motion.
 \end{itemize}
 
-For comparison, a human can generate roughly 30–50 N m of torque at the shoulder. So gravity and centrifugal forces are doing about 40\% of the work at impact. The muscles do the rest.
+These passive forces (arising from gravity and the coupled dynamics) contribute to the total torque that accelerates the system. The applied muscular torques (represented by $\bm{\tau}$ in the manipulator equation) must be combined with these passive components to produce the observed accelerations.
 
-But notice: if we had generated all of this torque during the downswing, the club would barely accelerate. Instead, we generate a moderate muscular torque and let gravity and momentum contribute. That's efficiency.
+Notice that passive dynamics contribute significantly, particularly the velocity-dependent centrifugal terms that become important at high rotation speeds. This is why the dynamics are complex and why precise control is necessary.
 \end{laymansbox}
 
 \section{The Interaction Torque: How the Arm Pulls the Club}
@@ -453,14 +501,15 @@ In the equations of motion, we have the term $M_2 L_1 L_{2,\text{cm}} \cos \thet
 The torque that one joint exerts on the other through the kinetic energy coupling. In the double pendulum, the term $M_2 L_1 L_{2,\text{cm}} (\ddot{\theta}_1 + \ddot{\theta}_2) \cos \theta_2$ in the $\theta_1$ equation is the torque that the elbow exerts on the shoulder through their coupling.
 \end{definition}
 
-Why does this matter? Because when you accelerate the elbow (throw the club down), it pulls on the upper arm. This is why you feel the club being ``heavy'' during the downswing. It's not that the club itself is heavy—it's that accelerating it creates a reaction torque that pulls on your shoulder.
+\begin{example}{The Coupled Interaction of Two Links}{ex:ch03_interaction}
+In the double pendulum model, the two links are coupled through the kinetic energy and constraint structure. The acceleration of one link directly affects the torque required at the other link.
 
-\begin{example}{The Whip Effect}{ex:ch03_whip}
-Imagine cracking a whip. The handle accelerates slowly, the middle segment accelerates faster, and the tip accelerates fastest. Each segment pulls the segment behind it.
+Consider the manipulator equation:
+$$\bm{M}(\bm{q}) \ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{\tau}$$
 
-In the golf swing, the same thing happens. The shoulder rotates at some speed. The elbow catches up and rotates faster. In doing so, it \textbf{pulls on the shoulder through the interaction torque}. This is why amateur golfers often feel the club dragging—they're not accelerating the elbow fast enough to create that interaction torque.
+The mass matrix $\bm{M}$ is not diagonal. When the second link accelerates (large $\ddot{\theta}_2$), it creates coupling terms $M_{12} \ddot{\theta}_2$ in the first equation of motion. This means the torque required at the first joint depends on the acceleration of the second joint.
 
-Elite golfers feel the club pulling—they've trained to accelerate the elbow hard, which pulls through the shoulder and wrist, creating a whip effect.
+In mechanical terms, accelerating the distal link (club) creates a reaction torque transmitted back to the proximal link (upper arm). This is not unique to the golf swing; it appears in any open-chain kinematic system with coupled dynamics.
 \end{example}
 
 \section{Chaotic Dynamics: Why Small Differences Matter}
@@ -471,47 +520,45 @@ Here's a fascinating property of the double pendulum: it can exhibit \textbf{cha
 Motion is chaotic if small changes in initial conditions lead to drastically different outcomes, despite the system being completely deterministic.
 \end{definition}
 
-For the golf swing, this has profound implications. Two golfers with nearly identical swings at the top (same angles and velocities) might produce wildly different impact conditions if the equations of motion are chaotic.
+The unforced double pendulum (with $\bm{\tau} = 0$) exhibits chaotic behavior in certain parameter regimes. However, the golf swing always involves active control ($\bm{\tau} \neq 0$). With active control, the system behavior changes, but sensitivity to perturbations in the applied torques remains an important consideration.
 
-Actually, in the absence of control ($\bm{\tau} = 0$), the double pendulum exhibits chaos only in certain regimes. But once you add muscular control ($\bm{\tau} \neq 0$), the picture becomes complex. Small errors in muscle activation can compound.
+This sensitivity is a fundamental property of nonlinear systems: small variations in control inputs or system state can produce significantly different outcomes. Understanding this property is relevant to biomechanics and motor control, as it explains why achieving repeatable motion requires precise execution of control commands.
 
-This is why consistency is hard. It's not just about executing a ``swing shape''—it's about executing precise \textbf{forces} at precise times.
+\begin{laymansbox}{Sensitivity to Initial Conditions}{box:ch03_chaos_consistency}
+A key property of nonlinear dynamical systems is that small changes in the current state or applied forces can lead to appreciably different future states. This is particularly true near bifurcation points or in chaotic regimes.
 
-\begin{laymansbox}{Chaos and Consistency}{box:ch03_chaos_consistency}
-Here's a simple example. Suppose your shoulder is rotating at 10.47 rad/s and you want to accelerate the club by releasing the wrist ($\ddot{\theta}_2 > 0$).
+Consider the manipulator equation in a controlled scenario where muscular torques $\bm{\tau}(t)$ are applied according to some control law. Small variations in the timing, magnitude, or direction of the applied torques result in different state trajectories. The nonlinear coupling terms (particularly the velocity-dependent centrifugal and Coriolis terms) amplify small perturbations.
 
-If you release perfectly, the club accelerates and hits the sweet spot.
+For the double pendulum, the state-dependent nature of the mass matrix $\bm{M}(\bm{q})$ and Coriolis matrix $\bm{C}(\bm{q}, \dot{\bm{q}})$ means that the same muscular command, applied at slightly different system states, produces different accelerations and hence different subsequent trajectories.
 
-If you release just slightly late (by 0.01 seconds), the coupling terms in the equations mean the shoulder and elbow positions have evolved differently. The wrist is now at a slightly different angle and position. The release now happens at a different configuration. The club's trajectory is different. Impact happens at a different location on the clubface. The ball flies to a different target.
-
-Over the course of a full swing with multiple muscles controlling multiple DOF, these small errors can accumulate. This is why practice is essential: you're training your nervous system to execute precise control signals, overcoming the inherent chaos of the dynamics.
+This property is important for understanding why consistent execution of motion is difficult: the physical system itself amplifies small errors in the applied control.
 \end{laymansbox}
 
-\section{From Force Equations to Physical Insight}
+\section{Decomposing the Equation of Motion}
 
-The manipulator equation $\bm{M} \ddot{\bm{q}} + \bm{C} \dot{\bm{q}} + \bm{g} = \bm{\tau}$ is not just mathematics—it's a statement about physics.
+The manipulator equation $\bm{M}(\bm{q}) \ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{\tau}$ provides a complete description of the coupled dynamics of the two-link system. The equation separates naturally into distinct physical components:
 
-\textbf{Left side} = what the system wants to do given its current state (gravity pulling, momentum carrying it forward, inertia resisting acceleration).
+\textbf{Left side}: These terms represent the passive dynamics arising from the structure and current state of the system. They include inertial effects (proportional to acceleration through $\bm{M}$), velocity-dependent forces (Coriolis and centrifugal terms in $\bm{C}$), and gravitational torques ($\bm{g}$).
 
-\textbf{Right side} = what you're actively commanding with muscles.
+\textbf{Right side}: The applied (muscular) torques $\bm{\tau}$ represent the active control input that the neuromuscular system provides.
 
-The difference between amateurs and experts isn't just that experts generate larger forces. It's that experts \textbf{understand the left side} and use small commands on the right to steer the passive dynamics toward their goal.
+The actual motion results from the balance between these passive dynamics and the applied control. Understanding which terms dominate at different phases of motion is essential for analyzing and predicting the system's behavior.
 
 \begin{principle}{Key Takeaways}{pr:ch03_key_takeaways}
 \begin{enumerate}
-\item \textbf{The double pendulum captures the essential physics of the golf swing}: two linked segments with gravity, inertia, and velocity-dependent forces.
+\item \textbf{The double pendulum model captures the essential physics}: two rigid links with rotational inertia, subject to gravity and coupled through their kinematic constraints.
 
-\item \textbf{The kinetic energy depends on the speeds and configuration}. An extended arm has higher inertia than a bent one. This is why golfers sometimes lengthen the swing (to increase the moment arm and feel the club's inertia).
+\item \textbf{Kinetic energy is configuration-dependent}. The total kinetic energy of the system depends on the state through both the angular velocities and the configuration (angles). The mass matrix $\bm{M}(\bm{q})$ encodes how the configuration affects the effective inertias.
 
-\item \textbf{The mass matrix $M(\theta_2)$ couples the joints}. The effective inertia at the shoulder depends on the elbow angle.
+\item \textbf{The mass matrix exhibits state dependence}. The term $M_{11}(\theta_2)$ depends on the elbow angle, meaning the effective inertia at the shoulder varies as the configuration changes. This coupling is a fundamental feature of multi-link systems.
 
-\item \textbf{Gravity exerts torques that vary with configuration}. At address (arm down), $\sin \theta_1 = 0$, so gravity is balanced. At the top (arm up), gravity pulls strongly.
+\item \textbf{Gravitational torques are configuration-dependent}. The terms $\sin \theta_1$ and $\sin(\theta_1 + \theta_2)$ in the gravity vector show that gravitational effects depend on the current orientation of each link.
 
-\item \textbf{Coriolis and centrifugal forces are huge in golf}. At 100 mph club speed, the centrifugal forces are on the order of $100 g$.
+\item \textbf{Velocity-dependent forces (Coriolis and centrifugal) scale with $\dot{\theta}^2$}. At high angular velocities, these nonlinear terms dominate the dynamics and must be accounted for in any realistic model.
 
-\item \textbf{The interaction torque couples the two joints}. Accelerating the elbow creates a reaction torque at the shoulder. This is the ``whip effect.''
+\item \textbf{The system exhibits coupling between joints}. The kinetic energy coupling creates non-diagonal terms in the mass matrix. Accelerating one joint directly affects the torque required at another joint.
 
-\item \textbf{Small differences in control can lead to large differences in outcome}. The dynamics are sensitive to initial conditions. Consistency requires precise muscular control.
+\item \textbf{The system is sensitive to the applied control}. Small changes in the applied torques $\bm{\tau}(t)$ lead to different state trajectories due to the nonlinear nature of the equations of motion.
 \end{enumerate}
 \end{principle}
 
@@ -527,7 +574,7 @@ We have derived the equations of motion for the double pendulum---the mathematic
 
 \item \textbf{Centrifugal Force}. At impact, $\dot{\theta}_1 = 10.47 \text{ rad/s}$. The centrifugal acceleration at the clubhead (distance $L_1 + L_2 = 1.35$ m from shoulder) is $a_c = \dot{\theta}_1^2 \cdot r$. Compute this acceleration in units of $g$.
 
-\item \textbf{Impact Accelerations}. A golf club at impact often experiences accelerations of $170g$ or more. Using the double pendulum model, estimate what shoulder and elbow accelerations ($\ddot{\theta}_1, \ddot{\theta}_2$) are needed to produce this. (Hint: the clubhead acceleration is $a = L_1 \ddot{\theta}_1 + \text{other terms}$.)
+\item \textbf{Impact Accelerations}. The clubhead experiences large accelerations during impact. Using the double pendulum model with $L_1 = 0.35$ m and $L_2 = 1.0$ m, estimate what angular accelerations ($\ddot{\theta}_1, \ddot{\theta}_2$) are needed to produce a clubhead acceleration of $50 \text{ m/s}^2$ (about $5g$). Use the approximation that at small angles near impact, the clubhead acceleration is approximately $a \approx L_1 \ddot{\theta}_1 + L_2 (\ddot{\theta}_1 + \ddot{\theta}_2)$.
 
 \item \textbf{Gravity Torque}. At the top of the backswing ($\theta_1 = 150°, \theta_2 = -70°$), compute the gravitational torque at the shoulder. Is gravity trying to pull the arm backward or forward? Why?
 

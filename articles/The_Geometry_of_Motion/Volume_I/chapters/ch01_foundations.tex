@@ -20,6 +20,37 @@ $\x_1(t)$ and $\x_2(t)$ are solutions, then so is $\alpha\x_1(t)+\beta\x_2(t)$--
 systems deny this convenience. The narrative typically stops there, leaving the impression
 that nonlinearity and superposition are fundamentally incompatible.
 
+\begin{center}
+\begin{tikzpicture}[scale=1.0]
+  % Draw curved manifold
+  \draw[thick, black] (0,0) to[out=20, in=200] (4, 0.5) to[out=20, in=160] (6, 2) to[out=20, in=180] (7, 3);
+
+  % Draw a point on the manifold
+  \filldraw[black] (3, 0.2) circle (0.08cm);
+  \node[below right, font=\small] at (3, 0.2) {$p$};
+
+  % Draw tangent space at that point (as a flat plane)
+  \draw[dashed, thin, gray] (2.5, -0.5) -- (3.5, -0.5);
+  \draw[dashed, thin, gray] (2.5, 1) -- (3.5, 1);
+  \fill[gray!10] (2.5, -0.5) rectangle (3.5, 1);
+
+  % Draw tangent vectors
+  \draw[->, red, thick] (3, 0.2) -- (3.6, 0.2);
+  \draw[->, blue, thick] (3, 0.2) -- (3, 0.8);
+  \node[right, font=\small, red] at (3.6, 0.2) {$\mathbf{v}_1$};
+  \node[right, font=\small, blue] at (3, 0.8) {$\mathbf{v}_2$};
+
+  % Label tangent space
+  \node[font=\small] at (3, 0.15) {$T_p\mathcal{M}$};
+
+  % Add label for manifold
+  \node[font=\small, above] at (5, 1.5) {Nonlinear manifold $\mathcal{M}$};
+\end{tikzpicture}
+\end{center}
+
+\noindent The key insight of this chapter is that while trajectories cannot be superposed on the manifold itself,
+\emph{infinitesimal perturbations} live in the tangent space $T_p\mathcal{M}$, where superposition holds exactly.
+
 That impression is incomplete. It is true that \emph{trajectories} in a nonlinear system
 do not generally superpose. But at each point in state space, there exists a tangent space
 that is a genuine vector space, and within that vector space, superposition holds exactly.
@@ -47,7 +78,7 @@ from the practical concerns of mechanics and the rigorous formalization of analy
 \subsection{Newton, Leibniz, and the Birth of the Infinitesimal}
 
 The modern concept of tangent space originates in the Newton--Leibniz calculus of the late
-17th century. Newton's method of ``fluxions'' (rates of change) and Leibniz's differential
+17th century \cite{Goldstein2002, Arnold1989}. Newton's method of ``fluxions'' (rates of change) and Leibniz's differential
 notation $\dd x$ both captured an intuitive idea: at each point on a smooth curve, there is
 a direction of motion, a ``tangent line.'' For a curve $y = f(x)$ in the plane, the tangent
 line at $(x_0, f(x_0))$ has slope $f'(x_0)$ and can be written as
@@ -63,7 +94,7 @@ the original calculus allowed.
 \subsection{Cauchy, Weierstrass, and the Rigorous Foundation}
 
 By the 19th century, Cauchy and especially Weierstrass placed the derivative on a rigorous
-footing. The limit definition
+footing \cite{Goldstein2002}. The limit definition
 \begin{equation}
 f'(x_0) := \lim_{h \to 0} \frac{f(x_0 + h) - f(x_0)}{h}
 \label{eq:ch1:derivative-limit}
@@ -79,14 +110,14 @@ write the function as $y = f(x)$ or in any other smooth parameterization.
 \subsection{Riemann's Vision of Intrinsic Geometry}
 
 Bernhard Riemann's 1854 paper \emph{Über die Hypothesen, welche der Geometrie zu Grunde
-liegen} (On the Hypotheses Which Lie at the Foundations of Geometry) was the pivotal moment.
+liegen} (On the Hypotheses Which Lie at the Foundations of Geometry) was the pivotal moment \cite{doCarmo1992}.
 Riemann observed that just as Newton and Leibniz could construct a local approximation
 (the tangent line) at each point of a curve, one could construct a local vector space
 (the tangent space) at each point of any smooth manifold, even if the manifold itself were
 curved, high-dimensional, or not embedded in Euclidean space.
 
 Riemann's innovation---and its modern development by Élie Cartan, Hermann Weyl, and
-others---fundamentally separated two ideas:
+others \cite{doCarmo1992, arnold1989}---fundamentally separated two ideas:
 \begin{enumerate}
 \item The \emph{manifold itself}: a geometric object that may be curved.
 \item The \emph{tangent space at a point}: a vector space, always flat and linear.
@@ -97,9 +128,9 @@ the nonlinearity of how tangent spaces connect as you move through the manifold.
 
 \subsection{From Approximation to Exact Structure}
 
-For most of the 20th century, even when differential geometry was fully developed, the
-relationship between a nonlinear dynamical system and its tangent-space (linearized)
-dynamics remained framed as an \emph{approximation}. Textbooks would write:
+For most of the 20th century, even when differential geometry was fully developed \cite{AbrahamMarsden1978, arnold1989},
+the relationship between a nonlinear dynamical system and its tangent-space (linearized)
+dynamics remained framed as an \emph{approximation} \cite{Khalil2002}. Textbooks would write:
 \begin{quote}
 To study the qualitative behavior of a nonlinear system $\dot\x = f(\x)$ near an
 equilibrium $\bar\x$, we linearize: $\dot{\dx} = \mat{A}\,\dx$ where $\mat{A} = \frac{\partial f}{\partial \x}|_{\bar\x}$.
@@ -123,8 +154,8 @@ then there is \emph{exactly one} matrix $\mat{A}$ satisfying this property (at t
 scale). The matrix $\mat{A}$ is not an approximation; it is the \emph{definition} of what
 smoothness means at that point.
 
-This modern viewpoint---which permeates contemporary differential geometry, control theory,
-and optimization (especially gradient-based learning)---is the foundation of this book.
+This modern viewpoint---which permeates contemporary differential geometry \cite{doCarmo1992},
+control theory \cite{Khalil2002, Sastry1999}, and optimization (especially gradient-based learning)---is the foundation of this book.
 We do not linearize for convenience and accept error. We recognize that linearization
 \emph{is} the exact infinitesimal description, and we use this exactness as a structural
 principle for analyzing and controlling nonlinear systems.

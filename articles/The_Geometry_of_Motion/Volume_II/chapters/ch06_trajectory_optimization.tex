@@ -18,6 +18,49 @@ How does an athlete instinctively know exactly how to move their arms to swing a
 
 In Chapter 1, we fundamentally reframed our control objective from "reaching a destination" to "tracking a trajectory." Up to this point, we have assumed that this optimal reference trajectory $\traj^*(t)$ is given to us by an oracle. This chapter answers the obvious next question: \emph{Where does this reference come from?}
 
+\begin{center}
+\begin{tikzpicture}[scale=1.0]
+  % Cost landscape (2D surface)
+  \begin{scope}[yshift=2cm]
+    % Surface representation
+    \draw[thick, gray!50] (-2, -1.5) grid (2, 1.5);
+    \draw[very thick, chapblue] (-2, -1) -- (-1, 0) -- (0, 1.2) -- (1, 0.5) -- (2, -0.5);
+
+    % Optimal trajectory marked
+    \filldraw[accentred] (0.3, 0.9) circle (3pt) node[above right, font=\small] {$J^*(\traj^*)$};
+
+    % Contour lines
+    \draw[dashed, gray!40] (-0.5, 0.5) circle (0.8);
+    \draw[dashed, gray!40] (-0.3, 0.6) circle (0.5);
+
+    \node[font=\small, gray] at (-1.8, -1.8) {Cost landscape};
+  \end{scope}
+
+  % Trajectory space representation
+  \begin{scope}[yshift=-1cm]
+    % Reference trajectory
+    \draw[very thick, trajgreen] (-2, -0.5) .. controls (-1, 1) and (1, 0.8) .. (2, 0);
+    \draw[-{Stealth[length=2mm]}, thick, trajgreen] (-1.5, 0.1) -- (-1.2, 0.4);
+    \draw[-{Stealth[length=2mm]}, thick, trajgreen] (0.5, 0.95) -- (0.8, 0.85);
+    \node[trajgreen!80!black, font=\small] at (1.5, 1.0) {$\traj^*(t)$};
+
+    % Transverse variations
+    \draw[dashed, accentred!60, line width=0.8pt] (-2, -1.2) .. controls (-1, 0.7) and (1, 0.5) .. (2, -0.3);
+    \draw[dashed, accentred!60, line width=0.8pt] (-2, 0.2) .. controls (-1, 1.3) and (1, 1.1) .. (2, 0.3);
+
+    % Terminal manifold
+    \draw[thick, accentred] (2, -0.8) -- (2, 0.8);
+    \node[accentred, font=\small] at (2.4, 0) {$\psi = 0$};
+
+    \node[font=\small, gray] at (-1.8, -1.8) {Trajectory space};
+  \end{scope}
+
+  % Axes labels
+  \draw[-{Stealth[length=2mm]}, thick, gray] (-2.5, 3.5) -- (2.5, 3.5) node[right, font=\small] {$t$};
+  \draw[-{Stealth[length=2mm]}, thick, gray] (-2.5, -2.5) -- (-2.5, 3.5) node[above, font=\small] {$J, \state$};
+\end{tikzpicture}
+\end{center}
+
 For systems whose purpose is to move---like our running example of the golf swing---the optimal trajectory is not arbitrary. We are not just trying to go from point A to point B while minimizing energy. We are trying to fulfill what we term the \textbf{Moving Target Objective}: optimizing the kinematics (velocity, pose, acceleration) of a system precisely at the moment it intersects a target manifold (e.g., the golf ball). 
 
 Crucially, \emph{the exact clock time that impact occurs does not matter}. A golfer has the freedom to start their backswing slowly and pause at the top. The optimization is entirely concerned with the \emph{shape} of the motion and its terminal kinematics. Time is a resource, not a constraint.
@@ -98,7 +141,7 @@ When optimizing for a golf swing, direct collocation handles this underactuation
 
 The previous sections frame a deterministic problem: "Find the swing that maximizes terminal speed."
 
-But as we argued in Chapter 1, biological systems and athletes do not optimize for peak deterministic performance. If you instruct an NLP solver to maximize golf club speed without regard for motor noise, the solver will ride the very edge of the constraint boundaries. It will produce a swing so delicately timed that a 5-millisecond execution error would result in a complete whiff.
+But as we argued in Chapter 1, biological systems and athletes do not optimize for peak deterministic performance. If you instruct an NLP solver to maximize golf club speed without regard for motor noise, the solver will ride the very edge of the constraint boundaries. The resulting trajectory may be extremely sensitive to execution errors; small perturbations in the state can lead to large deviations in the terminal condition $\psi(\state(t_f))$. This is quantified by the condition number of the Jacobian $\nabla_{\state} \psi$ at the optimal trajectory.
 
 \begin{principle}{The Repeatability Addendum}{repeatability_OCP}
   The theoretically optimal trajectory is useless if its local topology amplifies small execution errors into catastrophic terminal misses. The true objective must account for \emph{variance}.

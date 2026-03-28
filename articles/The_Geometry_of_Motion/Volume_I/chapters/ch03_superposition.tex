@@ -14,6 +14,9 @@ carefully delineates what does \emph{not} superpose: trajectories over time.
 
 \section{The Central Distinction}
 
+The principle of superposition is fundamental to mechanics \cite{Goldstein2002, Arnold1989} and has been
+rigorously formalized for mechanical systems in modern control theory \cite{Murray1994, BulloLewis2004, Sastry1999}.
+
 Superposition in this book refers to two distinct but related properties:
 
 \begin{enumerate}
@@ -45,7 +48,8 @@ acceleration} superposition, not trajectory addition.
 
 Consider a mechanical system with $n$ generalized coordinates $\q\in\R^n$, velocities
 $\dot\q\in\R^n$, and state $\x = (\q, \dot\q) \in T\mathcal{Q}$ (the tangent bundle of
-the configuration manifold). The standard manipulator form of the equations of motion is
+the configuration manifold). The standard manipulator form of the equations of motion \cite{Murray1994, Lynch2017}
+is
 \begin{equation}
 M(\q)\ddot\q + C(\q,\dot\q)\dot\q + \vec{g}(\q) = B(\q)\uvec + J(\q)^\T\vec{f}^{\,\text{ext}},
 \label{eq:ch3:manipulator}
@@ -218,6 +222,39 @@ The superposition theorem says: \emph{at any frozen instant, the acceleration pr
 by each force source adds linearly}. This is a direct consequence of Newton's second law
 being linear in forces, combined with the linearity of inverting the mass matrix.
 \end{intuitionbox}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.0, every node/.style={font=\small}]
+  % Ground
+  \draw[thick] (0,-0.5) -- (5, -0.5);
+  \foreach \x in {0.2, 0.6, 1.0, 1.4, 1.8, 2.2, 2.6, 3.0, 3.4, 3.8, 4.2, 4.6}{
+    \draw (\x, -0.5) -- (\x, -0.7);
+  }
+
+  % Diagram for force superposition
+  % Box representing system
+  \draw[thick, black] (1.5, 0.5) rectangle (3.5, 1.5);
+  \node at (2.5, 1) {System};
+
+  % Forces
+  \draw[->, red, very thick] (1.5, 1.25) -- (0.5, 1.25);
+  \node[left, red] at (0.4, 1.25) {$\vec{f}_1$};
+
+  \draw[->, blue, very thick] (3.5, 1.25) -- (4.5, 1.25);
+  \node[right, blue] at (4.6, 1.25);
+  \node[right, blue] at (4.6, 1.25) {$\vec{f}_2$};
+
+  \draw[->, green, very thick] (2.5, 1.5) -- (2.5, 2.2);
+  \node[above, green] at (2.5, 2.3) {$\vec{f}_3$};
+
+  % Acceleration output
+  \draw[->, black, very thick, loosely dashed] (2.5, 0.5) -- (2.5, -0.3);
+  \node[below, black] at (2.5, -0.35) {$\ddot\q = \frac{1}{M(\q)}(\vec{f}_1 + \vec{f}_2 + \vec{f}_3 - \text{gravity})$};
+
+  % Caption
+  \node at (2.5, 2.8) {Individual forces superpose to produce total acceleration};
+\end{tikzpicture}
+\end{center}
 
 \subsection{Decomposing Contributions}
 

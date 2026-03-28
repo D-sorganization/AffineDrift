@@ -100,6 +100,43 @@ These values are approximate and vary widely based on age, fitness, flexibility,
 
 \index{equations of motion!with damping}
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1.0]
+  % Spring-dashpot system
+  \draw[thick] (0, 0) -- (1, 0);
+  \node at (0.5, -0.3) {Wall};
+
+  % Spring element
+  \draw[thick] (1, 0) -- (1.5, 0);
+  \draw[thick] (1.5, -0.2) -- (1.6, 0.2) -- (1.7, -0.2) -- (1.8, 0.2) -- (1.9, -0.2) -- (2.0, 0);
+  \node at (1.75, 0.6) {$k$ (stiffness)};
+
+  % Dashpot (damper) element
+  \draw[thick, rounded corners=0.1] (2.2, -0.2) rectangle (2.8, 0.2);
+  \draw[thick] (2.5, -0.15) -- (2.5, 0.15);
+  \node at (2.5, 0.6) {$c$ (damping)};
+
+  % Connection
+  \draw[thick] (2.8, 0) -- (3.2, 0);
+
+  % Mass element
+  \draw[thick, fill=lightgray] (3.2, -0.35) rectangle (4.0, 0.35);
+  \node at (3.6, 0) {$m$};
+
+  % Velocity vector
+  \draw[thick, ->, color=blue] (4.0, 0) -- (5.0, 0);
+  \node[color=blue] at (4.5, 0.4) {$\dot{x}$};
+
+  % Below: forces
+  \node at (1.0, -1.0) {Spring force: $F_s = -kx$};
+  \node at (2.5, -1.0) {Damping force: $F_d = -c\dot{x}$};
+  \node at (1.75, -1.5) {Equation: $m\ddot{x} + c\dot{x} + kx = 0$};
+\end{tikzpicture}
+\caption{Linear spring-dashpot (mass-spring-damper) model of a joint with stiffness $k$, damping coefficient $c$, and inertial mass $m$. The damping force opposes velocity; the spring force opposes displacement.}
+\label{fig:damping_model}
+\end{figure}
+
 Recall from Chapter~\ref{ch:parallel_mechanisms} that the unforced kinematic chain is governed by:
 \[
 \massmat(\bm{q})\ddot{\bm{q}} + \cormat(\bm{q},\dot{\bm{q}})\dot{\bm{q}} + \gravvec(\bm{q}) = \bm{B}(\bm{q})\control + \bm{J}_c^T(\bm{q})\constraintforce
@@ -309,15 +346,13 @@ This connects to impedance control \citep{hogan1985impedance} from Chapter~\ref{
 \]
 where $\bm{K}$ and $\bm{D}$ are task-space stiffness and damping. Both are under nervous system control. The brain does not choose $\bm{K}$ and $\bm{D}$ independently; they are correlated. Higher impedance environments (like hitting off hardpan) tend to cause increased co-contraction, which increases both $\bm{K}$ and $\bm{D}$.
 
-\subsection{The Loose Grip Debate}
+\subsection{Grip Force and Hand-Club Interface Damping}
 
-A long-standing debate in golf coaching: should the grip be loose or firm?
+The grip force applied by the hand to the club determines the mechanical coupling at the hand-club interface. This coupling affects the boundary condition for the shaft dynamics. A higher grip force compresses tissue in the grip region, increasing the friction between hand and club and reducing oscillation amplitude at the grip end. A lower grip force allows greater relative motion and reduced damping at the interface.
 
-From a damping perspective, a firm grip increases the damping of the hand-club interface. The grip force compresses tissue, increasing friction. A loose grip reduces this damping, allowing the club to oscillate more freely.
+The relationship can be characterized as: higher grip force \(\to\) higher interface damping \(\to\) reduced shaft oscillation amplitude but increased energy dissipation at the grip. Conversely, lower grip force \(\to\) lower interface damping \(\to\) greater shaft oscillation potential but reduced energy loss at the grip.
 
-A tighter grip \(\to\) higher damping \(\to\) more energy loss but better control. A looser grip \(\to\) lower damping \(\to\) more energy transmission to the club but less damping of impact shock.
-
-The empirical data suggests that golfers find an intermediate grip pressure: tight enough to avoid the club slipping (which would be disastrous), but loose enough to allow some vibration that aids energy transfer. This is an implicit optimum balancing control and efficiency.
+The effective grip force during the downswing and at impact is determined by the neural control commands to the hand muscles, which are modulated based on proprioceptive feedback, swing intent, and learned patterns. The grip force dynamics interact with shaft stiffness and the inertial properties of the club to determine the overall mechanical response of the system.
 
 \section{Friction Models for Joints}
 \label{sec:friction_models}
@@ -523,14 +558,9 @@ Q = 2\pi \frac{\text{Peak energy stored}}{\text{Energy dissipated per cycle}} = 
 where $\zeta$ is the damping ratio. High Q (high stiffness, low damping) means oscillations persist. Low Q means oscillations decay quickly.
 \end{definition}
 
-Typical Q-factors:
-\begin{itemize}
-\item Steel shaft: $Q \approx 50--100$ (low damping, oscillations ring for many cycles).
-\item Graphite (carbon fiber) shaft: $Q \approx 100--300$ (higher damping, oscillations decay slower).
-\item Composite (mixed fiber) shaft: $Q \approx 50--150$ (intermediate).
-\end{itemize}
+Typical Q-factors vary significantly depending on material composition, fiber orientation, and resin system used in the composite. Material damping in shafts is determined by both the fiber material and the matrix properties. For golf shaft applications, measured Q-factors depend on the specific design and loading conditions; direct comparisons between materials require careful experimental control \citep{MacKenzie2009}.
 
-The paradoxical result: carbon fiber, which is stiffer and lighter than steel, actually has \emph{lower} material damping. So a graphite shaft rings longer after impact than a steel shaft of equal flex. Is this good or bad?
+The relationship between material type and damping behavior is complex. While graphite composites offer design flexibility through fiber orientation and resin selection, the effective damping depends on the complete material system rather than material type alone. Modern shaft design optimizes material properties to achieve desired performance characteristics including vibration characteristics, frequency response, and feel.
 
 \subsection{Lead-Lag Dynamics and Damping}
 
@@ -552,9 +582,11 @@ A lighter, lower-damping shaft (like a lightweight graphite) provides:
 
 Modern drivers use relatively low-damping graphite shafts precisely because the efficiency gain (higher ball speed for a given muscular effort) outweighs the aesthetic loss of transient vibrations.
 
-\begin{mythreality}{Myth: "Steel shafts are better for control because they don't vibrate."}{mythreality:steel_shaft}
-\textbf{Reality:} Steel shafts are more heavily damped, so they vibrate less \emph{after impact}. But during the downswing, the difference in oscillation is minimal if the shaft is loaded predominantly in bending (not torsion). The "control" benefit of steel is more about tradition, feel, and perhaps placebo than about physics. Graphite shafts can be equally controllable if the golfer has proper timing and technique.
-\end{mythreality}
+\subsection{Material Damping and Shaft Behavior}
+
+Steel and graphite shafts differ in material composition and resulting mechanical properties. The damping behavior of a shaft is determined by multiple factors including fiber orientation, resin system, wall thickness, and the frequency of vibration being examined. Direct comparisons between materials require careful specification of the frequency range, loading conditions, and measurement methods.
+
+The transient vibrations observed after impact depend on the damping characteristics at the frequencies excited by the collision. Different shaft materials and designs can produce different vibration signatures. However, the dynamic behavior during the swing phase (before impact) is determined primarily by the shaft stiffness and mass distribution, with damping playing a secondary role compared to the inertial and elastic properties.
 
 \section{The Control-Affine Perspective on Damping}
 \label{sec:damping_control_affine}

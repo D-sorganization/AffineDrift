@@ -43,6 +43,37 @@ The fundamental advantage of state-space methods over transfer functions is \emp
 
 The rest of this chapter builds the state-space framework from first principles. By the end, you will understand why Kalman's insight was revolutionary and why state space is now the only way modern control engineers think.
 
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}[scale=1.1]
+  % Input
+  \node[draw,rectangle,minimum width=1.5cm, minimum height=0.8cm] (u) at (0,1.5) {$\mathbf{u}$: Input};
+
+  % Dynamics block
+  \node[draw,rectangle,minimum width=2cm, minimum height=1cm] (dyn) at (2.5,1.5) {$\dot{\mathbf{x}} = \mathbf{Ax} + \mathbf{Bu}$};
+
+  % State integrator
+  \node[draw,rectangle,minimum width=1.8cm, minimum height=0.8cm] (int) at (5,1.5) {$\int \, \dd t$};
+  \draw[->,thick] (int) -- (5,-0.5) node[anchor=north] {$\mathbf{x}(t)$: State};
+
+  % Output
+  \node[draw,rectangle,minimum width=1.5cm, minimum height=0.8cm] (out) at (7,1.5) {$\mathbf{y} = \mathbf{Cx} + \mathbf{Du}$};
+  \draw[->,thick] (out) -- (7,-0.5) node[anchor=north] {$\mathbf{y}$: Output};
+
+  % Connections
+  \draw[->,thick] (u) -- (dyn);
+  \draw[->,thick] (dyn) -- (int);
+  \draw[->,thick] (int) -- (out);
+
+  % Feedback (optional)
+  \draw[->,thick,dashed] (5,-0.3) -- (5,-1.2) -- (1.25,-1.2) -- (1.25,1) node[anchor=east,xshift=-0.5cm] {feedback};
+
+  \node at (3.75,3) {State-Space System Architecture};
+\end{tikzpicture}
+\caption{Block diagram of a continuous-time linear state-space system. The input $\mathbf{u}$ drives the dynamics, producing state changes. The state $\mathbf{x}$ is obtained by integrating the state derivative. The output $\mathbf{y}$ is a linear combination of state and input.}
+\label{fig:statespace_architecture}
+\end{figure}
+
 \section{Constructing a State Vector}
 \label{sec:state_vector}
 
@@ -704,7 +735,7 @@ The linearization is valid in a neighborhood of the equilibrium. For large pertu
 \section{Python Worked Example: State Space Simulation and Phase Portrait}
 \label{sec:python_example}
 
-Consider the underdamped mass-spring-damper system: $m=1$, $c=0.5$, $k=2$, with initial conditions $q_0 = 1$, $\dot{q}_0 = 0$.
+Consider the underdamped mass-spring-damper system with \emph{illustrative numerical values}: $m=1\,\text{kg}$, $c=0.5\,\text{N}\cdot\text{s/m}$, $k=2\,\text{N/m}$, with initial conditions $q_0 = 1\,\text{m}$, $\dot{q}_0 = 0$.
 
 \begin{verbatim}
 import numpy as np

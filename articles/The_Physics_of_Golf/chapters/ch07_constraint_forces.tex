@@ -23,7 +23,7 @@ Constraint forces are:
 \begin{itemize}
 \item \textbf{Forces that enforce joint connections:} Your elbow joint connects the upper arm to the forearm. This connection is not free-floating; it's constrained. The constraint produces a force.
 \item \textbf{Forces that do zero net work:} This is paradoxical but true. Constraints don't \emph{add} energy to the system. Yet they \emph{redistribute} energy from one segment to another.
-\item \textbf{Forces that are enormous:} The constraint forces at your wrist during a swing can exceed $500$ N—far more than your muscles produce.
+\item \textbf{Forces that are enormous:} Constraint forces at joints can reach hundreds of Newtons during dynamic movement, substantially exceeding individual muscle forces \citep{Nesbit2005}.
 \item \textbf{Forces that are model-independent:} You don't need to know muscle physiology to compute them. They follow directly from the equations of motion and the constraints.
 \end{itemize}
 
@@ -389,6 +389,40 @@ If the wrist were completely free (unconstrained), the arm and club would move i
 By constraining the wrist (even just partially, as it is in a real swing where the wrist has limited flexibility), you create a mechanism for energy transfer. The constraint force is the agent of that transfer.
 \end{laymansbox}
 
+\begin{figure}[h!]
+\centering
+\begin{tikzpicture}[scale=1.0]
+  % Draw the two segments
+  \draw[thick, blue] (0,0) -- (2,0) node[midway, above] {Segment 1 (arm)};
+  \draw[thick, red] (2,0) -- (3.5,-1.5) node[midway, right] {Segment 2 (club)};
+
+  % Draw hinge joint
+  \draw[fill=black] (2,0) circle (0.1);
+
+  % Draw constraint force vectors at the joint
+  % Force on segment 1 (pointing left and down)
+  \draw[->, line width=2pt, green!60!black] (2,0) -- (1.3,-0.5) node[left] {$\bm{F}_c$ (on arm)};
+  % Force on segment 2 (pointing right and up)
+  \draw[->, line width=2pt, green!60!black] (2,0) -- (2.7,0.5) node[right] {$\bm{F}_c$ (on club)};
+
+  % Draw velocity vectors to show motion
+  \draw[->, line width=1.5pt, blue] (1,0) -- (0.5,-0.5) node[left, blue] {$\dot{\bm{q}}_1$};
+  \draw[->, line width=1.5pt, red] (2.8,-0.75) -- (2.3,-1.3) node[below right, red] {$\dot{\bm{q}}_2$};
+
+  % Add labels
+  \node at (0,-0.5) {Shoulder};
+  \node at (3.7,-2) {Wrist (hinge)};
+
+  % Illustrate constraint: annotation
+  \node[above right=2cm and 1cm] {\small Constraint: $\dot{\bm{q}}_1 \parallel \dot{\bm{q}}_2$};
+  \node[above right=2.8cm and 1cm] {\small Constraint forces do zero net work};
+  \node[above right=3.6cm and 1cm] {\small but redirect energy between segments};
+
+\end{tikzpicture}
+\caption{Constraint Forces at a Hinge Joint. The constraint force $\bm{F}_c$ acts at the joint, perpendicular to the allowed motion direction. On segment 1 (arm), the force opposes motion; on segment 2 (club), it drives motion. These action-reaction pair forces satisfy zero net power: $\bm{F}_c \cdot \dot{\bm{q}}_1 + (-\bm{F}_c) \cdot \dot{\bm{q}}_2 = 0$, yet they enable energy transfer from segment 1 to segment 2.}
+\label{fig:constraint_forces_hinge}
+\end{figure}
+
 %============================================================================
 \section{Constraint Forces vs. Joint Reaction Forces}
 \label{sec:constraint_vs_reaction_forces}
@@ -454,7 +488,7 @@ This transfer is most efficient when the proximal segment is large and slow, and
 \label{sec:constraint_forces_real_swing}
 
 \begin{example}{Grip Force During a Golf Swing}{ex:grip_force}
-A professional golfer's grip force during the downswing is typically $50$--$150$ N (measured via an instrumented club). This force is \emph{not} a muscular torque directly. Instead, it's the reaction force that the grip constraint exerts on the club.
+Instrumented measurements of grip force during the downswing show forces ranging from tens to hundreds of Newtons depending on swing phase and player characteristics. This force is \emph{not} a muscular torque directly. Instead, it's the reaction force that the grip constraint exerts on the club. The magnitude of this force is determined by the inertial dynamics of the coupled system rather than by the instantaneous level of muscle activation.
 
 During the downswing:
 \begin{enumerate}
@@ -468,13 +502,13 @@ The grip force arises \emph{automatically} from the constraint, without explicit
 
 However—and this is important—the golfer \emph{can} modulate the grip force by changing muscle tension or by allowing some slip. A gentle grip (low force) allows some flexibility; a firm grip (high force) enforces the constraint tightly. This modulation is a control knob.
 
-\textbf{Insight:} The large grip forces in a golf swing (often 100+ N at late downswing) are not evidence of muscular effort. They're evidence of massive inertial forces being channeled through the constraint. Muscles are simply holding the constraint in place, not driving the acceleration.
+\textbf{Insight:} The large grip forces in a golf swing are not primarily evidence of active muscular contraction driving the motion. Rather, they reflect the inertial forces that must be channeled through the grip constraint to maintain the coupling between hand and club. The magnitude of these forces is determined by the system's kinematics and inertias, not by muscle activation level.
 \end{example}
 
 \begin{example}{Ground Reaction Forces and the Closed Kinematic Chain}{ex:ground_reaction_forces}
 The golfer's feet are in contact with the ground, which is a constraint: the feet cannot move downward (the ground prevents it).
 
-During the downswing, this ground constraint produces enormous vertical forces. A 200-pound golfer might experience peak ground reaction forces of $1.5$--$2$ times body weight, or $300$--$400$ pounds-force. These forces are constraint forces—they arise from the geometry of contact with the ground.
+During the downswing, the ground constraint produces reaction forces that substantially exceed the player's static weight, scaling with the inertial acceleration of the player's body segments during the swing. These forces are constraint forces—they arise from the geometry of contact with the ground and the dynamics of the motion, not from muscle activation directly.
 
 These ground reaction forces are crucial because they close the kinetic chain. Without the ground, the golfer would slide backward as they rotate forward. The ground reaction force (a constraint force) prevents this, keeping the lower body anchored while the upper body rotates.
 

@@ -4,10 +4,26 @@
 \epigraph{``Air has weight. It moves with inertia. When you swing a club through it at 50 meters per second, you do not pass through a void—you carve through a fluid that resists. This resistance is not tiny. And it is not random. It is force, and it must be accounted for.''}{Applied aerodynamics principle}
 
 \begin{laymansbox}{Why Air Resistance Matters for Physics Accuracy}{context:drag-matters}
-You've likely heard that drag is ``negligible'' in golf. That's wrong. At clubhead speeds of 80--120 mph, the club is moving fast enough that air resistance is comparable to the forces from muscle torques during the late downswing. When you compute inverse dynamics—trying to infer the joint torques from measured motion—ignoring drag introduces systematic errors of 2--5\% in peak joint torque estimates, and much larger errors in wrist and ankle torques (where moment arms are small). For a researcher or coach trying to understand the \emph{true} control applied by muscles, this bias is unacceptable. For a golfer, ignoring drag means your training data is biased: your coaches think you're producing more torque than you actually are, because they attribute some of the acceleration to physics instead of muscle. Understanding drag improves both the accuracy of swing analysis and the fairness of athlete assessment.
+You've likely heard that drag is ``negligible'' in golf. That's wrong. At clubhead speeds of 80--120 mph, the club is moving fast enough that air resistance is comparable to the forces from muscle torques during the late downswing. When you compute inverse dynamics—trying to infer the joint torques from measured motion—ignoring drag introduces systematic errors reported to be on the order of 2--5\% in peak joint torque estimates \cite{aerodynamic_drag_golf}, and much larger errors in wrist and ankle torques (where moment arms are small). For a researcher or coach trying to understand the \emph{true} control applied by muscles, this bias is unacceptable. For a golfer, ignoring drag means your training data is biased: your coaches think you're producing more torque than you actually are, because they attribute some of the acceleration to physics instead of muscle. Understanding drag improves both the accuracy of swing analysis and the fairness of athlete assessment.
 \end{laymansbox}
 
 \section{The Physics of Drag: From First Principles}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1.2]
+  \draw[thick, color=blue] (0,0) -- (4,0);
+  \draw[->>, thick, red] (-0.5,0) -- (-0.5,-1.5);
+  \node[left, red] at (-0.5,-0.75) {$\mathbf{v}$};
+  \draw[->>, thick, orange] (2,0.3) -- (2,1.8);
+  \node[right, orange] at (2,1) {$F_{\text{drag}}$};
+  \draw[dashed, gray, thin] (-1.5,0.8) -- (5,0.8);
+  \draw[dashed, gray, thin] (-1.5,-0.8) -- (5,-0.8);
+\end{tikzpicture}
+\caption{Aerodynamic drag force opposing motion: magnitude scales as velocity squared.}
+\label{fig:drag_force}
+\end{figure}
+
 
 \index{drag force}
 \index{drag coefficient}

@@ -191,6 +191,33 @@ $Q_{k,\xu} = 0$) recovers the \emph{iLQR} algorithm, which often works well in p
 compute.
 \end{intuitionbox}
 
+\begin{center}
+\begin{tikzpicture}[scale=1.0]
+  % Draw cost functional
+  \draw[thick, black] (0, 0) to[out=0, in=180] (2, 0.8) to[out=0, in=150] (4, 1.2);
+
+  % Mark nominal trajectory
+  \filldraw[black] (0, 0) circle (0.06cm);
+  \filldraw[black] (2, 0.8) circle (0.06cm);
+  \filldraw[black] (4, 1.2) circle (0.06cm);
+
+  % Draw cost function as a bowl (quadratic)
+  \draw[dashed, red] (1.5, -0.3) to[bend right] (2.5, -0.3);
+  \draw[dashed, red] (1.7, -0.1) to[bend right] (2.3, -0.1);
+  \draw[dashed, red] (1.9, 0.1) to[bend right] (2.1, 0.1);
+
+  % Annotation
+  \node[font=\small, above] at (2, 1.8) {Trajectory optimization: minimize cost along path};
+  \node[font=\small, right] at (3, -0.5) {Local quadratic cost};
+
+  % Legend
+  \draw[-,black, thick] (5, 1.5) -- (5.5, 1.5);
+  \node[right, font=\small] at (5.6, 1.5) {Nominal trajectory};
+  \draw[dashed, red, thick] (5, 1) -- (5.5, 1);
+  \node[right, font=\small] at (5.6, 1) {Local quadratic approximation};
+\end{tikzpicture}
+\end{center}
+
 \subsection{Intuition: Hessian Curvature as Control Sensitivity}
 
 The matrix $Q_{k,\uu}$ is the \emph{Hessian of the Q-function with respect to control}. A large eigenvalue indicates

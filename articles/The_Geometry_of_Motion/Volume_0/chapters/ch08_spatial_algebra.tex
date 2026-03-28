@@ -27,6 +27,30 @@ However, the true synthesis came when \textbf{Roy Featherstone}, in the 1980s an
 
 Modern robotics and physics engines (MuJoCo \cite{todorov2012}, Drake, UpstreamDrift) are built entirely on Featherstone's spatial framework.
 
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}[scale=1.0]
+  % Coordinate frame
+  \draw[->,thick,black] (0,0,0) -- (2,0,0) node[anchor=north] {$x$};
+  \draw[->,thick,black] (0,0,0) -- (0,2,0) node[anchor=east] {$y$};
+  \draw[->,thick,black] (0,0,0) -- (0,0,2) node[anchor=south] {$z$};
+
+  % Force vector at center
+  \draw[->,thick,red,scale=1.2] (0,0,0) -- (1.2,0.8,0) node[anchor=west] {$\mathbf{f}$ (linear force)};
+
+  % Torque/moment vector
+  \draw[->,thick,blue,scale=1.2] (0,0,0) -- (0,0,1.5) node[anchor=south] {$\boldsymbol{\tau}$ (torque/moment)};
+
+  % Spatial wrench = [f; tau]
+  \node[draw,rectangle,minimum width=2cm,minimum height=1cm] at (3.5,0.5) {Wrench $\mathcal{F} = \begin{bmatrix} \mathbf{f} \\ \boldsymbol{\tau} \end{bmatrix}$};
+
+  % Similarly for velocity
+  \node at (0,-1.5,-0.5) {Spatial vectors unify translation (linear) and rotation (angular) quantities};
+\end{tikzpicture}
+\caption{A spatial wrench is a 6-dimensional vector combining linear forces and torques (moments). Similarly, spatial twists combine linear and angular velocities. This unification allows forces and velocities to be manipulated using unified algebraic operations.}
+\label{fig:spatial_wrench}
+\end{figure}
+
 \section{Plücker Coordinates and Lines in 3D}
 \label{sec:plucker}
 

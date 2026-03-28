@@ -15,6 +15,21 @@ the interaction of articular surfaces, ligaments, joint capsule, and muscle forc
 This section develops the kinematics of biological joints using the screw theory
 framework of Volume~0, extended to handle the additional complexity.
 
+\begin{center}
+\begin{tikzpicture}[scale=0.85, >=Stealth]
+  % Gimbal lock illustration
+  \node at (0, 3.5) {\textbf{Engineering Revolute}};
+  \draw[thick, fill=gray!20] (0, 0.5) circle (0.8);
+  \draw[->, thick, blue] (0, 0.5) -- (0.8, 0.5) node[right] {1-DOF axis (fixed)};
+
+  \node at (4, 3.5) {\textbf{Biological Joint}};
+  \draw[thick] (4, 0) ellipse (1.2 and 0.6);
+  \draw[thick] (4, 1) ellipse (1.0 and 0.5);
+  \draw[->, thick, red] (4, 0.5) -- (4.8, 0.8) node[right, font=\small] {ISA migrates};
+  \node[font=\tiny, gray, text width=2cm, align=center] at (4, -0.8) {Coupled rotation\\+ translation};
+\end{tikzpicture}
+\end{center}
+
 \subsection{The Instantaneous Screw Axis}
 
 Every rigid-body motion can be decomposed into a rotation about and translation along
@@ -48,8 +63,9 @@ flexion from $0^\circ$ to $90^\circ$:
 \end{enumerate}
 
 This coupled motion means the knee ISA migrates superiorly and posteriorly during
-flexion. The four-bar linkage model \cite{OConnor1989} provides a simplified but
-insightful mechanical analog:
+flexion. The position and velocity of the ISA are key outputs of kinematic analysis
+\cite{Crisco2000, Wretenberg1995}. The four-bar linkage model provides a simplified but
+insightful mechanical analog for understanding coupled knee kinematics \cite{OConnor1989}:
 
 \begin{lstlisting}[language=Python, caption={Instantaneous screw axis computation for a biological joint.}]
 import numpy as np
@@ -126,8 +142,10 @@ def knee_isa_trajectory(
 
 The glenohumeral joint has the largest range of motion of any joint in the body,
 achieved at the expense of stability. The ``ball-and-socket'' description is a
-gross simplification: the humeral head translates $2$--$4$~mm during abduction,
-and the instantaneous center of rotation shifts continuously.
+gross simplification: quantitative measurements show the humeral head translates during
+abduction \cite{Karduna2000, Dickerson2005}, and the instantaneous center of rotation
+shifts continuously. The instantaneous screw axis of the shoulder is not fixed and
+migrates through the joint during arm motion \cite{Halder2000}.
 
 The shoulder complex involves four joints:
 \begin{enumerate}

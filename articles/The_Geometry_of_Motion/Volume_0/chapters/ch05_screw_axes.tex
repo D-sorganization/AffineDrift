@@ -27,6 +27,33 @@ In the late 20th century, the theory experienced a modern renaissance through th
 
 Today, screw theory forms the mathematical backbone of robotics, mechanism design, and physics simulation. The computational efficiency of 6D spatial vectors and the elegance of group-theoretic manipulations have made screw-based algorithms the industry standard in systems like Featherstone's Rigid Body Dynamics Algorithm \cite{Featherstone2008} and modern geometry-aware physics engines.
 
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}[scale=1.0]
+  % Screw axis (vertical)
+  \draw[thick,dashed,black] (2,-1) -- (2,3) node[anchor=south] {Screw axis};
+
+  % Object position 1
+  \draw[fill=blue,circle] (1.5,-0.5) circle (0.3);
+  \node[below] at (1.5,-0.9) {Initial position};
+
+  % Rotation about axis
+  \draw[thick,blue,->] (1.5,-0.5) arc (180:90:0.7) node[anchor=south east,xshift=-0.3cm] {$\theta$ rotation};
+
+  % Object position 2
+  \draw[fill=red,circle] (2.7,0.5) circle (0.3);
+  \node[right] at (3.1,0.5) {Final position (rotated)};
+
+  % Translation along axis
+  \draw[thick,blue,->] (1.5,-0.5) -- (1.5,1.5) node[anchor=east,xshift=-0.3cm] {$d$ translation};
+
+  % Demonstrate screw
+  \node at (2,2.5) {Screw = Rotation + Parallel Translation};
+\end{tikzpicture}
+\caption{Visualization of Chasles' theorem: Any rigid body motion can be decomposed as rotation about a screw axis combined with translation parallel to that axis. This unified motion is more efficient to represent and compute with than separate rotation and translation.}
+\label{fig:screw_axis}
+\end{figure}
+
 \section{The Unified $4 \times 4$ Transform SE(3)}
 \label{sec:se3_definition}
 

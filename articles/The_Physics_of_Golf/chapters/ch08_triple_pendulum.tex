@@ -17,14 +17,16 @@ In a real swing, there's a third crucial articulation: the wrist.
 
 The wrist matters because:
 \begin{enumerate}
-\item \textbf{Timing:} The wrist unlocks last, after the shoulders and hips. This sequential unlocking is the essence of the kinetic chain.
-\item \textbf{Speed amplification:} The wrist and club can achieve speeds that far exceed what the arm alone could produce.
-\item \textbf{Stored energy:} During the backswing and early downswing, the wrist is cocked (constrained). This cocking stores elastic potential energy that's released later.
-\item \textbf{Control:} The wrist is where the golfer has the most precise control, because the club's motion is most sensitive to wrist angles.
+\item \textbf{Sequential constraint release:} The wrist is the final joint to be unconstrained in the kinetic chain. Understanding when and how this constraint is released is essential to modeling the final acceleration phase.
+\item \textbf{Velocity amplification:} Due to the mass matrix coupling and Coriolis effects, the club can achieve angular velocities substantially higher than those of the arm segments alone.
+\item \textbf{Elasticity and constraint dynamics:} The wrist tendons and ligaments provide elasticity that acts as a constraint mechanism. The energetics of wrist constraint release are central to understanding motion amplification.
+\item \textbf{Inertial sensitivity:} Because the club has small inertia relative to the forearm, small changes in wrist angle produce large changes in club-tip velocity—a property captured by the mass matrix structure.
 \end{enumerate}
 
-A triple pendulum (shoulder, elbow, wrist) is the minimum model needed to capture the whip effect—the dramatic acceleration of the club in the final phase of the downswing.
+A triple pendulum (shoulder, elbow, wrist) is the minimum model needed to capture the full dynamics of kinetic chain energy transfer through sequential constraint release and Coriolis-driven acceleration.
 \end{laymansbox}
+
+The triple pendulum model extends the two-link system by adding an explicit wrist segment. This third joint enables further energy concentration beyond what is possible in a two-link model. The coupling between all three segments through the mass matrix means that motion at the shoulder affects the accelerations at both the elbow and wrist, and motion at the elbow affects the wrist acceleration. Understanding these couplings requires careful analysis of the full system equations.
 
 %============================================================================
 \section{The Triple Pendulum Model}
@@ -43,17 +45,53 @@ The configuration is fully specified by $\bm{q} = (q_1, q_2, q_3)^T \in \mathbb{
 
 In our golf model, the three links correspond to: (1) the upper arm, from shoulder to elbow, (2) the forearm-and-hands segment, from elbow to wrist/grip, and (3) the golf club, from grip to clubhead. The three joints---shoulder, elbow/wrist hinge, and wrist cock---each allow rotation in specific planes. This is a simplification of the real anatomy (which has many more degrees of freedom), but it captures the essential energy-transfer mechanism that makes the golf swing work.
 
+\begin{figure}[h!]
+\centering
+\begin{tikzpicture}[scale=1.0]
+  % Fixed pivot point
+  \draw[fill=black] (0,0) circle (0.12) node[below=0.3cm] {Shoulder (Joint 1)};
+
+  % Segment 1 (upper arm)
+  \draw[line width=3pt, blue] (0,0) -- (1.5,-1.2) node[midway, left] {$L_1, m_1, I_1$};
+  \draw[fill=blue] (1.5,-1.2) circle (0.08);
+
+  % Segment 2 (forearm)
+  \draw[line width=3pt, orange] (1.5,-1.2) -- (2.8,-2.3) node[midway, right] {$L_2, m_2, I_2$};
+  \draw[fill=orange] (2.8,-2.3) circle (0.08);
+
+  % Segment 3 (club)
+  \draw[line width=3pt, red] (2.8,-2.3) -- (3.6,-3.8) node[midway, right] {$L_3, m_3, I_3$};
+  \draw[fill=red] (3.6,-3.8) circle (0.08);
+
+  % Angle annotations
+  \arc{arc}  % placeholder for angle notation
+  \node[right=0.1cm, above=0.2cm of (0,0)] {$q_1$};
+  \node[right=0.2cm, above=0.2cm of (1.5,-1.2)] {$q_2$};
+  \node[right=0.2cm, above=0.2cm of (2.8,-2.3)] {$q_3$};
+
+  % Legend for parameters
+  \node[anchor=west] at (5,-0.5) {Parameters:};
+  \node[anchor=west] at (5,-1) {$L_i$: segment length};
+  \node[anchor=west] at (5,-1.5) {$m_i$: segment mass};
+  \node[anchor=west] at (5,-2) {$I_i$: moment of inertia};
+  \node[anchor=west] at (5,-2.5) {$q_i$: joint angle};
+
+\end{tikzpicture}
+\caption{Triple Pendulum Model: The Three-Link Kinetic Chain. Segment 1 (upper arm, blue) rotates at the shoulder about joint 1. Segment 2 (forearm, orange) rotates at the elbow about joint 2. Segment 3 (club, red) rotates at the wrist about joint 3. Each segment is characterized by its length, mass, and inertial properties. The cascade of joints enables sequential energy transfer from proximal to distal segments through constraint release and Coriolis coupling.}
+\label{fig:triple_pendulum_diagram}
+\end{figure}
+
 \begin{laymansbox}{Understanding the Three Segments}{inplain:triple_pendulum_segments}
-In a real golfer:
+In the anatomical structure modeled:
 \begin{itemize}
-\item Segment 1 represents the rotation of the shoulders and torso about the spine. This is the largest, slowest segment.
-\item Segment 2 represents the rotation of the arm at the elbow. It's smaller and faster than segment 1.
-\item Segment 3 represents the rotation of the club at the wrist. It's the smallest and fastest.
+\item Segment 1 (shoulder-torso) has the largest moment of inertia $I_1$ because it includes the torso mass distribution about the spine.
+\item Segment 2 (forearm) has intermediate inertia $I_2$, significantly smaller than the shoulder-torso system.
+\item Segment 3 (club) has the smallest inertia $I_3$, many times smaller than the forearm.
 \end{itemize}
 
-Each segment has an inertia. The shoulder is hard to move (large $I_1$, since it includes the torso). The forearm is easier (smaller $I_2$). The club is easiest (tiny $I_3$).
+The off-diagonal terms in the mass matrix (e.g., $M_{12}$, $M_{13}$) reflect mechanical coupling: motion at one joint affects the effective inertia at other joints. This coupling is essential to understanding the system's energy transfer properties.
 
-But the masses are also ordered: the torso is much heavier than the arm, which is much heavier than the club. These two facts—inertia decreases and lever arm decreases—create a situation where small forces at the wrist can produce enormous club speeds.
+The ratio of inertias determines how efficiently energy can be redistributed: when energy is transferred from a large-inertia segment to a small-inertia segment, the small segment's velocity increases substantially (from $T = \frac{1}{2}I\omega^2$, equal energy implies $\omega \propto 1/\sqrt{I}$).
 \end{laymansbox}
 
 %============================================================================
@@ -121,6 +159,8 @@ For golf:
 This coupling means: \textbf{accelerating one joint automatically affects the others.} You can't rotate the shoulder without also rotating the elbow, even if the elbow muscles are relaxed. The inertia matrix ensures this coupling.
 \end{laymansbox}
 
+The structure of the mass matrix reveals how mechanical coupling propagates through the kinetic chain. When the shoulder joint applies a torque, that torque must overcome not only the shoulder's own inertia but also the inertial resistance of all distal segments. The off-diagonal entries encode the magnitude of this propagated inertial effect. In typical human limb geometries, the mass matrix exhibits a diagonal-dominant structure: the diagonal entries substantially exceed the off-diagonal entries in magnitude. This structure has important consequences for understanding passive dynamics. Even small perturbations in joint configuration can produce measurable changes in the effective inertias, which feed back through the Coriolis terms to produce non-trivial accelerations. The physical interpretation is that each proximal segment "feels" the inertia of all distal segments, creating a cascade effect where changes in distal joint angles propagate upstream through the inertial coupling.
+
 \begin{example}{Numerical Triple Pendulum Mass Matrix}{ex:triple_pendulum_mass_numerical}
 Assume:
 \begin{itemize}
@@ -168,7 +208,9 @@ C_i = \sum_{j, k} \frac{\partial M_{ij}}{\partial q_k} \dot{q}_j \dot{q}_k
 
 But now there are many terms. The key new effect is \emph{cross-coupling}: the wrist velocity can influence shoulder and elbow accelerations through Coriolis.
 
-Physically, this manifests as the whip effect. When you rotate your shoulders while the wrist is extending, Coriolis creates a tangential acceleration on the club. This is why the club reaches such high speeds: it's not pushed by muscular torque, but yanked by Coriolis, which scales as velocity squared.
+The Coriolis terms arise from the kinematic structure of the system. When multiple segments rotate with different angular velocities, the time derivatives of the mass matrix produce non-zero Coriolis contributions. These contributions couple the rotations: a velocity at one joint produces an acceleration at another joint as a by-product of the mass matrix structure and the constraint that all segments remain rigidly connected. The magnitude of these Coriolis accelerations scales quadratically with velocity, making them increasingly dominant as joint velocities increase during the downswing.
+
+The physical interpretation is that Coriolis effects represent the automatic redirection of inertial forces in a coupled, multi-link system. When the arm rotates while the club is partially constrained (but the constraint is weakening), the Coriolis term acts to accelerate the club in the direction of arm rotation. This acceleration is not actively produced by muscle; it is a kinematic consequence of the rotating reference frames coupled through the inertial mass matrix.
 \end{laymansbox}
 
 \begin{example}{Coriolis Whip at the Club}{ex:triple_coriolis_whip}
@@ -215,6 +257,8 @@ The \textbf{whip effect} is the dramatic increase in club speed at the end of th
 The key insight: \textbf{each unlocking transfers momentum to the next segment via constraint forces.} The shoulder's momentum accelerates the arm (via the elbow constraint). The arm's momentum accelerates the club (via the wrist constraint).
 
 By the time the club is free, it has accumulated momentum from all three segments, all channeled through constraints that do zero net work.
+
+The timing of these sequential unlocks is determined by the interplay of muscle activation, elastic properties, and inertial dynamics. Early in the downswing, muscles actively accelerate the hips and shoulders. The constraint forces at each joint redirect this motion to the distal segments. As the downswing progresses and joint velocities build, the Coriolis terms grow (scaling with $\dot{q}_i \dot{q}_j$ products) and increasingly dominate the muscle-produced torques. The moment when a distal joint is "released" from its constraint (e.g., when the wrist extends from its cocked position) represents a critical transition: the released segment suddenly experiences acceleration from Coriolis effects that were previously constrained out. This release timing is therefore crucial to the efficiency of energy transfer.
 \end{principle}
 
 \begin{laymansbox}{Why Sequential Matters}{inplain:sequential_unlocking_why}
@@ -261,26 +305,26 @@ By cocking the wrist and holding it through mid-downswing, the golfer creates a 
 This is why wrist cock matters: it's about timing the release to maximize the arm-to-club momentum transfer, not about storing energy.
 \end{laymansbox}
 
-\begin{example}{Wrist Cock Timing and Club Speed}{ex:wrist_cock_timing}
-Scenario A: Early wrist release
+\begin{example}{Wrist Constraint Release Timing and Club Acceleration}{ex:wrist_cock_timing}
+Consider two scenarios where the wrist constraint is released at different phases of the downswing.
+
+Scenario A: Constraint release at $t_A$ (early downswing)
 \begin{itemize}
-\item At $t = 0.2$ s (early downswing), the wrist is released.
-\item The arm is rotating at $\dot{q}_1 = 8$ rad/s, $\dot{q}_2 = 10$ rad/s.
-\item The club, now free, initially has the same angular velocity as the arm constraint would dictate.
-\item But the club's small inertia means it quickly adopts the arm's velocity, with minimal acceleration.
+\item Arm configuration: $\dot{q}_1 = 8$ rad/s, $\dot{q}_2 = 10$ rad/s.
+\item The wrist constraint $q_2 + q_3 = \text{const}$ is removed.
+\item The club now evolves under constraint-free dynamics. Its acceleration depends on the inertial coupling with the arm and Coriolis effects.
+\item The arm is rotating at moderate speed, so the Coriolis coupling term $\frac{\partial M_{23}}{\partial q_2} \dot{q}_2 \dot{q}_3$ is modest.
 \end{itemize}
 
-Scenario B: Late wrist release
+Scenario B: Constraint release at $t_B$ (late downswing), with $t_B > t_A$
 \begin{itemize}
-\item At $t = 0.40$ s (late downswing), the wrist is released.
-\item The arm is rotating at $\dot{q}_1 = 20$ rad/s, $\dot{q}_2 = 35$ rad/s (much faster).
-\item The club is released when the arm is already moving very fast.
-\item Coriolis torques at the club are now enormous, catapulting the club to $\dot{q}_3 = 60$ rad/s.
+\item Arm configuration: $\dot{q}_1 = 20$ rad/s, $\dot{q}_2 = 35$ rad/s.
+\item The wrist constraint is released.
+\item The arm's angular velocities are significantly higher. The Coriolis coupling term $\frac{\partial M_{23}}{\partial q_2} \dot{q}_2 \dot{q}_3$ is now much larger, producing greater acceleration of the club.
+\item The club inherits kinetic energy from the arm's rotational energy, producing a final velocity higher than in Scenario A.
 \end{itemize}
 
-The difference: by releasing late, the club inherits the arm's higher velocity, and Coriolis amplifies it further. A release that's 200 ms later can result in 20--30% higher club speed.
-
-\textbf{Insight:} This is why wrist release timing is so important in teaching. It's not about how hard you release (muscular effort), but about \emph{when} you release relative to the arm's motion. A golfer who releases too early (before the arm has built up speed) will have a slower club at impact. A golfer who releases at the optimum moment will achieve maximum speed.
+\textbf{Analysis:} The magnitude of the Coriolis-driven acceleration at the club is proportional to the product of arm velocities. Releasing the constraint when arm velocities are highest allows the club to benefit from the maximal Coriolis coupling, resulting in higher final velocity. The timing of constraint release is thus dynamically significant: it modulates when and how efficiently energy can be transferred from proximal to distal segments.
 \end{example}
 
 %============================================================================
@@ -330,47 +374,38 @@ The club's angular velocity increased by 2 rad/s (from 25 to 27) in just 50 ms, 
 \end{example}
 
 \begin{constraintbox}{The DCR Blows Up Even Larger with Three Segments}{constraint:triple_dcr_blowup}
-With a third segment, the Drift-Control Ratio at the club becomes even more extreme. In the final 30 ms before impact:
-\begin{itemize}
-\item Coriolis torque at the club: $\sim 800$--$1000$ Nm.
-\item Muscular torque available at the club: $\sim 10$--$20$ Nm.
-\item DCR: $50:1$ to $100:1$.
-\end{itemize}
+With a third segment, the Drift-Control Ratio at the club becomes even more extreme. Using the earlier analysis, the Coriolis torque scales with the product of angular velocities and inertial coupling terms. For realistic downswing parameters (shoulder $\dot{q}_1 \sim 20$ rad/s, elbow $\dot{q}_2 \sim 35$ rad/s, coupling parameters $\frac{\partial M_{23}}{\partial q_2} \sim 0.01$), the Coriolis term at the wrist dominates the muscular torques by an order of magnitude.
 
-The club is so completely ballistically committed that even attempting to "accelerate" it at impact is futile. All speed comes from the passive dynamics of the prior segments.
+The club becomes essentially ballistically committed late in the downswing. Muscular torques at the wrist become negligible relative to the constraint forces and Coriolis effects that govern club motion. All significant acceleration comes from the passive dynamics of the prior segments.
 \end{constraintbox}
 
 %============================================================================
 \section{Comparison: Double vs. Triple Pendulum}
 \label{sec:double_vs_triple_pendulum}
 
-\begin{example}{DCR and Club Speed: Double vs. Triple}{ex:dcr_double_vs_triple}
-Consider the same initial arm motion in both models. For a double pendulum (shoulder and elbow):
+\begin{example}{Comparing Double and Triple Pendulum Dynamics}{ex:dcr_double_vs_triple}
+Consider arm motion under the same initial conditions in both models. For a double pendulum (shoulder and elbow), the elbow joint's acceleration at mid-downswing is governed by the mass matrix and Coriolis terms. At an instant with $\dot{q}_1 = 12$ rad/s and $\dot{q}_2 = 20$ rad/s, gravity and Coriolis produce accelerations that depend on the specific inertial parameters.
 
-At mid-downswing ($\dot{q}_1 = 12$ rad/s, $\dot{q}_2 = 20$ rad/s), the elbow accelerates due to gravity and Coriolis. The ZTCF predicts $\ddot{q}_2 \approx 20$ rad/s$^2$.
+For a triple pendulum with the wrist initially locked (constraint $q_2 + q_3 = \text{const}$), the wrist constraint couples the club to the arm. Upon release, the freed wrist joint allows the club to develop accelerations driven by the coupling terms $\frac{\partial M_{23}}{\partial q_2}$ and higher-order Coriolis effects.
 
-For a triple pendulum with the wrist initially locked (constraint $q_2 + q_3 = \text{const}$):
+The qualitative difference is significant: the triple pendulum model adds an additional stage of energy concentration. By constraining the club during the early and mid-downswing and then releasing it at a critical moment when proximal segment velocities are high, the three-link structure allows energy redistribution beyond what a two-link system can achieve.
 
-At the same instant, the wrist constraint couples the club to the arm. When released mid-downswing, the club's acceleration is constrained by the arm's motion. Once released, Coriolis at the wrist produces $\ddot{q}_3 \approx 40$ rad/s$^2$ or higher.
-
-\textbf{Numerical comparison:}
+\textbf{Structural comparison:}
 
 \begin{center}
 \begin{tabular}{|l|c|c|}
 \hline
 & \textbf{Double Pendulum} & \textbf{Triple Pendulum} \\
 \hline
-Club velocity at 0.35 s & 35 rad/s & 25 rad/s (wrist locked) \\
-Club velocity at 0.40 s (post-release) & 35 rad/s (still 2 segments) & 40 rad/s (wrist free) \\
-DCR at 0.40 s & $\sim 20:1$ & $\sim 50:1$ \\
-Impact speed (linear, at club tip) & 70 mph & 90 mph \\
+Number of links & 2 (shoulder, elbow) & 3 (shoulder, elbow, wrist) \\
+Energy concentration stages & 1 (shoulder to elbow) & 2 (shoulder to elbow, elbow to club) \\
+Maximum achievable club acceleration & Limited by shoulder/elbow mass ratio & Higher due to additional wrist-club mass ratio \\
+Flexibility in timing the release & Limited to elbow unlock & Extended via wrist unlock timing \\
 \hline
 \end{tabular}
 \end{center}
 
-\textbf{Insight:} The triple pendulum model predicts higher club speeds because the wrist release creates an additional acceleration phase. The double pendulum saturates (the elbow can't accelerate any faster), but the triple pendulum still has room to accelerate the club via the wrist mechanism.
-
-This is why adding the wrist model is crucial: it explains how the club reaches professional-level speeds ($80$--$100$ mph) without requiring implausibly large muscular torques.
+\textbf{Insight:} The triple pendulum architecture enables greater speed amplification through sequential constraint release. The addition of a wrist segment with smaller inertia than the forearm allows further velocity concentration, demonstrating that kinetic chain effectiveness scales with the number of optimally-timed constraint releases.
 \end{example}
 
 %============================================================================

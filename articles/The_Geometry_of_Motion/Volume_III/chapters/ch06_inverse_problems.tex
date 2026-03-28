@@ -10,12 +10,34 @@
 
 Inverse dynamics is the most widely used computational tool in biomechanics: given
 measured kinematics $\bm{q}(t)$, $\dot{\bm{q}}(t)$, $\ddot{\bm{q}}(t)$ and external
-forces $\bm{F}_{\text{ext}}(t)$, compute the net joint torques:
+forces $\bm{F}_{\text{ext}}(t)$, compute the net joint torques. The complete pipeline,
+illustrated in Figure~\ref{fig:ch6:id-pipeline}, transforms raw experimental data into
+mechanistic estimates of the forces acting on the system:
 \begin{equation}
   \bm{\tau}(t) = M(\bm{q})\ddot{\bm{q}} + C(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} + g(\bm{q})
   - J_c^T(\bm{q}) \bm{F}_{\text{ext}}.
   \label{eq:ch6:inverse-dynamics}
 \end{equation}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.9, >=Stealth, node distance=2.2cm]
+  \node[draw, thick, minimum width=2.5cm, fill=blue!10] (collect) {Data Collection\\(markers, forces)};
+  \node[draw, thick, minimum width=2.5cm, fill=blue!10, right of=collect] (process) {Marker\\Processing};
+  \node[draw, thick, minimum width=2.5cm, fill=green!10, right of=process] (ik) {Inverse\\Kinematics};
+  \node[draw, thick, minimum width=2.5cm, fill=green!10, right of=ik] (id) {Inverse\\Dynamics};
+  \node[draw, thick, minimum width=2.5cm, fill=red!10, right of=id] (muscle) {Muscle Force\\Estimation};
+
+  \draw[->, thick] (collect) -- (process);
+  \draw[->, thick] (process) -- (ik);
+  \draw[->, thick] (ik) -- (id);
+  \draw[->, thick] (id) -- (muscle);
+
+  \node[below, font=\small] at (collect.south) {Observables};
+  \node[below, font=\small] at (ik.south) {Kinematics};
+  \node[below, font=\small] at (id.south) {Net torques};
+  \node[below, font=\small] at (muscle.south) {Individual forces};
+\end{tikzpicture}
+\end{center}
 
 The standard pipeline comprises five stages:
 \begin{enumerate}

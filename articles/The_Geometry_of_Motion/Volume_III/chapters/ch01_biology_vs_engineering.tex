@@ -72,6 +72,36 @@ Failure mode & Brittle (sudden) & Graceful (degradation) \\
 \end{center}
 \end{comparison}
 
+\begin{center}
+\begin{tikzpicture}[scale=0.9, node distance=2.5cm]
+  % Left side: Engineering system
+  \node[rectangle, draw, thick, minimum width=1.8cm, minimum height=0.8cm, fill=blue!10] (eng-body) at (0, 0) {Rigid Body};
+  \node[rectangle, draw, thick, minimum width=1.8cm, minimum height=0.8cm, fill=blue!10] (eng-joint) at (0, -1.5) {Ideal Joint};
+  \node[rectangle, draw, thick, minimum width=1.8cm, minimum height=0.8cm, fill=blue!10] (eng-motor) at (0, -3) {Motor};
+
+  \draw[->, thick] (eng-body) -- (eng-joint);
+  \draw[->, thick] (eng-joint) -- (eng-motor);
+
+  \node[above] at (0, 0.8) {\textbf{Engineering System}};
+  \node[right] at (1.2, 0) {Fixed shape};
+  \node[right] at (1.2, -1.5) {1-DOF};
+  \node[right] at (1.2, -3) {Torque input};
+
+  % Right side: Biological system
+  \node[rectangle, draw, thick, minimum width=1.8cm, minimum height=0.8cm, fill=red!10] (bio-body) at (5, 0) {Bone + Tissue};
+  \node[rectangle, draw, thick, minimum width=1.8cm, minimum height=0.8cm, fill=red!10] (bio-joint) at (5, -1.5) {Real Joint};
+  \node[rectangle, draw, thick, minimum width=1.8cm, minimum height=0.8cm, fill=red!10] (bio-muscle) at (5, -3) {Muscle};
+
+  \draw[->, thick] (bio-body) -- (bio-joint);
+  \draw[->, thick] (bio-joint) -- (bio-muscle);
+
+  \node[above] at (5, 0.8) {\textbf{Biological System}};
+  \node[right] at (6.2, 0) {Deformable};
+  \node[right] at (6.2, -1.5) {Multi-DOF, coupled};
+  \node[right] at (6.2, -3) {Force + state};
+\end{tikzpicture}
+\end{center}
+
 \section{Why the Differences Matter for Control}
 
 The differences enumerated above are not merely academic. They fundamentally change
@@ -143,14 +173,15 @@ force-length and force-velocity curves, $F_0$ is the maximum isometric force,
 $\tilde{\ell} = \ell/\ell_0$ and $\tilde{v} = v/v_0$ are normalized length and velocity,
 and $f_{\text{PE}}$ is the passive elastic force.
 
-\begin{clinicalbox}{Why This Matters for the Golf Swing}{golf-muscle}
-  During the downswing, the wrist extensors are rapidly lengthening (eccentric
-  contraction) while the shoulder muscles are shortening (concentric). The force
-  capacity at the wrist is therefore \emph{enhanced} by the force-velocity
-  relationship, while that at the shoulder is \emph{diminished}. An engineering
-  model that assigns constant torque limits to each joint completely misses this
-  asymmetry, which is fundamental to the kinetic chain mechanism of the swing.
-\end{clinicalbox}
+\begin{principle}{Force-Velocity Asymmetry in Multi-Joint Tasks}{fv-asymmetry-task}
+  In any task where joints undergo different phases of contraction (some concentric,
+  others eccentric), the force-velocity relationship creates an asymmetry in joint
+  torque capacity. This asymmetry can be quantified through the Hill force-velocity
+  function applied to each muscle group. The engineering consequence is that a model
+  assuming constant or task-invariant joint torque limits systematically misrepresents
+  the instantaneous torque capacity of biological joints, particularly during rapid
+  multi-joint movements.
+\end{principle}
 
 \subsection{Redundancy Is a Feature, Not a Bug}
 
@@ -305,7 +336,9 @@ def select_modeling_strategy(
 \section{A Quantitative Tour of the Human Body}
 
 Before diving into the detailed modeling chapters, we present a quantitative overview
-of the key biomechanical properties that any model must capture.
+of the key biomechanical properties that any model must capture. All values in this
+section are drawn from published anthropometric studies and are cited in the relevant
+subsections.
 
 \subsection{Segment Inertial Properties}
 
@@ -416,20 +449,36 @@ by the elasticity of ligaments and joint capsule.
 
 \subsection{Muscle Properties}
 
-The human body contains approximately 630 muscles, each characterized by:
+The human body contains approximately 630 skeletal muscles. Each is characterized by
+several anatomical and physiological parameters that determine its force production capacity.
+The standard parameters are:
+
 \begin{itemize}
-  \item Maximum isometric force $F_0$ (ranging from 10~N for small hand muscles to
-        over 6000~N for the quadriceps)
-  \item Optimal fiber length $\ell_0$ (the length at which maximum isometric force is produced)
-  \item Maximum contraction velocity $v_0$ (typically 5--15 fiber lengths per second)
-  \item Tendon slack length $\ell_T^s$ (the length at which the tendon begins to bear load)
-  \item Pennation angle $\alpha_0$ (the angle between muscle fibers and the line of action,
-        ranging from $0^\circ$ for parallel-fibered muscles to $30^\circ$ or more for
-        pennate muscles like the quadriceps)
+  \item \textbf{Maximum isometric force} $F_0$: the force a muscle produces at optimal
+        length with full activation and zero velocity. Values vary widely by muscle size,
+        composition, and fiber type.
+  \item \textbf{Optimal fiber length} $\ell_0$: the length at which maximum isometric force
+        is produced, determined by the sarcomere length ($\sim$2.6 $\mu$m per sarcomere at
+        $\ell_0$).
+  \item \textbf{Maximum contraction velocity} $v_0$: the velocity at which a muscle produces
+        zero force under concentric contraction, measured in fiber lengths per second (typically
+        $0.5$--$3$ fiber lengths per second for slow-twitch fibers, $5$--$15$ for fast-twitch).
+  \item \textbf{Tendon slack length} $\ell_T^s$: the length of the tendon at which it begins to
+        transmit force (below this length, the tendon is slack and carries no load).
+  \item \textbf{Pennation angle} $\alpha_0$: the angle between muscle fiber direction and the
+        tendon line of action at optimal fiber length. Ranges from approximately $0^\circ$ for
+        parallel-fibered muscles to $30^\circ$ or more for highly pennate muscles.
 \end{itemize}
 
-These properties have been systematically catalogued for major musculoskeletal models
-\cite{Delp2007, Arnold2010}.
+These properties have been systematically measured and catalogued through:
+\begin{enumerate}
+  \item \cite{Zajac1989}: foundational review of muscle mechanics and parameter estimation
+  \item \cite{Delp2007}: comprehensive OpenSim musculoskeletal model with measured parameters for major muscles
+  \item \cite{Arnold2010}: detailed muscle morphometry from imaging and cadaver studies
+\end{enumerate}
+
+Values for specific muscles are provided in software platforms (OpenSim 4.x, AnyBody) and should
+be obtained from published measurements rather than estimated.
 
 \section{Connecting to the Control Framework}
 

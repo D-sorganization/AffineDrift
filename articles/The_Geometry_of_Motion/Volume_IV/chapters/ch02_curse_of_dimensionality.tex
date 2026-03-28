@@ -24,6 +24,38 @@ needed to solve many problems grow \emph{exponentially} with the state dimension
   \end{itemize}
 \end{definition}
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1.0]
+  % Axes
+  \draw[->, thick] (0, 0) -- (6, 0) node[anchor=north] {Dimension ($n$)};
+  \draw[->, thick] (0, 0) -- (0, 5) node[anchor=east, rotate=90] {Computational Cost};
+
+  % Grid-based (exponential)
+  \draw[red, thick, smooth] plot coordinates {
+    (1, 0.3) (1.5, 0.6) (2, 1.2) (2.5, 2.4) (3, 4.8)
+  } node[anchor=west] {\small Grid: $O(N^n)$};
+
+  % DDP (cubic)
+  \draw[blue, thick, smooth] plot coordinates {
+    (1, 0.2) (2, 0.5) (3, 1.0) (4, 1.5) (5, 2.5) (6, 3.5)
+  } node[anchor=west] {\small DDP: $O(n^3)$};
+
+  % Synergy reduction (flat)
+  \draw[green, thick] (0, 0.3) -- (6, 0.3) node[anchor=west] {\small Synergies: $O(k^3)$};
+
+  % Shaded region (infeasible)
+  \fill[red, opacity=0.1] (4, 5) -- (6, 5) -- (6, 0) -- (4, 0) -- cycle;
+  \draw (5, 3) node[anchor=center] {\small Curse\\ \small region};
+
+  \draw (3, 4.2) node[anchor=center, font=\small] {Exponential growth};
+\end{tikzpicture}
+\caption{The curse of dimensionality: computational cost grows exponentially with dimension
+for grid-based methods, cubically for DDP, and remains constant when using synergy-based
+dimensionality reduction (where $k \ll n$).}
+\label{fig:ch2:curse-viz}
+\end{figure}
+
 \section{Biological Solutions}
 
 Humans solve the dimensionality problem through five complementary mechanisms:

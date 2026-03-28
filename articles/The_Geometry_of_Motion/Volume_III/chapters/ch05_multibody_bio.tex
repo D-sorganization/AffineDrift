@@ -14,6 +14,31 @@ base (the pelvis/trunk). However, many functional activities create temporary cl
 chains: the stance phase of gait (foot on ground), pushing against a wall, or the golf
 swing when both hands grip the club.
 
+\begin{center}
+\begin{tikzpicture}[scale=0.85, >=Stealth, node distance=1.5cm]
+  % Open chain
+  \node[draw, circle, thick] (base1) at (0, 2) {0};
+  \node[draw, circle, thick] (j1) at (1.5, 2) {1};
+  \node[draw, circle, thick] (j2) at (3, 2) {2};
+  \node[draw, circle, thick] (j3) at (4.5, 2) {3};
+
+  \draw[thick] (base1) -- (j1) -- (j2) -- (j3);
+
+  \node[below] at (2.25, 1.5) {\textbf{Open Chain} (arm reaching)};
+
+  % Closed chain
+  \node[draw, circle, thick] (base2) at (0, -1) {0};
+  \node[draw, circle, thick] (j4) at (1.5, -1) {1};
+  \node[draw, circle, thick] (j5) at (3, -1) {2};
+  \node[draw, circle, thick] (ground) at (3, -2.5) {Ground};
+
+  \draw[thick] (base2) -- (j4) -- (j5) -- (ground);
+  \draw[thick, dashed] (ground) -- (base2) node[midway, below] {contact};
+
+  \node[below] at (2.25, -3.2) {\textbf{Closed Chain} (gait stance phase)};
+\end{tikzpicture}
+\end{center}
+
 \subsection{Equations of Motion for Biological Chains}
 
 The equations of motion for an $n$-DOF musculoskeletal system take the standard

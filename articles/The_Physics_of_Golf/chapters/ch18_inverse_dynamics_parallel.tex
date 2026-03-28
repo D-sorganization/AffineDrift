@@ -14,6 +14,24 @@ This is the most technically demanding chapter in this book. Push through it. Th
 \end{laymansbox}
 
 \section{The Inverse Problem: From Motion to Force}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[node distance=1.2cm, auto, font=\small]
+  \node[draw, rounded rectangle] (motion) {Measured Trajectory};
+  \node[draw, below of=motion] (kinematics) {Compute velocities/accelerations};
+  \node[draw, below of=kinematics] (forces) {Compute external forces};
+  \node[draw, below of=forces] (inverse) {Apply RNEA algorithm};
+  \node[draw, rounded rectangle, below of=inverse] (torques) {Inferred joint torques};
+  \draw[->] (motion) -- (kinematics);
+  \draw[->] (kinematics) -- (forces);
+  \draw[->] (forces) -- (inverse);
+  \draw[->] (inverse) -- (torques);
+\end{tikzpicture}
+\caption{Inverse dynamics workflow: from measured motion to inferred joint torques via differentiation and dynamic equations.}
+\label{fig:inverse_dynamics_flow}
+\end{figure}
+
 \label{sec:inverse_definition}
 
 \subsection{Forward and Inverse Dynamics Defined}

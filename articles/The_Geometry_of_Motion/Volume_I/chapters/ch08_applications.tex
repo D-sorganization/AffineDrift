@@ -20,6 +20,10 @@ pathways. The goal is to move from theory to implementation.
 
 \subsection{System Definition and Parameterization}
 
+Real-world applications of geometric mechanics and contraction theory have been extensively studied
+in robotics \cite{Murray1994, Spong2006, Lynch2017} and biomechanics \cite{Flash1985, Westervelt2007}.
+This section demonstrates the framework's applicability to complex, high-dimensional systems.
+
 The golfer--club--shaft system is a coupled rigid--flexible multibody chain:
 \begin{itemize}
 \item \textbf{Golfer}: Rigid body segments (torso, upper arm, forearm, hand) with
@@ -1643,6 +1647,61 @@ merely theoretical elegance. It is a practical engineering toolkit that unifies 
 biomechanics, robotics, aerospace, and automotive systems. The common thread is always the same: linearize
 exactly in the tangent space, verify contraction, exploit the drift, and let duality guarantee both
 performance and robustness from a single computation.
+
+\begin{center}
+\begin{tikzpicture}[scale=1.0, every node/.style={font=\small}]
+  % Central system box
+  \draw[very thick, red, rounded rectangle, minimum width=3cm, minimum height=0.8cm]
+    (1.5, 2.5) to (4.5, 2.5);
+  \node[font=\small\bfseries, red] at (3, 2.5) {Nonlinear System};
+
+  % Four analytic tools radiating out
+  \draw[thick, blue, rounded rectangle, minimum width=2cm, minimum height=0.6cm]
+    (0, 4) to (1.5, 4);
+  \node[font=\small, blue, align=center] at (0.75, 4) {Tangent-space\\linearization};
+
+  \draw[thick, blue, rounded rectangle, minimum width=2cm, minimum height=0.6cm]
+    (4.5, 4) to (6, 4);
+  \node[font=\small, blue, align=center] at (5.25, 4) {Contraction\\metrics};
+
+  \draw[thick, blue, rounded rectangle, minimum width=2cm, minimum height=0.6cm]
+    (0, 1) to (1.5, 1);
+  \node[font=\small, blue, align=center] at (0.75, 1) {Optimal\\control};
+
+  \draw[thick, blue, rounded rectangle, minimum width=2cm, minimum height=0.6cm]
+    (4.5, 1) to (6, 1);
+  \node[font=\small, blue, align=center] at (5.25, 1) {Drift--input\\decomposition};
+
+  % Arrows from system to tools
+  \draw[<->, thick, black] (1.5, 2.5) -- (1.5, 4);
+  \draw[<->, thick, black] (4.5, 2.5) -- (4.5, 4);
+  \draw[<->, thick, black] (1.5, 2.5) -- (1.5, 1);
+  \draw[<->, thick, black] (4.5, 2.5) -- (4.5, 1);
+
+  % Application domains below
+  \draw[thick, green, rectangle, minimum width=1.3cm, minimum height=0.5cm]
+    (0.2, -0.8) to (1.3, -0.8);
+  \node[font=\small, green] at (0.75, -0.8) {Golf swing};
+
+  \draw[thick, green, rectangle, minimum width=1.3cm, minimum height=0.5cm]
+    (2, -0.8) to (3.1, -0.8);
+  \node[font=\small, green] at (2.55, -0.8) {Robotics};
+
+  \draw[thick, green, rectangle, minimum width=1.3cm, minimum height=0.5cm]
+    (3.8, -0.8) to (4.9, -0.8);
+  \node[font=\small, green] at (4.35, -0.8) {Aerospace};
+
+  \draw[thick, green, rectangle, minimum width=1.3cm, minimum height=0.5cm]
+    (5.6, -0.8) to (6.7, -0.8);
+  \node[font=\small, green] at (6.15, -0.8) {Automotive};
+
+  % Arrows down to applications
+  \draw[<-, thick, black] (1.5, 2.5) -- (0.75, -0.3);
+  \draw[<-, thick, black] (3, 2.5) -- (2.55, -0.3);
+  \draw[<-, thick, black] (4.5, 2.5) -- (4.35, -0.3);
+  \draw[<-, thick, black] (4.5, 2.5) -- (6.15, -0.3);
+\end{tikzpicture}
+\end{center}
 
 \section*{Exercises}
 

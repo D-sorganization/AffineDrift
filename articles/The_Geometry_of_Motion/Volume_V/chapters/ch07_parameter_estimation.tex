@@ -3,7 +3,21 @@
 
 \epigraph{All models are wrong, but some are less wrong than others once you fit them.}{}
 
+Parameter estimation uses measured motion data to infer unknown model parameters such as
+segment masses, inertias, and damping coefficients. This chapter covers least-squares
+methods for linear and bilinear problems, and optimization methods for nonlinear problems.
+
 \section{System Identification for Multi-Body Models}
+
+The linear regression approach exploits the linearity of the equations of motion with
+respect to inertial parameters. Given measured trajectories $\bm{q}(t), \dot{\bm{q}}(t),
+\ddot{\bm{q}}(t)$ and applied torques $\bm{\tau}(t)$, we form the regressor matrix
+$Y(\bm{q}, \dot{\bm{q}}, \ddot{\bm{q}})$ such that
+\begin{equation}
+  \bm{\tau} = Y(\bm{q}, \dot{\bm{q}}, \ddot{\bm{q}}) \bm{\pi}
+\end{equation}
+where $\bm{\pi}$ is the parameter vector \cite{luh1980}. The least-squares solution
+minimizes $\|Y\bm{\pi} - \bm{\tau}\|^2_2$.
 
 \begin{lstlisting}[language=Python, caption={Inertial parameter estimation from motion data.}]
 import numpy as np
@@ -51,9 +65,45 @@ def estimate_inertial_params(
     return params
 \end{lstlisting}
 
+\section{Parameter Estimation Landscape}
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[
+    scale=1.2,
+    ]
+    % Axes
+    \draw[->] (0, 0) -- (4, 0) node[right] {Parameter 1};
+    \draw[->] (0, 0) -- (0, 4) node[above] {Parameter 2};
+
+    % Elliptical contours (cost function level sets)
+    \draw[gray!50] (2, 2) ellipse (1.5 and 1.2);
+    \draw[gray!50] (2, 2) ellipse (1 and 0.8);
+    \draw[gray!50] (2, 2) ellipse (0.5 and 0.4);
+
+    % Minimum
+    \node[fill=red, circle, inner sep=2pt] (min) at (2, 2) {};
+    \node[below right] at (min) {Optimum};
+
+    % Sample points
+    \node[fill=blue, circle, inner sep=1.5pt] at (1, 2.5) {};
+    \node[fill=blue, circle, inner sep=1.5pt] at (3, 1.5) {};
+    \node[fill=blue, circle, inner sep=1.5pt] at (0.5, 1) {};
+
+    % Labels
+    \node[left] at (-0.3, 3.5) {Cost Function};
+    \node[left] at (-0.3, 3) {Contours};
+  \end{tikzpicture}
+  \caption{Parameter estimation as optimization over the parameter space. Least-squares
+    methods seek the minimum of the cost function (red point) from initial guesses (blue points).}
+  \label{fig:param-landscape}
+\end{figure}
+
 \section{Muscle Parameter Calibration}
 
-Using the Hill model from Volume~III with optimization to match experimental data.
+Muscle parameters (Hill model constants: $a$, $F_{\max}$, optimal fiber length, etc.) can
+be estimated by fitting model predictions to force or EMG measurements. This requires
+nonlinear optimization, typically using gradient-based methods \cite{nocedal2006}.
 
 \section*{Exercises}
 \begin{enumerate}

@@ -18,6 +18,10 @@ confront the numerical challenges in computing it accurately.
 
 \subsection{Setup: Nominal and Perturbed Trajectories}
 
+The variational equation is one of the most important tools in dynamical systems theory \cite{Khalil2002, Sastry1999}.
+It provides an exact linear characterization of infinitesimal perturbations around a nominal trajectory and is
+fundamental to stability analysis, sensitivity computation, and optimal control \cite{pontryagin1962, SlotineLi1991}.
+
 Given the control-affine dynamics
 \begin{equation}
 \dot\x = f(\x) + G(\x)\,\uvec, \quad \x\in\R^n,\;\uvec\in\R^m,
@@ -160,8 +164,45 @@ the base point. Notice that $\mat{A}$ depends on the nominal input $\bar\uvec(t)
 reference inputs generate different tangent-space dynamics!
 \end{intuitionbox}
 
+\begin{center}
+\begin{tikzpicture}[scale=1.0]
+  % Draw nominal trajectory in state space
+  \draw[very thick, black] (0,0) to[out=30, in=180] (3, 2) to[out=0, in=130] (5.5, 2.5);
+  \filldraw[black] (3, 2) circle (0.08cm);
+  \node[below left, font=\small] at (3, 2) {$\bar\x(t_1)$};
+
+  % Draw perturbed trajectory close to nominal
+  \draw[dashed, blue] (0.2, 0.3) to[out=30, in=180] (3.2, 2.3) to[out=0, in=130] (5.7, 2.8);
+  \filldraw[blue] (3.2, 2.3) circle (0.06cm);
+
+  % Draw tangent space at nominal trajectory point
+  \draw[gray, thin, densely dashed] (2, 1) -- (4, 3);
+  \draw[gray, thin, densely dashed] (2, 3) -- (4, 1);
+
+  % Draw perturbation vector
+  \draw[->, red, thick] (3, 2) -- (3.2, 2.3);
+  \node[right, red, font=\small] at (3.15, 2.15) {$\dx(t_1)$};
+
+  % Arrows showing evolution
+  \draw[->, gray, thick, loosely dashed] (1.5, 0.5) -- (1.5, 0);
+  \node[below, font=\small, gray] at (1.5, 0) {time $t$};
+
+  % Labels
+  \node[font=\small] at (0, -0.5) {Nominal trajectory: $\bar\x(t)$};
+  \node[font=\small, blue] at (0.3, -1) {Perturbed trajectory: $\x(t) = \bar\x(t) + \dx(t)$};
+
+\end{tikzpicture}
+\end{center}
+
+The key insight is that the perturbation $\dx(t)$ evolves linearly in the tangent space along the nominal trajectory,
+governed by the variational equation~\eqref{eq:ch2:variational}. This linear evolution is exact at the infinitesimal level.
+
 
 \section{The State Transition Matrix}
+
+The state transition matrix (STM) is the fundamental solution object for linear time-varying systems.
+It is covered extensively in classical control texts \cite{Khalil2002, Sastry1999} and forms the basis
+for sensitivity analysis and optimal control computations.
 
 \subsection{Definition and Fundamental ODE}
 
@@ -290,7 +331,8 @@ from integration itself.
 \section{The Peano-Baker Series and Exact Solution}
 
 While the ODE~\eqref{eq:ch2:stm-ode} defines the STM implicitly, we can construct an explicit
-series solution called the Peano-Baker series (also known as the Dyson series in physics).
+series solution called the Peano-Baker series \cite[CITE: Peano-Baker history in Magnus expansion]} (also known as the Dyson series in physics).
+This series has deep connections to Lie group theory and geometric analysis \cite{doCarmo1992, AbrahamMarsden1978}.
 
 \subsection{Derivation of the Series}
 

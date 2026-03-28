@@ -32,6 +32,44 @@ If a robot under-swings by $5$ cm on the first attempt, the controller records t
   where $\bm{L}(t)$ is a learning filter. This updates the nominal trajectory to iteratively cancel out deterministic disturbances.
 \end{definition}
 
+\begin{center}
+\begin{tikzpicture}[scale=1.1]
+  % X-axis: trials
+  \draw[-{Stealth[length=2mm]}, thick, gray] (0, 0) -- (6.5, 0) node[right, font=\small] {Trial $j$};
+
+  % Y-axis: error
+  \draw[-{Stealth[length=2mm]}, thick, gray] (0, 0) -- (0, 4) node[above, font=\small] {Terminal Error};
+
+  % Error with model mismatch (without learning)
+  \draw[thick, chapblue!60, decoration={markings,
+      mark=at position 0.3 with {\circle{1pt}},
+      mark=at position 0.5 with {\circle{1pt}},
+      mark=at position 0.7 with {\circle{1pt}},
+      mark=at position 0.9 with {\circle{1pt}}
+    }, postaction={decorate}]
+    (1, 2.8) -- (6, 2.8) node[right, font=\small] {Open-loop (model error)};
+
+  % ILC convergence
+  \draw[very thick, trajgreen, decoration={markings,
+      mark=at position 0.2 with {\circle{1.5pt}},
+      mark=at position 0.35 with {\circle{1.5pt}},
+      mark=at position 0.5 with {\circle{1.5pt}},
+      mark=at position 0.65 with {\circle{1.5pt}},
+      mark=at position 0.8 with {\circle{1.5pt}},
+      mark=at position 0.95 with {\circle{1.5pt}}
+    }, postaction={decorate}]
+    (1, 3.5) .. controls (2, 2.9) and (3.5, 0.8) .. (6, 0.2);
+  \node[trajgreen!80!black, font=\small] at (4.5, 1.5) {ILC + Feedback};
+
+  % Annotations
+  \node[gray, font=\tiny, align=center] at (3, 3.2) {Deterministic\\disturbances};
+  \node[gray, font=\tiny, align=center] at (3, 0.6) {Learned\\dynamics};
+
+  % Grid
+  \draw[gray!20] (1, 0) grid (6, 4);
+\end{tikzpicture}
+\end{center}
+
 % ══════════════════════════════════════════════
 \section{Policy Search and Reinforcement Learning}
 % ══════════════════════════════════════════════
@@ -56,4 +94,25 @@ A singular optimal trajectory $\traj^*$ and its corresponding funnel $\mathcal{F
 Instead of re-running a massive NLP optimization for every scenario, biological systems and advanced controllers maintain \textbf{Trajectory Libraries}. A library consists of several distinct, pre-computed optimal trajectories and their corresponding local funnels.
 
 When faced with a new task (e.g., striking the ball on an uneven lie), the system searches its library for the closest matching funnel. By interpolating between established funnels using techniques like LQR-Trees~\cite{Tedrake2009} or simple spatial blending, the system can instantly generate a stable, feasible motion without any online optimization.
+
+% ══════════════════════════════════════════════
+\section{Summary}
+% ══════════════════════════════════════════════
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{@{} l p{7.5cm} @{}}
+  \toprule
+  \textbf{Concept} & \textbf{Mechanism of Learning} \\
+  \midrule
+  Iterative Learning Control (ILC) & Feedforward update: $\control_{\text{ff}, j+1} = \control_{\text{ff}, j} + \bm{L}(t) \bm{\xi}_j$. Learns deterministic model mismatch. \\
+  Policy Search & Direct optimization of feedback parameters $\bm{\theta}$ via gradient methods on sampled task performance. \\
+  Reinforcement Learning (RL) & Learns both reference trajectories and feedback policies through trial-and-error in simulation or on real systems. \\
+  Trajectory Library & Pre-computed collection of optimal trajectories and funnels for multiple task variants; enables instantaneous adaptation via interpolation. \\
+  Model Identification & Learning the true plant dynamics $\bm{f}_{\text{true}}(\state, \control)$ to replace or refine the nominal model. \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.3cm}
 

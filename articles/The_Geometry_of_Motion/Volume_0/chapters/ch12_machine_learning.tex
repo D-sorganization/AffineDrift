@@ -33,6 +33,45 @@ In 2013, \textbf{Deep Reinforcement Learning} emerged when \textbf{Volodymyr Mni
 
 Today, reinforcement learning powers robot locomotion, manipulation, autonomous driving, and optimal control across diverse domains. The mathematical foundation remains calculus: the chain rule applied iteratively through nested functions.
 
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}[scale=1.0]
+  % Input layer
+  \node[draw,circle,minimum width=0.5cm] (x1) at (0,2) {$x_1$};
+  \node[draw,circle,minimum width=0.5cm] (x2) at (0,1) {$x_2$};
+  \node[draw,circle,minimum width=0.5cm] (x3) at (0,0) {$x_3$};
+
+  % Hidden layer
+  \node[draw,circle,minimum width=0.5cm] (h1) at (2,2) {$h_1$};
+  \node[draw,circle,minimum width=0.5cm] (h2) at (2,1) {$h_2$};
+  \node[draw,circle,minimum width=0.5cm] (h3) at (2,0) {$h_3$};
+
+  % Output layer
+  \node[draw,circle,minimum width=0.5cm] (y1) at (4,1.5) {$y_1$};
+  \node[draw,circle,minimum width=0.5cm] (y2) at (4,0.5) {$y_2$};
+
+  % Connections (sample)
+  \draw[-,thick] (x1) -- (h1);
+  \draw[-,thick] (x1) -- (h2);
+  \draw[-,thick] (x2) -- (h1);
+  \draw[-,thick] (x2) -- (h3);
+  \draw[-,thick] (x3) -- (h2);
+  \draw[-,thick] (h1) -- (y1);
+  \draw[-,thick] (h2) -- (y2);
+  \draw[-,thick] (h3) -- (y1);
+
+  % Labels
+  \node[below] at (0,-0.7) {Input};
+  \node[below] at (2,-0.7) {Hidden};
+  \node[below] at (4,-0.7) {Output};
+
+  \node at (2,3) {Neural Network Architecture};
+  \node at (2,-1.5) {Learn weights via backpropagation: $\nabla_\mathbf{W} \mathcal{L} = \frac{\partial \mathcal{L}}{\partial \mathbf{W}}$};
+\end{tikzpicture}
+\caption{A fully-connected neural network with one hidden layer. Information flows from input to output through weighted connections. Backpropagation efficiently computes gradients with respect to all weights, enabling gradient descent optimization.}
+\label{fig:neural_network}
+\end{figure}
+
 % ==========================================================================
 \section{The Limits of Analytical Control}
 % ==========================================================================

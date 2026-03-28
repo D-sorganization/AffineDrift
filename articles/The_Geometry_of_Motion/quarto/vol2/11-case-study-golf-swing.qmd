@@ -13,7 +13,7 @@ title: "Case Study: The Complete Golf Swing"
 ## Unifying the "Control is Motion" Framework
 
 
-Throughout this text, we have systematically deconstructed the classical control paradigm and rebuilt it to handle tasks defined uniquely by motion. We conclude by applying our holistic framework to a 15-DOF musculoskeletal model of the human golf swing in order to formally synthesize the mathematical structure of athletic perfection.
+Throughout this text, we have systematically applied the trajectory-centric control paradigm to handle tasks defined primarily by motion. We conclude by applying our framework to a simulated 15-DOF musculoskeletal model of the human golf swing to explore the mathematical structure of high-speed athletic movements.
 
 The objective is clear: maximize negative clubhead velocity at the precise spatial intersection with the golf ball, while maintaining face angle orthogonality. The exact time interval $t_f$ in which this occurs is irrelevant; only the geometric state at impact matters. Furthermore, the commanded motion must not exceed the structural limits of biological torque, and the trajectory must be highly robust to physiological signal-dependent noise (SDN).
 
@@ -37,13 +37,16 @@ Finally, we compute the verified bounds of this stability region using **Sums-of
 
 
 
-  The final computed funnel reveals the mathematical secret of the professional golfer. During the backswing, the funnel is immensely wide; the motion is forgiving, and vast transverse deviations are easily tolerated without violating the invariant boundary.
+  The final computed funnel illustrates a key hypothesis about elite athletic mechanics. Computations on this model suggest that during the backswing, the funnel is relatively wide; the motion allows for larger transverse deviations without violating the invariant boundary.
   
-  As the swing approaches the transition and the explosive downswing, the funnel aggressively tightens. The stochastic optimization has selected a trajectory whose passive unactuated dynamics are so profoundly stable in the final $0.15$ seconds that the funnel diameter at impact shrinks to virtually zero. Any small deviation injected by muscular noise is passively swallowed by the immense centrifugal geometry of the zero dynamics. The golfer does not aggressively steer the club to the ball; they simply set the initial conditions, and the physics irresistibly pull the clubface through the target manifold.
+  As the simulated swing approaches the transition and the explosive downswing, the funnel progressively tightens. Driven by the model assumptions, the stochastic optimization selects a trajectory whose passive unactuated dynamics are highly self-stabilizing in the final milliseconds. In this idealized case, the mathematical funnel diameter at impact shrinks significantly. This suggests a motor control strategy where small deviations injected by muscular noise are attenuated by the centrifugal geometry of the zero dynamics, rather than fully compensated by active feedback.
 
 
 
-Through this book, we hope we have proven that the thermostat has its place, but when the objective is a sweeping, dynamic motion cutting through the physical world, "Control is Motion" provides the only mathematically truthful language.
+Through this book, we hope we have demonstrated that the geometric approach to control is a powerful tool for analyzing sweeping, dynamic motions where the spatial path and physical interactions are paramount.
+
+### Limitations of the Model
+It must be emphasized that these results are derived from a simplified, synthesized numerical model under strict assumptions (such as passive wrists and specific noise representations). The results illustrate principles of transverse contraction but do not replace the complex neural feedback and real physiological limits present in an actual biological swing.
 
 
 \bibliographystyle{plain}

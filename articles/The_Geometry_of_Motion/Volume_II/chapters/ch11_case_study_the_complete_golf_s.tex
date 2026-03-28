@@ -33,11 +33,13 @@ With $\traj^*(s)$ computed, we lock down the trajectory using \textbf{Transverse
 
 Finally, we compute the verified bounds of this stability region using \textbf{Sums-of-Squares Programming} (Chapter 7). The SDP calculates a rigorous boundary function $V(\state, t) = 1$ that proves the system is confined to an invariant funnel. 
 
-\begin{keyidea}{The Architecture of the Perfect Swing}{perfect_swing}
-  The final computed funnel reveals the mathematical secret of the professional golfer. During the backswing, the funnel is immensely wide; the motion is forgiving, and vast transverse deviations are easily tolerated without violating the invariant boundary.
-  
-  As the swing approaches the transition and the explosive downswing, the funnel aggressively tightens. The stochastic optimization has selected a trajectory whose passive unactuated dynamics are so profoundly stable in the final $0.15$ seconds that the funnel diameter at impact shrinks to virtually zero. Any small deviation injected by muscular noise is passively swallowed by the immense centrifugal geometry of the zero dynamics. The golfer does not aggressively steer the club to the ball; they simply set the initial conditions, and the physics irresistibly pull the clubface through the target manifold.
-\end{keyidea}
+\begin{principle}{Time-Varying Funnel Geometry}{funnel_geometry}
+  The computed funnel $\mathcal{F}(t) = \{\state \mid V(\state, t) \leq 1\}$ exhibits a time-dependent volume structure, $\text{Vol}(\mathcal{F}(t))$, whose evolution reflects the stability properties of the transverse feedback subsystem. The Lyapunov function $V(\state, t) = (\state - \traj^*(t))^\top \mathbf{P}(t) (\state - \traj^*(t))$ (Chapter 7) contains a time-varying matrix $\mathbf{P}(t)$ determined by the Riccati equation of the transverse linearization (Chapter 4).
+
+  During the early phases of motion, the eigenvalues of the transverse feedback matrix $\mathbf{A}_\perp(t) - \mathbf{B}_\perp(t)\mathbf{K}(t)$ may be negative but bounded in magnitude, permitting larger initial condition deviations. As $t \to t_f$, the contraction rates increase (more negative eigenvalues), and the Lyapunov ellipsoid contracts accordingly. The rate of contraction is governed by the stochastic cost functional (Chapter 6), which balances terminal objective maximization against variance amplification through the zero dynamics (Chapter 5).
+
+  At the terminal manifold constraint $\psi(\state(t_f)) = 0$, the funnel width is constrained by the SOS program's requirement that $(V(\state(t_f), t_f) - 1)$ defines an invariant boundary. This width is not arbitrary; it emerges from the solution of a semidefinite program (Chapter 7) and represents the mathematically verified margin of success.
+\end{principle}
 
 Through this book, we hope we have proven that the thermostat has its place, but when the objective is a sweeping, dynamic motion cutting through the physical world, "Control is Motion" provides the only mathematically truthful language.
 

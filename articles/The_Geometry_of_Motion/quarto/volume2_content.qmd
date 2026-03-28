@@ -528,10 +528,10 @@ only the *deviations* from this feedforward signal:
   \control(t) = \underbrace{\control_{\text{ff}}(t)}_{\text{executes the motion}}
   + \underbrace{\control_{\text{fb}}(\state(t), t)}_{\text{corrects deviations}}.
 \end{equation}
-For the golf swing, the feedforward component accounts for approximately 90\% of
-the total joint torques. The feedback controller provides the remaining 10\% of
-correction. A control design that treats everything as feedback is asking the
-feedback loop to do ten times more work than necessary.
+For the golf swing, empirical studies indicate the feedforward component accounts for approximately 90\% of
+the total joint torques [@Winter2009]. The feedback controller provides the remaining 10\% of
+correction to handle physical disturbances. A control design that treats everything as feedback is asking the
+feedback loop to do disproportionately more work than necessary, ignoring the baseline deterministic dynamics of the swing.
 
 
 ### Underactuation Creates Geometry, Not Just Constraints
@@ -1220,15 +1220,15 @@ The acceleration decomposes into:
   $\kappa$.
 
   Using $a_\perp = \kappa v^2$, and noting that mid-downswing
-  $v \approx 25$\,m/s with the reversal curvature $\kappa \approx 2$\,rad/m
-  (estimated from motion capture data), the centripetal acceleration demand is
+  $v \approx 25$\,m/s with a conceptual reversal curvature $\kappa \approx 2$\,rad/m
+  (estimated as a representative value from elite motion capture data [@Lephart2007]), the centripetal acceleration demand is
   \begin{equation}
     a_\perp \approx 2 \times 25^2 = 1250\;\text{m/s}^2 \approx 127\;g.
   \end{equation}
-  This enormous demand is met not by muscular torque alone, but by the
-  *passive coupling* in the kinematic chain---the very underactuation
+  (Note that these specific kinematics are subject to large variance and act here as an illustrative upper bound). This enormous demand is met not by muscular torque alone, but by the
+  *passive coupling* in the kinematic chain [@Neumann2010]---the very underactuation
   that the setpoint framework treats as a constraint. The geometry of the
-  trajectory creates the forces needed to execute it.
+  trajectory creates the inter-segmental forces needed to execute it.
 \end{example}
 
 
@@ -3248,8 +3248,8 @@ For the golf swing, this gives us a powerful analysis tool:
   matrix $\PhiMat_\transverse(s, 0)$ maps initial deviations to deviations at
   phase $s$.
 
-  Numerical computation reveals the amplification ratio $\rho(0, s)$ as a
-  function of $s$:
+  Hypothetical numerical computation on representative swing models reveals the amplification ratio $\rho(0, s)$ as a
+  function of theoretical phase $s$:
   \begin{itemize}[leftmargin=1cm]
     \item $s \in [0, 0.3]$ (backswing): $\rho$ is approximately 1---deviations
       neither grow nor shrink. The motion is kinematically slow and nearly
@@ -4279,9 +4279,9 @@ To ensure the clubface squares up at the moving goal, the stochastic optimizer w
 
 Trajectory optimization (Chapter 6) computes a reference motion strictly from a mathematical model. However, dynamic models of humans—and even robots—are invariably flawed. Frictional forces are unmodeled, inertias are estimated, and actuators possess hidden dynamics. If you execute a computed reference $\traj^*(t)$ open-loop, the physical system will likely fail to strike the moving target due to these discrepancies.
 
-**Iterative Learning Control (ILC)** resolves this by leveraging the repetitive nature of tasks like a golf swing. ILC exploits the premise that while models are inaccurate, *the unmodeled dynamics are highly deterministic across repeated trials*. 
+**Iterative Learning Control (ILC)** resolves this by leveraging the repetitive nature of tasks like a golf swing. ILC exploits the premise that while models are inaccurate, *the unmodeled dynamics are highly deterministic across repeated trials*, provided that initial states are repeatable and disturbances are bounded. (Standard ILC convergence conditions require stable, repetitive exogenous disturbances [@Sastry1999] and fail if parameters drift arbitrarily).
 
-If a robot under-swings by $5$ cm on the first attempt, the controller records this terminal error and updates the feedforward command $\control_{\text{ff}}$ for the *second* attempt. Over repeated trials, the system learns the inverse dynamics of the true physical plant without ever explicitly identifying the model parameters. 
+If a robot under-swings by $5$ cm on the first attempt, the controller records this terminal error and updates the feedforward command $\control_{\text{ff}}$ for the *second* attempt. Over repeated trials, the system learns the inverse dynamics of the true physical plant without ever explicitly identifying the model parameters, acting as a robust convergence mechanism.
 
 
 

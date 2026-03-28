@@ -25,6 +25,47 @@ If the robot hits an unmodeled friction patch and slows down, the reference traj
 
 Instead of parameterizing our optimal trajectory as $\traj^*(t)$, we parameterize it as a function of the phase: $\traj^*(s)$. The phase $s \in [0, 1]$ represents the percentage of motion completed. For a walking robot, $s$ could be the forward position of the hip. For a golf swing, $s$ could be the angular position of the shoulder relative to the ball. The reference trajectory is now a purely spatial curve.
 
+\begin{center}
+\begin{tikzpicture}[scale=1.1]
+  % Time-based parameterization (top)
+  \begin{scope}[yshift=2.5cm]
+    \node[font=\bfseries, chapblue] at (0, 1.5) {Time-Based: $\traj^*(t)$};
+
+    % Time axis
+    \draw[-{Stealth[length=2mm]}, thick, gray] (0, 0) -- (4, 0) node[right, font=\small] {$t$};
+    \draw[thick, chapblue] (0.5, 0.3) -- (0.6, 0) -- (0.7, 0.3);
+    \draw[thick, chapblue] (1.5, 0.3) -- (1.6, 0) -- (1.7, 0.3);
+    \draw[thick, chapblue] (2.5, 0.3) -- (2.6, 0) -- (2.7, 0.3);
+    \draw[thick, chapblue] (3.5, 0.3) -- (3.6, 0) -- (3.7, 0.3);
+
+    % Problem: if system slows down
+    \draw[-{Stealth[length=2mm]}, thick, red!70] (1.3, -0.5) -- (0.8, -0.5);
+    \node[red!70, font=\small] at (1.0, -0.95) {slows down};
+    \node[red!70, font=\small, align=center] at (3.0, -0.95) {reference marches\\on: error grows!};
+  \end{scope}
+
+  % Phase-based parameterization (bottom)
+  \begin{scope}[yshift=-0.5cm]
+    \node[font=\bfseries, trajgreen!80!black] at (0, 1.5) {Phase-Based: $\traj^*(s)$};
+
+    % State trajectory (spatial curve)
+    \draw[-{Stealth[length=2mm]}, very thick, trajgreen] (0.5, 0.2) .. controls (1.0, 0.6) and (2.0, 0.8) .. (3.5, 0.3);
+    \node[trajgreen!80!black, font=\small\bfseries] at (2.0, 1.1) {$\traj^*(s)$};
+
+    % Phase progression (independent of clock)
+    \filldraw[accentred] (0.5, 0.2) circle (2pt) node[below, font=\small] {$s=0$};
+    \filldraw[accentred] (2.0, 0.8) circle (2pt) node[above, font=\small] {$s=0.5$};
+    \filldraw[accentred] (3.5, 0.3) circle (2pt) node[below, font=\small] {$s=1$};
+
+    % Advantage
+    \node[trajgreen!80!black, font=\small, align=center] at (2.0, -0.7) {Phase advances based on\\physical state, not clock};
+  \end{scope}
+
+  % Dividing line
+  \draw[thick, gray!40] (-0.3, 1.8) -- (4.3, 1.8);
+\end{tikzpicture}
+\end{center}
+
 \begin{definition}{Phase Variable}{phase_variable}
   A phase variable $s(\state)$ is a continuously differentiable scalar function of the state $\state$ such that its time derivative is strictly positive along all feasible trajectories inside the nominal funnel:
   \begin{equation}
@@ -74,4 +115,25 @@ By enforcing HZD, we can design rhythmic walking gaits that are astonishingly ro
 While the golf swing is not a periodic walking gait, the phase-variable approach perfectly encapsulates the athletic reality of the swing. The golfer's shoulder angle defines the phase $s$. The target manifold is $s = 1.0$ (the impact location). 
 
 By structuring the control scheme computationally through Virtual Constraints, the golfer is impervious to slight hesitations at the top of the backswing. The transverse feedback LQR (Chapter 4) corrects spatial deviations from the unactuated club ($\theta_2$), while the phase variable ensures the arm actuation ($u_1$) applies the necessary parametric braking entirely in synchrony with the physical location of the arms, leading to perfectly timed passive impact dynamics regardless of chronological speed.
+
+% ══════════════════════════════════════════════
+\section{Summary}
+% ══════════════════════════════════════════════
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{@{} l p{7.5cm} @{}}
+  \toprule
+  \textbf{Concept} & \textbf{Definition \& Role} \\
+  \midrule
+  Phase Variable & Scalar function $s(\state)$ that increases monotonically along trajectories and decouples spatial path geometry from temporal execution. \\
+  Virtual Constraints & Control objective of the form $\state - \traj^*(s(\state)) = 0$ that drives the system onto a lower-dimensional invariant manifold. \\
+  Invariant Manifold & The manifold $\mathcal{Z} = \{\state \mid \state = \traj^*(s(\state))\}$ on which the system evolves when virtual constraints are satisfied. \\
+  Hybrid Zero Dynamics & The reduced dynamics of the system when constrained to $\mathcal{Z}$, including discrete impact maps that preserve manifold membership. \\
+  Partial Feedback Lin. & Control design that cancels nonlinearities on actuated DOFs while allowing unactuated DOFs to evolve freely on the manifold. \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.3cm}
 

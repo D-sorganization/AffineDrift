@@ -60,6 +60,30 @@ Never add complexity you don't need. Never remove complexity the physics require
 \end{principle}
 
 \section{Joint Types in Robotics --- A Taxonomy}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.9]
+  \draw[fill=blue!30] (0,3.5) rectangle (1.5,4.5) node[midway] {\small 1R};
+  \draw[fill=blue!30] (2,3.5) rectangle (3.5,4.5) node[midway] {\small 2R};
+  \draw[fill=blue!30] (4,3.5) rectangle (5.5,4.5) node[midway] {\small 3R};
+  \node[below, font=\tiny] at (0.75,3.3) {Revolute};
+  \node[below, font=\tiny] at (2.75,3.3) {Universal};
+  \node[below, font=\tiny] at (4.75,3.3) {Spherical};
+  \draw[thick] (0,2.5) circle (0.3);
+  \draw[->] (0,2.5) -- (0.3,2.5);
+  \draw[thick] (2,2.5) circle (0.3);
+  \draw[->] (2,2.5) -- (2.3,2.5);
+  \draw[->] (2,2.5) -- (2,2.8);
+  \draw[thick] (4,2.5) circle (0.3);
+  \draw[->] (4,2.5) -- (4.3,2.5);
+  \draw[->] (4,2.5) -- (4,2.8);
+  \draw[->] (4,2.5) -- (4.15,2.65);
+\end{tikzpicture}
+\caption{Joint primitives: revolute (1R) one axis, universal (2R) two axes, spherical (3R) three axes.}
+\label{fig:joint_primitives}
+\end{figure}
+
 \label{sec:joint_types}
 
 \index{revolute joint}

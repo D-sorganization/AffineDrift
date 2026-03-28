@@ -15,12 +15,13 @@ biological computation has a time cost determined by the physics of synaptic
 transmission:
 
 \begin{neurobox}{Neural Timing Constraints}{timing}
+  Measured values from neurophysiology (Hodgkin and Huxley, 1952; Kandel et al., 2013):
   \begin{itemize}
-    \item \textbf{Synaptic delay}: 1--5~ms per synapse (chemical synapses)
-    \item \textbf{Axonal conduction}: 1--100~m/s (depends on myelination and diameter)
-    \item \textbf{Action potential duration}: $\sim$1~ms
-    \item \textbf{Refactory period}: $\sim$1--2~ms absolute, $\sim$3--5~ms relative
-    \item \textbf{Total per-layer delay}: $\sim$5--10~ms including integration time
+    \item \textbf{Synaptic delay}: 1--5~ms per chemical synapse (AMPA receptor rise time $\sim$1 ms)
+    \item \textbf{Axonal conduction}: unmyelinated $\sim$1~m/s, myelinated $\sim$100~m/s
+    \item \textbf{Action potential}: rising phase 1~ms, falling phase 2--3~ms
+    \item \textbf{Refractory period}: absolute $\sim$1--2~ms (sodium channel inactivation)
+    \item \textbf{Total per-layer delay}: $\sim$5--10~ms (synaptic + integration + propagation)
   \end{itemize}
 \end{neurobox}
 
@@ -63,8 +64,9 @@ computation that must complete within a given time window:
 
 \section{The Motor Cortex: Six Layers, Not Sixty}
 
-The cerebral cortex, including the primary motor cortex (M1), has a remarkably
-consistent architecture across mammalian species \cite{Mountcastle1997}:
+The cerebral cortex has a remarkably consistent six-layered architecture across
+mammalian species (Mountcastle, 1997). This constraint applies uniformly to M1 and
+other cortical areas:
 
 \begin{enumerate}
   \item \textbf{Layer I}: molecular layer (mostly dendrites and axons, few cell bodies)
@@ -96,6 +98,43 @@ is approximately 8--12 synapses deep.
           timescales and abstraction levels.
   \end{enumerate}
 \end{insight}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.95]
+  % Input
+  \draw (0, 1.5) rectangle (0.8, 2.2);
+  \draw (0.4, 1.85) node[anchor=center, font=\tiny] {Input};
+
+  % Deep network (left)
+  \draw (0.4, 3.5) node[anchor=center, font=\small\bf] {Deep: 10 layers $\times$ 50 wide};
+  \for \i in {1, ..., 10} {
+    \draw (1 + 0.4*\i, 1.5) circle (0.15);
+  };
+  \for \i in {1, ..., 10} {
+    \draw (1.4 + 0.4*\i, 1.5) circle (0.15);
+  };
+  \draw (6, 1.5) node[anchor=west, font=\tiny] {Latency: 50 ms};
+
+  % Output layer
+  \draw (8, 1.5) rectangle (8.8, 2.2);
+  \draw (8.4, 1.85) node[anchor=center, font=\tiny] {Output};
+
+  % Wide network (right)
+  \draw (0.4, -0.2) node[anchor=center, font=\small\bf] {Wide: 2 layers $\times$ 2000 wide};
+  \fill[blue, opacity=0.2] (1, -1) rectangle (4.5, -0.4);
+  \draw (2.75, -0.7) node[anchor=center, font=\small] {Hidden layer (2000 neurons)};
+  \draw (6, -0.7) node[anchor=west, font=\tiny] {Latency: 10 ms};
+
+  % Arrow showing advantage
+  \draw[->, thick, red] (6.2, 1.3) -- (6.2, -0.3);
+  \draw (6.5, 0.5) node[anchor=west, font=\small, color=red] {5x faster};
+\end{tikzpicture}
+\caption{Shallow-wide architecture trades depth for width: a 2-layer network with 2000
+neurons per layer completes in 10 ms, while a 10-layer network with 50 neurons per
+layer takes 50 ms---too slow for real-time motor control.}
+\label{fig:ch4:shallow-wide-arch}
+\end{figure}
 
 \section{Computational Implications}
 
@@ -242,9 +281,11 @@ Each level operates on a compressed representation of the level below:
 
 \subsection{Synergies as Dimensionality Reduction}
 
-Muscle synergies (d'Avella and Bizzi 2005 \cite{dAvellaBizzi2005}) provide the
-most direct evidence for dimensionality reduction in motor control. The activation
-pattern of $p$ muscles is approximated as a linear combination of $k \ll p$ synergies:
+Muscle synergies provide direct evidence for dimensionality reduction. d'Avella et al.
+(2005) showed that frog leg motor output can be reconstructed from 5 synergies.
+In human reaching, Tresch et al. (2006) demonstrated that 4--6 synergies explain
+>90% of variance across 15 reaching directions. The muscle activation pattern of $p$
+muscles is approximated as a linear combination of $k \ll p$ synergies:
 \begin{equation}
   \bm{u}(t) = \sum_{i=1}^{k} c_i(t) \bm{w}_i = W \bm{c}(t),
   \label{eq:ch4:synergy-decomposition}
@@ -252,9 +293,9 @@ pattern of $p$ muscles is approximated as a linear combination of $k \ll p$ syne
 where $W \in \Reals^{p \times k}$ is the synergy matrix (fixed spatial patterns)
 and $\bm{c}(t) \in \Reals^k$ are the time-varying synergy activations.
 
-Experimental evidence consistently shows that $k = 4$--$6$ synergies can explain
-$> 90\%$ of the variance in muscle activation patterns across a wide range of
-tasks \cite{Tresch2006, Ting2007}.
+Experimental studies across diverse tasks (reaching, walking, postural responses)
+consistently identify $k = 4$--$6$ synergies accounting for $> 90\%$ variance
+(Tresch et al. 2006, Ting and Macpherson 2005).
 
 \begin{lstlisting}[language=Python, caption={Muscle synergy extraction using Non-negative Matrix Factorization.}]
 import numpy as np

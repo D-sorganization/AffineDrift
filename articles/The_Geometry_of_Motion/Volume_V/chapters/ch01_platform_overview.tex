@@ -9,7 +9,49 @@
 
 UpstreamDrift is a unified platform for multi-body dynamics simulation, trajectory
 optimization, and motor control analysis. It wraps multiple physics engines behind
-a consistent Python API.
+a consistent Python API. This chapter provides an overview of the platform's modular
+design and engine selection criteria to guide tool choice for specific applications.
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[
+    every node/.style={draw, rounded corners, minimum width=2cm, text centered},
+    ]
+    % Top layer: User Applications
+    \node[fill=blue!20] (apps) at (0, 5) {Applications};
+
+    % Second layer: Modules
+    \node[fill=green!20] (traj) at (-3, 3.5) {Trajectory\\Optimization};
+    \node[fill=green!20] (rl) at (0, 3.5) {Reinforcement\\Learning};
+    \node[fill=green!20] (ctrl) at (3, 3.5) {Control\\Design};
+
+    % Third layer: Common Infrastructure
+    \node[fill=yellow!20] (common) at (0, 2) {Common Infrastructure\\(State, Export, Diagnostics)};
+
+    % Bottom layer: Physics Engines
+    \node[fill=orange!20] (mujoco) at (-3.5, 0.5) {MuJoCo};
+    \node[fill=orange!20] (drake) at (-1, 0.5) {Drake};
+    \node[fill=orange!20] (pinoc) at (1.5, 0.5) {Pinocchio};
+    \node[fill=orange!20] (opensim) at (4, 0.5) {OpenSim};
+
+    % Edges
+    \draw[->] (apps) -- (traj);
+    \draw[->] (apps) -- (rl);
+    \draw[->] (apps) -- (ctrl);
+    \draw[->] (traj) -- (common);
+    \draw[->] (rl) -- (common);
+    \draw[->] (ctrl) -- (common);
+    \draw[->] (common) -- (mujoco);
+    \draw[->] (common) -- (drake);
+    \draw[->] (common) -- (pinoc);
+    \draw[->] (common) -- (opensim);
+  \end{tikzpicture}
+  \caption{UpstreamDrift platform architecture showing the unified Python API
+    (Common Infrastructure layer) sitting above multiple physics engines, with
+    application modules for trajectory optimization, reinforcement learning,
+    and control design.}
+  \label{fig:platform-arch}
+\end{figure}
 
 \subsection{Core Components}
 
@@ -34,24 +76,29 @@ Tools & \texttt{src/tools/} & Development utilities \\
 \subsection{Supported Physics Engines}
 
 \begin{enumerate}
-  \item \textbf{MuJoCo} (\texttt{physics\_engines/mujoco/}): Google DeepMind's
-        multi-joint dynamics engine. Soft contacts, muscle actuators, fast simulation.
-        Primary engine for biomechanical modeling.
+  \item \textbf{MuJoCo} (\texttt{physics\_engines/mujoco/}): Multi-body dynamics simulator
+        designed for control and reinforcement learning \cite{todorov2012}. Implements soft contact
+        models, supports muscle actuators, and uses efficient convex optimization for contact
+        resolution. Primary engine for biomechanical and contact-rich simulations.
 
-  \item \textbf{Drake} (\texttt{physics\_engines/drake/}): MIT's multibody dynamics
-        toolbox. Mathematical rigor, analytical gradients, trajectory optimization.
-        Primary engine for control design.
+  \item \textbf{Drake} (\texttt{physics\_engines/drake/}): Multibody dynamics toolbox from MIT
+        emphasizing mathematical rigor and analytical system properties \cite{TedrakeBooks}.
+        Provides analytical Jacobians, integrates trajectory optimization directly, and supports
+        hybrid systems. Primary engine for control design and trajectory optimization.
 
-  \item \textbf{Pinocchio} (\texttt{physics\_engines/pinocchio/}): LAAS-CNRS C++ library
-        with Python bindings. Efficient rigid-body dynamics with analytical derivatives.
-        Primary engine for real-time control.
+  \item \textbf{Pinocchio} (\texttt{physics\_engines/pinocchio/}): Open-source C++ library
+        (LAAS-CNRS) for rigid-body dynamics with efficient computation of forward and inverse
+        dynamics using the RNEA algorithm \cite{Featherstone2008}. Provides analytical derivatives
+        and real-time performance. Primary engine for real-time control.
 
-  \item \textbf{OpenSim} (\texttt{physics\_engines/opensim/}): Stanford's musculoskeletal
-        modeling software. Hill-type muscle models, inverse dynamics. Primary engine
-        for biomechanics.
+  \item \textbf{OpenSim} (\texttt{physics\_engines/opensim/}): Musculoskeletal modeling platform
+        from Stanford for biomechanical simulation. Implements Hill-type muscle models and
+        static optimization for muscle force estimation. Primary engine for biomechanics and
+        motion capture analysis.
 
-  \item \textbf{MyoSuite} (\texttt{physics\_engines/myosuite/}): Muscle-driven
-        reinforcement learning environments. Primary engine for motor learning research.
+  \item \textbf{MyoSuite} (\texttt{physics\_engines/myosuite/}): Task and environment suite
+        for muscle-driven motor control with OpenSim integration. Provides Gymnasium-compatible
+        interfaces for reinforcement learning. Primary engine for motor learning research.
 \end{enumerate}
 
 \section{Getting Started}
@@ -187,18 +234,21 @@ print(f"Energy loss:    {(1 - results['energy'][-1]/results['energy'][0])*100:.1
   \renewcommand{\arraystretch}{1.3}
   \begin{tabular}{@{}lll@{}}
   \toprule
-  \textbf{If you need\ldots} & \textbf{Use} & \textbf{Why} \\
+  \textbf{Application} & \textbf{Recommended Engine} & \textbf{Key Feature} \\
   \midrule
-  Fast contact simulation & MuJoCo & Soft contact model, GPU \\
-  Trajectory optimization & Drake & Analytical gradients \\
-  Real-time forward dynamics & Pinocchio & C++ speed, O(n) \\
-  Muscle-driven biomechanics & OpenSim & Hill models built-in \\
-  RL with muscles & MyoSuite & Gym-compatible \\
-  Quick prototyping & Built-in Python & No dependencies \\
+  Fast contact-rich simulation & MuJoCo & Convex soft contact \\
+  Trajectory optimization & Drake & Analytical gradients, direct methods \\
+  Real-time forward dynamics & Pinocchio & $O(n)$ RNEA algorithm \\
+  Muscle-driven simulation & OpenSim & Hill-type muscle models \\
+  RL with muscles & MyoSuite & Gym environment wrappers \\
+  Analytical gradient-free methods & Built-in Python & No external dependencies \\
   \bottomrule
   \end{tabular}
   \end{center}
 \end{handson}
+
+\textbf{Engine Comparison Details.} Table comparisons of contact models, computational
+complexity, and theoretical guarantees are provided in Chapter~\ref{ch:engine-comparison}.
 
 \section*{Exercises}
 
