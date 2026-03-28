@@ -40,15 +40,15 @@ In the manipulator equation, every torque comes from one of five sources:
 \node at (0, 3) [anchor=center] {$\bm{M}(\bm{q}) \ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{\tau}$};
 
 % Five source boxes arranged vertically
-\node (inertial) [draw, rectangle, minimum width=2.5cm, minimum height=0.8cm, fill=lightblue!30] at (0, 1.5) {\textbf{Inertial}\\$\bm{M}(\bm{q}) \ddot{\bm{q}}$};
+\node (inertial) [draw, rectangle, minimum width=2.5cm, minimum height=0.8cm, fill=blue!15] at (0, 1.5) {\textbf{Inertial}\\$\bm{M}(\bm{q}) \ddot{\bm{q}}$};
 
-\node (velocity) [draw, rectangle, minimum width=2.5cm, minimum height=0.8cm, fill=lightgreen!30] at (0, 0.3) {\textbf{Velocity-Dependent}\\$\bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}}$};
+\node (velocity) [draw, rectangle, minimum width=2.5cm, minimum height=0.8cm, fill=green!15] at (0, 0.3) {\textbf{Velocity-Dependent}\\$\bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}}$};
 
-\node (gravity) [draw, rectangle, minimum width=2.5cm, minimum height=0.8cm, fill=lightyellow!30] at (0, -0.9) {\textbf{Gravitational}\\$\bm{g}(\bm{q})$};
+\node (gravity) [draw, rectangle, minimum width=2.5cm, minimum height=0.8cm, fill=yellow!15] at (0, -0.9) {\textbf{Gravitational}\\$\bm{g}(\bm{q})$};
 
-\node (muscular) [draw, rectangle, minimum width=2.5cm, minimum height=0.8cm, fill=lightcoral!30] at (0, -2.1) {\textbf{Muscular (Control)}\\$\bm{\tau}$};
+\node (muscular) [draw, rectangle, minimum width=2.5cm, minimum height=0.8cm, fill=red!15] at (0, -2.1) {\textbf{Muscular (Control)}\\$\bm{\tau}$};
 
-\node (constraint) [draw, rectangle, minimum width=2.5cm, minimum height=0.8cm, fill=lightgray!30] at (0, -3.3) {\textbf{Constraint}\\(implicit in $\ddot{\bm{q}}$)};
+\node (constraint) [draw, rectangle, minimum width=2.5cm, minimum height=0.8cm, fill=gray!15] at (0, -3.3) {\textbf{Constraint}\\(implicit in $\ddot{\bm{q}}$)};
 
 % Vertical line showing they sum to zero (or equal control)
 \draw [thick, -] (-1.5, 1.8) -- (-1.5, -3);
@@ -368,7 +368,7 @@ Each term contributes:
 
 \item \textbf{Muscular torque} $\bm{\tau}$: The applied torque that must satisfy the equation of motion.
 
-\textbf{Numerical illustration:} If $\ddot{\theta}_1 = 40 \text{ rad/s}^2$, $M_{11} = 1.54 \text{ kg m}^2$, $\bm{C} \dot{\bm{q}} \approx 15 \text{ N m}$, and $\bm{g} \approx 5 \text{ N m}$, then:
+\textbf{Numerical illustration:} If $\ddot{\theta}_1 = 40 \text{ rad/s}^2$, $M_{11} = 1.54 \text{ kg m}^2$, $\bm{C} \dot{\bm{q}} \approx 10 \text{ N m}$, and $\bm{g} \approx 5 \text{ N m}$, then:
 \begin{equation}
 \tau_1 = M_{11} \ddot{\theta}_1 + C \dot{\bm{q}} + g = 1.54 \times 40 + 10 + 5 = 61.6 + 10 + 5 \approx 77 \text{ N m}
 \end{equation}

@@ -146,23 +146,12 @@ Configuration:
   \item Ball joints: each has $d_i = 3$ (allowing 3-DOF rotation)
 \end{itemize}
 
-Actually, for a simpler accounting: the Stewart platform is driven by 6 linear actuators (one per leg), each with 1 DOF (extension/retraction). The constraints are:
-\begin{itemize}
-  \item 6 distance constraints from the 6 legs (6 constant lengths)
-  \item Each constraint removes 1 DOF from the platform's 6 spatial DOF
-\end{itemize}
-
-Thus:
+For a more direct accounting: the Stewart platform is driven by 6 linear actuators (one per leg), each with 1 DOF (extension/retraction). The platform has 6 DOF in free space, and the 6 leg-length constraints fully determine its pose (position and orientation). When the 6 legs are driven by actuators with specified lengths:
 \begin{equation}
-\text{DOF} = 6 - 6 = 6
+\text{DOF} = 6 \text{ (input controls)} = 6 \text{ (DOF in pose)}
 \end{equation}
 
-Wait---this requires careful accounting. The platform has 6 DOF in free space. The 6 leg-length constraints fully determine the platform's pose (position and orientation). If the 6 legs are driven by actuators with specified lengths, then:
-\begin{equation}
-\text{DOF} = 6 \text{ (input controls)} - 6 \text{ (constraints)} = 6 \text{ (DOF in pose)}
-\end{equation}
-
-Actually, the standard result is: a non-degenerate Stewart platform has exactly \textbf{6 DOF} in its end-effector pose, and requires 6 actuators to control all 6 spatial DOF. This makes it a fully parallel manipulator.
+The standard result is that a non-degenerate Stewart platform has exactly \textbf{6 DOF} in its end-effector pose and requires 6 actuators to control all 6 spatial DOF. This makes it a fully parallel manipulator.
 \end{example}
 
 \subsection{Worked Example 3: Human Arm Kinematics}

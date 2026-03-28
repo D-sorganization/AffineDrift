@@ -10,7 +10,7 @@
 
 \begin{laymansbox}{Context \& Use Case: Energy-Based Dynamics}{context_box}
 \textbf{The Math You Will See:} We will define the \textbf{Lagrangian} ($\mathcal{L}$) and the \textbf{Euler-Lagrange Equations}. We will derive the classic standard form: $\mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})\dot{\mathbf{q}} + \mathbf{G}(\mathbf{q}) = \boldsymbol{\tau}$.
-\textbf{Why We Need It:} The Recursive Newton-Euler Algorithm (Chapter 7) is unmatched for fast computer simulations. However, when we need to mathematically \emph{prove} that a robot won't fall over, or design an optimal control law like LQR or Contraction Metrics, we need explicit equations. Lagrangian mechanics abandons vectors and forces entirely. It looks purely at the kinetic and potential \textit{energy} of the system, gracefully ignoring invisible internal constraint forces (like the tension in a rigid arm) to instantly yield elegant, closed-form equations of motion.
+\textbf{Why We Need It:} The Recursive Newton-Euler Algorithm (Chapter 7) is unmatched for fast computer simulations. However, when we need to mathematically \emph{prove} that a robot won't fall over, or design an optimal control law like LQR or Contraction Metrics, we need explicit equations. Lagrangian mechanics abandons vectors and forces entirely. It looks purely at the kinetic and potential \textit{energy} of the system, gracefully ignoring invisible internal constraint forces (like the tension in a rigid arm) to instantly yield compact, closed-form equations of motion.
 \textbf{All Variables Defined:} $T$ is Kinetic Energy, $V$ is Potential Energy, and $\mathcal{L} = T - V$.
 \end{laymansbox}
 
@@ -64,7 +64,7 @@ While Newton's equations are spectacular for computational algorithms evaluating
 
 If a bead slides along a curved wire, or a heavy pendulum swings on a rigid rod, Newton demands that you calculate the exact, microscopic physical force the wire exerts on the bead, or the tension the rod pulls on the bob, just to ensure they don't break. For a 15-DOF mechanism, solving for 15 unknown internal constraint forces pulling against each other is mathematically agonizing and analytically useless for control theory.
 
-Moreover, constraint forces do \emph{no work} in the motion. The tension in a rigid pendulum rod redirects motion but adds no energy. Yet in Newton's framework, we must solve for it anyway. This is deeply inelegant.
+Moreover, constraint forces do \emph{no work} in the motion. The tension in a rigid pendulum rod redirects motion but adds no energy. Yet in Newton's framework, we must solve for it anyway. This is unnecessarily cumbersome.
 
 Lagrangian mechanics solves this by working exclusively with \textbf{generalized coordinates}—minimal, unconstrained variables. The constraints are built into the coordinate system itself. Internal forces vanish from the mathematical framework entirely.
 
@@ -262,7 +262,7 @@ $$(\mathbf{M} - 2\mathbf{C})^T = \mathbf{M}^T - 2\mathbf{C}^T = \mathbf{M} - 2\m
 and since $\mathbf{C}^T = \frac{d\mathbf{M}}{dt} - \mathbf{C}$:
 $$(\mathbf{M} - 2\mathbf{C})^T = \mathbf{M} - 2\left(\frac{d\mathbf{M}}{dt} - \mathbf{C}\right) = \mathbf{M} - \frac{d\mathbf{M}}{dt} - 2\mathbf{C} + 2\mathbf{M}$$
 
-Actually, the standard proof uses energy conservation more directly. The key fact is:
+The standard proof uses energy conservation more directly. The key fact is:
 $$\dot{\mathbf{q}}^T(\mathbf{M} - 2\mathbf{C})\dot{\mathbf{q}} = 0$$
 
 for all $\dot{\mathbf{q}}$, which implies $\mathbf{M} - 2\mathbf{C} + (\mathbf{M} - 2\mathbf{C})^T = 0$, i.e., skew-symmetry.
@@ -628,7 +628,7 @@ Both formulations yield identical equations of motion, but traverse different co
 \textbf{Derivation} & Calculus of variations & Free-body diagram + recursion \\
 \textbf{Analytical Form} & $\mathbf{M}, \mathbf{C}, \mathbf{G}$ matrices explicit & $\mathbf{M}, \mathbf{C}$ assembled link-by-link \\
 \textbf{Computational Cost} & $O(n^3)$ matrix inversion & $O(n)$ recursive forward/backward pass \\
-\textbf{Control Design} & Elegant (LQR, feedback linearization) & Cumbersome (requires explicit $\mathbf{M}, \mathbf{C}$) \\
+\textbf{Control Design} & Direct (LQR, feedback linearization) & Cumbersome (requires explicit $\mathbf{M}, \mathbf{C}$) \\
 \textbf{Implementation} & By hand for small systems & Physics engines (rigid body simulators) \\
 \hline
 \end{tabular}

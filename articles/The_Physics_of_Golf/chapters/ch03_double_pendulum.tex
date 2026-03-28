@@ -111,7 +111,7 @@ Moment of inertia $I$ (point-mass approx.) & 0.077 kg m$^2$ & 0.375 kg m$^2$ \\
 \end{tabular}
 \end{center}
 
-\textit{Note on moment of inertia:} We use the point-mass approximation $I = M L_{\text{cm}}^2$. For link 1: $I_1 = 2.5 \times 0.175^2 = 0.077$ kg\,m$^2$. For link 2: $I_2 = 1.5 \times 0.5^2 = 0.375$ kg\,m$^2$.
+\textit{Note on moment of inertia:} Under the point-mass approximation, all mass is concentrated at the center of mass, so the rotational inertia of each link about its own center of mass is $I_{cm} = 0$. The values $I = M L_{\text{cm}}^2$ quoted here (link~1: $2.5 \times 0.175^2 = 0.077$ kg\,m$^2$; link~2: $1.5 \times 0.5^2 = 0.375$ kg\,m$^2$) are moments of inertia about the \emph{pivot}, used only for quick order-of-magnitude estimates. In the Lagrangian derivation below, we set $I_i = 0$ (point-mass) so that all rotational kinetic energy is captured by the translational term $\frac{1}{2}M_i |\dot{\bm{r}}_{cm,i}|^2$.
 
 These representative values allow us to compute explicit examples and develop intuition for the magnitude of forces and accelerations that appear during a golf swing. The physics governing the motion remains the same regardless of the specific parameter values.
 
@@ -170,9 +170,9 @@ Its velocity is:
 \label{eq:ch03_cm2_vel}
 \end{align}
 
-The kinetic energy of link 2 is:
+The kinetic energy of link 2 is (under the point-mass approximation, $I_2 = 0$, so all rotational kinetic energy is captured by the translational term):
 \begin{equation}
-T_2 = \frac{1}{2} M_2 |\dot{\bm{r}}_{\text{cm},2}|^2 + \frac{1}{2} I_2 (\dot{\theta}_1 + \dot{\theta}_2)^2
+T_2 = \frac{1}{2} M_2 |\dot{\bm{r}}_{\text{cm},2}|^2
 \label{eq:ch03_T2_general}
 \end{equation}
 
