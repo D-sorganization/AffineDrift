@@ -19,6 +19,24 @@ In this chapter, we develop a mathematical model of shaft flexibility, show how 
 % ─────────────────────────────────────────────────────────────────
 \section{Why Rigid Models Fail}
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1.2]
+  \draw[thick, color=blue] (0,0) -- (5,0);
+  \draw[dashed, gray, thin] (0,-1) -- (5,-1);
+  \draw[thick, color=red] (0,0) .. controls (1.5,-0.3) and (3.5,-0.8) .. (5,-1);
+  \node at (2.5,-1.5) {\small Bending mode 1 (lowest frequency)};
+  \node at (2.5,-2) {\small Elastic deformation};
+  \fill[black] (0,0) circle (0.15);
+  \node[above] at (0,0) {\small Grip};
+  \fill[black] (5,-1) circle (0.15);
+  \node[above right] at (5,-1) {\small Clubhead};
+\end{tikzpicture}
+\caption{Shaft bending modes: fundamental bending creates elastic energy storage.}
+\label{fig:shaft_bending}
+\end{figure}
+
+
 \index{shaft!flexibility}
 \index{Euler-Bernoulli beam}
 
@@ -300,7 +318,7 @@ Consider two golfers with identical biomechanics (same joint angles, angular vel
 
 For a high-speed golfer (say, 90+ mph swing speed), the centrifugal stiffening effect is so large that even a relatively flexible shaft is effectively stiff by mid-downswing. So a flexible shaft is useful. For a slower golfer, the centrifugal stiffening is weaker, and a flexible shaft might still be oscillating at impact, causing control problems.
 
-This is why amateur golfers benefit from shafts matched to their swing speed: the goal is to have the shaft reach its maximum elasticity just before impact, releasing all its energy at the optimal moment.
+For a given swing speed, the goal is to have the shaft reach its maximum elasticity just before impact, releasing all its energy at the optimal moment. The choice of shaft characteristics (flex, profile, weight) should match the golfer's swing parameters (speed, acceleration profile) to optimize energy transfer.
 \end{example}
 
 % ─────────────────────────────────────────────────────────────────
@@ -323,7 +341,7 @@ A shaft with the wrong stiffness changes the drift field in a way that moves the
 The task of shaft fitting is to adjust $\shaftstiff$, $\zeta$, the flex profile, and the total shaft mass to produce a drift field whose $\ztcf$ closely matches the golfer's target trajectory for their measured swing speed and swing geometry.
 
 \begin{principle}{Shaft Fitting as Drift Design}{princ:ch11:shaft_fitting}
-A properly fitted shaft does two things:
+The shaft design should accomplish the following:
 \begin{enumerate}
 \item It aligns the drift field $f(\state)$ with your swing characteristics, so that the zero-torque counterfactual (the autopilot trajectory) naturally points toward the target.
 \item It maximizes the energy transfer from the muscles and gravity to the clubhead by timing the catapult effect to release its energy at the optimal moment.

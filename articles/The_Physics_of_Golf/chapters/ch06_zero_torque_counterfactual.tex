@@ -27,6 +27,8 @@ The answer is shocking. The ZTCF trajectory—what would happen if your muscles 
 \section{Formal Definition of the ZTCF}
 \label{sec:ztcf_formal_definition}
 
+The concept of analyzing passive motion is foundational in biomechanics. By studying what a system does without active control, researchers can isolate and understand the contribution of passive forces \citep{Nesbit2005, MacKenzie2009}.
+
 \begin{definition}{The Zero-Torque Counterfactual}{def:ztcf}
 The \textbf{Zero-Torque Counterfactual} is the trajectory $\bm{q}_{\text{ZTCF}}(t)$ obtained by solving the equations of motion from the current state $(\bm{q}(t_0), \dot{\bm{q}}(t_0))$ with all muscle torques set to zero:
 \begin{equation}
@@ -62,6 +64,54 @@ The fundamental insight is that the total torque at any joint can be decomposed:
 \label{eq:torque_decomposition}
 \end{equation}
 
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=1.2]
+% Timeline from backswing through impact
+\draw [thick, ->] (0, 0) -- (10, 0) node [right] {Time (swing phase)};
+
+% Swing phase labels
+\node at (0.5, -0.5) [font=\small] {Top};
+\node at (2.5, -0.5) [font=\small] {Early Down};
+\node at (5, -0.5) [font=\small] {Mid Down};
+\node at (7.5, -0.5) [font=\small] {Late Down};
+\node at (9.5, -0.5) [font=\small] {Impact};
+
+% Draw two curves: actual torque and ZTCF torque
+% ZTCF grows gradually then sharply (passive dynamics)
+\draw [thick, red, smooth] (0, 1) to (1, 1.2) to (2.5, 2.0) to (5, 3.5) to (7.5, 6) to (9.5, 9);
+\node at (1, 1.5) [font=\small, color=red] {$\tau_\text{ZTCF}$};
+
+% Actual torque (more controlled, may not grow as fast)
+\draw [thick, blue, smooth] (0, 1) to (1, 1.3) to (2.5, 2.2) to (5, 3.5) to (7.5, 4.5) to (9.5, 5.5);
+\node at (7, 2.5) [font=\small, color=blue] {$\tau_\text{actual}$};
+
+% Difference (control input)
+\draw [thick, green, smooth] (0, 0.05) to (1, -0.1) to (2.5, -0.2) to (5, 0) to (7.5, 1.5) to (9.5, 3.5);
+\node at (8.5, 0.8) [font=\small, color=green] {$\tau_\text{input}$};
+
+% Add horizontal reference lines and annotations
+\draw [dashed, gray] (0, 3) -- (10, 3);
+\node at (-0.5, 3) [font=\tiny] {Ref};
+
+% Shaded regions for DCR regimes
+\draw [fill=lightblue, opacity=0.1] (0, 0) rectangle (2.5, 10);
+\node at (1.25, 9.5) [font=\tiny] {Low DCR};
+
+\draw [fill=lightyellow, opacity=0.1] (2.5, 0) rectangle (5, 10);
+\node at (3.75, 9.5) [font=\tiny] {Medium DCR};
+
+\draw [fill=lightcoral, opacity=0.1] (5, 0) rectangle (10, 10);
+\node at (7.5, 9.5) [font=\tiny] {High DCR};
+
+% Add y-axis label
+\node at (-0.8, 5) [rotate=90, font=\small] {Torque};
+
+\end{tikzpicture}
+\caption{Schematic comparison of ZTCF and actual torque trajectories during the swing. The ZTCF torque (red, passive) grows quadratically with velocity. The actual torque (blue) is modulated by control. The difference (green, control input) varies through the swing. Early phases require substantial control input; late phases show reduced control as drift dominates (high DCR).}
+\label{fig:ch06_ztcf_timeline}
+\end{figure}
+
 where:
 \begin{itemize}
 \item $\bm{\tau}_{\text{ZTCF}}$ is the torque that would arise from passive dynamics (gravity, Coriolis, centrifugal, and constraint forces).
@@ -75,16 +125,29 @@ A professional golfer's advantage is \emph{not} producing more total torque. It'
 \end{principle}
 
 \begin{laymansbox}{Why This Matters for the Swing}{inplain:ztcf_application}
-Here's a practical realization: most swing coaching teaches \emph{active moves}—"accelerate your hips," "fire your chest," "unwind your arms." But the ZTCF shows that much of the downswing happens \emph{automatically}, driven by the momentum and position stored during the backswing.
+The ZTCF analysis reveals a fundamental decomposition of swing dynamics:
 
-The actual skill lies in:
+\textbf{Total motion} = \textbf{Passive dynamics (ZTCF)} + \textbf{Control correction}
+
+This decomposition has important implications for understanding the downswing:
+
 \begin{enumerate}
-\item Building the right \emph{initial condition}: the setup and backswing position.
-\item Making \emph{small, well-timed adjustments} during the downswing to channel that passive energy correctly.
-\item Knowing \emph{when to relax}—when to let passive physics take over.
+\item \textbf{Initial conditions matter}: The configuration and velocities at the top of the backswing determine the passive trajectory (ZTCF). If the initial state is chosen correctly, the passive dynamics carry much of the downswing motion naturally. If not, active control must work harder.
+
+\item \textbf{Control acts as correction}: The actual motion $\bm{q}(t)$ will deviate from the ZTCF trajectory. The deviation $\Delta \bm{q}(t) = \bm{q}(t) - \bm{q}_{\text{ZTCF}}(t)$ is driven by the control input $\bm{u}(t)$. The control input magnitude needed depends on how different the actual trajectory is from what passive dynamics would produce.
+
+\item \textbf{Control timing is critical}: From the optimal control perspective, the most efficient control occurs early (when control authority is high) and strategically during phases when the ZTCF trajectory diverges from the target. Late-swing corrections require larger muscular effort because the DCR is very high.
+
 \end{enumerate}
 
-This is why teaching golfers to "slow down their hips" often works: it's not about making the hips move slower in absolute terms, it's about \emph{aligning} the muscles' control signal with the passive dynamics, so that passive acceleration and active muscular acceleration work together rather than against each other.
+\textbf{Computational approach:} To design an efficient swing, one could:
+\begin{enumerate}
+\item Compute the ZTCF trajectory from the initial state.
+\item Identify deviations from desired impact conditions.
+\item Solve for control inputs that minimize the cost of correction.
+\end{enumerate}
+
+This systematic approach connects biomechanical parameters, system dynamics, and control design.
 \end{laymansbox}
 
 %============================================================================
@@ -235,11 +298,26 @@ By the time the club reaches impact, the Coriolis torque can exceed $500$ Nm, wh
 \end{example}
 
 \begin{laymansbox}{Why the DCR Blows Up}{inplain:dcr_blowup_reason}
-Centrifugal and Coriolis torques scale with the \emph{square of velocity}. Muscular torques scale with muscle activation, which is more or less constant. So as you accelerate the downswing—spinning your hips faster, extending your arm faster—the passive torques grow quadratically while muscular torques grow linearly (if at all; often muscles are relaxing, not activating).
+The mathematical origin of the DCR blow-up is the velocity-dependent scaling of passive forces.
 
-This means there's a \emph{threshold velocity} beyond which the swing becomes ballistic. Once you cross that threshold, further speed comes from passive dynamics, not from muscular effort.
+\textbf{Passive torque (from Coriolis/centrifugal):} These terms are quadratic in velocity:
+\begin{equation}
+\tau_{\text{passive}} \propto \dot{\bm{q}}^2
+\end{equation}
 
-Elite golfers don't swing faster because they have stronger muscles. They swing faster because they've optimized the \emph{initial conditions} (setup and backswing) and the \emph{timing of control inputs} to let passive physics accelerate the system as much as possible while maintaining control over direction.
+\textbf{Muscular torque (control input):} The input $\bm{u}$ is bounded by physiological limits (muscle strength):
+\begin{equation}
+|\tau_{\text{muscle}}| \leq \tau_{\text{max}}
+\end{equation}
+
+As velocity increases during the downswing, $\tau_{\text{passive}}$ grows as $v^2$, while $\tau_{\text{max}}$ remains constant. The ratio:
+\begin{equation}
+\text{DCR} = \frac{\tau_{\text{passive}}}{\tau_{\text{muscle}}} \propto \dot{\bm{q}}^2
+\end{equation}
+
+grows quadratically with velocity. This explains the sharp rise in DCR during the downswing and the practical consequence: there exists a velocity threshold beyond which muscular input cannot significantly alter the trajectory.
+
+\textbf{Implication:} To achieve high clubhead speeds, the control strategy must emphasize early acceleration (low DCR phase) to build velocity, rather than attempting acceleration in the late downswing (high DCR phase) where passive dynamics dominate.
 \end{laymansbox}
 
 %============================================================================

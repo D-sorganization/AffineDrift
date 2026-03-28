@@ -82,6 +82,48 @@ In a well-executed golf swing, the following sequence occurs:
 
 This staggered timing is the essence of the kinetic chain. Each segment acts as a whip segment: it receives torque from its proximal neighbor, accelerates, reaches a peak velocity, and then transfers its momentum to the distal neighbor as constraint forces.
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[thick, font=\small]
+  % Time axis
+  \draw[->] (0,0) -- (10,0) node[anchor=west] {Downswing Time (\%)};
+
+  % Velocity traces for each segment
+  % Hips (earliest)
+  \draw[color=red, thick] plot coordinates {(1,4) (3,5) (5,3) (7,1) (9,0.5)};
+  \node[red] at (5.5, 5.5) {Hips};
+
+  % Torso (medium)
+  \draw[color=orange, thick] plot coordinates {(1.5,3.5) (4,5) (6.5,2.5) (8.5,0.5)};
+  \node[orange] at (6.5, 5.5) {Torso};
+
+  % Shoulders (later)
+  \draw[color=green, thick] plot coordinates {(2.5,3) (5.5,5) (7.5,2) (9,0.3)};
+  \node[green] at (7.5, 5.5) {Shoulders};
+
+  % Arms/Wrists (latest)
+  \draw[color=blue, thick] plot coordinates {(4,2) (7.5,5) (8.5,1)};
+  \node[blue] at (8, 5.5) {Arms/Wrists};
+
+  % Club (maximum velocity late)
+  \draw[color=purple, thick, dashed] plot coordinates {(5,1) (9,5.5)};
+  \node[purple] at (9.5, 5.5) {Club};
+
+  % Mark events
+  \draw[dashed, gray] (5, 0) -- (5, 6);
+  \node[gray] at (5, -0.5) {Early};
+
+  \draw[dashed, gray] (7.5, 0) -- (7.5, 6);
+  \node[gray] at (7.5, -0.5) {Late};
+
+  % Y-axis label
+  \node[rotate=90] at (-0.8, 3) {Rotational Velocity};
+
+\end{tikzpicture}
+\caption{Kinetic chain sequencing: proximal-to-distal timing of segment velocities. Each segment's peak velocity is staggered in time, with proximal segments (hips, torso) reaching peak velocity earlier and distal segments (arms, wrists, club) reaching peak velocity progressively later. This staggered timing concentrates energy and velocity into the distal segments, culminating in maximum club speed near impact.}
+\label{fig:ch30_kinetic_chain_timing}
+\end{figure}
+
 \subsection{Peak Velocity Timing and the Energy Cascade}
 
 The timing relationship can be quantified. For a ideal coupled oscillator model (discussed below), the time interval between the peak velocity of segment $i$ and the peak velocity of segment $i+1$ is roughly:
@@ -569,22 +611,22 @@ The constraint forces redistribute energy among the segments: $P_i^{(c)}$ can be
 
 \index{energy budget!golf swing}
 
-Measurements of elite golfers reveal the following approximate energy distribution (from \citep{Hume2005, Sprigings2005}):
+Measurements of elite golfers suggest approximate energy distributions during the downswing (from \citep{Hume2005, Sprigings2005}). The following table presents illustrative values of kinetic energy at various phases:
 
 \begin{center}
-\begin{tabular}{lcc}
+\begin{tabular}{lc}
 \toprule
-Segment & Peak KE (J) & \% of Total KE at Impact \\
+Segment & Estimated KE Range (J) \\
 \midrule
-Hips and torso & 50--80 & 15--25\% \\
-Shoulders and arms & 40--60 & 15--20\% \\
-Wrists and forearms & 20--40 & 8--15\% \\
-Club & 200--300 & 50--60\% \\
+Hips and torso & 50--80 \\
+Shoulders and arms & 40--60 \\
+Wrists and forearms & 20--40 \\
+Club & 200--300 \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-The club contains the majority of the kinetic energy at impact, even though it represents a small fraction of the body mass. This is the result of the velocity amplification produced by the kinetic chain: the body's segments transfer their kinetic energy progressively into smaller, faster-moving segments, with the final concentration in the club.
+The club contains the majority of the kinetic energy at impact, even though it represents a small fraction of the body mass. This is the result of the velocity amplification produced by the kinetic chain: the body's segments transfer their kinetic energy progressively into smaller, faster-moving segments, with the final concentration in the club. Note: The exact energy distribution at impact depends on how kinetic energy is defined (simultaneous vs. peak values at different times) and may vary significantly between individuals.
 
 The muscular power input occurs primarily during the backswing and the early downswing. By the time the club approaches impact, most of the muscles are acting eccentrically (decelerating), transmitting their kinetic energy forward. The muscles are not ``driving'' the club at impact; they are \emph{restraining} the body while the club catches up.
 

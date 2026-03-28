@@ -39,16 +39,53 @@ Typical timescale: months to years to reach this stage for golf.
 \end{definition}
 
 \begin{example}{The Three Stages in Golf}{ex:ch25_stages_example}
-\textbf{Cognitive stage (beginner):} You're taking a lesson. The pro says, ``Rotate your shoulders to 90 degrees and keep your hips at 45 degrees.'' You stand over the ball and think: hips, shoulders, rotation. You swing. The club path is all over. Your consistency is terrible. You can't even think about the target---you're too busy thinking about angles.
+\textbf{Cognitive stage:} High conscious attention to movement parameters. Performance is highly variable and errors are large.
 
-\textbf{Associative stage (intermediate):} You've practiced hundreds of swings. You no longer need verbal instructions. You can feel when your shoulders are rotated properly. The swing feels more natural. You hit fewer bad shots. But you still occasionally think about mechanics (``Am I keeping my head still?''), and your swing is sensitive to this attention.
+\textbf{Associative stage:} Moderate conscious attention. Performance consistency increases and errors decrease.
 
-\textbf{Autonomous stage (advanced):} You address the ball, glance at the target, and swing. The mechanics happen automatically. If you start thinking about mechanics, your swing actually gets worse---you disrupt the automatic process. Your swing is stable and repeatable. You can focus on course strategy, target selection, and visualization.
+\textbf{Autonomous stage:} Minimal conscious attention. Movement is stable and repeatable. Attention can be directed to external goals.
 \end{example}
 
 The transition from cognitive to associative to autonomous reflects a shift in how the brain controls movement. In the cognitive stage, the swing is controlled by the prefrontal cortex (deliberate, conscious, slow). As learning progresses, control shifts to premotor areas (less conscious, faster). By the autonomous stage, control is delegated to the motor cortex, cerebellum, and basal ganglia (automatic, very fast, reliable).
 
 \cite{fitts1967human}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[thick, font=\small]
+  % X-axis: trials/time
+  \draw[->] (0,0) -- (10,0) node[anchor=west] {Practice (Trials, Time)};
+
+  % Y-axis left: variability
+  \draw[->] (0,0) -- (0,5) node[anchor=south, rotate=90] {Performance Variability};
+
+  % Three stage regions
+  \draw[fill=red!20, opacity=0.3] (0,2) rectangle (3,4.5);
+  \draw[fill=orange!20, opacity=0.3] (3,1) rectangle (6,3.5);
+  \draw[fill=green!20, opacity=0.3] (6,0.5) rectangle (9,2.5);
+
+  % Cognitive curve (high variability)
+  \draw[red, thick] plot coordinates {(0.2,4.3) (0.5,4.2) (1,4.1) (1.5,4) (2,3.8) (2.5,3.5) (3,3.2)};
+
+  % Associative curve (moderate variability)
+  \draw[orange, thick] plot coordinates {(3,3.2) (3.5,2.8) (4,2.5) (4.5,2.2) (5,1.8) (5.5,1.5) (6,1.2)};
+
+  % Autonomous curve (low variability)
+  \draw[green, thick] plot coordinates {(6,1.2) (6.5,1) (7,0.9) (7.5,0.8) (8,0.7) (8.5,0.65) (9,0.6)};
+
+  % Labels
+  \node at (1.5, 3) {Cognitive};
+  \node at (4.5, 0.2) {Associative};
+  \node at (7.5, -0.8) {Autonomous};
+
+  % Stage markers
+  \draw[dashed, gray] (3, 0) -- (3, 5);
+  \draw[dashed, gray] (6, 0) -- (6, 5);
+
+\end{tikzpicture}
+\caption{Motor learning stages. Performance variability (error rate, inconsistency) decreases over practice as control transitions from cognitive (prefrontal cortex) to associative (premotor areas) to autonomous (motor cortex and cerebellum). The rate of improvement and the ultimate variability depend on practice quality and individual factors.}
+\label{fig:ch25_learning_stages}
+\end{figure}
 
 \subsection{Bernstein's Problem: How Does the Brain Reduce Dimensionality?}
 \label{subsec:ch25_bernstein}
@@ -213,16 +250,9 @@ For example, a throwing schema might encode: ``To throw distance $d$, apply init
 Applied to golf:
 
 \begin{example}{Golf Schema}{ex:ch25_golf_schema}
-A golf swing schema might encode:
-\begin{itemize}
-\item Basic motion: ``Rotate shoulders, shift hips, lag wrists, accelerate club.''
-\item Tunable parameters: timing of transition, extent of lag, rotational velocity.
-\item Mapping: ``To hit driver $x$ yards, use parameters $(t_0, \theta_{\mathrm{lag}}, \omega)$ such that the output clubhead speed is proportional to desired distance.''
-\end{itemize}
+A golf swing schema encodes mappings between task parameters (desired distance, club type) and motor commands (timing, force magnitude, motion amplitude). The schema specifies how to modulate fundamental motor patterns to achieve different outcomes.
 
-When you switch from driver to 6-iron, you're using the same schema, but with different parameters. The schema generalizes.
-
-Schema theory predicts that practicing multiple distances (variable practice) should produce better learning than practicing a single distance (constant practice), because the learner builds a more robust schema. This has been confirmed in research.
+Research confirms that practicing multiple distances produces better long-term learning than practicing a single distance, because variable practice builds more robust, generalizable schemas.
 \end{example}
 
 \cite{schmidt1975schema, schmidt1988uncertain}
@@ -513,7 +543,7 @@ But this difficulty drives deeper learning. The brain is forced to identify what
 This is called the \textit{contextual interference effect}.
 \end{explanation}
 
-\subsection{External vs. Internal Focus of Attention}
+\subsection{Attentional Focus During Movement}
 \label{subsec:ch25_focus}
 
 \index{attentional focus}
@@ -521,21 +551,17 @@ This is called the \textit{contextual interference effect}.
 \index{internal focus}
 \index{ideomotor theory}
 
-Where should the golfer focus attention during the swing?
+Research distinguishes between two modes of attentional focus during movement execution:
 
 \begin{definition}{Internal Focus}{def:ch25_internal_focus}
-Attention directed at the body or movement. ``Keep my head still,'' ``Rotate my hips,'' ``Lag the club.''
+Attention directed at body or movement parameters. Examples: body position, joint angles, muscle activation patterns.
 \end{definition}
 
 \begin{definition}{External Focus}{def:ch25_external_focus}
-Attention directed at the external goal or the ball. ``Swing to the target,'' ``Feel the ball flight,'' ``Smooth tempo.''
+Attention directed at external consequences or goals. Examples: target location, ball trajectory, movement outcome.
 \end{definition}
 
-Research shows that external focus produces better performance and better learning \cite{wulf2007attention}. Why?
-
-Recall ideomotor theory from Chapter \ref{ch:motor_control_brain}: actions are represented by their effects, not by motor commands. When you focus on the ball flight (external), you activate the action effect pathway directly. Your motor system automatically retrieves the learned motor program.
-
-When you focus on mechanics (internal), you're thinking about motor commands. This partially bypasses the learned action effect pathway. Your motor system must generate commands based on mechanical rules instead of retrieving learned programs. This is slower, less automatic, and more variable.
+Empirical studies show that external focus produces better performance and better learning \cite{wulf2007attention}. According to ideomotor theory, actions are represented by their effects rather than motor commands. External focus activates the action effect pathway, allowing automatic retrieval of learned motor programs. Internal focus engages explicit motor commands, which is slower and more variable for automatic movements.
 
 \cite{wulf2007attention, mcnevin2003increases}
 
@@ -569,17 +595,17 @@ Coaching golfers to develop a quiet eye often improves consistency.
 
 Anders Ericsson defined \textit{deliberate practice} as practice that is focused, effortful, and designed to improve a specific aspect of performance \cite{ericsson1993role}:
 
-\begin{principle}{Deliberate Practice in Golf}{box:ch25_deliberate_practice}
+\begin{principle}{Characteristics of Deliberate Practice}{box:ch25_deliberate_practice}
 \begin{itemize}
-\item \textbf{Goal-directed:} Practice has a specific aim. Not just ``hit balls,'' but ``improve my driver consistency'' or ``learn to fade the ball.''
+\item \textbf{Goal-directed:} Practice with specific objectives rather than unfocused repetition.
 
-\item \textbf{Focused attention:} You're attending to feedback and results. You're not on autopilot.
+\item \textbf{Focused attention:} Active attention to feedback and performance outcomes.
 
-\item \textbf{Immediate feedback:} You know the result of each swing immediately. The ball lands where you're looking.
+\item \textbf{Immediate feedback:} Rapid knowledge of results.
 
-\item \textbf{Repetition with variation:} You hit many shots, but with variation in parameters (distance, target, club).
+\item \textbf{Repetition with variation:} Multiple trials with parametric variation.
 
-\item \textbf{Outside your comfort zone:} Some shots are harder than others. You work on the harder ones.
+\item \textbf{Progressive challenge:} Tasks that exceed current performance level.
 \end{itemize}
 \end{principle}
 

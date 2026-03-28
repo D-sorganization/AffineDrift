@@ -30,7 +30,7 @@ The rigid body approximation works well for:
 \item Understanding energy flow and power sequencing
 \item Analyzing gross swing kinematics (hip turn, shoulder turn, X-factor)
 \item Inverse dynamics of the skeleton itself (bone accelerations)
-\item Teaching and coaching (the mental model is clear and intuitive)
+\item Pedagogical applications (the mental model provides clear intuitive understanding)
 \end{itemize}
 \end{principle}
 
@@ -54,6 +54,26 @@ Similarly, the torso during a full downswing rotation is not a solid block. It c
 The chest wall is deformable. It breathes. Under the compressive forces of the swing, the ribs flex, the intercostal spaces narrow, and the thoracic volume changes. The spine itself is not a rigid rod; the intervertebral discs are compressible and can shear. When the spine undergoes the extreme loading of a golf downswing, these deformations become non-negligible.
 
 \section{Wobbling Mass---The Muscle Jiggle Problem}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1.0]
+  \draw[fill=blue!30, thick] (0,-0.3) rectangle (0.5,0.3);
+  \node[midway] {\small Bone};
+  \draw[thick] (0.5,0) -- (2,0);
+  \draw[fill=red!30, thick] (2,-0.4) rectangle (2.6,0.4);
+  \node[midway, font=\tiny] {Soft};
+  \draw[thick] (2.6,-0.4) -- (3.2,-0.4);
+  \draw[thick] (2.6,0.4) -- (3.2,0.4);
+  \draw[thick] (3.2,-0.4) rectangle (3.5,0.4);
+  \node[below] at (0.25,-0.6) {$m_r$};
+  \node[below] at (1.25,-0.4) {$k$};
+  \node[below] at (2.3,-0.7) {$m_w$};
+\end{tikzpicture}
+\caption{Two-mass model: rigid core (bone) coupled to soft shell (tissue).}
+\label{fig:soft_tissue_model}
+\end{figure}
+
 \label{sec:wobbling_mass}
 
 \index{wobbling mass}
@@ -258,7 +278,7 @@ IAP is the hydrostatic pressure within the abdominal cavity, created by coordina
 \end{itemize}
 \end{definition}
 
-For a golfer during the downswing, IAP typically peaks at 80--120 mmHg. This is slightly below a heavy deadlift (where IAP can exceed 200 mmHg) but still substantial.
+During maximal exertion such as the golf downswing, IAP is reported to reach values in the range of 80--120 mmHg \cite{intra_abdominal_pressure_golf}. This is slightly below a heavy deadlift (where IAP can exceed 200 mmHg) but still substantial.
 
 \subsection{IAP as a Structural Support System}
 
@@ -284,7 +304,7 @@ F_{\mathrm{IAP}} = 13,300 \text{ Pa} \times 0.04 \text{ m}^2 = 532 \text{ N}
 \begin{example}{IAP Force Calculation for Golf Downswing}{ex:iap_force}
 Scenario: 80 kg golfer, torso mass 35 kg, during downswing peak loading.
 \begin{itemize}
-\item IAP pressure: 100 mmHg = 13,300 Pa
+\item IAP pressure: 100 mmHg = 13,300 Pa (representative mid-range value during exertion)
 \item Diaphragm area: 0.04 m$^2$
 \item Upward force on diaphragm: $F = 13,300 \times 0.04 = 532$ N
 \item Pelvic floor area: ~0.03 m$^2$

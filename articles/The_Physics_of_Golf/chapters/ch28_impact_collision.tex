@@ -122,6 +122,48 @@ m_{\text{eff}} = m_{\text{clubhead}} + \alpha m_{\text{shaft}} + \text{(arm cont
 where $\alpha$ is a coupling coefficient $\sim 0.4$--0.6. Typical: $m_{\text{eff}} \approx 220$--240g for a driver.
 \end{definition}
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1.2]
+  % Clubhead before impact
+  \draw[thick, fill=lightgray] (0.5, 1.5) rectangle (1.5, 2.0);
+  \node at (1.0, 1.75) {\small Clubhead};
+
+  % Club velocity vector
+  \draw[thick, ->, color=blue] (1.5, 1.75) -- (3.0, 1.75);
+  \node[color=blue] at (2.25, 2.0) {$v_c$};
+
+  % Golf ball before impact
+  \draw[thick, fill=white, draw=black] (3.5, 1.5) circle (0.25);
+  \node at (3.5, 0.9) {Ball};
+
+  % Impact zone
+  \draw[dashed] (3.4, 1.0) -- (3.6, 1.0);
+  \draw[dashed] (3.4, 2.0) -- (3.6, 2.0);
+  \node[fill=white] at (4.5, 1.5) {\small Contact Phase};
+
+  % After impact
+  \node[fill=white] at (0.5, 0.3) {\small After Impact:};
+
+  % Clubhead after
+  \draw[thick, fill=lightgray] (1.0, -0.5) rectangle (1.8, 0.0);
+  \node at (1.4, -0.25) {\small $v_c'$};
+
+  % Ball velocity vector
+  \draw[thick, ->, color=red] (3.5, 1.2) -- (5.5, 0.2);
+  \node[color=red] at (5.0, 0.7) {$v_b'$};
+
+  % Normal force annotation
+  \draw[thick, <->, color=green] (3.2, 1.2) -- (3.2, 0.2);
+  \node[color=green] at (2.4, 0.7) {$N$};
+
+  % Coefficient of restitution equation
+  \node[fill=white, draw=black] at (2.5, -1.2) {$e = \frac{v_c' - v_b'}{v_c}$};
+\end{tikzpicture}
+\caption{Club-ball impact collision showing clubhead velocity $v_c$ before impact, normal force $N$, and resulting velocities $v_c'$ and $v_b'$ after impact. The coefficient of restitution $e$ relates the relative velocities.}
+\label{fig:impact_collision}
+\end{figure}
+
 \section{The Great Myth: ``Impact Is Isolated''}
 
 Now we must address what might be the most damaging misconception in golf physics:
@@ -200,9 +242,9 @@ If impact were truly isolated, grip force would be irrelevant. But it is not.
 
 \index{grip force!at impact}
 
-Experimental evidence from force plate studies and launch monitor correlations shows that grip force at impact (measured 5--10ms before contact) correlates with final ball speed even when clubhead speed is held constant. The effect is small but measurable: a 10\% increase in grip force can increase ball speed by 0.3--0.5 mph.
+The mechanism by which grip force affects ball speed is that grip force (axial tension) changes the effective mass $m_{\text{eff}}$ participating in the collision. A tighter grip increases shaft pre-tension, which couples more of the arm mass into the collision. The effective mass rises slightly, and by equation~\eqref{eq:ball_velocity_after}, if $m_{\text{eff}}$ increases, $v_b'$ increases (slightly).
 
-How is this possible if the collision is isolated? The mechanism is that grip force (axial tension) changes the effective mass $m_{\text{eff}}$ participating in the collision. A tighter grip increases shaft pre-tension, which couples more of the arm mass into the collision. The effective mass rises slightly, and by equation~\eqref{eq:ball_velocity_after}, if $m_{\text{eff}}$ increases, $v_b'$ increases (slightly).
+\cite{Jorgensen1994} provides experimental evidence that variations in grip force produce measurable changes in impact dynamics through shaft tension modulation. The quantitative relationship between grip force changes and ball speed variations is complex and depends on grip geometry, shaft properties, and the speed of grip force modulation during the downswing.
 
 \subsection{Argument 4: Quantitative Impulse Analysis}
 
@@ -608,25 +650,27 @@ The consensus result of this research is clear: impact is a complex 3D collision
 
 \section{Practical Implications}
 
-\subsection{Why ``Trusting the Swing'' Matters}
+\subsection{Impact as a Drift-Dominated System}
 
-The ZTCF analysis shows that impact is a drift-dominated moment. You cannot consciously control the collision. The best you can do is:
+The ZTCF analysis shows that impact is a drift-dominated moment where active neuromuscular control has ceased. The impact outcome is determined by the system state at the beginning of the impact phase, which is itself determined by control actions earlier in the swing.
+
+The relationship between impact variables and earlier control actions can be understood as follows:
 
 \begin{enumerate}
-\item \textbf{Set up correctly:} Ensure your aim, stance, and grip are optimal before the swing begins.
+\item \textbf{Initial conditions:} The state of the body, arms, and club at the beginning of the downswing acceleration phase determines the initial energy and angular momentum available.
 
-\item \textbf{Develop repeatable mechanics:} Practice until your swing produces consistent clubhead speed, path, and face angle at impact. This is the domain of swing mechanics, not impact physics.
+\item \textbf{Swing mechanics variables:} Clubhead speed, path, and face angle at impact are determined by the sequence and magnitude of joint accelerations and torques applied during the acceleration phase (roughly the first 70\% of the downswing).
 
-\item \textbf{Trust the swing:} During the downswing and impact, conscious thought and muscular adjustments are counterproductive. They introduce randomness into a system that should be consistent.
+\item \textbf{Drift phase dynamics:} The final 50--100 ms before impact is controlled by inertial dynamics, ground reaction forces, and the passive elastic properties of the musculoskeletal system, not by active muscle control.
 
-\item \textbf{Optimize impact conditions indirectly:} If you want more backspin, increase dynamic loft (tee lower, lean shaft forward). If you want less curve, reduce club path deviation. These are swing mechanics inputs, not impact controls.
+\item \textbf{Impact outcome:} The relationship between ball speed, launch angle, and spin rate to impact variables is governed by rigid body collision mechanics, as detailed in the preceding sections.
 \end{enumerate}
 
-\subsection{Why Off-Center Hits Are Forgiven}
+\subsection{Effective Mass and Sweet Spot Width}
 
-Modern clubs have large sweet spots. This is because of the low stiffness of drivers (large clubheads, thin faces). Even a 0.5-inch off-center hit results in only 2--3\% ball speed loss due to the elastic deformation of the face being only slightly reduced and the effective mass being slightly reduced.
+Modern driver clubs exhibit large ``sweet spots'' (regions of impact where ball speed variation is small). This is due to the mechanical properties of driver construction: large clubheads with thin, flexible faces distribute force over a larger contact area. Off-center impacts result in reduced smash factor (lower ball speed) compared to center-face impacts, but the loss is less severe than in equipment with stiffer clubface structures.
 
-Compare this to a bat in baseball, where an off-center hit causes significant energy loss and vibration. The golf club is designed to be forgiving.
+For a typical driver, an impact 0.5 inches off-center from the sweet spot results in approximately 2--3\% reduction in ball speed. This degradation is smaller than in higher-loft clubs (like irons) because the larger clubhead moment of inertia about the center of percussion reduces the variation in effective mass across different impact locations.
 
 \section{Exercises}
 

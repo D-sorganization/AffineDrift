@@ -199,12 +199,13 @@ This is why constraint forces are so useful in the golf swing: they can transfer
 \label{sec:energy_partition_downswing}
 
 \begin{example}{Energy Partition at Five Downswing Phases}{ex:energy_partition_five_phases}
-Track the kinetic energy of each segment during the downswing. Assume a triple pendulum (torso, arm, club) with the following initial energies:
+\label{ex:five_phases_energy}
+This example illustrates energy redistribution during the downswing using a triple pendulum (torso, arm, club) model. The following are \textbf{illustrative estimates} from a simplified mechanical model, computed from the double pendulum parameters in Chapter~\ref{ch:03_double_pendulum}. They show the typical pattern of energy flow from proximal to distal segments. Real swings show quantitative variation depending on technique, anthropometry, and swing speed.
 
 \begin{enumerate}
 \item \textbf{Phase 1: Top of backswing (t = 0)}
 
-Configuration: fully coiled, little rotation.
+Configuration: fully coiled, little rotation. Model parameters: $I_1 = 2.0$ kg$\cdot$m$^2$, $I_2 = 0.5$ kg$\cdot$m$^2$, $I_3 = 0.1$ kg$\cdot$m$^2$.
 \begin{align}
 T_{\text{torso}} &= \frac{1}{2} I_1 \dot{q}_1^2 \approx \frac{1}{2} \times 2.0 \times 0^2 = 0 \text{ J}\\
 T_{\text{arm}} &= \frac{1}{2} I_2 \dot{q}_2^2 \approx \frac{1}{2} \times 0.5 \times 0^2 = 0 \text{ J}\\
@@ -212,83 +213,68 @@ T_{\text{club}} &= \frac{1}{2} I_3 \dot{q}_3^2 \approx \frac{1}{2} \times 0.1 \t
 T_{\text{total}} &= 0 \text{ J}
 \end{align}
 
-Potential energy is maximum (arms elevated), approximately $V \approx 20$ J.
+Potential energy is maximum (arms elevated), approximately $V \approx V_0$ (reference value).
 
 \textbf{Energy partition: 0\% kinetic, 100\% potential (gravitational + elastic).}
 
 \item \textbf{Phase 2: Early downswing (t = 0.1 s, 100 ms)}
 
-Hip acceleration has begun. Torso is rotating fast, arms are beginning to lag.
+Hip acceleration has begun. Torso is rotating, arms are lagging.
 \begin{align}
-\dot{q}_1 &= 8 \text{ rad/s} \quad T_1 = \frac{1}{2} \times 2.0 \times 64 = 64 \text{ J}\\
-\dot{q}_2 &= 3 \text{ rad/s} \quad T_2 = \frac{1}{2} \times 0.5 \times 9 = 2.25 \text{ J}\\
-\dot{q}_3 &= 2 \text{ rad/s} \quad T_3 = \frac{1}{2} \times 0.1 \times 4 = 0.2 \text{ J}\\
-T_{\text{total}} &= 66.45 \text{ J}
+\dot{q}_1 &= \omega_1^{(2)} \text{ rad/s} \quad T_1 = \frac{1}{2} I_1 (\omega_1^{(2)})^2\\
+\dot{q}_2 &= \omega_2^{(2)} \text{ rad/s} \quad T_2 = \frac{1}{2} I_2 (\omega_2^{(2)})^2\\
+\dot{q}_3 &= \omega_3^{(2)} \text{ rad/s} \quad T_3 = \frac{1}{2} I_3 (\omega_3^{(2)})^2\\
+T_{\text{total}} &= T_1 + T_2 + T_3
 \end{align}
 
-$V \approx 15$ J (arms have fallen).
-
-\textbf{Energy partition: 66.45 J kinetic (81\%), 15 J potential (19\%). Most energy is in torso rotation.}
+\textbf{Energy partition:} Most energy is in torso rotation. [CITE: Empirical values from motion capture studies; see Nesbit 2005, MacKenzie 2009]
 
 \item \textbf{Phase 3: Mid-downswing (t = 0.25 s, 250 ms)}
 
-Torso approaching maximum speed, arm beginning to accelerate.
+Torso approaching peak angular velocity, arm beginning to accelerate.
 \begin{align}
-\dot{q}_1 &= 12 \text{ rad/s} \quad T_1 = \frac{1}{2} \times 2.0 \times 144 = 144 \text{ J}\\
-\dot{q}_2 &= 12 \text{ rad/s} \quad T_2 = \frac{1}{2} \times 0.5 \times 144 = 36 \text{ J}\\
-\dot{q}_3 &= 10 \text{ rad/s} \quad T_3 = \frac{1}{2} \times 0.1 \times 100 = 5 \text{ J}\\
-T_{\text{total}} &= 185 \text{ J}
+\dot{q}_1 &= \omega_1^{(3)} \text{ rad/s} \quad T_1 = \frac{1}{2} I_1 (\omega_1^{(3)})^2\\
+\dot{q}_2 &= \omega_2^{(3)} \text{ rad/s} \quad T_2 = \frac{1}{2} I_2 (\omega_2^{(3)})^2\\
+\dot{q}_3 &= \omega_3^{(3)} \text{ rad/s} \quad T_3 = \frac{1}{2} I_3 (\omega_3^{(3)})^2\\
+T_{\text{total}} &= T_1 + T_2 + T_3
 \end{align}
 
-$V \approx 5$ J (arms fully lowered).
+$V \approx V_{\min}$ (arms nearly lowered).
 
-\textbf{Energy partition: 185 J kinetic (97\%), 5 J potential (3\%). Most energy is still in torso, but arm is accelerating.}
+\textbf{Energy partition:} Most energy still in torso and arm.
 
 \item \textbf{Phase 4: Late downswing (t = 0.35 s, 350 ms)}
 
-Torso beginning to decelerate (it's rotating maximally), arm and club accelerating rapidly.
+Torso beginning to decelerate, arm and club accelerating rapidly via constraint forces.
 \begin{align}
-\dot{q}_1 &= 13 \text{ rad/s} (peaking) \quad T_1 = \frac{1}{2} \times 2.0 \times 169 = 169 \text{ J}\\
-\dot{q}_2 &= 18 \text{ rad/s} \quad T_2 = \frac{1}{2} \times 0.5 \times 324 = 81 \text{ J}\\
-\dot{q}_3 &= 25 \text{ rad/s} \quad T_3 = \frac{1}{2} \times 0.1 \times 625 = 31.25 \text{ J}\\
-T_{\text{total}} &= 281.25 \text{ J}
+\dot{q}_1 &= \omega_1^{(4)} \text{ rad/s} (peaking) \quad T_1 = \frac{1}{2} I_1 (\omega_1^{(4)})^2\\
+\dot{q}_2 &= \omega_2^{(4)} \text{ rad/s} \quad T_2 = \frac{1}{2} I_2 (\omega_2^{(4)})^2\\
+\dot{q}_3 &= \omega_3^{(4)} \text{ rad/s} \quad T_3 = \frac{1}{2} I_3 (\omega_3^{(4)})^2\\
+T_{\text{total}} &= T_1 + T_2 + T_3
 \end{align}
 
-$V \approx 0$ J (minimal potential energy remaining).
-
-\textbf{Energy partition: Club now carries 31.25 J out of 281.25 J total, or 11\%. Energy is being transferred to the club.}
+\textbf{Energy partition:} Club begins receiving significant fraction of total energy via constraint forces.
 
 \item \textbf{Phase 5: Impact (t = 0.42 s, 420 ms)}
 
-Torso decelerating (energy exhausted), arm decelerating, club at maximum speed.
+Torso and arm decelerating, club at maximum speed.
 \begin{align}
-\dot{q}_1 &= 8 \text{ rad/s} (slowing) \quad T_1 = \frac{1}{2} \times 2.0 \times 64 = 64 \text{ J}\\
-\dot{q}_2 &= 15 \text{ rad/s} (slowing) \quad T_2 = \frac{1}{2} \times 0.5 \times 225 = 56.25 \text{ J}\\
-\dot{q}_3 &= 50 \text{ rad/s} (maximum) \quad T_3 = \frac{1}{2} \times 0.1 \times 2500 = 125 \text{ J}\\
-T_{\text{total}} &= 245.25 \text{ J}
+\dot{q}_1 &= \omega_1^{(5)} \text{ rad/s} (slowing) \quad T_1 = \frac{1}{2} I_1 (\omega_1^{(5)})^2\\
+\dot{q}_2 &= \omega_2^{(5)} \text{ rad/s} (slowing) \quad T_2 = \frac{1}{2} I_2 (\omega_2^{(5)})^2\\
+\dot{q}_3 &= \omega_3^{(5)} \text{ rad/s} (maximum) \quad T_3 = \frac{1}{2} I_3 (\omega_3^{(5)})^2\\
+T_{\text{total}} &= T_1 + T_2 + T_3
 \end{align}
 
-Total energy has decreased to 245.25 J (from peak of 281.25 J) due to air resistance and internal losses.
+Total energy has decreased from Phase 4 due to air resistance and internal losses.
 
-\textbf{Energy partition: Club carries 125 J out of 245.25 J, or 51\%. At impact, more than half the total energy is in the club.}
+\textbf{Energy partition:} Club carries the largest fraction of total kinetic energy.
 \end{enumerate}
 
-\textbf{Summary Table:}
+\textbf{General Pattern:}
 
-\begin{center}
-\begin{tabular}{|c|c|c|c|c|c|c|c|}
-\hline
-\textbf{Phase} & \textbf{Time} & $T_1$ & $T_2$ & $T_3$ & $T_{\text{total}}$ & \textbf{Club\%} & \textbf{Notes} \\
-\hline
-1. Top & 0 ms & 0 & 0 & 0 & 0 J & 0\% & All potential (coiled) \\
-2. Early & 100 ms & 64 & 2.25 & 0.2 & 66.45 J & 0.3\% & Torso-driven \\
-3. Mid & 250 ms & 144 & 36 & 5 & 185 J & 2.7\% & Arm accelerating \\
-4. Late & 350 ms & 169 & 81 & 31.25 & 281.25 J & 11.1\% & Club accelerating \\
-5. Impact & 420 ms & 64 & 56.25 & 125 & 245.25 J & 51\% & Club carries most energy \\
-\end{tabular}
-\end{center}
+The fraction of kinetic energy in the club increases during the downswing. This increase is entirely due to constraint forces redirecting energy from proximal to distal segments. The proximal segments (torso, hips) build up energy via muscular effort early in the downswing. As these segments decelerate, constraint forces (through the moment arm and rigid-body couplings) transfer energy to distal segments. Because the club has lower inertia, this energy transfer results in higher angular velocity: $\omega = \sqrt{2E/I}$.
 
-\noindent\footnotesize The energy values in this table are computed from the double pendulum model with parameters from Chapter~\ref{ch:03_double_pendulum}. They are order-of-magnitude estimates appropriate for a typical male amateur golfer (90~kg, driver swing). Individual swings will vary by $\pm$30\% depending on technique, anthropometry, and swing speed. Measured values from instrumented club and force plate studies \citep{Nesbit2005} are broadly consistent with these estimates.
+Specific numerical values vary by $\pm 30\%$ depending on golfer anthropometry, swing speed, and technique. Measured data from force plate and motion capture studies \citep{Nesbit2005, MacKenzie2009} confirm the qualitative pattern of proximal-to-distal energy transfer.
 \normalsize
 
 \textbf{Interpretation:}
@@ -297,6 +283,56 @@ The fraction of energy in the club grows from 0\% at the top to 51\% at impact. 
 
 This explains why the club reaches such high speeds: it's not that muscles are pushing it hard. It's that the proximal segments have built up energy, and constraint forces have concentrated that energy into the distal segment (which has minimal inertia, so small energy means high velocity).
 \end{example}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1.0]
+  % Draw a Sankey-style energy flow diagram
+  % Proximal sources on the left, distal sinks on the right
+
+  % Rectangles representing energy reservoirs at each phase
+  \draw[fill=blue!20, draw=blue, thick] (0, 3) rectangle (1, 3.5) node[midway] {Muscles};
+  \draw[fill=red!20, draw=red, thick] (0, 1.5) rectangle (1, 2) node[midway] {Gravity};
+
+  % Mid-swing energy
+  \draw[fill=orange!30, draw=orange, thick] (3, 2) rectangle (4.5, 4.5) node[midway] {\large Torso};
+
+  % Late downswing: energy splitting
+  \draw[fill=yellow!30, draw=yellow, thick] (6, 2.5) rectangle (7, 3.5) node[midway] {Arm};
+  \draw[fill=green!30, draw=green, thick] (6, 0.5) rectangle (7, 1.5) node[midway] {Club};
+
+  % Impact: mostly in club
+  \draw[fill=green!50, draw=darkgreen, thick] (9, 0.5) rectangle (10.5, 2.5) node[midway] {\large Club\\at impact};
+
+  % Flow arrows
+  % Muscle to torso
+  \draw[->, thick, blue] (1, 3.25) -- (3, 3.5);
+  % Gravity to torso
+  \draw[->, thick, red] (1, 1.75) -- (3, 2.5);
+
+  % Torso to arm and club (constraint transfer)
+  \draw[->, thick, orange] (4.5, 3.5) -- (6, 3);
+  \draw[->, thick, orange] (4.5, 2.5) -- (6, 1);
+
+  % Arm to club (late release)
+  \draw[->, thick, yellow] (7, 3) -- (9, 1.8);
+  % Club self-acceleration
+  \draw[->, thick, green] (7, 1) -- (9, 1.5);
+
+  % Phase labels
+  \node[above] at (0.5, 4.7) {\small Early downswing};
+  \node[above] at (3.75, 5) {\small Mid-downswing};
+  \node[above] at (6.5, 4.7) {\small Late downswing};
+  \node[above] at (9.75, 3) {\small Impact};
+
+  % Energy loss
+  \draw[-, dashed, gray] (7, -0.5) -- (10.5, -0.5);
+  \node[below] at (8.75, -0.7) {\footnotesize Losses (air resistance, deformation)};
+
+\end{tikzpicture}
+\caption{Energy flow from sources (muscles, gravity) through body segments to the club. Constraint forces redirect energy from proximal (torso) to distal (club) without adding to total system energy. The club receives increasing energy share as distal segments have lower inertia.}
+\label{fig:energy-sankey}
+\end{figure}
 
 \begin{laymansbox}{Energy Flow Visualization}{inplain:energy_flow_visualization}
 Imagine energy as a fluid flowing through the kinetic chain:

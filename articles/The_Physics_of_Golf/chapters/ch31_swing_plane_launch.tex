@@ -11,6 +11,44 @@ A golfer who swings at 100 mph but launches the ball at 8$^{\circ}$ with 1500 RP
 
 The concept of the ``swing plane'' has been central to golf instruction since Ben Hogan's iconic description of the golfer swinging along a pane of glass tilted at an angle from the ball to the golfer's shoulders. While Hogan's metaphor captures useful intuition, the modern definition requires precision: \index{swing plane!mathematical definition}
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1.0, view={120}{30}]
+  % Ground plane
+  \draw[thick] (-2, 0, 0) -- (3, 0, 0);
+  \draw[thick] (-2, 0, 0) -- (-2, 0, 3);
+  \draw[gray, dashed] (3, 0, 0) -- (3, 0, 3);
+  \draw[gray, dashed] (-2, 0, 3) -- (3, 0, 3);
+  \node at (-2.5, 0, 0) {Target line};
+
+  % Swing plane (tilted)
+  \draw[thick, fill=blue!20, opacity=0.3] (0, 0, 0) -- (3, 0, 0) -- (3, 2.5, 2.5) -- (0, 2.5, 2.5);
+  \node at (1.5, 1.2, 1.5) {Swing plane};
+
+  % Club path at impact
+  \draw[thick, ->, color=red] (1.5, 1.2, 1.5) -- (2.5, 1.8, 1.5);
+  \node[color=red] at (2.6, 1.8, 0.8) {Club path};
+
+  % Ball
+  \draw[thick, fill=white, draw=black] (0.2, 0.1, 0) circle (0.15);
+  \node at (0.2, -0.3, 0) {Ball};
+
+  % Attack angle annotation
+  \draw[thick, ->, color=green] (1.5, 0.5, 0.5) -- (1.5, 1.2, 1.2);
+  \node[color=green] at (0.8, 0.7, 0.8) {Attack angle};
+
+  % Vertical axis
+  \draw[thick, ->, color=orange] (0, 0, 0) -- (0, 0, 2.5);
+  \node[color=orange] at (-0.3, 0, 2.7) {Vertical};
+
+  % Clubhead
+  \draw[thick, fill=lightgray] (1.2, 1.2, 1.2) rectangle (1.6, 1.5, 1.5);
+  \node at (1.4, 1.8, 1.4) {Club};
+\end{tikzpicture}
+\caption{Swing plane geometry showing the tilted plane containing the club path at impact, the attack angle measured from horizontal, and the relationship to the target line and vertical axis. The clubhead moves along the swing plane toward the ball.}
+\label{fig:swing_plane_geometry}
+\end{figure}
+
 \begin{definition}{The Swing Plane at Impact}{def:swing_plane}
 The swing plane at impact is the plane containing the instantaneous club path direction $\vec{p}_{\text{club}}$ (the velocity direction of the club center-of-mass at impact) and the vertical axis at the ball's location. This plane is tilted from horizontal by the \textit{attack angle} and rotated azimuthally by the \textit{path direction}.
 \end{definition}
@@ -168,30 +206,24 @@ This narrow window is why face angle control is so critical. A 5$^{\circ}$ error
 \index{drift!face angle during deceleration}
 \index{control window!closure}
 
-One of the most important concepts from the drift-control framework (Chapter~\ref{ch:05_affine_structure}) is the distinction between quantities the golfer can actively control and those that are determined by drift.
+One of the most important concepts from the drift-control framework (Chapter~\ref{ch:05_affine_structure}) is the distinction between quantities determined by active control and those determined by drift dynamics.
 
-During the final 50 milliseconds before impact, the golfer's muscles are no longer providing active acceleration to the club. The face angle during this interval is determined almost entirely by \textbf{drift}—the ongoing rotation of the club and forearms under the influence of inertia, ground reaction forces, and centripetal acceleration.
+During the final 50 milliseconds before impact, active neuromuscular control has ceased. The face angle during this interval is determined by \textbf{drift}—the ongoing rotation of the club and forearms under the influence of angular momentum, inertial properties, ground reaction forces, and kinematic constraints.
 
 \begin{principle}{Control Window Closure for Face Angle}{prin:face_control_window}
-The golfer's ability to consciously control face angle closes approximately 100--150 milliseconds before impact. After this point, the face angle trajectory toward impact is determined by:
+The transition from active control to drift-dominated dynamics occurs approximately 100--150 milliseconds before impact. After this point, the face angle trajectory toward impact is determined by:
 
 \begin{enumerate}
-\item The angular momentum imparted during the acceleration phase
-\item The inertial properties of the club and arms
-\item The ground reaction forces and their moment arms
-\item The geometry of the kinetic chain
+\item The angular momentum acquired during the acceleration phase
+\item The inertial properties of the club, arms, and trunk
+\item The ground reaction forces and their moment arms about the body segments
+\item The geometric constraints of the kinetic chain
 \end{enumerate}
 
-Practically, this means that a golfer seeking to improve face angle consistency must focus on:
-
-\begin{enumerate}
-\item \textbf{Setup conditions} that determine the initial state for the drift phase (e.g., grip pressure, hand position, arm angle at the top of the swing)
-\item \textbf{The first 70\% of the downswing}, where active neuromuscular control is still operative
-\item \textbf{Consistency}, not consciously ``steering'' or ``adjusting'' in the final moment
-\end{enumerate}
+The face angle at impact is therefore a deterministic consequence of these system properties and the state at the transition to drift phase. The timing and sequence of joint accelerations during the first 70\% of the downswing determines both the angular momentum and the kinematic configuration at drift onset.
 \end{principle}
 
-This concept has profound implications for swing instruction and training. ``Feel'' and conscious correction in the final stages of the swing are largely ineffective for controlling face angle; instead, the golfer must train the setup and early downswing to ensure that drift carries the club to the desired face angle at impact.
+This relationship has important implications for understanding the determinants of impact conditions. The face angle at impact reflects the cumulative effect of control inputs applied during the acceleration phase; late-swing corrections have minimal effect on face angle due to the high moment of inertia of the arm-club system and the short remaining time before impact.
 
 \section{The D-Plane and Modern Ball Flight Laws}
 \label{sec:d_plane}
@@ -326,12 +358,9 @@ For a golfer with a 100 mph clubhead speed and a smash factor of 1.48, the ball 
 
 The carry distance of a golf ball is maximized at a specific launch angle that depends on ball speed and spin rate. Higher ball speeds tolerate (and require) higher launch angles because the ball spends longer in the air and has more opportunity to rise.
 
-\begin{equation}
-\theta_{\text{launch,opt}} \approx \frac{23 - 0.15 \cdot \Omega_{\text{spin,krpm}}}{1 + 0.0067 \cdot v_{\text{club}}}
-\label{eq:optimal_angle}
-\end{equation}
+The optimal launch angle is determined by the balance between gravitational descent and Magnus lift from spin. Empirical data from launch monitor measurements show that optimal launch angle increases with lower spin rates and decreases with higher ball speeds. \citep{Broadie2014} The relationship is non-linear and varies with atmospheric conditions and equipment characteristics.
 
-where $\Omega_{\text{spin,krpm}}$ is spin rate in thousands of RPM and $v_{\text{club}}$ is clubhead speed in mph.
+For typical driver conditions, the optimal launch angle can be approximated through regression analysis on measured data, with values typically ranging from 10--16 degrees depending on the golfer's swing speed and spin rate characteristics.
 
 For typical conditions:
 
@@ -427,14 +456,14 @@ The carry distance of a golf shot depends on multiple variables: ball speed, lau
 
 \index{carry distance!sensitivity to parameters}
 
-By taking partial derivatives of the carry distance with respect to each launch parameter, we can quantify the relative importance of each:
+By taking partial derivatives of the carry distance with respect to each launch parameter, we can quantify the relative importance of each. The sensitivity of carry distance to ball speed has been empirically determined through launch monitor data analysis \citep{Broadie2014}:
 
 \begin{equation}
-\frac{\partial d_{\text{carry}}}{\partial v_{\text{ball}}} \approx 2.5 \text{ yards/mph}
+\frac{\partial d_{\text{carry}}}{\partial v_{\text{ball}}} \approx 2.0--3.0 \text{ yards/mph}
 \label{eq:sensitivity_speed}
 \end{equation}
 
-This means that a 1 mph increase in ball speed produces approximately 2.5 additional yards of carry distance.
+The exact sensitivity value depends on launch angle, spin rate, atmospheric conditions, and slope of the landing area. Typical values from measured data on level ground suggest that a 1 mph increase in ball speed produces approximately 2--3 additional yards of carry distance, with the coefficient varying by golfer and condition.
 
 \begin{equation}
 \frac{\partial d_{\text{carry}}}{\partial \theta_{\text{launch}}} \approx 4--6 \text{ yards/degree (near optimum)}
@@ -526,47 +555,45 @@ A golfer who tries to ``release the club'' or ``rotate the hips faster'' in the 
 This explains why great golfers have such efficient swings: they do the hard work early (acceleration phase), and then they let drift carry them to a predictable outcome (impact).
 \end{example}
 
-\subsection{What the Golfer Can Control: Setup for Drift}
+\subsection{Determinants of the Drift Phase: Setup and Acceleration Phase}
 
-Given that launch conditions are determined by drift, the golfer's control is exercised through:
+Launch conditions at impact are determined by the state of the system at the beginning of the drift phase and the equations governing drift dynamics. The initial state at the beginning of the downswing (top of swing) is itself determined by the setup phase and the preceding backswing. Key variables affecting the subsequent drift trajectory include:
 
 \begin{enumerate}
-\item \textbf{Grip:} Grip pressure, grip size, and grip position on the shaft all affect the inertial properties of the club and the damping of oscillations during the downswing.
+\item \textbf{Grip force and hand position:} These determine the mechanical coupling at the hand-club interface and the effective boundary condition for shaft dynamics.
 
-\item \textbf{Posture and alignment:} These establish the planes, paths, and rotation axes available during the acceleration phase.
+\item \textbf{Posture and body segment angles:} These establish the kinematic structure and the moment arms through which ground reaction forces and muscular forces can be applied.
 
-\item \textbf{Club position at the top:} The location and orientation of the club at the start of the downswing determine the trajectory of the drift phase. A club laid off at the top will drift toward a different impact position than one positioned across the line.
+\item \textbf{Club orientation at top of swing:} The initial position and orientation of the club relative to the body segments determines the initial angular momentum vector and the configuration at the onset of the drift phase.
 
-\item \textbf{Sequence and timing of segment acceleration:} The order in which the legs, hips, torso, and arms accelerate determines the distribution of energy and the resulting club trajectory.
+\item \textbf{Acceleration phase mechanics:} The sequence, timing, and magnitude of joint torques applied during the acceleration phase determine the angular momentum distribution among body segments at the transition to drift phase. This determines the subsequent free-motion trajectory under gravity and kinematic constraints.
 
 \end{enumerate}
 
-By controlling these setup variables, the golfer controls the drift trajectory and thus the launch conditions.
+The launch conditions observed at impact are the inevitable result of these control variables operating through the dynamics of the system.
 
-\section{Conclusion: Integration with Equipment and Instruction}
+\section{Integration of Impact Conditions with Equipment and Swing Dynamics}
 
 \index{swing plane!summary}
 \index{clubface control!summary}
 \index{launch optimization!summary}
 
-The swing plane defines the spatial envelope within which the club moves. The clubface orientation at impact, determined largely by forearm rotation during the acceleration phase and then fixed by drift, directly governs launch direction and spin axis. The launch conditions—ball speed, launch angle, and spin rate—determine carry distance and accuracy.
+The swing plane defines the spatial envelope within which the club moves. The clubface orientation at impact is determined by the cumulative rotations of body segments during the acceleration phase and is then constrained by the drift dynamics. The launch conditions—ball speed, launch angle, and spin rate—are determined by the impact conditions (clubhead speed, face angle, attack angle) combined with the collision mechanics.
 
-The sensitivity analysis shows that ball speed and face angle matter most. The \ztcf{} framework clarifies that launch conditions are the outcome of drift determined by setup and acceleration, not conscious late-swing control.
+Sensitivity analysis demonstrates that ball speed and face angle have the strongest effects on carry distance and direction accuracy. The \ztcf{} framework clarifies that launch conditions are outcomes of the system dynamics: they result from the initial setup configuration, the control inputs applied during the acceleration phase, and the subsequent drift evolution to impact.
 
-For the coach and golfer, this suggests a hierarchy of priorities:
+The quantitative relationships established in this chapter provide a framework for understanding which impact variables are most consequential:
 
 \begin{enumerate}
-\item \textbf{First:} Establish consistent setup and initial conditions that produce repeatable drift to the desired impact position.
+\item Ball speed sensitivity (approximately 2--3 yards per mph) indicates that smash factor efficiency is a primary determinant of carry distance.
 
-\item \textbf{Second:} Optimize ball speed by improving the efficiency of energy transfer (Chapter~\ref{ch:impact_collision_collision}) and by matching swing speed to equipment (Chapter~\ref{ch:impact_collision_collision}).
+\item Face angle sensitivity (approximately 60--70 yards per degree at 250 yards carry) indicates that face angle consistency is critical for directional accuracy.
 
-\item \textbf{Third:} Optimize launch angle and spin rate by selecting appropriate loft and swing mechanics for the golfer's speed profile.
-
-\item \textbf{Fourth:} Fine-tune face angle control by improving forearm rotation mechanics and grip consistency.
+\item Spin rate within the optimal range (approximately 2200--2600 RPM for typical driver conditions) has secondary effects on carry distance when launch angle is also optimized.
 
 \end{enumerate}
 
-Modern swing analysis technology (radar-based launch monitors, high-speed video) makes it possible to measure all of these quantities precisely. The next generation of instruction will increasingly be data-driven, with objective feedback on launch conditions guiding the selection of mechanical priorities.
+Modern instrumentation (radar-based launch monitors, high-speed video) enables precise measurement of launch conditions and impact parameters. This quantitative data provides feedback on the outcomes of the swing dynamics and can be used to evaluate hypotheses about the relationship between mechanics and impact conditions.
 
 \begin{exercises}{Problems and Thought Experiments}{ex:launch}
 

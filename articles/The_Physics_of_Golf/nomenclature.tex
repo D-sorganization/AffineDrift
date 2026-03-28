@@ -45,13 +45,14 @@ surrounding paragraph.
 
 \section*{Affine Control Decomposition}
 \begin{description}
-    \item[$f(\bm{x})$] Drift vector field: what the system does with zero applied torque.
-    \item[$G(\bm{x})$] Input (control) matrix field.
-    \item[$G(\bm{x})\bm{u}$] Control vector field: the effect of muscular effort.
-    \item[$\dot{\bm{x}} = f(\bm{x}) + G(\bm{x})\bm{u}$] The control-affine system equation.
-    \item[$\bm{x}^{\mathrm{ZTCF}}(t)$] Zero-Torque Counterfactual trajectory ($\bm{u} = \bm{0}$).
-    \item[$\bm{x}^{\mathrm{ZVCF}}(t)$] Zero-Velocity Counterfactual state ($\dot{\bm{q}} = \bm{0}$).
-    \item[$\mathrm{DCR}(t)$] Drift-to-Control Ratio: $\norm{f(\bm{x}(t))}/\norm{G(\bm{x}(t))\bm{u}(t)}$.
+    \item[$\state$] The full system state, equivalent to $\bm{x}$ (used interchangeably for readability).
+    \item[$f(\state)$] Drift vector field: the passive evolution with zero applied control ($\bm{u} = \bm{0}$).
+    \item[$G(\state)$] Input (control) matrix field, mapping control inputs to state derivatives.
+    \item[$G(\state)\control$] Control vector field: the effect of muscular control effort.
+    \item[$\dot{\state} = f(\state) + G(\state)\control$] The control-affine system equation.
+    \item[$\state^{\mathrm{ZTCF}}(t)$] Zero-Torque Counterfactual trajectory (evolution under drift only, $\control = \bm{0}$).
+    \item[$\state^{\mathrm{ZVCF}}(t)$] Zero-Velocity Counterfactual state (system state if $\dot{\bm{q}} = \bm{0}$).
+    \item[$\mathrm{DCR}(t)$] Drift-to-Control Ratio: $\norm{f(\state(t))}/\norm{G(\state(t))\control(t)}$.
 \end{description}
 
 \section*{Constraint Mechanics}

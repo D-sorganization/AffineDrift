@@ -32,15 +32,15 @@ Most golfers have never asked these questions. Coaches rarely answer them. Yet t
 
 \subsection*{The Kinematic Story}
 
-Much of modern golf instruction—especially on video—focuses on \textbf{kinematics}: the description of motion. ``At this point in the swing, the hips have rotated 45 degrees and the shoulders 90 degrees. The club is on-plane.''
+Much of modern golf instruction—especially on video—focuses on \textbf{kinematics}: the description of motion without reference to forces. The kinematic perspective describes the motion: ``At this point in the swing, the hips have rotated through angle $\theta_{\text{hip}}$ and the shoulders through angle $\theta_{\text{shoulder}}$.''
 
-This is useful for pattern recognition. Tour professionals do exhibit consistent kinematic patterns. But kinematics is \emph{descriptive}, not \emph{causal}. Knowing that Rory McIlroy's hips rotate 45 degrees at lag doesn't tell you why your hips should rotate 45 degrees, or what happens if they rotate 40 degrees, or 50 degrees. And it certainly doesn't explain what your muscles are actually doing to create that rotation.
+This is useful for pattern recognition and comparison. Kinematic analysis reveals consistent patterns in high-performing swings. But kinematics is \emph{descriptive}, not \emph{causal}. Observing that certain hip and shoulder angles occur at specific phases does not explain why those angles produce the desired impact conditions, or what happens when angles differ from the typical pattern. Crucially, kinematic description does not directly reveal the underlying muscular forces and torques that generate the observed motion.
 
 \subsection*{The Strength and Flexibility Story}
 
-Another narrative dominates fitness and instruction: the golf swing is limited by strength, flexibility, and athletic capacity. ``Stronger core = faster swing. More flexible shoulders = wider arc.''
+Another narrative prevalent in golf fitness emphasizes strength, flexibility, and athletic capacity as primary determinants of swing performance. The claim is that muscular force production and range of motion directly determine swing speed and trajectory.
 
-There's truth here. A weak golfer swings slower. A stiff golfer can't reach certain positions. But strength and flexibility are permitting conditions, not determining ones. Plenty of strong golfers have poor swings. Plenty of flexible golfers are terrible. Why?
+There is indeed a relationship here: limited strength sets a ceiling on the maximum forces the muscles can generate, and limited flexibility constrains the possible positions the body can reach. But strength and flexibility are necessary but not sufficient conditions. The question remains: given a particular strength and flexibility profile, what forces do the muscles actually generate at each instant in the swing, and how do those forces interact with gravity and inertia to produce the observed motion?
 
 \section{The Missing Story: Forces}
 
@@ -49,11 +49,11 @@ Here's what both stories miss: \textbf{at every instant of the swing, your body 
 \index{force!in golf swing}
 \index{torque!in golf swing}
 
-The shape of your swing—the kinematics—is the \emph{consequence} of these forces, not the cause. Similarly, your strength merely sets a upper limit on the forces you can generate; it doesn't dictate which forces you generate at each moment.
+The shape of your swing—the kinematics—is the \emph{consequence} of these forces, not the cause. Similarly, your strength merely sets an upper limit on the forces you can generate; it doesn't dictate which forces you generate at each moment.
 
 When a coach says ``rotate your hips,'' what they mean is: ``generate a torque around your vertical axis that accelerates your hip rotation.'' When they say ``release the club,'' they mean: ``stop generating a torque at your wrist, allowing gravity and the club's momentum to accelerate it downward and forward.''
 
-Physics lets us quantify exactly this. It gives us a language to say:
+Physics provides a framework to quantify these phenomena precisely. It provides a language to distinguish among:
 \begin{itemize}
 \item This torque comes from your muscles pulling (what we'll call \textbf{$\control$}).
 \item This torque comes from gravity doing work (what we'll call \textbf{$\drift$}).
@@ -73,16 +73,50 @@ The mathematical separation of drift from control is the backbone of this entire
 Once you can attribute each force to its source, you can understand what you're actually trying to control.
 
 \begin{laymansbox}{Why Attribution Matters}{box:ch01_attribution}
-Here's a concrete example: suppose your club is moving at 100 mph at impact. The acceleration of the clubhead is enormous—roughly 179 times the acceleration due to gravity ($179g$). Your wrists are creating that acceleration, right?
+Here's a concrete example: suppose your club is moving at speed $v$ at impact, where $v$ is typically in the range 100--120 mph for skilled golfers \citep{Jorgensen1994}. The acceleration of the clubhead is then $a = v^2 / L$, where $L$ is the arm-club length. This acceleration is often expressed in multiples of gravitational acceleration $g$. The natural question is: does the muscular torque at the wrist account for all of this acceleration?
 
-Wrong. Or rather, not entirely. Some of that centripetal acceleration comes from the \textbf{tension in your arm}—a constraint force that has nothing to do with muscle contraction. Some comes from gravity. Some comes from the high-speed rotation of your arm (a \textbf{velocity-dependent inertial force}). Your wrist torque contributes, yes, but quantifying \emph{how much} is a physics problem.
+The answer is no. Some of that centripetal acceleration comes from the \textbf{tension in your arm}—a constraint force that has nothing to do with muscle contraction. Some comes from gravity. Some comes from the high-speed rotation of your arm (a \textbf{velocity-dependent inertial force}). Your wrist torque contributes, yes, but quantifying \emph{how much} is a physics problem.
 
 Until you can attribute each force to its source—gravity, muscle, constraint, or momentum—you're flying blind.
 \end{laymansbox}
 
 \section{Two Kinds of Forces: A Preview}
 
-This entire book pivots on a single insight: \textbf{all forces in your swing come from one of two sources}.
+This entire book pivots on a single insight: \textbf{all forces in your swing come from one of two sources}. Figure~\ref{fig:ch01_drift_control_schematic} illustrates the conceptual framework: the golfer's arm and club system experiences both passive drift forces (gravity and inertial effects) and active control forces (muscular torques), and the swing trajectory results from their combination.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1.2]
+  % Draw golfer's body
+  \draw[line width=2pt] (0,0) -- (0,1) node[midway, left=0.2cm] {\small shoulder};
+
+  % Draw upper arm
+  \draw[line width=2pt] (0,1) -- (1.2,2) node[midway, above left=0.1cm] {\small upper arm};
+
+  % Draw forearm/club
+  \draw[line width=2.5pt, red] (1.2,2) -- (2.5,1.5) node[midway, above right=0.1cm] {\small club};
+
+  % Draw gravity force on club
+  \draw[->, very thick, blue] (2.5,1.5) -- (2.5,0.8) node[right=0.3cm] {\textbf{Drift: gravity}};
+
+  % Draw centrifugal/inertial force
+  \draw[->, very thick, blue] (2.5,1.5) -- (3.2,1.5) node[right=0.2cm, align=left] {\textbf{Drift:} \\ \textbf{centrifugal}};
+
+  % Draw control torque at elbow
+  \draw[->, very thick, green] (1.2,2) arc (180:90:0.4) node[left=0.3cm, align=center] {\small \textbf{Control:} \\ \textbf{muscle torque}};
+
+  % Draw control torque at shoulder
+  \draw[->, very thick, green] (0,1) arc (270:200:0.4) node[left=0.4cm, align=center] {\small \textbf{Control:} \\ \textbf{muscle torque}};
+
+  % Legend
+  \draw[line width=1.5pt, blue] (0,-0.8) -- (0.4,-0.8) node[right=0.2cm] {Drift forces (passive, automatic)};
+  \draw[line width=1.5pt, green] (0,-1.2) -- (0.4,-1.2) node[right=0.2cm] {Control forces (muscular, active)};
+\end{tikzpicture}
+\caption{Schematic of drift and control forces in the golf swing. Drift forces (blue) include gravity and velocity-dependent inertial effects that act automatically based on the system state. Control forces (green) are active muscular torques applied by the nervous system to steer the swing.}
+\label{fig:ch01_drift_control_schematic}
+\end{figure}
+
+Understanding the distinction between these two sources of force is the foundation for all subsequent analysis.
 
 \subsection*{Drift: The Physics You Can't Control}
 
@@ -96,18 +130,14 @@ We call this component \textbf{$\drift$}\index{drift}. It's what the system does
 
 On top of drift, you actively generate torques by contracting muscles. These are what we call \textbf{$\control$}\index{control} forces. They add to (or subtract from) the passive drift, steering the system toward your desired outcome.
 
-Here's the profound insight: \textbf{elite golfers don't fight drift. They ride it.} They understand their body's passive dynamics deeply enough that they add minimal muscular control, just enough to navigate the drift toward the target.
-
-Novice golfers do the opposite. They fight their own physics. They generate excessive muscular force to cancel out the drift effects, then generate more force to make the swing they want. It's exhausting, inconsistent, and why golfers talking about the swing always say ``trust'' and ``let it happen.'' They mean: let the drift happen.
+An important observation emerges from studying swings across different skill levels: the distribution of drift versus control forces differs systematically. Some golfers generate swings where drift forces carry the club through most of the downswing, with control forces applied primarily for steering and timing. Other golfers appear to generate muscular control throughout the swing, actively resisting the passive drift dynamics rather than working with them. This distinction—between systems where the drift-to-control ratio is high versus low—proves diagnostic for understanding swing efficiency and consistency.
 
 \begin{driftcontrol}{Drift vs. Control in a Simple Fall}{dc:ch01_fall}
-Imagine your arm holding a 1 lb weight at shoulder height. You're exerting an upward force equal to the weight's weight (call it $W = 1 \text{ lb}$). This is $\control$—your muscle generating force to hold the weight steady.
+Imagine your arm holding a mass $m$ at shoulder height. You're exerting an upward force equal to the weight's gravitational force (call it $W = mg$). This is $\control$—your muscle generating force to hold the mass steady.
 
-Now you release it. What happens? $\drift$ takes over. Gravity pulls downward. The weight accelerates at $g = 32 \text{ ft/s}^2$. You're not doing anything—physics is.
+Now you release it. What happens? $\drift$ takes over. Gravity pulls downward. The mass accelerates at $g$ (approximately $9.8 \text{ m/s}^2$ or $32 \text{ ft/s}^2$). You're not doing anything—physics is.
 
-In a golf swing: when your arm is at the top of the backswing holding the club in a specific position, you're exerting $\control$. During the downswing, you release—and $\drift$ (gravity plus the rotational momentum of your arm) does most of the work of accelerating the club toward impact. Your muscles then add small corrections to steer that accelerating club toward the target.
-
-The swing is efficient because gravity and momentum contribute approximately 60--80\% of the work. Your muscles do the remaining 20--40\%, mostly steering. The exact fraction depends on swing type, athlete power, and technique.
+In a golf swing: when your arm is at the top of the backswing holding the club in a specific position, you're exerting $\control$. During the downswing, you begin to reduce this $\control$ torque—and $\drift$ (gravity plus the rotational momentum of your arm) does substantial work accelerating the club toward impact. Your muscles then add corrections to steer that accelerating club toward the target. The model predicts that passive dynamics (gravity and momentum from the arm's rotational acceleration) account for a significant fraction of the total downswing acceleration, with active muscular control providing directional and timing refinement.
 \end{driftcontrol}
 
 \section{The Central Equation}
@@ -134,16 +164,16 @@ This equation is the spine of the book. Everything flows from understanding its 
 
 \section{Why a Physics Textbook for Golfers?}
 
-You might ask: \emph{physicists have written about golf before. Why do we need another book?}
+You might ask: \emph{physicists have written about golf before \citep{Jorgensen1970, Jorgensen1994}. Why do we need another book?}
 
-Because nearly all existing physics of golf is written \textbf{for physicists}, not \textbf{for golfers}. It buries the intuition under pages of equations. Worse, it treats the golf swing as an optimization problem to be solved in hindsight: ``What swing parameters maximize distance?'' That's useful for equipment design, but it's not actionable for a player.
+Because nearly all existing physics of golf is written \textbf{for physicists}, not \textbf{for golfers}. It buries the intuition under pages of equations. Worse, it treats the golf swing as an optimization problem to be solved in hindsight: ``What swing parameters maximize distance?'' \citep{Penner2001} That's useful for equipment design, but it provides limited insight into the forces and torques that generate a swing.
 
-This book is different. We're asking: \textbf{what is the structure of the forces and torques that make a swing possible?} Once you understand that structure, you can:
+This textbook is different. We're asking: \textbf{what is the structure of the forces and torques that make a swing possible?} Once you understand that structure, you can:
 \begin{itemize}
-\item Diagnose why a particular swing flaw produces a specific miss (crooked shot, thin strike, lack of distance).
-\item Understand why a coach's cue works or doesn't work (it's because of how the cue changes your control relative to the drift).
-\item Build intuition about what your body can and can't easily do (based on the passive dynamics).
-\item Improve faster, because you're working with physics, not against it.
+\item Understand the physical mechanisms underlying swing trajectories and impact conditions.
+\item Interpret coaching advice in terms of the underlying force structure (how a cue changes your control relative to the drift).
+\item Build intuition about constraints on swing mechanics based on the passive dynamics and control authority.
+\item Improve consistency by understanding which swing parameters are drift-dominated and which require active control.
 \end{itemize}
 
 \begin{principle}{Why Physics Matters}{pr:ch01_why_physics}
@@ -175,23 +205,25 @@ This is a toy model. Real golfers have two arms, a rotating torso, hip and knee 
 
 The equations are complicated enough to be interesting but simple enough to solve (sometimes exactly, often numerically). The physics of gravity, inertia, velocity-dependent forces, and control all show up. And crucially, the double pendulum exhibits chaotic behavior—meaning small changes in control can produce wildly different outcomes, just like the golf swing.
 
+To ground this abstract model in concrete reality, consider what happens when the control input is suddenly withdrawn:
+
 \begin{example}{What Happens If You Let Go Mid-Swing?}{ex:ch01_letgo}
 Imagine you're mid-swing with your double-pendulum arms. You're generating muscular torques at the shoulder and elbow. Then, midway through the downswing, you simply stop contracting those muscles and let your arms fall freely.
 
 \begin{itemize}
 \item \textbf{What will happen?} Your arms will not continue in a straight path. Instead, gravity will pull the club downward, and the rotational momentum of your arm will curve its path. The club will accelerate, but not in the direction you were controlling.
 
-\item \textbf{Why?} Because your $\control$ disappeared. Only $\drift$ remains—gravity, inertia, and the constraint that your arm is hinged at the shoulder. That drift is perfectly well-defined by the physics. It's deterministic. But it's not the path you wanted.
+\item \textbf{Why?} Because your $\control$ disappeared. Only $\drift$ remains—gravity, inertia, and the constraint that your arm is hinged at the shoulder. That drift is perfectly well-defined by the physics. It's deterministic. But it's not the path you intended.
 
-\item \textbf{What does this tell us?} It tells us that your brain is constantly solving a control problem. Even in a ``smooth, automatic'' swing, your nervous system is generating muscular torques at every instant to steer the passive drift toward impact. Elite golfers make this look effortless because they've learned to use small, efficient control signals to ride the drift. Novices fight the drift because they're not aware of it.
+\item \textbf{What does this tell us?} It tells us that continuous active control is a necessity if the swing is to reach the ball at impact on a predictable trajectory. Even during the downswing, the nervous system must be generating muscular torques at every instant to steer the passive drift dynamics toward impact. The model predicts that swings differing in their drift-to-control ratio will exhibit different sensitivities to timing variations and perturbations.
 \end{itemize}
 
-In Chapter~\ref{ch:03_double_pendulum}, we'll actually solve the equations for what happens if you let go mid-swing in a double-pendulum model with realistic golf parameters. The answer will surprise you.
+In Chapter~\ref{ch:03_double_pendulum}, we'll actually solve the equations for what happens if control is removed mid-swing in a double-pendulum model with realistic golf parameters. The mathematical solution provides precise predictions about the resulting trajectory.
 \end{example}
 
 \section{A Road Map}
 
-Here's what unfolds in the following chapters:
+The remainder of this textbook develops the mathematical and physical framework needed to analyze golf swings quantitatively. We move from foundational definitions of coordinates and state, through the derivation of equations of motion, to the systematic decomposition of forces into drift and control components. Each chapter builds on the previous one, with the goal of equipping you with tools to diagnose and understand swing mechanics from first principles.
 
 \subsection*{Chapter~\ref{ch:02_language_of_motion}: The Language of Motion}
 Before we can talk about forces, we need a language for describing where your body is and how fast it's moving. We'll introduce \textbf{generalized coordinates}\index{generalized coordinates}—a way to describe the configuration of your body (e.g., shoulder angle, elbow angle). We'll define \textbf{state space}\index{state space}—the combination of position and velocity. Every swing, at every instant, is a point in this state space.
@@ -200,7 +232,7 @@ Before we can talk about forces, we need a language for describing where your bo
 We'll set up the full equations of motion for the double pendulum using \textbf{Lagrangian mechanics}\index{Lagrangian mechanics}. You'll see exactly where the mass matrix $\bm{M}(\bm{q})$ comes from (it measures inertia), where the Coriolis and centrifugal terms come from (they're what it means for your arm to move fast), and where gravity comes from. We'll compute all of this step-by-step, with golf numbers.
 
 \subsection*{Chapter~\ref{ch:04_forces_and_torques}: Forces and Torques}
-We'll unpack the manipulator equation, term by term. What does each term do? How big are the forces? At impact, your clubhead accelerates at $179g$. Where does that come from? We'll attribute every force to its source: muscle, gravity, constraint, or momentum.
+We'll unpack the manipulator equation, term by term. What does each term do? How large are the forces relative to one another? At impact, the clubhead undergoes large acceleration, often expressed as a multiple of $g$. Where does that acceleration come from? We'll attribute every force to its source: muscle, gravity, constraint, or momentum.
 
 \subsection*{Chapter~\ref{ch:05_affine_structure}: Drift and Control}
 Finally, we'll write the equation in its most useful form:
@@ -212,7 +244,7 @@ Finally, we'll write the equation in its most useful form:
 
 where $\bm{f}(\bm{x})$ is the drift and $\bm{G}(\bm{x}) \bm{u}$ is your control. We'll understand exactly which parts of your swing are passive (drift) and which parts require active muscular command (control). We'll introduce the \textbf{Drift-to-Control Ratio} (DCR)—a diagnostic tool that tells you whether a particular swing phase is drift-dominated or control-dominated.
 
-Elite golfers, we'll find, have high DCR in the critical phases. They let drift do the work. Novices have low DCR—they're fighting physics with muscle.
+Empirical observation suggests that swings differ markedly in their drift-to-control ratio during critical phases like the downswing and acceleration phase. Understanding this distribution is a key diagnostic tool for improving swing consistency and efficiency.
 
 \begin{principle}{Key Takeaways}{pr:ch01_key_takeaways}
 \begin{enumerate}
@@ -231,6 +263,8 @@ Left side = drift. Right side = control.
 \item \textbf{The double pendulum is your guide}. It's simple enough to understand fully, complex enough to be realistic. Use it to build intuition.
 \end{enumerate}
 \end{principle}
+
+To apply these concepts and develop intuition about forces and dynamics in simple systems, we offer the following exercises. These problems invite you to observe physical phenomena in familiar contexts (falling objects, spinning balls, swinging weights) and to reason about the forces and torques involved. They lay groundwork for the more sophisticated analysis of the golf swing that follows in later chapters.
 
 \begin{exercises}{Chapter Exercises}{ex:ch01}
 \begin{enumerate}

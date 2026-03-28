@@ -4,7 +4,7 @@
 \epigraph{The brain is the ultimate controller---a device of extraordinary subtlety that solves the golf swing problem every time you play, without you ever consciously knowing the equations.}{Adapted from Richard Feynman}
 
 \begin{laymansbox}{What This Chapter Is About}{box:ch24_intro}
-We've spent the last several chapters learning the physics: the nonlinear dynamics, the drift-dominated regime, the trade-off between control and drift. But now we must face the central mystery: \textit{the brain solves this problem}. Not perfectly---golfers miss---but with remarkable consistency. An elite golfer produces clubhead speeds within 2\% of their average, swing after swing, despite 30--50 millisecond neural delays, sensor noise, and a system where the downswing lasts only 300 milliseconds.
+We've spent the last several chapters learning the physics: the nonlinear dynamics, the drift-dominated regime, the trade-off between control and drift. But now we must face the central mystery: \textit{the brain solves this problem}. Not perfectly---golfers miss---but with remarkable consistency. An elite golfer produces clubhead speeds within 2\% of their average, swing after swing \cite{jorgensen1994physics}, despite 30--50 millisecond neural delays, sensor noise, and a system where the downswing lasts only 300 milliseconds.
 
 This chapter reframes the nervous system as an engineering control system and asks: what kind of controller is the brain? How does it manage to work within such severe constraints? The answer will astonish you: the brain doesn't try to control everything. Instead, it exploits the drift field---the very physics we've been studying---to do most of the work. The brain is not fighting physics; it is using physics as its primary actuator.
 \end{laymansbox}
@@ -41,7 +41,7 @@ This is not a simple problem. It is a \textit{nonlinear optimal control problem 
 
 \item \textbf{Noisy actuators:} Muscle force variability is 5--10% even when you're trying to produce exactly the same torque twice. This is called \textit{signal-dependent noise} and increases with force level.
 
-\item \textbf{Bounded control:} Maximum torques are limited. The shoulder can produce roughly 100--200 N$\cdot$m of torque, the elbow 100--150 N$\cdot$m, the wrist 30--50 N$\cdot$m. The brain cannot exceed these.
+\item \textbf{Bounded control:} Maximum torques are limited. The shoulder can produce roughly 100--200 N$\cdot$m of torque, the elbow 100--150 N$\cdot$m, the wrist 30--50 N$\cdot$m \cite{enoka2002neuromechanics}. The brain cannot exceed these.
 \end{enumerate}
 \end{constraintbox}
 
@@ -143,7 +143,7 @@ The cerebellum is remarkable for several reasons:
 
 \begin{principle}{Cerebellar Architecture}{box:ch24_cerebellum_arch}
 \begin{itemize}
-\item \textbf{Size:} The cerebellum is only ~10\% of the brain's volume, but contains ~70\% of all neurons (approximately 69 billion granule cells---making it the most neuron-dense structure in the brain. It also contains roughly 15 million Purkinje cells, the large output neurons that project to the deep cerebellar nuclei).
+\item \textbf{Size:} The cerebellum is only ~10\% of the brain's volume, but contains ~70\% of all neurons \cite{williams1995cerebellum} (approximately 69 billion granule cells---making it the most neuron-dense structure in the brain. It also contains roughly 15 million Purkinje cells, the large output neurons that project to the deep cerebellar nuclei) \cite{eccles1967cerebellum}.
 
 \item \textbf{Computational density:} This makes the cerebellum the most densely packed neural tissue in the brain---a parallel processor of extraordinary power.
 
@@ -225,23 +225,7 @@ Modern ideomotor theory \cite{prinz2002perception, hommel2009theory} has formali
 An action is coded as a set of desired sensory consequences (the effect). When the action goal is activated, the motor system automatically retrieves the motor commands that, in the past, produced those consequences. The action is executed by commands designed to minimize discrepancy between the predicted sensory consequences and the desired consequences.
 \end{theorem}
 
-This has a striking implication for golf coaching: \textbf{the coach should focus the golfer's attention on the desired outcome, not on the mechanics of movement}.
-
-\begin{example}{Ideomotor in Golf}{ex:ch24_ideomotor_golf}
-Consider two coaching approaches:
-
-\textbf{Mechanics-focused:} ``Keep your head still. Shift your weight to your front side. Lag the club. Extend through the ball.''
-
-\textbf{Outcome-focused:} ``Feel the swing shape. See the ball flight. Feel the contact. Swing to the target.''
-
-According to ideomotor theory, the second approach is more effective. Here's why: when you think about mechanics, you're thinking about motor commands (``fire the pectoral muscle'', ``lag the club''). This bypasses the action effect pathway. Your motor system is confused---it's trying to both retrieve learned commands and generate new commands based on mechanical rules.
-
-When you think about the outcome (the ball flight, the feeling of good contact), you activate the action effect. Your motor system automatically retrieves the learned motor program that produces that effect. No confusion. No conflict.
-
-This explains why great coaches talk about feel and target, not mechanics.
-\end{example}
-
-The ideomotor principle also connects to the drift field. In the ZTCF framework, the brain doesn't need to control every detail of the trajectory. Instead, it specifies the initial conditions and lets physics (the drift field) carry the system to the outcome. In ideomotor terms, the brain specifies the desired sensory consequence (impact with the ball, ball trajectory), and the motor system retrieves the commands that, given physics, produce that consequence.
+The ideomotor principle connects to the drift field. In the ZTCF framework, the brain doesn't need to control every detail of the trajectory. Instead, it specifies the initial conditions and lets physics (the drift field) carry the system to the outcome. In ideomotor terms, the brain specifies the desired sensory consequence (impact with the ball, ball trajectory), and the motor system retrieves the commands that, given physics, produce that consequence.
 
 \cite{prinz2002perception, hommel2009theory, wolfensteller2016action}
 
@@ -254,6 +238,48 @@ The ideomotor principle also connects to the drift field. In the ZTCF framework,
 \index{muscle unit recruitment}
 
 To understand how the brain controls movement, we need to understand its hardware architecture. The nervous system is not a single, monolithic controller. It's a hierarchy of controllers, each operating at a different timescale and with different capabilities.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[node distance=2cm, thick]
+  % Prefrontal Cortex
+  \node[draw, rectangle, minimum width=6cm, minimum height=0.8cm, fill=blue!20] (pfc) {Prefrontal Cortex (Goal Selection)};
+
+  % Motor Cortex
+  \node[draw, rectangle, minimum width=6cm, minimum height=0.8cm, fill=blue!30, below of=pfc] (m1) {Primary Motor Cortex M1 (Motor Commands)};
+
+  % Spinal Cord
+  \node[draw, rectangle, minimum width=6cm, minimum height=0.8cm, fill=blue!40, below of=m1] (spinal) {Spinal Cord (Local Control)};
+
+  % Muscles
+  \node[draw, rectangle, minimum width=6cm, minimum height=0.8cm, fill=blue!50, below of=spinal] (muscles) {Muscles (Force Production)};
+
+  % Cerebellum (side)
+  \node[draw, rectangle, minimum width=4cm, minimum height=0.8cm, fill=red!30, right of=m1, xshift=4cm] (cerebellum) {Cerebellum (Internal Models)};
+
+  % Basal Ganglia (side)
+  \node[draw, rectangle, minimum width=4cm, minimum height=0.8cm, fill=red!30, right of=spinal, xshift=4cm] (basal) {Basal Ganglia (Action Selection)};
+
+  % Arrows - feedforward
+  \draw[->] (pfc) -- (m1);
+  \draw[->] (m1) -- (spinal);
+  \draw[->] (spinal) -- (muscles);
+
+  % Feedback loops
+  \draw[<-, color=green, dashed] (cerebellum) -- (spinal);
+  \draw[<-, color=green, dashed] (cerebellum) -- (m1);
+  \draw[<-, color=green, dashed] (basal) -- (pfc);
+
+  % Label timescales
+  \node[anchor=west, font=\footnotesize] at (7.5, 1.2) {100--250 ms};
+  \node[anchor=west, font=\footnotesize] at (7.5, -0.6) {10--50 ms};
+  \node[anchor=west, font=\footnotesize] at (7.5, -2.4) {30--100 ms};
+  \node[anchor=west, font=\footnotesize] at (7.5, -4.2) {50--200 ms};
+
+\end{tikzpicture}
+\caption{Motor control hierarchy in the brain. Top-down commands flow from prefrontal cortex (goal selection) through motor cortex to spinal circuits and muscles. The cerebellum (red, right) monitors movement and provides error signals. The basal ganglia select which action to execute. Each level operates on a different timescale.}
+\label{fig:ch24_hierarchy}
+\end{figure}
 
 \subsection{The Motor Cortex}
 \label{subsec:ch24_motor_cortex}

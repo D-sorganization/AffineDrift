@@ -143,6 +143,31 @@ Yes! A 4-bar linkage has 1 DOF. $\checkmark$
 \textbf{Lesson:} The Grübler formula is powerful but requires careful counting. For a tree structure (no loops), use the simple formula $\sum f_i$. For a mechanism with loops, you must account for loop closure constraints, and the planar formula differs from the 3D formula.
 
 \section{Worked Example --- The Golf Swing Model}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\tiny, level distance=1.5cm, sibling distance=1.8cm]
+  \node[draw] {Base}
+    child {node[draw] {Torso}
+      child {node[draw] {Arm}
+        child {node[draw] {Forearm}
+          child {node[draw] {Hand}}
+          }
+        }
+      }
+    child {node[draw] {Pelvis}
+      child {node[draw] {Leg-L}
+        child {node[draw] {Foot-L}}
+        }
+      child {node[draw] {Leg-R}
+        child {node[draw] {Foot-R}}
+        }
+      };
+\end{tikzpicture}
+\caption{URDF kinematic tree: rigid bodies connected by joints defining the kinematic chain.}
+\label{fig:urdf_tree}
+\end{figure}
+
 \label{sec:golf_swing_dof}
 
 \index{golf swing model}
