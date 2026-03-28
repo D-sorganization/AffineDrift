@@ -85,50 +85,59 @@ is approximately 8--12 synapses deep.
   In deep learning, we can stack layers because silicon is fast. In biology, we cannot.
   Instead, the brain uses:
   \begin{enumerate}
-    \item \textbf{Width}: $\sim$10 billion cortical neurons, each receiving $\sim$10,000
-          synaptic inputs. The total computational capacity is in the \emph{connections},
-          not the depth.
+    \item \textbf{Width}: approximately 16 billion cortical neurons (humans), each
+          receiving $\sim$10,000 synaptic inputs (Kandel et al., 2013). The total
+          computational capacity is in the connections, not the depth.
     \item \textbf{Recurrence}: horizontal connections within layers create recurrent
           dynamics that effectively increase computational depth through temporal
-          iteration (but at the cost of time).
+          iteration (but at the cost of time). These recurrent loops operate at 10--100 ms
+          timescales within a single motor control cycle.
     \item \textbf{Specialization}: different brain regions process different aspects
-          of the motor task in parallel, communicating through thick fiber bundles.
+          of the motor task in parallel, communicating through thick fiber bundles
+          (corpus callosum, cerebral peduncles).
     \item \textbf{Hierarchy}: a shallow hierarchy of cortex $\to$ subcortical structures
-          $\to$ spinal cord $\to$ muscles, with each level operating at different
-          timescales and abstraction levels.
+          (basal ganglia, cerebellum, brainstem) $\to$ spinal cord $\to$ muscles, with each
+          level operating at different timescales and abstraction levels.
   \end{enumerate}
 \end{insight}
+
+\emph{This architectural choice has profound consequences.} While a deep network might
+process sensory information in 50 serial steps, the brain achieves comparable flexibility
+through width and recurrence. Consider a reaching task: the cortex does not recompute the
+entire motor plan from scratch at each millisecond. Instead, it maintains a dynamical
+state that evolves according to its intrinsic connectivity. Perturbations are handled
+through feedback loops that operate in parallel at multiple levels.
 
 \begin{figure}[h]
 \centering
 \begin{tikzpicture}[scale=0.95]
   % Input
   \draw (0, 1.5) rectangle (0.8, 2.2);
-  \draw (0.4, 1.85) node[anchor=center, font=\tiny] {Input};
+  \draw (0.4, 1.85) node[align=center, anchor=center, font=\tiny] {Input};
 
   % Deep network (left)
-  \draw (0.4, 3.5) node[anchor=center, font=\small\bf] {Deep: 10 layers $\times$ 50 wide};
-  \for \i in {1, ..., 10} {
+  \draw (0.4, 3.5) node[align=center, anchor=center, font=\small\bf] {Deep: 10 layers $\times$ 50 wide};
+  \foreach \i in {1, ..., 10} {
     \draw (1 + 0.4*\i, 1.5) circle (0.15);
   };
-  \for \i in {1, ..., 10} {
+  \foreach \i in {1, ..., 10} {
     \draw (1.4 + 0.4*\i, 1.5) circle (0.15);
   };
-  \draw (6, 1.5) node[anchor=west, font=\tiny] {Latency: 50 ms};
+  \draw (6, 1.5) node[align=center, anchor=west, font=\tiny] {Latency: 50 ms};
 
   % Output layer
   \draw (8, 1.5) rectangle (8.8, 2.2);
-  \draw (8.4, 1.85) node[anchor=center, font=\tiny] {Output};
+  \draw (8.4, 1.85) node[align=center, anchor=center, font=\tiny] {Output};
 
   % Wide network (right)
-  \draw (0.4, -0.2) node[anchor=center, font=\small\bf] {Wide: 2 layers $\times$ 2000 wide};
+  \draw (0.4, -0.2) node[align=center, anchor=center, font=\small\bf] {Wide: 2 layers $\times$ 2000 wide};
   \fill[blue, opacity=0.2] (1, -1) rectangle (4.5, -0.4);
-  \draw (2.75, -0.7) node[anchor=center, font=\small] {Hidden layer (2000 neurons)};
-  \draw (6, -0.7) node[anchor=west, font=\tiny] {Latency: 10 ms};
+  \draw (2.75, -0.7) node[align=center, anchor=center, font=\small] {Hidden layer (2000 neurons)};
+  \draw (6, -0.7) node[align=center, anchor=west, font=\tiny] {Latency: 10 ms};
 
   % Arrow showing advantage
   \draw[->, thick, red] (6.2, 1.3) -- (6.2, -0.3);
-  \draw (6.5, 0.5) node[anchor=west, font=\small, color=red] {5x faster};
+  \draw (6.5, 0.5) node[align=center, anchor=west, font=\small, color=red] {5x faster};
 \end{tikzpicture}
 \caption{Shallow-wide architecture trades depth for width: a 2-layer network with 2000
 neurons per layer completes in 10 ms, while a 10-layer network with 50 neurons per

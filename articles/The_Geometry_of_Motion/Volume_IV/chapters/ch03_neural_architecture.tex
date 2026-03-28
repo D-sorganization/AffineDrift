@@ -12,30 +12,30 @@
 \begin{tikzpicture}[scale=1.0]
   % Cortex box
   \draw (1, 1) rectangle (3, 4);
-  \draw (2, 3.5) node[anchor=center, font=\small\bf] {Cortex};
-  \draw (2, 2.7) node[anchor=center, font=\tiny] {PMC/SMA};
-  \draw (2, 2.3) node[anchor=center, font=\tiny] {M1};
+  \draw (2, 3.5) node[align=center, anchor=center, font=\small\bf] {Cortex};
+  \draw (2, 2.7) node[align=center, anchor=center, font=\tiny] {PMC/SMA};
+  \draw (2, 2.3) node[align=center, anchor=center, font=\tiny] {M1};
 
   % Basal ganglia
   \draw (4, 2.5) rectangle (5.5, 3.5);
-  \draw (4.75, 3.0) node[anchor=center, font=\small\bf] {Basal};
-  \draw (4.75, 2.7) node[anchor=center, font=\small\bf] {Ganglia};
+  \draw (4.75, 3.0) node[align=center, anchor=center, font=\small\bf] {Basal};
+  \draw (4.75, 2.7) node[align=center, anchor=center, font=\small\bf] {Ganglia};
 
   % Cerebellum
   \draw (5.5, 0.5) rectangle (7, 1.5);
-  \draw (6.25, 1.0) node[anchor=center, font=\small\bf] {Cerebellum};
+  \draw (6.25, 1.0) node[align=center, anchor=center, font=\small\bf] {Cerebellum};
 
   % Spinal cord
   \draw (1.5, -0.5) rectangle (2.5, 0.5);
-  \draw (2, 0) node[anchor=center, font=\small\bf] {Spinal};
-  \draw (2, -0.3) node[anchor=center, font=\tiny] {CPGs};
+  \draw (2, 0) node[align=center, anchor=center, font=\small\bf] {Spinal};
+  \draw (2, -0.3) node[align=center, anchor=center, font=\tiny] {CPGs};
 
   % Connections
-  \draw[->, thick] (2, 1) -- (2, 0.5) node[anchor=east, midway, font=\tiny] {motor output};
-  \draw[->, thick, dashed] (3, 2) -- (4, 2.8) node[anchor=south, midway, font=\tiny] {action sel.};
-  \draw[->, thick, dashed] (3, 3) -- (5.5, 1.2) node[anchor=south, midway, font=\tiny] {error signal};
+  \draw[->, thick] (2, 1) -- (2, 0.5) node[align=center, anchor=east, midway, font=\tiny] {motor output};
+  \draw[->, thick, dashed] (3, 2) -- (4, 2.8) node[align=center, anchor=south, midway, font=\tiny] {action sel.};
+  \draw[->, thick, dashed] (3, 3) -- (5.5, 1.2) node[align=center, anchor=south, midway, font=\tiny] {error signal};
   \draw[->, thick] (2.5, 0.2) -- (4, 0.2);
-  \draw (3.2, 0.4) node[anchor=south, font=\tiny] {feedback};
+  \draw (3.2, 0.4) node[align=center, anchor=south, font=\tiny] {feedback};
 
 \end{tikzpicture}
 \caption{Hierarchical neural motor architecture: cortex plans/initiates, basal ganglia
@@ -101,6 +101,14 @@ its primary role in motor control as a \textbf{forward model}:
     \item The granule cell layer provides the basis functions for the nonlinear mapping
   \end{itemize}
 \end{neurobox}
+
+This cerebellar architecture has been verified through multiple lines of evidence. Patients
+with cerebellar lesions show impaired adaptation to visuomotor rotations (Shadmehr and
+Mussa-Ivaldi, 1994) and cannot learn reaching trajectories with altered dynamics. Single-unit
+recordings from Purkinje cells show learning-related changes in their responses during
+motor adaptation tasks (Kawato, 1999). The timescale of cerebellar learning ($\sim$minutes)
+matches the time constant of LTD induction and consolidation, providing a mechanistic
+account of trial-by-trial motor learning.
 
 \subsection{Basal Ganglia: Action Selection}
 

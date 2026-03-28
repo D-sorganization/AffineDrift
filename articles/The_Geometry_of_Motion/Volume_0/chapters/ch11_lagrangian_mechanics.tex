@@ -72,7 +72,7 @@ Lagrangian mechanics solves this by working exclusively with \textbf{generalized
 \section{Hamilton's Principle and the Calculus of Variations}
 % ==========================================================================
 
-\textbf{Hamilton's Principle} \cite{goldstein2002,arnold1989} states that among all conceivable paths $\mathbf{q}(t)$ connecting two configurations $\mathbf{q}(t_1)$ and $\mathbf{q}(t_2)$ at fixed times, the \emph{actual} physical path satisfies:
+\textbf{Hamilton's Principle} \cite{Goldstein2002,Arnold1989} states that among all conceivable paths $\mathbf{q}(t)$ connecting two configurations $\mathbf{q}(t_1)$ and $\mathbf{q}(t_2)$ at fixed times, the \emph{actual} physical path satisfies:
 
 \begin{equation}
 \delta \mathcal{S} = \delta \int_{t_1}^{t_2} \mathcal{L}(\mathbf{q}, \dot{\mathbf{q}}, t) \, dt = 0
@@ -320,7 +320,7 @@ Thus total energy is conserved. This is the mechanical manifestation of Noether'
 \section{Hamiltonian Mechanics}
 % ==========================================================================
 
-The energy conservation result above reveals something profound: the total energy $H = T + V$ is not merely a convenient bookkeeping device but a \emph{generating function} for the dynamics themselves. Once we recognize that a single scalar quantity---the total energy---is preserved along every physical trajectory, a natural question arises: can we reformulate the entire dynamics using energy as the fundamental object, rather than the Lagrangian? The answer is yes, and the resulting framework---Hamiltonian mechanics---replaces second-order equations in $(q, \dot{q})$ with first-order equations in $(q, p)$, where $p$ is the conjugate momentum. This reformulation is not merely aesthetic. The Hamiltonian viewpoint exposes the \emph{symplectic geometry} of phase space, provides canonical transformations that simplify otherwise intractable problems, and underpins modern developments in geometric integration, optimal control, and quantum mechanics \cite{goldstein2002,arnold1989}.
+The energy conservation result above reveals something profound: the total energy $H = T + V$ is not merely a convenient bookkeeping device but a \emph{generating function} for the dynamics themselves. Once we recognize that a single scalar quantity---the total energy---is preserved along every physical trajectory, a natural question arises: can we reformulate the entire dynamics using energy as the fundamental object, rather than the Lagrangian? The answer is yes, and the resulting framework---Hamiltonian mechanics---replaces second-order equations in $(q, \dot{q})$ with first-order equations in $(q, p)$, where $p$ is the conjugate momentum. This reformulation is not merely aesthetic. The Hamiltonian viewpoint exposes the \emph{symplectic geometry} of phase space, provides canonical transformations that simplify otherwise intractable problems, and underpins modern developments in geometric integration, optimal control, and quantum mechanics \cite{Goldstein2002,Arnold1989}.
 
 While Lagrangian mechanics uses $(q, \dot{q})$ as the fundamental variables, there is a mathematically equivalent formulation using $(q, p)$, where $p$ is the conjugate momentum.
 
@@ -393,7 +393,7 @@ is conserved. If $\mathcal{L} = T - V$ with $T$ quadratic in velocities, then $H
 \index{Noether's theorem!rigorous proof}
 % ==========================================================================
 
-We now present a complete proof of Noether's theorem following \cite{marsden1999} and \cite{arnold1989}.
+We now present a complete proof of Noether's theorem following \cite{marsden1999} and \cite{Arnold1989}.
 
 \textbf{Setup.} Let $\Phi_\epsilon : \mathcal{Q} \to \mathcal{Q}$ be a one-parameter family of diffeomorphisms\index{diffeomorphism} with $\Phi_0 = \mathrm{id}$. Define the \textbf{infinitesimal generator}\index{infinitesimal generator} of the transformation:
 \begin{equation}
@@ -459,7 +459,7 @@ The multipliers $\boldsymbol{\lambda}$ are determined by enforcing $\ddot{\bolds
 \section{D'Alembert's Principle and Virtual Work}
 % ==========================================================================
 
-An alternative derivation of Lagrangian mechanics begins with \textbf{D'Alembert's Principle} \cite{goldstein2002}, which unifies constraints and dynamics.
+An alternative derivation of Lagrangian mechanics begins with \textbf{D'Alembert's Principle} \cite{Goldstein2002}, which unifies constraints and dynamics.
 
 Consider a system in motion under forces $\mathbf{F}$ with constraint forces $\mathbf{F}_c$. Newton's second law is:
 $$m\mathbf{a} = \mathbf{F} + \mathbf{F}_c$$
@@ -642,7 +642,7 @@ For a 2-DOF arm, both methods agree perfectly. For a 15-DOF golf swing, the Recu
 \index{symplectic integrator}
 % ==========================================================================
 
-Standard ODE solvers such as forward Euler and classical Runge-Kutta (RK4) do not respect the geometric structure of Hamiltonian systems. Over long simulations, they introduce systematic energy drift: trajectories slowly spiral inward or outward in phase space, producing non-physical behavior \cite{arnold1989}.
+Standard ODE solvers such as forward Euler and classical Runge-Kutta (RK4) do not respect the geometric structure of Hamiltonian systems. Over long simulations, they introduce systematic energy drift: trajectories slowly spiral inward or outward in phase space, producing non-physical behavior \cite{Arnold1989}.
 
 \textbf{Symplectic integrators}\index{symplectic integrator} are numerical methods that exactly preserve the \textbf{symplectic form}\index{symplectic form}:
 \begin{equation}
@@ -837,7 +837,7 @@ In control theory (Volume I), Lagrangian mechanics enables:
 \section{Further Reading and References}
 % ==========================================================================
 
-The foundations of Lagrangian and Hamiltonian mechanics are treated with exceptional depth in Goldstein, Poole, and Safko \cite{goldstein2002}, which remains the standard graduate reference for classical mechanics. Their treatment of variational principles, canonical transformations, and Hamilton-Jacobi theory provides the analytical backbone for everything presented in this chapter. For a more mathematically rigorous and geometrically oriented perspective, Arnold \cite{arnold1989} develops classical mechanics from the standpoint of differential geometry and symplectic topology, making explicit the manifold structure that underlies configuration space and phase space.
+The foundations of Lagrangian and Hamiltonian mechanics are treated with exceptional depth in Goldstein, Poole, and Safko \cite{Goldstein2002}, which remains the standard graduate reference for classical mechanics. Their treatment of variational principles, canonical transformations, and Hamilton-Jacobi theory provides the analytical backbone for everything presented in this chapter. For a more mathematically rigorous and geometrically oriented perspective, Arnold \cite{Arnold1989} develops classical mechanics from the standpoint of differential geometry and symplectic topology, making explicit the manifold structure that underlies configuration space and phase space.
 
 The geometric mechanics perspective---viewing the mass matrix as a Riemannian metric and Coriolis forces as geodesic deviations---is developed systematically in Marsden and Ratiu \cite{marsden1999}. Their treatment of Noether's theorem, momentum maps, and reduction theory provides the mathematical language for understanding symmetry and conservation in mechanical systems at a level far beyond what we have space for here. Readers interested in the Lie group structure of rigid body mechanics and its interplay with Lagrangian dynamics should consult Murray, Li, and Sastry \cite{Murray1994}, who unify the geometric and control-theoretic viewpoints.
 

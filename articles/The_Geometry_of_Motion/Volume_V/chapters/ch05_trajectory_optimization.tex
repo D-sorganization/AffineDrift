@@ -13,7 +13,7 @@ trajectory and solving quadratic subproblems. Figure~\ref{fig:ilqr-loop} shows t
 \begin{figure}[h]
   \centering
   \begin{tikzpicture}[
-    every node/.style={draw, rounded corners, minimum width=2cm, text centered, font=\small},
+    every node/.style={align=center, draw, rounded corners, minimum width=2cm, text centered, font=\small},
     ]
     % Initial trajectory
     \node[fill=blue!20] (init) at (0, 4) {Initialize\\$\bm{u}_0$};
@@ -38,8 +38,8 @@ trajectory and solving quadratic subproblems. Figure~\ref{fig:ilqr-loop} shows t
     \draw[->] (forward) -- (backward);
     \draw[->] (backward) -- (linesearch);
     \draw[->] (linesearch) -- (converge);
-    \draw[->] (converge) -- node[left] {No} (1, 1) -- (forward);
-    \draw[->] (converge) -- node[above right] {Yes} (exit);
+    \draw[->] (converge) -- node[align=center, left] {No} (1, 1) -- (forward);
+    \draw[->] (converge) -- node[align=center, above right] {Yes} (exit);
   \end{tikzpicture}
   \caption{iLQR algorithm loop: initialize control trajectory, forward rollout
     to compute state trajectory, backward pass to compute feedback gains,

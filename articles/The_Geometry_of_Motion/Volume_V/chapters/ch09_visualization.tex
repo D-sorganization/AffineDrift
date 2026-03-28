@@ -5,6 +5,40 @@
 
 \section{3D Motion Visualization}
 
+Visualization of multi-body trajectories is essential for understanding simulated motion
+and validating controller behavior. This section covers kinematics-based visualization
+(stick figures), manipulability analysis, and energy flow diagrams.
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[
+    scale=0.8,
+    ]
+    % Base (ground)
+    \draw[thick] (-1, 0) -- (3, 0);
+    \filldraw[gray!50] (-1, 0) rectangle (0, -0.2);
+
+    % Link 1 (upper arm)
+    \draw[thick, blue] (0, 0) -- (1.5, 1.2) node[align=center, midway, left] {$L_1$};
+    \filldraw[blue, circle, inner sep=3pt] (0, 0) node[align=center, left] {Joint 0};
+    \filldraw[blue, circle, inner sep=3pt] (1.5, 1.2);
+
+    % Link 2 (forearm)
+    \draw[thick, red] (1.5, 1.2) -- (2.8, 1.8) node[align=center, midway, right] {$L_2$};
+    \filldraw[red, circle, inner sep=3pt] (1.5, 1.2) node[align=center, left] {Joint 1};
+    \filldraw[red, circle, inner sep=3pt] (2.8, 1.8) node[align=center, right] {End};
+
+    % Angle annotations
+    \draw[gray, dashed] (0, 0) -- (1, 0);
+    \draw[gray, dashed] (1.5, 1.2) -- (2.5, 1.2);
+    \draw[gray] (0.7, 0) arc (0:40:0.7) node[right, font=\small] {$q_0$};
+    \draw[gray] (2.1, 1.2) arc (0:25:0.6) node[right, font=\small] {$q_1$};
+  \end{tikzpicture}
+  \caption{Stick-figure representation of a 2-link arm. Visualization code computes
+    joint positions from angles using forward kinematics, then renders links and joints.}
+  \label{fig:stick-figure}
+\end{figure}
+
 \begin{lstlisting}[language=Python, caption={Stick-figure animation for multi-body motion.}]
 import numpy as np
 
@@ -68,12 +102,22 @@ def phase_portrait(
 
 \section{Jacobian and Manipulability Visualization}
 
-Visualizing the velocity manipulability ellipsoid $J J^T$ at each configuration.
+Visualizing the velocity manipulability ellipsoid $J J^T$ at each configuration \cite{Khatib1987}.
+The Jacobian maps joint velocities to end-effector velocities: $\bm{v}_{\text{ee}} = J(\bm{q}) \dot{\bm{q}}$.
+The manipulability ellipsoid is the image of the unit ball under $J$, and its principal axes
+show the directions in which the end-effector can move with maximum ease.
 
 \section{Energy Flow Diagrams}
 
-Tracking kinetic and potential energy across segments to understand energy transfer
-in the kinetic chain.
+Energy flow diagrams track how kinetic and potential energy change during motion,
+and how energy is transferred between segments via the kinetic chain. For a
+multi-segment system, the total energy is
+\begin{equation}
+  E_{\text{total}} = \sum_i \left( KE_i + PE_i \right) = \sum_i \left( \frac{1}{2} I_i \dot{q}_i^2 + m_i g h_i \right)
+\end{equation}
+where $I_i$ is the effective inertia, $\dot{q}_i$ is the angular velocity, and $h_i$
+is the height of the center of mass of segment $i$. During ballistic phases (no muscle
+torque), energy is conserved and transferred between kinetic and potential forms.
 
 \section*{Exercises}
 \begin{enumerate}

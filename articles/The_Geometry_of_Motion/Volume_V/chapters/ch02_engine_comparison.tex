@@ -9,6 +9,40 @@ We simulate the same pendulum in all engines and compare accuracy, computation t
 and energy conservation across different timesteps. The benchmark code provides a
 repeatable framework for evaluating engine performance on a standard task.
 
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[
+    scale=0.9,
+    ]
+    % Axes
+    \draw[->] (0, 0) -- (5, 0) node[align=center, right] {Time Step (ms)};
+    \draw[->] (0, 0) -- (0, 4) node[align=center, above] {Energy Drift (\%)};
+
+    % Grid
+    \draw[gray!30, step=0.5] (0, 0) grid (5, 4);
+
+    % Curves (approximate)
+    \draw[thick, blue] (0.5, 0.1) .. controls (1.5, 0.3) .. (2.5, 0.8) .. controls (3.5, 1.5) .. (4.5, 2.5);
+    \draw[thick, red] (0.5, 0.2) .. controls (1.5, 0.6) .. (2.5, 1.4) .. controls (3.5, 2.2) .. (4.5, 3.1);
+    \draw[thick, green] (0.5, 0.15) .. controls (1.5, 0.4) .. (2.5, 1.0) .. controls (3.5, 1.8) .. (4.5, 2.8);
+
+    % Labels
+    \node[below left, font=\small, fill=white] at (1, 1.5) {MuJoCo};
+    \node[below left, font=\small, fill=white] at (1, 2.2) {Drake};
+    \node[below left, font=\small, fill=white] at (1, 1.8) {Pinocchio};
+
+    % Markers
+    \filldraw[blue, circle, inner sep=1.5pt] (2.5, 0.8);
+    \filldraw[red, circle, inner sep=1.5pt] (2.5, 1.4);
+    \filldraw[green, circle, inner sep=1.5pt] (2.5, 1.0);
+  \end{tikzpicture}
+  \caption{Representative energy drift curves for pendulum simulation across
+    physics engines at different timesteps. Smaller drift indicates better
+    numerical integration accuracy. This is a schematic only; actual values
+    depend on integration method and model parameters.}
+  \label{fig:benchmark-drift}
+\end{figure}
+
 \begin{lstlisting}[language=Python, caption={Cross-engine benchmark framework.}]
 import numpy as np
 from dataclasses import dataclass

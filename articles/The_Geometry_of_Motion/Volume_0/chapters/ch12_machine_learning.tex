@@ -372,7 +372,7 @@ Reinforcement learning operates on \textbf{Markov Decision Processes}, a mathema
 
 \subsection{Formal Definition}
 
-An MDP \cite{sutton2018} is a tuple $(\mathcal{S}, \mathcal{A}, P, R, \gamma)$:
+An MDP \cite{Sutton2018} is a tuple $(\mathcal{S}, \mathcal{A}, P, R, \gamma)$:
 
 \begin{itemize}
     \item $\mathcal{S}$: state space (joint angles, velocities, sensor readings)
@@ -422,7 +422,7 @@ This expresses the value of a state as the immediate reward plus the discounted 
 
 \subsection{REINFORCE Algorithm}
 
-\textbf{REINFORCE} \cite{sutton2018} is a basic policy gradient method that learns a policy $\pi_{\boldsymbol{\theta}}(a|s)$ parametrized by $\boldsymbol{\theta}$ (e.g., neural network weights).
+\textbf{REINFORCE} \cite{Sutton2018} is a basic policy gradient method that learns a policy $\pi_{\boldsymbol{\theta}}(a|s)$ parametrized by $\boldsymbol{\theta}$ (e.g., neural network weights).
 
 The key insight is the \textbf{policy gradient theorem}:
 
@@ -788,7 +788,7 @@ Q(s,a) \leftarrow Q(s,a) + \alpha\bigl[r + \gamma \max_{a'} Q(s', a') - Q(s,a)\b
 \end{equation}
 where $\alpha$ is the learning rate, $\gamma$ the discount factor, $r$ the reward, and $s'$ the successor state.
 
-\textbf{Deep Q-Networks (DQN).}\index{DQN} For high-dimensional state spaces, $Q$ is approximated by a neural network $Q(s,a;\boldsymbol{\theta})$ \cite{sutton2018}. Two key innovations stabilize training:
+\textbf{Deep Q-Networks (DQN).}\index{DQN} For high-dimensional state spaces, $Q$ is approximated by a neural network $Q(s,a;\boldsymbol{\theta})$ \cite{Sutton2018}. Two key innovations stabilize training:
 \begin{itemize}
     \item \textbf{Experience replay}\index{experience replay}: transitions $(s,a,r,s')$ are stored in a buffer and sampled uniformly for mini-batch updates, breaking temporal correlations.
     \item \textbf{Target network}\index{target network}: a slowly-updated copy $Q(s,a;\boldsymbol{\theta}^-)$ provides stable targets, preventing oscillation.
@@ -868,7 +868,7 @@ The Lagrangian structure we derived analytically in Chapter 11 can be \emph{lear
 \mathbf{M}_{\boldsymbol{\theta}}(\mathbf{q}) = \mathbf{L}_{\boldsymbol{\theta}}(\mathbf{q})\,\mathbf{L}_{\boldsymbol{\theta}}(\mathbf{q})^\top + \epsilon\,\mathbf{I}
 \label{eq:delan_mass}
 \end{equation}
-where $\mathbf{L}_{\boldsymbol{\theta}}$ is a lower-triangular matrix output by the network and $\epsilon > 0$ ensures strict positive definiteness. The potential energy $V_{\boldsymbol{\theta}}(\mathbf{q})$ is learned by a separate network. Together, the Lagrangian is $\mathcal{L} = \frac{1}{2}\dot{\mathbf{q}}^\top \mathbf{M}_{\boldsymbol{\theta}}(\mathbf{q})\,\dot{\mathbf{q}} - V_{\boldsymbol{\theta}}(\mathbf{q})$, and the equations of motion are obtained by differentiating through the Euler-Lagrange equations using automatic differentiation \cite{sutton2018, goodfellow2016}.
+where $\mathbf{L}_{\boldsymbol{\theta}}$ is a lower-triangular matrix output by the network and $\epsilon > 0$ ensures strict positive definiteness. The potential energy $V_{\boldsymbol{\theta}}(\mathbf{q})$ is learned by a separate network. Together, the Lagrangian is $\mathcal{L} = \frac{1}{2}\dot{\mathbf{q}}^\top \mathbf{M}_{\boldsymbol{\theta}}(\mathbf{q})\,\dot{\mathbf{q}} - V_{\boldsymbol{\theta}}(\mathbf{q})$, and the equations of motion are obtained by differentiating through the Euler-Lagrange equations using automatic differentiation \cite{Sutton2018, goodfellow2016}.
 
 % ==========================================================================
 \subsection{Exploration Strategies}
@@ -1201,7 +1201,7 @@ The machine learning methods presented in this chapter do not exist in isolation
 
 The material in this chapter draws from several foundational texts and research programs. For a comprehensive treatment of deep learning foundations---including network architectures, activation functions, backpropagation, and optimization---Goodfellow, Bengio, and Courville \cite{goodfellow2016} remains the definitive reference. Their treatment of regularization, generalization theory, and practical training methodology provides essential context for anyone applying neural networks to control problems.
 
-The reinforcement learning framework, including Markov Decision Processes, value functions, and policy gradient theory, is developed rigorously in Sutton and Barto \cite{sutton2018}. Their text covers the full spectrum from tabular methods to function approximation, and their presentation of the policy gradient theorem is the mathematical foundation for the REINFORCE algorithm and its descendants.
+The reinforcement learning framework, including Markov Decision Processes, value functions, and policy gradient theory, is developed rigorously in Sutton and Barto \cite{Sutton2018}. Their text covers the full spectrum from tabular methods to function approximation, and their presentation of the policy gradient theorem is the mathematical foundation for the REINFORCE algorithm and its descendants.
 
 For modern policy optimization, the reader should consult Schulman et al.\ \cite{schulman2015} for the trust region perspective (TRPO) that motivated the development of PPO, and Schulman et al.\ \cite{schulman2017} for the proximal policy optimization algorithm itself. These papers establish the theoretical basis for stable policy updates that has become the standard in continuous control.
 

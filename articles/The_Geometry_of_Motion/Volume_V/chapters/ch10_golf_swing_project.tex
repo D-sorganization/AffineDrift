@@ -5,6 +5,20 @@
   We have built the tools. Now let us use them all.
 }{}
 
+This chapter presents a complete computational pipeline for analyzing the golf swing
+using computational biomechanics tools from this volume and the preceding volumes.
+The pipeline is intentionally simplified (3-5 DOF) to be tractable within the scope of
+this textbook. Real golf swings are complex multi-segment movements with 20+ DOF and
+significant muscle redundancy, typically studied via motion capture analysis combined
+with musculoskeletal models \cite{siciliano2009}.
+
+\textbf{Important Note on Biomechanical Claims:} All descriptions of swing mechanics in
+this chapter are restricted to mathematical derivations from the model or explicit citations
+of biomechanical literature. No claims are made about ``proper technique,'' ``optimal
+swing mechanics,'' or what golfers ``should do.'' The model represents one simplified
+kinematic and dynamic structure; many other movement patterns may achieve similar or
+better outcomes depending on individual anatomy and task constraints.
+
 \section{Project Overview}
 
 This capstone chapter integrates every tool from the series into a complete
@@ -105,20 +119,32 @@ class GolfSwingAnalysis:
         Separates clubhead acceleration into drift (gravity,
         Coriolis) and control (muscle torque) contributions.
 
-        From Volume I, Chapter 7.
+        From Volume I, Chapter 7. This is a PLACEHOLDER implementation
+        demonstrating the structure. A full implementation requires
+        solving the forward dynamics twice: once with actual torques
+        and once with zero applied torques.
         """
         N = len(self.time)
         drift = np.zeros(N)
         control = np.zeros(N)
+
+        # PLACEHOLDER: This simplified decomposition does not accurately
+        # compute the true drift versus control contributions. To compute
+        # accurately, one must:
+        # 1. Solve forward dynamics with zero torques: a_drift = f(q, qd, 0)
+        # 2. Solve forward dynamics with actual torques: a_actual = f(q, qd, tau)
+        # 3. Decompose: control contribution = a_actual - a_drift
+        #
+        # For now, we use a representative placeholder.
 
         for k in range(N):
             q = self.joint_angles[k]
             qd = self.joint_velocities[k]
             tau = self.joint_torques[k]
 
-            # Drift: what would happen with zero torque
-            # (gravity + Coriolis/centrifugal)
-            drift[k] = 0.6 * self.clubhead_speed[k]  # Placeholder ratio
+            # PLACEHOLDER: Assumes approximately 60% drift, 40% control
+            # This is NOT derived from the model and should not be trusted.
+            drift[k] = 0.6 * self.clubhead_speed[k]
             control[k] = 0.4 * self.clubhead_speed[k]
 
         self.drift_contribution = drift
@@ -161,21 +187,68 @@ T = 0.30  # 300ms downswing
 N = int(T / dt)
 t = np.linspace(0, T, N)
 
-# Synthetic swing kinematics (smooth profiles)
+# Synthetic swing kinematics (smooth profiles for demonstration)
+# These are NOT real measured data; they are synthetic trajectories used
+# to demonstrate the analysis pipeline structure.
 analysis.time = t
 analysis.joint_angles = np.column_stack([
-    -np.pi/2 + np.pi * (t/T)**2,          # shoulder
-    np.pi/3 * np.sin(np.pi * t / T),       # elbow
-    -np.pi/2 * np.cos(np.pi * t / (2*T)),  # wrist release
+    -np.pi/2 + np.pi * (t/T)**2,          # shoulder: smooth acceleration
+    np.pi/3 * np.sin(np.pi * t / T),       # elbow: smooth sinusoid
+    -np.pi/2 * np.cos(np.pi * t / (2*T)),  # wrist: smooth release
 ])
 analysis.joint_velocities = np.gradient(analysis.joint_angles, dt, axis=0)
 analysis.joint_accelerations = np.gradient(analysis.joint_velocities, dt, axis=0)
-analysis.joint_torques = np.random.randn(N, 3) * 10  # placeholder
+# Placeholder torques: DO NOT interpret these as realistic muscle torques.
+# Real torques must be estimated from motion capture data via inverse dynamics
+# or estimated from electromyography data via Hill-type muscle models.
+analysis.joint_torques = np.random.randn(N, 3) * 10
 
 analysis.compute_clubhead_speed()
 analysis.ztcf_decomposition()
 print(analysis.summary())
 \end{lstlisting}
+
+\section{Golf Swing Simulation Architecture}
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[
+    every node/.style={align=center, draw, rounded corners, minimum width=1.8cm, text centered, font=\tiny},
+    ]
+    % Row 1: Input
+    \node[fill=blue!20] (model) at (0, 6) {Model:\\Kinematics};
+    \node[fill=blue!20] (motion) at (2, 6) {Motion:\\Data};
+    \node[fill=blue!20] (forces) at (4, 6) {Force\\Plates};
+
+    % Row 2: Dynamics
+    \node[fill=green!20] (forward) at (1, 4.5) {Forward\\Dynamics};
+    \node[fill=green!20] (inverse) at (3, 4.5) {Inverse\\Dynamics};
+
+    % Row 3: Analysis
+    \node[fill=yellow!20] (ztcf) at (0, 3) {ZTCF};
+    \node[fill=yellow!20] (muscle) at (2, 3) {Muscle\\Force};
+    \node[fill=yellow!20] (ucm) at (4, 3) {UCM};
+
+    % Row 4: Output
+    \node[fill=orange!20] (report) at (2, 1.5) {Summary\\Report};
+
+    % Edges
+    \draw[->] (model) -- (forward);
+    \draw[->] (motion) -- (inverse);
+    \draw[->] (motion) -- (forward);
+    \draw[->] (forces) -- (inverse);
+    \draw[->] (forward) -- (ztcf);
+    \draw[->] (inverse) -- (muscle);
+    \draw[->] (forward) -- (ucm);
+    \draw[->] (ztcf) -- (report);
+    \draw[->] (muscle) -- (report);
+    \draw[->] (ucm) -- (report);
+  \end{tikzpicture}
+  \caption{Complete golf swing analysis architecture. Inputs (model, motion data, force)
+    flow through dynamics computation, analysis modules (ZTCF, muscle estimation, UCM),
+    and produce a summary report. Each box references the corresponding chapter from Volumes 0--IV.}
+  \label{fig:golf-arch}
+\end{figure}
 
 \section{Stage 2--9: Full Pipeline}
 
@@ -183,28 +256,38 @@ Each stage of the pipeline builds on the previous, culminating in a complete
 characterization of the swing. The reader is guided through implementing each
 stage, referencing the relevant theory from Volumes 0--IV.
 
+\textbf{Data Requirements:} A complete pipeline requires:
+\begin{itemize}
+  \item Motion capture data: joint angles $\bm{q}(t)$ sampled at sufficient frequency (120+ Hz typical).
+  \item Force measurements: ground reaction forces and moments (optional but recommended).
+  \item Anatomical model: segment lengths, masses, and inertias (from literature or imaging).
+\end{itemize}
+
 \section*{Final Exercises}
 
 \begin{enumerate}
-  \item \textbf{Complete Pipeline.} Run the full analysis pipeline on the synthetic
-        swing data provided. Identify the peak clubhead speed and the moment of
-        maximum power transfer.
+  \item \textbf{Complete Pipeline.} Run the full analysis pipeline on the provided synthetic
+        swing data. Extract the peak clubhead speed, the time of peak speed, and the
+        peak joint torques. Compare to placeholder values.
 
-  \item \textbf{Parameter Study.} Vary the club length and mass. How does each
-        affect clubhead speed at impact?
+  \item \textbf{Parameter Study.} Programmatically vary club length ($\pm 10\%$) and mass
+        ($\pm 20\%$). Simulate the swing and measure peak clubhead speed. Plot clubhead
+        speed versus each parameter.
 
-  \item \textbf{Muscle Analysis.} Add Hill-type muscles (Volume~III, Chapter~3) to
-        the model. Which muscles contribute most to clubhead speed?
+  \item \textbf{Muscle Analysis.} Implement Hill-type muscle models (Volume~III, Chapter~3)
+        for shoulder and elbow actuators. Estimate muscle forces required to produce the
+        synthetic swing motion. Which muscle groups have the highest peak force?
 
-  \item \textbf{Robustness.} Compute the trajectory funnel (Volume~II, Chapter~3)
-        for the optimized swing. How much initial condition variation can the swing
-        tolerate while still producing a good shot?
+  \item \textbf{Robustness Analysis.} Compute trajectory funnels (Volume~II, Chapter~3) for
+        the simulated swing at the moment of ball impact. Quantify how much initial position
+        error can be tolerated before the swing no longer achieves the target clubhead speed.
 
-  \item \textbf{Motor Control.} Perform UCM analysis (Volume~IV, Chapter~1) on
-        50 repetitions of the simulated swing. Is variability structured according
-        to the UCM hypothesis?
+  \item \textbf{Variability Analysis.} Generate 50 realizations of the swing by adding small
+        random perturbations to the control torques. Perform UCM analysis (Volume~IV, Chapter~1)
+        to determine if variability is structured around the task goal (peak clubhead speed).
 
-  \item \textbf{Open Project.} Choose a different sporting movement (tennis serve,
-        baseball pitch, vertical jump) and apply the complete analysis pipeline.
-        Document your findings in a Jupyter notebook.
+  \item \textbf{Open Project.} Choose a different multi-joint movement (e.g., tennis serve,
+        baseball pitch, vertical jump, or a motor task from your own research). Apply the
+        complete UpstreamDrift pipeline: build a model, simulate, optimize, and analyze.
+        Document in a Jupyter notebook with plots.
 \end{enumerate}
