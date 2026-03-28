@@ -161,28 +161,42 @@
 \setlength{\headheight}{14.5pt}
 
 % ──────────────────────────────────────────────
+% Notation Concordance — Volume 0
+% ──────────────────────────────────────────────
+% This volume uses the "primer" notation conventions:
+%   Vectors:    bold italic via \bm{}     e.g. \state = \bm{x}
+%   Reals:      \Reals  (alias \R also available via geometry_of_motion.sty)
+%   Lie groups: \SO, \SE expand to SO(3), SE(3) with the (3) baked in
+%   Transpose:  bare ^T  (no macro — the shared \T alias is available but unused here)
+%
+% See geometry_of_motion.sty for the canonical fallback definitions shared
+% across all volumes.  Any \renewcommand below overrides the \providecommand
+% fallback in the .sty file.
+% ──────────────────────────────────────────────
+
+% ──────────────────────────────────────────────
 % Custom commands
 % ──────────────────────────────────────────────
-\newcommand{\state}{\bm{x}}
-\newcommand{\control}{\bm{u}}
-\newcommand{\traj}{\bm{\gamma}}
+\renewcommand{\state}{\bm{x}}
+\renewcommand{\control}{\bm{u}}
+\renewcommand{\traj}{\bm{\gamma}}
 \newcommand{\manifold}{\mathcal{M}}
 \newcommand{\configspace}{\mathcal{Q}}
 \newcommand{\statespace}{\mathcal{X}}
 \newcommand{\tube}{\mathcal{T}}
-\newcommand{\Reals}{\mathbb{R}}
-\newcommand{\dd}{\mathrm{d}}
-\newcommand{\dt}{\,\dd t}
+\renewcommand{\Reals}{\mathbb{R}}
+\renewcommand{\dd}{\mathrm{d}}
+\renewcommand{\dt}{\,\dd t}
 
 \DeclareMathOperator*{\argmin}{arg\,min}
 \DeclareMathOperator*{\argmax}{arg\,max}
 
-\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
-\newcommand{\inner}[2]{\left\langle #1,\, #2 \right\rangle}
-\newcommand{\se}{\mathfrak{se}(3)}
-\newcommand{\so}{\mathfrak{so}(3)}
-\newcommand{\SE}{\mathrm{SE}(3)}
-\newcommand{\SO}{\mathrm{SO}(3)}
+\renewcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\renewcommand{\inner}[2]{\left\langle #1,\, #2 \right\rangle}
+\renewcommand{\se}{\mathfrak{se}(3)}
+\renewcommand{\so}{\mathfrak{so}(3)}
+\renewcommand{\SE}{\mathrm{SE}(3)}
+\renewcommand{\SO}{\mathrm{SO}(3)}
 \newcommand{\screw}{\mathcal{S}}
 \newcommand{\twist}{\mathcal{V}}
 \newcommand{\wrench}{\mathcal{F}}
@@ -214,7 +228,7 @@
 
 Before we can begin to analyze the geometry of moving physical bodies or command them to navigate the world via control theory, we must establish a common language. The physics of movement happens in the real world, but our understanding of it happens entirely within mathematical spaces.
 
-This primer, **Volume 0** of *The Geometry of Motion*, is designed to bridge the gap between basic calculus/algebra and the rigorous differential geometry required for modern nonlinear control theory. By intuitively introducing State Space, Configuration Manifolds, SO(3) Rotations, and Screw Theory, this text ensures that the "lay user" possesses the foundational armor needed to attack the subsequent volumes on Tangent Spaces (Volume I) and Trajectory Control (Volume II).
+This primer, \textbf{Volume 0} of \textit{The Geometry of Motion}, is designed to bridge the gap between basic calculus/algebra and the rigorous differential geometry required for modern nonlinear control theory. By intuitively introducing State Space, Configuration Manifolds, SO(3) Rotations, and Screw Theory, this text ensures that the "lay user" possesses the foundational armor needed to attack the subsequent volumes on Tangent Spaces (Volume I) and Trajectory Control (Volume II).
 
 The philosophy of this primer maintains our overarching theme: mathematics should be driven by the physical reality of motion, not abstract algebra for its own sake.
 
