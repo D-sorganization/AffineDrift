@@ -5,12 +5,11 @@ title: "From Muscle Forces to Joint Torques"
 ::: {.callout-note}
 ## The Bridge Between Anatomy and Physics
 
-Golfers think in muscles: ``activate the glutes,'' ``engage the core,'' ``flex the forearms.'' But physicists and engineers think in torques: rotations about joint axes. How does a muscle's pull translate into a joint's rotation? The answer lies in moment arms, leverage, and the geometry of the body. This chapter builds the mathematical bridge from muscle physiology to joint mechanics.
+Golfers think in muscles: "activate the glutes," "engage the core," "flex the forearms." But physicists and engineers think in torques: rotations about joint axes. How does a muscle's pull translate into a joint's rotation? The answer lies in moment arms, leverage, and the geometry of the body. This chapter builds the mathematical bridge from muscle physiology to joint mechanics.
 
 :::
 
 ## The Problem: Muscles Pull, Joints Rotate
-
 
 
 Muscles generate linear forces. A muscle is a collection of fibers that contract along a single line of action, pulling the two bones it connects with a force magnitude $F^M$. This is a linear force, measured in Newtons.
@@ -60,7 +59,7 @@ This means: **the same muscle force produces different torques at different join
 
 ::: {.callout-note}
 ## In Plain Language
-Imagine using a wrench to turn a bolt. When the wrench is perpendicular to the bolt (90-degree angle), your grip strength matters most. As you rotate the bolt and the wrench tilts, the same grip strength produces less rotational effect. The effective ``lever arm'' of your hand has decreased because the angle has changed.
+Imagine using a wrench to turn a bolt. When the wrench is perpendicular to the bolt (90-degree angle), your grip strength matters most. As you rotate the bolt and the wrench tilts, the same grip strength produces less rotational effect. The effective "lever arm" of your hand has decreased because the angle has changed.
 :::
 
 ### Moment Arm as a Function of Joint Angle
@@ -98,7 +97,7 @@ The muscle Jacobian $\bm{R}(\bm{q})^T$ maps muscle forces to joint torques. It i
 
 This is directly analogous to the Jacobian in robotics and dynamics. For a robot with a linear actuator pulling on a rigid link, $\bm{J}^T \bm{F} = \boldsymbol{\tau}$.
 
-\subsection{Numerical Example: A Two-Joint Arm}
+### Numerical Example: A Two-Joint Arm
 
 ::: {.callout-tip}
 ## Moment Arms and Joint Torques in a Two-Joint Arm
@@ -122,34 +121,32 @@ __DISPLAY_MATH_5__
 Note that muscle 2 contributes to both joints: it generates 6 N$\cdot$m at the shoulder and 12 N$\cdot$m at the elbow.
 :::
 
-\subsection{Configuration-Dependent Jacobian}
+### Configuration-Dependent Jacobian
 
 The muscle Jacobian $\bm{R}(\bm{q})^T$ is configuration-dependent. As the golfer swings and the joint angles change, the moment arm matrix evolves. This means the mapping from muscle forces to joint torques continuously changes.
 
 This is a source of elegant motor control: by keeping muscle forces constant while joint angles change, a golfer can modulate joint torques. Conversely, achieving a desired joint torque sequence requires modulating muscle forces as the configuration changes.
 
 %==============================================================================
-\section{Redundancy: More Muscles Than Joints}
-\label{sec:redundancy}
+## Redundancy: More Muscles Than Joints
+{#sec:redundancy}
 
   
 
 The human body has far more muscles than joints. For example:
-\begin{itemize}
 - Total skeletal muscles: \textasciitilde 630.
 - Functional joints (with meaningful DOF): \textasciitilde 200.
 - Degrees of freedom for movement: \textasciitilde 244.
-\end{itemize}
+
 
 For a local region, say the arm, the disparity is even more dramatic:
-\begin{itemize}
 - Muscles in the arm: \textasciitilde 30 major muscles.
 - Functional DOF: \textasciitilde 7-10 (shoulder, elbow, wrist, and a few finger joints).
-\end{itemize}
 
-This means $n_m > n_j$: the muscle Jacobian $\bm{R}^T$ is tall and wide ($n_j \times n_m$ with $n_j < n_m$). The system is \textbf{redundant}: many different muscle force combinations can produce the same joint torque.
 
-\subsection{The Null Space of the Muscle Jacobian}
+This means $n_m > n_j$: the muscle Jacobian $\bm{R}^T$ is tall and wide ($n_j \times n_m$ with $n_j < n_m$). The system is **redundant**: many different muscle force combinations can produce the same joint torque.
+
+### The Null Space of the Muscle Jacobian
 
 For a given desired joint torque $\boldsymbol{\tau}^*$, any muscle force vector satisfying
 $$\bm{R}(\bm{q})^T \bm{F}^M = \boldsymbol{\tau}^*$$
@@ -158,44 +155,41 @@ $$\bm{F}^M = \bm{F}_0^M + \mathbf{v},$$
 where $\mathbf{v}$ is in the null space of $\bm{R}^T$:
 $$\bm{R}^T \mathbf{v} = \mathbf{0}.$$
 
-Vectors in the null space of $\bm{R}^T$ correspond to muscle force combinations that produce zero net torque. These are \textbf{co-contraction patterns}: muscles that pull against each other, increasing joint stiffness without producing net rotation.
+Vectors in the null space of $\bm{R}^T$ correspond to muscle force combinations that produce zero net torque. These are **co-contraction patterns**: muscles that pull against each other, increasing joint stiffness without producing net rotation.
 
 ::: {.callout-important}
 ## Co-contraction
 Co-contraction is the simultaneous activation of antagonist muscles (muscles that would produce opposite torques if activated alone). Co-contraction increases joint stiffness and stability at the expense of muscular energy.
 :::
 
-\subsection{Why Redundancy Matters for Golf}
+### Why Redundancy Matters for Golf
 
 Redundancy is not a bug; it is a feature. It allows:
 
-\begin{enumerate}
 
-- \textbf{Modulation of joint stiffness:} By varying co-contraction levels, a golfer can stiffen or soften a joint without changing the net torque. This is essential for impact: at ball contact, high stiffness is desirable to resist deformation and maintain club face alignment.
+- **Modulation of joint stiffness:** By varying co-contraction levels, a golfer can stiffen or soften a joint without changing the net torque. This is essential for impact: at ball contact, high stiffness is desirable to resist deformation and maintain club face alignment.
 
-- \textbf{Stability and perturbation rejection:} Redundancy allows the nervous system to activate muscles beyond what is strictly needed, creating a ``stiffness buffer.'' If an unexpected perturbation (gust of wind, uneven ground) occurs, the excess activation can resist the perturbation.
+- **Stability and perturbation rejection:** Redundancy allows the nervous system to activate muscles beyond what is strictly needed, creating a "stiffness buffer." If an unexpected perturbation (gust of wind, uneven ground) occurs, the excess activation can resist the perturbation.
 
-- \textbf{Metabolic efficiency:} The nervous system can choose muscle activation patterns that minimize metabolic cost, not just produce the desired torque. Different combinations of muscles have different metabolic efficiencies.
+- **Metabolic efficiency:** The nervous system can choose muscle activation patterns that minimize metabolic cost, not just produce the desired torque. Different combinations of muscles have different metabolic efficiencies.
 
-\end{enumerate}
 
 The central question in motor control is: **how does the nervous system resolve the redundancy? How does it choose which muscles to activate?**
 
-\subsection{In the Control-Affine Framework}
+### In the Control-Affine Framework
 
-In the control-affine model $\dot{\bm{x}} = f(\bm{x}) + G(\bm{x})\bm{u}$, the control input $\bm{u}$ represents the \textbf{net equivalent joint torque}. This is a single number per joint, subsume all of the redundancy of the underlying muscles.
+In the control-affine model $\dot{\bm{x}} = f(\bm{x}) + G(\bm{x})\bm{u}$, the control input $\bm{u}$ represents the **net equivalent joint torque**. This is a single number per joint, subsume all of the redundancy of the underlying muscles.
 
 The mapping from muscle forces to net joint torque involves the muscle Jacobian, but once we work at the level of joint torques, the redundancy is no longer explicitly visible. We have traded detail (individual muscles) for simplicity (equivalent torques).
 
 ::: {.callout-note}
 ## In Plain Language
-Think of muscles as many different roads to the same destination. The nervous system needs to choose which roads to take (which muscles to activate). The joint torque is the destination itself (the torque achieved). In the control-affine framework, we focus on the destination, not the roads. The underlying muscle redundancy is hidden ``under the hood.''
+Think of muscles as many different roads to the same destination. The nervous system needs to choose which roads to take (which muscles to activate). The joint torque is the destination itself (the torque achieved). In the control-affine framework, we focus on the destination, not the roads. The underlying muscle redundancy is hidden "under the hood."
 :::
 
 %==============================================================================
-\section{Why We Model with Joint Torques, Not Muscle Forces}
-\label{sec:why-joint-torques}
-
+## Why We Model with Joint Torques, Not Muscle Forces
+{#sec:why-joint-torques}
 
 
 The equations of motion for the golfer are written in terms of joint angles $\bm{q}$ and joint torques $\boldsymbol{\tau}$:
@@ -207,73 +201,69 @@ __DISPLAY_MATH_4__
 
 We could. But there are several reasons why joint torques are preferred:
 
-\subsection{Sufficiency}
+### Sufficiency
 
 The dynamics depend only on the net torque $\boldsymbol{\tau}$ at each joint, not on how that torque is achieved. The mass matrix $\bm{M}(\bm{q})$ and the Coriolis/gravity terms depend only on the configuration and motion, not on the muscles.
 
-This means: the equations of motion ``see'' only the aggregate effect of all muscles. The neural and muscular details are projections onto a lower-dimensional space (joint torques).
+This means: the equations of motion "see" only the aggregate effect of all muscles. The neural and muscular details are projections onto a lower-dimensional space (joint torques).
 
 This is a powerful simplification. It allows us to study the mechanics of the swing without needing to model 630 muscles individually.
 
-\subsection{Redundancy Avoidance}
+### Redundancy Avoidance
 
 If we work with muscle forces, we have an underdetermined system. The same motion can be achieved with infinitely many muscle activation patterns (due to the null space). We would need an additional criterion (optimization: minimize energy, fatigue, etc.) to pick a unique solution.
 
 By working with joint torques, we eliminate the redundancy at the source. We work in a space where dynamics are determined.
 
-\subsection{Experimental Accessibility}
+### Experimental Accessibility
 
 We can measure joint angles (with motion capture) and joint torques (via inverse dynamics, computed from kinematics and force plates). We cannot directly measure individual muscle forces (without invasive devices like dynamometers or electromyography).
 
 So joint torques are experimentally accessible; individual muscle forces often are not.
 
-\subsection{Connection to Control**
+### Connection to Control**
 
 In the control-affine framework $\dot{\bm{x}} = f(\bm{x}) + G(\bm{x})\bm{u}$, the control input $\bm{u}$ is interpreted as the net equivalent joint torques. This is the natural choice because:
 - Joint angles $\bm{q}$ are part of the state $\bm{x}$.
-- Joint torques are conjugate to joint angles (they are the ``forces'' that change $\bm{q}$).
+- Joint torques are conjugate to joint angles (they are the "forces" that change $\bm{q}$).
 - The control input should be conjugate to a component of the state.
 
-::: {.callout-important}
+::: {.callout-important
 ## Why Joint Torques Suffice
 The equations of motion depend only on the net joint torque, not on how that torque is generated by muscles. Therefore:
-\begin{enumerate}
 - The dynamics are sufficient to determine motion from joint torques alone.
 - Working with joint torques avoids the redundancy inherent in muscle space.
 - Joint torques are experimentally measurable via inverse dynamics.
 - In control-affine models, joint torques are the natural choice for control inputs.
-\end{enumerate}
+
 For these reasons, biomechanical models universally use joint torques.
 :::
 
-\subsection{What Is Lost?}
+### What Is Lost?
 
 Working at the joint torque level involves a projection that loses information:
-\begin{itemize}
 - Individual muscle activation patterns.
 - Joint stiffness from co-contraction (though some models include this as a separate stiffness term).
 - Metabolic cost of different muscle activation strategies.
 - Fatigue accumulation in specific muscles.
-\end{itemize}
+
 
 If you need to study these details, you must work at the muscle level. But for understanding the mechanics of the swing and how joint torques produce motion, joint torques are sufficient.
 
 %==============================================================================
-\section{Biarticular Muscles: Coupling Between Joints}
-\label{sec:biarticular}
-
+## Biarticular Muscles: Coupling Between Joints
+{#sec:biarticular}
 
 
 Some muscles cross two or more joints. In the arm, for example:
-\begin{itemize}
 - Biceps: crosses the shoulder and elbow.
 - Triceps: crosses the shoulder and elbow.
 - Wrist flexors: cross the elbow, wrist, and finger joints.
-\end{itemize}
 
-These \textbf{biarticular muscles} create coupling between joints: activating a biarticular muscle produces torques at multiple joints simultaneously.
 
-\subsection{The Moment Arm Matrix for Biarticular Muscles}
+These **biarticular muscles** create coupling between joints: activating a biarticular muscle produces torques at multiple joints simultaneously.
+
+### The Moment Arm Matrix for Biarticular Muscles
 
 For a biarticular muscle connecting joints $i$ and $j$, the moment arm matrix $\bm{R}(\bm{q})$ has non-zero entries in both row $i$ and row $j$. For example, if muscle $k$ is biarticular (acts at joints 2 and 3), then:
 $$R_{2,k}(\bm{q}) \neq 0 \quad \text{and} \quad R_{3,k}(\bm{q}) \neq 0.$$
@@ -286,7 +276,7 @@ $$\tau_2 = R_{2,k} F_k^M + \ldots, \quad \tau_3 = R_{3,k} F_k^M + \ldots$$
 Biarticular muscles produce coupled torques at two or more joints. A single muscle activation produces correlated torques at those joints, without requiring independent control at each joint.
 :::
 
-\subsection{Energy Transfer via Biarticular Muscles}
+### Energy Transfer via Biarticular Muscles
 
 Biarticular muscles are elegant mechanisms for energy transfer. Suppose a proximal joint (e.g., shoulder) accelerates, storing kinetic energy in a moving segment. A biarticular muscle can then transfer some of this energy to the distal joint (e.g., elbow) without explicit distal control.
 
@@ -297,7 +287,7 @@ This is a key mechanism in the kinetic chain: the legs accelerate, the hips foll
 Imagine a chain of pulleys, where a rope passes through multiple pulleys. If you pull one end of the rope, the motion propagates through all the pulleys at once, without needing to adjust each pulley individually. Biarticular muscles are like this rope: they couple motion and energy across joints.
 :::
 
-\subsection{Example: The Wrist Flexors in Golf}
+### Example: The Wrist Flexors in Golf
 
 The flexor carpi radialis and flexor carpi ulnaris are biarticular muscles. They originate at the medial epicondyle of the humerus (near the elbow) and insert on the wrist and hand.
 
@@ -307,14 +297,14 @@ __DISPLAY_MATH_0__
 A golfer can rotate the forearm (elbow) and flex the wrist simultaneously by activating the wrist flexors, without separate control of the elbow and wrist. This is efficient for power generation in the swing.
 
 %==============================================================================
-\section{The Inverse Problem: From Desired Torques to Muscle Forces}
-\label{sec:inverse-problem}
+## The Inverse Problem: From Desired Torques to Muscle Forces
+{#sec:inverse-problem}
 
  
 
 Suppose you want a certain joint torque profile $\boldsymbol{\tau}^*(t)$ to swing the club optimally. The inverse problem is: what muscle forces $\bm{F}^M(t)$ are needed?
 
-\subsection{The Underdetermined Inverse}
+### The Underdetermined Inverse
 
 From the muscle Jacobian relation:
 $$\boldsymbol{\tau} = \bm{R}(\bm{q})^T \bm{F}^M,$$
@@ -322,34 +312,34 @@ we want to solve for $\bm{F}^M$ given $\boldsymbol{\tau}$ and $\bm{q}$.
 
 But $\bm{R}^T$ is a tall, wide matrix ($n_j \times n_m$ with $n_j < n_m$). The equation $\boldsymbol{\tau} = \bm{R}^T \bm{F}^M$ is underdetermined: it has infinitely many solutions (or no solutions, if $\boldsymbol{\tau}$ is not in the column space of $\bm{R}^T$).
 
-\subsection{Optimization Approaches}
+### Optimization Approaches
 
 To pick a unique solution, an additional criterion is needed. Common choices are:
 
-\textbf{1. Minimize total muscle force:}
+**1. Minimize total muscle force:**
 __DISPLAY_MATH_1__
-This minimizes the ``effort'' in an intuitive sense.
+This minimizes the "effort" in an intuitive sense.
 
-\textbf{2. Minimize metabolic cost:}
+**2. Minimize metabolic cost:**
 __DISPLAY_MATH_2__
 where $C_i$ is a nonlinear cost function that accounts for the metabolic energy of muscle $i$. Metabolic cost is not proportional to force; it depends on the muscle fiber type, contraction velocity, and other factors.
 
-\textbf{3. Minimize fatigue:}
+**3. Minimize fatigue:**
 __DISPLAY_MATH_3__
 where $f_i$ accounts for fatigue accumulation in muscle $i$ over time.
 
 ::: {.callout-important}
 ## Static Optimization
-Static optimization is the process of computing muscle forces that minimize some criterion (typically energy or fatigue) while producing a desired set of joint torques. It is ``static'' in the sense that it solves the optimization problem at each time step independently, without considering the dynamics of muscle contraction.
+Static optimization is the process of computing muscle forces that minimize some criterion (typically energy or fatigue) while producing a desired set of joint torques. It is "static" in the sense that it solves the optimization problem at each time step independently, without considering the dynamics of muscle contraction.
 :::
 
-\subsection{Why This Matters for Golf (and Why It's Hard)}
+### Why This Matters for Golf (and Why It's Hard)
 
 The nervous system solves the inverse problem unconsciously. It knows what torques are needed (from the motor plan) and automatically recruits muscles to achieve those torques, choosing activations that are efficient, stable, and adaptable.
 
 Understanding this process is a major open problem in neuroscience and biomechanics. Different people, even with the same swing goal, may recruit muscles differently. Training and skill development may involve learning more efficient muscle activation patterns.
 
-For the golfer, this suggests: there is no single ``correct'' muscle activation pattern for a swing. Different patterns of muscle activation can produce the same swing, with different metabolic costs and efficiencies. A skilled golfer (or coached golfer) learns activation patterns that are efficient and repeatable.
+For the golfer, this suggests: there is no single "correct" muscle activation pattern for a swing. Different patterns of muscle activation can produce the same swing, with different metabolic costs and efficiencies. A skilled golfer (or coached golfer) learns activation patterns that are efficient and repeatable.
 
 ::: {.callout-note}
 ## In Plain Language
@@ -357,34 +347,32 @@ You want to hit a 7-iron to a target 150 yards away. Your brain knows the club h
 :::
 
 %==============================================================================
-\section{Practical Example: The Golf Grip}
-\label{sec:grip-forces}
+## Practical Example: The Golf Grip
+{#sec:grip-forces}
 
  
 
 The grip is where the hand transfers control forces and torques to the club. It illustrates the interplay of muscle forces, moment arms, and joint torques.
 
-\subsection{Anatomy of the Grip}
+### Anatomy of the Grip
 
 The grip involves approximately 8--10 muscles in each hand and forearm:
-\begin{itemize}
 - Flexor carpi radialis: wrist flexor, radial deviation.
 - Flexor carpi ulnaris: wrist flexor, ulnar deviation.
 - Extensor carpi radialis: wrist extensor.
 - Extensor digitorum: finger extensors.
 - Flexor digitorum superficialis and profundus: finger flexors.
 - Intrinsic hand muscles: fine control of finger position.
-\end{itemize}
+
 
 These muscles act on 3+ articulations: wrist (2 DOF: flexion/extension, radial/ulnar deviation) and fingers (multiple joints).
 
-\subsection{Grip Force vs. Grip Torque}
+### Grip Force vs. Grip Torque
 
 The grip serves two functions:
-\begin{enumerate}
 - **Grip force:** The normal force pressing the hand against the club grip. This is a constraint force; it maintains contact between hand and club.
 - **Grip torque:** The torques applied by the hands to rotate or stabilize the club.
-\end{enumerate}
+
 
 The grip force is distributed around the circumference of the grip. If you measure the grip force profile (force vs. position around the grip), you can infer information about which muscles are active and how they are coordinated.
 
@@ -393,7 +381,7 @@ The grip torque is more subtle. Movements of the wrist and fingers create torque
 - Radial/ulnar wrist deviation tilts the club face.
 - Finger flexion can modulate the grip force or produce subtle torques.
 
-\subsection{Moment Arm Changes with Hand Configuration}
+### Moment Arm Changes with Hand Configuration
 
 As the grip changes (different grip styles: strong, weak, neutral), the geometry of the hand-club interface changes. This alters the moment arms of the muscles.
 
@@ -401,16 +389,15 @@ For example, in a strong grip (club positioned more closed), the flexor carpi ul
 
 Different grip styles essentially change the muscle Jacobian $\bm{R}(\bm{q})$, making different muscle groups more or less effective for producing specific wrist torques.
 
-\subsection{Grip Force Modulation During the Swing}
+### Grip Force Modulation During the Swing
 
 Force plate and EMG (electromyography) studies reveal that grip force changes dramatically during the swing:
-\begin{itemize}
 - Early in the backswing: grip force is relatively low (20--30\% of maximum).
 - At the top of the backswing: grip force increases to resist gravity and prepare for the downswing (40--50\% of maximum).
 - During the downswing: grip force increases further (60--80\% of maximum).
 - At impact: grip force peaks at 80--100\% of maximum, providing stiffness to resist deformation and maintain club face alignment.
 - During the follow-through: grip force decreases as the club decelerates.
-\end{itemize}
+
 
 This modulation is achieved through coordinated muscle activation. Different phases require different activation patterns, computed by the nervous system via the inverse problem.
 
@@ -424,7 +411,6 @@ Grip stiffness comes from co-contraction: simultaneous activation of muscles tha
 %==============================================================================
 ::: {.callout-important}
 ## Key Takeaways
-\begin{enumerate}
 
 - Muscles generate linear forces along their line of action. Joints rotate about axes. The moment arm is the geometric bridge: moment arm = perpendicular distance from line of action to axis. Torque = force × moment arm.
 
@@ -437,12 +423,11 @@ Grip stiffness comes from co-contraction: simultaneous activation of muscles tha
 - Redundancy is not a problem; it is a feature. It allows modulation of joint stiffness (co-contraction), stability against perturbations, and optimization of metabolic efficiency.
 
 - We model dynamics using joint torques, not muscle forces, because:
-\begin{enumerate}
 - The equations of motion depend only on net joint torques.
 - This avoids the underdetermined muscle redundancy.
 - Joint torques are experimentally measurable.
 - Joint torques are the natural control inputs in control-affine models.
-\end{enumerate}
+
 
 - Biarticular muscles couple torques at two joints. They enable energy transfer between proximal and distal joints without explicit distal control, a key mechanism in the kinetic chain.
 
@@ -452,21 +437,19 @@ Grip stiffness comes from co-contraction: simultaneous activation of muscles tha
 
 - At the grip, the moment arm matrix changes with hand configuration (grip style). Different grip styles make different muscles more effective for producing wrist control.
 
-\end{enumerate}
+
 :::
 
 %==============================================================================
 ## Chapter Exercises
 
-\begin{enumerate}
 
 - Define the moment arm. Why does it depend on joint configuration? Give a practical example from the golf swing.
 
 - For a biceps with a maximum force $F_{\max} = 600$ N, compute the maximum torque at the elbow when:
-\begin{enumerate}
 - The moment arm is 0.05 m (near full extension).
 - The moment arm is 0.03 m (partially flexed).
-\end{enumerate}
+
 Which configuration is more mechanically advantageous? Why?
 
 - A simple forearm has 2 muscles acting on the elbow and wrist. Suppose the moment arm matrix is:

@@ -3,7 +3,6 @@ title: "The Complete Swing"
 ---
 
 
-
 # The Complete Golf Swing: Putting It All Together
 
 ::: {.callout-tip}
@@ -32,7 +31,7 @@ A complete model of the golf swing includes:
 The full state vector is enormous: 20+ joint angles, 20+ joint angular velocities, plus the modal coordinates for shaft flexibility, plus the ground reaction forces (which are determined by the constraints). But despite the dimensionality, the affine structure holds:
 
 $$
-\dot{\state} = f(\state) + G(\state) \control
+\dot{\mathbf{x}} = f(\mathbf{x}) + G(\mathbf{x}) \control
 $$
 
 The drift field $f$ includes gravity, Coriolis forces, elastic forces from the shaft, and passive damping. The control field $G$ is the mapping from muscle torques to accelerations. The constraints are managed through Lagrange multipliers (the constraint forces).
@@ -45,7 +44,7 @@ The swing begins at address, with the golfer standing still (or nearly still) at
 
 At address, the golfer's body is in static equilibrium with the ground. The feet press on the ground; the ground pushes back with normal forces (vertical) and potential friction forces (horizontal). The muscles are in low-level contraction, maintaining posture against gravity.
 
-In terms of the affine framework, the velocity and acceleration are zero (or small). The drift field $f(\state)$ at address points downward (gravity). But muscle torques (control inputs) are active, holding the body in position. The control authority $G(\state)$ is fully available.
+In terms of the affine framework, the velocity and acceleration are zero (or small). The drift field $f(\mathbf{x})$ at address points downward (gravity). But muscle torques (control inputs) are active, holding the body in position. The control authority $G(\mathbf{x})$ is fully available.
 
 The golf swing begins when the golfer deliberately breaks this equilibrium. The muscles that were holding the body in static posture begin to activate in a coordinated sequence. This is the beginning of the backswing.
 
@@ -57,7 +56,7 @@ The initial configuration at address is crucial. It determines:
 2. **The initial constraint configuration:** The hand position, grip angle, and club face angle at address determine how the constraints will guide the motion.
 3. **The initial muscle state:** The baseline muscle activation level (how tensioned the muscles are) affects the rate at which muscle torques can increase.
 
-Small changes in address can significantly change the swing that follows. This is because the drift field is sensitive to the initial conditions. A slightly different hand position at address means a slightly different trajectory for the \ztcf, which requires different control inputs to correct.
+Small changes in address can significantly change the swing that follows. This is because the drift field is sensitive to the initial conditions. A slightly different hand position at address means a slightly different trajectory for the ZTCF, which requires different control inputs to correct.
 
 This is why swing consistency begins with consistent setup. A golfer who is careful about address (foot position, ball position, hand position, alignment) is setting the initial conditions for a consistent drift field.
 
@@ -163,7 +162,7 @@ The drift field in mid-downswing includes all the components from early downswin
 
 Mid-downswing is where the swing becomes ballistic. The motor cortex can still send commands, and muscles can still produce torque. But the effects of these commands are small. The drift field is so strong that changing the control inputs would require enormous torques to have any effect.
 
-This is the physical basis for the saying ``once you start the downswing, it's too late to change.'' It is not that the golfer is incapable of producing torque; it is that the torque required to make a large change in the swing path is so large that the muscles cannot produce it. The drift has taken over.
+This is the physical basis for the saying "once you start the downswing, it's too late to change." It is not that the golfer is incapable of producing torque; it is that the torque required to make a large change in the swing path is so large that the muscles cannot produce it. The drift has taken over.
 
 Golfers intuitively understand this. A golfer who tries to "hold on" to the club in mid-downswing (trying to resist the centrifugal and Coriolis forces) will produce poor results. The golfer must commit to the motion and let the drift carry it through.
 
@@ -184,7 +183,7 @@ The drift field in late downswing is complex and multifaceted:
 
 ### The Catapult Effect in Action
 
-This is where the shaft flexibility (Chapter~\ref{ch:flexible_shaft}) matters most. The elastic energy stored in the bent shaft is now being released. As the shaft snaps back toward straight, it does work on the clubhead, accelerating it further.
+This is where the shaft flexibility (Chapter @ch:flexible_shaft) matters most. The elastic energy stored in the bent shaft is now being released. As the shaft snaps back toward straight, it does work on the clubhead, accelerating it further.
 
 The magnitude of this effect depends on the shaft's stiffness and damping, which are parameters of the drift field. A more flexible shaft stores more energy and releases it more powerfully (if the timing is right). A stiffer shaft stores less energy but might be harder to bend in the first place.
 
@@ -409,13 +408,13 @@ We began this book with a simple question: what forces are at work in the golf s
 
 Throughout the book, we have seen how this framework illuminates every aspect of the swing:
 
-- **Chapter~\ref{ch:03_double_pendulum}** showed how even a simple double pendulum exhibits drift and control.
-- **Chapter~\ref{ch:05_affine_structure}** developed the affine structure that underlies all golfs physics.
-- **Chapter~\ref{ch:zero_torque_counterfactual}** introduced the ZTCF, the autopilot trajectory.
-- **Chapters~\ref{ch:constraint_forces}--10** showed how constraints and energy flow reshape the swing.
-- **Chapter~\ref{ch:flexible_shaft}** revealed how shaft flexibility contributes entirely to drift.
-- **Chapter~\ref{ch:fascia}** debunked myths about fascia and placed it correctly in the framework.
-- **Chapter~\ref{ch:interdisciplinary}** showed how multiple disciplines all speak the language of drift and control.
+- **Chapter @ch:03_double_pendulum** showed how even a simple double pendulum exhibits drift and control.
+- **Chapter @ch:05_affine_structure** developed the affine structure that underlies all golfs physics.
+- **Chapter @ch:zero_torque_counterfactual** introduced the ZTCF, the autopilot trajectory.
+- **Chapters @ch:constraint_forces--10** showed how constraints and energy flow reshape the swing.
+- **Chapter @ch:flexible_shaft** revealed how shaft flexibility contributes entirely to drift.
+- **Chapter @ch:fascia** debunked myths about fascia and placed it correctly in the framework.
+- **Chapter @ch:interdisciplinary** showed how multiple disciplines all speak the language of drift and control.
 - **This chapter** brought it all together, walking through the swing and revealing the dominance of drift in the late downswing.
   The core insight is this: **the golf swing is a masterpiece of managed drift.**
   The golfer's job is not to control every part of the swing. The golfer's job is to set up the initial conditions and the early motion so that the drift field naturally produces the desired outcome. Then, in execution, trust the drift. Let physics do the work. Use control sparingly, for fine-tuning, not for driving the entire motion.

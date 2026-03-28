@@ -3,13 +3,12 @@ title: "Constraint Forces"
 ---
 
 
-
 # Constraint Forces: The Hidden Engines of the Swing
 
 ::: {.callout-tip}
 ## Why Constraint Forces Matter Most
 
-You learned in Chapter~\ref{ch:zero_torque_counterfactual} that the downswing is passive—gravity and Coriolis drive acceleration. But Chapter~\ref{ch:zero_torque_counterfactual} left a critical question unanswered:
+You learned in Chapter @ch:zero_torque_counterfactual that the downswing is passive—gravity and Coriolis drive acceleration. But Chapter @ch:zero_torque_counterfactual left a critical question unanswered:
 
 **How does the arm's momentum become the club's momentum?**
 
@@ -207,7 +206,7 @@ T = T_{\text{arm}} + T_{\text{club}} = \frac{1}{2}\dot{\bm{q}}_1^T \bm{M}_1(\bm{
 
 The power going to each segment is:
 
-\frac{dT_{\text{arm}}}{dt} &= \bm{\tau}_{\text{arm}} \cdot \dot{\bm{q}}_1 + \bm{F}_{\text{constraint, arm}} \cdot v_{\text{arm}}\\
+\frac{dT_{\text{arm}}}{dt} &= \bm{\tau}_{\text{arm}} \cdot \dot{\bm{q}}_1 + \bm{F}_{\text{constraint, arm}} \cdot v_{\text{arm}}
 \frac{dT_{\text{club}}}{dt} &= \bm{\tau}_{\text{club}} \cdot \dot{\bm{q}}_2 + \bm{F}_{\text{constraint, club}} \cdot v_{\text{club}}
 
 The constraint forces ensure that:
@@ -222,20 +221,20 @@ But individually, each term can be nonzero, allowing energy to transfer from arm
 
 **Example: Wrist Constraint Force in the Double Pendulum**
 
-Return to the double pendulum from Chapter~\ref{ch:zero_torque_counterfactual}, but now add a constraint: the wrist is locked so that $q_1 + q_2 = \text{const} = 115°$. This forces the club to move relative to the arm in a coordinated way.
+Return to the double pendulum from Chapter @ch:zero_torque_counterfactual, but now add a constraint: the wrist is locked so that $q_1 + q_2 = \text{const} = 115°$. This forces the club to move relative to the arm in a coordinated way.
 
 The constraint Jacobian is:
 
 \bm{J}_c =  1 & 1
 
-At the configuration from Chapter~\ref{ch:zero_torque_counterfactual} ($q_1 = 45°$, $\dot{q}_1 = 8$ rad/s, $q_2 = 70°$, $\dot{q}_2 = 12$ rad/s), the unconstrained accelerations (from the ZTCF) are:
+At the configuration from Chapter @ch:zero_torque_counterfactual ($q_1 = 45°$, $\dot{q}_1 = 8$ rad/s, $q_2 = 70°$, $\dot{q}_2 = 12$ rad/s), the unconstrained accelerations (from the ZTCF) are:
 
-\ddot{q}_1^{\text{unconstrained}} &\approx -5.56 \text{ rad/s}^2\\
+\ddot{q}_1^{\text{unconstrained}} &\approx -5.56 \text{ rad/s}^2
 \ddot{q}_2^{\text{unconstrained}} &\approx 21.9 \text{ rad/s}^2
 
 With the constraint, $\ddot{q}_1 + \ddot{q}_2 = 0$ must hold. But the unconstrained accelerations are $-5.56$ and $21.9$, which sum to $16.34 \neq 0$. The constraint must enforce this.
 
-Using the procedure from Section \ref{sec:solving_constraint_forces}, we solve for $\lambda$. The constraint acceleration condition is:
+Using the procedure from Section @sec:solving_constraint_forces, we solve for $\lambda$. The constraint acceleration condition is:
 
 \bm{J}_c \ddot{\bm{q}} = -\dot{\bm{J}}_c \dot{\bm{q}} = 0 \quad \text{(since $\bm{J}_c$ is constant)}
 
@@ -245,19 +244,19 @@ Thus:
 
 From the constrained EOM:
 
-\bm{M}_{11} \ddot{q}_1 + \bm{M}_{12} \ddot{q}_2 + C_1 + g_1 &= 0 + \lambda\\
+\bm{M}_{11} \ddot{q}_1 + \bm{M}_{12} \ddot{q}_2 + C_1 + g_1 &= 0 + \lambda
 \bm{M}_{21} \ddot{q}_1 + \bm{M}_{22} \ddot{q}_2 + C_2 + g_2 &= 0 + \lambda
 
 (The constraint force acts as $\bm{J}_c^T \lambda =  1 \\ 1  \lambda$.)
 
 With the constraint $\ddot{q}_2 = -\ddot{q}_1$, we have two equations and two unknowns ($\ddot{q}_1$ and $\lambda$):
 
-\bm{M}_{11} \ddot{q}_1 - \bm{M}_{12} \ddot{q}_1 + C_1 + g_1 &= \lambda\\
+\bm{M}_{11} \ddot{q}_1 - \bm{M}_{12} \ddot{q}_1 + C_1 + g_1 &= \lambda
 -\bm{M}_{21} \ddot{q}_1 + \bm{M}_{22} \ddot{q}_1 + C_2 + g_2 &= \lambda
 
-Solving (using values from Chapter~\ref{ch:zero_torque_counterfactual}):
+Solving (using values from Chapter @ch:zero_torque_counterfactual):
 
-(0.71 - 0.014) \ddot{q}_1 + (-1.09) + 2.51 &= \lambda\\
+(0.71 - 0.014) \ddot{q}_1 + (-1.09) + 2.51 &= \lambda
 (-0.014 + 0.016) \ddot{q}_1 + 0 + (-0.27) &= \lambda
 
 From the second equation:
@@ -286,7 +285,7 @@ The constraint force magnitude is $\lambda \approx 0.265$ Nm. This is the "effor
 
 Now let's compute the power transfer. The power flowing to each segment through the constraint is:
 
-P_{\text{arm, constraint}} &= \lambda \cdot \dot{q}_1 = 0.265 \times 8 = 2.12 \text{ W}\\
+P_{\text{arm, constraint}} &= \lambda \cdot \dot{q}_1 = 0.265 \times 8 = 2.12 \text{ W}
 P_{\text{club, constraint}} &= \lambda \cdot \dot{q}_2 = 0.265 \times 12 = 3.18 \text{ W}
 
 Wait—these don't sum to zero! That's because I've made an error in the sign or interpretation. Let me reconsider.
@@ -405,9 +404,9 @@ These ground reaction forces are crucial because they close the kinetic chain. W
 
 :::
 
-**What comes next:** Understanding constraints, we now ask: what if there are *multiple* constraints forming a closed loop? What if the body is not just a serial chain (hips → shoulders → arms → club) but a parallel mechanism with closed kinematic chains? That's the subject of Chapter~\ref{ch:parallel_mechanisms}.
+**What comes next:** Understanding constraints, we now ask: what if there are *multiple* constraints forming a closed loop? What if the body is not just a serial chain (hips → shoulders → arms → club) but a parallel mechanism with closed kinematic chains? That's the subject of Chapter @ch:parallel_mechanisms.
 
-But first, Chapter~\ref{ch:triple_pendulum} extends the double pendulum to a triple pendulum, adding the wrists, and shows how the constraint-driven energy transfer becomes even more dramatic with an additional segment.
+But first, Chapter @ch:triple_pendulum extends the double pendulum to a triple pendulum, adding the wrists, and shows how the constraint-driven energy transfer becomes even more dramatic with an additional segment.
 
 ## Chapter Exercises: Constraint Forces
 
@@ -417,7 +416,7 @@ Explain in plain language: Why can a grip force of 100 N do zero net work on the
 (Hint: Think about the direction of the grip force and the direction of motion. Are they parallel or perpendicular?)
 
 {Geometric}
-For the wrist constraint in the double pendulum (Section \ref{sec:double_pendulum_constraint_force}), sketch the configuration of the arm and club when $q_1 + q_2 = 115°$. Identify the null space (allowed motion) and the direction of the constraint force.
+For the wrist constraint in the double pendulum (Section @sec:double_pendulum_constraint_force), sketch the configuration of the arm and club when $q_1 + q_2 = 115°$. Identify the null space (allowed motion) and the direction of the constraint force.
 
 {Quantitative}
 A single-segment arm has mass $m = 2$ kg, length $L = 0.7$ m, and moment of inertia $I = 0.08$ kg$\cdot$m$^2$. It's rotating at $\omega = 10$ rad/s and experiences an inward centrifugal acceleration.
@@ -440,7 +439,7 @@ Watch a high-speed video of a golfer's swing (at least 1000 fps). Identify momen
 How does the arm motion change in each case? How does the club behave when the wrist constraint is tight vs. loose?
 
 {Analysis: Energy Transfer}
-For the double pendulum with constraint (Section \ref{sec:double_pendulum_constraint_force}):
+For the double pendulum with constraint (Section @sec:double_pendulum_constraint_force):
 1. Compute the kinetic energy of the arm before and after applying the constraint.
 2. Compute the kinetic energy of the club before and after.
 3. How much energy has been transferred from arm to club? Is it consistent with zero net power for the constraint?

@@ -5,14 +5,11 @@ title: "Aerodynamic Drag: The Force You Cannot Ignore"
 ::: {.callout-note}
 ## Why Air Resistance Matters for Physics Accuracy
 
-You've likely heard that drag is ``negligible'' in golf. That's wrong. At clubhead speeds of 80--120 mph, the club is moving fast enough that air resistance is comparable to the forces from muscle torques during the late downswing. When you compute inverse dynamics—trying to infer the joint torques from measured motion—ignoring drag introduces systematic errors of 2--5% in peak joint torque estimates, and much larger errors in wrist and ankle torques (where moment arms are small). For a researcher or coach trying to understand the *true* control applied by muscles, this bias is unacceptable. For a golfer, ignoring drag means your training data is biased: your coaches think you're producing more torque than you actually are, because they attribute some of the acceleration to physics instead of muscle. Understanding drag improves both the accuracy of swing analysis and the fairness of athlete assessment.
+You've likely heard that drag is "negligible" in golf. That's wrong. At clubhead speeds of 80--120 mph, the club is moving fast enough that air resistance is comparable to the forces from muscle torques during the late downswing. When you compute inverse dynamics—trying to infer the joint torques from measured motion—ignoring drag introduces systematic errors of 2--5% in peak joint torque estimates, and much larger errors in wrist and ankle torques (where moment arms are small). For a researcher or coach trying to understand the *true* control applied by muscles, this bias is unacceptable. For a golfer, ignoring drag means your training data is biased: your coaches think you're producing more torque than you actually are, because they attribute some of the acceleration to physics instead of muscle. Understanding drag improves both the accuracy of swing analysis and the fairness of athlete assessment.
 
 :::
 
 ## The Physics of Drag: From First Principles
-
-
-
 
 
 Drag is the force exerted by a fluid (in this case, air) on an object moving through it, opposing the motion. Unlike gravity and inertial forces (which are derived from geometry and mass), drag is fundamentally a fluid-mechanical phenomenon. To understand it, we must start with the equations of fluid flow.
@@ -21,10 +18,10 @@ When an object moves through a fluid, it disturbs the fluid's velocity field. Th
 
 At high Reynolds numbers (which is the regime of golf—$\mathrm{Re} = \rho v L / \mu \sim 10^5$ for clubheads), the flow is turbulent or transitional, and the drag force is well-approximated by:
 
-\begin{equation}
+$$
 F_D = \frac{1}{2} \rho v^2 C_D A
-\label{eq:drag-scalar}
-\end{equation}
+{#eq:drag-scalar}
+$$
 
 where:
 
@@ -35,10 +32,10 @@ where:
 
 The drag force acts *opposite* to the velocity direction. In vector form:
 
-\begin{equation}
+$$
 \bm{F}_D = -\frac{1}{2} \rho C_D A \|\bm{v}\| \bm{v}
-\label{eq:drag-vector}
-\end{equation}
+{#eq:drag-vector}
+$$
 
 This is a nonlinear function of velocity—quadratic in magnitude. This is critical: at twice the speed, drag is *four times* larger.
 
@@ -48,19 +45,15 @@ This is a nonlinear function of velocity—quadratic in magnitude. This is criti
 The drag coefficient $C_D$ is determined by the shape of the object and must be measured experimentally or computed via computational fluid dynamics (CFD).
 
 
-\begin{tabular}{lll}
-\toprule
-Shape & $C_D$ & Notes 
-\midrule
-Sphere & $\sim 0.47$ & Smooth ball in laminar regime 
-Golf ball (dimpled) & $0.20$--$0.30$ & Dimples reduce drag significantly 
-Golf ball (smooth) & $\sim 0.47$ & Why golf balls have dimples 
-Cylinder (axis transverse) & $0.4$--$1.2$ & Depends on aspect ratio 
-Golf club shaft (simplified) & $0.5$--$0.8$ & Approximated as cylinder 
-Golf driver head (modern) & $0.30$--$0.50$ & Aerodynamic crown reduces drag 
-Flat plate (normal) & $\sim 1.0$ & Maximum drag 
-\bottomrule
-\end{tabular}
+| Shape | $C_D$ | Notes 
+Sphere | $\sim 0.47$ | Smooth ball in laminar regime 
+Golf ball (dimpled) | $0.20$--$0.30$ | Dimples reduce drag significantly 
+Golf ball (smooth) | $\sim 0.47$ | Why golf balls have dimples 
+Cylinder (axis transverse) | $0.4$--$1.2$ | Depends on aspect ratio 
+Golf club shaft (simplified) | $0.5$--$0.8$ | Approximated as cylinder 
+Golf driver head (modern) | $0.30$--$0.50$ | Aerodynamic crown reduces drag 
+Flat plate (normal) | $\sim 1.0$ | Maximum drag |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 
 
 The reference area $A$ is the projected area. For a cylinder of diameter $d$ and length $L$ with axis perpendicular to flow, $A = d \times L$. For a sphere of diameter $D$, $A = \pi D^2 / 4$. For a clubhead, $A$ is roughly the cross-sectional area of the clubface, approximately 50--80 cm$^2$ for modern drivers.
@@ -82,18 +75,14 @@ Let's put numbers on drag during a golf swing. For a clubhead with:
 - $v = 50$ m/s (typical impact speed, $\approx 112$ mph)
 
 The drag force is:
-\begin{equation}
+$$
 F_D = \frac{1}{2} \times 1.225 \times 50^2 \times 0.4 \times 0.005 = 3.06 \text{ N}
-\label{eq:drag-example}
-\end{equation}
+{#eq:drag-example}
+$$
 
 This seems small (3 N), but over the course of a downswing lasting 0.25 seconds with the club accelerating and decelerating, the impulse (integrated force) is significant. Moreover, drag acts throughout the downswing, not just at impact.
 
 ## Drag on Different Segments of the Swing
-
-
-
-
 
 
 The golf swing is not a single rigid body moving through air. It is a multi-segment kinematic chain where each segment moves at a different speed. The club shaft, clubhead, arms, and torso all contribute to total drag.
@@ -103,36 +92,36 @@ The golf swing is not a single rigid body moving through air. It is a multi-segm
 The shaft is approximately a cylinder: length $L \approx 1.1$ m, diameter $d \approx 0.01$ m. The reference area for a cylinder (with axis perpendicular to motion) is $A_{\text{shaft}} = d \times L \approx 0.01 \times 1.1 = 0.011$ m$^2$ (110 cm$^2$).
 
 However, the shaft is not moving at a single velocity. Different points along the shaft rotate at different speeds. For a rigid shaft rotating about the shoulder joint, the velocity at position $s$ along the shaft (measured from the shoulder) is:
-\begin{equation}
+$$
 v(s) = \dot{\theta} \times s
-\label{eq:shaft-velocity}
-\end{equation}
+{#eq:shaft-velocity}
+$$
 where $\dot{\theta}$ is the angular velocity and $s$ is the distance from the rotation center.
 
 The drag force on an infinitesimal segment $ds$ is:
-\begin{equation}
+$$
 dF = \frac{1}{2} \rho C_D d_{\text{seg}} v(s)^2 \, ds
-\label{eq:shaft-drag-element}
-\end{equation}
+{#eq:shaft-drag-element}
+$$
 where $d_{\text{seg}}$ is the local diameter (approximately constant for a standard shaft).
 
 Substituting $v(s) = \dot{\theta} s$:
-\begin{equation}
+$$
 dF = \frac{1}{2} \rho C_D d_{\text{seg}} (\dot{\theta} s)^2 \, ds = \frac{1}{2} \rho C_D d_{\text{seg}} \dot{\theta}^2 s^2 \, ds
-\label{eq:shaft-drag-integrated}
-\end{equation}
+{#eq:shaft-drag-integrated}
+$$
 
 The total drag force on the shaft is:
-\begin{equation}
+$$
 F_{\text{shaft}} = \int_0^L \frac{1}{2} \rho C_D d_{\text{seg}} \dot{\theta}^2 s^2 \, ds = \frac{1}{2} \rho C_D d_{\text{seg}} \dot{\theta}^2 \frac{L^3}{3}
-\label{eq:total-shaft-drag}
-\end{equation}
+{#eq:total-shaft-drag}
+$$
 
 This drag force acts at different points along the shaft, so it produces a distributed torque about the shoulder. The effective drag torque is:
-\begin{equation}
+$$
 \tau_{\text{shaft}} = \int_0^L s \, dF = \int_0^L s \times \frac{1}{2} \rho C_D d_{\text{seg}} \dot{\theta}^2 s^2 \, ds = \frac{1}{2} \rho C_D d_{\text{seg}} \dot{\theta}^2 \frac{L^4}{4}
-\label{eq:shaft-drag-torque}
-\end{equation}
+{#eq:shaft-drag-torque}
+$$
 
 ::: {.callout-tip}
 ## Shaft Drag Torque at Impact
@@ -145,19 +134,21 @@ Consider a golf shaft with parameters:
 - $\dot{\theta}_{\text{shoulder}} = 25$ rad/s (impact angular velocity, approximately 1430 deg/s, consistent with published data [@zheng2008golf])
 - $\rho = 1.225$ kg/m$^3$
 
-Using Eq.~\eqref{eq:shaft-drag-torque}:
-\begin{equation}
+Using Eq. \eqref{eq:shaft-drag-torque}:
+$$
 \tau_{\text{shaft}} = \frac{1}{2} \times 1.225 \times 0.5 \times 0.01 \times 25^2 \times \frac{1.1^4}{4}
-\end{equation}
+$$
 
 Computing step by step:
-\begin{align}
-\frac{1.1^4}{4} &= \frac{1.464}{4} = 0.366 \\
-25^2 &= 625 \\
-\tau_{\text{shaft}} &= \frac{1}{2} \times 1.225 \times 0.5 \times 0.01 \times 625 \times 0.366 \\
-&=  \\
+$$
+\begin{aligned}
+\frac{1.1^4}{4} &= \frac{1.464}{4} = 0.366 
+25^2 &= 625 
+\tau_{\text{shaft}} &= \frac{1}{2} \times 1.225 \times 0.5 \times 0.01 \times 625 \times 0.366 
+&=  
 &\approx 0.70 \text{ N·m}
-\end{align}
+\end{aligned}
+$$
 
 So the shaft alone produces a drag torque of about 0.7 N·m at the shoulder. For reference, the total shoulder torque at impact is typically 50--100 N·m, so shaft drag accounts for approximately 1% of the total resistive effect. While small for the shaft alone, the combined drag from the shaft and clubhead together is more significant (see below).
 
@@ -172,20 +163,20 @@ The clubhead is bluff—roughly hemispherical or teardrop-shaped. It experiences
 - Its shape is not streamlined
 
 At impact, with clubhead speed $v_{\text{club}} \approx 50$ m/s, the drag force on the clubhead is:
-\begin{equation}
+$$
 F_{\text{head}} = \frac{1}{2} \times 1.225 \times 0.005 \times 50^2 \times 0.4 = 3.06 \text{ N}
-\label{eq:clubhead-drag-impact}
-\end{equation}
+{#eq:clubhead-drag-impact}
+$$
 
 Importantly, modern driver design has aerodynamically optimized crowns (top surface) to reduce $C_D$ compared to older designs. A 2010s-era driver might have $C_D \approx 0.35$; a smooth sphere at the same speed would have $C_D \approx 0.47$. This 25% reduction in drag coefficient is one reason modern drivers are more forgiving—less drag means more energy reaches the ball.
 
 ### Arms and Torso
 
 The moving mass of the golfer's arms and torso also experiences drag. The arms move at speeds up to 10--15 m/s (much slower than the club), and the frontal area is roughly 0.05 m$^2$ (shoulders and torso width). The drag force on the arms is:
-\begin{equation}
+$$
 F_{\text{arms}} = \frac{1}{2} \times 1.225 \times 0.05 \times 12^2 \times 1.0 \approx 4.4 \text{ N}
-\label{eq:arm-drag}
-\end{equation}
+{#eq:arm-drag}
+$$
 
 where we used a more bluff $C_D \approx 1.0$ for the complex shape of the human body. While this is comparable to the clubhead drag, the arms move more slowly and for a longer duration (the arms accelerate throughout the downswing, not just at impact). The integrated effect is smaller.
 
@@ -205,36 +196,33 @@ For optimization and biomechanical analysis, the clubhead is the priority. Reduc
 ## Drag in the Equations of Motion
 
 
-
-
-
 Drag enters the equations of motion as an additional generalized force. Recall the Lagrangian equations with external forces:
-\begin{equation}
+$$
 \bm{M}(\bm{q})\ddot{\bm{q}} + \bm{C}(\bm{q},\dot{\bm{q}})\dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{B}\bm{u} + \bm{J}_c^T \boldsymbol{\lambda} + \bm{Q}_{\text{drag}}(\bm{q}, \dot{\bm{q}})
-\label{eq:eom-with-drag}
-\end{equation}
+{#eq:eom-with-drag}
+$$
 
 where $\bm{Q}_{\text{drag}}(\bm{q}, \dot{\bm{q}})$ is the vector of generalized drag forces.
 
 For a single joint (say, shoulder rotation), the cartesian drag force $F_D$ is converted to a joint torque via the moment arm:
-\begin{equation}
+$$
 Q_{\text{drag}} = -r \times F_D
-\label{eq:cartesian-to-joint}
-\end{equation}
+{#eq:cartesian-to-joint}
+$$
 
 where the negative sign indicates that drag opposes motion. For the multi-segment case (shaft), the moment arm $r$ varies along the length, and we integrate as done in the previous section.
 
 Drag is a *dissipative* force: it always opposes motion and always removes mechanical energy. The power dissipated by drag is:
-\begin{equation}
+$$
 P_{\text{drag}} = \bm{Q}_{\text{drag}}^T \dot{\bm{q}} < 0 \quad \text{always}
-\label{eq:drag-power}
-\end{equation}
+{#eq:drag-power}
+$$
 
 This means:
-\begin{equation}
-\frac{dE}{dt} = P_{\text{muscle}} + P_{\text{gravity}} + P_{\text{inertial}} + P_{\text{drag}} + \ldots
-\label{eq:energy-balance}
-\end{equation}
+$$
+\frac{dE}{dt} = P_{\text{muscle}} + P_{\text{gravity}} + P_{\text{inertial}} + P_{\text{drag}} + ...
+{#eq:energy-balance}
+$$
 
 where $P_{\text{drag}} < 0$ represents energy leaving the system into the air.
 
@@ -248,28 +236,25 @@ If you swing a club in slow motion (speeds of 1--2 m/s), drag is negligible and 
 ## Why Drag Matters for Inverse Dynamics
 
 
-
-
-
 One of the most important applications of the equations of motion is *inverse dynamics*: given a measured motion (joint angles and angular velocities recorded via motion capture), compute the joint torques (or forces) that caused that motion. This is the standard tool in biomechanics research to infer what athletes are actually doing.
 
 The inverse dynamics formula is derived from rearranging the EOM:
-\begin{equation}
+$$
 \bm{u} = \bm{M}(\bm{q})^{-1} \left[ \bm{M}(\bm{q})\ddot{\bm{q}} + \bm{C}(\bm{q},\dot{\bm{q}})\dot{\bm{q}} + \bm{g}(\bm{q}) + \bm{Q}_{\text{drag}} - \bm{J}_c^T \boldsymbol{\lambda} \right]
-\label{eq:inverse-dyn-full}
-\end{equation}
+{#eq:inverse-dyn-full}
+$$
 
 If we neglect drag, we compute:
-\begin{equation}
+$$
 \bm{u}_{\text{wrong}} = \bm{M}(\bm{q})^{-1} \left[ \bm{M}(\bm{q})\ddot{\bm{q}} + \bm{C}(\bm{q},\dot{\bm{q}})\dot{\bm{q}} + \bm{g}(\bm{q}) - \bm{J}_c^T \boldsymbol{\lambda} \right]
-\label{eq:inverse-dyn-no-drag}
-\end{equation}
+{#eq:inverse-dyn-no-drag}
+$$
 
 The error is:
-\begin{equation}
+$$
 \Delta\bm{u} = \bm{u} - \bm{u}_{\text{wrong}} = \bm{M}(\bm{q})^{-1} \bm{Q}_{\text{drag}}(\bm{q}, \dot{\bm{q}})
-\label{eq:inverse-dyn-error}
-\end{equation}
+{#eq:inverse-dyn-error}
+$$
 
 ::: {.callout-note}
 ## Bias in Inverse Dynamics
@@ -298,9 +283,9 @@ Suppose we measure wrist angular kinematics during the late downswing:
 Wrist inertia: $I_{\text{wrist}} \approx 0.05$ kg·m$^2$ (forearm + club segment).
 
 Computed wrist torque without drag:
-\begin{equation}
-\tau_{\text{computed}} = I \ddot{\theta} + \text{(other terms)} = 0.05 \times 2000 + \ldots = 100 + \ldots \text{ N·m}
-\end{equation}
+$$
+\tau_{\text{computed}} = I \ddot{\theta} + \text{(other terms)} = 0.05 \times 2000 + ... = 100 + ... \text{ N·m}
+$$
 
 Now add drag. The forearm and club moving at 70 rad/s at the wrist (moment arm $\approx 0.3$ m from axis) create drag force. Estimating:
 
@@ -311,19 +296,15 @@ Now add drag. The forearm and club moving at 70 rad/s at the wrist (moment arm $
 - Drag torque: $\tau_{\text{drag}} \approx 5 \times 0.2 = 1$ N·m
 
 The error in computed torque is:
-\begin{equation}
+$$
 \Delta\tau = \tau_{\text{drag}} = 1 \text{ N·m} \quad \text{(approximately 1\% of total, but could be larger)}
-\end{equation}
+$$
 
 However, if we compute the peak wrist torque throughout the downswing and the drag torque peaks late (at highest speed), the peak error can be 5--10% for the wrist joint specifically.
 
 :::
 
 ## Drag on the Golf Ball: Post-Impact Physics
-
-
-
-
 
 
 Once the ball leaves the clubface, drag and air properties determine the trajectory. This is fundamentally different from the swing mechanics, but it's an instructive application of drag in golf.
@@ -333,24 +314,24 @@ The golf ball has a diameter of approximately 42.67 mm (minimum allowed by rules
 Why do dimples reduce drag? The answer lies in boundary layer transition. For a smooth sphere at golf-ball Reynolds numbers ($\mathrm{Re} \sim 10^5$), the laminar boundary layer (thin layer of slow-moving fluid at the surface) separates well before the back of the sphere, creating a large wake and high drag. Dimples trigger transition to turbulence in the boundary layer, which stays attached longer, narrowing the wake and reducing pressure drag. The net effect: dimples reduce drag by 40--50% and increase range by a similar fraction.
 
 The lift force on a ball with backspin is:
-\begin{equation}
+$$
 F_L = \frac{1}{2} \rho v^2 C_L A
-\label{eq:lift-force}
-\end{equation}
+{#eq:lift-force}
+$$
 
 where $C_L$ depends on the spin rate (spin parameter):
-\begin{equation}
+$$
 S = \frac{r \omega}{v}
-\label{eq:spin-parameter}
-\end{equation}
+{#eq:spin-parameter}
+$$
 
 Here $r$ is the ball radius, $\omega$ is the angular velocity (backspin), and $v$ is the translational velocity. For typical golf shots, $S \sim 0.1$--$0.3$, and $C_L$ ranges from 0.1 to 0.5.
 
 The trajectory of a ball in flight must be computed numerically by solving:
-\begin{equation}
+$$
 m \ddot{\bm{r}} = m\bm{g} - \frac{1}{2}\rho v^2 C_D A \frac{\bm{v}}{\|\bm{v}\|} + \bm{F}_L(\omega)
-\label{eq:ball-trajectory}
-\end{equation}
+{#eq:ball-trajectory}
+$$
 
 where $\bm{F}_L$ is the Magnus lift force. This is a nonlinear ODE with velocity-dependent coefficients.
 
@@ -371,20 +352,16 @@ For golfers and coaches, it's worth understanding that backspin is not always be
 ## Modeling Drag in Swing Simulation
 
 
-
-
-
-
 To include drag in a golf swing simulation, several approaches are available, each with different tradeoffs.
 
 ### Lumped Parameter Approach
 
 Treat the club as a few discrete elements (shaft, clubhead, grip), each with a fixed drag coefficient and reference area. Compute drag for each element based on its velocity, then convert to joint torques via moment arms. This is computationally efficient and sufficient for most analyses.
 
-\begin{equation}
+$$
 \bm{Q}_{\text{drag}} = -\sum_{i} r_i(\bm{q}) \times \frac{1}{2} \rho C_{D,i} A_i \|\bm{v}_i(\bm{q}, \dot{\bm{q}})\| \bm{v}_i(\bm{q}, \dot{\bm{q}})
-\label{eq:lumped-drag}
-\end{equation}
+{#eq:lumped-drag}
+$$
 
 where the sum is over clubhead, shaft, and arm segments, and $\bm{v}_i$ is the velocity of segment $i$.
 
@@ -406,7 +383,7 @@ Drag depends on environmental conditions:
 ::: {.callout-note}
 ## Environmental Factors Affecting Drag
 
-\begin{description}
+
 - Air density $\rho$: Varies with temperature and altitude. At 5000 ft elevation, $\rho \approx 1.05$ kg/m$^3$, about 14% lower than sea level. This reduces drag (and also reduces ball range due to less lift).
 
 - Wind: Non-zero ambient wind changes the relative velocity. If there is a 5 m/s headwind and the clubhead is moving at 50 m/s, the relative velocity is 55 m/s, and drag increases by $(55/50)^2 \approx 21\%$.
@@ -415,7 +392,6 @@ Drag depends on environmental conditions:
 
 - Shaft compliance: Some modern shafts have aerodynamic profiles or coatings that reduce $C_D$ slightly.
 
-\end{description}
 
 :::
 
@@ -424,14 +400,11 @@ For precision inverse dynamics analysis (research or high-level coaching), these
 ## Drag in the Zero-Torque Counterfactual (ZTCF)
 
 
-
-
-
 Recall that the Zero-Torque Counterfactual (ZTCF) describes the natural motion of the golf swing when all control inputs are zero: $\bm{u} = 0$. The equation of motion becomes:
-\begin{equation}
+$$
 \bm{M}(\bm{q})\ddot{\bm{q}} + \bm{C}(\bm{q},\dot{\bm{q}})\dot{\bm{q}} + \bm{g}(\bm{q}) + \bm{Q}_{\text{drag}}(\bm{q}, \dot{\bm{q}}) = \bm{J}_c^T \boldsymbol{\lambda}
-\label{eq:ztcf-with-drag}
-\end{equation}
+{#eq:ztcf-with-drag}
+$$
 
 The ZTCF describes the *passive trajectory*—the path the swing would follow if muscles applied zero torque (after release). In this framework, drag is part of the *drift field* $f(\bm{x})$.
 
@@ -461,21 +434,21 @@ Without drag, the ZTCF is driven by gravity (pulling downward), inertial forces 
 Consider a simplified single-joint model of the swing (shoulder rotation), starting at the top of the backswing with angular velocity $\omega_0 = 0$ and ending near impact. The joint inertia is $I = 2$ kg·m$^2$ (arm + club), and gravity torque is $\tau_g(\theta) = -5 \sin(\theta)$ N·m (approximate, small torque at high speeds). Drag torque is $\tau_d = -0.5 \omega^2$ N·m (from air resistance, estimated).
 
 Without drag, the EOM is:
-\begin{equation}
+$$
 2 \ddot{\omega} - 5\sin(\theta) = 0 \quad \Rightarrow \quad \ddot{\omega} = 2.5 \sin(\theta)
-\end{equation}
+$$
 
 At $\theta = 90°$ (downswing midpoint), $\ddot{\omega} = 2.5 \times 1 = 2.5$ rad/s$^2$. Integrating numerically from $\theta = 0$ (top) to $\theta = 90°$ (impact), the final angular velocity is $\omega_{\text{impact, no drag}} \approx 85$ rad/s.
 
 With drag included:
-\begin{equation}
+$$
 2 \ddot{\omega} - 5\sin(\theta) - 0.5\omega^2 = 0 \quad \Rightarrow \quad \ddot{\omega} = 2.5 \sin(\theta) + 0.25\omega^2
-\end{equation}
+$$
 
 Wait, this formulation is not quite right. Drag opposes motion, so:
-\begin{equation}
+$$
 \ddot{\omega} = 2.5 \sin(\theta) - 0.25\omega^2 \quad \text{(gravity accelerates, drag decelerates)}
-\end{equation}
+$$
 
 At mid-downswing with $\omega \sim 50$ rad/s, the drag deceleration is $0.25 \times 50^2 = 625$ rad/s$^2$, which dominates the gravity acceleration (2.5 rad/s$^2$). So the system decelerates, not accelerates, after mid-downswing. Integrating with drag, the final angular velocity is $\omega_{\text{impact, with drag}} \approx 78$ rad/s—about 8% lower than without drag.
 
@@ -484,8 +457,6 @@ If an experimenter measures $\omega_{\text{impact}} = 78$ rad/s and computes inv
 :::
 
 ## Practical Recommendations for Swing Analysis
-
-
 
 
 The question of whether to include drag depends on the application:
@@ -503,7 +474,7 @@ The question of whether to include drag depends on the application:
 
 **Drag can be omitted if:**
 
-- You are interested in qualitative patterns (e.g., ``is torque increasing or decreasing?'')
+- You are interested in qualitative patterns (e.g., "is torque increasing or decreasing?")
 - Shoulder or hip torques are the focus (large moment arms, drag error is 1--3%)
 - You are doing real-time swing feedback (computational speed matters more than 2% accuracy)
 - Environmental conditions are calm (no wind, sea level)
@@ -518,35 +489,31 @@ The question of whether to include drag depends on the application:
 :::
 
 ::: {.callout-warning}
-## Myth: ``Air drag is negligible in golf''
-\begin{description}
+## Myth: "Air drag is negligible in golf"
+
 - **The Myth:** Golf is played in air at relatively modest speeds, so air resistance is a second-order effect. The swing is controlled by gravity, inertia, and muscles. Drag is a detail for researchers, not a real constraint.
 
 - **The Reality:** At 50 m/s clubhead speed, drag forces are comparable to the muscular forces available late in the downswing. Drag reduces clubhead speed by 5--10% over the course of the downswing. For inverse dynamics, omitting drag introduces systematic errors of 2--5% in peak torques, and much larger errors in small joints. For accurate biomechanical analysis, drag must be included. Moreover, drag is part of the *passive dynamics* that define what the swing must overcome—understanding drag is understanding the true challenge the nervous system faces.
 
 - **Why the Myth Persists:** Early biomechanics studies on golf were conducted before computational tools made it easy to include drag. The approximation was reasonable for the research questions at the time. The myth has lingered in textbooks and coaching education, even as the tools have improved. Modern research includes drag routinely.
-\end{description}
+
 :::
 
 ## Drag in the Context of Drift and Control
-
-
 
 
 Finally, let's place drag within the broader framework of drift vs. control forces.
 
 ::: {.callout-note}
 ## Drift Forces Include Drag
-\begin{minipage}[t]{0.48\textwidth}
 **The drift field $f(\bm{x})$ includes:**
 
 - Gravity: $-\bm{M}^{-1} \bm{g}(\bm{q})$
 - Inertial: $-\bm{M}^{-1} \bm{C}\dot{\bm{q}}$
 - **Drag: $-\bm{M}^{-1} \bm{Q}_{\text{drag}}(\bm{q}, \dot{\bm{q}})$**
 
-Drag is a dissipative force, always opposing motion. It reduces kinetic energy. Physically, it is as much a ``drift'' as gravity---it is a passive effect that happens without muscular input.
-\end{minipage}\hfill
-\begin{minipage}[t]{0.48\textwidth}
+Drag is a dissipative force, always opposing motion. It reduces kinetic energy. Physically, it is as much a "drift" as gravity---it is a passive effect that happens without muscular input.
+
 **Drift-to-control ratio with drag:**
 
 Comparing magnitudes at impact:
@@ -558,7 +525,7 @@ Comparing magnitudes at impact:
 - **Total drift/control ratio: $\sim 10$--$20$:1**
 
 Including drag makes the situation slightly worse (higher ratio), but the conclusion is the same: impact is uncontrollable.
-\end{minipage}
+
 :::
 
 ::: {.callout-important}
@@ -581,13 +548,13 @@ Including drag makes the situation slightly worse (higher ratio), but the conclu
 :::
 
 ### Looking Ahead
-With all external forces now catalogued---gravity, ground reaction, muscle torques, and aerodynamic drag---we face a fundamental question: given the observed motion, can we recover the muscle torques that produced it? Chapter~\ref{ch:inverse_dynamics_parallel} tackles this *inverse problem* and reveals a sobering limitation: when the body forms closed kinematic loops (as it does in a two-handed grip), the inverse problem becomes mathematically non-invertible.
+With all external forces now catalogued---gravity, ground reaction, muscle torques, and aerodynamic drag---we face a fundamental question: given the observed motion, can we recover the muscle torques that produced it? Chapter @ch:inverse_dynamics_parallel tackles this *inverse problem* and reveals a sobering limitation: when the body forms closed kinematic loops (as it does in a two-handed grip), the inverse problem becomes mathematically non-invertible.
 
 ## Chapter Exercises
 
-- **Drag Force Magnitude.** A golf clubhead with area $A = 0.006$ m$^2$, drag coefficient $C_D = 0.4$, moves at $v = 40$ m/s. Calculate the drag force using Eq.~\eqref{eq:drag-scalar}. At what velocity would the drag force double? (Hint: use the $v^2$ dependence.)
+- **Drag Force Magnitude.** A golf clubhead with area $A = 0.006$ m$^2$, drag coefficient $C_D = 0.4$, moves at $v = 40$ m/s. Calculate the drag force using Eq. \eqref{eq:drag-scalar}. At what velocity would the drag force double? (Hint: use the $v^2$ dependence.)
 
-- **Shaft Drag Torque.** A golf shaft with $L = 1.1$ m, diameter $d = 0.01$ m, $C_D = 0.5$, rotates at angular velocity $\dot{\theta} = 60$ rad/s about the shoulder. Using Eq.~\eqref{eq:shaft-drag-torque}, compute the drag torque. Compare this to a typical shoulder torque of 80 N·m. What fraction of the total torque does drag represent?
+- **Shaft Drag Torque.** A golf shaft with $L = 1.1$ m, diameter $d = 0.01$ m, $C_D = 0.5$, rotates at angular velocity $\dot{\theta} = 60$ rad/s about the shoulder. Using Eq. \eqref{eq:shaft-drag-torque}, compute the drag torque. Compare this to a typical shoulder torque of 80 N·m. What fraction of the total torque does drag represent?
 
 - **Inverse Dynamics Error.** In a swing study, a researcher computes wrist torque using inverse dynamics without including drag. The measured acceleration is $\ddot{\theta}_{\text{wrist}} = 1500$ rad/s$^2$, wrist inertia is $I = 0.06$ kg·m$^2$, and other terms sum to 2 N·m. The computed torque (no drag) is $\tau = I \ddot{\theta} + 2 = 0.06 \times 1500 + 2 = 92$ N·m.
 
@@ -601,5 +568,5 @@ Now estimate the drag torque: arm + club dragging through air at high speed prod
 
 - **Lumped Parameter Drag.** Model a golf swing as two segments: (1) arm + forearm, velocity $v_{\text{arm}} = 10$ m/s, area $A_{\text{arm}} = 0.02$ m$^2$, $C_D = 0.8$; (2) club, velocity $v_{\text{club}} = 50$ m/s, area $A_{\text{club}} = 0.005$ m$^2$, $C_D = 0.4$. Compute the drag force on each. Which dominates? Why?
 
-- **Spin Parameter and Lift.** A golf ball after impact has velocity $v = 50$ m/s and backspin $\omega = 200$ rad/s. The ball radius is $r = 0.02$ m. Compute the spin parameter $S$ using Eq.~\eqref{eq:spin-parameter}. Is this in the typical range for golf (0.1--0.3)? If $C_L = 0.3$ at this spin, compute the lift force on the ball (mass 0.045 kg). How does lift compare to weight?
+- **Spin Parameter and Lift.** A golf ball after impact has velocity $v = 50$ m/s and backspin $\omega = 200$ rad/s. The ball radius is $r = 0.02$ m. Compute the spin parameter $S$ using Eq. \eqref{eq:spin-parameter}. Is this in the typical range for golf (0.1--0.3)? If $C_L = 0.3$ at this spin, compute the lift force on the ball (mass 0.045 kg). How does lift compare to weight?
 

@@ -50,13 +50,13 @@ Here's what both stories miss: **at every instant of the swing, your body genera
 
 The shape of your swing—the kinematics—is the *consequence* of these forces, not the cause. Similarly, your strength merely sets a upper limit on the forces you can generate; it doesn't dictate which forces you generate at each moment.
 
-When a coach says "rotate your hips," what they mean is: "generate a torque around your vertical axis that accelerates your hip rotation." When they say "release the club," they mean: ``stop generating a torque at your wrist, allowing gravity and the club's momentum to accelerate it downward and forward.''
+When a coach says "rotate your hips," what they mean is: "generate a torque around your vertical axis that accelerates your hip rotation." When they say "release the club," they mean: "stop generating a torque at your wrist, allowing gravity and the club's momentum to accelerate it downward and forward."
 
 Physics lets us quantify exactly this. It gives us a language to say:
-- This torque comes from your muscles pulling (what we'll call **\control**).
-- This torque comes from gravity doing work (what we'll call **\drift**).
-- This torque comes from your arm moving fast, creating **centrifugal effects** (\drift again).
-- This force is **\state-dependent**—it depends on where your arms are and how fast they're moving.
+- This torque comes from your muscles pulling (what we'll call **control**).
+- This torque comes from gravity doing work (what we'll call **drift**).
+- This torque comes from your arm moving fast, creating **centrifugal effects** (drift again).
+- This force is **state-dependent**—it depends on where your arms are and how fast they're moving.
 
 Once you can attribute each force to its source, you can understand what you're actually trying to control.
 
@@ -81,11 +81,11 @@ When you're driving a car at 60 mph and you lift your hands off the wheel for a 
 
 In your golf swing, similar "passive" physics is constantly at work. If you swung your arm and then just let go of the club, gravity would pull it down. The rotation of your arm would carry the club in a curved path. These are **dynamics** that happen whether you "think" about them or not.
 
-We call this component **\drift**. It's what the system does on autopilot, determined by the laws of physics given your body's current state (positions and velocities).
+We call this component **drift**. It's what the system does on autopilot, determined by the laws of physics given your body's current state (positions and velocities).
 
 ### Control: What Your Muscles Add
 
-On top of drift, you actively generate torques by contracting muscles. These are what we call **\control** forces. They add to (or subtract from) the passive drift, steering the system toward your desired outcome.
+On top of drift, you actively generate torques by contracting muscles. These are what we call **control** forces. They add to (or subtract from) the passive drift, steering the system toward your desired outcome.
 
 Here's the profound insight: **elite golfers don't fight drift. They ride it.** They understand their body's passive dynamics deeply enough that they add minimal muscular control, just enough to navigate the drift toward the target.
 
@@ -94,11 +94,11 @@ Novice golfers do the opposite. They fight their own physics. They generate exce
 ::: {.callout-important}
 ## Drift vs. Control in a Simple Fall
 
-Imagine your arm holding a 1 lb weight at shoulder height. You're exerting an upward force equal to the weight's weight (call it $W = 1 \text{ lb}$). This is \control—your muscle generating force to hold the weight steady.
+Imagine your arm holding a 1 lb weight at shoulder height. You're exerting an upward force equal to the weight's weight (call it $W = 1 \text{ lb}$). This is control—your muscle generating force to hold the weight steady.
 
-Now you release it. What happens? \drift takes over. Gravity pulls downward. The weight accelerates at $g = 32 \text{ ft/s}^2$. You're not doing anything—physics is.
+Now you release it. What happens? drift takes over. Gravity pulls downward. The weight accelerates at $g = 32 \text{ ft/s}^2$. You're not doing anything—physics is.
 
-In a golf swing: when your arm is at the top of the backswing holding the club in a specific position, you're exerting \control. During the downswing, you release—and \drift (gravity plus the rotational momentum of your arm) does most of the work of accelerating the club toward impact. Your muscles then add small corrections to steer that accelerating club toward the target.
+In a golf swing: when your arm is at the top of the backswing holding the club in a specific position, you're exerting control. During the downswing, you release—and drift (gravity plus the rotational momentum of your arm) does most of the work of accelerating the club toward impact. Your muscles then add small corrections to steer that accelerating club toward the target.
 
 The swing is efficient because gravity does $\approx 80\%$ of the work. Your muscles do the remaining $\approx 20\%$, mostly steering.
 
@@ -171,25 +171,25 @@ The equations are complicated enough to be interesting but simple enough to solv
 Imagine you're mid-swing with your double-pendulum arms. You're generating muscular torques at the shoulder and elbow. Then, midway through the downswing, you simply stop contracting those muscles and let your arms fall freely.
 
 - **What will happen?** Your arms will not continue in a straight path. Instead, gravity will pull the club downward, and the rotational momentum of your arm will curve its path. The club will accelerate, but not in the direction you were controlling.
-- **Why?** Because your \control disappeared. Only \drift remains—gravity, inertia, and the constraint that your arm is hinged at the shoulder. That drift is perfectly well-defined by the physics. It's deterministic. But it's not the path you wanted.
+- **Why?** Because your control disappeared. Only drift remains—gravity, inertia, and the constraint that your arm is hinged at the shoulder. That drift is perfectly well-defined by the physics. It's deterministic. But it's not the path you wanted.
 - **What does this tell us?** It tells us that your brain is constantly solving a control problem. Even in a "smooth, automatic" swing, your nervous system is generating muscular torques at every instant to steer the passive drift toward impact. Elite golfers make this look effortless because they've learned to use small, efficient control signals to ride the drift. Novices fight the drift because they're not aware of it.
 
-In Chapter~\ref{ch:03_double_pendulum}, we'll actually solve the equations for what happens if you let go mid-swing in a double-pendulum model with realistic golf parameters. The answer will surprise you.
+In Chapter @ch:03_double_pendulum, we'll actually solve the equations for what happens if you let go mid-swing in a double-pendulum model with realistic golf parameters. The answer will surprise you.
 
 ## A Road Map
 
 Here's what unfolds in the following chapters:
 
-### Chapter~\ref{ch:02_language_of_motion}: The Language of Motion
+### Chapter @ch:02_language_of_motion: The Language of Motion
 Before we can talk about forces, we need a language for describing where your body is and how fast it's moving. We'll introduce **generalized coordinates**—a way to describe the configuration of your body (e.g., shoulder angle, elbow angle). We'll define **state space**—the combination of position and velocity. Every swing, at every instant, is a point in this state space.
 
-### Chapter~\ref{ch:03_double_pendulum}: The Double Pendulum
+### Chapter @ch:03_double_pendulum: The Double Pendulum
 We'll set up the full equations of motion for the double pendulum using **Lagrangian mechanics**. You'll see exactly where the mass matrix $\bm{M}(\bm{q})$ comes from (it measures inertia), where the Coriolis and centrifugal terms come from (they're what it means for your arm to move fast), and where gravity comes from. We'll compute all of this step-by-step, with golf numbers.
 
-### Chapter~\ref{ch:04_forces_and_torques}: Forces and Torques
+### Chapter @ch:04_forces_and_torques: Forces and Torques
 We'll unpack the manipulator equation, term by term. What does each term do? How big are the forces? At impact, your clubhead accelerates at $179g$. Where does that come from? We'll attribute every force to its source: muscle, gravity, constraint, or momentum.
 
-### Chapter~\ref{ch:05_affine_structure}: Drift and Control
+### Chapter @ch:05_affine_structure: Drift and Control
 Finally, we'll write the equation in its most useful form:
 
 \dot{\bm{x}} = \bm{f}(\bm{x}) + \bm{G}(\bm{x}) \bm{u}

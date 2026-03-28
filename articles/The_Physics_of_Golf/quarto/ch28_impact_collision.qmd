@@ -9,7 +9,7 @@ Everything you do in your golf swing---the footwork, the rotation, the lag, the 
 ::: {.callout-note}
 ## Why Impact Matters
 
-You've heard that ``golf is 90% mental.'' That's nonsense. But here's what's true: your score is determined almost entirely by what happens in the 0.5 milliseconds when club meets ball. A golfer who swings identically every time but varies impact conditions by just 5% will have 10x more variation in distance. This is not a technical failure---it's physics. The impact moment is where every nuance of your swing is reflected in the ball's flight. To be a better golfer, you must understand what matters at impact.
+You've heard that "golf is 90% mental." That's nonsense. But here's what's true: your score is determined almost entirely by what happens in the 0.5 milliseconds when club meets ball. A golfer who swings identically every time but varies impact conditions by just 5% will have 10x more variation in distance. This is not a technical failure---it's physics. The impact moment is where every nuance of your swing is reflected in the ball's flight. To be a better golfer, you must understand what matters at impact.
 
 :::
 
@@ -24,22 +24,27 @@ The answer is subtle and will require us to dispel a dangerous myth.
 When two objects collide elastically, they don't stick together or bounce away at random speeds. Instead, their relative velocity of separation is proportional to their relative velocity of approach. This proportionality constant is called the **coefficient of restitution** (COR), denoted $e$.
 
 
-
 Consider a clubhead of mass $m_c$ moving at velocity $v_c$ striking a stationary ball of mass $m_b$. Before impact:
-\begin{align}
+$$
+\begin{aligned}
 \text{Relative velocity of approach} = v_c - 0 = v_c
-\end{align}
+\end{aligned}
+$$
 
 After impact, the ball moves at velocity $v_b'$ and the clubhead at velocity $v_c'$:
-\begin{align}
+$$
+\begin{aligned}
 \text{Relative velocity of separation} = v_c' - v_b'
-\end{align}
+\end{aligned}
+$$
 
 The coefficient of restitution relates these:
-\begin{align}
+$$
+\begin{aligned}
 e = \frac{v_c' - v_b'}{v_c - 0} = \frac{v_c' - v_b'}{v_c}
-\label{eq:cor_definition}
-\end{align}
+{#eq:cor_definition}
+\end{aligned}
+$$
 
 For golf, $e$ is always less than 1 (an inelastic collision). For a modern driver hitting a golf ball, the USGA/R&A regulates the maximum COR to be 0.830.  This limit exists because without it, the ball would fly too far and the game would collapse.
 
@@ -47,9 +52,11 @@ For golf, $e$ is always less than 1 (an inelastic collision). For a modern drive
 ## Coefficient of Restitution
 
 The coefficient of restitution is the ratio of the relative speed of separation to the relative speed of approach in a collision:
-\begin{align}
+$$
+\begin{aligned}
 e = \frac{\text{speed of separation}}{\text{speed of approach}}
-\end{align}
+\end{aligned}
+$$
 For golf ball impacts: $0.70 < e < 0.83$ (drivers regulated at 0.83 max). Lower values mean more energy is lost to deformation and heat.
 
 :::
@@ -58,34 +65,44 @@ For golf ball impacts: $0.70 < e < 0.83$ (drivers regulated at 0.83 max). Lower 
 
 Now we apply conservation of momentum. During the collision, momentum is conserved (external forces during the brief impact are negligible compared to the collision forces):
 
-\begin{align}
+$$
+\begin{aligned}
 m_c v_c + m_b \cdot 0 = m_c v_c' + m_b v_b'
-\label{eq:momentum_conservation}
-\end{align}
+{#eq:momentum_conservation}
+\end{aligned}
+$$
 
 We have two equations (the momentum equation and the COR equation) and two unknowns ($v_c'$ and $v_b'$). Solving these simultaneously:
 
-From equation~\eqref{eq:cor_definition}:
-\begin{align}
+From equation \eqref{eq:cor_definition}:
+$$
+\begin{aligned}
 v_b' - v_c' = e \cdot v_c
-\end{align}
+\end{aligned}
+$$
 
-From equation~\eqref{eq:momentum_conservation}:
-\begin{align}
+From equation \eqref{eq:momentum_conservation}:
+$$
+\begin{aligned}
 m_c v_c = m_c v_c' + m_b v_b'
-\end{align}
+\end{aligned}
+$$
 
 Solving (standard result):
-\begin{align}
+$$
+\begin{aligned}
 v_b' = \frac{(1+e) m_c}{m_c + m_b} v_c
-\label{eq:ball_velocity_after}
-\end{align}
+{#eq:ball_velocity_after}
+\end{aligned}
+$$
 
 For a typical driver: $m_c \approx 200\,\text{g}$, $m_b \approx 45.93\,\text{g}$ (USGA minimum), $e = 0.83$, and clubhead speed $v_c = 110\,\text{mph} = 49.2\,\text{m/s}$.
 
-\begin{align}
+$$
+\begin{aligned}
 v_b' = \frac{(1+0.83) \times 200}{200 + 45.93} \times 49.2 = \frac{1.83 \times 200}{245.93} \times 49.2 = 1.486 \times 49.2 = 73.1\,\text{m/s} \approx 163\,\text{mph}
-\end{align}
+\end{aligned}
+$$
 
 This ratio $v_b' / v_c$ is called the **smash factor**.  Modern drivers achieve 1.48--1.50 under optimal conditions. This is not magic---it's the direct consequence of momentum conservation and the COR of the clubface.
 
@@ -93,12 +110,14 @@ This ratio $v_b' / v_c$ is called the **smash factor**.  Modern drivers achieve 
 ## The Smash Factor
 
 The smash factor is the ratio of ball speed to clubhead speed at impact:
-\begin{align}
+$$
+\begin{aligned}
 \text{Smash Factor} = \frac{v_b'}{v_c} \approx \frac{(1+e) m_c}{m_c + m_b}
-\end{align}
+\end{aligned}
+$$
 For drivers with $e=0.83$, $m_c=200\,\text{g}$, $m_b=46\,\text{g}$, we get $\approx 1.48$.
 
-Note: this formula uses clubhead mass $m_c$. In practice, the *effective mass* at impact is larger (Section~\ref{sec:ch28_effective_mass}), typically $m_{\mathrm{eff}} \approx 1.1$--$1.2 \times m_c$, because the shaft and proximal arm contribute inertia. Using $m_{\mathrm{eff}}$ instead of $m_c$ increases the predicted smash factor slightly and matches measured values more closely.
+Note: this formula uses clubhead mass $m_c$. In practice, the *effective mass* at impact is larger (Section @sec:ch28_effective_mass), typically $m_{\mathrm{eff}} \approx 1.1$--$1.2 \times m_c$, because the shaft and proximal arm contribute inertia. Using $m_{\mathrm{eff}}$ instead of $m_c$ increases the predicted smash factor slightly and matches measured values more closely.
 
 The smash factor is nearly independent of clubhead speed. A slower swing at the same quality of strike produces the same smash factor. This is why feel matters more than raw speed.
 
@@ -106,18 +125,19 @@ The smash factor is nearly independent of clubhead speed. A slower swing at the 
 
 ### The Effective Mass Concept
 
-Here is where things get subtle. Equation~\eqref{eq:ball_velocity_after} uses $m_c$ as the clubhead mass. But what mass actually participates in the collision?
+Here is where things get subtle. Equation \eqref{eq:ball_velocity_after} uses $m_c$ as the clubhead mass. But what mass actually participates in the collision?
 
-If you hold a baseball bat loosely and someone hits it with a baseball, most of the bat's mass is not involved in the immediate collision---only the part near the impact point. The rest of the bat is ``hidden'' by the finite speed of sound in the material.
-
+If you hold a baseball bat loosely and someone hits it with a baseball, most of the bat's mass is not involved in the immediate collision---only the part near the impact point. The rest of the bat is "hidden" by the finite speed of sound in the material.
 
 
 For a golf club, the shaft connects the clubhead to your hands. During impact, the clubhead is trying to slow down (the ball is pushing back), while your hands are still moving forward (momentum conservation). The shaft, under tension and bending, transmits forces. The effective mass $m_{\text{eff}}$ that participates in the collision is larger than the clubhead mass alone.
 
 Modern research using high-speed camera tracking and force plate measurements shows:
-\begin{align}
+$$
+\begin{aligned}
 m_{\text{eff}} \approx 1.1 \text{ to } 1.2 \times m_{\text{clubhead}}
-\end{align}
+\end{aligned}
+$$
 
 This 10--20% increase comes primarily from the shaft mass and some arm mass, properly weighted by the mechanical coupling. A 200g clubhead with a 50g shaft might have $m_{\text{eff}} \approx 220$--240g.
 
@@ -127,18 +147,20 @@ The practical implication: the effective mass is closer to what you feel intuiti
 ## Effective Mass
 
 The effective mass is the inertial resistance to acceleration that the ball experiences during collision. It accounts for the clubhead mass, shaft mass, and coupling through the tensioned shaft:
-\begin{align}
+$$
+\begin{aligned}
 m_{\text{eff}} = m_{\text{clubhead}} + \alpha m_{\text{shaft}} + \text{(arm contribution)}
-\end{align}
+\end{aligned}
+$$
 where $\alpha$ is a coupling coefficient $\sim 0.4$--0.6. Typical: $m_{\text{eff}} \approx 220$--240g for a driver.
 
 :::
 
-## The Great Myth: ``Impact Is Isolated''
+## The Great Myth: "Impact Is Isolated"
 
 Now we must address what might be the most damaging misconception in golf physics:
 
-*``The ball-club collision happens so fast that forces from the golfer's body cannot reach the clubhead during impact. Impact is an isolated collision governed only by the kinematics at the moment of contact.''*
+*"The ball-club collision happens so fast that forces from the golfer's body cannot reach the clubhead during impact. Impact is an isolated collision governed only by the kinematics at the moment of contact."*
 
 This is **wrong**, and understanding why requires quantitative reasoning about shafts, stiffness, and wave propagation.
 
@@ -157,54 +179,62 @@ Let's build the argument piece by piece.
 
 A golf shaft is primarily a hollow steel or graphite tube. Steel has a Young's modulus $E \approx 200\,\text{GPa}$ and density $\rho \approx 7850\,\text{kg/m}^3$. The speed of sound in steel is:
 
-\begin{align}
+$$
+\begin{aligned}
 c_{\text{steel}} = \sqrt{\frac{E}{\rho}} \approx \sqrt{\frac{200 \times 10^9}{7850}} \approx 5050\,\text{m/s}
-\end{align}
+\end{aligned}
+$$
 
 A typical driver shaft is 1.1m long. The time for a stress wave to propagate from grip to clubhead is:
 
-\begin{align}
+$$
+\begin{aligned}
 t_{\text{transit}} = \frac{L}{c} = \frac{1.1}{5050} \approx 0.218\,\text{ms}
-\end{align}
+\end{aligned}
+$$
 
 The contact time is:
 
-\begin{align}
+$$
+\begin{aligned}
 t_{\text{contact}} \approx 0.5\,\text{ms}
-\end{align}
+\end{aligned}
+$$
 
 **Therefore**: $t_{\text{transit}} < t_{\text{contact}}$. A stress wave can traverse the entire shaft in less than half the contact duration. This means an axial force applied at the grip during the first 0.218ms of contact has time to reach the clubhead before the ball leaves the face.
-
 
 
 This is not a marginal effect. If you apply a grip force change at $t=0.2\,\text{ms}$ (during contact), that signal reaches the clubhead at $t=0.418\,\text{ms}$ (still during the collision).
 
 ### Argument 2: Pre-Impact Axial Tension
 
-The second argument is even more powerful. During the downswing, the centripetal acceleration required to swing a 200g clubhead at 90 mph in an arc of ~4 feet creates enormous tension along the shaft.
-
+The second argument is even more powerful. During the downswing, the centripetal acceleration required to swing a 200g clubhead at 90 mph in an arc of  4 feet creates enormous tension along the shaft.
 
 
 Consider the downswing: at the moment before impact, the clubhead is moving at $v_c = 50\,\text{m/s}$ in a circular arc of radius $r \approx 1.2\,\text{m}$ (forearm plus club). The centripetal acceleration is:
 
-\begin{align}
+$$
+\begin{aligned}
 a_c = \frac{v_c^2}{r} = \frac{(50)^2}{1.2} \approx 2083\,\text{m/s}^2 \approx 212g
-\end{align}
+\end{aligned}
+$$
 
 The shaft and clubhead experience this acceleration. The tension required to maintain this acceleration over the shaft and clubhead mass (roughly 250g total) is:
 
-\begin{align}
+$$
+\begin{aligned}
 T = m \cdot a_c \approx 0.25 \text{ kg} \times 2083 \text{ m/s}^2 \approx 521\,\text{N}
-\end{align}
+\end{aligned}
+$$
 
 This is a pre-load tension of about 500N on the shaft---equivalent to hanging 50kg from the grip end. The shaft is **stretched**, not slack.
 
-Now, crucially: if you increase grip force by 10N during impact, that change in tension propagates down a **pre-stretched shaft**. The shaft is already under stress; it is not ``waiting'' to take up slack. The elastic deformation changes instantaneously (or at the speed of sound, which is fast enough).
+Now, crucially: if you increase grip force by 10N during impact, that change in tension propagates down a **pre-stretched shaft**. The shaft is already under stress; it is not "waiting" to take up slack. The elastic deformation changes instantaneously (or at the speed of sound, which is fast enough).
 
 ::: {.callout-important}
 ## Pre-Tension Effect
 
-During the downswing, centripetal acceleration creates axial tension in the shaft of order $500$--$800\,\text{N}$ in a driver swing. This pre-loads the shaft, eliminating any slack. A grip force change during impact is not transmitted by ``wave propagation'' (which is slow), but by elastic modulation of the already-stretched shaft, which is nearly instantaneous. The effective stiffness is $k_{\text{shaft}} \approx 50,000\,\text{N/m}$ (axial).
+During the downswing, centripetal acceleration creates axial tension in the shaft of order $500$--$800\,\text{N}$ in a driver swing. This pre-loads the shaft, eliminating any slack. A grip force change during impact is not transmitted by "wave propagation" (which is slow), but by elastic modulation of the already-stretched shaft, which is nearly instantaneous. The effective stiffness is $k_{\text{shaft}} \approx 50,000\,\text{N/m}$ (axial).
 
 Any grip force variation during impact modulates the clubhead's inertial state and thus affects the collision.
 
@@ -215,32 +245,37 @@ Any grip force variation during impact modulates the clubhead's inertial state a
 If impact were truly isolated, grip force would be irrelevant. But it is not.
 
 
-
 Experimental evidence from force plate studies and launch monitor correlations shows that grip force at impact (measured 5--10ms before contact) correlates with final ball speed even when clubhead speed is held constant. The effect is small but measurable: a 10% increase in grip force can increase ball speed by 0.3--0.5 mph.
 
-How is this possible if the collision is isolated? The mechanism is that grip force (axial tension) changes the effective mass $m_{\text{eff}}$ participating in the collision. A tighter grip increases shaft pre-tension, which couples more of the arm mass into the collision. The effective mass rises slightly, and by equation~\eqref{eq:ball_velocity_after}, if $m_{\text{eff}}$ increases, $v_b'$ increases (slightly).
+How is this possible if the collision is isolated? The mechanism is that grip force (axial tension) changes the effective mass $m_{\text{eff}}$ participating in the collision. A tighter grip increases shaft pre-tension, which couples more of the arm mass into the collision. The effective mass rises slightly, and by equation \eqref{eq:ball_velocity_after}, if $m_{\text{eff}}$ increases, $v_b'$ increases (slightly).
 
 ### Argument 4: Quantitative Impulse Analysis
 
 Let's put numbers on this. The impulse imparted to the ball is:
 
-\begin{align}
+$$
+\begin{aligned}
 J = m_b (v_b' - 0) = 45.93 \text{ g} \times 73.1 \text{ m/s} = 3.36\,\text{kg}{\cdot}\text{m/s}
-\end{align}
+\end{aligned}
+$$
 
 Over a contact time of 0.5ms, the average force on the ball is:
 
-\begin{align}
+$$
+\begin{aligned}
 F_{\text{avg}} = \frac{J}{t_{\text{contact}}} = \frac{3.36}{0.5 \times 10^{-3}} = 6720\,\text{N}
-\end{align}
+\end{aligned}
+$$
 
 This is a massive force (about 1.5 tons), but it acts only on the ball. By Newton's third law, the ball exerts an equal and opposite force on the clubhead.
 
 Now, consider the shaft. If the grip force increases from $F_g$ to $F_g + \Delta F$ during the contact window (say, in the middle 0.25ms of contact), the shaft can transmit this change. The shaft stiffness in axial direction is $k \approx 50,000\,\text{N/m}$. An axial deformation $\Delta x$ induces a force change:
 
-\begin{align}
+$$
+\begin{aligned}
 \Delta F = k \cdot \Delta x
-\end{align}
+\end{aligned}
+$$
 
 If the hand moves 1mm more during the contact interval due to a force change, this propagates an additional $\Delta F = 50,000 \times 0.001 = 50\,\text{N}$ down the shaft. This is small compared to the 6700N collision force, but it is not zero. And crucially, this 50N force can increase $m_{\text{eff}}$ by roughly $\Delta m = \Delta F / a_c = 50 / 2083 \approx 0.024\,\text{kg} = 24\,\text{g}$, which is a measurable change to a 220g effective mass.
 
@@ -251,7 +286,7 @@ Grip force at impact is not irrelevant. Although the contact is brief, the shaft
 
 :::
 
-To be clear: the *dominant* determinant of ball speed is still clubhead speed and mass at the moment of contact. The shaft-transmitted forces modify the effective mass by a few percent, producing measurable but modest effects (0.3--0.5~mph on ball speed). The practical implication is not that grip force controls distance, but rather that the system is not perfectly isolated---a distinction that matters for high-fidelity modeling and for understanding why `dead hands' at impact is an oversimplification.
+To be clear: the *dominant* determinant of ball speed is still clubhead speed and mass at the moment of contact. The shaft-transmitted forces modify the effective mass by a few percent, producing measurable but modest effects (0.3--0.5 mph on ball speed). The practical implication is not that grip force controls distance, but rather that the system is not perfectly isolated---a distinction that matters for high-fidelity modeling and for understanding why `dead hands' at impact is an oversimplification.
 
 ## The Coefficient of Restitution in Detail
 
@@ -260,25 +295,18 @@ To be clear: the *dominant* determinant of ball speed is still clubhead speed an
 The USGA/R&A imposed the 0.830 COR limit in 1998 to prevent driving distances from increasing indefinitely. Without this limit, modern materials would allow COR values of 0.85--0.88.
 
 
-
-
-\begin{tabular}{lcc}
-\hline
-**Club Type** & **Typical COR** & **Notes** 
-\hline
-Driver (regulated) & 0.830 (max) & Trampoline effect; face flex 
-Fairway wood & 0.80--0.82 & Slightly less flexible face 
-3-wood & 0.79--0.81 & Smaller, stiffer head 
-Long iron (3--5) & 0.77--0.79 & Much stiffer face structure 
-Mid iron (6--8) & 0.75--0.77 & Forged steel; minimal flex 
-Short iron (9, PW) & 0.73--0.75 & Minimal energy return 
-Putter & 0.65--0.70 & Low speed, low energy transfer 
-\hline
-\end{tabular}
+| **Club Type** | **Typical COR** | **Notes** 
+Driver (regulated) | 0.830 (max) | Trampoline effect; face flex 
+Fairway wood | 0.80--0.82 | Slightly less flexible face 
+3-wood | 0.79--0.81 | Smaller, stiffer head 
+Long iron (3--5) | 0.77--0.79 | Much stiffer face structure 
+Mid iron (6--8) | 0.75--0.77 | Forged steel; minimal flex 
+Short iron (9, PW) | 0.73--0.75 | Minimal energy return 
+Putter | 0.65--0.70 | Low speed, low energy transfer |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 
 
 Why does COR vary so much? The answer is in the construction. Modern drivers have very thin (1.7--1.8mm) titanium or steel faces that flex inward during impact, absorbing energy elastically and then rebounding. Irons have much stiffer faces because they need to control spin and perform across a wider hitting area.
-
 
 
 ### The Trampoline Effect
@@ -297,7 +325,7 @@ The result is that modern drivers operate very close to the theoretical COR limi
 
 The COR is not constant. It varies with impact speed and temperature:
 
-- **Higher impact speeds**: COR tends to increase slightly with speed up to ~120 mph, then decrease. This is because at very high speeds, the materials cannot respond elastically fast enough.
+- **Higher impact speeds**: COR tends to increase slightly with speed up to  120 mph, then decrease. This is because at very high speeds, the materials cannot respond elastically fast enough.
 
 - **Temperature**: COR increases with temperature. A warm ball (85$^{\circ}$F) has COR about 1% higher than a cold ball (40$^{\circ}$F). This is why pro tournaments are often played in warm climates, and why winter golf is more forgiving (softer, lower COR, less distance penalty for mishits).
 
@@ -314,8 +342,7 @@ The observed COR in a real shot depends on impact speed, temperature, location o
 
 ### The Old (Wrong) Ball Flight Laws
 
-For decades, golf instructors taught the ``ball flight laws'': the direction the ball flies is determined by the club path, and curve is determined by clubface angle relative to path. This was wrong.
-
+For decades, golf instructors taught the "ball flight laws": the direction the ball flies is determined by the club path, and curve is determined by clubface angle relative to path. This was wrong.
 
 
 High-speed camera tracking and modern launch monitors have revealed the truth:
@@ -325,7 +352,7 @@ High-speed camera tracking and modern launch monitors have revealed the truth:
 
 **For a centrally-struck golf shot:**
 
-- **Initial ball direction** is determined ~75--85% by clubface angle and ~15--25% by club path (for center-face impacts with a driver). For off-center hits, the gear effect alters this ratio, and for highly lofted clubs (wedges), the path contribution increases. These percentages are empirical, derived from launch monitor data \citep{Broadie2014}. The face dominates.
+- **Initial ball direction** is determined  75--85% by clubface angle and  15--25% by club path (for center-face impacts with a driver). For off-center hits, the gear effect alters this ratio, and for highly lofted clubs (wedges), the path contribution increases. These percentages are empirical, derived from launch monitor data [@Broadie2014]. The face dominates.
 - **Spin axis** is determined by the differential between face angle and path angle. The more the path is inside the face angle, the more the spin axis tilts.
 - **Spin rate** is determined by dynamic loft (the loft angle of the club at the moment of impact, accounting for attack angle) and the normal force at impact.
 
@@ -342,19 +369,22 @@ At impact, three numbers completely determine the initial ball flight:
 - **Spin rate** $\omega_s$: the total spin in revolutions per minute
 
 The launch angle is determined primarily by:
-\begin{align}
+$$
+\begin{aligned}
 \theta_L \approx \theta_{\text{loft}} + \theta_{\text{attack}}
-\end{align}
+\end{aligned}
+$$
 
 where $\theta_{\text{loft}}$ is the static loft of the club (e.g., 9.5$^{\circ}$ for a driver) and $\theta_{\text{attack}}$ is the attack angle (the angle at which the clubhead is moving downward or upward). For a driver swing with 9.5$^{\circ}$ loft and +3$^{\circ}$ attack angle, the dynamic loft is 12.5$^{\circ}$.
 
 
-
 The spin rate depends on the spin loft, which is the angle between the club's velocity vector and the spin axis:
 
-\begin{align}
+$$
+\begin{aligned}
 \text{Spin loft} = \theta_{\text{dynamic loft}} - \theta_{\text{club path}}
-\end{align}
+\end{aligned}
+$$
 
 A driver with 12.5$^{\circ}$ dynamic loft and 0$^{\circ}$ path (down the target line) has 12.5$^{\circ}$ spin loft. A driver with the same dynamic loft but 3$^{\circ}$ inside-out path has 9.5$^{\circ}$ spin loft and will have less backspin.
 
@@ -378,7 +408,7 @@ The ball flight will have:
 - Spin rate: $\approx 2600$ RPM (depends on friction, ball construction)
 - Carry distance: $\approx 275$ yards (accounting for air resistance and Magnus force)
 
-A small change: if the path rotates to 3$^{\circ}$ inside-out (clubhead moving right-to-left relative to target line), the spin loft drops to 9$^{\circ}$, spin rate drops by ~300 RPM, and the ball curves less. The carry distance might drop to 270 yards.
+A small change: if the path rotates to 3$^{\circ}$ inside-out (clubhead moving right-to-left relative to target line), the spin loft drops to 9$^{\circ}$, spin rate drops by  300 RPM, and the ball curves less. The carry distance might drop to 270 yards.
 
 :::
 
@@ -386,12 +416,14 @@ A small change: if the path rotates to 3$^{\circ}$ inside-out (clubhead moving r
 
 Recall from the earlier chapters that a golf swing is described by a control-affine system:
 
-\begin{align}
-\dot{\state} = \drift(\state) + \control(t) \cdot \inputmap(\state)
-\label{eq:ztcf_general}
-\end{align}
+$$
+\begin{aligned}
+\dot{state} = drift(state) + control(t) \cdot \inputmap(state)
+{#eq:ztcf_general}
+\end{aligned}
+$$
 
-The drift $\drift(\state)$ represents passive physics (gravity, inertia, elastic forces). The control $\control(t)$ represents muscular inputs (torques, forces from the golfer's body).
+The drift $\drift(\mathbf{x})$ represents passive physics (gravity, inertia, elastic forces). The control $\control(t)$ represents muscular inputs (torques, forces from the golfer's body).
 
 ::: {.callout-note}
 ## Impact in the ZTCF Framework
@@ -400,13 +432,15 @@ The drift $\drift(\state)$ represents passive physics (gravity, inertia, elastic
 
 The collision force is order $6700\,\text{N}$ (as calculated earlier). The maximum muscular force the golfer can exert at the grip is order 200--300N. The **drift-to-control ratio** is:
 
-\begin{align}
-\frac{|\drift|}{|\control|} \sim \frac{6700}{250} \sim 27:1
-\end{align}
+$$
+\begin{aligned}
+\frac{|drift|}{|control|} \sim \frac{6700}{250} \sim 27:1
+\end{aligned}
+$$
 
 Even accounting for mechanical advantage through the lever system of the arm, this ratio is still 10:1 or higher. Impact is a moment where drift overwhelmingly dominates control.
 
-**However:** the drift field itself was shaped by control actions made 100--200ms earlier (during the acceleration phase of the downswing). The clubhead speed, angle, and shaft tension at impact are all the result of earlier control inputs. Impact is where the drift ``delivers the payload.'' The quality of delivery was determined by control, but the delivery itself is drift.
+**However:** the drift field itself was shaped by control actions made 100--200ms earlier (during the acceleration phase of the downswing). The clubhead speed, angle, and shaft tension at impact are all the result of earlier control inputs. Impact is where the drift "delivers the payload." The quality of delivery was determined by control, but the delivery itself is drift.
 
 This has a profound implication: **you cannot control impact directly**. You can only control the approach to impact. Once the collision begins, physics takes over. The best you can do is ensure that your swing mechanics (guided by control) arrive at impact in an optimal state.
 
@@ -420,9 +454,11 @@ The key insight from the ZTCF perspective is that impact is not a control proble
 
 The clubhead arrives at impact with kinetic energy:
 
-\begin{align}
+$$
+\begin{aligned}
 KE_{\text{clubhead}} = \frac{1}{2} m_c v_c^2 = \frac{1}{2} \times 0.2 \text{ kg} \times (49.2 \text{ m/s})^2 = 242\,\text{J}
-\end{align}
+\end{aligned}
+$$
 
 For a 110 mph driver swing, this is about 242 Joules of kinetic energy in the clubhead alone (the shaft and arms contain additional energy, but we focus on the clubhead).
 
@@ -430,27 +466,35 @@ For a 110 mph driver swing, this is about 242 Joules of kinetic energy in the cl
 
 The ball gains kinetic energy:
 
-\begin{align}
+$$
+\begin{aligned}
 KE_{\text{ball}} = \frac{1}{2} m_b v_b'^2 = \frac{1}{2} \times 0.04593 \text{ kg} \times (73.1 \text{ m/s})^2 = 122.7\,\text{J}
-\end{align}
+\end{aligned}
+$$
 
 So about 122.7 J is transferred to the ball. The clubhead loses kinetic energy:
 
-\begin{align}
+$$
+\begin{aligned}
 \Delta KE_{\text{clubhead}} = KE_{\text{before}} - KE_{\text{after}} = \frac{1}{2} m_c (v_c^2 - v_c'^2)
-\end{align}
+\end{aligned}
+$$
 
 After impact, the clubhead velocity is (from conservation of momentum):
 
-\begin{align}
+$$
+\begin{aligned}
 v_c' = \frac{m_c v_c - m_b v_b'}{m_c} = \frac{0.2 \times 49.2 - 0.04593 \times 73.1}{0.2} = \frac{9.84 - 3.36}{0.2} = 32.4 \text{ m/s}
-\end{align}
+\end{aligned}
+$$
 
 So:
 
-\begin{align}
+$$
+\begin{aligned}
 \Delta KE_{\text{clubhead}} = \frac{1}{2} \times 0.2 \times (49.2^2 - 32.4^2) = 0.1 \times (2420 - 1050) = 137\,\text{J}
-\end{align}
+\end{aligned}
+$$
 
 The clubhead loses 137 J.
 
@@ -458,35 +502,43 @@ The clubhead loses 137 J.
 
 Energy conservation:
 
-\begin{align}
+$$
+\begin{aligned}
 \Delta KE_{\text{clubhead}} = KE_{\text{ball}} + \text{Losses}
-\end{align}
+\end{aligned}
+$$
 
-\begin{align}
+$$
+\begin{aligned}
 137 = 122.7 + \text{Losses}
-\end{align}
+\end{aligned}
+$$
 
-\begin{align}
+$$
+\begin{aligned}
 \text{Losses} \approx 14.3\,\text{J}
-\end{align}
+\end{aligned}
+$$
 
 Where is this energy lost?
 
-- **Deformation of the ball**: The ball compresses by ~7mm during the collision. The elasticity of the ball material is not perfect; some energy is lost to internal damping. Estimate: ~5--7 J.
+- **Deformation of the ball**: The ball compresses by  7mm during the collision. The elasticity of the ball material is not perfect; some energy is lost to internal damping. Estimate:  5--7 J.
 
-- **Deformation of the clubface**: The face deflects inward by 3--5mm. The elastic rebound is not 100% efficient; some energy is lost to hysteresis and damping in the titanium or steel. Estimate: ~4--6 J.
+- **Deformation of the clubface**: The face deflects inward by 3--5mm. The elastic rebound is not 100% efficient; some energy is lost to hysteresis and damping in the titanium or steel. Estimate:  4--6 J.
 
-- **Heat and sound**: The collision is violent and the materials are stressed beyond the elastic limit locally. Some molecular deformation generates heat. The impact also radiates as sound (the ``click'' you hear). Estimate: ~2--3 J.
+- **Heat and sound**: The collision is violent and the materials are stressed beyond the elastic limit locally. Some molecular deformation generates heat. The impact also radiates as sound (the "click" you hear). Estimate:  2--3 J.
 
-- **Spin generation**: Some energy goes into generating backspin. The friction between the ball and clubface creates a torque that spins the ball. Estimate: ~1--2 J.
+- **Spin generation**: Some energy goes into generating backspin. The friction between the ball and clubface creates a torque that spins the ball. Estimate:  1--2 J.
 
-Total dissipation: ~12--18 J. Our calculated value of 14.3 J sits right in this range.
+Total dissipation:  12--18 J. Our calculated value of 14.3 J sits right in this range.
 
 **The efficiency of the collision is:**
 
-\begin{align}
+$$
+\begin{aligned}
 \eta = \frac{KE_{\text{ball}}}{KE_{\text{clubhead, before}}} = \frac{122.7}{242} = 50.7\%
-\end{align}
+\end{aligned}
+$$
 
 ::: {.callout-important}
 ## Impact Energy Budget
@@ -511,12 +563,13 @@ Golf is unique among ball sports in the prevalence of backspin. A baseball or te
 The reason is in the geometry of the impact. At impact, the clubface is nearly perpendicular to the velocity vector (nearly perpendicular to the horizontal). The ball compresses and then rebounds off the face. The face imparts a normal impulse (perpendicular to the face), but due to friction, there is also a tangential impulse (parallel to the face, in the vertical direction).
 
 
-
 The friction force between the ball and face creates a torque:
 
-\begin{align}
+$$
+\begin{aligned}
 \boldsymbol{\tau} = \mathbf{r} \times \mathbf{F}_{\text{friction}}
-\end{align}
+\end{aligned}
+$$
 
 where $\mathbf{r}$ is the position vector from the ball's center to the contact point. Since the contact is on the lower surface of the ball (for a normal drive), the friction force creates a torque about the horizontal axis, generating backspin.
 
@@ -534,18 +587,22 @@ The amount of backspin depends on:
 
 The spin loft is the difference between the dynamic loft (the vertical angle of the clubface) and the club path (the horizontal direction the club is moving).
 
-\begin{align}
+$$
+\begin{aligned}
 \text{Spin loft} = \text{Dynamic loft} - \text{(Club path relative to spin axis)}
-\end{align}
+\end{aligned}
+$$
 
 For a driver with 12.5$^{\circ}$ dynamic loft and a path down the target line (0$^{\circ}$ horizontally), the spin loft is simply 12.5$^{\circ}$.
 
 The backspin rate in revolutions per minute is approximately:
 
-\begin{align}
+$$
+\begin{aligned}
 RPM_{\text{backspin}} \approx 96 \times \text{(Spin loft in degrees)} + \text{(adjustments for speed, friction)}
-\label{eq:spin_rate_approx}
-\end{align}
+{#eq:spin_rate_approx}
+\end{aligned}
+$$
 
 This is a rule of thumb; the exact relationship depends on the coefficient of friction and the ball construction. But the rule captures the essence: higher spin loft means more backspin.
 
@@ -562,15 +619,19 @@ A golfer hits a driver with:
 Spin loft = 12$^{\circ}$.
 
 Using the rule of thumb:
-\begin{align}
+$$
+\begin{aligned}
 RPM \approx 96 \times 12 + \text{(speed adjustments)} \approx 1152 + 200 \approx 1350 \text{ RPM}
-\end{align}
+\end{aligned}
+$$
 
 Wait, this seems low. The formula is actually more sensitive to clubhead speed. A better empirical formula is:
 
-\begin{align}
+$$
+\begin{aligned}
 RPM \approx 100 \times \text{(Spin loft)} \times \left(1 + 0.0005 \times (v_c - 100)\right)
-\end{align}
+\end{aligned}
+$$
 
 With $v_c = 100$ mph, this gives $\approx 1200$ RPM. At $v_c = 110$ mph, the factor is $1.005$, so RPM $\approx 1260$. This is still lower than the 2600 RPM we'd expect for a good driver spin rate.
 
@@ -587,7 +648,6 @@ The USGA/R&A specify groove geometry (width, depth, spacing). Modern clubs are d
 In wet conditions, a club with excellent groove design might maintain 80--90% of the dry spin rate, while a poorly grooved club might drop to 50%.
 
 
-
 For spin generation theory, we can model the contact between ball and face as a sliding-rolling transition. Initially, the ball slides on the face (high relative velocity). As the collision progresses, friction acts to reduce the relative sliding velocity. By the end of the contact, the ball may be rolling on the face (zero relative velocity at the contact point). The total backspin depends on how far this transition progresses during the 0.5ms contact.
 
 If the contact is very slippery (wet, smooth face), the ball barely begins rolling by the time it leaves the face, and backspin is low. If the contact is very sticky (dry, grooved face), the rolling condition is achieved quickly, and backspin is high.
@@ -598,15 +658,15 @@ If the contact is very slippery (wet, smooth face), the ball barely begins rolli
 
 The physics of golf impact has evolved dramatically over the past 60 years:
 
-**Cochran & Stobbs (1968):**  \citep{Cochran1968} In their landmark book ``Search for the Perfect Swing,'' Cochran and Stobbs applied classical mechanics to golf for the first time. They introduced high-speed camera analysis, measured ball flight trajectories carefully, and developed the early ball flight laws. Their work established that clubhead speed and loft determine trajectory more than previously understood. However, they lacked the computation to solve 3D oblique impact problems rigorously.
+**Cochran & Stobbs (1968):**  [@Cochran1968] In their landmark book "Search for the Perfect Swing," Cochran and Stobbs applied classical mechanics to golf for the first time. They introduced high-speed camera analysis, measured ball flight trajectories carefully, and developed the early ball flight laws. Their work established that clubhead speed and loft determine trajectory more than previously understood. However, they lacked the computation to solve 3D oblique impact problems rigorously.
 
-**Penner (2003):**  \citep{Penner2003} In a comprehensive review in ``Physics Today,'' physicist R. Adair (with Penner) provided a modern physics perspective on golf. They showed that the standard momentum-based impact models were incomplete for 3D off-center hits and spin generation. They emphasized the importance of oblique impact theory and the coupling between translational and rotational motion of the ball.
+**Penner (2003):**  [@Penner2003] In a comprehensive review in "Physics Today," physicist R. Adair (with Penner) provided a modern physics perspective on golf. They showed that the standard momentum-based impact models were incomplete for 3D off-center hits and spin generation. They emphasized the importance of oblique impact theory and the coupling between translational and rotational motion of the ball.
 
-**Cross (2006):**  \citep{Cross2006} Physics educator Rod Cross published detailed experimental studies of club-ball impacts using high-speed force measurement and video. Cross measured the collision time, peak forces, and energy transfer with precision. He showed that the COR depends on impact speed and location, and that gear effect (sidespin from off-center hits) arises naturally from oblique impact mechanics, not from magical club designs.
+**Cross (2006):**  [@Cross2006] Physics educator Rod Cross published detailed experimental studies of club-ball impacts using high-speed force measurement and video. Cross measured the collision time, peak forces, and energy transfer with precision. He showed that the COR depends on impact speed and location, and that gear effect (sidespin from off-center hits) arises naturally from oblique impact mechanics, not from magical club designs.
 
-**Hocknell (2002):**  \citep{Hocknell2002} Aerospace engineer John Hocknell used finite element analysis (FEA) to model the collision of a clubhead with a ball. His simulations revealed the complex deformation patterns of the ball and clubface during the collision and showed how energy is dissipated. Modern club manufacturers now routinely use similar FEA models to optimize face thickness profiles.
+**Hocknell (2002):**  [@Hocknell2002] Aerospace engineer John Hocknell used finite element analysis (FEA) to model the collision of a clubhead with a ball. His simulations revealed the complex deformation patterns of the ball and clubface during the collision and showed how energy is dissipated. Modern club manufacturers now routinely use similar FEA models to optimize face thickness profiles.
 
-**Broadie (2014):**  \citep{Broadie2014} Statistician Mark Broadie, through the PGA Tour's ShotLink database, analyzed the relationship between impact conditions (ball speed, launch angle, spin rate) and actual shot outcomes. He quantified that ``strokes gained'' framework and showed empirically which impact conditions matter most. This work bridges physics to practical performance metrics.
+**Broadie (2014):**  [@Broadie2014] Statistician Mark Broadie, through the PGA Tour's ShotLink database, analyzed the relationship between impact conditions (ball speed, launch angle, spin rate) and actual shot outcomes. He quantified that "strokes gained" framework and showed empirically which impact conditions matter most. This work bridges physics to practical performance metrics.
 
 ### Current State of Impact Science
 
@@ -626,7 +686,7 @@ The consensus result of this research is clear: impact is a complex 3D collision
 
 ## Practical Implications
 
-### Why ``Trusting the Swing'' Matters
+### Why "Trusting the Swing" Matters
 
 The ZTCF analysis shows that impact is a drift-dominated moment. You cannot consciously control the collision. The best you can do is:
 
@@ -706,8 +766,3 @@ A driver impact occurs with the following parameters:
 - (d) Calculate the clubhead velocity after impact and its kinetic energy.
 - (e) Calculate the total energy dissipated (lost to deformation, heat, sound, etc.).
 - (f) Express the energy loss as a percentage of the initial clubhead kinetic energy. How does this compare to the theoretical COR prediction?
-
-
-
-\end{antml:parameter>
-</invoke>

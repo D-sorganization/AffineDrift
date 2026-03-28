@@ -3,7 +3,6 @@ title: "Interdisciplinary Perspectives"
 ---
 
 
-
 # Where Disciplines Collide: An Interdisciplinary Perspective
 
 ::: {.callout-tip}
@@ -37,7 +36,7 @@ From a control theory perspective: the early downswing is a phase of high contro
 
 This perspective explains why the infraspinatus is most active early in the swing, not late---it is setting up the drift, not fighting it.
 
-The affine framework provides a bridge between control theory and biomechanics. Both disciplines can now speak the same language: the language of drift $f(\state)$ and control $G(\state)\control$.
+The affine framework provides a bridge between control theory and biomechanics. Both disciplines can now speak the same language: the language of drift $f(\mathbf{x})$ and control $G(\mathbf{x})\control$.
 
 For control theorists, this language makes the biology explicit: the drift includes gravity, Coriolis forces, elastic energy in the shaft, and passive damping in connective tissue. The control is muscle torque, coordinated across many joints.
 
@@ -123,7 +122,7 @@ The cerebellum is thought to learn **forward models**---internal models that pre
 
 This is why practice matters. Each swing, the nervous system compares the actual trajectory to the predicted trajectory. If there is an error, the forward model is refined. After hundreds of repetitions, the forward model becomes very accurate, and the cerebellum can predict the swing outcome before it happens.
 
-The affine framework provides a clear picture of what the cerebellar forward model must learn: the drift field $f(\state)$. The control field $G(\state)$ is relatively fixed (the muscles can always produce force in approximately the same directions). But the drift field is complex and depends on the current state in nonlinear ways. The cerebellum's job is to learn $f(\state)$ well enough that it can predict future states and plan control inputs that will achieve the goal.
+The affine framework provides a clear picture of what the cerebellar forward model must learn: the drift field $f(\mathbf{x})$. The control field $G(\mathbf{x})$ is relatively fixed (the muscles can always produce force in approximately the same directions). But the drift field is complex and depends on the current state in nonlinear ways. The cerebellum's job is to learn $f(\mathbf{x})$ well enough that it can predict future states and plan control inputs that will achieve the goal.
 
 ### Motor Cortex and Feedback Control
 
@@ -147,7 +146,7 @@ This learning happens at multiple timescales:
 3. **Across sessions:** Motor learning over days and weeks, including muscle adaptation (strength and hypertrophy).
 4. **Across seasons:** Long-term adaptation to club and shaft changes, swing changes, and biomechanical constraints.
 
-The affine framework provides a way to understand what the nervous system must learn at each timescale. At the fastest timescale (within-swing feedback), the nervous system must learn the control authority $G(\state)$: what control inputs are available at the current state? At the slowest timescale (learning new swing patterns), the nervous system must learn a new drift field $f(\state)$: how does the body move when no muscle torques are applied?
+The affine framework provides a way to understand what the nervous system must learn at each timescale. At the fastest timescale (within-swing feedback), the nervous system must learn the control authority $G(\mathbf{x})$: what control inputs are available at the current state? At the slowest timescale (learning new swing patterns), the nervous system must learn a new drift field $f(\mathbf{x})$: how does the body move when no muscle torques are applied?
 
 ## Material Science: Shaft Design and Ball Physics
 
@@ -157,7 +156,7 @@ These materials have mechanical properties that significantly affect the swing a
 
 ### Shaft Materials and Design
 
-Carbon fiber composites are strong, stiff, and light. This is why they are used in golf shafts. A carbon shaft can be engineered to have specific stiffness properties: the bending stiffness (described by $EI$ in Chapter~\ref{ch:flexible_shaft}) can be tuned by varying the fiber orientation and the resin matrix.
+Carbon fiber composites are strong, stiff, and light. This is why they are used in golf shafts. A carbon shaft can be engineered to have specific stiffness properties: the bending stiffness (described by $EI$ in Chapter @ch:flexible_shaft) can be tuned by varying the fiber orientation and the resin matrix.
 
 A shaft with fibers oriented primarily in the lengthwise direction (along the shaft) is very stiff in bending and torsion. A shaft with fibers oriented at an angle (spirally wrapped) is more compliant and can absorb more deformation. A shaft with a variable fiber orientation (stiffer near the grip, more flexible near the tip) produces a specific bending profile.
 
@@ -222,15 +221,15 @@ But there is an inverse problem: given the observed ball trajectory, what can we
 ### Learning the Drift Field from Data
 
 Suppose a golfer takes 100 swings with launch monitor data collected. Each swing has:
-- Pre-swing state: hand position, hand velocity, shoulder angle, etc. (the state $\state_0$).
-- Impact state: clubhead speed, club face angle, club path, etc. (the state $\state_{\text{impact}}$).
+- Pre-swing state: hand position, hand velocity, shoulder angle, etc. (the state $\mathbf{x}_0$).
+- Impact state: clubhead speed, club face angle, club path, etc. (the state $\mathbf{x}_{\text{impact}}$).
 - Post-impact: ball speed, spin rate, launch angle, ball position at various times.
 
-From the 100 data points, can we learn the drift field $f(\state)$?
+From the 100 data points, can we learn the drift field $f(\mathbf{x})$?
 
 The answer is: partially, yes. We can use the pre-impact states and post-impact measurements to estimate how the state evolves over the swing. We can fit a model to the data and extract estimates of the drift field.
 
-More precisely, we can estimate the parameters of the drift field. The drift field has a known structure (it includes gravity, Coriolis forces, elastic forces from the shaft, etc.). We can measure or estimate most of these from the golfer's biomechanics and equipment. For the unknown parameters (like the shaft stiffness $\shaftstiff$ or the effective muscle damping), we can use the launch monitor data to infer the best values.
+More precisely, we can estimate the parameters of the drift field. The drift field has a known structure (it includes gravity, Coriolis forces, elastic forces from the shaft, etc.). We can measure or estimate most of these from the golfer's biomechanics and equipment. For the unknown parameters (like the shaft stiffness $k_{\text{shaft}}$ or the effective muscle damping), we can use the launch monitor data to infer the best values.
 
 This is machine learning in the service of physics: not a black-box neural network, but a physics-informed model that learns the unknown parameters.
 
@@ -325,7 +324,7 @@ The most effective coach is one who understands the drift field structure and de
 
 How do all these disciplines fit together? Through the zero-torque counterfactual.
 
-Recall that the ZTCF is the trajectory the clubhead would follow if all muscle torques were zero. It depends entirely on the drift field $f(\state)$, the state at which zero-torque conditions are imposed, and the constraints of the body.
+Recall that the ZTCF is the trajectory the clubhead would follow if all muscle torques were zero. It depends entirely on the drift field $f(\mathbf{x})$, the state at which zero-torque conditions are imposed, and the constraints of the body.
 
 Now:
 
