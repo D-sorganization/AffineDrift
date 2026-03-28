@@ -64,10 +64,12 @@ In our golf model, the three links correspond to: (1) the upper arm, from should
   \draw[fill=red] (3.6,-3.8) circle (0.08);
 
   % Angle annotations
-  \arc{arc}  % placeholder for angle notation
-  \node[right=0.1cm, above=0.2cm of (0,0)] {$q_1$};
-  \node[right=0.2cm, above=0.2cm of (1.5,-1.2)] {$q_2$};
-  \node[right=0.2cm, above=0.2cm of (2.8,-2.3)] {$q_3$};
+  \draw[->] (0,-0.5) arc[start angle=-90, end angle=-50, radius=0.5];
+  \node[right] at (0.3,-0.35) {$q_1$};
+  \draw[->] (1.5,-1.7) arc[start angle=-90, end angle=-50, radius=0.5];
+  \node[right] at (1.8,-1.55) {$q_2$};
+  \draw[->] (2.8,-2.8) arc[start angle=-90, end angle=-50, radius=0.5];
+  \node[right] at (3.1,-2.65) {$q_3$};
 
   % Legend for parameters
   \node[anchor=west] at (5,-0.5) {Parameters:};
@@ -123,21 +125,23 @@ M_{13} & M_{23} & M_{33}
 \label{eq:triple_mass_matrix_structure}
 \end{equation}
 
-The diagonal entries are:
+The diagonal entries are (using $L_{c,i} = L_i/2$ for the center-of-mass distance of each link, and relative joint angles $q_2$, $q_3$):
 \begin{align}
-M_{11} &= I_1 + m_1(L_1/2)^2 + I_2 + m_2(L_1^2 + L_1 L_2 \cos q_2) + I_3 + m_3(L_1^2 + L_1 L_2 \cos q_2 + L_2^2 + 2L_1 L_2 \cos q_2)\\
-M_{22} &= I_2 + m_2(L_2/2)^2 + I_3 + m_3(L_2^2 + L_1 L_2 \cos q_2)\\
-M_{33} &= I_3 + m_3(L_3/2)^2
+M_{11} &= I_1 + m_1 L_{c,1}^2 + (m_2 + m_3) L_1^2 + m_2 L_{c,2}^2 + m_3 L_2^2 + m_3 L_{c,3}^2 \notag\\
+       &\quad + 2 m_2 L_1 L_{c,2} \cos q_2 + 2 m_3 L_1 L_2 \cos q_2 + 2 m_3 L_1 L_{c,3} \cos(q_2 + q_3) + 2 m_3 L_2 L_{c,3} \cos q_3 \\
+M_{22} &= I_2 + m_2 L_{c,2}^2 + m_3 L_2^2 + m_3 L_{c,3}^2 + 2 m_3 L_2 L_{c,3} \cos q_3 \\
+M_{33} &= I_3 + m_3 L_{c,3}^2
 \end{align}
 
 The off-diagonal terms capture the coupling between segments:
 \begin{align}
-M_{12} &= I_2 + m_2 L_1 L_2 \cos q_2 + I_3 + m_3(L_2^2 + L_1 L_2 \cos q_2)\\
-M_{13} &= I_3 + m_3(L_2^2 + L_1 L_2 \cos q_2)\\
-M_{23} &= I_3 + m_3(L_2^2/2)
+M_{12} &= m_2 L_1 L_{c,2} \cos q_2 + m_3 L_1 L_2 \cos q_2 + m_3 L_1 L_{c,3} \cos(q_2 + q_3) \notag\\
+       &\quad + I_2 + m_2 L_{c,2}^2 + m_3 L_2^2 + m_3 L_{c,3}^2 + 2 m_3 L_2 L_{c,3} \cos q_3 \\
+M_{13} &= I_3 + m_3 L_{c,3}^2 + m_3 L_1 L_{c,3} \cos(q_2 + q_3) + m_3 L_2 L_{c,3} \cos q_3 \\
+M_{23} &= I_3 + m_3 L_{c,3}^2 + m_3 L_2 L_{c,3} \cos q_3
 \end{align}
 
-(These expressions simplify if we ignore the inertias of distal segments about proximal joints, which is reasonable for golf swings.)
+(These are the standard 3-link planar pendulum mass matrix entries using relative joint angles. They simplify if we ignore the rotational inertias $I_i$ of individual segments, which is reasonable for golf swing modeling.)
 \end{definition}
 
 \begin{laymansbox}{What the Mass Matrix Entries Mean}{inplain:mass_matrix_meaning}

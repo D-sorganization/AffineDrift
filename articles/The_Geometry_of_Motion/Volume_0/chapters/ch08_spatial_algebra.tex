@@ -25,7 +25,7 @@ In 1900, Sir \textbf{Robert Stawell Ball} \cite{ball1900} developed the theory o
 
 However, the true synthesis came when \textbf{Roy Featherstone}, in the 1980s and 1990s, recognized that Ball's geometric screws and Plücker's algebraic coordinates could be married with Lie algebra to create a unified computational framework for multi-body dynamics. Featherstone's \textbf{Spatial Vector Algebra} \cite{Featherstone2008} standardized the representation, showed how to compose inertias of linked chains (composite rigid body algorithm), and proved that careful use of spatial algebra enables $O(N)$ inverse dynamics.
 
-Modern robotics and physics engines (MuJoCo \cite{todorov2012}, Drake, UpstreamDrift) are built entirely on Featherstone's spatial framework.
+Modern robotics and physics engines (MuJoCo \cite{todorov2012}, Drake, Pinocchio) are built entirely on Featherstone's spatial framework. The companion platform accompanying this textbook builds on the same foundation.
 
 \begin{figure}[htb]
 \centering
@@ -226,18 +226,16 @@ When the reference frame origin is \emph{at} the center of mass ($\mathbf{c} = \
 The Spatial Inertia Matrix $\mathcal{I}$ is symmetric and positive definite.
 
 \textbf{Proof (Symmetry)}:
-The matrix $\mathcal{I}$ has:
-\begin{itemize}
-  \item Top-left block: $\mathbf{I}_c - m[\mathbf{c}][\mathbf{c}]$ is symmetric (both $\mathbf{I}_c$ and the parallel-axis correction are symmetric).
-  \item Off-diagonal blocks: $m[\mathbf{c}]$ (top-right) and $-m[\mathbf{c}]$ (bottom-left) are not the same, but note that $[\mathbf{c}]^T = -[\mathbf{c}]$ (skew-symmetric), so the off-diagonals satisfy $m[\mathbf{c}] = -m(-[\mathbf{c}])$, making the matrix symmetric under the structure.
-  \item Bottom-right block: $m\mathbf{I}_{3 \times 3}$ is symmetric.
-\end{itemize}
-
-Actually, the standard form is:
+Write the spatial inertia in standard form:
 \[
-  \mathcal{I} = \begin{bmatrix} \mathbf{I}_c - m[\mathbf{c}][\mathbf{c}]^T & m[\mathbf{c}]^T \\ m[\mathbf{c}] & m\mathbf{I}_{3 \times 3} \end{bmatrix}
+  \mathcal{I} = \begin{bmatrix} \mathbf{I}_c - m[\mathbf{c}][\mathbf{c}]^T & m[\mathbf{c}]^T \\ m[\mathbf{c}] & m\mathbf{I}_{3 \times 3} \end{bmatrix}.
 \]
-with $[\mathbf{c}]^T = -[\mathbf{c}]$, and this is manifestly symmetric.
+Since $[\mathbf{c}]$ is skew-symmetric ($[\mathbf{c}]^T = -[\mathbf{c}]$), each block is symmetric or correctly transposed:
+\begin{itemize}
+  \item Top-left block: $\mathbf{I}_c - m[\mathbf{c}][\mathbf{c}]^T$ is symmetric (both $\mathbf{I}_c$ and the product $[\mathbf{c}][\mathbf{c}]^T$ are symmetric).
+  \item Off-diagonal blocks: The top-right block is $m[\mathbf{c}]^T = -m[\mathbf{c}]$, and the bottom-left block is $m[\mathbf{c}]$. Their transposes satisfy $(m[\mathbf{c}]^T)^T = m[\mathbf{c}]$, confirming $\mathcal{I}^T = \mathcal{I}$.
+  \item Bottom-right block: $m\mathbf{I}_{3 \times 3}$ is trivially symmetric.
+\end{itemize}
 
 \textbf{Proof (Positive Definite)}:
 For any non-zero spatial vector $\mathcal{V} = (\boldsymbol{\omega}, \mathbf{v})$, we compute:

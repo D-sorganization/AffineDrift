@@ -157,8 +157,9 @@ This is the \textbf{manipulator equation}\index{manipulator equation}. Don't be 
 \item $\bm{\tau}$: the \emph{applied} torques—what your muscles generate.
 \end{itemize}
 
-The left side is drift: what your body and the physics want to do.
-The right side is control: what you're actively commanding.
+When we rearrange this equation to solve for acceleration (Chapter~5), we get:
+$\ddot{\bm{q}} = \bm{M}^{-1}[-\bm{C}\dot{\bm{q}} - \bm{g}] + \bm{M}^{-1}\bm{\tau}$.
+The first term is \emph{drift}: what physics does on its own. The second term is \emph{control}: what your muscles actively command.
 
 This equation is the spine of the book. Everything flows from understanding its pieces.
 
@@ -258,7 +259,7 @@ Empirical observation suggests that swings differ markedly in their drift-to-con
 \[
 \bm{M}(\bm{q}) \ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{\tau}
 \]
-Left side = drift. Right side = control.
+Rearranged: $\ddot{\bm{q}} = \underbrace{\bm{M}^{-1}[-\bm{C}\dot{\bm{q}} - \bm{g}]}_{\text{drift}} + \underbrace{\bm{M}^{-1}\bm{\tau}}_{\text{control}}$.
 
 \item \textbf{The double pendulum is your guide}. It's simple enough to understand fully, complex enough to be realistic. Use it to build intuition.
 \end{enumerate}
