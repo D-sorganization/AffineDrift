@@ -6,10 +6,10 @@
 Everything you do in your golf swing---the footwork, the rotation, the lag, the tempo---is preparation for a single event: the moment the club strikes the ball. This event lasts approximately half a millisecond. In that time, invisible forces reshape the ball, the clubface deforms elastically, and the entire kinetic energy of your swing is transferred (or lost) in a collision governed by physics so elegant it seems almost unfair.
 
 \begin{laymansbox}{Why Impact Matters}{layman:impact_matters}
-You've heard that ``golf is 90\% mental.'' That's nonsense. But here's what's true: your score is determined almost entirely by what happens in the 0.5 milliseconds when club meets ball. A golfer who swings identically every time but varies impact conditions by just 5\% will have 10x more variation in distance. This is not a technical failure---it's physics. The impact moment is where every nuance of your swing is reflected in the ball's flight. To be a better golfer, you must understand what matters at impact.
+You've heard that ``golf is 90\% mental.'' The psychological dimension of golf is well-documented and important---course management, focus, and emotional regulation genuinely affect performance. But from a physics perspective, your score is ultimately determined by what happens in the 0.5 milliseconds when club meets ball. A golfer who swings identically every time but varies impact conditions by just 5\% will have 10x more variation in distance. This is not a technical failure---it's physics. The impact moment is where every nuance of your swing is reflected in the ball's flight. To be a better golfer, you must understand what matters at impact.
 \end{laymansbox}
 
-The question we face is profound: What really determines the outcome of impact? Is it just the speed and angle at which the club arrives? Or do forces from your body propagate through the shaft and influence the collision even while it's happening? Can you control impact, or is it purely a drift phenomenon?
+The question we face is central: What really determines the outcome of impact? Is it just the speed and angle at which the club arrives? Or do forces from your body propagate through the shaft and influence the collision even while it's happening? Can you control impact, or is it purely a drift phenomenon?
 
 The answer is subtle and will require us to dispel a dangerous myth.
 
@@ -28,12 +28,12 @@ Consider a clubhead of mass $m_c$ moving at velocity $v_c$ striking a stationary
 
 After impact, the ball moves at velocity $v_b'$ and the clubhead at velocity $v_c'$:
 \begin{align}
-\text{Relative velocity of separation} = v_c' - v_b'
+\text{Relative velocity of separation} = v_b' - v_c'
 \end{align}
 
 The coefficient of restitution relates these:
 \begin{align}
-e = \frac{v_c' - v_b'}{v_c - 0} = \frac{v_c' - v_b'}{v_c}
+e = \frac{v_b' - v_c'}{v_c - 0} = \frac{v_b' - v_c'}{v_c}
 \label{eq:cor_definition}
 \end{align}
 
@@ -74,7 +74,7 @@ v_b' = \frac{(1+e) m_c}{m_c + m_b} v_c
 \label{eq:ball_velocity_after}
 \end{align}
 
-For a typical driver: $m_c \approx 200\,\text{g}$, $m_b \approx 45.93\,\text{g}$ (USGA minimum), $e = 0.83$, and clubhead speed $v_c = 110\,\text{mph} = 49.2\,\text{m/s}$.
+For a typical driver: $m_c \approx 200\,\text{g}$, $m_b \approx 45.93\,\text{g}$ (USGA maximum), $e = 0.83$, and clubhead speed $v_c = 110\,\text{mph} = 49.2\,\text{m/s}$.
 
 \begin{align}
 v_b' = \frac{(1+0.83) \times 200}{200 + 45.93} \times 49.2 = \frac{1.83 \times 200}{245.93} \times 49.2 = 1.486 \times 49.2 = 73.1\,\text{m/s} \approx 163\,\text{mph}
@@ -158,15 +158,15 @@ where $\alpha$ is a coupling coefficient $\sim 0.4$--0.6. Typical: $m_{\text{eff
   \node[color=green] at (2.4, 0.7) {$N$};
 
   % Coefficient of restitution equation
-  \node[fill=white, draw=black] at (2.5, -1.2) {$e = \frac{v_c' - v_b'}{v_c}$};
+  \node[fill=white, draw=black] at (2.5, -1.2) {$e = \frac{v_b' - v_c'}{v_c}$};
 \end{tikzpicture}
 \caption{Club-ball impact collision showing clubhead velocity $v_c$ before impact, normal force $N$, and resulting velocities $v_c'$ and $v_b'$ after impact. The coefficient of restitution $e$ relates the relative velocities.}
 \label{fig:impact_collision}
 \end{figure}
 
-\section{The Great Myth: ``Impact Is Isolated''}
+\section{The Isolation Approximation: How Good Is It?}
 
-Now we must address what might be the most damaging misconception in golf physics:
+A common simplifying assumption in golf physics is:
 
 \textit{``The ball-club collision happens so fast that forces from the golfer's body cannot reach the clubhead during impact. Impact is an isolated collision governed only by the kinematics at the moment of contact.''}
 
@@ -260,7 +260,7 @@ Over a contact time of 0.5ms, the average force on the ball is:
 F_{\text{avg}} = \frac{J}{t_{\text{contact}}} = \frac{3.36}{0.5 \times 10^{-3}} = 6720\,\text{N}
 \end{align}
 
-This is a massive force (about 1.5 tons), but it acts only on the ball. By Newton's third law, the ball exerts an equal and opposite force on the clubhead.
+This is a massive force (about 685~kg, or 0.75 short tons), but it acts only on the ball. By Newton's third law, the ball exerts an equal and opposite force on the clubhead.
 
 Now, consider the shaft. If the grip force increases from $F_g$ to $F_g + \Delta F$ during the contact window (say, in the middle 0.25ms of contact), the shaft can transmit this change. The shaft stiffness in axial direction is $k \approx 50,000\,\text{N/m}$. An axial deformation $\Delta x$ induces a force change:
 
@@ -280,7 +280,7 @@ To be clear: the \emph{dominant} determinant of ball speed is still clubhead spe
 
 \subsection{USGA Regulations and Practical Values}
 
-The USGA/R&A imposed the 0.830 COR limit in 1998 to prevent driving distances from increasing indefinitely. Without this limit, modern materials would allow COR values of 0.85--0.88.
+The USGA introduced the COR limit in 1998 (initially set at 0.822, later raised to 0.830), and the R\&A adopted the same limit in 2008. Without this limit, modern materials would allow COR values of 0.85--0.88.
 
 \index{USGA!COR limit}
 
@@ -363,12 +363,19 @@ At impact, three numbers completely determine the initial ball flight:
 \item \textbf{Spin rate} $\omega_s$: the total spin in revolutions per minute
 \end{enumerate}
 
-The launch angle is determined primarily by:
+A first approximation for the launch angle is:
 \begin{align}
 \theta_L \approx \theta_{\text{loft}} + \theta_{\text{attack}}
 \end{align}
 
-where $\theta_{\text{loft}}$ is the static loft of the club (e.g., 9.5$^{\circ}$ for a driver) and $\theta_{\text{attack}}$ is the attack angle (the angle at which the clubhead is moving downward or upward). For a driver swing with 9.5$^{\circ}$ loft and +3$^{\circ}$ attack angle, the dynamic loft is 12.5$^{\circ}$.
+However, this simple sum is an oversimplification. A more accurate empirical relationship, derived from launch monitor data, is:
+\begin{align}
+\theta_L \approx 0.84 \times \theta_{\text{dynamic loft}} + 0.16 \times \theta_{\text{attack}}
+\end{align}
+
+where $\theta_{\text{dynamic loft}}$ accounts for static loft, shaft lean, and face angle at impact. The ball launches closer to the face normal than the simple sum suggests, because the ball compresses against the face during contact.
+
+For a driver swing with 9.5$^{\circ}$ static loft and +3$^{\circ}$ attack angle, the dynamic loft is approximately 12.5$^{\circ}$, giving a launch angle of $\approx 0.84 \times 12.5 + 0.16 \times 3 \approx 11.0^{\circ}$.
 
 \index{dynamic loft}
 
@@ -393,7 +400,7 @@ A golfer hits a driver with:
 The ball flight will have:
 \begin{itemize}
 \item Ball speed: $1.48 \times 49.2 = 72.8$ m/s $\approx$ 163 mph
-\item Launch angle: $\approx 9.5 + 2.5 = 12.0^{\circ}$
+\item Launch angle: $\approx 0.84 \times 12.0 + 0.16 \times 2.5 \approx 10.5^{\circ}$
 \item Launch direction: $\approx 0^{\circ}$ (at target)
 \item Spin loft: $12.0 - 0 = 12.0^{\circ}$
 \item Spin rate: $\approx 2600$ RPM (depends on friction, ball construction)
@@ -430,7 +437,7 @@ Even accounting for mechanical advantage through the lever system of the arm, th
 
 \textbf{However:} the drift field itself was shaped by control actions made 100--200ms earlier (during the acceleration phase of the downswing). The clubhead speed, angle, and shaft tension at impact are all the result of earlier control inputs. Impact is where the drift ``delivers the payload.'' The quality of delivery was determined by control, but the delivery itself is drift.
 
-This has a profound implication: \textbf{you cannot control impact directly}. You can only control the approach to impact. Once the collision begins, physics takes over. The best you can do is ensure that your swing mechanics (guided by control) arrive at impact in an optimal state.
+This has a striking implication: \textbf{you cannot control impact directly}. You can only control the approach to impact. Once the collision begins, physics takes over. The best you can do is ensure that your swing mechanics (guided by control) arrive at impact in an optimal state.
 
 \end{driftcontrol}
 
@@ -564,40 +571,17 @@ The spin loft is the difference between the dynamic loft (the vertical angle of 
 
 For a driver with 12.5$^{\circ}$ dynamic loft and a path down the target line (0$^{\circ}$ horizontally), the spin loft is simply 12.5$^{\circ}$.
 
-The backspin rate in revolutions per minute is approximately:
+The backspin rate depends on spin loft, clubhead speed, friction coefficient, and ball construction. Simple linear formulas (e.g., $RPM \approx k \times \text{spin loft}$) are insufficient because the relationship is nonlinear and strongly dependent on the sliding-to-rolling transition during the 0.5~ms contact.
 
-\begin{align}
-RPM_{\text{backspin}} \approx 96 \times \text{(Spin loft in degrees)} + \text{(adjustments for speed, friction)}
-\label{eq:spin_rate_approx}
-\end{align}
-
-This is a rule of thumb; the exact relationship depends on the coefficient of friction and the ball construction. But the rule captures the essence: higher spin loft means more backspin.
-
-\begin{example}{Spin Rate Calculation}{ex:spin_rate}
-A golfer hits a driver with:
+\begin{example}{Spin Rate: Measured Ranges}{ex:spin_rate}
+For a driver with a spin loft of 10--15$^{\circ}$, typical measured backspin rates are:
 \begin{itemize}
-\item Clubhead speed: 100 mph (more realistic for an amateur)
-\item Dynamic loft: 12$^{\circ}$
-\item Club path: 0$^{\circ}$ (down target line)
-\item Ball speed: 148 mph (smash factor 1.48)
+\item Clubhead speed 90~mph: 2000--2800~RPM
+\item Clubhead speed 100~mph: 2200--3000~RPM
+\item Clubhead speed 110~mph: 2400--3200~RPM
 \end{itemize}
 
-Spin loft = 12$^{\circ}$.
-
-Using the rule of thumb:
-\begin{align}
-RPM \approx 96 \times 12 + \text{(speed adjustments)} \approx 1152 + 200 \approx 1350 \text{ RPM}
-\end{align}
-
-Wait, this seems low. The formula is actually more sensitive to clubhead speed. A better empirical formula is:
-
-\begin{align}
-RPM \approx 100 \times \text{(Spin loft)} \times \left(1 + 0.0005 \times (v_c - 100)\right)
-\end{align}
-
-With $v_c = 100$ mph, this gives $\approx 1200$ RPM. At $v_c = 110$ mph, the factor is $1.005$, so RPM $\approx 1260$. This is still lower than the 2600 RPM we'd expect for a good driver spin rate.
-
-The reality is that the empirical relationship is complex and depends heavily on the club design, ball construction, and friction conditions. Modern launch monitors measure spin rate directly via high-speed camera imaging.
+These values are measured directly by modern launch monitors (Trackman, Foresight) using high-speed camera imaging. The wide ranges reflect variation in ball construction, groove design, moisture conditions, and impact location on the face. No simple closed-form formula reliably predicts spin rate from first principles; the empirical relationship depends heavily on the specific club-ball combination and contact conditions.
 \end{example}
 
 \subsection{Groove Geometry and Moisture}

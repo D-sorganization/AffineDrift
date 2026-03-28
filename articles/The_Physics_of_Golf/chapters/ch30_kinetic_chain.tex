@@ -235,7 +235,7 @@ The stretch magnitude is $\Delta \alpha_X^{\text{stretch}} = \alpha_X^{\text{max
 
 \subsection{Elastic Energy Storage and the Coupled Oscillator Picture}
 
-The X-factor stretch reveals something profound: the trunk is not a rigid lever being rotated by the hips. Instead, it is an elastic structure with its own dynamics. At the top of the backswing, both hips and shoulders are at their maximum rotation. However, the shoulders and hips have \emph{different natural frequencies} due to their different masses and the stiffness of the coupling (trunk muscles, fascia, ligaments).
+The X-factor stretch reveals something important: the trunk is not a rigid lever being rotated by the hips. Instead, it is an elastic structure with its own dynamics. At the top of the backswing, both hips and shoulders are at their maximum rotation. However, the shoulders and hips have \emph{different natural frequencies} due to their different masses and the stiffness of the coupling (trunk muscles, fascia, ligaments).
 
 Consider a two-DOF model of the hips (segment 1) and shoulders (segment 2), coupled elastically:
 
@@ -331,10 +331,10 @@ The wrist release is not an active drive of the club by the wrist muscles. Rathe
 Consider the wrist and club as a coupled system. Let $\theta_a$ be the arm rotation angle and $\theta_c$ be the club rotation angle. The club is subject to a constraint torque from the arm:
 
 \[
-I_{\text{club}} \ddot{\theta}_c = \tau_{\text{arm}} + \tau_{\text{gravity}} + \tau_{\text{air}}
+I_{\text{club}} \ddot{\theta}_c = \tau_{\text{arm}} + \tau_{\text{gravity}} + \tau_{\text{air}} + \tau_{\text{centrifugal}}
 \]
 
-where $\tau_{\text{arm}}$ is the constraint torque transmitted through the wrist from the arm. During the lag phase (when the wrist is cocked and constrained), the lag angle $\phi = \theta_a - \theta_c$ is maintained by a constraint:
+where $\tau_{\text{arm}}$ is the constraint torque transmitted through the wrist from the arm and $\tau_{\text{centrifugal}}$ is the centrifugal torque arising from the rotating arm reference frame (this is the dominant force driving club acceleration after release; see below). During the lag phase (when the wrist is cocked and constrained), the lag angle $\phi = \theta_a - \theta_c$ is maintained by a constraint:
 
 \[
 \phi = \text{const} \quad \Rightarrow \quad \dot{\theta}_c = \dot{\theta}_a, \quad \ddot{\theta}_c = \ddot{\theta}_a
@@ -343,12 +343,12 @@ where $\tau_{\text{arm}}$ is the constraint torque transmitted through the wrist
 This means the wrist is acting like a rigid link, transmitting all acceleration from the arm to the club. The constraint force is whatever torque is necessary to maintain this rigid coupling:
 
 \[
-\tau_{\text{arm}} = I_{\text{club}} \ddot{\theta}_a - \tau_{\text{gravity}} - \tau_{\text{air}}
+\tau_{\text{arm}} = I_{\text{club}} \ddot{\theta}_a - \tau_{\text{gravity}} - \tau_{\text{air}} - \tau_{\text{centrifugal}}
 \]
 
-As long as the wrist muscles can maintain this constraint (i.e., as long as the required torque does not exceed the maximum torque the wrist muscles can exert), the lag angle remains constant. However, as the arm accelerates faster and faster, the required constraint torque grows. Eventually, the constraint becomes infeasible (the wrist muscles cannot provide enough torque), and the lag angle begins to decrease. The wrist is now \emph{releasing} not by active uncocking, but by the relaxation of the constraint.
+As long as the wrist muscles can maintain this constraint (i.e., as long as the required torque does not exceed the maximum torque the wrist muscles can exert), the lag angle remains constant. However, as the arm accelerates faster and faster, the required constraint torque grows---especially the centrifugal contribution, which scales as $\dot{\theta}_a^2$. Eventually, the constraint becomes infeasible (the wrist muscles cannot provide enough torque), and the lag angle begins to decrease. The wrist is now \emph{releasing} not by active uncocking, but by the relaxation of the constraint.
 
-Once the constraint is released, the club experiences only the torque from gravity and air resistance, which are small compared to the inertial forces from the arm. The club then accelerates under its own inertia, driven by Coriolis forces and the centrifugal effects of the rotating reference frame of the arm.
+Once the constraint is released, the club accelerates primarily under the centrifugal torque from the rotating arm reference frame, with Coriolis forces contributing additional acceleration. Gravity and air drag are comparatively small at these speeds. The centrifugal acceleration from the rotating arm is the \emph{dominant} force driving the club to high angular velocities in the final phase before impact.
 
 \subsection{Late Release vs. Early Release: A Quantitative Comparison}
 
@@ -659,7 +659,7 @@ A better approach is to improve sequencing and efficiency. A golfer with excelle
 \index{Zero-Time-Constraint Force!kinetic chain}
 \index{drift field!kinetic chain}
 
-One of the most profound insights from the ZTCF formalism (Chapter~\ref{ch:zero_torque_counterfactual}) is that the proximal-to-distal sequencing of the kinetic chain does \emph{not} need to be programmed into the motor control system. Instead, it \emph{emerges naturally} from the structure of the equations of motion when the body is modeled as a coupled kinetic chain with realistic mass, geometry, and stiffness parameters.
+One of the most striking insights from the ZTCF formalism (Chapter~\ref{ch:zero_torque_counterfactual}) is that the proximal-to-distal sequencing of the kinetic chain does \emph{not} need to be programmed into the motor control system. Instead, it \emph{emerges naturally} from the structure of the equations of motion when the body is modeled as a coupled kinetic chain with realistic mass, geometry, and stiffness parameters.
 
 \subsection{Natural Frequencies and Coupling}
 
