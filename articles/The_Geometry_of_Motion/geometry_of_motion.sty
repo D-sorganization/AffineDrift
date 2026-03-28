@@ -88,18 +88,15 @@
 % Usage: \begin{gomdraftnotice} ... \end{gomdraftnotice}
 % Uses basic fcolorbox so it works without tcolorbox.
 \newenvironment{gomdraftnotice}{%
-  \par\medskip
-  \noindent
-  \begingroup
-  \fboxsep=8pt
-  \fboxrule=1.5pt
-  \fcolorbox{darkgold!80!black}{yellow!10!white}{%
-    \begin{minipage}{\dimexpr\textwidth-2\fboxsep-2\fboxrule}%
-    \textbf{Draft Notice.}\enspace
+  \par\medskip\noindent
+  \begin{center}
+  \begin{minipage}{0.92\textwidth}
+  \hrule height 0.8pt \smallskip
+  \textbf{Draft Notice.}\enspace
 }{%
-    \end{minipage}%
-  }%
-  \endgroup
+  \smallskip \hrule height 0.8pt
+  \end{minipage}
+  \end{center}
   \par\medskip
 }
 
