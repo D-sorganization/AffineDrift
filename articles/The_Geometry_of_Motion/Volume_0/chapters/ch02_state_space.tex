@@ -284,7 +284,7 @@ If we package our mass-spring equations into matrices, we get:
 \end{equation}
 
 \begin{itemize}
-    \item \textbf{The A Matrix}: $\mathbf{A} = \begin{bmatrix} 0 & 1 \\ -k/m & -c/m \end{bmatrix}$. This matrix defines the "drift" of the system. If you turn off all motors ($u=0$), the $\mathbf{A}$ matrix dictates exactly how the system will coast to a stop, oscillate, or explode. Its eigenvalues completely define the system's natural stability!
+    \item \textbf{The A Matrix}: $\mathbf{A} = \begin{bmatrix} 0 & 1 \\ -k/m & -c/m \end{bmatrix}$. This matrix defines the "drift" of the system. If you turn off all motors ($u=0$), the $\mathbf{A}$ matrix dictates exactly how the system will coast to a stop, oscillate, or explode. Its eigenvalues completely define the system's natural stability.
 
     \item \textbf{The B Matrix}: $\mathbf{B} = \begin{bmatrix} 0 \\ 1/m \end{bmatrix}$. This matrix defines how your control inputs $u$ actually inject energy into the state. Notice that the top value is $0$, meaning our motor cannot instantly teleport the position ($x_1$); it can only directly push the velocity ($x_2$).
 \end{itemize}

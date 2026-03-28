@@ -11,7 +11,7 @@
 \begin{laymansbox}{Context \& Use Case: Unifying Translation and Rotation}{context_box}
 \textbf{The Math You Will See:} We will merge 3D translation vectors ($\mathbf{p}$) and $3 \times 3$ rotation matrices ($\mathbf{R}$) together into a massive $4 \times 4$ \textbf{Homogeneous Transformation Matrix} ($\mathbf{T}$). Furthermore, we will combine linear and angular velocities into a 6D \textbf{Twist} ($\screw$), and linear forces and torques into a 6D \textbf{Wrench} ($\wrench$). We will prove Chasles' theorem rigorously, derive the group and Lie algebra structure, and develop the full machinery of screw theory including reciprocal screws and virtual work.
 
-\textbf{Why We Need It:} In code, doing math on rotation and translation separately is messy, prone to bugs, and algebraically slow. If we pack everything into $4 \times 4$ matrices and 6D vectors, the equations for moving a robot arm, calculating gravity, and applying motor torques all collapse down into elegant, single-line matrix multiplications. This is exactly how industrial physics engines (like MuJoCo and Drake) do their internal calculations!
+\textbf{Why We Need It:} In code, doing math on rotation and translation separately is messy, prone to bugs, and algebraically slow. If we pack everything into $4 \times 4$ matrices and 6D vectors, the equations for moving a robot arm, calculating gravity, and applying motor torques all collapse down into elegant, single-line matrix multiplications. This is exactly how industrial physics engines (like MuJoCo and Drake) do their internal calculations.
 
 \textbf{All Variables Defined:} $\mathbf{T} \in \SE(3)$ describes a full pose, $\screw \in \Reals^6$ describes 6D spatial velocity, and $\wrench \in \Reals^6$ describes 6D spatial force. See the \textbf{Nomenclature} at the start of the book.
 \end{laymansbox}
@@ -613,7 +613,7 @@ This formula states that power has two contributions: the rotational power $\bol
 
 \subsection{Invariance of Power}
 
-A profound property of the spatial formalism is that power is invariant under changes of reference frame. If we express both the twist and the wrench in any frame, the inner product $\wrench^T \twist$ yields the same value. This is the mathematical embodiment of energy conservation: the rate of work done on a body does not depend on which observer calculates it.
+A notable property of the spatial formalism is that power is invariant under changes of reference frame. If we express both the twist and the wrench in any frame, the inner product $\wrench^T \twist$ yields the same value. This is the mathematical embodiment of energy conservation: the rate of work done on a body does not depend on which observer calculates it.
 
 \section{Reciprocal Screws and Constraint Analysis}
 \label{sec:reciprocal_screws}
