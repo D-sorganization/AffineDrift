@@ -22,19 +22,16 @@ simultaneously.
 :::
 
 
-
 ## The Central Bridge
 
 
 Chapters~\ref{ch:contraction} and~\ref{ch:optimal-control} developed two apparently
 independent threads:
-\begin{itemize}
-\item **Contraction theory**: find a metric $\mat{M}$ such that
-$\mat{A}_{\text{cl}}^\T\mat{M}+\mat{M}\mat{A}_{\text{cl}}+\dot{\mat{M}}
-\preceq -2\lambda\mat{M}$.
-\item **Optimal control**: find a gain $\mat{K}$ via the Riccati equation,
-producing a cost-to-go matrix $\mat{S}$.
-\end{itemize}
+- **Contraction theory**: find a metric $\mat{M}$ such that
+  $\mat{A}_{\text{cl}}^\T\mat{M}+\mat{M}\mat{A}_{\text{cl}}+\dot{\mat{M}}
+  \preceq -2\lambda\mat{M}$.
+- **Optimal control**: find a gain $\mat{K}$ via the Riccati equation,
+  producing a cost-to-go matrix $\mat{S}$.
 
 The duality theorem shows these are the same computation under the right interpretation.
 
@@ -65,10 +62,8 @@ $\mat{S}$ of the algebraic Riccati equation (ARE)
 \label{eq:ch6:are-steady}
 \end{equation}
 is simultaneously:
-\begin{enumerate}
-\item The **cost curvature** matrix: the optimal cost-to-go for a state $\x$ is exactly $V^\star(\x) = \x^\T\mat{S}\x$.
-\item A **Lyapunov function** for the closed-loop system $\dot\x = (\mat{A}-\mat{B}\mat{K})\x$ with $\mat{K} = \mat{R}^{-1}\mat{B}^\T\mat{S}$.
-\end{enumerate}
+1. The **cost curvature** matrix: the optimal cost-to-go for a state $\x$ is exactly $V^\star(\x) = \x^\T\mat{S}\x$.
+2. A **Lyapunov function** for the closed-loop system $\dot\x = (\mat{A}-\mat{B}\mat{K})\x$ with $\mat{K} = \mat{R}^{-1}\mat{B}^\T\mat{S}$.
 
 This insight unified two previously separate fields: \textit{the stability guarantee comes free from optimizing
 the cost}. This was conceptually revolutionary. Before Kalman, engineers solved LQR problems for one reason (minimize
@@ -106,14 +101,12 @@ optimizes the cost but also delivers remarkable robustness properties *for free*
 \begin{proposition}[Guaranteed Robustness Margins of LQR]
 \label{prop:ch6:lqr-margins}
 The continuous-time LQR controller $\mat{K} = \mat{R}^{-1}\mat{B}^\T\mat{S}$ derived from the ARE guarantees:
-\begin{enumerate}
-\item **Gain margin**: multiplicative perturbations to the control input satisfying $\|\Delta\mat{K}\|$ remain
-      stable for any $\Delta\mat{K}$ with $\|\Delta\mat{K}\| < \|\mat{K}\|$.
-\item **Strict gain margin**: even more precisely, the loop remains stable if $\mat{K} \to \eta\mat{K}$
-      for any $\eta \in (1/2, \infty)$.
-\item **Phase margin**: the loop margin under phase perturbations is at least $60^\circ$ on both sides.
-\item **Disk margin**: the closed-loop poles lie outside a disk of radius $1/2$ centered at $(-1, 0)$.
-\end{enumerate}
+1. **Gain margin**: multiplicative perturbations to the control input satisfying $\|\Delta\mat{K}\|$ remain
+   stable for any $\Delta\mat{K}$ with $\|\Delta\mat{K}\| < \|\mat{K}\|$.
+2. **Strict gain margin**: even more precisely, the loop remains stable if $\mat{K} \to \eta\mat{K}$
+   for any $\eta \in (1/2, \infty)$.
+3. **Phase margin**: the loop margin under phase perturbations is at least $60^\circ$ on both sides.
+4. **Disk margin**: the closed-loop poles lie outside a disk of radius $1/2$ centered at $(-1, 0)$.
 \end{proposition}
 
 \begin{proof}[Proof Sketch]
@@ -150,7 +143,6 @@ more aggressive) fails only when $\eta \leq 1/2$—and by then, the system is al
 
 
 ## Discrete-Time Duality: The Value Decrease Identity
-
 
 
 ### The Core Derivation
@@ -268,10 +260,8 @@ V_{k+1} - V_k \leq -\alpha_k \norm{\dx_k}^2.
 
 \begin{remark}[Interpretation]
 The value decrease identity reveals the fundamental bargain of LQR: the cost is paid in two parts at each step:
-\begin{enumerate}
-\item **State penalty**: $\dx_k^\T\mat{Q}_k\dx_k$ penalizes the state deviation from the reference.
-\item **Control penalty**: $\du_k^\T\mat{R}_k\du_k = \dx_k^\T\mat{K}_k^\T\mat{R}_k\mat{K}_k\dx_k$ penalizes the energy cost of the optimal control action.
-\end{enumerate}
+1. **State penalty**: $\dx_k^\T\mat{Q}_k\dx_k$ penalizes the state deviation from the reference.
+2. **Control penalty**: $\du_k^\T\mat{R}_k\du_k = \dx_k^\T\mat{K}_k^\T\mat{R}_k\mat{K}_k\dx_k$ penalizes the energy cost of the optimal control action.
 
 The sum of these two terms is the rate at which the Lyapunov function (Riccati-weighted squared norm) decreases.
 This is why LQR is so well-behaved: every unit of perturbation energy is forced to be paid down via the optimal control.
@@ -328,12 +318,10 @@ determined by the smallest eigenvalue of the stage cost and the condition number
 
 \begin{remark}[Decay Rate Interpretation]
 The decay rate $\rho = 1 - \alpha/\overline{s}$ reveals a trade-off:
-\begin{itemize}
-\item **Larger $\alpha$** (stronger stage cost): faster decay.
-\item **Larger $\overline{s**$} (larger Riccati solution): slower decay, but more robust (larger basin of attraction).
-\item The condition number $\kappa_S := \overline{s}/\underline{s}$ appears in the Euclidean norm bound: worse conditioning
-      means a larger factor in front of the exponential decay.
-\end{itemize}
+- **Larger $\alpha$** (stronger stage cost): faster decay.
+- **Larger $\overline{s**$} (larger Riccati solution): slower decay, but more robust (larger basin of attraction).
+- The condition number $\kappa_S := \overline{s}/\underline{s}$ appears in the Euclidean norm bound: worse conditioning
+  means a larger factor in front of the exponential decay.
 
 Good LQR design balances aggressiveness (large $\alpha$) with robustness (well-conditioned $\mat{S}$).
 \end{remark}
@@ -516,7 +504,6 @@ The constant decay rate (last column) of $0.954$ confirms the theoretical predic
 
 
 ## Continuous-Time Duality: Detailed Derivation
-
 
 
 ### Setup and Objectives
@@ -712,7 +699,6 @@ This is precisely the contraction condition: **the Riccati solution simultaneous
 ## Robustness Margins from LQR
 
 
-
 ### Gain Margin
 
 
@@ -786,7 +772,6 @@ need not separately verify robustness---the LQR computation provides it.
 ## Condition Number and Its Effect on Contraction Rate
 
 
-
 ### Definition and Interpretation
 
 
@@ -803,12 +788,10 @@ A well-conditioned matrix has $\kappa(\mat{S}) \approx 1$; a poorly conditioned 
 
 
 When $\kappa(\mat{S})$ is large, it often indicates that:
-\begin{enumerate}
-\item The system is nearly uncontrollable in some direction (e.g., the angular velocity of the pendulum is hard to control).
-\item The Riccati matrix has very different scales along its principal directions.
-\item Perturbations in one direction (corresponding to $\lambda_{\max}(\mat{S})$) are much more costly than in another
-      (corresponding to $\lambda_{\min}(\mat{S})$).
-\end{enumerate}
+1. The system is nearly uncontrollable in some direction (e.g., the angular velocity of the pendulum is hard to control).
+2. The Riccati matrix has very different scales along its principal directions.
+3. Perturbations in one direction (corresponding to $\lambda_{\max}(\mat{S})$) are much more costly than in another
+   (corresponding to $\lambda_{\min}(\mat{S})$).
 
 In the limit of complete uncontrollability, $\lambda_{\min}(\mat{S}) \to 0$, and $\kappa(\mat{S}) \to \infty$.
 
@@ -837,15 +820,12 @@ The number of time steps to reduce the value by a factor of $e$ is:
 
 **Conclusion**: A large condition number $\kappa(\mat{S})$ is a warning sign. It means the system has directions
 that are hard to control, and convergence is slower. The designer should either:
-\begin{enumerate}
-\item Increase the state penalty $\mat{Q}$ in the weakly controllable direction to reduce $\overline{s}/\underline{s}$.
-\item Accept slower convergence but maintain open-loop robustness.
-\item Redesign the system (e.g., add actuators) to improve controllability.
-\end{enumerate}
+1. Increase the state penalty $\mat{Q}$ in the weakly controllable direction to reduce $\overline{s}/\underline{s}$.
+2. Accept slower convergence but maintain open-loop robustness.
+3. Redesign the system (e.g., add actuators) to improve controllability.
 
 
 ## Connections to H-Infinity and Robust Control
-
 
 
 ### The H-Infinity Problem
@@ -884,20 +864,16 @@ where $\gamma$ is the worst-case $L_2$ gain.
 
 
 The duality theorem extends to $H^\infty$ control: the Riccati solution $\mat{S}_\infty$ serves as both:
-\begin{enumerate}
-\item **Optimal performance certificate**: the value function $V = \x^\T\mat{S}_\infty\x$ guarantees that the
-      $L_2$ gain from disturbances to outputs is at most $\gamma$.
-\item **Contraction metric under disturbances**: the time-derivative of $V$ is negative even under the worst-case
-      disturbance, ensuring exponential stability.
-\end{enumerate}
+1. **Optimal performance certificate**: the value function $V = \x^\T\mat{S}_\infty\x$ guarantees that the
+   $L_2$ gain from disturbances to outputs is at most $\gamma$.
+2. **Contraction metric under disturbances**: the time-derivative of $V$ is negative even under the worst-case
+   disturbance, ensuring exponential stability.
 
 The key insight is the disturbance direction in the Riccati equation: $\gamma^{-2}\mat{B}_w\mat{B}_w^\T$ enters with a
 *negative* sign (compared to the control input $\mat{B}_u$ which is positive). This asymmetry means the controller
 is simultaneously designed to:
-\begin{itemize}
-\item Minimize control energy (via $\mat{B}_u$).
-\item Maximize disturbance rejection (via $\mat{B}_w$ with the worst-case scaling).
-\end{itemize}
+- Minimize control energy (via $\mat{B}_u$).
+- Maximize disturbance rejection (via $\mat{B}_w$ with the worst-case scaling).
 
 
 ### Worked Example: Pendulum with Wind Disturbance
@@ -916,7 +892,6 @@ objectives.
 
 
 ## Time-Varying vs. Steady-State Duality
-
 
 
 ### The Discrete Riccati Equation (DRE)
@@ -958,23 +933,19 @@ with $\rho = 1 - \alpha/\overline{s}$ independent of $k$.
 ### Geometric Interpretation
 
 
-\begin{enumerate}
-\item **Time-varying case (DRE)**: The Riccati matrix $\mat{S}_k$ changes at each step, reflecting the changing
-      ``cost-to-go'' as we move backward in time from the final state. The tangent space metric is \textit{adapted to the
-      current time}: at times near the terminal condition, the metric emphasizes directions that are expensive to steer;
-      far from the terminal, the metric is influenced by asymptotic stability.
-
-\item **Steady-state case (ARE)**: The Riccati matrix reaches a time-invariant steady state. The metric no longer
-      changes, and the contraction property is uniform in time. This is appropriate for infinite-horizon problems or
-      problems where the horizon is much longer than the natural time scale of the system.
-\end{enumerate}
+1. **Time-varying case (DRE)**: The Riccati matrix $\mat{S}_k$ changes at each step, reflecting the changing
+   ``cost-to-go'' as we move backward in time from the final state. The tangent space metric is \textit{adapted to the
+   current time}: at times near the terminal condition, the metric emphasizes directions that are expensive to steer;
+   far from the terminal, the metric is influenced by asymptotic stability.
+2. **Steady-state case (ARE)**: The Riccati matrix reaches a time-invariant steady state. The metric no longer
+   changes, and the contraction property is uniform in time. This is appropriate for infinite-horizon problems or
+   problems where the horizon is much longer than the natural time scale of the system.
 
 In both cases, the duality theorem holds: the Riccati solution (time-varying or steady-state) is simultaneously the optimal
 cost-to-go and the contraction metric.
 
 
 ## Tangent Bundle Geometry and Geodesics
-
 
 
 ### The Tangent Bundle
@@ -1060,7 +1031,6 @@ the eigenvectors of $\mat{A}_{\text{cl}}$.
 ## Practical Design with Duality
 
 
-
 ### Integrated Design Workflow
 
 
@@ -1068,29 +1038,23 @@ The duality theorem suggests a unified design methodology:
 
 \begin{designbox}
 **Integrated Stability-Optimality Design:**
-\begin{enumerate}
-\item **Model the system**: discretize or linearize to get $(\mat{A}, \mat{B})$.
-\item **Choose weights**: select $\mat{Q}$ and $\mat{R}$ based on performance objectives (state tracking, control
-      effort).
-\item **Solve the Riccati equation**: compute $\mat{S}$ (via the ARE or DRE).
-\item **Extract the gain**: $\mat{K} = (\mat{R} + \mat{B}^\T\mat{S}\mat{B})^{-1}\mat{B}^\T\mat{S}\mat{A}$.
-\item **Verify contraction margins**:
-      \begin{itemize}
-      \item Compute $\alpha = \lambda_{\min}(\mat{Q} + \mat{K}^\T\mat{R}\mat{K})$.
-      \item Compute $\overline{s} = \lambda_{\max}(\mat{S})$ and $\underline{s} = \lambda_{\min}(\mat{S})$.
-      \item Contraction rate: $\rho = 1 - \alpha/\overline{s}$.
-      \item Condition number: $\kappa(\mat{S}) = \overline{s}/\underline{s}$.
-      \end{itemize}
-\item **Decision point**:
-      \begin{itemize}
-      \item If $\rho$ is close to 1 (say, $\rho > 0.9$) or $\kappa(\mat{S})$ is large (say, $> 100$), the system
-            has weak controllability. Increase $\mat{Q}$ in the hard-to-control direction and re-solve.
-      \item If $\rho$ is small (say, $< 0.3$) and $\kappa(\mat{S})$ is reasonable, the design is aggressive and
-            robust. Proceed to implementation.
-      \item Otherwise, the design is balanced. Implement and tune on hardware if needed.
-      \end{itemize}
-\item **Robustness certification**: the gain margins [1/2, $\infty$) and phase margin $\geq$ $60^\circ$ apply automatically.
-\end{enumerate}
+1. **Model the system**: discretize or linearize to get $(\mat{A}, \mat{B})$.
+2. **Choose weights**: select $\mat{Q}$ and $\mat{R}$ based on performance objectives (state tracking, control
+   effort).
+3. **Solve the Riccati equation**: compute $\mat{S}$ (via the ARE or DRE).
+4. **Extract the gain**: $\mat{K} = (\mat{R} + \mat{B}^\T\mat{S}\mat{B})^{-1}\mat{B}^\T\mat{S}\mat{A}$.
+5. **Verify contraction margins**:
+   - Compute $\alpha = \lambda_{\min}(\mat{Q} + \mat{K}^\T\mat{R}\mat{K})$.
+   - Compute $\overline{s} = \lambda_{\max}(\mat{S})$ and $\underline{s} = \lambda_{\min}(\mat{S})$.
+   - Contraction rate: $\rho = 1 - \alpha/\overline{s}$.
+   - Condition number: $\kappa(\mat{S}) = \overline{s}/\underline{s}$.
+6. **Decision point**:
+   - If $\rho$ is close to 1 (say, $\rho > 0.9$) or $\kappa(\mat{S})$ is large (say, $> 100$), the system
+   has weak controllability. Increase $\mat{Q}$ in the hard-to-control direction and re-solve.
+   - If $\rho$ is small (say, $< 0.3$) and $\kappa(\mat{S})$ is reasonable, the design is aggressive and
+   robust. Proceed to implementation.
+   - Otherwise, the design is balanced. Implement and tune on hardware if needed.
+7. **Robustness certification**: the gain margins [1/2, $\infty$) and phase margin $\geq$ $60^\circ$ apply automatically.
 \end{designbox}
 
 
@@ -1101,26 +1065,20 @@ The duality requires several conditions:
 
 \begin{warningbox}
 **Limitations of the Duality:**
-\begin{enumerate}
-\item **Bounded Riccati**: If the system loses controllability near a trajectory, the Riccati matrix can become
-      unbounded or ill-conditioned. This is detected by monitoring $\kappa(\mat{S})$. If $\kappa(\mat{S}) > 10^6$ or
-      $\lambda_{\min}(\mat{S}) < 10^{-6}$, the system is nearly uncontrollable.
-
-\item **Meaningful weights**: The weights $\mat{Q}$ and $\mat{R}$ must reflect true performance objectives. If
-      weights are chosen arbitrarily (e.g., to make the Riccati well-conditioned), the resulting controller may be
-      suboptimal in practice.
-
-\item **Linearity and perturbations**: The duality holds exactly in the tangent space (linearized dynamics). For
-      large perturbations or highly nonlinear systems, the linear theory breaks down. Nonlinear generalizations (e.g.,
-      differential games with Bellman equations) exist but are more complex.
-
-\item **Measurement and state estimation**: The duality assumes perfect state knowledge ($\uvec = -\mat{K}\x$). With
-      measurement noise or partial observability, a separate state estimator (Kalman filter) is needed, and the
-      duality extends in a more subtle way (separation principle).
-
-\item **Sampling and discretization**: When continuous-time controllers are implemented on digital hardware,
-      discretization errors can break the duality. Careful Tustin or zero-order-hold discretization is required.
-\end{enumerate}
+1. **Bounded Riccati**: If the system loses controllability near a trajectory, the Riccati matrix can become
+   unbounded or ill-conditioned. This is detected by monitoring $\kappa(\mat{S})$. If $\kappa(\mat{S}) > 10^6$ or
+   $\lambda_{\min}(\mat{S}) < 10^{-6}$, the system is nearly uncontrollable.
+2. **Meaningful weights**: The weights $\mat{Q}$ and $\mat{R}$ must reflect true performance objectives. If
+   weights are chosen arbitrarily (e.g., to make the Riccati well-conditioned), the resulting controller may be
+   suboptimal in practice.
+3. **Linearity and perturbations**: The duality holds exactly in the tangent space (linearized dynamics). For
+   large perturbations or highly nonlinear systems, the linear theory breaks down. Nonlinear generalizations (e.g.,
+   differential games with Bellman equations) exist but are more complex.
+4. **Measurement and state estimation**: The duality assumes perfect state knowledge ($\uvec = -\mat{K}\x$). With
+   measurement noise or partial observability, a separate state estimator (Kalman filter) is needed, and the
+   duality extends in a more subtle way (separation principle).
+5. **Sampling and discretization**: When continuous-time controllers are implemented on digital hardware,
+   discretization errors can break the duality. Careful Tustin or zero-order-hold discretization is required.
 \end{warningbox}
 
 
@@ -1264,43 +1222,31 @@ $\lambda_{\text{overall}} \geq \min(\lambda_{\text{control}}, \lambda_{\text{obs
 This is a practical nonlinear extension of the separation principle.
 
 
-
 ## Chapter Summary
 
 
-\begin{enumerate}
-\item **Historical foundation**: Kalman (1960) discovered that the LQR cost-to-go matrix is a Lyapunov function
-      for the closed-loop system. Willems (1972) formalized this via dissipation inequalities. Anderson and Moore
-      highlighted the robustness margins of LQR.
-
-\item **Discrete duality**: The value decrease identity $\Delta V = -\dx^\T(\mat{Q} + \mat{K}^\T\mat{R}\mat{K})\dx$
-      is both a proof of optimality and a contraction certificate. The decay rate $\rho = 1 - \alpha/\overline{s}$
-      characterizes convergence speed.
-
-\item **Continuous duality**: The time-derivative $\dot{V} = -\dx^\T(\mat{Q} + \mat{K}^\T\mat{R}\mat{K})\dx$ follows
-      directly from the DRE and the closed-loop dynamics. Exponential decay follows with rate $\lambda = \alpha/(2\overline{s})$.
-
-\item **Robustness margins**: LQR guarantees gain margin [1/2, $\infty$), phase margin $\geq$ $60^\circ$, and disk margin---all
-      consequences of the Riccati structure and the positive-definiteness of $\mat{S}$.
-
-\item **Condition number**: The condition number $\kappa(\mat{S}) = \overline{s}/\underline{s}$ quantifies the
-      difficulty of controlling the system. Large $\kappa$ indicates poor controllability and slow convergence.
-
-\item **H$\infty$ extension**: The duality extends to robust control: the H$\infty$ Riccati solution is simultaneously an optimal
-      performance certificate and a contraction metric under worst-case disturbances.
-
-\item **Time-varying vs. steady-state**: The DRE provides time-adapted metrics for finite-horizon problems; the ARE
-      provides a constant metric for infinite-horizon, time-invariant systems.
-
-\item **Geometric interpretation**: The Riccati matrix defines a Riemannian metric on the tangent bundle. Optimal
-      trajectories are geodesics, and the contraction property ensures neighboring geodesics converge exponentially.
-
-\item **Practical workflow**: Design with duality integrated: solve LQR once, verify contraction margins and condition
-      number, and adjust weights if needed. The single computation certifies both optimality and robustness.
-
-\item **Limitations**: Duality requires bounded, well-conditioned Riccati matrices; meaningful weights; and linearity
-      of perturbations. It breaks down near singular arcs, under large perturbations, or with hidden states.
-\end{enumerate}
+1. **Historical foundation**: Kalman (1960) discovered that the LQR cost-to-go matrix is a Lyapunov function
+   for the closed-loop system. Willems (1972) formalized this via dissipation inequalities. Anderson and Moore
+   highlighted the robustness margins of LQR.
+2. **Discrete duality**: The value decrease identity $\Delta V = -\dx^\T(\mat{Q} + \mat{K}^\T\mat{R}\mat{K})\dx$
+   is both a proof of optimality and a contraction certificate. The decay rate $\rho = 1 - \alpha/\overline{s}$
+   characterizes convergence speed.
+3. **Continuous duality**: The time-derivative $\dot{V} = -\dx^\T(\mat{Q} + \mat{K}^\T\mat{R}\mat{K})\dx$ follows
+   directly from the DRE and the closed-loop dynamics. Exponential decay follows with rate $\lambda = \alpha/(2\overline{s})$.
+4. **Robustness margins**: LQR guarantees gain margin [1/2, $\infty$), phase margin $\geq$ $60^\circ$, and disk margin---all
+   consequences of the Riccati structure and the positive-definiteness of $\mat{S}$.
+5. **Condition number**: The condition number $\kappa(\mat{S}) = \overline{s}/\underline{s}$ quantifies the
+   difficulty of controlling the system. Large $\kappa$ indicates poor controllability and slow convergence.
+6. **H$\infty$ extension**: The duality extends to robust control: the H$\infty$ Riccati solution is simultaneously an optimal
+   performance certificate and a contraction metric under worst-case disturbances.
+7. **Time-varying vs. steady-state**: The DRE provides time-adapted metrics for finite-horizon problems; the ARE
+   provides a constant metric for infinite-horizon, time-invariant systems.
+8. **Geometric interpretation**: The Riccati matrix defines a Riemannian metric on the tangent bundle. Optimal
+   trajectories are geodesics, and the contraction property ensures neighboring geodesics converge exponentially.
+9. **Practical workflow**: Design with duality integrated: solve LQR once, verify contraction margins and condition
+   number, and adjust weights if needed. The single computation certifies both optimality and robustness.
+10. **Limitations**: Duality requires bounded, well-conditioned Riccati matrices; meaningful weights; and linearity
+   of perturbations. It breaks down near singular arcs, under large perturbations, or with hidden states.
 
 This chapter has shown that optimality and stability are not independent concerns but two facets of a single geometric
 object. The Riccati matrix, solved once, provides both the controller and the robustness certificate. This is the power
@@ -1308,43 +1254,34 @@ of duality: one computation, two major objectives accomplished.
 
 \section*{Exercises}
 
-\begin{enumerate}
-\item **Value decrease identity.**
-      For the discrete pendulum in the worked example, verify the value decrease identity
-      numerically: compute $V_{k+1} - V_k$ and $-\dx_k^T(\mat{Q} + \mat{K}^T\mat{R}\mat{K})\dx_k$
-      and confirm equality.
-
-\item **Robustness margins.**
-      For the continuous-time system $\dot{x} = ax + bu$ with LQR weights $Q = 1$, $R = 1$,
-      compute the gain margin and phase margin as functions of $a$ and $b$. Verify the
-      theoretical bounds $[1/2, \infty)$ and $\geq 60°$.
-
-\item **Dual Riccati.**
-      For the system $\mat{A} = \begin{bmatrix} 0 & 1 \\ -1 & -0.1 \end{bmatrix}$,
-      $\mat{C} = [1, 0]$, $W = 0.1$, $V = 1$, solve the estimation ARE for $\mat{P}$.
-      Compare with the control ARE for $(\mat{A}^T, \mat{C}^T, W, V)$.
-
-\item **Condition number and convergence.**
-      For the 2D system in the worked example, vary $\mat{Q}$ from $0.1\mat{I}$ to $100\mat{I}$
-      while keeping $\mat{R} = \mat{I}$. Plot $\kappa(\mat{S})$ and the contraction rate
-      $\lambda$ as functions of $\|\mat{Q}\|$. Explain the observed relationship.
-
-\item **EKF implementation.**
-      Implement the EKF for the nonlinear pendulum $\ddot\theta + \sin\theta = u + w$
-      with measurement $y = \theta + v$. Compare the estimated trajectory with the true
-      trajectory for different noise levels.
-
-\item **Observability Gramian.**
-      For the linearized pendulum at the upright equilibrium, compute the observability
-      Gramian $\mathcal{W}_o(0, T)$ for $T = 1, 5, 10$. How does its condition number
-      change? What does this imply about the observability of the system?
-
-\item **H$\infty$ vs LQR.**
-      Solve both the LQR and H$\infty$ Riccati equations for the double integrator with
-      disturbance input. Compare the resulting contraction rates and gain magnitudes.
-
-\item **Separation principle verification.**
-      For the discrete pendulum, implement the separated controller (LQR gain) and
-      observer (Kalman gain). Verify that the closed-loop eigenvalues are the union
-      of the controller and observer eigenvalues.
-\end{enumerate}
+1. **Value decrease identity.**
+   For the discrete pendulum in the worked example, verify the value decrease identity
+   numerically: compute $V_{k+1} - V_k$ and $-\dx_k^T(\mat{Q} + \mat{K}^T\mat{R}\mat{K})\dx_k$
+   and confirm equality.
+2. **Robustness margins.**
+   For the continuous-time system $\dot{x} = ax + bu$ with LQR weights $Q = 1$, $R = 1$,
+   compute the gain margin and phase margin as functions of $a$ and $b$. Verify the
+   theoretical bounds $[1/2, \infty)$ and $\geq 60°$.
+3. **Dual Riccati.**
+   For the system $\mat{A} = \begin{bmatrix} 0 & 1 \\ -1 & -0.1 \end{bmatrix}$,
+   $\mat{C} = [1, 0]$, $W = 0.1$, $V = 1$, solve the estimation ARE for $\mat{P}$.
+   Compare with the control ARE for $(\mat{A}^T, \mat{C}^T, W, V)$.
+4. **Condition number and convergence.**
+   For the 2D system in the worked example, vary $\mat{Q}$ from $0.1\mat{I}$ to $100\mat{I}$
+   while keeping $\mat{R} = \mat{I}$. Plot $\kappa(\mat{S})$ and the contraction rate
+   $\lambda$ as functions of $\|\mat{Q}\|$. Explain the observed relationship.
+5. **EKF implementation.**
+   Implement the EKF for the nonlinear pendulum $\ddot\theta + \sin\theta = u + w$
+   with measurement $y = \theta + v$. Compare the estimated trajectory with the true
+   trajectory for different noise levels.
+6. **Observability Gramian.**
+   For the linearized pendulum at the upright equilibrium, compute the observability
+   Gramian $\mathcal{W}_o(0, T)$ for $T = 1, 5, 10$. How does its condition number
+   change? What does this imply about the observability of the system?
+7. **H$\infty$ vs LQR.**
+   Solve both the LQR and H$\infty$ Riccati equations for the double integrator with
+   disturbance input. Compare the resulting contraction rates and gain magnitudes.
+8. **Separation principle verification.**
+   For the discrete pendulum, implement the separated controller (LQR gain) and
+   observer (Kalman gain). Verify that the closed-loop eigenvalues are the union
+   of the controller and observer eigenvalues.

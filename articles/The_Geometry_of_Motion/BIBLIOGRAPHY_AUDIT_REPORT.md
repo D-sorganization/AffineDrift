@@ -75,7 +75,7 @@ All of the following keys are properly defined in geometry_of_motion.bib:
 **Status**: All 7 previously missing entries have been resolved.
 
 | Citation Key | Resolution |
-|--------------|------------|
+| --- | --- |
 | Arnold1989 | Added to geometry_of_motion.bib |
 | Bellman1961 | Added to geometry_of_motion.bib |
 | Featherstone1983 | Added to geometry_of_motion.bib |

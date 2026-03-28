@@ -18,22 +18,18 @@ carefully delineates what does *not* superpose: trajectories over time.
 :::
 
 
-
 ## The Central Distinction
 
 
 Superposition in this book refers to two distinct but related properties:
 
-\begin{enumerate}
-\item **Tangent-space superposition** (Chapter~\ref{ch:foundations}):
-infinitesimal perturbations add as vectors in the tangent space. This holds for
-*any* smooth system.
-
-\item **Input superposition at fixed state**: for mechanical systems with
-control-affine dynamics $\dot\x = f(\x) + G(\x)\uvec$, the mapping from inputs
-$\uvec$ to state derivatives $\dot\x$ is affine at each frozen state, and the
-incremental mapping (relative to zero input) is *linear*.
-\end{enumerate}
+1. **Tangent-space superposition** (Chapter~\ref{ch:foundations}):
+   infinitesimal perturbations add as vectors in the tangent space. This holds for
+   *any* smooth system.
+2. **Input superposition at fixed state**: for mechanical systems with
+   control-affine dynamics $\dot\x = f(\x) + G(\x)\uvec$, the mapping from inputs
+   $\uvec$ to state derivatives $\dot\x$ is affine at each frozen state, and the
+   incremental mapping (relative to zero input) is *linear*.
 
 Both are exact. Neither claims that trajectories superpose globally.
 
@@ -47,9 +43,7 @@ acceleration} superposition, not trajectory addition.
 \end{warningbox}
 
 
-
 ## Control-Affine Structure in Mechanical Systems
-
 
 
 ### The Manipulator Equation
@@ -116,12 +110,10 @@ since the kinetic energy is strictly positive whenever the system is moving. The
 is $\dot\q = 0$, which gives $\dot\q^\T M(\q)\,\dot\q = 0$.
 
 This positive definiteness is the foundation for many important properties:
-\begin{itemize}
-\item The mass matrix is invertible at every configuration.
-\item The equation $M(\q)\ddot\q = \tau$ can always be solved for $\ddot\q$.
-\item The associated quadratic form defines a Riemannian metric on the configuration space,
-      making $M(\q)$ the natural metric tensor.
-\end{itemize}
+- The mass matrix is invertible at every configuration.
+- The equation $M(\q)\ddot\q = \tau$ can always be solved for $\ddot\q$.
+- The associated quadratic form defines a Riemannian metric on the configuration space,
+  making $M(\q)$ the natural metric tensor.
 
 
 ### Connection to Christoffel Symbols
@@ -202,7 +194,6 @@ Writing as a first-order system on the tangent bundle:
 This is the **control-affine form**: $\dot\x = f(\x) + G(\x)\uvec$.
 
 
-
 ## The Superposition Theorem
 
 
@@ -215,13 +206,11 @@ $$
 := M(\q)^{-1}\bigl[B(\q)\uvec - C(\q,\dot\q)\dot\q - \vec{g}(\q)\bigr].
 $$
 Then:
-\begin{enumerate}
-\item The map $\uvec \mapsto \Phi_{(\q,\dot\q)}(\uvec)$ is **affine** in $\uvec$.
-\item The incremental map
-$\uvec \mapsto \Phi_{(\q,\dot\q)}(\uvec) - \Phi_{(\q,\dot\q)}(\vec{0})
-= M(\q)^{-1}B(\q)\,\uvec$
-is **linear** in $\uvec$.
-\end{enumerate}
+1. The map $\uvec \mapsto \Phi_{(\q,\dot\q)}(\uvec)$ is **affine** in $\uvec$.
+2. The incremental map
+   $\uvec \mapsto \Phi_{(\q,\dot\q)}(\uvec) - \Phi_{(\q,\dot\q)}(\vec{0})
+   = M(\q)^{-1}B(\q)\,\uvec$
+   is **linear** in $\uvec$.
 \end{theorem}
 
 \begin{proof}
@@ -255,7 +244,6 @@ etc., then
 Each term $\Delta\ddot\q^{(i)} := H(\q)\uvec^{(i)}$ is the instantaneous acceleration
 contribution of the $i$\textsuperscript{th} input channel. These contributions add
 linearly and can be computed, compared, and analyzed independently.
-
 
 
 ## Three Parallel Derivations
@@ -474,13 +462,10 @@ All three formulations yield the identical abstract structure:
 \end{equation}
 where $f_2$ collects all state-dependent terms and $H$ is the linear input-to-acceleration
 map. The linearity in $\uvec$ is inherited from three independent facts:
-\begin{enumerate}
-\item Forces and wrenches scale linearly with their magnitudes (Newton's second law).
-\item The generalized-force mapping from physical forces to $\q$-space uses Jacobians
-      (linear maps).
-\item The mass-matrix inversion $M(\q)^{-1}$ is a linear operator at fixed $\q$.
-\end{enumerate}
-
+1. Forces and wrenches scale linearly with their magnitudes (Newton's second law).
+2. The generalized-force mapping from physical forces to $\q$-space uses Jacobians
+   (linear maps).
+3. The mass-matrix inversion $M(\q)^{-1}$ is a linear operator at fixed $\q$.
 
 
 ## Energy Perspective and Power Superposition
@@ -566,7 +551,6 @@ P^{(\text{grav})} + P^{(\text{control})} = \dot\q^\T \vec{g}(\q) + P^{(\text{con
 \end{equation}
 
 This decomposition is exact and enables independent analysis of each channel.
-
 
 
 ## Constraint Forces and the Control-Affine DAE
@@ -666,7 +650,6 @@ control-affine structure is preserved on this constrained manifold: inputs still
 to accelerations (in the constrained directions), but the Lagrange multipliers adjust to
 enforce the constraints.
 \end{intuitionbox}
-
 
 
 ## Concrete Numerical Example: Pendulum Trajectory Non-Superposition
@@ -792,7 +775,6 @@ unless $\sin$ is linear, which it is not. This nonlinearity accumulates over tim
 trajectories to diverge.
 
 
-
 ## Virtual Work Principle and Generalized Forces
 
 
@@ -888,7 +870,6 @@ provides confidence that the superposition principle is exact and universal.
 \end{designbox}
 
 
-
 ## Expanded Pendulum Example with Numerical Values
 
 
@@ -965,10 +946,8 @@ To exactly cancel gravity, set $\tau^{(g)} = 9.81\sin q$. Then:
 
 This is a double integrator: any control torque $\tau^{(c)}$ directly accelerates the system
 without gravitational interference. For example:
-\begin{itemize}
-\item At $q = 30^\circ$: $\tau^{(g)} = 9.81 \times 0.5 = 4.905$ N\textperiodcentered{}m to cancel gravity.
-\item At $q = 90^\circ$: $\tau^{(g)} = 9.81 \times 1.0 = 9.81$ N\textperiodcentered{}m to cancel gravity.
-\end{itemize}
+- At $q = 30^\circ$: $\tau^{(g)} = 9.81 \times 0.5 = 4.905$ N\textperiodcentered{}m to cancel gravity.
+- At $q = 90^\circ$: $\tau^{(g)} = 9.81 \times 1.0 = 9.81$ N\textperiodcentered{}m to cancel gravity.
 
 \paragraph{Superposition example.}
 Suppose at state $(q, \dot q) = (30^\circ, 1 \text{ rad/s})$ we apply:
@@ -1076,7 +1055,6 @@ the input acceleration remains constant. This illustrates the exact decompositio
 the control-affine structure.
 
 
-
 ## Energy Methods and Passivity
 
 
@@ -1145,17 +1123,13 @@ where $\y = B(\q)^\T\dot\q$ is the passive output.
 
 This passivity property ensures:
 
-\begin{enumerate}
-\item **Energy Stability**: Any control law $\uvec = -K(\q,\dot\q)$ with
-      $K$ such that $K^\T B(\q)^\T\dot\q > 0$ will decrease the total energy.
-
-\item **Decomposition**: Because the control-affine structure separates the input
-      linearly, we can design controllers that combine conservative (energy-preserving) and
-      dissipative (energy-reducing) components.
-
-\item **Robustness**: Passive systems tolerate a wide class of perturbations and
-      uncertainties without losing stability, making them ideal for robust control design.
-\end{enumerate}
+1. **Energy Stability**: Any control law $\uvec = -K(\q,\dot\q)$ with
+   $K$ such that $K^\T B(\q)^\T\dot\q > 0$ will decrease the total energy.
+2. **Decomposition**: Because the control-affine structure separates the input
+   linearly, we can design controllers that combine conservative (energy-preserving) and
+   dissipative (energy-reducing) components.
+3. **Robustness**: Passive systems tolerate a wide class of perturbations and
+   uncertainties without losing stability, making them ideal for robust control design.
 
 
 ### Passive Decomposition of Dynamics
@@ -1176,7 +1150,6 @@ guarantees that inputs affect the system linearly, while passivity guarantees th
 flow is constrained and can be managed systematically. Together, they provide a complete
 framework for stable control design.
 \end{designbox}
-
 
 
 ## When the Affine Structure Fails
@@ -1255,19 +1228,14 @@ dynamics are qualitatively different (stick vs. slip), precluding smooth superpo
 
 When the affine structure breaks down:
 
-\begin{enumerate}
-\item **Local Approximations**: Near a nominal trajectory, use Taylor expansions to
-      recover a locally affine system.
-
-\item **Hybrid Models**: Use piecewise-affine models that are affine within regions
-      (e.g., separate models for stick and slip).
-
-\item **Identification**: Empirically identify the true input-to-acceleration map
-      and fit a control-affine model to it.
-
-\item **Robust Control**: Use $\mathcal{H}_\infty$ or other robust techniques to
-      tolerate structured uncertainty in the model.
-\end{enumerate}
+1. **Local Approximations**: Near a nominal trajectory, use Taylor expansions to
+   recover a locally affine system.
+2. **Hybrid Models**: Use piecewise-affine models that are affine within regions
+   (e.g., separate models for stick and slip).
+3. **Identification**: Empirically identify the true input-to-acceleration map
+   and fit a control-affine model to it.
+4. **Robust Control**: Use $\mathcal{H}_\infty$ or other robust techniques to
+   tolerate structured uncertainty in the model.
 
 \begin{warningbox}
 The control-affine structure is a powerful abstraction, but it is an idealization. Real
@@ -1275,8 +1243,6 @@ systems have friction, saturation, actuator dynamics, and other nonlinearities. 
 validate the affine assumption experimentally or via detailed simulation before deploying
 a control law designed under this assumption.
 \end{warningbox}
-
-
 
 
 ## Lie Brackets and Accessibility
@@ -1290,7 +1256,6 @@ directions are not directly in the span of the input vector fields.
 
 
 ### The Lie Bracket: Definition and Geometric Meaning
-
 
 
 ::: {.callout-note}
@@ -1362,8 +1327,6 @@ modes. This is precisely the $[f, g]$ mechanism --- reaching unactuated directio
 through time-varying combinations of actuated ones.
 
 :::
-
-
 
 
 ## Feedback Linearization: The Global Alternative
@@ -1441,7 +1404,6 @@ preserves the drift structure that feedback linearization would cancel.
 \end{designbox}
 
 
-
 ## Passivity and Energy-Based Analysis
 
 
@@ -1451,7 +1413,6 @@ the energy-based stability framework.
 
 
 ### Passive Systems
-
 
 
 ::: {.callout-note}
@@ -1533,87 +1494,64 @@ and robustness margins.
 \end{intuitionbox}
 
 
-
 ## Chapter Summary
 
 
-\begin{enumerate}
-\item The manipulator equation $M(\q)\ddot\q + C(\q,\dot\q)\dot\q + \vec{g}(\q) = B(\q)\uvec$
-      arises from kinetic energy $T = \frac{1}{2}\dot\q^\T M(\q)\dot\q$, where the mass matrix
-      is always positive definite (guaranteeing invertibility).
-
-\item The Coriolis and centrifugal terms are encoded in the Christoffel symbols of the
-      configuration-space metric, connecting dynamics to differential geometry.
-
-\item At each frozen state, the acceleration map $\uvec\mapsto\ddot\q$ is linear. This is the
-      **input superposition principle**.
-
-\item This linearity is *not* an approximation---it follows from Newton's second law,
-      the linearity of generalized-force mappings (Jacobians), and mass-matrix inversion.
-
-\item The same structure emerges identically from Newton--Euler, Lagrangian, and
-      screw-theoretic derivations, each illustrated with a detailed 2-DOF planar arm example.
-
-\item Power delivered by each input channel superimposes linearly: $P_{\text{total}} = \sum P^{(i)}$.
-
-\item Holonomic constraints (e.g., rolling without slipping) interact with the control-affine
-      structure via Lagrange multipliers in a differential-algebraic equation (DAE) form,
-      preserving affinity on the constrained submanifold.
-
-\item Trajectory superposition is *false* for nonlinear systems, demonstrated via concrete
-      numerical examples of a pendulum under different torques.
-
-\item The virtual work principle guarantees that generalized forces are linear in physical forces,
-      providing a classical mechanics foundation for the control-affine structure.
-
-\item A detailed pendulum example with $m=1$ kg, $\ell=1$ m, $g=9.81$ m/s$^2$ illustrates
-      drift accelerations at various angles and the exact decomposition of gravity compensation
-      and control torques.
-
-\item Passivity theory connects the control-affine structure to energy stability: the system
-      is passive with storage function $E = T + V$, enabling energy-based controller design.
-
-\item Practical systems often violate the affine assumption due to state-dependent input
-      constraints, actuator dynamics, and nonsmooth friction. Mitigation strategies include
-      local linearization, hybrid models, identification, and robust control techniques.
-\end{enumerate}
+1. The manipulator equation $M(\q)\ddot\q + C(\q,\dot\q)\dot\q + \vec{g}(\q) = B(\q)\uvec$
+   arises from kinetic energy $T = \frac{1}{2}\dot\q^\T M(\q)\dot\q$, where the mass matrix
+   is always positive definite (guaranteeing invertibility).
+2. The Coriolis and centrifugal terms are encoded in the Christoffel symbols of the
+   configuration-space metric, connecting dynamics to differential geometry.
+3. At each frozen state, the acceleration map $\uvec\mapsto\ddot\q$ is linear. This is the
+   **input superposition principle**.
+4. This linearity is *not* an approximation---it follows from Newton's second law,
+   the linearity of generalized-force mappings (Jacobians), and mass-matrix inversion.
+5. The same structure emerges identically from Newton--Euler, Lagrangian, and
+   screw-theoretic derivations, each illustrated with a detailed 2-DOF planar arm example.
+6. Power delivered by each input channel superimposes linearly: $P_{\text{total}} = \sum P^{(i)}$.
+7. Holonomic constraints (e.g., rolling without slipping) interact with the control-affine
+   structure via Lagrange multipliers in a differential-algebraic equation (DAE) form,
+   preserving affinity on the constrained submanifold.
+8. Trajectory superposition is *false* for nonlinear systems, demonstrated via concrete
+   numerical examples of a pendulum under different torques.
+9. The virtual work principle guarantees that generalized forces are linear in physical forces,
+   providing a classical mechanics foundation for the control-affine structure.
+10. A detailed pendulum example with $m=1$ kg, $\ell=1$ m, $g=9.81$ m/s$^2$ illustrates
+   drift accelerations at various angles and the exact decomposition of gravity compensation
+   and control torques.
+11. Passivity theory connects the control-affine structure to energy stability: the system
+   is passive with storage function $E = T + V$, enabling energy-based controller design.
+12. Practical systems often violate the affine assumption due to state-dependent input
+   constraints, actuator dynamics, and nonsmooth friction. Mitigation strategies include
+   local linearization, hybrid models, identification, and robust control techniques.
 
 \section*{Exercises}
 
-\begin{enumerate}
-\item **Mass matrix positive definiteness.**
-      For the 2-DOF planar arm in the text, show that $\det(M(\q)) > 0$ for all $\q$
-      by direct computation. Identify the configuration where $\kappa(M)$ is maximized.
-
-\item **Lie bracket of the pendulum.**
-      For the pendulum system $\dot\x = f(\x) + g u$ with $f = (x_2,\; -\sin(x_1))^T$
-      and $g = (0, 1)^T$, compute $[f, g]$ and $[g, [f, g]]$. Verify that
-      $\text{span}\{g, [f, g]\}$ has dimension 2 at all $\x$, confirming accessibility.
-
-\item **Superposition failure.**
-      For the system $\dot{x} = x^2 + u$, compute the trajectories $x^{(1)}(t)$ under
-      $u_1 = 1$ and $x^{(2)}(t)$ under $u_2 = 2$, both starting from $x_0 = 0$.
-      Verify that $x^{(1)} + x^{(2)}$ does not solve the system under $u_1 + u_2 = 3$.
-
-\item **Feedback linearization of a simple system.**
-      For $\dot{x}_1 = x_2$, $\dot{x}_2 = x_1^2 + u$ with output $y = x_1$, compute the
-      relative degree, the linearizing feedback, and the zero dynamics. Is the system minimum phase?
-
-\item **Passivity of the 2-DOF arm.**
-      For the 2-DOF arm in the text, verify that the system with input $\uvec = \tau$ and
-      output $\vec{y} = \dot\q$ is passive with storage function $E = T + V$.
-
-\item **Coriolis matrix properties.**
-      Show that $\dot{M}(\q) - 2C(\q, \dot\q)$ is skew-symmetric for the 2-DOF arm
-      (Christoffel-form Coriolis matrix). Why does this property matter for passivity?
-
-\item **Underactuated bracket rank.**
-      For a 3-DOF system with $B = [1, 0, 0; 0, 1, 0]^T$ (actuated at joints 1 and 2
-      only), compute $[f, g_1]$ and $[f, g_2]$ in the first-order form. Under what
-      conditions on $M(\q)$ does the accessibility rank condition hold?
-
-\item **Port-Hamiltonian formulation.**
-      Rewrite the damped pendulum $\ddot\theta + c\dot\theta + \sin\theta = u$ in
-      port-Hamiltonian form~\eqref{eq:ch3:port-hamiltonian}. Identify $J$, $R$, $G$,
-      and $H$ explicitly.
-\end{enumerate}
+1. **Mass matrix positive definiteness.**
+   For the 2-DOF planar arm in the text, show that $\det(M(\q)) > 0$ for all $\q$
+   by direct computation. Identify the configuration where $\kappa(M)$ is maximized.
+2. **Lie bracket of the pendulum.**
+   For the pendulum system $\dot\x = f(\x) + g u$ with $f = (x_2,\; -\sin(x_1))^T$
+   and $g = (0, 1)^T$, compute $[f, g]$ and $[g, [f, g]]$. Verify that
+   $\text{span}\{g, [f, g]\}$ has dimension 2 at all $\x$, confirming accessibility.
+3. **Superposition failure.**
+   For the system $\dot{x} = x^2 + u$, compute the trajectories $x^{(1)}(t)$ under
+   $u_1 = 1$ and $x^{(2)}(t)$ under $u_2 = 2$, both starting from $x_0 = 0$.
+   Verify that $x^{(1)} + x^{(2)}$ does not solve the system under $u_1 + u_2 = 3$.
+4. **Feedback linearization of a simple system.**
+   For $\dot{x}_1 = x_2$, $\dot{x}_2 = x_1^2 + u$ with output $y = x_1$, compute the
+   relative degree, the linearizing feedback, and the zero dynamics. Is the system minimum phase?
+5. **Passivity of the 2-DOF arm.**
+   For the 2-DOF arm in the text, verify that the system with input $\uvec = \tau$ and
+   output $\vec{y} = \dot\q$ is passive with storage function $E = T + V$.
+6. **Coriolis matrix properties.**
+   Show that $\dot{M}(\q) - 2C(\q, \dot\q)$ is skew-symmetric for the 2-DOF arm
+   (Christoffel-form Coriolis matrix). Why does this property matter for passivity?
+7. **Underactuated bracket rank.**
+   For a 3-DOF system with $B = [1, 0, 0; 0, 1, 0]^T$ (actuated at joints 1 and 2
+   only), compute $[f, g_1]$ and $[f, g_2]$ in the first-order form. Under what
+   conditions on $M(\q)$ does the accessibility rank condition hold?
+8. **Port-Hamiltonian formulation.**
+   Rewrite the damped pendulum $\ddot\theta + c\dot\theta + \sin\theta = u$ in
+   port-Hamiltonian form~\eqref{eq:ch3:port-hamiltonian}. Identify $J$, $R$, $G$,
+   and $H$ explicitly.
