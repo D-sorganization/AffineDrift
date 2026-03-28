@@ -911,12 +911,12 @@ class NeuralNetwork:
 
     def __init__(self, input_dim, hidden_dim, output_dim):
         """Initialize network parameters."""
-        # Layer 1: input -> hidden
-        self.W1 = np.random.randn(hidden_dim, input_dim) * 0.01
+        # Layer 1: input -> hidden (He initialization for ReLU layers)
+        self.W1 = np.random.randn(hidden_dim, input_dim) * np.sqrt(2.0 / input_dim)
         self.b1 = np.zeros((hidden_dim, 1))
 
-        # Layer 2: hidden -> output
-        self.W2 = np.random.randn(output_dim, hidden_dim) * 0.01
+        # Layer 2: hidden -> output (Xavier/Glorot for the output layer)
+        self.W2 = np.random.randn(output_dim, hidden_dim) * np.sqrt(1.0 / hidden_dim)
         self.b2 = np.zeros((output_dim, 1))
 
         # Cache for backprop
@@ -1193,7 +1193,7 @@ The machine learning methods presented in this chapter do not exist in isolation
 
 \textbf{Differentiable Dynamics from the Articulated Body Algorithm (Chapter 10).} The Articulated Body Algorithm (ABA) computes forward dynamics---mapping torques to accelerations---in $O(n)$ time. When implemented in autodifferentiation frameworks (e.g., JAX, PyTorch), ABA provides exact, efficient gradients of accelerations with respect to torques, masses, and inertial parameters. This is the computational engine behind model-based reinforcement learning: the agent can ``imagine'' trajectories by differentiating through the physics, using the gradient to optimize control inputs directly.
 
-\textbf{Emerging Frontiers.} Several active research directions sit at the intersection of geometric mechanics and deep learning. \textbf{Lagrangian Neural Networks} (LNNs) parameterize the Lagrangian $\mathcal{L}(\mathbf{q}, \dot{\mathbf{q}})$ as a neural network and recover equations of motion via automatic differentiation of the Euler-Lagrange equations, guaranteeing energy conservation by construction. \textbf{Hamiltonian Neural Networks} (HNNs) similarly parameterize the Hamiltonian $H(\mathbf{q}, \mathbf{p})$ and evolve dynamics through Hamilton's equations, preserving symplectic structure. These architectures represent a principled fusion of the variational principles from Chapter~\ref{ch:lagrangian} with the function approximation machinery of this chapter, and they consistently outperform generic neural network dynamics models on long-horizon prediction tasks.
+\textbf{Emerging Frontiers.} Several active research directions sit at the intersection of geometric mechanics and deep learning. \textbf{Lagrangian Neural Networks} (LNNs) parameterize the Lagrangian $\mathcal{L}(\mathbf{q}, \dot{\mathbf{q}})$ as a neural network and recover equations of motion via automatic differentiation of the Euler-Lagrange equations, guaranteeing energy conservation by construction. \textbf{Hamiltonian Neural Networks} (HNNs) similarly parameterize the Hamiltonian $H(\mathbf{q}, \mathbf{p})$ and evolve dynamics through Hamilton's equations, preserving symplectic structure. These architectures represent a principled fusion of the variational principles from Chapter~\ref{ch:lagrangian} with the function approximation machinery of this chapter, and in several benchmarks they have shown improved accuracy over generic neural network dynamics models on long-horizon prediction tasks \cite{cranmer2020lagrangian, greydanus2019hamiltonian}.
 
 % ==========================================================================
 \section{Further Reading and References}

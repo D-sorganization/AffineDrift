@@ -31,7 +31,7 @@ When a gymnast swings on a high bar, their center of mass rotates around the bar
   The system is \textbf{underactuated} if $m < n$, meaning there are fewer actuators than degrees of freedom. In this case, the matrix $\Bmat$ is not full rank (it maps a lower-dimensional control space into the $n$-dimensional configuration space).
 \end{definition}
 
-If we lack the authority to command arbitrary accelerations, the classical setpoint perspective sees this as a profound failing. A setpoint controller wants to cancel the nonlinearities, feedback-linearize the system, and dictate the exact motion. Underactuation prevents this brute-force cancellation. 
+If we lack the authority to command arbitrary accelerations, the classical setpoint perspective sees this as a fundamental limitation. A setpoint controller wants to cancel the nonlinearities, feedback-linearize the system, and dictate the exact motion. Underactuation prevents this brute-force cancellation. 
 
 However, from the trajectory-first perspective developed in Chapter~1, underactuation is not merely a restriction---it is a geometric feature. The \emph{passive dynamics} (the unactuated portions of the dynamics) define a manifold of feasible trajectories. We don't fight the physics; we ride it. 
 
@@ -171,7 +171,7 @@ For the golf swing, the zero dynamics describe how the club moves if the golfer'
 
 Revisiting the concept of Transverse Linearization (Chapter~4), if we linearize the unactuated dynamics around the trajectory $\traj^*(t)$, we analyze the transverse divergence of the club from its optimal path.
 
-We find a beautiful physical phenomenon:
+We find a notable physical phenomenon:
 \begin{itemize}
   \item During the early downswing, the club's zero dynamics are \emph{unstable}. If the club gets slightly out of position, the centrifugal force tends to pull it further off the optimal plane.
   \item During the late downswing (the release phase), the club's zero dynamics become \emph{strongly stable}. The massive acceleration $\ddot{\theta}_2 \gg 0$ acts like a stiff restoring spring. The centrifugal force aligns the club perfectly with the arms. 

@@ -25,17 +25,17 @@ The golf swing is a control problem: the goal is to direct the ball toward the t
 
 The key insight of control theory is the separation of controllable and uncontrollable effects. The controllable effects (control inputs) are the torques the muscles can apply. The uncontrollable effects (drift) are everything else---gravity, inertia, centrifugal force, elastic restoring forces. The art of control is to set up the drift (through the initial backswing) such that drift alone (the zero-torque counterfactual) points toward the target. Then, in execution, small control inputs make small corrections to keep on track.
 
-Biomechanics had historically treated the swing as a list of muscle activations: "the supraspinatus fires, then the pectoralis major, then the forearm extensors," and so on. This is descriptive but not explanatory. Why does the supraspinatus fire at that moment? How does its activation contribute to the clubhead trajectory?
+Biomechanics had historically treated the swing as a list of muscle activations: "the infraspinatus fires, then the pectoralis major, then the forearm extensors," and so on. This is descriptive but not explanatory. Why does the infraspinatus fire at that moment? How does its activation contribute to the clubhead trajectory?
 
 Control theory reframes these questions. The muscle activations are the control inputs. The question is not "what fires when?" but "what is the control objective, and how do the muscle activations achieve it?" The answer is: by exploiting drift.
 
-**Example: The Supraspinatus Activation**
+**Example: The Infraspinatus Activation**
 
-The supraspinatus (one of the rotator cuff muscles) initiates external rotation of the shoulder during the transition and early downswing. Traditionally, biomechanists say "the supraspinatus activates to control external rotation."
+The infraspinatus (one of the rotator cuff muscles responsible for external rotation) activates during the transition and early downswing to control the shoulder's rotational state. (Note: the supraspinatus primarily *abducts* the shoulder; external rotation is performed by the infraspinatus and teres minor.) Traditionally, biomechanists say "the infraspinatus activates to control external rotation."
 
-From a control theory perspective: the early downswing is a phase of high control authority and low drift (many muscle groups are active, and gravity has not yet accelerated the clubhead much). The supraspinatus activation is part of the overall control strategy to set up a drift field that will naturally lead to the desired clubhead trajectory by mid-downswing. Once the swing is moving fast (mid to late downswing), the supraspinatus activation ceases or decreases; the drift dominates, and control authority is low.
+From a control theory perspective: the early downswing is a phase of high control authority and low drift (many muscle groups are active, and gravity has not yet accelerated the clubhead much). The infraspinatus activation is part of the overall control strategy to set up a drift field that will naturally lead to the desired clubhead trajectory by mid-downswing. Once the swing is moving fast (mid to late downswing), the infraspinatus activation ceases or decreases; the drift dominates, and control authority is low.
 
-This perspective explains why the supraspinatus is most active early in the swing, not late---it is setting up the drift, not fighting it.
+This perspective explains why the infraspinatus is most active early in the swing, not late---it is setting up the drift, not fighting it.
 
 The affine framework provides a bridge between control theory and biomechanics. Both disciplines can now speak the same language: the language of drift $f(\state)$ and control $G(\state)\control$.
 
@@ -153,7 +153,7 @@ The affine framework provides a way to understand what the nervous system must l
 
 The golf club is not just a biomechanical system; it is a material structure. The shaft is typically made of carbon fiber (a composite material: carbon fibers embedded in epoxy resin). The clubhead is made of steel or titanium or a composite. The ball is made of a synthetic rubber or urethane cover over a rubber core.
 
-These materials have mechanical properties that profoundly affect the swing and the outcome.
+These materials have mechanical properties that significantly affect the swing and the outcome.
 
 ### Shaft Materials and Design
 
@@ -169,18 +169,28 @@ Material science has also improved shaft design by reducing weight. A lighter sh
 
 When the club strikes the ball, the ball deforms (compresses). This deformation is governed by the elastic properties of the ball's rubber core. A softer ball (lower compression) deforms more easily; a harder ball (higher compression) deforms less.
 
-The compression affects how much energy is transferred to the ball and how much is lost to heat and deformation. The relationship is quantified by the **coefficient of restitution** (COR), which is the ratio of the velocity at which the ball leaves the clubface to the velocity at which the club hits the ball:
+The compression affects how much energy is transferred to the ball and how much is lost to heat and deformation. Two related quantities are important:
+
+The **coefficient of restitution** (COR) is the ratio of the *relative separation speed* to the *relative approach speed* of the clubface and ball:
 
 $$
-\mathrm{COR} = \frac{v_{\text{out}}}{v_{\text{in}}}
+\mathrm{COR} = \frac{v_{\text{separation}}}{v_{\text{approach}}}
 $$
 
-A COR of 1.0 would mean perfectly elastic collision (no energy loss). A COR less than 1.0 means some energy is lost. Modern golf ball and clubface technology has COR values of about 0.8--0.82 (about 80\% of the impact energy is transferred to the ball; 20\% is lost).
+A COR of 1.0 would mean a perfectly elastic collision (no energy loss). Modern golf ball and clubface technology has COR values of about 0.83 (the USGA limit). The fraction of kinetic energy transferred depends on both the COR and the mass ratio of club to ball, not on COR alone.
+
+The **smash factor** is the ratio of ball speed to clubhead speed:
+
+$$
+\text{Smash Factor} = \frac{v_{\text{ball}}}{v_{\text{club}}}
+$$
+
+Typical smash factors for drivers are 1.45--1.50. These two quantities are related but distinct: COR describes the collision efficiency, while smash factor describes the speed amplification (which depends on the mass ratio as well as COR).
 
 The COR depends on both the ball and the clubface:
-- Softer balls (lower compression) have higher COR (more energy transfer).
-- Harder balls (higher compression) have lower COR (less energy transfer).
-- Faster clubhead speeds increase the effective COR (the ball deforms more and recovers more completely).
+- Softer balls (lower compression) tend to have higher COR at lower swing speeds.
+- Harder balls (higher compression) tend to have lower COR at lower swing speeds but may perform better at higher speeds.
+- The relationship between clubhead speed and effective COR is complex and depends on ball construction.
 
 This is where ball fitting meets swing physics. A slower golfer (say, 80 mph swing speed) benefits from a softer ball with higher COR, because the softer ball deforms more, allowing the golfer to transfer more energy. A faster golfer (say, 100 mph) can use a harder ball with lower COR, gaining better control and tighter dispersion.
 
@@ -358,7 +368,7 @@ A golfer hits a driver from a tee. A launch monitor records:
 
 ### The Physics
 
-The clubhead must have been traveling at about (145 mph / 0.82 COR) $\approx 177$ mph just before impact. From the club path and face angle, we can infer the club's orientation and velocity in 3D.
+Using the smash factor (ball speed / clubhead speed $\approx$ 1.49 for a well-struck driver), the clubhead must have been traveling at about $145 / 1.49 \approx 97$ mph just before impact. From the club path and face angle, we can infer the club's orientation and velocity in 3D.
 
 The ZTCF predicted that the clubhead would reach this speed and orientation at impact. This is the natural, passive trajectory (drift field) at this point in the swing. The muscle torques did not produce this speed; the drift field did.
 

@@ -39,31 +39,31 @@ $$|\boldsymbol{\tau}| = |\bm{r}| \cdot |\bm{F}| \cdot \sin(\alpha),$$
 where $\alpha$ is the angle between $\bm{r}$ and $\bm{F}$. The moment arm is the component of $\bm{r}$ perpendicular to $\bm{F}$:
 $$r = |\bm{r}| \sin(\alpha).$$
 
-\subsection{Example: The Biceps at the Elbow}
+### Example: The Biceps at the Elbow
 
-Consider the biceps muscle pulling on the forearm at the elbow. The biceps attaches to the radius (one of the forearm bones) at a point roughly 4 cm from the elbow joint center (at full arm extension). The line of action of the biceps is nearly vertical.
+Consider the biceps muscle pulling on the forearm at the elbow. At approximately 90 degrees of flexion (where the moment arm is largest), the biceps has a moment arm of roughly 4--5 cm from the elbow joint center. The line of action of the biceps is nearly perpendicular to the forearm at this angle.
 
 If the biceps exerts a force $F = 500$ N (a typical maximum), the torque about the elbow is:
 $$\tau = 500 \, \mathrm{N} \times 0.04 \, \mathrm{m} = 20 \, \mathrm{N \cdot m}.$$
 
 This torque causes the forearm to rotate (flex) about the elbow.
 
-\subsection{Moment Arms Are Configuration-Dependent}
+### Moment Arms Are Configuration-Dependent
 
 Here is the crucial complication: the moment arm changes as the joint moves.
 
-When the elbow is fully extended (arm straight), the biceps is oriented perpendicular to the forearm, and the moment arm is near its maximum, roughly 4 cm.
+When the elbow is fully extended (arm straight), the biceps tendon runs nearly parallel to the forearm, and the moment arm is near its minimum, roughly 1--2 cm.
 
-When the elbow is fully flexed (arm bent), the biceps is more parallel to the forearm, and the moment arm decreases to roughly 2 cm.
+When the elbow is flexed to approximately 90 degrees, the biceps pulls at its most effective angle, and the moment arm reaches its maximum, roughly 4--5 cm. At full flexion, the moment arm decreases again as the muscle wraps closer to the joint center.
 
-This means: \textbf{the same muscle force produces different torques at different joint configurations}.
+This means: **the same muscle force produces different torques at different joint configurations**.
 
 ::: {.callout-note}
 ## In Plain Language
 Imagine using a wrench to turn a bolt. When the wrench is perpendicular to the bolt (90-degree angle), your grip strength matters most. As you rotate the bolt and the wrench tilts, the same grip strength produces less rotational effect. The effective ``lever arm'' of your hand has decreased because the angle has changed.
 :::
 
-\subsection{Moment Arm as a Function of Joint Angle}
+### Moment Arm as a Function of Joint Angle
 
 For the $i$-th joint with angle $q_i$, the moment arm $r_i(\bm{q})$ is a function of the entire configuration $\bm{q}$ (because changing one joint angle can affect the geometry of nearby joints).
 
@@ -73,22 +73,18 @@ A common parameterization is:
 $$r_i(\bm{q}) = r_{i,0} + r_{i,1} q_i + r_{i,2} q_i^2 + \ldots,$$
 where $r_{i,0}, r_{i,1}, r_{i,2}, \ldots$ are empirically determined coefficients. This captures the nonlinear dependence of moment arm on joint angle.
 
-%==============================================================================
-\section{The Muscle Jacobian: From Muscle Space to Joint Space}
-\label{sec:muscle-jacobian}
+## The Muscle Jacobian: From Muscle Space to Joint Space {#sec-muscle-jacobian}
 
  
 
 Now consider a whole limb with multiple joints and multiple muscles acting across them. The relationship between muscle forces and joint torques can be expressed as a linear map.
 
-\subsection{The Muscle Jacobian Matrix}
+### The Muscle Jacobian Matrix
 
 Define:
-\begin{itemize}
 - $\bm{F}^M \in \mathbb{R}^{n_m}$: vector of muscle forces, where $n_m$ is the number of muscles.
 - $\boldsymbol{\tau} \in \mathbb{R}^{n_j}$: vector of joint torques, where $n_j$ is the number of joints.
 - $\bm{R}(\bm{q}) \in \mathbb{R}^{n_j \times n_m}$: the moment arm matrix, whose entry $R_{ij}(\bm{q})$ is the moment arm of muscle $j$ about joint $i$.
-\end{itemize}
 
 The relationship between muscle forces and joint torques is:
 $$\boldsymbol{\tau} = \bm{R}(\bm{q})^T \bm{F}^M.$$
