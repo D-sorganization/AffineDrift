@@ -5,11 +5,6 @@ title: "Throwing Away the Target"
 # Throwing Away the Target
 
 
-}
-
-
-
-
 ## The Wrong Question
 
 
@@ -21,13 +16,12 @@ seductive---*give me a destination and I will take you there*.
 But consider the golf swing.
 
 A skilled golfer does not steer the clubhead toward the ball the way a thermostat
-drives a room toward $72^\circ$F. There is no ``setpoint'' floating in space that
+drives a room toward $72^\circ$F. There is no "setpoint" floating in space that
 the club is chasing. Instead, the golfer's body executes a *motion*---a
 coordinated, whole-body trajectory through a high-dimensional configuration space.
 The clubhead arrives at the ball not because it was pointed at the ball, but because
 the entire motion was shaped so that, somewhere along its arc, the club happens to
 pass through the ball's location at enormous speed.
-
 
 
   **Control is motion, not destination.**
@@ -38,9 +32,8 @@ pass through the ball's location at enormous speed.
   but by how faithfully it reproduces a desired motion.
 
 
-
 This is not merely a philosophical reframing. It changes the mathematics. It changes
-what we optimize. It changes how we define stability. And it changes what ``success''
+what we optimize. It changes how we define stability. And it changes what "success"
 means in a controlled system.
 
 The purpose of this book is to develop control theory from this trajectory-first
@@ -49,7 +42,8 @@ misleading) case of a much richer theory, and to build the mathematical tools ne
 to design controllers for systems whose purpose is to *move*.
 
 
-
+::: {.content-visible when-format="pdf"}
+```{=latex}
 \begin{center}
 \begin{tikzpicture}[scale=1.0]
   % Classical picture
@@ -104,8 +98,12 @@ to design controllers for systems whose purpose is to *move*.
   \draw[thick, gray!40] (0, -2.0) -- (0, 2.5);
 \end{tikzpicture}
 \end{center}
+```
+:::
 
-
+::: {.content-visible when-format="html"}
+*[Figure: See PDF edition for TikZ diagram.]*
+:::
 
 
 ## Why Setpoints Are a Special Case
@@ -118,7 +116,7 @@ Let us be precise about what we mean. Consider a nonlinear system
   \control \in \controlspace \subseteq \Reals^m,
 \end{equation}
 where $\bm{f}$ is smooth and the state space $\statespace$ may carry additional
-geometric structure (it may be a manifold, as we will see in Chapter~3).
+geometric structure (it may be a manifold, as we will see in Chapter 3).
 
 In the classical framework, the control objective is:
 \begin{quote}
@@ -127,27 +125,22 @@ In the classical framework, the control objective is:
 The entire apparatus of Lyapunov stability, LQR, pole placement, and PID control
 is built around this question. But notice what this objective assumes:
 
-\begin{enumerate}[leftmargin=2cm, label=**A\arabic*.**]
-  \item There exists a meaningful equilibrium $\state^*$ where $\bm{f}(\state^*, \control^*) = \bm{0}$.
-  \item The system's purpose is to *reach and remain at* this equilibrium.
-  \item Performance is measured by how quickly and smoothly the error
-        $\bm{e}(t) = \state(t) - \state^*$ decays.
-\end{enumerate}
+1. There exists a meaningful equilibrium $\state^*$ where $\bm{f}(\state^*, \control^*) = \bm{0}$.
+2. The system's purpose is to *reach and remain at* this equilibrium.
+3. Performance is measured by how quickly and smoothly the error
+   $\bm{e}(t) = \state(t) - \state^*$ decays.
 
 Now consider the systems this book is about:
 
-\begin{itemize}[leftmargin=1.5cm]
-  \item A golfer executing a swing---the body passes through a continuum of
-        configurations and never ``arrives'' anywhere.
-  \item A gymnast performing a floor routine---the motion *is* the performance.
-  \item A biped walking---there is no single posture that constitutes ``walking'';
-        walking is a *limit cycle*, a periodic orbit through state space.
-  \item A robotic arm tracing a weld seam---the task is defined by the path, not the endpoint.
-\end{itemize}
+- A golfer executing a swing---the body passes through a continuum of
+  configurations and never "arrives" anywhere.
+- A gymnast performing a floor routine---the motion *is* the performance.
+- A biped walking---there is no single posture that constitutes "walking";
+  walking is a *limit cycle*, a periodic orbit through state space.
+- A robotic arm tracing a weld seam---the task is defined by the path, not the endpoint.
 
 For all of these systems, assumptions **A1**--**A3** fail. The correct
 control objective is fundamentally different:
-
 
 
   Given a reference trajectory $\traj^*: [0, T] \to \statespace$, find a feedback
@@ -156,16 +149,14 @@ control objective is fundamentally different:
     \norm{\state(t) - \traj^*(t)} \leq \varepsilon(t)
     \qquad \text{for all } t \in [0, T],
   \end{equation}
-  where $\varepsilon(t)$ is a prescribed tracking tolerance (the ``tube width''),
+  where $\varepsilon(t)$ is a prescribed tracking tolerance (the "tube width"),
   and the system is robust to disturbances $\bm{d}(t)$ satisfying
   $\norm{\bm{d}(t)} \leq \delta$.
-
 
 
 A setpoint is simply the degenerate case where $\traj^*(t) = \state^*$ for all $t$
 and $T \to \infty$. The trajectory-tracking framework *contains* the setpoint
 framework, but not vice versa.
-
 
 
   Given a reference trajectory $\traj^*: [0,T] \to \statespace$ and a tube radius
@@ -178,9 +169,8 @@ framework, but not vice versa.
   $\tube(0)$ remains in $\tube(t)$ for all $t \in [0, T]$.
 
 
-
 This definition is the trajectory-centric replacement for Lyapunov stability. Instead
-of asking ``does the system converge to a point?'' we ask ``does the system stay
+of asking "does the system converge to a point?" we ask ``does the system stay
 inside a moving tube?'' The tube can be tight where precision matters (e.g., at
 ball impact in the golf swing) and loose where it does not (e.g., during the
 backswing).
@@ -193,26 +183,24 @@ We will use the golf swing throughout this book as a running example---not becau
 golf is inherently more interesting than other motions, but because it compresses
 an extraordinary number of control-theoretic challenges into roughly 1.2~seconds:
 
-\begin{enumerate}[label=(\roman*)]
-  \item **High dimensionality.** The human body has over 200 degrees of freedom.
-        Even a simplified musculoskeletal model of the golf swing uses 20--40
-        generalized coordinates.
-  \item **Extreme nonlinearity.** Joint torques couple through the full rigid-body
-        dynamics, including Coriolis and centrifugal terms that dominate at high
-        angular velocities.
-  \item **Underactuation.** Once the club is released in the downswing, the
-        wrist hinge ``freewheels''---the golfer cannot directly control the club angle.
-        The clubhead speed at impact comes from *passive dynamics*, not
-        active torque.
-  \item **Time-criticality with flexible timing.** The swing must produce the
-        right state (clubhead position, velocity, and orientation) at impact,
-        but the *exact* time of impact is not prescribed. The golfer
-        is free to take the backswing slowly or quickly.
-  \item **Repeatability over optimality.** A touring professional does not
-        execute the theoretically optimal swing. They execute a swing they
-        can *repeat* 300 times in a tournament, under pressure, with
-        minimal variance.
-\end{enumerate}
+1. **High dimensionality.** The human body has over 200 degrees of freedom.
+   Even a simplified musculoskeletal model of the golf swing uses 20--40
+   generalized coordinates.
+2. **Extreme nonlinearity.** Joint torques couple through the full rigid-body
+   dynamics, including Coriolis and centrifugal terms that dominate at high
+   angular velocities.
+3. **Underactuation.** Once the club is released in the downswing, the
+   wrist hinge "freewheels"---the golfer cannot directly control the club angle.
+   The clubhead speed at impact comes from *passive dynamics*, not
+   active torque.
+4. **Time-criticality with flexible timing.** The swing must produce the
+   right state (clubhead position, velocity, and orientation) at impact,
+   but the *exact* time of impact is not prescribed. The golfer
+   is free to take the backswing slowly or quickly.
+5. **Repeatability over optimality.** A touring professional does not
+   execute the theoretically optimal swing. They execute a swing they
+   can *repeat* 300 times in a tournament, under pressure, with
+   minimal variance.
 
 \begin{example}{From Setpoint Thinking to Trajectory Thinking}{golf_shift}
   Suppose we model a simplified golf swing with generalized coordinates
@@ -238,7 +226,6 @@ the minimum-time or minimum-energy trajectory?'' But this is the wrong question
 for biological and athletic systems. The right question is:
 
 
-
   The best trajectory is not the one that maximizes performance on a single trial,
   but the one that maximizes *expected performance over many trials* in the
   presence of noise, fatigue, and uncertainty. Formally, we seek
@@ -250,7 +237,6 @@ for biological and athletic systems. The right question is:
   \end{equation}
   where $J$ is the performance cost, $\bm{w}$ represents stochastic disturbances
   (motor noise, perceptual error), and $\lambda > 0$ penalizes variance.
-
 
 
 This is why elite golfers do not all swing the same way. Each golfer finds a
@@ -288,12 +274,10 @@ as a function of $s$, not $t$:
 \end{equation}
 This decouples the *shape* of the motion from its *temporal execution*.
 The controller has two separate tasks:
-\begin{enumerate}[label=(\alph*)]
-  \item **Path tracking**: keep $\state(t)$ close to the reference path
-        $\traj^*(s(t))$, and
-  \item **Timing control**: regulate $\dot{s}$ to achieve the desired
-        speed profile along the path.
-\end{enumerate}
+1. **Path tracking**: keep $\state(t)$ close to the reference path
+   $\traj^*(s(t))$, and
+2. **Timing control**: regulate $\dot{s}$ to achieve the desired
+   speed profile along the path.
 This decomposition is impossible in the setpoint framework, where time and space
 are fused together.
 
@@ -302,10 +286,9 @@ are fused together.
 
 
 When we shift from point stability to trajectory stability, the relevant notion of
-``closeness'' changes. We do not care about the distance from $\state(t)$ to
+"closeness" changes. We do not care about the distance from $\state(t)$ to
 $\traj^*(t)$ at the same clock time---we care about the distance from $\state(t)$
 to the *nearest point on the trajectory*.
-
 
 
   Let $\traj^*: [0,1] \to \statespace$ be a smooth reference trajectory. The
@@ -314,18 +297,17 @@ to the *nearest point on the trajectory*.
     d_\perp(\state, \traj^*) = \min_{s \in [0,1]} \norm{\state - \traj^*(s)}.
   \end{equation}
   The minimizing argument $s^*(\state) = \arg\min_s \norm{\state - \traj^*(s)}$
-  is the **projection phase**, giving the ``closest point on the reference.''
-
+  is the **projection phase**, giving the "closest point on the reference."
 
 
 This leads to a decomposition of the state into two components:
-\begin{itemize}[leftmargin=1.5cm]
-  \item The **tangential component**: where the system is *along* the
-        trajectory (measured by $s$).
-  \item The **transverse component**: how far the system is *from* the
-        trajectory (measured by $d_\perp$).
-\end{itemize}
+- The **tangential component**: where the system is *along* the
+  trajectory (measured by $s$).
+- The **transverse component**: how far the system is *from* the
+  trajectory (measured by $d_\perp$).
 
+::: {.content-visible when-format="pdf"}
+```{=latex}
 \begin{center}
 \begin{tikzpicture}[scale=1.2]
   % Reference trajectory
@@ -365,7 +347,12 @@ This leads to a decomposition of the state into two components:
   \node[font=\small, gray, below] at (0.3, -1.3) {$s^*$};
 \end{tikzpicture}
 \end{center}
+```
+:::
 
+::: {.content-visible when-format="html"}
+*[Figure: See PDF edition for TikZ diagram.]*
+:::
 
 
 A system is **orbitally stable** around $\traj^*$ if the transverse distance
@@ -394,6 +381,8 @@ The tube width $\varepsilon(s)$ is a design parameter. For the golf swing:
   \end{cases}
 \end{equation}
 
+::: {.content-visible when-format="pdf"}
+```{=latex}
 \begin{center}
 \begin{tikzpicture}[xscale=8, yscale=2.5]
   % Axes
@@ -425,9 +414,15 @@ The tube width $\varepsilon(s)$ is a design parameter. For the golf swing:
   }
 \end{tikzpicture}
 \end{center}
+```
+:::
+
+::: {.content-visible when-format="html"}
+*[Figure: See PDF edition for TikZ diagram.]*
+:::
 
 This funnel profile encodes the physical insight that precision matters most at
-impact and least during setup. The controller ``spends'' its control authority
+impact and least during setup. The controller "spends" its control authority
 where it matters, rather than trying to maintain uniform precision everywhere---a
 lesson that classical setpoint control cannot teach.
 
@@ -448,7 +443,6 @@ equilibrium and stays near it. In the trajectory framework, stability means
 *confinement*: the state remains inside the moving tube.
 
 
-
   A reference trajectory $\traj^*$ is **stable** under the closed-loop
   dynamics $\dot{\state} = \bm{f}(\state, \bm{k}(\state, t))$ if for every
   $\varepsilon > 0$ there exists $\delta > 0$ such that
@@ -460,10 +454,9 @@ equilibrium and stays near it. In the trajectory framework, stability means
   $d_\perp(\state(t), \traj^*) \to 0$ as the system evolves.
 
 
-
 Note the subtle but critical difference: we use the transverse distance $d_\perp$,
 not the time-indexed error $\norm{\state(t) - \traj^*(t)}$. This allows the system
-to be ahead of or behind schedule without being considered ``unstable.''
+to be ahead of or behind schedule without being considered "unstable."
 
 
 ### The Cost Function Is a Functional, Not a Function
@@ -493,7 +486,7 @@ and low effort during the backswing.
 ### Feedforward Is Not Optional---It Is Primary
 
 
-In the setpoint framework, feedforward is a ``nice to have'' that reduces transient
+In the setpoint framework, feedforward is a "nice to have" that reduces transient
 error. In the trajectory framework, feedforward is the *primary* control
 action. The reference trajectory $\traj^*(t)$ implicitly defines a feedforward
 control signal
@@ -534,7 +527,7 @@ squares the clubface through the double pendulum effect.
   requires understanding the geometry of this submanifold.
 \end{proposition}
 
-We will make this precise in Chapter~5 using the language of constraint manifolds
+We will make this precise in Chapter 5 using the language of constraint manifolds
 and their null-space structures.
 
 
@@ -594,52 +587,42 @@ increasingly sophisticated layers:
 Before proceeding, let us establish the conceptual vocabulary that will replace
 the classical language throughout this book:
 
-\begin{center}
-\renewcommand{\arraystretch}{1.4}
-\begin{tabular}{@{} l @{\qquad$\longrightarrow$\qquad} l @{}}
-  **\color{gray**Classical term} & **\color{chapblue**Trajectory term} \\
-  \hline
-  Setpoint / reference & Reference trajectory $\traj^*(s)$ \\
-  Error $\bm{e}(t) = \state - \state^*$ & Transverse deviation $d_\perp(\state, \traj^*)$ \\
-  Lyapunov stability & Orbital / trajectory stability \\
-  Convergence to equilibrium & Confinement to tube \\
-  Regulation & Path tracking + timing control \\
-  Step response & Trajectory tracking response \\
-  Steady-state error & Persistent transverse offset \\
-  Gain margin & Funnel robustness margin \\
-  Pole placement & Transverse eigenvalue assignment \\
-\end{tabular}
-\end{center}
-
-
+> \renewcommand{\arraystretch}{1.4}
+> \begin{tabular}{@{} l @{\qquad$\longrightarrow$\qquad} l @{}}
+> **\color{gray**Classical term} & **\color{chapblue**Trajectory term}
+> \hline
+> Setpoint / reference & Reference trajectory $\traj^*(s)$
+> Error $\bm{e}(t) = \state - \state^*$ & Transverse deviation $d_\perp(\state, \traj^*)$
+> Lyapunov stability & Orbital / trajectory stability
+> Convergence to equilibrium & Confinement to tube
+> Regulation & Path tracking + timing control
+> Step response & Trajectory tracking response
+> Steady-state error & Persistent transverse offset
+> Gain margin & Funnel robustness margin
+> Pole placement & Transverse eigenvalue assignment
+> \end{tabular}
 
 
 ## Exercises
 
 
-\begin{enumerate}[label=**1.\arabic*.**, leftmargin=1.5cm]
+1. **(Conceptual.)** Consider a simple pendulum $\ddot{\theta} + \sin\theta = u$.
+2. Identify the equilibria and classify their stability.
+3. Now consider the task of making the pendulum execute a full revolution
+   (pumping up from rest to continuous spinning). Explain why this task
+   *cannot* be formulated as setpoint regulation.
+4. Sketch the reference trajectory in the $(\theta, \dot{\theta})$ phase
+   plane for one complete revolution. What is the natural phase variable?
 
-\item **(Conceptual.)** Consider a simple pendulum $\ddot{\theta} + \sin\theta = u$.
-  \begin{enumerate}[label=(\alph*)]
-    \item Identify the equilibria and classify their stability.
-    \item Now consider the task of making the pendulum execute a full revolution
-          (pumping up from rest to continuous spinning). Explain why this task
-          *cannot* be formulated as setpoint regulation.
-    \item Sketch the reference trajectory in the $(\theta, \dot{\theta})$ phase
-          plane for one complete revolution. What is the natural phase variable?
-  \end{enumerate}
-
-\item **(Mathematical.)** For the system $\dot{x}_1 = x_2$,\;
+- **(Mathematical.)** For the system $\dot{x}_1 = x_2$,\;
   $\dot{x}_2 = -x_1 + u$, consider the reference trajectory
   $\traj^*(t) = (\cos t,\, -\sin t)^\top$ (a unit circle in state space).
-  \begin{enumerate}[label=(\alph*)]
-    \item Verify that $u_{\text{ff}}(t) = 0$ produces exactly this trajectory.
-    \item Compute the transverse linearization about $\traj^*$.
-    \item Design a feedback law $u_{\text{fb}}$ that achieves asymptotic orbital
-          stability.
-  \end{enumerate}
+  1. Verify that $u_{\text{ff}}(t) = 0$ produces exactly this trajectory.
+2. Compute the transverse linearization about $\traj^*$.
+3. Design a feedback law $u_{\text{fb}}$ that achieves asymptotic orbital
+   stability.
 
-\item **(Design.)** A simplified 2-DOF golf swing model has coordinates
+- **(Design.)** A simplified 2-DOF golf swing model has coordinates
   $\bm{q} = (\theta_{\text{arm}}, \theta_{\text{club}})$ with dynamics
   $$
     \bm{M}(\bm{q})\ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}})\dot{\bm{q}}
@@ -647,29 +630,22 @@ the classical language throughout this book:
     \qquad \bm{B} = \begin{pmatrix} 1 \\ 0 \end{pmatrix}.
   $$
   This system is underactuated: only $\theta_{\text{arm}}$ is directly actuated.
-  \begin{enumerate}[label=(\alph*)]
-    \item Explain qualitatively how the club can accelerate through passive dynamics
-          even though no torque is applied at the wrist.
-    \item Define a phase variable $s$ and sketch a funnel profile $\varepsilon(s)$
-          appropriate for this system.
-    \item Discuss why a setpoint controller applied at impact ($s = 0.7$) would
-          produce the wrong motion.
-  \end{enumerate}
+  1. Explain qualitatively how the club can accelerate through passive dynamics
+   even though no torque is applied at the wrist.
+2. Define a phase variable $s$ and sketch a funnel profile $\varepsilon(s)$
+   appropriate for this system.
+3. Discuss why a setpoint controller applied at impact ($s = 0.7$) would
+   produce the wrong motion.
 
-\item **(Philosophical.)** A thermostat, an autopilot, and a dancer's body
-  are all ``controlled systems.'' Classify each according to whether its primary
+- **(Philosophical.)** A thermostat, an autopilot, and a dancer's body
+  are all "controlled systems." Classify each according to whether its primary
   control objective is (i)~setpoint regulation, (ii)~trajectory tracking, or
   (iii)~something else entirely. Justify your classification.
 
-\end{enumerate}
 
-
-\begin{center}
-  \rule{0.5\textwidth}{0.4pt}\\[0.5cm]
-  {\small\itshape
-  The river does not arrive at the ocean and stop.\\
-  It becomes the ocean.\\
-  The swing does not arrive at impact and stop.\\
-  It becomes the follow-through.\\[0.3cm]
-  Control is motion.}
-\end{center}
+> ---
+> The river does not arrive at the ocean and stop.
+> It becomes the ocean.
+> The swing does not arrive at impact and stop.
+> It becomes the follow-through.
+> Control is motion.}

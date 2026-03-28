@@ -20,9 +20,7 @@ confront the numerical challenges in computing it accurately.
 :::
 
 
-
 ## From Global Nonlinearity to Local Linearity
-
 
 
 ### Setup: Nominal and Perturbed Trajectories
@@ -173,9 +171,7 @@ reference inputs generate different tangent-space dynamics!
 \end{intuitionbox}
 
 
-
 ## The State Transition Matrix
-
 
 
 ### Definition and Fundamental ODE
@@ -305,7 +301,6 @@ from integration itself.
 \end{axiombox}
 
 
-
 ## The Peano-Baker Series and Exact Solution
 
 
@@ -391,7 +386,6 @@ differently to emphasize commutators.
 \end{remark}
 
 
-
 ## Numerical Computation of the State Transition Matrix
 
 
@@ -447,11 +441,9 @@ D_m(\mat{A}\tau)\,\Phi(t,t_0) = N_\ell(\mat{A}\tau),
 which gives $\Phi$ with spectral accuracy.
 
 A common choice is the $[7/8]$ Padé approximation with scaling and squaring:
-\begin{enumerate}
-\item Scale: Find the smallest integer $q$ such that $\|\mat{A}\tau / 2^q\| < \rho$ for some threshold $\rho$ (typically $0.5$).
-\item Compute: Apply the $[7/8]$ Padé approximant to $\mat{A}\tau/2^q$.
-\item Square: Repeatedly square the result $q$ times to recover $\exp(\mat{A}\tau)$.
-\end{enumerate}
+1. Scale: Find the smallest integer $q$ such that $\|\mat{A}\tau / 2^q\| < \rho$ for some threshold $\rho$ (typically $0.5$).
+2. Compute: Apply the $[7/8]$ Padé approximant to $\mat{A}\tau/2^q$.
+3. Square: Repeatedly square the result $q$ times to recover $\exp(\mat{A}\tau)$.
 
 This approach achieves unit roundoff accuracy in double precision with minimal computational cost.
 
@@ -460,15 +452,13 @@ This approach achieves unit roundoff accuracy in double precision with minimal c
 
 
 For an $n\times n$ STM:
-\begin{itemize}
-\item **Direct integration:** Each step of an RK4 integrator performs $\sim 4$ matrix multiplications
-      (one per stage), each costing $O(n^3)$. For $N$ steps: $O(4Nn^3)$ flops.
-\item **Matrix exponential (scaling \& squaring):** Computing $N_\ell(\mat{A})$ costs $O(n^3)$; solving
-      the linear system costs $O(n^3)$ (via LU factorization). Squaring $q$ times adds $qO(n^3)$. Total per call:
-      $O((q+2)n^3)$ flops.
-\item **Evaluation cost per time step:** Regardless of method, if we evaluate $\Phi$ at $N$ time points,
-      the dominant cost is $O(Nn^3)$.
-\end{itemize}
+- **Direct integration:** Each step of an RK4 integrator performs $\sim 4$ matrix multiplications
+  (one per stage), each costing $O(n^3)$. For $N$ steps: $O(4Nn^3)$ flops.
+- **Matrix exponential (scaling \& squaring):** Computing $N_\ell(\mat{A})$ costs $O(n^3)$; solving
+  the linear system costs $O(n^3)$ (via LU factorization). Squaring $q$ times adds $qO(n^3)$. Total per call:
+  $O((q+2)n^3)$ flops.
+- **Evaluation cost per time step:** Regardless of method, if we evaluate $\Phi$ at $N$ time points,
+  the dominant cost is $O(Nn^3)$.
 
 For large $n$ (e.g., $n=100$), the $O(n^3)$ factor is significant. Specialized structure in $\mat{A}$ (sparse,
 low-rank, block-diagonal) can be exploited to reduce cost. For general dense problems, direct integration
@@ -478,7 +468,6 @@ with adaptive step-size control is often most efficient in practice.
 Computing $\Phi$ for stiff systems (those with widely separated time scales) is notoriously ill-conditioned.
 We discuss remedies in Section~\ref{sec:ch2:stability}.
 \end{warningbox}
-
 
 
 ## Variation of Constants Formula
@@ -545,15 +534,12 @@ which is the Duhamel formula.
 
 The Duhamel formula decomposes the state perturbation into two contributions:
 
-\begin{enumerate}
-\item **Homogeneous term** $\Phi(t,t_0)\dx(t_0)$: The initial perturbation $\dx(t_0)$ is propagated
-      forward via the STM. This is the response to initial conditions alone.
-
-\item **Forced term** $\int_{t_0}^{t}\Phi(t,s)\mat{B}(s)\du(s)\,\dd s$: At each time $s$, a control
-      perturbation $\du(s)$ is applied. It enters through the actuator channels $\mat{B}(s)$, and its effect
-      is then propagated forward from time $s$ to time $t$ by the STM $\Phi(t,s)$. The integral sums the
-      contributions of all past control inputs, weighted by their propagation matrices.
-\end{enumerate}
+1. **Homogeneous term** $\Phi(t,t_0)\dx(t_0)$: The initial perturbation $\dx(t_0)$ is propagated
+   forward via the STM. This is the response to initial conditions alone.
+2. **Forced term** $\int_{t_0}^{t}\Phi(t,s)\mat{B}(s)\du(s)\,\dd s$: At each time $s$, a control
+   perturbation $\du(s)$ is applied. It enters through the actuator channels $\mat{B}(s)$, and its effect
+   is then propagated forward from time $s$ to time $t$ by the STM $\Phi(t,s)$. The integral sums the
+   contributions of all past control inputs, weighted by their propagation matrices.
 
 \begin{designbox}
 The Duhamel formula is the engine behind sensitivity analysis, adjoint methods, and trajectory optimization.
@@ -563,7 +549,6 @@ superpose linearly in the tangent space. For control design, this formula shows 
 have the most leverage: early times (with large $\Phi(t,s)$) and actuator-rich directions (large column spaces
 of $\mat{B}(s)$) are most influential.
 \end{designbox}
-
 
 
 ## Discrete-Time Variational Dynamics
@@ -654,7 +639,6 @@ it is a pure product of matrices. For numerical work, computing $\Phi_{d,\ell,k}
 multiplication is standard, but for large $\ell-k$, this accumulates rounding errors and can
 become numerically unstable (Section~\ref{sec:ch2:stability}).
 \end{remark}
-
 
 
 ## A Worked Example: Linearized Pendulum
@@ -809,9 +793,7 @@ The numerical values are illustrative. In practice, one would solve this on a co
 \end{remark}
 
 
-
 ## Sensitivity Analysis and Parameter Dependence
-
 
 
 ### Parameter Sensitivity via the Variational Equation
@@ -909,7 +891,6 @@ incorporated into machine learning infrastructure.
 \end{remark}
 
 
-
 ## Liouville's Formula and Phase Space Volume
 
 
@@ -960,7 +941,6 @@ if $\det(\Phi)$ grows unexpectedly, it may indicate numerical instability or an 
 \end{warningbox}
 
 
-
 ## Numerical Stability and Ill-Conditioning
 
 
@@ -998,13 +978,11 @@ A robust remedy is to propagate the STM using a QR decomposition:
 where $Q$ is orthonormal and $R$ is upper triangular. The QR factorization is updated at each step
 without explicitly computing $\Phi$.
 
-\begin{enumerate}
-\item **Propagate:** Integrate the ODE $\dot Q = \mat{A}(t)Q$ with $Q(t_0,t_0) = \mat{I}$.
-\item **Orthonormalize:** At each step, compute $[Q_{\text{new}}, R_{\text{step}}] = \text{qr}(\tilde{Q})$,
-      where $\tilde{Q}$ is the current approximate matrix from the integrator. Store $R = R \cdot R_{\text{step}}$.
-\item **Recover:** At any time, $\Phi = Q \cdot R$ can be reconstructed, but more importantly, $R$ remains
-      well-conditioned (bounded) throughout the integration.
-\end{enumerate}
+1. **Propagate:** Integrate the ODE $\dot Q = \mat{A}(t)Q$ with $Q(t_0,t_0) = \mat{I}$.
+2. **Orthonormalize:** At each step, compute $[Q_{\text{new}}, R_{\text{step}}] = \text{qr}(\tilde{Q})$,
+   where $\tilde{Q}$ is the current approximate matrix from the integrator. Store $R = R \cdot R_{\text{step}}$.
+3. **Recover:** At any time, $\Phi = Q \cdot R$ can be reconstructed, but more importantly, $R$ remains
+   well-conditioned (bounded) throughout the integration.
 
 This approach prevents underflow and overflow and maintains numerical stability for arbitrarily long integration times.
 
@@ -1025,19 +1003,15 @@ to restart the integration from a recent checkpoint or use higher precision arit
 
 \begin{designbox}
 Best practices for stable STM computation:
-\begin{enumerate}
-\item Use automatic differentiation to compute $\mat{A}(t)$ accurately.
-\item For stiff systems, use implicit integrators (BDF or Rosenbrock) rather than explicit ones.
-\item For very long integration times, use QR-based propagation to maintain stability.
-\item Monitor singular values of $\Phi$ and switch to higher precision if needed.
-\item When $\det(\Phi)$ becomes very small or very large, verify against Liouville's formula.
-\end{enumerate}
+1. Use automatic differentiation to compute $\mat{A}(t)$ accurately.
+2. For stiff systems, use implicit integrators (BDF or Rosenbrock) rather than explicit ones.
+3. For very long integration times, use QR-based propagation to maintain stability.
+4. Monitor singular values of $\Phi$ and switch to higher precision if needed.
+5. When $\det(\Phi)$ becomes very small or very large, verify against Liouville's formula.
 \end{designbox}
 
 
-
 ## Qualitative Interpretation of the Jacobians
-
 
 
 ### $\mat{A}(t)$: Local State Sensitivity
@@ -1045,21 +1019,17 @@ Best practices for stable STM computation:
 
 The eigenvalues and singular values of $\mat{A}(t)$ reveal the local perturbation landscape:
 
-\begin{itemize}
-\item **Eigenvalues with positive real part:** indicate locally unstable directions---perturbations
-      that amplify exponentially. If $\lambda = \alpha + i\beta$ with $\alpha > 0$, perturbations grow
-      as $e^{\alpha t}$ while oscillating with frequency $\beta$.
-
-\item **Eigenvalues with negative real part:** indicate locally contracting directions. Perturbations
-      decay as $e^{\alpha t}$ with $\alpha < 0$.
-
-\item **The symmetric part** $\sym(\mat{A}) = \frac{1}{2}(\mat{A}+\mat{A}^T)$ governs instantaneous
-      growth/decay of perturbation energy. The quadratic form $\|\dx\|^2$ evolves as
-      \begin{equation}
-      \frac{\dd}{\dd t}\|\dx\|^2 = 2\dx^T\dot\dx = 2\dx^T\mat{A}\dx = 2\dx^T[\sym(\mat{A})]\dx + 2\dx^T[\skewpart(\mat{A})]\dx.
-      \end{equation}
-      The skew part $\skewpart(\mat{A}) = \frac{1}{2}(\mat{A}-\mat{A}^T)$ does not affect energy directly; it causes rotation.
-\end{itemize}
+- **Eigenvalues with positive real part:** indicate locally unstable directions---perturbations
+  that amplify exponentially. If $\lambda = \alpha + i\beta$ with $\alpha > 0$, perturbations grow
+  as $e^{\alpha t}$ while oscillating with frequency $\beta$.
+- **Eigenvalues with negative real part:** indicate locally contracting directions. Perturbations
+  decay as $e^{\alpha t}$ with $\alpha < 0$.
+- **The symmetric part** $\sym(\mat{A}) = \frac{1}{2}(\mat{A}+\mat{A}^T)$ governs instantaneous
+  growth/decay of perturbation energy. The quadratic form $\|\dx\|^2$ evolves as
+  \begin{equation}
+  \frac{\dd}{\dd t}\|\dx\|^2 = 2\dx^T\dot\dx = 2\dx^T\mat{A}\dx = 2\dx^T[\sym(\mat{A})]\dx + 2\dx^T[\skewpart(\mat{A})]\dx.
+  \end{equation}
+  The skew part $\skewpart(\mat{A}) = \frac{1}{2}(\mat{A}-\mat{A}^T)$ does not affect energy directly; it causes rotation.
 
 For control design, the eigenvalues of $\mat{A}(t)$ tell us which directions are naturally unstable (requiring
 control action to stabilize) and which are naturally stable (requiring control only for disturbance rejection).
@@ -1070,41 +1040,33 @@ control action to stabilize) and which are naturally stable (requiring control o
 
 The matrix $\mat{B}(t)$ determines which perturbation directions can be corrected by control action:
 
-\begin{itemize}
-\item **Column space:** The column space $\text{col}(\mat{B}(t))$ is the set of instantaneously reachable
-      perturbation directions. An input $\du$ can move the state in any direction in $\text{col}(\mat{B}(t))$.
-
-\item **Rank deficiency:** If $\rank(\mat{B}(t)) < n$, some directions are not directly controllable at
-      that instant (the system is *underactuated*). For example, a 2D quadrotor can only apply forces;
-      it cannot directly exert a torque (without wing asymmetry), so the yaw dynamics are decoupled from
-      translational control.
-
-\item **Condition number:** The condition number $\kappa(\mat{B}^T\mat{B}) = \sigma_{\max}/\sigma_{\min}$
-      indicates how efficiently different directions can be influenced. A large condition number means some
-      directions require much larger inputs than others, making them ``hard to control.''
-
-\item **Controllability:** Over a finite time horizon, a system is controllable if the Gramian
-      \begin{equation}
-      W_c(t_0, t_f) = \int_{t_0}^{t_f}\Phi(t_f, s)\mat{B}(s)\mat{B}(s)^T\Phi(t_f,s)^T\,\dd s
-      \label{eq:ch2:controllability-gramian}
-      \end{equation}
-      is invertible. This integrates the influence of $\mat{B}(s)$ over all times, accounting for how control
-      inputs at early times are propagated forward.
-\end{itemize}
+- **Column space:** The column space $\text{col}(\mat{B}(t))$ is the set of instantaneously reachable
+  perturbation directions. An input $\du$ can move the state in any direction in $\text{col}(\mat{B}(t))$.
+- **Rank deficiency:** If $\rank(\mat{B}(t)) < n$, some directions are not directly controllable at
+  that instant (the system is *underactuated*). For example, a 2D quadrotor can only apply forces;
+  it cannot directly exert a torque (without wing asymmetry), so the yaw dynamics are decoupled from
+  translational control.
+- **Condition number:** The condition number $\kappa(\mat{B}^T\mat{B}) = \sigma_{\max}/\sigma_{\min}$
+  indicates how efficiently different directions can be influenced. A large condition number means some
+  directions require much larger inputs than others, making them ``hard to control.''
+- **Controllability:** Over a finite time horizon, a system is controllable if the Gramian
+  \begin{equation}
+  W_c(t_0, t_f) = \int_{t_0}^{t_f}\Phi(t_f, s)\mat{B}(s)\mat{B}(s)^T\Phi(t_f,s)^T\,\dd s
+  \label{eq:ch2:controllability-gramian}
+  \end{equation}
+  is invertible. This integrates the influence of $\mat{B}(s)$ over all times, accounting for how control
+  inputs at early times are propagated forward.
 
 \begin{warningbox}
 Many practical failures in optimization-based control stem from poor conditioning of $\mat{A}(t)$ or
 $\mat{B}(t)$---not from failure of the nominal planner. Monitoring these matrices along a trajectory is
 essential for robust implementation. Common issues include:
-\begin{enumerate}
-\item High stiffness (large spread in eigenvalues of $\mat{A}$) $\Rightarrow$ choose implicit integrators.
-\item Low rank in $\mat{B}$ $\Rightarrow$ the system is underactuated; ensure the control cost is set
-      appropriately to handle underactuation.
-\item Large condition number of $\mat{B}^T\mat{B}$ $\Rightarrow$ input saturation is likely; include
-      saturation constraints in the optimizer.
-\end{enumerate}
+1. High stiffness (large spread in eigenvalues of $\mat{A}$) $\Rightarrow$ choose implicit integrators.
+2. Low rank in $\mat{B}$ $\Rightarrow$ the system is underactuated; ensure the control cost is set
+   appropriately to handle underactuation.
+3. Large condition number of $\mat{B}^T\mat{B}$ $\Rightarrow$ input saturation is likely; include
+   saturation constraints in the optimizer.
 \end{warningbox}
-
 
 
 ## Residuals Under Finite Perturbations
@@ -1193,7 +1155,6 @@ once they are in a neighborhood of the optimum.
 \end{remark}
 
 
-
 ## Structure-Preserving Numerical Integration
 
 
@@ -1210,14 +1171,12 @@ Consider a Hamiltonian system with $H(\q, \vec{p}) = T(\vec{p}) + V(\q)$. The co
 dynamics preserve the Hamiltonian ($\dot{H} = 0$), the symplectic form, and phase-space
 volume (Liouville's theorem, Section~\ref{sec:ch2:liouville}). A generic Runge--Kutta
 integrator preserves *none* of these. Over long simulations, this manifests as:
-\begin{itemize}
-\item **Energy drift**: the numerically computed energy $H(\q_k, \vec{p}_k)$ drifts
-      monotonically upward or downward, even though the true energy is constant.
-\item **Phase-space expansion**: trajectories spiral outward in phase space,
-      destroying the qualitative behavior of the system.
-\item **Broken symmetries**: conservation laws (angular momentum, for instance)
-      are violated, leading to unphysical trajectories.
-\end{itemize}
+- **Energy drift**: the numerically computed energy $H(\q_k, \vec{p}_k)$ drifts
+  monotonically upward or downward, even though the true energy is constant.
+- **Phase-space expansion**: trajectories spiral outward in phase space,
+  destroying the qualitative behavior of the system.
+- **Broken symmetries**: conservation laws (angular momentum, for instance)
+  are violated, leading to unphysical trajectories.
 
 For short simulations (a single golf downswing at 0.5 s), these effects are typically
 negligible. For repeated simulations, parameter sweeps, or optimization loops that
@@ -1250,11 +1209,9 @@ When the state space includes rotation groups (SO(3) for rigid-body attitude, SE
 pose), standard integrators that parameterize rotations via Euler angles or quaternions
 face singularities or constraint drift. Lie group integrators work directly on the group:
 
-\begin{enumerate}
-\item Compute the velocity in the Lie algebra $\mathfrak{g}$ (tangent space at the identity).
-\item Integrate in $\mathfrak{g}$ using standard methods.
-\item Map back to the group via the exponential map: $R_{k+1} = R_k \cdot \exp(\omega_k \, h)$.
-\end{enumerate}
+1. Compute the velocity in the Lie algebra $\mathfrak{g}$ (tangent space at the identity).
+2. Integrate in $\mathfrak{g}$ using standard methods.
+3. Map back to the group via the exponential map: $R_{k+1} = R_k \cdot \exp(\omega_k \, h)$.
 
 This guarantees that $R_{k+1} \in \text{SO}(3)$ exactly (no normalization or re-projection
 needed). The Crouch-Grossman and Munthe-Kaas methods provide systematic frameworks for
@@ -1287,64 +1244,49 @@ with variational principles provides a fully structure-preserving computational 
 \end{designbox}
 
 
-
 ## Chapter Summary
 
 
-\begin{enumerate}
-
-\item **Variational Equation from First Principles:**
-      The variational equation $\dot\dx = \mat{A}(t)\dx + \mat{B}(t)\du$ emerges from a careful Taylor expansion
-      of the nonlinear dynamics, keeping first-order terms in $\dx$ and $\du$ and dropping $O(\|\dx\|^2)$ residuals.
-      This is exact for infinitesimal perturbations and an excellent first-order approximation for small but
-      finite perturbations.
-
-\item **State Transition Matrix:**
-      The STM $\Phi(t,t_0)$ is the unique solution to $\dot\Phi = \mat{A}(t)\Phi$ with $\Phi(t_0,t_0) = \mat{I}$.
-      It characterizes the evolution of any perturbation via $\dx(t) = \Phi(t,t_0)\dx(t_0)$.
-
-\item **Fundamental Properties:**
-      The STM satisfies three key properties: semigroup ($\Phi(t_2,t_0) = \Phi(t_2,t_1)\Phi(t_1,t_0)$),
-      invertibility ($\Phi^{-1}(t,t_0) = \Phi(t_0,t)$), and Liouville's formula for the determinant.
-
-\item **Peano-Baker Series:**
-      The STM admits an explicit infinite series solution (Peano-Baker series), which converges uniformly
-      for bounded $\mat{A}(t)$. This series elegantly handles non-commutativity in the matrix product.
-
-\item **Numerical Integration:**
-      Computing $\Phi$ typically requires integrating the $n \times n$ matrix ODE. For time-invariant systems,
-      the matrix exponential can be computed via Padé approximation with scaling and squaring. For stiff systems,
-      QR-based propagation ensures numerical stability.
-
-\item **Variation of Constants (Duhamel) Formula:**
-      When both initial and input perturbations are present, the solution is
-      $\dx(t) = \Phi(t,t_0)\dx(t_0) + \int_{t_0}^{t}\Phi(t,s)\mat{B}(s)\du(s)\dd s$.
-      This shows how effects superpose linearly in the tangent space and is fundamental to sensitivity analysis
-      and optimal control.
-
-\item **Discrete-Time Variational Dynamics:**
-      For computational implementation, the continuous-time variational equation is discretized. The discrete
-      STM is a product of Jacobians: $\Phi_{d,\ell,k} = \prod_{j=k}^{\ell-1}\mat{A}_j$.
-
-\item **Sensitivity and Adjoint Methods:**
-      Parameter sensitivities $\frac{\partial\x}{\partial p}$ satisfy a linearized ODE whose solution is given
-      by the Duhamel formula. The adjoint method computes cost gradients efficiently by propagating a costate
-      backward in time, governed by $\dot\lambda = -\mat{A}(t)^T\lambda$.
-
-\item **Residuals and Convergence:**
-      Finite perturbations incur residuals of order $O(\|\dx\|^2)$, reflecting manifold curvature. Iterative
-      re-linearization (as in DDP) eliminates the dominant residual, leading to quadratic convergence.
-
-\item **Numerical Challenges:**
-      Stiff systems and long integration times can render $\Phi$ numerically singular. QR-based propagation
-      and singular value monitoring provide robust diagnostics and solutions.
-
-\item **Matrix Interpretation:**
-      $\mat{A}(t)$ encodes local sensitivity (eigenvalues reveal stable/unstable directions);
-      $\mat{B}(t)$ encodes local control authority (column space reveals reachable directions).
-      Together they are the raw material for all subsequent stability and optimality analyses.
-
-\end{enumerate}
+1. **Variational Equation from First Principles:**
+   The variational equation $\dot\dx = \mat{A}(t)\dx + \mat{B}(t)\du$ emerges from a careful Taylor expansion
+   of the nonlinear dynamics, keeping first-order terms in $\dx$ and $\du$ and dropping $O(\|\dx\|^2)$ residuals.
+   This is exact for infinitesimal perturbations and an excellent first-order approximation for small but
+   finite perturbations.
+2. **State Transition Matrix:**
+   The STM $\Phi(t,t_0)$ is the unique solution to $\dot\Phi = \mat{A}(t)\Phi$ with $\Phi(t_0,t_0) = \mat{I}$.
+   It characterizes the evolution of any perturbation via $\dx(t) = \Phi(t,t_0)\dx(t_0)$.
+3. **Fundamental Properties:**
+   The STM satisfies three key properties: semigroup ($\Phi(t_2,t_0) = \Phi(t_2,t_1)\Phi(t_1,t_0)$),
+   invertibility ($\Phi^{-1}(t,t_0) = \Phi(t_0,t)$), and Liouville's formula for the determinant.
+4. **Peano-Baker Series:**
+   The STM admits an explicit infinite series solution (Peano-Baker series), which converges uniformly
+   for bounded $\mat{A}(t)$. This series elegantly handles non-commutativity in the matrix product.
+5. **Numerical Integration:**
+   Computing $\Phi$ typically requires integrating the $n \times n$ matrix ODE. For time-invariant systems,
+   the matrix exponential can be computed via Padé approximation with scaling and squaring. For stiff systems,
+   QR-based propagation ensures numerical stability.
+6. **Variation of Constants (Duhamel) Formula:**
+   When both initial and input perturbations are present, the solution is
+   $\dx(t) = \Phi(t,t_0)\dx(t_0) + \int_{t_0}^{t}\Phi(t,s)\mat{B}(s)\du(s)\dd s$.
+   This shows how effects superpose linearly in the tangent space and is fundamental to sensitivity analysis
+   and optimal control.
+7. **Discrete-Time Variational Dynamics:**
+   For computational implementation, the continuous-time variational equation is discretized. The discrete
+   STM is a product of Jacobians: $\Phi_{d,\ell,k} = \prod_{j=k}^{\ell-1}\mat{A}_j$.
+8. **Sensitivity and Adjoint Methods:**
+   Parameter sensitivities $\frac{\partial\x}{\partial p}$ satisfy a linearized ODE whose solution is given
+   by the Duhamel formula. The adjoint method computes cost gradients efficiently by propagating a costate
+   backward in time, governed by $\dot\lambda = -\mat{A}(t)^T\lambda$.
+9. **Residuals and Convergence:**
+   Finite perturbations incur residuals of order $O(\|\dx\|^2)$, reflecting manifold curvature. Iterative
+   re-linearization (as in DDP) eliminates the dominant residual, leading to quadratic convergence.
+10. **Numerical Challenges:**
+   Stiff systems and long integration times can render $\Phi$ numerically singular. QR-based propagation
+   and singular value monitoring provide robust diagnostics and solutions.
+11. **Matrix Interpretation:**
+   $\mat{A}(t)$ encodes local sensitivity (eigenvalues reveal stable/unstable directions);
+   $\mat{B}(t)$ encodes local control authority (column space reveals reachable directions).
+   Together they are the raw material for all subsequent stability and optimality analyses.
 
 \begin{designbox}
 The variational equation is not merely a linear approximation: it is an exact first-order differential-geometric
@@ -1357,44 +1299,35 @@ geometric tracking control, and neural network training dynamics.
 
 \section*{Exercises}
 
-\begin{enumerate}
-\item **STM of a linear system.**
-      For the LTI system $\mat{A} = \begin{bmatrix} 0 & 1 \\ -\omega^2 & -2\zeta\omega \end{bmatrix}$
-      (damped harmonic oscillator), compute $\Phi(t, 0) = e^{\mat{A}t}$ analytically using eigenvalue
-      decomposition. Verify the semigroup property $\Phi(t_2, 0) = \Phi(t_2, t_1)\Phi(t_1, 0)$.
-
-\item **Peano-Baker truncation error.**
-      For the system in Exercise 1, compute the first three terms of the Peano-Baker
-      series~\eqref{eq:ch2:peano-baker}. Estimate the truncation error at $t = 1$ and compare
-      with the exact exponential.
-
-\item **Liouville's formula.**
-      Verify Liouville's formula (Theorem~\ref{thm:ch2:liouville}) for the 2D system
-      $\dot{x}_1 = x_2$, $\dot{x}_2 = -x_1 - 0.1 x_2$ by computing both $\det\Phi(t, 0)$
-      directly and $\exp(\int_0^t \trace\mat{A}(s)\,\dd s)$.
-
-\item **Sensitivity of a nonlinear system.**
-      For the Van der Pol oscillator $\ddot{x} - \mu(1 - x^2)\dot{x} + x = 0$ with $\mu = 1$,
-      compute the variational equation along the trajectory starting from $(x_0, \dot{x}_0) = (2, 0)$.
-      Integrate the STM numerically for one period. What do the singular values of $\Phi$ reveal?
-
-\item **Input sensitivity.**
-      For the control-affine system $\dot\x = \mat{A}\x + \mat{B}\uvec$ with $\mat{A}$, $\mat{B}$
-      from the pendulum example in Section~\ref{sec:ch2:pendulum-example}, use the variation of
-      constants formula to compute the response to a unit pulse input $\uvec(t) = \delta(t - t_0)$.
-
-\item **Symplectic integrator comparison.**
-      Implement both RK4 and the symplectic Euler method for the undamped pendulum
-      $\ddot\theta + \sin\theta = 0$. Integrate for 1000 periods. Plot the energy $H(\theta, \dot\theta)$
-      as a function of time for both methods. Explain the qualitative difference.
-
-\item **Discrete-time STM.**
-      For the discrete system $\x_{k+1} = \mat{A}_k \x_k$ with $\mat{A}_k$ periodic
-      ($\mat{A}_{k+N} = \mat{A}_k$), express the one-period STM as a product. What is the
-      relationship between the eigenvalues of this product and the stability of the system?
-
-\item **Magnus expansion.**
-      For a time-varying $\mat{A}(t) = \mat{A}_0 + \varepsilon \mat{A}_1 \sin(\omega t)$,
-      compute the first-order Magnus expansion and compare with the Peano-Baker series
-      at $t = 2\pi/\omega$. Under what conditions does the Magnus expansion converge faster?
-\end{enumerate}
+1. **STM of a linear system.**
+   For the LTI system $\mat{A} = \begin{bmatrix} 0 & 1 \\ -\omega^2 & -2\zeta\omega \end{bmatrix}$
+   (damped harmonic oscillator), compute $\Phi(t, 0) = e^{\mat{A}t}$ analytically using eigenvalue
+   decomposition. Verify the semigroup property $\Phi(t_2, 0) = \Phi(t_2, t_1)\Phi(t_1, 0)$.
+2. **Peano-Baker truncation error.**
+   For the system in Exercise 1, compute the first three terms of the Peano-Baker
+   series~\eqref{eq:ch2:peano-baker}. Estimate the truncation error at $t = 1$ and compare
+   with the exact exponential.
+3. **Liouville's formula.**
+   Verify Liouville's formula (Theorem~\ref{thm:ch2:liouville}) for the 2D system
+   $\dot{x}_1 = x_2$, $\dot{x}_2 = -x_1 - 0.1 x_2$ by computing both $\det\Phi(t, 0)$
+   directly and $\exp(\int_0^t \trace\mat{A}(s)\,\dd s)$.
+4. **Sensitivity of a nonlinear system.**
+   For the Van der Pol oscillator $\ddot{x} - \mu(1 - x^2)\dot{x} + x = 0$ with $\mu = 1$,
+   compute the variational equation along the trajectory starting from $(x_0, \dot{x}_0) = (2, 0)$.
+   Integrate the STM numerically for one period. What do the singular values of $\Phi$ reveal?
+5. **Input sensitivity.**
+   For the control-affine system $\dot\x = \mat{A}\x + \mat{B}\uvec$ with $\mat{A}$, $\mat{B}$
+   from the pendulum example in Section~\ref{sec:ch2:pendulum-example}, use the variation of
+   constants formula to compute the response to a unit pulse input $\uvec(t) = \delta(t - t_0)$.
+6. **Symplectic integrator comparison.**
+   Implement both RK4 and the symplectic Euler method for the undamped pendulum
+   $\ddot\theta + \sin\theta = 0$. Integrate for 1000 periods. Plot the energy $H(\theta, \dot\theta)$
+   as a function of time for both methods. Explain the qualitative difference.
+7. **Discrete-time STM.**
+   For the discrete system $\x_{k+1} = \mat{A}_k \x_k$ with $\mat{A}_k$ periodic
+   ($\mat{A}_{k+N} = \mat{A}_k$), express the one-period STM as a product. What is the
+   relationship between the eigenvalues of this product and the stability of the system?
+8. **Magnus expansion.**
+   For a time-varying $\mat{A}(t) = \mat{A}_0 + \varepsilon \mat{A}_1 \sin(\omega t)$,
+   compute the first-order Magnus expansion and compare with the Peano-Baker series
+   at $t = 2\pi/\omega$. Under what conditions does the Magnus expansion converge faster?

@@ -5,16 +5,11 @@ title: "Orbital Stability and Transverse Linearization"
 # Orbital Stability and Transverse Linearization
 
 
-
-
-
-
-
 ## The Problem with Lyapunov
 
 
 The classical Lyapunov framework asks a simple question: \emph{does the state
-converge to an equilibrium?} We demonstrated in Chapter~1 that this is the
+converge to an equilibrium?} We demonstrated in Chapter 1 that this is the
 wrong question for systems whose purpose is to move. But the problem goes
 deeper than philosophical framing---Lyapunov stability is \emph{structurally
 incapable} of analyzing trajectory-tracking systems.
@@ -36,78 +31,70 @@ But the system is executing the correct motion perfectly! The only
 ``error'' is that it is slightly ahead of or behind schedule.
 
 
-
   Lyapunov stability conflates two independent phenomena:
-  \begin{enumerate}[label=(\roman*)]
-    \item **Transverse deviations**: the system drifts *away from*
-      the trajectory path. This is a genuine control failure.
-    \item **Tangential deviations**: the system is ahead of or behind
-      schedule *along* the trajectory path. This is a timing difference,
-      not a tracking failure.
-  \end{enumerate}
+  1. **Transverse deviations**: the system drifts *away from*
+   the trajectory path. This is a genuine control failure.
+2. **Tangential deviations**: the system is ahead of or behind
+   schedule *along* the trajectory path. This is a timing difference,
+   not a tracking failure.
   Lyapunov stability rejects both. Orbital stability accepts tangential
   deviations and rejects only transverse ones. For systems whose purpose is
   motion, orbital stability is the correct notion.
 
 
-
-\begin{center}
-\begin{tikzpicture}[scale=1.0]
-  % --- Lyapunov view ---
-  \begin{scope}[shift={(-4.5,0)}]
-    \node[font=\bfseries\small, chapblue] at (0, 3.0) {Lyapunov View};
-    \draw[-{Stealth[length=2.5mm]}, thick, gray] (-2, 0) -- (2, 0)
-      node[right, font=\small] {$x_1$};
-    \draw[-{Stealth[length=2.5mm]}, thick, gray] (0, -2) -- (0, 2.5)
-      node[above, font=\small] {$x_2$};
-    % Reference trajectory
-    \draw[very thick, trajgreen, decoration={markings,
-        mark=at position 0.3 with {\arrow{Stealth[length=2.5mm]}},
-        mark=at position 0.7 with {\arrow{Stealth[length=2.5mm]}}
-      }, postaction={decorate}]
-      (-1.5, -1.5) .. controls (-0.5, 1) and (0.5, 1.5) .. (1.5, 0.3);
-    % Reference point at time t
-    \filldraw[trajgreen!80!black] (0.0, 1.15) circle (2.5pt);
-    \node[above right, font=\scriptsize, trajgreen!80!black] at (0.1, 1.2) {$\traj^*(t)$};
-    % Perturbed (timing shift)
-    \filldraw[accentred] (-0.55, 0.5) circle (2.5pt);
-    \node[below left, font=\scriptsize, accentred] at (-0.6, 0.4) {$\traj^*(t\!-\!\varepsilon)$};
-    % Error arrow
-    \draw[-{Stealth[length=2mm]}, thick, accentred, dashed]
-      (0.0, 1.15) -- (-0.5, 0.55);
-    \node[font=\scriptsize, accentred] at (0.5, 0.55) {$\bm{e}(t) \neq 0$};
-    % Verdict
-    \node[font=\small\bfseries, accentred] at (0, -2.5) {``Unstable''};
-    \node[font=\scriptsize] at (0, -2.9) {(wrong answer)};
-  \end{scope}
-
-  % Dividing line
-  \draw[thick, gray!30] (0, -2.2) -- (0, 2.8);
-
-  % --- Orbital view ---
-  \begin{scope}[shift={(4.5,0)}]
-    \node[font=\bfseries\small, trajgreen!80!black] at (0, 3.0) {Orbital View};
-    \draw[-{Stealth[length=2.5mm]}, thick, gray] (-2, 0) -- (2, 0)
-      node[right, font=\small] {$x_1$};
-    \draw[-{Stealth[length=2.5mm]}, thick, gray] (0, -2) -- (0, 2.5)
-      node[above, font=\small] {$x_2$};
-    % Reference trajectory
-    \draw[very thick, trajgreen, decoration={markings,
-        mark=at position 0.3 with {\arrow{Stealth[length=2.5mm]}},
-        mark=at position 0.7 with {\arrow{Stealth[length=2.5mm]}}
-      }, postaction={decorate}]
-      (-1.5, -1.5) .. controls (-0.5, 1) and (0.5, 1.5) .. (1.5, 0.3);
-    % Perturbed (timing shift) - ON the trajectory
-    \filldraw[chapblue] (-0.55, 0.5) circle (2.5pt);
-    \node[below left, font=\scriptsize, chapblue] at (-0.6, 0.4) {on $\orbit$};
-    % Transverse distance = 0
-    \node[font=\scriptsize, chapblue] at (1.0, 0.9) {$d_\transverse = 0$};
-    % Verdict
-    \node[font=\small\bfseries, trajgreen!80!black] at (0, -2.5) {``Stable''};
-    \node[font=\scriptsize] at (0, -2.9) {(correct answer)};
-  \end{scope}
-\end{tikzpicture}
-\end{center}
+> \begin{tikzpicture}[scale=1.0]
+> % --- Lyapunov view ---
+> \begin{scope}[shift={(-4.5,0)}]
+> \node[font=\bfseries\small, chapblue] at (0, 3.0) {Lyapunov View};
+> \draw[-{Stealth[length=2.5mm]}, thick, gray] (-2, 0) -- (2, 0)
+> node[right, font=\small] {$x_1$};
+> \draw[-{Stealth[length=2.5mm]}, thick, gray] (0, -2) -- (0, 2.5)
+> node[above, font=\small] {$x_2$};
+> % Reference trajectory
+> \draw[very thick, trajgreen, decoration={markings,
+> mark=at position 0.3 with {\arrow{Stealth[length=2.5mm]}},
+> mark=at position 0.7 with {\arrow{Stealth[length=2.5mm]}}
+> }, postaction={decorate}]
+> (-1.5, -1.5) .. controls (-0.5, 1) and (0.5, 1.5) .. (1.5, 0.3);
+> % Reference point at time t
+> \filldraw[trajgreen!80!black] (0.0, 1.15) circle (2.5pt);
+> \node[above right, font=\scriptsize, trajgreen!80!black] at (0.1, 1.2) {$\traj^*(t)$};
+> % Perturbed (timing shift)
+> \filldraw[accentred] (-0.55, 0.5) circle (2.5pt);
+> \node[below left, font=\scriptsize, accentred] at (-0.6, 0.4) {$\traj^*(t\!-\!\varepsilon)$};
+> % Error arrow
+> \draw[-{Stealth[length=2mm]}, thick, accentred, dashed]
+> (0.0, 1.15) -- (-0.5, 0.55);
+> \node[font=\scriptsize, accentred] at (0.5, 0.55) {$\bm{e}(t) \neq 0$};
+> % Verdict
+> \node[font=\small\bfseries, accentred] at (0, -2.5) {``Unstable''};
+> \node[font=\scriptsize] at (0, -2.9) {(wrong answer)};
+> \end{scope}
+> % Dividing line
+> \draw[thick, gray!30] (0, -2.2) -- (0, 2.8);
+> % --- Orbital view ---
+> \begin{scope}[shift={(4.5,0)}]
+> \node[font=\bfseries\small, trajgreen!80!black] at (0, 3.0) {Orbital View};
+> \draw[-{Stealth[length=2.5mm]}, thick, gray] (-2, 0) -- (2, 0)
+> node[right, font=\small] {$x_1$};
+> \draw[-{Stealth[length=2.5mm]}, thick, gray] (0, -2) -- (0, 2.5)
+> node[above, font=\small] {$x_2$};
+> % Reference trajectory
+> \draw[very thick, trajgreen, decoration={markings,
+> mark=at position 0.3 with {\arrow{Stealth[length=2.5mm]}},
+> mark=at position 0.7 with {\arrow{Stealth[length=2.5mm]}}
+> }, postaction={decorate}]
+> (-1.5, -1.5) .. controls (-0.5, 1) and (0.5, 1.5) .. (1.5, 0.3);
+> % Perturbed (timing shift) - ON the trajectory
+> \filldraw[chapblue] (-0.55, 0.5) circle (2.5pt);
+> \node[below left, font=\scriptsize, chapblue] at (-0.6, 0.4) {on $\orbit$};
+> % Transverse distance = 0
+> \node[font=\scriptsize, chapblue] at (1.0, 0.9) {$d_\transverse = 0$};
+> % Verdict
+> \node[font=\small\bfseries, trajgreen!80!black] at (0, -2.5) {``Stable''};
+> \node[font=\scriptsize] at (0, -2.9) {(correct answer)};
+> \end{scope}
+> \end{tikzpicture}
 
 
 ## Orbital Stability: Formal Definitions
@@ -118,7 +105,6 @@ We now define orbital stability rigorously. The key object is the
 timing information.
 
 
-
   Given a trajectory $\traj^*: [0, T] \to \statespace$, the **orbit**
   is the set
   \begin{equation}
@@ -127,9 +113,6 @@ timing information.
   The orbit is a one-dimensional submanifold of $\statespace$ (a curve
   without parameterization). For periodic trajectories with period $T$,
   $\traj^*(0) = \traj^*(T)$ and $\orbit$ is a closed curve (a loop).
-
-
-
 
 
   A trajectory $\traj^*(t)$ (or its orbit $\orbit$) is \textbf{orbitally
@@ -145,11 +128,9 @@ timing information.
   $d(\state(t), \orbit) \to 0$ as $t \to \infty$.
 
 
-
 Critically, orbital stability does not require $\norm{\state(t) - \traj^*(t)}
 \to 0$. The system may drift along the orbit (ahead or behind schedule) while
 remaining perfectly stable. Only deviations *away from* the orbit matter.
-
 
 
   A trajectory is orbitally stable **with asymptotic phase** if it is
@@ -162,7 +143,6 @@ remaining perfectly stable. Only deviations *away from* the orbit matter.
   ``locks in'' to a definite timing, shifted by $\theta^*$ from the
   nominal schedule. This is the strongest practical form of trajectory
   stability.
-
 
 
 \begin{example}{Limit Cycles: The Prototype}{limit_cycle}
@@ -191,8 +171,6 @@ decomposition}, the central technical tool of this chapter.
 ### Projection onto the Orbit
 
 
-
-
   Given a state $\state$ sufficiently close to the orbit $\orbit$, the
   **nearest-point projection** is
   \begin{equation}
@@ -204,15 +182,12 @@ decomposition}, the central technical tool of this chapter.
   is closer to $\orbit$ than the minimum radius of curvature of the orbit).
 
 
-
-
 ### The Moving Hyperplane Decomposition
 
 
 At each point $\traj^*(s)$ on the orbit, the state space $\Reals^n$
 decomposes into a one-dimensional tangential direction and an
 $(n{-}1)$-dimensional transverse hyperplane:
-
 
 
   At the point $\traj^*(s)$ on the orbit, define:
@@ -233,49 +208,40 @@ $(n{-}1)$-dimensional transverse hyperplane:
   in the transverse dynamics.
 
 
-
-\begin{center}
-\begin{tikzpicture}[scale=1.15]
-  % Orbit
-  \draw[very thick, trajgreen, decoration={markings,
-      mark=at position 0.15 with {\arrow{Stealth[length=3mm]}},
-      mark=at position 0.5 with {\arrow{Stealth[length=3mm]}},
-      mark=at position 0.85 with {\arrow{Stealth[length=3mm]}}
-    }, postaction={decorate}]
-    (-3, -0.5) .. controls (-1.5, 2) and (1.5, 2) .. (3, -0.3);
-  \node[trajgreen!70!black, font=\small\bfseries] at (3.4, 0.1) {$\orbit$};
-
-  % Point on orbit
-  \coordinate (P) at (0, 1.65);
-  \filldraw[trajgreen!70!black] (P) circle (2.5pt);
-  \node[above, font=\small, trajgreen!70!black] at (0, 1.85) {$\traj^*(s^*)$};
-
-  % Tangent vector
-  \draw[-{Stealth[length=3.5mm]}, very thick, chapblue]
-    (P) -- ++(1.2, -0.05);
-  \node[chapblue, font=\small\bfseries] at (1.5, 1.85) {$\bm{t}(s^*)$};
-
-  % Transverse hyperplane (shown as a line in 2D)
-  \draw[thick, darkgold, dashed] ($(P) + (-0.1, -1.8)$) -- ($(P) + (0.1, 1.8)$);
-  \node[darkgold, font=\small\bfseries, rotate=85] at (-0.5, 2.8) {$\Sigma(s^*)$};
-
-  % Actual state
-  \coordinate (X) at (0.3, 0.2);
-  \filldraw[accentred] (X) circle (2.5pt);
-  \node[right, font=\small\bfseries, accentred] at (0.4, 0.2) {$\state(t)$};
-
-  % Transverse deviation
-  \draw[-{Stealth[length=2.5mm]}, thick, accentred]
-    (P) -- ($(P) + (0.05, -1.45)$);
-  \node[accentred, font=\small] at (-0.7, 0.5) {$\bm{\xi}$};
-
-  % Phase annotation
-  \draw[thin, gray, |->] (-3, -1.6) -- (3, -1.6) node[right, font=\small] {$s$};
-  \draw[thin, gray, dashed] (0, -1.6) -- (P);
-  \filldraw[gray] (0, -1.6) circle (1.5pt);
-  \node[font=\small, gray, below] at (0, -1.6) {$s^*$};
-\end{tikzpicture}
-\end{center}
+> \begin{tikzpicture}[scale=1.15]
+> % Orbit
+> \draw[very thick, trajgreen, decoration={markings,
+> mark=at position 0.15 with {\arrow{Stealth[length=3mm]}},
+> mark=at position 0.5 with {\arrow{Stealth[length=3mm]}},
+> mark=at position 0.85 with {\arrow{Stealth[length=3mm]}}
+> }, postaction={decorate}]
+> (-3, -0.5) .. controls (-1.5, 2) and (1.5, 2) .. (3, -0.3);
+> \node[trajgreen!70!black, font=\small\bfseries] at (3.4, 0.1) {$\orbit$};
+> % Point on orbit
+> \coordinate (P) at (0, 1.65);
+> \filldraw[trajgreen!70!black] (P) circle (2.5pt);
+> \node[above, font=\small, trajgreen!70!black] at (0, 1.85) {$\traj^*(s^*)$};
+> % Tangent vector
+> \draw[-{Stealth[length=3.5mm]}, very thick, chapblue]
+> (P) -- ++(1.2, -0.05);
+> \node[chapblue, font=\small\bfseries] at (1.5, 1.85) {$\bm{t}(s^*)$};
+> % Transverse hyperplane (shown as a line in 2D)
+> \draw[thick, darkgold, dashed] ($(P) + (-0.1, -1.8)$) -- ($(P) + (0.1, 1.8)$);
+> \node[darkgold, font=\small\bfseries, rotate=85] at (-0.5, 2.8) {$\Sigma(s^*)$};
+> % Actual state
+> \coordinate (X) at (0.3, 0.2);
+> \filldraw[accentred] (X) circle (2.5pt);
+> \node[right, font=\small\bfseries, accentred] at (0.4, 0.2) {$\state(t)$};
+> % Transverse deviation
+> \draw[-{Stealth[length=2.5mm]}, thick, accentred]
+> (P) -- ($(P) + (0.05, -1.45)$);
+> \node[accentred, font=\small] at (-0.7, 0.5) {$\bm{\xi}$};
+> % Phase annotation
+> \draw[thin, gray, |->] (-3, -1.6) -- (3, -1.6) node[right, font=\small] {$s$};
+> \draw[thin, gray, dashed] (0, -1.6) -- (P);
+> \filldraw[gray] (0, -1.6) circle (1.5pt);
+> \node[font=\small, gray, below] at (0, -1.6) {$s^*$};
+> \end{tikzpicture}
 
 
 ## Transverse Linearization
@@ -318,20 +284,17 @@ $\state = \traj^*(s^*) + \bm{\xi}$ and linearizing about $\bm{\xi} = \bm{0}$:
 
 \begin{remark}{Understanding the Transverse $\Amat_\transverse$}{A_trans_explain}
   Equation \eqref{eq:A_transverse} has a clear structure:
-  \begin{itemize}[leftmargin=1cm]
-    \item The first term $\bm{P}\, \frac{\partial \bm{f}}{\partial \state}\, \bm{P}$
-      is the standard Jacobian projected onto the transverse space. This
-      captures how the system dynamics affect cross-trajectory deviations.
-    \item The second term subtracts the component of the Jacobian that acts along
-      the tangent direction---this is exactly the tangential dynamics that
-      orbital stability ``forgets.''
-  \end{itemize}
+  - The first term $\bm{P}\, \frac{\partial \bm{f}}{\partial \state}\, \bm{P}$
+  is the standard Jacobian projected onto the transverse space. This
+  captures how the system dynamics affect cross-trajectory deviations.
+- The second term subtracts the component of the Jacobian that acts along
+  the tangent direction---this is exactly the tangential dynamics that
+  orbital stability ``forgets.''
   The resulting $\Amat_\transverse(s)$ has dimension $(n{-}1) \times (n{-}1)$,
   one less than the full state Jacobian. The removed eigenvalue corresponds
   to motion along the orbit---the tangential direction in which we are
   *not* demanding stability.
 \end{remark}
-
 
 
   The reference trajectory $\traj^*(t)$ is asymptotically orbitally stable
@@ -347,8 +310,6 @@ $\state = \traj^*(s^*) + \bm{\xi}$ and linearizing about $\bm{\xi} = \bm{0}$:
   theory apply.
 
 
-
-
 ### The Transverse Jacobian: A Practical Formula
 
 
@@ -356,7 +317,7 @@ For implementation, the key quantities are computed as follows. Let
 $\bm{J}(t) = \frac{\partial \bm{f}}{\partial \state}\big|_{\traj^*, \control^*}$
 be the Jacobian along the reference. Choose any orthonormal basis
 $\{\bm{n}_1(s), \ldots, \bm{n}_{n-1}(s)\}$ for $\Sigma(s)$---the Frenet--Serret
-frame from Chapter~2 provides a natural choice. Collect these into the matrix
+frame from Chapter 2 provides a natural choice. Collect these into the matrix
 $\bm{N}(s) = [\bm{n}_1 \mid \cdots \mid \bm{n}_{n-1}] \in \Reals^{n \times (n-1)}$.
 Then:
 
@@ -402,8 +363,6 @@ system. Floquet theory provides the definitive stability analysis tool.
 ### The State Transition Matrix
 
 
-
-
   For the linear time-varying system $\dot{\bm{\xi}} = \Amat_\transverse(t)\,
   \bm{\xi}$, the **state transition matrix**
   $\PhiMat(t, t_0)$ satisfies
@@ -414,11 +373,7 @@ system. Floquet theory provides the definitive stability analysis tool.
   The solution is $\bm{\xi}(t) = \PhiMat(t, t_0)\, \bm{\xi}(t_0)$.
 
 
-
-
 ### The Monodromy Matrix
-
-
 
 
   For a periodic orbit with period $T$, the **monodromy matrix**
@@ -431,18 +386,15 @@ system. Floquet theory provides the definitive stability analysis tool.
   multipliers}).
 
 
-
 \begin{theorem}[Floquet Stability Criterion]
   A periodic orbit is:
-  \begin{enumerate}[label=(\roman*)]
-    \item **Orbitally stable** if all Floquet multipliers satisfy
-      $|\mu_k| \leq 1$, with multipliers on the unit circle being
-      semisimple.
-    \item **Asymptotically orbitally stable** if all Floquet multipliers
-      satisfy $|\mu_k| < 1$ (all strictly inside the unit circle).
-    \item **Orbitally unstable** if any Floquet multiplier satisfies
-      $|\mu_k| > 1$.
-  \end{enumerate}
+  1. **Orbitally stable** if all Floquet multipliers satisfy
+   $|\mu_k| \leq 1$, with multipliers on the unit circle being
+   semisimple.
+2. **Asymptotically orbitally stable** if all Floquet multipliers
+   satisfy $|\mu_k| < 1$ (all strictly inside the unit circle).
+3. **Orbitally unstable** if any Floquet multiplier satisfies
+   $|\mu_k| > 1$.
 \end{theorem}
 
 \begin{remark}{The Missing Multiplier}{missing_multiplier}
@@ -494,18 +446,14 @@ information, Poincar\'e sections give *discrete-time* (strobed)
 information.
 
 
-
   A **Poincar\'e section** for an orbit $\orbit$ is a smooth
   $(n{-}1)$-dimensional surface $\poincare \subset \statespace$ such that:
-  \begin{enumerate}[label=(\roman*)]
-    \item $\orbit$ intersects $\poincare$ transversally (not tangentially).
-    \item In a neighborhood of the intersection, every orbit near $\orbit$
-      also crosses $\poincare$.
-  \end{enumerate}
+  1. $\orbit$ intersects $\poincare$ transversally (not tangentially).
+2. In a neighborhood of the intersection, every orbit near $\orbit$
+   also crosses $\poincare$.
   The **Poincar\'e return map** $\bm{P}: \poincare \to \poincare$ sends
   each point on $\poincare$ to the next intersection with $\poincare$ under
   the flow.
-
 
 
 For periodic orbits, the orbit crosses $\poincare$ once per period, and
@@ -534,7 +482,6 @@ sections}: a continuous family of transverse hyperplanes, one at each point
 of the orbit.
 
 
-
   A **moving Poincar\'e section** along a trajectory $\traj^*(s)$,
   $s \in [0, L]$, is the family of hyperplanes
   \begin{equation}
@@ -551,9 +498,7 @@ of the orbit.
   $\PhiMat_\transverse(s_2, s_1)$ of the transverse dynamics.
 
 
-
 For the golf swing, this gives us a powerful analysis tool:
-
 
 
   For a finite-time trajectory $\traj^*: [0, T] \to \statespace$, define
@@ -571,9 +516,8 @@ For the golf swing, this gives us a powerful analysis tool:
     \rho(0, s_{\text{impact}}) \ll 1 \qquad \text{(deviations shrink
     toward impact)}.
   \end{equation}
-  This is a precise formulation of the funnel concept from Chapter~1:
+  This is a precise formulation of the funnel concept from Chapter 1:
   the tube narrows because the transverse dynamics are contracting.
-
 
 
 \begin{example}{Amplification Profile of the Golf Swing}{golf_amplification}
@@ -584,21 +528,19 @@ For the golf swing, this gives us a powerful analysis tool:
 
   Numerical computation reveals the amplification ratio $\rho(0, s)$ as a
   function of $s$:
-  \begin{itemize}[leftmargin=1cm]
-    \item $s \in [0, 0.3]$ (backswing): $\rho$ is approximately 1---deviations
-      neither grow nor shrink. The motion is kinematically slow and nearly
-      linear.
-    \item $s \in [0.3, 0.5]$ (transition): $\rho$ *increases* past 1.
-      This is the unstable phase---the high curvature and speed change
-      amplify deviations. Without feedback, errors grow here.
-    \item $s \in [0.5, 0.7]$ (late downswing): $\rho$ *decreases*.
-      The passive dynamics of the double-pendulum release are
-      self-stabilizing in the transverse directions. The wrist release
-      ``funnels'' the club toward the correct impact state.
-    \item $s = 0.75$ (impact): $\rho(0, 0.75) < 1$. The net effect over
-      the entire swing is transverse contraction---deviations are smaller
-      at impact than at address.
-  \end{itemize}
+  - $s \in [0, 0.3]$ (backswing): $\rho$ is approximately 1---deviations
+  neither grow nor shrink. The motion is kinematically slow and nearly
+  linear.
+- $s \in [0.3, 0.5]$ (transition): $\rho$ *increases* past 1.
+  This is the unstable phase---the high curvature and speed change
+  amplify deviations. Without feedback, errors grow here.
+- $s \in [0.5, 0.7]$ (late downswing): $\rho$ *decreases*.
+  The passive dynamics of the double-pendulum release are
+  self-stabilizing in the transverse directions. The wrist release
+  ``funnels'' the club toward the correct impact state.
+- $s = 0.75$ (impact): $\rho(0, 0.75) < 1$. The net effect over
+  the entire swing is transverse contraction---deviations are smaller
+  at impact than at address.
 
   This profile explains why skilled golfers are accurate despite the
   extreme nonlinearity of the swing: the trajectory is designed so that its
@@ -617,8 +559,6 @@ the result back to the nonlinear system.
 
 
 ### Time-Varying LQR for Transverse Stabilization
-
-
 
 
   The trajectory tracking problem reduces to solving the \emph{differential
@@ -644,19 +584,16 @@ the result back to the nonlinear system.
   and the full state coordinates.
 
 
-
 The weighting matrices $\bm{Q}(t)$ and $\bm{R}$ have clear physical
 interpretations:
-\begin{itemize}[leftmargin=1.5cm]
-  \item $\bm{Q}(t)$ penalizes transverse deviation. Making $\bm{Q}$ large
-    near impact tightens the funnel where precision matters.
-  \item $\bm{R}$ penalizes control effort. Making $\bm{R}$ small allows
-    aggressive correction but may demand unrealistic actuator authority.
-  \item The *phase-dependent* nature of $\bm{Q}(t)$ is essential:
-    we want tight tracking near impact and loose tracking during the backswing.
-    This is the time-varying tube from Chapter~1, now realized through the
-    Riccati equation.
-\end{itemize}
+- $\bm{Q}(t)$ penalizes transverse deviation. Making $\bm{Q}$ large
+  near impact tightens the funnel where precision matters.
+- $\bm{R}$ penalizes control effort. Making $\bm{R}$ small allows
+  aggressive correction but may demand unrealistic actuator authority.
+- The *phase-dependent* nature of $\bm{Q}(t)$ is essential:
+  we want tight tracking near impact and loose tracking during the backswing.
+  This is the time-varying tube from Chapter 1, now realized through the
+  Riccati equation.
 
 
 ### Phase-Varying Gains and the Funnel Connection
@@ -664,7 +601,7 @@ interpretations:
 
 The terminal-value Riccati equation \eqref{eq:riccati} naturally produces
 gains that tighten as the terminal time approaches. This is exactly the
-funnel behavior we designed geometrically in Chapter~1:
+funnel behavior we designed geometrically in Chapter 1:
 
 \begin{theorem}[Riccati Funnel]
   Let $\bm{S}(t)$ be the solution of \eqref{eq:riccati} with terminal
@@ -683,7 +620,7 @@ funnel behavior we designed geometrically in Chapter~1:
   control authority is sufficient.
 \end{theorem}
 
-This is the formal connection between the geometric funnel of Chapter~1 and
+This is the formal connection between the geometric funnel of Chapter 1 and
 the algebraic Riccati equation: \textbf{the funnel is the level set of the
 Riccati cost-to-go.}
 
@@ -694,59 +631,51 @@ Riccati cost-to-go.}
 Assembling all the pieces, the trajectory tracking controller has three
 layers:
 
-\begin{center}
-\begin{tikzpicture}[
-  block/.style={draw, rounded corners, minimum height=1.2cm,
-    minimum width=3.5cm, font=\small, align=center, thick},
-  arrow/.style={-{Stealth[length=3mm]}, thick}
-]
-  % Blocks
-  \node[block, fill=trajgreen!15, draw=trajgreen!70] (ff) at (0, 3)
-    {**Feedforward**\\ $\control^*(t)$ from\\ inverse dynamics};
-  \node[block, fill=chapblue!10, draw=chapblue!70] (proj) at (0, 1.2)
-    {**Projection**\\ $s^* = \pi(\state)$\\ $\bm{\xi} = \bm{P}\,(\state - \traj^*(s^*))$};
-  \node[block, fill=darkgold!15, draw=darkgold!70] (fb) at (0, -0.6)
-    {**Transverse Feedback**\\ $\delta\control = \bm{K}_\transverse(s^*)\, \bm{\xi}$};
-  \node[block, fill=accentred!10, draw=accentred!70] (plant) at (5.5, 1.2)
-    {**Plant**\\ $\dot{\state} = \bm{f}(\state, \control)$};
+> \begin{tikzpicture}[
+> block/.style={draw, rounded corners, minimum height=1.2cm,
+> minimum width=3.5cm, font=\small, align=center, thick},
+> arrow/.style={-{Stealth[length=3mm]}, thick}
+> ]
+> % Blocks
+> \node[block, fill=trajgreen!15, draw=trajgreen!70] (ff) at (0, 3)
+> {**Feedforward** $\control^*(t)$ from inverse dynamics};
+> \node[block, fill=chapblue!10, draw=chapblue!70] (proj) at (0, 1.2)
+> {**Projection** $s^* = \pi(\state)$ $\bm{\xi} = \bm{P}\,(\state - \traj^*(s^*))$};
+> \node[block, fill=darkgold!15, draw=darkgold!70] (fb) at (0, -0.6)
+> {**Transverse Feedback** $\delta\control = \bm{K}_\transverse(s^*)\, \bm{\xi}$};
+> \node[block, fill=accentred!10, draw=accentred!70] (plant) at (5.5, 1.2)
+> {**Plant** $\dot{\state} = \bm{f}(\state, \control)$};
+> % Arrows
+> \draw[arrow] (ff) -| (4, 3) |- node[above, font=\scriptsize, pos=0.25]
+> {$\control^*$} (plant.170);
+> \draw[arrow] (fb) -| (4, -0.6) |- node[below, font=\scriptsize, pos=0.25]
+> {$\delta\control$} (plant.190);
+> \draw[arrow] (plant) -- ++(2, 0) node[right, font=\small] {$\state(t)$}
+> |- (7.5, -2) -| (-3, -2) |- (proj.west);
+> \draw[arrow] (proj) -- (fb);
+> % Sum
+> \node[font=\large] at (4.3, 1.2) {$+$};
+> \end{tikzpicture}
 
-  % Arrows
-  \draw[arrow] (ff) -| (4, 3) |- node[above, font=\scriptsize, pos=0.25]
-    {$\control^*$} (plant.170);
-  \draw[arrow] (fb) -| (4, -0.6) |- node[below, font=\scriptsize, pos=0.25]
-    {$\delta\control$} (plant.190);
-  \draw[arrow] (plant) -- ++(2, 0) node[right, font=\small] {$\state(t)$}
-    |- (7.5, -2) -| (-3, -2) |- (proj.west);
-  \draw[arrow] (proj) -- (fb);
-
-  % Sum
-  \node[font=\large] at (4.3, 1.2) {$+$};
-\end{tikzpicture}
-\end{center}
-
-\begin{enumerate}[label=**Layer \arabic*.**, leftmargin=2cm]
-  \item **Feedforward** $\control^*(t)$: computed offline from inverse
-    dynamics, provides $\sim$90\% of the total control effort.
-  \item **Projection**: measures the current state $\state(t)$,
-    projects onto the orbit to find $s^*$, and computes the transverse
-    deviation $\bm{\xi}$.
-  \item **Transverse feedback** $\delta\control = \bm{K}_\transverse(s^*)\, \bm{\xi}$:
-    stabilizes the transverse dynamics using phase-varying gains from the
-    Riccati equation.
-\end{enumerate}
+1. **Feedforward** $\control^*(t)$: computed offline from inverse
+   dynamics, provides $\sim$90\% of the total control effort.
+2. **Projection**: measures the current state $\state(t)$,
+   projects onto the orbit to find $s^*$, and computes the transverse
+   deviation $\bm{\xi}$.
+3. **Transverse feedback** $\delta\control = \bm{K}_\transverse(s^*)\, \bm{\xi}$:
+   stabilizes the transverse dynamics using phase-varying gains from the
+   Riccati equation.
 
 \begin{remark}{Why Not Just Use Standard LQR?}{why_not_lqr}
   One could linearize the *full* dynamics about $\traj^*(t)$ and apply
   standard time-varying LQR to the $n$-dimensional error
   $\bm{e}(t) = \state(t) - \traj^*(t)$. This works, but:
-  \begin{enumerate}[label=(\alph*)]
-    \item It ``wastes'' control effort trying to correct tangential deviations
-      (timing errors), which are benign.
-    \item It fights the inherent marginal stability in the tangential direction,
-      leading to unnecessarily high gains.
-    \item It does not produce the correct funnel shape---it penalizes all
-      errors equally, including timing errors.
-  \end{enumerate}
+  1. It ``wastes'' control effort trying to correct tangential deviations
+   (timing errors), which are benign.
+2. It fights the inherent marginal stability in the tangential direction,
+   leading to unnecessarily high gains.
+3. It does not produce the correct funnel shape---it penalizes all
+   errors equally, including timing errors.
   The transverse approach avoids all three problems. It is geometrically
   correct, computationally smaller (dimension $n - 1$ vs.\ $n$), and
   physically meaningful.
@@ -760,14 +689,12 @@ A practical controller must be robust to model uncertainty and external
 disturbances. The transverse framework provides natural robustness margins.
 
 
-
   For the closed-loop transverse system
   $\dot{\bm{\xi}} = [\Amat_\transverse - \Bmat_\transverse \bm{K}_\transverse]\, \bm{\xi}$,
   the **transverse gain margin** and **transverse phase margin**
   are the gain and phase margins of the transverse loop transfer function.
   These are the trajectory-tracking analogues of the classical setpoint
   stability margins.
-
 
 
 \begin{proposition}[Robustness of Transverse LQR]
@@ -785,30 +712,27 @@ even when the golfer's motor commands are noisy.
 ## Summary
 
 
-\begin{center}
-\renewcommand{\arraystretch}{1.4}
-\begin{tabular}{@{} l p{8.5cm} @{}}
-  \toprule
-  **Concept** & **Significance** \\
-  \midrule
-  Orbital stability & The correct stability notion for moving systems:
-    only cross-orbit deviations matter \\
-  Transverse linearization & Reduces orbital stability to $(n{-}1)$-dim
-    LTV stability; removes the tangential ``nuisance'' direction \\
-  Floquet multipliers & Eigenvalues of the transverse monodromy matrix;
-    determine stability of periodic orbits \\
-  Moving Poincar\'e sections & Extend Poincar\'e analysis to non-periodic
-    trajectories; connect to the state transition matrix \\
-  Amplification ratio $\rho$ & Maximum singular value of $\PhiMat_\transverse$;
-    quantifies transverse error growth or contraction \\
-  Transverse LQR & Phase-varying feedback from the Riccati equation; the
-    optimal funnel controller \\
-  Riccati funnel & The LQR cost-to-go defines the funnel boundary; connects
-    geometric and algebraic views \\
-  \bottomrule
-\end{tabular}
-\end{center}
-
+> \renewcommand{\arraystretch}{1.4}
+> \begin{tabular}{@{} l p{8.5cm} @{}}
+> \toprule
+> **Concept** & **Significance**
+> \midrule
+> Orbital stability & The correct stability notion for moving systems:
+> only cross-orbit deviations matter
+> Transverse linearization & Reduces orbital stability to $(n{-}1)$-dim
+> LTV stability; removes the tangential ``nuisance'' direction
+> Floquet multipliers & Eigenvalues of the transverse monodromy matrix;
+> determine stability of periodic orbits
+> Moving Poincar\'e sections & Extend Poincar\'e analysis to non-periodic
+> trajectories; connect to the state transition matrix
+> Amplification ratio $\rho$ & Maximum singular value of $\PhiMat_\transverse$;
+> quantifies transverse error growth or contraction
+> Transverse LQR & Phase-varying feedback from the Riccati equation; the
+> optimal funnel controller
+> Riccati funnel & The LQR cost-to-go defines the funnel boundary; connects
+> geometric and algebraic views
+> \bottomrule
+> \end{tabular}
 
 
 This chapter has provided the mathematical backbone for everything that
@@ -823,7 +747,7 @@ passive transverse dynamics create a natural funnel toward impact, and the
 transverse LQR controller tightens this funnel using phase-varying gains
 that match the demands of each phase of the motion.
 
-In Chapter~5, we will see how underactuation constrains the transverse dynamics,
+In Chapter 5, we will see how underactuation constrains the transverse dynamics,
 creating geometric structure that can be *exploited* rather than merely
 tolerated.
 
@@ -831,82 +755,64 @@ tolerated.
 ## Exercises
 
 
-\begin{enumerate}[label=**4.\arabic*.**, leftmargin=1.5cm]
+1. **(Conceptual.)** Explain why a pendulum swinging on its limit
+   cycle (pumped by a periodic torque) is orbitally stable but *not*
+   Lyapunov stable. Sketch the phase portrait and identify the tangential
+   and transverse directions.
+2. **(Computation.)** For the Van der Pol oscillator
+   $\ddot{x} - \mu(1 - x^2)\dot{x} + x = 0$ with $\mu = 1$:
+3. Numerically find the limit cycle by simulating from
+   $(x, \dot{x}) = (3, 0)$ until transient effects decay.
+4. Compute the transverse linearization along the limit cycle.
+5. Compute the monodromy matrix and Floquet multipliers numerically.
+6. Verify that one multiplier of the full (2D) system is exactly 1.
 
-\item **(Conceptual.)** Explain why a pendulum swinging on its limit
-  cycle (pumped by a periodic torque) is orbitally stable but *not*
-  Lyapunov stable. Sketch the phase portrait and identify the tangential
-  and transverse directions.
-
-\item **(Computation.)** For the Van der Pol oscillator
-  $\ddot{x} - \mu(1 - x^2)\dot{x} + x = 0$ with $\mu = 1$:
-  \begin{enumerate}[label=(\alph*)]
-    \item Numerically find the limit cycle by simulating from
-      $(x, \dot{x}) = (3, 0)$ until transient effects decay.
-    \item Compute the transverse linearization along the limit cycle.
-    \item Compute the monodromy matrix and Floquet multipliers numerically.
-    \item Verify that one multiplier of the full (2D) system is exactly 1.
-  \end{enumerate}
-
-\item **(Transverse linearization.)** For the system
+- **(Transverse linearization.)** For the system
   $\dot{x}_1 = x_2 + u$, $\dot{x}_2 = -x_1^3$, consider the trajectory
   $\traj^*(t) = (\cos t, -\sin t)$ with appropriate $u^*$.
-  \begin{enumerate}[label=(\alph*)]
-    \item Find $u^*(t)$ such that $\traj^*$ is a solution.
-    \item Compute the full Jacobian $\bm{J}(t)$ along $\traj^*$.
-    \item Compute the transverse Jacobian $\Amat_\transverse(t)$.
-    \item Is the orbit stable open-loop? Design stabilizing transverse feedback.
-  \end{enumerate}
+  1. Find $u^*(t)$ such that $\traj^*$ is a solution.
+2. Compute the full Jacobian $\bm{J}(t)$ along $\traj^*$.
+3. Compute the transverse Jacobian $\Amat_\transverse(t)$.
+4. Is the orbit stable open-loop? Design stabilizing transverse feedback.
 
-\item **(Numerical project: Transverse LQR.)** For the double pendulum
-  from Exercise~3.4:
-  \begin{enumerate}[label=(\alph*)]
-    \item Compute a reference swing trajectory using direct collocation
-      (or load from a data file).
-    \item Compute the transverse linearization along the trajectory.
-    \item Solve the differential Riccati equation with $\bm{Q}(t)$ that
-      increases 10-fold near the terminal phase (``impact'').
-    \item Simulate the closed-loop system with random initial perturbations
-      and plot the transverse deviation $\norm{\bm{\xi}(t)}$ over time.
-    \item Compute the amplification ratio profile $\rho(0, s)$ and identify
-      the ``natural funnel'' phase.
-  \end{enumerate}
+- **(Numerical project: Transverse LQR.)** For the double pendulum
+  from Exercise 3.4:
+  1. Compute a reference swing trajectory using direct collocation
+   (or load from a data file).
+2. Compute the transverse linearization along the trajectory.
+3. Solve the differential Riccati equation with $\bm{Q}(t)$ that
+   increases 10-fold near the terminal phase (``impact'').
+4. Simulate the closed-loop system with random initial perturbations
+   and plot the transverse deviation $\norm{\bm{\xi}(t)}$ over time.
+5. Compute the amplification ratio profile $\rho(0, s)$ and identify
+   the ``natural funnel'' phase.
 
-\item **(Design.)** A walking robot with period-1 gait has Floquet
+- **(Design.)** A walking robot with period-1 gait has Floquet
   multipliers $\mu_1 = 0.9$, $\mu_2 = 1.1$, $\mu_3 = 0.5$.
-  \begin{enumerate}[label=(\alph*)]
-    \item Is the gait orbitally stable? Which mode is problematic?
-    \item Design a transverse feedback controller that places the unstable
-      multiplier $\mu_2$ at $0.6$. What gain is required?
-    \item After stabilization, what is the worst-case convergence rate
-      per stride?
-    \item How many strides does it take to reduce a 10\% transverse
-      deviation to 1\%?
-  \end{enumerate}
+  1. Is the gait orbitally stable? Which mode is problematic?
+2. Design a transverse feedback controller that places the unstable
+   multiplier $\mu_2$ at $0.6$. What gain is required?
+3. After stabilization, what is the worst-case convergence rate
+   per stride?
+4. How many strides does it take to reduce a 10\% transverse
+   deviation to 1\%?
 
-\item **(Philosophical.)** Compare the transverse LQR approach
+- **(Philosophical.)** Compare the transverse LQR approach
   (this chapter) with the standard trajectory-tracking LQR (linearize about
   $\traj^*(t)$, regulate $\bm{e} = \state - \traj^*(t)$ to zero).
-  \begin{enumerate}[label=(\alph*)]
-    \item Under what conditions do the two approaches give identical feedback
-      gains? (Hint: consider straight-line trajectories.)
-    \item Construct a numerical example where standard LQR uses significantly
-      more control effort than transverse LQR.
-    \item Discuss which approach is preferable for the golf swing and why.
-  \end{enumerate}
-
-\end{enumerate}
+  1. Under what conditions do the two approaches give identical feedback
+   gains? (Hint: consider straight-line trajectories.)
+2. Construct a numerical example where standard LQR uses significantly
+   more control effort than transverse LQR.
+3. Discuss which approach is preferable for the golf swing and why.
 
 
-\begin{center}
-  \rule{0.5\textwidth}{0.4pt}\\[0.5cm]
-  {\small\itshape
-  The pendulum does not care if you are watching at noon or midnight.\\
-  Its orbit knows no clock.\\[0.2cm]
-  Stability is not arrival. It is the promise\\
-  that the motion, once begun, will keep its shape---\\
-  even when the world pushes back.}
-\end{center}
+> ---
+> The pendulum does not care if you are watching at noon or midnight.
+> Its orbit knows no clock.
+> Stability is not arrival. It is the promise
+> that the motion, once begun, will keep its shape---
+> even when the world pushes back.}
 
 
 ## Python Implementations {#sec-vol2-ch4-python}
