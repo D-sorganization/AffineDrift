@@ -31,7 +31,9 @@ Two hinges (frictionless, perfect revolutes):
 
 Generalized coordinates:
 
-\bm{q} =  \theta_1 \\ \theta_2
+$$
+\bm{q} = \begin{pmatrix} \theta_1 \\ \theta_2 \end{pmatrix}
+$$
 
 where $\theta_1$ is the angle of link 1 (measured from some reference, say vertical), and $\theta_2$ is the **relative** angle of link 2 with respect to link 1.
 
@@ -77,51 +79,83 @@ Link 2 rotates about the elbow, which is itself moving. This is trickier.
 
 The elbow is at position:
 
+$$
 \bm{r}_{\text{elbow}} = L_1 (\sin \theta_1, -\cos \theta_1)
+$$
 
 Its velocity is:
 
+$$
 \dot{\bm{r}}_{\text{elbow}} = L_1 \dot{\theta}_1 (\cos \theta_1, \sin \theta_1)
+$$
 
 The center of mass of link 2 is at distance $L_{2,\text{cm}}$ from the elbow, at angle $\theta_1 + \theta_2$:
 
+$$
 \bm{r}_{\text{cm},2} = L_1 (\sin \theta_1, -\cos \theta_1) + L_{2,\text{cm}} (\sin(\theta_1 + \theta_2), -\cos(\theta_1 + \theta_2))
+$$
 
 Its velocity is:
 
-\dot{\bm{r}}_{\text{cm},2} &= L_1 \dot{\theta}_1 (\cos \theta_1, \sin \theta_1) 
+$$
+\begin{aligned}
+\dot{\bm{r}}_{\text{cm},2} &= L_1 \dot{\theta}_1 (\cos \theta_1, \sin \theta_1) \\
 &\quad + L_{2,\text{cm}} (\dot{\theta}_1 + \dot{\theta}_2) (\cos(\theta_1 + \theta_2), \sin(\theta_1 + \theta_2))
+\end{aligned}
+$$
 
 The kinetic energy of link 2 is:
 
+$$
 T_2 = \frac{1}{2} M_2 |\dot{\bm{r}}_{\text{cm},2}|^2 + \frac{1}{2} I_2 (\dot{\theta}_1 + \dot{\theta}_2)^2
+$$
 
 Expanding $|\dot{\bm{r}}_{\text{cm},2}|^2$:
 
-|\dot{\bm{r}}_{\text{cm},2}|^2 &= \big[ L_1 \dot{\theta}_1 \cos \theta_1 + L_{2,\text{cm}} (\dot{\theta}_1 + \dot{\theta}_2) \cos(\theta_1 + \theta_2) \big]^2 
+$$
+\begin{aligned}
+|\dot{\bm{r}}_{\text{cm},2}|^2 &= \big[ L_1 \dot{\theta}_1 \cos \theta_1 + L_{2,\text{cm}} (\dot{\theta}_1 + \dot{\theta}_2) \cos(\theta_1 + \theta_2) \big]^2 \\
 &\quad + \big[ L_1 \dot{\theta}_1 \sin \theta_1 + L_{2,\text{cm}} (\dot{\theta}_1 + \dot{\theta}_2) \sin(\theta_1 + \theta_2) \big]^2
+\end{aligned}
+$$
 
 After expanding and simplifying (using $\cos^2 + \sin^2 = 1$ and $\cos \alpha \cos \beta + \sin \alpha \sin \beta = \cos(\alpha - \beta)$):
 
-|\dot{\bm{r}}_{\text{cm},2}|^2 &= L_1^2 \dot{\theta}_1^2 + L_{2,\text{cm}}^2 (\dot{\theta}_1 + \dot{\theta}_2)^2 
+$$
+\begin{aligned}
+|\dot{\bm{r}}_{\text{cm},2}|^2 &= L_1^2 \dot{\theta}_1^2 + L_{2,\text{cm}}^2 (\dot{\theta}_1 + \dot{\theta}_2)^2 \\
 &\quad + 2 L_1 L_{2,\text{cm}} \dot{\theta}_1 (\dot{\theta}_1 + \dot{\theta}_2) \cos \theta_2
+\end{aligned}
+$$
 
 So:
 
-T_2 &= \frac{1}{2} M_2 \big[ L_1^2 \dot{\theta}_1^2 + L_{2,\text{cm}}^2 (\dot{\theta}_1 + \dot{\theta}_2)^2 + 2 L_1 L_{2,\text{cm}} \dot{\theta}_1 (\dot{\theta}_1 + \dot{\theta}_2) \cos \theta_2 \big] 
+$$
+\begin{aligned}
+T_2 &= \frac{1}{2} M_2 \big[ L_1^2 \dot{\theta}_1^2 + L_{2,\text{cm}}^2 (\dot{\theta}_1 + \dot{\theta}_2)^2 + 2 L_1 L_{2,\text{cm}} \dot{\theta}_1 (\dot{\theta}_1 + \dot{\theta}_2) \cos \theta_2 \big] \\
 &\quad + \frac{1}{2} I_2 (\dot{\theta}_1 + \dot{\theta}_2)^2
+\end{aligned}
+$$
 
 ### Total Kinetic Energy
 
-T &= T_1 + T_2 
-&= \frac{1}{2} I_1 \dot{\theta}_1^2 + \frac{1}{2} M_2 \Big[ L_1^2 \dot{\theta}_1^2 + L_{2,\text{cm}}^2 (\dot{\theta}_1 + \dot{\theta}_2)^2 
+$$
+\begin{aligned}
+T &= T_1 + T_2 \\
+&= \frac{1}{2} I_1 \dot{\theta}_1^2 + \frac{1}{2} M_2 \Big[ L_1^2 \dot{\theta}_1^2 + L_{2,\text{cm}}^2 (\dot{\theta}_1 + \dot{\theta}_2)^2 \\
 &\quad + 2 L_1 L_{2,\text{cm}} \dot{\theta}_1 (\dot{\theta}_1 + \dot{\theta}_2) \cos \theta_2 \Big] + \frac{1}{2} I_2 (\dot{\theta}_1 + \dot{\theta}_2)^2
+\end{aligned}
+$$
 
 Collecting terms:
 
-T &= \frac{1}{2} (I_1 + M_2 L_1^2) \dot{\theta}_1^2 
-&\quad + \frac{1}{2} (M_2 L_{2,\text{cm}}^2 + I_2) (\dot{\theta}_1 + \dot{\theta}_2)^2 
+$$
+\begin{aligned}
+T &= \frac{1}{2} (I_1 + M_2 L_1^2) \dot{\theta}_1^2 \\
+&\quad + \frac{1}{2} (M_2 L_{2,\text{cm}}^2 + I_2) (\dot{\theta}_1 + \dot{\theta}_2)^2 \\
 &\quad + M_2 L_1 L_{2,\text{cm}} \dot{\theta}_1 (\dot{\theta}_1 + \dot{\theta}_2) \cos \theta_2
+\end{aligned}
+$$
 
 ::: {.callout-tip}
 ## Why Kinetic Energy Matters
@@ -147,18 +181,26 @@ The potential energy of a mass at height $h$ is $V = Mgh$ (relative to some refe
 
 For link 1, the center of mass is at height:
 
+$$
 h_1 = -L_{1,\text{cm}} \cos \theta_1
+$$
 
 (Taking the shoulder as the reference, and negative because we measure downward as negative.)
 
 For link 2, the center of mass is at height:
 
+$$
 h_2 = -L_1 \cos \theta_1 - L_{2,\text{cm}} \cos(\theta_1 + \theta_2)
+$$
 
 Total potential energy:
 
-V &= M_1 g h_1 + M_2 g h_2 
+$$
+\begin{aligned}
+V &= M_1 g h_1 + M_2 g h_2 \\
 &= -M_1 g L_{1,\text{cm}} \cos \theta_1 - M_2 g \big[ L_1 \cos \theta_1 + L_{2,\text{cm}} \cos(\theta_1 + \theta_2) \big]
+\end{aligned}
+$$
 
 ::: {.callout-tip}
 ## The Potential Energy Landscape
@@ -178,7 +220,7 @@ Now we use the Lagrangian formalism.
 
 The Lagrangian is defined as:
 
-\mathcal{L} = T - V
+$$\mathcal{L} = T - V$$
 
 It's the kinetic energy minus the potential energy.
 
@@ -186,7 +228,9 @@ It's the kinetic energy minus the potential energy.
 
 The Euler-Lagrange equations state that the equations of motion are:
 
+$$
 \frac{d}{dt} \left( \frac{\partial \mathcal{L}}{\partial \dot{q}_i} \right) - \frac{\partial \mathcal{L}}{\partial q_i} = \tau_i
+$$
 
 for each coordinate $q_i$. Here, $\tau_i$ is the applied torque (from muscles).
 
@@ -202,27 +246,41 @@ We need:
 
 From $T$ (Equation @eq:ch03_T_rearranged), the terms involving $\dot{\theta}_1$ are:
 
-\frac{\partial T}{\partial \dot{\theta}_1} &= (I_1 + M_2 L_1^2) \dot{\theta}_1 + (M_2 L_{2,\text{cm}}^2 + I_2) (\dot{\theta}_1 + \dot{\theta}_2) 
-&\quad + M_2 L_1 L_{2,\text{cm}} [(\dot{\theta}_1 + \dot{\theta}_2) + \dot{\theta}_1] \cos \theta_2 
-&= (I_1 + M_2 L_1^2) \dot{\theta}_1 + (M_2 L_{2,\text{cm}}^2 + I_2) (\dot{\theta}_1 + \dot{\theta}_2) 
+$$
+\begin{aligned}
+\frac{\partial T}{\partial \dot{\theta}_1} &= (I_1 + M_2 L_1^2) \dot{\theta}_1 + (M_2 L_{2,\text{cm}}^2 + I_2) (\dot{\theta}_1 + \dot{\theta}_2) \\
+&\quad + M_2 L_1 L_{2,\text{cm}} [(\dot{\theta}_1 + \dot{\theta}_2) + \dot{\theta}_1] \cos \theta_2 \\
+&= (I_1 + M_2 L_1^2) \dot{\theta}_1 + (M_2 L_{2,\text{cm}}^2 + I_2) (\dot{\theta}_1 + \dot{\theta}_2) \\
 &\quad + M_2 L_1 L_{2,\text{cm}} (2 \dot{\theta}_1 + \dot{\theta}_2) \cos \theta_2
+\end{aligned}
+$$
 
 Taking the time derivative:
 
-\frac{d}{dt} \left( \frac{\partial T}{\partial \dot{\theta}_1} \right) &= (I_1 + M_2 L_1^2) \ddot{\theta}_1 + (M_2 L_{2,\text{cm}}^2 + I_2) (\ddot{\theta}_1 + \ddot{\theta}_2) 
-&\quad + M_2 L_1 L_{2,\text{cm}} (2 \ddot{\theta}_1 + \ddot{\theta}_2) \cos \theta_2 
+$$
+\begin{aligned}
+\frac{d}{dt} \left( \frac{\partial T}{\partial \dot{\theta}_1} \right) &= (I_1 + M_2 L_1^2) \ddot{\theta}_1 + (M_2 L_{2,\text{cm}}^2 + I_2) (\ddot{\theta}_1 + \ddot{\theta}_2) \\
+&\quad + M_2 L_1 L_{2,\text{cm}} (2 \ddot{\theta}_1 + \ddot{\theta}_2) \cos \theta_2 \\
 &\quad - M_2 L_1 L_{2,\text{cm}} (2 \dot{\theta}_1 + \dot{\theta}_2) \dot{\theta}_2 \sin \theta_2
+\end{aligned}
+$$
 
 Now the partial of $T$ with respect to $\theta_1$:
 
-\frac{\partial T}{\partial \theta_1} &= 0
+$$
+\frac{\partial T}{\partial \theta_1} = 0
+$$
 
 (since $T$ doesn't depend on $\theta_1$ explicitly, only on $\dot{\theta}_1$).
 
 The partial of $V$ with respect to $\theta_1$:
 
-\frac{\partial V}{\partial \theta_1} &= M_1 g L_{1,\text{cm}} \sin \theta_1 + M_2 g L_1 \sin \theta_1 + M_2 g L_{2,\text{cm}} \sin(\theta_1 + \theta_2) 
+$$
+\begin{aligned}
+\frac{\partial V}{\partial \theta_1} &= M_1 g L_{1,\text{cm}} \sin \theta_1 + M_2 g L_1 \sin \theta_1 + M_2 g L_{2,\text{cm}} \sin(\theta_1 + \theta_2) \\
 &= (M_1 L_{1,\text{cm}} + M_2 L_1) g \sin \theta_1 + M_2 g L_{2,\text{cm}} \sin(\theta_1 + \theta_2)
+\end{aligned}
+$$
 
 So:
 
@@ -259,7 +317,9 @@ These equations are complicated because the double pendulum is a coupled system.
 
 The Euler-Lagrange equations are hard to parse. Let's rewrite them in the standard form:
 
+$$
 \bm{M}(\bm{q}) \ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{\tau}
+$$
 
 where:
 - $\bm{M}(\bm{q})$ is the **mass matrix** (moment of inertia matrix).
@@ -271,15 +331,22 @@ where:
 
 Collecting all terms with $\ddot{\theta}_1$ and $\ddot{\theta}_2$:
 
-\bm{M}(\bm{q}) =
-M_{11}(\theta_2) & M_{12}(\theta_2) 
+$$
+\bm{M}(\bm{q}) = \begin{bmatrix}
+M_{11}(\theta_2) & M_{12}(\theta_2) \\
 M_{21}(\theta_2) & M_{22}
+\end{bmatrix}
+$$
 
 where:
 
-M_{11}(\theta_2) &= I_1 + M_2 L_1^2 + M_2 L_{2,\text{cm}}^2 + I_2 + 2 M_2 L_1 L_{2,\text{cm}} \cos \theta_2 
-M_{12}(\theta_2) &= M_{21}(\theta_2) = M_2 L_{2,\text{cm}}^2 + I_2 + M_2 L_1 L_{2,\text{cm}} \cos \theta_2 
+$$
+\begin{aligned}
+M_{11}(\theta_2) &= I_1 + M_2 L_1^2 + M_2 L_{2,\text{cm}}^2 + I_2 + 2 M_2 L_1 L_{2,\text{cm}} \cos \theta_2 \\
+M_{12}(\theta_2) &= M_{21}(\theta_2) = M_2 L_{2,\text{cm}}^2 + I_2 + M_2 L_1 L_{2,\text{cm}} \cos \theta_2 \\
 M_{22} &= M_2 L_{2,\text{cm}}^2 + I_2
+\end{aligned}
+$$
 
 Key observation: $M_{11}$ depends on $\theta_2$ (the elbow angle). This means the effective inertia at the shoulder depends on whether the elbow is bent. An extended arm ($\theta_2 \approx 0$) has higher inertia than a bent arm ($\theta_2$ large and negative).
 
@@ -287,25 +354,38 @@ Key observation: $M_{11}$ depends on $\theta_2$ (the elbow angle). This means th
 
 Collecting all terms with $\dot{\theta}_1 \dot{\theta}_2$ and $\dot{\theta}^2$:
 
-\bm{C}(\bm{q}, \dot{\bm{q}}) =
-0 & C_{12}(\bm{q}, \dot{\bm{q}}) 
+$$
+\bm{C}(\bm{q}, \dot{\bm{q}}) = \begin{bmatrix}
+0 & C_{12}(\bm{q}, \dot{\bm{q}}) \\
 C_{21}(\bm{q}, \dot{\bm{q}}) & 0
+\end{bmatrix}
+$$
 
 where:
 
-C_{12}(\bm{q}, \dot{\bm{q}}) &= -M_2 L_1 L_{2,\text{cm}} (2 \dot{\theta}_1 + \dot{\theta}_2) \sin \theta_2 
+$$
+\begin{aligned}
+C_{12}(\bm{q}, \dot{\bm{q}}) &= -M_2 L_1 L_{2,\text{cm}} (2 \dot{\theta}_1 + \dot{\theta}_2) \sin \theta_2 \\
 C_{21}(\bm{q}, \dot{\bm{q}}) &= M_2 L_1 L_{2,\text{cm}} \dot{\theta}_1^2 \sin \theta_2
+\end{aligned}
+$$
 
-Actually, the standard form is:
-$$\bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} =  C_{12} \dot{\theta}_2 \\ C_{21} \dot{\theta}_1 $$
+More precisely, the standard form is:
+
+$$
+\bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} = \begin{bmatrix} C_{12} \dot{\theta}_2 \\ C_{21} \dot{\theta}_1 \end{bmatrix}
+$$
 
 But it's more standard to write the Coriolis matrix such that $\bm{C} \dot{\bm{q}}$ gives the full velocity-dependent torque. We'll use the convention where the $(i,j)$ entry couples the velocity of joint $j$ to joint $i$.
 
 ### The Gravity Vector
 
-\bm{g}(\bm{q}) =
-(M_1 L_{1,\text{cm}} + M_2 L_1) g \sin \theta_1 + M_2 g L_{2,\text{cm}} \sin(\theta_1 + \theta_2) 
+$$
+\bm{g}(\bm{q}) = \begin{bmatrix}
+(M_1 L_{1,\text{cm}} + M_2 L_1) g \sin \theta_1 + M_2 g L_{2,\text{cm}} \sin(\theta_1 + \theta_2) \\
 M_2 g L_{2,\text{cm}} \sin(\theta_1 + \theta_2)
+\end{bmatrix}
+$$
 
 ## Numerical Example: A Realistic Golf Swing
 
@@ -321,26 +401,38 @@ Suppose at impact, the arm is nearly extended:
 
 The mass matrix at this configuration:
 
-M_{11} &\approx 0.015 + 2.5 \cdot 0.35^2 + 2.5 \cdot 0.5^2 + 0.4 + 2 \cdot 2.5 \cdot 0.35 \cdot 0.5 \cos(-5°) 
-&\approx 0.015 + 0.306 + 0.625 + 0.4 + 0.872 
+$$
+\begin{aligned}
+M_{11} &\approx 0.015 + 2.5 \cdot 0.35^2 + 2.5 \cdot 0.5^2 + 0.4 + 2 \cdot 2.5 \cdot 0.35 \cdot 0.5 \cos(-5°) \\
+&\approx 0.015 + 0.306 + 0.625 + 0.4 + 0.872 \\
 &\approx 2.22 \text{ kg m}^2
+\end{aligned}
+$$
 
 (This is the effective moment of inertia of the entire arm+club system about the shoulder.)
 
 The gravitational torques:
 
-g_1 &= (2.5 \cdot 0.175 + 2.5 \cdot 0.35) \cdot 9.81 \cdot \sin(0°) + 2.5 \cdot 9.81 \cdot 0.5 \cdot \sin(-5°) 
-&\approx 0 - 10.6 \text{ N m} 
+$$
+\begin{aligned}
+g_1 &= (2.5 \cdot 0.175 + 2.5 \cdot 0.35) \cdot 9.81 \cdot \sin(0°) + 2.5 \cdot 9.81 \cdot 0.5 \cdot \sin(-5°) \\
+&\approx 0 - 10.6 \text{ N m} \\
 &\approx -10.6 \text{ N m}
+\end{aligned}
+$$
 
 (Negative means gravity is pulling the arm downward/backward.)
 
 The Coriolis term at the elbow:
 
-C_{21} \dot{\theta}_1 &= M_2 L_1 L_{2,\text{cm}} \dot{\theta}_1^2 \sin \theta_2 
-&= 2.5 \cdot 0.35 \cdot 0.5 \cdot 10.47^2 \cdot \sin(-5°) 
-&\approx 2.5 \cdot 0.35 \cdot 0.5 \cdot 109.6 \cdot (-0.087) 
+$$
+\begin{aligned}
+C_{21} \dot{\theta}_1 &= M_2 L_1 L_{2,\text{cm}} \dot{\theta}_1^2 \sin \theta_2 \\
+&= 2.5 \cdot 0.35 \cdot 0.5 \cdot 10.47^2 \cdot \sin(-5°) \\
+&\approx 2.5 \cdot 0.35 \cdot 0.5 \cdot 109.6 \cdot (-0.087) \\
 &\approx -6.6 \text{ N m}
+\end{aligned}
+$$
 
 ::: {.callout-tip}
 ## What These Numbers Mean

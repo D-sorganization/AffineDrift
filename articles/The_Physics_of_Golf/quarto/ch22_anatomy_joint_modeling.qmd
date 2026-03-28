@@ -78,7 +78,15 @@ A revolute joint allows one rotation about a fixed axis. Symbol: R.
 **Constraints:** $c = 5$. The joint prevents translation in all directions and rotation about the other two axes.
 
 **Constraint equation:** If the axis is $\bm{u}$ in frame A, and bodies are at relative orientation $\bm{R}$, the constraints on relative position and non-axis rotations prevent unwanted motion:
-__DISPLAY_MATH_0__
+
+$$
+\begin{aligned}
+\bm{p}_{AB} &= 0 \quad \text{(position is zero at joint frame)}\\
+\bm{R}_{AB}(:, 1) \cdot \bm{u} &= \bm{u} \quad \text{(rotation axis preserved)}\\
+\bm{R}_{AB}(:, 2) \cdot \bm{u} &= 0 \quad \text{(perpendicular to axis)}\\
+\bm{R}_{AB}(:, 3) \cdot \bm{u} &= 0 \quad \text{(perpendicular to axis)}
+\end{aligned}
+$$
 
 **Example in golf:** The knee is modeled as a revolute joint: the tibia rotates about a horizontal axis through the knee.
 
@@ -91,7 +99,13 @@ A prismatic joint allows translation along a fixed axis. Symbol: P.
 **Constraints:** $c = 5$. All rotations are prevented, and translations perpendicular to the axis are blocked.
 
 **Constraint equation:** If the axis is $\bm{u}$:
-__DISPLAY_MATH_1__
+
+$$
+\begin{aligned}
+\bm{R}_{AB} &= \bm{I} \quad \text{(no relative rotation)}\\
+\bm{p}_{AB} \cdot \bm{u}^\perp &= 0 \quad \text{(translation only along } \bm{u}\text{)}
+\end{aligned}
+$$
 
 **Example in golf:** Prismatic joints don't appear in the human body. They appear in golf machines---a robot that extends its arm along a rail.
 
@@ -124,7 +138,13 @@ A universal joint (Cardan joint or Hooke's coupling) allows rotation about two p
 **Constraints:** $c = 4$. Prevents translation and rotation about one axis.
 
 **Constraint equation:** If the two axes are $\bm{u}_1$ and $\bm{u}_2$ (perpendicular):
-__DISPLAY_MATH_2__
+
+$$
+\begin{aligned}
+\bm{p}_{AB} &= 0\\
+\bm{R}_{AB} \cdot (\bm{u}_1 \times \bm{u}_2) &= \bm{u}_1 \times \bm{u}_2 \quad \text{(no rotation perpendicular to plane)}
+\end{aligned}
+$$
 
 **Important property:** Unlike a spherical joint, a universal joint can introduce *kinematic singularities*. When the two rotation axes align, the joint locks and loses controllability. This is why steering joints in cars use a universal joint with careful geometry to avoid the steering axis aligning with the input shaft axis.
 

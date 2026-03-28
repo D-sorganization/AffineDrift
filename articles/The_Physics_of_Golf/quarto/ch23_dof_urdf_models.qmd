@@ -190,7 +190,12 @@ Actually, let me simplify for now. Let's focus on the upper body and arms (ignor
 
 **Open chain (if the two hands were not gripping the same club):**
 
-__DISPLAY_MATH_8__
+$$
+\begin{aligned}
+\sum f_i &= 3 + 3 + 3 + 2 + 2 + 3 + 2 + 2 \\
+&= 20 \text{ DOF}
+\end{aligned}
+$$
 
 **Bodies:** Pelvis + Lumbar + Thorax + Lead Upper Arm + Lead Forearm + Lead Hand + Trail Upper Arm + Trail Forearm + Trail Hand = 9 bodies (plus the ground/pelvis base, so $N = 10$).
 
@@ -353,7 +358,9 @@ In this section, we characterize the structure of these infinite solutions: the 
 
 Let's formalize the redundancy. Suppose the task is to control the position and orientation of the club head. We call this the **task space**:
 
-__DISPLAY_MATH_0__
+$$
+\bm{x} = h(\bm{q}) \in \mathbb{R}^6
+$$ {#eq-ch23_task_space}
 
 where $\bm{q} \in \mathbb{R}^n$ is the vector of joint angles ($n \approx 25$--$30$ for a full-body golf swing model) and $h$ is the forward kinematics function that maps joint angles to club head pose.
 
@@ -361,7 +368,9 @@ The task is 6-dimensional. The system is $n$-dimensional. Since $n > 6$, the sys
 
 For a full-body golf swing model with $n = 25$, we have:
 
-__DISPLAY_MATH_1__
+$$
+\text{Redundancy} = 25 - 6 = 19 \text{ DOF of redundancy}
+$$ {#eq-ch23_redundancy_dof}
 
 This means: *you can move your joints while keeping the club head fixed*. The only motions available are those that don't move the club head. These are called **null-space motions**.
 
@@ -369,7 +378,9 @@ This means: *you can move your joints while keeping the club head fixed*. The on
 
 To understand null-space motion mathematically, we differentiate the task:
 
-__DISPLAY_MATH_2__
+$$
+\dot{\bm{x}} = \frac{\partial h}{\partial \bm{q}} \dot{\bm{q}} = \bm{J}(\bm{q}) \dot{\bm{q}}
+$$ {#eq-ch23_task_jacobian}
 
 where $\bm{J}(\bm{q}) \in \mathbb{R}^{6 \times n}$ is the **task Jacobian**. It relates club head velocity (task space) to joint velocities (joint space).
 
@@ -379,7 +390,9 @@ Since $\bm{J}$ has more columns than rows ($n > 6$), it has a non-trivial **null
 ## Null Space of the Jacobian
 The null space of the Jacobian is the set of all joint velocities that produce zero club head velocity:
 
-__DISPLAY_MATH_3__
+$$
+\mathcal{N}(\bm{J}) = \{\dot{\bm{q}}_0 : \bm{J} \dot{\bm{q}}_0 = 0\}
+$$ {#eq-ch23_null_space_def}
 
 Geometrically, this is the set of directions in joint space that are orthogonal to all rows of $\bm{J}$.
 
@@ -394,7 +407,9 @@ Now consider the inverse problem: given a desired club head position $\bm{x}^*$,
 
 The set of all solutions is:
 
-__DISPLAY_MATH_4__
+$$
+\mathcal{M}(\bm{x}^*) = \{\bm{q} : h(\bm{q}) = \bm{x}^*\}
+$$ {#eq-ch23_solution_manifold}
 
 This set is called the **solution manifold**. It is a submanifold of the joint configuration space $\mathbb{R}^n$.
 
@@ -530,7 +545,9 @@ An instructor might optimize for one criterion (minimal shoulder strain), while 
 ## Null-Space Optimization in the ZTCF
 Recall from Chapters @ch:05_affine_structure and 6 that the system evolves under drift and control:
 
-__DISPLAY_MATH_5__
+$$
+\dot{\bm{x}}_{\text{state}} = \bm{f}(\bm{x}_{\text{state}}) + \bm{G}(\bm{x}_{\text{state}}) \bm{u}
+$$ {#eq-ch23_ztcf_system}
 
 In the golf swing, the state includes joint angles and velocities. The control is muscular torque.
 
@@ -538,7 +555,9 @@ Now, here is the key insight: **redundancy means the control matrix $\bm{G}$ has
 
 Specifically, suppose we decompose the control:
 
-__DISPLAY_MATH_6__
+$$
+\bm{u} = \bm{u}_{\text{task}} + \bm{u}_{\text{null}}
+$$ {#eq-ch23_control_decomposition}
 
 where:
 - $\bm{u}_{\text{task}}$ is a component that directly drives the task (club head motion).
@@ -565,7 +584,9 @@ This layered control is the hallmark of expertise.
 
 If we want to command a desired club head velocity $\dot{\bm{x}}_{\text{desired}}$ while optimizing in the null space, we solve:
 
-__DISPLAY_MATH_7__
+$$
+\dot{\bm{q}} = \bm{J}^{\dagger} \dot{\bm{x}}_{\text{desired}} + (\bm{I} - \bm{J}^{\dagger} \bm{J}) \bm{z}
+$$ {#eq-ch23_pseudoinverse_solution}
 
 where:
 - $\bm{J}^{\dagger}$ is the Moore-Penrose pseudoinverse: $(J^T J)^{-1} J^T$.

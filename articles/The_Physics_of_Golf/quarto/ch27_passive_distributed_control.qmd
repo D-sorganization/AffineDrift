@@ -127,10 +127,16 @@ Here is the key idea: *before the downswing begins*, the brain computes the *imp
 
 
 Mathematically, the control input changes from a time-varying torque signal $\bm{u}(t)$ to a set of fixed impedance parameters:
-__DISPLAY_MATH_2__
+
+$$
+\{\bm{K}, \bm{D}, \bm{q}_0\} \quad \text{(set once before the swing)}
+$$
 
 During the downswing, the actual torque at each joint is then:
-__DISPLAY_MATH_3__
+
+$$
+\bm{\tau}(t) = -\bm{K}(\bm{q}(t) - \bm{q}_0) - \bm{D}\dot{\bm{q}}(t) + \bm{\tau}_{\mathrm{feedforward}}(t).
+$$
 
 
 The three terms break down as follows:
@@ -147,7 +153,14 @@ Compare this to the traditional view:
 **Traditional View**
 
 The brain computes $\bm{u}(t)$ at every millisecond:
-__DISPLAY_MATH_11__
+
+$$
+\begin{aligned}
+\text{Computational} &\text{ cost:} \\
+&\approx 20 \text{ DOF} \times 1000 \text{ Hz} \\
+&= 20{,}000 \text{ decisions/s}
+\end{aligned}
+$$
 
 Requires:
 - Fast forward models
@@ -161,11 +174,18 @@ Vulnerable to:
 - Model error
 
 
-\hfill
 **Impedance Control View**
 
 The brain computes impedance parameters once:
-__DISPLAY_MATH_12__
+
+$$
+\begin{aligned}
+\text{Computational} &\text{ cost:} \\
+&\approx 40 \text{ parameters} \\
+&\text{ (20 stiffness + 20 damping)} \\
+&+ \text{pre-computed feedforward}
+\end{aligned}
+$$
 
 Requires:
 - Coarse models (body morphology)
@@ -194,7 +214,10 @@ This is why training and practice are so important: they allow the motor system 
 {#sec:passive_ztcf}
 
 Recall from Chapter @ch:05_affine_structure the Zero Torque Control Fraction (ZTCF) decomposition:
-__DISPLAY_MATH_4__
+
+$$
+\dot{\bm{x}} = f(\bm{x}) + G(\bm{x})\bm{u}.
+$$
 
 The drift $f(\bm{x})$ represents the system's natural evolution without control. If you released the golfer's muscles, the arms would fall under gravity and Coriolis forces---this is the drift.
 
@@ -203,10 +226,15 @@ How do passive impedance forces fit into this framework?
 
 If the golfer pre-sets muscle stiffness $\bm{K}$ and damping $\bm{D}$, these are *automatic forces*. They are not part of the feedforward control $G(\bm{x})\bm{u}$. Instead, they modify the *drift field itself*:
 
-__DISPLAY_MATH_5__
+$$
+\dot{\bm{x}} = f_{\mathrm{original}}(\bm{x}) + f_{\mathrm{impedance}}(\bm{x}) + G(\bm{x})\bm{u}_{\mathrm{feedforward}}.
+$$
 
 The impedance-augmented drift becomes:
-__DISPLAY_MATH_6__
+
+$$
+f_{\mathrm{impedance}}(\bm{x}) = \begin{bmatrix} \dot{\bm{q}} \\ -\bm{M}^{-1}(\bm{q})[\bm{K}(\bm{q}-\bm{q}_0) + \bm{D}\dot{\bm{q}}] \end{bmatrix}.
+$$
 
 
 This means the ZTCF---the fraction of the motion explained by gravity, inertia, and Coriolis forces *alone*---increases dramatically when impedance is included. The original drift accounts for maybe 40--50\% of the swing. The impedance-augmented drift accounts for 70--80\% (estimated from simulation studies comparing ZTCF trajectories with and without pre-set impedance; experimental validation with EMG-derived stiffness profiles remains an active area of research).
@@ -352,24 +380,34 @@ A *Lyapunov function* is a scalar-valued function $V(\bm{x})$ that measures "dis
 
 For a passively controlled system with stiffness $\bm{K}$, damping $\bm{D}$, and desired trajectory $\bm{q}_d(t)$, a natural Lyapunov function is the sum of kinetic and potential energy:
 
-__DISPLAY_MATH_7__
+$$
+V(\bm{q}, \dot{\bm{q}}) = \frac{1}{2}\dot{\bm{q}}^T \bm{M}(\bm{q}) \dot{\bm{q}} + \frac{1}{2}(\bm{q} - \bm{q}_d)^T \bm{K} (\bm{q} - \bm{q}_d).
+$$
 
 
 The first term is the kinetic energy. The second term is the "elastic potential energy" stored in the impedance (spring-like stiffness).
 
 Now, compute the time derivative along the trajectory:
-__DISPLAY_MATH_8__
+
+$$
+\dot{V} = \dot{\bm{q}}^T \bm{M} \ddot{\bm{q}} + \frac{1}{2}\dot{\bm{q}}^T \dot{\bm{M}} \dot{\bm{q}} + (\bm{q} - \bm{q}_d)^T \bm{K} \dot{\bm{q}}.
+$$
 
 Substituting the equation of motion $\bm{M}\ddot{\bm{q}} = -\bm{K}(\bm{q}-\bm{q}_d) - \bm{D}\dot{\bm{q}} + \text{other forces}$:
 
-__DISPLAY_MATH_9__
+$$
+\dot{V} = -\dot{\bm{q}}^T \bm{D} \dot{\bm{q}} + \text{other force terms}.
+$$
 
 If damping is sufficiently large, the term $-\dot{\bm{q}}^T \bm{D} \dot{\bm{q}}$ dominates. Since this term is negative (damping always dissipates energy), we have $\dot{V} < 0$.
 
 ::: {.callout-important}
 ## Passive Stability Condition
 If a system is controlled by a passive impedance (stiffness + damping) and the damping is sufficiently large, then:
-__DISPLAY_MATH_10__
+
+$$
+\dot{V} = -\dot{\bm{q}}^T \bm{D} \dot{\bm{q}} + \text{(small perturbation terms)} < 0.
+$$
 
 This implies the Lyapunov function decreases, and the system is Lyapunov-stable: perturbations decay exponentially, and the system returns to the desired trajectory.
 :::
@@ -520,14 +558,12 @@ Gravity, inertia, and Coriolis forces shape the motion through the drift field $
 
 The kinetic chain physics couples the segments; energy flows from proximal to distal naturally.
 
-\hfill
 **Impedance**
 
 The muscles pre-set stiffness and damping, augmenting the drift and enabling passive stability.
 
 Spinal circuits maintain baseline control with minimal brain oversight.
 
-\hfill
 **Feedforward Drive**
 
 The motor cortex pre-computes a trajectory and provides a feedforward command $\bm{\tau}_{\mathrm{ff}}$ that biases the motion.

@@ -116,7 +116,12 @@ $$\bm{F}^M = \begin{pmatrix} 500 \\ 300 \end{pmatrix} \, \mathrm{N}.$$
 The joint torques are:
 $$\boldsymbol{\tau} = \bm{R}^T \bm{F}^M = \begin{pmatrix} 0.05 & 0 \\ 0.02 & 0.04 \end{pmatrix} \begin{pmatrix} 500 \\ 300 \end{pmatrix}.$$
 
-__DISPLAY_MATH_5__
+$$
+\begin{aligned}
+\tau_{\text{shoulder}} &= 0.05 \times 500 + 0.02 \times 300 = 25 + 6 = 31 \, \mathrm{N \cdot m}. \\
+\tau_{\text{elbow}} &= 0 \times 500 + 0.04 \times 300 = 0 + 12 = 12 \, \mathrm{N \cdot m}.
+\end{aligned}
+$$
 
 Note that muscle 2 contributes to both joints: it generates 6 N$\cdot$m at the shoulder and 12 N$\cdot$m at the elbow.
 :::
@@ -197,7 +202,9 @@ $$\bm{M}(\bm{q})\ddot{\bm{q}} + \bm{C}(\bm{q},\dot{\bm{q}})\dot{\bm{q}} + \bm{g}
 
 Why not write them in terms of muscle forces $\bm{F}^M$?
 
-__DISPLAY_MATH_4__
+$$
+\bm{M}(\bm{q})\ddot{\bm{q}} + \bm{C}(\bm{q},\dot{\bm{q}})\dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{R}(\bm{q})^T \bm{F}^M.
+$$
 
 We could. But there are several reasons why joint torques are preferred:
 
@@ -292,7 +299,13 @@ Imagine a chain of pulleys, where a rope passes through multiple pulleys. If you
 The flexor carpi radialis and flexor carpi ulnaris are biarticular muscles. They originate at the medial epicondyle of the humerus (near the elbow) and insert on the wrist and hand.
 
 When activated, they produce:
-__DISPLAY_MATH_0__
+
+$$
+\begin{aligned}
+\tau_{\text{elbow}} &= R_{\text{elbow}} F_{\text{flexor}}, \\
+\tau_{\text{wrist}} &= R_{\text{wrist}} F_{\text{flexor}}.
+\end{aligned}
+$$
 
 A golfer can rotate the forearm (elbow) and flex the wrist simultaneously by activating the wrist flexors, without separate control of the elbow and wrist. This is efficient for power generation in the swing.
 
@@ -317,15 +330,27 @@ But $\bm{R}^T$ is a tall, wide matrix ($n_j \times n_m$ with $n_j < n_m$). The e
 To pick a unique solution, an additional criterion is needed. Common choices are:
 
 **1. Minimize total muscle force:**
-__DISPLAY_MATH_1__
+
+$$
+\min_{\bm{F}^M} \sum_i (F_i^M)^2 \quad \text{subject to} \quad \bm{R}^T \bm{F}^M = \boldsymbol{\tau}.
+$$
+
 This minimizes the "effort" in an intuitive sense.
 
 **2. Minimize metabolic cost:**
-__DISPLAY_MATH_2__
+
+$$
+\min_{\bm{F}^M} \sum_i C_i(F_i^M) \quad \text{subject to} \quad \bm{R}^T \bm{F}^M = \boldsymbol{\tau},
+$$
+
 where $C_i$ is a nonlinear cost function that accounts for the metabolic energy of muscle $i$. Metabolic cost is not proportional to force; it depends on the muscle fiber type, contraction velocity, and other factors.
 
 **3. Minimize fatigue:**
-__DISPLAY_MATH_3__
+
+$$
+\min_{\bm{F}^M} \sum_i f_i(F_i^M, \text{prior activation}) \quad \text{subject to} \quad \bm{R}^T \bm{F}^M = \boldsymbol{\tau},
+$$
+
 where $f_i$ accounts for fatigue accumulation in muscle $i$ over time.
 
 ::: {.callout-important}
