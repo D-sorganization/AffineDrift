@@ -122,7 +122,7 @@ A rotation by angle $\theta$ about the $x$-axis, with the rotation viewed as rig
 
 \begin{derivation}
 The $x$-axis unit vector $\hat{\mathbf{e}}_x = [1, 0, 0]^T$ is invariant. The $y$ and $z$ axes lie in the $yz$-plane, which undergoes a 2D rotation:
-$$\begin{bmatrix} y' \\ z' \end{bmatrix} = \begin{bmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{bmatrix} \begin{bmatrix} y \\ z \end{bmatrix}.$$
+\[\begin{bmatrix} y' \\ z' \end{bmatrix} = \begin{bmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{bmatrix} \begin{bmatrix} y \\ z \end{bmatrix}.\]
 Embedding this in 3D yields equation \eqref{eq:Rx}.
 \end{derivation}
 
@@ -258,6 +258,7 @@ The composite rotation is:
 
 \index{gimbal lock}
 \subsection{Gimbal Lock: Singularity and Proof}
+\label{sec:gimbal_lock}
 
 \begin{laymansbox}{Gimbal Lock: Physical Intuition}{gimballock}
   If an airplane pitches perfectly $90^\circ$ straight up into the sky, its Roll axis (pointing out its nose) now perfectly aligns with its original Yaw axis (pointing perfectly down towards the Earth).
@@ -509,23 +510,22 @@ The unit quaternions $\mathbf{q}$ and $-\mathbf{q}$ represent the same rotation 
 \end{theorem}
 
 \begin{proof}
-Let $\mathbf{q} = [\cos(\theta/2), \hat{\boldsymbol{\omega}} \sin(\theta/2)]$ represent a rotation by angle $\theta$ about axis $\hat{\boldsymbol{\omega}}$. Then:
+The rotation action of a unit quaternion $\mathbf{q}$ on a pure-imaginary quaternion $\mathbf{v} = [0, \vec{v}]$ is:
 \begin{equation}
--\mathbf{q} = [-\cos(\theta/2), -\hat{\boldsymbol{\omega}} \sin(\theta/2)] = [\cos(\theta/2 + \pi), -\hat{\boldsymbol{\omega}} \sin(\theta/2 + \pi)].
+\mathbf{v}' = \mathbf{q} \otimes \mathbf{v} \otimes \mathbf{q}^*.
 \end{equation}
 
-Interpreting this as an angle $\theta' = \theta + 2\pi$ about axis $-\hat{\boldsymbol{\omega}}$, or equivalently as an angle $\theta' - 2\pi = \theta$ about $-\hat{\boldsymbol{\omega}}$... Actually, let's be more direct: when we rotate a vector using the formula $\mathbf{v}' = \mathbf{q} \otimes \mathbf{v} \otimes \mathbf{q}^{-1}$, the quaternion and its negative yield:
+For $-\mathbf{q}$, we compute:
 \begin{align}
-\mathbf{v}'(\mathbf{q}) &= \mathbf{q} \otimes \mathbf{v} \otimes \mathbf{q}^{-1}, \\
-\mathbf{v}'(-\mathbf{q}) &= (-\mathbf{q}) \otimes \mathbf{v} \otimes (-\mathbf{q})^{-1} = (-\mathbf{q}) \otimes \mathbf{v} \otimes (-\mathbf{q})^*.
+(-\mathbf{q}) \otimes \mathbf{v} \otimes (-\mathbf{q})^*
+  &= (-\mathbf{q}) \otimes \mathbf{v} \otimes (-\mathbf{q}^*) \\
+  &= (-1)(\mathbf{q}) \otimes \mathbf{v} \otimes (-1)(\mathbf{q}^*) \\
+  &= (-1)(-1)\,\mathbf{q} \otimes \mathbf{v} \otimes \mathbf{q}^* \\
+  &= \mathbf{q} \otimes \mathbf{v} \otimes \mathbf{q}^*,
 \end{align}
+where we used the fact that $(-\mathbf{q})^* = -\mathbf{q}^*$ and that the scalar factor $(-1)$ commutes with quaternion multiplication and appears twice, yielding $(-1)^2 = 1$.
 
-Since multiplication by $-1$ commutes with all quaternion operations (being a scalar):
-\begin{equation}
-(-\mathbf{q}) \otimes \mathbf{v} \otimes (-\mathbf{q})^* = -[\mathbf{q} \otimes \mathbf{v} \otimes \mathbf{q}^*] \cdot (-1) = \mathbf{q} \otimes \mathbf{v} \otimes \mathbf{q}^*.
-\end{equation}
-
-Thus $\mathbf{v}'(\mathbf{q}) = \mathbf{v}'(-\mathbf{q})$, so both quaternions induce the same rotation.
+Thus $\mathbf{q}$ and $-\mathbf{q}$ induce the identical rotation on every vector $\vec{v} \in \Reals^3$.
 \end{proof}
 
 \index{rotation matrix!quaternion conversion}

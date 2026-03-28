@@ -11,7 +11,7 @@
 \begin{laymansbox}{Context \& Use Case: Unifying Translation and Rotation}{context_box}
 \textbf{The Math You Will See:} We will merge 3D translation vectors ($\mathbf{p}$) and $3 \times 3$ rotation matrices ($\mathbf{R}$) together into a massive $4 \times 4$ \textbf{Homogeneous Transformation Matrix} ($\mathbf{T}$). Furthermore, we will combine linear and angular velocities into a 6D \textbf{Twist} ($\screw$), and linear forces and torques into a 6D \textbf{Wrench} ($\wrench$). We will prove Chasles' theorem rigorously, derive the group and Lie algebra structure, and develop the full machinery of screw theory including reciprocal screws and virtual work.
 
-\textbf{Why We Need It:} In code, doing math on rotation and translation separately is messy, prone to bugs, and algebraically slow. If we pack everything into $4 \times 4$ matrices and 6D vectors, the equations for moving a robot arm, calculating gravity, and applying motor torques all collapse down into elegant, single-line matrix multiplications. This is exactly how industrial physics engines (like MuJoCo and Drake) do their internal calculations.
+\textbf{Why We Need It:} In code, doing math on rotation and translation separately is messy, prone to bugs, and algebraically slow. If we pack everything into $4 \times 4$ matrices and 6D vectors, the equations for moving a robot arm, calculating gravity, and applying motor torques all collapse down into concise, single-line matrix multiplications. This is exactly how industrial physics engines (like MuJoCo and Drake) do their internal calculations.
 
 \textbf{All Variables Defined:} $\mathbf{T} \in \SE(3)$ describes a full pose, $\screw \in \Reals^6$ describes 6D spatial velocity, and $\wrench \in \Reals^6$ describes 6D spatial force. See the \textbf{Nomenclature} at the start of the book.
 \end{laymansbox}
@@ -78,7 +78,7 @@ This operation involves both matrix multiplication and vector addition, which de
    \mathbf{R}_{\text{combined}} = \mathbf{R}_2 \mathbf{R}_1 \quad \text{and} \quad \mathbf{p}_{\text{combined}} = \mathbf{R}_2 \mathbf{p}_1 + \mathbf{p}_2
 \end{equation}
 
-To unify translation and rotation into a single, flawless algebraic operation, mathematicians embed the $3 \times 3$ matrix and the $3 \times 1$ vector into a magnificent $4 \times 4$ matrix using the machinery of \textbf{homogeneous coordinates}.
+To unify translation and rotation into a single, flawless algebraic operation, mathematicians embed the $3 \times 3$ matrix and the $3 \times 1$ vector into a single $4 \times 4$ matrix using the machinery of \textbf{homogeneous coordinates}.
 
 \begin{definition}{Homogeneous Transformation Matrix (\texorpdfstring{$\mathbf{T}$}{T})}{homo_matrix}
   By appending a row of zeros and a single '1' to the bottom, we define the \textbf{Homogeneous Transformation Matrix} $\mathbf{T}$:
@@ -146,7 +146,7 @@ The dimension of $\SE(3)$ is $\text{dim}(\SO(3)) + \text{dim}(\Reals^3) = 3 + 3 
 
 If $\mathbf{T} \in \SE(3)$ defines the complete layout of a rigid body in space, what is the \emph{velocity} of that body as it moves? And more fundamentally, what is the geometry of any displacement $\mathbf{T}$?
 
-The answer is provided by one of the most elegant theorems in mechanics:
+The answer is provided by one of the central theorems in mechanics:
 
 \begin{theorem}{Chasles--Mozzi Theorem (Mozzi 1763; Chasles 1830)}{chasles}
   Any rigid body displacement in 3D space can be expressed as a rotation about a unique axis combined with a translation parallel to that axis. In other words, every element $\mathbf{T} \in \SE(3)$ corresponds to a \textbf{screw motion} along a specific geometric axis.
@@ -189,7 +189,7 @@ The answer is provided by one of the most elegant theorems in mechanics:
 To visualize how the Screw Axis unifies motion, consider two classic throws:
 
 \begin{enumerate}
-    \item \textbf{A Perfect Football Spiral:} When a quarterback throws a tight spiral, the football translates rapidly down the field (the linear velocity $\mathbf{v}$). Simultaneously, it spins rapidly around its long axis (angular velocity $\boldsymbol{\omega}$). Because the spin axis and the travel direction are perfectly parallel, this is a pure screw motion! The \emph{Pitch} $h$ is large because it travels far for every rotation.
+    \item \textbf{A Perfect Football Spiral:} When a quarterback throws a tight spiral, the football translates rapidly down the field (the linear velocity $\mathbf{v}$). Simultaneously, it spins rapidly around its long axis (angular velocity $\boldsymbol{\omega}$). Because the spin axis and the travel direction are perfectly parallel, this is a pure screw motion. The \emph{Pitch} $h$ is large because it travels far for every rotation.
 
     \item \textbf{A Frisbee Throw:} A frisbee flies horizontally across a field ($\mathbf{v}$ points forward horizontally). However, it spins like a top around its vertical axis ($\boldsymbol{\omega}$ points straight up). The translation and rotation vectors are perfectly perpendicular ($90^\circ$ apart). This is \emph{still} a screw motion! Chasles' Theorem guarantees we can find a mathematical vertical axis floating somewhere to the side of the frisbee where evaluating purely the spin around that distant axis flawlessly replicates the combined forward flight and local spin.
 
@@ -608,7 +608,7 @@ proof that extracts the screw parameters from an arbitrary rigid body displaceme
 \label{sec:virtual_power}
 
 \begin{principle}{Virtual Work / Power Duality}{virtual_work}
-  One of the most elegant consequences of the unified 6D formalism is that \textbf{Mechanical Power} ($P$)—the rate of work done by a wrench on a moving body—can be computed as a single dot-product calculation:
+  One of the most useful consequences of the unified 6D formalism is that \textbf{Mechanical Power} ($P$)—the rate of work done by a wrench on a moving body—can be computed as a single dot-product calculation:
   \begin{equation}
       P = \wrench^T \twist = [\boldsymbol{\tau}^T, \mathbf{f}^T] \begin{bmatrix} \boldsymbol{\omega} \\ \mathbf{v} \end{bmatrix} = \boldsymbol{\tau} \cdot \boldsymbol{\omega} + \mathbf{f} \cdot \mathbf{v} \label{eq:power}
   \end{equation}
@@ -657,7 +657,7 @@ For example, a revolute joint constrains motion to pure rotation about a fixed a
 The wrench $\wrench = [\boldsymbol{\tau}^T, \mathbf{f}^T]^T \in \Reals^6$ is not merely a convenient notation---it is the natural language for describing how forces and torques act on rigid bodies in three-dimensional space. To build physical intuition, we examine three fundamental loading scenarios.
 
 \begin{laymansbox}{Why Combine Force and Torque into One Object?}{wrench_unified}
-In everyday life, we think of forces (pushes) and torques (twists) as separate things. But in robotics, they are inseparable. When you push a door handle, you are simultaneously applying a force (at the handle) and a torque (about the hinge). The wrench captures both in a single 6D vector, just as the twist captures both linear and angular velocity. This unification is not just elegant---it is \emph{computationally essential} for algorithms that must compute thousands of force-motion interactions per second.
+In everyday life, we think of forces (pushes) and torques (twists) as separate things. But in robotics, they are inseparable. When you push a door handle, you are simultaneously applying a force (at the handle) and a torque (about the hinge). The wrench captures both in a single 6D vector, just as the twist captures both linear and angular velocity. This unification is not merely convenient---it is \emph{computationally essential} for algorithms that must compute thousands of force-motion interactions per second.
 \end{laymansbox}
 
 \subsection{Three Fundamental Wrench Types}
@@ -886,7 +886,7 @@ The key insights are:
 
   \item \textbf{Wrenches:} Forces and torques are similarly unified into 6D vectors, dual to twists.
 
-  \item \textbf{Power is Inner Product:} Mechanical power is the inner product of wrench and twist, $P = \wrench^T \twist$, providing an elegant, unified formula for energy calculations.
+  \item \textbf{Power is Inner Product:} Mechanical power is the inner product of wrench and twist, $P = \wrench^T \twist$, providing a compact, unified formula for energy calculations.
 
   \item \textbf{Adjoint Representation:} The $6 \times 6$ Adjoint matrix transforms twists between reference frames, accounting for both rotation and translation of the frame.
 

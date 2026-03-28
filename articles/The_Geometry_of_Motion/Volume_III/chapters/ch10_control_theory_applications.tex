@@ -1,6 +1,12 @@
 \chapter{Applications of Control Theory to Biological Systems}
 \label{ch:control-bio}
 
+\begin{gomdraftnotice}
+This chapter is under active development and contains only a structural outline
+with preliminary material. Full exposition, worked examples, proofs, and exercises
+will be added in future editions.
+\end{gomdraftnotice}
+
 \epigraph{%
   The body is not a robot that happens to be made of meat.
   It is a system that has evolved to exploit its own physics.
@@ -12,7 +18,8 @@ Forward dynamics simulation integrates the equations of motion given muscle
 excitations $\bm{u}(t)$. A feedback control loop for biological systems is illustrated
 in Figure~\ref{fig:ch10:control-loop}.
 
-\begin{center}
+\begin{figure}[htbp]
+\centering
 \begin{tikzpicture}[scale=0.9, >=Stealth, node distance=2.2cm]
   % CNS / Goal
   \node[draw, thick, fill=blue!10, minimum width=2.2cm, align=center] (cns) {CNS\\(Goal)};
@@ -38,7 +45,9 @@ in Figure~\ref{fig:ch10:control-loop}.
   \node[below] at (neural.south) {Neural input};
   \node[below] at (skeletal.south) {Motion output};
 \end{tikzpicture}
-\end{center}
+\caption{Biological feedback control loop: CNS goal signals drive neural excitations through muscle and skeletal dynamics, with proprioceptive feedback closing the loop.}
+\label{fig:ch10:control-loop}
+\end{figure}
 \begin{equation}
   \ddot{\bm{q}} = M(\bm{q})^{-1}\left[R(\bm{q})\bm{F}_{\text{muscle}} + J_c^T \bm{F}_c
   - C(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} - g(\bm{q})\right],

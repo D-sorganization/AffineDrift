@@ -31,6 +31,9 @@
 \usepackage{enumitem}
 
 %% ---------- Algorithms (lightweight replacement) ----------
+%% Note: Volume 0 defines a different 'algorithmic' env (monospace wrapper).
+%% If compiling the series as a single document, use \gomdeclaretheorems from
+%% geometry_of_motion.sty and load the algorithmic package instead.
 \usepackage{float}
 \newfloat{algorithm}{htbp}{loa}
 \floatname{algorithm}{Algorithm}
@@ -151,29 +154,45 @@
 \theoremstyle{remark}
 \newtheorem{remark}[theorem]{Remark}
 
+%% ---------- Notation Concordance — Volume I ----------
+%% This volume uses tangent-space notation conventions:
+%%   Vectors:    bold italic via \vec{} (redefined to \bm{})  e.g. \x = \vec{x}
+%%   Reals:      \R  (alias for \Reals — both available via geometry_of_motion.sty)
+%%   Lie groups: \SO, \SE are parameterless — caller writes \SO(3), \SE(3) explicitly
+%%   Transpose:  \T (sans-serif T)
+%%   Matrices:   \mat{A} = \mathbf{A}
+%%
+%% Key differences from other volumes:
+%%   - Uses \x, \q, \uvec shorthand (not \state, \control)
+%%   - Uses \mat{} wrapper instead of bare \mathbf{}
+%%   - \SO, \SE do NOT include (3) — write \SO(3) at the call site
+%%
+%% See geometry_of_motion.sty for the canonical fallback definitions.
+%% ─────────────────────────────────────────────────────
+
 %% ---------- Custom commands ----------
-\newcommand{\R}{\mathbb{R}}
+\renewcommand{\R}{\mathbb{R}}
 \newcommand{\N}{\mathbb{N}}
-\newcommand{\dd}{\mathrm{d}}
+\renewcommand{\dd}{\mathrm{d}}
 
 \DeclareMathOperator*{\argmin}{arg\,min}
 \DeclareMathOperator*{\argmax}{arg\,max}
 
-\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\renewcommand{\norm}[1]{\left\lVert #1 \right\rVert}
 \newcommand{\abs}[1]{\left\lvert #1 \right\rvert}
-\newcommand{\inner}[2]{\left\langle #1,\, #2 \right\rangle}
-\newcommand{\T}{\mathsf{T}}   % transpose
+\renewcommand{\inner}[2]{\left\langle #1,\, #2 \right\rangle}
+\renewcommand{\T}{\mathsf{T}}   % transpose
 \newcommand{\trace}{\operatorname{tr}}
 \newcommand{\diag}{\operatorname{diag}}
 \newcommand{\rank}{\operatorname{rank}}
-\newcommand{\SO}{\mathrm{SO}}
-\newcommand{\SE}{\mathrm{SE}}
+\renewcommand{\SO}{\mathrm{SO}}
+\renewcommand{\SE}{\mathrm{SE}}
 \newcommand{\ad}{\mathrm{ad}}
 \newcommand{\E}{\mathbb{E}}
 
 %% Bold vectors and matrices
 \renewcommand{\vec}[1]{\bm{#1}}
-\newcommand{\mat}[1]{\mathbf{#1}}
+\renewcommand{\mat}[1]{\mathbf{#1}}
 \newcommand{\x}{\vec{x}}
 \newcommand{\q}{\vec{q}}
 \newcommand{\uvec}{\vec{u}}
@@ -189,7 +208,7 @@
 \DeclareMathOperator{\Span}{span}
 \DeclareMathOperator{\sym}{sym}
 \DeclareMathOperator{\skewpart}{skew}
-\newcommand{\dt}{\dd t}
+\renewcommand{\dt}{\dd t}
 
 %% ---------- Chapter style ----------
 \usepackage{titlesec}
@@ -548,7 +567,7 @@ transition matrix for LTI systems: $\Phi(t, t_0) = e^{\mat{A}(t-t_0)}$.
 
 \textbf{Caution:} For time-varying $\mat{A}(t)$, $\Phi(t, t_0) \neq e^{\int_{t_0}^t \mat{A}(s)\,\dd s}$
 in general. Equality holds only when $[\mat{A}(t_1), \mat{A}(t_2)] = 0$ for all $t_1, t_2$
-(Theorem~\ref{thm:ch2:magnus-condition}).
+(the commutativity condition for matrix exponentials).
 
 \section{Kronecker Products}
 

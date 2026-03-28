@@ -92,9 +92,9 @@ Then:
 This is the \textbf{control-affine form}\index{control-affine form}. It's called ``affine'' (not ``linear'') because the dependence on control is linear, but the dependence on state is not linear.
 
 \begin{laymansbox}{What Is a Vector Field?}{box:ch05_vector_field}
-A \textbf{vector field} assigns an arrow to every point in space. The drift field $f(\state)$ assigns an arrow to every possible state of the golfer---it tells you which direction the system would move next if all muscles went limp. The control field $G(\state)\control$ adds a second arrow showing what muscle torques contribute.
+A \textbf{vector field} assigns an arrow to every point in space. Imagine painting a tiny arrow at every point in the 4-dimensional state space. Each arrow shows the direction and speed the system would move if left to its own devices (no muscles). At a state where the arm is high and moving slowly, the arrow points downward and forward (gravity accelerates the arm). At a state where the arm is moving fast, the arrow curves---Coriolis and centrifugal effects bend the trajectory. Collectively, these arrows form a vector field: a map that tells you, at every possible state, where physics wants to take you next. The drift $\bm{f}(\bm{x})$ \emph{is} this vector field.
 
-At any instant, the system moves in the direction of the \emph{sum} of these two arrows. Early in the downswing, the control arrow is significant. By impact, the drift arrow is so enormous that the control arrow is negligible by comparison.
+The control field $\bm{G}(\bm{x}) \bm{u}$ adds a second arrow showing what muscle torques contribute. At any instant, the system moves in the direction of the \emph{sum} of these two arrows. Early in the downswing, the control arrow is significant. By impact, the drift arrow is so enormous that the control arrow is negligible by comparison.
 
 Imagine standing in a river. The current is the drift field---it carries you regardless of what you do. Your swimming strokes are the control field. In a gentle stream, your strokes dominate. In whitewater rapids, the current dominates. The golf swing transitions from gentle stream (address) to rapids (impact).
 \end{laymansbox}
@@ -237,10 +237,6 @@ A function that assigns a vector to each point in space. In our case, at each st
 \label{fig:ch05_drift_vector_field}
 \end{figure}
 
-\begin{laymansbox}{Visualizing the Drift Vector Field}{box:ch05_drift_field_visual}
-Imagine painting a tiny arrow at every point in the 4-dimensional state space. Each arrow shows the direction and speed the system would move if left to its own devices (no muscles). At a state where the arm is high and moving slowly, the arrow points downward and forward (gravity accelerates the arm). At a state where the arm is moving fast, the arrow curves---Coriolis and centrifugal effects bend the trajectory. Collectively, these arrows form a \textbf{vector field}: a map that tells you, at every possible state, where physics wants to take you next. The drift $\bm{f}(\bm{x})$ \emph{is} this vector field.
-\end{laymansbox}
-
 \begin{example}{Drift in the Double Pendulum at Rest}{ex:ch05_drift_at_rest}
 Suppose you're at address ($\theta_1 = 0°, \theta_2 = 0°, \dot{\theta}_1 = 0, \dot{\theta}_2 = 0$) and you suddenly remove all muscular control ($\bm{\tau} = 0$).
 
@@ -371,7 +367,7 @@ DCR is very high (drift is doing most of the work).
 
 \subsection*{Impact and Beyond: Extremely High DCR}
 
-At impact, the clubhead is accelerating at 180 $g$. This is primarily from:
+At impact, the clubhead is accelerating at $\sim$180~m/s$^2$ ($\approx 18g$; see Chapter~\ref{ch:04_forces_and_torques}, Eq.~\ref{eq:ch04_total_accel_impact}). This is primarily from:
 \begin{itemize}
 \item Centrifugal force (from the high rotation speed): $\approx 50$ N m equivalent.
 \item Gravity: $\approx 10$ N m equivalent.
