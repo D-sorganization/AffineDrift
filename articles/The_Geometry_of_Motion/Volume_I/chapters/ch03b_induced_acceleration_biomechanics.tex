@@ -1,5 +1,5 @@
 %% ==========================================================================
-%%  Chapter 3b: Induced Acceleration Analysis — Superposition in Biomechanics
+%%  Chapter 3b: Induced Acceleration Analysis --- Superposition in Biomechanics
 %%  Placed in Volume I after ch03_superposition
 %% ==========================================================================
 \chapter{Induced Acceleration Analysis: Superposition in the Biomechanics Literature}
@@ -21,9 +21,9 @@ different questions, can lead to complementary insights that enrich both fields.
 
 The study of human movement has long grappled with a fundamental attribution problem: given that many muscles act simultaneously on a mechanically coupled kinematic chain, how does one determine the contribution of each muscle to the observed motion? Inverse dynamics can determine the \emph{net} joint torques required to produce observed accelerations, but it cannot decompose those torques into individual muscle contributions, nor can it determine the causal relationship between a torque at one joint and the acceleration at another joint.
 
-\citet{ZajacGordon1989} addressed this gap in a seminal review that established the theoretical basis for induced acceleration analysis in multi-articular movement. Their central observation was that in a multi-joint system, a muscle force produces torques at the joints it crosses, but through the dynamic coupling inherent in the equations of motion, these torques induce accelerations at \emph{every} joint in the chain. Moreover, the induced accelerations depend not only on the muscle's torque, but on the entire system's mass matrix $\bm{M}(\bm{q})$ and its inverse---precisely the quantities that encode the inertial coupling between segments.
+\cite{ZajacGordon1989} addressed this gap in a seminal review that established the theoretical basis for induced acceleration analysis in multi-articular movement. Their central observation was that in a multi-joint system, a muscle force produces torques at the joints it crosses, but through the dynamic coupling inherent in the equations of motion, these torques induce accelerations at \emph{every} joint in the chain. Moreover, the induced accelerations depend not only on the muscle's torque, but on the entire system's mass matrix $\bm{M}(\bm{q})$ and its inverse---precisely the quantities that encode the inertial coupling between segments.
 
-This observation motivated a research program spanning more than three decades, applying induced acceleration analysis to walking \citep{Zajac2002, Zajac2003, Neptune2001, Kepple1997}, clinical gait pathology \citep{RileyKerrigan1999, Silverman2014}, throwing \citep{Hirashima2007control, Hirashima2008kinetic, HirashimaOhtsuki2008}, cycling \citep{Schutte1993}, sit-to-stand transfers \citep{Caruthers2016}, and postural control \citep{Challis2011}.
+This observation motivated a research program spanning more than three decades, applying induced acceleration analysis to walking \cite{Zajac2002, Zajac2003, Neptune2001, Kepple1997}, clinical gait pathology \cite{RileyKerrigan1999, Silverman2014}, throwing \cite{Hirashima2007control, Hirashima2008kinetic, HirashimaOhtsuki2008}, cycling \cite{Schutte1993}, sit-to-stand transfers \cite{Caruthers2016}, and postural control \cite{Challis2011}.
 
 %% --------------------------------------------------------------------------
 \section{The Formal Framework}
@@ -91,7 +91,7 @@ Starting from the manipulator equation (Equation~\ref{eq:ch3:manipulator} in Cha
 \section{Instantaneous Effects, Cumulative Effects, and the Drift Field}
 \label{sec:iaa_inst_cum}
 
-One of the most significant conceptual contributions of the induced acceleration literature is the distinction between \textbf{instantaneous effects} and \textbf{cumulative effects}, developed most clearly by \citet{Hirashima2008kinetic} and \citet{Hirashima2011application}.
+One of the most significant conceptual contributions of the induced acceleration literature is the distinction between \textbf{instantaneous effects} and \textbf{cumulative effects}, developed most clearly by \cite{Hirashima2008kinetic} and \cite{Hirashima2011application}.
 
 \subsection{Instantaneous Effects}
 
@@ -132,37 +132,37 @@ This mapping has practical significance. When the biomechanics community reports
 
 \subsection{Walking: The Zajac--Neptune Framework}
 
-The most comprehensive application of induced acceleration analysis has been to human walking. \citet{Zajac2002} (Part~I) and \citet{Zajac2003} (Part~II) provided a two-part review that established the methodological framework and derived coordination principles from dynamical simulations.
+The most comprehensive application of induced acceleration analysis has been to human walking. \cite{Zajac2002} (Part~I) and \cite{Zajac2003} (Part~II) provided a two-part review that established the methodological framework and derived coordination principles from dynamical simulations.
 
 Key findings include:
 
 \begin{enumerate}
 \item \textbf{Inverse dynamics is necessary but not sufficient.} Inverse dynamics computes the net joint torques required to produce observed motion, but cannot determine the causal contributions of individual muscles to segment accelerations. Induced acceleration analysis, applied to forward dynamics simulations, provides the missing causal information.
 
-\item \textbf{Energy flow between segments cannot be inferred from joint powers alone.} \citet{Zajac2002} demonstrated that the commonly used method of computing joint power ($P = \tau \cdot \dot{\theta}$) and segmental angular velocities does not correctly determine energy flow between segments, because constraint forces redistribute energy in complex ways. Only induced acceleration and power analysis, which tracks each muscle's contribution to each segment's energy, provides a correct account.
+\item \textbf{Energy flow between segments cannot be inferred from joint powers alone.} \cite{Zajac2002} demonstrated that the commonly used method of computing joint power ($P = \tau \cdot \dot{\theta}$) and segmental angular velocities does not correctly determine energy flow between segments, because constraint forces redistribute energy in complex ways. Only induced acceleration and power analysis, which tracks each muscle's contribution to each segment's energy, provides a correct account.
 
 \item \textbf{Biarticular muscles have complex, configuration-dependent roles.} Muscles crossing two joints (such as the gastrocnemius or rectus femoris) can have different---sometimes opposite---effects on the two joints they cross, and these effects change with posture.
 \end{enumerate}
 
-\citet{Neptune2001} applied this framework to the ankle plantar flexors during walking. Using a forward dynamics simulation driven by 15 individual muscle actuators, they decomposed the contributions of the soleus and gastrocnemius to trunk support (vertical center-of-mass acceleration), forward progression (horizontal center-of-mass acceleration), and swing initiation (mechanical energy delivered to the leg in pre-swing). Their results demonstrated that the soleus delivers its energy primarily to the trunk (providing support and forward progression), while the gastrocnemius delivers its energy primarily to the leg (initiating swing). This functional dissociation between two muscles at the same joint---invisible to inverse dynamics---exemplifies the power of the induced acceleration framework and the principle of superposition applied to individual force sources.
+\cite{Neptune2001} applied this framework to the ankle plantar flexors during walking. Using a forward dynamics simulation driven by 15 individual muscle actuators, they decomposed the contributions of the soleus and gastrocnemius to trunk support (vertical center-of-mass acceleration), forward progression (horizontal center-of-mass acceleration), and swing initiation (mechanical energy delivered to the leg in pre-swing). Their results demonstrated that the soleus delivers its energy primarily to the trunk (providing support and forward progression), while the gastrocnemius delivers its energy primarily to the leg (initiating swing). This functional dissociation between two muscles at the same joint---invisible to inverse dynamics---exemplifies the power of the induced acceleration framework and the principle of superposition applied to individual force sources.
 
 \subsection{Overarm Throwing: The Hirashima Framework}
 
-\citet{Hirashima2007control} and \citet{Hirashima2008kinetic} extended induced acceleration analysis to three-dimensional, 13-degree-of-freedom models of baseball pitching. Their work introduced several methodological advances:
+\cite{Hirashima2007control} and \cite{Hirashima2008kinetic} extended induced acceleration analysis to three-dimensional, 13-degree-of-freedom models of baseball pitching. Their work introduced several methodological advances:
 
 \begin{enumerate}
-\item \textbf{Full 3D induced acceleration analysis.} By writing the equations of motion in generalized coordinates (joint angles) rather than segment coordinates, and premultiplying by the full $13 \times 13$ inverse mass matrix, \citet{Hirashima2008kinetic} computed the acceleration induced by each of the 13 generalized forces, plus the velocity-dependent torque, plus gravity, on each of the 13 degrees of freedom.
+\item \textbf{Full 3D induced acceleration analysis.} By writing the equations of motion in generalized coordinates (joint angles) rather than segment coordinates, and premultiplying by the full $13 \times 13$ inverse mass matrix, \cite{Hirashima2008kinetic} computed the acceleration induced by each of the 13 generalized forces, plus the velocity-dependent torque, plus gravity, on each of the 13 degrees of freedom.
 
-\item \textbf{Decomposition of velocity-dependent torques.} \citet{Hirashima2008kinetic} further decomposed the velocity-dependent torque into contributions from the angular velocity of each individual segment, tracing the kinematic source of each cumulative effect. This allowed them to determine which segment's motion was the ``origin'' of the velocity-dependent torque acting at distant joints.
+\item \textbf{Decomposition of velocity-dependent torques.} \cite{Hirashima2008kinetic} further decomposed the velocity-dependent torque into contributions from the angular velocity of each individual segment, tracing the kinematic source of each cumulative effect. This allowed them to determine which segment's motion was the ``origin'' of the velocity-dependent torque acting at distant joints.
 
-\item \textbf{Correction of erroneous methods in the literature.} \citet{HirashimaOhtsuki2008} demonstrated that previous studies had incorrectly analyzed multi-joint dynamics by treating each segment's equation of motion independently (dividing by the diagonal inertia term) rather than solving the coupled system through the full inverse mass matrix. This error led to incorrect attributions of muscle function and is equivalent, in our framework, to neglecting the off-diagonal elements of $\bm{M}^{-1}$---that is, ignoring the dynamic coupling that is the very phenomenon induced acceleration analysis is designed to capture.
+\item \textbf{Correction of erroneous methods in the literature.} \cite{HirashimaOhtsuki2008} demonstrated that previous studies had incorrectly analyzed multi-joint dynamics by treating each segment's equation of motion independently (dividing by the diagonal inertia term) rather than solving the coupled system through the full inverse mass matrix. This error led to incorrect attributions of muscle function and is equivalent, in our framework, to neglecting the off-diagonal elements of $\bm{M}^{-1}$---that is, ignoring the dynamic coupling that is the very phenomenon induced acceleration analysis is designed to capture.
 \end{enumerate}
 
 The key finding from the throwing studies was that the kinetic chain operates through a conversion of instantaneous muscle effects (at proximal joints, in the early phase) into cumulative velocity-dependent effects (at distal joints, in the late phase). The proximal muscles create angular velocities that persist in the system as velocity-dependent torques, which then accelerate the distal joints without requiring large distal muscle forces. This is the kinetic chain reinterpreted through the lens of superposition: proximal forces create the drift field that drives the distal motion.
 
 \subsection{Postural Control and the Induced Acceleration Index}
 
-\citet{Challis2011} introduced the \textbf{induced acceleration index} (IAI), a dimensionless quantity that captures the configuration-dependent coupling potential between joints:
+\cite{Challis2011} introduced the \textbf{induced acceleration index} (IAI), a dimensionless quantity that captures the configuration-dependent coupling potential between joints:
 
 \begin{equation}
 \text{IAI}_{j \to k} = \left| \bm{M}_{kk}^{-1} \bm{M}_{kj} \right|
@@ -177,11 +177,11 @@ The IAI is a scalar summary of the off-diagonal structure of $\bm{M}^{-1}(\bm{q}
 Induced acceleration analysis has been applied to clinical gait analysis, where it provides individualized diagnostic information about the sources of movement dysfunction:
 
 \begin{itemize}
-\item \textbf{Stiff-legged gait:} \citet{RileyKerrigan1999} showed that reduced knee flexion in swing-phase gait after stroke can result from impairments at the hip, knee, or ankle, with the specific cause varying between patients. Induced acceleration analysis, by decomposing knee acceleration into contributions from each joint's torque, identified the patient-specific impairment pattern and informed individualized rehabilitation protocols.
+\item \textbf{Stiff-legged gait:} \cite{RileyKerrigan1999} showed that reduced knee flexion in swing-phase gait after stroke can result from impairments at the hip, knee, or ankle, with the specific cause varying between patients. Induced acceleration analysis, by decomposing knee acceleration into contributions from each joint's torque, identified the patient-specific impairment pattern and informed individualized rehabilitation protocols.
 
-\item \textbf{Sit-to-stand transfers:} \citet{Caruthers2016} used a 46-degree-of-freedom, 194-actuator musculoskeletal model to show that the quadriceps oppose forward center-of-mass acceleration during sit-to-stand, despite generating large forces. The gluteus maximus and soleus were the primary contributors to lifting and advancing the center of mass. This counterintuitive finding illustrates the importance of accounting for dynamic coupling ($\bm{M}^{-1}$) rather than reasoning from anatomy alone.
+\item \textbf{Sit-to-stand transfers:} \cite{Caruthers2016} used a 46-degree-of-freedom, 194-actuator musculoskeletal model to show that the quadriceps oppose forward center-of-mass acceleration during sit-to-stand, despite generating large forces. The gluteus maximus and soleus were the primary contributors to lifting and advancing the center of mass. This counterintuitive finding illustrates the importance of accounting for dynamic coupling ($\bm{M}^{-1}$) rather than reasoning from anatomy alone.
 
-\item \textbf{Electrical stimulation cycling:} \citet{Schutte1993} used a musculoskeletal model to analyze electrically stimulated leg cycling for spinal cord injury rehabilitation, identifying how seat configuration and stimulation timing affect the ability of stimulated muscles to produce the desired pedaling motion.
+\item \textbf{Electrical stimulation cycling:} \cite{Schutte1993} used a musculoskeletal model to analyze electrically stimulated leg cycling for spinal cord injury rehabilitation, identifying how seat configuration and stimulation timing affect the ability of stimulated muscles to produce the desired pedaling motion.
 \end{itemize}
 
 %% --------------------------------------------------------------------------
@@ -190,13 +190,13 @@ Induced acceleration analysis has been applied to clinical gait analysis, where 
 
 \subsection{Ground Contact and Constraint Forces}
 
-In movements involving ground contact (walking, standing, the golf stance), the ground reaction force must be included in the induced acceleration analysis. Because the ground reaction force is itself a constraint force that depends on all other forces in the system, decomposing it into individual muscle contributions requires special treatment. \citet{Neptune2001} addressed this by computing each muscle's contribution to the ground reaction force through a perturbation approach: remove one muscle force, re-integrate the equations of motion over one time step, and compare the resulting ground reaction force to the original.
+In movements involving ground contact (walking, standing, the golf stance), the ground reaction force must be included in the induced acceleration analysis. Because the ground reaction force is itself a constraint force that depends on all other forces in the system, decomposing it into individual muscle contributions requires special treatment. \cite{Neptune2001} addressed this by computing each muscle's contribution to the ground reaction force through a perturbation approach: remove one muscle force, re-integrate the equations of motion over one time step, and compare the resulting ground reaction force to the original.
 
-\citet{Silverman2014} reviewed the various computational approaches and their assumptions. The choice of ground contact model (rigid constraint, viscoelastic elements, rolling surface) affects the decomposition and must be reported and validated.
+\cite{Silverman2014} reviewed the various computational approaches and their assumptions. The choice of ground contact model (rigid constraint, viscoelastic elements, rolling surface) affects the decomposition and must be reported and validated.
 
 \subsection{Model Dependence}
 
-\citet{Hirashima2008kinetic} noted that the results of induced acceleration analysis can depend on the number of segments and degrees of freedom in the model. Adding trunk motion or lower extremity dynamics can change the interpretation of upper extremity muscle function. The induced acceleration framework is exact given the model, but the model is always an approximation of the biological system. Validation against experimental kinematics (by integrating the induced accelerations forward and comparing to observed motion) is an essential step, as demonstrated by \citet{Hirashima2008kinetic} and \citet{RileyKerrigan1999}.
+\cite{Hirashima2008kinetic} noted that the results of induced acceleration analysis can depend on the number of segments and degrees of freedom in the model. Adding trunk motion or lower extremity dynamics can change the interpretation of upper extremity muscle function. The induced acceleration framework is exact given the model, but the model is always an approximation of the biological system. Validation against experimental kinematics (by integrating the induced accelerations forward and comparing to observed motion) is an essential step, as demonstrated by \cite{Hirashima2008kinetic} and \cite{RileyKerrigan1999}.
 
 %% --------------------------------------------------------------------------
 \section{Synthesis: Two Communities, One Mathematical Structure}
@@ -211,7 +211,7 @@ Recognizing this equivalence has several benefits:
 
 \item \textbf{Conceptual unification.} The drift-control distinction in control theory provides a natural framework for organizing the biomechanical findings: instantaneous muscle effects are control inputs; cumulative velocity-dependent effects are the drift field; drift dominance in fast movements is a statement about the relative magnitudes of these two contributions.
 
-\item \textbf{Methodological rigor.} The control-affine framework's emphasis on the \emph{instantaneous} nature of superposition (Chapter~\ref{ch:superposition}) provides a clear warning against the trajectory-superposition errors identified by \citet{HirashimaOhtsuki2008} in the biomechanics literature.
+\item \textbf{Methodological rigor.} The control-affine framework's emphasis on the \emph{instantaneous} nature of superposition (Chapter~\ref{ch:superposition}) provides a clear warning against the trajectory-superposition errors identified by \cite{HirashimaOhtsuki2008} in the biomechanics literature.
 
 \item \textbf{Broader applicability.} The same mathematical structure applies to any multi-body mechanical system: robotic manipulators, prosthetic limbs, sports equipment, and any system governed by Lagrangian or Newtonian mechanics.
 \end{enumerate}

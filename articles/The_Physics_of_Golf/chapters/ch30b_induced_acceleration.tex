@@ -1,4 +1,4 @@
-% Chapter: Induced Acceleration Analysis — Quantifying Who Moves What
+% Chapter: Induced Acceleration Analysis --- Quantifying Who Moves What
 % Placed in Part VIII: The Kinetic Chain and Performance, after ch30_kinetic_chain
 
 \chapter{Induced Acceleration Analysis: Quantifying Who Moves What}
@@ -16,7 +16,7 @@ In the previous chapter, we described the kinetic chain as a sequential cascade 
 
 This chapter introduces a technique from biomechanics research called \textbf{induced acceleration analysis} (IAA). The key idea is mathematically simple: because the equations of motion are linear in the forces at each instant, we can apply each force \emph{one at a time} and compute the acceleration it would produce if it acted alone. The sum of these individual contributions exactly equals the total acceleration. This is the principle of \textbf{superposition}\index{superposition} applied to multi-body dynamics.
 
-Induced acceleration analysis was pioneered by \citet{ZajacGordon1989} for studying muscle function in multi-joint movements and was extended into a comprehensive framework for walking by \citet{Zajac2002, Zajac2003}. The technique has since been applied to throwing \citep{Hirashima2008kinetic, Hirashima2007control, HirashimaOhtsuki2008}, gait pathology \citep{RileyKerrigan1999, Neptune2001}, sit-to-stand transfers \citep{Caruthers2016}, cycling \citep{Schutte1993}, and postural control \citep{Challis2011}. This chapter brings induced acceleration analysis into the golf swing for the first time, connecting it to the control-affine framework developed in earlier chapters.
+Induced acceleration analysis was pioneered by \cite{ZajacGordon1989} for studying muscle function in multi-joint movements and was extended into a comprehensive framework for walking by \cite{Zajac2002, Zajac2003}. The technique has since been applied to throwing \cite{Hirashima2008kinetic, Hirashima2007control, HirashimaOhtsuki2008}, gait pathology \cite{RileyKerrigan1999, Neptune2001}, sit-to-stand transfers \cite{Caruthers2016}, cycling \cite{Schutte1993}, and postural control \cite{Challis2011}. This chapter brings induced acceleration analysis into the golf swing for the first time, connecting it to the control-affine framework developed in earlier chapters.
 
 \end{laymansbox}
 
@@ -96,7 +96,7 @@ Readers who have followed the development in Chapter~\ref{ch:05_affine_structure
 
 The drift field $\bm{f}(\bm{x})$ contains the velocity-dependent and gravity terms---exactly the terms that induced acceleration analysis labels as ``velocity-induced'' and ``gravity-induced'' accelerations. The control term $\bm{G}(\bm{x}) \bm{u}$ maps muscle inputs $\bm{u}$ to accelerations through the control matrix $\bm{G}(\bm{x})$, which embeds the inverse mass matrix $\bm{M}^{-1}(\bm{q})$.
 
-The connection is direct: \textbf{the biomechanics community's ``induced acceleration analysis'' is the instantaneous superposition that arises naturally from the control-affine structure of mechanical systems.} Both frameworks exploit the same mathematical fact---that forces map linearly to accelerations at each frozen state---but they were developed independently by different research communities. The control-affine formulation comes from nonlinear control theory \citep{Murray1994, BulloLewis2004}, while induced acceleration analysis was developed in the biomechanics and rehabilitation literature \citep{ZajacGordon1989, Zajac2002}.
+The connection is direct: \textbf{the biomechanics community's ``induced acceleration analysis'' is the instantaneous superposition that arises naturally from the control-affine structure of mechanical systems.} Both frameworks exploit the same mathematical fact---that forces map linearly to accelerations at each frozen state---but they were developed independently by different research communities. The control-affine formulation comes from nonlinear control theory \cite{Murray1994, BulloLewis2004}, while induced acceleration analysis was developed in the biomechanics and rehabilitation literature \cite{ZajacGordon1989, Zajac2002}.
 
 \begin{driftcontrol}{Drift, Control, and Induced Acceleration}{dc:iaa}
 
@@ -137,17 +137,17 @@ Consider a two-joint system (shoulder and elbow) in a horizontal plane. If we ap
 
 where $A_{ij}$ denotes the $(i,j)$ element of $\bm{M}^{-1}(\bm{q})$. The shoulder experiences an acceleration $A_{11} \tau_1$ (the \emph{direct} effect), but the elbow also experiences an acceleration $A_{21} \tau_1$ (the \emph{remote} or \emph{induced} effect). The off-diagonal element $A_{21}$ is generally nonzero because the segments are physically linked: applying a torque at the shoulder creates a reaction force at the elbow joint, which accelerates the forearm.
 
-This phenomenon was clearly articulated by \citet{ZajacGordon1989} in their foundational review: in multi-articular movement, determining the action of a muscle requires accounting for the constraint forces that propagate through the entire chain. A muscle crossing only the shoulder can accelerate the elbow, the wrist, and the club---not through direct contact, but through the mechanical coupling embedded in $\bm{M}^{-1}(\bm{q})$.
+This phenomenon was clearly articulated by \cite{ZajacGordon1989} in their foundational review: in multi-articular movement, determining the action of a muscle requires accounting for the constraint forces that propagate through the entire chain. A muscle crossing only the shoulder can accelerate the elbow, the wrist, and the club---not through direct contact, but through the mechanical coupling embedded in $\bm{M}^{-1}(\bm{q})$.
 
 \subsection{Posture Dependence: The Same Torque, Different Results}
 
 \index{inertia matrix!posture dependence}
 
-A second important finding, emphasized in the work of \citet{Hirashima2011application}, is that the induced accelerations depend on the current posture $\bm{q}$ of the entire system, because $\bm{M}^{-1}(\bm{q})$ changes with configuration.
+A second important finding, emphasized in the work of \cite{Hirashima2011application}, is that the induced accelerations depend on the current posture $\bm{q}$ of the entire system, because $\bm{M}^{-1}(\bm{q})$ changes with configuration.
 
 Consider the shoulder internal rotation torque applied to a three-segment upper limb model. When the elbow is fully extended (so the entire limb forms a straight line), the principal axes of inertia of the distal chain align with the shoulder joint axes. In this configuration, the shoulder internal rotation torque produces \emph{only} internal rotation---there is a clean one-to-one mapping from torque to acceleration.
 
-However, when the elbow is flexed at $90^{\circ}$ (a typical mid-downswing posture), the principal axes of inertia no longer align with the joint coordinate axes. Now the same shoulder internal rotation torque produces not only internal rotation, but also abduction and horizontal extension at the shoulder \citep{Hirashima2011application}. This means that a muscle's functional role---the acceleration it actually produces---is not fixed by anatomy alone. It depends on the instantaneous posture of the entire kinematic chain.
+However, when the elbow is flexed at $90^{\circ}$ (a typical mid-downswing posture), the principal axes of inertia no longer align with the joint coordinate axes. Now the same shoulder internal rotation torque produces not only internal rotation, but also abduction and horizontal extension at the shoulder \cite{Hirashima2011application}. This means that a muscle's functional role---the acceleration it actually produces---is not fixed by anatomy alone. It depends on the instantaneous posture of the entire kinematic chain.
 
 \begin{principle}{Configuration-Dependent Muscle Function}{prin:config_dependent}
 
@@ -165,7 +165,7 @@ Changing the posture---even at joints far from the muscle---changes the accelera
 
 \index{induced acceleration index}
 
-\citet{Challis2011} formalized the configuration-dependent coupling between joints by introducing the \textbf{induced acceleration index} (IAI). For a system where joint $j$ is ``active'' (has an applied torque) and joint $k$ is ``inactive'' (has no applied torque), the IAI quantifies the potential of the active joint to accelerate the inactive joint:
+\cite{Challis2011} formalized the configuration-dependent coupling between joints by introducing the \textbf{induced acceleration index} (IAI). For a system where joint $j$ is ``active'' (has an applied torque) and joint $k$ is ``inactive'' (has no applied torque), the IAI quantifies the potential of the active joint to accelerate the inactive joint:
 
 \begin{equation}
 \text{IAI}_{j \to k} = \left| M_{kk}^{-1} M_{kj} \right|
@@ -174,7 +174,7 @@ Changing the posture---even at joints far from the muscle---changes the accelera
 
 This dimensionless index depends only on the system's configuration and inertial properties, not on the magnitudes of the torques. It reveals the \emph{structural} coupling between joints.
 
-For a model of quiet standing, \citet{Challis2011} found that the ankle has over 12 times the ability to accelerate the hip joint compared to the hip's ability to accelerate the ankle. This asymmetry helps explain why the ankle strategy is the primary postural control mechanism for small perturbations.
+For a model of quiet standing, \cite{Challis2011} found that the ankle has over 12 times the ability to accelerate the hip joint compared to the hip's ability to accelerate the ankle. This asymmetry helps explain why the ankle strategy is the primary postural control mechanism for small perturbations.
 
 In the golf swing, similar asymmetries exist. During the early downswing, the large muscles of the hips and trunk have a strong ability to accelerate the distal segments (arms, wrists, club) through the off-diagonal elements of $\bm{M}^{-1}$. As the limbs extend during the late downswing, the coupling changes: the extended configuration alters the inertia matrix, potentially amplifying or diminishing the effectiveness of proximal torques on distal motion.
 
@@ -186,7 +186,7 @@ In the golf swing, similar asymmetries exist. During the early downswing, the la
 \index{cumulative effect}
 \index{velocity-dependent torque}
 
-One of the most important distinctions to emerge from the induced acceleration literature---and one with direct relevance to understanding the golf swing---is the difference between \textbf{instantaneous effects} and \textbf{cumulative effects}. This distinction was developed most clearly in the work of \citet{Hirashima2008kinetic} and \citet{Hirashima2011application} in the context of baseball pitching, and it maps directly onto the drift-control decomposition introduced in Chapter~\ref{ch:05_affine_structure}.
+One of the most important distinctions to emerge from the induced acceleration literature---and one with direct relevance to understanding the golf swing---is the difference between \textbf{instantaneous effects} and \textbf{cumulative effects}. This distinction was developed most clearly in the work of \cite{Hirashima2008kinetic} and \cite{Hirashima2011application} in the context of baseball pitching, and it maps directly onto the drift-control decomposition introduced in Chapter~\ref{ch:05_affine_structure}.
 
 \subsection{Instantaneous Effects: What the Current Torques Produce Right Now}
 
@@ -228,7 +228,7 @@ The golf swing is a fast, ballistic movement. By the time the club is approachin
 
 This is the physical basis for the observation made in Chapter~\ref{ch:05_affine_structure} that the drift-to-control ratio at the wrist reaches 5:1 to 30:1 during the late downswing. The majority of the clubhead's acceleration during impact approach is a \emph{cumulative effect}---the stored consequence of forces applied earlier in the swing, now manifesting as velocity-dependent torques that accelerate the distal segments.
 
-\citet{Hirashima2008kinetic} demonstrated this phenomenon clearly in baseball pitching, where the elbow extension and wrist flexion accelerations are produced predominantly by velocity-dependent torques rather than by local joint torques. The proximal trunk and shoulder joint motions, in contrast, are produced primarily by local muscle torques (instantaneous effects). The kinetic chain, in this framework, is a mechanism by which \emph{instantaneous} muscle efforts at proximal joints are converted into \emph{cumulative} velocity-dependent torques that accelerate distal joints without requiring large distal muscle forces.
+\cite{Hirashima2008kinetic} demonstrated this phenomenon clearly in baseball pitching, where the elbow extension and wrist flexion accelerations are produced predominantly by velocity-dependent torques rather than by local joint torques. The proximal trunk and shoulder joint motions, in contrast, are produced primarily by local muscle torques (instantaneous effects). The kinetic chain, in this framework, is a mechanism by which \emph{instantaneous} muscle efforts at proximal joints are converted into \emph{cumulative} velocity-dependent torques that accelerate distal joints without requiring large distal muscle forces.
 
 %=============================================================================
 \section{Lessons from Throwing: Implications for the Golf Swing}
@@ -237,11 +237,11 @@ This is the physical basis for the observation made in Chapter~\ref{ch:05_affine
 \index{overarm throwing!induced acceleration}
 \index{kinetic chain!baseball pitching}
 
-The golf swing and the overarm throw share fundamental dynamical features: both are fast, multi-joint movements performed by serial kinematic chains, and both rely on proximal-to-distal energy transfer to achieve high distal segment speeds. The induced acceleration analyses of baseball pitching performed by \citet{Hirashima2007control, Hirashima2008kinetic, HirashimaOhtsuki2008} provide some of the clearest demonstrations of how the kinetic chain operates at the level of individual forces and accelerations.
+The golf swing and the overarm throw share fundamental dynamical features: both are fast, multi-joint movements performed by serial kinematic chains, and both rely on proximal-to-distal energy transfer to achieve high distal segment speeds. The induced acceleration analyses of baseball pitching performed by \cite{Hirashima2007control, Hirashima2008kinetic, HirashimaOhtsuki2008} provide some of the clearest demonstrations of how the kinetic chain operates at the level of individual forces and accelerations.
 
 \subsection{Proximal Muscles Drive the System; Distal Joints Are Driven by Cumulative Effects}
 
-Using a 13-degree-of-freedom model of the trunk and upper limb, \citet{Hirashima2008kinetic} performed induced acceleration analysis on the pitching motions of skilled baseball players. The results were striking:
+Using a 13-degree-of-freedom model of the trunk and upper limb, \cite{Hirashima2008kinetic} performed induced acceleration analysis on the pitching motions of skilled baseball players. The results were striking:
 
 \begin{itemize}
 \item \textbf{Trunk motion} (forward translation and leftward rotation) was produced primarily by the joint torques at the trunk itself---an \emph{instantaneous direct effect}. The large muscles of the lower body and core generate the initial kinetic energy of the system.
@@ -255,7 +255,7 @@ Using a 13-degree-of-freedom model of the trunk and upper limb, \citet{Hirashima
 
 \subsection{The Route of the Kinetic Chain}
 
-\citet{Hirashima2008kinetic} decomposed the velocity-dependent torque into its kinematic sources, tracing the chain of causation:
+\cite{Hirashima2008kinetic} decomposed the velocity-dependent torque into its kinematic sources, tracing the chain of causation:
 
 \begin{enumerate}
 \item Trunk and shoulder joint torques accelerate the trunk and upper arm (instantaneous effect, early phase).
@@ -271,7 +271,7 @@ This represents a ``route'' through which the kinetic energy flows, with each li
 
 A separate mechanism, distinct from the cumulative effect, also operates in fast multi-joint movements: the \textbf{torque reversal}. Near ball release, the elbow joint torque reverses from extension to flexion (the muscles begin braking elbow extension). While this braking decelerates the elbow, it simultaneously accelerates the wrist into flexion through the instantaneous remote effect (the off-diagonal coupling in $\bm{M}^{-1}$).
 
-\citet{Hirashima2011application} emphasized that this effect is mechanically distinct from the cumulative effect: the torque reversal is an instantaneous remote effect caused by the current joint torque, not by past force history. Previous researchers had often grouped these two effects together under the label ``interaction torque,'' obscuring their different origins and different implications for training and technique.
+\cite{Hirashima2011application} emphasized that this effect is mechanically distinct from the cumulative effect: the torque reversal is an instantaneous remote effect caused by the current joint torque, not by past force history. Previous researchers had often grouped these two effects together under the label ``interaction torque,'' obscuring their different origins and different implications for training and technique.
 
 In the golf swing, an analogous mechanism may operate at the wrist: as the lead arm decelerates approaching impact, the braking torque at the wrist can accelerate the club through the instantaneous remote effect, adding to the dominant cumulative contribution from the drift field.
 
@@ -286,7 +286,7 @@ While the golf swing is a fast ballistic movement, the foundational work on indu
 
 \subsection{The Foundational Walking Studies}
 
-The comprehensive two-part review by \citet{Zajac2002, Zajac2003} established the modern framework for induced acceleration analysis in biomechanics. Their key contributions were:
+The comprehensive two-part review by \cite{Zajac2002, Zajac2003} established the modern framework for induced acceleration analysis in biomechanics. Their key contributions were:
 
 \begin{enumerate}
 \item \textbf{Clarifying energy flow:} Joint powers and segmental angular velocities alone cannot determine how energy flows between segments, because constraint forces redistribute energy in ways that are not visible in inverse dynamics. Forward dynamics simulation, coupled with induced acceleration analysis, is required to identify causal relationships between muscle forces and movement outcomes.
@@ -298,7 +298,7 @@ The comprehensive two-part review by \citet{Zajac2002, Zajac2003} established th
 
 \subsection{Soleus versus Gastrocnemius: A Case Study in Superposition}
 
-The study by \citet{Neptune2001} applied induced acceleration analysis to a forward dynamics simulation of normal walking, focusing on the individual contributions of the soleus (a uniarticular ankle plantar flexor) and the gastrocnemius (a biarticular ankle plantar flexor that also crosses the knee).
+The study by \cite{Neptune2001} applied induced acceleration analysis to a forward dynamics simulation of normal walking, focusing on the individual contributions of the soleus (a uniarticular ankle plantar flexor) and the gastrocnemius (a biarticular ankle plantar flexor that also crosses the knee).
 
 Despite both muscles being ankle plantar flexors, their contributions to whole-body function were strikingly different:
 
@@ -314,13 +314,13 @@ For golf, this finding carries a broader lesson: muscles with similar anatomical
 
 \subsection{Clinical Applications: Stiff-Legged Gait}
 
-\citet{RileyKerrigan1999} applied induced acceleration analysis to study stiff-legged gait in stroke patients, demonstrating the clinical utility of the technique. By computing the knee accelerations induced by hip, knee, and ankle moments individually, they showed that the causes of reduced knee flexion in swing were highly variable across patients---some had ankle impairments, others had hip impairments, and individual patients required individualized rehabilitation protocols.
+\cite{RileyKerrigan1999} applied induced acceleration analysis to study stiff-legged gait in stroke patients, demonstrating the clinical utility of the technique. By computing the knee accelerations induced by hip, knee, and ankle moments individually, they showed that the causes of reduced knee flexion in swing were highly variable across patients---some had ankle impairments, others had hip impairments, and individual patients required individualized rehabilitation protocols.
 
 This patient-specific diagnostic capability is a direct consequence of superposition: by decomposing the total acceleration into individual contributions, clinicians could identify which joint's impairment was primarily responsible for the movement dysfunction.
 
 \subsection{Sit-to-Stand Transfers}
 
-\citet{Caruthers2016} used a three-dimensional musculoskeletal model with 46 degrees of freedom and 194 muscle-tendon actuators to study sit-to-stand transfers. Their induced acceleration analysis revealed that the gluteus maximus and soleus were the primary contributors to lifting and advancing the center of mass, while the quadriceps---despite generating large forces---actually \emph{opposed} forward center-of-mass acceleration. This finding was counterintuitive to the quadriceps' anatomical function and to naive kinematic reasoning, but was entirely consistent with the dynamic coupling embedded in $\bm{M}^{-1}(\bm{q})$ given the body's configuration during the task.
+\cite{Caruthers2016} used a three-dimensional musculoskeletal model with 46 degrees of freedom and 194 muscle-tendon actuators to study sit-to-stand transfers. Their induced acceleration analysis revealed that the gluteus maximus and soleus were the primary contributors to lifting and advancing the center of mass, while the quadriceps---despite generating large forces---actually \emph{opposed} forward center-of-mass acceleration. This finding was counterintuitive to the quadriceps' anatomical function and to naive kinematic reasoning, but was entirely consistent with the dynamic coupling embedded in $\bm{M}^{-1}(\bm{q})$ given the body's configuration during the task.
 
 %=============================================================================
 \section{Implications for the Golf Swing}
@@ -370,7 +370,7 @@ This correspondence is not a coincidence: both frameworks start from the same eq
 
 A critical caveat, emphasized in Chapter~3 of \emph{The Geometry of Motion, Volume~I}, is that superposition holds \emph{instantaneously} but \emph{not} over time. The accelerations induced by individual forces add up exactly at each frozen instant. But if we were to simulate the system forward in time under only one force, the resulting trajectory would diverge from the component of the actual trajectory ``due to'' that force, because the system's state evolves nonlinearly.
 
-\citet{HirashimaOhtsuki2008} articulated this point clearly in the context of motor control research. Several previous studies had incorrectly applied induced acceleration reasoning to individual equations of motion for each segment, rather than solving the coupled system simultaneously. When researchers treated each segment's equation independently and divided torques by the diagonal inertia term, they obtained incorrect estimates of the causal contributions. The correct approach---premultiplying by the \emph{full} inverse mass matrix, solving the coupled system of equations simultaneously---respects the dynamic coupling and yields physically meaningful results.
+\cite{HirashimaOhtsuki2008} articulated this point clearly in the context of motor control research. Several previous studies had incorrectly applied induced acceleration reasoning to individual equations of motion for each segment, rather than solving the coupled system simultaneously. When researchers treated each segment's equation independently and divided torques by the diagonal inertia term, they obtained incorrect estimates of the causal contributions. The correct approach---premultiplying by the \emph{full} inverse mass matrix, solving the coupled system of equations simultaneously---respects the dynamic coupling and yields physically meaningful results.
 
 The lesson for golf biomechanics is clear: to understand what each muscle does at any instant, one must account for the full kinematic chain. Analyzing the wrist in isolation, or the shoulder in isolation, produces misleading conclusions because it ignores the off-diagonal coupling that is the physical basis of the kinetic chain itself.
 
@@ -401,11 +401,11 @@ The lesson for golf biomechanics is clear: to understand what each muscle does a
 
 \item Using the double-pendulum model from Chapter~\ref{ch:03_double_pendulum}, compute the velocity-dependent torque $\bm{V}(\bm{q}, \dot{\bm{q}})$ and the gravity torque $\bm{g}(\bm{q})$ at a representative mid-downswing posture ($\theta_1 = -45^{\circ}, \theta_2 = -90^{\circ}$, with angular velocities $\dot{\theta}_1 = 500~\text{deg/s}, \dot{\theta}_2 = 200~\text{deg/s}$). Compute the induced accelerations from each source and verify that they sum to the total acceleration.
 
-\item The induced acceleration index (IAI) of \citet{Challis2011} quantifies the coupling potential between joints. For a two-segment model of the golfer's lead arm and club, compute the IAI at three postures: (a) early downswing (large lag angle), (b) mid-downswing (moderate lag angle), and (c) near impact (small lag angle). Discuss how the coupling changes and what this implies for wrist release mechanics.
+\item The induced acceleration index (IAI) of \cite{Challis2011} quantifies the coupling potential between joints. For a two-segment model of the golfer's lead arm and club, compute the IAI at three postures: (a) early downswing (large lag angle), (b) mid-downswing (moderate lag angle), and (c) near impact (small lag angle). Discuss how the coupling changes and what this implies for wrist release mechanics.
 
-\item \citet{Hirashima2008kinetic} found that elbow extension in baseball pitching is primarily produced by velocity-dependent torques, not by elbow joint torques. Using the control-affine framework, explain why this observation is equivalent to saying that the drift field dominates the control input at the elbow during the late phase of the throw.
+\item \cite{Hirashima2008kinetic} found that elbow extension in baseball pitching is primarily produced by velocity-dependent torques, not by elbow joint torques. Using the control-affine framework, explain why this observation is equivalent to saying that the drift field dominates the control input at the elbow during the late phase of the throw.
 
-\item Consider the finding of \citet{Neptune2001} that soleus and gastrocnemius have opposite energetic effects on the trunk and leg during walking. Explain how this result follows from the off-diagonal structure of $\bm{M}^{-1}(\bm{q})$ and the different moment-arm vectors of uniarticular versus biarticular muscles. How might analogous reasoning apply to the pectoralis major (biarticular) versus the subscapularis (uniarticular) during the golf downswing?
+\item Consider the finding of \cite{Neptune2001} that soleus and gastrocnemius have opposite energetic effects on the trunk and leg during walking. Explain how this result follows from the off-diagonal structure of $\bm{M}^{-1}(\bm{q})$ and the different moment-arm vectors of uniarticular versus biarticular muscles. How might analogous reasoning apply to the pectoralis major (biarticular) versus the subscapularis (uniarticular) during the golf downswing?
 \end{enumerate}
 
 \end{exercises}
