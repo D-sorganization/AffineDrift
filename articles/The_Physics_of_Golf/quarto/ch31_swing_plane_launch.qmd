@@ -108,7 +108,9 @@ The **face angle relative to the swing plane** is the most important of these be
 
 The clubface angle at impact is determined by the cumulative rotations of three joints in the upper body and arms:
 
-__DISPLAY_MATH_1__
+$$
+\alpha_{\text{face}} = \alpha_{\text{forearm}} + \alpha_{\text{wrist}} + \alpha_{\text{shaft twist}} + \text{(initial address angle)}
+$$
 
 where:
 
@@ -147,7 +149,9 @@ The gate is the angular range of face angles at impact that produces ball flight
 
 For a golfer with a typical clubhead speed of 90 mph and swing-dependent characteristics, the gate width is typically:
 
-__DISPLAY_MATH_2__
+$$
+\text{Gate width} \approx 3\text{--}5\text{ degrees}
+$$
 
 This narrow window is why face angle control is so critical. A 5$^{\circ}$error in face angle will produce a shot 30--40 yards offline, while a 5$^{\circ}$error in club path produces a much smaller offline error (because path has a smaller effect on launch direction than face angle does, as we will discuss in Section @sec:d_plane).
 
@@ -187,11 +191,15 @@ For decades, golf instruction was based on a simple model: the ball starts in th
 ### The Classical Model vs. Reality
 
 The classical model states:
-__DISPLAY_MATH_3__
+$$
+\text{Launch direction} \approx \text{Club path} \quad (\text{incorrect})
+$$
 
 In reality, the launch direction is heavily weighted toward the clubface direction:
 
-__DISPLAY_MATH_4__
+$$
+\text{Launch direction} \approx 0.85 \cdot \text{Face angle} + 0.15 \cdot \text{Club path} \quad (\text{driver; approximate})
+$$
 
 This 85--15 split (the exact ratio depends on loft and dynamic conditions) is known as the **D-plane model**. [@trackman_ball_flight]
 
@@ -205,7 +213,9 @@ The D-plane is the plane perpendicular to the launch direction (the initial dire
 
 In the reference frame of the swing plane (which simplifies calculations), the launch direction of the ball can be expressed as:
 
-__DISPLAY_MATH_5__
+$$
+\vec{L} = w_{\text{face}} \cdot \vec{F} + w_{\text{path}} \cdot \vec{P}
+$$ {#eq-launch_weighted}
 
 where:
 
@@ -214,10 +224,16 @@ where:
 - $w_{\text{face}}$ and $w_{\text{path}}$ are weighting coefficients with $w_{\text{face}} + w_{\text{path}} = 1$
 
 For a driver (low loft, high ball speed), typical values are:
-__DISPLAY_MATH_6__
+
+$$
+w_{\text{face}} \approx 0.85, \quad w_{\text{path}} \approx 0.15
+$$
 
 For a short iron (high loft, lower ball speed), the weighting shifts toward the path:
-__DISPLAY_MATH_7__
+
+$$
+w_{\text{face}} \approx 0.80, \quad w_{\text{path}} \approx 0.20
+$$
 
 The weighting coefficients depend on multiple factors:
 - **Loft angle:** Higher loft → greater face angle weighting
@@ -233,7 +249,10 @@ The spin axis of the ball is the axis of rotation of the ball about its center. 
 However, most golf impacts have some degree of gear effect because the contact is not exactly at the ball's center. The effective spin axis is rotated away from the perpendicular by an amount dependent on the side-spin rate and gear effect.
 
 A simplified model is:
-__DISPLAY_MATH_8__
+
+$$
+\vec{S}_{\text{axis}} \approx \vec{L} \times (\vec{F} + \vec{P})
+$$ {#eq-spin_axis}
 
 where$\times$denotes the cross product. The spin axis magnitude is related to the side-spin rate and affects the curvature of the ball flight.
 
@@ -241,7 +260,10 @@ where$\times$denotes the cross product. The spin axis magnitude is related to th
 
 
 The **face-to-path difference** is simply:
-__DISPLAY_MATH_9__
+
+$$
+\Delta_{\text{FP}} = \alpha_{\text{face}} - \alpha_{\text{path}}
+$$
 
 This quantity directly determines the *curvature* of the shot (draw vs. fade), independent of the overall direction:
 
@@ -272,7 +294,9 @@ These three parameters, along with launch direction (azimuth) and spin axis (til
 
 Ball speed is the product of clubhead speed and the **smash factor**:
 
-__DISPLAY_MATH_10__
+$$
+v_{\text{ball}} = \text{SMF} \times v_{\text{club}}
+$$ {#eq-smash}
 
 where SMF is the smash factor, typically ranging from 1.40 to 1.50 for drivers on well-struck shots. (Chapter @ch:impact_collision_collision discusses smash factor in detail.)
 
@@ -283,9 +307,11 @@ For a golfer with a 100 mph clubhead speed and a smash factor of 1.48, the ball 
 
 The carry distance of a golf ball is maximized at a specific launch angle that depends on ball speed and spin rate. Higher ball speeds tolerate (and require) higher launch angles because the ball spends longer in the air and has more opportunity to rise.
 
-__DISPLAY_MATH_11__
+$$
+\theta_{\text{launch,opt}} \approx 22 - 0.075 \, v_{\text{club}} - 0.5 \, \Omega_{\text{spin,krpm}}
+$$
 
-where$\Omega_{\text{spin,krpm}}$is spin rate in thousands of RPM and$v_{\text{club}}$is clubhead speed in mph.
+where$\Omega_{\text{spin,krpm}}$is spin rate in thousands of RPM and$v_{\text{club}}$is clubhead speed in mph. This empirical approximation, derived from regression on launch-monitor data, captures the general trend: optimal launch angle decreases with increasing ball speed and increasing spin rate.
 
 For typical conditions:
 
@@ -305,7 +331,9 @@ Spin imparts Magnus lift to the ball (Chapter @ch:aerodynamic-drag), which oppos
 ## The Spin-Distance Trade-Off
 For a given ball speed and launch angle, there is an optimal spin rate that maximizes carry distance. The relationship is non-linear:
 
-__DISPLAY_MATH_12__
+$$
+d_{\text{carry}}(\Omega_{\text{spin}}) = a \cdot v_{\text{ball}}^2 - b \cdot \Omega_{\text{spin}} - c \cdot \Omega_{\text{spin}}^2
+$$ {#eq-spin_distance}
 
 For typical driver conditions (100 mph club speed, 14$^{\circ}$launch angle), the optimal spin rate is approximately 2200--2600 RPM. Below this range, the ball doesn't carry far enough. Above this range, excess spin increases air resistance and reduces distance.
 :::
