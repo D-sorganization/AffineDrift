@@ -106,10 +106,12 @@ To make the analysis concrete, we use representative parameters chosen to be typ
 Length $L$ & 0.35 m & 1.0 m \\
 Mass $M$ & 2.5 kg & 1.5 kg \\
 Center of mass distance from hinge & 0.175 m & 0.5 m \\
-Moment of inertia $I$ & 0.015 kg m$^2$ & 0.4 kg m$^2$ \\
+Moment of inertia $I$ (point-mass approx.) & 0.077 kg m$^2$ & 0.375 kg m$^2$ \\
 \hline
 \end{tabular}
 \end{center}
+
+\textit{Note on moment of inertia:} We use the point-mass approximation $I = M L_{\text{cm}}^2$. For link 1: $I_1 = 2.5 \times 0.175^2 = 0.077$ kg\,m$^2$. For link 2: $I_2 = 1.5 \times 0.5^2 = 0.375$ kg\,m$^2$.
 
 These representative values allow us to compute explicit examples and develop intuition for the magnitude of forces and accelerations that appear during a golf swing. The physics governing the motion remains the same regardless of the specific parameter values.
 
@@ -454,9 +456,9 @@ Consider a representative impact condition where the arm is nearly extended. The
 The mass matrix at this configuration:
 \begin{align}
 M_{11} &= I_1 + M_2 L_1^2 + M_2 L_{2,\text{cm}}^2 + I_2 + 2 M_2 L_1 L_{2,\text{cm}} \cos \theta_2 \\
-&\approx 0.015 + 2.5 \cdot (0.35)^2 + 2.5 \cdot (0.5)^2 + 0.4 + 2 \cdot 2.5 \cdot 0.35 \cdot 0.5 \cos(-5°) \\
-&\approx 0.015 + 0.306 + 0.625 + 0.4 + 0.872 \\
-&\approx 2.22 \text{ kg m}^2
+&\approx 0.077 + 1.5 \times (0.35)^2 + 1.5 \times (0.5)^2 + 0.375 + 2 \times 1.5 \times 0.35 \times 0.5 \cos(-5°) \\
+&\approx 0.077 + 0.184 + 0.375 + 0.375 + 0.524 \\
+&\approx 1.54 \text{ kg m}^2
 \end{align}
 
 This represents the effective moment of inertia of the coupled arm+club system about the shoulder at this configuration.
@@ -464,26 +466,26 @@ This represents the effective moment of inertia of the coupled arm+club system a
 The gravitational torques are found from the gravity vector:
 \begin{align}
 g_1 &= (M_1 L_{1,\text{cm}} + M_2 L_1) g \sin \theta_1 + M_2 g L_{2,\text{cm}} \sin(\theta_1 + \theta_2) \\
-&= (2.5 \cdot 0.175 + 2.5 \cdot 0.35) \cdot 9.81 \cdot \sin(0°) + 2.5 \cdot 9.81 \cdot 0.5 \cdot \sin(-5°) \\
-&\approx 0 + 12.25 \cdot (-0.087) \\
-&\approx -1.1 \text{ N m}
+&= (2.5 \times 0.175 + 1.5 \times 0.35) \times 9.81 \times \sin(0°) + 1.5 \times 9.81 \times 0.5 \times \sin(-5°) \\
+&\approx 0 + 7.36 \times (-0.087) \\
+&\approx -0.64 \text{ N m}
 \end{align}
 
 The Coriolis/centrifugal term at the elbow (from Equation \ref{eq:ch03_coriolis_matrix}):
 \begin{align}
 C_{21}(\dot{\theta}_1) &= M_2 L_1 L_{2,\text{cm}} \dot{\theta}_1^2 \sin \theta_2 \\
-&= 2.5 \cdot 0.35 \cdot 0.5 \cdot (10)^2 \cdot \sin(-5°) \\
-&= 2.5 \cdot 0.35 \cdot 0.5 \cdot 100 \cdot (-0.087) \\
-&\approx -3.8 \text{ N m}
+&= 1.5 \times 0.35 \times 0.5 \times (10)^2 \times \sin(-5°) \\
+&= 1.5 \times 0.35 \times 0.5 \times 100 \times (-0.087) \\
+&\approx -2.3 \text{ N m}
 \end{align}
 
 \begin{laymansbox}{Interpretation of the Force Components}{box:ch03_forces_meaning}
 The numerical values at impact show the magnitude of various terms in the equations of motion:
 
 \begin{itemize}
-\item The effective inertia $M_{11} \approx 2.22$ kg m$^2$ determines how much acceleration results from a given applied torque.
-\item The gravitational torque $g_1 \approx -1.1$ N m acts to rotate the system back toward the downward position (negative indicates restoring direction).
-\item The centrifugal term $C_{21} \approx -3.8$ N m arises from the high rotational velocity and acts to influence the relative joint motion.
+\item The effective inertia $M_{11} \approx 1.54$ kg m$^2$ determines how much acceleration results from a given applied torque.
+\item The gravitational torque $g_1 \approx -0.64$ N m acts to rotate the system back toward the downward position (negative indicates restoring direction).
+\item The centrifugal term $C_{21} \approx -2.3$ N m arises from the high rotational velocity and acts to influence the relative joint motion.
 \end{itemize}
 
 These passive forces (arising from gravity and the coupled dynamics) contribute to the total torque that accelerates the system. The applied muscular torques (represented by $\bm{\tau}$ in the manipulator equation) must be combined with these passive components to produce the observed accelerations.

@@ -124,7 +124,7 @@ where:
 \begin{itemize}
 \item $P_{\text{gravity}} = -\bm{g}^T \dot{\bm{q}}$: power from gravity (negative during backswing, positive during downswing as the arm falls).
 
-\item $P_{\text{Coriolis}} = -\bm{C}^T \dot{\bm{q}}$: power from Coriolis/centrifugal effects.
+\item $P_{\text{Coriolis}} = -\dot{\bm{q}}^T \bm{C} \dot{\bm{q}} = 0$: Coriolis/centrifugal power. This is \emph{identically zero} by the skew-symmetry of $(\dot{\bm{M}} - 2\bm{C})$. Coriolis forces redistribute energy among coordinates but cannot change the total kinetic energy.
 
 \item $P_{\text{input}} = \bm{u}^T \dot{\bm{q}}$: power from muscular torques (always non-negative; muscles do positive work).
 
@@ -133,7 +133,7 @@ where:
 \end{theorem}
 
 \begin{laymansbox}{Why Constraint Power is Zero (But Energy Still Transfers)}{inplain:constraint_power_paradox}
-This is the key insight: constraint forces do zero net power to the system, yet they transfer energy between segments.
+A key observation is that constraint forces do zero net power to the system, yet they transfer energy between segments.
 
 How? The trick is to decompose power by segment:
 \begin{equation}
@@ -440,9 +440,9 @@ Track the energy throughout a complete swing for a 200-pound (90 kg) golfer with
 \hline
 Address & 0 J & 0 J & 0 J & 0 J & Starting point \\
 Top of backswing & +15 J & +10 J & 0 J & 25 J & Arm elevation + muscle tension \\
-Midway down & +5 J & +2 J & +100 J & 107 J & Energy conversion; gravity contributes \\
-Late downswing & 0 J & 0 J & +200 J & 200 J & Kinetic energy peaked \\
-Impact & 0 J & 0 J & +200 J & 200 J & Energy in club motion \\
+Midway down & +5 J & +2 J & +80 J & 87 J & Energy conversion; gravity contributes \\
+Late downswing & 0 J & 0 J & +115 J & 115 J & Kinetic energy peaked \\
+Impact & 0 J & 0 J & +115 J & 115 J & Energy in club motion \\
 Post-impact & 0 J & 0 J & +50 J & 50 J & Energy to ball \& air \\
 \hline
 \end{tabular}
@@ -453,7 +453,7 @@ Post-impact & 0 J & 0 J & +50 J & 50 J & Energy to ball \& air \\
 \begin{enumerate}
 \item \textbf{Energy input:} Muscles do work during the backswing (lifting arms, creating tension) and early downswing (accelerating hips). Total muscular input is roughly $25$--$30$ J (from potential and elastic energy) plus $70$--$80$ J from muscular acceleration (early downswing). Total input: $\approx 100$ J.
 
-\item \textbf{Energy peak:} At late downswing, kinetic energy reaches $200$ J. This is the sum of muscular work plus energy from gravity (falling arms during downswing adds $\sim 100$ J).
+\item \textbf{Energy peak:} At late downswing, kinetic energy reaches $\sim$115 J. This is the sum of muscular work ($\sim$90 J) plus recovered gravitational PE ($\sim$15 J) plus recovered elastic PE ($\sim$10 J).
 
 \item \textbf{Constraint force redistribution:} The $200$ J is redistributed from hips/torso ($\sim 150$ J) to arms and club ($\sim 50$ J) via constraint forces. No external energy added; pure redistribution.
 
@@ -516,11 +516,11 @@ This is why timing is everything in golf: the total energy input is roughly cons
 \begin{example}{Energy Partition in the Double Pendulum}{ex:double_pend_energy_complete}
 For a double pendulum (arm and club), the total kinetic energy is:
 \begin{equation}
-T = \frac{1}{2} I_1 \dot{q}_1^2 + \frac{1}{2} I_2 \dot{q}_2^2 + m_2 L_1 L_2 \cos(q_2) \dot{q}_1 \dot{q}_2
+T = \frac{1}{2}(I_1 + M_2 L_1^2)\dot{q}_1^2 + \frac{1}{2}(M_2 L_{2,\text{cm}}^2 + I_2)(\dot{q}_1 + \dot{q}_2)^2 + M_2 L_1 L_{2,\text{cm}} \cos(q_2) \dot{q}_1 (\dot{q}_1 + \dot{q}_2)
 \label{eq:double_pend_kinetic_energy}
 \end{equation}
 
-The third term is the coupling term—it's nonzero only if both segments are rotating.
+Note the use of $(\dot{q}_1 + \dot{q}_2)$ for the absolute angular velocity of link 2. The third term couples the two joints.
 
 The power delivered by gravity and Coriolis (no muscle input, $\bm{u} = \mathbf{0}$) is:
 \begin{equation}
@@ -594,9 +594,9 @@ At $384$ W, the club's kinetic energy is increasing at an enormous rate. Over ju
 
 \item \textbf{Lag timing is critical:} Releasing the wrist earlier or later changes the final club speed by a factor of 2--3, even with identical muscular effort. Timing determines when the club inherits the arm's energy.
 
-\item \textbf{Efficiency:} A typical swing is about 50\% efficient—100 J of muscular input results in 50 J of kinetic energy in the ball. Losses come from air resistance, inefficient constraint transfers, and incomplete energy capture at impact.
+\item \textbf{Efficiency:} The overall efficiency (muscular work in $\to$ ball kinetic energy out) depends on many factors. Published estimates of collision efficiency (club-to-ball) are $\sim$70--80\% \citep{Penner2001}; additional losses occur during the swing itself.
 
-\item \textbf{The role of muscles:} Muscles provide the initial energy input (early downswing) and set up the constraint configuration (lag, X-factor). But the final club speed emerges primarily from passive constraint-based energy redistribution and Coriolis effects.
+\item \textbf{The role of muscles:} Muscles provide the initial energy input (early downswing) and set up the constraint configuration (lag, X-factor). The final club speed emerges from both muscular work and passive constraint-based energy redistribution through the mass-matrix coupling. Coriolis terms redistribute (but do not create) energy within the system.
 \end{enumerate}
 \end{principle}
 

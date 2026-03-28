@@ -108,7 +108,7 @@ The GRF is whatever force is needed to give the center of mass the acceleration 
 
 :::
 
-This equation is profound. It says: the GRF is a *reaction*---it is whatever is required to maintain ground contact while the internal forces (muscles) reshape the body. The muscles create internal torques, which accelerate body segments. These accelerations change the center-of-mass acceleration. The GRF adjusts to match.
+This equation is important. It says: the GRF is a *reaction*---it is whatever is required to maintain ground contact while the internal forces (muscles) reshape the body. The muscles create internal torques, which accelerate body segments. These accelerations change the center-of-mass acceleration. The GRF adjusts to match.
 
 ### Impulse: The Time Integral
 
@@ -141,14 +141,10 @@ The impulse delivered by the ground (the integral of GRF over time) equals the c
 
 Suppose a 90 kg golfer stands on a force plate during the downswing. The force plate records:
 
-\begin{tabular}{lll}
-\hline
-**Time** & **Vertical GRF** & **Anterior-Posterior GRF** 
-\hline
-$t = 0.0$ s & $900$ N (standing) & $0$ N 
-$t = 0.2$ s & $1200$ N (peak) & $200$ N (forward) 
-\hline
-\end{tabular}
+| **Time** | **Vertical GRF** | **Anterior-Posterior GRF** |
+|----------|-----------------|---------------------------|
+| $t = 0.0$ s | $900$ N (standing) | $0$ N |
+| $t = 0.2$ s | $1200$ N (peak) | $200$ N (forward) |
 
 
 At $t = 0.2$ s, compute the center-of-mass acceleration.
@@ -168,7 +164,8 @@ $$
 $$
 \ddot{z}_{\mathrm{COM}} = \frac{1200 + 883}{90} = 23.1 \text{ m/s}^2.
 $$
-This is an upward acceleration of $23.1 / 9.81 \approx 2.35$ g's.
+
+Note: In the sign convention used here, $F_z = m\ddot{z} - mg$ (with upward positive), so $\ddot{z} = (F_z + mg)/m$. This is an upward acceleration of $23.1 / 9.81 \approx 2.35$ g's. This reflects the golfer actively extending the legs during the downswing push-off phase.
 
 Anterior-Posterior component:
 $$
@@ -310,7 +307,7 @@ $$
 $$
 where $\bm{r}_{\mathrm{COM}}$ is computed from the joint angles $\bm{q}(t)$ via forward kinematics.
 
-### Zero-Torque Controlled Flight (ZTCF)
+### Zero-Torque Counterfactual (ZTCF)
 
 Consider a thought experiment: suppose all muscle torques are set to zero ($\boldsymbol{\tau}_{\mathrm{muscle}} = 0$), but the golfer remains in contact with the ground. What GRF exists?
 
@@ -497,7 +494,7 @@ This data feeds into coaching: golfers can see whether their GRF pattern matches
 
 :::
 
-\subsection*{Looking Ahead}
+### Looking Ahead
 Ground reaction forces provide the impulse that changes the body's momentum, but the internal mechanism that generates motion is muscular torque at the joints. How do individual muscle forces combine to produce joint torques? Chapter~\ref{ch:muscle-to-torque} develops the *muscle Jacobian* that maps hundreds of muscle forces into the handful of joint torques that appear in our equations of motion.
 
 ## Chapter Exercises
