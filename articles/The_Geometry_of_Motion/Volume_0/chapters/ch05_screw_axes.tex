@@ -16,10 +16,19 @@
 \textbf{All Variables Defined:} $\mathbf{T} \in \SE(3)$ describes a full pose, $\screw \in \Reals^6$ describes 6D spatial velocity, and $\wrench \in \Reals^6$ describes 6D spatial force. See the \textbf{Nomenclature} at the start of the book.
 \end{laymansbox}
 
+\begin{principle}{Twist and Wrench Ordering Convention}{twist_wrench_convention}
+Throughout this text, we adopt the \textbf{Murray--Li--Sastry / Lynch--Park convention} \cite{Murray1994, Lynch2017} for spatial vectors:
+\begin{itemize}
+  \item \textbf{Twist} (spatial velocity): $\mathcal{V} = (\boldsymbol{\omega}, \mathbf{v})^T \in \Reals^6$, with angular velocity $\boldsymbol{\omega}$ in the \emph{top} three components and linear velocity $\mathbf{v}$ in the \emph{bottom} three.
+  \item \textbf{Wrench} (spatial force): $\mathcal{F} = (\boldsymbol{\tau}, \mathbf{f})^T \in \Reals^6$, with torque $\boldsymbol{\tau}$ in the top three and linear force $\mathbf{f}$ in the bottom three.
+\end{itemize}
+Note that Featherstone \cite{Featherstone2008} uses the reversed ordering $(\mathbf{v}, \boldsymbol{\omega})$. Readers consulting Featherstone's \emph{Rigid Body Dynamics Algorithms} should be mindful of this transposition when comparing equations.
+\end{principle}
+
 \section{Historical Context: From Chasles to Modern Screw Theory}
 \label{sec:historical_context_screws}
 
-The mathematical formalism of screws has a rich history spanning nearly two centuries. French mathematician \textbf{Michel Chasles} published his foundational theorem in 1830, establishing that any rigid body displacement in 3D space can be described as a rotation about a fixed axis combined with a translation parallel to that axis. This unifying insight—that even the most chaotic tumbling motion is geometrically equivalent to a single screw—became the cornerstone of spatial mechanics.
+The mathematical formalism of screws has a rich history spanning over two centuries. Italian mathematician \textbf{Giulio Mozzi} first showed in 1763 that any rigid body displacement can be decomposed into a rotation and a parallel translation, though his work received little attention at the time. French mathematician \textbf{Michel Chasles} independently published the result in 1830 in a more widely disseminated form, establishing that any rigid body displacement in 3D space can be described as a rotation about a fixed axis combined with a translation parallel to that axis. This unifying insight—that even the most complex rigid body motion is geometrically equivalent to a single screw—became the cornerstone of spatial mechanics.
 
 The theory lay relatively dormant until the late 19th century, when \textbf{Robert Stawell Ball} formalized screw calculus in his monograph \textit{A Treatise on the Theory of Screws} \cite{ball1900}. Ball's framework unified the representation of twists (infinitesimal motions) and wrenches (spatial forces) into a coherent algebraic system. He introduced the concept of \textbf{reciprocal screws}—pairs of screws satisfying a special orthogonality condition—which became essential for constraint analysis in mechanisms. The modern Lie-algebraic treatment of twists and wrenches was developed systematically by Murray, Li, and Sastry \cite{Murray1994}.
 
@@ -139,7 +148,7 @@ If $\mathbf{T} \in \SE(3)$ defines the complete layout of a rigid body in space,
 
 The answer is provided by one of the most elegant theorems in mechanics:
 
-\begin{theorem}{Chasles' Theorem (1830)}{chasles}
+\begin{theorem}{Chasles--Mozzi Theorem (Mozzi 1763; Chasles 1830)}{chasles}
   Any rigid body displacement in 3D space can be expressed as a rotation about a unique axis combined with a translation parallel to that axis. In other words, every element $\mathbf{T} \in \SE(3)$ corresponds to a \textbf{screw motion} along a specific geometric axis.
 \end{theorem}
 
@@ -613,7 +622,7 @@ This formula states that power has two contributions: the rotational power $\bol
 
 \subsection{Invariance of Power}
 
-A profound property of the spatial formalism is that power is invariant under changes of reference frame. If we express both the twist and the wrench in any frame, the inner product $\wrench^T \twist$ yields the same value. This is the mathematical embodiment of energy conservation: the rate of work done on a body does not depend on which observer calculates it.
+A notable property of the spatial formalism is that power is invariant under changes of reference frame. If we express both the twist and the wrench in any frame, the inner product $\wrench^T \twist$ yields the same value. This is the mathematical embodiment of energy conservation: the rate of work done on a body does not depend on which observer calculates it.
 
 \section{Reciprocal Screws and Constraint Analysis}
 \label{sec:reciprocal_screws}
