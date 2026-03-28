@@ -5,11 +5,6 @@ title: "Learning to Move"
 # Learning to Move
 
 
-
-
-
-
-
 ## Iterative Learning Control (ILC)
 
 
@@ -18,7 +13,6 @@ Trajectory optimization (Chapter 6) computes a reference motion strictly from a 
 **Iterative Learning Control (ILC)** resolves this by leveraging the repetitive nature of tasks like a golf swing. ILC exploits the premise that while models are inaccurate, *the unmodeled dynamics are highly deterministic across repeated trials*. 
 
 If a robot under-swings by $5$ cm on the first attempt, the controller records this terminal error and updates the feedforward command $\control_{\text{ff}}$ for the *second* attempt. Over repeated trials, the system learns the inverse dynamics of the true physical plant without ever explicitly identifying the model parameters. 
-
 
 
   Let $j$ denote the trial index. The feedforward command for trial $j+1$ is updated based on the command and the *transverse error* $\bm{\xi}$ from trial $j$:
@@ -31,8 +25,6 @@ If a robot under-swings by $5$ cm on the first attempt, the controller records t
   where $\bm{L}(t)$ is a learning filter. This updates the nominal trajectory to iteratively cancel out deterministic disturbances.
 
 
-
-
 ## Policy Search and Reinforcement Learning
 
 
@@ -41,11 +33,9 @@ While ILC updates the feedforward commands to zero-out deterministic tracking er
 Instead of computing the transverse LQR gains $\bm{K}_\perp(t)$ from an analytical Riccati equation (Chapter 4), we parameterize the controller as a policy $\pi_{\bm{\theta}}(\state)$ and search the parameter space $\bm{\theta}$ to minimize the variance at the moving goal under realistic noise.
 
 Reinforcement Learning (RL), specifically policy gradient methods, allows the agent to sample thousands of golf swings in simulation, continuously updating its policy parameters to maximize the expected reward (clubhead speed and squareness at impact). A heavily trained RL agent organically converges on the very principles we mathematically derived in earlier chapters:
-\begin{enumerate}
-    \item It abandons rigid time-tracking and autonomously discovers phase-variable mapping.
-    \item It exploits the underactuated double-pendulum whipping motion to gain speed.
-    \item It artificially widens its "funnel" during the transition phase, realizing that overly tight feedback control here merely amplifies motor noise and spoils the impact constraints.
-\end{enumerate}
+1. It abandons rigid time-tracking and autonomously discovers phase-variable mapping.
+2. It exploits the underactuated double-pendulum whipping motion to gain speed.
+3. It artificially widens its "funnel" during the transition phase, realizing that overly tight feedback control here merely amplifies motor noise and spoils the impact constraints.
 
 
 ## Trajectory Libraries

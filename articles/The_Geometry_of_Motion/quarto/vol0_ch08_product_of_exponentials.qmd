@@ -20,7 +20,6 @@ Modern robotics, notably popularized by Richard Murray, Zexiang Li, Shankar Sast
 :::
 
 
-
 ## The Forward Kinematics Equation
 
 
@@ -31,12 +30,10 @@ If a robotic arm has $n$ joints, the Product of Exponentials formula computes th
 \end{equation}
 
 Where:
-\begin{enumerate}
-    \item $M \in \SE$ is the "Home Configuration" matrix perfectly describing where the end-effector sits when all motor angles $\theta_i = 0$.
-    \item $\screw_i \in \se$ is the spatial Screw Axis (the twist parameter) for joint $i$, expressed in the global Space Frame when the robot is at Home Configuration.
-    \item $\theta_i$ is the actual angle (or distance) the motor has moved.
-    \item $e^{[\screw_i]\theta_i} \in \SE$ is the Matrix Exponential (developed in Chapter 5) mapping that single joint's motion into a 4x4 matrix.
-\end{enumerate}
+1. $M \in \SE$ is the "Home Configuration" matrix perfectly describing where the end-effector sits when all motor angles $\theta_i = 0$.
+2. $\screw_i \in \se$ is the spatial Screw Axis (the twist parameter) for joint $i$, expressed in the global Space Frame when the robot is at Home Configuration.
+3. $\theta_i$ is the actual angle (or distance) the motor has moved.
+4. $e^{[\screw_i]\theta_i} \in \SE$ is the Matrix Exponential (developed in Chapter 5) mapping that single joint's motion into a 4x4 matrix.
 
 This equation guarantees that no matter how complex the geometric chain is, the entire forward kinematics operation is just sequentially multiplying $4 \times 4$ matrices starting from the base to the tool tip.
 

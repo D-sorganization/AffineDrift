@@ -18,9 +18,7 @@ along the flow.
 :::
 
 
-
 ## Historical Context and the Shift to Trajectory Stability
-
 
 
 ### From Lyapunov Point Stability to Trajectory Convergence
@@ -77,17 +75,14 @@ the ``ruler'' to change with position and time.
 
 
 Contraction theory has since become a cornerstone of:
-\begin{itemize}
-\item **Incremental stability and synchronization**: studying how coupled oscillators,
-      networked systems, and consensus algorithms achieve agreement.
-\item **Control design**: synthesis of feedback laws that guarantee contraction, leading
-      to robust and verifiable controllers.
-\item **Learning-based control**: verification of neural network controllers via metric
-      composition and convex optimization.
-\item **Robotics and autonomous systems**: design of feedback laws that are tolerant to
-      perturbations and external disturbances.
-\end{itemize}
-
+- **Incremental stability and synchronization**: studying how coupled oscillators,
+  networked systems, and consensus algorithms achieve agreement.
+- **Control design**: synthesis of feedback laws that guarantee contraction, leading
+  to robust and verifiable controllers.
+- **Learning-based control**: verification of neural network controllers via metric
+  composition and convex optimization.
+- **Robotics and autonomous systems**: design of feedback laws that are tolerant to
+  perturbations and external disturbances.
 
 
 ## From Equilibrium Stability to Trajectory Stability
@@ -107,7 +102,6 @@ flow. If all tangent vectors shrink in a chosen metric, the geodesic distance be
 trajectories also shrinks. Contraction is local shrinking that integrates into global
 convergence.
 \end{intuitionbox}
-
 
 
 ## The Contraction Condition
@@ -171,7 +165,6 @@ rate $\lambda$ corresponds directly to the exponential decay rate of perturbatio
 condition is called a **matrix inequality** because it compares two matrices in the
 partial order defined by positive semidefiniteness.
 \end{remark}
-
 
 
 ## Complete Proof of Exponential Convergence
@@ -305,7 +298,6 @@ The contraction condition ensures all three work together.
 \end{remark}
 
 
-
 ## The Identity Metric: Symmetric Jacobian Condition
 
 
@@ -330,9 +322,7 @@ is the central computational challenge.
 \end{remark}
 
 
-
 ## Worked Example: A Simple Linear System
-
 
 
 ### Problem Setup
@@ -429,9 +419,7 @@ this simple system, the identity metric already achieves excellent contraction.
 \end{designbox}
 
 
-
 ## Partial Contraction: Hierarchical Structure
-
 
 
 ### When Not All Directions Contract
@@ -458,12 +446,10 @@ may drift. We can still harness the contraction in $\x_2$ to establish synchroni
 \begin{theorem}[Partial Contraction via Hierarchical Decomposition]
 \label{thm:ch4:partial}
 Partition $\x = [\x_1; \x_2]$ with dimensions $n_1$ and $n_2$. Suppose:
-\begin{enumerate}
-\item The reduced system for $\x_2$ is globally contracting with rate $\lambda_2 > 0$
-      in a metric $\mat{M}_2(\x_2,t)$.
-\item For any fixed trajectory $\x_2(t)$, the $\x_1$-subsystem driven by $\x_2(t)$ is
-      globally contracting with rate $\lambda_1 > 0$ in a metric $\mat{M}_1(\x_1,\x_2,t)$.
-\end{enumerate}
+1. The reduced system for $\x_2$ is globally contracting with rate $\lambda_2 > 0$
+   in a metric $\mat{M}_2(\x_2,t)$.
+2. For any fixed trajectory $\x_2(t)$, the $\x_1$-subsystem driven by $\x_2(t)$ is
+   globally contracting with rate $\lambda_1 > 0$ in a metric $\mat{M}_1(\x_1,\x_2,t)$.
 Then the full system is contracting with rate $\lambda = \min(\lambda_1, \lambda_2)$
 in the block-diagonal metric
 \begin{equation}
@@ -495,9 +481,7 @@ and all solutions synchronize to the reference motion.
 \end{example}
 
 
-
 ## Control Contraction Metrics: Design and Duality
-
 
 
 ### Feedback Design Under Contraction
@@ -605,9 +589,7 @@ sample point, solving a series of SDPs. The result is a conservative (but comput
 approximation to the true metric.
 
 
-
 ## Discrete-Time Contraction
-
 
 
 ### Discrete Contraction Condition
@@ -676,9 +658,7 @@ is fast enough that the discrete assumption is valid.
 \end{remark}
 
 
-
 ## Numerical Example: Van der Pol Oscillator
-
 
 
 ### System Description
@@ -761,9 +741,7 @@ nonlinear coupling term.
 \end{intuitionbox}
 
 
-
 ## Robustness Margins from Contraction
-
 
 
 ### Disturbance Attenuation via Contraction Rate
@@ -814,15 +792,13 @@ yielding an ultimate bound proportional to $D/\lambda$.
 
 The ultimate bound \eqref{eq:ch4:ultimate-bound-steady} shows that:
 
-\begin{itemize}
-\item **Higher contraction rate $\lambda$ ** $\implies$ **smaller steady-state error**.
-      A fast-contracting system naturally rejects disturbances more aggressively.
-\item **Metric condition number ** $\kappa = \overline{m}/\underline{m}$ enters
-      the bound. A well-conditioned metric (close to isotropic) improves robustness.
-\item **Design trade-off**: increasing $\lambda$ may require larger control effort
-      or more aggressive feedback. Practical design balances contraction rate and
-      control limitations.
-\end{itemize}
+- **Higher contraction rate $\lambda$ ** $\implies$ **smaller steady-state error**.
+  A fast-contracting system naturally rejects disturbances more aggressively.
+- **Metric condition number ** $\kappa = \overline{m}/\underline{m}$ enters
+  the bound. A well-conditioned metric (close to isotropic) improves robustness.
+- **Design trade-off**: increasing $\lambda$ may require larger control effort
+  or more aggressive feedback. Practical design balances contraction rate and
+  control limitations.
 
 \begin{designbox}
 In robust control applications (aircraft flight control, surgical robotics), the contraction
@@ -832,9 +808,7 @@ a convex optimization problem.
 \end{designbox}
 
 
-
 ## Incremental Input-to-State Stability (ISS)
-
 
 
 ### ISS vs.\ Contraction
@@ -868,9 +842,7 @@ contraction guarantees not only ISS but also trajectory synchronization.
 \end{remark}
 
 
-
 ## Extended Lyapunov Comparison
-
 
 
 ### Unified Perspective
@@ -924,7 +896,6 @@ same rate---a scenario that contraction explicitly rules out.
 \end{remark}
 
 
-
 ## Contraction in Biomechanical Systems
 
 
@@ -940,26 +911,22 @@ particular attention to the golf swing.
 The human neuromuscular system implements contraction through several mechanisms that
 operate at different time scales:
 
-\begin{enumerate}
-\item **Muscle impedance (passive contraction):** Skeletal muscles exhibit intrinsic
-      viscoelastic properties. Even without neural activation, a stretched muscle generates
-      a restoring force proportional to its displacement and a damping force proportional
-      to its velocity. In the language of this chapter, the Jacobian of the passive
-      dynamics has negative eigenvalues at equilibrium---the muscle constitutes a natural
-      contraction metric in joint space.
-
-\item **Stretch reflex (active contraction):** The spinal stretch reflex provides
-      fast ($\sim$40 ms) feedback that resists perturbations. This is a feedback controller
-      that increases the contraction rate beyond the passive baseline. In our framework,
-      the reflex effectively modifies $\mat{A}_{\text{cl}} = \mat{A} - G\mat{K}_{\text{reflex}}$,
-      where $\mat{K}_{\text{reflex}}$ is the reflex gain.
-
-\item **Co-contraction (metric shaping):** When a person stiffens a joint by
-      simultaneously activating agonist and antagonist muscles, they are effectively
-      increasing the eigenvalues of the contraction metric in the directions of that joint.
-      This is the biological equivalent of choosing a non-identity metric $\mat{M}(\x)$:
-      co-contraction shapes the metric to provide stronger contraction where needed.
-\end{enumerate}
+1. **Muscle impedance (passive contraction):** Skeletal muscles exhibit intrinsic
+   viscoelastic properties. Even without neural activation, a stretched muscle generates
+   a restoring force proportional to its displacement and a damping force proportional
+   to its velocity. In the language of this chapter, the Jacobian of the passive
+   dynamics has negative eigenvalues at equilibrium---the muscle constitutes a natural
+   contraction metric in joint space.
+2. **Stretch reflex (active contraction):** The spinal stretch reflex provides
+   fast ($\sim$40 ms) feedback that resists perturbations. This is a feedback controller
+   that increases the contraction rate beyond the passive baseline. In our framework,
+   the reflex effectively modifies $\mat{A}_{\text{cl}} = \mat{A} - G\mat{K}_{\text{reflex}}$,
+   where $\mat{K}_{\text{reflex}}$ is the reflex gain.
+3. **Co-contraction (metric shaping):** When a person stiffens a joint by
+   simultaneously activating agonist and antagonist muscles, they are effectively
+   increasing the eigenvalues of the contraction metric in the directions of that joint.
+   This is the biological equivalent of choosing a non-identity metric $\mat{M}(\x)$:
+   co-contraction shapes the metric to provide stronger contraction where needed.
 
 \begin{intuitionbox}
 A novice golfer co-contracts many muscles simultaneously, creating a stiff (high $\lambda$)
@@ -978,17 +945,15 @@ contraction (Theorem~\ref{thm:ch4:partial}) applies. The kinematic chain
 $\text{torso} \to \text{shoulder} \to \text{elbow} \to \text{wrist} \to \text{club}$
 exhibits a natural partitioning:
 
-\begin{itemize}
-\item The proximal segments (torso, shoulder) are heavily muscled and contract rapidly.
-      Their contraction rate $\lambda_{\text{proximal}}$ is high.
-\item The distal segments (wrist, club) have less muscular authority. Their contraction
-      rate $\lambda_{\text{distal}}$ is lower, and the club shaft (being passive) does
-      not contract at all without feedback.
-\item Partial contraction theory guarantees that if the proximal subsystem contracts,
-      and the distal subsystem contracts when driven by a fixed proximal trajectory,
-      then the overall chain contracts at rate
-      $\lambda = \min(\lambda_{\text{proximal}}, \lambda_{\text{distal}})$.
-\end{itemize}
+- The proximal segments (torso, shoulder) are heavily muscled and contract rapidly.
+  Their contraction rate $\lambda_{\text{proximal}}$ is high.
+- The distal segments (wrist, club) have less muscular authority. Their contraction
+  rate $\lambda_{\text{distal}}$ is lower, and the club shaft (being passive) does
+  not contract at all without feedback.
+- Partial contraction theory guarantees that if the proximal subsystem contracts,
+  and the distal subsystem contracts when driven by a fixed proximal trajectory,
+  then the overall chain contracts at rate
+  $\lambda = \min(\lambda_{\text{proximal}}, \lambda_{\text{distal}})$.
 
 This hierarchical structure explains why elite golfers focus on consistency of the
 proximal chain (stable torso rotation, repeatable shoulder turn): if the proximal
@@ -1003,17 +968,15 @@ During the late downswing, the system enters a drift-dominated regime
 to centrifugal and Coriolis forces. In this regime, the contraction properties of the
 *drift field* determine whether the motion is stable:
 
-\begin{enumerate}
-\item If the drift Jacobian has eigenvalues with negative real parts (natural damping),
-      the uncontrolled trajectory is contracting. This is the ``natural stability''
-      of the late downswing.
-\item If the drift Jacobian has eigenvalues with positive real parts (instability),
-      perturbations grow exponentially. At impact, even small deviations from the
-      intended trajectory can produce large clubface errors.
-\item The contraction rate of the drift determines the ``forgiveness'' of the swing:
-      a highly contracting drift absorbs perturbations, while a weakly contracting or
-      expanding drift amplifies them.
-\end{enumerate}
+1. If the drift Jacobian has eigenvalues with negative real parts (natural damping),
+   the uncontrolled trajectory is contracting. This is the ``natural stability''
+   of the late downswing.
+2. If the drift Jacobian has eigenvalues with positive real parts (instability),
+   perturbations grow exponentially. At impact, even small deviations from the
+   intended trajectory can produce large clubface errors.
+3. The contraction rate of the drift determines the ``forgiveness'' of the swing:
+   a highly contracting drift absorbs perturbations, while a weakly contracting or
+   expanding drift amplifies them.
 
 \begin{designbox}
 The practical design principle for swing optimization is: use the controllable early
@@ -1028,7 +991,6 @@ has uniformly negative eigenvalues are ``safe zones'' where the swing is inheren
 stable. The optimal trajectory passes through these zones during the critical
 impact phase.
 \end{designbox}
-
 
 
 ## Stochastic Contraction
@@ -1094,7 +1056,6 @@ The optimal trade-off depends on the noise intensity and the available actuator 
 \end{designbox}
 
 
-
 ## Contraction Tubes and Funnel Control
 
 
@@ -1126,13 +1087,11 @@ Funnel control prescribes a time-varying performance boundary $\varphi(t) > 0$
 (the ``funnel'') and designs a gain that guarantees the tracking error satisfies
 $\|e(t)\| < \varphi(t)$ for all $t > 0$. The connection to contraction is:
 
-\begin{itemize}
-\item The funnel boundary $\varphi(t)$ defines the desired tube radius.
-\item A contracting controller with rate $\lambda \geq -\dot\varphi / \varphi$
-      guarantees that trajectories remain within the funnel.
-\item The adaptive gain $k(t) = 1/(\varphi(t) - \|e(t)\|)$ from classical funnel
-      control achieves this by increasing gain as the error approaches the boundary.
-\end{itemize}
+- The funnel boundary $\varphi(t)$ defines the desired tube radius.
+- A contracting controller with rate $\lambda \geq -\dot\varphi / \varphi$
+  guarantees that trajectories remain within the funnel.
+- The adaptive gain $k(t) = 1/(\varphi(t) - \|e(t)\|)$ from classical funnel
+  control achieves this by increasing gain as the error approaches the boundary.
 
 \begin{intuitionbox}
 Contraction tubes formalize the intuition that ``nearby trajectories stay nearby.''
@@ -1144,61 +1103,47 @@ and loose in insensitive ones.
 \end{intuitionbox}
 
 
-
 ## Chapter Summary
 
 
-\begin{enumerate}
-\item **Historical foundations:** Contraction theory evolved from Demidovich's
-      work on the symmetric Jacobian condition (1961) and was formalized by Lohmiller
-      and Slotine (1998). It generalizes Lyapunov stability from point stability to
-      trajectory stability.
-
-\item **The contraction condition** (Def.~\ref{def:ch4:contraction}) is a matrix
-      inequality on the Jacobian and metric:
-      $\mat{A}^\T\mat{M} + \mat{M}\mat{A} + \dot{\mat{M}} \preceq -2\lambda\mat{M}$.
-
-\item **Exponential convergence** (Thm.~\ref{thm:ch4:convergence}): If the condition
-      holds, all trajectories converge to each other at rate $e^{-\lambda t}$. The proof
-      combines geodesic parametrization, Gronwall's inequality, and metric sandwich bounds.
-
-\item **Metric freedom**: The choice of $\mat{M}$ is flexible. Many nonlinear systems
-      that do not contract in the identity metric may contract in a well-chosen metric.
-      Finding the right metric is the central computational challenge.
-
-\item **Worked example** (Sec.~\ref{sec:ch4:example}): A linear system with Jacobian
-      $\mat{A} = [[-2,1],[0,-3]]$ is contracting in the identity metric at rate $\lambda \approx 1.79$.
-
-\item **Partial contraction** (Sec.~\ref{sec:ch4:partial}): Not all directions must
-      contract uniformly. Hierarchical decomposition (Thm.~\ref{thm:ch4:partial})
-      enables contraction in one subsystem to drive convergence in another.
-
-\item **Control contraction metrics (CCM)** (Sec.~\ref{sec:ch4:ccm}): For controlled
-      systems, feedback design can be posed as a convex optimization in the dual metric
-      $\mat{W} = \mat{M}^{-1}$. The pointwise LMI
-      $\dot{\mat{W}} - \mat{A}\mat{W} - \mat{W}\mat{A}^\T + \gamma GG^\T \preceq -2\lambda\mat{W}$
-      enables SDP-based controller synthesis.
-
-\item **Discrete-time contraction** (Sec.~\ref{sec:ch4:discrete}): The condition
-      $\mat{J}_k^\T \mat{M}_{k+1} \mat{J}_k \preceq \rho^2 \mat{M}_k$ certifies exponential
-      decay with rate $\rho < 1$ for iterative algorithms and digital controllers.
-
-\item **Numerical metric synthesis**: The Van der Pol oscillator (Sec.~\ref{sec:ch4:vdp})
-      demonstrates how parameterized metrics can be found computationally to achieve
-      contraction despite nonlinearity.
-
-\item **Robustness margins**: The contraction rate $\lambda$ directly bounds
-      disturbance rejection. For $\norm{d(t)} \leq D$, the ultimate error bound
-      is $\sqrt{\overline{m}/({\lambda\underline{m}})} \cdot D$ (Thm.~\ref{thm:ch4:disturbance-rejection}).
-
-\item **ISS relationship**: Contraction implies incremental ISS, which is strictly
-      stronger than standard ISS. Contraction certifies trajectory synchronization, not
-      just input-output boundedness.
-
-\item **Lyapunov connection**: Contraction implies Lyapunov stability, but the
-      converse does not hold. Contraction is a stronger, trajectory-focused property
-      (Prop.~\ref{prop:ch4:contraction-lyapunov}).
-\end{enumerate}
+1. **Historical foundations:** Contraction theory evolved from Demidovich's
+   work on the symmetric Jacobian condition (1961) and was formalized by Lohmiller
+   and Slotine (1998). It generalizes Lyapunov stability from point stability to
+   trajectory stability.
+2. **The contraction condition** (Def.~\ref{def:ch4:contraction}) is a matrix
+   inequality on the Jacobian and metric:
+   $\mat{A}^\T\mat{M} + \mat{M}\mat{A} + \dot{\mat{M}} \preceq -2\lambda\mat{M}$.
+3. **Exponential convergence** (Thm.~\ref{thm:ch4:convergence}): If the condition
+   holds, all trajectories converge to each other at rate $e^{-\lambda t}$. The proof
+   combines geodesic parametrization, Gronwall's inequality, and metric sandwich bounds.
+4. **Metric freedom**: The choice of $\mat{M}$ is flexible. Many nonlinear systems
+   that do not contract in the identity metric may contract in a well-chosen metric.
+   Finding the right metric is the central computational challenge.
+5. **Worked example** (Sec.~\ref{sec:ch4:example}): A linear system with Jacobian
+   $\mat{A} = [[-2,1],[0,-3]]$ is contracting in the identity metric at rate $\lambda \approx 1.79$.
+6. **Partial contraction** (Sec.~\ref{sec:ch4:partial}): Not all directions must
+   contract uniformly. Hierarchical decomposition (Thm.~\ref{thm:ch4:partial})
+   enables contraction in one subsystem to drive convergence in another.
+7. **Control contraction metrics (CCM)** (Sec.~\ref{sec:ch4:ccm}): For controlled
+   systems, feedback design can be posed as a convex optimization in the dual metric
+   $\mat{W} = \mat{M}^{-1}$. The pointwise LMI
+   $\dot{\mat{W}} - \mat{A}\mat{W} - \mat{W}\mat{A}^\T + \gamma GG^\T \preceq -2\lambda\mat{W}$
+   enables SDP-based controller synthesis.
+8. **Discrete-time contraction** (Sec.~\ref{sec:ch4:discrete}): The condition
+   $\mat{J}_k^\T \mat{M}_{k+1} \mat{J}_k \preceq \rho^2 \mat{M}_k$ certifies exponential
+   decay with rate $\rho < 1$ for iterative algorithms and digital controllers.
+9. **Numerical metric synthesis**: The Van der Pol oscillator (Sec.~\ref{sec:ch4:vdp})
+   demonstrates how parameterized metrics can be found computationally to achieve
+   contraction despite nonlinearity.
+10. **Robustness margins**: The contraction rate $\lambda$ directly bounds
+   disturbance rejection. For $\norm{d(t)} \leq D$, the ultimate error bound
+   is $\sqrt{\overline{m}/({\lambda\underline{m}})} \cdot D$ (Thm.~\ref{thm:ch4:disturbance-rejection}).
+11. **ISS relationship**: Contraction implies incremental ISS, which is strictly
+   stronger than standard ISS. Contraction certifies trajectory synchronization, not
+   just input-output boundedness.
+12. **Lyapunov connection**: Contraction implies Lyapunov stability, but the
+   converse does not hold. Contraction is a stronger, trajectory-focused property
+   (Prop.~\ref{prop:ch4:contraction-lyapunov}).
 
 In the next chapter, we turn to **input-output analysis** and transfer functions,
 exploring how tangent-space methods interface with frequency-domain techniques for
@@ -1206,47 +1151,38 @@ feedback design.
 
 \section*{Exercises}
 
-\begin{enumerate}
-\item **Contraction of a linear system.**
-      For $\dot\x = \mat{A}\x$ with $\mat{A} = \begin{bmatrix} -1 & 2 \\ 0 & -3 \end{bmatrix}$,
-      find the contraction rate using the identity metric $\mat{M} = \mat{I}$. Then find a
-      diagonal metric $\mat{M} = \text{diag}(m_1, m_2)$ that maximizes the contraction rate.
-
-\item **LMI feasibility.**
-      For the system $\dot\x = f(\x) + g(\x)u$ with
-      $f = (-x_1 + x_2^2,\; -2x_2)^T$ and $g = (0, 1)^T$, formulate the LMI condition
-      for finding a constant contraction metric $\mat{M}$ and rate $\lambda > 0$
-      (with $u = -kx_2$). Solve it for $k = 1$.
-
-\item **Partial contraction.**
-      For a cascade system $\dot{x}_1 = -x_1 + x_2^2$, $\dot{x}_2 = -2x_2 + u$,
-      verify partial contraction: show that the $x_2$-subsystem contracts independently,
-      and the $x_1$-subsystem contracts when $x_2(t)$ is treated as a known input.
-      What is the overall contraction rate?
-
-\item **CCM computation.**
-      For the single-input system $\dot{x}_1 = x_2$, $\dot{x}_2 = -x_1^3 + u$,
-      search for a CCM by parameterizing $\mat{W}(\x) = \mat{M}(\x)^{-1}$ as a polynomial
-      in $\x$ and solving the pointwise LMI condition.
-
-\item **Discrete-time contraction.**
-      Show that the discrete system $\x_{k+1} = \mat{A}\x_k$ is contracting if and only if
-      $\|\mat{A}\|_{\mat{M}} < 1$ for some positive definite $\mat{M}$. What is the
-      contraction rate in terms of $\|\mat{A}\|_{\mat{M}}$?
-
-\item **Stochastic contraction bound.**
-      For the scalar SDE $\dd x = -\lambda x \,\dd t + \sigma \,\dd W$ with $\lambda > 0$,
-      compute the steady-state variance $\E[x^2]$ exactly. Verify that it equals
-      $\sigma^2 / (2\lambda)$, consistent with the bound in Theorem~\ref{thm:ch4:stochastic-contraction}.
-
-\item **Tube computation.**
-      For the system in Exercise 1 with bounded disturbance $\|w\| \leq d = 0.1$,
-      compute the contraction tube radius $r(t)$ for $r_0 = 1$. At what time $t^*$
-      does the tube radius reach twice the steady-state radius?
-
-\item **Biological contraction.**
-      Consider a simplified muscle model: $\dot{x} = -kx - b\dot{x} + F(t)$ where
-      $k > 0$ (stiffness) and $b > 0$ (damping). Show this is contracting and compute
-      the contraction rate as a function of $k$ and $b$. Relate to the co-contraction
-      mechanism described in the biomechanics section.
-\end{enumerate}
+1. **Contraction of a linear system.**
+   For $\dot\x = \mat{A}\x$ with $\mat{A} = \begin{bmatrix} -1 & 2 \\ 0 & -3 \end{bmatrix}$,
+   find the contraction rate using the identity metric $\mat{M} = \mat{I}$. Then find a
+   diagonal metric $\mat{M} = \text{diag}(m_1, m_2)$ that maximizes the contraction rate.
+2. **LMI feasibility.**
+   For the system $\dot\x = f(\x) + g(\x)u$ with
+   $f = (-x_1 + x_2^2,\; -2x_2)^T$ and $g = (0, 1)^T$, formulate the LMI condition
+   for finding a constant contraction metric $\mat{M}$ and rate $\lambda > 0$
+   (with $u = -kx_2$). Solve it for $k = 1$.
+3. **Partial contraction.**
+   For a cascade system $\dot{x}_1 = -x_1 + x_2^2$, $\dot{x}_2 = -2x_2 + u$,
+   verify partial contraction: show that the $x_2$-subsystem contracts independently,
+   and the $x_1$-subsystem contracts when $x_2(t)$ is treated as a known input.
+   What is the overall contraction rate?
+4. **CCM computation.**
+   For the single-input system $\dot{x}_1 = x_2$, $\dot{x}_2 = -x_1^3 + u$,
+   search for a CCM by parameterizing $\mat{W}(\x) = \mat{M}(\x)^{-1}$ as a polynomial
+   in $\x$ and solving the pointwise LMI condition.
+5. **Discrete-time contraction.**
+   Show that the discrete system $\x_{k+1} = \mat{A}\x_k$ is contracting if and only if
+   $\|\mat{A}\|_{\mat{M}} < 1$ for some positive definite $\mat{M}$. What is the
+   contraction rate in terms of $\|\mat{A}\|_{\mat{M}}$?
+6. **Stochastic contraction bound.**
+   For the scalar SDE $\dd x = -\lambda x \,\dd t + \sigma \,\dd W$ with $\lambda > 0$,
+   compute the steady-state variance $\E[x^2]$ exactly. Verify that it equals
+   $\sigma^2 / (2\lambda)$, consistent with the bound in Theorem~\ref{thm:ch4:stochastic-contraction}.
+7. **Tube computation.**
+   For the system in Exercise 1 with bounded disturbance $\|w\| \leq d = 0.1$,
+   compute the contraction tube radius $r(t)$ for $r_0 = 1$. At what time $t^*$
+   does the tube radius reach twice the steady-state radius?
+8. **Biological contraction.**
+   Consider a simplified muscle model: $\dot{x} = -kx - b\dot{x} + F(t)$ where
+   $k > 0$ (stiffness) and $b > 0$ (damping). Show this is contracting and compute
+   the contraction rate as a function of $k$ and $b$. Relate to the co-contraction
+   mechanism described in the biomechanics section.
