@@ -112,25 +112,37 @@
 \setlength{\headheight}{14.5pt}
 
 % ──────────────────────────────────────────────
+% Notation Concordance — Volume II
+% ──────────────────────────────────────────────
+% This volume uses the same "primer" conventions as Volume 0:
+%   Vectors:    bold italic via \bm{}     e.g. \state = \bm{x}
+%   Reals:      \Reals  (alias \R also available via geometry_of_motion.sty)
+%   Lie groups: not heavily used in this volume
+%   Transpose:  bare ^T  (no macro)
+%
+% See geometry_of_motion.sty for the canonical fallback definitions.
+% ──────────────────────────────────────────────
+
+% ──────────────────────────────────────────────
 % Custom commands
 % ──────────────────────────────────────────────
-\newcommand{\state}{\bm{x}}
-\newcommand{\control}{\bm{u}}
-\newcommand{\traj}{\bm{\gamma}}
+\renewcommand{\state}{\bm{x}}
+\renewcommand{\control}{\bm{u}}
+\renewcommand{\traj}{\bm{\gamma}}
 \newcommand{\manifold}{\mathcal{M}}
 \newcommand{\configspace}{\mathcal{Q}}
 \newcommand{\statespace}{\mathcal{X}}
 \newcommand{\controlspace}{\mathcal{U}}
 \newcommand{\tube}{\mathcal{T}}
-\newcommand{\Reals}{\mathbb{R}}
-\newcommand{\dd}{\mathrm{d}}
-\newcommand{\dt}{\,\dd t}
+\renewcommand{\Reals}{\mathbb{R}}
+\renewcommand{\dd}{\mathrm{d}}
+\renewcommand{\dt}{\,\dd t}
 
 \DeclareMathOperator*{\argmin}{arg\,min}
 \DeclareMathOperator*{\argmax}{arg\,max}
 
-\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
-\newcommand{\inner}[2]{\left\langle #1,\, #2 \right\rangle}
+\renewcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\renewcommand{\inner}[2]{\left\langle #1,\, #2 \right\rangle}
 
 % Additional commands for specific chapters
 \newcommand{\tangent}{\bm{T}}

@@ -967,29 +967,15 @@ The accelerations produced are:
 
 Under the combined input $\tau^{(1)} + \tau^{(2)} = 4.5$ N\textperiodcentered{}m:
 \begin{equation}
-\ddot q^{(1)}+^{(2)} = -9.81 \times 0.5 + 4.5 = -4.905 + 4.5 = -0.405 \text{ rad/s}^2.
+\ddot q^{(1+2)} = -9.81 \times 0.5 + 4.5 = -4.905 + 4.5 = -0.405 \text{ rad/s}^2.
 \end{equation}
 
-Checking superposition:
+Naively checking whether total accelerations superpose:
 \begin{equation}
-\ddot q^{(1)} + \ddot q^{(2)} = -1.905 + (-3.405) = -5.310 \text{ rad/s}^2.
+\ddot q^{(1)} + \ddot q^{(2)} = -1.905 + (-3.405) = -5.310 \text{ rad/s}^2 \neq -0.405.
 \end{equation}
 
-Hmm, these don't match! But wait---the question is about superposition of \emph{inputs}, not
-accelerations. The correct statement is: the acceleration produced by input $\tau^{(1)} + \tau^{(2)}$
-equals the sum of accelerations produced by $\tau^{(1)}$ and $\tau^{(2)}$ \emph{relative to zero input}.
-
-Relative accelerations:
-\begin{align}
-\Delta\ddot q^{(1)} &:= \ddot q^{(1)} - \ddot q^{(0)} = -1.905 - 0 = -1.905, \\
-\Delta\ddot q^{(2)} &:= \ddot q^{(2)} - \ddot q^{(0)} = -3.405 - 0 = -3.405, \\
-\Delta\ddot q^{(1)}+^{(2)} &:= \ddot q^{(1)+^{(2)}} - \ddot q^{(0)} = -0.405 - 0 = -0.405.
-\end{align}
-
-And now: $\Delta\ddot q^{(1)} + \Delta\ddot q^{(2)} = -1.905 + (-3.405) = -5.310 \neq -0.405$.
-
-This still fails because we're adding \emph{accelerations} at the same state. The correct
-superposition is for the \emph{input-to-acceleration transfer function}:
+The mismatch is expected: the \emph{total} accelerations $\ddot q^{(i)}$ each include the gravity drift term $a_{\text{drift}} = -g\sin q = -4.905$, so summing them double-counts gravity. Superposition applies to the \emph{input-to-acceleration map}, not to total accelerations. The correct decomposition separates the drift from the input contribution:
 \begin{equation}
 H(q) = \frac{\ddot q}{\tau} = 1 \quad \text{(constant for the pendulum)}.
 \end{equation}
