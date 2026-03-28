@@ -332,13 +332,7 @@ A professional golfer's X-factor rotation creates large internal compressive and
 \begin{example}{Constraint Forces in the Spine Loop}{ex:spine_constraint_forces}
 Consider the spine loop: pelvis → spine → shoulders. If the pelvis rotates $\theta_p = 60°$ and the shoulders rotate $\theta_{sh} = 20°$ (X-factor), the spine must absorb the difference: $\theta_s = 40°$.
 
-The loop constraint is:
-\begin{equation}
-\bm{\Phi}_{\text{spine}} = \theta_p + \theta_s + \theta_{sh} = 60° + 40° + 20° = 120° \neq 0
-\label{eq:spine_constraint_violation}
-\end{equation}
-
-Wait, I made an error. Let me redefine. If all rotations are measured from a common reference frame (not relative), and the constraint is that the total rotations must sum to zero in the loop:
+Defining the rotations in a common reference frame, the loop closure constraint is:
 \begin{equation}
 \bm{\Phi}_{\text{spine}} = \theta_p - \theta_{sh} - \Delta\theta_{\text{spine}} = 0
 \label{eq:spine_constraint_correct}
@@ -359,7 +353,7 @@ The magnitude of these constraint forces depends on the inertial parameters, the
 \begin{constraintbox}{The X-Factor is a Constraint Mechanism}{constraint:xfactor_constraint}
 The \textbf{X-factor} is the difference between hip and shoulder rotation:
 \begin{equation}
-\text{X-factor} = \theta_{\text{hips}} - \theta_{\text{shoulders}}
+\text{X-factor} = \theta_{\text{shoulders}} - \theta_{\text{hips}}
 \label{eq:xfactor_definition}
 \end{equation}
 
@@ -386,7 +380,7 @@ Without the ground, the golfer would slide backward as they rotate forward (by N
 A 200-pound golfer (mass 90 kg) during the downswing experiences:
 
 \begin{enumerate}
-\item \textbf{Vertical force:} The golfer's weight is $90 \times 9.81 = 883$ N. As the golfer rotates and transfers weight forward, the ground reaction force increases to $1200$--$1500$ N (1.4--1.7 times body weight). This is a constraint force—the ground must push up harder to prevent the golfer from accelerating downward.
+\item \textbf{Vertical force:} The golfer's weight is $90 \times 9.81 = 883$ N. As the golfer rotates and transfers weight forward, the ground reaction force increases to approximately 1.0--1.4 times body weight \citep{Nesbit2005}. This is a constraint force---the ground must push up harder to prevent the golfer from accelerating downward.
 
 \item \textbf{Horizontal force:} As the upper body rotates and accelerates forward, the golfer's momentum would carry them forward. The friction between feet and ground provides a horizontal constraint force to prevent sliding. This force can reach $200$--$300$ N.
 
@@ -528,7 +522,7 @@ For the golf swing, the over-constraint ensures that as the hips drive, the shou
 
 \item \textbf{Ground reaction forces close the chain:} The ground contact is a loop constraint that prevents sliding and creates reaction forces. Without firm footing, this constraint is violated and energy is lost.
 
-\item \textbf{Constraint forces are enormous:} Loop constraints produce forces of $500$--$1000$ N or more at the spine, grip, and other joints. These are not muscular forces—they're automatic consequences of the constraint geometry.
+\item \textbf{Constraint forces are enormous:} Loop constraints produce forces of hundreds of Newtons at the spine, grip, and other joints, depending on swing speed and body parameters. These are not muscular forces---they are automatic consequences of the constraint geometry and the system dynamics.
 
 \item \textbf{Over-constraint is intentional:} Multiple paths from hips to arms create redundancy. This redundancy, combined with elasticity, enables stiffness, load sharing, and efficient energy transfer.
 
