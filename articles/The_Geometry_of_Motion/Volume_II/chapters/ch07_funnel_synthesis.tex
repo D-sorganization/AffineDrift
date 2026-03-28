@@ -94,7 +94,7 @@ If the derivative of the boundary function points inward everywhere on the bound
 \section{Sums-of-Squares (SOS) Programming}
 % ══════════════════════════════════════════════
 
-Proving that $\dot{V} < 0$ on the boundary $V=1$ for a general nonlinear function $\bm{f}$ is famously difficult. We have an infinite number of states on the boundary to check! We circumvent this by restricting our dynamics $\bm{f}$ algorithms to polynomials (via Taylor expansion or substitution) and leveraging \textbf{Sums-of-Squares (SOS) Programming}~\cite{Boyd1994, MajumdarTedrake2017}.
+Proving that $\dot{V} < 0$ on the boundary $V=1$ for a general nonlinear function $\bm{f}$ is famously difficult. We have an infinite number of states on the boundary to check. We circumvent this by restricting our dynamics $\bm{f}$ algorithms to polynomials (via Taylor expansion or substitution) and leveraging \textbf{Sums-of-Squares (SOS) Programming}~\cite{Boyd1994, MajumdarTedrake2017}.
 
 A polynomial $p(x)$ is a Sum of Squares if it can be written as $p(x) = \sum_{i} q_i(x)^2$ for some polynomials $q_i(x)$. If a polynomial is SOS, it is globally non-negative. Testing if a polynomial is SOS turns out to be equivalent to solving a Semidefinite Program (SDP)—a convex optimization problem that can be solved very efficiently.
 
@@ -102,7 +102,7 @@ We can reframe Theorem \ref{thm:funnel_invariance} using the S-procedure. To gua
 \begin{equation}
   -\dot{V}(\state, t) - L(\state, t)(1 - V(\state, t)) \quad \text{is SOS}
 \end{equation}
-where $L(\state, t)$ is a strictly positive polynomial multiplier. If $V(\state, t) = 1$, the second term vanishes, and the SOS condition forces $-\dot{V} > 0$, achieving our invariance proof!
+where $L(\state, t)$ is a strictly positive polynomial multiplier. If $V(\state, t) = 1$, the second term vanishes, and the SOS condition forces $-\dot{V} > 0$, achieving the invariance proof.
 
 % ══════════════════════════════════════════════
 \section{Computing the Funnel for the Golf Swing}
