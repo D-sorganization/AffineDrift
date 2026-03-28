@@ -95,8 +95,10 @@ Attack angle $\gamma_{\text{atk}}$ is the angle of the club path component perpe
 The relationship between attack angle and swing plane tilt is subtle but important. If a golfer swings along a plane tilted at angle $\theta_{\text{plane}}$ and descends along that plane with speed $v_{\text{down-plane}}$, then:
 
 \begin{equation}
-\gamma_{\text{atk}} = \theta_{\text{plane}} + \text{(component of acceleration in vertical direction)}
+\gamma_{\text{atk}} = \arcsin\!\bigl(\sin(\theta_{\text{plane}}) \cdot \sin(\theta_{\text{descent}})\bigr)
 \end{equation}
+
+where $\theta_{\text{descent}}$ is the angle of descent along the inclined plane at the moment of impact. For small angles, $\gamma_{\text{atk}} \approx \theta_{\text{plane}} \cdot \theta_{\text{descent}}$ (both in radians). In practice, the attack angle is measured directly by launch monitors rather than computed from plane geometry.
 
 For a driver, typical attack angles are +4$^{\circ}$ to +8$^{\circ}$ (slightly upward). For a 7-iron, typical attack angles are $-4$^{\circ}$ to $-6$^{\circ}$ (downward). \index{attack angle!typical values}
 
@@ -134,7 +136,7 @@ The orientation of the clubface at impact is the single most critical variable f
 The orientation of the clubface is fully determined by three independent parameters:
 
 \begin{enumerate}
-\item \textbf{Face angle} ($\alpha_{\text{face}}$): The rotation of the clubface about the shaft axis, measured in the horizontal plane. Negative angles represent a \textit{closed} face (toe higher than heel); positive angles represent an \textit{open} face (heel higher than toe). A 1$^{\circ}$ face angle error at impact with a driver produces approximately 17--20 yards of offline displacement at 250 yards of carry distance.
+\item \textbf{Face angle} ($\alpha_{\text{face}}$): The rotation of the clubface about the shaft axis, measured in the horizontal plane. Negative angles represent a \textit{closed} face (toe higher than heel); positive angles represent an \textit{open} face (heel higher than toe). A 1$^{\circ}$ face angle error at impact with a driver produces approximately 13--20~yards of offline displacement at 250~yards of carry distance (including both the initial geometric offset and the spin-induced curve).
 
 \item \textbf{Dynamic loft} ($\alpha_{\text{loft}}$): The angle between the clubface and the horizontal plane, measured in the direction of the swing plane. At address, the loft is static. At impact, dynamic loft is the sum of the static loft, the shaft lean (forward or backward), and any flexion in the shaft.
 
@@ -159,11 +161,11 @@ The clubface angle at impact is determined by the cumulative rotations of three 
 where:
 
 \begin{itemize}
-\item $\alpha_{\text{forearm}}$ is the supination/pronation (rotation about the long axis of the forearm). Supination (palm-up rotation) opens the face; pronation (palm-down rotation) closes it. This is the \textbf{dominant} contributor, accounting for approximately 70\% of total face angle change from address to impact. \index{forearm supination}
+\item $\alpha_{\text{forearm}}$ is the supination/pronation (rotation about the long axis of the forearm). Supination (palm-up rotation) opens the face; pronation (palm-down rotation) closes it. This is the \textbf{dominant} contributor to face angle change from address to impact (illustrative estimate: $\sim$70\% of total change, though the exact proportion varies with swing style). \index{forearm supination}
 
-\item $\alpha_{\text{wrist}}$ is the ulnar/radial deviation of the wrist in the plane perpendicular to the forearm axis. Ulnar deviation (wrist curl toward the pinky) closes the face; radial deviation (wrist curl toward the thumb) opens it. This contributes approximately 20\% of total face angle change. \index{wrist ulnar deviation}
+\item $\alpha_{\text{wrist}}$ is the ulnar/radial deviation of the wrist in the plane perpendicular to the forearm axis. Ulnar deviation (wrist curl toward the pinky) closes the face; radial deviation (wrist curl toward the thumb) opens it. This contributes a secondary portion (illustrative estimate: $\sim$20\%) of total face angle change. \index{wrist ulnar deviation}
 
-\item $\alpha_{\text{shaft twist}}$ is the torsional twisting of the shaft itself due to aerodynamic and impact forces. For a modern driver, this typically contributes 5--10$^{\circ}$ of change during the downswing. \index{shaft twist}
+\item $\alpha_{\text{shaft twist}}$ is the torsional twisting of the shaft itself due to off-center loading and dynamic forces. For a modern driver, shaft twist during the downswing is typically 1--3$^{\circ}$ \citep{MacKenzie2009}; older or softer designs may exhibit somewhat more. \index{shaft twist}
 
 \end{itemize}
 
@@ -199,7 +201,7 @@ For a golfer with a typical clubhead speed of 90 mph and swing-dependent charact
 \text{Gate width} \approx 3--5\text{ degrees}
 \end{equation}
 
-This narrow window is why face angle control is so critical. A 5$^{\circ}$ error in face angle will produce a shot 30--40 yards offline, while a 5$^{\circ}$ error in club path produces a much smaller offline error (because path has a smaller effect on launch direction than face angle does, as we will discuss in Section~\ref{sec:d_plane}).
+This narrow window is why face angle control is so critical. A 5$^{\circ}$ error in face angle will produce a shot roughly 65--100~yards offline at 250~yards carry, while a 5$^{\circ}$ error in club path produces a much smaller offline error (15--35~yards) because path has a smaller effect on launch direction than face angle does (see Section~\ref{sec:d_plane}).
 
 \subsection{Drift vs. Control: The Final 50 Milliseconds}
 
@@ -444,7 +446,7 @@ Modern driver design targets specific launch conditions by manipulating:
 
 Wind introduces additional complexity to launch angle optimization. A headwind increases optimal launch angle because the ball needs more time aloft before hitting ground effect. A tailwind decreases optimal launch angle because the ball benefits from ground effect and doesn't need to climb as steeply.
 
-For a headwind of 10 mph, the optimal launch angle increases by approximately 1--2$^{\circ}$. For a 10 mph tailwind, it decreases by approximately 1$^{\circ}$.
+For a headwind of 10~mph, the optimal launch angle increases by approximately 1--2$^{\circ}$. For a 10~mph tailwind, it decreases by approximately 1$^{\circ}$. These are illustrative estimates; the exact adjustments depend on ball speed, spin rate, and atmospheric density.
 
 \section{Sensitivity Analysis: What Matters Most?}
 \label{sec:sensitivity}
@@ -486,18 +488,18 @@ This means a 100 RPM change in spin rate produces only 2--3 yards of distance ch
 Unlike distance, directional accuracy is far more sensitive to face angle than to club path:
 
 \begin{equation}
-\frac{\partial \text{(offline distance)}}{\partial \alpha_{\text{face}}} \approx 60--70 \text{ yards per degree (at 250 yards carry)}
+\frac{\partial \text{(offline distance)}}{\partial \alpha_{\text{face}}} \approx 13--20 \text{ yards per degree (at 250 yards carry)}
 \label{eq:sensitivity_face}
 \end{equation}
 
-This means a 1$^{\circ}$ error in face angle at impact produces approximately 60--70 yards of offline error at the landing zone. In contrast:
+This means a 1$^{\circ}$ error in face angle at impact produces approximately 13--20~yards of offline displacement at 250~yards carry distance. The initial direction offset from a 1$^{\circ}$ face angle error is approximately 4--5~yards at 250~yards (from geometry: $250 \times \tan(1^{\circ}) \approx 4.4$~yards), but the spin-induced curve adds additional displacement, bringing the total to 13--20~yards depending on conditions. In contrast:
 
 \begin{equation}
-\frac{\partial \text{(offline distance)}}{\partial \alpha_{\text{path}}} \approx 20--30 \text{ yards per degree (at 250 yards carry)}
+\frac{\partial \text{(offline distance)}}{\partial \alpha_{\text{path}}} \approx 3--7 \text{ yards per degree (at 250 yards carry)}
 \label{eq:sensitivity_path}
 \end{equation}
 
-A 1$^{\circ}$ path error produces only 20--30 yards of offline error because the face angle weighting in the D-plane model mitigates the effect of path.
+A 1$^{\circ}$ path error produces only 3--7~yards of offline displacement because the face angle weighting in the D-plane model mitigates the effect of path (the ball starts primarily in the face direction, not the path direction).
 
 \subsection{The Consistency Argument}
 
@@ -538,7 +540,7 @@ The launch conditions observed at impact are the outcome of:
 
 \end{enumerate}
 
-The implication is striking: \textit{the golfer cannot consciously control launch conditions by ``steering'' or ``feeling'' in the final moments}. Instead, launch conditions are determined by the setup and acceleration phases.
+The implication is far-reaching: \textit{the golfer cannot consciously control launch conditions by ``steering'' or ``feeling'' in the final moments}. Instead, launch conditions are determined by the setup and acceleration phases.
 \end{principle}
 
 \subsection{The Control Window Closes 50--100 ms Before Impact}

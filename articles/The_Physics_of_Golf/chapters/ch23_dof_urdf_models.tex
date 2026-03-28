@@ -90,54 +90,18 @@ Both methods agree for a tree structure.
 \subsection{Worked Example 2: A Closed Kinematic Loop}
 
 \begin{example}{4-Bar Mechanism (Linkage)}{ex:four_bar_loop}
-Consider a classic 4-bar linkage: 4 bars (links) connected by 4 revolute joints. The links form a closed loop: link 1 connects to link 2, link 2 to link 3, link 3 to link 4, and link 4 back to link 1.
+Consider a classic 4-bar linkage: 4 bars (links) connected by 4 revolute joints forming a closed loop. One link is the ground frame (fixed), so $N = 4$ (ground + 3 moving links).
 
-\textbf{Bodies:} Ground (if we consider the base fixed) + 3 moving links = 4 bodies. Actually, let's say the ground is the reference and we have 4 rigid bodies total in the chain: $N = 4$.
-
-Wait, a 4-bar mechanism has 4 links forming a loop. One link is the ground frame (fixed). So $N = 4$ (ground + 3 moving links).
-
-\textbf{Joints:} 4 revolute joints. $J = 4$. Each has $f_i = 1$, so $\sum c_i = 20$.
-
-\textbf{Grübler calculation (open chain):}
-$$\mathrm{DOF} = 6(4-1) - 20 = 18 - 20 = -2$$
-
-Negative DOF? This is wrong! The issue is that the formula gives a negative answer when there's a loop. We need to account for loop closure constraints.
-
-\textbf{Loop constraints:} The four bars form a closed loop. This loop closure imposes a constraint: the end of bar 1 and the start of bar 2 must meet (position match), AND the end of bar 3 and the start of bar 4 must meet. These are 6 constraints per loop (3 position + 3 orientation) ... but wait, in a planar 4-bar mechanism, only some of these constraints are active.
-
-Actually, the correct formula for a mechanism with loops is:
-$$\mathrm{DOF}_{\text{mechanism}} = 6(N-1) - \sum c_i - (\text{loop closure constraints})$$
-
-For a planar 4-bar mechanism, the loop closure imposes 3 constraints (2 position + 1 orientation in the plane). So:
-$$\mathrm{DOF} = 18 - 20 - (-2) = 18 - 20 + 2 = 0$$
-
-Hmm, still off. Let me reconsider. Actually, the Grübler formula for a planar mechanism (where all DOFs are in a plane) is:
+\textbf{Key insight:} Because this is a planar mechanism, we must use the \textbf{planar Gr\"ubler formula}, not the spatial one. In 2D, each free body has 3~DOF (two translations + one rotation), and each revolute joint imposes 2 constraints (prevents the two translations at the joint, while permitting rotation):
 
 $$\mathrm{DOF}_{\text{planar}} = 3(N-1) - \sum c_i^{\text{planar}}$$
 
-For a planar 4-bar: $N = 4$, each revolute imposes $c^{\text{planar}} = 1$ constraint.
-$$\mathrm{DOF} = 3(3) - 4(1) = 9 - 4 = 5$$
+With $N = 4$ bodies and $J = 4$ planar revolutes ($c = 2$ each):
+$$\mathrm{DOF} = 3(4-1) - 4 \times 2 = 9 - 8 = 1$$
 
-Still wrong! Let me look this up mentally... A 4-bar linkage should have 1 DOF (you can input one angle and the rest of the mechanism follows).
+A 4-bar linkage has 1~DOF. $\checkmark$ You can input one angle and the geometry of the closed loop determines all other positions.
 
-Ah, I see the issue. We need to count more carefully. In a planar mechanism:
-- Each body has 3 DOF: 2 translations + 1 rotation in the plane.
-- Ground is fixed: 0 DOF.
-- Each moving body contributes 3 DOF: $N-1$ moving bodies × 3 = 3(N-1)$.
-
-For a 4-bar with 4 bodies (1 ground + 3 moving): $3(4-1) = 9$ unconstrained DOF.
-
-Each revolute in a plane allows 1 rotation, imposes 2 constraints (prevents 2 translations + 1 perpendicular rotation ... wait, let me think again.
-
-Actually, in 2D:
-- Revolute joint: $f = 1$ (rotation), $c = 2$ (prevents 2 translations)
-- Prismatic joint: $f = 1$ (translation), $c = 2$ (prevents perpendicular translation + rotation)
-
-For a 4-bar: $N = 4$, $J = 4$ revolutes, $\sum c = 4 \times 2 = 8$.
-
-$$\mathrm{DOF} = 3(4-1) - 8 = 9 - 8 = 1$$
-
-Yes! A 4-bar linkage has 1 DOF. $\checkmark$
+\textbf{Common pitfall:} Applying the \emph{spatial} Gr\"ubler formula ($6(N-1) - \sum(6-f_i)$) to a planar mechanism gives $6 \times 3 - 4 \times 5 = 18 - 20 = -2$, which is meaningless. The spatial formula overcounts constraints because planar revolutes implicitly constrain out-of-plane motion that was never available.
 \end{example}
 
 \textbf{Lesson:} The Grübler formula is powerful but requires careful counting. For a tree structure (no loops), use the simple formula $\sum f_i$. For a mechanism with loops, you must account for loop closure constraints, and the planar formula differs from the 3D formula.
@@ -197,17 +161,25 @@ The model consists of the following kinematic chain:
    \item Club: (0-DOF, rigidly attached to lead hand)
    \end{itemize}
 
-\item \textbf{Trail side (right arm for right-handed golfer):}
+\item \textbf{Trail arm (right arm for right-handed golfer):}
    \begin{itemize}
+   \item Trail shoulder: 3-DOF (spherical) connecting thorax to upper arm
+   \item Trail elbow: 2-DOF (1R flexion + 1R pronation) connecting upper arm to forearm
+   \item Trail wrist: 2-DOF (universal joint) connecting forearm to hand
+   \end{itemize}
+
+\item \textbf{Lower body (both legs):}
+   \begin{itemize}
+   \item Lead hip: 3-DOF (spherical) connecting pelvis to lead upper leg
+   \item Lead knee: 1-DOF (revolute) connecting upper leg to lower leg
+   \item Lead ankle: 2-DOF connecting lower leg to foot
    \item Trail hip: 3-DOF (spherical) connecting pelvis to trail upper leg
    \item Trail knee: 1-DOF (revolute) connecting upper leg to lower leg
    \item Trail ankle: 2-DOF connecting lower leg to foot
-   \item Lead hip: 3-DOF connecting pelvis to lead upper leg
-   \item Lead knee: 1-DOF connecting upper leg to lower leg
-   \item Lead ankle: 2-DOF connecting lower leg to foot
    \end{itemize}
+\end{enumerate}
 
-Actually, let me simplify for now. Let's focus on the upper body and arms (ignore legs for this calculation).
+For the DOF calculation below, we focus on the upper body and arms (ignoring legs).
 
 \subsection{Simplified Upper Body Model}
 
@@ -234,11 +206,8 @@ Actually, let me simplify for now. Let's focus on the upper body and arms (ignor
 
 \textbf{Joints:} 8 joints as listed.
 
-\textbf{Grübler check (open chain):}
-$$\mathrm{DOF} = 6(10-1) - \sum c_i = 54 - (6-3 \times 3) - (6-3) - (6-2) - ... $$
-
-Actually, let's use the simpler formula for a tree:
-$$\mathrm{DOF}_{\text{tree}} = \sum f_i = 20$$
+\textbf{Gr\"ubler check (tree):} Since this is an open kinematic tree (no loops), the DOF is simply the sum of joint freedoms:
+$$\mathrm{DOF}_{\text{tree}} = \sum f_i = 3 + 3 + 3 + 2 + 2 + 3 + 2 + 2 = 20$$
 
 So without any closure constraints, 20 DOF.
 

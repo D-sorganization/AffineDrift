@@ -210,23 +210,15 @@ A robot arm with:
 \item Three revolute joints connecting four links
 \end{itemize}
 
-Using Grübler: $N = 5$ links (including ground), $J = 3$ revolute joints, $\sum f_i = 3$.
+Using the full Gr\"ubler formula with $N = 5$ links (including ground) and $J = 3$ revolute joints:
+$$\text{DOF} = 6(N-1) - \sum(6-f_i) = 6 \times 4 - 3 \times 5 = 24 - 15 = 9$$
 
-$$\text{DOF} = 6(5-1) - (3 \times 6 - 3) = 24 - 15 = 9$$
+This answer ($9$~DOF) is incorrect for a 3-revolute chain. The discrepancy arises because the Gr\"ubler formula counts spatial DOF, but this is a \textbf{planar} mechanism with implicit constraints that eliminate out-of-plane motion.
 
-Wait, that's wrong. Let me recalculate. If all three joints are revolute ($f=1$ each):
-$$\text{DOF} = 6(5-1) - \sum(6-f_i) = 24 - 3(6-1) = 24 - 15 = 9$$
+\textbf{The correct approach for a tree structure (no loops)} is simply the sum of joint freedoms:
+$$\text{DOF} = \sum_{i=1}^{J} f_i = 1 + 1 + 1 = 3$$
 
-Still wrong. Actually, the formula is:
-$$\text{DOF} = 6(N-1) - \sum(6-f_i)$$
-
-With $N=5$, $J=3$ revolutes:
-$$\text{DOF} = 6 \cdot 4 - 3 \cdot 5 = 24 - 15 = 9$$
-
-Hmm, this still doesn't match intuition. A 3-link robot with 3 revolutes should have 3 DOF. The issue is that the formula needs careful application. For a \textbf{tree} structure (no loops), the correct formula is:
-$$\text{DOF} = \sum_{i=1}^{J} f_i$$
-
-simply the sum of joint freedoms. So 3 revolutes give 3 DOF. The full Grübler formula applies when there are \textbf{loops}.
+Three revolutes in series give 3~DOF. The full Gr\"ubler formula is needed only when the mechanism contains \textbf{closed loops}.
 \end{example}
 
 \section{The Knee --- A Revolute (Mostly)}
@@ -282,7 +274,7 @@ The motion is overwhelmingly flexion-extension. If you sit on a chair and move y
 \item \textbf{Medial-lateral translation:} Small shifts (a few mm) occur during rotation.
 \end{enumerate}
 
-For golf analysis, these secondary motions are usually negligible. The screw-home adds $\approx 2\%$ error to the model. For injury risk assessment (e.g., ACL tear prediction), these details matter.
+For golf analysis, these secondary motions are usually negligible. The screw-home mechanism introduces a small error to the revolute model (the 8--12${}^\circ$ tibial rotation at full extension is a fraction of the total $\sim$140${}^\circ$ flexion range). For injury risk assessment (e.g., ACL tear prediction), these details matter.
 \end{driftcontrol}
 
 \subsection{Modeling Recommendation}
@@ -319,7 +311,7 @@ In a healthy hip:
 \item External rotation: $\approx 45{}^\circ$
 \end{itemize}
 
-\textbf{Important in golf:} The lead hip (left hip for a right-handed golfer) must internally rotate significantly during the downswing, sometimes $\approx 60{}^\circ$ or more in professional swings. This is close to the limit of normal hip motion.
+\textbf{Important in golf:} The lead hip (left hip for a right-handed golfer) must internally rotate significantly during the downswing, with published motion-capture data reporting approximately 35--50${}^\circ$ in professional swings \citep{Cheetham2001, HumeKeogh2005}. This approaches the upper limit of typical hip internal rotation ROM ($\approx 40{}^\circ$), which is why hip mobility is critical for elite performance.
 
 \subsection{Why Spherical Works}
 
@@ -596,6 +588,8 @@ Wrist & Universal (2R) & 2 & Cock and bow motion \\
 \end{tabular}
 \end{center}
 
+\textbf{Note on ROM values:} The range-of-motion values cited throughout this chapter (knee flexion $\sim$140${}^\circ$, hip flexion $\sim$120${}^\circ$, etc.) are representative values from standard anatomy and biomechanics references \citep{Neumann2017, Nordin2012}. Individual variation is substantial; values for a specific subject should be obtained from clinical measurement or motion capture data.
+
 \subsection{Decision Flowchart}
 
 When choosing a joint model, ask:
@@ -662,7 +656,7 @@ The golf swing subjects the musculoskeletal system to extreme loads in a highly 
 
 Low back pain is the most common golf injury, affecting 25--35\% of amateur golfers and 22--25\% of professionals. The mechanism is primarily \textbf{combined loading}: the lumbar spine simultaneously experiences compression (from axial loads due to ground reaction forces transmitted through the trunk), shear (from rotational accelerations), and torsion (from the X-factor separation described in Chapter~\ref{ch:kinetic_chain}).
 
-Peak lumbar compression occurs during the downswing transition, when the hips reverse direction while the torso continues rotating backward. Studies report compressive loads of 6--8 times body weight in professional golfers at this instant---comparable to loads measured during competitive rowing or heavy deadlifting.
+Peak lumbar compression occurs during the downswing transition, when the hips reverse direction while the torso continues rotating backward. Hosea et al. (1990) measured compressive loads of 6--8 times body weight in professional golfers at this instant 	tep{Hosea1990}---comparable to loads measured during competitive rowing or heavy deadlifting. Note that this estimate comes from a single study with a small sample size; subsequent work has generally confirmed high spinal loads in the golf swing but with varying magnitudes depending on methodology.
 
 The injury risk increases when:
 \begin{itemize}
