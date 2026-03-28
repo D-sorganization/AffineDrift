@@ -21,7 +21,7 @@
 
 The mathematics of 3D rotation has been refined over centuries by some of history's greatest mathematicians. In \textbf{1775}, Leonhard Euler published his groundbreaking \emph{Euler's Rotation Theorem}, establishing that any finite rotation in 3D space can be described as a single rotation about a fixed axis by some angle—a foundational geometric insight that remains central to modern rotation calculus.
 
-However, Euler's representation (axis-angle form) requires solving nonlinear equations and computing trigonometric functions. In \textbf{1843}, the Irish mathematician \textbf{William Rowan Hamilton} invented \textbf{Quaternions} ($\mathcal{H}$), an extension of complex numbers to four dimensions. Quaternions compactly encode rotations as multiplication operations on 4-tuples, bypassing the singularities that plague other representations. Almost simultaneously, \textbf{Olinde Rodrigues} (1795–1853) derived the famous \textbf{Rodrigues rotation formula}, expressing how a vector rotates about an axis—a result that connects Euler's axis-angle theorem to matrix algebra.
+However, Euler's representation (axis-angle form) requires solving nonlinear equations and computing trigonometric functions. In \textbf{1843}, the Irish mathematician \textbf{William Rowan Hamilton} invented \textbf{Quaternions} ($\mathcal{H}$), an extension of complex numbers to four dimensions. Quaternions elegantly encode rotations as multiplication operations on 4-tuples, bypassing the singularities that plague other representations. Almost simultaneously, \textbf{Olinde Rodrigues} (1795–1853) derived the famous \textbf{Rodrigues rotation formula}, expressing how a vector rotates about an axis—a result that connects Euler's axis-angle theorem to matrix algebra.
 
 These three frameworks—rotation matrices, quaternions, and axis-angle representations—are \emph{mathematically equivalent} but offer different computational and conceptual advantages. Modern robotics and computer graphics employ all three, often switching between them fluidly.
 
@@ -122,7 +122,7 @@ A rotation by angle $\theta$ about the $x$-axis, with the rotation viewed as rig
 
 \begin{derivation}
 The $x$-axis unit vector $\hat{\mathbf{e}}_x = [1, 0, 0]^T$ is invariant. The $y$ and $z$ axes lie in the $yz$-plane, which undergoes a 2D rotation:
-$$\begin{bmatrix} y' \\ z' \end{bmatrix} = \begin{bmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{bmatrix} \begin{bmatrix} y \\ z \end{bmatrix}.$$
+\[\begin{bmatrix} y' \\ z' \end{bmatrix} = \begin{bmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{bmatrix} \begin{bmatrix} y \\ z \end{bmatrix}.\]
 Embedding this in 3D yields equation \eqref{eq:Rx}.
 \end{derivation}
 
@@ -496,7 +496,7 @@ where $\hat{\boldsymbol{\omega}}$ is a unit vector (the rotation axis) and $\the
 \end{theorem}
 
 \begin{laymansbox}{Why the Half-Angles?}{quaternion_half_angle}
-  You might notice $\theta/2$ in the formula instead of just $\theta$. This is because applying a quaternion rotation to a vector $\mathbf{v}$ requires multiplying it from the front \emph{and} the back ($\mathbf{q} \otimes \mathbf{v} \otimes \mathbf{q}^{-1}$, where $\mathbf{v}$ is viewed as the quaternion $[0, v_x, v_y, v_z]^T$). The half-angles combine during this double-multiplication to yield the full-angle $\theta$ rotation.
+  You might notice $\theta/2$ in the formula instead of just $\theta$. This is because applying a quaternion rotation to a vector $\mathbf{v}$ requires multiplying it from the front \emph{and} the back ($\mathbf{q} \otimes \mathbf{v} \otimes \mathbf{q}^{-1}$, where $\mathbf{v}$ is viewed as the quaternion $[0, v_x, v_y, v_z]^T$). The half-angles combine during this double-multiplication to give the perfect full-angle $\theta$ rotation!
 
   Note also that the quaternions $\mathbf{q}$ and $-\mathbf{q}$ represent the exact same physical rotation in 3D space.
 \end{laymansbox}
@@ -509,23 +509,22 @@ The unit quaternions $\mathbf{q}$ and $-\mathbf{q}$ represent the same rotation 
 \end{theorem}
 
 \begin{proof}
-Let $\mathbf{q} = [\cos(\theta/2), \hat{\boldsymbol{\omega}} \sin(\theta/2)]$ represent a rotation by angle $\theta$ about axis $\hat{\boldsymbol{\omega}}$. Then:
+The rotation action of a unit quaternion $\mathbf{q}$ on a pure-imaginary quaternion $\mathbf{v} = [0, \vec{v}]$ is:
 \begin{equation}
--\mathbf{q} = [-\cos(\theta/2), -\hat{\boldsymbol{\omega}} \sin(\theta/2)] = [\cos(\theta/2 + \pi), -\hat{\boldsymbol{\omega}} \sin(\theta/2 + \pi)].
+\mathbf{v}' = \mathbf{q} \otimes \mathbf{v} \otimes \mathbf{q}^*.
 \end{equation}
 
-To verify this directly, observe that when we rotate a vector using the formula $\mathbf{v}' = \mathbf{q} \otimes \mathbf{v} \otimes \mathbf{q}^{-1}$, the quaternion and its negative yield:
+For $-\mathbf{q}$, we compute:
 \begin{align}
-\mathbf{v}'(\mathbf{q}) &= \mathbf{q} \otimes \mathbf{v} \otimes \mathbf{q}^{-1}, \\
-\mathbf{v}'(-\mathbf{q}) &= (-\mathbf{q}) \otimes \mathbf{v} \otimes (-\mathbf{q})^{-1} = (-\mathbf{q}) \otimes \mathbf{v} \otimes (-\mathbf{q})^*.
+(-\mathbf{q}) \otimes \mathbf{v} \otimes (-\mathbf{q})^*
+  &= (-\mathbf{q}) \otimes \mathbf{v} \otimes (-\mathbf{q}^*) \\
+  &= (-1)(\mathbf{q}) \otimes \mathbf{v} \otimes (-1)(\mathbf{q}^*) \\
+  &= (-1)(-1)\,\mathbf{q} \otimes \mathbf{v} \otimes \mathbf{q}^* \\
+  &= \mathbf{q} \otimes \mathbf{v} \otimes \mathbf{q}^*,
 \end{align}
+where we used the fact that $(-\mathbf{q})^* = -\mathbf{q}^*$ and that the scalar factor $(-1)$ commutes with quaternion multiplication and appears twice, yielding $(-1)^2 = 1$.
 
-Since multiplication by $-1$ commutes with all quaternion operations (being a scalar):
-\begin{equation}
-(-\mathbf{q}) \otimes \mathbf{v} \otimes (-\mathbf{q})^* = -[\mathbf{q} \otimes \mathbf{v} \otimes \mathbf{q}^*] \cdot (-1) = \mathbf{q} \otimes \mathbf{v} \otimes \mathbf{q}^*.
-\end{equation}
-
-Thus $\mathbf{v}'(\mathbf{q}) = \mathbf{v}'(-\mathbf{q})$, so both quaternions induce the same rotation.
+Thus $\mathbf{q}$ and $-\mathbf{q}$ induce the identical rotation on every vector $\vec{v} \in \Reals^3$.
 \end{proof}
 
 \index{rotation matrix!quaternion conversion}

@@ -138,20 +138,20 @@ A four-bar linkage has exactly \textbf{1 DOF}. Once you specify the angle of one
 \begin{example}{Stewart Platform DOF}{ex_stewart}
 The Stewart platform (also called a Gough-Stewart platform) is a parallel manipulator consisting of a base platform, a movable top platform, and six variable-length actuators connecting them.
 
-Configuration:
+We apply the Gr\"ubler--Kutzbach formula for spatial mechanisms. Each leg connects the base to the top platform through a universal joint (2 DOF) at the base, a prismatic actuator (1 DOF), and a spherical joint (3 DOF) at the top:
 \begin{itemize}
-  \item $n = 1$ movable body (the top platform; the base is ground)
-  \item $j = 12$ joints total: 6 revolute joints at the base (one per leg) and 6 ball joints at the top (one per leg)
-  \item Base revolute joints: each has $d_i = 1$
-  \item Ball joints: each has $d_i = 3$ (allowing 3-DOF rotation)
+  \item $n = 14$ total bodies: 1 top platform + 6 upper leg segments + 6 lower leg segments + ground
+  \item $j = 18$ joints: 6 universal (2 DOF each) + 6 prismatic (1 DOF each) + 6 spherical (3 DOF each)
+  \item Total joint freedoms: $\sum d_i = 6 \times 2 + 6 \times 1 + 6 \times 3 = 36$
 \end{itemize}
 
-For a more direct accounting: the Stewart platform is driven by 6 linear actuators (one per leg), each with 1 DOF (extension/retraction). The platform has 6 DOF in free space, and the 6 leg-length constraints fully determine its pose (position and orientation). When the 6 legs are driven by actuators with specified lengths:
+Applying the spatial Gr\"ubler formula ($\lambda = 6$ for spatial mechanisms):
 \begin{equation}
-\text{DOF} = 6 \text{ (input controls)} = 6 \text{ (DOF in pose)}
+\text{DOF} = \lambda(n - 1 - j) + \sum_{i=1}^{j} d_i = 6(14 - 1 - 18) + 36 = 6(-5) + 36 = 6.
+\label{eq:stewart_dof}
 \end{equation}
 
-The standard result is that a non-degenerate Stewart platform has exactly \textbf{6 DOF} in its end-effector pose and requires 6 actuators to control all 6 spatial DOF. This makes it a fully parallel manipulator.
+A non-degenerate Stewart platform therefore has exactly \textbf{6 DOF} in its end-effector pose and requires 6 actuators (the prismatic joints) to control all 6 spatial DOF. This makes it a fully parallel manipulator: all actuators work in parallel to position and orient the top platform.
 \end{example}
 
 \subsection{Worked Example 3: Human Arm Kinematics}
@@ -208,7 +208,7 @@ The torus $T^2 = S^1 \times S^1$ is the Cartesian product of two circles. It is 
 
   The corresponding \textbf{State Space} $\mathcal{X}$ (from Chapter 2) is the configuration space multiplied by the velocity of those coordinates, meaning state space always has $2n$ dimensions.
 
-  $$ \text{State} \ \mathbf{x} = [\mathbf{q}^T, \dot{\mathbf{q}}^T]^T \in \mathcal{X} = T\mathcal{Q} $$
+  \[ \text{State} \ \mathbf{x} = [\mathbf{q}^T, \dot{\mathbf{q}}^T]^T \in \mathcal{X} = T\mathcal{Q} \]
   (Where $T\mathcal{Q}$ represents the Tangent Bundle of the configuration manifold).
 \end{laymansbox}
 

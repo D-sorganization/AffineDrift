@@ -89,7 +89,7 @@ When analytical equations fail due to extreme nonlinear complexity or uncertaint
 \textbf{Theorem (Cybenko, 1989):} Let $f: [0,1]^n \to \mathbb{R}$ be any continuous function on a compact domain. For any $\epsilon > 0$, there exists a neural network with a single hidden layer containing finitely many neurons with sigmoid activation $\sigma(z) = \frac{1}{1+e^{-z}}$ that approximates $f$ uniformly to within $\epsilon$.
 
 \textbf{Formal Statement:} There exist weights $\mathbf{W}, \mathbf{b}$ and biases $\mathbf{c}$ such that:
-$$\left|f(\mathbf{x}) - \sum_{i=1}^N c_i \sigma(\mathbf{w}_i^T \mathbf{x} + b_i)\right| < \epsilon$$
+\[\left|f(\mathbf{x}) - \sum_{i=1}^N c_i \sigma(\mathbf{w}_i^T \mathbf{x} + b_i)\right| < \epsilon\]
 for all $\mathbf{x} \in [0,1]^n$.
 
 \textbf{Significance:} This theorem proves that neural networks are \emph{universal function approximators}. Given enough neurons and proper training, a network can learn any smooth function. The theorem does NOT guarantee efficient learning (the required number of neurons may be exponentially large), nor does it provide a training algorithm. But it proves the concept is sound: if we can optimize the weights, we can approximate any control policy.
@@ -147,10 +147,10 @@ Different activation functions possess different properties and computational ch
 
 \subsection{Rectified Linear Unit (ReLU)}
 
-$$\sigma_{\text{ReLU}}(z) = \max(0, z) = \begin{cases} z & \text{if } z > 0 \\ 0 & \text{if } z \leq 0 \end{cases}$$
+\[\sigma_{\text{ReLU}}(z) = \max(0, z) = \begin{cases} z & \text{if } z > 0 \\ 0 & \text{if } z \leq 0 \end{cases}\]
 
 \textbf{Derivative:}
-$$\frac{d\sigma_{\text{ReLU}}}{dz} = \begin{cases} 1 & \text{if } z > 0 \\ 0 & \text{if } z < 0 \end{cases}$$
+\[\frac{d\sigma_{\text{ReLU}}}{dz} = \begin{cases} 1 & \text{if } z > 0 \\ 0 & \text{if } z < 0 \end{cases}\]
 
 \textbf{Advantages:}
 \begin{itemize}
@@ -168,10 +168,10 @@ $$\frac{d\sigma_{\text{ReLU}}}{dz} = \begin{cases} 1 & \text{if } z > 0 \\ 0 & \
 
 \subsection{Sigmoid}
 
-$$\sigma_{\text{sig}}(z) = \frac{1}{1 + e^{-z}}$$
+\[\sigma_{\text{sig}}(z) = \frac{1}{1 + e^{-z}}\]
 
 \textbf{Derivative:}
-$$\frac{d\sigma_{\text{sig}}}{dz} = \sigma_{\text{sig}}(z)(1 - \sigma_{\text{sig}}(z))$$
+\[\frac{d\sigma_{\text{sig}}}{dz} = \sigma_{\text{sig}}(z)(1 - \sigma_{\text{sig}}(z))\]
 
 \textbf{Range:} $(0, 1)$—useful for probability outputs (classification).
 
@@ -184,10 +184,10 @@ $$\frac{d\sigma_{\text{sig}}}{dz} = \sigma_{\text{sig}}(z)(1 - \sigma_{\text{sig
 
 \subsection{Hyperbolic Tangent (Tanh)}
 
-$$\sigma_{\text{tanh}}(z) = \tanh(z) = \frac{e^z - e^{-z}}{e^z + e^{-z}}$$
+\[\sigma_{\text{tanh}}(z) = \tanh(z) = \frac{e^z - e^{-z}}{e^z + e^{-z}}\]
 
 \textbf{Derivative:}
-$$\frac{d\sigma_{\text{tanh}}}{dz} = 1 - \tanh^2(z)$$
+\[\frac{d\sigma_{\text{tanh}}}{dz} = 1 - \tanh^2(z)\]
 
 \textbf{Range:} $(-1, 1)$—zero-centered, better than sigmoid for training.
 
@@ -195,12 +195,12 @@ $$\frac{d\sigma_{\text{tanh}}}{dz} = 1 - \tanh^2(z)$$
 
 \subsection{Gaussian Error Linear Unit (GELU)}
 
-$$\sigma_{\text{GELU}}(z) = z \cdot \Phi(z)$$
+\[\sigma_{\text{GELU}}(z) = z \cdot \Phi(z)\]
 
 where $\Phi(z) = \frac{1}{2}\left[1 + \text{erf}\left(\frac{z}{\sqrt{2}}\right)\right]$ is the cumulative distribution function of the standard normal.
 
 Approximation (often used for efficiency):
-$$\sigma_{\text{GELU}}(z) \approx 0.5z\left(1 + \tanh\left(\sqrt{\frac{2}{\pi}}(z + 0.044715z^3)\right)\right)$$
+\[\sigma_{\text{GELU}}(z) \approx 0.5z\left(1 + \tanh\left(\sqrt{\frac{2}{\pi}}(z + 0.044715z^3)\right)\right)\]
 
 \textbf{Advantages:}
 \begin{itemize}
@@ -219,7 +219,7 @@ Training a neural network requires defining what "correct" means: a loss functio
 
 For control tasks with reference trajectories, the \textbf{Mean Squared Error (MSE)} loss is:
 
-$$\mathcal{L}_{\text{MSE}} = \frac{1}{N}\sum_{i=1}^N \|\pi(\mathbf{s}_i; \boldsymbol{\theta}) - \mathbf{a}_i^*\|^2$$
+\[\mathcal{L}_{\text{MSE}} = \frac{1}{N}\sum_{i=1}^N \|\pi(\mathbf{s}_i; \boldsymbol{\theta}) - \mathbf{a}_i^*\|^2\]
 
 where $\mathbf{a}_i^*$ is the desired (expert or reference) action at state $\mathbf{s}_i$, and $N$ is the batch size.
 
@@ -229,7 +229,7 @@ where $\mathbf{a}_i^*$ is the desired (expert or reference) action at state $\ma
 
 The \textbf{Huber loss} is a hybrid that is quadratic for small errors and linear for large errors:
 
-$$\mathcal{L}_{\text{Huber}}(\delta) = \begin{cases} \frac{1}{2}\delta^2 & \text{if } |\delta| \leq \kappa \\ \kappa(|\delta| - \frac{\kappa}{2}) & \text{if } |\delta| > \kappa \end{cases}$$
+\[\mathcal{L}_{\text{Huber}}(\delta) = \begin{cases} \frac{1}{2}\delta^2 & \text{if } |\delta| \leq \kappa \\ \kappa(|\delta| - \frac{\kappa}{2}) & \text{if } |\delta| > \kappa \end{cases}\]
 
 where $\delta = \pi(\mathbf{s}) - \mathbf{a}^*$ is the prediction error and $\kappa$ is a threshold (typically 1.0).
 
@@ -241,13 +241,13 @@ In reinforcement learning, we don't have reference actions $\mathbf{a}^*$. Inste
 
 The \textbf{Policy Gradient Loss} (used in algorithms like REINFORCE and PPO) is:
 
-$$\mathcal{L}_{\text{PG}} = -\mathbb{E}[\log \pi(a_t | s_t) \cdot \hat{R}_t]$$
+\[\mathcal{L}_{\text{PG}} = -\mathbb{E}[\log \pi(a_t | s_t) \cdot \hat{R}_t]\]
 
 where $\hat{R}_t$ is an estimate of future discounted rewards (the \textbf{return}).
 
 The \textbf{Value Loss} (used in actor-critic methods) is:
 
-$$\mathcal{L}_{\text{Value}} = \mathbb{E}[(\hat{R}_t - V(s_t; \boldsymbol{\phi}))^2]$$
+\[\mathcal{L}_{\text{Value}} = \mathbb{E}[(\hat{R}_t - V(s_t; \boldsymbol{\phi}))^2]\]
 
 where $V(s_t; \boldsymbol{\phi})$ is a learned value function predicting expected future rewards.
 
@@ -269,45 +269,45 @@ Consider a simple 2-layer network:
 
 To compute $\frac{\partial \mathcal{L}}{\partial \mathbf{W}^{(1)}}$, we apply the chain rule:
 
-$$\frac{\partial \mathcal{L}}{\partial \mathbf{W}^{(1)}} = \frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(2)}} \cdot \frac{\partial \mathbf{z}^{(2)}}{\partial \mathbf{h}^{(1)}} \cdot \frac{\partial \mathbf{h}^{(1)}}{\partial \mathbf{z}^{(1)}} \cdot \frac{\partial \mathbf{z}^{(1)}}{\partial \mathbf{W}^{(1)}}$$
+\[\frac{\partial \mathcal{L}}{\partial \mathbf{W}^{(1)}} = \frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(2)}} \cdot \frac{\partial \mathbf{z}^{(2)}}{\partial \mathbf{h}^{(1)}} \cdot \frac{\partial \mathbf{h}^{(1)}}{\partial \mathbf{z}^{(1)}} \cdot \frac{\partial \mathbf{z}^{(1)}}{\partial \mathbf{W}^{(1)}}\]
 
 \subsection{Forward Pass}
 
 Compute all intermediate activations:
-$$\mathbf{z}^{(1)} = \mathbf{W}^{(1)}\mathbf{s} + \mathbf{b}^{(1)}$$
-$$\mathbf{h}^{(1)} = \sigma(\mathbf{z}^{(1)})$$
-$$\mathbf{z}^{(2)} = \mathbf{W}^{(2)}\mathbf{h}^{(1)} + \mathbf{b}^{(2)}$$
-$$\mathcal{L} = \frac{1}{2}\|\mathbf{z}^{(2)} - \mathbf{a}^*\|^2$$
+\[\mathbf{z}^{(1)} = \mathbf{W}^{(1)}\mathbf{s} + \mathbf{b}^{(1)}\]
+\[\mathbf{h}^{(1)} = \sigma(\mathbf{z}^{(1)})\]
+\[\mathbf{z}^{(2)} = \mathbf{W}^{(2)}\mathbf{h}^{(1)} + \mathbf{b}^{(2)}\]
+\[\mathcal{L} = \frac{1}{2}\|\mathbf{z}^{(2)} - \mathbf{a}^*\|^2\]
 
 \subsection{Backward Pass (Backpropagation)}
 
 Compute gradients in reverse order:
 
 \textbf{Step 1:} Loss gradient
-$$\frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(2)}} = \mathbf{z}^{(2)} - \mathbf{a}^* \in \mathbb{R}^{n_a}$$
+\[\frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(2)}} = \mathbf{z}^{(2)} - \mathbf{a}^* \in \mathbb{R}^{n_a}\]
 
 \textbf{Step 2:} Gradient w.r.t. $\mathbf{W}^{(2)}$ and $\mathbf{b}^{(2)}$
-$$\frac{\partial \mathcal{L}}{\partial \mathbf{W}^{(2)}} = \frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(2)}} (\mathbf{h}^{(1)})^T$$
-$$\frac{\partial \mathcal{L}}{\partial \mathbf{b}^{(2)}} = \frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(2)}}$$
+\[\frac{\partial \mathcal{L}}{\partial \mathbf{W}^{(2)}} = \frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(2)}} (\mathbf{h}^{(1)})^T\]
+\[\frac{\partial \mathcal{L}}{\partial \mathbf{b}^{(2)}} = \frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(2)}}\]
 
 \textbf{Step 3:} Backprop through activation to hidden layer
-$$\frac{\partial \mathcal{L}}{\partial \mathbf{h}^{(1)}} = (\mathbf{W}^{(2)})^T \frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(2)}}$$
+\[\frac{\partial \mathcal{L}}{\partial \mathbf{h}^{(1)}} = (\mathbf{W}^{(2)})^T \frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(2)}}\]
 
 \textbf{Step 4:} Backprop through nonlinearity
-$$\frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(1)}} = \frac{\partial \mathcal{L}}{\partial \mathbf{h}^{(1)}} \odot \sigma'(\mathbf{z}^{(1)})$$
+\[\frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(1)}} = \frac{\partial \mathcal{L}}{\partial \mathbf{h}^{(1)}} \odot \sigma'(\mathbf{z}^{(1)})\]
 
 where $\odot$ is element-wise multiplication and $\sigma'(z) = \frac{d\sigma}{dz}$.
 
 \textbf{Step 5:} Gradient w.r.t. $\mathbf{W}^{(1)}$ and $\mathbf{b}^{(1)}$
-$$\frac{\partial \mathcal{L}}{\partial \mathbf{W}^{(1)}} = \frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(1)}} \mathbf{s}^T$$
-$$\frac{\partial \mathcal{L}}{\partial \mathbf{b}^{(1)}} = \frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(1)}}$$
+\[\frac{\partial \mathcal{L}}{\partial \mathbf{W}^{(1)}} = \frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(1)}} \mathbf{s}^T\]
+\[\frac{\partial \mathcal{L}}{\partial \mathbf{b}^{(1)}} = \frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(1)}}\]
 
 \subsection{General Pattern}
 
 For any layer $\ell$:
-$$\frac{\partial \mathcal{L}}{\partial \mathbf{W}^{(\ell)}} = \frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(\ell)}} (\mathbf{h}^{(\ell-1)})^T$$
-$$\frac{\partial \mathcal{L}}{\partial \mathbf{h}^{(\ell-1)}} = (\mathbf{W}^{(\ell)})^T \frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(\ell)}}$$
-$$\frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(\ell)}} = \frac{\partial \mathcal{L}}{\partial \mathbf{h}^{(\ell)}} \odot \sigma'(\mathbf{z}^{(\ell)})$$
+\[\frac{\partial \mathcal{L}}{\partial \mathbf{W}^{(\ell)}} = \frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(\ell)}} (\mathbf{h}^{(\ell-1)})^T\]
+\[\frac{\partial \mathcal{L}}{\partial \mathbf{h}^{(\ell-1)}} = (\mathbf{W}^{(\ell)})^T \frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(\ell)}}\]
+\[\frac{\partial \mathcal{L}}{\partial \mathbf{z}^{(\ell)}} = \frac{\partial \mathcal{L}}{\partial \mathbf{h}^{(\ell)}} \odot \sigma'(\mathbf{z}^{(\ell)})\]
 
 The \textbf{computational cost} of backprop is roughly twice the forward pass, making gradient computation affordable even for massive networks.
 
@@ -319,13 +319,13 @@ The \textbf{computational cost} of backprop is roughly twice the forward pass, m
 
 Having computed gradients, the simplest update rule is to move opposite to the gradient:
 
-$$\boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_t - \alpha \nabla_{\boldsymbol{\theta}} \mathcal{L}(\boldsymbol{\theta}_t)$$
+\[\boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_t - \alpha \nabla_{\boldsymbol{\theta}} \mathcal{L}(\boldsymbol{\theta}_t)\]
 
 where $\alpha$ is the \textbf{learning rate}—how large a step to take. The gradient $\nabla_{\boldsymbol{\theta}} \mathcal{L}$ points in the direction of increasing loss, so moving opposite reduces it.
 
 In practice, we compute the gradient on a small batch of data (not the entire dataset) for efficiency:
 
-$$\mathcal{L}(\boldsymbol{\theta}) \approx \frac{1}{B}\sum_{i=1}^B \mathcal{L}(\boldsymbol{\theta}; \mathbf{s}_i, \mathbf{a}_i)$$
+\[\mathcal{L}(\boldsymbol{\theta}) \approx \frac{1}{B}\sum_{i=1}^B \mathcal{L}(\boldsymbol{\theta}; \mathbf{s}_i, \mathbf{a}_i)\]
 
 This is \textbf{Stochastic Gradient Descent (SGD)}: noisy but fast.
 
@@ -333,8 +333,8 @@ This is \textbf{Stochastic Gradient Descent (SGD)}: noisy but fast.
 
 Adding momentum accelerates convergence and helps escape shallow local minima:
 
-$$\mathbf{m}_t = \beta \mathbf{m}_{t-1} + (1-\beta)\nabla_{\boldsymbol{\theta}} \mathcal{L}$$
-$$\boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_t - \alpha \mathbf{m}_t$$
+\[\mathbf{m}_t = \beta \mathbf{m}_{t-1} + (1-\beta)\nabla_{\boldsymbol{\theta}} \mathcal{L}\]
+\[\boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_t - \alpha \mathbf{m}_t\]
 
 where $\beta \approx 0.9$ is the momentum decay. The momentum term $\mathbf{m}_t$ is an exponentially-weighted average of past gradients.
 
@@ -344,16 +344,16 @@ where $\beta \approx 0.9$ is the momentum decay. The momentum term $\mathbf{m}_t
 
 \textbf{Adaptive Moment Estimation (Adam)} combines momentum with adaptive learning rates per parameter:
 
-$$\mathbf{m}_t = \beta_1 \mathbf{m}_{t-1} + (1-\beta_1)\nabla_{\boldsymbol{\theta}} \mathcal{L}$$
-$$\mathbf{v}_t = \beta_2 \mathbf{v}_{t-1} + (1-\beta_2)(\nabla_{\boldsymbol{\theta}} \mathcal{L})^2$$
+\[\mathbf{m}_t = \beta_1 \mathbf{m}_{t-1} + (1-\beta_1)\nabla_{\boldsymbol{\theta}} \mathcal{L}\]
+\[\mathbf{v}_t = \beta_2 \mathbf{v}_{t-1} + (1-\beta_2)(\nabla_{\boldsymbol{\theta}} \mathcal{L})^2\]
 
 (second moment is element-wise squared)
 
-$$\hat{\mathbf{m}}_t = \frac{\mathbf{m}_t}{1 - \beta_1^t}, \quad \hat{\mathbf{v}}_t = \frac{\mathbf{v}_t}{1 - \beta_2^t}$$
+\[\hat{\mathbf{m}}_t = \frac{\mathbf{m}_t}{1 - \beta_1^t}, \quad \hat{\mathbf{v}}_t = \frac{\mathbf{v}_t}{1 - \beta_2^t}\]
 
 (bias correction to account for initialization at zero)
 
-$$\boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_t - \alpha \frac{\hat{\mathbf{m}}_t}{\sqrt{\hat{\mathbf{v}}_t} + \epsilon}$$
+\[\boldsymbol{\theta}_{t+1} = \boldsymbol{\theta}_t - \alpha \frac{\hat{\mathbf{m}}_t}{\sqrt{\hat{\mathbf{v}}_t} + \epsilon}\]
 
 where division is element-wise and $\epsilon \approx 10^{-8}$ prevents division by zero.
 
@@ -386,7 +386,7 @@ An MDP \cite{Sutton2018} is a tuple $(\mathcal{S}, \mathcal{A}, P, R, \gamma)$:
 
 The \textbf{Markov property} states that the future depends only on the current state, not the history:
 
-$$P(s_{t+1} | s_t, a_t, s_{t-1}, a_{t-1}, \ldots) = P(s_{t+1} | s_t, a_t)$$
+\[P(s_{t+1} | s_t, a_t, s_{t-1}, a_{t-1}, \ldots) = P(s_{t+1} | s_t, a_t)\]
 
 This is a simplifying assumption that makes the problem tractable. Partially Observable MDPs (POMDPs) relax this assumption.
 
@@ -394,25 +394,25 @@ This is a simplifying assumption that makes the problem tractable. Partially Obs
 
 The \textbf{return} from time $t$ is the sum of discounted future rewards:
 
-$$R_t = r_t + \gamma r_{t+1} + \gamma^2 r_{t+2} + \cdots = \sum_{k=0}^{\infty} \gamma^k r_{t+k}$$
+\[R_t = r_t + \gamma r_{t+1} + \gamma^2 r_{t+2} + \cdots = \sum_{k=0}^{\infty} \gamma^k r_{t+k}\]
 
 The \textbf{state value function} $V(s)$ estimates the expected return starting from state $s$ under a policy $\pi$:
 
-$$V^{\pi}(s) = \mathbb{E}[R_t | s_t = s, \pi]$$
+\[V^{\pi}(s) = \mathbb{E}[R_t | s_t = s, \pi]\]
 
 The \textbf{action-value function} (Q-function) estimates the expected return after taking action $a$ in state $s$, then following policy $\pi$:
 
-$$Q^{\pi}(s, a) = \mathbb{E}[R_t | s_t = s, a_t = a, \pi]$$
+\[Q^{\pi}(s, a) = \mathbb{E}[R_t | s_t = s, a_t = a, \pi]\]
 
 The \textbf{advantage function} measures how much better action $a$ is compared to the policy's default:
 
-$$A^{\pi}(s, a) = Q^{\pi}(s, a) - V^{\pi}(s)$$
+\[A^{\pi}(s, a) = Q^{\pi}(s, a) - V^{\pi}(s)\]
 
 \subsection{Bellman Equation}
 
 The fundamental recursion in MDPs is the \textbf{Bellman equation}:
 
-$$V^{\pi}(s) = \sum_{a} \pi(a|s) \sum_{s'} P(s'|s,a)[R(s,a,s') + \gamma V^{\pi}(s')]$$
+\[V^{\pi}(s) = \sum_{a} \pi(a|s) \sum_{s'} P(s'|s,a)[R(s,a,s') + \gamma V^{\pi}(s')]\]
 
 This expresses the value of a state as the immediate reward plus the discounted value of the next state. Solving this recursion (either iteratively or via dynamic programming) yields the optimal policy.
 
@@ -426,20 +426,20 @@ This expresses the value of a state as the immediate reward plus the discounted 
 
 The key insight is the \textbf{policy gradient theorem}:
 
-$$\nabla_{\boldsymbol{\theta}} J(\boldsymbol{\theta}) = \mathbb{E}[\nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(a|s) \cdot R_t]$$
+\[\nabla_{\boldsymbol{\theta}} J(\boldsymbol{\theta}) = \mathbb{E}[\nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(a|s) \cdot R_t]\]
 
 where $J(\boldsymbol{\theta})$ is the expected return and $R_t$ is the actual return from time $t$ onward.
 
 \textbf{Derivation:} The expected return is:
-$$J(\boldsymbol{\theta}) = \mathbb{E}_{s \sim \rho, a \sim \pi_{\boldsymbol{\theta}}}[R_t]$$
+\[J(\boldsymbol{\theta}) = \mathbb{E}_{s \sim \rho, a \sim \pi_{\boldsymbol{\theta}}}[R_t]\]
 
 Taking the gradient and using the log-derivative trick ($\nabla \log f = \frac{\nabla f}{f}$):
 
-$$\nabla_{\boldsymbol{\theta}} J = \mathbb{E}[\nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(a|s) \cdot R_t]$$
+\[\nabla_{\boldsymbol{\theta}} J = \mathbb{E}[\nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(a|s) \cdot R_t]\]
 
 This gradient can be estimated from sample trajectories:
 
-$$\hat{\nabla}_{\boldsymbol{\theta}} J \approx \frac{1}{N}\sum_{i=1}^N \nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(a_i|s_i) \cdot R_i$$
+\[\hat{\nabla}_{\boldsymbol{\theta}} J \approx \frac{1}{N}\sum_{i=1}^N \nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(a_i|s_i) \cdot R_i\]
 
 The \textbf{REINFORCE algorithm}:
 
@@ -472,12 +472,12 @@ Solutions:
 
 \begin{enumerate}
     \item \textbf{Baseline Subtraction:} Use a learned value function to reduce variance:
-    $$\hat{\nabla}_{\boldsymbol{\theta}} J \approx \mathbb{E}[\nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(a|s) \cdot (R_t - V(s))]$$
+    \[\hat{\nabla}_{\boldsymbol{\theta}} J \approx \mathbb{E}[\nabla_{\boldsymbol{\theta}} \log \pi_{\boldsymbol{\theta}}(a|s) \cdot (R_t - V(s))]\]
 
     This estimates the \textbf{advantage} $A(s,a) = Q(s,a) - V(s)$, which has lower variance than raw returns.
 
     \item \textbf{N-step returns:} Use multi-step bootstrapping:
-    $$R_t^{(n)} = r_t + \gamma r_{t+1} + \cdots + \gamma^{n-1}r_{t+n-1} + \gamma^n V(s_{t+n})$$
+    \[R_t^{(n)} = r_t + \gamma r_{t+1} + \cdots + \gamma^{n-1}r_{t+n-1} + \gamma^n V(s_{t+n})\]
 
     Longer $n$ has more bias but lower variance.
 \end{enumerate}
@@ -501,19 +501,19 @@ Two neural networks:
 
 The critic produces an estimate of the value, allowing us to compute the advantage:
 
-$$\hat{A}_t = r_t + \gamma V_{\boldsymbol{\phi}}(s_{t+1}) - V_{\boldsymbol{\phi}}(s_t)$$
+\[\hat{A}_t = r_t + \gamma V_{\boldsymbol{\phi}}(s_{t+1}) - V_{\boldsymbol{\phi}}(s_t)\]
 
 This \textbf{temporal difference (TD) error} estimates the advantage on the fly without waiting for an entire episode.
 
 \subsection{Update Rules}
 
 \textbf{Critic update:} Minimize value loss
-$$\mathcal{L}_{\text{critic}} = (r_t + \gamma V_{\boldsymbol{\phi}}(s_{t+1}) - V_{\boldsymbol{\phi}}(s_t))^2$$
-$$\boldsymbol{\phi} \gets \boldsymbol{\phi} - \alpha_{\phi} \nabla_{\boldsymbol{\phi}} \mathcal{L}_{\text{critic}}$$
+\[\mathcal{L}_{\text{critic}} = (r_t + \gamma V_{\boldsymbol{\phi}}(s_{t+1}) - V_{\boldsymbol{\phi}}(s_t))^2\]
+\[\boldsymbol{\phi} \gets \boldsymbol{\phi} - \alpha_{\phi} \nabla_{\boldsymbol{\phi}} \mathcal{L}_{\text{critic}}\]
 
 \textbf{Actor update:} Maximize expected advantage
-$$\mathcal{L}_{\text{actor}} = -\log \pi_{\boldsymbol{\theta}}(a_t|s_t) \cdot \hat{A}_t$$
-$$\boldsymbol{\theta} \gets \boldsymbol{\theta} - \alpha_{\boldsymbol{\theta}} \nabla_{\boldsymbol{\theta}} \mathcal{L}_{\text{actor}}$$
+\[\mathcal{L}_{\text{actor}} = -\log \pi_{\boldsymbol{\theta}}(a_t|s_t) \cdot \hat{A}_t\]
+\[\boldsymbol{\theta} \gets \boldsymbol{\theta} - \alpha_{\boldsymbol{\theta}} \nabla_{\boldsymbol{\theta}} \mathcal{L}_{\text{actor}}\]
 
 \subsection{Advantage}
 
@@ -538,11 +538,11 @@ A fundamental issue in policy gradient methods: if the policy changes too much i
 
 PPO addresses this using a clipped policy gradient objective:
 
-$$\mathcal{L}^{\text{clip}}(\boldsymbol{\theta}) = \mathbb{E}\left[\min\left(r_t(\boldsymbol{\theta}) \cdot \hat{A}_t, \text{clip}(r_t(\boldsymbol{\theta}), 1-\epsilon, 1+\epsilon) \cdot \hat{A}_t\right)\right]$$
+\[\mathcal{L}^{\text{clip}}(\boldsymbol{\theta}) = \mathbb{E}\left[\min\left(r_t(\boldsymbol{\theta}) \cdot \hat{A}_t, \text{clip}(r_t(\boldsymbol{\theta}), 1-\epsilon, 1+\epsilon) \cdot \hat{A}_t\right)\right]\]
 
 where the \textbf{probability ratio} is:
 
-$$r_t(\boldsymbol{\theta}) = \frac{\pi_{\boldsymbol{\theta}}(a_t|s_t)}{\pi_{\boldsymbol{\theta}_{\text{old}}}(a_t|s_t)}$$
+\[r_t(\boldsymbol{\theta}) = \frac{\pi_{\boldsymbol{\theta}}(a_t|s_t)}{\pi_{\boldsymbol{\theta}_{\text{old}}}(a_t|s_t)}\]
 
 and $\epsilon \approx 0.2$ is the clipping parameter.
 
@@ -561,7 +561,7 @@ This prevents the policy from collapsing to a bad deterministic action or diverg
 
 The complete PPO loss combines clipped policy gradient, value loss, and entropy regularization:
 
-$$\mathcal{L}^{\text{PPO}}(\boldsymbol{\theta}, \boldsymbol{\phi}) = \mathbb{E}\left[\mathcal{L}^{\text{clip}} - c_1 \mathcal{L}_{\text{value}} + c_2 \mathcal{H}(\pi_{\boldsymbol{\theta}})\right]$$
+\[\mathcal{L}^{\text{PPO}}(\boldsymbol{\theta}, \boldsymbol{\phi}) = \mathbb{E}\left[\mathcal{L}^{\text{clip}} - c_1 \mathcal{L}_{\text{value}} + c_2 \mathcal{H}(\pi_{\boldsymbol{\theta}})\right]\]
 
 where:
 \begin{itemize}
@@ -635,13 +635,13 @@ Modern approaches combine both:
 
 Learn a network $u_{\boldsymbol{\theta}}(t, \mathbf{x})$ that satisfies a known PDE:
 
-$$\frac{\partial u}{\partial t} + \mathcal{N}[u] = 0$$
+\[\frac{\partial u}{\partial t} + \mathcal{N}[u] = 0\]
 
 where $\mathcal{N}$ is a nonlinear operator (e.g., $\mathcal{N}[u] = -u \frac{\partial u}{\partial x}$ for Burgers' equation).
 
 The loss combines:
 
-$$\mathcal{L} = \mathcal{L}_{\text{data}} + \lambda \mathcal{L}_{\text{physics}}$$
+\[\mathcal{L} = \mathcal{L}_{\text{data}} + \lambda \mathcal{L}_{\text{physics}}\]
 
 \begin{itemize}
     \item \textbf{Data loss:} $\mathcal{L}_{\text{data}} = \frac{1}{N}\sum_i (u_{\boldsymbol{\theta}}(t_i, \mathbf{x}_i) - u_i^{\text{obs}})^2$ (match observations)
@@ -654,13 +654,13 @@ Derivatives $\frac{\partial u_{\boldsymbol{\theta}}}{\partial t}$ are computed v
 
 For learned dynamics $\dot{\mathbf{x}} = f_{\boldsymbol{\theta}}(\mathbf{x}, \mathbf{u})$:
 
-$$\mathcal{L}_{\text{physics}} = \frac{1}{M}\sum_j \left(\frac{d\mathbf{x}_j}{dt} - f_{\boldsymbol{\theta}}(\mathbf{x}_j, \mathbf{u}_j)\right)^2$$
+\[\mathcal{L}_{\text{physics}} = \frac{1}{M}\sum_j \left(\frac{d\mathbf{x}_j}{dt} - f_{\boldsymbol{\theta}}(\mathbf{x}_j, \mathbf{u}_j)\right)^2\]
 
 (enforces time derivatives match the learned model)
 
 For control with known Lagrangian dynamics:
 
-$$\mathcal{L}_{\text{physics}} = \left\|\mathbf{M}(\mathbf{x})\ddot{\mathbf{x}} + \mathbf{C}(\mathbf{x},\dot{\mathbf{x}})\dot{\mathbf{x}} + \mathbf{G}(\mathbf{x}) - \mathbf{u}\right\|^2$$
+\[\mathcal{L}_{\text{physics}} = \left\|\mathbf{M}(\mathbf{x})\ddot{\mathbf{x}} + \mathbf{C}(\mathbf{x},\dot{\mathbf{x}})\dot{\mathbf{x}} + \mathbf{G}(\mathbf{x}) - \mathbf{u}\right\|^2\]
 
 \textbf{Benefit:} Encoding known physics greatly reduces data requirements and improves generalization to unseen configurations. This approach directly bridges Chapter~\ref{ch:lagrangian}'s Lagrangian equations of motion with data-driven learning: the analytical structure $\mathbf{M}\ddot{\mathbf{q}} + \mathbf{C}\dot{\mathbf{q}} + \mathbf{G} = \boldsymbol{\tau}$ derived from energy principles becomes a differentiable constraint that guides the network toward physically consistent predictions.
 
@@ -672,11 +672,11 @@ $$\mathcal{L}_{\text{physics}} = \left\|\mathbf{M}(\mathbf{x})\ddot{\mathbf{x}} 
 
 Instead of discrete layers, \textbf{Neural ODEs} define the hidden state as the solution to a continuous ODE:
 
-$$\frac{dh(t)}{dt} = f_{\boldsymbol{\theta}}(h(t), t)$$
+\[\frac{dh(t)}{dt} = f_{\boldsymbol{\theta}}(h(t), t)\]
 
 The network output is obtained by solving this ODE from $t=0$ to $t=T$:
 
-$$h(T) = h(0) + \int_0^T f_{\boldsymbol{\theta}}(h(t), t) \, dt$$
+\[h(T) = h(0) + \int_0^T f_{\boldsymbol{\theta}}(h(t), t) \, dt\]
 
 Solved numerically using an ODE solver (e.g., RK45).
 
@@ -684,7 +684,7 @@ Solved numerically using an ODE solver (e.g., RK45).
 
 Training Neural ODEs requires computing gradients through an ODE solve, which is expensive. The \textbf{adjoint method} computes gradients backward in time:
 
-$$\frac{\partial \mathcal{L}}{\partial \boldsymbol{\theta}} = -\int_T^0 \left(\frac{\partial L}{\partial h(t)}\right)^T \frac{\partial f_{\boldsymbol{\theta}}}{\partial \boldsymbol{\theta}} dt$$
+\[\frac{\partial \mathcal{L}}{\partial \boldsymbol{\theta}} = -\int_T^0 \left(\frac{\partial L}{\partial h(t)}\right)^T \frac{\partial f_{\boldsymbol{\theta}}}{\partial \boldsymbol{\theta}} dt\]
 
 This avoids storing intermediate activations (memory-efficient) and allows efficient backprop through ODE solvers.
 
@@ -724,7 +724,7 @@ If the policy learns to succeed across this distribution of tasks, it becomes ro
 
 Alternatively, use real-world data to \textbf{identify} the actual system parameters:
 
-$$\hat{\boldsymbol{\theta}}_{\text{system}} = \arg\min_{\boldsymbol{\theta}} \sum_i \|f(\mathbf{s}_i, \mathbf{u}_i; \boldsymbol{\theta}) - \mathbf{s}_{i+1}^{\text{obs}}\|^2$$
+\[\hat{\boldsymbol{\theta}}_{\text{system}} = \arg\min_{\boldsymbol{\theta}} \sum_i \|f(\mathbf{s}_i, \mathbf{u}_i; \boldsymbol{\theta}) - \mathbf{s}_{i+1}^{\text{obs}}\|^2\]
 
 Then retrain the policy with identified parameters.
 
@@ -740,7 +740,7 @@ State: $\mathbf{s} = [\theta, \dot{\theta}]$ (angle and angular velocity)
 Action: $u \in [-1, 1]$ (normalized torque)
 
 Reward:
-$$r_t = -(\theta_t^2 + 0.1\dot{\theta}_t^2 + 0.01 u_t^2)$$
+\[r_t = -(\theta_t^2 + 0.1\dot{\theta}_t^2 + 0.01 u_t^2)\]
 
 This rewards reaching $\theta \approx \pi$ (upright), low velocity, and low control effort.
 
@@ -748,7 +748,7 @@ This rewards reaching $\theta \approx \pi$ (upright), low velocity, and low cont
 
 A simple 2-layer network with ReLU activations:
 
-$$\pi_{\boldsymbol{\theta}}(s) = \tanh(\mathbf{W}_2 \text{ReLU}(\mathbf{W}_1 s + b_1) + b_2)$$
+\[\pi_{\boldsymbol{\theta}}(s) = \tanh(\mathbf{W}_2 \text{ReLU}(\mathbf{W}_1 s + b_1) + b_2)\]
 
 This maps 2D state to 1D action in $[-1, 1]$.
 
@@ -1117,7 +1117,7 @@ For continuous control, actions are typically:
 
 Design a reward that guides learning toward the desired behavior:
 
-$$r_t = r_{\text{task}} + r_{\text{sparse}} + r_{\text{cost}}$$
+\[r_t = r_{\text{task}} + r_{\text{sparse}} + r_{\text{cost}}\]
 
 where:
 \begin{itemize}
@@ -1128,7 +1128,7 @@ where:
 
 Example for reaching a target $\mathbf{x}_{\text{goal}}$:
 
-$$r_t = -\|\mathbf{x}_{\text{EE},t} - \mathbf{x}_{\text{goal}}\|^2 - 0.01 \|\boldsymbol{\tau}_t\|^2 + 100 \cdot \mathbb{1}[\text{reached}]$$
+\[r_t = -\|\mathbf{x}_{\text{EE},t} - \mathbf{x}_{\text{goal}}\|^2 - 0.01 \|\boldsymbol{\tau}_t\|^2 + 100 \cdot \mathbb{1}[\text{reached}]\]
 
 \subsection{Training Stability}
 
