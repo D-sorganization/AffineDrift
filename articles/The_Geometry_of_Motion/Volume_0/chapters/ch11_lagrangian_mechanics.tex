@@ -18,7 +18,7 @@
 \section{Historical Context: From Newton to Lagrange to Hamilton}
 % ==========================================================================
 
-The development of Lagrangian mechanics represents one of the most consequential intellectual shifts in the history of mechanics. Isaac Newton formulated motion through explicit forces acting on point masses: $\sum \mathbf{F} = m\mathbf{a}$. This framework dominated for over a century and remains the foundation of computational physics engines.
+The development of Lagrangian mechanics represents one of the most far-reaching intellectual shifts in the history of mechanics. Isaac Newton formulated motion through explicit forces acting on point masses: $\sum \mathbf{F} = m\mathbf{a}$. This framework dominated for over a century and remains the foundation of computational physics engines.
 
 However, in 1788, \textbf{Joseph-Louis Lagrange} published his \textit{M\'{e}canique Analytique}, introducing a radically different approach. Rather than tracking forces, Lagrange proposed that mechanical systems evolve along paths that extremize a single scalar function: the \textbf{action integral}
 $$\mathcal{S}[\mathbf{q}(t)] = \int_{t_1}^{t_2} \mathcal{L}(\mathbf{q}, \dot{\mathbf{q}}, t) \, dt$$
@@ -144,7 +144,7 @@ Lagrange defined the \textbf{Lagrangian} as:
 \label{eq:lagrangian}
 \end{equation}
 
-This is the difference between kinetic and potential energy. It elegantly encodes all the dynamics needed to recover Newton's laws, yet its form is independent of the choice of coordinate system (within the family of generalized coordinates).
+This is the difference between kinetic and potential energy. It encodes all the dynamics needed to recover Newton's laws, yet its form is independent of the choice of coordinate system (within the family of generalized coordinates).
 
 When we substitute $\mathcal{L}$ into the Euler-Lagrange equation:
 $$\frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}}\right) - \frac{\partial \mathcal{L}}{\partial \mathbf{q}} = \boldsymbol{\tau}$$
@@ -476,7 +476,7 @@ $$\delta W = (\mathbf{F} - m\mathbf{a}) \cdot \delta \mathbf{r} = 0$$
 In generalized coordinates:
 $$\sum_i \left(\frac{\partial \mathcal{L}}{\partial q_i} - \frac{d}{dt}\frac{\partial \mathcal{L}}{\partial \dot{q}_i}\right) \delta q_i = 0$$
 
-Since the $\delta q_i$ are arbitrary (independent), each coefficient must vanish, recovering the Euler-Lagrange equations. This approach elegantly shows that Lagrangian mechanics is a direct consequence of Newton's laws when viewed through the lens of generalized coordinates and constraint-respecting displacements.
+Since the $\delta q_i$ are arbitrary (independent), each coefficient must vanish, recovering the Euler-Lagrange equations. This approach shows directly that Lagrangian mechanics is a direct consequence of Newton's laws when viewed through the lens of generalized coordinates and constraint-respecting displacements.
 
 % ==========================================================================
 \section{Christoffel Symbols and the Geometry of $\mathbf{M}$}
@@ -818,7 +818,7 @@ Lagrangian mechanics reformulates classical dynamics through energy rather than 
 \begin{enumerate}
     \item \textbf{Hamilton's Principle}: Physical systems extremize the action integral $\mathcal{S} = \int \mathcal{L} \, dt$.
     \item \textbf{Euler-Lagrange Equations}: $\frac{d}{dt}\left(\frac{\partial \mathcal{L}}{\partial \dot{\mathbf{q}}}\right) - \frac{\partial \mathcal{L}}{\partial \mathbf{q}} = \boldsymbol{\tau}$ automatically yields equations of motion.
-    \item \textbf{Standard Form}: $\mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})\dot{\mathbf{q}} + \mathbf{G}(\mathbf{q}) = \boldsymbol{\tau}$ elegantly separates inertia, Coriolis, and gravity effects.
+    \item \textbf{Standard Form}: $\mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})\dot{\mathbf{q}} + \mathbf{G}(\mathbf{q}) = \boldsymbol{\tau}$ cleanly separates inertia, Coriolis, and gravity effects.
     \item \textbf{Constraint Elimination}: Generalized coordinates automatically incorporate holonomic constraints, eliminating unknown constraint forces.
     \item \textbf{Energy Conservation}: Time-translation symmetry (via Noether's theorem) guarantees $\frac{d(T+V)}{dt} = 0$ when $\boldsymbol{\tau} = 0$.
     \item \textbf{Hamiltonian Formulation}: A Legendre transform yields symplectic form $\dot{\mathbf{q}} = \frac{\partial H}{\partial \mathbf{p}}$, $\dot{\mathbf{p}} = -\frac{\partial H}{\partial \mathbf{q}}$.
