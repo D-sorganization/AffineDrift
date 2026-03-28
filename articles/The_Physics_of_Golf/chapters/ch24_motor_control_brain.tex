@@ -1,12 +1,12 @@
 \chapter{Motor Control I: The Brain as Controller}
 \label{ch:motor_control_brain}
 
-\epigraph{The brain is the ultimate controller---a device of extraordinary subtlety that solves the golf swing problem every time you play, without you ever consciously knowing the equations.}{Adapted from Richard Feynman}
+\epigraph{The brain is the ultimate controller---a device of considerable subtlety that solves the golf swing problem every time you play, without you ever consciously knowing the equations.}{Adapted from Richard Feynman}
 
 \begin{laymansbox}{What This Chapter Is About}{box:ch24_intro}
-We've spent the last several chapters learning the physics: the nonlinear dynamics, the drift-dominated regime, the trade-off between control and drift. But now we must face the central mystery: \textit{the brain solves this problem}. Not perfectly---golfers miss---but with remarkable consistency. An elite golfer produces clubhead speeds within 2\% of their average, swing after swing \cite{jorgensen1994physics}, despite 30--50 millisecond neural delays, sensor noise, and a system where the downswing lasts only 300 milliseconds.
+We've spent the last several chapters learning the physics: the nonlinear dynamics, the drift-dominated regime, the trade-off between control and drift. But now we must face the central mystery: \textit{the brain solves this problem}. Not perfectly---golfers miss---but with high consistency. An elite golfer produces clubhead speeds within 2\% of their average, swing after swing \cite{jorgensen1994physics}, despite 30--50 millisecond neural delays, sensor noise, and a system where the downswing lasts only 300 milliseconds.
 
-This chapter reframes the nervous system as an engineering control system and asks: what kind of controller is the brain? How does it manage to work within such severe constraints? The answer will astonish you: the brain doesn't try to control everything. Instead, it exploits the drift field---the very physics we've been studying---to do most of the work. The brain is not fighting physics; it is using physics as its primary actuator.
+This chapter reframes the nervous system as an engineering control system and asks: what kind of controller is the brain? How does it manage to work within such severe constraints? The answer is instructive: the brain does not try to control everything. Instead, it exploits the drift field---the very physics we've been studying---to do most of the work. The brain is not fighting physics; it is using physics as its primary actuator.
 \end{laymansbox}
 
 \section{The Control Problem: What the Brain Must Solve}
@@ -139,13 +139,13 @@ The forward and inverse models are intimately related. The brain learns them tog
 
 Where in the brain do these internal models live? The leading candidate is the \textit{cerebellum}, a structure at the base of the brain.
 
-The cerebellum is remarkable for several reasons:
+The cerebellum is notable for several reasons:
 
 \begin{principle}{Cerebellar Architecture}{box:ch24_cerebellum_arch}
 \begin{itemize}
 \item \textbf{Size:} The cerebellum is only ~10\% of the brain's volume, but contains ~70\% of all neurons \cite{williams1995cerebellum} (approximately 69 billion granule cells---making it the most neuron-dense structure in the brain. It also contains roughly 15 million Purkinje cells, the large output neurons that project to the deep cerebellar nuclei) \cite{eccles1967cerebellum}.
 
-\item \textbf{Computational density:} This makes the cerebellum the most densely packed neural tissue in the brain---a parallel processor of extraordinary power.
+\item \textbf{Computational density:} This makes the cerebellum the most densely packed neural tissue in the brain---a massively parallel neural processor.
 
 \item \textbf{Simple circuit:} The cerebellar circuit is highly stereotyped and mathematically simple. It's one of the few neural circuits we nearly understand.
 

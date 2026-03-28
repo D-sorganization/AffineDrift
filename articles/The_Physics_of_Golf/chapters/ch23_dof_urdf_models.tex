@@ -70,7 +70,7 @@ The formula subtracts the total constraints from the free DOF.
 \begin{example}{3-Link Robot Arm}{ex:robot_arm_dof}
 Consider a robot arm with a fixed base and three revolute joints in series:
 
-\textbf{Bodies:} Ground (base, fixed) + Link 1 + Link 2 + Link 3 = 4 total. But the ground is the reference frame, so $N = 4$ bodies are connected. Actually, let's be careful: we include ground as one of the $N$, so $N = 4$.
+\textbf{Bodies:} Ground (base, fixed) + Link 1 + Link 2 + Link 3 = 4 total. But the ground is the reference frame, so $N = 4$ bodies are connected. To be precise: we include ground as one of the $N$, so $N = 4$.
 
 \textbf{Joints:} 3 revolute joints (one between ground and link 1, one between link 1 and link 2, one between link 2 and link 3). So $J = 3$.
 
@@ -79,7 +79,7 @@ Consider a robot arm with a fixed base and three revolute joints in series:
 \textbf{Grübler calculation:}
 $$\mathrm{DOF} = 6(4-1) - 15 = 18 - 15 = 3$$
 
-\textbf{Sanity check:} A 3-link planar arm (all revolutes in the same plane) should have 3 DOF. Yes! The end-effector position in the plane has 2 DOF (x and y), and the end-effector orientation has 1 DOF (angle). Total: 3 DOF. $\checkmark$
+\textbf{Sanity check:} A 3-link planar arm (all revolutes in the same plane) should have 3 DOF. Confirmed: The end-effector position in the plane has 2 DOF (x and y), and the end-effector orientation has 1 DOF (angle). Total: 3 DOF. $\checkmark$
 
 \textbf{Alternative calculation (tree formula):} For a tree structure (no loops), the DOF is simply the sum of joint DOFs:
 $$\mathrm{DOF} = \sum_{i=1}^{J} f_i = 1 + 1 + 1 = 3$$
@@ -1220,7 +1220,7 @@ This is the future of golf biomechanics: mathematical models that explain not ju
 \end{principle}
 
 \subsection*{Looking Ahead}
-We now have a complete musculoskeletal model: joints with defined degrees of freedom, kinematic chains described in URDF, and dynamics engines to simulate them. But a model without a controller is just a ragdoll. Who---or what---controls the swing? Part~VIII turns to the remarkable organ that orchestrates all of this: the human brain. Chapter~\ref{ch:motor_control_brain} examines how the brain solves the control problem under severe constraints of delay, noise, and bandwidth.
+We now have a complete musculoskeletal model: joints with defined degrees of freedom, kinematic chains described in URDF, and dynamics engines to simulate them. But a model without a controller is just a ragdoll. Who---or what---controls the swing? Part~VIII turns to the organ that orchestrates all of this: the human brain. Chapter~\ref{ch:motor_control_brain} examines how the brain solves the control problem under severe constraints of delay, noise, and bandwidth.
 
 \begin{exercises}{Chapter Exercises}{ex:ch23_exercises}
 \begin{enumerate}
