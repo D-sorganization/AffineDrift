@@ -162,7 +162,7 @@ This coupling means: \textbf{accelerating one joint automatically affects the ot
 The structure of the mass matrix reveals how mechanical coupling propagates through the kinetic chain. When the shoulder joint applies a torque, that torque must overcome not only the shoulder's own inertia but also the inertial resistance of all distal segments. The off-diagonal entries encode the magnitude of this propagated inertial effect. In typical human limb geometries, the mass matrix exhibits a diagonal-dominant structure: the diagonal entries substantially exceed the off-diagonal entries in magnitude. This structure has important consequences for understanding passive dynamics. Even small perturbations in joint configuration can produce measurable changes in the effective inertias, which feed back through the Coriolis terms to produce non-trivial accelerations. The physical interpretation is that each proximal segment "feels" the inertia of all distal segments, creating a cascade effect where changes in distal joint angles propagate upstream through the inertial coupling.
 
 \begin{example}{Numerical Triple Pendulum Mass Matrix}{ex:triple_pendulum_mass_numerical}
-Assume:
+Assume the following parameters for the three-link model. (These extend the simplified parameters from Chapter~\ref{ch:zero_torque_counterfactual} by adding a third segment; the two-link canonical parameters from Chapter~\ref{ch:03_double_pendulum} use different values appropriate for that simpler model.)
 \begin{itemize}
 \item Segment 1 (arm): $L_1 = 0.4$ m, $m_1 = 2$ kg, $I_1 = 0.05$ kg$\cdot$m$^2$.
 \item Segment 2 (forearm): $L_2 = 0.3$ m, $m_2 = 0.5$ kg, $I_2 = 0.01$ kg$\cdot$m$^2$.
@@ -270,7 +270,7 @@ A crude analogy: imagine a train with three cars. If all three cars accelerate f
 
 In the golf swing, the "engine" is the legs and hips (driven by muscle). The hips push the shoulders (via the spine, a constraint). The shoulders push the arms (via the shoulder joint, a constraint). The arms push the club (via the wrist, a constraint). By the end, the club is moving at $50$--$60$ mph, far faster than any single muscle could achieve.
 
-And the remarkable part: this transfer happens \emph{automatically}, due to constraints and inertia, with minimal active muscular effort once the sequence is initiated.
+The key point: this transfer happens \emph{automatically}, due to constraints and inertia, with minimal active muscular effort once the sequence is initiated.
 \end{laymansbox}
 
 %============================================================================
@@ -485,11 +485,11 @@ Explain in plain language: Why does releasing the wrist late in the downswing pr
 \end{exercise}
 
 \begin{exercise}{Mass Matrix}
-For the triple pendulum with parameters:
+For the triple pendulum with the following parameters (deliberately different from the worked example above, to explore sensitivity to segment properties):
 \begin{itemize}
-\item $I_1 = 0.1$, $m_1 = 3$, $L_1 = 0.4$.
-\item $I_2 = 0.02$, $m_2 = 1$, $L_2 = 0.3$.
-\item $I_3 = 0.01$, $m_3 = 0.2$, $L_3 = 0.5$.
+\item $I_1 = 0.1$ kg$\cdot$m$^2$, $m_1 = 3$ kg, $L_1 = 0.4$ m.
+\item $I_2 = 0.02$ kg$\cdot$m$^2$, $m_2 = 1$ kg, $L_2 = 0.3$ m.
+\item $I_3 = 0.01$ kg$\cdot$m$^2$, $m_3 = 0.2$ kg, $L_3 = 0.5$ m.
 \end{itemize}
 
 At configuration $q_2 = 90°, q_3 = 100°$:

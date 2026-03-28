@@ -20,7 +20,7 @@ Most golfers think they're creating the swing through muscular effort. In realit
 
 The \textbf{Zero-Torque Counterfactual (ZTCF)} is a thought experiment that isolates the second effect. It asks: \textbf{If I eliminate all the torques my muscles produce, what trajectory does my body follow?}
 
-The answer is shocking. The ZTCF trajectory—what would happen if your muscles vanished—explains most of the shape of the downswing. Your muscles spend most of the swing \emph{restraining} the physics, not driving it.
+The answer is counterintuitive. The ZTCF trajectory—what would happen if your muscles vanished—explains most of the shape of the downswing. Your muscles spend most of the swing \emph{restraining} the physics, not driving it.
 \end{laymansbox}
 
 %============================================================================
@@ -237,15 +237,13 @@ For a golfer, this distinction matters because gravity is always present (and pr
 \section{The Drift-Control Ratio (DCR) and the Blow-Up in Late Downswing}
 \label{sec:dcr_blowup}
 
-\begin{definition}{Drift-Control Ratio (DCR)}{def:dcr}
-At any time during the swing, the \textbf{Drift-Control Ratio (DCR)} quantifies the relative magnitudes of passive and active torques. For a single joint:
+Recall the \textbf{Drift-to-Control Ratio (DCR)} introduced in Chapter~\ref{ch:05_affine_structure} (Definition~\ref{def:ch05_dcr}). In the state-space formulation, the DCR is defined as $\text{DCR} = |\bm{f}(\bm{x})| / |\bm{G}(\bm{x}) \bm{u}|$. Equivalently, in the torque-space formulation used here:
 \begin{equation}
 \text{DCR} = \frac{|\bm{\tau}_{\text{drift}}|}{|\bm{\tau}_{\text{input}}|}
 \label{eq:dcr_definition}
 \end{equation}
 
 When DCR $\approx 1$, passive and active torques are comparable. When DCR $\gg 1$, passive dynamics dominate; the muscle input is tiny relative to what physics produces.
-\end{definition}
 
 \begin{constraintbox}{The DCR Tells You Who's in Charge}{constraint:dcr_meaning}
 The Drift-Control Ratio is a \emph{control authority metric}. It asks: \textbf{How much is the system being driven by its own physics vs. by active muscle control?}
@@ -268,27 +266,27 @@ Consider a two-segment arm (shoulder and elbow) during the downswing. Assume:
 \item Elbow angular velocity: $\dot{q}_2 = 10$ rad/s (extending rapidly).
 \end{itemize}
 
-At this configuration, Coriolis torques at the elbow are approximately:
+At this configuration, using the chapter's worked-example parameters ($m_{\text{club}} = 0.2$~kg, $L_1 = 0.4$~m, $L_2 = 0.3$~m; see Section~\ref{sec:double_pendulum_ztcf}), the Coriolis torques at the elbow are approximately:
 \begin{equation}
-\tau_{\text{Coriolis}} \approx 2 m_{\text{club}} L_1 L_2 \dot{q}_1 \dot{q}_2 \approx 2 \times 0.2 \times 0.4 \times 0.4 \times 5 \times 10 \approx 32 \text{ Nm}
+\tau_{\text{Coriolis}} \approx 2 m_{\text{club}} L_1 L_2 \dot{q}_1 \dot{q}_2 \approx 2 \times 0.2 \times 0.4 \times 0.3 \times 5 \times 10 \approx 24 \text{ Nm}
 \label{eq:dcr_example_coriolis}
 \end{equation}
 
 The typical muscular torque available at the elbow is perhaps $5$--$10$ Nm. Thus:
 \begin{equation}
-\text{DCR}_{\text{elbow}} \approx \frac{32}{7.5} \approx 4
+\text{DCR}_{\text{elbow}} \approx \frac{24}{7.5} \approx 3
 \label{eq:dcr_example_ratio}
 \end{equation}
 
 Later in the downswing, when $\dot{q}_1 \approx 15$ rad/s and $\dot{q}_2 \approx 20$ rad/s (the club is whipping), Coriolis grows to:
 \begin{equation}
-\tau_{\text{Coriolis}} \approx 2 \times 0.2 \times 0.4 \times 0.4 \times 15 \times 20 \approx 192 \text{ Nm}
+\tau_{\text{Coriolis}} \approx 2 \times 0.2 \times 0.4 \times 0.3 \times 15 \times 20 \approx 144 \text{ Nm}
 \label{eq:dcr_example_late_coriolis}
 \end{equation}
 
 Now:
 \begin{equation}
-\text{DCR}_{\text{elbow}} \approx \frac{192}{7.5} \approx 26
+\text{DCR}_{\text{elbow}} \approx \frac{144}{7.5} \approx 19
 \label{eq:dcr_example_late_ratio}
 \end{equation}
 
@@ -325,7 +323,7 @@ grows quadratically with velocity. This explains the sharp rise in DCR during th
 \label{sec:double_pendulum_ztcf}
 
 \begin{example}{ZTCF for a Two-Link Arm in Downswing Configuration}{ex:double_pend_ztcf}
-Consider a double pendulum (shoulder and elbow) with parameters:
+Consider a double pendulum (shoulder and elbow) with simplified parameters chosen to make the algebra tractable. (These differ from the canonical parameters in Chapter~\ref{ch:03_double_pendulum}; the physical conclusions are qualitatively the same.)
 \begin{itemize}
 \item Shoulder: length $L_1 = 0.4$ m, mass $m_1 = 2$ kg (upper arm), $I_1 = 0.05$ kg$\cdot$m$^2$ (about the shoulder).
 \item Elbow: length $L_2 = 0.3$ m, mass $m_2 = 0.2$ kg (club), $I_2 = 0.01$ kg$\cdot$m$^2$ (about the elbow).
