@@ -122,33 +122,32 @@ The continuous-time LQR controller $\mat{K} = \mat{R}^{-1}\mat{B}^\T\mat{S}$ der
 \end{enumerate}
 \end{proposition}
 
-\begin{proof}[Proof Sketch]
-The key is that the Riccati solution $\mat{S}$ serves as a Lyapunov function. Consider a perturbed controller
-$\mat{K}_\eta = \eta \mat{K}$ for $\eta > 0$. The closed-loop system becomes $\dot\x = (\mat{A} - \eta\mat{B}\mat{K})\x$.
-Using $V = \x^\T\mat{S}\x$:
+\begin{proof}[Proof Sketch (Completion of Squares)]
+The ARE states $\mat{A}^\T\mat{S} + \mat{S}\mat{A} + \mat{Q} - \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S} = 0$,
+with $\mat{K} = \mat{R}^{-1}\mat{B}^\T\mat{S}$. Consider the perturbed controller
+$\uvec = -\eta\mat{K}\x$ for $\eta > 0$. Using $V = \x^\T\mat{S}\x$:
 \begin{equation}
 \dot{V} = \x^\T[(\mat{A} - \eta\mat{B}\mat{K})^\T\mat{S} + \mat{S}(\mat{A} - \eta\mat{B}\mat{K})]\x.
 \label{eq:ch6:perturbed-V}
 \end{equation}
 
-From the ARE, we have
-\begin{equation}
-\mat{A}^\T\mat{S} + \mat{S}\mat{A} = -\mat{Q} - \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S} + 2\mat{S}\mat{A}.
-\label{eq:ch6:are-rearrange}
-\end{equation}
-
-Rewriting,
+Substituting the ARE ($\mat{A}^\T\mat{S} + \mat{S}\mat{A} = -\mat{Q} + \mat{K}^\T\mat{R}\mat{K}$) and
+noting $\mat{S}\mat{B}\mat{K} = \mat{K}^\T\mat{R}\mat{K}$:
 \begin{align}
-\dot{V} &= \x^\T[(\mat{A}^\T\mat{S} + \mat{S}\mat{A}) - \eta(\mat{K}^\T\mat{B}^\T\mat{S} + \mat{S}\mat{B}\mat{K})]\x \notag\\
-&= \x^\T[-\mat{Q} - \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S}
-  - \eta\mat{K}^\T\mat{B}^\T\mat{S} - \eta\mat{S}\mat{B}\mat{K}]\x \notag\\
-&= \x^\T[-\mat{Q} - \mat{S}\mat{B}(\mat{R}^{-1} + \eta\mat{K}\mat{R}^{-1} + \eta\mat{R}^{-1}\mat{K}^\T)\mat{B}^\T\mat{S}]\x.
+\dot{V} &= \x^\T[-\mat{Q} + \mat{K}^\T\mat{R}\mat{K} - 2\eta\mat{K}^\T\mat{R}\mat{K}]\x \notag\\
+&= -\x^\T[\mat{Q} + (2\eta - 1)\mat{K}^\T\mat{R}\mat{K}]\x.
 \label{eq:ch6:eta-perturbation}
 \end{align}
 
-For the system to remain stable, we need $\dot{V} < 0$. This requires the term in brackets to be negative definite.
-The critical value occurs when the gain margin is half: at $\eta = 1/2$, the perturbation magnitude reaches the
-threshold. For $\eta \in (1/2, \infty)$, the dissipation inequality continues to hold, guaranteeing stability.
+Since $\mat{Q} \succeq 0$ and $\mat{R} \succ 0$, the expression is negative definite whenever $2\eta - 1 > 0$,
+i.e., $\eta > 1/2$. For $\eta \to \infty$, the quadratic term grows without bound, so stability is maintained
+for all $\eta \in (1/2, \infty)$.
+
+\begin{remark}
+This result is specific to continuous-time LQR (SISO: gain margin $[1/2, \infty)$, phase margin $\pm 60^\circ$).
+Discrete-time LQR does not enjoy such generous margins; the relevant concept there is the \emph{disk margin},
+which depends on the sampling rate and system dynamics. The two settings should not be conflated.
+\end{remark}
 \end{proof}
 
 This proposition is not academic: it explains why tuning an LQR controller by scaling the gain (increasing $\eta$ to be
@@ -183,7 +182,7 @@ Introduce the gain matrix
 \end{equation}
 which allows us to rewrite the Riccati equation in the \textbf{alternative (or canonical) form}:
 \begin{equation}
-\mat{S}_k = \mat{Q}_k + (\mat{A}_k - \mat{B}_k\mat{K}_k)^\T \mat{S}_{k+1} (\mat{A}_k - \mat{B}_k\mat{K}_k),
+\mat{S}_k = \mat{Q}_k + \mat{K}_k^\T\mat{R}_k\mat{K}_k + (\mat{A}_k - \mat{B}_k\mat{K}_k)^\T \mat{S}_{k+1} (\mat{A}_k - \mat{B}_k\mat{K}_k),
 \label{eq:ch6:riccati-alt-form}
 \end{equation}
 which is a key form that appears throughout duality theory.
@@ -221,7 +220,7 @@ V_{k+1}-V_k &= \dx_k^\T\!\left[
 
 \textbf{Step 3: Invoke the Riccati alternative form}. Equation~\eqref{eq:ch6:riccati-alt-form} states:
 \begin{equation}
-\mat{S}_k = \mat{Q}_k + (\mat{A}_k - \mat{B}_k\mat{K}_k)^\T \mat{S}_{k+1} (\mat{A}_k - \mat{B}_k\mat{K}_k).
+\mat{S}_k = \mat{Q}_k + \mat{K}_k^\T\mat{R}_k\mat{K}_k + (\mat{A}_k - \mat{B}_k\mat{K}_k)^\T \mat{S}_{k+1} (\mat{A}_k - \mat{B}_k\mat{K}_k).
 \end{equation}
 
 Therefore:
@@ -585,41 +584,13 @@ Substituting into~\eqref{eq:ch6:expanded-lhs}:
 \label{eq:ch6:partial}
 \end{align}
 
-Now use the fact that $\mat{K} = \mat{R}^{-1}\mat{B}^\T\mat{S}$. Then:
+Now use $\mat{K} = \mat{R}^{-1}\mat{B}^\T\mat{S}$ and the symmetry $\mat{R} = \mat{R}^\T$:
 \begin{align}
-\mat{K}^\T\mat{B}^\T\mat{S} + \mat{S}\mat{B}\mat{K} &= \mat{S}\mat{B}(\mat{R}^{-1})^\T\mat{B}^\T\mat{S} + \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S} \notag\\
-&= 2\mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S} \quad \text{(using } \mat{R} = \mat{R}^\T \text{)} \\
-&\quad - \mat{S}\mat{B}\mat{R}^{-1}\mat{R}(\mat{R}^{-1})^\T\mat{B}^\T\mat{S}.
-\label{eq:ch6:trick}
-\end{align}
-
-Actually, let's use a cleaner approach. Note that:
-\begin{equation}
-\mat{K}^\T\mat{R}\mat{K} = \mat{S}\mat{B}(\mat{R}^{-1})^\T\mat{R}\mat{R}^{-1}\mat{B}^\T\mat{S}
-                        = \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S}.
-\label{eq:ch6:K-R-K}
-\end{equation}
-
-Also:
-\begin{equation}
-\mat{K}^\T\mat{B}^\T\mat{S} + \mat{S}\mat{B}\mat{K} = \mat{S}\mat{B}\mat{K} + \mat{K}^\T\mat{B}^\T\mat{S}
-                                                    = (\mat{S}\mat{B}\mat{K} + (\mat{S}\mat{B}\mat{K})^\T)
-                                                    = \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S} + \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S}
-                                                    = 2\mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S}.
-\label{eq:ch6:symmetric-form}
-\end{equation}
-
-Wait, let me reconsider. We have $\mat{K} = \mat{R}^{-1}\mat{B}^\T\mat{S}$, so:
-\begin{align}
-\mat{K}^\T\mat{B}^\T\mat{S} &= \mat{S}\mat{B}(\mat{R}^{-1})^\T\mat{B}^\T\mat{S} = \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S}, \\
+\mat{K}^\T\mat{B}^\T\mat{S} &= \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S}, \\
 \mat{S}\mat{B}\mat{K} &= \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S}.
 \end{align}
-
-So indeed:
-\begin{equation}
-\mat{K}^\T\mat{B}^\T\mat{S} + \mat{S}\mat{B}\mat{K} = 2\mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S}.
-\label{eq:ch6:key-sum}
-\end{equation}
+Hence $\mat{K}^\T\mat{B}^\T\mat{S} + \mat{S}\mat{B}\mat{K} = 2\mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S}$.
+Note also that $\mat{K}^\T\mat{R}\mat{K} = \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S}$.
 
 Substituting back:
 \begin{align}
@@ -647,7 +618,7 @@ If $\mat{Q} + \mat{K}^\T\mat{R}\mat{K} \succeq \alpha\mat{I}$ and $\underline{s}
 
 Solving the differential inequality:
 \begin{equation}
-V(t) \leq e^{-\lambda t}V(0), \quad \text{where} \quad \lambda = \frac{\alpha}{2\overline{s}}.
+V(t) \leq e^{-\lambda t}V(0), \quad \text{where} \quad \lambda = \frac{\alpha}{\overline{s}}.
 \label{eq:ch6:ct-exp-decay}
 \end{equation}
 
@@ -669,7 +640,7 @@ Comparing~\eqref{eq:ch6:ct-value-drop} with the contraction condition from Chapt
 \mat{A}_{\text{cl}}^\T\mat{M} + \mat{M}\mat{A}_{\text{cl}} + \dot{\mat{M}} \preceq -2\lambda\mat{M},
 \label{eq:ch6:contraction-lmi}
 \end{equation}
-we see that setting $\mat{M} = \mat{S}$ and $\lambda = \alpha/(2\overline{s})$ gives:
+we see that setting $\mat{M} = \mat{S}$ and $\lambda = \alpha/(2\overline{s})$ (so that $2\lambda = \alpha/\overline{s}$) gives:
 \begin{equation}
 \mat{A}_{\text{cl}}^\T\mat{S} + \mat{S}\mat{A}_{\text{cl}} + \dot{\mat{S}}
 = -(\mat{Q} + \mat{K}^\T\mat{R}\mat{K})

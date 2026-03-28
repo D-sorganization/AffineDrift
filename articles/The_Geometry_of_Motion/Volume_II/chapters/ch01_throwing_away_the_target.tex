@@ -45,9 +45,11 @@ what we optimize. It changes how we define stability. And it changes what ``succ
 means in a controlled system.
 
 The purpose of this book is to develop control theory from this trajectory-first
-perspective, to show that the classical setpoint framework is a special (and often
-misleading) case of a much richer theory, and to build the mathematical tools needed
-to design controllers for systems whose purpose is to \emph{move}.
+perspective. The classical setpoint framework is the correct tool for regulation
+problems---holding a system at a desired operating point---and remains one of the
+great achievements of control engineering. However, for systems whose primary purpose
+is to \emph{move}, the trajectory-tracking framework provides a natural generalization
+that contains setpoint regulation as a special case.
 
 \vspace{0.3cm}
 
@@ -217,11 +219,12 @@ an extraordinary number of control-theoretic challenges into roughly 1.2~seconds
   \theta_{\text{arm}},\, \theta_{\text{wrist}})^\top$ and their velocities
   $\dot{\bm{q}}$, giving state $\state = (\bm{q}, \dot{\bm{q}}) \in \Reals^8$.
 
-  \textbf{Setpoint approach} (wrong): Define a target state $\state^* =
-  (\bm{q}_{\text{impact}}, \dot{\bm{q}}_{\text{impact}})$ and design a controller
-  to drive $\state(t) \to \state^*$. This fails immediately: the system should not
-  \emph{stop} at $\state^*$. Impact is a waypoint, not a destination. The club must
-  be accelerating \emph{through} the ball, not decelerating toward it.
+  \textbf{Setpoint approach} (inappropriate for this task): Define a target state
+  $\state^* = (\bm{q}_{\text{impact}}, \dot{\bm{q}}_{\text{impact}})$ and design a
+  controller to drive $\state(t) \to \state^*$. This is ill-suited to a golf swing
+  because the system should not \emph{stop} at $\state^*$. Impact is a waypoint, not
+  a destination. The club must be accelerating \emph{through} the ball, not
+  decelerating toward it.
 
   \textbf{Trajectory approach} (right): Define a reference motion
   $\traj^*(s): [0, 1] \to \Reals^8$ parameterized by a phase variable $s$ (not

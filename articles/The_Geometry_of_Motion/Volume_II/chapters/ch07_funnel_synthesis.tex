@@ -16,7 +16,7 @@ Even if you know the mathematically perfect path for a golf swing, no human can 
 \section{Beyond LQR: The Need for Guaranteed Invariance}
 % ══════════════════════════════════════════════
 
-In Chapter 4, we showed that applying time-varying Linear Quadratic Regulation (LQR) to the transverse dynamics creates a contracting envelope of stability. The Riccati equation naturally shapes this envelope into a "funnel" that narrows as the terminal constraint approaches. 
+In Chapter 4, we showed that applying time-varying Linear Quadratic Regulation (LQR) to the transverse dynamics creates a contracting envelope of stability. The Riccati equation naturally shapes this envelope into a ``funnel'' that narrows as the terminal constraint approaches. The idea of composing such funnels into motion planning trees was introduced by Tedrake \cite{Tedrake2009} (LQR-Trees) and extended by Majumdar and Tedrake \cite{MajumdarTedrake2017} using sum-of-squares verification.
 
 However, LQR guarantees are inherently \emph{local}. They rely on the linear approximation of the transverse dynamics $\dot{\bm{\xi}} = \bm{A}_\perp(t)\bm{\xi} + \bm{B}_\perp(t)\delta\control$. For actual physical systems traversing highly nonlinear state spaces—like a golf club accelerating to $50$ m/s while subject to massive centrifugal and Coriolis forces—this linearization quickly breaks down. If a disturbance pushes the state too far from the reference trajectory $\traj^*(t)$, the nonlinearities will dominate, the LQR restoring forces will compute the wrong corrective action, and the clubhead will completely miss the ball.
 

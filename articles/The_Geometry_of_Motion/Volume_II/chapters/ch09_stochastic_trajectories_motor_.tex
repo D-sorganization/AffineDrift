@@ -33,7 +33,7 @@ This simple reality crumbles deterministic optimal control. If you compute an op
 
 Why do humans move in smooth, bell-shaped velocity profiles rather than jerky "bang-bang" optimal control solutions when reaching for coffee?
 
-Classical control attempts to explain this via "minimum jerk" theories, positing that the nervous system explicitly encodes an optimization functional to minimize $\int \dddot{x}^2 \dt$. The trajectory-first perspective offers a much deeper, physically grounded explanation: the \textbf{Minimum Variance Theory} \cite{HarrisWolpert1998}.
+One influential explanation is the \textbf{minimum jerk} theory of Flash and Hogan \cite{FlashHogan1985}, which posits that the nervous system minimizes $\int \dddot{x}^2 \dt$ (the integral of squared jerk). This kinematic criterion successfully predicts many features of reaching movements. An alternative, physically grounded explanation comes from the \textbf{Minimum Variance Theory} of Harris and Wolpert \cite{HarrisWolpert1998}, which derives smooth trajectories from the assumption of signal-dependent noise. Both theories remain active areas of research, and they are not mutually exclusive---minimum-jerk trajectories can emerge as a consequence of variance minimization under certain noise models.
 
 \begin{keyidea}{Optimization for Repeatability}{min_variance}
   The human nervous system seeks to move in a way that minimizes the final endpoint variance evaluated across multiple trials. Under signal-dependent noise, this objective naturally selects for smooth trajectories with bounded control effort.

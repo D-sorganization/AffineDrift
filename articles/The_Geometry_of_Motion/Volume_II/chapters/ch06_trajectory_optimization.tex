@@ -104,9 +104,9 @@ where $\bm{\Phi}$ represents the numerical integrator step. Multi-shooting is ex
 
 \subsection{Direct Collocation}
 
-Direct Collocation takes this a step further. We represent both the state trajectory and the control signal as piecewise polynomials (e.g., cubic splines for state, linear splines for control). The decision variables are the coefficients of these polynomials, typically located at discrete \textbf{collocation points}.
+Direct Collocation \cite{Betts2010} takes this a step further. We represent both the state trajectory and the control signal as piecewise polynomials (e.g., cubic splines for state, linear splines for control). The decision variables are the coefficients of these polynomials, typically located at discrete \textbf{collocation points}.
 
-Instead of using a numerical integrator, we enforce the differential equation algebraicaly at the collocation points:
+Instead of using a numerical integrator, we enforce the differential equation algebraically at the collocation points:
 \begin{equation}
   \dot{\tilde{\state}}(t_c) - \bm{f}(\tilde{\state}(t_c), \tilde{\control}(t_c)) = \bm{0} \qquad \text{(Collocation constraint)}
 \end{equation}
