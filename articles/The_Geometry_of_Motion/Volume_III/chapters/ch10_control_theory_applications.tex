@@ -15,19 +15,19 @@ in Figure~\ref{fig:ch10:control-loop}.
 \begin{center}
 \begin{tikzpicture}[scale=0.9, >=Stealth, node distance=2.2cm]
   % CNS / Goal
-  \node[draw, thick, fill=blue!10, minimum width=2.2cm] (cns) {CNS\\(Goal)};
+  \node[draw, thick, fill=blue!10, minimum width=2.2cm, align=center] (cns) {CNS\\(Goal)};
 
   % Neural command
-  \node[draw, thick, fill=green!10, minimum width=2.2cm, right of=cns] (neural) {Neural\\Excitation $\bm{u}(t)$};
+  \node[draw, thick, fill=green!10, minimum width=2.2cm, align=center, right of=cns] (neural) {Neural\\Excitation $\bm{u}(t)$};
 
   % Muscle dynamics
-  \node[draw, thick, fill=green!10, minimum width=2.2cm, right of=neural] (muscle) {Muscle\\Dynamics};
+  \node[draw, thick, fill=green!10, minimum width=2.2cm, align=center, right of=neural] (muscle) {Muscle\\Dynamics};
 
   % Skeletal dynamics
-  \node[draw, thick, fill=green!10, minimum width=2.2cm, right of=muscle] (skeletal) {Skeletal\\Dynamics};
+  \node[draw, thick, fill=green!10, minimum width=2.2cm, align=center, right of=muscle] (skeletal) {Skeletal\\Dynamics};
 
   % Measurement
-  \node[draw, thick, fill=orange!10, minimum width=2.2cm, below of=skeletal] (measure) {Proprioceptive\\Feedback};
+  \node[draw, thick, fill=orange!10, minimum width=2.2cm, align=center, below of=skeletal] (measure) {Proprioceptive\\Feedback};
 
   \draw[->, thick] (cns) -- (neural);
   \draw[->, thick] (neural) -- (muscle);
