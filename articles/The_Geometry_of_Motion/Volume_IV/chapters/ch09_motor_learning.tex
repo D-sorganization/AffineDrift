@@ -9,25 +9,63 @@
 
 \section{Three Learning Systems}
 
-Motor learning involves three distinct neural systems:
+Motor learning involves three distinct neural systems with different timescales and mechanisms:
 
 \begin{enumerate}
-  \item \textbf{Error-based learning} (cerebellar): uses sensory prediction errors to
-        update forward models. Fast, trial-by-trial updates. The dominant mechanism
-        for adaptation to perturbations.
+  \item \textbf{Error-based learning} (cerebellum): uses sensory prediction errors (climbing
+        fiber signals) to update cerebellar forward models via LTD (Marr, 1969; Kawato et al.,
+        1987). Trial-by-trial timescale (minutes to hours). Dominant mechanism for visuomotor
+        adaptation (Shadmehr and Mussa-Ivaldi, 1994).
 
-  \item \textbf{Reinforcement learning} (basal ganglia): uses reward signals to
-        strengthen successful motor strategies. Slower than error-based learning but
-        can discover novel solutions.
+  \item \textbf{Reinforcement learning} (basal ganglia): uses dopamine reward signals to
+        strengthen successful motor patterns (Schultz et al., 1997). Slower than error-based
+        learning (hours to days). Enables discovery of novel solutions not implicit in the
+        task structure.
 
-  \item \textbf{Use-dependent learning} (cortical): repetition of a movement biases
-        future movements toward the repeated pattern. Explains why practice builds
-        habits.
+  \item \textbf{Consolidation and structural learning} (cortical): repetition of a movement
+        biases future movements toward repeated patterns (Cohen et al., 2005). Timescale of
+        hours to days; explains habit formation. Involves gradual changes in M1 tuning and
+        synaptic weights.
 \end{enumerate}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.85]
+  % Timeline
+  \draw (0, 0) -- (8, 0);
+  \draw (0, -0.2) node[anchor=north] {Baseline};
+  \draw (3.5, -0.2) node[anchor=north] {Adaptation};
+  \draw (7.5, -0.2) node[anchor=north] {Washout};
+
+  % Error curve (schematic)
+  \draw[blue, thick] (0, 1) -- (1.5, 1) -- (2, 3) -- (3.5, 1.2) -- (4.5, 0.3) -- (5.5, 0.1) -- (8, 0.8);
+
+  % Labels
+  \draw (0.75, 0.5) node[anchor=center, font=\tiny] {minimal};
+  \draw (2.75, 3.3) node[anchor=center, font=\tiny] {early};
+  \draw (4, 0.8) node[anchor=center, font=\tiny] {adaptation};
+  \draw (7.2, 1.2) node[anchor=center, font=\tiny] {aftereffect};
+
+  % Dashed line (zero)
+  \draw[dashed] (0, 0) -- (8, 0);
+
+  % Y-axis
+  \draw[->, thick] (-0.3, 0) -- (-0.3, 3.5) node[anchor=east, rotate=90] {Error};
+
+  % Title
+  \draw (4, 4.2) node[anchor=center, font=\small\bf] {Visuomotor Adaptation Curve};
+  \draw (4, 3.8) node[anchor=center, font=\tiny] {(Reaching with visual rotation)};
+\end{tikzpicture}
+\caption{Characteristic visuomotor adaptation profile (Shadmehr and Mussa-Ivaldi, 1994):
+rapid error reduction (first 20 trials), gradual asymptote, persistent aftereffect
+demonstrating learning consolidation.}
+\label{fig:ch9:visuomotor-adaptation}
+\end{figure}
 
 \section{Visuomotor Adaptation}
 
-The classic paradigm for studying error-based learning:
+The classic paradigm for studying error-based learning (Kamin, 1969; Shadmehr and Mussa-Ivaldi,
+1994):
 
 \begin{lstlisting}[language=Python, caption={Visuomotor adaptation simulation.}]
 import numpy as np
@@ -114,19 +152,25 @@ print(f"  Aftereffect: {result['reaching_error'][250]:.1f} deg")
 
 \subsection{Savings}
 Re-learning a previously learned adaptation is faster than initial learning,
-even after complete washout. This ``savings'' effect suggests that motor memories
-are not erased but suppressed.
+even after complete washout (Ebbinghaus, 1885; Huang et al., 2011). This savings
+effect suggests that motor memories are not erased but suppressed, with additional
+learning circuits retaining implicit information about the learning dynamics.
 
-\subsection{Interference}
-Learning opposite perturbations (A then B) produces \emph{anterograde interference}:
-learning B interferes with retention of A. This is analogous to catastrophic
-forgetting in neural networks.
+\subsection{Interference and Dual-Rate Learning}
+Learning opposite perturbations (A then B) produces anterograde interference:
+learning B slows retention of A (Li and Xie, 2000). This is explained by dual-rate
+learning models: a fast process learns trial-by-trial; a slow process consolidates.
+Interference occurs because the fast process is task-specific while the slow process
+is more general.
 
-\section{Structural Learning}
+\section{Structural Learning and Meta-Learning}
 
 Over many adaptation experiences, subjects develop the ability to adapt faster---they
-learn to learn. In the language of meta-learning: the structure of the learning
-problem (which parameters to update, how to respond to errors) is itself learned.
+learn to learn (context-dependent learning). Smith et al. (1998) showed that prior
+exposure to one visuomotor rotation task accelerates learning of a novel rotation.
+This involves learning the structure of the task space itself, not just individual
+parameter values. Brain areas like dorsolateral prefrontal cortex appear to encode
+such meta-learning (Gershman et al., 2017).
 
 \section*{Exercises}
 

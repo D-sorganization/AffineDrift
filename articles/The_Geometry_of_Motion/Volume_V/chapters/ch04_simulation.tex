@@ -4,7 +4,16 @@
 \epigraph{Forward simulation answers ``what happens if\ldots?''\\
 Inverse dynamics answers ``what caused this?''}{}
 
+The forward dynamics problem computes accelerations from forces, while inverse dynamics
+(also called the inverse kinematics problem when phrased in terms of finding required
+torques) computes forces from desired accelerations. Both are fundamental to control design
+and trajectory planning.
+
 \section{Forward Dynamics with UpstreamDrift}
+
+Forward dynamics integration typically uses explicit or implicit Runge-Kutta methods,
+or specialized algorithms such as the Recursive Newton-Euler Algorithm (RNEA) for
+rigid-body systems \cite{Featherstone2008, Featherstone1983}.
 
 \begin{lstlisting}[language=Python, caption={Forward dynamics simulation pipeline.}]
 import numpy as np
@@ -81,12 +90,47 @@ qdd = forward_dynamics_rnea(q0, qd0, np.zeros(2), params)
 print(f"Gravity-driven accelerations: {qdd}")
 \end{lstlisting}
 
+\section{Simulation Loop and Integration Schemes}
+
+Figure~\ref{fig:sim-loop} illustrates the typical forward simulation loop. At each
+timestep, we compute accelerations from the equations of motion, integrate to update
+velocities and positions, and advance to the next timestep.
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[
+    every node/.style={draw, rounded corners, minimum width=2.2cm, text centered, font=\small},
+    ]
+    % State
+    \node[fill=blue!20] (state) at (0, 0) {Current State\\$\bm{q}, \dot{\bm{q}}$};
+    % Compute accelerations
+    \node[fill=green!20] (forces) at (3, 0) {Compute Forces\\$\bm{f}(\bm{q}, \dot{\bm{q}}, t)$};
+    % Solve dynamics
+    \node[fill=yellow!20] (dynamics) at (6, 0) {Forward Dynamics\\$\ddot{\bm{q}} = M^{-1}(\bm{f} - C - G)$};
+    % Integrate
+    \node[fill=orange!20] (integrate) at (9, 0) {Integrate\\(RK4, Euler, etc)};
+    % Next state
+    \node[fill=blue!20] (next) at (12, 0) {Next State\\$\bm{q}_{k+1}, \dot{\bm{q}}_{k+1}$};
+
+    % Arrows
+    \draw[->] (state) -- (forces);
+    \draw[->] (forces) -- (dynamics);
+    \draw[->] (dynamics) -- (integrate);
+    \draw[->] (integrate) -- (next);
+    \draw[->] (12.8, -0.3) -- (12.8, -1.2) -- (0, -1.2) -- (0, -0.4) node[above, pos=0.5, fill=white] {repeat};
+  \end{tikzpicture}
+  \caption{Forward simulation loop: from current state to forces (gravity, contacts, actuators),
+    compute accelerations via forward dynamics, integrate, and update to next state.}
+  \label{fig:sim-loop}
+\end{figure}
+
 \section{Inverse Dynamics Pipeline}
 
-The inverse pipeline: given $\bm{q}(t), \dot{\bm{q}}(t), \ddot{\bm{q}}(t)$, compute
-$\bm{\tau}(t)$. This is the Recursive Newton-Euler Algorithm (RNEA) running in
-reverse: instead of computing accelerations from torques, we compute torques from
-accelerations.
+The inverse dynamics problem solves for torques given desired motion: given $\bm{q}(t),
+\dot{\bm{q}}(t), \ddot{\bm{q}}(t)$, compute $\bm{\tau}(t)$. This is implemented via the
+Recursive Newton-Euler Algorithm (RNEA) \cite{Featherstone2008, luh1980}. The RNEA
+can be run either forward (for forward dynamics) or backward (for inverse dynamics)
+through the kinematic chain.
 
 \section*{Exercises}
 \begin{enumerate}

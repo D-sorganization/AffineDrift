@@ -7,6 +7,43 @@
   each playing its part in the symphony of movement.
 }{}
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1.0]
+  % Cortex box
+  \draw (1, 1) rectangle (3, 4);
+  \draw (2, 3.5) node[anchor=center, font=\small\bf] {Cortex};
+  \draw (2, 2.7) node[anchor=center, font=\tiny] {PMC/SMA};
+  \draw (2, 2.3) node[anchor=center, font=\tiny] {M1};
+
+  % Basal ganglia
+  \draw (4, 2.5) rectangle (5.5, 3.5);
+  \draw (4.75, 3.0) node[anchor=center, font=\small\bf] {Basal};
+  \draw (4.75, 2.7) node[anchor=center, font=\small\bf] {Ganglia};
+
+  % Cerebellum
+  \draw (5.5, 0.5) rectangle (7, 1.5);
+  \draw (6.25, 1.0) node[anchor=center, font=\small\bf] {Cerebellum};
+
+  % Spinal cord
+  \draw (1.5, -0.5) rectangle (2.5, 0.5);
+  \draw (2, 0) node[anchor=center, font=\small\bf] {Spinal};
+  \draw (2, -0.3) node[anchor=center, font=\tiny] {CPGs};
+
+  % Connections
+  \draw[->, thick] (2, 1) -- (2, 0.5) node[anchor=east, midway, font=\tiny] {motor output};
+  \draw[->, thick, dashed] (3, 2) -- (4, 2.8) node[anchor=south, midway, font=\tiny] {action sel.};
+  \draw[->, thick, dashed] (3, 3) -- (5.5, 1.2) node[anchor=south, midway, font=\tiny] {error signal};
+  \draw[->, thick] (2.5, 0.2) -- (4, 0.2);
+  \draw (3.2, 0.4) node[anchor=south, font=\tiny] {feedback};
+
+\end{tikzpicture}
+\caption{Hierarchical neural motor architecture: cortex plans/initiates, basal ganglia
+selects actions, cerebellum provides error-based learning, spinal cord implements CPGs
+and reflex circuits.}
+\label{fig:ch3:motor-arch}
+\end{figure}
+
 \section{Cortical Motor Areas}
 
 The cerebral cortex contains several distinct motor areas, each with specialized roles:
@@ -17,14 +54,16 @@ M1 (Brodmann area 4) is the final cortical output stage for voluntary movement.
 Layer V contains the giant pyramidal (Betz) cells whose axons form the corticospinal
 tract---the most direct neural pathway from cortex to spinal motor neurons.
 
-Key properties of M1:
+Key properties of M1 (experimentally confirmed):
 \begin{itemize}
   \item \textbf{Somatotopic organization}: body parts are mapped to cortical regions
-        (the motor homunculus), but with overlapping representations
-  \item \textbf{Population coding}: individual neurons have broad tuning; movement
-        direction is encoded by the \emph{population vector} \cite{Georgopoulos1986}
-  \item \textbf{Preparatory activity}: M1 neurons are active 100--200~ms before
-        movement onset, during motor preparation
+        (the motor homunculus), with overlapping representations (Penfield and Boldrey, 1937)
+  \item \textbf{Population coding}: individual neurons have broad directional tuning; movement
+        direction is encoded by the population vector (Georgopoulos et al. 1986 demonstrated
+        that M1 neurons fire maximally at preferred directions, and the population vector
+        accurately predicts reach direction)
+  \item \textbf{Preparatory activity}: M1 neurons show activity 100--200~ms before
+        movement onset during motor preparation, reflecting planning processes
 \end{itemize}
 
 \subsection{Premotor Cortex (PMC) and Supplementary Motor Area (SMA)}
@@ -39,18 +78,20 @@ Key properties of M1:
 
 \subsection{Cerebellum: The Forward Model}
 
-The cerebellum contains more neurons than the rest of the brain combined ($\sim$70 billion
-granule cells). Its primary role in motor control is as a \textbf{forward model}:
+The cerebellum contains approximately 69 billion granule cells (Herculano-Houzel, 2010),
+more than the rest of the brain combined. Electrophysiological and lesion studies establish
+its primary role in motor control as a \textbf{forward model}:
 
 \begin{neurobox}{The Cerebellum as a Forward Model}{cerebellum-forward}
-  The cerebellum:
+  The cerebellar circuit (Marr, 1969; Albus, 1971; Kawato et al., 1987):
   \begin{enumerate}
     \item Receives a copy of the motor command (efference copy) via the pontine nuclei
     \item Receives sensory feedback via the inferior olive and mossy fibers
-    \item Computes the \emph{predicted} sensory consequences of the command
-    \item Compares prediction with actual sensory feedback
-    \item Generates an error signal that updates the forward model (climbing fiber
-          pathway, long-term depression of parallel fiber--Purkinje cell synapses)
+    \item Computes the predicted sensory consequences of the command using parallel
+          fiber--Purkinje cell synapses (basis function expansion)
+    \item The climbing fiber signal carries sensory prediction error from the inferior olive
+    \item Error-driven learning updates Purkinje cell responses through long-term depression
+          (LTD) at parallel fiber--Purkinje cell synapses, with time constants of 100-1000 ms
   \end{enumerate}
   In the language of control theory (Volume~I):
   \begin{itemize}

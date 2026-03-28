@@ -5,13 +5,67 @@
 
 \section{Model Formats}
 
+Multi-body models are typically stored in structured XML formats. Two primary formats are widely supported:
+
 \subsection{URDF (Universal Robot Description Format)}
-XML-based format used by ROS, Drake, and Pinocchio. Defines links, joints, and visual/collision geometry.
+
+URDF is an XML-based format developed for the Robot Operating System (ROS) and adopted by Drake
+and Pinocchio. It defines the kinematic and dynamic structure through \texttt{<link>} and
+\texttt{<joint>} elements, along with visual and collision geometry. URDF models use the
+Denavit-Hartenberg convention or explicit spatial transforms \cite{dh1955}.
 
 \subsection{MJCF (MuJoCo XML)}
-MuJoCo's native format. Extends URDF with actuators, tendons, muscles, and contact parameters.
+
+MuJoCo XML (MJCF) is MuJoCo's native format, extending URDF with specialized elements for
+actuators, tendons, muscle models, and fine-grained contact parameters. This format is
+necessary for full access to MuJoCo's simulation features including soft contact models and
+muscle-based control.
 
 \section{Building a 7-Segment Golf Model}
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[
+    every node/.style={text centered, font=\small},
+    ]
+    % Workflow boxes
+    \draw[rounded corners, fill=blue!20] (0, 4) rectangle (3, 4.7) node[pos=0.5] {Define Segments};
+    \draw[rounded corners, fill=blue!20] (4, 4) rectangle (7, 4.7) node[pos=0.5] {Specify Joints};
+    \draw[rounded corners, fill=blue!20] (8, 4) rectangle (11, 4.7) node[pos=0.5] {Add Constraints};
+
+    % Arrow down
+    \draw[->] (1.5, 4) -- (1.5, 3);
+    \draw[->] (5.5, 4) -- (5.5, 3);
+    \draw[->] (9.5, 4) -- (9.5, 3);
+
+    % Assembly box
+    \draw[rounded corners, fill=green!20] (2, 1.5) rectangle (8, 2.5) node[pos=0.5] {Build MultiBodyModel};
+
+    % Arrow down
+    \draw[->] (5, 1.5) -- (5, 0.8);
+
+    % Export box
+    \draw[rounded corners, fill=yellow!20] (2, -0.5) rectangle (8, 0.5) node[pos=0.5] {Export to URDF / MJCF};
+
+    % Engine import
+    \draw[rounded corners, fill=orange!20] (1, -1.8) rectangle (3.5, -0.8) node[pos=0.5] {MuJoCo};
+    \draw[rounded corners, fill=orange!20] (3.8, -1.8) rectangle (6.2, -0.8) node[pos=0.5] {Drake};
+    \draw[rounded corners, fill=orange!20] (6.5, -1.8) rectangle (9, -0.8) node[pos=0.5] {Pinocchio};
+
+    \draw[->] (4.5, -0.5) -- (2.25, -0.8);
+    \draw[->] (5, -0.5) -- (5, -0.8);
+    \draw[->] (5.5, -0.5) -- (7.75, -0.8);
+  \end{tikzpicture}
+  \caption{Model building workflow: segment definition, joint specification, constraint
+    addition, and export to physics engine formats.}
+  \label{fig:model-workflow}
+\end{figure}
+
+\subsection{Programmatic Model Construction}
+
+Models can be constructed programmatically to enable parameterized design studies. The following
+code demonstrates the creation of a 7-segment golf swing model using segment parameters from
+anthropometric data.
 
 \begin{lstlisting}[language=Python, caption={Programmatic multi-body model construction.}]
 import numpy as np
@@ -71,7 +125,8 @@ def build_golf_swing_model() -> MultiBodyModel:
     """
     model = MultiBodyModel(name="golf_swing_7seg")
 
-    # Segment properties (de Leva 1996, 80kg male)
+    # Segment properties from anthropometric tables (80 kg male)
+    # Based on standard biomechanical models from literature
     model.links = [
         Link("pelvis", mass=11.2, length=0.15, com_position=0.075),
         Link("trunk", mass=25.5, length=0.48, com_position=0.22),
@@ -101,8 +156,15 @@ print(f"\nURDF preview:\n{model.to_urdf()[:500]}...")
 \end{lstlisting}
 
 \section*{Exercises}
+
 \begin{enumerate}
-  \item Build a 3-segment arm model and export as URDF.
-  \item Add muscle attachment points to the golf model.
-  \item Load the URDF into MuJoCo and verify the model visually.
+  \item \textbf{Simple Arm Model.} Build a 3-segment arm model (upper arm, forearm, hand)
+    with revolute joints. Define segment masses and lengths, then export as URDF.
+
+  \item \textbf{Muscle Attachment Points.} Extend the golf model by adding origin and
+    insertion points for at least two muscles (e.g., shoulder and elbow extensors).
+    See Volume~III, Chapter~3 for Hill-type muscle models.
+
+  \item \textbf{Visual Verification.} Load the generated URDF into MuJoCo using the
+    provided tools and verify the model geometry and kinematics visually.
 \end{enumerate}

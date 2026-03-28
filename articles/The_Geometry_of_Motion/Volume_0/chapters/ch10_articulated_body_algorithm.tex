@@ -33,6 +33,30 @@ In 1983, Roy Featherstone published a seminal paper \cite{featherstone1983} prop
 
 The ABA has become the foundation of modern physics engines. Every frame of a video game featuring character animation, every timestep of a MuJoCo simulation, and every dynamics prediction in a robot control system leverages Featherstone's algorithm. Subsequent refinements by Featherstone himself \cite{featherstone1987} and countless others have extended ABA to handle floating bases (crucial for humanoid robots), contact constraints, and complex contact models.
 
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}[scale=1.0]
+  % Two-pass algorithm
+  \node[draw,rectangle,minimum width=3cm,minimum height=1cm] (pass1) at (2,3) {Pass 1: Forward Kinematics \& Velocities};
+  \node[draw,rectangle,minimum width=3cm,minimum height=1cm] (pass2) at (2,1.5) {Pass 2: Backward Dynamics (ABA)};
+
+  % Information flow
+  \draw[->,thick] (pass1) -- (pass2) node[midway,right,xshift=0.2cm] {$\mathbf{q}, \dot{\mathbf{q}}$};
+
+  % Inputs/Outputs
+  \node[draw,rectangle,minimum width=1.5cm,minimum height=0.8cm] (input) at (0,3) {$\boldsymbol{\tau}$};
+  \draw[->,thick] (input) -- (pass2);
+
+  \node[draw,rectangle,minimum width=1.5cm,minimum height=0.8cm] (output) at (4.5,1.5) {$\ddot{\mathbf{q}}$};
+  \draw[->,thick] (pass2) -- (output);
+
+  % Complexity
+  \node[below] at (2,0.3) {Forward Dynamics: O(N) time using Articulated Body Algorithm};
+\end{tikzpicture}
+\caption{The Articulated Body Algorithm executes in two passes through the kinematic tree: (1) forward pass computes velocities and transforms from known joint positions and velocities, (2) backward pass (from end-effector toward base) propagates inertias and forces to compute joint accelerations. Each pass is O(N), making total algorithm O(N).}
+\label{fig:aba_passes}
+\end{figure}
+
 \section{The Forward Dynamics Problem}
 \label{sec:forward_dynamics_problem}
 

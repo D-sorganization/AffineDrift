@@ -46,7 +46,7 @@ stability problem share a common certificate.
 
 \subsection{Kalman's Insight (1960)}
 
-In his seminal papers on linear-quadratic regulation, Kalman showed that the unique positive-definite solution
+In his seminal papers on linear-quadratic regulation \cite{Kalman1960}, Kalman showed that the unique positive-definite solution
 $\mat{S}$ of the algebraic Riccati equation (ARE)
 \begin{equation}
 \mat{0} = \mat{Q} + \mat{A}^\T\mat{S} + \mat{S}\mat{A} - \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S}
@@ -62,6 +62,29 @@ This insight unified two previously separate fields: \textit{the stability guara
 the cost}. This was conceptually revolutionary. Before Kalman, engineers solved LQR problems for one reason (minimize
 energy) and separately checked stability (find a Lyapunov function). Afterward, they solved it once and received both
 certifications.
+
+\begin{center}
+\begin{tikzpicture}[scale=1.0]
+  % Left side: Cost
+  \draw[thick, black] (0, 1.5) rectangle (2.5, 2.5);
+  \node[font=\small, align=center] at (1.25, 2) {Cost curvature:\\$V^* = \x^\T \mat{S} \x$};
+
+  % Right side: Stability
+  \draw[thick, black] (3.5, 1.5) rectangle (6, 2.5);
+  \node[font=\small, align=center] at (4.75, 2) {Lyapunov function:\\$V = \x^\T \mat{S} \x$};
+
+  % Central object
+  \draw[very thick, red, rounded rectangle, minimum width=2cm, minimum height=0.8cm] (2.5, 0.5) to (3.5, 0.5);
+  \node[font=\small\bfseries, red] at (3, 0.5) {Riccati Solution $\mat{S}$};
+
+  % Arrows
+  \draw[<->, thick, black] (1.25, 1.5) -- (2.85, 1.1);
+  \draw[<->, thick, black] (4.75, 1.5) -- (3.15, 1.1);
+
+  % Caption
+  \node[font=\small] at (3, -0.3) {One solution serves both purposes};
+\end{tikzpicture}
+\end{center}
 
 \subsection{Dissipation Inequalities and Willems' Framework (1971)}
 

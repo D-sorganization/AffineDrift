@@ -7,6 +7,56 @@
   To have a model is to have learned.
 }{}
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.95]
+  % Forward model path
+  \draw (0, 1) rectangle (1, 1.5);
+  \draw (0.5, 1.25) node[anchor=center, font=\tiny\bf] {$\hat{x}_k$};
+
+  \draw[->, thick] (1, 1.25) -- (2, 1.25) node[anchor=south, midway, font=\tiny] {$u_k$};
+
+  \draw (2, 0.8) rectangle (3.5, 1.7);
+  \draw (2.75, 1.25) node[anchor=center, font=\small] {Forward};
+  \draw (2.75, 0.95) node[anchor=center, font=\tiny] {Model};
+
+  \draw[->, thick] (3.5, 1.25) -- (4.5, 1.25) node[anchor=south, midway, font=\tiny] {$\hat{x}_{k+1}$};
+
+  % Actual state
+  \draw (4.5, 0.8) rectangle (5.5, 1.7);
+  \draw (5, 1.25) node[anchor=center, font=\tiny\bf] {$x_{k+1}$};
+
+  % Feedback path
+  \draw[->, thick, red] (5, 0.8) -- (5, 0.2);
+  \draw (5.5, 0.5) node[anchor=west, font=\tiny, color=red] {error};
+
+  % Error-based update
+  \draw (4, -0.2) rectangle (6, 0.2);
+  \draw (5, 0) node[anchor=center, font=\tiny] {Update weights};
+
+  % Inverse model (right side)
+  \draw (0, -1) rectangle (1, -0.5);
+  \draw (0.5, -0.75) node[anchor=center, font=\tiny\bf] {$x_k$};
+
+  \draw (2, -1.2) rectangle (3.5, -0.3);
+  \draw (2.75, -0.75) node[anchor=center, font=\small] {Inverse};
+  \draw (2.75, -1.05) node[anchor=center, font=\tiny] {Model};
+
+  \draw[->, thick] (0, -0.75) -- (2, -0.75);
+  \draw[->, thick] (1, -0.75) -- (2, -0.75) node[anchor=south, midway, font=\tiny] {$x_{\text{des}}$};
+
+  \draw[->, thick] (3.5, -0.75) -- (4.5, -0.75);
+  \draw (4, -1.05) node[anchor=center, font=\tiny] {$u^*$};
+
+  % Label
+  \draw (2.75, 2.3) node[anchor=center, font=\small\bf] {Forward-Inverse Model Pair};
+\end{tikzpicture}
+\caption{Paired forward and inverse models: forward model predicts state evolution from
+command; inverse model computes command to reach desired state. Learning updates both
+based on sensory prediction error.}
+\label{fig:ch6:forward-inverse}
+\end{figure}
+
 \section{Forward Models}
 
 A forward model predicts the sensory consequences of a motor command:
@@ -18,9 +68,10 @@ which is exactly the state propagation used in Volume~I.
 
 \subsection{The MOSAIC Architecture}
 
-The MOSAIC model (Modular Selection and Identification for Control)
-\cite{WolpertKawato1998} proposes that the brain maintains \emph{multiple}
-paired forward-inverse models, each tuned to a different context:
+The MOSAIC model (Modular Selection and Identification for Control) (Wolpert and Kawato,
+1998) proposes that the brain maintains multiple paired forward-inverse models, each
+tuned to different dynamics or contexts. Experimental evidence shows that humans learn
+separate models for reaching with different tools (Shadmehr and Mussa-Ivaldi, 1994):
 
 \begin{lstlisting}[language=Python, caption={MOSAIC-style multiple model architecture.}]
 import numpy as np

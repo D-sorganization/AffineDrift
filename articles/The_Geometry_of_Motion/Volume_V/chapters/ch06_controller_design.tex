@@ -3,7 +3,50 @@
 
 \epigraph{A controller is only as good as its worst-case performance.}{}
 
+This chapter covers implementation of feedback controllers for multi-body systems,
+from proportional-derivative (PD) control to contraction-based designs. All controllers
+assume full state feedback, i.e., direct access to positions and velocities.
+
 \section{PD Control with Gravity Compensation}
+
+The proportional-derivative controller with gravity compensation is the simplest
+nonlinear controller that guarantees asymptotic stability for mechanical systems
+without external disturbances \cite{SlotineLi1991}.
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[
+    every node/.style={draw, rounded corners, minimum width=1.8cm, text centered, font=\small},
+    ]
+    % Desired trajectory
+    \node[fill=blue!20] (desired) at (0, 2) {Desired\\Trajectory};
+    % Error computation
+    \node[fill=green!20] (error) at (2, 2) {Error\\$e = q_d - q$};
+    % PD law
+    \node[fill=yellow!20] (pd) at (4, 2) {PD Control\\$K_p e + K_d \dot{e}$};
+    % Gravity compensation
+    \node[fill=orange!20] (gravity) at (4, 0.3) {Gravity\\$g(q)$};
+    % Summing junction
+    \node[fill=pink!20] (sum) at (6, 1.2) {$+$};
+    % System
+    \node[fill=purple!20] (sys) at (8, 1.2) {Multi-Body\\System};
+    % State feedback
+    \node[fill=blue!20] (feedback) at (8, -0.5) {Measured\\$q, \dot{q}$};
+
+    % Arrows
+    \draw[->] (desired) -- (error);
+    \draw[->] (error) -- (pd);
+    \draw[->] (gravity) -- (sum);
+    \draw[->] (pd) -- (sum);
+    \draw[->] (sum) -- (sys);
+    \draw[->] (sys) -- (8, 0.3) -- (feedback);
+    \draw[->] (feedback) -- (1, 0.3) -- (error);
+  \end{tikzpicture}
+  \caption{PD control with gravity compensation. The controller computes an error signal
+    from desired and measured positions, applies PD gains, and adds gravity compensation
+    to achieve asymptotic tracking.}
+  \label{fig:pd-control}
+\end{figure}
 
 \begin{lstlisting}[language=Python, caption={PD controller with gravity compensation.}]
 import numpy as np
@@ -42,11 +85,17 @@ class PDGravityCompController:
 
 \section{Trajectory Tracking with Contraction}
 
-Implementing the contraction-based controller from Volume~I, Chapter~4.
+Contraction theory provides tools for analyzing nonlinear stability with global guarantees
+\cite{LohmillerSlotine1998, ManchesterSlotine2017}. A contraction-based controller designs
+the feedback law to make the closed-loop system contracting with respect to a suitable metric,
+guaranteeing exponential convergence to the desired trajectory from any initial condition.
 
 \section{Funnel Control}
 
-Implementing trajectory tubes (Volume~II, Chapter~3) for robust tracking.
+Trajectory funnels define regions around a nominal trajectory within which the controller
+guarantees convergence \cite{MajumdarTedrake2017}. This is useful for handling model uncertainty
+and disturbances. Funnel computation requires solving a set of linear matrix inequalities (LMIs)
+at each time step.
 
 \section*{Exercises}
 \begin{enumerate}

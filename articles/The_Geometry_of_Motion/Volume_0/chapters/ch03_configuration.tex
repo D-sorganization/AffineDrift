@@ -34,6 +34,36 @@ The mathematical framework of Configuration Space owes its development to three 
 
 In Chapter 2, we learned that the State Space $\mathcal{X}$ consists of both position coordinates ($\mathbf{q}$) and velocity coordinates ($\dot{\mathbf{q}}$). But how many position coordinates does our system actually have?
 
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}[scale=1.0]
+  % 4-bar linkage
+  \draw[thick] (0,0) -- (2,0);  % ground link
+  \draw[thick] (2,0) -- (3.5,1.5);  % link 1
+  \draw[thick] (3.5,1.5) -- (5.5,0.8);  % link 2
+  \draw[thick] (5.5,0.8) -- (5.5,0);  % link 3
+  \draw[thick] (5.5,0) -- (0,0);  % close ground
+
+  % Joints (circles)
+  \draw[fill=black] (0,0) circle (0.1);
+  \draw[fill=black] (2,0) circle (0.1);
+  \draw[fill=black] (3.5,1.5) circle (0.1);
+  \draw[fill=black] (5.5,0.8) circle (0.1);
+  \draw[fill=black] (5.5,0) circle (0.1);
+
+  % Labels
+  \node[below] at (2,-0.25) {$\theta_1$};
+  \node[above] at (3.8,1.7) {$\theta_2$};
+  \node[right] at (5.75,0.4) {$\theta_3$};
+  \node[below] at (1,-0.3) {Fixed ground};
+
+  % DOF indicator
+  \node[draw,rectangle,minimum width=2.5cm,minimum height=0.6cm] at (2.75,-1.5) {DOF = 1 (mechanism has 1 degree of freedom)};
+\end{tikzpicture}
+\caption{A four-bar linkage mechanism. Although there are three moving links, the geometric constraints from the four revolute joints reduce the mechanism to 1 degree of freedom. Specifying $\theta_1$ uniquely determines $\theta_2$ and $\theta_3$.}
+\label{fig:fourbar_linkage}
+\end{figure}
+
 \subsection{The Concept of Degrees of Freedom}
 
 Consider a single speck of dust floating completely unconstrained in a room. To perfectly define where it is, you need 3 coordinates: $x, y, z$. If it is instead a rigid body floating in the room, knowing $x, y, z$ only fixes its center of mass. It could be pitched entirely backward, or rolled on its side. It therefore requires three additional \textbf{angles} (roll, pitch, yaw) defining its rotation.

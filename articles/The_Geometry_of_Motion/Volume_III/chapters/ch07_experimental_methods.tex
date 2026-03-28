@@ -8,6 +8,34 @@
 
 \section{Motion Capture Systems}
 
+\begin{center}
+\begin{tikzpicture}[scale=0.85, >=Stealth]
+  % Lab setup
+  \draw[thick, dashed, gray] (0, 0) rectangle (5, 4) node[above left] {Calibrated Volume};
+
+  % Cameras
+  \node[draw, circle, thick, font=\small] (cam1) at (0.5, 3.5) {Cam 1};
+  \node[draw, circle, thick, font=\small] (cam2) at (4.5, 3.5) {Cam 2};
+  \node[draw, circle, thick, font=\small] (cam3) at (2.5, 0.5) {Cam 3};
+
+  % Subject with markers
+  \draw[thick] (2.5, 1.5) circle (0.4) node {\tiny S};
+  \filldraw[fill=white, draw=black, thick] (2.5, 2.3) circle (3pt);
+  \filldraw[fill=white, draw=black, thick] (2.2, 1.8) circle (3pt);
+  \filldraw[fill=white, draw=black, thick] (2.8, 1.8) circle (3pt);
+
+  \node[right, font=\small] at (3, 2.3) {Markers};
+
+  % Force plate
+  \draw[very thick, fill=gray!20] (1.5, 0) rectangle (3.5, 0.3) node[below] {Force Plate};
+
+  % Lines from cameras to markers
+  \draw[dashed, thin, gray] (cam1) -- (2.5, 2);
+  \draw[dashed, thin, gray] (cam2) -- (2.5, 2);
+  \draw[dashed, thin, gray] (cam3) -- (2.5, 2);
+\end{tikzpicture}
+\end{center}
+
 \subsection{Marker-Based Systems}
 
 Optoelectronic motion capture systems (Vicon, Qualisys, OptiTrack) track retroreflective

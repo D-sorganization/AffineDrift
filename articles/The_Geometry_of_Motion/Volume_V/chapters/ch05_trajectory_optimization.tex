@@ -5,8 +5,49 @@
 
 \section{DDP/iLQR Implementation}
 
-Differential Dynamic Programming (Volume~I, Chapter~5) is the workhorse for
-trajectory optimization. Here we implement it end-to-end:
+Differential Dynamic Programming (DDP) and iterative Linear Quadratic Regulator (iLQR) are
+related algorithms for trajectory optimization \cite{Mayne1966, jacobson1970dpp}. They solve
+the finite-horizon optimal control problem by iteratively linearizing around a nominal
+trajectory and solving quadratic subproblems. Figure~\ref{fig:ilqr-loop} shows the algorithm structure.
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[
+    every node/.style={draw, rounded corners, minimum width=2cm, text centered, font=\small},
+    ]
+    % Initial trajectory
+    \node[fill=blue!20] (init) at (0, 4) {Initialize\\$\bm{u}_0$};
+
+    % Forward pass
+    \node[fill=green!20] (forward) at (0, 2) {Forward Rollout:\\$\bm{x}(t)$};
+
+    % Backward pass
+    \node[fill=yellow!20] (backward) at (4, 2) {Backward Pass:\\Compute $k, K$ gains};
+
+    % Line search
+    \node[fill=orange!20] (linesearch) at (2, 0.3) {Line Search:\\Update $\bm{u}$};
+
+    % Convergence check
+    \node[fill=pink!20] (converge) at (2, -1.2) {Converged?};
+
+    % Exit
+    \node[fill=green!20] (exit) at (4, -2.5) {Optimal\\$\bm{x}^*, \bm{u}^*$};
+
+    % Arrows
+    \draw[->] (init) -- (forward);
+    \draw[->] (forward) -- (backward);
+    \draw[->] (backward) -- (linesearch);
+    \draw[->] (linesearch) -- (converge);
+    \draw[->] (converge) -- node[left] {No} (1, 1) -- (forward);
+    \draw[->] (converge) -- node[above right] {Yes} (exit);
+  \end{tikzpicture}
+  \caption{iLQR algorithm loop: initialize control trajectory, forward rollout
+    to compute state trajectory, backward pass to compute feedback gains,
+    line search to update controls, and convergence check.}
+  \label{fig:ilqr-loop}
+\end{figure}
+
+Here we implement iLQR end-to-end:
 
 \begin{lstlisting}[language=Python, caption={iLQR implementation for trajectory optimization.}]
 import numpy as np
@@ -116,9 +157,18 @@ def ilqr_solve(
 The classic control benchmark: swing a pendulum from the hanging position to
 the inverted equilibrium.
 
+\section{Application: Optimal Pendulum Swing-Up}
+
+The pendulum swing-up is a classic trajectory optimization benchmark. The goal is to
+find the minimum-energy torque sequence that brings the pendulum from the downward
+(stable) equilibrium to the upright (unstable) equilibrium.
+
 \section{Application: Golf Swing Optimization}
 
-Applying DDP to a 3-DOF golf model to optimize clubhead speed at impact.
+DDP can be applied to a simplified golf model (3-5 DOF) to optimize clubhead speed
+at ball impact. The cost function would penalize control effort while maximizing
+endpoint velocity. In practice, golf swing optimization requires careful handling
+of contact constraints at impact.
 
 \section*{Exercises}
 \begin{enumerate}

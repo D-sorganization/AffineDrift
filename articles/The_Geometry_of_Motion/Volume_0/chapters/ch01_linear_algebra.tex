@@ -35,6 +35,29 @@ Today, every simulation framework discussed in this text series---from MuJoCo's 
 
 Before mapping physics, we must understand the fundamental data structures of control theory: vectors and matrices. More importantly, we must understand the abstract \emph{space} in which these objects live, because the geometry of that space dictates everything about how physical systems behave. Readers seeking a comprehensive undergraduate treatment of these ideas will find Strang's textbook~\cite{strang2019} an excellent companion to this chapter.
 
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}[scale=1.0]
+  % Draw 3D coordinate system
+  \draw[->] (0,0,0) -- (3,0,0) node[anchor=west] {$x_1$};
+  \draw[->] (0,0,0) -- (0,3,0) node[anchor=south] {$x_2$};
+  \draw[->] (0,0,0) -- (0,0,3) node[anchor=east] {$x_3$};
+
+  % Draw a vector
+  \draw[->,thick,blue] (0,0,0) -- (2,1.5,1.5) node[anchor=west] {$\mathbf{v}$};
+
+  % Draw projection onto x1-x2 plane
+  \draw[dashed,gray] (2,1.5,1.5) -- (2,1.5,0);
+  \draw[dashed,gray] (2,1.5,0) -- (0,0,0);
+
+  % Draw a transformation (linear transformation visualization)
+  \draw[thick,red,->] (5,1,0.75) -- (7,2.25,1.5) node[anchor=west] {$\mathbf{M}\mathbf{v}$};
+  \node at (6,0,0) {Linear Transformation};
+\end{tikzpicture}
+\caption{Vector in $\Reals^3$ and its transformation under a linear map $T(\mathbf{v}) = \mathbf{M}\mathbf{v}$.}
+\label{fig:vector_transformation}
+\end{figure}
+
 \subsection{Vectors}
 
 A \textbf{vector}\index{Vector} $\mathbf{v}$ is an ordered array of numbers. It can represent a position in space, a velocity profile, a list of sensor readings, or the activation levels of every muscle in a golfer's forearm. In physics, vectors implicitly assume a coordinate frame (e.g., $X, Y, Z$). A generic column vector in $n$-dimensional space is denoted:
@@ -354,6 +377,30 @@ If this determinant is zero, the three vectors are coplanar and linearly depende
 % ------------------------------------------------------------------
 
 When you multiply a general vector by a matrix, the resulting vector typically changes both its magnitude and its direction. However, for almost every square matrix, there exist a few special directions that do \emph{not} change their orientation when the matrix acts upon them. They are only stretched, shrunk, or flipped. These invariant directions reveal the deepest structural properties of the linear transformation.
+
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}[scale=1.2]
+  % Circle (unit vectors)
+  \draw[gray,dashed,thick] (0,0) circle (1.5cm);
+
+  % Generic vector (rotated and stretched)
+  \draw[->,blue,thick] (0,0) -- (0.8,1.2) node[anchor=south west] {$\mathbf{v}$};
+  \draw[->,blue,thick,dashed] (0,0) -- (1.6,2.4) node[anchor=south west] {$\mathbf{A}\mathbf{v}$ (rotated \& stretched)};
+
+  % Eigenvector 1 (stretched only, not rotated)
+  \draw[->,red,thick] (0,0) -- (1.4,0) node[anchor=south] {$\mathbf{e}_1$};
+  \draw[->,red,thick,dashed] (0,0) -- (2.8,0) node[anchor=south] {$\lambda_1 \mathbf{e}_1$};
+
+  % Eigenvector 2 (shrunk, not rotated)
+  \draw[->,green,thick] (0,0) -- (0,1.2) node[anchor=west] {$\mathbf{e}_2$};
+  \draw[->,green,thick,dashed] (0,0) -- (0,0.6) node[anchor=west] {$\lambda_2 \mathbf{e}_2$};
+
+  \node at (0,-2.2) {Eigenvectors are only scaled, not rotated};
+\end{tikzpicture}
+\caption{Geometric interpretation of eigenvectors: they are special directions that are only stretched or shrunk by a matrix, never rotated. Dashed arrows show $\mathbf{A}\mathbf{v}$ for various vectors $\mathbf{v}$.}
+\label{fig:eigenvector_geometry}
+\end{figure}
 
 \subsection{The Eigenvalue Equation}
 \label{subsec:eigen_equation}

@@ -29,6 +29,37 @@ In the early 20th century, the theory was extended and generalized. By the latte
 
 The exponential-logarithm formalism is now foundational to modern control theory, computer graphics (SLERP interpolation), and numerical algorithms for rigid body dynamics. Understanding it is essential for anyone working with continuous motion in space.
 
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}[scale=1.1]
+  % Curved manifold SO(3)
+  \draw[thick,black] (0,0) circle (1.2);
+  \node at (-1.5,0) {SO(3)};
+
+  % Identity element
+  \draw[fill=black] (1.2,0) circle (0.08);
+  \node[right] at (1.3,0) {$\mathbf{I}$};
+
+  % Tangent space (flat)
+  \draw[thick,blue,->] (1.2,0) -- (2.5,1) node[anchor=west] {$\mathfrak{so}(3)$ (Lie algebra)};
+  \draw[thick,blue,->] (1.2,0) -- (2.5,-0.5) node[anchor=west] {tangent space};
+
+  % Exponential map
+  \draw[thick,red,->,bend right=30] (2.2,0.8) to (0.8,0.8);
+  \node at (1.5,1.3) {$\exp(\cdot)$};
+
+  % Points on manifold
+  \draw[fill=red] (0.7,0.85) circle (0.08);
+  \node[above] at (0.7,1) {$\mathbf{R}(\theta)$};
+
+  % Log map
+  \draw[thick,green,->,bend right=30] (0.5,0.75) to (2.3,0.3);
+  \node at (1,1.1) {$\log(\cdot)$};
+\end{tikzpicture}
+\caption{The exponential and logarithmic maps bridge the curved Lie group SO(3) and its flat tangent space (Lie algebra $\mathfrak{so}(3)$). The exponential map converts infinitesimal rotations to finite rotations; the logarithm extracts the rotation axis and angle from a rotation matrix.}
+\label{fig:exponential_map}
+\end{figure}
+
 \section{Lie Algebras and the Tangent Space}
 \label{sec:lie_algebras}
 

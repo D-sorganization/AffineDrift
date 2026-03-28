@@ -45,8 +45,49 @@ To verify invariance, we use the machinery of Lyapunov theory, adapted for traje
 
 If the derivative of the boundary function points inward everywhere on the boundary, trajectories may circulate inside the funnel, but they can never escape it. For a moving target problem, we want the spatial volume of $\mathcal{F}(t)$ to shrink as $t \to t_f$, terminating in a tight bounded region at impact.
 
+\begin{center}
+\begin{tikzpicture}[scale=1.2]
+  % Reference trajectory
+  \draw[very thick, trajgreen, decoration={markings,
+      mark=at position 0.4 with {\arrow{Stealth[length=2mm]}},
+      mark=at position 0.8 with {\arrow{Stealth[length=2mm]}}
+    }, postaction={decorate}]
+    (0, 0) .. controls (1, 2) and (2, 1.5) .. (3.5, 0.2);
+  \node[trajgreen!80!black, font=\small\bfseries] at (1.5, 2.3) {$\traj^*(t)$};
+
+  % Funnel boundaries - ellipses at different times
+  \draw[thick, accentred, dotted] (0, 0) circle (0.6);
+  \node[accentred, font=\scriptsize] at (-0.4, -0.8) {$t=0$};
+
+  \draw[thick, accentred, dotted] (1.5, 1.8) ellipse (0.5 and 0.35);
+  \node[accentred, font=\scriptsize] at (1.0, 2.5) {$t=t_1$};
+
+  \draw[thick, accentred, dotted] (2.8, 0.8) ellipse (0.3 and 0.2);
+  \node[accentred, font=\scriptsize] at (3.3, 1.2) {$t=t_2$};
+
+  \draw[thick, accentred, dotted] (3.5, 0.2) circle (0.12);
+  \node[accentred, font=\scriptsize] at (3.5, -0.35) {$t=t_f$};
+
+  % Invariant tube boundary
+  \draw[dashed, chapblue!60, line width=1pt] (0, 0.6) .. controls (1.2, 2.2) and (2.2, 1.85) .. (3.62, 0.32);
+  \draw[dashed, chapblue!60, line width=1pt] (0, -0.6) .. controls (1.2, 1.4) and (2.2, 0.85) .. (3.38, 0.08);
+
+  % Target manifold
+  \draw[thick, accentred] (3.4, -0.15) -- (3.4, 0.55);
+  \node[accentred, font=\small] at (3.85, 0.2) {$\psi = 0$};
+
+  % Disturbance example
+  \draw[-{Stealth[length=2mm]}, thick, red!70] (1.2, 1.3) -- (1.5, 0.9);
+  \node[red!70, font=\small] at (0.9, 0.7) {disturbance};
+
+  % Axes
+  \draw[-{Stealth[length=2mm]}, thick, gray] (-0.5, -1.2) -- (4.2, -1.2) node[right, font=\small] {$t$};
+  \draw[-{Stealth[length=2mm]}, thick, gray] (-0.5, -1.2) -- (-0.5, 2.8) node[above, font=\small] {$\state$};
+\end{tikzpicture}
+\end{center}
+
 \begin{keyidea}{Funnels Define the Usable State Space}{usable_space}
-  A computed funnel is not just an analysis tool; it is the ultimate judge of repeatability. It explicitly defines the exact set of initial conditions (e.g., the kinematic state at the top of the backswing) that are mathematically guaranteed to successfully strike the ball despite the presence of extreme nonlinearities.
+  A computed funnel $\mathcal{F}(t)$ is not just an analysis tool; it is the ultimate judge of repeatability. It explicitly defines the exact set of initial conditions (e.g., the kinematic state at the top of the backswing) that are mathematically guaranteed to successfully satisfy the terminal constraint $\psi(\state(t_f)) = 0$ despite the presence of extreme nonlinearities and bounded disturbances. The time-varying geometry of the funnel---narrowing as $t \to t_f$---encodes the stability structure of the transverse dynamics along the reference trajectory.
 \end{keyidea}
 
 % ══════════════════════════════════════════════
@@ -80,6 +121,27 @@ where $\bm{P}(t)$ is a positive definite matrix that changes continuously along 
 
   The optimizer actively computes the exact structural limits of the golf swing's passive dynamics. It discovers that early in the downswing, the funnel can be incredibly "wide" (forgiving), but as centrifugal forces build, the SOS constraints force $\bm{P}(t_k)$ to become highly elongated along the unactuated dimensions in order to maintain the invariance guarantee. The resulting geometry is a true numerical portrait of athletic consistency.
 \end{example}
+
+% ══════════════════════════════════════════════
+\section{Summary}
+% ══════════════════════════════════════════════
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{@{} l p{7.5cm} @{}}
+  \toprule
+  \textbf{Concept} & \textbf{Role in Funnel Synthesis} \\
+  \midrule
+  Lyapunov Function & Time-varying scalar $V(\state, t)$ that measures distance from the reference trajectory; boundary $V = 1$ defines the funnel surface. \\
+  Positive Invariance & Mathematical property ensuring that $\state(0) \in \mathcal{F}(0)$ implies $\state(t) \in \mathcal{F}(t)$ for all $t \in [0, t_f]$. \\
+  Sums-of-Squares (SOS) & Convex optimization technique to verify that $\dot{V} < 0$ on the funnel boundary, eliminating the need for numerical sampling. \\
+  Semidefinite Program & Optimization problem solved to compute the time-varying matrix $\bm{P}(t)$ that maximizes funnel volume subject to SOS constraints. \\
+  Transverse LQR & Provides initial feedback gains $\bm{K}(t)$ for stabilizing deviations orthogonal to the reference trajectory. \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.3cm}
 
 In Chapter 8, we will explore how to make these funnels robust to temporal variation by migrating out of the time domain entirely and into the phase domain.
 

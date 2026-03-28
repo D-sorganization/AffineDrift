@@ -30,6 +30,37 @@ In the 1990s, Richard Murray, Zexiang Li, and Shankar Sastry—building on Lie g
 
 This approach was further refined and popularized by Kevin Lynch and Frank Park \cite{lynch2017}, whose textbook \textit{Modern Robotics: Mechanics, Planning, and Control} established PoE as the modern standard. Today, PoE is the default kinematics formalism in advanced robotics research, computational mechanics, and biomechanics.
 
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}[scale=1.0]
+  % Base frame
+  \draw[thick] (0,0) circle (0.15);
+  \node[below] at (0,-0.3) {Base $\mathbf{M}$ (home)};
+
+  % Joint 1 axis
+  \draw[->,thick,red] (0,0) -- (1.5,0.5) node[anchor=south] {Axis 1};
+
+  % After first twist
+  \draw[thick] (1.5,0.5) circle (0.15);
+  \node[right] at (1.7,0.7) {$e^{[\mathcal{S}_1]\theta_1} \mathbf{M}$};
+
+  % Joint 2 axis
+  \draw[->,thick,blue] (1.5,0.5) -- (2.7,1.8) node[anchor=south] {Axis 2};
+
+  % After second twist
+  \draw[thick] (2.7,1.8) circle (0.15);
+  \node[right] at (2.9,2.0) {$e^{[\mathcal{S}_2]\theta_2} e^{[\mathcal{S}_1]\theta_1} \mathbf{M}$};
+
+  % Final pose
+  \draw[thick] (2.7,1.8) -- (3.5,2.8);
+  \node[right] at (3.6,2.8) {End-Effector};
+
+  \node at (1.3,3.5) {Product of Exponentials: PoE};
+\end{tikzpicture}
+\caption{Product of Exponentials formula for forward kinematics. Each joint contributes an exponential twist applied to the previous configuration. The final end-effector pose is the product: $\mathbf{T}(\boldsymbol{\theta}) = e^{[\mathcal{S}_n]\theta_n} \cdots e^{[\mathcal{S}_2]\theta_2} e^{[\mathcal{S}_1]\theta_1} \mathbf{M}$.}
+\label{fig:product_exponentials}
+\end{figure}
+
 \section{Abandoning Denavit-Hartenberg}
 \label{sec:dh_limitations}
 
