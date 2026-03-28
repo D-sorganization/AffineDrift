@@ -72,6 +72,12 @@ Failure mode & Brittle (sudden) & Graceful (degradation) \\
 \end{center}
 \end{comparison}
 
+These differences reflect fundamentally distinct design philosophies. Engineering systems are designed
+for precise, repeatable control of pre-specified outputs. Biological systems are evolved for robustness,
+adaptability, and efficiency under uncertain conditions. Neither approach is superior; rather, they
+optimize for different objectives. Understanding which differences are essential for your particular
+biomechanical question is crucial for successful modeling.
+
 \begin{center}
 \begin{tikzpicture}[scale=0.9, node distance=2.5cm]
   % Left side: Engineering system
@@ -138,9 +144,15 @@ damping matrix.
   \end{itemize}
 \end{principle}
 
-For the human body during locomotion, the long bones satisfy $\omega_k \gg \omega_c$---bone
-compliance can be neglected. For the spine and for soft tissues, the separation is less
-clean, and dynamic flexibility effects may be significant.
+The timescale separation principle is critical for model selection. For different body
+regions and different movement speeds, the applicability of the rigid-body approximation varies.
+For the human body during locomotion, empirical measurements suggest that long bones have natural
+frequencies sufficiently high that the rigid-body assumption is justified. For the spine and
+soft tissues, particularly during rapid movements, the separation is less clean, and dynamic
+flexibility effects may contribute meaningfully to the system behavior. The choice of whether to
+include flexibility as explicit state variables or treat it as a quasi-static effect should be
+guided by both the timescale analysis above and by quantitative comparison of model predictions
+to experimental data.
 
 \subsection{Muscle Force Production Is State-Dependent}
 
@@ -500,11 +512,15 @@ applicable---with modifications. The key insight is:
   (drift + control) is preserved.
 \end{principle}
 
-\begin{laymansbox}{Mathematical Reminder: The Expanded Manifold}{expanded_manifold_reminder}
-Recall from Volumes 0 and I that the "State Vector" $\mathbf{x}$ is a point moving through a geometric space called the State Space Manifold. 
-
-In robotics, this manifold just tracked joint angles and velocities ($2n$ dimensions). In biomechanics, we are mathematically expanding the dimensional size of the manifold by adding $2p$ brand new dimensions to track muscle activation and fiber length. The system is still just a single dot moving through a manifold governed by $\dot{\state} = f(\state) + G(\state) \bm{u}$, but the geometry is now vastly higher-dimensional. All of the differential geometry tools (Tangent Spaces, Logarithms) still mechanically apply, but at a computational cost!
-\end{laymansbox}
+\begin{remark}{Dimensional Expansion of the State Space}{expanded_manifold}
+  Recall from Volumes~0 and~I that the state manifold $\mathcal{M}$ has dimension $2n$ for a system
+  with $n$ joint degrees of freedom (tracking positions and velocities). When muscles are included,
+  the state space expands: for each of $p$ muscles, we add two dimensions to track activation $a_i$
+  and fiber length $\ell_i^M$, yielding a state space of dimension $2n + 2p$. The system still evolves
+  according to $\dot{\state} = f(\state) + G(\state) \bm{u}$, but the ambient manifold is now much
+  higher-dimensional. All differential geometry tools (Lie brackets, contraction metrics, etc.)\ from
+  Volumes~I--II apply without modification, though computational complexity scales with dimension.
+\end{remark}
 
 This means:
 \begin{itemize}

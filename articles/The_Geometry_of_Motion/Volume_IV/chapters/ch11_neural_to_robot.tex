@@ -7,6 +7,47 @@
   We cannot. This tells us something.
 }{}
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.85]
+  % Hierarchical levels
+  \draw (0.5, 4) rectangle (2.5, 4.8);
+  \draw (1.5, 4.4) node[anchor=center, font=\small] {Task Planning};
+  \draw (1.5, 4.0) node[anchor=center, font=\tiny] {(Cortical, 100 ms)};
+
+  \draw[->, thick] (1.5, 4) -- (1.5, 3.5);
+
+  \draw (0.5, 2.8) rectangle (2.5, 3.6);
+  \draw (1.5, 3.2) node[anchor=center, font=\small] {Trajectory};
+  \draw (1.5, 2.9) node[anchor=center, font=\tiny] {(Cerebellar, 50 ms)};
+
+  \draw[->, thick] (1.5, 2.8) -- (1.5, 2.3);
+
+  \draw (0.5, 1.6) rectangle (2.5, 2.4);
+  \draw (1.5, 2.0) node[anchor=center, font=\small] {CPG Output};
+  \draw (1.5, 1.7) node[anchor=center, font=\tiny] {(Spinal, 10 ms)};
+
+  \draw[->, thick] (1.5, 1.6) -- (1.5, 1.1);
+
+  \draw (0.5, 0.4) rectangle (2.5, 1.2);
+  \draw (1.5, 0.8) node[anchor=center, font=\small] {Joint Torques};
+  \draw (1.5, 0.5) node[anchor=center, font=\tiny] {(Motor neurons, 1 ms)};
+
+  % Feedback paths (dashed)
+  \draw[->, thick, dashed, red] (0.4, 0.8) -- (0.2, 0.8) -- (0.2, 2.0) -- (0.4, 2.0);
+  \draw (0.05, 1.4) node[anchor=east, font=\tiny, color=red] {error};
+
+  % Title
+  \draw (4, 4.6) node[anchor=west, font=\small\bf] {Bio-Inspired Hierarchy};
+  \draw (4, 4.2) node[anchor=west, font=\tiny] {Shallow-wide at each level};
+  \draw (4, 3.85) node[anchor=west, font=\tiny] {Multi-timescale control};
+\end{tikzpicture}
+\caption{Hierarchical multi-timescale control architecture: each level shallow (1-2
+layers) but wide (thousands of parallel channels), operating at increasing timescales
+and levels of abstraction.}
+\label{fig:ch11:hierarchy}
+\end{figure}
+
 \section{Lessons from Biology for Robot Design}
 
 The four volumes of theory converge on practical design principles for robotic
@@ -34,11 +75,15 @@ control systems:
 
 \section{Cerebellar-Inspired Adaptive Control}
 
-The cerebellum's architecture suggests a specific adaptive controller:
+The cerebellum's circuit architecture (Marr, 1969; Albus, 1971; Kawato et al., 1987)
+directly suggests an adaptive control scheme:
 \begin{itemize}
-  \item \textbf{Granule cells} $\to$ basis function expansion (like kernel methods)
-  \item \textbf{Purkinje cells} $\to$ linear combination of basis functions
-  \item \textbf{Climbing fiber error} $\to$ supervised learning signal
+  \item \textbf{Granule cells} ($\sim$69 billion): create a compressed basis function
+        representation of input state via mossy fiber--granule cell synapses
+  \item \textbf{Purkinje cells} ($\sim$17 million): linearly combine granule cell outputs;
+        synaptic weights change via LTD when climbing fiber error signals are present
+  \item \textbf{Climbing fiber error} (inferior olive): carries sensory prediction error
+        from brainstem nuclei; signals at $\sim$1 Hz but with precise timing (10 ms resolution)
 \end{itemize}
 
 This maps directly to:
@@ -54,8 +99,10 @@ $\bm{e}$ is the tracking error (climbing fiber signal).
 \section{CPG-Based Locomotion Controllers}
 
 Following Chapter~8, CPG-based locomotion controllers use coupled oscillators to
-generate walking/running patterns. The CPG provides the \emph{timing} and the
-musculoskeletal model provides the \emph{mechanics}:
+generate walking/running patterns. This architecture is inspired by Grillner's (1975)
+demonstration that deafferented spinal cords generate coordinated stepping. The CPG
+provides the \emph{timing} and \emph{synergy} structure; feedback provides \emph{stability}
+and \emph{responsiveness}:
 
 \begin{lstlisting}[language=Python, caption={Bio-inspired locomotion controller architecture.}]
 import numpy as np

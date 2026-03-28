@@ -6,6 +6,30 @@
   computation: what is computed, how, and why.
 }{}
 
+\begin{table}[h]
+\centering
+\caption{Comparison of computational motor control theories.}
+\label{tab:ch10:theories}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{@{}lcccc@{}}
+\toprule
+\textbf{Theory} & \textbf{Learning Rule} & \textbf{Variability} & \textbf{Key Prediction} \\
+\midrule
+OFC & Error feedback & Tolerate task-irrelevant & Bell-shaped velocity \\
+(Todorov, 2004) & & & profiles \\
+\midrule
+Active Inference & Minimize free energy & Prediction error-driven & Sensorimotor uncertainty \\
+(Friston, 2010) & & & shapes movement \\
+\midrule
+Internal Model & Forward model learning & Exploration + exploitation & Gradual visuomotor \\
+(Kawato, 1999) & (climbing fiber error) & & adaptation \\
+\midrule
+Synergy Control & Reduced-dim learning & Synergy-space variability & Movement flexibility \\
+(d'Avella, 2005) & (NMF, ICA) & allowed & without dimensionality \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \section{Optimal Feedback Control}
 
 The dominant computational theory of motor control is optimal feedback control (OFC),
@@ -114,21 +138,30 @@ A key feature of biological motor systems is that motor noise is
   \quad \sigma(\bar{\control}) = k \norm{\bar{\control}},
   \label{eq:ch10:signal-dep-noise}
 \end{equation}
-where $\bm{\xi}$ is white noise and $k$ is the noise coefficient.
+where $\bm{\xi}$ is white Gaussian noise and $k$ is the noise coefficient (empirically
+$k \approx 0.01$--$0.05$ in human reaching). This property has been measured extensively
+(Schmidt et al., 1979; Harris and Wolpert, 1998).
 
-This explains minimum-jerk trajectories: the optimal trajectory under signal-dependent
-noise minimizes the time-integral of squared jerk \cite{FlashHogan1985, Harris1998}.
+Under signal-dependent noise, the optimal trajectory minimizes integrated squared jerk
+(Flash and Hogan, 1985). This is a key prediction of OFC: the bell-shaped velocity
+profiles observed in human reaching emerge naturally as solutions to the signal-dependent
+noise minimization problem, not from any explicit minimization of jerk (Todorov, 2004).
 
 \section{Active Inference (Friston Framework)}
 
-Active inference reframes motor control as inference: the agent infers the
-actions that would make its predictions come true:
+Active inference (Friston, 2010; Friston et al., 2016) reframes motor control as
+inference: the agent minimizes prediction error by acting to make observations match
+its generative model. This is formalized through variational free energy minimization:
 \begin{equation}
   F = \mathbb{E}_q[\ln q(\state) - \ln p(\state, \bm{y})],
   \label{eq:ch10:free-energy}
 \end{equation}
-where $F$ is the variational free energy, $q(\state)$ is the approximate posterior,
-and $p(\state, \bm{y})$ is the generative model.
+where $F$ is the variational free energy, $q(\state)$ is the approximate posterior belief,
+and $p(\state, \bm{y})$ is the generative model. The agent chooses actions to minimize
+$F$. This unifies action, perception, and learning under a single principle. While the
+experimental evidence is still developing, active inference correctly predicts many
+phenomena including the minimum intervention principle and why the brain is tolerant of
+task-irrelevant variability.
 
 \section*{Exercises}
 

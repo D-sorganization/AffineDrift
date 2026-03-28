@@ -3,9 +3,17 @@
 
 \epigraph{When the model is too complex for optimal control, let the agent learn.}{}
 
+Reinforcement learning (RL) methods can solve motor control problems when the cost function
+is difficult to specify or when model uncertainty is large \cite{Sutton2018}. This chapter
+demonstrates how to formulate multi-body control tasks as RL environments and integrate
+with standard policy optimization algorithms like PPO \cite{schulman2017}.
+
 \section{RL Environments in UpstreamDrift}
 
-UpstreamDrift provides Gymnasium-compatible environments for motor control tasks:
+UpstreamDrift provides Gymnasium-compatible environments for motor control tasks \cite{Sutton2018}.
+Gymnasium (formerly OpenAI Gym) is a standard interface for defining RL environments with
+reset, step, and reward computation methods. This enables use of any RL algorithm implemented
+for Gymnasium.
 
 \begin{lstlisting}[language=Python, caption={Custom RL environment for pendulum control.}]
 import numpy as np
@@ -78,10 +86,46 @@ for _ in range(200):
 print(f"Random policy total reward: {total_reward:.1f}")
 \end{lstlisting}
 
+\section{Agent-Environment Loop}
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[
+    every node/.style={draw, rounded corners, minimum width=2cm, text centered, font=\small},
+    ]
+    % Agent
+    \node[fill=blue!20] (agent) at (2, 2) {RL Agent};
+    % Environment
+    \node[fill=green!20] (env) at (6, 2) {Environment};
+
+    % Agent to Environment
+    \draw[->] (3.2, 2.2) -- (4.8, 2.2) node[above, midway, font=\tiny] {action $a_t$};
+
+    % Environment to Agent
+    \draw[->] (4.8, 1.8) -- (3.2, 1.8) node[below, midway, font=\tiny] {state $s_{t+1}$, reward $r_t$};
+
+    % State and reward processing
+    \node[fill=yellow!20, below of=env] (sim) at (6, 0.3) {Forward Simulation};
+    \node[fill=orange!20, below of=agent] (policy) at (2, 0.3) {Policy Network};
+
+    % Agent learning loop
+    \draw[->] (1, 2) -- (1, 0.7) -- (2, 0.7) node[left, pos=0.5, font=\tiny] {experience};
+
+    \node[right, font=\tiny, fill=white] at (6.5, 0.5) {Computes next\\state via\\forward dynamics};
+
+    \node[right, font=\tiny, fill=white] at (2.5, 0.1) {Learns from\\experience\\via policy\\gradient};
+  \end{tikzpicture}
+  \caption{RL agent-environment loop. The agent selects actions via its policy network;
+    the environment integrates dynamics and computes rewards. Both interact repeatedly.}
+  \label{fig:rl-loop}
+\end{figure}
+
 \section{From Gym to Golf}
 
-The UpstreamDrift RL pipeline extends from simple benchmarks to full golf swing optimization
-using MyoSuite muscle-driven environments.
+The UpstreamDrift RL pipeline extends from simple benchmarks (pendulum, reaching) to
+full muscle-driven golf swing optimization using MyoSuite environments. The reward
+function is task-specific; for golf, one might maximize clubhead speed at impact while
+penalizing muscle effort.
 
 \section*{Exercises}
 \begin{enumerate}

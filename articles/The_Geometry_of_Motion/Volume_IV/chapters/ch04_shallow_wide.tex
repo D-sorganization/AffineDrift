@@ -85,19 +85,28 @@ is approximately 8--12 synapses deep.
   In deep learning, we can stack layers because silicon is fast. In biology, we cannot.
   Instead, the brain uses:
   \begin{enumerate}
-    \item \textbf{Width}: $\sim$10 billion cortical neurons, each receiving $\sim$10,000
-          synaptic inputs. The total computational capacity is in the \emph{connections},
-          not the depth.
+    \item \textbf{Width}: approximately 16 billion cortical neurons (humans), each
+          receiving $\sim$10,000 synaptic inputs (Kandel et al., 2013). The total
+          computational capacity is in the connections, not the depth.
     \item \textbf{Recurrence}: horizontal connections within layers create recurrent
           dynamics that effectively increase computational depth through temporal
-          iteration (but at the cost of time).
+          iteration (but at the cost of time). These recurrent loops operate at 10--100 ms
+          timescales within a single motor control cycle.
     \item \textbf{Specialization}: different brain regions process different aspects
-          of the motor task in parallel, communicating through thick fiber bundles.
+          of the motor task in parallel, communicating through thick fiber bundles
+          (corpus callosum, cerebral peduncles).
     \item \textbf{Hierarchy}: a shallow hierarchy of cortex $\to$ subcortical structures
-          $\to$ spinal cord $\to$ muscles, with each level operating at different
-          timescales and abstraction levels.
+          (basal ganglia, cerebellum, brainstem) $\to$ spinal cord $\to$ muscles, with each
+          level operating at different timescales and abstraction levels.
   \end{enumerate}
 \end{insight}
+
+\emph{This architectural choice has profound consequences.} While a deep network might
+process sensory information in 50 serial steps, the brain achieves comparable flexibility
+through width and recurrence. Consider a reaching task: the cortex does not recompute the
+entire motor plan from scratch at each millisecond. Instead, it maintains a dynamical
+state that evolves according to its intrinsic connectivity. Perturbations are handled
+through feedback loops that operate in parallel at multiple levels.
 
 \begin{figure}[h]
 \centering
