@@ -265,7 +265,7 @@ So the arm doesn't accelerate if it's at rest and perfectly vertical. That makes
 Now suppose you're at an angle, say $\theta_1 = 45°$. Then:
 \begin{align}
 \ddot{\theta}_1 &= \bm{M}^{-1}_{11} \cdot (-(M_1 L_{1,cm} + M_2 L_1) g \sin(45°)) \\
-&= \bm{M}^{-1}_{11} \cdot (-(2.5 \times 0.175 + 2.5 \times 0.35) \times 9.81 \times 0.707) \\
+&= \bm{M}^{-1}_{11} \cdot (-(2.5 \times 0.175 + 1.5 \times 0.35) \times 9.81 \times 0.707) \\
 &\approx -20 \text{ N m} \times 0.45 \text{ kg m}^{-2} \\
 &\approx -9 \text{ rad/s}^2
 \end{align}
@@ -282,7 +282,7 @@ This trajectory is called an \textbf{integral curve}\index{integral curve} or \t
 In the golf swing, the drift is what happens if you let go of the club at any point. Gravity will pull it down. The momentum will carry it forward. The trajectory is set by $\bm{f}$.
 
 \begin{laymansbox}{Why Understanding Drift Matters}{box:ch05_drift_importance}
-The profound insight is that the system dynamics separate into passive and active components. Understanding the drift $\bm{f}(\bm{x})$ is the foundation for any control strategy.
+A useful structural observation is that the system dynamics separate into passive and active components. Understanding the drift $\bm{f}(\bm{x})$ is the foundation for any control strategy.
 
 Consider a system in the downswing phase. At each instant, the equation $\dot{\bm{x}} = \bm{f}(\bm{x}) + \bm{G}(\bm{x}) \bm{u}$ predicts how the state evolves. If the control input $\bm{u}$ is chosen to align with the drift field—rather than oppose it—the system reaches desired states more efficiently.
 
@@ -306,7 +306,7 @@ The control matrix $\bm{G}(\bm{x})$ depends on the state (specifically, on the c
 \begin{example}{Control Leverage at Different Configurations}{ex:ch05_leverage}
 The inverse mass matrix $\bm{M}^{-1}(\bm{q})$ tells you the leverage.
 
-\textbf{At address} ($\theta_1 = 0°, \theta_2 = 0°$): the arm is extended. The moment of inertia is high ($M_{11} \approx 2.22$ kg m$^2$). So $M^{-1}_{11} \approx 0.45$ rad/s$^2$ per N m. A 50 N m torque produces $50 \times 0.45 = 22.5$ rad/s$^2$ of acceleration.
+\textbf{At address} ($\theta_1 = 0°, \theta_2 = 0°$): the arm is extended. The moment of inertia is high ($M_{11} \approx 1.54$ kg m$^2$). So $M^{-1}_{11} \approx 0.64$ rad/s$^2$ per N m. A 50 N m torque produces $50 \times 0.64 = 32$ rad/s$^2$ of acceleration.
 
 \textbf{At the top of the backswing} ($\theta_1 = 150°, \theta_2 = -70°$): the arm is bent. The effective moment of inertia is lower. So $M^{-1}_{11}$ is higher. A given muscle torque produces a larger acceleration.
 
@@ -343,9 +343,7 @@ The following numerical regimes provide qualitative guidelines that would need t
 
 \item $\dcr \approx 1$--$5$: Control and drift contribute comparably. The system evolution depends significantly on both passive forces and muscular input. Transition and early downswing typically occupy this regime.
 
-\item $\dcr > 10$: Drift dominates. Passive forces (gravity, velocity-dependent Coriolis and centrifugal forces) produce large torques compared to muscular input. Control becomes a fine-tuning perturbation. Late downswing approaches this regime.
-
-\item $\dcr > 50$: Passive dynamics overwhelm control. The swing trajectory is largely predetermined by initial conditions and passive forces. Muscular input provides only minimal course correction. This regime characterizes the final moments before impact.
+\item $\dcr > 5$--$10$: Drift dominates. Passive forces (gravity, velocity-dependent Coriolis and centrifugal forces) produce large torques compared to muscular input. Control becomes a fine-tuning perturbation. Late downswing approaches this regime, with DCR values potentially reaching 10--30 depending on swing speed and body parameters.
 \end{itemize}
 
 \textbf{Caveat:} The exact numerical thresholds depend on swing parameters (arm segment masses and inertias), swing speed, and the magnitude of applied muscular torque. These values should be validated through simulation or experimental measurement for specific conditions.
@@ -578,7 +576,7 @@ All of this is encoded in understanding and exploiting the drift.
 
 \item \textbf{The golf swing is an optimal control problem}. The nervous system implicitly solves it through learning and practice.
 
-\item \textbf{Technique is about riding the drift}. Strength helps, but technique (understanding $\bm{f}$ and choosing $\bm{u}$ wisely) matters more.
+\item \textbf{Technique involves working with the drift}. Strength sets the ceiling on available control torques, but efficient technique aligns muscular commands with the passive dynamics rather than opposing them.
 
 \item \textbf{Physics is universal}. While individual golfers vary in geometry and strength, the fundamental structure (the equations $\bm{M}, \bm{C}, \bm{g}$) is the same.
 \end{enumerate}
