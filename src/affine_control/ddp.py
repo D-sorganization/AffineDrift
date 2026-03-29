@@ -226,13 +226,44 @@ def _compute_adaptive_timesteps(
     return cast(np.ndarray[Any, Any], np.clip(dt_adaptive, DT_CLIP_MIN, DT_CLIP_MAX))
 
 
+def _rk4_step(
+    f: Callable[..., np.ndarray[Any, Any]],
+    x: np.ndarray[Any, Any],
+    u: np.ndarray[Any, Any],
+    dt: float,
+) -> np.ndarray[Any, Any]:
+    """Perform a single 4th-order Runge-Kutta integration step.
+
+    Uses the classical RK4 method for improved accuracy over Euler integration.
+    The control input ``u`` is held constant over the step (zero-order hold).
+
+    Args:
+        f: Dynamics function f(x, u) returning dx/dt.
+        x: Current state vector.
+        u: Control input (constant over the step).
+        dt: Timestep size.
+
+    Returns:
+        Next state vector after one RK4 step.
+    """
+    k1 = f(x, u)
+    k2 = f(x + 0.5 * dt * k1, u)
+    k3 = f(x + 0.5 * dt * k2, u)
+    k4 = f(x + dt * k3, u)
+    return x + (dt / 6.0) * (k1 + 2.0 * k2 + 2.0 * k3 + k4)
+
+
 def _simulate_trajectory(
     f: Callable[..., np.ndarray[Any, Any]],
     x0: np.ndarray[Any, Any],
     u_traj: np.ndarray[Any, Any],
     t_grid: np.ndarray[Any, Any],
 ) -> np.ndarray[Any, Any]:
-    """Euler integration simulation (mock approximation — full RK4 not implemented)."""
+    """Simulate a trajectory using RK4 integration.
+
+    Uses 4th-order Runge-Kutta for each step, holding the control input
+    constant within each interval (zero-order hold).
+    """
     require(
         len(u_traj) == len(t_grid) - 1,
         "u_traj length must equal t_grid length - 1",
@@ -242,8 +273,7 @@ def _simulate_trajectory(
     curr_x = x0
     for i in range(len(u_traj)):
         dt = t_grid[i + 1] - t_grid[i]
-        dx = f(curr_x, u_traj[i])
-        curr_x = curr_x + dx * dt
+        curr_x = _rk4_step(f, curr_x, u_traj[i], dt)
         x.append(curr_x)
     return np.array(x)
 

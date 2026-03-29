@@ -25,6 +25,36 @@ from src.core.contracts import check_finite_array, check_positive, require
 
 logger = logging.getLogger(__name__)
 
+# Condition number threshold above which the mass matrix is considered near-singular.
+# For a 2x2 mass matrix in a well-posed manipulator problem, condition numbers
+# above 1e12 indicate near-singularity (e.g. fully extended arm).
+MASS_MATRIX_COND_THRESHOLD = 1e12
+
+
+def check_mass_matrix_singularity(M: np.ndarray[Any, Any], context: str = "") -> None:
+    """Raise ``ValueError`` if the mass matrix is near-singular.
+
+    Uses the 2-norm condition number as the diagnostic. A high condition
+    number indicates that the matrix is close to singular and that
+    ``np.linalg.solve`` or ``np.linalg.inv`` would produce unreliable results.
+
+    Args:
+        M: Square mass (inertia) matrix.
+        context: Optional context string for the error message.
+
+    Raises:
+        ValueError: If ``cond(M) > MASS_MATRIX_COND_THRESHOLD``.
+    """
+    cond = float(np.linalg.cond(M))
+    if cond > MASS_MATRIX_COND_THRESHOLD:
+        msg = (
+            f"Mass matrix is near-singular (condition number {cond:.2e} "
+            f"exceeds threshold {MASS_MATRIX_COND_THRESHOLD:.0e})"
+        )
+        if context:
+            msg = f"{context}: {msg}"
+        raise ValueError(msg)
+
 
 def _central_difference_linearization(
     dynamics: "DynamicalSystem",
@@ -363,11 +393,9 @@ class RobotArm(DynamicalSystem):
         G2 = m2 * g * l2 * np.cos(q1 + q2)
         G = np.array([G1, G2])
 
-        # M * ddq + C + G = tau
-        # ddq = M_inv * (tau - C - G)
-
-        invM = np.linalg.inv(M)
-        ddq = invM @ (np.array([tau1, tau2]) - C - G)
+        # M * ddq + C + G = tau  =>  ddq = M^{-1} (tau - C - G)
+        check_mass_matrix_singularity(M, context="RobotArm.dynamics")
+        ddq = np.linalg.solve(M, np.array([tau1, tau2]) - C - G)
 
         return np.array([dq1, dq2, ddq[0], ddq[1]])
 

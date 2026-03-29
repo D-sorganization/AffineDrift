@@ -1,4 +1,8 @@
-"""Benchmark classical setpoint control against trajectory-tracking control."""
+"""Benchmark classical setpoint control against trajectory-tracking control.
+
+Delegates shared constants and validation to ``rl_funnel_support`` and
+reporting dataclasses to ``rl_funnel_reporting`` to avoid duplication.
+"""
 
 from __future__ import annotations
 
@@ -6,7 +10,6 @@ import argparse
 import logging
 import time
 from collections.abc import Callable
-from dataclasses import dataclass, field
 from typing import Any, cast
 
 import numpy as np
@@ -17,35 +20,27 @@ from scipy.linalg import solve_continuous_are
 from src.core.constants import GRAVITY_M_S2
 from src.core.contracts.definitions import require
 from src.core.contracts.validators import check_finite_array, check_positive
+from src.tangent_models.examples import check_mass_matrix_singularity
+from src.tools.rl_funnel_reporting import BenchmarkResult, format_results
+from src.tools.rl_funnel_support import (
+    DEFAULT_CONTROL_SATURATION,
+    double_pendulum_mass_matrix,
+    validate_state_vector,
+    validate_weight_matrix,
+)
+from src.tools.rl_funnel_support import PENDULUM_LINK_1_M as PENDULUM_L1
+from src.tools.rl_funnel_support import PENDULUM_LINK_2_M as PENDULUM_L2
+from src.tools.rl_funnel_support import PENDULUM_MASS_1_KG as PENDULUM_M1
+from src.tools.rl_funnel_support import PENDULUM_MASS_2_KG as PENDULUM_M2
 
+# Symmetric saturation bounds derived from the shared default
+CONTROL_SATURATION_DEFAULT: tuple[float, float] = (
+    -DEFAULT_CONTROL_SATURATION,
+    DEFAULT_CONTROL_SATURATION,
+)
 
-def validate_state_vector(x: npt.NDArray[Any], name: str) -> None:
-    check_finite_array(x, name)
-
-
-def validate_weight_matrix(Q: npt.NDArray[Any], shape: tuple[int, int], name: str) -> None:
-    check_finite_array(Q, name)
-
-
-def format_results(results: list["BenchmarkResult"]) -> str:
-    return "\n".join([f"{r.name}: error={r.tracking_error:.4f}" for r in results])
-
-
-def double_pendulum_mass_matrix(th1: float, th2: float) -> npt.NDArray[Any]:
-    return np.eye(2)
-
-
-# Default control saturation limits for the double-pendulum benchmark (N*m).
-# The value 50 N*m is appropriate for a 1 kg, 0.5 m double pendulum; adjust
-# for different systems by passing `control_limits` to run_benchmark().
-DEFAULT_CONTROL_SATURATION = 50.0
-CONTROL_SATURATION_DEFAULT: tuple[float, float] = (-50.0, 50.0)
-
-# Double pendulum physical parameters (2-DoF golf swing proxy)
-PENDULUM_M1 = 1.0  # kg, mass of upper link
-PENDULUM_M2 = 1.0  # kg, mass of lower link
-PENDULUM_L1 = 0.5  # m, length of upper link
-PENDULUM_L2 = 0.5  # m, length of lower link
+# Re-export for backward compatibility (tests import from this module)
+__all__ = ["BenchmarkResult", "format_results"]
 
 logger = logging.getLogger(__name__)
 
@@ -70,6 +65,7 @@ def double_pendulum_drift(
     th1, th2, dth1, dth2 = x
     s12 = np.sin(th1 - th2)
     M = double_pendulum_mass_matrix(th1, th2)
+    check_mass_matrix_singularity(M, context="double_pendulum_drift")
     rhs = np.array(
         [
             -PENDULUM_M2 * PENDULUM_L1 * PENDULUM_L2 * dth2**2 * s12
@@ -91,9 +87,10 @@ def double_pendulum_B(x: npt.NDArray[Any]) -> npt.NDArray[Any]:
     )
     check_finite_array(x, "x")
 
-    # m1, m2, L1, L2 unused
     th1, th2, _, _ = x
-    M_inv = np.linalg.inv(double_pendulum_mass_matrix(th1, th2))
+    M = double_pendulum_mass_matrix(th1, th2)
+    check_mass_matrix_singularity(M, context="double_pendulum_B")
+    M_inv = np.linalg.inv(M)
     B_full = np.zeros((4, 2))
     B_full[2:, :] = M_inv  # torques affect angular accelerations
     return B_full
@@ -138,27 +135,6 @@ def generate_reference_trajectory(
 # ---------------------------------------------------------------------------
 # Controllers
 # ---------------------------------------------------------------------------
-
-
-@dataclass
-class BenchmarkResult:
-    """Container for the output of a single benchmark run.
-
-    Attributes:
-        name: Human-readable controller name used in reports.
-        tracking_error: Integrated squared state-tracking error.
-        control_effort: Integrated squared control input norm.
-        runtime_sec: Wall-clock time for the benchmark run in seconds.
-        trajectory: State trajectory array, shape ``(T, n)``.
-        t_grid: Time grid corresponding to *trajectory*, shape ``(T,)``.
-    """
-
-    name: str
-    tracking_error: float
-    control_effort: float
-    runtime_sec: float
-    trajectory: np.ndarray = field(repr=False)
-    t_grid: np.ndarray = field(repr=False)
 
 
 def setpoint_lqr_controller(

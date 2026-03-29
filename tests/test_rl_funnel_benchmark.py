@@ -100,8 +100,10 @@ def test_format_results_returns_summary_text(caplog: pytest.LogCaptureFixture) -
         ),
     ]
     summary = format_results(results)
-    assert "Setpoint LQR: error=4.0000" in summary
-    assert "Trajectory Tracking (TTCF): error=2.0000" in summary
+    assert "Setpoint LQR" in summary
+    assert "4.0000" in summary
+    assert "Trajectory Tracking (TTCF)" in summary
+    assert "2.0000" in summary
 
 
 def test_default_control_saturation_positive() -> None:

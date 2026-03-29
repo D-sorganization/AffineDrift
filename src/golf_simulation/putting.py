@@ -253,29 +253,78 @@ class PuttingSimulator:
                 logger.debug("Putt stopped at (%.3f, %.3f) after %.2f s", x, y, t)
                 break
 
-            # Surface slope -> gravity-induced acceleration
-            slope_x, slope_y = self.surface.evaluate_slope(x, y)
-            grav_ax = -GRAVITY_M_S2 * slope_x
-            grav_ay = -GRAVITY_M_S2 * slope_y
-
-            # Friction deceleration (opposes motion)
-            friction_ax = -deceleration * vx / max(speed, 1e-10)
-            friction_ay = -deceleration * vy / max(speed, 1e-10)
-
-            # Total acceleration
-            ax = grav_ax + friction_ax
-            ay = grav_ay + friction_ay
-
-            # Euler integration
-            vx += ax * self.dt
-            vy += ay * self.dt
-            x += vx * self.dt
-            y += vy * self.dt
+            # RK4 integration for improved accuracy over Euler
+            x, y, vx, vy = self._rk4_putt_step(x, y, vx, vy, deceleration)
 
             t += self.dt
             trajectory.append((x, y))
 
         return trajectory
+
+    def _putt_derivatives(
+        self,
+        x: float,
+        y: float,
+        vx: float,
+        vy: float,
+        deceleration: float,
+    ) -> tuple[float, float, float, float]:
+        """Compute state derivatives for the putting dynamics.
+
+        Returns:
+            Tuple of (dx/dt, dy/dt, dvx/dt, dvy/dt).
+        """
+        speed = math.sqrt(vx * vx + vy * vy)
+        slope_x, slope_y = self.surface.evaluate_slope(x, y)
+        grav_ax = -GRAVITY_M_S2 * slope_x
+        grav_ay = -GRAVITY_M_S2 * slope_y
+        friction_ax = -deceleration * vx / max(speed, 1e-10)
+        friction_ay = -deceleration * vy / max(speed, 1e-10)
+        ax = grav_ax + friction_ax
+        ay = grav_ay + friction_ay
+        return vx, vy, ax, ay
+
+    def _rk4_putt_step(
+        self,
+        x: float,
+        y: float,
+        vx: float,
+        vy: float,
+        deceleration: float,
+    ) -> tuple[float, float, float, float]:
+        """Advance the putting state by one RK4 step.
+
+        Returns:
+            Updated (x, y, vx, vy) after one timestep.
+        """
+        dt = self.dt
+        k1 = self._putt_derivatives(x, y, vx, vy, deceleration)
+        k2 = self._putt_derivatives(
+            x + 0.5 * dt * k1[0],
+            y + 0.5 * dt * k1[1],
+            vx + 0.5 * dt * k1[2],
+            vy + 0.5 * dt * k1[3],
+            deceleration,
+        )
+        k3 = self._putt_derivatives(
+            x + 0.5 * dt * k2[0],
+            y + 0.5 * dt * k2[1],
+            vx + 0.5 * dt * k2[2],
+            vy + 0.5 * dt * k2[3],
+            deceleration,
+        )
+        k4 = self._putt_derivatives(
+            x + dt * k3[0],
+            y + dt * k3[1],
+            vx + dt * k3[2],
+            vy + dt * k3[3],
+            deceleration,
+        )
+        x += (dt / 6.0) * (k1[0] + 2.0 * k2[0] + 2.0 * k3[0] + k4[0])
+        y += (dt / 6.0) * (k1[1] + 2.0 * k2[1] + 2.0 * k3[1] + k4[1])
+        vx += (dt / 6.0) * (k1[2] + 2.0 * k2[2] + 2.0 * k3[2] + k4[2])
+        vy += (dt / 6.0) * (k1[3] + 2.0 * k2[3] + 2.0 * k3[3] + k4[3])
+        return x, y, vx, vy
 
     def is_holed(
         self,

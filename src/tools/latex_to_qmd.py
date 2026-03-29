@@ -23,6 +23,15 @@ from src.tools.utils.latex_utils import (
     extract_body,
     extract_metadata,
 )
+from src.tools.utils.quarto_transforms import (
+    clean_quarto_latex_commands,
+    convert_quarto_environments,
+    convert_quarto_equations,
+    convert_quarto_figures,
+    convert_quarto_references,
+    convert_quarto_sections,
+    create_quarto_frontmatter,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -61,9 +70,7 @@ class LaTeXToQuartoConverter:
     def convert_sections(self, content: str) -> str:
         """Convert LaTeX sections to Markdown headers."""
         content = convert_sections_to_markdown(content)
-        # Quarto-specific: paragraph/subparagraph headings
-        content = re.sub(r"\\paragraph\{([^}]+)\}", r"##### \1", content)
-        return re.sub(r"\\subparagraph\{([^}]+)\}", r"###### \1", content)
+        return convert_quarto_sections(content)
 
     def convert_text_formatting(self, content: str) -> str:
         """Convert LaTeX text formatting to Markdown."""
@@ -76,88 +83,19 @@ class LaTeXToQuartoConverter:
 
     def convert_environments(self, content: str) -> str:
         """Convert special LaTeX environments."""
-        # Abstract
-        content = re.sub(
-            r"\\begin\{abstract\}(.*?)\\end\{abstract\}",
-            r"::: {.abstract-section}\n## Abstract\n\n\1\n\n:::",
-            content,
-            flags=re.DOTALL,
-        )
-
-        # Key points
-        content = re.sub(
-            r"\\begin\{keypoint\}(?:\[[^\]]*\])?(.*?)\\end\{keypoint\}",
-            r"::: {.keypoint-box}\n**Key Point:** \1\n:::",
-            content,
-            flags=re.DOTALL,
-        )
-
-        # Limitations
-        content = re.sub(
-            r"\\begin\{limitation\}(?:\[[^\]]*\])?(.*?)\\end\{limitation\}",
-            r"::: {.limitation-box}\n**Fundamental Limitation:** \1\n:::",
-            content,
-            flags=re.DOTALL,
-        )
-
-        # Quotes
-        return re.sub(r"\\begin\{quote\}(.*?)\\end\{quote\}", r"> \1", content, flags=re.DOTALL)
+        return convert_quarto_environments(content)
 
     def convert_equations(self, content: str) -> str:
-        """Convert LaTeX equations - Quarto supports them natively!."""
-        # Display equations - keep as-is, Quarto understands them
-        # Just ensure they're on their own lines
-
-        # align environments - keep as-is
-        content = re.sub(r"\\begin\{align\}", r"\n$$\n\\begin{align}", content)
-        content = re.sub(r"\\end\{align\}", r"\\end{align}\n$$\n", content)
-
-        # equation environments - keep as-is
-        content = re.sub(r"\\begin\{equation\}", r"\n$$", content)
-        return re.sub(r"\\end\{equation\}", r"$$\n", content)
+        """Convert LaTeX equations -- Quarto supports them natively."""
+        return convert_quarto_equations(content)
 
     def convert_figures(self, content: str) -> str:
         """Convert LaTeX figures to Quarto format."""
-
-        # Remove complex figure environments but preserve caption info
-        def replace_figure(match: re.Match[str]) -> str:
-            """Replace LaTeX figure environment with Quarto figure syntax."""
-            fig_content = match.group(1)
-
-            # Try to extract caption
-            caption_match = re.search(r"\\caption\{([^}]+)\}", fig_content)
-            caption = caption_match.group(1) if caption_match else ""
-
-            if caption:
-                return f"\n\n[Figure: {caption}]\n\n"
-            return "\n\n[Figure]\n\n"
-
-        content = re.sub(
-            r"\\begin\{figure\}(.*?)\\end\{figure\}",
-            replace_figure,
-            content,
-            flags=re.DOTALL,
-        )
-
-        # Remove tikzpicture environments
-        return re.sub(
-            r"\\begin\{tikzpicture\}.*?\\end\{tikzpicture\}",
-            "[Figure: TikZ diagram - see PDF version]",
-            content,
-            flags=re.DOTALL,
-        )
+        return convert_quarto_figures(content)
 
     def convert_references(self, content: str) -> str:
         """Convert LaTeX cross-references."""
-        # Convert \ref and \cref to Quarto format
-        content = re.sub(r"\\cref\{([^}]+)\}", r"[@\1]", content)
-        content = re.sub(r"\\ref\{([^}]+)\}", r"[@\1]", content)
-
-        # Convert \label to Quarto format
-        content = re.sub(r"\\label\{eq:([^}]+)\}", r"{#eq-\1}", content)
-        content = re.sub(r"\\label\{fig:([^}]+)\}", r"{#fig-\1}", content)
-        content = re.sub(r"\\label\{sec:([^}]+)\}", r"{#sec-\1}", content)
-        return re.sub(r"\\label\{([^}]+)\}", r"{#\1}", content)
+        return convert_quarto_references(content)
 
     def convert_links(self, content: str) -> str:
         """Convert LaTeX URLs and hyperlinks to Markdown."""
@@ -165,46 +103,12 @@ class LaTeXToQuartoConverter:
 
     def clean_latex_commands(self, content: str) -> str:
         """Remove or clean remaining LaTeX commands."""
-        # Apply shared cleanup (comments, labels, spacing, structure)
         content = clean_common_latex(content)
-
-        # Quarto-specific: custom commands → bold
-        content = re.sub(r"\\bvec\{([^}]+)\}", r"**\1**", content)
-        content = re.sub(r"\\(Feq|Ceq|Rdrift|Rinput)", r"**\1**", content)
-
-        # Remove table environments
-        content = re.sub(r"\\begin\{table\}.*?\\end\{table\}", "[Table]", content, flags=re.DOTALL)
-        content = re.sub(
-            r"\\begin\{tabular\}.*?\\end\{tabular\}",
-            "[Table]",
-            content,
-            flags=re.DOTALL,
-        )
-
-        # Remove theorem/definition environments
-        return re.sub(
-            r"\\begin\{(theorem|definition|proposition|lemma)\}(.*?)\\end\{\1\}",
-            r"\n\n**\1:** \2\n\n",
-            content,
-            flags=re.DOTALL,
-        )
+        return clean_quarto_latex_commands(content)
 
     def create_frontmatter(self, metadata: dict[str, str]) -> str:
         """Create Quarto YAML frontmatter."""
-        frontmatter = "---\n"
-        frontmatter += f'title: "{metadata["title"]}"\n'
-        frontmatter += f'author: "{metadata["author"]}"\n'
-        frontmatter += f'date: "{metadata["date"]}"\n'
-        frontmatter += """format:
-  html:
-    toc: true
-    toc-depth: 3
-    number-sections: false
-    code-fold: true
----
-
-"""
-        return frontmatter
+        return create_quarto_frontmatter(metadata)
 
     def convert_to_qmd(self, latex_content: str) -> str:
         """Main conversion pipeline."""
