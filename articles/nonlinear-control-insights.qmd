@@ -13,15 +13,15 @@ format:
 
 ## Introduction
 
-Here is a puzzle. A golfer swings a club that weighs less than a kilogram and somehow generates enough force to send a ball flying 300 yards. Where does all that force come from? Not from the muscles—human muscles simply are not that powerful. The answer lies in something far more elegant: the golfer is surfing on a wave of their own making.
+A golfer swings a club that weighs less than a kilogram, yet the ball can travel over 250 yards. The kinetic energy at impact far exceeds what the muscles alone can produce in the roughly 0.3 seconds of the downswing. The mechanism is energy accumulation through the kinetic chain: gravitational potential energy, elastic energy, and inertial coupling amplify the muscular input.
 
-The mathematical language for this "wave-riding" is the control-affine system:
+The mathematical language for this is the control-affine system:
 
 $$
 \dot{x} = f(x) + G(x)u.
 $$
 
-Here, $f(x)$ is the **drift**—everything that happens on its own due to gravity, momentum, elastic energy, and motion history. And $G(x)u$ is the **input**—what the golfer actively does with their muscles. The profound insight is that these two contributions do not interfere with each other. They are mechanically orthogonal. This is not merely an analogy; it is a rigorous mathematical fact that provides the justification for the **Skeletal Baseline** and validates the Zero Torque Counterfactual (ZTCF) not just as a computational tool, but as the system's natural trajectory from which all active deviation must be purchased.
+Here, $f(x)$ is the **drift**---the autonomous dynamics arising from gravity, momentum, elastic energy, and Coriolis/centrifugal coupling. And $G(x)u$ is the **input**---the torques the golfer actively generates through muscular contraction. The key structural property is that these two contributions are *additively separable*: the drift field and the input field combine linearly in the state derivative. This additive structure provides the mathematical justification for the **Skeletal Baseline** and validates the Zero Torque Counterfactual (ZTCF) as the system's natural trajectory from which all active deviation must be produced.
 
 This control-theoretic perspective transforms how we understand the swing. In traditional biomechanics, we measure a total force and ask: "How hard did the golfer work?" In the control-affine framework, we ask a more powerful question: "How much of this force is the golfer supplying, and how much is the system providing for free?"
 
