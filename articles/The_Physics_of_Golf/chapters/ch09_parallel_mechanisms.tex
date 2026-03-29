@@ -847,7 +847,7 @@ This is why inverse dynamics can compute \emph{joint-level} torques (sum of all 
 In the early 1980s, biomechanist C.L. Vaughan published foundational work on the biomechanics of athletic movements with closed kinematic loops. His key contributions include:
 
 \begin{reference}{Vaughan's Contributions}{ref:vaughan}
-Vaughan (1981) and Vaughan (1983) were among the first to recognize that the golf swing is a \emph{closed kinematic chain} and to formalize the mathematics of loop constraints in biomechanics. His work addressed the fundamental problem: when both hands grip a club and both feet touch the ground, how can inverse dynamics resolve the ambiguity in force distribution?
+\cite{Vaughan1981,Vaughan1983} were among the first to recognize that the golf swing is a \emph{closed kinematic chain} and to formalize the mathematics of loop constraints in biomechanics. His work addressed the fundamental problem: when both hands grip a club and both feet touch the ground, how can inverse dynamics resolve the ambiguity in force distribution?
 
 Vaughan's resolution strategy:
 \begin{enumerate}
@@ -1016,13 +1016,13 @@ Understanding internal forces is crucial for analyzing injury risk and predictin
 Parallel mechanisms have been studied extensively in the robotics and mechanical engineering literature. Key theoretical foundations include:
 
 \begin{reference}{Stewart Platform (1965)}{ref:stewart_platform}
-D.\ Stewart (1965) published the foundational paper on the Stewart platform, a hexapod parallel manipulator with 6 legs connecting a base to a moving platform. The Stewart platform has become ubiquitous in precision engineering, flight simulators, and machine tools.
+\cite{Stewart1965} published the foundational paper on the Stewart platform, a hexapod parallel manipulator with 6 legs connecting a base to a moving platform. The Stewart platform has become ubiquitous in precision engineering, flight simulators, and machine tools.
 
 Stewart's key insight: a parallel mechanism with $n$ legs can be designed to have $n$ DOF (one per leg) or more if the legs are redundantly constrained. The stiffness and precision of a parallel mechanism often exceed those of a serial robot because loads are distributed across multiple paths.
 \end{reference}
 
 \begin{reference}{Merlet's Parallel Robots (2006)}{ref:merlet_2006}
-J.P.\ Merlet's comprehensive treatise on parallel robots (2006) systematized the theory of parallel mechanisms, including:
+\cite{Merlet2006} provides a comprehensive treatise on parallel robots that systematized the theory of parallel mechanisms, including:
 \begin{itemize}
 \item Forward and inverse kinematics algorithms.
 \item Singularity analysis.
@@ -1034,11 +1034,11 @@ Merlet's work is essential reading for anyone serious about understanding parall
 \end{reference}
 
 \begin{reference}{Hunt's Kinematic Geometry (1978)}{ref:hunt_1978}
-K.H.\ Hunt (1978) provided foundational work on the geometry and algebraic foundations of kinematic mechanisms, including parallel systems. Hunt's screw theory approach (discussed below) is particularly relevant to understanding constraint forces.
+\cite{Hunt1978} provided foundational work on the geometry and algebraic foundations of kinematic mechanisms, including parallel systems. Hunt's screw theory approach (discussed below) is particularly relevant to understanding constraint forces.
 \end{reference}
 
 \begin{reference}{Gosselin \& Angeles' Singularity Analysis (1990)}{ref:gosselin_angeles}
-C.M.\ Gosselin and J.\ Angeles (1990) developed comprehensive methods for analyzing singularities in parallel mechanisms. Their classification of singularities into workspace boundaries, leg singularities, and architecture singularities has become standard in robotics.
+\cite{GosselinAngeles1990} developed comprehensive methods for analyzing singularities in parallel mechanisms. Their classification of singularities into workspace boundaries, leg singularities, and architecture singularities has become standard in robotics.
 \end{reference}
 
 %============================================================================
@@ -1387,35 +1387,4 @@ A golfer needs to apply a total grip torque of 100 N·m to accelerate a club dur
 \item If electromyography (EMG) shows the right hand is 1.5 times more activated than the left, what would you estimate $\tau_R$ to be? (Assume activation is proportional to torque.)
 \item Why is grip sensor data (force plates at the hands) needed to uniquely resolve this ambiguity?
 \end{enumerate}
-\end{exercise}
-
-\begin{exercise}{GRF and Pelvis Acceleration}
-A 100 kg golfer applies a ground reaction torque (free moment) of 120 N·m about the vertical axis during the downswing. The pelvis has moment of inertia (about vertical) of $I_p = 4$ kg·m$^2$.
-
-\begin{enumerate}
-\item What is the pelvis's angular acceleration due to the ground torque alone? (Use $\alpha = \tau / I$.)
-\item If the hip muscles also apply a torque of 80 N·m in the same direction, what is the total pelvis acceleration?
-\item What fraction of the pelvis's acceleration comes from the ground vs. the muscles?
-\end{enumerate}
-
-This exercise illustrates the "ground-up" power transfer.
-\end{exercise}
-
-\begin{exercise}{Critical Reading: Robotics Analogy}
-Read the problem statement for this chapter about mapping between robotics and golf. Then find a paper or article on Stewart platforms or parallel robots.
-
-Write a short paragraph (5-7 sentences) explaining how one specific aspect of the Stewart platform's behavior (e.g., singularities, load sharing, workspace limitations) applies to the golf swing.
-\end{exercise}
-
-\end{exercises}
-
-\index{Parallel mechanism}
-\index{Serial mechanism}
-\index{Closed kinematic loop}
-\index{Loop closure constraint}
-\index{Loop Jacobian}
-\index{Gruebler's criterion}
-\index{Over-constrained mechanism}
-\index{X-factor}
-\index{Spine constraint}
-\index{Ground reaction force}
+\

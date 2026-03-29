@@ -130,6 +130,118 @@ end-effector), loss of rank in $J_c$ means the gripper can move in some directio
 Such singularities are important to understand for control design: they represent configurations where
 standard feedback cannot stabilize the system locally.
 
+\subsection{Worked Example: Planar Two-Link Closed Chain}
+
+\index{Closed-chain!two-link planar}%
+Consider a simple planar closed-chain mechanism: two rigid links of lengths $\ell_1$ and $\ell_2$, with
+joints at angles $\theta_1$ and $\theta_2$ (measured from the horizontal), constrained to meet at a common
+endpoint. Let the base be at the origin.
+
+The configuration space is $Q_{\text{free}} = [0, 2\pi) \times [0, 2\pi)$ (the pair $(\theta_1, \theta_2)$).
+The constraint is that the endpoint of link 1 equals the endpoint of link 2, measured from a fixed reference:
+\begin{align}
+  \ell_1 \cos\theta_1 &= \ell_2 \cos\theta_2 + \Delta x, \\
+  \ell_1 \sin\theta_1 &= \ell_2 \sin\theta_2 + \Delta y,
+\end{align}
+where $(\Delta x, \Delta y)$ is the fixed distance between the base points.
+
+Rewrite as
+\begin{align}
+  \phi_1(\theta_1, \theta_2) &:= \ell_1 \cos\theta_1 - \ell_2 \cos\theta_2 - \Delta x = 0, \\
+  \phi_2(\theta_1, \theta_2) &:= \ell_1 \sin\theta_1 - \ell_2 \sin\theta_2 - \Delta y = 0.
+\end{align}
+
+The constraint Jacobian is
+\begin{equation}
+  J_c = \begin{bmatrix}
+    -\ell_1 \sin\theta_1 & \ell_2 \sin\theta_2 \\
+    \ell_1 \cos\theta_1 & -\ell_2 \cos\theta_2
+  \end{bmatrix}.
+\end{equation}
+
+For a regular point, we require $\text{rank}(J_c) = 2$. The determinant is
+\begin{equation}
+  \det(J_c) = \ell_1 \ell_2 (\sin\theta_1 \cos\theta_2 + \cos\theta_1 \sin\theta_2) = \ell_1 \ell_2 \sin(\theta_1 - \theta_2).
+\end{equation}
+
+The constraint manifold becomes singular when $\theta_1 = \theta_2$ (both links parallel) or $\theta_1 = \theta_2 + \pi$
+(links anti-parallel). At these configurations, the two links are aligned and cannot be separated---the mechanism
+has a locked or freely-moving singularity.
+
+The constraint manifold $Q_c$ in the regular case is a 0-dimensional set (isolated points), but for special
+geometries (e.g., $\ell_1 = \ell_2$), the manifold may be 1-dimensional.
+
+\subsection{Revolute Joint Constraints on SE(3)$^2$}
+
+\index{Joint constraint!revolute}%
+A revolute joint constrains the relative motion of two bodies to rotation about a single axis. In the product
+space $SE(3)^2$, where the first copy represents the frame of body 1 and the second represents body 2,
+the joint imposes constraints on the relative transformation.
+
+Let $g = g_1^{-1} g_2 \in SE(3)$ be the relative transformation. A revolute joint aligned with the $z$-axis
+at a fixed point (the pivot) requires:
+\begin{enumerate}
+  \item \textbf{Position constraint}: The relative position of the pivot must be zero:
+  \begin{equation}
+    \phi_1(g) := p_{\text{rel}, x} = 0, \quad \phi_2(g) := p_{\text{rel}, y} = 0, \quad \phi_3(g) := p_{\text{rel}, z} = 0.
+  \end{equation}
+  These are 3 constraints on the translational part.
+
+  \item \textbf{Rotational constraint}: The relative rotation must be about the $z$-axis only, so the rotation
+  axis in the body frame must align with $z$. This is typically enforced as:
+  \begin{equation}
+    \phi_4(g) := R_{\text{rel}}(1, 2) = 0, \quad \phi_5(g) := R_{\text{rel}}(2, 1) = 0,
+  \end{equation}
+  where $R_{\text{rel}}(i, j)$ are the off-diagonal entries of the rotation part ensuring alignment.
+\end{enumerate}
+
+Thus, a single revolute joint imposes \textbf{5 constraints} on $SE(3)^2$ (3 translational + 2 rotational),
+leaving \textbf{1 degree of freedom} (rotation about the axis).
+
+\subsection{Holonomic vs. Nonholonomic Constraints: The Integrability Condition}
+
+\index{Integrability condition}%
+The distinction between holonomic and nonholonomic constraints lies in the concept of \textbf{integrability}.
+A velocity constraint
+\begin{equation}
+  \sum_i a_i(q) \, \dot{q}_i = 0
+\end{equation}
+is called \textbf{holonomic} if there exists a function $\phi(q)$ such that
+\begin{equation}
+  a_i(q) = \frac{\partial \phi}{\partial q_i}.
+\end{equation}
+
+Equivalently, the 1-form $\alpha = \sum_i a_i(q) \, dq_i$ is \textbf{exact}, i.e., $\alpha = d\phi$ for some scalar function $\phi$.
+By Frobenius's theorem, a 1-form is exact if and only if it is \textbf{closed}: $d\alpha = 0$.
+
+For a single 1-form, this means
+\begin{equation}
+  \frac{\partial a_i}{\partial q_j} = \frac{\partial a_j}{\partial q_i} \quad \text{for all } i, j.
+\end{equation}
+
+\begin{example}[Holonomic Constraint: Grip Condition]
+  Suppose a robot hand grips an object, and the contact point must remain at a fixed position in 3D space.
+  The velocity constraint is $\dot{\mathbf{p}}_{\text{contact}} = 0$, which can be written as
+  \begin{equation}
+    \phi_x(q) := p_x(q) = 0, \quad \phi_y(q) := p_y(q) = 0, \quad \phi_z(q) := p_z(q) = 0.
+  \end{equation}
+  These are three holonomic constraints. The integrability condition is trivially satisfied because each
+  constraint is a function of configuration only.
+\end{example}
+
+\begin{example}[Nonholonomic Constraint: Rolling Foot]
+  A foot rolling on the ground without slipping satisfies $\mathbf{v}_{\text{contact}} = 0$ (no slipping).
+  But the foot can also \emph{roll} (angular motion about the contact line). The velocity constraint is
+  $v_x(q, \dot{q}) = \dot{q}_{\text{roll}} \times r = 0$ (approximately), which does not integrate to
+  a holonomic constraint---the foot can reach different positions through different rolling paths.
+
+  The 1-form is not exact: $d\alpha \ne 0$, and the constraint manifold is not a simple level set.
+\end{example}
+
+For the golf swing and grasp mechanics studied in this chapter, we focus on \textbf{holonomic constraints}
+(grip points, contact patches, joint limits), while acknowledging that rolling contacts and sliding are
+inherently nonholonomic and require specialized treatment.
+
 \section{Lagrangian Mechanics on Constrained Manifolds}
 \label{sec:ch9:lagrangian}
 
@@ -221,6 +333,74 @@ The Coriolis-centrifugal acceleration in configuration space can be expressed in
   coordinates makes them explicit and important for numerical computation.
 \end{intuitionbox}
 
+\subsection{Christoffel Symbol Computation: A 2-DOF Example}
+
+\index{Christoffel symbol!example}%
+Consider a 2-DOF system with generalized coordinates $(q_1, q_2)$ and mass matrix
+\begin{equation}
+  M(q) = \begin{bmatrix} m_1 + m_2 & m_2 \cos(q_2) \\ m_2 \cos(q_2) & m_2 \end{bmatrix},
+\end{equation}
+where $m_1$ and $m_2$ are link masses, and the $(1,2)$ entry includes a position-dependent coupling.
+
+The Christoffel symbols \eqref{eq:ch9:christoffel} require computing the inverse:
+\begin{equation}
+  M^{-1} = \frac{1}{\det(M)} \begin{bmatrix} m_2 & -m_2 \cos(q_2) \\ -m_2 \cos(q_2) & m_1 + m_2 \end{bmatrix},
+\end{equation}
+where $\det(M) = m_1 m_2 + m_2^2(1 - \cos^2(q_2)) = m_1 m_2 + m_2^2 \sin^2(q_2)$.
+
+For the term $\Gamma^1_{22}$ (which produces centrifugal acceleration in direction 1 due to velocity in direction 2):
+\begin{align}
+  \Gamma^1_{22} &= \frac{1}{2} (M^{-1})_{1l} \left( \frac{\partial M_{l2}}{\partial q_1} + \frac{\partial M_{l2}}{\partial q_1}
+  - \frac{\partial M_{22}}{\partial q_l} \right), \\
+  &= \frac{1}{2} (M^{-1})_{11} \left( 0 + 0 - 0 \right) + \frac{1}{2} (M^{-1})_{12} \left( 0 + 0 - 0 \right), \\
+  &= 0.
+\end{align}
+
+But $\Gamma^1_{12}$ (Coriolis coupling):
+\begin{align}
+  \Gamma^1_{12} &= \frac{1}{2} (M^{-1})_{1l} \left( \frac{\partial M_{l2}}{\partial q_1} + \frac{\partial M_{l1}}{\partial q_2}
+  - \frac{\partial M_{12}}{\partial q_l} \right), \\
+  &= \frac{1}{2} (M^{-1})_{12} \left( \frac{\partial M_{22}}{\partial q_1} + 0 - \frac{\partial M_{12}}{\partial q_1} \right).
+\end{align}
+
+Since $\frac{\partial M_{22}}{\partial q_1} = 0$ and $\frac{\partial M_{12}}{\partial q_1} = -m_2 \sin(q_2)$:
+\begin{equation}
+  \Gamma^1_{12} = \frac{1}{2} (M^{-1})_{12} \cdot m_2 \sin(q_2) = \frac{m_2 \sin(q_2)}{2 \det(M)} \cdot m_2 \sin(q_2).
+\end{equation}
+
+This produces the Coriolis term $(C(q,\dot{q})\dot{q})_1 = -\Gamma^1_{12} \dot{q}_1 \dot{q}_2$ and centrifugal terms,
+which are essential for accurate simulation and control.
+
+\subsection{Routh Reduction for Cyclic Coordinates}
+
+\index{Routh reduction}%
+\index{Cyclic coordinate}%
+When the Lagrangian $L(q, \dot{q}) = T(q, \dot{q}) - V(q)$ is invariant under a symmetry group action,
+certain generalized coordinates (called \textbf{cyclic coordinates}) do not appear explicitly in $L$.
+
+For such a coordinate $q_{\text{cyc}}$, the Euler-Lagrange equation gives
+\begin{equation}
+  \frac{d}{dt}\frac{\partial L}{\partial \dot{q}_{\text{cyc}}} = 0,
+\end{equation}
+so the generalized momentum is conserved:
+\begin{equation}
+  p_{\text{cyc}} = \frac{\partial L}{\partial \dot{q}_{\text{cyc}}} = \text{constant}.
+\end{equation}
+
+The \textbf{Routhian} is constructed by eliminating the cyclic velocity:
+\begin{equation}
+  R(q_{\text{shape}}, \dot{q}_{\text{shape}}, p_{\text{cyc}}) := \dot{q}_{\text{cyc}} p_{\text{cyc}} - L(q_{\text{shape}}, \dot{q}_{\text{shape}}, \dot{q}_{\text{cyc}}(p_{\text{cyc}})),
+\end{equation}
+where $\dot{q}_{\text{cyc}} = \dot{q}_{\text{cyc}}(q_{\text{shape}}, \dot{q}_{\text{shape}}, p_{\text{cyc}})$ is determined from the constraint.
+
+The dynamics of the shape variables reduce to
+\begin{equation}
+  \frac{d}{dt}\frac{\partial R}{\partial \dot{q}_{\text{shape}}} - \frac{\partial R}{\partial q_{\text{shape}}} = 0,
+\end{equation}
+a system of lower dimension. This is crucial for understanding the golf swing: the total angular momentum
+is conserved (cyclic coordinate), and the swing dynamics can be reduced to the shape changes of the arms,
+with the rotation of the torso following deterministically.
+
 \subsection{Index-3 DAE Formulation and Stabilization}
 
 \index{DAE!index-3}%
@@ -232,17 +412,53 @@ The system of equations
 is a \textbf{differential-algebraic equation (DAE)} of \textbf{index 3}. The index is the minimum
 number of times the algebraic constraint must be differentiated to derive an ODE for $\lambda$.
 
-To solve this numerically, we use the \textbf{Baumgarte stabilization} method: instead of enforcing
-only the acceleration constraint \eqref{eq:ch9:accel-constraint}, we augment it with corrective terms:
+To understand why, differentiate the constraint \eqref{eq:ch9:dae-2} in time:
+\begin{equation}
+  \dot{\Phi} = J_c(q) \dot{q} = 0. \label{eq:ch9:dae-vel}
+\end{equation}
+
+Differentiate again:
+\begin{equation}
+  \ddot{\Phi} = J_c(q) \ddot{q} + \dot{J}_c(q,\dot{q}) \dot{q} = 0. \label{eq:ch9:dae-acc}
+\end{equation}
+
+Now substitute \eqref{eq:ch9:dae-1} into \eqref{eq:ch9:dae-acc}:
+\begin{equation}
+  J_c(q) M(q)^{-1} \left( J_c(q)^\top \lambda + B(q)\mathbf{u} - C(q,\dot{q})\dot{q} - \nabla V(q) \right) + \dot{J}_c(q,\dot{q}) \dot{q} = 0.
+\end{equation}
+
+This is an equation for $\lambda$. Thus, we need three differentiations (position $\to$ velocity $\to$ acceleration)
+to obtain an ODE system. The system is of \textbf{index 3}.
+
+\subsubsection{Baumgarte Stabilization}
+
+To solve this numerically, the \textbf{Baumgarte stabilization} method augments the acceleration constraint
+with corrective terms proportional to the position and velocity constraint violations:
 \begin{equation}
   J_c(q)\ddot{q} + \dot{J}_c(q,\dot{q})\dot{q} + 2\alpha \dot{\Phi}(q,\dot{q}) + \beta^2 \Phi(q) = 0,
   \label{eq:ch9:baumgarte}
 \end{equation}
-where $\alpha, \beta > 0$ are tuning parameters. This reduces the DAE to index 1 and suppresses the growth
-of constraint violations due to integration error.
+where $\alpha, \beta > 0$ are tuning parameters (typically $\alpha = \beta = 1$ or chosen to damp oscillations).
+
+The correction terms $2\alpha \dot{\Phi} + \beta^2 \Phi$ can be interpreted as a feedback law: if the constraint
+is violated, the correction grows to drive the state back onto the manifold. This reduces the effective index
+to 1 and suppresses exponential growth of constraint violations due to numerical integration error.
+
+The modified constraint can be rewritten as a second-order ODE in $\Phi$:
+\begin{equation}
+  \ddot{\Phi} + 2\alpha \dot{\Phi} + \beta^2 \Phi = 0,
+\end{equation}
+which is stable (like a damped harmonic oscillator) if $\alpha, \beta > 0$.
+
+\subsubsection{Projection Method}
 
 Alternatively, the \textbf{projection method} projects the unconstrained accelerations onto the constraint
-manifold at each time step, ensuring exact constraint satisfaction up to machine precision.
+manifold at each time step:
+\begin{equation}
+  \ddot{q}_{\text{proj}} = \left( I - J_c(q)^\top (J_c(q) M^{-1}(q) J_c(q)^\top)^{-1} J_c(q) M^{-1}(q) \right) \ddot{q}_{\text{unconstrained}},
+\end{equation}
+ensuring exact constraint satisfaction up to machine precision. This is more accurate but computationally
+expensive (requires solving a linear system at each time step).
 
 \section{Control-Affine Systems on Configuration Manifolds}
 \label{sec:ch9:control-affine}
@@ -278,6 +494,43 @@ measures the difference between flowing along $X$ then $Y$ versus $Y$ then $X$:
   [X, Y] = X \circ Y - Y \circ X.
 \end{equation}
 
+In local coordinates, if $X = \sum_i X_i \frac{\partial}{\partial q_i}$ and $Y = \sum_j Y_j \frac{\partial}{\partial q_j}$, then
+\begin{equation}
+  [X, Y] = \sum_{i,j} \left( X_i \frac{\partial Y_j}{\partial q_i} - Y_i \frac{\partial X_j}{\partial q_i} \right) \frac{\partial}{\partial q_j}.
+  \label{eq:ch9:lie-bracket-coords}
+\end{equation}
+
+\begin{example}[Explicit Lie Bracket Computation]
+  Let $X = [x_2; -x_1]$ and $Y = [0; 1]$ (as column vectors). Compute $[X, Y]$.
+
+  In coordinates on $\mathbb{R}^2$, we have
+  \begin{align}
+    X &= x_2 \frac{\partial}{\partial x_1} - x_1 \frac{\partial}{\partial x_2}, \\
+    Y &= \frac{\partial}{\partial x_2}.
+  \end{align}
+
+  Applying $X$ to the components of $Y$:
+  \begin{align}
+    X(Y_1) &= X(0) = 0, \\
+    X(Y_2) &= X(1) = 0.
+  \end{align}
+
+  Applying $Y$ to the components of $X$:
+  \begin{align}
+    Y(X_1) &= Y(x_2) = \frac{\partial x_2}{\partial x_2} = 1, \\
+    Y(X_2) &= Y(-x_1) = \frac{\partial(-x_1)}{\partial x_2} = 0.
+  \end{align}
+
+  Using \eqref{eq:ch9:lie-bracket-coords}:
+  \begin{equation}
+    [X, Y] = \left( 0 - 1 \right) \frac{\partial}{\partial x_1} + \left( 0 - 0 \right) \frac{\partial}{\partial x_2}
+    = -\frac{\partial}{\partial x_1} = [1; 0].
+  \end{equation}
+
+  This new direction is independent of $X$ and $Y$, showing that two inputs can generate motion in a third direction
+  via iterated Lie brackets.
+\end{example}
+
 For the system \eqref{eq:ch9:control-affine}, the controllability condition (Hermann-Nagano, Chow's theorem)
 states that the system is (generically) controllable if the Lie algebra generated by $\{g_1, \ldots, g_m\}$
 and their iterated Lie brackets spans the entire tangent space at almost every point:
@@ -303,17 +556,69 @@ and their iterated Lie brackets spans the entire tangent space at almost every p
   having only 2 inputs and 4 degrees of freedom.
 \end{example}
 
-\subsection{Reachability and Accessibility Algebras}
+\subsection{Geodesic Spray and the Levi-Civita Connection}
 
-\index{Reachability}%
-The \textbf{accessibility algebra} at a point $q$ is the Lie algebra generated by the input fields:
+\index{Geodesic spray}%
+\index{Levi-Civita connection}%
+The drift field $f(q, \dot{q}) = -M(q)^{-1}(C(q,\dot{q})\dot{q} + \nabla V(q))$ on the tangent bundle $TQ$
+has a geometric interpretation via the Levi-Civita connection.
+
+The \textbf{geodesic spray} associated with the Riemannian metric $g = M$ is the second-order ODE on $TQ$ defined by
 \begin{equation}
-  \mathcal{L}(q) = \text{Lie-span}\{g_1(q), \ldots, g_m(q)\}.
+  \ddot{q}^k + \Gamma^k_{ij}(q) \dot{q}^i \dot{q}^j = 0,
+  \label{eq:ch9:geodesic-spray}
+\end{equation}
+where $\Gamma^k_{ij}$ are the Christoffel symbols. This describes motion along geodesics of the metric.
+
+In our constrained system with gravity, the equation of motion becomes
+\begin{equation}
+  \ddot{q}^k + \Gamma^k_{ij}(q) \dot{q}^i \dot{q}^j = -M^{-1}(q) \nabla V(q) + M^{-1}(q) B(q) u.
 \end{equation}
 
-The system is \textbf{controllable from state} $(q_0, \dot{q}_0)$ if the reachable set has non-empty interior.
-For affine systems with drift, local controllability is more subtle: the presence of a nonvanishing drift
-$f(q,\dot{q})$ may render a point unreachable in backward time.
+The drift field $f(q, \dot{q})$ encapsulates both the Christoffel symbols (geodesic curvature) and the gradient
+of the potential. This connection reveals that the Coriolis and centrifugal terms, though appearing as ``fictitious forces''
+in a coordinate-dependent view, are actually manifestations of the curvature of the configuration manifold with respect
+to the kinetic-energy metric \cite{BulloLewis2004}.
+
+\subsection{Input Distribution and Metric Orthogonal Complement}
+
+\index{Input distribution}%
+The \textbf{input distribution} is the span of the input fields:
+\begin{equation}
+  \Delta_{\text{input}}(q) := \text{span}\{g_1(q), \ldots, g_m(q)\}.
+\end{equation}
+
+The orthogonal complement with respect to the metric $M(q)$ is
+\begin{equation}
+  \Delta_{\text{input}}^{\perp_M}(q) := \{\mathbf{v} \in T_q Q : \mathbf{v}^\top M(q) g_i(q) = 0 \text{ for all } i = 1, \ldots, m\}.
+\end{equation}
+
+Physically, directions in $\Delta_{\text{input}}^{\perp_M}$ are ``expensive to actuate''---they require large inputs
+relative to the kinetic energy gained. In redundant manipulators, null-space motions are chosen to avoid high-cost
+directions.
+
+\subsection{Passivity and Energy Storage}
+
+\index{Passivity}%
+A mechanical system is \textbf{passive} if the power supplied by external forces equals the rate of change of
+stored energy (kinetic + potential):
+\begin{equation}
+  u^\top \tau_{\text{ext}} = \frac{d}{dt}(T + V),
+  \label{eq:ch9:passivity}
+\end{equation}
+where $u$ are control inputs (torques or forces) and $\tau_{\text{ext}}$ is the external wrench.
+
+Integrating over time:
+\begin{equation}
+  \int_0^t u(\sigma)^\top \tau_{\text{ext}}(\sigma) \, d\sigma = (T(t) + V(t)) - (T(0) + V(0)).
+\end{equation}
+
+For a golf swing, the golfer supplies energy through muscle activation. The swing is passive if the mechanical
+energy at ball contact equals the input energy minus losses (air resistance, grip friction). Energy-optimal swings
+minimize the input work subject to achieving a target ball velocity.
+
+Passivity-based control exploits this structure: by designing feedback laws that preserve or reduce total energy,
+we ensure stability without detailed knowledge of system parameters \cite{BulloLewis2004}.
 
 \section{Null Spaces, Redundancy, and Families of Solutions}
 \label{sec:ch9:null-space}
@@ -383,21 +688,87 @@ can be optimized separately.
 \subsection{Wrench Space and Constraint Wrench Space}
 
 \index{Wrench space}%
+\index{Constraint wrench space}%
 In the dual space (forces and moments), a \textbf{wrench} is an element of the cotangent space $T_q^* Q$.
-The \textbf{constraint wrench space} is the set of wrenches that do no work on the constraint manifold:
+A wrench can be written as $\mathbf{W} = \lambda \in \mathbb{R}^m$, where $\mathbf{W}^\top \mathbf{v}$ represents
+the power (work per unit time) exerted by the wrench in direction $\mathbf{v}$.
+
+The \textbf{wrench space} (all possible wrenches) is $\mathcal{W}_{\text{all}} = T_q^* Q \cong \mathbb{R}^m$.
+
+The \textbf{constraint wrench space} is the set of wrenches that do no work on velocities in the constraint manifold:
 \begin{equation}
-  \mathcal{W}_c = \{\mathbf{W} \in T_q^* Q : \mathbf{W}(\mathbf{v}) = 0 \text{ for all } \mathbf{v} \in T_q Q_c\}
+  \mathcal{W}_c = \{\mathbf{W} \in T_q^* Q : \mathbf{W}^\top \mathbf{v} = 0 \text{ for all } \mathbf{v} \in T_q Q_c\}
   = \text{range}(J_c(q)^\top).
+  \label{eq:ch9:constraint-wrench-space}
 \end{equation}
 
-Conversely, the \textbf{feasible wrench space} (wrenches that can move the system along the constraint manifold)
-is the orthogonal complement:
+These are the constraint reaction forces: forces normal to the constraint manifold that enforce the constraints.
+
+The dimension formula:
 \begin{equation}
-  \mathcal{W}_{\text{feas}} = (\mathcal{W}_c)^{\perp} = \ker(J_c(q)).
+  \dim(\mathcal{W}_c) = \text{rank}(J_c(q)^\top) = \text{rank}(J_c(q)) = c.
 \end{equation}
 
-In parallel robotics (Gosselin \& Angeles 1990, Yoshikawa 1985), understanding which wrenches can be
-applied without violating constraints is critical for grasp stability and force control.
+Conversely, the \textbf{feasible wrench space} (wrenches that can do work on the constraint manifold) is the
+orthogonal complement:
+\begin{equation}
+  \mathcal{W}_{\text{feas}} = (\mathcal{W}_c)^{\perp} = \ker(J_c(q)^\top),
+\end{equation}
+with dimension $\dim(\mathcal{W}_{\text{feas}}) = m - \text{rank}(J_c) = m - c = n_c$ (the dimension of the constraint manifold).
+
+\subsubsection{Minimum Muscle Stress Criterion}
+
+\index{Crowninshield-Brand criterion}%
+In biomechanics, the inverse problem is to determine muscle forces given kinematics. With $N$ muscles and fewer
+constraints (from joints), the problem is redundant: infinitely many muscle force combinations produce the same
+joint torques.
+
+The \textbf{Crowninshield \& Brand (1981)} criterion minimizes muscle stress (force per physiological cross-sectional area):
+\begin{equation}
+  \min_{f_m} \sum_i \frac{f_{m,i}}{A_i}^p,
+\end{equation}
+subject to
+\begin{equation}
+  \sum_i R_i f_{m,i} = \tau_j,
+\end{equation}
+where $f_{m,i}$ is the force in muscle $i$, $A_i$ is its cross-sectional area, $R_i$ is its moment arm, and
+$\tau_j$ are joint torques. The exponent $p$ (typically $p = 2$) emphasizes distributing load evenly across muscles.
+
+This is a convex quadratic program (if $p = 2$) that can be solved efficiently. The solution lies in the null space
+of the moment-arm matrix and represents a physiologically plausible distribution of muscle activations.
+
+\subsubsection{Optimal Null-Space Velocity for Torque Minimization}
+
+\index{Null-space optimization}%
+In a redundant manipulator with $m > n_c$ actuators, we seek to achieve a desired acceleration $\ddot{q}_d$
+while minimizing control effort (torque squared).
+
+The general solution is
+\begin{equation}
+  u = B^\dagger M(\ddot{q}_d - f) + (I - B^\dagger B) z,
+  \label{eq:ch9:control-general-redundant}
+\end{equation}
+where $B^\dagger$ is the pseudoinverse and $z \in \mathbb{R}^m$ is arbitrary (null-space component).
+
+To minimize $\|u\|^2 = \|B^\dagger M(\ddot{q}_d - f)\|^2 + \|(I - B^\dagger B) z\|^2$, we choose
+\begin{equation}
+  z^* = 0,
+\end{equation}
+giving the minimum-norm control.
+
+But we may also want to minimize joint torques or muscle activations, which is reflected in a weighted cost:
+\begin{equation}
+  \|u\|_W^2 = u^\top W u,
+\end{equation}
+where $W$ is a positive-definite weight matrix.
+
+The optimal null-space velocity is then
+\begin{equation}
+  z^* = -(I - B^\dagger B) \left( \frac{dW}{dq} \text{vec}(B^\dagger M(\ddot{q}_d - f)) \right),
+  \label{eq:ch9:optimal-null-space}
+\end{equation}
+a corrective term that minimizes the predicted cost gradient. This enables motion planning that optimizes
+over redundancy online.
 
 \section{Screw Theory, Lie Groups, and Rigid Body Motion}
 \label{sec:ch9:screw-theory}
@@ -447,11 +818,26 @@ a \textbf{transformed twist}:
 \end{equation}
 which in matrix form gives a new twist in the body frame.
 
+Explicitly, if $g = [R \, \mathbf{p}; 0 \, 1] \in SE(3)$ and $\hat{\xi} = [[\omega]_\times \, \mathbf{v}; 0 \, 0]$, then
+\begin{equation}
+  \text{Ad}_g(\hat{\xi}) = \begin{bmatrix} R[\omega]_\times R^\top & R\mathbf{v} \\ 0 & 0 \end{bmatrix},
+  \label{eq:ch9:adjoint-matrix}
+\end{equation}
+where the rotated angular velocity is $\omega' = R\omega$ and the transformed linear velocity is $\mathbf{v}' = R\mathbf{v} - [\mathbf{p}]_\times R\omega$.
+
 The \textbf{coadjoint action} acts on wrench space (dual to twists):
 \begin{equation}
   \text{Ad}^*_g(\mathbf{W}) = (g^{-\top}) \mathbf{W},
 \end{equation}
-where $\mathbf{W}$ is a wrench (element of the dual algebra $\mathfrak{se}^*(3)$).
+where $\mathbf{W}$ is a wrench (element of the dual algebra $\mathfrak{se}^*(3)$). In component form, if $\mathbf{W} = [\boldsymbol{\tau}; \mathbf{F}]$
+(torque and force), then
+\begin{equation}
+  \text{Ad}^*_g \begin{bmatrix} \boldsymbol{\tau} \\ \mathbf{F} \end{bmatrix} = \begin{bmatrix} R^\top(\boldsymbol{\tau} - \mathbf{p} \times \mathbf{F}) \\ R^\top \mathbf{F} \end{bmatrix}.
+  \label{eq:ch9:coadjoint-matrix}
+\end{equation}
+
+This transformation is essential when changing reference frames: if a wrench is applied at one point and we wish
+to express it at another, the coadjoint action computes the equivalent wrench at the new frame.
 
 \subsection{Poincaré Equations on SE(3)}
 
@@ -484,7 +870,59 @@ evolve as
 
 These are the generalized Euler equations for rigid body dynamics.
 
-\subsection{Loop Closure in Twist Space: Multi-Body Chains}
+\subsection{Worked Example: Golf Grip Constraint in Twist Space}
+
+\index{Golf swing!grip constraint}%
+Consider a golfer gripping a club with both hands. Let the left hand contact the club at point $p_L$ and the right
+hand at point $p_R$. The constraint is that both hands must hold the club without slipping, so their velocities
+must equal the club's velocity at those points.
+
+In twist space, the constraint Jacobian relates joint velocities to the twists of each contact point:
+\begin{equation}
+  J_{\text{left}} \dot{q}_{\text{left}} = \xi_{\text{club}} |_{p_L}, \quad J_{\text{right}} \dot{q}_{\text{right}} = \xi_{\text{club}} |_{p_R}.
+\end{equation}
+
+Eliminating $\xi_{\text{club}}$ (by requiring both equal the same club twist), we get a bilateral constraint:
+\begin{equation}
+  J_{\text{left}} \dot{q}_{\text{left}} = J_{\text{right}} \dot{q}_{\text{right}},
+\end{equation}
+or equivalently,
+\begin{equation}
+  [J_{\text{left}}, -J_{\text{right}}] \begin{bmatrix} \dot{q}_{\text{left}} \\ \dot{q}_{\text{right}} \end{bmatrix} = 0.
+\end{equation}
+
+The constraint Jacobian is $J_c = [J_{\text{left}}, -J_{\text{right}}] \in \mathbb{R}^{6 \times (n_L + n_R)}$.
+
+The null space of $J_c$ parameterizes motions compatible with the grip: two arms moving in tandem while maintaining
+contact. Any griping motion must lie in $\ker(J_c)$.
+
+The constraint wrench space (reaction forces at the grip) is $\text{range}(J_c^\top)$. These are the forces and
+torques the club exerts on the hands, which must be balanced by muscle forces in the arms.
+
+\subsection{Grassmann Geometry and Singularities}
+
+\index{Grassmann variety}%
+\index{Singularity!Grassmann}%
+The Grassmann variety $\text{Gr}(k, 6)$ is the space of $k$-dimensional linear subspaces of $\mathbb{R}^6$ (the twist space).
+A set of $k$ joint screws (twist generators) span a $k$-dimensional subspace; the Grassmann variety parameterizes
+all possible such subspaces.
+
+For a parallel mechanism with $k$ joint screws $\xi_1, \ldots, \xi_k$, the Grassmann point is
+\begin{equation}
+  \Pi = \text{span}\{\xi_1, \ldots, \xi_k\} \in \text{Gr}(k, 6).
+\end{equation}
+
+A singularity occurs when this Grassmann point reaches a location where the screws become linearly dependent.
+More precisely, at a singular configuration, the $k$ screws no longer span a $k$-dimensional subspace:
+\begin{equation}
+  \text{rank}([\xi_1, \ldots, \xi_k]) < k.
+\end{equation}
+
+The set of singular configurations forms a codimension-1 subvariety of the Grassmann variety (generically).
+
+For the golf swing, singularities occur when the two arms align (both arms vertical, for example), making it impossible
+to separately control the arm configuration while maintaining a grip. Near singularities, the Jacobian becomes
+ill-conditioned, requiring large forces or torques to move the club.
 
 \index{Loop closure}%
 In a closed-loop kinematic chain (e.g., a parallel mechanism or a multi-loop robot), the constraint
@@ -570,13 +1008,56 @@ where $\lambda_q$ and $\lambda_{\dot{q}}$ are costates (Lagrange multipliers for
 \subsection{Switching Functions and Singular Arcs}
 
 \index{Singular arc}%
+\index{Switching function}%
 When the control appears linearly in the Hamiltonian, i.e., $H = H_0 + (G(q)^\top \lambda_{\dot{q}})^\top u$,
 the optimal control law is bang-bang (at the boundary of $\mathcal{U}$) unless the \textbf{switching function}
 \begin{equation}
-  \phi_{\text{switch}}(t) = G(q(t))^\top \lambda_{\dot{q}}(t)
+  \phi_i(t) := G_i(q(t))^\top \lambda_{\dot{q}}(t) = \frac{\partial H}{\partial u_i}
+  \label{eq:ch9:switching-function}
 \end{equation}
-vanishes over an interval. When $\phi_{\text{switch}} = 0$, the control is \textbf{singular}: it is determined
-not by minimization but by the constraint $\phi_{\text{switch}} = 0$ and its time derivatives.
+vanishes over an interval. When $\phi_i \ne 0$, the optimal control is
+\begin{equation}
+  u_i^* = \begin{cases} u_{\max} & \text{if } \phi_i(t) > 0, \\ u_{\min} & \text{if } \phi_i(t) < 0, \end{cases}
+\end{equation}
+corresponding to maximum (or minimum) control effort in that direction.
+
+When $\phi_i(t) = 0$ over a time interval, the control is \textbf{singular}: it is determined not by minimization
+but by maintaining the constraint $\phi_i = 0$. The singular control is found by requiring that $\dot{\phi}_i = 0$,
+$\ddot{\phi}_i = 0$, etc., until $u$ appears explicitly.
+
+For a golf swing, bang-bang control would correspond to muscles either fully contracted or fully relaxed at each instant.
+Biological evidence suggests that actual swings use \emph{smooth} control profiles, with muscle activation varying
+continuously. This indicates either (1) a different cost function (not time-optimal), or (2) constraints on the
+rate of muscle force change (not instantaneous activation).
+
+\subsection{Quadratic Cost and Optimal Control}
+
+For a quadratic cost functional
+\begin{equation}
+  J = \int_0^T \left( \|q(t) - q_d\|_Q^2 + \|u(t)\|_R^2 \right) dt,
+\end{equation}
+where $Q$ is a state weight and $R$ is a control weight, the Hamiltonian becomes
+\begin{equation}
+  H = \|q - q_d\|_Q^2 + \|u\|_R^2 + \lambda_q^\top \dot{q} + \lambda_{\dot{q}}^\top(f(q,\dot{q}) + G(q)u).
+\end{equation}
+
+The optimal control minimizes $H$ with respect to $u$:
+\begin{equation}
+  \frac{\partial H}{\partial u} = 2R u + G(q)^\top \lambda_{\dot{q}} = 0,
+\end{equation}
+giving
+\begin{equation}
+  u^* = -\frac{1}{2} R^{-1} G(q)^\top \lambda_{\dot{q}}.
+  \label{eq:ch9:optimal-control-quadratic}
+\end{equation}
+
+This is a linear feedback law in terms of the costate. For a golf swing with bounded actuation (e.g., $u_i \in [0, 1]$
+for muscle activation), the control clips at the boundaries:
+\begin{equation}
+  u_i^* = \text{clip}\left[ -\frac{1}{2} (R^{-1} G^\top \lambda_{\dot{q}})_i, 0, 1 \right],
+  \label{eq:ch9:clipped-control}
+\end{equation}
+a mixed bang-singular control.
 
 \subsection{Hamilton-Jacobi-Bellman Equation}
 
@@ -590,11 +1071,48 @@ the HJB equation:
 \end{equation}
 with boundary condition $V(q, \dot{q}, T) = \phi(q)$.
 
+The HJB equation is a nonlinear first-order PDE. Its solution encodes the optimal control law everywhere in state space:
+\begin{equation}
+  u^*(q, \dot{q}, t) = \arg\min_u \left[ \ell(q,\dot{q},u) + \frac{\partial V}{\partial \dot{q}}^\top G(q)u \right].
+\end{equation}
+
 For systems without explicit time dependence, the steady-state HJB is
 \begin{equation}
   0 = \min_u \left[ \ell(q,\dot{q},u) + \frac{\partial V}{\partial q}^\top \dot{q}
   + \frac{\partial V}{\partial \dot{q}}^\top(f + Gu) \right].
 \end{equation}
+
+\subsubsection{Curse of Dimensionality}
+
+The HJB equation must be solved over the full state space $(q, \dot{q})$. For a human golf swing:
+\begin{itemize}
+  \item Configuration space: $q$ has dimension $n \approx 14$ (7 joint angles per arm + torso).
+  \item Tangent bundle: $(q, \dot{q})$ has dimension $2n \approx 28$.
+  \item Discretization: If we discretize each dimension with 10 grid points, we have $10^{28}$ grid cells---computationally intractable.
+\end{itemize}
+
+This is the \textbf{curse of dimensionality}: the number of grid points grows exponentially with state dimension.
+Direct numerical solution of HJB is thus infeasible for high-dimensional systems.
+
+\subsubsection{Approximate Methods}
+
+To overcome this limitation:
+\begin{enumerate}
+  \item \textbf{iLQR/DDP} (Iterative Linear-Quadratic Regulator / Differential Dynamic Programming): Linearize
+  dynamics around a nominal trajectory and solve a sequence of finite-horizon, quadratic approximations.
+  This is tractable even for 28-dimensional systems.
+
+  \item \textbf{Value Iteration with Basis Functions}: Approximate $V(q, \dot{q}) \approx \sum_k w_k \phi_k(q, \dot{q})$
+  using learned basis functions (e.g., radial basis functions or neural networks). The HJB equation becomes
+  a regression problem.
+
+  \item \textbf{Policy Search}: Parameterize the control law $u = \pi(q, \dot{q}; \theta)$ with parameters $\theta$,
+  and optimize directly over $\theta$ using gradient descent or evolutionary strategies.
+\end{enumerate}
+
+For biomechanics, evidence suggests that humans do not solve the global optimization problem online. Rather,
+the nervous system likely uses learned inverse models (neural networks) or heuristic strategies (e.g., minimizing
+energy or jerk) that approximate the optimal solution.
 
 \subsection{iLQR and Trajectory Optimization}
 
@@ -623,7 +1141,8 @@ dynamics and the cost gradient onto the constraint manifold.
 \subsection{Observability Rank Condition}
 
 \index{Observability}%
-A system is \textbf{observable from state}$(q, \dot{q})$ with measurements $y = h(q, \dot{q})$ if
+\index{Observability rank matrix}%
+A system is \textbf{observable from state} $(q, \dot{q})$ with measurements $y = h(q, \dot{q})$ if
 the mapping from initial states to output trajectories is injective. The observable subspace
 can be characterized via the \textbf{observability rank condition} (Hermann \& Krener 1977).
 
@@ -631,15 +1150,27 @@ For a control-affine system
 \begin{equation}
   \dot{\mathbf{x}} = f(\mathbf{x}) + G(\mathbf{x})u, \quad y = h(\mathbf{x}),
 \end{equation}
-define the observability codistribution:
+define the observability rank matrix
+\begin{equation}
+  \mathcal{O}(\mathbf{x}) = \begin{bmatrix}
+    \frac{\partial h}{\partial \mathbf{x}} \\
+    \frac{\partial (L_f h)}{\partial \mathbf{x}} \\
+    \frac{\partial (L_f^2 h)}{\partial \mathbf{x}} \\
+    \vdots
+  \end{bmatrix},
+  \label{eq:ch9:observability-matrix}
+\end{equation}
+where $L_f h$ is the Lie derivative (directional derivative along $f$): $L_f h = \frac{\partial h}{\partial \mathbf{x}} f(\mathbf{x})$.
+
+Equivalently, define the observability codistribution:
 \begin{equation}
   d\mathcal{O} = \text{span}\{dh, L_f dh, L_f^2 dh, \ldots, L_f^{n-1} dh, L_{g_i} dh, L_{g_i} L_f dh, \ldots\},
 \end{equation}
 where $L_X dh$ is the Lie derivative of the differential form $dh$ along vector field $X$.
 
 \begin{proposition}[Observability from Measurements]\label{prop:observability}
-  If the observability codistribution $d\mathcal{O}$ has full rank at all points (i.e., rank $n$),
-  then the system is (generically) locally observable.
+  If the observability rank matrix $\mathcal{O}(\mathbf{x})$ has full rank (rank $n$) at all points
+  or on an open dense set, then the system is (generically) locally observable.
 \end{proposition}
 
 \subsection{Drift Force Observability in Mechanical Systems}
@@ -672,21 +1203,55 @@ where $L_X dh$ is the Lie derivative of the differential form $dh$ along vector 
 
 \subsection{Identifiability Ambiguity and the Observable Subspace}
 
+\index{Identifiability}%
+\index{Ambiguity set}%
 In practice, we may not measure all components of $(q,\dot{q})$. If measurements are $y = h(q, \dot{q})$,
 then only the observable subspace is identifiable:
 \begin{equation}
   \mathcal{O}_{\text{obs}} = \ker(d\mathcal{O})^{\perp}.
 \end{equation}
 
-For biomechanical systems, the unobservable subspace typically includes internal muscle activations
-and muscle-tendon parameters. This is why we must resolve identifiability via:
+States in the unobservable subspace $\ker(d\mathcal{O})$ produce identical measurement trajectories.
+The \textbf{ambiguity set} at state $\mathbf{x}_0$ is an affine subspace:
+\begin{equation}
+  \mathcal{A}(\mathbf{x}_0) = \{\mathbf{x}_0 + \mathbf{v} : \mathbf{v} \in \ker(d\mathcal{O}(\mathbf{x}_0))\},
+\end{equation}
+a coset of the null space. All points in this set are indistinguishable from measurements alone.
+
+For biomechanical systems in gait analysis, the measurements typically include:
 \begin{itemize}
-  \item \textbf{Electromyography (EMG)}: Direct measurement of muscle electrical activity, which
-  correlates with muscle force (though nonlinearly).
-  \item \textbf{Optimization criteria}: e.g., minimization of metabolic cost or muscle fatigue
-  (Crowninshield \& Brand 1981, Todorov \& Jordan 2002).
-  \item \textbf{Instrumented equipment}: Force plates, pressure sensors, inertial measurement units.
+  \item Joint angles $(q)$ from motion capture.
+  \item Joint angular velocities $(\dot{q})$ from pose derivatives.
+  \item Ground reaction forces (from force plates).
+  \item (Optionally) EMG from muscles.
 \end{itemize}
+
+The unobservable subspace typically includes internal muscle activations and muscle-tendon parameters (force-length
+and force-velocity relationships). Different muscle activation patterns can produce the same motion and GRF,
+creating ambiguity.
+
+This identifiability problem is resolved via:
+\begin{enumerate}
+  \item \textbf{Electromyography (EMG)}: Direct measurement of muscle electrical activity. EMG correlates with muscle force
+  (though nonlinearly, with a temporal delay ~50 ms), providing additional observational data. Integration over
+  time gives muscle activation (a control input), which constrains the null-space ambiguity.
+
+  \item \textbf{Optimization criteria}: In the absence of EMG, assume the nervous system optimizes a physiological criterion.
+  Common choices:
+  \begin{itemize}
+    \item \textbf{Minimum effort}: Minimize $\sum_i u_i^2$ (control effort).
+    \item \textbf{Minimum metabolic cost}: Minimize $\sum_i C_i(u_i)$ where $C_i$ is the metabolic cost of muscle $i$
+    \cite{Zajac1989}.
+    \item \textbf{Minimum fatigue}: Minimize $\sum_i u_i^p / A_i$ (muscle stress), as in the Crowninshield \& Brand criterion
+    \cite{CrowninshieldBrand1981}.
+  \end{itemize}
+
+  \item \textbf{Instrumented equipment}: Pressure sensors in shoes, inertial measurement units (IMUs), and wireless
+  EMG systems provide additional measurements that constrain the unobservable subspace.
+\end{enumerate}
+
+The choice of optimization criterion strongly influences the predicted muscle activations. Biomechanical analyses
+often compare predictions from different criteria to test physiological plausibility \cite{TodorovJordan2002}.
 
 \section{Ground Reaction Forces and Lower-Body Parallel Mechanisms}
 \label{sec:ch9:grf}
@@ -695,26 +1260,131 @@ and muscle-tendon parameters. This is why we must resolve identifiability via:
 
 \index{Ground reaction force}%
 \index{GRF}%
+\index{Parallel mechanism!lower body}%
 The human (or biped) lower body can be viewed as a parallel mechanism: two legs, each a serial chain,
 meeting at the pelvis and terminating in feet on the ground. When both feet are in contact, the system
 becomes constrained.
 
 The unconstrained DOF of each leg is 7 (3 DOF hip, 1 DOF knee, 3 DOF ankle). For both legs:
 \begin{equation}
-  \text{Total DOF} = 2 \times 7 = 14.
+  \text{Total DOF}_{\text{free}} = 2 \times 7 = 14.
 \end{equation}
 
-Constraints imposed by bilateral ground contact include:
+When one foot is in contact with the ground (single-leg stance), the foot position and orientation are fixed relative
+to the ground, imposing 6 constraints (3 translational + 3 rotational). Thus:
+\begin{equation}
+  \text{DOF}_{\text{single-leg}} = 14 - 6 = 8,
+\end{equation}
+distributed as: 6 DOF for the pelvis/torso and 2 DOF for the free leg (internal configuration).
+
+When both feet are in bilateral ground contact, we have additional constraints:
 \begin{itemize}
-  \item \textbf{Vertical position}: Each foot contact point has zero vertical velocity: $2 \times 1 = 2$ constraints.
-  \item \textbf{Horizontal position (no slip)}: Each foot has zero horizontal velocity: $2 \times 2 = 4$ constraints
-  (assumes sufficient friction).
-  \item \textbf{Rigid-body constraint on pelvis}: The pelvis position and orientation are determined
-  by the feet: $3$ translational + $3$ rotational = $6$ DOF are consumed.
+  \item \textbf{Foot-ground contact}: Each foot contact point has zero velocity (no penetration, no slip):
+  $2 \times 3 = 6$ translational constraints.
+  \item \textbf{Foot orientation}: If we assume feet remain flat and parallel to the ground, each foot has
+  3 constraints on rotation: $2 \times 3 = 6$ rotational constraints.
 \end{itemize}
 
-With ~10 constraints, the effective DOF of the pelvis under bilateral contact is approximately $6$ DOF,
-and the remaining leg DOF are ~4 (2 per leg for internal joint angles compatible with the pelvis pose).
+However, when both feet are on the ground, the feet may not be independently aligned (e.g., they share the ground plane).
+The actual number of independent constraints for bilateral contact is typically:
+\begin{equation}
+  \text{Constraints}_{\text{bilateral}} \approx 6 + 6 = 12.
+\end{equation}
+
+Thus:
+\begin{equation}
+  \text{DOF}_{\text{bilateral}} = 14 - 12 = 2,
+\end{equation}
+leaving approximately 2 DOF for the system (e.g., height of the pelvis and one internal leg angle), though this
+depends on foot geometry and friction assumptions.
+
+\subsection{Force Plate Measurements and Wrench Decomposition}
+
+\index{Force plate}%
+A force plate mounted under the ground measures the reaction wrench at the contact surface. The six components are:
+\begin{align}
+  F_x, F_y &: \text{Horizontal forces (anterior-posterior and medial-lateral)}, \\
+  F_z &: \text{Vertical normal force}, \\
+  M_x, M_y, M_z &: \text{Moments (torques)} \text{ about the x, y, z axes}.
+\end{align}
+
+Additionally, the force plate provides:
+\begin{equation}
+  \text{COP} = (\text{COP}_x, \text{COP}_y) := \left( \frac{M_y}{F_z}, -\frac{M_x}{F_z} \right),
+\end{equation}
+the center of pressure (the location on the ground where a single equivalent force acts). This is computed from
+the moments assuming all forces act through a single point on the ground surface.
+
+\subsection{Sequential Inverse Dynamics Computation}
+
+\index{Inverse dynamics!sequential}%
+Given measured kinematics $(q(t), \dot{q}(t), \ddot{q}(t))$ and GRF $\mathbf{W}_{\text{grf}}$, the inverse dynamics
+computes joint torques using a backward recursion from the foot to the hip.
+
+\subsubsection{Newton-Euler Recursion}
+
+For each link $i$ (starting from the end-effector at the foot):
+\begin{enumerate}
+  \item Compute the acceleration of the link's center of mass:
+  \begin{equation}
+    \mathbf{a}_{i,\text{cm}} = \mathbf{a}_{i} + \boldsymbol{\alpha}_{i} \times \mathbf{r}_{i,\text{cm}} - \boldsymbol{\omega}_{i} \times (\boldsymbol{\omega}_{i} \times \mathbf{r}_{i,\text{cm}}),
+  \end{equation}
+  where $\mathbf{a}_i$ and $\boldsymbol{\alpha}_i$ are the linear and angular acceleration of link $i$, $\mathbf{r}_{i,\text{cm}}$
+  is the position of the center of mass relative to the joint, and $\boldsymbol{\omega}_i$ is angular velocity.
+
+  \item Compute the force and moment at link $i$:
+  \begin{align}
+    \mathbf{f}_i &= \mathbf{f}_{i+1} + m_i \mathbf{a}_{i,\text{cm}}, \label{eq:ch9:force-recursion} \\
+    \boldsymbol{\tau}_i &= \boldsymbol{\tau}_{i+1} + \mathbf{r}_{i,\text{cm}} \times \mathbf{f}_i + I_i \boldsymbol{\alpha}_i + \boldsymbol{\omega}_i \times (I_i \boldsymbol{\omega}_i),
+  \end{align}
+  where $m_i$ is the link mass, $I_i$ is the inertia tensor, and the last term is the gyroscopic effect.
+
+  \item Extract the joint torque as the component along the joint axis:
+  \begin{equation}
+    \tau_i = \boldsymbol{\tau}_i \cdot \hat{e}_i,
+  \end{equation}
+  where $\hat{e}_i$ is the unit vector along the joint axis.
+\end{enumerate}
+
+The boundary condition at the foot is the measured GRF: $\mathbf{f}_{\text{foot}} = \mathbf{F}_{\text{grf}}$ and
+$\boldsymbol{\tau}_{\text{foot}} = \mathbf{M}_{\text{grf}}$ (or computed from the COP).
+
+This backward recursion is efficient ($O(n)$ complexity) and does not require matrix inversion, in contrast to
+forward dynamics.
+
+\subsection{Kinetic Energy Partition and Power Balance}
+
+\index{Power balance}%
+\index{Mechanical work}%
+The total kinetic energy of the lower body is partitioned among links:
+\begin{equation}
+  T_{\text{total}} = T_{\text{pelvis}} + T_{\text{left-leg}} + T_{\text{right-leg}} + \ldots
+\end{equation}
+
+Each link contributes:
+\begin{equation}
+  T_i = \frac{1}{2} m_i v_{i,\text{cm}}^2 + \frac{1}{2} \boldsymbol{\omega}_i^\top I_i \boldsymbol{\omega}_i.
+\end{equation}
+
+The mechanical power delivered by the ground at each contact point is:
+\begin{equation}
+  P_{\text{grf}} = \mathbf{F}_{\text{grf}} \cdot \mathbf{v}_{\text{contact}} + \mathbf{M}_{\text{grf}} \cdot \boldsymbol{\omega}_{\text{foot}}.
+\end{equation}
+
+For a stationary foot (no slipping, $\mathbf{v}_{\text{contact}} = 0$), the power is purely rotational:
+\begin{equation}
+  P_{\text{grf}} = \mathbf{M}_{\text{grf}} \cdot \boldsymbol{\omega}_{\text{foot}}.
+  \label{eq:ch9:ground-torque-power}
+\end{equation}
+
+This ground torque power is often overlooked in simplified models but is essential for accurate energy accounting:
+it represents rotational energy supplied by the ground, critical for activities like cutting or rapid direction changes.
+
+The power balance (without friction losses) is:
+\begin{equation}
+  P_{\text{grf}} + P_{\text{muscles}} = \frac{d}{dt}(T_{\text{total}} + V_{\text{total}}),
+\end{equation}
+where $P_{\text{muscles}} = \sum_j \tau_j \dot{q}_j$ is the mechanical power generated by muscles at each joint.
 
 \subsection{Ground Wrench Decomposition}
 
@@ -796,6 +1466,7 @@ of external torques.
 
 \index{Momentum map}%
 \index{Inertia tensor!locked}%
+\index{Noether's theorem}%
 If we ``lock'' the shape variables (i.e., hold $q_{\text{shape}}$ fixed), the kinetic energy in the group
 direction defines the \textbf{locked inertia tensor} $I_{\text{locked}}(q_{\text{shape}})$.
 
@@ -810,28 +1481,67 @@ under $G$-action, Noether's theorem implies that the momentum map is conserved a
 
 \index{Geometric phase}%
 \index{Holonomy}%
+\index{Berry phase}%
 Consider a system that undergoes a cyclic shape change: $q_{\text{shape}}(0) = q_{\text{shape}}(T)$ but
 the group variable changes by $g(T) \ne \text{id}$. The change in group variable is the \textbf{geometric phase}
-(also called Berry phase or Hannay angle, Berry 1984, Hannay 1985, Shapere \& Wilczek 1989).
+(also called Berry phase or Hannay angle, after Berry (1984) and Hannay (1985); see also Shapere \& Wilczek (1989)).
 
 \begin{example}[Geometric Phase in a Golf Swing]
-  A golfer swinging both arms (shape change) rotates the torso relative to the pelvis (group change).
-  Even without external torques, the asymmetry of arm motion produces a net rotation. This is a geometric
-  phase effect: certain shape changes generate rotation.
+  A golfer swinging both arms (shape change) in a coordinated pattern rotates the torso relative to the pelvis
+  (group change). Even without external torques (conserving total angular momentum), the asymmetry and sequencing
+  of arm motion produces a net rotation. This is a geometric phase effect: certain shape changes generate rotation.
+
+  Specifically, if the golfer:
+  \begin{enumerate}
+    \item Raises the left arm (rotates about the shoulder).
+    \item Lowers the left arm while raising the right arm.
+    \item Lowers the right arm.
+    \item (Returns to initial shape, but torso has rotated.)
+  \end{enumerate}
+
+  The sequence matters: a different order of arm raises produces a different net torso rotation. This is purely
+  geometric (due to the Lie group structure), not from any external torque.
 
   The rate of accumulation of geometric phase is proportional to the area enclosed by the shape trajectory
-  in the shape space, weighted by the locked inertia tensor.
+  in the shape space, weighted by the inverse locked inertia tensor: $\Delta\phi \propto \oint A(q_{\text{shape}}) \cdot dq_{\text{shape}}$.
 \end{example}
 
-The curvature of the mechanical connection quantifies how much geometric phase accumulates per unit area
-of shape trajectory. The curvature form $\Omega \in \Omega^2(Q/G, \mathfrak{g})$ is related to the second
-derivatives of the locked inertia:
+\subsubsection{Mechanical Connection and Berry Phase Formula}
+
+The \textbf{mechanical connection} is the projection $A(q, \dot{q}): TQ \to \mathfrak{g}$ that decomposes velocities into
+shape and group parts. It is defined via the locked inertia:
 \begin{equation}
-  \Omega = \text{(connection-form curvature)}.
+  A(q_{\text{shape}}, \dot{q}_{\text{shape}}) := I_{\text{locked}}(q_{\text{shape}})^{-1} J_G(q_{\text{shape}}, \dot{q}_{\text{shape}}),
+  \label{eq:ch9:mechanical-connection}
+\end{equation}
+where $J_G$ is the momentum map (extracts the group-direction component of momentum from shape changes).
+
+The accumulated geometric phase along a closed curve in shape space is given by:
+\begin{equation}
+  \Delta \phi = \oint A(q_{\text{shape}}) \cdot dq_{\text{shape}} = \int_{\text{interior}} F(q_{\text{shape}}) \, dA,
+  \label{eq:ch9:berry-phase-formula}
+\end{equation}
+where $F$ is the curvature 2-form (the exterior derivative of $A$), and the second integral is over the surface
+bounded by the closed curve.
+
+\subsubsection{Grassmann Geometry and Manipulability}
+
+\index{Manipulability!measure}%
+The \textbf{manipulability measure} of a Jacobian $J(q)$ quantifies how well the system can apply forces in all
+directions:
+\begin{equation}
+  w(q) = \sqrt{\det(J(q) J(q)^\top)}.
+  \label{eq:ch9:manipulability}
 \end{equation}
 
-For control design, this means that to accumulate rotation in a desired direction, one must plan shape
-changes that sweep the appropriate area in shape space.
+High manipulability indicates that the Jacobian has full rank and is well-conditioned; low manipulability indicates
+near-singularity.
+
+The connection to curvature: manipulability is related to the volume element in the Grassmann variety. When the
+joint screws are nearly parallel (low manipulability), the curvature of the mechanical connection becomes large,
+meaning the geometric phase changes rapidly with shape variations. This suggests that near singularities, small
+shape changes produce large rotational effects---a useful property for certain tasks (like rapid reorientation)
+but problematic for precise control.
 
 \section{Numerical Methods and Implementation}
 \label{sec:ch9:numerics}
@@ -840,55 +1550,135 @@ changes that sweep the appropriate area in shape space.
 
 \index{SHAKE}%
 \index{RATTLE}%
+\index{Constraint-preserving integrator}%
 For systems with holonomic constraints, the most commonly used constraint-preserving integrators are:
 
-\begin{enumerate}
-  \item \textbf{SHAKE} (Ryckaert et al. 1977): A position-level constraint solver that uses iterative
-  Lagrange multiplier updates:
-  \begin{equation}
-    q_{n+1} = q_n + \Delta t \, \dot{q}_{n+1/2} + \frac{\Delta t^2}{2m^{-1}} F_n - \frac{\Delta t^2}{2} J_c(q_n)^\top \lambda_n,
-  \end{equation}
-  and then solves $\Phi(q_{n+1}) = 0$ iteratively for $\lambda_n$.
+\subsubsection{SHAKE Algorithm}
 
-  \item \textbf{RATTLE} (Andersen 1983): A velocity-level constraint solver that preserves both
-  position and velocity constraints, leading to better energy conservation and stability.
+\textbf{SHAKE} (Ryckaert et al. 1977) is a position-level constraint solver that uses iterative Lagrange
+multiplier updates. The algorithm:
+\begin{enumerate}
+  \item Predict position: $q_{n+1}^{\text{pred}} = q_n + \Delta t \, \dot{q}_n + \frac{\Delta t^2}{2} M(q_n)^{-1} F(q_n, \dot{q}_n)$.
+  \item Correct for constraints iteratively:
+  \begin{equation}
+    q_{n+1}^{(k+1)} = q_{n+1}^{(k)} - J_c(q_{n+1}^{(k)})^\top (J_c(q_{n+1}^{(k)}) J_c(q_{n+1}^{(k)})^\top)^{-1} \Phi(q_{n+1}^{(k)}),
+    \label{eq:ch9:shake-update}
+  \end{equation}
+  repeating until $\|\Phi(q_{n+1}^{(k)})\| < \epsilon_{\text{tol}}$ (constraint violation is small).
+  \item Compute velocities: $\dot{q}_{n+1} = \frac{q_{n+1} - q_n}{\Delta t}$.
 \end{enumerate}
 
-Both methods require solving linear systems with the constraint Jacobian, which can be accelerated using
-direct solvers (Cholesky, LU) or iterative solvers (Krylov methods) depending on the sparsity pattern.
+Advantages: Simple to implement, preserves constraint manifold up to numerical precision.
+Disadvantages: Velocity constraint ($J_c \dot{q} = 0$) is not explicitly enforced, leading to potential velocity drift.
+
+\subsubsection{RATTLE Algorithm}
+
+\textbf{RATTLE} (Andersen 1983) augments SHAKE by also enforcing the velocity constraint. The algorithm:
+\begin{enumerate}
+  \item Predict position: $q_{n+1}^{\text{pred}} = q_n + \Delta t \, \dot{q}_n + \frac{\Delta t^2}{2} M(q_n)^{-1} F_n$.
+  \item Correct position (same as SHAKE) until $\Phi(q_{n+1}) \approx 0$.
+  \item Predict velocity: $\dot{q}_{n+1}^{\text{pred}} = \dot{q}_n + \Delta t \, M(q_n)^{-1} (F_n + J_c(q_{n+1})^\top \lambda_n)$.
+  \item Correct velocity:
+  \begin{equation}
+    \dot{q}_{n+1} = \dot{q}_{n+1}^{\text{pred}} - J_c(q_{n+1})^\top (J_c(q_{n+1}) M(q_{n+1})^{-1} J_c(q_{n+1})^\top)^{-1}
+    J_c(q_{n+1}) \dot{q}_{n+1}^{\text{pred}},
+  \end{equation}
+  ensuring $J_c(q_{n+1}) \dot{q}_{n+1} = 0$.
+\end{enumerate}
+
+Advantages: Preserves both position and velocity constraints; superior energy conservation.
+Disadvantages: More expensive (requires solving two linear systems per step).
+
+Both methods require solving linear systems with the constraint Jacobian, which can be accelerated using:
+\begin{itemize}
+  \item \textbf{Direct solvers} (Cholesky, LU): Fast for dense or well-structured matrices.
+  \item \textbf{Iterative solvers} (Conjugate Gradient, GMRES, Krylov methods): Efficient for sparse matrices.
+\end{itemize}
 
 \subsection{SVD for Null-Space Projection}
 
 \index{SVD!null space}%
-To project accelerations onto the constraint manifold, compute the singular value decomposition:
+To project accelerations onto the constraint manifold, compute the singular value decomposition (SVD):
 \begin{equation}
   J_c(q) = U \Sigma V^\top,
+  \label{eq:ch9:svd-jc}
 \end{equation}
-where $\Sigma$ is diagonal with singular values $\sigma_1 \ge \sigma_2 \ge \cdots$. The null-space projector is
-\begin{equation}
-  P_{\ker(J_c)} = I - V_{1:c} V_{1:c}^\top,
-\end{equation}
-where $V_{1:c}$ are the first $c$ columns of $V$ (corresponding to non-zero singular values).
+where $U \in \mathbb{R}^{c \times c}$ and $V \in \mathbb{R}^{n \times n}$ are orthogonal matrices, and $\Sigma \in \mathbb{R}^{c \times n}$
+is diagonal with singular values $\sigma_1 \ge \sigma_2 \ge \cdots \ge \sigma_c > 0$.
 
-Projecting an acceleration: $\ddot{q}_{\text{proj}} = P_{\ker(J_c)} \ddot{q}$ ensures the result lies in
-the constraint manifold.
+The columns of $V$ can be partitioned as $V = [V_{\text{range}}, V_{\text{null}}]$:
+\begin{itemize}
+  \item $V_{\text{range}} = V_{:,1:c}$: The first $c$ columns (corresponding to non-zero singular values).
+  These span the range of $J_c^\top$, i.e., directions that increase constraint violation.
+  \item $V_{\text{null}} = V_{:,c+1:n}$: The last $n - c$ columns (corresponding to zero singular values).
+  These span the null space $\ker(J_c)$, i.e., directions that preserve constraints.
+\end{itemize}
+
+The null-space projector is:
+\begin{equation}
+  P_{\ker(J_c)} = V_{\text{null}} V_{\text{null}}^\top = I - V_{\text{range}} V_{\text{range}}^\top.
+  \label{eq:ch9:null-projector}
+\end{equation}
+
+To project an acceleration onto the constraint manifold:
+\begin{equation}
+  \ddot{q}_{\text{proj}} = P_{\ker(J_c)} \ddot{q} = (I - V_{\text{range}} V_{\text{range}}^\top) \ddot{q},
+\end{equation}
+ensuring $J_c(q) \ddot{q}_{\text{proj}} = 0$ (acceleration constraint is satisfied).
+
+The SVD is numerically stable and does not require matrix inversion. For large-scale systems, sparse SVD
+algorithms (using Krylov subspace methods) can accelerate computation. The SVD also naturally reveals the
+rank of $J_c$ via the number of large singular values; if $\sigma_c$ is small, $J_c$ is nearly rank-deficient,
+indicating proximity to a singularity.
 
 \subsection{Berry Phase Computation}
 
 \index{Berry phase!computation}%
+\index{Line integral!connection form}%
 To compute the net geometric phase accumulated over a shape trajectory $q_{\text{shape}}(s)$ for $s \in [0,1]$,
 we use the formula (Shapere \& Wilczek 1989):
 \begin{equation}
   \theta_{\text{geometric}} = \oint \mathbf{A}(q_{\text{shape}}) \cdot dq_{\text{shape}},
+  \label{eq:ch9:berry-phase-line-integral}
 \end{equation}
-where $\mathbf{A}$ is the connection form (related to the locked inertia tensor gradients).
+where $\mathbf{A}$ is the connection form. By Stokes' theorem, this equals
+\begin{equation}
+  \theta_{\text{geometric}} = \int_{\text{Surface}} (\text{curl} \, \mathbf{A}) \, dA = \int_{\text{Surface}} \Omega \, dA,
+\end{equation}
+where $\Omega = d\mathbf{A}$ is the curvature 2-form.
 
-Numerically:
+The mechanical connection relates to the locked inertia:
+\begin{equation}
+  \mathbf{A}(q_{\text{shape}}) = I_{\text{locked}}(q_{\text{shape}})^{-1} \frac{\partial I_{\text{locked}}}{\partial q_{\text{shape}}}.
+\end{equation}
+
+Numerical implementation:
 \begin{enumerate}
-  \item Compute the locked inertia tensor $I_{\text{locked}}(q_{\text{shape}})$ for a dense grid of shape values.
-  \item Compute the connection form via finite differences: $A_i(q_{\text{shape}}) \approx \frac{\partial I_{\text{locked}}}{\partial q_{\text{shape}, i}}$.
-  \item Integrate around the closed curve using the trapezoidal rule or Simpson's rule.
+  \item \textbf{Grid construction}: Discretize the shape space on a fine grid. For a 2-DOF shape space, this is
+  an $N \times N$ grid of shape values.
+
+  \item \textbf{Locked inertia computation}: For each grid point $q_{\text{shape}}$:
+  \begin{equation}
+    I_{\text{locked}}(q_{\text{shape}}) = \frac{\partial T}{\partial \dot{q}_{\text{group}}^2}\bigg|_{q_{\text{shape}}, \dot{q}_{\text{group}}}
+    \approx \frac{1}{2} \frac{\partial^2 (T - V)}{\partial \dot{q}_{\text{group}}^2},
+  \end{equation}
+  computed by evaluating the kinetic energy in the group direction while holding shape fixed.
+
+  \item \textbf{Connection form}: Compute the connection form via finite differences:
+  \begin{equation}
+    A_i(q_{\text{shape}}) \approx \frac{I_{\text{locked}}(q_{\text{shape}} + \delta_i) - I_{\text{locked}}(q_{\text{shape}} - \delta_i)}{2 \delta q_{\text{shape}, i}}.
+  \end{equation}
+
+  \item \textbf{Line integral}: Integrate around a closed curve in shape space using the trapezoidal rule:
+  \begin{equation}
+    \oint \mathbf{A} \cdot dq_{\text{shape}} \approx \sum_{k} \mathbf{A}(q_{\text{shape}, k}) \cdot (q_{\text{shape}, k+1} - q_{\text{shape}, k}).
+  \end{equation}
+
+  \item \textbf{Stokes integral (alternative)}: Compute the curvature 2-form $\Omega = d\mathbf{A}$ and integrate
+  over the interior surface using Simpson's rule or other quadrature.
 \end{enumerate}
+
+For a golf swing, this allows prediction of the net torso rotation given a sequence of arm raises and lowers.
 
 \section{Integration: From Theory to Practice}
 \label{sec:ch9:integration}
@@ -940,29 +1730,142 @@ Geometric phase & Net rotation from shape change & Falling cat, golf swing & Ori
 
 \subsection{Workflow: From Problem to Solution}
 
-A typical workflow for analyzing a constrained mechanical system:
+\index{Workflow!analysis and design}%
+A typical workflow for analyzing and designing control for a constrained mechanical system:
+
+\subsubsection{Step 1: Problem Formulation}
 
 \begin{enumerate}
-  \item \textbf{Identify constraints}. Write down all holonomic constraints $\Phi_j(q) = 0$. Verify that
-  the constraint Jacobian has full rank (regular constraint).
+  \item \textbf{Identify constraints}. Write down all holonomic constraints $\Phi_j(q) = 0$ (position
+  constraints that reduce configuration space). Distinguish from nonholonomic constraints (velocity constraints
+  that do not integrate).
 
-  \item \textbf{Compute the constraint manifold dimension}. $n_c = n - \text{rank}(J_c)$.
+  \item \textbf{Verify regularity}. Confirm that the constraint Jacobian $J_c(q)$ has full row rank
+  at all feasible configurations (or at least on the region of interest). If not, expect singularities
+  and plan accordingly.
 
-  \item \textbf{Construct the mass matrix}. Use composite-body algorithm or Lagrangian formulation.
+  \item \textbf{Compute the constraint manifold dimension}. $n_c = n - \text{rank}(J_c)$, the dimension of
+  the configuration space on which the system can move.
+\end{enumerate}
 
-  \item \textbf{Compute Christoffel symbols} (optional, for forward simulation) or compute
-  Coriolis matrix directly.
+\subsubsection{Step 2: Dynamics Construction}
 
-  \item \textbf{Define drift and input fields}. Extract $f(q,\dot{q})$ and $g_i(q)$ from the
-  Euler-Lagrange equations.
+\begin{enumerate}
+  \item \textbf{Construct the mass matrix} $M(q)$. Use:
+  \begin{itemize}
+    \item \textbf{Composite-body algorithm} (Craig 2005): Efficient recursive method for serial chains.
+    \item \textbf{Lagrangian formulation}: $M_{ij} = \sum_k (m_k J_{k,i}^\top J_{k,j} + \text{tr}(\cdots))$
+    for parallel mechanisms.
+    \item \textbf{Numerical differentiation}: Differentiate kinetic energy expressions (slow but general).
+  \end{itemize}
 
-  \item \textbf{Analyze controllability}. Compute Lie brackets and check the controllability rank condition.
+  \item \textbf{Compute Coriolis and centrifugal terms}. Either:
+  \begin{itemize}
+    \item Compute Christoffel symbols from $M(q)$ and use $C_{ij} = -\sum_k \Gamma^i_{jk} \dot{q}_j \dot{q}_k$.
+    \item Use $C = \dot{M} - \frac{1}{2} \text{sym}(\text{grad}_q M)$, a shortcut formula.
+  \end{itemize}
 
-  \item \textbf{Plan trajectories}. Use iLQR or differential dynamic programming, projecting onto the
-  constraint manifold at each iteration.
+  \item \textbf{Define gravity and potential energy}. $V(q) = -\sum_k m_k g \, h_k(q)$,
+  where $h_k$ is the height of link $k$'s center of mass.
 
-  \item \textbf{Implement and validate}. Use a constraint-preserving integrator (SHAKE/RATTLE). Verify
-  constraint satisfaction and energy conservation.
+  \item \textbf{Formulate the constrained Euler-Lagrange equations}:
+  \begin{equation}
+    M(q)\ddot{q} + C(q,\dot{q})\dot{q} + \nabla V(q) = J_c(q)^\top \lambda + B(q)\mathbf{u},
+  \end{equation}
+  where $\lambda$ are constraint multipliers and $B(q)\mathbf{u}$ is the actuation.
+\end{enumerate}
+
+\subsubsection{Step 3: Control Analysis}
+
+\begin{enumerate}
+  \item \textbf{Identify actuators and input matrix}. Determine which degrees of freedom are actuated:
+  $B(q) \in \mathbb{R}^{n \times m}$.
+
+  \item \textbf{Analyze controllability}. Compute Lie brackets of input fields $g_i = M^{-1} B e_i$ and check:
+  \begin{equation}
+    \text{rank}\{g_i, [g_i, g_j], [[g_i, g_j], g_k], \ldots\} \stackrel{?}{=} n_c.
+  \end{equation}
+  If rank is less than $n_c$, the system is uncontrollable; plan differently.
+
+  \item \textbf{Compute accessibility algebra}. The Lie algebra generated by input fields characterizes
+  what motions are achievable (important for grasping and manipulation).
+
+  \item \textbf{Analyze null-space redundancy} (if $m > n_c$). Characterize the null space of $B(q)$ or
+  the input distribution. Identify which motions can be performed without affecting the main task.
+\end{enumerate}
+
+\subsubsection{Step 4: Trajectory Planning}
+
+\begin{enumerate}
+  \item \textbf{Define cost function}. Choose:
+  \begin{itemize}
+    \item Time-optimal: $\int_0^T dt$.
+    \item Energy-optimal: $\int_0^T u^\top u \, dt$.
+    \item Tracking: $\int_0^T \|q(t) - q_d(t)\|^2 + \|u(t)\|^2 \, dt$.
+    \item Biomechanical: Minimize metabolic cost (Zajac 1989) or muscle fatigue.
+  \end{itemize}
+
+  \item \textbf{Apply optimal control method}:
+  \begin{itemize}
+    \item \textbf{Pontryagin Maximum Principle}: Derive necessary conditions for optimality (costate equations).
+    \item \textbf{iLQR/DDP}: Iteratively linearize and solve quadratic sub-problems (practical for complex systems).
+    \item \textbf{Trajectory optimization}: Direct methods that discretize and solve as finite-dimensional NLP.
+  \end{itemize}
+
+  \item \textbf{Project onto constraint manifold}. At each iteration, ensure generated trajectories satisfy
+  $\Phi(q(t)) = 0$ and $J_c(q)\dot{q} = 0$ using projection methods or by reparameterizing with reduced coordinates.
+
+  \item \textbf{Validate optimality}. Check costate equations and verify that the Hamiltonian is constant
+  along optimal trajectories (for autonomous systems).
+\end{enumerate}
+
+\subsubsection{Step 5: Numerical Simulation and Validation}
+
+\begin{enumerate}
+  \item \textbf{Choose a constraint-preserving integrator}:
+  \begin{itemize}
+    \item SHAKE: Fast, simple, but velocity drift over long runs.
+    \item RATTLE: More stable, preserves both position and velocity constraints.
+    \item Projection method: Exact up to machine precision, but expensive.
+  \end{itemize}
+
+  \item \textbf{Integrate forward in time}:
+  \begin{equation}
+    (q(t_{n+1}), \dot{q}(t_{n+1})) = \text{INTEGRATOR}(q(t_n), \dot{q}(t_n), \Delta t, \text{system parameters}).
+  \end{equation}
+
+  \item \textbf{Verify constraint satisfaction}. Check:
+  \begin{itemize}
+    \item Position: $\|\Phi(q(t))\| < \epsilon_{\text{constraint}}$ (small tolerance, typically $10^{-6}$ to $10^{-8}$).
+    \item Velocity: $\|J_c(q(t)) \dot{q}(t)\| < \epsilon_{\text{velocity}}$.
+    \item Energy: $\|E(t) - E(0)\| < \epsilon_{\text{energy}}$ (energy should be conserved for passive systems).
+  \end{tolerances}
+
+  \item \textbf{Sensitivity analysis}. Vary system parameters (masses, inertias, friction) and re-simulate
+  to understand robustness.
+
+  \item \textbf{Compare with experimental data} (if available). For gait analysis or sports biomechanics,
+  compare predictions with motion capture and GRF measurements.
+\end{enumerate}
+
+\subsubsection{Step 6: Control Implementation}
+
+\begin{enumerate}
+  \item \textbf{Synthesize feedback control}. Use the value function or costate trajectory to design
+  feedback laws:
+  \begin{equation}
+    \mathbf{u}(t) = \pi(q(t), \dot{q}(t), t; \theta^*)
+  \end{equation}
+  where $\theta^*$ are the optimal parameters (e.g., feedback gains from iLQR).
+
+  \item \textbf{Implement on hardware}. Deploy the control law on the actual system (robot or human
+  neuromuscular system, via visual feedback and learning).
+
+  \item \textbf{Online adaptation}. If the system is uncertain (e.g., object mass unknown), use
+  adaptive or learning-based control to refine the law online.
+
+  \item \textbf{Validate safety}. Ensure the control law respects bounds on forces, torques, and
+  accelerations; include fail-safes to prevent damage.
 \end{enumerate}
 
 \subsection{Research Directions and Open Problems}
@@ -991,34 +1894,113 @@ Several frontier topics extend the theory developed here:
 
 \section{Summary and Further Reading}
 
-This chapter has developed the geometric framework for constrained mechanical systems:
+This chapter has developed the geometric framework for constrained mechanical systems, connecting differential
+geometry, mechanics, control theory, and numerical methods. The key insights are:
+
+\subsection{Core Concepts and Structures}
+
 \begin{itemize}
-  \item Configuration manifolds and holonomic constraints define the feasible motion space.
-  \item Lagrangian mechanics on submanifolds encodes the cost of motion (kinetic energy) via a Riemannian metric.
-  \item Control-affine systems with drift and input fields allow for systematic analysis of controllability.
-  \item Null spaces and redundancy structure enable optimization over motor abundance.
-  \item Screw theory provides a coordinate-free language for rigid motions and forces.
-  \item Optimal control principles (Pontryagin) guide trajectory design.
-  \item Observability and identifiability characterize what can be learned from measurements.
-  \item Connections and geometric phase reveal subtle rotational effects from shape changes.
-  \item Numerical methods (SHAKE, RATTLE, SVD projection) make theory actionable.
+  \item \textbf{Configuration manifolds and holonomic constraints} define the feasible motion space. A constraint
+  manifold $Q_c = \{\Phi(q) = 0\}$ is a lower-dimensional submanifold of the unconstrained space, with dimension
+  $\dim(Q_c) = n - \text{rank}(J_c)$. Regular constraints ensure smooth submanifold structure.
+
+  \item \textbf{Lagrangian mechanics on submanifolds} encodes the cost of motion via kinetic energy. The mass matrix
+  $M(q)$ induces a Riemannian metric, and the Christoffel symbols capture how basis vectors rotate on the curved
+  configuration space. These geometric effects (Coriolis, centrifugal) arise naturally from the manifold curvature.
+
+  \item \textbf{Control-affine systems with drift and input fields} ($\ddot{q} = f(q,\dot{q}) + \sum_i g_i u_i$)
+  allow systematic analysis of controllability via Lie brackets. The Lie algebra generated by input fields determines
+  what motions are achievable.
+
+  \item \textbf{Null spaces and redundancy} structure enable motion planning in high-dimensional systems. When actuators
+  exceed degrees of freedom ($m > n_c$), the null space $(I - B^\dagger B)$ parameterizes motions that preserve the
+  primary task. Null-space optimization allows secondary objectives (energy minimization, singularity avoidance).
+
+  \item \textbf{Screw theory and Lie groups} provide a coordinate-free language. Twists (infinitesimal rigid motions)
+  live in $\mathfrak{se}(3)$, wrenches in the dual $\mathfrak{se}^*(3)$. The adjoint and coadjoint actions transform
+  these objects under reference frame changes, enabling force analysis in multiple frames.
+
+  \item \textbf{Optimal control principles (Pontryagin Maximum Principle)} guide trajectory design. The Hamiltonian
+  encodes the trade-off between cost (running cost + control effort) and dynamics (drift and actuation). Solving the
+  resulting costate ODEs yields the optimal control law and value function.
+
+  \item \textbf{Observability and identifiability} characterize what can be learned from measurements. The observability
+  rank condition (via Lie derivatives) determines which state components are uniquely determined by output trajectories.
+  The unobservable subspace creates ambiguity; resolving this requires additional measurements (EMG, optimization criteria).
+
+  \item \textbf{Connections and geometric phase} reveal subtle rotational effects from shape changes. Even in the absence
+  of external torques, coordinated shape changes (e.g., arm raises in a golf swing) accumulate net rotation via the
+  mechanical connection. The accumulated phase is proportional to the area swept in shape space.
+
+  \item \textbf{Numerical methods (SHAKE, RATTLE, SVD projection)} make theory actionable. Constraint-preserving integrators
+  enforce constraints up to machine precision while maintaining energy conservation. SVD provides stable null-space projection.
 \end{itemize}
 
-For deeper study, the definitive references are:
+\subsection{Unified Perspective}
+
+All of the above structures are manifestations of a single geometric principle: \emph{motion on a manifold is constrained
+by its intrinsic geometry}. The metric $M(q)$ encodes what directions are ``expensive'' to move; the constraint Jacobian
+$J_c(q)$ encodes feasible directions; Lie brackets encode achievable changes via control. Optimal control solves for the
+trajectory that minimizes cost while respecting these geometric constraints.
+
+\subsection{Applications}
+
+The framework applies to diverse problems:
 \begin{itemize}
-  \item \textit{Manifolds, Tensor Analysis, and Applications} (Abraham, Marsden, Ratiu 1988) for differential geometry.
-  \item \textit{Mathematical Introduction to Robotic Manipulation} (Murray, Li, Sastry 1994) for control-affine systems.
-  \item \textit{A Mathematical Introduction to Robotic Manipulation} for screw theory.
-  \item \textit{Geometric Mechanics and Control of Spinning Tops} (Bloch 2003) for geometric phase and connections.
-  \item \textit{Proceedings of the IEEE} special issues on geometric control and biomechanics (various years).
+  \item \textbf{Parallel mechanisms and grippers}: Understand force/velocity trade-offs, singularities, and grasp stability.
+  \item \textbf{Legged locomotion}: Analyze gait dynamics under bilateral foot contact; optimize for energy efficiency.
+  \item \textbf{Sports biomechanics}: Predict muscle activations, understand geometric effects (e.g., rotation via geometric phase).
+  \item \textbf{Humanoid robotics}: Plan whole-body motion respecting balance and manipulation constraints simultaneously.
 \end{itemize}
 
-\begin{intuitionbox}
-  The deepest insight of this chapter is that constraints are not obstacles but \emph{opportunities}
-  for simplification and specialization. A constrained system has less complexity (lower dimension of $Q_c$)
-  but also more structure: the constraint manifold carries a natural induced metric, and the null space
-  offers redundancy for secondary objectives. Understanding and exploiting this structure is the key to
-  elegant analysis and efficient control.
-\end{intuitionbox}
+\subsection{Further Reading}
 
-\printindex
+For deeper study, key references are:
+
+\begin{enumerate}
+  \item \cite{BulloLewis2004}: \textit{Geometric Control of Mechanical Systems}. Comprehensive treatment of Lie groups,
+  differential geometry, and optimal control for mechanics. Essential for understanding mechanical connections and
+  geometric phase.
+
+  \item \cite{AbrahamMarsden1978}: \textit{Foundations of Mechanics}. Foundational text on differential geometry and
+  Lagrangian mechanics. Rigorous mathematical treatment of manifolds, tangent spaces, and Lie groups.
+
+  \item \cite{Arnold1989}: \textit{Mathematical Methods of Classical Mechanics}. Elegant geometric perspective on classical
+  mechanics. Covers configuration manifolds, symplectic geometry, and conservation laws via Noether's theorem.
+
+  \item \cite{Murray1994}: \textit{A Mathematical Introduction to Robotic Manipulation}. Practical guide to kinematics,
+  dynamics, and control of manipulators. Screw theory and Jacobian analysis.
+
+  \item \cite{marsden1999}: \textit{Introduction to Mechanics and Symmetry}. Focuses on symmetries and conservation laws;
+  includes discussion of Routh reduction and geometric phase.
+
+  \item \cite{pontryagin1962}: \textit{The Mathematical Theory of Optimal Processes}. Classic monograph on Pontryagin
+  Maximum Principle and optimal control. Foundational for trajectory optimization.
+
+  \item \cite{HairerLubichWanner2006}: \textit{Geometric Numerical Integration}. Comprehensive treatment of structure-preserving
+  integrators. Covers symplectic methods, constraint-preserving algorithms (SHAKE, RATTLE), and error analysis.
+
+  \item \cite{Zajac1989}: \textit{Muscle and Tendon: Properties, Models, Scaling, and Applications to Biomechanics and
+  Motor Control}. Comprehensive biomechanics reference. Details muscle physiology, force-length-velocity relationships,
+  and optimization methods for inverse dynamics.
+
+  \item \cite{TodorovJordan2002}: \textit{Optimality Principles in Sensorimotor Control}. Elegant formulation of motor
+  control as optimal control under uncertainty. Discusses how the nervous system may implement near-optimal strategies.
+
+  \item \cite{deLeva1996}: \textit{Adjustments to Zatsiorsky-Seluyanov's Segment Inertia Parameters}. Provides anthropomorphic
+  data (segment masses, inertias) for human biomechanics simulations.
+
+  \item \cite{ball1900}: \textit{Theory of Screws}. Classic treatise on screw theory in rigid body mechanics. Foundational
+  for modern treatments of twists and wrenches.
+
+  \item \cite{Goldstein2002}: \textit{Classical Mechanics} (3rd ed.). Comprehensive classical mechanics text. Covers Lagrangian
+  and Hamiltonian formalism, rigid body dynamics, and introduction to differential geometry.
+\end{enumerate}
+
+\subsection{Looking Forward}
+
+The geometric methods of this chapter—configuration manifolds, Riemannian metrics, optimal control—are increasingly
+recognized as the right language for complex, multi-body systems. As systems grow more complex (humanoid robots with
+many joints, biological systems with hundreds of muscles), geometric structure provides the essential simplifications
+that make analysis and design feasible. Future work will increasingly combine these classical geometric methods with
+modern machine learning, using data to learn constraint manifolds and cost functions automatically.
