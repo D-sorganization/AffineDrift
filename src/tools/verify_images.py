@@ -102,10 +102,7 @@ def process_file(file_path: Path) -> list[str]:
 
     with ThreadPoolExecutor(max_workers=5) as executor:
         futures = {executor.submit(check_url, url, file_path): url for url in urls}
-        for future in futures:
-            result = future.result()
-            if result:
-                results.append(result)
+        results.extend(result for future in futures if (result := future.result()))
 
     return results
 

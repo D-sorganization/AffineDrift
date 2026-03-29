@@ -72,13 +72,11 @@ def is_inside_quarto_alternate_formats(tag: Any) -> bool:
 
 def _collect_html_files(*, docs_dir: Path) -> list[Path]:
     """Return all HTML files relative to docs directory."""
-    html_files: list[Path] = []
-    for full_path in docs_dir.rglob("*.html"):
-        relative = full_path.relative_to(docs_dir)
-        if any(part in IGNORED_ARTIFACT_DIRS for part in relative.parts):
-            continue
-        html_files.append(relative)
-    return html_files
+    return [
+        full_path.relative_to(docs_dir)
+        for full_path in docs_dir.rglob("*.html")
+        if not any(part in IGNORED_ARTIFACT_DIRS for part in full_path.relative_to(docs_dir).parts)
+    ]
 
 
 def _collect_all_files(*, docs_dir: Path) -> set[Path]:

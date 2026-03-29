@@ -89,11 +89,9 @@ def main() -> None:
             f for f in python_files if not any(part in _EXCLUDE_DIRS for part in f.parts)
         ]
 
-    all_issues = []
-    for filepath in python_files:
-        issues = check_file(filepath)
-        if issues:
-            all_issues.append((filepath, issues))
+    all_issues = [
+        (filepath, issues) for filepath in python_files if (issues := check_file(filepath))
+    ]
 
     # Report
     if all_issues:

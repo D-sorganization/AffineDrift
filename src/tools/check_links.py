@@ -55,8 +55,8 @@ def find_links(file_path: Path) -> list[tuple[str, int]]:
 
 def unique_broken(links: list[tuple[str, int, str]]) -> list[tuple[str, int, str]]:
     """Remove duplicate broken links."""
-    seen = set()
-    unique = []
+    seen: set[tuple[str, int, str]] = set()
+    unique: list[tuple[str, int, str]] = []
     for link in links:
         if link not in seen:
             unique.append(link)
@@ -137,9 +137,11 @@ def check_links(root_dir: str) -> list[tuple[str, int, str]]:
             logger.exception(f"Error reading {file_path}: {e}")
             continue
 
-        for link, line_num in links:
-            if _is_broken_link(root_path=root_path, file_path=file_path, link=link):
-                broken_links.append((str(file_path.relative_to(root_path)), line_num, link))
+        broken_links.extend(
+            (str(file_path.relative_to(root_path)), line_num, link)
+            for link, line_num in links
+            if _is_broken_link(root_path=root_path, file_path=file_path, link=link)
+        )
 
     return unique_broken(broken_links)
 

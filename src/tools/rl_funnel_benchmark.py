@@ -256,23 +256,25 @@ def _precompute_lqr_gains(
     Returns:
         Gains array of shape (T, m, n).
     """
-    gains = []
     eps = 1e-6
-    for _i, t in enumerate(t_ref):
-        x_ref_i = x_ref[:, _i]
+
+    def _compute_gain(idx: int) -> np.ndarray:
+        """Compute LQR gain at a single reference time step."""
+        x_ref_i = x_ref[:, idx]
         A = np.zeros((n, n))
-        f0 = double_pendulum_drift(t, x_ref_i)
+        f0 = double_pendulum_drift(t_ref[idx], x_ref_i)
         for j in range(n):
             ej = np.zeros(n)
             ej[j] = eps
-            A[:, j] = (double_pendulum_drift(t, x_ref_i + ej) - f0) / eps
+            A[:, j] = (double_pendulum_drift(t_ref[idx], x_ref_i + ej) - f0) / eps
         B0 = double_pendulum_B(x_ref_i)
         try:
             P = solve_continuous_are(A, B0, Q_tt, R_tt)
-            K = np.linalg.solve(R_tt, B0.T @ P)
+            return np.linalg.solve(R_tt, B0.T @ P)
         except (np.linalg.LinAlgError, ValueError):
-            K = np.zeros((m, n))
-        gains.append(K)
+            return np.zeros((m, n))
+
+    gains = [_compute_gain(i) for i in range(len(t_ref))]
     return np.array(gains)
 
 
@@ -359,7 +361,9 @@ def _compute_tracking_metrics(
 
     x_ref_interp = interp1d(t_ref, x_ref, kind="linear", fill_value="extrapolate")
     x_star = x_ref_interp(t_eval)
-    tracking_error = float(np.mean(np.linalg.norm(x_sim - x_star, axis=0) ** 2))
+    # Vectorized tracking error: mean of squared norms along time axis
+    state_errors = x_sim - x_star
+    tracking_error = float(np.mean(np.sum(state_errors**2, axis=0)))
     u_all = np.array([controller(t, x_sim[:, i]) for i, t in enumerate(t_eval)])
     control_effort = float(np.mean(np.sum(u_all**2, axis=1)))
     return tracking_error, control_effort
