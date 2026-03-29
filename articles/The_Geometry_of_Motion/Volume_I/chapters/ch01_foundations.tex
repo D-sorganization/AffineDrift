@@ -38,6 +38,22 @@ local ruler; changing the metric changes which perturbation directions count as 
 or ``small.''
 \end{intuitionbox}
 
+\begin{remark}[Lie Brackets and Nonlinear Coupling]
+\label{rem:ch1:lie-brackets}
+While vector fields are added and scaled linearly in the tangent space, their composition
+via the flow map is nonlinear. The \emph{Lie bracket} $[\,\mathbf{f}, \mathbf{g}\,]$ of two vector
+fields measures this nonlinear coupling: it quantifies how the order of application matters.
+Formally, for vector fields $\mathbf{f}$ and $\mathbf{g}$ on a manifold $\mathcal{M}$,
+\begin{equation}
+[\,\mathbf{f}, \mathbf{g}\,] = \frac{\partial \mathbf{g}}{\partial \x}\mathbf{f} - \frac{\partial \mathbf{f}}{\partial \x}\mathbf{g}.
+\end{equation}
+As Agrachev and Sachkov detail in \cite[Ch.~1--2]{AgrachevSachkov2004}, the Lie bracket is the
+fundamental tool for understanding how infinitesimal perturbations in different directions
+interact. In control theory, brackets $[\,\mathbf{g}_i, \mathbf{g}_j\,]$ between input vector fields characterize what motions can be generated through iterated applications of controls---the
+foundation of controllability analysis via the Lie algebra rank condition, discussed in
+Chapter~\ref{ch:superposition}.
+\end{remark}
+
 
 \section{Historical Context: From Newton to Modern Differential Geometry}
 
@@ -367,6 +383,7 @@ $T_p\mathcal{M}$ a vector space.
 For systems evolving in $\R^n$, the tangent space at any point is isomorphic to $\R^n$
 itself. The distinction becomes non-trivial on curved manifolds (e.g., $\SO(3)$ for
 rotational dynamics), where the tangent space is a genuinely different object from the
+manifold. More fundamentally, the control-affine structure defines a \emph{distribution}---a linear subspace of the tangent bundle whose closure under Lie brackets determines what states are reachable by the control system (see Agrachev and Sachkov \cite[Ch.~3]{AgrachevSachkov2004}).
 manifold.
 
 \subsection{Isomorphism with Directional Derivatives}
@@ -551,6 +568,7 @@ T_{\mat{R}}\SO(3) = \{\mat{S} \in \R^{3 \times 3} : \mat{S} + \mat{S}\T = 0\}.
 \label{eq:ch1:so3-tangent}
 \end{equation}
 
+This space is 3-dimensional and is often denoted $\mathfrak{so}(3)$, the Lie algebra of $\SO(3)$. The Lie algebra structure---defined through the commutator bracket $[\mathbf{S}_1, \mathbf{S}_2] = \mathbf{S}_1\mathbf{S}_2 - \mathbf{S}_2\mathbf{S}_1$---is exactly the Lie bracket of vector fields on the manifold $\SO(3)$. This bridge between algebraic (Lie algebra) and geometric (Lie bracket) structures is central to Agrachev and Sachkov's treatment of geometric control on Lie groups \cite[Ch.~2]{AgrachevSachkov2004}.
 This space is 3-dimensional and is often denoted $\mathfrak{so}(3)$, the Lie algebra of $\SO(3)$.
 
 \subsubsection{Jacobian on SO(3)}

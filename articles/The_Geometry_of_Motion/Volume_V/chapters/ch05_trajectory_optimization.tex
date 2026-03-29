@@ -5,6 +5,55 @@
 
 \section{DDP/iLQR Implementation}
 
+Differential Dynamic Programming (DDP) and iterative Linear Quadratic Regulator (iLQR) are
+related algorithms for trajectory optimization \cite{Mayne1966, jacobson1970dpp}. They solve
+the finite-horizon optimal control problem by iteratively linearizing around a nominal
+trajectory and solving quadratic subproblems. Figure~\ref{fig:ilqr-loop} shows the algorithm structure.
+
+iLQR is a numerical method for implementing the feedback synthesis results from Agrachev \&
+Sachkov \cite{AgrachevSachkov2004}, Chapter~6: it iteratively computes the optimal feedback law
+via local linearization and quadratic approximation of the cost. The backward-pass computation
+of gains $K(t)$ corresponds to the solution of the Riccati equation, a central object in their
+optimal control theory.
+
+\begin{figure}[h]
+  \centering
+  \begin{tikzpicture}[
+    every node/.style={align=center, draw, rounded corners, minimum width=2cm, text centered, font=\small},
+    ]
+    % Initial trajectory
+    \node[fill=blue!20] (init) at (0, 4) {Initialize\\$\bm{u}_0$};
+
+    % Forward pass
+    \node[fill=green!20] (forward) at (0, 2) {Forward Rollout:\\$\bm{x}(t)$};
+
+    % Backward pass
+    \node[fill=yellow!20] (backward) at (4, 2) {Backward Pass:\\Compute $k, K$ gains};
+
+    % Line search
+    \node[fill=orange!20] (linesearch) at (2, 0.3) {Line Search:\\Update $\bm{u}$};
+
+    % Convergence check
+    \node[fill=pink!20] (converge) at (2, -1.2) {Converged?};
+
+    % Exit
+    \node[fill=green!20] (exit) at (4, -2.5) {Optimal\\$\bm{x}^*, \bm{u}^*$};
+
+    % Arrows
+    \draw[->] (init) -- (forward);
+    \draw[->] (forward) -- (backward);
+    \draw[->] (backward) -- (linesearch);
+    \draw[->] (linesearch) -- (converge);
+    \draw[->] (converge) -- node[align=center, left] {No} (1, 1) -- (forward);
+    \draw[->] (converge) -- node[align=center, above right] {Yes} (exit);
+  \end{tikzpicture}
+  \caption{iLQR algorithm loop: initialize control trajectory, forward rollout
+    to compute state trajectory, backward pass to compute feedback gains,
+    line search to update controls, and convergence check.}
+  \label{fig:ilqr-loop}
+\end{figure}
+
+Here we implement iLQR end-to-end:
 Differential Dynamic Programming (Volume~I, Chapter~5) is the workhorse for
 trajectory optimization. Here we implement it end-to-end:
 
@@ -113,6 +162,16 @@ def ilqr_solve(
 
 \section{Application: Optimal Pendulum Swing-Up}
 
+The pendulum swing-up is a classic trajectory optimization benchmark. The goal is to
+find the minimum-energy torque sequence that brings the pendulum from the downward
+(stable) equilibrium to the upright (unstable) equilibrium.
+
+This is a canonical example in Agrachev \& Sachkov \cite{AgrachevSachkov2004} (Chapter~5, Example 5.1):
+the pendulum system is an affine control system $\ddot{\theta} = -g\sin\theta + u$, and the swing-up
+problem is optimal synthesis: find the control law that minimizes energy while ensuring convergence
+to the upright equilibrium. Their theory predicts that the optimal trajectory will exhibit
+``bang-bang'' control (maximum torque in one direction) followed by a final feedback phase---
+which is exactly what occurs in practice.
 The classic control benchmark: swing a pendulum from the hanging position to
 the inverted equilibrium.
 

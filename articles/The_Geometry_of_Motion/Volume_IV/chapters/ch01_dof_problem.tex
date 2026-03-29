@@ -92,6 +92,13 @@ mathematical framework for understanding how the nervous system manages redundan
   (in the \textbf{orthogonal complement}) directly affects task performance.
 \end{definition}
 
+\noindent
+In the language of Agrachev \& Sachkov's geometric control theory \cite{AgrachevSachkov2004},
+the null space of $J_h$ IS the uncontrollable subspace of the system when the task variable
+is taken as the output. Chapter~3.1 of \cite{AgrachevSachkov2004} develops exactly this theory:
+given a control system with an output map, which state perturbations affect the output? The answer
+is the orthogonal complement of the null space---precisely the mechanism underlying the UCM hypothesis.
+
 \begin{laymansbox}{Mathematical Reminder: The Geometry of the UCM}{ucm_geometry_reminder}
 Recall our differential geometry from Volume 0: a manifold is a curved surface representing valid states. The \textbf{Uncontrolled Manifold} (UCM) is quite literally a geometric submanifold embedded inside the larger configuration space $\mathcal{Q}$. 
 
@@ -218,6 +225,9 @@ In the language of control theory:
   \item Stage 1: reduce the system dimension from $n$ to $k$ (the task dimension)
   \item Stage 2: increase the controlled dimension while maintaining task performance
   \item Stage 3: exploit the drift dynamics $f(\state)$ by designing trajectories that
+        use passive mechanics (Volume~II, Chapter~5). This is formalized in Agrachev \& Sachkov
+        \cite{AgrachevSachkov2004}, Chapter~4, which develops the geometric theory of accessible
+        sets and optimal trajectories for systems where drift (passive dynamics) dominates.
         use passive mechanics (Volume~II, Chapter~5)
 \end{itemize}
 

@@ -4,6 +4,21 @@
 \epigraph{Forward simulation answers ``what happens if\ldots?''\\
 Inverse dynamics answers ``what caused this?''}{}
 
+The forward dynamics problem computes accelerations from forces, while inverse dynamics
+(also called the inverse kinematics problem when phrased in terms of finding required
+torques) computes forces from desired accelerations. Both are fundamental to control design
+and trajectory planning.
+
+Mathematically, we are integrating affine nonlinear systems $\dot{\state} = f(\state) + G(\state) \control$.
+Agrachev \& Sachkov \cite{AgrachevSachkov2004}, Chapter~2, develop the foundational theory of
+existence and uniqueness of solutions for such systems. Their results guarantee that the forward
+simulation is well-defined and solutions exist for all time (under mild regularity conditions).
+
+\section{Forward Dynamics with the Companion Platform}
+
+Forward dynamics integration typically uses explicit or implicit Runge-Kutta methods,
+or specialized algorithms such as the Recursive Newton-Euler Algorithm (RNEA) for
+rigid-body systems \cite{Featherstone2008, Featherstone1983}.
 \section{Forward Dynamics with UpstreamDrift}
 
 \begin{lstlisting}[language=Python, caption={Forward dynamics simulation pipeline.}]
