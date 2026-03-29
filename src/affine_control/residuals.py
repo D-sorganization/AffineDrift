@@ -94,11 +94,9 @@ def _max_spectral_norm(H: np.ndarray[Any, Any]) -> float:
     Returns:
         Maximum spectral norm across all output components.
     """
-    M = 0.0
-    for k in range(H.shape[0]):
-        norm_k = np.linalg.norm(H[k, :, :], ord=2)
-        M = max(M, float(norm_k))
-    return M
+    # Vectorized: compute spectral norm for each component Hessian slice
+    norms = np.array([np.linalg.norm(H[k, :, :], ord=2) for k in range(H.shape[0])])
+    return float(np.max(norms)) if norms.size > 0 else 0.0
 
 
 def compute_hessian_norm(
@@ -188,11 +186,8 @@ def predict_residual_bound(
         (len(M_traj), len(delta_x_traj), len(dt_traj)),
     )
 
-    r_accum = 0.0
-
-    for i in range(len(dt_traj)):
-        rate = float((M_traj[i] / 2.0) * (delta_x_traj[i] ** 2))
-        r_accum += rate * float(dt_traj[i])
+    # Vectorized: r = sum( (M_i / 2) * delta_x_i^2 * dt_i )
+    r_accum = float(np.sum((M_traj / 2.0) * (delta_x_traj**2) * dt_traj))
 
     ensure(r_accum >= 0, "residual bound must be non-negative", r_accum)
     return r_accum

@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from typing import Any, Callable, Tuple
 
+from src.core.contracts import check_finite_array, check_positive, require
+
 from .ilqr_solver import ILQRSolver, NDArray, TrajectoryOptimizer  # noqa: F401
 
 
@@ -22,6 +24,13 @@ def ilqr_solver_wrapper(
     """
     Wrapper around ILQRSolver to match the DDP mock signature.
     """
+    require(callable(f), "dynamics function f must be callable")
+    check_finite_array(x0, "x0")
+    check_finite_array(xf, "xf")
+    require(x0.shape == xf.shape, "x0 and xf must have same shape")
+    require(len(u_init) > 0, "u_init must not be empty")
+    check_positive(eps_residual, "eps_residual")
+    require(max_iters >= 1, "max_iters must be >= 1", max_iters)
     solver = ILQRSolver()
     dt = 0.01  # default dt, adaptive timestep might be needed but simple fixed is fine
     x_traj, u_traj, t_traj = solver.optimize(

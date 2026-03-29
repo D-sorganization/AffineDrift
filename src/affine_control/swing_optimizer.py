@@ -300,8 +300,8 @@ class SwingOptimizer:
             eps_residual=cfg.convergence_tol,
             max_iters=min(5, cfg.max_iterations),
         )
-        traj_list = [x_traj[i] for i in range(len(x_traj))]
-        ctrl_list = [u_traj[i] for i in range(len(u_traj))]
+        traj_list = list(x_traj)
+        ctrl_list = list(u_traj)
         current_cost = self.compute_trajectory_cost(traj_list, ctrl_list)
         return x_traj, u_traj, current_cost
 
@@ -393,8 +393,8 @@ class SwingOptimizer:
         final_velocity = float(np.linalg.norm(velocity_portion))
 
         result = SwingOptimizationResult(
-            optimal_controls=[best_u_traj[i] for i in range(len(best_u_traj))],
-            optimal_trajectory=[best_x_traj[i] for i in range(len(best_x_traj))],
+            optimal_controls=list(best_u_traj),
+            optimal_trajectory=list(best_x_traj),
             final_velocity=final_velocity,
             cost=best_cost,
             converged=converged,

@@ -33,7 +33,9 @@ def _central_difference_linearization(
     epsilon: float = 1e-6,
 ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
     """Numerically linearize a system with central differences."""
+    check_positive(epsilon, "epsilon")
     x_arr = np.array(x, dtype=float)
+    check_finite_array(x_arr, "x")
     u_arr = np.array(u, dtype=float)
     n = len(x_arr)
     m = len(u_arr)

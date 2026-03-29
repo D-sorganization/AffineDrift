@@ -5,6 +5,8 @@ from typing import Callable, Protocol, Tuple, TypeAlias
 import numpy as np
 import numpy.typing as npt
 
+from src.core.contracts import check_finite_array, check_positive, require
+
 NDArray: TypeAlias = npt.NDArray[np.float64]
 
 
@@ -44,6 +46,14 @@ class ILQRSolver:
         Runs the iLQR algorithm.
         Returns: x_traj, u_traj, t_traj
         """
+        require(callable(dynamics_fn), "dynamics_fn must be callable")
+        check_finite_array(x0, "x0")
+        check_finite_array(xf, "xf")
+        require(x0.shape == xf.shape, "x0 and xf must have same shape")
+        require(len(u_init) > 0, "u_init must not be empty")
+        check_positive(dt, "dt")
+        require(max_iters >= 1, "max_iters must be >= 1", max_iters)
+        check_positive(tol, "tol")
         N = len(u_init)
         n_x = len(x0)
         n_u = u_init.shape[1] if len(u_init.shape) > 1 else 1
@@ -161,6 +171,9 @@ class ILQRSolver:
         dt: float,
     ) -> NDArray:
         """Simulate the system forward using Euler integration."""
+        check_finite_array(x0, "x0")
+        require(len(u_traj) > 0, "u_traj must not be empty")
+        check_positive(dt, "dt")
         N = len(u_traj)
         x_traj = np.zeros((N + 1, len(x0)))
         x_traj[0] = x0

@@ -250,12 +250,10 @@ def _resample_controls(
     require(len(u_old) > 0, "u_old must not be empty")
     require(len(t_old) > 0, "t_old must not be empty")
     require(len(t_new) > 0, "t_new must not be empty")
-    u_resampled = []
-
     # Zero-order hold: map each new time point to the last preceding control
-    for t in t_new:
-        idx = int(np.searchsorted(t_old, t, side="right")) - 1
-        idx = np.clip(idx, 0, len(u_old) - 1)
-        u_resampled.append(u_old[idx])
+    u_resampled = [
+        u_old[np.clip(int(np.searchsorted(t_old, t, side="right")) - 1, 0, len(u_old) - 1)]
+        for t in t_new
+    ]
 
     return np.array(u_resampled)
