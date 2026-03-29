@@ -391,9 +391,133 @@ For the golf swing, the over-constraint ensures that as the hips drive, the shou
 
 **What comes next:** Now that we understand how forces are produced (ZTCF), transmitted (constraint forces), and routed through a parallel mechanism (loop constraints), the final step is to understand how energy flows through the system. How does the kinetic energy partition between the segments? Where is energy stored and released? When is energy lost? These questions are answered in Chapter @ch:energy_transfer.
 
+## Vaughan's Closed-Loop Analysis: Historical Context
+
+In the early 1980s, biomechanist C.L. Vaughan published foundational work on the biomechanics of athletic movements with closed kinematic loops. His key contributions include:
+
+::: {.callout-note}
+
+## Vaughan's Contributions to Constraint Biomechanics
+
+`r cite_key("Vaughan1981,Vaughan1983")` were among the first to recognize that the golf swing is a *closed kinematic chain* and to formalize the mathematics of loop constraints in biomechanics. His work addressed the fundamental problem: when both hands grip a club and both feet touch the ground, how can inverse dynamics resolve the ambiguity in force distribution?
+
+Vaughan's resolution strategy:
+
+1. Assume that the load is distributed proportionally to the sum of kinetic and potential energies in each limb.
+2. Alternatively, minimize a criterion such as total muscle activation or total joint torque (optimization approach).
+3. Use additional sensors (force plates, instrumented grip) to break the ambiguity.
+
+His work established the vocabulary and mathematical framework still used today in analyzing parallel mechanisms in biomechanics.
+
+:::
+
+Modern understanding builds on Vaughan's foundation by recognizing that:
+
+- The ambiguity in load distribution is a feature of parallel mechanisms, not a bug or limitation of the analysis.
+- Different golfers can achieve the same kinematics with different muscle activation patterns (load distributions), reflecting individual control strategies.
+- Optimization criteria (e.g., minimize muscle activation) are useful but can only constrain the ambiguity, not eliminate it.
+
+## Parallel Mechanisms in Robotics: Background and Theory
+
+Parallel mechanisms have been studied extensively in the robotics and mechanical engineering literature. Key theoretical foundations include:
+
+**The Stewart Platform (1965)**
+
+`r cite_key("Stewart1965")` published the foundational paper on the Stewart platform, a hexapod parallel manipulator with 6 legs connecting a base to a moving platform. The Stewart platform has become ubiquitous in precision engineering, flight simulators, and machine tools.
+
+Stewart's key insight: a parallel mechanism with $n$ legs can be designed to have $n$ DOF (one per leg) or more if the legs are redundantly constrained. The stiffness and precision of a parallel mechanism often exceed those of a serial robot because loads are distributed across multiple paths.
+
+**Merlet's Parallel Robots (2006)**
+
+`r cite_key("Merlet2006")` provides a comprehensive treatise on parallel robots that systematized the theory of parallel mechanisms, including:
+
+- Forward and inverse kinematics algorithms.
+- Singularity analysis.
+- Workspace analysis.
+- Control strategies.
+
+Merlet's work is essential reading for anyone serious about understanding parallel mechanism theory in the context of biomechanics.
+
+**Hunt's Kinematic Geometry (1978)**
+
+`r cite_key("Hunt1978")` provided foundational work on the geometry and algebraic foundations of kinematic mechanisms, including parallel systems. Hunt's screw theory approach is particularly relevant to understanding constraint forces.
+
+**Gosselin & Angeles' Singularity Analysis (1990)**
+
+`r cite_key("GosselinAngeles1990")` developed comprehensive methods for analyzing singularities in parallel mechanisms. Their classification of singularities into workspace boundaries, leg singularities, and architecture singularities has become standard in robotics.
+
+## Formal Mapping: Robotics Terminology to Golf Swing
+
+To clarify the parallel between robotics terminology and the golf swing, here is an explicit mapping:
+
+| Robotics (Stewart Platform) | Golf Swing |
+|---|---|
+| Fixed base | Pelvis / torso |
+| Moving platform | Club |
+| Hexapod legs (6 paths) | Arms + spine (multiple paths) |
+| Leg actuators | Muscle torques |
+| Leg constraint forces | Internal hand/grip forces |
+| Forward kinematics | Position of club given arm angles |
+| Inverse kinematics | Finding arm angles for desired club position |
+| Singularity (workspace boundary) | Maximum reach of club |
+| Leg singularity (straight) | Arm fully extended (impact) |
+| Self-motion (null space) | Face angle adjustment without changing trajectory |
+| Load sharing problem | Left vs. right hand force ambiguity |
+
+This mapping makes clear that the golf swing is mechanically a parallel mechanism in the robotics sense. The problems and insights from parallel robotics transfer directly to biomechanics.
+
+## Jacobian Analysis: Velocity and Force
+
+The constraint Jacobian encodes relationships at two levels: velocity and force.
+
+**Velocity-Level Constraint**
+
+The velocity-level constraint is:
+
+$$\mathbf{J}_c(\bm{q}) \dot{\bm{q}} = \mathbf{0}$$
+
+This says: any joint velocity $\dot{\bm{q}}$ must be orthogonal to the row vectors of $\mathbf{J}_c$ (i.e., in the null space of $\mathbf{J}_c$). These null space velocities are the allowed motions.
+
+**Force-Level Jacobian Transpose**
+
+The force-level relation is:
+
+$$\boldsymbol{\tau} = \mathbf{J}_c^T(\bm{q}) \mathbf{f}$$
+
+This says: constraint forces $\mathbf{f}$ (e.g., grip forces) produce generalized torques $\boldsymbol{\tau}$ through the Jacobian transpose. Forces in the range of $\mathbf{J}_c^T$ constrain motion; forces in the null space of $\mathbf{J}_c^T$ are internal (don't constrain motion).
+
+**Orthogonality of Null Spaces**
+
+The null space of $\mathbf{J}_c$ (allowed velocities) is orthogonal to the range of $\mathbf{J}_c^T$ (constraining forces):
+
+$$\mathcal{N}(\mathbf{J}_c) \perp \text{Range}(\mathbf{J}_c^T)$$
+
+Mechanically, this means: a force in the range of $\mathbf{J}_c^T$ does no work on a velocity in the null space of $\mathbf{J}_c$. Forces perpendicular to allowed motions don't produce motion—they create internal stress.
+
+## Screw Theory Treatment
+
+Screw theory is an elegant mathematical framework for kinematic and force analysis of mechanisms. It's particularly powerful for parallel mechanisms.
+
+**Twists and Wrenches**
+
+A **twist** (or screw) is a unit vector representing a motion: rotation about an axis combined with translation along that axis.
+
+A **wrench** is a unit vector representing a force: a force in some direction combined with a torque (moment) about an axis.
+
+Twists and wrenches satisfy a reciprocal relationship: a twist and a wrench are **reciprocal** if their inner product is zero. Reciprocal wrenches do no work on reciprocal twists.
+
+In the context of the golf swing:
+
+- The allowed motions of the club (given the constraint) form a subspace of twists.
+- The constraint forces (grip force) form wrenches reciprocal to the allowed twists.
+- The internal forces (null space forces) also form reciprocal wrenches and do no work on allowed motions.
+
+Screw theory provides a coordinate-free, elegant way to analyze these relationships. Interested readers are referred to `r cite_key("Murray1994,BulloLewis2004")`.
+
 ## Chapter Exercises: Parallel Mechanisms
 
-{Conceptual}
+**Conceptual**
+
 Explain in plain language: Why is the golfer's body over-constrained (according to Gruebler's formula), yet it can still move? What makes this possible?
 
 {X-Factor Calculation}

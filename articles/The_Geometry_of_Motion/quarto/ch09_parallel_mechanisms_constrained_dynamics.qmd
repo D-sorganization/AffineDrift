@@ -1,0 +1,362 @@
+%% ==========================================================================
+%%  Chapter 9: Parallel Mechanisms, Constrained Dynamics, and Geometric Control
+%% ==========================================================================
+
+# Parallel Mechanisms, Constrained Dynamics, and Geometric Control
+
+\label{ch:parallel-mechanisms}
+
+::: {.callout-note}
+
+## Why This Matters
+
+A golf club held in both hands, a parallel robot gripping an object, or legs pushing against the ground are all systems with **constraints**: physical connections that remove degrees of freedom and couple subsystems. Rather than treating constraints as annoying algebraic equations to eliminate, we view them as **geometric structures**—reductions of the configuration manifold, decompositions of force space, and sources of null-space redundancy.
+
+This chapter unifies the mathematical treatment of configuration manifolds, Lagrangian mechanics on submanifolds, and optimal control in the presence of constraints. The geometry reveals why and how complex motions can be decomposed, where redundancy lives, and how to design controls that respect the hidden structure.
+
+:::
+
+## Configuration Manifolds and Holonomic Constraints
+
+\label{sec:ch9:config-manifolds}
+
+### Unconstrained Configuration Space
+
+The starting point for any mechanical system is its **configuration manifold** $Q$, the space of all kinematically possible positions of the system. For a system of $N$ rigid bodies in three dimensions, the unconstrained configuration space is:
+
+$$Q_{\text{free}} = (SE(3))^N$$
+
+where $SE(3)$ is the special Euclidean group (rigid body motions in 3D). Each copy of $SE(3)$ represents one body's position and orientation, encoded by a homogeneous transformation matrix:
+
+$$T_i = \begin{bmatrix} R_i(\theta_i) & \mathbf{p}_i \\ 0 & 1 \end{bmatrix} \in SE(3),$$
+
+where $R_i \in SO(3)$ is the rotation matrix and $\mathbf{p}_i \in \mathbb{R}^3$ is the position.
+
+The dimension of $Q_{\text{free}}$ is $\dim Q_{\text{free}} = 6N$, since each rigid body has 3 translational and 3 rotational degrees of freedom. For a system of $N$ links in a planar setting, the dimension reduces to $\dim Q_{\text{free}} = 3N$.
+
+### Holonomic and Nonholonomic Constraints
+
+A **holonomic constraint** is a geometric restriction on the configuration that can be expressed as an algebraic equation:
+
+$$\phi_j(q) = 0, \quad j = 1, \ldots, c,$$
+
+where $q \in Q_{\text{free}}$ and $\phi_j: Q_{\text{free}} \to \mathbb{R}$ is a smooth function. Examples include:
+
+- **Loop closure constraints**: In a multi-link chain or parallel mechanism, if two end-effectors must meet at a point (or achieve a fixed relative pose), this imposes holonomic constraints.
+- **Contact constraints**: A foot in contact with the ground has its vertical position fixed and its horizontal position constrained (if friction prevents slipping).
+- **Joint constraints**: Pin joints, sliding joints, and spherical joints all reduce the relative configuration space via holonomic constraints.
+
+A **nonholonomic constraint**, by contrast, is a restriction on velocities that does not integrate to a holonomic constraint:
+
+$$\sum_i a_i(q) \dot{q}_i = 0.$$
+
+The canonical example is a rolling wheel or rolling foot: the velocity constraint does not prevent the wheel from moving to any configuration through some sequence of motions. This chapter focuses on **holonomic constraints**; nonholonomic mechanics require specialized treatment.
+
+### The Constraint Manifold as a Submanifold
+
+Let $\Phi: Q_{\text{free}} \to \mathbb{R}^c$ be the constraint map:
+
+$$\Phi(q) = \begin{bmatrix} \phi_1(q) \\ \vdots \\ \phi_c(q) \end{bmatrix}.$$
+
+The constraint manifold is the level set:
+
+$$Q_c := \{q \in Q_{\text{free}} : \Phi(q) = 0\}.$$
+
+The Jacobian of the constraint is the $c \times n$ matrix:
+
+$$J_c(q) := \frac{\partial \Phi}{\partial q} \bigg|_q \in \mathbb{R}^{c \times n},$$
+
+where $n = \dim Q_{\text{free}}$.
+
+**Proposition (Regular Constraint Theorem):**
+
+Suppose that for all $q \in Q_c$, the Jacobian $J_c(q)$ has full row rank (rank $c$). Then:
+
+1. $Q_c$ is a smooth submanifold of $Q_{\text{free}}$ of dimension $n_c := n - c$.
+2. The tangent space at any point $q \in Q_c$ is the kernel of $J_c(q)$:
+$$T_q Q_c = \ker(J_c(q)) = \{\mathbf{v} \in T_q Q_{\text{free}} : J_c(q)\mathbf{v} = 0\}.$$
+3. The orthogonal complement (with respect to the kinetic-energy metric) is spanned by the gradient vectors:
+$$(\kern-0.2em T_q Q_c)^{\perp_M} = \text{span}\{\nabla_{q} \phi_1(q), \ldots, \nabla_{q} \phi_c(q)\} = \text{range}(J_c(q)^\top).$$
+
+### Worked Example: Planar Two-Link Closed Chain
+
+Consider a simple planar closed-chain mechanism: two rigid links of lengths $\ell_1$ and $\ell_2$, with joints at angles $\theta_1$ and $\theta_2$ (measured from the horizontal), constrained to meet at a common endpoint.
+
+The configuration space is $Q_{\text{free}} = [0, 2\pi) \times [0, 2\pi)$ (the pair $(\theta_1, \theta_2)$). The constraint is that the endpoint of link 1 equals the endpoint of link 2:
+
+\begin{align}
+  \ell_1 \cos\theta_1 &= \ell_2 \cos\theta_2 + \Delta x, \\
+  \ell_1 \sin\theta_1 &= \ell_2 \sin\theta_2 + \Delta y,
+\end{align}
+
+where $(\Delta x, \Delta y)$ is the fixed distance between the base points. The constraint Jacobian is:
+
+$$J_c = \begin{bmatrix}
+  -\ell_1 \sin\theta_1 & \ell_2 \sin\theta_2 \\
+  \ell_1 \cos\theta_1 & -\ell_2 \cos\theta_2
+\end{bmatrix}.$$
+
+The constraint manifold becomes singular when $\theta_1 = \theta_2$ (both links parallel) or $\theta_1 = \theta_2 + \pi$ (links anti-parallel). At these configurations, the mechanism has a locked or freely-moving singularity.
+
+## Lagrangian Mechanics on Constrained Manifolds
+
+\label{sec:ch9:lagrangian}
+
+### Kinetic Energy and the Riemannian Metric
+
+On the unconstrained tangent bundle $T Q_{\text{free}}$, the kinetic energy is:
+
+$$T = \frac{1}{2} \dot{q}^\top M(q) \dot{q},$$
+
+where $M(q) \in \mathbb{R}^{n \times n}$ is the symmetric, positive-definite **mass matrix** (or **inertia matrix**). For a chain of rigid bodies, the entries of $M$ depend only on the configuration $q$.
+
+The mass matrix induces a **Riemannian metric** on $Q_{\text{free}}$:
+
+$$\langle \mathbf{u}, \mathbf{v} \rangle_M := \mathbf{u}^\top M(q) \mathbf{v} \quad \text{for } \mathbf{u}, \mathbf{v} \in T_q Q.$$
+
+This metric encodes the cost of acceleration: moving fast in a direction requires more kinetic energy if $M$ is large in that direction.
+
+### Euler-Lagrange Equations with Constraints
+
+The **Lagrangian** is $L = T - V$, where $V(q)$ is the potential energy. When constraints $\Phi(q) = 0$ are active, we introduce Lagrange multipliers $\lambda \in \mathbb{R}^c$ and write the constrained Euler-Lagrange equations:
+
+$$M(q)\ddot{q} + C(q,\dot{q})\dot{q} + \nabla V(q) = J_c(q)^\top \lambda + B(q)\mathbf{u},$$
+
+where:
+
+- $C(q,\dot{q})$ is the Coriolis-centrifugal matrix.
+- $\nabla V(q)$ is the gravitational gradient.
+- $J_c(q)^\top \lambda$ is the constraint force (normal to the constraint manifold).
+- $B(q) \in \mathbb{R}^{n \times m}$ is the input matrix, and $\mathbf{u} \in \mathbb{R}^m$ are the control inputs.
+
+The constraint forces $J_c(q)^\top \lambda$ enforce the acceleration constraint:
+
+$$J_c(q) \ddot{q} + \frac{d}{dt}(J_c(q))\dot{q} = 0,$$
+
+which follows by differentiating $\Phi(q(t)) = 0$ twice in time.
+
+### Christoffel Symbols and Geometric Meaning of Coriolis
+
+On a Riemannian manifold, the **Christoffel symbols** $\Gamma^k_{ij}$ describe how the basis vectors of the tangent space change as we move through the manifold. In coordinates:
+
+$$\Gamma^k_{ij} = \frac{1}{2} M^{kl} \left( \frac{\partial M_{lj}}{\partial q_i} + \frac{\partial M_{li}}{\partial q_j} - \frac{\partial M_{ij}}{\partial q_l} \right),$$
+
+where $M^{kl}$ is the $(k,l)$-entry of $M^{-1}$.
+
+The Coriolis-centrifugal acceleration can be expressed in terms of Christoffel symbols:
+
+$$(C(q,\dot{q})\dot{q})_i = -\sum_{j,k} \Gamma^j_{ik}\dot{q}_j\dot{q}_k.$$
+
+::: {.callout-note}
+
+### Intuition: Coriolis Terms as Coordinate Artifacts
+
+The Coriolis and centrifugal terms are *not* ``real'' forces acting on the system. Rather, they are artifacts of our choice of coordinates on the curved configuration manifold. They arise because the basis vectors $\partial/\partial q_i$ are not constant; they rotate and stretch as we move through $Q$. A coordinate-free description would eliminate them, but working in local coordinates makes them explicit and important for numerical computation.
+
+:::
+
+### Routh Reduction for Cyclic Coordinates
+
+When the Lagrangian $L(q, \dot{q}) = T(q, \dot{q}) - V(q)$ is invariant under a symmetry group action, certain generalized coordinates (called **cyclic coordinates**) do not appear explicitly in $L$.
+
+For such a coordinate $q_{\text{cyc}}$, the Euler-Lagrange equation gives:
+
+$$\frac{d}{dt}\frac{\partial L}{\partial \dot{q}_{\text{cyc}}} = 0,$$
+
+so the generalized momentum is conserved:
+
+$$p_{\text{cyc}} = \frac{\partial L}{\partial \dot{q}_{\text{cyc}}} = \text{constant}.$$
+
+The **Routhian** is constructed by eliminating the cyclic velocity:
+
+$$R(q_{\text{shape}}, \dot{q}_{\text{shape}}, p_{\text{cyc}}) := \dot{q}_{\text{cyc}} p_{\text{cyc}} - L(q_{\text{shape}}, \dot{q}_{\text{shape}}, \dot{q}_{\text{cyc}}(p_{\text{cyc}})),$$
+
+The dynamics of the shape variables reduce to a system of lower dimension. This is crucial for understanding the golf swing: the total angular momentum is conserved (cyclic coordinate), and the swing dynamics can be reduced to the shape changes of the arms, with the rotation of the torso following deterministically.
+
+### Index-3 DAE Formulation and Stabilization
+
+The system:
+
+\begin{align}
+  M(q)\ddot{q} + C(q,\dot{q})\dot{q} + \nabla V(q) &= J_c(q)^\top \lambda + B(q)\mathbf{u}, \\
+  \Phi(q) &= 0,
+\end{align}
+
+is a **differential-algebraic equation (DAE)** of **index 3**. The index is the minimum number of times the algebraic constraint must be differentiated to derive an ODE for $\lambda$.
+
+To understand why, differentiate the constraint in time twice to get an equation for $\lambda$. Thus, we need three differentiations (position $\to$ velocity $\to$ acceleration) to obtain an ODE system.
+
+**Baumgarte Stabilization:**
+
+To solve this numerically, the **Baumgarte stabilization** method augments the acceleration constraint with corrective terms:
+
+$$J_c(q)\ddot{q} + \dot{J}_c(q,\dot{q})\dot{q} + 2\alpha \dot{\Phi}(q,\dot{q}) + \beta^2 \Phi(q) = 0,$$
+
+where $\alpha, \beta > 0$ are tuning parameters. The correction terms can be interpreted as a feedback law: if the constraint is violated, the correction grows to drive the state back onto the manifold. This reduces the effective index to 1 and suppresses exponential growth of constraint violations due to numerical integration error.
+
+## Control-Affine Systems on Configuration Manifolds
+
+\label{sec:ch9:control-affine}
+
+### Control-Affine Dynamics and Drift Field
+
+A system is **control-affine** if the dynamics can be written as:
+
+$$\ddot{q} = f(q,\dot{q}) + \sum_{i=1}^{m} g_i(q) u_i,$$
+
+where $f: TQ \to TQ$ is the **drift** vector field (dynamics with zero control) and $g_i: Q \to \mathbb{R}^n$ are the **input fields**.
+
+From the constrained Euler-Lagrange equation, we identify:
+
+\begin{align}
+  f(q,\dot{q}) &= -M(q)^{-1} \left( C(q,\dot{q})\dot{q} + \nabla V(q) - J_c(q)^\top \lambda \right), \\
+  g_i(q) &= M(q)^{-1} B(q)e_i,
+\end{align}
+
+where $e_i$ is the $i$-th standard basis vector.
+
+### Lie Bracket and Controllability
+
+On the tangent bundle $TQ$, we define vector fields. The **Lie bracket** of two vector fields $X$ and $Y$ measures the difference between flowing along $X$ then $Y$ versus $Y$ then $X$:
+
+$$[X, Y] = X \circ Y - Y \circ X.$$
+
+In local coordinates:
+
+$$[X, Y] = \sum_{i,j} \left( X_i \frac{\partial Y_j}{\partial q_i} - Y_i \frac{\partial X_j}{\partial q_i} \right) \frac{\partial}{\partial q_j}.$$
+
+**Controllability Condition (Hermann-Nagano, Chow's Theorem):**
+
+The system is (generically) controllable if the Lie algebra generated by $\{g_1, \ldots, g_m\}$ and their iterated Lie brackets spans the entire tangent space at almost every point:
+
+$$\text{span}\left\{g_i, [g_i, g_j], [[g_i,g_j], g_k], \ldots\right\}\bigg|_q = T_q(TQ).$$
+
+### Geodesic Spray and the Levi-Civita Connection
+
+The drift field $f(q, \dot{q}) = -M(q)^{-1}(C(q,\dot{q})\dot{q} + \nabla V(q))$ on the tangent bundle $TQ$ has a geometric interpretation via the Levi-Civita connection.
+
+The **geodesic spray** associated with the Riemannian metric $g = M$ is the second-order ODE on $TQ$ defined by:
+
+$$\ddot{q}^k + \Gamma^k_{ij}(q) \dot{q}^i \dot{q}^j = 0,$$
+
+where $\Gamma^k_{ij}$ are the Christoffel symbols. This describes motion along geodesics of the metric.
+
+In our constrained system with gravity, the equation of motion becomes:
+
+$$\ddot{q}^k + \Gamma^k_{ij}(q) \dot{q}^i \dot{q}^j = -M^{-1}(q) \nabla V(q) + M^{-1}(q) B(q) u.$$
+
+The drift field $f(q, \dot{q})$ encapsulates both the Christoffel symbols (geodesic curvature) and the gradient of the potential. This connection reveals that the Coriolis and centrifugal terms, though appearing as ``fictitious forces'' in a coordinate-dependent view, are actually manifestations of the curvature of the configuration manifold.
+
+### Null Spaces, Redundancy, and Families of Solutions
+
+\label{sec:ch9:null-space}
+
+#### Algebraic Redundancy and the Nullspace
+
+When the number of inputs $m$ is less than the dimension of the configuration space $n_c$ (the dimension of the constrained manifold $Q_c$), the system is **redundant**: there are multiple ways to achieve the same acceleration.
+
+Suppose we seek to track a desired acceleration $\ddot{q}_d \in T Q_c$. The control law:
+
+$$B(q) u = M(q)(\ddot{q}_d - f(q,\dot{q}))$$
+
+may have no unique solution if the right-hand side is not in the range of $B(q)$. When $m < n_c$, there are typically infinite solutions (a family parameterized by the null space):
+
+$$u = B(q)^+ M(q)(\ddot{q}_d - f(q,\dot{q})) + (I - B(q)^+ B(q)) z,$$
+
+where $B(q)^+$ is the pseudoinverse and $z$ is an arbitrary vector.
+
+#### Wrench Space and Constraint Wrench Space
+
+In the dual space (forces and moments), a **wrench** is an element of the cotangent space $T_q^* Q$. The **constraint wrench space** is the set of wrenches that do no work on velocities in the constraint manifold:
+
+$$\mathcal{W}_c = \text{range}(J_c(q)^\top).$$
+
+Any constraint force can be uniquely decomposed as:
+
+$$\mathbf{F} = \mathbf{F}_{\text{useful}} + \mathbf{F}_{\text{reaction}},$$
+
+where $\mathbf{F}_{\text{useful}}$ acts along the constraint manifold and $\mathbf{F}_{\text{reaction}}$ is normal to it.
+
+## Optimal Control and Pontryagin Maximum Principle
+
+\label{sec:ch9:optimal-control}
+
+### Optimal Control Problem Formulation
+
+Consider the constrained optimal control problem:
+
+\begin{align}
+  \min_u \quad & \int_0^T \ell(q(t), \dot{q}(t), u(t)) \, dt + \phi(q(T)) \\
+  \text{subject to} \quad & \dot{q} = q', \\
+  & \ddot{q} = f(q,\dot{q}) + G(q)u, \\
+  & \Phi(q) = 0, \\
+  & u(t) \in \mathcal{U}.
+\end{align}
+
+where $\mathcal{U}$ is the set of admissible controls (typically $\mathcal{U} = [-u_{\max}, u_{\max}]^m$).
+
+### Pontryagin Maximum Principle
+
+Define the Hamiltonian:
+
+$$H(q, \dot{q}, \lambda_q, \lambda_{\dot{q}}, u) = \ell(q,\dot{q},u) + \lambda_q^\top \dot{q} + \lambda_{\dot{q}}^\top(f(q,\dot{q}) + G(q)u),$$
+
+where $\lambda_q$ and $\lambda_{\dot{q}}$ are costates (Lagrange multipliers).
+
+**Theorem (Pontryagin Maximum Principle):**
+
+If $(q^*, \dot{q}^*, u^*)$ is a solution to the optimal control problem, then there exist costates $\lambda_q(t)$ and $\lambda_{\dot{q}}(t)$ such that:
+
+1. The costate equations hold:
+\begin{align}
+      \dot{\lambda}_q &= -\frac{\partial H}{\partial q} + J_c(q)^\top \mu,\\
+      \dot{\lambda}_{\dot{q}} &= -\frac{\partial H}{\partial \dot{q}},
+\end{align}
+
+2. The optimal control minimizes the Hamiltonian:
+$$u^* = \arg\min_{u \in \mathcal{U}} H(q^*, \dot{q}^*, \lambda_q, \lambda_{\dot{q}}, u).$$
+
+3. Boundary conditions are satisfied: $\lambda_q(T) = \nabla\phi(q(T))$.
+
+### Quadratic Cost and Optimal Control
+
+For a quadratic cost functional:
+
+$$J = \int_0^T \left( \|q(t) - q_d\|_Q^2 + \|u(t)\|_R^2 \right) dt,$$
+
+where $Q$ is a state weight and $R$ is a control weight, the optimal control is:
+
+$$u^* = -\frac{1}{2} R^{-1} G(q)^\top \lambda_{\dot{q}}.$$
+
+This is a linear feedback law in terms of the costate. For a golf swing with bounded actuation (e.g., $u_i \in [0, 1]$ for muscle activation), the control clips at the boundaries, giving a mixed bang-singular control.
+
+### Hamilton-Jacobi-Bellman Equation
+
+The optimal value function $V(q, \dot{q}, t)$ (minimum cost from state $(q, \dot{q})$ at time $t$) satisfies the HJB equation:
+
+$$-\frac{\partial V}{\partial t} = \min_u \left[ \ell(q,\dot{q},u) + \frac{\partial V}{\partial q}^\top \dot{q} + \frac{\partial V}{\partial \dot{q}}^\top(f + Gu) \right],$$
+
+with boundary condition $V(q, \dot{q}, T) = \phi(q)$.
+
+### iLQR and Trajectory Optimization
+
+Given a nominal trajectory $\{(q_k, \dot{q}_k, u_k)\}_{k=0}^T$, the **iLQR** (iterative linear-quadratic regulator) algorithm:
+
+1. **Backward pass**: Linearize the dynamics around the nominal trajectory and solve the Riccati recursion backward to compute optimal feedback gains $K_k$ and value-function matrices $S_k$.
+
+2. **Forward pass**: Apply the feedback law and integrate forward to compute a new nominal trajectory.
+
+3. **Repeat** until the trajectory converges.
+
+When the constraints must be satisfied, we augment the backward pass by projecting both the linearized dynamics and the cost gradient onto the constraint manifold.
+
+## Summary and Biological Applications
+
+Constrained dynamics appear ubiquitously in biomechanics:
+
+- **Two-handed grip**: Loop closure constraints couple the two arms through the club or object.
+- **Parallel legs in stance**: Contact constraints from multiple feet create redundancy and enable stability.
+- **Spine and fascia**: Internal constraints link spine segments and distribute forces passively.
+- **Muscle redundancy**: More muscles than DOF means the nervous system must solve a redundancy problem at every instant.
+
+The geometric framework—constraint manifolds, Lagrangian mechanics, control-affine dynamics, and optimal control—provides a unified language for understanding and designing these systems. Whether analyzing golf, robotics, or animal locomotion, the same mathematical structures emerge.
