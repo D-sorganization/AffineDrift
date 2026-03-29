@@ -27,6 +27,13 @@ performing a skilled movement---these systems are intrinsically \emph{trajectory
 A Lyapunov function certifying stability at one point does not explain why nearby
 trajectories diverge under perturbations or what determines their convergence rate.
 
+The concept of contraction---trajectories converging robustly---is fundamentally dual to the concept of 
+controllability in Agrachev and Sachkov's geometric framework \cite[Ch.~4]{AgrachevSachkov2004}. While 
+controllability asks \emph{what is reachable} from a given initial condition via forward-time controls, 
+contraction analysis asks \emph{do trajectories converge} and thus provides a certificate of robustness 
+and structural stability. Both are geometric properties: controllability relies on Lie bracket accessibility 
+in the forward direction, while contraction provides a metric-based certificate of asymptotic behavior.
+
 Contraction theory reframes the question: \textbf{do all nearby trajectories converge
 to each other, regardless of initial condition?} This is a genuinely different property,
 and it provides the certificate we need.
@@ -92,6 +99,13 @@ convergence.
 
 
 \section{The Contraction Condition}
+
+The contraction metric $M(\x)$ acts as a Riemannian metric on the state space, defining distance and 
+angle between perturbations in the tangent space. As Agrachev and Sachkov discuss \cite[Ch.~8]{AgrachevSachkov2004}, 
+Riemannian geometry is central to sub-Riemannian optimal control problems, where the metric constrains which 
+directions are directly accessible via controls. Contraction analysis uses a metric to measure convergence rates
+in this geometric sense---a local ruler that changes from point to point, naturally extending linear 
+stability theory to nonlinear, curved state spaces.
 
 Consider the autonomous system
 \begin{equation}
@@ -457,6 +471,12 @@ and all solutions synchronize to the reference motion.
 
 \section{Control Contraction Metrics: Design and Duality}
 
+
+Contraction metrics provide a natural dual certificate to control distributions and accessibility. 
+Agrachev and Sachkov \cite[Part~III]{AgrachevSachkov2004} analyze feedback stabilization and regulation 
+through the lens of controlled accessibility: a system is stabilizable if the drift-controlled vector field 
+admits appropriate accessibility properties. Control contraction metrics encode this geometric stabilization 
+property via a metric that contracts under feedback, providing a constructive and verifiable stability certificate.
 \subsection{Feedback Design Under Contraction}
 
 For controlled systems

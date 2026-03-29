@@ -53,3 +53,21 @@ Applying maximum $u_1$ torque during the downswing injects enormous variance int
 
 To ensure the clubface squares up at the moving goal, the stochastic optimizer will \emph{deliberately back off} the peak requested torque. It trades a deterministic $5$ mph gain in clubhead speed for a massive reduction in angular variance at the target manifold. The optimal biological swing is mathematically proven to be a sub-maximal physical exertion.
 
+
+The extension of the deterministic Pontryagin framework to stochastic systems is developed rigorously in Agrachev and Sachkov \cite{AgrachevSachkov2004}. When the system is subject to signal-dependent noise (SDN), the traditional Hamiltonian maximization is supplemented by terms encoding risk: the optimizer must maximize expected performance while managing the variance of terminal conditions under noise propagation. This leads to \textbf{risk-sensitive control} problems where the cost includes an entropy-like term penalizing uncertainty.
+
+For the golf swing under SDN, the stochastic extension of the attainable set framework tells us that not all nominally reachable configurations are equally \emph{robustly} reachable. A configuration in the interior of the deterministic attainable set may lie on the boundary of the stochastic attainable set if noise-driven perturbations commonly push trajectories away from it. By contrast, configurations that are "stable" with respect to noise (in the direction of the control Lie algebra) remain deeply inside the stochastic attainable set. The funnel computed in Chapter 7 with stochastic cost weighting thus encodes not just reachability, but \textbf{robust attainment}---guarantee of success under unavoidable noise.
+
+% ══════════════════════════════════════════════
+\section{Summary}
+% ══════════════════════════════════════════════
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{@{} l p{7.5cm} @{}}
+  \toprule
+  \textbf{Concept} & \textbf{Implication for Control} \\
+  \midrule
+  Signal-Dependent Noise (SDN) & Muscle noise variance proportional to command: $\text{Var}(\tilde{u}) = c u^2$. Requires bounded control effort for repeatability. \\
+  Minimum Variance Theory & Explains smooth, controlled velocity profiles as solutions to endpoint error variance minimization under SDN. \\
+  Stochastic OCP & Opt

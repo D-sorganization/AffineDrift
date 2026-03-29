@@ -67,6 +67,11 @@ Instead of using a numerical integrator, we enforce the differential equation al
 \begin{equation}
   \dot{\tilde{\state}}(t_c) - \bm{f}(\tilde{\state}(t_c), \tilde{\control}(t_c)) = \bm{0} \qquad \text{(Collocation constraint)}
 \end{equation}
+where $\tilde{\state}$ and $\tilde{\control}$ are the polynomial approximations.
+
+\begin{remark}{Pontryagin Maximum Principle and Optimal Control}{pontryagin_ocp}
+  While direct collocation provides a practical numerical algorithm, the theoretical foundation for trajectory optimization comes from the \textbf{Pontryagin Maximum Principle} \cite{AgrachevSachkov2004}. This principle states that along an optimal trajectory, a Hamiltonian function $\mathcal{H}(\state, \control, \bm{\lambda}) = L(\state, \control) + \bm{\lambda}^\top \bm{f}(\state, \control)$ must be maximized with respect to $\control$ at each instant, where the costate $\bm{\lambda}(t)$ evolves backward according to adjoint dynamics. For underactuated systems, \textbf{bang-bang} structures emerge (control saturates at bounds) when the Hamiltonian is linear in $\control$. \textbf{Singular arcs} occur when the Hamiltonian is affine but not linear, requiring higher-order conditions to determine $\control$. The golf swing's explosive wrist release is precisely such a singular arc: the optimal control structure is predicted by Agrachev and Sachkov's geometric analysis of the control Lie algebra and its role in the maximization condition.
+\end{remark} 
 where $\tilde{\state}$ and $\tilde{\control}$ are the polynomial approximations. 
 
 \begin{keyidea}{Fidelity vs. Flexibility}{collocation_vs_shooting}

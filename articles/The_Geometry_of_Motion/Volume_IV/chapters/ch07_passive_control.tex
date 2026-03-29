@@ -31,6 +31,19 @@ organize movement. His key insights, translated into the language of this series
 
 \section{Passive Dynamic Walking}
 
+The most striking example of passive dynamics is passive dynamic walking
+(McGeer, 1990): a simple mechanical biped with knees, feet, and hip (no motors)
+walks down a gentle slope in stable limit cycles with zero active control. This
+demonstrates that complex coordinated movement can emerge from mechanical design
+and gravity alone.
+
+\noindent
+Mathematically, the walker is a system with zero control input: $\dot{\state} = f(\state)$
+is purely drift dynamics with no control term $G(\state) \bm{u}$. The stability analysis
+of periodic orbits in such systems is a central topic in Agrachev \& Sachkov \cite{AgrachevSachkov2004},
+Chapter~2 (affine systems with zero control) and Chapter~4 (limit cycles and stability):
+the existence of stable walking gaits relies on eigenvalue analysis of the Poincaré return map,
+a classical dynamical systems tool that forms the foundation of their geometric approach.
 The most striking example of passive dynamics is passive dynamic walking,
 demonstrated by McGeer (1990) \cite{McGeer1990}: a simple mechanical biped
 can walk down a gentle slope with \emph{no actuators and no control}:
@@ -116,6 +129,12 @@ The golf swing exemplifies passive dynamics exploitation:
 In the ZTCF framework of Volume~I, Chapter~7: the drift contribution $f(\state)$
 accounts for $\sim$60\% of the clubhead speed. The control contribution
 $G(\state)\control$ provides the remaining $\sim$40\%.
+
+Trajectory design exploiting drift is formalized in Agrachev \& Sachkov \cite{AgrachevSachkov2004},
+Chapter~5 (optimal control with drift): when the drift term dominates the control term, optimal
+trajectories naturally evolve along low-cost paths in the accessible set, allowing the system to
+reach distant targets with minimal control effort. The golf swing is a biological instance of
+this principle.
 
 \section{Bernstein's Stage 3: Exploiting DOF}
 

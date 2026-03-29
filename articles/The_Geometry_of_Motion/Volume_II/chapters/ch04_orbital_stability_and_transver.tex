@@ -331,6 +331,10 @@ $\state = \traj^*(s^*) + \bm{\xi}$ and linearizing about $\bm{\xi} = \bm{0}$:
   theory apply.
 \end{principle}
 
+\begin{remark}{Adjoint Systems and Costate Evolution}{adjoint_systems}
+  The transverse linearization and feedback gain computation via time-varying LQR are intimately connected to the adjoint system and costate dynamics from the Pontryagin Maximum Principle, as developed in Agrachev and Sachkov \cite{AgrachevSachkov2004}. When solving trajectory optimization (Chapter 6), Pontryagin introduces costate variables $\bm{\lambda}(t)$ evolving backward according to adjoint dynamics. The Riccati matrix $\bm{P}(t)$ in the transverse LQR feedback law connects directly to these costates. Thus orbital stabilization (this chapter) and trajectory optimization (Chapter 6) spring from the same Hamiltonian geometric principle underlying optimal control.
+\end{remark}
+
 \subsection{The Transverse Jacobian: A Practical Formula}
 
 For implementation, the key quantities are computed as follows. Let
