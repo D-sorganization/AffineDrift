@@ -433,7 +433,6 @@ class SwingOptimizer:
         check_shape(initial_state, (self._config.state_dim,), "initial_state")
         require(callable(dynamics_fn), "dynamics_fn must be callable")
 
-
         cfg = self._config
         logger.info(
             "Starting swing optimization: n_joints=%d, horizon=%d, dt=%.4f",

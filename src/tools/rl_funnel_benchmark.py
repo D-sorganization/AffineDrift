@@ -33,6 +33,8 @@ def format_results(results: list["BenchmarkResult"]) -> str:
 
 def double_pendulum_mass_matrix(th1: float, th2: float) -> npt.NDArray[Any]:
     return np.eye(2)
+
+
 # Default control saturation limits for the double-pendulum benchmark (N*m).
 # The value 50 N*m is appropriate for a 1 kg, 0.5 m double pendulum; adjust
 # for different systems by passing `control_limits` to run_benchmark().
@@ -209,7 +211,6 @@ def setpoint_lqr_controller(
 
 
 def _precompute_lqr_gains(
-
     t_ref: np.ndarray,
     x_ref: np.ndarray,
     n: int,
@@ -297,6 +298,7 @@ def trajectory_tracking_lqr(
     R_tt = R_tt if R_tt is not None else 0.1 * np.eye(m)
     gains_array = _precompute_lqr_gains(t_ref, x_ref, n, m, Q_tt, R_tt)
     x_ref_interp = interp1d(t_ref, x_ref, kind="linear", fill_value="extrapolate")
+
     def get_K(t: float) -> np.ndarray:
         """Look up precomputed LQR gain at time t via nearest-index interpolation."""
         idx = np.clip(np.searchsorted(t_ref, t) - 1, 0, len(t_ref) - 2)
