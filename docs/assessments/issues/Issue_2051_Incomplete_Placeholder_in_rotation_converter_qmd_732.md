@@ -1,18 +1,18 @@
 ---
-title: "Incomplete Placeholder in startup-launcher.css:384"
+title: "Incomplete Placeholder in rotation-converter.qmd:732"
 labels: ['incomplete-implementation,critical']
 assignee: "unassigned"
 status: "open"
 ---
 
 # Issue Description
-Found critical incomplete implementation in `css/startup-launcher.css` at line 384.
+Found critical incomplete implementation in `articles/rotation-converter.qmd` at line 732.
 
 ## Context
-**Type**: Placeholder | **Location**: `css/startup-launcher.css:384`
+**Type**: Placeholder | **Location**: `articles/rotation-converter.qmd:732`
 
 ```python
-/* Skeleton placeholder styles */
+// Screw axis placeholder
 ```
 
 ## Audit Metrics
