@@ -1,18 +1,18 @@
 ---
-title: "Incomplete Placeholder in script.js:1717"
+title: "Incomplete Placeholder in rotation-converter.qmd:736"
 labels: ['incomplete-implementation,critical']
 assignee: "unassigned"
 status: "open"
 ---
 
 # Issue Description
-Found critical incomplete implementation in `script.js` at line 1717.
+Found critical incomplete implementation in `articles/rotation-converter.qmd` at line 736.
 
 ## Context
-**Type**: Placeholder | **Location**: `script.js:1717`
+**Type**: Placeholder | **Location**: `articles/rotation-converter.qmd:736`
 
 ```python
-if (placeholder) {
+// Arc placeholder
 ```
 
 ## Audit Metrics
