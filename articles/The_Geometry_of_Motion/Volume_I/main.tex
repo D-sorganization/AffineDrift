@@ -621,6 +621,18 @@ Large-scale discretizations produce sparse operators. Storing sparse matrices in
 reduces memory and enables scalable iterative solvers (CG, GMRES, MINRES). This matters for
 trajectory optimization and model predictive control where linear solves dominate runtime.
 
+\section{LMI Fundamentals}
+
+Linear Matrix Inequalities (LMIs) take the form $\mat{A}_0 + \sum_i x_i \mat{A}_i \prec 0$.
+These are convex constraints. Tools like cvxpy and SciPy can solve LMI optimization problems
+efficiently.
+
 \begin{example}{Python Example: Sparse Solve with SciPy}{app-sparse-solve}
 \begin{lstlisting}[language=Python]
 import nu
+\end{lstlisting}
+\end{example}
+
+\bibliographystyle{alpha}
+\bibliography{../geometry_of_motion}
+\end{document}
