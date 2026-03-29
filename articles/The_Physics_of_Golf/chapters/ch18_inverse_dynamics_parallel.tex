@@ -204,6 +204,57 @@ Differentiating twice:
 \label{eq:constraint_acceleration}
 \end{equation}
 
+%============================================================================
+\section{Loop Closure Equations and Velocity Constraints}
+\label{sec:loop_closure_formal}
+
+\index{loop closure}\index{kinematic consistency}\index{velocity constraint}
+
+For the golf swing with a two-handed grip, the fundamental constraint is that both hands must grip the same club. In the 3D spatial case, this imposes 6 constraints (3 positional, 3 rotational) relating the left and right arm configurations.
+
+\begin{definition}{Loop Closure Equations (Formal)}{def:loop_closure_formal}
+If the left arm has forward kinematics $\mathbf{T}_L(\bm{q}_L)$ and the right arm has forward kinematics $\mathbf{T}_R(\bm{q}_R)$, where $\mathbf{T}$ are homogeneous transformation matrices, then the loop closure constraint is:
+\begin{equation}
+\mathbf{T}_L(\bm{q}_L) = \mathbf{T}_R(\bm{q}_R)
+\label{eq:loop_closure_spatial}
+\end{equation}
+
+This is a matrix equation in $SE(3)$ (the special Euclidean group). Written as explicit constraints on positions and orientations:
+\begin{align}
+\mathbf{p}_L(\bm{q}_L) &= \mathbf{p}_R(\bm{q}_R) \quad \text{(3 position constraints)} \\
+\mathbf{R}_L(\bm{q}_L) &= \mathbf{R}_R(\bm{q}_R) \quad \text{(3 orientation constraints)}
+\label{eq:loop_closure_explicit}
+\end{align}
+
+This is a nonlinear system of 6 equations in $n$ unknowns (the joint angles $\bm{q}_L$ and $\bm{q}_R$).
+\end{definition}
+
+\subsection{Velocity-Level Constraint}
+\label{subsec:velocity_constraint}
+
+Differentiating the loop closure equation with respect to time:
+\begin{equation}
+\mathbf{J}_L(\bm{q}_L)\,\dot{\bm{q}}_L = \mathbf{J}_R(\bm{q}_R)\,\dot{\bm{q}}_R
+\label{eq:velocity_constraint_loop}
+\end{equation}
+
+This is the velocity-level loop constraint: the velocities of the left and right end effectors must match (they're gripping the same object).
+
+Rearranging into standard form:
+\begin{equation}
+\begin{bmatrix} \mathbf{J}_L & -\mathbf{J}_R \end{bmatrix} \begin{bmatrix} \dot{\bm{q}}_L \\ \dot{\bm{q}}_R \end{bmatrix} = \mathbf{0}
+\label{eq:constraint_jacobian_two_arm}
+\end{equation}
+
+The constraint Jacobian is:
+\begin{equation}
+\mathbf{J}_c = \begin{bmatrix} \mathbf{J}_L & -\mathbf{J}_R \end{bmatrix}
+\label{eq:constraint_jacobian_definition_two_arm}
+\end{equation}
+
+The rank of this Jacobian is typically 6 (for non-singular arm configurations). This means the velocity constraint reduces the effective DOF from $n$ (unconstrained) to $n - 6$ (constrained).
+
+%============================================================================
 \subsection{Counting Equations and Unknowns}
 \label{subsec:counting}
 
@@ -227,165 +278,703 @@ For a closed-loop system: $p$ may remain $n$ (muscles still act on all $n$ DOF),
 
 The constraint forces $\boldsymbol{\lambda}$ are \emph{real forces}. Your left hand genuinely pushes against your right hand. But you cannot see this force directly. It is internal to the system. And when you try to invert the dynamics—to go from measured motion to inferred torques—the constraint forces and applied torques become entangled in a way that makes them impossible to disentangle uniquely.
 
-\section{The Singular Matrix: Why Inversion Fails}
-\label{sec:singular_matrix}
+%============================================================================
+\section{The Constraint Jacobian Geometry and DOF}
+\label{sec:constraint_jacobian_geometry}
 
-\subsection{The Augmented System}
-\label{subsec:augmented_system}
+\index{constraint Jacobian}\index{rank}\index{degrees of freedom}
 
-To set up the inverse dynamics problem formally, consider the augmented system combining dynamics and constraints:
+The constraint Jacobian $\mathbf{J}_c(\bm{q})$ is an $k \times n$ matrix, where $k$ is the number of constraints and $n$ is the number of generalized coordinates.
+
+\begin{principle}{DOF Reduction via Constraints}{principle:dof_reduction}
+The effective degrees of freedom of a constrained system is:
 \begin{equation}
-\begin{bmatrix} \bm{M}(\bm{q}) & -\bm{J}_c^T(\bm{q}) \\ \bm{J}_c(\bm{q}) & \bm{0} \end{bmatrix} \begin{bmatrix} \ddot{\bm{q}} \\ \boldsymbol{\lambda} \end{bmatrix} = \begin{bmatrix} \bm{B}(\bm{q})\,\bm{u} - \bm{h}(\bm{q},\dot{\bm{q}}) \\ -\dot{\bm{J}}_c(\bm{q},\dot{\bm{q}})\,\dot{\bm{q}} \end{bmatrix}
-\label{eq:augmented_forward}
+\text{DOF}_{\text{effective}} = n - \text{rank}(\mathbf{J}_c(\bm{q}))
+\label{eq:dof_effective}
 \end{equation}
 
-where $\bm{h}(\bm{q},\dot{\bm{q}}) = \bm{C}(\bm{q},\dot{\bm{q}})\,\dot{\bm{q}} + \bm{g}(\bm{q})$ collects velocity-dependent and gravity terms.
+At non-singular configurations, the rank of $\mathbf{J}_c$ is typically equal to $k$ (the number of constraints). At singular configurations, the rank drops below $k$, meaning some constraints become redundant or the system gains unexpected DOF.
+\end{principle}
 
-\index{KKT system}
+\subsection{Rank Loss and Singularities}
+\label{subsec:rank_loss_singularities}
 
-This is called the KKT (Karush-Kuhn-Tucker) or augmented system. It is square ($2n \times 2n$ if $k$ constraints reduce the system to $n$ independent DOF).
+\index{singularity}\index{rank deficiency}
 
-\begin{theorem}{The Augmented System is Invertible in Forward Dynamics}{thm:augmented_invertible}
-For a well-posed mechanical system with constraints, the augmented matrix
+A \textbf{singularity} occurs when $\text{rank}(\mathbf{J}_c(\bm{q})) < k$. At a singularity:
+
+\begin{enumerate}
+\item The constraint Jacobian has a nontrivial null space.
+\item Some constraints become dependent on others.
+\item The mechanism may gain an unexpected degree of freedom.
+\item The constraint forces may become infinite (if the system is forced through the singularity).
+\end{enumerate}
+
+In the golf swing, singularities occur at:
+\begin{itemize}
+\item Address position (near-singularity with low effective stiffness).
+\item Impact (arm fully extended, approach to leg singularity).
+\item Transition points between backswing and downswing.
+\end{itemize}
+
+%============================================================================
+\section{Null Space of the Constraint Jacobian: Allowed Motions}
+\label{sec:nullspace_constraint_jacobian}
+
+\index{null space}\index{allowed velocities}\index{redundancy}
+
+The null space of $\mathbf{J}_c$ is the set of velocities that don't violate the constraint:
 \begin{equation}
-\bm{K} = \begin{bmatrix} \bm{M} & -\bm{J}_c^T \\ \bm{J}_c & \bm{0} \end{bmatrix}
-\label{eq:KKT_matrix}
+\mathcal{N}(\mathbf{J}_c) = \{ \dot{\bm{q}} : \mathbf{J}_c(\bm{q})\,\dot{\bm{q}} = \mathbf{0} \}
+\label{eq:nullspace_constraint}
 \end{equation}
 
-is nonsingular whenever $\bm{M}$ is positive definite and $\bm{J}_c$ has full row rank. Therefore, given $\bm{u}$, we can always solve uniquely for $\ddot{\bm{q}}$ and $\boldsymbol{\lambda}$.
-
-This means \textbf{forward dynamics always works}.
-\end{theorem}
-
-This theorem guarantees that if you specify all muscle torques, the skeleton's acceleration is uniquely determined. Physically, this makes sense: physics is deterministic going forward.
-
-\subsection{The Underdetermined Inverse}
-\label{subsec:underdetermined_inverse}
-
-But inverse dynamics is different. Now, we know $\ddot{\bm{q}}$ (from motion capture) and want to find $\bm{u}$ and $\boldsymbol{\lambda}$.
-
-Rearrange Equation \ref{eq:eom_constrained}:
+\begin{definition}{Null Space Dimension and Redundancy}{def:nullspace_dimension}
+The dimension of the null space is:
 \begin{equation}
-\bm{B}(\bm{q})\,\bm{u} + \bm{J}_c^T(\bm{q})\,\boldsymbol{\lambda} = \bm{M}(\bm{q})\,\ddot{\bm{q}} + \bm{h}(\bm{q},\dot{\bm{q}})
-\label{eq:inverse_rearranged}
+d = n - \text{rank}(\mathbf{J}_c)
+\label{eq:nullspace_dim_formula}
 \end{equation}
 
-Let $\bm{r} = \bm{M}(\bm{q})\,\ddot{\bm{q}} + \bm{h}(\bm{q},\dot{\bm{q}})$ be the known right-hand side (the net force required to produce the measured acceleration).
-
-We must solve:
-\begin{equation}
-\bm{B}(\bm{q})\,\bm{u} + \bm{J}_c^T(\bm{q})\,\boldsymbol{\lambda} = \bm{r}
-\label{eq:inverse_underdetermined}
-\end{equation}
-
-This is an underdetermined linear system: $n$ equations, $p + k$ unknowns, with $p + k > n$.
-
-\begin{definition}{Solution Space and Null Space}{def:nullspace}
-The solution to Equation \ref{eq:inverse_underdetermined} is not unique. Instead, the general solution is:
-\begin{equation}
-\begin{bmatrix} \bm{u} \\ \boldsymbol{\lambda} \end{bmatrix} = \begin{bmatrix} \bm{u}^* \\ \boldsymbol{\lambda}^* \end{bmatrix} + \mathcal{N}
-\label{eq:general_solution}
-\end{equation}
-
-where $\begin{bmatrix} \bm{u}^* \\ \boldsymbol{\lambda}^* \end{bmatrix}$ is any particular solution and $\mathcal{N}$ is the null space:
-\begin{equation}
-\mathcal{N} = \left\{ \begin{bmatrix} \delta\bm{u} \\ \delta\boldsymbol{\lambda} \end{bmatrix} : \bm{B}(\bm{q})\,\delta\bm{u} + \bm{J}_c^T(\bm{q})\,\delta\boldsymbol{\lambda} = \bm{0} \right\}
-\label{eq:nullspace_def}
-\end{equation}
-
-Any combination of applied torques and constraint forces in the null space produces \emph{zero net force}. These combinations are invisible to the equations of motion: they change $\bm{u}$ and $\boldsymbol{\lambda}$ without changing the predicted kinematics.
+This dimension is the number of "redundant" or "hidden" DOF in the system—joint motions that don't change the constraint (the club's motion remains unchanged).
 \end{definition}
 
-\index{null space}\index{underdetermined system}
+\begin{example}{Null Space for Two-Handed Grip}{ex:nullspace_two_hands}
+Consider the two arms (14 DOF total) gripping a club with 6 constraints (3 position + 3 orientation).
 
-The constraint forces $\boldsymbol{\lambda}$ can usually be determined from the constraint equations themselves (given measured $\ddot{\bm{q}}$, Equation \ref{eq:constraint_acceleration} determines $\boldsymbol{\lambda}$). But the applied torques $\bm{u}$ cannot be uniquely determined without additional information or modeling assumptions.
+At a non-singular configuration:
+\begin{equation}
+d = 14 - 6 = 8
+\label{eq:nullspace_dim_two_arms}
+\end{equation}
 
-\section{A Concrete Example: The Two-Handed Golf Grip}
-\label{sec:two_hand_example}
-
-\begin{laymansbox}{Setting Up the Problem}{context:two_hand_setup}
-Let us work through a concrete example: the biomechanics of holding a golf club with both hands.
-
-Model the system as follows:
+This means there are 8-dimensional family of joint configurations that all result in the same club position and orientation. Some examples of these null space motions:
 \begin{itemize}
-\item Left arm: 3 joints (shoulder, elbow, wrist) with coordinates $q_L^{(1)}, q_L^{(2)}, q_L^{(3)}$.
-\item Right arm: 3 joints with coordinates $q_R^{(1)}, q_R^{(2)}, q_R^{(3)}$.
-\item A club held at a fixed position relative to each hand.
-\item Total: 6 degrees of freedom without constraints.
+\item Adjust right-hand grip pressure while maintaining club position.
+\item Adjust left-hand grip angle without changing the club's position.
+\item Change the plane of the arm motion (more vertical vs. more horizontal) while keeping club trajectory fixed.
+\item Adjust wrist cock angle without changing the overall club motion.
 \end{itemize}
 
-The constraint is simple: both hands must grip the same club. The constraint equation is:
-\begin{equation}
-\bm{\Phi}_{\text{grip}} = \text{(position of right hand)} - \text{(position of left hand)} - \text{(club geometry)} = \bm{0}
-\label{eq:grip_constraint}
-\end{equation}
-
-This constraint is $k = 3$ dimensional (three spatial coordinates). So the constrained system has $6 - 3 = 3$ independent DOF.
-
-But we still have 6 actuators (muscles acting on 6 joint angles). The system is \textbf{redundantly actuated}: more muscle groups than independent degrees of freedom.
-\end{laymansbox}
-
-\subsection{Setting Up the Equations}
-\label{subsec:two_hand_equations}
-
-The equation of motion for the combined two-arm system (without constraints):
-\begin{equation}
-\bm{M}(q_L, q_R)\begin{bmatrix}\ddot{\bm{q}}_L \\ \ddot{\bm{q}}_R\end{bmatrix} + \bm{h} = \begin{bmatrix}\bm{\tau}_L \\ \bm{\tau}_R\end{bmatrix} + \bm{J}_c^T(\bm{q})\,\boldsymbol{\lambda}_{\text{grip}}
-\label{eq:two_arm_eom}
-\end{equation}
-
-where $\bm{\tau}_L$ and $\bm{\tau}_R$ are the torques applied by the left and right arm muscles.
-
-The constraint Jacobian $\bm{J}_c \in \mathbb{R}^{3 \times 6}$ relates changes in joint angles to changes in the grip constraint.
-
-The constraint force $\boldsymbol{\lambda}_{\text{grip}} \in \mathbb{R}^3$ represents the internal reaction force between the two hands. It is exerted on the left hand in one direction and on the right hand in the opposite direction, forming an equal-and-opposite pair.
-
-\subsection{The Underdetermined Inverse Problem}
-\label{subsec:two_hand_underdetermined}
-
-Suppose a motion-capture system measures the trajectory $\bm{q}_L(t)$ and $\bm{q}_R(t)$. We compute $\ddot{\bm{q}}_L$ and $\ddot{\bm{q}}_R$ by differentiating twice.
-
-From the equations of motion:
-\begin{equation}
-\begin{bmatrix}\bm{\tau}_L \\ \bm{\tau}_R\end{bmatrix} = \bm{M}\begin{bmatrix}\ddot{\bm{q}}_L \\ \ddot{\bm{q}}_R\end{bmatrix} + \bm{h} - \bm{J}_c^T\,\boldsymbol{\lambda}_{\text{grip}}
-\label{eq:two_hand_inverse}
-\end{equation}
-
-This gives us 6 equations (three for the left arm, three for the right arm).
-
-The unknowns are:
-\begin{itemize}
-\item $\bm{\tau}_L \in \mathbb{R}^3$ (3 left-arm muscle torques)
-\item $\bm{\tau}_R \in \mathbb{R}^3$ (3 right-arm muscle torques)
-\item $\boldsymbol{\lambda}_{\text{grip}} \in \mathbb{R}^3$ (3 components of grip force)
-\end{itemize}
-
-Total: $3 + 3 + 3 = 9$ unknowns, but only 6 equations.
-
-\begin{example}{The Load-Sharing Ambiguity}{ex:load_sharing}
-Suppose the constraint forces have been determined (from the constraint kinematics). We have:
-\begin{equation}
-\bm{J}_c\,\ddot{\bm{q}} + \dot{\bm{J}}_c\,\dot{\bm{q}} = \bm{0} \quad \Rightarrow \quad \boldsymbol{\lambda}_{\text{grip}} \text{ is determined}
-\label{eq:lambda_determined}
-\end{equation}
-
-Now, from the equation of motion:
-\begin{equation}
-\begin{bmatrix}\bm{\tau}_L \\ \bm{\tau}_R\end{bmatrix} = \bm{M}\begin{bmatrix}\ddot{\bm{q}}_L \\ \ddot{\bm{q}}_R\end{bmatrix} + \bm{h} - \bm{J}_c^T\,\boldsymbol{\lambda}_{\text{grip}}
-\label{eq:tau_to_solve}
-\end{equation}
-
-The right-hand side is known. Call it $\bm{r} = \bm{M}\begin{bmatrix}\ddot{\bm{q}}_L \\ \ddot{\bm{q}}_R\end{bmatrix} + \bm{h} - \bm{J}_c^T\,\boldsymbol{\lambda}_{\text{grip}}$.
-
-We need to find 6 muscle torques from this one 6-dimensional vector $\bm{r}$. But $\bm{r}$ contains only the \emph{net} force on the arms. If the left arm pushes on the club with torque $\boldsymbol{\tau}_L^{(0)}$ and the right arm pulls with torque $\boldsymbol{\tau}_R^{(0)} = -\boldsymbol{\tau}_L^{(0)}$, the net effect is zero.
-
-Any decomposition of $\bm{r}$ as $\bm{r} = \bm{\tau}_L + \bm{\tau}_R$ is valid. The physical motor commands of the left arm can be adjusted upward and the right arm downward (or vice versa) without changing the observed kinematics.
-
-The left arm "load" and the right arm "load" are unobservable from kinematics alone.
+These are all "free" motions in the sense that they don't require external work—they're constrained by the loop closure but allowed by it.
 \end{example}
 
-\index{load sharing}\index{muscle recruitment}
+\subsection{Null Space Projector}
+\label{subsec:nullspace_projector}
 
+A useful computational tool is the \textbf{null space projector}:
+\begin{equation}
+\mathbf{P} = \mathbf{I} - \mathbf{J}_c^+ \mathbf{J}_c
+\label{eq:nullspace_projector}
+\end{equation}
+
+where $\mathbf{J}_c^+$ is the pseudoinverse of $\mathbf{J}_c$.
+
+This matrix projects any velocity onto the null space:
+\begin{equation}
+\dot{\bm{q}}_{\text{null}} = \mathbf{P}\,\dot{\bm{q}}_{\text{any}}
+\label{eq:nullspace_projection}
+\end{equation}
+
+Any velocity of the form $\dot{\bm{q}}_{\text{null}}$ satisfies the constraint exactly.
+
+%============================================================================
+\section{Internal Forces and the Dual Null Space}
+\label{sec:internal_forces_dual}
+
+\index{internal forces}\index{range}\index{dual space}
+
+Just as the null space describes allowed velocities, the dual null space describes internal forces.
+
+\begin{definition}{Useful and Internal Forces}{def:useful_internal_forces}
+\begin{itemize}
+\item \textbf{Useful forces:} Those in the range of $\mathbf{J}_c^T$. These forces constrain the motion (they do work on the constraint).
+
+\item \textbf{Internal forces:} Those in the null space of $\mathbf{J}_c^T$. These forces don't constrain motion—they create internal stress without affecting the kinematics.
+\end{itemize}
+\end{definition}
+
+\begin{principle}{Orthogonality of Null Spaces}{principle:orthogonality_null_duals}
+A fundamental property of linear algebra:
+\begin{equation}
+\mathcal{N}(\mathbf{J}_c) \perp \text{Range}(\mathbf{J}_c^T)
+\label{eq:orthogonality_null_range}
+\end{equation}
+
+Mechanically: a force in the range of $\mathbf{J}_c^T$ does zero work on any velocity in the null space of $\mathbf{J}_c$.
+\end{principle}
+
+\begin{laymansbox}{Why Internal Forces Matter for Injury}{context:internal_forces_injury}
+Internal forces (those in the null space of $\mathbf{J}_c^T$) are mechanically "invisible"—they don't change the kinematics. But they create real stresses in tissues.
+
+For example, a golfer might grip the club very tightly (large internal grip force) while maintaining identical club trajectory compared to a golfer with light grip. The kinematics are the same, but the internal stresses are very different. The tight-grip golfer may fatigue forearm muscles and risk injury from the excess internal force.
+
+This is why understanding the dual null space is crucial for predicting injury risk and coaching swing efficiency.
+\end{laymansbox}
+
+%============================================================================
+\section{Why Drift Forces Are Not Constrained by the Loop}
+\label{sec:drift_not_constrained_inverse}
+
+\index{drift forces}\index{gravity}\index{centrifugal}\index{Coriolis}
+
+A critical insight from Chapter~\ref{ch:parallel_mechanisms}: drift forces are computed from kinematics alone and are NOT affected by the constraint ambiguity.
+
+\subsection{Gravity}
+\label{subsec:gravity_inverse}
+
+Gravity acts on the center of mass:
+\begin{equation}
+\mathbf{F}_{\text{grav}} = m\mathbf{g}
+\label{eq:gravity_force}
+\end{equation}
+
+The center of mass position is determined uniquely by the skeleton's configuration $\bm{q}$. Once you know the configuration from motion capture, gravity is completely determined. No ambiguity.
+
+\subsection{Coriolis Force}
+\label{subsec:coriolis_inverse}
+
+The Coriolis force is:
+\begin{equation}
+\mathbf{F}_{\text{Cor}} = -2m\,\boldsymbol{\omega} \times \mathbf{v}_{\text{rel}}
+\label{eq:coriolis_general}
+\end{equation}
+
+Both $\boldsymbol{\omega}$ (body rotation rate) and $\mathbf{v}_{\text{rel}}$ (relative velocity) are determined from joint angles and velocities. No ambiguity.
+
+Moreover, Coriolis is \emph{perpendicular} to the velocity that creates it. This perpendicularity is a kinematic fact, not dependent on forces.
+
+\subsection{Centrifugal Force}
+\label{subsec:centrifugal_inverse}
+
+The centrifugal acceleration (in the rotating frame) is:
+\begin{equation}
+\mathbf{a}_{\text{cent}} = -\boldsymbol{\omega} \times (\boldsymbol{\omega} \times \mathbf{r})
+\label{eq:centrifugal_accel}
+\end{equation}
+
+This depends only on $\boldsymbol{\omega}$ (rotation rate, from kinematics) and $\mathbf{r}$ (position, from kinematics). No ambiguity.
+
+\begin{principle}{Drift Forces Are Observable}{principle:drift_observable_inverse}
+From motion capture alone, a biomechanist can compute the total drift force:
+\begin{equation}
+\mathbf{F}_{\text{drift}} = \mathbf{F}_{\text{grav}} + \mathbf{F}_{\text{Cor}} + \mathbf{F}_{\text{cent}} + \text{(elastic drift)}
+\label{eq:total_drift_force}
+\end{equation}
+
+This total drift force is uniquely determined by kinematics. There is no null space ambiguity. The ZTCF framework (Chapter~\ref{ch:zero_torque_counterfactual}) leverages this fact to compute the total net force without needing to resolve the ambiguity in individual muscle torques.
+\end{principle}
+
+%============================================================================
+\section{Active Force Distribution Ambiguity}
+\label{sec:active_force_ambiguity}
+
+\index{force distribution}\index{load sharing}\index{ambiguity}
+
+While drift forces are unambiguous, the distribution of \emph{active muscle torques} between the two hands is ambiguous.
+
+\begin{theorem}{The Ambiguity Theorem for Two-Handed Grip}{theorem:ambiguity_two_hands}
+In a system where both hands grip a common object:
+
+The total required force (drift + control combined) is uniquely determined:
+\begin{equation}
+\mathbf{F}_{\text{total}} = \mathbf{M}\,\ddot{\bm{q}} + \mathbf{C}\,\dot{\bm{q}} + \mathbf{g}
+\label{eq:total_force_unique}
+\end{equation}
+
+But this total can be decomposed between hands infinitely many ways:
+\begin{equation}
+\mathbf{F}_{\text{total}} = \mathbf{F}_L + \mathbf{F}_R
+\label{eq:load_decomposition}
+\end{equation}
+
+where any pair $(\mathbf{F}_L, \mathbf{F}_R)$ satisfying $\mathbf{F}_L + \mathbf{F}_R = \mathbf{F}_{\text{total}}$ is equally valid kinematically.
+
+Mathematically: the solution space is the affine subspace
+\begin{equation}
+\{ (\mathbf{F}_L, \mathbf{F}_R) : \mathbf{F}_L + \mathbf{F}_R = \mathbf{F}_{\text{total}} \}
+\label{eq:solution_affine_subspace}
+\end{equation}
+
+This is a 3-dimensional affine subspace (codimension 3 in the 6-dimensional space of possible $(\mathbf{F}_L, \mathbf{F}_R)$ pairs).
+\end{theorem}
+
+\subsection{Vaughan's Resolution Strategy}
+\label{subsec:vaughan_resolution}
+
+\index{Vaughan}\index{optimization}\index{load distribution}
+
+C.L. Vaughan (1981, 1983) proposed several strategies to resolve this ambiguity:
+
+\begin{reference}{Vaughan's Approaches}{ref:vaughan_resolution_strategies}
+
+\begin{enumerate}
+
+\item \textbf{Proportional load sharing:} Assume the load is distributed proportionally to the sum of kinetic and potential energies in each limb. This is a heuristic without strong physical justification.
+
+\item \textbf{Optimization criterion:} Minimize a scalar objective such as:
+\begin{equation}
+J = \sum_i (\tau_i / \tau_{i,\text{max}})^2
+\label{eq:optimization_criterion_torque}
+\end{equation}
+
+or
+
+\begin{equation}
+J = \sum_i (\dot{E}_i)^2 \quad \text{(metabolic cost)}
+\label{eq:optimization_criterion_metabolic}
+\end{equation}
+
+Subject to the constraint $\mathbf{F}_L + \mathbf{F}_R = \mathbf{F}_{\text{total}}$.
+
+\item \textbf{Instrumented measurement:} Use force plates under each hand (or each foot for lower body) to directly measure the constraint forces, breaking the ambiguity.
+
+\end{enumerate}
+
+The optimization approach has become standard in biomechanics, with the understanding that different objective functions (minimize muscle activation, minimize metabolic cost, minimize joint torques, etc.) will yield different load distributions—all of which are mechanically consistent with the measured motion.
+
+\end{reference}
+
+%============================================================================
+\section{Modern Instrumented Club Approaches}
+\label{sec:instrumented_clubs}
+
+\index{instrumented equipment}\index{strain gauges}\index{force sensors}
+
+One way to break the ambiguity is to measure forces directly at the grip.
+
+\subsection{Strain Gauge Instrumentation}
+\label{subsec:strain_gauges}
+
+A \textbf{strain gauge} is a thin resistive element that changes resistance when strained. By gluing strain gauges to the club shaft (or grip), researchers can measure the forces and moments acting on the club.
+
+\begin{definition}{Wheatstone Bridge Configuration}{def:wheatstone_bridge}
+Strain gauges are typically arranged in a \textbf{Wheatstone bridge} configuration to maximize sensitivity and cancel out temperature-related drift:
+\begin{equation}
+V_{\text{output}} = V_{\text{input}} \times \frac{R_1 R_3 - R_2 R_4}{(R_1 + R_2)(R_3 + R_4)}
+\label{eq:wheatstone_output}
+\end{equation}
+
+When one strain gauge experiences tension (strain) and the opposite experiences compression, the output voltage is proportional to the strain.
+\end{definition}
+
+\subsection{Piezoelectric Force Sensors}
+\label{subsec:piezoelectric_sensors}
+
+\textbf{Piezoelectric sensors} generate an electrical signal when mechanically deformed. They are faster and more sensitive than strain gauges but typically require amplification.
+
+\begin{definition}{Piezoelectric Effect}{def:piezoelectric}
+Certain crystals (quartz, PZT ceramics) generate a voltage when stressed:
+\begin{equation}
+\mathbf{V} = \mathbf{d} \cdot \boldsymbol{\sigma}
+\label{eq:piezoelectric_relation}
+\end{equation}
+
+where $\mathbf{d}$ is the piezoelectric coefficient and $\boldsymbol{\sigma}$ is the applied stress.
+\end{definition}
+
+Piezoelectric sensors are often arranged in a hexapod configuration (6 sensors, one for each DOF: 3 forces, 3 moments).
+
+\subsection{Two-Point Wrench Measurement}
+\label{subsec:two_point_wrench}
+
+\index{wrench}\index{force and moment}
+
+With force/moment data from multiple points, a biomechanist can compute the resultant wrench (total force and moment) acting on the club.
+
+\begin{definition}{Wrench}{def:wrench}
+A \textbf{wrench} is a 6D vector combining force and moment:
+\begin{equation}
+\mathcal{W} = \begin{bmatrix} \mathbf{F} \\ \mathbf{M} \end{bmatrix} \in \mathbb{R}^6
+\label{eq:wrench_definition}
+\end{equation}
+\end{definition}
+
+If two independent grip points on the club have known wrenches $\mathcal{W}_L$ and $\mathcal{W}_R$, the total wrench is:
+\begin{equation}
+\mathcal{W}_{\text{total}} = \mathcal{W}_L + \mathcal{W}_R
+\label{eq:total_wrench_two_points}
+\end{equation}
+
+This directly measures the resultant constraint forces and resolves the ambiguity (at least in the grip forces).
+
+%============================================================================
+\section{Lower Body Inverse Dynamics: GRF and Feet}
+\label{sec:lower_body_inverse_dynamics}
+
+\index{ground reaction force}\index{force plate}\index{lower body}\index{sequential computation}
+
+The lower body biomechanics can be analyzed using the same inverse dynamics framework, but with the advantage that force plate data provides a known boundary condition.
+
+\subsection{Force Plate Boundary Condition}
+\label{subsec:force_plate_bc}
+
+A force plate measures the total force and moment exerted by the ground on the golfer's feet. This is a known external force that can be used to "close" the system and allow unique inverse dynamics computation.
+
+\begin{principle}{Force Plate Provides Unique Solution}{principle:force_plate_unique}
+With force plate data:
+\begin{itemize}
+\item The distal boundary condition (force/moment at the foot) is known (measured by force plate).
+\item The proximal boundary condition (forces at the hip, if we're analyzing the leg only) is unknown but can be computed.
+\item The leg kinematics is measured.
+\item RNEA can be applied uniquely to solve for joint torques.
+\end{itemize}
+
+This is in contrast to the upper body, where no distal boundary condition is known (the club's acceleration is known, but the forces on the club from external sources—like aerodynamic drag or the ball—are unknown).
+\end{principle}
+
+\subsection{Sequential Ankle-Knee-Hip Computation}
+\label{subsec:sequential_ankle_knee_hip}
+
+\index{RNEA}\index{sequential computation}
+
+Lower body inverse dynamics is computed sequentially, distal to proximal:
+
+\begin{enumerate}
+
+\item \textbf{Ankle:} Apply RNEA using the foot's acceleration (from kinematics) and the foot's force/moment (from force plate). Solve for ankle joint torque.
+
+\item \textbf{Knee:} Using the ankle torque and lower leg's acceleration, compute the forces and moments at the knee. Solve for knee joint torque.
+
+\item \textbf{Hip:} Using the knee torque and thigh's acceleration, compute the forces and moments at the hip. Solve for hip joint torque.
+
+\end{enumerate}
+
+\begin{example}{Lower Body Inverse Dynamics Example}{ex:lower_body_id}
+A 100 kg golfer during the downswing:
+\begin{itemize}
+\item Force plate measures vertical GRF: $F_z = 1400$ N (1.4 BW).
+\item Force plate measures free moment: $M_z = 80$ N·m.
+\item Motion capture shows hip acceleration: $\ddot{\theta}_{\text{hip}} = 200$ rad/s$^2$.
+\item Hip inertia: $I_{\text{hip}} = 2$ kg·m$^2$.
+\end{itemize}
+
+From kinematics and the force plate data, we can compute the hip torque that produced the observed acceleration.
+
+If the ground torque is $M_z = 80$ N·m and this is applied at the feet (roughly 0.2 m from the pelvis), the resulting pelvis torque is approximately $\tau_{\text{pelvis}} = M_z / I_{\text{hip}} \times $ (accounting for moment arms and mass distribution).
+
+This is a well-determined problem because the force plate provides the boundary condition.
+\end{example}
+
+%============================================================================
+\section{Ground Reaction Torque: Initiating Pelvis Rotation}
+\label{sec:ground_torque_detailed}
+
+\index{ground reaction torque}\index{free moment}\index{yaw moment}
+
+The ground reaction torque (free moment) $M_z$ is the torque applied by the ground about the vertical axis. This is a fundamental driver of pelvis rotation in the golf swing.
+
+\subsection{Computation of Ground Reaction Torque}
+\label{subsec:ground_torque_computation}
+
+If force plate data is available, $M_z$ is directly measured. If not, it can be approximated from the offset of the vertical ground reaction force from the body's center of rotation.
+
+\begin{definition}{Ground Torque from Force Offset}{def:ground_torque_offset}
+If the vertical GRF $F_z$ is applied at a horizontal offset $\mathbf{r}$ from the pelvis center, the resulting torque is:
+\begin{equation}
+M_z = \mathbf{r} \times F_z
+\label{eq:ground_torque_offset}
+\end{equation}
+
+More precisely, if the center of pressure is at horizontal position $(x_{\text{COP}}, y_{\text{COP}})$ and the pelvis center is at $(x_p, y_p)$, then:
+\begin{equation}
+M_z = (x_{\text{COP}} - x_p) \times F_z^y - (y_{\text{COP}} - y_p) \times F_z^x
+\label{eq:ground_torque_cop}
+\end{equation}
+
+where $F_z^x$ and $F_z^y$ are the horizontal components of the GRF vector.
+\end{definition}
+
+\subsection{Role in Downswing Initiation}
+\label{subsec:ground_torque_downswing}
+
+\begin{principle}{Ground Torque Initiates Downswing}{principle:ground_torque_downswing_role}
+During the transition from backswing to downswing, the pelvis begins to accelerate. This acceleration is driven by:
+
+\begin{enumerate}
+\item The ground reaction torque $M_z$ (from the force plate).
+\item The hip muscle torques (computed from inverse dynamics).
+\end{enumerate}
+
+The relative contributions vary, but in professional golfers, the ground reaction torque often contributes 50% or more of the total pelvis acceleration. This is another manifestation of drift dominance: the ground does significant mechanical work on the golfer's body.
+\end{principle}
+
+\subsection{Forward and Backward Torque Asymmetry}
+\label{subsec:forward_backward_asymmetry}
+
+An interesting feature of ground reaction torque is the asymmetry between forward (toward the target) and backward (away from target) torques.
+
+During the downswing, the ground typically exerts a torque that \emph{accelerates} the pelvis (positive torque in the direction of swing). This is mechanically assisting the swing.
+
+During the follow-through, the ground may exert a \emph{braking} torque (negative torque opposing pelvis rotation) as the golfer's feet push off the ground to stabilize balance.
+
+This asymmetry reveals the "ground-up" power transfer story: the ground actively powers the downswing but passively decelerates the follow-through.
+
+%============================================================================
+\section{Resolving Ambiguity: EMG, Optimization, and Instrumented Equipment}
+\label{sec:resolving_ambiguity}
+
+\index{electromyography}\index{EMG}\index{optimization}\index{muscle activation}
+
+Three general approaches exist to resolve the ambiguity in inverse dynamics of parallel systems:
+
+\subsection{Approach 1: Electromyography (EMG)}
+\label{subsec:approach_emg}
+
+\index{EMG}\index{electromyography}\index{muscle activation}
+
+\begin{definition}{Electromyography (EMG)}{def:emg}
+\textbf{Electromyography} is the measurement of electrical activity in muscles. Electrodes (surface or intramuscular) detect the action potentials generated by motor units when a muscle contracts.
+
+EMG signal amplitude is typically proportional to muscle activation level (recruitment) and contraction force.
+\end{definition}
+
+EMG data can be used to constrain the solution: if EMG shows that the right arm is much more active than the left, the load distribution must favor the right arm.
+
+\begin{laymansbox}{Strengths and Limitations of EMG}{context:emg_strengths_limitations}
+
+\textbf{Strengths:}
+\begin{itemize}
+\item Direct measurement of muscle activation (neural signal).
+\item Relatively non-invasive (surface electrodes).
+\item High temporal resolution (can capture millisecond-scale changes in activation).
+\end{itemize}
+
+\textbf{Limitations:}
+\begin{itemize}
+\item EMG does not measure force directly—the relationship between EMG amplitude and force is nonlinear and depends on muscle length, velocity, fatigue state, and many other factors.
+\item Cross-talk from nearby muscles can contaminate the signal.
+\item Some deep muscles (e.g., deep core stabilizers) are difficult to record with surface electrodes.
+\item EMG signal is noisy and requires filtering and processing, introducing artifacts.
+\end{itemize}
+
+In practice, EMG is most useful as a qualitative indicator (which muscles are active) rather than a quantitative measure of force.
+\end{laymansbox}
+
+\subsection{Approach 2: Optimization}
+\label{subsec:approach_optimization}
+
+\index{optimization}\index{criterion}\index{objective function}
+
+An optimization approach assumes the golfer distributes loads according to some implicit criterion (e.g., minimize energy, minimize fatigue, minimize peak joint torque). By applying this criterion, we can select a specific solution from the ambiguous solution space.
+
+\begin{definition}{Static Optimization for Load Distribution}{def:static_optimization}
+Minimize a scalar objective function:
+\begin{equation}
+J = \sum_i (\tau_i)^2 \quad \text{or} \quad J = \sum_i (\tau_i / \tau_{i,\text{max}})^2 \quad \text{or} \quad J = \sum_i |EMG_i|
+\label{eq:optimization_objectives}
+\end{equation}
+
+Subject to:
+\begin{equation}
+\mathbf{F}_L + \mathbf{F}_R = \mathbf{F}_{\text{total}}
+\label{eq:optimization_constraint_force}
+\end{equation}
+
+and any additional constraints from biomechanical limits or measured data (e.g., EMG).
+\end{definition}
+
+\begin{example}{Quadratic Programming Solution}{ex:quadratic_program}
+A common choice is to minimize the sum of squared torques:
+\begin{equation}
+J = \sum_i \tau_i^2
+\label{eq:sum_squared_torques}
+\end{equation}
+
+Subject to $\mathbf{F}_L + \mathbf{F}_R = \mathbf{F}_{\text{total}}$.
+
+This is a quadratic program with a linear constraint. The solution is the "minimum-norm" distribution: the distribution that achieves the required total force while minimizing the total joint torque magnitude.
+
+The solution can be written explicitly using the pseudoinverse and null space projector (Chapter~\ref{ch:parallel_mechanisms}):
+\begin{equation}
+\mathbf{F}_{\text{min-norm}} = \mathbf{J}_c^+ \mathbf{F}_{\text{total}}
+\label{eq:minimum_norm_force}
+\end{equation}
+\end{example}
+
+\begin{laymansbox}{Strengths and Limitations of Optimization}{context:optimization_strengths_limitations}
+
+\textbf{Strengths:}
+\begin{itemize}
+\item Provides a deterministic solution.
+\item Computationally straightforward (quadratic programs, convex optimization).
+\item Results are often physiologically reasonable (minimum-norm solutions correlate with energy efficiency in some cases).
+\end{itemize}
+
+\textbf{Limitations:}
+\begin{itemize}
+\item The choice of objective function is somewhat arbitrary. Different objectives yield different solutions.
+\item Golfers may not actually optimize according to the chosen criterion—different golfers may use different strategies.
+\item Optimization cannot capture individual variation in control strategy without additional data.
+\end{itemize}
+
+The optimization approach is best viewed as a useful heuristic for generating plausible load distributions, not as a definitive answer.
+\end{laymansbox}
+
+\subsection{Approach 3: Instrumented Equipment (Grip Sensors, Force Plates)}
+\label{subsec:approach_instrumentation}
+
+\index{instrumentation}\index{force measurement}\index{grip sensors}
+
+The most direct approach: measure the constraint forces directly using sensors.
+
+\begin{definition}{Grip Force Sensors}{def:grip_sensors}
+Force sensors mounted on or around the golf club grip can measure:
+\begin{itemize}
+\item Left-hand grip force (magnitude and direction).
+\item Right-hand grip force (magnitude and direction).
+\item The combined wrench (resultant force and moment).
+\end{itemize}
+
+Modern grip sensors often use capacitive, resistive, or piezoelectric elements. Some are integrated into the grip itself; others are external measurement devices (like a six-axis load cell under the hands).
+\end{definition}
+
+With grip force data, the ambiguity is completely resolved:
+\begin{equation}
+\mathbf{F}_L + \mathbf{F}_R = \mathbf{F}_{\text{measured}}
+\label{eq:measured_constraint_force}
+\end{equation}
+
+The constraint forces are known, so the active muscle torques can be computed uniquely (subject only to the null space ambiguity in muscle-by-muscle decomposition, not in joint-level torques).
+
+\begin{laymansbox}{Strengths and Limitations of Instrumentation}{context:instrumentation_strengths_limitations}
+
+\textbf{Strengths:}
+\begin{itemize}
+\item Direct measurement—no assumptions or modeling required.
+\item Resolves the fundamental ambiguity completely.
+\item High fidelity and accuracy (modern sensors are very precise).
+\end{itemize}
+
+\textbf{Limitations:}
+\begin{itemize}
+\item Adds complexity and cost to the experimental setup.
+\item Requires careful calibration.
+\item Can affect the golfer's natural swing (extra sensors on the club change its balance and feel).
+\item Data collection requires specialized equipment and expertise.
+\end{itemize}
+
+Instrumented approaches are typically reserved for detailed research studies, not routine biomechanical screening.
+\end{laymansbox}
+
+%============================================================================
+\section{What CAN We Determine? The Identifiable Subspace}
+\label{sec:identifiable}
+
+\begin{laymansbox}{The Glass Half Full}{context:glass_half_full}
+Despite the ambiguity, inverse dynamics is not useless. Many aspects of the motion \emph{are} uniquely determined by kinematics. It is important to know exactly which aspects are observable and which are invisible.
+\end{laymansbox}
+
+\subsection{The Identifiable Components}
+\label{subsec:identifiable_components}
+
+\begin{definition}{Identifiable vs. Unidentifiable Components}{def:identifiable}
+From motion capture data of a system with loop constraints, the following quantities are \textbf{uniquely determined}:
+
+\begin{enumerate}
+
+\item \textbf{Total generalized force (drift + control):} The sum of all forces and moments required to produce the measured acceleration. This is computed from the right-hand side of the equation of motion and is independent of how the force is distributed among individual actuators.
+
+\item \textbf{Constraint forces (Lagrange multipliers):} The internal forces maintaining the loop closure. These are determined by the constraint kinematics equations:
+\begin{equation}
+\mathbf{J}_c\,\ddot{\bm{q}} + \dot{\mathbf{J}}_c\,\dot{\bm{q}} = \mathbf{0} \quad \Rightarrow \quad \boldsymbol{\lambda} \text{ is determined}
+\label{eq:constraint_forces_determined}
+\end{equation}
+
+\item \textbf{Joint-level torques (sum of all muscles at a joint):} The total torque at a joint (summed across all muscles and passive structures) is uniquely determined by the local dynamics:
+\begin{equation}
+\tau_{\text{joint}} = I\,\ddot{q} + \text{(local Coriolis and gravity terms)}
+\label{eq:joint_torque_unique}
+\end{equation}
+
+\end{enumerate}
+
+The following quantities are \textbf{underdetermined}:
+
+\begin{enumerate}
+
+\item \textbf{Individual muscle forces:} How the total joint torque is distributed among the left vs. right hand, or among the flexor vs. extensor muscles, is not uniquely determined. This is the fundamental load-sharing ambiguity.
+
+\item \textbf{Muscle activation patterns:} Without EMG or other supplementary data, you cannot infer which specific muscles are active or how hard each is working.
+
+\item \textbf{Internal stresses in tissues:} High grip pressure vs. low grip pressure produce identical kinematics but different internal stresses. These internal stresses are invisible to motion capture.
+
+\end{enumerate}
+\end{definition}
+
+\subsection{Joint Torques Are Identifiable}
+\label{subsec:joint_torques_identifiable}
+
+\begin{principle}{Joint-Level Torques from Inverse Dynamics}{principle:joint_torques_identifiable}
+At the joint level, inverse dynamics succeeds:
+\begin{equation}
+\tau_{\text{joint}} = M_{\text{joint}}\,\ddot{q}_{\text{joint}} + C_{\text{joint}}\,\dot{q}_{\text{joint}} + g_{\text{joint}} - \text{(constraint forces from children)}
+\label{eq:joint_torque_formula}
+\end{equation}
+
+This torque is the \emph{net} torque at the joint—the sum of all forces and moments acting on it (muscles, ligaments, constraint forces, etc.). It is uniquely determined from kinematics.
+
+However, this net joint torque is \emph{not} the same as muscle torque. The net torque includes:
+\begin{itemize}
+\item Active muscle torques.
+\item Passive tissue torques (ligaments, tendons, capsule).
+\item Constraint forces.
+\end{itemize}
+
+All of these contribute to the net joint torque. To separate them requires additional information (e.g., models of passive tissue stiffness, knowledge of constraint forces from force plates).
+\end{principle}
+
+%============================================================================
+\section{The ZTCF Framework as Forward Dynamics}
+\label{sec:ztcf_forward_dynamics}
+
+\index{ZTCF}\index{zero torque counterfactual}\index{forward dynamics}
+
+Here is the insight that makes ZTCF robust to loop constraints:
+
+\begin{principle}{ZTCF is a Forward Problem}{principle:ztcf_forward_problem}
+The ZTCF framework (Chapter~\ref{ch:zero_torque_counterfactual}) asks: "If all muscles were deactivated and only passive drift forces acted, what would the motion be?"
+
+This is a \emph{forward dynamics} problem: given the drift forces (which are kinematically determined), integrate forward to predict the motion.
+
+Forward dynamics is uniquely solvable even in parallel systems (recall Theorem \ref{thm:forward_wellposed} in Chapter~\ref{ch:inverse_dynamics_parallel}). Therefore, ZTCF is robust.
+
+The ZTCF result is the "baseline motion" that drift alone would produce. The \emph{actual motion} differs from this baseline because of active muscle control. The difference between actual and ZTCF is the \emph{control-induced perturbation}.
+
+By computing this perturbation directly (rather than trying to invert the forces), the ZTCF framework sidesteps the underdetermined inverse problem entirely.
+\end{principle}
+
+\begin{example}{ZTCF for Two-Handed Grip}{ex:ztcf_two_hands_example}
+Consider the golf swing with a two-handed grip:
+
+\begin{enumerate}
+
+\item \textbf{Compute drift forces:} From the measured kinematics (position, velocity, acceleration of joints), compute gravity, Coriolis, and centrifugal forces. These are kinematically determined.
+
+\item \textbf{Forward dynamics with drift only:} Integrate the equation of motion with only drift forces (no muscle torques):
+\begin{equation}
+\mathbf{M}\,\ddot{\bm{q}} = -\mathbf{C}\,\dot{\bm{q}} - \mathbf{g} + \text{(constraint forces)}
+\label{eq:drift_only_forward}
+\end{equation}
+
+This is a forward problem (forces given, motion sought). It's well-determined.
+
+\item \textbf{ZTCF prediction:} The solution is the motion that drift alone would produce, subject to the constraints.
+
+\item \textbf{Control input:} The muscle torques are whatever is needed to produce the \emph{actual} motion instead of the ZTCF motion:
+\begin{equation}
+\mathbf{u}_{\text{control}} = \mathbf{M}(\ddot{\bm{q}}_{\text{actual}} - \ddot{\bm{q}}_{\text{ZTCF}}) + \text{(cross terms)}
+\label{eq:control_torque_ztcf}
+\end{equation}
+
+This control torque is uniquely determined (at the joint level, at least).
+
+\end{enumerate}
+
+By framing the problem as forward dynamics (ZTCF) rather than inverse dynamics, we avoid the ambiguity entirely.
+\end{example}
+
+%============================================================================
 \section{Why Forward Works but Inverse Doesn't: The Asymmetry}
 \label{sec:asymmetry}
 
@@ -435,393 +1024,48 @@ The applied torques $\bm{u}$ lie in an affine subspace of dimension at least 1. 
 
 Physically: knowing how the skeleton moved does not fully specify what the muscles were doing. The muscles' effort can be distributed infinitely many ways among the different muscle groups, as long as their combined effect matches the observed motion.
 
-\section{What CAN We Determine? The Identifiable Subspace}
-\label{sec:identifiable}
+%============================================================================
+\section{Synthesis: What Inverse Dynamics Can and Cannot Tell You}
+\label{sec:synthesis_inverse_dynamics}
 
-\begin{laymansbox}{The Glass Half Full}{context:glass_half_full}
-Despite the ambiguity, inverse dynamics is not useless. Many aspects of the motion \emph{are} uniquely determined by kinematics. It is important to know exactly which aspects are observable and which are invisible.
+\index{identifiable}\index{unidentifiable}\index{inverse dynamics limitations}
+
+Let's consolidate what we've learned about the limits and possibilities of inverse dynamics:
+
+\begin{laymansbox}{Inverse Dynamics: The Final Summary}{context:inverse_summary}
+
+\textbf{What inverse dynamics CAN tell you (uniquely, from motion capture alone):}
+
+\begin{enumerate}
+\item The total net force and moment required at each joint.
+\item The constraint forces (e.g., grip force, ground reaction force).
+\item The ground reaction force and torque (if force plates are available).
+\item The sequential dynamics of the lower body (ankle → knee → hip, with force plate boundary condition).
+\end{enumerate}
+
+\textbf{What inverse dynamics CANNOT tell you (without additional information):}
+
+\begin{enumerate}
+\item The distribution of load between the two hands or two feet (in a parallel system).
+\item Individual muscle forces or activation patterns (without EMG or optimization assumptions).
+\item Internal stresses in tissues (without models of passive tissue properties).
+\item Which of multiple kinematically equivalent motor strategies the golfer is actually using.
+\end{enumerate}
+
+\textbf{How to break the ambiguity:}
+
+\begin{enumerate}
+\item Add force/moment sensors at the grip (instrumented clubs).
+\item Add EMG sensors to the relevant muscles.
+\item Apply an optimization criterion (e.g., minimize metabolic cost).
+\item Use sport-specific knowledge (e.g., professional golfers likely use near-optimal strategies).
+\end{enumerate}
+
 \end{laymansbox}
 
-\subsection{The Identifiable Components}
-\label{subsec:identifiable_components}
+\begin{exercises}{Chapter Exercises: Inverse Dynamics and Parallel Loops}{ex:chapter_18_exercises}
 
-\begin{definition}{Identifiable vs. Unidentifiable Components}{def:identifiable}
-From motion capture data of a system with loop constraints, the following quantities are \textbf{uniquely determined}:
-
-\begin{enumerate}
-\item \textbf{Net generalized force on the system:}
-\begin{equation}
-\bm{M}(\bm{q})\,\ddot{\bm{q}} + \bm{C}(\bm{q},\dot{\bm{q}})\,\dot{\bm{q}} + \bm{g}(\bm{q})
-\end{equation}
-
-This is computed directly from kinematics and is independent of which muscles did the work.
-
-\item \textbf{Constraint forces $\boldsymbol{\lambda}$:}
-From the constraint equations:
-\begin{equation}
-\bm{J}_c\,\ddot{\bm{q}} + \dot{\bm{J}}_c\,\dot{\bm{q}} = \bm{0}
-\end{equation}
-
-The constraint forces are determined up to the null space of $\bm{J}_c^T$.
-
-\item \textbf{Total net moment about the center of mass:}
-For multi-body systems, the total kinetic moment can be uniquely computed from kinematics.
-
-\end{enumerate}
-
-The following are \textbf{NOT uniquely determined}:
-
-\begin{enumerate}
-\item \textbf{Individual muscle torques in redundant systems:} If two muscles can produce the same net effect, their individual contributions cannot be separated from kinematics alone.
-
-\item \textbf{Load sharing between limbs:} In the two-handed grip example, the split between left-hand and right-hand torques is unobservable.
-
-\item \textbf{Internal forces in closed kinematic loops:} For example, the shear force at an intervertebral disc connecting two vertebrae in a twisted spine cannot be determined from kinematics alone.
-
-\end{enumerate}
-\end{definition}
-
-\index{identifiable}\index{unidentifiable}
-
-\subsection{Null Space Analysis}
-\label{subsec:nullspace_analysis}
-
-To characterize exactly which combinations of applied torques are invisible, compute the null space of the force distribution matrix:
-
-\begin{equation}
-\mathcal{N} = \mathrm{null}\left(\bm{B}(\bm{q})\right) \cap \mathrm{null}\left(\bm{J}_c^T(\bm{q})\right)^\perp
-\label{eq:nullspace_compound}
-\end{equation}
-
-\index{null space}
-
-Any torque vector in this null space produces zero observable force on the system. These are the "invisible" motor commands.
-
-\begin{example}{Null Space in the Two-Armed System}{ex:nullspace_arms}
-In the two-handed grip with identical left and right arms, suppose the constraint force is zero (the hands are not pushing against each other, just lightly touching).
-
-Then the null space includes all vectors of the form:
-\begin{equation}
-\begin{bmatrix} \bm{\tau}_L \\ \bm{\tau}_R \end{bmatrix} = \begin{bmatrix} \bm{\delta} \\ -\bm{\delta} \end{bmatrix}
-\end{equation}
-
-where $\bm{\delta}$ is any 3-dimensional torque vector.
-
-This represents the left arm pushing harder and the right arm pulling back by the same amount. The net effect on the club is zero. This entire family of motor commands is invisible to inverse dynamics.
-
-The dimension of the null space is 3. The number of degrees of freedom is 3. So the unidentifiable portion spans \emph{half} the space of possible motor commands!
-\end{example}
-
-\section{Strategies for Coping with Underdetermined Inverse Dynamics}
-\label{sec:coping_strategies}
-
-\subsection{Optimization-Based Approaches}
-\label{subsec:optimization}
-
-\index{optimization}\index{Moore-Penrose}\index{pseudoinverse}
-
-When inverse dynamics has no unique solution, the standard approach is to minimize some cost function subject to the equations of motion:
-
-\begin{definition}{Minimum-Norm Solution}{def:min_norm}
-Given the underdetermined system
-\begin{equation}
-\bm{B}(\bm{q})\,\bm{u} + \bm{J}_c^T\,\boldsymbol{\lambda} = \bm{r}(\bm{q},\dot{\bm{q}},\ddot{\bm{q}})
-\end{equation}
-
-solve:
-\begin{equation}
-\min_{\bm{u}, \boldsymbol{\lambda}} \left\|\bm{u}\right\|^2 + \alpha\left\|\boldsymbol{\lambda}\right\|^2
-\label{eq:min_norm_objective}
-\end{equation}
-
-subject to the equations of motion. The solution is given by the Moore-Penrose pseudoinverse:
-\begin{equation}
-\bm{u}^* = \bm{B}^+(\bm{r} - \bm{J}_c^T\,\boldsymbol{\lambda})
-\label{eq:pseudoinverse_solution}
-\end{equation}
-
-where $\bm{B}^+ = (\bm{B}^T\bm{B})^{-1}\bm{B}^T$ is the left pseudoinverse of $\bm{B}$.
-\end{definition}
-
-\index{pseudoinverse}
-
-This approach yields a unique solution—but it is a \textbf{modeling choice}, not a physical fact. The assumption that muscles minimize "effort" (measured as norm of torques) is a modeling assumption. It may or may not be accurate for a real golfer.
-
-Different cost functions (e.g., minimizing total power, or metabolic cost) yield different answers. The "correct" answer depends on how the nervous system actually controls motion, which is an open neuroscience question.
-
-\subsection{EMG-Informed Methods}
-\label{subsec:emg}
-
-\index{electromyography}\index{EMG}
-
-Instead of assuming muscles minimize effort, measure the muscles' electrical activity directly:
-
-\begin{principle}{Electromyography-Informed Inverse Dynamics}{prin:emg_informed}
-Record electromyographic (EMG) signals from major muscles during the swing. These signals (motor unit action potentials) are correlated with muscle activation. Use these measurements as \emph{constraints} on the inverse dynamics problem:
-
-\begin{equation}
-\min_{\bm{u}} \left\|\bm{u} - \bm{u}_{\text{EMG}}\right\|^2
-\end{equation}
-
-subject to:
-\begin{equation}
-\bm{B}(\bm{q})\,\bm{u} + \bm{J}_c^T\,\boldsymbol{\lambda} = \bm{r}
-\end{equation}
-
-where $\bm{u}_{\text{EMG}}$ is derived from integrated and normalized EMG signals.
-
-This approach provides additional information that kinematics alone cannot: the neuromuscular commands themselves. The solution is now constrained by physiology, not just mechanics.
-\end{principle}
-
-EMG-informed methods are more realistic but also more labor-intensive. They require placing electrodes on many muscles, careful signal processing, and a valid model relating EMG to muscle force.
-
-\subsection{Instrumented Clubs and Force Sensors}
-\label{subsec:force_sensors}
-
-\index{force sensors}\index{instrumentation}
-
-The most direct way to break the underdetermined inverse problem is to measure constraint forces directly:
-
-\begin{example}{Instrumented Golf Clubs}{ex:instrumented_clubs}
-A golf club instrumented with a 6-DOF force-torque sensor at the grip can measure the forces and torques applied by both hands simultaneously.
-
-Given these direct measurements of the grip forces, the inverse dynamics equations become:
-\begin{equation}
-\bm{B}(\bm{q})\,\bm{u} = \bm{r} - \bm{J}_c^T\,\boldsymbol{\lambda}_{\text{measured}}
-\end{equation}
-
-where $\boldsymbol{\lambda}_{\text{measured}}$ is known from the force sensor. Now, the system has $n$ equations and $p$ unknowns (the applied torques). If $p = n$, the system is square and has a unique solution.
-
-This is why instrumented clubs are a valuable research tool: they convert an underdetermined inverse problem into a determined one.
-\end{example}
-
-\subsection{Reducing the System: Cutting the Loop}
-\label{subsec:cutting_loop}
-
-Some research simplifies the problem by hand-modeling one limb as "driving" and others as "passive":
-
-\begin{example}{Dominant-Arm Assumption}{ex:dominant_arm}
-A researcher models the golf swing by assuming the right arm (dominant, in a right-handed golfer) applies all the torque. The left arm is modeled as a passive link, responding to forces and torques applied through the grip.
-
-Mathematically, this reduces the number of active DOF from 6 to 3 (the dominant arm's joints). The constraint equations still hold (the grip constraint), but now the constraint forces are the only unknown applied through the non-dominant arm.
-
-The inverse problem becomes determined.
-
-However, this assumption—that the left arm is passive—is a modeling choice. In reality, a skilled golfer uses both arms actively, and their relative contributions vary. The assumption may be reasonable as a first approximation but becomes inaccurate if the golfer's strategy shifts.
-\end{example}
-
-\section{Implications for the Zero-Torque Club-First Framework}
-\label{sec:ztcf_framework}
-
-\begin{laymansbox}{Why Forward Simulation is More Robust}{context:ztcf_robustness}
-The ZTCF (Zero-Torque Club-First) framework asks a different question than traditional inverse dynamics. Rather than asking \textit{What muscle torques caused this motion?}, it asks \textit{What motion occurs if the muscles apply zero torque to the club?}
-
-This is a \textbf{forward} problem, not an inverse problem. And for forward problems, the parallel loop is not an obstacle—it is fully handled by the laws of physics.
-\end{laymansbox}
-
-\subsection{ZTCF as Forward Dynamics}
-\label{subsec:ztcf_forward}
-
-\index{ZTCF}\index{Zero-Torque Club-First}
-
-Recall the ZTCF governing equation:
-\begin{equation}
-\bm{M}(\bm{q})\,\ddot{\bm{q}} + \bm{C}(\bm{q},\dot{\bm{q}})\,\dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{J}_c^T(\bm{q})\,\boldsymbol{\lambda}
-\label{eq:ztcf_eom}
-\end{equation}
-
-This is forward dynamics with $\bm{u} = \bm{0}$ (the applied torques are set to zero). The only forces acting are constraint forces and gravity.
-
-\begin{principle}{ZTCF Avoids the Inverse Problem Entirely}{prin:ztcf_sidestep}
-The ZTCF trajectory is a \textbf{forward integration problem}. Given initial conditions $\bm{q}(0), \dot{\bm{q}}(0)$ and the constraint equations $\bm{\Phi}(\bm{q}) = \bm{0}$, the motion $\bm{q}(t)$ is \textbf{uniquely determined} by integrating the constrained EOM forward.
-
-Even though the system has parallel loops and redundant actuators, the forward integration is \emph{well-posed}. The KKT matrix (Equation \ref{eq:KKT_matrix}) is nonsingular at each time step, so the constraint forces $\boldsymbol{\lambda}$ and accelerations $\ddot{\bm{q}}$ are uniquely determined.
-
-The ZTCF trajectory is the unique solution to the zero-control problem. There is no ambiguity in what the motion is.
-
-\textbf{This is the fundamental advantage of the ZTCF approach.} It does not suffer from the underdetermined inverse problem. It is robust even in systems with complex parallel loops.
-\end{principle}
-
-\subsection{Comparing Estimation Approaches}
-\label{subsec:comparing_approaches}
-
-\begin{driftcontrol}{Forward Simulation vs.\ Inverse Inference in Parallel Systems}{drift:simulation_vs_inference}
-
-\textbf{Inverse Dynamics Approach:}
-\begin{itemize}
-\item \textbf{Question:} What torques caused this measured motion?
-\item \textbf{Method:} Measure $\bm{q}(t)$, differentiate to get $\ddot{\bm{q}}(t)$, solve backward.
-\item \textbf{In parallel systems:} Underdetermined. No unique answer without additional assumptions (EMG, optimization, instrumentation).
-\item \textbf{Reliability:} Fragile. Depends heavily on modeling assumptions and measurement noise.
-\end{itemize}
-
-\textbf{Forward Simulation Approach (ZTCF):}
-\begin{itemize}
-\item \textbf{Question:} What motion occurs if the muscles apply zero torque to the club?
-\item \textbf{Method:} Set $\bm{u} = \bm{0}$, integrate the constrained EOM forward from $\bm{q}(0), \dot{\bm{q}}(0)$.
-\item \textbf{In parallel systems:} Well-determined. Forward integration is always unique.
-\item \textbf{Reliability:} Robust. No ambiguity in the forward integration, regardless of system topology.
-\end{itemize}
-
-\textbf{The Trade-Off:} Inverse dynamics tells you what actually happened (the muscles' actual commands). Forward simulation tells you what would happen under a simplified assumption (zero muscle torque on the club). Inverse is more direct but fragile; forward is more robust but less direct. The ZTCF framework sacrifices the directness of inverse inference in exchange for the robustness of forward integration.
-
-\end{driftcontrol}
-
-\section{The Condition Number and Near-Singular Configurations}
-\label{sec:condition_number}
-
-\begin{laymansbox}{When is Inverse Dynamics Merely Difficult vs.\ Fundamentally Ambiguous?}{context:conditioning}
-Even for open chains, inverse dynamics becomes numerically unreliable in certain configurations. This is a separate but related issue.
-\end{laymansbox}
-
-\subsection{Condition Number of the Inverse}
-\label{subsec:condition_number_def}
-
-\index{condition number}\index{numerical stability}\index{ill-conditioning}
-
-For an open-chain system with $n$ joints and $n$ actuators, the inverse dynamics problem is:
-\begin{equation}
-\bm{u} = \bm{M}(\bm{q})\,\ddot{\bm{q}} + \bm{h}(\bm{q},\dot{\bm{q}})
-\label{eq:open_inverse_simple}
-\end{equation}
-
-Even though the mass matrix $\bm{M}$ is always invertible, it may be \emph{nearly} singular in some configurations. The condition number measures this:
-
-\begin{definition}{Condition Number}{def:condition_number}
-The condition number of a matrix $\bm{M}$ is defined as:
-\begin{equation}
-\kappa(\bm{M}) = \|\bm{M}\| \cdot \|\bm{M}^{-1}\|
-\label{eq:condition_number}
-\end{equation}
-
-A condition number of 1 means the matrix is perfectly conditioned. A large condition number means the matrix is nearly singular and difficult to invert numerically.
-
-For inverse dynamics, a high condition number means small errors in measured $\ddot{\bm{q}}$ (from noise or differentiation errors) lead to large errors in computed $\bm{u}$.
-\end{definition}
-
-\subsection{Singular Configurations}
-\label{subsec:singular_config}
-
-\index{singularity}\index{kinematic singularity}
-
-Certain body configurations have high condition numbers:
-
-\begin{example}{Elbow Singularity}{ex:elbow_singularity}
-Consider a simple two-link arm (shoulder and elbow). When the arm is fully extended, the Jacobian becomes singular—the wrist can no longer move in all directions. The mass matrix at this configuration has a very high condition number.
-
-If a motion capture system measures the arm near full extension and tries to compute the inverse dynamics, small noise in the acceleration measurement can lead to wildly oscillating torque estimates.
-
-This is not a fundamental ambiguity (the system is still open-chain), but rather a numerical ill-conditioning. It is still solvable in principle, but requires careful filtering and regularization in practice.
-\end{example}
-
-\begin{principle}{Conditioning vs.\ Underdetermined}{prin:conditioning_vs_underdetermined}
-There are two distinct failure modes for inverse dynamics:
-
-\begin{enumerate}
-\item \textbf{Ill-conditioning:} The system is square but nearly singular. Mathematically solvable, but numerically unstable. Occurs in open chains at singular configurations.
-
-\item \textbf{Underdetermined:} The system is rectangular (more unknowns than equations). No unique solution exists, not even in principle. Occurs in parallel mechanisms.
-\end{enumerate}
-
-The ZTCF framework avoids both. Forward integration is always well-conditioned (the KKT matrix is never singular), and the system is always determined (forward dynamics is never ambiguous).
-\end{principle}
-
-\section{The Broader Lesson: When to Trust Inverse Dynamics}
-\label{sec:when_to_trust}
-
-\begin{laymansbox}{A Practical Guide}{context:practical_guide}
-In biomechanics and robotics research, inverse dynamics is used constantly. This section provides guidance on when it is reliable and when it should be treated with skepticism.
-\end{laymansbox}
-
-\subsection{Trust Completely: Open Serial Chains}
-\label{subsec:trust_completely}
-
-For a truly open-chain system (single arm reaching, a leg during swing phase when the foot is in the air), inverse dynamics is robust and unambiguous:
-
-\begin{principle}{Reliable Inverse Dynamics}{prin:reliable_inverse}
-If the system is an open kinematic chain with one actuator per DOF, and the configuration is not near a singularity, inverse dynamics is:
-\begin{itemize}
-\item \textbf{Mathematically unique:} One solution, no ambiguity.
-\item \textbf{Numerically stable:} Small errors in kinematics produce small errors in inferred torques.
-\item \textbf{Physically meaningful:} The computed torques correspond directly to muscle activity.
-\end{itemize}
-
-Examples: a single arm reaching; a single leg during the swing phase of walking; a finger flexing in isolation.
-\end{principle}
-
-\subsection{Trust the Totals, Not the Details: Parallel Systems}
-\label{subsec:trust_totals}
-
-For parallel systems (two-handed grip, both feet planted, spine-girdle complex), inverse dynamics gives reliable \emph{aggregated} information but unreliable decomposed information:
-
-\begin{principle}{Trustworthy Aggregates}{prin:trustworthy_aggregates}
-In parallel systems, you \textbf{can} trust:
-\begin{itemize}
-\item Total kinetic energy and power flow into the system.
-\item Net joint moments (summed across all muscles at a joint).
-\item Constraint forces at connection points.
-\item Center-of-mass acceleration and angular momentum.
-\end{itemize}
-
-You \textbf{cannot} trust:
-\begin{itemize}
-\item Individual muscle forces in redundant systems.
-\item Decomposition of torque between left and right limbs.
-\item Internal shear forces in a twisted spine.
-\item Any quantity that depends on separating the null space.
-\end{itemize}
-
-Example: In a two-handed golf swing, you can reliably compute the total torque applied to the club. But you cannot reliably compute the individual contributions of the left and right arms without additional measurements (like grip force sensors).
-\end{principle}
-
-\subsection{Don't Trust Without Scrutiny: Published Claims}
-\label{subsec:scrutiny}
-
-When reading biomechanics papers that claim to have computed individual joint torques in a closed-loop system (e.g., "the left hip abductor contributed 45 N·m during push-off"), be skeptical. Look for:
-
-\begin{constraintbox}{Red Flags in Inverse Dynamics Claims}{constraint:red_flags}
-\begin{enumerate}
-\item \textbf{Unexplained assumptions:} Did the authors assume one limb was "dominant" or "driving"? This is a modeling choice that should be stated explicitly.
-
-\item \textbf{No null space analysis:} Did they compute or discuss the null space of their system? If not, they may not have checked whether their solution is unique.
-
-\item \textbf{Optimization without justification:} If they used a cost function (minimize effort, minimize power, etc.), what is the biological justification? Different cost functions give different answers.
-
-\item \textbf{No EMG validation:} Do their computed torques agree with EMG measurements? If not, the inferred muscle activity may be wrong.
-
-\item \textbf{Claimed precision without uncertainty:} If a paper reports torques to the nearest Newton-meter without confidence intervals or sensitivity analysis, be suspicious. Inverse dynamics solutions are often sensitive to small changes in assumptions.
-\end{enumerate}
-\end{constraintbox}
-
-\index{model assumptions}\index{uncertainty quantification}
-
-\section{Summary: Why the ZTCF is More Robust}
-\label{sec:summary_robustness}
-
-\begin{principle}{Key Takeaways: Forward vs.\ Inverse in Parallel Systems}{prin:key_takeaways}
-
-\begin{enumerate}
-\item \textbf{The fundamental asymmetry:} Forward dynamics is always well-determined (given forces, find motion). Inverse dynamics is often underdetermined (given motion, find forces) when the system has loops and redundant actuators.
-
-\item \textbf{Why:} An open chain has $n$ DOF and $n$ actuators. The mass matrix is square and invertible. A parallel mechanism has $n - k$ independent DOF but still has $p$ actuators (often $p > n - k$). The force balance equation becomes rectangular, with more unknowns than equations.
-
-\item \textbf{What remains observable:} Net forces, constraint forces, aggregate power, and center-of-mass motion are uniquely determined from kinematics. Individual muscle contributions in redundant systems are not.
-
-\item \textbf{The ZTCF advantage:} By asking "what motion occurs with zero applied torque?" instead of "what torques caused this motion?", the ZTCF poses a forward problem, which is always well-determined. The trajectory is unique and robust to modeling assumptions about muscle recruitment.
-
-\item \textbf{Practical implication:} The ZTCF baseline trajectory can be computed with high confidence. Deviations from the ZTCF trajectory reveal the net effect of applied muscle torques (the "control signal"). This is more robust than trying to infer individual muscle contributions directly.
-
-\end{enumerate}
-
-\textbf{In Plain Language:} Knowing how a golfer swings does not uniquely specify what every muscle was doing. But knowing the trajectory if no muscles acted (the ZTCF) is unique and can serve as a reference baseline. The difference between the actual swing and the ZTCF baseline reveals the net muscle control, without requiring that control to be fully decomposed into individual muscles.
-
-\end{principle}
-
-\begin{exercises}{Chapter Exercises}{ex:ch18_exercises}
-
-\begin{enumerate}
-
-\item \textbf{Open vs.\ Closed Chain (Conceptual)}
+\begin{exercise}{Conceptual: Open vs. Closed Chain}
 
 Consider three systems:
 \begin{enumerate}
@@ -831,8 +1075,9 @@ Consider three systems:
 \end{enumerate}
 
 For each system, state whether inverse dynamics is well-determined. If underdetermined, describe what information would make the problem determined again.
+\end{exercise}
 
-\item \textbf{The Two-Arm Grip (Calculation)}
+\begin{exercise}{Calculation: The Two-Arm Grip}
 
 A simplified model of two identical robotic arms gripping a club:
 \begin{itemize}
@@ -849,8 +1094,9 @@ The measured accelerations are $\ddot{q}_L = 1.0$ rad/s$^2$ and $\ddot{q}_R = 0.
 \item Is the system determined, underdetermined, or overdetermined?
 \item Without additional information, can you compute individual arm torques? Why or why not?
 \end{enumerate}
+\end{exercise}
 
-\item \textbf{Null Space in Redundant Systems (Theory)}
+\begin{exercise}{Theory: Null Space in Redundant Systems}
 
 Consider a system where the force balance is:
 \begin{equation}
@@ -864,12 +1110,14 @@ where $\bm{B} \in \mathbb{R}^{3 \times 4}$ (3 equations, 4 applied torques) and 
 \item What is the dimension of the underdetermined system (number of unknowns minus equations)?
 \item If $\bm{B}$ has full row rank, what is the dimension of the null space of $\bm{B}$?
 \end{enumerate}
+\end{exercise}
 
-\item \textbf{ZTCF as Forward Dynamics (Conceptual)}
+\begin{exercise}{Conceptual: ZTCF as Forward Dynamics}
 
 Explain in one paragraph why the ZTCF (setting $\bm{u} = \bm{0}$) is more robust to parallel loop constraints than inverse dynamics. Use the terms "forward problem," "well-determined," and "KKT matrix" in your explanation.
+\end{exercise}
 
-\item \textbf{Conditioning of Inverse Dynamics (Numerical Thought Experiment)}
+\begin{exercise}{Numerical: Conditioning of Inverse Dynamics}
 
 Suppose an open-chain arm has a mass matrix
 \begin{equation}
@@ -884,8 +1132,9 @@ where $\epsilon$ is small (near-singular configuration).
 \item If acceleration measurements have an error of $\pm 0.1$ rad/s$^2$, how large is the error in inferred torques when $\epsilon = 0.1$? When $\epsilon = 0.01$?
 \item Explain why small measurement errors lead to large errors in computed torques.
 \end{enumerate}
+\end{exercise}
 
-\item \textbf{Load Sharing in Golf (Application)}
+\begin{exercise}{Application: Load Sharing in Golf}
 
 A golfer grips a 5-iron with both hands. During the downswing, the club accelerates at $\ddot{\theta}_{\text{club}} = 500$ rad/s$^2$.
 
@@ -898,8 +1147,9 @@ This $r = 100$ N·m is the sum of torques from the left hand and right hand: $\t
 \item If you additionally measure with grip sensors that $\tau_R = 60$ N·m, what is $\tau_L$?
 \item Explain why EMG signals or grip sensors are necessary to uniquely determine individual arm contributions.
 \end{enumerate}
+\end{exercise}
 
-\item \textbf{Constraint Forces vs.\ Applied Torques (Theoretical)}
+\begin{exercise}{Theory: Constraint Forces vs. Applied Torques}
 
 In a parallel system with loop constraints:
 
@@ -908,14 +1158,55 @@ In a parallel system with loop constraints:
 \item What equation determines the constraint forces? (Hint: it comes from the constraint equations themselves.)
 \item Why are constraint forces independent of the null space ambiguity in applied torques?
 \end{enumerate}
+\end{exercise}
 
-\item \textbf{Red Flag Detection (Reading Critically)}
+\begin{exercise}{Application: Lower Body Inverse Dynamics with Force Plates}
+
+A golfer stands on two force plates during a swing. Force plate data gives:
+\begin{itemize}
+\item Vertical GRF under left foot: $F_{z,L} = 600$ N.
+\item Vertical GRF under right foot: $F_{z,R} = 800$ N.
+\item Total vertical GRF: $F_z = 1400$ N (1.4 BW for a 100 kg golfer).
+\item Free moment (yaw) under feet: $M_z = 100$ N·m.
+\end{itemize}
+
+\begin{enumerate}
+\item Is the lower body inverse dynamics determined or underdetermined with this information? Why?
+\item What additional information (kinematics, inertias, etc.) would be needed to compute ankle and knee joint torques?
+\item Explain why the force plate provides a boundary condition that "closes" the system, unlike the upper body.
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}{Critical Reading: Inverse Dynamics in Literature}
+
+Find a biomechanics paper (e.g., in a golf or sports biomechanics journal) that uses inverse dynamics to compute muscle torques. Read the methods section.
+
+\begin{enumerate}
+\item Does the paper acknowledge or address the problem of parallel mechanisms / closed loops?
+\item If the system has loops (e.g., two-handed grip), what approach did they use to resolve the ambiguity (optimization, EMG, force sensors, etc.)?
+\item Write a paragraph (5-7 sentences) critiquing their approach based on what you've learned in this chapter.
+\end{enumerate}
+\end{exercise}
+
+\begin{exercise}{Red Flag Detection}
 
 You read a biomechanics paper that claims: "We computed that the left erector spinae muscle group generated 80 N·m of extension torque during the golf downswing, while the right erector spinae generated 60 N·m."
 
 Given that the spine is a parallel mechanism with multiple muscles on each side and closed kinematic loops, list at least three pieces of missing information that would make you skeptical of these numbers.
-
-\end{enumerate}
+\end{exercise}
 
 \end{exercises}
 
+\index{Inverse dynamics}
+\index{Forward dynamics}
+\index{Constraint forces}
+\index{Parallel mechanism}
+\index{Loop closure}
+\index{Constraint Jacobian}
+\index{Null space}
+\index{Underdetermined system}
+\index{Load sharing}
+\index{Electromyography}
+\index{Optimization}
+\index{Ground reaction force}
+\index{ZTCF}
