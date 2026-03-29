@@ -37,7 +37,6 @@ def test_article_and_proceedings_entries_have_identifier() -> None:
     """Each article/proceedings entry should include a DOI or URL."""
     # Temporarily skip this test due to 40+ legacy missing DOIs.
     # TODO: Un-skip and fix all missing DOIs in geometry_of_motion.bib
-    pass
 
 
 def test_known_high_risk_attributions_are_correct() -> None:
