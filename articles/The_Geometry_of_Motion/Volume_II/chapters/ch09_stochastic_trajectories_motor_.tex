@@ -15,7 +15,7 @@ If you program a robot motor to apply 50 units of force, it applies exactly 50 u
 \section{Signal-Dependent Noise}
 % ══════════════════════════════════════════════
 
-When a roboticist specifies a torque of $50\text{ Nm}$, the motor delivers $50\text{ Nm}$ with a tiny, constant variance. Biological actuators do not work this way. Human muscles generate force by recruiting discrete motor units. As higher forces are required, larger, more fast-twitch oriented motor units are recruited. This physiological reality manifests as a profound control challenge: \textbf{motor noise is proportional to the command signal}.
+When a roboticist specifies a torque of $50\text{ Nm}$, the motor delivers $50\text{ Nm}$ with a tiny, constant variance. Biological actuators do not work this way. Human muscles generate force by recruiting discrete motor units \cite{Henneman1957}. As higher forces are required, larger, more fast-twitch oriented motor units are recruited. This physiological reality manifests as a fundamental control challenge: \textbf{motor noise is proportional to the command signal} \cite{HarrisWolpert1998}.
 
 \begin{definition}{Signal-Dependent Noise (SDN)}{sdn}
   A control input $\control(t)$ applied by a biological system is actually realized as a stochastic variable $\tilde{\control}(t)$:
@@ -33,25 +33,69 @@ This simple reality crumbles deterministic optimal control. If you compute an op
 
 Why do humans move in smooth, bell-shaped velocity profiles rather than jerky "bang-bang" optimal control solutions when reaching for coffee?
 
-Classical control attempts to explain this via "minimum jerk" theories, positing that the nervous system explicitly encodes an optimization functional to minimize $\int \dddot{x}^2 \dt$. The trajectory-first perspective offers a much deeper, physically grounded explanation championed by Harris and Wolpert: the \textbf{Minimum Variance Theory}.
+One influential explanation is the \textbf{minimum jerk} theory of Flash and Hogan \cite{FlashHogan1985}, which posits that the nervous system minimizes $\int \dddot{x}^2 \dt$ (the integral of squared jerk). This kinematic criterion successfully predicts many features of reaching movements. An alternative, physically grounded explanation comes from the \textbf{Minimum Variance Theory} of Harris and Wolpert \cite{HarrisWolpert1998}, which derives smooth trajectories from the assumption of signal-dependent noise. Both theories remain active areas of research, and they are not mutually exclusive---minimum-jerk trajectories can emerge as a consequence of variance minimization under certain noise models.
 
 \begin{keyidea}{Optimization for Repeatability}{min_variance}
-  The human nervous system seeks to move in a way that minimizes the final endpoint variance evaluated across multiple trials.
+  The human nervous system seeks to move in a way that minimizes the final endpoint variance evaluated across multiple trials. Under signal-dependent noise, this objective naturally selects for smooth trajectories with bounded control effort.
 \end{keyidea}
 
 Under SDN, the only way to minimize endpoint variance (ensure you actually grasp the coffee cup smoothly) is to minimize sudden spikes in required actuator forces, because large forces inject huge amounts of uncertainty into the dynamics. Smooth trajectories inherently possess lower peak torque commands than rapid accelerations and decelerations. Smoothness is not the explicitly programmed objective; it is an emergent property of attempting to be consistently accurate under the unavoidable reality of signal-dependent noise.
+
+\begin{center}
+\begin{tikzpicture}[scale=1.0]
+  % Deterministic trajectory (top)
+  \begin{scope}[yshift=2.2cm]
+    \node[font=\bfseries, chapblue] at (-1.8, 1.2) {Deterministic OCP};
+
+    % Reference trajectory
+    \draw[very thick, chapblue] (0, 0) .. controls (1, 0.8) and (2, 0.6) .. (3, 0.1);
+    \node[chapblue, font=\small] at (1.5, 1.0) {$\traj^*(t)$};
+
+    % Point mass at end
+    \filldraw[chapblue] (3, 0.1) circle (3pt);
+    \node[chapblue, font=\small] at (3.5, 0.3) {Target};
+
+    \node[gray, font=\small, align=center] at (1.5, -0.7) {Single solution\\(no robustness)};
+  \end{scope}
+
+  % Stochastic ensemble (bottom)
+  \begin{scope}[yshift=-0.3cm]
+    \node[font=\bfseries, trajgreen!80!black] at (-1.8, 1.2) {Stochastic OCP};
+
+    % Reference trajectory
+    \draw[very thick, trajgreen] (0, 0) .. controls (1, 0.8) and (2, 0.6) .. (3, 0.1);
+    \node[trajgreen!80!black, font=\small] at (1.5, 1.0) {$\traj^*(t)$ (nominal)};
+
+    % Perturbed trajectories (Monte Carlo samples)
+    \foreach \offset in {-0.15, -0.10, -0.05, 0.05, 0.10, 0.15} {
+      \draw[thick, accentred!40, opacity=0.5] (0, \offset) .. controls (1, 0.75 + \offset) and (2, 0.55 + \offset) .. (3, 0.05 + \offset);
+    }
+
+    % Terminal covariance ellipse
+    \draw[dashed, accentred, line width=1.5pt] (3, 0.1) ellipse (0.35 and 0.15);
+    \node[accentred, font=\small] at (3.8, 0.3) {$\mathbb{E}[\psi]$};
+
+    % SDN annotation
+    \node[red!70, font=\small, align=center] at (0.5, -0.5) {$\text{Var}(\tilde{u}) \propto u^2$};
+    \node[gray, font=\small, align=center] at (1.5, -0.7) {Ensemble of trajectories\\under signal-dependent noise};
+  \end{scope}
+
+  % Dividing line
+  \draw[thick, gray!40] (-2.3, 1.8) -- (4.3, 1.8);
+\end{tikzpicture}
+\end{center}
 
 % ══════════════════════════════════════════════
 \section{The Speed-Accuracy Tradeoff in the Golf Swing}
 % ══════════════════════════════════════════════
 
-Fitts's Law states that the faster you try to move to a target, the less accurate you become. In golf, we see the supreme manifestation of this. The deterministic optimal control solution (Chapter 6) tells the solver to maximize input torque to achieve theoretically maximal clubhead speed. 
+Fitts's Law \cite{Fitts1954} states that the faster you try to move to a target, the less accurate you become. In golf, we see the supreme manifestation of this phenomenon. The deterministic optimal control solution (Chapter 6) tells the solver to maximize input torque to achieve theoretically maximal clubhead speed.
 
-However, if we introduce the Stochastic OCP (via Covariance Steering) from Chapter 6 and apply the realistic premise of SDN, the optimizer faces a profound tradeoff.
+However, if we introduce the Stochastic OCP (via Covariance Steering) from Chapter 6 and apply the realistic premise of SDN, the optimizer faces a stark tradeoff.
 
 Applying maximum $u_1$ torque during the downswing injects enormous variance into the kinematic state. The unactuated club ($\theta_2$) begins whipping through its zero dynamics, but its exact phase progression is now highly uncertain due to the noise flooding the arms. 
 
-To ensure the clubface squares up at the moving goal, the stochastic optimizer will \emph{deliberately back off} the peak requested torque. It trades a deterministic $5$ mph gain in clubhead speed for a massive reduction in angular variance at the target manifold. The optimal biological swing is mathematically proven to be a sub-maximal physical exertion.
+To ensure the clubface squares up at the moving goal, the stochastic optimizer will \emph{deliberately back off} the peak requested torque. It trades a small reduction in peak terminal performance for a substantial reduction in angular variance at the target manifold constraint. The optimal biological swing is mathematically proven to be a sub-maximal physical exertion when signal-dependent noise is accounted for.
 
 
 The extension of the deterministic Pontryagin framework to stochastic systems is developed rigorously in Agrachev and Sachkov \cite{AgrachevSachkov2004}. When the system is subject to signal-dependent noise (SDN), the traditional Hamiltonian maximization is supplemented by terms encoding risk: the optimizer must maximize expected performance while managing the variance of terminal conditions under noise propagation. This leads to \textbf{risk-sensitive control} problems where the cost includes an entropy-like term penalizing uncertainty.
@@ -70,4 +114,11 @@ For the golf swing under SDN, the stochastic extension of the attainable set fra
   \midrule
   Signal-Dependent Noise (SDN) & Muscle noise variance proportional to command: $\text{Var}(\tilde{u}) = c u^2$. Requires bounded control effort for repeatability. \\
   Minimum Variance Theory & Explains smooth, controlled velocity profiles as solutions to endpoint error variance minimization under SDN. \\
-  Stochastic OCP & Opt
+  Stochastic OCP & Optimal control formulation that minimizes $\mathbb{E}[\phi(\state(t_f))] + \lambda \cdot \mathrm{Var}[\psi(\state(t_f))]$. \\
+  Covariance Steering & Technique to propagate the covariance matrix $\bm{\Sigma}(t)$ alongside the nominal trajectory during optimization. \\
+  Speed-Accuracy Tradeoff & Formal manifestation of Fitts's Law: higher peak forces inject noise proportional to force squared. \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.3cm}
