@@ -4,7 +4,7 @@
 \epigraph{``Air has weight. It moves with inertia. When you swing a club through it at 50 meters per second, you do not pass through a void—you carve through a fluid that resists. This resistance is not tiny. And it is not random. It is force, and it must be accounted for.''}{Applied aerodynamics principle}
 
 \begin{laymansbox}{Why Air Resistance Matters for Physics Accuracy}{context:drag-matters}
-You've likely heard that drag is ``negligible'' in golf. That's wrong. At clubhead speeds of 80--120 mph, the club is moving fast enough that air resistance is comparable to the forces from muscle torques during the late downswing. When you compute inverse dynamics—trying to infer the joint torques from measured motion—ignoring drag introduces systematic errors of 2--5\% in peak joint torque estimates, and much larger errors in wrist and ankle torques (where moment arms are small). For a researcher or coach trying to understand the \emph{true} control applied by muscles, this bias is unacceptable. For a golfer, ignoring drag means your training data is biased: your coaches think you're producing more torque than you actually are, because they attribute some of the acceleration to physics instead of muscle. Understanding drag improves both the accuracy of swing analysis and the fairness of athlete assessment.
+You've likely heard that drag is ``negligible'' in golf. That's wrong. At clubhead speeds of 80--120 mph, the club is moving fast enough that air resistance is a meaningful contributor to the forces acting on the system during the late downswing. When you compute inverse dynamics—trying to infer the joint torques from measured motion—ignoring drag introduces systematic errors in peak joint torque estimates, with proportionally larger errors in wrist and ankle torques where moment arms are small. For a researcher or coach trying to understand the \emph{true} control applied by muscles, this bias is unacceptable. For a golfer, ignoring drag means your training data is biased: your coaches think you're producing more torque than you actually are, because they attribute some of the acceleration to physics instead of muscle. Understanding drag improves both the accuracy of swing analysis and the fairness of athlete assessment.
 \end{laymansbox}
 
 \section{The Physics of Drag: From First Principles}
@@ -67,21 +67,21 @@ The reference area $A$ is the projected area. For a cylinder of diameter $d$ and
 Imagine pushing a paddle through air. To accelerate the air out of the way, you must impart momentum to it. In time $dt$, you push a volume of air $A v \, dt$ (cross-sectional area times distance traveled). The mass of this air is $\rho A v \, dt$. You must accelerate it from rest to some velocity $u_{\mathrm{air}} \approx v$ (simplified). The momentum imparted is $\Delta p \approx \rho A v \, dt \times v = \rho A v^2 dt$. The force is $F = \Delta p / dt = \rho A v^2$. This is the leading-order drag force. The exact formula includes the drag coefficient $C_D$ and density, but the $v^2$ scaling is inescapable from momentum conservation.
 \end{laymansbox}
 
-Let's put numbers on drag during a golf swing. For a clubhead with:
+We can put illustrative numbers on drag during a golf swing using plausible, order-of-magnitude parameter choices. For a clubhead with:
 \begin{itemize}
-\item $\rho = 1.225$ kg/m$^3$ (air density)
-\item $C_D = 0.4$ (typical modern driver)
-\item $A = 0.005$ m$^2$ (50 cm$^2$, clubhead reference area)
-\item $v = 50$ m/s (typical impact speed, $\approx 112$ mph)
+\item $\rho = 1.225$ kg/m$^3$ (air density at sea level, 15°C---a standard reference value)
+\item $C_D = 0.4$ (a representative value for a modern driver; actual values vary by design)
+\item $A = 0.005$ m$^2$ (50 cm$^2$, a representative clubhead reference area)
+\item $v = 50$ m/s (a representative impact speed, $\approx 112$ mph)
 \end{itemize}
 
 The drag force is:
 \begin{equation}
-F_D = \frac{1}{2} \times 1.225 \times 50^2 \times 0.4 \times 0.005 = 3.06 \text{ N}
+F_D = \frac{1}{2} \times 1.225 \times 50^2 \times 0.4 \times 0.005 \approx 3 \text{ N}
 \label{eq:drag-example}
 \end{equation}
 
-This seems small (3 N), but over the course of a downswing lasting 0.25 seconds with the club accelerating and decelerating, the impulse (integrated force) is significant. Moreover, drag acts throughout the downswing, not just at impact.
+This illustrative result is on the order of a few newtons---small compared to the ground reaction forces, but non-negligible as a contribution integrated over the downswing. Drag acts throughout the downswing, not just at impact, so its cumulative effect on the dynamics is meaningful.
 
 \section{Drag on Different Segments of the Swing}
 
@@ -152,7 +152,7 @@ Computing step by step:
 &\approx 7.1 \text{ N·m}
 \end{align}
 
-So the shaft alone produces a drag torque of about 7 N·m at the shoulder. For reference, the total shoulder torque at impact is typically 50--100 N·m, so shaft drag accounts for 7--14\% of the total resistive effect.
+So for these illustrative parameters, the shaft alone produces a drag torque on the order of several N·m at the shoulder---a non-trivial contribution to the total resistive effect at impact. The exact magnitude depends on the specific swing kinematics and shaft geometry.
 \end{example}
 
 \subsection{The Clubhead}
@@ -174,23 +174,17 @@ Importantly, modern driver design has aerodynamically optimized crowns (top surf
 
 \subsection{Arms and Torso}
 
-The moving mass of the golfer's arms and torso also experiences drag. The arms move at speeds up to 10--15 m/s (much slower than the club), and the frontal area is roughly 0.05 m$^2$ (shoulders and torso width). The drag force on the arms is:
-\begin{equation}
-F_{\text{arms}} = \frac{1}{2} \times 1.225 \times 0.05 \times 12^2 \times 1.0 \approx 4.4 \text{ N}
-\label{eq:arm-drag}
-\end{equation}
-
-where we used a more bluff $C_D \approx 1.0$ for the complex shape of the human body. While this is comparable to the clubhead drag, the arms move more slowly and for a longer duration (the arms accelerate throughout the downswing, not just at impact). The integrated effect is smaller.
+The moving mass of the golfer's arms and torso also experiences drag. The arms move substantially slower than the club, and the body presents a large but irregular frontal area. For a bluff body like a human arm, $C_D$ is considerably higher than for a streamlined clubhead. The drag force on the arms is therefore a meaningful contributor---comparable in magnitude to the clubhead drag by this rough estimate---but because the arms move more slowly and for a longer duration, their time-integrated contribution differs. Reliable values for body-segment drag require experimental measurement or careful CFD analysis; the numbers here are illustrative only.
 
 \begin{principle}{Relative Importance of Drag Sources}{principle:drag-sources}
 Ranking by contribution to total resistive torque (integrated over downswing):
 \begin{enumerate}
-\item \textbf{Clubhead drag} (40--50\%): Acts at highest velocity, longest moment arm (shaft length).
-\item \textbf{Shaft drag} (30--40\%): Distributed along shaft, acts over entire downswing.
-\item \textbf{Arm/torso drag} (10--20\%): Slower speeds, but large mass and area. Notably increases late in downswing as arm approaches full extension.
+\item \textbf{Clubhead drag}: Acts at highest velocity, with the longest moment arm (shaft length). Likely the dominant contributor.
+\item \textbf{Shaft drag}: Distributed along shaft, acts over entire downswing. A significant secondary contributor.
+\item \textbf{Arm/torso drag}: Slower speeds, but large and irregular shape. Notably increases late in downswing as the arm approaches full extension.
 \end{enumerate}
 
-For optimization and biomechanical analysis, the clubhead is the priority. Reducing clubhead $C_D$ by 10\% reduces total resistive torque by 4--5\%.
+The precise percentage split between these sources depends on club geometry, swing kinematics, and body morphology, and requires measurement or CFD to quantify reliably. Qualitatively, the clubhead is the priority for aerodynamic optimization because it moves fastest and sits at the end of the longest moment arm.
 \end{principle}
 
 \section{Drag in the Equations of Motion}
@@ -230,7 +224,7 @@ This means:
 where $P_{\text{drag}} < 0$ represents energy leaving the system into the air.
 
 \begin{laymansbox}{Energy Lost to Air Resistance}{context:energy-loss-intuition}
-If you swing a club in slow motion (speeds of 1--2 m/s), drag is negligible and nearly all the muscular work goes into kinetic energy and potential energy of the moving limbs. Now swing at normal speeds (50 m/s at the clubhead). A significant fraction of your muscular work is dissipated by pushing air out of the way. This is why you feel tired after a range session—you're not just moving your body; you're doing work against air. For long-term fatigue and metabolic costs, drag is relevant. For a single swing, the energy dissipated by drag is about 5--10\% of the total kinetic energy produced, a small but non-negligible amount.
+If you swing a club in slow motion, drag is negligible and nearly all the muscular work goes into kinetic energy and potential energy of the moving limbs. Now swing at full speed. A meaningful fraction of your muscular work is dissipated by pushing air out of the way. This is why you feel tired after a range session---you're not just moving your body; you're doing work against air. For long-term fatigue and metabolic costs, drag is relevant. For a single swing, the energy dissipated by drag is a small but non-negligible fraction of the total kinetic energy produced; the exact fraction depends on the swing kinematics and is best determined from simulation.
 \end{laymansbox}
 
 \section{Why Drag Matters for Inverse Dynamics}
@@ -269,7 +263,7 @@ When drag is omitted:
 \item The bias is \textbf{configuration-dependent}—it depends on $\bm{q}$ (which segments are accelerating)
 \end{itemize}
 
-For example, computed wrist torques may be 5--10\% too high if drag is omitted, while shoulder torques may be only 1--2\% too high. This is because the wrist has a smaller moment arm, so drag forces have a larger percentage effect.
+The bias is larger at smaller joints (wrist, ankle) because those joints have shorter moment arms, so drag forces represent a larger percentage of the total torque. Shoulder and hip torques, with their larger moment arms, are less affected in percentage terms. The precise bias depends on the specific swing kinematics and model parameters.
 \end{definition}
 
 \begin{example}{Numerical Error in Wrist Torque Calculation}{ex:inverse-dyn-error}
@@ -287,21 +281,14 @@ Computed wrist torque without drag:
 \tau_{\text{computed}} = I \ddot{\theta} + \text{(other terms)} = 0.05 \times 2000 + \ldots = 100 + \ldots \text{ N·m}
 \end{equation}
 
-Now add drag. The forearm and club moving at 70 rad/s at the wrist (moment arm $\approx 0.3$ m from axis) create drag force. Estimating:
+Now add drag. The forearm and club moving rapidly through air generate drag forces that act at distributed moment arms from the wrist axis. The drag torque about the wrist is not directly measurable without detailed fluid-structure modeling or experiment. What we \emph{can} say from the physics:
 \begin{itemize}
-\item Arm drag: $F_{\text{arm}} \approx 2$ N (slow-moving arm)
-\item Club drag: $F_{\text{club}} \approx 3$ N (fast-moving club)
-\item Total drag force on forearm: $F_D \approx 5$ N
-\item Drag moment arm: $r_D \approx 0.2$ m (distributed)
-\item Drag torque: $\tau_{\text{drag}} \approx 5 \times 0.2 = 1$ N·m
+\item Drag forces act opposite to velocity and scale as $v^2$
+\item They are distributed along the forearm and club, so the effective moment arm is also distributed
+\item The resulting drag torque is smaller than the inertial torque term ($I\ddot{\theta}$), but not negligible relative to the joint torque itself
 \end{itemize}
 
-The error in computed torque is:
-\begin{equation}
-\Delta\tau = \tau_{\text{drag}} = 1 \text{ N·m} \quad \text{(approximately 1\% of total, but could be larger)}
-\end{equation}
-
-However, if we compute the peak wrist torque throughout the downswing and the drag torque peaks late (at highest speed), the peak error can be 5--10\% for the wrist joint specifically.
+The qualitative conclusion is that omitting drag causes the computed wrist torque to be too high, because some of the observed deceleration is attributable to passive air resistance rather than active muscular braking. The magnitude of this error grows with speed and is proportionally larger for the wrist than for the shoulder.
 \end{example}
 
 \section{Drag on the Golf Ball: Post-Impact Physics}
@@ -478,7 +465,7 @@ The question of whether to include drag depends on the application:
 \textbf{Drag can be omitted if:}
 \begin{itemize}
 \item You are interested in qualitative patterns (e.g., ``is torque increasing or decreasing?'')
-\item Shoulder or hip torques are the focus (large moment arms, drag error is 1--3\%)
+\item Shoulder or hip torques are the focus (large moment arms reduce the relative drag error)
 \item You are doing real-time swing feedback (computational speed matters more than 2\% accuracy)
 \item Environmental conditions are calm (no wind, sea level)
 \end{itemize}
@@ -496,7 +483,7 @@ The question of whether to include drag depends on the application:
 \begin{description}
 \item[\textbf{The Myth:}] Golf is played in air at relatively modest speeds, so air resistance is a second-order effect. The swing is controlled by gravity, inertia, and muscles. Drag is a detail for researchers, not a real constraint.
 
-\item[\textbf{The Reality:}] At 50 m/s clubhead speed, drag forces are comparable to the muscular forces available late in the downswing. Drag reduces clubhead speed by 5--10\% over the course of the downswing. For inverse dynamics, omitting drag introduces systematic errors of 2--5\% in peak torques, and much larger errors in small joints. For accurate biomechanical analysis, drag must be included. Moreover, drag is part of the \emph{passive dynamics} that define what the swing must overcome—understanding drag is understanding the true challenge the nervous system faces.
+\item[\textbf{The Reality:}] At full swing clubhead speeds, drag forces are non-negligible compared to the muscular torques available late in the downswing. The cumulative effect of drag over the downswing is a meaningful reduction in clubhead speed. For inverse dynamics, omitting drag introduces systematic errors in peak torques, with proportionally larger effects at small joints. For accurate biomechanical analysis, drag must be included. Moreover, drag is part of the \emph{passive dynamics} that define what the swing must overcome---understanding drag is understanding the true challenge the nervous system faces.
 
 \item[\textbf{Why the Myth Persists:}] Early biomechanics studies on golf were conducted before computational tools made it easy to include drag. The approximation was reasonable for the research questions at the time. The myth has lingered in textbooks and coaching education, even as the tools have improved. Modern research includes drag routinely.
 \end{description}
@@ -523,16 +510,7 @@ Drag is a dissipative force, always opposing motion. It reduces kinetic energy. 
 \begin{minipage}[t]{0.48\textwidth}
 \textbf{Drift-to-control ratio with drag:}
 
-Comparing magnitudes at impact:
-\begin{itemize}
-\item Inertial drift: $\sim 50$--$100$ N$\cdot$m
-\item Gravitational drift: $\sim 10$--$20$ N$\cdot$m
-\item Drag: $\sim 5$--$15$ N$\cdot$m (depends on geometry)
-\item Control (muscle): $\sim 5$--$10$ N$\cdot$m
-\item \textbf{Total drift/control ratio: $\sim 10$--$20$:1}
-\end{itemize}
-
-Including drag makes the situation slightly worse (higher ratio), but the conclusion is the same: impact is uncontrollable.
+Qualitatively, at impact the dominant torques are inertial (from angular momentum already in the system), with gravitational and drag contributions as secondary terms, and muscular torques as the smallest contributor. Including drag makes the drift-to-control ratio somewhat larger because drag is a passive, not active, effect. The conclusion is the same: by impact, the motion is largely determined by passive dynamics.
 \end{minipage}
 \end{driftcontrol}
 
@@ -546,7 +524,7 @@ Including drag makes the situation slightly worse (higher ratio), but the conclu
 
 \item \textbf{Drag removes energy.} It is fundamentally dissipative, part of the drift field. The swing must overcome drag to maintain clubhead speed.
 
-\item \textbf{Drag matters for inverse dynamics.} Omitting drag introduces 2--5\% bias in peak joint torques. For wrist torques, the error can be 5--10\%. For research requiring high accuracy, drag must be included.
+\item \textbf{Drag matters for inverse dynamics.} Omitting drag introduces a systematic upward bias in computed joint torques---larger at small joints (wrist, ankle) than at large joints (shoulder, hip). For research requiring high accuracy, drag must be included.
 
 \item \textbf{Dimples on a golf ball reduce drag by 40--50\%.} This illustrates that aerodynamic design is not a detail—it fundamentally shapes performance. Golf club design has similarly optimized crowns and shafts to reduce drag.
 
@@ -563,11 +541,11 @@ With all external forces now catalogued---gravity, ground reaction, muscle torqu
 
 \item \textbf{Drag Force Magnitude.} A golf clubhead with area $A = 0.006$ m$^2$, drag coefficient $C_D = 0.4$, moves at $v = 40$ m/s. Calculate the drag force using Eq.~\eqref{eq:drag-scalar}. At what velocity would the drag force double? (Hint: use the $v^2$ dependence.)
 
-\item \textbf{Shaft Drag Torque.} A golf shaft with $L = 1.1$ m, diameter $d = 0.01$ m, $C_D = 0.5$, rotates at angular velocity $\dot{\theta} = 60$ rad/s about the shoulder. Using Eq.~\eqref{eq:shaft-drag-torque}, compute the drag torque. Compare this to a typical shoulder torque of 80 N·m. What fraction of the total torque does drag represent?
+\item \textbf{Shaft Drag Torque.} A golf shaft with $L = 1.1$ m, diameter $d = 0.01$ m, $C_D = 0.5$, rotates at angular velocity $\dot{\theta} = 60$ rad/s about the shoulder. Using Eq.~\eqref{eq:shaft-drag-torque}, compute the drag torque in N·m. Comment qualitatively on whether this torque is likely to be significant relative to the total shoulder torque.
 
 \item \textbf{Inverse Dynamics Error.} In a swing study, a researcher computes wrist torque using inverse dynamics without including drag. The measured acceleration is $\ddot{\theta}_{\text{wrist}} = 1500$ rad/s$^2$, wrist inertia is $I = 0.06$ kg·m$^2$, and other terms sum to 2 N·m. The computed torque (no drag) is $\tau = I \ddot{\theta} + 2 = 0.06 \times 1500 + 2 = 92$ N·m.
 
-Now estimate the drag torque: arm + club dragging through air at high speed produces approximately 1.5 N·m. What is the true muscle torque? What is the error percentage?
+Using the drag formula (Eq.~\eqref{eq:drag-scalar}) and plausible assumptions for arm/club speed and frontal area, estimate a drag torque contribution. What is the direction of the resulting bias in the computed muscle torque?
 
 \item \textbf{Environmental Drag Variation.} At sea level, $\rho = 1.225$ kg/m$^3$. At 5000 ft elevation, $\rho \approx 1.05$ kg/m$^3$. For a clubhead moving at 50 m/s ($C_D = 0.4$, $A = 0.006$ m$^2$), calculate the drag force at each elevation. What is the percentage change in drag?
 

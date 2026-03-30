@@ -160,38 +160,25 @@ The drift field $f(\bm{x})$ is modified because the effective stiffness and damp
 
 
 
-Now consider a much larger effect: the torso itself. The human torso is not a solid block of muscle and bone. It is a container filled with organs, blood, other fluids, and fat. The total visceral mass (everything inside the ribcage and abdomen excluding the spine) is approximately:
+Now consider a much larger effect: the torso itself. The human torso is not a solid block of muscle and bone. It is a container filled with organs, blood, other fluids, and fat. The total visceral mass (everything inside the ribcage and abdomen excluding the spine) constitutes a substantial fraction of total torso mass. Standard anatomical reference values indicate that organs, blood, and fat together account for roughly half of total torso mass. These contents are not rigidly attached to the skeleton. They can move, shift, and redistribute during motion.
 
-- Heart: ~0.3 kg
-- Lungs: ~1.2 kg
-- Liver: ~1.5 kg
-- Kidneys: ~0.3 kg
-- Stomach, intestines, spleen, pancreas: ~2 kg
-- Blood: ~5 kg (in the torso cavity)
-- Abdominal fat and other organs: ~3--8 kg
-- **Total: approximately 13--18 kg out of the torso's total mass of ~25--35 kg**
-
-That is roughly 50% of torso mass in the form of *fluid or semi-fluid organs*. These are not rigidly attached to the skeleton. They can move, shift, and redistribute during motion.
-
-During the golf swing, the torso undergoes extreme angular acceleration. At the peak of the downswing, the torso rotates at angular velocities approaching 600${}^\circ$/s (10.5 rad/s). Consider the centrifugal acceleration experienced by a structure 15 cm from the rotation axis:
+During the golf swing, the torso undergoes large angular accelerations. At the peak of the downswing, the torso angular velocity is substantial---on the order of several hundred degrees per second---creating meaningful centrifugal acceleration on any structure at a radial distance from the rotation axis. For a structure at, say, 10--15 cm from the axis:
 \begin{equation}
-a_{\mathrm{centrifugal}} = \omega^2 r = (10.5)^2 \times 0.15 = 16.5 \text{ m/s}^2 \approx 1.7 g
+a_{\mathrm{centrifugal}} = \omega^2 r
 \end{equation}
 
-**A liver in the rotating torso experiences nearly 2 gravitational accelerations of centrifugal force pulling it outward.** The liver is suspended by ligaments and tissue connections; it shifts and stretches in response to this loading.
+Even moderate angular velocities produce centrifugal accelerations that are a meaningful fraction of gravity. **The organs in the rotating torso experience centrifugal forces pulling them outward.** The liver, suspended by ligaments and tissue connections, shifts and stretches in response to this loading.
 
 ::: {.callout-tip}
 ## Visceral Mass Redistribution
 
-During a fast downswing torso rotation:
+During a fast downswing torso rotation, centrifugal effects load the visceral contents of the torso. The general physics:
 
-- Angular velocity: $\omega = 600^{\circ}$/s $= 10.5$ rad/s
-- Abdominal radius (centroid of viscera): $r \approx 0.12$ m
-- Centrifugal acceleration: $a = \omega^2 r = 13$ m/s$^2$
-- Centrifugal force on 15 kg of viscera: $F = m a = 15 \times 13 = 195$ N (outward)
-- This is equivalent to a sideways shove of about 20 kg force on the internal organs
+- At any given angular velocity $\omega$ and radial distance $r$, the centrifugal acceleration is $a = \omega^2 r$
+- This acts on every organ and fluid mass inside the torso, creating outward forces proportional to mass
+- These forces are resisted by the ligaments, mesentery, and connective tissue suspending each organ
 
-The organs shift outward and laterally. The liver and other mobile organs redistribute within the abdomen. Note: specific displacement magnitudes during golf swings have not been directly measured in the literature; the force estimates above provide an order-of-magnitude bound on the loading, but actual displacements depend on tissue compliance and abdominal cavity geometry. This creates a time-varying mass distribution within the torso.
+The organs shift outward and laterally. Mobile organs redistribute in the direction of the centrifugal force. Specific displacement magnitudes during golf swings have not been directly measured in the literature; the force estimates provide an order-of-magnitude bound, but actual displacements depend on tissue compliance and abdominal cavity geometry. This creates a time-varying mass distribution within the torso.
 
 The key consequence: the inertia tensor of the torso is *not constant*. It changes during the swing as visceral mass redistributes.
 
@@ -212,7 +199,7 @@ For the torso with shifting viscera, the moment of inertia changes as the mass d
 I_{\mathrm{torso}}(t) = I_{\mathrm{skeleton}}(t) + I_{\mathrm{viscera}}(t)
 \end{equation}
 
-During the downswing, as the torso accelerates and then decelerates, and as centrifugal forces shift the viscera, the moment of inertia can change by 5--10% of its nominal value. This might seem small, but it has cascading effects on the dynamics.
+During the downswing, as the torso accelerates and then decelerates, and as centrifugal forces shift the viscera, the moment of inertia changes. This variation may seem small, but it has cascading effects on the dynamics.
 
 Recall the equation of rotational motion:
 \begin{equation}
@@ -265,7 +252,7 @@ IAP is the hydrostatic pressure within the abdominal cavity, created by coordina
 
 :::
 
-For a golfer during the downswing, IAP typically peaks at 80--120 mmHg. This is slightly below a heavy deadlift (where IAP can exceed 200 mmHg) but still substantial.
+For a golfer during the downswing, IAP is expected to rise substantially above resting levels. The Valsalva maneuver---which is what golfers partially employ during the swing---is known to produce IAP well above 100 mmHg in trained individuals. The exact value during a golf swing depends on how hard the golfer braces and the breathing strategy used.
 
 ### IAP as a Structural Support System
 
@@ -286,18 +273,17 @@ where $P$ is the pressure and $A_{\mathrm{diaphragm}}$ is the area of the diaphr
 F_{\mathrm{IAP}} = 13,300 \text{ Pa} \times 0.04 \text{ m}^2 = 532 \text{ N}
 \end{equation}
 
-**A pressurized abdomen at 100 mmHg generates an upward force of roughly 530 newtons on the diaphragm.** For comparison, the force exerted by the back extensor muscles during a golf downswing is typically 300--500 newtons. The IAP force is *comparable to the total back extensor force*. This is enormous.
+**A pressurized abdomen at 100 mmHg generates an upward force of roughly 530 newtons on the diaphragm (for this representative area estimate).** This is a substantial force---comparable in order of magnitude to the forces exerted by the back extensor muscles, meaning IAP contributes meaningfully to the structural support of the spine during loading.
 
 ::: {.callout-tip}
 ## IAP Force Calculation for Golf Downswing
 
-Scenario: 80 kg golfer, torso mass 35 kg, during downswing peak loading.
+At an IAP of 100 mmHg (13,300 Pa) and a representative diaphragm area of 0.04 m$^2$ (a rough anatomical estimate---actual values vary by individual):
 
 - IAP pressure: 100 mmHg = 13,300 Pa
-- Diaphragm area: 0.04 m$^2$
+- Diaphragm area (representative): 0.04 m$^2$
 - Upward force on diaphragm: $F = 13,300 \times 0.04 = 532$ N
-- Pelvic floor area: ~0.03 m$^2$
-- Downward force on pelvic floor: $532 \times (0.03/0.04) \approx 400$ N
+- Pelvic floor (smaller area, representative): force in the opposite direction of similar order
 
 The pressurized cavity creates forces that:
 
@@ -353,11 +339,11 @@ We have established the mechanisms. Now let us see how IAP contributes to swing 
 
 ### 1. Spine Stabilization and Load Distribution
 
-During the downswing, the lumbar spine is subjected to enormous compressive loads. A 80 kg golfer can experience compression forces exceeding 8 times body weight at the L4/L5 disc. That is roughly 6,400 newtons of compression. The disc can withstand this (discs are designed to handle heavy loads), but the vertebrae, facet joints, and ligaments are stressed.
+During the downswing, the lumbar spine is subjected to large compressive loads. Biomechanical research on spinal loading in golf documents substantial forces at the L4/L5 disc during the downswing transition---forces that are large enough that disc health is a relevant concern. The disc can withstand high compressive loads (it is designed for this purpose), but the vertebrae, facet joints, and ligaments are all stressed.
 
 By raising IAP, the golfer creates a cushioning effect. The pressurized fluid distributes loads more evenly throughout the abdominal cavity rather than concentrating them on the spine. The result: reduced peak stress on the disc and vertebrae, and lower shear forces on the facet joints.
 
-Research in spinal biomechanics has shown that appropriate IAP can reduce the compressive load on the L4/L5 disc by 20--40%, depending on the IAP level and the direction of loading.
+Research in spinal biomechanics has demonstrated that appropriate IAP can meaningfully reduce the compressive load on the lumbar disc, though the exact percentage depends on the IAP level, anatomy, and the direction of loading.
 
 ### 2. Torso Stiffness and Energy Transmission
 
@@ -370,7 +356,7 @@ The result: for the same hip torque, a stiffer torso produces greater shoulder r
 
 
 
-One of the most important concepts in modern golf biomechanics is the ``X-factor stretch.'' During the backswing, the golfer creates a large hip-shoulder separation: hips rotate 40--50${}^\circ$, shoulders rotate 70--90${}^\circ$, creating a 30--50${}^\circ$ relative angle. This loading stretches the torso muscles and stores elastic strain energy in the tissues.
+One of the most important concepts in modern golf biomechanics is the ``X-factor stretch.'' During the backswing, the golfer creates a large hip-shoulder separation: the hips rotate less than the shoulders, creating a relative angle between pelvis and thorax. This loading stretches the torso muscles and stores elastic strain energy in the tissues.
 
 At the transition, the golfer reverses this motion and taps into the stored elastic energy. But for elastic energy to be stored and released effectively, the tissue must have adequate stiffness. A loose, low-IAP torso cannot store much elastic energy. A stiff, high-IAP torso can store significant energy.
 
@@ -546,7 +532,7 @@ Detailed biomechanics & Multi-segment + soft tissue & Very High & 5--15%
 - Soft tissue wobbles and oscillates relative to bone, introducing high-frequency artifacts in motion capture data; filter or model these effects separately.
 - The torso contains ~50% fluid-like material (viscera, blood) that redistributes during rotation, creating time-varying inertial properties.
 - Intra-abdominal pressure acts as a hydraulic cylinder, providing spine stability and increasing torso stiffness, which enhances power transmission.
-- IAP can reach 80--120 mmHg during a golf downswing, generating forces of 400--500 newtons that help support the spine.
+- IAP rises substantially during the golf downswing, generating forces on the order of hundreds of newtons that help support the spine. The exact pressure achieved depends on how forcefully the golfer braces and the breathing strategy used.
 - The exhale-during-downswing cue is physiologically sound: it maintains IAP while preventing blood pressure spikes.
 - Soft tissue effects are small corrections to the rigid body model for predicting club head speed, but they are critical for understanding spine loading and injury risk.
 - Choose your model based on application: rigid body for coaching and swing mechanics, multi-segment for injury assessment, full soft tissue for detailed biomechanics.
@@ -560,13 +546,13 @@ Soft tissues make the body pliable and compliant, adding distributed mass and da
 
 - **Wobbling Mass Calculation:** Estimate the natural frequency of wobble for the forearm during the downswing. Assume: mass of soft tissue = 0.8 kg, stiffness = 3000 N/m. What is the period of oscillation?
 
-- **Visceral Centrifugal Force:** Calculate the total centrifugal force on 15 kg of viscera in a rotating torso at 500${}^\circ$/s, with the centroid 0.1 m from the axis of rotation. How does this compare to the weight of the viscera?
+- **Visceral Centrifugal Force:** A rotating torso at 500${}^\circ$/s carries visceral mass $m_v$ with centroid at $r = 0.1$ m from the rotation axis. Write an expression for the centrifugal force as a function of $m_v$. How does this force compare to the weight of that same mass? At what angular velocity would the centrifugal acceleration equal $g$?
 
-- **IAP Structural Force:** If IAP reaches 110 mmHg and the diaphragm area is 0.045 m$^2$, what is the total upward force on the diaphragm? Compare this to a typical back extensor muscle force of 350 newtons.
+- **IAP Structural Force:** If IAP reaches 110 mmHg and the diaphragm area is 0.045 m$^2$, what is the total upward force on the diaphragm? Comment on whether this force is significant compared to the order of magnitude of forces expected from the back extensor muscles.
 
 - **Torso Stiffness:** Assume a baseline torsional stiffness of the torso (without IAP) is $k_0 = 150$ N$\cdot$m/rad. Estimate the additional stiffness contribution from IAP at 100 mmHg, assuming $k_{\mathrm{IAP}}(P) = 50 P/\mathrm{mmHg}$ N$\cdot$m/rad. What is the percentage increase in stiffness?
 
-- **Time-Varying Inertia:** A torso with 35 kg total mass has a nominal moment of inertia about the vertical axis of $I_0 = 3.0$ kg$\cdot$m$^2$. During downswing rotation at 10 rad/s, the viscera shift outward, increasing the moment of inertia by 6%. If the torso is rotating at constant angular velocity, what is the effective damping-like term $\dot{I}(t) \dot{\theta}$? (Assume $\dot{I}/dt \approx -0.01$ kg$\cdot$m$^2$/s during the initial downswing acceleration.)
+- **Time-Varying Inertia:** A torso has a nominal moment of inertia $I_0$ about the vertical axis. During downswing rotation, visceral redistribution increases $I$ by a small fraction $\delta$. Write the equation of rotational motion including the $\dot{I}(t)\dot{\theta}$ term. Explain physically why this term acts like a damping contribution and in what direction it acts during the acceleration and deceleration phases of the downswing.
 
 - **Wobble Resonance:** Suppose a limb segment has natural wobble frequency $\omega_n = 12$ Hz. If the joint is rotating at a frequency approaching $\omega_n$, how does the effective inertia change compared to low-frequency rotation?
 
