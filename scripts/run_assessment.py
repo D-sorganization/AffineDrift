@@ -147,7 +147,7 @@ def _gather_findings(assessment_id: str, file_count: int) -> tuple[list[str], in
     # No automated checks - require real review
     findings = [
         f"- Python files analyzed: {file_count}",
-        "- **REQUIRES REVIEW**: No automated checks available for this category",
+        "- **Requires manual assessment**: No automated checks available for this category",
         "- Score must be assigned by Jules bot or manual code review",
         "- Do NOT use a default score - real analysis is required",
     ]
@@ -177,7 +177,7 @@ def _format_assessment_report(
         score = max(0, min(10, score))
         score_display = f"{score}/10"
     else:
-        score_display = "PENDING REVIEW"
+        score_display = "AWAITING ASSESSMENT"
 
     return f"""# Assessment {assessment_id}: {assessment_name}
 
@@ -235,7 +235,7 @@ def run_assessment(assessment_id: str, output_path: Path) -> int:
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(report_content)
 
-    score_display = f"{score}/10" if score is not None else "PENDING REVIEW"
+    score_display = f"{score}/10" if score is not None else "AWAITING ASSESSMENT"
     logger.info(f"Assessment {assessment_id} report saved to {output_path}")
     logger.info(f"  Score: {score_display}")
     return 0

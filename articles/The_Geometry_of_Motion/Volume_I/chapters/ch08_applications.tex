@@ -18,6 +18,14 @@ pathways. The goal is to move from theory to implementation.
 \section{Biomechanics: The Golf Swing as a Control-Affine System}
 %% ==========================================================================
 
+The golfer's musculoskeletal system can be analyzed via the Lie algebra rank condition of Agrachev and Sachkov 
+\cite[Ch.~3]{AgrachevSachkov2004}. For a 3-DOF simplified golfer model (torso, arm, club), the control distribution 
+is spanned by the muscle torque vector fields at each joint. The rank condition checks whether the Lie algebra generated 
+by these controls spans the full 3-dimensional tangent space at key configurations. For underactuated joints (where muscles 
+cannot directly apply torque), the Lie bracket terms $[\,\mathbf{g}_i, \mathbf{g}_j\,]$ between muscles at adjacent joints 
+determine whether the distant distal segment is controllable. This geometric analysis predicts which swing patterns are 
+biomechanically feasible and which require additional degrees of freedom or feedforward strategies.
+
 \subsection{System Definition and Parameterization}
 
 Real-world applications of geometric mechanics and contraction theory have been extensively studied
@@ -431,6 +439,14 @@ depends on the specific biomechanical context.
 \section{Robotics: Contraction\index{Contraction Analysis}-Certified Manipulation}
 %% ==========================================================================
 
+Contraction metrics provide certificates of stability and robustness that are dual to the control distribution's 
+controllability in the sense of Agrachev and Sachkov \cite[Ch.~4]{AgrachevSachkov2004}. Where controllability asks 
+"what is reachable?" and relies on Lie bracket accessibility, contraction asks "do trajectories converge?" and relies 
+on Riemannian geometry. A robot arm with a control metric demonstrates both properties: the Lie algebra rank condition 
+confirms that all configurations are reachable, while a contraction metric certifies that desired reference trajectories 
+are robustly attractive against perturbations. This geometric duality unifies manipulation tasks (via controllability) 
+with robust execution (via contraction).
+
 \subsection{Operational Space Control with Contraction\index{Contraction Analysis} Guarantees}
 
 For a robot manipulator tracking a task-space trajectory $\vec{y}_d(t)$ with task
@@ -699,6 +715,14 @@ of the regularization as singularities are approached.
 \section{Aerospace: Spacecraft Proximity Operations}
 %% ==========================================================================
 
+Fuel-optimal spacecraft maneuvers are solved via the Pontryagin Maximum Principle in the geometric formulation of 
+Agrachev and Sachkov \cite[Ch.~5]{AgrachevSachkov2004}. The Hamiltonian on the cotangent bundle encodes fuel consumption 
+as a costate multiplier. Optimal controls often exhibit \emph{bang-bang} structure (thrusters at maximum or minimum) 
+with \emph{singular arcs} where the control takes intermediate values determined by the Hamiltonian's flatness in control. 
+The symplectic structure of the optimal control problem guarantees that costate dynamics evolve via the adjoint of the 
+linearized state flow, making the sensitivity of optimal trajectories to perturbations predictable via the Riccati 
+equation from Chapter~\ref{ch:optimal_control}.
+
 \subsection{Clohessy-Wiltshire Equations and State-Space Form}
 
 \subsubsection{Linearized Dynamics}
@@ -960,6 +984,15 @@ against trajectory accuracy.
 %% ==========================================================================
 \section{Autonomous Driving: Vehicle Dynamics and Lane-Keeping}
 %% ==========================================================================
+
+The bicycle model is a canonical nonholonomic system analyzed via geometric control in Agrachev and Sachkov 
+\cite[Ch.~6]{AgrachevSachkov2004}. The constraint "velocity in the direction of heading" reduces the state-space dimension
+below the number of degrees of freedom, yet the system remains controllable through Lie bracket combinations of steering 
+and forward velocity. The Lie bracket $[\,\text{steer}, \text{forward}\,]$ generates sideways motion, enabling the 
+parallel parking maneuver. The rank condition---that the Lie algebra of the control distribution has full rank---guarantees 
+that any configuration and heading are reachable, making autonomous vehicles steerable in principle. Contraction-based 
+lane-keeping control (Chapter~\ref{ch:contraction}) ensures that perturbations from the lane centerline decay exponentially, 
+providing a robustness certificate that supplements the accessibility guarantee.
 
 \subsection{Bicycle Model Kinematics\index{Kinematics}}
 

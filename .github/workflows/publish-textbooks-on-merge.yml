@@ -149,7 +149,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Download all artifacts
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@v7
         with:
           path: release-artifacts
 
@@ -224,7 +224,7 @@ jobs:
       - name: Create or update release
         run: |
           TAG_NAME="textbook-latest"
-          RELEASE_NOTES="Automated release of The Geometry of Motion textbooks.
+          RELEASE_NOTES="Automated release of Tangent-Space Methods for Nonlinear Control and Biomechanics textbooks.
 
           Contents:
           - Complete textbook PDF (all volumes merged with bookmarks)
@@ -238,13 +238,13 @@ jobs:
             echo "Updating existing release..."
             gh release delete "$TAG_NAME" --yes
             gh release create "$TAG_NAME" \
-              --title "Textbook Latest (Geometry of Motion)" \
+              --title "Textbook Latest (Tangent-Space Methods)" \
               --notes "$RELEASE_NOTES" \
               release-pdfs/*
           else
             echo "Creating new release..."
             gh release create "$TAG_NAME" \
-              --title "Textbook Latest (Geometry of Motion)" \
+              --title "Textbook Latest (Tangent-Space Methods)" \
               --notes "$RELEASE_NOTES" \
               release-pdfs/*
           fi

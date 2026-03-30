@@ -17,6 +17,28 @@ along the flow.
 
 :::
 
+::: {.callout-note}
+
+Contraction theory answers one of the most practical questions in engineering:
+**if I make a small mistake, will the system recover?**
+
+Think about pouring water into a funnel. No matter where the water enters the
+funnel's rim, it all converges to the same narrow exit. The funnel is "contracting"---it
+squeezes all paths toward a single trajectory. A system with this property is forgiving:
+small errors in timing, position, or force all wash out over time.
+
+The opposite is a system that *diverges*---like balancing a marble on top of a hill.
+The slightest nudge sends it rolling away, and the error grows. Such systems are
+unforgiving and require constant, precise correction.
+
+This chapter develops the mathematics to distinguish funnels from hilltops, and
+everything in between. The key tool is a **metric**---a local ruler that measures
+distances between trajectories. If that ruler says distances are shrinking, the
+system is contracting. The beauty of the approach is that finding the right ruler
+*proves* the system is stable, without having to simulate every possible starting
+condition.
+:::
+
 
 ## Historical Context and the Shift to Trajectory Stability
 
@@ -53,6 +75,15 @@ The framework bridges classical results in differential geometry (Riemannian met
 geodesic flows) with modern control and stability analysis. By allowing the metric to
 vary in space and time, Lohmiller--Slotine generalized earlier work and made contraction
 a practical tool for nonlinear system analysis and design.
+
+\begin{intuitionbox}
+Think of contraction this way: if you release a handful of rubber ducks into a river,
+they initially spread out. But as the river narrows through a gorge, they are squeezed
+together. By the time they exit the gorge, they are traveling in a tight group regardless
+of where you released them. The gorge is a contracting region. Contraction theory
+formalizes this ``gorge property'' for any dynamical system, using a metric that plays
+the role of the river's width.
+\end{intuitionbox}
 
 
 ### Demidovich's Condition (1961): An Historical Precursor

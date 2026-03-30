@@ -36,6 +36,10 @@ We need a mathematically rigorous way to define the \emph{exact boundary} of our
   constitutes a valid \textbf{dynamic funnel} if the set is positively invariant under the closed-loop dynamics. That is, if $\state(0) \in \mathcal{F}(0)$, then $\state(t) \in \mathcal{F}(t)$ for all $t > 0$.
 \end{definition}
 
+\begin{remark}{Funnels as Attainable Sets and Symplectic Structure}{funnels_attainable_sets}
+  The dynamic funnel can be reinterpreted through the framework of \textbf{attainable sets} developed in Agrachev and Sachkov \cite{AgrachevSachkov2004}. At time $t$, the funnel boundary $V(\state, t) = 1$ defines the set of states that are on the margin of being able to reach the terminal manifold $\psi(\state(t_f)) = \bm{0}$ at time $t_f$. States strictly inside the funnel ($V < 1$) can reach the target with robustness to spare; states outside cannot reach it at all. As $t \to t_f$, the attainable set shrinks to a single point (or lower-dimensional manifold if the terminal constraint has slack). The Lyapunov function $V(\state, t)$ encodes this shrinking geometry. Furthermore, the Hamiltonian structure from the Pontryagin framework implies that the level sets $V = \text{const}$ are transverse to the true optimal trajectories in the sense of symplectic geometry. The funnel is thus not merely a Euclidean tube, but a geometric object reflecting the Hamiltonian symplectic structure of optimal motion.
+\end{remark}
+
 % ══════════════════════════════════════════════
 \section{Time-Varying Lyapunov Functions for Trajectories}
 % ══════════════════════════════════════════════
@@ -121,6 +125,14 @@ We define our candidate Lyapunov function as a time-varying quadratic form:
   V(\state, t) = (\state - \traj^*(t))^\top \bm{P}(t) (\state - \traj^*(t))
 \end{equation}
 where $\bm{P}(t)$ is a positive definite matrix that changes continuously along the trajectory. The funnel boundary is the time-varying ellipsoid where $V=1$. By altering $\bm{P}(t)$, we alter the shape and orientation of the funnel.
+
+\begin{remark}{Value Functions and Hamilton-Jacobi-Bellman Theory}{hjb_value_functions}
+  The Lyapunov function $V(\state, t)$ in funnel synthesis is deeply connected to the value function from dynamic programming, and more broadly to the \textbf{Hamilton-Jacobi-Bellman (HJB) equation} in optimal control. The value function $J^*(\state, t)$ represents the optimal cost to reach the terminal constraint from state $\state$ at time $t$. In the deterministic setting of Agrachev and Sachkov's framework \cite{AgrachevSachkov2004}, the value function satisfies the HJB partial differential equation:
+  \begin{equation}
+    \frac{\partial J^*}{\partial t} + \min_{\control} \left[ L(\state, \control) + \nabla_{\state} J^* \cdot \bm{f}(\state, \control) \right] = 0.
+  \end{equation}
+  The level sets of $J^*(\state, t) = c$ define the attainable set from which cost $c$ can still be incurred to reach the target. The funnel synthesized via Lyapunov methods is a conservative approximation of this optimal value function: it guarantees invariance via the $\dot{V} < 0$ condition, making it a certificate of feasibility. Computing the exact value function would require solving the HJB equation, which is generally difficult; the Lyapunov/SOS approach trades exactness for verifiability.
+\end{remark}
 
 \begin{example}{Volume Maximization via SDP}{vol_max}
   We transcribe the continuous time $t$ into discrete nodes $t_k$, just as we did in direct collocation. At each node, we set up an SDP that seeks to \emph{maximize} the volume of the ellipsoid defined by $\bm{P}(t_k)$, subject to the SOS invariance constraints connecting it to adjacent nodes.

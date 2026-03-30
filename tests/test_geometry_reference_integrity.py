@@ -1,4 +1,4 @@
-"""Reference integrity guardrails for Geometry of Motion bibliography."""
+"""Reference integrity guardrails for Tangent-Space Methods bibliography."""
 
 from __future__ import annotations
 

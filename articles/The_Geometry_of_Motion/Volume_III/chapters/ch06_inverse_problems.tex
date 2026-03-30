@@ -129,6 +129,15 @@ to $5n$). This is an underdetermined system:
   \label{eq:ch6:redundancy}
 \end{equation}
 
+\noindent
+From a control-theoretic perspective, this is an \emph{accessibility} problem. The system
+can reach a desired joint torque $\bm{\tau}$ if and only if $\bm{\tau}$ lies in the image
+of $R(\bm{q})$---the reachable torque set. When $p > n$, the system is over-actuated:
+multiple control inputs (muscle activation patterns) can produce the same output (joint torque).
+Agrachev \& Sachkov \cite{AgrachevSachkov2004}, Chapter~3, develop this theory for general affine
+systems: the reachable set and controllability are characterized by Lie bracket conditions on
+the control vector fields, of which $R(\bm{q})$ is a concrete instance.
+
 \subsection{Static Optimization}
 
 The most common approach minimizes a cost function:
@@ -142,6 +151,13 @@ where $\alpha = 2$ (minimize sum of squared activations) or $\alpha = 3$ (minimi
 metabolic energy proxy). The constraint $F_i \leq a_i \cdot f_L \cdot F_{0,i}$ enforces
 the force-length and activation constraints from Chapter~3.
 
+\noindent
+This cost-based resolution naturally emerges from geometric optimal control: Agrachev \&
+Sachkov's framework \cite{AgrachevSachkov2004}, Chapters~5--6, shows that for over-actuated
+affine systems, optimal synthesis automatically selects among the infinitely many solutions
+to the constraint. The choice of cost function $\mathcal{L}(\bm{F})$ implicitly defines
+the reachable set and which solutions are `naturally' preferred by the dynamics.
+
 \subsection{Computed Muscle Control (CMC)}
 
 CMC \cite{Thelen2003} combines forward dynamics with feedback control. It uses a
@@ -153,6 +169,12 @@ the desired muscle excitations:
   \label{eq:ch6:cmc}
 \end{equation}
 where $K_v$ and $K_p$ are velocity and position feedback gains.
+
+CMC is a tracking control law: it ensures that the system follows a reference trajectory
+despite the nonlinearity and redundancy of the muscle-driven system. Agrachev \& Sachkov
+\cite{AgrachevSachkov2004}, Chapter~6, develop general feedback synthesis theory for
+nonlinear systems, showing that stability can be guaranteed via suitable Lyapunov functions
+and feedback design---exactly the principle underlying CMC's success.
 
 \section{Parameter Estimation}
 
