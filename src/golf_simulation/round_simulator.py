@@ -373,8 +373,8 @@ class RoundSimulator:
 
         final_x, final_y = putt_trajectory[-1]
 
-        for px, py in putt_trajectory:
-            idx = putt_trajectory.index((px, py))
+        for idx, (px, py) in enumerate(putt_trajectory):
+            # Approximate velocity at this point (difference from next point)
             if idx < len(putt_trajectory) - 1:
                 nx, ny = putt_trajectory[idx + 1]
                 cvx = (nx - px) / putt_sim.dt
