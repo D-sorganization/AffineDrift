@@ -46,9 +46,9 @@ In this book, we use relative angles. So $\theta_2 = 0$ means the two links are 
 
 :::
 
-### Numerical Parameters (Realistic Golf)
+### Numerical Parameters (Illustrative Model)
 
-Let's use numbers that match an actual golfer:
+For this textbook, we adopt the following illustrative parameters for the double-pendulum model. Segment lengths and masses are order-of-magnitude consistent with anthropometric data for a 50th-percentile male [@winter2009biomechanics; @deleva1996adjustments], combined with a standard golf club. The moments of inertia are computed from the assumed geometry (point-mass approximation at the center of mass).
 
 | **Parameter** | **Link 1 (Upper Arm)** | **Link 2 (Forearm + Club)** |
 | --- | --- | --- |
@@ -57,7 +57,7 @@ Let's use numbers that match an actual golfer:
 | CM distance from hinge | 0.175 m | 0.5 m |
 | Moment of inertia $I$ | 0.015 kg m$^2$ | 0.4 kg m$^2$ |
 
-These are approximate values for a typical golfer. Golfers with larger bodies or longer clubs will have different values, but the physics is the same.
+These are illustrative values chosen for pedagogical clarity. Individual golfers will have different segment properties, but the qualitative physics is the same.
 
 ## The Kinetic Energy
 
@@ -307,9 +307,9 @@ But it's more standard to write the Coriolis matrix such that $\bm{C} \dot{\bm{q
 (M_1 L_{1,\text{cm}} + M_2 L_1) g \sin \theta_1 + M_2 g L_{2,\text{cm}} \sin(\theta_1 + \theta_2) \\
 M_2 g L_{2,\text{cm}} \sin(\theta_1 + \theta_2)
 
-## Numerical Example: A Realistic Golf Swing
+## Numerical Example: Illustrative Golf Swing
 
-Let's plug in numbers and see what the forces actually are.
+Let's plug in the illustrative parameters from above and see what the forces look like. The specific numerical results depend on these assumed values; the qualitative conclusions hold across a range of realistic parameters.
 
 ### At Impact
 
@@ -350,7 +350,7 @@ At impact:
 - Gravity is pulling with a torque of 10.6 N m.
 - The centrifugal force (from the high shoulder rotation) is creating a torque of 6.6 N m trying to straighten the elbow.
 
-For comparison, a human can generate roughly 30â€“50 N m of torque at the shoulder. So gravity and centrifugal forces are doing about 40\% of the work at impact. The muscles do the rest.
+In this illustrative model, gravity and centrifugal forces together contribute a meaningful fraction of the total torque at impact. The muscles contribute the remainder.
 
 But notice: if we had generated all of this torque during the downswing, the club would barely accelerate. Instead, we generate a moderate muscular torque and let gravity and momentum contribute. That's efficiency.
 
@@ -399,7 +399,7 @@ This is why consistency is hard. It's not just about executing a "swing shape"â€
 ::: {.callout-tip}
 ## Chaos and Consistency
 
-Here's a simple example. Suppose your shoulder is rotating at 10.47 rad/s and you want to accelerate the club by releasing the wrist ($\ddot{\theta}_2 > 0$).
+Here's a simple example. Using the same illustrative parameters, suppose the shoulder is rotating at 10.47 rad/s and you want to accelerate the club by releasing the wrist ($\ddot{\theta}_2 > 0$).
 
 If you release perfectly, the club accelerates and hits the sweet spot.
 
