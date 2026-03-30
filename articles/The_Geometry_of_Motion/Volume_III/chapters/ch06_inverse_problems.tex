@@ -122,8 +122,10 @@ ground reaction forces are not available (e.g., swimming, throwing).
 \section{The Muscle Redundancy Problem}
 
 Inverse dynamics gives net joint torques $\bm{\tau} \in \Reals^n$, but we want
-individual muscle forces $\bm{F} \in \Reals^p$ with $p > n$ (typically $p = 3n$
-to $5n$). This is an underdetermined system:
+individual muscle forces $\bm{F} \in \Reals^p$ with $p > n$. The exact ratio
+between muscles and generalized coordinates depends on model granularity and how
+muscle groups are represented, but in all such cases the system is
+underdetermined:
 \begin{equation}
   R(\bm{q}) \bm{F} = \bm{\tau}, \quad \bm{F} \geq 0.
   \label{eq:ch6:redundancy}

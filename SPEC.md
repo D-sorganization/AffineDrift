@@ -2,7 +2,7 @@
 
 <!--
   TEMPLATE VERSION: 1.0.0
-  LAST UPDATED: 2026-03-28
+  LAST UPDATED: 2026-03-30
 
   This is the canonical specification template for all repositories in the
   D-sorganization fleet. Every repo MUST have a SPEC.md at its root.
@@ -28,7 +28,7 @@
 | **License** | MIT |
 | **Current Version** | 1.0.0 |
 | **Spec Version** | 1.0.0 |
-| **Last Spec Update** | 2026-03-28 |
+| **Last Spec Update** | 2026-03-30 |
 
 ## 2. Purpose & Mission
 
@@ -153,6 +153,7 @@ AffineDrift/
 | F9 | GitHub Actions Automation | ✅ | 54 CI/CD workflows including Jules automation agents for code analysis and deployment |
 | F10 | Progressive Web App Support | ✅ | Service worker and manifest for PWA capabilities (offline access, installability) |
 | F11 | Textbook Compilation Pipeline | ✅ | Quarto pipeline to compile educational materials into publishable textbook format |
+| F12 | Textbook claim guardrail | ✅ | PR CI blocks newly added unsupported quantitative or study claims in textbook content unless they include a citation or an explicit illustrative caveat |
 
 ### API / Interface Contract
 

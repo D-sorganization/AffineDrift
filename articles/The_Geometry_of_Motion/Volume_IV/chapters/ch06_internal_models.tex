@@ -154,7 +154,7 @@ which corresponds to the feedforward control of Volume~II.
 
 \section{Smith Predictor for Neural Delays}
 
-The sensorimotor system faces delays of 50--200~ms. The Smith predictor
+The sensorimotor system faces finite neural and sensing delays. The Smith predictor
 architecture uses a forward model to compensate:
 \begin{equation}
   \hat{\state}_{\text{current}} = \hat{\state}(t - \Delta t) +
@@ -172,7 +172,8 @@ where $\Delta t$ is the sensory delay. The controller operates on the
         how the responsibilities shift.
 
   \item \textbf{Smith Predictor.} Implement a Smith predictor for a simple pendulum
-        with a 100~ms sensory delay. Compare performance with and without prediction.
+        with a user-chosen sensory delay parameter. Compare performance with and
+        without prediction.
 
   \item \textbf{(Research.)} Summarize evidence for multiple internal models in
         human motor control, citing at least three experimental studies.
