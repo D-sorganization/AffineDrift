@@ -89,13 +89,13 @@ class TestDDPMockGuard:
 
     def test_mock_solver_blocked_without_allow_flag(self) -> None:
         """optimize() should reject mock solver unless allow_mock_solver=True."""
-        config = SwingOptimizationConfig(n_joints=1, horizon_steps=5, max_iterations=1)
+        config = SwingOptimizationConfig(n_joints=1, horizon_steps=5, max_iterations=1, allow_mock_solver=False)
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", UserWarning)
-            optimizer = SwingOptimizer(config)
-        x0 = np.zeros(2)
-        with pytest.raises(ContractViolationError, match="mock"):
-            optimizer.optimize(x0, lambda x, u: np.array([x[1], u[0]]))
+            with pytest.raises(ContractViolationError, match="mock"):
+                optimizer = SwingOptimizer(config)
+                x0 = np.zeros(2)
+                optimizer.optimize(x0, lambda x, u: np.array([x[1], u[0]]))
 
     def test_mock_solver_allowed_with_flag(self) -> None:
         """optimize() should succeed when allow_mock_solver=True."""

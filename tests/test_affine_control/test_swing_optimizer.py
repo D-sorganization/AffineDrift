@@ -493,12 +493,12 @@ class TestSwingOptimizerOptimize(unittest.TestCase):
 
         from src.core.contracts import ContractViolationError
 
-        config = SwingOptimizationConfig(n_joints=1, horizon_steps=5, max_iterations=1)
+        config = SwingOptimizationConfig(n_joints=1, horizon_steps=5, max_iterations=1, allow_mock_solver=False)
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", UserWarning)
-            optimizer = SwingOptimizer(config)
-        with self.assertRaises(ContractViolationError):
-            optimizer.optimize(np.zeros(2), double_integrator_1dof)
+            with self.assertRaises(ContractViolationError):
+                optimizer = SwingOptimizer(config)
+                optimizer.optimize(np.zeros(2), double_integrator_1dof)
 
 
 # ── Property and accessor tests ─────────────────────────────────────────────
