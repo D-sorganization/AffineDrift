@@ -392,6 +392,7 @@ def _build_priority_section(criticals: list[Finding], todos: list[Finding]) -> l
     all_items = list(criticals) + list(todos)
 
     def priority_score(item: Mapping[str, Any]) -> int:
+        """Compute a scalar priority score: high impact and low complexity rank highest."""
         imp, _, comp = calculate_metrics(item)
         return (imp * 10) - comp
 
@@ -510,6 +511,7 @@ def _compile_report_body(
     report.extend(_build_priority_section(criticals, todos))
     report.extend(_create_high_impact_issues(criticals))
     return report
+
 
 def generate_report() -> None:
     """Generate the structured completist status report."""

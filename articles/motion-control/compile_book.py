@@ -196,6 +196,7 @@ _CHAPTER_FILES = [
     "/mnt/project/chapter11.tex",
 ]
 
+
 def create_complete_book() -> str:
     """Create a complete book from all chapter files"""
 
@@ -362,6 +363,7 @@ modern geometric methods, providing both theoretical foundations and practical
 tools for designing controllers for systems that must move through the world
 with purpose and precision.
 """
+
 
 def create_summary() -> None:
     """Create a summary of what was accomplished"""

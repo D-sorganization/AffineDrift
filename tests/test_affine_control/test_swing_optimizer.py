@@ -79,7 +79,8 @@ class TestSwingOptimizationConfig(unittest.TestCase):
 
     def test_valid_config_custom(self) -> None:
         """Config with all custom values should be valid."""
-        config = SwingOptimizationConfig(n_joints=5,
+        config = SwingOptimizationConfig(
+            n_joints=5,
             horizon_steps=100,
             dt=0.005,
             max_iterations=200,
@@ -87,7 +88,8 @@ class TestSwingOptimizationConfig(unittest.TestCase):
             control_weight=0.1,
             target_velocity=40.0,
             terminal_weight=50.0,
-            allow_mock_solver=True)
+            allow_mock_solver=True,
+        )
         self.assertEqual(config.n_joints, 5)
         self.assertEqual(config.horizon_steps, 100)
         self.assertAlmostEqual(config.dt, 0.005)
@@ -257,11 +259,13 @@ class TestSwingOptimizerCost(unittest.TestCase):
         """Create a standard 2-joint optimizer for cost tests."""
         import warnings
 
-        self.config = SwingOptimizationConfig(n_joints=2,
+        self.config = SwingOptimizationConfig(
+            n_joints=2,
             control_weight=1.0,
             target_velocity=10.0,
             terminal_weight=100.0,
-            allow_mock_solver=True)
+            allow_mock_solver=True,
+        )
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", UserWarning)
             self.optimizer = SwingOptimizer(self.config)
@@ -328,9 +332,12 @@ class TestSwingOptimizerCost(unittest.TestCase):
         """Terminal cost should scale with terminal_weight."""
         import warnings
 
-        config_low = SwingOptimizationConfig(n_joints=2, target_velocity=10.0, terminal_weight=1.0, allow_mock_solver=True)
-        config_high = SwingOptimizationConfig(n_joints=2, target_velocity=10.0, terminal_weight=100.0
-        , allow_mock_solver=True)
+        config_low = SwingOptimizationConfig(
+            n_joints=2, target_velocity=10.0, terminal_weight=1.0, allow_mock_solver=True
+        )
+        config_high = SwingOptimizationConfig(
+            n_joints=2, target_velocity=10.0, terminal_weight=100.0, allow_mock_solver=True
+        )
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", UserWarning)
             opt_low = SwingOptimizer(config_low)
@@ -490,7 +497,9 @@ class TestSwingOptimizerOptimize(unittest.TestCase):
 
         from src.core.contracts import ContractViolationError
 
-        config = SwingOptimizationConfig(n_joints=1, horizon_steps=5, max_iterations=1, allow_mock_solver=False)
+        config = SwingOptimizationConfig(
+            n_joints=1, horizon_steps=5, max_iterations=1, allow_mock_solver=False
+        )
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", UserWarning)
             with self.assertRaises(ContractViolationError):

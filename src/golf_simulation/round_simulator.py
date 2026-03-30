@@ -382,9 +382,7 @@ class RoundSimulator:
             else:
                 cvx, cvy = 0.0, 0.0
 
-            if putt_sim.is_holed(
-                px, py, cvx, cvy, hole.pin_position[0], hole.pin_position[1]
-            ):
+            if putt_sim.is_holed(px, py, cvx, cvy, hole.pin_position[0], hole.pin_position[1]):
                 final_x, final_y = hole.pin_position[0], hole.pin_position[1]
                 break
 

@@ -99,6 +99,7 @@ QMD_FILES = [
     "articles.qmd",  # Process last (template source)
 ]
 
+
 def main() -> None:
     """Process all .qmd files and generate HTML pages."""
 

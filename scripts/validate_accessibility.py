@@ -98,6 +98,7 @@ _ALL_ALLOWED = (
     | {c.upper() for c in _ALLOWED_UI}
 )
 
+
 def check_colorblind_safe_colors(file_path: Path) -> list[str]:
     """Check if custom colors use the colorblind-safe palette.
 
