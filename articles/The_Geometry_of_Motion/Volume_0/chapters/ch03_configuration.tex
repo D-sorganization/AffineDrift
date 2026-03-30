@@ -900,16 +900,16 @@ directly to the general theory.
 
 % ==========================================================================
 \section{Exercises}
-\label{sec:exercises}
+\label{sec:ch3_exercises}
 
-\noindent\textbf{Foundational Tier}
+\subsection*{Foundational Tier}
 
 \begin{enumerate}
 
-\item \label{ex:1}
+\item \label{ex:ch3_1}
 A system consisting of a single rigid body in 3D space (not subject to constraints) has how many degrees of freedom? Explain why.
 
-\item \label{ex:2}
+\item \label{ex:ch3_2}
 For the planar 4-bar linkage, verify Grübler's formula:
 \begin{enumerate}
   \item Identify $n$ (movable links), $j$ (joints), and $d_i$ (DOF per joint).
@@ -917,32 +917,32 @@ For the planar 4-bar linkage, verify Grübler's formula:
   \item Explain why the result matches your intuition.
 \end{enumerate}
 
-\item \label{ex:3}
+\item \label{ex:ch3_3}
 The circle $S^1$ is a 1-dimensional manifold. Why can you not cover $S^1$ with a single chart $(U, \varphi)$ where $\varphi : U \to \Reals$? (Hint: think about continuity at the wraparound point.)
 
-\item \label{ex:4}
+\item \label{ex:ch3_4}
 For a point $q \in S^1$ (the circle), what is the dimension of the tangent space $T_q S^1$? Why?
 
-\item \label{ex:5}
+\item \label{ex:ch3_5}
 A 2-link planar arm has link lengths $L_1 = 1, L_2 = 1$. At the configuration $q_1 = 0, q_2 = 0$, what is the end-effector position $\mathbf{p}_{end}$? What is the Jacobian at this configuration?
 
 \end{enumerate}
 
-\noindent\textbf{Intermediate Tier}
+\subsection*{Intermediate Tier}
 
 \begin{enumerate}
 
-\item \label{ex:6}
+\item \label{ex:ch3_6}
 Grübler's formula for planar mechanisms: DOF $= 3n - 3j + \sum d_i$.
 \begin{enumerate}
   \item A planar slider-crank mechanism has 3 moving links, 4 joints (one revolute, three other). What must the other three joints be to have DOF $= 1$? Show your calculation.
   \item Sketch such a mechanism.
 \end{enumerate}
 
-\item \label{ex:7}
+\item \label{ex:ch3_7}
 For the 2-link arm from Example~\ref{example:2link_jacobian}, show that at configuration $q_1 = \pi/2, q_2 = 0$, the Jacobian is singular (det$J = 0$). What does this singularity represent geometrically? (Hint: what is the end-effector orientation?)
 
-\item \label{ex:8}
+\item \label{ex:ch3_8}
 Consider the reachable workspace of a 2-link arm with $L_1 = 2, L_2 = 1$.
 \begin{enumerate}
   \item What is the inner radius (minimum distance from origin)?
@@ -950,26 +950,26 @@ Consider the reachable workspace of a 2-link arm with $L_1 = 2, L_2 = 1$.
   \item What is the area of the annular workspace?
 \end{enumerate}
 
-\item \label{ex:9}
+\item \label{ex:ch3_9}
 Transition maps on $S^1$: Using the two charts from Example~\ref{example:circle_charts}, show that the transition map $\tau_{12}$ is smooth. What would happen if you tried to use a chart $(U, \varphi)$ with $\varphi(\theta) = \theta$ (angle in radians) covering the entire circle? Why does this fail to be a valid chart?
 
-\item \label{ex:10}
+\item \label{ex:ch3_10}
 For a unicycle model (Example~\ref{ex:unicycle}), write the non-holonomic constraint in Pfaffian form $\mathbf{A}(\mathbf{q}) \dot{\mathbf{q}} = \mathbf{0}$. How many velocity constraints are there? What is the dimension of the allowed velocity subspace?
 
 \end{enumerate}
 
-\noindent\textbf{Advanced Tier}
+\subsection*{Advanced Tier}
 
 \begin{enumerate}
 
-\item \label{ex:11}
+\item \label{ex:ch3_11}
 Prove that for a 2-link arm, the workspace is indeed an annulus (not a disk or other shape).
 \begin{enumerate}
   \item Show that the reachable set is $\{(x, y) : |L_1 - L_2| \le r \le L_1 + L_2\}$ where $r = \sqrt{x^2+y^2}$.
   \item Hint: parameterize by $q_1, q_2 \in [0, 2\pi)$ and use the constraint that the sum of two vectors of fixed length $L_1, L_2$ has magnitude bounded by $L_1 + L_2$ and at least $|L_1 - L_2|$.
 \end{enumerate}
 
-\item \label{ex:12}
+\item \label{ex:ch3_12}
 Inverse Kinematics for a 3-link planar arm: Suppose we augment the 2-link arm with a third link of length $L_3 = 0.5$.
 \begin{enumerate}
   \item Write the forward kinematics: $x, y, \theta$ in terms of $q_1, q_2, q_3$.
@@ -977,10 +977,10 @@ Inverse Kinematics for a 3-link planar arm: Suppose we augment the 2-link arm wi
   \item Numerically solve (using Python or Matlab) starting from an initial guess $\mathbf{q}_0 = [\pi/6, \pi/6, \pi/6]^T$.
 \end{enumerate}
 
-\item \label{ex:13}
+\item \label{ex:ch3_13}
 For a rolling ball on a 2D plane with no-slip condition (Example~\ref{ex:rolling_coin}), write the full state (configuration + velocity) and state the non-holonomic constraint in Pfaffian form. Does this constraint reduce the dimension of the configuration space?
 
-\item \label{ex:14}
+\item \label{ex:ch3_14}
 Prove the equivalence (Theorem~\ref{thm:tangent_equivalence}) by constructing explicit isomorphisms:
 \begin{enumerate}
   \item Given a curve $\gamma(t)$ with $\gamma(0) = q$ and local coordinates $\varphi(\gamma(t))$, define a derivation $v_\gamma$ on smooth functions.
@@ -988,7 +988,7 @@ Prove the equivalence (Theorem~\ref{thm:tangent_equivalence}) by constructing ex
   \item Verify that these maps are mutual inverses (up to equivalence).
 \end{enumerate}
 
-\item \label{ex:15}
+\item \label{ex:ch3_15}
 Stewart Platform Inverse Kinematics: A Stewart platform has a desired end-effector pose (position $\mathbf{p} \in \Reals^3$ and orientation $R \in SO(3)$). Given 6 attachment points on the base and 6 on the platform, the inverse kinematics problem is to find the 6 actuator lengths $\ell_1, \ldots, \ell_6$.
 \begin{enumerate}
   \item Write the constraint equations (distance constraints).
