@@ -17,7 +17,3 @@
 ## 2025-10-27 - Streamlit Matplotlib Caching
 **Learning:** Matplotlib figure generation is a significant bottleneck in interactive Streamlit apps. Re-creating `Figure` objects on every script rerun causes noticeable lag.
 **Action:** Use `@st.cache_resource` (with `max_entries` limit) to cache functions that return Matplotlib `Figure` objects. This keeps the live figure object in memory and avoids expensive reconstruction, dramatically improving responsiveness.
-
-## 2026-03-30 - Scroll Event Listener Consolidation
-**Learning:** Multiple separate `window.addEventListener("scroll", ...)` calls performing identical or near-identical geometry checks (like calculating `window.scrollY > SCROLL_THRESHOLD`) cause redundant DOM thrashing. In this codebase, the "Export to PDF" button used a debounced scroll listener while the "Back to Top" button used an optimized `requestAnimationFrame` loop.
-**Action:** When adding scroll-dependent UI elements (like sticky headers or floating buttons), always merge their visibility logic into a single, shared `requestAnimationFrame` tracked scroll loop rather than attaching isolated event listeners.

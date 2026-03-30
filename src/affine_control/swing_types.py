@@ -43,7 +43,7 @@ class SwingOptimizationConfig:
     control_weight: float = DEFAULT_CONTROL_WEIGHT
     target_velocity: float = DEFAULT_TARGET_VELOCITY
     terminal_weight: float = DEFAULT_TERMINAL_WEIGHT
-    allow_mock_solver: bool = True
+    allow_mock_solver: bool = False
 
     def __post_init__(self) -> None:
         """Validate configuration invariants (Design by Contract)."""
