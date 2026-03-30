@@ -43,6 +43,61 @@ def check_alt_text_in_qmd(file_path: Path) -> list[str]:
     return issues
 
 
+_SAFE_COLORS = {
+    "#E69F00",
+    "#56B4E9",
+    "#009E73",
+    "#F0E442",
+    "#0072B2",
+    "#D55E00",
+    "#CC79A7",
+    "#000000",
+    "#999999",
+}
+
+_ALLOWED_NEUTRALS = {
+    "#FFFFFF",
+    "#F8F9FA",
+    "#E9ECEF",
+    "#DEE2E6",
+    "#CED4DA",
+    "#ADB5BD",
+    "#6C757D",
+    "#495057",
+    "#343A40",
+    "#212529",
+    "#000000",
+    "#1A1A2E",
+    "#0A0A1A",
+    "#2C3E50",
+    "#34495E",
+}
+
+_ALLOWED_BLUES = {
+    "#0F4C75",
+    "#17A2B8",
+    "#138496",
+    "#1AA179",
+    "#155724",
+    "#0062CC",
+    "#004085",
+}
+
+_ALLOWED_UI = {
+    "#BD2130",
+    "#856404",
+    "#E7F3FF",
+    "#E3F2FD",
+    "#FFEBEE",
+}
+
+_ALL_ALLOWED = (
+    {c.upper() for c in _SAFE_COLORS}
+    | {c.upper() for c in _ALLOWED_NEUTRALS}
+    | {c.upper() for c in _ALLOWED_BLUES}
+    | {c.upper() for c in _ALLOWED_UI}
+)
+
 def check_colorblind_safe_colors(file_path: Path) -> list[str]:
     """Check if custom colors use the colorblind-safe palette.
 
@@ -52,71 +107,11 @@ def check_colorblind_safe_colors(file_path: Path) -> list[str]:
     issues = []
     content = file_path.read_text(encoding="utf-8")
 
-    # Okabe-Ito palette colors (primary colorblind-safe palette)
-    safe_colors = {
-        "#E69F00",
-        "#56B4E9",
-        "#009E73",
-        "#F0E442",
-        "#0072B2",
-        "#D55E00",
-        "#CC79A7",
-        "#000000",
-        "#999999",
-    }
-
-    # Allow common neutral colors (grays, whites, blacks)
-    # These are generally safe for colorblind users
-    allowed_neutrals = {
-        "#FFFFFF",
-        "#F8F9FA",
-        "#E9ECEF",
-        "#DEE2E6",
-        "#CED4DA",
-        "#ADB5BD",
-        "#6C757D",
-        "#495057",
-        "#343A40",
-        "#212529",
-        "#000000",
-        "#1A1A2E",
-        "#0A0A1A",
-        "#2C3E50",
-        "#34495E",
-    }
-
-    # Allow blues and teals that are generally colorblind-safe
-    allowed_blues = {
-        "#0F4C75",
-        "#17A2B8",
-        "#138496",
-        "#1AA179",
-        "#155724",
-        "#0062CC",
-        "#004085",
-    }
-
-    # Allow standard Bootstrap/UI colors that have been tested
-    allowed_ui = {
-        "#BD2130",
-        "#856404",
-        "#E7F3FF",
-        "#E3F2FD",
-        "#FFEBEE",
-    }
-
-    all_allowed = (
-        {c.upper() for c in safe_colors}
-        | {c.upper() for c in allowed_neutrals}
-        | {c.upper() for c in allowed_blues}
-        | {c.upper() for c in allowed_ui}
-    )
-
     # Find hex colors in CSS/SCSS
     hex_colors = re.finditer(r"#[0-9A-Fa-f]{6}", content)
     for match in hex_colors:
         color = match.group(0).upper()
-        if color not in all_allowed and not any(
+        if color not in _ALL_ALLOWED and not any(
             [
                 color.startswith("#F"),  # Light colors
                 color.startswith("#E"),  # Light colors

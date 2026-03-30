@@ -432,18 +432,15 @@ def _create_high_impact_issues(criticals: list[Finding]) -> list[str]:
     return lines
 
 
-def generate_report() -> None:
-    """Generate the structured completist status report."""
-    stubs = analyze_stubs()
-    ni_errors = analyze_not_implemented()
-    todos, fixmes = analyze_todos()
-    missing_docs = analyze_docs()
-    _ = analyze_abstract_methods()
-    placeholders = analyze_placeholders()
-
-    criticals = _identify_criticals(stubs, ni_errors, placeholders)
-
-    date_s = datetime.now().strftime("%Y-%m-%d")
+def _compile_report_body(
+    criticals: list[Finding],
+    todos: list[Finding],
+    placeholders: list[Finding],
+    fixmes: list[Finding],
+    missing_docs: list[Finding],
+    date_s: str,
+) -> list[str]:
+    """Compile the main markdown body of the report."""
     report = [
         f"# Completist Report: {date_s}\n",
         "## Executive Summary",
@@ -512,6 +509,21 @@ def generate_report() -> None:
 
     report.extend(_build_priority_section(criticals, todos))
     report.extend(_create_high_impact_issues(criticals))
+    return report
+
+def generate_report() -> None:
+    """Generate the structured completist status report."""
+    stubs = analyze_stubs()
+    ni_errors = analyze_not_implemented()
+    todos, fixmes = analyze_todos()
+    missing_docs = analyze_docs()
+    _ = analyze_abstract_methods()
+    placeholders = analyze_placeholders()
+
+    criticals = _identify_criticals(stubs, ni_errors, placeholders)
+
+    date_s = datetime.now().strftime("%Y-%m-%d")
+    report = _compile_report_body(criticals, todos, placeholders, fixmes, missing_docs, date_s)
 
     os.makedirs(REPORT_DIR, exist_ok=True)
     report_path = os.path.join(REPORT_DIR, f"Completist_Report_{date_s}.md")
