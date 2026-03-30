@@ -36,10 +36,13 @@ This is not a simple problem. It is a *nonlinear optimal control problem in real
 - **Sensory feedback delay:** Information about body position (proprioception) reaches the brain in 30--50 milliseconds. Visual feedback takes 80--150 milliseconds. For vestibular (balance) feedback: 10--20 milliseconds. The downswing lasts 300 milliseconds.
 
 - **Noisy sensors:** Proprioceptive acuity varies by joint. At the wrist, you can detect a 1--2 degree change in angle. At the shoulder, it's 3--5 degrees. Vision has high acuity but slow feedback. The nervous system must work with uncertain, delayed measurements.
+<!-- TODO: citation needed for proprioceptive acuity values (1--2 degrees wrist, 3--5 degrees shoulder) -->
 
 - **Noisy actuators:** Muscle force variability is 5--10% even when you're trying to produce exactly the same torque twice. This is called *signal-dependent noise* and increases with force level.
+<!-- TODO: citation needed for the 5--10% muscle force variability figure -->
 
 - **Bounded control:** Maximum torques are limited. The shoulder can produce roughly 100--200 N$\cdot$m of torque, the elbow 100--150 N$\cdot$m, the wrist 30--50 N$\cdot$m. The brain cannot exceed these.
+<!-- TODO: citation needed for the joint torque capacity estimates (shoulder 100--200 N·m, elbow 100--150 N·m, wrist 30--50 N·m) -->
 
 :::
 
@@ -54,6 +57,7 @@ The downswing takes approximately 250--300 ms. Consider the delay budget:
 - Neural transmission to muscles: $\sim$10--20 ms
 - Electromechanical delay (muscle activation): $\sim$40--60 ms
 
+<!-- TODO: citation needed for each of the neural latency components above; these are approximate values consistent with motor neuroscience literature but should be supported by specific references -->
 Total round-trip delay: approximately 250--330 ms. This exceeds the entire downswing duration. The implication is stark: **meaningful corrective feedback is largely unavailable during the downswing.** The downswing is predominantly a pre-programmed ballistic action. Most "corrections" you feel yourself making were likely planned before the downswing began, triggered by predicted (not actual) sensory feedback. Some limited proprioceptive correction may occur in the earliest phases of the downswing, but the scope for mid-course adjustment is severely constrained.
 
 :::
@@ -91,6 +95,7 @@ This is pre-computed, before feedback arrives. No error correction is possible d
 Now here is the critical insight: **the golf downswing appears to be dominated by feedforward control**.
 
 Why? The timescales don't work out. Suppose a visual feedback signal detected an error at time $t=100$ ms (early in the downswing). This signal takes 80--150 ms to reach the visual cortex. By the time it arrives, we're at $t \approx 180$--250 ms. The motor system then needs 50--100 ms to generate a corrective command. The correction reaches the muscles at $t \approx 230$--350 ms. But the swing is over by $t \approx 300$ ms. The correction arrives too late.
+<!-- TODO: citation needed for visual processing latency (80--150 ms to visual cortex) and motor command generation latency (50--100 ms) values -->
 
 ::: {.callout-warning}
 ## The Feedback Fantasy
@@ -100,6 +105,7 @@ Why? The timescales don't work out. Suppose a visual feedback signal detected an
 :::
 
 Proprioceptive feedback is faster (30--50 ms) but still problematic. A proprioceptive error signal arrives in time for maybe one correction cycle. The elite golfer likely does not rely heavily on this. Instead, the swing is executed predominantly as a *ballistic* movement---once it starts, it unfolds largely according to a pre-planned motor program, with only minimal real-time adjustments.
+<!-- TODO: citation needed for proprioceptive feedback latency (30--50 ms) in the context of the golf swing -->
 
 This realization has significant implications. It suggests that the brain does its most important work *before* the swing starts: encoding the initial conditions, setting muscle stiffness, and preparing the motor program. The execution phase is largely pre-programmed, though not perfectly deterministic.
 
@@ -177,7 +183,8 @@ Without an internal model, the brain cannot solve the golf swing. Here's why:
 ::: {.callout-tip}
 ## Controlling Without a Model
 
-Suppose you didn't have an internal model. You swing the club and see (after 150 ms) that the clubface was open. You generate a correction. But this correction is based on what your muscles did 150 milliseconds ago, when the club was in a different position. The dynamics are nonlinear---the effect of a torque at position $\bm{x}_1$ is different from the effect of the same torque at position $\bm{x}_2$. Applying a correction based on delayed feedback at the wrong state is futile.
+Suppose you didn't have an internal model. You swing the club and see (after approximately 150 ms, a rough estimate for visual processing latency) that the clubface was open. You generate a correction. But this correction is based on what your muscles did 150 milliseconds ago, when the club was in a different position. The dynamics are nonlinear---the effect of a torque at position $\bm{x}_1$ is different from the effect of the same torque at position $\bm{x}_2$. Applying a correction based on delayed feedback at the wrong state is futile.
+<!-- TODO: citation needed for the ~150 ms visual processing latency estimate used as an illustrative value here -->
 
 With an internal model, you *predict* what will happen before it happens. You mentally simulate the swing. If the simulation predicts an open clubface, you adjust the plan *before* you swing.
 
