@@ -27,7 +27,7 @@
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto |
 | **License** | MIT |
 | **Current Version** | 1.0.1 |
-| **Spec Version** | 1.0.2 |
+| **Spec Version** | 1.0.3 |
 | **Last Spec Update** | 2026-03-30 |
 
 ## 2. Purpose & Mission
@@ -43,6 +43,7 @@ AffineDrift is a research platform that explores golf swing biomechanics through
 - Implement swing trajectory optimization using differential dynamic programming (DDP) and iLQR solvers
 - Achieve and maintain >50% test coverage with property-based testing (Hypothesis) across all critical modules
 - Provide comprehensive educational resources that bridge control theory and applied biomechanics
+- Maintain textbook bibliographies and chapter citations with explicit scientific sourcing for biomechanics, multibody dynamics, geometry, and control-theory claims
 
 ### Non-Goals
 
@@ -156,6 +157,7 @@ AffineDrift/
 | F12 | Textbook claim guardrail | ✅ | PR CI blocks newly added unsupported quantitative or study claims in textbook content unless they include a citation or an explicit illustrative caveat |
 | F13 | PR site-build and dependency-audit gate | ✅ | `ci-standard.yml` audits Python dependencies with `pip-audit`, renders the Quarto site in PR CI, syncs frontend assets, and runs Playwright smoke tests against the generated docs |
 | F14 | Bibliography duplicate-alias guardrail | ✅ | Reference-integrity tests require duplicate bibliography records to carry an explicit legacy-compatibility note instead of silently diverging |
+| F15 | Textbook bibliography synchronization | ✅ | The Geometry of Motion and The Physics of Golf keep chapter-level citations synchronized with shared bibliography sources in `references/affine-drift.bib` and the book-specific `.bib` files |
 
 ### API / Interface Contract
 
@@ -183,6 +185,11 @@ AffineDrift/
 - GitHub Pages deployment at `AffineDrift.com`
 - Service worker handles offline content caching
 - All pages render with MathJax notation support
+
+**Textbook Bibliographies:**
+- `references/affine-drift.bib` is the shared canonical bibliography source for the site and textbook projects
+- `articles/The_Geometry_of_Motion/geometry_of_motion.bib` and `articles/The_Physics_of_Golf/golf_physics.bib` contain book-specific bibliography entries used by Quarto renders
+- Chapter sources in both textbook projects are expected to cite foundational literature for geometric mechanics, multibody dynamics, parallel mechanisms, motor control, and impedance-control claims
 
 ## 6. Data & Configuration
 
