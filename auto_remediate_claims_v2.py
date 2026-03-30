@@ -6,7 +6,9 @@ base_dir = r"c:\Users\diete\Repositories\AffineDrift\articles\The_Physics_of_Gol
 DISCLAIMER = """
 ::: {.callout-warning}
 ## Pedagogical Simplification
-The numerical values, claims, and parameters discussed in this section are formulated as illustrative model outputs and didactic simplifications. They are intended for pedagogical purposes and do not represent published, empirical biomechanical measurements.
+The numerical values, claims, and parameters discussed in this section are formulated as
+illustrative model outputs and didactic simplifications. They are intended for pedagogical
+purposes and do not represent published, empirical biomechanical measurements.
 :::
 """
 
@@ -34,50 +36,59 @@ TARGETS = [
     r"disc can tolerate sustained compression up to.*8 times body weight",
     r"That leaves 20--25 DOF unspecified",
     r"A large reward signal \(dopamine\) is released from the midbrain",
-    r"By pre-positioning muscles, the brain avoids the neural delays"
+    r"By pre-positioning muscles, the brain avoids the neural delays",
 ]
 
+
 def fix_file(filepath):
-    with open(filepath, "r", encoding="utf-8") as f:
+    with open(filepath, encoding="utf-8") as f:
         content = f.read()
 
     changed = False
 
     # Insert disclaimer before paragraphs containing targets
-    lines = content.split('\n')
+    lines = content.split("\n")
     new_lines = []
-    
+
     i = 0
     while i < len(lines):
         line = lines[i]
-        
+
         # Check if any target is in this line
         hit = False
         for target in TARGETS:
             if re.search(target, line, re.IGNORECASE):
                 hit = True
                 break
-                
+
         if hit:
             # Check if disclaimer is nearby
             recent = "\\n".join(new_lines[-5:])
             if "Pedagogical Simplification" not in recent:
                 new_lines.append(DISCLAIMER)
             changed = True
-            
+
             # Also soften specific phrases
-            line = line.replace("peak shoulder rotation rate", "illustrative peak shoulder rotation rate")
+            line = line.replace(
+                "peak shoulder rotation rate", "illustrative peak shoulder rotation rate"
+            )
             line = line.replace("typical smash factor", "theoretical peak smash factor")
-            line = line.replace("Drag acts throughout", "In this model, drag is assumed to act throughout")
-            line = line.replace("Typical wobble amplitudes are 1--3 cm", "Modeled wobble amplitudes are roughly estimated at 1--3 cm")
-            
+            line = line.replace(
+                "Drag acts throughout", "In this model, drag is assumed to act throughout"
+            )
+            line = line.replace(
+                "Typical wobble amplitudes are 1--3 cm",
+                "Modeled wobble amplitudes are roughly estimated at 1--3 cm",
+            )
+
         new_lines.append(line)
         i += 1
-        
+
     if changed:
         with open(filepath, "w", encoding="utf-8") as f:
-            f.write('\n'.join(new_lines))
+            f.write("\n".join(new_lines))
         print(f"Patched {os.path.basename(filepath)}")
+
 
 for root, _, files in os.walk(base_dir):
     for f in files:
