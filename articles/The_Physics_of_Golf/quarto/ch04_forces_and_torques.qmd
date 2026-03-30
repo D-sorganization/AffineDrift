@@ -260,31 +260,28 @@ For example, by using angles $\theta_1$ and $\theta_2$ instead of Cartesian coor
 
 However, if you wanted to know the actual force at the grip (the force the hand exerts on the club), you'd need to solve for it separately. The manipulator equation doesn't directly give you constraint forces.
 
-## Putting It Together: Force Attribution in Impact
+## Putting It Together: Force Attribution at Impact
 
-Let's do a complete force attribution at impact. At impact, the clubhead is moving at roughly 100 mph = 44.7 m/s. The clubhead acceleration is enormous.
+Using our illustrative double-pendulum parameters from Chapter 3, let's sketch a force attribution at impact. At impact the clubhead is moving fast and the accelerations are large.
 
 ### The Clubhead Acceleration
 
-The clubhead is at distance $r = L_1 + L_2 = 1.35$ m from the shoulder. At impact, the shoulder is rotating at $\omega = \dot{\theta}_1 = 10.47 \text{ rad/s}$.
+The clubhead is at distance $r = L_1 + L_2 = 1.35$ m from the shoulder. Using the illustrative shoulder rotation speed $\omega = 10.47 \text{ rad/s}$ from Chapter 3, the centripetal acceleration (toward the shoulder) is:
 
-The centripetal acceleration (toward the shoulder) is:
+a_c = \omega^2 r = 10.47^2 \times 1.35 = 147.6 \text{ m/s}^2 \approx 15\,g
 
-a_c = \omega^2 r = 10.47^2 \times 1.35 = 147.6 \text{ m/s}^2 = 15.0 g
-
-But the elbow is also rotating, and the arm is accelerating, so the total acceleration is higher:
-
-a_{\text{total}} \approx 180 \text{ m/s}^2 = 18.3 g
-
-This matches observation: impact accelerations are typically 150–200 $g$.
+With the elbow also rotating and the arm accelerating, total accelerations are higher still. Published measurements of clubhead acceleration during the golf swing report values on the order of 100$g$ or more [@cochran1968search; @penner2003physics], though exact figures depend on the golfer and measurement methodology.
 
 ### Where Do These Accelerations Come From?
 
-At impact:
-- **Inertial**: to achieve these accelerations, the arm must overcome its own inertia. $\tau_{\text{inertia}} = M_{11} \ddot{\theta}_1 \approx 40 \text{ N m}$.
-- **Gravity**: at impact ($\theta_1 \approx 0°$), gravity is nearly balanced. Gravity's contribution is small, maybe 5–10 N m, and mostly neutral (neither helping nor hurting).
-- **Coriolis/Centrifugal**: these are huge. At 100 mph, $\dot{\theta}_1$ and $\dot{\theta}_2$ are both large. The velocity-dependent forces are on the order of 10–20 N m, and they're helping (pushing the arm in the direction it's accelerating).
-- **Muscular**: the total muscular torque must be roughly $40 + 10 = 50$ N m (inertia plus gravity, minus the velocity-dependent forces that are helping). Humans can generate this.
+At impact, the manipulator equation attributes the total torque to several sources. Qualitatively:
+
+- **Inertial**: the arm must overcome its own inertia to sustain the acceleration.
+- **Gravity**: near impact ($\theta_1 \approx 0°$), gravity's lever arm about the shoulder is small, so its contribution is modest.
+- **Coriolis/Centrifugal**: at high angular velocities, the velocity-dependent forces become large and can assist the acceleration.
+- **Muscular**: the net muscular torque is whatever is needed to close the gap between the inertial demand and the passive contributions.
+
+The relative magnitudes depend on the specific model parameters and swing kinematics; the qualitative pattern---that passive forces contribute substantially at impact---is robust.
 
 ### The Constraint Force at the Grip
 
@@ -358,21 +355,17 @@ Understanding the arm's forces is a stepping stone to understanding the full swi
 
 :::
 
-## Numerical Summary: Forces Throughout the Swing
+## Qualitative Summary: How Forces Shift Throughout the Swing
 
-Let's tabulate the major forces at different phases:
+The relative importance of each force source changes dramatically across swing phases:
 
-| **Phase** | $\tau_{\text{inertia}}$ | $\tau_{\text{grav}}$ | $\tau_{\text{Cor/Cent}}$ | $\tau_{\text{muscle needed}}$ |
-| --- | --- | --- | --- | --- |
-| Address | 5 N m | -10 N m | 0 | +15 N m |
-| Backswing | 20 N m | -30 N m | 0 | +50 N m |
-| Top | 2 N m | -30 N m | 0 | +32 N m |
-| Transition | 50 N m | -20 N m | +5 N m | $-35$ N m$^*$ |
-| Early downswing | 100 N m | -10 N m | +10 N m | $-80$ N m$^*$ |
-| Late downswing | 60 N m | 0 N m | +15 N m | $-45$ N m$^*$ |
-| Impact | 40 N m | +5 N m | +20 N m | $-35$ N m$^*$ |
+- **Address/Backswing**: Velocities are low, so Coriolis and centrifugal forces are negligible. Gravity is the dominant passive force. Muscles must work against gravity to elevate the club and wind the backswing.
+- **Top of backswing**: The system is momentarily near rest. Gravity creates a large restoring torque. Muscles hold the position.
+- **Transition**: The golfer initiates the downswing. Inertial demands grow rapidly. Gravity begins to assist as the club descends.
+- **Downswing**: Velocities increase sharply. Velocity-dependent forces (Coriolis, centrifugal) grow quadratically with speed and become the largest passive contributors. Muscles may actually need to *brake* in certain joints rather than accelerate, because passive forces are doing most of the work.
+- **Impact**: Accelerations are enormous. Passive forces dominate. The muscular contribution is relatively small compared to the total forces in play.
 
-$^*$ Negative muscle torque means the muscles are braking, not accelerating. This is counterintuitive but happens because gravity and velocity-dependent forces are doing most of the accelerating.
+The exact magnitudes at each phase depend on the model parameters and the golfer's technique. What matters qualitatively is the *shift*: early in the swing, muscles do most of the work; late in the swing, passive dynamics dominate.
 
 ## The Fundamental Insight
 
