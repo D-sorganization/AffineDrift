@@ -418,11 +418,20 @@ export function initLightbox() {
 export function initCriticsCorner() {
     const criticsCorners = document.querySelectorAll(".critics-corner");
 
-    criticsCorners.forEach((corner) => {
+    criticsCorners.forEach((corner, index) => {
         const header = corner.querySelector(".critics-corner-header");
         const content = corner.querySelector(".critics-corner-content");
 
         if (header && content) {
+            if (!content.id) {
+                content.id = `critics-corner-content-${index + 1}`;
+            }
+
+            header.setAttribute("aria-controls", content.id);
+
+            const isExpandedInitial = header.getAttribute("aria-expanded") === "true";
+            content.setAttribute("aria-hidden", String(!isExpandedInitial));
+
             content.style.maxHeight = "0";
             content.style.overflow = "hidden";
             content.style.transition =
@@ -436,12 +445,14 @@ export function initCriticsCorner() {
                     content.style.paddingTop = "0";
                     content.style.paddingBottom = "0";
                     header.setAttribute("aria-expanded", "false");
+                    content.setAttribute("aria-hidden", "true");
                 } else {
                     content.style.maxHeight =
                         content.scrollHeight + CRITICS_CORNER_PADDING_OFFSET + "px";
                     content.style.paddingTop = "1rem";
                     content.style.paddingBottom = "1rem";
                     header.setAttribute("aria-expanded", "true");
+                    content.setAttribute("aria-hidden", "false");
                 }
             });
         }
