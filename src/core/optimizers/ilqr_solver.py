@@ -33,6 +33,111 @@ class ILQRSolver:
         self.terminal_weight = 100.0
         self.control_weight = 0.01
 
+    def _validate_inputs(
+        self,
+        dynamics_fn: Callable[[NDArray, NDArray], NDArray],
+        x0: NDArray,
+        xf: NDArray,
+        u_init: NDArray,
+        dt: float,
+        max_iters: int,
+        tol: float,
+    ) -> None:
+        """Validate inputs before starting optimization."""
+        require(callable(dynamics_fn), "dynamics_fn must be callable")
+        check_finite_array(x0, "x0")
+        check_finite_array(xf, "xf")
+        require(x0.shape == xf.shape, "x0 and xf must have same shape")
+        require(len(u_init) > 0, "u_init must not be empty")
+        check_positive(dt, "dt")
+        require(max_iters >= 1, "max_iters must be >= 1", max_iters)
+        check_positive(tol, "tol")
+
+    def _linearize_dynamics(
+        self,
+        dynamics_fn: Callable[[NDArray, NDArray], NDArray],
+        x: NDArray,
+        u: NDArray,
+        n_x: int,
+        n_u: int,
+        dt: float,
+    ) -> tuple[NDArray, NDArray]:
+        """Compute linearized dynamics A, B matrices via finite differences."""
+        A = np.zeros((n_x, n_x))
+        B = np.zeros((n_x, n_u))
+        eps = 1e-5
+        f0 = dynamics_fn(x, u)
+        for i in range(n_x):
+            x_pert = x.copy()
+            x_pert[i] += eps
+            A[:, i] = (dynamics_fn(x_pert, u) - f0) / eps
+        for j in range(n_u):
+            u_pert = u.copy()
+            u_pert[j] += eps
+            B[:, j] = (dynamics_fn(x, u_pert) - f0) / eps
+
+        Ad = np.eye(n_x) + A * dt
+        Bd = B * dt
+        return Ad, Bd
+
+    def _backward_pass(
+        self,
+        x_traj: NDArray,
+        u_traj: NDArray,
+        xf: NDArray,
+        dt: float,
+        n_x: int,
+        n_u: int,
+        Q: NDArray,
+        R: NDArray,
+        Q_f: NDArray,
+        dynamics_fn: Callable[[NDArray, NDArray], NDArray],
+    ) -> tuple[NDArray, NDArray, float]:
+        """Perform iLQR backward pass to compute optimal gains."""
+        N = len(u_traj)
+        V_x = Q_f @ (x_traj[-1] - xf)
+        V_xx = Q_f
+
+        k_traj = np.zeros((N, n_u))
+        K_traj = np.zeros((N, n_u, n_x))
+        max_k = 0.0
+
+        for k_idx in range(N - 1, -1, -1):
+            x_k = x_traj[k_idx]
+            u_k = u_traj[k_idx]
+
+            A, B = self._linearize_dynamics(dynamics_fn, x_k, u_k, n_x, n_u, dt)
+
+            lx = Q @ (x_k - xf)
+            lu = R @ u_k
+            lxx = Q
+            luu = R
+            lux = np.zeros((n_u, n_x))
+
+            Q_x = lx + A.T @ V_x
+            Q_u = lu + B.T @ V_x
+            Q_xx = lxx + A.T @ V_xx @ A
+            Q_uu = luu + B.T @ V_xx @ B
+            Q_ux = lux + B.T @ V_xx @ A
+
+            eigvals = np.linalg.eigvalsh(Q_uu)
+            if eigvals[0] <= 0:
+                Q_uu += np.eye(n_u) * (-eigvals[0] + 1e-3)
+
+            Q_uu_inv = np.linalg.inv(Q_uu)
+            k_gain = -Q_uu_inv @ Q_u
+            K_gain = -Q_uu_inv @ Q_ux
+
+            k_traj[k_idx] = k_gain
+            K_traj[k_idx] = K_gain
+
+            V_x = Q_x + K_gain.T @ Q_uu @ k_gain + K_gain.T @ Q_u + Q_ux.T @ k_gain
+            V_xx = Q_xx + K_gain.T @ Q_uu @ K_gain + K_gain.T @ Q_ux + Q_ux.T @ K_gain
+
+            max_k = max(max_k, np.max(np.abs(k_gain)))
+
+        return k_traj, K_traj, float(max_k)
+
     def optimize(
         self,
         dynamics_fn: Callable[[NDArray, NDArray], NDArray],
@@ -43,18 +148,8 @@ class ILQRSolver:
         max_iters: int = 50,
         tol: float = 1e-3,
     ) -> tuple[NDArray, NDArray, NDArray]:
-        """
-        Runs the iLQR algorithm.
-        Returns: x_traj, u_traj, t_traj
-        """
-        require(callable(dynamics_fn), "dynamics_fn must be callable")
-        check_finite_array(x0, "x0")
-        check_finite_array(xf, "xf")
-        require(x0.shape == xf.shape, "x0 and xf must have same shape")
-        require(len(u_init) > 0, "u_init must not be empty")
-        check_positive(dt, "dt")
-        require(max_iters >= 1, "max_iters must be >= 1", max_iters)
-        check_positive(tol, "tol")
+        """Runs the iLQR algorithm."""
+        self._validate_inputs(dynamics_fn, x0, xf, u_init, dt, max_iters, tol)
         N = len(u_init)
         n_x = len(x0)
         n_u = u_init.shape[1] if len(u_init.shape) > 1 else 1
@@ -69,79 +164,16 @@ class ILQRSolver:
         R = np.eye(n_u) * self.control_weight
         Q_f = np.eye(n_x) * self.terminal_weight
 
-        # Since this is a basic interface matching DDP_mock,
-        # we do finite differences for A and B.
-        def get_linearized(x: NDArray, u: NDArray) -> tuple[NDArray, NDArray]:
-            """Compute linearized dynamics A, B matrices via finite differences."""
-            A = np.zeros((n_x, n_x))
-            B = np.zeros((n_x, n_u))
-            eps = 1e-5
-            f0 = dynamics_fn(x, u)
-            for i in range(n_x):
-                x_pert = x.copy()
-                x_pert[i] += eps
-                A[:, i] = (dynamics_fn(x_pert, u) - f0) / eps
-            for j in range(n_u):
-                u_pert = u.copy()
-                u_pert[j] += eps
-                B[:, j] = (dynamics_fn(x, u_pert) - f0) / eps
-
-            # Continuous to discrete approx: x_{k+1} = x_k + f(x,u)*dt
-            Ad = np.eye(n_x) + A * dt
-            Bd = B * dt
-            return Ad, Bd
-
         for _iteration in range(max_iters):
-            # Backward Pass
-            V_x = Q_f @ (x_traj[-1] - xf)
-            V_xx = Q_f
+            k_traj, K_traj, max_k = self._backward_pass(
+                x_traj, u_traj, xf, dt, n_x, n_u, Q, R, Q_f, dynamics_fn
+            )
 
-            k_traj = np.zeros((N, n_u))
-            K_traj = np.zeros((N, n_u, n_x))
-
-            expected_cost_reduction = 0.0
-
-            for k_idx in range(N - 1, -1, -1):
-                x_k = x_traj[k_idx]
-                u_k = u_traj[k_idx]
-
-                A, B = get_linearized(x_k, u_k)
-
-                lx = Q @ (x_k - xf) + (R @ u_k) * 0  # simplify state cost
-                lu = R @ u_k
-                lxx = Q
-                luu = R
-                lux = np.zeros((n_u, n_x))
-
-                Q_x = lx + A.T @ V_x
-                Q_u = lu + B.T @ V_x
-                Q_xx = lxx + A.T @ V_xx @ A
-                Q_uu = luu + B.T @ V_xx @ B
-                Q_ux = lux + B.T @ V_xx @ A
-
-                # Regularize Q_uu
-                eigvals = np.linalg.eigvalsh(Q_uu)
-                if eigvals[0] <= 0:
-                    Q_uu += np.eye(n_u) * (-eigvals[0] + 1e-3)
-
-                Q_uu_inv = np.linalg.inv(Q_uu)
-                k_gain = -Q_uu_inv @ Q_u
-                K_gain = -Q_uu_inv @ Q_ux
-
-                k_traj[k_idx] = k_gain
-                K_traj[k_idx] = K_gain
-
-                V_x = Q_x + K_gain.T @ Q_uu @ k_gain + K_gain.T @ Q_u + Q_ux.T @ k_gain
-                V_xx = Q_xx + K_gain.T @ Q_uu @ K_gain + K_gain.T @ Q_ux + Q_ux.T @ K_gain
-
-                expected_cost_reduction += 0.5 * k_gain.T @ Q_uu @ k_gain
-
-            # Forward Pass (Line Search)
             alpha = 1.0
             x_new = np.zeros_like(x_traj)
             u_new = np.zeros_like(u_traj)
 
-            for _ in range(5):  # backtracking
+            for _ in range(5):
                 x_new[0] = x0
                 for k_idx in range(N):
                     u_new[k_idx] = (
@@ -150,11 +182,8 @@ class ILQRSolver:
                         + K_traj[k_idx] @ (x_new[k_idx] - x_traj[k_idx])
                     )
                     x_new[k_idx + 1] = x_new[k_idx] + dynamics_fn(x_new[k_idx], u_new[k_idx]) * dt
-
-                # We could evaluate true cost and accept if improved, but we'll take best effort
                 break
 
-            max_k = np.max(np.abs(k_traj))
             x_traj = x_new
             u_traj = u_new
 

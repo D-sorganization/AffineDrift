@@ -98,7 +98,7 @@ def process_file(file_path: Path) -> list[str]:
         content = f.read()
 
     urls = extract_image_urls(content)
-    results = []
+    results: list[str] = []
 
     with ThreadPoolExecutor(max_workers=5) as executor:
         futures = {executor.submit(check_url, url, file_path): url for url in urls}
