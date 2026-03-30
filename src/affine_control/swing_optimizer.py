@@ -113,11 +113,6 @@ class SwingOptimizer:
             "config must be a SwingOptimizationConfig instance",
             type(config).__name__,
         )
-        if ddp_solver is None:
-            require(
-                config.allow_mock_solver,
-                "mock DDP solver requires explicit opt-in via allow_mock_solver=True",
-            )
         self._config = config
         self._using_mock = ddp_solver is None
         if ddp_solver is None:
