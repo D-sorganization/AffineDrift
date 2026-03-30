@@ -263,6 +263,7 @@ class TestSwingOptimizerCost(unittest.TestCase):
             control_weight=1.0,
             target_velocity=10.0,
             terminal_weight=100.0,
+            allow_mock_solver=True,
         )
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", UserWarning)
@@ -330,9 +331,9 @@ class TestSwingOptimizerCost(unittest.TestCase):
         """Terminal cost should scale with terminal_weight."""
         import warnings
 
-        config_low = SwingOptimizationConfig(n_joints=2, target_velocity=10.0, terminal_weight=1.0)
+        config_low = SwingOptimizationConfig(n_joints=2, target_velocity=10.0, terminal_weight=1.0, allow_mock_solver=True)
         config_high = SwingOptimizationConfig(
-            n_joints=2, target_velocity=10.0, terminal_weight=100.0
+            n_joints=2, target_velocity=10.0, terminal_weight=100.0, allow_mock_solver=True
         )
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", UserWarning)
@@ -493,12 +494,11 @@ class TestSwingOptimizerOptimize(unittest.TestCase):
 
         from src.core.contracts import ContractViolationError
 
-        config = SwingOptimizationConfig(n_joints=1, horizon_steps=5, max_iterations=1)
-        with warnings.catch_warnings():
-            warnings.simplefilter("ignore", UserWarning)
-            optimizer = SwingOptimizer(config)
+        config = SwingOptimizationConfig(n_joints=1, horizon_steps=5, max_iterations=1, allow_mock_solver=False)
         with self.assertRaises(ContractViolationError):
-            optimizer.optimize(np.zeros(2), double_integrator_1dof)
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore", UserWarning)
+                optimizer = SwingOptimizer(config)
 
 
 # ── Property and accessor tests ─────────────────────────────────────────────
@@ -511,6 +511,10 @@ class TestSwingOptimizerProperties(unittest.TestCase):
         """Create a SwingOptimizer suppressing the mock-solver warning."""
         import warnings
 
+        # Ensure mock solver is allowed for these property tests
+        if "allow_mock_solver" not in kwargs:
+            kwargs["allow_mock_solver"] = True
+
         config = SwingOptimizationConfig(**kwargs)  # type: ignore[arg-type]
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", UserWarning)
@@ -518,7 +522,7 @@ class TestSwingOptimizerProperties(unittest.TestCase):
 
     def test_config_property(self) -> None:
         """Config should be accessible via property."""
-        config = SwingOptimizationConfig(n_joints=3)
+        config = SwingOptimizationConfig(n_joints=3, allow_mock_solver=True)
         import warnings
 
         with warnings.catch_warnings():
