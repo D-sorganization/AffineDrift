@@ -413,6 +413,7 @@ python src/tools/code_quality_ast.py
 
 | Date | Version | Changes |
 |------|---------|---------|
+| 2026-03-30 | 1.0.1 | Added citation markers (TODO comments) and humble qualifiers to unsourced numerical claims in ch01--ch21 of The Physics of Golf — issues #1900–#1920 (batch 3) |
 | 2026-03-30 | 1.0.0 | Documented PR CI dependency-audit plus rendered-site E2E gate, mock-solver opt-in behavior at `SwingOptimizer.optimize`, and bibliography duplicate-alias integrity guardrails |
 | 2026-03-28 | 1.0.0 | Initial SPEC.md specification for AffineDrift v1.0.0 — all core features documented and implemented |
 
