@@ -50,9 +50,9 @@ The rigid body approximation breaks down when we need to:
 
 So when does the rigid body assumption actually break? The fundamental issue is *inertial mismatch*. The bones are stiff, but they are connected to large masses of soft tissue---muscle, fat, connective tissue, organs, blood. When a bone accelerates rapidly, the soft tissue does not instantly follow. Instead, it lags behind, creating internal stresses and relative motion.
 
-Consider the upper arm during the downswing. The humerus (upper arm bone) is accelerating forward and down at perhaps 500 m/s$^2$ during peak downswing acceleration. The soft tissue hanging on the arm---the muscles, the fat, the skin---has inertial mass. This soft tissue experiences an inertial force that tries to keep it moving in its old direction. The tissue oscillates relative to the bone, creating a secondary motion superimposed on the primary swing motion.
+Consider the upper arm during the downswing. The humerus (upper arm bone) is accelerating forward and down at perhaps 500 m/s$^2$ during peak downswing acceleration (an illustrative estimate; exact values depend on golfer size and swing speed [<!-- TODO: citation needed for measured upper arm acceleration magnitudes during golf downswing -->]). The soft tissue hanging on the arm---the muscles, the fat, the skin---has inertial mass. This soft tissue experiences an inertial force that tries to keep it moving in its old direction. The tissue oscillates relative to the bone, creating a secondary motion superimposed on the primary swing motion.
 
-Similarly, the torso during a full downswing rotation is not a solid block. It contains approximately 35 kg of additional mass beyond the skeletal framework: viscera, organs, blood, fat distributed throughout the abdomen. During the violent rotation of a golf downswing (torso angular velocity reaching 600${}^\circ$/s), this soft mass does not rotate in perfect lockstep with the skeletal torso. It shifts, it redistributes, it creates time-varying inertial properties that the rigid body model assumes away.
+Similarly, the torso during a full downswing rotation is not a solid block. It contains approximately 35 kg of additional mass beyond the skeletal framework: viscera, organs, blood, fat distributed throughout the abdomen [<!-- TODO: citation needed for typical torso soft tissue mass estimates -->]. During the violent rotation of a golf downswing (torso angular velocity reaching 600${}^\circ$/s), this soft mass does not rotate in perfect lockstep with the skeletal torso. It shifts, it redistributes, it creates time-varying inertial properties that the rigid body model assumes away.
 
 The chest wall is deformable. It breathes. Under the compressive forces of the swing, the ribs flex, the intercostal spaces narrow, and the thoracic volume changes. The spine itself is not a rigid rod; the intervertebral discs are compressible and can shear. When the spine undergoes the extreme loading of a golf downswing, these deformations become non-negligible.
 
@@ -107,7 +107,7 @@ Consider the upper arm during a fast downswing:
 - Natural frequency: $\omega_n = \sqrt{k_w/m_w} \approx 70$ rad/s $\approx$ 11 Hz
 - Damping ratio: $\zeta = c_w/(2\sqrt{k_w m_w}) \approx 0.38$ (underdamped)
 
-During the downswing (which lasts  0.15 seconds), the arm accelerates at peak rates of 500 m/s$^2$. This high-frequency content excites the wobble mass oscillation. Typical wobble amplitudes are 1--3 cm during the swing and post-swing phases. The wobble mass will oscillate for several cycles after the swing ends, dissipating energy through damping.
+During the downswing (which lasts approximately 0.15--0.3 seconds [<!-- TODO: citation needed for measured downswing duration -->]), the arm accelerates at peak rates on the order of 500 m/s$^2$ [<!-- TODO: citation needed for measured peak arm acceleration during golf downswing -->]. This high-frequency content excites the wobble mass oscillation. Typical wobble amplitudes are 1--3 cm during the swing and post-swing phases. The wobble mass will oscillate for several cycles after the swing ends, dissipating energy through damping.
 
 :::
 
@@ -152,14 +152,14 @@ The drift field $f(\bm{x})$ is modified because the effective stiffness and damp
 
 Now consider a much larger effect: the torso itself. The human torso is not a solid block of muscle and bone. It is a container filled with organs, blood, other fluids, and fat. The total visceral mass (everything inside the ribcage and abdomen excluding the spine) is approximately:
 
-- Heart:  0.3 kg
-- Lungs:  1.2 kg
-- Liver:  1.5 kg
-- Kidneys:  0.3 kg
-- Stomach, intestines, spleen, pancreas:  2 kg
-- Blood:  5 kg (in the torso cavity)
-- Abdominal fat and other organs:  3--8 kg
-- **Total: approximately 13--18 kg out of the torso's total mass of  25--35 kg**
+- Heart: ~0.3 kg [<!-- TODO: citation needed for mean organ mass values -->]
+- Lungs: ~1.2 kg
+- Liver: ~1.5 kg
+- Kidneys: ~0.3 kg
+- Stomach, intestines, spleen, pancreas: ~2 kg
+- Blood: ~5 kg (in the torso cavity)
+- Abdominal fat and other organs: ~3--8 kg
+- **Total: approximately 13--18 kg out of the torso's total mass of ~25--35 kg [<!-- TODO: citation needed for typical torso total mass and soft tissue fraction -->]**
 
 That is roughly 50% of torso mass in the form of *fluid or semi-fluid organs*. These are not rigidly attached to the skeleton. They can move, shift, and redistribute during motion.
 
