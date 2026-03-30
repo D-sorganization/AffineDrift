@@ -503,6 +503,7 @@ class TestSwingOptimizerOptimize(unittest.TestCase):
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore", UserWarning)
                 optimizer = SwingOptimizer(config)
+                optimizer.optimize(np.zeros(2), double_integrator_1dof)
 
 
 # ── Property and accessor tests ─────────────────────────────────────────────
