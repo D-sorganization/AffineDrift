@@ -175,24 +175,22 @@ $$
 \mathrm{COR} = \frac{v_{\text{out}}}{v_{\text{in}}}
 $$
 
-A COR of 1.0 would mean perfectly elastic collision (no energy loss). A COR less than 1.0 means some energy is lost. Modern golf ball and clubface technology has COR values of about 0.8--0.82 (about 80\% of the impact energy is transferred to the ball; 20\% is lost).
+A COR of 1.0 would mean perfectly elastic collision (no energy loss). A COR less than 1.0 means some energy is lost. Modern golf ball and clubface technology has COR values in the range of roughly 0.8 or above [@penner2003physics], meaning most of the impact energy is transferred to the ball.
 
 The COR depends on both the ball and the clubface:
 - Softer balls (lower compression) have higher COR (more energy transfer).
 - Harder balls (higher compression) have lower COR (less energy transfer).
 - Faster clubhead speeds increase the effective COR (the ball deforms more and recovers more completely).
 
-This is where ball fitting meets swing physics. A slower golfer (say, 80 mph swing speed) benefits from a softer ball with higher COR, because the softer ball deforms more, allowing the golfer to transfer more energy. A faster golfer (say, 100 mph) can use a harder ball with lower COR, gaining better control and tighter dispersion.
+This is where ball fitting meets swing physics. As a general principle, a slower golfer benefits from a softer ball with higher COR, because the softer ball deforms more, allowing the golfer to transfer more energy. A faster golfer can use a harder ball with lower COR, gaining better control and tighter dispersion [@penner2003physics].
 
 **Example: Ball Fitting for Swing Speed**
 
-Consider two golfers: Alice (80 mph swing speed) and Bob (100 mph swing speed). They both hit balls with a 9-iron from 150 yards.
+For this illustrative example, consider two golfers with different swing speeds. A slower golfer uses a soft ball (low compression, relatively high COR [@penner2003physics]). The impact dynamics transfer the energy efficiently, and the ball launches at a relatively high angle with low spin (due to the soft compression).
 
-Alice uses a soft ball (low compression, COR $\approx 0.82$). The impact dynamics transfer the energy efficiently, and the ball launches at a relatively high angle with low spin (due to the soft compression).
+A faster golfer uses a harder ball (high compression, somewhat lower COR). The impact dynamics are harsher, but the higher clubhead speed means the ball still leaves the face at high speed. The harder ball produces a lower launch angle and higher spin, which can be used for control.
 
-Bob uses a harder ball (high compression, COR $\approx 0.78$). The impact dynamics are harsher, but Bob's higher clubhead speed means the ball still leaves the face at high speed. The harder ball produces a lower launch angle and higher spin, which Bob can use for control.
-
-If Alice tried Bob's ball, she would lose distance (lower COR means less energy transfer). If Bob tried Alice's ball, he would gain too much carry distance and lose the control he gets from the higher compression ball.
+If the slower golfer tried the harder ball, they would lose distance (lower COR means less energy transfer). If the faster golfer tried the softer ball, they would gain too much carry distance and lose the control they get from the higher compression ball.
 
 This is not magic; it is material science applied to the constraints of the swing.
 
@@ -349,16 +347,16 @@ Let us walk through a concrete example showing how launch monitors measure what 
 
 ### The Scenario
 
-A golfer hits a driver from a tee. A launch monitor records:
-- Ball speed: 145 mph (65 m/s).
-- Spin rate: 2500 RPM.
-- Launch angle: 14 degrees.
-- Club path: 3 degrees right of target (open).
-- Club face angle: 2 degrees right of target (open).
+For this illustrative example, consider a golfer who hits a driver from a tee and a launch monitor records:
+- Ball speed below the golfer's target.
+- Spin rate above the optimal range for the given launch angle.
+- Launch angle near optimal.
+- Club path slightly open of target.
+- Club face angle slightly open of target.
 
 ### The Physics
 
-The clubhead must have been traveling at about (145 mph / 0.82 COR) $\approx 177$ mph just before impact. From the club path and face angle, we can infer the club's orientation and velocity in 3D.
+From the ball speed and the COR of the ball and clubface combination [@penner2003physics], we can estimate the clubhead speed just before impact. From the club path and face angle, we can infer the club's orientation and velocity in 3D.
 
 The ZTCF predicted that the clubhead would reach this speed and orientation at impact. This is the natural, passive trajectory (drift field) at this point in the swing. The muscle torques did not produce this speed; the drift field did.
 
@@ -366,12 +364,10 @@ The ball speed, spin rate, and launch angle are determined by the impact dynamic
 
 ### The Feedback
 
-The launch monitor displays the carry distance: 280 yards. The golfer wants 300 yards. Why is the ball not going as far?
-
-The model can identify the root cause:
-1. **Ball speed is low.** At 145 mph, the ball speed is below the target (say, 155 mph for this golfer). This suggests the clubhead speed was low, or the club made off-center contact.
-2. **Spin rate is high.** At 2500 RPM, the spin rate is adding backspin, reducing carry distance. For a 14-degree launch angle, the optimal spin rate is closer to 2000--2200 RPM. The extra spin is likely because the club face was slightly closed relative to the club path, imparting extra spin.
-3. **Launch angle is optimal.** At 14 degrees, the launch angle is close to the optimal 13--15 degrees for this golfer's swing speed.
+The launch monitor displays a carry distance short of the golfer's target. The model can identify the root cause:
+1. **Ball speed is low.** The ball speed is below the target for this golfer, suggesting the clubhead speed was low or the club made off-center contact.
+2. **Spin rate is high.** The spin rate is adding excess backspin, reducing carry distance. The extra spin is likely because the club face was slightly closed relative to the club path, imparting extra spin.
+3. **Launch angle is near optimal.** The launch angle is close to the optimal range for this golfer's swing speed.
 
 The diagnosis: the golfer's ZTCF is producing the correct launch angle and spin axis, but the clubhead speed is too low, and the club face is slightly closed. To improve:
 1. **Increase clubhead speed:** This is a drift issue. The golfer's swing sequence (the order in which body parts accelerate) is determining the drift field. Adjusting the sequence (more aggressive hip rotation, earlier lag release) could increase the clubhead speed.
