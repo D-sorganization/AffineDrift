@@ -1,8 +1,10 @@
 % ==========================================================================
 %  Chapter 3: Configuration Space and Degrees of Freedom
 % ==========================================================================
-\chapter{Configuration Space\index{Configuration Space} and Degrees of Freedom\index{Degrees of Freedom}}
+\chapter{Configuration Space and Degrees of Freedom}
 \label{ch:configuration}
+\index{Configuration Space}
+\index{Degrees of Freedom}
 
 \epigraph{%
   To command a body to move, we must first establish exactly where it is. We do not use the raw atoms of the universe to map a body; we use its independent coordinates—its configuration.
@@ -171,7 +173,7 @@ The hand position can be specified by 3 Cartesian coordinates $(x, y, z)$ and th
 \end{example}
 
 % ==========================================================================
-\section{The Configuration Space $\mathcal{Q}$ and Topological Manifolds}
+\section{The Configuration Space \texorpdfstring{$\mathcal{Q}$}{Q} and Topological Manifolds}
 \label{sec:config_space}
 
 The collection of all valid configurations a system can possibly achieve---accounting for all of its physical constraints, linkages, pins, and bearings---is called its \textbf{Configuration Space}, mathematically denoted by the symbol $\mathcal{Q}$.
@@ -235,7 +237,7 @@ An \emph{atlas} on a manifold $\mathcal{Q}$ is a collection of charts $\{(U_i, \
 \end{itemize}
 \end{definition}
 
-\subsection{Worked Example: Charts on the Circle $S^1$}
+\subsection{Worked Example: Charts on the Circle \texorpdfstring{$S^1$}{S1}}
 \label{example:circle_charts}
 
 \begin{example}{Two Charts Are Necessary for \texorpdfstring{$S^1$}{S1}}{ex_circle_charts}
@@ -288,7 +290,7 @@ For a \emph{smooth} (or \emph{differentiable}) manifold, we require all transiti
 A differentiable manifold is a topological manifold equipped with a differentiable structure: an atlas where every transition map is $C^\infty$ (infinitely differentiable).
 \end{definition}
 
-\subsection{Worked Example: Transition Map on $S^1$}
+\subsection{Worked Example: Transition Map on \texorpdfstring{$S^1$}{S1}}
 \label{example:circle_transition}
 
 \begin{example}{Transition Map on the Circle}{ex_circle_transition}
@@ -374,7 +376,7 @@ This satisfies the Leibniz rule by the product rule of calculus. Conversely, giv
 
 The intuition: curves give a geometric picture of infinitesimal motion; derivations give an algebraic picture of how functions change. Both capture the same mathematical object.
 
-\subsection{The Tangent Bundle $T\mathcal{Q}$}
+\subsection{The Tangent Bundle \texorpdfstring{$T\mathcal{Q}$}{TQ}}
 
 \begin{definition}{Tangent Bundle}{tangent_bundle}
 The \emph{Tangent Bundle} $T\mathcal{Q}$ is the disjoint union of all tangent spaces:
@@ -898,16 +900,16 @@ directly to the general theory.
 
 % ==========================================================================
 \section{Exercises}
-\label{sec:exercises}
+\label{sec:ch3_exercises}
 
-\subsection{Foundational Tier}
+\subsection*{Foundational Tier}
 
 \begin{enumerate}
 
-\item \label{ex:1}
+\item \label{ex:ch3_1}
 A system consisting of a single rigid body in 3D space (not subject to constraints) has how many degrees of freedom? Explain why.
 
-\item \label{ex:2}
+\item \label{ex:ch3_2}
 For the planar 4-bar linkage, verify Grübler's formula:
 \begin{enumerate}
   \item Identify $n$ (movable links), $j$ (joints), and $d_i$ (DOF per joint).
@@ -915,32 +917,32 @@ For the planar 4-bar linkage, verify Grübler's formula:
   \item Explain why the result matches your intuition.
 \end{enumerate}
 
-\item \label{ex:3}
+\item \label{ex:ch3_3}
 The circle $S^1$ is a 1-dimensional manifold. Why can you not cover $S^1$ with a single chart $(U, \varphi)$ where $\varphi : U \to \Reals$? (Hint: think about continuity at the wraparound point.)
 
-\item \label{ex:4}
+\item \label{ex:ch3_4}
 For a point $q \in S^1$ (the circle), what is the dimension of the tangent space $T_q S^1$? Why?
 
-\item \label{ex:5}
+\item \label{ex:ch3_5}
 A 2-link planar arm has link lengths $L_1 = 1, L_2 = 1$. At the configuration $q_1 = 0, q_2 = 0$, what is the end-effector position $\mathbf{p}_{end}$? What is the Jacobian at this configuration?
 
 \end{enumerate}
 
-\subsection{Intermediate Tier}
+\subsection*{Intermediate Tier}
 
 \begin{enumerate}
 
-\item \label{ex:6}
+\item \label{ex:ch3_6}
 Grübler's formula for planar mechanisms: DOF $= 3n - 3j + \sum d_i$.
 \begin{enumerate}
   \item A planar slider-crank mechanism has 3 moving links, 4 joints (one revolute, three other). What must the other three joints be to have DOF $= 1$? Show your calculation.
   \item Sketch such a mechanism.
 \end{enumerate}
 
-\item \label{ex:7}
+\item \label{ex:ch3_7}
 For the 2-link arm from Example~\ref{example:2link_jacobian}, show that at configuration $q_1 = \pi/2, q_2 = 0$, the Jacobian is singular (det$J = 0$). What does this singularity represent geometrically? (Hint: what is the end-effector orientation?)
 
-\item \label{ex:8}
+\item \label{ex:ch3_8}
 Consider the reachable workspace of a 2-link arm with $L_1 = 2, L_2 = 1$.
 \begin{enumerate}
   \item What is the inner radius (minimum distance from origin)?
@@ -948,26 +950,26 @@ Consider the reachable workspace of a 2-link arm with $L_1 = 2, L_2 = 1$.
   \item What is the area of the annular workspace?
 \end{enumerate}
 
-\item \label{ex:9}
+\item \label{ex:ch3_9}
 Transition maps on $S^1$: Using the two charts from Example~\ref{example:circle_charts}, show that the transition map $\tau_{12}$ is smooth. What would happen if you tried to use a chart $(U, \varphi)$ with $\varphi(\theta) = \theta$ (angle in radians) covering the entire circle? Why does this fail to be a valid chart?
 
-\item \label{ex:10}
+\item \label{ex:ch3_10}
 For a unicycle model (Example~\ref{ex:unicycle}), write the non-holonomic constraint in Pfaffian form $\mathbf{A}(\mathbf{q}) \dot{\mathbf{q}} = \mathbf{0}$. How many velocity constraints are there? What is the dimension of the allowed velocity subspace?
 
 \end{enumerate}
 
-\subsection{Advanced Tier}
+\subsection*{Advanced Tier}
 
 \begin{enumerate}
 
-\item \label{ex:11}
+\item \label{ex:ch3_11}
 Prove that for a 2-link arm, the workspace is indeed an annulus (not a disk or other shape).
 \begin{enumerate}
   \item Show that the reachable set is $\{(x, y) : |L_1 - L_2| \le r \le L_1 + L_2\}$ where $r = \sqrt{x^2+y^2}$.
   \item Hint: parameterize by $q_1, q_2 \in [0, 2\pi)$ and use the constraint that the sum of two vectors of fixed length $L_1, L_2$ has magnitude bounded by $L_1 + L_2$ and at least $|L_1 - L_2|$.
 \end{enumerate}
 
-\item \label{ex:12}
+\item \label{ex:ch3_12}
 Inverse Kinematics for a 3-link planar arm: Suppose we augment the 2-link arm with a third link of length $L_3 = 0.5$.
 \begin{enumerate}
   \item Write the forward kinematics: $x, y, \theta$ in terms of $q_1, q_2, q_3$.
@@ -975,10 +977,10 @@ Inverse Kinematics for a 3-link planar arm: Suppose we augment the 2-link arm wi
   \item Numerically solve (using Python or Matlab) starting from an initial guess $\mathbf{q}_0 = [\pi/6, \pi/6, \pi/6]^T$.
 \end{enumerate}
 
-\item \label{ex:13}
+\item \label{ex:ch3_13}
 For a rolling ball on a 2D plane with no-slip condition (Example~\ref{ex:rolling_coin}), write the full state (configuration + velocity) and state the non-holonomic constraint in Pfaffian form. Does this constraint reduce the dimension of the configuration space?
 
-\item \label{ex:14}
+\item \label{ex:ch3_14}
 Prove the equivalence (Theorem~\ref{thm:tangent_equivalence}) by constructing explicit isomorphisms:
 \begin{enumerate}
   \item Given a curve $\gamma(t)$ with $\gamma(0) = q$ and local coordinates $\varphi(\gamma(t))$, define a derivation $v_\gamma$ on smooth functions.
@@ -986,7 +988,7 @@ Prove the equivalence (Theorem~\ref{thm:tangent_equivalence}) by constructing ex
   \item Verify that these maps are mutual inverses (up to equivalence).
 \end{enumerate}
 
-\item \label{ex:15}
+\item \label{ex:ch3_15}
 Stewart Platform Inverse Kinematics: A Stewart platform has a desired end-effector pose (position $\mathbf{p} \in \Reals^3$ and orientation $R \in SO(3)$). Given 6 attachment points on the base and 6 on the platform, the inverse kinematics problem is to find the 6 actuator lengths $\ell_1, \ldots, \ell_6$.
 \begin{enumerate}
   \item Write the constraint equations (distance constraints).

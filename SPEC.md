@@ -154,11 +154,15 @@ AffineDrift/
 | F10 | Progressive Web App Support | ✅ | Service worker and manifest for PWA capabilities (offline access, installability) |
 | F11 | Textbook Compilation Pipeline | ✅ | Quarto pipeline to compile educational materials into publishable textbook format |
 | F12 | Textbook claim guardrail | ✅ | PR CI blocks newly added unsupported quantitative or study claims in textbook content unless they include a citation or an explicit illustrative caveat |
+| F13 | PR site-build and dependency-audit gate | ✅ | `ci-standard.yml` audits Python dependencies with `pip-audit`, renders the Quarto site in PR CI, syncs frontend assets, and runs Playwright smoke tests against the generated docs |
+| F14 | Bibliography duplicate-alias guardrail | ✅ | Reference-integrity tests require duplicate bibliography records to carry an explicit legacy-compatibility note instead of silently diverging |
 
 ### API / Interface Contract
 
 **Python API:**
 - `affine_control.swing_optimizer.SwingOptimizer` — Main optimization interface
+  - Constructor permits a missing solver for inspection/tests but emits a warning and binds the documented mock implementation
+  - `optimize(...)` rejects the mock solver unless `SwingOptimizationConfig.allow_mock_solver=True`
   - `optimize(swing_model, constraints) -> OptimizedTrajectory` — Run trajectory optimization
 - `core.optimizers.iLQR` — iLQR solver
   - `solve(dynamics, cost_fn, initial_trajectory) -> Solution` — Compute optimal trajectory
@@ -292,7 +296,7 @@ AffineDrift follows a **test pyramid** strategy: unit tests form the base (fast,
 
 | Workflow | Trigger | Purpose | Blocking? |
 |----------|---------|---------|-----------|
-| `ci-standard.yml` | Push/PR to main | Lint, type-check, test, coverage | Yes |
+| `ci-standard.yml` | Push/PR to main | Lint, type-check, dependency audit, site render, E2E smoke tests, coverage | Yes |
 | `deploy-website.yml` | Merge to main | Build Quarto site, deploy to GitHub Pages | Yes |
 | `test-coverage.yml` | Push/PR | Report coverage metrics | Yes (50% minimum) |
 | `link-check.yml` | Push/PR | Validate all links in content | Yes |
@@ -409,6 +413,7 @@ python src/tools/code_quality_ast.py
 
 | Date | Version | Changes |
 |------|---------|---------|
+| 2026-03-30 | 1.0.0 | Documented PR CI dependency-audit plus rendered-site E2E gate, mock-solver opt-in behavior at `SwingOptimizer.optimize`, and bibliography duplicate-alias integrity guardrails |
 | 2026-03-28 | 1.0.0 | Initial SPEC.md specification for AffineDrift v1.0.0 — all core features documented and implemented |
 
 ---

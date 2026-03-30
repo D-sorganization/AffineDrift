@@ -1,10 +1,13 @@
 """Tests for textbook unsupported-claim guardrails."""
 
+import subprocess
 from pathlib import Path
+from unittest.mock import Mock, patch
 
 from scripts.check_textbook_claims import (
     AddedLine,
     _is_textbook_path,
+    _merge_base,
     _parse_added_lines,
     find_unsupported_claims,
 )
@@ -121,3 +124,23 @@ def test_find_unsupported_claims_ignores_symbolic_math_without_claim_language(
         ],
     )
     assert findings == []
+
+
+def test_merge_base_fetches_default_branch_before_fallback(tmp_path: Path) -> None:
+    """CI merge-base resolution should fetch the default branch before falling back."""
+    fetch_calls: list[list[str]] = []
+
+    def fake_run(*args, **kwargs):  # type: ignore[no-untyped-def]
+        cmd = args[0]
+        if cmd[:3] == ["git", "fetch", "origin"]:
+            fetch_calls.append(cmd)
+            return Mock(stdout="", returncode=0)
+        if cmd[:3] == ["git", "merge-base", "HEAD"] and cmd[3] == "origin/main":
+            return Mock(stdout="abc123\n", returncode=0)
+        raise subprocess.CalledProcessError(returncode=1, cmd=cmd)
+
+    with patch("scripts.check_textbook_claims.subprocess.run", side_effect=fake_run):
+        merge_base = _merge_base(tmp_path)
+
+    assert merge_base == "abc123"
+    assert ["git", "fetch", "origin", "main"] in fetch_calls
