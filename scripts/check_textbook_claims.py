@@ -3,7 +3,6 @@
 
 from __future__ import annotations
 
-import json
 import os
 import re
 import subprocess
@@ -68,47 +67,6 @@ def _is_textbook_path(rel_path: str) -> bool:
 
 def _merge_base(repo_root: Path) -> str:
     """Resolve a stable merge base for changed-file comparisons."""
-    event_path = os.getenv("GITHUB_EVENT_PATH", "").strip()
-    if event_path:
-        try:
-            event = json.loads(Path(event_path).read_text(encoding="utf-8"))
-        except (json.JSONDecodeError, OSError):
-            event = {}
-        pull_request = event.get("pull_request") if isinstance(event, dict) else None
-        if isinstance(pull_request, dict):
-            base = pull_request.get("base")
-            if isinstance(base, dict):
-                base_ref = str(base.get("ref", "")).strip()
-                if base_ref:
-                    subprocess.run(
-                        ["git", "fetch", "--depth=200", "origin", base_ref],
-                        cwd=repo_root,
-                        check=False,
-                        capture_output=True,
-                        text=True,
-                        encoding="utf-8",
-                        errors="replace",
-                    )
-                    try:
-                        result = subprocess.run(
-                            ["git", "merge-base", "HEAD", f"origin/{base_ref}"],
-                            cwd=repo_root,
-                            check=True,
-                            capture_output=True,
-                            text=True,
-                            encoding="utf-8",
-                            errors="replace",
-                        )
-                    except subprocess.CalledProcessError:
-                        result = None
-                    if result is not None:
-                        sha = result.stdout.strip()
-                        if sha:
-                            return sha
-                base_sha = str(base.get("sha", "")).strip()
-                if base_sha:
-                    return base_sha
-
     candidates = ["origin/main", "main", "HEAD~1"]
     for candidate in candidates:
         try:
@@ -143,15 +101,12 @@ def _diff_text(repo_root: Path, base_ref: str) -> str:
             errors="replace",
         )
 
-    commands: list[list[str]] = [
-        ["git", "diff", "--unified=0", f"{base_ref}..HEAD"],
-        ["git", "diff", "--unified=0", f"{base_ref}...HEAD"],
-    ]
+    commands: list[list[str]] = []
     if ci_base_ref:
-        commands.append(["git", "diff", "--unified=0", f"origin/{ci_base_ref}..HEAD"])
         commands.append(["git", "diff", "--unified=0", f"origin/{ci_base_ref}...HEAD"])
     commands.extend(
         [
+            ["git", "diff", "--unified=0", f"{base_ref}...HEAD"],
             ["git", "diff", "--unified=0", "HEAD^1...HEAD"],
             ["git", "show", "--unified=0", "--format=", "HEAD"],
         ]
