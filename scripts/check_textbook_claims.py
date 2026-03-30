@@ -81,7 +81,7 @@ def _merge_base(repo_root: Path) -> str:
                 base_ref = str(base.get("ref", "")).strip()
                 if base_ref:
                     subprocess.run(
-                        ["git", "fetch", "--depth=200", "origin", base_ref],
+                        ["git", "fetch", "origin", base_ref],
                         cwd=repo_root,
                         check=False,
                         capture_output=True,
@@ -119,7 +119,7 @@ def _merge_base(repo_root: Path) -> str:
             )
             if not fetched_default or remote_ref != default_base:
                 subprocess.run(
-                    ["git", "fetch", "--depth=200", "origin", remote_ref],
+                    ["git", "fetch", "origin", remote_ref],
                     cwd=repo_root,
                     check=False,
                     capture_output=True,
@@ -152,7 +152,7 @@ def _diff_text(repo_root: Path, base_ref: str) -> str:
     ci_base_ref = os.getenv("GITHUB_BASE_REF", "").strip()
     if ci_base_ref:
         subprocess.run(
-            ["git", "fetch", "--depth=1", "origin", ci_base_ref],
+            ["git", "fetch", "origin", ci_base_ref],
             cwd=repo_root,
             check=False,
             capture_output=True,

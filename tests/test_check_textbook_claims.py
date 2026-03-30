@@ -132,7 +132,7 @@ def test_merge_base_fetches_default_branch_before_fallback(tmp_path: Path) -> No
 
     def fake_run(*args, **kwargs):  # type: ignore[no-untyped-def]
         cmd = args[0]
-        if cmd[:3] == ["git", "fetch", "--depth=200"]:
+        if cmd[:3] == ["git", "fetch", "origin"]:
             fetch_calls.append(cmd)
             return Mock(stdout="", returncode=0)
         if cmd[:3] == ["git", "merge-base", "HEAD"] and cmd[3] == "origin/main":
@@ -143,4 +143,4 @@ def test_merge_base_fetches_default_branch_before_fallback(tmp_path: Path) -> No
         merge_base = _merge_base(tmp_path)
 
     assert merge_base == "abc123"
-    assert ["git", "fetch", "--depth=200", "origin", "main"] in fetch_calls
+    assert ["git", "fetch", "origin", "main"] in fetch_calls
