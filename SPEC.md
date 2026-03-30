@@ -27,7 +27,7 @@
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto |
 | **License** | MIT |
 | **Current Version** | 1.0.6 |
-| **Spec Version** | 1.0.7 |
+| **Spec Version** | 1.0.8 |
 | **Last Spec Update** | 2026-03-30 |
 
 ## 2. Purpose & Mission
@@ -420,6 +420,7 @@ python src/tools/code_quality_ast.py
 
 | Date | Version | Changes |
 |------|---------|---------|
+| 2026-03-30 | 1.0.6 | fix(ci): aligned regression tests with current workflows — mock-solver guard asserted at optimize() per SwingOptimizer contract; test_deployment_integrity updated to match Quarto render action in ci-standard.yml; added dotenv-example removal step before E2E render; updated torque-generator docstrings in Universal_Joint_Model_Enhanced.py |
 | 2026-03-30 | 1.0.6 | A-N Assessment remediation (issue #2012): auto-formatted 10 files to comply with black 100-char limit; added missing docstrings to priority_score, __post_init__, _requires_token, create_issue, sha256, sync_one, main, __init__, _handle_text/_code_block/_inline_code/_display_math/_inline_math, setup_logging_with_timestamp, find_markdown_files across scripts/ |
 | 2026-03-30 | 1.0.5 | Performance fix: replaced O(n²) list.index() loop in putt simulator with enumerate() for linear-time hole-score lookups in round_simulator.py |
 | 2026-03-30 | 1.0.4 | Fixed remaining CI failures in batch-4 PR: replaced bare HTML TODO comments with inline caveat phrasing ("illustrative", "depends on", etc.) in ch16, ch18--ch31 qmd files and ch14--ch16, ch19 tex files to satisfy checker window requirements |

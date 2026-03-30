@@ -46,7 +46,9 @@ def test_ci_workflow_builds_site_for_e2e_and_audits_dependencies() -> None:
 
     assert "pip-audit" in content, "CI workflow should audit Python dependencies"
     assert "Build site for E2E" in content, "E2E lane should build the site before testing"
-    assert "quarto render" in content, "E2E lane must render docs artifacts"
+    assert (
+        "quarto render" in content or "quarto-actions/render" in content
+    ), "E2E lane must render docs artifacts"
     assert (
         "scripts/sync_frontend_assets.py" in content
     ), "E2E lane should use the shared frontend sync path"

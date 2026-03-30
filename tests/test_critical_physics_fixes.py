@@ -94,8 +94,9 @@ class TestDDPMockGuard:
         )
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", UserWarning)
-            with pytest.raises(ContractViolationError, match="mock"):
-                optimizer = SwingOptimizer(config)
+            optimizer = SwingOptimizer(config)
+        with pytest.raises(ContractViolationError, match="mock"):
+            optimizer.optimize(np.zeros(2), lambda x, u: np.array([x[1], u[0]]))
 
     def test_mock_solver_allowed_with_flag(self) -> None:
         """optimize() should succeed when allow_mock_solver=True."""
