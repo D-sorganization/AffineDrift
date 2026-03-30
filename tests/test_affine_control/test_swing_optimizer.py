@@ -331,9 +331,7 @@ class TestSwingOptimizerCost(unittest.TestCase):
         """Terminal cost should scale with terminal_weight."""
         import warnings
 
-        config_low = SwingOptimizationConfig(
-            n_joints=2, target_velocity=10.0, terminal_weight=1.0, allow_mock_solver=True
-        )
+        config_low = SwingOptimizationConfig(n_joints=2, target_velocity=10.0, terminal_weight=1.0, allow_mock_solver=True)
         config_high = SwingOptimizationConfig(
             n_joints=2, target_velocity=10.0, terminal_weight=100.0, allow_mock_solver=True
         )
@@ -496,9 +494,7 @@ class TestSwingOptimizerOptimize(unittest.TestCase):
 
         from src.core.contracts import ContractViolationError
 
-        config = SwingOptimizationConfig(
-            n_joints=1, horizon_steps=5, max_iterations=1, allow_mock_solver=False
-        )
+        config = SwingOptimizationConfig(n_joints=1, horizon_steps=5, max_iterations=1, allow_mock_solver=False)
         with self.assertRaises(ContractViolationError):
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore", UserWarning)

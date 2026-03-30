@@ -26,7 +26,7 @@
 | **Owner** | D-sorganization |
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto |
 | **License** | MIT |
-| **Current Version** | 1.0.0 |
+| **Current Version** | 1.0.1 |
 | **Spec Version** | 1.0.2 |
 | **Last Spec Update** | 2026-03-30 |
 
@@ -414,6 +414,7 @@ python src/tools/code_quality_ast.py
 | Date | Version | Changes |
 |------|---------|---------|
 | 2026-03-30 | 1.0.2 | Added caveat phrasing and improved humble language for uncited numerical claims in ch02, ch03, ch04, ch07, ch10, ch11, ch13, ch18, ch19, ch20, ch21, ch23, ch25, ch26, ch29, ch31, and glossary of The Physics of Golf (content audit wave 2; issues #2007--#2011) |
+| 2026-03-30 | 1.0.1 | Improve accessibility for Critics Corner with aria-controls |
 | 2026-03-30 | 1.0.1 | Added citation markers, TODO notes, and humble phrasing for unsourced claims in chapters 1--13 of The Physics of Golf (issues #1868--#1880, batch 1) |
 | 2026-03-30 | 1.0.0 | Documented PR CI dependency-audit plus rendered-site E2E gate, mock-solver opt-in behavior at `SwingOptimizer.optimize`, and bibliography duplicate-alias integrity guardrails |
 | 2026-03-28 | 1.0.0 | Initial SPEC.md specification for AffineDrift v1.0.0 — all core features documented and implemented |
