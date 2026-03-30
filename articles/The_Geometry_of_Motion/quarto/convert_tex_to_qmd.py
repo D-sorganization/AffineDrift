@@ -1,8 +1,10 @@
-import os
 import re
+from pathlib import Path
+
+from src.core.contracts import require
 
 
-def convert_tex_to_qmd(input_file: str, output_file: str) -> None:
+def convert_tex_to_qmd(input_file: str | Path, output_file: str | Path) -> None:
     """Convert a LaTeX .tex file to a Quarto .qmd file.
 
     Performs basic structural conversion: chapter/section headers to
@@ -11,11 +13,14 @@ def convert_tex_to_qmd(input_file: str, output_file: str) -> None:
 
     Parameters
     ----------
-    input_file : str
+    input_file : str | Path
         Path to the input .tex file.
-    output_file : str
+    output_file : str | Path
         Path to the output .qmd file.
     """
+    require(bool(input_file), "input_file must not be empty")
+    require(bool(output_file), "output_file must not be empty")
+
     with open(input_file, encoding="utf-8") as f:
         content = f.read()
 
@@ -73,43 +78,45 @@ def convert_tex_to_qmd(input_file: str, output_file: str) -> None:
         f.write(content)
 
 
-base_dir = r"c:\Users\diete\Repositories\AffineDrift\articles\The_Geometry_of_Motion"
+base_dir = Path(r"c:\Users\diete\Repositories\AffineDrift\articles\The_Geometry_of_Motion")
+quarto_dir = base_dir / "quarto"
 
 vol0_chapters = []
-vol0_dir = os.path.join(base_dir, "Volume_0", "chapters")
-for chap in sorted(os.listdir(vol0_dir)):
-    if chap.endswith(".tex"):
-        qmd_chap = chap.replace(".tex", ".qmd")
-        # Rename to avoid conflicts with Vol 1
-        qmd_chap = "vol0_" + qmd_chap
-        convert_tex_to_qmd(os.path.join(vol0_dir, chap), os.path.join(base_dir, "quarto", qmd_chap))
-        vol0_chapters.append(qmd_chap)
+vol0_dir = base_dir / "Volume_0" / "chapters"
+if vol0_dir.exists():
+    for f_path in vol0_dir.iterdir():
+        if f_path.name.endswith(".tex"):
+            qmd_chap = f_path.name.replace(".tex", ".qmd")
+            # Rename to avoid conflicts with Vol 1
+            qmd_chap = "vol0_" + qmd_chap
+            convert_tex_to_qmd(f_path, quarto_dir / qmd_chap)
+            vol0_chapters.append(qmd_chap)
 
-with open(os.path.join(base_dir, "quarto", "volume0.qmd"), "w") as f:
-    f.write("# Volume 0: The Mathematical Primer\n\n")
-    for q in vol0_chapters:
-        f.write(f"{{{{< include {q} >}}}}\n")
+with open(quarto_dir / "volume0.qmd", "w") as f_out:
+    f_out.write("# Volume 0: The Mathematical Primer\n\n")
+    for q in sorted(vol0_chapters):
+        f_out.write(f"{{{{< include {q} >}}}}\n")
 
 vol1_chapters = []
-vol1_dir = os.path.join(base_dir, "Volume_I", "chapters")
-for chap in sorted(os.listdir(vol1_dir)):
-    if chap.endswith(".tex"):
-        qmd_chap = chap.replace(".tex", ".qmd")
-        convert_tex_to_qmd(os.path.join(vol1_dir, chap), os.path.join(base_dir, "quarto", qmd_chap))
-        vol1_chapters.append(qmd_chap)
+vol1_dir = base_dir / "Volume_I" / "chapters"
+if vol1_dir.exists():
+    for f_path in vol1_dir.iterdir():
+        if f_path.name.endswith(".tex"):
+            qmd_chap = f_path.name.replace(".tex", ".qmd")
+            convert_tex_to_qmd(f_path, quarto_dir / qmd_chap)
+            vol1_chapters.append(qmd_chap)
 
-with open(os.path.join(base_dir, "quarto", "volume1.qmd"), "w") as f:
-    f.write("# Volume I: Foundations of Exact Linearization and Contraction\n\n")
-    for q in vol1_chapters:
-        f.write(f"{{{{< include {q} >}}}}\n")
+with open(quarto_dir / "volume1.qmd", "w") as f_out:
+    f_out.write("# Volume I: Foundations of Exact Linearization and Contraction\n\n")
+    for q in sorted(vol1_chapters):
+        f_out.write(f"{{{{< include {q} >}}}}\n")
 
-convert_tex_to_qmd(
-    os.path.join(base_dir, "Volume_II", "main.tex"),
-    os.path.join(base_dir, "quarto", "volume2_content.qmd"),
-)
+vol2_main = base_dir / "Volume_II" / "main.tex"
+if vol2_main.exists():
+    convert_tex_to_qmd(vol2_main, quarto_dir / "volume2_content.qmd")
 
-with open(os.path.join(base_dir, "quarto", "volume2.qmd"), "w") as f:
-    f.write("# Volume II: Transverse Control and The Architecture of Trajectories\n\n")
-    f.write("{{< include volume2_content.qmd >}}\n")
+with open(quarto_dir / "volume2.qmd", "w") as f_out:
+    f_out.write("# Volume II: Transverse Control and The Architecture of Trajectories\n\n")
+    f_out.write("{{< include volume2_content.qmd >}}\n")
 
 print("Conversion complete!")

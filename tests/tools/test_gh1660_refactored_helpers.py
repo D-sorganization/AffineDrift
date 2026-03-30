@@ -318,9 +318,7 @@ class TestSelectBestTrajectory:
     def _make_optimizer(self):  # type: ignore[no-untyped-def]
         from src.affine_control.swing_optimizer import SwingOptimizationConfig, SwingOptimizer
 
-        config = SwingOptimizationConfig(
-            n_joints=1, horizon_steps=5, max_iterations=3, allow_mock_solver=True
-        )
+        config = SwingOptimizationConfig(n_joints=1, horizon_steps=5, max_iterations=3, allow_mock_solver=True)
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", UserWarning)
             return SwingOptimizer(config)
