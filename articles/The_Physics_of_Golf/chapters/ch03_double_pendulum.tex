@@ -47,9 +47,9 @@ There are two conventions for defining $\theta_2$:
 In this book, we use relative angles. So $\theta_2 = 0$ means the two links are aligned (arm fully extended). $\theta_2 = -90°$ means the forearm is bent perpendicular to the upper arm.
 \end{laymansbox}
 
-\subsection*{Numerical Parameters (Realistic Golf)}
+\subsection*{Numerical Parameters (Illustrative Model)}
 
-Let's use numbers that match an actual golfer:
+For this textbook, we adopt the following illustrative parameters for the double-pendulum model. Segment lengths and masses are order-of-magnitude consistent with anthropometric data for a 50th-percentile male \cite{winter2009biomechanics, deleva1996adjustments}, combined with a standard golf club. The moments of inertia are computed from the assumed geometry (point-mass approximation at the center of mass).
 
 \begin{center}
 \begin{tabular}{|l|r|r|}
@@ -64,7 +64,7 @@ Moment of inertia $I$ & 0.015 kg m$^2$ & 0.4 kg m$^2$ \\
 \end{tabular}
 \end{center}
 
-These are approximate values for a typical golfer. Golfers with larger bodies or longer clubs will have different values, but the physics is the same.
+These are illustrative values chosen for pedagogical clarity. Individual golfers will have different segment properties, but the qualitative physics is the same.
 
 \begin{laymansbox}{Roadmap: Deriving the Equations of Motion}{box:ch03_roadmap}
 We are about to derive the equations that govern the double pendulum. Here is the strategy:
@@ -390,9 +390,9 @@ M_2 g L_{2,\text{cm}} \sin(\theta_1 + \theta_2)
 \label{eq:ch03_gravity_vector}
 \end{equation}
 
-\section{Numerical Example: A Realistic Golf Swing}
+\section{Numerical Example: Illustrative Golf Swing}
 
-Let's plug in numbers and see what the forces actually are.
+Let's plug in the illustrative parameters from above and see what the forces look like. The specific numerical results depend on these assumed values; the qualitative conclusions hold across a range of realistic parameters.
 
 \subsection*{At Impact}
 
@@ -438,7 +438,7 @@ At impact:
 \item The centrifugal force (from the high shoulder rotation) is creating a torque of 6.6 N m trying to straighten the elbow.
 \end{itemize}
 
-For comparison, a human can generate roughly 30–50 N m of torque at the shoulder. So gravity and centrifugal forces are doing about 40\% of the work at impact. The muscles do the rest.
+In this illustrative model, gravity and centrifugal forces together contribute a meaningful fraction of the total torque at impact. The muscles contribute the remainder.
 
 But notice: if we had generated all of this torque during the downswing, the club would barely accelerate. Instead, we generate a moderate muscular torque and let gravity and momentum contribute. That's efficiency.
 \end{laymansbox}
@@ -478,7 +478,7 @@ Actually, in the absence of control ($\bm{\tau} = 0$), the double pendulum exhib
 This is why consistency is hard. It's not just about executing a ``swing shape''—it's about executing precise \textbf{forces} at precise times.
 
 \begin{laymansbox}{Chaos and Consistency}{box:ch03_chaos_consistency}
-Here's a simple example. Suppose your shoulder is rotating at 10.47 rad/s and you want to accelerate the club by releasing the wrist ($\ddot{\theta}_2 > 0$).
+Here's a simple example. Using the same illustrative parameters, suppose the shoulder is rotating at 10.47 rad/s and you want to accelerate the club by releasing the wrist ($\ddot{\theta}_2 > 0$).
 
 If you release perfectly, the club accelerates and hits the sweet spot.
 
