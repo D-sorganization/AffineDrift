@@ -714,9 +714,25 @@ runOnDomReady(function () {
     );
   });
 
+  // Export to PDF Button
+  const exportToPdfBtn = document.createElement("button");
+  exportToPdfBtn.className = "export-to-pdf";
+  exportToPdfBtn.setAttribute("aria-label", "Export page to PDF");
+  exportToPdfBtn.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+      <polyline points="14 2 14 8 20 8"></polyline>
+      <line x1="12" y1="18" x2="12" y2="12"></line>
+      <line x1="9" y1="15" x2="15" y2="15"></line>
+    </svg>
+    <span class="tooltip">Export to PDF</span>
+  `;
+  document.body.appendChild(exportToPdfBtn);
+
   // ⚡ Bolt Optimization: Debounce scroll events with requestAnimationFrame & Cache Geometry
+  // Combined listener for both Back-to-Top and Export-to-PDF buttons
   let isScrollTicking = false;
-  let isBackToTopVisible = false;
+  let isButtonsVisible = false;
   let maxScroll = 0;
   const SCROLL_THRESHOLD = 300;
 
@@ -746,12 +762,14 @@ runOnDomReady(function () {
 
     // Visibility toggle with state tracking
     const shouldBeVisible = scrollTop > SCROLL_THRESHOLD;
-    if (shouldBeVisible !== isBackToTopVisible) {
-      isBackToTopVisible = shouldBeVisible;
+    if (shouldBeVisible !== isButtonsVisible) {
+      isButtonsVisible = shouldBeVisible;
       if (shouldBeVisible) {
         backToTopBtn.classList.add("visible");
+        exportToPdfBtn.classList.add("visible");
       } else {
         backToTopBtn.classList.remove("visible");
+        exportToPdfBtn.classList.remove("visible");
       }
     }
 
@@ -777,42 +795,6 @@ runOnDomReady(function () {
 
   // Initial check
   updateScrollProgress();
-
-  // Export to PDF Button
-  const exportToPdfBtn = document.createElement("button");
-  exportToPdfBtn.className = "export-to-pdf";
-  exportToPdfBtn.setAttribute("aria-label", "Export page to PDF");
-  exportToPdfBtn.innerHTML = `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-      <polyline points="14 2 14 8 20 8"></polyline>
-      <line x1="12" y1="18" x2="12" y2="12"></line>
-      <line x1="9" y1="15" x2="15" y2="15"></line>
-    </svg>
-    <span class="tooltip">Export to PDF</span>
-  `;
-  document.body.appendChild(exportToPdfBtn);
-
-  // Show/hide export button based on scroll (same as back-to-top)
-  function updateExportButtonVisibility() {
-    const scrollTop = window.scrollY;
-    const shouldBeVisible = scrollTop > SCROLL_THRESHOLD;
-    if (shouldBeVisible) {
-      exportToPdfBtn.classList.add("visible");
-    } else {
-      exportToPdfBtn.classList.remove("visible");
-    }
-  }
-
-  // Update visibility on scroll
-  window.addEventListener(
-    "scroll",
-    debounce(updateExportButtonVisibility, 100),
-    { passive: true },
-  );
-
-  // Initial visibility check
-  updateExportButtonVisibility();
 
   // Export to PDF functionality
   exportToPdfBtn.addEventListener("click", () => {
