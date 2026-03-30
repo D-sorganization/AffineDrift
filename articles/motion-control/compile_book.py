@@ -36,11 +36,7 @@ def extract_chapter_content(filepath: str) -> str:
         return ""
 
 
-def create_complete_book() -> str:
-    """Create a complete book from all chapter files"""
-
-    # LaTeX preamble
-    preamble = r"""\documentclass[12pt, openany]{book}
+_PREAMBLE = r"""\documentclass[12pt, openany]{book}
 
 % ──────────────────────────────────────────────
 % Packages
@@ -185,25 +181,27 @@ def create_complete_book() -> str:
 
 """
 
-    # Chapter files in order
-    chapter_files = [
-        "/mnt/project/chapter1.tex",
-        "/mnt/project/chapter2.tex",
-        "/mnt/project/chapter3.tex",
-        "/mnt/project/chapter4.tex",
-        "/mnt/project/chapter5.tex",
-        "/mnt/project/chapter6.tex",
-        "/mnt/project/chapter7.tex",
-        "/mnt/project/chapter8.tex",
-        "/mnt/project/chapter9.tex",
-        "/mnt/project/chapter10.tex",
-        "/mnt/project/chapter11.tex",
-    ]
 
-    # Build the complete book content
-    book_content = preamble
+_CHAPTER_FILES = [
+    "/mnt/project/chapter1.tex",
+    "/mnt/project/chapter2.tex",
+    "/mnt/project/chapter3.tex",
+    "/mnt/project/chapter4.tex",
+    "/mnt/project/chapter5.tex",
+    "/mnt/project/chapter6.tex",
+    "/mnt/project/chapter7.tex",
+    "/mnt/project/chapter8.tex",
+    "/mnt/project/chapter9.tex",
+    "/mnt/project/chapter10.tex",
+    "/mnt/project/chapter11.tex",
+]
 
-    for _, chapter_file in enumerate(chapter_files):
+def create_complete_book() -> str:
+    """Create a complete book from all chapter files"""
+
+    book_content = _PREAMBLE
+
+    for _, chapter_file in enumerate(_CHAPTER_FILES):
         logger.info(f"Processing {chapter_file}...")
         chapter_content = extract_chapter_content(chapter_file)
         if chapter_content:
@@ -258,9 +256,7 @@ def compile_pdf(tex_file: str) -> str | None:
         return None
 
 
-def create_summary() -> None:
-    """Create a summary of what was accomplished"""
-    summary = """
+_SUMMARY = """
 # Control Is Motion - Complete Textbook
 
 ## Book Overview
@@ -367,8 +363,10 @@ tools for designing controllers for systems that must move through the world
 with purpose and precision.
 """
 
+def create_summary() -> None:
+    """Create a summary of what was accomplished"""
     with open("/home/claude/BOOK_SUMMARY.md", "w") as f:
-        f.write(summary)
+        f.write(_SUMMARY)
 
     logger.info("Book summary created: BOOK_SUMMARY.md")
 

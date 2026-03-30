@@ -58,49 +58,49 @@ def extract_html_from_qmd(qmd_file: Path) -> tuple[str | None, str | None, str |
     return title, description, html_content
 
 
+QMD_FILES = [
+    "index.qmd",
+    "overview.qmd",
+    "about.qmd",
+    "collaborate.qmd",
+    "contact.qmd",
+    "drifter-manifesto.qmd",
+    "models.qmd",
+    "models-drake.qmd",
+    "models-mujoco.qmd",
+    "models-myosim.qmd",
+    "models-opensim.qmd",
+    "models-pendulum.qmd",
+    "models-pinocchio.qmd",
+    "models-simulink.qmd",
+    "resources-books.qmd",
+    "resources-datasets.qmd",
+    "resources-notebooklm.qmd",
+    "resources-papers.qmd",
+    "resources-researchers.qmd",
+    "resources-software.qmd",
+    "resources-videos.qmd",
+    "resources-websites.qmd",
+    "resources.qmd",
+    "bibliography.qmd",
+    "book-reviews.qmd",
+    "research-reviews.qmd",
+    "daydreams-doodles.qmd",
+    "research-review-baseball-pitching.qmd",
+    "research-review-induced-acceleration-analysis.qmd",
+    "research-review-interaction-forces.qmd",
+    "research-review-shaft-flexibility.qmd",
+    "repositories.qmd",
+    "repositories-2d-model.qmd",
+    "repositories-3d-model.qmd",
+    "repositories-drake.qmd",
+    "repositories-models.qmd",
+    "repositories-pinocchio.qmd",
+    "articles.qmd",  # Process last (template source)
+]
+
 def main() -> None:
     """Process all .qmd files and generate HTML pages."""
-    # List of .qmd files to process (articles.qmd processed last as template source)
-    qmd_files = [
-        "index.qmd",
-        "overview.qmd",
-        "about.qmd",
-        "collaborate.qmd",
-        "contact.qmd",
-        "drifter-manifesto.qmd",
-        "models.qmd",
-        "models-drake.qmd",
-        "models-mujoco.qmd",
-        "models-myosim.qmd",
-        "models-opensim.qmd",
-        "models-pendulum.qmd",
-        "models-pinocchio.qmd",
-        "models-simulink.qmd",
-        "resources-books.qmd",
-        "resources-datasets.qmd",
-        "resources-notebooklm.qmd",
-        "resources-papers.qmd",
-        "resources-researchers.qmd",
-        "resources-software.qmd",
-        "resources-videos.qmd",
-        "resources-websites.qmd",
-        "resources.qmd",
-        "bibliography.qmd",
-        "book-reviews.qmd",
-        "research-reviews.qmd",
-        "daydreams-doodles.qmd",
-        "research-review-baseball-pitching.qmd",
-        "research-review-induced-acceleration-analysis.qmd",
-        "research-review-interaction-forces.qmd",
-        "research-review-shaft-flexibility.qmd",
-        "repositories.qmd",
-        "repositories-2d-model.qmd",
-        "repositories-3d-model.qmd",
-        "repositories-drake.qmd",
-        "repositories-models.qmd",
-        "repositories-pinocchio.qmd",
-        "articles.qmd",  # Process last (template source)
-    ]
 
     # Generate bibliography data
     try:
@@ -127,7 +127,7 @@ def main() -> None:
         logger.error("Template content is empty, cannot proceed")
         return
 
-    for qmd_name in qmd_files:
+    for qmd_name in QMD_FILES:
         qmd_file = Path(qmd_name)
         if not qmd_file.exists():
             continue
