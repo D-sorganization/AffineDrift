@@ -29,7 +29,7 @@ def validate_weight_matrix(Q: npt.NDArray[Any], shape: tuple[int, int], name: st
     check_finite_array(Q, name)
 
 
-def format_results(results: list["BenchmarkResult"]) -> str:
+def format_results(results: list[BenchmarkResult]) -> str:
     """Format benchmark results as a newline-separated string."""
     return "\n".join([f"{r.name}: error={r.tracking_error:.4f}" for r in results])
 
@@ -54,7 +54,6 @@ def double_pendulum_mass_matrix(th1: float, th2: float) -> npt.NDArray[Any]:
         ]
     )
     return M
-
 
 
 # Default control saturation limits for the double-pendulum benchmark (N*m).

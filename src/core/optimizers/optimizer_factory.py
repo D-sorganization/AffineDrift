@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from typing import Any, Callable, Tuple
+from collections.abc import Callable
+from typing import Any
 
 from src.core.contracts import check_finite_array, check_positive, require
 
@@ -20,7 +21,7 @@ def ilqr_solver_wrapper(
     eps_residual: float = 1e-3,
     max_iters: int = 50,
     compute_hessian_bound_func: Any = None,
-) -> Tuple[NDArray, NDArray, NDArray]:
+) -> tuple[NDArray, NDArray, NDArray]:
     """
     Wrapper around ILQRSolver to match the DDP mock signature.
     """
