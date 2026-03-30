@@ -2,12 +2,14 @@ name: Compile Golf Physics Textbook
 
 on:
   push:
-    branches: [main]
+    branches: [main, staging]
     paths:
       - "articles/The_Physics_of_Golf/**"
   pull_request:
+    branches: [main]
     paths:
       - "articles/The_Physics_of_Golf/**"
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

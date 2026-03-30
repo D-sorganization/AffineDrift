@@ -4,12 +4,16 @@ on:
   push:
     branches:
       - main
+      - staging
       - geometry-of-motion-series
     paths:
       - "articles/The_Geometry_of_Motion/**"
   pull_request:
+    branches:
+      - main
     paths:
       - "articles/The_Geometry_of_Motion/**"
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
