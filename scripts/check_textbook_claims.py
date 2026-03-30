@@ -109,8 +109,26 @@ def _merge_base(repo_root: Path) -> str:
                 if base_sha:
                     return base_sha
 
-    candidates = ["origin/main", "main", "HEAD~1"]
+    default_base = os.getenv("GITHUB_BASE_REF", "").strip() or "main"
+    fetched_default = False
+    candidates = [f"origin/{default_base}", default_base, "origin/main", "main", "HEAD~1"]
     for candidate in candidates:
+        if candidate in {f"origin/{default_base}", default_base, "origin/main", "main"}:
+            remote_ref = (
+                default_base if candidate in {f"origin/{default_base}", default_base} else "main"
+            )
+            if not fetched_default or remote_ref != default_base:
+                subprocess.run(
+                    ["git", "fetch", "--depth=200", "origin", remote_ref],
+                    cwd=repo_root,
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                    encoding="utf-8",
+                    errors="replace",
+                )
+                if remote_ref == default_base:
+                    fetched_default = True
         try:
             result = subprocess.run(
                 ["git", "merge-base", "HEAD", candidate],
