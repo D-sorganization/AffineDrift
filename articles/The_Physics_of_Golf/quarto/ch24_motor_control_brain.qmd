@@ -39,11 +39,11 @@ This is not a simple problem. It is a *nonlinear optimal control problem in real
 
 - **Sensory feedback delay:** Information about body position (proprioception) reaches the brain in 30--50 milliseconds. Visual feedback takes 80--150 milliseconds. For vestibular (balance) feedback: 10--20 milliseconds. The downswing lasts 300 milliseconds.
 
-- **Noisy sensors:** Proprioceptive acuity varies by joint. At the wrist, you can detect a 1--2 degree change in angle. At the shoulder, it's 3--5 degrees. Vision has high acuity but slow feedback. The nervous system must work with uncertain, delayed measurements.
+- **Noisy sensors:** Proprioceptive acuity varies by joint and is coarser at proximal joints than distal ones [@Kandel2013]. Vision has high acuity but slow feedback. The nervous system must work with uncertain, delayed measurements.
 
 - **Noisy actuators:** Muscle force variability is 5--10% even when you're trying to produce exactly the same torque twice. This is called *signal-dependent noise* and increases with force level.
 
-- **Bounded control:** Maximum torques are limited. The shoulder can produce roughly 100--200 N$\cdot$m of torque, the elbow 100--150 N$\cdot$m, the wrist 30--50 N$\cdot$m. The brain cannot exceed these.
+- **Bounded control:** Maximum torques are limited. The proximal joints (shoulder, elbow) produce far more torque than the distal joints (wrist, fingers). The brain cannot exceed these physical limits.
 
 :::
 
@@ -286,7 +286,7 @@ The major pathway for voluntary motor control. Fibers originate in the motor cor
 
 :::
 
-Signal transmission in these fibers is fast---roughly 120 m/s in myelinated fibers. This means a motor command takes about 30 ms to reach the hand muscles, and about 50 ms to reach the foot muscles.
+Signal transmission in these fibers is fast---roughly 70--120 m/s in myelinated fibers [@Kandel2013]. This means a motor command takes on the order of 30--50 ms to reach the upper limb muscles.
 
 An important principle:
 
@@ -315,7 +315,7 @@ A rapid response to muscle stretch. When a muscle is stretched, spindle receptor
 
 :::
 
-For the golf swing, the spinal cord implements local stabilizing reflexes. If a gust of wind pushes your arm off its intended path, spinal reflexes resist the perturbation. The brain doesn't have time to react (visual feedback wouldn't arrive for 150 ms), so the spinal cord handles it automatically.
+For the golf swing, the spinal cord implements local stabilizing reflexes. If a gust of wind pushes your arm off its intended path, spinal reflexes resist the perturbation. The brain doesn't have time to react---visual feedback latencies far exceed the duration of a single correction cycle---so the spinal cord handles it automatically [@Kandel2013].
 
 ### The Basal Ganglia: Action Selection
 
