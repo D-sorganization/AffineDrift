@@ -5,7 +5,7 @@ title: "Swing Plane, Clubface Control, and Launch Optimization"
 ::: {.callout-note}
 ## Why Launch Conditions Matter More Than Swing Speed
 
-A golfer who swings at 100 mph but launches the ball at 8$^{\circ}$ with 1500 RPM of backspin will hit it 220 yards. Another golfer swinging at the same speed but launching at 14$^{\circ}$ with 2400 RPM will hit it 270 yards—50 yards further despite identical clubhead speed. This difference comes not from how fast the club moves, but from *where* the club is moving and *how* it is oriented when it strikes the ball. This chapter examines the geometry of the swing plane and clubface orientation that convert clubhead velocity into optimal ball flight. The physics is precise, the tolerances are narrow, and the payoff is enormous: understanding launch conditions separates good golfers from great ones.
+Two golfers with identical clubhead speeds can produce dramatically different carry distances depending on how the ball leaves the clubface. A golfer who launches the ball too low with too little spin will hit it shorter than one who optimizes both launch angle and spin rate for their speed---even though the club moved just as fast. This difference comes not from how fast the club moves, but from *where* the club is moving and *how* it is oriented when it strikes the ball. This chapter examines the geometry of the swing plane and clubface orientation that convert clubhead velocity into optimal ball flight. The physics is precise, the tolerances are narrow, and the payoff is enormous: understanding launch conditions separates good golfers from great ones.
 
 :::
 
@@ -106,7 +106,7 @@ The orientation of the clubface at impact is the single most critical variable f
 The orientation of the clubface is fully determined by three independent parameters:
 
 \begin{enumerate}
-- \textbf{Face angle} ($\alpha_{\text{face}}$): The rotation of the clubface about the shaft axis, measured in the horizontal plane. Negative angles represent a \textit{closed} face (toe higher than heel); positive angles represent an \textit{open} face (heel higher than toe). A 1$^{\circ}$face angle error at impact with a driver produces approximately 17--20 yards of offline displacement at 250 yards of carry distance.
+- \textbf{Face angle} ($\alpha_{\text{face}}$): The rotation of the clubface about the shaft axis, measured in the horizontal plane. Negative angles represent a \textit{closed} face (toe higher than heel); positive angles represent an \textit{open} face (heel higher than toe). Even small face angle errors at impact produce substantial offline displacement, because the D-plane model weights face angle heavily in determining launch direction.
 
 - \textbf{Dynamic loft} ($\alpha_{\text{loft}}$): The angle between the clubface and the horizontal plane, measured in the direction of the swing plane. At address, the loft is static. At impact, dynamic loft is the sum of the static loft, the shaft lean (forward or backward), and any flexion in the shaft.
 
@@ -169,7 +169,7 @@ For a golfer with a typical clubhead speed of 90 mph and swing-dependent charact
 
 __DISPLAY_MATH_2__
 
-This narrow window is why face angle control is so critical. A 5$^{\circ}$error in face angle will produce a shot 30--40 yards offline, while a 5$^{\circ}$error in club path produces a much smaller offline error (because path has a smaller effect on launch direction than face angle does, as we will discuss in Section~\ref{sec:d_plane}).
+This narrow window is why face angle control is so critical. A significant error in face angle produces a substantially larger offline deviation than an equal error in club path, because the D-plane model assigns most of the launch direction influence to face angle rather than path (see Section~\ref{sec:d_plane}).
 
 \subsection{Drift vs. Control: The Final 50 Milliseconds}
 
@@ -309,34 +309,19 @@ __DISPLAY_MATH_10__
 
 where SMF is the smash factor, typically ranging from 1.40 to 1.50 for drivers on well-struck shots. (Chapter~\ref{ch:impact_collision_collision} discusses smash factor in detail.)
 
-For a golfer with a 100 mph clubhead speed and a smash factor of 1.48, the ball speed is 148 mph.
+For illustration: a golfer with a 100 mph clubhead speed and a smash factor of 1.48 would produce a ball speed of 148 mph.
 
 \subsection{Optimal Launch Angle for Distance}
 
 
 
-The carry distance of a golf ball is maximized at a specific launch angle that depends on ball speed and spin rate. Higher ball speeds tolerate (and require) higher launch angles because the ball spends longer in the air and has more opportunity to rise.
+The carry distance of a golf ball is maximized at a specific launch angle that depends on ball speed and spin rate. Higher ball speeds require lower optimal launch angles because Magnus lift is greater at higher speeds, and excessive trajectory height at high speeds increases total time in the air but at the cost of reduced horizontal velocity. The relationship is:
 
 __DISPLAY_MATH_11__
 
-where$\Omega_{\text{spin,krpm}}$is spin rate in thousands of RPM and$v_{\text{club}}$is clubhead speed in mph.
+where $\theta_{\text{launch,opt}}$ decreases with increasing clubhead speed and increases with decreasing spin rate. Closed-form approximations for this function exist in the golf aerodynamics literature [@penner2003physics], but their numerical coefficients depend on ball construction and are not reproduced here as universal constants.
 
-For typical conditions:
-
-\begin{table}[h]
-\centering
-\begin{tabular}{cccc}
-\hline
-\textbf{Club Speed} & \textbf{Spin Rate} & \textbf{Optimal Launch Angle} & \textbf{Typical Carry} \\
-\hline
-90 mph & 2000 RPM & 15--16$^{\circ}$& 210 yards \\
-100 mph & 2400 RPM & 12--14$^{\circ}$& 250 yards \\
-110 mph & 2600 RPM & 10--12$^{\circ}$& 290 yards \\
-\hline
-\end{tabular}
-\caption{Typical optimal launch angles and resulting carry distances for drivers.}
-\label{tab:launch_angle_opt}
-\end{table}
+For typical driver conditions, the general trend is that higher swing speeds require lower optimal launch angles and tolerate lower spin rates. Specific optimal values depend on ball construction, atmospheric conditions, and the exact shape of the carry distance function, and are best determined with launch monitor data for a given golfer and equipment combination.
 
 \subsection{Spin Rate Trade-Off: Lift and Air Resistance}
 
@@ -351,32 +336,14 @@ For a given ball speed and launch angle, there is an optimal spin rate that maxi
 
 __DISPLAY_MATH_12__
 
-For typical driver conditions (100 mph club speed, 14$^{\circ}$launch angle), the optimal spin rate is approximately 2200--2600 RPM. Below this range, the ball doesn't carry far enough. Above this range, excess spin increases air resistance and reduces distance.
+Below the optimum, insufficient spin reduces lift and the ball falls short. Above the optimum, excess spin increases aerodynamic drag and reduces distance. The precise optimal spin rate depends on ball speed, launch angle, ball construction, and atmospheric conditions, and is best established empirically with launch monitor data for a given golfer and equipment combination.
 :::
 
 \subsection{The Launch Window}
 
 
 
-In practical terms, a golfer should target a specific region of launch condition space, called the \textbf{launch window}. For a driver with 100 mph clubhead speed:
-
-\begin{table}[h]
-\centering
-\begin{tabular}{lll}
-\hline
-\textbf{Parameter} & \textbf{Target Range} & \textbf{Tolerance} \\
-\hline
-Ball speed & 148--150 mph &$\pm 2$mph \\
-Launch angle & 12--14$^{\circ}$&$\pm 1^{\circ}$ 
-Spin rate & 2200--2600 RPM & $\pm 200$ RPM 
-Smash factor & 1.48--1.50 & $\pm 0.02$ 
-\hline
-\end{tabular}
-\caption{Typical launch window for a driver with 100 mph clubhead speed.}
-
-\end{table}
-
-Hitting within this window consistently produces carry distances within 10--15 yards of the golfer's maximum, with directional consistency $\pm 10$ yards laterally (for a square face angle).
+In practical terms, a golfer should target a specific region of launch condition space, called the \textbf{launch window}. The launch window specifies the combination of ball speed, launch angle, and spin rate that produces near-maximum carry distance. For a given clubhead speed, the launch window is relatively narrow: the optimal launch angle and spin rate interact, and deviating substantially from both simultaneously produces significant distance loss. The specific parameters of an individual golfer's launch window are best determined from launch monitor data, as they depend on swing geometry, ball construction, and atmospheric conditions.
 
 ### Equipment Design and Launch Optimization
 
@@ -398,7 +365,7 @@ Modern driver design targets specific launch conditions by manipulating:
 
 Wind introduces additional complexity to launch angle optimization. A headwind increases optimal launch angle because the ball needs more time aloft before hitting ground effect. A tailwind decreases optimal launch angle because the ball benefits from ground effect and doesn't need to climb as steeply.
 
-For a headwind of 10 mph, the optimal launch angle increases by approximately 1--2$^{\circ}$. For a 10 mph tailwind, it decreases by approximately 1$^{\circ}$.
+The magnitude of the optimal launch angle adjustment depends on wind speed and ball speed, and is best quantified with a flight model or launch monitor for specific conditions.
 
 ## Sensitivity Analysis: What Matters Most?
 
@@ -410,48 +377,34 @@ The carry distance of a golf shot depends on multiple variables: ball speed, lau
 
 
 
-By taking partial derivatives of the carry distance with respect to each launch parameter, we can quantify the relative importance of each:
+By taking partial derivatives of the carry distance with respect to each launch parameter, we can qualitatively rank the relative importance of each:
 
 \begin{equation}
-\frac{\partial d_{\text{carry}}}{\partial v_{\text{ball}}} \approx 2.5 \text{ yards/mph}
+\frac{\partial d_{\text{carry}}}{\partial v_{\text{ball}}} > 0 \quad (\text{more ball speed always helps})
 \label{eq:sensitivity_speed}
 \end{equation}
 
-This means that a 1 mph increase in ball speed produces approximately 2.5 additional yards of carry distance.
+Ball speed has a positive, roughly linear effect on carry distance across most of the practical speed range.
 
 \begin{equation}
-\frac{\partial d_{\text{carry}}}{\partial \theta_{\text{launch}}} \approx 4--6 \text{ yards/degree (near optimum)}
+\frac{\partial d_{\text{carry}}}{\partial \theta_{\text{launch}}} \approx 0 \quad (\text{near optimum; larger when far from optimum})
 \label{eq:sensitivity_angle}
 \end{equation}
 
-The sensitivity to launch angle is strongly non-linear: near the optimal launch angle, it is maximal (4--6 yards per degree); far from optimal, the sensitivity drops significantly.
+The sensitivity to launch angle is strongly non-linear: near the optimal launch angle, small changes produce little distance change; far from the optimum, the sensitivity is larger.
 
 \begin{equation}
-\frac{\partial d_{\text{carry}}}{\partial \Omega_{\text{spin}}} \approx 0.02--0.03 \text{ yards/RPM}
+\frac{\partial d_{\text{carry}}}{\partial \Omega_{\text{spin}}} < 0 \quad (\text{near or above optimum spin rate})
 \label{eq:sensitivity_spin}
 \end{equation}
 
-This means a 100 RPM change in spin rate produces only 2--3 yards of distance change (when already near the optimal spin rate).
+Near the optimal spin rate, carry distance is relatively insensitive to small spin changes. The precise numerical values of these partial derivatives depend on ball speed, launch angle, ball construction, and atmospheric conditions, and are not presented here as universal constants.
 
 ### Directional Sensitivity
 
 
 
-Unlike distance, directional accuracy is far more sensitive to face angle than to club path:
-
-\begin{equation}
-\frac{\partial \text{(offline distance)}}{\partial \alpha_{\text{face}}} \approx 60--70 \text{ yards per degree (at 250 yards carry)}
-\label{eq:sensitivity_face}
-\end{equation}
-
-This means a 1$^{\circ}$ error in face angle at impact produces approximately 60--70 yards of offline error at the landing zone. In contrast:
-
-\begin{equation}
-\frac{\partial \text{(offline distance)}}{\partial \alpha_{\text{path}}} \approx 20--30 \text{ yards per degree (at 250 yards carry)}
-\label{eq:sensitivity_path}
-\end{equation}
-
-A 1$^{\circ}$ path error produces only 20--30 yards of offline error because the face angle weighting in the D-plane model mitigates the effect of path.
+Unlike distance, directional accuracy is far more sensitive to face angle than to club path. The D-plane model assigns approximately 85% weight to face angle and 15% weight to path for a driver, which means face angle errors produce substantially larger offline deviations than path errors of equal magnitude. The exact ratio between face angle and path effects varies with loft and dynamic conditions, but the qualitative ordering---face angle matters more---is robust.
 
 ### The Consistency Argument
 
@@ -459,19 +412,7 @@ A 1$^{\circ}$ path error produces only 20--30 yards of offline error because the
 
 A critical insight from sensitivity analysis is that **reducing variance in any single parameter is more valuable than increasing the mean**.
 
-For example, a golfer with a clubhead speed of 100 mph and a smash factor variance of 0.05 (very good) produces a ball speed distribution with standard deviation:
-
-\begin{equation}
-\sigma_{v_{\text{ball}}} = 100 \times 0.05 = 5 \text{ mph}
-\end{equation}
-
-which in turn produces a carry distance standard deviation of:
-
-\begin{equation}
-\sigma_{d_{\text{carry}}} = \frac{\partial d}{\partial v_{\text{ball}}} \times \sigma_{v_{\text{ball}}} = 2.5 \times 5 = 12.5 \text{ yards}
-\end{equation}
-
-Reducing the smash factor variance to 0.03 would reduce carry distance variance to 7.5 yards—an improvement of 5 yards in the dispersion. This is more valuable than increasing average clubhead speed by 2 mph (which increases average carry by only 5 yards but doesn't reduce variance).
+As an illustrative example, a golfer with a smash factor variance of $\sigma_{\text{SMF}}$ produces a ball speed variance of $v_{\text{club}} \times \sigma_{\text{SMF}}$ mph, which propagates through the distance sensitivity to produce a carry distance variance. Reducing smash factor variance by improving strike consistency reduces carry distance variance proportionally. This variance reduction is often more valuable than a modest average gain in clubhead speed, because high variance means some shots are significantly short of maximum distance.
 
 ## The \ztcf{ Perspective on Launch}
 
@@ -552,9 +493,9 @@ Modern swing analysis technology (radar-based launch monitors, high-speed video)
 
 - **Swing Plane Geometry:** A golfer addresses a driver with lie angle 56.5$^{\circ}$ from vertical. The golfer's shoulder plane is 50$^{\circ}$ from horizontal. Assuming the swing plane parallels the shoulder plane, what is the attack angle if the golfer's arm swing produces a vertical drop of 2 inches from top of swing to impact, across a horizontal distance of 15 inches?
 
-- **Face Angle Sensitivity:** In a research study, golfers with identical clubhead speeds of 100 mph but different face angle consistency were compared. Golfer A has a face angle standard deviation of 2$^{\circ}$; Golfer B has a standard deviation of 4$^{\circ}$. Using the sensitivity result $\partial(\text{offline distance}) / \partial(\alpha_{\text{face}}) \approx 65$ yards per degree, estimate the lateral dispersion (standard deviation) for each golfer at 250 yards of carry distance.
+- **Face Angle Sensitivity:** In a research study, golfers with identical clubhead speeds of 100 mph but different face angle consistency were compared. Golfer A has a face angle standard deviation of 2$^{\circ}$; Golfer B has a standard deviation of 4$^{\circ}$. Suppose a launch monitor measurement establishes that a 1$^{\circ}$ face angle error produces an offline displacement of $k$ yards for this golfer. Express the lateral dispersion (standard deviation) of each golfer's landing zone in terms of $k$, and discuss how the choice of $k$ depends on golfer speed and ball construction.
 
-- **Launch Optimization:** A golfer with 95 mph clubhead speed and 2200 RPM spin rate hits a driver with the following launch conditions: 140 mph ball speed, 16$^{\circ}$ launch angle, 2200 RPM. The golfer's carry distance is 240 yards. Using sensitivity derivatives, estimate the carry distance if the launch angle is improved to 13$^{\circ}$ (by club adjustment) while holding ball speed and spin constant.
+- **Launch Optimization:** A golfer with 95 mph clubhead speed and 2200 RPM spin rate hits a driver with the following launch conditions: 140 mph ball speed, 16$^{\circ}$ launch angle, 2200 RPM. The golfer's carry distance is 240 yards. Using the concept of optimal launch angle (which decreases with increasing speed), explain qualitatively why adjusting to a lower launch angle might improve carry distance for this golfer. What additional information would be needed to estimate the distance change quantitatively?
 
 - **D-Plane Calculation:** A golfer swings with a club path of 2$^{\circ}$ right and a face angle of 0$^{\circ}$ (square to target). Using the 85--15 weighting for a driver, what is the initial launch direction (in degrees right of target)?
 
@@ -562,7 +503,7 @@ Modern swing analysis technology (radar-based launch monitors, high-speed video)
 
 - **Equipment Effect on Launch:** Two golfers have identical swing mechanics and clubhead speeds (100 mph). Golfer A uses a driver with CG position 1 inch lower than Golfer B. Qualitatively, how will the launch angles and spin rates differ between the two golfers? (Use the principles of CG position from Chapter~\ref{ch:impact_collision_collision}.)
 
-- **Wind and Launch Angle:** A golfer faces a 15 mph headwind and a 15 mph tailwind on different holes. Explain qualitatively how the optimal launch angle should differ, and estimate the difference in optimal launch angle (in degrees).
+- **Wind and Launch Angle:** A golfer faces a 15 mph headwind and a 15 mph tailwind on different holes. Explain qualitatively how the optimal launch angle should differ between these two conditions. What physical mechanism causes the optimal angle to shift with wind?
 
-- **Consistency as a Metric:** A golfer is considering two interventions: (1) a swing change that increases average ball speed by 3 mph but increases ball speed variance (std dev) from 4 mph to 5 mph, or (2) a technique that maintains the same average ball speed but reduces variance to 2.5 mph. Which intervention produces better outcomes in terms of distance consistency? Justify quantitatively.
+- **Consistency as a Metric:** A golfer is considering two interventions: (1) a swing change that increases average ball speed by 3 mph but increases ball speed variance (std dev) from 4 mph to 5 mph, or (2) a technique that maintains the same average ball speed but reduces variance to 2.5 mph. Letting $s$ denote the carry distance sensitivity to ball speed (yards per mph), express the expected carry distance and carry distance standard deviation for each intervention in terms of $s$. For what values of $s$ does intervention (2) produce smaller carry distance variance?
 
