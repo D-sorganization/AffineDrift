@@ -21,6 +21,8 @@ from collections.abc import Callable
 import numpy as np
 from scipy.integrate import OdeResult, solve_ivp
 
+from src.core.contracts import check_finite_array, require
+
 # Get logger for this module (don't configure at module level)
 logger = logging.getLogger(__name__)
 
@@ -58,6 +60,9 @@ def M_matrix(q: np.ndarray) -> np.ndarray:
     M : ndarray, shape (2, 2)
         Inertia matrix.
     """
+    check_finite_array(q, "q")
+    require(len(q) == 2, "q must have length 2")
+
     q1, q2 = q
     cos2 = np.cos(q2)
 
@@ -90,6 +95,11 @@ def C_times_qdot(q: np.ndarray, qdot: np.ndarray) -> np.ndarray:
     Cq : ndarray, shape (2,)
         Vector C(q, qdot) * qdot.
     """
+    check_finite_array(q, "q")
+    check_finite_array(qdot, "qdot")
+    require(len(q) == 2, "q must have length 2")
+    require(len(qdot) == 2, "qdot must have length 2")
+
     q1, q2 = q
     q1dot, q2dot = qdot
 
@@ -122,6 +132,9 @@ def g_vector(q: np.ndarray) -> np.ndarray:
     gq : ndarray, shape (2,)
         Gravity torques [g1, g2].
     """
+    check_finite_array(q, "q")
+    require(len(q) == 2, "q must have length 2")
+
     q1, q2 = q
 
     g1 = (m1 * c1 + m2 * l1) * GRAVITY_M_S2 * np.sin(q1) + m2 * c2 * GRAVITY_M_S2 * np.sin(q1 + q2)
@@ -158,6 +171,13 @@ def tau_natural(q: np.ndarray, qdot: np.ndarray, qddot: np.ndarray) -> np.ndarra
     tau_nat : ndarray, shape (2,)
         Natural torque vector.
     """
+    check_finite_array(q, "q")
+    check_finite_array(qdot, "qdot")
+    check_finite_array(qddot, "qddot")
+    require(len(q) == 2, "q must have length 2")
+    require(len(qdot) == 2, "qdot must have length 2")
+    require(len(qddot) == 2, "qddot must have length 2")
+
     Mq = M_matrix(q) @ qddot
     Cq = C_times_qdot(q, qdot)
     gq = g_vector(q)
@@ -195,6 +215,11 @@ def double_pendulum_dynamics(
     xdot : ndarray, shape (4,)
         Time derivative of the state.
     """
+    require(np.isfinite(t), "t must be finite")
+    check_finite_array(x, "x")
+    require(len(x) == 4, "x must have length 4")
+    require(callable(u_func), "u_func must be callable")
+
     q = x[0:2]
     qdot = x[2:4]
 
@@ -238,6 +263,11 @@ def u_pd(t: float, x: np.ndarray, kp: float = 10.0, kd: float = 2.0) -> np.ndarr
     u : ndarray, shape (2,)
         Joint torques [u1, u2].
     """
+    check_finite_array(x, "x")
+    require(len(x) == 4, "x must have length 4")
+    require(np.isfinite(kp), "kp must be finite")
+    require(np.isfinite(kd), "kd must be finite")
+
     q = x[0:2]
     qdot = x[2:4]
 
@@ -274,6 +304,9 @@ def compute_tau_natural_trajectory(
     tau_nat_traj : ndarray, shape (N, 2)
         Natural torque trajectory at each time sample.
     """
+    require(sol is not None, "sol must not be None")
+    require(callable(u_func), "u_func must be callable")
+
     t = sol.t
     x = sol.y.T  # shape: (N, 4)
     N = x.shape[0]
@@ -320,6 +353,9 @@ def J_end_effector(q: np.ndarray) -> np.ndarray:
     J : ndarray, shape (3, 2)
         Jacobian such that v = J(q) qdot, with v = [vx, vy, omega_z].
     """
+    check_finite_array(q, "q")
+    require(len(q) == 2, "q must have length 2")
+
     q1, q2 = q
     s1 = np.sin(q1)
     c1 = np.cos(q1)

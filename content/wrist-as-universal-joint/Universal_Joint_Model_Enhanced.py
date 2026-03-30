@@ -23,6 +23,8 @@ import sys
 import matplotlib
 import numpy as np
 
+from src.core.contracts import check_positive
+
 matplotlib.use("QtAgg")
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
@@ -92,6 +94,11 @@ def calculate_moments_of_inertia(
             - I_alpha (float): Moment of inertia about shaft axis (kg·m²) - higher MOI.
             - I_gamma (float): Moment of inertia about local gamma axis (kg·m²) - lowest MOI.
     """
+    check_positive(clubhead_weight_g, "clubhead_weight_g")
+    check_positive(shaft_weight_g, "shaft_weight_g")
+    check_positive(club_length_m, "club_length_m")
+    check_positive(cg_distance_m, "cg_distance_m")
+
     m_head = clubhead_weight_g / 1000.0  # kg
     m_shaft = shaft_weight_g / 1000.0  # kg
 
@@ -642,13 +649,22 @@ class PlotCanvas(FigureCanvas):  # type: ignore[misc]
             self.polynomial_error = "Invalid polynomial syntax. Please check your expression."
             torque = self.t**2 - self.t
         except NameError:
-            self.polynomial_error = "Invalid variable or function. Only 't', 'sin', 'cos', 'exp', 'sqrt', 'log', 'pi', and 'e' are allowed."
+            self.polynomial_error = (
+                "Invalid variable or function. Only 't', 'sin', 'cos', "
+                "'exp', 'sqrt', 'log', 'pi', & 'e' allowed."
+            )
             torque = self.t**2 - self.t
         except (TypeError, ValueError) as e:
-            self.polynomial_error = f"Error in polynomial expression: {type(e).__name__}. Please check your formula."
+            self.polynomial_error = (
+                f"Error in polynomial expression: {type(e).__name__}. "
+                "Please check your formula."
+            )
             torque = self.t**2 - self.t
         except (Exception, ArithmeticError):
-            self.polynomial_error = "Unexpected error evaluating polynomial expression. Please check your formula."
+            self.polynomial_error = (
+                "Unexpected error evaluating polynomial. "
+                "Please check your formula."
+            )
             torque = self.t**2 - self.t
         return torque
 
