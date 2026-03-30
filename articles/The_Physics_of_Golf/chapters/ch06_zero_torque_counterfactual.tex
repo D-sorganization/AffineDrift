@@ -211,27 +211,17 @@ At this configuration, Coriolis torques at the elbow are approximately:
 \label{eq:dcr_example_coriolis}
 \end{equation}
 
-The typical muscular torque available at the elbow is perhaps $5$--$10$ Nm. Thus:
-\begin{equation}
-\text{DCR}_{\text{elbow}} \approx \frac{32}{7.5} \approx 4
-\label{eq:dcr_example_ratio}
-\end{equation}
+For this illustrative example, suppose the available muscular torque at the elbow is on the order of a few newton-meters. Then the DCR at this configuration is already well above 1---the passive dynamics are contributing more than muscles.
 
-Later in the downswing, when $\dot{q}_1 \approx 15$ rad/s and $\dot{q}_2 \approx 20$ rad/s (the club is whipping), Coriolis grows to:
+Later in the downswing, when angular velocities increase (e.g., $\dot{q}_1 \approx 15$ rad/s and $\dot{q}_2 \approx 20$ rad/s), the Coriolis torque grows quadratically:
 \begin{equation}
 \tau_{\text{Coriolis}} \approx 2 \times 0.2 \times 0.4 \times 0.4 \times 15 \times 20 \approx 192 \text{ Nm}
 \label{eq:dcr_example_late_coriolis}
 \end{equation}
 
-Now:
-\begin{equation}
-\text{DCR}_{\text{elbow}} \approx \frac{192}{7.5} \approx 26
-\label{eq:dcr_example_late_ratio}
-\end{equation}
+The DCR grows rapidly. Because velocity-dependent torques scale with the \emph{square} of angular velocity while muscular capacity remains roughly constant, the ratio becomes very large as impact approaches. The swing becomes increasingly ballistic.
 
-By the time the club reaches impact, the Coriolis torque can exceed $500$ Nm, while muscles can only produce $10$--$20$ Nm. The DCR has reached \textbf{25--50:1 or higher}.
-
-\textbf{Interpretation:} In the final 50 ms before impact, the golf swing is \emph{not controlled}. It's a ballistic process, unfolding under its own inertial dynamics with muscles acting as tiny corrections. You cannot "accelerate" the club at impact—it's already accelerating at 50 times the rate your muscles can push. All you can do is guide the direction and refine the timing.
+\textbf{Interpretation:} In the final phase before impact, the golf swing is essentially a ballistic process, unfolding under its own inertial dynamics with muscles acting as small corrections. The skill lies in having set up the initial conditions and timing correctly earlier in the swing.
 \end{example}
 
 \begin{laymansbox}{Why the DCR Blows Up}{inplain:dcr_blowup_reason}
@@ -459,7 +449,7 @@ But the timing window is brutal: the contact lasts only $0.5$ ms. To achieve a 1
 
 \item \textbf{The ZVCF refinement:} Further isolates gravity from velocity-dependent forces, revealing the role of initial momentum.
 
-\item \textbf{The DCR blow-up:} As velocity increases, passive torques grow as $v^2$, while muscular torques stay roughly constant. The Drift-Control Ratio explodes in late downswing, reaching 50:1 or higher.
+\item \textbf{The DCR blow-up:} As velocity increases, passive torques grow as $v^2$, while muscular torques stay roughly constant. The Drift-Control Ratio grows rapidly in the late downswing, making the motion increasingly ballistic.
 
 \item \textbf{Double pendulum example:} Showed concretely how gravity and Coriolis produce large torques, while muscles apply restraint and correction.
 
@@ -504,7 +494,7 @@ Set up the double pendulum ZTCF from Section \ref{sec:double_pendulum_ztcf} in a
 \end{exercise}
 
 \begin{exercise}{Analysis}
-The Drift-Control Ratio (DCR) is defined as the ratio of passive to active torques. In early downswing, DCR $\approx 2:1$. In late downswing, DCR $\approx 50:1$.
+The Drift-Control Ratio (DCR) is defined as the ratio of passive to active torques. As the downswing progresses, DCR increases substantially---passive forces become increasingly dominant relative to muscular contributions.
 
 What does this imply about the \emph{type} of muscular effort needed in each phase? Is "harder work" required early or late?
 \end{exercise}

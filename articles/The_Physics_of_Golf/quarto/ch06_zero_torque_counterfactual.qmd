@@ -173,19 +173,13 @@ At this configuration, Coriolis torques at the elbow are approximately:
 
 \tau_{\text{Coriolis}} \approx 2 m_{\text{club}} L_1 L_2 \dot{q}_1 \dot{q}_2 \approx 2 \times 0.2 \times 0.4 \times 0.4 \times 5 \times 10 \approx 32 \text{ Nm}
 
-The typical muscular torque available at the elbow is perhaps $5$--$10$ Nm. Thus:
+For this illustrative example, suppose the available muscular torque at the elbow is on the order of a few newton-meters. Then the DCR at this configuration is already well above 1---the passive dynamics are contributing more than muscles.
 
-\text{DCR}_{\text{elbow}} \approx \frac{32}{7.5} \approx 4
-
-Later in the downswing, when $\dot{q}_1 \approx 15$ rad/s and $\dot{q}_2 \approx 20$ rad/s (the club is whipping), Coriolis grows to:
+Later in the downswing, when angular velocities increase (e.g., $\dot{q}_1 \approx 15$ rad/s and $\dot{q}_2 \approx 20$ rad/s), the Coriolis torque grows quadratically:
 
 \tau_{\text{Coriolis}} \approx 2 \times 0.2 \times 0.4 \times 0.4 \times 15 \times 20 \approx 192 \text{ Nm}
 
-Now:
-
-\text{DCR}_{\text{elbow}} \approx \frac{192}{7.5} \approx 26
-
-By the time the club reaches impact, the Coriolis torque can exceed $500$ Nm, while muscles can only produce $10$--$20$ Nm. The DCR has reached **25--50:1 or higher**.
+The DCR grows rapidly. Because velocity-dependent torques scale with the *square* of angular velocity while muscular capacity remains roughly constant, the ratio becomes very large as impact approaches. The swing becomes increasingly ballistic.
 
 **Interpretation:** In the final 50 ms before impact, the golf swing is *not controlled*. It's a ballistic process, unfolding under its own inertial dynamics with muscles acting as tiny corrections. You cannot "accelerate" the club at impact—it's already accelerating at 50 times the rate your muscles can push. All you can do is guide the direction and refine the timing.
 
@@ -354,19 +348,11 @@ It also explains why trying to "add speed" or "accelerate through impact" with m
 
 :::
 
-**Example: Impact Time and the Margin for Control**
+**Example: The Margin for Control Near Impact**
 
-Assume the club head reaches $100$ mph (44.7 m/s) at impact, with an angular velocity of $50$ rad/s about the shoulder. The DCR at this moment is approximately $40:1$.
+The key insight is about *scaling*. As the downswing progresses and angular velocities grow, the passive torques (which scale as $v^2$) rapidly outstrip the muscular torques (which are roughly bounded by physiological limits). Near impact, the ratio of passive to muscular torque becomes very large.
 
-The only muscular torques available are perhaps $10$ Nm. The passive (Coriolis) torques are $400$ Nm.
-
-If the golfer tries to make a 1° correction (0.0175 rad) in club face angle, this requires a tangential acceleration at the club head. But the club is already accelerating at $44.7 \times 50 = 2235$ m/s$^2$ (228 G's). Adding a 10% correction requires additional acceleration of 224 m/s$^2$.
-
-With the club mass of $0.2$ kg, this requires a force of $44.8$ N, or a torque of $44.8 \times 0.3 = 13.4$ Nm—just barely within reach of muscular capacity.
-
-But the timing window is brutal: the contact lasts only $0.5$ ms. To achieve a 1° correction requires the muscular torque to be applied *exactly* during this window. Miss by even 5 ms, and the correction is too late.
-
-**Conclusion:** The control margin is razor-thin. The downswing is essentially ballistic, and the skill is in having set things up correctly beforehand.
+This means the late downswing is essentially ballistic. The golfer cannot meaningfully redirect the club in the final moments before contact---the passive dynamics are far too strong. Ball-club contact itself lasts on the order of half a millisecond [@penner2003physics], far too brief for any neural feedback loop. The skill lies not in last-instant correction, but in having set up the initial conditions and timing correctly earlier in the swing.
 
 ## Summary and Preview
 
@@ -376,7 +362,7 @@ But the timing window is brutal: the contact lasts only $0.5$ ms. To achieve a 1
 1. **What the ZTCF is:** A thought experiment that isolates what physics would do with zero muscle input. It's a reference trajectory showing "how much is passive."
 2. **The decomposition:** Total torque = drift (passive) + control (muscular). Knowing this split is essential for understanding where effort matters.
 3. **The ZVCF refinement:** Further isolates gravity from velocity-dependent forces, revealing the role of initial momentum.
-4. **The DCR blow-up:** As velocity increases, passive torques grow as $v^2$, while muscular torques stay roughly constant. The Drift-Control Ratio explodes in late downswing, reaching 50:1 or higher.
+4. **The DCR blow-up:** As velocity increases, passive torques grow as $v^2$, while muscular torques stay roughly constant. The Drift-Control Ratio grows rapidly in the late downswing, making the motion increasingly ballistic.
 5. **Double pendulum example:** Showed concretely how gravity and Coriolis produce large torques, while muscles apply restraint and correction.
 6. **Model-dependence:** ZTCF requires a biomechanical model; it cannot be measured directly. But the qualitative conclusions are robust.
 7. **Ballistic commitment:** The downswing becomes ballistic once velocity reaches a threshold. The real skill is in setup and early-downswing momentum building.
@@ -410,7 +396,7 @@ Set up the double pendulum ZTCF from Section \ref{sec:double_pendulum_ztcf} in a
 4. Qualitatively describe the motion: does the shoulder continue rotating? Does the elbow extend further?
 
 {Analysis}
-The Drift-Control Ratio (DCR) is defined as the ratio of passive to active torques. In early downswing, DCR $\approx 2:1$. In late downswing, DCR $\approx 50:1$.
+The Drift-Control Ratio (DCR) is defined as the ratio of passive to active torques. As the downswing progresses, DCR increases substantially---passive forces become increasingly dominant relative to muscular contributions.
 
 What does this imply about the *type* of muscular effort needed in each phase? Is "harder work" required early or late?
 
