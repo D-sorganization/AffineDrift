@@ -181,7 +181,7 @@ def adaptive_timestep_ddp_mock(
 
     u_traj, x_traj, t = _initialize_ddp_trajectory(f, x0, u_init)
 
-    for iteration in range(max_iters):
+    for _iteration in range(max_iters):
         u_traj, x_traj, t = _run_ddp_iteration(
             f, x0, x_traj, u_traj, t, eps_residual, compute_hessian_bound_func
         )

@@ -1,13 +1,14 @@
 from __future__ import annotations
 
-from typing import Callable, Protocol, Tuple, TypeAlias
+from collections.abc import Callable
+from typing import Protocol
 
 import numpy as np
 import numpy.typing as npt
 
 from src.core.contracts import check_finite_array, check_positive, require
 
-NDArray: TypeAlias = npt.NDArray[np.float64]
+type NDArray = npt.NDArray[np.float64]
 
 
 class TrajectoryOptimizer(Protocol):
@@ -20,7 +21,7 @@ class TrajectoryOptimizer(Protocol):
         dt: float = 0.01,
         max_iters: int = 20,
         tol: float = 1e-4,
-    ) -> Tuple[NDArray, NDArray, NDArray]: ...
+    ) -> tuple[NDArray, NDArray, NDArray]: ...
 
 
 class ILQRSolver:
@@ -41,7 +42,7 @@ class ILQRSolver:
         dt: float = 0.01,
         max_iters: int = 50,
         tol: float = 1e-3,
-    ) -> Tuple[NDArray, NDArray, NDArray]:
+    ) -> tuple[NDArray, NDArray, NDArray]:
         """
         Runs the iLQR algorithm.
         Returns: x_traj, u_traj, t_traj
@@ -70,7 +71,7 @@ class ILQRSolver:
 
         # Since this is a basic interface matching DDP_mock,
         # we do finite differences for A and B.
-        def get_linearized(x: NDArray, u: NDArray) -> Tuple[NDArray, NDArray]:
+        def get_linearized(x: NDArray, u: NDArray) -> tuple[NDArray, NDArray]:
             """Compute linearized dynamics A, B matrices via finite differences."""
             A = np.zeros((n_x, n_x))
             B = np.zeros((n_x, n_u))
@@ -90,7 +91,7 @@ class ILQRSolver:
             Bd = B * dt
             return Ad, Bd
 
-        for iteration in range(max_iters):
+        for _iteration in range(max_iters):
             # Backward Pass
             V_x = Q_f @ (x_traj[-1] - xf)
             V_xx = Q_f
