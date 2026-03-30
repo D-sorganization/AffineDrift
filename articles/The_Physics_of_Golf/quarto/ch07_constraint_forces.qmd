@@ -14,7 +14,7 @@ You learned in Chapter @ch:zero_torque_counterfactual that the downswing is pass
 
 If gravity is pulling the whole system downward, why does the club accelerate *faster* than the arm? Where does that extra speed come from?
 
-The answer is constraint forces. They are the *hidden engines* of the kinetic chain.
+The answer is constraint forces. They are the *hidden engines* of the kinetic chain, exactly the kind of noncontributing forces analyzed in Kane-style constrained dynamics [@roithmayr2016kanes_method].
 
 Constraint forces are:
 - **Forces that enforce joint connections:** Your elbow joint connects the upper arm to the forearm. This connection is not free-floating; it's constrained. The constraint produces a force.
@@ -37,7 +37,7 @@ A **holonomic constraint** is an algebraic equation that restricts the configura
 
 For a golf swing, examples include:
 - **Joint connection:** The wrist connects the arm to the club. This means the endpoint of the arm coincides with the base of the club: $\bm{\Phi}_{\text{wrist}}(\bm{q}) = \bm{x}_{\text{arm}}(\bm{q}) - \bm{x}_{\text{club}}(\bm{q}) = \mathbf{0}$.
-- **Grip constraint:** Your hand is fixed on the grip, so the grip point cannot move relative to your palm: $\bm{\Phi}_{\text{grip}}(\bm{q}) = \bm{x}_{\text{grip}} - \text{const} = \mathbf{0}$.
+- **Grip constraint:** Your hand is fixed on the grip, so the grip point cannot move relative to your palm: $\bm{\Phi}_{\text{grip}}(\bm{q}) = \bm{x}_{\text{grip}} - \text{const} = \mathbf{0}$, which is the kind of wrench-bearing static coupling formal screw theory was built to describe [@crane2022screw_theory].
 - **Ground contact:** Your feet are in contact with the ground: $z_{\text{feet}} = 0$ (vertical position is fixed).
 
 :::
@@ -443,4 +443,3 @@ For the double pendulum with constraint (Section @sec:double_pendulum_constraint
 1. Compute the kinetic energy of the arm before and after applying the constraint.
 2. Compute the kinetic energy of the club before and after.
 3. How much energy has been transferred from arm to club? Is it consistent with zero net power for the constraint?
-

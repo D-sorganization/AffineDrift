@@ -495,6 +495,7 @@ class TestSwingOptimizerOptimize(unittest.TestCase):
             warnings.simplefilter("ignore", UserWarning)
             with self.assertRaises(ContractViolationError):
                 optimizer = SwingOptimizer(config)
+                optimizer.optimize(np.zeros(2), double_integrator_1dof)
 
 
 # ── Property and accessor tests ─────────────────────────────────────────────
