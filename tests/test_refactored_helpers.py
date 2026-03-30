@@ -36,7 +36,9 @@ class TestSwingOptimizerHelpers(unittest.TestCase):
         """Return a minimal SwingOptimizer for testing."""
         from src.affine_control.swing_optimizer import SwingOptimizationConfig, SwingOptimizer
 
-        cfg = SwingOptimizationConfig(n_joints=n_joints, horizon_steps=5, max_iterations=3, allow_mock_solver=True)
+        cfg = SwingOptimizationConfig(
+            n_joints=n_joints, horizon_steps=5, max_iterations=3, allow_mock_solver=True
+        )
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", UserWarning)
             return SwingOptimizer(cfg)
@@ -76,7 +78,9 @@ class TestSwingOptimizerHelpers(unittest.TestCase):
         """_package_result computes final velocity as L2 norm of velocity portion."""
         from src.affine_control.swing_optimizer import SwingOptimizationConfig, SwingOptimizer
 
-        cfg = SwingOptimizationConfig(n_joints=2, horizon_steps=5, max_iterations=2, allow_mock_solver=True)
+        cfg = SwingOptimizationConfig(
+            n_joints=2, horizon_steps=5, max_iterations=2, allow_mock_solver=True
+        )
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", UserWarning)
             opt = SwingOptimizer(cfg)

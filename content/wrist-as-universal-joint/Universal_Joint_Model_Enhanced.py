@@ -597,7 +597,7 @@ class PlotCanvas(FigureCanvas):  # type: ignore[misc]
 
     def _gen_step(self) -> np.ndarray:
         torque = np.zeros_like(self.t)
-        torque[len(self.t)//2:] = 3.0
+        torque[len(self.t) // 2 :] = 3.0
         return torque
 
     def _gen_pulse(self) -> np.ndarray:
@@ -656,14 +656,12 @@ class PlotCanvas(FigureCanvas):  # type: ignore[misc]
             torque = self.t**2 - self.t
         except (TypeError, ValueError) as e:
             self.polynomial_error = (
-                f"Error in polynomial expression: {type(e).__name__}. "
-                "Please check your formula."
+                f"Error in polynomial expression: {type(e).__name__}. " "Please check your formula."
             )
             torque = self.t**2 - self.t
         except (Exception, ArithmeticError):
             self.polynomial_error = (
-                "Unexpected error evaluating polynomial. "
-                "Please check your formula."
+                "Unexpected error evaluating polynomial. " "Please check your formula."
             )
             torque = self.t**2 - self.t
         return torque

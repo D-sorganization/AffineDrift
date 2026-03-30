@@ -84,10 +84,38 @@ INTENTIONAL_DIVERGENCE: tuple[str, ...] = ("script.js vs docs/script.js",)
 
 
 def sha256(path: Path) -> str:
+    """Return the SHA-256 hex digest of a file's contents.
+
+    Parameters
+    ----------
+    path : Path
+        File to hash.
+
+    Returns
+    -------
+    str
+        Lowercase hex-encoded SHA-256 digest.
+    """
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def sync_one(repo_root: Path, mapping: SyncMap, check_only: bool) -> list[str]:
+    """Synchronize one source file to all its configured mirror paths.
+
+    Parameters
+    ----------
+    repo_root : Path
+        Absolute path to the repository root.
+    mapping : SyncMap
+        Source-to-mirrors mapping to apply.
+    check_only : bool
+        When True, report drift without copying files.
+
+    Returns
+    -------
+    list[str]
+        Human-readable status messages for each mirror checked.
+    """
     source = repo_root / mapping.source
     if not source.exists():
         return [f"MISSING SOURCE: {mapping.source}"]
@@ -119,6 +147,13 @@ def sync_one(repo_root: Path, mapping: SyncMap, check_only: bool) -> list[str]:
 
 
 def main() -> int:
+    """Entry point: parse CLI args, run all sync maps, and return an exit code.
+
+    Returns
+    -------
+    int
+        0 if no drift (or drift was corrected); 1 if ``--check`` detected drift.
+    """
     logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
     parser = argparse.ArgumentParser(description="Sync canonical frontend assets")
     parser.add_argument(

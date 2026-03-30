@@ -1,7 +1,16 @@
 import subprocess
 
 
-def create_issue(title, body):
+def create_issue(title: str, body: str) -> None:
+    """Create a GitHub issue using the gh CLI.
+
+    Parameters
+    ----------
+    title : str
+        Issue title.
+    body : str
+        Markdown body text for the issue.
+    """
     print(f"Creating issue: {title}")
     subprocess.run(["gh", "issue", "create", "--title", title, "--body", body], check=True)
 
