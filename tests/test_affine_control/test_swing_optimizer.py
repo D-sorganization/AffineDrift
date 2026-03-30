@@ -67,7 +67,7 @@ class TestSwingOptimizationConfig(unittest.TestCase):
 
     def test_valid_config_defaults(self) -> None:
         """Config with n_joints and all defaults should be valid."""
-        config = SwingOptimizationConfig(n_joints=3)
+        config = SwingOptimizationConfig(n_joints=3, allow_mock_solver=True)
         self.assertEqual(config.n_joints, 3)
         self.assertEqual(config.horizon_steps, DEFAULT_HORIZON_STEPS)
         self.assertEqual(config.dt, DEFAULT_DT)
@@ -79,8 +79,7 @@ class TestSwingOptimizationConfig(unittest.TestCase):
 
     def test_valid_config_custom(self) -> None:
         """Config with all custom values should be valid."""
-        config = SwingOptimizationConfig(
-            n_joints=5,
+        config = SwingOptimizationConfig(n_joints=5,
             horizon_steps=100,
             dt=0.005,
             max_iterations=200,
@@ -88,69 +87,69 @@ class TestSwingOptimizationConfig(unittest.TestCase):
             control_weight=0.1,
             target_velocity=40.0,
             terminal_weight=50.0,
-        )
+            allow_mock_solver=True)
         self.assertEqual(config.n_joints, 5)
         self.assertEqual(config.horizon_steps, 100)
         self.assertAlmostEqual(config.dt, 0.005)
 
     def test_state_dim_property(self) -> None:
         """state_dim should be 2 * n_joints."""
-        config = SwingOptimizationConfig(n_joints=4)
+        config = SwingOptimizationConfig(n_joints=4, allow_mock_solver=True)
         self.assertEqual(config.state_dim, 8)
 
     def test_control_dim_property(self) -> None:
         """control_dim should equal n_joints."""
-        config = SwingOptimizationConfig(n_joints=4)
+        config = SwingOptimizationConfig(n_joints=4, allow_mock_solver=True)
         self.assertEqual(config.control_dim, 4)
 
     def test_invalid_n_joints_zero(self) -> None:
         """n_joints=0 should raise ContractViolationError."""
         with self.assertRaises(ContractViolationError):
-            SwingOptimizationConfig(n_joints=0)
+            SwingOptimizationConfig(n_joints=0, allow_mock_solver=True)
 
     def test_invalid_n_joints_negative(self) -> None:
         """Negative n_joints should raise ContractViolationError."""
         with self.assertRaises(ContractViolationError):
-            SwingOptimizationConfig(n_joints=-1)
+            SwingOptimizationConfig(n_joints=-1, allow_mock_solver=True)
 
     def test_invalid_dt_zero(self) -> None:
         """dt=0 should raise ContractViolationError."""
         with self.assertRaises(ContractViolationError):
-            SwingOptimizationConfig(n_joints=3, dt=0.0)
+            SwingOptimizationConfig(n_joints=3, dt=0.0, allow_mock_solver=True)
 
     def test_invalid_dt_negative(self) -> None:
         """Negative dt should raise ContractViolationError."""
         with self.assertRaises(ContractViolationError):
-            SwingOptimizationConfig(n_joints=3, dt=-0.01)
+            SwingOptimizationConfig(n_joints=3, dt=-0.01, allow_mock_solver=True)
 
     def test_invalid_horizon_steps_zero(self) -> None:
         """horizon_steps=0 should raise ContractViolationError."""
         with self.assertRaises(ContractViolationError):
-            SwingOptimizationConfig(n_joints=3, horizon_steps=0)
+            SwingOptimizationConfig(n_joints=3, horizon_steps=0, allow_mock_solver=True)
 
     def test_invalid_max_iterations_zero(self) -> None:
         """max_iterations=0 should raise ContractViolationError."""
         with self.assertRaises(ContractViolationError):
-            SwingOptimizationConfig(n_joints=3, max_iterations=0)
+            SwingOptimizationConfig(n_joints=3, max_iterations=0, allow_mock_solver=True)
 
     def test_invalid_convergence_tol_negative(self) -> None:
         """Negative convergence_tol should raise ContractViolationError."""
         with self.assertRaises(ContractViolationError):
-            SwingOptimizationConfig(n_joints=3, convergence_tol=-1e-6)
+            SwingOptimizationConfig(n_joints=3, convergence_tol=-1e-6, allow_mock_solver=True)
 
     def test_invalid_control_weight_negative(self) -> None:
         """Negative control_weight should raise ContractViolationError."""
         with self.assertRaises(ContractViolationError):
-            SwingOptimizationConfig(n_joints=3, control_weight=-0.01)
+            SwingOptimizationConfig(n_joints=3, control_weight=-0.01, allow_mock_solver=True)
 
     def test_invalid_target_velocity_zero(self) -> None:
         """target_velocity=0 should raise ContractViolationError (must be positive)."""
         with self.assertRaises(ContractViolationError):
-            SwingOptimizationConfig(n_joints=3, target_velocity=0.0)
+            SwingOptimizationConfig(n_joints=3, target_velocity=0.0, allow_mock_solver=True)
 
     def test_config_is_frozen(self) -> None:
         """Config should be immutable (frozen dataclass)."""
-        config = SwingOptimizationConfig(n_joints=3)
+        config = SwingOptimizationConfig(n_joints=3, allow_mock_solver=True)
         with self.assertRaises(AttributeError):
             config.n_joints = 5  # type: ignore[misc]
 
@@ -258,13 +257,11 @@ class TestSwingOptimizerCost(unittest.TestCase):
         """Create a standard 2-joint optimizer for cost tests."""
         import warnings
 
-        self.config = SwingOptimizationConfig(
-            n_joints=2,
+        self.config = SwingOptimizationConfig(n_joints=2,
             control_weight=1.0,
             target_velocity=10.0,
             terminal_weight=100.0,
-            allow_mock_solver=True,
-        )
+            allow_mock_solver=True)
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", UserWarning)
             self.optimizer = SwingOptimizer(self.config)
@@ -331,12 +328,9 @@ class TestSwingOptimizerCost(unittest.TestCase):
         """Terminal cost should scale with terminal_weight."""
         import warnings
 
-        config_low = SwingOptimizationConfig(
-            n_joints=2, target_velocity=10.0, terminal_weight=1.0, allow_mock_solver=True
-        )
-        config_high = SwingOptimizationConfig(
-            n_joints=2, target_velocity=10.0, terminal_weight=100.0, allow_mock_solver=True
-        )
+        config_low = SwingOptimizationConfig(n_joints=2, target_velocity=10.0, terminal_weight=1.0, allow_mock_solver=True)
+        config_high = SwingOptimizationConfig(n_joints=2, target_velocity=10.0, terminal_weight=100.0
+        , allow_mock_solver=True)
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", UserWarning)
             opt_low = SwingOptimizer(config_low)
@@ -496,12 +490,10 @@ class TestSwingOptimizerOptimize(unittest.TestCase):
 
         from src.core.contracts import ContractViolationError
 
-        config = SwingOptimizationConfig(
-            n_joints=1, horizon_steps=5, max_iterations=1, allow_mock_solver=False
-        )
-        with self.assertRaises(ContractViolationError):
-            with warnings.catch_warnings():
-                warnings.simplefilter("ignore", UserWarning)
+        config = SwingOptimizationConfig(n_joints=1, horizon_steps=5, max_iterations=1, allow_mock_solver=False)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", UserWarning)
+            with self.assertRaises(ContractViolationError):
                 optimizer = SwingOptimizer(config)
 
 
@@ -515,11 +507,7 @@ class TestSwingOptimizerProperties(unittest.TestCase):
         """Create a SwingOptimizer suppressing the mock-solver warning."""
         import warnings
 
-        # Ensure mock solver is allowed for these property tests
-        if "allow_mock_solver" not in kwargs:
-            kwargs["allow_mock_solver"] = True
-
-        config = SwingOptimizationConfig(**kwargs)  # type: ignore[arg-type]
+        config = SwingOptimizationConfig(**kwargs, allow_mock_solver=True)  # type: ignore[arg-type]
         with warnings.catch_warnings():
             warnings.simplefilter("ignore", UserWarning)
             return SwingOptimizer(config)

@@ -226,19 +226,21 @@ runOnDomReady(function () {
 
   // --- 1b. Lazy Loading Images ---
   // Add 'loaded' class to lazy images once they load for CSS animation removal
-  const lazyImages = document.querySelectorAll('img[loading="lazy"]');
-  lazyImages.forEach((img) => {
-    if (img.complete) {
-      img.classList.add("loaded");
-    } else {
-      img.addEventListener("load", function () {
-        this.classList.add("loaded");
-      });
-      img.addEventListener("error", function () {
-        this.classList.add("loaded"); // Remove shimmer even on error
-      });
+  // ⚡ Bolt Optimization: Use document.images (O(1)) instead of querySelectorAll (O(N))
+  for (const img of document.images) {
+    if (img.getAttribute("loading") === "lazy") {
+      if (img.complete) {
+        img.classList.add("loaded");
+      } else {
+        img.addEventListener("load", function () {
+          this.classList.add("loaded");
+        });
+        img.addEventListener("error", function () {
+          this.classList.add("loaded"); // Remove shimmer even on error
+        });
+      }
     }
-  });
+  }
 
   // --- 2. History & TOC Generation ---
 
