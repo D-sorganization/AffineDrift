@@ -18,7 +18,7 @@ page-layout: full
 
         <div class="drift-intro-text">
           <p>The golf swing is a high-speed, dynamic physical act involving the whole body, the objective of which is to deliver the golf club with a precise set of kinematic constraints. This raises the question: how could we possibly control such an act? A related question is when such control is even possible.</p>
-          <p>As will be outlined further, the dynamics of the golf swing are dependent on not only what you are currently doing, but also what you have done in the past—a phenomenon known as "drift" in nonlinear control theory. This term stems from the velocity- and state-dependent dynamics that arise when systems are moving. As motion increases in speed, these effects can dominate, rendering any active, conscious control efforts by the golfer futile.</p>
+          <p>As will be outlined further, the dynamics of the golf swing are dependent on not only what you are currently doing, but also what you have done in the past—a phenomenon known as "drift" in nonlinear control theory. This term stems from the velocity- and state-dependent dynamics that arise when systems are moving. As motion increases in speed, these effects can become significant, potentially limiting the golfer's ability to make corrective adjustments during the fastest phases of the swing (see <a href="../articles/theory-part2.html">Theory Part 2</a> for quantitative analysis).</p>
           <p>In the control-affine framework, drift is not a problem to be eliminated; it is the accumulated result of the system's passive dynamics. Drift is greatest at high velocities, where velocity- and state-dependent coupling terms dominate the equations of motion. Understanding and exploiting this passive contribution is central to the analysis presented on this site.</p>
         </div>
       </div>
@@ -53,7 +53,7 @@ page-layout: full
           <div class="theory-intro">
             <h2 class="anchored">Theory of Control</h2>
             <p>
-              The golf swing presents a profound coordination challenge: how does a golfer orchestrate the motion of multiple body segments to achieve a desired outcome? This problem lies at the heart of motor control research, and it is precisely what nonlinear control theory is designed to address.
+              The golf swing presents a high-dimensional coordination challenge: how does a golfer orchestrate the motion of multiple body segments to achieve a desired outcome? This problem lies at the heart of motor control research, and it is precisely what nonlinear control theory is designed to address.
             </p>
           </div>
 
@@ -104,11 +104,11 @@ page-layout: full
               </div>
               <div class="component">
                 <h4>Drift $f(x)$</h4>
-                <p>The "natural" path of the swing if muscles went silent. Dominated by centrifugal loads and gravity.</p>
+                <p>The trajectory the system would follow in the absence of all muscular torque inputs. Includes gravitational, Coriolis, and centrifugal coupling terms, whose relative magnitudes vary with swing phase.</p>
               </div>
               <div class="component">
                 <h4>Control $u$</h4>
-                <p>The active muscular intervention. Limited by force-velocity properties and neural reaction times.</p>
+                <p>The active muscular intervention. Constrained by force-velocity properties of muscle (Hill, 1938) and neural transmission delays (Schmidt &amp; Lee, 2011).</p>
               </div>
                <div class="component">
                 <h4>Input Field $g(x)$</h4>
@@ -191,9 +191,7 @@ page-layout: full
           <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 0.75rem;">Suggested order for new readers:</p>
           <ol style="font-size: 0.85rem; padding-left: 1.25rem; line-height: 1.8; margin-bottom: 0;">
             <li><a href="overview.html">Overview</a> <em>(here)</em></li>
-            <li><a href="../articles/affine-nature-golf-swing.html">Affine Nature of the Golf Swing</a></li>
-            <li><a href="../articles/zero-torque-counterfactual.html">Zero-Torque Counterfactual</a></li>
-            <li><a href="../articles/intentional-constraint-collapse.html">Intentional Constraint Collapse</a></li>
+            <li><a href="../articles/theory-part1.html">Drifter Manifesto (Parts 1–5)</a></li>
             <li><a href="../pages/tangent-hyperplanes.html">Tangent Hyperplanes</a></li>
             <li><a href="../resources/research-reviews.html">Research Reviews</a></li>
             <li><a href="../models/models.html">Build &amp; Simulate</a></li>
