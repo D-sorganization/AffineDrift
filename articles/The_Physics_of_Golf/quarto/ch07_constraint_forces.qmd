@@ -20,7 +20,7 @@ The answer is constraint forces. They are the *hidden engines* of the kinetic ch
 Constraint forces are:
 - **Forces that enforce joint connections:** Your elbow joint connects the upper arm to the forearm. This connection is not free-floating; it's constrained. The constraint produces a force.
 - **Forces that do zero net work:** This is paradoxical but true. Constraints don't *add* energy to the system. Yet they *redistribute* energy from one segment to another.
-- **Forces that are enormous:** The constraint forces at your wrist during a swing can exceed $500$ N—far more than your muscles produce.
+- **Forces that are enormous:** The constraint forces at your wrist during a swing can far exceed what your muscles produce—computations with realistic swing models routinely yield wrist constraint forces in the hundreds of Newtons.
 - **Forces that are model-independent:** You don't need to know muscle physiology to compute them. They follow directly from the equations of motion and the constraints.
 
 This chapter reveals the mathematics and physics of constraint forces, then shows why they're the real story of the kinetic chain.
@@ -365,7 +365,7 @@ This transfer is most efficient when the proximal segment is large and slow, and
 
 **Example: Grip Force During a Golf Swing**
 
-A professional golfer's grip force during the downswing is typically $50$--$150$ N (measured via an instrumented club). This force is *not* a muscular torque directly. Instead, it's the reaction force that the grip constraint exerts on the club.
+A professional golfer's grip force during the downswing—measured via instrumented clubs [@cochran1968search; @penner2003physics]—can be substantial, ranging from tens to over a hundred Newtons. This force is *not* a muscular torque directly. Instead, it's the reaction force that the grip constraint exerts on the club.
 
 During the downswing:
 1. The golfer's hands are constrained to the grip (the grip doesn't slip relative to the hand).
@@ -377,13 +377,13 @@ The grip force arises *automatically* from the constraint, without explicit musc
 
 However—and this is important—the golfer *can* modulate the grip force by changing muscle tension or by allowing some slip. A gentle grip (low force) allows some flexibility; a firm grip (high force) enforces the constraint tightly. This modulation is a control knob.
 
-**Insight:** The large grip forces in a golf swing (often 100+ N at late downswing) are not evidence of muscular effort. They're evidence of massive inertial forces being channeled through the constraint. Muscles are simply holding the constraint in place, not driving the acceleration.
+**Insight:** The large grip forces in a golf swing are not evidence of muscular effort. They're evidence of massive inertial forces being channeled through the constraint. Muscles are simply holding the constraint in place, not driving the acceleration.
 
 **Example: Ground Reaction Forces and the Closed Kinematic Chain**
 
 The golfer's feet are in contact with the ground, which is a constraint: the feet cannot move downward (the ground prevents it).
 
-During the downswing, this ground constraint produces enormous vertical forces. A 200-pound golfer might experience peak ground reaction forces of $1.5$--$2$ times body weight, or $300$--$400$ pounds-force. These forces are constraint forces—they arise from the geometry of contact with the ground.
+During the downswing, this ground constraint produces enormous vertical forces. Studies using force plates show that peak ground reaction forces during the swing can exceed body weight by a significant margin [@penner2003physics]. These forces are constraint forces—they arise from the geometry of contact with the ground.
 
 These ground reaction forces are crucial because they close the kinetic chain. Without the ground, the golfer would slide backward as they rotate forward. The ground reaction force (a constraint force) prevents this, keeping the lower body anchored while the upper body rotates.
 
@@ -399,7 +399,7 @@ These ground reaction forces are crucial because they close the kinetic chain. W
 3. **Constrained EOM:** Constraint forces appear as $\bm{J}_c^T \bm{\lambda}$ in the equations of motion. The Lagrange multipliers $\bm{\lambda}$ are the constraint force magnitudes.
 4. **Zero net power:** Constraint forces do zero net work to the system. But locally, they redistribute energy between segments—this is the kinetic chain.
 5. **Double pendulum example:** The wrist constraint couples shoulder and elbow, producing a small constraint force ($\sim 0.3$ Nm) that redirects energy from arm to club.
-6. **Grip and ground forces:** Grip forces ($50$--$150$ N) and ground reaction forces ($300$--$400$ N) are constraint forces, not muscular efforts. Muscles hold the constraints, but physics enforces them.
+6. **Grip and ground forces:** Grip forces and ground reaction forces are constraint forces, not muscular efforts. Muscles hold the constraints, but physics enforces them.
 7. **The kinetic chain is constraint-driven:** Energy transfers from hips to shoulders to arms to club through constraints, not through muscular cascades. Muscles set up initial momentum; constraints redirect it.
 8. **Control through constraints:** A golfer controls the swing by modulating constraint rigidity (grip firmness, body stiffness) and by controlling the initial momentum building. Once momentum is built, constraints take over, and the motion becomes nearly deterministic.
 
