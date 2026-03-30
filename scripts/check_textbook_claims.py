@@ -143,12 +143,15 @@ def _diff_text(repo_root: Path, base_ref: str) -> str:
             errors="replace",
         )
 
-    commands: list[list[str]] = []
+    commands: list[list[str]] = [
+        ["git", "diff", "--unified=0", f"{base_ref}..HEAD"],
+        ["git", "diff", "--unified=0", f"{base_ref}...HEAD"],
+    ]
     if ci_base_ref:
+        commands.append(["git", "diff", "--unified=0", f"origin/{ci_base_ref}..HEAD"])
         commands.append(["git", "diff", "--unified=0", f"origin/{ci_base_ref}...HEAD"])
     commands.extend(
         [
-            ["git", "diff", "--unified=0", f"{base_ref}...HEAD"],
             ["git", "diff", "--unified=0", "HEAD^1...HEAD"],
             ["git", "show", "--unified=0", "--format=", "HEAD"],
         ]
