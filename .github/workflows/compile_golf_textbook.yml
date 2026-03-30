@@ -21,10 +21,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Compile LaTeX → PDF
-        uses: xu-cheng/latex-action@v3
+        uses: xu-cheng/latex-action@v4
         continue-on-error: true
         with:
           root_file: main.tex
@@ -64,7 +64,7 @@ jobs:
 
       - name: Upload PDF artifact
         if: steps.verify.outputs.pdf_exists == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: The_Physics_of_Golf
           path: articles/The_Physics_of_Golf/The_Physics_of_Golf.pdf
@@ -78,7 +78,7 @@ jobs:
 
     steps:
       - name: Download artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: The_Physics_of_Golf
 
