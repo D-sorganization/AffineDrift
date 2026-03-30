@@ -56,7 +56,6 @@ def double_pendulum_mass_matrix(th1: float, th2: float) -> npt.NDArray[Any]:
     return M
 
 
-
 # Default control saturation limits for the double-pendulum benchmark (N*m).
 # The value 50 N*m is appropriate for a 1 kg, 0.5 m double pendulum; adjust
 # for different systems by passing `control_limits` to run_benchmark().
