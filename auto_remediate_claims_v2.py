@@ -41,6 +41,7 @@ TARGETS = [
 
 
 def fix_file(filepath):
+    """Insert pedagogical disclaimers and soften specific phrases in a QMD file."""
     with open(filepath, encoding="utf-8") as f:
         content = f.read()
 
