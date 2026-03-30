@@ -1,4 +1,7 @@
-"""Notebook bridge generation and validation for Tangent-Space Methods for Nonlinear Control and Biomechanics."""
+"""Notebook bridge generation and validation.
+
+Tangent-Space Methods for Nonlinear Control and Biomechanics.
+"""
 
 from __future__ import annotations
 
