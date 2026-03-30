@@ -19,6 +19,8 @@ import logging
 from collections.abc import Callable
 
 import numpy as np
+from numpy import transpose
+from numpy.linalg import pinv, solve
 from scipy.integrate import OdeResult, solve_ivp
 
 from src.core.contracts import check_finite_array, require
@@ -230,7 +232,7 @@ def double_pendulum_dynamics(
     gq = g_vector(q)
 
     # qddot = M^-1 (u - C(q,qdot) qdot - g(q))
-    qddot = np.linalg.solve(Mq, u - Cq - gq)
+    qddot = solve(Mq, u - Cq - gq)
 
     return np.concatenate([qdot, qddot])
 
@@ -308,7 +310,7 @@ def compute_tau_natural_trajectory(
     require(callable(u_func), "u_func must be callable")
 
     t = sol.t
-    x = sol.y.T  # shape: (N, 4)
+    x = transpose(sol.y)  # shape: (N, 4)
     N = x.shape[0]
     tau_nat_traj = np.zeros((N, 2))
 
@@ -324,7 +326,7 @@ def compute_tau_natural_trajectory(
         gq = g_vector(q)
 
         # qddot from dynamics
-        qddot = np.linalg.solve(Mq, u - Cq - gq)
+        qddot = solve(Mq, u - Cq - gq)
 
         # natural torque for this state
         tau_nat_traj[i, :] = tau_natural(q, qdot, qddot)
@@ -391,8 +393,8 @@ def wrench_from_torque(q: np.ndarray, tau: np.ndarray) -> np.ndarray:
         Approximate planar wrench [Fx, Fy, Mz].
     """
     J = J_end_effector(q)
-    JT = J.T
-    w = np.linalg.pinv(JT) @ tau
+    JT = transpose(J)
+    w = pinv(JT) @ tau
     return w
 
 
