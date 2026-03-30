@@ -413,6 +413,7 @@ python src/tools/code_quality_ast.py
 
 | Date | Version | Changes |
 |------|---------|---------|
+| 2026-03-30 | 1.0.3 | Added TODO(citation) markers and humble qualifiers for unsourced numerical claims in ch14--ch31 LaTeX chapters of The Physics of Golf — issues #1881, #1882, #1883, #1884, #1885, #1886, #1887, #1888, #1889, #1890, #1892, #1893, #1894, #1895, #1896, #1897, #1898, #1899 (batch 2) |
 | 2026-03-30 | 1.0.2 | Added citation markers, TODO notes, and humble phrasing for unsourced numerical claims and study references in ch22--ch31, glossary.qmd (The Physics of Golf), and 01-throwing-away-target.qmd (The Geometry of Motion) — issues #1921, #1922, #1924, #1925, #1926, #1927, #1928, #1929, #1930, #1931, #1932, #1948 (batch 4) |
 | 2026-03-30 | 1.0.1 | Added citation markers (TODO comments) and humble qualifiers to unsourced numerical claims in ch01--ch21 of The Physics of Golf — issues #1900--#1920 (batch 3) |
 | 2026-03-30 | 1.0.0 | Documented PR CI dependency-audit plus rendered-site E2E gate, mock-solver opt-in behavior at `SwingOptimizer.optimize`, and bibliography duplicate-alias integrity guardrails |
