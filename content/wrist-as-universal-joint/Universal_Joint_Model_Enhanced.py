@@ -583,93 +583,88 @@ class PlotCanvas(FigureCanvas):  # type: ignore[misc]
 
         self.update_plot()
 
+    def _gen_golf_random(self) -> np.ndarray:
+        torque = np.random.normal(0, 1, len(self.t))
+        torque += np.exp(-50 * (self.t - 0.5) ** 2) * 8 * np.random.randn(len(self.t))
+        return np.convolve(torque, np.ones(10) / 10, mode="same")
+
+    def _gen_step(self) -> np.ndarray:
+        torque = np.zeros_like(self.t)
+        torque[len(self.t)//2:] = 3.0
+        return torque
+
+    def _gen_pulse(self) -> np.ndarray:
+        torque = np.zeros_like(self.t)
+        pulse_start = int(len(self.t) * 0.4)
+        pulse_end = int(len(self.t) * 0.6)
+        torque[pulse_start:pulse_end] = 5.0 * np.random.randn(pulse_end - pulse_start)
+        return torque
+
+    def _gen_burst(self) -> np.ndarray:
+        torque = np.zeros_like(self.t)
+        burst_center = len(self.t) // 2
+        burst_width = len(self.t) // 10
+        burst_indices = np.arange(
+            max(0, burst_center - burst_width),
+            min(len(self.t), burst_center + burst_width),
+        )
+        torque[burst_indices] = np.random.normal(0, 3, len(burst_indices))
+        return torque
+
+    def _gen_sinusoidal(self) -> np.ndarray:
+        return 2.0 * np.sin(8 * np.pi * self.t)
+
+    def _gen_random_noise(self) -> np.ndarray:
+        torque = np.random.normal(0, 1.5, len(self.t))
+        return np.convolve(torque, np.ones(10) / 10, mode="same")
+
+    def _gen_polynomial(self) -> np.ndarray:
+        try:
+            from simpleeval import simple_eval
+
+            safe_dict = {
+                "t": self.t,
+                "sin": np.sin,
+                "cos": np.cos,
+                "exp": np.exp,
+                "sqrt": np.sqrt,
+                "log": np.log,
+                "pi": np.pi,
+                "e": np.e,
+            }
+            result = simple_eval(self.polynomial_expression, names=safe_dict)
+            if isinstance(result, np.ndarray):
+                torque = result
+            else:
+                torque = np.full_like(self.t, float(result))
+            self.polynomial_error = None
+        except SyntaxError:
+            self.polynomial_error = "Invalid polynomial syntax. Please check your expression."
+            torque = self.t**2 - self.t
+        except NameError:
+            self.polynomial_error = "Invalid variable or function. Only 't', 'sin', 'cos', 'exp', 'sqrt', 'log', 'pi', and 'e' are allowed."
+            torque = self.t**2 - self.t
+        except (TypeError, ValueError) as e:
+            self.polynomial_error = f"Error in polynomial expression: {type(e).__name__}. Please check your formula."
+            torque = self.t**2 - self.t
+        except (Exception, ArithmeticError):
+            self.polynomial_error = "Unexpected error evaluating polynomial expression. Please check your formula."
+            torque = self.t**2 - self.t
+        return torque
+
     def generate_sample_torque(self) -> np.ndarray:
         """Generate a torque signal based on noise type"""
-        t = self.t
-
-        if self.noise_type == "Golf-like Random":
-            torque = np.random.normal(0, 1, len(t))
-            torque += np.exp(-50 * (t - 0.5) ** 2) * 8 * np.random.randn(len(t))
-            torque = np.convolve(torque, np.ones(10) / 10, mode="same")
-        elif self.noise_type == "Step":
-            torque = np.zeros_like(t)
-            torque[250:] = 3.0  # Step at midpoint
-        elif self.noise_type == "Pulse":
-            torque = np.zeros_like(t)
-            pulse_start = 200
-            pulse_end = 300
-            torque[pulse_start:pulse_end] = 5.0 * np.random.randn(pulse_end - pulse_start)
-        elif self.noise_type == "Burst":
-            torque = np.zeros_like(t)
-            burst_center = 250
-            burst_width = 50
-            burst_indices = np.arange(
-                max(0, burst_center - burst_width),
-                min(len(t), burst_center + burst_width),
-            )
-            torque[burst_indices] = np.random.normal(0, 3, len(burst_indices))
-        elif self.noise_type == "Sinusoidal":
-            torque = 2.0 * np.sin(8 * np.pi * t)
-        elif self.noise_type == "Random":
-            torque = np.random.normal(0, 1.5, len(t))
-            torque = np.convolve(torque, np.ones(10) / 10, mode="same")
-        elif self.noise_type == "Polynomial":
-            # Evaluate polynomial expression using safer method
-            # Note: We don't expose 'np' module to prevent sandbox escape via object introspection
-            try:
-                # Use simpleeval for safe expression evaluation (no code execution)
-                from simpleeval import simple_eval
-
-                # Create a safe evaluation environment with only specific allowed functions
-                safe_dict = {
-                    "t": t,
-                    "sin": np.sin,
-                    "cos": np.cos,
-                    "exp": np.exp,
-                    "sqrt": np.sqrt,
-                    "log": np.log,
-                    "pi": np.pi,
-                    "e": np.e,
-                }
-                # Evaluate using simpleeval (secure, no arbitrary code execution)
-                result = simple_eval(self.polynomial_expression, names=safe_dict)
-                # Ensure it's a numpy array (check outside eval for safety)
-                if isinstance(result, np.ndarray):
-                    torque = result
-                else:
-                    # Convert scalar to array
-                    torque = np.full_like(t, float(result))
-                # Store success (clear any previous error)
-                self.polynomial_error = None
-            except SyntaxError:
-                # Syntax error in expression
-                error_msg = "Invalid polynomial syntax. Please check your expression."
-                self.polynomial_error = error_msg
-                torque = t**2 - t  # Use fallback polynomial
-            except NameError:
-                # Invalid variable or function used
-                error_msg = "Invalid variable or function. Only 't', 'sin', 'cos', 'exp', 'sqrt', 'log', 'pi', and 'e' are allowed."  # noqa: E501
-                self.polynomial_error = error_msg
-                torque = t**2 - t  # Use fallback polynomial
-            except (TypeError, ValueError) as e:
-                # Type or value error
-                error_msg = f"Error in polynomial expression: {type(e).__name__}. Please check your formula."  # noqa: E501
-                self.polynomial_error = error_msg
-                torque = t**2 - t  # Use fallback polynomial
-            except (NameError, SyntaxError, ArithmeticError):
-                # Other unexpected errors (e.g. eval-related exceptions)
-                error_msg = (
-                    "Unexpected error evaluating polynomial expression. Please check your formula."
-                )
-                self.polynomial_error = error_msg
-                torque = t**2 - t  # Use fallback polynomial
-        else:
-            # Default to golf-like
-            torque = np.random.normal(0, 1, len(t))
-            torque += np.exp(-50 * (t - 0.5) ** 2) * 8 * np.random.randn(len(t))
-            torque = np.convolve(torque, np.ones(10) / 10, mode="same")
-
-        return torque
+        generators = {
+            "Golf-like Random": self._gen_golf_random,
+            "Step": self._gen_step,
+            "Pulse": self._gen_pulse,
+            "Burst": self._gen_burst,
+            "Sinusoidal": self._gen_sinusoidal,
+            "Random": self._gen_random_noise,
+            "Polynomial": self._gen_polynomial,
+        }
+        gen_func = generators.get(self.noise_type, self._gen_golf_random)
+        return gen_func()
 
     def set_noise_type(self, noise_type: str) -> None:
         """Set noise type and regenerate"""
