@@ -43,7 +43,7 @@ class TestBallFlightDynamics:
         assert bfd.radius > 0
 
     def test_invalid_mass_raises(self):
-        with pytest.raises(Exception):
+        with pytest.raises(ValueError):
             BallFlightDynamics(mass=-1.0)
 
     def test_dynamics_returns_correct_shape(self):

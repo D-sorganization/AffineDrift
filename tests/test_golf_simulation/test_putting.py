@@ -28,7 +28,7 @@ class TestGreenSurface:
         assert not green.is_on_green(-1.0, -1.0)
 
     def test_invalid_stimp_raises(self):
-        with pytest.raises(Exception):
+        with pytest.raises(ValueError):
             GreenSurface(width=30.0, height=30.0, stimp=2.0)
 
 

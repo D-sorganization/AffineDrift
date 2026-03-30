@@ -31,12 +31,7 @@ repos:
         # Skip for docs-only or workflow-only changes
         exclude: ^(\.github/|docs/|.*\.md$)
 
-      - id: ruff-format
-        name: "ruff format"
-        types: [python]
-        exclude: ^(\.github/|docs/|.*\.md$)
-
-  # Black - Python code formatter
+  # Black - Python code formatter (CLAUDE.md policy: Black, NOT ruff format)
   - repo: https://github.com/psf/black
     rev: 26.1.0
     hooks:
