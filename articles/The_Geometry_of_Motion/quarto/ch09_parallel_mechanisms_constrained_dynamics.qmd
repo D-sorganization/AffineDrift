@@ -12,7 +12,7 @@
 
 A golf club held in both hands, a parallel robot gripping an object, or legs pushing against the ground are all systems with **constraints**: physical connections that remove degrees of freedom and couple subsystems. Rather than treating constraints as annoying algebraic equations to eliminate, we view them as **geometric structures**—reductions of the configuration manifold, decompositions of force space, and sources of null-space redundancy.
 
-This chapter unifies the mathematical treatment of configuration manifolds, Lagrangian mechanics on submanifolds, and optimal control in the presence of constraints. The geometry reveals why and how complex motions can be decomposed, where redundancy lives, and how to design controls that respect the hidden structure.
+This chapter unifies the mathematical treatment of configuration manifolds, Lagrangian mechanics on submanifolds, and optimal control in the presence of constraints. The geometry reveals why and how complex motions can be decomposed, where redundancy lives, and how to design controls that respect the hidden structure [@briot2015parallel_robots; @roithmayr2016kanes_method].
 
 :::
 
@@ -267,7 +267,7 @@ where $B(q)^+$ is the pseudoinverse and $z$ is an arbitrary vector.
 
 #### Wrench Space and Constraint Wrench Space
 
-In the dual space (forces and moments), a **wrench** is an element of the cotangent space $T_q^* Q$. The **constraint wrench space** is the set of wrenches that do no work on velocities in the constraint manifold:
+In the dual space (forces and moments), a **wrench** is an element of the cotangent space $T_q^* Q$. The **constraint wrench space** is the set of wrenches that do no work on velocities in the constraint manifold, as in classical constrained multibody treatments [@roithmayr2016kanes_method; @crane2022screw_theory]:
 
 $$\mathcal{W}_c = \text{range}(J_c(q)^\top).$$
 
