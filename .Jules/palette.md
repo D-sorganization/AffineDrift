@@ -13,3 +13,7 @@
 ## 2026-01-20 - Auto-Growing Textareas
 **Learning:** Fixed-height textareas create friction for users writing detailed feedback, forcing them to scroll within a small viewport. This disconnects the user from their content.
 **Action:** Implement auto-growing textareas that expand with content using `scrollHeight`, ensuring `resize: none` to prevent conflict and `overflow: hidden` to avoid scrollbar flicker until max-height is reached.
+
+## 2026-03-30 - Added `aria-controls` to interactive expandable UI element.
+**Learning:** Found a common pattern for accessible expand/collapse widgets: when an interactive element (like a button) expands or collapses a section, it is crucial to link it with `aria-controls` to the section's `id`. Moreover, managing the visual states of expanded / collapsed via CSS is not enough. The element must also correctly set `aria-expanded="true/false"` on the button and `aria-hidden="true/false"` on the controlled container depending on its state.
+**Action:** When adding or auditing collapsible sections across the app (like sidebars, accordions, and dropdown menus), ensure both `aria-controls` is explicitly defined, and state elements `aria-expanded` and `aria-hidden` are actively toggled via JS logic matching the visual appearance.
