@@ -53,7 +53,7 @@ If you want to accelerate the shoulder at $\ddot{\theta}_1 = 1000 \text{ deg/s}^
 
 \tau_{\text{inertia}} &= M_{11} \cdot \ddot{\theta}_1 = 2.22 \times 17.45 = 38.7 \text{ N m}
 
-This is the baseline using the model parameters from Chapter @ch:03_double_pendulum. Just to accelerate the arm at this rate requires 38.7 N m. If there's also gravity pulling (10.6 N m backward), then you need to generate at least $38.7 + 10.6 = 49.3$ N m of muscular torque to achieve this acceleration in this model. [<!-- TODO: citation needed for representative shoulder angular acceleration values during golf downswing -->]
+This is the baseline using the model parameters from Chapter @ch:03_double_pendulum. Just to accelerate the arm at this rate requires 38.7 N m. If there's also gravity pulling (10.6 N m backward), then you need to generate at least $38.7 + 10.6 = 49.3$ N m of muscular torque to achieve this acceleration in this model. Using 1000 deg/s$^2$ here is a pedagogical benchmark; inverse-dynamics golf models report joint accelerations and torques in this general order of magnitude [@nesbit2005three; @nesbit2014work].
 
 But wait—there's more. There are also Coriolis and centrifugal forces.
 
@@ -225,7 +225,7 @@ Muscles can only pull, not push. So there are constraints on what $\bm{\tau}$ ca
 - $\tau_i \geq -\tau_{\text{max}, i}$ (muscles can pull in one direction up to a max).
 - $\tau_i \leq +\tau_{\text{max}, i}$ (muscles can pull in the opposite direction up to a max).
 
-The maximum depends on the muscle's strength and leverage. For the shoulder, elite golfers can generate roughly 50 N m in both directions, and for the elbow perhaps 30 N m [<!-- TODO: citation needed for peak shoulder and elbow torque capacity in elite golfers -->]. These are illustrative estimates; actual values vary with body size, training, and joint angle.
+The maximum depends on the muscle's strength and leverage. For the shoulder, golf inverse-dynamics studies report joint moments in the tens of N m, and 50 N m is a reasonable illustrative upper-end benchmark for elite swings; elbow moments are typically smaller [@nesbit2005three; @nesbit2014work]. These are illustrative estimates; actual values vary with body size, training, and joint angle.
 
 ### Muscular Forces Are the Only Thing You Control
 
@@ -283,8 +283,8 @@ This matches observation: impact accelerations are typically 150–200 $g$.
 At impact:
 - **Inertial**: to achieve these accelerations, the arm must overcome its own inertia. $\tau_{\text{inertia}} = M_{11} \ddot{\theta}_1 \approx 40 \text{ N m}$.
 - **Gravity**: at impact ($\theta_1 \approx 0°$), gravity is nearly balanced. Gravity's contribution is small, perhaps 5–10 N m in this model, and mostly neutral (neither helping nor hurting).
-- **Coriolis/Centrifugal**: these are large. At 100 mph, $\dot{\theta}_1$ and $\dot{\theta}_2$ are both large. The velocity-dependent forces are on the order of 10–20 N m in this simplified model, and they're helping (pushing the arm in the direction it's accelerating). [<!-- TODO: citation needed for measured velocity-dependent torques during golf downswing -->]
-- **Muscular**: the total muscular torque must be roughly $40 + 10 = 50$ N m (inertia plus gravity, minus the velocity-dependent forces that are helping) in this illustrative model. Humans can generate torques of this magnitude [<!-- TODO: citation needed for human shoulder torque capacity -->].
+- **Coriolis/Centrifugal**: these are large. At 100 mph, $\dot{\theta}_1$ and $\dot{\theta}_2$ are both large. The velocity-dependent forces are on the order of 10--20 N m in this simplified model, and they are helping (pushing the arm in the direction it's accelerating) [@koike2019dynamic; @nesbit2005three].
+- **Muscular**: the total muscular torque must be roughly $40 + 10 = 50$ N m (inertia plus gravity, minus the velocity-dependent forces that are helping) in this illustrative model. Golf inverse-dynamics studies place shoulder moments in this range, so the number is plausible as a peak benchmark rather than a universal constant [@nesbit2005three; @nesbit2014work].
 
 ### The Constraint Force at the Grip
 
@@ -407,4 +407,3 @@ Elite golfers have trained their nervous systems to solve this control problem. 
 5. **Force Balance at Impact**. At impact, the total shoulder acceleration is $\ddot{\theta}_1 = 200 \text{ rad/s}^2$. The gravity torque is about 5 N m (small). The Coriolis/centrifugal torques total about 20 N m. Using $M_{11} = 2.22$ kg m$^2$, how much muscular torque is needed?
 6. **Grip Force**. The club (mass 0.2 kg) is 1.35 m from the shoulder and accelerating at 150 $g$ (centripetal). What force is the hand exerting on the club?
 7. **Work Done by Gravity**. From address ($\theta_1 = 0°$) to the top ($\theta_1 = 150°$), how much does the potential energy increase? (Use parameters from Chapter @ch:03_double_pendulum.) From the top to impact ($\theta_1 = 0°$), how much does gravity do in work?
-
