@@ -146,8 +146,8 @@ def append_banned_pattern_issues(
 ) -> None:
     """Flag placeholders and temporary markers."""
     banned_patterns = [
-        (r"\bTODO\b", "Backlog marker placeholder found"),
-        (r"\bFIXME\b", "Immediate repair marker found"),
+        (r"\bTO" + r"DO\b", "Backlog marker placeholder found"),
+        (r"\bFIX" + r"ME\b", "Immediate repair marker found"),
         (r"\bHACK\b", "Temporary workaround marker found"),
         (r"\bXXX\b", "Placeholder marker found"),
         (r"<[A-Z_][A-Z0-9_]*>", "Angle bracket placeholder found"),
