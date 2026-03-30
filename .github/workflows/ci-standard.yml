@@ -161,7 +161,7 @@ jobs:
         run: pytest tests/ --cov=src/tools --cov-report=xml --cov-fail-under=50 --timeout=60
       - name: Critical Module Coverage Gate
         run: python3 scripts/check_critical_module_coverage.py
-      - uses: codecov/codecov-action@v5
+      - uses: codecov/codecov-action@v6
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         if: env.CODECOV_TOKEN != ''
@@ -180,7 +180,7 @@ jobs:
         run: npm ci
       - name: Run JS Tests
         run: npm test -- --coverage
-      - uses: codecov/codecov-action@v5
+      - uses: codecov/codecov-action@v6
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         if: env.CODECOV_TOKEN != ''
