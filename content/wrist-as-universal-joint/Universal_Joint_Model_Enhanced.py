@@ -591,19 +591,19 @@ class PlotCanvas(FigureCanvas):  # type: ignore[misc]
         self.update_plot()
 
     def _gen_golf_random(self) -> np.ndarray:
-        """Generate a golf-swing-like random torque profile with a Gaussian burst."""
+        """Generate a golf-like random torque trace with a smoothed impact burst."""
         torque = np.random.normal(0, 1, len(self.t))
         torque += np.exp(-50 * (self.t - 0.5) ** 2) * 8 * np.random.randn(len(self.t))
         return np.convolve(torque, np.ones(10) / 10, mode="same")
 
     def _gen_step(self) -> np.ndarray:
-        """Generate a step torque: zero for the first half, constant 3 Nm for the second."""
+        """Generate a step-input torque profile."""
         torque = np.zeros_like(self.t)
         torque[len(self.t) // 2 :] = 3.0
         return torque
 
     def _gen_pulse(self) -> np.ndarray:
-        """Generate a short random-amplitude pulse in the middle 20 % of the time span."""
+        """Generate a short random pulse torque profile."""
         torque = np.zeros_like(self.t)
         pulse_start = int(len(self.t) * 0.4)
         pulse_end = int(len(self.t) * 0.6)
@@ -611,7 +611,7 @@ class PlotCanvas(FigureCanvas):  # type: ignore[misc]
         return torque
 
     def _gen_burst(self) -> np.ndarray:
-        """Generate a narrow Gaussian-envelope noise burst centred in the time span."""
+        """Generate a localized burst of random torque around mid-swing."""
         torque = np.zeros_like(self.t)
         burst_center = len(self.t) // 2
         burst_width = len(self.t) // 10
@@ -623,16 +623,16 @@ class PlotCanvas(FigureCanvas):  # type: ignore[misc]
         return torque
 
     def _gen_sinusoidal(self) -> np.ndarray:
-        """Generate a pure sinusoidal torque at 4 Hz with 2 Nm amplitude."""
+        """Generate a smooth sinusoidal torque profile."""
         return 2.0 * np.sin(8 * np.pi * self.t)
 
     def _gen_random_noise(self) -> np.ndarray:
-        """Generate smoothed Gaussian white noise as a torque profile."""
+        """Generate filtered random noise as a baseline torque profile."""
         torque = np.random.normal(0, 1.5, len(self.t))
         return np.convolve(torque, np.ones(10) / 10, mode="same")
 
     def _gen_polynomial(self) -> np.ndarray:
-        """Evaluate a user-supplied polynomial/expression string over the time vector."""
+        """Evaluate the configured polynomial torque expression safely."""
         try:
             from simpleeval import simple_eval
 

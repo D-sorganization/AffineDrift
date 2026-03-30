@@ -210,6 +210,16 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps chromium
 
+      - name: Set up Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: "1.6.39"
+
+      - name: Remove .env.example
+        run: rm -f .env.example
+        # Quarto's dotenv validation requires non-empty example values, but CI
+        # doesn't need the example file during the E2E render.
+
       - name: Build site for E2E
         uses: quarto-dev/quarto-actions/render@v2
         with:
