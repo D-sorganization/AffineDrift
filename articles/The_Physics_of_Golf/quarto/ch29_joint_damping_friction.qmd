@@ -456,7 +456,7 @@ During the final 100 ms of the downswing, club speed is changing at a rate of $\
 
 ### Sensitivity Analysis
 
-We can estimate the effect of damping on predicted club head speed. A first-order approximation:
+In this illustrative sensitivity analysis, we can estimate the effect of damping on predicted club head speed. A first-order approximation:
 
 $$
 \Delta v_{\text{club}} \approx -\frac{\partial v_{\text{club}}}{\partial D} \cdot \Delta D
@@ -470,14 +470,14 @@ Empirically, this derivative is approximately $-0.02$ m/s per (Nm$\cdot$s/rad) o
 For a driver swing (club speed 80--90 mph, illustrative range for intermediate to advanced golfers; depends on individual), a 2 mph change is about 5% of club speed. This is not negligible, but it's not dominant either. Most of the sensitivity in club speed comes from muscular timing and force magnitude, not from damping.
 <!-- TODO: citation needed for representative driver swing speed range (80--[mph value]) and the claim that damping sensitivity is [% value] of club speed ; exact values depends on individual biomechanics and model assumptions -->
 
-However, in a poorly timed swing, damping effects can amplify, especially if the downswing phase is extended (slow-motion downswing). In such cases, damping may account for 10--15% of the club speed variation.
+However, in this simplified sensitivity picture, damping effects can amplify, especially if the downswing phase is extended (slow-motion downswing). In such cases, damping may account for 10--15% of the club speed variation.
 
 ### Recommendations for Modelers
 
 ::: {.callout-warning}
 ## Practical Guidelines for Modeling Damping
 
-- **If modeling the full swing (address to follow-through)**: Include a constant damping matrix with values from the table in Section @sec:sources_damping. Use linear viscous damping; the added complexity of nonlinear friction is not justified by the accuracy gain for most purposes.
+- **If modeling the full swing (address to follow-through)**: In this illustrative modeling recommendation, include a constant damping matrix with values from the table in Section @sec:sources_damping. Use linear viscous damping; the added complexity of nonlinear friction is not justified by the accuracy gain for most purposes.
 
 - **If modeling only the downswing or impact**: Damping becomes more important. Use configuration-dependent damping $\bm{D}(\bm{q})$ with higher coefficients when joints are flexed deeply.
 
