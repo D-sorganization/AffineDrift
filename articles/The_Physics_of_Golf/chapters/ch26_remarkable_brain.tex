@@ -42,7 +42,7 @@ Let's quantify exactly what the brain accomplishes in a 300 millisecond downswin
 
 \item \textbf{Muscles:} Roughly 200 muscles are involved in the swing, from large muscles (pectoralis, latissimus dorsi) to small stabilizer muscles. Each muscle can be activated at a different level, producing roughly 7 ordinal levels (off, 1/6, 2/6, ..., 6/6 maximum). The muscle activation space is a 200-dimensional continuous manifold $[0,1]^{200}$. Even discretizing each muscle to just 7 activation levels gives $7^{200} \approx 10^{169}$ states---a number so large it exceeds the number of atoms in the observable universe ($\sim 10^{80}$). The brain cannot search this space; it must exploit structure.
 
-\item \textbf{Time points during the swing:} At 100 Hz temporal resolution (10 milliseconds per time step, reasonable for neural control), a 300 ms downswing has 30 time points. At each time point, you could independently command each muscle.
+\item \textbf{Time points during the swing:} At a coarse temporal resolution (e.g., 10 ms per time step, rough order of magnitude for neural control), a 300 ms downswing has roughly 30 time points. At each time point, you could independently command each muscle.
 
 \item \textbf{Control space size:} If you could independently vary muscle activations at each time point, the total number of possible swings would be roughly $(7^{200})^{30}$. This is an astronomically large space: $\approx 10^{4000}$ distinct swings.
 
@@ -159,7 +159,7 @@ The resistance of a joint to perturbation. A very stiff joint (high co-contracti
 \end{definition}
 
 \begin{principle}{Impedance Control Strategy}{box:ch26_impedance_control}
-Instead of the brain commanding: ``Move the shoulder to 90 degrees at 3 degrees per millisecond,'' it commands: ``Set shoulder stiffness to 2.3 N$\cdot$m per degree.''
+Instead of the brain commanding: ``Move the shoulder to 90 degrees at 3 degrees per millisecond,'' it commands: ``Set shoulder stiffness to [some appropriate level].''
 
 This is a passive control strategy. The stiffness is a mechanical property of the musculoskeletal system. Once set, the joint naturally resists perturbations without requiring active correction.
 
@@ -240,7 +240,7 @@ For the golf swing:
 
 \item The clubhead will soon hit the ball. The brain pre-activates muscles that will stabilize impact.
 
-\item These pre-activations happen 50--100 ms before the event, anticipating it using the forward model.
+\item These pre-activations happen well before the event, anticipating it using the forward model.
 
 \item By pre-positioning muscles, the brain avoids the neural delays. The muscles are already primed when the event occurs.
 \end{itemize}
@@ -297,9 +297,9 @@ Within 100 putts, the golfer has learned the putter physics. They can hit putts 
 
 If the brain didn't learn physics, this wouldn't happen. The brain would have no way to generalize from driver swings to putter strokes. But it does generalize, by updating its internal model.
 
-\textbf{Experiment 2: Perturbed feedback.} Researchers study learning in a 2D reaching task where the visual feedback is systematically rotated. For example, when you try to move your hand right, the feedback shows it moving at a 30-degree angle.
+\textbf{Experiment 2: Perturbed feedback.} Researchers study learning in a 2D reaching task where the visual feedback is systematically rotated \citep{wolpert2011motor}. For example, when you try to move your hand right, the feedback shows it moving at a rotated angle.
 
-Initially, people make large errors. But within 30--40 trials, they adapt. Their reaching becomes accurate again.
+Initially, people make large errors. But within tens of trials, they adapt. Their reaching becomes accurate again.
 
 Critically, when the perturbation is removed, performance is initially poor (negative aftereffects), then recovers. This shows that the brain has internally updated its model to compensate for the perturbation.
 

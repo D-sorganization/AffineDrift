@@ -12,7 +12,7 @@ The body doesn't control the swing by micromanaging every degree of freedom. Ins
 \section{The Computational Problem: Why the Brain Can't Micromanage}
 \label{sec:comp_problem}
 
-In Chapters~\ref{ch:motor_control_brain}--\ref{ch:motor_learning}, we encountered the bandwidth problem: the brain has limited computational resources, slow feedback loops (100--300 ms latency), and a maximum processing rate around 10--40 bits per second. The golf swing involves roughly 20 degrees of freedom, each of which must be controlled. If the brain tried to compute independent torques for each joint at the rate of swing execution (1000 Hz or faster near impact), it would require simultaneous processing of about 20,000 decisions per second.
+In Chapters~\ref{ch:motor_control_brain}--\ref{ch:motor_learning}, we encountered the bandwidth problem: the brain has limited computational resources, slow feedback loops (100--300 ms latency), and a processing rate far below what continuous real-time control would require. The golf swing involves roughly 20 degrees of freedom, each of which must be controlled. If the brain tried to compute independent torques for each joint at the rate of swing execution (1000 Hz or faster near impact), it would require simultaneous processing of about 20,000 decisions per second.
 
 \index{bandwidth!neural}
 \index{motor control!bandwidth}
@@ -252,7 +252,7 @@ f_{\mathrm{impedance}}(\bm{x}) = \begin{bmatrix} \dot{\bm{q}} \\ -\bm{M}^{-1}(\b
 \index{drift!gravity-inertial}
 \index{Coriolis forces}
 
-This means the ZTCF---the fraction of the motion explained by gravity, inertia, and Coriolis forces \emph{alone}---increases dramatically when impedance is included. The original drift accounts for maybe 40--50\% of the swing. The impedance-augmented drift accounts for 70--80\% (estimated from simulation studies comparing ZTCF trajectories with and without pre-set impedance; experimental validation with EMG-derived stiffness profiles remains an active area of research).
+This means the ZTCF---the fraction of the motion explained by gravity, inertia, and Coriolis forces \emph{alone}---increases dramatically when impedance is included. The bare drift accounts for a substantial portion of the swing; including pre-set impedance explains considerably more of the motion, though the precise fraction depends on the specific swing and the impedance model assumed.
 
 \begin{driftcontrol}{Bare Drift vs. Impedance-Augmented Drift}{lab:drift_impedance}
 
@@ -262,7 +262,7 @@ This means the ZTCF---the fraction of the motion explained by gravity, inertia, 
 \begin{itemize}
 \item Represents a completely passive arm: muscles off, no co-contraction
 \item Shows the trajectory a relaxed arm would follow
-\item Explains $\sim$40--50\% of the actual swing
+\item Accounts for a baseline portion of the actual swing trajectory
 \item Unrealistic because muscles are never completely off
 \end{itemize}
 
@@ -272,7 +272,7 @@ This means the ZTCF---the fraction of the motion explained by gravity, inertia, 
 \begin{itemize}
 \item Represents an arm with pre-set muscle tension and co-contraction
 \item Shows the trajectory the arm follows with no additional muscular effort
-\item Explains $\sim$70--80\% of the actual swing (estimated from simulation studies comparing ZTCF trajectories with and without pre-set impedance; experimental validation with EMG-derived stiffness profiles remains an active area of research)
+\item Accounts for considerably more of the actual swing than bare drift alone
 \item Realistic because muscles are always at some baseline tone
 \item Allows small feedforward corrections to fine-tune the motion
 \end{itemize}
@@ -296,7 +296,7 @@ Skeletal muscles contain specialized sensory receptors called \emph{muscle spind
 
 \begin{enumerate}
 \item Spindles fire (increase firing rate)
-\item Sensory signals travel to the spinal cord (10--20 ms)
+\item Sensory signals travel to the spinal cord (a few tens of milliseconds)
 \item Spinal circuits activate the motor neurons of the \emph{same muscle}
 \item Muscle contracts and resists the stretch
 \end{enumerate}
@@ -305,7 +305,7 @@ Skeletal muscles contain specialized sensory receptors called \emph{muscle spind
 \index{alpha motor neurons}
 \index{gamma motor neurons}
 
-This is called the \emph{monosynaptic stretch reflex} because it involves only one synapse in the spinal cord. The latency is remarkably short: 20--30 ms. By contrast, conscious reflexes (routing through the brain) have latencies of 100--300 ms.
+This is called the \emph{monosynaptic stretch reflex} because it involves only one synapse in the spinal cord. The latency is remarkably short: 20--30 ms \citep{Kandel2013}. By contrast, conscious reflexes (routing through the brain) have latencies of 100--300 ms.
 
 The stretch reflex is a \emph{local, automatic, distributed controller}. Each muscle has its own feedback loop built into the spinal cord. The brain does not have to manage it.
 
