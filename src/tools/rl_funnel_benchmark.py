@@ -27,7 +27,7 @@ def validate_weight_matrix(Q: npt.NDArray[Any], shape: tuple[int, int], name: st
     check_finite_array(Q, name)
 
 
-def format_results(results: list["BenchmarkResult"]) -> str:
+def format_results(results: list[BenchmarkResult]) -> str:
     return "\n".join([f"{r.name}: error={r.tracking_error:.4f}" for r in results])
 
 

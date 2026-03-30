@@ -58,7 +58,7 @@ class TestGolfCourse:
 
     def test_invalid_hole_number_raises(self):
         course = create_par3_course()
-        with pytest.raises(Exception):
+        with pytest.raises(ValueError):
             course.get_hole(0)
 
     def test_total_yardage(self):
