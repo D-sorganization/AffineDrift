@@ -273,7 +273,7 @@ def test_assess_scalability():
 
 
 @patch("scripts.assess_repo.generate_markdown_report")
-@patch("scripts.assess_repo.generate_issue_document")
+@patch("scripts.assess_runner.generate_issue_document")
 @patch("pathlib.Path.write_text")
 @patch("scripts.assess_repo.get_python_files")
 def test_main(mock_get_files, mock_write, mock_issue, mock_report):
