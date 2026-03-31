@@ -208,6 +208,36 @@ class PuttingSimulator:
         self.dt = dt
         self.hole_radius = hole_radius
 
+    def _euler_step(
+        self,
+        x: float,
+        y: float,
+        vx: float,
+        vy: float,
+        deceleration: float,
+    ) -> tuple[float, float, float, float]:
+        """Advance the putt state by one Euler step.
+
+        Args:
+            x: Current x position in meters.
+            y: Current y position in meters.
+            vx: Current x velocity in m/s.
+            vy: Current y velocity in m/s.
+            deceleration: Stimpmeter-calibrated friction deceleration (m/s^2).
+
+        Returns:
+            Updated (x, y, vx, vy) after one timestep.
+        """
+        speed = math.sqrt(vx * vx + vy * vy)
+        slope_x, slope_y = self.surface.evaluate_slope(x, y)
+        ax = -GRAVITY_M_S2 * slope_x - deceleration * vx / max(speed, 1e-10)
+        ay = -GRAVITY_M_S2 * slope_y - deceleration * vy / max(speed, 1e-10)
+        vx += ax * self.dt
+        vy += ay * self.dt
+        x += vx * self.dt
+        y += vy * self.dt
+        return x, y, vx, vy
+
     def simulate(
         self,
         start_x: float,
@@ -233,45 +263,17 @@ class PuttingSimulator:
         """
         check_positive(max_time, "max_time")
 
-        x = start_x
-        y = start_y
-        vx = velocity_x
-        vy = velocity_y
-
-        # Stimpmeter-based deceleration: empirical formula
-        # Higher stimp = lower deceleration = faster green
+        x, y, vx, vy = start_x, start_y, velocity_x, velocity_y
         deceleration = 1.285 / self.surface.stimp
-
         trajectory: list[tuple[float, float]] = [(x, y)]
         t = 0.0
 
         while t < max_time:
             speed = math.sqrt(vx * vx + vy * vy)
-
-            # Stop if the ball has effectively stopped
             if speed < 0.005:
                 logger.debug("Putt stopped at (%.3f, %.3f) after %.2f s", x, y, t)
                 break
-
-            # Surface slope -> gravity-induced acceleration
-            slope_x, slope_y = self.surface.evaluate_slope(x, y)
-            grav_ax = -GRAVITY_M_S2 * slope_x
-            grav_ay = -GRAVITY_M_S2 * slope_y
-
-            # Friction deceleration (opposes motion)
-            friction_ax = -deceleration * vx / max(speed, 1e-10)
-            friction_ay = -deceleration * vy / max(speed, 1e-10)
-
-            # Total acceleration
-            ax = grav_ax + friction_ax
-            ay = grav_ay + friction_ay
-
-            # Euler integration
-            vx += ax * self.dt
-            vy += ay * self.dt
-            x += vx * self.dt
-            y += vy * self.dt
-
+            x, y, vx, vy = self._euler_step(x, y, vx, vy, deceleration)
             t += self.dt
             trajectory.append((x, y))
 
