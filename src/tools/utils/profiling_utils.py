@@ -5,14 +5,11 @@ functions and code blocks.
 """
 
 import functools
-import logging
 import timeit
 from collections.abc import Callable
 from typing import Any
 
 from .logging_utils import setup_logging
-
-logger = logging.getLogger(__name__)
 
 logger = setup_logging(__name__)
 
