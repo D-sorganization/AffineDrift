@@ -12,7 +12,7 @@ const {
   MATHJAX_RENDER_DELAY_MS,
   CRITICS_CORNER_PADDING_OFFSET,
   initAriaLabels
-} = require('../script.js');
+} = require('../js/main.js');
 
 describe('Utility Functions', () => {
   describe('debounce', () => {
