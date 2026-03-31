@@ -65,6 +65,12 @@ from .html_utils import (
 )
 from .issue_utils import format_issue_body, get_repo_short_name
 from .logging_utils import setup_logging, setup_logging_with_timestamp
+from .numerical_profiling import (
+    NumericalProfiler,
+    ProfileRecord,
+    ProfilingCollector,
+    profile_numerical,
+)
 from .profiling_utils import profile_execution_time
 from .report_utils import (
     AssessmentFinding,
@@ -140,6 +146,10 @@ __all__ = [
     "run_sync_in_thread",
     # Profiling utilities
     "profile_execution_time",
+    "NumericalProfiler",
+    "ProfileRecord",
+    "ProfilingCollector",
+    "profile_numerical",
     # Validation utilities
     "BaseValidator",
 ]
