@@ -16,9 +16,33 @@ permissions:
   id-token: write
 
 jobs:
-  build:
-    if: github.repository == 'D-sorganization/AffineDrift'
+
+  # ── Dispatcher: route to self-hosted if available ──────────────────────────
+  pick-runner:
     runs-on: ubuntu-latest
+    timeout-minutes: 2
+    outputs:
+      runner: ${{ steps.check.outputs.runner }}
+    steps:
+      - name: Check for self-hosted runner
+        id: check
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          ONLINE=$(gh api /orgs/${{ github.repository_owner }}/actions/runners \
+            --jq '[.runners[] | select(.status == "online") | select(.labels[].name == "d-sorg-fleet")] | length' \
+            2>/dev/null || echo "0")
+          if [[ "$ONLINE" -gt 0 ]]; then
+            echo "runner=d-sorg-fleet" >> $GITHUB_OUTPUT
+            echo "Self-hosted runner online — routing locally"
+          else
+            echo "runner=ubuntu-latest" >> $GITHUB_OUTPUT
+            echo "No self-hosted runner — using GitHub-hosted"
+          fi
+  build:
+    needs: pick-runner
+    if: github.repository == 'D-sorganization/AffineDrift'
+    runs-on: ${{ needs.pick-runner.outputs.runner }}
     env:
       PYTHONPATH: .
     steps:
@@ -104,8 +128,8 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
+    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    needs: [pick-runner, build]
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
