@@ -174,7 +174,6 @@ class TestProfileNumericalDecorator:
         @profile_numerical()
         def documented():
             """My docstring."""
-            pass
 
         assert documented.__doc__ == "My docstring."
 
