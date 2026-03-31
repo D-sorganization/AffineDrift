@@ -115,6 +115,10 @@ class SwingOptimizer:
             type(config).__name__,
         )
         if ddp_solver is None:
+            require(
+                config.allow_mock_solver,
+                "mock DDP solver requires explicit opt-in via allow_mock_solver=True",
+            )
             warnings.warn(
                 "adaptive_timestep_ddp_mock is a non-functional mock implementation. "
                 "The backward pass and Riccati equation solving are not implemented. "
