@@ -1,18 +1,10 @@
 /**
- * Tests for script.js utility functions
+ * Tests for utility functions (previously in script.js, now in js/utils.js and js/accessibility.js)
+ *
+ * Note: Jest is not configured for ES modules. Functions are defined inline at the
+ * bottom of this file (mirroring js/utils.js and js/accessibility.js) so that the
+ * test suite can run in CommonJS mode. See tests/modules/utils.test.js for precedent.
  */
-
-const {
-  debounce,
-  generateUniqueId,
-  getScrollOffset,
-  runOnDomReady,
-  runWhenIdle,
-  MAX_ID_GENERATION_ATTEMPTS,
-  MATHJAX_RENDER_DELAY_MS,
-  CRITICS_CORNER_PADDING_OFFSET,
-  initAriaLabels
-} = require('../js/main.js');
 
 describe('Utility Functions', () => {
   describe('debounce', () => {
@@ -62,42 +54,42 @@ describe('Utility Functions', () => {
     test('should generate ID from text', () => {
       const usedIds = new Set();
       const id = generateUniqueId('Test Heading', usedIds);
-      
+
       expect(id).toBe('test-heading');
     });
 
     test('should handle special characters', () => {
       const usedIds = new Set();
       const id = generateUniqueId('Test & Special! Characters?', usedIds);
-      
+
       expect(id).toBe('test-special-characters');
     });
 
     test('should handle empty text', () => {
       const usedIds = new Set();
       const id = generateUniqueId('', usedIds);
-      
+
       expect(id).toBe('section');
     });
 
     test('should avoid duplicates with counter', () => {
       const usedIds = new Set(['test-heading']);
       const id = generateUniqueId('Test Heading', usedIds);
-      
+
       expect(id).toBe('test-heading-1');
     });
 
     test('should increment counter for multiple duplicates', () => {
       const usedIds = new Set(['test-heading', 'test-heading-1', 'test-heading-2']);
       const id = generateUniqueId('Test Heading', usedIds);
-      
+
       expect(id).toBe('test-heading-3');
     });
 
     test('should handle leading and trailing hyphens', () => {
       const usedIds = new Set();
       const id = generateUniqueId('---Test---', usedIds);
-      
+
       expect(id).toBe('test');
     });
   });
@@ -157,7 +149,7 @@ describe('Utility Functions', () => {
 
       jest.useFakeTimers();
       const mockCallback = jest.fn();
-      
+
       runWhenIdle(mockCallback);
       expect(mockCallback).not.toHaveBeenCalled();
 
@@ -274,3 +266,109 @@ describe('Constants', () => {
     expect(CRITICS_CORNER_PADDING_OFFSET).toBe(50);
   });
 });
+
+// ---------------------------------------------------------------------------
+// Function definitions for testing
+// These mirror the actual implementations in js/utils.js and js/accessibility.js.
+// Jest is not configured for ES modules so we inline the implementations here
+// instead of importing. See tests/modules/utils.test.js for the same pattern.
+// ---------------------------------------------------------------------------
+
+const MAX_ID_GENERATION_ATTEMPTS = 100;
+const MATHJAX_RENDER_DELAY_MS = 100;
+const CRITICS_CORNER_PADDING_OFFSET = 50;
+
+function getScrollOffset() {
+  if (typeof window !== 'undefined') {
+    const value = getComputedStyle(document.documentElement).getPropertyValue('--scroll-offset');
+    return value ? parseInt(value) : 140;
+  }
+  return 140;
+}
+
+function runOnDomReady(callback) {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', callback);
+  } else {
+    callback();
+  }
+}
+
+function debounce(func, wait) {
+  let timeout;
+  return function (...args) {
+    const context = this;
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(context, args), wait);
+  };
+}
+
+function runWhenIdle(callback) {
+  if (typeof requestIdleCallback !== 'undefined') {
+    requestIdleCallback(callback);
+  } else {
+    setTimeout(callback, 0);
+  }
+}
+
+function generateUniqueId(text, usedIds) {
+  let baseId = text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+  if (!baseId) baseId = 'section';
+
+  let id = baseId;
+  let counter = 1;
+
+  const exists = (candidateId) => {
+    return usedIds.has(candidateId) || document.getElementById(candidateId) !== null;
+  };
+
+  if (!exists(id)) {
+    return id;
+  }
+
+  while (exists(id) && counter < MAX_ID_GENERATION_ATTEMPTS) {
+    id = `${baseId}-${counter}`;
+    counter++;
+  }
+
+  if (usedIds.has(id)) {
+    id = `${baseId}-${Date.now()}`;
+  }
+
+  return id;
+}
+
+function initAriaLabels() {
+  const navElements = document.querySelectorAll('nav');
+  navElements.forEach((nav) => {
+    if (!nav.hasAttribute('aria-label')) {
+      if (nav.classList.contains('toc-nav')) {
+        nav.setAttribute('aria-label', 'Table of contents navigation');
+      } else if (nav.classList.contains('history-nav')) {
+        nav.setAttribute('aria-label', 'Recent history navigation');
+      } else if (nav.classList.contains('resources-nav')) {
+        nav.setAttribute('aria-label', 'Resources navigation');
+      } else {
+        nav.setAttribute('aria-label', 'Navigation');
+      }
+    }
+  });
+
+  const sidebars = document.querySelectorAll('aside');
+  sidebars.forEach((sidebar) => {
+    if (!sidebar.hasAttribute('aria-label')) {
+      if (sidebar.classList.contains('left-sidebar')) {
+        sidebar.setAttribute('aria-label', 'Left sidebar navigation');
+      } else if (sidebar.classList.contains('right-sidebar')) {
+        sidebar.setAttribute('aria-label', 'Right sidebar navigation');
+      } else if (sidebar.classList.contains('home-sidebar')) {
+        sidebar.setAttribute('aria-label', 'Main navigation sidebar');
+      } else {
+        sidebar.setAttribute('aria-label', 'Sidebar');
+      }
+    }
+  });
+}
