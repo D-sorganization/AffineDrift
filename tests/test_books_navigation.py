@@ -30,9 +30,9 @@ def test_navbar_excludes_books_tab() -> None:
     Books are rendered (books/**/*.qmd) but hidden from nav until ready.
     """
     quarto = QUARTO_CONFIG.read_text(encoding="utf-8")
-    assert "books/index.html" not in quarto, (
-        "Book Series links should not appear in _quarto.yml until volumes exist"
-    )
+    assert (
+        "books/index.html" not in quarto
+    ), "Book Series links should not appear in _quarto.yml until volumes exist"
 
 
 def test_books_pages_exist_and_use_shared_sidebar() -> None:
