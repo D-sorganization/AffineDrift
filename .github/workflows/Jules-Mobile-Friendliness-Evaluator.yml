@@ -23,7 +23,7 @@ jobs:
       - name: Check for self-hosted runner
         id: check
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.RUNNER_CHECK_TOKEN }}
         run: |
           ONLINE=$(gh api /orgs/${{ github.repository_owner }}/actions/runners \
             --jq '[.runners[] | select(.status == "online") | select(.labels[].name == "d-sorg-fleet")] | length' \
@@ -273,7 +273,7 @@ jobs:
         if: steps.mobile-checks.outputs.total_issues > 0
         env:
           JULES_API_KEY: ${{ secrets.JULES_API_KEY }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.RUNNER_CHECK_TOKEN }}
         run: |
           set -e
           DATE=$(date +%Y-%m-%d)
@@ -427,7 +427,7 @@ jobs:
       - name: Create Issue for Low Scores
         if: steps.mobile-checks.outputs.grade_num < 5
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.RUNNER_CHECK_TOKEN }}
           SCORE: ${{ steps.mobile-checks.outputs.score }}
           GRADE: ${{ steps.mobile-checks.outputs.grade }}
         run: |
