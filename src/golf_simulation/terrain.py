@@ -74,6 +74,48 @@ TERRAIN_PROPERTIES: dict[TerrainType, TerrainProperties] = {
 }
 
 
+def _resolve_surface_normal(
+    surface_normal: np.ndarray[Any, Any] | None,
+) -> np.ndarray[Any, Any]:
+    """Resolve and normalise the surface normal vector.
+
+    Args:
+        surface_normal: User-supplied normal, or None for flat ground ([0, 0, 1]).
+
+    Returns:
+        Unit normal vector (3,).
+    """
+    if surface_normal is None:
+        return np.array([0.0, 0.0, 1.0])
+    check_finite_array(surface_normal, "surface_normal")
+    norm = float(np.linalg.norm(surface_normal))
+    require(norm > 1e-10, "surface_normal must be non-zero")
+    return surface_normal / norm
+
+
+def _apply_friction_to_tangential(
+    v_tangential: np.ndarray[Any, Any],
+    v_normal_mag: float,
+    friction: float,
+) -> np.ndarray[Any, Any]:
+    """Apply surface friction to reduce the tangential velocity component.
+
+    Args:
+        v_tangential: Tangential velocity component vector (3,).
+        v_normal_mag: Signed magnitude of the normal velocity component (m/s).
+        friction: Friction coefficient of the surface.
+
+    Returns:
+        Post-friction tangential velocity vector (3,).
+    """
+    tangential_speed = float(np.linalg.norm(v_tangential))
+    if tangential_speed > 1e-10:
+        friction_decel = friction * abs(v_normal_mag)
+        reduced_speed = max(0.0, tangential_speed - friction_decel)
+        return v_tangential * (reduced_speed / tangential_speed)
+    return v_tangential
+
+
 def compute_bounce(
     velocity: np.ndarray[Any, Any],
     spin: np.ndarray[Any, Any],
@@ -99,36 +141,16 @@ def compute_bounce(
     require(len(velocity) == 3, "velocity must be a 3D vector")
     require(len(spin) == 3, "spin must be a 3D vector")
 
-    if surface_normal is None:
-        surface_normal = np.array([0.0, 0.0, 1.0])
-    else:
-        check_finite_array(surface_normal, "surface_normal")
-        norm = float(np.linalg.norm(surface_normal))
-        require(norm > 1e-10, "surface_normal must be non-zero")
-        surface_normal = surface_normal / norm
-
-    # Decompose velocity into normal and tangential components
-    v_normal_mag = np.dot(velocity, surface_normal)
-    v_normal = v_normal_mag * surface_normal
+    n_hat = _resolve_surface_normal(surface_normal)
+    v_normal_mag = float(np.dot(velocity, n_hat))
+    v_normal = v_normal_mag * n_hat
     v_tangential = velocity - v_normal
 
-    # Apply coefficient of restitution to normal component (reverse direction)
-    cor = terrain_props.coefficient_of_restitution
-    post_v_normal = -cor * v_normal
-
-    # Apply friction to tangential component
-    friction = terrain_props.friction_coefficient
-    tangential_speed = np.linalg.norm(v_tangential)
-    if tangential_speed > 1e-10:
-        friction_decel = friction * abs(v_normal_mag)
-        reduced_speed = max(0.0, tangential_speed - friction_decel)
-        post_v_tangential = v_tangential * (reduced_speed / tangential_speed)
-    else:
-        post_v_tangential = v_tangential
-
+    post_v_normal = -terrain_props.coefficient_of_restitution * v_normal
+    post_v_tangential = _apply_friction_to_tangential(
+        v_tangential, v_normal_mag, terrain_props.friction_coefficient
+    )
     post_velocity = post_v_normal + post_v_tangential
-
-    # Spin retention
     post_spin = spin * terrain_props.spin_retention
 
     logger.debug(
@@ -137,5 +159,4 @@ def compute_bounce(
         np.linalg.norm(post_velocity),
         terrain_props.spin_retention,
     )
-
     return post_velocity, post_spin

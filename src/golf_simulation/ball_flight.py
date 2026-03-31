@@ -223,6 +223,28 @@ class BallFlightDynamics(DynamicalSystem):
 
         return A, B
 
+    def _clamp_to_ground(
+        self,
+        state_vec: np.ndarray[Any, Any],
+        t: float,
+    ) -> BallFlightState:
+        """Clamp ball z-coordinate to ground level and return the updated state.
+
+        Args:
+            state_vec: Current 9D state vector (modified in-place).
+            t: Current simulation time in seconds (used for logging).
+
+        Returns:
+            BallFlightState with z clamped to 0.
+        """
+        state_vec[2] = 0.0
+        logger.debug("Ball landed at t=%.3f s, x=%.1f, y=%.1f", t, state_vec[0], state_vec[1])
+        return BallFlightState(
+            position=state_vec[0:3].copy(),
+            velocity=state_vec[3:6].copy(),
+            spin=state_vec[6:9].copy(),
+        )
+
     def simulate(
         self,
         initial_state: BallFlightState,
@@ -253,26 +275,15 @@ class BallFlightDynamics(DynamicalSystem):
         while t < max_time:
             state_vec = self._rk4_step(state_vec, u, dt)
             t += dt
-
-            state = BallFlightState(
-                position=state_vec[0:3].copy(),
-                velocity=state_vec[3:6].copy(),
-                spin=state_vec[6:9].copy(),
-            )
-            trajectory.append(state)
-
-            # Stop if ball has hit the ground (z <= 0) after initial launch
-            if state_vec[2] <= 0.0 and t > dt:
-                # Clamp z to ground level
-                state_vec[2] = 0.0
-                trajectory[-1] = BallFlightState(
+            trajectory.append(
+                BallFlightState(
                     position=state_vec[0:3].copy(),
                     velocity=state_vec[3:6].copy(),
                     spin=state_vec[6:9].copy(),
                 )
-                logger.debug(
-                    "Ball landed at t=%.3f s, x=%.1f, y=%.1f", t, state_vec[0], state_vec[1]
-                )
+            )
+            if state_vec[2] <= 0.0 and t > dt:
+                trajectory[-1] = self._clamp_to_ground(state_vec, t)
                 break
 
         return trajectory

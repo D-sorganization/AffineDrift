@@ -72,6 +72,32 @@ class GolfHole:
         dy = self.pin_position[1] - y
         return math.sqrt(dx * dx + dy * dy)
 
+    def _fairway_projection(self, x: float, y: float) -> tuple[float, float]:
+        """Project (x, y) onto the tee-to-pin line and return (t, perp_dist).
+
+        Args:
+            x: X position in meters.
+            y: Y position in meters.
+
+        Returns:
+            Tuple of (t, perp_dist) where t is the normalised projection
+            parameter along the line (0 = tee, 1 = pin) and perp_dist is
+            the perpendicular distance from the centre line in meters.
+            Returns (0.0, 0.0) if the hole has zero length.
+        """
+        tee_x, tee_y = self.tee_position[0], self.tee_position[1]
+        pin_x, pin_y = self.pin_position[0], self.pin_position[1]
+        hole_dx = pin_x - tee_x
+        hole_dy = pin_y - tee_y
+        hole_length = math.sqrt(hole_dx**2 + hole_dy**2)
+        if hole_length <= 1e-6:
+            return 0.0, 0.0
+        t = ((x - tee_x) * hole_dx + (y - tee_y) * hole_dy) / (hole_length**2)
+        proj_x = tee_x + t * hole_dx
+        proj_y = tee_y + t * hole_dy
+        perp_dist = math.sqrt((x - proj_x) ** 2 + (y - proj_y) ** 2)
+        return t, perp_dist
+
     def get_terrain(self, x: float, y: float) -> TerrainType:
         """Determine the terrain type at a given position.
 
@@ -89,44 +115,20 @@ class GolfHole:
         if self.terrain_fn is not None:
             return self.terrain_fn(x, y)
 
-        # Distance-based heuristic
-        dist_to_tee = math.sqrt((x - self.tee_position[0]) ** 2 + (y - self.tee_position[1]) ** 2)
-
-        # On the green
-        dist_to_green_center = math.sqrt(
-            (x - self.green_center[0]) ** 2 + (y - self.green_center[1]) ** 2
-        )
-        if dist_to_green_center <= self.green_radius:
+        dist_to_green = math.sqrt((x - self.green_center[0]) ** 2 + (y - self.green_center[1]) ** 2)
+        if dist_to_green <= self.green_radius:
             return TerrainType.GREEN
 
-        # Near the tee
+        dist_to_tee = math.sqrt((x - self.tee_position[0]) ** 2 + (y - self.tee_position[1]) ** 2)
         if dist_to_tee < 5.0:
             return TerrainType.TEE_BOX
 
-        # Fairway corridor: within a band along the tee-to-pin line
-        tee_x, tee_y = self.tee_position[0], self.tee_position[1]
-        pin_x, pin_y = self.pin_position[0], self.pin_position[1]
-        hole_dx = pin_x - tee_x
-        hole_dy = pin_y - tee_y
-        hole_length = math.sqrt(hole_dx**2 + hole_dy**2)
-
-        if hole_length > 1e-6:
-            # Project point onto tee-to-pin line
-            t = ((x - tee_x) * hole_dx + (y - tee_y) * hole_dy) / (hole_length**2)
-            # Perpendicular distance from the fairway center line
-            proj_x = tee_x + t * hole_dx
-            proj_y = tee_y + t * hole_dy
-            perp_dist = math.sqrt((x - proj_x) ** 2 + (y - proj_y) ** 2)
-
-            # Fairway width narrows near the green
-            fairway_width = 25.0 if t < 0.8 else 15.0  # meters
-
-            if 0.0 <= t <= 1.0 and perp_dist <= fairway_width:
-                return TerrainType.FAIRWAY
-
-            if 0.0 <= t <= 1.05 and perp_dist <= fairway_width + 15.0:
-                return TerrainType.ROUGH
-
+        t, perp_dist = self._fairway_projection(x, y)
+        fairway_width = 25.0 if t < 0.8 else 15.0
+        if 0.0 <= t <= 1.0 and perp_dist <= fairway_width:
+            return TerrainType.FAIRWAY
+        if 0.0 <= t <= 1.05 and perp_dist <= fairway_width + 15.0:
+            return TerrainType.ROUGH
         return TerrainType.DEEP_ROUGH
 
 
@@ -252,6 +254,31 @@ def create_par3_course(name: str = "Pine Valley Par 3") -> GolfCourse:
     return GolfCourse(name=name, holes=holes)
 
 
+# (par, yardage) specs for the 18-hole AffineDrift Championship layout (par 72).
+_CHAMPIONSHIP_HOLE_SPECS: list[tuple[int, float]] = [
+    (4, 415.0),  # 1
+    (5, 545.0),  # 2
+    (4, 390.0),  # 3
+    (3, 185.0),  # 4
+    (4, 440.0),  # 5
+    (4, 375.0),  # 6
+    (5, 530.0),  # 7
+    (3, 165.0),  # 8
+    (4, 460.0),  # 9
+    (4, 420.0),  # 10
+    (3, 195.0),  # 11
+    (5, 560.0),  # 12
+    (4, 385.0),  # 13
+    (4, 350.0),  # 14
+    (4, 430.0),  # 15
+    (3, 220.0),  # 16
+    (5, 570.0),  # 17
+    (4, 445.0),  # 18
+]
+
+_CHAMPIONSHIP_HANDICAPS: list[int] = [5, 11, 9, 15, 1, 13, 7, 17, 3, 6, 16, 10, 12, 14, 2, 18, 8, 4]
+
+
 def create_championship_course(name: str = "AffineDrift Championship") -> GolfCourse:
     """Create an 18-hole championship course, par 72.
 
@@ -263,45 +290,16 @@ def create_championship_course(name: str = "AffineDrift Championship") -> GolfCo
     Returns:
         A GolfCourse with 18 holes totaling par 72.
     """
-    # (par, yardage) for each hole
-    hole_specs: list[tuple[int, float]] = [
-        (4, 415.0),  # 1
-        (5, 545.0),  # 2
-        (4, 390.0),  # 3
-        (3, 185.0),  # 4
-        (4, 440.0),  # 5
-        (4, 375.0),  # 6
-        (5, 530.0),  # 7
-        (3, 165.0),  # 8
-        (4, 460.0),  # 9
-        (4, 420.0),  # 10
-        (3, 195.0),  # 11
-        (5, 560.0),  # 12
-        (4, 385.0),  # 13
-        (4, 350.0),  # 14
-        (4, 430.0),  # 15
-        (3, 220.0),  # 16
-        (5, 570.0),  # 17
-        (4, 445.0),  # 18
-    ]
-
-    handicaps = [5, 11, 9, 15, 1, 13, 7, 17, 3, 6, 16, 10, 12, 14, 2, 18, 8, 4]
-
     holes = [
         _make_hole(
             number=i + 1,
             par=par,
             yardage=yardage,
-            handicap=handicaps[i],
+            handicap=_CHAMPIONSHIP_HANDICAPS[i],
             y_offset=i * 150.0,
         )
-        for i, (par, yardage) in enumerate(hole_specs)
+        for i, (par, yardage) in enumerate(_CHAMPIONSHIP_HOLE_SPECS)
     ]
-
-    total_par = sum(p for p, _ in hole_specs)
-    logger.info(
-        "Created championship course '%s' with 18 holes, par %d",
-        name,
-        total_par,
-    )
+    total_par = sum(p for p, _ in _CHAMPIONSHIP_HOLE_SPECS)
+    logger.info("Created championship course '%s' with 18 holes, par %d", name, total_par)
     return GolfCourse(name=name, holes=holes)
