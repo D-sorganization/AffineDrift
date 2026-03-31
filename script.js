@@ -1633,9 +1633,10 @@ function scrollToTop() {
 
 // Accessibility: Add ARIA labels to navigation elements
 function initAriaLabels() {
+  // ⚡ Bolt Optimization: Use getElementsByTagName (Live Collection) instead of querySelectorAll
   // Add ARIA labels to navigation elements
-  const navElements = document.querySelectorAll('nav');
-  navElements.forEach((nav) => {
+  const navElements = document.getElementsByTagName('nav');
+  for (const nav of navElements) {
     if (!nav.hasAttribute('aria-label')) {
       // Determine label based on class or heading
       if (nav.classList.contains('toc-nav')) {
@@ -1648,11 +1649,11 @@ function initAriaLabels() {
         nav.setAttribute('aria-label', 'Navigation');
       }
     }
-  });
+  }
 
   // Add ARIA labels to sidebar elements
-  const sidebars = document.querySelectorAll('aside');
-  sidebars.forEach((sidebar) => {
+  const sidebars = document.getElementsByTagName('aside');
+  for (const sidebar of sidebars) {
     if (!sidebar.hasAttribute('aria-label')) {
       if (sidebar.classList.contains('left-sidebar')) {
         sidebar.setAttribute('aria-label', 'Left sidebar navigation');
@@ -1664,73 +1665,72 @@ function initAriaLabels() {
         sidebar.setAttribute('aria-label', 'Sidebar');
       }
     }
-  });
+  }
 
   // Add ARIA labels to main content areas
-  const mainElements = document.querySelectorAll('main');
-  mainElements.forEach((main) => {
+  const mainElements = document.getElementsByTagName('main');
+  for (const main of mainElements) {
     if (!main.hasAttribute('aria-label') && !main.hasAttribute('role')) {
       main.setAttribute('role', 'main');
       main.setAttribute('aria-label', 'Main content');
     }
-  });
+  }
 
-  // Add ARIA labels to search inputs
-  const searchInputs = document.querySelectorAll('input[type="search"]');
-  searchInputs.forEach((input) => {
+  // Add ARIA labels to inputs
+  // ⚡ Bolt Optimization: Consolidate multiple querySelectorAll calls into one loop over getElementsByTagName
+  const inputs = document.getElementsByTagName('input');
+  for (const input of inputs) {
     if (!input.hasAttribute('aria-label') && !input.id) {
-      input.setAttribute('aria-label', 'Search');
+      if (input.getAttribute('type') === 'search') {
+        input.setAttribute('aria-label', 'Search');
+      } else {
+        const placeholder = input.getAttribute('placeholder');
+        if (placeholder) {
+          input.setAttribute('aria-label', placeholder);
+        }
+      }
     }
-  });
+  }
 
   // Add ARIA labels to social links
   const socialLinks = document.querySelectorAll('.social-link');
-  socialLinks.forEach((link) => {
+  for (const link of socialLinks) {
     if (!link.hasAttribute('aria-label')) {
       const text = link.textContent.trim();
       link.setAttribute('aria-label', `Visit ${text}`);
     }
-  });
+  }
 
   // Add ARIA labels to resource cards
   const resourceCards = document.querySelectorAll('.resource-card');
-  resourceCards.forEach((card) => {
+  for (const card of resourceCards) {
     if (!card.hasAttribute('aria-label')) {
       const heading = card.querySelector('h3');
       if (heading) {
         card.setAttribute('aria-label', `Resource: ${heading.textContent.trim()}`);
       }
     }
-  });
+  }
 
   // Add ARIA labels to article cards
   const articleCards = document.querySelectorAll('.article-card');
-  articleCards.forEach((card) => {
+  for (const card of articleCards) {
     if (!card.hasAttribute('aria-label')) {
       const heading = card.querySelector('h3');
       if (heading) {
         card.setAttribute('aria-label', `Article: ${heading.textContent.trim()}`);
       }
     }
-  });
+  }
 
   // Add ARIA live region for dynamic content
   const historyLists = document.querySelectorAll('[id$="-history-list"]');
-  historyLists.forEach((list) => {
+  for (const list of historyLists) {
     if (!list.hasAttribute('aria-live')) {
       list.setAttribute('aria-live', 'polite');
       list.setAttribute('aria-atomic', 'false');
     }
-  });
-
-  // Add ARIA labels to form elements without labels
-  const formInputs = document.querySelectorAll('input:not([aria-label]):not([id])');
-  formInputs.forEach((input) => {
-    const placeholder = input.getAttribute('placeholder');
-    if (placeholder) {
-      input.setAttribute('aria-label', placeholder);
-    }
-  });
+  }
 }
 
 // Run ARIA labels initialization when DOM is ready
