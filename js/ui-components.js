@@ -67,19 +67,21 @@ export function initFadeAnimations() {
  * Initialize lazy loading for images
  */
 export function initLazyImages() {
-    const lazyImages = document.querySelectorAll('img[loading="lazy"]');
-    lazyImages.forEach((img) => {
-        if (img.complete) {
-            img.classList.add("loaded");
-        } else {
-            img.addEventListener("load", function () {
-                this.classList.add("loaded");
-            });
-            img.addEventListener("error", function () {
-                this.classList.add("loaded");
-            });
+    // ⚡ Bolt Optimization: Use document.images (O(1)) instead of querySelectorAll (O(N))
+    for (const img of document.images) {
+        if (img.getAttribute("loading") === "lazy") {
+            if (img.complete) {
+                img.classList.add("loaded");
+            } else {
+                img.addEventListener("load", function () {
+                    this.classList.add("loaded");
+                });
+                img.addEventListener("error", function () {
+                    this.classList.add("loaded");
+                });
+            }
         }
-    });
+    }
 
     if ("loading" in HTMLImageElement.prototype) {
         for (const img of document.images) {
