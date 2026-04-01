@@ -16,6 +16,8 @@
     if (!target) return;
 
     button.setAttribute("aria-expanded", String(expanded));
+    button.setAttribute("aria-controls", targetId);
+    target.setAttribute("aria-hidden", String(!expanded));
     target.classList.toggle("show", expanded);
   }
 
