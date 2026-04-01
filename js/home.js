@@ -17,11 +17,17 @@
 
     button.setAttribute("aria-expanded", String(expanded));
     target.classList.toggle("show", expanded);
+    target.setAttribute("aria-hidden", String(!expanded));
   }
 
   function initCollapsibleSections() {
     const toggleButtons = document.querySelectorAll(".sidebar-section-toggle");
     toggleButtons.forEach((button) => {
+      const targetId = button.getAttribute("data-target");
+      if (targetId) {
+        button.setAttribute("aria-controls", targetId);
+      }
+
       setSectionExpanded(button, isTrue(button.getAttribute("aria-expanded")));
       button.addEventListener("click", () => {
         const expanded = isTrue(button.getAttribute("aria-expanded"));
