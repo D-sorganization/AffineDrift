@@ -67,29 +67,34 @@ export function initFadeAnimations() {
  * Initialize lazy loading for images
  */
 export function initLazyImages() {
-    const lazyImages = document.querySelectorAll('img[loading="lazy"]');
-    lazyImages.forEach((img) => {
-        if (img.complete) {
-            img.classList.add("loaded");
-        } else {
-            img.addEventListener("load", function () {
-                this.classList.add("loaded");
-            });
-            img.addEventListener("error", function () {
-                this.classList.add("loaded");
-            });
-        }
-    });
+    const supportsLazyLoading = "loading" in HTMLImageElement.prototype;
 
-    if ("loading" in HTMLImageElement.prototype) {
-        for (const img of document.images) {
-            if (img.src && !img.hasAttribute("loading")) {
+    // ⚡ Bolt: Iterate live collection once to avoid O(N) querySelectorAll traversal
+    for (const img of document.images) {
+        if (supportsLazyLoading && !img.hasAttribute("loading")) {
+            // Apply lazy loading only if it has a src, srcset, or data-src
+            if (img.src || img.srcset || img.dataset.src) {
                 img.setAttribute("loading", "lazy");
+            }
+        }
+
+        // Attach event listeners unconditionally to prevent regressions
+        if (img.getAttribute("loading") === "lazy" || supportsLazyLoading) {
+            if (img.complete) {
+                img.classList.add("loaded");
+            } else {
+                img.addEventListener("load", function () {
+                    this.classList.add("loaded");
+                });
+                img.addEventListener("error", function () {
+                    this.classList.add("loaded");
+                });
             }
         }
     }
 
     if ("loading" in HTMLIFrameElement.prototype) {
+        // ⚡ Bolt: Iterate live collection once
         const iframes = document.getElementsByTagName("iframe");
         for (const iframe of iframes) {
             if (iframe.src && !iframe.hasAttribute("loading")) {

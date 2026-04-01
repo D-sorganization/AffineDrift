@@ -108,10 +108,11 @@ export function initResponsiveTables() {
  * Initialize copy to clipboard for code blocks
  */
 export function initCodeCopy() {
-    const codeBlocks = document.querySelectorAll("pre");
-    codeBlocks.forEach((pre) => {
-        if (pre.parentNode.classList.contains("code-wrapper")) return;
-        if (!pre.textContent.trim()) return;
+    // ⚡ Bolt: Iterate live collection instead of querySelectorAll for better performance
+    const codeBlocks = document.getElementsByTagName("pre");
+    for (const pre of codeBlocks) {
+        if (pre.parentNode.classList.contains("code-wrapper")) continue;
+        if (!pre.textContent.trim()) continue;
 
         pre.setAttribute("tabindex", "0");
         pre.setAttribute("role", "region");
@@ -130,7 +131,7 @@ export function initCodeCopy() {
         button.dataset.action = "copy-code";
 
         wrapper.appendChild(button);
-    });
+    }
 
     document.addEventListener("click", async (e) => {
         const button = e.target.closest('button[data-action="copy-code"]');
@@ -190,7 +191,8 @@ export function initFormAccessibility() {
  * Initialize auto-growing textareas
  */
 export function initAutoGrowTextareas() {
-    const textareas = document.querySelectorAll("textarea");
+    // ⚡ Bolt: Iterate live collection instead of querySelectorAll for better performance
+    const textareas = document.getElementsByTagName("textarea");
     if (textareas.length === 0) return;
 
     function adjustHeight(el) {
@@ -200,17 +202,19 @@ export function initAutoGrowTextareas() {
         el.style.overflowY = newHeight >= 500 ? "auto" : "hidden";
     }
 
-    textareas.forEach((textarea) => {
+    for (const textarea of textareas) {
         if (textarea.value) {
             setTimeout(() => adjustHeight(textarea), 0);
         }
         textarea.addEventListener("input", () => adjustHeight(textarea));
-    });
+    }
 
     window.addEventListener(
         "resize",
         debounce(() => {
-            textareas.forEach(adjustHeight);
+            for (const textarea of textareas) {
+                adjustHeight(textarea);
+            }
         }, 250)
     );
 }
