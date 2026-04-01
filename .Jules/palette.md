@@ -17,3 +17,7 @@
 ## 2026-03-30 - Added `aria-controls` to interactive expandable UI element.
 **Learning:** Found a common pattern for accessible expand/collapse widgets: when an interactive element (like a button) expands or collapses a section, it is crucial to link it with `aria-controls` to the section's `id`. Moreover, managing the visual states of expanded / collapsed via CSS is not enough. The element must also correctly set `aria-expanded="true/false"` on the button and `aria-hidden="true/false"` on the controlled container depending on its state.
 **Action:** When adding or auditing collapsible sections across the app (like sidebars, accordions, and dropdown menus), ensure both `aria-controls` is explicitly defined, and state elements `aria-expanded` and `aria-hidden` are actively toggled via JS logic matching the visual appearance.
+
+## 2026-04-01 - Proper Accessible UI States for Sidebars
+**Learning:** Collapsible sidebar sections in `home.js` were changing their display visually via CSS classes but lacked full aria accessibility properties linking the toggle to its contents. Without proper connection (`aria-controls`) and visual state synchronization (`aria-hidden`), screen reader users won't know the exact outcome of triggering the element.
+**Action:** Always ensure that when writing or refactoring DOM manipulation logic for collapsible elements, `aria-controls` explicitly connects the button to its target `id`, and both `aria-expanded` and `aria-hidden` attributes correctly reflect the toggled state.
