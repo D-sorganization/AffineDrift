@@ -92,9 +92,10 @@ class TestDocstringCoverage:
         _, _, missing = _collect_docstring_stats(src_root)
         # Filter out module-level items (lineno == 0)
         public_missing = [(p, ln, n) for p, ln, n in missing if ln > 0]
-        assert public_missing == [], (
-            "Public functions/classes missing docstrings in affine_control:\n"
-            + "\n".join(f"  {p}:{ln} — {n}" for p, ln, n in public_missing)
+        assert (
+            public_missing == []
+        ), "Public functions/classes missing docstrings in affine_control:\n" + "\n".join(
+            f"  {p}:{ln} — {n}" for p, ln, n in public_missing
         )
 
     def test_benchmark_result_has_docstring(self) -> None:

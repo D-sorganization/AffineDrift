@@ -147,7 +147,7 @@ AffineDrift/
 | F2 | Affine Control Theory Swing Optimizer | ✅ | Implements DDP and iLQR algorithms to optimize golf swing trajectories as affine controllable systems |
 | F3 | Tangent Space and Hyperplane Models | ✅ | Provides mathematical models for tangent space methods with educational examples |
 | F4 | Interactive JavaScript Visualizations | ✅ | Rotation converter, search interface, and mathematical visualization components |
-| F5 | Mathematical Notation Rendering | ✅ | Supports MathJax and KaTeX for rendering LaTeX equations in web content |
+| F5 | Mathematical Notation Rendering | ✅ | Supports MathJax and KaTeX for rendering LaTeX equations in web content, with `ui/lazy` enabled for performance |
 | F6 | Property-Based Testing with Hypothesis | ✅ | Comprehensive property-based testing strategy using Hypothesis framework |
 | F7 | CSS Budget Enforcement | ✅ | Automated CI enforcement of CSS file size limits to maintain performance |
 | F8 | Mirror Validation | ✅ | Ensures duplicate stylesheets match canonical versions across the codebase |
