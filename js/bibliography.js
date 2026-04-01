@@ -112,7 +112,7 @@
         (url) =>
           `<li><a href="${escapeHtml(
             url,
-          )}" target="_blank" rel="noopener">${escapeHtml(url)}</a></li>`,
+          )}" target="_blank" rel="noopener noreferrer">${escapeHtml(url)}</a></li>`,
       )
       .join("");
 
