@@ -15,7 +15,9 @@
     const target = document.getElementById(targetId);
     if (!target) return;
 
+    button.setAttribute("aria-controls", targetId);
     button.setAttribute("aria-expanded", String(expanded));
+    target.setAttribute("aria-hidden", String(!expanded));
     target.classList.toggle("show", expanded);
   }
 
