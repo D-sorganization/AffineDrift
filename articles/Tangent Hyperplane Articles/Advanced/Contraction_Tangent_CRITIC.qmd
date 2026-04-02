@@ -1410,33 +1410,22 @@ With the remedies outlined above—tightening claims, adding missing proofs, val
       <div class="critic-item">
         <div class="critic-perspective">
 <span class="critic-label">Alternative View:</span>
-<h3>The Pragmatic Value of the "Duality" Framework</h3>
+<h3>The Pragmatic Value of the "Duality" Heuristic</h3>
         </div>
-        <p class="critic-argument">The critique that the stability-optimality mapping is mathematically asymmetric (LQR yields contraction, but the inverse is non-unique) is formally correct, but it arguably misses the point for applied engineering. In modern control design, treating this relationship as a bidirectional "duality" is not a mathematical oversight, but a necessary, productive heuristic. Bridging these concepts allows practitioners to inject geometric stability constraints directly into optimization frameworks, significantly accelerating the design of safe, high-performance robotics. Insisting on strict mathematical isomorphisms over operational utility risks gatekeeping tools that, empirically, work exceptionally well.</p>
+        <p class="critic-argument">The critique that the stability-optimality mapping is strictly unidirectional (LQR yields contraction, but the inverse is non-unique) is mathematically accurate, yet arguably misses the broader engineering context. In modern computational control, treating this relationship as a bidirectional "duality" is not a mathematical error, but a highly productive heuristic. By bridging these concepts, practitioners can systematically transform the notoriously non-convex search for Lyapunov functions into tractable, convex Semi-Definite Programs (SDPs). Insisting on perfect mathematical isomorphism ignores the operational reality that this heuristic reliably generates safe, high-performance controllers in high-dimensional systems where formal inverse optimality is practically impossible.</p>
         <div class="author-response">
-<strong>Our Response:</strong> We acknowledge the power of this operational heuristic; engineering routinely outpaces formal theory by relying on what works in practice. The framework is indeed a strong design accelerator. However, clarity of taxonomy remains important. If the text explicitly framed this as a <em>pragmatic</em> duality rather than a formal mathematical equivalence, it would empower engineers without misleading theorists.
+<strong>Our Response:</strong> We fully acknowledge the immense operational power of this heuristic. Leveraging Riccati-like structures to guide numerical metric searches is indeed a cornerstone of modern robust control. However, our critique centers on pedagogical clarity. When the text frames this as a formal "duality" without qualifying it as a pragmatic tool, it misleads students and theorists into assuming a deep geometric equivalence that does not exist. A simple reframing from "Mathematical Equivalence" to "Computational Heuristic" resolves this tension while preserving the method's utility.
         </div>
       </div>
 
       <div class="critic-item">
         <div class="critic-perspective">
 <span class="critic-label">Alternative View:</span>
-<h3>Mathematical Frameworks as Predictive Biological Models</h3>
+<h3>Local Stability is Sufficient for Receding Horizon Methods</h3>
         </div>
-        <p class="critic-argument">Dismissing the muscle synergy claims (Section 7) due to a lack of immediate empirical data fundamentally misunderstands how theoretical computational neuroscience operates. New organizing principles—like the hypothesis that biological synergies maximize contraction rates—must be mathematically formalized <em>before</em> experimentalists know what to look for. Historically, foundational models like minimum-jerk or minimum-variance were proposed entirely on mathematical elegance before data verified them. By framing contraction maximization mathematically, the authors are providing a precise, falsifiable model that gives meaning and direction to future EMG and motion capture studies.</p>
+        <p class="critic-argument">The objection regarding time-varying metrics and the Differential Riccati Equation (DRE)—specifically that DRE solutions do not guarantee uniform global bounds across arbitrary time horizons—applies classical, infinite-horizon Lyapunov standards to finite-horizon optimal control. In practice, algorithms like Contraction-DDP operate in a receding horizon framework (Model Predictive Control). As long as the time-varying metric establishes a local region of forward-invariance (a "tube") and the SDP solver ensures recursive feasibility step-by-step, the system is mathematically safe. Demanding a globally bounded, uniformly valid metric across all time is an unnecessarily rigid standard that would invalidate most modern, successful predictive control architectures.</p>
         <div class="author-response">
-<strong>Our Response:</strong> This is a highly valid perspective. Theoretical formulation is a necessary precursor to discovery, and the contraction-maximization hypothesis is both compelling and testable. The intention of our critique is not to suppress theoretical exploration, but to urge the authors to clearly label these sections as "predictive models" rather than "established facts." This ensures that readers appropriately distinguish the rigorously proven control math from the pioneering biological hypotheses.
-        </div>
-      </div>
-
-      <div class="critic-item">
-        <div class="critic-perspective">
-<span class="critic-label">Alternative View:</span>
-<h3>Rethinking "Certified" in the Context of Optimization-Based Control</h3>
-        </div>
-        <p class="critic-argument">Demanding an exhaustive, global analytical proof to justify the term "certified stability" (Theorem 4.1) applies an anachronistic standard to modern optimization-based control. In contemporary, high-dimensional robotics, analytical proofs are often intractable. Instead, "certified" has evolved to mean that the control algorithm mathematically embeds and verifies stability constraints (like SDP conditions) <em>at runtime</em>. Because the solver rigorously checks these conditions step-by-step before executing control, the system is practically and mathematically certified by the algorithmic structure itself, rendering the demand for offline global proofs largely obsolete.</p>
-        <div class="author-response">
-<strong>Our Response:</strong> We concede that runtime algorithmic guarantees represent a paradigm shift in how stability is practically verified, and treating SDP enforcement as a form of certification is reasonable. Acknowledging this modern standard, our critique's focus refines: the article would be significantly strengthened by explicitly defining "certified" as "algorithmically guaranteed at runtime" rather than allowing readers to assume a classical, offline analytical proof exists.
+<strong>Our Response:</strong> This is a strong and valid point; receding horizon control correctly trades global, infinite-horizon guarantees for verifiable, step-by-step local safety. The core of our critique is not that the method is unsafe, but rather that the article fails to explicitly document these necessary conditions. If the paper explicitly stated that stability relies on step-by-step recursive feasibility and required monitoring the metric's condition number to prevent local numerical ill-conditioning, it would align perfectly with modern MPC standards while remaining rigorous.
         </div>
       </div>
 
