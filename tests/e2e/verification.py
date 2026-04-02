@@ -1,6 +1,8 @@
-from playwright.sync_api import sync_playwright
 import os
 import shutil
+
+from playwright.sync_api import sync_playwright
+
 
 def run_cuj(page):
     page.goto(f"file://{os.getcwd()}/offline.html")
@@ -21,6 +23,7 @@ def run_cuj(page):
     page.screenshot(path="/home/jules/verification/screenshots/verification.png")
     page.wait_for_timeout(1000)  # Hold final state for the video
 
+
 if __name__ == "__main__":
     os.makedirs("/home/jules/verification/videos", exist_ok=True)
     os.makedirs("/home/jules/verification/screenshots", exist_ok=True)
@@ -31,9 +34,7 @@ if __name__ == "__main__":
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
-        context = browser.new_context(
-            record_video_dir="/home/jules/verification/videos"
-        )
+        context = browser.new_context(record_video_dir="/home/jules/verification/videos")
         page = context.new_page()
         try:
             run_cuj(page)
