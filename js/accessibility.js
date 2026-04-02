@@ -55,8 +55,9 @@ export function initRepoLinks() {
  */
 export function initAriaLabels() {
     // Navigation elements
-    const navElements = document.querySelectorAll("nav");
-    navElements.forEach((nav) => {
+    // ⚡ Bolt Optimization: Use live HTMLCollection for O(1) DOM access
+    const navElements = document.getElementsByTagName("nav");
+    for (const nav of navElements) {
         if (!nav.hasAttribute("aria-label")) {
             if (nav.classList.contains("toc-nav")) {
                 nav.setAttribute("aria-label", "Table of contents navigation");
@@ -68,11 +69,12 @@ export function initAriaLabels() {
                 nav.setAttribute("aria-label", "Navigation");
             }
         }
-    });
+    }
 
     // Sidebar elements
-    const sidebars = document.querySelectorAll("aside");
-    sidebars.forEach((sidebar) => {
+    // ⚡ Bolt Optimization: Use live HTMLCollection for O(1) DOM access
+    const sidebars = document.getElementsByTagName("aside");
+    for (const sidebar of sidebars) {
         if (!sidebar.hasAttribute("aria-label")) {
             if (sidebar.classList.contains("left-sidebar")) {
                 sidebar.setAttribute("aria-label", "Left sidebar navigation");
@@ -84,16 +86,17 @@ export function initAriaLabels() {
                 sidebar.setAttribute("aria-label", "Sidebar");
             }
         }
-    });
+    }
 
     // Main content areas
-    const mainElements = document.querySelectorAll("main");
-    mainElements.forEach((main) => {
+    // ⚡ Bolt Optimization: Use live HTMLCollection for O(1) DOM access
+    const mainElements = document.getElementsByTagName("main");
+    for (const main of mainElements) {
         if (!main.hasAttribute("aria-label") && !main.hasAttribute("role")) {
             main.setAttribute("role", "main");
             main.setAttribute("aria-label", "Main content");
         }
-    });
+    }
 
     // Search inputs
     const searchInputs = document.querySelectorAll('input[type="search"]');
