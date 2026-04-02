@@ -55,8 +55,9 @@ export function initRepoLinks() {
  */
 export function initAriaLabels() {
     // Navigation elements
-    const navElements = document.querySelectorAll("nav");
-    navElements.forEach((nav) => {
+    // ⚡ Bolt Optimization: Use getElementsByTagName (O(1)) instead of querySelectorAll (O(N))
+    const navElements = document.getElementsByTagName("nav");
+    Array.from(navElements).forEach((nav) => {
         if (!nav.hasAttribute("aria-label")) {
             if (nav.classList.contains("toc-nav")) {
                 nav.setAttribute("aria-label", "Table of contents navigation");
@@ -71,8 +72,9 @@ export function initAriaLabels() {
     });
 
     // Sidebar elements
-    const sidebars = document.querySelectorAll("aside");
-    sidebars.forEach((sidebar) => {
+    // ⚡ Bolt Optimization: Use getElementsByTagName (O(1)) instead of querySelectorAll (O(N))
+    const sidebars = document.getElementsByTagName("aside");
+    Array.from(sidebars).forEach((sidebar) => {
         if (!sidebar.hasAttribute("aria-label")) {
             if (sidebar.classList.contains("left-sidebar")) {
                 sidebar.setAttribute("aria-label", "Left sidebar navigation");
@@ -87,8 +89,9 @@ export function initAriaLabels() {
     });
 
     // Main content areas
-    const mainElements = document.querySelectorAll("main");
-    mainElements.forEach((main) => {
+    // ⚡ Bolt Optimization: Use getElementsByTagName (O(1)) instead of querySelectorAll (O(N))
+    const mainElements = document.getElementsByTagName("main");
+    Array.from(mainElements).forEach((main) => {
         if (!main.hasAttribute("aria-label") && !main.hasAttribute("role")) {
             main.setAttribute("role", "main");
             main.setAttribute("aria-label", "Main content");

@@ -21,3 +21,6 @@
 ## 2025-02-19 - QuerySelectorAttribute vs Live Collection Iteration
 **Learning:** Selecting elements with specific attributes via `document.querySelectorAll('img[loading="lazy"]')` requires a full DOM scan and parsing of the selector. It's often faster to iterate over a live collection like `document.images` and check the attribute manually (`img.getAttribute("loading") === "lazy"`).
 **Action:** When searching for global elements like forms, images, or links that also require specific attributes, iterate over the built-in HTMLCollections and do manual filtering instead of relying on complex `querySelectorAll` selectors.
+## 2024-05-25 - Live Collections vs querySelectorAll for Tag Names
+**Learning:** Selecting global tag elements like `nav`, `aside`, and `main` using `document.querySelectorAll("nav")` executes an O(N) DOM traversal and parsing of the selector. It's much faster to use `document.getElementsByTagName("nav")` which returns a live HTMLCollection and executes in O(1) time.
+**Action:** Always prefer `document.getElementsByTagName("tag")` or other live collections for simple global tag lookups instead of `querySelectorAll`.
