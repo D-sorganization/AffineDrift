@@ -134,7 +134,11 @@ class MATLABQualityChecker:
         # Clean path completely to prevent any MATLAB injection techniques
         # including quote escaping, statement terminators (;), and line breaks.
         safe_path = (
-            str(script_path).replace("'", "").replace(";", "").replace("\n", "").replace("\r", "")
+            str(script_path)
+            .replace("'", "")
+            .replace(";", "")
+            .replace("\n", "")
+            .replace("\r", "")
         )
         return [
             ["matlab", "-batch", f"run('{safe_path}')"],
