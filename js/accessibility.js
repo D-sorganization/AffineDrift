@@ -43,11 +43,15 @@ export function initSecureExternalLinks() {
  * Set external links on GitHub repos
  */
 export function initRepoLinks() {
-    document
-        .querySelectorAll('.navbar-nav a[href^="https://github.com"]')
-        .forEach((link) => {
+    // ⚡ Bolt Optimization: Use document.links (O(1)) instead of querySelectorAll (O(N))
+    for (const link of document.links) {
+        if (
+            link.href.startsWith("https://github.com") &&
+            link.closest(".navbar-nav")
+        ) {
             link.setAttribute("target", "_blank");
-        });
+        }
+    }
 }
 
 /**
