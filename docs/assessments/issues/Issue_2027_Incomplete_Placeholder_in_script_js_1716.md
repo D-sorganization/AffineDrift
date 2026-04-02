@@ -1,18 +1,18 @@
 ---
-title: "Incomplete Placeholder in resources-software.qmd:126"
+title: "Incomplete Placeholder in script.js:1716"
 labels: ['incomplete-implementation,critical']
 assignee: "unassigned"
 status: "open"
 ---
 
 # Issue Description
-Found critical incomplete implementation in `resources-software.qmd` at line 126.
+Found critical incomplete implementation in `script.js` at line 1716.
 
 ## Context
-**Type**: Placeholder | **Location**: `resources-software.qmd:126`
+**Type**: Placeholder | **Location**: `script.js:1716`
 
 ```python
-<img src="static/images/placeholder.svg" alt="MuJoCo Logo" class="software-logo">
+const placeholder = input.getAttribute('placeholder');
 ```
 
 ## Audit Metrics

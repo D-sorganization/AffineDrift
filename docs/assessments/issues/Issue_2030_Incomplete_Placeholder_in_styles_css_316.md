@@ -1,18 +1,18 @@
 ---
-title: "Incomplete Placeholder in book-reviews.qmd:32"
+title: "Incomplete Placeholder in styles.css:316"
 labels: ['incomplete-implementation,critical']
 assignee: "unassigned"
 status: "open"
 ---
 
 # Issue Description
-Found critical incomplete implementation in `book-reviews.qmd` at line 32.
+Found critical incomplete implementation in `styles.css` at line 316.
 
 ## Context
-**Type**: Placeholder | **Location**: `book-reviews.qmd:32`
+**Type**: Placeholder | **Location**: `styles.css:316`
 
 ```python
-<li>Book recommendations coming soon...</li>
+/* Lazy loading placeholder */
 ```
 
 ## Audit Metrics
