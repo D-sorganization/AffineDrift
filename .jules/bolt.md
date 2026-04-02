@@ -41,3 +41,6 @@
 ## 2025-02-19 - QuerySelector Descendant Check vs HTMLCollection
 **Learning:** Checking for specific descendants (like images or SVGs inside a link) using `element.querySelector("img, svg")` requires parsing a CSS selector and traversing the subtree. Using `element.getElementsByTagName("img").length` is significantly faster as it utilizes live, cached collections.
 **Action:** When replacing expensive CSS selectors within descendant checks, prefer direct tag lookups using `getElementsByTagName()` and evaluating the `.length` property to avoid the overhead of parsing CSS selectors for every iterated element.
+## 2026-04-02 - Array.join() and toLowerCase() in Hot Search Loops
+**Learning:** Calling `.join(" ").toLowerCase()` on object properties dynamically during a search filter loop creates massive memory allocations and garbage collection pressure, turning an O(1) property check into an O(N * M) string generation bottleneck on every keystroke.
+**Action:** Pre-compute and cache lowercased string representations of searchable fields on the objects themselves immediately after data load, changing dynamic string generation into O(1) property access during filtering.

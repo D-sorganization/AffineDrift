@@ -46,16 +46,7 @@
     return el.innerHTML;
   };
 
-  const entrySearchText = (entry) =>
-    [
-      entry.title,
-      entry.venue,
-      entry.description,
-      ...(entry.authors || []),
-      ...(entry.concepts || []),
-    ]
-      .join(" ")
-      .toLowerCase();
+  const entrySearchText = (entry) => entry._haystack || "";
 
   const scoreEntry = (entry, queryTerms) => {
     if (queryTerms.length === 0) return 0;
@@ -63,11 +54,9 @@
     let score = 0;
 
     for (const term of queryTerms) {
-      if (entry.title.toLowerCase().includes(term)) score += 5;
-      if ((entry.authors || []).join(" ").toLowerCase().includes(term))
-        score += 3;
-      if ((entry.concepts || []).join(" ").toLowerCase().includes(term))
-        score += 2;
+      if (entry._titleLower.includes(term)) score += 5;
+      if (entry._authorsLower.includes(term)) score += 3;
+      if (entry._conceptsLower.includes(term)) score += 2;
       if (haystack.includes(term)) score += 1;
     }
 
@@ -244,7 +233,30 @@
 
   const init = async () => {
     try {
-      state.entries = await loadEntries();
+      const rawEntries = await loadEntries();
+      // ⚡ Bolt Optimization: Pre-compute and cache lowercased strings once at load time.
+      // This eliminates expensive .toLowerCase() and .join() calls during the hot search loop,
+      // turning O(N*M) string allocations per keystroke into O(1) property lookups.
+      state.entries = rawEntries.map(entry => {
+        const titleLower = entry.title ? entry.title.toLowerCase() : "";
+        const authorsLower = (entry.authors || []).join(" ").toLowerCase();
+        const conceptsLower = (entry.concepts || []).join(" ").toLowerCase();
+        const haystack = [
+          entry.title,
+          entry.venue,
+          entry.description,
+          ...(entry.authors || []),
+          ...(entry.concepts || [])
+        ].join(" ").toLowerCase();
+
+        return {
+          ...entry,
+          _titleLower: titleLower,
+          _authorsLower: authorsLower,
+          _conceptsLower: conceptsLower,
+          _haystack: haystack
+        };
+      });
       countEl.textContent = `${state.entries.length} references`;
       renderSortControls();
       renderList();
