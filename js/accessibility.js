@@ -29,6 +29,12 @@ export function initSecureExternalLinks() {
                 !link.classList.contains("external-link")
             ) {
                 link.classList.add("external-link");
+
+                const srText = document.createElement("span");
+                srText.className = "sr-only";
+                srText.textContent = " (opens in a new tab)";
+                link.appendChild(srText);
+
                 const icon = document.createElement("span");
                 icon.className = "external-link-icon";
                 icon.setAttribute("aria-hidden", "true");

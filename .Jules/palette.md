@@ -21,3 +21,7 @@
 ## 2026-04-01 - Proper Accessible UI States for Sidebars
 **Learning:** Collapsible sidebar sections in `home.js` were changing their display visually via CSS classes but lacked full aria accessibility properties linking the toggle to its contents. Without proper connection (`aria-controls`) and visual state synchronization (`aria-hidden`), screen reader users won't know the exact outcome of triggering the element.
 **Action:** Always ensure that when writing or refactoring DOM manipulation logic for collapsible elements, `aria-controls` explicitly connects the button to its target `id`, and both `aria-expanded` and `aria-hidden` attributes correctly reflect the toggled state.
+
+## 2025-03-03 - Context for External Links
+**Learning:** Automatically adding target="_blank" and visual icons to external links without providing screen-reader-only text causes visually impaired users to lose context when navigating away from the current tab.
+**Action:** Always include a visually-hidden (`.sr-only`) text span (e.g., "(opens in a new tab)") alongside or within the link when opening links in new tabs to provide explicit, accessible warnings for screen reader users.
