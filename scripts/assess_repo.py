@@ -341,8 +341,10 @@ def assess_code_style(root: Path) -> dict[str, Any]:
         details.append("Pre-commit config found")
 
     if found_configs and ".flake8" in found_configs and "ruff.toml" in found_configs:
-        recommendation = "**AUTO-FIXED:** Added `.flake8` and `ruff.toml` code style configuration files."
-        score = max(score, 8) # Reflect the quick fix
+        recommendation = (
+            "**AUTO-FIXED:** Added `.flake8` and `ruff.toml` code style configuration files."
+        )
+        score = max(score, 8)  # Reflect the quick fix
     else:
         recommendation = "Add code style configuration files (e.g., `.flake8`, `ruff.toml`) and use pre-commit hooks."
 
