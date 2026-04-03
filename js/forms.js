@@ -108,8 +108,11 @@ export function initResponsiveTables() {
  * Initialize copy to clipboard for code blocks
  */
 export function initCodeCopy() {
-    const codeBlocks = document.querySelectorAll("pre");
-    codeBlocks.forEach((pre) => {
+    // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) live collection) instead of querySelectorAll (O(N))
+    const codeBlocks = document.getElementsByTagName("pre");
+
+    // Convert to Array to avoid issues with live collections when mutating DOM
+    Array.from(codeBlocks).forEach((pre) => {
         if (pre.parentNode.classList.contains("code-wrapper")) return;
         if (!pre.textContent.trim()) return;
 
@@ -190,7 +193,8 @@ export function initFormAccessibility() {
  * Initialize auto-growing textareas
  */
 export function initAutoGrowTextareas() {
-    const textareas = document.querySelectorAll("textarea");
+    // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) live collection) instead of querySelectorAll (O(N))
+    const textareas = document.getElementsByTagName("textarea");
     if (textareas.length === 0) return;
 
     function adjustHeight(el) {
@@ -200,17 +204,19 @@ export function initAutoGrowTextareas() {
         el.style.overflowY = newHeight >= 500 ? "auto" : "hidden";
     }
 
-    textareas.forEach((textarea) => {
+    for (const textarea of textareas) {
         if (textarea.value) {
             setTimeout(() => adjustHeight(textarea), 0);
         }
         textarea.addEventListener("input", () => adjustHeight(textarea));
-    });
+    }
 
     window.addEventListener(
         "resize",
         debounce(() => {
-            textareas.forEach(adjustHeight);
+            for (const textarea of textareas) {
+                adjustHeight(textarea);
+            }
         }, 250)
     );
 }

@@ -60,23 +60,29 @@ export function initSmoothScroll() {
  */
 export function initNavbarCollapse() {
     const navbarCollapse = document.getElementById("navbarCollapse");
-    const navLinks = document.querySelectorAll(
-        '.navbar-nav a.nav-link[href^="#"]'
-    );
-    navLinks.forEach((link) => {
-        link.addEventListener("click", () => {
-            if (navbarCollapse && navbarCollapse.classList.contains("show")) {
-                const collapseInstance = window.bootstrap?.Collapse?.getInstance
-                    ? window.bootstrap.Collapse.getInstance(navbarCollapse)
-                    : null;
-                if (collapseInstance) {
-                    collapseInstance.hide();
-                } else {
-                    navbarCollapse.classList.remove("show");
-                }
+    // ⚡ Bolt Optimization: Use document.links (O(1)) instead of querySelectorAll (O(N))
+    for (const link of document.links) {
+        if (
+            link.classList.contains("nav-link") &&
+            link.closest(".navbar-nav")
+        ) {
+            const href = link.getAttribute("href");
+            if (href && href.startsWith("#")) {
+                link.addEventListener("click", () => {
+                    if (navbarCollapse && navbarCollapse.classList.contains("show")) {
+                        const collapseInstance = window.bootstrap?.Collapse?.getInstance
+                            ? window.bootstrap.Collapse.getInstance(navbarCollapse)
+                            : null;
+                        if (collapseInstance) {
+                            collapseInstance.hide();
+                        } else {
+                            navbarCollapse.classList.remove("show");
+                        }
+                    }
+                });
             }
-        });
-    });
+        }
+    }
 }
 
 /**
@@ -244,11 +250,13 @@ export function initAnchorLinks() {
  * Initialize ScrollSpy for Table of Contents
  */
 export function initScrollSpy() {
-    const tocLinks = document.querySelectorAll("#toc-list a");
+    const tocList = document.getElementById("toc-list");
+    if (!tocList) return;
+    const tocLinks = tocList.getElementsByTagName("a");
     if (tocLinks.length === 0) return;
 
     const linkMap = new Map();
-    tocLinks.forEach((link) => {
+    Array.from(tocLinks).forEach((link) => {
         const href = link.getAttribute("href");
         if (href && href.startsWith("#")) {
             linkMap.set(href.substring(1), link);

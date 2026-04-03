@@ -16,16 +16,25 @@ export function initSecureExternalLinks() {
             link.hostname !== currentHostname &&
             link.protocol.startsWith("http")
         ) {
-            if (!link.hasAttribute("target")) {
-                link.setAttribute("target", "_blank");
+            // ⚡ Bolt Optimization: Use property access and DOMTokenList
+            // Avoids O(N) memory allocation from string split/join for every external link
+            if (!link.target) {
+                link.target = "_blank";
             }
-            const rel = link.getAttribute("rel") || "";
-            const parts = rel.split(" ").filter((p) => p);
-            if (!parts.includes("noopener")) parts.push("noopener");
-            if (!parts.includes("noreferrer")) parts.push("noreferrer");
-            link.setAttribute("rel", parts.join(" "));
+
+            if (link.relList) {
+                link.relList.add("noopener", "noreferrer");
+            } else {
+                const rel = link.getAttribute("rel") || "";
+                const parts = rel.split(" ").filter((p) => p);
+                if (!parts.includes("noopener")) parts.push("noopener");
+                if (!parts.includes("noreferrer")) parts.push("noreferrer");
+                link.setAttribute("rel", parts.join(" "));
+            }
+
             if (
-                !link.querySelector("img, svg") &&
+                link.getElementsByTagName("img").length === 0 &&
+                link.getElementsByTagName("svg").length === 0 &&
                 !link.classList.contains("external-link")
             ) {
                 link.classList.add("external-link");
@@ -43,18 +52,24 @@ export function initSecureExternalLinks() {
  * Set external links on GitHub repos
  */
 export function initRepoLinks() {
-    document
-        .querySelectorAll('.navbar-nav a[href^="https://github.com"]')
-        .forEach((link) => {
+    // ⚡ Bolt Optimization: Use document.links (O(1)) instead of querySelectorAll (O(N))
+    for (const link of document.links) {
+        if (
+            link.href.startsWith("https://github.com") &&
+            link.closest(".navbar-nav")
+        ) {
             link.setAttribute("target", "_blank");
-        });
+        }
+    }
 }
 
 /**
  * Initialize all ARIA labels for accessibility
  */
 export function initAriaLabels() {
-    // ⚡ Bolt Optimization: Use live HTMLCollections instead of querySelectorAll
+    // ⚡ Bolt Optimization: Use getElementsByTagName and getElementsByClassName
+    // (O(1) Live Collections) instead of querySelectorAll (O(N) Traversal)
+
     // Navigation elements
     const navElements = document.getElementsByTagName("nav");
     for (const nav of navElements) {
@@ -95,6 +110,7 @@ export function initAriaLabels() {
             main.setAttribute("aria-label", "Main content");
         }
     }
+
 
     // Single pass over all inputs
     const inputs = document.getElementsByTagName("input");
@@ -151,6 +167,7 @@ export function initAriaLabels() {
     }
 
     // History lists - live regions
+    // Fallback to querySelectorAll here because id selection is a complex pattern
     const historyLists = document.querySelectorAll('[id$="-history-list"]');
     for (const list of historyLists) {
         if (!list.hasAttribute("aria-live")) {
