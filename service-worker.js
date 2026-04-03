@@ -19,7 +19,6 @@ const PRECACHE_ASSETS = [
   '/index.html',
   ...STARTUP_ASSETS,
   '/styles.css',
-  '/script.js',
   '/favicon.ico',
   '/manifest.json',
   OFFLINE_URL

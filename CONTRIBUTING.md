@@ -220,7 +220,7 @@ def process_file(file_path: Path) -> dict[str, str]:
 - Avoid global variables
 - Use strict equality (`===`, `!==`)
 - Test in multiple browsers
-- Follow patterns in existing `script.js`
+- Follow patterns in existing `js/` modules (utils.js, navigation.js, ui-components.js, etc.)
 
 **Example:**
 
@@ -439,7 +439,7 @@ AffineDrift/
 │   └── tools/            # Tool-specific assets
 ├── _quarto.yml           # Quarto configuration
 ├── custom.scss           # Custom styles
-├── script.js             # Main JavaScript
+
 ├── styles.css            # Compiled styles
 └── requirements.txt      # Python dependencies
 ```
@@ -448,7 +448,7 @@ AffineDrift/
 
 - `_quarto.yml` - Site configuration, navigation, metadata
 - `custom.scss` - SCSS variables and custom styles
-- `script.js` - Interactive features and navigation
+- `js/main.js` - ES6 module entry point (imports all js/ modules)
 - `requirements.txt` - Python package dependencies
 
 ## Common Tasks
@@ -503,7 +503,7 @@ AffineDrift/
 
 ### Adding JavaScript Features
 
-1. Edit `script.js` or create module in `src/js/`
+1. Create or edit a module in `js/` (utils.js, navigation.js, ui-components.js, etc.)
 2. Follow existing patterns and conventions
 3. Test in multiple browsers
 4. Add JSDoc comments
@@ -692,7 +692,7 @@ export const myFeature = {
 };
 ```
 
-Import in `script.js`:
+Import in `js/main.js`:
 
 ```javascript
 import { myFeature } from "./src/js/my-module.js";

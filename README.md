@@ -31,7 +31,7 @@ AffineDrift/
 ├── index.qmd           # Main homepage (Quarto markdown)
 ├── _quarto.yml         # Quarto configuration
 ├── styles.css          # Custom styling
-├── script.js           # Interactive features
+├── js/                # JavaScript ES6 modules (main.js entry point)
 ├── docs/               # Additional documentation
 │   └── assessments/    # Quality assessments
 ├── tests/              # Python tests
