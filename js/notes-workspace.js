@@ -141,7 +141,7 @@
         <button type="button" data-action="restore">Restore Bin</button>
         <button type="button" data-action="popout">Pop-out</button>
       </div>
-      <div class="ad-notes-status" id="ad-notes-status"></div>
+      <div class="ad-notes-status" id="ad-notes-status" aria-live="polite" aria-atomic="true"></div>
     `;
 
     document.body.appendChild(toggleBtn);
