@@ -45,3 +45,7 @@
 ## 2024-05-25 - Live Collections for ARIA Initialization
 **Learning:** Initializing ARIA labels globally using `querySelectorAll` causes excessive layout thrashing and CSS parsing overhead. Using live HTMLCollections (`getElementsByTagName` and `getElementsByClassName`) and manually checking properties is significantly faster.
 **Action:** When applying attributes like ARIA labels globally across elements (e.g., inputs, lists, cards), retrieve elements via `getElementsByTagName` or `getElementsByClassName` and use `for...of` loops, manually filtering attributes rather than relying on complex `querySelectorAll` selectors.
+
+## 2026-04-03 - Pre-computing Strings for Frontend Search
+**Learning:** Calculating `.toLowerCase()` and `.join()` inside a search loop runs on every keystroke, causing O(N*M) string allocations. This creates massive GC pressure.
+**Action:** Pre-compute and cache expensive string operations (like lowercasing and joining arrays) on the data objects at load time, rather than calling them dynamically during the search filter function.
