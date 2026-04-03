@@ -106,8 +106,9 @@ export function initLazyImages() {
  * Initialize accordion functionality
  */
 export function initAccordions() {
-    const accordionHeaders = document.querySelectorAll(".accordion-header");
-    accordionHeaders.forEach((header, index) => {
+    const accordionHeaders = document.getElementsByClassName("accordion-header");
+    let index = 0;
+    for (const header of accordionHeaders) {
         const content = header.nextElementSibling;
         if (content && content.classList.contains("accordion-content")) {
             if (!content.id) {
@@ -117,7 +118,8 @@ export function initAccordions() {
             const isExpanded = header.getAttribute("aria-expanded") === "true";
             content.setAttribute("aria-hidden", !isExpanded);
         }
-    });
+        index++;
+    }
 
     document.addEventListener("click", (e) => {
         const header = e.target.closest(".accordion-header");
@@ -419,9 +421,9 @@ export function initLightbox() {
  * Initialize Critics Corner toggle
  */
 export function initCriticsCorner() {
-    const criticsCorners = document.querySelectorAll(".critics-corner");
-
-    criticsCorners.forEach((corner, index) => {
+    const criticsCorners = document.getElementsByClassName("critics-corner");
+    let index = 0;
+    for (const corner of criticsCorners) {
         const header = corner.querySelector(".critics-corner-header");
         const content = corner.querySelector(".critics-corner-content");
 
@@ -459,20 +461,24 @@ export function initCriticsCorner() {
                 }
             });
         }
-    });
+        index++;
+    }
 }
 
 /**
  * Initialize Layman's Terms toggle
  */
 export function initLaymansTermsToggle() {
-    const laymansSections = document.querySelectorAll(".laymans-terms");
-
-    laymansSections.forEach((section, index) => {
+    const laymansSections = document.getElementsByClassName("laymans-terms");
+    let index = 0;
+    for (const section of laymansSections) {
         const header = section.querySelector(".laymans-terms-header");
         const content = section.querySelector(".laymans-terms-content");
 
-        if (!header || !content) return;
+        if (!header || !content) {
+            index++;
+            continue;
+        }
 
         if (!content.id) {
             content.id = `laymans-terms-content-${index + 1}`;
@@ -487,20 +493,24 @@ export function initLaymansTermsToggle() {
             header.setAttribute("aria-expanded", String(!expanded));
             content.setAttribute("aria-hidden", String(expanded));
         });
-    });
+        index++;
+    }
 }
 
 /**
  * Initialize Critics Comments toggle
  */
 export function initCriticsCommentsToggle() {
-    const criticsSections = document.querySelectorAll(".critics-comments");
-
-    criticsSections.forEach((section, index) => {
+    const criticsSections = document.getElementsByClassName("critics-comments");
+    let index = 0;
+    for (const section of criticsSections) {
         const header = section.querySelector(".critics-comments-header");
         const content = section.querySelector(".critics-comments-content");
 
-        if (!header || !content) return;
+        if (!header || !content) {
+            index++;
+            continue;
+        }
 
         if (!content.id) {
             content.id = `critics-comments-content-${index + 1}`;
@@ -515,5 +525,6 @@ export function initCriticsCommentsToggle() {
             header.setAttribute("aria-expanded", String(!expanded));
             content.setAttribute("aria-hidden", String(expanded));
         });
-    });
+        index++;
+    }
 }
