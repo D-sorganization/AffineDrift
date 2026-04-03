@@ -46,16 +46,7 @@
     return el.innerHTML;
   };
 
-  const entrySearchText = (entry) =>
-    [
-      entry.title,
-      entry.venue,
-      entry.description,
-      ...(entry.authors || []),
-      ...(entry.concepts || []),
-    ]
-      .join(" ")
-      .toLowerCase();
+  const entrySearchText = (entry) => entry._searchText;
 
   const scoreEntry = (entry, queryTerms) => {
     if (queryTerms.length === 0) return 0;
@@ -63,11 +54,9 @@
     let score = 0;
 
     for (const term of queryTerms) {
-      if (entry.title.toLowerCase().includes(term)) score += 5;
-      if ((entry.authors || []).join(" ").toLowerCase().includes(term))
-        score += 3;
-      if ((entry.concepts || []).join(" ").toLowerCase().includes(term))
-        score += 2;
+      if (entry._searchTitle.includes(term)) score += 5;
+      if (entry._searchAuthors.includes(term)) score += 3;
+      if (entry._searchConcepts.includes(term)) score += 2;
       if (haystack.includes(term)) score += 1;
     }
 
@@ -231,6 +220,23 @@
       const data = await response.json();
       if (!Array.isArray(data))
         throw new Error("Invalid bibliography data format");
+
+      // ⚡ Bolt Optimization: Pre-compute lowercase strings for search to avoid O(N*M) allocations per keystroke
+      data.forEach((entry) => {
+        entry._searchTitle = (entry.title || "").toLowerCase();
+        entry._searchAuthors = (entry.authors || []).join(" ").toLowerCase();
+        entry._searchConcepts = (entry.concepts || []).join(" ").toLowerCase();
+        entry._searchText = [
+          entry.title,
+          entry.venue,
+          entry.description,
+          ...(entry.authors || []),
+          ...(entry.concepts || []),
+        ]
+          .join(" ")
+          .toLowerCase();
+      });
+
       return data;
     } catch (error) {
       if (error.name === "AbortError") {
