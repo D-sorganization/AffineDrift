@@ -29,3 +29,7 @@
 ## 2025-10-28 - DOMTokenList vs String Manipulation
 **Learning:** Manually manipulating space-separated attributes (like `rel` or `class`) using `.split(" ")` and `.join(" ")` in loops creates unnecessary arrays and string copies, causing garbage collection overhead. Using `.split("/").pop()` on URLs is similarly wasteful compared to `substring()`.
 **Action:** Always use native `DOMTokenList` APIs (like `element.classList` or `element.relList`) to add, remove, or toggle tokens directly without JS memory allocation. Use `substring(lastIndexOf("/"))` for simple path extractions.
+
+## 2025-02-21 - QuerySelector with Complex CSS on Links vs Live Collection Iteration
+**Learning:** Complex CSS selectors on links like `document.querySelectorAll('.navbar-nav a.nav-link[href^="#"]')` or `document.querySelectorAll('.navbar-nav a[href^="https://github.com"]')` can be extremely slow on large pages. Iterating over `document.links` and checking `href` and `classList` is much faster.
+**Action:** Replace `querySelectorAll` with iteration over `document.links` for operations that search for links with specific attributes or classes.
