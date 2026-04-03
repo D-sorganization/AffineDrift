@@ -30,6 +30,10 @@
 **Learning:** Manually manipulating space-separated attributes (like `rel` or `class`) using `.split(" ")` and `.join(" ")` in loops creates unnecessary arrays and string copies, causing garbage collection overhead. Using `.split("/").pop()` on URLs is similarly wasteful compared to `substring()`.
 **Action:** Always use native `DOMTokenList` APIs (like `element.classList` or `element.relList`) to add, remove, or toggle tokens directly without JS memory allocation. Use `substring(lastIndexOf("/"))` for simple path extractions.
 
+## 2025-02-19 - Safe DOM Iteration with Live Collections
+**Learning:** When iterating over live HTMLCollections (e.g., `document.getElementsByTagName()`) to optimize DOM queries, changing attributes like `aria-label` is generally safe as it doesn't mutate the DOM structure or the collection itself (unlike wrapping elements or changing classes used in `getElementsByClassName`). Reusing collections for subsequent loops is also highly efficient.
+**Action:** When migrating from `querySelectorAll` to live collections, evaluate whether the loop body alters the criteria of the collection. If it only modifies independent attributes, it is perfectly safe to iterate directly using `for...of` without `Array.from()`.
+
 ## 2025-02-21 - QuerySelector with Complex CSS on Links vs Live Collection Iteration
 **Learning:** Complex CSS selectors on links like `document.querySelectorAll('.navbar-nav a.nav-link[href^="#"]')` or `document.querySelectorAll('.navbar-nav a[href^="https://github.com"]')` can be extremely slow on large pages. Iterating over `document.links` and checking `href` and `classList` is much faster.
 **Action:** Replace `querySelectorAll` with iteration over `document.links` for operations that search for links with specific attributes or classes.

@@ -66,8 +66,10 @@ export function initRepoLinks() {
  * Initialize all ARIA labels for accessibility
  */
 export function initAriaLabels() {
+    // ⚡ Bolt Optimization: Use getElementsByTagName and getElementsByClassName
+    // (O(1) Live Collections) instead of querySelectorAll (O(N) Traversal)
+
     // Navigation elements
-    // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) live collection) instead of querySelectorAll (O(N))
     const navElements = document.getElementsByTagName("nav");
     for (const nav of navElements) {
         if (!nav.hasAttribute("aria-label")) {
@@ -84,7 +86,6 @@ export function initAriaLabels() {
     }
 
     // Sidebar elements
-    // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) live collection) instead of querySelectorAll (O(N))
     const sidebars = document.getElementsByTagName("aside");
     for (const sidebar of sidebars) {
         if (!sidebar.hasAttribute("aria-label")) {
@@ -101,7 +102,6 @@ export function initAriaLabels() {
     }
 
     // Main content areas
-    // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) live collection) instead of querySelectorAll (O(N))
     const mainElements = document.getElementsByTagName("main");
     for (const main of mainElements) {
         if (!main.hasAttribute("aria-label") && !main.hasAttribute("role")) {
@@ -111,25 +111,25 @@ export function initAriaLabels() {
     }
 
     // Search inputs
-    const searchInputs = document.querySelectorAll('input[type="search"]');
-    searchInputs.forEach((input) => {
-        if (!input.hasAttribute("aria-label") && !input.id) {
+    const inputs = document.getElementsByTagName("input");
+    for (const input of inputs) {
+        if (input.type === "search" && !input.hasAttribute("aria-label") && !input.id) {
             input.setAttribute("aria-label", "Search");
         }
-    });
+    }
 
     // Social links
-    const socialLinks = document.querySelectorAll(".social-link");
-    socialLinks.forEach((link) => {
+    const socialLinks = document.getElementsByClassName("social-link");
+    for (const link of socialLinks) {
         if (!link.hasAttribute("aria-label")) {
             const text = link.textContent.trim();
             link.setAttribute("aria-label", `Visit ${text}`);
         }
-    });
+    }
 
     // Resource cards
-    const resourceCards = document.querySelectorAll(".resource-card");
-    resourceCards.forEach((card) => {
+    const resourceCards = document.getElementsByClassName("resource-card");
+    for (const card of resourceCards) {
         if (!card.hasAttribute("aria-label")) {
             const heading = card.querySelector("h3");
             if (heading) {
@@ -139,11 +139,11 @@ export function initAriaLabels() {
                 );
             }
         }
-    });
+    }
 
     // Article cards
-    const articleCards = document.querySelectorAll(".article-card");
-    articleCards.forEach((card) => {
+    const articleCards = document.getElementsByClassName("article-card");
+    for (const card of articleCards) {
         if (!card.hasAttribute("aria-label")) {
             const heading = card.querySelector("h3");
             if (heading) {
@@ -153,27 +153,28 @@ export function initAriaLabels() {
                 );
             }
         }
-    });
+    }
 
     // History lists - live regions
+    // Fallback to querySelectorAll here because id selection is a complex pattern
     const historyLists = document.querySelectorAll('[id$="-history-list"]');
-    historyLists.forEach((list) => {
+    for (const list of historyLists) {
         if (!list.hasAttribute("aria-live")) {
             list.setAttribute("aria-live", "polite");
             list.setAttribute("aria-atomic", "false");
         }
-    });
+    }
 
     // Form inputs without labels
-    const formInputs = document.querySelectorAll(
-        "input:not([aria-label]):not([id])"
-    );
-    formInputs.forEach((input) => {
-        const placeholder = input.getAttribute("placeholder");
-        if (placeholder) {
-            input.setAttribute("aria-label", placeholder);
+    // Reuse the inputs collection from earlier search
+    for (const input of inputs) {
+        if (!input.hasAttribute("aria-label") && !input.id) {
+            const placeholder = input.getAttribute("placeholder");
+            if (placeholder) {
+                input.setAttribute("aria-label", placeholder);
+            }
         }
-    });
+    }
 }
 
 /**
