@@ -37,3 +37,7 @@
 ## 2025-02-21 - QuerySelector with Complex CSS on Links vs Live Collection Iteration
 **Learning:** Complex CSS selectors on links like `document.querySelectorAll('.navbar-nav a.nav-link[href^="#"]')` or `document.querySelectorAll('.navbar-nav a[href^="https://github.com"]')` can be extremely slow on large pages. Iterating over `document.links` and checking `href` and `classList` is much faster.
 **Action:** Replace `querySelectorAll` with iteration over `document.links` for operations that search for links with specific attributes or classes.
+
+## 2025-02-19 - QuerySelector Descendant Check vs HTMLCollection
+**Learning:** Checking for specific descendants (like images or SVGs inside a link) using `element.querySelector("img, svg")` requires parsing a CSS selector and traversing the subtree. Using `element.getElementsByTagName("img").length` is significantly faster as it utilizes live, cached collections.
+**Action:** When replacing expensive CSS selectors within descendant checks, prefer direct tag lookups using `getElementsByTagName()` and evaluating the `.length` property to avoid the overhead of parsing CSS selectors for every iterated element.

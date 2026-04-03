@@ -33,7 +33,8 @@ export function initSecureExternalLinks() {
             }
 
             if (
-                !link.querySelector("img, svg") &&
+                link.getElementsByTagName("img").length === 0 &&
+                link.getElementsByTagName("svg").length === 0 &&
                 !link.classList.contains("external-link")
             ) {
                 link.classList.add("external-link");
@@ -110,13 +111,6 @@ export function initAriaLabels() {
         }
     }
 
-    // Search inputs
-    const inputs = document.getElementsByTagName("input");
-    for (const input of inputs) {
-        if (input.type === "search" && !input.hasAttribute("aria-label") && !input.id) {
-            input.setAttribute("aria-label", "Search");
-        }
-    }
 
     // Social links
     const socialLinks = document.getElementsByClassName("social-link");
@@ -165,13 +159,17 @@ export function initAriaLabels() {
         }
     }
 
-    // Form inputs without labels
-    // Reuse the inputs collection from earlier search
+    // Input elements (Search and generic forms)
+    const inputs = document.getElementsByTagName("input");
     for (const input of inputs) {
         if (!input.hasAttribute("aria-label") && !input.id) {
-            const placeholder = input.getAttribute("placeholder");
-            if (placeholder) {
-                input.setAttribute("aria-label", placeholder);
+            if (input.type === "search") {
+                input.setAttribute("aria-label", "Search");
+            } else {
+                const placeholder = input.getAttribute("placeholder");
+                if (placeholder) {
+                    input.setAttribute("aria-label", placeholder);
+                }
             }
         }
     }
