@@ -146,7 +146,7 @@ export function initBackToTop() {
     const circumference = 2 * Math.PI * radius;
 
     backToTopBtn.innerHTML = `
-    <svg class="progress-ring" width="48" height="48" viewBox="0 0 48 48">
+    <svg class="progress-ring" width="48" height="48" viewBox="0 0 48 48" aria-hidden="true">
       <circle
         class="progress-ring-circle"
         stroke="white"
@@ -158,7 +158,7 @@ export function initBackToTop() {
         style="stroke-dasharray: ${circumference}; stroke-dashoffset: ${circumference};"
       />
     </svg>
-    <svg class="back-to-top-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <svg class="back-to-top-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
       <path d="M12 4l-8 8h6v8h4v-8h6z"/>
     </svg>
   `;
@@ -242,7 +242,7 @@ export function initExportToPdf() {
     exportToPdfBtn.className = "export-to-pdf";
     exportToPdfBtn.setAttribute("aria-label", "Export page to PDF");
     exportToPdfBtn.innerHTML = `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
       <polyline points="14 2 14 8 20 8"></polyline>
       <line x1="12" y1="18" x2="12" y2="12"></line>
@@ -313,7 +313,7 @@ export function initLightbox() {
     const closeBtn = document.createElement("button");
     closeBtn.className = "lightbox-close";
     closeBtn.setAttribute("aria-label", "Close zoom");
-    closeBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
+    closeBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
 
     function closeLightbox() {
         lightbox.classList.remove("active");
