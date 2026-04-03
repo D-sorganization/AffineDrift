@@ -41,3 +41,7 @@
 ## 2025-02-19 - QuerySelector Descendant Check vs HTMLCollection
 **Learning:** Checking for specific descendants (like images or SVGs inside a link) using `element.querySelector("img, svg")` requires parsing a CSS selector and traversing the subtree. Using `element.getElementsByTagName("img").length` is significantly faster as it utilizes live, cached collections.
 **Action:** When replacing expensive CSS selectors within descendant checks, prefer direct tag lookups using `getElementsByTagName()` and evaluating the `.length` property to avoid the overhead of parsing CSS selectors for every iterated element.
+
+## 2024-05-25 - Live Collections for ARIA Initialization
+**Learning:** Initializing ARIA labels globally using `querySelectorAll` causes excessive layout thrashing and CSS parsing overhead. Using live HTMLCollections (`getElementsByTagName` and `getElementsByClassName`) and manually checking properties is significantly faster.
+**Action:** When applying attributes like ARIA labels globally across elements (e.g., inputs, lists, cards), retrieve elements via `getElementsByTagName` or `getElementsByClassName` and use `for...of` loops, manually filtering attributes rather than relying on complex `querySelectorAll` selectors.

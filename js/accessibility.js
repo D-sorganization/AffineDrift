@@ -112,6 +112,23 @@ export function initAriaLabels() {
     }
 
 
+    // Single pass over all inputs
+    const inputs = document.getElementsByTagName("input");
+    for (const input of inputs) {
+        // Search inputs
+        if (input.type === "search" && !input.hasAttribute("aria-label") && !input.id) {
+            input.setAttribute("aria-label", "Search");
+        }
+
+        // Form inputs without labels
+        if (!input.hasAttribute("aria-label") && !input.id) {
+            const placeholder = input.getAttribute("placeholder");
+            if (placeholder) {
+                input.setAttribute("aria-label", placeholder);
+            }
+        }
+    }
+
     // Social links
     const socialLinks = document.getElementsByClassName("social-link");
     for (const link of socialLinks) {
@@ -156,21 +173,6 @@ export function initAriaLabels() {
         if (!list.hasAttribute("aria-live")) {
             list.setAttribute("aria-live", "polite");
             list.setAttribute("aria-atomic", "false");
-        }
-    }
-
-    // Input elements (Search and generic forms)
-    const inputs = document.getElementsByTagName("input");
-    for (const input of inputs) {
-        if (!input.hasAttribute("aria-label") && !input.id) {
-            if (input.type === "search") {
-                input.setAttribute("aria-label", "Search");
-            } else {
-                const placeholder = input.getAttribute("placeholder");
-                if (placeholder) {
-                    input.setAttribute("aria-label", placeholder);
-                }
-            }
         }
     }
 }
