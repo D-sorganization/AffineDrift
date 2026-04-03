@@ -37,6 +37,7 @@ Usage
 from __future__ import annotations
 
 import logging
+import warnings
 from collections.abc import Callable
 from typing import Any
 
@@ -114,9 +115,14 @@ class SwingOptimizer:
             type(config).__name__,
         )
         if ddp_solver is None:
-            require(
-                config.allow_mock_solver,
-                "mock DDP solver requires explicit opt-in via allow_mock_solver=True",
+            warnings.warn(
+                "adaptive_timestep_ddp_mock is a non-functional mock implementation. "
+                "The backward pass and Riccati equation solving are not implemented. "
+                "Trajectories produced are mathematically incorrect. "
+                "Do not use in production optimisation pipelines. "
+                "See: docs/assessments/issues/ISSUE_Completist_Critical_DDPMock_2026-01-30.md",
+                UserWarning,
+                stacklevel=2,
             )
         self._config = config
         self._ddp_solver = ddp_solver if ddp_solver is not None else adaptive_timestep_ddp_mock
@@ -432,6 +438,10 @@ class SwingOptimizer:
         check_finite_array(initial_state, "initial_state")
         check_shape(initial_state, (self._config.state_dim,), "initial_state")
         require(callable(dynamics_fn), "dynamics_fn must be callable")
+        require(
+            self._config.allow_mock_solver or self._ddp_solver is not adaptive_timestep_ddp_mock,
+            "mock DDP solver requires explicit opt-in via allow_mock_solver=True",
+        )
 
         cfg = self._config
         logger.info(

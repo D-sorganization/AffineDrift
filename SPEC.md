@@ -1,15 +1,15 @@
-# SPEC.md — Repository Specification Document
+# SPEC.md â Repository Specification Document
 
 <!--
   TEMPLATE VERSION: 1.0.0
-  LAST UPDATED: 2026-03-31
+  LAST UPDATED: 2026-04-02
 
   This is the canonical specification template for all repositories in the
   D-sorganization fleet. Every repo MUST have a SPEC.md at its root.
 
   INSTRUCTIONS:
   1. Copy this template to the root of your repository as SPEC.md
-  2. Fill in every section — leave nothing as "[TODO]"
+  2. Fill in every section â leave nothing as "[TODO]"
   3. Keep this document updated with every PR that changes functionality
   4. CI will block merges if SPEC.md is stale (source changed but spec didn't)
 
@@ -27,8 +27,8 @@
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto |
 | **License** | MIT |
 | **Current Version** | 1.0.6 |
-| **Spec Version** | 1.0.9 |
-| **Last Spec Update** | 2026-03-30 |
+| **Spec Version** | 1.0.11 |
+| **Last Spec Update** | 2026-04-02 |
 
 ## 2. Purpose & Mission
 
@@ -61,63 +61,63 @@ AffineDrift operates as a standalone research and education platform within the 
 
 ```
 AffineDrift/
-├── src/
-│   ├── affine_control/          # Swing optimization and control algorithms
-│   │   ├── swing_optimizer.py   # DDP and iLQR solvers for swing trajectories
-│   │   ├── ddp_solver.py        # Differential dynamic programming implementation
-│   │   ├── residuals.py         # Optimization residual calculations
-│   │   └── swing_types.py       # Swing model definitions and types
-│   ├── core/                    # Foundational abstractions and utilities
-│   │   ├── constants.py         # Physical and mathematical constants
-│   │   ├── contracts.py         # Design-by-contract specifications
-│   │   ├── optimizers.py        # iLQR optimizer implementations
-│   │   └── protocols.py         # Type protocols and interfaces
-│   └── tangent_models/          # Tangent space and hyperplane methods
-│       ├── tangent_space.py     # Tangent space mathematics
-│       └── examples.py          # Example implementations and tutorials
-├── src/tools/                   # CI/CD utilities and build tools
-│   ├── link_checker.py          # Validate links in documentation
-│   ├── site_health.py           # Monitor website health metrics
-│   └── code_quality_ast.py      # AST-based code quality analysis
-├── tests/                       # Test suite (80+ test files)
-│   ├── test_affine_control/     # Physics and optimization tests
-│   ├── test_core/               # Core module tests
-│   ├── test_tangent_models/     # Tangent space method tests
-│   ├── test_tools/              # Tool and CI/CD tests
-│   ├── test_content/            # Content structure and validation
-│   └── test_integration/        # Cross-module integration tests
-├── js/                          # JavaScript interactive features
-│   ├── rotation-converter/      # 3D rotation visualization
-│   ├── search.js                # Site search functionality
-│   └── interactive-viz.js       # Mathematical visualizations
-├── css/                         # Canonical stylesheets (CSS budget enforced)
-│   ├── main.css                 # Primary stylesheet
-│   ├── typography.css           # Typography and layout
-│   └── responsive.css           # Responsive design rules
-├── content/                     # Quarto markdown source files (.qmd)
-│   ├── index.qmd                # Homepage
-│   ├── getting-started.qmd      # Getting started guide
-│   └── [other pages]            # Additional educational content
-├── articles/                    # Research articles (.qmd format)
-│   ├── swing-modeling.qmd       # Core swing modeling article
-│   ├── optimization-theory.qmd  # Optimization theory and methods
-│   └── [other articles]         # Additional research content
-├── books/                       # Quarto book projects
-│   └── control-theory-guide.qmd # Comprehensive control theory textbook
-├── .github/workflows/           # 54 GitHub Actions workflows
-│   ├── ci-standard.yml          # Main CI pipeline
-│   ├── deploy-website.yml       # Quarto site build and deployment
-│   ├── test-coverage.yml        # Test coverage reporting
-│   ├── link-check.yml           # Link validation
-│   ├── css-budget.yml           # CSS size enforcement
-│   └── [other workflows]        # Jules agents, specialized tests, etc.
-├── tests/                       # Additional test organization
-│   └── e2e/                     # End-to-end Playwright tests
-├── _quarto.yml                  # Quarto configuration
-├── pyproject.toml               # Python project metadata and dependencies
-├── package.json                 # JavaScript dependencies
-├── SPEC.md                      # This specification document
-└── README.md                    # Project overview and quick start
+âââ src/
+â   âââ affine_control/          # Swing optimization and control algorithms
+â   â   âââ swing_optimizer.py   # DDP and iLQR solvers for swing trajectories
+â   â   âââ ddp_solver.py        # Differential dynamic programming implementation
+â   â   âââ residuals.py         # Optimization residual calculations
+â   â   âââ swing_types.py       # Swing model definitions and types
+â   âââ core/                    # Foundational abstractions and utilities
+â   â   âââ constants.py         # Physical and mathematical constants
+â   â   âââ contracts.py         # Design-by-contract specifications
+â   â   âââ optimizers.py        # iLQR optimizer implementations
+â   â   âââ protocols.py         # Type protocols and interfaces
+â   âââ tangent_models/          # Tangent space and hyperplane methods
+â       âââ tangent_space.py     # Tangent space mathematics
+â       âââ examples.py          # Example implementations and tutorials
+âââ src/tools/                   # CI/CD utilities and build tools
+â   âââ link_checker.py          # Validate links in documentation
+â   âââ site_health.py           # Monitor website health metrics
+â   âââ code_quality_ast.py      # AST-based code quality analysis
+âââ tests/                       # Test suite (80+ test files)
+â   âââ test_affine_control/     # Physics and optimization tests
+â   âââ test_core/               # Core module tests
+â   âââ test_tangent_models/     # Tangent space method tests
+â   âââ test_tools/              # Tool and CI/CD tests
+â   âââ test_content/            # Content structure and validation
+â   âââ test_integration/        # Cross-module integration tests
+âââ js/                          # JavaScript interactive features
+â   âââ rotation-converter/      # 3D rotation visualization
+â   âââ search.js                # Site search functionality
+â   âââ interactive-viz.js       # Mathematical visualizations
+âââ css/                         # Canonical stylesheets (CSS budget enforced)
+â   âââ main.css                 # Primary stylesheet
+â   âââ typography.css           # Typography and layout
+â   âââ responsive.css           # Responsive design rules
+âââ content/                     # Quarto markdown source files (.qmd)
+â   âââ index.qmd                # Homepage
+â   âââ getting-started.qmd      # Getting started guide
+â   âââ [other pages]            # Additional educational content
+âââ articles/                    # Research articles (.qmd format)
+â   âââ swing-modeling.qmd       # Core swing modeling article
+â   âââ optimization-theory.qmd  # Optimization theory and methods
+â   âââ [other articles]         # Additional research content
+âââ books/                       # Quarto book projects
+â   âââ control-theory-guide.qmd # Comprehensive control theory textbook
+âââ .github/workflows/           # 54 GitHub Actions workflows
+â   âââ ci-standard.yml          # Main CI pipeline
+â   âââ deploy-website.yml       # Quarto site build and deployment
+â   âââ test-coverage.yml        # Test coverage reporting
+â   âââ link-check.yml           # Link validation
+â   âââ css-budget.yml           # CSS size enforcement
+â   âââ [other workflows]        # Jules agents, specialized tests, etc.
+âââ tests/                       # Additional test organization
+â   âââ e2e/                     # End-to-end Playwright tests
+âââ _quarto.yml                  # Quarto configuration
+âââ pyproject.toml               # Python project metadata and dependencies
+âââ package.json                 # JavaScript dependencies
+âââ SPEC.md                      # This specification document
+âââ README.md                    # Project overview and quick start
 ```
 
 ### Key Components
@@ -143,43 +143,43 @@ AffineDrift/
 
 | # | Feature | Status | Description |
 |---|---------|--------|-------------|
-| F1 | Quarto Website Rendering and Deployment | ✅ | Renders Quarto markdown (.qmd) source files into static HTML and deploys to GitHub Pages |
-| F2 | Affine Control Theory Swing Optimizer | ✅ | Implements DDP and iLQR algorithms to optimize golf swing trajectories as affine controllable systems |
-| F3 | Tangent Space and Hyperplane Models | ✅ | Provides mathematical models for tangent space methods with educational examples |
-| F4 | Interactive JavaScript Visualizations | ✅ | Rotation converter, search interface, and mathematical visualization components |
-| F5 | Mathematical Notation Rendering | ✅ | Supports MathJax and KaTeX for rendering LaTeX equations in web content |
-| F6 | Property-Based Testing with Hypothesis | ✅ | Comprehensive property-based testing strategy using Hypothesis framework |
-| F7 | CSS Budget Enforcement | ✅ | Automated CI enforcement of CSS file size limits to maintain performance |
-| F8 | Mirror Validation | ✅ | Ensures duplicate stylesheets match canonical versions across the codebase |
-| F9 | GitHub Actions Automation | ✅ | 54 CI/CD workflows including Jules automation agents for code analysis and deployment |
-| F10 | Progressive Web App Support | ✅ | Service worker and manifest for PWA capabilities (offline access, installability) |
-| F11 | Textbook Compilation Pipeline | ✅ | Quarto pipeline to compile educational materials into publishable textbook format |
-| F12 | Textbook claim guardrail | ✅ | PR CI blocks newly added unsupported quantitative or study claims in textbook content unless they include a citation or an explicit illustrative caveat |
-| F13 | PR site-build and dependency-audit gate | ✅ | `ci-standard.yml` audits Python dependencies with `pip-audit`, renders the Quarto site in PR CI, syncs frontend assets, and runs Playwright smoke tests against the generated docs |
-| F14 | Bibliography duplicate-alias guardrail | ✅ | Reference-integrity tests require duplicate bibliography records to carry an explicit legacy-compatibility note instead of silently diverging |
-| F15 | Textbook bibliography synchronization | ✅ | The Geometry of Motion and The Physics of Golf keep chapter-level citations synchronized with shared bibliography sources in `references/affine-drift.bib` and the book-specific `.bib` files |
+| F1 | Quarto Website Rendering and Deployment | â | Renders Quarto markdown (.qmd) source files into static HTML and deploys to GitHub Pages |
+| F2 | Affine Control Theory Swing Optimizer | â | Implements DDP and iLQR algorithms to optimize golf swing trajectories as affine controllable systems |
+| F3 | Tangent Space and Hyperplane Models | â | Provides mathematical models for tangent space methods with educational examples |
+| F4 | Interactive JavaScript Visualizations | â | Rotation converter, search interface, and mathematical visualization components |
+| F5 | Mathematical Notation Rendering | â | Supports MathJax and KaTeX for rendering LaTeX equations in web content |
+| F6 | Property-Based Testing with Hypothesis | â | Comprehensive property-based testing strategy using Hypothesis framework |
+| F7 | CSS Budget Enforcement | â | Automated CI enforcement of CSS file size limits to maintain performance |
+| F8 | Mirror Validation | â | Ensures duplicate stylesheets match canonical versions across the codebase |
+| F9 | GitHub Actions Automation | â | 54 CI/CD workflows including Jules automation agents for code analysis and deployment |
+| F10 | Progressive Web App Support | â | Service worker and manifest for PWA capabilities (offline access, installability) |
+| F11 | Textbook Compilation Pipeline | â | Quarto pipeline to compile educational materials into publishable textbook format |
+| F12 | Textbook claim guardrail | â | PR CI blocks newly added unsupported quantitative or study claims in textbook content unless they include a citation or an explicit illustrative caveat |
+| F13 | PR site-build and dependency-audit gate | â | `ci-standard.yml` audits Python dependencies with `pip-audit`, renders the Quarto site in PR CI, syncs frontend assets, and runs Playwright smoke tests against the generated docs |
+| F14 | Bibliography duplicate-alias guardrail | â | Reference-integrity tests require duplicate bibliography records to carry an explicit legacy-compatibility note instead of silently diverging |
+| F15 | Textbook bibliography synchronization | â | The Geometry of Motion and The Physics of Golf keep chapter-level citations synchronized with shared bibliography sources in `references/affine-drift.bib` and the book-specific `.bib` files |
 
 ### API / Interface Contract
 
 **Python API:**
-- `affine_control.swing_optimizer.SwingOptimizer` — Main optimization interface
+- `affine_control.swing_optimizer.SwingOptimizer` â Main optimization interface
   - Constructor permits a missing solver for inspection/tests but emits a warning and binds the documented mock implementation
   - `optimize(...)` rejects the mock solver unless `SwingOptimizationConfig.allow_mock_solver=True`
-  - `optimize(swing_model, constraints) -> OptimizedTrajectory` — Run trajectory optimization
-- `core.optimizers.iLQR` — iLQR solver
-  - `solve(dynamics, cost_fn, initial_trajectory) -> Solution` — Compute optimal trajectory
-- `tangent_models.TangentSpaceModel` — Tangent space abstraction
-  - `project(vector) -> Vector` — Project to tangent space
+  - `optimize(swing_model, constraints) -> OptimizedTrajectory` â Run trajectory optimization
+- `core.optimizers.iLQR` â iLQR solver
+  - `solve(dynamics, cost_fn, initial_trajectory) -> Solution` â Compute optimal trajectory
+- `tangent_models.TangentSpaceModel` â Tangent space abstraction
+  - `project(vector) -> Vector` â Project to tangent space
 
 **JavaScript API:**
-- `RotationConverter` — Interactive 3D rotation tool
-  - `convert(matrix, target_format) -> string` — Convert rotation representations
-- `SearchIndex.query(term) -> SearchResults` — Full-text search across content
+- `RotationConverter` â Interactive 3D rotation tool
+  - `convert(matrix, target_format) -> string` â Convert rotation representations
+- `SearchIndex.query(term) -> SearchResults` â Full-text search across content
 
 **CLI Tools:**
-- `link-checker.py` — Validate all documentation links
-- `site-health.py` — Generate health report on website assets
-- `code-quality-ast.py` — Analyze Python code structure and metrics
+- `link-checker.py` â Validate all documentation links
+- `site-health.py` â Generate health report on website assets
+- `code-quality-ast.py` â Analyze Python code structure and metrics
 
 **Website (HTTP):**
 - GitHub Pages deployment at `AffineDrift.com`
@@ -231,10 +231,10 @@ AffineDrift/
 - Coverage configuration (minimum 50%)
 
 **Code Quality Settings:**
-- **ruff** — Linting rules in `pyproject.toml` under `[tool.ruff]`
-- **black** — 100-character line limit (NOT ruff format)
-- **mypy** — Type checking enabled for all src/ modules
-- **No print() in src/** — Only logging module permitted
+- **ruff** â Linting rules in `pyproject.toml` under `[tool.ruff]`
+- **black** â 100-character line limit (NOT ruff format)
+- **mypy** â Type checking enabled for all src/ modules
+- **No print() in src/** â Only logging module permitted
 
 ## 7. Testing Specification
 
@@ -420,20 +420,22 @@ python src/tools/code_quality_ast.py
 
 | Date | Version | Changes |
 |------|---------|---------|
-| 2026-03-30 | 1.0.9 | fix(html): corrected malformed HTML structure in Wrist_Universal_Claude.html — removed stray </p> tags after list elements and fixed <p> tags improperly wrapping <ul>/<ol> block content |
-| 2026-03-30 | 1.0.6 | fix(ci): aligned regression tests with current workflows — mock-solver guard asserted at optimize() per SwingOptimizer contract; test_deployment_integrity updated to match Quarto render action in ci-standard.yml; added dotenv-example removal step before E2E render; updated torque-generator docstrings in Universal_Joint_Model_Enhanced.py |
+| 2026-04-02 | 1.0.11 | refactor(js): remove legacy monolithic script.js (1753 LOC) -- DRY violation resolved; all HTML updated to use js/main.js ES6 module exclusively; service worker cache, jest.config, CONTRIBUTING and README updated to reflect modular js/ directory (#2070) |
+| 2026-04-01 | 1.0.10 | security(links): Added rel="noopener noreferrer" to target="_blank" links in latex_utils.py and bibliography.js to mitigate reverse tabnabbing vulnerabilities |
+| 2026-03-30 | 1.0.9 | fix(html): corrected malformed HTML structure in Wrist_Universal_Claude.html â removed stray </p> tags after list elements and fixed <p> tags improperly wrapping <ul>/<ol> block content |
+| 2026-03-30 | 1.0.6 | fix(ci): aligned regression tests with current workflows â mock-solver guard asserted at optimize() per SwingOptimizer contract; test_deployment_integrity updated to match Quarto render action in ci-standard.yml; added dotenv-example removal step before E2E render; updated torque-generator docstrings in Universal_Joint_Model_Enhanced.py |
 | 2026-03-30 | 1.0.6 | A-N Assessment remediation (issue #2012): auto-formatted 10 files to comply with black 100-char limit; added missing docstrings to priority_score, __post_init__, _requires_token, create_issue, sha256, sync_one, main, __init__, _handle_text/_code_block/_inline_code/_display_math/_inline_math, setup_logging_with_timestamp, find_markdown_files across scripts/ |
-| 2026-03-30 | 1.0.5 | Performance fix: replaced O(n²) list.index() loop in putt simulator with enumerate() for linear-time hole-score lookups in round_simulator.py |
+| 2026-03-30 | 1.0.5 | Performance fix: replaced O(nÂ²) list.index() loop in putt simulator with enumerate() for linear-time hole-score lookups in round_simulator.py |
 | 2026-03-30 | 1.0.4 | Fixed remaining CI failures in batch-4 PR: replaced bare HTML TODO comments with inline caveat phrasing ("illustrative", "depends on", etc.) in ch16, ch18--ch31 qmd files and ch14--ch16, ch19 tex files to satisfy checker window requirements |
-| 2026-03-30 | 1.0.3 | Added TODO(citation) markers and humble qualifiers for unsourced numerical claims in ch14--ch31 LaTeX chapters of The Physics of Golf — issues #1881, #1882, #1883, #1884, #1885, #1886, #1887, #1888, #1889, #1890, #1892, #1893, #1894, #1895, #1896, #1897, #1898, #1899 (batch 2) |
+| 2026-03-30 | 1.0.3 | Added TODO(citation) markers and humble qualifiers for unsourced numerical claims in ch14--ch31 LaTeX chapters of The Physics of Golf â issues #1881, #1882, #1883, #1884, #1885, #1886, #1887, #1888, #1889, #1890, #1892, #1893, #1894, #1895, #1896, #1897, #1898, #1899 (batch 2) |
 | 2026-03-30 | 1.0.2 | Added caveat phrasing and improved humble language for uncited numerical claims in ch02, ch03, ch04, ch07, ch10, ch11, ch13, ch18, ch19, ch20, ch21, ch23, ch25, ch26, ch29, ch31, and glossary of The Physics of Golf (content audit wave 2; issues #2007--#2011) |
-| 2026-03-30 | 1.0.2 | Added citation markers, TODO notes, and humble phrasing for unsourced numerical claims and study references in ch22--ch31, glossary.qmd (The Physics of Golf), and 01-throwing-away-target.qmd (The Geometry of Motion) — issues #1921, #1922, #1924, #1925, #1926, #1927, #1928, #1929, #1930, #1931, #1932, #1948 (batch 4) |
+| 2026-03-30 | 1.0.2 | Added citation markers, TODO notes, and humble phrasing for unsourced numerical claims and study references in ch22--ch31, glossary.qmd (The Physics of Golf), and 01-throwing-away-target.qmd (The Geometry of Motion) â issues #1921, #1922, #1924, #1925, #1926, #1927, #1928, #1929, #1930, #1931, #1932, #1948 (batch 4) |
 | 2026-03-30 | 1.0.1 | Improve accessibility for Critics Corner with aria-controls |
 | 2026-03-30 | 1.0.1 | Added citation markers, TODO notes, and humble phrasing for unsourced claims in chapters 1--13 of The Physics of Golf (issues #1868--#1880, batch 1) |
-| 2026-03-30 | 1.0.1 | Added citation markers (TODO comments) and humble qualifiers to unsourced numerical claims in ch01--ch21 of The Physics of Golf — issues #1900--#1920 (batch 3) |
+| 2026-03-30 | 1.0.1 | Added citation markers (TODO comments) and humble qualifiers to unsourced numerical claims in ch01--ch21 of The Physics of Golf â issues #1900--#1920 (batch 3) |
 | 2026-03-30 | 1.0.0 | Consolidated frontend scroll event handlers via `requestAnimationFrame` |
 | 2026-03-30 | 1.0.0 | Documented PR CI dependency-audit plus rendered-site E2E gate, mock-solver opt-in behavior at `SwingOptimizer.optimize`, and bibliography duplicate-alias integrity guardrails |
-| 2026-03-28 | 1.0.0 | Initial SPEC.md specification for AffineDrift v1.0.0 — all core features documented and implemented |
+| 2026-03-28 | 1.0.0 | Initial SPEC.md specification for AffineDrift v1.0.0 â all core features documented and implemented |
 
 ---
 
