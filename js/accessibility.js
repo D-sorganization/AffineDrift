@@ -67,6 +67,9 @@ export function initRepoLinks() {
  * Initialize all ARIA labels for accessibility
  */
 export function initAriaLabels() {
+    // ⚡ Bolt Optimization: Use getElementsByTagName and getElementsByClassName
+    // (O(1) Live Collections) instead of querySelectorAll (O(N) Traversal)
+
     // Navigation elements
     const navElements = document.getElementsByTagName("nav");
     for (const nav of navElements) {
@@ -108,6 +111,7 @@ export function initAriaLabels() {
         }
     }
 
+
     // Social links
     const socialLinks = document.getElementsByClassName("social-link");
     for (const link of socialLinks) {
@@ -146,6 +150,7 @@ export function initAriaLabels() {
     }
 
     // History lists - live regions
+    // Fallback to querySelectorAll here because id selection is a complex pattern
     const historyLists = document.querySelectorAll('[id$="-history-list"]');
     for (const list of historyLists) {
         if (!list.hasAttribute("aria-live")) {
