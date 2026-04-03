@@ -3,7 +3,7 @@
 ## Grade: 8.0/10
 
 ## Details
-Try blocks: 111, Bare excepts: 3
+Try blocks: 108, Bare excepts: 1
 
 ## Recommendations
 - Replace bare `except:` blocks with specific exceptions and ensure `try` blocks are used.
