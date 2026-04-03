@@ -19,6 +19,8 @@ from src.golf_simulation.terrain import TerrainType
 
 logger = logging.getLogger(__name__)
 
+GRAVITY_M_S2 = 9.81
+
 
 class ClubType(Enum):
     """Golf club classification."""
@@ -92,7 +94,7 @@ class GolfClub:
         v = self.typical_speed_ms
         angle = self.typical_launch_rad
         # Simplified range estimate: R = v^2 * sin(2*theta) / g * drag_factor
-        g = 9.81
+        g = GRAVITY_M_S2
         drag_factor = 0.55  # Empirical correction for drag
         range_m = v**2 * np.sin(2.0 * angle) / g * drag_factor
         return float(range_m * 1.09361)  # meters to yards

@@ -3,6 +3,8 @@
 import numpy as np
 import pytest
 
+GRAVITY_M_S2 = 9.81
+
 from src.golf_simulation.ball_flight import BallFlightDynamics, BallFlightState
 
 
@@ -60,7 +62,7 @@ class TestBallFlightDynamics:
         u = np.zeros(3)
         dx = bfd.dynamics(x, u)
         # Velocity derivatives: only gravity in z
-        assert abs(dx[5] - (-9.81)) < 0.01  # az ~ -g
+        assert abs(dx[5] - (-GRAVITY_M_S2)) < 0.01  # az ~ -g
 
     def test_no_magnus_without_spin(self):
         """Zero spin should produce no Magnus force."""
