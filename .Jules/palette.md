@@ -25,3 +25,7 @@
 ## 2026-04-02 - Icon-only button accessibility with dynamic state
 **Learning:** Hardcoding generic `aria-label`s on stateful icon-only buttons (like dark mode toggles) provides a poor experience, as screen readers read the generic label followed by the emoji character (e.g., "Toggle dark mode, Sun"). Furthermore, it doesn't clearly convey the *action* that will happen.
 **Action:** For stateful icon-only buttons, dynamically update the `aria-label` to explicitly describe the action ("Switch to light mode") and wrap the visual emoji/icon in `<span aria-hidden="true">` so it's ignored by screen readers.
+
+## 2026-05-24 - Dynamic Status Updates Accessibility
+**Learning:** Dynamic UI status updates (such as "Notes saved" or "Workspace cleared") are visual-only changes by default. Without explicit ARIA properties, screen reader users miss crucial feedback about the results of their actions.
+**Action:** Always add `aria-live="polite"` and `aria-atomic="true"` to status containers so that content changes are automatically announced to assistive technologies without stealing focus.
