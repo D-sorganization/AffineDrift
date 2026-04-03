@@ -131,11 +131,9 @@ class MATLABQualityChecker:
 
     def _build_matlab_commands(self, script_path: Path) -> list[list[str]]:
         """Return ordered list of MATLAB/Octave commands to attempt."""
-        # Clean path completely to prevent any MATLAB injection techniques
-        # including quote escaping, statement terminators (;), and line breaks.
-        safe_path = (
-            str(script_path).replace("'", "").replace(";", "").replace("\n", "").replace("\r", "")
-        )
+        # Sanitize the file path by escaping single quotes for MATLAB.
+        # MATLAB escapes single quotes by doubling them.
+        safe_path = str(script_path).replace("'", "''")
         return [
             ["matlab", "-batch", f"run('{safe_path}')"],
             ["matlab", "-nosplash", "-nodesktop", "-batch", f"run('{safe_path}')"],
