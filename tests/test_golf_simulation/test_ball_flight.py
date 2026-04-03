@@ -3,9 +3,9 @@
 import numpy as np
 import pytest
 
-GRAVITY_M_S2 = 9.81
-
 from src.golf_simulation.ball_flight import BallFlightDynamics, BallFlightState
+
+GRAVITY_M_S2 = 9.81
 
 
 class TestBallFlightState:
