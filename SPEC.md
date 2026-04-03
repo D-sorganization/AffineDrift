@@ -420,6 +420,7 @@ python src/tools/code_quality_ast.py
 
 | Date | Version | Changes |
 |------|---------|---------|
+| 2026-04-02 | 1.1.0 | refactor(scripts): extracted monolithic scripts into focused modules — mypy_autofix_agent.py (737→84 LOC) split into mypy_models, mypy_io, mypy_fixers, mypy_runner; assess_repo.py (663→87 LOC) split into assess_categories, assess_runner; added 111 new tests across 6 new test files (TDD, issue #2073) |
 | 2026-03-30 | 1.0.9 | fix(html): corrected malformed HTML structure in Wrist_Universal_Claude.html — removed stray </p> tags after list elements and fixed <p> tags improperly wrapping <ul>/<ol> block content |
 | 2026-03-30 | 1.0.6 | fix(ci): aligned regression tests with current workflows — mock-solver guard asserted at optimize() per SwingOptimizer contract; test_deployment_integrity updated to match Quarto render action in ci-standard.yml; added dotenv-example removal step before E2E render; updated torque-generator docstrings in Universal_Joint_Model_Enhanced.py |
 | 2026-03-30 | 1.0.6 | A-N Assessment remediation (issue #2012): auto-formatted 10 files to comply with black 100-char limit; added missing docstrings to priority_score, __post_init__, _requires_token, create_issue, sha256, sync_one, main, __init__, _handle_text/_code_block/_inline_code/_display_math/_inline_math, setup_logging_with_timestamp, find_markdown_files across scripts/ |
