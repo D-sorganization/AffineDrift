@@ -28,9 +28,14 @@ export function updateHistorySidebar() {
         pageTitle = "Home";
     }
 
+    // ⚡ Bolt Optimization: Use lastIndexOf/substring instead of split().pop()
+    // Avoids creating an array of path segments just to get the last item
+    const path = window.location.pathname;
+    const urlFromPath = path.substring(path.lastIndexOf("/") + 1);
+
     const currentPage = {
         title: pageTitle,
-        url: window.location.pathname.split("/").pop() || "index.html",
+        url: urlFromPath || "index.html",
         fullUrl: window.location.href,
     };
 
@@ -119,7 +124,8 @@ export function initArticleHistory() {
 
     const STORAGE_KEY = "affinedrift_articles_history";
     const currentPath = window.location.pathname;
-    const currentUrl = currentPath.split("/").pop() || "";
+    // ⚡ Bolt Optimization: Use lastIndexOf/substring instead of split().pop()
+    const currentUrl = currentPath.substring(currentPath.lastIndexOf("/") + 1) || "";
     const isArticlePage =
         currentPath.includes("/articles/") && currentUrl.endsWith(".html");
 
