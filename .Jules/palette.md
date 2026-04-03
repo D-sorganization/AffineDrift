@@ -21,3 +21,7 @@
 ## 2026-04-01 - Proper Accessible UI States for Sidebars
 **Learning:** Collapsible sidebar sections in `home.js` were changing their display visually via CSS classes but lacked full aria accessibility properties linking the toggle to its contents. Without proper connection (`aria-controls`) and visual state synchronization (`aria-hidden`), screen reader users won't know the exact outcome of triggering the element.
 **Action:** Always ensure that when writing or refactoring DOM manipulation logic for collapsible elements, `aria-controls` explicitly connects the button to its target `id`, and both `aria-expanded` and `aria-hidden` attributes correctly reflect the toggled state.
+
+## 2026-04-02 - Icon-only button accessibility with dynamic state
+**Learning:** Hardcoding generic `aria-label`s on stateful icon-only buttons (like dark mode toggles) provides a poor experience, as screen readers read the generic label followed by the emoji character (e.g., "Toggle dark mode, Sun"). Furthermore, it doesn't clearly convey the *action* that will happen.
+**Action:** For stateful icon-only buttons, dynamically update the `aria-label` to explicitly describe the action ("Switch to light mode") and wrap the visual emoji/icon in `<span aria-hidden="true">` so it's ignored by screen readers.
