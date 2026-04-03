@@ -37,9 +37,33 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # ── Dispatcher: route to self-hosted if available ──────────────────────────
+  pick-runner:
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    outputs:
+      runner: ${{ steps.check.outputs.runner }}
+    steps:
+      - name: Check for self-hosted runner
+        id: check
+        env:
+          GH_TOKEN: ${{ secrets.RUNNER_CHECK_TOKEN }}
+        run: |
+          ONLINE=$(gh api /orgs/${{ github.repository_owner }}/actions/runners \
+            --jq '[.runners[] | select(.status == "online") | select(.labels[].name == "d-sorg-fleet")] | length' \
+            2>/dev/null || echo "0")
+          if [[ "$ONLINE" -gt 0 ]]; then
+            echo "runner=d-sorg-fleet" >> $GITHUB_OUTPUT
+            echo "Self-hosted runner online — routing locally"
+          else
+            echo "runner=ubuntu-latest" >> $GITHUB_OUTPUT
+            echo "No self-hosted runner — using GitHub-hosted"
+          fi
+
   run-assessments:
     name: Run Repository Assessments (A-O)
-    runs-on: ubuntu-latest
+    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    needs: pick-runner
     permissions:
       contents: write
       pull-requests: write
@@ -211,7 +235,7 @@ jobs:
     name: Auto-Fix All Issues (Consolidated)
     needs: run-assessments
     if: github.event.inputs.auto_fix != 'false' && github.event.inputs.dry_run != 'true'
-    runs-on: ubuntu-latest
+    runs-on: ${{ needs.pick-runner.outputs.runner }}
     permissions:
       contents: write
       pull-requests: write
@@ -386,7 +410,7 @@ jobs:
   create-github-issues:
     name: Create GitHub Issues for Untracked Problems
     needs: run-assessments
-    runs-on: ubuntu-latest
+    runs-on: ${{ needs.pick-runner.outputs.runner }}
     permissions:
       issues: write
 
@@ -440,7 +464,7 @@ jobs:
       inputs.source_pr_to_close != '' &&
       inputs.dry_run != 'true' &&
       needs.auto-fix-issues.result == 'success'
-    runs-on: ubuntu-latest
+    runs-on: ${{ needs.pick-runner.outputs.runner }}
     permissions:
       pull-requests: write
 
@@ -484,7 +508,8 @@ jobs:
   dry-run-summary:
     name: Dry Run Summary
     if: inputs.dry_run == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    needs: pick-runner
 
     steps:
       - name: Generate dry run report
