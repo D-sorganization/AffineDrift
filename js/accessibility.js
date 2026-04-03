@@ -16,14 +16,22 @@ export function initSecureExternalLinks() {
             link.hostname !== currentHostname &&
             link.protocol.startsWith("http")
         ) {
-            if (!link.hasAttribute("target")) {
-                link.setAttribute("target", "_blank");
+            // ⚡ Bolt Optimization: Use property access and DOMTokenList
+            // Avoids O(N) memory allocation from string split/join for every external link
+            if (!link.target) {
+                link.target = "_blank";
             }
-            const rel = link.getAttribute("rel") || "";
-            const parts = rel.split(" ").filter((p) => p);
-            if (!parts.includes("noopener")) parts.push("noopener");
-            if (!parts.includes("noreferrer")) parts.push("noreferrer");
-            link.setAttribute("rel", parts.join(" "));
+
+            if (link.relList) {
+                link.relList.add("noopener", "noreferrer");
+            } else {
+                const rel = link.getAttribute("rel") || "";
+                const parts = rel.split(" ").filter((p) => p);
+                if (!parts.includes("noopener")) parts.push("noopener");
+                if (!parts.includes("noreferrer")) parts.push("noreferrer");
+                link.setAttribute("rel", parts.join(" "));
+            }
+
             if (
                 link.getElementsByTagName("img").length === 0 &&
                 link.getElementsByTagName("svg").length === 0 &&
@@ -44,11 +52,15 @@ export function initSecureExternalLinks() {
  * Set external links on GitHub repos
  */
 export function initRepoLinks() {
-    document
-        .querySelectorAll('.navbar-nav a[href^="https://github.com"]')
-        .forEach((link) => {
+    // ⚡ Bolt Optimization: Use document.links (O(1)) instead of querySelectorAll (O(N))
+    for (const link of document.links) {
+        if (
+            link.href.startsWith("https://github.com") &&
+            link.closest(".navbar-nav")
+        ) {
             link.setAttribute("target", "_blank");
-        });
+        }
+    }
 }
 
 /**

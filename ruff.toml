@@ -1,0 +1,33 @@
+line-length = 100
+target-version = "py312"
+exclude = [
+    ".git",
+    "__pycache__",
+    "build",
+    "dist",
+    "tests/test_critical_physics_fixes.py",
+    "venv",
+    "env",
+    ".env",
+    "node_modules",
+    "*.ipynb",
+    "content",
+    "docs",
+]
+
+[lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = ["D", "RUF001"]
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[lint.per-file-ignores]
+"__init__.py" = ["F401"]
+"tests/*" = ["S101", "E501"]
+"tests/test_critical_physics_fixes.py" = ["F821", "E402", "E731", "F401"]
+"tools/**/*.py" = ["E501"]
+"scripts/**/*.py" = ["E501"]
+"docs/**/*.py" = ["E501"]
+"build-html.py" = ["E501"]
+
+[lint.isort]
+known-first-party = ["src", "games", "tools"]
