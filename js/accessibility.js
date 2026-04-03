@@ -16,14 +16,22 @@ export function initSecureExternalLinks() {
             link.hostname !== currentHostname &&
             link.protocol.startsWith("http")
         ) {
-            if (!link.hasAttribute("target")) {
-                link.setAttribute("target", "_blank");
+            // ⚡ Bolt Optimization: Use property access and DOMTokenList
+            // Avoids O(N) memory allocation from string split/join for every external link
+            if (!link.target) {
+                link.target = "_blank";
             }
-            const rel = link.getAttribute("rel") || "";
-            const parts = rel.split(" ").filter((p) => p);
-            if (!parts.includes("noopener")) parts.push("noopener");
-            if (!parts.includes("noreferrer")) parts.push("noreferrer");
-            link.setAttribute("rel", parts.join(" "));
+
+            if (link.relList) {
+                link.relList.add("noopener", "noreferrer");
+            } else {
+                const rel = link.getAttribute("rel") || "";
+                const parts = rel.split(" ").filter((p) => p);
+                if (!parts.includes("noopener")) parts.push("noopener");
+                if (!parts.includes("noreferrer")) parts.push("noreferrer");
+                link.setAttribute("rel", parts.join(" "));
+            }
+
             if (
                 !link.querySelector("img, svg") &&
                 !link.classList.contains("external-link")

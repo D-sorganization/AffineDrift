@@ -54,12 +54,13 @@ export function initFadeAnimations() {
             }
         });
     } else {
-        const allSections = document.querySelectorAll("section");
-        allSections.forEach((section) => {
+        // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) live collection) instead of querySelectorAll (O(N))
+        const allSections = document.getElementsByTagName("section");
+        for (const section of allSections) {
             section.style.opacity = "1";
             section.style.transform = "translateY(0)";
             section.style.visibility = "visible";
-        });
+        }
     }
 }
 
