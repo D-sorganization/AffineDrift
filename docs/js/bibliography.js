@@ -46,28 +46,17 @@
     return el.innerHTML;
   };
 
-  const entrySearchText = (entry) =>
-    [
-      entry.title,
-      entry.venue,
-      entry.description,
-      ...(entry.authors || []),
-      ...(entry.concepts || []),
-    ]
-      .join(" ")
-      .toLowerCase();
-
   const scoreEntry = (entry, queryTerms) => {
     if (queryTerms.length === 0) return 0;
-    const haystack = entrySearchText(entry);
+    // ⚡ Bolt Optimization: Use pre-computed strings instead of dynamically
+    // allocating and joining arrays on every keystroke.
+    const haystack = entry._searchHaystack;
     let score = 0;
 
     for (const term of queryTerms) {
-      if (entry.title.toLowerCase().includes(term)) score += 5;
-      if ((entry.authors || []).join(" ").toLowerCase().includes(term))
-        score += 3;
-      if ((entry.concepts || []).join(" ").toLowerCase().includes(term))
-        score += 2;
+      if (entry._titleLower.includes(term)) score += 5;
+      if (entry._authorsLower.includes(term)) score += 3;
+      if (entry._conceptsLower.includes(term)) score += 2;
       if (haystack.includes(term)) score += 1;
     }
 
@@ -148,7 +137,8 @@
 
     const filtered = state.entries.filter((entry) => {
       if (queryTerms.length === 0) return true;
-      const haystack = entrySearchText(entry);
+      // ⚡ Bolt Optimization: Use pre-computed haystack instead of dynamic generation.
+      const haystack = entry._searchHaystack;
       return queryTerms.every((term) => haystack.includes(term));
     });
 
@@ -244,7 +234,30 @@
 
   const init = async () => {
     try {
-      state.entries = await loadEntries();
+      const entries = await loadEntries();
+
+      // ⚡ Bolt Optimization: Pre-compute search strings to avoid O(N*M) allocations per keystroke.
+      state.entries = entries.map(entry => {
+        const _titleLower = (entry.title || "").toLowerCase();
+        const _authorsLower = (entry.authors || []).join(" ").toLowerCase();
+        const _conceptsLower = (entry.concepts || []).join(" ").toLowerCase();
+        const _searchHaystack = [
+          entry.title,
+          entry.venue,
+          entry.description,
+          ...(entry.authors || []),
+          ...(entry.concepts || [])
+        ].join(" ").toLowerCase();
+
+        return {
+          ...entry,
+          _titleLower,
+          _authorsLower,
+          _conceptsLower,
+          _searchHaystack
+        };
+      });
+
       countEl.textContent = `${state.entries.length} references`;
       renderSortControls();
       renderList();
