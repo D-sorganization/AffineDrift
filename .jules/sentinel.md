@@ -36,3 +36,8 @@
 **Vulnerability:** I thought there was a code injection in `matlab_quality_check.py` because `replace("'", "''")` was used to escape single quotes, but MATLAB string literals actually don't parse backslash escapes inside single-quoted strings, and doubling single quotes is the robust and correct way to escape strings in MATLAB. Attempting to strip characters like semicolons or quotes creates a regression as legitimate paths with quotes or semicolons would break.
 **Learning:** MATLAB's string escaping rules inside single quotes are extremely simple (doubling the quote). There's no backslash escaping, and newlines cause parse errors rather than code execution. Thus `run('path_with_escaped_quotes')` is fully secure.
 **Prevention:** Do not try to "fix" robust language-specific string escaping mechanisms by replacing them with aggressive character stripping, as it degrades functionality without adding security.
+
+## 2026-03-10 - Missing aria-hidden on decorative SVGs
+**Vulnerability:** Missing `aria-hidden="true"` on dynamically injected SVG icons inside buttons and links. This can cause screen readers to announce the SVG contents or generic "image" terms alongside the parent's `aria-label`, leading to redundant and confusing announcements for users relying on assistive technology.
+**Learning:** Decorative SVG icons inside interactive elements like buttons or links need explicit ARIA hiding so that assistive technologies focus solely on the meaningful text or the explicitly provided `aria-label` of the parent element.
+**Prevention:** Always add `aria-hidden="true"` to dynamically injected decorative SVG icons during frontend DOM generation.
