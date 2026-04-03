@@ -25,3 +25,7 @@
 ## 2025-02-19 - QuerySelector vs Live Collection Iteration for Tags
 **Learning:** `document.querySelectorAll("tag")` requires a full DOM scan and parsing of the selector. It's often faster to iterate over a live collection like `document.getElementsByTagName("tag")` which is O(1) time complexity.
 **Action:** When searching for global elements like standard tags (`nav`, `aside`, `main`, `textarea`, `pre`, `section`), always prefer `document.getElementsByTagName` over `document.querySelectorAll` combined with a `for...of` loop.
+
+## 2025-10-28 - DOMTokenList vs String Manipulation
+**Learning:** Manually manipulating space-separated attributes (like `rel` or `class`) using `.split(" ")` and `.join(" ")` in loops creates unnecessary arrays and string copies, causing garbage collection overhead. Using `.split("/").pop()` on URLs is similarly wasteful compared to `substring()`.
+**Action:** Always use native `DOMTokenList` APIs (like `element.classList` or `element.relList`) to add, remove, or toggle tokens directly without JS memory allocation. Use `substring(lastIndexOf("/"))` for simple path extractions.
