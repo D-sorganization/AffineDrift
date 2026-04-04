@@ -181,19 +181,13 @@
         setStatus("Pop-out blocked by browser.");
         return;
       }
-      const escaped = textArea.value
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#39;");
       const openerOrigin = window.location.origin;
       pop.document.write(`
         <!doctype html>
         <html><head><title>AffineDrift Project Notes</title></head>
         <body style="font-family: sans-serif; margin: 1rem;">
           <h2 style="margin-top:0;">AffineDrift Project Notes</h2>
-          <textarea id="notes" style="width:100%; min-height:360px;">${escaped}</textarea>
+          <textarea id="notes" style="width:100%; min-height:360px;"></textarea>
           <div style="margin-top:0.75rem;">
             <button id="save">Save</button>
             <button id="close">Close</button>
@@ -209,6 +203,8 @@
         </body></html>
       `);
       pop.document.close();
+      // Securely set the value without XSS risk from document.write
+      pop.document.getElementById("notes").value = textArea.value;
       setStatus("Opened pop-out workspace.");
     }
 
