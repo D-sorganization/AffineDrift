@@ -143,8 +143,9 @@ export function generateTableOfContents() {
         }
     });
 
-    const categories = document.querySelectorAll(".article-category");
-    categories.forEach((category) => {
+    // ⚡ Bolt Optimization: Use getElementsByClassName (O(1) live collection) instead of querySelectorAll (O(N))
+    const categories = document.getElementsByClassName("article-category");
+    for (const category of categories) {
         const heading = category.querySelector("h3");
         if (heading) {
             let id = category.id;
@@ -162,11 +163,13 @@ export function generateTableOfContents() {
                 level: 2,
             });
         }
-    });
+    }
 
     if (sections.length === 0) {
-        const h2s = document.querySelectorAll("h2");
-        h2s.forEach((h2, index) => {
+        // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) live collection) instead of querySelectorAll (O(N))
+        const h2s = document.getElementsByTagName("h2");
+        let index = 0;
+        for (const h2 of h2s) {
             let id = h2.id;
             if (!id || usedIds.has(id)) {
                 id = generateUniqueId(
@@ -181,7 +184,8 @@ export function generateTableOfContents() {
                 text: h2.textContent.trim(),
                 level: 2,
             });
-        });
+            index++;
+        }
     }
 
     if (sections.length > 0) {
