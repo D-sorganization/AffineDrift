@@ -49,3 +49,7 @@
 ## 2026-04-03 - Pre-computing Strings for Frontend Search
 **Learning:** Calculating `.toLowerCase()` and `.join()` inside a search loop runs on every keystroke, causing O(N*M) string allocations. This creates massive GC pressure.
 **Action:** Pre-compute and cache expensive string operations (like lowercasing and joining arrays) on the data objects at load time, rather than calling them dynamically during the search filter function.
+
+## 2024-05-26 - DOM Creation vs Regex String Replacement for Escaping
+**Learning:** Using `document.createElement("div")` to escape HTML strings incurs significant memory allocation and layout thrashing, especially in hot loops generating large lists. This is incredibly slow compared to native string operations.
+**Action:** When escaping HTML in JavaScript, especially in loops, use regular expression string replacements (e.g., `.replace(/&/g, "&amp;")`) instead of creating dummy DOM elements to avoid layout thrashing and severe memory allocation overhead.
