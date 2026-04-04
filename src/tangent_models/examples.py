@@ -175,8 +175,12 @@ class SpacecraftRendezvous(DynamicalSystem):
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> np.ndarray[Any, Any]:
         """Compute spacecraft rendezvous dynamics."""
-        if isinstance(u, float | int):
-            raise ValueError("Control input must be a vector for SpacecraftRendezvous")
+        check_finite_array(x, "state vector")
+        require(len(x) == 6, "state vector must have 6 elements")
+        require(
+            not isinstance(u, float | int),
+            "Control input must be a vector for SpacecraftRendezvous",
+        )
         rx, ry, rz, vx, vy, vz = x
         ux, uy, uz = u
 
@@ -201,8 +205,9 @@ class SpacecraftRendezvous(DynamicalSystem):
         Computes the analytical Jacobian of the nonlinear relative motion
         dynamics, yielding A and B matrices for the tangent linear model.
         """
-        if isinstance(u, float | int):
-            raise ValueError("Control input must be a vector")
+        check_finite_array(x, "state vector")
+        require(len(x) == 6, "state vector must have 6 elements")
+        require(not isinstance(u, float | int), "Control input must be a vector")
 
         rx, ry, rz, _, _, _ = x
         n = self.n
@@ -258,8 +263,9 @@ class PlanarQuadrotor(DynamicalSystem):
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> np.ndarray[Any, Any]:
         """Compute planar quadrotor dynamics."""
-        if isinstance(u, float | int):
-            raise ValueError("Control input must be a vector")
+        check_finite_array(x, "state vector")
+        require(len(x) == 6, "state vector must have 6 elements")
+        require(not isinstance(u, float | int), "Control input must be a vector")
         px, py, theta, vx, vy, omega = x
         u1, u2 = u
 
@@ -276,8 +282,9 @@ class PlanarQuadrotor(DynamicalSystem):
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
         """Linearize planar quadrotor dynamics."""
-        if isinstance(u, float | int):
-            raise ValueError("Control input must be a vector")
+        check_finite_array(x, "state vector")
+        require(len(x) == 6, "state vector must have 6 elements")
+        require(not isinstance(u, float | int), "Control input must be a vector")
         px, py, theta, vx, vy, omega = x
         u1, u2 = u
         T = u1 + u2
@@ -336,8 +343,9 @@ class RobotArm(DynamicalSystem):
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> np.ndarray[Any, Any]:
         """Compute robot arm dynamics."""
-        if isinstance(u, float | int):
-            raise ValueError("Control input must be a vector")
+        check_finite_array(x, "state vector")
+        require(len(x) == 4, "state vector must have 4 elements")
+        require(not isinstance(u, float | int), "Control input must be a vector")
         q1, q2, dq1, dq2 = x
         tau1, tau2 = u
 
@@ -384,8 +392,9 @@ class RobotArm(DynamicalSystem):
         Central differences give O(epsilon^2) accuracy vs O(epsilon) for forward differences,
         consistent with _finite_diff_jacobian in residuals.py.
         """
-        if isinstance(u, float | int):
-            raise ValueError("Control input must be a vector")
+        check_finite_array(x, "state vector")
+        require(len(x) == 4, "state vector must have 4 elements")
+        require(not isinstance(u, float | int), "Control input must be a vector")
         # Using numerical linearization for the 2-link arm due to complexity
         epsilon = 1e-6
         n = 4
