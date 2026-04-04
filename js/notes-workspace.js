@@ -173,6 +173,7 @@
     function closePanel() {
       panel.classList.remove("open");
       toggleBtn.setAttribute("aria-expanded", "false");
+      toggleBtn.focus();
     }
 
     function openPopout() {
@@ -223,6 +224,12 @@
         closePanel();
       } else {
         openPanel();
+      }
+    });
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape" && panel.classList.contains("open")) {
+        closePanel();
       }
     });
 
