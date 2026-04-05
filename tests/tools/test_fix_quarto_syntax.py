@@ -1,6 +1,10 @@
 """Tests for fix_quarto_syntax.py — Quarto markdown syntax fixing functions."""
 
-from src.tools.fix_quarto_syntax import fix_superposition, fix_theory_part5, fix_units_wrist
+from src.tools.fix_quarto_syntax import (
+    fix_superposition,
+    fix_theory_part5,
+    fix_units_wrist,
+)
 
 
 class TestFixSuperposition:

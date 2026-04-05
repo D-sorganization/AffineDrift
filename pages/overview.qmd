@@ -1,215 +1,69 @@
 ---
 title: "Overview"
-description: "Affine control theory for golf swing dynamics"
-toc: false
+description: "Scope, evidence standards, and reading paths for the AffineDrift website"
+toc: true
 page-layout: full
 ---
 
-```{=html}
-<div class="container">
-  <div class="standard-page-layout">
-    <!-- Left Sidebar: Marcus Aurelius & Intro (Blue Backdrop) -->
-    <div class="left-sidebar blue-sidebar">
-      <div class="sidebar-sticky-content">
-        <blockquote class="featured-quote blockquote" style="border: none; padding: 0; margin-bottom: 2rem;">
-          <p style="font-size: 1.2rem; font-style: italic; color: rgba(255,255,255,0.9);">"What we do now echoes in eternity"</p>
-          <cite style="color: rgba(255,255,255,0.7); display: block; margin-top: 0.5rem;">— Marcus Aurelius</cite>
-        </blockquote>
+AffineDrift is a public technical website about control-affine mechanics, golf-swing modeling, and related questions in biomechanics and motor control. The site combines textbooks, research notes, critiques, and implementation resources. Its purpose is not to present every interpretation as settled; it is to distinguish established mathematical structure from model-dependent inference and open hypotheses.
 
-        <div class="drift-intro-text">
-          <p>The golf swing is a high-speed, dynamic physical act involving the whole body, the objective of which is to deliver the golf club with a precise set of kinematic constraints. This raises the question: how could we possibly control such an act? A related question is when such control is even possible.</p>
-          <p>As will be outlined further, the dynamics of the golf swing are dependent on not only what you are currently doing, but also what you have done in the past—a phenomenon known as "drift" in nonlinear control theory. This term stems from the velocity- and state-dependent dynamics that arise when systems are moving. As motion increases in speed, these effects can become significant, potentially limiting the golfer's ability to make corrective adjustments during the fastest phases of the swing (see <a href="../articles/theory-part2.html">Theory Part 2</a> for quantitative analysis).</p>
-          <p>In the control-affine framework, drift is not a problem to be eliminated; it is the accumulated result of the system's passive dynamics. Drift is greatest at high velocities, where velocity- and state-dependent coupling terms dominate the equations of motion. Understanding and exploiting this passive contribution is central to the analysis presented on this site.</p>
-        </div>
-      </div>
-    </div>
+::: {.callout-important}
+## Suggested reading path
 
-    <!-- Main Content -->
-    <main class="main-content-area">
-      <div style="margin-bottom: 1.5rem; padding: 0.75rem 1rem; background: #dcfce7; border-left: 3px solid #16a34a; border-radius: 4px; font-size: 0.9rem;">
-        <strong>Canonical Reading Path:</strong> New readers should start with the
-        <a href="../articles/theory-part1.html">Drifter Manifesto series (Parts 1–5)</a>,
-        which is the primary reference for all AffineDrift theory. The Tangent Hyperplanes series and
-        Tangent-Space Methods textbook are exploratory/in-development work maintained separately.
-      </div>
+1. [Article Index](../resources/articles.html) for the current inventory.
+2. [Drifter Manifesto](../pages/drifter-manifesto.html) for the core AffineDrift series.
+3. [The Physics of Golf](../articles/The_Physics_of_Golf/quarto/index.html) for the golf-specific textbook treatment.
+4. [The Geometry of Motion](../articles/The_Geometry_of_Motion/quarto/index.html) for the broader mathematical series.
+5. [Critiques and Responses](../critiques/index.html) for scope limits, objections, and unresolved points.
+:::
 
-      <section id="mission" class="mission-section">
-        <div class="mission-content">
-          <p class="mission-text">
-            AffineDrift is named after a concept in nonlinear control theory, the mathematical framework for managing complex, chaotic systems. The structure of a control-affine system allows the total movement to be clearly separated into two distinct components:
-          </p>
-          <ul class="mission-list">
-            <li><strong>Drift:</strong> The system's inherent, autonomous motion based on its current state.</li>
-            <li><strong>Control:</strong> The changes in motion that arise only from deliberate, external inputs.</li>
-          </ul>
-          <p class="mission-text">
-            This division highlights a key property of mechanical systems: history matters. The system's past actions are encoded in its present state---its accumulated momentum, geometry, and timing. For the golfer, every swing is a combination of current muscular effort and the dynamics inherited from the system's prior state.
-          </p>
-        </div>
-      </section>
+## Core Analytical Framing
 
-      <section id="theory" class="theory-section">
-        <div class="theory-content">
-          <div class="theory-intro">
-            <h2 class="anchored">Theory of Control</h2>
-            <p>
-              The golf swing presents a high-dimensional coordination challenge: how does a golfer orchestrate the motion of multiple body segments to achieve a desired outcome? This problem lies at the heart of motor control research, and it is precisely what nonlinear control theory is designed to address.
-            </p>
-          </div>
+The recurring mathematical form on the site is the control-affine ordinary differential equation
 
-          <div class="coordination-section">
-            <p>
-              Rather than treating the swing as a sequence of static positions (descriptive biomechanics), a control-perspective frames it as a trajectory optimization problem: the golfer must find the correct sequence of muscular forces (control inputs) to guide the system from the address position to ball contact. The system's dynamics are captured by the fundamental control-affine structure:
-            </p>
-            
-            <div class="equation">
-              $$\dot{x} = f(x) + g(x)u$$
-            </div>
+$$\dot{x} = f(x) + g(x)u.$$
 
-            <p>
-              This mathematical framework provides a rigorous way to separate the swing's total movement into two distinct, identifiable components:
-            </p>
-            
-            <ul class="mission-list">
-              <li><strong>Drift ($f(x)$):</strong> The passive dynamics of the system. This includes gravity, inertial forces, Coriolis effects, and the dynamics of the flexible club shaft. It represents how the system would naturally evolve in the complete absence of muscle input.</li>
-              <li><strong>Control ($g(x)u$):</strong> The active dynamics resulting only from the golfer's muscle torques ($u$). The term $g(x)$ encodes the "mechanical advantage"—how effective a control input is at changing acceleration—which varies throughout the swing.</li>
-            </ul>
+In this notation, $x$ denotes the modeled state, $f(x)$ collects state-dependent dynamics that remain when the applied control input is set to zero, and $g(x)u$ represents the contribution of the modeled input. That ODE form is standard in nonlinear control theory. AffineDrift's site-specific contribution is to use it as an organizing lens for golf-swing mechanics and related biomechanical questions.
 
-            <p>
-              This decomposition is crucial: it allows researchers to causally attribute observed forces to either the golfer's active effort or the powerful, passive inertia of the body and club. By framing the swing this way, we move beyond simply describing the movement to a more predictive, mechanistic understanding of how coordination emerges from the interaction between neural control and mechanical dynamics.
-            </p>
-            <div style="margin-top: 1rem; padding: 0.75rem 1rem; background: var(--bg-secondary, #f8f9fa); border-left: 3px solid var(--primary-color, #2563eb); border-radius: 4px; font-size: 0.9rem; color: var(--text-light, #6b7280);">
-              <strong>Provenance:</strong> The control-affine ODE structure is standard in nonlinear systems theory (Isidori 1995; Nijmeijer &amp; van der Schaft 1990). The drift/input decomposition and ZTCF applied to golf biomechanics are AffineDrift synthesis. Claims about shaft mode capture and DCR magnitude are model-dependent; see <a href="../articles/theory-part1.html">Theory Part 1</a> for derivations and <a href="../critiques/index.html">Critiques</a> for identified scope limitations.
-            </div>
-          </div>
-        </div>
-      </section>
+On this site, **drift** refers to the state-dependent dynamics represented by $f(x)$, and **control** refers to the modeled input contribution $g(x)u$. That distinction can be analytically useful, but its interpretation depends on the chosen coordinates, the multibody model, the treatment of constraints, and the level at which actuation is represented.
 
-      <section id="golf" class="golf-section">
-        <div class="golf-content">
-          <div class="golf-intro">
-            <h2 class="anchored">Applied to Golf</h2>
-            <p>
-              By framing the swing as a control-affine system, we move beyond static positions to analyze the flow of
-              dynamics. We can explicitly calculate the contribution of passive physics versus active intent.
-            </p>
-          </div>
+::: {.callout-note}
+## Provenance
 
-          <div class="golf-model">
-            <h3>System Components</h3>
-            <div class="components-grid">
-              <div class="component">
-                <h4>State Space $x$</h4>
-                <p>$\mathbb{R}^{2n}$ vector containing all joint angles and velocities.</p>
-              </div>
-              <div class="component">
-                <h4>Drift $f(x)$</h4>
-                <p>The trajectory the system would follow in the absence of all muscular torque inputs. Includes gravitational, Coriolis, and centrifugal coupling terms, whose relative magnitudes vary with swing phase.</p>
-              </div>
-              <div class="component">
-                <h4>Control $u$</h4>
-                <p>The active muscular intervention. Constrained by force-velocity properties of muscle (Hill, 1938) and neural transmission delays (Schmidt &amp; Lee, 2011).</p>
-              </div>
-               <div class="component">
-                <h4>Input Field $g(x)$</h4>
-                <p>The configuration-dependent map from torques to accelerations, weighted by the inverse inertia matrix.</p>
-              </div>
-            </div>
-          </div>
+The control-affine formulation itself is standard nonlinear-systems material. The site's use of drift/input decomposition, zero-torque counterfactuals, and related golf-specific interpretations is original AffineDrift synthesis built on top of that standard machinery.
+:::
 
-        </div>
-      </section>
+## What Counts as Evidence Here
 
-      <!-- Critics Corner - Technical Criticism Section -->
-      <section id="critics-corner" class="critics-corner">
-        <button class="critics-corner-header" aria-expanded="false">
-          <h2>Critics Corner</h2>
-          <span class="critics-corner-icon">▼</span>
-        </button>
-        <div class="critics-corner-content">
-          <div class="criticism-item">
-            <h3>Oversimplification of Neuromuscular Dynamics</h3>
-            <span class="criticism-severity moderate">Moderate</span>
-            <p>
-              The control-affine framework abstracts muscular physiology into a simple torque vector $u$, ignoring force-velocity relationships, activation dynamics, and muscle redundancy. Real neuromuscular systems exhibit time delays, saturation, and cross-coupling effects that may significantly affect the validity of the drift-input decomposition.
-            </p>
-            <div class="criticism-response">
-              <h4>Defense</h4>
-              <p>
-                This abstraction is intentional and explicitly stated in the modeling assumptions. The framework operates at the torque level precisely to preserve the affine structure. Force-velocity constraints are treated as bounds on the feasible input set $\mathcal{U}(x)$ rather than nonlinearities in the dynamics. Future work will address activation dynamics through hybrid modeling approaches.
-              </p>
-            </div>
-          </div>
+- Equations and derivations are strongest when they follow directly from stated model assumptions and cited source material.
+- Quantitative claims are only as strong as the model, parameter set, and identification procedure behind them.
+- Interpretive claims about motor control, skill, or causation should be read cautiously unless the page provides direct data, citations, or a clearly delimited derivation.
+- Exploratory pages are retained where they may still be useful, but they should be read as proposals or working notes rather than settled conclusions.
 
-          <div class="criticism-item">
-            <h3>Impact Phase Exclusion</h3>
-            <span class="criticism-severity minor">Minor</span>
-            <p>
-              The theoretical framework explicitly excludes the ball-club impact phase, which is arguably the most critical moment of the swing. This limits the practical applicability of the analysis for understanding how impact conditions relate to ball flight.
-            </p>
-            <div class="criticism-response">
-              <h4>Defense</h4>
-              <p>
-                The framework is designed as a "Theory of Delivery"—analyzing how the golfer controls the system to achieve specific terminal conditions. Since control authority effectively ends at impact, the drift-input decomposition applies to the delivery phase. Impact mechanics require separate hybrid dynamics treatment, which will be addressed in subsequent work.
-              </p>
-            </div>
-          </div>
+## Main Content Areas
 
-          <div class="criticism-item">
-            <h3>Modal Truncation Error</h3>
-            <span class="criticism-severity minor">Minor</span>
-            <p>
-              Representing the flexible shaft with a finite number of modes ($m$) introduces truncation error, potentially missing high-frequency dynamics that may be relevant during rapid swing phases.
-            </p>
-            <div class="criticism-response">
-              <h4>Defense</h4>
-              <p>
-                Standard modal analysis practice suggests that a small number of bending modes (typically 3-5) captures the dominant shaft deformation energy for typical swing frequencies. The theoretical framework is agnostic to the number of modes---practitioners can include additional modes as needed. Convergence analysis will be presented in Part II.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
+- [Drifter Manifesto](../pages/drifter-manifesto.html): canonical AffineDrift series on control-affine modeling of the golf swing.
+- [The Physics of Golf](../articles/The_Physics_of_Golf/quarto/index.html): textbook-scale golf application of the site's mechanics framework.
+- [The Geometry of Motion](../articles/The_Geometry_of_Motion/quarto/index.html): broader mathematical and computational series.
+- [Tangent Hyperplanes](../pages/tangent-hyperplanes.html): exploratory tangent-space series with explicit provenance and scope notes.
+- [Research Reviews](../resources/research-reviews.html): literature-review hub; the current review pages are still incomplete.
+- [Models](../models/models.html): modeling and simulation resources across several software stacks.
 
-    <!-- Right Sidebar: TOC and Podcast -->
-    <div class="right-sidebar">
-      <div class="sidebar-sticky-content">
-        
-        <div class="sidebar-section">
-          <h3 class="sidebar-heading">On This Page</h3>
-          <ul class="sidebar-links">
-            <li><a href="#mission">Mission</a></li>
-            <li><a href="#theory">Theory of Control</a></li>
-            <li><a href="#golf">Applied to Golf</a></li>
-            <li><a href="#critics-corner">Critics Corner</a></li>
-          </ul>
-        </div>
+## Scope and Limits
 
-        <div class="sidebar-section" style="margin-top: 2rem;">
-          <h3 class="sidebar-heading">Reading Path</h3>
-          <p style="font-size: 0.85rem; color: var(--text-light); margin-bottom: 0.75rem;">Suggested order for new readers:</p>
-          <ol style="font-size: 0.85rem; padding-left: 1.25rem; line-height: 1.8; margin-bottom: 0;">
-            <li><a href="overview.html">Overview</a> <em>(here)</em></li>
-            <li><a href="../articles/theory-part1.html">Drifter Manifesto (Parts 1–5)</a></li>
-            <li><a href="../pages/tangent-hyperplanes.html">Tangent Hyperplanes</a></li>
-            <li><a href="../resources/research-reviews.html">Research Reviews</a></li>
-            <li><a href="../models/models.html">Build &amp; Simulate</a></li>
-          </ol>
-        </div>
+The site is strongest when it explains how a particular model behaves and what follows from that model's equations. It is weaker whenever a page jumps from model structure to broad claims about human intent, coaching, or biological mechanism without direct supporting evidence.
 
-        <div class="sidebar-section" style="margin-top: 2rem;">
-          <h3 class="sidebar-heading">Resources</h3>
-          <div class="resource-card" style="padding: 1rem; border: none; box-shadow: none; background: transparent; padding-left: 0;">
-             <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--primary-blue);">Overview Podcast</h3>
-             <p class="resource-description" style="font-size: 0.9rem; line-height: 1.5; margin-bottom: 0.5rem;">
-                Listen to an AI-generated introduction to the core concepts of Affine Drift.
-             </p>
-             <a href="https://notebooklm.google.com/notebook/8bdf0048-aac6-4456-ae04-026539bf01dd?artifactId=3518b591-c752-462b-9a04-83618b21508c" target="_blank" class="resource-link" style="padding-left: 0;">Listen Now &rarr;</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-```
+Several recurring topics deserve that caution:
+
+- Golf-swing force attribution depends on coordinate choices, constraint models, and how internal forces are represented.
+- Quantitative drift/control comparisons are model-dependent and should not be generalized beyond the assumptions used to derive them.
+- Shaft flexibility, soft-tissue mechanics, and neuromuscular control introduce additional layers of modeling uncertainty.
+- Impact is a hybrid event; any pre-impact framework has to state clearly what it does and does not claim about the collision itself.
+
+## Reader Guidance
+
+If you want the broadest introduction, start with the [Article Index](../resources/articles.html), then read the [Drifter Manifesto](../pages/drifter-manifesto.html) alongside the relevant critique pages.
+
+If you want a golf-specific textbook path, begin with [The Physics of Golf](../articles/The_Physics_of_Golf/quarto/index.html).
+
+If you want the mathematical foundations first, begin with [The Geometry of Motion](../articles/The_Geometry_of_Motion/quarto/index.html), especially Volume 0 and Volume I.
