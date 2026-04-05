@@ -206,10 +206,7 @@ export function initAutoGrowTextareas() {
 
     for (const textarea of textareas) {
         textarea.style.resize = "none";
-        textarea.style.overflow = "hidden";
-        if (textarea.value) {
-            setTimeout(() => adjustHeight(textarea), 0);
-        }
+        setTimeout(() => adjustHeight(textarea), 0);
         textarea.addEventListener("input", () => adjustHeight(textarea));
     }
 
