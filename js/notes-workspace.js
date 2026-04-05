@@ -182,27 +182,25 @@
         setStatus("Pop-out blocked by browser.");
         return;
       }
-      const openerOrigin = window.location.origin;
-      pop.document.write(`
-        <!doctype html>
-        <html><head><title>AffineDrift Project Notes</title></head>
-        <body style="font-family: sans-serif; margin: 1rem;">
-          <h2 style="margin-top:0;">AffineDrift Project Notes</h2>
-          <textarea id="notes" style="width:100%; min-height:360px;"></textarea>
-          <div style="margin-top:0.75rem;">
-            <button id="save">Save</button>
-            <button id="close">Close</button>
-          </div>
-          <scr` + `ipt>
-            const area = document.getElementById("notes");
-            const targetOrigin = "${openerOrigin}";
-            document.getElementById("save").addEventListener("click", function () {
-              window.opener.postMessage({ type: "AD_NOTES_SAVE", content: area.value }, targetOrigin);
-            });
-            document.getElementById("close").addEventListener("click", function () { window.close(); });
-          <` + `/script>
-        </body></html>
-      `);
+      pop.document.write(
+        '<!doctype html>' +
+        '<html><head><title>AffineDrift Project Notes</title></head>' +
+        '<body style="font-family: sans-serif; margin: 1rem;">' +
+          '<h2 style="margin-top:0;">AffineDrift Project Notes</h2>' +
+          '<textarea id="notes" style="width:100%; min-height:360px;"></textarea>' +
+          '<div style="margin-top:0.75rem;">' +
+            '<button id="save">Save</button>' +
+            '<button id="close">Close</button>' +
+          '</div>' +
+          '<scr' + 'ipt>' +
+            'const area = document.getElementById("notes");' +
+            'document.getElementById("save").addEventListener("click", function () {' +
+              'window.opener.postMessage({ type: "AD_NOTES_SAVE", content: area.value }, window.opener.location.origin);' +
+            '});' +
+            'document.getElementById("close").addEventListener("click", function () { window.close(); });' +
+          '</scr' + 'ipt>' +
+        '</body></html>'
+      );
       pop.document.close();
       // Securely set the value without XSS risk from document.write
       pop.document.getElementById("notes").value = textArea.value;
