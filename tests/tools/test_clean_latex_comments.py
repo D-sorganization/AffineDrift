@@ -1,6 +1,9 @@
 """Tests for clean_latex_comments.py"""
 
-from src.tools.clean_latex_comments import clean_latex_comments_in_file, remove_latex_comments
+from src.tools.clean_latex_comments import (
+    clean_latex_comments_in_file,
+    remove_latex_comments,
+)
 
 
 def test_remove_latex_comments():

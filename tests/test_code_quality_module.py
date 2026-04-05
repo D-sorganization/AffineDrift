@@ -11,7 +11,10 @@ import pytest
 import src.tools.code_quality_check as cq_shim  # noqa: F401 — covers shim imports
 from src.tools.code_quality.ast_analyzer import check_ast_issues
 from src.tools.code_quality.check import check_file, main
-from src.tools.code_quality.pattern_checker import check_banned_patterns, check_magic_numbers
+from src.tools.code_quality.pattern_checker import (
+    check_banned_patterns,
+    check_magic_numbers,
+)
 from src.tools.code_quality.report_generator import report_issues
 
 # ---------------------------------------------------------------------------

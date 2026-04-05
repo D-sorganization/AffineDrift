@@ -78,14 +78,18 @@ class TestGenerateTorqueHelpers:
     """Tests for extracted torque signal generator helpers."""
 
     def test_generate_golf_torque_returns_correct_shape(self) -> None:
-        from src.tools.wrist_universal_joint.torque_calculator import _generate_golf_torque
+        from src.tools.wrist_universal_joint.torque_calculator import (
+            _generate_golf_torque,
+        )
 
         t = np.linspace(0, 1, 500)
         torque = _generate_golf_torque(t)
         assert torque.shape == t.shape
 
     def test_generate_step_torque_is_zero_before_index_250(self) -> None:
-        from src.tools.wrist_universal_joint.torque_calculator import _generate_step_torque
+        from src.tools.wrist_universal_joint.torque_calculator import (
+            _generate_step_torque,
+        )
 
         t = np.linspace(0, 1, 500)
         torque = _generate_step_torque(t)
@@ -93,14 +97,18 @@ class TestGenerateTorqueHelpers:
         assert np.all(torque[250:] == 3.0)
 
     def test_generate_step_torque_correct_shape(self) -> None:
-        from src.tools.wrist_universal_joint.torque_calculator import _generate_step_torque
+        from src.tools.wrist_universal_joint.torque_calculator import (
+            _generate_step_torque,
+        )
 
         t = np.linspace(0, 1, 500)
         torque = _generate_step_torque(t)
         assert torque.shape == t.shape
 
     def test_generate_pulse_torque_zero_outside_range(self) -> None:
-        from src.tools.wrist_universal_joint.torque_calculator import _generate_pulse_torque
+        from src.tools.wrist_universal_joint.torque_calculator import (
+            _generate_pulse_torque,
+        )
 
         t = np.linspace(0, 1, 500)
         torque = _generate_pulse_torque(t)
@@ -109,7 +117,9 @@ class TestGenerateTorqueHelpers:
         assert np.all(torque[300:] == 0.0)
 
     def test_generate_burst_torque_zero_far_from_center(self) -> None:
-        from src.tools.wrist_universal_joint.torque_calculator import _generate_burst_torque
+        from src.tools.wrist_universal_joint.torque_calculator import (
+            _generate_burst_torque,
+        )
 
         t = np.linspace(0, 1, 500)
         torque = _generate_burst_torque(t)
@@ -123,7 +133,9 @@ class TestBuildPolynomialNamespace:
     """Tests for _build_polynomial_namespace."""
 
     def test_builds_evaluator_with_expected_names(self) -> None:
-        from src.tools.wrist_universal_joint.torque_calculator import _build_polynomial_namespace
+        from src.tools.wrist_universal_joint.torque_calculator import (
+            _build_polynomial_namespace,
+        )
 
         t = np.linspace(0, 1, 10)
         evaluator = _build_polynomial_namespace(t)
@@ -132,7 +144,9 @@ class TestBuildPolynomialNamespace:
         assert result.shape == t.shape
 
     def test_evaluator_supports_pi(self) -> None:
-        from src.tools.wrist_universal_joint.torque_calculator import _build_polynomial_namespace
+        from src.tools.wrist_universal_joint.torque_calculator import (
+            _build_polynomial_namespace,
+        )
 
         t = np.linspace(0, 1, 10)
         evaluator = _build_polynomial_namespace(t)
@@ -144,7 +158,9 @@ class TestValidatePolynomialResult:
     """Tests for _validate_polynomial_result."""
 
     def test_valid_array_returns_no_error(self) -> None:
-        from src.tools.wrist_universal_joint.torque_calculator import _validate_polynomial_result
+        from src.tools.wrist_universal_joint.torque_calculator import (
+            _validate_polynomial_result,
+        )
 
         t = np.linspace(0, 1, 10)
         result = np.ones(10)
@@ -153,7 +169,9 @@ class TestValidatePolynomialResult:
         np.testing.assert_array_equal(arr, result)
 
     def test_shape_mismatch_returns_error(self) -> None:
-        from src.tools.wrist_universal_joint.torque_calculator import _validate_polynomial_result
+        from src.tools.wrist_universal_joint.torque_calculator import (
+            _validate_polynomial_result,
+        )
 
         t = np.linspace(0, 1, 10)
         result = np.ones(5)  # wrong shape
@@ -162,7 +180,9 @@ class TestValidatePolynomialResult:
         assert "shape" in err
 
     def test_scalar_result_broadcasts_to_array(self) -> None:
-        from src.tools.wrist_universal_joint.torque_calculator import _validate_polynomial_result
+        from src.tools.wrist_universal_joint.torque_calculator import (
+            _validate_polynomial_result,
+        )
 
         t = np.linspace(0, 1, 10)
         arr, err = _validate_polynomial_result(3.14, t)
@@ -316,7 +336,10 @@ class TestSelectBestTrajectory:
     """Tests for SwingOptimizer._select_best_trajectory."""
 
     def _make_optimizer(self):  # type: ignore[no-untyped-def]
-        from src.affine_control.swing_optimizer import SwingOptimizationConfig, SwingOptimizer
+        from src.affine_control.swing_optimizer import (
+            SwingOptimizationConfig,
+            SwingOptimizer,
+        )
 
         config = SwingOptimizationConfig(
             n_joints=1, horizon_steps=5, max_iterations=3, allow_mock_solver=True

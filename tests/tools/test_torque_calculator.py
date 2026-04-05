@@ -176,7 +176,9 @@ class TestGenerateSampleTorque:
 
     def test_golf_like_random(self) -> None:
         """Should generate golf-like random torque without error."""
-        from src.tools.wrist_universal_joint.torque_calculator import generate_sample_torque
+        from src.tools.wrist_universal_joint.torque_calculator import (
+            generate_sample_torque,
+        )
 
         t = self._make_t()
         torque, err = generate_sample_torque("Golf-like Random", t)
@@ -185,7 +187,9 @@ class TestGenerateSampleTorque:
 
     def test_step(self) -> None:
         """Should generate step torque without error."""
-        from src.tools.wrist_universal_joint.torque_calculator import generate_sample_torque
+        from src.tools.wrist_universal_joint.torque_calculator import (
+            generate_sample_torque,
+        )
 
         t = self._make_t()
         torque, err = generate_sample_torque("Step", t)
@@ -194,7 +198,9 @@ class TestGenerateSampleTorque:
 
     def test_pulse(self) -> None:
         """Should generate pulse torque without error."""
-        from src.tools.wrist_universal_joint.torque_calculator import generate_sample_torque
+        from src.tools.wrist_universal_joint.torque_calculator import (
+            generate_sample_torque,
+        )
 
         t = self._make_t()
         torque, err = generate_sample_torque("Pulse", t)
@@ -203,7 +209,9 @@ class TestGenerateSampleTorque:
 
     def test_burst(self) -> None:
         """Should generate burst torque without error."""
-        from src.tools.wrist_universal_joint.torque_calculator import generate_sample_torque
+        from src.tools.wrist_universal_joint.torque_calculator import (
+            generate_sample_torque,
+        )
 
         t = self._make_t()
         torque, err = generate_sample_torque("Burst", t)
@@ -212,7 +220,9 @@ class TestGenerateSampleTorque:
 
     def test_sinusoidal(self) -> None:
         """Should generate sinusoidal torque without error."""
-        from src.tools.wrist_universal_joint.torque_calculator import generate_sample_torque
+        from src.tools.wrist_universal_joint.torque_calculator import (
+            generate_sample_torque,
+        )
 
         t = self._make_t()
         torque, err = generate_sample_torque("Sinusoidal", t)
@@ -221,7 +231,9 @@ class TestGenerateSampleTorque:
 
     def test_random(self) -> None:
         """Should generate random torque without error."""
-        from src.tools.wrist_universal_joint.torque_calculator import generate_sample_torque
+        from src.tools.wrist_universal_joint.torque_calculator import (
+            generate_sample_torque,
+        )
 
         t = self._make_t()
         torque, err = generate_sample_torque("Random", t)
@@ -230,7 +242,9 @@ class TestGenerateSampleTorque:
 
     def test_polynomial_valid_expression(self) -> None:
         """Should evaluate polynomial expression without error."""
-        from src.tools.wrist_universal_joint.torque_calculator import generate_sample_torque
+        from src.tools.wrist_universal_joint.torque_calculator import (
+            generate_sample_torque,
+        )
 
         t = self._make_t()
         torque, err = generate_sample_torque("Polynomial", t, polynomial_expression="t**2 - t")
@@ -240,7 +254,9 @@ class TestGenerateSampleTorque:
 
     def test_unknown_type_defaults_to_golf_like(self) -> None:
         """Should default to golf-like random for unknown noise type."""
-        from src.tools.wrist_universal_joint.torque_calculator import generate_sample_torque
+        from src.tools.wrist_universal_joint.torque_calculator import (
+            generate_sample_torque,
+        )
 
         t = self._make_t()
         torque, err = generate_sample_torque("UnknownType", t)
@@ -248,14 +264,18 @@ class TestGenerateSampleTorque:
 
     def test_raises_on_empty_time_array(self) -> None:
         """Should raise on empty time array (contract)."""
-        from src.tools.wrist_universal_joint.torque_calculator import generate_sample_torque
+        from src.tools.wrist_universal_joint.torque_calculator import (
+            generate_sample_torque,
+        )
 
         with pytest.raises(AssertionError):
             generate_sample_torque("Step", np.array([]))
 
     def test_step_indices_relative_to_length(self) -> None:
         """Step should activate at midpoint regardless of array length."""
-        from src.tools.wrist_universal_joint.torque_calculator import generate_sample_torque
+        from src.tools.wrist_universal_joint.torque_calculator import (
+            generate_sample_torque,
+        )
 
         for n in (100, 200, 1000):
             t = np.linspace(0, 1, n)
@@ -269,7 +289,9 @@ class TestGenerateSampleTorque:
 
     def test_pulse_indices_relative_to_length(self) -> None:
         """Pulse should be centered relative to array length, not at fixed 200-300."""
-        from src.tools.wrist_universal_joint.torque_calculator import generate_sample_torque
+        from src.tools.wrist_universal_joint.torque_calculator import (
+            generate_sample_torque,
+        )
 
         for n in (100, 200, 1000):
             t = np.linspace(0, 1, n)
@@ -283,7 +305,9 @@ class TestGenerateSampleTorque:
 
     def test_burst_indices_relative_to_length(self) -> None:
         """Burst should be centered at midpoint for any array length."""
-        from src.tools.wrist_universal_joint.torque_calculator import generate_sample_torque
+        from src.tools.wrist_universal_joint.torque_calculator import (
+            generate_sample_torque,
+        )
 
         for n in (100, 200, 1000):
             t = np.linspace(0, 1, n)
@@ -292,7 +316,9 @@ class TestGenerateSampleTorque:
 
     def test_all_noise_types_work_with_short_array(self) -> None:
         """All noise types should produce valid output for a short time array (n=50)."""
-        from src.tools.wrist_universal_joint.torque_calculator import generate_sample_torque
+        from src.tools.wrist_universal_joint.torque_calculator import (
+            generate_sample_torque,
+        )
 
         t = np.linspace(0, 1, 50)
         for noise_type in ("Golf-like Random", "Step", "Pulse", "Burst", "Sinusoidal", "Random"):
@@ -309,7 +335,9 @@ class TestEvaluatePolynomial:
 
     def test_syntax_error_returns_fallback(self) -> None:
         """Should return fallback and error message for invalid syntax."""
-        from src.tools.wrist_universal_joint.torque_calculator import _evaluate_polynomial
+        from src.tools.wrist_universal_joint.torque_calculator import (
+            _evaluate_polynomial,
+        )
 
         t = self._make_t()
         result, err = _evaluate_polynomial(t, "t ** (")
@@ -318,7 +346,9 @@ class TestEvaluatePolynomial:
 
     def test_invalid_variable_returns_error(self) -> None:
         """Should return fallback for undefined variable (NameNotDefined)."""
-        from src.tools.wrist_universal_joint.torque_calculator import _evaluate_polynomial
+        from src.tools.wrist_universal_joint.torque_calculator import (
+            _evaluate_polynomial,
+        )
 
         t = self._make_t()
         # simpleeval raises NameNotDefined (subclass of NameError)
@@ -333,7 +363,9 @@ class TestEvaluatePolynomial:
 
     def test_valid_expression_returns_no_error(self) -> None:
         """Should return no error for valid expression."""
-        from src.tools.wrist_universal_joint.torque_calculator import _evaluate_polynomial
+        from src.tools.wrist_universal_joint.torque_calculator import (
+            _evaluate_polynomial,
+        )
 
         t = self._make_t()
         result, err = _evaluate_polynomial(t, "sin(t)")
@@ -342,7 +374,9 @@ class TestEvaluatePolynomial:
 
     def test_scalar_result_expanded_to_array(self) -> None:
         """Should expand scalar result to full array."""
-        from src.tools.wrist_universal_joint.torque_calculator import _evaluate_polynomial
+        from src.tools.wrist_universal_joint.torque_calculator import (
+            _evaluate_polynomial,
+        )
 
         t = self._make_t()
         result, err = _evaluate_polynomial(t, "3.14")

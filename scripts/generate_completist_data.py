@@ -24,7 +24,10 @@ from collections.abc import Callable, Iterator
 from pathlib import Path
 from typing import Final
 
-from src.tools.utils.cli_contracts import ensure_existing_dir, ensure_writable_output_file
+from src.tools.utils.cli_contracts import (
+    ensure_existing_dir,
+    ensure_writable_output_file,
+)
 
 # Configuration
 DATA_DIR: Final[str] = ".jules/completist_data"
