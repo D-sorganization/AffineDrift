@@ -63,8 +63,13 @@ jobs:
 
       - name: Install System Dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libgl1 libegl1 libxrandr2 libxss1 libxcursor1 libxcomposite1 libasound2t64 libxi6 libxtst6
+          if command -v sudo &> /dev/null; then
+            sudo apt-get update
+            sudo apt-get install -y libgl1 libegl1 libxrandr2 libxss1 libxcursor1 libxcomposite1 libasound2t64 libxi6 libxtst6
+          else
+            apt-get update || true
+            apt-get install -y libgl1 libegl1 libxrandr2 libxss1 libxcursor1 libxcomposite1 libasound2t64 libxi6 libxtst6 || true
+          fi
 
       - run: pip install ruff==0.15.6 black==26.3.1 mypy==1.19.1 bandit==1.7.7 pydocstyle==6.3.0
 
@@ -230,8 +235,13 @@ jobs:
 
       - name: Install System Dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libgl1 libegl1 libxrandr2 libxss1 libxcursor1 libxcomposite1 libasound2t64 libxi6 libxtst6
+          if command -v sudo &> /dev/null; then
+            sudo apt-get update
+            sudo apt-get install -y libgl1 libegl1 libxrandr2 libxss1 libxcursor1 libxcomposite1 libasound2t64 libxi6 libxtst6
+          else
+            apt-get update || true
+            apt-get install -y libgl1 libegl1 libxrandr2 libxss1 libxcursor1 libxcomposite1 libasound2t64 libxi6 libxtst6 || true
+          fi
 
       - name: Install Dependencies
         run: npm ci
