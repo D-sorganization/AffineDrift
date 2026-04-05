@@ -1,4 +1,4 @@
-## 2025-02-23 - Prevent XSS in Notes Popout
-**Vulnerability:** Cross-Site Scripting (XSS) via document.write in the notes pop-out feature.
-**Learning:** Interpolating user-provided text directly into an HTML string passed to document.write, even with rudimentary character escaping, is brittle and insecure.
-**Prevention:** Always use safe DOM properties like textContent or value to inject user-controlled data into the DOM.
+## 2025-05-18 - XSS via Document.write String Interpolation
+**Vulnerability:** DOM-based Cross-Site Scripting (XSS) via `document.write` string interpolation.
+**Learning:** Injecting variables directly into a `document.write()` payload using template literals is insecure. While the interpolated variable might appear safe (like `window.location.origin`), this pattern sets a dangerous precedent and can easily be refactored to introduce user-controllable data in the future, creating a direct vector for script injection.
+**Prevention:** Avoid `document.write` where possible. When generating pop-out windows via `document.write`, ensure the payload consists of strictly static HTML strings without backtick interpolation. Fetch dynamic context (like `window.opener.location.origin`) locally within the injected script execution context rather than substituting it into the HTML payload.
