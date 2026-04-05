@@ -360,7 +360,7 @@ def benchmark(
     if kwargs is None:
         kwargs = {}
 
-    fn_label = label or getattr(func, "__name__", "anonymous")
+    fn_label: str = label or str(getattr(func, "__name__", "anonymous"))
 
     # Warmup
     for _ in range(warmup):
