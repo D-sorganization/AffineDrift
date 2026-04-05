@@ -202,8 +202,6 @@
         '</body></html>'
       );
       pop.document.close();
-      // Securely set the value without XSS risk from document.write
-      pop.document.getElementById("notes").value = textArea.value;
       setStatus("Opened pop-out workspace.");
     }
 
