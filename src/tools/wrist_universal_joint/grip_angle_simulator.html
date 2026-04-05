@@ -641,6 +641,16 @@
                 const expr = document.getElementById('polynomial-expr').value || 't**2 - t';
                 polynomialError = null;
                 try {
+                    // 🛡️ Sentinel: XSS Prevention
+                    // Remove all allowed function names, variables, and math object properties
+                    let sanitized = expr.replace(/Math\.(sin|cos|exp|sqrt|log|PI|E)/g, '');
+                    sanitized = sanitized.replace(/\b(sin|cos|exp|sqrt|log|pi|e|t)\b/g, '');
+
+                    // The remaining string should strictly be numbers, operators, and parenthesis
+                    if (!/^[0-9\s\+\-\*\/\(\)\.\,]*$/.test(sanitized)) {
+                        throw new Error("Invalid expression: Only basic math operations and 't' are allowed.");
+                    }
+
                     // Safe evaluation - only allow specific functions
                     const safeEval = (t_val) => {
                         const sin = Math.sin;
