@@ -236,10 +236,12 @@ def profile_memory(
     """
 
     def decorator(fn: Callable[..., Any]) -> Callable[..., Any]:
+        """Wrap *fn* with tracemalloc memory measurement."""
         fn_label = label or fn.__name__
 
         @functools.wraps(fn)
         def wrapper(*args: Any, **kwargs: Any) -> Any:
+            """Measure memory usage and call the original function."""
             tracemalloc_was_running = tracemalloc.is_tracing()
             if not tracemalloc_was_running:
                 tracemalloc.start()

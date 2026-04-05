@@ -151,7 +151,7 @@ class TestProfileExecutionTime:
     def test_preserves_name(self):
         @profile_execution_time
         def my_named_func():
-            pass
+            return None
 
         assert my_named_func.__name__ == "my_named_func"
 
@@ -189,7 +189,7 @@ class TestProfileMemory:
     def test_preserves_function_name(self):
         @profile_memory
         def named_fn():
-            pass
+            return None
 
         assert named_fn.__name__ == "named_fn"
 
@@ -236,7 +236,7 @@ class TestMemoryTracking:
 class TestBenchmark:
     def test_basic_benchmark(self):
         def noop():
-            pass
+            return None
 
         result = benchmark(noop, iterations=3)
         assert result.function_name == "noop"
@@ -276,7 +276,7 @@ class TestBenchmark:
         report = ProfilingReport()
 
         def noop():
-            pass
+            return None
 
         benchmark(noop, iterations=2, report=report)
         assert len(report.benchmark_results) == 1
