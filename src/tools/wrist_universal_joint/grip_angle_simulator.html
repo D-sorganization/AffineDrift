@@ -641,6 +641,19 @@
                 const expr = document.getElementById('polynomial-expr').value || 't**2 - t';
                 polynomialError = null;
                 try {
+                    // 🛡️ Sentinel: XSS Prevention
+                    // Remove all allowed function names, variables, and math object properties.
+                    // IMPORTANT: We do NOT remove 'e' alone, because that breaks scientific notation
+                    // (like '1e-3'). Instead we explicitly remove 'Math.E', 'pi', etc.
+                    let sanitized = expr.replace(/Math\.(sin|cos|exp|sqrt|log|PI|E)/g, '');
+                    sanitized = sanitized.replace(/\b(sin|cos|exp|sqrt|log|pi|t)\b/g, '');
+
+                    // The remaining string should strictly be numbers (including scientific e/E),
+                    // operators, and parenthesis. We add e/E to the regex whitelist.
+                    if (!/^[0-9\s\+\-\*\/\(\)\.\,eE]*$/.test(sanitized)) {
+                        throw new Error("Invalid expression: Only basic math operations and 't' are allowed.");
+                    }
+
                     // Safe evaluation - only allow specific functions
                     const safeEval = (t_val) => {
                         const sin = Math.sin;
