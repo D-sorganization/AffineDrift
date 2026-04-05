@@ -23,7 +23,6 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-
   # ── Dispatcher: route to self-hosted if available ──────────────────────────
   pick-runner:
     runs-on: ubuntu-latest
@@ -63,8 +62,12 @@ jobs:
 
       - name: Install System Dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libgl1 libegl1 libxrandr2 libxss1 libxcursor1 libxcomposite1 libasound2t64 libxi6 libxtst6
+          if sudo -n true 2>/dev/null; then
+            sudo apt-get update
+            sudo apt-get install -y libgl1 libegl1 libxrandr2 libxss1 libxcursor1 libxcomposite1 libasound2t64 libxi6 libxtst6
+          else
+            echo "No passwordless sudo — assuming system deps are pre-installed (self-hosted runner)"
+          fi
 
       - run: pip install ruff==0.15.6 black==26.3.1 mypy==1.19.1 bandit==1.7.7 pydocstyle==6.3.0
 
@@ -230,8 +233,12 @@ jobs:
 
       - name: Install System Dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libgl1 libegl1 libxrandr2 libxss1 libxcursor1 libxcomposite1 libasound2t64 libxi6 libxtst6
+          if sudo -n true 2>/dev/null; then
+            sudo apt-get update
+            sudo apt-get install -y libgl1 libegl1 libxrandr2 libxss1 libxcursor1 libxcomposite1 libasound2t64 libxi6 libxtst6
+          else
+            echo "No passwordless sudo — assuming system deps are pre-installed (self-hosted runner)"
+          fi
 
       - name: Install Dependencies
         run: npm ci
