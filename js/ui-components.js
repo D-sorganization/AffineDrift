@@ -393,13 +393,23 @@ export function initLightbox() {
         lightbox.appendChild(closeBtn);
 
         const figure = img.closest("figure");
+        let captionAdded = false;
+
         if (figure) {
             const figcaption = figure.querySelector("figcaption");
             if (figcaption) {
                 const captionClone = figcaption.cloneNode(true);
                 captionClone.className = "lightbox-caption";
                 lightbox.appendChild(captionClone);
+                captionAdded = true;
             }
+        }
+
+        if (!captionAdded && img.alt) {
+            const altCaption = document.createElement("div");
+            altCaption.className = "lightbox-caption";
+            altCaption.textContent = img.alt;
+            lightbox.appendChild(altCaption);
         }
 
         lightbox.classList.add("active");
