@@ -290,7 +290,7 @@ class SwingOptimizer:
         Returns:
             Tuple of (x_traj, u_traj, current_cost).
         """
-        x_traj, u_traj, _t_traj = adaptive_timestep_ddp_mock(
+        x_traj, u_traj, _t_traj = self._ddp_solver(
             f=dynamics_fn,
             x0=initial_state,
             xf=x_target,

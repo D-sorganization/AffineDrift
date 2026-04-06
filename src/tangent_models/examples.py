@@ -381,29 +381,4 @@ class RobotArm(DynamicalSystem):
         """
         if isinstance(u, float | int):
             raise ValueError("Control input must be a vector")
-        # Using numerical linearization for the 2-link arm due to complexity
-        epsilon = 1e-6
-        n = 4
-        m = 2
-
-        A = np.zeros((n, n))
-        B = np.zeros((n, m))
-
-        # Compute A using central differences: (f(x+eps) - f(x-eps)) / (2*eps)
-        for i in range(n):
-            x_plus = x.copy()
-            x_plus[i] += epsilon
-            x_minus = x.copy()
-            x_minus[i] -= epsilon
-            A[:, i] = (self.dynamics(x_plus, u) - self.dynamics(x_minus, u)) / (2 * epsilon)
-
-        # Compute B using central differences: (f(u+eps) - f(u-eps)) / (2*eps)
-        u_arr = np.array(u, dtype=float)
-        for i in range(m):
-            u_plus = u_arr.copy()
-            u_plus[i] += epsilon
-            u_minus = u_arr.copy()
-            u_minus[i] -= epsilon
-            B[:, i] = (self.dynamics(x, u_plus) - self.dynamics(x, u_minus)) / (2 * epsilon)
-
-        return A, B
+        return _central_difference_linearization(self, x, u)

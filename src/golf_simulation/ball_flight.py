@@ -22,7 +22,7 @@ import numpy as np
 
 from src.core.constants import GRAVITY_M_S2
 from src.core.contracts import check_non_negative, check_positive, require
-from src.tangent_models.examples import DynamicalSystem
+from src.tangent_models.examples import DynamicalSystem, _central_difference_linearization
 
 logger = logging.getLogger(__name__)
 
@@ -194,34 +194,7 @@ class BallFlightDynamics(DynamicalSystem):
         Returns:
             Tuple of (A, B) Jacobian matrices.
         """
-        x_arr = np.array(x, dtype=float)
-        u_arr = np.array(u, dtype=float) if not isinstance(u, float) else np.array([u])
-        require(len(x_arr) == 9, "state vector must have 9 elements")
-
-        n = len(x_arr)
-        m = len(u_arr)
-        epsilon = 1e-6
-
-        A = np.zeros((n, n))
-        B = np.zeros((n, m))
-
-        # Compute A via central differences
-        for i in range(n):
-            x_plus = x_arr.copy()
-            x_minus = x_arr.copy()
-            x_plus[i] += epsilon
-            x_minus[i] -= epsilon
-            A[:, i] = (self.dynamics(x_plus, u_arr) - self.dynamics(x_minus, u_arr)) / (2 * epsilon)
-
-        # Compute B via central differences
-        for i in range(m):
-            u_plus = u_arr.copy()
-            u_minus = u_arr.copy()
-            u_plus[i] += epsilon
-            u_minus[i] -= epsilon
-            B[:, i] = (self.dynamics(x_arr, u_plus) - self.dynamics(x_arr, u_minus)) / (2 * epsilon)
-
-        return A, B
+        return _central_difference_linearization(self, np.asarray(x, dtype=float), u)
 
     def _clamp_to_ground(
         self,
