@@ -68,6 +68,18 @@ python scripts/check-equations.py
 
 **Target:** `.qmd` and `.md` files in `articles/` directory
 
+### fix_html.py
+Normalizes the generated wrist article HTML with repo-root-relative input and output paths.
+
+**Usage:**
+```bash
+python fix_html.py --dry-run
+python fix_html.py --input content/wrist-as-universal-joint/Wrist_Universal_Claude.html
+python fix_html.py --input content/wrist-as-universal-joint/Wrist_Universal_Claude.html --output build/Wrist_Universal_Claude.html
+```
+
+**Default input:** `content/wrist-as-universal-joint/Wrist_Universal_Claude.html`
+
 ## Quality & Assessment Scripts
 
 ### seo_audit.py

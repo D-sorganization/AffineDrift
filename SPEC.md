@@ -422,6 +422,7 @@ python src/tools/code_quality_ast.py
 |------|---------|---------|
 | 2026-04-05 | 1.0.15 | security(xss): Prevented XSS in polynomial evaluation by explicitly stripping allowed math variables/functions and validating the remainder strictly via regex before `new Function` evaluation in `grip_angle_simulator.html` |
 | 2026-04-04 | 1.0.13 | security(xss): Fixed XSS vulnerability in `notes-workspace.js` by avoiding `document.write` with string interpolation and safely assigning `value` property |
+| 2026-04-05 | 1.0.15 | fix(tools): made `fix_html.py` repo-root portable with explicit input/output resolution and dry-run support |
 | 2026-04-04 | 1.0.15 | perf(frontend): Apply resize:none to auto-growing textareas managed by `initAutoGrowTextareas()` to prevent user manual resizing which conflicts with JS logic |
 | 2026-04-04 | 1.0.14 | perf(frontend): Replaced DOM-based escapeHtml with Regex string replacement in JS to avoid layout thrashing and reduce memory allocations |
 | 2026-04-05 | 1.0.15 | security(xss): Fixed XSS vulnerability in `notes-workspace.js` popout feature by removing `document.write` template literal evaluation. |
