@@ -66,7 +66,31 @@ Validates mathematical equations in markdown files for LaTeX syntax errors.
 python scripts/check-equations.py
 ```
 
+### check_qmd_citation_keys.py
+Scans website-facing Quarto files and fails when a bibliography citation key does
+not resolve against the document's configured bibliography files. Internal Quarto
+cross-references such as `@sec:...`, `@fig:...`, `@tbl:...`, `@eq:...`, and
+`@ch:...` are ignored.
+
+**Usage:**
+```bash
+python scripts/check_qmd_citation_keys.py
+```
+
+**Target:** `articles/`, `books/`, `pages/`, `resources/`, and `index.qmd`
+
 **Target:** `.qmd` and `.md` files in `articles/` directory
+
+### check_citation_resolution.py
+Scans website `.qmd` files and fails when citation keys do not resolve against the
+configured Quarto bibliography files for each page or book project.
+
+**Usage:**
+```bash
+python scripts/check_citation_resolution.py
+```
+
+**Target:** `articles/`, `books/`, `pages/`, `resources/`, and `index.qmd`
 
 ### fix_html.py
 Normalizes the generated wrist article HTML with repo-root-relative input and output paths.
