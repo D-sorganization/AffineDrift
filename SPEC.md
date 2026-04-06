@@ -27,8 +27,8 @@
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto |
 | **License** | MIT |
 | **Current Version** | 1.0.6 |
-| **Spec Version** | 1.0.15 |
-| **Last Spec Update** | 2026-04-05 |
+| **Spec Version** | 1.0.16 |
+| **Last Spec Update** | 2026-04-06 |
 
 ## 2. Purpose & Mission
 
@@ -158,6 +158,7 @@ AffineDrift/
 | F13 | PR site-build and dependency-audit gate | ✅ | `ci-standard.yml` audits Python dependencies with `pip-audit`, renders the Quarto site in PR CI, syncs frontend assets, and runs Playwright smoke tests against the generated docs |
 | F14 | Bibliography duplicate-alias guardrail | ✅ | Reference-integrity tests require duplicate bibliography records to carry an explicit legacy-compatibility note instead of silently diverging |
 | F15 | Textbook bibliography synchronization | ✅ | The Geometry of Motion and The Physics of Golf keep chapter-level citations synchronized with shared bibliography sources in `references/affine-drift.bib` and the book-specific `.bib` files |
+| F16 | Website citation-resolution guardrail | ✅ | PR CI scans website `.qmd` sources, resolves their configured bibliography files, and fails when citation keys do not map to a known bibliography entry |
 
 ### API / Interface Contract
 
@@ -276,6 +277,7 @@ AffineDrift follows a **test pyramid** strategy: unit tests form the base (fast,
 - [x] Smoke tests on Chromium pass for critical pages
 - [x] Property-based tests with Hypothesis verify DDP convergence across parameter ranges
 - [x] Design-by-contract assertions enforce preconditions and postconditions
+- [x] Website `.qmd` citations resolve against project or page bibliography files, excluding Quarto cross-references such as `@eq-` and `@sec-`
 
 ## 8. Quality Standards
 
@@ -421,6 +423,7 @@ python src/tools/code_quality_ast.py
 | Date | Version | Changes |
 |------|---------|---------|
 | 2026-04-05 | 1.0.15 | security(xss): Prevented XSS in polynomial evaluation by explicitly stripping allowed math variables/functions and validating the remainder strictly via regex before `new Function` evaluation in `grip_angle_simulator.html` |
+| 2026-04-06 | 1.0.16 | ci(content): added citation-resolution checks for website `.qmd` sources, covering root and nested Quarto bibliography files and excluding Quarto cross-references from unresolved-key failures |
 | 2026-04-04 | 1.0.13 | security(xss): Fixed XSS vulnerability in `notes-workspace.js` by avoiding `document.write` with string interpolation and safely assigning `value` property |
 | 2026-04-05 | 1.0.15 | fix(tools): made `fix_html.py` repo-root portable with explicit input/output resolution and dry-run support |
 | 2026-04-04 | 1.0.15 | perf(frontend): Apply resize:none to auto-growing textareas managed by `initAutoGrowTextareas()` to prevent user manual resizing which conflicts with JS logic |

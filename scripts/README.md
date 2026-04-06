@@ -68,6 +68,17 @@ python scripts/check-equations.py
 
 **Target:** `.qmd` and `.md` files in `articles/` directory
 
+### check_citation_resolution.py
+Scans website `.qmd` files and fails when citation keys do not resolve against the
+configured Quarto bibliography files for each page or book project.
+
+**Usage:**
+```bash
+python scripts/check_citation_resolution.py
+```
+
+**Target:** `articles/`, `books/`, `pages/`, `resources/`, and `index.qmd`
+
 ### fix_html.py
 Normalizes the generated wrist article HTML with repo-root-relative input and output paths.
 
