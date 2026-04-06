@@ -54,8 +54,12 @@ def test_find_unresolved_citations_reports_missing_keys(tmp_path: Path) -> None:
     article_dir = repo_root / "articles" / "demo"
     article_dir.mkdir(parents=True)
     (article_dir / "_quarto.yml").write_text("bibliography: refs.bib\n", encoding="utf-8")
-    (article_dir / "refs.bib").write_text("@article{smith2020,\n  title={Demo}\n}\n", encoding="utf-8")
-    (article_dir / "chapter.qmd").write_text("[@smith2020; @missing2024; @sec:intro]\n", encoding="utf-8")
+    (article_dir / "refs.bib").write_text(
+        "@article{smith2020,\n  title={Demo}\n}\n", encoding="utf-8"
+    )
+    (article_dir / "chapter.qmd").write_text(
+        "[@smith2020; @missing2024; @sec:intro]\n", encoding="utf-8"
+    )
 
     diagnostics = find_unresolved_citations(repo_root)
 

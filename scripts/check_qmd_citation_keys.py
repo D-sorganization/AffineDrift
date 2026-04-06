@@ -38,9 +38,7 @@ IGNORED_CITATION_PREFIXES = (
     "tbl:",
     "thm:",
 )
-IGNORED_CITATION_PATTERNS = (
-    re.compile(r"^ch\d+[_-]"),
-)
+IGNORED_CITATION_PATTERNS = (re.compile(r"^ch\d+[_-]"),)
 
 
 def extract_frontmatter(text: str) -> dict:
@@ -148,7 +146,9 @@ def find_unresolved_citations(repo_root: Path) -> list[str]:
 
         bibliography_paths = configured_bibliography_paths(repo_root, qmd_path)
         if not bibliography_paths:
-            diagnostics.append(f"{qmd_path.relative_to(repo_root)}: citations present but no bibliography configured")
+            diagnostics.append(
+                f"{qmd_path.relative_to(repo_root)}: citations present but no bibliography configured"
+            )
             continue
 
         available_keys: set[str] = set()
