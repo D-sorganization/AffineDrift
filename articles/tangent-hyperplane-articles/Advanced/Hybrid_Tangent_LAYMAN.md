@@ -1,4 +1,5 @@
 # In Layman's Terms: Hybrid Tangent Spaces
+
 **Target Audience:** Non-technical readers, practitioners, students
 **Source:** Hybrid_Tangent_Spaces.qmd
 **Date:** January 18, 2026
@@ -48,6 +49,7 @@ Between jumps, the system behaves normally—it's smooth and our usual tangent s
 ### 2. **Sudden Jumps (At Guards)**
 
 At special moments, the system hits a "boundary" (called a **guard surface**) and something discontinuous happens:
+
 - The state might jump to a new value
 - The mode of operation might switch
 - Forces might appear or disappear
@@ -114,6 +116,7 @@ When you hit a guard, three things happen:
 ### Visual Metaphor
 
 Imagine a pinball machine:
+
 - **Modes:** Different regions of the table (upper area, lower area, bonus chamber)
 - **Guards:** The flippers and bumpers (boundaries between regions)
 - **Flow:** Ball rolls smoothly within each region
@@ -130,16 +133,19 @@ When you cross a guard, the state of the system might jump. The **reset map** is
 ### Example 1: Bouncing Ball
 
 **Before impact (state $x^-$):**
+
 - Height: 0 meters (just touching ground)
 - Velocity: -5 m/s (moving down)
 
 **Guard crossed:** Ball touches ground
 
 **Reset map:**
+
 - New height: Still 0 meters (no change in position)
 - New velocity: $-0.8 \times (-5) = +4$ m/s (moving up, but slower due to energy loss)
 
 The **0.8** is called the **coefficient of restitution** ($e$). It measures bounciness:
+
 - $e = 1$: Perfectly elastic (no energy lost, bounces to the same height)
 - $e = 0$: Perfectly inelastic (sticks to the ground, no bounce)
 - $e = 0.8$: Typical rubber ball (bounces to 64% of original height, since height $\propto v^2$)
@@ -149,11 +155,13 @@ The **0.8** is called the **coefficient of restitution** ($e$). It measures boun
 ### Example 2: Walking Robot Heel Strike
 
 **Before heel strike:**
+
 - Leg swinging forward at 2 m/s
 
 **Guard crossed:** Foot contacts ground
 
 **Reset map:**
+
 - Foot velocity → 0 m/s (can't sink into the ground)
 - Other joint velocities change due to conservation of angular momentum
 
@@ -164,6 +172,7 @@ The **0.8** is called the **coefficient of restitution** ($e$). It measures boun
 Even though the trajectory itself jumps discontinuously, the **effect on small perturbations is linear**.
 
 **What this means:**
+
 - If you nudge the pre-impact velocity by 0.1 m/s, the post-impact velocity gets nudged by (some linear factor) × 0.1 m/s
 - That linear factor is captured in a matrix called the **saltation matrix** (more on that next)
 
@@ -178,6 +187,7 @@ The word **saltation** comes from Latin "saltare" (to jump). A saltation matrix 
 ### The Setup
 
 You have:
+
 - A nominal trajectory that crosses a guard at time $t_j$
 - A slightly perturbed trajectory (maybe you started from a slightly different position)
 
@@ -188,6 +198,7 @@ You have:
 $$\delta x^+ = S_j \cdot \delta x^-$$
 
 Where:
+
 - $\delta x^-$ is the perturbation just before the jump
 - $\delta x^+$ is the perturbation just after the jump
 - $S_j$ is the saltation matrix for that particular guard crossing
@@ -197,10 +208,12 @@ Where:
 It has two parts:
 
 **Part 1: Direct effect of the reset map**
+
 - If the ball velocity gets multiplied by -0.8, perturbations in velocity also get multiplied by -0.8
 - This is captured by the **reset Jacobian** $P_j$
 
 **Part 2: Timing correction**
+
 - The perturbed trajectory might cross the guard at a slightly different time
 - During that time difference, the system is still evolving (e.g., gravity is still pulling)
 - This adds a correction term to $P_j$ to get the full saltation matrix $S_j$
@@ -210,10 +223,12 @@ It has two parts:
 Imagine you're driving on a road that suddenly turns 90 degrees to the right (a sharp corner, like a guard surface).
 
 **Before the turn:**
+
 - Your velocity is "forward" (let's say north)
 - Perturbations (small changes in speed or steering) are in the "roughly north" tangent space
 
 **At the turn:**
+
 - You rotate the steering wheel
 - Your velocity is now "right" (east)
 - The tangent space rotates with you—perturbations are now in the "roughly east" space
@@ -227,6 +242,7 @@ For our ball with $e = 0.8$ and velocity $v^- = -5$ m/s just before impact:
 $$S_j = \begin{bmatrix} -0.8 & 0 \\ \frac{-9.8 \times 1.8}{-5} & -0.8 \end{bmatrix} = \begin{bmatrix} -0.8 & 0 \\ 3.53 & -0.8 \end{bmatrix}$$
 
 **What this tells us:**
+
 - First row: A perturbation in velocity before impact creates a perturbation in height after impact (because timing of the bounce shifts)
 - Second row: Velocity perturbations scale by -0.8, plus a bit of coupling from height perturbations
 
@@ -252,6 +268,7 @@ This is the variational equation. It's exact for infinitesimal perturbations.
 **"At every instant within a mode, the system is exactly linear. At guard crossings, perturbations jump linearly via the saltation matrix $S_j$."**
 
 Mathematically:
+
 - **Within modes:** $\delta \dot{x} = A(t) \delta x$ (same as before)
 - **At jumps:** $\delta x^+ = S_j \delta x^-$ (new rule)
 
@@ -282,6 +299,7 @@ Let's revisit the examples from the beginning and see how the framework handles 
 **Smooth assumption breaks:** Velocity jumps discontinuously at each impact.
 
 **Hybrid framework solution:**
+
 - **Mode:** Flight (ball in air)
 - **Guard:** Height = 0, moving downward
 - **Reset:** Velocity reverses and scales by $e$
@@ -294,6 +312,7 @@ Let's revisit the examples from the beginning and see how the framework handles 
 **Smooth assumption breaks:** Foot strike and toe-off are sudden events. The dynamics are totally different depending on whether the foot is on the ground.
 
 **Hybrid framework solution:**
+
 - **Mode 1:** Stance (foot on ground, single support)
 - **Mode 2:** Swing (foot in air, no ground contact)
 - **Guards:** Heel strike (enter stance), toe-off (enter swing)
@@ -306,6 +325,7 @@ Let's revisit the examples from the beginning and see how the framework handles 
 **Smooth assumption breaks:** The light is either ON or OFF, no in-between.
 
 **Hybrid framework solution:**
+
 - **Mode 1:** Light OFF
 - **Mode 2:** Light ON
 - **Guards:** User flips switch (discrete event)
@@ -318,6 +338,7 @@ Let's revisit the examples from the beginning and see how the framework handles 
 **Smooth assumption breaks:** Infinitely many bounces in finite time (if $e < 1$, the ball bounces faster and faster until it "settles" in finite time).
 
 **Hybrid framework solution:**
+
 - Same as basketball, but now we track the sequence of bounces
 - The time between bounces decreases geometrically: $T_1, T_2, T_3, \ldots$ with $T_n = e^n T_1$
 - Total time: $T_{total} = T_1 (1 + e + e^2 + \ldots) = \frac{T_1}{1 - e}$ (finite!)
@@ -333,11 +354,13 @@ Let's revisit the examples from the beginning and see how the framework handles 
 **Challenge:** A walking robot has two feet. At any moment, one foot might be on the ground (stance) or in the air (swing). The contact forces appear and disappear suddenly.
 
 **Hybrid model:**
+
 - **Modes:** Single support left, single support right, double support (both feet down), flight (running)
 - **Guards:** Heel strike (foot touches ground), toe-off (foot leaves ground)
 - **Resets:** At heel strike, the foot velocity must go to zero. This causes a shock wave through the robot's joints, which is captured by the saltation matrix.
 
 **Why it matters:**
+
 - Traditional smooth optimization would "smooth out" the foot strike, predicting the foot sinks into the ground slightly. This is physically wrong and leads to bad gaits.
 - Hybrid optimization respects the contact: the foot stops instantly, energy is lost, and the gait is stable.
 
@@ -348,19 +371,22 @@ Let's revisit the examples from the beginning and see how the framework handles 
 **Challenge:** A golf club head traveling at 50 m/s hits a 46-gram ball. The collision lasts about 0.5 milliseconds. During that time, forces are enormous (10,000 Newtons), and the ball goes from 0 to 70 m/s.
 
 **Hybrid model:**
+
 - **Phase 1 (Backswing):** Smooth dynamics, club rotates back
 - **Phase 2 (Downswing):** Smooth dynamics, club accelerates toward ball
 - **Phase 3 (Impact):** Discontinuous jump. Club and ball exchange momentum according to restitution coefficient $e \approx 0.78$
 - **Phase 4 (Follow-through):** Smooth dynamics, club decelerates
 
 **Saltation matrix at impact:**
+
 - Ball velocity after impact: $v_{ball}^+ = 1.48 \times v_{club}^-$ (for typical club/ball mass ratio)
 - The factor 1.48 comes from the impact equations (momentum + restitution)
 - Perturbations in club speed map linearly to perturbations in ball speed via this factor
 
 **Optimization insight:**
 Using hybrid DDP (differential dynamic programming) to optimize the swing, the algorithm discovers:
-- The club should decelerate *slightly* just before impact (counter-intuitive!)
+
+- The club should decelerate _slightly_ just before impact (counter-intuitive!)
 - This maximizes energy transfer and minimizes vibration losses
 
 This would be missed by a smooth approximation that doesn't respect the discontinuity.
@@ -370,12 +396,14 @@ This would be missed by a smooth approximation that doesn't respect the disconti
 **Challenge:** A spacecraft approaches the International Space Station at 0.1 m/s. When the docking mechanism touches, there's a soft capture (impact with $e = 0.3$, highly dissipative to avoid bouncing away).
 
 **Hybrid model:**
+
 - **Mode 1 (Approach):** Smooth orbital dynamics, thrusters provide control
 - **Guard:** Contact sensor detects docking port touch
 - **Reset:** Velocity jumps according to the soft-capture mechanism (like a very squishy collision)
 - **Mode 2 (Latched):** Spacecraft is now rigidly connected to ISS
 
 **Why it matters:**
+
 - If you modeled the docking mechanism as a stiff spring (smooth approximation), the simulation timesteps would need to be incredibly small (microseconds) to capture the stiffness accurately. This is computationally expensive.
 - Hybrid model treats the capture as a discrete event with a known reset map. Simulation is fast and accurate.
 
@@ -384,18 +412,21 @@ This would be missed by a smooth approximation that doesn't respect the disconti
 ### Application 4: Manufacturing (Drilling or Cutting)
 
 **Challenge:** A drill bit cuts into metal. Two phases:
+
 - **Air mode:** Drill spinning, approaching the workpiece (no cutting forces)
 - **Contact mode:** Drill touching metal, huge cutting forces appear, chips form, heat is generated
 
 The transition is sudden—cutting forces don't "gradually appear," they jump to a large value the instant contact is made.
 
 **Hybrid model:**
+
 - **Mode 1:** Air (smooth dynamics, just motor torque)
 - **Guard:** Bit touches workpiece (sensed by position or force threshold)
 - **Reset:** Cutting forces appear (no jump in position, but force/torque jumps)
 - **Mode 2:** Cutting (different dynamics due to friction, chip formation)
 
 **Why it matters:**
+
 - Machining optimization needs to avoid chatter (vibration) and tool breakage
 - The jump in forces at contact excites vibrations
 - Hybrid models predict these and allow the optimizer to plan feed rates that avoid resonance
@@ -413,16 +444,19 @@ Let's revisit the geometric interpretation of saltation with a concrete analogy.
 Imagine you're pushing a cart across a flat floor. Suddenly, the cart hits a wall.
 
 **Before impact:**
+
 - Cart moving forward at 2 m/s
 - Small perturbations (wiggling the handle) change the cart's velocity in any direction—forward, sideways, etc.
 - The "tangent space" is 2D (you can perturb forward/backward and left/right)
 
 **At impact (hitting the wall):**
+
 - The cart's forward velocity suddenly goes to zero (inelastic collision)
 - Sideways velocity is unaffected (the wall only stops forward motion)
 - The tangent space "rotates": perturbations in the forward direction get killed, perturbations sideways remain
 
 **After impact:**
+
 - Cart is at rest against the wall
 - Small perturbations can only move sideways (forward is blocked by the wall)
 - The tangent space is now effectively 1D (only sideways motion allowed)
@@ -432,12 +466,14 @@ Imagine you're pushing a cart across a flat floor. Suddenly, the cart hits a wal
 $$S = \begin{bmatrix} 0 & 0 \\ 0 & 1 \end{bmatrix}$$
 
 Meaning:
+
 - Forward velocity perturbation → 0 (first row)
 - Sideways velocity perturbation → unchanged (second row)
 
 ### Why "Rotation"?
 
-The tangent space doesn't literally rotate in space, but its *effective directions* change:
+The tangent space doesn't literally rotate in space, but its _effective directions_ change:
+
 - Before: "forward" is a valid perturbation direction
 - After: "forward" is forbidden (blocked by the wall)
 
@@ -446,6 +482,7 @@ In linear algebra terms, the saltation matrix is a projection operator that kill
 ### General Principle
 
 At any impact or switch:
+
 - The tangent space before the jump has certain directions
 - The saltation matrix maps those directions to new directions after the jump
 - Some directions might get scaled (damped or amplified)
@@ -467,6 +504,7 @@ If you have jumps at times $t_1, t_2, t_3, \ldots$, the total effect on perturba
 $$\text{Final perturbation} = \Phi_3 S_3 \Phi_2 S_2 \Phi_1 S_1 \times \text{Initial perturbation}$$
 
 Where:
+
 - $\Phi_1$ is smooth flow from start to jump 1
 - $S_1$ is saltation at jump 1
 - $\Phi_2$ is smooth flow from jump 1 to jump 2
@@ -486,6 +524,7 @@ If the eigenvalues of $S$ are less than 1 (dissipative impact), then $S^5$ is ve
 If the eigenvalues were greater than 1 (energy-adding impact, like a ball on a vibrating table), then $S^5$ would be large—perturbations grow, and the trajectory is unstable.
 
 **This explains why:**
+
 - A bouncing ball settles down (eigenvalues < 1)
 - A ball on a shaking table can bounce chaotically (eigenvalues can be > 1)
 
@@ -504,10 +543,12 @@ $$F_{contact}(x) = \begin{cases} 0 & \text{if } x > 0 \\ -k \cdot x & \text{if }
 With $k$ very large, this approximates a hard collision.
 
 **Pros:**
+
 - Smooth everywhere (standard calculus applies)
 - No special event detection needed
 
 **Cons:**
+
 - **Numerical stiffness:** Requires tiny timesteps (proportional to $1/\sqrt{k}$). For $k = 10^6$, timesteps are microseconds—simulation is slow.
 - **Parameter tuning:** What value of $k$ to use? Too small: not realistic. Too large: numerically unstable.
 - **Obscures physics:** The "sharpness" of the impact (guard surface) has physical meaning. Smoothing it out hides that structure.
@@ -519,12 +560,14 @@ With $k$ very large, this approximates a hard collision.
 **Idea:** Treat jumps as discrete events with explicit guards and reset maps.
 
 **Pros:**
+
 - **Accurate:** Respects the physics exactly
 - **Fast:** Timesteps can be large (no stiffness)
 - **Interpretable:** Clear separation of modes and jumps
 - **Optimizable:** Saltation matrices enable gradient-based optimization through jumps
 
 **Cons:**
+
 - **Requires event detection:** Need to find when guards are crossed (adds complexity)
 - **Non-smooth:** Standard smooth calculus doesn't apply at jumps (need special handling)
 
@@ -537,10 +580,12 @@ With $k$ very large, this approximates a hard collision.
 $$\text{Gap} \times \text{Force} = 0, \quad \text{Gap} \geq 0, \quad \text{Force} \geq 0$$
 
 **Pros:**
+
 - Automatically discovers contact timings (don't need to pre-specify when jumps occur)
 - Handles multiple simultaneous contacts
 
 **Cons:**
+
 - Non-convex (many local minima)
 - Requires good initialization
 - Complementarity is tricky to enforce numerically
@@ -550,15 +595,18 @@ $$\text{Gap} \times \text{Force} = 0, \quad \text{Gap} \geq 0, \quad \text{Force
 ### Recommendation
 
 Use **hybrid explicit** when:
+
 - Contact sequence is known (e.g., walking: left-right-left-right)
 - Accuracy and speed matter
 - You need guarantees (convergence, stability)
 
 Use **contact-implicit** when:
+
 - Contact sequence is unknown (e.g., exploring novel gaits)
 - System has many potential contacts (e.g., multi-fingered hand grasping)
 
 Use **smooth approximation** when:
+
 - Prototyping quickly
 - Impacts are "soft" (stiffness is moderate, not extreme)
 
@@ -573,6 +621,7 @@ Use **smooth approximation** when:
 **Yes:** Hybrid systems are piecewise smooth (smooth within each mode, jumps at boundaries).
 
 **No:** The framework provides much more than just that label:
+
 - Rigorous tools for computing sensitivities through jumps (saltation matrices)
 - Algorithms for optimization (hybrid DDP)
 - Geometric interpretation (tangent space transformations)
@@ -595,9 +644,10 @@ The framework supports all three.
 
 **A:** Good question. Sliding is handled by **Filippov solutions**.
 
-When a system "slides" along a boundary (like a block on a table with friction), the velocity is tangent to the boundary. Filippov's theory says the dynamics are a *convex combination* of the vector fields on either side of the boundary.
+When a system "slides" along a boundary (like a block on a table with friction), the velocity is tangent to the boundary. Filippov's theory says the dynamics are a _convex combination_ of the vector fields on either side of the boundary.
 
 **Example:** A block on a table:
+
 - If $F_{push} < F_{friction}$: Block doesn't move (stuck)
 - If $F_{push} > F_{friction}$: Block slides
 - If $F_{push} = F_{friction}$ exactly: Block might be on the edge (sliding mode)
@@ -623,17 +673,20 @@ Any time you have "if-then" rules in your dynamics, you can model it as a hybrid
 **Real systems** often jump, collide, switch modes, and violate smoothness.
 
 **The hybrid framework** extends the tangent space idea to these systems by:
+
 1. Allowing different modes with different physics
 2. Explicitly handling guards (boundaries between modes)
 3. Using saltation matrices to map perturbations across jumps
 4. Composing smooth flow and discrete jumps into a unified picture
 
 **The payoff:**
+
 - We can still optimize trajectories (hybrid DDP)
 - We can still design controllers (mode-aware feedback)
 - We can still analyze stability (eigenvalues of saltation matrices)
 
 **The cost:**
+
 - More machinery (guards, resets, event detection)
 - Non-smooth math (measure theory, complementarity)
 
@@ -650,9 +703,10 @@ This article adds a crucial caveat:
 **"...as long as the system is smooth. When it jumps, the tangent space jumps too, but in a predictable linear way."**
 
 **Unified view:**
+
 - **Within modes:** The original tangent space framework applies unchanged
 - **At jumps:** We augment the framework with saltation matrices
-- **Overall:** Hybrid systems have a *piecewise linear tangent space structure*
+- **Overall:** Hybrid systems have a _piecewise linear tangent space structure_
 
 This is a natural extension, not a contradiction. The core geometric insight (local linearity) survives, and we gain the ability to handle the most common forms of non-smoothness in engineering.
 
@@ -665,6 +719,7 @@ This is a natural extension, not a contradiction. The core geometric insight (lo
 - **Critical review:** See [CRITICAL_REVIEW.md](../CRITICAL_REVIEW.md) for limitations and edge cases
 
 **Practical resources:**
+
 - Hybrid system simulation: Look up "event-driven simulation" and "zero-crossing detection"
 - Optimization: Search for "hybrid DDP," "contact-implicit optimization," and "complementarity constraints"
 - Robotics applications: Boston Dynamics walking robots, MIT humanoid locomotion research

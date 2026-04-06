@@ -1,4 +1,5 @@
 # In Layman's Terms: Contraction Theory Meets Tangent Spaces
+
 **Target Audience:** Non-technical readers, practitioners, students
 **Source:** Contraction_Tangent_Unification.qmd
 **Date:** January 18, 2026
@@ -19,6 +20,7 @@ Imagine you're designing a robot arm to paint intricate patterns on pottery. You
 2. **Stability:** Ensure tiny vibrations or bumps don't ruin the painting
 
 Traditionally, these were treated as separate problems requiring separate solutions. Control engineers would:
+
 - First optimize the trajectory (make it "perfect")
 - Then add stabilizing feedback (make it "robust")
 
@@ -38,22 +40,25 @@ Think of a rubber band stretched between your fingers. What happens when you rel
 
 **It snaps back.** The rubber band wants to return to its natural, unstretched state. The farther you stretch it, the harder it pulls back.
 
-**Contraction theory says:** *Some dynamical systems behave like rubber bands—errors naturally shrink over time.*
+**Contraction theory says:** _Some dynamical systems behave like rubber bands—errors naturally shrink over time._
 
 ### Everyday Examples
 
 **1. Your car's cruise control:**
+
 - If you go a bit too fast, the system reduces throttle
 - If you go a bit too slow, it increases throttle
 - Either way, you **converge** back to the target speed
 - The system is "contracting" toward the setpoint
 
 **2. A swinging pendulum with friction:**
+
 - No matter where you release it, it eventually stops at the bottom
 - All trajectories **converge** to the same resting state
 - The friction makes the system contracting
 
 **3. A thermostat:**
+
 - Room too hot? Turn on AC
 - Room too cold? Turn on heat
 - Temperature naturally drifts toward the setpoint
@@ -61,6 +66,7 @@ Think of a rubber band stretched between your fingers. What happens when you rel
 ### The Mathematical Definition (Simplified)
 
 A system is **contracting** if:
+
 - Any two nearby states get **closer together** over time
 - This happens **exponentially fast**—like compound interest in reverse
 - The rate of convergence is predictable and guaranteed
@@ -91,6 +97,7 @@ When you solve an optimal control problem (like planning a robot's motion), you 
 **That metric is ALSO a contraction metric!**
 
 In other words:
+
 - The optimal controller makes errors expensive (optimality)
 - The same controller makes errors shrink exponentially (stability)
 
@@ -105,10 +112,12 @@ Here's the heart of the unification:
 ### Two Perspectives, One Reality
 
 **Optimality perspective:**
+
 - "If I deviate from the plan, it costs me this much (measured by the Riccati matrix)"
 - Focus: Minimizing cost
 
 **Stability perspective:**
+
 - "If I deviate from the plan, I'll converge back this fast (measured by the contraction metric)"
 - Focus: Guaranteeing convergence
 
@@ -132,15 +141,18 @@ Going back to the rubber band:
 ### 1. Robot Arms That Self-Stabilize
 
 **The old way:**
+
 1. Plan optimal trajectory
 2. Design separate stabilizing controller
 3. Hope they don't interfere with each other
 
 **The new way (contraction-aware control):**
+
 1. Plan trajectory **with contraction constraints** built in
 2. Get stability guarantees **for free** from the optimization
 
 **Real result (from the article):** A 7-DOF robot arm tracking a circular path:
+
 - **76% reduction** in tracking error
 - **5× faster** disturbance rejection
 - **Guaranteed** convergence rate (measured 4.87 Hz vs designed 5.0 Hz)
@@ -152,11 +164,13 @@ Going back to the rubber band:
 **The problem:** Professional golfers swing faster than amateurs but **maintain control** better. Why?
 
 **Contraction analysis reveals:**
+
 - Pros maintain a high "stability margin" throughout the swing
 - Even during rapid motion (club head at 100+ mph), the dynamics remain contracting
 - Amateurs lose stability near impact—small perturbations cause big errors
 
 **Quantified:**
+
 - **Pros:** Stability margin γ > 0.5 throughout swing
 - **Amateurs:** Stability margin γ < 0.2 near impact
 
@@ -169,6 +183,7 @@ Going back to the rubber band:
 **Challenge:** Docking with the ISS requires centimeter-level precision. Orbital mechanics are nonlinear. Fuel is limited.
 
 **Contraction-based approach:**
+
 1. Plan trajectory using DDP (differential dynamic programming)
 2. Add contraction penalty to ensure exponential convergence
 3. Result: Certified basin of attraction—you **know** the safe operating region
@@ -194,6 +209,7 @@ Here's where it gets beautiful (and a bit abstract).
 ### What This Means Physically
 
 Imagine you're walking on a trampoline:
+
 - Near the center (the goal), the trampoline curves steeply downward
 - The curvature creates a "bowl" that pulls you toward the center
 - The steeper the bowl, the faster you slide to the center
@@ -213,6 +229,7 @@ You don't need to understand the equations to appreciate the beauty, but here's 
 **What it is:** A differential equation that describes how the "cost-to-go" (value function) changes along a trajectory.
 
 **Standard form:**
+
 ```
 -dS/dt = A^T S + S A - S B R^(-1) B^T S + Q
 ```
@@ -224,6 +241,7 @@ You don't need to understand the equations to appreciate the beauty, but here's 
 **What it is:** A requirement that ensures errors shrink exponentially.
 
 **Standard form:**
+
 ```
 A^T M + M A < -2λ M
 ```
@@ -235,6 +253,7 @@ A^T M + M A < -2λ M
 **The shocking fact:** When you set M = S (metric equals value function), **both equations are satisfied**.
 
 In other words:
+
 - Solving the optimal control problem gives you S
 - That S is automatically a contraction metric
 - The contraction rate comes from the eigenvalues of the closed-loop system
@@ -250,14 +269,17 @@ Now that we know optimality = stability, we can design smarter algorithms.
 ### The Idea: Optimize with Stability Guarantees
 
 **Standard trajectory optimization:**
+
 - Minimize cost (fuel, time, error)
 - Hope the result is stable
 
 **Contraction-aware trajectory optimization:**
+
 - Minimize cost **subject to** contraction constraints
 - Get certified stability as part of the solution
 
 **Mathematical form:**
+
 ```
 Minimize: trajectory cost
 Subject to:
@@ -267,6 +289,7 @@ Subject to:
 ```
 
 **Output:**
+
 - Optimal trajectory
 - Feedback gains
 - **Certified basin of attraction**—the region where convergence is guaranteed
@@ -277,17 +300,18 @@ Subject to:
 
 **Comparison:**
 
-| Metric                  | Classical DDP | Contraction-DDP | Improvement |
-|-------------------------|---------------|-----------------|-------------|
-| Success rate (σ=0.1)    | 94%           | 100%            | +6%         |
-| Success rate (σ=0.2)    | 71%           | 98%             | +38%        |
-| Success rate (σ=0.3)    | 42%           | 89%             | +112%       |
+| Metric                  | Classical DDP | Contraction-DDP | Improvement   |
+| ----------------------- | ------------- | --------------- | ------------- |
+| Success rate (σ=0.1)    | 94%           | 100%            | +6%           |
+| Success rate (σ=0.2)    | 71%           | 98%             | +38%          |
+| Success rate (σ=0.3)    | 42%           | 89%             | +112%         |
 | Basin of attraction     | 14.3 units³   | 28.7 units³     | **2× larger** |
 | Convergence consistency | High variance | Low variance    | More reliable |
 
 **σ = initial state perturbation (noise in starting position/velocity)**
 
 **Takeaway:** By explicitly enforcing contraction, you get:
+
 - Larger basin of attraction (more robust to disturbances)
 - More consistent convergence (predictable behavior)
 - Modest computational cost (+60% with warm-starting)
@@ -311,6 +335,7 @@ This is where theory meets biology.
 **Muscle synergies aren't arbitrary.** They're the **optimal subspace** for contraction.
 
 **Analogy:** Imagine you're steering a ship with 50 ropes. You could pull them randomly, but it's smarter to:
+
 - Group ropes by their effect (e.g., "left turn bundle", "right turn bundle")
 - Pull bundles, not individual ropes
 
@@ -325,6 +350,7 @@ This is where theory meets biology.
 **Contraction view:** Impedance is a **metric**—it defines how errors are weighted.
 
 **Example:** Holding a full coffee cup:
+
 - High stiffness in vertical direction (don't spill!)
 - Low stiffness in horizontal direction (allow smooth motion)
 
@@ -337,6 +363,7 @@ This is where theory meets biology.
 ### Contraction-DDP Algorithm
 
 **Input:**
+
 - Initial trajectory
 - Desired contraction rate λ
 - Penalty weight μ (how much to prioritize stability)
@@ -349,6 +376,7 @@ This is where theory meets biology.
 4. **Line search:** Update trajectory with step size α
 
 **Output:**
+
 - Optimal trajectory
 - Time-varying feedback gains
 - Certified contraction rate
@@ -358,17 +386,20 @@ This is where theory meets biology.
 ### Practical Implementation (JAX)
 
 **Why JAX?**
+
 - Automatic differentiation (compute Jacobians exactly)
 - JIT compilation (fast execution)
 - Batching (vectorize over time steps)
 
 **Key steps:**
+
 1. Define dynamics function
 2. Use `jacfwd` to compute linearization matrices A, B
 3. Solve Riccati equation backward in time
 4. Verify contraction condition
 
 **Example output (pendulum swing-up):**
+
 ```
 Solving with classical DDP...
 Converged in 12 iterations
@@ -389,6 +420,7 @@ Final contraction rate: 1.94 Hz (target: 2.0 Hz)
 **Almost, but with a twist.**
 
 LQR (Linear Quadratic Regulator) gives optimal feedback for linear systems. For nonlinear systems, you need to:
+
 - Linearize at every point along the trajectory (time-varying LQR)
 - This is what DDP does
 
@@ -401,6 +433,7 @@ LQR (Linear Quadratic Regulator) gives optimal feedback for linear systems. For 
 **No.** Contraction requires smooth dynamics (at least C^1—continuously differentiable).
 
 For systems with:
+
 - Impacts (e.g., walking, bouncing)
 - Switches (e.g., mode changes)
 - Friction (stick-slip)
@@ -414,6 +447,7 @@ You need hybrid system techniques. **But:** You can use contraction within each 
 **Scaling:** For n-dimensional systems, SDP costs O(n^4) using interior-point methods.
 
 **Mitigation:**
+
 - Warm-starting (use previous solution as initial guess)
 - Sparsity (exploit block structure)
 - Approximation (use fixed metric M = I, lose optimality but retain stability)
@@ -433,6 +467,7 @@ You need hybrid system techniques. **But:** You can use contraction within each 
 **Different communities, different journals, different notation.**
 
 **Example:** The Riccati equation appears in both fields but was called:
+
 - "Value function propagation" in optimal control
 - "Lyapunov function candidate" in stability theory
 
@@ -445,6 +480,7 @@ You need hybrid system techniques. **But:** You can use contraction within each 
 **Stability theory asks:** "Will the system behave predictably?"
 
 **These seem like different questions.** But they're not. They're:
+
 - **Dual formulations** of the same geometric structure
 - Related by Legendre transform (cost ↔ metric)
 
@@ -461,6 +497,7 @@ You need hybrid system techniques. **But:** You can use contraction within each 
 **After:** Single optimization that delivers both simultaneously.
 
 **Example:** Satellite trajectory planning:
+
 - Old: Optimize fuel, then check if stable, then re-optimize, repeat
 - New: Optimize fuel **with contraction constraint**, get stability certificate immediately
 
@@ -469,6 +506,7 @@ You need hybrid system techniques. **But:** You can use contraction within each 
 **Machine learning controllers** (neural networks) work well but are black boxes. You can't prove they're safe.
 
 **Contraction-aware control:**
+
 - Transparent: You know exactly why it's stable (the metric tells you)
 - Certifiable: You can compute the basin of attraction
 - Trustworthy: Satisfies safety regulations
@@ -482,6 +520,7 @@ You need hybrid system techniques. **But:** You can use contraction within each 
 **Contraction hypothesis:** The brain optimizes for **robust, self-correcting motions**, not just energetic efficiency.
 
 **Testable prediction:** Brain-damaged patients should show:
+
 - Preserved optimality (can still reach targets)
 - Degraded contraction (unstable motions, more corrections)
 
@@ -494,33 +533,43 @@ You need hybrid system techniques. **But:** You can use contraction within each 
 If you want to dig deeper, here are the core equations:
 
 ### 1. Contraction Condition
+
 ```
 A^T M + M A + dM/dt ≤ -2λ M
 ```
+
 **Says:** Metric M makes errors decay with rate λ.
 
 ### 2. Differential Riccati Equation
+
 ```
 -dS/dt = Q + A^T S + S A - S B R^(-1) B^T S
 ```
+
 **Says:** Value function S propagates backward in time.
 
 ### 3. Duality
+
 ```
 M = S
 ```
+
 **Says:** The metric IS the value function.
 
 ### 4. Closed-Loop Dynamics
+
 ```
 dx/dt = (A - B K) x,   K = R^(-1) B^T S
 ```
+
 **Says:** Optimal feedback renders the system contracting.
 
 ### 5. Contraction Rate
+
 ```
 λ = (1/2) λ_min(S B R^(-1) B^T S)
 ```
+
 **Says:** Contraction rate is determined by smallest eigenvalue of a specific matrix.
 
 **Don't worry if these look intimidating.** The point is: They're all **different views of the same structure**.
@@ -532,6 +581,7 @@ dx/dt = (A - B K) x,   K = R^(-1) B^T S
 ### Optimality ≡ Stability
 
 In a well-designed system:
+
 - The optimal way to act **is** the stable way
 - Stability constraints **don't reduce** optimality—they **define** it
 - The "cost of error" and "rate of error decay" are two sides of the same coin
@@ -545,18 +595,22 @@ In a well-designed system:
 ## Who Should Care?
 
 ### Researchers
+
 - Unified framework for analyzing nonlinear control
 - New connections between geometry, optimization, and dynamics
 
 ### Engineers
+
 - Design controllers with **guaranteed** stability
 - Compute basins of attraction for safety certification
 
 ### Neuroscientists
+
 - Explain motor control via contraction metrics
 - Predict synergy structure from task requirements
 
 ### Coaches/Trainers
+
 - Understand why some techniques are "dynamically stable"
 - Design training regimes that prioritize robust skill acquisition
 
@@ -574,11 +628,13 @@ In a well-designed system:
 ### Practical Tools
 
 All code examples available at:
+
 ```
 https://github.com/AffineDrift/contraction-tangent-unification
 ```
 
 Includes:
+
 - JAX implementation of Contraction-DDP
 - CVXPY metric optimization
 - Benchmark problems (cartpole, pendulum, robot arm)
@@ -593,12 +649,14 @@ Includes:
 The Riccati matrix (cost-to-go) **is** the contraction metric (stability measure). Solving for one gives you the other **for free**.
 
 **Practical impact:**
+
 - Design controllers with certified stability
 - Larger basins of attraction (2× in examples)
 - Predictable convergence rates
 - Unified design methodology
 
 **Conceptual impact:**
+
 - Optimality ≡ Stability (not a trade-off, an identity)
 - Dynamics live on curved spaces (Riemannian geometry matters)
 - The "right" metric makes everything simple
@@ -617,5 +675,5 @@ Like the duck-rabbit illusion: Once you see both, you can't unsee it. And that c
 
 ---
 
-*Created by AffineDrift Framework, January 18, 2026*
-*Target word count: ~2,800 words (achieved: ~2,950)*
+_Created by AffineDrift Framework, January 18, 2026_
+_Target word count: ~2,800 words (achieved: ~2,950)_

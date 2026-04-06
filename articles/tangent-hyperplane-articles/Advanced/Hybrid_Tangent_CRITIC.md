@@ -30,6 +30,7 @@ The article "Hybrid Tangent Spaces: Beyond Smooth Dynamics" extends the Tangent 
 ## Weakness 1: Incomplete Saltation Matrix Derivation
 
 ### Location
+
 Chapter 3, equations @eq-saltation-matrix through @eq-saltation-general
 
 ### The Problem
@@ -57,6 +58,7 @@ with a "sketch" derivation that hand-waves the critical coupling between jump ti
 **For reviewers:** A control theorist will immediately ask "What are the sufficient conditions for this formula to hold?" Without a rigorous proof, they cannot verify whether their system satisfies the assumptions.
 
 **For implementers:** Practitioners will encounter guards like:
+
 - Kinematic loops: $\det(J(q)) = 0$ (configuration-dependent, nonlinear)
 - Force limits: $\|\lambda\| - \lambda_{\text{max}} = 0$ (depends on state derivatives)
 - Energy thresholds: $\frac{1}{2}v^T M v - E_{\text{thresh}} = 0$ (quadratic in velocity)
@@ -68,11 +70,13 @@ The article provides no guidance on whether the saltation formula applies to the
 ### Evidence / References
 
 **Rigorous treatment exists:**
+
 - Burden et al. (2015): "The role of saltation matrices in hybrid system analysis" provides a complete proof using the calculus of variations, not just chain rule hand-waving
 - Glocker & Pfeiffer (1995): "Multiple impacts with friction in rigid multibody systems" derives saltation matrices for complementarity systems with Lagrange multipliers
 - Leine & Heimsch (2012): "Global uniform symptotic attractive stability of the non-autonomous bouncing ball system" proves conditions for validity of saltation matrices in non-smooth mechanics
 
 **What's missing:**
+
 - Explicit assumptions: $h \in C^2$, $\nabla h \neq 0$, transversality $\nabla h^T f^- \neq 0$
 - Proof sketch using implicit function theorem (guard as level set)
 - Extension to codimension-$k$ guards (multiple simultaneous contacts)
@@ -88,6 +92,7 @@ The saltation matrix is the **central mathematical object** enabling hybrid DDP.
 1. **Add explicit assumptions section** before equation @eq-saltation-matrix:
 
    > **Assumptions for Saltation Matrix Formula:**
+   >
    > 1. Guard function $h: \mathbb{R}^n \to \mathbb{R}$ is $C^2$ in a neighborhood of $x^-$
    > 2. Regularity: $\nabla h(x^-) \neq 0$ (guard is a smooth manifold)
    > 3. Transversality: $\nabla h(x^-)^T f(x^-, u^-) \neq 0$ (trajectory crosses guard, not tangent)
@@ -121,6 +126,7 @@ The saltation matrix is the **central mathematical object** enabling hybrid DDP.
 ## Weakness 2: Measure-Theoretic Rigor Gaps
 
 ### Location
+
 - Chapter 2, section "Measure-Theoretic Interpretation" (lines 343-366)
 - Chapter 6, section "Zeno Behavior and Measure Zero Jump Sets" (lines 2186-2238)
 
@@ -129,20 +135,24 @@ The saltation matrix is the **central mathematical object** enabling hybrid DDP.
 The article invokes measure theory to justify that "jump times have measure zero, so they don't matter for integrals," but this is **dangerously oversimplified**:
 
 1. **Claim (line 359):** "The derivative $\dot{x}(t)$ exists almost everywhere (a.e.)"
+
    - **Missing:** Under what conditions? Lipschitz continuity of $f$ within modes? Bounded variation of $x(t)$? The article just asserts this without proof or citation.
 
 2. **Claim (line 362):** "Jumps have measure zero, so they contribute zero to integrals"
+
    - **Misleading:** This is true for **Lebesgue integrals** of $L^1$ functions, but:
      - What about **action integrals** $\int L(x, \dot{x}) dt$ where $\dot{x}$ has discontinuities? The Lagrangian $L$ may be undefined at jumps.
      - The correct framework is **functions of bounded variation** (BV) or **càdlàg** (right-continuous with left limits), not just "a.e. differentiable."
    - The article mentions "càdlàg" (line 2226) in the Zeno section but doesn't connect it to the earlier measure-theoretic claims.
 
 3. **Filippov solutions** (eq-filippov, lines 316-342):
+
    - The definition is copy-pasted from a textbook (convex hull of limit values) but never used again. Why introduce this?
    - **Sliding modes** (line 334): The condition $\nabla h \cdot f_1 \cdot \nabla h \cdot f_2 < 0$ is garbled. Should be: "vectors point toward surface from opposite sides" formalized as $(\nabla h^T f_1)(\nabla h^T f_2) < 0$.
    - The Coulomb friction example (line 337) claims Filippov solutions handle stiction, but **no derivation** of the actual Filippov set is provided. What is $F_{\text{Filippov}}(x)$ for $\dot{x} = 0$?
 
 4. **Zeno behavior** (lines 2186-2238):
+
    - **Claim:** "The state transition through infinitely many jumps is $\Phi_{\text{Zeno}} = \lim_{N \to \infty} \prod_{j=1}^N S_j$"
    - **Problem:** This limit may not exist! The product of non-commuting matrices does not generally converge. Even if $\|S_j\| < 1$, the product can oscillate.
    - **Claim:** "Perturbations are completely damped by infinite impacts"
@@ -157,11 +167,13 @@ The article invokes measure theory to justify that "jump times have measure zero
 ### Why This Is a Problem
 
 **For mathematicians:** Measure theory is invoked as a magic wand to make problems disappear. A rigorous analyst will reject the article for not proving:
+
 - Existence and uniqueness of Carathéodory solutions (generalization of ODE solutions to discontinuous right-hand sides)
 - Conditions for integrals to be well-defined (Lebesgue vs. Riemann vs. Stieltjes)
 - Convergence of infinite products of saltation matrices
 
 **For optimization theorists:** Variational calculus on non-smooth spaces requires either:
+
 - Clarke generalized gradients (for locally Lipschitz functions)
 - BV functions with Stieltjes measures (for jumps)
 - Convex analysis (for Filippov set-valued maps)
@@ -173,12 +185,14 @@ The article uses **none of these tools** explicitly, just vague appeals to "a.e.
 ### Evidence / References
 
 **Proper treatments:**
-- Goebel, Sanfelice, Teel (2012): *Hybrid Dynamical Systems* — Chapter 2 develops the correct framework (hybrid arcs as BV functions, hybrid time domains)
-- Clarke (1990): *Optimization and Nonsmooth Analysis* — Defines generalized gradients for non-smooth optimization
+
+- Goebel, Sanfelice, Teel (2012): _Hybrid Dynamical Systems_ — Chapter 2 develops the correct framework (hybrid arcs as BV functions, hybrid time domains)
+- Clarke (1990): _Optimization and Nonsmooth Analysis_ — Defines generalized gradients for non-smooth optimization
 - Bressan & Rampazzo (1994): "Impulsive control systems without commutativity assumptions" — Proves existence of Filippov solutions for hybrid systems
 - Leine & van de Wouw (2008): "Stability and Convergence of Mechanical Systems with Unilateral Constraints" — Rigorous treatment of measure-theoretic aspects in non-smooth mechanics
 
 **What's missing:**
+
 - Cite the **correct theorem** (Filippov 1988, Theorem 1) for existence of solutions to discontinuous ODEs
 - State **regularity assumptions** on $f$ (locally Lipschitz in each mode)
 - Prove or cite a proof that $\int_0^T L(x(t), u(t)) dt$ is well-defined for hybrid trajectories
@@ -217,6 +231,7 @@ Measure theory is not a cosmetic detail—it's the **foundation** for claiming v
 
    > **Theorem (Zeno Limit):**
    > If the sequence of saltation matrices satisfies:
+   >
    > 1. Uniform contractivity: $\|S_j\| \leq \rho < 1$ for all $j$
    > 2. Commutativity: $S_i S_j = S_j S_i$ (or weakly: $\|S_i S_j - S_j S_i\| \leq \epsilon$)
    >
@@ -238,6 +253,7 @@ Measure theory is not a cosmetic detail—it's the **foundation** for claiming v
 ## Weakness 3: Zeno Behavior Treatment is Superficial
 
 ### Location
+
 Chapter 6, section "Zeno Behavior and Measure Zero Jump Sets" (lines 2186-2238)
 
 ### The Problem
@@ -245,17 +261,21 @@ Chapter 6, section "Zeno Behavior and Measure Zero Jump Sets" (lines 2186-2238)
 The bouncing ball Zeno example is presented as if it **resolves** the mathematical difficulties, but it actually **illustrates why Zeno is hard**:
 
 1. **Claim (line 2200):** "The total time to rest is finite: $T_{\text{total}} = 2v_0/[g(1-e)]$"
+
    - True for the bouncing ball, but **this is the simplest possible case**. Most hybrid systems don't have closed-form Zeno times.
 
 2. **Claim (line 2210):** "The state transition through infinitely many jumps is $\Phi_{\text{Zeno}} = 0$"
+
    - **Unjustified.** The product $\prod_{j=1}^\infty S_j$ is computed for the specific bouncing ball saltation matrix (eq-ball-saltation), but no general theorem is stated.
 
 3. **Claim (line 2232):** "Jump times contribute zero measure, so they can be ignored in cost functionals"
+
    - **Incorrect for impulsive costs.** If the cost includes a term like $\sum_{j} c(x^-, x^+)$ (penalize energy loss at each impact), then infinitely many jumps produce an **infinite cost** even if they occur in finite time:
      $$J = \int_0^T L(x, u) dt + \sum_{j=1}^\infty c(x_j^-, x_j^+)$$
      The second sum may not converge.
 
 4. **No discussion of stabilization/destabilization:**
+
    - Zeno behavior can be **stable** (bouncing ball settles to rest) or **unstable** (chattering contact with increasing energy).
    - The article assumes $\|S_j\| < 1$ (contractive) without considering cases where impacts add energy (e.g., driven oscillators with timed impacts).
 
@@ -266,6 +286,7 @@ The bouncing ball Zeno example is presented as if it **resolves** the mathematic
 ### Why This Is a Problem
 
 **For theorists:** Zeno behavior is a **well-studied pathology** in hybrid systems. The article's treatment is superficial compared to the literature, which has:
+
 - Sufficient conditions for Zeno to occur (contraction maps on guard surface)
 - Necessary conditions for Zeno to not occur (dwell time bounds)
 - Regularization methods (ε-guards, time-stepping schemes)
@@ -273,6 +294,7 @@ The bouncing ball Zeno example is presented as if it **resolves** the mathematic
 By not engaging with this literature, the article appears naive.
 
 **For practitioners:** Zeno is a **common bug** in contact simulation. Engineers need to know:
+
 - How to detect Zeno (monitor inter-event times)
 - How to resolve it (declare rest, switch to quasi-static model, increase restitution)
 - Whether the optimization still works (Does hybrid DDP converge if the nominal trajectory has Zeno? What about perturbed trajectories?)
@@ -284,16 +306,19 @@ The article provides **no practical guidance**, just "it's measure-theoretically
 ### Evidence / References
 
 **Literature on Zeno:**
+
 - Johansson & Egerstedt (2003): "Quantifying Zeno behavior in hybrid systems"
 - Ames, Zheng, et al. (2006): "Characterization of Zeno behavior in hybrid systems using homological methods"
 - Zhang, Johansson, et al. (2001): "Zeno hybrid systems" — defines Zeno time and proves conditions for existence
 
 **Regularization methods:**
+
 - Stewart (1998): "Rigid-body dynamics with friction and impact" — proposes time-stepping schemes that automatically handle Zeno
-- Acary & Brogliato (2008): *Numerical Methods for Nonsmooth Dynamical Systems* — Chapter 6 on Zeno and its numerical treatment
+- Acary & Brogliato (2008): _Numerical Methods for Nonsmooth Dynamical Systems_ — Chapter 6 on Zeno and its numerical treatment
 
 **Control-theoretic perspectives:**
-- Orlov (2008): *Discontinuous Systems: Lyapunov Analysis and Robust Synthesis* — uses Zeno (chattering) for finite-time stabilization
+
+- Orlov (2008): _Discontinuous Systems: Lyapunov Analysis and Robust Synthesis_ — uses Zeno (chattering) for finite-time stabilization
 - Nersesov, Haddad, et al. (2007): "Stability analysis of Zeno equilibria in hybrid systems"
 
 ### Severity
@@ -333,6 +358,7 @@ Zeno is a known challenge, not a novel contribution. The article's treatment is 
 4. **Provide numerical resolution strategy:**
 
    > **Algorithm (Zeno Detection and Regularization):**
+   >
    > 1. Monitor inter-event times: $\Delta t_j = t_{j+1} - t_j$
    > 2. If $\Delta t_j < \Delta t_{\min}$ (threshold) for $k$ consecutive events:
    >    - Declare Zeno detected
@@ -345,6 +371,7 @@ Zeno is a known challenge, not a novel contribution. The article's treatment is 
 5. **Acknowledge when Zeno is problematic:**
 
    > Zeno behavior is **benign** for the bouncing ball (natural convergence to rest). However, in other systems:
+   >
    > - **Chattering control:** Bang-bang controllers may produce Zeno switching between modes, requiring sliding mode analysis
    > - **Unstable Zeno:** Some systems accumulate energy through impacts, leading to finite-time blow-up
    > - **Computational cost:** Detecting infinitely many events in simulation requires adaptive timesteps, increasing cost
@@ -356,6 +383,7 @@ Zeno is a known challenge, not a novel contribution. The article's treatment is 
 ## Weakness 4: Complementarity Constraints are Oversimplified
 
 ### Location
+
 Chapter 8 (@sec-contact-implicit), lines 2457-2598
 
 ### The Problem
@@ -363,24 +391,29 @@ Chapter 8 (@sec-contact-implicit), lines 2457-2598
 The contact-implicit section presents complementarity constraints as if they're straightforward to handle in optimization, but this is **the hard part** of contact mechanics:
 
 1. **Claim (eq-complementarity, line 2466):** "$0 \leq \phi(q) \perp \lambda \geq 0$"
+
    - This is **linear complementarity** (LCP) notation, which is only solvable efficiently when the dynamics are **linear**. For nonlinear systems, complementarity is a **nonlinear complementarity problem** (NCP), which is NP-hard in general.
 
 2. **Smoothing methods** (lines 2494-2518):
+
    - **Sigmoid smoothing** (eq-smooth-complementarity): Replaces $\phi \lambda = 0$ with $\phi \lambda \leq \epsilon$
      - **Problem:** This is a **relaxation**, not an approximation. The solution of the smoothed problem may violate the original constraints by $O(\epsilon)$. For stiff contacts (e.g., humanoid foot on concrete), $\epsilon$ must be tiny, causing numerical ill-conditioning.
    - **Barrier method** (eq-barrier): Uses $\mu \log(\phi) + \log(\lambda)$
      - **Problem:** Interior point methods require $\phi > 0$ and $\lambda > 0$ initially (strictly feasible). Many contact problems start at $\phi = 0$ (already in contact), so barriers don't apply directly.
 
 3. **Exact jumps via mode enumeration** (lines 2519-2525):
+
    - **Claim:** "Combinatorial explosion $2^N$ mode sequences"
    - **Misleading:** For many systems, the mode sequence is **physically constrained**. E.g., a biped has at most 4 modes (double support, left single, right single, flight). The combinatorics only explode for unconstrained multi-contact (e.g., granular media).
 
 4. **Contact-implicit (Posa)** (lines 2527-2538):
+
    - **Claim:** "Use NLP solvers with constraint relaxation"
    - **Missing:** Which solver? SNOPT, IPOPT, SQP? Each has different convergence properties for complementarity.
    - **Missing:** How to initialize? Contact-implicit is **notoriously sensitive** to warm-start. The article says "requires warm-starting" (line 2548) but gives no guidance.
 
 5. **Trade-offs** (lines 2540-2568):
+
    - Lists advantages/disadvantages of contact-implicit vs. hybrid DDP, but the comparison is **superficial**:
      - "Contact-implicit handles multiple contacts" — so does hybrid DDP with multi-dimensional guards
      - "Hybrid DDP requires known guard crossings" — contact-implicit requires known contact candidates (which surfaces might touch)
@@ -395,6 +428,7 @@ The contact-implicit section presents complementarity constraints as if they're 
 **For roboticists:** Complementarity is the **central challenge** in contact simulation. Simply stating "enforce $\phi \lambda = 0$" is like saying "solve the Navier-Stokes equations" — technically correct, but useless without numerical methods.
 
 **For optimization experts:** The article conflates **problem formulation** (complementarity constraints exist) with **solution methods** (how to solve them). Readers will be left wondering:
+
 - Is smoothing good enough? (Depends on $\epsilon$ and problem conditioning)
 - Which NLP solver should I use? (No recommendation given)
 - How do I handle infeasibility? (No discussion)
@@ -404,12 +438,14 @@ The contact-implicit section presents complementarity constraints as if they're 
 ### Evidence / References
 
 **Proper treatments:**
+
 - Anitescu & Potra (1997): "Formulating dynamic multi-rigid-body contact problems with friction as solvable linear complementarity problems" — Shows LCP formulation is exact for time-stepping, not trajectory optimization
 - Todorov (2014): "Convex and analytically-invertible dynamics with contacts and constraints: Theory and implementation in MuJoCo" — Uses convex relaxation of complementarity via soft constraints
 - Posa, Cantu, Tedrake (2014): "A direct method for trajectory optimization of rigid bodies through contact" — The original contact-implicit paper, which includes initialization strategies the article omits
 - Manchester & Kuindersma (2017): "Variational contact-implicit trajectory optimization" — Derives gradients for complementarity constraints using implicit function theorem
 
 **What's missing:**
+
 - Derivation of gradients $\frac{\partial \lambda}{\partial q}$ for active constraints
 - Handling of **mode switching** (contact made/broken during optimization iteration)
 - Convergence guarantees (when does contact-implicit converge to a local minimum?)
@@ -426,6 +462,7 @@ Contact-implicit is presented as an alternative to hybrid DDP, but without imple
 1. **Clarify which complementarity formulation is being used:**
 
    > There are multiple formulations of complementarity constraints:
+   >
    > 1. **Nonlinear Complementarity Problem (NCP):** Find $q, \lambda$ such that $\phi(q) \geq 0, \lambda \geq 0, \phi(q)^T \lambda = 0$
    > 2. **Linear Complementarity Problem (LCP):** Special case where $\phi(q) = Aq + b$, solvable in polynomial time
    > 3. **Mathematical Program with Complementarity Constraints (MPCC):** Optimize $J(q)$ subject to complementarity
@@ -435,8 +472,7 @@ Contact-implicit is presented as an alternative to hybrid DDP, but without imple
 2. **Derive the contact gradient:**
 
    > For an active constraint $\phi(q) = 0$, the contact force $\lambda$ is determined by the dynamics:
-   > $$M(q)\ddot{q} + h(q, \dot{q}) = Bu + J_c^T \lambda$$
-   > $$J_c \ddot{q} = 0 \quad \text{(no penetration)}$$
+   > $$M(q)\ddot{q} + h(q, \dot{q}) = Bu + J_c^T \lambda$$ > $$J_c \ddot{q} = 0 \quad \text{(no penetration)}$$
    > Solving for $\lambda$:
    > $$\lambda = (J_c M^{-1} J_c^T)^{-1} J_c M^{-1} (h - Bu)$$
    > The gradient is:
@@ -446,6 +482,7 @@ Contact-implicit is presented as an alternative to hybrid DDP, but without imple
 3. **Provide initialization strategy:**
 
    > **Warm-start for Contact-Implicit:**
+   >
    > 1. Solve a **contact-free** trajectory (ignore obstacles, allow penetration)
    > 2. Project trajectory onto feasible set: For each timestep, if $\phi(q_k) < 0$, solve:
    >    $$q_k^+ = \arg\min_{q} \|q - q_k\|^2 \quad \text{s.t.} \quad \phi(q) \geq 0$$
@@ -456,6 +493,7 @@ Contact-implicit is presented as an alternative to hybrid DDP, but without imple
 4. **Compare computational cost:**
 
    > In our experience (unpublished), for a 10-DOF humanoid with 4 contacts over 1-second trajectory (100 timesteps):
+   >
    > - Contact-implicit (IPOPT): 50-200 iterations, 10-60 seconds (highly variable)
    > - Hybrid DDP (known mode sequence): 5-15 iterations, 1-5 seconds (quadratic convergence)
    >
@@ -472,6 +510,7 @@ Contact-implicit is presented as an alternative to hybrid DDP, but without imple
 6. **State when complementarity is actually solved exactly:**
 
    > **Caveat:** The examples in this article (bouncing ball, golf impact) do **not use complementarity formulations**. They use **explicit guard crossings** with known reset maps. Complementarity is relevant for:
+   >
    > - Multi-contact systems (e.g., quadrupeds, hands grasping)
    > - Uncertain contact ordering (which foot lands first?)
    > - Quasi-static manipulation (force closure, form closure)
@@ -483,6 +522,7 @@ Contact-implicit is presented as an alternative to hybrid DDP, but without imple
 ## Weakness 5: JAX Implementation Claims are Unverified
 
 ### Location
+
 Chapter 10, section "JAX Implementation Considerations" (lines 2846-2905)
 
 ### The Problem
@@ -490,20 +530,24 @@ Chapter 10, section "JAX Implementation Considerations" (lines 2846-2905)
 The article provides JAX pseudocode for custom VJP (vector-Jacobian product) through jumps, but the code is **incomplete and potentially incorrect**:
 
 1. **Custom VJP definition** (lines 2862-2904):
+
    - The forward pass integrates to `t_jump`, applies reset `x_plus = jnp.dot(S, x_minus)`, then continues integration
    - **Problem:** The reset Jacobian $P_j = \partial R/\partial x$ is **not the same** as the saltation matrix $S_j$! The code conflates them.
    - From equation @eq-saltation-matrix: $S_j = P_j + (\text{correction term})$. The code uses `S` directly without computing the correction.
 
 2. **Backward pass** (lines 2876-2889):
+
    - `g_minus = jnp.dot(S.T, g_plus)`
    - **Correct** if `S` is the saltation matrix, but see previous point.
 
 3. **Missing residuals:**
+
    - The `backward_with_jump` signature is `def backward_with_jump(residuals, g):` where `residuals = (x_minus, x_plus, S)`
    - But the forward pass doesn't **return** these residuals! JAX custom VJP requires the forward pass to return `(output, residuals)`, not just `output`.
    - The code is **syntactically invalid** for JAX.
 
 4. **Integration functions undefined:**
+
    - `integrate(x0, u, t0, t1)` is called but never defined. Is this:
      - `odeint` (adaptive RK45)?
      - Fixed-step Euler?
@@ -511,6 +555,7 @@ The article provides JAX pseudocode for custom VJP (vector-Jacobian product) thr
    - The backward pass calls `integrate_backward(g, ...)`, which is also undefined. Does this use the adjoint method? Discrete adjoint?
 
 5. **Event detection missing:**
+
    - The forward pass assumes `t_jump` is **known**. But the earlier section on event detection (lines 2804-2844) describes bisection to **find** `t_jump`.
    - How do you differentiate through bisection? The jump time $t_j$ depends on the state $x$, so $\frac{\partial t_j}{\partial x_0}$ must be computed. The code ignores this.
 
@@ -529,19 +574,23 @@ The article provides JAX pseudocode for custom VJP (vector-Jacobian product) thr
 ### Evidence / References
 
 **Correct autodiff through jumps:**
+
 - Suh, Peng, Tedrake (2022): "Bundled Gradients through Contact via Randomized Smoothing" — Uses smoothing to make contact differentiable
 - Degrave et al. (2019): "A differentiable physics engine for deep learning in robotics" — Implements custom gradients for rigid body contact in TensorFlow
 - Todorov (2011): "A convex, smooth and invertible contact model for trajectory optimization" — Analytically derives contact Jacobians
 
 **JAX documentation:**
+
 - JAX custom VJP guide: https://jax.readthedocs.io/en/latest/notebooks/Custom_derivative_rules_for_Python_code.html
   - Shows the correct signature: `fwd` returns `(output, residuals)`, `bwd` receives `(residuals, g)`
 
 **Adjoint sensitivity analysis:**
+
 - Chen et al. (2018): "Neural Ordinary Differential Equations" — Defines continuous adjoint method for ODE integration
 - Rackauckas et al. (2020): "DiffEqSensitivity.jl: Efficient sensitivity analysis for differential equations" — Implements discrete and continuous adjoint
 
 **What's missing:**
+
 - Correct JAX syntax for `defvjp` (should be `@jax.custom_vjp` decorator with separate `_fwd` and `_bwd` functions)
 - Treatment of jump time variation $\frac{\partial t_j}{\partial x_0}$ (appears in saltation matrix but not in VJP)
 - Validation: "We tested this on the bouncing ball and compared to finite differences; error is $O(10^{-8})$" (or similar)
@@ -612,6 +661,7 @@ hybrid_rollout.defvjp(hybrid_rollout_fwd, hybrid_rollout_bwd)
 4. **Validate with a test case:**
 
 > **Validation:** We implemented the bouncing ball system and compared gradients:
+>
 > - **Analytical:** Using equation @eq-ball-saltation, $\frac{\partial v_{\text{final}}}{\partial v_0} = (-e)^N$ (for $N$ bounces)
 > - **Autodiff (JAX):** Using the custom VJP above
 > - **Finite differences:** Central differences with $\epsilon = 10^{-6}$
@@ -628,6 +678,7 @@ hybrid_rollout.defvjp(hybrid_rollout_fwd, hybrid_rollout_bwd)
 5. **Cite prior work on differentiable contact:**
 
 > Automatic differentiation through contact has been studied in:
+>
 > - Suh et al. (2022): Use randomized smoothing to approximate contact gradients
 > - de Avila Belbute-Peres et al. (2018): Differentiate through physics simulators using implicit function theorem
 > - Geilinger et al. (2020): Adjoint sensitivity for contact-implicit systems
@@ -637,6 +688,7 @@ hybrid_rollout.defvjp(hybrid_rollout_fwd, hybrid_rollout_bwd)
 6. **Acknowledge limitations:**
 
 > **When this approach fails:**
+>
 > - If the guard function $h(x)$ is **non-smooth** (e.g., piecewise linear), the gradient $\nabla h$ is undefined at kinks
 > - If the reset map $R(x)$ is **discontinuous** in $x$ (e.g., mode-dependent reset), $\partial R/\partial x$ doesn't exist
 > - If **multiple guards** are crossed simultaneously, the saltation matrix is undefined (order ambiguity)
@@ -648,6 +700,7 @@ hybrid_rollout.defvjp(hybrid_rollout_fwd, hybrid_rollout_bwd)
 ## Weakness 6: Applications are Oversimplified Examples
 
 ### Location
+
 Chapter 9 (@sec-applications), lines 2600-2792
 
 ### The Problem
@@ -655,6 +708,7 @@ Chapter 9 (@sec-applications), lines 2600-2792
 The three applications (humanoid locomotion, golf swing, manipulation) are presented as **success stories**, but critical details are missing:
 
 1. **Humanoid locomotion** (lines 2604-2660):
+
    - **Claim:** "Hybrid DDP generates a stabilizing walking gait in 10-15 iterations"
    - **Missing:** Compared to what baseline? On what hardware? With what initial guess?
    - **Missing:** The heel strike saltation matrix (eq-heel-strike-saltation) is stated as:
@@ -663,6 +717,7 @@ The three applications (humanoid locomotion, golf swing, manipulation) are prese
    - **Missing:** What about **underactuation**? Humanoids have unactuated position DOFs (floating base). How does DDP handle this? The Riccati recursion assumes full rank $B$, which is false for floating-base systems.
 
 2. **Golf swing** (lines 2662-2730):
+
    - **Claim:** "Hybrid DDP finds the optimal swing trajectory in 8-12 iterations"
    - **Missing:** Optimal for what objective? Maximize ball speed? Distance? Accuracy?
    - **Claim:** "The clubhead should decelerate slightly before impact to maximize energy transfer (counter-intuitive)"
@@ -670,12 +725,14 @@ The three applications (humanoid locomotion, golf swing, manipulation) are prese
    - **Possible explanation:** The article may be confusing "deceleration" (negative acceleration) with "torque reduction" (control effort decreases). But this needs clarification.
 
 3. **Manipulation** (lines 2732-2792):
+
    - **Claim:** "Generates smooth pick-place trajectories with minimal impact transients"
    - **Missing:** Compared to what? Naive PID? Open-loop trajectory?
    - **Claim:** "The hybrid formulation ensures forces remain within friction cone limits"
    - **Misleading:** The hybrid formulation can **check** friction cone constraints, but it doesn't automatically **enforce** them. You need to add constraints to the optimization (inequality constraints on $\lambda$), which is not shown.
 
 4. **No quantitative results:**
+
    - No plots of trajectories, costs, or convergence
    - No tables comparing methods
    - No error bars or sensitivity analysis
@@ -693,6 +750,7 @@ The three applications (humanoid locomotion, golf swing, manipulation) are prese
 **For researchers:** Without quantitative comparisons, the claims are **unverifiable**. "10-15 iterations" — is that good? Bad? Standard? We don't know.
 
 **For skeptics:** The golf swing claim (deceleration improves transfer) is a **red flag**. Either it's:
+
 - A mistake (confusing variables)
 - A non-obvious result requiring detailed explanation
 - A result of unrealistic modeling assumptions (e.g., clubhead compliance)
@@ -702,16 +760,19 @@ Without clarification, it undermines the entire article.
 ### Evidence / References
 
 **Realistic humanoid control:**
+
 - Kuindersma et al. (2016): "Optimization-based locomotion planning, estimation, and control design for the Atlas humanoid robot" — Uses contact-implicit with 30 DOF, runs in real-time
 - Posa et al. (2014): "Direct trajectory optimization through contact" — Shows contact-implicit takes 100-1000 iterations for humanoid gaits, not 10-15
 - Duan et al. (2021): "Whole-body humanoid control from human motion capture data" — Uses hybrid DDP but requires extensive tuning (hyperparameters, initial guess)
 
 **Golf physics:**
-- Cochran & Stobbs (1968): *The Search for the Perfect Swing* — Classic reference, shows ball speed ∝ clubhead speed at impact
+
+- Cochran & Stobbs (1968): _The Search for the Perfect Swing_ — Classic reference, shows ball speed ∝ clubhead speed at impact
 - Jorgensen (1970): "On the dynamics of the swing of a golf club" — Derives optimal swing (maximize clubhead speed, not decelerate)
 - Cross (2014): "Impact of a ball with a bat or racket" — Energy transfer analysis confirms maximum at maximum speed
 
 **What's missing:**
+
 - Convergence plots (cost vs. iteration)
 - Trajectory visualizations (joint angles, contact forces)
 - Comparison to baselines (PID, LQR, contact-implicit)
@@ -728,6 +789,7 @@ The applications are meant to demonstrate the framework's utility, but they're s
 1. **Pick ONE application and work it out in detail:**
 
    Instead of three shallow examples, provide:
+
    - **System description:** Full state vector, control inputs, parameters (masses, lengths, restitution)
    - **Optimization setup:** Cost function (weights on states, controls, terminal cost), constraints (joint limits, torque limits, guard conditions)
    - **Implementation:** Timestep, integration method, convergence tolerance
@@ -737,6 +799,7 @@ The applications are meant to demonstrate the framework's utility, but they're s
 2. **Fix or clarify the golf swing claim:**
 
    Either:
+
    - **Retract the claim:** "Our initial hypothesis that pre-impact deceleration improves transfer was incorrect; optimization confirms maximum clubhead speed at impact is optimal."
    - **Explain the claim:** "The apparent deceleration is actually a **torque reduction** 50 ms before impact, allowing passive dynamics to maximize speed. This is consistent with sports biomechanics literature on proximal-to-distal sequencing."
    - **Provide a plot:** Show clubhead velocity vs. time for optimal and baseline trajectories.
@@ -744,6 +807,7 @@ The applications are meant to demonstrate the framework's utility, but they're s
 3. **State assumptions for humanoid example:**
 
    > **Simplifications:**
+   >
    > - 5-link model (torso + 2 legs, planar motion)
    > - Point feet (no ankle torque)
    > - Known contact sequence (left stance → right stance → left stance)
@@ -751,6 +815,7 @@ The applications are meant to demonstrate the framework's utility, but they're s
    >
    > **Limitations:**
    > These simplifications enable rapid prototyping but exclude:
+   >
    > - Underactuation (floating base requires different DDP formulation, e.g., projected Riccati)
    > - 3D balance (sagittal plane only)
    > - Uncertainty (deterministic model)
@@ -761,11 +826,13 @@ The applications are meant to demonstrate the framework's utility, but they're s
 
    > **When Hybrid DDP Fails:**
    > If the initial guess crosses a guard at time $t_0$ but the optimal trajectory should cross at $t_0 + \Delta t$, the backward pass may produce feedback gains that **destabilize** the guard crossing. Symptoms:
+   >
    > - Cost increases instead of decreasing
    > - Guard crossing time oscillates between iterations
    > - Saltation matrix becomes ill-conditioned
    >
    > **Resolution:**
+   >
    > - Re-initialize with a better guess (e.g., from contact-implicit global search)
    > - Add trust region (constrain $\|\delta x\|, \|\delta u\|$ per iteration)
    > - Smooth the guard (replace $h(x) = 0$ with $|h(x)| < \epsilon$)
@@ -783,6 +850,7 @@ The applications are meant to demonstrate the framework's utility, but they're s
 ## Weakness 7: Missing Literature on Hybrid System Optimization
 
 ### Location
+
 Throughout, but especially "Further Reading" (lines 2019-2039)
 
 ### The Problem
@@ -790,19 +858,23 @@ Throughout, but especially "Further Reading" (lines 2019-2039)
 The article cites foundational hybrid systems theory (Goebel, Sanfelice, Teel) and contact mechanics (Stewart, Trinkle, Anitescu & Potra), but **omits** significant recent work on trajectory optimization for hybrid systems:
 
 1. **Hybrid DDP specifically:**
+
    - Mordatch et al. (2012): "Discovery of complex behaviors through contact-invariant optimization" — First contact-implicit trajectory optimization paper (predates Posa et al.)
    - Erez & Todorov (2012): "Trajectory optimization for domains with contacts using inverse dynamics" — Uses inverse dynamics to handle contacts
    - Tassa et al. (2014): "Control-limited differential dynamic programming" — Handles control constraints in DDP, relevant for mode switches
 
 2. **Saltation matrices in optimization:**
+
    - Burden, Sastry, et al. (2015): "The role of saltation matrices in hybrid system analysis" — **Cited in "Further Reading"** but not engaged with. This paper proves when saltation matrices exist and how to compute them for general hybrid systems. The article reinvents some of this.
 
 3. **Contact-implicit methods:**
+
    - Manchester & Kuindersma (2017): "Variational contact-implicit trajectory optimization" — **Cited** but not discussed. This paper derives the contact Jacobian the article claims is missing.
    - Aydinoglu et al. (2021): "Rapidplan: Planning to learn for bipedal locomotion" — Shows contact-implicit planning on real robots
    - Sleiman et al. (2021): "Versatile multicontact planning and control for legged loco-manipulation" — Multi-contact optimization for quadrupeds
 
 4. **Differentiable contact:**
+
    - Suh, Peng, Tedrake (2022): "Bundled gradients through contact via randomized smoothing"
    - de Avila Belbute-Peres et al. (2018): "End-to-end differentiable physics for learning and control"
    - Geilinger et al. (2020): "Add: Analytically differentiable dynamics for multi-body systems with frictional contact"
@@ -816,11 +888,13 @@ The article cites foundational hybrid systems theory (Goebel, Sanfelice, Teel) a
 **For readers:** The article presents hybrid tangent spaces as a **novel contribution**, but much of the machinery (saltation matrices, mode-aware DDP, contact-implicit optimization) **already exists** in the literature. The article's contribution is **synthesizing** these ideas under the "Tangent Hyperplane" geometric perspective, but this is not made clear.
 
 **For reviewers:** Failure to engage with prior art suggests:
+
 - Ignorance of the field (undermines authority)
 - Reinventing the wheel (wasted effort)
 - Overclaiming novelty (dishonesty)
 
 **For the field:** By not positioning this work relative to existing methods, the article doesn't clarify:
+
 - What's **new**? (Geometric interpretation? JAX implementation?)
 - What's **better**? (Faster? More general? Easier to understand?)
 - What's **different**? (Hybrid automata vs. mode sequences vs. contact-implicit?)
@@ -838,6 +912,7 @@ The theory presented is mostly correct (modulo Weaknesses 1-6), but the **schola
    > **Relationship to Prior Work**
    >
    > The hybrid dynamical systems framework (Chapter 2) is standard in the controls literature (Goebel et al., 2012; Lygeros et al., 2003). Our contribution is **reinterpreting** hybrid systems through the lens of **tangent space geometry**, emphasizing:
+   >
    > - Left/right tangent spaces at jumps (continuous vs. discontinuous)
    > - Saltation matrices as **tangent space linear maps** (not just "state transition corrections")
    > - Variational dynamics as **piecewise smooth manifolds** (not just "functions of bounded variation")
@@ -845,6 +920,7 @@ The theory presented is mostly correct (modulo Weaknesses 1-6), but the **schola
    > **Saltation matrices** were introduced by Anitescu & Potra (1997) for impact mechanics and formalized by Burden et al. (2015) for general hybrid systems. We **simplify the exposition** using geometric language (normal/tangent decomposition, impact as oblique reflection) to make saltation matrices accessible to readers familiar with the Tangent Hyperplane framework.
    >
    > **Hybrid DDP** has been developed by:
+   >
    > - Erez & Todorov (2012): Inverse dynamics for contacts
    > - Tassa et al. (2014): Control-limited DDP
    > - Manchester & Kuindersma (2017): Variational contact-implicit
@@ -869,6 +945,7 @@ The theory presented is mostly correct (modulo Weaknesses 1-6), but the **schola
 
    > **Contribution of this article:**
    > While hybrid systems theory and contact mechanics are well-established, this article provides the **first unified treatment** within the Tangent Hyperplane geometric framework. Specifically:
+   >
    > 1. **Geometric interpretation:** Saltation matrices as tangent space rotations/projections (Chapter 5)
    > 2. **Pedagogical synthesis:** Simplified derivations using normal/tangent decomposition (Chapter 4)
    > 3. **Practical implementation:** JAX code for autodiff through jumps (Chapter 10)
@@ -877,6 +954,7 @@ The theory presented is mostly correct (modulo Weaknesses 1-6), but the **schola
 4. **Expand "Further Reading" with recent work:**
 
    Add:
+
    - Mordatch, Todorov, Popović (2012): "Discovery of complex behaviors through contact-invariant optimization", SIGGRAPH
    - Suh, Peng, Tedrake (2022): "Bundled gradients through contact via randomized smoothing", CoRL
    - Aydinoglu et al. (2021): "Rapidplan: Whole-body planning with contact-implicit trajectory optimization", ICRA
@@ -887,6 +965,7 @@ The theory presented is mostly correct (modulo Weaknesses 1-6), but the **schola
 ## Weakness 8: No Discussion of When the Framework Breaks
 
 ### Location
+
 Missing from entire article (should be in Conclusion or "Limitations" section)
 
 ### The Problem
@@ -894,21 +973,26 @@ Missing from entire article (should be in Conclusion or "Limitations" section)
 The article presents hybrid tangent spaces as a **complete extension** of the smooth framework, but never discusses:
 
 1. **Non-transversal crossings:**
+
    - What if $\nabla h^T f = 0$ (trajectory tangent to guard)? The saltation formula (eq-saltation-matrix) has division by zero.
    - Example: A ball rolling on a curved surface may **graze** a constraint boundary without crossing it.
 
 2. **Simultaneous guards:**
+
    - What if multiple guards are crossed at the same instant (e.g., two-foot landing in double support)?
    - The saltation matrix derivation assumes a single guard; the multi-guard case requires solving a system of constraints.
 
 3. **Chattering (infinite switching in finite time):**
+
    - Different from Zeno (infinitely many of the **same** event) — chattering alternates between modes.
    - Example: Coulomb friction at low velocity (stick-slip-stick-slip...).
 
 4. **State-dependent restitution:**
+
    - What if $e = e(v)$ (velocity-dependent coefficient)? Then $P_j$ depends on $x^-$ nonlinearly, and the saltation matrix may not be well-defined.
 
 5. **Measure concentration:**
+
    - What if the trajectory spends **most** of its time in a narrow boundary layer (e.g., high-frequency chattering)?
    - The "measure zero" argument breaks down if the system is **always near a jump**.
 
@@ -923,6 +1007,7 @@ The article presents hybrid tangent spaces as a **complete extension** of the sm
 **For practitioners:** Engineers will encounter these cases and assume the framework **should** handle them. When it doesn't, they'll blame the framework (or worse, get wrong results without realizing).
 
 **For critics:** The absence of a "Limitations" section is a **red flag**. It suggests either:
+
 - The authors don't know the limitations (naive)
 - The authors know but hide them (deceptive)
 
@@ -945,19 +1030,15 @@ Without stating when the framework applies, every claim is potentially suspect.
    > 1. **Transversal guard crossings:** $\nabla h(x^-)^T f(x^-, u^-) \neq 0$
    >    - **Failure mode:** Grazing contact (tangent trajectory) requires **higher-order analysis** (second derivatives of guard function)
    >    - **Resolution:** Use **time-stepping methods** (Stewart, 1998) that implicitly handle grazing via complementarity
-   >
    > 2. **Isolated jumps:** Jump times $\{t_j\}$ are discrete (no accumulation)
    >    - **Failure mode:** Zeno behavior (infinitely many jumps in finite time) requires **regularization** (rest detection, compliance)
    >    - **Resolution:** Declare equilibrium when inter-event time $< \epsilon$ (numerical threshold)
-   >
    > 3. **Scalar guards:** Each transition is triggered by a single function $h(x) = 0$
    >    - **Failure mode:** Simultaneous contacts (codimension > 1) require **multi-dimensional saltation matrices**
    >    - **Resolution:** Use Moore-Penrose pseudoinverse of constraint Jacobian (Glocker & Pfeiffer, 1995)
-   >
    > 4. **Smooth resets:** $R(x) \in C^1$ with invertible Jacobian
    >    - **Failure mode:** Plastic impact (perfectly inelastic, $e = 0$) produces **singular** $P_j$ (projects onto lower-dimensional manifold)
    >    - **Resolution:** Regularize with $e = \epsilon > 0$ or reformulate dynamics in reduced coordinates
-   >
    > 5. **Finite-dimensional state:** $x \in \mathbb{R}^n$
    >    - **Failure mode:** Flexible bodies, fluids, or field theories require **infinite-dimensional tangent spaces** (function spaces)
    >    - **Extension:** Hybrid PDEs (e.g., Stefan problem for phase transitions) use **Sobolev space** tangent bundles
@@ -988,11 +1069,13 @@ Without stating when the framework applies, every claim is potentially suspect.
 
    > **When to smooth instead of using jumps:**
    > For systems with:
+   >
    > - Very stiff contacts (numerical timestep $\ll$ contact duration)
    > - Uncertain contact timing (noisy sensors)
    > - Gradient-based learning (differentiability required)
    >
    > **Smoothed contact models** (e.g., compliant contact, sigmoid approximation) may be more practical than explicit hybrid formulations. The trade-off is:
+   >
    > - **Accuracy:** Explicit jumps are exact for rigid bodies; smoothing introduces $O(\epsilon)$ error
    > - **Robustness:** Smoothing avoids singularities at grazing; explicit jumps require careful event detection
    > - **Speed:** Time-stepping with jumps can use larger timesteps (no stiffness); smoothing requires small $\Delta t \sim \epsilon$
@@ -1032,6 +1115,7 @@ To make this article **defensible against expert review**, prioritize:
 1. **Move measure theory to an Appendix:** The Filippov/càdlàg discussion (Chapter 2) is **correct but distracting**. Most readers don't need it. Put it in an appendix titled "Measure-Theoretic Foundations" for rigor-seekers.
 
 2. **Expand one application fully:** Instead of three shallow examples (Chapter 9), pick the **bouncing ball** (simplest) and work it out **completely**:
+
    - Analytical solution (closed-form Zeno time)
    - Numerical implementation (JAX code)
    - Gradient validation (finite differences vs. saltation matrix)
@@ -1040,6 +1124,7 @@ To make this article **defensible against expert review**, prioritize:
    This provides a **reference implementation** readers can trust.
 
 3. **Add "Assumptions and Notation" section** upfront: Before Chapter 1, list:
+
    - Regularity assumptions ($f \in C^1$, $h \in C^2$, $\nabla h \neq 0$)
    - Notation conventions (left/right limits $x^-, x^+$; saltation $S_j$ vs. reset $P_j$)
    - Scope (finite-dimensional, deterministic, known mode sequence)
@@ -1049,12 +1134,14 @@ To make this article **defensible against expert review**, prioritize:
 4. **Reframe Conclusion:** Instead of "We've achieved..." (triumphalist), write:
 
    > **What This Article Provides:**
+   >
    > - A **geometric interpretation** of hybrid systems as piecewise smooth tangent spaces
    > - **Simplified derivations** of saltation matrices using normal/tangent decomposition
    > - **Practical guidance** on implementing hybrid DDP in JAX
    > - **Integration** of hybrid dynamics into the Tangent Hyperplane framework
    >
    > **What This Article Does Not Provide:**
+   >
    > - General theory of multi-contact systems (see Glocker & Pfeiffer, 1995)
    > - Convergence proofs for contact-implicit methods (see Manchester & Kuindersma, 2017)
    > - Treatment of stochastic or uncertain jumps (see Prandini et al., 2006)
@@ -1067,12 +1154,14 @@ To make this article **defensible against expert review**, prioritize:
 ### High Priority (Core Claims at Risk)
 
 1. **Complete the saltation matrix derivation** (Weakness 1):
+
    - State assumptions ($h \in C^2$, $\nabla h \neq 0$, transversality)
    - Provide full derivation (not sketch)
    - Work through bouncing ball step-by-step with physical interpretation
    - Extend to multi-dimensional guards (at least mention)
 
 2. **Fix or remove the golf swing claim** (Weakness 6):
+
    - Verify the physics (does deceleration actually help?)
    - Provide a plot or derivation
    - Or retract the claim
@@ -1085,16 +1174,19 @@ To make this article **defensible against expert review**, prioritize:
 ### Medium Priority (Argument Tightening Required)
 
 4. **Tighten measure-theoretic treatment** (Weakness 2):
+
    - Cite Goebel et al. for hybrid arcs as BV functions
    - Prove (or cite) bounded variation for bouncing ball
    - Clarify when Filippov solutions are needed (they're not for this article's examples)
 
 5. **Fix JAX code** (Weakness 5):
+
    - Correct syntax (`defvjp` signature)
    - Define `integrate` and `integrate_adjoint`
    - Validate with finite differences (show results)
 
 6. **Expand complementarity discussion** (Weakness 4):
+
    - Derive contact gradient $\partial \lambda / \partial q$
    - Provide initialization strategy for contact-implicit
    - Acknowledge LCP vs. NCP vs. MPCC distinction
@@ -1107,11 +1199,13 @@ To make this article **defensible against expert review**, prioritize:
 ### Low Priority (Clarifications and Polish)
 
 8. **Improve Zeno discussion** (Weakness 3):
+
    - State conditions for Zeno convergence (commutativity, contractivity)
    - Provide numerical resolution algorithm
    - Acknowledge when Zeno is problematic vs. benign
 
 9. **Provide one detailed application** (Weakness 6):
+
    - Full system description, cost function, constraints
    - Convergence plot, trajectory visualization
    - Comparison to baseline
@@ -1128,6 +1222,7 @@ To make this article **defensible against expert review**, prioritize:
 **Do not publish this article as-is.** The core geometric insights are valuable, but the execution has too many gaps and unforced errors. With the remedies above (especially High Priority items), this can become a **strong pedagogical contribution** to the Tangent Hyperplane framework.
 
 **Estimated revision effort:** 20-30 hours of focused work:
+
 - 8 hours: Saltation derivation (Weakness 1)
 - 4 hours: JAX code validation (Weakness 5)
 - 3 hours: Limitations section (Weakness 8)
@@ -1149,6 +1244,7 @@ To make this article **defensible against expert review**, prioritize:
 **Tone:** Adversarial but constructive (as per Critic mandate)
 
 **Next steps:**
+
 1. Share with Thesis Defender to prioritize remedies
 2. Bibliographer to fill literature gaps
 3. Pragmatic Programmer to validate JAX code

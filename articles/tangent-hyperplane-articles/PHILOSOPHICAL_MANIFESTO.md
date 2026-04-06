@@ -1,4 +1,5 @@
 # The Tangent Hyperplane Manifesto
+
 **Why This Is Not "Just Another Linearization Paper"**
 
 ---
@@ -52,6 +53,7 @@ At a single point $\bar{x}$, the tangent space $T_{\bar{x}}\mathcal{M}$ is:
 **Key insight:** This isn't approximate. The derivative **is** the tangent space. There is no "better" local linear approximation—this is it, by definition.
 
 **What this means:**
+
 ```
 If you stay in the tangent space (dt → 0), superposition is perfect.
 Period. No asterisks. No "up to O(ε²)." Exact.
@@ -68,19 +70,21 @@ $$
 $$
 
 **The linear part is exact accumulation:**
+
 - Each infinitesimal $d(\delta x)$ follows exact linearized dynamics
 - Integration preserves this exactness over the path
 - The **residual** is not "error from approximation"—it's **curvature of the manifold**
 
 **Key distinction:**
 
-| Standard View | Tangent Hyperplane View |
-|--------------|------------------------|
+| Standard View                    | Tangent Hyperplane View                                  |
+| -------------------------------- | -------------------------------------------------------- |
 | "Linearization introduces error" | "Linearization is exact; curvature introduces residuals" |
-| Residual = approximation failure | Residual = geometric feature (second fundamental form) |
-| Try to minimize error | Measure and exploit curvature |
+| Residual = approximation failure | Residual = geometric feature (second fundamental form)   |
+| Try to minimize error            | Measure and exploit curvature                            |
 
 **What this means:**
+
 ```
 The variation δx accumulates exactly along each tangent space.
 Residuals appear only when moving *between* tangent spaces.
@@ -97,9 +101,10 @@ In optimal control (DDP, iLQR, MPC):
 - The **Riccati solution is exact** for the local quadratic problem
 - The **gains are optimal** for infinitesimal perturbations
 
-**Key insight:** DDP doesn't "approximate" the nonlinear problem—it **solves a sequence of exact local problems**. The nonlinearity is handled by *re-solving* as you move through state space, not by "hoping the linear approximation is close enough."
+**Key insight:** DDP doesn't "approximate" the nonlinear problem—it **solves a sequence of exact local problems**. The nonlinearity is handled by _re-solving_ as you move through state space, not by "hoping the linear approximation is close enough."
 
 **What this means:**
+
 ```
 Every backward pass solves an exact LQR problem.
 Every forward pass updates the tangent space.
@@ -117,6 +122,7 @@ To be absolutely clear, here's what we are **not** claiming:
 We never claim the tangent space is valid far from $\bar{x}$. Residuals grow as $O(\|\delta x\|^2)$. We know this. We quantify this. We design around this.
 
 **What we ARE saying:**
+
 > At the limit (infinitesimally), linearization is not approximate—it's exact. Moving away from that limit introduces measurable, predictable curvature effects.
 
 ---
@@ -126,7 +132,8 @@ We never claim the tangent space is valid far from $\bar{x}$. Residuals grow as 
 It doesn't. That's the whole point.
 
 **What we ARE saying:**
-> Superposition holds exactly *in each tangent space*. The nonlinear system is a manifold of tangent spaces. Navigate the manifold correctly, and you can accumulate exact local effects into global behavior.
+
+> Superposition holds exactly _in each tangent space_. The nonlinear system is a manifold of tangent spaces. Navigate the manifold correctly, and you can accumulate exact local effects into global behavior.
 
 ---
 
@@ -135,6 +142,7 @@ It doesn't. That's the whole point.
 They absolutely do. In high-curvature regions, residuals dominate.
 
 **What we ARE saying:**
+
 > Residuals are geometric signals (curvature sensors), not approximation errors. You can monitor them, bound them, and use them to adapt (Residual-Aware Control article).
 
 ---
@@ -144,6 +152,7 @@ They absolutely do. In high-curvature regions, residuals dominate.
 No. Global analysis still requires Lyapunov functions, barriers, reachability, etc.
 
 **What we ARE saying:**
+
 > This **unifies** local methods (LQR, gain scheduling) with geometric understanding. It's the missing conceptual bridge between "linearize and hope" and "solve the full HJB."
 
 ---
@@ -201,9 +210,11 @@ accumulates **exact** local linearized contributions. The integral itself is exa
 ### For Researchers
 
 **Standard framing:**
+
 > "We linearize for convenience, accept some error, and validate numerically."
 
 **Tangent hyperplane framing:**
+
 > "We exploit exact local geometry, accumulate variations correctly, and measure curvature as a first-class signal."
 
 **Impact:** Changes the research question from "How do we approximate better?" to "How do we navigate the tangent bundle efficiently?"
@@ -213,9 +224,11 @@ accumulates **exact** local linearized contributions. The integral itself is exa
 ### For Practitioners (Control Engineers)
 
 **Standard framing:**
+
 > "LQR works okay near the operating point. For aggressive maneuvers, we need nonlinear MPC, which is expensive."
 
 **Tangent hyperplane framing:**
+
 > "LQR is **exact** at each instant. Use residuals to detect when curvature is high, then switch to MPC. This is geometric mode-switching, not heuristic tuning."
 
 **Impact:** Transforms "trial and error" into principled design.
@@ -225,9 +238,11 @@ accumulates **exact** local linearized contributions. The integral itself is exa
 ### For Students
 
 **Standard framing:**
+
 > "Nonlinear systems are hard. Linear control is an approximation we use because the math is tractable."
 
 **Tangent hyperplane framing:**
+
 > "Nonlinear systems are **locally linear by geometry**. The 'hard part' is navigating between tangent spaces, not approximating within them."
 
 **Impact:** Students understand **why** linearization works, not just **when** to apply it.
@@ -324,8 +339,8 @@ But if you only have 5 minutes and want the **philosophical punch**, you just re
 
 **End of Manifesto**
 
-*For technical details, see the full article series.*
-*For critique, see the Critic's Corner documents.*
-*For accessibility, see the Layman's Terms summaries.*
+_For technical details, see the full article series._
+_For critique, see the Critic's Corner documents._
+_For accessibility, see the Layman's Terms summaries._
 
 **For the truth, see this document.**
