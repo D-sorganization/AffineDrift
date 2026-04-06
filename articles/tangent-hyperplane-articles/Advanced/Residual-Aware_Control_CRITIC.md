@@ -24,7 +24,7 @@ The proof of Theorem 1.1 (Quantitative Residual Bound) makes several unstated as
 
 **Logical gaps:**
 
-1. **Step from eq. 2.7 to 2.9:** The proof claims $\|\delta u\| \leq K \|\delta x\|$ "for control-affine systems where δu is chosen via LQR," but this is only true for the *optimal* LQR controller, and only when the linearization is accurate. This is circular: we're bounding residuals assuming the controller works, but the controller's validity depends on small residuals.
+1. **Step from eq. 2.7 to 2.9:** The proof claims $\|\delta u\| \leq K \|\delta x\|$ "for control-affine systems where δu is chosen via LQR," but this is only true for the _optimal_ LQR controller, and only when the linearization is accurate. This is circular: we're bounding residuals assuming the controller works, but the controller's validity depends on small residuals.
 
 2. **Integration argument:** The proof integrates $\|\dot{r}\| \leq C_M \|\delta x\|^2$ to get $\|r(t_1)\| \leq \int \|\dot{r}\| dt$, but $\delta x(t)$ itself depends on $r(t)$ through the coupling $\dot{\delta x} = A \delta x + \text{terms involving } r$. The proof treats $\delta x(t)$ as known, but it's part of the system state.
 
@@ -57,15 +57,18 @@ These gaps make the bound **qualitatively useful** (residuals scale as O(||δx||
 ### Suggested Remedies
 
 1. **State assumptions explicitly:**
+
    - Add: "Assume ||δu|| = ||K δx|| where K is the LQR gain with ||K|| ≤ K_max."
    - Add: "Assume ||A(t)|| ≤ A_max uniformly along the trajectory."
    - Add: "Assume ||H_f(x,u)|| ≤ M for all (x,u) in a tube around the nominal trajectory."
 
 2. **Revise the integration argument:**
+
    - Either: Solve the coupled δx-r system explicitly (harder), or
    - Use a **bootstrapping argument**: "For small initial perturbations ||δx(0)|| ≤ δ₀, the residual remains O(δ₀²) over time horizons satisfying..."
 
 3. **Clarify Grönwall application:**
+
    - State the condition: "For DDP timesteps Δt satisfying ||A||Δt < 0.1, the exponential term is approximately 1 + O(||A||Δt)."
    - Add: "For stiff systems with large ||A||, either reduce Δt or use the exact exponential form."
 
@@ -90,6 +93,7 @@ Theorem 2.1 claims that "Adaptive DDP converges to a local minimum of the contin
 **Unjustified generalization:**
 
 1. **What are "standard DDP assumptions"?** DDP convergence requires:
+
    - Controllability
    - Positive definite cost Hessians (Qᵤᵤ > 0)
    - Lipschitz continuous dynamics
@@ -124,14 +128,17 @@ Without a rigorous convergence proof, the adaptive timestep method is **heuristi
 ### Suggested Remedies
 
 1. **Downgrade claim to conjecture:**
+
    - Change "Theorem 2.1" to "Conjecture 2.1" or "Empirical Observation 2.1."
    - Or restrict to: "Under fixed timestep selection (computed once before optimization), convergence follows from standard DDP results."
 
 2. **Provide empirical convergence analysis:**
+
    - Plot: Cost vs. iteration for adaptive DDP vs. fixed-step DDP.
    - Show that convergence is monotonic (or explain backtracking when grid changes).
 
 3. **Add stabilization technique:**
+
    - Adapt grid only when cost improvement stalls (like mesh refinement in collocation methods).
    - Or: Use **frozen grid** for backward pass, update grid only in forward pass.
 
@@ -156,10 +163,12 @@ The article uses two methods for computing Hessian bounds (analytical and autodi
 **Unstated assumptions and potential errors:**
 
 1. **Example 1.1 (pendulum):** The Hessian computation claims $\|H_f\|_{\max} = g/L$ based on the (0,0) element of the Hessian of $f_2(\theta, \dot\theta)$. But:
+
    - The Hessian is a 2×2 matrix (for 2D state). What about the (1,0), (0,1), (1,1) elements?
    - The norm should be computed as $\max_i \|H_{f_i}\|$ where $H_{f_i}$ is the Hessian of the i-th component of f.
 
 2. **Autodiff method (lines 1006-1013):** The code computes `jax.hessian(lambda x: dynamics(x, u, params))`, which returns a tensor of shape (n, n, n). The code takes `vmap` over the first dimension and computes Frobenius norms. But:
+
    - Is Frobenius norm the right choice? The bound requires operator norm (spectral norm).
    - Why `vmap` over dimension 0 instead of taking the max over all elements?
 
@@ -173,6 +182,7 @@ If the Hessian bound is wrong, then:
 - **Or too small** (M overestimated) → excessive computation for no benefit.
 
 A rigorous paper would include:
+
 - Numerical experiment: Compute predicted residual bound vs. observed residual.
 - Comparison: Analytical M vs. autodiff M vs. Monte Carlo sampling of H over trajectories.
 
@@ -189,14 +199,17 @@ A rigorous paper would include:
 ### Suggested Remedies
 
 1. **Correct the pendulum example:**
+
    - Show the full Hessian matrix for both f₁ and f₂.
    - Compute the spectral norm, not just the max element.
 
 2. **Fix the autodiff code:**
+
    - Use `jnp.linalg.norm(H_i, ord=2)` instead of Frobenius norm.
    - Clarify: "We compute the maximum spectral norm over state dimensions."
 
 3. **Add numerical validation section:**
+
    - Title: "4.2 Validation of Hessian Bounds"
    - Content:
      - Simulate pendulum/quadrotor with known perturbations.
@@ -224,17 +237,20 @@ The application examples (quadrotor, humanoid, golf) present **simulated results
 **Empirical insufficiency:**
 
 1. **Quadrotor aerobatics (3.1):**
+
    - Claims "40% fewer nodes than uniform fine discretization" but:
      - What was the baseline? Uniform Δt = ?
      - How sensitive is this to εᵣ? (only one value shown: εᵣ = 0.05)
      - No comparison against ALTRO, Crocoddyl, or other modern solvers.
 
 2. **Humanoid walking (3.2):**
+
    - Claims "fall rate reduced from 15% to 5%"—on what dataset?
    - Only 20 trials each—with binomial statistics, this is not statistically significant (p ≈ 0.24 using Fisher's exact test).
    - No comparison: is 5% good? What does a state-of-the-art MPC achieve?
 
 3. **Golf swing (3.3):**
+
    - Results table shows "ball_speed: 71.8 m/s (99.6% of fine)" but:
      - This is **simulated data** in a code block, not experimental.
      - Where is the actual data? No plots, no raw numbers.
@@ -258,6 +274,7 @@ A skeptical reviewer would say:
 - **Statistical significance:** With n=20 trials, 3/20 vs 1/20 failures gives p=0.24 (Fisher's exact test). Standard practice requires p < 0.05 for significance. See [Wasserstein & Lazar (2016), "ASA Statement on p-Values"](https://doi.org/10.1080/00031305.2016.1154108).
 
 - **Optimal control benchmarks:**
+
   - [ALTRO (Howell et al. 2019)](https://roboticexplorationlab.org/papers/altro-iros.pdf): State-of-the-art solver with rigorous benchmarks.
   - [Crocoddyl (Mastalli et al. 2020)](https://doi.org/10.1109/TRO.2020.3041882): Contact-rich trajectory optimization with extensive comparisons.
 
@@ -270,20 +287,24 @@ A skeptical reviewer would say:
 ### Suggested Remedies
 
 1. **Expand humanoid experiment:**
+
    - Increase trials to n ≥ 100 to achieve statistical power.
    - Report confidence intervals (e.g., 95% CI for fall rate).
    - Compare against: (a) pure MPC, (b) pure LQR, (c) residual-adaptive (proposed).
 
 2. **Add quantitative golf data:**
+
    - Remove the fake "simulated results" code block.
    - Either: (a) run actual simulations and report distributions, or (b) clearly label it as "Hypothetical Performance" and don't claim it as validation.
 
 3. **Benchmark against ALTRO:**
+
    - Implement the same quadrotor flip problem in ALTRO.
    - Report: solve time, final cost, constraint violations, nodes used.
    - Show that residual-adaptive is competitive or better.
 
 4. **Ablation study:**
+
    - Test: Fixed Δt (coarse), Fixed Δt (fine), Adaptive Δt (no residuals, just state-based), Adaptive Δt (residual-based).
    - Plot: Cost vs. computation time for all methods.
 
@@ -312,6 +333,7 @@ The article claims to handle "hybrid systems" (e.g., heel strike in Section 3.2)
 1. **Theorem 1.1 requires C² dynamics:** The proof uses Taylor expansion and Hessian bounds, both undefined at discontinuities. So how can residuals be used at impacts?
 
 2. **Detection is post-hoc:** The article says "spike above threshold → impact detected," but:
+
    - By the time the residual spikes, the impact has **already occurred**.
    - How do you prevent integrator failure during the discontinuity?
    - Standard hybrid systems (Westervelt et al., Grizzle et al.) use **guard functions** to predict impacts before they happen.
@@ -341,15 +363,18 @@ A hybrid systems expert would immediately object:
 ### Suggested Remedies
 
 1. **Restrict claims:**
+
    - Remove "with Impacts" from Section 3.2 title.
    - Add disclaimer: "This article addresses smooth dynamics. For systems with impacts (heel strike, collisions), see [Hybrid Tangent Spaces article]."
 
 2. **Or expand the framework:**
+
    - Add Section 1.4: "Extension to Hybrid Systems."
    - Define piecewise-C² dynamics with guard functions g(x) = 0.
    - Modify Theorem 1.1: "For t ∈ [tₖ, tₖ₊₁] (between impacts), the residual bound holds. At impacts, use reset map Δ(x) explicitly."
 
 3. **Clarify impact detection:**
+
    - Change "spike above threshold → impact detected" to:
      - "We monitor both residuals ||r|| and guard function g(x). When g(x) ≈ 0, we switch to impact-aware mode."
    - Add: "Residuals provide early warning of model mismatch (e.g., unexpected slip), while guard functions predict geometric impacts (e.g., heel strike)."
@@ -408,6 +433,7 @@ Without a clear answer, the contribution is unclear.
 ### Suggested Remedies
 
 1. **Add explicit comparison section:**
+
    - Section 2.2.1: "Comparison to Standard MPC Error Monitoring"
    - Explain:
      - Standard MPC: Replan when $\|x - \bar{x}\| > \epsilon$ (total error).
@@ -415,12 +441,14 @@ Without a clear answer, the contribution is unclear.
      - Advantage: Residuals isolate **nonlinearity-induced error** from disturbances/noise.
 
 2. **Clarify the benefit:**
+
    - Add: "Monitoring residuals separately from first-order deviations allows us to distinguish between:
      - **Disturbances** (captured by δx, handled by LQR), and
      - **Model nonlinearity** (captured by r, requiring MPC).
    - This enables finer-grained mode switching than total error alone."
 
 3. **Cite and differentiate from Tube MPC:**
+
    - Add: "Our approach complements Tube MPC by providing **geometric residual bounds** (Theorem 1.1) instead of worst-case disturbance bounds. This allows tighter tubes in low-curvature regions."
 
 4. **Experimental comparison:**
@@ -477,15 +505,18 @@ Without this, the adaptive rule is **unprincipled**.
 ### Suggested Remedies
 
 1. **Add minimum timestep analysis:**
+
    - Section 2.1.4: "Minimum Timestep from Numerical Stability"
    - Derive: For RK4 integrator with Lipschitz constant L, require $\Delta t \geq \Delta t_{\min} = \frac{1}{L}$ for stability.
 
 2. **Justify clipping:**
+
    - Change hard-coded [0.001, 0.1] to:
      - $\Delta t_{\min}$ = max(10⁻³, 1/L) (stability)
      - $\Delta t_{\max}$ = εᵣ / (M δx²) (accuracy)
 
 3. **Discuss computational trade-off:**
+
    - Add: "In regions with M → ∞ (near singularities), adaptive Δt may become impractically small. In such cases, alternative methods (collocation, implicit integration) should be used."
 
 4. **Add cost model:**
@@ -510,14 +541,17 @@ The article cites foundational references (Li & Todorov 2004, Mayne et al. 2005)
 **Literature gaps:**
 
 1. **Adaptive mesh refinement in trajectory optimization:**
+
    - [GPOPS-II (Patterson & Rao 2014)](https://doi.org/10.1145/2558904): Uses adaptive mesh refinement in Gaussian quadrature collocation—directly relevant to adaptive Δt.
    - [Hereid et al. (2016), "Frost: Fast robot optimization and simulation toolkit"](https://doi.org/10.1109/IROS.2016.7759025): Uses adaptive time grids for contact-rich systems.
 
 2. **Residual learning in model-based RL:**
+
    - [Nagabandi et al. (2018), "Neural network dynamics for model-based deep RL"](https://arxiv.org/abs/1708.02596): Learns residual dynamics $\hat{f} = f_{\text{nominal}} + f_{\text{residual}}$.
    - [Mehta et al. (2020), "Learning quadrupedal locomotion over challenging terrain"](https://arxiv.org/abs/2010.11251): Uses residuals to adapt MPC online.
 
 3. **Curvature-aware control:**
+
    - [Manchester (2017), "LQR-Trees with input and state constraints"](https://doi.org/10.1016/j.automatica.2017.06.027): Uses funnels (similar to residual tubes) for verification.
    - [Majumdar & Tedrake (2017), "Funnel libraries for real-time robust feedback motion planning"](https://doi.org/10.1177/0278364917712421): Closely related to residual-aware tube MPC.
 
@@ -543,6 +577,7 @@ Listed above.
 ### Suggested Remedies
 
 1. **Add "Related Work" section:**
+
    - Insert before Section 1: "0.1 Relationship to Prior Work"
    - Subsections:
      - Adaptive mesh methods in trajectory optimization
@@ -552,6 +587,7 @@ Listed above.
    - For each, explain: how this work differs or builds on it.
 
 2. **Update bibliography:**
+
    - Add at least 5-10 papers from 2015-2025 in optimal control, robotics, and geometric mechanics.
 
 3. **Explicitly differentiate:**
@@ -562,16 +598,16 @@ Listed above.
 
 ## Summary Table of Critiques
 
-| # | Issue | Severity | Primary Remedy |
-|---|-------|----------|----------------|
-| 1 | Theorem 1.1 proof gaps | Medium-High | Explicit assumptions, revised proof |
-| 2 | Adaptive DDP convergence unsupported | Medium | Downgrade to conjecture or prove rigorously |
-| 3 | Hessian bound computation errors | Medium | Numerical validation, corrected norms |
-| 4 | Insufficient experimental validation | High | More trials, error bars, baselines |
-| 5 | Hybrid systems scope overreach | Medium-High | Restrict claims or expand theory |
-| 6 | Unclear novelty vs. MPC | Medium | Explicit comparison section |
-| 7 | Missing timestep bounds | Low-Medium | Minimum Δt analysis |
-| 8 | Outdated literature | Medium | Related work section, recent citations |
+| #   | Issue                                | Severity    | Primary Remedy                              |
+| --- | ------------------------------------ | ----------- | ------------------------------------------- |
+| 1   | Theorem 1.1 proof gaps               | Medium-High | Explicit assumptions, revised proof         |
+| 2   | Adaptive DDP convergence unsupported | Medium      | Downgrade to conjecture or prove rigorously |
+| 3   | Hessian bound computation errors     | Medium      | Numerical validation, corrected norms       |
+| 4   | Insufficient experimental validation | High        | More trials, error bars, baselines          |
+| 5   | Hybrid systems scope overreach       | Medium-High | Restrict claims or expand theory            |
+| 6   | Unclear novelty vs. MPC              | Medium      | Explicit comparison section                 |
+| 7   | Missing timestep bounds              | Low-Medium  | Minimum Δt analysis                         |
+| 8   | Outdated literature                  | Medium      | Related work section, recent citations      |
 
 ---
 
@@ -602,11 +638,13 @@ For a blog/website, it's **excellent** as an accessible introduction to the idea
 ### Recommended Next Steps
 
 1. **Immediate (before public release):**
+
    - Add disclaimers about proof sketches and preliminary results.
    - Fix Hessian computation errors (Critique 3).
    - Remove or qualify hybrid systems claims (Critique 5).
 
 2. **Short-term (for publication):**
+
    - Expand experimental validation (Critique 4): more trials, error bars, ALTRO comparison.
    - Add Related Work section (Critique 8).
    - Clarify novelty vs. MPC (Critique 6).

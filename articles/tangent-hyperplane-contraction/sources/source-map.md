@@ -8,8 +8,8 @@ This map documents which existing AffineDrift materials are being used to develo
 - `articles/tangent-hyperplanes-series/part-2-dynamics.qmd`
 - `articles/tangent-hyperplanes-series/part-3-control.qmd`
 - `articles/tangent-hyperplanes-series/part-4-residuals-curvature.qmd`
-- `articles/Tangent Hyperplane Articles/Tangent_Hyperplanes_Unified_Thesis.qmd`
-- `articles/Tangent Hyperplane Articles/Advanced/Contraction_Tangent_Unification.qmd`
+- `articles/tangent-hyperplane-articles/Tangent_Hyperplanes_Unified_Thesis.qmd`
+- `articles/tangent-hyperplane-articles/Advanced/Contraction_Tangent_Unification.qmd`
 - `articles/nonlinear-control-insights.qmd`
 - `articles/theory-part1.qmd` through `articles/theory-part5.qmd`
 
