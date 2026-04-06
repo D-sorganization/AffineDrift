@@ -84,3 +84,36 @@ HTML_FIX_PATTERNS: tuple[tuple[str, str, str], ...] = (
     (r'crossorigin=""', "crossorigin", "boolean attribute normalization"),
     (r'\s+role="link"', "", "redundant role='link' on anchors"),
 )
+
+# ── LaTeX Environment Conversion Patterns ────────────────────────────────
+# Shared regex patterns for LaTeX-to-{HTML,QMD} converters (DRY).
+
+LATEX_ABSTRACT_PATTERN: str = r"\\begin\{abstract\}(.*?)\\end\{abstract\}"
+"""Regex matching LaTeX abstract environments."""
+
+LATEX_KEYPOINT_PATTERN: str = r"\\begin\{keypoint\}(?:\[[^\]]*\])?(.*?)\\end\{keypoint\}"
+"""Regex matching LaTeX keypoint environments (with optional title)."""
+
+LATEX_LIMITATION_PATTERN: str = r"\\begin\{limitation\}(?:\[[^\]]*\])?(.*?)\\end\{limitation\}"
+"""Regex matching LaTeX limitation environments (with optional title)."""
+
+LATEX_ALIGN_BEGIN_PATTERN: str = r"\\begin\{align\}"
+"""Regex matching the start of a LaTeX align environment."""
+
+LATEX_ALIGN_END_PATTERN: str = r"\\end\{align\}"
+"""Regex matching the end of a LaTeX align environment."""
+
+LATEX_EQUATION_BEGIN_PATTERN: str = r"\\begin\{equation\}"
+"""Regex matching the start of a LaTeX equation environment."""
+
+LATEX_EQUATION_END_PATTERN: str = r"\\end\{equation\}"
+"""Regex matching the end of a LaTeX equation environment."""
+
+LATEX_TIKZ_PATTERN: str = r"\\begin\{tikzpicture\}.*?\\end\{tikzpicture\}"
+"""Regex matching LaTeX tikzpicture environments."""
+
+LATEX_CUSTOM_COMMAND_BVEC_PATTERN: str = r"\\bvec\{([^}]+)\}"
+"""Regex matching custom \\bvec command."""
+
+LATEX_CUSTOM_COMMAND_SYMBOLS_PATTERN: str = r"\\(Feq|Ceq|Rdrift|Rinput)"
+"""Regex matching custom symbol commands (Feq, Ceq, etc.)."""

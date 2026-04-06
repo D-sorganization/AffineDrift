@@ -13,6 +13,18 @@ from datetime import date
 from pathlib import Path
 
 from src.tools.utils import setup_logging_with_timestamp
+from src.tools.utils.constants import (
+    LATEX_ABSTRACT_PATTERN,
+    LATEX_ALIGN_BEGIN_PATTERN,
+    LATEX_ALIGN_END_PATTERN,
+    LATEX_CUSTOM_COMMAND_BVEC_PATTERN,
+    LATEX_CUSTOM_COMMAND_SYMBOLS_PATTERN,
+    LATEX_EQUATION_BEGIN_PATTERN,
+    LATEX_EQUATION_END_PATTERN,
+    LATEX_KEYPOINT_PATTERN,
+    LATEX_LIMITATION_PATTERN,
+    LATEX_TIKZ_PATTERN,
+)
 from src.tools.utils.latex_utils import (
     clean_common_latex,
     convert_lists_to_markdown,
@@ -78,7 +90,7 @@ class LaTeXToQuartoConverter:
         """Convert special LaTeX environments."""
         # Abstract
         content = re.sub(
-            r"\\begin\{abstract\}(.*?)\\end\{abstract\}",
+            LATEX_ABSTRACT_PATTERN,
             r"::: {.abstract-section}\n## Abstract\n\n\1\n\n:::",
             content,
             flags=re.DOTALL,
@@ -86,7 +98,7 @@ class LaTeXToQuartoConverter:
 
         # Key points
         content = re.sub(
-            r"\\begin\{keypoint\}(?:\[[^\]]*\])?(.*?)\\end\{keypoint\}",
+            LATEX_KEYPOINT_PATTERN,
             r"::: {.keypoint-box}\n**Key Point:** \1\n:::",
             content,
             flags=re.DOTALL,
@@ -94,7 +106,7 @@ class LaTeXToQuartoConverter:
 
         # Limitations
         content = re.sub(
-            r"\\begin\{limitation\}(?:\[[^\]]*\])?(.*?)\\end\{limitation\}",
+            LATEX_LIMITATION_PATTERN,
             r"::: {.limitation-box}\n**Fundamental Limitation:** \1\n:::",
             content,
             flags=re.DOTALL,
@@ -109,12 +121,12 @@ class LaTeXToQuartoConverter:
         # Just ensure they're on their own lines
 
         # align environments - keep as-is
-        content = re.sub(r"\\begin\{align\}", r"\n$$\n\\begin{align}", content)
-        content = re.sub(r"\\end\{align\}", r"\\end{align}\n$$\n", content)
+        content = re.sub(LATEX_ALIGN_BEGIN_PATTERN, r"\n$$\n\\begin{align}", content)
+        content = re.sub(LATEX_ALIGN_END_PATTERN, r"\\end{align}\n$$\n", content)
 
         # equation environments - keep as-is
-        content = re.sub(r"\\begin\{equation\}", r"\n$$", content)
-        return re.sub(r"\\end\{equation\}", r"$$\n", content)
+        content = re.sub(LATEX_EQUATION_BEGIN_PATTERN, r"\n$$", content)
+        return re.sub(LATEX_EQUATION_END_PATTERN, r"$$\n", content)
 
     def convert_figures(self, content: str) -> str:
         """Convert LaTeX figures to Quarto format."""
@@ -141,7 +153,7 @@ class LaTeXToQuartoConverter:
 
         # Remove tikzpicture environments
         return re.sub(
-            r"\\begin\{tikzpicture\}.*?\\end\{tikzpicture\}",
+            LATEX_TIKZ_PATTERN,
             "[Figure: TikZ diagram - see PDF version]",
             content,
             flags=re.DOTALL,
@@ -168,9 +180,9 @@ class LaTeXToQuartoConverter:
         # Apply shared cleanup (comments, labels, spacing, structure)
         content = clean_common_latex(content)
 
-        # Quarto-specific: custom commands → bold
-        content = re.sub(r"\\bvec\{([^}]+)\}", r"**\1**", content)
-        content = re.sub(r"\\(Feq|Ceq|Rdrift|Rinput)", r"**\1**", content)
+        # Quarto-specific: custom commands -> bold
+        content = re.sub(LATEX_CUSTOM_COMMAND_BVEC_PATTERN, r"**\1**", content)
+        content = re.sub(LATEX_CUSTOM_COMMAND_SYMBOLS_PATTERN, r"**\1**", content)
 
         # Remove table environments
         content = re.sub(r"\\begin\{table\}.*?\\end\{table\}", "[Table]", content, flags=re.DOTALL)

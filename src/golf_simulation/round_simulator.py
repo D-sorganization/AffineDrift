@@ -12,6 +12,8 @@ from dataclasses import dataclass
 
 import numpy as np
 
+from src.core.constants import REGULATION_HOLE_RADIUS_M, STIMPMETER_CALIBRATION_FACTOR
+from src.core.contracts import require
 from src.golf_simulation.ball_flight import BallFlightDynamics, BallFlightState
 from src.golf_simulation.clubs import ClubBag, ClubType, GolfClub, LaunchConditions
 from src.golf_simulation.course import METERS_TO_YARDS, GolfCourse, GolfHole
@@ -121,6 +123,15 @@ class RoundSimulator:
             ball_flight: Ball flight dynamics model. Defaults to standard params.
             rng_seed: Random seed for shot dispersion (None = non-deterministic).
         """
+        require(isinstance(course, GolfCourse), "course must be a GolfCourse instance")
+        require(
+            club_bag is None or isinstance(club_bag, ClubBag),
+            "club_bag must be a ClubBag instance or None",
+        )
+        require(
+            ball_flight is None or isinstance(ball_flight, BallFlightDynamics),
+            "ball_flight must be a BallFlightDynamics instance or None",
+        )
         self.course = course
         self.club_bag = club_bag if club_bag is not None else ClubBag()
         self.ball_flight = ball_flight if ball_flight is not None else BallFlightDynamics()
@@ -189,7 +200,7 @@ class RoundSimulator:
 
             # Check if holed
             dist_remaining = hole.distance_to_pin(position[0], position[1])
-            if dist_remaining < 0.054:  # Within hole radius
+            if dist_remaining < REGULATION_HOLE_RADIUS_M:
                 logger.debug("Hole %d completed in %d strokes", hole.number, stroke_count)
                 break
 
@@ -240,8 +251,8 @@ class RoundSimulator:
         speed_variation = 1.0 + self.rng.normal(0.0, 0.02)
         ball_speed = club.typical_speed_ms * max(speed_variation, 0.5)
         direction_error = self.rng.normal(0.0, np.radians(2.0))
-        dx = hole.pin_position[0] - position[0]
-        dy = hole.pin_position[1] - position[1]
+        dx = hole.pin_x - position[0]
+        dy = hole.pin_y - position[1]
         aim_direction = math.atan2(dy, dx)
         return LaunchConditions(
             ball_speed=ball_speed,
@@ -352,7 +363,7 @@ class RoundSimulator:
         """
         direction_error = self.rng.normal(0.0, np.radians(1.0))
         aim_angle = math.atan2(dy, dx) + direction_error
-        deceleration = 1.285 / stimp
+        deceleration = STIMPMETER_CALIBRATION_FACTOR / stimp
         target_speed = math.sqrt(2.0 * deceleration * dist) * 1.1
         speed_variation = 1.0 + self.rng.normal(0.0, 0.05)
         putt_speed = target_speed * max(speed_variation, 0.3)
@@ -382,8 +393,8 @@ class RoundSimulator:
                 cvy = (ny - py) / putt_sim.dt
             else:
                 cvx, cvy = 0.0, 0.0
-            if putt_sim.is_holed(px, py, cvx, cvy, hole.pin_position[0], hole.pin_position[1]):
-                return hole.pin_position[0], hole.pin_position[1]
+            if putt_sim.is_holed(px, py, cvx, cvy, hole.pin_x, hole.pin_y):
+                return hole.pin_x, hole.pin_y
         return final_x, final_y
 
     def _simulate_putt(
@@ -401,8 +412,8 @@ class RoundSimulator:
             ShotResult for the putt.
         """
         putter = self.club_bag.get_club(ClubType.PUTTER)
-        dx = hole.pin_position[0] - position[0]
-        dy = hole.pin_position[1] - position[1]
+        dx = hole.pin_x - position[0]
+        dy = hole.pin_y - position[1]
         dist = math.sqrt(dx * dx + dy * dy)
 
         if dist < 1e-6:

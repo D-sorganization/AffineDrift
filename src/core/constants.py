@@ -121,3 +121,18 @@ DEFAULT_SPACECRAFT_MASS_KG: float = 100.0
 
 LINK_TEXT_TRUNCATE_LENGTH: int = _env_int("AD_LINK_TEXT_TRUNCATE", 50)
 """Maximum characters kept when truncating anchor text in health reports."""
+
+# ── GOLF SIMULATION PHYSICS (immutable) ──────────────────────────────────
+
+STIMPMETER_CALIBRATION_FACTOR: float = 1.285
+"""Stimpmeter deceleration calibration factor (m/s^2 per stimp-unit inverse).
+
+The deceleration due to friction on a putting green is modelled as
+``STIMPMETER_CALIBRATION_FACTOR / stimpmeter_reading``.
+"""
+
+REGULATION_HOLE_RADIUS_M: float = 0.054
+"""Regulation golf hole radius in meters (4.25 inches / 2)."""
+
+HOLE_CAPTURE_SPEED_MS: float = 1.5
+"""Maximum ball speed (m/s) at which the hole can capture the ball."""

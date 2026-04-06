@@ -53,7 +53,9 @@ def compute_hessian_bound(
     check_finite_array(x, "x")
     check_finite_array(u, "u")
     check_positive(epsilon, "epsilon")
-    return compute_hessian_norm(f, x, u, epsilon)
+    result = compute_hessian_norm(f, x, u, epsilon)
+    ensure(result >= 0, "hessian bound must be non-negative", result)
+    return result
 
 
 def _finite_diff_jacobian(
@@ -161,7 +163,9 @@ def compute_hessian_norm(
         Maximum spectral norm of the component Hessians.
     """
     H = _build_hessian_tensor(f, x, u, epsilon)
-    return _max_spectral_norm(H)
+    result = _max_spectral_norm(H)
+    ensure(result >= 0, "hessian norm must be non-negative", result)
+    return result
 
 
 def predict_residual_bound(
