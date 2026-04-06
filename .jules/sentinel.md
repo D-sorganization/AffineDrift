@@ -7,3 +7,8 @@
 **Vulnerability:** Client-Side Code Injection (XSS) via `new Function` in the polynomial signal generator of the grip angle simulator.
 **Learning:** Even when intended to restrict evaluation to specific math functions, passing unsanitized user input to `new Function('...', 'return ' + expr)` allows attackers to craft payloads (e.g., `1; alert(1)`) to execute arbitrary JavaScript within the user's browser. Furthermore, naively filtering allowed string tokens (like `e`) can inadvertently break valid scientific notation (e.g., `1e-3`).
 **Prevention:** To prevent XSS when evaluating mathematical expressions via `new Function` or `eval` in JavaScript, sanitize the input by explicitly replacing allowed functions/variables (e.g., `Math.sin`, `t`, `pi`) with empty strings, and using a strict regex (e.g., `/^[0-9\s\+\-\*\/\(\)\.\,eE]*$/`) on the remainder to ensure only basic math operators and valid numeric characters (including scientific notation exponents) are present.
+
+## 2026-04-06 - Prevent DOM-based XSS in History URLs
+**Vulnerability:** Found a DOM-based XSS vulnerability in `js/history.js` where URLs retrieved from `localStorage` were directly assigned to anchor `href` properties.
+**Learning:** `localStorage` is an untrusted sink that can be polluted by other scripts or extensions on the same domain. Assigning arbitrary data from it to active properties like `href` allows injection of `javascript:` payloads.
+**Prevention:** Always validate and sanitize URLs before assigning them to `href` attributes (e.g., ensuring they do not start with `javascript:`).
