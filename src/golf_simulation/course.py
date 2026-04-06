@@ -68,6 +68,26 @@ class GolfHole:
         """Y coordinate of the pin position in meters."""
         return self.pin_position[1]
 
+    @property
+    def tee_x(self) -> float:
+        """X coordinate of the tee position in meters."""
+        return self.tee_position[0]
+
+    @property
+    def tee_y(self) -> float:
+        """Y coordinate of the tee position in meters."""
+        return self.tee_position[1]
+
+    @property
+    def green_x(self) -> float:
+        """X coordinate of the green center in meters."""
+        return self.green_center[0]
+
+    @property
+    def green_y(self) -> float:
+        """Y coordinate of the green center in meters."""
+        return self.green_center[1]
+
     def distance_to_pin(self, x: float, y: float) -> float:
         """Compute horizontal distance from (x, y) to the pin in meters.
 
@@ -78,8 +98,8 @@ class GolfHole:
         Returns:
             Euclidean distance to pin in meters (2D, ignoring elevation).
         """
-        dx = self.pin_position[0] - x
-        dy = self.pin_position[1] - y
+        dx = self.pin_x - x
+        dy = self.pin_y - y
         return math.sqrt(dx * dx + dy * dy)
 
     def _fairway_projection(self, x: float, y: float) -> tuple[float, float]:
@@ -95,8 +115,8 @@ class GolfHole:
             the perpendicular distance from the centre line in meters.
             Returns (0.0, 0.0) if the hole has zero length.
         """
-        tee_x, tee_y = self.tee_position[0], self.tee_position[1]
-        pin_x, pin_y = self.pin_position[0], self.pin_position[1]
+        tee_x, tee_y = self.tee_x, self.tee_y
+        pin_x, pin_y = self.pin_x, self.pin_y
         hole_dx = pin_x - tee_x
         hole_dy = pin_y - tee_y
         hole_length = math.sqrt(hole_dx**2 + hole_dy**2)
@@ -125,11 +145,11 @@ class GolfHole:
         if self.terrain_fn is not None:
             return self.terrain_fn(x, y)
 
-        dist_to_green = math.sqrt((x - self.green_center[0]) ** 2 + (y - self.green_center[1]) ** 2)
+        dist_to_green = math.sqrt((x - self.green_x) ** 2 + (y - self.green_y) ** 2)
         if dist_to_green <= self.green_radius:
             return TerrainType.GREEN
 
-        dist_to_tee = math.sqrt((x - self.tee_position[0]) ** 2 + (y - self.tee_position[1]) ** 2)
+        dist_to_tee = math.sqrt((x - self.tee_x) ** 2 + (y - self.tee_y) ** 2)
         if dist_to_tee < 5.0:
             return TerrainType.TEE_BOX
 
