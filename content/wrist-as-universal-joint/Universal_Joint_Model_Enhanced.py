@@ -14,6 +14,14 @@ Key improvements over previous model:
 - Shows transmission fraction vs. wrist angle for selected grip angles
 - More physically accurate modeling of constraint torques
 
+NOTE: This file is a standalone PyQt6 desktop application for download.
+The canonical modular implementation (used by the web-based Streamlit app) lives in:
+    src/tools/wrist_universal_joint/
+    - torque_calculator.py  — the math functions defined here
+    - plots.py              — visualization helpers
+    - streamlit_app.py      — web UI entry point
+Any updates to the physics should be made in torque_calculator.py and reflected here.
+
 Author: Enhanced model based on universal joint mechanics
 Date: 2025-11-25
 """
