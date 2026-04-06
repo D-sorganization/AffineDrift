@@ -5,9 +5,11 @@ This directory contains build, maintenance, and automation scripts for the Affin
 ## Build & Deployment Scripts
 
 ### generate_sitemap.py
+
 Generates the sitemap.xml file for SEO and search engine indexing.
 
 **Usage:**
+
 ```bash
 python scripts/generate_sitemap.py
 ```
@@ -15,9 +17,11 @@ python scripts/generate_sitemap.py
 **Output:** `sitemap.xml` in the project root
 
 ### generate_search_index.py
+
 Creates the search index for the site's search functionality.
 
 **Usage:**
+
 ```bash
 python scripts/generate_search_index.py
 ```
@@ -25,9 +29,11 @@ python scripts/generate_search_index.py
 **Output:** `docs/search.json`
 
 ### generate_bibliography_data.py
+
 Processes bibliography data from YAML/JSON sources and generates structured bibliography files.
 
 **Usage:**
+
 ```bash
 python scripts/generate_bibliography_data.py
 ```
@@ -38,9 +44,11 @@ python scripts/generate_bibliography_data.py
 ## Content Processing Scripts
 
 ### add_meta_descriptions.py
+
 Adds or updates meta descriptions in HTML files for SEO optimization.
 
 **Usage:**
+
 ```bash
 python scripts/add_meta_descriptions.py
 ```
@@ -48,31 +56,38 @@ python scripts/add_meta_descriptions.py
 **Target:** HTML files in `docs/` directory
 
 ### scan_quarto_syntax.py
+
 Scans Quarto (.qmd) files for syntax issues and potential problems.
 
 **Usage:**
+
 ```bash
 python scripts/scan_quarto_syntax.py [path]
 ```
 
 **Options:**
+
 - `path`: Directory or file to scan (default: current directory)
 
 ### check-equations.py
+
 Validates mathematical equations in markdown files for LaTeX syntax errors.
 
 **Usage:**
+
 ```bash
 python scripts/check-equations.py
 ```
 
 ### check_qmd_citation_keys.py
+
 Scans website-facing Quarto files and fails when a bibliography citation key does
 not resolve against the document's configured bibliography files. Internal Quarto
 cross-references such as `@sec:...`, `@fig:...`, `@tbl:...`, `@eq:...`, and
 `@ch:...` are ignored.
 
 **Usage:**
+
 ```bash
 python scripts/check_qmd_citation_keys.py
 ```
@@ -82,10 +97,12 @@ python scripts/check_qmd_citation_keys.py
 **Target:** `.qmd` and `.md` files in `articles/` directory
 
 ### check_citation_resolution.py
+
 Scans website `.qmd` files and fails when citation keys do not resolve against the
 configured Quarto bibliography files for each page or book project.
 
 **Usage:**
+
 ```bash
 python scripts/check_citation_resolution.py
 ```
@@ -93,9 +110,11 @@ python scripts/check_citation_resolution.py
 **Target:** `articles/`, `books/`, `pages/`, `resources/`, and `index.qmd`
 
 ### fix_html.py
+
 Normalizes the generated wrist article HTML with repo-root-relative input and output paths.
 
 **Usage:**
+
 ```bash
 python fix_html.py --dry-run
 python fix_html.py --input content/wrist-as-universal-joint/Wrist_Universal_Claude.html
@@ -107,9 +126,11 @@ python fix_html.py --input content/wrist-as-universal-joint/Wrist_Universal_Clau
 ## Quality & Assessment Scripts
 
 ### seo_audit.py
+
 Performs comprehensive SEO audit of the generated site.
 
 **Usage:**
+
 ```bash
 python scripts/seo_audit.py
 ```
@@ -117,9 +138,11 @@ python scripts/seo_audit.py
 **Output:** SEO audit report with recommendations
 
 ### assess_repo.py
+
 Analyzes repository structure, code quality, and generates assessment reports.
 
 **Usage:**
+
 ```bash
 python scripts/assess_repo.py
 ```
@@ -127,9 +150,11 @@ python scripts/assess_repo.py
 **Output:** Assessment report in `assessments/` directory
 
 ### baseline_assessments.py
+
 Creates baseline quality metrics for tracking improvements over time.
 
 **Usage:**
+
 ```bash
 python scripts/baseline_assessments.py
 ```
@@ -137,9 +162,11 @@ python scripts/baseline_assessments.py
 **Output:** Baseline metrics in `assessments/` directory
 
 ### generate_assessment_summary.py
+
 Generates summary reports from individual assessment files.
 
 **Usage:**
+
 ```bash
 python scripts/generate_assessment_summary.py
 ```
@@ -148,9 +175,11 @@ python scripts/generate_assessment_summary.py
 **Output:** `assessments/summary.md`
 
 ### create_issues_from_assessment.py
+
 Automatically creates GitHub issues from assessment findings.
 
 **Usage:**
+
 ```bash
 python scripts/create_issues_from_assessment.py
 ```
@@ -162,36 +191,40 @@ python scripts/create_issues_from_assessment.py
 ### Typical Build Process
 
 1. **Content Updates:**
+
    ```bash
    # Check equations in articles
    python scripts/check-equations.py
-   
+
    # Scan for syntax issues
    python scripts/scan_quarto_syntax.py articles/
    ```
 
 2. **Build Site:**
+
    ```bash
    quarto render
    ```
 
 3. **Post-Build:**
+
    ```bash
    # Generate search index
    python scripts/generate_search_index.py
-   
+
    # Generate sitemap
    python scripts/generate_sitemap.py
-   
+
    # Add meta descriptions
    python scripts/add_meta_descriptions.py
    ```
 
 4. **Quality Checks:**
+
    ```bash
    # Run SEO audit
    python scripts/seo_audit.py
-   
+
    # Run repository assessment
    python scripts/assess_repo.py
    ```
