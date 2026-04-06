@@ -66,6 +66,19 @@ Validates mathematical equations in markdown files for LaTeX syntax errors.
 python scripts/check-equations.py
 ```
 
+### check_qmd_citation_keys.py
+Scans website-facing Quarto files and fails when a bibliography citation key does
+not resolve against the document's configured bibliography files. Internal Quarto
+cross-references such as `@sec:...`, `@fig:...`, `@tbl:...`, `@eq:...`, and
+`@ch:...` are ignored.
+
+**Usage:**
+```bash
+python scripts/check_qmd_citation_keys.py
+```
+
+**Target:** `articles/`, `books/`, `pages/`, `resources/`, and `index.qmd`
+
 **Target:** `.qmd` and `.md` files in `articles/` directory
 
 ### check_citation_resolution.py
