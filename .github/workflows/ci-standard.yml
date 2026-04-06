@@ -2,7 +2,7 @@ name: CI Standard
 # Refreshed to verify path resolution
 on:
   push:
-    branches: [main]
+    branches: [main, staging]
     paths-ignore:
       - "docs/**"
       - "**.md"
@@ -151,8 +151,8 @@ jobs:
           fi
       - name: Run Tests
         env:
-          PYTHONPATH: src
-        run: pytest tests/ --cov=src/tools --cov-report=xml --cov-fail-under=50 --timeout=60
+          PYTHONPATH: .
+        run: pytest tests/ --cov=src --cov-report=xml --cov-fail-under=50 --timeout=60
       - name: Critical Module Coverage Gate
         run: python3 scripts/check_critical_module_coverage.py
       - uses: codecov/codecov-action@v5

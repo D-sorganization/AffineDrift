@@ -148,9 +148,7 @@ class ProfilingReport:
         if self.memory_results:
             lines.append("--- Memory ---")
             for m in self.memory_results:
-                lines.append(
-                    f"  {m.label}: peak={m.peak_mb:.2f} MB, " f"current={m.current_mb:.2f} MB"
-                )
+                lines.append(f"  {m.label}: peak={m.peak_mb:.2f} MB, current={m.current_mb:.2f} MB")
             lines.append("")
 
         if self.benchmark_results:
