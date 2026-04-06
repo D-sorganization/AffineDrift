@@ -1,19 +1,22 @@
 # Tangent Hyperplane Framework: Complete Learning Path
+
 **A Comprehensive Guide to Nonlinear Control Through Geometric Intuition**
 
 ---
 
 ## Overview
 
-This collection presents a unified geometric framework for understanding nonlinear dynamical systems through the lens of **exact infinitesimal superposition**. The central thesis: *nonlinear systems are exactly linear at every instant—we just need to exploit that local linearity intelligently.*
+This collection presents a unified geometric framework for understanding nonlinear dynamical systems through the lens of **exact infinitesimal superposition**. The central thesis: _nonlinear systems are exactly linear at every instant—we just need to exploit that local linearity intelligently._
 
 **Target Audience:**
+
 - Graduate students in control theory, robotics, biomechanics
 - Practitioners in aerospace, robotics, sports science
 - Researchers seeking geometric intuition for optimization algorithms
 - Anyone curious about why LQR, MPC, and DDP actually work
 
 **Prerequisites:**
+
 - Linear algebra (matrices, eigenvalues, linear maps)
 - Multivariable calculus (partial derivatives, gradients)
 - Basic differential equations (first-order ODEs)
@@ -26,14 +29,18 @@ This collection presents a unified geometric framework for understanding nonline
 We provide three learning paths depending on your goals:
 
 ### Track 1: **Conceptual Understanding** (No equations)
-*Goal: Understand "why" without "how"*
+
+_Goal: Understand "why" without "how"_
+
 - Start with Layman's Terms summaries
 - Read motivational sections only
 - Skip mathematical derivations
 - **Time:** 2-3 hours
 
 ### Track 2: **Applied Practitioner** (Implement algorithms)
-*Goal: Use methods in your work*
+
+_Goal: Use methods in your work_
+
 - Read main articles, skip proofs
 - Focus on algorithm pseudocode
 - Study case studies closely
@@ -41,7 +48,9 @@ We provide three learning paths depending on your goals:
 - **Time:** 2-3 weeks
 
 ### Track 3: **Theoretical Mastery** (Full rigor)
-*Goal: Deep understanding, prepare for research*
+
+_Goal: Deep understanding, prepare for research_
+
 - Read everything including appendices
 - Work through all derivations
 - Study critical reviews
@@ -53,16 +62,19 @@ We provide three learning paths depending on your goals:
 ## Part I: Foundations (Required for All)
 
 ### 1. **Tangent_Hyperplanes_Unified_Thesis.qmd** 📘 CORE DOCUMENT
+
 **Prerequisite:** None (self-contained)
 **Difficulty:** ⭐⭐⭐ Moderate
 **Time:** 4-6 hours
 
 **What You'll Learn:**
+
 - Part I: Why tangent spaces are exact, not approximate
 - Part II: How integration preserves superposition of variations
 - Part III: How DDP/iLQR/MPC exploit this structure
 
 **Key Concepts:**
+
 - Fréchet derivative as exact infinitesimal structure
 - State transition operators
 - Residuals as manifold curvature
@@ -72,6 +84,7 @@ We provide three learning paths depending on your goals:
 **Why Start Here:** This is the comprehensive reference. Everything else builds on or extends this.
 
 **Supplementary Materials:**
+
 - `LAYMANS_TERMS_SUMMARY.md` - Non-technical overview (read first if intimidated)
 - `TECHNICAL_ASSESSMENT.md` - Quality evaluation (for advisors/reviewers)
 - `CRITICAL_REVIEW.md` - Known weaknesses and defenses
@@ -80,11 +93,13 @@ We provide three learning paths depending on your goals:
 ---
 
 ### 2. **Tangent_Hyperplanes_Golf_Application.md** 🏌️ OPTIONAL SUPPLEMENT
+
 **Prerequisite:** Unified Thesis (Part I only)
 **Difficulty:** ⭐⭐ Easy
 **Time:** 1 hour
 
 **What You'll Learn:**
+
 - Application to biomechanics (golf swing)
 - Why coaching decomposition makes mathematical sense
 - Connection to sports science
@@ -95,14 +110,16 @@ We provide three learning paths depending on your goals:
 
 ## Part II: Advanced Theory (For Deep Understanding)
 
-*After mastering Part I, these articles extend the framework in specific directions.*
+_After mastering Part I, these articles extend the framework in specific directions._
 
 ### 3. **Residual-Aware_Control.qmd** 📊 NEW
+
 **Prerequisite:** Unified Thesis (Parts I-III)
 **Difficulty:** ⭐⭐⭐⭐ Advanced
 **Time:** 3-4 hours
 
 **What You'll Learn:**
+
 - Quantitative residual bounds with explicit constants
 - Real-time residual monitoring for control switching
 - Curvature-adaptive timesteps in DDP
@@ -111,6 +128,7 @@ We provide three learning paths depending on your goals:
 **Key Innovation:** Treats residuals as **actionable control signals**, not just theoretical curiosities.
 
 **Applications:**
+
 - Quadrotor: Hover (low curvature) vs. aerobatics (high curvature)
 - Humanoid gait: Foot strike = curvature spike
 - Spacecraft: Gimbal lock = curvature singularity
@@ -118,17 +136,20 @@ We provide three learning paths depending on your goals:
 **Why Read:** Bridges theory to practice—gives you a tool (residual threshold) to decide "when do I need nonlinear methods?"
 
 **Supplementary:**
+
 - `Residual-Aware_Control_LAYMAN.md` - Accessible explanation
 - `Residual-Aware_Control_CRITIC.md` - Technical objections answered
 
 ---
 
 ### 4. **Contraction_Tangent_Unification.qmd** 🔄 NEW
+
 **Prerequisite:** Unified Thesis + familiarity with Lyapunov stability
 **Difficulty:** ⭐⭐⭐⭐⭐ Expert
 **Time:** 4-5 hours
 
 **What You'll Learn:**
+
 - Contraction theory (Lohmiller & Slotine) via tangent bundle
 - Duality: Stability (contraction) ↔ Optimality (DDP)
 - Contraction metrics as Riemannian geometry on tangent spaces
@@ -137,6 +158,7 @@ We provide three learning paths depending on your goals:
 **Key Innovation:** Shows contraction analysis and trajectory optimization are **dual perspectives** on the same geometry.
 
 **Applications:**
+
 - Proving DDP convergence for specific systems
 - Designing controllers with exponential stability guarantees
 - Understanding when LQR is globally optimal
@@ -144,17 +166,20 @@ We provide three learning paths depending on your goals:
 **Why Read:** If you know contraction theory, this shows how it fits with optimization. If you know DDP, this shows how to add stability guarantees.
 
 **Supplementary:**
+
 - `Contraction_Tangent_LAYMAN.md` - Why trajectories "forget" initial conditions
 - `Contraction_Tangent_CRITIC.md` - Comparison to standard contraction literature
 
 ---
 
 ### 5. **Hybrid_Tangent_Spaces.qmd** 🔀 NEW
+
 **Prerequisite:** Unified Thesis + basic knowledge of hybrid systems
 **Difficulty:** ⭐⭐⭐⭐ Advanced
 **Time:** 3-4 hours
 
 **What You'll Learn:**
+
 - Extending tangent space framework to discontinuous systems
 - Each mode has smooth dynamics (tangent space applies)
 - Guard conditions = tangent space jumps
@@ -164,6 +189,7 @@ We provide three learning paths depending on your goals:
 **Key Innovation:** Addresses "C¹ smoothness is unrealistic" criticism—shows framework extends to impacts, friction, switches.
 
 **Applications:**
+
 - Bipedal walking (foot strike = impact → discrete jump in tangent space)
 - Robotic grasping (contact = mode switch)
 - Chemical reactors (phase transitions = guard crossings)
@@ -171,6 +197,7 @@ We provide three learning paths depending on your goals:
 **Why Read:** Most real systems are hybrid (contact, switches, saturation). This makes the framework applicable to actual robots and biomechanics.
 
 **Supplementary:**
+
 - `Hybrid_Tangent_LAYMAN.md` - Hopping on one foot (intuitive hybrid example)
 - `Hybrid_Tangent_CRITIC.md` - Comparison to hybrid automata literature
 
@@ -208,6 +235,7 @@ We provide three learning paths depending on your goals:
 ### Order 3: **Application-Driven (Solve My Problem)**
 
 1. Identify your problem domain:
+
    - **Smooth systems (spacecraft, drones in free flight):** Unified Thesis Parts I-II, then Residual-Aware
    - **High-speed motion (golf, baseball):** Golf Application + Unified Thesis + Residual-Aware
    - **Legged robots, manipulation:** Unified Thesis + Hybrid Systems
@@ -245,14 +273,14 @@ Unified Thesis (Part I: Geometry)
 
 ## Prerequisites by Document
 
-| Document | Math Level | Control Background | Programming | Time |
-|----------|------------|-------------------|-------------|------|
-| **Layman Summaries** | None | None | None | 30 min each |
-| **Unified Thesis** | Calculus, Linear Algebra | Helpful | Optional | 4-6 hrs |
-| **Golf Application** | Basic calculus | None | None | 1 hr |
-| **Residual-Aware** | Multivariable calculus | State-space | Python recommended | 3-4 hrs |
-| **Contraction** | Real analysis, ODEs | Lyapunov theory | MATLAB/Python | 4-5 hrs |
-| **Hybrid Systems** | ODEs, Measure theory (basic) | Hybrid automata (intro) | Python + simulation | 3-4 hrs |
+| Document             | Math Level                   | Control Background      | Programming         | Time        |
+| -------------------- | ---------------------------- | ----------------------- | ------------------- | ----------- |
+| **Layman Summaries** | None                         | None                    | None                | 30 min each |
+| **Unified Thesis**   | Calculus, Linear Algebra     | Helpful                 | Optional            | 4-6 hrs     |
+| **Golf Application** | Basic calculus               | None                    | None                | 1 hr        |
+| **Residual-Aware**   | Multivariable calculus       | State-space             | Python recommended  | 3-4 hrs     |
+| **Contraction**      | Real analysis, ODEs          | Lyapunov theory         | MATLAB/Python       | 4-5 hrs     |
+| **Hybrid Systems**   | ODEs, Measure theory (basic) | Hybrid automata (intro) | Python + simulation | 3-4 hrs     |
 
 ---
 
@@ -260,17 +288,17 @@ Unified Thesis (Part I: Geometry)
 
 For when you need to remember "what was that formula?"
 
-| Concept | Equation | Document | Section |
-|---------|----------|----------|---------|
-| **Fréchet Derivative** | $f(x_0 + \delta x) = f(x_0) + A\delta x + o(\|\delta x\|)$ | Unified Thesis | Part I, Ch. 1 |
-| **Variational Dynamics** | $\delta\dot{x} = A(t)\delta x + B(t)\delta u$ | Unified Thesis | Part I, Ch. 2 |
-| **State Transition** | $\delta x(t_1) = \Phi(t_1,t_0)\delta x(t_0) + \int \Phi(t_1,\tau)B(\tau)\delta u(\tau)d\tau$ | Unified Thesis | Part II, Ch. 6 |
-| **Residual Scaling** | $\|r\| = O(\epsilon^2)$ | Unified Thesis | Part I, Ch. 4 |
-| **Quantitative Residual** | $\|r(t_1)\| \leq \frac{1}{2}\|H\|_{\max}\int \|\delta x\|^2 dt$ | Residual-Aware | Part I, Theorem 1 |
-| **Hamiltonian** | $H = L + \lambda^T f$ | Unified Thesis | Part III, Ch. 9 |
-| **DDP Q-function** | $Q_{uu} = L_{uu} + B^T P B$ | Unified Thesis | Part III, Ch. 11 |
-| **Contraction Metric** | $\dot{V} \leq -\alpha V$ | Contraction | Part I, Def. 2 |
-| **Impact Map** | $\dot{x}^+ = \Delta(\dot{x}^-)$ | Hybrid Systems | Part II, Ch. 3 |
+| Concept                   | Equation                                                                                     | Document       | Section           |
+| ------------------------- | -------------------------------------------------------------------------------------------- | -------------- | ----------------- |
+| **Fréchet Derivative**    | $f(x_0 + \delta x) = f(x_0) + A\delta x + o(\|\delta x\|)$                                   | Unified Thesis | Part I, Ch. 1     |
+| **Variational Dynamics**  | $\delta\dot{x} = A(t)\delta x + B(t)\delta u$                                                | Unified Thesis | Part I, Ch. 2     |
+| **State Transition**      | $\delta x(t_1) = \Phi(t_1,t_0)\delta x(t_0) + \int \Phi(t_1,\tau)B(\tau)\delta u(\tau)d\tau$ | Unified Thesis | Part II, Ch. 6    |
+| **Residual Scaling**      | $\|r\| = O(\epsilon^2)$                                                                      | Unified Thesis | Part I, Ch. 4     |
+| **Quantitative Residual** | $\|r(t_1)\| \leq \frac{1}{2}\|H\|_{\max}\int \|\delta x\|^2 dt$                              | Residual-Aware | Part I, Theorem 1 |
+| **Hamiltonian**           | $H = L + \lambda^T f$                                                                        | Unified Thesis | Part III, Ch. 9   |
+| **DDP Q-function**        | $Q_{uu} = L_{uu} + B^T P B$                                                                  | Unified Thesis | Part III, Ch. 11  |
+| **Contraction Metric**    | $\dot{V} \leq -\alpha V$                                                                     | Contraction    | Part I, Def. 2    |
+| **Impact Map**            | $\dot{x}^+ = \Delta(\dot{x}^-)$                                                              | Hybrid Systems | Part II, Ch. 3    |
 
 ---
 
@@ -365,19 +393,23 @@ A: CRITICS_CORNER.md Criticism #7 has detailed comparison table
 
 **Books to Read Alongside:**
 
-1. **H. K. Khalil, *Nonlinear Systems* (2002)**
+1. **H. K. Khalil, _Nonlinear Systems_ (2002)**
+
    - Chapter 4 (Lyapunov Stability) pairs with Unified Thesis Ch. 3
    - Chapter 9 (Feedback Linearization) contrasts with our "embrace nonlinearity" approach
 
-2. **S. Sastry, *Nonlinear Systems: Analysis, Stability, and Control* (1999)**
+2. **S. Sastry, _Nonlinear Systems: Analysis, Stability, and Control_ (1999)**
+
    - Chapter 2 (Mathematical Preliminaries) for differential geometry background
    - Chapter 7 (Optimal Control) for Hamiltonian formalism
 
-3. **J. M. Lee, *Introduction to Smooth Manifolds* (2012)**
+3. **J. M. Lee, _Introduction to Smooth Manifolds_ (2012)**
+
    - Chapters 3-4 (Tangent Vectors, Tangent Bundle) for geometric foundations
    - Advanced but clarifies "what is a tangent space really?"
 
-4. **V. I. Arnold, *Mathematical Methods of Classical Mechanics* (1989)**
+4. **V. I. Arnold, _Mathematical Methods of Classical Mechanics_ (1989)**
+
    - Chapter 8 (Hamiltonian Mechanics) for variational principles
    - Beautiful geometric perspective, complements Part III
 
@@ -397,23 +429,24 @@ A: CRITICS_CORNER.md Criticism #7 has detailed comparison table
 
 We use consistent notation across all articles:
 
-| Symbol | Meaning | Dimensionality |
-|--------|---------|----------------|
-| $x$ | State vector | $\mathbb{R}^n$ |
-| $u$ | Control input | $\mathbb{R}^m$ |
-| $f(x,u)$ | Vector field (dynamics) | $\mathbb{R}^n \to \mathbb{R}^n$ |
-| $A = \frac{\partial f}{\partial x}$ | State Jacobian | $\mathbb{R}^{n \times n}$ |
-| $B = \frac{\partial f}{\partial u}$ | Input Jacobian | $\mathbb{R}^{n \times m}$ |
-| $\delta x$, $\delta u$ | Infinitesimal perturbations | $\mathbb{R}^n$, $\mathbb{R}^m$ |
-| $\Phi(t_1, t_0)$ | State transition operator | $\mathbb{R}^{n \times n}$ |
-| $\lambda$ | Costate (adjoint) | $\mathbb{R}^n$ |
-| $H$ | Hamiltonian | $\mathbb{R}$ |
-| $L$ | Lagrangian (running cost) | $\mathbb{R}$ |
-| $r$ | Residual (superposition failure) | $\mathbb{R}^n$ |
-| $\epsilon$ | Perturbation magnitude | $\mathbb{R}_+$ |
-| $T_x\mathcal{M}$ | Tangent space at $x$ | Vector space $\cong \mathbb{R}^n$ |
+| Symbol                              | Meaning                          | Dimensionality                    |
+| ----------------------------------- | -------------------------------- | --------------------------------- |
+| $x$                                 | State vector                     | $\mathbb{R}^n$                    |
+| $u$                                 | Control input                    | $\mathbb{R}^m$                    |
+| $f(x,u)$                            | Vector field (dynamics)          | $\mathbb{R}^n \to \mathbb{R}^n$   |
+| $A = \frac{\partial f}{\partial x}$ | State Jacobian                   | $\mathbb{R}^{n \times n}$         |
+| $B = \frac{\partial f}{\partial u}$ | Input Jacobian                   | $\mathbb{R}^{n \times m}$         |
+| $\delta x$, $\delta u$              | Infinitesimal perturbations      | $\mathbb{R}^n$, $\mathbb{R}^m$    |
+| $\Phi(t_1, t_0)$                    | State transition operator        | $\mathbb{R}^{n \times n}$         |
+| $\lambda$                           | Costate (adjoint)                | $\mathbb{R}^n$                    |
+| $H$                                 | Hamiltonian                      | $\mathbb{R}$                      |
+| $L$                                 | Lagrangian (running cost)        | $\mathbb{R}$                      |
+| $r$                                 | Residual (superposition failure) | $\mathbb{R}^n$                    |
+| $\epsilon$                          | Perturbation magnitude           | $\mathbb{R}_+$                    |
+| $T_x\mathcal{M}$                    | Tangent space at $x$             | Vector space $\cong \mathbb{R}^n$ |
 
 **Calculus notation:**
+
 - $o(\cdot)$: Little-o (vanishes faster than argument)
 - $O(\cdot)$: Big-O (grows no faster than argument)
 - $\|\cdot\|$: Euclidean norm (2-norm)
@@ -433,6 +466,7 @@ This framework is actively evolving. Planned additions:
 5. **Application Notes:** Domain-specific guides (aerospace, biomechanics, chemical eng.)
 
 **How to contribute:**
+
 - GitHub: [D-sorganization/AffineDrift](https://github.com/D-sorganization/AffineDrift)
 - Issues: Report errors, request clarifications
 - Discussions: Ask questions, share applications
@@ -442,6 +476,7 @@ This framework is actively evolving. Planned additions:
 ## Acknowledgments
 
 This framework synthesizes ideas from:
+
 - Differential geometry (Fréchet, Lee, Arnold)
 - Nonlinear control (Kalman, Jacobson, Mayne, Sastry, Khalil)
 - Contraction theory (Lohmiller, Slotine)

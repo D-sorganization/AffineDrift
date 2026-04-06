@@ -1,4 +1,5 @@
 # In Layman's Terms: Residual-Aware Control
+
 **Target Audience:** Non-technical readers, practitioners, students
 **Source:** Residual-Aware_Control.qmd
 **Date:** January 18, 2026
@@ -24,6 +25,7 @@ If you blindly follow "drive straight," you'll drift off course. The worse the c
 **Traditional approach:** Use the simplified map anyway, accept some error, and hope it doesn't get too bad.
 
 **This article's approach:** Monitor how much you're drifting in real-time, and use that drift as a signal:
+
 - Small drift? Keep using the simple map (cheap, fast)
 - Big drift? Switch to detailed navigation (expensive, accurate)
 - Massive drift? You're on a hairpin turn—zoom in and slow down!
@@ -39,18 +41,21 @@ Here's the central idea that makes everything work:
 ### The amount you drift tells you how curvy the road is.
 
 **Straight road (low curvature):**
+
 - Your simplified map says "go straight"
 - Reality is actually straight
 - Drift = nearly zero
 - **Strategy:** Trust the simple map, drive fast and confidently
 
 **Gentle curve (moderate curvature):**
+
 - Your map says "go straight"
 - Reality curves slightly
 - Drift = small but noticeable
 - **Strategy:** Check the map more often, be ready to adjust
 
 **Hairpin turn (high curvature):**
+
 - Your map says "go straight"
 - Reality curves sharply
 - Drift = large and growing fast
@@ -66,6 +71,7 @@ In control systems, the "simplified map" is called **linearization**—treating 
 The **residual** is the drift: the difference between where the simplified (linear) model says you should be and where the complex (nonlinear) reality actually puts you.
 
 **Key discovery:** The residual isn't random noise. It's directly related to the **curvature** of the system:
+
 - Low curvature → small residuals
 - High curvature → large residuals
 
@@ -80,10 +86,12 @@ By monitoring residuals, you have a **curvature sensor** that tells you when you
 Simple controllers (like "LQR" in control theory) are cheap to compute but assume linearity. Complex controllers (like "MPC" in control theory) handle nonlinearity but are expensive.
 
 **Without residual awareness:**
+
 - Use cheap controller everywhere → fail on sharp curves
 - Use expensive controller everywhere → waste 99% of computation on straight roads
 
 **With residual awareness:**
+
 - Use cheap controller on straight sections (95% of the time)
 - Switch to expensive controller only on curves (5% of the time)
 - **Result:** 10× speedup with same accuracy
@@ -93,11 +101,13 @@ Simple controllers (like "LQR" in control theory) are cheap to compute but assum
 When planning a complex motion (like a robot backflip or a golf swing), you need to break time into steps. But how small should the steps be?
 
 **Traditional approach:**
+
 - Fixed timestep everywhere
 - Too large → inaccurate on curves
 - Too small → wasteful on straight sections
 
 **Residual-aware approach:**
+
 - Monitor predicted residuals
 - Automatically shrink timestep on curves (zoom in on the hard parts)
 - Automatically expand timestep on straight sections (zoom out on the easy parts)
@@ -109,6 +119,7 @@ When a real system deviates from your model (unexpected wind, slippery floor, wo
 
 **Traditional controller:** Doesn't notice until it's too late
 **Residual-aware controller:** Detects the spike immediately
+
 - "This drift is too large for current conditions"
 - Automatically switches to more robust mode
 - Or triggers an alert for human intervention
@@ -122,6 +133,7 @@ The article provides mathematical bounds: If the system curvature is M and you s
 **Drift ≤ (M/2) × δx² × Δt**
 
 This isn't just "probably small"—it's a **guaranteed upper limit**. You can now:
+
 - Predict maximum drift before it happens
 - Set acceptable drift thresholds for safety-critical systems
 - Certify that "drift will never exceed 5cm" for a surgical robot
@@ -137,24 +149,28 @@ This isn't just "probably small"—it's a **guaranteed upper limit**. You can no
 **Phases of motion:**
 
 **Cruising (flying straight):**
+
 - Curvature: Low (gentle, predictable motion)
 - Predicted drift: 0.01 meters
 - **Controller:** Simple LQR at 50 Hz (20ms updates)
 - **Computational cost:** 2.5 milliseconds per second
 
 **Entering the flip:**
+
 - Curvature: Moderate (starting to rotate fast)
 - Predicted drift: 0.15 meters
 - **Controller:** Switch to MPC at 100 Hz (10ms updates)
 - **Computational cost:** 5 milliseconds per second
 
 **Peak of flip (spinning 400 deg/sec):**
+
 - Curvature: High (extreme rotation in 3D space)
 - Predicted drift: 0.45 meters
 - **Controller:** Full MPC with tiny timesteps
 - **Computational cost:** 10 milliseconds per second
 
 **Recovery:**
+
 - Curvature drops → drift decreases
 - **Controller:** Automatically switches back to cheap LQR
 
@@ -169,12 +185,14 @@ This isn't just "probably small"—it's a **guaranteed upper limit**. You can no
 **Challenge:** When the robot's foot hits the ground (heel strike), there's a sudden impact—a discontinuity that breaks the smooth assumptions.
 
 **Without residual monitoring:**
+
 - Controller assumes smooth motion
 - Heel strike happens
 - Model is completely wrong for a brief moment
 - By the time error is noticed, robot is already falling
 
 **With residual monitoring:**
+
 - Controller watches drift continuously
 - Heel strike causes drift to **spike** (predicted drift ≈ 0.01, actual drift jumps to 0.5+)
 - **Immediate detection:** "Something discrete just happened"
@@ -182,6 +200,7 @@ This isn't just "probably small"—it's a **guaranteed upper limit**. You can no
 - Robot adjusts and stays balanced
 
 **Experimental result:** ATRIAS robot (60kg, 1.2m tall)
+
 - Fixed controller: 15% fall rate (3 out of 20 trials)
 - Residual-aware controller: 5% fall rate (1 out of 20 trials)
 
@@ -194,21 +213,25 @@ This isn't just "probably small"—it's a **guaranteed upper limit**. You can no
 **Challenge:** A golf swing has radically different curvature in different phases:
 
 **Backswing:** Slow, smooth motion
+
 - Curvature: Low (M ≈ 2.5)
 - Adaptive timestep: 0.02 seconds
 - Computation nodes needed: 25
 
 **Transition (top of backswing):** Changing direction
+
 - Curvature: Moderate (M ≈ 12)
 - Adaptive timestep: 0.005 seconds (4× smaller!)
 - Computation nodes needed: 40
 
 **Downswing:** Explosive acceleration
+
 - Curvature: High (M ≈ 45)
 - Adaptive timestep: 0.002 seconds (10× smaller!)
 - Computation nodes needed: 150
 
 **Impact (club hits ball in 0.5 milliseconds):**
+
 - Curvature: Extreme (M ≈ 200)
 - Adaptive timestep: 0.0002 seconds (100× smaller!)
 - Computation nodes needed: 25
@@ -218,6 +241,7 @@ This isn't just "probably small"—it's a **guaranteed upper limit**. You can no
 **Savings:** 76% reduction in computation
 
 **Performance:**
+
 - Ball speed: 71.8 m/s (adaptive) vs 72.1 m/s (uniform fine) = 99.6% accuracy
 - Computation time: 4× faster
 
@@ -230,6 +254,7 @@ This isn't just "probably small"—it's a **guaranteed upper limit**. You can no
 ### Step 1: Predict Drift
 
 Before you move, estimate how much drift you'll have:
+
 1. Measure the "curvature" of your system at your current state (how nonlinear is it right now?)
 2. Estimate how far you'll move (perturbation size)
 3. Calculate predicted drift using the relationship:
@@ -239,11 +264,13 @@ Before you move, estimate how much drift you'll have:
 ### Step 2: Set Thresholds
 
 Decide what's acceptable for your task:
+
 - Precision surgery robot: Maximum drift = 1mm
 - Delivery drone: Maximum drift = 10cm
 - Sports motion analysis: Maximum drift = 5cm
 
 Define three zones:
+
 - **Green zone:** Drift < threshold/3 → "Safe, use simple controller"
 - **Yellow zone:** Drift between threshold/3 and threshold → "Warning, increase attention"
 - **Red zone:** Drift > threshold → "Danger, switch to complex controller"
@@ -253,11 +280,13 @@ Define three zones:
 Two ways to monitor:
 
 **A) Predicted monitoring (offline planning):**
+
 - During trajectory design, calculate predicted drift at each step
 - Adjust timesteps/controller complexity accordingly
 - Build the plan with the right level of detail everywhere
 
 **B) Observed monitoring (online execution):**
+
 - As the system runs, compare:
   - Where the simple model predicted you'd be
   - Where you actually are
@@ -269,16 +298,19 @@ Two ways to monitor:
 Based on drift levels, the controller automatically:
 
 **Low drift → Efficient mode:**
+
 - Use cheap LQR controller
 - Large timesteps (fast updates)
 - Minimal computation
 
 **High drift → Careful mode:**
+
 - Use expensive MPC controller
 - Small timesteps (slow, precise updates)
 - Maximum computation
 
 **Critical drift → Emergency mode:**
+
 - Full nonlinear optimization
 - Backup safety controller ready
 - Alert human operator
@@ -294,6 +326,7 @@ The system smoothly transitions between modes with **hysteresis** (different thr
 **Answer:** Good controllers are expensive.
 
 For a quadrotor:
+
 - Simple controller (LQR): 0.01 milliseconds per update
 - Complex controller (MPC): 5-10 milliseconds per update
 
@@ -308,11 +341,13 @@ If you update at 100 Hz (every 10ms), the complex controller barely fits in real
 **Sometimes yes, sometimes no:**
 
 **Yes, if:** Motion is repeatable (robot on assembly line, choreographed drone show)
+
 - Pre-compute curvature along trajectory
 - Build adaptive plan offline
 - Execute it
 
 **No, if:** Environment is unpredictable (walking on rocky terrain, wind gusts, opponent in a game)
+
 - Can't pre-plan for unknown disturbances
 - Need real-time residual monitoring to detect "actual drift is way bigger than expected"
 - Triggers adaptation even if plan said it would be smooth
@@ -322,16 +357,19 @@ If you update at 100 Hz (every 10ms), the complex controller barely fits in real
 ### **"What if residuals are always large? Doesn't this just mean 'always use the expensive controller'?"**
 
 **Answer:** If residuals are always large, it means:
+
 1. Your system is highly nonlinear everywhere, OR
 2. Your perturbations are too large
 
 **Solutions:**
+
 - **Reduce perturbation size:** Take smaller steps (reduce timestep for planning, reduce deviation tolerance for tracking)
 - **Improve linearization points:** Relinearize more frequently (update the "tangent plane" before you drift too far)
 - **Accept complexity:** Yes, some systems need expensive methods most of the time
 
 **But:** Even then, residual monitoring helps:
-- You *know* when you're in high-curvature regions (no surprises)
+
+- You _know_ when you're in high-curvature regions (no surprises)
 - You can guarantee drift bounds (safety-critical)
 - You can diagnose problems ("Why are residuals so high? Is my model wrong?")
 
@@ -340,18 +378,21 @@ If you update at 100 Hz (every 10ms), the complex controller barely fits in real
 **Answer:** You're right—the math assumes smooth (differentiable) dynamics.
 
 **For impacts (like robot walking):**
+
 - Residuals **spike** at impact
 - Use residual spike as a **detector**: "Impact just happened"
 - Switch to hybrid system model for that moment
 - Resume smooth control after impact settles
 
 **For switches (like gear changes, valve opening):**
+
 - Separate the system into modes (gear 1, gear 2, etc.)
 - Apply residual-aware control within each mode
 - Use separate logic for mode transitions
 
 **For constraints (like joint limits, obstacles):**
-- Residual-aware control tells you *if linearization is accurate*
+
+- Residual-aware control tells you _if linearization is accurate_
 - Constraint satisfaction is a separate problem (handled by MPC formulation)
 - The two work together: residuals tell you when to switch to constrained MPC
 
@@ -368,24 +409,28 @@ This has been known for centuries (Taylor series, calculus 101).
 ### What's New:
 
 #### 1. **Quantitative Bounds**
+
 **Old:** "Error is O(δx²)" (order-of-magnitude)
 **New:** "Error ≤ (M/2) × δx² × Δt" (exact upper bound with specific constant M)
 
 **Impact:** You can now compute guaranteed maximum drift, not just estimate it's "probably small."
 
 #### 2. **Residuals as Control Signals**
+
 **Old:** Residuals are errors to minimize
 **New:** Residuals are sensors that reveal system curvature
 
 **Impact:** Shift from "fight the error" to "use the error as information."
 
 #### 3. **Adaptive Algorithms**
+
 **Old:** Fixed timestep, fixed controller
 **New:** Timestep and controller complexity adapt based on real-time residuals
 
 **Impact:** Automatic efficiency—system adjusts itself without human tuning.
 
 #### 4. **Geometric Interpretation**
+
 **Old:** Residuals are "leftover terms in Taylor series"
 **New:** Residuals measure "drift from tangent space" and quantify manifold curvature
 
@@ -396,26 +441,31 @@ This has been known for centuries (Taylor series, calculus 101).
 ## Who Should Care?
 
 ### **Robotics Engineers**
+
 - Build adaptive controllers that are fast on easy motions, careful on hard motions
 - Automatically detect contact/impact events from residual spikes
 - Guarantee tracking accuracy with quantitative bounds
 
 ### **Aerospace Engineers**
+
 - Optimize spacecraft trajectories with adaptive discretization
 - Switch between simple and complex guidance modes based on flight phase
 - Certify mission safety with residual bounds
 
 ### **Sports Scientists**
+
 - Optimize athlete motions (golf, gymnastics, throwing)
 - Automatically identify the "hard parts" of a complex motion
 - Focus training on high-curvature phases
 
 ### **Algorithm Developers**
+
 - Implement DDP/iLQR with adaptive timesteps for faster convergence
 - Build mode-switching MPC that's efficient and robust
 - Create general-purpose tools for residual monitoring
 
 ### **Students**
+
 - Understand why some phases of motion are harder to control than others
 - See the connection between calculus (second derivatives, curvature) and real systems
 - Learn a principled way to trade off computation vs. accuracy
@@ -433,6 +483,7 @@ Instead of treating everything the same, **residual-aware control** uses drift a
 - **Automatic switching:** Based on quantitative thresholds
 
 The result:
+
 - **Efficiency:** 4-10× computational speedup vs. always-careful approaches
 - **Robustness:** Early detection of model errors and disturbances
 - **Guarantees:** Quantitative bounds on tracking accuracy
@@ -444,18 +495,21 @@ This isn't magic. It's just **listening to what the system is telling you** thro
 ## Analogies to Remember
 
 ### **The GPS Navigator**
+
 - Straight highway → trust simple directions, drive fast
 - Winding mountain road → check map constantly, drive carefully
 - Hairpin turn → zoomed-in navigation, slow to a crawl
 - **Drift from straight line tells you which mode you're in**
 
 ### **The Staircase**
+
 - Each step is simple (linear: push → go up)
 - A tall building is complex (nonlinear: path spirals)
 - But climb enough simple steps → reach the top
 - **Residual = how far you drifted from straight-line prediction when you account for the twist in the stairs**
 
 ### **The Hiking Trail**
+
 - Flat meadow → big strides, don't check map every step
 - Rocky slope → small steps, watch your footing
 - Cliff edge → tiny steps, full attention

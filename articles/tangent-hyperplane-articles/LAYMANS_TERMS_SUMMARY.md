@@ -1,4 +1,5 @@
 # In Layman's Terms: Tangent Hyperplane Framework
+
 **Target Audience:** Non-technical readers, practitioners, students
 **Source:** Tangent_Hyperplanes_Unified_Thesis.qmd
 **Date:** January 18, 2026
@@ -14,6 +15,7 @@
 ## The Core Problem
 
 Imagine you're driving a car up a winding mountain road. The road curves left, then right, climbs steeply, then levels out. If someone asked you to predict exactly where you'll be in 10 minutes, that's incredibly hard because:
+
 - The steepness keeps changing
 - The curves aren't uniform
 - Your speed depends on the slope
@@ -21,9 +23,9 @@ Imagine you're driving a car up a winding mountain road. The road curves left, t
 
 This is what engineers call a **nonlinear system**—one where small changes don't have simple, predictable effects.
 
-Most real-world systems are like this: robot arms, aircraft, golf swings, chemical reactions. The traditional approach is to throw up our hands and say *"It's too complicated, let's just approximate it"* or *"Let's simulate it on a computer and hope."*
+Most real-world systems are like this: robot arms, aircraft, golf swings, chemical reactions. The traditional approach is to throw up our hands and say _"It's too complicated, let's just approximate it"_ or _"Let's simulate it on a computer and hope."_
 
-**This thesis argues:** *There's a better way.*
+**This thesis argues:** _There's a better way._
 
 ---
 
@@ -43,10 +45,11 @@ That tiny flat patch is called a **"tangent plane"** (or "tangent hyperplane" in
 ### What This Means
 
 At every moment:
+
 1. Your car sits on a little flat patch (tangent space)
 2. On that patch, normal linear rules apply: double the gas pedal → double the acceleration
-3. A split-second later, you're on a *different* flat patch (the tangent space has moved)
-4. But at *that* new moment, linear rules apply again—just with different numbers
+3. A split-second later, you're on a _different_ flat patch (the tangent space has moved)
+4. But at _that_ new moment, linear rules apply again—just with different numbers
 
 **The whole journey** is you hopping from one linear snapshot to the next, each one perfectly simple, even though the overall path is complex.
 
@@ -58,7 +61,8 @@ At every moment:
 
 Linear systems are easy to work with. Engineers have powerful tools (like "LQR controllers" and "Riccati equations") that only work on linear systems.
 
-**The breakthrough:** Since the system is linear *at each instant*, we can:
+**The breakthrough:** Since the system is linear _at each instant_, we can:
+
 - Use those simple tools repeatedly at each moment
 - String the results together to control the nonlinear system
 
@@ -67,6 +71,7 @@ It's like solving 1,000 easy problems instead of one impossible problem.
 ### 2. **We Can Predict Errors**
 
 When you "linearize" (replace the curve with a straight line), you make an error. But this framework tells you:
+
 - The error is **quadratic**: If you double your step size, the error goes up 4×
 - The error comes from **curvature**: Sharper curves = bigger errors
 - You can **measure** the error and decide if it's acceptable
@@ -86,8 +91,9 @@ Many control techniques (like gain scheduling, model predictive control, traject
 **The Problem:** The arm has 6 joints. Each joint's torque affects all the others (because of momentum, gravity, and geometry). It's massively nonlinear.
 
 **The Tangent Space Solution:**
+
 1. **Right now**, the arm is at a specific position
-2. At that position, we compute the "tangent plane"—the exact linear rules for how torques affect motion *right now*
+2. At that position, we compute the "tangent plane"—the exact linear rules for how torques affect motion _right now_
 3. We calculate the optimal torques using simple linear math
 4. The arm moves a tiny bit
 5. Repeat from step 1
@@ -99,6 +105,7 @@ Many control techniques (like gain scheduling, model predictive control, traject
 **The Problem:** Orbital mechanics are complex. Thrust in one direction causes rotation. Rotation affects trajectory. Everything couples.
 
 **The Tangent Space Solution:**
+
 1. **Right now**, the spacecraft has a position and velocity
 2. At that state, the dynamics are linear: thrust → acceleration is a simple relationship
 3. We compute the optimal thrust using that local linear model
@@ -112,6 +119,7 @@ Many control techniques (like gain scheduling, model predictive control, traject
 **Golf Swing:** A coach breaks the swing into pieces: "Work on your backswing. Now work on your downswing. Now work on your follow-through."
 
 **Why this makes sense mathematically:**
+
 - At each phase of the swing, different muscles dominate
 - At each phase, the motion is approximately linear (small changes in torque → proportional changes in speed)
 - By fixing each phase independently, you're effectively linearizing around different points on the swing trajectory
@@ -125,6 +133,7 @@ This isn't just intuition—it's **mathematically justified** by the tangent spa
 ### Part I: **Geometry** (Why it works)
 
 Explains **why** tangent spaces are exact, not approximate. Uses pictures and analogies to show:
+
 - A tangent plane is the "best flat approximation" to a curvy surface
 - At the limit (infinitesimally small), it's **perfect**, not approximate
 - The rules of calculus guarantee this
@@ -142,6 +151,7 @@ Shows what happens when you **add up** lots of tiny linear steps to get a full t
 ### Part III: **Algorithms** (How to actually do it)
 
 Provides concrete algorithms for:
+
 - **DDP/iLQR:** Trajectory optimization by solving a sequence of local LQR problems
 - **MPC:** Real-time control by re-planning at every step
 - **Case studies:** Spacecraft, robot arms, drones
@@ -154,7 +164,7 @@ Provides concrete algorithms for:
 
 ### **"But linearization is an approximation!"**
 
-**Answer:** The derivative (the tangent space) is **exact**. What's approximate is using the tangent space to predict behavior *far away* from the point. But if you only step a tiny bit, or if you re-linearize constantly, the approximation error is negligible.
+**Answer:** The derivative (the tangent space) is **exact**. What's approximate is using the tangent space to predict behavior _far away_ from the point. But if you only step a tiny bit, or if you re-linearize constantly, the approximation error is negligible.
 
 Think of it like a map: A flat map of the Earth is "wrong" globally, but a street map of your neighborhood is "exact enough" for walking around the block.
 
@@ -167,6 +177,7 @@ It's like climbing stairs: Each step is small and linear, but you can climb a ta
 ### **"What about discontinuous systems? Impacts? Switches?"**
 
 **Answer:** The framework requires smooth dynamics ($C^1$—continuously differentiable). For impacts or switches, you'd need to:
+
 - Treat each mode separately
 - Use different techniques (like hybrid automata) at the switching points
 
@@ -179,6 +190,7 @@ The thesis is clear about this limit.
 **Not the math**—linearization and Jacobians have been around for centuries.
 
 **What's new:**
+
 1. **The framing:** Calling it "exact infinitesimal structure" instead of "first-order approximation" changes how people think about it
 2. **The unification:** Showing that LQR, MPC, DDP, gain scheduling, and even some stability proofs all use the same underlying idea
 3. **The pedagogy:** Making the geometric picture (moving tangent spaces) central, not just algebraic manipulations
@@ -190,7 +202,7 @@ The thesis is clear about this limit.
 ## Who Should Care?
 
 - **Students:** Understand control theory deeply, not just memorize formulas
-- **Engineers:** Design better controllers by understanding *why* methods work
+- **Engineers:** Design better controllers by understanding _why_ methods work
 - **Researchers:** See connections between disparate fields (geometry, dynamics, optimization)
 - **Coaches/practitioners:** Justify decomposition strategies (breaking complex motions into components)
 
