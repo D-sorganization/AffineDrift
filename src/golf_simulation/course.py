@@ -58,6 +58,16 @@ class GolfHole:
         check_range(self.handicap, 1, 18, "handicap")
         check_positive(self.green_radius, "green_radius")
 
+    @property
+    def pin_x(self) -> float:
+        """X coordinate of the pin position in meters."""
+        return self.pin_position[0]
+
+    @property
+    def pin_y(self) -> float:
+        """Y coordinate of the pin position in meters."""
+        return self.pin_position[1]
+
     def distance_to_pin(self, x: float, y: float) -> float:
         """Compute horizontal distance from (x, y) to the pin in meters.
 

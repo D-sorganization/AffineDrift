@@ -133,6 +133,16 @@ class SwingOptimizer:
             self._Q[i, i] = 1.0
         self._Q_f = config.terminal_weight * self._Q
 
+    def _build_target_state(self) -> np.ndarray[Any, Any]:
+        """Build the target state vector (zeros for positions, target_velocity for velocities).
+
+        Returns:
+            Target state vector of dimension ``state_dim``.
+        """
+        x_target = np.zeros(self._config.state_dim)
+        x_target[self._config.n_joints :] = self._config.target_velocity
+        return x_target
+
     @property
     def config(self) -> SwingOptimizationConfig:
         """Return the optimizer's configuration (read-only)."""
@@ -190,10 +200,7 @@ class SwingOptimizer:
             "control",
         )
 
-        # Build the target state (zeros for positions, target_velocity for velocities)
-        x_target = np.zeros(self._config.state_dim)
-        x_target[self._config.n_joints :] = self._config.target_velocity
-
+        x_target = self._build_target_state()
         dx = state - x_target
         state_cost = float(dx @ self._Q @ dx)
         control_cost = float(control @ self._R @ control)
@@ -217,9 +224,7 @@ class SwingOptimizer:
         check_finite_array(state, "state")
         check_shape(state, (self._config.state_dim,), "state")
 
-        x_target = np.zeros(self._config.state_dim)
-        x_target[self._config.n_joints :] = self._config.target_velocity
-
+        x_target = self._build_target_state()
         dx = state - x_target
         cost = float(dx @ self._Q_f @ dx)
         ensure(cost >= -EPSILON, "terminal cost must be non-negative", cost)
@@ -269,8 +274,7 @@ class SwingOptimizer:
             Tuple of (x_target, u_init) where x_target is the desired terminal
             state and u_init is the zero initial control sequence.
         """
-        x_target = np.zeros(cfg.state_dim)
-        x_target[cfg.n_joints :] = cfg.target_velocity
+        x_target = self._build_target_state()
         u_init = np.zeros((cfg.horizon_steps, cfg.control_dim))
         return x_target, u_init
 

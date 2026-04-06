@@ -10,7 +10,12 @@ from __future__ import annotations
 import logging
 import math
 
-from src.core.constants import GRAVITY_M_S2
+from src.core.constants import (
+    GRAVITY_M_S2,
+    HOLE_CAPTURE_SPEED_MS,
+    REGULATION_HOLE_RADIUS_M,
+    STIMPMETER_CALIBRATION_FACTOR,
+)
 from src.core.contracts import check_positive, check_range, require
 
 logger = logging.getLogger(__name__)
@@ -192,7 +197,7 @@ class PuttingSimulator:
         self,
         surface: GreenSurface,
         dt: float = 0.001,
-        hole_radius: float = 0.054,
+        hole_radius: float = REGULATION_HOLE_RADIUS_M,
     ) -> None:
         """Initialize putting simulator.
 
@@ -264,7 +269,7 @@ class PuttingSimulator:
         check_positive(max_time, "max_time")
 
         x, y, vx, vy = start_x, start_y, velocity_x, velocity_y
-        deceleration = 1.285 / self.surface.stimp
+        deceleration = STIMPMETER_CALIBRATION_FACTOR / self.surface.stimp
         trajectory: list[tuple[float, float]] = [(x, y)]
         t = 0.0
 
@@ -308,6 +313,4 @@ class PuttingSimulator:
         speed = math.sqrt(vx * vx + vy * vy)
 
         # Ball must be within hole radius and slow enough to drop in
-        # Maximum capture speed: ~1.5 m/s (empirical)
-        max_capture_speed = 1.5
-        return dist <= self.hole_radius and speed < max_capture_speed
+        return dist <= self.hole_radius and speed < HOLE_CAPTURE_SPEED_MS
