@@ -169,24 +169,32 @@ export function initCodeCopy() {
  * Initialize form accessibility features
  */
 export function initFormAccessibility() {
-    const requiredInputs = document.querySelectorAll(
-        "input[required], textarea[required], select[required]"
-    );
-    requiredInputs.forEach((input) => {
-        if (input.id) {
-            const label = document.querySelector(`label[for="${input.id}"]`);
-            if (label && !label.querySelector(".required-indicator")) {
-                const indicator = document.createElement("span");
-                indicator.className = "required-indicator";
-                indicator.textContent = " *";
-                indicator.style.color = "var(--accent-blue)";
-                indicator.style.fontWeight = "bold";
-                indicator.setAttribute("aria-hidden", "true");
-                indicator.title = "Required field";
-                label.appendChild(indicator);
-            }
+    // ⚡ Bolt Optimization: Use getElementsByTagName and input.labels instead of querySelectorAll for O(1) live collection iteration and label access
+    const processInput = (input) => {
+        if (!input.required) return;
+
+        let label = null;
+        if (input.labels && input.labels.length > 0) {
+            label = input.labels[0];
+        } else if (input.id) {
+            label = document.querySelector(`label[for="${input.id}"]`);
         }
-    });
+
+        if (label && !label.querySelector(".required-indicator")) {
+            const indicator = document.createElement("span");
+            indicator.className = "required-indicator";
+            indicator.textContent = " *";
+            indicator.style.color = "var(--accent-blue)";
+            indicator.style.fontWeight = "bold";
+            indicator.setAttribute("aria-hidden", "true");
+            indicator.title = "Required field";
+            label.appendChild(indicator);
+        }
+    };
+
+    for (const input of document.getElementsByTagName("input")) processInput(input);
+    for (const textarea of document.getElementsByTagName("textarea")) processInput(textarea);
+    for (const select of document.getElementsByTagName("select")) processInput(select);
 }
 
 /**

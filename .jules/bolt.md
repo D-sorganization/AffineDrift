@@ -53,3 +53,11 @@
 ## 2024-05-26 - DOM Creation vs Regex String Replacement for Escaping
 **Learning:** Using `document.createElement("div")` to escape HTML strings incurs significant memory allocation and layout thrashing, especially in hot loops generating large lists. This is incredibly slow compared to native string operations.
 **Action:** When escaping HTML in JavaScript, especially in loops, use regular expression string replacements (e.g., `.replace(/&/g, "&amp;")`) instead of creating dummy DOM elements to avoid layout thrashing and severe memory allocation overhead.
+
+## 2024-05-27 - Input Labels O(1) Property
+**Learning:** Using `document.querySelector('label[for="..."]')` to find a label for an input is an O(N) operation that requires parsing a CSS selector and traversing the DOM. However, standard inputs have an O(1) built-in property `input.labels` that returns a `NodeList` of associated labels (both explicit via `for` and implicit via wrapping).
+**Action:** When finding the `<label>` associated with an `<input>` element, always use the `input.labels` property instead of querying the DOM.
+
+## 2024-05-28 - Global Input Iteration Fallbacks
+**Learning:** While iterating over `document.forms` and `form.elements` seems like a clean way to find all inputs without `querySelectorAll`, it ignores standalone inputs that are not wrapped in a `<form>` tag.
+**Action:** When optimizing global DOM queries for form inputs, prefer iterating over live collections like `document.getElementsByTagName('input')`, `textarea`, and `select` rather than nested `document.forms` loops to ensure no elements are missed.
