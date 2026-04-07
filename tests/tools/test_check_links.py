@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 
 from src.tools.check_links import (
+    LinkResolutionContext,
     _is_broken_link,
     _should_scan_file,
     check_links,
@@ -143,6 +144,14 @@ class TestIsBrokenLink:
         f = tmp_path / "page.qmd"
         result = _is_broken_link(root_path=tmp_path, file_path=f, link="target.qmd")
         assert result is False
+
+    def test_html_link_resolves_via_context_facade(self, tmp_path: Path) -> None:
+        """The link-resolution facade should treat HTML links as source-backed pages."""
+        section_dir = tmp_path / "guide"
+        section_dir.mkdir()
+        (section_dir / "index.qmd").write_text("guide", encoding="utf-8")
+        context = LinkResolutionContext(root_path=tmp_path, source_file=tmp_path / "page.qmd")
+        assert context.is_broken("guide/index.html") is False
 
 
 class TestCheckLinks:
