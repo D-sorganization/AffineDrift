@@ -655,7 +655,7 @@ def _build_comprehensive_report(scores: dict[str, dict[str, Any]], final_grade: 
     return "\n".join(lines) + "\n"
 
 
-def main():
+def main() -> None:
     """Execute the full repository assessment and generate reports."""
     root = Path.cwd()
     py_files = get_python_files(root)
