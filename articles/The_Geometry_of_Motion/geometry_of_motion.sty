@@ -4,6 +4,10 @@
 \RequirePackage{xcolor}
 \RequirePackage{listings}
 \RequirePackage{bm}
+\RequirePackage{float}
+\RequirePackage{enumitem}
+\RequirePackage[most]{tcolorbox}
+\tcbuselibrary{theorems, breakable, skins}
 
 \makeatletter
 \newcommand{\gomdefinecolorifmissing}[3]{%
@@ -108,5 +112,43 @@
   \@ifundefined{definition}{\newtheorem{definition}[theorem]{Definition}}{}%
   \@ifundefined{example}{\newtheorem{example}[theorem]{Example}}{}%
   \@ifundefined{remark}{\newtheorem{remark}[theorem]{Remark}}{}%
+  \makeatother
+}
+
+\newcommand{\gomdeclarealgorithms}{%
+  \makeatletter
+  \@ifundefined{c@algorithm}{%
+    \newfloat{algorithm}{htbp}{loa}[chapter]%
+    \floatname{algorithm}{Algorithm}%
+  }{}%
+  \@ifundefined{algorithmic}{%
+    \newenvironment{algorithmic}[1][]{%
+      \begin{enumerate}[label=\arabic*:,leftmargin=2em]
+    }{%
+      \end{enumerate}
+    }%
+  }{}%
+  \providecommand{\STATE}{\item}%
+  \providecommand{\State}{\item}%
+  \providecommand{\REQUIRE}{\item[\textbf{Require:}]}%
+  \providecommand{\Require}{\item[\textbf{Require:}]}%
+  \providecommand{\ENSURE}{\item[\textbf{Ensure:}]}%
+  \providecommand{\Ensure}{\item[\textbf{Ensure:}]}%
+  \providecommand{\FOR}[1]{\item \textbf{for} ##1 \textbf{do}}%
+  \providecommand{\For}[1]{\item \textbf{for} ##1 \textbf{do}}%
+  \providecommand{\ENDFOR}{\item \textbf{end for}}%
+  \providecommand{\EndFor}{\item \textbf{end for}}%
+  \providecommand{\IF}[1]{\item \textbf{if} ##1 \textbf{then}}%
+  \providecommand{\If}[1]{\item \textbf{if} ##1 \textbf{then}}%
+  \providecommand{\ELSE}{\item \textbf{else}}%
+  \providecommand{\Else}{\item \textbf{else}}%
+  \providecommand{\ENDIF}{\item \textbf{end if}}%
+  \providecommand{\EndIf}{\item \textbf{end if}}%
+  \providecommand{\WHILE}[1]{\item \textbf{while} ##1 \textbf{do}}%
+  \providecommand{\While}[1]{\item \textbf{while} ##1 \textbf{do}}%
+  \providecommand{\ENDWHILE}{\item \textbf{end while}}%
+  \providecommand{\EndWhile}{\item \textbf{end while}}%
+  \providecommand{\RETURN}[1]{\item \textbf{return} ##1}%
+  \providecommand{\Return}[1]{\item \textbf{return} ##1}%
   \makeatother
 }
