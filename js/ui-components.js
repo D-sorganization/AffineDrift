@@ -29,18 +29,19 @@ export function initFadeAnimations() {
             });
         }, observerOptions);
 
-        const sectionsToAnimate = document.querySelectorAll(
-            "section:not(.page-header):not(.article-section)"
-        );
+        // ⚡ Bolt Optimization: Use getElementsByTagName (O(1)) and manual filtering instead of global querySelectorAll (O(N))
+        const allSections = document.getElementsByTagName("section");
         const animationStates = [];
 
-        sectionsToAnimate.forEach((section) => {
-            const rect = section.getBoundingClientRect();
-            animationStates.push({
-                section,
-                shouldAnimate: rect.top > window.innerHeight,
-            });
-        });
+        for (const section of allSections) {
+            if (!section.classList.contains("page-header") && !section.classList.contains("article-section")) {
+                const rect = section.getBoundingClientRect();
+                animationStates.push({
+                    section,
+                    shouldAnimate: rect.top > window.innerHeight,
+                });
+            }
+        }
 
         animationStates.forEach(({ section, shouldAnimate }) => {
             if (shouldAnimate) {
