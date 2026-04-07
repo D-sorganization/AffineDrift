@@ -61,3 +61,7 @@
 ## 2024-05-28 - Global Input Iteration Fallbacks
 **Learning:** While iterating over `document.forms` and `form.elements` seems like a clean way to find all inputs without `querySelectorAll`, it ignores standalone inputs that are not wrapped in a `<form>` tag.
 **Action:** When optimizing global DOM queries for form inputs, prefer iterating over live collections like `document.getElementsByTagName('input')`, `textarea`, and `select` rather than nested `document.forms` loops to ensure no elements are missed.
+
+## 2026-04-07 - Layout Thrashing in DOM Initialization
+**Learning:** Interleaving layout reads (like `getComputedStyle`) and DOM mutations (`insertBefore`, `appendChild`) inside a loop causes forced synchronous layout (Layout Thrashing), severely impacting the main thread during initialization.
+**Action:** When iterating over elements that require layout checks before DOM modification, always batch the reads into a separate array or phase before performing the writes.
