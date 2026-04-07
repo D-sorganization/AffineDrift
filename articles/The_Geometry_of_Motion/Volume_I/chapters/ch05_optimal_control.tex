@@ -410,6 +410,58 @@ successive linearization:
 \end{algorithmic}
 \end{algorithm}
 
+\subsection{Implementation Ladder}
+
+The large DDP loop becomes easier to implement and debug when broken into two reusable subroutines: a backward pass that computes local quadratic models and gains, and a globalization wrapper that decides whether a candidate step is trustworthy.
+
+\begin{algorithm}[htbp]
+\caption{Discrete Riccati Backward Pass for iLQR / DDP}
+\label{alg:ch5:riccati-backward-pass}
+\begin{algorithmic}[1]
+\Require Linearized dynamics $(\mat{A}_k, \mat{B}_k)$, quadraticized cost terms, terminal Hessian $\mat{S}_T$, regularization $\mu$.
+\Ensure Feedback gains $\mat{K}_k$, feedforward steps $\vec{k}_k$, and updated value Hessians $\mat{S}_k$.
+\State Set $\mat{S}_T \gets \nabla_{\x \x}^2 \ell_T(\bar\x_T)$ and $\vec{s}_T \gets \nabla_{\x} \ell_T(\bar\x_T)$.
+\For{$k = T-1, T-2, \ldots, 0$}
+  \State Assemble the local Q-function blocks:
+  \State \quad $Q_{k,\uu} \gets \mat{R}_k + \mat{B}_k^\T \mat{S}_{k+1} \mat{B}_k + \mu \mat{I}$
+  \State \quad $Q_{k,\ux} \gets \mat{N}_k + \mat{B}_k^\T \mat{S}_{k+1} \mat{A}_k$
+  \State \quad $Q_{k,\u} \gets \vec{r}_k + \mat{B}_k^\T \vec{s}_{k+1}$
+  \State Check that $Q_{k,\uu}$ is positive definite; if not, increase $\mu$ and restart.
+  \State Compute the local policy:
+  \State \quad $\vec{k}_k \gets -Q_{k,\uu}^{-1} Q_{k,\u}$
+  \State \quad $\mat{K}_k \gets -Q_{k,\uu}^{-1} Q_{k,\ux}$
+  \State Update the quadratic model of the cost-to-go:
+  \State \quad $\vec{s}_k \gets Q_{k,\x} + \mat{K}_k^\T Q_{k,\uu} \vec{k}_k + \mat{K}_k^\T Q_{k,\u} + Q_{k,\ux}^\T \vec{k}_k$
+  \State \quad $\mat{S}_k \gets Q_{k,\xx} + \mat{K}_k^\T Q_{k,\uu} \mat{K}_k + \mat{K}_k^\T Q_{k,\ux} + Q_{k,\ux}^\T \mat{K}_k$
+\EndFor
+\Return $\{\vec{k}_k, \mat{K}_k, \mat{S}_k\}_{k=0}^{T-1}$
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[htbp]
+\caption{Globalized iLQR / DDP Step Acceptance}
+\label{alg:ch5:ddp-globalization}
+\begin{algorithmic}[1]
+\Require Nominal trajectory $(\bar\x_k, \bar\uvec_k)$, local policy $(\vec{k}_k, \mat{K}_k)$, trial step sizes $\alpha$, regularization $\mu$.
+\Ensure Accepted trajectory update or a regularization increase.
+\For{each trial step size $\alpha \in \{1, 1/2, 1/4, \ldots, \alpha_{\min}\}$}
+  \State Reset $x_0 \gets \bar\x_0$.
+  \For{$k = 0, 1, \ldots, T-1$}
+    \State Form the trial control:
+    \State \quad $\uvec_k^{\text{trial}} \gets \bar\uvec_k + \alpha \vec{k}_k + \mat{K}_k (x_k - \bar\x_k)$
+    \State Propagate the nonlinear dynamics: $x_{k+1} \gets f(x_k, \uvec_k^{\text{trial}})$.
+  \EndFor
+  \State Evaluate the realized cost decrease $\Delta J_{\text{actual}}$.
+  \If{$\Delta J_{\text{actual}}$ is sufficiently negative}
+    \State Decrease $\mu$ and accept the trial trajectory.
+    \Return Accepted update.
+  \EndIf
+\EndFor
+\State Increase $\mu$ and repeat the backward pass around the same nominal trajectory.
+\Return No acceptable step found at the current regularization.
+\end{algorithmic}
+\end{algorithm}
+
 \subsection{iLQR Variant}
 
 The iterative LQR (iLQR) simplifies the backward pass by setting $Q_{k,\xu} = \mat{B}_k^\T\mat{S}_{k+1}\mat{A}_k$
