@@ -18,6 +18,7 @@ import re
 import sys
 from pathlib import Path
 
+from scripts.cli_output import write_stderr, write_stdout
 from src.core.contracts import require
 
 # ─── type mapping ─────────────────────────────────────────────────────────────
@@ -97,9 +98,9 @@ def _entry_to_bibtex(entry: dict) -> str:  # type: ignore[type-arg]
 # ─── main ─────────────────────────────────────────────────────────────────────
 
 
-def main() -> int:
+def main(repo_root: Path | None = None) -> int:
     """Convert bibliography.json to references/affine-drift.bib."""
-    repo_root = Path(__file__).resolve().parent.parent
+    repo_root = repo_root or Path(__file__).resolve().parent.parent
     bib_json = repo_root / "data" / "bibliography.json"
     out_dir = repo_root / "references"
     out_path = out_dir / "affine-drift.bib"
@@ -108,10 +109,7 @@ def main() -> int:
 
     entries = json.loads(bib_json.read_text(encoding="utf-8"))
     if not isinstance(entries, list):
-        print(
-            f"ERROR: bibliography.json must be a list, got {type(entries).__name__}",
-            file=sys.stderr,
-        )
+        write_stderr(f"ERROR: bibliography.json must be a list, got {type(entries).__name__}")
         return 1
 
     out_dir.mkdir(exist_ok=True)
@@ -127,7 +125,7 @@ def main() -> int:
         lines.append("")
 
     out_path.write_text("\n".join(lines), encoding="utf-8")
-    print(f"Wrote {len(entries)} entries to {out_path}")
+    write_stdout(f"Wrote {len(entries)} entries to {out_path}")
     return 0
 
 

@@ -15,6 +15,8 @@ from pathlib import Path
 
 import yaml
 
+from scripts.cli_output import write_stdout
+
 ROOT = Path(__file__).parent.parent
 ARTICLES_DIR = ROOT / "articles"
 REQUIRED_FIELDS = {"title"}
@@ -28,7 +30,7 @@ EXCLUDE_DIRS = {
 }
 
 
-def parse_frontmatter(content: str) -> dict:
+def parse_frontmatter(content: str) -> dict[str, object]:
     """Extract and parse YAML frontmatter from a QMD file."""
     if not content.startswith("---"):
         return {}
@@ -36,9 +38,14 @@ def parse_frontmatter(content: str) -> dict:
     if end == -1:
         return {}
     try:
-        return yaml.safe_load(content[3:end]) or {}
+        parsed = yaml.safe_load(content[3:end]) or {}
     except yaml.YAMLError:
         return {}
+
+    if not isinstance(parsed, dict):
+        return {}
+
+    return parsed
 
 
 def should_skip(path: Path) -> bool:
@@ -69,9 +76,10 @@ def validate_file(path: Path) -> list[str]:
     return errors
 
 
-def main() -> int:
+def main(articles_dir: Path | None = None) -> int:
     """Run frontmatter validation; return exit code."""
-    qmd_files = sorted(ARTICLES_DIR.rglob("*.qmd"))
+    target_articles_dir = articles_dir or ARTICLES_DIR
+    qmd_files = sorted(target_articles_dir.rglob("*.qmd"))
     errors = []
 
     for qmd in qmd_files:
@@ -80,12 +88,12 @@ def main() -> int:
         errors.extend(validate_file(qmd))
 
     if errors:
-        print("Frontmatter validation FAILED:")
+        write_stdout("Frontmatter validation FAILED:")
         for e in errors:
-            print(f"  {e}")
+            write_stdout(f"  {e}")
         return 1
 
-    print(f"Frontmatter validation passed ({len(qmd_files)} files checked).")
+    write_stdout(f"Frontmatter validation passed ({len(qmd_files)} files checked).")
     return 0
 
 
