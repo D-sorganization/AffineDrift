@@ -67,8 +67,7 @@ class LinkResolutionContext:
     def is_html_target_resolvable(self, target_path: Path) -> bool:
         """Return whether an HTML link maps to a supported source or output artifact."""
         if any(
-            self.path_exists(candidate)
-            for candidate in self._html_candidate_paths(target_path)
+            self.path_exists(candidate) for candidate in self._html_candidate_paths(target_path)
         ):
             return True
         return target_path.is_dir() and self.path_exists(target_path / "index.qmd")
