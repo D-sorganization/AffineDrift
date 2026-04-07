@@ -27,8 +27,8 @@
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.6                                            |
-| **Spec Version**        | 1.0.16                                           |
-| **Last Spec Update**    | 2026-04-06                                       |
+| **Spec Version**        | 1.0.17                                           |
+| **Last Spec Update**    | 2026-04-07                                       |
 
 ## 2. Purpose & Mission
 
@@ -145,32 +145,32 @@ AffineDrift/
 
 ### Core Features
 
-| #   | Feature                                 | Status | Description                                                                                                                                                                                   |
-| --- | --------------------------------------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| F1  | Quarto Website Rendering and Deployment | ✅     | Renders Quarto markdown (.qmd) source files into static HTML and deploys to GitHub Pages                                                                                                      |
-| F2  | Affine Control Theory Swing Optimizer   | ✅     | Implements DDP and iLQR algorithms to optimize golf swing trajectories as affine controllable systems                                                                                         |
-| F3  | Tangent Space and Hyperplane Models     | ✅     | Provides mathematical models for tangent space methods with educational examples                                                                                                              |
-| F4  | Interactive JavaScript Visualizations   | ✅     | Rotation converter, search interface, and mathematical visualization components                                                                                                               |
-| F5  | Mathematical Notation Rendering         | ✅     | Supports MathJax and KaTeX for rendering LaTeX equations in web content, with `ui/lazy` enabled for performance                                                                               |
-| F6  | Property-Based Testing with Hypothesis  | ✅     | Comprehensive property-based testing strategy using Hypothesis framework                                                                                                                      |
-| F7  | CSS Budget Enforcement                  | ✅     | Automated CI enforcement of CSS file size limits to maintain performance                                                                                                                      |
-| F8  | Mirror Validation                       | ✅     | Ensures duplicate stylesheets match canonical versions across the codebase                                                                                                                    |
-| F9  | GitHub Actions Automation               | ✅     | 54 CI/CD workflows including Jules automation agents for code analysis and deployment                                                                                                         |
-| F10 | Progressive Web App Support             | ✅     | Service worker and manifest for PWA capabilities (offline access, installability)                                                                                                             |
-| F11 | Textbook Compilation Pipeline           | ✅     | Quarto pipeline to compile educational materials into publishable textbook format                                                                                                             |
-| F12 | Textbook claim guardrail                | ✅     | PR CI blocks newly added unsupported quantitative or study claims in textbook content unless they include a citation or an explicit illustrative caveat                                       |
-| F13 | PR site-build and dependency-audit gate | ✅     | `ci-standard.yml` audits Python dependencies with `pip-audit`, renders the Quarto site in PR CI, syncs frontend assets, and runs Playwright smoke tests against the generated docs            |
-| F14 | Bibliography duplicate-alias guardrail  | ✅     | Reference-integrity tests require duplicate bibliography records to carry an explicit legacy-compatibility note instead of silently diverging                                                 |
-| F15 | Textbook bibliography synchronization   | ✅     | The Geometry of Motion and The Physics of Golf keep chapter-level citations synchronized with shared bibliography sources in `references/affine-drift.bib` and the book-specific `.bib` files |
-| F16 | Website citation-resolution guardrail   | ✅     | PR CI scans website `.qmd` sources, resolves their configured bibliography files, and fails when citation keys do not map to a known bibliography entry                                       |
+| #   | Feature                                 | Status | Description                                                                                                                                                                                                                                |
+| --- | --------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| F1  | Quarto Website Rendering and Deployment | ✅     | Renders Quarto markdown (.qmd) source files into static HTML and deploys to GitHub Pages                                                                                                                                                   |
+| F2  | Affine Control Theory Swing Optimizer   | ✅     | Implements DDP and iLQR algorithms to optimize golf swing trajectories as affine controllable systems                                                                                                                                      |
+| F3  | Tangent Space and Hyperplane Models     | ✅     | Provides mathematical models for tangent space methods with educational examples                                                                                                                                                           |
+| F4  | Interactive JavaScript Visualizations   | ✅     | Rotation converter, search interface, and mathematical visualization components                                                                                                                                                            |
+| F5  | Mathematical Notation Rendering         | ✅     | Supports MathJax and KaTeX for rendering LaTeX equations in web content, with `ui/lazy` enabled for performance                                                                                                                            |
+| F6  | Property-Based Testing with Hypothesis  | ✅     | Comprehensive property-based testing strategy using Hypothesis framework                                                                                                                                                                   |
+| F7  | CSS Budget Enforcement                  | ✅     | Automated CI enforcement of CSS file size limits to maintain performance                                                                                                                                                                   |
+| F8  | Mirror Validation                       | ✅     | Ensures duplicate stylesheets match canonical versions across the codebase                                                                                                                                                                 |
+| F9  | GitHub Actions Automation               | ✅     | 54 CI/CD workflows including Jules automation agents for code analysis and deployment                                                                                                                                                      |
+| F10 | Progressive Web App Support             | ✅     | Service worker and manifest for PWA capabilities (offline access, installability)                                                                                                                                                          |
+| F11 | Textbook Compilation Pipeline           | ✅     | Quarto pipeline to compile educational materials into publishable textbook format                                                                                                                                                          |
+| F12 | Textbook claim guardrail                | ✅     | PR CI blocks newly added unsupported quantitative or study claims in textbook content unless they include a citation or an explicit illustrative caveat                                                                                    |
+| F13 | PR site-build and dependency-audit gate | ✅     | `ci-standard.yml` audits Python dependencies with blocking `pip-audit`, measures coverage across the full `src/` tree, renders the Quarto site in PR CI, syncs frontend assets, and runs Playwright smoke tests against the generated docs |
+| F14 | Bibliography duplicate-alias guardrail  | ✅     | Reference-integrity tests require duplicate bibliography records to carry an explicit legacy-compatibility note instead of silently diverging                                                                                              |
+| F15 | Textbook bibliography synchronization   | ✅     | The Geometry of Motion and The Physics of Golf keep chapter-level citations synchronized with shared bibliography sources in `references/affine-drift.bib` and the book-specific `.bib` files                                              |
+| F16 | Website citation-resolution guardrail   | ✅     | PR CI scans website `.qmd` sources, resolves their configured bibliography files, and fails when citation keys do not map to a known bibliography entry                                                                                    |
 
 ### API / Interface Contract
 
 **Python API:**
 
 - `affine_control.swing_optimizer.SwingOptimizer` — Main optimization interface
-  - Constructor permits a missing solver for inspection/tests but emits a warning and binds the documented mock implementation
-  - `optimize(...)` rejects the mock solver unless `SwingOptimizationConfig.allow_mock_solver=True`
+  - Constructor requires a real `ddp_solver` unless `SwingOptimizationConfig.allow_mock_solver=True` explicitly opts into the documented mock implementation for test-only usage
+  - `optimize(...)` may execute the mock solver only after that explicit opt-in
   - `optimize(swing_model, constraints) -> OptimizedTrajectory` — Run trajectory optimization
 - `core.optimizers.iLQR` — iLQR solver
   - `solve(dynamics, cost_fn, initial_trajectory) -> Solution` — Compute optimal trajectory
@@ -269,12 +269,12 @@ AffineDrift follows a **test pyramid** strategy: unit tests form the base (fast,
 
 ### Coverage Requirements
 
-| Scope           | Minimum | Current | Enforced By                |
-| --------------- | ------- | ------- | -------------------------- |
-| Overall src/    | 50%     | ~50%    | CI (`--cov-fail-under=50`) |
-| affine_control/ | 70%     | ~70%    | CI                         |
-| core/           | 70%     | ~70%    | CI                         |
-| tools/          | 60%     | ~60%    | CI                         |
+| Scope           | Minimum | Current | Enforced By                                 |
+| --------------- | ------- | ------- | ------------------------------------------- |
+| Overall src/    | 50%     | ~90%    | CI (`pytest --cov=src --cov-fail-under=50`) |
+| affine_control/ | 70%     | ~70%    | Critical module coverage gate               |
+| core/           | 70%     | ~70%    | Critical module coverage gate               |
+| tools/          | 60%     | ~90%    | CI plus critical module coverage gate       |
 
 ### Required Test Scenarios
 
@@ -316,16 +316,16 @@ AffineDrift follows a **test pyramid** strategy: unit tests form the base (fast,
 
 ### CI/CD Pipeline
 
-| Workflow                  | Trigger         | Purpose                                                                    | Blocking?          |
-| ------------------------- | --------------- | -------------------------------------------------------------------------- | ------------------ |
-| `ci-standard.yml`         | Push/PR to main | Lint, type-check, dependency audit, site render, E2E smoke tests, coverage | Yes                |
-| `deploy-website.yml`      | Merge to main   | Build Quarto site, deploy to GitHub Pages                                  | Yes                |
-| `test-coverage.yml`       | Push/PR         | Report coverage metrics                                                    | Yes (50% minimum)  |
-| `link-check.yml`          | Push/PR         | Validate all links in content                                              | Yes                |
-| `css-budget.yml`          | Push/PR         | Enforce CSS file size limits                                               | Yes                |
-| `module-size-budget.yml`  | Push/PR         | Enforce Python module complexity                                           | Yes                |
-| `dry-tracker.yml`         | Nightly         | Identify code duplication patterns                                         | No (informational) |
-| `Jules automation agents` | Various         | Automated code review, refactoring suggestions                             | No (informational) |
+| Workflow                  | Trigger         | Purpose                                                                                         | Blocking?          |
+| ------------------------- | --------------- | ----------------------------------------------------------------------------------------------- | ------------------ |
+| `ci-standard.yml`         | Push/PR to main | Lint, type-check, blocking dependency audit, full-`src/` coverage, site render, E2E smoke tests | Yes                |
+| `deploy-website.yml`      | Merge to main   | Build Quarto site, deploy to GitHub Pages                                                       | Yes                |
+| `test-coverage.yml`       | Push/PR         | Report coverage metrics                                                                         | Yes (50% minimum)  |
+| `link-check.yml`          | Push/PR         | Validate all links in content                                                                   | Yes                |
+| `css-budget.yml`          | Push/PR         | Enforce CSS file size limits                                                                    | Yes                |
+| `module-size-budget.yml`  | Push/PR         | Enforce Python module complexity                                                                | Yes                |
+| `dry-tracker.yml`         | Nightly         | Identify code duplication patterns                                                              | No (informational) |
+| `Jules automation agents` | Various         | Automated code review, refactoring suggestions                                                  | No (informational) |
 
 ## 9. Dependencies
 
@@ -435,6 +435,7 @@ python src/tools/code_quality_ast.py
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                      |
 | ---------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-04-07 | 1.0.17  | fix(ci): documented the explicit `SwingOptimizer` mock-solver opt-in at construction time, widened `ci-standard.yml` coverage enforcement to the full `src/` tree, and made the main `pip-audit` gate blocking                                                                                                                                                               |
 | 2026-04-05 | 1.0.15  | security(xss): Prevented XSS in polynomial evaluation by explicitly stripping allowed math variables/functions and validating the remainder strictly via regex before `new Function` evaluation in `grip_angle_simulator.html`                                                                                                                                               |
 | 2026-04-06 | 1.0.16  | ci(content): added citation-resolution checks for website `.qmd` sources, covering root and nested Quarto bibliography files and excluding Quarto cross-references from unresolved-key failures                                                                                                                                                                              |
 | 2026-04-04 | 1.0.13  | security(xss): Fixed XSS vulnerability in `notes-workspace.js` by avoiding `document.write` with string interpolation and safely assigning `value` property                                                                                                                                                                                                                  |
