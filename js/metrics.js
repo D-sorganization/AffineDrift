@@ -215,7 +215,7 @@
                 <div class="metrics-item">
                   <span class="item-name" title="${escapeHtml(
                     entry.title,
-                  )}">${truncate(entry.title, 40)}</span>
+                  )}">${escapeHtml(truncate(entry.title, 40))}</span>
                   <span class="item-count">${entry.count}</span>
                 </div>
               `,

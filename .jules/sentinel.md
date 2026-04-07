@@ -12,3 +12,8 @@
 **Vulnerability:** Found a DOM-based XSS vulnerability in `js/history.js` where URLs retrieved from `localStorage` were directly assigned to anchor `href` properties.
 **Learning:** `localStorage` is an untrusted sink that can be polluted by other scripts or extensions on the same domain. Assigning arbitrary data from it to active properties like `href` allows injection of `javascript:` payloads.
 **Prevention:** Always validate and sanitize URLs before assigning them to `href` attributes (e.g., ensuring they do not start with `javascript:`).
+
+## 2026-04-07 - Prevent DOM-based XSS in Truncated Strings
+**Vulnerability:** DOM-based XSS via unescaped truncated user input in the metrics widget.
+**Learning:** When preparing user-controlled strings for display, wrapping them in helper functions like `truncate()` does not sanitize them. If the resulting truncated string is injected into HTML without escaping, it can execute malicious payloads.
+**Prevention:** Always escape the final string immediately before injecting it into the DOM, even if it has passed through other formatting or utility functions like `truncate()`. Example: `${escapeHtml(truncate(userInput, 40))}`.
