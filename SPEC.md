@@ -27,7 +27,7 @@
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.17                                           |
+| **Spec Version**        | 1.0.22                                           |
 | **Last Spec Update**    | 2026-04-07                                       |
 
 ## 2. Purpose & Mission
@@ -115,6 +115,7 @@ AffineDrift/
 ├── scripts/                     # Content and repository maintenance utilities
 │   ├── check_bibliography_quality.py # Bibliography structure and metadata validation
 │   ├── check_qmd_citation_keys.py    # Quarto citation-key integrity scan for site content
+│   ├── cli_output.py                 # Explicit stdout/stderr helpers for intentional CLI contracts
 │   └── README.md                # Script usage and CI-facing documentation
 ├── tests/                       # Additional test organization
 │   └── e2e/                     # End-to-end Playwright tests
@@ -166,6 +167,11 @@ AffineDrift/
 | F16 | Website citation-resolution guardrail   | ✅     | PR CI scans website `.qmd` sources, resolves their configured bibliography files, and fails when citation keys do not map to a known bibliography entry                                                                                    |
 | F17 | Textbook algorithm convention sharing   | ✅     | `geometry_of_motion.sty` exposes shared algorithm and pseudocode primitives so implementation-oriented chapters use one consistent notation and formatting style                                 |
 | F18 | Textbook applied-optimization guidance  | ✅     | Volume I and Volume II include implementation-grade pseudocode for DDP/iLQR, direct collocation, funnel synthesis, ILC, and trajectory-library adaptation, plus a bounded treatment of evolutionary search |
+| F19 | Script CLI output contracts             | ✅     | Maintenance scripts route intentional terminal output through `scripts/cli_output.py`, making stdout/stderr behavior explicit and easier to test without weakening logging semantics |
+| F20 | RL benchmark modular split              | ✅     | `src/tools/rl_funnel_benchmark.py` now stays under the repo file-size budget by delegating dynamics, controllers, and simulation concerns to focused helper modules while preserving the benchmark module's public API |
+| F21 | Tooling Demeter facades                 | ✅     | Link and site-health utilities isolate DOM/path traversal behind small façade objects so repository-governance checks depend on narrower interfaces instead of nested reach-through |
+| F22 | Wrist-model Qt module split             | ✅     | The legacy `content/wrist-as-universal-joint/Universal_Joint_Model_Enhanced.py` launcher now delegates geometry, kinematics, Qt canvas rendering, and window assembly to focused modules under `src/tools/wrist_universal_joint`, keeping the entrypoint thin while preserving its public surface |
+| F23 | Analysis helper fallback logging        | ✅     | `src/tools/utils/analysis_utils.py` logs recoverable parse and file-read failures at debug level when it falls back to zeroed or empty analysis results, keeping repository-quality scans observable without turning invalid files into hard failures |
 
 ### API / Interface Contract
 
@@ -191,6 +197,7 @@ AffineDrift/
 - `link-checker.py` — Validate all documentation links
 - `site-health.py` — Generate health report on website assets
 - `code-quality-ast.py` — Analyze Python code structure and metrics
+- `scripts/cli_output.py` — Shared helper for scripts that intentionally emit user-facing stdout/stderr lines as part of their CLI contract
 
 **Website (HTTP):**
 
@@ -438,6 +445,8 @@ python src/tools/code_quality_ast.py
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                      |
 | ---------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-04-07 | 1.0.19  | chore(types): annotated the remaining public Python functions in `src/` and `scripts/`, added an AST regression test to keep return annotations from drifting, and closed the final actionable slice of assessment issue #2241 after auditing stale print/config findings                                                                                                     |
+| 2026-04-07 | 1.0.18  | fix(scripts): replaced remaining raw script-level `print()` calls with explicit stdout/stderr helpers, made maintenance scripts import-safe with `main()` entry points, and added CLI-output regression tests for the affected utilities                                                                                                                                       |
 | 2026-04-07 | 1.0.17  | fix(ci): documented the explicit `SwingOptimizer` mock-solver opt-in at construction time, widened `ci-standard.yml` coverage enforcement to the full `src/` tree, and made the main `pip-audit` gate blocking                                                                                                                                                               |
 | 2026-04-05 | 1.0.15  | security(xss): Prevented XSS in polynomial evaluation by explicitly stripping allowed math variables/functions and validating the remainder strictly via regex before `new Function` evaluation in `grip_angle_simulator.html`                                                                                                                                               |
 | 2026-04-06 | 1.0.16  | ci(content): added citation-resolution checks for website `.qmd` sources, covering root and nested Quarto bibliography files and excluding Quarto cross-references from unresolved-key failures                                                                                                                                                                              |
