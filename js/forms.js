@@ -67,14 +67,18 @@ export function initEmailCopy() {
  * Initialize responsive table wrappers
  */
 export function initResponsiveTables() {
-    const tables = document.querySelectorAll("#quarto-document-content table");
+    const container = document.getElementById("quarto-document-content");
+    if (!container) return;
+
+    // ⚡ Bolt Optimization: Scope tag lookup to specific container instead of global querySelectorAll (O(N))
+    const tables = container.getElementsByTagName("table");
     const tableUsedIds = new Set();
 
     // ⚡ Bolt Optimization: Batch DOM reads (getComputedStyle) and writes (insertBefore/appendChild) separately to eliminate forced synchronous layout (Layout Thrashing)
     const tablesToWrap = [];
 
     // Phase 1: Read Layout
-    tables.forEach((table) => {
+    Array.from(tables).forEach((table) => {
         const parent = table.parentElement;
         if (
             parent.classList.contains("table-wrapper") ||
