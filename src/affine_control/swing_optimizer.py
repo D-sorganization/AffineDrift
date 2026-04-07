@@ -123,8 +123,11 @@ class SwingOptimizer:
             type(config).__name__,
         )
         self._config = config
-        self._using_mock = ddp_solver is None
-        if self._using_mock:
+        solver: Callable[
+            ..., tuple[np.ndarray[Any, Any], np.ndarray[Any, Any], np.ndarray[Any, Any]]
+        ]
+        if ddp_solver is None:
+            self._using_mock = True
             require(
                 config.allow_mock_solver,
                 "Mock DDP solver requires allow_mock_solver=True in config. "
@@ -137,9 +140,11 @@ class SwingOptimizer:
                 UserWarning,
                 stacklevel=2,
             )
-            self._ddp_solver = adaptive_timestep_ddp_mock
+            solver = adaptive_timestep_ddp_mock
         else:
-            self._ddp_solver = ddp_solver
+            self._using_mock = False
+            solver = ddp_solver
+        self._ddp_solver = solver
         self._R = config.control_weight * np.eye(config.control_dim)
         self._Q = np.zeros((config.state_dim, config.state_dim))
         # Penalize velocity deviations (second half of state vector)
