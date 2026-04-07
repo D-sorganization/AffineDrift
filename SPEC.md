@@ -169,6 +169,7 @@ AffineDrift/
 | F18 | Textbook applied-optimization guidance  | ✅     | Volume I and Volume II include implementation-grade pseudocode for DDP/iLQR, direct collocation, funnel synthesis, ILC, and trajectory-library adaptation, plus a bounded treatment of evolutionary search |
 | F19 | Script CLI output contracts             | ✅     | Maintenance scripts route intentional terminal output through `scripts/cli_output.py`, making stdout/stderr behavior explicit and easier to test without weakening logging semantics |
 | F20 | RL benchmark modular split              | ✅     | `src/tools/rl_funnel_benchmark.py` now stays under the repo file-size budget by delegating dynamics, controllers, and simulation concerns to focused helper modules while preserving the benchmark module's public API |
+| F21 | Tooling Demeter facades                 | ✅     | Link and site-health utilities isolate DOM/path traversal behind small façade objects so repository-governance checks depend on narrower interfaces instead of nested reach-through |
 
 ### API / Interface Contract
 
