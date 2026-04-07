@@ -297,15 +297,11 @@ def _build_signal_group(window: Any, main_layout: QVBoxLayout) -> None:
     signal_layout.addLayout(noise_layout)
 
     poly_layout = QHBoxLayout()
-    window.polynomial_label = QLabel(
-        'Polynomial (e.g., "t**2 + 2*t - 1" or "t**3 - 0.5*t"):'
-    )
+    window.polynomial_label = QLabel('Polynomial (e.g., "t**2 + 2*t - 1" or "t**3 - 0.5*t"):')
     window.polynomial_label.setStyleSheet("font-size: 11pt; font-weight: bold;")
     poly_layout.addWidget(window.polynomial_label)
     window.polynomial_input = QLineEdit()
-    window.polynomial_input.setPlaceholderText(
-        "Enter polynomial expression using t as variable"
-    )
+    window.polynomial_input.setPlaceholderText("Enter polynomial expression using t as variable")
     window.polynomial_input.setText("t**2 - t")
     window.polynomial_input.setVisible(False)
     window.polynomial_input.textChanged.connect(window.update_polynomial_signal)
