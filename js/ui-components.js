@@ -162,6 +162,7 @@ export function initBackToTop() {
     <svg class="back-to-top-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
       <path d="M12 4l-8 8h6v8h4v-8h6z"/>
     </svg>
+    <span class="tooltip">Back to top</span>
   `;
     document.body.appendChild(backToTopBtn);
 

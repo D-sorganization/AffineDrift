@@ -74,6 +74,10 @@ export function initResponsiveTables() {
     const tables = container.getElementsByTagName("table");
     const tableUsedIds = new Set();
 
+    // ⚡ Bolt Optimization: Batch DOM reads (getComputedStyle) and writes (insertBefore/appendChild) separately to eliminate forced synchronous layout (Layout Thrashing)
+    const tablesToWrap = [];
+
+    // Phase 1: Read Layout
     Array.from(tables).forEach((table) => {
         const parent = table.parentElement;
         if (
@@ -83,7 +87,11 @@ export function initResponsiveTables() {
         ) {
             return;
         }
+        tablesToWrap.push(table);
+    });
 
+    // Phase 2: Mutate DOM
+    tablesToWrap.forEach((table) => {
         const wrapper = document.createElement("div");
         wrapper.className = "table-wrapper";
         wrapper.setAttribute("tabindex", "0");
