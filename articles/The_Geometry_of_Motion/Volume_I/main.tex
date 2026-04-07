@@ -26,40 +26,11 @@
 \usepackage{listings}
 \usepackage{../geometry_of_motion}
 \usepackage{array}
+\gomdeclarealgorithms
 
 %% ---------- Lists ----------
 \usepackage{enumitem}
 
-%% ---------- Algorithms (lightweight replacement) ----------
-%% Note: Volume 0 defines a different 'algorithmic' env (monospace wrapper).
-%% If compiling the series as a single document, use \gomdeclaretheorems from
-%% geometry_of_motion.sty and load the algorithmic package instead.
-\usepackage{float}
-\newfloat{algorithm}{htbp}{loa}
-\floatname{algorithm}{Algorithm}
-\newenvironment{algorithmic}[1][]{\begin{enumerate}[label=\arabic*:,leftmargin=2em]}{\end{enumerate}}
-\newcommand{\STATE}{\item}
-\newcommand{\State}{\item}
-\newcommand{\REQUIRE}{\item[\textbf{Require:}]}
-\newcommand{\Require}{\item[\textbf{Require:}]}
-\newcommand{\ENSURE}{\item[\textbf{Ensure:}]}
-\newcommand{\Ensure}{\item[\textbf{Ensure:}]}
-\newcommand{\FOR}[1]{\item \textbf{for} #1 \textbf{do}}
-\newcommand{\For}[1]{\item \textbf{for} #1 \textbf{do}}
-\newcommand{\ENDFOR}{\item \textbf{end for}}
-\newcommand{\EndFor}{\item \textbf{end for}}
-\newcommand{\IF}[1]{\item \textbf{if} #1 \textbf{then}}
-\newcommand{\If}[1]{\item \textbf{if} #1 \textbf{then}}
-\newcommand{\ELSE}{\item \textbf{else}}
-\newcommand{\Else}{\item \textbf{else}}
-\newcommand{\ENDIF}{\item \textbf{end if}}
-\newcommand{\EndIf}{\item \textbf{end if}}
-\newcommand{\WHILE}[1]{\item \textbf{while} #1 \textbf{do}}
-\newcommand{\While}[1]{\item \textbf{while} #1 \textbf{do}}
-\newcommand{\ENDWHILE}{\item \textbf{end while}}
-\newcommand{\EndWhile}{\item \textbf{end while}}
-\newcommand{\RETURN}[1]{\item \textbf{return} #1}
-\newcommand{\Return}[1]{\item \textbf{return} #1}
 \gomapplylistingstyle
 
 %% ---------- Headers and footers ----------
@@ -92,7 +63,6 @@
 }
 
 %% ---------- Colored boxes for remarks, intuition, etc. ----------
-\usepackage[most]{tcolorbox}
 
 \newtcolorbox{intuitionbox}[1][]{%
   colback=blue!5!white,

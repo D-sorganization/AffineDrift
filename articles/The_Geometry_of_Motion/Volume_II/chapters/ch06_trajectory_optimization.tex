@@ -127,6 +127,35 @@ where $\tilde{\state}$ and $\tilde{\control}$ are the polynomial approximations.
   Direct collocation results in a massive, highly sparse NLP. Because the solver has access to the state at every grid point simultaneously, it can easily manipulate the physical trajectory to satisfy difficult path constraints without waiting to "simulate" the result. Collocation is widely considered the state-of-the-art for generating complex dynamic motions like walking, jumping, and swinging.
 \end{keyidea}
 
+\subsection{Implementation Sketch: Moving-Target Direct Collocation}
+
+For readers who want a concrete recipe, the moving-target OCP can be translated into a collocation program with only a few repeating ingredients: mesh nodes, defect constraints, terminal manifold constraints, and a continuation strategy for difficult initial guesses.
+
+\begin{algorithm}[htbp]
+\caption{Moving-Target Direct Collocation Workflow}
+\label{alg:ch6:moving-target-collocation}
+\begin{algorithmic}[1]
+\Require Initial state $\state_0$, dynamics $\dot{\state} = \bm{f}(\state, \control)$, running cost $L$, terminal manifold $\psi(\state(t_f)) = \bm{0}$, mesh size $N$.
+\Ensure A feasible trajectory $\traj^*(t)$ and control schedule $\control^*(t)$.
+\State Choose a normalized mesh $\tau_k \in [0, 1]$ and treat $t_f$ as a decision variable.
+\State Parameterize $\tilde{\state}(\tau)$ and $\tilde{\control}(\tau)$ by spline or polynomial coefficients.
+\State Initialize the decision vector with a dynamically plausible warm start.
+\For{each mesh interval $k = 0, 1, \ldots, N-1$}
+  \State Add collocation defects enforcing $t_f \, \frac{\dd \tilde{\state}}{\dd \tau} - \bm{f}(\tilde{\state}, \tilde{\control}) = \bm{0}$.
+  \State Add path constraints $\bm{h}(\tilde{\state}, \tilde{\control}) \leq \bm{0}$ at nodes or quadrature points.
+\EndFor
+\State Add the terminal manifold constraint $\psi(\tilde{\state}(1)) = \bm{0}$.
+\State Approximate the objective with quadrature:
+\State \quad $J \approx \phi(\tilde{\state}(1)) + t_f \sum_k w_k L(\tilde{\state}(\tau_k), \tilde{\control}(\tau_k))$.
+\While{the NLP residuals or defect norms remain too large}
+  \State Solve the sparse NLP.
+  \State If convergence stalls, refine the mesh or relax the terminal target and continue homotopically.
+\EndWhile
+\State Reintegrate the optimized control on the full nonlinear dynamics to verify that the defects predict a true trajectory.
+\Return The verified trajectory, control history, and terminal time.
+\end{algorithmic}
+\end{algorithm}
+
 % ══════════════════════════════════════════════
 \section{Optimizing Underactuated Geometries}
 % ══════════════════════════════════════════════
@@ -169,6 +198,44 @@ To solve this in a collocation framework without massive Monte Carlo simulations
 The optimizer is now forced to "widen the funnel" as it approaches the moving goal. It sacrifices a small amount of peak clubhead speed to select a trajectory geometry where the passive dynamics are heavily stabilizing in the transverse direction. The result is a trajectory that a human can actually \emph{repeat}.
 
 % ══════════════════════════════════════════════
+\section{Evolutionary Methods as Complementary Optimizers}
+% ══════════════════════════════════════════════
+
+Gradient-based transcription methods remain the primary tools of this book because they exploit analytic structure, expose multipliers and costates, and integrate naturally with the Riccati and funnel machinery developed elsewhere. Even so, there are important regimes where \textbf{evolutionary} or \textbf{genetic} methods are valuable companions rather than competitors.
+
+When the control policy is low-dimensional, the cost landscape is badly nonconvex, or contact-rich simulation makes derivatives unreliable, practitioners often turn to genetic algorithms, evolution strategies, differential evolution, or cross-entropy style search \cite{Goldberg1989,StornPrice1997,HansenOstermeier2001}. These methods optimize a population of candidate trajectories or policy parameters by repeatedly scoring, selecting, mutating, and recombining them.
+
+\begin{remark}{Where Evolutionary Search Fits}{evolutionary_fit}
+  In the Control Is Motion framework, evolutionary methods are best viewed as \emph{outer-loop search tools}. They are useful for generating warm starts, choosing high-level swing style parameters, tuning phase transitions, or exploring discontinuous task families where gradient information is poor. Once a promising family of motions has been discovered, direct collocation, DDP, and funnel verification should still be used to refine and certify the motion.
+\end{remark}
+
+\begin{algorithm}[htbp]
+\caption{Population-Based Search for a Swing Parameterization}
+\label{alg:ch6:evolutionary-search}
+\begin{algorithmic}[1]
+\Require Policy or trajectory parameterization $\bm{\theta}$, simulator, population size $M$, elite count $M_e$.
+\Ensure A high-performing parameter vector $\bm{\theta}^\star$ that can seed a local optimizer.
+\State Sample an initial population $\{\bm{\theta}^{(m)}\}_{m=1}^M$ around a biomechanically plausible nominal swing.
+\For{generation $g = 1, 2, \ldots, G$}
+  \For{each candidate $\bm{\theta}^{(m)}$}
+    \State Simulate the full swing and score terminal speed, impact feasibility, and repeatability.
+    \State Reject candidates that violate hard constraints or miss the terminal manifold.
+  \EndFor
+  \State Rank the feasible population by objective value.
+  \State Keep the top $M_e$ elites.
+  \State Generate the next population by mutation, recombination, or covariance adaptation around the elites.
+\EndFor
+\State Select the best feasible candidate $\bm{\theta}^\star$.
+\State Use $\bm{\theta}^\star$ to initialize direct collocation or DDP for high-accuracy refinement.
+\Return $\bm{\theta}^\star$
+\end{algorithmic}
+\end{algorithm}
+
+\begin{keyidea}{Global Search, Local Certification}{global_search_local_certification}
+  A genetic or evolutionary method can help \emph{find} a promising family of motions, but it does not by itself explain why the motion is stable or repeatable. The book's geometric pipeline remains: search globally if needed, then refine locally with derivatives, and finally certify robustness with funnels or covariance analysis.
+\end{keyidea}
+
+% ══════════════════════════════════════════════
 \section{Summary}
 % ══════════════════════════════════════════════
 
@@ -183,6 +250,7 @@ The optimizer is now forced to "widen the funnel" as it approaches the moving go
   Direct Collocation & Representing the entire trajectory as splines and enforcing dynamics algebraically at discrete points arrayed along the trajectory. \\
   Passive Exploitation & Solvers naturally optimize underactuated topologies by weaponizing coupling matrices ($M_{21}, C_2$). \\
   Stochastic Robustness & Augmenting the OCP with expected variance to ensure the resulting trajectory can be consistently executed by noisy nonlinear plants. \\
+  Evolutionary Search & A derivative-free outer loop for discovering warm starts or task-family parameters before derivative-based refinement. \\
   \bottomrule
 \end{tabular}
 \end{center}
@@ -212,4 +280,3 @@ Determining the shape of the reference trajectory is the cornerstone of Control 
   The perfect motion is rarely the fastest.\\
   It is the one that survives reality.}
 \end{center}
-

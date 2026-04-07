@@ -26,7 +26,7 @@
 | **Owner**               | D-sorganization                                  |
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
-| **Current Version**     | 1.0.6                                            |
+| **Current Version**     | 1.0.7                                            |
 | **Spec Version**        | 1.0.17                                           |
 | **Last Spec Update**    | 2026-04-07                                       |
 
@@ -44,6 +44,7 @@ AffineDrift is a research platform that explores golf swing biomechanics through
 - Achieve and maintain >50% test coverage with property-based testing (Hypothesis) across all critical modules
 - Provide comprehensive educational resources that bridge control theory and applied biomechanics
 - Maintain textbook bibliographies and chapter citations with explicit scientific sourcing for biomechanics, multibody dynamics, geometry, and control-theory claims
+- Present the textbook volumes with shared algorithm and pseudocode conventions so implementation guidance is consistent across the series
 
 ### Non-Goals
 
@@ -163,6 +164,8 @@ AffineDrift/
 | F14 | Bibliography duplicate-alias guardrail  | ✅     | Reference-integrity tests require duplicate bibliography records to carry an explicit legacy-compatibility note instead of silently diverging                                                                                              |
 | F15 | Textbook bibliography synchronization   | ✅     | The Geometry of Motion and The Physics of Golf keep chapter-level citations synchronized with shared bibliography sources in `references/affine-drift.bib` and the book-specific `.bib` files                                              |
 | F16 | Website citation-resolution guardrail   | ✅     | PR CI scans website `.qmd` sources, resolves their configured bibliography files, and fails when citation keys do not map to a known bibliography entry                                                                                    |
+| F17 | Textbook algorithm convention sharing   | ✅     | `geometry_of_motion.sty` exposes shared algorithm and pseudocode primitives so implementation-oriented chapters use one consistent notation and formatting style                                 |
+| F18 | Textbook applied-optimization guidance  | ✅     | Volume I and Volume II include implementation-grade pseudocode for DDP/iLQR, direct collocation, funnel synthesis, ILC, and trajectory-library adaptation, plus a bounded treatment of evolutionary search |
 
 ### API / Interface Contract
 
