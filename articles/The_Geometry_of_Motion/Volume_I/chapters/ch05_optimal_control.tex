@@ -424,15 +424,15 @@ The large DDP loop becomes easier to implement and debug when broken into two re
 \For{$k = T-1, T-2, \ldots, 0$}
   \State Assemble the local Q-function blocks:
   \State \quad $Q_{k,\uu} \gets \mat{R}_k + \mat{B}_k^\T \mat{S}_{k+1} \mat{B}_k + \mu \mat{I}$
-  \State \quad $Q_{k,\ux} \gets \mat{N}_k + \mat{B}_k^\T \mat{S}_{k+1} \mat{A}_k$
-  \State \quad $Q_{k,\u} \gets \vec{r}_k + \mat{B}_k^\T \vec{s}_{k+1}$
+  \State \quad $Q_{k,\xu} \gets \mat{N}_k + \mat{B}_k^\T \mat{S}_{k+1} \mat{A}_k$
+  \State \quad $Q_{k,\mathbf{u}} \gets \vec{r}_k + \mat{B}_k^\T \vec{s}_{k+1}$
   \State Check that $Q_{k,\uu}$ is positive definite; if not, increase $\mu$ and restart.
   \State Compute the local policy:
-  \State \quad $\vec{k}_k \gets -Q_{k,\uu}^{-1} Q_{k,\u}$
-  \State \quad $\mat{K}_k \gets -Q_{k,\uu}^{-1} Q_{k,\ux}$
+  \State \quad $\vec{k}_k \gets -Q_{k,\uu}^{-1} Q_{k,\mathbf{u}}$
+  \State \quad $\mat{K}_k \gets -Q_{k,\uu}^{-1} Q_{k,\xu}$
   \State Update the quadratic model of the cost-to-go:
-  \State \quad $\vec{s}_k \gets Q_{k,\x} + \mat{K}_k^\T Q_{k,\uu} \vec{k}_k + \mat{K}_k^\T Q_{k,\u} + Q_{k,\ux}^\T \vec{k}_k$
-  \State \quad $\mat{S}_k \gets Q_{k,\xx} + \mat{K}_k^\T Q_{k,\uu} \mat{K}_k + \mat{K}_k^\T Q_{k,\ux} + Q_{k,\ux}^\T \mat{K}_k$
+  \State \quad $\vec{s}_k \gets Q_{k,\x} + \mat{K}_k^\T Q_{k,\uu} \vec{k}_k + \mat{K}_k^\T Q_{k,\mathbf{u}} + Q_{k,\xu}^\T \vec{k}_k$
+  \State \quad $\mat{S}_k \gets Q_{k,\xx} + \mat{K}_k^\T Q_{k,\uu} \mat{K}_k + \mat{K}_k^\T Q_{k,\xu} + Q_{k,\xu}^\T \mat{K}_k$
 \EndFor
 \Return $\{\vec{k}_k, \mat{K}_k, \mat{S}_k\}_{k=0}^{T-1}$
 \end{algorithmic}
