@@ -21,13 +21,13 @@ format:
   <div class="laymans-terms-content">
     <div class="laymans-terms-inner">
       <p class="laymans-terms-intro">
-        Theory is great, but does it actually work? Part V tests the math using a sophisticated computer simulation.
+        Theory is great, but can we implement it without breaking the math? Part V checks the theory in a computer simulation and asks whether the numerical machinery behaves the way the equations say it should.
       </p>
 
       <div class="laymans-item">
         <h3>The "Flight Simulator" for Golf</h3>
         <p>
-          We built a digital model of a golfer and club (using a tool called Simulink) to act as a proving ground. It allows us to perform experiments that would be impossible in real life—like instantaneously turning off a golfer's muscles to see what happens.
+          We built a digital model of a golfer and club (using a tool called Simulink) to act as a proving ground. It allows us to perform model-based experiments that would be impossible in real life—like instantaneously turning off the simulated driving torques to see what happens.
         </p>
         <div class="analogy">
           <strong>Analogy:</strong> Before a pilot flies a new plane, they test it in a simulator. We simulate the "crash" scenarios (like the ZTCF) here to ensure the math holds up under stress.
@@ -37,10 +37,10 @@ format:
       <div class="laymans-item">
         <h3>The Kill Switch Experiment</h3>
         <p>
-          We ran a "kill switch" test: at various points in the downswing, we cut the power to the virtual golfer's muscles.
+          We ran a "kill switch" test: at various points in the downswing, we cut the simulated driving torques.
         </p>
         <div class="key-takeaway">
-          The result? The club kept moving violently due to momentum. This confirms that late in the swing, the "passive" forces (Drift) are massive—often larger than what the golfer can actively produce.
+          The result? In the simulation, the club kept moving violently due to momentum. This shows that, within the planar model, late-swing drift forces can remain large even after the simulated driving torques are removed.
         </div>
       </div>
 
@@ -66,7 +66,7 @@ This numerical validation is restricted to planar motion and cannot verify 3D gy
 
 The mathematical derivations in Part IV confirmed that the affine control structure holds exactly for idealized mechanical systems. However, real-world application requires more than algebraic correctness; it requires numerical robustness. The golf swing involves stiff differential equations, high-speed gyroscopic coupling, and rapid transient loading of the flexible shaft. It is not immediately obvious that the delicate subtraction operations required for the ZTCF and ZVCF counterfactuals will remain stable and accurate in a discrete-time simulation environment.
 
-Specifically, while the equation $\tau_{\text{input}} = \tau_{\text{total}} - \tau_{\text{drift}}$ is algebraically exact, its numerical implementation involves subtracting two large, noisy vectors to recover a smaller residual. If the integration of the ZTCF trajectory diverges due to solver tolerances or discrete sampling artifacts, the entire causal attribution collapses.
+Specifically, while the equation $\tau_{\text{input}} = \tau_{\text{total}} - \tau_{\text{drift}}$ is algebraically exact, its numerical implementation involves subtracting two large, noisy vectors to recover a smaller residual. If the integration of the ZTCF trajectory diverges due to solver tolerances or discrete sampling artifacts, the model-internal attribution becomes numerically unreliable.
 
 To bridge the gap between the theoretical derivations (Part IV) and the future experimental applications (Phase III), we require a numerical proof-of-concept. The following section documents the forward-dynamics implementation used to validate the **algebraic consistency** of the affine decomposition in the planar environment described above. This ensures that the abstract ZTCF and ZVCF counterfactual definitions remain robust under integration error and discrete-time sampling.
 
@@ -97,7 +97,7 @@ A total of 56 kill-switch times were distributed uniformly across the downswing.
 3. the model continued to evolve under drift dynamics only,
 4. the resulting hand--on--club forces were recorded at the kill instant.
 
-This procedure produced a sampled version of the drift forces across the downswing. The resulting "counterfactual" points represent the purely passive momentum contribution to the hand--club interaction forces.
+This procedure produced a sampled version of the drift forces across the downswing. The resulting "counterfactual" points represent the passive momentum contribution to the hand--club interaction forces within the planar simulation.
 
 ### Comparison with total forces
 
@@ -115,7 +115,7 @@ The analysis showed:
 This "overshoot" of passive momentum—where drift forces exceed the total force required for the path—implies a negative (braking) input. While this effect may be amplified by the minimal damping in the skeletal baseline model, it correctly identifies the *net non-conservative effort* required to restrain the system's inertia. Whether this braking is achieved via active eccentric contraction or by tuning passive tissue impedance, it represents a deviation from the purely ballistic trajectory defined by $f(x)$.
 :::
 
-These findings match the theoretical prediction that drift forces do not vanish when torque inputs are removed and can dominate the interaction forces during high-velocity phases of the swing.
+These findings are consistent with the theoretical prediction that drift forces do not vanish when torque inputs are removed and can dominate the interaction forces during high-velocity phases of the swing within this planar, constant-impedance model.
 
 ### Zero Velocity Counterfactual computation and validation
 
@@ -146,7 +146,7 @@ The fact that $F_{\text{total}} - F_{\mathrm{ZTCF}} = F_{\mathrm{ZVCF}}$ holds n
 The current Simulink model provides:
 
 - a working numerical platform for evaluating drift, ZTCF, ZVCF, and input forces,
-- a validation of the affine decomposition under realistic multibody dynamics,
+- a numerical verification of the affine decomposition under the modeled multibody dynamics,
 - a method for quantifying the effect of momentum on hand--club interaction forces,
 - a pathway toward full Phase II (simulation) and Phase III (experimental) papers.
 

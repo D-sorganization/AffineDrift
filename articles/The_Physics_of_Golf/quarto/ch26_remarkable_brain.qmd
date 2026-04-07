@@ -13,11 +13,11 @@ When you swing a golf club, your brain is simultaneously:
 - Working with 30--50 millisecond neural delays
 - Processing 80--150 millisecond sensory delays
 - Generating force within 50--100 millisecond muscle activation delays
-- Solving a nonlinear optimal control problem in real time
+- Approximating something like a nonlinear optimal control problem in real time
 - Managing transitions between high-control and high-drift phases
 - Doing all of this in 300 milliseconds with only 20 watts of power
 
-No current robot replicates this combination of speed, dimensionality, and adaptability. No AI system has demonstrated comparable performance in physical dexterity tasks of this complexity. Yet your brain does it every day, without thinking about it. This is the chapter that asks: how? And what does this remarkable biological achievement suggest about the nature of intelligence?
+As of this writing, no widely deployed robot or AI system matches this exact combination of speed, dimensionality, adaptability, and low-power execution in an everyday athletic setting. Yet your brain does something close to it every day, without conscious calculation. This is the chapter that asks: how? And what does this remarkable biological achievement suggest about the nature of intelligence?
 
 We also ask the inverse question: why does the brain occasionally fail catastrophically? Why do the yips happen? Why do skilled golfers sometimes choke? The answers reveal surprising truths about how the brain works.
 
@@ -37,17 +37,17 @@ Let's quantify exactly what the brain accomplishes in a 300 millisecond downswin
 
 - **Degrees of freedom:** The golf swing involves roughly 7 major joints: shoulders (2 DOF each = 4), elbows (1 each = 2), wrists (2 each = 4), torso rotation (1), hip rotation (1), knee bend (1), ankle (1). Total:  13 DOF for major joints. Including smaller joints (fingers, feet) and the club as a separate dynamic object: 20+ DOF.
 
-- **Muscles:** Roughly 200 muscles are involved in the swing, from large muscles (pectoralis, latissimus dorsi) to small stabilizer muscles. Each muscle can be activated at a different level, producing roughly 7 ordinal levels (off, 1/6, 2/6, ..., 6/6 maximum). The muscle activation space is a 200-dimensional continuous manifold $[0,1]^{200}$. Even discretizing each muscle to just 7 activation levels gives $7^{200} \approx 10^{169}$ states---a number so large it exceeds the number of atoms in the observable universe ($\sim 10^{80}$). The brain cannot search this space; it must exploit structure.
+- **Muscles:** Roughly 200 muscles are involved in the swing, from large muscles (pectoralis, latissimus dorsi) to small stabilizer muscles. Each muscle can be activated at a different level, producing a huge control space. As a thought experiment, even discretizing each muscle to just 7 activation levels gives $7^{200} \approx 10^{169}$ states---a number so large it exceeds the number of atoms in the observable universe ($\sim 10^{80}$). The point is not that the brain literally searches this space; the point is that structure must drastically reduce the effective control problem.
 
 - **Time points during the swing:** At 100 Hz temporal resolution (10 milliseconds per time step, reasonable for neural control), a 300 ms downswing has 30 time points. At each time point, you could independently command each muscle.
 
-- **Control space size:** If you could independently vary muscle activations at each time point, the total number of possible swings would be roughly $(7^{200})^{30}$. This is an astronomically large space: $\approx 10^{4000}$ distinct swings.
+- **Control space size:** If you could independently vary muscle activations at each time point, the total number of possible swings would be roughly $(7^{200})^{30}$. This thought experiment produces an astronomically large space: $\approx 10^{4000}$ distinct swings.
 
 - **Computational challenge:** To find the optimal swing by exhaustive search would require evaluating $10^{4000}$ candidates. Even if each evaluation took a nanosecond, this would take $10^{3991}$ seconds---far longer than the age of the universe.
 
 :::
 
-Yet the brain finds a good solution in milliseconds. How?
+Yet the brain produces workable solutions in milliseconds. How?
 
 ### Constraints Reduce the Space
 
@@ -62,11 +62,11 @@ The brain doesn't solve this high-dimensional problem directly. Instead, it expl
 
   By using smooth trajectories for each synergy, the control dimensionality drops to perhaps 30--50 parameters.
 
-- **Physics constraints:** The dynamics are highly nonlinear, but they have structure. The drift field dominates; control is weak. This means many motor commands produce nearly the same outcome. The brain exploits this: it only needs to set initial conditions and let physics do the rest.
+- **Physics constraints:** The dynamics are highly nonlinear, but they have structure. In the affine-control perspective developed in this book, late-swing drift can become large relative to newly applied control inputs. If that picture is approximately right, then many nearby motor commands may lead to similar outcomes, allowing the brain to rely more on state preparation and less on continuous correction.
 
 - **Learned motor primitives:** The brain doesn't solve the problem from scratch each swing. It retrieves a learned primitive---a pre-computed motor program---and applies it. This is like having a solution template that only needs minor tuning.
 
-These constraints reduce the effective dimensionality from $10^{4000}$ to something manageable: perhaps 30--50 parameters to optimize.
+These constraints reduce the effective dimensionality from $10^{4000}$ to something manageable: perhaps a few dozen parameters to tune, though the exact number is heuristic rather than literal.
 
 ### The Constraint of Time
 
@@ -86,13 +86,13 @@ The most severe constraint is temporal:
 
 - By the time visual feedback about the swing reaches your brain, the swing is over. By the time proprioceptive feedback produces a corrective motor command, the swing is over.
 
-- The brain can process maybe 1--2 feedback correction cycles during the swing. This is barely enough for any feedback-based control.
+- The brain can likely process only a very small number of meaningful feedback correction cycles during the downswing.
 
-- Conclusion: the swing is predominantly ballistic---pre-planned and executed with at most minimal real-time feedback correction.
+- Conclusion: the downswing is likely to be heavily pre-planned, with limited opportunity for deliberate real-time correction.
 
 :::
 
-This is not a limitation of the brain; it is a fundamental constraint of the system. Even with arbitrarily fast neural processing, real-time feedback control of the downswing would be severely limited by sensory and actuator delays. The practical solution: learn a feedforward program that works well enough.
+This is not a limitation of the brain; it is a fundamental constraint of the system. Even with very fast neural processing, real-time feedback control of the downswing would be limited by sensory and actuator delays. The practical solution is to rely heavily on feedforward structure, while still allowing fast reflexive and stabilizing feedback to contribute where it can.
 
 [@todorov2004optimality]
 
@@ -104,22 +104,22 @@ Given these constraints, how does the brain manage to swing a golf club?
 ### Strategy 1: Exploit Drift---Use Physics as the Primary Actuator
 
 
-This is the central insight of the entire textbook, viewed from the motor control perspective.
+This is the central insight of the textbook, viewed from the motor control perspective.
 
 ::: {.callout-important}
 ## Drift Exploitation in Neural Control
-The golf swing is drift-dominated. The drift forces (gravity, centrifugal effects, elastic restoring forces) are much larger than the control forces (muscle torques).
+In the affine-control interpretation developed in this book, the golf swing can become drift-dominated late in the downswing. In that view, the state-dependent mechanical terms (gravity, inertial effects, elastic restoring forces) can become large relative to newly applied control torques.
 
-This is an enormous advantage for the brain. The brain doesn't need to generate the whole trajectory. It only needs to:
+If that interpretation is correct, it gives the brain an enormous advantage. The brain does not need to generate the whole trajectory from scratch. It mainly needs to:
 
 - Set the initial conditions correctly (address position, grip orientation, muscle stiffness).
 - Apply an early-swing control input that initiates the acceleration.
-- Let the drift field carry the system through the mid- and late-swing phases.
+- Let the drift field carry much of the system through the mid- and late-swing phases.
 
-The ball's final position is determined primarily by the drift field physics, not by precise real-time muscle control. The brain exploits this by using a *high-level setpoint control strategy*: specify where the system *should be* at key points, and let physics carry it there.
+Shot outcome is then shaped strongly by the evolving system state and passive dynamics, not only by precise real-time muscle control. In that case, the brain can exploit a *high-level setpoint control strategy*: specify where the system *should be* at key points, and let physics carry much of the motion between them.
 :::
 
-This is why the ZTCF framework (Chapter @ch:zero_torque_counterfactual) is so important. The brain is using the mathematical structure of drift-dominated systems to simplify its control problem.
+This is why the ZTCF framework (Chapter @ch:zero_torque_counterfactual) is so important. It offers a way to ask whether a seemingly complicated motion contains a large state-driven component that reduces the burden on moment-to-moment control.
 
 Compare this to trying to control a tennis racket during a return, where the control forces may be more comparable to drift forces and the time window is even shorter. This would require more sophisticated real-time feedback control. The hypothesis is that the drift-dominated structure of the golf swing is part of what makes learned consistency possible, though this comparison has not been rigorously tested across sports.
 
@@ -138,9 +138,9 @@ The resistance of a joint to perturbation. A very stiff joint (high co-contracti
 ::: {.callout-important}
 ## Impedance Control Strategy
 
-Instead of the brain commanding: "Move the shoulder to 90 degrees at 3 degrees per millisecond," it commands: "Set shoulder stiffness to 2.3 N$\cdot$m per degree." (These specific values are illustrative; actual impedance values vary by individual, task, and muscle co-contraction level; approximately 1--5 N$\cdot$m per degree is a typical estimated range <!-- TODO: add citation for illustrative shoulder stiffness values in impedance control, e.g., motor control or rehabilitation engineering literature -->).
+Instead of the brain commanding: "Move the shoulder to this exact angle at this exact rate," it may command something closer to: "Set shoulder stiffness to a task-appropriate level."
 
-This is a passive control strategy. The stiffness is a mechanical property of the musculoskeletal system. Once set, the joint naturally resists perturbations without requiring active correction.
+This is a partly passive control strategy. The stiffness is a mechanical property of the musculoskeletal system once it has been established through muscle activity. After it is set, the joint naturally resists perturbations without requiring continuous active correction.
 
 Mathematically, impedance control commands the effective stiffness $\bm{K}$ and damping $\bm{D}$:
 $$
@@ -221,7 +221,7 @@ For the golf swing:
 
 - The clubhead will soon hit the ball. The brain pre-activates muscles that will stabilize impact.
 
-- These pre-activations happen approximately 50--100 ms before the event (illustrative; depends on task and individual; typical pre-activation windows vary roughly 30--150 ms in the motor control literature <!-- TODO: add citation for the anticipatory pre-activation window estimate, e.g., EMG studies of feed-forward motor control -->), anticipating it using the forward model.
+- These pre-activations happen tens of milliseconds before the event, anticipating it using the forward model.
 
 
 ::: {.callout-warning}
@@ -233,7 +233,7 @@ The numerical values, claims, and parameters discussed in this section are formu
 
 :::
 
-This is why the pre-swing motion and address posture are so critical. Elite golfers spend 5--10 seconds setting up precisely. They're not just getting comfortable; they're pre-positioning the musculoskeletal system and pre-activating muscles. The actual swing, when it comes, unfolds from a precisely prepared state.
+This is why the pre-swing motion and address posture are so critical. Elite golfers often spend several seconds setting up precisely. They're not just getting comfortable; they're pre-positioning the musculoskeletal system and pre-activating muscles. The actual swing, when it comes, unfolds from a carefully prepared state.
 
 ## The Brain as an Internal Model: What It Learns
 
@@ -708,5 +708,4 @@ Understanding this---that power and fragility are two sides of the same coin---i
 - What would a robot need to match human golf performance? List at least 5 capabilities and explain why each is difficult.
 
 - Explain the paradox: your brain solves an extraordinarily complex control problem while also being vulnerable to failure under pressure. Why are these two things related?
-
 
