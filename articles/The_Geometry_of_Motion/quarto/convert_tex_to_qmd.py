@@ -1,6 +1,7 @@
 import re
 from pathlib import Path
 
+from scripts.cli_output import write_stdout
 from src.core.contracts import require
 
 
@@ -78,45 +79,68 @@ def convert_tex_to_qmd(input_file: str | Path, output_file: str | Path) -> None:
         f.write(content)
 
 
-base_dir = Path(r"c:\Users\diete\Repositories\AffineDrift\articles\The_Geometry_of_Motion")
-quarto_dir = base_dir / "quarto"
+def _collect_volume_chapters(volume_dir: Path, quarto_dir: Path, prefix: str = "") -> list[str]:
+    """Convert a volume's chapter .tex files and return the generated QMD names."""
+    chapters: list[str] = []
+    if not volume_dir.exists():
+        return chapters
 
-vol0_chapters = []
-vol0_dir = base_dir / "Volume_0" / "chapters"
-if vol0_dir.exists():
-    for f_path in vol0_dir.iterdir():
+    for f_path in volume_dir.iterdir():
         if f_path.name.endswith(".tex"):
             qmd_chap = f_path.name.replace(".tex", ".qmd")
-            # Rename to avoid conflicts with Vol 1
-            qmd_chap = "vol0_" + qmd_chap
+            if prefix:
+                qmd_chap = f"{prefix}{qmd_chap}"
             convert_tex_to_qmd(f_path, quarto_dir / qmd_chap)
-            vol0_chapters.append(qmd_chap)
+            chapters.append(qmd_chap)
+    return chapters
 
-with open(quarto_dir / "volume0.qmd", "w") as f_out:
-    f_out.write("# Volume 0: The Mathematical Primer\n\n")
-    for q in sorted(vol0_chapters):
-        f_out.write(f"{{{{< include {q} >}}}}\n")
 
-vol1_chapters = []
-vol1_dir = base_dir / "Volume_I" / "chapters"
-if vol1_dir.exists():
-    for f_path in vol1_dir.iterdir():
-        if f_path.name.endswith(".tex"):
-            qmd_chap = f_path.name.replace(".tex", ".qmd")
-            convert_tex_to_qmd(f_path, quarto_dir / qmd_chap)
-            vol1_chapters.append(qmd_chap)
+def _write_volume_index(quarto_dir: Path, filename: str, title: str, chapters: list[str]) -> None:
+    """Write a Quarto include file for a volume."""
+    with open(quarto_dir / filename, "w", encoding="utf-8") as f_out:
+        f_out.write(f"# {title}\n\n")
+        for q in sorted(chapters):
+            f_out.write(f"{{{{< include {q} >}}}}\n")
 
-with open(quarto_dir / "volume1.qmd", "w") as f_out:
-    f_out.write("# Volume I: Foundations of Exact Linearization and Contraction\n\n")
-    for q in sorted(vol1_chapters):
-        f_out.write(f"{{{{< include {q} >}}}}\n")
 
-vol2_main = base_dir / "Volume_II" / "main.tex"
-if vol2_main.exists():
-    convert_tex_to_qmd(vol2_main, quarto_dir / "volume2_content.qmd")
+def main(repo_root: Path | None = None) -> int:
+    """Convert the Geometry of Motion LaTeX volumes to Quarto includes."""
+    repo_root = repo_root or Path(__file__).resolve().parents[3]
+    base_dir = repo_root / "articles" / "The_Geometry_of_Motion"
+    quarto_dir = base_dir / "quarto"
+    quarto_dir.mkdir(parents=True, exist_ok=True)
 
-with open(quarto_dir / "volume2.qmd", "w") as f_out:
-    f_out.write("# Volume II: Transverse Control and The Architecture of Trajectories\n\n")
-    f_out.write("{{< include volume2_content.qmd >}}\n")
+    vol0_chapters = _collect_volume_chapters(
+        base_dir / "Volume_0" / "chapters",
+        quarto_dir,
+        "vol0_",
+    )
+    _write_volume_index(
+        quarto_dir,
+        "volume0.qmd",
+        "Volume 0: The Mathematical Primer",
+        vol0_chapters,
+    )
 
-print("Conversion complete!")
+    vol1_chapters = _collect_volume_chapters(base_dir / "Volume_I" / "chapters", quarto_dir)
+    _write_volume_index(
+        quarto_dir,
+        "volume1.qmd",
+        "Volume I: Foundations of Exact Linearization and Contraction",
+        vol1_chapters,
+    )
+
+    vol2_main = base_dir / "Volume_II" / "main.tex"
+    if vol2_main.exists():
+        convert_tex_to_qmd(vol2_main, quarto_dir / "volume2_content.qmd")
+
+    with open(quarto_dir / "volume2.qmd", "w", encoding="utf-8") as f_out:
+        f_out.write("# Volume II: Transverse Control and The Architecture of Trajectories\n\n")
+        f_out.write("{{< include volume2_content.qmd >}}\n")
+
+    write_stdout("Conversion complete!")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

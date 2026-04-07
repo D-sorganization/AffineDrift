@@ -25,7 +25,10 @@ from __future__ import annotations
 import logging
 import subprocess
 import sys
+from collections.abc import Callable
 from dataclasses import dataclass
+
+from scripts.cli_output import write_stdout
 
 logger = logging.getLogger(__name__)
 
@@ -134,7 +137,19 @@ def _run_gate(gate: CoverageGate) -> bool:
     return passed
 
 
-def main() -> int:
+def _emit_summary(results: list[tuple[str, bool]]) -> None:
+    """Write the coverage gate summary to stdout."""
+    write_stdout()
+    write_stdout("=" * 60)
+    write_stdout("Coverage Gate Summary")
+    write_stdout("=" * 60)
+    for name, passed in results:
+        icon = "PASS" if passed else "FAIL"
+        write_stdout(f"  [{icon}] {name}")
+    write_stdout("=" * 60)
+
+
+def main(run_gate: Callable[[CoverageGate], bool] = _run_gate) -> int:
     """Run all coverage gates and return 0 on success, 1 on any failure."""
     logging.basicConfig(
         level=logging.INFO,
@@ -145,19 +160,11 @@ def main() -> int:
     results: list[tuple[str, bool]] = []
 
     for gate in COVERAGE_GATES:
-        passed = _run_gate(gate)
+        passed = run_gate(gate)
         results.append((gate.package, passed))
 
-    # Summary
     failures = [name for name, passed in results if not passed]
-    print()
-    print("=" * 60)
-    print("Coverage Gate Summary")
-    print("=" * 60)
-    for name, passed in results:
-        icon = "PASS" if passed else "FAIL"
-        print(f"  [{icon}] {name}")
-    print("=" * 60)
+    _emit_summary(results)
 
     if failures:
         logger.error(
