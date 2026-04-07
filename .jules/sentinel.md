@@ -16,3 +16,7 @@
 **Vulnerability:** Missing Content Security Policy (CSP) headers, making the site broadly susceptible to XSS if an injection point is found.
 **Learning:** Implementing a strict CSP via the `<meta>` tag in the site's global HTML head (e.g. `_includes/site-head.html`) adds a defense-in-depth layer against script and style injections.
 **Prevention:** Always include a baseline Content Security Policy restricting resources like scripts and styles to 'self' and explicitly allowed domains (like unpkg/js_deliver).
+## 2026-04-07 - Allow MathJax and YouTube origins in CSP
+**Vulnerability:** A strict Content Security Policy (CSP) blocked the loading of essential third-party assets (MathJax from jsdelivr) and embedded YouTube videos, leading to CI smoke test failures and missing functionality.
+**Learning:** When enforcing 'default-src \'self\'', you must explicitly list every third-party domain required for fonts, stylesheets, and embedded frames. Relying solely on 'self' in a site relying on CDNs causes immediate functional breakage.
+**Prevention:** Always test CSP updates thoroughly across all page types (especially pages with embeds and math formulas) and monitor console errors or automated end-to-end tests for blocked assets.
