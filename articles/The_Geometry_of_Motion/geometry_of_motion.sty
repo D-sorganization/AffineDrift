@@ -105,18 +105,16 @@
 }
 
 % Optional shared theorem primitives
+\makeatletter
 \newcommand{\gomdeclaretheorems}{%
-  \makeatletter
   \@ifundefined{theorem}{\newtheorem{theorem}{Theorem}[chapter]}{}%
   \@ifundefined{proposition}{\newtheorem{proposition}[theorem]{Proposition}}{}%
   \@ifundefined{definition}{\newtheorem{definition}[theorem]{Definition}}{}%
   \@ifundefined{example}{\newtheorem{example}[theorem]{Example}}{}%
   \@ifundefined{remark}{\newtheorem{remark}[theorem]{Remark}}{}%
-  \makeatother
 }
 
 \newcommand{\gomdeclarealgorithms}{%
-  \makeatletter
   \@ifundefined{c@algorithm}{%
     \newfloat{algorithm}{htbp}{loa}[chapter]%
     \floatname{algorithm}{Algorithm}%
@@ -150,5 +148,5 @@
   \providecommand{\EndWhile}{\item \textbf{end while}}%
   \providecommand{\RETURN}[1]{\item \textbf{return} ##1}%
   \providecommand{\Return}[1]{\item \textbf{return} ##1}%
-  \makeatother
 }
+\makeatother
