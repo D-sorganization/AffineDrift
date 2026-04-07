@@ -28,7 +28,11 @@ Usage
         SwingOptimizer,
     )
 
-    config = SwingOptimizationConfig(n_joints=3, horizon_steps=50)
+    config = SwingOptimizationConfig(
+        n_joints=3,
+        horizon_steps=50,
+        allow_mock_solver=True,  # explicit opt-in while using the placeholder solver
+    )
     optimizer = SwingOptimizer(config)
     result = optimizer.optimize(initial_state, dynamics_fn)
     logger.debug(f"Achieved velocity: {result.final_velocity:.2f} m/s")
@@ -37,6 +41,7 @@ Usage
 from __future__ import annotations
 
 import logging
+import warnings
 from collections.abc import Callable
 from typing import Any
 
@@ -78,7 +83,11 @@ class SwingOptimizer:
     -------
     ::
 
-        config = SwingOptimizationConfig(n_joints=3, horizon_steps=50)
+        config = SwingOptimizationConfig(
+            n_joints=3,
+            horizon_steps=50,
+            allow_mock_solver=True,
+        )
         optimizer = SwingOptimizer(config)
 
         def dynamics(x, u):
@@ -115,13 +124,16 @@ class SwingOptimizer:
         )
         self._config = config
         self._using_mock = ddp_solver is None
-        if ddp_solver is None:
-            import warnings
-
+        if self._using_mock:
+            require(
+                config.allow_mock_solver,
+                "Mock DDP solver requires allow_mock_solver=True in config. "
+                "Pass a real ddp_solver for non-test usage.",
+            )
             warnings.warn(
                 "adaptive_timestep_ddp_mock is a non-functional mock solver. "
-                "Set allow_mock_solver=True in SwingOptimizationConfig to permit its use in "
-                "optimize(). For production, supply a real ddp_solver.",
+                "allow_mock_solver=True explicitly opts into test-only usage. "
+                "For production, supply a real ddp_solver.",
                 UserWarning,
                 stacklevel=2,
             )

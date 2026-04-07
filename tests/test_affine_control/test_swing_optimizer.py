@@ -491,20 +491,13 @@ class TestSwingOptimizerOptimize(unittest.TestCase):
         self.assertTrue(np.isfinite(result.cost))
         self.assertGreaterEqual(result.cost, 0.0)
 
-    def test_optimize_rejects_mock_solver_without_opt_in(self) -> None:
-        """optimize() raises ContractViolationError when mock solver not opted-in."""
-        import warnings
-
-        from src.core.contracts import ContractViolationError
-
+    def test_constructor_rejects_mock_solver_without_opt_in(self) -> None:
+        """SwingOptimizer should reject the implicit mock path by default."""
         config = SwingOptimizationConfig(
             n_joints=1, horizon_steps=5, max_iterations=1, allow_mock_solver=False
         )
-        with warnings.catch_warnings():
-            warnings.simplefilter("ignore", UserWarning)
-            optimizer = SwingOptimizer(config)
         with self.assertRaises(ContractViolationError):
-            optimizer.optimize(np.zeros(2), double_integrator_1dof)
+            SwingOptimizer(config)
 
 
 # ── Property and accessor tests ─────────────────────────────────────────────
