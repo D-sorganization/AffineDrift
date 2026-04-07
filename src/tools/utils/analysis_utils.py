@@ -124,9 +124,17 @@ def collect_python_file_metrics(filepath: Path) -> PythonFileMetrics:
             elif isinstance(node, ast.If | ast.For | ast.While | ast.ExceptHandler):
                 branches += 1
     except (SyntaxError, ValueError):
-        pass
+        logger.debug(
+            "Falling back to zeroed Python metrics for %s after parse failure.",
+            filepath,
+            exc_info=True,
+        )
     except (FileNotFoundError, OSError, KeyError):
-        pass
+        logger.debug(
+            "Falling back to zeroed Python metrics for %s after file read failure.",
+            filepath,
+            exc_info=True,
+        )
 
     return PythonFileMetrics(
         functions=functions,
@@ -195,7 +203,10 @@ def collect_function_details(content: str) -> list[FunctionDetail]:
                     )
                 )
     except (SyntaxError, ValueError):
-        pass
+        logger.debug(
+            "Falling back to empty function details after parse failure.",
+            exc_info=True,
+        )
     return functions
 
 
