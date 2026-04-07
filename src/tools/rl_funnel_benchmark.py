@@ -10,9 +10,12 @@ from typing import Any
 import numpy as np
 import numpy.typing as npt
 
+from src.core.constants import GRAVITY_M_S2
 from src.core.contracts.definitions import require
 from src.core.contracts.validators import check_positive
 from src.tools.rl_funnel_controllers import (
+    _precompute_lqr_gains,
+    _validate_ttcf_inputs,
     setpoint_lqr_controller,
     trajectory_tracking_lqr,
 )
@@ -29,16 +32,24 @@ from src.tools.rl_funnel_dynamics import (
     generate_reference_trajectory,
     validate_state_vector,
 )
-from src.tools.rl_funnel_simulation import BenchmarkResult, run_benchmark
+from src.tools.rl_funnel_simulation import (
+    BenchmarkResult,
+    _compute_tracking_metrics,
+    _validate_benchmark_inputs,
+    run_benchmark,
+)
 
 __all__ = [
     "BenchmarkResult",
     "CONTROL_SATURATION_DEFAULT",
     "DEFAULT_CONTROL_SATURATION",
+    "GRAVITY_M_S2",
     "PENDULUM_L1",
     "PENDULUM_L2",
     "PENDULUM_M1",
     "PENDULUM_M2",
+    "_compute_tracking_metrics",
+    "_precompute_lqr_gains",
     "double_pendulum_B",
     "double_pendulum_drift",
     "double_pendulum_mass_matrix",
@@ -50,6 +61,8 @@ __all__ = [
     "run_comparison",
     "setpoint_lqr_controller",
     "trajectory_tracking_lqr",
+    "_validate_benchmark_inputs",
+    "_validate_ttcf_inputs",
     "validate_state_vector",
 ]
 
@@ -104,7 +117,16 @@ def run_comparison(
     def _rb(ctrl: Callable[[float, np.ndarray], np.ndarray], label: str) -> BenchmarkResult:
         """Run a single named benchmark and return its result."""
         logger.info("Running %s benchmark...", label)
-        return run_benchmark(ctrl, x0_perturbed, t_span, t_ref, x_ref, label, dt=dt)
+        return run_benchmark(
+            ctrl,
+            x0_perturbed,
+            t_span,
+            t_ref,
+            x_ref,
+            label,
+            dt=dt,
+            control_limits=(-control_limit, control_limit),
+        )
 
     return [
         _rb(setpoint_lqr_controller(x_target), "Setpoint LQR"),

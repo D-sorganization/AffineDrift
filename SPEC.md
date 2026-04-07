@@ -27,7 +27,7 @@
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.17                                           |
+| **Spec Version**        | 1.0.19                                           |
 | **Last Spec Update**    | 2026-04-07                                       |
 
 ## 2. Purpose & Mission
@@ -166,6 +166,7 @@ AffineDrift/
 | F16 | Website citation-resolution guardrail   | ✅     | PR CI scans website `.qmd` sources, resolves their configured bibliography files, and fails when citation keys do not map to a known bibliography entry                                                                                    |
 | F17 | Textbook algorithm convention sharing   | ✅     | `geometry_of_motion.sty` exposes shared algorithm and pseudocode primitives so implementation-oriented chapters use one consistent notation and formatting style                                 |
 | F18 | Textbook applied-optimization guidance  | ✅     | Volume I and Volume II include implementation-grade pseudocode for DDP/iLQR, direct collocation, funnel synthesis, ILC, and trajectory-library adaptation, plus a bounded treatment of evolutionary search |
+| F19 | RL benchmark modular split              | ✅     | `src/tools/rl_funnel_benchmark.py` now stays under the repo file-size budget by delegating dynamics, controllers, and simulation concerns to focused helper modules while preserving the benchmark module's public API |
 
 ### API / Interface Contract
 
