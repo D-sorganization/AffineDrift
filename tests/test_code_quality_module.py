@@ -35,6 +35,13 @@ def test_check_file_returns_empty_for_clean_file(tmp_path: Path) -> None:
     assert not any("Error" in msg for _, msg, _ in issues)
 
 
+def test_code_quality_shim_declares_explicit_public_api() -> None:
+    """The shim should expose a narrow, explicit compatibility surface."""
+    assert "main" in cq_shim.__all__
+    assert "check_file" in cq_shim.__all__
+    assert "logger" not in cq_shim.__all__
+
+
 def test_check_file_returns_error_tuple_on_oserror(tmp_path: Path) -> None:
     """check_file should return a synthetic error tuple when file is unreadable."""
     missing = tmp_path / "no_file.py"

@@ -34,5 +34,19 @@ from src.tools.code_quality.pattern_checker import (  # noqa: F401
 
 logger = logging.getLogger(__name__)
 
+__all__ = [
+    "ALLOWED_CONSTANTS",
+    "BANNED_PATTERNS",
+    "Colors",
+    "MAGIC_NUMBERS",
+    "PASS_PATTERNS",
+    "check_ast_issues",
+    "check_banned_patterns",
+    "check_file",
+    "check_magic_numbers",
+    "is_legitimate_pass_context",
+    "main",
+]
+
 if __name__ == "__main__":
     main()
