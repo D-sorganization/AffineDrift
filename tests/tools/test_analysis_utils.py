@@ -109,7 +109,9 @@ class TestCollectPythonFileMetrics:
         result = collect_python_file_metrics(f)
         assert isinstance(result, PythonFileMetrics)
 
-    def test_logs_missing_file_fallback(self, tmp_path: Path, caplog: pytest.LogCaptureFixture) -> None:
+    def test_logs_missing_file_fallback(
+        self, tmp_path: Path, caplog: pytest.LogCaptureFixture
+    ) -> None:
         """Should log a debug message when a file cannot be read."""
         f = tmp_path / "missing.py"
         with caplog.at_level("DEBUG"):
