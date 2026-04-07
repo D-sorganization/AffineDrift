@@ -24,6 +24,7 @@ import re
 from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
+from typing import Any
 
 from src.tools.utils import get_python_files, setup_logging_with_timestamp
 from src.tools.utils.cli_contracts import ensure_writable_output_file
@@ -72,7 +73,7 @@ def compute_file_hash(content: str) -> str:
     return hashlib.md5(normalized.encode(), usedforsecurity=False).hexdigest()
 
 
-def get_detailed_function_metrics(content: str):
+def get_detailed_function_metrics(content: str) -> list[dict[str, Any]]:
     """Simple AST parser to get function metrics."""
     try:
         tree = ast.parse(content)
@@ -228,7 +229,7 @@ def check_testing(root_path: Path) -> list[dict]:
     return issues
 
 
-def run_review(root_path: Path):
+def run_review(root_path: Path) -> dict[str, Any]:
     """Run the full pragmatic programmer review."""
     logger.info(f"Running Pragmatic Review on {root_path}")
     files = find_python_files(root_path)
@@ -248,7 +249,7 @@ def run_review(root_path: Path):
     }
 
 
-def generate_markdown_report(results, output_path):
+def generate_markdown_report(results: dict[str, Any], output_path: Path) -> None:
     """Generate a markdown report from review results."""
     md = [f"# Pragmatic Programmer Review: {results['repository']}"]
     md.append(f"**Date**: {results['timestamp'][:10]}")
