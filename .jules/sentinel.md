@@ -12,3 +12,7 @@
 **Vulnerability:** Found a DOM-based XSS vulnerability in `js/history.js` where URLs retrieved from `localStorage` were directly assigned to anchor `href` properties.
 **Learning:** `localStorage` is an untrusted sink that can be polluted by other scripts or extensions on the same domain. Assigning arbitrary data from it to active properties like `href` allows injection of `javascript:` payloads.
 **Prevention:** Always validate and sanitize URLs before assigning them to `href` attributes (e.g., ensuring they do not start with `javascript:`).
+## 2026-04-07 - Add Content Security Policy Meta Tag
+**Vulnerability:** Missing Content Security Policy (CSP) headers, making the site broadly susceptible to XSS if an injection point is found.
+**Learning:** Implementing a strict CSP via the `<meta>` tag in the site's global HTML head (e.g. `_includes/site-head.html`) adds a defense-in-depth layer against script and style injections.
+**Prevention:** Always include a baseline Content Security Policy restricting resources like scripts and styles to 'self' and explicitly allowed domains (like unpkg/js_deliver).
