@@ -62,6 +62,19 @@ class TestGetPythonMetrics:
         result = get_python_metrics(f)
         assert isinstance(result, dict)
 
+    def test_logs_syntax_error_file_fallback(
+        self,
+        tmp_path: Path,
+        caplog: pytest.LogCaptureFixture,
+    ) -> None:
+        """Should log a debug message when AST parsing fails."""
+        f = tmp_path / "bad.py"
+        f.write_text("def foo(\n", encoding="utf-8")
+        with caplog.at_level("DEBUG"):
+            result = collect_python_file_metrics(f)
+        assert isinstance(result, PythonFileMetrics)
+        assert "Falling back to zeroed Python metrics" in caplog.text
+
 
 class TestCollectPythonFileMetrics:
     """Tests for collect_python_file_metrics()."""
