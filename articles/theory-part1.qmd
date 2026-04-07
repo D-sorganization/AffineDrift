@@ -130,7 +130,7 @@ Before we write a single equation, let's ask a simple question: when a golfer sw
           Why introduce the complexity of affine control theory and Lie brackets? Standard inverse dynamics already calculates the net moments required for a motion. Critics argue that decomposing these moments into $f(x)$ and $g(x)u$ adds mathematical overhead without changing the fundamental physics of $F=ma$.
         </p>
         <div class="author-response">
-          <strong>Our Response:</strong> Standard inverse dynamics provides the <em>sum</em> of forces required, but it is causally ambiguous: it cannot distinguish between a force required to <em>overcome</em> inertia and a force required to <em>exploit</em> it. The affine structure is the only mathematical framework that rigorously separates the system's "Inertial Memory" (Drift) from the player's "Current Agency" (Input). Without this separation, we cannot formulate the counterfactuals (e.g., "What if I stopped pushing?") that are essential for understanding control strategy.
+          <strong>Our Response:</strong> Standard inverse dynamics provides the <em>sum</em> of forces required, but it is causally ambiguous: it cannot distinguish between a force required to <em>overcome</em> inertia and a force required to <em>exploit</em> it. A control-affine formulation gives us a rigorous way to separate the system's state-dependent drift from the torque-level input <em>within the model</em>. That separation makes counterfactual questions (e.g., "What if I stopped pushing?") mathematically well-posed, even though experimental identification of muscle effort still requires additional measurement and validation work.
         </div>
       </div>
 
@@ -145,20 +145,20 @@ Before we write a single equation, let's ask a simple question: when a golfer sw
 
 ## Introduction
 
-Traditional biomechanical analyses of the golf swing rely heavily on inverse dynamics to estimate generalized joint torques and hand forces from measured kinematics and external forces. While inverse dynamics provides the *total* generalized forces consistent with a given motion, it does not reveal the causal structure of those forces---specifically, how much arises from the golfer's active muscular effort versus how much is generated passively by inertia, gravity, elastic shaft deformation, and motion history.
+Traditional biomechanical analyses of the golf swing rely heavily on inverse dynamics to estimate generalized joint torques and hand forces from measured kinematics and external forces. While inverse dynamics provides the *total* generalized forces consistent with a given motion, it does not by itself identify how much of a measured torque came from active muscular effort versus how much is generated passively by inertia, gravity, elastic shaft deformation, and motion history.
 
-This distinction is fundamental. Passive forces (drift) can be large---even dominant---during rapid phases of the swing, meaning that inverse-dynamics forces are often misinterpreted as indicators of muscular effort. Without a principled decomposition, it is impossible to determine whether a large observed torque is caused by the golfer's action or simply emerges from the dynamics of the system.
+This distinction is fundamental. Passive forces (drift) can be large---even dominant---during rapid phases of the swing, meaning that inverse-dynamics forces are often misinterpreted as direct indicators of muscular effort. Without a principled decomposition, it is difficult to tell whether a large modeled torque reflects newly applied input or state-dependent dynamics already present in the system.
 
 The aim of this manuscript is to establish a rigorous, strictly theoretical foundation for decomposing forces in the golf swing into two analytically distinct components:
 
 -   **Drift forces** arising purely from passive, state-dependent mechanical dynamics, and
 -   **Input forces** arising solely from actively applied joint torques.
 
-The key mathematical observation is that the golfer--club--shaft system can be modeled as a *nonlinear control-affine mechanical system*. Control-affine systems admit an additive decomposition of their dynamics into passive drift and linear control input channels. Once the affine structure is established, counterfactual tools such as the *Zero Torque Counterfactual* (ZTCF) and *Zero Velocity Counterfactual* (ZVCF) follow naturally and enable clean mechanical attribution of forces within the model.
+The key mathematical observation is that the golfer--club--shaft system can be modeled as a *nonlinear control-affine mechanical system*. Control-affine systems admit an additive decomposition of their dynamics into passive drift and linear control input channels. Once the affine structure is established, counterfactual tools such as the *Zero Torque Counterfactual* (ZTCF) and *Zero Velocity Counterfactual* (ZVCF) follow naturally and enable mechanical attribution of forces within the model. They do not, by themselves, constitute direct physiological identification of muscle activity in a real golfer.
 
 This paper is *Part I* of a broader project. It develops the theoretical architecture only---no simulation, numerical results, or empirical data are presented here. Subsequent papers (Parts II and III) will implement and validate this framework using high-fidelity multibody simulations, flexible-shaft modeling, and experimental motion-capture data. By isolating the theory in this manuscript, we ensure that the mathematical structure is complete, self-contained, and available for independent scrutiny before numerical or empirical layers are added.
 
-Let us pause and say plainly what we are doing. Imagine you are sitting in a rowboat on a river. Part of your motion downstream comes from the river's current---that is the "drift." Part comes from your rowing---that is the "input." If you stop rowing, the current carries you along at some speed. If the river is still, only your rowing moves you. The total motion is the sum of both. This paper builds the mathematical machinery to decompose the golf swing the same way: what would the club do if the golfer's muscles went silent (drift), and what additional motion does muscular effort create (input)? The mathematical framework is sophisticated, but the physical question is as simple as a boat on a river.
+Let us pause and say plainly what we are doing. Imagine you are sitting in a rowboat on a river. Part of your motion downstream comes from the river's current---that is the "drift." Part comes from your rowing---that is the "input." If you stop rowing, the current carries you along at some speed. If the river is still, only your rowing moves you. The total motion is the sum of both. This paper builds the mathematical machinery to decompose the golf swing the same way <em>within a specified mechanical model</em>: what would the club do if the modeled driving torques were removed (drift), and what additional motion do the applied torques create (input)? The mathematical framework is sophisticated, but the physical question is as simple as a boat on a river.
 
 The remainder of the paper is organized as follows:
 
@@ -170,7 +170,7 @@ The subsequent sections (Part II onwards) cover the counterfactual constructions
 
 Detailed derivations, modal approximations, and toy examples are collected in the Appendices (Part IV).
 
-To rigorously distinguish 'drift' from 'input', we must first define the mechanical universe in which these forces exist. The concepts of active and passive are not absolute; they are defined relative to the system boundary. A force that is 'external' to a sub-component may be 'internal' to the whole. Therefore, before deriving equations, we must explicitly fix the boundaries of the golfer--club--shaft system, specifying exactly which degrees of freedom are malleable (flexible modes) and which are directly actuated (joints).
+To rigorously distinguish 'drift' from 'input', we must first define the mechanical universe in which these forces exist. The concepts of active and passive are not absolute; they are defined relative to the system boundary and the level at which the inputs are modeled. A force that is 'external' to a sub-component may be 'internal' to the whole. Therefore, before deriving equations, we must explicitly fix the boundaries of the golfer--club--shaft system, specifying exactly which degrees of freedom are malleable (flexible modes) and which are directly actuated (joints).
 
 ## System Definition and Modeling Assumptions
 
