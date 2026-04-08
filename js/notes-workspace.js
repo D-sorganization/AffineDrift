@@ -164,7 +164,6 @@
     function loadIntoTextArea() {
       const active = store.loadActive();
       textArea.value = active.content;
-      autoGrow();
       if (active.updatedAt) {
         setStatus(`Loaded saved notes (${active.updatedAt})`);
       } else {
@@ -174,6 +173,7 @@
 
     function openPanel() {
       panel.classList.add("open");
+      autoGrow();
       toggleBtn.setAttribute("aria-expanded", "true");
       textArea.focus();
     }
