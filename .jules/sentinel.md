@@ -26,3 +26,7 @@
 **Vulnerability:** A strict Content Security Policy (CSP) blocked the loading of essential third-party assets (MathJax from jsdelivr) and embedded YouTube videos, leading to CI smoke test failures and missing functionality.
 **Learning:** When enforcing 'default-src \'self\'', you must explicitly list every third-party domain required for fonts, stylesheets, and embedded frames. Relying solely on 'self' in a site relying on CDNs causes immediate functional breakage.
 **Prevention:** Always test CSP updates thoroughly across all page types (especially pages with embeds and math formulas) and monitor console errors or automated end-to-end tests for blocked assets.
+## 2025-04-07 - Prevent DOM-based XSS in Template Literals
+**Vulnerability:** DOM-based Cross-Site Scripting (XSS) via `innerHTML` assignment using template literals containing user-controlled URLs and text in `.qmd` history components.
+**Learning:** Directly interpolating potentially unsafe object properties (like `item.url` and `item.title` from `localStorage`) into a string that is assigned to `innerHTML` is inherently unsafe and can execute injected payloads (e.g., `javascript:` URIs).
+**Prevention:** Always use safe DOM APIs such as `document.createElement`, `textContent`, and proper validation logic (e.g. checking protocol before assigning to `a.href`) instead of string interpolation into `innerHTML`.

@@ -1118,9 +1118,15 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
 
-    booksHistoryList.innerHTML = history.map(item => 
-      `<li><a href="${item.url}">${item.title}</a></li>`
-    ).join('');
+        booksHistoryList.innerHTML = '';
+    history.forEach(item => {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = typeof item.url === "string" && !item.url.replace(/[\x00-\x20]/g, "").toLowerCase().startsWith("javascript:") ? item.url : "#";
+      a.textContent = item.title;
+      li.appendChild(a);
+      booksHistoryList.appendChild(li);
+    });
   }
 
   updateBooksHistory();
