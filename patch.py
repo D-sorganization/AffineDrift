@@ -1,6 +1,4 @@
-import sys
-
-with open("js/forms.js", "r") as f:
+with open("js/forms.js") as f:
     content = f.read()
 
 old_code = """export function initAutoGrowTextareas() {
