@@ -390,13 +390,25 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     if (history.length === 0) {
-      websitesHistoryList.innerHTML = '<li class="history-empty">No recent websites yet</li>';
+      websitesHistoryList.textContent = '';
+      const li = document.createElement('li');
+      li.className = 'history-empty';
+      li.textContent = 'No recent websites yet';
+      websitesHistoryList.appendChild(li);
       return;
     }
 
-    websitesHistoryList.innerHTML = history.map(item => 
-      `<li><a href="${item.url}">${item.title}</a></li>`
-    ).join('');
+    websitesHistoryList.textContent = '';
+    const fragment = document.createDocumentFragment();
+    history.forEach((item) => {
+      const li = document.createElement("li");
+      const a = document.createElement("a");
+      a.href = typeof item.url === "string" && !item.url.replace(/[\x00-\x20]/g, "").toLowerCase().startsWith("javascript:") ? item.url : "#";
+      a.textContent = item.title;
+      li.appendChild(a);
+      fragment.appendChild(li);
+    });
+    websitesHistoryList.appendChild(fragment);
   }
 
   updateWebsitesHistory();
