@@ -27,7 +27,11 @@ export function initEmailCopy() {
             continue;
 
         const href = link.getAttribute("href");
-        const email = href.replace(/^mailto:/, "").split("?")[0];
+        // ⚡ Bolt Optimization: Use indexOf and substring instead of split("?")
+        // Avoids O(N) array allocation/GC overhead from split when extracting the email
+        const rawEmail = href.replace(/^mailto:/, "");
+        const queryIndex = rawEmail.indexOf("?");
+        const email = queryIndex !== -1 ? rawEmail.substring(0, queryIndex) : rawEmail;
         if (!email) continue;
 
         const button = document.createElement("button");
