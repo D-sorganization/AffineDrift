@@ -48,7 +48,7 @@ def test_resolve_bibliography_paths_uses_nearest_project_and_frontmatter(tmp_pat
 
     chapter = chapter_dir / "01-intro.qmd"
     chapter.write_text(
-        "---\nbibliography: chapter.bib\n---\nSee [@local2026].\n",
+        "---\n" "bibliography: chapter.bib\n" "---\n" "See [@local2026].\n",
         encoding="utf-8",
     )
 
