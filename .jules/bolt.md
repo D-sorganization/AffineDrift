@@ -65,4 +65,6 @@
 ## 2026-04-07 - Layout Thrashing in DOM Initialization
 **Learning:** Interleaving layout reads (like `getComputedStyle`) and DOM mutations (`insertBefore`, `appendChild`) inside a loop causes forced synchronous layout (Layout Thrashing), severely impacting the main thread during initialization.
 **Action:** When iterating over elements that require layout checks before DOM modification, always batch the reads into a separate array or phase before performing the writes.
-## 2025-02-21 - QuerySelector with Complex CSS on Links vs Live Collection Iteration\n**Learning:** Complex CSS selectors on links like `document.querySelectorAll('.navbar-nav a.nav-link[href^="#"]')` or `document.querySelectorAll('.navbar-nav a[href^="https://github.com"]')` can be extremely slow on large pages. Iterating over `document.links` and checking `href` and `classList` is much faster.\n**Action:** Replace `querySelectorAll` with iteration over `document.links` for operations that search for links with specific attributes or classes.
+## 2026-04-09 - Over-optimizing Split
+**Learning:** Replacing `.split()` with `.indexOf()` and `.substring()` for extracting parts of short strings like URLs is technically more memory efficient, but often constitutes an unreadable micro-optimization with no measurable impact.
+**Action:** Avoid micro-optimizations with no measurable impact, such as replacing `.split()` with `.indexOf()` and `.substring()` for extracting parts of short strings, especially when followed by inherently expensive operations like DOM manipulations.

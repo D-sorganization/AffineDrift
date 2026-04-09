@@ -94,7 +94,7 @@
       .ad-notes-header h3 { margin: 0; font-size: 1rem; color: #0f4c75; }
       .ad-notes-area {
         width: 100%; min-height: 210px; border: 1px solid #cad4de; border-radius: 8px;
-        padding: 0.65rem; font-size: 0.92rem; resize: none; overflow: hidden; line-height: 1.45;
+        padding: 0.65rem; font-size: 0.92rem; resize: vertical; line-height: 1.45;
       }
       .ad-notes-actions { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 0.6rem; }
       .ad-notes-actions button {
@@ -150,13 +150,6 @@
     const textArea = panel.querySelector("#ad-notes-workspace-area");
     const status = panel.querySelector("#ad-notes-status");
 
-    function autoGrow() {
-      textArea.style.height = 'auto';
-      textArea.style.height = textArea.scrollHeight + 'px';
-    }
-
-    textArea.addEventListener("input", autoGrow);
-
     function setStatus(message) {
       status.textContent = message;
     }
@@ -173,7 +166,6 @@
 
     function openPanel() {
       panel.classList.add("open");
-      autoGrow();
       toggleBtn.setAttribute("aria-expanded", "true");
       textArea.focus();
     }
@@ -222,7 +214,6 @@
       if (typeof event.data.content !== "string") return;
       store.saveActive(event.data.content);
       textArea.value = event.data.content;
-      autoGrow();
       setStatus("Saved from pop-out.");
     });
 
@@ -252,20 +243,17 @@
         setStatus("Notes saved.");
       } else if (action === "clear") {
         textArea.value = "";
-        autoGrow();
         store.clearActive();
         setStatus("Workspace cleared.");
       } else if (action === "delete") {
         store.saveActive(textArea.value);
         const moved = store.moveActiveToRecycleBin();
         textArea.value = "";
-        autoGrow();
         setStatus(moved ? "Deleted to recycle bin." : "Nothing to delete.");
       } else if (action === "restore") {
         const restored = store.restoreFromRecycleBin();
         if (restored) {
           textArea.value = store.loadActive().content;
-          autoGrow();
           setStatus("Restored from recycle bin.");
         } else {
           setStatus("Recycle bin is empty.");
