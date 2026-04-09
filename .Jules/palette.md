@@ -36,3 +36,7 @@
 ## 2026-04-06 - Alt Text Fallback for Modal Images
 **Learning:** When images are promoted to a modal view (lightbox), relying solely on `<figcaption>` can leave images that only use `alt` attributes without visual context or descriptive text in the modal state.
 **Action:** When promoting an image to a modal view, if no `<figcaption>` is present, fall back to extracting and displaying the image's `alt` text to preserve contextual information for all users.
+
+## 2024-05-24 - Accessibility States for Workspace Panel
+**Learning:** Found that custom panels like the notes workspace toggle need explicit aria-controls and aria-hidden states. Relying solely on CSS classes or aria-expanded on the button is insufficient for screen readers to fully understand the panel's visibility.
+**Action:** Always ensure that when implementing custom toggleable panels, aria-controls is explicitly defined, and both aria-expanded and aria-hidden are actively synced via JS logic.
