@@ -8,9 +8,7 @@ from pathlib import Path
 
 import pytest
 
-from articles.The_Geometry_of_Motion.quarto.convert_tex_to_qmd import (
-    main as convert_tex_main,
-)
+from articles.The_Geometry_of_Motion.quarto.convert_tex_to_qmd import main as convert_tex_main
 from scripts.check_coverage_gates import CoverageGate
 from scripts.check_coverage_gates import main as coverage_gates_main
 from scripts.convert_bibliography_to_bib import main as convert_bib_main
