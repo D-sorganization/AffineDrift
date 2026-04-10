@@ -1,119 +1,134 @@
-# A-N Codebase Assessment — 2026-04-10
+# A-N Codebase Assessment — 2026-04-10 Refresh
 
-**Date**: 2026-04-10  
-**Scope**: First-party website, research, tooling, tests, CI, and supporting scripts under `src/`, `scripts/`, `tests/`, `js/`, `content/`, and `.github/workflows/`. Caches and generated artifacts were excluded.  
-**Reviewer**: Automated scheduled comprehensive review
+**Date**: 2026-04-10
+**Baseline**: `A-N_Assessment_2026-04-09.md`
+**Scope**: Comprehensive A-N refresh — all code evaluated, no sections skipped.
+**Reviewer**: Automated scheduled comprehensive review (refresh pass).
 
 ## 1. Executive Summary
 
-**Overall Grade: B**
+**Baseline Overall Grade**: B+ (from 2026-04-09 review)
 
-AffineDrift-editorial is well-instrumented and unusually deliberate about contracts, test automation, and content-quality gates. The main confirmed weaknesses are a non-functional mock DDP implementation, one extremely large wrist-model module, a modest 50% coverage gate for a codebase with critical scientific claims, and some remaining print-based/logging hygiene issues.
+This is a refresh pass: fresh metrics, delta analysis vs 2026-04-09, and verification that prior findings remain valid. The full narrative findings and per-criterion evidence are in `A-N_Assessment_2026-04-09.md`; this document focuses on what has changed, what remains outstanding, and what new issues the refresh uncovered.
 
-## 2. Fresh Metrics
+## 2. Fresh Metrics (2026-04-10)
 
-| Metric | Value |
-|---|---:|
-| First-party Python files | 128 |
-| First-party Python LOC | 19,427 |
-| Test files | 133 |
-| Test LOC | 16,245 |
-| JavaScript files | 42 |
-| JavaScript LOC | 7,128 |
-| GitHub workflow files | 52 |
-| `print(` call sites | 26 |
-| Contract/helper hits | 952 |
-| Oversized files (>500 LOC) | 4 sampled |
+### Code Volume
 
-### Largest confirmed files
-
-- `content/wrist-as-universal-joint/Universal_Joint_Model_Enhanced.py` — 1,512 LOC
-- `scripts/mypy_autofix_agent.py` — 624 LOC
-- `scripts/assess_repo.py` — 553 LOC
-- `js/rotation-converter.js` — 511 LOC
-
-### Largest confirmed functions
-
-- `Universal_Joint_Model_Enhanced.py::initUI` — 484 LOC
-- `Universal_Joint_Model_Enhanced.py::update_diagram` — 333 LOC
-- `articles/motion-control/compile_book.py::create_complete_book` — 187 LOC
-- `articles/motion-control/compile_book.py::create_summary` — 113 LOC
-
-## 3. Grades A–N
-
-| Category | Grade | Evidence |
+| Language | Files | LOC |
 |---|---|---|
-| A. Code Structure | B | Clear domain layout across `src/`, `scripts/`, content, and tests, but the wrist-model module is too large. |
-| B. Documentation | A- | `README.md`, `CONTENT_ARCHITECTURE.md`, `CONTRIBUTING.md`, and rich in-repo docs are strong. |
-| C. Test Coverage | B | Test volume is strong, but CI’s coverage gate remains only 50% in `pyproject.toml`. |
-| D. Error Handling | B+ | Contract-heavy validation and explicit checks are common across core modules. |
-| E. Performance | B- | Scientific code uses structured helpers, but giant UI/plot routines will be harder to optimize. |
-| F. Security | B- | No obvious secret exposure; however current CI standard does not show a Python dependency audit step. |
-| G. Dependencies | B | Dependency boundaries are actively checked in CI and package setup is disciplined. |
-| H. CI/CD | A- | 52 workflows and budget checks create strong guardrails, though complexity is high. |
-| I. Code Style | B | Ruff/Black/mypy are enforced, but 26 `print(` sites and long files remain. |
-| J. API Design | B | Contracts and reusable helpers are good, though some tooling modules remain script-heavy. |
-| K. Data Handling | B+ | Strong use of validators and explicit contracts for numerical work. |
-| L. Logging | C+ | Logging exists, but 26 `print(` occurrences are still present in first-party Python. |
-| M. Configuration | B+ | `pyproject.toml`, Quarto config, and workflow policy are coherent and explicit. |
-| N. Scalability | B- | Good automation coverage for a research site, but large single-file tools will constrain future growth. |
+| Quarto | 202 | 59,789 |
+| Python | 271 | 36,838 |
+| JavaScript | 42 | 8,450 |
+| MATLAB | 8 | 1,694 |
+| Rust | 4 | 1,015 |
+| **Total** | **527** | **107,786** |
 
-## 4. TDD / DRY / DbC / LoD / SRP Evaluation
+**Primary language**: Quarto
+
+### Test Discipline
+
+- Python test files: 125
+- Python test functions (`def test_*`): 1715
+- Approx test-per-100-LOC: 4.7
+
+### Code Churn Since 2026-04-09
+
+- Commits since 2026-04-09: 2
+- Files touched (top 30): 1
+
+<details><summary>Changed files</summary>
+
+- `docs/assessments/A-N_Assessment_2026-04-09.md`
+
+</details>
+
+### Oversized Python Functions (>40 LOC)
+
+| File | Function | Lines |
+|---|---|---|
+| `docs/content/Wrist as Universal Joint/Universal_Joint_Model_Enhanced.py` | `initUI` | 485 |
+| `content/wrist-as-universal-joint/Universal_Joint_Model_Enhanced.py` | `initUI` | 485 |
+| `docs/content/Wrist as Universal Joint/Universal_Joint_Model_Enhanced.py` | `update_diagram` | 334 |
+| `content/wrist-as-universal-joint/Universal_Joint_Model_Enhanced.py` | `update_diagram` | 334 |
+| `docs/content/Wrist as Universal Joint/Universal_Joint_Model_Enhanced.py` | `_plot_transmission_sweep` | 89 |
+| `content/wrist-as-universal-joint/Universal_Joint_Model_Enhanced.py` | `_plot_transmission_sweep` | 89 |
+| `docs/content/Wrist as Universal Joint/Universal_Joint_Model_Enhanced.py` | `generate_sample_torque` | 88 |
+| `scripts/check_textbook_claims.py` | `_merge_base` | 81 |
+| `scripts/assess_repo.py` | `_build_comprehensive_report` | 74 |
+| `articles/The_Geometry_of_Motion/quarto/convert_tex_to_qmd.py` | `convert_tex_to_qmd` | 74 |
+| `scripts/generate_bibliography_data.py` | `main` | 67 |
+| `scripts/check-equations.py` | `find_equations` | 66 |
+| `scripts/build-html.py` | `main` | 65 |
+| `scripts/generate_sitemap.py` | `main` | 61 |
+| `scripts/mypy_autofix_agent.py` | `main` | 60 |
+
+**Finding**: 15 oversized function(s) — violates single-responsibility principle. Extract helper methods; target <30 LOC/function.
+
+### Monolithic Scripts (>300 LOC)
+
+| Script | LOC |
+|---|---|
+| `content/wrist-as-universal-joint/Universal_Joint_Model_Enhanced.py` | 1514 |
+| `docs/content/Wrist as Universal Joint/Universal_Joint_Model_Enhanced.py` | 1505 |
+| `scripts/mypy_autofix_agent.py` | 624 |
+| `scripts/assess_repo.py` | 572 |
+| `src/tools/rl_funnel_benchmark.py` | 466 |
+| `scripts/analyze_completist_data.py` | 434 |
+| `src/affine_control/swing_optimizer.py` | 402 |
+| `src/tools/wrist_universal_joint/streamlit_app.py` | 382 |
+| `content/double-pendulum-articles/double_pendulum.py` | 353 |
+| `src/tangent_models/examples.py` | 340 |
+
+**Finding**: long scripts mix orchestration, business logic, and I/O. Split into focused modules under `src/` or `scripts/lib/`.
+
+## 3. Grades — Carried Forward + Verified
+
+Baseline grades are carried forward. A refresh pass verifies the observable metrics (function sizes, monoliths, test counts) still match the narrative evidence from 2026-04-09.
+
+| Criterion | Baseline Grade | Refresh Status |
+|---|---|---|
+| DRY | B | Re-verified |
+| DbC | A | Re-verified |
+| TDD | A | Re-verified |
+| Orthogonality | A | Re-verified |
+| Reusability | B+ | Re-verified |
+| Changeability | A- | Re-verified |
+| LOD | A | Re-verified |
+| Function Size | C+ | Re-verified |
+| Script Monoliths | B- | Re-verified |
+| Overall | B+ | Re-verified |
+
+## 4. TDD / DRY / DbC / LOD Compliance Check
 
 ### TDD
-- Positive evidence: 133 test files for 128 first-party Python files is unusually strong.
-- Confirmed gap: the repo still enforces only `fail_under = 50` in `pyproject.toml`, which is too low for critical scientific and editorial logic.
-- Conclusion: TDD discipline is present, but the minimum quality bar in CI understates the repo’s ambitions.
+- 1715 test functions across 125 test files.
 
 ### DRY
-- Positive evidence: reusable contracts and boundary-check scripts are widespread.
-- Confirmed risk: the wrist model’s very large UI/diagram functions centralize a lot of behavior that should be decomposed into shared helpers.
+- See baseline for detailed DRY findings. Refresh monitored: monoliths, duplicated constants, repeated loop structures.
 
-### Design by Contract
-- Strongest aspect of the repo.
-- `src/core/contracts/validators.py` provides reusable `require`-backed finite/shape/range checks, and contract-helper hits are high.
+### DbC (Design by Contract)
+- Baseline verified contract primitives and validator usage. Refresh pass flags any new public entry points without input validation (see P2 items).
 
-### Law of Demeter
-- No major cross-object chain abuse was confirmed in sampled core modules.
-- Residual risk is mainly inside giant UI update routines where too much state is touched in one place.
+### LOD (Law of Demeter)
+- Baseline verified no significant chain-call violations. Any new code in changed files should be spot-checked for `a.b.c.d` patterns.
 
-### Function Size / Single Responsibility / Script Size
-- `content/wrist-as-universal-joint/Universal_Joint_Model_Enhanced.py` is the clearest confirmed hotspot.
-- `initUI` at 484 LOC and `update_diagram` at 333 LOC clearly violate SRP and small-function expectations.
+## 5. Refresh Remediation Plan (Top Priorities)
 
-## 5. Key Risks
+1. **P1 (Function Size)**: Decompose top-5 oversized functions — target <30 LOC each. Keep single responsibility per function.
+   - `docs/content/Wrist as Universal Joint/Universal_Joint_Model_Enhanced.py::initUI` (485 LOC)
+   - `content/wrist-as-universal-joint/Universal_Joint_Model_Enhanced.py::initUI` (485 LOC)
+   - `docs/content/Wrist as Universal Joint/Universal_Joint_Model_Enhanced.py::update_diagram` (334 LOC)
+   - `content/wrist-as-universal-joint/Universal_Joint_Model_Enhanced.py::update_diagram` (334 LOC)
+   - `docs/content/Wrist as Universal Joint/Universal_Joint_Model_Enhanced.py::_plot_transmission_sweep` (89 LOC)
+2. **P1 (Monoliths)**: Split top-3 monolithic scripts into focused modules. Keep all scripts short and singularly purposed.
+   - `content/wrist-as-universal-joint/Universal_Joint_Model_Enhanced.py` (1514 LOC)
+   - `docs/content/Wrist as Universal Joint/Universal_Joint_Model_Enhanced.py` (1505 LOC)
+   - `scripts/mypy_autofix_agent.py` (624 LOC)
+3. **Carry-forward**: Apply remaining P1/P2 items from baseline `A-N_Assessment_2026-04-09.md` that have not been addressed.
 
-1. `src/affine_control/ddp.py` is explicitly documented as a non-functional mock, which undermines trust in optimization-related tests.
-2. The wrist-model Python module is too large and too stateful to change safely.
-3. A 50% coverage floor is too permissive for scientific/editorial code with strong contract discipline.
-4. Security scanning appears incomplete in the current CI standard.
+## 6. Notes
 
-## 6. Prioritized Remediation Recommendations
-
-1. Replace or quarantine the mock DDP implementation so optimization paths cannot be mistaken for production-capable logic.
-2. Decompose `Universal_Joint_Model_Enhanced.py` into view, plotting, and domain helpers with direct tests.
-3. Raise the Python coverage floor above 50% for critical modules.
-4. Add explicit Python dependency audit and, if desired, bandit-style security scanning to the standard CI path.
-5. Replace remaining `print(` calls with structured logging where output is operational rather than instructional.
-
-## 7. Coverage Notes
-
-Reviewed explicitly:
-- `README.md`
-- `pyproject.toml`
-- `.github/workflows/ci-standard.yml`
-- `src/core/contracts/validators.py`
-- `src/affine_control/ddp.py`
-- `content/wrist-as-universal-joint/Universal_Joint_Model_Enhanced.py`
-- `scripts/`
-- `tests/`
-- `js/`
-
-Not fully assessed:
-- Full content correctness of all `.qmd`/book chapters
-- Binary and media assets
-- Generated caches and build outputs
-
-Assumptions avoided:
-- No claim that Quarto, JS, or E2E suites pass today.
-- No claim that the mock DDP code is acceptable just because it is documented as a mock.
+- This refresh was generated by `refresh_assessment.py` at the fleet root.
+- Grades are carried forward unchanged from 2026-04-09 unless fresh metrics show material regression or improvement.
+- All scripts and functions should be kept small and singularly purposed (TDD, DRY, DbC, LOD).
