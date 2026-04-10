@@ -122,12 +122,14 @@
     toggleBtn.className = "ad-notes-toggle";
     toggleBtn.type = "button";
     toggleBtn.setAttribute("aria-expanded", "false");
+    toggleBtn.setAttribute("aria-controls", "ad-notes-workspace-panel");
     toggleBtn.textContent = "Project Notes";
 
     const panel = document.createElement("section");
     panel.id = "ad-notes-workspace-panel";
     panel.className = "ad-notes-panel";
     panel.setAttribute("aria-label", "Project notes workspace");
+    panel.setAttribute("aria-hidden", "true");
     panel.innerHTML = `
       <div class="ad-notes-header">
         <h3>Project Notes</h3>
@@ -175,12 +177,14 @@
       panel.classList.add("open");
       autoGrow();
       toggleBtn.setAttribute("aria-expanded", "true");
+      panel.setAttribute("aria-hidden", "false");
       textArea.focus();
     }
 
     function closePanel() {
       panel.classList.remove("open");
       toggleBtn.setAttribute("aria-expanded", "false");
+      panel.setAttribute("aria-hidden", "true");
       toggleBtn.focus();
     }
 
