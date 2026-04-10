@@ -104,12 +104,17 @@ def compute_joint_torques(
 # Joints: shoulder flexion, elbow flexion
 # Muscles: anterior deltoid, biceps (biarticular),
 #          triceps (biarticular), brachialis
+#
+# Convention: R has shape (n_joints, n_muscles) so that
+# tau = R @ F maps the muscle-force vector to a joint-torque
+# vector via a single matrix-vector product. Each row is a joint
+# and each column is a muscle. This is the shape that
+# compute_joint_torques() expects.
 R = np.array([
-    # shoulder, elbow
-    [0.05,  0.03,  -0.025,  0.0],   # shoulder moment arms (m)
-    [0.0,   0.04,  -0.020,  0.03],  # elbow moment arms (m)
-]).T  # Shape: (4 muscles, 2 joints) -> transpose to (2, 4)
-R = R.T  # Now (2 joints, 4 muscles)
+    # deltoid, biceps, triceps, brachialis
+    [0.05,  0.03,  -0.025,  0.0 ],  # row 0: shoulder moment arms (m)
+    [0.0,   0.04,  -0.020,  0.03],  # row 1: elbow moment arms (m)
+])  # Shape: (2 joints, 4 muscles) -- ready to use as-is
 
 # Note: biceps has moment arms at BOTH joints (bi-articular)
 muscle_forces = np.array([200.0, 150.0, 100.0, 120.0])  # Newtons

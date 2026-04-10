@@ -31,7 +31,14 @@ When a gymnast swings on a high bar, their center of mass rotates around the bar
   The system is \textbf{underactuated} if $m < n$, meaning there are fewer actuators than degrees of freedom. In this case, the matrix $\Bmat$ is not full rank (it maps a lower-dimensional control space into the $n$-dimensional configuration space).
 \end{definition}
 
-If we lack the authority to command arbitrary accelerations, the classical setpoint perspective sees this as a profound failing. A setpoint controller wants to cancel the nonlinearities, feedback-linearize the system, and dictate the exact motion. Underactuation prevents this brute-force cancellation. 
+\index{underactuation}\index{passive dynamics}\index{zero dynamics}%
+\index{feedback linearization}\index{actuation matrix}%
+\index{double pendulum}\index{parametric excitation}%
+\index{inertial coupling}\index{Coriolis matrix}\index{mass matrix}%
+\index{annihilator}\index{constraint!dynamic}%
+\index{control Lie algebra}\index{bang-bang control}\index{singular arc}
+
+If we lack the authority to command arbitrary accelerations, the classical setpoint perspective sees this as a fundamental limitation. A setpoint controller wants to cancel the nonlinearities, feedback-linearize the system, and dictate the exact motion. Underactuation prevents this brute-force cancellation. 
 
 However, from the trajectory-first perspective developed in Chapter~1, underactuation is not merely a restriction---it is a geometric feature. The \emph{passive dynamics} (the unactuated portions of the dynamics) define a manifold of feasible trajectories. We don't fight the physics; we ride it. 
 

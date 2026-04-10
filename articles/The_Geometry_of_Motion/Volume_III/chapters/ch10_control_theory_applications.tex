@@ -140,6 +140,57 @@ establishes the fundamental existence and optimality conditions for such optimal
 Their treatment covers affine systems with constraints and provides both theoretical guarantees
 and computational methods (the method of characteristics) for solving OCPs of this form.
 
+\subsection{Metabolic Cost Models}
+
+Predictive simulation requires a physiologically meaningful running cost. The
+most widely used choice in gait simulation is a \emph{metabolic energy rate} model,
+which converts muscle state and force into an estimate of the whole-body
+rate of ATP consumption. Umberger et al.\ \cite{umberger2003metabolic} proposed a
+four-term decomposition in which the instantaneous metabolic rate of muscle $i$
+is written as
+\[
+  \dot{E}_i = \dot{h}_i^{A} + \dot{h}_i^{M} + \dot{h}_i^{SL} + \dot{w}_i^{CE},
+\]
+summing activation heat, maintenance heat, shortening/lengthening heat, and the
+mechanical work done by the contractile element, each calibrated against in-vitro
+muscle energetics. Bhargava et al.\ \cite{bhargava2004metabolic} offer a closely
+related formulation that separates activation and maintenance using fast and slow
+fiber fractions, and is the model shipped with OpenSim
+\cite{delp2007opensim,rajagopal2016full}. Whole-body metabolic cost is obtained by
+summing $\dot{E}_i$ across all muscles and adding a constant basal rate.
+
+In practice, minimizing $\int_0^T \sum_i \dot{E}_i \dt$ is expensive and nonsmooth,
+so many optimal-control studies substitute a surrogate such as $\sum_i a_i^p$ or
+$\sum_i (F_i/F_i^0)^p$ with $p \in \{2, 3\}$
+\cite{pandy2001computer,anderson2001dynamic}. Surrogates and calibrated metabolic
+models generally agree on qualitative patterns (preferred walking speed, stride
+frequency) but can disagree on absolute cost.
+
+\subsection{Muscle Synergies}
+
+Predictive simulation of a 600-muscle model has many more inputs than degrees of
+freedom, reproducing the motor-redundancy problem of Chapter~1 at the control
+level. A long line of neuroscience research has proposed that the central nervous
+system sidesteps this curse of dimensionality by driving muscles in low-dimensional
+patterns called \emph{muscle synergies}: a small set of time-invariant activation
+vectors $\bm{w}_k \in \Reals^{n_{\text{m}}}$ modulated by time-varying coefficients
+$c_k(t)$ so that the full activation is
+\[
+  \bm{a}(t) \approx \sum_{k=1}^{K} c_k(t)\, \bm{w}_k,
+  \qquad K \ll n_{\text{m}}.
+\]
+Bizzi \& Cheung \cite{bizzi2008combining} summarize the evidence for synergies as
+building blocks of motor behavior across species, while d'Avella et al.\
+\cite{davella2003combinations} showed that a handful of time-varying synergies
+account for most of the EMG variance in natural arm reaching. Non-negative matrix
+factorization \cite{HarrisWolpert1998} is the standard extraction technique because
+activations and synergies are non-negative.
+
+For control-theoretic purposes, synergies provide a rationale for low-dimensional
+parameterizations of the input in optimal-control problems, reducing the effective
+control dimension from $n_{\text{m}}$ to $K$ and making predictive simulation
+tractable at whole-body scale.
+
 \section{Prosthetics and Exoskeleton Control}
 
 The control theory of Volumes~I--II applies directly to assistive devices:
@@ -180,19 +231,18 @@ The progression through this volume mirrors the progression through the series:
 
 \begin{center}
 \renewcommand{\arraystretch}{1.3}
-\begin{tabular}{@{}lll@{}}
+\begin{tabular}{@{}llll@{}}
 \toprule
 \textbf{Volume} & \textbf{Concept} & \textbf{Biomechanical Application} & \textbf{Agrachev \& Sachkov} \\
-\textbf{Volume} & \textbf{Concept} & \textbf{Biomechanical Application} \\
 \midrule
-Vol~0 & Screw axes, PoE & Joint kinematics, ISA analysis \\
-Vol~I & Contraction theory & Stability of muscle-driven systems \\
-Vol~I & DDP/iLQR & Optimal muscle excitation patterns \\
-Vol~II & Trajectory tubes & Motor variability envelopes \\
-Vol~II & Phase variables & Gait cycle parameterization \\
-Vol~III & Hill model & Force prediction \\
-Vol~III & Inverse dynamics & Joint torque estimation \\
-Vol~IV & Motor control & Neural command generation \\
+Vol~0   & Screw axes, PoE      & Joint kinematics, ISA analysis            & \cite[Ch.~2]{AgrachevSachkov2004} \\
+Vol~I   & Contraction theory   & Stability of muscle-driven systems        & \cite[Ch.~4]{AgrachevSachkov2004} \\
+Vol~I   & DDP/iLQR             & Optimal muscle excitation patterns        & \cite[Ch.~8]{AgrachevSachkov2004} \\
+Vol~II  & Trajectory tubes     & Motor variability envelopes               & \cite[Ch.~3]{AgrachevSachkov2004} \\
+Vol~II  & Phase variables      & Gait cycle parameterization               & \cite[Ch.~7]{AgrachevSachkov2004} \\
+Vol~III & Hill model           & Force prediction                          & \cite[Ch.~6]{AgrachevSachkov2004} \\
+Vol~III & Inverse dynamics     & Joint torque estimation                   & \cite[Ch.~5]{AgrachevSachkov2004} \\
+Vol~IV  & Motor control        & Neural command generation                 & \cite[Ch.~8]{AgrachevSachkov2004} \\
 \bottomrule
 \end{tabular}
 \end{center}

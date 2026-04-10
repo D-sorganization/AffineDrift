@@ -5,7 +5,7 @@
 \chapter{Where Disciplines Collide: An Interdisciplinary Perspective}
 \label{ch:interdisciplinary}
 
-\epigraph{Golf is a microcosm where physics, engineering, neuroscience, and biomechanics all collide. Understanding the collision is understanding the game.}{---AffineDrift}
+\epigraph{Golf is a microcosm where physics, engineering, neuroscience, and biomechanics all collide. Understanding the collision is understanding the game.}{}
 
 % ─────────────────────────────────────────────────────────────────
 \begin{laymansbox}{Why Disciplines Matter}{laymans:ch13:disciplines}
@@ -190,7 +190,7 @@ The affine framework provides a way to understand what the nervous system must l
 
 The golf club is not just a biomechanical system; it is a material structure. The shaft is typically made of carbon fiber (a composite material: carbon fibers embedded in epoxy resin). The clubhead is made of steel or titanium or a composite. The ball is made of a synthetic rubber or urethane cover over a rubber core.
 
-These materials have mechanical properties that profoundly affect the swing and the outcome.
+These materials have mechanical properties that substantially affect the swing and the outcome.
 
 \subsection*{Shaft Materials and Design}
 
@@ -258,7 +258,7 @@ These measurements are direct windows into the physics of the swing and impact. 
 
 The model that predicts ball trajectory from swing parameters is essentially a solution to the equations of motion for the ball under gravity, air drag, and spin-induced lift (Magnus effect). This is a well-understood physics problem.
 
-But there is an inverse problem: given the observed ball trajectory, what can we infer about the club and ball at impact? This is where data science and machine learning come in.
+But there is an inverse problem: given the observed ball trajectory, what can we infer about the club and ball at impact? This is where physics-informed parameter estimation and statistical inference become essential.
 
 \subsection*{Learning the Drift Field from Data}
 
@@ -277,7 +277,7 @@ The answer is: partially, yes. We can use the pre-impact states and post-impact 
 
 More precisely, we can estimate the parameters of the drift field. The drift field has a known structure (it includes gravity, Coriolis forces, elastic forces from the shaft, etc.). We can measure or estimate most of these from the golfer's biomechanics and equipment. For the unknown parameters (like the shaft stiffness $\shaftstiff$ or the effective muscle damping), we can use the launch monitor data to infer the best values.
 
-This is machine learning in the service of physics: not a black-box neural network, but a physics-informed model that learns the unknown parameters.
+This physics-informed approach constrains the solution space using the known structure of the drift field, in contrast to purely empirical regression methods that lack physical interpretability.
 
 \subsection*{Predicting Ball Outcome from Swing Data}
 
@@ -531,7 +531,7 @@ The launch monitor and the personalized physics model together provide diagnosti
 
 \item \textbf{Material science explains how equipment design} (shaft stiffness, ball compression) affects the swing and its outcome.
 
-\item \textbf{Data science and machine learning allow us to learn personalized drift fields from launch monitor data.}
+\item \textbf{Statistical inference and parameter estimation allow us to learn personalized drift fields from launch monitor data.}
 
 \item \textbf{Sports medicine uses force analysis to prevent injury:} good technique distributes load across the body, reducing injury risk.
 
@@ -541,7 +541,7 @@ The launch monitor and the personalized physics model together provide diagnosti
 
 \item \textbf{The future is personalized:} every golfer will have a model of their own drift field and control authority, enabling precise diagnosis and targeted improvement.
 
-\item \textbf{Technology enables insight:} launch monitors, motion capture, and machine learning make the invisible physics visible, allowing golfers and coaches to learn from data rather than just intuition.
+\item \textbf{Technology enables insight:} launch monitors, motion capture, and computational modeling make the invisible physics visible, allowing golfers and coaches to learn from data rather than just intuition.
 \end{enumerate}
 \end{principle}
 

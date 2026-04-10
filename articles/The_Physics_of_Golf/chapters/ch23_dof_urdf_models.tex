@@ -29,7 +29,7 @@ Suppose you have a model of the human body made from the joints we discussed in 
 
 That's approximately 35 numbers. Are all 35 independent? Is there a systematic way to count?
 
-The answer is the \textbf{Grübler-Kutzbach formula}, a tool from mechanism design that counts the degrees of freedom of any kinematic chain. In this chapter, we'll learn to use it, build a complete golf swing model in URDF (Unified Robot Description Format), and show how to simulate that model using robotics software.
+The answer is the \textbf{Grübler-Kutzbach formula}, a tool from mechanism design that counts the degrees of freedom of any kinematic chain~\citep{Uicker1993,Hunt1978}. In this chapter, we'll learn to use it, build a complete golf swing model in URDF (Unified Robot Description Format)~\citep{Lynch2017,Featherstone2008}, and show how to simulate that model using robotics software.
 
 This is where biomechanics meets robotics. The human body is a robot. The laws are the same.
 \end{laymansbox}
@@ -43,7 +43,7 @@ This is where biomechanics meets robotics. The human body is a robot. The laws a
 
 \subsection{The Formula}
 
-The \textbf{Grübler-Kutzbach formula} (also called the Chebychev-Grübler-Kutzbach formula) counts the total degrees of freedom of a kinematic system.
+The \textbf{Grübler-Kutzbach formula} (also called the Chebychev-Grübler-Kutzbach formula) counts the total degrees of freedom of a kinematic system~\citep{Uicker1993,Hunt1978,Merlet2006}.
 
 \begin{theorem}{Grübler-Kutzbach Formula}{thm:grubler}
 For a kinematic chain of $N$ rigid bodies (links) connected by $J$ joints, where joint $i$ has $f_i$ degrees of freedom, the total degrees of freedom of the system is:
@@ -265,7 +265,7 @@ For the golf swing, we have roughly 25--30 DOF. The task (hit a golf ball to a t
 \index{null space}
 \index{self-motion}
 
-The human arm is a fascinating example of a redundant manipulator. Let's analyze it in detail.
+The human arm is a fascinating example of a redundant manipulator~\citep{Murray1994,Siciliano2009}. Let's analyze it in detail.
 
 \subsection{DOF Count}
 
@@ -367,7 +367,7 @@ Your shoulder can rotate, your elbow can flex or extend, your wrist can bend and
 
 This is redundancy. Your body has more degrees of freedom than the task requires.
 
-The golf swing is the same. A golfer has approximately 25--30 degrees of freedom \citep{winter2009biomechanics}. But the task --- place the club face square to the target with maximum speed at impact --- requires control of only 6 variables: the position (3) and orientation (3) of the club head.
+The golf swing is the same. A golfer has approximately 25--30 degrees of freedom \citep{Winter2009}. But the task --- place the club face square to the target with maximum speed at impact --- requires control of only 6 variables: the position (3) and orientation (3) of the club head.
 
 That leaves 20--25 DOF unspecified. There are \emph{infinitely many} joint configurations that produce the same club position. This is not a problem. It's a feature. It's how the brain exploits redundancy to adapt, optimize, and recover from perturbations.
 
@@ -474,7 +474,7 @@ This explains why two elite golfers can look completely different in slow motion
 
 \subsection{Bernstein's Degrees of Freedom Problem}
 
-In 1967, the Soviet biomechanist Nikolai Bernstein posed the fundamental question: \emph{How does the brain choose among infinitely many solutions?}
+In 1967, the Soviet biomechanist Nikolai Bernstein posed the fundamental question: \emph{How does the brain choose among infinitely many solutions?}~\citep{bernstein1967coordination,Todorov2002}
 
 \begin{definition}{Bernstein's Degrees of Freedom Problem}{def:ch23_bernstein_problem}
 Given a motor task (e.g., hit a golf ball), the organism has many more DOF than required by the task. This creates a problem:
@@ -507,7 +507,7 @@ As the golfer learns, the brain develops these patterns. It learns to exploit re
 
 \subsection{Self-Organization Through Constraints}
 
-So how does the brain actually choose? The answer is not that it picks one solution at random. Rather, the solution is dramatically constrained by physics and physiology:
+So how does the brain actually choose? The answer is not that it picks one solution at random. Rather, the solution is dramatically constrained by physics and physiology~\citep{todorov2004optimality,scott2004optimal,HarrisWolpert1998}:
 
 \begin{itemize}
 \item \textbf{Joint limits:} Each joint has a maximum range of motion. This reduces the feasible set to a smaller manifold (the intersection of the solution manifold with the joint-limit constraints).
@@ -664,7 +664,7 @@ The structure of the golf swing emerges from redundancy:
 \index{Unified Robot Description Format}
 \index{robot description}
 
-URDF is an XML-based format that describes the kinematic and dynamic structure of a robot. It was originally developed for ROS (Robot Operating System) at Willow Garage. Today, URDF is the standard format for describing humanoid robots, industrial arms, and increasingly, human body models.
+URDF is an XML-based format that describes the kinematic and dynamic structure of a robot~\citep{Lynch2017,Siciliano2009}. It was originally developed for ROS (Robot Operating System) at Willow Garage. Today, URDF is the standard format for describing humanoid robots, industrial arms, and increasingly, human body models~\citep{koo2009application,Delp2007}.
 
 \subsection{Basic Structure}
 
@@ -862,7 +862,7 @@ $$\text{DOF} = 3 + 3 + 3 + 2 + 2 + 3 + 2 + 2 = 20 \text{ DOF}$$
 
 \subsection{Segment Parameters: Anthropometry}
 
-To populate the URDF with realistic inertia values, we use anthropometric data. The most widely used data comes from de Leva (1996), who measured body segment masses and moments of inertia on cadavers and living subjects.
+To populate the URDF with realistic inertia values, we use anthropometric data~\citep{Winter2009,Hamill2015}. The most widely used data comes from de Leva (1996), who measured body segment masses and moments of inertia on cadavers and living subjects~\citep{Zatsiorsky1998}.
 
 \begin{example}{Anthropometric Data (de Leva 1996)}{ex:anthropometry}
 For a 70 kg male, typical segment masses are:
@@ -1033,11 +1033,11 @@ A complete URDF would include all segment masses and inertias computed from de L
 \index{Pinocchio}
 \index{dynamics engine}
 
-Once you have a URDF, you can load it into a dynamics engine. These engines compute the equations of motion automatically.
+Once you have a URDF, you can load it into a dynamics engine~\citep{Featherstone2008,Lynch2017}. These engines compute the equations of motion automatically using recursive rigid-body algorithms~\citep{pandy2001computer}.
 
 \subsection{Drake (MIT)}
 
-Drake is a C++/Python library for dynamics, control, and optimization. It includes:
+Drake is a C++/Python library for dynamics, control, and optimization~\citep{Featherstone2008}. It includes:
 \begin{itemize}
 \item Symbolic and numerical differentiation
 \item Inverse and forward dynamics
@@ -1054,7 +1054,7 @@ For a golf swing, Drake can:
 
 \subsection{MuJoCo (DeepMind)}
 
-MuJoCo (Multi-Joint dynamics with Contact) is a physics engine designed for robotics and biomechanics. It's fast, accurate, and widely used for reinforcement learning.
+MuJoCo (Multi-Joint dynamics with Contact) is a physics engine designed for robotics and biomechanics~\citep{todorov2005generalized}. It's fast, accurate, and widely used for reinforcement learning.
 
 Key features:
 \begin{itemize}
@@ -1068,7 +1068,7 @@ For the golf swing, MuJoCo is ideal for learning-based approaches. You can train
 
 \subsection{Pinocchio (INRIA)}
 
-Pinocchio is a lightweight library focused on efficient computation of dynamics algorithms. It computes:
+Pinocchio is a lightweight library focused on efficient computation of dynamics algorithms~\citep{Featherstone2008}. It computes:
 \begin{itemize}
 \item Forward kinematics: given $\bm{q}$ and $\dot{\bm{q}}$, compute link positions and velocities
 \item Jacobians: $\bm{J}(\bm{q})$ and time derivatives $\dot{\bm{J}}(\bm{q},\dot{\bm{q}})$
@@ -1191,7 +1191,7 @@ Elite golfers exploit this redundancy:
 \item Over a career, they learn the null-space motions that work best for their body
 \end{itemize}
 
-A robot with redundancy is more adaptable, more robust to perturbations, and more efficient. The human body is a redundant robot.
+A robot with redundancy is more adaptable, more robust to perturbations, and more efficient~\citep{Siciliano2009,bernstein1967coordination}. The human body is a redundant robot.
 
 \subsection{The Identification Problem}
 
@@ -1199,7 +1199,7 @@ If we want to understand how a golfer produces a particular swing, we face an in
 
 With 20 DOF, this is underdetermined: there are infinitely many solutions. The nervous system must choose one. Which one?
 
-Optimization theory suggests the nervous system minimizes some cost (muscle activation, energy, jerks, joint torques). Different costs lead to different solutions. Biomechanics must find the right cost.
+Optimization theory suggests the nervous system minimizes some cost (muscle activation, energy, jerks, joint torques)~\citep{Todorov2002,Flash1985,scott2004optimal}. Different costs lead to different solutions. Biomechanics must find the right cost.
 
 A URDF + dynamics engine allows us to:
 1. Propose a cost function

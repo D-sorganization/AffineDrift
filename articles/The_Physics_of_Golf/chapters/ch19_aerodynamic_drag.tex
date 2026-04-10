@@ -13,7 +13,7 @@ You've likely heard that drag is ``negligible'' in golf. That's wrong. At clubhe
 \index{drag coefficient}
 \index{reference area}
 
-Drag is the force exerted by a fluid (in this case, air) on an object moving through it, opposing the motion. Unlike gravity and inertial forces (which are derived from geometry and mass), drag is fundamentally a fluid-mechanical phenomenon. To understand it, we must start with the equations of fluid flow.
+Drag is the force exerted by a fluid (in this case, air) on an object moving through it, opposing the motion~\citep{bearman1976golf,smits2010aerodynamic}. Unlike gravity and inertial forces (which are derived from geometry and mass), drag is fundamentally a fluid-mechanical phenomenon. To understand it, we must start with the equations of fluid flow.
 
 When an object moves through a fluid, it disturbs the fluid's velocity field. The fluid flows around the object, following paths determined by the balance of pressure gradients and viscous stresses. Behind the object, a wake forms—a region of lower pressure and turbulent flow. The pressure difference between the front and back of the object creates a net force in the direction opposite to motion: this is drag.
 
@@ -42,7 +42,7 @@ The drag force acts \emph{opposite} to the velocity direction. In vector form:
 This is a nonlinear function of velocity—quadratic in magnitude. This is critical: at twice the speed, drag is \emph{four times} larger.
 
 \begin{definition}{Drag Coefficient and Reference Area}{def:cd-area}
-The drag coefficient $C_D$ is determined by the shape of the object and must be measured experimentally or computed via computational fluid dynamics (CFD).
+The drag coefficient $C_D$ is determined by the shape of the object and must be measured experimentally or computed via computational fluid dynamics (CFD)~\citep{bearman1976golf,smits2010aerodynamic,daish1972physics}.
 
 \begin{center}
 \begin{tabular}{lll}
@@ -298,11 +298,11 @@ The qualitative conclusion is that omitting drag causes the computed wrist torqu
 \index{lift force}
 \index{Magnus effect}
 
-Once the ball leaves the clubface, drag and air properties determine the trajectory. This is fundamentally different from the swing mechanics, but it's an instructive application of drag in golf.
+Once the ball leaves the clubface, drag and air properties determine the trajectory~\citep{bearman1976golf,smits2010aerodynamic,Penner2003}. This is fundamentally different from the swing mechanics, but it's an instructive application of drag in golf.
 
 The golf ball has a diameter of approximately 42.67 mm (minimum allowed by rules). If it were smooth, it would have a drag coefficient of approximately $C_D \approx 0.47$ (sphere). However, golf balls are covered with 300--500 \emph{dimples}—small indentations that reduce drag to $C_D \approx 0.20$--$0.30$.
 
-Why do dimples reduce drag? The answer lies in boundary layer transition. For a smooth sphere at golf-ball Reynolds numbers ($\mathrm{Re} \sim 10^5$), the laminar boundary layer (thin layer of slow-moving fluid at the surface) separates well before the back of the sphere, creating a large wake and high drag. Dimples trigger transition to turbulence in the boundary layer, which stays attached longer, narrowing the wake and reducing pressure drag. The net effect: dimples reduce drag by 40--50\% and increase range by a similar fraction.
+Why do dimples reduce drag? The answer lies in boundary layer transition~\citep{bearman1976golf,smits2010aerodynamic}. For a smooth sphere at golf-ball Reynolds numbers ($\mathrm{Re} \sim 10^5$), the laminar boundary layer (thin layer of slow-moving fluid at the surface) separates well before the back of the sphere, creating a large wake and high drag. Dimples trigger transition to turbulence in the boundary layer, which stays attached longer, narrowing the wake and reducing pressure drag. The net effect: dimples reduce drag by 40--50\% and increase range by a similar fraction.
 
 The lift force on a ball with backspin is:
 \begin{equation}
@@ -316,7 +316,7 @@ S = \frac{r \omega}{v}
 \label{eq:spin-parameter}
 \end{equation}
 
-Here $r$ is the ball radius, $\omega$ is the angular velocity (backspin), and $v$ is the translational velocity. For typical golf shots, $S \sim 0.1$--$0.3$, and $C_L$ ranges from 0.1 to 0.5.
+Here $r$ is the ball radius, $\omega$ is the angular velocity (backspin), and $v$ is the translational velocity. For typical golf shots, $S \sim 0.1$--$0.3$, and $C_L$ ranges from 0.1 to 0.5~\citep{smits2010aerodynamic,Penner2003}.
 
 The trajectory of a ball in flight must be computed numerically by solving:
 \begin{equation}
