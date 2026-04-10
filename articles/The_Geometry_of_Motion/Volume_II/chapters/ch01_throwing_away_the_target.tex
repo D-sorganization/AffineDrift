@@ -1,5 +1,10 @@
 \chapter{Throwing Away the Target}
 \label{ch:throwing_target}
+\index{trajectory tracking}\index{setpoint control}\index{control is motion}%
+\index{trajectory tube}\index{tube-invariance}\index{funnel}%
+\index{golf swing}\index{underactuation}\index{passive dynamics}%
+\index{limit cycle}\index{Lyapunov stability}\index{reachable set}%
+\index{attainable set}\index{Orbit Theorem}\index{signal-dependent noise}
 
 \epigraph{%
   A river does not flow toward the ocean because it knows where the ocean is.
@@ -16,7 +21,7 @@ Classical control theory often focuses on getting a system to a specific point a
 \section{The Wrong Question}
 % ──────────────────────────────────────────────
 
-Open any classical control textbook and you will find, within the first few pages, a
+Open any classical control textbook~\cite{kuo2002learning} and you will find, within the first few pages, a
 picture like this: a system, an error signal, a reference point, and a controller
 whose entire purpose is to drive that error to zero. The implicit promise is
 seductive---\emph{give me a destination and I will take you there}.
@@ -44,9 +49,9 @@ This is not merely a philosophical reframing. It changes the mathematics. It cha
 what we optimize. It changes how we define stability. And it changes what ``success''
 means in a controlled system.
 
-The purpose of this book is to develop control theory from this trajectory-first
-perspective, to show that the classical setpoint framework is a special (and often
-misleading) case of a much richer theory, and to build the mathematical tools needed
+In this volume, we develop control theory from this trajectory-first
+perspective, showing that the classical setpoint framework is a special (and often
+limiting) case of a much richer theory, and building the mathematical tools needed
 to design controllers for systems whose purpose is to \emph{move}.
 
 \vspace{0.3cm}
@@ -167,7 +172,7 @@ framework, but not vice versa.
 
 \begin{definition}{Trajectory Tube}{tube}
   Given a reference trajectory $\traj^*: [0,T] \to \statespace$ and a tube radius
-  function $\varepsilon: [0,T] \to \Reals_{>0}$, the \textbf{trajectory tube} is the
+  function $\varepsilon: [0,T] \to \Reals_{>0}$, the \textbf{trajectory tube}~\cite{MajumdarTedrake2017} is the
   time-varying set
   \begin{equation}
     \tube(t) = \bigl\{\, \state \in \statespace : \norm{\state - \traj^*(t)} \leq \varepsilon(t) \,\bigr\}.
@@ -195,7 +200,7 @@ golf is inherently more interesting than other motions, but because it compresse
 an extraordinary number of control-theoretic challenges into roughly 1.2~seconds:
 
 \begin{enumerate}[label=(\roman*)]
-  \item \textbf{High dimensionality.} The human body has over 200 degrees of freedom.
+  \item \textbf{High dimensionality.} The human body has over 200 degrees of freedom~\cite{Winter2009,Zatsiorsky2002}.
         Even a simplified musculoskeletal model of the golf swing uses 20--40
         generalized coordinates.
   \item \textbf{Extreme nonlinearity.} Joint torques couple through the full rigid-body

@@ -42,8 +42,8 @@ flexion from $0^\circ$ to $90^\circ$:
 \begin{enumerate}
   \item The femoral condyles \textbf{roll} on the tibial plateaus (like a wheel on a road)
   \item They simultaneously \textbf{slide} posteriorly (the contact point moves backward)
-  \item The tibia undergoes coupled \textbf{internal rotation} of approximately $15^\circ$
-        (the ``screw-home'' mechanism)
+  \item The tibia undergoes coupled \textbf{internal rotation} of approximately
+        $15^\circ$ (the ``screw-home'' mechanism) \cite{walker1972quantitative,komistek2003invivo}
   \item The contact area shifts, changing the effective moment arm
 \end{enumerate}
 
@@ -101,14 +101,20 @@ def knee_isa_trajectory(
         Array of flexion angles in degrees.
     roll_slide_ratio : float
         Ratio of rolling to total contact displacement.
-        Pure rolling = 1.0, pure sliding = 0.0.
+        Pure rolling = 1.0, pure sliding = 0.0. A value of
+        approximately 0.6 is consistent with the in-vitro
+        tibiofemoral measurements of Walker et al. (1972)
+        [walker1972quantitative].
 
     Returns
     -------
     np.ndarray, shape (N, 3)
         ISA positions in the tibial reference frame.
     """
-    R_condyle = 0.030  # approximate femoral condyle radius (m)
+    # Approximate femoral condyle radius (m); representative
+    # adult value from Walker et al. (1972) [walker1972quantitative]
+    # and standard knee-anatomy references [nigg2007biomechanics].
+    R_condyle = 0.030
     isa_positions = np.zeros((len(flexion_angles), 3))
 
     for i, theta in enumerate(np.radians(flexion_angles)):
@@ -126,12 +132,13 @@ def knee_isa_trajectory(
 
 The glenohumeral joint has the largest range of motion of any joint in the body,
 achieved at the expense of stability. The ``ball-and-socket'' description is a
-gross simplification: the humeral head translates $2$--$4$~mm during abduction,
-and the instantaneous center of rotation shifts continuously.
+gross simplification: the humeral head translates $2$--$4$~mm during abduction
+\cite{harryman1990translation}, and the instantaneous center of rotation shifts
+continuously.
 
 The shoulder complex involves four joints:
 \begin{enumerate}
-  \item \textbf{Glenohumeral} (GH): primary ball-and-socket, 3 DOF rotation + $\sim$3~mm translation
+  \item \textbf{Glenohumeral} (GH): primary ball-and-socket, 3 DOF rotation + $\sim$3~mm translation \cite{harryman1990translation}
   \item \textbf{Acromioclavicular} (AC): 3 DOF rotation, small range
   \item \textbf{Sternoclavicular} (SC): 3 DOF rotation, small range
   \item \textbf{Scapulothoracic} (ST): not a true synovial joint; the scapula glides on

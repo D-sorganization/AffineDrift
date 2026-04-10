@@ -92,9 +92,9 @@ When optimizing for a golf swing, direct collocation handles this underactuation
 \begin{example}{The Golf Swing OCP}{golf_ocp}
   Consider our planar double pendulum model from Chapter 5. The solver is given the task to maximize $\dot{\theta}_2(t_f)$ (club speed). 
   
-  **Initial Guess:** If we seed the NLP solver with a naive guess (e.g., constant shoulder torque), the club speed will be pitifully low.
+  **Initial Guess:** If we seed the NLP solver with a naive guess (e.g., constant shoulder torque), the club speed will be substantially suboptimal.
   
-  **The Optimized Result:** The solver discovers the optimal physical orchestration entirely on its own. It will apply a massive positive $u_1$ to accelerate the arms, and then immediately reverse $u_1$ to negative maximum just prior to $t_f$. The optimizer mathematicaly "discovers" the necessary inertial coupling (the parametric excitation of $M_{21}\ddot{\theta}_1$) to whip the unactuated club link through the terminal manifold constraint! The passive dynamics are beautifully exploited to satisfy the objective.
+  **The Optimized Result:** The solver discovers the optimal physical orchestration entirely on its own. It will apply a massive positive $u_1$ to accelerate the arms, and then immediately reverse $u_1$ to negative maximum just prior to $t_f$. The optimizer mathematically "discovers" the necessary inertial coupling (the parametric excitation of $M_{21}\ddot{\theta}_1$) to whip the unactuated club link through the terminal manifold constraint! The passive dynamics are beautifully exploited to satisfy the objective.
 \end{example}
 
 
@@ -134,7 +134,7 @@ The optimizer is now forced to "widen the funnel" as it approaches the moving go
   Moving Target OCP & Finding a trajectory that optimizes terminal kinematics when intersecting a spatial manifold, without prescribing the clock time. \\
   Multi-Shooting & Discretizing the time domain into segments, using numerical integrators to enforce dynamics constraints between nodes. \\
   Direct Collocation & Representing the entire trajectory as splines and enforcing dynamics algebraically at discrete points arrayed along the trajectory. \\
-  Passive Exploitation & Solvers naturally optimize underactuated topologies by weaponizing coupling matrices ($M_{21}, C_2$). \\
+  Passive Exploitation & Solvers naturally optimize underactuated topologies by exploiting coupling matrices ($M_{21}, C_2$). \\
   Stochastic Robustness & Augmenting the OCP with expected variance to ensure the resulting trajectory can be consistently executed by noisy nonlinear plants. \\
   \bottomrule
 \end{tabular}

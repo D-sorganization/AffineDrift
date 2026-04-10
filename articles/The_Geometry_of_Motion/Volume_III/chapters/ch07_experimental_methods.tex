@@ -14,13 +14,20 @@ Optoelectronic motion capture systems (Vicon, Qualisys, OptiTrack) track retrore
 markers attached to the body surface. Standard configurations use 30--80 markers placed
 on bony landmarks following established protocols (Plug-in-Gait, Cleveland Clinic, ISB).
 
-Key specifications for biomechanical applications:
+Key specifications for biomechanical applications
+\cite{chiari2005human,chiari2005human}:
 \begin{itemize}
   \item \textbf{Sampling rate}: 100--500~Hz for human motion (higher for impacts)
   \item \textbf{Spatial accuracy}: $<1$~mm in calibrated volume
   \item \textbf{Marker size}: 9--14~mm diameter
   \item \textbf{Latency}: important for real-time applications ($<10$~ms achievable)
 \end{itemize}
+
+It is important to note that the instrument accuracy above refers to the camera
+system alone. The dominant error in marker-based biomechanics is not camera noise
+but \emph{soft tissue artifact}---the relative motion between skin markers and the
+underlying bone---discussed in Section~\ref{sec:sta} below
+\cite{chiari2005human,chiari2005human}.
 
 \subsection{Markerless Systems}
 
@@ -89,6 +96,65 @@ def process_mocap_data(
 
     return positions, velocities, accelerations
 \end{lstlisting}
+
+\subsection{Soft Tissue Artifact}
+\label{sec:sta}
+
+Soft tissue artifact (STA) is the relative motion between skin-mounted markers
+and the underlying bone caused by deformation of skin, subcutaneous fat, and muscle
+during movement. STA is widely recognized as the dominant source of error in
+marker-based motion capture, frequently exceeding the nominal camera resolution
+by more than an order of magnitude \cite{chiari2005human,peters2010quantification}.
+
+The magnitude of STA varies strongly with marker location, anatomical region,
+task, and subject anthropometry. Representative values for the lower limb are
+10--30~mm of skin-marker displacement relative to bone during walking and running,
+with the thigh segment the worst offender and the shank the best
+\cite{chiari2005human,peters2010quantification}. STA is not random noise: it is
+task-correlated and heavily dependent on muscle contraction state, which means
+low-pass filtering cannot remove it.
+
+Practical mitigation strategies include:
+\begin{itemize}
+  \item \textbf{Rigid marker clusters} mounted on lightweight shells, which average
+        out local skin motion over a neighborhood of markers.
+  \item \textbf{Optimal pose estimation}, in which the rigid body pose of a segment
+        is obtained by least-squares fitting of a cluster of markers rather than by
+        differencing pairs of landmarks \cite{chiari2005human}.
+  \item \textbf{Global optimization / inverse kinematics} with joint constraints,
+        which enforces an articulated model and redistributes STA across the chain.
+  \item \textbf{Biplanar fluoroscopy} or bone pins when the research question
+        demands sub-millimeter bone-to-bone accuracy.
+\end{itemize}
+
+STA should always be reported as part of the uncertainty budget of any kinetic
+analysis; inverse dynamics is sensitive to segment orientation errors, and
+moderate STA can produce large errors in computed joint moments.
+
+\subsection{Low-Pass Filter Cutoff Selection}
+\label{sec:filter-cutoff}
+
+Choosing the cutoff frequency for the low-pass Butterworth filter in
+\texttt{process\_mocap\_data()} is not a matter of taste: a cutoff that is too low
+attenuates the true signal (especially accelerations, whose energy extends to
+higher frequencies than positions), while a cutoff that is too high leaves noise
+that is amplified by numerical differentiation.
+
+The standard objective procedure is \textbf{residual analysis}, due to Winter
+\cite{Winter2009}. For a range of candidate cutoffs $f_c$, one computes
+the root-mean-square residual
+\[
+  R(f_c) = \sqrt{\frac{1}{N}\sum_{i=1}^{N}\bigl(x_i - \hat{x}_i(f_c)\bigr)^2},
+\]
+where $x_i$ is the raw signal and $\hat{x}_i(f_c)$ is the filtered signal. Plotting
+$R(f_c)$ vs.\ $f_c$ produces a curve that is approximately linear in the high-$f_c$
+regime (residuals reflect only noise) and rises sharply at low $f_c$ (residuals
+include signal). The optimal cutoff is the intersection of the extrapolated linear
+noise-only segment with the $R$-axis, typically in the range 4--10~Hz for
+kinematics of whole-body locomotion and 10--20~Hz for running and impact-dominated
+tasks \cite{Winter2009}. Higher cutoffs are required when downstream
+analysis needs accelerations or joint powers, since differentiation acts as a
+high-pass amplifier.
 
 \section{Electromyography (EMG)}
 

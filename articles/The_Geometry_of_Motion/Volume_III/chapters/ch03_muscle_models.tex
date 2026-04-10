@@ -79,11 +79,24 @@ normalized fiber length $\tilde{\ell} = \ell^M / \ell_0^M$:
     f_L(\tilde{\ell}) = \exp\!\left(-\frac{(\tilde{\ell} - 1)^2}{\gamma}\right),
     \label{eq:ch3:force-length}
   \end{equation}
-  where $\gamma \approx 0.45$ controls the width of the curve. Maximum force ($f_L = 1$)
-  occurs at optimal fiber length ($\tilde{\ell} = 1$). Force decreases for both shorter
-  and longer fiber lengths, reaching near-zero at approximately $\tilde{\ell} = 0.5$
-  and $\tilde{\ell} = 1.5$.
+  where $\gamma \approx 0.45$ \cite{thelen2003adjustment} controls the width of the
+  curve. Maximum force ($f_L = 1$) occurs at optimal fiber length ($\tilde{\ell} = 1$).
+  Force decreases for both shorter and longer fiber lengths, reaching near-zero at
+  approximately $\tilde{\ell} = 0.5$ and $\tilde{\ell} = 1.5$.
 \end{definition}
+
+\begin{quote}
+  \textit{A note on the numerical parameters.} The values $\gamma = 0.45$,
+  $A_f = 0.25$, $k^{PE} = 4.0$, and $\varepsilon_0 = 0.6$ used throughout this
+  chapter are the default parameters recommended by Thelen
+  \cite{thelen2003adjustment} for the ``generic'' adult Hill-type muscle, and
+  also serve as the baseline for the Millard--Uchida formulation
+  \cite{millard2013flexing}. They are calibrated against mid-thigh muscles of
+  young adults and should be interpreted as a starting point, not as universal
+  constants. Real muscles exhibit systematic variation with age, sex, training
+  status, and fiber-type composition, and subject-specific tuning is almost
+  always required for quantitative predictions.
+\end{quote}
 
 The physical basis for the force-length relationship is the sliding filament theory
 \cite{HuxleySimmons1971}: at the optimal length, the maximum number of actin-myosin
@@ -103,10 +116,14 @@ class MuscleParameters:
     v0: float          # Maximum contraction velocity (m/s)
     l_T_slack: float   # Tendon slack length (m)
     alpha0: float      # Pennation angle at optimal length (rad)
-    gamma: float = 0.45  # Force-length curve width parameter
-    Af: float = 0.25   # Force-velocity shape factor
-    kPE: float = 4.0   # Passive elastic stiffness parameter
-    e0: float = 0.6    # Passive elastic strain at F0
+    # Defaults below are the Thelen (2003) generic-adult values.
+    # See: Thelen, D.G. (2003) "Adjustment of muscle mechanics
+    # model parameters to simulate dynamic contractions in older
+    # adults," J. Biomech. Eng. 125(1), 70-77 [thelen2003adjustment].
+    gamma: float = 0.45  # Force-length curve width (Thelen 2003)
+    Af: float = 0.25     # Force-velocity shape factor (Thelen 2003)
+    kPE: float = 4.0     # Passive elastic stiffness (Thelen 2003)
+    e0: float = 0.6      # Passive strain at F0 (Thelen 2003)
 
     @property
     def v_max(self) -> float:
@@ -226,8 +243,10 @@ def muscle_force(
                 * force_velocity(v_tilde, activation, params.Af))
     f_passive = force_length_passive(l_tilde, params.kPE, params.e0)
 
-    # Pennation angle (changes with fiber length)
-    cos_alpha = np.cos(params.alpha0) if l_tilde > 0.1 else 1.0
+    # Pennation angle varies with fiber length under the
+    # constant-thickness assumption: sin(alpha) = sin(alpha0) * l0_M / l_M
+    sin_alpha = np.sin(params.alpha0) * params.l0_M / max(l_M, 1e-6)
+    cos_alpha = np.sqrt(max(0.0, 1.0 - sin_alpha ** 2))
 
     # Total force along tendon
     F_active = f_active * params.F0 * cos_alpha

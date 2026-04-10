@@ -1,0 +1,58 @@
+\chapter{The Physics of Putting}
+\label{ch:putting}
+
+\begin{laymansbox}{Why Putting Looks Simple but Isn't}{lay:putting}
+Putting accounts for roughly 40\% of strokes played in a typical round, yet the physics differs fundamentally from the full swing. The ball barely leaves the surface, aerodynamic forces are negligible, and the dominant dynamics involve rolling friction, surface slope, and a stroke whose timing constants are measured in hundreds of milliseconds rather than tens. This chapter develops a minimal mathematical model of the putt: how the ball transitions from sliding to rolling, how gravity and slope steer it, and why the metronome-like tempo of elite putters emerges naturally from a pendulum treatment of the stroke.
+\end{laymansbox}
+
+\section{Rolling Versus Sliding Dynamics}
+\label{sec:putting_roll_slide}
+
+Immediately after impact the ball possesses linear velocity $v_0$ but essentially no spin---the putter face imparts very little angular momentum compared with that needed for pure rolling ($\omega = v/r$). The ball therefore \emph{skids} over the first few centimeters of its journey. During the skid phase, kinetic friction acts backward on the bottom of the ball, simultaneously decelerating its translation and accelerating its rotation:
+\begin{align}
+m \dot{v} &= -\mu_k m g, \\
+I \dot{\omega} &= \mu_k m g r,
+\end{align}
+where $I = \tfrac{2}{5} m r^2$ for a uniform sphere. Pure rolling is reached when $v = \omega r$; setting $\omega(t_r) r = v(t_r)$ yields a skid duration $t_r = 2 v_0 / (7 \mu_k g)$ after which the ball rolls without slipping and only rolling friction remains \cite{penner2002putting}. For a typical green with $\mu_k \approx 0.25$ the skid phase lasts roughly 0.1~s and covers about 20\% of the putt length.
+
+\section{Putt Path on Slopes}
+\label{sec:putting_slopes}
+
+On a green with slope angle $\alpha$, the component of gravity along the surface is $g_\parallel = g \sin \alpha$, directed down the fall line. Treating the ball as a rolling point mass, the equation of motion in the green-plane coordinates is
+\begin{equation}
+\ddot{\mathbf{r}} = -\mu_r g\, \hat{\mathbf{v}} + g \sin \alpha\, \hat{\mathbf{s}},
+\end{equation}
+where $\hat{\mathbf{s}}$ is the unit vector along the steepest descent and $\mu_r$ is the effective rolling friction coefficient. The gravitational term curves the trajectory: a putt rolled perpendicular to the fall line follows a parabola toward the low side, and the apex of that parabola is the ``apex point'' experienced putters visualize when reading greens.
+
+\section{The Stimpmeter and Friction Coefficients}
+\label{sec:putting_stimp}
+
+The \emph{Stimpmeter}, standardized by the USGA, releases a ball from a fixed height down an inclined ramp and measures the roll-out distance $L$ on a level green. Because the ramp delivers a known release velocity $v_r \approx 1.83$~m/s, the rolling friction coefficient follows from energy conservation:
+\begin{equation}
+\mu_r = \frac{v_r^2}{2 g L}.
+\end{equation}
+Stimp readings (in feet) typically range from 8 (slow municipal green) to 13 (major championship), corresponding to $\mu_r$ values between 0.07 and 0.04. Tournament greens are therefore effectively twice as slick as everyday putting surfaces \cite{karlsen2008putting}.
+
+\section{Pendulum Model of the Putting Stroke}
+\label{sec:putting_pendulum}
+
+The putting stroke is well approximated as a pendulum swinging about a pivot near the base of the neck, with the putter and arms forming a compound pendulum of effective length $L_p$ and small-angle natural frequency $\omega_p = \sqrt{g / L_p}$. For $L_p \approx 0.8$~m this gives $\omega_p \approx 3.5$~rad/s and a period $T_p \approx 1.8$~s, remarkably close to the measured half-period of elite putting strokes ($\approx 0.8$--$1.0$~s backswing plus downswing) \cite{mackenzie2011putting}. The pendulum analogy explains why tour players are taught to let the stroke ``swing freely'': at the pendulum's natural frequency the stroke requires minimal muscular input and thus minimal opportunity for neuromuscular noise to corrupt the line and speed.
+
+\section{Tempo and Consistency}
+\label{sec:putting_tempo}
+
+Elite putters exhibit extraordinarily consistent tempo ratios---the ratio of backswing to downswing time hovers near 2:1 across a wide range of putt lengths \cite{pelz2000putting}. Because the pendulum frequency is set by geometry rather than stroke length, this consistency emerges naturally from the physics: longer putts are produced by larger amplitude at the same frequency, not by swinging faster. Direction variance on flat greens among tour players is approximately $0.5^\circ$ \cite{karlsen2008putting}, which means a 20-foot putt can still finish within the hole if its initial line and speed are both within tight tolerances.
+
+\begin{exercises}{Problems and Thought Experiments}{ex:putting}
+
+\begin{enumerate}
+
+\item \textbf{Skid-to-Roll Transition:} A ball is struck with initial velocity $v_0 = 2.0$~m/s and zero spin on a green with kinetic friction $\mu_k = 0.25$. Using $I = \tfrac{2}{5} m r^2$, compute the time $t_r$ and distance $x_r$ at which pure rolling is first achieved, and determine the velocity at that instant. What fraction of the initial kinetic energy has been dissipated during the skid?
+
+\item \textbf{Breaking Putt:} A 20-foot putt is aimed perpendicular to the fall line of a green sloped at $\alpha = 2^\circ$. Assume an effective rolling friction $\mu_r = 0.05$ and that the ball must arrive at the hole with vanishing velocity. (a)~Estimate the required initial speed. (b)~Estimate the lateral deflection (``break'') due to gravity, treating the trajectory as a short-time expansion. (c)~Where should the golfer aim relative to the hole?
+
+\item \textbf{Stimp and Stroke Length:} Two greens measure Stimp~9 and Stimp~12. For a 15-foot putt on each, use the rolling friction values implied by the Stimpmeter formula to compute the required initial velocity assuming pure rolling throughout. Assuming the pendulum model $v_0 = L_p \omega_p \theta_0$ with $L_p = 0.8$~m, what backswing amplitude $\theta_0$ does each putt require? Comment on whether the difference is within the putter's perceptual threshold.
+
+\end{enumerate}
+
+\end{exercises}

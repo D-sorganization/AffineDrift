@@ -1,5 +1,6 @@
 ---
 title: "Motor Control III: The Remarkable Brain"
+bibliography: ../golf_physics.bib
 ---
 
 ::: {.callout-note}
@@ -17,11 +18,11 @@ When you swing a golf club, your brain is simultaneously:
 - Managing transitions between high-control and high-drift phases
 - Doing all of this in 300 milliseconds with only 20 watts of power
 
-No robot can currently do this. No AI system has come close. Yet your brain does it every day, without thinking about it. This is the chapter that asks: how? And what does this profound biological achievement mean for understanding intelligence?
+No robot can currently do this. No engineered control system has come close. Yet the human brain does it every day, without conscious effort. This is the chapter that asks: how? And what does this remarkable biological achievement reveal about the organization of intelligent motor control?
 
 We also ask the inverse question: why does the brain occasionally fail catastrophically? Why do the yips happen? Why do skilled golfers sometimes choke? The answers reveal surprising truths about how the brain works.
 
-Finally, we consider what artificial intelligence could learn from the brain, and what the golf swing reveals about the future of AI.
+Finally, we consider what the brain's motor control strategies reveal about the principles of intelligent control more broadly.
 
 :::
 
@@ -95,7 +96,7 @@ The most severe constraint is temporal:
 
 - By the time visual feedback about the swing reaches your brain, the swing is over. By the time proprioceptive feedback produces a corrective motor command, the swing is over.
 
-- The brain can process maybe 1--2 feedback correction cycles during the swing. This is barely enough for any feedback-based control.
+- Given the 300 ms downswing duration and ~100 ms sensorimotor loop delay, the brain can process at most 1--2 feedback correction cycles during the swing. This is barely enough for any feedback-based control.
 
 - Conclusion: the swing *must* be ballistic---pre-planned and executed without real-time feedback correction.
 
@@ -319,99 +320,99 @@ Why? The internal model has learned something about the general transformation--
 
 \cite{wolpert2011motor, shadmehr2010computational}
 
-## Comparison with Artificial Intelligence: What Can Machines Learn?
+## What Makes Biological Motor Learning Distinctive
 
 
 
 
 
 
-The brain is an existence proof that biological neural networks can learn to control the golf swing. Can artificial neural networks do the same?
+The brain's approach to learning the golf swing differs fundamentally from engineered control systems. Understanding these differences illuminates why biological motor control achieves such remarkable performance under the severe constraints outlined above.
 
-### How Brain Learning Differs from AI Learning
+### Distinctive Features of Biological Motor Learning
 
 ::: {.callout-important}
-## Brain vs. AI: Learning Mechanisms
+## Biological vs. Engineered Learning Mechanisms
 
 \begin{tabular}{|l|l|l|}
 \hline
-Aspect & Brain & AI (Reinforcement Learning) 
+Aspect & Brain & Engineered Control
 \hline
-Data efficiency & 10,000--100,000 trials & $10^6$--$10^8$ simulated episodes 
+Data efficiency & 10,000--100,000 trials & $10^6$--$10^8$ simulated episodes
 \hline
-Learning time & Hours to years & Seconds to hours (simulated) 
+Learning time & Hours to years & Seconds to hours (simulated)
 \hline
-Sensory input & Rich (proprioception, vision, touch, vestibular) & Impoverished (usually joint angles only) 
+Sensory input & Rich (proprioception, vision, touch, vestibular) & Impoverished (usually joint angles only)
 \hline
-Built-in structure & Yes (cerebellar circuit, motor cortex hierarchy) & Often not (generic architecture) 
+Built-in structure & Yes (cerebellar circuit, motor cortex hierarchy) & Often not (generic architecture)
 \hline
-Error signals & Multiple (proprioceptive error, outcome error, dopamine) & Usually single reward signal 
+Error signals & Multiple (proprioceptive error, outcome error, dopamine) & Usually single reward signal
 \hline
-Learning rule & Local (synaptic level) & Global (backpropagation) 
+Learning rule & Local (synaptic level) & Global (backpropagation)
 \hline
-Online vs. offline & Both & Typically offline 
+Online vs. offline & Both & Typically offline
 \hline
-Interpretability & Some (we understand cerebellar circuit) & Poor (black box) 
+Interpretability & Some (we understand cerebellar circuit) & Poor (black box)
 \hline
 \end{tabular}
 
 :::
 
-The brain is *sample-efficient*. It learns from roughly 10,000 repetitions. Reinforcement learning algorithms often need $10^6$ to $10^8$ simulated episodes. Why?
+The brain is *sample-efficient*. It learns from roughly 10,000 repetitions. Engineered learning algorithms often require $10^6$ to $10^8$ simulated episodes. Why?
 
 Several factors:
 
 - **Richer feedback:** The brain gets proprioceptive feedback at every moment (prediction errors on the trajectory), not just a final reward. This means more learning signals per trial.
 
-- **Built-in structure:** The brain's neural circuits are not random. The cerebellum has a stereotyped architecture that's good for learning dynamics. This prior structure accelerates learning.
+- **Built-in structure:** The brain's neural circuits are not random. The cerebellum has a stereotyped architecture well suited to learning dynamics. This prior structure accelerates learning.
 
-- **Transfer learning:** The brain leverages prior knowledge from other movements. A tennis player learning golf already has some internal models for rotational motion. An AI starting from random weights has no prior knowledge.
+- **Transfer learning:** The brain leverages prior knowledge from other movements. A tennis player learning golf already has some internal models for rotational motion.
 
 - **Hierarchical control:** The brain decomposes the problem. High-level planning, mid-level trajectory generation, low-level muscle control. This decomposition makes learning at each level easier.
 
-### What the Brain Does Better
+### Strengths of Biological Motor Learning
 
 ::: {.callout-important}
-## Dimensions Where the Brain Excels
+## Dimensions Where Biological Learning Excels
 
-- **Transfer learning:** Humans transfer skills across very different contexts (tennis to golf, squash to badminton). AI systems are often brittle and task-specific.
+- **Transfer learning:** Humans transfer skills across very different contexts (tennis to golf, squash to badminton).
 
-- **Robustness:** Humans handle perturbations gracefully. If the wind blows during your swing, you adjust. If you're tired, you adapt. AI systems often fail on out-of-distribution inputs.
+- **Robustness:** Humans handle perturbations gracefully. If the wind blows during the swing, the golfer adjusts. If fatigued, the golfer adapts.
 
-- **Compositionality:** Humans combine learned skills in novel ways. A golfer who's played tennis and baseball might discover a unique swing combining elements of both. AI systems rarely compose skills.
+- **Compositionality:** Humans combine learned skills in novel ways. A golfer who has played tennis and baseball might discover a unique swing combining elements of both.
 
-- **One-shot learning:** Humans can sometimes learn from a single demonstration (``Do it this way''). Deep RL typically needs thousands of examples.
+- **One-shot learning:** Humans can sometimes learn from a single demonstration.
 
-- **Physical understanding:** Humans develop intuitive physics through play and exploration. ``That club is heavier, so I need to swing slower.'' AI systems don't naturally develop this understanding.
+- **Physical understanding:** Humans develop intuitive physics through play and exploration. A heavier club naturally prompts a slower swing.
 
 :::
 
-### What AI Does Better
+### Constraints of Biological Motor Learning
 
 ::: {.callout-important}
-## Dimensions Where AI Excels
+## Dimensions Where Biological Learning is Constrained
 
-- **Consistency:** A trained neural network produces the same output for the same input, every time. The brain sometimes gets the yips.
+- **Consistency:** Biological motor control is subject to noise and variability. The brain sometimes produces the yips.
 
-- **Speed:** Modern AI can evaluate millions of candidates per second. The brain processes at 10--40 Hz.
+- **Speed of deliberation:** The brain processes at roughly 10--40 Hz for conscious motor planning, limiting the rate of explicit search.
 
-- **Global optimization:** AI can find globally optimal solutions using large-scale search. The brain may find local optima. (Though in practice, local optima are often good enough.)
+- **Global optimization:** The brain typically settles into local optima that are good enough rather than performing exhaustive search.
 
-- **Scalability:** AI can be trained on massive datasets. The brain's learning is limited by the time humans can spend practicing.
+- **Scalability of practice:** The brain's learning is limited by the physical time humans can spend practicing.
 
-- **Precise control:** AI can command exact forces with millisecond precision. The brain has noise and delays.
+- **Precision:** Biological motor commands have irreducible noise and delays.
 
 :::
 
-\cite{lake2017building, hassibi2017intelligence}
+\cite{lake2017building}
 
-## What Artificial Intelligence Could Learn from the Brain
-
-
+## Principles of Biological Motor Intelligence
 
 
 
-If the brain is so impressive at learning motor control, what could AI learn from it?
+
+
+The brain's approach to motor control embodies several principles that illuminate how complex movement is organized.
 
 ### Hierarchical Control
 
@@ -431,34 +432,30 @@ The brain doesn't try to solve one massive optimization problem. Instead, it dec
 
 This hierarchy reduces the problem at each level. The strategic level doesn't think about muscles; the execution level doesn't think about goals.
 
-Modern AI research has begun exploring similar hierarchies. The *options framework* in reinforcement learning formalizes this: high-level actions (options) are themselves learned policies for lower-level control.
+This hierarchical decomposition is a general principle of complex control systems, also formalized in robotics through layered architectures and in control theory through cascaded controllers.
 
 :::
 
-\cite{barto2003recent, sutton2011temporal}
+\cite{barto2003recent}
 
-### Internal Models and Model-Based RL
-
-
+### Internal Forward Models
 
 
 
-The brain builds an explicit forward model of the world. Modern AI has been dominated by *model-free* RL (like Q-learning), which learns value functions without learning a model.
 
-But there's growing recognition that model-based RL is more sample-efficient. If an agent has a forward model, it can imagine many trajectories without actually executing them.
+
+The brain builds explicit forward models of the body and the world. When the cerebellum issues a motor command, it simultaneously predicts the sensory consequences of that command. This predictive capability is central to how biological motor control achieves sample efficiency: the brain can evaluate candidate actions using an internal simulation before committing to execute them.
 
 ::: {.callout-tip}
-## Model-Based vs. Model-Free RL
+## The Forward Model in the Golf Swing
 
-**Model-free approach:** The robot tries a motor command. It gets a reward. It updates its value function. It tries another command. After a million trials, it learns which commands are good.
+When the golfer initiates the downswing, the cerebellum has already generated a prediction of what the proprioceptive trajectory should look like: the expected sequence of joint angles, velocities, and muscle tensions. As the swing unfolds, the actual sensory signals are compared against the predicted signals. Mismatches are flagged as prediction errors and used to refine the internal model for future swings.
 
-**Model-based approach:** The robot learns a forward model: ``If I move in this direction with this force, I'll end up here.'' Now it can *imagine* many trajectories using the model, without physically executing them. It can plan offline and execute online.
-
-The brain uses model-based approach. Modern AI is moving toward it.
+This mechanism allows the brain to learn from every repetition, not just from trials that produce good outcomes. Each swing yields a stream of prediction errors at every time point, providing vastly more information per trial than a single outcome-based reward signal.
 
 :::
 
-\cite{deisenroth2013tutorial, dreamer2020scalable}
+\cite{wolpert2011motor, shadmehr2010computational}
 
 ### Embodiment and Physics Exploitation
 
@@ -466,7 +463,7 @@ The brain uses model-based approach. Modern AI is moving toward it.
 
 
 
-A profound insight from the brain is that it doesn't try to control every DOF. Instead, it exploits the body's morphology and the environment's physics.
+A striking insight from motor control research is that the nervous system doesn't try to control every DOF. Instead, it exploits the body's morphology and the environment's physics.
 
 ::: {.callout-important}
 ## Embodied Control: Using Physics as Actuator
@@ -483,7 +480,7 @@ More generally, the brain exploits:
 
 :::
 
-Most roboticists try to control everything actively. A better approach: design the robot to exploit passive dynamics, and use active control only for the fine adjustments.
+This principle---exploiting passive dynamics and using active control only for refinement---connects directly to the drift-control decomposition developed throughout this book. The brain is, in essence, a controller that has learned to ride the drift field.
 
 \cite{ijspeert2013biorobotics, ghazi2009central}
 
@@ -492,24 +489,20 @@ Most roboticists try to control everything actively. A better approach: design t
 
 
 
-The brain learns from *prediction errors*. At every moment during the swing, the brain predicts what proprioceptive signals it expects, compares to actual signals, and learns from the mismatch.
-
-This is *self-supervised learning*: the agent generates its own learning signal by predicting its own sensory feedback.
-
-Modern AI has begun exploring self-supervised learning. Instead of learning from hand-labeled data (expensive) or reward signals (sparse), agents learn by predicting future observations.
+The brain learns from *prediction errors*. At every moment during the swing, the brain predicts what proprioceptive signals it expects, compares to actual signals, and learns from the mismatch. The agent generates its own learning signal by predicting its own sensory feedback---no external teacher is required.
 
 ::: {.callout-tip}
-## Self-Supervised Learning in AI
+## The Novice Golfer's First Practice Session
 
-**Traditional approach:** Train a robot arm on 1000 manually labeled examples of ``reaching to target.''
+Consider a novice picking up a golf club for the first time. On the initial swing, the cerebellum has no reliable forward model for this specific body-club system. It generates a motor command based on prior experience with similar rotational movements (a tennis swing, perhaps, or a baseball bat). The predicted proprioceptive trajectory diverges substantially from the actual trajectory: the club is heavier than expected, the grip point is farther from the body, the moment of inertia is unfamiliar.
 
-**Self-supervised approach:** Let the robot arm move randomly for an hour. For each action, predict the resulting arm configuration. Learn a forward model by predicting its own sensory consequences. Now the robot can use this forward model for planning without any labeled data.
+Every mismatch between predicted and actual proprioception is a prediction error. These errors are routed to the cerebellum, where they drive synaptic changes in the circuits that generated the original command. On the next swing, the motor command is subtly adjusted to reduce the predicted error. After hundreds of repetitions, the prediction errors shrink, and the forward model has captured the dynamics of this particular club in this particular body [@wolpert2011motor].
 
-This is closer to how the brain learns. A baby doesn't have labeled data. Instead, it acts, observes consequences, and builds a forward model of its body.
+No external reward is needed. The novice does not have to hit a good shot to learn---the mere fact that the actual sensory feedback differs from the predicted feedback is enough.
 
 :::
 
-\cite{pathak2016curiosity, dreamer2020scalable}
+\cite{wolpert2011motor}
 
 ## The Golf Swing as a Window into Intelligence
 
@@ -624,7 +617,7 @@ What causes the yips?
 
 The yips teach us that motor control is fragile. Once you've learned a movement, you can't easily unlearn it or consciously control it. The more automatic the movement, the harder it is to consciously correct.
 
-This has a profound implication: overanalyzing your swing is dangerous. The more you think about mechanics, the more you disrupt the automatic system. Paradoxically, the best way to improve is often to stop thinking and just feel.
+This has a significant implication: overanalyzing the swing is counterproductive. The more one thinks about mechanics, the more the automatic system is disrupted. Paradoxically, the most effective path to improvement is often to stop thinking and let the trained motor program execute.
 
 \cite{beilock2010choke, adler2011focus}
 
@@ -716,7 +709,7 @@ Let's return to the central observation. Every time you swing a golf club, your 
 
 :::
 
-No robot can do this. No AI system has come close. We don't even know how to build one that could.
+No robot can do this. No engineered control system has come close. We do not yet know how to build one that could.
 
 And yet, the brain shanks.
 
@@ -737,9 +730,9 @@ Understanding this---that power and fragility are two sides of the same coin---i
 
 - The brain learns three things through practice: the drift field (physics), the control effectiveness of muscles, and the optimal motor policy for achieving goals.
 
-- The brain is sample-efficient, building accurate models from 10,000--100,000 repetitions, while AI methods often require millions. The brain achieves this through built-in structure, hierarchical control, and rich sensory feedback.
+- The brain is sample-efficient, building accurate models from 10,000--100,000 repetitions, while engineered learning methods often require millions. The brain achieves this through built-in structure, hierarchical control, and rich sensory feedback.
 
-- Artificial intelligence could benefit from the brain's approaches: hierarchical control, model-based planning, embodied exploitation of physics, and prediction-driven learning.
+- Biological motor control embodies several general principles of intelligent control: hierarchical decomposition, model-based planning, embodied exploitation of physics, and prediction-driven learning.
 
 - The golf swing is an ideal model system for studying intelligence because it's complex, measurable, learnable, and has interesting failure modes.
 
@@ -763,9 +756,9 @@ Understanding this---that power and fragility are two sides of the same coin---i
 
 - How does the brain demonstrate that it learns physics? What experiments provide evidence?
 
-- Compare model-based and model-free reinforcement learning. Which approach is the brain using? Which approach is modern AI typically using?
+- Compare model-based and model-free learning. Which approach does the brain use, and what is the evidence?
 
-- What could AI systems learn from the brain's approach to motor control? List three specific strategies.
+- Describe three principles of biological motor control that illuminate how complex movement is organized. Explain each with reference to the golf swing.
 
 - Explain the yips using the setpoint hypothesis. Why might a corrupted reference trajectory lead to jerky, unstable movements?
 

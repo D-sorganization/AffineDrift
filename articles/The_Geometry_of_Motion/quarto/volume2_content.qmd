@@ -1499,7 +1499,7 @@ dynamics. The dominant effect is a **curvature-induced coupling**:
   the geometric coupling between the curve's shape and the transverse stability.
 \end{proposition}
 
-This result has a profound implication: \emph{the stability of trajectory
+This result has a direct implication: \emph{the stability of trajectory
 tracking depends on the geometry of the trajectory.} A trajectory with low
 curvature is inherently easier to stabilize than one with high curvature,
 even if the underlying system dynamics are identical. The curvature modifies
@@ -3616,7 +3616,7 @@ When a gymnast swings on a high bar, their center of mass rotates around the bar
 
 
 
-If we lack the authority to command arbitrary accelerations, the classical setpoint perspective sees this as a profound failing. A setpoint controller wants to cancel the nonlinearities, feedback-linearize the system, and dictate the exact motion. Underactuation prevents this brute-force cancellation. 
+If we lack the authority to command arbitrary accelerations, the classical setpoint perspective sees this as a fundamental failing. A setpoint controller wants to cancel the nonlinearities, feedback-linearize the system, and dictate the exact motion. Underactuation prevents this brute-force cancellation. 
 
 However, from the trajectory-first perspective developed in Chapter~1, underactuation is not merely a restriction---it is a geometric feature. The *passive dynamics* (the unactuated portions of the dynamics) define a manifold of feasible trajectories. We don't fight the physics; we ride it. 
 
@@ -3941,9 +3941,9 @@ When optimizing for a golf swing, direct collocation handles this underactuation
 \begin{example}{The Golf Swing OCP}{golf_ocp}
   Consider our planar double pendulum model from Chapter 5. The solver is given the task to maximize $\dot{\theta}_2(t_f)$ (club speed). 
   
-  **Initial Guess:** If we seed the NLP solver with a naive guess (e.g., constant shoulder torque), the club speed will be pitifully low.
+  **Initial Guess:** If we seed the NLP solver with a naive guess (e.g., constant shoulder torque), the club speed will be substantially suboptimal.
   
-  **The Optimized Result:** The solver discovers the optimal physical orchestration entirely on its own. It will apply a massive positive $u_1$ to accelerate the arms, and then immediately reverse $u_1$ to negative maximum just prior to $t_f$. The optimizer mathematicaly "discovers" the necessary inertial coupling (the parametric excitation of $M_{21}\ddot{\theta}_1$) to whip the unactuated club link through the terminal manifold constraint! The passive dynamics are beautifully exploited to satisfy the objective.
+  **The Optimized Result:** The solver discovers the optimal physical orchestration entirely on its own. It will apply a massive positive $u_1$ to accelerate the arms, and then immediately reverse $u_1$ to negative maximum just prior to $t_f$. The optimizer mathematically "discovers" the necessary inertial coupling (the parametric excitation of $M_{21}\ddot{\theta}_1$) to whip the unactuated club link through the terminal manifold constraint! The passive dynamics are beautifully exploited to satisfy the objective.
 \end{example}
 
 % ══════════════════════════════════════════════
@@ -3987,7 +3987,7 @@ The optimizer is now forced to "widen the funnel" as it approaches the moving go
   Moving Target OCP & Finding a trajectory that optimizes terminal kinematics when intersecting a spatial manifold, without prescribing the clock time. \\
   Multi-Shooting & Discretizing the time domain into segments, using numerical integrators to enforce dynamics constraints between nodes. \\
   Direct Collocation & Representing the entire trajectory as splines and enforcing dynamics algebraically at discrete points arrayed along the trajectory. \\
-  Passive Exploitation & Solvers naturally optimize underactuated topologies by weaponizing coupling matrices ($M_{21}, C_2$). \\
+  Passive Exploitation & Solvers naturally optimize underactuated topologies by exploiting coupling matrices ($M_{21}, C_2$). \\
   Stochastic Robustness & Augmenting the OCP with expected variance to ensure the resulting trajectory can be consistently executed by noisy nonlinear plants. \\
   \bottomrule
 \end{tabular}
@@ -4215,7 +4215,7 @@ By structuring the control scheme computationally through Virtual Constraints, t
 
 % ══════════════════════════════════════════════
 
-When a roboticist specifies a torque of $50\text{ Nm}$, the motor delivers $50\text{ Nm}$ with a tiny, constant variance. Biological actuators do not work this way. Human muscles generate force by recruiting discrete motor units. As higher forces are required, larger, more fast-twitch oriented motor units are recruited. This physiological reality manifests as a profound control challenge: **motor noise is proportional to the command signal**.
+When a roboticist specifies a torque of $50\text{ Nm}$, the motor delivers $50\text{ Nm}$ with a tiny, constant variance. Biological actuators do not work this way. Human muscles generate force by recruiting discrete motor units. As higher forces are required, larger, more fast-twitch oriented motor units are recruited. This physiological reality manifests as a central control challenge: **motor noise is proportional to the command signal**.
 
 
 
@@ -4255,7 +4255,7 @@ Under SDN, the only way to minimize endpoint variance (ensure you actually grasp
 
 Fitts's Law states that the faster you try to move to a target, the less accurate you become. In golf, we see the supreme manifestation of this. The deterministic optimal control solution (Chapter 6) tells the solver to maximize input torque to achieve theoretically maximal clubhead speed. 
 
-However, if we introduce the Stochastic OCP (via Covariance Steering) from Chapter 6 and apply the realistic premise of SDN, the optimizer faces a profound tradeoff.
+However, if we introduce the Stochastic OCP (via Covariance Steering) from Chapter 6 and apply the realistic premise of SDN, the optimizer faces a sharp tradeoff.
 
 Applying maximum $u_1$ torque during the downswing injects enormous variance into the kinematic state. The unactuated club ($\theta_2$) begins whipping through its zero dynamics, but its exact phase progression is now highly uncertain due to the noise flooding the arms. 
 
@@ -4341,7 +4341,7 @@ When faced with a new task (e.g., striking the ball on an uneven lie), the syste
 
 % ══════════════════════════════════════════════
 
-Throughout this text, we have systematically deconstructed the classical control paradigm and rebuilt it to handle tasks defined uniquely by motion. We conclude by applying our holistic framework to a 15-DOF musculoskeletal model of the human golf swing in order to formally synthesize the mathematical structure of athletic perfection.
+Throughout this text, we have systematically deconstructed the classical control paradigm and rebuilt it to handle tasks defined uniquely by motion. We conclude by applying our holistic framework to a 15-DOF musculoskeletal model of the human golf swing synthesizing the mathematical structure underlying skilled athletic motion.
 
 The objective is clear: maximize negative clubhead velocity at the precise spatial intersection with the golf ball, while maintaining face angle orthogonality. The exact time interval $t_f$ in which this occurs is irrelevant; only the geometric state at impact matters. Furthermore, the commanded motion must not exceed the structural limits of biological torque, and the trajectory must be highly robust to physiological signal-dependent noise (SDN).
 
@@ -4367,11 +4367,11 @@ Finally, we compute the verified bounds of this stability region using **Sums-of
 
   The final computed funnel reveals the mathematical secret of the professional golfer. During the backswing, the funnel is immensely wide; the motion is forgiving, and vast transverse deviations are easily tolerated without violating the invariant boundary.
   
-  As the swing approaches the transition and the explosive downswing, the funnel aggressively tightens. The stochastic optimization has selected a trajectory whose passive unactuated dynamics are so profoundly stable in the final $0.15$ seconds that the funnel diameter at impact shrinks to virtually zero. Any small deviation injected by muscular noise is passively swallowed by the immense centrifugal geometry of the zero dynamics. The golfer does not aggressively steer the club to the ball; they simply set the initial conditions, and the physics irresistibly pull the clubface through the target manifold.
+  As the swing approaches the transition and the explosive downswing, the funnel aggressively tightens. The stochastic optimization has selected a trajectory whose passive unactuated dynamics are so strongly stable in the final $0.15$ seconds that the funnel diameter at impact shrinks to virtually zero. Any small deviation injected by muscular noise is passively swallowed by the immense centrifugal geometry of the zero dynamics. The golfer does not aggressively steer the club to the ball; they simply set the initial conditions, and the physics irresistibly pull the clubface through the target manifold.
 
 
 
-Through this book, we hope we have proven that the thermostat has its place, but when the objective is a sweeping, dynamic motion cutting through the physical world, "Control is Motion" provides the only mathematically truthful language.
+Through this book, we hope we have proven that the thermostat has its place, but when the objective is a sweeping, dynamic motion cutting through the physical world, the trajectory-centric perspective of "Control is Motion" provides a natural and expressive mathematical language.
 
 
 \bibliographystyle{plain}

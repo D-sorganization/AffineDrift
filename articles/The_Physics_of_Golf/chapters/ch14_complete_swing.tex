@@ -5,7 +5,7 @@
 \chapter{The Complete Golf Swing: Putting It All Together}
 \label{ch:complete_swing}
 
-\epigraph{A perfect golf swing is a masterpiece of managed drift.}{---AffineDrift}
+\epigraph{A perfect golf swing is a masterpiece of managed drift.}{}
 
 % ─────────────────────────────────────────────────────────────────
 \begin{laymansbox}{From Theory to Reality}{laymans:ch14:synthesis}
@@ -502,7 +502,7 @@ A golfer who has a ZTCF that points away from the target must use high control i
 \index{coaching!what can be controlled}
 \index{timing of control}
 
-Understanding drift and control teaches a profound lesson: \emph{most of the swing is beyond your control.}
+Understanding drift and control teaches a central lesson: \emph{most of the swing is beyond active control.}
 
 In the late downswing, when the clubhead speed is highest and the ball outcome is being determined, you cannot effectively control the swing. The drift field is too strong. Any attempt to make large adjustments will either have no effect (the inertia is too great) or will have delayed effects (your control input delays its effect by 50+ milliseconds, which is too slow for the swing).
 
@@ -620,6 +620,32 @@ This is the physics of golf. This is why the game is so hard and so beautiful: b
 \item \textbf{The lesson for golfers:} practice the early swing, perfect the setup, then let physics carry you through.
 \end{enumerate}
 \end{principle}
+
+% ─────────────────────────────────────────────────────────────────
+\section{Experimental Methods}
+\label{sec:ch14_experimental_methods}
+
+Everything in this chapter---joint angles, torques, clubhead speed, ground reaction forces---must ultimately be measured in the laboratory or on the course if the model is to be tested against reality. Golf biomechanics experiments typically rely on four complementary measurement modalities.
+
+\paragraph{Optical motion capture.} Passive-marker systems such as Vicon and OptiTrack track retro-reflective markers attached to anatomical landmarks at sample rates of 240--500~Hz (and up to 2000~Hz for high-speed configurations). Sub-millimeter spatial accuracy is typical in a well-calibrated volume, which is sufficient to resolve the clubhead speed profile of a full swing. A marker set for the golf swing usually includes 40--60 markers on the trunk, pelvis, upper extremities, and club \cite{Nesbit2005}.
+
+\paragraph{Force plates.} Ground reaction forces and moments are recorded with triaxial force plates (e.g., AMTI, Kistler, Bertec) sampling at 1000--2400~Hz. A dual-plate setup places one plate under each foot so that lead-trail weight shift can be quantified independently, and the center of pressure on each plate is accurate to within a few millimeters.
+
+\paragraph{Launch monitors.} Radar-based systems (TrackMan, FlightScope) and multi-camera photometric systems (Foresight GCQuad) measure clubhead speed, clubhead path, face angle, ball speed, launch angle, and spin axis with sub-percent accuracy within a fraction of a second of impact. These devices bridge the lab and the course, providing ground truth for launch conditions in both settings.
+
+\paragraph{Electromyography.} Surface EMG electrodes placed over key muscles capture activation timing to within a few milliseconds. For the golf swing, EMG is primarily useful for ordering the onsets of force production across the kinetic chain rather than for estimating absolute muscle force, because the surface signal is contaminated by cross-talk and by the nonlinear relationship between activation and force.
+
+\paragraph{Soft tissue artifact.} The dominant error source in marker-based motion capture is soft tissue artifact (STA): skin markers slide relative to the underlying bone during rapid motion and deformation of overlying soft tissue, producing apparent joint motions that the bone did not execute. For the golf swing, STA can introduce errors of several degrees at the thoracic spine and hips, and dedicated compensation techniques are required to obtain trustworthy joint kinematics \cite{chiari2005human}.
+
+% ─────────────────────────────────────────────────────────────────
+\section{Model Validation}
+\label{sec:ch14_model_validation}
+
+A mathematical model of the golf swing earns the right to be believed only when its predictions are compared with measurements on real golfers. For the double-pendulum model developed in this chapter, the canonical validation target is the clubhead speed profile as a function of downswing time.
+
+Two-segment models predict peak clubhead speeds within roughly 5--10\% of measured values for well-matched subject parameters, and they reproduce the qualitative shape of the velocity profile---a slow early acceleration, a sharp burst through the release phase, and a peak just before impact \cite{MacKenzie2009}. Agreement deteriorates markedly when generic segment masses and lengths are used in place of subject-specific parameters: a 1~cm error in forearm length or a 100~g error in club moment of inertia shifts peak clubhead speed by several meters per second. Forward-dynamics models are particularly sensitive to the prescribed wrist torque profile; sensitivity analyses typically report elasticities of 2--4 for clubhead speed with respect to wrist torque magnitude.
+
+The double-pendulum model also has structural limitations that no amount of parameter tuning can remove. It is two-dimensional, which cannot represent the out-of-plane motion of the club through the downswing; it treats each segment as rigid, which ignores shaft bending and soft-tissue deformation; and it concentrates all mass at a point, which discards the effect of the club's moment of inertia about its long axis. Three-dimensional models with flexible shafts and distributed-mass segments close much of this gap but require the kind of subject-specific calibration described above \cite{Nesbit2005,MacKenzie2009}. The honest summary is that simple models capture the physics that drives the swing, while faithful quantitative prediction for an individual golfer still requires measurements on that golfer.
 
 % ─────────────────────────────────────────────────────────────────
 \begin{exercises}{Chapter Exercises}{exercises:ch14}

@@ -5,7 +5,7 @@
 \label{ch:lagrangian}
 
 \epigraph{%
-  Why break a machine apart into agonizing lists of individual pulling and pushing forces when you can extract its exact motion by simply observing where its energy wants to go?
+  Why break a machine apart into long lists of individual pulling and pushing forces when you can extract its exact motion by examining where its energy flows?
 }{}
 
 \begin{laymansbox}{Context \& Use Case: Energy-Based Dynamics}{context_box}
@@ -28,7 +28,7 @@ Nearly simultaneously, \textbf{Leonhard Euler} was developing the \textbf{calcul
 
 Later, in the early 1800s, \textbf{William Rowan Hamilton} reformulated Lagrange's framework using a Legendre transform, introducing \textbf{conjugate momenta} and the \textbf{Hamiltonian} function $H = \mathbf{p} \cdot \dot{\mathbf{q}} - \mathcal{L}$. This opened pathways to modern quantum mechanics and symplectic geometry.
 
-\textbf{Why This History Matters:} Lagrangian mechanics is not merely an alternative notation for Newton's laws. It encodes deep philosophical truth: nature does not "know" about forces. It only "knows" about energy. Systems evolve along extremal paths of action. This principle applies equally to light rays (Fermat's principle), quantum fields (path integrals), and relativistic gravity (Einstein's equations). By learning Lagrangian mechanics, you are learning the geometric language that unifies all modern physics.
+\textbf{Why This History Matters:} Lagrangian mechanics is not merely an alternative notation for Newton's laws. The variational formulation expresses the dynamics in terms of energy alone, without explicitly invoking forces. Both formulations are equivalent and useful in different contexts. Systems evolve along extremal paths of action. This principle applies equally to light rays (Fermat's principle), quantum fields (path integrals), and relativistic gravity (Einstein's equations). By learning Lagrangian mechanics, you are learning the geometric language that unifies much of modern physics.
 
 % ==========================================================================
 \section{The Limitations of Newton}
@@ -36,9 +36,9 @@ Later, in the early 1800s, \textbf{William Rowan Hamilton} reformulated Lagrange
 
 In the Newtonian framework (utilized powerfully by the Recursive Newton-Euler algorithm in Chapter 7), motion is determined by analyzing explicit spatial forces: $\sum \mathbf{F} = m\mathbf{a}$.
 
-While Newton's equations are spectacular for computational algorithms evaluating rigid bodies link-by-link in a physics engine, they suffer from a fatal flaw when deriving mathematical models by hand: \textbf{Constraint Forces}.
+While Newton's equations are well suited to computational algorithms that evaluate rigid bodies link-by-link in a physics engine, they suffer from a practical drawback when deriving mathematical models by hand: \textbf{Constraint Forces}.
 
-If a bead slides along a curved wire, or a heavy pendulum swings on a rigid rod, Newton demands that you calculate the exact, microscopic physical force the wire exerts on the bead, or the tension the rod pulls on the bob, just to ensure they don't break. For a 15-DOF mechanism, solving for 15 unknown internal constraint forces pulling against each other is mathematically agonizing and analytically useless for control theory.
+If a bead slides along a curved wire, or a heavy pendulum swings on a rigid rod, Newton demands that you calculate the exact, microscopic physical force the wire exerts on the bead, or the tension the rod pulls on the bob, just to ensure they don't break. For a 15-DOF mechanism, solving for 15 unknown internal constraint forces pulling against each other is mathematically cumbersome and analytically unhelpful for control theory.
 
 Moreover, constraint forces do \emph{no work} in the motion. The tension in a rigid pendulum rod redirects motion but adds no energy. Yet in Newton's framework, we must solve for it anyway. This is deeply inelegant.
 

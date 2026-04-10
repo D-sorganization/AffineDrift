@@ -1,7 +1,7 @@
 \chapter{Motor Control I: The Brain as Controller}
 \label{ch:motor_control_brain}
 
-\epigraph{The brain is the ultimate controller---a device of extraordinary subtlety that solves the golf swing problem every time you play, without you ever consciously knowing the equations.}{Adapted from Richard Feynman}
+\epigraph{The nervous system solves the equations of motion every time you swing---not by computing them explicitly, but by encoding centuries of evolutionary wisdom about the structure of dynamics.}{}
 
 \begin{laymansbox}{What This Chapter Is About}{box:ch24_intro}
 We've spent the last several chapters learning the physics: the nonlinear dynamics, the drift-dominated regime, the trade-off between control and drift. But now we must face the central mystery: \textit{the brain solves this problem}. Not perfectly---golfers miss---but with remarkable consistency. An elite golfer produces clubhead speeds within 2\% of their average, swing after swing, despite 30--50 millisecond neural delays, sensor noise, and a system where the downswing lasts only 300 milliseconds.
@@ -17,7 +17,7 @@ This chapter reframes the nervous system as an engineering control system and as
 \index{feedforward control}
 \index{feedback control}
 
-Recall from Chapters \ref{ch:zero_torque_counterfactual} and \ref{ch:zero_torque_counterfactual} that the golf swing is a control-affine system:
+Recall from Chapters \ref{ch:05_affine_structure} and \ref{ch:zero_torque_counterfactual} that the golf swing is a control-affine system:
 \begin{equation}
 \dot{\bm{x}} = f(\bm{x}) + G(\bm{x})\bm{u}(t)
 \label{eq:ch24_control_affine}
@@ -96,9 +96,9 @@ Why? The timescales don't work out. Suppose a visual feedback signal detected an
 \textbf{Reality:} By the time visual information about clubface angle reaches your motor cortex, the downswing is finished. The correction arrives after impact. What you \textit{think} is feedback is actually \textit{learning from your last swing}. The golf swing is planned and executed as a feedforward command.
 \end{mythreality}
 
-Proprioceptive feedback is faster (30--50 ms) but still problematic. A proprioceptive error signal arrives in time for maybe one correction cycle. The elite golfer does not rely on this. Instead, the swing is executed as a \textit{ballistic} movement---once it starts, it unfolds according to a pre-planned motor program, with only minimal real-time adjustments.
+Proprioceptive feedback is faster (30--50 ms) but still problematic. A proprioceptive error signal arrives in time for at most one correction cycle. The elite golfer does not rely on this. Instead, the swing is executed as a \textit{ballistic} movement---once it starts, it unfolds according to a pre-planned motor program, with only minimal real-time adjustments.
 
-This realization has profound implications. It means the brain does its real work \textit{before} the swing starts: encoding the initial conditions, setting muscle stiffness, and preparing the motor program. The execution phase is largely deterministic.
+This realization has significant implications. It means the brain does its real work \textit{before} the swing starts: encoding the initial conditions, setting muscle stiffness, and preparing the motor program. The execution phase is largely deterministic.
 
 \section{Internal Models: The Brain's Simulator}
 \label{sec:ch24_internal_models}
@@ -205,10 +205,10 @@ For the golf swing, this framework explains several phenomena:
 
 \item \textbf{Post-swing learning:} After the swing, a large prediction error is available: the ball lands at location $\bm{x}_{\mathrm{actual}}$ instead of the predicted location $\bm{x}_{\mathrm{predicted}}$. This error drives learning. The brain updates its internal model to reduce the error on the next swing.
 
-\item \textbf{Lack of time for correction:} During a 300 ms downswing, the brain has time for maybe one or two prediction error cycles. Thus, most corrections cannot happen mid-swing. The brain relies on the prior learning.
+\item \textbf{Lack of time for correction:} During a 300 ms downswing, the brain has time for at most one or two prediction error cycles. Thus, most corrections cannot happen mid-swing. The brain relies on the prior learning.
 \end{enumerate}
 
-This framework has profound implications. It says that action is not fundamentally different from perception. Both work through prediction and error correction. The goal of a motor action is to make the actual sensory consequences match your predicted sensory consequences. For the golf swing, the predicted sensory consequence is the \textit{feeling} of a well-struck shot---the proprioceptive pattern that you've learned corresponds to good contact.
+This framework has significant implications. It says that action is not fundamentally different from perception. Both work through prediction and error correction. The goal of a motor action is to make the actual sensory consequences match your predicted sensory consequences. For the golf swing, the predicted sensory consequence is the \textit{feeling} of a well-struck shot---the proprioceptive pattern that you've learned corresponds to good contact.
 
 \section{Ideomotor Theory: Think the Result, Not the Process}
 \label{sec:ch24_ideomotor}
@@ -320,7 +320,7 @@ When you hit a poor shot, dopamine neurons are quiet (no reward). The circuits t
 This is \textit{reinforcement learning} implemented in neural circuits.
 \end{example}
 
-Parkinson's disease, which damages dopamine neurons, produces profound difficulty in action selection. Patients know what they want to do, but they cannot initiate movement. They can stand frozen, unable to take a step. This illustrates how critical the basal ganglia are for movement initiation.
+Parkinson's disease, which damages dopamine neurons, produces severe difficulty in action selection. Patients know what they want to do, but they cannot initiate movement. They can stand frozen, unable to take a step. This illustrates how critical the basal ganglia are for movement initiation.
 
 \subsection{Motor Unit Recruitment: Henneman's Size Principle}
 \label{subsec:ch24_recruitment}
