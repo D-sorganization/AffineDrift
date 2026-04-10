@@ -114,6 +114,32 @@ We can reframe Theorem \ref{thm:funnel_invariance} using the S-procedure. To gua
 \end{equation}
 where $L(\state, t)$ is a strictly positive polynomial multiplier. If $V(\state, t) = 1$, the second term vanishes, and the SOS condition forces $-\dot{V} > 0$, achieving the invariance proof.
 
+\subsection{Implementation Sketch: Funnel Synthesis}
+
+The workflow below is the practical bridge from a nominal trajectory to a certifiable tube of allowable perturbations.
+
+\begin{algorithm}[htbp]
+\caption{Trajectory-Centered Funnel Synthesis}
+\label{alg:ch7:funnel-synthesis}
+\begin{algorithmic}[1]
+\Require Nominal trajectory $\traj^*(t)$, feedback law $\control = \bm{k}(\state, t)$, polynomial closed-loop model, time grid $\{t_k\}$.
+\Ensure Time-varying Lyapunov matrices $\bm{P}(t_k)$ defining a verified funnel.
+\State Linearize or polynomially approximate the closed-loop dynamics around $\traj^*(t)$.
+\State Initialize $\bm{P}(t_k)$ from the transverse Riccati solution or another stabilizing quadratic form.
+\For{each node $t_k$}
+  \State Define the candidate boundary $V_k(\state) = (\state - \traj^*(t_k))^\top \bm{P}(t_k) (\state - \traj^*(t_k))$.
+  \State Introduce SOS multipliers enforcing $-\dot{V}_k - L_k(1 - V_k)$ to be nonnegative on the boundary.
+  \State Add positive-definiteness constraints on $\bm{P}(t_k)$.
+\EndFor
+\While{the SDP remains feasible}
+  \State Maximize the ellipsoid volume or a surrogate such as $-\log \det \bm{P}(t_k)$ across the grid.
+  \State If infeasibility appears, shrink the candidate funnel, refine the polynomial model, or shorten the horizon.
+\EndWhile
+\State Interpolate the verified $\bm{P}(t_k)$ between nodes to obtain a continuous funnel approximation.
+\Return The verified funnel family $\mathcal{F}(t) = \{\state \mid V(\state, t) \leq 1\}$
+\end{algorithmic}
+\end{algorithm}
+
 % ══════════════════════════════════════════════
 \section{Computing the Funnel for the Golf Swing}
 % ══════════════════════════════════════════════
@@ -155,6 +181,7 @@ where $\bm{P}(t)$ is a positive definite matrix that changes continuously along 
   Sums-of-Squares (SOS) & Convex optimization technique to verify that $\dot{V} < 0$ on the funnel boundary, eliminating the need for numerical sampling. \\
   Semidefinite Program & Optimization problem solved to compute the time-varying matrix $\bm{P}(t)$ that maximizes funnel volume subject to SOS constraints. \\
   Transverse LQR & Provides initial feedback gains $\bm{K}(t)$ for stabilizing deviations orthogonal to the reference trajectory. \\
+  Funnel Synthesis Workflow & Practical sequence of polynomial approximation, SOS certification, and ellipsoid-volume maximization around the nominal trajectory. \\
   \bottomrule
 \end{tabular}
 \end{center}
@@ -162,4 +189,3 @@ where $\bm{P}(t)$ is a positive definite matrix that changes continuously along 
 \vspace{0.3cm}
 
 In Chapter 8, we will explore how to make these funnels robust to temporal variation by migrating out of the time domain entirely and into the phase domain.
-

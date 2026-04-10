@@ -34,7 +34,10 @@ class TestSwingOptimizerHelpers(unittest.TestCase):
 
     def _make_optimizer(self, n_joints: int = 2) -> Any:
         """Return a minimal SwingOptimizer for testing."""
-        from src.affine_control.swing_optimizer import SwingOptimizationConfig, SwingOptimizer
+        from src.affine_control.swing_optimizer import (
+            SwingOptimizationConfig,
+            SwingOptimizer,
+        )
 
         cfg = SwingOptimizationConfig(
             n_joints=n_joints, horizon_steps=5, max_iterations=3, allow_mock_solver=True
@@ -76,7 +79,10 @@ class TestSwingOptimizerHelpers(unittest.TestCase):
 
     def test_package_result_final_velocity(self) -> None:
         """_package_result computes final velocity as L2 norm of velocity portion."""
-        from src.affine_control.swing_optimizer import SwingOptimizationConfig, SwingOptimizer
+        from src.affine_control.swing_optimizer import (
+            SwingOptimizationConfig,
+            SwingOptimizer,
+        )
 
         cfg = SwingOptimizationConfig(
             n_joints=2, horizon_steps=5, max_iterations=2, allow_mock_solver=True
@@ -395,7 +401,9 @@ class TestPrintTextResults(unittest.TestCase):
 
     def test_print_text_results_calls_logger(self) -> None:
         """_print_text_results logs key fields from the results dict."""
-        from src.tools.matlab_utilities.scripts.matlab_quality_check import _print_text_results
+        from src.tools.matlab_utilities.scripts.matlab_quality_check import (
+            _print_text_results,
+        )
 
         results: dict[str, object] = {
             "timestamp": "2026-01-01",
@@ -411,7 +419,9 @@ class TestPrintTextResults(unittest.TestCase):
 
     def test_print_text_results_with_issues(self) -> None:
         """_print_text_results logs issues when they are present."""
-        from src.tools.matlab_utilities.scripts.matlab_quality_check import _print_text_results
+        from src.tools.matlab_utilities.scripts.matlab_quality_check import (
+            _print_text_results,
+        )
 
         results: dict[str, object] = {
             "timestamp": "2026-01-01",

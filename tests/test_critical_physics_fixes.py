@@ -78,8 +78,8 @@ class TestMassMatrixPhysics:
 class TestDDPMockGuard:
     """#1743: mock solver must not run in production path without guard."""
 
-    def test_mock_solver_emits_warning_on_init(self) -> None:
-        """Creating SwingOptimizer without solver should warn."""
+    def test_mock_solver_emits_warning_when_explicitly_opted_in(self) -> None:
+        """Creating SwingOptimizer without solver should warn when mock use is explicit."""
         config = SwingOptimizationConfig(n_joints=1, horizon_steps=5, allow_mock_solver=True)
         with warnings.catch_warnings(record=True) as caught:
             warnings.simplefilter("always")
@@ -87,16 +87,13 @@ class TestDDPMockGuard:
         msgs = [str(w.message) for w in caught if issubclass(w.category, UserWarning)]
         assert any("mock" in m.lower() for m in msgs)
 
-    def test_mock_solver_blocked_without_allow_flag(self) -> None:
-        """optimize() should reject mock solver unless allow_mock_solver=True."""
+    def test_mock_solver_rejected_without_allow_flag(self) -> None:
+        """Construction should fail when a real solver is not supplied."""
         config = SwingOptimizationConfig(
             n_joints=1, horizon_steps=5, max_iterations=1, allow_mock_solver=False
         )
-        with warnings.catch_warnings():
-            warnings.simplefilter("ignore", UserWarning)
-            optimizer = SwingOptimizer(config)
         with pytest.raises(ContractViolationError, match="mock"):
-            optimizer.optimize(np.zeros(2), lambda x, u: np.array([x[1], u[0]]))
+            SwingOptimizer(config)
 
     def test_mock_solver_allowed_with_flag(self) -> None:
         """optimize() should succeed when allow_mock_solver=True."""

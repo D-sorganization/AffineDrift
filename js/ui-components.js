@@ -29,18 +29,19 @@ export function initFadeAnimations() {
             });
         }, observerOptions);
 
-        const sectionsToAnimate = document.querySelectorAll(
-            "section:not(.page-header):not(.article-section)"
-        );
+        // ⚡ Bolt Optimization: Use getElementsByTagName (O(1)) and manual filtering instead of global querySelectorAll (O(N))
+        const allSections = document.getElementsByTagName("section");
         const animationStates = [];
 
-        sectionsToAnimate.forEach((section) => {
-            const rect = section.getBoundingClientRect();
-            animationStates.push({
-                section,
-                shouldAnimate: rect.top > window.innerHeight,
-            });
-        });
+        for (const section of allSections) {
+            if (!section.classList.contains("page-header") && !section.classList.contains("article-section")) {
+                const rect = section.getBoundingClientRect();
+                animationStates.push({
+                    section,
+                    shouldAnimate: rect.top > window.innerHeight,
+                });
+            }
+        }
 
         animationStates.forEach(({ section, shouldAnimate }) => {
             if (shouldAnimate) {
@@ -161,6 +162,7 @@ export function initBackToTop() {
     <svg class="back-to-top-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
       <path d="M12 4l-8 8h6v8h4v-8h6z"/>
     </svg>
+    <span class="tooltip">Back to top</span>
   `;
     document.body.appendChild(backToTopBtn);
 
@@ -393,13 +395,23 @@ export function initLightbox() {
         lightbox.appendChild(closeBtn);
 
         const figure = img.closest("figure");
+        let captionAdded = false;
+
         if (figure) {
             const figcaption = figure.querySelector("figcaption");
             if (figcaption) {
                 const captionClone = figcaption.cloneNode(true);
                 captionClone.className = "lightbox-caption";
                 lightbox.appendChild(captionClone);
+                captionAdded = true;
             }
+        }
+
+        if (!captionAdded && img.alt) {
+            const altCaption = document.createElement("div");
+            altCaption.className = "lightbox-caption";
+            altCaption.textContent = img.alt;
+            lightbox.appendChild(altCaption);
         }
 
         lightbox.classList.add("active");

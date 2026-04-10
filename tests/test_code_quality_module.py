@@ -11,7 +11,10 @@ import pytest
 import src.tools.code_quality_check as cq_shim  # noqa: F401 — covers shim imports
 from src.tools.code_quality.ast_analyzer import check_ast_issues
 from src.tools.code_quality.check import check_file, main
-from src.tools.code_quality.pattern_checker import check_banned_patterns, check_magic_numbers
+from src.tools.code_quality.pattern_checker import (
+    check_banned_patterns,
+    check_magic_numbers,
+)
 from src.tools.code_quality.report_generator import report_issues
 
 # ---------------------------------------------------------------------------
@@ -30,6 +33,13 @@ def test_check_file_returns_empty_for_clean_file(tmp_path: Path) -> None:
     assert isinstance(issues, list)
     # No banned patterns, no magic numbers, no missing docstrings
     assert not any("Error" in msg for _, msg, _ in issues)
+
+
+def test_code_quality_shim_declares_explicit_public_api() -> None:
+    """The shim should expose a narrow, explicit compatibility surface."""
+    assert "main" in cq_shim.__all__
+    assert "check_file" in cq_shim.__all__
+    assert "logger" not in cq_shim.__all__
 
 
 def test_check_file_returns_error_tuple_on_oserror(tmp_path: Path) -> None:

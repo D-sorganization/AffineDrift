@@ -29,3 +29,10 @@
 ## 2024-04-03 - Accessible UI Status Updates
 **Learning:** When dynamic UI elements like status containers update text content (e.g., "Saved", "Cleared"), screen readers will not announce these changes by default, leaving users unaware of the outcome of their actions.
 **Action:** Ensure that status container elements include `aria-live="polite"` and `aria-atomic="true"` to notify screen readers of content changes gracefully.
+## 2024-04-05 - Auto-Growing Textareas Missing Resize Constraints
+**Learning:** While calculating and applying `scrollHeight` creates a dynamic auto-growing textarea, failing to hide the native resize handle (`resize: none`) and scrollbar (`overflow: hidden`) before the calculation can result in user-conflict (where manual resizing fights the JS logic) and visual jitter.
+**Action:** When initializing auto-growing textareas, always assert `style.resize = "none"` and `style.overflow = "hidden"` on the element prior to applying dynamic height event listeners.
+
+## 2026-04-06 - Alt Text Fallback for Modal Images
+**Learning:** When images are promoted to a modal view (lightbox), relying solely on `<figcaption>` can leave images that only use `alt` attributes without visual context or descriptive text in the modal state.
+**Action:** When promoting an image to a modal view, if no `<figcaption>` is present, fall back to extracting and displaying the image's `alt` text to preserve contextual information for all users.

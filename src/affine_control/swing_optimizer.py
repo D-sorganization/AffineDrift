@@ -28,7 +28,11 @@ Usage
         SwingOptimizer,
     )
 
-    config = SwingOptimizationConfig(n_joints=3, horizon_steps=50)
+    config = SwingOptimizationConfig(
+        n_joints=3,
+        horizon_steps=50,
+        allow_mock_solver=True,  # explicit opt-in while using the placeholder solver
+    )
     optimizer = SwingOptimizer(config)
     result = optimizer.optimize(initial_state, dynamics_fn)
     logger.debug(f"Achieved velocity: {result.final_velocity:.2f} m/s")
@@ -37,6 +41,7 @@ Usage
 from __future__ import annotations
 
 import logging
+import warnings
 from collections.abc import Callable
 from typing import Any
 
@@ -78,7 +83,11 @@ class SwingOptimizer:
     -------
     ::
 
-        config = SwingOptimizationConfig(n_joints=3, horizon_steps=50)
+        config = SwingOptimizationConfig(
+            n_joints=3,
+            horizon_steps=50,
+            allow_mock_solver=True,
+        )
         optimizer = SwingOptimizer(config)
 
         def dynamics(x, u):
@@ -114,20 +123,28 @@ class SwingOptimizer:
             type(config).__name__,
         )
         self._config = config
-        self._using_mock = ddp_solver is None
+        solver: Callable[
+            ..., tuple[np.ndarray[Any, Any], np.ndarray[Any, Any], np.ndarray[Any, Any]]
+        ]
         if ddp_solver is None:
-            import warnings
-
+            self._using_mock = True
+            require(
+                config.allow_mock_solver,
+                "Mock DDP solver requires allow_mock_solver=True in config. "
+                "Pass a real ddp_solver for non-test usage.",
+            )
             warnings.warn(
                 "adaptive_timestep_ddp_mock is a non-functional mock solver. "
-                "Set allow_mock_solver=True in SwingOptimizationConfig to permit its use in "
-                "optimize(). For production, supply a real ddp_solver.",
+                "allow_mock_solver=True explicitly opts into test-only usage. "
+                "For production, supply a real ddp_solver.",
                 UserWarning,
                 stacklevel=2,
             )
-            self._ddp_solver = adaptive_timestep_ddp_mock
+            solver = adaptive_timestep_ddp_mock
         else:
-            self._ddp_solver = ddp_solver
+            self._using_mock = False
+            solver = ddp_solver
+        self._ddp_solver = solver
         self._R = config.control_weight * np.eye(config.control_dim)
         self._Q = np.zeros((config.state_dim, config.state_dim))
         # Penalize velocity deviations (second half of state vector)

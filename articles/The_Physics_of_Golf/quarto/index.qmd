@@ -1,38 +1,34 @@
 ---
 title: "The Physics of Golf"
 subtitle: "Force, Drift, and Control in the Golf Swing"
+description: "A mechanics-first textbook on golf-swing modeling, force attribution, and control-affine analysis"
 ---
 
 # Preface {.unnumbered}
 
-Every golfer, from the weekend duffer to the touring professional, has felt it: that one swing where everything clicks, the ball launches off the clubface with a crack that resonates up through your hands, and for a brief moment the physics of the universe conspired in your favor. What happened in that swing? What forces were at play? And — perhaps more importantly — which of those forces did *you* actually create, and which did physics hand you for free?
+This book develops a mechanics-first account of the golf swing. Its central question is how the equations of motion partition observed acceleration into state-dependent dynamics and torque-driven intervention, and how far that partition can support biomechanical interpretation.
 
-This book exists to answer those questions with mathematical precision, but in a language that any curious golfer can follow.
+The text uses golf as a concrete case study for multibody mechanics, control-affine modeling, inverse problems, and motor-control questions. It is written for readers who want technical detail but also want the physical meaning of each step made explicit.
 
-## The Central Idea
+## Scope
 
-When you swing a golf club, two fundamentally different kinds of forces are at work:
+The chapters move from simple pendulum models to closed-chain mechanics, flexible elements, inverse dynamics, musculoskeletal considerations, and impact-related topics. Some chapters are primarily derivational; others are interpretive. Throughout the book, the strongest claims are the ones that follow directly from the model under discussion.
 
-**Drift** is everything that would happen if your muscles went limp mid-swing: momentum carrying the club forward, gravity pulling it down, the shaft springing back from its bend. These are the forces of physics acting on autopilot.
+## Central Analytical Idea
 
-**Control** is the direct effect of your muscles applying torque at the joints.
+The book repeatedly distinguishes two modeled contributions to motion:
 
-The mathematical framework that separates these two is called *control-affine decomposition*, and it is the backbone of this entire book.
+- **Drift**: the state-dependent dynamics that remain when modeled control input is set to zero.
+- **Control**: the modeled contribution of applied torques or other explicit inputs.
 
-## Why This Matters
+That separation is useful because it forces the analysis to ask which terms are inherited from system state and which arise from deliberate intervention. It does **not** remove the need to specify assumptions carefully. Quantitative comparisons between drift and control depend on model structure, parameter identification, coordinate choice, and how constraints are represented.
 
-By the time you reach the fastest part of the downswing, model-based estimates suggest that the drift forces overwhelm the control forces by roughly two orders of magnitude. The swing is effectively on autopilot. The outcome was largely determined earlier, by how you set up the conditions that drift would exploit.
+## Reader Guidance
 
-Elite golfers are not necessarily stronger — the evidence suggests they are better at arranging physics to work in their favor.
+This is not a coaching manual and it does not assume that every quantity appearing in a model can be measured directly in practice. Instead, it aims to show what the chosen equations imply, where inverse inference becomes uncertain, and where interpretation outruns available evidence.
 
-## What You Will Learn
+Readers interested mainly in golf applications can proceed chapter by chapter from the beginning. Readers who want the broader mathematical background can use the companion series [The Geometry of Motion](../../The_Geometry_of_Motion/quarto/index.html).
 
-This book takes you from the simplest possible model of a golf swing — a double pendulum, which is just two sticks hinged together — through constraint forces that silently redirect enormous amounts of energy, through the parallel mechanisms that make the human body a closed kinematic chain, all the way to the flexible shaft and the biological tissues that connect it all together.
+## Relation to the Broader Project
 
-We do not shy away from equations. Every equation in this book is motivated by a physical question that a golfer would care about, and every equation is followed by a plain-language explanation of what it means and why it matters.
-
-## Part of the AffineDrift Project
-
-This book is part of the [AffineDrift](https://affinedrift.com) project, a broader effort to bring modern control theory and robotics mathematics to the study of human movement. Our companion series, *The Geometry of Motion*, provides the full mathematical foundations; this volume is designed to be self-contained and accessible without it.
-
-Welcome to the physics of golf. Let's find out what your swing is really doing.
+Within AffineDrift, this volume is the golf-specific textbook entry point. It works alongside shorter articles, critiques, and literature reviews. Where a claim on the site depends on a particular multibody model or counterfactual construction, this book is one of the main places where that dependency is made explicit.

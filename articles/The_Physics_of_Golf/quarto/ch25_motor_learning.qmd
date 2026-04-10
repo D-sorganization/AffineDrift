@@ -7,9 +7,9 @@ title: "Motor Control II: Learning the Swing"
 
 In the previous chapter, we learned that the brain controls the golf swing using feedforward commands based on internal models. But where do these internal models come from? They are learned. This chapter explores how the brain learns to swing.
 
-The central claim: learning the golf swing is not learning mechanics. It is learning to *feel* a good swing and then learning to reproduce that feeling on demand. Once you have felt a well-struck shot---the timing, the contact, the release, the follow-through---your brain stores that proprioceptive pattern. All subsequent practice is an attempt to recreate that sensation.
+One useful perspective is that learning the golf swing is not only about explicit mechanics. It is also about learning to *feel* an effective swing and then learning to reproduce that feeling on demand. Once you have felt a well-struck shot---the timing, the contact, the release, the follow-through---your brain may retain important parts of that proprioceptive pattern. Much of subsequent practice can then be understood as an attempt to recreate and refine that sensation.
 
-This perspective explains why some people learn fast, why practice must be deliberate, and why golf can seem to break down mysteriously (when the stored pattern becomes corrupted). It also suggests a radically different approach to instruction and coaching.
+This perspective helps explain why some people learn fast, why practice must be deliberate, and why golf can seem to break down mysteriously (when the stored pattern becomes unreliable). It complements, rather than replaces, more mechanical or task-level approaches to instruction and coaching.
 
 :::
 
@@ -56,7 +56,7 @@ Typical timescale: months to years to reach this stage for golf.
 
 :::
 
-The transition from cognitive to associative to autonomous reflects a shift in how the brain controls movement. In the cognitive stage, the swing is controlled by the prefrontal cortex (deliberate, conscious, slow). As learning progresses, control shifts to premotor areas (less conscious, faster). By the autonomous stage, control is delegated to the motor cortex, cerebellum, and basal ganglia (automatic, very fast, reliable).
+The transition from cognitive to associative to autonomous reflects a shift in how the brain controls movement. Roughly speaking, early learning depends more on deliberate, attention-heavy processing, while later stages rely more on distributed sensorimotor circuits involving premotor areas, motor cortex, cerebellum, and basal ganglia. The exact division of labor is more complex than a one-region-per-stage mapping, but the high-level progression is still useful.
 
 [@fitts1967human]
 
@@ -90,7 +90,7 @@ Bernstein proposed three strategies:
 ::: {.callout-tip}
 ## Bernstein's Problem in Golf
 
-Consider the moment of impact. The clubhead, which may be traveling at approximately 90 mph or more for advanced golfers (illustrative; varies with skill level), undergoes rapid deceleration during ball contact (contact duration is typically estimated at roughly 0.5 ms for a driver; illustrative estimate, depends on ball construction and swing speed <!-- TODO: add citation for typical clubhead speed and impact contact duration values, e.g., high-speed photography studies -->). This requires an enormous force from the ground (reaction force). This force must be transferred through the body to the club.
+Consider the moment of impact. The clubhead undergoes rapid deceleration during ball contact, creating large loads that must be transmitted through the club and body. That transmission challenge is one reason impact is a useful example of Bernstein's problem: the system must coordinate many joints and tissues quickly, not just one isolated segment.
 
 A beginner (freezing DOF): keeps the arms rigid, tries to absorb the impact force passively. Result: the arms get hurt, the shot is inconsistent, the club is not stable.
 
@@ -104,18 +104,18 @@ Learning the golf swing, in Bernstein's framework, is a progression from freezin
 
 [@bernstein1967coordination]
 
-## The Feel of a Good Shot: Proprioception as the Control Signal
+## The Feel of a Good Shot: Proprioception as a Control Cue
 
 
-Here is the central thesis of the motor learning chapter:
+Here is one useful working hypothesis for the motor-learning chapter:
 
 ::: {.callout-important}
 ## The Setpoint Hypothesis: Feel as Target
-When you hit a great golf shot, you *feel* it. This "feel" is a specific proprioceptive pattern: a combination of joint angles, angular velocities, muscle tensions, and tactile sensations at every moment during the swing. The brain encodes this pattern as a reference trajectory or "setpoint."
+When you hit a great golf shot, you *feel* it. This "feel" can be described as a proprioceptive pattern: a combination of joint angles, angular velocities, muscle tensions, and tactile sensations across the swing. In a setpoint-style interpretation, the brain encodes important parts of this pattern as a reference trajectory or "setpoint."
 
-All subsequent swing attempts are compared against this reference. The comparison generates a prediction error: $\bm{e}(t) = \bm{x}_{\mathrm{desired}}(t) - \hat{\bm{x}}_{\mathrm{actual}}(t)$. This error drives motor adaptation.
+In that simplified account, subsequent swing attempts are compared against this reference. The comparison generates a prediction error: $\bm{e}(t) = \bm{x}_{\mathrm{desired}}(t) - \hat{\bm{x}}_{\mathrm{actual}}(t)$. This error can drive motor adaptation.
 
-The golfer's primary learning goal is not to learn mechanics. It is to learn to *recall* and *reproduce* the proprioceptive pattern of a good shot on demand.
+For many golfers, one major learning goal is to *recall* and *reproduce* the proprioceptive pattern of a good shot on demand, even though mechanical understanding and task goals still matter.
 :::
 
 ### Proprioception: The Silent Sense
@@ -140,17 +140,16 @@ Proprioceptive information comes from several sources:
 
 :::
 
-The acuity of proprioception varies by joint:
+The acuity of proprioception varies by joint, so the body does not sense every degree of freedom with equal precision:
+
+| Joint | Relative position sense | Typical role in the swing |
+| --- | --- | --- |
+| Wrist | Finer | Fine club-orientation adjustments and grip feedback |
+| Elbow | Intermediate | Coordination between forearm and arm |
+| Shoulder | Coarser | Large-range positioning and power production |
 
 
-| Joint | Position Discrimination Threshold 
-Wrist | 1--2$^{\circ}$ 
-Elbow | 2--3$^{\circ}$ 
-Shoulder | 3--5$^{\circ}$ |
-| --- | --- | --- | --- | --- |
-
-
-So your wrist position sense is more acute than your shoulder. This makes sense: the wrist makes fine adjustments in the golf swing, while the shoulder provides power.
+This qualitative pattern helps explain why golfers often describe wrist and grip sensations very precisely, while describing shoulder position more coarsely.
 
 ### The Reference Trajectory: Storing the Good Swing
 
@@ -161,7 +160,7 @@ When you hit a great golf shot, what happens in your brain?
 
 - During the swing, proprioceptive afferents are firing from every joint, muscle, and receptor, encoding the instantaneous body configuration.
 
-- After impact, the ball follows a trajectory. You see where it lands (visual feedback delay that varies with distance and individual; roughly 150 ms or more is a typical estimated latency for visual processing, but depends on individual visual processing speed and attention <!-- TODO: add citation for approximate visual feedback latency in ball-sport contexts, e.g., sensorimotor neuroscience literature -->).
+- After impact, the ball follows a trajectory. You see where it lands, but that visual information arrives too late to reshape the downswing that just happened. It is useful mainly for evaluating and updating the next attempt.
 
 
 ::: {.callout-warning}
@@ -169,24 +168,26 @@ When you hit a great golf shot, what happens in your brain?
 The numerical values, claims, and parameters discussed in this section are formulated as illustrative model outputs and didactic simplifications. They are intended for pedagogical purposes and do not represent published, empirical biomechanical measurements.
 :::
 
-- In this illustrative learning loop, your brain compares predicted and actual outcomes. The ball landed where you expected---success! A large reward signal (dopamine) is released from the midbrain [@wolpert2011principles, @krakauer2019motor].
+- In this illustrative learning loop, your brain compares predicted and actual outcomes. If the ball lands where you expected, the movement is reinforced through reward and error-based learning signals [@wolpert2011motor, @krakauer2019motor].
 
-- The brain now stores the complete proprioceptive trajectory that led to success. This trajectory, encoded as a time series of joint configurations and muscle activations, becomes the reference for future swings.
+- The brain may then reinforce the proprioceptive trajectory that led to success. Elements of that trajectory can become part of the reference for future swings.
 
-This stored trajectory is what coaches and players call "feel." It's the proprioceptive signature of a successful swing.
+This reinforced sensory trajectory is part of what coaches and players call "feel." It is one way to describe the proprioceptive signature of a successful swing.
 
 ::: {.callout-tip}
 ## The Feel of a Good Swing
 
 Close your eyes and think about a great golf shot you've hit. Do you visualize the ball flight? Maybe. But more likely, you *feel* the swing. You feel the timing of the transition. You feel the lag in the wrists. You feel the acceleration through the ball. You feel the follow-through.
 
-This is proprioceptive memory---a sensory template encoded in your motor memory.
+This is proprioceptive memory---a sensory template encoded in motor memory.
 
 Now, suppose someone asked you to describe the mechanics of that swing. You might struggle. You might give different descriptions each time. But if they asked you to reproduce the swing, you could do it (on a good day) with high consistency.
 
-Why? Because the reference trajectory is proprioceptive, not mechanical. Your motor system doesn't need mechanical descriptions. It needs the feel.
+Why? One plausible answer is that the remembered cue is often more proprioceptive than verbal or mechanical. Your motor system may not need an explicit mechanical description in order to reproduce a movement pattern, even though mechanical structure still shapes the movement being learned.
 
 :::
+
+This "feel as target" account should be read as a pedagogical lens, not a complete theory of motor learning. In practice, golf learning likely blends sensory templates, task-level goals, movement schemas, environmental constraints, and explicit coaching cues. The value of the setpoint hypothesis is that it highlights one piece of that mix that players often report directly.
 
 ## Contemporary Motor Learning Frameworks
 
@@ -644,4 +645,3 @@ Importantly, these factors interact. Someone with lower genetic aptitude but hig
 - How does motor learning relate to the ZTCF framework from earlier chapters? How does understanding drift change how you think about learning the swing?
 
 - Why is transfer of learning (skills from tennis improving golf) possible? What is being transferred---mechanics or something else?
-

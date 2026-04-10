@@ -19,16 +19,16 @@
 
 ## 1. Identity
 
-| Field | Value |
-|-------|-------|
-| **Repository Name** | `AffineDrift` |
-| **GitHub URL** | `https://github.com/D-sorganization/AffineDrift` |
-| **Owner** | D-sorganization |
-| **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto |
-| **License** | MIT |
-| **Current Version** | 1.0.6 |
-| **Spec Version** | 1.0.14 |
-| **Last Spec Update** | 2026-04-04 |
+| Field                   | Value                                            |
+| ----------------------- | ------------------------------------------------ |
+| **Repository Name**     | `AffineDrift`                                    |
+| **GitHub URL**          | `https://github.com/D-sorganization/AffineDrift` |
+| **Owner**               | D-sorganization                                  |
+| **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
+| **License**             | MIT                                              |
+| **Current Version**     | 1.0.7                                            |
+| **Spec Version**        | 1.0.24                                           |
+| **Last Spec Update**    | 2026-04-08                                       |
 
 ## 2. Purpose & Mission
 
@@ -44,6 +44,7 @@ AffineDrift is a research platform that explores golf swing biomechanics through
 - Achieve and maintain >50% test coverage with property-based testing (Hypothesis) across all critical modules
 - Provide comprehensive educational resources that bridge control theory and applied biomechanics
 - Maintain textbook bibliographies and chapter citations with explicit scientific sourcing for biomechanics, multibody dynamics, geometry, and control-theory claims
+- Present the textbook volumes with shared algorithm and pseudocode conventions so implementation guidance is consistent across the series
 
 ### Non-Goals
 
@@ -111,6 +112,11 @@ AffineDrift/
 │   ├── link-check.yml           # Link validation
 │   ├── css-budget.yml           # CSS size enforcement
 │   └── [other workflows]        # Jules agents, specialized tests, etc.
+├── scripts/                     # Content and repository maintenance utilities
+│   ├── check_bibliography_quality.py # Bibliography structure and metadata validation
+│   ├── check_qmd_citation_keys.py    # Quarto citation-key integrity scan for site content
+│   ├── cli_output.py                 # Explicit stdout/stderr helpers for intentional CLI contracts
+│   └── README.md                # Script usage and CI-facing documentation
 ├── tests/                       # Additional test organization
 │   └── e2e/                     # End-to-end Playwright tests
 ├── _quarto.yml                  # Quarto configuration
@@ -122,49 +128,58 @@ AffineDrift/
 
 ### Key Components
 
-| Component | Location | Purpose |
-|-----------|----------|---------|
-| Swing Optimizer | `src/affine_control/swing_optimizer.py` | DDP and iLQR-based trajectory optimization for golf swings |
-| DDP Solver | `src/affine_control/ddp_solver.py` | Core differential dynamic programming algorithm |
-| Core Constants | `src/core/constants.py` | Physical and mathematical constants used throughout |
-| iLQR Optimizer | `src/core/optimizers.py` | Iterative linear-quadratic regulation solver |
-| Tangent Space Models | `src/tangent_models/` | Tangent space and hyperplane mathematical abstractions |
-| Link Checker | `src/tools/link_checker.py` | CI/CD tool for validating documentation links |
-| Site Health Monitor | `src/tools/site_health.py` | Automated website health and performance checks |
-| Code Quality Analyzer | `src/tools/code_quality_ast.py` | AST-based Python code quality analysis |
-| Rotation Converter | `js/rotation-converter/` | Interactive 3D rotation visualization and converter |
-| Search Functionality | `js/search.js` | Full-text search across website content |
-| Quarto Configuration | `_quarto.yml` | Website build and rendering configuration |
-| Test Suite | `tests/` | 80+ pytest and Jest test files |
+| Component             | Location                                | Purpose                                                    |
+| --------------------- | --------------------------------------- | ---------------------------------------------------------- |
+| Swing Optimizer       | `src/affine_control/swing_optimizer.py` | DDP and iLQR-based trajectory optimization for golf swings |
+| DDP Solver            | `src/affine_control/ddp_solver.py`      | Core differential dynamic programming algorithm            |
+| Core Constants        | `src/core/constants.py`                 | Physical and mathematical constants used throughout        |
+| iLQR Optimizer        | `src/core/optimizers.py`                | Iterative linear-quadratic regulation solver               |
+| Tangent Space Models  | `src/tangent_models/`                   | Tangent space and hyperplane mathematical abstractions     |
+| Link Checker          | `src/tools/link_checker.py`             | CI/CD tool for validating documentation links              |
+| Site Health Monitor   | `src/tools/site_health.py`              | Automated website health and performance checks            |
+| Code Quality Analyzer | `src/tools/code_quality_ast.py`         | AST-based Python code quality analysis                     |
+| Rotation Converter    | `js/rotation-converter/`                | Interactive 3D rotation visualization and converter        |
+| Search Functionality  | `js/search.js`                          | Full-text search across website content                    |
+| Quarto Configuration  | `_quarto.yml`                           | Website build and rendering configuration                  |
+| Test Suite            | `tests/`                                | 80+ pytest and Jest test files                             |
 
 ## 5. Desired Functionality
 
 ### Core Features
 
-| # | Feature | Status | Description |
-|---|---------|--------|-------------|
-| F1 | Quarto Website Rendering and Deployment | ✅ | Renders Quarto markdown (.qmd) source files into static HTML and deploys to GitHub Pages |
-| F2 | Affine Control Theory Swing Optimizer | ✅ | Implements DDP and iLQR algorithms to optimize golf swing trajectories as affine controllable systems |
-| F3 | Tangent Space and Hyperplane Models | ✅ | Provides mathematical models for tangent space methods with educational examples |
-| F4 | Interactive JavaScript Visualizations | ✅ | Rotation converter, search interface, and mathematical visualization components |
-| F5 | Mathematical Notation Rendering | ✅ | Supports MathJax and KaTeX for rendering LaTeX equations in web content, with `ui/lazy` enabled for performance |
-| F6 | Property-Based Testing with Hypothesis | ✅ | Comprehensive property-based testing strategy using Hypothesis framework |
-| F7 | CSS Budget Enforcement | ✅ | Automated CI enforcement of CSS file size limits to maintain performance |
-| F8 | Mirror Validation | ✅ | Ensures duplicate stylesheets match canonical versions across the codebase |
-| F9 | GitHub Actions Automation | ✅ | 54 CI/CD workflows including Jules automation agents for code analysis and deployment |
-| F10 | Progressive Web App Support | ✅ | Service worker and manifest for PWA capabilities (offline access, installability) |
-| F11 | Textbook Compilation Pipeline | ✅ | Quarto pipeline to compile educational materials into publishable textbook format |
-| F12 | Textbook claim guardrail | ✅ | PR CI blocks newly added unsupported quantitative or study claims in textbook content unless they include a citation or an explicit illustrative caveat |
-| F13 | PR site-build and dependency-audit gate | ✅ | `ci-standard.yml` audits Python dependencies with `pip-audit`, renders the Quarto site in PR CI, syncs frontend assets, and runs Playwright smoke tests against the generated docs |
-| F14 | Bibliography duplicate-alias guardrail | ✅ | Reference-integrity tests require duplicate bibliography records to carry an explicit legacy-compatibility note instead of silently diverging |
-| F15 | Textbook bibliography synchronization | ✅ | The Geometry of Motion and The Physics of Golf keep chapter-level citations synchronized with shared bibliography sources in `references/affine-drift.bib` and the book-specific `.bib` files |
+| #   | Feature                                 | Status | Description                                                                                                                                                                                                                                |
+| --- | --------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| F1  | Quarto Website Rendering and Deployment | ✅     | Renders Quarto markdown (.qmd) source files into static HTML and deploys to GitHub Pages                                                                                                                                                   |
+| F2  | Affine Control Theory Swing Optimizer   | ✅     | Implements DDP and iLQR algorithms to optimize golf swing trajectories as affine controllable systems                                                                                                                                      |
+| F3  | Tangent Space and Hyperplane Models     | ✅     | Provides mathematical models for tangent space methods with educational examples                                                                                                                                                           |
+| F4  | Interactive JavaScript Visualizations   | ✅     | Rotation converter, search interface, and mathematical visualization components                                                                                                                                                            |
+| F5  | Mathematical Notation Rendering         | ✅     | Supports MathJax and KaTeX for rendering LaTeX equations in web content, with `ui/lazy` enabled for performance                                                                                                                            |
+| F6  | Property-Based Testing with Hypothesis  | ✅     | Comprehensive property-based testing strategy using Hypothesis framework                                                                                                                                                                   |
+| F7  | CSS Budget Enforcement                  | ✅     | Automated CI enforcement of CSS file size limits to maintain performance                                                                                                                                                                   |
+| F8  | Mirror Validation                       | ✅     | Ensures duplicate stylesheets match canonical versions across the codebase                                                                                                                                                                 |
+| F9  | GitHub Actions Automation               | ✅     | 54 CI/CD workflows including Jules automation agents for code analysis and deployment                                                                                                                                                      |
+| F10 | Progressive Web App Support             | ✅     | Service worker and manifest for PWA capabilities (offline access, installability)                                                                                                                                                          |
+| F11 | Textbook Compilation Pipeline           | ✅     | Quarto pipeline to compile educational materials into publishable textbook format                                                                                                                                                          |
+| F12 | Textbook claim guardrail                | ✅     | PR CI blocks newly added unsupported quantitative or study claims in textbook content unless they include a citation or an explicit illustrative caveat                                                                                    |
+| F13 | PR site-build and dependency-audit gate | ✅     | `ci-standard.yml` audits Python dependencies with blocking `pip-audit`, measures coverage across the full `src/` tree, renders the Quarto site in PR CI, syncs frontend assets, and runs Playwright smoke tests against the generated docs |
+| F14 | Bibliography duplicate-alias guardrail  | ✅     | Reference-integrity tests require duplicate bibliography records to carry an explicit legacy-compatibility note instead of silently diverging                                                                                              |
+| F15 | Textbook bibliography synchronization   | ✅     | The Geometry of Motion and The Physics of Golf keep chapter-level citations synchronized with shared bibliography sources in `references/affine-drift.bib` and the book-specific `.bib` files                                              |
+| F16 | Website citation-resolution guardrail   | ✅     | PR CI scans website `.qmd` sources, resolves their configured bibliography files, and fails when citation keys do not map to a known bibliography entry                                                                                    |
+| F17 | Textbook algorithm convention sharing   | ✅     | `geometry_of_motion.sty` exposes shared algorithm and pseudocode primitives so implementation-oriented chapters use one consistent notation and formatting style                                 |
+| F18 | Textbook applied-optimization guidance  | ✅     | Volume I and Volume II include implementation-grade pseudocode for DDP/iLQR, direct collocation, funnel synthesis, ILC, and trajectory-library adaptation, plus a bounded treatment of evolutionary search |
+| F19 | Script CLI output contracts             | ✅     | Maintenance scripts route intentional terminal output through `scripts/cli_output.py`, making stdout/stderr behavior explicit and easier to test without weakening logging semantics |
+| F20 | RL benchmark modular split              | ✅     | `src/tools/rl_funnel_benchmark.py` now stays under the repo file-size budget by delegating dynamics, controllers, and simulation concerns to focused helper modules while preserving the benchmark module's public API |
+| F21 | Tooling Demeter facades                 | ✅     | Link and site-health utilities isolate DOM/path traversal behind small façade objects so repository-governance checks depend on narrower interfaces instead of nested reach-through |
+| F22 | Wrist-model Qt module split             | ✅     | The legacy `content/wrist-as-universal-joint/Universal_Joint_Model_Enhanced.py` launcher now delegates geometry, kinematics, Qt canvas rendering, and window assembly to focused modules under `src/tools/wrist_universal_joint`, keeping the entrypoint thin while preserving its public surface |
+| F23 | Analysis helper fallback logging        | ✅     | `src/tools/utils/analysis_utils.py` logs recoverable parse and file-read failures at debug level when it falls back to zeroed or empty analysis results, keeping repository-quality scans observable without turning invalid files into hard failures |
 
 ### API / Interface Contract
 
 **Python API:**
+
 - `affine_control.swing_optimizer.SwingOptimizer` — Main optimization interface
-  - Constructor permits a missing solver for inspection/tests but emits a warning and binds the documented mock implementation
-  - `optimize(...)` rejects the mock solver unless `SwingOptimizationConfig.allow_mock_solver=True`
+  - Constructor requires a real `ddp_solver` unless `SwingOptimizationConfig.allow_mock_solver=True` explicitly opts into the documented mock implementation for test-only usage
+  - `optimize(...)` may execute the mock solver only after that explicit opt-in
   - `optimize(swing_model, constraints) -> OptimizedTrajectory` — Run trajectory optimization
 - `core.optimizers.iLQR` — iLQR solver
   - `solve(dynamics, cost_fn, initial_trajectory) -> Solution` — Compute optimal trajectory
@@ -172,21 +187,26 @@ AffineDrift/
   - `project(vector) -> Vector` — Project to tangent space
 
 **JavaScript API:**
+
 - `RotationConverter` — Interactive 3D rotation tool
   - `convert(matrix, target_format) -> string` — Convert rotation representations
 - `SearchIndex.query(term) -> SearchResults` — Full-text search across content
 
 **CLI Tools:**
+
 - `link-checker.py` — Validate all documentation links
 - `site-health.py` — Generate health report on website assets
 - `code-quality-ast.py` — Analyze Python code structure and metrics
+- `scripts/cli_output.py` — Shared helper for scripts that intentionally emit user-facing stdout/stderr lines as part of their CLI contract
 
 **Website (HTTP):**
+
 - GitHub Pages deployment at `AffineDrift.com`
 - Service worker handles offline content caching
 - All pages render with MathJax notation support
 
 **Textbook Bibliographies:**
+
 - `references/affine-drift.bib` is the shared canonical bibliography source for the site and textbook projects
 - `articles/The_Geometry_of_Motion/geometry_of_motion.bib` and `articles/The_Physics_of_Golf/golf_physics.bib` contain book-specific bibliography entries used by Quarto renders
 - Chapter sources in both textbook projects are expected to cite foundational literature for geometric mechanics, multibody dynamics, parallel mechanisms, motor control, and impedance-control claims
@@ -195,26 +215,27 @@ AffineDrift/
 
 ### Input Data
 
-| Input | Format | Source | Schema |
-|-------|--------|--------|--------|
-| Swing Trajectories | YAML / JSON | User-defined or benchmark datasets | Defines initial position, velocity, torques, constraints |
-| Mathematical Examples | Quarto Markdown | `articles/` and `books/` directories | Standard Quarto with LaTeX and code cells |
-| Website Content | Quarto Markdown (.qmd) | `content/`, `articles/`, `books/` | Quarto markdown with YAML frontmatter |
-| Configuration Parameters | YAML | `_quarto.yml`, `.github/workflows/` | Quarto and GitHub Actions configuration |
+| Input                    | Format                 | Source                               | Schema                                                   |
+| ------------------------ | ---------------------- | ------------------------------------ | -------------------------------------------------------- |
+| Swing Trajectories       | YAML / JSON            | User-defined or benchmark datasets   | Defines initial position, velocity, torques, constraints |
+| Mathematical Examples    | Quarto Markdown        | `articles/` and `books/` directories | Standard Quarto with LaTeX and code cells                |
+| Website Content          | Quarto Markdown (.qmd) | `content/`, `articles/`, `books/`    | Quarto markdown with YAML frontmatter                    |
+| Configuration Parameters | YAML                   | `_quarto.yml`, `.github/workflows/`  | Quarto and GitHub Actions configuration                  |
 
 ### Output Data
 
-| Output | Format | Destination | Description |
-|--------|--------|-------------|-------------|
-| Optimized Swing Trajectories | NumPy arrays / JSON | Memory or file system | Joint angles, velocities, and torques over time |
-| Optimization Reports | JSON | User-defined or CI logs | Convergence metrics, final cost, solver statistics |
-| Static Website | HTML + CSS + JS | GitHub Pages (`AffineDrift.com`) | Rendered Quarto site with interactive features |
-| Test Reports | JSON / HTML | GitHub Actions artifacts | Coverage reports, test results, performance metrics |
-| Code Quality Reports | JSON / Text | CI logs and artifacts | Linting results, type checking errors, AST analysis |
+| Output                       | Format              | Destination                      | Description                                         |
+| ---------------------------- | ------------------- | -------------------------------- | --------------------------------------------------- |
+| Optimized Swing Trajectories | NumPy arrays / JSON | Memory or file system            | Joint angles, velocities, and torques over time     |
+| Optimization Reports         | JSON                | User-defined or CI logs          | Convergence metrics, final cost, solver statistics  |
+| Static Website               | HTML + CSS + JS     | GitHub Pages (`AffineDrift.com`) | Rendered Quarto site with interactive features      |
+| Test Reports                 | JSON / HTML         | GitHub Actions artifacts         | Coverage reports, test results, performance metrics |
+| Code Quality Reports         | JSON / Text         | CI logs and artifacts            | Linting results, type checking errors, AST analysis |
 
 ### Configuration
 
 **Quarto Configuration** (`_quarto.yml`):
+
 - Website title, author, and metadata
 - Output format (HTML for GitHub Pages)
 - Theme and CSS customization
@@ -222,15 +243,18 @@ AffineDrift/
 - Navigation menu structure
 
 **GitHub Actions Secrets:**
+
 - GitHub Pages deployment token (auto-configured)
 
 **Python Configuration** (`pyproject.toml`):
+
 - Python version: 3.12
 - Dependencies pinned with version ranges
 - Test discovery paths
 - Coverage configuration (minimum 50%)
 
 **Code Quality Settings:**
+
 - **ruff** — Linting rules in `pyproject.toml` under `[tool.ruff]`
 - **black** — 100-character line limit (NOT ruff format)
 - **mypy** — Type checking enabled for all src/ modules
@@ -244,23 +268,23 @@ AffineDrift follows a **test pyramid** strategy: unit tests form the base (fast,
 
 ### Test Organization
 
-| Category | Location | Framework | Markers |
-|----------|----------|-----------|---------|
-| Unit | `tests/test_affine_control/`, `tests/test_core/`, `tests/test_tangent_models/` | pytest | `@pytest.mark.unit` |
-| Integration | `tests/test_integration/` | pytest | `@pytest.mark.integration` |
-| Content/Structure | `tests/test_content/` | pytest | `@pytest.mark.content` |
-| Specialized (DbC, RL benchmarks) | `tests/test_specialized/` | pytest | `@pytest.mark.specialized` |
-| JavaScript/Bibliography | `tests/` | Jest | N/A |
-| End-to-End | `tests/e2e/` | Playwright (Chromium) | N/A |
+| Category                         | Location                                                                       | Framework             | Markers                    |
+| -------------------------------- | ------------------------------------------------------------------------------ | --------------------- | -------------------------- |
+| Unit                             | `tests/test_affine_control/`, `tests/test_core/`, `tests/test_tangent_models/` | pytest                | `@pytest.mark.unit`        |
+| Integration                      | `tests/test_integration/`                                                      | pytest                | `@pytest.mark.integration` |
+| Content/Structure                | `tests/test_content/`                                                          | pytest                | `@pytest.mark.content`     |
+| Specialized (DbC, RL benchmarks) | `tests/test_specialized/`                                                      | pytest                | `@pytest.mark.specialized` |
+| JavaScript/Bibliography          | `tests/`                                                                       | Jest                  | N/A                        |
+| End-to-End                       | `tests/e2e/`                                                                   | Playwright (Chromium) | N/A                        |
 
 ### Coverage Requirements
 
-| Scope | Minimum | Current | Enforced By |
-|-------|---------|---------|-------------|
-| Overall src/ | 50% | ~50% | CI (`--cov-fail-under=50`) |
-| affine_control/ | 70% | ~70% | CI |
-| core/ | 70% | ~70% | CI |
-| tools/ | 60% | ~60% | CI |
+| Scope           | Minimum | Current | Enforced By                                 |
+| --------------- | ------- | ------- | ------------------------------------------- |
+| Overall src/    | 50%     | ~90%    | CI (`pytest --cov=src --cov-fail-under=50`) |
+| affine_control/ | 70%     | ~70%    | Critical module coverage gate               |
+| core/           | 70%     | ~70%    | Critical module coverage gate               |
+| tools/          | 60%     | ~90%    | CI plus critical module coverage gate       |
 
 ### Required Test Scenarios
 
@@ -276,21 +300,22 @@ AffineDrift follows a **test pyramid** strategy: unit tests form the base (fast,
 - [x] Smoke tests on Chromium pass for critical pages
 - [x] Property-based tests with Hypothesis verify DDP convergence across parameter ranges
 - [x] Design-by-contract assertions enforce preconditions and postconditions
+- [x] Website `.qmd` citations resolve against project or page bibliography files, excluding Quarto cross-references such as `@eq-` and `@sec-`
 
 ## 8. Quality Standards
 
 ### Code Quality Tools
 
-| Tool | Version | Purpose | Blocking? |
-|------|---------|---------|-----------|
-| ruff | Latest | Linting (multiple rules) | Yes |
-| black | Latest | Code formatting (100-char lines) | Yes |
-| mypy | Latest | Static type checking | Yes |
-| pytest | Latest | Testing framework | Yes |
-| pytest-cov | Latest | Coverage measurement | Yes |
-| Hypothesis | Latest | Property-based testing | No (optional depth) |
-| Jest | Latest | JavaScript testing | Yes |
-| Playwright | Latest | E2E testing (Chromium) | Yes |
+| Tool       | Version | Purpose                          | Blocking?           |
+| ---------- | ------- | -------------------------------- | ------------------- |
+| ruff       | Latest  | Linting (multiple rules)         | Yes                 |
+| black      | Latest  | Code formatting (100-char lines) | Yes                 |
+| mypy       | Latest  | Static type checking             | Yes                 |
+| pytest     | Latest  | Testing framework                | Yes                 |
+| pytest-cov | Latest  | Coverage measurement             | Yes                 |
+| Hypothesis | Latest  | Property-based testing           | No (optional depth) |
+| Jest       | Latest  | JavaScript testing               | Yes                 |
+| Playwright | Latest  | E2E testing (Chromium)           | Yes                 |
 
 ### Design Principles
 
@@ -301,50 +326,50 @@ AffineDrift follows a **test pyramid** strategy: unit tests form the base (fast,
 
 ### CI/CD Pipeline
 
-| Workflow | Trigger | Purpose | Blocking? |
-|----------|---------|---------|-----------|
-| `ci-standard.yml` | Push/PR to main | Lint, type-check, dependency audit, site render, E2E smoke tests, coverage | Yes |
-| `deploy-website.yml` | Merge to main | Build Quarto site, deploy to GitHub Pages | Yes |
-| `test-coverage.yml` | Push/PR | Report coverage metrics | Yes (50% minimum) |
-| `link-check.yml` | Push/PR | Validate all links in content | Yes |
-| `css-budget.yml` | Push/PR | Enforce CSS file size limits | Yes |
-| `module-size-budget.yml` | Push/PR | Enforce Python module complexity | Yes |
-| `dry-tracker.yml` | Nightly | Identify code duplication patterns | No (informational) |
-| `Jules automation agents` | Various | Automated code review, refactoring suggestions | No (informational) |
+| Workflow                  | Trigger         | Purpose                                                                                         | Blocking?          |
+| ------------------------- | --------------- | ----------------------------------------------------------------------------------------------- | ------------------ |
+| `ci-standard.yml`         | Push/PR to main | Lint, type-check, blocking dependency audit, full-`src/` coverage, site render, E2E smoke tests | Yes                |
+| `deploy-website.yml`      | Merge to main   | Build Quarto site, deploy to GitHub Pages                                                       | Yes                |
+| `test-coverage.yml`       | Push/PR         | Report coverage metrics                                                                         | Yes (50% minimum)  |
+| `link-check.yml`          | Push/PR         | Validate all links in content                                                                   | Yes                |
+| `css-budget.yml`          | Push/PR         | Enforce CSS file size limits                                                                    | Yes                |
+| `module-size-budget.yml`  | Push/PR         | Enforce Python module complexity                                                                | Yes                |
+| `dry-tracker.yml`         | Nightly         | Identify code duplication patterns                                                              | No (informational) |
+| `Jules automation agents` | Various         | Automated code review, refactoring suggestions                                                  | No (informational) |
 
 ## 9. Dependencies
 
 ### Runtime Dependencies
 
-| Package | Version | Purpose |
-|---------|---------|---------|
-| numpy | Latest | Numerical computations for trajectory optimization |
-| scipy | Latest | Scientific algorithms (optimization, linear algebra) |
-| matplotlib | Latest | Plotting and visualization of swing trajectories |
-| pydantic | Latest | Data validation and runtime type checking |
-| PyYAML | Latest | YAML configuration file parsing |
-| beautifulsoup4 | Latest | HTML parsing for link checking and site analysis |
-| requests | Latest | HTTP requests for external data fetching |
-| streamlit | Latest | Interactive dashboard for visualization (optional) |
+| Package        | Version | Purpose                                              |
+| -------------- | ------- | ---------------------------------------------------- |
+| numpy          | Latest  | Numerical computations for trajectory optimization   |
+| scipy          | Latest  | Scientific algorithms (optimization, linear algebra) |
+| matplotlib     | Latest  | Plotting and visualization of swing trajectories     |
+| pydantic       | Latest  | Data validation and runtime type checking            |
+| PyYAML         | Latest  | YAML configuration file parsing                      |
+| beautifulsoup4 | Latest  | HTML parsing for link checking and site analysis     |
+| requests       | Latest  | HTTP requests for external data fetching             |
+| streamlit      | Latest  | Interactive dashboard for visualization (optional)   |
 
 ### Development Dependencies
 
-| Package | Version | Purpose |
-|---------|---------|---------|
-| pytest | Latest | Testing framework |
-| pytest-cov | Latest | Coverage reporting |
-| hypothesis | Latest | Property-based testing library |
-| ruff | Latest | Linting and code quality |
-| black | Latest | Code formatting (100-char lines) |
-| mypy | Latest | Type checking |
-| jest | Latest | JavaScript testing framework |
-| playwright | Latest | Browser automation for E2E tests |
+| Package    | Version | Purpose                          |
+| ---------- | ------- | -------------------------------- |
+| pytest     | Latest  | Testing framework                |
+| pytest-cov | Latest  | Coverage reporting               |
+| hypothesis | Latest  | Property-based testing library   |
+| ruff       | Latest  | Linting and code quality         |
+| black      | Latest  | Code formatting (100-char lines) |
+| mypy       | Latest  | Type checking                    |
+| jest       | Latest  | JavaScript testing framework     |
+| playwright | Latest  | Browser automation for E2E tests |
 
 ### Fleet Dependencies
 
-| Repo | Relationship | Description |
-|------|-------------|-------------|
-| QuatEngine | Referenced in non-goals | Game engine; AffineDrift does not depend on it |
+| Repo          | Relationship            | Description                                               |
+| ------------- | ----------------------- | --------------------------------------------------------- |
+| QuatEngine    | Referenced in non-goals | Game engine; AffineDrift does not depend on it            |
 | UpstreamDrift | Referenced in non-goals | Real-time physics simulator; AffineDrift is complementary |
 
 ## 10. Deployment & Operations
@@ -383,13 +408,13 @@ python src/tools/code_quality_ast.py
 
 ### Build Artifacts
 
-| Artifact | Format | Destination |
-|----------|--------|-------------|
-| Static Website | HTML + CSS + JS | GitHub Pages (AffineDrift.com) |
-| Test Reports | JSON + HTML | GitHub Actions artifacts and CI logs |
-| Coverage Reports | LCOV + HTML | CI artifacts (coverage.xml) |
-| Quarto Book | PDF + HTML | GitHub Pages and releases |
-| Optimization Results | JSON | File system or cloud storage (user-defined) |
+| Artifact             | Format          | Destination                                 |
+| -------------------- | --------------- | ------------------------------------------- |
+| Static Website       | HTML + CSS + JS | GitHub Pages (AffineDrift.com)              |
+| Test Reports         | JSON + HTML     | GitHub Actions artifacts and CI logs        |
+| Coverage Reports     | LCOV + HTML     | CI artifacts (coverage.xml)                 |
+| Quarto Book          | PDF + HTML      | GitHub Pages and releases                   |
+| Optimization Results | JSON            | File system or cloud storage (user-defined) |
 
 ## 11. Roadmap & Open Issues
 
@@ -399,14 +424,14 @@ python src/tools/code_quality_ast.py
 
 ### Planned Work
 
-| Priority | Item | Target Date |
-|----------|------|-------------|
-| P0 | Maintain test coverage >50% across all PRs | Ongoing |
-| P1 | Publish research paper on affine swing modeling | Q2 2026 |
-| P1 | Expand tangent space examples and tutorials | Q2 2026 |
-| P2 | Optimize iLQR solver performance for real-time feedback | Q3 2026 |
-| P2 | Add interactive swing trajectory editor to website | Q3 2026 |
-| P3 | Support additional swing types (left-handed, alternative stances) | Q4 2026 |
+| Priority | Item                                                              | Target Date |
+| -------- | ----------------------------------------------------------------- | ----------- |
+| P0       | Maintain test coverage >50% across all PRs                        | Ongoing     |
+| P1       | Publish research paper on affine swing modeling                   | Q2 2026     |
+| P1       | Expand tangent space examples and tutorials                       | Q2 2026     |
+| P2       | Optimize iLQR solver performance for real-time feedback           | Q3 2026     |
+| P2       | Add interactive swing trajectory editor to website                | Q3 2026     |
+| P3       | Support additional swing types (left-handed, alternative stances) | Q4 2026     |
 
 ### Known Limitations
 
@@ -418,26 +443,37 @@ python src/tools/code_quality_ast.py
 
 ## 12. Change Log
 
-| Date | Version | Changes |
-|------|---------|---------|
-| 2026-04-04 | 1.0.13 | security(xss): Fixed XSS vulnerability in `notes-workspace.js` by avoiding `document.write` with string interpolation and safely assigning `value` property |
-| 2026-04-04 | 1.0.14 | perf(frontend): Replaced DOM-based escapeHtml with Regex string replacement in JS to avoid layout thrashing and reduce memory allocations |
-| 2026-04-03 | 1.0.12 | security(matlab): Fixed path escaping vulnerability in `matlab_quality_check.py` by properly escaping single quotes for MATLAB strings instead of aggressively removing characters |
-| 2026-04-01 | 1.0.10 | security(links): Added `rel="noopener noreferrer"` to `target="_blank"` links generated by `latex_utils.py` and `bibliography.js` to mitigate reverse tabnabbing vulnerabilities |
-| 2026-03-30 | 1.0.9 | fix(html): corrected malformed HTML structure in Wrist_Universal_Claude.html — removed stray </p> tags after list elements and fixed <p> tags improperly wrapping <ul>/<ol> block content |
-| 2026-03-30 | 1.0.6 | fix(ci): aligned regression tests with current workflows — mock-solver guard asserted at optimize() per SwingOptimizer contract; test_deployment_integrity updated to match Quarto render action in ci-standard.yml; added dotenv-example removal step before E2E render; updated torque-generator docstrings in Universal_Joint_Model_Enhanced.py |
-| 2026-03-30 | 1.0.6 | A-N Assessment remediation (issue #2012): auto-formatted 10 files to comply with black 100-char limit; added missing docstrings to priority_score, __post_init__, _requires_token, create_issue, sha256, sync_one, main, __init__, _handle_text/_code_block/_inline_code/_display_math/_inline_math, setup_logging_with_timestamp, find_markdown_files across scripts/ |
-| 2026-03-30 | 1.0.5 | Performance fix: replaced O(n²) list.index() loop in putt simulator with enumerate() for linear-time hole-score lookups in round_simulator.py |
-| 2026-03-30 | 1.0.4 | Fixed remaining CI failures in batch-4 PR: replaced bare HTML TODO comments with inline caveat phrasing ("illustrative", "depends on", etc.) in ch16, ch18--ch31 qmd files and ch14--ch16, ch19 tex files to satisfy checker window requirements |
-| 2026-03-30 | 1.0.3 | Added TODO(citation) markers and humble qualifiers for unsourced numerical claims in ch14--ch31 LaTeX chapters of The Physics of Golf — issues #1881, #1882, #1883, #1884, #1885, #1886, #1887, #1888, #1889, #1890, #1892, #1893, #1894, #1895, #1896, #1897, #1898, #1899 (batch 2) |
-| 2026-03-30 | 1.0.2 | Added caveat phrasing and improved humble language for uncited numerical claims in ch02, ch03, ch04, ch07, ch10, ch11, ch13, ch18, ch19, ch20, ch21, ch23, ch25, ch26, ch29, ch31, and glossary of The Physics of Golf (content audit wave 2; issues #2007--#2011) |
-| 2026-03-30 | 1.0.2 | Added citation markers, TODO notes, and humble phrasing for unsourced numerical claims and study references in ch22--ch31, glossary.qmd (The Physics of Golf), and 01-throwing-away-target.qmd (The Geometry of Motion) — issues #1921, #1922, #1924, #1925, #1926, #1927, #1928, #1929, #1930, #1931, #1932, #1948 (batch 4) |
-| 2026-03-30 | 1.0.1 | Improve accessibility for Critics Corner with aria-controls |
-| 2026-03-30 | 1.0.1 | Added citation markers, TODO notes, and humble phrasing for unsourced claims in chapters 1--13 of The Physics of Golf (issues #1868--#1880, batch 1) |
-| 2026-03-30 | 1.0.1 | Added citation markers (TODO comments) and humble qualifiers to unsourced numerical claims in ch01--ch21 of The Physics of Golf — issues #1900--#1920 (batch 3) |
-| 2026-03-30 | 1.0.0 | Consolidated frontend scroll event handlers via `requestAnimationFrame` |
-| 2026-03-30 | 1.0.0 | Documented PR CI dependency-audit plus rendered-site E2E gate, mock-solver opt-in behavior at `SwingOptimizer.optimize`, and bibliography duplicate-alias integrity guardrails |
-| 2026-03-28 | 1.0.0 | Initial SPEC.md specification for AffineDrift v1.0.0 — all core features documented and implemented |
+| Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                      |
+| ---------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-04-09 | 1.0.24  | docs(articles): Refined the Layman's Terms section in Contraction_Tangent_CRITIC.qmd to use relatable analogies and improve clarity |
+| 2026-04-07 | 1.0.19  | chore(types): annotated the remaining public Python functions in `src/` and `scripts/`, added an AST regression test to keep return annotations from drifting, and closed the final actionable slice of assessment issue #2241 after auditing stale print/config findings                                                                                                     |
+| 2026-04-07 | 1.0.18  | fix(scripts): replaced remaining raw script-level `print()` calls with explicit stdout/stderr helpers, made maintenance scripts import-safe with `main()` entry points, and added CLI-output regression tests for the affected utilities                                                                                                                                       |
+| 2026-04-07 | 1.0.17  | fix(ci): documented the explicit `SwingOptimizer` mock-solver opt-in at construction time, widened `ci-standard.yml` coverage enforcement to the full `src/` tree, and made the main `pip-audit` gate blocking                                                                                                                                                               |
+| 2026-04-05 | 1.0.15  | security(xss): Prevented XSS in polynomial evaluation by explicitly stripping allowed math variables/functions and validating the remainder strictly via regex before `new Function` evaluation in `grip_angle_simulator.html`                                                                                                                                               |
+| 2026-04-08 | 1.0.23  | security(xss): Fixed DOM-based XSS vulnerability in `.qmd` history list components by replacing `innerHTML` with `document.createElement` and safe text assignment                                                                                                                                                                                                           |
+| 2026-04-06 | 1.0.16  | ci(content): added citation-resolution checks for website `.qmd` sources, covering root and nested Quarto bibliography files and excluding Quarto cross-references from unresolved-key failures                                                                                                                                                                              |
+| 2026-04-04 | 1.0.13  | security(xss): Fixed XSS vulnerability in `notes-workspace.js` by avoiding `document.write` with string interpolation and safely assigning `value` property                                                                                                                                                                                                                  |
+| 2026-04-05 | 1.0.15  | fix(tools): made `fix_html.py` repo-root portable with explicit input/output resolution and dry-run support                                                                                                                                                                                                                                                                  |
+| 2026-04-04 | 1.0.15  | perf(frontend): Apply resize:none to auto-growing textareas managed by `initAutoGrowTextareas()` to prevent user manual resizing which conflicts with JS logic                                                                                                                                                                                                               |
+| 2026-04-04 | 1.0.14  | perf(frontend): Replaced DOM-based escapeHtml with Regex string replacement in JS to avoid layout thrashing and reduce memory allocations                                                                                                                                                                                                                                    |
+| 2026-04-05 | 1.0.15  | security(xss): Fixed XSS vulnerability in `notes-workspace.js` popout feature by removing `document.write` template literal evaluation.                                                                                                                                                                                                                                      |
+| 2026-04-03 | 1.0.12  | security(matlab): Fixed path escaping vulnerability in `matlab_quality_check.py` by properly escaping single quotes for MATLAB strings instead of aggressively removing characters                                                                                                                                                                                           |
+| 2026-04-01 | 1.0.10  | security(links): Added `rel="noopener noreferrer"` to `target="_blank"` links generated by `latex_utils.py` and `bibliography.js` to mitigate reverse tabnabbing vulnerabilities                                                                                                                                                                                             |
+| 2026-04-06 | 1.0.16  | Added repository-wide Quarto citation-key integrity validation in `ci-standard.yml`, documented `scripts/check_qmd_citation_keys.py`, and updated review-bot workflow handling so trusted automated reviewers do not fail PR automation                                                                                                                                      |
+| 2026-03-30 | 1.0.9   | fix(html): corrected malformed HTML structure in Wrist_Universal_Claude.html — removed stray </p> tags after list elements and fixed <p> tags improperly wrapping <ul>/<ol> block content                                                                                                                                                                                    |
+| 2026-03-30 | 1.0.6   | fix(ci): aligned regression tests with current workflows — mock-solver guard asserted at optimize() per SwingOptimizer contract; test_deployment_integrity updated to match Quarto render action in ci-standard.yml; added dotenv-example removal step before E2E render; updated torque-generator docstrings in Universal_Joint_Model_Enhanced.py                           |
+| 2026-03-30 | 1.0.6   | A-N Assessment remediation (issue #2012): auto-formatted 10 files to comply with black 100-char limit; added missing docstrings to priority_score, **post_init**, \_requires_token, create_issue, sha256, sync_one, main, **init**, \_handle_text/\_code_block/\_inline_code/\_display_math/\_inline_math, setup_logging_with_timestamp, find_markdown_files across scripts/ |
+| 2026-03-30 | 1.0.5   | Performance fix: replaced O(n²) list.index() loop in putt simulator with enumerate() for linear-time hole-score lookups in round_simulator.py                                                                                                                                                                                                                                |
+| 2026-03-30 | 1.0.4   | Fixed remaining CI failures in batch-4 PR: replaced bare HTML TODO comments with inline caveat phrasing ("illustrative", "depends on", etc.) in ch16, ch18--ch31 qmd files and ch14--ch16, ch19 tex files to satisfy checker window requirements                                                                                                                             |
+| 2026-03-30 | 1.0.3   | Added TODO(citation) markers and humble qualifiers for unsourced numerical claims in ch14--ch31 LaTeX chapters of The Physics of Golf — issues #1881, #1882, #1883, #1884, #1885, #1886, #1887, #1888, #1889, #1890, #1892, #1893, #1894, #1895, #1896, #1897, #1898, #1899 (batch 2)                                                                                        |
+| 2026-03-30 | 1.0.2   | Added caveat phrasing and improved humble language for uncited numerical claims in ch02, ch03, ch04, ch07, ch10, ch11, ch13, ch18, ch19, ch20, ch21, ch23, ch25, ch26, ch29, ch31, and glossary of The Physics of Golf (content audit wave 2; issues #2007--#2011)                                                                                                           |
+| 2026-03-30 | 1.0.2   | Added citation markers, TODO notes, and humble phrasing for unsourced numerical claims and study references in ch22--ch31, glossary.qmd (The Physics of Golf), and 01-throwing-away-target.qmd (The Geometry of Motion) — issues #1921, #1922, #1924, #1925, #1926, #1927, #1928, #1929, #1930, #1931, #1932, #1948 (batch 4)                                                |
+| 2026-03-30 | 1.0.1   | Improve accessibility for Critics Corner with aria-controls                                                                                                                                                                                                                                                                                                                  |
+| 2026-03-30 | 1.0.1   | Added citation markers, TODO notes, and humble phrasing for unsourced claims in chapters 1--13 of The Physics of Golf (issues #1868--#1880, batch 1)                                                                                                                                                                                                                         |
+| 2026-03-30 | 1.0.1   | Added citation markers (TODO comments) and humble qualifiers to unsourced numerical claims in ch01--ch21 of The Physics of Golf — issues #1900--#1920 (batch 3)                                                                                                                                                                                                              |
+| 2026-03-30 | 1.0.0   | Consolidated frontend scroll event handlers via `requestAnimationFrame`                                                                                                                                                                                                                                                                                                      |
+| 2026-03-30 | 1.0.0   | Documented PR CI dependency-audit plus rendered-site E2E gate, mock-solver opt-in behavior at `SwingOptimizer.optimize`, and bibliography duplicate-alias integrity guardrails                                                                                                                                                                                               |
+| 2026-03-28 | 1.0.0   | Initial SPEC.md specification for AffineDrift v1.0.0 — all core features documented and implemented                                                                                                                                                                                                                                                                          |
 
 ---
 

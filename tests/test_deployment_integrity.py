@@ -45,6 +45,11 @@ def test_ci_workflow_builds_site_for_e2e_and_audits_dependencies() -> None:
     content = CI_WORKFLOW_PATH.read_text(encoding="utf-8")
 
     assert "pip-audit" in content, "CI workflow should audit Python dependencies"
+    assert (
+        "pip-audit -r requirements.txt || true" not in content
+    ), "CI dependency audit must not be fail-open"
+    assert "--cov=src" in content, "CI coverage should target the full src tree"
+    assert "--cov=src/tools" not in content, "CI coverage scope must not exclude core packages"
     assert "Build site for E2E" in content, "E2E lane should build the site before testing"
     assert (
         "quarto render" in content or "quarto-actions/render" in content

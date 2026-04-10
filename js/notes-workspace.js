@@ -122,12 +122,14 @@
     toggleBtn.className = "ad-notes-toggle";
     toggleBtn.type = "button";
     toggleBtn.setAttribute("aria-expanded", "false");
+    toggleBtn.setAttribute("aria-controls", "ad-notes-workspace-panel");
     toggleBtn.textContent = "Project Notes";
 
     const panel = document.createElement("section");
     panel.id = "ad-notes-workspace-panel";
     panel.className = "ad-notes-panel";
     panel.setAttribute("aria-label", "Project notes workspace");
+    panel.setAttribute("aria-hidden", "true");
     panel.innerHTML = `
       <div class="ad-notes-header">
         <h3>Project Notes</h3>
@@ -167,12 +169,14 @@
     function openPanel() {
       panel.classList.add("open");
       toggleBtn.setAttribute("aria-expanded", "true");
+      panel.setAttribute("aria-hidden", "false");
       textArea.focus();
     }
 
     function closePanel() {
       panel.classList.remove("open");
       toggleBtn.setAttribute("aria-expanded", "false");
+      panel.setAttribute("aria-hidden", "true");
       toggleBtn.focus();
     }
 
@@ -182,27 +186,25 @@
         setStatus("Pop-out blocked by browser.");
         return;
       }
-      const openerOrigin = window.location.origin;
-      pop.document.write(`
-        <!doctype html>
-        <html><head><title>AffineDrift Project Notes</title></head>
-        <body style="font-family: sans-serif; margin: 1rem;">
-          <h2 style="margin-top:0;">AffineDrift Project Notes</h2>
-          <textarea id="notes" style="width:100%; min-height:360px;"></textarea>
-          <div style="margin-top:0.75rem;">
-            <button id="save">Save</button>
-            <button id="close">Close</button>
-          </div>
-          <scr` + `ipt>
-            const area = document.getElementById("notes");
-            const targetOrigin = "${openerOrigin}";
-            document.getElementById("save").addEventListener("click", function () {
-              window.opener.postMessage({ type: "AD_NOTES_SAVE", content: area.value }, targetOrigin);
-            });
-            document.getElementById("close").addEventListener("click", function () { window.close(); });
-          <` + `/script>
-        </body></html>
-      `);
+      pop.document.write(
+        '<!doctype html>' +
+        '<html><head><title>AffineDrift Project Notes</title></head>' +
+        '<body style="font-family: sans-serif; margin: 1rem;">' +
+          '<h2 style="margin-top:0;">AffineDrift Project Notes</h2>' +
+          '<textarea id="notes" style="width:100%; min-height:360px;"></textarea>' +
+          '<div style="margin-top:0.75rem;">' +
+            '<button id="save">Save</button>' +
+            '<button id="close">Close</button>' +
+          '</div>' +
+          '<scr' + 'ipt>' +
+            'const area = document.getElementById("notes");' +
+            'document.getElementById("save").addEventListener("click", function () {' +
+              'window.opener.postMessage({ type: "AD_NOTES_SAVE", content: area.value }, window.opener.location.origin);' +
+            '});' +
+            'document.getElementById("close").addEventListener("click", function () { window.close(); });' +
+          '</scr' + 'ipt>' +
+        '</body></html>'
+      );
       pop.document.close();
       // Securely set the value without XSS risk from document.write
       pop.document.getElementById("notes").value = textArea.value;

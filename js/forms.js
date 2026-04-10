@@ -67,10 +67,18 @@ export function initEmailCopy() {
  * Initialize responsive table wrappers
  */
 export function initResponsiveTables() {
-    const tables = document.querySelectorAll("#quarto-document-content table");
+    const container = document.getElementById("quarto-document-content");
+    if (!container) return;
+
+    // ⚡ Bolt Optimization: Scope tag lookup to specific container instead of global querySelectorAll (O(N))
+    const tables = container.getElementsByTagName("table");
     const tableUsedIds = new Set();
 
-    tables.forEach((table) => {
+    // ⚡ Bolt Optimization: Batch DOM reads (getComputedStyle) and writes (insertBefore/appendChild) separately to eliminate forced synchronous layout (Layout Thrashing)
+    const tablesToWrap = [];
+
+    // Phase 1: Read Layout
+    Array.from(tables).forEach((table) => {
         const parent = table.parentElement;
         if (
             parent.classList.contains("table-wrapper") ||
@@ -79,7 +87,11 @@ export function initResponsiveTables() {
         ) {
             return;
         }
+        tablesToWrap.push(table);
+    });
 
+    // Phase 2: Mutate DOM
+    tablesToWrap.forEach((table) => {
         const wrapper = document.createElement("div");
         wrapper.className = "table-wrapper";
         wrapper.setAttribute("tabindex", "0");
@@ -169,24 +181,32 @@ export function initCodeCopy() {
  * Initialize form accessibility features
  */
 export function initFormAccessibility() {
-    const requiredInputs = document.querySelectorAll(
-        "input[required], textarea[required], select[required]"
-    );
-    requiredInputs.forEach((input) => {
-        if (input.id) {
-            const label = document.querySelector(`label[for="${input.id}"]`);
-            if (label && !label.querySelector(".required-indicator")) {
-                const indicator = document.createElement("span");
-                indicator.className = "required-indicator";
-                indicator.textContent = " *";
-                indicator.style.color = "var(--accent-blue)";
-                indicator.style.fontWeight = "bold";
-                indicator.setAttribute("aria-hidden", "true");
-                indicator.title = "Required field";
-                label.appendChild(indicator);
-            }
+    // ⚡ Bolt Optimization: Use getElementsByTagName and input.labels instead of querySelectorAll for O(1) live collection iteration and label access
+    const processInput = (input) => {
+        if (!input.required) return;
+
+        let label = null;
+        if (input.labels && input.labels.length > 0) {
+            label = input.labels[0];
+        } else if (input.id) {
+            label = document.querySelector(`label[for="${input.id}"]`);
         }
-    });
+
+        if (label && !label.querySelector(".required-indicator")) {
+            const indicator = document.createElement("span");
+            indicator.className = "required-indicator";
+            indicator.textContent = " *";
+            indicator.style.color = "var(--accent-blue)";
+            indicator.style.fontWeight = "bold";
+            indicator.setAttribute("aria-hidden", "true");
+            indicator.title = "Required field";
+            label.appendChild(indicator);
+        }
+    };
+
+    for (const input of document.getElementsByTagName("input")) processInput(input);
+    for (const textarea of document.getElementsByTagName("textarea")) processInput(textarea);
+    for (const select of document.getElementsByTagName("select")) processInput(select);
 }
 
 /**
@@ -197,26 +217,46 @@ export function initAutoGrowTextareas() {
     const textareas = document.getElementsByTagName("textarea");
     if (textareas.length === 0) return;
 
-    function adjustHeight(el) {
-        el.style.height = "auto";
-        const newHeight = Math.min(el.scrollHeight, 500);
-        el.style.height = newHeight + "px";
-        el.style.overflowY = newHeight >= 500 ? "auto" : "hidden";
+    // ⚡ Bolt Optimization: Batch DOM reads and writes to avoid forced synchronous layout (Layout Thrashing)
+    function batchAdjustHeights() {
+        const heights = [];
+
+        // Phase 1: Write (reset heights to compute scrollHeight accurately)
+        for (const textarea of textareas) {
+            textarea.style.height = "auto";
+        }
+
+        // Phase 2: Read (get scrollHeights)
+        for (let i = 0; i < textareas.length; i++) {
+            heights.push(Math.min(textareas[i].scrollHeight, 500));
+        }
+
+        // Phase 3: Write (apply new heights and overflows)
+        for (let i = 0; i < textareas.length; i++) {
+            textareas[i].style.height = heights[i] + "px";
+            textareas[i].style.overflowY = heights[i] >= 500 ? "auto" : "hidden";
+        }
     }
 
+    // Initialize all textareas statically
     for (const textarea of textareas) {
-        if (textarea.value) {
-            setTimeout(() => adjustHeight(textarea), 0);
-        }
-        textarea.addEventListener("input", () => adjustHeight(textarea));
+        textarea.style.resize = "none";
+        textarea.style.overflow = "hidden";
+        // Handle individual input events (single element adjust doesn't cause O(N) thrashing loop, but batching is safe)
+        textarea.addEventListener("input", () => {
+            textarea.style.height = "auto";
+            const newHeight = Math.min(textarea.scrollHeight, 500);
+            textarea.style.height = newHeight + "px";
+            textarea.style.overflowY = newHeight >= 500 ? "auto" : "hidden";
+        });
     }
+
+    setTimeout(() => batchAdjustHeights(), 0);
 
     window.addEventListener(
         "resize",
         debounce(() => {
-            for (const textarea of textareas) {
-                adjustHeight(textarea);
-            }
+            batchAdjustHeights();
         }, 250)
     );
 }
