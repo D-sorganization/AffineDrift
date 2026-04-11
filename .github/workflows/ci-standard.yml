@@ -60,7 +60,7 @@ jobs:
           cache-dependency-path: requirements.txt
 
       - name: Install Python dependencies
-        run: pip install -r requirements.txt
+        run: python -m pip install -r requirements.txt
 
       - name: Install System Dependencies
         run: |
@@ -71,13 +71,13 @@ jobs:
             echo "No passwordless sudo — assuming system deps are pre-installed (self-hosted runner)"
           fi
 
-      - run: pip install ruff==0.15.6 black==26.3.1 mypy==1.19.1 bandit==1.7.7 pydocstyle==6.3.0
+      - run: python -m pip install ruff==0.15.6 black==26.3.1 mypy==1.19.1 bandit==1.7.7 pydocstyle==6.3.0
 
       # Validate that environment is sane
       - name: Environment Health Check
         run: |
           python3 --version
-          pip --version
+          python -m pip --version
           ruff --version
           black --version
           mypy --version
@@ -90,7 +90,7 @@ jobs:
       - name: Check Formatting
         run: black --check --line-length 100 .
 
-      - run: pip install mypy types-PyYAML types-requests
+      - run: python -m pip install mypy types-PyYAML types-requests
       - name: Verify frontend asset sync
         # docs/ HTML is no longer committed (issue #1419); sync mirrors inside docs/
         # are rebuilt by Quarto at deploy time. Skip here if docs/ is absent.
@@ -133,7 +133,7 @@ jobs:
       - name: Install Tool Requirements
         run: |
           if [ -d "tools" ]; then
-            find tools -name "requirements.txt" -exec pip install -r {} \;
+            find tools -name "requirements.txt" -exec python -m pip install -r {} \;
           fi
       - run: mypy src/tools/ scripts/ --ignore-missing-imports || echo "::warning::Type checking has issues - fix type annotations"
       - name: Verify Code Quality
@@ -182,22 +182,22 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python }}
-      - run: pip install -r requirements.txt pytest-timeout pytest-cov
+      - run: python -m pip install -r requirements.txt pytest-timeout pytest-cov
       - name: Install Tool Requirements
         run: |
           if [ -d "tools" ]; then
-            find tools -name "requirements.txt" -exec pip install -r {} \;
+            find tools -name "requirements.txt" -exec python -m pip install -r {} \;
           fi
       - name: Run Tests
         env:
           PYTHONPATH: src
-        run: pytest tests/ --cov=src --cov-report=xml --cov-fail-under=50 --timeout=120
+        run: python -m pytest tests/ --cov=src --cov-report=xml --cov-fail-under=50 --timeout=120
       - name: Run Content Lint Tests
         env:
           PYTHONPATH: src
-        run: pytest --override-ini addopts= tests/ -m content_lint --timeout=120
+        run: python -m pytest --override-ini addopts= tests/ -m content_lint --timeout=120
       - name: Audit Python Dependencies
-        run: pip install pip-audit && pip-audit -r requirements.txt
+        run: python -m pip install pip-audit && pip-audit -r requirements.txt
       - name: Critical Module Coverage Gate
         run: python3 scripts/check_critical_module_coverage.py
       - uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0
@@ -233,14 +233,41 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Detect E2E-relevant changes
+        id: e2e_changes
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" != "pull_request" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          git fetch --no-tags --depth=1 origin "${{ github.base_ref }}"
+          changed_files=$(git diff --name-only "origin/${{ github.base_ref }}...HEAD")
+          relevant_files=$(printf "%s\n" "$changed_files" | grep -Ev '^$|^\.github/workflows/ci-standard\.yml$' || true)
+
+          if [ -z "$relevant_files" ]; then
+            echo "Only CI workflow plumbing changed; skipping E2E site render."
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "E2E-relevant files changed:"
+            printf "%s\n" "$relevant_files"
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
       - uses: actions/setup-node@v6
+        if: steps.e2e_changes.outputs.run == 'true'
         with: { node-version: "20" }
       - uses: actions/setup-python@v6
+        if: steps.e2e_changes.outputs.run == 'true'
         with: { python-version: "3.12" }
       - name: Install Python dependencies
-        run: pip install -r requirements.txt
+        if: steps.e2e_changes.outputs.run == 'true'
+        run: python -m pip install -r requirements.txt
 
       - name: Install System Dependencies
+        if: steps.e2e_changes.outputs.run == 'true'
         run: |
           if sudo -n true 2>/dev/null; then
             sudo apt-get update
@@ -250,8 +277,10 @@ jobs:
           fi
 
       - name: Install Dependencies
+        if: steps.e2e_changes.outputs.run == 'true'
         run: npm ci
       - name: Install Playwright Browsers
+        if: steps.e2e_changes.outputs.run == 'true'
         run: |
           if sudo -n true 2>/dev/null; then
             npx playwright install --with-deps chromium
@@ -261,29 +290,34 @@ jobs:
           fi
 
       - name: Set up Quarto
+        if: steps.e2e_changes.outputs.run == 'true'
         uses: quarto-dev/quarto-actions/setup@8a96df13519ee81fd526f2dfca5962811136661b # v2.2.0
         with:
           version: "1.6.39"
       - name: Remove .env.example
+        if: steps.e2e_changes.outputs.run == 'true'
         run: rm -f .env.example
         # Quarto's dotenv validation requires non-empty example values, but CI
         # doesn't need the example file during the E2E render.
       - name: Build site for E2E
+        if: steps.e2e_changes.outputs.run == 'true'
         uses: quarto-dev/quarto-actions/render@8a96df13519ee81fd526f2dfca5962811136661b # v2.2.0
         with:
           to: html
           path: .
       - name: Sync Frontend Assets
+        if: steps.e2e_changes.outputs.run == 'true'
         run: python3 scripts/sync_frontend_assets.py
 
       - name: Run E2E Smoke Tests (Critical Flows)
+        if: steps.e2e_changes.outputs.run == 'true'
         run: |
           npx playwright test \
             --project=chromium \
             --retries=0 \
             tests/e2e/smoke.spec.js
       - uses: actions/upload-artifact@v7
-        if: failure()
+        if: failure() && steps.e2e_changes.outputs.run == 'true'
         with:
           name: playwright-report
           path: playwright-report/
