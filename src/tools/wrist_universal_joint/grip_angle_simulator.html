@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enhanced Wrist Universal Joint Model</title>
     <script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
+    <script src="grip_angle_polynomial_evaluator.js"></script>
     <style>
         * {
             margin: 0;
@@ -654,23 +655,8 @@
                         throw new Error("Invalid expression: Only basic math operations and 't' are allowed.");
                     }
 
-                    // Safe evaluation - only allow specific functions
-                    const safeEval = (t_val) => {
-                        const sin = Math.sin;
-                        const cos = Math.cos;
-                        const exp = Math.exp;
-                        const sqrt = Math.sqrt;
-                        const log = Math.log;
-                        const pi = Math.PI;
-                        const e = Math.E;
-                        const t = t_val;
-                        // Use Function constructor for safer evaluation
-                        const func = new Function('t', 'sin', 'cos', 'exp', 'sqrt', 'log', 'pi', 'e', 
-                            `return ${expr}`);
-                        return func(t, sin, cos, exp, sqrt, log, pi, e);
-                    };
                     for (let i = 0; i < length; i++) {
-                        noise.push(safeEval(t[i]));
+                        noise.push(WristPolynomialEvaluator.evaluatePolynomialExpression(expr, t[i]));
                     }
                 } catch (error) {
                     polynomialError = `Error: ${error.message}`;
