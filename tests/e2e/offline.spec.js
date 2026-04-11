@@ -1,13 +1,26 @@
-const { test, expect } = require('@playwright/test');
+const { test, expect } = require("@playwright/test");
 
-test.describe('Offline Mode (Service Worker)', () => {
-  test('should serve cached homepage when offline', async ({ page, context }) => {
+test.describe("Offline Mode (Service Worker)", () => {
+  async function waitForServiceWorker(page) {
+    await page
+      .waitForFunction(
+        () =>
+          !("serviceWorker" in navigator) || navigator.serviceWorker.controller,
+        null,
+        { timeout: 5000 },
+      )
+      .catch(() => {});
+  }
+
+  test("should serve cached homepage when offline", async ({
+    page,
+    context,
+  }) => {
     // 1. Online: Navigate to homepage to trigger SW install
-    await page.goto('/');
+    await page.goto("/");
     await expect(page).toHaveTitle(/AffineDrift/);
 
-    // Wait a bit for SW to install and cache
-    await page.waitForTimeout(3000);
+    await waitForServiceWorker(page);
 
     // 2. Go Offline
     await context.setOffline(true);
@@ -21,10 +34,13 @@ test.describe('Offline Mode (Service Worker)', () => {
     expect(isOnline).toBe(false);
   });
 
-  test('should serve offline page for non-cached resources', async ({ page, context }) => {
+  test("should serve offline page for non-cached resources", async ({
+    page,
+    context,
+  }) => {
     // 1. Online: Navigate to homepage
-    await page.goto('/');
-    await page.waitForTimeout(3000); // Wait for SW
+    await page.goto("/");
+    await waitForServiceWorker(page);
 
     // 2. Go Offline
     await context.setOffline(true);
@@ -36,7 +52,7 @@ test.describe('Offline Mode (Service Worker)', () => {
 
     // 4. Verify offline page content
     // offline.html usually has specific text
-    const heading = page.locator('h1, h2');
+    const heading = page.locator("h1, h2");
     await expect(heading).toContainText(/Offline/i);
 
     // Or check specific text from offline.html if we know it
