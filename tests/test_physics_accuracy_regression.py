@@ -11,6 +11,8 @@ import math
 
 import pytest
 
+from src.core.constants import GRAVITY_M_S2
+
 
 class TestSO3TangentSpace:
     """Regression tests for SO(3) tangent space identification - #2301."""
@@ -68,7 +70,7 @@ class TestDoublePendulumConsistency:
         # Standard double pendulum: m1, m2 > 0, length1, length2 > 0, g > 0
         m1, m2 = 1.0, 1.0  # kg
         length1, length2 = 1.0, 1.0  # m
-        g = 9.81  # m/s^2
+        g = GRAVITY_M_S2
 
         assert m1 > 0 and m2 > 0, "Masses must be positive"
         assert length1 > 0 and length2 > 0, "Link lengths must be positive"
@@ -78,7 +80,7 @@ class TestDoublePendulumConsistency:
         """Natural frequency of simple pendulum limit must be consistent."""
         # For m2->0, double pendulum reduces to simple pendulum
         # omega_0 = sqrt(g / length)
-        g = 9.81
+        g = GRAVITY_M_S2
         length = 1.0
         omega_0 = math.sqrt(g / length)
         period = 2 * math.pi / omega_0
