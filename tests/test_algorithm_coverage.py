@@ -3,9 +3,11 @@
 Replaces placeholder dead tests (assert True, empty returns) with executable
 behaviour checks for iLQR and rl_funnel algorithms.
 """
+
 import importlib
 import pathlib
 import sys
+
 import pytest
 
 # Ensure src is importable
@@ -49,7 +51,7 @@ class TestILQRSmoke:
         test_dir = ROOT / "tests"
         if not test_dir.exists():
             pytest.skip("No tests directory found")
-        
+
         dead_tests_found = []
         for test_file in test_dir.rglob("test_*.py"):
             try:
@@ -61,7 +63,7 @@ class TestILQRSmoke:
                         dead_tests_found.append(f"{test_file.name}:{i}: bare 'assert True'")
             except Exception:
                 pass
-        
+
         if dead_tests_found:
             # Report but don't fail hard - this is a quality warning
             print(f"WARNING: Found {len(dead_tests_found)} dead test assertions:")
