@@ -259,7 +259,7 @@ The Drift-Control Ratio is a \emph{control authority metric}. It asks: \textbf{H
 The increase in DCR during the late downswing is a notable feature of the ZTCF analysis.
 \end{constraintbox}
 
-\begin{example}{The DCR Blow-Up in a Typical Swing}{ex:dcr_blowup_numbers}
+\begin{example}{The DCR Growth in a Typical Swing}{ex:dcr_blowup_numbers}
 Consider a two-segment arm (shoulder and elbow) during the downswing. Assume:
 \begin{itemize}
 \item Shoulder angle: $q_1 = 90°$ (arm horizontal).
@@ -268,33 +268,33 @@ Consider a two-segment arm (shoulder and elbow) during the downswing. Assume:
 \item Elbow angular velocity: $\dot{q}_2 = 10$ rad/s (extending rapidly).
 \end{itemize}
 
-At this configuration, Coriolis torques at the elbow are approximately (the factor of 2 arises from the symmetric Christoffel symbols $\Gamma^2_{12} = \Gamma^2_{21}$; we use the canonical second-link parameters $M_2 = 1.5$~kg, $L_{c,2} = 0.5$~m from Chapter~\ref{ch:03_double_pendulum}):
+At this configuration, using the club center-of-mass distance $L_{c,2} = 0.15$~m rather than the full link length and omitting the extra factor of 2, the Coriolis torque is approximately:
 \begin{equation}
-\tau_{\text{Coriolis}} \approx 2 M_2 L_1 L_{c,2} \dot{q}_1 \dot{q}_2 \approx 2 \times 1.5 \times 0.35 \times 0.5 \times 5 \times 10 \approx 26 \text{ Nm}
+\tau_{\text{Coriolis}} \approx m_{\text{club}} L_1 L_{c,2} \dot{q}_1 \dot{q}_2 \approx 0.2 \times 0.4 \times 0.15 \times 5 \times 10 \approx 0.6 \text{ Nm}
 \label{eq:dcr_example_coriolis}
 \end{equation}
 
 The typical muscular torque available at the elbow is perhaps $5$--$10$ Nm. Thus:
 \begin{equation}
-\text{DCR}_{\text{elbow}} \approx \frac{26}{7.5} \approx 3.5
+\text{DCR}_{\text{elbow}} \approx \frac{0.6}{7.5} \approx 0.08
 \label{eq:dcr_example_ratio}
 \end{equation}
 
 Later in the downswing, when $\dot{q}_1 \approx 15$ rad/s and $\dot{q}_2 \approx 20$ rad/s (the club is whipping), Coriolis grows to:
 \begin{equation}
-\tau_{\text{Coriolis}} \approx 2 \times 1.5 \times 0.35 \times 0.5 \times 15 \times 20 \approx 158 \text{ Nm}
+\tau_{\text{Coriolis}} \approx 0.2 \times 0.4 \times 0.15 \times 15 \times 20 \approx 3.6 \text{ Nm}
 \label{eq:dcr_example_late_coriolis}
 \end{equation}
 
 Now:
 \begin{equation}
-\text{DCR}_{\text{elbow}} \approx \frac{158}{7.5} \approx 21
+\text{DCR}_{\text{elbow}} \approx \frac{3.6}{7.5} \approx 0.48
 \label{eq:dcr_example_late_ratio}
 \end{equation}
 
-By the time the club reaches impact, published inverse-dynamics studies report wrist Coriolis torques on the order of 10--50 Nm \citep{Nesbit2005}. With muscular torques of $\sim$10--20 Nm, the DCR at the wrist reaches approximately \textbf{5--25:1} in the late downswing.
+Even in this toy model, the passive term still grows quadratically with speed. In richer models and near-impact postures, published inverse-dynamics studies report wrist Coriolis torques on the order of 10--50 Nm \citep{Nesbit2005}. With muscular torques of $\sim$10--20 Nm, the DCR at the wrist can still become large in the late downswing.
 
-\textbf{Interpretation:} In the final phase before impact, the golf swing is largely ballistic. Passive dynamics dominate, and muscles provide relatively small corrections. The effective control window occurs earlier in the downswing when DCR is lower.
+\textbf{Interpretation:} In this simplified interpretation, the main point is the quadratic scaling of passive torque with velocity. The late downswing still demands careful timing, but this toy example should not be read as a literal hundreds-of-Nm Coriolis estimate.
 \end{example}
 
 \begin{laymansbox}{Why the DCR Blows Up}{inplain:dcr_blowup_reason}
