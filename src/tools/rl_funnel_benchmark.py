@@ -10,7 +10,6 @@ from typing import Any
 import numpy as np
 import numpy.typing as npt
 
-from src.core.constants import GRAVITY_M_S2
 from src.core.contracts.definitions import require
 from src.core.contracts.validators import check_positive
 from src.tools.rl_funnel_controllers import (
@@ -20,23 +19,27 @@ from src.tools.rl_funnel_controllers import (
     trajectory_tracking_lqr,
 )
 from src.tools.rl_funnel_dynamics import (
+    double_pendulum_B,
+    double_pendulum_drift,
+    generate_reference_trajectory,
+)
+from src.tools.rl_funnel_simulation import (
+    _compute_tracking_metrics,
+    _validate_benchmark_inputs,
+    run_benchmark,
+)
+from src.tools.rl_funnel_support import (
     CONTROL_SATURATION_DEFAULT,
     DEFAULT_CONTROL_SATURATION,
+    GRAVITY_M_S2,
     PENDULUM_L1,
     PENDULUM_L2,
     PENDULUM_M1,
     PENDULUM_M2,
-    double_pendulum_B,
-    double_pendulum_drift,
-    double_pendulum_mass_matrix,
-    generate_reference_trajectory,
-    validate_state_vector,
-)
-from src.tools.rl_funnel_simulation import (
     BenchmarkResult,
-    _compute_tracking_metrics,
-    _validate_benchmark_inputs,
-    run_benchmark,
+    double_pendulum_mass_matrix,
+    format_results,
+    validate_state_vector,
 )
 
 __all__ = [
@@ -67,11 +70,6 @@ __all__ = [
 ]
 
 logger = logging.getLogger(__name__)
-
-
-def format_results(results: list[BenchmarkResult]) -> str:
-    """Format benchmark results as a newline-separated string."""
-    return "\n".join([f"{r.name}: error={r.tracking_error:.4f}" for r in results])
 
 
 def _setup_comparison(
