@@ -166,9 +166,9 @@ def test_spacecraft_rendezvous_defaults_use_named_constants() -> None:
     """SpacecraftRendezvous defaults must match named constants from src.core.constants."""
     sys = SpacecraftRendezvous()
     assert sys.mu == EARTH_MU, "mu default must equal EARTH_MU from core.constants"
-    assert sys.r_t == ISS_ORBIT_RADIUS_M, (
-        "r_t default must equal ISS_ORBIT_RADIUS_M from core.constants"
-    )
-    assert sys.m == DEFAULT_SPACECRAFT_MASS_KG, (
-        "m default must equal DEFAULT_SPACECRAFT_MASS_KG from core.constants"
-    )
+    assert (
+        sys.r_t == ISS_ORBIT_RADIUS_M
+    ), "r_t default must equal ISS_ORBIT_RADIUS_M from core.constants"
+    assert (
+        sys.m == DEFAULT_SPACECRAFT_MASS_KG
+    ), "m default must equal DEFAULT_SPACECRAFT_MASS_KG from core.constants"
