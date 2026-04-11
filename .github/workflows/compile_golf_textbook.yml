@@ -11,6 +11,9 @@ on:
       - "articles/The_Physics_of_Golf/**"
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
