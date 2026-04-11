@@ -424,9 +424,9 @@ class TestShortIronDPlaneWeighting:
 
     def test_short_iron_weighting_shifts_toward_face(self) -> None:
         """The chapter text should keep the short-iron split face-dominant."""
-        chapter = Path(
-            "articles/The_Physics_of_Golf/quarto/ch31_swing_plane_launch.qmd"
-        ).read_text(encoding="utf-8")
+        chapter = Path("articles/The_Physics_of_Golf/quarto/ch31_swing_plane_launch.qmd").read_text(
+            encoding="utf-8"
+        )
         assert (
             "For a short iron (high loft, lower ball speed), the weighting shifts further toward the face:"
             in chapter
