@@ -8,10 +8,17 @@ Addresses issues:
 """
 
 import math
+from pathlib import Path
 
 import pytest
 
 from src.core.constants import GRAVITY_M_S2
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+GEOMETRY_CH01 = REPO_ROOT / "articles/The_Geometry_of_Motion/quarto/ch01_foundations.qmd"
+GEOMETRY_CH01_TEX = (
+    REPO_ROOT / "articles/The_Geometry_of_Motion/Volume_I/chapters/ch01_foundations.tex"
+)
 
 
 class TestSO3TangentSpace:
@@ -60,6 +67,16 @@ class TestSO3TangentSpace:
         assert np.allclose(
             skew_check, 0, atol=1e-10
         ), "R^T @ X must be skew-symmetric for X in T_R SO(3)"
+
+    def test_geometry_chapter_states_tangent_space_at_R_as_translated_lie_algebra(self):
+        """Chapter text must not identify T_R SO(3) directly with skew matrices."""
+        for source in (GEOMETRY_CH01, GEOMETRY_CH01_TEX):
+            chapter = source.read_text(encoding="utf-8")
+
+            assert "T_{\\mat{I}}\\SO(3) = \\mathfrak{so}(3)" in chapter
+            assert "T_{\\mat{R}}\\SO(3) = \\{\\mat{R}\\mat{S}" in chapter
+            assert "= \\mat{R}\\mathfrak{so}(3)" in chapter
+            assert "T_{\\mat{R}}\\SO(3) = \\{\\mat{S} \\in \\R^{3 \\times 3}" not in chapter
 
 
 class TestDoublePendulumConsistency:
@@ -179,3 +196,15 @@ class TestEigenvalueInvariance:
         P_dot = (P_tdt - P_t) / dt
         assert np.any(np.abs(P_dot) > 1e-10), "P_dot must be nonzero for time-dep transform"
         # This nonzero P_dot is the correction term that changes effective eigenvalues
+
+    def test_geometry_chapter_qualifies_eigenvalue_invariance_claim(self):
+        """Chapter text must distinguish constant and time-dependent transforms."""
+        for source in (GEOMETRY_CH01, GEOMETRY_CH01_TEX):
+            chapter = source.read_text(encoding="utf-8")
+
+            assert "For a time-independent coordinate" in chapter
+            assert "the eigenvalues of $\\mat{A}$ are unchanged" in chapter
+            assert "For a time-dependent coordinate" in chapter
+            assert "instantaneous eigenvalues of $\\mat{A}_z$ need not match" in chapter
+            assert "geometric content}---eigenvalues" not in chapter
+            assert "geometric content*---eigenvalues" not in chapter
