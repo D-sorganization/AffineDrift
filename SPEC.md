@@ -27,7 +27,7 @@
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.35                                           |
+| **Spec Version**        | 1.0.36                                           |
 | **Last Spec Update**    | 2026-04-11                                       |
 
 ## 2. Purpose & Mission
@@ -462,7 +462,6 @@ python src/tools/code_quality_ast.py
 | 2026-04-11 | 1.0.30  | fix(logging): made `setup_logging()` import-order safe by avoiding root `basicConfig()` calls for named loggers while preserving root configuration for script entry points.                                                                                                                                    |
 | 2026-04-11 | 1.0.30  | fix(tools): preserved escaped LaTeX percent signs during comment cleanup and added regression coverage for `\%` content followed by trailing comments                                                                                                                                                                                                                        |
 | 2026-04-11 | 1.0.29  | fix(critical): hardened workflow event payload handling, corrected wrist universal-joint ratio semantics, refreshed the chapter 3 double-pendulum numeric example, and restored package-qualified batch converter imports                                                                                                                                                    |
-| 2026-04-11 | 1.0.28  | fix(seo): made the shared site head emit page-specific canonical URLs instead of always pointing canonical metadata at the homepage, with regression coverage for canonical URL construction. |
 | 2026-04-11 | 1.0.27  | fix(tools): prevented display math created from LaTeX `equation` environments in `src/tools/latex_to_html.py` from being wrapped twice, and added a regression test for the single-wrapper output                                                                                                                                                                            |
 | 2026-04-11 | 1.0.26  | fix(testing): made `make test` run Python coverage before JavaScript coverage and removed the bare `pass` coverage exclusion so stubs remain visible in reports                                                                                                                                                                                                              |
 | 2026-04-11 | 1.0.25  | fix(tools): made RL benchmark comparison honor the caller-provided `dt` when generating reference trajectories and added regression coverage for the reference time grid                                                                                                                                                                                                     |
