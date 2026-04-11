@@ -324,11 +324,16 @@ def assess_code_style(root: Path) -> dict[str, Any]:
     score = 0
     details = []
 
-    configs = [".flake8", "ruff.toml", ".pylintrc", ".eslintrc", ".prettierrc"]
+    configs = [".pylintrc", ".eslintrc", ".prettierrc"]
     found_configs = []
     for c in configs:
         if (root / c).exists():
             found_configs.append(c)
+    pyproject = root / "pyproject.toml"
+    if pyproject.exists():
+        content = pyproject.read_text(encoding="utf-8")
+        if "[tool.ruff]" in content:
+            found_configs.append("pyproject.toml [tool.ruff]")
 
     if found_configs:
         score += 5
@@ -340,13 +345,11 @@ def assess_code_style(root: Path) -> dict[str, Any]:
         score += 3
         details.append("Pre-commit config found")
 
-    if found_configs and ".flake8" in found_configs and "ruff.toml" in found_configs:
-        recommendation = (
-            "**AUTO-FIXED:** Added `.flake8` and `ruff.toml` code style configuration files."
-        )
+    if "pyproject.toml [tool.ruff]" in found_configs:
+        recommendation = "**AUTO-FIXED:** Ruff configuration lives in `pyproject.toml`."
         score = max(score, 8)  # Reflect the quick fix
     else:
-        recommendation = "Add code style configuration files (e.g., `.flake8`, `ruff.toml`) and use pre-commit hooks."
+        recommendation = "Add code style configuration files (e.g., `pyproject.toml` with `[tool.ruff]`) and use pre-commit hooks."
 
     return {
         "grade": min(10, score),
