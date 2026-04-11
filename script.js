@@ -316,7 +316,9 @@ runOnDomReady(function () {
       displayHistory.forEach((item) => {
         const li = document.createElement("li");
         const a = document.createElement("a");
-        a.href = item.url;
+        // 🛡️ Sentinel Security: Prevent XSS from malicious URLs in localStorage
+        const unsafeProtocol = /^(javascript|data|vbscript):/i;
+        a.href = unsafeProtocol.test(item.url) ? "#" : item.url;
         const displayTitle =
           item.title.length > MAX_HISTORY_TITLE_LENGTH
             ? item.title.substring(0, MAX_HISTORY_TITLE_LENGTH) + "..."
