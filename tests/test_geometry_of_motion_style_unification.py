@@ -4,6 +4,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
+pytestmark = pytest.mark.content_lint
+
 ROOT = Path(__file__).resolve().parents[1]
 STYLE_FILE = ROOT / "articles" / "The_Geometry_of_Motion" / "geometry_of_motion.sty"
 VOLUME_MAIN_FILES = (

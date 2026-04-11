@@ -27,7 +27,7 @@
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.26                                           |
+| **Spec Version**        | 1.0.28                                           |
 | **Last Spec Update**    | 2026-04-11                                       |
 
 ## 2. Purpose & Mission
@@ -157,7 +157,7 @@ AffineDrift/
 | F6  | Property-Based Testing with Hypothesis  | ✅     | Comprehensive property-based testing strategy using Hypothesis framework                                                                                                                                                                   |
 | F7  | CSS Budget Enforcement                  | ✅     | Automated CI enforcement of CSS file size limits to maintain performance                                                                                                                                                                   |
 | F8  | Mirror Validation                       | ✅     | Ensures duplicate stylesheets match canonical versions across the codebase                                                                                                                                                                 |
-| F9  | GitHub Actions Automation               | ✅     | 54 CI/CD workflows including Jules automation agents for code analysis and deployment                                                                                                                                                      |
+| F9  | GitHub Actions Automation               | ✅     | 54 CI/CD workflows including Jules automation agents for code analysis and deployment; third-party actions are pinned to immutable SHAs where practical                                                                                     |
 | F10 | Progressive Web App Support             | ✅     | Service worker and manifest for PWA capabilities (offline access, installability)                                                                                                                                                          |
 | F11 | Textbook Compilation Pipeline           | ✅     | Quarto pipeline to compile educational materials into publishable textbook format                                                                                                                                                          |
 | F12 | Textbook claim guardrail                | ✅     | PR CI blocks newly added unsupported quantitative or study claims in textbook content unless they include a citation or an explicit illustrative caveat                                                                                    |
@@ -446,6 +446,7 @@ python src/tools/code_quality_ast.py
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                      |
 | ---------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-04-11 | 1.0.27  | fix(tools): prevented display math created from LaTeX `equation` environments in `src/tools/latex_to_html.py` from being wrapped twice, and added a regression test for the single-wrapper output |
 | 2026-04-11 | 1.0.26  | fix(testing): made `make test` run Python coverage before JavaScript coverage and removed the bare `pass` coverage exclusion so stubs remain visible in reports |
 | 2026-04-11 | 1.0.25  | fix(tools): made RL benchmark comparison honor the caller-provided `dt` when generating reference trajectories and added regression coverage for the reference time grid |
 | 2026-04-09 | 1.0.24  | docs(articles): Refined the Layman's Terms section in Contraction_Tangent_CRITIC.qmd to use relatable analogies and improve clarity |

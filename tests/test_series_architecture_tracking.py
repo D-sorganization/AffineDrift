@@ -4,6 +4,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
+pytestmark = pytest.mark.content_lint
+
 ROOT = Path(__file__).resolve().parents[1]
 ARCH_DOC = ROOT / "docs" / "development" / "geometry_of_motion_architecture.md"
 
