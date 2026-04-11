@@ -112,6 +112,7 @@ class RoundSimulator:
         club_bag: ClubBag | None = None,
         ball_flight: BallFlightDynamics | None = None,
         rng_seed: int | None = None,
+        putting_simulator: PuttingSimulator | None = None,
     ) -> None:
         """Initialize the round simulator.
 
@@ -120,11 +121,13 @@ class RoundSimulator:
             club_bag: Club bag to use. Defaults to standard set.
             ball_flight: Ball flight dynamics model. Defaults to standard params.
             rng_seed: Random seed for shot dispersion (None = non-deterministic).
+            putting_simulator: Fully built PuttingSimulator instance to use for all greens.
         """
         self.course = course
         self.club_bag = club_bag if club_bag is not None else ClubBag()
         self.ball_flight = ball_flight if ball_flight is not None else BallFlightDynamics()
         self.rng = np.random.default_rng(rng_seed)
+        self.putting_simulator = putting_simulator
 
     def simulate_round(self) -> RoundResult:
         """Simulate a complete round of golf.
@@ -361,14 +364,19 @@ class RoundSimulator:
                 is_penalty=False,
             )
 
-        green = GreenSurface.create_flat_green(
-            width=hole.green_radius * 3.0,
-            height=hole.green_radius * 3.0,
-            stimp=11.0,
-        )
-        putt_sim = PuttingSimulator(surface=green)
+        if self.putting_simulator is not None:
+            putt_sim = self.putting_simulator
+            stimp = putt_sim.surface.stimp
+        else:
+            green = GreenSurface.create_flat_green(
+                width=hole.green_radius * 3.0,
+                height=hole.green_radius * 3.0,
+                stimp=11.0,
+            )
+            putt_sim = PuttingSimulator(surface=green)
+            stimp = green.stimp
 
-        vx, vy = self._compute_putt_velocity(dx, dy, dist, green.stimp)
+        vx, vy = self._compute_putt_velocity(dx, dy, dist, stimp)
         putt_trajectory = putt_sim.simulate(position[0], position[1], vx, vy)
 
         final_x, final_y = putt_trajectory[-1]
