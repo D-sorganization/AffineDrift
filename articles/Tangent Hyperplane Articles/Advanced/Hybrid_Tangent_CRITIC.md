@@ -12,8 +12,8 @@ The article "Hybrid Tangent Spaces: Beyond Smooth Dynamics" extends the Tangent 
   - Chapter 2 (@sec-hybrid-automata): Measure-theoretic treatment
   - Chapter 6 (@sec-variation-through-jumps): Zeno behavior
   - Chapter 8 (@sec-contact-implicit): Complementarity constraints
-  - Chapter 10 (@sec-implementation): JAX custom VJP claims
-  - Chapter 9 (@sec-applications): Real system applicability
+  - Chapter 10 (@sec-hs-implementation): JAX custom VJP claims
+  - Chapter 9 (@sec-hs-applications): Real system applicability
 
 ## Nature of the Issues
 
@@ -194,7 +194,7 @@ Measure theory is not a cosmetic detail—it's the **foundation** for claiming v
 
 1. **Replace vague appeals to measure theory with precise statements:**
 
-   Before equation @eq-hybrid-cost, add:
+   Before equation @eq-hs-hybrid-cost-jump, add:
 
    > **Assumption (Regularity):**
    > Within each mode $q_i$, the vector field $f_i(x, u)$ is **locally Lipschitz** in $x$ and piecewise continuous in $t$. This ensures existence and uniqueness of solutions by the Carathéodory Extension Theorem.
@@ -362,7 +362,7 @@ Chapter 8 (@sec-contact-implicit), lines 2457-2598
 
 The contact-implicit section presents complementarity constraints as if they're straightforward to handle in optimization, but this is **the hard part** of contact mechanics:
 
-1. **Claim (eq-complementarity, line 2466):** "$0 \leq \phi(q) \perp \lambda \geq 0$"
+1. **Claim (hs-eq-complementarity, line 2466):** "$0 \leq \phi(q) \perp \lambda \geq 0$"
    - This is **linear complementarity** (LCP) notation, which is only solvable efficiently when the dynamics are **linear**. For nonlinear systems, complementarity is a **nonlinear complementarity problem** (NCP), which is NP-hard in general.
 
 2. **Smoothing methods** (lines 2494-2518):
@@ -648,7 +648,7 @@ hybrid_rollout.defvjp(hybrid_rollout_fwd, hybrid_rollout_bwd)
 ## Weakness 6: Applications are Oversimplified Examples
 
 ### Location
-Chapter 9 (@sec-applications), lines 2600-2792
+Chapter 9 (@sec-hs-applications), lines 2600-2792
 
 ### The Problem
 
