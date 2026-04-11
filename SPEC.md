@@ -259,7 +259,7 @@ AffineDrift/
 **Python Configuration** (`pyproject.toml`):
 
 - Python version: 3.12
-- Dependencies pinned with version ranges
+- Core runtime dependencies pinned to exact versions in `requirements.txt`
 - Test discovery paths
 - Coverage configuration (minimum 50%)
 
@@ -353,25 +353,25 @@ AffineDrift follows a **test pyramid** strategy: unit tests form the base (fast,
 
 | Package        | Version | Purpose                                              |
 | -------------- | ------- | ---------------------------------------------------- |
-| numpy          | Latest  | Numerical computations for trajectory optimization   |
-| scipy          | Latest  | Scientific algorithms (optimization, linear algebra) |
-| matplotlib     | Latest  | Plotting and visualization of swing trajectories     |
-| pydantic       | Latest  | Data validation and runtime type checking            |
-| PyYAML         | Latest  | YAML configuration file parsing                      |
-| beautifulsoup4 | Latest  | HTML parsing for link checking and site analysis     |
-| requests       | Latest  | HTTP requests for external data fetching             |
-| streamlit      | Latest  | Interactive dashboard for visualization (optional)   |
+| numpy          | 2.4.4   | Numerical computations for trajectory optimization     |
+| scipy          | 1.17.1  | Scientific algorithms (optimization, linear algebra)  |
+| matplotlib     | 3.10.8  | Plotting and visualization of swing trajectories     |
+| pydantic       | 2.12.5  | Data validation and runtime type checking            |
+| PyYAML         | 6.0.3   | YAML configuration file parsing                      |
+| beautifulsoup4 | 4.14.3  | HTML parsing for link checking and site analysis     |
+| requests       | 2.33.1  | HTTP requests for external data fetching             |
+| streamlit      | 1.56.0  | Interactive dashboard for visualization *(optional tool dependency)* |
 
 ### Development Dependencies
 
 | Package    | Version | Purpose                          |
 | ---------- | ------- | -------------------------------- |
-| pytest     | Latest  | Testing framework                |
-| pytest-cov | Latest  | Coverage reporting               |
-| hypothesis | Latest  | Property-based testing library   |
-| ruff       | Latest  | Linting and code quality         |
-| black      | Latest  | Code formatting (100-char lines) |
-| mypy       | Latest  | Type checking                    |
+| pytest     | 8.3.5   | Testing framework                |
+| pytest-cov | 7.1.0   | Coverage reporting               |
+| hypothesis | 6.151.12 | Property-based testing library   |
+| ruff       | 0.15.9  | Linting and code quality         |
+| black      | 26.3.1  | Code formatting (100-char lines) |
+| mypy       | 1.20.0  | Type checking                    |
 | jest       | Latest  | JavaScript testing framework     |
 | playwright | Latest  | Browser automation for E2E tests |
 
@@ -397,6 +397,7 @@ AffineDrift follows a **test pyramid** strategy: unit tests form the base (fast,
 git clone https://github.com/D-sorganization/AffineDrift.git
 cd AffineDrift
 pip install -r requirements.txt
+pip install -r src/tools/wrist_universal_joint/requirements.txt  # optional, for Streamlit wrist tool
 npm install
 
 # Running tests
@@ -461,9 +462,11 @@ python src/tools/code_quality_ast.py
 | 2026-04-11 | 1.0.33  | fix(ci): removed duplicate requirements installation from `ci-standard.yml`, enabled pip caching, allowed workflow-only changes to trigger CI, aligned PR auto-labeler path rules with the repository layout, and cleaned stale SPEC conflict markers.                                                          |
 | 2026-04-11 | 1.0.32  | chore(deps): pinned previously unpinned root requirements and moved streamlit out of core requirements into the wrist tool optional requirements file.                                                                                                                                                         |
 | 2026-04-11 | 1.0.31  | fix(latex): documented the tcolorbox package loading contract to avoid option-clash failures in the golf physics PDF build.                                                                                                                                                                                     |
+| 2026-04-11 | 1.0.31  | test(content): aligned the Geometry of Motion style guardrail with the explicit `tcolorbox` package load while continuing to reject the broad `[most]` option that triggered package option clashes                                                                                                                                |
 | 2026-04-11 | 1.0.30  | fix(logging): made `setup_logging()` import-order safe by avoiding root `basicConfig()` calls for named loggers while preserving root configuration for script entry points.                                                                                                                                    |
 | 2026-04-11 | 1.0.30  | fix(tools): preserved escaped LaTeX percent signs during comment cleanup and added regression coverage for `\%` content followed by trailing comments                                                                                                                                                                                                                        |
 | 2026-04-11 | 1.0.29  | fix(critical): hardened workflow event payload handling, corrected wrist universal-joint ratio semantics, refreshed the chapter 3 double-pendulum numeric example, and restored package-qualified batch converter imports                                                                                                                                                    |
+| 2026-04-11 | 1.0.28  | fix(seo): made the shared site head emit page-specific canonical URLs instead of always pointing canonical metadata at the homepage, with regression coverage for canonical URL construction.                                                                                                                                      |
 | 2026-04-11 | 1.0.27  | fix(tools): prevented display math created from LaTeX `equation` environments in `src/tools/latex_to_html.py` from being wrapped twice, and added a regression test for the single-wrapper output                                                                                                                                                                            |
 | 2026-04-11 | 1.0.26  | fix(testing): made `make test` run Python coverage before JavaScript coverage and removed the bare `pass` coverage exclusion so stubs remain visible in reports                                                                                                                                                                                                              |
 | 2026-04-11 | 1.0.25  | fix(tools): made RL benchmark comparison honor the caller-provided `dt` when generating reference trajectories and added regression coverage for the reference time grid                                                                                                                                                                                                     |
