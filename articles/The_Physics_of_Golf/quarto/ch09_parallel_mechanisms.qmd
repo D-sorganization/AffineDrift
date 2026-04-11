@@ -52,7 +52,7 @@ Key property: Motion of one part is constrained by multiple paths. The system is
 
 :::
 
-{Intuitive Difference}{inplain:serial_vs_parallel_intuition}
+### Intuitive Difference {#inplain:serial_vs_parallel_intuition}
 A serial chain is like a single path through a graph: you can move each joint, and the endpoint of the chain follows.
 
 A parallel mechanism is like multiple paths. If you try to move one joint, you might be blocked by another path. The constraint must be satisfied by all paths simultaneously.
@@ -93,7 +93,7 @@ Or more generally:
 
 This is a holonomic constraint, just like the joint constraints from Chapter @ch:constraint_forces.
 
-{Why Loops Matter for the Swing}{inplain:loops_swing_importance}
+### Why Loops Matter for the Swing {#inplain:loops_swing_importance}
 In a serial chain, you can rotate your hips, shoulders, and arms independently (within limits). In a body with loops, these rotations are coupled.
 
 For example, if you rotate your pelvis 50° (hips opening), and you want to prevent your shoulders from rotating (to create "X-factor"), the spine must absorb the difference. This is not free—it requires elastic energy and creates internal stresses.
@@ -143,7 +143,7 @@ This matrix encodes how each shoulder angle affects the hand positions.
 
 ## The Gruebler Mobility Formula
 
-{Gruebler's Criterion for Planar Mechanisms}{theorem:gruebler}
+### Gruebler's Criterion for Planar Mechanisms {#theorem:gruebler}
 For a mechanism with $N$ rigid bodies, $J$ joints, and $C$ constraints, the mobility (degrees of freedom) is:
 
 M = 3(N - 1) - 2J - C_{\text{passive}}
@@ -159,7 +159,7 @@ M = 6(N - 1) - \sum_i f_i
 
 where $f_i$ is the constraint count for joint $i$ (a revolute joint constrains 5 DOF in 3D; a ball joint constrains 3 DOF, etc.).
 
-{What Gruebler's Formula Tells You}{inplain:gruebler_interpretation}
+### What Gruebler's Formula Tells You {#inplain:gruebler_interpretation}
 Gruebler's criterion predicts the effective DOF of a mechanism based purely on its topology—the number and types of joints, without needing to know forces or dynamics.
 
 For example, a Stewart platform (6-legged parallel manipulator):
@@ -211,7 +211,7 @@ For the golf swing, this is crucial: the golfer's flexibility determines how muc
 
 :::
 
-{Why Flexibility Matters}{inplain:flexibility_importance}
+### Why Flexibility Matters {#inplain:flexibility_importance}
 A golfer's flexibility is often treated as a cosmetic issue (in yoga-style golf tips). But from a dynamics perspective, flexibility is *functional*.
 
 A golfer who can rotate their hips 60° while keeping their shoulders at 20° rotation is creating a large X-factor. This is possible because the spine has elasticity—it can absorb the differential rotation.
@@ -254,7 +254,7 @@ For the golfer to achieve X-factor (hips open more than shoulders), the constrai
 
 During a golf swing at full speed, these forces can reach $1000$ N or higher, causing significant stress in the spine.
 
-{The X-Factor is a Constraint Mechanism}{constraint:xfactor_constraint}
+### The X-Factor is a Constraint Mechanism {#constraint:xfactor_constraint}
 The **X-factor** is the difference between hip and shoulder rotation:
 
 \text{X-factor} = \theta_{\text{hips}} - \theta_{\text{shoulders}}
@@ -295,7 +295,7 @@ verified result.
 
 All of these forces are constraints, not muscle-produced forces. The muscles control the motion (how the golfer accelerates), but the ground enforces the constraints (the golfer doesn't sink into the ground or slide away).
 
-{Why Footing Matters}{inplain:footing_importance}
+### Why Footing Matters {#inplain:footing_importance}
 A golfer's balance and footing are crucial because the ground constraint is critical for the swing's effectiveness.
 
 If the feet slip (poor footing), the constraint is violated, and the golfer's motion becomes uncontrolled. The energy that would normally be transferred through the kinetic chain (hips → shoulders → arms → club) is instead lost to lateral motion.
@@ -382,7 +382,7 @@ For the golf swing, the over-constraint ensures that as the hips drive, the shou
 
 ## Summary: Parallel Mechanisms and the Golf Body
 
-{Key Takeaways: Parallel Mechanisms and Loop Constraints}{principle:parallel_key_takeaways}
+### Key Takeaways: Parallel Mechanisms and Loop Constraints {#principle:parallel_key_takeaways}
 
 1. **Serial vs. parallel:** The golf body is not a serial chain (hips → shoulders → arms). It's a parallel mechanism with closed loops. The spine and arms form multiple paths from the hips to the shoulders.
 2. **Closed loops and constraints:** Each loop (e.g., spine loop, ground contact loop) is a holonomic constraint. These constraints reduce effective DOF and create constraint forces.

@@ -36,7 +36,7 @@ The configuration is fully specified by $\bm{q} = (q_1, q_2, q_3)^T \in \mathbb{
 
 :::
 
-{Understanding the Three Segments}{inplain:triple_pendulum_segments}
+### Understanding the Three Segments {#inplain:triple_pendulum_segments}
 In a real golfer:
 - Segment 1 represents the rotation of the shoulders and torso about the spine. This is the largest, slowest segment.
 - Segment 2 represents the rotation of the arm at the elbow. It's smaller and faster than segment 1.
@@ -48,7 +48,7 @@ But the masses are also ordered: the torso is much heavier than the arm, which i
 
 ## Equations of Motion for the Triple Pendulum
 
-{Triple Pendulum Dynamics}{theorem:triple_pendulum_dynamics}
+### Triple Pendulum Dynamics {#theorem:triple_pendulum_dynamics}
 The equations of motion for a planar triple pendulum are:
 
 \bm{M}(\bm{q}) \ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}}) + \bm{g}(\bm{q}) = \bm{u}
@@ -85,7 +85,7 @@ Here $L_{3,\text{cm}} = L_3/2$, so the club terms correctly depend on the relati
 
 :::
 
-{What the Mass Matrix Entries Mean}{inplain:mass_matrix_meaning}
+### What the Mass Matrix Entries Mean {#inplain:mass_matrix_meaning}
 The diagonal entry $M_{ii}$ is the "effective inertia" of segment $i$ as seen from joint $i$. It includes:
 - The intrinsic inertia of segment $i$ ($I_i$).
 - The contribution of all distal segments (via their masses and positions).
@@ -127,7 +127,7 @@ The entry $(\bm{M}^{-1})_{33} = 80$ is much larger than $(\bm{M}^{-1})_{11} = 15
 
 ## Coriolis Terms in the Triple Pendulum
 
-{Why Coriolis Gets Complicated with Three Segments}{inplain:triple_coriolis_complexity}
+### Why Coriolis Gets Complicated with Three Segments {#inplain:triple_coriolis_complexity}
 With three segments, the Coriolis terms become much richer. The basic structure is still:
 
 C_i = \sum_{j, k} \frac{\partial M_{ij}}{\partial q_k} \dot{q}_j \dot{q}_k
@@ -172,7 +172,7 @@ By the time the club is free, it has accumulated momentum from all three segment
 
 :::
 
-{Why Sequential Matters}{inplain:sequential_unlocking_why}
+### Why Sequential Matters {#inplain:sequential_unlocking_why}
 If all three joints unlocked simultaneously, the momentum wouldn't be efficiently transferred. Each segment would accelerate independently, and the distal segments (arm and club) would be slower.
 
 But by unlocking in sequence—hips first, then shoulders, then elbows, then wrists—each segment inherits the momentum from the previous segment. This is called the *summation of speed principle*.
@@ -198,7 +198,7 @@ From a constraint perspective:
 
 :::
 
-{Wrist Cock as Energy Storage}{inplain:wrist_cock_energy}
+### Wrist Cock as Energy Storage {#inplain:wrist_cock_energy}
 When the wrist is held in a cocked position, the wrist tendons are stretched. This is elastic potential energy. When the wrist is released, this energy is converted to kinetic energy, accelerating the club.
 
 However—and this is important—the elastic energy in the wrist is *tiny* compared to the kinetic energy of the club at impact. A rough calculation:
@@ -267,7 +267,7 @@ And velocities:
 
 The club's angular velocity increased by 2 rad/s (from 25 to 27) in just 50 ms, with *zero* muscle torque. This is the whip effect: passive Coriolis acceleration at the club.
 
-{The DCR Blows Up Even Larger with Three Segments}{constraint:triple_dcr_blowup}
+### The DCR Blows Up Even Larger with Three Segments {#constraint:triple_dcr_blowup}
 With a third segment, the Drift-Control Ratio at the club becomes even more extreme. In the final 30 ms before impact:
 - Coriolis torque at the club: $\sim 800$--$1000$ Nm.
 - Muscular torque available at the club: $\sim 10$--$20$ Nm.
@@ -318,7 +318,7 @@ This energy redistribution happens through constraint forces, which do zero net 
 
 :::
 
-{Why Distal Segments Move Faster}{inplain:distal_faster_explanation}
+### Why Distal Segments Move Faster {#inplain:distal_faster_explanation}
 A common observation: the club moves faster than the arm, which moves faster than the shoulders. This seems counterintuitive if you think of torques cascading down—shouldn't the hips push the shoulders, which push the arms, so everything moves at similar speeds?
 
 The explanation: the segments have different inertias. The shoulder has much larger inertia than the arm, which has much larger inertia than the club.

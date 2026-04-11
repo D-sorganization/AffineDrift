@@ -24,6 +24,16 @@ FENCED_DIV_FILES = (
     AFFINE_ARTICLE,
     REPO_ROOT / "articles" / "The_Geometry_of_Motion" / "quarto" / "volume2_content.qmd",
 )
+PHYSICS_OF_GOLF_QMD_FILES = (
+    REPO_ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "ch02_language_of_motion.qmd",
+    REPO_ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "ch05_affine_structure.qmd",
+    REPO_ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "ch06_zero_torque_counterfactual.qmd",
+    REPO_ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "ch07_constraint_forces.qmd",
+    REPO_ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "ch08_triple_pendulum.qmd",
+    REPO_ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "ch09_parallel_mechanisms.qmd",
+    REPO_ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "ch10_energy_transfer.qmd",
+    REPO_ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "ch12_fascia.qmd",
+)
 
 CONVERSATIONAL_FILES = (
     REPO_ROOT / "articles" / "The_Physics_of_Golf" / "chapters" / "ch09_parallel_mechanisms.tex",
@@ -46,6 +56,7 @@ CONVERSATIONAL_PHRASES = (
 
 REF_PATTERN = re.compile(r"@((?:sec|subsec|eq)-[A-Za-z0-9_:-]+)")
 LABEL_PATTERN = re.compile(r"\{#([A-Za-z0-9_:-]+)\}")
+LEGACY_TITLE_LABEL_PATTERN = re.compile(r"^\{[^{}\n]+\}\{[A-Za-z]+:[^{}\n]+\}$", re.MULTILINE)
 
 
 def test_affine_article_internal_refs_are_resolved() -> None:
@@ -120,6 +131,14 @@ def test_target_pages_do_not_use_raw_fenced_div_markers() -> None:
         text = qmd_file.read_text(encoding="utf-8")
         assert "::: {.callout-note}" not in text
         assert "::: {.abstract-section}" not in text
+
+
+<<<<<<< HEAD
+def test_physics_of_golf_chapters_use_standard_title_label_syntax() -> None:
+    """Physics of Golf chapters should not use legacy standalone title/label lines."""
+    for qmd_file in PHYSICS_OF_GOLF_QMD_FILES:
+        text = qmd_file.read_text(encoding="utf-8")
+        assert LEGACY_TITLE_LABEL_PATTERN.search(text) is None, qmd_file
 
 
 def test_target_pages_do_not_retain_draft_conversational_language() -> None:
