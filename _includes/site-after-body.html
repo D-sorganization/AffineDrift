@@ -16,8 +16,14 @@
       navigator.serviceWorker.register('/service-worker.js')
         .catch(function(error) {
           console.warn('ServiceWorker registration failed:', error);
-        });
+      });
     });
+  }
+</script>
+<script src="/js/service-worker-updates.js"></script>
+<script>
+  if (window.AffineDriftServiceWorkerUpdates) {
+    window.AffineDriftServiceWorkerUpdates.init();
   }
 </script>
 <script src="/js/notes-workspace.js"></script>
