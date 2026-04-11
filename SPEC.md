@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-04-11T21:43:30Z
+Last-Updated: 2026-04-11T22:15:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-04-11T21:43:30Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.43                                           |
+| **Spec Version**        | 1.0.44                                           |
 | **Last Spec Update**    | 2026-04-11                                       |
 
 ## 2. Purpose & Mission
@@ -188,6 +188,7 @@ AffineDrift/
 | F33 | Round putting simulator injection       | ✅     | `RoundSimulator` accepts an optional prebuilt `PuttingSimulator` so tests and callers can provide calibrated green physics without relying on inline flat-green construction.                                                                                                                                                    |
 | F34 | Mypy autofix package entrypoints        | ✅     | The mypy autofix agent is split into focused modules under `scripts/mypy_autofix` while preserving the legacy `scripts/mypy_autofix_agent.py` workflow entrypoint as a compatibility wrapper.                                                                                                                                    |
 | F35 | Face-angle sensitivity consistency      | ✅     | Physics of Golf chapter 31 keeps driver face-angle offline-distance sensitivity in the documented 13--20 yards-per-degree range and regression tests block the previous 60--70 yards-per-degree contradiction.                                                                                                                   |
+| F36 | Time-dependent transformation caveat    | ✅     | Geometry of Motion chapter 1 now states eigenvalue invariance only for time-independent coordinate transforms and explicitly warns that time-dependent terms in the transformed linearization can alter raw instantaneous eigenvalues.                                                                                           |
 
 ### API / Interface Contract
 
@@ -464,6 +465,7 @@ python src/tools/code_quality_ast.py
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                      |
 | ---------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-04-11 | 1.0.44  | fix(textbook): clarified that eigenspectrum invariance in Geometry of Motion chapter 1 applies only to time-independent coordinate transforms, with an explicit caveat that full time-dependent transformed linearizations include extra terms that affect raw eigenvalues.                                                                                                  |
 | 2026-04-11 | 1.0.43  | fix(textbook): corrected Physics of Golf chapter 31 face-angle and path-angle directional sensitivity values so the later sensitivity section matches the earlier 13--20 yards-per-degree face-angle range, with regression coverage against the old 60--70 yards-per-degree claim.                                                                                          |
 | 2026-04-11 | 1.0.42  | refactor(tooling): decomposed the mypy autofix agent into a package with focused parser, strategy, file, model, and runner modules while keeping the legacy script path callable for GitHub workflow compatibility.                                                                                                                                                          |
 | 2026-04-11 | 1.0.41  | refactor(simulation): allowed `RoundSimulator` to receive an injected `PuttingSimulator`, preserving the default flat-green path while enabling calibrated putting physics in tests and callers.                                                                                                                                                                             |
