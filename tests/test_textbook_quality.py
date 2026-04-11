@@ -137,7 +137,6 @@ def test_target_pages_do_not_use_raw_fenced_div_markers() -> None:
         assert "::: {.abstract-section}" not in text
 
 
-<<<<<<< HEAD
 def test_physics_of_golf_chapters_use_standard_title_label_syntax() -> None:
     """Physics of Golf chapters should not use legacy standalone title/label lines."""
     for qmd_file in PHYSICS_OF_GOLF_QMD_FILES:
