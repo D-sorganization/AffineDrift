@@ -73,6 +73,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
+          TRIGGERED_BY: ${{ github.event.comment.user.login }}
         run: |
           gh issue comment "$ISSUE_NUMBER" --body "$(cat <<'EOF'
           👋 **Jules here!** I've received your request and I'm analyzing this issue now.
@@ -80,7 +81,7 @@ jobs:
           I'll create a PR with a fix shortly. Stay tuned! 🔧
 
           ---
-          *Triggered by @${{ github.event.comment.user.login }}*
+          *Triggered by @${TRIGGERED_BY}*
           EOF
           )"
 
@@ -258,13 +259,19 @@ jobs:
 
       - name: Summary
         if: always()
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          TRIGGERED_BY: ${{ github.event.comment.user.login }}
+          STATUS: ${{ steps.jules.outputs.status || 'N/A' }}
+          PR_URL: ${{ steps.jules.outputs.pr_url }}
         run: |
           echo "## Jules Issue Fixer Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "- **Issue:** #${{ github.event.issue.number }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Title:** ${{ github.event.issue.title }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Triggered by:** @${{ github.event.comment.user.login }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Status:** ${{ steps.jules.outputs.status || 'N/A' }}" >> $GITHUB_STEP_SUMMARY
-          if [ -n "${{ steps.jules.outputs.pr_url }}" ]; then
-            echo "- **PR:** ${{ steps.jules.outputs.pr_url }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Issue:** #$ISSUE_NUMBER" >> $GITHUB_STEP_SUMMARY
+          printf '%s\n' "- **Title:** $ISSUE_TITLE" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **Triggered by:** @$TRIGGERED_BY" >> $GITHUB_STEP_SUMMARY
+          echo "- **Status:** $STATUS" >> $GITHUB_STEP_SUMMARY
+          if [ -n "$PR_URL" ]; then
+            printf '%s\n' "- **PR:** $PR_URL" >> "$GITHUB_STEP_SUMMARY"
           fi

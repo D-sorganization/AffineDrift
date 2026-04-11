@@ -278,8 +278,8 @@ def convert_lists_to_html(content: str) -> str:
 
 def remove_comments(content: str) -> str:
     """Remove LaTeX comments (lines starting with % and inline comments)."""
-    content = re.sub(r"^%.*$", "", content, flags=re.MULTILINE)
-    content = re.sub(r"%.*", "", content)
+    content = re.sub(r"^(?<!\\)%.*$", "", content, flags=re.MULTILINE)
+    content = re.sub(r"(?<!\\)%.*", "", content)
     return content
 
 

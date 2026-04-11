@@ -3,36 +3,19 @@
 from __future__ import annotations
 
 import sys
-import types
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
 
 
-def _stub_latex_to_qmd() -> tuple[types.ModuleType, object]:
-    """Create a stub for the non-package latex_to_qmd module."""
-    stub = types.ModuleType("latex_to_qmd")
-    stub.LaTeXToQuartoConverter = MagicMock  # type: ignore[attr-defined]
-    return stub
-
-
 def _import_convert_all_to_quarto():  # noqa: ANN201
-    """Import convert_all_to_quarto with stubbed latex_to_qmd."""
-    stub = _stub_latex_to_qmd()
-    old = sys.modules.get("latex_to_qmd")
-    sys.modules["latex_to_qmd"] = stub
-    try:
-        if "src.tools.convert_all_to_quarto" in sys.modules:
-            del sys.modules["src.tools.convert_all_to_quarto"]
-        import src.tools.convert_all_to_quarto as m
+    """Import convert_all_to_quarto through package-qualified imports."""
+    if "src.tools.convert_all_to_quarto" in sys.modules:
+        del sys.modules["src.tools.convert_all_to_quarto"]
+    import src.tools.convert_all_to_quarto as m
 
-        return m
-    finally:
-        if old is None:
-            sys.modules.pop("latex_to_qmd", None)
-        else:
-            sys.modules["latex_to_qmd"] = old
+    return m
 
 
 class TestSetupArticlesDirectory:

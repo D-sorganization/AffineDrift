@@ -103,7 +103,7 @@ def universal_joint_transmission_ratio(
     sin_phi = np.sin(phi_rad)
 
     # Angular velocity ratio: ω_out/ω_in
-    denominator = np.sqrt(1.0 - sin_delta**2 * sin_phi**2)
+    denominator = 1.0 - sin_delta**2 * sin_phi**2
     omega_ratio = cos_delta / denominator
 
     # Torque ratio: τ_out/τ_in = 1/(ω_out/ω_in) from power conservation

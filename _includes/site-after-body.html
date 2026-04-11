@@ -3,23 +3,10 @@
     const offsetMeta = document.querySelector('meta[name="quarto:offset"]');
     const base = offsetMeta ? offsetMeta.getAttribute('content') : '/';
     const normalizedBase = base.endsWith('/') ? base : `${base}/`;
-
-    // Feature-detect ES module support; load modular version or legacy bundle
-    // NOTE: The 'nomodule' attribute is ONLY honoured on parser-inserted
-    // <script> tags.  Dynamically created scripts ignore it, so both bundles
-    // would execute in modern browsers.  Detect explicitly instead.
-    if ('noModule' in HTMLScriptElement.prototype) {
-      // Modern browser – load the ES6 module entry point only
-      const moduleScript = document.createElement('script');
-      moduleScript.type = 'module';
-      moduleScript.src = `${normalizedBase}js/main.js`;
-      document.body.appendChild(moduleScript);
-    } else {
-      // Legacy browser (pre-2018) – load the monolithic fallback
-      const legacyScript = document.createElement('script');
-      legacyScript.src = `${normalizedBase}script.js`;
-      document.body.appendChild(legacyScript);
-    }
+    const moduleScript = document.createElement('script');
+    moduleScript.type = 'module';
+    moduleScript.src = `${normalizedBase}js/main.js`;
+    document.body.appendChild(moduleScript);
   })();
 </script>
 <script>
