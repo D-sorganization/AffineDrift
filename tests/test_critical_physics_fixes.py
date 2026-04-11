@@ -28,6 +28,8 @@ from src.tools.wrist_universal_joint.torque_calculator import (
     universal_joint_transmission_ratio,
 )
 
+GRAVITY_M_S2 = 9.81
+
 
 class TestMassMatrixPhysics:
     """#1742: mass matrix must reflect actual double-pendulum inertia."""
@@ -189,7 +191,9 @@ class TestGolfChapter03NumericalExample:
         theta1_dot = np.deg2rad(600.0)
 
         m11 = 0.015 + m2 * l1**2 + m2 * l2**2 + 0.4 + 2 * m2 * l1 * l2 * np.cos(theta2)
-        g1 = (m1 * 0.175 + m2 * 0.35) * 9.81 * np.sin(0.0) + m2 * 9.81 * 0.5 * np.sin(theta2)
+        g1 = (m1 * 0.175 + m2 * 0.35) * GRAVITY_M_S2 * np.sin(
+            0.0
+        ) + m2 * GRAVITY_M_S2 * 0.5 * np.sin(theta2)
         c21 = m2 * l1 * l2 * theta1_dot**2 * np.sin(theta2)
 
         assert np.isclose(m11, 1.496752, atol=1e-6)
