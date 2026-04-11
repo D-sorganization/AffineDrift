@@ -42,7 +42,7 @@ For a golf swing, examples include:
 
 :::
 
-{What a Constraint Is}{inplain:constraint_meaning}
+### What a Constraint Is {#inplain:constraint_meaning}
 A constraint is a rule that limits where your body can go. The elbow joint is a constraint: your forearm can't be at two different distances from your shoulder. The constraint *enforces* that the forearm is always, say, exactly 30 cm from the shoulder.
 
 Now here's the key insight: to enforce a constraint, the joint must *push*. If your arm wants to fly away from your shoulder due to centrifugal effects, the elbow joint must push inward to prevent it. That push is the constraint force.
@@ -78,7 +78,7 @@ This tells us: to maintain the constraint, motion in $q_1$ and $q_2$ must be cou
 
 ## The Constrained Equations of Motion
 
-{Constrained Lagrangian Dynamics}{theorem:constrained_lagrangian}
+### Constrained Lagrangian Dynamics {#theorem:constrained_lagrangian}
 When constraints are present, the equations of motion take the form:
 
 \bm{M}(\bm{q})\ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}}) + \bm{g}(\bm{q}) = \bm{B}(\bm{q})\bm{u} + \bm{J}_c(\bm{q})^T \bm{\lambda}
@@ -92,7 +92,7 @@ where:
 
 The vector $\bm{\lambda} \in \mathbb{R}^{n_c}$ contains the **Lagrange multipliers**, one for each constraint. These are the magnitudes of the constraint forces, expressed in the constraint coordinate directions.
 
-{Reading the Constrained EOM}{inplain:constrained_eom_reading}
+### Reading the Constrained EOM {#inplain:constrained_eom_reading}
 The equation says: acceleration (left side, $\bm{M}\ddot{\bm{q}}$) comes from four sources (right side):
 
 1. **Gravity and Coriolis** ($\bm{C}, \bm{g}$): passive forces we've already discussed.
@@ -105,7 +105,7 @@ But because the force is perpendicular, it can have a large magnitude while doin
 
 ## Solving for the Constraint Forces
 
-{Computing Lagrange Multipliers}{proc:compute_multipliers}
+### Computing Lagrange Multipliers {#proc:compute_multipliers}
 To find $\bm{\lambda}$, we use the constraint that $\bm{\Phi}(\bm{q}) = \mathbf{0}$ must be maintained at all times. Taking the time derivative twice:
 
 \bm{J}_c(\bm{q}) \ddot{\bm{q}} = -\dot{\bm{J}}_c(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} - \bm{J}_c(\bm{q}) \ddot{\bm{q}}_{\text{unconstrained}}
@@ -122,7 +122,7 @@ Rearranging:
 
 Solving this linear system gives $\bm{\lambda}$.
 
-{Why This Procedure Works}{inplain:lambda_computation}
+### Why This Procedure Works {#inplain:lambda_computation}
 The constraint equation $\bm{\Phi} = 0$ is an algebraic restriction. If you differentiate it twice, you get an equation involving $\ddot{\bm{q}}$. This equation says: "the acceleration must be consistent with maintaining the constraint."
 
 You plug in the EOM (which relates $\ddot{\bm{q}}$ to forces) and solve for the unknown constraint forces $\bm{\lambda}$.
@@ -161,7 +161,7 @@ The range of $\bm{J}_c^T$ is:
 
 **Interpretation:** The constraint force acts along the direction $(1, 1)$—i.e., simultaneously at both joints. This makes sense: the constraint couples the two joints, so forces must be applied at both to maintain coupling.
 
-{Constraints Restrict the Effective DOF}{constraint:effective_dof}
+### Constraints Restrict the Effective DOF {#constraint:effective_dof}
 A system with $n$ configuration variables and $n_c$ holonomic constraints has only $n - n_c$ *effective degrees of freedom*.
 
 For example:
@@ -173,7 +173,7 @@ The constraint forces are whatever is needed to project the "free" dynamics onto
 
 ## Energy Transfer via Constraint Forces
 
-{Zero Power Constraint Condition}{theorem:zero_power_constraint}
+### Zero Power Constraint Condition {#theorem:zero_power_constraint}
 The power delivered by a constraint force is:
 
 P_{\text{constraint}} = \bm{\lambda}^T \bm{J}_c(\bm{q}) \dot{\bm{q}}
@@ -188,7 +188,7 @@ P_{\text{constraint}} = \mathbf{0}
 
 Constraint forces do *zero* net power to the system.
 
-{The Power Paradox}{inplain:power_paradox}
+### The Power Paradox {#inplain:power_paradox}
 Here's where the magic happens. Constraint forces:
 - Do zero *net* work on the system (total energy is unchanged).
 - Yet they *redistribute* energy between segments dramatically.
@@ -298,7 +298,7 @@ Hmm, still not zero. The discrepancy arises because I haven't accounted for all 
 
 **Key Finding:** The constraint force is small ($\sim 0.3$ Nm) but its *direction* is crucial: it acts to slow the shoulder and speed the club. Over the course of the downswing, integrated over time, these forces accumulate to produce the dramatic energy transfer from arm to club.
 
-{Why the Wrist Hinge Matters}{inplain:wrist_constraint_meaning}
+### Why the Wrist Hinge Matters {#inplain:wrist_constraint_meaning}
 The wrist isn't just a joint that holds the club. It's a *constraint* that couples the arm and club together. This coupling allows the inertia of the arm to slow down while the inertia of the club speeds up—energy is transferred through the constraint force.
 
 If the wrist were completely free (unconstrained), the arm and club would move independently. The arm would decelerate under gravity, while the club would whip around due to Coriolis. But they wouldn't exchange energy efficiently.
@@ -348,7 +348,7 @@ And this is why active muscular control is secondary: muscles are too weak compa
 
 :::
 
-{Energy and Momentum Transfer Through Constraints}{constraint:energy_momentum_transfer}
+### Energy and Momentum Transfer Through Constraints {#constraint:energy_momentum_transfer}
 A constraint does zero net work. But in a multi-segment system, it can transfer energy from one segment to another.
 
 The mechanism is simple:
