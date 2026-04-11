@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import ast
+import importlib.util
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -34,3 +35,32 @@ def test_python_call_sites_use_keyword_arguments() -> None:
         "src/tools/wrist_universal_joint/enhanced_model_kinematics.py",
     ]:
         _assert_keyword_calls(REPO_ROOT / relative)
+
+
+def test_legacy_universal_joint_launcher_reexports_public_api() -> None:
+    """The legacy docs launcher should keep old imports working."""
+    launcher = REPO_ROOT / "docs/content/Wrist as Universal Joint/Universal_Joint_Model_Enhanced.py"
+    spec = importlib.util.spec_from_file_location("legacy_universal_joint_launcher", launcher)
+    assert spec is not None
+    assert spec.loader is not None
+
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+
+    for name in [
+        "MainWindow",
+        "DiagramCanvas",
+        "PlotCanvas",
+        "DocumentationDialog",
+        "calculate_moments_of_inertia",
+        "universal_joint_transmission_ratio",
+        "distribute_torque_by_grip_angle",
+        "run",
+    ]:
+        assert name in module.__all__
+        assert hasattr(module, name)
+
+    assert module.calculate_moments_of_inertia(200.0, 100.0, 1.0, 0.85) == (
+        0.17783333333333332,
+        0.08891666666666666,
+    )
