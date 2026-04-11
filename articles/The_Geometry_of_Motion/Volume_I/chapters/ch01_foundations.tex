@@ -468,8 +468,14 @@ and the Jacobian transforms as
 \mat{A}_z = \mat{T}\,\mat{A}\,\mat{T}^{-1} + \dot{\mat{T}}\,\mat{T}^{-1},
 \label{eq:ch1:jacobian-transform}
 \end{equation}
-ensuring that the \emph{geometric content}---eigenvalues, contraction rates, stability
-conclusions---is coordinate-invariant.
+so the extra $\dot{\mat{T}}\mat{T}^{-1}$ term must be retained whenever the
+coordinate chart varies along the trajectory. For a time-independent coordinate
+change, $\dot{\mat{T}}=0$ and the transformation is a similarity transform, so
+the eigenvalues of $\mat{A}$ are unchanged. For a time-dependent coordinate
+change, the instantaneous eigenvalues of $\mat{A}_z$ need not match those of
+$\mat{A}$; invariant statements must instead be made about the underlying
+geometric dynamics, such as stability conclusions, Lyapunov exponents, or
+contraction rates.
 
 
 \section{Residuals: Geometry, Not Error}
@@ -592,15 +598,30 @@ with determinant $+1$:
 \end{equation}
 
 $\SO(3)$ is a 3-dimensional Lie group: it is a smooth manifold that is also a group under
-matrix multiplication. The tangent space to $\SO(3)$ at any point $\mat{R} \in \SO(3)$ is
-the space of skew-symmetric matrices:
+matrix multiplication. At the identity, the tangent space is the space of
+skew-symmetric matrices, called the Lie algebra $\mathfrak{so}(3)$:
 \begin{equation}
-T_{\mat{R}}\SO(3) = \{\mat{S} \in \R^{3 \times 3} : \mat{S} + \mat{S}\T = 0\}.
+T_{\mat{I}}\SO(3) = \mathfrak{so}(3)
+= \{\mat{S} \in \R^{3 \times 3} : \mat{S} + \mat{S}\T = 0\}.
 \label{eq:ch1:so3-tangent}
 \end{equation}
 
-This space is 3-dimensional and is often denoted $\mathfrak{so}(3)$, the Lie algebra of $\SO(3)$. The Lie algebra structure---defined through the commutator bracket $[\mathbf{S}_1, \mathbf{S}_2] = \mathbf{S}_1\mathbf{S}_2 - \mathbf{S}_2\mathbf{S}_1$---is exactly the Lie bracket of vector fields on the manifold $\SO(3)$. This bridge between algebraic (Lie algebra) and geometric (Lie bracket) structures is central to Agrachev and Sachkov's treatment of geometric control on Lie groups \cite[Ch.~2]{AgrachevSachkov2004}.
-This space is 3-dimensional and is often denoted $\mathfrak{so}(3)$, the Lie algebra of $\SO(3)$.
+At an arbitrary rotation $\mat{R}$, the tangent space is the left translation of
+that Lie algebra:
+\begin{equation}
+T_{\mat{R}}\SO(3) = \{\mat{R}\mat{S} : \mat{S} \in \mathfrak{so}(3)\}
+= \mat{R}\mathfrak{so}(3).
+\label{eq:ch1:SO3-tangent-at-R}
+\end{equation}
+
+This space is 3-dimensional, but its elements are generally not themselves
+skew-symmetric unless $\mat{R}=\mat{I}$. The Lie algebra structure---defined
+through the commutator bracket $[\mathbf{S}_1, \mathbf{S}_2] =
+\mathbf{S}_1\mathbf{S}_2 - \mathbf{S}_2\mathbf{S}_1$---is exactly the Lie
+bracket of vector fields on the manifold $\SO(3)$. This bridge between
+algebraic (Lie algebra) and geometric (Lie bracket) structures is central to
+Agrachev and Sachkov's treatment of geometric control on Lie groups
+\cite[Ch.~2]{AgrachevSachkov2004}.
 
 \subsubsection{Jacobian on SO(3)}
 
