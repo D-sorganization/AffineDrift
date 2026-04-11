@@ -9,15 +9,9 @@ import streamlit as st
 from matplotlib.figure import Figure
 
 from .diagram import draw_diagram as _draw_diagram
-from .plots import (
-    plot_acceleration as _plot_acceleration,
-)
-from .plots import (
-    plot_torque as _plot_torque,
-)
-from .plots import (
-    plot_transmission_sweep as _plot_transmission_sweep,
-)
+from .plots import plot_acceleration as _plot_acceleration
+from .plots import plot_torque as _plot_torque
+from .plots import plot_transmission_sweep as _plot_transmission_sweep
 
 
 @st.cache_resource(max_entries=20)

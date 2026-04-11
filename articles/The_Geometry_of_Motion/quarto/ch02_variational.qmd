@@ -289,16 +289,16 @@ The determinant of the state transition matrix satisfies
 \begin{proof}
 We use the matrix determinant lemma (also called Jacobi's formula):
 \begin{equation}
-\frac{\dd}{\dd t}\det(\Phi(t,t_0)) = \trace\left(\text{adj}(\Phi)\,\frac{\dd\Phi}{\dd t}\right)\,\frac{1}{\det(\Phi)},
+\frac{\dd}{\dd t}\det(\Phi(t,t_0)) = \trace\left(\text{adj}(\Phi)\,\frac{\dd\Phi}{\dd t}\right),
 \label{eq:ch2:jacobi}
 \end{equation}
 where $\text{adj}(\Phi)$ is the adjugate matrix. For a nonsingular matrix,
 $\text{adj}(\Phi) = \det(\Phi)\,\Phi^{-T}$, so
 \begin{align}
-\frac{\dd}{\dd t}\det(\Phi) &= \trace(\Phi^{-T}\,\dot{\Phi})\\
-&= \trace(\Phi^{-T}\,\mat{A}\,\Phi)\\
-&= \trace(\mat{A}\,\Phi\,\Phi^{-T})\\
-&= \trace(\mat{A}).
+\frac{\dd}{\dd t}\det(\Phi) &= \det(\Phi)\trace(\Phi^{-T}\,\dot{\Phi})\\
+&= \det(\Phi)\trace(\Phi^{-T}\,\mat{A}\,\Phi)\\
+&= \det(\Phi)\trace(\mat{A}\,\Phi\,\Phi^{-T})\\
+&= \det(\Phi)\trace(\mat{A}).
 \end{align}
 
 Here we used the cyclic property of the trace: $\trace(ABC) = \trace(BCA) = \trace(CAB)$.

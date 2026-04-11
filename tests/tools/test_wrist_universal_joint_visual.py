@@ -135,7 +135,9 @@ class TestPlotsModule:
 
         with _streamlit_context():
             import src.tools.wrist_universal_joint.plots as plots
-            from src.tools.wrist_universal_joint.enhanced_model_kinematics import TorqueSignals
+            from src.tools.wrist_universal_joint.enhanced_model_kinematics import (
+                TorqueSignals,
+            )
 
             signals = TorqueSignals(
                 omega_ratio=0.91,
@@ -198,7 +200,9 @@ class TestPlotsModule:
 
         with _streamlit_context():
             import src.tools.wrist_universal_joint.plots as plots
-            from src.tools.wrist_universal_joint.enhanced_model_kinematics import TransmissionSweep
+            from src.tools.wrist_universal_joint.enhanced_model_kinematics import (
+                TransmissionSweep,
+            )
 
             sweep = TransmissionSweep(
                 wrist_angle_deg=np.array([-60.0, 0.0, 60.0]),
