@@ -28,6 +28,10 @@ CH06_TEX = (
     / "chapters"
     / "ch06_zero_torque_counterfactual.tex"
 )
+CH03_QMD = REPO_ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "ch03_double_pendulum.qmd"
+CH03_TEX = REPO_ROOT / "articles" / "The_Physics_of_Golf" / "chapters" / "ch03_double_pendulum.tex"
+CH08_QMD = REPO_ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "ch08_triple_pendulum.qmd"
+CH08_TEX = REPO_ROOT / "articles" / "The_Physics_of_Golf" / "chapters" / "ch08_triple_pendulum.tex"
 CH09_PARALLEL_MECHANISMS = (
     REPO_ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "ch09_parallel_mechanisms.qmd"
 )
@@ -199,6 +203,31 @@ def test_ch06_coriolis_example_uses_cm_distance_and_small_values() -> None:
         assert "0.2 \\times 0.4 \\times 0.15 \\times 15 \\times 20 \\approx 3.6" in text
         assert "32 \\text{ Nm}" not in text
         assert "192 \\text{ Nm}" not in text
+
+
+def test_issue_2290_documents_parameter_context_for_double_pendulum_examples() -> None:
+    """Issue #2290 requires documenting why double-pendulum parameter sets differ by chapter."""
+    ch03_qmd_text = CH03_QMD.read_text(encoding="utf-8")
+    ch03_tex_text = CH03_TEX.read_text(encoding="utf-8")
+    ch06_qmd_text = CH06_QMD.read_text(encoding="utf-8")
+    ch06_tex_text = CH06_TEX.read_text(encoding="utf-8")
+    ch08_qmd_text = CH08_QMD.read_text(encoding="utf-8")
+    ch08_tex_text = CH08_TEX.read_text(encoding="utf-8")
+
+    assert "canonical two-link baseline for this chapter" in ch03_qmd_text
+    assert "two-link values for illustration" in ch03_tex_text
+    assert (
+        "These values are an illustrative counterfactual setup used only in this worked example"
+        in ch06_qmd_text
+    )
+    assert "illustrative counterfactual setup for this worked example" in ch06_tex_text
+    assert (
+        "specific worked example that extends the counterfactual two-link setup from Chapter 6"
+        in ch08_qmd_text
+    )
+    assert (
+        "two-link canonical parameters from Chapter~\\ref{ch:03_double_pendulum}" in ch08_tex_text
+    )
 
 
 def test_ch02_liouville_jacobi_formula_has_correct_det_factor() -> None:
