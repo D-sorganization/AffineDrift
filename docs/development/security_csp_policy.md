@@ -4,13 +4,14 @@
 #2282: CSP contained `unsafe-inline` and `unsafe-eval` directives that negate XSS protection.
 
 ## Policy
-- **Removed**: `unsafe-inline` (replaced with `strict-dynamic` for script-src)
+- **Removed**: `unsafe-inline` (replaced with hashes for shared inline scripts and styles)
 - **Removed**: `unsafe-eval` (no safe substitute - code should not use eval())
-- **Required**: Use nonce-based or hash-based script loading for inline scripts
+- **Required**: Use hash-based allowances for shared inline scripts and styles
 
 ## Implementation
-If Quarto-generated HTML requires inline scripts, use the `include-in-header` option
-to inject a CSP meta tag with nonce support instead of blanket `unsafe-inline`.
+The shared Quarto includes now carry CSP hashes for the inline JSON-LD,
+bootstrapping scripts, and fallback styles that remain in the page head and
+body partials.
 
 ## References
 - [MDN CSP](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP)
