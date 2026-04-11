@@ -135,6 +135,24 @@ class TestEulerBernoulliBeam:
         assert inertial_term > 0, "Inertial term rho*A*omega^2*W must be nonzero"
         assert inertial_term > 1e-6, "Inertial term is significant and must not be omitted"
 
+    def test_textbook_equation_has_dynamic_term(self):
+        """Regression guard: the chapter 11 flexible shaft source must include inertia."""
+        chapter_path = Path("articles/The_Physics_of_Golf/quarto/ch11_flexible_shaft.qmd")
+        chapter_text = chapter_path.read_text(encoding="utf-8")
+
+        expected_fragments = [
+            "EI \\frac{\\partial^4 w}{\\partial z^4}(z,t) + \\rho A \\frac{\\partial^2 w}{\\partial t^2}(z,t)",
+            "q(z,t)",
+            "w(z,t)",
+        ]
+        for fragment in expected_fragments:
+            assert fragment in chapter_text, f"Missing expected chapter fragment: {fragment}"
+
+        static_fragment = "EI \\frac{\\partial^4 w}{\\partial z^4} = q(z)"
+        assert (
+            static_fragment not in chapter_text
+        ), "Static-only Euler-Bernoulli equation should not be used without dynamic context"
+
 
 class TestEigenvalueInvariance:
     """Tests for eigenvalue invariance claims - #2305."""
