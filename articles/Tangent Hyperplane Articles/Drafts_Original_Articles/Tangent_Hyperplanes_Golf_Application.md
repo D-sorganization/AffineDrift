@@ -1,5 +1,6 @@
 ---
 title: "Deconstructing Complexity: A Linear Perspective on the Nonlinear Dynamics of the Golf Swing"
+description: "The golf swing is a quintessential example of a complex, high-speed, and fundamentally nonlinear dynamical system. In a fraction of a second, the human..."
 subtitle: "Applying the Tangent Hyperplane Framework to Biomechanical Analysis"
 author: "Generated via NotebookLM"
 date: "2026-01-18"
