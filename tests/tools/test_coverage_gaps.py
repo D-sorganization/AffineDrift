@@ -16,23 +16,19 @@ import pytest
 class TestCleanLatexCommentsMain:
     """Cover clean_latex_comments.py main() and branch paths."""
 
-    def test_main_with_no_matching_files(self, tmp_path: Path) -> None:
+    def test_main_with_no_matching_files(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         """main() should not crash when no .qmd files found."""
-        import os
-
         from src.tools.clean_latex_comments import main
 
-        original = os.getcwd()
-        os.chdir(tmp_path)
-        try:
-            main()  # no .qmd files → nothing happens
-        finally:
-            os.chdir(original)
+        monkeypatch.chdir(tmp_path)
+        main()  # no .qmd files → nothing happens
 
-    def test_main_processes_content_directories(self, tmp_path: Path) -> None:
+    def test_main_processes_content_directories(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         """main() should process qmd files in predefined content directories."""
-        import os
-
         from src.tools.clean_latex_comments import main
 
         # Create the expected directory structure
@@ -40,14 +36,10 @@ class TestCleanLatexCommentsMain:
         content_dir.mkdir(parents=True)
         qmd = content_dir / "test.qmd"
         qmd.write_text("Hello\n% comment\nWorld", encoding="utf-8")
-        original = os.getcwd()
-        os.chdir(tmp_path)
-        try:
-            main()
-            content = qmd.read_text()
-            assert "% comment" not in content
-        finally:
-            os.chdir(original)
+        monkeypatch.chdir(tmp_path)
+        main()
+        content = qmd.read_text()
+        assert "% comment" not in content
 
     def test_clean_returns_true_on_success(self, tmp_path: Path) -> None:
         """clean_latex_comments_in_file always returns True on successful processing."""
@@ -63,58 +55,45 @@ class TestCleanLatexCommentsMain:
 class TestFixQuartoSyntaxMain:
     """Cover fix_quarto_syntax.py main() function."""
 
-    def test_main_with_articles_directory(self, tmp_path: Path) -> None:
+    def test_main_with_articles_directory(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         """main() should process files in articles/ directory."""
-        import os
-
         from src.tools.fix_quarto_syntax import main
 
         articles_dir = tmp_path / "articles"
         articles_dir.mkdir()
         (articles_dir / "test.qmd").write_text("Some content", encoding="utf-8")
+        monkeypatch.chdir(tmp_path)
+        main()  # Should not raise even with no matching patterns
 
-        original = os.getcwd()
-        os.chdir(tmp_path)
-        try:
-            main()  # Should not raise even with no matching patterns
-        finally:
-            os.chdir(original)
-
-    def test_main_no_articles_dir_raises(self, tmp_path: Path) -> None:
+    def test_main_no_articles_dir_raises(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         """main() should raise when articles/ doesn't exist."""
-        import os
-
         from src.tools.fix_quarto_syntax import main
 
-        original = os.getcwd()
-        os.chdir(tmp_path)
-        try:
-            with pytest.raises((FileNotFoundError, OSError)):
-                main()
-        finally:
-            os.chdir(original)
+        monkeypatch.chdir(tmp_path)
+        with pytest.raises((FileNotFoundError, OSError)):
+            main()
 
 
 class TestWrapSidebarsMain:
     """Cover wrap_sidebars.py main() function."""
 
-    def test_main_with_no_qmd_files(self, tmp_path: Path) -> None:
+    def test_main_with_no_qmd_files(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         """main() should not crash when no .qmd files found."""
-        import os
-
         from src.tools.wrap_sidebars import main
 
-        original = os.getcwd()
-        os.chdir(tmp_path)
-        try:
-            main()
-        finally:
-            os.chdir(original)
+        monkeypatch.chdir(tmp_path)
+        main()
 
-    def test_main_processes_qmd_files(self, tmp_path: Path) -> None:
+    def test_main_processes_qmd_files(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         """main() should process .qmd files in current directory."""
-        import os
-
         from src.tools.wrap_sidebars import main
 
         qmd = tmp_path / "test.qmd"
@@ -122,14 +101,10 @@ class TestWrapSidebarsMain:
             '<aside class="left-sidebar">\n  <nav>links</nav>\n</aside>\n',
             encoding="utf-8",
         )
-        original = os.getcwd()
-        os.chdir(tmp_path)
-        try:
-            main()
-            content = qmd.read_text()
-            assert "sidebar-sticky-content" in content
-        finally:
-            os.chdir(original)
+        monkeypatch.chdir(tmp_path)
+        main()
+        content = qmd.read_text()
+        assert "sidebar-sticky-content" in content
 
 
 class TestCodeQualityCheckMain:
@@ -200,19 +175,15 @@ class TestVerifyImagesProcess:
 class TestPublishManualArticleMain:
     """Cover publish_manual_article.py main() paths."""
 
-    def test_main_exits_when_source_missing(self, tmp_path: Path) -> None:
+    def test_main_exits_when_source_missing(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
         """main() should call sys.exit when source file is missing."""
-        import os
-
         from src.tools.publish_manual_article import main
 
-        original = os.getcwd()
-        os.chdir(tmp_path)
-        try:
-            with pytest.raises(SystemExit):
-                main()
-        finally:
-            os.chdir(original)
+        monkeypatch.chdir(tmp_path)
+        with pytest.raises(SystemExit):
+            main()
 
 
 class TestConvertAllLatexMorePaths:
