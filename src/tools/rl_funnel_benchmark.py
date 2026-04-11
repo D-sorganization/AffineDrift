@@ -95,7 +95,7 @@ def _setup_comparison(
     rng = np.random.default_rng(seed)
     logger.info("Generating reference trajectory...")
     x0_nominal = np.array([np.pi / 2, np.pi / 4, 0.0, 0.0])
-    t_ref, x_ref = generate_reference_trajectory(t_span, dt=0.01, x0=x0_nominal)
+    t_ref, x_ref = generate_reference_trajectory(t_span, dt=dt, x0=x0_nominal)
     x0_perturbed = x0_nominal + perturbation_scale * rng.standard_normal(4)
     return x0_perturbed, t_ref, x_ref, x_ref[:, -1]
 

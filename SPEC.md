@@ -27,8 +27,8 @@
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.24                                           |
-| **Last Spec Update**    | 2026-04-08                                       |
+| **Spec Version**        | 1.0.25                                           |
+| **Last Spec Update**    | 2026-04-11                                       |
 
 ## 2. Purpose & Mission
 
@@ -168,7 +168,7 @@ AffineDrift/
 | F17 | Textbook algorithm convention sharing   | ✅     | `geometry_of_motion.sty` exposes shared algorithm and pseudocode primitives so implementation-oriented chapters use one consistent notation and formatting style                                 |
 | F18 | Textbook applied-optimization guidance  | ✅     | Volume I and Volume II include implementation-grade pseudocode for DDP/iLQR, direct collocation, funnel synthesis, ILC, and trajectory-library adaptation, plus a bounded treatment of evolutionary search |
 | F19 | Script CLI output contracts             | ✅     | Maintenance scripts route intentional terminal output through `scripts/cli_output.py`, making stdout/stderr behavior explicit and easier to test without weakening logging semantics |
-| F20 | RL benchmark modular split              | ✅     | `src/tools/rl_funnel_benchmark.py` now stays under the repo file-size budget by delegating dynamics, controllers, and simulation concerns to focused helper modules while preserving the benchmark module's public API |
+| F20 | RL benchmark modular split              | ✅     | `src/tools/rl_funnel_benchmark.py` now stays under the repo file-size budget by delegating dynamics, controllers, and simulation concerns to focused helper modules while preserving the benchmark module's public API, including caller-provided reference trajectory timesteps |
 | F21 | Tooling Demeter facades                 | ✅     | Link and site-health utilities isolate DOM/path traversal behind small façade objects so repository-governance checks depend on narrower interfaces instead of nested reach-through |
 | F22 | Wrist-model Qt module split             | ✅     | The legacy `content/wrist-as-universal-joint/Universal_Joint_Model_Enhanced.py` launcher now delegates geometry, kinematics, Qt canvas rendering, and window assembly to focused modules under `src/tools/wrist_universal_joint`, keeping the entrypoint thin while preserving its public surface |
 | F23 | Analysis helper fallback logging        | ✅     | `src/tools/utils/analysis_utils.py` logs recoverable parse and file-read failures at debug level when it falls back to zeroed or empty analysis results, keeping repository-quality scans observable without turning invalid files into hard failures |
@@ -445,6 +445,7 @@ python src/tools/code_quality_ast.py
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                      |
 | ---------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-04-11 | 1.0.25  | fix(tools): made RL benchmark comparison honor the caller-provided `dt` when generating reference trajectories and added regression coverage for the reference time grid |
 | 2026-04-09 | 1.0.24  | docs(articles): Refined the Layman's Terms section in Contraction_Tangent_CRITIC.qmd to use relatable analogies and improve clarity |
 | 2026-04-07 | 1.0.19  | chore(types): annotated the remaining public Python functions in `src/` and `scripts/`, added an AST regression test to keep return annotations from drifting, and closed the final actionable slice of assessment issue #2241 after auditing stale print/config findings                                                                                                     |
 | 2026-04-07 | 1.0.18  | fix(scripts): replaced remaining raw script-level `print()` calls with explicit stdout/stderr helpers, made maintenance scripts import-safe with `main()` entry points, and added CLI-output regression tests for the affected utilities                                                                                                                                       |
