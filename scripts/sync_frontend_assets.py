@@ -74,6 +74,14 @@ SYNC_MAPS: tuple[SyncMap, ...] = (
         mirrors=("docs/js/bibliography.js",),
     ),
     SyncMap(
+        source="js/service-worker-utils.js",
+        mirrors=("docs/js/service-worker-utils.js",),
+    ),
+    SyncMap(
+        source="js/service-worker-updates.js",
+        mirrors=("docs/js/service-worker-updates.js",),
+    ),
+    SyncMap(
         source="styles.css",
         mirrors=("docs/styles.css",),
     ),
