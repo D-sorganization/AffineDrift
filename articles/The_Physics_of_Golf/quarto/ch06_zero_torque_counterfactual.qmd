@@ -38,7 +38,7 @@ The state evolves from the current configuration and velocities as if the muscle
 
 :::
 
-{Understanding the ZTCF}{inplain:ztcf_meaning}
+### Understanding the ZTCF {#inplain:ztcf_meaning}
 Think of it this way: Imagine you're in the middle of your downswing, and suddenly every muscle in your body freezes and produces zero force. You're not paralyzed—your joints still move because your limbs are swinging. But once frozen, there's no active muscular torque. What happens?
 
 The answer: the system undergoes *passive dynamics*—motion driven purely by gravity, by the momentum already stored in your limbs, and by the couplings between segments.
@@ -69,7 +69,7 @@ This framework predicts that skilled golfers would produce smaller, more precise
 
 :::
 
-{Why This Matters for the Swing}{inplain:ztcf_application}
+### Why This Matters for the Swing {#inplain:ztcf_application}
 Here's a practical realization: most swing coaching teaches *active moves*—"accelerate your hips," "fire your chest," "unwind your arms." But the ZTCF shows that much of the downswing happens *automatically*, driven by the momentum and position stored during the backswing.
 
 The actual skill lies in:
@@ -81,7 +81,7 @@ This is why teaching golfers to "slow down their hips" often works: it's not abo
 
 ## Computing the ZTCF: Algorithm and Simulation
 
-{Computing the ZTCF Trajectory}{proc:ztcf_algorithm}
+### Computing the ZTCF Trajectory {#proc:ztcf_algorithm}
 Given the current state $\bm{x}(t_0) = (\bm{q}(t_0), \dot{\bm{q}}(t_0))$ at time $t_0$:
 
 1. **Capture the state:** Record the joint angles and angular velocities at the moment of interest (e.g., at mid-downswing).
@@ -121,7 +121,7 @@ This equation contains only gravity ($\bm{g}$) and the inertial mass matrix. It 
 
 :::
 
-{ZVCF vs ZTCF: What's the Difference?}{inplain:zvcf_vs_ztcf}
+### ZVCF vs ZTCF: What's the Difference? {#inplain:zvcf_vs_ztcf}
 The ZTCF assumes: "No muscles. Physics takes over."
 
 The ZVCF assumes: "No muscles *and* no momentum. Only gravity acts."
@@ -151,7 +151,7 @@ When DCR $\approx 1$, passive and active torques are comparable. When DCR $\gg 1
 
 :::
 
-{The DCR Tells You Who's in Charge}{constraint:dcr_meaning}
+### The DCR Tells You Who's in Charge {#constraint:dcr_meaning}
 The Drift-Control Ratio is a *control authority metric*. It asks: **How much is the system being driven by its own physics vs. by active muscle control?**
 
 - **Early backswing (DCR $\approx 0.5$--$1$):** Muscles and gravity are comparable. Active control is substantial.
@@ -188,7 +188,7 @@ In this illustrative estimate, by the time the club reaches impact, the Coriolis
 
 **Interpretation:** In this simplified interpretation, in the final 50 ms before impact, the golf swing is *not controlled*. It's a ballistic process, unfolding under its own inertial dynamics with muscles acting as tiny corrections. You cannot "accelerate" the club at impact—it's already accelerating at 50 times the rate your muscles can push. All you can do is guide the direction and refine the timing.
 
-{Why the DCR Blows Up}{inplain:dcr_blowup_reason}
+### Why the DCR Blows Up {#inplain:dcr_blowup_reason}
 Centrifugal and Coriolis torques scale with the *square of velocity*. Muscular torques scale with muscle activation, which is more or less constant. So as you accelerate the downswing—spinning your hips faster, extending your arm faster—the passive torques grow quadratically while muscular torques grow linearly (if at all; often muscles are relaxing, not activating).
 
 This means there's a *threshold velocity* beyond which the swing becomes ballistic. Once you cross that threshold, further speed comes from passive dynamics, not from muscular effort.
@@ -315,7 +315,7 @@ The accuracy of the ZTCF depends entirely on how well your model captures the tr
 
 :::
 
-{Why Model Errors Matter}{inplain:ztcf_model_error}
+### Why Model Errors Matter {#inplain:ztcf_model_error}
 Suppose your estimate of the club's moment of inertia is off by 20%. This affects how Coriolis torques scale. The ZTCF trajectory will diverge from the true counterfactual.
 
 This is why researchers spend so much effort on accurate biomechanical parameter estimation. The ZTCF analysis is only as good as the model underneath.
