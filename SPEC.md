@@ -27,7 +27,7 @@
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.28                                           |
+| **Spec Version**        | 1.0.29                                           |
 | **Last Spec Update**    | 2026-04-11                                       |
 
 ## 2. Purpose & Mission
@@ -173,6 +173,10 @@ AffineDrift/
 | F22 | Wrist-model Qt module split             | ✅     | The legacy `content/wrist-as-universal-joint/Universal_Joint_Model_Enhanced.py` launcher now delegates geometry, kinematics, Qt canvas rendering, and window assembly to focused modules under `src/tools/wrist_universal_joint`, keeping the entrypoint thin while preserving its public surface |
 | F23 | Analysis helper fallback logging        | ✅     | `src/tools/utils/analysis_utils.py` logs recoverable parse and file-read failures at debug level when it falls back to zeroed or empty analysis results, keeping repository-quality scans observable without turning invalid files into hard failures |
 | F24 | Developer test target coverage          | ✅     | `make test` runs Python `src/` coverage and JavaScript coverage so local developer checks exercise both primary test stacks before code reaches CI |
+| F25 | Workflow event-payload hardening        | ✅     | Comment, issue, and PR-body GitHub event payloads are passed through workflow `env:` values and shell-safe handling instead of being interpolated directly into `run:` scripts |
+| F26 | Wrist universal-joint ratio consistency | ✅     | The wrist universal-joint tools use the Cardan/Hooke transmission denominator without a square root, standardize ratio call sites with keyword arguments, and keep Streamlit cache decorators typed for mypy |
+| F27 | Batch converter package imports         | ✅     | Batch LaTeX conversion entrypoints import converter classes through package-qualified `src.tools.*` paths so they work under pytest and module execution |
+| F28 | Physics of Golf numeric consistency     | ✅     | Critical textbook checks pin the chapter 3 double-pendulum numerical example to the documented `M2 = 1.5 kg` parameter set so rendered values do not drift from the stated model |
 
 ### API / Interface Contract
 
@@ -446,6 +450,7 @@ python src/tools/code_quality_ast.py
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                      |
 | ---------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-04-11 | 1.0.29  | fix(critical): hardened workflow event payload handling, corrected wrist universal-joint ratio semantics, refreshed the chapter 3 double-pendulum numeric example, and restored package-qualified batch converter imports                                                                                                                                                    |
 | 2026-04-11 | 1.0.27  | fix(tools): prevented display math created from LaTeX `equation` environments in `src/tools/latex_to_html.py` from being wrapped twice, and added a regression test for the single-wrapper output |
 | 2026-04-11 | 1.0.26  | fix(testing): made `make test` run Python coverage before JavaScript coverage and removed the bare `pass` coverage exclusion so stubs remain visible in reports |
 | 2026-04-11 | 1.0.25  | fix(tools): made RL benchmark comparison honor the caller-provided `dt` when generating reference trajectories and added regression coverage for the reference time grid |
