@@ -176,6 +176,27 @@ class TestMPCFullReachable:
         assert monitor.mode == "LQR"
 
 
+class TestGolfChapter03NumericalExample:
+    """#2278: ch03 numerical example must use the table values consistently."""
+
+    def test_double_pendulum_worked_example_values(self) -> None:
+        """The published numerical example should match the stated masses."""
+        m1 = 2.5
+        m2 = 1.5
+        l1 = 0.35
+        l2 = 0.5
+        theta2 = np.deg2rad(-5.0)
+        theta1_dot = np.deg2rad(600.0)
+
+        m11 = 0.015 + m2 * l1**2 + m2 * l2**2 + 0.4 + 2 * m2 * l1 * l2 * np.cos(theta2)
+        g1 = (m1 * 0.175 + m2 * 0.35) * 9.81 * np.sin(0.0) + m2 * 9.81 * 0.5 * np.sin(theta2)
+        c21 = m2 * l1 * l2 * theta1_dot**2 * np.sin(theta2)
+
+        assert np.isclose(m11, 1.496752, atol=1e-6)
+        assert np.isclose(g1, -0.641248, atol=1e-6)
+        assert np.isclose(c21, -2.508895, atol=1e-6)
+
+
 # ---------------------------------------------------------------------------
 # Issue #1745: Linearization must use central differences
 # ---------------------------------------------------------------------------
