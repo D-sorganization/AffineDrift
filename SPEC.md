@@ -27,7 +27,7 @@
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.36                                           |
+| **Spec Version**        | 1.0.37                                           |
 | **Last Spec Update**    | 2026-04-11                                       |
 
 ## 2. Purpose & Mission
@@ -179,6 +179,7 @@ AffineDrift/
 | F27 | Batch converter package imports         | ✅     | Batch LaTeX conversion entrypoints import converter classes through package-qualified `src.tools.*` paths so they work under pytest and module execution                                                                                                                                                               |
 | F28 | Physics of Golf numeric consistency     | ✅     | Critical textbook checks pin the chapter 3 double-pendulum numerical example to the documented `M2 = 1.5 kg` parameter set so rendered values do not drift from the stated model                                                                                                                                       |
 | F29 | Wrist-model figure lifecycle            | ✅     | Wrist-model Streamlit visualizations create Matplotlib figures through the object-oriented `Figure` API and avoid resource-caching array-backed plot functions                                                                                                                                    |
+| F30 | Assessment category mappings            | ✅     | Repository assessment helpers keep `ASSESSMENT_DEFINITIONS` names synchronized with canonical A-N category labels so generated reports and category lookups use consistent terminology.                                                                                                                               |
 
 ### API / Interface Contract
 
@@ -454,6 +455,7 @@ python src/tools/code_quality_ast.py
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                      |
 | ---------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-04-11 | 1.0.37  | fix(assessment): synchronized `ASSESSMENT_DEFINITIONS` category names with the canonical A-N `CATEGORIES` map and added regression coverage for report-label consistency.                                                                                                                                       |
 | 2026-04-11 | 1.0.35  | fix(pwa): bounded the service-worker cache and surfaced update notices so stale offline content refreshes visibly without unbounded storage growth                                                                                                                                                                                                                           |
 | 2026-04-11 | 1.0.34  | fix(wrist): switched wrist-model Matplotlib helpers from pyplot state to object-oriented `Figure` construction and removed resource caching from array-backed plot functions.                                                                                                                                   |
 | 2026-04-11 | 1.0.33  | fix(ci): removed duplicate requirements installation from `ci-standard.yml`, enabled pip caching, allowed workflow-only changes to trigger CI, aligned PR auto-labeler path rules with the repository layout, and cleaned stale SPEC conflict markers.                                                          |
