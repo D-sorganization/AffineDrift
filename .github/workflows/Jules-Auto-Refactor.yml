@@ -53,7 +53,7 @@ jobs:
 
       - name: Install Tools
         run: |
-          pip install ruff isort autoflake
+          pip install ruff black isort autoflake
 
       - name: Configure Git
         run: |
@@ -127,10 +127,10 @@ jobs:
           ruff check --fix --unsafe-fixes "$TARGET" 2>/dev/null && \
             FIXES_APPLIED="$FIXES_APPLIED ruff-unsafe"
 
-          # 5. Ruff format
-          echo "Running ruff format..."
-          ruff format "$TARGET" 2>/dev/null && \
-            FIXES_APPLIED="$FIXES_APPLIED ruff-format"
+          # 5. Black formatting
+          echo "Running black..."
+          black "$TARGET" 2>/dev/null && \
+            FIXES_APPLIED="$FIXES_APPLIED black"
 
           echo "fixes=$FIXES_APPLIED" >> $GITHUB_OUTPUT
 
