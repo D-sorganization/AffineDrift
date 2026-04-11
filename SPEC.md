@@ -27,7 +27,7 @@
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.37                                           |
+| **Spec Version**        | 1.0.38                                           |
 | **Last Spec Update**    | 2026-04-11                                       |
 
 ## 2. Purpose & Mission
@@ -180,6 +180,7 @@ AffineDrift/
 | F28 | Physics of Golf numeric consistency     | ✅     | Critical textbook checks pin the chapter 3 double-pendulum numerical example to the documented `M2 = 1.5 kg` parameter set so rendered values do not drift from the stated model                                                                                                                                       |
 | F29 | Wrist-model figure lifecycle            | ✅     | Wrist-model Streamlit visualizations create Matplotlib figures through the object-oriented `Figure` API and avoid resource-caching array-backed plot functions                                                                                                                                    |
 | F30 | Assessment category mappings            | ✅     | Repository assessment helpers keep `ASSESSMENT_DEFINITIONS` names synchronized with canonical A-N category labels so generated reports and category lookups use consistent terminology.                                                                                                                               |
+| F31 | Dependency pinning and tool isolation   | ✅     | Root Python requirements use exact pins for reproducible CI installs while the Streamlit wrist tool keeps its optional UI-specific requirements in its local requirements file.                                                                                                                                        |
 
 ### API / Interface Contract
 
@@ -259,7 +260,7 @@ AffineDrift/
 **Python Configuration** (`pyproject.toml`):
 
 - Python version: 3.12
-- Dependencies pinned with version ranges
+- Core runtime dependencies pinned to exact versions in `requirements.txt`
 - Test discovery paths
 - Coverage configuration (minimum 50%)
 
@@ -353,25 +354,25 @@ AffineDrift follows a **test pyramid** strategy: unit tests form the base (fast,
 
 | Package        | Version | Purpose                                              |
 | -------------- | ------- | ---------------------------------------------------- |
-| numpy          | Latest  | Numerical computations for trajectory optimization   |
-| scipy          | Latest  | Scientific algorithms (optimization, linear algebra) |
-| matplotlib     | Latest  | Plotting and visualization of swing trajectories     |
-| pydantic       | Latest  | Data validation and runtime type checking            |
-| PyYAML         | Latest  | YAML configuration file parsing                      |
-| beautifulsoup4 | Latest  | HTML parsing for link checking and site analysis     |
-| requests       | Latest  | HTTP requests for external data fetching             |
-| streamlit      | Latest  | Interactive dashboard for visualization (optional)   |
+| numpy          | 2.4.4   | Numerical computations for trajectory optimization     |
+| scipy          | 1.17.1  | Scientific algorithms (optimization, linear algebra)  |
+| matplotlib     | 3.10.8  | Plotting and visualization of swing trajectories     |
+| pydantic       | 2.12.5  | Data validation and runtime type checking            |
+| PyYAML         | 6.0.3   | YAML configuration file parsing                      |
+| beautifulsoup4 | 4.14.3  | HTML parsing for link checking and site analysis     |
+| requests       | 2.33.1  | HTTP requests for external data fetching             |
+| streamlit      | 1.56.0  | Interactive dashboard for visualization *(optional tool dependency)* |
 
 ### Development Dependencies
 
 | Package    | Version | Purpose                          |
 | ---------- | ------- | -------------------------------- |
-| pytest     | Latest  | Testing framework                |
-| pytest-cov | Latest  | Coverage reporting               |
-| hypothesis | Latest  | Property-based testing library   |
-| ruff       | Latest  | Linting and code quality         |
-| black      | Latest  | Code formatting (100-char lines) |
-| mypy       | Latest  | Type checking                    |
+| pytest     | 8.3.5   | Testing framework                |
+| pytest-cov | 7.1.0   | Coverage reporting               |
+| hypothesis | 6.151.12 | Property-based testing library   |
+| ruff       | 0.15.9  | Linting and code quality         |
+| black      | 26.3.1  | Code formatting (100-char lines) |
+| mypy       | 1.20.0  | Type checking                    |
 | jest       | Latest  | JavaScript testing framework     |
 | playwright | Latest  | Browser automation for E2E tests |
 
@@ -397,6 +398,7 @@ AffineDrift follows a **test pyramid** strategy: unit tests form the base (fast,
 git clone https://github.com/D-sorganization/AffineDrift.git
 cd AffineDrift
 pip install -r requirements.txt
+pip install -r src/tools/wrist_universal_joint/requirements.txt  # optional, for Streamlit wrist tool
 npm install
 
 # Running tests
@@ -455,6 +457,7 @@ python src/tools/code_quality_ast.py
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                      |
 | ---------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-04-11 | 1.0.38  | chore(deps): pinned root Python dependencies exactly and isolated the optional Streamlit wrist-tool requirements in the tool-local requirements file while preserving documented setup steps.                                                                                                                     |
 | 2026-04-11 | 1.0.37  | fix(assessment): synchronized `ASSESSMENT_DEFINITIONS` category names with the canonical A-N `CATEGORIES` map and added regression coverage for report-label consistency.                                                                                                                                       |
 | 2026-04-11 | 1.0.35  | fix(pwa): bounded the service-worker cache and surfaced update notices so stale offline content refreshes visibly without unbounded storage growth                                                                                                                                                                                                                           |
 | 2026-04-11 | 1.0.34  | fix(wrist): switched wrist-model Matplotlib helpers from pyplot state to object-oriented `Figure` construction and removed resource caching from array-backed plot functions.                                                                                                                                   |
