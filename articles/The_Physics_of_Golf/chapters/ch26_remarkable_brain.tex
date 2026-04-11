@@ -1,27 +1,20 @@
-\chapter{Motor Control III: The Remarkable Brain}
+\chapter{Motor Control III: Biological Constraints and Human Performance}
 \label{ch:remarkable_brain}
 
-\epigraph{The brain does more in three hundred milliseconds than any computer in the world can do in three seconds. And yet, it shanks. This is the deepest truth about golf.}{}
-
 \begin{laymansbox}{What This Chapter Is About}{box:ch26_intro}
-We've learned how the brain controls the golf swing and how it learns. Now we step back and ask: how remarkable is what the brain actually accomplishes?
+The previous two chapters described how the nervous system controls the golf swing and how it learns. The present chapter takes a step back and asks about the scale of the problem the brain is solving --- not to celebrate the brain, but to understand which constraints matter for an engineering model of human swing control.
 
-When you swing a golf club, your brain is simultaneously:
+When a golfer swings a club, the central nervous system is simultaneously responsible for:
 \begin{itemize}
-\item Controlling roughly 200 muscles across 20+ joints
-\item Working with 30--50 millisecond neural delays
-\item Processing 80--150 millisecond sensory delays
-\item Generating force within 50--100 millisecond muscle activation delays
-\item Solving a nonlinear optimal control problem in real time
-\item Managing transitions between high-control and high-drift phases
-\item Doing all of this in 300 milliseconds with only 20 watts of power
+\item coordinating on the order of a few hundred muscles acting across roughly twenty skeletal joints;
+\item issuing motor commands through a corticospinal pathway whose transmission delay is a few tens of milliseconds;
+\item waiting for proprioceptive feedback on a similar timescale and visual feedback on a somewhat longer one;
+\item commanding actuators (skeletal muscle) whose force response rises over a similar several-tens-of-milliseconds envelope;
+\item doing this in a downswing whose entire duration is only a few hundred milliseconds.
 \end{itemize}
+Each of these timescales is drawn from the neurophysiology and motor-control literature \cite{Kandel2013, shadmehr2005computational, shadmehr2010computational}.
 
-No robot can currently do this. No engineered control system has come close. Yet the human brain does it every day, without conscious effort. This is the chapter that asks: how? And what does this remarkable biological achievement reveal about the organization of intelligent motor control?
-
-We also ask the inverse question: why does the brain occasionally fail catastrophically? Why do the yips happen? Why do skilled golfers sometimes choke? The answers reveal surprising truths about how the brain works.
-
-Finally, we consider what the brain's motor control strategies reveal about the principles of intelligent control more broadly.
+No currently deployed robotic platform reproduces the combination of speed, precision, adaptability, and energy efficiency that a skilled human achieves in this task; whether any future one will is a research question, not a closed matter. Here we ask the narrower engineering question: given the timing and signal constraints listed above, what class of controller is compatible with observed human performance? We also ask the inverse question --- why does this controller occasionally fail in dramatic ways (the yips, choking under pressure) --- because those failures tell us as much about the control architecture as the successes do.
 \end{laymansbox}
 
 \section{The Scale of the Problem the Brain Solves}
@@ -320,7 +313,7 @@ Why? The internal model has learned something about the general transformation--
 \index{internal models}
 \index{motor control}
 
-The brain's approach to learning the golf swing differs fundamentally from engineered control systems. Understanding these differences illuminates why biological motor control achieves such remarkable performance under the severe constraints outlined above.
+The brain's approach to learning the golf swing differs in several concrete ways from classical engineered control systems. The differences are worth articulating because they suggest which engineering ideas are likely to transfer to the biological case and which are not.
 
 \subsection{Distinctive Features of Biological Motor Learning}
 \label{subsec:ch26_brain_vs_ai_learning}

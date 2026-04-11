@@ -19,14 +19,14 @@ can be rewritten in a form that separates passive physics from active control:
 \label{eq:ch05_affine_repeat}
 \end{equation}
 
-This is the \textbf{control-affine form}\index{control-affine}. It says:
+This is the \textbf{control-affine form}\index{control-affine}, a standard object in nonlinear control theory \cite{Isidori1995, Khalil2002}. It says:
 \begin{itemize}
 \item The system evolves in state space ($\bm{x}$).
 \item Left alone, the system follows the \textbf{drift} $\bm{f}(\bm{x})$.
 \item Your muscles add a \textbf{control} term $\bm{G}(\bm{x}) \bm{u}$ on top.
 \end{itemize}
 
-This decomposition is the key to understanding the golf swing. It's where drift and control become concrete.
+The control-affine structure is central to the analysis in this book for a reason that is easy to state: it is the largest class of nonlinear systems in which the contribution of the input is additive and therefore linearly separable from the passive dynamics. A generic nonlinear system $\dot{\bm{x}} = F(\bm{x}, \bm{u})$ does not admit such a separation. Mechanical systems derived from a Lagrangian with control torques entering linearly in the generalized forces do, and the golfer--club system is one of them \cite{Murray1994}.
 \end{laymansbox}
 
 \section{From Equations of Motion to State Space}
@@ -113,7 +113,7 @@ where:
 \item $\bm{u}$ is the \textbf{control input}.
 \end{itemize}
 
-The term ``affine'' means the system is linear in the control but possibly nonlinear in the state.
+The term ``affine'' means the system is linear in the control but possibly nonlinear in the state. The class is treated in depth in standard references on nonlinear control \cite{Isidori1995, Khalil2002}, and its application to mechanical systems is developed in \cite{Murray1994}.
 \end{definition}
 
 \begin{laymansbox}{Why ``Affine'' Matters}{box:ch05_why_affine}
@@ -259,15 +259,13 @@ In the golf swing, the drift is the natural motion of your arm under gravity and
 The control matrix $\bm{G}(\bm{x})$ depends on the state (specifically, on the configuration $\bm{q}$). This is the leverage: how much does a given muscle torque affect the state acceleration?
 
 \begin{example}{Control Leverage at Different Configurations}{ex:ch05_leverage}
-The inverse mass matrix $\bm{M}^{-1}(\bm{q})$ tells you the leverage.
+The inverse mass matrix $\bm{M}^{-1}(\bm{q})$ is the leverage operator: it maps applied torques to resulting accelerations. Its diagonal entries are particularly interpretable --- $M^{-1}_{ii}$ gives the angular acceleration of the $i$-th generalized coordinate per unit of applied torque, with all other torques held at zero.
 
-\textbf{At address} ($\theta_1 = 0°, \theta_2 = 0°$): the arm is extended. The moment of inertia is high ($M_{11} \approx 2.22$ kg m$^2$). So $M^{-1}_{11} \approx 0.45$ rad/s$^2$ per N m. A 50 N m torque produces $50 \times 0.45 = 22.5$ rad/s$^2$ of acceleration.
+\textbf{At address} ($\theta_1 = 0^\circ$, $\theta_2 = 0^\circ$), using the double-pendulum parameters adopted in Chapter~\ref{ch:03_double_pendulum} ($L_1 = 0.35$~m, $M_1 = 2.5$~kg, $L_2 = 1.0$~m, $M_2 = 1.5$~kg, with the point-mass-at-CM approximation), a direct calculation of $M_{11}(\bm{q}) = I_1 + I_2 + M_2 L_1^2 + 2 M_2 L_1 L_{2,\mathrm{cm}} \cos\theta_2$ gives $M_{11} \approx 2.19$~kg~m$^2$, so $M^{-1}_{11} \approx 0.46$~(rad/s$^2$)/(N~m). An arbitrary order-of-magnitude shoulder torque on the order of tens of N~m therefore produces an order-of-magnitude angular acceleration of tens of rad/s$^2$ at address. We deliberately avoid stating a single ``typical'' torque number here because the peak shoulder torques reported in the golf biomechanics literature span roughly an order of magnitude across amateur and professional populations \cite{Nesbit2005, Mackenzie2006}; Chapter~\ref{ch:kinetic_chain} discusses the reported ranges in detail.
 
-\textbf{At the top of the backswing} ($\theta_1 = 150°, \theta_2 = -70°$): the arm is bent. The effective moment of inertia is lower. So $M^{-1}_{11}$ is higher. A given muscle torque produces a larger acceleration.
+\textbf{At the top of the backswing} ($\theta_1 \approx 150^\circ$, $\theta_2 \approx -70^\circ$), the elbow angle brings the second link closer to the shoulder axis, so the rigid-body term $2 M_2 L_1 L_{2,\mathrm{cm}} \cos\theta_2$ becomes small (and briefly negative), pulling $M_{11}$ down. Consequently $M^{-1}_{11}$ rises and a given muscle torque produces a larger angular acceleration.
 
-Wait, that doesn't sound right. If the arm is shorter (bent), shouldn't it be harder to accelerate?
-
-Actually, no. The \textbf{moment of inertia} is lower (because the mass is closer to the axis). So $M^{-1}$ is higher (easier to accelerate). This is why it's easier to accelerate a bent arm than an extended one.
+This initially sounds wrong --- surely a shorter lever should be ``harder'' to accelerate? --- but it is exactly what the mass matrix tells us. A bent arm has a smaller moment of inertia about the shoulder because the mass is closer to the axis, and so it is easier to accelerate angularly. This is the same physics that makes a figure skater spin up when she pulls her arms in.
 \end{example}
 
 \section{The Drift-to-Control Ratio (DCR)}
@@ -289,14 +287,25 @@ If DCR is low, muscles dominate. Drift contributes little.
 The DCR varies throughout the swing.
 
 \begin{laymansbox}{Reading the DCR}{box:ch05_reading_dcr}
-The Drift-to-Control Ratio answers a simple question: \emph{how much of the motion is physics, and how much is you?}
+The Drift-to-Control Ratio answers a simple question: \emph{how much of the instantaneous state derivative is generated by the passive dynamics, and how much by the active input?}
 \begin{itemize}
-\item $\dcr < 1$: Your muscles dominate. You are actively pushing and pulling the system. This is the backswing and early downswing.
-\item $\dcr \approx 1$--$5$: Muscles and physics contribute roughly equally. This is mid-downswing.
-\item $\dcr > 10$: Physics dominates. Gravity, centrifugal, and Coriolis forces are carrying the motion. Muscular torques are small corrections. This is late downswing and impact.
-\item $\dcr > 50$: The swing is effectively on autopilot. Your muscles cannot meaningfully alter the trajectory. This is the last 50 milliseconds before impact.
+\item $\dcr \ll 1$: active torques dominate the state derivative. The system is in a control-authoritative regime --- the muscles decide where it goes next. The static phases of the swing (address, the static portion of the backswing, the transition pause at the top) live here.
+\item $\dcr \sim 1$: the two contributions are comparable. This is where the classical "riding the drift" observation applies --- small changes in input have meaningful but not overwhelming effect.
+\item $\dcr \gg 1$: passive terms dominate. Gravity, centrifugal, and Coriolis effects grow quadratically with joint velocity, and by mid- to late-downswing the passive contribution typically exceeds the active contribution in any simulation we have run against the Chapter~\ref{ch:03_double_pendulum} parameters. Muscular torques become small corrections.
 \end{itemize}
-The practical implication: if you want to change impact conditions, you must act \emph{early}, while DCR is still low enough for muscles to matter.
+We deliberately avoid fixing numerical thresholds (such as ``$\dcr > 50$ means the swing is on autopilot'') in the definition itself. Threshold values depend on how $|\bm{f}|$ and $|\bm{G}\bm{u}|$ are normed, on the specific parameters of the pendulum model, and on whether the ratio is evaluated jointwise or aggregated into a single scalar. Two reasonable choices of norm can give answers that differ by an order of magnitude. The practical takeaway is the qualitative one: if you want to change impact conditions, you must act \emph{early}, while the input is still competing on equal terms with the drift. The numerical quantification of when this window closes requires a simulation with stated parameters (see Chapter~\ref{ch:14_complete_swing}).
+\end{laymansbox}
+
+\begin{laymansbox}{Technical Note on DCR and Its Norms}{box:ch05_dcr_norms}
+A formally careful reader will object that the quantity
+\[
+\dcr = \frac{|\bm{f}(\bm{x})|}{|\bm{G}(\bm{x})\bm{u}|}
+\]
+is not a pure number without further specification. The drift vector field $\bm{f}$ and the input contribution $\bm{G}\bm{u}$ are vectors in a tangent space whose components can have mixed units (angles and angular velocities in the state-space form, or generalized forces if the ratio is taken at the level of $\bm{\tau}$). Two choices make this precise. The first is a jointwise scalar:
+\[
+\dcr_i = \frac{\big|[\bm{M}^{-1}(\bm{C}\dot{\bm{q}} + \bm{g})]_i\big|}{\big|[\bm{M}^{-1}\bm{\tau}]_i\big|}
+\]
+evaluated at each generalized coordinate $i$, which gives a per-joint number without any cross-coordinate aggregation. The second is a matrix-norm ratio based on a chosen inner product on the tangent space (typically the inertia-weighted inner product, in which case the numerator becomes the energy rate of change from passive forces). Throughout this book we use the per-joint form unless stated otherwise and we report the drift/control magnitudes separately rather than a single scalar when the distinction matters. Readers interested in the formal mathematics should consult the geometric control literature \cite{Khalil2002}.
 \end{laymansbox}
 
 \subsection*{Address: Low DCR}
@@ -370,30 +379,12 @@ This is what coaches mean by ``let the club do the work,'' ``don't muscle the sw
 
 It's not mystical. It's physics.
 
-\begin{example}{A Tour Pro Descending}{ex:ch05_tour_pro}
-A tour professional at the top of the backswing:
+\begin{example}{A Schematic Tour Pro Descent}{ex:ch05_tour_pro}
+Consider a schematic descent traced through state space by the control-affine decomposition. We describe it qualitatively rather than putting numbers on it, because peak torques, timing windows, and muscle loads vary widely across golfer populations and are reported in the biomechanics literature with a wide spread \cite{Nesbit2005, Mackenzie2006}. The numerical illustrations needed to make this concrete live in Chapter~\ref{ch:14_complete_swing}, where we trace the double-pendulum trajectory end to end with stated parameters.
 
-1. \textbf{Recognizes} the state: $\theta_1 = 150°$, velocities near zero, gravity pulling with $\approx 30$ N m.
+At the top of the backswing, the state has $\theta_1$ near its maximum and both velocities near zero. Gravity supplies a nontrivial drift torque; centrifugal and Coriolis contributions are small because $\dot{\bm{q}}$ is small. A skilled golfer \emph{initiates} the downswing by adding a modest active torque on top of this drift, then --- and this is the structural observation --- progressively \emph{reduces} the active torque as the velocity-dependent drift builds. The passive terms in $\bm{f}(\bm{x})$ grow quadratically in the angular velocities, so what started as a control-dominated regime at the transition becomes drift-dominated by the middle of the downswing. Near impact, active muscular effort is small relative to the passive contributions, and the swing finishes largely on the momentum it has accumulated.
 
-2. \textbf{Initiates transition}: applies modest muscular torque at the transition, approximately 20 N m.
-
-3. \textbf{Feels the drift accelerating}: as the arm starts to rotate, centrifugal forces build. These add to gravity, accelerating the arm faster than the initial muscular torque would.
-
-4. \textbf{Modulates control}: instead of increasing muscular force, the pro \emph{decreases} it or even applies a small braking force. The drift is already accelerating faster than desired.
-
-5. \textbf{Releases at impact}: at the optimal moment, applies a final muscular acceleration at the wrist (the release) to synchronize the clubhead speed with the target.
-
-6. \textbf{Follow-through}: after impact, gravity and momentum carry the club. No more muscular effort needed.
-
-Total muscular effort: approximately 60--80 N m generated over the whole swing, with a distribution that works with physics rather than against it.
-
-Compare to a novice:
-
-1. At the top, applies 40 N m to start the downswing.
-2. Applies 40 N m throughout, fighting the increasing drift.
-3. At impact, applies 50 N m, overaccelerating.
-4. Total muscular effort: approximately 150+ N m, much more, and inconsistent because the novice is constantly fighting the passive forces instead of working with them.
-
+A less efficient swing pattern looks qualitatively different in the same picture: the active torque is not reduced as the drift builds, so the golfer continues to add muscular effort when the vector field is already delivering acceleration, and the two contributions compete rather than compound. Energetically the latter strategy costs more muscular work for the same (or a smaller) clubhead speed. The affine framework makes this observation formal; what the numbers look like in any individual swing is a simulation question, not a theoretical one.
 \end{example}
 
 \section{The Geometry of the Golf Swing}

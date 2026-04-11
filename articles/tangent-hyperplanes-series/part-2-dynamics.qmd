@@ -1,11 +1,13 @@
 ---
 title: "Tangent Hyperplanes II: Dynamics"
 description: "Infinitesimal dynamics and moving tangent spaces."
+bibliography: ../../references/affine-drift.bib
+csl: ../../references/chicago-author-date.csl
 ---
 
-## The Hidden Linearity of Nonlinear Systems
+## Linearization Along a Nonlinear Trajectory
 
-Now here's where it gets interesting. The tangent space isn't just a geometric curiosity — it's where dynamics live. Consider a nonlinear dynamical system:
+The tangent-space construction becomes useful when applied to a flow. Consider a smooth nonlinear dynamical system:
 
 $$
 \dot{x} = f(x, u)
@@ -13,9 +15,9 @@ $$
 
 where $x \in \mathbb{R}^n$ is the state, $u \in \mathbb{R}^m$ is the control input, and $f$ is a smooth vector field. This system is genuinely nonlinear. The future state depends on $x$ in a complex, nonlinear way.
 
-But here is the key insight: **At every instant, the equations of motion decompose into a linear system on the tangent space. The matrices A(t) and B(t) — the Jacobians of the dynamics — encode the system's instantaneous behavior with complete fidelity.**
+At a specified reference trajectory, the first variation of the dynamics is linear. The matrices $A(t)$ and $B(t)$ are the Jacobians of the vector field evaluated along that trajectory. They encode the instantaneous first-order response of the system, not the full finite-amplitude nonlinear flow.
 
-This is not saying that the system is "approximately linear." It is saying that the derivative itself — the infinitesimal response to perturbations — *is* a linear operator, by definition.
+This is the standard variational equation used in nonlinear systems analysis and trajectory optimization [@khalil2002nonlinear; @slotine1991applied; @tedrake2023underactuated].
 
 ## Linearization Along a Reference Trajectory
 
@@ -31,7 +33,7 @@ $$
 \dot{x̄}(t) + \delta\dot{x}(t) = f(x̄(t) + \delta x(t), ū(t) + \delta u(t))
 $$
 
-Subtracting the reference trajectory equation and expanding the right-hand side to first order using the Taylor series:
+Subtracting the reference trajectory equation and expanding the right-hand side to first order gives:
 
 $$
 f(x̄ + \delta x, ū + \delta u) = f(x̄, ū) + \frac{\partial f}{\partial x}\bigg|_{(x̄,ū)} \delta x + \frac{\partial f}{\partial u}\bigg|_{(x̄,ū)} \delta u + O(\|\delta x\|^2, \|\delta u\|^2)
@@ -53,27 +55,27 @@ $$
 B(t) = \frac{\partial f}{\partial u}\bigg|_{(x̄(t),ū(t))}
 $$
 
-These are $n \times n$ and $n \times m$ matrices, respectively, evaluated along the reference trajectory at each time $t$.
+These are $n \times n$ and $n \times m$ matrices, respectively, evaluated along the reference trajectory at each time $t$. The omitted terms are second order in the perturbations.
 
 ## Moving Tangent Spaces
 
 ![Moving tangent spaces](./figures/moving_tangent.svg)
 
-The tangent space at the reference state $x̄(t)$ is exactly the space in which this linear system evolves. As the system evolves, the reference state moves along the trajectory, and the tangent space moves with it. At each instant $t$, the tangent hyperplane is:
+The tangent space at the reference state $x̄(t)$ is the space in which this first-order perturbation model evolves. As the reference state moves, the tangent space moves with it. At each instant $t$, the tangent hyperplane is:
 
 $$
 H_{x̄(t)} = x̄(t) + T_{x̄(t)} M
 $$
 
-The perturbation $\delta x(t)$ lives in this moving linear subspace. The matrices $A(t)$ and $B(t)$ describe how perturbations grow or shrink within this space.
+The perturbation $\delta x(t)$ lives in this moving linear subspace. The matrices $A(t)$ and $B(t)$ describe how first-order perturbations grow, shrink, or couple within it.
 
-## Superposition: Exact, Not Approximate
+## Superposition in the Variational Equation
 
-Here is a crucial property: **Within each tangent space, superposition holds exactly. Two small perturbations combine linearly. This is not an approximation — it's the definition of the derivative.**
+The variational equation is linear. Therefore, within that equation, superposition holds exactly:
 
 If $\delta x_1(t)$ is a solution to $\delta\dot{x} = A(t)\delta x + B(t)\delta u_1$ and $\delta x_2(t)$ is a solution to $\delta\dot{x} = A(t)\delta x + B(t)\delta u_2$, then $\delta x_1(t) + \delta x_2(t)$ is exactly a solution to $\delta\dot{x} = A(t)\delta x + B(t)(\delta u_1 + \delta u_2)$.
 
-This is true to machine precision (within numerical error only) because we are working with the definition of linearity itself. The tangent space is a linear space, and the linearized dynamics preserve linearity.
+This statement is about the linearized perturbation model. The original nonlinear system does not generally superpose over finite perturbations, because the second-order and higher-order terms introduce interactions.
 
 ## The State Transition Matrix
 
@@ -89,20 +91,20 @@ $$
 \delta x(t) = \Phi(t, t_0)\delta x(t_0) + \int_{t_0}^{t} \Phi(t, \tau) B(\tau) \delta u(\tau) \, d\tau
 $$
 
-This is the exact solution to the perturbation equation, valid to all orders in the perturbation variables themselves (since the perturbation equation is linear).
+This is the exact solution of the linear perturbation equation. Its accuracy as a prediction of the nonlinear system depends on the size of the neglected remainder terms.
 
 ## Limitations: Finite Perturbations and Nonlinearity
 
 The linearized system is exact infinitesimally. For finite perturbations, the story is more complicated:
 
 :::{.callout-warning}
-**Higher-Order Terms Neglected:** The error from dropping $O(\|\delta x\|^2, \|\delta u\|^2)$ terms is bounded but non-zero. The bound is proportional to the square of the perturbation size. If you double the perturbation, the error quadruples.
+**Higher-Order Terms Neglected:** The error from dropping $O(\|\delta x\|^2, \|\delta u\|^2)$ terms is bounded under smoothness assumptions but non-zero. Locally, the leading bound scales quadratically with perturbation size.
 
 **Superposition Breaks Down:** Superposition holds exactly for the linearized system. But when you add the higher-order correction terms back in, two small perturbations no longer combine linearly — there are interaction terms.
 
 **Validity Range:** The linearized system is trustworthy only when $\|\delta x(t)\|$ and $\|\delta u(t)\|$ remain small. In nonlinear systems, small initial perturbations can grow exponentially. Eventually, the linearization fails.
 :::
 
-## Looking Ahead
+## Next
 
-The fact that we can extract a linear system from nonlinear dynamics — and that this linear system is exact infinitesimally — opens the door to using powerful control tools. In [Part 3](./part-3-control.qmd), we will see how differential dynamic programming and iterative linear-quadratic regulation exploit this fact to design nonlinear controllers.
+The variational equation is the entry point for local control design. [Part 3](./part-3-control.qmd) explains how LQR, DDP, and iLQR use this first-order structure.

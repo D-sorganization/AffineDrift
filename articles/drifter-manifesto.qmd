@@ -4,6 +4,8 @@ subtitle: "A Control-Affine Framework for Golf Swing Biomechanics"
 description: "The foundational theory series establishing the control-affine framework for golf swing analysis, including drift/input decomposition, ZTCF, ZVCF, drift invariance, and numerical implementation."
 author: "Dieter Olson"
 date: today
+bibliography: ../references/affine-drift.bib
+csl: ../references/chicago-author-date.csl
 format:
   html:
     toc: true
@@ -16,7 +18,7 @@ format:
 
 The Drifter Manifesto is the primary theoretical reference for AffineDrift. It establishes the control-affine framework, introduces key concepts (ZTCF, ZVCF, Drift-Control Ratio), and provides the notation used throughout all AffineDrift research.
 
-**Provenance:** The control-affine form $\dot{x} = f(x) + g(x)u$ is established control theory (Isidori 1995; Nijmeijer & van der Schaft 1990). The drift/input decomposition, ZTCF, and DCR applied to golf biomechanics are original AffineDrift synthesis — not peer-reviewed. See [Critiques & Responses](../critiques/index.html) for documented limitations.
+**Provenance:** The control-affine form $\dot{x} = f(x) + g(x)u$ is established nonlinear-control material [@isidori1995nonlinear; @nijmeijer1990nonlinear; @khalil2002nonlinear]. The geometric treatment used here follows @bullo2004geometric and @bloch2003nonholonomic, and the recursive multibody foundations follow @featherstone2008rigid, @murray1994mathematical, and @lynch2017modern. The drift/input decomposition, ZTCF, and DCR applied to golf biomechanics are original AffineDrift synthesis and are not peer-reviewed. See [Critiques & Responses](../critiques/index.html) for documented limitations.
 :::
 
 
@@ -27,7 +29,7 @@ The Drifter Manifesto is the primary theoretical reference for AffineDrift. It e
 ::: {.callout-note}
 ### Novelty Status
 
-- **Established (textbook):** Control-affine system formulation $\dot{x} = f(x) + g(x)u$; Lagrangian derivation of rigid-body multibody dynamics; tangent space linearization.
+- **Established (textbook):** Control-affine system formulation $\dot{x} = f(x) + g(x)u$ [@isidori1995nonlinear; @nijmeijer1990nonlinear; @khalil2002nonlinear]; Lagrangian derivation of rigid-body multibody dynamics [@goldstein2002classical; @lanczos2012variational; @arnold1989mathematical]; tangent space linearization.
 - **Novel application:** Applying the drift/input decomposition to golf biomechanics; the "Frozen Strategy" assumption for biological impedance; defining ZTCF and ZVCF as diagnostic tools for swing analysis.
 - **Terminology:** The terms "drift" and "input" are standard in nonlinear control. "Zero Torque Counterfactual (ZTCF)" and "Zero Velocity Counterfactual (ZVCF)" are the authors' naming for these constructions in the golf context.
 :::
@@ -159,7 +161,7 @@ The aim of this manuscript is to establish a rigorous, strictly theoretical foun
 -   **Drift forces** arising purely from passive, state-dependent mechanical dynamics, and
 -   **Input forces** arising solely from actively applied joint torques.
 
-The key mathematical observation is that the golfer--club--shaft system can be modeled as a *nonlinear control-affine mechanical system*. Control-affine systems admit an additive decomposition of their dynamics into passive drift and linear control input channels. Once the affine structure is established, counterfactual tools such as the *Zero Torque Counterfactual* (ZTCF) and *Zero Velocity Counterfactual* (ZVCF) follow naturally and enable clean mechanical attribution of forces within the model.
+The key mathematical observation is that the golfer--club--shaft system can be modeled as a *nonlinear control-affine mechanical system* [@isidori1995nonlinear; @bullo2004geometric]. Control-affine systems admit an additive decomposition of their dynamics into passive drift and linear control input channels [@nijmeijer1990nonlinear, Ch.~2]. Once the affine structure is established, counterfactual tools such as the *Zero Torque Counterfactual* (ZTCF) and *Zero Velocity Counterfactual* (ZVCF) follow naturally and enable clean mechanical attribution of forces within the model. The broader programme of using counterfactual reasoning to attribute causal structure to dynamical systems is laid out by @pearl2009causality; here we specialize that programme to the mechanical setting by exploiting the linear-in-input structure of the equations of motion.
 
 This paper is *Part I* of a broader project. It develops the theoretical architecture only---no simulation, numerical results, or empirical data are presented here. Subsequent papers (Parts II and III) will implement and validate this framework using high-fidelity multibody simulations, flexible-shaft modeling, and experimental motion-capture data. By isolating the theory in this manuscript, we ensure that the mathematical structure is complete, self-contained, and available for independent scrutiny before numerical or empirical layers are added.
 
@@ -203,13 +205,13 @@ To translate these assumptions into a rigorous mathematical structure, we must f
 
 #### Generalized coordinates and state
 
-The golfer's anatomy is modeled as a multibody kinematic chain with generalized coordinates $q \in \mathbb{R}^{n}$, each representing a rotational degree of freedom (e.g., shoulder rotations, elbow flexion, wrist deviations, spinal rotations). Any standard representation (Denavit--Hartenberg parameters, exponential coordinates, or spatial vectors) is admissible. The configuration space for the rigid segments is a smooth manifold $\mathcal{Q}_r$, typically a product of Lie groups (e.g., $SE(3) \times \mathbb{T}^k$).
+The golfer's anatomy is modeled as a multibody kinematic chain with generalized coordinates $q \in \mathbb{R}^{n}$, each representing a rotational degree of freedom (e.g., shoulder rotations, elbow flexion, wrist deviations, spinal rotations). Any standard representation (Denavit--Hartenberg parameters, exponential coordinates [@murray1994mathematical; @lynch2017modern], or spatial vectors [@featherstone2008rigid]) is admissible. The configuration space for the rigid segments is a smooth manifold $\mathcal{Q}_r$, typically a product of Lie groups (e.g., $SE(3) \times \mathbb{T}^k$).
 
 The flexible shaft is modeled via a finite-dimensional modal approximation with modal coordinates
 
 $$\eta = [\eta_{1}, \dots, \eta_{m}]^{T} \in \mathbb{R}^{m},$$
 
-where each $\eta_{i}$ represents the amplitude of a particular bending or deformation mode. The total configuration manifold is the smooth product manifold $\mathcal{Q} = \mathcal{Q}_r \times \mathbb{R}^m$ of dimension $N = n+m$.
+where each $\eta_{i}$ represents the amplitude of a particular bending or deformation mode. Finite-dimensional modal reduction of a distributed Euler--Bernoulli or Timoshenko beam clamped at the hand and free at the tip is the standard approach to flexible-link robotic systems [@book1984recursive; @clough1993dynamics; @meirovitch2010methods]. The total configuration manifold is the smooth product manifold $\mathcal{Q} = \mathcal{Q}_r \times \mathbb{R}^m$ of dimension $N = n+m$.
 
 We formalize the golfer--club system as a simple mechanical system $(Q, \mathbb{G}, V)$, where the configuration space $Q$ is a smooth manifold of dimension $N = n+m$. We endow $\mathcal{Q}$ with a Riemannian metric $\mathbb{G}$ defined by the kinetic energy tensor $M(q, \eta)$. For any tangent vector $v_q \in T_q \mathcal{Q}$, the kinetic energy is given by the quadratic form: $$T(v_q) = \frac{1}{2} \langle v_q, v_q \rangle_{\mathbb{G}} = \frac{1}{2} v_q^T M(q,\eta) v_q.$$
 
@@ -217,7 +219,7 @@ The dynamics of the system evolve on the **tangent bundle** $T\mathcal{Q}$, the 
 
 In plainer terms: the state vector $x$ captures both *where* every part of the system is (the joint angles $q$ and shaft bend $\eta$) and *how fast* each is moving ($\dot{q}$ and $\dot{\eta}$). Just as you need both a car's position on a highway and its speed to predict where it will be in five seconds, the physics needs both configuration and velocity to predict what comes next. The tangent bundle is simply the mathematical name for the space of all possible "where + how fast" combinations.
 
-The equations of motion are generated by the **Levi-Civita connection** $\nabla$ associated with the metric $\mathbb{G}$. The drift vector field $f(x)$ is formally the **geodesic spray** $S: T\mathcal{Q} \to TT\mathcal{Q}$ of the metric, modified by the vertical lift of the potential and dissipative forces. Explicitly, if $\nabla_{\dot{x}}\dot{x}$ represents the covariant acceleration, the unforced dynamics satisfy $\nabla_{\dot{x}}\dot{x} = -M^{-1}(\nabla V + F_{dissip})$. This geometric definition ensures that $f(x)$ is a coordinate-independent object—a global section of the tangent bundle—guaranteeing that our decomposition is intrinsic to the mechanics, not an artifact of the choice of variables.
+The equations of motion are generated by the **Levi-Civita connection** $\nabla$ associated with the metric $\mathbb{G}$. The drift vector field $f(x)$ is formally the **geodesic spray** $S: T\mathcal{Q} \to TT\mathcal{Q}$ of the metric, modified by the vertical lift of the potential and dissipative forces [@bullo2004geometric, Ch.~4; @bloch2003nonholonomic, Ch.~3]. Explicitly, if $\nabla_{\dot{x}}\dot{x}$ represents the covariant acceleration, the unforced dynamics satisfy $\nabla_{\dot{x}}\dot{x} = -M^{-1}(\nabla V + F_{dissip})$. This geometric definition ensures that $f(x)$ is a coordinate-independent object—a global section of the tangent bundle—guaranteeing that our decomposition is intrinsic to the mechanics, not an artifact of the choice of variables.
 
 ::: callout-note
 ### Note on Constrained Subsystems (The Wrist)
@@ -342,7 +344,7 @@ For reference, the following table summarizes the main symbols used in the manus
 
 ### Unified control-affine derivation (rigid + flexible system)
 
-To rigorously identify the causal contribution of muscular torque, we must derive the equations of motion in a form that explicitly separates active inputs from passive dynamics. We employ the **Lagrangian formalism** to generate the dynamics, ensuring energy consistency, and then transform the result into **control-affine state space form** to isolate the input channels.
+To identify the causal contribution of muscular torque, we derive the equations of motion in a form that explicitly separates active inputs from passive dynamics. We employ the **Lagrangian formalism** [@goldstein2002classical; @lanczos2012variational] to generate the dynamics, ensuring energy consistency, and then transform the result into **control-affine state space form** [@khalil2002nonlinear; @isidori1995nonlinear] to isolate the input channels.
 
 #### Lagrangian formulation
 
@@ -356,7 +358,7 @@ The total kinetic energy $T$ is the integral of the squared velocity over the sy
 
 ##### 2. Coriolis and Centrifugal Fields
 
-Expanding the time derivative $\frac{d}{dt}(M \dot{q}_{\text{sys}})$ yields velocity-dependent inertial forces: $$\frac{d}{dt}(M \dot{q}_{\text{sys}}) = M \ddot{q}_{\text{sys}} + \dot{M} \dot{q}_{\text{sys}}.$$ Combined with the partial derivative $-\frac{\partial T}{\partial q_{\text{sys}}}$, these form the Coriolis and centrifugal matrix $C(q_{\text{sys}}, \dot{q}_{\text{sys}})$, defined component-wise by Christoffel symbols of the first kind: $$C_{kj} = \sum_{i=1}^{n+m} \frac{1}{2} \left( \frac{\partial M_{kj}}{\partial q_i} + \frac{\partial M_{ki}}{\partial q_j} - \frac{\partial M_{ij}}{\partial q_k} \right) \dot{q}_i.$$ A critical property for stability analysis is that $\dot{M} - 2C$ is skew-symmetric, reflecting the conservation of energy in the absence of work-doing forces.
+Expanding the time derivative $\frac{d}{dt}(M \dot{q}_{\text{sys}})$ yields velocity-dependent inertial forces: $$\frac{d}{dt}(M \dot{q}_{\text{sys}}) = M \ddot{q}_{\text{sys}} + \dot{M} \dot{q}_{\text{sys}}.$$ Combined with the partial derivative $-\frac{\partial T}{\partial q_{\text{sys}}}$, these form the Coriolis and centrifugal matrix $C(q_{\text{sys}}, \dot{q}_{\text{sys}})$, defined component-wise by Christoffel symbols of the first kind: $$C_{kj} = \sum_{i=1}^{n+m} \frac{1}{2} \left( \frac{\partial M_{kj}}{\partial q_i} + \frac{\partial M_{ki}}{\partial q_j} - \frac{\partial M_{ij}}{\partial q_k} \right) \dot{q}_i.$$ A property repeatedly exploited in stability analysis is that $\dot{M} - 2C$ is skew-symmetric, reflecting the conservation of energy in the absence of work-doing forces [@spong2005robot, §6; @siciliano2010robotics, §7.3].
 
 ##### 3. Potentials and Dissipation
 
@@ -2571,7 +2573,7 @@ The algorithms in this appendix show how ZTCF and ZVCF are computed numerically 
 
 This concludes the five-part theoretical exposition of the AffineDrift project. We began in Part I by constructing the control-affine state space $\dot{x} = f(x) + g(x)u$, proving that the mechanical structure of the golfer--club system inherently separates passive drift from active input. In Part II, we exploited this separation to define the Zero Torque and Zero Velocity counterfactuals, shifting the analytical focus from instantaneous forces to causal histories. Part III validated the robustness of these tools by proving Drift Invariance, ensuring our baseline does not shift under the weight of the input it measures. Finally, Parts IV and V provided the mathematical proofs and numerical validations necessary to trust these abstractions in practice.
 
-The framework is now complete. It stands as a rigorous, falsifiable mechanical theory of the golf swing—one that replaces the monolithic "net moment" of inverse dynamics with a nuanced, causally articulated map of interaction. The next phase of this project leaves the page and the simulator to confront the noisy, variable reality of human motion capture.
+The theoretical framework is complete. It offers a mechanical decomposition of the golfer--club system that replaces the single "net moment" returned by inverse dynamics with a causally articulated account of how forces arise. The framework makes three testable predictions that would cause us to abandon or revise it: (i) in simulation, the numerical identity $\tau_{\mathrm{total}} - \tau_{\mathrm{ZTCF}} \approx \tau_{\mathrm{ZVCF}}$ should hold within the bound derived from Gronwall's inequality applied to the drift flow; (ii) trajectories with matching drift fields and different inputs should evolve into the same future state if integrated long enough, up to controllable directions in the sense of the Lie algebra rank condition; and (iii) when applied to experimental motion-capture data of a range of golfers, the Drift-Control Ratio should separate swings that are dominated by passive physics from swings that are dominated by muscular correction in a way that matches independent biomechanical markers of effort (EMG amplitudes, grip-force traces). Any of these predictions being violated on clean data would falsify the framework as stated. The next phase of the project leaves the page and the simulator to confront the noisy, variable reality of human motion capture.
 
 
 ### Related Articles

@@ -100,14 +100,12 @@ Here is the central insight: \textbf{elite golfers do not fight drift. They ride
 
 Novice golfers do the opposite. They fight their own physics. They generate excessive muscular force to cancel out the drift effects, then generate more force to make the swing they want. It's exhausting, inconsistent, and why golfers talking about the swing always say ``trust'' and ``let it happen.'' They mean: let the drift happen.
 
-\begin{driftcontrol}{Drift vs. Control in a Simple Fall}{dc:ch01_fall}
-Imagine your arm holding a 1 lb weight at shoulder height. You're exerting an upward force equal to the weight's weight (call it $W = 1 \text{ lb}$). This is $\control$—your muscle generating force to hold the weight steady.
+\begin{driftcontrol}{Drift and Control in a Simple Fall}{dc:ch01_fall}
+Imagine your arm holding a small mass --- say $0.5$~kg --- at shoulder height. You exert an upward force of magnitude $mg \approx 4.9$~N to hold it steady. That force is $\control$: your muscle is generating it.
 
-Now you release it. What happens? $\drift$ takes over. Gravity pulls downward. The weight accelerates at $g = 32 \text{ ft/s}^2$. You're not doing anything—physics is.
+Release the mass. What happens next is $\drift$. Gravity pulls the mass downward, the acceleration is $g \approx 9.81$~m/s$^2$, and you are not doing anything; the passive dynamics are.
 
-In a golf swing: when your arm is at the top of the backswing holding the club in a specific position, you're exerting $\control$. During the downswing, you release—and $\drift$ (gravity plus the rotational momentum of your arm) does most of the work of accelerating the club toward impact. Your muscles then add small corrections to steer that accelerating club toward the target.
-
-The swing is efficient because gravity and momentum contribute a substantial share of the work. Your muscles contribute the remainder, mostly steering. The exact fraction depends on swing type, athlete power, technique, and the model used to decompose the contributions.
+The same structural observation applies to a golf swing. When the arm is at the top of the backswing the muscles are doing most of the work of holding the club in position, and this part of the motion is dominated by $\control$. During the downswing the situation reverses: gravity and the accumulated momentum of the arm take over, and the muscles reduce to steering and timing. How much of the total work is done by each source depends on the model, the individual golfer, and the club; we return to this question quantitatively in Chapter~\ref{ch:14_complete_swing} using stated parameters and a defined simulation.
 \end{driftcontrol}
 
 \section{The Central Equation}
@@ -171,7 +169,7 @@ Two rigid rods (``links'') connected by a hinge. The first rod is hinged at a fi
 In golf terms: the first rod is your \textbf{upper arm} (shoulder to elbow). The second rod is your \textbf{forearm + club} (elbow to club head).
 \end{definition}
 
-This is a toy model. Real golfers have two arms, a rotating torso, hip and knee joints, and many more degrees of freedom. But here's the remarkable thing: \textbf{almost all of the essential physics appears in the double pendulum}.
+This is a toy model. Real golfers have two arms, a rotating torso, hip and knee joints, and many more degrees of freedom. But the key observation is that \textbf{almost all of the essential physics appears already in the double pendulum} --- the coupling between inertia, gravity, centrifugal effects, and active torques is present from the moment you write down even this minimal two-link system.
 
 The equations are complicated enough to be interesting but simple enough to solve (sometimes exactly, often numerically). The physics of gravity, inertia, velocity-dependent forces, and control all show up. And crucially, the double pendulum exhibits chaotic behavior—meaning small changes in control can produce wildly different outcomes, just like the golf swing.
 
@@ -235,7 +233,7 @@ Left side = drift. Right side = control.
 \begin{exercises}{Chapter Exercises}{ex:ch01}
 \begin{enumerate}
 
-\item \textbf{The Free Fall}. Hold a golf ball at arm's length. Release it. How long until it hits the ground? How fast is it moving when it hits? (Use $g = 32 \text{ ft/s}^2$.) Now do the same with a heavier ball (baseball). Does it hit the ground faster or slower? Why? (Hint: think about forces.)
+\item \textbf{The Free Fall}. Hold a golf ball at arm's length. Release it. How long until it hits the ground? How fast is it moving when it hits? (Use $g \approx 9.81$~m/s$^2$.) Now do the same with a heavier ball (baseball). Does it hit the ground faster or slower? Why? (Hint: think about forces.)
 
 \item \textbf{The Spinning Ball}. Spin a golf ball on a table (give it backspin). Watch it slow down and stop. What forces are acting on it? What forces are not acting on it? Try the same on a frictionless surface (ice). What's different?
 
