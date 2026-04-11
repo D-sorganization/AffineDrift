@@ -14,8 +14,9 @@ pythonpath = ["."]
 testpaths = ["tests"]
 markers = [
     "integration: marks tests requiring cross-module or I/O integration",
+    "content_lint: marks repository-content assertions that are skipped by default",
 ]
-addopts = "--tb=short"
+addopts = "-m 'not content_lint' --tb=short"
 
 [tool.coverage.run]
 source = ["src", "scripts"]
@@ -35,7 +36,6 @@ exclude_lines = [
     "if __name__ == .__main__.",
     "if TYPE_CHECKING:",
     "raise NotImplementedError",
-    "pass",
 ]
 
 [tool.mypy]
