@@ -10,6 +10,13 @@ def test_categories_exist():
     assert "O" in assessment_utils.CATEGORIES
 
 
+def test_assessment_definitions_match_category_names():
+    definition_names = {
+        key: value["name"] for key, value in assessment_utils.ASSESSMENT_DEFINITIONS.items()
+    }
+    assert definition_names == assessment_utils.CATEGORIES
+
+
 def test_group_weights():
     assert assessment_utils.GROUP_WEIGHTS
     # Weights sum to 1.0 (with floating point tolerance)
