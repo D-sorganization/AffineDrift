@@ -30,7 +30,6 @@ def _assert_keyword_calls(path: Path) -> None:
 def test_python_call_sites_use_keyword_arguments() -> None:
     """The Python helpers should pass phi_rad and delta_rad explicitly."""
     for relative in [
-        "src/tools/wrist_universal_joint/plots.py",
         "src/tools/wrist_universal_joint/streamlit_app.py",
         "src/tools/wrist_universal_joint/enhanced_model_kinematics.py",
     ]:

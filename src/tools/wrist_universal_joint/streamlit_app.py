@@ -29,17 +29,17 @@ from .constants import (
     DEFAULT_SHAFT_WEIGHT,
     DEFAULT_SIGNAL_LENGTH,
 )
+from .streamlit_visualization import (
+    draw_diagram,
+    plot_acceleration,
+    plot_torque,
+    plot_transmission_sweep,
+)
 from .torque_calculator import (
     calculate_moments_of_inertia,
     distribute_torque_by_grip_angle,
     generate_sample_torque,
     universal_joint_transmission_ratio,
-)
-from .visualization import (
-    draw_diagram,
-    plot_acceleration,
-    plot_torque,
-    plot_transmission_sweep,
 )
 
 logger = logging.getLogger(__name__)

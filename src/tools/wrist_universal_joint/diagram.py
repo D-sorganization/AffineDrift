@@ -11,28 +11,15 @@ This module contains the forearm-hand-club diagram rendering:
 from __future__ import annotations
 
 import logging
-from collections.abc import Callable
-from typing import Any, ParamSpec, TypeVar, cast
+from typing import Any, cast
 
 import numpy as np
-import streamlit as st
 from matplotlib.figure import Figure
 from matplotlib.patches import Ellipse, Polygon
 
 from src.core.contracts import check_range
 
 logger = logging.getLogger(__name__)
-
-_P = ParamSpec("_P")
-_R = TypeVar("_R")
-
-
-def _cache_resource(max_entries: int) -> Callable[[Callable[_P, _R]], Callable[_P, _R]]:
-    """Return Streamlit's cache decorator with preserved function typing."""
-    return cast(
-        Callable[[Callable[_P, _R]], Callable[_P, _R]],
-        st.cache_resource(max_entries=max_entries),
-    )
 
 
 def _draw_club_shaft(ax: Any, wrist_x: float, wrist_y: float, shaft_length: float) -> float:
@@ -338,49 +325,19 @@ def _setup_diagram_axes(ax: Any) -> None:
     ax.set_title("Forearm-Hand-Club Diagram", fontsize=12, fontweight="bold", pad=20)
 
 
-# Cache figure generation to prevent expensive redraws
-# Limit entries to prevent OOM when sliding through many angles
-@_cache_resource(max_entries=20)
 def draw_diagram(
     grip_angle_deg: float,
     wrist_angle_deg: float,
 ) -> Figure:
-    """Draw the forearm-hand-club diagram.
-
-    This coordinator delegates rendering to focused helper functions.
-
-    Args:
-        grip_angle_deg: Grip angle in degrees [0, 90].
-        wrist_angle_deg: Wrist deviation angle in degrees [-60, 60].
-
-    Returns:
-        Matplotlib Figure with the rendered diagram.
-    """
+    """Draw the forearm-hand-club diagram."""
     check_range(grip_angle_deg, 0, 90, "grip_angle_deg")
     check_range(wrist_angle_deg, -60, 60, "wrist_angle_deg")
     logger.debug("Drawing diagram: grip=%.1f deg, wrist=%.1f deg", grip_angle_deg, wrist_angle_deg)
     fig = Figure(figsize=(12, 4))
     ax = fig.subplots()
 
-    theta_grip_rad = np.radians(grip_angle_deg)
-    phi_wrist_rad = np.radians(wrist_angle_deg)
-    wrist_x, wrist_y = 0.4, 0.5
-    hand_length = 0.2
-    hand_dir_x = np.cos(theta_grip_rad)
-    hand_dir_y = np.sin(theta_grip_rad)
+    from .enhanced_model_geometry import draw_enhanced_model_diagram
 
-    shaft_end_x = _draw_club_shaft(ax, wrist_x, wrist_y, shaft_length=1.05)
-    _draw_clubhead(ax, shaft_end_x, wrist_y)
-    _draw_hand(ax, wrist_x, wrist_y, hand_length, theta_grip_rad)
-    _draw_fingers(ax, wrist_x, wrist_y, hand_dir_x, hand_dir_y)
-    _draw_forearm(
-        ax, wrist_x, wrist_y, hand_length, hand_dir_x, hand_dir_y, theta_grip_rad, phi_wrist_rad
-    )
-    _draw_wrist_joint(ax, wrist_x, wrist_y)
-    _draw_grip_angle_arc(ax, wrist_x, wrist_y, theta_grip_rad)
-    forearm_x = wrist_x + (hand_length / 2) * hand_dir_x
-    forearm_y = wrist_y + (hand_length / 2) * hand_dir_y
-    _draw_wrist_angle_arc(ax, forearm_x, forearm_y, theta_grip_rad, phi_wrist_rad)
-    _setup_diagram_axes(ax)
+    draw_enhanced_model_diagram(ax, grip_angle_deg, wrist_angle_deg)
     fig.tight_layout()
     return fig

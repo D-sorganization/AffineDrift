@@ -15,7 +15,7 @@ import contextlib
 import sys
 import types
 from typing import Any
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 
 def _build_streamlit_mock() -> types.ModuleType:
@@ -128,6 +128,104 @@ def _streamlit_context():  # type: ignore[return]
 
 class TestPlotsModule:
     """Tests for src.tools.wrist_universal_joint.plots functions."""
+
+    def test_compute_torque_signals_delegates_to_enhanced_kinematics(self) -> None:
+        """_compute_torque_signals should proxy the shared kinematics helper."""
+        import numpy as np
+
+        with _streamlit_context():
+            import src.tools.wrist_universal_joint.plots as plots
+            from src.tools.wrist_universal_joint.enhanced_model_kinematics import TorqueSignals
+
+            signals = TorqueSignals(
+                omega_ratio=0.91,
+                tau_ratio=1.09,
+                torque_transmitted=np.array([1.0, 2.0]),
+                torque_alpha=np.array([0.4, 0.8]),
+                torque_gamma=np.array([0.6, 1.2]),
+            )
+            with patch.object(plots, "_compute_torque_signals_core", return_value=signals) as core:
+                result = plots._compute_torque_signals(np.array([3.0, 4.0]), 30.0, 10.0)
+
+            core.assert_called_once()
+            called_input, called_grip, called_wrist = core.call_args.args
+            np.testing.assert_array_equal(called_input, np.array([3.0, 4.0]))
+            assert called_grip == 30.0
+            assert called_wrist == 10.0
+            np.testing.assert_array_equal(result[0], signals.torque_transmitted)
+            np.testing.assert_array_equal(result[1], signals.torque_alpha)
+            np.testing.assert_array_equal(result[2], signals.torque_gamma)
+            assert result[3] == signals.tau_ratio
+
+    def test_compute_acceleration_signals_delegates_to_enhanced_kinematics(self) -> None:
+        """_compute_acceleration_signals should proxy the shared kinematics helper."""
+        import numpy as np
+
+        with _streamlit_context():
+            import src.tools.wrist_universal_joint.plots as plots
+            from src.tools.wrist_universal_joint.enhanced_model_kinematics import (
+                AccelerationSignals,
+            )
+
+            signals = AccelerationSignals(
+                accel_alpha=np.array([1.5, 2.5]),
+                accel_gamma=np.array([3.5, 4.5]),
+            )
+            with patch.object(
+                plots,
+                "_compute_acceleration_signals_core",
+                return_value=signals,
+            ) as core:
+                result = plots._compute_acceleration_signals(
+                    np.array([5.0, 6.0]), 25.0, -5.0, 0.1, 0.2
+                )
+
+            core.assert_called_once()
+            called_input, called_grip, called_wrist, called_i_alpha, called_i_gamma = (
+                core.call_args.args
+            )
+            np.testing.assert_array_equal(called_input, np.array([5.0, 6.0]))
+            assert called_grip == 25.0
+            assert called_wrist == -5.0
+            assert called_i_alpha == 0.1
+            assert called_i_gamma == 0.2
+            np.testing.assert_array_equal(result[0], signals.accel_alpha)
+            np.testing.assert_array_equal(result[1], signals.accel_gamma)
+
+    def test_compute_transmission_sweep_delegates_to_enhanced_kinematics(self) -> None:
+        """_compute_transmission_sweep should proxy the shared kinematics helper."""
+        import numpy as np
+
+        with _streamlit_context():
+            import src.tools.wrist_universal_joint.plots as plots
+            from src.tools.wrist_universal_joint.enhanced_model_kinematics import TransmissionSweep
+
+            sweep = TransmissionSweep(
+                wrist_angle_deg=np.array([-60.0, 0.0, 60.0]),
+                omega_ratios=np.array([0.8, 1.0, 0.8]),
+                tau_ratios=np.array([1.25, 1.0, 1.25]),
+                accel_alpha_ratios=np.array([2.0, 2.5, 2.0]),
+                accel_gamma_ratios=np.array([1.0, 1.2, 1.0]),
+            )
+            with patch.object(
+                plots,
+                "_compute_transmission_sweep_core",
+                return_value=sweep,
+            ) as core:
+                result = plots._compute_transmission_sweep(
+                    np.array([-30.0, 0.0, 30.0]), 0.5, 0.1, 0.2
+                )
+
+            core.assert_called_once()
+            called_grip_deg, called_wrist_deg, called_i_alpha, called_i_gamma = core.call_args.args
+            assert called_grip_deg == np.degrees(0.5)
+            assert called_wrist_deg == 0.0
+            assert called_i_alpha == 0.1
+            assert called_i_gamma == 0.2
+            np.testing.assert_array_equal(result[0], sweep.tau_ratios)
+            np.testing.assert_array_equal(result[1], sweep.omega_ratios)
+            np.testing.assert_array_equal(result[2], sweep.accel_alpha_ratios)
+            np.testing.assert_array_equal(result[3], sweep.accel_gamma_ratios)
 
     def test_plot_torque_returns_figure(self) -> None:
         """plot_torque should return a matplotlib Figure."""
@@ -274,14 +372,29 @@ class TestPlotsModule:
             tau, omega, a_alpha, a_gamma = plots._compute_transmission_sweep(
                 phi_sweep, 0.5, 0.005, 0.001
             )
-            assert len(tau) == 20
-            assert len(omega) == 20
-            assert len(a_alpha) == 20
-            assert len(a_gamma) == 20
+            assert len(tau) == 200
+            assert len(omega) == 200
+            assert len(a_alpha) == 200
+            assert len(a_gamma) == 200
 
 
 class TestDiagramModule:
     """Tests for src.tools.wrist_universal_joint.diagram functions."""
+
+    def test_draw_diagram_delegates_to_shared_geometry(self) -> None:
+        """draw_diagram should call the shared enhanced-model renderer."""
+        with _streamlit_context():
+            import matplotlib.figure as mfig
+
+            import src.tools.wrist_universal_joint.diagram as diagram
+
+            with patch(
+                "src.tools.wrist_universal_joint.enhanced_model_geometry.draw_enhanced_model_diagram"
+            ) as draw:
+                fig = diagram.draw_diagram(grip_angle_deg=30.0, wrist_angle_deg=10.0)
+
+            draw.assert_called_once()
+            assert isinstance(fig, mfig.Figure)
 
     def test_draw_diagram_returns_figure(self) -> None:
         """draw_diagram should return a matplotlib Figure."""
