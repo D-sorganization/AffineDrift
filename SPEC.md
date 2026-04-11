@@ -211,7 +211,7 @@ AffineDrift/
 **Website (HTTP):**
 
 - GitHub Pages deployment at `AffineDrift.com`
-- Service worker handles bounded offline content caching and notifies clients when stale-while-revalidate refreshes new content
+- Service worker handles offline content caching
 - All pages render with MathJax notation support
 
 **Textbook Bibliographies:**
