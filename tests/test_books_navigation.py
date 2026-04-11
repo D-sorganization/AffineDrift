@@ -4,6 +4,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
+pytestmark = pytest.mark.content_lint
+
 REPO_ROOT = Path(__file__).resolve().parents[1]
 QUARTO_CONFIG = REPO_ROOT / "_quarto.yml"
 BOOKS_DIR = REPO_ROOT / "books"
