@@ -1,77 +1,43 @@
 {
-  "date": "2026-04-10",
   "repository": "AffineDrift-textbook-review",
+  "date": "2026-04-11",
   "overall_grade": "B-",
   "category_grades": {
-    "A": "B-",
-    "B": "A-",
-    "C": "B",
-    "D": "B+",
-    "E": "B-",
-    "F": "B",
-    "G": "B",
-    "H": "A-",
-    "I": "B",
-    "J": "B",
-    "K": "B+",
-    "L": "B-",
-    "M": "B+",
-    "N": "B-"
+    "A_Code_Structure": "C",
+    "B_Documentation": "B",
+    "C_Test_Coverage_TDD": "B",
+    "D_Error_Handling_DbC": "B-",
+    "E_Performance": "C",
+    "F_Security": "B-",
+    "G_Dependencies": "B",
+    "H_CI_CD": "B",
+    "I_Code_Style": "B-",
+    "J_API_Design_LoD": "C",
+    "K_Data_Handling": "B-",
+    "L_Logging": "B-",
+    "M_Configuration": "B",
+    "N_Scalability_Maintainability": "C"
   },
   "key_risks": [
-    "The DDP implementation remains a documented mock.",
-    "script.js has become a 1,525 LOC frontend monolith.",
-    "Coverage enforcement is still only 50%.",
-    "Wrist-model logic remains split across oversized legacy and maintained paths."
+    "Split oversized functions by responsibility",
+    "Decompose monolithic modules and scripts"
   ],
-  "evidence": [
-    {
-      "path": "src/affine_control/ddp.py",
-      "note": "The module warns that the DDP implementation is a non-functional mock."
-    },
-    {
-      "path": "script.js",
-      "note": "1,525 LOC root frontend module."
-    },
-    {
-      "path": "docs/content/Wrist as Universal Joint/Universal_Joint_Model_Enhanced.py",
-      "note": "1,505 LOC legacy/doc script with 484 LOC and 333 LOC functions."
-    },
-    {
-      "path": "src/tools/wrist_universal_joint/qt_ui_sections.py",
-      "note": "Still contains 116 LOC and 97 LOC builder functions."
-    },
-    {
-      "path": "pyproject.toml",
-      "note": "Coverage threshold remains fail_under = 50."
-    }
+  "issue_count": 2,
+  "evidence": {
+    "code_files": 592,
+    "code_loc": 147659,
+    "test_files": 162,
+    "docs": 690,
+    "configs": 6,
+    "ci_workflows": 53,
+    "oversized_modules": 12,
+    "oversized_functions": 12,
+    "contract_signal_files": 221,
+    "error_signal_files": 178
+  },
+  "coverage_notes": [
+    ".NET recursive inventory with cache/build/vendor/generated exclusions"
   ],
-  "prioritized_remediation_recommendations": [
-    "Replace or isolate the mock DDP implementation.",
-    "Split script.js into smaller feature modules with direct tests.",
-    "Raise critical coverage thresholds above 50%.",
-    "Continue migrating wrist-model logic out of the giant legacy/doc script."
-  ],
-  "assessment_coverage_notes": [
-    "Reviewed key Python modules, major frontend surface, CI, tests, and wrist-model code paths.",
-    "Did not claim complete textbook-content review coverage.",
-    "Sandbox authentication blocks GitHub issue and PR creation."
-  ],
-  "issue_candidates": [
-    {
-      "title": "Break up the root script.js monolith",
-      "severity": "high",
-      "area": "maintainability"
-    },
-    {
-      "title": "Replace or quarantine the mock DDP implementation",
-      "severity": "high",
-      "area": "reliability"
-    },
-    {
-      "title": "Raise coverage enforcement for critical modules",
-      "severity": "medium",
-      "area": "testability"
-    }
-  ]
+  "publication_status": "blocked: git/GitHub credentials and/or safe-directory ownership",
+  "updated_at": "2026-04-11T01:07:13.2568213-07:00"
 }
