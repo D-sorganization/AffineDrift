@@ -36,3 +36,7 @@
 ## 2026-04-06 - Alt Text Fallback for Modal Images
 **Learning:** When images are promoted to a modal view (lightbox), relying solely on `<figcaption>` can leave images that only use `alt` attributes without visual context or descriptive text in the modal state.
 **Action:** When promoting an image to a modal view, if no `<figcaption>` is present, fall back to extracting and displaying the image's `alt` text to preserve contextual information for all users.
+
+## 2026-04-11 - Actionable Empty States
+**Learning:** For optimal UX in search or filter features, empty states ('no results') should not be dead ends.
+**Action:** Always provide an actionable, one-click reset mechanism (e.g., a 'Clear Search' button) that clears the query and restores focus to the input field.
