@@ -1,72 +1,26 @@
-# Issues to Create
+# Issue Candidates - 2026-04-11
 
-## Replace or quarantine the mock DDP implementation
+Repository: `AffineDrift-editorial`  
 
-**Problem statement**  
-`src/affine_control/ddp.py` explicitly documents that the DDP implementation is a non-functional mock and warns that the backward pass and Riccati solving are not implemented. That makes optimization behavior easy to misunderstand and weakens reliability claims.
+These issue candidates were generated locally because GitHub issue creation is blocked by credentials/access in this environment.
 
-**Evidence**
-- `src/affine_control/ddp.py`
+### Split oversized functions by responsibility
 
-**Impact**  
-Optimization-related tests and documentation can imply more mathematical validity than the implementation actually provides.
+- Severity: medium
+- Problem statement: One or more Python functions exceed 40 LOC.
+- Evidence: current assessment metrics for `AffineDrift-editorial`; see large function/module tables and CI/test inventory above.
+- Impact: Large functions weaken SRP, reviewability, and targeted TDD.
+- Proposed fix: Extract pure helpers and add tests around extracted behavior.
+- Acceptance criteria: No priority function remains above 40 LOC without documented justification.
+- Expectations: preserve TDD, DRY, Design by Contract, Law of Demeter, small functions, SRP, and bounded module size.
 
-**Proposed fix**  
-Either implement the missing backward-pass logic or move the mock behind an unmistakably non-production interface and update callers/tests accordingly.
+### Decompose monolithic modules and scripts
 
-**Acceptance criteria**
-- Production-facing code paths no longer depend on the mock as if it were real DDP.
-- Tests clearly separate placeholder behavior from validated optimization behavior.
-- Documentation matches the runtime contract.
+- Severity: medium
+- Problem statement: One or more modules exceed 300 LOC.
+- Evidence: current assessment metrics for `AffineDrift-editorial`; see large function/module tables and CI/test inventory above.
+- Impact: Long modules concentrate unrelated responsibilities and increase maintenance risk.
+- Proposed fix: Move orchestration, I/O, and domain logic into focused modules.
+- Acceptance criteria: Top oversized modules have clear boundaries and regression tests.
+- Expectations: preserve TDD, DRY, Design by Contract, Law of Demeter, small functions, SRP, and bounded module size.
 
-**Expectations**  
-Relevant to TDD, DbC, and reliability expectations.
-
----
-
-## Refactor the wrist model monolith into tested components
-
-**Problem statement**  
-`content/wrist-as-universal-joint/Universal_Joint_Model_Enhanced.py` is 1,512 LOC, with `initUI` at 484 LOC and `update_diagram` at 333 LOC. This is a confirmed SRP and function-size violation.
-
-**Evidence**
-- `content/wrist-as-universal-joint/Universal_Joint_Model_Enhanced.py`
-
-**Impact**  
-UI and plotting changes are difficult to review, test, and safely evolve.
-
-**Proposed fix**  
-Split the module into domain math, plotting, and UI composition helpers, with tests for each nontrivial component.
-
-**Acceptance criteria**
-- The largest functions are reduced to orchestration only.
-- Plotting/state update logic is moved into reusable helpers.
-- New tests cover the extracted behavior.
-
-**Expectations**  
-Directly addresses DRY, LoD, SRP, and maintainability.
-
----
-
-## Raise coverage enforcement for critical scientific modules
-
-**Problem statement**  
-The repo has a strong test suite, but CI still allows `fail_under = 50` in `pyproject.toml`, which is too low for a contract-heavy scientific/editorial codebase.
-
-**Evidence**
-- `pyproject.toml`
-- `tests/`
-
-**Impact**  
-Important regressions can slip through even though the repo already has the discipline to support stronger guarantees.
-
-**Proposed fix**  
-Raise the coverage floor in stages and enforce higher coverage for the most critical numerical and editorial infrastructure modules.
-
-**Acceptance criteria**
-- The global threshold is increased above 50%.
-- Critical modules have explicit coverage expectations.
-- CI fails when those thresholds regress.
-
-**Expectations**  
-Directly improves TDD and long-term maintainability.

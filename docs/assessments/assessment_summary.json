@@ -1,77 +1,43 @@
 {
-  "date": "2026-04-10",
   "repository": "AffineDrift-editorial",
-  "overall_grade": "B",
+  "date": "2026-04-11",
+  "overall_grade": "B-",
   "category_grades": {
-    "A": "B",
-    "B": "A-",
-    "C": "B",
-    "D": "B+",
-    "E": "B-",
-    "F": "B-",
-    "G": "B",
-    "H": "A-",
-    "I": "B",
-    "J": "B",
-    "K": "B+",
-    "L": "C+",
-    "M": "B+",
-    "N": "B-"
+    "A_Code_Structure": "C",
+    "B_Documentation": "B",
+    "C_Test_Coverage_TDD": "B",
+    "D_Error_Handling_DbC": "B-",
+    "E_Performance": "C",
+    "F_Security": "B-",
+    "G_Dependencies": "B",
+    "H_CI_CD": "B",
+    "I_Code_Style": "B-",
+    "J_API_Design_LoD": "C",
+    "K_Data_Handling": "B-",
+    "L_Logging": "B-",
+    "M_Configuration": "B",
+    "N_Scalability_Maintainability": "C"
   },
   "key_risks": [
-    "Optimization code still depends on a documented non-functional mock DDP implementation.",
-    "The wrist-model Python module is oversized and violates SRP.",
-    "Coverage enforcement is too low for a contract-heavy scientific repo.",
-    "Security scanning in CI appears incomplete."
+    "Split oversized functions by responsibility",
+    "Decompose monolithic modules and scripts"
   ],
-  "evidence": [
-    {
-      "path": "src/affine_control/ddp.py",
-      "note": "Module header explicitly states the DDP implementation is a non-functional mock."
-    },
-    {
-      "path": "content/wrist-as-universal-joint/Universal_Joint_Model_Enhanced.py",
-      "note": "1,512 LOC file with initUI at 484 LOC and update_diagram at 333 LOC."
-    },
-    {
-      "path": "pyproject.toml",
-      "note": "Coverage gate remains fail_under = 50."
-    },
-    {
-      "path": ".github/workflows/ci-standard.yml",
-      "note": "Strong quality checks are present, but no explicit Python dependency audit step was confirmed."
-    },
-    {
-      "path": "src/core/contracts/validators.py",
-      "note": "Strong reusable DbC helper layer with require-based numeric checks."
-    }
+  "issue_count": 2,
+  "evidence": {
+    "code_files": 556,
+    "code_loc": 147390,
+    "test_files": 153,
+    "docs": 666,
+    "configs": 5,
+    "ci_workflows": 52,
+    "oversized_modules": 12,
+    "oversized_functions": 12,
+    "contract_signal_files": 200,
+    "error_signal_files": 168
+  },
+  "coverage_notes": [
+    ".NET recursive inventory with cache/build/vendor/generated exclusions"
   ],
-  "prioritized_remediation_recommendations": [
-    "Replace or isolate the mock DDP path from production-style optimization flows.",
-    "Refactor the wrist-model module into smaller tested components.",
-    "Raise the minimum coverage gate for critical modules above 50%.",
-    "Add explicit Python dependency/security scanning to standard CI."
-  ],
-  "assessment_coverage_notes": [
-    "Reviewed key Python core modules, CI, scripts, tests, JavaScript surface, and major wrist-model content code.",
-    "Did not claim full content-review coverage of all book chapters or media assets.",
-    "Remote GitHub issue and PR creation is blocked by missing sandbox credentials."
-  ],
-  "issue_candidates": [
-    {
-      "title": "Replace or quarantine the mock DDP implementation",
-      "severity": "high",
-      "area": "reliability"
-    },
-    {
-      "title": "Refactor the wrist model monolith into tested components",
-      "severity": "high",
-      "area": "maintainability"
-    },
-    {
-      "title": "Raise coverage enforcement for critical scientific modules",
-      "severity": "medium",
-      "area": "testability"
-    }
-  ]
+  "publication_status": "blocked: git/GitHub credentials and/or safe-directory ownership",
+  "updated_at": "2026-04-11T01:07:11.5306029-07:00"
 }
