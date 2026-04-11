@@ -12,11 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 GLOSSARY_QMD = ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "glossary.qmd"
 GLOSSARY_TEX = ROOT / "articles" / "The_Physics_of_Golf" / "chapters" / "glossary.tex"
 ZERO_TORQUE_CHAPTER = (
-    ROOT
-    / "articles"
-    / "The_Physics_of_Golf"
-    / "quarto"
-    / "ch06_zero_torque_counterfactual.qmd"
+    ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "ch06_zero_torque_counterfactual.qmd"
 )
 
 
