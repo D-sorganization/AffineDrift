@@ -22,7 +22,7 @@ Once you understand the double pendulum, adding complexity (more joints, torso r
 ### The System
 
 Two rigid rods:
-- **Link 1** (upper arm): length $L_1$, mass $M_1$, moment of inertia about the elbow $I_1$.
+- **Link 1** (upper arm): length $L_1$, mass $M_1$, moment of inertia about the shoulder $I_1$.
 - **Link 2** (forearm + club): length $L_2$, mass $M_2$, moment of inertia about the grip $I_2$.
 
 Two hinges (frictionless, perfect revolutes):
@@ -57,7 +57,7 @@ Let's use numbers that match an actual golfer:
 | Length $L$ | 0.35 m | 1.0 m |
 | Mass $M$ | 2.5 kg | 1.5 kg |
 | CM distance from hinge | 0.175 m | 0.5 m |
-| Moment of inertia $I$ | 0.015 kg m$^2$ | 0.4 kg m$^2$ |
+| Moment of inertia $I$ | 0.077 kg m$^2$ | 0.4 kg m$^2$ |
 
 These are approximate values for a typical golfer. Golfers with larger bodies or longer clubs will have different values, but the physics is the same.
 
@@ -403,9 +403,9 @@ The mass matrix at this configuration:
 
 $$
 \begin{aligned}
-M_{11} &\approx 0.015 + 1.5 \cdot 0.35^2 + 1.5 \cdot 0.5^2 + 0.4 + 2 \cdot 1.5 \cdot 0.35 \cdot 0.5 \cos(-5°) \\
-&\approx 0.015 + 0.184 + 0.375 + 0.4 + 0.523 \\
-&\approx 1.50 \text{ kg m}^2
+M_{11} &\approx 0.077 + 2.5 \cdot 0.35^2 + 2.5 \cdot 0.5^2 + 0.4 + 2 \cdot 2.5 \cdot 0.35 \cdot 0.5 \cos(-5°) \\
+&\approx 0.077 + 0.306 + 0.625 + 0.4 + 0.872 \\
+&\approx 2.22 \text{ kg m}^2
 \end{aligned}
 $$
 
