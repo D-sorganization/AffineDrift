@@ -11,6 +11,9 @@ pytestmark = pytest.mark.content_lint
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 AFFINE_ARTICLE = REPO_ROOT / "articles" / "affine-nature-golf-swing.qmd"
+CH09_PARALLEL_MECHANISMS = (
+    REPO_ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "ch09_parallel_mechanisms.qmd"
+)
 BOOK_FILES = (
     REPO_ROOT / "books" / "tangent-space-methods.qmd",
     REPO_ROOT / "books" / "control-is-motion.qmd",
@@ -68,6 +71,16 @@ def test_book_pages_explain_notebooks_feature() -> None:
         text = book_file.read_text(encoding="utf-8")
         assert "## Notebook Workflow" in text
         assert "notebooks/geometry_of_motion/" in text
+
+
+def test_ch09_gruebler_example_stewart_platform_is_consistent() -> None:
+    """Stewart platform example in ch09 should use the corrected 3D mobility count."""
+    text = CH09_PARALLEL_MECHANISMS.read_text(encoding="utf-8")
+    assert "For a 3D mechanism, the formula is:\n\nM = 6(N - 1) - \\sum_i f_i" in text
+    assert "N = 8" in text
+    assert "J = 12" in text
+    assert "M = 6(8-1) - 12 \\times 3 = 42 - 36 = 6" in text
+    assert "M = -9" not in text
 
 
 def _collect_fenced_div_balance_issues(text: str) -> list[str]:
