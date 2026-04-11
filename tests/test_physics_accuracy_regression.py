@@ -64,9 +64,9 @@ class TestSO3TangentSpace:
         # R^T @ X should be skew-symmetric (in so(3))
         RT_X = R.T @ X
         skew_check = RT_X + RT_X.T
-        assert np.allclose(
-            skew_check, 0, atol=1e-10
-        ), "R^T @ X must be skew-symmetric for X in T_R SO(3)"
+        assert np.allclose(skew_check, 0, atol=1e-10), (
+            "R^T @ X must be skew-symmetric for X in T_R SO(3)"
+        )
 
     def test_geometry_chapter_states_tangent_space_at_R_as_translated_lie_algebra(self):
         """Chapter text must not identify T_R SO(3) directly with skew matrices."""
@@ -149,9 +149,9 @@ class TestEulerBernoulliBeam:
             assert fragment in chapter_text, f"Missing expected chapter fragment: {fragment}"
 
         static_fragment = "EI \\frac{\\partial^4 w}{\\partial z^4} = q(z)"
-        assert (
-            static_fragment not in chapter_text
-        ), "Static-only Euler-Bernoulli equation should not be used without dynamic context"
+        assert static_fragment not in chapter_text, (
+            "Static-only Euler-Bernoulli equation should not be used without dynamic context"
+        )
 
 
 class TestEigenvalueInvariance:
@@ -176,9 +176,9 @@ class TestEigenvalueInvariance:
         eigs_A = sorted(np.linalg.eigvals(A).real)
         eigs_similar = sorted(np.linalg.eigvals(A_similar).real)
 
-        assert np.allclose(
-            eigs_A, eigs_similar, atol=1e-10
-        ), "Eigenvalues must be invariant under constant similarity transform"
+        assert np.allclose(eigs_A, eigs_similar, atol=1e-10), (
+            "Eigenvalues must be invariant under constant similarity transform"
+        )
 
     def test_eigenvalues_NOT_invariant_under_timedep_transform(self):
         """Eigenvalues are NOT invariant under time-dependent coordinate changes.
