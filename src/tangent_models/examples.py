@@ -182,7 +182,9 @@ class SpacecraftRendezvous(DynamicalSystem):
             "Control input must be a vector for SpacecraftRendezvous",
         )
         rx, ry, rz, vx, vy, vz = x
-        ux, uy, uz = u
+        u_vec = np.asarray(u, dtype=float)
+        require(u_vec.shape == (3,), "control input must have 3 elements")
+        ux, uy, uz = u_vec
 
         rc = np.sqrt((self.r_t + rx) ** 2 + ry**2 + rz**2)
 
@@ -267,7 +269,9 @@ class PlanarQuadrotor(DynamicalSystem):
         require(len(x) == 6, "state vector must have 6 elements")
         require(not isinstance(u, float | int), "Control input must be a vector")
         px, py, theta, vx, vy, omega = x
-        u1, u2 = u
+        u_vec = np.asarray(u, dtype=float)
+        require(u_vec.shape == (2,), "control input must have 2 elements")
+        u1, u2 = u_vec
 
         # Total thrust
         T = u1 + u2
@@ -286,7 +290,9 @@ class PlanarQuadrotor(DynamicalSystem):
         require(len(x) == 6, "state vector must have 6 elements")
         require(not isinstance(u, float | int), "Control input must be a vector")
         px, py, theta, vx, vy, omega = x
-        u1, u2 = u
+        u_vec = np.asarray(u, dtype=float)
+        require(u_vec.shape == (2,), "control input must have 2 elements")
+        u1, u2 = u_vec
         T = u1 + u2
 
         A = np.zeros((6, 6))
@@ -347,7 +353,9 @@ class RobotArm(DynamicalSystem):
         require(len(x) == 4, "state vector must have 4 elements")
         require(not isinstance(u, float | int), "Control input must be a vector")
         q1, q2, dq1, dq2 = x
-        tau1, tau2 = u
+        u_vec = np.asarray(u, dtype=float)
+        require(u_vec.shape == (2,), "control input must have 2 elements")
+        tau1, tau2 = u_vec
 
         m1, m2, l1, l2, g = self.m1, self.m2, self.l1, self.l2, self.g
 
