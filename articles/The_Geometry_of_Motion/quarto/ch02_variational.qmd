@@ -243,20 +243,17 @@ For any $t_0 \leq t_1 \leq t_2$,
 \end{theorem}
 
 \begin{proof}
-Let $\Psi(t) := \Phi(t_2,t_1)\,\Phi(t_1,t_0)$. We compute
+Let $\Psi(t) := \Phi(t,t_1)\,\Phi(t_1,t_0)$. We compute
 \begin{align}
-\dot{\Psi}(t) &= \frac{\dd}{\dd t}\left[\Phi(t_2,t_1)\,\Phi(t_1,t_0)\right]\\
-&= \frac{\partial \Phi(t_2,t_1)}{\partial t}\,\Phi(t_1,t_0) + \Phi(t_2,t_1)\frac{\partial \Phi(t_1,t_0)}{\partial t}.
+\dot{\Psi}(t) &= \frac{\dd}{\dd t}\left[\Phi(t,t_1)\,\Phi(t_1,t_0)\right]\\
+&= \mat{A}(t)\,\Phi(t,t_1)\,\Phi(t_1,t_0) = \mat{A}(t)\,\Psi(t).
 \end{align}
 
-For $t_0 \leq t \leq t_1$, the first term vanishes (since $\Phi(t_2,t_1)$ does not depend on $t$ when $t<t_1$),
-and the second term gives
-\begin{equation}
-\dot{\Psi}(t) = \Phi(t_2,t_1)\,\mat{A}(t)\,\Phi(t_1,t_0) = \mat{A}(t)\,\Psi(t).
-\end{equation}
+At $t=t_1$, we have $\Psi(t_1) = \Phi(t_1,t_1)\,\Phi(t_1,t_0) = \mat{I}_n\,\Phi(t_1,t_0) = \Phi(t_1,t_0)$.
 
-At $t=t_0$, we have $\Psi(t_0) = \Phi(t_2,t_1)\,\Phi(t_1,t_0)|_{t_1=t_0} = \Phi(t_2,t_0)\,\mat{I}_n = \Phi(t_2,t_0)$.
-Thus $\Psi$ and $\Phi(\cdot,t_0)$ satisfy the same ODE with the same initial condition, hence they are equal.
+Both $\Psi(t)$ and $\Phi(t,t_0)$ satisfy the same linear ODE $\dot{\mat{X}} = \mat{A}(t)\mat{X}$.
+By uniqueness of solutions to linear ODEs, if they are equal at $t_1$, they are equal everywhere.
+Thus $\Psi(t) = \Phi(t,t_0)$. Evaluating at $t = t_2$ yields $\Phi(t_2,t_0) = \Phi(t_2,t_1)\,\Phi(t_1,t_0)$, completing the proof.
 \end{proof}
 
 \begin{theorem}[Invertibility]
