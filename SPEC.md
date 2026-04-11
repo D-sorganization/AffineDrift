@@ -27,7 +27,7 @@
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.30                                           |
+| **Spec Version**        | 1.0.31                                           |
 | **Last Spec Update**    | 2026-04-11                                       |
 
 ## 2. Purpose & Mission
@@ -451,6 +451,7 @@ python src/tools/code_quality_ast.py
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                      |
 | ---------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 2026-04-11 | 1.0.30  | fix(tools): preserved escaped LaTeX percent signs during comment cleanup and added regression coverage for `\%` content followed by trailing comments                                                                                                                                                                                                                        |
+| 2026-04-11 | 1.0.31  | test(content): aligned the Geometry of Motion style guardrail with the explicit `tcolorbox` package load while continuing to reject the broad `[most]` option that triggered package option clashes                                                                                                                                    |
 | 2026-04-11 | 1.0.29  | fix(critical): hardened workflow event payload handling, corrected wrist universal-joint ratio semantics, refreshed the chapter 3 double-pendulum numeric example, and restored package-qualified batch converter imports                                                                                                                                                    |
 | 2026-04-11 | 1.0.27  | fix(tools): prevented display math created from LaTeX `equation` environments in `src/tools/latex_to_html.py` from being wrapped twice, and added a regression test for the single-wrapper output                                                                                                                                                                            |
 | 2026-04-11 | 1.0.26  | fix(testing): made `make test` run Python coverage before JavaScript coverage and removed the bare `pass` coverage exclusion so stubs remain visible in reports                                                                                                                                                                                                              |
