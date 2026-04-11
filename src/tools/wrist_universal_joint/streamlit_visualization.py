@@ -2,7 +2,11 @@
 
 from __future__ import annotations
 
+from typing import Any
+
+import numpy as np
 import streamlit as st
+from matplotlib.figure import Figure
 
 from .diagram import draw_diagram as _draw_diagram
 from .plots import (
@@ -17,15 +21,15 @@ from .plots import (
 
 
 @st.cache_resource(max_entries=20)
-def draw_diagram(grip_angle_deg: float, wrist_angle_deg: float):
+def draw_diagram(grip_angle_deg: float, wrist_angle_deg: float) -> Figure:
     """Cache the common diagram renderer for the Streamlit app."""
     return _draw_diagram(grip_angle_deg, wrist_angle_deg)
 
 
 @st.cache_resource(max_entries=20)
 def plot_torque(
-    t,
-    input_torque,
+    t: np.ndarray[Any, Any],
+    input_torque: np.ndarray[Any, Any],
     grip_angle_deg: float,
     wrist_angle_deg: float,
     i_alpha: float,
@@ -34,7 +38,7 @@ def plot_torque(
     show_transmitted: bool,
     show_alpha: bool,
     show_gamma: bool,
-):
+) -> Figure:
     """Cache the torque plot for the Streamlit app."""
     return _plot_torque(
         t,
@@ -52,15 +56,15 @@ def plot_torque(
 
 @st.cache_resource(max_entries=20)
 def plot_acceleration(
-    t,
-    input_torque,
+    t: np.ndarray[Any, Any],
+    input_torque: np.ndarray[Any, Any],
     grip_angle_deg: float,
     wrist_angle_deg: float,
     i_alpha: float,
     i_gamma: float,
     show_alpha: bool,
     show_gamma: bool,
-):
+) -> Figure:
     """Cache the acceleration plot for the Streamlit app."""
     return _plot_acceleration(
         t,
@@ -84,7 +88,7 @@ def plot_transmission_sweep(
     show_velocity: bool,
     show_accel_alpha: bool,
     show_accel_gamma: bool,
-):
+) -> Figure:
     """Cache the transmission sweep plot for the Streamlit app."""
     return _plot_transmission_sweep(
         grip_angle_deg,

@@ -244,8 +244,13 @@ jobs:
             exit 0
           fi
 
-          git fetch --no-tags --depth=1 origin "${{ github.base_ref }}"
-          changed_files=$(git diff --name-only "origin/${{ github.base_ref }}...HEAD")
+          git fetch --no-tags origin "${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}"
+          if changed_files=$(git diff --name-only "origin/${{ github.base_ref }}...HEAD"); then
+            :
+          else
+            echo "No merge base found for origin/${{ github.base_ref }}...HEAD; falling back to HEAD^..HEAD."
+            changed_files=$(git diff --name-only "HEAD^..HEAD")
+          fi
           relevant_files=$(printf "%s\n" "$changed_files" | grep -Ev '^$|^\.github/workflows/ci-standard\.yml$' || true)
 
           if [ -z "$relevant_files" ]; then
