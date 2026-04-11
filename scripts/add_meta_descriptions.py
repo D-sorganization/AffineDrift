@@ -1,12 +1,19 @@
 #!/usr/bin/env python3
-"""Add meta descriptions to files that are missing them.
-Uses intelligent extraction from content to generate relevant descriptions.
+"""Add meta descriptions to chapter/article files missing them.
+
+The updater prefers existing manual overrides, then falls back to a concise
+first meaningful paragraph from the file body.
 """
 
 import re
+import sys
 from pathlib import Path
 
-from src.tools.utils.content_utils import read_qmd_with_frontmatter
+ROOT = Path(__file__).resolve().parent.parent
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from src.tools.utils.content_utils import read_qmd_with_frontmatter  # noqa: E402
 
 # Manual overrides for better descriptions
 DESCRIPTION_OVERRIDES = {
@@ -33,6 +40,8 @@ DESCRIPTION_OVERRIDES = {
     "articles/appendix-applications.qmd": "Practical applications of the control-affine decomposition framework in golf swing analysis, training, and equipment design.",
 }
 
+TARGET_ROOTS = (ROOT / "articles", ROOT / "content")
+
 
 def extract_first_paragraph(content: str) -> str:
     """Extract first meaningful paragraph for description."""
@@ -52,6 +61,8 @@ def extract_first_paragraph(content: str) -> str:
 
     paragraphs = [p.strip() for p in content.split("\n\n") if p.strip()]
     for p in paragraphs:
+        if p.lstrip().startswith(">"):
+            continue
         clean_p = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", p)
         clean_p = re.sub(r"\s+", " ", clean_p).strip()
         clean_p = re.sub(r"[*_]", "", clean_p)
@@ -60,6 +71,23 @@ def extract_first_paragraph(content: str) -> str:
             if len(clean_p) > 155:
                 clean_p = clean_p[:155].rsplit(" ", 1)[0] + "..."
             return clean_p
+
+    return ""
+
+
+def build_description(filepath: Path, content: str, frontmatter: dict[str, str]) -> str:
+    """Build a conservative description for a file."""
+    relpath = filepath.relative_to(ROOT).as_posix()
+    if relpath in DESCRIPTION_OVERRIDES:
+        return DESCRIPTION_OVERRIDES[relpath]
+
+    description = extract_first_paragraph(content)
+    if description:
+        return description
+
+    title = frontmatter.get("title", "").strip()
+    if title:
+        return title
 
     return ""
 
@@ -111,21 +139,34 @@ def main() -> None:
     files_updated = 0
     files_skipped = 0
 
-    for filepath_str, description in DESCRIPTION_OVERRIDES.items():
-        filepath = Path(filepath_str)
-        if not filepath.exists():
-            files_skipped += 1
+    for target_root in TARGET_ROOTS:
+        if not target_root.exists():
             continue
 
-        content, frontmatter = read_qmd_with_frontmatter(filepath)
-        if not content.startswith("---") or "description" in frontmatter:
-            files_skipped += 1
-            continue
+        for filepath in sorted(target_root.rglob("*")):
+            if filepath.suffix.lower() not in {".qmd", ".md"}:
+                continue
 
-        if add_description_to_file(filepath, description):
-            files_updated += 1
-        else:
-            files_skipped += 1
+            content, frontmatter = read_qmd_with_frontmatter(filepath)
+            if not content.startswith("---") or "description" in frontmatter:
+                files_skipped += 1
+                continue
+
+            if not frontmatter.get("title"):
+                files_skipped += 1
+                continue
+
+            description = build_description(filepath, content, frontmatter)
+            if not description:
+                files_skipped += 1
+                continue
+
+            if add_description_to_file(filepath, description):
+                files_updated += 1
+            else:
+                files_skipped += 1
+
+    print(f"Updated {files_updated} files; skipped {files_skipped}.")
 
 
 if __name__ == "__main__":

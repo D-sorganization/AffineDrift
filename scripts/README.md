@@ -53,7 +53,7 @@ Adds or updates meta descriptions in HTML files for SEO optimization.
 python scripts/add_meta_descriptions.py
 ```
 
-**Target:** HTML files in `docs/` directory
+**Target:** Quarto and Markdown article files in `articles/` and `content/`
 
 ### scan_quarto_syntax.py
 
