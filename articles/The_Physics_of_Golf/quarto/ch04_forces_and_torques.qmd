@@ -48,13 +48,13 @@ In the manipulator equation, the terms $\bm{M}(\bm{q}) \ddot{\bm{q}}$ are exactl
 
 **Example: Inertia at the Shoulder**
 
-Recall from Chapter @ch:03_double_pendulum that the effective moment of inertia at the shoulder is about $M_{11} \approx 2.22 \text{ kg m}^2$.
+Recall from Chapter @sec-03_double_pendulum that the effective moment of inertia at the shoulder is about $M_{11} \approx 2.22 \text{ kg m}^2$.
 
 If you want to accelerate the shoulder at $\ddot{\theta}_1 = 1000 \text{ deg/s}^2 = 17.45 \text{ rad/s}^2$, the inertial torque you must overcome is:
 
 \tau_{\text{inertia}} &= M_{11} \cdot \ddot{\theta}_1 = 2.22 \times 17.45 = 38.7 \text{ N m}
 
-This is the baseline using the model parameters from Chapter @ch:03_double_pendulum. Just to accelerate the arm at this rate requires 38.7 N m. If there's also gravity pulling (10.6 N m backward), then you need to generate at least $38.7 + 10.6 = 49.3$ N m of muscular torque to achieve this acceleration in this model (illustrative; depends on individual body parameters <!-- TODO: add citation for representative shoulder angular acceleration values during golf downswing -->).
+This is the baseline using the model parameters from Chapter @sec-03_double_pendulum. Just to accelerate the arm at this rate requires 38.7 N m. If there's also gravity pulling (10.6 N m backward), then you need to generate at least $38.7 + 10.6 = 49.3$ N m of muscular torque to achieve this acceleration in this model (illustrative; depends on individual body parameters <!-- TODO: add citation for representative shoulder angular acceleration values during golf downswing -->).
 
 But wait—there's more. There are also Coriolis and centrifugal forces.
 
@@ -97,7 +97,7 @@ The centrifugal torque on the elbow is:
 
 \tau_c &= m_{\text{forearm}} \cdot a_c \cdot r_{\text{cm}}
 
-The full expression involves the mass distribution and geometry of the forearm-club system, which we develop rigorously in @ch:05_affine_structure. The key observation is that centrifugal force acts to straighten the arm during the downswing, contributing to the passive dynamics that accelerate the clubhead without additional muscular effort.
+The full expression involves the mass distribution and geometry of the forearm-club system, which we develop rigorously in @sec-05_affine_structure. The key observation is that centrifugal force acts to straighten the arm during the downswing, contributing to the passive dynamics that accelerate the clubhead without additional muscular effort.
 
 More precisely, the centrifugal term in $\bm{C}$ is:
 
@@ -403,8 +403,8 @@ Elite golfers have trained their nervous systems to solve this control problem. 
 
 1. **Inertial Torque**. The shoulder has moment of inertia $M_{11} = 2.22$ kg m$^2$. What muscular torque is needed just to accelerate the shoulder at $\ddot{\theta}_1 = 500 \text{ deg/s}^2 = 8.7 \text{ rad/s}^2$, ignoring all other forces?
 2. **Centrifugal Force**. At impact, the shoulder rotates at $\dot{\theta}_1 = 600 \text{ deg/s} = 10.47 \text{ rad/s}$. The forearm+club is 1.35 m from the shoulder. What is the centrifugal acceleration? What force would a 1 kg mass experience at that distance?
-3. **Coriolis Coupling**. Suppose the shoulder rotates at constant rate $\dot{\theta}_1 = 8 \text{ rad/s}$. The elbow suddenly starts rotating at $\dot{\theta}_2 = 5 \text{ rad/s}$. Using the Coriolis term from Chapter @ch:03_double_pendulum, estimate the torque this creates at the shoulder.
-4. **Gravity Torque**. At the top of the backswing, $\theta_1 = 150°, \theta_2 = -70°$. Compute the gravitational torque at the shoulder (use parameters from Chapter @ch:03_double_pendulum). Is gravity trying to rotate the shoulder forward (into the downswing) or backward?
+3. **Coriolis Coupling**. Suppose the shoulder rotates at constant rate $\dot{\theta}_1 = 8 \text{ rad/s}$. The elbow suddenly starts rotating at $\dot{\theta}_2 = 5 \text{ rad/s}$. Using the Coriolis term from Chapter @sec-03_double_pendulum, estimate the torque this creates at the shoulder.
+4. **Gravity Torque**. At the top of the backswing, $\theta_1 = 150°, \theta_2 = -70°$. Compute the gravitational torque at the shoulder (use parameters from Chapter @sec-03_double_pendulum). Is gravity trying to rotate the shoulder forward (into the downswing) or backward?
 5. **Force Balance at Impact**. At impact, the total shoulder acceleration is $\ddot{\theta}_1 = 200 \text{ rad/s}^2$. The gravity torque is about 5 N m (small). The Coriolis/centrifugal torques total about 20 N m. Using $M_{11} = 2.22$ kg m$^2$, how much muscular torque is needed?
 6. **Grip Force**. The club (mass 0.2 kg) is 1.35 m from the shoulder and accelerating at 150 $g$ (centripetal). What force is the hand exerting on the club?
-7. **Work Done by Gravity**. From address ($\theta_1 = 0°$) to the top ($\theta_1 = 150°$), how much does the potential energy increase? (Use parameters from Chapter @ch:03_double_pendulum.) From the top to impact ($\theta_1 = 0°$), how much does gravity do in work?
+7. **Work Done by Gravity**. From address ($\theta_1 = 0°$) to the top ($\theta_1 = 150°$), how much does the potential energy increase? (Use parameters from Chapter @sec-03_double_pendulum.) From the top to impact ($\theta_1 = 0°$), how much does gravity do in work?

@@ -20,7 +20,7 @@ Induced acceleration analysis was pioneered by @ZajacGordon1989 for studying mus
 
 ### Starting from the Manipulator Equation
 
-Recall from Chapter @ch:04_forces_and_torques that the equations of motion for an $n$-degree-of-freedom mechanical system take the form:
+Recall from Chapter @sec-04_forces_and_torques that the equations of motion for an $n$-degree-of-freedom mechanical system take the form:
 
 $$
 \boldsymbol{M}(\boldsymbol{q}) \ddot{\boldsymbol{q}} = \boldsymbol{\tau}_{\text{muscle}} + \boldsymbol{V}(\boldsymbol{q}, \dot{\boldsymbol{q}}) + \boldsymbol{g}(\boldsymbol{q})
@@ -74,7 +74,7 @@ This is not a thought experiment about what *would* happen over time if we only 
 
 ### Connection to the Control-Affine Framework {#sec:iaa_affine_connection}
 
-Readers who have followed the development in Chapter @ch:05_affine_structure will recognize that Equation @eq:iaa_superposition is closely related to the control-affine decomposition:
+Readers who have followed the development in Chapter @sec-05_affine_structure will recognize that Equation @eq:iaa_superposition is closely related to the control-affine decomposition:
 
 $$
 \dot{\boldsymbol{x}} = \underbrace{\boldsymbol{f}(\boldsymbol{x})}_{\text{drift}} + \underbrace{\boldsymbol{G}(\boldsymbol{x}) \boldsymbol{u}}_{\text{control}}
@@ -154,7 +154,7 @@ In the golf swing, similar asymmetries exist. During the early downswing, the la
 
 ## Instantaneous Effects versus Cumulative Effects {#sec:instantaneous_cumulative}
 
-One of the most important distinctions to emerge from the induced acceleration literature---and one with direct relevance to understanding the golf swing---is the difference between **instantaneous effects** and **cumulative effects**. This distinction was developed most clearly in the work of @Hirashima2008kinetic and @Hirashima2011application in the context of baseball pitching, and it maps directly onto the drift-control decomposition introduced in Chapter @ch:05_affine_structure.
+One of the most important distinctions to emerge from the induced acceleration literature---and one with direct relevance to understanding the golf swing---is the difference between **instantaneous effects** and **cumulative effects**. This distinction was developed most clearly in the work of @Hirashima2008kinetic and @Hirashima2011application in the context of baseball pitching, and it maps directly onto the drift-control decomposition introduced in Chapter @sec-05_affine_structure.
 
 ### Instantaneous Effects: What the Current Torques Produce Right Now
 
@@ -191,7 +191,7 @@ The drift field in the golf swing is not an abstract mathematical construct. It 
 
 The golf swing is a fast, ballistic movement. By the time the club is approaching impact, the angular velocities in the system are enormous---shoulder internal rotation rates of $5{,}000$--$7{,}000~\text{deg/s}$ are not unusual in elite players, with wrist uncocking rates even higher. The velocity-dependent torques (centrifugal and Coriolis) at these speeds produce accelerations that dwarf what the muscles can produce instantaneously.
 
-This is the physical basis for the observation made in Chapter @ch:05_affine_structure that the drift-to-control ratio at the wrist reaches 5:1 to 30:1 during the late downswing. The majority of the clubhead's acceleration during impact approach is a *cumulative effect*---the stored consequence of forces applied earlier in the swing, now manifesting as velocity-dependent torques that accelerate the distal segments.
+This is the physical basis for the observation made in Chapter @sec-05_affine_structure that the drift-to-control ratio at the wrist reaches 5:1 to 30:1 during the late downswing. The majority of the clubhead's acceleration during impact approach is a *cumulative effect*---the stored consequence of forces applied earlier in the swing, now manifesting as velocity-dependent torques that accelerate the distal segments.
 
 @Hirashima2008kinetic demonstrated this phenomenon clearly in baseball pitching, where the elbow extension and wrist flexion accelerations are produced predominantly by velocity-dependent torques rather than by local joint torques. The proximal trunk and shoulder joint motions, in contrast, are produced primarily by local muscle torques (instantaneous effects). The kinetic chain, in this framework, is a mechanism by which *instantaneous* muscle efforts at proximal joints are converted into *cumulative* velocity-dependent torques that accelerate distal joints without requiring large distal muscle forces.
 
@@ -273,7 +273,7 @@ This patient-specific diagnostic capability is a direct consequence of superposi
 
 The results reviewed in this chapter frame the golf swing as a **superposition problem**: at each instant, the clubhead acceleration is the sum of contributions from every torque source in the body, weighted by the current configuration of the kinematic chain. This framing provides several actionable insights:
 
-1. **Proximal muscles are the primary energy source.** Consistent with the kinetic chain analysis in Chapter @ch:kinetic_chain, induced acceleration research confirms that the large muscles of the lower body and trunk generate the initial kinetic energy that is subsequently transferred to the distal segments through cumulative effects. Attempting to "muscle" the club with the hands and forearms during the late downswing is not only ineffective (because the drift field already dominates) but may actually be counterproductive (because inappropriate distal torques can disrupt the velocity-dependent acceleration cascade).
+1. **Proximal muscles are the primary energy source.** Consistent with the kinetic chain analysis in Chapter @sec-kinetic_chain, induced acceleration research confirms that the large muscles of the lower body and trunk generate the initial kinetic energy that is subsequently transferred to the distal segments through cumulative effects. Attempting to "muscle" the club with the hands and forearms during the late downswing is not only ineffective (because the drift field already dominates) but may actually be counterproductive (because inappropriate distal torques can disrupt the velocity-dependent acceleration cascade).
 
 2. **The effectiveness of any torque depends on the current posture.** Two golfers applying the same hip torque at the same moment in the downswing may produce very different club accelerations if their postures differ, because $\boldsymbol{M}^{-1}(\boldsymbol{q})$ changes with configuration. This provides a physics-based explanation for why "form" matters: proper sequencing and posture optimize the coupling matrix $\boldsymbol{M}^{-1}$ to maximize the transfer of proximal effort to distal acceleration.
 
@@ -291,7 +291,7 @@ The induced acceleration framework unifies the observations made throughout this
 | Control $\boldsymbol{G}(\boldsymbol{x})\boldsymbol{u}$ | Muscle-induced acceleration | Voluntary effort |
 | $\boldsymbol{M}^{-1}(\boldsymbol{q})$ | Coupling matrix | Posture-dependent transfer |
 | Drift dominance | Cumulative >> instantaneous | Physics takes over late |
-| ZTCF (Ch. @ch:zero_torque_counterfactual) | Zero-torque induced acc. | What happens with no muscles |
+| ZTCF (Ch. @sec-zero_torque_counterfactual) | Zero-torque induced acc. | What happens with no muscles |
 
 This correspondence is not a coincidence: both frameworks start from the same equations of motion and exploit the same linearity of the inverse mass matrix. The biomechanics community and the control theory community arrived at equivalent decompositions through different paths, motivated by different questions ("what does each muscle do?" versus "what can the controller influence?"). Recognizing this equivalence strengthens both approaches and allows practitioners in either field to draw on the insights of the other.
 
@@ -324,7 +324,7 @@ The lesson for golf biomechanics is clear: to understand what each muscle does a
 
 1. For a two-segment planar model (shoulder and elbow in a horizontal plane), write out the $2 \times 2$ mass matrix $\boldsymbol{M}(\boldsymbol{q})$ and compute its inverse. Show that the off-diagonal elements of $\boldsymbol{M}^{-1}$ are generally nonzero, confirming that a shoulder torque induces elbow acceleration.
 
-2. Using the double-pendulum model from Chapter @ch:03_double_pendulum, compute the velocity-dependent torque $\boldsymbol{V}(\boldsymbol{q}, \dot{\boldsymbol{q}})$ and the gravity torque $\boldsymbol{g}(\boldsymbol{q})$ at a representative mid-downswing posture ($\theta_1 = -45^{\circ}, \theta_2 = -90^{\circ}$, with angular velocities $\dot{\theta}_1 = 500~\text{deg/s}, \dot{\theta}_2 = 200~\text{deg/s}$). Compute the induced accelerations from each source and verify that they sum to the total acceleration.
+2. Using the double-pendulum model from Chapter @sec-03_double_pendulum, compute the velocity-dependent torque $\boldsymbol{V}(\boldsymbol{q}, \dot{\boldsymbol{q}})$ and the gravity torque $\boldsymbol{g}(\boldsymbol{q})$ at a representative mid-downswing posture ($\theta_1 = -45^{\circ}, \theta_2 = -90^{\circ}$, with angular velocities $\dot{\theta}_1 = 500~\text{deg/s}, \dot{\theta}_2 = 200~\text{deg/s}$). Compute the induced accelerations from each source and verify that they sum to the total acceleration.
 
 3. The induced acceleration index (IAI) of @Challis2011 quantifies the coupling potential between joints. For a two-segment model of the golfer's lead arm and club, compute the IAI at three postures: (a) early downswing (large lag angle), (b) mid-downswing (moderate lag angle), and (c) near impact (small lag angle). Discuss how the coupling changes and what this implies for wrist release mechanics.
 

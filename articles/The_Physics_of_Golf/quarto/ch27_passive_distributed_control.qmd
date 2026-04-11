@@ -1,6 +1,6 @@
 ---
 title: "Passive and Distributed Control: The Self-Organizing Swing"
-description: "In Chapters @ch:motorcontrolbrain--@ch:motorlearning, we encountered the bandwidth problem: the brain has limited computational resources, slow feedback..."
+description: "In Chapters @sec-motorcontrolbrain--@ch:motorlearning, we encountered the bandwidth problem: the brain has limited computational resources, slow feedback..."
 ---
 
 ::: {.callout-note}
@@ -14,7 +14,7 @@ The body doesn't control the swing by micromanaging every degree of freedom. Ins
 
 ## The Computational Problem: Why the Brain Can't Micromanage
 
-In Chapters @ch:motor_control_brain--@ch:motor_learning, we encountered the bandwidth problem: the brain has limited computational resources, slow feedback loops (100--300 ms latency), and a maximum processing rate around 10--40 bits per second. The golf swing involves roughly 20 degrees of freedom, each of which must be controlled. If the brain tried to compute independent torques for each joint at the rate of swing execution (1000 Hz or faster near impact), it would require simultaneous processing of about 20,000 decisions per second.
+In Chapters @sec-motor_control_brain--@ch:motor_learning, we encountered the bandwidth problem: the brain has limited computational resources, slow feedback loops (100--300 ms latency), and a maximum processing rate around 10--40 bits per second. The golf swing involves roughly 20 degrees of freedom, each of which must be controlled. If the brain tried to compute independent torques for each joint at the rate of swing execution (1000 Hz or faster near impact), it would require simultaneous processing of about 20,000 decisions per second.
 
 
 This exceeds the brain's capacity by orders of magnitude. Yet skilled golfers execute repeatable swings that hit the ball in the same location, with the same contact pattern, swing after swing. How?
@@ -110,7 +110,7 @@ The critical distinction is the *proximal-to-distal impedance gradient*. Look at
 
 This gradient is the physical signature of the kinetic chain. It allows energy to flow from large, powerful proximal segments to smaller, faster distal segments---a cascade that produces the high speed required at impact.
 
-The damping component of impedance---the $\bm{D}\dot{\bm{q}}$ term---is not merely a passive energy sink. As we explore in Chapter @ch:joint_damping_friction, damping at each joint propagates through the mass matrix coupling to affect every other joint in the chain. The brain's choice of co-contraction level at one joint therefore has system-wide consequences for the dynamics of every other joint.
+The damping component of impedance---the $\bm{D}\dot{\bm{q}}$ term---is not merely a passive energy sink. As we explore in Chapter @sec-joint_damping_friction, damping at each joint propagates through the mass matrix coupling to affect every other joint in the chain. The brain's choice of co-contraction level at one joint therefore has system-wide consequences for the dynamics of every other joint.
 
 ::: {.callout-note}
 ## Why Novices Grip Too Hard
@@ -214,7 +214,7 @@ This is why training and practice are so important: they allow the motor system 
 ## Passive Control in the ZTCF Framework
 {#sec:passive_ztcf}
 
-Recall from Chapter @ch:05_affine_structure the Zero Torque Control Fraction (ZTCF) decomposition:
+Recall from Chapter @sec-05_affine_structure the Zero Torque Control Fraction (ZTCF) decomposition:
 
 $$
 \dot{\bm{x}} = f(\bm{x}) + G(\bm{x})\bm{u}.
@@ -326,7 +326,7 @@ A properly pre-tuned kinetic chain exhibits remarkable emergent behaviors. These
 ### Energy Flow from Proximal to Distal
 {#subsec:energy_flow}
 
-In Chapter @ch:energy_transfer, we saw that power flows from proximal segments (large muscles, high inertia) to distal segments (small muscles, low inertia). The mechanism is the inertial load on the distal joints.
+In Chapter @sec-energy_transfer, we saw that power flows from proximal segments (large muscles, high inertia) to distal segments (small muscles, low inertia). The mechanism is the inertial load on the distal joints.
 
 When the proximal joint rotates, the distal segment experiences a centripetal acceleration (and thus an inertial force) in the rotating frame. If the proximal impedance is high and the distal impedance is low, the distal segment will accelerate. The transfer of energy is a consequence of the impedance gradient and the rotational kinematics.
 
@@ -542,10 +542,10 @@ Training should include:
 
 We have now surveyed the motor control system across four chapters:
 
-- **Chapter @ch:motor_control_brain:** The brain and spinal cord have limited bandwidth. Real-time independent control of 20+ DOF is infeasible within the available time budget.
-- **Chapter @ch:motor_learning:** The motor system learns and adapts by modifying forward models and internal representations.
-- **Chapter @ch:motor_learning:** Movement inherently exhibits variability; the motor system manages it through noise shaping and regularization.
-- **Chapter @ch:passive_distributed_control:** The motor system avoids micromanagement by pre-tuning mechanical properties and distributing control to spinal and local circuits.
+- **Chapter @sec-motor_control_brain:** The brain and spinal cord have limited bandwidth. Real-time independent control of 20+ DOF is infeasible within the available time budget.
+- **Chapter @sec-motor_learning:** The motor system learns and adapts by modifying forward models and internal representations.
+- **Chapter @sec-motor_learning:** Movement inherently exhibits variability; the motor system manages it through noise shaping and regularization.
+- **Chapter @sec-passive_distributed_control:** The motor system avoids micromanagement by pre-tuning mechanical properties and distributing control to spinal and local circuits.
 
 
 Passive control is the *final piece*. It shows how the brain solves the fundamental control problem: not by computing fast, but by computing smart. By setting mechanical conditions that allow the physics and the body's own passive dynamics to do most of the work.
