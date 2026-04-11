@@ -54,7 +54,7 @@ The constant 6 reflects the dimension of rigid-body motion in three-dimensional 
 
 ### Interpretation
 
-Let's build intuition. Suppose we have $N$ bodies floating freely in space with no constraints. Each body can translate and rotate independently: $6(N-1)$ DOF total (the first body is the reference frame).
+Consider $N$ bodies floating freely in space with no constraints. Each body can translate and rotate independently: $6(N-1)$ DOF total, with the first body serving as the reference frame.
 
 Each joint imposes constraints. A revolute joint (1 DOF) imposes $c = 6 - 1 = 5$ constraints: it prevents translation in 3 directions and rotation about 2 axes (perpendicular to the joint axis). A spherical joint (3 DOF) imposes $c = 6 - 3 = 3$ constraints: only translation is prevented.
 
@@ -66,7 +66,7 @@ The formula subtracts the total constraints from the free DOF.
 ## 3-Link Robot Arm
 Consider a robot arm with a fixed base and three revolute joints in series:
 
-**Bodies:** Ground (base, fixed) + Link 1 + Link 2 + Link 3 = 4 total. But the ground is the reference frame, so $N = 4$ bodies are connected. Actually, let's be careful: we include ground as one of the $N$, so $N = 4$.
+**Bodies:** Ground (base, fixed) + Link 1 + Link 2 + Link 3 = 4 total. Count the ground as one of the $N$ bodies, so $N = 4$.
 
 **Joints:** 3 revolute joints (one between ground and link 1, one between link 1 and link 2, one between link 2 and link 3). So $J = 3$.
 
@@ -75,7 +75,7 @@ Consider a robot arm with a fixed base and three revolute joints in series:
 **Grübler calculation:**
 $$\mathrm{DOF} = 6(4-1) - 15 = 18 - 15 = 3$$
 
-**Sanity check:** A 3-link planar arm (all revolutes in the same plane) should have 3 DOF. Yes! The end-effector position in the plane has 2 DOF (x and y), and the end-effector orientation has 1 DOF (angle). Total: 3 DOF. $\checkmark$
+**Sanity check:** A 3-link planar arm (all revolutes in the same plane) should have 3 DOF. The end-effector position in the plane has 2 DOF (x and y), and the end-effector orientation has 1 DOF (angle). Total: 3 DOF. $\checkmark$
 
 **Alternative calculation (tree formula):** For a tree structure (no loops), the DOF is simply the sum of joint DOFs:
 $$\mathrm{DOF} = \sum_{i=1}^{J} f_i = 1 + 1 + 1 = 3$$
@@ -89,52 +89,52 @@ Both methods agree for a tree structure.
 ## 4-Bar Mechanism (Linkage)
 Consider a classic 4-bar linkage: 4 bars (links) connected by 4 revolute joints. The links form a closed loop: link 1 connects to link 2, link 2 to link 3, link 3 to link 4, and link 4 back to link 1.
 
-**Bodies:** Ground (if we consider the base fixed) + 3 moving links = 4 bodies. Actually, let's say the ground is the reference and we have 4 rigid bodies total in the chain: $N = 4$.
+**Bodies:** Ground (if we consider the base fixed) + 3 moving links = 4 bodies. Count the ground as the reference and use $N = 4$ rigid bodies total.
 
-Wait, a 4-bar mechanism has 4 links forming a loop. One link is the ground frame (fixed). So $N = 4$ (ground + 3 moving links).
+A 4-bar mechanism has 4 links forming a loop. One link is the ground frame (fixed), so $N = 4$ (ground + 3 moving links).
 
 **Joints:** 4 revolute joints. $J = 4$. Each has $f_i = 1$, so $\sum c_i = 20$.
 
 **Grübler calculation (open chain):**
 $$\mathrm{DOF} = 6(4-1) - 20 = 18 - 20 = -2$$
 
-Negative DOF? This is wrong! The issue is that the formula gives a negative answer when there's a loop. We need to account for loop closure constraints.
+Negative DOF? This is wrong. The open-chain formula gives a negative answer when there is a loop, so loop closure constraints must be included.
 
-**Loop constraints:** The four bars form a closed loop. This loop closure imposes a constraint: the end of bar 1 and the start of bar 2 must meet (position match), AND the end of bar 3 and the start of bar 4 must meet. These are 6 constraints per loop (3 position + 3 orientation) ... but wait, in a planar 4-bar mechanism, only some of these constraints are active.
+**Loop constraints:** The four bars form a closed loop. This loop closure imposes a constraint: the end of bar 1 and the start of bar 2 must meet (position match), AND the end of bar 3 and the start of bar 4 must meet. These are 6 constraints per loop (3 position + 3 orientation), but in a planar 4-bar mechanism only some of these constraints are active.
 
-Actually, the correct formula for a mechanism with loops is:
+The correct formula for a mechanism with loops is:
 $$\mathrm{DOF}_{\text{mechanism}} = 6(N-1) - \sum c_i - (\text{loop closure constraints})$$
 
 For a planar 4-bar mechanism, the loop closure imposes 3 constraints (2 position + 1 orientation in the plane). So:
 $$\mathrm{DOF} = 18 - 20 - (-2) = 18 - 20 + 2 = 0$$
 
-Hmm, still off. Let me reconsider. Actually, the Grübler formula for a planar mechanism (where all DOFs are in a plane) is:
+For a planar mechanism, the Grübler formula is:
 
 $$\mathrm{DOF}_{\text{planar}} = 3(N-1) - \sum c_i^{\text{planar}}$$
 
-For a planar 4-bar: $N = 4$, each revolute imposes $c^{\text{planar}} = 1$ constraint.
+For a planar 4-bar: $N = 4$, and each revolute imposes $c^{\text{planar}} = 1$ constraint.
 $$\mathrm{DOF} = 3(3) - 4(1) = 9 - 4 = 5$$
 
-Still wrong! Let me look this up mentally... A 4-bar linkage should have 1 DOF (you can input one angle and the rest of the mechanism follows).
+This result is still incorrect. A 4-bar linkage should have 1 DOF: one input angle determines the remaining configuration.
 
-Ah, I see the issue. We need to count more carefully. In a planar mechanism:
+The issue is the counting convention. In a planar mechanism:
 - Each body has 3 DOF: 2 translations + 1 rotation in the plane.
 - Ground is fixed: 0 DOF.
 - Each moving body contributes 3 DOF: $N-1$ moving bodies × 3 = 3(N-1)$.
 
-For a 4-bar with 4 bodies (1 ground + 3 moving):$3(4-1) = 9$unconstrained DOF.
+For a 4-bar with 4 bodies (1 ground + 3 moving), $3(4-1) = 9$ unconstrained DOF.
 
-Each revolute in a plane allows 1 rotation, imposes 2 constraints (prevents 2 translations + 1 perpendicular rotation ... wait, let me think again.
+Each revolute in a plane allows 1 rotation and imposes 2 constraints, preventing the two in-plane translations.
 
-Actually, in 2D:
+In 2D:
 - Revolute joint:$f = 1$(rotation),$c = 2$(prevents 2 translations)
 - Prismatic joint:$f = 1$(translation),$c = 2$(prevents perpendicular translation + rotation)
 
-For a 4-bar:$N = 4$,$J = 4$revolutes,$\sum c = 4 \times 2 = 8$.
+For a 4-bar: $N = 4$, $J = 4$ revolutes, and $\sum c = 4 \times 2 = 8$.
 
 $$\mathrm{DOF} = 3(4-1) - 8 = 9 - 8 = 1$$
 
-Yes! A 4-bar linkage has 1 DOF. $\checkmark$
+A 4-bar linkage has 1 DOF. $\checkmark$
 :::
 
 **Lesson:** The Grübler formula is powerful but requires careful counting. For a tree structure (no loops), use the simple formula $\sum f_i$. For a mechanism with loops, you must account for loop closure constraints, and the planar formula differs from the 3D formula.
@@ -143,13 +143,13 @@ Yes! A 4-bar linkage has 1 DOF. $\checkmark$
 {#sec:golf_swing_dof}
 
 
-Let's build a golf swing model from scratch and count its degrees of freedom.
+Consider a golf swing model and count its degrees of freedom.
 
 ### Model Definition
 
 The model consists of the following kinematic chain:
 
-- **Base:** Pelvis (fixed to ground). We'll define the pelvis in the global frame. The pelvis orientation is fixed (for now), or we can allow small pelvis rotations in the $z$-axis (azimuth, yaw).
+- **Base:** Pelvis (fixed to ground). Define the pelvis in the global frame. The pelvis orientation is fixed, or small pelvis rotations can be allowed about the $z$-axis (azimuth, yaw).
 
 - **Spine:**
    - Lumbar spine: 3-DOF joint (spherical) connecting pelvis to lumbar vertebra
@@ -173,7 +173,7 @@ The model consists of the following kinematic chain:
    - Lead ankle: 2-DOF connecting lower leg to foot
 
 
-Actually, let me simplify for now. Let's focus on the upper body and arms (ignore legs for this calculation).
+For this calculation, focus on the upper body and arms and ignore the legs.
 
 ### Simplified Upper Body Model
 
@@ -204,14 +204,14 @@ $$
 **Grübler check (open chain):**
 $$\mathrm{DOF} = 6(10-1) - \sum c_i = 54 - (6-3 \times 3) - (6-3) - (6-2) - ... $$
 
-Actually, let's use the simpler formula for a tree:
+For this open chain, use the simpler tree formula:
 $$\mathrm{DOF}_{\text{tree}} = \sum f_i = 20$$
 
 So without any closure constraints, 20 DOF.
 
 ### The Grip Constraint (Loop Closure)
 
-Here's the critical part: the two hands grip the *same club*. The lead hand holds one end of the grip, and the trail hand holds the other end. The club is a rigid body.
+The key constraint is that the two hands grip the *same club*. The lead hand holds one end of the grip, and the trail hand holds the other end. The club is a rigid body.
 
 This creates a **loop closure constraint**: the position and orientation of the club relative to the lead hand must be consistent with the position and orientation relative to the trail hand.
 
@@ -1213,4 +1213,3 @@ We now have a complete musculoskeletal model: joints with defined degrees of fre
 - **Loop Constraint:** Explain why a two-handed golf grip creates a loop constraint in the kinematic model. How many constraints does this loop impose? (Position: 3, orientation: 3, or less?)
 
 - **Redundancy in Golf:** Explain why elbow swivel (null-space motion) matters for golf swing consistency. Can two golfers produce the same club trajectory with different arm configurations? Give a specific example.
-
