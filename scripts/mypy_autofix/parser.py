@@ -35,9 +35,7 @@ def parse_mypy_output(output: str) -> list[MypyError]:
     """Parse mypy output into structured errors."""
     errors = []
     # Pattern: file.py:line:col: severity: message  [error-code]
-    pattern = re.compile(
-        r"^(.+?):(\d+):(\d+):\s+(error|note):\s+(.+?)(?:\s+\[([^\]]+)\])?\s*$"
-    )
+    pattern = re.compile(r"^(.+?):(\d+):(\d+):\s+(error|note):\s+(.+?)(?:\s+\[([^\]]+)\])?\s*$")
     for line in output.splitlines():
         match = pattern.match(line.strip())
         if match:

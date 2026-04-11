@@ -28,9 +28,7 @@ def _group_errors_by_file(
         if is_safe_path(error.file):
             errors_by_file[error.file].append(error)
         else:
-            report.skipped_reasons.append(
-                f"Skipped {error.file}:{error.line} - outside safe path"
-            )
+            report.skipped_reasons.append(f"Skipped {error.file}:{error.line} - outside safe path")
     return errors_by_file
 
 
@@ -122,14 +120,10 @@ def run_agent(
 
     for filepath, file_errors in sorted(errors_by_file.items()):
         if files_modified >= max_files:
-            report.skipped_reasons.append(
-                f"Skipped {filepath} - max files ({max_files}) reached"
-            )
+            report.skipped_reasons.append(f"Skipped {filepath} - max files ({max_files}) reached")
             continue
         if total_fixes >= max_fixes:
-            report.skipped_reasons.append(
-                f"Skipped {filepath} - max fixes ({max_fixes}) reached"
-            )
+            report.skipped_reasons.append(f"Skipped {filepath} - max fixes ({max_fixes}) reached")
             continue
 
         lines = read_file_lines(filepath)
