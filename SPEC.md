@@ -27,7 +27,7 @@
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.41                                           |
+| **Spec Version**        | 1.0.42                                           |
 | **Last Spec Update**    | 2026-04-11                                       |
 
 ## 2. Purpose & Mission
@@ -184,6 +184,7 @@ AffineDrift/
 | F31 | Dependency pinning and tool isolation   | ✅     | Root Python requirements use exact pins for reproducible CI installs while the Streamlit wrist tool keeps its optional UI-specific requirements in its local requirements file.                                                                                                                                                  |
 | F32 | Stimpmeter-calibrated putting physics   | ✅     | Putting roll simulation and round-level putt speed estimation share the USGA Stimpmeter launch-speed deceleration formula, with regression coverage for Stimp 10 stopping distance.                                                                                                                                              |
 | F33 | Round putting simulator injection       | ✅     | `RoundSimulator` accepts an optional prebuilt `PuttingSimulator` so tests and callers can provide calibrated green physics without relying on inline flat-green construction.                                                                                                                                                    |
+| F34 | RL funnel benchmark result sharing      | ✅     | RL funnel benchmark result structures and result-formatting helpers are exposed through `src/rl_funnel` so benchmark callers can use one shared result surface instead of duplicating lightweight reporting models.                                                                                                                 |
 
 ### API / Interface Contract
 
@@ -460,6 +461,7 @@ python src/tools/code_quality_ast.py
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                      |
 | ---------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-04-11 | 1.0.42  | refactor(rl_funnel): documented the shared benchmark-result surface that centralizes `BenchmarkResult` and `format_results` for RL funnel benchmarking.                                                                                                                                                                                                                     |
 | 2026-04-11 | 1.0.41  | refactor(simulation): allowed `RoundSimulator` to receive an injected `PuttingSimulator`, preserving the default flat-green path while enabling calibrated putting physics in tests and callers.                                                                                                                                                                             |
 | 2026-04-11 | 1.0.40  | fix(physics): corrected putting deceleration to use the Stimpmeter stopping-distance formula in both direct putting simulation and round-level putt speed estimation, with regression coverage for Stimp 10 rollout distance.                                                                                                                                                |
 | 2026-04-11 | 1.0.39  | test(algorithms): replaced placeholder algorithm smoke checks with executable coverage for the iLQR optimizer and RL funnel controllers, including finite-control and validation assertions.                                                                                                                                                                                 |
