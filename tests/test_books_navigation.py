@@ -27,16 +27,24 @@ def test_quarto_render_includes_books_folder() -> None:
     assert "books/**/*.qmd" in quarto
 
 
-def test_navbar_excludes_books_tab() -> None:
-    """Books section is excluded from the navbar until volumes are complete.
+def test_navbar_includes_books_tab() -> None:
+    """Book-related pages are linked from the navbar.
 
-    Issue #1530: The Book Series dropdown linked to non-existent pages.
-    Books are rendered (books/**/*.qmd) but hidden from nav until ready.
+    Issue #2343: Add books section to top-level navigation now that the four
+    book pages are rendered and expected to be navigable.
     """
     quarto = QUARTO_CONFIG.read_text(encoding="utf-8")
-    assert (
-        "books/index.html" not in quarto
-    ), "Book Series links should not appear in _quarto.yml until volumes exist"
+    assert "books/index.html" in quarto
+
+
+def test_navbar_includes_tools_and_repositories() -> None:
+    """Program/tools and repository hubs should be present in navbar links.
+
+    Issue #2343 identified these rendered sections as missing from navigation.
+    """
+    quarto = QUARTO_CONFIG.read_text(encoding="utf-8")
+    assert "pages/tools.html" in quarto
+    assert "repositories/repositories.html" in quarto
 
 
 def test_books_pages_exist_and_use_shared_sidebar() -> None:
