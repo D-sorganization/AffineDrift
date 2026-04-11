@@ -223,14 +223,6 @@ jobs:
               git add -A
             fi
 
-            # Run ruff format for formatting fixes
-            echo "Running ruff format..."
-            ruff format . 2>&1 || true
-            if [ -n "$(git status --porcelain)" ]; then
-              CHANGES_MADE="$CHANGES_MADE ruff-format"
-              git add -A
-            fi
-
             # Run isort as backup for import sorting
             echo "Running isort..."
             isort --profile black . 2>&1 || true
