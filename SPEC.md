@@ -29,7 +29,7 @@ Last-Updated: 2026-04-11T21:43:30Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.42                                           |
+| **Spec Version**        | 1.0.43                                           |
 | **Last Spec Update**    | 2026-04-11                                       |
 
 ## 2. Purpose & Mission
@@ -187,6 +187,7 @@ AffineDrift/
 | F32 | Stimpmeter-calibrated putting physics   | ✅     | Putting roll simulation and round-level putt speed estimation share the USGA Stimpmeter launch-speed deceleration formula, with regression coverage for Stimp 10 stopping distance.                                                                                                                                              |
 | F33 | Round putting simulator injection       | ✅     | `RoundSimulator` accepts an optional prebuilt `PuttingSimulator` so tests and callers can provide calibrated green physics without relying on inline flat-green construction.                                                                                                                                                    |
 | F34 | Mypy autofix package entrypoints        | ✅     | The mypy autofix agent is split into focused modules under `scripts/mypy_autofix` while preserving the legacy `scripts/mypy_autofix_agent.py` workflow entrypoint as a compatibility wrapper.                                                                                                                                    |
+| F35 | Face-angle sensitivity consistency      | ✅     | Physics of Golf chapter 31 keeps driver face-angle offline-distance sensitivity in the documented 13--20 yards-per-degree range and regression tests block the previous 60--70 yards-per-degree contradiction.                                                                                                                   |
 
 ### API / Interface Contract
 
@@ -463,6 +464,7 @@ python src/tools/code_quality_ast.py
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                      |
 | ---------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-04-11 | 1.0.43  | fix(textbook): corrected Physics of Golf chapter 31 face-angle and path-angle directional sensitivity values so the later sensitivity section matches the earlier 13--20 yards-per-degree face-angle range, with regression coverage against the old 60--70 yards-per-degree claim.                                                                                          |
 | 2026-04-11 | 1.0.42  | refactor(tooling): decomposed the mypy autofix agent into a package with focused parser, strategy, file, model, and runner modules while keeping the legacy script path callable for GitHub workflow compatibility.                                                                                                                                                          |
 | 2026-04-11 | 1.0.41  | refactor(simulation): allowed `RoundSimulator` to receive an injected `PuttingSimulator`, preserving the default flat-green path while enabling calibrated putting physics in tests and callers.                                                                                                                                                                             |
 | 2026-04-11 | 1.0.40  | fix(physics): corrected putting deceleration to use the Stimpmeter stopping-distance formula in both direct putting simulation and round-level putt speed estimation, with regression coverage for Stimp 10 rollout distance.                                                                                                                                                |
