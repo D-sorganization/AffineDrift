@@ -33,6 +33,11 @@ on:
         type: boolean
         default: false
 
+permissions:
+  actions: write
+  contents: write
+  pull-requests: read
+
 concurrency:
   group: bot-ci-trigger-${{ github.event.pull_request.number || github.run_id }}
   cancel-in-progress: false
