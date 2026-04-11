@@ -43,7 +43,10 @@ def _compute_torque_signals(
     """
     theta_grip_rad = np.radians(grip_angle_deg)
     phi_wrist_rad = np.radians(wrist_angle_deg)
-    _omega_ratio, tau_ratio = universal_joint_transmission_ratio(theta_grip_rad, phi_wrist_rad)
+    _omega_ratio, tau_ratio = universal_joint_transmission_ratio(
+        phi_rad=phi_wrist_rad,
+        delta_rad=theta_grip_rad,
+    )
     torque_transmitted = input_torque * tau_ratio
     torque_alpha, torque_gamma = distribute_torque_by_grip_angle(torque_transmitted, theta_grip_rad)
     return torque_transmitted, np.asarray(torque_alpha), np.asarray(torque_gamma), tau_ratio
@@ -231,7 +234,10 @@ def _compute_transmission_sweep(
     accel_gamma_ratios_list: list[float] = []
 
     for phi_rad in phi_sweep_rad:
-        omega_r, tau_r = universal_joint_transmission_ratio(theta_grip_rad, phi_rad)
+        omega_r, tau_r = universal_joint_transmission_ratio(
+            phi_rad=phi_rad,
+            delta_rad=theta_grip_rad,
+        )
         omega_ratios_list.append(omega_r)
         tau_ratios_list.append(tau_r)
 
