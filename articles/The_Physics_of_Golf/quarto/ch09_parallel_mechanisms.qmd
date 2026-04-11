@@ -146,7 +146,7 @@ This matrix encodes how each shoulder angle affects the hand positions.
 {Gruebler's Criterion for Planar Mechanisms}{theorem:gruebler}
 For a mechanism with $N$ rigid bodies, $J$ joints, and $C$ constraints, the mobility (degrees of freedom) is:
 
-M = 3(N - 1) - 2J + C_{\text{passive}}
+M = 3(N - 1) - 2J - C_{\text{passive}}
 
 where:
 - $3(N-1)$ is the total DOF if all bodies were free.
@@ -157,25 +157,22 @@ For a 3D mechanism, the formula is:
 
 M = 6(N - 1) - \sum_i f_i
 
-where $f_i$ is the constraint count for joint $i$ (a revolute joint removes 5 DOF in 3D; a ball joint removes 3 DOF, etc.).
+where $f_i$ is the constraint count for joint $i$ (a revolute joint constrains 5 DOF in 3D; a ball joint constrains 3 DOF, etc.).
 
 {What Gruebler's Formula Tells You}{inplain:gruebler_interpretation}
 Gruebler's criterion predicts the effective DOF of a mechanism based purely on its topology—the number and types of joints, without needing to know forces or dynamics.
 
 For example, a Stewart platform (6-legged parallel manipulator):
-- 2 platforms (base + moving): $N = 2$.
-- 6 legs, each with a ball joint: $J = 6$, $f_i = 3$ per joint.
-- Ground contact on base: $C_{\text{passive}} = 3$.
+- 2 platforms (base + moving platform) plus six rigid legs: $N = 8$.
+- Two spherical joints per leg: $J = 12$, with $f_i = 3$ per spherical joint.
 
 Mobility:
 
-M = 6(2-1) - 6 \times 3 + 3 = 6 - 18 + 3 = -9 + 6 = 0 \quad \text{(incorrect)}
+M = 6(8-1) - 12 \times 3 = 42 - 36 = 6
 
-This gives $M = -9$, which is nonsensical. The issue is that the 6 legs are *redundantly constrained*—the structure is over-constrained but still rigid. The correct formula for parallel mechanisms accounts for this via:
+A Stewart platform is a 6-DOF mechanism with a well-conditioned rigid platform: this is the expected baseline mobility for six-legged flight-simulator style manipulators.
 
-M = 6(N-1) - \sum_i f_i + \text{(redundancy correction)}
-
-In the Stewart platform, the redundancy is intentional: the 6 legs over-constrain the moving platform, which allows high stiffness and precision.
+The same count would be different if any leg family was missing constraints, but this is the topology the platform is designed to realize.
 
 **Example: Gruebler Applied to the Golfer**
 
@@ -188,7 +185,7 @@ Simplify the golfer as:
 
 Mobility (planar approximation, 2D):
 
-M = 3(3-1) - 2 \times 11 + 3 = 6 - 22 + 3 = -13
+M = 3(3-1) - 2 \times 11 - 3 = 6 - 22 - 3 = -19
 
 This gives a negative mobility, which means the system is over-constrained. But the golfer is not locked—there's flexibility.
 
