@@ -11,7 +11,8 @@ This module contains the forearm-hand-club diagram rendering:
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Any, cast
+from collections.abc import Callable
+from typing import TYPE_CHECKING, Any, ParamSpec, TypeVar, cast
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -26,6 +27,17 @@ if TYPE_CHECKING:
     from matplotlib.figure import Figure
 
 logger = logging.getLogger(__name__)
+
+_P = ParamSpec("_P")
+_R = TypeVar("_R")
+
+
+def _cache_resource(max_entries: int) -> Callable[[Callable[_P, _R]], Callable[_P, _R]]:
+    """Return Streamlit's cache decorator with preserved function typing."""
+    return cast(
+        Callable[[Callable[_P, _R]], Callable[_P, _R]],
+        st.cache_resource(max_entries=max_entries),
+    )
 
 
 def _draw_club_shaft(ax: Any, wrist_x: float, wrist_y: float, shaft_length: float) -> float:
@@ -333,7 +345,7 @@ def _setup_diagram_axes(ax: Any) -> None:
 
 # Cache figure generation to prevent expensive redraws
 # Limit entries to prevent OOM when sliding through many angles
-@st.cache_resource(max_entries=20)
+@_cache_resource(max_entries=20)
 def draw_diagram(
     grip_angle_deg: float,
     wrist_angle_deg: float,

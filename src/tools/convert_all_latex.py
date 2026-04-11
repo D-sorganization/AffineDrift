@@ -5,8 +5,7 @@ Converts all LaTeX article files to HTML and updates root-level HTML files.
 
 import sys
 
-from latex_to_html import LaTeXToHTMLConverter
-
+from src.tools.latex_to_html import LaTeXToHTMLConverter
 from src.tools.utils import batch_convert, setup_logging
 
 logger = setup_logging(__name__)

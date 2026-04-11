@@ -118,6 +118,22 @@ class TestUniversalJointTransmissionRatio:
         )
         assert omega_ratio * tau_ratio == pytest.approx(1.0)
 
+    def test_matches_closed_form_without_sqrt(self) -> None:
+        """The implementation should match the standard Hooke/Cardan formula."""
+        from src.tools.wrist_universal_joint.torque_calculator import (
+            universal_joint_transmission_ratio,
+        )
+
+        phi_rad = np.radians(30.0)
+        delta_rad = np.radians(20.0)
+        omega_ratio, tau_ratio = universal_joint_transmission_ratio(
+            phi_rad=phi_rad,
+            delta_rad=delta_rad,
+        )
+        denominator = 1.0 - np.sin(delta_rad) ** 2 * np.sin(phi_rad) ** 2
+        assert omega_ratio == pytest.approx(np.cos(delta_rad) / denominator)
+        assert tau_ratio == pytest.approx(denominator / np.cos(delta_rad))
+
     def test_clamps_excessive_delta(self) -> None:
         """Should clamp delta > MAX_DELTA_DEGREES without raising."""
         from src.tools.wrist_universal_joint.torque_calculator import (

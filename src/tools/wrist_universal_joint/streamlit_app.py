@@ -382,7 +382,10 @@ def _compute_info_metrics(params: dict[str, Any], input_torque: Any) -> dict[str
     wrist_angle = params["wrist_angle"]
     theta_grip_rad = np.radians(grip_angle)
     phi_wrist_rad = np.radians(wrist_angle)
-    omega_ratio, tau_ratio = universal_joint_transmission_ratio(theta_grip_rad, phi_wrist_rad)
+    omega_ratio, tau_ratio = universal_joint_transmission_ratio(
+        phi_rad=phi_wrist_rad,
+        delta_rad=theta_grip_rad,
+    )
     torque_transmitted = np.mean(input_torque) * tau_ratio
     torque_alpha, torque_gamma = distribute_torque_by_grip_angle(torque_transmitted, theta_grip_rad)
     return {
