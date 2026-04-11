@@ -1,7 +1,7 @@
 // AffineDrift Service Worker for offline support
-// Version 3: Updated 2026-03-13 (batch fixes for content accuracy, CSS, PWA manifest)
+// Version 5: Updated 2026-04-11 (drop legacy script.js runtime path)
 // TODO #1459: Replace hardcoded version with content-hash cache busting via build pipeline
-const CACHE_NAME = 'affinedrift-v4-1a0bcd4a';
+const CACHE_NAME = 'affinedrift-v5-legacy-js-removed';
 const OFFLINE_URL = '/offline.html';
 
 // Critical startup assets - loaded first for fast splash screen
@@ -19,7 +19,7 @@ const PRECACHE_ASSETS = [
   '/index.html',
   ...STARTUP_ASSETS,
   '/styles.css',
-  '/script.js',
+  '/js/main.js',
   '/favicon.ico',
   '/manifest.json',
   OFFLINE_URL

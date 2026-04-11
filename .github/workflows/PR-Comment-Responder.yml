@@ -79,17 +79,15 @@ jobs:
       - name: Analyze Comment
         id: analyze
         if: steps.filter.outputs.is_bot != 'true' && steps.pr_state.outputs.should_skip != 'true'
+        env:
+          COMMENT_BODY: ${{ github.event.comment.body }}
+          COMMENT_PATH: ${{ github.event.comment.path }}
+          COMMENT_LINE: ${{ github.event.comment.line }}
         run: |
           # Get comment body
           if [ "${{ github.event_name }}" = "pull_request_review_comment" ]; then
-            COMMENT_BODY="${{ github.event.comment.body }}"
-            COMMENT_PATH="${{ github.event.comment.path }}"
-            COMMENT_LINE="${{ github.event.comment.line }}"
             COMMENT_TYPE="review"
           else
-            COMMENT_BODY="${{ github.event.comment.body }}"
-            COMMENT_PATH=""
-            COMMENT_LINE=""
             COMMENT_TYPE="pr"
           fi
 
@@ -122,6 +120,12 @@ jobs:
           steps.analyze.outputs.is_actionable == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COMMENT_BODY: ${{ github.event.comment.body }}
+          COMMENT_PATH: ${{ github.event.comment.path }}
+          COMMENT_LINE: ${{ github.event.comment.line }}
+          COMMENT_ID: ${{ github.event.comment.id }}
+          COMMENT_AUTHOR: ${{ github.event.comment.user.login }}
+          REPOSITORY: ${{ github.repository }}
         run: |
           mkdir -p .jules/pending
           QUEUE_FILE=".jules/pending/pr_comments.json"
@@ -134,61 +138,54 @@ jobs:
           # Create comment entry
           TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
           PR_NUMBER="${{ steps.pr_state.outputs.pr_number }}"
-
           if [ "${{ github.event_name }}" = "pull_request_review_comment" ]; then
-            COMMENT_ID="${{ github.event.comment.id }}"
-            COMMENT_BODY=$(echo '${{ toJson(github.event.comment.body) }}')
-            COMMENT_PATH="${{ github.event.comment.path }}"
-            COMMENT_LINE="${{ github.event.comment.line }}"
             COMMENT_TYPE="review"
-            COMMENT_AUTHOR="${{ github.event.comment.user.login }}"
           else
-            COMMENT_ID="${{ github.event.comment.id }}"
-            COMMENT_BODY=$(echo '${{ toJson(github.event.comment.body) }}')
-            COMMENT_PATH=""
-            COMMENT_LINE=""
             COMMENT_TYPE="pr"
-            COMMENT_AUTHOR="${{ github.event.comment.user.login }}"
           fi
+          export QUEUE_FILE PR_NUMBER TIMESTAMP
+          export COMMENT_TYPE
 
           # Use Python for safe JSON manipulation
-          python3 << PYEOF
+          python3 <<'PYEOF'
           import json
           import os
 
-          queue_file = "$QUEUE_FILE"
+          queue_file = os.environ["QUEUE_FILE"]
 
           # Load existing queue
           try:
-              with open(queue_file, 'r') as f:
+              with open(queue_file, 'r', encoding='utf-8') as f:
                   queue = json.load(f)
           except:
               queue = {"comments": []}
 
           # Check for duplicate (same comment ID)
-          comment_id = "$COMMENT_ID"
+          comment_id = os.environ["COMMENT_ID"]
           existing_ids = [c.get('comment_id') for c in queue.get('comments', [])]
 
           if comment_id in existing_ids:
               print(f"Comment {comment_id} already in queue, skipping")
           else:
+              comment_path = os.environ.get("COMMENT_PATH") or None
+              comment_line = os.environ.get("COMMENT_LINE") or None
               # Add new comment
               new_comment = {
                   "comment_id": comment_id,
-                  "pr_number": int("$PR_NUMBER"),
-                  "type": "$COMMENT_TYPE",
-                  "author": "$COMMENT_AUTHOR",
-                  "body": $COMMENT_BODY,
-                  "path": "$COMMENT_PATH" if "$COMMENT_PATH" else None,
-                  "line": int("$COMMENT_LINE") if "$COMMENT_LINE" else None,
-                  "queued_at": "$TIMESTAMP",
-                  "repository": "${{ github.repository }}"
+                  "pr_number": int(os.environ["PR_NUMBER"]),
+                  "type": os.environ["COMMENT_TYPE"],
+                  "author": os.environ["COMMENT_AUTHOR"],
+                  "body": os.environ["COMMENT_BODY"],
+                  "path": comment_path,
+                  "line": int(comment_line) if comment_line else None,
+                  "queued_at": os.environ["TIMESTAMP"],
+                  "repository": os.environ["REPOSITORY"]
               }
 
               queue["comments"].append(new_comment)
-              queue["last_updated"] = "$TIMESTAMP"
+              queue["last_updated"] = os.environ["TIMESTAMP"]
 
-              with open(queue_file, 'w') as f:
+              with open(queue_file, 'w', encoding='utf-8') as f:
                   json.dump(queue, f, indent=2)
 
               print(f"Queued comment {comment_id} from PR #{new_comment['pr_number']}")
