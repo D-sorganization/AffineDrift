@@ -1,13 +1,15 @@
 ---
 title: "Tangent Hyperplanes III: Control"
 description: "Control design in the tangent space."
+bibliography: ../../references/affine-drift.bib
+csl: ../../references/chicago-author-date.csl
 ---
 
 ## The Linearization-Based Control Principle
 
-If nonlinear dynamics are exactly linear at each instant, then we can use linear control tools — LQR, Riccati equations, all the machinery of linear systems theory — at each instant along a trajectory. **This is the key insight behind DDP, iLQR, and virtually every practical nonlinear control method.**
+Linear control tools are useful for nonlinear systems when they are applied to a local model with a stated operating point or trajectory. LQR, Riccati equations, DDP, and iLQR all exploit this idea, but none of them turn a finite nonlinear problem into a globally linear one.
 
-The logic is elegant: linearize around a nominal trajectory, solve a linear optimal control problem to get a feedback gain, apply that gain, and repeat. Each iteration refines the trajectory. Eventually — if the problem is well-conditioned — the iterations converge to a solution of the nonlinear optimal control problem.
+The procedure is iterative: linearize around a nominal trajectory, solve a local optimal control problem, apply a candidate update, and then relinearize. Convergence depends on initialization, conditioning, regularization, and the local curvature of the problem [@jacobson1970ddp; @bryson1975applied; @todorov2002optimal; @tedrake2023underactuated].
 
 ## Linear Quadratic Regulation (LQR)
 
@@ -43,11 +45,11 @@ $$
 K(t) = R(t)^{-1} B(t)^T S(t)
 $$
 
-The matrix $S(t)$ is the **value function Hessian** — it encodes the cost-to-go from state $x$ at time $t$ under optimal control.
+The matrix $S(t)$ is the quadratic value-function matrix for the linearized problem. In the local second-order expansion used by DDP and iLQR, it plays the role of a Hessian approximation to the cost-to-go.
 
 ## Differential Dynamic Programming (DDP) and iLQR
 
-The power of linearization becomes clear in DDP (Differential Dynamic Programming) and iLQR (iterative Linear-Quadratic Regulator). These algorithms work as follows:
+DDP and iLQR use repeated local approximations. A typical iteration is:
 
 1. **Start with a nominal trajectory** $(x̄(t), ū(t))$ — perhaps from some heuristic or previous iteration.
 
@@ -60,24 +62,24 @@ $$u(t) = ū(t) - K(t)(x(t) - x̄(t))$$
 
 5. **Accept or adjust:** If the cost improved, accept the new trajectory and iterate. Otherwise, backtrack.
 
-This procedure is called **successive approximation** or **shooting.** Each iteration solves a linear optimal control problem on the linearized system, but the actual system integrated forward is nonlinear. The iterations refine the trajectory and the gain, accounting for nonlinear effects through repeated linearization.
+Each iteration solves a local optimal control problem, while the rollout used to test the update is performed on the nonlinear system. The method accounts for nonlinear effects by repeated relinearization and step acceptance, not by assuming that the nonlinear system is globally linear.
 
 ## Exactness in the Limit
 
 **LQR is exact for the linearized system.** That is: if you solve the Riccati equation and apply the feedback control to the linear system $\delta\dot{x} = A(t)\delta x + B(t)\delta u$, you will get the optimal trajectory for that linear system, to machine precision.
 
-Residuals from nonlinearity — the $O(\|\delta x\|^2)$ terms we dropped — are not captured by the linearized LQR solution. However, these residuals are *handled by iteration.* You apply the control, integrate the nonlinear system forward, see what trajectory you get, linearize around it, solve LQR again, and repeat. Each iteration accounts for the mismatch between linear and nonlinear dynamics.
+Residuals from nonlinearity, including the $O(\|\delta x\|^2)$ terms dropped in the first-order model, are not captured by the linearized LQR solution. Iteration reduces this mismatch when the candidate update stays within the local basin where the approximation is accurate.
 
-This is why DDP/iLQR works so well: it is not trying to solve the nonlinear problem in one shot. Instead, it leverages the fact that linearization is exact infinitesimally, and uses iteration to handle the nonlinear corrections systematically.
+This is the practical strength of DDP and iLQR: the method does not solve the nonlinear problem in one step. It uses local models, nonlinear rollouts, and repeated correction.
 
 ## Connection to Stability and Optimality
 
-The Stability-Optimality Duality framework reveals a deep connection: **The Riccati matrix $S(t)$ serves a dual role.**
+The Riccati matrix $S(t)$ can serve two related roles in local analysis:
 
 - **As a value function:** $S(t)$ encodes the cost-to-go from time $t$ onward under optimal control.
 - **As a contraction metric:** $S(t)$ defines a metric with respect to which the optimal feedback controller is a contraction. Perturbations decay exponentially under the optimal feedback law.
 
-This duality means that optimizing for cost and ensuring stability are not separate concerns — they are two faces of the same geometric structure. The Riccati matrix simultaneously minimizes cost and ensures robust convergence.
+This connection should be stated carefully. For a linear-quadratic problem, the Riccati solution gives the optimal feedback law and a Lyapunov function candidate under the usual stabilizability and detectability assumptions. For nonlinear systems, the statement is local and depends on the trajectory, approximation accuracy, and implementation details.
 
 ## Limitations and Practical Considerations
 
@@ -88,9 +90,9 @@ This duality means that optimizing for cost and ensuring stability are not separ
 
 **Computational Cost:** Solving the Riccati equation is $O(n^3)$ per time step. For high-dimensional systems or long horizons, this can be expensive. Approximations like truncated feedback or time-varying gains are sometimes used.
 
-**No Global Guarantees:** iLQR is a local optimization method. It finds a local minimum, not a global one. The quality of the solution depends heavily on initialization.
+**No Global Guarantees:** iLQR is a local optimization method. It may converge to a local minimum, a poor stationary point, or fail to improve if the initialization and regularization are inadequate.
 :::
 
 ## Looking Ahead
 
-We have now seen the full chain: from geometric tangent spaces to linearized dynamics to linear optimal control to iterative nonlinear control algorithms. The final piece is understanding the error: what happens when the linearization breaks down? In [Part 4](./part-4-residuals-curvature.qmd), we examine residuals and curvature — the mechanisms by which nonlinearity limits the range of validity of linear tools.
+We have now connected tangent spaces, variational dynamics, and local optimal control. [Part 4](./part-4-residuals-curvature.qmd) examines the residual terms that limit the validity of these local models.

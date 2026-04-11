@@ -1,11 +1,13 @@
 ---
 title: "Tangent Hyperplanes IV: Residuals and Curvature"
 description: "Residuals arise from curvature, not modeling error."
+bibliography: ../../references/affine-drift.bib
+csl: ../../references/chicago-author-date.csl
 ---
 
 ## The Residual Question
 
-So if tangent spaces are exact infinitesimally, what happens at finite scale? The answer is **residuals** — and understanding them is the key to knowing when your linear tools are trustworthy and when they're not.
+Tangent spaces are exact first-order objects. At finite scale, the omitted higher-order terms appear as residuals. Estimating those residuals is what determines whether a local linear model is adequate for a specific control or simulation task.
 
 We have seen that the linearized perturbation equation:
 
@@ -19,7 +21,7 @@ $$
 \dot{x} = f(x, u)
 $$
 
-When we solve the linearized system and compare the solution to the actual nonlinear trajectory, there is a gap. This gap is the **residual** — not because our model is wrong, but because we deliberately dropped the second-order and higher-order terms.
+When we solve the linearized system and compare the result with the nonlinear trajectory, the difference is the residual. It is not necessarily a modeling error; it is the Taylor remainder produced by using a first-order model over a finite displacement.
 
 ## Residual Definition and Bounds
 
@@ -41,17 +43,17 @@ $$
 r(t) = x(t) - [x̄(t) + \hat{x}(t)]
 $$
 
-**Key bound:** There exist constants $C > 0$ and $\epsilon_0 > 0$ such that for $\|\delta x(t_0)\| + \|\delta u\|_\infty \leq \epsilon_0$:
+Under standard local smoothness and boundedness assumptions, there exist constants $C > 0$ and $\epsilon_0 > 0$ such that for $\|\delta x(t_0)\| + \|\delta u\|_\infty \leq \epsilon_0$:
 
 $$
 \|r(t)\| \leq C \cdot [\|\delta x(t_0)\|^2 + \|\delta u\|_\infty^2]
 $$
 
-The residual is **quadratic in the size of the perturbation.** This is not a coincidence — it comes from the second-order Taylor expansion of $f$.
+The leading residual is quadratic in the size of the perturbation. The constant $C$ depends on bounds on the second derivatives of $f$, the time horizon, and the growth of the state transition matrix.
 
 ## Geometric Interpretation: Curvature
 
-Why does the residual scale as the square of the perturbation? The answer is geometry. In the neighborhood of the reference trajectory, the true nonlinear flow is curved. The linearization gives you the tangent direction at each instant, but if you follow the tangent for a finite distance, you will deviate from the actual curved path.
+The residual scales quadratically because the first-order term has already been accounted for. In the neighborhood of the reference trajectory, the nonlinear flow has curvature. The linearization gives the tangent direction at each instant, but following that tangent over a finite displacement generally deviates from the curved flow.
 
 The amount of deviation is proportional to the curvature of the flow, integrated over the distance traveled. For small perturbations, curvature effects are small. For large perturbations, curvature dominates.
 
@@ -63,18 +65,18 @@ $$
 
 where $H$ represents the Hessian tensor of $f$. The curvature is captured by these second derivatives, and they propagate through the dynamics to create the quadratic residual.
 
-## Practical Implication: A Scaling Law
+## Practical Scaling Law
 
-Here is the most important takeaway: **If you double the perturbation size, the residual quadruples.**
+The local scaling law is simple: if the second-order term dominates and the constants remain comparable, doubling the perturbation size increases the leading residual by roughly a factor of four.
 
 Mathematically: if $\|\delta x(t_0)\| \to 2\|\delta x(t_0)\|$, then $\|r(t)\| \to 4\|r(t)\|$.
 
-This tells you exactly how far you can trust linearization:
+This provides a diagnostic, not a universal guarantee:
 
-- If your perturbation is 1 cm and the residual is 0.1 mm, then doubling to 2 cm makes the residual 0.4 mm (still small).
-- But if your perturbation grows to 10 cm, the residual balloons to 10 mm (now significant).
+- If a perturbation is 1 cm and the residual is 0.1 mm, doubling to 2 cm predicts a leading residual near 0.4 mm, provided the local bound remains valid.
+- If the perturbation grows to 10 cm, the residual estimate may become too large for the linear model to be useful.
 
-The **margin before breakdown** is encoded in this quadratic scaling. You can use it to set error tolerances, determine when to re-linearize, and decide if a linear approximation is good enough for your application.
+The margin before breakdown is therefore empirical and model dependent. The scaling law helps set error tolerances, trigger relinearization, and decide whether a local approximation is sufficient for a given task.
 
 ## Residuals in DDP/iLQR
 
@@ -86,7 +88,7 @@ In iterative linear-quadratic methods, residuals are implicitly handled by the i
 4. You linearize at the new trajectory, where residuals are smaller.
 5. You repeat.
 
-Each iteration reduces the perturbation magnitude, which quadratically reduces the residual. The algorithm is thus a **residual-reduction algorithm** disguised as a trajectory refinement algorithm.
+Successful iterations reduce the perturbation magnitude, which reduces the leading residual. This is one reason local trajectory-optimization methods rely on line search, trust regions, or regularization.
 
 However, understanding residuals explicitly is crucial for:
 
@@ -96,13 +98,13 @@ However, understanding residuals explicitly is crucial for:
 
 ## Residual-Aware Control
 
-Understanding residuals opens the door to **adaptive control algorithms** that explicitly monitor and compensate for nonlinear effects. Instead of blindly trusting the linearization, these methods:
+Residual-aware control methods explicitly monitor and compensate for nonlinear effects. Instead of assuming the linearization remains valid, these methods:
 
 - Estimate residuals online.
 - Use them to adjust the feedback gain or the LQR weight matrices.
 - Re-linearize or use higher-order corrections when residuals grow too large.
 
-For advanced treatments of these ideas, see the site's article on [Residual-Aware Control](../tangent-hyperplane-articles/Advanced/Residual-Aware_Control.qmd).
+For a related site treatment, see [Residual-Aware Control](../tangent-hyperplane-articles/Advanced/Residual-Aware_Control.qmd).
 
 ## Limitations and Edge Cases
 
@@ -116,13 +118,13 @@ For advanced treatments of these ideas, see the site's article on [Residual-Awar
 **Control Nonlinearity:** If the control input enters nonlinearly (e.g., $\dot{x} = f(x, u^2)$), the perturbation equation has a different form, and residuals may scale differently.
 :::
 
-## Summary: The Four Parts
+## Summary
 
-We have now completed the journey:
+The four-part argument is:
 
 1. **Geometry:** Tangent spaces are exact infinitesimal linear approximations to curved manifolds.
 2. **Dynamics:** Nonlinear systems linearize exactly on the tangent space; the linearized system is exact infinitesimally.
 3. **Control:** Linear optimal control tools (LQR, Riccati equations) can be applied at each instant along a trajectory via iteration.
 4. **Residuals:** Nonlinearity introduces curvature, which produces quadratic residuals. These residuals bound the range of validity of linear approximations.
 
-Together, these ideas form the foundation of modern nonlinear control: linearize, solve optimally on the linearized system, integrate forward, measure the gap, and iterate. The gap shrinks quadratically with perturbation size. This is not a hack or an approximation — it is the rigorous mathematics of derivatives and curvature, turned into an algorithm.
+Together, these ideas describe the local workflow behind many nonlinear control algorithms: linearize, solve a local problem, integrate the nonlinear system, measure the residual, and iterate. The method is powerful precisely because it keeps track of what the local model does and does not justify.

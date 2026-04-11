@@ -28,7 +28,7 @@ But control theorists and kinematic engineers almost never look at the physical 
 \begin{laymansbox}{Historical Context: From Transfer Functions to State Space}{history_box}
 In the 1950s, control engineers exclusively used \textbf{transfer functions}\index{Transfer Function}, which relate outputs to inputs in the frequency domain via Laplace transforms. Transfer functions are elegant for single-input single-output (SISO) systems and for analyzing stability via Nyquist diagrams and Bode plots. However, they fail catastrophically for multi-input multi-output (MIMO) systems and provide no insight into what is happening \emph{inside} the system.
 
-In 1960, \textbf{Rudolf E. Kalman} published his seminal paper~\cite{Kalman1960} introducing state-space representations and the foundational concepts of \textbf{controllability}\index{Controllability} and \textbf{observability}\index{Observability}. This was revolutionary: it enabled the design of optimal controllers for complex systems, the treatment of MIMO systems, and the development of the Kalman filter—one of the most important algorithms in engineering. The state-space framework was so powerful that it became the universal language of control theory.
+In 1960, \textbf{Rudolf E. Kalman} introduced the state-space representation of linear dynamical systems and the structural concepts of \textbf{controllability}\index{Controllability} and \textbf{observability}\index{Observability}~\cite{Kalman1960}. The state-space formulation made the analysis of multi-input multi-output systems systematic, opened the door to optimal linear-quadratic control, and led within a few years to the recursive estimation problem now known as the Kalman filter. Within a decade, state space had become the standard working language of quantitative control engineering.
 \end{laymansbox}
 
 The fundamental advantage of state-space methods over transfer functions is \emph{transparency}~\cite{Khalil2002}. A transfer function $G(s) = \frac{Y(s)}{U(s)}$ tells you how the input drives the output, but it hides the internal structure. A state-space model $\dot{\mathbf{x}} = \mathbf{A}\mathbf{x} + \mathbf{B}\mathbf{u}$ exposes the entire flow of energy and information through the system. This transparency makes it possible to:
@@ -41,7 +41,7 @@ The fundamental advantage of state-space methods over transfer functions is \emp
   \item Estimate hidden state variables from measurements (Kalman filter)
 \end{itemize}
 
-The rest of this chapter builds the state-space framework from first principles. By the end, you will understand why Kalman's insight was revolutionary and why state space is now the only way modern control engineers think.
+The rest of this chapter builds the state-space framework from first principles. By the end, the reader should understand why Kalman's formulation became the standard and why state space is the working representation for almost every modern control problem.
 
 \section{Constructing a State Vector}
 \label{sec:state_vector}

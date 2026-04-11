@@ -1,21 +1,23 @@
 ---
 title: "Tangent Hyperplanes I: Geometry"
-description: "Geometric foundations for tangent hyperplanes."
+description: "Geometric foundations for tangent hyperplanes and their first-order limits."
+bibliography: ../../references/affine-drift.bib
+csl: ../../references/chicago-author-date.csl
 ---
 
 ## Overview
 
-This article establishes the geometric foundations of tangent hyperplanes for smooth nonlinear systems. We will see that tangent spaces are not approximate tools — they are exact infinitesimal descriptions of how curved surfaces behave near a point.
+This article sets out the geometric foundation for tangent hyperplanes in smooth nonlinear systems. The central point is narrow but important: tangent spaces are exact first-order objects. They describe the derivative of a smooth constraint or flow at a point. They do not, by themselves, make finite nonlinear motion linear.
 
-## The Intuition: Standing on a Hill
+The distinction matters for control. Linear methods become defensible when the scale of the perturbation and the regularity of the system are stated explicitly. The relevant background is standard geometric mechanics and nonlinear control [@arnold1989mathematical; @bullo2004geometric; @khalil2002nonlinear].
 
-Imagine you're standing on a hill. The ground under your feet is curved — the elevation changes as you walk in any direction. But if you look at just the small patch where you're standing, it looks flat. Perfectly flat. You could lay a sheet of paper down and it would fit without creasing.
+## Local Geometry
 
-That flat patch is the tangent space — and here's the remarkable thing: *it's not an approximation*. It's the exact local structure of the curved surface. Not approximately exact. Exactly exact. In the limit as you shrink the patch to infinitesimal size, the difference between the curved surface and its flat approximation vanishes faster than the shrinkage itself. This is what mathematicians mean by "the tangent space is the limit definition of the derivative."
+A curved surface can look flat in a sufficiently small neighborhood. That local flat object is the tangent space. More precisely, for a smooth manifold the tangent space is the vector space of allowable first-order directions at a point. It is exact as a derivative, while its use as a finite approximation depends on the size of the displacement and the curvature of the underlying set.
 
 ## Manifolds and Tangent Spaces
 
-A smooth manifold $M$ is a curved space that is locally flat. At every point $x \in M$, we can define a tangent space $T_x M$ — a linear vector space that captures the directions in which we can move at that point while staying on (or infinitesimally near) the manifold.
+A smooth manifold $M$ is locally diffeomorphic to Euclidean space. At every regular point $x \in M$, the tangent space $T_x M$ is a linear vector space containing the admissible first-order directions at that point.
 
 For a manifold defined implicitly by a smooth constraint $h(x) = 0$ (where $h: \mathbb{R}^n \to \mathbb{R}^p$ with $p < n$), the tangent space is:
 
@@ -23,7 +25,7 @@ $$
 T_x M = \ker(\nabla h(x)) = \{v \in \mathbb{R}^n : \nabla h(x) \cdot v = 0\}
 $$
 
-In other words, the tangent space consists of all infinitesimal directions that do not change $h$ — the directions in which you can move without violating the constraint.
+This expression assumes that $\nabla h(x)$ has full rank. Under that regularity condition, the implicit function theorem gives a smooth local manifold, and the kernel of the constraint Jacobian gives the allowable first-order directions.
 
 ## Formal Definition of the Tangent Hyperplane
 
@@ -33,19 +35,17 @@ $$
 H_x := x + T_x M
 $$
 
-This is a flat hyperplane passing through $x$ and parallel to the tangent space. It lives in the ambient space $\mathbb{R}^n$, not on the curved manifold itself.
+This affine subspace passes through $x$ and is parallel to $T_x M$. It lives in the ambient space $\mathbb{R}^n$, not on the curved manifold itself.
 
-## The Exactness Claim
+## What "Exact" Means
 
-Here is the key insight: **The tangent hyperplane is exact infinitesimally.**
-
-What does "exact" mean? It means that if you move by a perturbation $\delta x$ with $\|\delta x\| = \epsilon$ in a direction in the tangent space, then the residual difference between where you are and where the constraint surface is located decays as $O(\epsilon^2)$ — quadratically in perturbation size:
+The tangent hyperplane is exact as a first-order description. If $\delta x$ is a perturbation with $\|\delta x\| = \epsilon$ in a tangent direction, the distance between the tangent prediction and the true constraint surface is second order:
 
 $$
 \|x + \delta x - \text{(closest point on } M)\| = O(\|\delta x\|^2)
 $$
 
-This is not an approximation statement. It is a precise asymptotic characterization. By 'exact,' we mean in the **infinitesimal limit**: the tangent hyperplane captures the local geometry with no error as $\|\delta x\| \to 0$ — the Fréchet derivative **is** the linear map, not an approximation to one. For finite perturbations, second-order residuals arise (and these are what make the tangent hyperplane an "excellent approximation" rather than perfect) — we can bound them quantitatively in [Part 4](./part-4-residuals-curvature.qmd). The term "exact" refers to the infinitesimal limit, not to finite-step accuracy.
+Thus "exact" means exact in the infinitesimal limit. For finite perturbations, second-order residuals remain; [Part 4](./part-4-residuals-curvature.qmd) states this as an error bound. This language is intentionally restricted: a tangent hyperplane is not a global replacement for the nonlinear manifold.
 
 ## Simple Example: The Unit Circle
 
@@ -67,15 +67,15 @@ $$
 \|(1, \epsilon) - (1 - \epsilon^2/2, \epsilon)\| = \epsilon^2/2 = O(\epsilon^2)
 $$
 
-Exactly as predicted. Shrink the perturbation by a factor of 10, and the residual shrinks by a factor of 100.
+This is the expected second-order scaling. Shrinking the perturbation by a factor of 10 shrinks this residual term by a factor of 100.
 
 ## Why This Matters for Control and Dynamics
 
-The exactness of tangent spaces is not merely a curiosity. It justifies using linear approximations for system analysis and control design. Because the tangent space captures the exact first-order structure, we can:
+The first-order exactness of tangent spaces is the local reason that linear methods appear throughout nonlinear control [@isidori1995nonlinear; @khalil2002nonlinear]. Because the tangent space captures the first derivative, we can:
 
-- Design controllers using linear tools (LQR, Riccati equations) that are valid in the limit.
-- Bound the error that accumulates from nonlinearity.
-- Know precisely when linear tools fail: when perturbations grow large.
+- design local controllers using linear tools such as LQR and Riccati equations;
+- bound the error introduced by neglected higher-order terms;
+- state when the approximation is expected to fail, namely when perturbations leave the local region where second-order terms remain small.
 
 ## Limitations
 
@@ -87,6 +87,6 @@ The tangent space framework requires some care:
 **Constraint Regularity:** The constraint must have full rank ($\text{rank}(\nabla h) = p$) at every point of interest. Otherwise, the manifold is singular or the dimension of the tangent space is undefined.
 :::
 
-## Looking Ahead
+## Next
 
-Now that we have a rigorous understanding of tangent spaces, we can ask: what happens to the dynamics when the system evolves along a manifold? In [Part 2](./part-2-dynamics.qmd), we will see how the equations of motion decompose into a linear system on the moving tangent space.
+The next question is dynamical: how does a nonlinear system evolve relative to a moving tangent space? [Part 2](./part-2-dynamics.qmd) develops the variational equation along a reference trajectory.

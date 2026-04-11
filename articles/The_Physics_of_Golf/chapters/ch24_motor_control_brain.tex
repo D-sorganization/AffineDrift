@@ -4,9 +4,9 @@
 \epigraph{The nervous system solves the equations of motion every time you swing---not by computing them explicitly, but by encoding centuries of evolutionary wisdom about the structure of dynamics.}{}
 
 \begin{laymansbox}{What This Chapter Is About}{box:ch24_intro}
-We've spent the last several chapters learning the physics: the nonlinear dynamics, the drift-dominated regime, the trade-off between control and drift. But now we must face the central mystery: \textit{the brain solves this problem}. Not perfectly---golfers miss---but with remarkable consistency. An elite golfer produces clubhead speeds within 2\% of their average, swing after swing, despite 30--50 millisecond neural delays, sensor noise, and a system where the downswing lasts only 300 milliseconds.
+We have spent the preceding chapters studying the mechanics of the golfer--club system: the nonlinear dynamics, the drift-dominated regime, and the trade-off between control and drift. We now turn to a different question. The equations of motion only prescribe what happens given an input trajectory $\bm{u}(t)$. Something has to \emph{generate} that trajectory, and in a human golfer that something is the central nervous system. Across a population of reasonably skilled players the resulting clubhead speeds are reported to vary by only a few percent swing-to-swing, even though the downswing itself lasts only a few hundred milliseconds and every stage of the sensorimotor loop is subject to delays and noise on the order of tens of milliseconds \cite{Kandel2013}. The ranges and mechanisms are discussed quantitatively in the sections that follow.
 
-This chapter reframes the nervous system as an engineering control system and asks: what kind of controller is the brain? How does it manage to work within such severe constraints? The answer will astonish you: the brain doesn't try to control everything. Instead, it exploits the drift field---the very physics we've been studying---to do most of the work. The brain is not fighting physics; it is using physics as its primary actuator.
+The chapter reframes the nervous system as a control system in the engineering sense and asks what kind of controller it is. The organizing observation is that the brain does not need to generate every detail of the motion from scratch: it can lean on the drift field $\bm{f}(\bm{x})$ for most of the acceleration and use the active input $\bm{G}(\bm{x})\bm{u}$ for timing and steering. This is the same decomposition we have been developing throughout the book, now viewed from the controller's side.
 \end{laymansbox}
 
 \section{The Control Problem: What the Brain Must Solve}
@@ -30,18 +30,19 @@ The brain's problem: compute $\bm{u}(t)$ as a function of time to produce a desi
 This is not a simple problem. It is a \textit{nonlinear optimal control problem in real time}, subject to harsh constraints:
 
 \begin{constraintbox}{Constraints on the Brain's Control Problem}{box:ch24_constraints}
+The numerical ranges below are drawn from the neuroscience and motor-control literature. Where sources disagree we give the reported range rather than a point estimate.
 \begin{enumerate}
-\item \textbf{Neural delay:} Motor commands must travel from the motor cortex to the muscles via the spinal cord. Typical conduction time: 30--50 milliseconds. If the downswing lasts 300 milliseconds, the motor command that initiates the acceleration phase must be generated 50 milliseconds before the transition.
+\item \textbf{Neural transmission delay:} Motor commands travel from the motor cortex down the corticospinal tract to the muscles. Reported peripheral conduction times for upper-limb motoneurons fall in the tens of milliseconds, with the full cortex-to-muscle path typically reported in the 20--50~ms range \cite{Kandel2013, shadmehr2005computational}. The downswing itself lasts on the order of a few hundred milliseconds, so the motor command that initiates the acceleration phase must be launched well before the visible motion begins.
 
-\item \textbf{Activation dynamics:} Once a motor neuron fires, the muscle doesn't instantly produce torque. Muscle force rises with a time constant of 50--100 milliseconds. The brain cannot produce torque changes faster than this.
+\item \textbf{Activation dynamics:} A motor neuron firing does not produce instantaneous torque. Muscle force rises with a time constant typically reported in the 40--100~ms range depending on the muscle and the task, reflecting the combined electromechanical delay and the twitch dynamics of the active fibers \cite{Zajac1989, Kandel2013}. Torque changes faster than this are not physically realizable by biological actuators.
 
-\item \textbf{Sensory feedback delay:} Information about body position (proprioception) reaches the brain in 30--50 milliseconds. Visual feedback takes 80--150 milliseconds. For vestibular (balance) feedback: 10--20 milliseconds. The downswing lasts 300 milliseconds.
+\item \textbf{Sensory feedback delay:} Proprioceptive information from muscle spindles and Golgi tendon organs reaches cortex with reported latencies of a few tens of milliseconds; visual feedback is substantially slower because of retinal transduction and cortical processing, typically reported on the order of 100~ms; vestibular feedback is the fastest of the three \cite{Kandel2013, shadmehr2005computational, shadmehr2010computational}. A downswing is too short for a visual feedback loop to close within it.
 
-\item \textbf{Noisy sensors:} Proprioceptive acuity varies by joint and is coarser at proximal joints than distal ones \citep{Kandel2013}. Vision has high acuity but slow feedback. The nervous system must work with uncertain, delayed measurements.
+\item \textbf{Noisy sensors:} Proprioceptive acuity varies by joint and is coarser at proximal joints than distal ones \cite{Kandel2013}. Vision has high spatial acuity but slow feedback. The nervous system must therefore work with uncertain, delayed measurements and cannot be treated as a perfect-information controller.
 
-\item \textbf{Noisy actuators:} Muscle force variability is 5--10% even when you're trying to produce exactly the same torque twice. This is called \textit{signal-dependent noise} and increases with force level.
+\item \textbf{Noisy actuators (signal-dependent noise):} Muscle force variability grows approximately linearly with the commanded force, an observation formalized by \cite{harris1998signal} and subsequently incorporated into most optimal-control models of the motor system \cite{Todorov2002}. This is why maximum-effort swings are typically less reproducible than moderate-effort swings.
 
-\item \textbf{Bounded control:} Maximum torques are limited. The proximal joints (shoulder, elbow) produce far more torque than the distal joints (wrist, fingers). The brain cannot exceed these physical limits.
+\item \textbf{Bounded control:} Peak torques are limited. Proximal joints (shoulder, elbow) can produce substantially larger torques than distal joints (wrist, fingers). The brain cannot exceed these physiological limits; any control strategy must respect the per-joint torque envelope.
 \end{enumerate}
 \end{constraintbox}
 
