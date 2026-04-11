@@ -98,6 +98,27 @@ def test_ch09_gruebler_example_stewart_platform_is_consistent() -> None:
     assert "M = -9" not in text
 
 
+def test_ch03_link1_inertia_definition_matches_table_and_equation() -> None:
+    """Chapter 3 should use a consistent shoulder-point-mass convention for I_1."""
+    text = (
+        REPO_ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "ch03_double_pendulum.qmd"
+    ).read_text(encoding="utf-8")
+    assert (
+        "**Link 1** (upper arm): length $L_1$, mass $M_1$, moment of inertia about the shoulder $I_1$."
+        in text
+    )
+    assert (
+        "where $I_1 = M_1 L_{1,\\text{cm}}^2$ is the moment of inertia of link 1 about the shoulder hinge."
+        in text
+    )
+    assert "Moment of inertia $I$ | 0.077 kg m$^2$ | 0.4 kg m$^2$" in text
+    assert "Moment of inertia $I$ | 0.015 kg m$^2$ | 0.4 kg m$^2$" not in text
+    assert (
+        "M_{11} &\\approx 0.077 + 2.5 \\cdot 0.35^2 + 2.5 \\cdot 0.5^2 + 0.4 + 2 \\cdot 2.5 \\cdot 0.35 \\cdot 0.5 \\cos(-5°)"
+        in text
+    )
+
+
 def _collect_fenced_div_balance_issues(text: str) -> list[str]:
     """Return fenced-div balance issues outside fenced code blocks."""
     issues: list[str] = []
