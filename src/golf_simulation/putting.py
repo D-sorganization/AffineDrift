@@ -15,6 +15,20 @@ from src.core.contracts import check_positive, check_range, require
 
 logger = logging.getLogger(__name__)
 
+STIMPMETER_INITIAL_SPEED_M_S = 1.83
+FEET_TO_METERS = 0.3048
+
+
+def stimpmeter_deceleration(stimp: float) -> float:
+    """Return constant rolling deceleration implied by a Stimpmeter reading.
+
+    A Stimpmeter launches the ball at about 1.83 m/s. The reported stimp is
+    the stopping distance in feet, so v^2 = 2ad gives a = v^2 / (2S).
+    """
+    check_range(stimp, 4.0, 16.0, "stimp")
+    stimp_meters = stimp * FEET_TO_METERS
+    return STIMPMETER_INITIAL_SPEED_M_S**2 / (2.0 * stimp_meters)
+
 
 class GreenSurface:
     """Putting green surface with elevation contours.
@@ -238,9 +252,9 @@ class PuttingSimulator:
         vx = velocity_x
         vy = velocity_y
 
-        # Stimpmeter-based deceleration: empirical formula
+        # Stimpmeter-based deceleration from v^2 = 2ad.
         # Higher stimp = lower deceleration = faster green
-        deceleration = 1.285 / self.surface.stimp
+        deceleration = stimpmeter_deceleration(self.surface.stimp)
 
         trajectory: list[tuple[float, float]] = [(x, y)]
         t = 0.0

@@ -15,7 +15,7 @@ import numpy as np
 from src.golf_simulation.ball_flight import BallFlightDynamics, BallFlightState
 from src.golf_simulation.clubs import ClubBag, ClubType, GolfClub, LaunchConditions
 from src.golf_simulation.course import METERS_TO_YARDS, GolfCourse, GolfHole
-from src.golf_simulation.putting import GreenSurface, PuttingSimulator
+from src.golf_simulation.putting import GreenSurface, PuttingSimulator, stimpmeter_deceleration
 from src.golf_simulation.terrain import TerrainType
 
 logger = logging.getLogger(__name__)
@@ -329,7 +329,7 @@ class RoundSimulator:
         direction_error = self.rng.normal(0.0, np.radians(1.0))
         aim_angle = math.atan2(dy, dx) + direction_error
 
-        deceleration = 1.285 / stimp
+        deceleration = stimpmeter_deceleration(stimp)
         target_speed = math.sqrt(2.0 * deceleration * dist) * 1.1
         speed_variation = 1.0 + self.rng.normal(0.0, 0.05)
         putt_speed = target_speed * max(speed_variation, 0.3)

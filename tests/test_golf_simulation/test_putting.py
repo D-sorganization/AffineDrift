@@ -2,7 +2,7 @@
 
 import pytest
 
-from src.golf_simulation.putting import GreenSurface, PuttingSimulator
+from src.golf_simulation.putting import GreenSurface, PuttingSimulator, stimpmeter_deceleration
 
 
 class TestGreenSurface:
@@ -33,6 +33,17 @@ class TestGreenSurface:
 
 
 class TestPuttingSimulator:
+    def test_stimpmeter_deceleration_uses_usga_launch_speed(self):
+        deceleration = stimpmeter_deceleration(10.0)
+        assert deceleration == pytest.approx(0.549, rel=0.01)
+
+    def test_flat_stimp_10_rolls_stimpmeter_distance(self):
+        green = GreenSurface.create_flat_green(20.0, 20.0, 10.0)
+        sim = PuttingSimulator(green)
+        positions = sim.simulate(10.0, 5.0, 0.0, 1.83, max_time=10.0)
+        rollout_m = abs(positions[-1][1] - 5.0)
+        assert rollout_m == pytest.approx(3.048, rel=0.03)
+
     def test_straight_putt_on_flat_green(self):
         green = GreenSurface.create_flat_green(30.0, 30.0, 10.0)
         sim = PuttingSimulator(green)
