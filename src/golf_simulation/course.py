@@ -21,6 +21,47 @@ logger = logging.getLogger(__name__)
 YARDS_TO_METERS = 0.9144
 METERS_TO_YARDS = 1.0 / YARDS_TO_METERS
 
+CHAMPIONSHIP_HOLE_SPECS: tuple[tuple[int, float], ...] = (
+    (4, 415.0),
+    (5, 545.0),
+    (4, 390.0),
+    (3, 185.0),
+    (4, 440.0),
+    (4, 375.0),
+    (5, 530.0),
+    (3, 165.0),
+    (4, 460.0),
+    (4, 420.0),
+    (3, 195.0),
+    (5, 560.0),
+    (4, 385.0),
+    (4, 350.0),
+    (4, 430.0),
+    (3, 220.0),
+    (5, 570.0),
+    (4, 445.0),
+)
+CHAMPIONSHIP_HANDICAPS: tuple[int, ...] = (
+    5,
+    11,
+    9,
+    15,
+    1,
+    13,
+    7,
+    17,
+    3,
+    6,
+    16,
+    10,
+    12,
+    14,
+    2,
+    18,
+    8,
+    4,
+)
+
 
 @dataclass(frozen=True)
 class GolfHole:
@@ -263,42 +304,18 @@ def create_championship_course(name: str = "AffineDrift Championship") -> GolfCo
     Returns:
         A GolfCourse with 18 holes totaling par 72.
     """
-    # (par, yardage) for each hole
-    hole_specs: list[tuple[int, float]] = [
-        (4, 415.0),  # 1
-        (5, 545.0),  # 2
-        (4, 390.0),  # 3
-        (3, 185.0),  # 4
-        (4, 440.0),  # 5
-        (4, 375.0),  # 6
-        (5, 530.0),  # 7
-        (3, 165.0),  # 8
-        (4, 460.0),  # 9
-        (4, 420.0),  # 10
-        (3, 195.0),  # 11
-        (5, 560.0),  # 12
-        (4, 385.0),  # 13
-        (4, 350.0),  # 14
-        (4, 430.0),  # 15
-        (3, 220.0),  # 16
-        (5, 570.0),  # 17
-        (4, 445.0),  # 18
-    ]
-
-    handicaps = [5, 11, 9, 15, 1, 13, 7, 17, 3, 6, 16, 10, 12, 14, 2, 18, 8, 4]
-
     holes = [
         _make_hole(
             number=i + 1,
             par=par,
             yardage=yardage,
-            handicap=handicaps[i],
+            handicap=CHAMPIONSHIP_HANDICAPS[i],
             y_offset=i * 150.0,
         )
-        for i, (par, yardage) in enumerate(hole_specs)
+        for i, (par, yardage) in enumerate(CHAMPIONSHIP_HOLE_SPECS)
     ]
 
-    total_par = sum(p for p, _ in hole_specs)
+    total_par = sum(par for par, _ in CHAMPIONSHIP_HOLE_SPECS)
     logger.info(
         "Created championship course '%s' with 18 holes, par %d",
         name,

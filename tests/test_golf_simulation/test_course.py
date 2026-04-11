@@ -3,6 +3,8 @@
 import pytest
 
 from src.golf_simulation.course import (
+    CHAMPIONSHIP_HANDICAPS,
+    CHAMPIONSHIP_HOLE_SPECS,
     GolfHole,
     create_championship_course,
     create_par3_course,
@@ -50,6 +52,25 @@ class TestGolfCourse:
         course = create_championship_course()
         assert len(course.holes) == 18
         assert course.total_par == 72
+
+    def test_championship_course_uses_declarative_specs(self):
+        course = create_championship_course()
+        assert [hole.number for hole in course.holes] == list(range(1, 19))
+        assert [hole.par for hole in course.holes] == [
+            par for par, _yardage in CHAMPIONSHIP_HOLE_SPECS
+        ]
+        assert [hole.yardage for hole in course.holes] == [
+            yardage for _par, yardage in CHAMPIONSHIP_HOLE_SPECS
+        ]
+        assert [hole.handicap for hole in course.holes] == list(CHAMPIONSHIP_HANDICAPS)
+        assert sorted(hole.handicap for hole in course.holes) == list(range(1, 19))
+
+    def test_championship_course_totals_are_stable(self):
+        course = create_championship_course()
+        assert course.total_par == sum(par for par, _yardage in CHAMPIONSHIP_HOLE_SPECS)
+        assert course.total_yardage == pytest.approx(
+            sum(yardage for _par, yardage in CHAMPIONSHIP_HOLE_SPECS)
+        )
 
     def test_get_hole_by_number(self):
         course = create_par3_course()
