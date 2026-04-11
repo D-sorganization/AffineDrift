@@ -11,6 +11,20 @@ pytestmark = pytest.mark.content_lint
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 AFFINE_ARTICLE = REPO_ROOT / "articles" / "affine-nature-golf-swing.qmd"
+CH06_QMD = (
+    REPO_ROOT
+    / "articles"
+    / "The_Physics_of_Golf"
+    / "quarto"
+    / "ch06_zero_torque_counterfactual.qmd"
+)
+CH06_TEX = (
+    REPO_ROOT
+    / "articles"
+    / "The_Physics_of_Golf"
+    / "chapters"
+    / "ch06_zero_torque_counterfactual.tex"
+)
 CH09_PARALLEL_MECHANISMS = (
     REPO_ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "ch09_parallel_mechanisms.qmd"
 )
@@ -171,3 +185,14 @@ def test_target_pages_do_not_retain_draft_conversational_language() -> None:
         text = source_file.read_text(encoding="utf-8")
         for phrase in CONVERSATIONAL_PHRASES:
             assert phrase not in text, f"{source_file}: found {phrase!r}"
+
+
+def test_ch06_coriolis_example_uses_cm_distance_and_small_values() -> None:
+    """The ch06 Coriolis example should stay tied to the center-of-mass lever arm."""
+    for file_path in (CH06_QMD, CH06_TEX):
+        text = file_path.read_text(encoding="utf-8")
+        assert "L_{c,2} = 0.15" in text
+        assert "0.2 \\times 0.4 \\times 0.15 \\times 5 \\times 10 \\approx 0.6" in text
+        assert "0.2 \\times 0.4 \\times 0.15 \\times 15 \\times 20 \\approx 3.6" in text
+        assert "32 \\text{ Nm}" not in text
+        assert "192 \\text{ Nm}" not in text
