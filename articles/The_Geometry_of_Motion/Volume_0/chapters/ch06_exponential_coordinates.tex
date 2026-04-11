@@ -170,28 +170,30 @@ Computing the matrix exponential $e^{[\hat{\boldsymbol{\omega}}]\theta}$ by summ
     [\hat{\boldsymbol{\omega}}]^3 = -[\hat{\boldsymbol{\omega}}]
   \end{equation}
 
-  This can be verified directly: $[\hat{\boldsymbol{\omega}}]^3 = [\hat{\boldsymbol{\omega}}] \cdot [\hat{\boldsymbol{\omega}}]^2 = [\hat{\boldsymbol{\omega}}] (\hat{\boldsymbol{\omega}}\hat{\boldsymbol{\omega}}^T - \mathbf{I}) = [\hat{\boldsymbol{\omega}}] - [\hat{\boldsymbol{\omega}}] = -[\hat{\boldsymbol{\omega}}]$ (using $[\hat{\boldsymbol{\omega}}] \hat{\boldsymbol{\omega}} = 0$).
+  This can be verified directly: $[\hat{\boldsymbol{\omega}}]^3 = [\hat{\boldsymbol{\omega}}] \cdot [\hat{\boldsymbol{\omega}}]^2 = [\hat{\boldsymbol{\omega}}] (\hat{\boldsymbol{\omega}}\hat{\boldsymbol{\omega}}^T - \mathbf{I}) = \mathbf{0} - [\hat{\boldsymbol{\omega}}] = -[\hat{\boldsymbol{\omega}}]$ (using $[\hat{\boldsymbol{\omega}}] \hat{\boldsymbol{\omega}} = 0$).
 
   The pattern repeats:
   \begin{equation}
-    [\hat{\boldsymbol{\omega}}]^4 = [\hat{\boldsymbol{\omega}}]^2, \quad [\hat{\boldsymbol{\omega}}]^5 = [\hat{\boldsymbol{\omega}}]^3 = -[\hat{\boldsymbol{\omega}}], \quad [\hat{\boldsymbol{\omega}}]^6 = [\hat{\boldsymbol{\omega}}]^2, \quad \ldots
+    [\hat{\boldsymbol{\omega}}]^4 = [\hat{\boldsymbol{\omega}}]^2, \quad
+    [\hat{\boldsymbol{\omega}}]^5 = [\hat{\boldsymbol{\omega}}]^3 = -[\hat{\boldsymbol{\omega}}], \quad
+    [\hat{\boldsymbol{\omega}}]^6 = [\hat{\boldsymbol{\omega}}]^2, \quad [\hat{\boldsymbol{\omega}}]^7 = [\hat{\boldsymbol{\omega}}]^3 = [\hat{\boldsymbol{\omega}}], \quad \ldots
   \end{equation}
 
   Therefore, the Taylor series can be reorganized by grouping terms with the same power modulo 3:
 
   \begin{align}
     e^{[\hat{\boldsymbol{\omega}}]\theta} &= \sum_{n=0}^{\infty} \frac{([\hat{\boldsymbol{\omega}}]\theta)^n}{n!} \\
-    &= \sum_{k=0}^{\infty} \frac{[\hat{\boldsymbol{\omega}}]^{2k} \theta^{2k}}{(2k)!} + \sum_{k=0}^{\infty} \frac{[\hat{\boldsymbol{\omega}}]^{2k+1} \theta^{2k+1}}{(2k+1)!} \\
-    &= \sum_{k=0}^{\infty} \frac{[\hat{\boldsymbol{\omega}}]^2 \theta^{2k}}{(2k)!} + \sum_{k=0}^{\infty} \frac{[\hat{\boldsymbol{\omega}}] \theta^{2k+1}}{(2k+1)!}
+    &= \sum_{k=0}^{\infty} \frac{[\hat{\boldsymbol{\omega}}]^{2k} \theta^{2k}}{(2k)!} + \sum_{k=0}^{\infty} \frac{(-1)^k[\hat{\boldsymbol{\omega}}] \theta^{2k+1}}{(2k+1)!} \\
+    &= \sum_{k=0}^{\infty} \frac{[\hat{\boldsymbol{\omega}}]^2 \theta^{2k}}{(2k)!} + \sum_{k=0}^{\infty} \frac{(-1)^k[\hat{\boldsymbol{\omega}}] \theta^{2k+1}}{(2k+1)!}
   \end{align}
 
-  (using $[\hat{\boldsymbol{\omega}}]^0 = \mathbf{I}$, $[\hat{\boldsymbol{\omega}}]^2 = [\hat{\boldsymbol{\omega}}]^2$, and $[\hat{\boldsymbol{\omega}}]^{2k+1} = [\hat{\boldsymbol{\omega}}]$).
+  (using $[\hat{\boldsymbol{\omega}}]^0 = \mathbf{I}$, $[\hat{\boldsymbol{\omega}}]^2 = [\hat{\boldsymbol{\omega}}]^2$, and $[\hat{\boldsymbol{\omega}}]^{2k+1} = (-1)^k[\hat{\boldsymbol{\omega}}]$).
 
   Now separate the constant terms:
   \begin{align}
-    e^{[\hat{\boldsymbol{\omega}}]\theta} &= \mathbf{I} + \sum_{k=1}^{\infty} \frac{[\hat{\boldsymbol{\omega}}]^2 \theta^{2k}}{(2k)!} + \sum_{k=0}^{\infty} \frac{[\hat{\boldsymbol{\omega}}] \theta^{2k+1}}{(2k+1)!} \\
-    &= \mathbf{I} + [\hat{\boldsymbol{\omega}}]^2 \sum_{k=1}^{\infty} \frac{\theta^{2k}}{(2k)!} + [\hat{\boldsymbol{\omega}}] \sum_{k=0}^{\infty} \frac{\theta^{2k+1}}{(2k+1)!} \\
-    &= \mathbf{I} + [\hat{\boldsymbol{\omega}}]^2 \left( \sum_{k=0}^{\infty} \frac{\theta^{2k}}{(2k)!} - 1 \right) + [\hat{\boldsymbol{\omega}}] \sum_{k=0}^{\infty} \frac{\theta^{2k+1}}{(2k+1)!}
+    e^{[\hat{\boldsymbol{\omega}}]\theta} &= \mathbf{I} + \sum_{k=1}^{\infty} \frac{[\hat{\boldsymbol{\omega}}]^2 \theta^{2k}}{(2k)!} + \sum_{k=0}^{\infty} \frac{(-1)^k[\hat{\boldsymbol{\omega}}] \theta^{2k+1}}{(2k+1)!} \\
+    &= \mathbf{I} + [\hat{\boldsymbol{\omega}}]^2 \sum_{k=1}^{\infty} \frac{\theta^{2k}}{(2k)!} + [\hat{\boldsymbol{\omega}}] \sum_{k=0}^{\infty} \frac{(-1)^k\theta^{2k+1}}{(2k+1)!} \\
+    &= \mathbf{I} + [\hat{\boldsymbol{\omega}}]^2 \left( \sum_{k=0}^{\infty} \frac{\theta^{2k}}{(2k)!} - 1 \right) + [\hat{\boldsymbol{\omega}}] \sum_{k=0}^{\infty} \frac{(-1)^k\theta^{2k+1}}{(2k+1)!}
   \end{align}
 
   Recognizing the Taylor series for $\cos\theta$ and $\sin\theta$:
