@@ -15,10 +15,33 @@ from __future__ import annotations
 
 import logging
 import re
+from typing import Any
+
+import yaml
 
 from src.core.contracts import require
 
 logger = logging.getLogger(__name__)
+
+
+def _safe_load_frontmatter(yaml_content: str) -> dict[str, Any]:
+    """Parse YAML frontmatter into a mapping, returning empty data on bad YAML."""
+    try:
+        parsed = yaml.safe_load(yaml_content)
+    except yaml.YAMLError as exc:
+        logger.debug("Could not parse YAML frontmatter: %s", exc)
+        return {}
+
+    return parsed if isinstance(parsed, dict) else {}
+
+
+def _stringify_scalar(value: Any) -> str | None:
+    """Return a stable string for scalar YAML values; skip nested data."""
+    if isinstance(value, bool):
+        return "true" if value else "false"
+    if isinstance(value, (str, int, float)):
+        return str(value)
+    return None
 
 
 def extract_frontmatter(content: str) -> tuple[str | None, str]:
@@ -77,11 +100,9 @@ def extract_title_description(
     if yaml_content is None:
         return default_title, default_description
 
-    title_match = re.search(r'^title:\s*"([^"]+)"', yaml_content, re.MULTILINE)
-    desc_match = re.search(r'^description:\s*"([^"]+)"', yaml_content, re.MULTILINE)
-
-    title = title_match.group(1) if title_match else default_title
-    description = desc_match.group(1) if desc_match else default_description
+    frontmatter = _safe_load_frontmatter(yaml_content)
+    title = _stringify_scalar(frontmatter.get("title")) or default_title
+    description = _stringify_scalar(frontmatter.get("description")) or default_description
 
     return title, description
 
@@ -108,27 +129,14 @@ def parse_frontmatter_dict(content: str) -> dict[str, str]:
         {'title': 'My Article', 'description': 'A great article'}
     """
     require(content is not None, "content must not be None")
+    yaml_content, _ = extract_frontmatter(content)
+    if yaml_content is None:
+        return {}
+
     frontmatter: dict[str, str] = {}
-
-    if not content.startswith("---"):
-        return frontmatter
-
-    parts = content.split("---", 2)
-    if len(parts) < 3:
-        return frontmatter
-
-    yaml_content = parts[1].strip()
-    current_key: str | None = None
-
-    for line in yaml_content.split("\n"):
-        # Skip nested/indented content
-        if line.startswith("  ") and current_key is not None:
-            continue
-        if ":" in line:
-            key, value = line.split(":", 1)
-            key = key.strip()
-            value = value.strip().strip('"').strip("'")
-            frontmatter[key] = value
-            current_key = key
+    for key, value in _safe_load_frontmatter(yaml_content).items():
+        scalar_value = _stringify_scalar(value)
+        if scalar_value is not None:
+            frontmatter[str(key)] = scalar_value
 
     return frontmatter
