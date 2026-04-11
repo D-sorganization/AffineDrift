@@ -213,5 +213,5 @@ def test_ch02_liouville_jacobi_formula_has_correct_det_factor() -> None:
         align_end = text.find(r"\end{proof}", label_idx)
     section = text[eq_start:align_end]
     assert r"\frac{\dd}{\dd t}\det(\Phi(t,t_0))" in section
-    assert r"/\det(\Phi)" not in section
+    assert r"\frac{1}{\det(\Phi)}" not in section
     assert r"\det(\Phi)\trace(\Phi^{-T}\,\dot{\Phi})" in section
