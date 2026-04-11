@@ -191,6 +191,10 @@ jobs:
         env:
           PYTHONPATH: src
         run: pytest tests/ --cov=src --cov-report=xml --cov-fail-under=50 --timeout=120
+      - name: Run Content Lint Tests
+        env:
+          PYTHONPATH: src
+        run: pytest --override-ini addopts= tests/ -m content_lint --timeout=120
       - name: Audit Python Dependencies
         run: pip install pip-audit && pip-audit -r requirements.txt
       - name: Critical Module Coverage Gate

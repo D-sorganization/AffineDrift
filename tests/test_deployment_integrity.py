@@ -6,6 +6,10 @@ in the GitHub Actions deployment workflow.
 
 from pathlib import Path
 
+import pytest
+
+pytestmark = pytest.mark.content_lint
+
 ROOT_DIR = Path(__file__).parent.parent
 WORKFLOW_PATH = ROOT_DIR / ".github" / "workflows" / "deploy-website.yml"
 CI_WORKFLOW_PATH = ROOT_DIR / ".github" / "workflows" / "ci-standard.yml"
@@ -78,6 +82,15 @@ def test_check_scripts_exist() -> None:
     """Ensure the check scripts actually exist."""
     assert (ROOT_DIR / "src" / "tools" / "check_links.py").exists()
     assert (ROOT_DIR / "src" / "tools" / "check_site_health.py").exists()
+
+
+def test_ci_workflow_runs_content_lint_tests() -> None:
+    """CI should run content-lint checks explicitly after the default test pass."""
+    assert CI_WORKFLOW_PATH.exists(), "CI workflow file missing"
+    content = CI_WORKFLOW_PATH.read_text(encoding="utf-8")
+    assert "Run Content Lint Tests" in content
+    assert "pytest --override-ini addopts=" in content
+    assert "-m content_lint" in content
 
 
 def test_latex_release_workflow_integrity() -> None:
