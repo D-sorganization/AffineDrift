@@ -27,7 +27,8 @@ def test_shared_style_file_exists_with_core_primitives() -> None:
     assert "chapblue" in text
     assert r"\gomapplylistingstyle" in text
     assert r"\gomdeclaretheorems" in text
-    assert r"\RequirePackage{tcolorbox}" not in text
+    assert r"\RequirePackage[most]{tcolorbox}" not in text
+    assert r"\RequirePackage{tcolorbox}" in text
     assert r"\providecommand{\dd}" in text
 
 

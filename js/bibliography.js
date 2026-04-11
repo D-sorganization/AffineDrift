@@ -152,7 +152,12 @@
     }`;
 
     if (state.filtered.length === 0) {
-      listEl.innerHTML = `<p>No matches found. Try a broader query.</p>`;
+      listEl.innerHTML = `
+        <div class="bib-empty-state">
+          <p>No matches found. Try a broader query.</p>
+          <button type="button" class="sort-btn" id="bib-clear-search" style="margin-top: 1rem;">Clear Search</button>
+        </div>
+      `;
       return;
     }
 
@@ -288,6 +293,15 @@
     });
 
     listEl.addEventListener("click", (event) => {
+      const clearBtn = event.target.closest("#bib-clear-search");
+      if (clearBtn) {
+        searchInput.value = "";
+        state.query = "";
+        searchInput.focus();
+        renderList();
+        return;
+      }
+
       const button = event.target.closest("button[data-details-id]");
       if (!button) return;
       const entry = state.entries.find(
