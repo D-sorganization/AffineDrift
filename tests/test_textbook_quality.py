@@ -27,7 +27,11 @@ FENCED_DIV_FILES = (
 PHYSICS_OF_GOLF_QMD_FILES = (
     REPO_ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "ch02_language_of_motion.qmd",
     REPO_ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "ch05_affine_structure.qmd",
-    REPO_ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "ch06_zero_torque_counterfactual.qmd",
+    REPO_ROOT
+    / "articles"
+    / "The_Physics_of_Golf"
+    / "quarto"
+    / "ch06_zero_torque_counterfactual.qmd",
     REPO_ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "ch07_constraint_forces.qmd",
     REPO_ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "ch08_triple_pendulum.qmd",
     REPO_ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "ch09_parallel_mechanisms.qmd",
