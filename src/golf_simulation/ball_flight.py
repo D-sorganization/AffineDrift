@@ -26,6 +26,12 @@ from src.tangent_models.examples import DynamicalSystem
 
 logger = logging.getLogger(__name__)
 
+AIR_DYNAMIC_VISCOSITY_PAS = 1.81e-5
+GOLF_BALL_ZERO_LIFT_DRAG = 0.47
+GOLF_BALL_DRAG_TRANSITION_RE = 1.6e5
+GOLF_BALL_DRAG_TRANSITION_WIDTH = 2.5e4
+GOLF_BALL_LIFT_RESPONSE = 4.5
+
 
 @dataclass(frozen=True)
 class BallFlightState:
@@ -100,8 +106,8 @@ class BallFlightDynamics(DynamicalSystem):
             mass: Ball mass in kg (regulation: 0.04593 kg).
             radius: Ball radius in meters (regulation: 0.02135 m).
             rho: Air density in kg/m^3 (sea level: 1.225).
-            cd: Drag coefficient (dimensionless).
-            cl: Lift coefficient for Magnus effect (dimensionless).
+            cd: High-Reynolds-number drag coefficient asymptote.
+            cl: Lift-scale parameter for the spin-dependent Magnus model.
             gravity: Gravitational acceleration in m/s^2.
             wind: 3D wind velocity vector [wx, wy, wz] in m/s (default: no wind).
             spin_decay_rate: Exponential spin decay rate in 1/s.
@@ -130,6 +136,43 @@ class BallFlightDynamics(DynamicalSystem):
         """Cross-sectional area of the ball in m^2."""
         return np.pi * self.radius**2
 
+    def _reynolds_number(self, speed_rel: float) -> float:
+        """Compute the ball Reynolds number for a relative air speed."""
+        return (self.rho * speed_rel * (2.0 * self.radius)) / AIR_DYNAMIC_VISCOSITY_PAS
+
+    def _drag_coefficient(self, speed_rel: float) -> float:
+        """Return a velocity-dependent drag coefficient.
+
+        The curve blends a low-speed sphere-like drag coefficient toward the
+        golf-ball asymptote as Reynolds number rises through the drag crisis.
+        """
+        if speed_rel <= 0.0:
+            return self.cd
+
+        reynolds = self._reynolds_number(speed_rel)
+        blend = 1.0 / (
+            1.0
+            + np.exp((reynolds - GOLF_BALL_DRAG_TRANSITION_RE) / GOLF_BALL_DRAG_TRANSITION_WIDTH)
+        )
+        return float(self.cd + (GOLF_BALL_ZERO_LIFT_DRAG - self.cd) * blend)
+
+    def _lift_coefficient(self, speed_rel: float, spin: np.ndarray[Any, Any]) -> float:
+        """Return a spin-dependent lift coefficient.
+
+        The coefficient scales with the spin parameter r * |omega| / |v| and
+        saturates smoothly so the force uses the standard 0.5 * rho * v^2 * C_L * A
+        form rather than a volumetric proxy.
+        """
+        if speed_rel <= 0.0:
+            return 0.0
+
+        spin_mag = float(np.linalg.norm(spin))
+        if spin_mag <= 0.0:
+            return 0.0
+
+        spin_parameter = self.radius * spin_mag / speed_rel
+        return float(self.cl * (1.0 - np.exp(-GOLF_BALL_LIFT_RESPONSE * spin_parameter)))
+
     def dynamics(
         self,
         x: np.ndarray[Any, Any],
@@ -155,13 +198,25 @@ class BallFlightDynamics(DynamicalSystem):
         speed_rel = float(np.linalg.norm(v_rel))
 
         # Aerodynamic drag: -0.5 * rho * cd * A * |v_rel| * v_rel
-        drag = -0.5 * self.rho * self.cd * self.area * speed_rel * v_rel
+        cd_eff = self._drag_coefficient(speed_rel)
+        drag = -0.5 * self.rho * cd_eff * self.area * speed_rel * v_rel
 
-        # Magnus effect via Kutta-Joukowski for a spinning sphere with dimple
-        # enhancement: F = cl * (4/3) * pi * r^3 * rho * (spin x v_rel).
-        # The cl parameter scales for dimple-enhanced lift (~2-3x smooth sphere).
-        kj_coeff = self.cl * (4.0 / 3.0) * np.pi * self.radius**3 * self.rho
-        magnus = kj_coeff * np.cross(spin, v_rel)
+        # Magnus effect uses the standard projected-area lift formulation:
+        # F_L = 0.5 * rho * v^2 * C_L(S, Re) * A in the direction of omega x v.
+        magnus = np.zeros(3)
+        if speed_rel > 0.0:
+            lift_direction = np.cross(spin, v_rel)
+            lift_direction_norm = float(np.linalg.norm(lift_direction))
+            if lift_direction_norm > 0.0:
+                cl_eff = self._lift_coefficient(speed_rel, spin)
+                magnus = (
+                    0.5
+                    * self.rho
+                    * speed_rel**2
+                    * cl_eff
+                    * self.area
+                    * (lift_direction / lift_direction_norm)
+                )
 
         # Gravity
         gravity_force = np.array([0.0, 0.0, -self.mass * self.gravity])

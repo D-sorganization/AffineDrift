@@ -27,7 +27,7 @@
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.32                                           |
+| **Spec Version**        | 1.0.33                                           |
 | **Last Spec Update**    | 2026-04-11                                       |
 
 ## 2. Purpose & Mission
@@ -41,6 +41,7 @@ AffineDrift is a research platform that explores golf swing biomechanics through
 - Model golf swings as affine controllable systems with mathematical rigor, enabling optimization through advanced control algorithms
 - Publish and maintain research-quality educational content via Quarto website (AffineDrift.com) on GitHub Pages
 - Implement swing trajectory optimization using differential dynamic programming (DDP) and iLQR solvers
+- Model golf-ball flight with velocity-dependent drag and spin-dependent Magnus lift using the standard projected-area aerodynamic formulation
 - Achieve and maintain >50% test coverage with property-based testing (Hypothesis) across all critical modules
 - Provide comprehensive educational resources that bridge control theory and applied biomechanics
 - Maintain textbook bibliographies and chapter citations with explicit scientific sourcing for biomechanics, multibody dynamics, geometry, and control-theory claims
@@ -188,6 +189,8 @@ AffineDrift/
   - `optimize(swing_model, constraints) -> OptimizedTrajectory` — Run trajectory optimization
 - `core.optimizers.iLQR` — iLQR solver
   - `solve(dynamics, cost_fn, initial_trajectory) -> Solution` — Compute optimal trajectory
+- `golf_simulation.ball_flight.BallFlightDynamics` — Golf-ball flight integrator
+  - Uses Reynolds-dependent drag and spin-parameter lift to compute aerodynamic forces during free flight
 - `tangent_models.TangentSpaceModel` — Tangent space abstraction
   - `project(vector) -> Vector` — Project to tangent space
 

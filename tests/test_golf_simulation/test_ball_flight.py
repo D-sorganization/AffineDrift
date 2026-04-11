@@ -72,6 +72,23 @@ class TestBallFlightDynamics:
         # Should still have drag and gravity but no lift
         assert dx.shape == (9,)
 
+    def test_drag_coefficient_is_velocity_dependent(self):
+        """Higher Reynolds number should reduce the drag coefficient."""
+        bfd = BallFlightDynamics()
+        assert bfd._drag_coefficient(20.0) > bfd._drag_coefficient(70.0)
+
+    def test_magnus_force_uses_projected_area_lift_formula(self):
+        """Magnus force should follow the standard lift expression."""
+        bfd = BallFlightDynamics(cd=0.0, cl=0.5)
+        x = np.array([0, 0, 10, 60, 0, 0, 0, -250, 0], dtype=float)
+        u = np.zeros(3)
+        dx = bfd.dynamics(x, u)
+
+        expected_cl = bfd._lift_coefficient(60.0, np.array([0.0, -250.0, 0.0]))
+        expected_lift = 0.5 * bfd.rho * 60.0**2 * expected_cl * bfd.area
+
+        assert dx[5] == pytest.approx(-bfd.gravity + expected_lift / bfd.mass)
+
     def test_spin_decay(self):
         """Spin should decay over time."""
         bfd = BallFlightDynamics(spin_decay_rate=0.05)
