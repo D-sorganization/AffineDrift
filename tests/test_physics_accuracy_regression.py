@@ -57,9 +57,9 @@ class TestSO3TangentSpace:
         # R^T @ X should be skew-symmetric (in so(3))
         RT_X = R.T @ X
         skew_check = RT_X + RT_X.T
-        assert np.allclose(
-            skew_check, 0, atol=1e-10
-        ), "R^T @ X must be skew-symmetric for X in T_R SO(3)"
+        assert np.allclose(skew_check, 0, atol=1e-10), (
+            "R^T @ X must be skew-symmetric for X in T_R SO(3)"
+        )
 
 
 class TestDoublePendulumConsistency:
@@ -141,9 +141,9 @@ class TestEigenvalueInvariance:
         eigs_A = sorted(np.linalg.eigvals(A).real)
         eigs_similar = sorted(np.linalg.eigvals(A_similar).real)
 
-        assert np.allclose(
-            eigs_A, eigs_similar, atol=1e-10
-        ), "Eigenvalues must be invariant under constant similarity transform"
+        assert np.allclose(eigs_A, eigs_similar, atol=1e-10), (
+            "Eigenvalues must be invariant under constant similarity transform"
+        )
 
     def test_eigenvalues_NOT_invariant_under_timedep_transform(self):
         """Eigenvalues are NOT invariant under time-dependent coordinate changes.

@@ -39,7 +39,7 @@ def _stringify_scalar(value: Any) -> str | None:
     """Return a stable string for scalar YAML values; skip nested data."""
     if isinstance(value, bool):
         return "true" if value else "false"
-    if isinstance(value, (str, int, float)):
+    if isinstance(value, str | int | float):
         return str(value)
     return None
 
