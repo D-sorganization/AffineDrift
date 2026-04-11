@@ -7,6 +7,7 @@ Covers issues #1742, #1743, #1744, #1745, #1746, #1749, #1750, #1755.
 from __future__ import annotations
 
 import warnings
+from pathlib import Path
 from typing import Any
 from pathlib import Path
 
@@ -411,3 +412,23 @@ class TestCh10EnergyBudgetExplanation:
         assert "negative work" in chapter
         assert "air resistance" in chapter or "internal dissipation" in chapter
         assert "conservation error" in chapter
+
+
+# ---------------------------------------------------------------------------
+# Issue #2332: short-iron D-plane weighting must remain face-dominant
+# ---------------------------------------------------------------------------
+
+
+class TestShortIronDPlaneWeighting:
+    """#2332: short-iron launch-direction weighting should not flip toward path."""
+
+    def test_short_iron_weighting_shifts_toward_face(self) -> None:
+        """The chapter text should keep the short-iron split face-dominant."""
+        chapter = Path(
+            "articles/The_Physics_of_Golf/quarto/ch31_swing_plane_launch.qmd"
+        ).read_text(encoding="utf-8")
+        assert (
+            "For a short iron (high loft, lower ball speed), the weighting shifts further toward the face:"
+            in chapter
+        )
+        assert "w_{\\text{face}} \\approx 0.75, \\quad w_{\\text{path}} \\approx 0.25" in chapter
