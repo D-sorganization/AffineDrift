@@ -1,4 +1,6 @@
 import logging
+import sys
+from importlib import import_module
 
 from src.tools.utils import logging_utils
 
@@ -10,6 +12,7 @@ def test_imports():
 def test_setup_logging():
     logger = logging_utils.setup_logging("test_logger")
     assert isinstance(logger, logging.Logger)
+    assert logger.level == logging.INFO
 
 
 def test_setup_logging_with_timestamp():
@@ -65,3 +68,46 @@ def test_setup_logging_respects_explicit_level():
     """Explicit level parameter takes precedence over env var."""
     logger = logging_utils.setup_logging("test_explicit_level", level=logging.WARNING)
     assert isinstance(logger, logging.Logger)
+    assert logger.level == logging.WARNING
+
+
+def test_setup_logging_does_not_configure_root_for_named_loggers(monkeypatch):
+    calls: list[tuple[tuple[object, ...], dict[str, object]]] = []
+
+    def fake_basic_config(*args: object, **kwargs: object) -> None:
+        calls.append((args, kwargs))
+
+    monkeypatch.setattr(logging, "basicConfig", fake_basic_config)
+
+    logger = logging_utils.setup_logging("src.tools.check_links")
+
+    assert isinstance(logger, logging.Logger)
+    assert calls == []
+
+
+def test_setup_logging_configures_root_for_main(monkeypatch):
+    calls: list[tuple[tuple[object, ...], dict[str, object]]] = []
+
+    def fake_basic_config(*args: object, **kwargs: object) -> None:
+        calls.append((args, kwargs))
+
+    monkeypatch.setattr(logging, "basicConfig", fake_basic_config)
+
+    logger = logging_utils.setup_logging("__main__", format_string="%(message)s")
+
+    assert isinstance(logger, logging.Logger)
+    assert calls == [((), {"level": logging.INFO, "format": "%(message)s"})]
+
+
+def test_importing_module_does_not_configure_root_logging(monkeypatch):
+    calls: list[tuple[tuple[object, ...], dict[str, object]]] = []
+
+    def fake_basic_config(*args: object, **kwargs: object) -> None:
+        calls.append((args, kwargs))
+
+    monkeypatch.setattr(logging, "basicConfig", fake_basic_config)
+
+    sys.modules.pop("src.tools.check_links", None)
+    import_module("src.tools.check_links")
+
+    assert calls == []
