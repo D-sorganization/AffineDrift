@@ -59,7 +59,7 @@ The constant 6 reflects the dimension of rigid-body motion in three-dimensional 
 
 \subsection{Interpretation}
 
-Let's build intuition. Suppose we have $N$ bodies floating freely in space with no constraints. Each body can translate and rotate independently: $6(N-1)$ DOF total (the first body is the reference frame).
+Consider $N$ bodies floating freely in space with no constraints. Each body can translate and rotate independently: $6(N-1)$ DOF total, with the first body serving as the reference frame.
 
 Each joint imposes constraints. A revolute joint (1 DOF) imposes $c = 6 - 1 = 5$ constraints: it prevents translation in 3 directions and rotation about 2 axes (perpendicular to the joint axis). A spherical joint (3 DOF) imposes $c = 6 - 3 = 3$ constraints: only translation is prevented.
 
@@ -70,7 +70,7 @@ The formula subtracts the total constraints from the free DOF.
 \begin{example}{3-Link Robot Arm}{ex:robot_arm_dof}
 Consider a robot arm with a fixed base and three revolute joints in series:
 
-\textbf{Bodies:} Ground (base, fixed) + Link 1 + Link 2 + Link 3 = 4 total. But the ground is the reference frame, so $N = 4$ bodies are connected. To be precise: we include ground as one of the $N$, so $N = 4$.
+\textbf{Bodies:} Ground (base, fixed) + Link 1 + Link 2 + Link 3 = 4 total. Count the ground as one of the $N$ bodies, so $N = 4$.
 
 \textbf{Joints:} 3 revolute joints (one between ground and link 1, one between link 1 and link 2, one between link 2 and link 3). So $J = 3$.
 
@@ -79,7 +79,7 @@ Consider a robot arm with a fixed base and three revolute joints in series:
 \textbf{Grübler calculation:}
 $$\mathrm{DOF} = 6(4-1) - 15 = 18 - 15 = 3$$
 
-\textbf{Sanity check:} A 3-link planar arm (all revolutes in the same plane) should have 3 DOF. Confirmed: The end-effector position in the plane has 2 DOF (x and y), and the end-effector orientation has 1 DOF (angle). Total: 3 DOF. $\checkmark$
+\textbf{Sanity check:} A 3-link planar arm (all revolutes in the same plane) should have 3 DOF. The end-effector position in the plane has 2 DOF (x and y), and the end-effector orientation has 1 DOF (angle). Total: 3 DOF. $\checkmark$
 
 \textbf{Alternative calculation (tree formula):} For a tree structure (no loops), the DOF is simply the sum of joint DOFs:
 $$\mathrm{DOF} = \sum_{i=1}^{J} f_i = 1 + 1 + 1 = 3$$
@@ -137,14 +137,14 @@ A 4-bar linkage has 1~DOF. $\checkmark$ You can input one angle and the geometry
 \index{golf swing model}
 \index{kinematic structure}
 
-Let's build a golf swing model from scratch and count its degrees of freedom.
+Consider a golf swing model and count its degrees of freedom.
 
 \subsection{Model Definition}
 
 The model consists of the following kinematic chain:
 
 \begin{enumerate}
-\item \textbf{Base:} Pelvis (fixed to ground). We'll define the pelvis in the global frame. The pelvis orientation is fixed (for now), or we can allow small pelvis rotations in the $z$-axis (azimuth, yaw).
+\item \textbf{Base:} Pelvis (fixed to ground). Define the pelvis in the global frame. The pelvis orientation is fixed, or small pelvis rotations can be allowed about the $z$-axis (azimuth, yaw).
 
 \item \textbf{Spine:}
    \begin{itemize}
@@ -213,7 +213,7 @@ So without any closure constraints, 20 DOF.
 
 \subsection{The Grip Constraint (Loop Closure)}
 
-Here's the critical part: the two hands grip the \emph{same club}. The lead hand holds one end of the grip, and the trail hand holds the other end. The club is a rigid body.
+The key constraint is that the two hands grip the \emph{same club}. The lead hand holds one end of the grip, and the trail hand holds the other end. The club is a rigid body.
 
 This creates a \textbf{loop closure constraint}: the position and orientation of the club relative to the lead hand must be consistent with the position and orientation relative to the trail hand.
 
