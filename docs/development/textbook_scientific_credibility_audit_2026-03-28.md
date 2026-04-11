@@ -2,7 +2,7 @@
 
 Date: 2026-03-28  
 Scope:
-- Dynamics textbook: `articles/The_Geometry_of_Motion/quarto/` (with emphasis on `volume2_content.qmd` and `vol2/11-case-study-golf-swing.qmd`)
+- Dynamics textbook: `articles/The_Geometry_of_Motion/quarto/` (with emphasis on `volume2_content.qmd`)
 - The Physics of Golf textbook: `articles/The_Physics_of_Golf/quarto/`
 
 ## Executive Summary
@@ -53,8 +53,8 @@ This audit identified high-priority scientific credibility risks in both textboo
 The case-study chapter uses absolutist language (“only mathematically truthful,” “mathematical secret of the professional golfer,” “virtually zero funnel diameter”) without cited empirical validation.
 
 **Evidence**
-- Overstated claims and rhetoric in final case-study narrative.【F:articles/The_Geometry_of_Motion/quarto/vol2/11-case-study-golf-swing.qmd†L40-L47】
-- Strong quantitative/qualitative claims without references in the same chapter.【F:articles/The_Geometry_of_Motion/quarto/vol2/11-case-study-golf-swing.qmd†L16-L29】
+- Overstated claims and rhetoric in final case-study narrative.【F:articles/The_Geometry_of_Motion/quarto/volume2_content.qmd†L40-L47】
+- Strong quantitative/qualitative claims without references in the same chapter.【F:articles/The_Geometry_of_Motion/quarto/volume2_content.qmd†L16-L29】
 
 **Required Fixes**
 - Reword claims into evidence-graded statements: *established*, *model-derived*, *hypothesis*.
@@ -228,7 +228,7 @@ Both textbooks repeatedly introduce constants inline, causing traceability and c
 Numerous sections mix instruction, rhetoric, and derivation in long paragraphs, reducing readability and obscuring what is known vs assumed.
 
 **Evidence**
-- Dense, mixed-purpose paragraphing in dynamics ILC section and narrative case-study sections.【F:articles/The_Geometry_of_Motion/quarto/volume2_content.qmd†L4280-L4284】【F:articles/The_Geometry_of_Motion/quarto/vol2/11-case-study-golf-swing.qmd†L16-L47】
+- Dense, mixed-purpose paragraphing in dynamics ILC section and narrative case-study sections.【F:articles/The_Geometry_of_Motion/quarto/volume2_content.qmd†L4280-L4284】
 - Dense explanatory blocks and assertive teaching style in golf chapters with limited references.【F:articles/The_Physics_of_Golf/quarto/ch12_fascia.qmd†L57-L76】【F:articles/The_Physics_of_Golf/quarto/ch14_complete_swing.qmd†L293-L295】
 
 **Required Fixes**
