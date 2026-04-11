@@ -31,23 +31,31 @@ This chapter quantifies energy flow, shows why constraint forces are energy tran
 
 The total mechanical energy of the swing is:
 
+$$
 E = T + V = \sum_{i=1}^{n} T_i + \sum_{i=1}^{n} V_i
+$$
 
 where:
 
 - **Kinetic energy of segment $i$:**
 
+  $$
   T_i = \frac{1}{2} m_i v_{c,i}^2 + \frac{1}{2} I_i \dot{q}_i^2
+  $$
 
   The first term is translational KE of the center of mass; the second is rotational KE about the center of mass.
 - **Potential energy of segment $i$:**
 
+  $$
   V_i = m_i g h_i
+  $$
 
   where $h_i$ is the height of the center of mass above a reference.
 - **Total kinetic energy (for a system of linked segments):**
 
+  $$
   T = \frac{1}{2} \dot{\bm{q}}^T \bm{M}(\bm{q}) \dot{\bm{q}}
+  $$
 
   The mass matrix $\bm{M}(\bm{q})$ encodes all the kinetic energy, including coupling between segments.
 
@@ -70,19 +78,27 @@ During the downswing, potential energy and elastic energy are converted to kinet
 
 **Power** is the rate of energy change:
 
+$$
 P = \frac{dE}{dt}
+$$
 
 For kinetic energy:
 
+$$
 \frac{dT}{dt} = \frac{d}{dt}\left(\frac{1}{2}\dot{\bm{q}}^T \bm{M} \dot{\bm{q}}\right) = \dot{\bm{q}}^T \bm{M} \ddot{\bm{q}} + \frac{1}{2}\dot{\bm{q}}^T \dot{\bm{M}} \dot{\bm{q}}
+$$
 
 For potential energy:
 
+$$
 \frac{dV}{dt} = \sum_i m_i g \frac{dh_i}{dt}
+$$
 
 The total mechanical power balance is:
 
+$$
 \frac{dE}{dt} = \frac{dT}{dt} + \frac{dV}{dt} = \tau^T \dot{\bm{q}} + P_{\text{non-conservative}}
+$$
 
 where $\tau^T \dot{\bm{q}}$ is the power delivered by all torques (muscles, gravity, constraints).
 
@@ -91,7 +107,9 @@ where $\tau^T \dot{\bm{q}}$ is the power delivered by all torques (muscles, grav
 ### Power Decomposition {#theorem:power_decomposition}
 The power delivered to the system can be decomposed:
 
+$$
 P_{\text{total}} = P_{\text{gravity}} + P_{\text{Coriolis}} + P_{\text{input}} + P_{\text{constraint}}
+$$
 
 where:
 
@@ -111,12 +129,18 @@ Each term individually can be nonzero (e.g., the constraint force acts on segmen
 
 For example, at the wrist:
 
-P_{\text{constraint, arm}} &= \lambda_{\text{wrist}} \cdot v_{\text{arm}} \quad \text{(work done on arm)}
+$$
+\begin{aligned}
+P_{\text{constraint, arm}} &= \lambda_{\text{wrist}} \cdot v_{\text{arm}} \quad \text{(work done on arm)} \\
 P_{\text{constraint, club}} &= (-\lambda_{\text{wrist}}) \cdot v_{\text{club}} \quad \text{(reaction on club)}
+\end{aligned}
+$$
 
 If the arm is moving at velocity $v_a$ and the club at velocity $v_c$, and they're constrained to move together (or with a specific relationship), then:
 
+$$
 \lambda_{\text{wrist}} \cdot v_a - \lambda_{\text{wrist}} \cdot v_c = \lambda_{\text{wrist}} (v_a - v_c) = 0
+$$
 
 Only if the velocities are related by the constraint. But before the constraint is enforced, $v_a \neq v_c$, and the constraint force acts to accelerate the club and decelerate the arm, transferring energy between them.
 
@@ -127,15 +151,21 @@ Only if the velocities are related by the constraint. But before the constraint 
 ### Constraint Forces Do Zero Net Work {#theorem:constraint_zero_work}
 For any holonomic constraint $\bm{\Phi}(\bm{q}) = \mathbf{0}$, the power delivered by constraint forces is:
 
+$$
 P_{\text{constraint}} = \bm{\lambda}^T \bm{J}_c(\bm{q}) \dot{\bm{q}} = \bm{\lambda}^T \frac{d\bm{\Phi}}{dt}
+$$
 
 Since $\bm{\Phi}(\bm{q}(t)) = \mathbf{0}$ for all $t$:
 
+$$
 \frac{d\bm{\Phi}}{dt} = \bm{J}_c \dot{\bm{q}} = \mathbf{0}
+$$
 
 Therefore:
 
+$$
 P_{\text{constraint}} = \mathbf{0}
+$$
 
 ### The Physical Meaning {#inplain:constraint_power_meaning}
 The velocity $\dot{\bm{q}}$ is always in the null space of $\bm{J}_c$ (it's the only direction that maintains the constraint). Constraint forces act in the range of $\bm{J}_c^T$, which is perpendicular to the null space.
@@ -155,50 +185,70 @@ Track the kinetic energy of each segment during the downswing. The specific time
 1. **Phase 1: Top of backswing (t = 0)**
    Configuration: fully coiled, little rotation.
 
-   T_{\text{torso}} &= \frac{1}{2} I_1 \dot{q}_1^2 \approx \frac{1}{2} \times 2.0 \times 0^2 = 0 \text{ J}
-   T_{\text{arm}} &= \frac{1}{2} I_2 \dot{q}_2^2 \approx \frac{1}{2} \times 0.5 \times 0^2 = 0 \text{ J}
-   T_{\text{club}} &= \frac{1}{2} I_3 \dot{q}_3^2 \approx \frac{1}{2} \times 0.1 \times 0^2 = 0 \text{ J}
+   $$
+   \begin{aligned}
+   T_{\text{torso}} &= \frac{1}{2} I_1 \dot{q}_1^2 \approx \frac{1}{2} \times 2.0 \times 0^2 = 0 \text{ J} \\
+   T_{\text{arm}} &= \frac{1}{2} I_2 \dot{q}_2^2 \approx \frac{1}{2} \times 0.5 \times 0^2 = 0 \text{ J} \\
+   T_{\text{club}} &= \frac{1}{2} I_3 \dot{q}_3^2 \approx \frac{1}{2} \times 0.1 \times 0^2 = 0 \text{ J} \\
    T_{\text{total}} &= 0 \text{ J}
+   \end{aligned}
+   $$
 
    Potential energy is maximum (arms elevated), approximately $V \approx 20$ J.
    **Energy partition: 0\% kinetic, 100\% potential (gravitational + elastic).**
 2. **Phase 2: Early downswing (t = 0.1 s, 100 ms)**
    Hip acceleration has begun. Torso is rotating fast, arms are beginning to lag.
 
-   \dot{q}_1 &= 8 \text{ rad/s} \quad T_1 = \frac{1}{2} \times 2.0 \times 64 = 64 \text{ J}
-   \dot{q}_2 &= 3 \text{ rad/s} \quad T_2 = \frac{1}{2} \times 0.5 \times 9 = 2.25 \text{ J}
-   \dot{q}_3 &= 2 \text{ rad/s} \quad T_3 = \frac{1}{2} \times 0.1 \times 4 = 0.2 \text{ J}
+   $$
+   \begin{aligned}
+   \dot{q}_1 &= 8 \text{ rad/s} \quad T_1 = \frac{1}{2} \times 2.0 \times 64 = 64 \text{ J} \\
+   \dot{q}_2 &= 3 \text{ rad/s} \quad T_2 = \frac{1}{2} \times 0.5 \times 9 = 2.25 \text{ J} \\
+   \dot{q}_3 &= 2 \text{ rad/s} \quad T_3 = \frac{1}{2} \times 0.1 \times 4 = 0.2 \text{ J} \\
    T_{\text{total}} &= 66.45 \text{ J}
+   \end{aligned}
+   $$
 
    $V \approx 15$ J (arms have fallen).
    **Energy partition: 66.45 J kinetic (81\%), 15 J potential (19\%). Most energy is in torso rotation.**
 3. **Phase 3: Mid-downswing (t = 0.25 s, 250 ms)**
    Torso approaching maximum speed, arm beginning to accelerate.
 
-   \dot{q}_1 &= 12 \text{ rad/s} \quad T_1 = \frac{1}{2} \times 2.0 \times 144 = 144 \text{ J}
-   \dot{q}_2 &= 12 \text{ rad/s} \quad T_2 = \frac{1}{2} \times 0.5 \times 144 = 36 \text{ J}
-   \dot{q}_3 &= 10 \text{ rad/s} \quad T_3 = \frac{1}{2} \times 0.1 \times 100 = 5 \text{ J}
+   $$
+   \begin{aligned}
+   \dot{q}_1 &= 12 \text{ rad/s} \quad T_1 = \frac{1}{2} \times 2.0 \times 144 = 144 \text{ J} \\
+   \dot{q}_2 &= 12 \text{ rad/s} \quad T_2 = \frac{1}{2} \times 0.5 \times 144 = 36 \text{ J} \\
+   \dot{q}_3 &= 10 \text{ rad/s} \quad T_3 = \frac{1}{2} \times 0.1 \times 100 = 5 \text{ J} \\
    T_{\text{total}} &= 185 \text{ J}
+   \end{aligned}
+   $$
 
    $V \approx 5$ J (arms fully lowered).
    **Energy partition: 185 J kinetic (97\%), 5 J potential (3\%). Most energy is still in torso, but arm is accelerating.**
 4. **Phase 4: Late downswing (t = 0.35 s, 350 ms)**
    Torso beginning to decelerate (it's rotating maximally), arm and club accelerating rapidly.
 
-   \dot{q}_1 &= 13 \text{ rad/s} (peaking) \quad T_1 = \frac{1}{2} \times 2.0 \times 169 = 169 \text{ J}
-   \dot{q}_2 &= 18 \text{ rad/s} \quad T_2 = \frac{1}{2} \times 0.5 \times 324 = 81 \text{ J}
-   \dot{q}_3 &= 25 \text{ rad/s} \quad T_3 = \frac{1}{2} \times 0.1 \times 625 = 31.25 \text{ J}
+   $$
+   \begin{aligned}
+   \dot{q}_1 &= 13 \text{ rad/s} (peaking) \quad T_1 = \frac{1}{2} \times 2.0 \times 169 = 169 \text{ J} \\
+   \dot{q}_2 &= 18 \text{ rad/s} \quad T_2 = \frac{1}{2} \times 0.5 \times 324 = 81 \text{ J} \\
+   \dot{q}_3 &= 25 \text{ rad/s} \quad T_3 = \frac{1}{2} \times 0.1 \times 625 = 31.25 \text{ J} \\
    T_{\text{total}} &= 281.25 \text{ J}
+   \end{aligned}
+   $$
 
    $V \approx 0$ J (minimal potential energy remaining).
    **Energy partition: Club now carries 31.25 J out of 281.25 J total, or 11\%. Energy is being transferred to the club.**
 5. **Phase 5: Impact (t = 0.42 s, 420 ms)**
    Torso decelerating (energy exhausted), arm decelerating, club at maximum speed.
 
-   \dot{q}_1 &= 8 \text{ rad/s} (slowing) \quad T_1 = \frac{1}{2} \times 2.0 \times 64 = 64 \text{ J}
-   \dot{q}_2 &= 15 \text{ rad/s} (slowing) \quad T_2 = \frac{1}{2} \times 0.5 \times 225 = 56.25 \text{ J}
-   \dot{q}_3 &= 50 \text{ rad/s} (maximum) \quad T_3 = \frac{1}{2} \times 0.1 \times 2500 = 125 \text{ J}
+   $$
+   \begin{aligned}
+   \dot{q}_1 &= 8 \text{ rad/s} (slowing) \quad T_1 = \frac{1}{2} \times 2.0 \times 64 = 64 \text{ J} \\
+   \dot{q}_2 &= 15 \text{ rad/s} (slowing) \quad T_2 = \frac{1}{2} \times 0.5 \times 225 = 56.25 \text{ J} \\
+   \dot{q}_3 &= 50 \text{ rad/s} (maximum) \quad T_3 = \frac{1}{2} \times 0.1 \times 2500 = 125 \text{ J} \\
    T_{\text{total}} &= 245.25 \text{ J}
+   \end{aligned}
+   $$
 
    Total energy has decreased to 245.25 J (from peak of 281.25 J) because the late downswing includes negative work from eccentric muscle braking, with smaller losses to air resistance and internal dissipation.
    **Energy partition: Club carries 125 J out of 245.25 J, or 51\%. At impact, more than half the total energy is in the club.**
@@ -259,7 +309,9 @@ The mechanics:
 ### Why Sequential Peak Speeds Increase {#inplain:why_speeds_increase}
 Peak speeds increase as you go from proximal to distal because inertia decreases. Energy conservation gives:
 
+$$
 E = \frac{1}{2} I \omega^2 \implies \omega = \sqrt{\frac{2E}{I}}
+$$
 
 If a segment receives energy $E$ and has inertia $I$, its peak speed is $\omega = \sqrt{2E/I}$. Smaller inertia means higher speed for the same energy.
 
@@ -271,10 +323,14 @@ This is why the summation of speed principle is sometimes misunderstood. It's no
 
 Assume all segments receive the same amount of energy ($100$ J each) at their moment of peak speed:
 
+$$
+\begin{aligned}
 \text{Hips:} \quad &I_h = 5 \text{ kg} \cdot \text{m}^2 \implies \omega_h = \sqrt{2 \times 100 / 5} = \sqrt{40} = 6.3 \text{ rad/s}
 \text{Torso:} \quad &I_s = 2 \text{ kg} \cdot \text{m}^2 \implies \omega_s = \sqrt{2 \times 100 / 2} = \sqrt{100} = 10 \text{ rad/s}
 \text{Arm:} \quad &I_a = 0.5 \text{ kg} \cdot \text{m}^2 \implies \omega_a = \sqrt{2 \times 100 / 0.5} = \sqrt{400} = 20 \text{ rad/s}
 \text{Club:} \quad &I_c = 0.1 \text{ kg} \cdot \text{m}^2 \implies \omega_c = \sqrt{2 \times 100 / 0.1} = \sqrt{2000} = 44.7 \text{ rad/s}
+\end{aligned}
+$$
 
 The peak speed ratio is $\omega_c / \omega_h = 44.7 / 6.3 \approx 7$. The club is 7 times faster than the hips, even though they received equal energy!
 
@@ -355,22 +411,40 @@ This is why timing is everything in golf: the total energy input is roughly cons
 
 For a double pendulum (arm and club), the total kinetic energy is:
 
+$$
 T = \frac{1}{2} I_1 \dot{q}_1^2 + \frac{1}{2} I_2 \dot{q}_2^2 + m_2 L_1 L_2 \cos(q_2) \dot{q}_1 \dot{q}_2
+$$
 
 The third term is the coupling term—it's nonzero only if both segments are rotating.
 
 The power delivered by gravity and Coriolis (no muscle input, $\bm{u} = \mathbf{0}$) is:
 
+$$
 P = -\bm{C}^T \dot{\bm{q}} - \bm{g}^T \dot{\bm{q}}
+$$
 
 where:
 
-\bm{C} &=  -m_2 L_1 L_2 \sin(q_2) \dot{q}_1 \dot{q}_2 \\ 0 
-\bm{g} &=  m_1 g (L_1/2) \sin(q_1) + m_2 g L_1 \sin(q_1) \\ m_2 g (L_2/2) \sin(q_1 + q_2)
+$$
+\begin{aligned}
+\bm{C} &=
+\begin{bmatrix}
+-m_2 L_1 L_2 \sin(q_2) \dot{q}_1 \dot{q}_2 \\
+0
+\end{bmatrix} \\
+\bm{g} &=
+\begin{bmatrix}
+m_1 g (L_1/2) \sin(q_1) + m_2 g L_1 \sin(q_1) \\
+m_2 g (L_2/2) \sin(q_1 + q_2)
+\end{bmatrix}
+\end{aligned}
+$$
 
 The Coriolis term contributes:
 
+$$
 P_{\text{Cor}} = m_2 L_1 L_2 \sin(q_2) \dot{q}_1 \dot{q}_2 \cdot \dot{q}_1 = m_2 L_1 L_2 \sin(q_2) \dot{q}_1^2 \dot{q}_2
+$$
 
 When $q_2 > 0$ (elbow extended) and both $\dot{q}_1$ and $\dot{q}_2$ are positive (both rotating forward), the Coriolis power is positive for $\dot{q}_2 > 0$: energy is being added to the club's rotation.
 
@@ -382,7 +456,9 @@ This is the mechanism of energy transfer: Coriolis coupling acts as an energy pu
 
 At a moment when $q_2 = 90°$ (elbow extended), $\dot{q}_1 = 10$ rad/s, $\dot{q}_2 = 5$ rad/s (arm extending), $m_2 = 0.2$ kg, $L_1 = 0.4$ m, $L_2 = 0.3$ m:
 
+$$
 P_{\text{Cor}} = 0.2 \times 0.4 \times 0.3 \times \sin(90°) \times 10^2 \times 5 = 0.024 \times 1 \times 100 \times 5 = 12 \text{ W}
+$$
 
 At $12$ W, the club's kinetic energy is increasing at a rate of $12$ J/s. If this continues for $0.05$ s (50 ms), the club gains $0.6$ J of energy. This seems small, but it's the cumulative effect over the entire downswing that matters.
 
@@ -390,7 +466,9 @@ Later in the downswing, when velocities are higher and the coupling term is larg
 
 With $\dot{q}_1 = 20$ rad/s, $\dot{q}_2 = 40$ rad/s:
 
+$$
 P_{\text{Cor}} = 0.024 \times 1 \times 400 \times 40 = 384 \text{ W}
+$$
 
 At $384$ W, the club's kinetic energy is increasing at an enormous rate. Over just $0.01$ s (10 ms), the club gains $3.8$ J.
 

@@ -12,11 +12,15 @@ We've been building toward this chapter for four chapters. Now it's time to reve
 
 The manipulator equation:
 
+$$
 \bm{M}(\bm{q}) \ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{\tau}
+$$
 
 can be rewritten in a form that separates passive physics from active control:
 
+$$
 \dot{\bm{x}} = \bm{f}(\bm{x}) + \bm{G}(\bm{x}) \bm{u}
+$$
 
 This is the **control-affine form**. It says:
 - The system evolves in state space ($\bm{x}$).
@@ -35,11 +39,16 @@ To write the system in control-affine form, we need to convert the second-order 
 
 Recall from Chapter @ch:02_language_of_motion that the state is:
 
-\bm{x} =  \bm{q} \\ \dot{\bm{q}}  =  \theta_1 \\ \theta_2 \\ \dot{\theta}_1 \\ \dot{\theta}_2
+$$
+\bm{x} = \begin{bmatrix} \bm{q} \\ \dot{\bm{q}} \end{bmatrix}
+= \begin{bmatrix} \theta_1 \\ \theta_2 \\ \dot{\theta}_1 \\ \dot{\theta}_2 \end{bmatrix}
+$$
 
 The state evolves in time:
 
-\dot{\bm{x}} =  \dot{\bm{q}} \\ \ddot{\bm{q}}
+$$
+\dot{\bm{x}} = \begin{bmatrix} \dot{\bm{q}} \\ \ddot{\bm{q}} \end{bmatrix}
+$$
 
 The first line is trivial: $\frac{d}{dt}[\theta_1, \theta_2]^T = [\dot{\theta}_1, \dot{\theta}_2]^T$.
 
@@ -49,27 +58,58 @@ The second line requires us to solve for $\ddot{\bm{q}}$ from the manipulator eq
 
 From:
 
+$$
 \bm{M}(\bm{q}) \ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{\tau}
+$$
 
 we get:
 
+$$
 \ddot{\bm{q}} = \bm{M}(\bm{q})^{-1} \left[ \bm{\tau} - \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} - \bm{g}(\bm{q}) \right]
+$$
 
 This is the full equation. Now separate the passive and active terms:
 
-\ddot{\bm{q}} &= \bm{M}(\bm{q})^{-1} \left[ - \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} - \bm{g}(\bm{q}) \right] + \bm{M}(\bm{q})^{-1} \bm{\tau} 
+$$
+\begin{aligned}
+\ddot{\bm{q}} &= \bm{M}(\bm{q})^{-1} \left[ - \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} - \bm{g}(\bm{q}) \right] + \bm{M}(\bm{q})^{-1} \bm{\tau} \\
 &= \underbrace{\bm{M}(\bm{q})^{-1} \left[ - \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} - \bm{g}(\bm{q}) \right]}_{\text{drift}} + \underbrace{\bm{M}(\bm{q})^{-1} \bm{\tau}}_{\text{control}}
+\end{aligned}
+$$
 
 ### The Control-Affine Form
 
 Let's define:
-- **Drift dynamics**: $\bm{f}(\bm{x}) =  \dot{\bm{q}} \\ \bm{M}(\bm{q})^{-1} \left[ - \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} - \bm{g}(\bm{q}) \right]$
+- **Drift dynamics**:
+
+$$
+\bm{f}(\bm{x}) =
+\begin{bmatrix}
+\dot{\bm{q}} \\
+\bm{M}(\bm{q})^{-1} \left[ - \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} - \bm{g}(\bm{q}) \right]
+\end{bmatrix}
+$$
+
 - **Control input**: $\bm{u} = \bm{\tau}$ (the applied torques).
-- **Control matrix**: $\bm{G}(\bm{x}) =  0 & 0 \\ 0 & 0 \\ M^{-1}(\bm{q})$ (all zeros in the top rows, $M^{-1}$ in the bottom).
+- **Control matrix**:
+
+$$
+\bm{G}(\bm{x}) =
+\begin{bmatrix}
+0 & 0 \\
+0 & 0 \\
+M^{-1}_{11}(\bm{q}) & M^{-1}_{12}(\bm{q}) \\
+M^{-1}_{21}(\bm{q}) & M^{-1}_{22}(\bm{q})
+\end{bmatrix}
+$$
+
+(all zeros in the top rows, $M^{-1}$ in the bottom).
 
 Then:
 
+$$
 \dot{\bm{x}} = \bm{f}(\bm{x}) + \bm{G}(\bm{x}) \bm{u}
+$$
 
 This is the **control-affine form**. It's called "affine" (not "linear") because the dependence on control is linear, but the dependence on state is not linear.
 
@@ -78,7 +118,9 @@ This is the **control-affine form**. It's called "affine" (not "linear") because
 
 A system of the form:
 
+$$
 \dot{\bm{x}} = \bm{f}(\bm{x}) + \bm{G}(\bm{x}) \bm{u}
+$$
 
 where:
 - $\bm{f}(\bm{x})$ is the **drift vector field**: the system dynamics with no control.
@@ -112,38 +154,59 @@ Let's write out the control-affine form explicitly for the double pendulum.
 
 ### The Drift Vector Field
 
-\bm{f}(\bm{x}) =
-\dot{\theta}_1 
-\dot{\theta}_2 
-f_3(\bm{x}) 
+$$
+\bm{f}(\bm{x}) = \begin{bmatrix}
+\dot{\theta}_1 \\
+\dot{\theta}_2 \\
+f_3(\bm{x}) \\
 f_4(\bm{x})
+\end{bmatrix}
+$$
 
 where:
 
-f_3(\bm{x}) &= -M^{-1}_{11} \left[ \bm{C}_{12} \dot{\theta}_2 + g_1 \right] - M^{-1}_{12} \left[ \bm{C}_{22} \dot{\theta}_2 + g_2 \right] 
+$$
+\begin{aligned}
+f_3(\bm{x}) &= -M^{-1}_{11} \left[ \bm{C}_{12} \dot{\theta}_2 + g_1 \right] - M^{-1}_{12} \left[ \bm{C}_{22} \dot{\theta}_2 + g_2 \right] \\
 f_4(\bm{x}) &= -M^{-1}_{21} \left[ \bm{C}_{12} \dot{\theta}_2 + g_1 \right] - M^{-1}_{22} \left[ \bm{C}_{22} \dot{\theta}_2 + g_2 \right]
+\end{aligned}
+$$
 
 These are complicated expressions, but they encode all the passive dynamics: gravity pulling, inertia resisting, and velocity-dependent coupling.
 
-The key insight: **$\bm{f**$ depends on the current state but does not depend on your muscular control.}
+The key insight: **$\bm{f}$ depends on the current state but does not depend on your muscular control.**
 
 ### The Control Matrix
 
+$$
 \bm{G}(\bm{x}) =
-0 & 0 
-0 & 0 
-M^{-1}_{11}(\bm{q}) & M^{-1}_{12}(\bm{q}) 
+\begin{bmatrix}
+0 & 0 \\
+0 & 0 \\
+M^{-1}_{11}(\bm{q}) & M^{-1}_{12}(\bm{q}) \\
 M^{-1}_{21}(\bm{q}) & M^{-1}_{22}(\bm{q})
+\end{bmatrix}
+$$
 
 where $\bm{M}^{-1}(\bm{q})$ is the inverse of the mass matrix.
 
 The control input is:
 
-\bm{u} =  \tau_1 \\ \tau_2
+$$
+\bm{u} = \begin{bmatrix} \tau_1 \\ \tau_2 \end{bmatrix}
+$$
 
 So the full system is:
 
- \dot{\theta}_1 \\ \dot{\theta}_2 \\ \ddot{\theta}_1 \\ \ddot{\theta}_2  = \bm{f}(\bm{x}) + \bm{G}(\bm{x})  \tau_1 \\ \tau_2
+$$
+\begin{bmatrix}
+\dot{\theta}_1 \\
+\dot{\theta}_2 \\
+\ddot{\theta}_1 \\
+\ddot{\theta}_2
+\end{bmatrix}
+= \bm{f}(\bm{x}) + \bm{G}(\bm{x}) \begin{bmatrix} \tau_1 \\ \tau_2 \end{bmatrix}
+$$
 
 ## Drift as a Vector Field
 
@@ -168,18 +231,26 @@ The drift says what happens next. Let's compute:
 
 At rest, there's no inertia acceleration (velocities are zero). The only terms in $\bm{f}$ are the gravity terms:
 
-\ddot{\theta}_1 &= \bm{M}^{-1}_{11} \cdot (-g_1) 
-&= \bm{M}^{-1}_{11} \cdot (-(M_1 L_{1,cm} + M_2 L_1) g \sin(0°)) 
+$$
+\begin{aligned}
+\ddot{\theta}_1 &= \bm{M}^{-1}_{11} \cdot (-g_1) \\
+&= \bm{M}^{-1}_{11} \cdot (-(M_1 L_{1,cm} + M_2 L_1) g \sin(0°)) \\
 &= 0
+\end{aligned}
+$$
 
 So the arm doesn't accelerate if it's at rest and perfectly vertical. That makes sense: gravity is balanced.
 
 Now suppose you're at an angle, say $\theta_1 = 45°$. Then:
 
-\ddot{\theta}_1 &= \bm{M}^{-1}_{11} \cdot (-(M_1 L_{1,cm} + M_2 L_1) g \sin(45°)) 
-&= \bm{M}^{-1}_{11} \cdot (-(2.5 \times 0.175 + 2.5 \times 0.35) \times 9.81 \times 0.707) 
-&\approx -20 \text{ N m} \times 0.45 \text{ kg m}^{-2} 
+$$
+\begin{aligned}
+\ddot{\theta}_1 &= \bm{M}^{-1}_{11} \cdot (-(M_1 L_{1,cm} + M_2 L_1) g \sin(45°)) \\
+&= \bm{M}^{-1}_{11} \cdot (-(2.5 \times 0.175 + 2.5 \times 0.35) \times 9.81 \times 0.707) \\
+&\approx -20 \text{ N m} \times 0.45 \text{ kg m}^{-2} \\
 &\approx -9 \text{ rad/s}^2
+\end{aligned}
+$$
 
 Negative means the arm wants to rotate back toward vertical. Gravity is pulling it down.
 
@@ -239,7 +310,9 @@ Here's a new concept: the **Drift-to-Control Ratio (DCR)**.
 
 At any point in the state space, the DCR is the relative magnitude of drift versus control:
 
+$$
 \text{DCR} = \frac{|\bm{f}(\bm{x})|}{|\bm{G}(\bm{x}) \bm{u}|}_{\text{during max muscular effort}}
+$$
 
 If DCR is high, drift dominates. Muscles contribute little.
 If DCR is low, muscles dominate. Drift contributes little.
@@ -399,7 +472,9 @@ Let's step back and see the whole picture.
 
 Your arm + club is a mechanical system described by:
 
+$$
 \bm{M}(\bm{q}) \ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{\tau}
+$$
 
 ### The State Space
 
@@ -409,7 +484,9 @@ The system evolves in 4D state space: two angles and two angular velocities. Eve
 
 Without muscular control, the system follows the drift:
 
+$$
 \dot{\bm{x}} = \bm{f}(\bm{x})
+$$
 
 Drift encodes:
 - Gravity pulling the arm down.
@@ -422,7 +499,9 @@ At high speeds, drift dominates. At low speeds, muscles must do most of the work
 
 Your muscles generate torques $\bm{\tau}$ that perturb the drift:
 
+$$
 \dot{\bm{x}} = \bm{f}(\bm{x}) + \bm{G}(\bm{x}) \bm{u}
+$$
 
 Control is linear in the input but couples to state through $\bm{G}(\bm{x})$.
 
@@ -439,8 +518,8 @@ All of this is encoded in understanding and exploiting the drift.
 ## Key Takeaways
 
 1. **Control-affine form** separates drift and control: $\dot{\bm{x}} = \bm{f}(\bm{x}) + \bm{G}(\bm{x}) \bm{u}$.
-2. **Drift $\bm{f**(\bm{x})$} is what the system does without control: gravity, inertia, and velocity-dependent forces.
-3. **Control $\bm{G**(\bm{x}) \bm{u}$} is what muscles add: steering, not accelerating (mostly).
+2. **Drift $\bm{f}(\bm{x})$** is what the system does without control: gravity, inertia, and velocity-dependent forces.
+3. **Control $\bm{G}(\bm{x}) \bm{u}$** is what muscles add: steering, not accelerating (mostly).
 4. **The Drift-to-Control Ratio (DCR)** varies through the swing.
 
 8. **Elite golfers maximize DCR** by understanding and exploiting the drift.

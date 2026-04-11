@@ -34,7 +34,9 @@ This chapter reveals the mathematics and physics of constraint forces, then show
 
 A **holonomic constraint** is an algebraic equation that restricts the configuration of the system. It has the form:
 
+$$
 \bm{\Phi}(\bm{q}) = \mathbf{0}
+$$
 
 For a golf swing, examples include:
 - **Joint connection:** The wrist connects the arm to the club. This means the endpoint of the arm coincides with the base of the club: $\bm{\Phi}_{\text{wrist}}(\bm{q}) = \bm{x}_{\text{arm}}(\bm{q}) - \bm{x}_{\text{club}}(\bm{q}) = \mathbf{0}$.
@@ -57,7 +59,9 @@ Yet this zero-net-work force *does* redirect energy between segments.
 
 The **constraint Jacobian** is the matrix of partial derivatives of the constraint with respect to configuration:
 
+$$
 \bm{J}_c(\bm{q}) = \frac{\partial \bm{\Phi}}{\partial \bm{q}}
+$$
 
 If there are $n_c$ constraint equations and $n$ configuration variables, then $\bm{J}_c$ is $n_c \times n$.
 
@@ -69,11 +73,15 @@ For a double pendulum (shoulder and elbow), suppose the wrist constraint enforce
 
 The constraint might be:
 
+$$
 \bm{\Phi}(q_1, q_2) = q_1 + q_2 - \theta_{\text{fixed}}
+$$
 
 Then the constraint Jacobian is:
 
-\bm{J}_c =  1 & 1
+$$
+\bm{J}_c = \begin{bmatrix} 1 & 1 \end{bmatrix}
+$$
 
 This tells us: to maintain the constraint, motion in $q_1$ and $q_2$ must be coupled—they must move together. The rows of $\bm{J}_c$ define the directions in which motion is forbidden (the normal space) and allowed (the null space).
 
@@ -82,7 +90,9 @@ This tells us: to maintain the constraint, motion in $q_1$ and $q_2$ must be cou
 ### Constrained Lagrangian Dynamics {#theorem:constrained_lagrangian}
 When constraints are present, the equations of motion take the form:
 
+$$
 \bm{M}(\bm{q})\ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}}) + \bm{g}(\bm{q}) = \bm{B}(\bm{q})\bm{u} + \bm{J}_c(\bm{q})^T \bm{\lambda}
+$$
 
 where:
 - $\bm{M}(\bm{q})$ is the mass matrix.
@@ -109,17 +119,23 @@ But because the force is perpendicular, it can have a large magnitude while doin
 ### Computing Lagrange Multipliers {#proc:compute_multipliers}
 To find $\bm{\lambda}$, we use the constraint that $\bm{\Phi}(\bm{q}) = \mathbf{0}$ must be maintained at all times. Taking the time derivative twice:
 
+$$
 \bm{J}_c(\bm{q}) \ddot{\bm{q}} = -\dot{\bm{J}}_c(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} - \bm{J}_c(\bm{q}) \ddot{\bm{q}}_{\text{unconstrained}}
+$$
 
 where $\ddot{\bm{q}}_{\text{unconstrained}}$ is what the acceleration *would* be without the constraint.
 
 Substituting the constrained EOM:
 
+$$
 \bm{J}_c \bm{M}^{-1} \left[ \bm{B}\bm{u} + \bm{J}_c^T \bm{\lambda} - \bm{C} - \bm{g} \right] = -\dot{\bm{J}}_c \dot{\bm{q}} - \bm{J}_c \ddot{\bm{q}}_{\text{unconstrained}}
+$$
 
 Rearranging:
 
+$$
 \bm{J}_c \bm{M}^{-1} \bm{J}_c^T \bm{\lambda} = -\bm{J}_c \bm{M}^{-1} (\bm{B}\bm{u} - \bm{C} - \bm{g}) - \dot{\bm{J}}_c \dot{\bm{q}} - \bm{J}_c \ddot{\bm{q}}_{\text{unconstrained}}
+$$
 
 Solving this linear system gives $\bm{\lambda}$.
 
@@ -144,21 +160,31 @@ A fundamental property: $\text{null}(\bm{J}_c) \perp \text{range}(\bm{J}_c^T)$. 
 
 For a double pendulum with the constraint $q_1 + q_2 = \theta_{\text{fixed}}$, the constraint Jacobian is:
 
-\bm{J}_c =  1 & 1
+$$
+\bm{J}_c = \begin{bmatrix} 1 & 1 \end{bmatrix}
+$$
 
 The null space is found by solving:
 
- 1 & 1   v_1 \\ v_2  = 0 \implies v_1 = -v_2
+$$
+\begin{bmatrix} 1 & 1 \end{bmatrix}
+\begin{bmatrix} v_1 \\ v_2 \end{bmatrix}
+= 0 \implies v_1 = -v_2
+$$
 
 So the null space is one-dimensional:
 
-\text{null}(\bm{J}_c) = \text{span}\left\{  1 \\ -1  \right\}
+$$
+\text{null}(\bm{J}_c) = \text{span}\left\{ \begin{bmatrix} 1 \\ -1 \end{bmatrix} \right\}
+$$
 
 **Interpretation:** The only way to move while maintaining the constraint is to increase $q_1$ and decrease $q_2$ by the same amount (or vice versa). This keeps their sum constant.
 
 The range of $\bm{J}_c^T$ is:
 
-\text{range}(\bm{J}_c^T) = \text{span}\left\{  1 \\ 1  \right\}
+$$
+\text{range}(\bm{J}_c^T) = \text{span}\left\{ \begin{bmatrix} 1 \\ 1 \end{bmatrix} \right\}
+$$
 
 **Interpretation:** The constraint force acts along the direction $(1, 1)$—i.e., simultaneously at both joints. This makes sense: the constraint couples the two joints, so forces must be applied at both to maintain coupling.
 
@@ -177,15 +203,21 @@ The constraint forces are whatever is needed to project the "free" dynamics onto
 ### Zero Power Constraint Condition {#theorem:zero_power_constraint}
 The power delivered by a constraint force is:
 
+$$
 P_{\text{constraint}} = \bm{\lambda}^T \bm{J}_c(\bm{q}) \dot{\bm{q}}
+$$
 
 Since $\bm{J}_c(\bm{q}) \dot{\bm{q}} = \frac{d\bm{\Phi}}{dt}$ and $\bm{\Phi}(\bm{q}(t)) = \mathbf{0}$ for all $t$, we have:
 
+$$
 \frac{d\bm{\Phi}}{dt} = \mathbf{0}
+$$
 
 Therefore:
 
+$$
 P_{\text{constraint}} = \mathbf{0}
+$$
 
 Constraint forces do *zero* net power to the system.
 
@@ -203,16 +235,24 @@ This is the fundamental mechanism of the kinetic chain. The arm slows down (losi
 
 At any instant, the total kinetic energy is:
 
+$$
 T = T_{\text{arm}} + T_{\text{club}} = \frac{1}{2}\dot{\bm{q}}_1^T \bm{M}_1(\bm{q}_1) \dot{\bm{q}}_1 + \frac{1}{2}\dot{\bm{q}}_2^T \bm{M}_2(\bm{q}_2) \dot{\bm{q}}_2
+$$
 
 The power going to each segment is:
 
-\frac{dT_{\text{arm}}}{dt} &= \bm{\tau}_{\text{arm}} \cdot \dot{\bm{q}}_1 + \bm{F}_{\text{constraint, arm}} \cdot v_{\text{arm}}
+$$
+\begin{aligned}
+\frac{dT_{\text{arm}}}{dt} &= \bm{\tau}_{\text{arm}} \cdot \dot{\bm{q}}_1 + \bm{F}_{\text{constraint, arm}} \cdot v_{\text{arm}} \\
 \frac{dT_{\text{club}}}{dt} &= \bm{\tau}_{\text{club}} \cdot \dot{\bm{q}}_2 + \bm{F}_{\text{constraint, club}} \cdot v_{\text{club}}
+\end{aligned}
+$$
 
 The constraint forces ensure that:
 
+$$
 \bm{F}_{\text{constraint, arm}} \cdot v_{\text{arm}} + \bm{F}_{\text{constraint, club}} \cdot v_{\text{club}} = 0
+$$
 
 But individually, each term can be nonzero, allowing energy to transfer from arm to club.
 
@@ -226,68 +266,104 @@ Return to the double pendulum from Chapter @ch:zero_torque_counterfactual, but n
 
 The constraint Jacobian is:
 
-\bm{J}_c =  1 & 1
+$$
+\bm{J}_c = \begin{bmatrix} 1 & 1 \end{bmatrix}
+$$
 
 At the configuration from Chapter @ch:zero_torque_counterfactual ($q_1 = 45°$, $\dot{q}_1 = 8$ rad/s, $q_2 = 70°$, $\dot{q}_2 = 12$ rad/s), the unconstrained accelerations (from the ZTCF) are:
 
-\ddot{q}_1^{\text{unconstrained}} &\approx -5.56 \text{ rad/s}^2
+$$
+\begin{aligned}
+\ddot{q}_1^{\text{unconstrained}} &\approx -5.56 \text{ rad/s}^2 \\
 \ddot{q}_2^{\text{unconstrained}} &\approx 21.9 \text{ rad/s}^2
+\end{aligned}
+$$
 
 With the constraint, $\ddot{q}_1 + \ddot{q}_2 = 0$ must hold. But the unconstrained accelerations are $-5.56$ and $21.9$, which sum to $16.34 \neq 0$. The constraint must enforce this.
 
 Using the procedure from Section @sec:solving_constraint_forces, we solve for $\lambda$. The constraint acceleration condition is:
 
+$$
 \bm{J}_c \ddot{\bm{q}} = -\dot{\bm{J}}_c \dot{\bm{q}} = 0 \quad \text{(since $\bm{J}_c$ is constant)}
+$$
 
 Thus:
 
+$$
 \ddot{q}_1 + \ddot{q}_2 = 0
+$$
 
 From the constrained EOM:
 
-\bm{M}_{11} \ddot{q}_1 + \bm{M}_{12} \ddot{q}_2 + C_1 + g_1 &= 0 + \lambda
+$$
+\begin{aligned}
+\bm{M}_{11} \ddot{q}_1 + \bm{M}_{12} \ddot{q}_2 + C_1 + g_1 &= 0 + \lambda \\
 \bm{M}_{21} \ddot{q}_1 + \bm{M}_{22} \ddot{q}_2 + C_2 + g_2 &= 0 + \lambda
+\end{aligned}
+$$
 
-(The constraint force acts as $\bm{J}_c^T \lambda =  1 \\ 1  \lambda$.)
+The constraint force acts equally on both joints, with generalized-force components of $\lambda$ at each joint.
 
 With the constraint $\ddot{q}_2 = -\ddot{q}_1$, we have two equations and two unknowns ($\ddot{q}_1$ and $\lambda$):
 
-\bm{M}_{11} \ddot{q}_1 - \bm{M}_{12} \ddot{q}_1 + C_1 + g_1 &= \lambda
+$$
+\begin{aligned}
+\bm{M}_{11} \ddot{q}_1 - \bm{M}_{12} \ddot{q}_1 + C_1 + g_1 &= \lambda \\
 -\bm{M}_{21} \ddot{q}_1 + \bm{M}_{22} \ddot{q}_1 + C_2 + g_2 &= \lambda
+\end{aligned}
+$$
 
 Solving (using values from Chapter @ch:zero_torque_counterfactual):
 
-(0.71 - 0.014) \ddot{q}_1 + (-1.09) + 2.51 &= \lambda
+$$
+\begin{aligned}
+(0.71 - 0.014) \ddot{q}_1 + (-1.09) + 2.51 &= \lambda \\
 (-0.014 + 0.016) \ddot{q}_1 + 0 + (-0.27) &= \lambda
+\end{aligned}
+$$
 
 From the second equation:
 
+$$
 0.002 \ddot{q}_1 = \lambda + 0.27
+$$
 
 From the first equation:
 
+$$
 0.696 \ddot{q}_1 = \lambda + 1.09 - 2.51 = \lambda - 1.42
+$$
 
 Eliminating $\lambda$:
 
+$$
 0.696 \ddot{q}_1 - 0.002 \ddot{q}_1 = -1.42 - 0.27
+$$
 
+$$
 0.694 \ddot{q}_1 = -1.69 \implies \ddot{q}_1 \approx -2.44 \text{ rad/s}^2
+$$
 
 And:
 
+$$
 \lambda = 0.002 \times (-2.44) + 0.27 \approx -0.005 + 0.27 \approx 0.265 \text{ Nm}
+$$
 
 **Interpretation:**
 
 With the constraint in place, the shoulder decelerates more slowly ($-2.44$ rad/s$^2$ vs unconstrained $-5.56$), and the elbow accelerates less ($+2.44$ rad/s$^2$ vs unconstrained $+21.9$).
 
-The constraint force magnitude is $\lambda \approx 0.265$ Nm. This is the "effort" required to maintain the constraint. It's distributed equally at both joints ($\bm{J}_c^T \lambda =  0.265 \\ 0.265$ Nm).
+The constraint force magnitude is $\lambda \approx 0.265$ Nm. This is the "effort" required to maintain the constraint. It appears equally at both joints.
 
 Now let's compute the power transfer. The power flowing to each segment through the constraint is:
 
-P_{\text{arm, constraint}} &= \lambda \cdot \dot{q}_1 = 0.265 \times 8 = 2.12 \text{ W}
+$$
+\begin{aligned}
+P_{\text{arm, constraint}} &= \lambda \cdot \dot{q}_1 = 0.265 \times 8 = 2.12 \text{ W} \\
 P_{\text{club, constraint}} &= \lambda \cdot \dot{q}_2 = 0.265 \times 12 = 3.18 \text{ W}
+\end{aligned}
+$$
 
 Those raw numbers are not the full power balance. The zero-power result above applies to the coupled generalized constraint force over the whole system, while the segment-level bookkeeping depends on how the constraint is projected into each coordinate. The safe conclusion is:
 
@@ -313,7 +389,9 @@ In a biomechanical analysis, you might measure the force at the wrist using an i
 
 The relationship is:
 
+$$
 \bm{F}_{\text{joint}} = \bm{J}_c^T \bm{\lambda} / L_{\text{joint}}
+$$
 
 where $L_{\text{joint}}$ is the lever arm (moment arm) of the force about the joint.
 

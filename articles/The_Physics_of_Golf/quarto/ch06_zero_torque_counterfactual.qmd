@@ -33,7 +33,9 @@ In the double-pendulum model developed in previous chapters, the ZTCF trajectory
 
 The **Zero-Torque Counterfactual** is the trajectory $\bm{q}_{\text{ZTCF}}(t)$ obtained by solving the equations of motion from the current state $(\bm{q}(t_0), \dot{\bm{q}}(t_0))$ with all muscle torques set to zero:
 
+$$
 \bm{M}(\bm{q})\ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}}) + \bm{g}(\bm{q}) = \mathbf{0} \quad \text{with} \quad \bm{u} = \mathbf{0}
+$$
 
 The state evolves from the current configuration and velocities as if the muscles produce no torque whatsoever. No external forces besides gravity are applied; the system is purely passive.
 
@@ -55,7 +57,9 @@ If the ZTCF trajectory matches your actual swing, then at that moment, gravity a
 
 The fundamental insight is that the total torque at any joint can be decomposed:
 
+$$
 \bm{\tau}_{\text{total}} = \bm{\tau}_{\text{ZTCF}} + \bm{\tau}_{\text{input}}
+$$
 
 where:
 - $\bm{\tau}_{\text{ZTCF}}$ is the torque that would arise from passive dynamics (gravity, Coriolis, centrifugal, and constraint forces).
@@ -88,7 +92,9 @@ Given the current state $\bm{x}(t_0) = (\bm{q}(t_0), \dot{\bm{q}}(t_0))$ at time
 1. **Capture the state:** Record the joint angles and angular velocities at the moment of interest (e.g., at mid-downswing).
 2. **Set up the passive equations:**
 
+   $$
    \ddot{\bm{q}} = \bm{M}(\bm{q})^{-1} \left[ -\bm{C}(\bm{q}, \dot{\bm{q}}) - \bm{g}(\bm{q}) \right]
+   $$
 
    This equation gives the acceleration purely from passive forces (gravity, Coriolis).
 3. **Integrate:** Numerically integrate this ODE from $t_0$ forward in time using a standard solver (e.g., RK4). No muscle torques are applied; the system evolves under its own dynamics.
@@ -101,7 +107,9 @@ In practice, the ZTCF is computed in simulation by:
 1. Building a forward-dynamics model of the arm/club system, including all passive forces.
 2. Including a **"kill switch"** parameter, a binary flag $k_u$ that multiplies the input torques:
 
+   $$
    \bm{M}(\bm{q})\ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}}) + \bm{g}(\bm{q}) = k_u \cdot \bm{B}(\bm{q}) \bm{u}
+   $$
 
 3. Running the model twice:
 
@@ -116,7 +124,9 @@ In Simulink, this is literally a switch block in the control signal path, allowi
 
 The **Zero-Velocity Counterfactual (ZVCF)** is a further decomposition that isolates *configuration-dependent forces*. It is the acceleration that would result from gravity and Coriolis torques if all velocities were set to zero:
 
+$$
 \bm{M}(\bm{q})\ddot{\bm{q}}_{\text{ZVCF}} + \bm{g}(\bm{q}) = \mathbf{0}
+$$
 
 This equation contains only gravity ($\bm{g}$) and the inertial mass matrix. It excludes Coriolis/centrifugal terms, which depend on $\dot{\bm{q}}$.
 
@@ -131,7 +141,9 @@ The ZVCF is even more passive than the ZTCF. It tells you what would happen if y
 
 This is useful because it isolates a clean decomposition:
 
+$$
 \bm{\tau}_{\text{drift}} = \bm{\tau}_{\text{ZVCF}} + \bm{\tau}_{\text{velocity drift}}
+$$
 
 The total "drift" torque (what the system produces passively) is split into:
 - **Gravity-driven (ZVCF):** the torque from gravity acting on the current configuration.
@@ -146,7 +158,9 @@ For a golfer, this distinction matters because gravity is always present (and pr
 
 At any time during the swing, the **Drift-Control Ratio (DCR)** quantifies the relative magnitudes of passive and active torques. For a single joint:
 
+$$
 \text{DCR} = \frac{|\bm{\tau}_{\text{drift}}|}{|\bm{\tau}_{\text{input}}|}
+$$
 
 When DCR $\approx 1$, passive and active torques are comparable. When DCR $\gg 1$, passive dynamics dominate; the muscle input is tiny relative to what physics produces.
 
@@ -171,19 +185,27 @@ Consider a two-segment arm (shoulder and elbow) during the downswing. Assume:
 
 At this configuration, using the club center-of-mass distance $L_{c,2} = 0.15$ m rather than the full link length and omitting the extra factor of 2, the Coriolis torque is approximately:
 
+$$
 \tau_{\text{Coriolis}} \approx m_{\text{club}} L_1 L_{c,2} \dot{q}_1 \dot{q}_2 \approx 0.2 \times 0.4 \times 0.15 \times 5 \times 10 \approx 0.6 \text{ Nm}
+$$
 
 The typical muscular torque available at the elbow is perhaps $5$--$10$ Nm. Thus:
 
+$$
 \text{DCR}_{\text{elbow}} \approx \frac{0.6}{7.5} \approx 0.08
+$$
 
 Later in the downswing, when $\dot{q}_1 \approx 15$ rad/s and $\dot{q}_2 \approx 20$ rad/s (the club is whipping), Coriolis grows to:
 
+$$
 \tau_{\text{Coriolis}} \approx 0.2 \times 0.4 \times 0.15 \times 15 \times 20 \approx 3.6 \text{ Nm}
+$$
 
 Now:
 
+$$
 \text{DCR}_{\text{elbow}} \approx \frac{3.6}{7.5} \approx 0.48
+$$
 
 Even in this toy model, the passive term still grows quadratically with speed. In richer models and near-impact postures, published inverse-dynamics studies report wrist Coriolis torques on the order of 10--50 Nm \citep{Nesbit2005}. With muscular torques of $\sim$10--20 Nm, the DCR at the wrist can still become large in the late downswing.
 
@@ -206,77 +228,129 @@ Consider a double pendulum (shoulder and elbow) with parameters:
 
 At a snapshot in the mid-downswing, the state is:
 
-q_1 &= 45° \quad \text{(shoulder angle, measured from horizontal)}
-\dot{q}_1 &= 8 \text{ rad/s} \quad \text{(shoulder rotating forward)}
-q_2 &= 70° \quad \text{(elbow extension angle)}
+$$
+\begin{aligned}
+q_1 &= 45° \quad \text{(shoulder angle, measured from horizontal)}\\
+\dot{q}_1 &= 8 \text{ rad/s} \quad \text{(shoulder rotating forward)}\\
+q_2 &= 70° \quad \text{(elbow extension angle)}\\
 \dot{q}_2 &= 12 \text{ rad/s} \quad \text{(elbow extending)}
+\end{aligned}
+$$
 
 **Step 1: Compute the mass matrix and passive forces.**
 
 The mass matrix for a planar double pendulum is:
 
+$$
 \bm{M}(\bm{q}) =
-I_1 + m_1 (L_1/2)^2 + I_2 + m_2 L_1^2 + 2 m_2 L_1 (L_2/2) \cos(q_2) & I_2 + m_2 L_1 (L_2/2) \cos(q_2) 
+\begin{bmatrix}
+I_1 + m_1 (L_1/2)^2 + I_2 + m_2 L_1^2 + 2 m_2 L_1 (L_2/2) \cos(q_2) & I_2 + m_2 L_1 (L_2/2) \cos(q_2) \\
 I_2 + m_2 L_1 (L_2/2) \cos(q_2) & I_2 + m_2 (L_2/2)^2
+\end{bmatrix}
+$$
 
 Substituting values:
 
+$$
 \bm{M} \approx
-0.05 + 0.2 + 0.01 + 0.2 \times 0.16 + 2 \times 0.2 \times 0.4 \times 0.15 \times \cos(70°) & 0.01 + 0.2 \times 0.4 \times 0.15 \times \cos(70°) 
+\begin{bmatrix}
+0.05 + 0.2 + 0.01 + 0.2 \times 0.16 + 2 \times 0.2 \times 0.4 \times 0.15 \times \cos(70°) & 0.01 + 0.2 \times 0.4 \times 0.15 \times \cos(70°) \\
 0.01 + 0.2 \times 0.4 \times 0.15 \times \cos(70°) & 0.01 + 0.2 \times 0.0225
+\end{bmatrix}
+$$
 
 Evaluating at $\cos(70°) \approx 0.342$:
 
+$$
 \bm{M} \approx
-0.71 & 0.014 
+\begin{bmatrix}
+0.71 & 0.014 \\
 0.014 & 0.016
+\end{bmatrix}
+$$
 
 **Step 2: Compute Coriolis torques.**
 
 The Coriolis term is:
 
+$$
 C_1 = -m_2 L_1 (L_2/2) \sin(q_2) \dot{q}_1 \dot{q}_2
+$$
 
 Substituting:
 
+$$
 C_1 \approx -0.2 \times 0.4 \times 0.15 \times \sin(70°) \times 8 \times 12 \approx -0.2 \times 0.4 \times 0.15 \times 0.940 \times 96 \approx -1.09 \text{ Nm}
+$$
 
-$C_2 = 0$ (no Coriolis on the second segment in this simple model).
+$$
+C_2 = 0
+$$
+
+(no Coriolis on the second segment in this simple model).
 
 **Step 3: Compute gravity torques.**
 
-g_1 &= m_1 g (L_1/2) \cos(q_1) + m_2 g L_1 \cos(q_1) + m_2 g (L_2/2) \cos(q_1 + q_2)
+$$
+\begin{aligned}
+g_1 &= m_1 g (L_1/2) \cos(q_1) + m_2 g L_1 \cos(q_1) + m_2 g (L_2/2) \cos(q_1 + q_2)\\
 g_2 &= m_2 g (L_2/2) \cos(q_1 + q_2)
+\end{aligned}
+$$
 
 At $q_1 = 45°$ and $q_1 + q_2 = 115°$:
 
-g_1 &\approx 2 \times 9.81 \times 0.2 \times 0.707 + 0.2 \times 9.81 \times 0.4 \times 0.707 + 0.2 \times 9.81 \times 0.15 \times (-0.906)
-&\approx 2.78 - 0.27 \approx 2.51 \text{ Nm}
+$$
+\begin{aligned}
+g_1 &\approx 2 \times 9.81 \times 0.2 \times 0.707 + 0.2 \times 9.81 \times 0.4 \times 0.707 + 0.2 \times 9.81 \times 0.15 \times (-0.906) \\
+&\approx 2.78 - 0.27 \approx 2.51 \text{ Nm} \\
 g_2 &\approx 0.2 \times 9.81 \times 0.15 \times (-0.906) \approx -0.27 \text{ Nm}
+\end{aligned}
+$$
 
 **Step 4: Solve for ZTCF acceleration.**
 
 With $\bm{u} = \mathbf{0}$:
 
-\ddot{q}_1 
+$$
+\begin{aligned}
+\begin{bmatrix}
+\ddot{q}_1 \\
 \ddot{q}_2
- = \bm{M}^{-1}
--1.09 - 2.51 
+\end{bmatrix}
+&=
+\bm{M}^{-1}
+\begin{bmatrix}
+-1.09 - 2.51 \\
 -0 - (-0.27)
- = \bm{M}^{-1}
--3.60 
+\end{bmatrix}
+=
+\bm{M}^{-1}
+\begin{bmatrix}
+-3.60 \\
 0.27
+\end{bmatrix}
+\end{aligned}
+$$
 
 Inverting the mass matrix:
 
+$$
 \bm{M}^{-1} \approx
-1.45 & -1.27 
+\begin{bmatrix}
+1.45 & -1.27 \\
 -1.27 & 64.1
+\end{bmatrix}
+$$
 
 Thus:
 
-\ddot{q}_1^{\text{ZTCF}} &\approx 1.45 \times (-3.60) - 1.27 \times 0.27 \approx -5.22 - 0.34 \approx -5.56 \text{ rad/s}^2
+$$
+\begin{aligned}
+\ddot{q}_1^{\text{ZTCF}} &\approx 1.45 \times (-3.60) - 1.27 \times 0.27 \approx -5.22 - 0.34 \approx -5.56 \text{ rad/s}^2 \\
 \ddot{q}_2^{\text{ZTCF}} &\approx -1.27 \times (-3.60) + 64.1 \times 0.27 \approx 4.57 + 17.3 \approx 21.9 \text{ rad/s}^2
+\end{aligned}
+$$
 
 **Interpretation:**
 
@@ -284,8 +358,12 @@ The shoulder would decelerate at $5.56$ rad/s$^2$ (gravity is pulling the arm do
 
 Now compare to the actual swing. If the actual $\ddot{q}_1 = 2$ rad/s$^2$ and $\ddot{q}_2 = 8$ rad/s$^2$, then:
 
-\tau_{\text{input},1} &\approx 0.71 \times (2 - (-5.56)) = 0.71 \times 7.56 \approx 5.37 \text{ Nm}
+$$
+\begin{aligned}
+\tau_{\text{input},1} &\approx 0.71 \times (2 - (-5.56)) = 0.71 \times 7.56 \approx 5.37 \text{ Nm} \\
 \tau_{\text{input},2} &\approx 0.016 \times (8 - 21.9) = 0.016 \times (-13.9) \approx -0.22 \text{ Nm}
+\end{aligned}
+$$
 
 **Insight:** The shoulder requires a muscular torque of $5.37$ Nm to *slow the natural acceleration* (gravity wants to accelerate it more). The elbow requires a *braking* torque of $-0.22$ Nm to prevent the club from extending as fast as physics wants it to.
 

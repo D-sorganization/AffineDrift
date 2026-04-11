@@ -70,7 +70,9 @@ To derive the equations of motion, we start with energy. Every moving system has
 
 Link 1 rotates about the shoulder. Its kinetic energy is:
 
+$$
 T_1 = \frac{1}{2} I_1 \dot{\theta}_1^2
+$$
 
 where $I_1 = M_1 L_{1,\text{cm}}^2$ is the moment of inertia of link 1 about the shoulder hinge. (For simplicity, we treat each link as a point mass at its center of mass.)
 
@@ -285,20 +287,32 @@ $$
 
 So:
 
+$$
+\begin{aligned}
 -\frac{\partial \mathcal{L}}{\partial \theta_1} &= -\frac{\partial (T - V)}{\partial \theta_1} = \frac{\partial V}{\partial \theta_1}
+\end{aligned}
+$$
 
 The Euler-Lagrange equation becomes:
 
-&(I_1 + M_2 L_1^2) \ddot{\theta}_1 + (M_2 L_{2,\text{cm}}^2 + I_2) (\ddot{\theta}_1 + \ddot{\theta}_2) 
-&+ M_2 L_1 L_{2,\text{cm}} (2 \ddot{\theta}_1 + \ddot{\theta}_2) \cos \theta_2 
-&- M_2 L_1 L_{2,\text{cm}} (2 \dot{\theta}_1 + \dot{\theta}_2) \dot{\theta}_2 \sin \theta_2 
+$$
+\begin{aligned}
+&(I_1 + M_2 L_1^2) \ddot{\theta}_1 + (M_2 L_{2,\text{cm}}^2 + I_2) (\ddot{\theta}_1 + \ddot{\theta}_2) \\
+&+ M_2 L_1 L_{2,\text{cm}} (2 \ddot{\theta}_1 + \ddot{\theta}_2) \cos \theta_2 \\
+&- M_2 L_1 L_{2,\text{cm}} (2 \dot{\theta}_1 + \dot{\theta}_2) \dot{\theta}_2 \sin \theta_2 \\
 &= (M_1 L_{1,\text{cm}} + M_2 L_1) g \sin \theta_1 + M_2 g L_{2,\text{cm}} \sin(\theta_1 + \theta_2) + \tau_1
+\end{aligned}
+$$
 
 Similarly, for $\theta_2$:
 
-&(M_2 L_{2,\text{cm}}^2 + I_2) (\ddot{\theta}_1 + \ddot{\theta}_2) + M_2 L_1 L_{2,\text{cm}} \ddot{\theta}_1 \cos \theta_2 
-&+ M_2 L_1 L_{2,\text{cm}} \dot{\theta}_1^2 \sin \theta_2 
+$$
+\begin{aligned}
+&(M_2 L_{2,\text{cm}}^2 + I_2) (\ddot{\theta}_1 + \ddot{\theta}_2) + M_2 L_1 L_{2,\text{cm}} \ddot{\theta}_1 \cos \theta_2 \\
+&+ M_2 L_1 L_{2,\text{cm}} \dot{\theta}_1^2 \sin \theta_2 \\
 &= M_2 g L_{2,\text{cm}} \sin(\theta_1 + \theta_2) + \tau_2
+\end{aligned}
+$$
 
 ::: {.callout-tip}
 ## Reading the Equations
