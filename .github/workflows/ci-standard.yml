@@ -8,7 +8,6 @@ on:
       - "**.md"
       - "LICENSE"
       - ".gitignore"
-      - ".github/**"
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
     paths-ignore:
@@ -55,7 +54,10 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-python@v6
-        with: { python-version: "3.12" }
+        with:
+          python-version: "3.12"
+          cache: "pip"
+          cache-dependency-path: requirements.txt
 
       - name: Install Python dependencies
         run: pip install -r requirements.txt
@@ -89,7 +91,6 @@ jobs:
         run: black --check --line-length 100 .
 
       - run: pip install mypy types-PyYAML types-requests
-      - run: pip install -r requirements.txt
       - name: Verify frontend asset sync
         # docs/ HTML is no longer committed (issue #1419); sync mirrors inside docs/
         # are rebuilt by Quarto at deploy time. Skip here if docs/ is absent.
