@@ -19,8 +19,9 @@ from src.tools.rl_funnel_dynamics import (
 
 
 def validate_weight_matrix(Q: npt.NDArray[Any], shape: tuple[int, int], name: str) -> None:
-    """Validate that the weight matrix is finite."""
+    """Validate that the weight matrix is finite and has the expected shape."""
     check_finite_array(Q, name)
+    require(Q.shape == shape, f"{name} must have shape {shape}", Q.shape)
 
 
 def setpoint_lqr_controller(

@@ -163,6 +163,7 @@ class ILQRSolver:
         Q = np.eye(n_x) * self.state_weight
         R = np.eye(n_u) * self.control_weight
         Q_f = np.eye(n_x) * self.terminal_weight
+        current_cost = self._trajectory_cost(x_traj, u_traj, xf, Q, R, Q_f)
 
         for _iteration in range(max_iters):
             k_traj, K_traj, max_k = self._backward_pass(
@@ -170,10 +171,14 @@ class ILQRSolver:
             )
 
             alpha = 1.0
-            x_new = np.zeros_like(x_traj)
-            u_new = np.zeros_like(u_traj)
+            accepted = False
+            best_x_traj = x_traj
+            best_u_traj = u_traj
+            best_cost = current_cost
 
             for _ in range(5):
+                x_new = np.zeros_like(x_traj)
+                u_new = np.zeros_like(u_traj)
                 x_new[0] = x0
                 for k_idx in range(N):
                     u_new[k_idx] = (
@@ -182,16 +187,46 @@ class ILQRSolver:
                         + K_traj[k_idx] @ (x_new[k_idx] - x_traj[k_idx])
                     )
                     x_new[k_idx + 1] = x_new[k_idx] + dynamics_fn(x_new[k_idx], u_new[k_idx]) * dt
+                candidate_cost = self._trajectory_cost(x_new, u_new, xf, Q, R, Q_f)
+                if np.isfinite(candidate_cost) and candidate_cost < current_cost:
+                    best_x_traj = x_new
+                    best_u_traj = u_new
+                    best_cost = candidate_cost
+                    accepted = True
+                    break
+                alpha *= 0.5
+
+            if not accepted:
                 break
 
-            x_traj = x_new
-            u_traj = u_new
+            x_traj = best_x_traj
+            u_traj = best_u_traj
+            current_cost = best_cost
 
             if max_k < tol:
                 break
 
         t_traj: NDArray = np.asarray(np.linspace(0, N * dt, N + 1))
         return x_traj, u_traj, t_traj
+
+    def _trajectory_cost(
+        self,
+        x_traj: NDArray,
+        u_traj: NDArray,
+        xf: NDArray,
+        Q: NDArray,
+        R: NDArray,
+        Q_f: NDArray,
+    ) -> float:
+        """Return the finite-horizon quadratic tracking cost."""
+        total = 0.0
+        for x_k, u_k in zip(x_traj[:-1], u_traj, strict=True):
+            state_error = x_k - xf
+            total += 0.5 * float(state_error.T @ Q @ state_error)
+            total += 0.5 * float(u_k.T @ R @ u_k)
+        terminal_error = x_traj[-1] - xf
+        total += 0.5 * float(terminal_error.T @ Q_f @ terminal_error)
+        return total
 
     def _rollout(
         self,
