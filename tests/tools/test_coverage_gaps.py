@@ -81,9 +81,7 @@ class TestFixQuartoSyntaxMain:
 class TestWrapSidebarsMain:
     """Cover wrap_sidebars.py main() function."""
 
-    def test_main_with_no_qmd_files(
-        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_main_with_no_qmd_files(self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
         """main() should not crash when no .qmd files found."""
         from src.tools.wrap_sidebars import main
 
