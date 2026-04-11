@@ -199,7 +199,7 @@ preloads) without any velocity-dependent effects.
 
 The difference between the full drift and the ZVCF isolates velocity-dependent forces:
 \begin{equation}
-a_{\text{drift}} - a_{\text{ZVCF}} = -M(\q)^{-1}C(\q,\dot\q)\dot\q,
+a_{\text{drift}} - a_{\text{ZVCF}} = -M(\q)^{-1}\mat{C}(\q,\dot\q)\dot\q,
 \label{eq:ch7:velocity-contribution}
 \end{equation}
 which captures Coriolis, centrifugal, and gyroscopic effects. These are the forces that
@@ -209,7 +209,7 @@ arise purely from the system's inertial memory---the history encoded in $\dot\q$
 
 For mechanical systems without damping, the drift acceleration has a clean decomposition:
 \begin{equation}
-a_{\text{drift}} = -M(\q)^{-1}\left[C(\q,\dot\q)\dot\q + \vec{g}(\q)\right].
+a_{\text{drift}} = -M(\q)^{-1}\left[\mat{C}(\q,\dot\q)\dot\q + \vec{g}(\q)\right].
 \label{eq:ch7:drift-decomposition}
 \end{equation}
 
@@ -218,7 +218,7 @@ We can write this as a sum of two components:
 \label{eq:ch7:drift-components}
 \begin{align}
 a_{\text{grav}} &:= -M(\q)^{-1}\vec{g}(\q), \label{eq:ch7:a-grav}\\
-a_{\text{cor}} &:= -M(\q)^{-1}C(\q,\dot\q)\dot\q, \label{eq:ch7:a-cor}
+a_{\text{cor}} &:= -M(\q)^{-1}\mat{C}(\q,\dot\q)\dot\q, \label{eq:ch7:a-cor}
 \end{align}
 \end{subequations}
 
@@ -229,8 +229,8 @@ so that $a_{\text{drift}} = a_{\text{grav}} + a_{\text{cor}}$.
 This decomposition is valid because $M(\q)^{-1}$ is a linear operator (in the sense that
 it acts linearly on vectors). Therefore:
 \begin{equation}
-M(\q)^{-1}\left[C(\q,\dot\q)\dot\q + \vec{g}(\q)\right]
-= M(\q)^{-1}C(\q,\dot\q)\dot\q + M(\q)^{-1}\vec{g}(\q),
+M(\q)^{-1}\left[\mat{C}(\q,\dot\q)\dot\q + \vec{g}(\q)\right]
+= M(\q)^{-1}\mat{C}(\q,\dot\q)\dot\q + M(\q)^{-1}\vec{g}(\q),
 \end{equation}
 and the two contributions add exactly, with no interaction terms. This is a mechanical
 manifestation of superposition at the drift level.
@@ -243,7 +243,7 @@ depends only on the configuration $\q$, not on velocities.
 \textbf{Coriolis/centrifugal acceleration} $a_{\text{cor}}$ represents inertial effects that
 arise from the system's motion. For example, in a rotating coordinate frame, a moving object
 experiences fictitious forces. Here, these emerge from the kinetic energy structure encoded
-in $C(\q,\dot\q)$.
+in $\mat{C}(\q,\dot\q)$.
 \end{intuitionbox}
 
 \subsection{Magnitude Scaling}
@@ -320,7 +320,7 @@ does not mean the controller has significant authority---it means we can precise
 \subsection{Velocity Scaling}
 
 For mechanical systems, the drift scales quadratically with velocity (due to
-$C(\q,\dot\q)\dot\q$ terms), while maximum torque is roughly constant. Therefore:
+$\mat{C}(\q,\dot\q)\dot\q$ terms), while maximum torque is roughly constant. Therefore:
 \begin{equation}
 \rho \sim \frac{\dot\q^2}{\text{const}} \to \infty
 \quad\text{as } \norm{\dot\q}\to\infty.
@@ -429,7 +429,7 @@ computed by integrating the modified drift, providing a sensitivity counterfactu
 Gravity affects \emph{only} the drift, not the input matrix $G(\x)$. If we change the
 gravitational acceleration from $g$ to $g'$, then:
 \begin{equation}
-a_{\text{drift}}' = -M(\q)^{-1}[C(\q,\dot\q)\dot\q + g'(\q)],
+a_{\text{drift}}' = -M(\q)^{-1}[\mat{C}(\q,\dot\q)\dot\q + g'(\q)],
 \quad
 G(\x)' = G(\x) \quad \text{(unchanged)}.
 \label{eq:ch7:gravity-counterfactual}
@@ -755,7 +755,7 @@ M(\q)^{-1} = \frac{1}{1+\sin^2(q_1-q_2)}\begin{bmatrix}
 
 The Coriolis matrix can be computed from the kinetic energy. For this system:
 \begin{equation}
-C(\q,\dot\q) = \begin{bmatrix}
+\mat{C}(\q,\dot\q) = \begin{bmatrix}
 0 & -m_2 l_1 l_2 \sin(q_1-q_2)\dot{q}_2\\
 -m_2 l_1 l_2 \sin(q_1-q_2)\dot{q}_1 & 0
 \end{bmatrix}.
@@ -764,7 +764,7 @@ C(\q,\dot\q) = \begin{bmatrix}
 
 With parameters:
 \begin{equation}
-C(\q,\dot\q) = \begin{bmatrix}
+\mat{C}(\q,\dot\q) = \begin{bmatrix}
 0 & -\sin(q_1-q_2)\dot{q}_2\\
 -\sin(q_1-q_2)\dot{q}_1 & 0
 \end{bmatrix}.
@@ -800,7 +800,7 @@ With parameters:
 
 The full drift acceleration is:
 \begin{equation}
-a_{\text{drift}} = -M(\q)^{-1}[C(\q,\dot\q)\dot\q + \vec{g}(\q)].
+a_{\text{drift}} = -M(\q)^{-1}[\mat{C}(\q,\dot\q)\dot\q + \vec{g}(\q)].
 \label{eq:ch7:drift-full}
 \end{equation}
 
@@ -812,7 +812,7 @@ a_{\text{grav}} = -M(\q)^{-1}\vec{g}(\q).
 
 The Coriolis component is:
 \begin{equation}
-a_{\text{cor}} = -M(\q)^{-1}C(\q,\dot\q)\dot\q.
+a_{\text{cor}} = -M(\q)^{-1}\mat{C}(\q,\dot\q)\dot\q.
 \label{eq:ch7:drift-cor}
 \end{equation}
 
@@ -1085,7 +1085,7 @@ behavior follows directly from the equations of this chapter:
       resembling the actual trajectory. The gap $\|\x - \x^{(0)}\|$ is small.
 
 \item \textbf{Fast phase (high velocity):} As velocities grow, the Coriolis term
-      $a_{\text{cor}} = -M(\q)^{-1}C(\q,\dot\q)\dot\q$ dominates the drift because
+      $a_{\text{cor}} = -M(\q)^{-1}\mat{C}(\q,\dot\q)\dot\q$ dominates the drift because
       it scales as $\dot\q^2$. The ZTCF closely tracks the actual trajectory:
       removing control barely changes the motion because the available muscle torque
       $\|G(\x)\uvec_{\max}\|$ is small compared to $\|f(\x)\|$. The drift--control
@@ -1111,7 +1111,7 @@ which is bounded by
 
 Meanwhile, the centrifugal acceleration from the drift scales as:
 \begin{equation}
-\|a_{\text{cor}}\| \sim \|M(\q)^{-1} C(\q,\dot\q)\dot\q\| \sim O(\|\dot\q\|^2).
+\|a_{\text{cor}}\| \sim \|M(\q)^{-1} \mat{C}(\q,\dot\q)\dot\q\| \sim O(\|\dot\q\|^2).
 \end{equation}
 
 Since $\|\tau_{\max}\|$ is bounded (physiological or actuator limits) while
