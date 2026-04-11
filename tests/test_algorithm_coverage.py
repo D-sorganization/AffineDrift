@@ -1,94 +1,75 @@
-"""Tests for core algorithm smoke coverage - addresses #2294 and #2295.
+from __future__ import annotations
 
-Replaces placeholder dead tests (assert True, empty returns) with executable
-behaviour checks for iLQR and rl_funnel algorithms.
-"""
-
-import importlib
-import pathlib
-import sys
-
+import numpy as np
 import pytest
 
-# Ensure src is importable
-ROOT = pathlib.Path(__file__).parent.parent
-for candidate in (ROOT / "src", ROOT):
-    if candidate.exists() and str(candidate) not in sys.path:
-        sys.path.insert(0, str(candidate))
+from src.core.contracts.definitions import ContractViolationError
+from src.core.optimizers.ilqr_solver import ILQRSolver
+from src.tools.rl_funnel_controllers import (
+    setpoint_lqr_controller,
+    trajectory_tracking_lqr,
+    validate_weight_matrix,
+)
 
 
-class TestILQRSmoke:
-    """Smoke tests for iLQR - ensures module is importable and key symbols exist."""
+def test_ilqr_solver_optimizes_scalar_integrator_toward_target() -> None:
+    solver = ILQRSolver()
 
-    def test_module_importable(self):
-        """iLQR module must be importable without error."""
-        # Try common module paths
-        found = False
-        for mod_path in [
-            "ilqr",
-            "controllers.ilqr",
-            "src.ilqr",
-            "affine.controllers.ilqr",
-        ]:
-            try:
-                mod = importlib.import_module(mod_path)
-                found = True
-                assert mod is not None
-                break
-            except ImportError:
-                pass
-        if not found:
-            # Try filesystem scan
-            ilqr_files = list(ROOT.rglob("*ilqr*.py"))
-            # If no iLQR file exists at all, mark as xfail pending implementation
-            if not ilqr_files:
-                pytest.xfail("iLQR module not yet implemented - #2295 tracks this")
-            # We found files but can't import - that's the actual problem
-            pytest.fail(f"Found iLQR files {ilqr_files} but cannot import them")
+    def dynamics(_x: np.ndarray, u: np.ndarray) -> np.ndarray:
+        return np.array([u[0]], dtype=np.float64)
 
-    def test_no_dead_assert_true_tests(self):
-        """Verify no test files contain dead 'assert True' or empty-return tests."""
-        test_dir = ROOT / "tests"
-        if not test_dir.exists():
-            pytest.skip("No tests directory found")
+    x_traj, u_traj, t_traj = solver.optimize(
+        dynamics,
+        np.array([0.0], dtype=np.float64),
+        np.array([1.0], dtype=np.float64),
+        np.zeros((5, 1), dtype=np.float64),
+        dt=0.2,
+        max_iters=10,
+    )
 
-        dead_tests_found = []
-        for test_file in test_dir.rglob("test_*.py"):
-            try:
-                content = test_file.read_text(encoding="utf-8", errors="replace")
-                lines = content.splitlines()
-                for i, line in enumerate(lines, 1):
-                    stripped = line.strip()
-                    if stripped == "assert True":
-                        dead_tests_found.append(f"{test_file.name}:{i}: bare 'assert True'")
-            except Exception:
-                pass
-
-        if dead_tests_found:
-            # Report but don't fail hard - this is a quality warning
-            print(f"WARNING: Found {len(dead_tests_found)} dead test assertions:")
-            for dt in dead_tests_found[:10]:
-                print(f"  {dt}")
-        # Don't assert - just document the state. The CI gate can be tightened later.
-        assert True  # This test DOCUMENTS the issue, not fails on it
+    assert x_traj.shape == (6, 1)
+    assert u_traj.shape == (5, 1)
+    assert t_traj.tolist() == pytest.approx([0.0, 0.2, 0.4, 0.6, 0.8, 1.0])
+    assert abs(x_traj[-1, 0] - 1.0) < abs(x_traj[0, 0] - 1.0)
+    assert np.all(np.isfinite(x_traj))
+    assert np.all(np.isfinite(u_traj))
 
 
-class TestRLFunnelSmoke:
-    """Smoke tests for rl_funnel - ensures module is importable."""
+def test_ilqr_solver_rejects_invalid_input_shapes() -> None:
+    solver = ILQRSolver()
 
-    def test_module_importable(self):
-        """rl_funnel module must be importable without error."""
-        found = False
-        for mod_path in ["rl_funnel", "controllers.rl_funnel", "affine.rl_funnel"]:
-            try:
-                mod = importlib.import_module(mod_path)
-                found = True
-                assert mod is not None
-                break
-            except ImportError:
-                pass
-        if not found:
-            rl_files = list(ROOT.rglob("*rl_funnel*.py"))
-            if not rl_files:
-                pytest.xfail("rl_funnel module not yet implemented - #2295 tracks this")
-            pytest.fail(f"Found rl_funnel files {rl_files} but cannot import")
+    def dynamics(x: np.ndarray, _u: np.ndarray) -> np.ndarray:
+        return x
+
+    with pytest.raises(ContractViolationError, match="x0 and xf must have same shape"):
+        solver.optimize(
+            dynamics,
+            np.array([0.0], dtype=np.float64),
+            np.array([0.0, 1.0], dtype=np.float64),
+            np.zeros((2, 1), dtype=np.float64),
+        )
+
+
+def test_rl_funnel_setpoint_controller_returns_finite_control() -> None:
+    controller = setpoint_lqr_controller(np.zeros(4, dtype=np.float64))
+
+    control = controller(0.0, np.array([0.1, -0.1, 0.05, -0.05], dtype=np.float64))
+
+    assert control.shape == (2,)
+    assert np.all(np.isfinite(control))
+
+
+def test_rl_funnel_trajectory_tracking_controller_returns_finite_control() -> None:
+    t_ref = np.array([0.0, 0.5, 1.0], dtype=np.float64)
+    x_ref = np.zeros((4, len(t_ref)), dtype=np.float64)
+    controller = trajectory_tracking_lqr(t_ref, x_ref)
+
+    control = controller(0.25, np.array([0.1, 0.0, 0.0, -0.1], dtype=np.float64))
+
+    assert control.shape == (2,)
+    assert np.all(np.isfinite(control))
+
+
+def test_rl_funnel_weight_validation_rejects_shape_mismatch() -> None:
+    with pytest.raises(ContractViolationError, match="Q_sp must have shape"):
+        validate_weight_matrix(np.eye(3), (4, 4), "Q_sp")
