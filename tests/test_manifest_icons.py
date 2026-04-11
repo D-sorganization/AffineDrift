@@ -51,6 +51,7 @@ def test_manifest_icons_match_declared_sizes() -> None:
         assert icon_path.exists(), f"Manifest icon is missing: {src}"
         width, height = _read_png_size(icon_path)
         declared_width, declared_height = [int(side) for side in sizes.split("x", 1)]
-        assert (width, height) == (declared_width, declared_height), (
-            f"Manifest size for {src} is {sizes}, but file is {width}x{height}"
-        )
+        assert (width, height) == (
+            declared_width,
+            declared_height,
+        ), f"Manifest size for {src} is {sizes}, but file is {width}x{height}"
