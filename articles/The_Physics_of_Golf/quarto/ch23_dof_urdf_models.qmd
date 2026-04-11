@@ -8,7 +8,7 @@ description: "The Grübler-Kutzbach formula (also called the Chebychev-Grübler-
 
 You now know how to idealize individual joints. The next question is: *how many independent numbers do I need to describe a golf swing?*
 
-Suppose you have a model of the human body made from the joints we discussed in Chapter @ch:anatomy_joint_modeling. You specify:
+Suppose you have a model of the human body made from the joints we discussed in Chapter @sec-anatomy_joint_modeling. You specify:
 
 - Pelvis orientation (3 angles)
 - Spine angles (3 DOF)
@@ -552,7 +552,7 @@ An instructor might optimize for one criterion (minimal shoulder strain), while 
 
 ::: {.callout-note}
 ## Null-Space Optimization in the ZTCF
-Recall from Chapters @ch:05_affine_structure and 6 that the system evolves under drift and control:
+Recall from Chapters @sec-05_affine_structure and 6 that the system evolves under drift and control:
 
 $$
 \dot{\bm{x}}_{\text{state}} = \bm{f}(\bm{x}_{\text{state}}) + \bm{G}(\bm{x}_{\text{state}}) \bm{u}
@@ -1042,7 +1042,7 @@ Pinocchio is excellent for trajectory optimization. It can efficiently compute d
 
 ### Computing the Equations of Motion Automatically
 
-Here's the power of these tools. In Chapter @ch:parallel_mechanisms, we derived the equations of motion:
+Here's the power of these tools. In Chapter @sec-parallel_mechanisms, we derived the equations of motion:
 
 $$\bm{M}(\bm{q})\ddot{\bm{q}} = \bm{u} - \bm{C}(\bm{q},\dot{\bm{q}})\dot{\bm{q}} - \bm{g}(\bm{q})$$
 
@@ -1116,7 +1116,7 @@ A rough estimate: increasing the forearm mass by 10\% decreases the club speed b
 
 The golf swing is chaotic in a weak sense: small changes in initial conditions lead to larger changes in the outcome. This is because the swing is *controlled by initial conditions* (the backswing position, velocity, and acceleration), and any error in measuring these propagates forward.
 
-**Key finding:** The ZTCF (zero-torque constraint force analysis from Chapter @ch:soft_tissue_pliable) is moderately sensitive to anthropometric parameters but *extremely sensitive* to initial conditions and joint torques.
+**Key finding:** The ZTCF (zero-torque constraint force analysis from Chapter @sec-soft_tissue_pliable) is moderately sensitive to anthropometric parameters but *extremely sensitive* to initial conditions and joint torques.
 
 This is why motion capture accuracy matters more than perfectly measured segment masses. Getting the initial arm position and velocity correct is more important than having exact segment inertias.
 
@@ -1184,7 +1184,7 @@ This is the future of golf biomechanics: mathematical models that explain not ju
 :::
 
 ### Looking Ahead
-We now have a complete musculoskeletal model: joints with defined degrees of freedom, kinematic chains described in URDF, and dynamics engines to simulate them. But a model without a controller is just a ragdoll. Who---or what---controls the swing? Part VIII turns to the remarkable organ that orchestrates all of this: the human brain. Chapter @ch:motor_control_brain examines how the brain solves the control problem under severe constraints of delay, noise, and bandwidth.
+We now have a complete musculoskeletal model: joints with defined degrees of freedom, kinematic chains described in URDF, and dynamics engines to simulate them. But a model without a controller is just a ragdoll. Who---or what---controls the swing? Part VIII turns to the remarkable organ that orchestrates all of this: the human brain. Chapter @sec-motor_control_brain examines how the brain solves the control problem under severe constraints of delay, noise, and bandwidth.
 
 ## Chapter Exercises
 
