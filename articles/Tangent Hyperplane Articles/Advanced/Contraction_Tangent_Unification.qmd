@@ -51,13 +51,13 @@ Contraction theory provides a coordinate-free framework for establishing exponen
 Consider a dynamical system:
 $$
 \dot{\mathbf{x}} = \mathbf{f}(\mathbf{x}, t)
-$$ {#eq-dynamics}
+$$ {#eq-ctu-dynamics}
 
 The system is **contracting** if the distance between neighboring trajectories decreases exponentially.
 
 ::: {.callout-note icon=false}
 ## Definition 1.1 (Contraction)
-System (@eq-dynamics) is contracting in a region $\mathcal{D} \subset \mathbb{R}^n$ with rate $\lambda > 0$ if there exists a uniformly positive definite metric $\mathbf{M}(\mathbf{x}, t) = \mathbf{\Theta}^\top(\mathbf{x}, t) \mathbf{\Theta}(\mathbf{x}, t)$ such that:
+System (@eq-ctu-dynamics) is contracting in a region $\mathcal{D} \subset \mathbb{R}^n$ with rate $\lambda > 0$ if there exists a uniformly positive definite metric $\mathbf{M}(\mathbf{x}, t) = \mathbf{\Theta}^\top(\mathbf{x}, t) \mathbf{\Theta}(\mathbf{x}, t)$ such that:
 $$
 \frac{\partial \mathbf{F}}{\partial \mathbf{x}} + \frac{\partial \mathbf{F}^\top}{\partial \mathbf{x}} \prec -2\lambda \mathbf{I}
 $$ {#eq-contraction-condition}
@@ -97,7 +97,7 @@ $$ {#eq-eigenvalue-condition}
 
 ::: {.callout-important icon=false}
 ## Theorem 1.1 (Lohmiller-Slotine)
-If system (@eq-dynamics) is contracting, then:
+If system (@eq-ctu-dynamics) is contracting, then:
 
 1. **Uniqueness**: All trajectories converge to a single trajectory (steady state, periodic orbit, or any solution).
 2. **Exponential Convergence**: Rate is bounded by the contraction rate $\lambda$.
@@ -266,7 +266,7 @@ $$ {#eq-contraction-decay}
 LQR theory states: *Deviations from optimal trajectory incur cost growing quadratically*:
 $$
 V(\delta \mathbf{x}_t) = \delta \mathbf{x}_t^\top \mathbf{S}_t \delta \mathbf{x}_t
-$$ {#eq-value-function}
+$$ {#ctu-eq-value-function}
 
 The closed-loop system:
 $$
@@ -837,7 +837,7 @@ This quantifies the **robustness** to perturbations at time $t$.
 Robot dynamics:
 $$
 \mathbf{D}(\mathbf{q}) \ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q}, \dot{\mathbf{q}}) \dot{\mathbf{q}} + \mathbf{g}(\mathbf{q}) = \boldsymbol{\tau}
-$$ {#eq-robot-dynamics}
+$$ {#eq-ctu-robot-dynamics}
 
 Task space: $\mathbf{x} = \mathbf{h}(\mathbf{q})$ (e.g., end-effector position).
 
@@ -900,7 +900,7 @@ by choice of gains. $\square$
 ### Hybrid Dynamics
 
 During contact, the robot switches between:
-- **Free space**: Dynamics (@eq-robot-dynamics)
+- **Free space**: Dynamics (@eq-ctu-robot-dynamics)
 - **Contact**: Constrained dynamics with contact forces $\mathbf{F}_c$
 
 Hybrid system:

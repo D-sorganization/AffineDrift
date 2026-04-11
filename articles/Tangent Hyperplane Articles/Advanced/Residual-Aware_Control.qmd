@@ -52,7 +52,7 @@ From Unified Thesis Chapter 6, we know that the **residual** $r(t_1)$ at time $t
 
 $$
 x(t_1) = \bar{x}(t_1) + \Phi(t_1, t_0) \delta x(t_0) + r(t_1)
-$$ {#eq-residual-def}
+$$ {#rac-eq-residual-def}
 
 where:
 
@@ -77,7 +77,7 @@ For a $C^2$ dynamical system $\dot{x} = f(x, u)$ with bounded Hessian $\|H_f\|_{
 
 $$
 \| r(t_1) \| \leq \frac{M}{2} \int_{t_0}^{t_1} \| \delta x(t) \|^2 \, dt
-$$ {#eq-residual-bound}
+$$ {#eq-rac-residual-bound}
 
 where $\delta x(t)$ is the perturbation evolution under linearized dynamics.
 :::
@@ -98,7 +98,7 @@ The linearized dynamics use only first-order terms:
 
 $$
 \delta \dot{x} = A(t) \delta x + B(t) \delta u
-$$ {#eq-linearized-dynamics}
+$$ {#rac-eq-linearized-dynamics}
 
 where $A(t) = \nabla_x f|_{\bar{x}(t)}$ and $B(t) = \nabla_u f|_{\bar{u}(t)}$.
 
@@ -369,7 +369,7 @@ The residual **grows quadratically** in time for the pendulum, confirming Theore
 
 ### Motivation: Curvature-Dependent Step Sizing
 
-Standard DDP uses a fixed timestep $\Delta t$. But from @eq-residual-bound, we know residuals depend on:
+Standard DDP uses a fixed timestep $\Delta t$. But from @eq-rac-residual-bound, we know residuals depend on:
 
 1. Hessian magnitude $M$ (curvature)
 2. Integrated perturbation energy $\int \|\delta x\|^2 dt$
@@ -384,7 +384,7 @@ $$
 \Delta t = \sqrt{\frac{2 \epsilon_r}{M \|\delta x_{\max}\|^2}}
 $$ {#eq-adaptive-timestep}
 
-**Derivation:** From @eq-residual-bound with constant $\delta x$ over $\Delta t$:
+**Derivation:** From @eq-rac-residual-bound with constant $\delta x$ over $\Delta t$:
 
 $$
 \|r\| \leq \frac{M}{2} \|\delta x\|^2 \Delta t \leq \epsilon_r \implies \Delta t \leq \frac{2\epsilon_r}{M \|\delta x\|^2}
@@ -609,7 +609,7 @@ $$ {#eq-tube-def}
 
 where $\delta_{\max}(t)$ is chosen such that linearization errors remain bounded.
 
-**Key idea:** Set $\delta_{\max}(t)$ based on residual bound @eq-residual-bound:
+**Key idea:** Set $\delta_{\max}(t)$ based on residual bound @eq-rac-residual-bound:
 
 $$
 \delta_{\max}(t) = \sqrt{\frac{2 \epsilon_r}{M(t) \Delta t}}
@@ -680,7 +680,7 @@ If the nominal trajectory satisfies tightened constraints and $\|x(t) - \bar{x}(
 
 ---
 
-# Part III: Applications {#sec-applications}
+# Part III: Applications {#rac-sec-applications}
 
 ## Quadrotor Aerobatics {#sec-quadrotor}
 
@@ -946,7 +946,7 @@ plt.tight_layout()
 
 ---
 
-# Part IV: Implementation {#sec-implementation}
+# Part IV: Implementation {#rac-sec-implementation}
 
 ## JAX Implementation {#sec-jax}
 
@@ -1429,7 +1429,7 @@ def diagnose_residual_adaptive_controller(x_traj, u_traj, t_traj, dynamics, para
 
 ---
 
-# Conclusion {#sec-conclusion}
+# Conclusion {#rac-sec-conclusion}
 
 ## Summary
 
@@ -1437,7 +1437,7 @@ This article developed a comprehensive framework for **residual-aware control**,
 
 **Key results:**
 
-1. **Quantitative residual bounds** (@eq-residual-bound): $\|r\| \leq \frac{M}{2} \int \|\delta x\|^2 dt$
+1. **Quantitative residual bounds** (@eq-rac-residual-bound): $\|r\| \leq \frac{M}{2} \int \|\delta x\|^2 dt$
 2. **Adaptive algorithms**:
    - Curvature-dependent timestep DDP (Algorithm 2.1)
    - Residual-triggered LQR ↔ MPC switching

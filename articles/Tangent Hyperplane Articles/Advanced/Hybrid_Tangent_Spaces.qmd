@@ -360,7 +360,7 @@ The derivative $\dot{x}(t)$ exists **almost everywhere** (i.e., everywhere excep
 
 $$
 \int_0^T L(x(t), u(t)) \, dt = \sum_{i=1}^{N-1} \int_{t_i}^{t_{i+1}} L(x(t), u(t)) \, dt
-$$ {#eq-hybrid-cost}
+$$ {#eq-hs-hybrid-cost-jump}
 
 where $t_1, \ldots, t_{N-1}$ are the jump times (finite set).
 
@@ -1268,7 +1268,7 @@ Standard DDP assumes smooth dynamics. To handle hybrid systems, we must account 
 - Cost functional:
   $$
   J = \Phi(x(T)) + \sum_{k=0}^{N-1} \int_{t_k}^{t_{k+1}} L(x, u) \, dt
-  $$ {#eq-hybrid-cost}
+$$ {#hs-eq-hybrid-cost-ddp}
 - Goal: Compute feedback gains $K(t)$ and feedforward $k(t)$ to minimize $J$ under perturbations
 
 **Key modification:** At each jump, the value function must account for the discontinuity.
@@ -1279,7 +1279,7 @@ The DDP backward pass computes the cost-to-go:
 
 $$
 V(x, t) = \min_{u(\cdot)} \left\{ \int_t^T L(x(\tau), u(\tau)) \, d\tau + \Phi(x(T)) \right\}
-$$ {#eq-value-function}
+$$ {#hs-eq-value-function}
 
 In the smooth case, $V$ satisfies the Hamilton-Jacobi-Bellman (HJB) equation:
 
@@ -1463,7 +1463,7 @@ For a single contact point with gap $\phi(q) \geq 0$ and normal force $\lambda \
 
 $$
 \boxed{0 \leq \phi(q) \perp \lambda \geq 0}
-$$ {#eq-complementarity}
+$$ {#hs-eq-complementarity}
 
 This means:
 
@@ -1598,7 +1598,7 @@ No manual mode switching needed.
 
 ---
 
-# Chapter 9: Applications {#sec-applications}
+# Chapter 9: Applications {#sec-hs-applications}
 
 ## Humanoid Locomotion (Stance/Swing Phases)
 
@@ -1798,7 +1798,7 @@ The recurring theme: **Explicit treatment of discontinuities** via guards, reset
 
 ---
 
-# Chapter 10: Practical Algorithms {#sec-implementation}
+# Chapter 10: Practical Algorithms {#sec-hs-implementation}
 
 ## Guard Detection and Event Handling
 
