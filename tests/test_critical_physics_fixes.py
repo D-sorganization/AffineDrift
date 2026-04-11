@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import warnings
 from typing import Any
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -389,3 +390,24 @@ class TestEpsilonConsolidation:
         assert CORE_EPSILON == WRIST_EPSILON
         # Both should be 1e-6
         assert CORE_EPSILON == 1e-6
+
+
+# ---------------------------------------------------------------------------
+# Issue #2324: energy-budget drop needs explicit braking explanation
+# ---------------------------------------------------------------------------
+
+
+class TestCh10EnergyBudgetExplanation:
+    """#2324: chapter 10 should explain the 36 J phase-4-to-5 drop."""
+
+    def test_ch10_mentions_eccentric_braking_and_losses(self) -> None:
+        """The worked example should explain the apparent non-conservation."""
+        repo_root = Path(__file__).resolve().parents[1]
+        chapter = (
+            repo_root / "articles" / "The_Physics_of_Golf" / "quarto" / "ch10_energy_transfer.qmd"
+        ).read_text(encoding="utf-8")
+
+        assert "eccentric braking" in chapter
+        assert "negative work" in chapter
+        assert "air resistance" in chapter or "internal dissipation" in chapter
+        assert "conservation error" in chapter
