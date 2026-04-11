@@ -27,7 +27,7 @@
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.31                                           |
+| **Spec Version**        | 1.0.32                                           |
 | **Last Spec Update**    | 2026-04-11                                       |
 
 ## 2. Purpose & Mission
@@ -450,8 +450,12 @@ python src/tools/code_quality_ast.py
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                      |
 | ---------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+<<<<<<< HEAD
 | 2026-04-11 | 1.0.30  | fix(logging): made `setup_logging()` import-order safe by avoiding root `basicConfig()` calls for named loggers while preserving root configuration for script entry points. |
 | 2026-04-11 | 1.0.30  | fix(tools): preserved escaped LaTeX percent signs during comment cleanup and added regression coverage for `\%` content followed by trailing comments                                                                                                                                                                                                                        |
+=======
+<<<<<<< HEAD
+>>>>>>> 30ee6efc (fix canonical url)
 | 2026-04-11 | 1.0.29  | fix(critical): hardened workflow event payload handling, corrected wrist universal-joint ratio semantics, refreshed the chapter 3 double-pendulum numeric example, and restored package-qualified batch converter imports                                                                                                                                                    |
 | 2026-04-11 | 1.0.27  | fix(tools): prevented display math created from LaTeX `equation` environments in `src/tools/latex_to_html.py` from being wrapped twice, and added a regression test for the single-wrapper output                                                                                                                                                                            |
 | 2026-04-11 | 1.0.26  | fix(testing): made `make test` run Python coverage before JavaScript coverage and removed the bare `pass` coverage exclusion so stubs remain visible in reports                                                                                                                                                                                                              |
@@ -459,6 +463,14 @@ python src/tools/code_quality_ast.py
 | 2026-04-09 | 1.0.24  | docs(articles): Refined the Layman's Terms section in Contraction_Tangent_CRITIC.qmd to use relatable analogies and improve clarity                                                                                                                                                                                                                                          |
 | 2026-04-07 | 1.0.19  | chore(types): annotated the remaining public Python functions in `src/` and `scripts/`, added an AST regression test to keep return annotations from drifting, and closed the final actionable slice of assessment issue #2241 after auditing stale print/config findings                                                                                                    |
 | 2026-04-07 | 1.0.18  | fix(scripts): replaced remaining raw script-level `print()` calls with explicit stdout/stderr helpers, made maintenance scripts import-safe with `main()` entry points, and added CLI-output regression tests for the affected utilities                                                                                                                                     |
+=======
+| 2026-04-11 | 1.0.28  | fix(seo): made the shared site head emit page-specific canonical URLs instead of always pointing canonical metadata at the homepage, with regression coverage for canonical URL construction. |
+| 2026-04-11 | 1.0.26  | fix(testing): made `make test` run Python coverage before JavaScript coverage and removed the bare `pass` coverage exclusion so stubs remain visible in reports |
+| 2026-04-11 | 1.0.25  | fix(tools): made RL benchmark comparison honor the caller-provided `dt` when generating reference trajectories and added regression coverage for the reference time grid |
+| 2026-04-09 | 1.0.24  | docs(articles): Refined the Layman's Terms section in Contraction_Tangent_CRITIC.qmd to use relatable analogies and improve clarity |
+| 2026-04-07 | 1.0.19  | chore(types): annotated the remaining public Python functions in `src/` and `scripts/`, added an AST regression test to keep return annotations from drifting, and closed the final actionable slice of assessment issue #2241 after auditing stale print/config findings                                                                                                     |
+| 2026-04-07 | 1.0.18  | fix(scripts): replaced remaining raw script-level `print()` calls with explicit stdout/stderr helpers, made maintenance scripts import-safe with `main()` entry points, and added CLI-output regression tests for the affected utilities                                                                                                                                       |
+>>>>>>> 9deb1fc6 (fix canonical url)
 | 2026-04-07 | 1.0.17  | fix(ci): documented the explicit `SwingOptimizer` mock-solver opt-in at construction time, widened `ci-standard.yml` coverage enforcement to the full `src/` tree, and made the main `pip-audit` gate blocking                                                                                                                                                               |
 | 2026-04-05 | 1.0.15  | security(xss): Prevented XSS in polynomial evaluation by explicitly stripping allowed math variables/functions and validating the remainder strictly via regex before `new Function` evaluation in `grip_angle_simulator.html`                                                                                                                                               |
 | 2026-04-08 | 1.0.23  | security(xss): Fixed DOM-based XSS vulnerability in `.qmd` history list components by replacing `innerHTML` with `document.createElement` and safe text assignment                                                                                                                                                                                                           |
