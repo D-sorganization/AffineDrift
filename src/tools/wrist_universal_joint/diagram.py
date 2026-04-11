@@ -11,7 +11,7 @@ This module contains the forearm-hand-club diagram rendering:
 from __future__ import annotations
 
 import logging
-from typing import Any
+from typing import Any, cast
 
 import numpy as np
 from matplotlib.figure import Figure
