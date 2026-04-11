@@ -154,9 +154,9 @@ class TestMPCFullReachable:
         # Two more critical samples -> MPC_WARN -> MPC_FULL
         monitor.update(np.array([0.6]), x_nom)
         monitor.update(np.array([0.6]), x_nom)
-        assert monitor.mode == "MPC_FULL", (
-            "MPC_FULL must be reachable; was unreachable due to duplicate elif"
-        )
+        assert (
+            monitor.mode == "MPC_FULL"
+        ), "MPC_FULL must be reachable; was unreachable due to duplicate elif"
 
     def test_full_state_cycle(self) -> None:
         """Full cycle: LQR -> MPC_WARN -> MPC_FULL -> MPC_WARN -> LQR."""
@@ -216,9 +216,9 @@ class TestCentralDifferencesLinearization:
         ctr = (f(x0 + eps) - f(x0 - eps)) / (2 * eps)
 
         # Central should be closer to 3.0
-        assert abs(ctr - 3.0) < abs(fwd - 3.0), (
-            f"Central ({ctr}) should be closer to 3.0 than forward ({fwd})"
-        )
+        assert abs(ctr - 3.0) < abs(
+            fwd - 3.0
+        ), f"Central ({ctr}) should be closer to 3.0 than forward ({fwd})"
 
 
 # ---------------------------------------------------------------------------
@@ -239,9 +239,9 @@ class TestZeroOrderHoldResampling:
 
         u_resampled = _resample_controls(u_old, t_old, t_new)
         # At t=0.15, last preceding time is t=0.1 (index 1), so control should be u[1]=2.0
-        assert u_resampled[0, 0] == 2.0, (
-            f"Expected control 2.0 (from t=0.1), got {u_resampled[0, 0]}"
-        )
+        assert (
+            u_resampled[0, 0] == 2.0
+        ), f"Expected control 2.0 (from t=0.1), got {u_resampled[0, 0]}"
 
     def test_zoh_at_exact_grid_point(self) -> None:
         """At an exact grid point t_old[k], ZOH uses u_old[k] (the interval starting there)."""
@@ -251,9 +251,9 @@ class TestZeroOrderHoldResampling:
 
         u_resampled = _resample_controls(u_old, t_old, t_new)
         # At exactly t=0.1, searchsorted('right') returns 2, so idx=1 => u[1]=20.0
-        assert u_resampled[0, 0] == 20.0, (
-            f"At t=0.1 (grid point 1), ZOH should use u[1]=20.0, got {u_resampled[0, 0]}"
-        )
+        assert (
+            u_resampled[0, 0] == 20.0
+        ), f"At t=0.1 (grid point 1), ZOH should use u[1]=20.0, got {u_resampled[0, 0]}"
 
     def test_zoh_at_time_zero(self) -> None:
         """At t=0.0, should use first control."""
