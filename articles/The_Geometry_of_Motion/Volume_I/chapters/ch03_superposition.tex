@@ -52,10 +52,10 @@ $\dot\q\in\R^n$, and state $\x = (\q, \dot\q) \in T\mathcal{Q}$ (the tangent bun
 the configuration manifold). The standard manipulator form of the equations of motion \cite{Murray1994, Lynch2017}
 is
 \begin{equation}
-M(\q)\ddot\q + C(\q,\dot\q)\dot\q + \vec{g}(\q) = B(\q)\uvec + J(\q)^\T\vec{f}^{\,\text{ext}},
+M(\q)\ddot\q + \mat{C}(\q,\dot\q)\dot\q + \vec{g}(\q) = B(\q)\uvec + J(\q)^\T\vec{f}^{\,\text{ext}},
 \label{eq:ch3:manipulator}
 \end{equation}
-where $M(\q)\succ 0$ is the mass matrix, $C(\q,\dot\q)\dot\q$ collects Coriolis and
+where $M(\q)\succ 0$ is the mass matrix, $\mat{C}(\q,\dot\q)\dot\q$ collects Coriolis and
 centrifugal terms, $\vec{g}(\q)$ is the gravity vector, $B(\q)$ maps control inputs to
 generalized forces, $J(\q)$ is the constraint/contact Jacobian\index{Jacobian}, and
 $\vec{f}^{\,\text{ext}}$ represents external contact wrenches.
@@ -116,7 +116,7 @@ This positive definiteness is the foundation for many important properties:
 
 \subsection{Connection to Christoffel Symbols}
 
-The Coriolis and centrifugal terms $C(\q,\dot\q)\dot\q$ arise from taking the material
+The Coriolis and centrifugal terms $\mat{C}(\q,\dot\q)\dot\q$ arise from taking the material
 derivative of the kinetic energy. Using the Lagrangian\index{Lagrangian Mechanics} framework, the generalized forces
 associated with the kinetic energy are
 \begin{equation}
@@ -167,7 +167,7 @@ forces, the system moves as a free particle on a Riemannian manifold with metric
 
 Solving~\eqref{eq:ch3:manipulator} for the generalized acceleration:
 \begin{equation}
-\ddot\q = \underbrace{-M(\q)^{-1}\bigl[C(\q,\dot\q)\dot\q + \vec{g}(\q)\bigr]}_{
+\ddot\q = \underbrace{-M(\q)^{-1}\bigl[\mat{C}(\q,\dot\q)\dot\q + \vec{g}(\q)\bigr]}_{
 \displaystyle a_{\text{drift}}(\q,\dot\q)}
 + \underbrace{M(\q)^{-1}B(\q)}_{
 \displaystyle H(\q)}\,\uvec
@@ -197,7 +197,7 @@ Let a mechanical system satisfy~\eqref{eq:ch3:manipulator} and define the accele
 map at fixed state $(\q,\dot\q)$:
 \[
 \Phi_{(\q,\dot\q)}(\uvec)
-:= M(\q)^{-1}\bigl[B(\q)\uvec - C(\q,\dot\q)\dot\q - \vec{g}(\q)\bigr].
+:= M(\q)^{-1}\bigl[B(\q)\uvec - \mat{C}(\q,\dot\q)\dot\q - \vec{g}(\q)\bigr].
 \]
 Then:
 \begin{enumerate}
@@ -342,7 +342,7 @@ effective inertia. Similarly for joint 2.
 
 In matrix form, the Newton--Euler equations yield:
 \begin{equation}
-M(\q)\ddot\q + C(\q,\dot\q)\dot\q + \vec{g}(\q) = \begin{bmatrix}\tau_1 \\ \tau_2\end{bmatrix},
+M(\q)\ddot\q + \mat{C}(\q,\dot\q)\dot\q + \vec{g}(\q) = \begin{bmatrix}\tau_1 \\ \tau_2\end{bmatrix},
 \end{equation}
 demonstrating the affine structure: the acceleration depends linearly on the input torques
 (with a configuration-dependent gain $M(\q)^{-1}$).
@@ -352,7 +352,7 @@ demonstrating the affine structure: the acceleration depends linearly on the inp
 Starting from the Lagrangian $L(\q,\dot\q) = T(\q,\dot\q) - V(\q)$ with kinetic energy
 $T = \frac{1}{2}\dot\q^\T M(\q)\dot\q$ and potential energy $V(\q)$, the Lagrange--d'Alembert equations yield
 \begin{equation}
-M(\q)\ddot\q + C(\q,\dot\q)\dot\q + \vec{g}(\q) = B(\q,\dot\q)\uvec.
+M(\q)\ddot\q + \mat{C}(\q,\dot\q)\dot\q + \vec{g}(\q) = B(\q,\dot\q)\uvec.
 \label{eq:ch3:lagrange}
 \end{equation}
 
@@ -403,7 +403,7 @@ m_2 g\frac{\ell_2}{2}\cos(q_1+q_2)
 
 The Coriolis/centrifugal terms come from $\frac{\dd}{\dt}\frac{\partial T}{\partial\dot q_k} - \frac{\partial T}{\partial q_k}$:
 \begin{equation}
-C(\q,\dot\q)\dot\q = \begin{bmatrix}
+\mat{C}(\q,\dot\q)\dot\q = \begin{bmatrix}
 -m_2\ell_1\ell_2(-2\dot q_1\dot q_2 - \dot q_2^2)\sin q_2 \\
 m_2\ell_1\ell_2\dot q_1^2\sin q_2
 \end{bmatrix}.
@@ -530,16 +530,16 @@ Taking its time derivative:
 The second term $\frac{1}{2}\dot\q^\T \dot M(\q)\,\dot\q$ accounts for the fact that the mass
 matrix itself varies with configuration. Using the equation of motion
 \begin{equation}
-M(\q)\ddot\q = \uvec - C(\q,\dot\q)\dot\q - \vec{g}(\q),
+M(\q)\ddot\q = \uvec - \mat{C}(\q,\dot\q)\dot\q - \vec{g}(\q),
 \end{equation}
 we can write
 \begin{equation}
-\dot\q^\T M(\q)\,\ddot\q = \dot\q^\T \uvec - \dot\q^\T C(\q,\dot\q)\dot\q - \dot\q^\T \vec{g}(\q).
+\dot\q^\T M(\q)\,\ddot\q = \dot\q^\T \uvec - \dot\q^\T \mat{C}(\q,\dot\q)\dot\q - \dot\q^\T \vec{g}(\q).
 \end{equation}
 
 Substituting back:
 \begin{equation}
-\dot T = \dot\q^\T \uvec - \dot\q^\T C(\q,\dot\q)\dot\q - \dot\q^\T \vec{g}(\q)
+\dot T = \dot\q^\T \uvec - \dot\q^\T \mat{C}(\q,\dot\q)\dot\q - \dot\q^\T \vec{g}(\q)
 + \frac{1}{2}\dot\q^\T \dot M(\q)\,\dot\q.
 \label{eq:ch3:energy-decomposition}
 \end{equation}
@@ -601,7 +601,7 @@ This defines the \emph{constraint manifold}: the subspace of valid velocities.
 
 The constrained dynamics are given by:
 \begin{equation}
-M(\q)\ddot\q + C(\q,\dot\q)\dot\q + \vec{g}(\q) = B(\q)\uvec + J(\q)^\T\vec\lambda,
+M(\q)\ddot\q + \mat{C}(\q,\dot\q)\dot\q + \vec{g}(\q) = B(\q)\uvec + J(\q)^\T\vec\lambda,
 \label{eq:ch3:constrained-dynamics}
 \end{equation}
 where $\vec\lambda \in \R^m$ are Lagrange multipliers representing constraint forces, and we
@@ -625,7 +625,7 @@ Combining with~\eqref{eq:ch3:constrained-dynamics}:
 \begin{equation}
 \begin{bmatrix} M(\q) & -J(\q)^\T \\ J(\q) & 0 \end{bmatrix}
 \begin{bmatrix} \ddot\q \\ \vec\lambda \end{bmatrix}
-= \begin{bmatrix} B(\q)\uvec - C(\q,\dot\q)\dot\q - \vec{g}(\q) \\ -\dot J(\q)\,\dot\q \end{bmatrix}.
+= \begin{bmatrix} B(\q)\uvec - \mat{C}(\q,\dot\q)\dot\q - \vec{g}(\q) \\ -\dot J(\q)\,\dot\q \end{bmatrix}.
 \label{eq:ch3:DAE-system}
 \end{equation}
 
@@ -1049,22 +1049,22 @@ Taking its time derivative:
 \label{eq:ch3:energy-rate-full}
 \end{equation}
 
-Substituting the equation of motion $M(\q)\ddot\q = B(\q)\uvec - C(\q,\dot\q)\dot\q - \nabla_{\q} V(\q)$:
+Substituting the equation of motion $M(\q)\ddot\q = B(\q)\uvec - \mat{C}(\q,\dot\q)\dot\q - \nabla_{\q} V(\q)$:
 \begin{equation}
-\dot E = \dot\q^\T [B(\q)\uvec - C(\q,\dot\q)\dot\q - \nabla_{\q} V(\q)]
+\dot E = \dot\q^\T [B(\q)\uvec - \mat{C}(\q,\dot\q)\dot\q - \nabla_{\q} V(\q)]
 + \frac{1}{2}\dot\q^\T \dot M(\q)\,\dot\q + \nabla_{\q} V \cdot \dot\q.
 \label{eq:ch3:energy-substituted}
 \end{equation}
 
 The gravity terms cancel, leaving:
 \begin{equation}
-\dot E = \dot\q^\T B(\q)\uvec - \dot\q^\T C(\q,\dot\q)\dot\q + \frac{1}{2}\dot\q^\T \dot M(\q)\,\dot\q.
+\dot E = \dot\q^\T B(\q)\uvec - \dot\q^\T \mat{C}(\q,\dot\q)\dot\q + \frac{1}{2}\dot\q^\T \dot M(\q)\,\dot\q.
 \label{eq:ch3:energy-simplified}
 \end{equation}
 
-For many systems (especially those where $C$ and $\dot M$ have special structure), we have
+For many systems (especially those where $\mat{C}$ and $\dot M$ have special structure), we have
 \begin{equation}
-\dot\q^\T C(\q,\dot\q)\dot\q = -\frac{1}{2}\dot\q^\T \dot M(\q)\,\dot\q,
+\dot\q^\T \mat{C}(\q,\dot\q)\dot\q = -\frac{1}{2}\dot\q^\T \dot M(\q)\,\dot\q,
 \label{eq:ch3:skew-symmetry}
 \end{equation}
 which is a consequence of the Coriolis forces being orthogonal to velocity. Then:
@@ -1166,7 +1166,7 @@ breaks the differentiability assumed in the control-affine framework.
 
 The equation of motion becomes:
 \begin{equation}
-M(\q)\ddot\q + C(\q,\dot\q)\dot\q + \vec{g}(\q) + f_{\text{fric}}(\dot\q) = B(\q)\uvec,
+M(\q)\ddot\q + \mat{C}(\q,\dot\q)\dot\q + \vec{g}(\q) + f_{\text{fric}}(\dot\q) = B(\q)\uvec,
 \label{eq:ch3:with-friction}
 \end{equation}
 and while it remains affine in $\uvec$, the friction creates regions where the effective
@@ -1254,7 +1254,7 @@ degrees of freedom), the direct control authority $\text{span}\{g_1, \ldots, g_m
 does not span the full state space. The Lie brackets $[f, g_i]$ generate additional
 directions through the \emph{inertial coupling} encoded in the mass matrix.
 
-For the manipulator equation $M(\q)\ddot\q + C(\q,\dot\q)\dot\q + \vec{g}(\q) = B\uvec$
+For the manipulator equation $M(\q)\ddot\q + \mat{C}(\q,\dot\q)\dot\q + \vec{g}(\q) = B\uvec$
 with $B \in \R^{n \times m}$, $m < n$, the Lie bracket $[f, g_i]$ evaluated in
 first-order form $\x = (\q, \dot\q)$ involves the off-diagonal blocks of $M(\q)^{-1}$.
 Specifically, the new directions generated by $[f, g_i]$ correspond to accelerations
@@ -1419,7 +1419,7 @@ and robustness margins.
 \section{Chapter Summary}
 
 \begin{enumerate}
-\item The manipulator equation $M(\q)\ddot\q + C(\q,\dot\q)\dot\q + \vec{g}(\q) = B(\q)\uvec$
+\item The manipulator equation $M(\q)\ddot\q + \mat{C}(\q,\dot\q)\dot\q + \vec{g}(\q) = B(\q)\uvec$
       arises from kinetic energy $T = \frac{1}{2}\dot\q^\T M(\q)\dot\q$, where the mass matrix
       is always positive definite (guaranteeing invertibility).
 
