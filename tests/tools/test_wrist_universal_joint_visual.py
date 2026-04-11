@@ -176,10 +176,14 @@ class TestPlotsModule:
                 "_compute_acceleration_signals_core",
                 return_value=signals,
             ) as core:
-                result = plots._compute_acceleration_signals(np.array([5.0, 6.0]), 25.0, -5.0, 0.1, 0.2)
+                result = plots._compute_acceleration_signals(
+                    np.array([5.0, 6.0]), 25.0, -5.0, 0.1, 0.2
+                )
 
             core.assert_called_once()
-            called_input, called_grip, called_wrist, called_i_alpha, called_i_gamma = core.call_args.args
+            called_input, called_grip, called_wrist, called_i_alpha, called_i_gamma = (
+                core.call_args.args
+            )
             np.testing.assert_array_equal(called_input, np.array([5.0, 6.0]))
             assert called_grip == 25.0
             assert called_wrist == -5.0
@@ -208,7 +212,9 @@ class TestPlotsModule:
                 "_compute_transmission_sweep_core",
                 return_value=sweep,
             ) as core:
-                result = plots._compute_transmission_sweep(np.array([-30.0, 0.0, 30.0]), 0.5, 0.1, 0.2)
+                result = plots._compute_transmission_sweep(
+                    np.array([-30.0, 0.0, 30.0]), 0.5, 0.1, 0.2
+                )
 
             core.assert_called_once()
             called_grip_deg, called_wrist_deg, called_i_alpha, called_i_gamma = core.call_args.args
@@ -382,7 +388,9 @@ class TestDiagramModule:
 
             import src.tools.wrist_universal_joint.diagram as diagram
 
-            with patch("src.tools.wrist_universal_joint.enhanced_model_geometry.draw_enhanced_model_diagram") as draw:
+            with patch(
+                "src.tools.wrist_universal_joint.enhanced_model_geometry.draw_enhanced_model_diagram"
+            ) as draw:
                 fig = diagram.draw_diagram(grip_angle_deg=30.0, wrist_angle_deg=10.0)
 
             draw.assert_called_once()
