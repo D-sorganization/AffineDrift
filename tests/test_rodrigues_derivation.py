@@ -23,13 +23,11 @@ def test_rodrigues_power_pattern_captures_alternating_signs() -> None:
         r"\[\\hat\{\\boldsymbol\{\\omega\}\}\]\^\{2k\+1\}\s*=\s*\(-1\)\^k\s*"
         r"\[\\hat\{\\boldsymbol\{\\omega\}\}\]"
     )
-    assert odd_sign_pattern.search(text), (
-        "Expected derivation to state [ω]^(2k+1) = (-1)^k [ω]"
-    )
+    assert odd_sign_pattern.search(text), "Expected derivation to state [ω]^(2k+1) = (-1)^k [ω]"
     bad_pattern = re.compile(
         r"\[\\hat\{\\boldsymbol\{\\omega\}\}\]\^\{2k\+1\}\s*=\s*"
         r"\[\\hat\{\\boldsymbol\{\\omega\}\}\]"
     )
-    assert not bad_pattern.search(text), (
-        "Found non-alternating odd-power pattern for [\\hat{\\boldsymbol{\\omega}}]^{2k+1}"
-    )
+    assert not bad_pattern.search(
+        text
+    ), "Found non-alternating odd-power pattern for [\\hat{\\boldsymbol{\\omega}}]^{2k+1}"
