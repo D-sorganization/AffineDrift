@@ -1,11 +1,11 @@
 """Tests for the sitemap generator script."""
 
-# Add project root to path
+from pathlib import Path
 
-# Import after path setup
 from scripts.generate_sitemap import (
     get_changefreq,
     get_priority,
+    qmd_path_to_url_path,
 )
 from src.tools.utils import parse_frontmatter_dict
 
@@ -177,16 +177,16 @@ class TestSitemapXmlFormat:
 
     def test_url_path_conversion(self):
         """QMD files should be converted to HTML URLs."""
-        # Test the URL path logic
-        filepath = "articles/test-article.qmd"
-        expected_url_path = "articles/test-article.html"
-
-        url_path = filepath.replace(".qmd", ".html")
-        assert url_path == expected_url_path
+        assert qmd_path_to_url_path(Path("articles/test-article.qmd")) == (
+            "articles/test-article.html"
+        )
 
     def test_index_url_path_is_empty(self):
         """Index.html should map to root URL."""
-        url_path = "index.html"
-        if url_path == "index.html":
-            url_path = ""
-        assert url_path == ""
+        assert qmd_path_to_url_path(Path("index.qmd")) == ""
+
+    def test_page_url_path_keeps_directory_prefix(self):
+        """Pages under subdirectories should keep their directory URL prefix."""
+        assert qmd_path_to_url_path(Path("pages/drifter-manifesto.qmd")) == (
+            "pages/drifter-manifesto.html"
+        )
