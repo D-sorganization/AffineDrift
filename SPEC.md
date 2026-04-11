@@ -27,7 +27,7 @@
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.25                                           |
+| **Spec Version**        | 1.0.26                                           |
 | **Last Spec Update**    | 2026-04-11                                       |
 
 ## 2. Purpose & Mission
@@ -172,6 +172,7 @@ AffineDrift/
 | F21 | Tooling Demeter facades                 | ✅     | Link and site-health utilities isolate DOM/path traversal behind small façade objects so repository-governance checks depend on narrower interfaces instead of nested reach-through |
 | F22 | Wrist-model Qt module split             | ✅     | The legacy `content/wrist-as-universal-joint/Universal_Joint_Model_Enhanced.py` launcher now delegates geometry, kinematics, Qt canvas rendering, and window assembly to focused modules under `src/tools/wrist_universal_joint`, keeping the entrypoint thin while preserving its public surface |
 | F23 | Analysis helper fallback logging        | ✅     | `src/tools/utils/analysis_utils.py` logs recoverable parse and file-read failures at debug level when it falls back to zeroed or empty analysis results, keeping repository-quality scans observable without turning invalid files into hard failures |
+| F24 | Developer test target coverage          | ✅     | `make test` runs Python `src/` coverage and JavaScript coverage so local developer checks exercise both primary test stacks before code reaches CI |
 
 ### API / Interface Contract
 
@@ -445,6 +446,7 @@ python src/tools/code_quality_ast.py
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                      |
 | ---------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-04-11 | 1.0.26  | fix(testing): made `make test` run Python coverage before JavaScript coverage and removed the bare `pass` coverage exclusion so stubs remain visible in reports |
 | 2026-04-11 | 1.0.25  | fix(tools): made RL benchmark comparison honor the caller-provided `dt` when generating reference trajectories and added regression coverage for the reference time grid |
 | 2026-04-09 | 1.0.24  | docs(articles): Refined the Layman's Terms section in Contraction_Tangent_CRITIC.qmd to use relatable analogies and improve clarity |
 | 2026-04-07 | 1.0.19  | chore(types): annotated the remaining public Python functions in `src/` and `scripts/`, added an AST regression test to keep return annotations from drifting, and closed the final actionable slice of assessment issue #2241 after auditing stale print/config findings                                                                                                     |
