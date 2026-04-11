@@ -11,6 +11,9 @@ pytestmark = pytest.mark.content_lint
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 AFFINE_ARTICLE = REPO_ROOT / "articles" / "affine-nature-golf-swing.qmd"
+CH02_VARIATIONAL = (
+    REPO_ROOT / "articles" / "The_Geometry_of_Motion" / "quarto" / "ch02_variational.qmd"
+)
 CH06_QMD = (
     REPO_ROOT
     / "articles"
@@ -196,3 +199,19 @@ def test_ch06_coriolis_example_uses_cm_distance_and_small_values() -> None:
         assert "0.2 \\times 0.4 \\times 0.15 \\times 15 \\times 20 \\approx 3.6" in text
         assert "32 \\text{ Nm}" not in text
         assert "192 \\text{ Nm}" not in text
+
+
+def test_ch02_liouville_jacobi_formula_has_correct_det_factor() -> None:
+    """Liouville's formula should use the determinant identity without a division term."""
+    text = CH02_VARIATIONAL.read_text(encoding="utf-8")
+    label = r"\label{eq:ch2:jacobi}"
+    assert label in text
+    label_idx = text.index(label)
+    eq_start = text.rfind(r"\begin{equation}", 0, label_idx)
+    align_end = text.find(r"\end{align}", label_idx)
+    if align_end == -1:
+        align_end = text.find(r"\end{proof}", label_idx)
+    section = text[eq_start:align_end]
+    assert r"\frac{\dd}{\dd t}\det(\Phi(t,t_0))" in section
+    assert r"/\det(\Phi)" not in section
+    assert r"\det(\Phi)\trace(\Phi^{-T}\,\dot{\Phi})" in section
