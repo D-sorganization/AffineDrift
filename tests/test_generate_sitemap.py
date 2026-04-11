@@ -145,7 +145,7 @@ author: Author
     def test_handles_colons_in_values(self):
         """Should handle colons in values correctly."""
         content = """---
-title: Test: A Subtitle
+title: "Test: A Subtitle"
 ---
 """
         result = parse_frontmatter_dict(content)

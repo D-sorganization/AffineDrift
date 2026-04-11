@@ -2,7 +2,11 @@
 
 from __future__ import annotations
 
-from src.tools.utils.frontmatter import extract_frontmatter, extract_title_description
+from src.tools.utils.frontmatter import (
+    extract_frontmatter,
+    extract_title_description,
+    parse_frontmatter_dict,
+)
 
 # ---------------------------------------------------------------------------
 # extract_frontmatter tests
@@ -83,3 +87,31 @@ def test_extract_title_description_returns_default_when_description_missing() ->
     title, desc = extract_title_description(yaml, default_description="No desc")
     assert title == "Has no description"
     assert desc == "No desc"
+
+
+def test_extract_title_description_supports_unquoted_yaml_values() -> None:
+    """extract_title_description should parse standard unquoted YAML scalars."""
+    yaml = "title: Research Notes\ndescription: See https://example.com:8443/path"
+    title, desc = extract_title_description(yaml)
+    assert title == "Research Notes"
+    assert desc == "See https://example.com:8443/path"
+
+
+def test_parse_frontmatter_dict_uses_yaml_scalar_parsing() -> None:
+    """parse_frontmatter_dict should preserve valid YAML scalar values."""
+    content = """---
+title: "Research: Notes"
+description: See https://example.com:8443/path
+toc: true
+format:
+  html:
+    toc: true
+---
+Body.
+"""
+    frontmatter = parse_frontmatter_dict(content)
+
+    assert frontmatter["title"] == "Research: Notes"
+    assert frontmatter["description"] == "See https://example.com:8443/path"
+    assert frontmatter["toc"] == "true"
+    assert "format" not in frontmatter
