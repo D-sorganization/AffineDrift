@@ -27,7 +27,7 @@
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.34                                           |
+| **Spec Version**        | 1.0.35                                           |
 | **Last Spec Update**    | 2026-04-11                                       |
 
 ## 2. Purpose & Mission
@@ -211,7 +211,7 @@ AffineDrift/
 **Website (HTTP):**
 
 - GitHub Pages deployment at `AffineDrift.com`
-- Service worker handles offline content caching
+- Service worker handles bounded offline content caching and notifies clients when stale-while-revalidate refreshes new content
 - All pages render with MathJax notation support
 
 **Textbook Bibliographies:**
@@ -454,6 +454,7 @@ python src/tools/code_quality_ast.py
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                      |
 | ---------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-04-11 | 1.0.35  | fix(pwa): bounded the service-worker cache and surfaced update notices so stale offline content refreshes visibly without unbounded storage growth                                                                                                                                                                                                                           |
 | 2026-04-11 | 1.0.34  | fix(wrist): switched wrist-model Matplotlib helpers from pyplot state to object-oriented `Figure` construction and removed resource caching from array-backed plot functions.                                                                                                                                   |
 | 2026-04-11 | 1.0.33  | fix(ci): removed duplicate requirements installation from `ci-standard.yml`, enabled pip caching, allowed workflow-only changes to trigger CI, aligned PR auto-labeler path rules with the repository layout, and cleaned stale SPEC conflict markers.                                                          |
 | 2026-04-11 | 1.0.32  | chore(deps): pinned previously unpinned root requirements and moved streamlit out of core requirements into the wrist tool optional requirements file.                                                                                                                                                         |
