@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import warnings
 from typing import Any
+from pathlib import Path
 
 import numpy as np
 import pytest
@@ -27,6 +28,8 @@ from src.tools.rl_funnel_benchmark import (
 from src.tools.wrist_universal_joint.torque_calculator import (
     universal_joint_transmission_ratio,
 )
+
+GRAVITY_M_S2 = 9.81
 
 
 class TestMassMatrixPhysics:
@@ -174,6 +177,29 @@ class TestMPCFullReachable:
         # MPC_WARN -> LQR
         monitor.update(np.array([0.05]), x_nom)
         assert monitor.mode == "LQR"
+
+
+class TestGolfChapter03NumericalExample:
+    """#2278: ch03 numerical example must use the table values consistently."""
+
+    def test_double_pendulum_worked_example_values(self) -> None:
+        """The published numerical example should match the stated masses."""
+        m1 = 2.5
+        m2 = 1.5
+        l1 = 0.35
+        l2 = 0.5
+        theta2 = np.deg2rad(-5.0)
+        theta1_dot = np.deg2rad(600.0)
+
+        m11 = 0.015 + m2 * l1**2 + m2 * l2**2 + 0.4 + 2 * m2 * l1 * l2 * np.cos(theta2)
+        g1 = (m1 * 0.175 + m2 * 0.35) * GRAVITY_M_S2 * np.sin(
+            0.0
+        ) + m2 * GRAVITY_M_S2 * 0.5 * np.sin(theta2)
+        c21 = m2 * l1 * l2 * theta1_dot**2 * np.sin(theta2)
+
+        assert np.isclose(m11, 1.496752, atol=1e-6)
+        assert np.isclose(g1, -0.641248, atol=1e-6)
+        assert np.isclose(c21, -2.508895, atol=1e-6)
 
 
 # ---------------------------------------------------------------------------
@@ -364,3 +390,24 @@ class TestEpsilonConsolidation:
         assert CORE_EPSILON == WRIST_EPSILON
         # Both should be 1e-6
         assert CORE_EPSILON == 1e-6
+
+
+# ---------------------------------------------------------------------------
+# Issue #2324: energy-budget drop needs explicit braking explanation
+# ---------------------------------------------------------------------------
+
+
+class TestCh10EnergyBudgetExplanation:
+    """#2324: chapter 10 should explain the 36 J phase-4-to-5 drop."""
+
+    def test_ch10_mentions_eccentric_braking_and_losses(self) -> None:
+        """The worked example should explain the apparent non-conservation."""
+        repo_root = Path(__file__).resolve().parents[1]
+        chapter = (
+            repo_root / "articles" / "The_Physics_of_Golf" / "quarto" / "ch10_energy_transfer.qmd"
+        ).read_text(encoding="utf-8")
+
+        assert "eccentric braking" in chapter
+        assert "negative work" in chapter
+        assert "air resistance" in chapter or "internal dissipation" in chapter
+        assert "conservation error" in chapter

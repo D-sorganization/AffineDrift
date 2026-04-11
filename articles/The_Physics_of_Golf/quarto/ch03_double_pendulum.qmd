@@ -403,9 +403,9 @@ The mass matrix at this configuration:
 
 $$
 \begin{aligned}
-M_{11} &\approx 0.015 + 2.5 \cdot 0.35^2 + 2.5 \cdot 0.5^2 + 0.4 + 2 \cdot 2.5 \cdot 0.35 \cdot 0.5 \cos(-5°) \\
-&\approx 0.015 + 0.306 + 0.625 + 0.4 + 0.872 \\
-&\approx 2.22 \text{ kg m}^2
+M_{11} &\approx 0.015 + 1.5 \cdot 0.35^2 + 1.5 \cdot 0.5^2 + 0.4 + 2 \cdot 1.5 \cdot 0.35 \cdot 0.5 \cos(-5°) \\
+&\approx 0.015 + 0.184 + 0.375 + 0.4 + 0.523 \\
+&\approx 1.50 \text{ kg m}^2
 \end{aligned}
 $$
 
@@ -415,9 +415,9 @@ The gravitational torques:
 
 $$
 \begin{aligned}
-g_1 &= (2.5 \cdot 0.175 + 2.5 \cdot 0.35) \cdot 9.81 \cdot \sin(0°) + 2.5 \cdot 9.81 \cdot 0.5 \cdot \sin(-5°) \\
-&\approx 0 - 10.6 \text{ N m} \\
-&\approx -10.6 \text{ N m}
+g_1 &= (2.5 \cdot 0.175 + 1.5 \cdot 0.35) \cdot 9.81 \cdot \sin(0°) + 1.5 \cdot 9.81 \cdot 0.5 \cdot \sin(-5°) \\
+&\approx 0 - 0.64 \text{ N m} \\
+&\approx -0.64 \text{ N m}
 \end{aligned}
 $$
 
@@ -428,9 +428,9 @@ The Coriolis term at the elbow:
 $$
 \begin{aligned}
 C_{21} \dot{\theta}_1 &= M_2 L_1 L_{2,\text{cm}} \dot{\theta}_1^2 \sin \theta_2 \\
-&= 2.5 \cdot 0.35 \cdot 0.5 \cdot 10.47^2 \cdot \sin(-5°) \\
-&\approx 2.5 \cdot 0.35 \cdot 0.5 \cdot 109.6 \cdot (-0.087) \\
-&\approx -6.6 \text{ N m}
+&= 1.5 \cdot 0.35 \cdot 0.5 \cdot 10.47^2 \cdot \sin(-5°) \\
+&\approx 1.5 \cdot 0.35 \cdot 0.5 \cdot 109.7 \cdot (-0.087) \\
+&\approx -2.5 \text{ N m}
 \end{aligned}
 $$
 
@@ -438,11 +438,11 @@ $$
 ## What These Numbers Mean
 
 At impact:
-- The total mass/inertia of the arm+club is about 2.22 kg m$^2$.
-- Gravity is pulling with a torque of 10.6 N m.
-- The centrifugal force (from the high shoulder rotation) is creating a torque of 6.6 N m trying to straighten the elbow.
+- The total mass/inertia of the arm+club is about 1.50 kg m$^2$.
+- Gravity is pulling with a torque of 0.64 N m.
+- The centrifugal term (from the high shoulder rotation) is creating a torque of 2.5 N m trying to straighten the elbow.
 
-For comparison, a human can generate roughly 30–50 N m of torque at the shoulder (illustrative; values vary with body size, training, and joint angle <!-- TODO: add citation for peak shoulder torque capacity, e.g., inverse-dynamics golf studies -->). So gravity and centrifugal forces are doing about 40\% of the work at impact in this illustrative example. The muscles do the rest.
+For comparison, a human can generate roughly 30–50 N m of torque at the shoulder (illustrative; values vary with body size, training, and joint angle <!-- TODO: add citation for peak shoulder torque capacity, e.g., inverse-dynamics golf studies -->). So gravity and centrifugal effects are much smaller than the muscular torque budget in this illustrative example. The muscles do the rest.
 
 But notice: if we had generated all of this torque during the downswing, the club would barely accelerate. Instead, we generate a moderate muscular torque and let gravity and momentum contribute. That's efficiency.
 
@@ -532,4 +532,3 @@ The difference between amateurs and experts isn't just that experts generate lar
 4. **Impact Accelerations**. A golf club at impact often experiences accelerations of $170g$ or more. Using the double pendulum model, estimate what shoulder and elbow accelerations ($\ddot{\theta}_1, \ddot{\theta}_2$) are needed to produce this. (Hint: the clubhead acceleration is $a = L_1 \ddot{\theta}_1 + \text{other terms}$.)
 5. **Gravity Torque**. At the top of the backswing ($\theta_1 = 150°, \theta_2 = -70°$), compute the gravitational torque at the shoulder. Is gravity trying to pull the arm backward or forward? Why?
 6. **Chaotic Dynamics**. Look up the properties of the (unforced) double pendulum. In what regime does it exhibit chaos? Does the golf swing operate in that regime?
-

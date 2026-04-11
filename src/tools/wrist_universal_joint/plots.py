@@ -9,7 +9,8 @@ This module contains matplotlib-based plotting functions:
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Any
+from collections.abc import Callable
+from typing import TYPE_CHECKING, Any, ParamSpec, TypeVar, cast
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -30,6 +31,17 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
+_P = ParamSpec("_P")
+_R = TypeVar("_R")
+
+
+def _cache_resource(max_entries: int) -> Callable[[Callable[_P, _R]], Callable[_P, _R]]:
+    """Return Streamlit's cache decorator with preserved function typing."""
+    return cast(
+        Callable[[Callable[_P, _R]], Callable[_P, _R]],
+        st.cache_resource(max_entries=max_entries),
+    )
+
 
 def _compute_torque_signals(
     input_torque: np.ndarray[Any, Any],
@@ -43,7 +55,10 @@ def _compute_torque_signals(
     """
     theta_grip_rad = np.radians(grip_angle_deg)
     phi_wrist_rad = np.radians(wrist_angle_deg)
-    _omega_ratio, tau_ratio = universal_joint_transmission_ratio(theta_grip_rad, phi_wrist_rad)
+    _omega_ratio, tau_ratio = universal_joint_transmission_ratio(
+        phi_rad=phi_wrist_rad,
+        delta_rad=theta_grip_rad,
+    )
     torque_transmitted = input_torque * tau_ratio
     torque_alpha, torque_gamma = distribute_torque_by_grip_angle(torque_transmitted, theta_grip_rad)
     return torque_transmitted, np.asarray(torque_alpha), np.asarray(torque_gamma), tau_ratio
@@ -83,7 +98,7 @@ def _plot_torque_lines(
 
 # Cache figure generation to prevent expensive redraws
 # Limit entries to prevent OOM when sliding through many angles
-@st.cache_resource(max_entries=20)
+@_cache_resource(max_entries=20)
 def plot_torque(
     t: np.ndarray[Any, Any],
     input_torque: np.ndarray[Any, Any],
@@ -154,7 +169,7 @@ def _compute_acceleration_signals(
 
 # Cache figure generation to prevent expensive redraws
 # Limit entries to prevent OOM when sliding through many angles
-@st.cache_resource(max_entries=20)
+@_cache_resource(max_entries=20)
 def plot_acceleration(
     t: np.ndarray[Any, Any],
     input_torque: np.ndarray[Any, Any],
@@ -231,7 +246,10 @@ def _compute_transmission_sweep(
     accel_gamma_ratios_list: list[float] = []
 
     for phi_rad in phi_sweep_rad:
-        omega_r, tau_r = universal_joint_transmission_ratio(theta_grip_rad, phi_rad)
+        omega_r, tau_r = universal_joint_transmission_ratio(
+            phi_rad=phi_rad,
+            delta_rad=theta_grip_rad,
+        )
         omega_ratios_list.append(omega_r)
         tau_ratios_list.append(tau_r)
 
@@ -326,7 +344,7 @@ def _annotate_current_wrist_angle(
 
 # Cache figure generation to prevent expensive redraws
 # Limit entries to prevent OOM when sliding through many angles
-@st.cache_resource(max_entries=20)
+@_cache_resource(max_entries=20)
 def plot_transmission_sweep(
     grip_angle_deg: float,
     wrist_angle_deg: float,

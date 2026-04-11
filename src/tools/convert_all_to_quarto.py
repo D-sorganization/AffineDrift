@@ -6,8 +6,7 @@ Converts all LaTeX article files to Quarto .qmd format.
 import os
 import sys
 
-from latex_to_qmd import LaTeXToQuartoConverter
-
+from src.tools.latex_to_qmd import LaTeXToQuartoConverter
 from src.tools.utils import batch_convert, setup_logging
 
 logger = setup_logging(__name__)

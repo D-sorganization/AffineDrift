@@ -135,6 +135,11 @@ class TestFixRelativePaths:
         result = fix_relative_paths("<html>content</html>", depth=1)
         assert isinstance(result, str)
 
+    def test_main_js_path_is_rewritten(self) -> None:
+        """Should rewrite the active JS bundle path for nested pages."""
+        result = fix_relative_paths('<script src="js/main.js"></script>', depth=2)
+        assert 'src="../../js/main.js"' in result
+
     def test_depth_two_uses_double_prefix(self) -> None:
         """Should use ../../ prefix for depth=2."""
         result = fix_relative_paths("<html>content</html>", depth=2)

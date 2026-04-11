@@ -54,8 +54,8 @@ def compute_torque_signals(
     theta_grip_rad = np.radians(grip_angle_deg)
     phi_wrist_rad = np.radians(wrist_angle_deg)
     omega_ratio, tau_ratio = universal_joint_transmission_ratio(
-        phi_wrist_rad,
-        theta_grip_rad,
+        phi_rad=phi_wrist_rad,
+        delta_rad=theta_grip_rad,
     )
     torque_transmitted = input_torque * tau_ratio
     torque_alpha, torque_gamma = distribute_torque_by_grip_angle(
@@ -108,7 +108,10 @@ def compute_transmission_sweep(
     accel_gamma_ratios: list[float] = []
 
     for phi_rad in np.radians(phi_sweep):
-        omega_ratio, tau_ratio = universal_joint_transmission_ratio(phi_rad, theta_grip_rad)
+        omega_ratio, tau_ratio = universal_joint_transmission_ratio(
+            phi_rad=phi_rad,
+            delta_rad=theta_grip_rad,
+        )
         omega_ratios.append(omega_ratio)
         tau_ratios.append(tau_ratio)
 
@@ -131,8 +134,8 @@ def build_info_html(
 ) -> str:
     """Build the HTML summary shown in the info panel."""
     _omega_ratio, tau_ratio = universal_joint_transmission_ratio(
-        np.radians(wrist_angle_deg),
-        np.radians(grip_angle_deg),
+        phi_rad=np.radians(wrist_angle_deg),
+        delta_rad=np.radians(grip_angle_deg),
     )
     return f"""
         <b>Current Configuration:</b><br>

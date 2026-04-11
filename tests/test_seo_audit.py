@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """Tests for SEO audit script."""
 
+from pathlib import Path
+
 import pytest
 
 from scripts.seo_audit import (
@@ -218,3 +220,14 @@ title: "Page Without Description"
 
         # Image alt text issues
         assert len(image_issues) > 0
+
+
+class TestSiteHeadCanonicalUrl:
+    """Regression tests for the site head canonical URL handling."""
+
+    def test_does_not_hardcode_homepage_canonical_url(self):
+        """The shared head partial should not force every page to the homepage URL."""
+        site_head = Path(__file__).resolve().parents[1] / "_includes" / "site-head.html"
+        content = site_head.read_text(encoding="utf-8")
+
+        assert '<link rel="canonical" href="https://affinedrift.com">' not in content

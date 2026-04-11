@@ -17,3 +17,11 @@ def test_coverage_report_does_not_exclude_bare_pass() -> None:
     report_section = pyproject.split("[tool.coverage.report]", maxsplit=1)[1]
 
     assert '"pass"' not in report_section
+
+
+def test_ruff_config_lives_in_pyproject_only() -> None:
+    pyproject = (ROOT / "pyproject.toml").read_text(encoding="utf-8")
+
+    assert "[tool.ruff]" in pyproject
+    assert not (ROOT / "ruff.toml").exists()
+    assert not (ROOT / ".flake8").exists()

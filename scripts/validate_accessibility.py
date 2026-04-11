@@ -213,9 +213,9 @@ def validate_accessibility() -> tuple[int, dict[str, list[str]]]:
             all_issues[str(css_file.relative_to(repo_root))] = issues
             total_issues += len(issues)
 
-    # Check JavaScript files for ARIA labels
-    logger.info("Checking JavaScript files for ARIA labels...")
-    js_files = [repo_root / "script.js"]
+    # Check the active JavaScript bundle for ARIA labels
+    logger.info("Checking JavaScript bundle for ARIA labels...")
+    js_files = [repo_root / "js/main.js"]
     for js_file in js_files:
         if js_file.exists():
             issues = check_aria_labels_in_js(js_file)

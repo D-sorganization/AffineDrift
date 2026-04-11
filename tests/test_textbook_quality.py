@@ -11,6 +11,9 @@ pytestmark = pytest.mark.content_lint
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 AFFINE_ARTICLE = REPO_ROOT / "articles" / "affine-nature-golf-swing.qmd"
+CH09_PARALLEL_MECHANISMS = (
+    REPO_ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "ch09_parallel_mechanisms.qmd"
+)
 BOOK_FILES = (
     REPO_ROOT / "books" / "tangent-space-methods.qmd",
     REPO_ROOT / "books" / "control-is-motion.qmd",
@@ -20,6 +23,25 @@ BOOK_FILES = (
 FENCED_DIV_FILES = (
     AFFINE_ARTICLE,
     REPO_ROOT / "articles" / "The_Geometry_of_Motion" / "quarto" / "volume2_content.qmd",
+)
+
+CONVERSATIONAL_FILES = (
+    REPO_ROOT / "articles" / "The_Physics_of_Golf" / "chapters" / "ch09_parallel_mechanisms.tex",
+    REPO_ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "ch09_parallel_mechanisms.qmd",
+    REPO_ROOT / "articles" / "The_Physics_of_Golf" / "chapters" / "ch23_dof_urdf_models.tex",
+    REPO_ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "ch23_dof_urdf_models.qmd",
+    REPO_ROOT / "articles" / "The_Geometry_of_Motion" / "quarto" / "ch06_duality.qmd",
+)
+
+CONVERSATIONAL_PHRASES = (
+    "oops!",
+    "Wait, I made an error. Let me redefine.",
+    "Actually, let's be careful: we include ground as one of the $N$, so $N = 4$.",
+    "Actually, let's say the ground is the reference and we have 4 rigid bodies total in the chain: $N = 4$.",
+    "Actually, let's use the simpler formula for a tree:",
+    "Actually, let's use a cleaner approach. Note that:",
+    "Wait, let me reconsider. We have $\\mat{K} = \\mat{R}^{-1}\\mat{B}^\\T\\mat{S}$, so:",
+    "Here's the critical part:",
 )
 
 REF_PATTERN = re.compile(r"@((?:sec|subsec|eq)-[A-Za-z0-9_:-]+)")
@@ -49,6 +71,16 @@ def test_book_pages_explain_notebooks_feature() -> None:
         text = book_file.read_text(encoding="utf-8")
         assert "## Notebook Workflow" in text
         assert "notebooks/geometry_of_motion/" in text
+
+
+def test_ch09_gruebler_example_stewart_platform_is_consistent() -> None:
+    """Stewart platform example in ch09 should use the corrected 3D mobility count."""
+    text = CH09_PARALLEL_MECHANISMS.read_text(encoding="utf-8")
+    assert "For a 3D mechanism, the formula is:\n\nM = 6(N - 1) - \\sum_i f_i" in text
+    assert "N = 8" in text
+    assert "J = 12" in text
+    assert "M = 6(8-1) - 12 \\times 3 = 42 - 36 = 6" in text
+    assert "M = -9" not in text
 
 
 def _collect_fenced_div_balance_issues(text: str) -> list[str]:
@@ -88,3 +120,11 @@ def test_target_pages_do_not_use_raw_fenced_div_markers() -> None:
         text = qmd_file.read_text(encoding="utf-8")
         assert "::: {.callout-note}" not in text
         assert "::: {.abstract-section}" not in text
+
+
+def test_target_pages_do_not_retain_draft_conversational_language() -> None:
+    """Published chapter sources should avoid draft-style self-correction language."""
+    for source_file in CONVERSATIONAL_FILES:
+        text = source_file.read_text(encoding="utf-8")
+        for phrase in CONVERSATIONAL_PHRASES:
+            assert phrase not in text, f"{source_file}: found {phrase!r}"
