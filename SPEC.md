@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-04-11T23:45:00Z
+Last-Updated: 2026-04-11T23:52:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-04-11T23:45:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.47                                           |
+| **Spec Version**        | 1.0.48                                           |
 | **Last Spec Update**    | 2026-04-11                                       |
 
 ## 2. Purpose & Mission
@@ -466,6 +466,7 @@ python src/tools/code_quality_ast.py
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                      |
 | ---------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-04-11 | 1.0.48  | refactor(rl-funnel): centralized benchmark result, result formatting, pendulum constants, mass-matrix, and state-vector validation in `src/tools/rl_funnel_support.py`, with compatibility re-export coverage across the RL funnel modules.                                                                                                                                  |
 | 2026-04-11 | 1.0.47  | refactor(wrist): replaced the duplicated docs/content Universal_Joint_Model_Enhanced.py monolith with a thin compatibility launcher that re-exports the maintained wrist universal-joint modules, with regression coverage for the legacy public API surface.                                                                                                                |
 | 2026-04-11 | 1.0.46  | fix(textbook): documented the modeling context for differing double-pendulum and triple-pendulum parameter sets in Physics of Golf chapters 3, 6, and 8, with content checks guarding the explanatory notes.                                                                                                                                                                 |
 | 2026-04-11 | 1.0.45  | fix(textbook): corrected Physics of Golf chapter 11 from a static Euler-Bernoulli form to the dynamic equation including $\rho A \partial_t^2 w$, aligned supporting prose and LaTeX source, and added a regression assertion against static-only omissions.                                                                                                                 |
