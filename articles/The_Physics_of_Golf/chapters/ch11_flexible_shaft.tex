@@ -69,19 +69,28 @@ The rigid model predicts that the clubhead would be at the end of a straight lin
 
 To model shaft flexibility mathematically, we use \textbf{Euler-Bernoulli beam theory}, a classical result from mechanics. A beam (our shaft) can be described by how much it bends at each point along its length.
 
-The fundamental equation for the shape of a bent beam is:
+The governing dynamic equation for transverse shaft deflection is:
 \[
-EI \frac{\partial^4 w}{\partial z^4} = q(z)
+EI \frac{\partial^4 w}{\partial z^4}(z,t) + \rho A \frac{\partial^2 w}{\partial t^2}(z,t) = q(z,t)
 \]
 
 where:
 \begin{itemize}
-\item $w(z)$ is the vertical deflection of the beam at position $z$ along the shaft.
+\item $w(z,t)$ is the vertical deflection of the shaft at position $z$ and time $t$.
 \item $E$ is the material's elastic modulus (stiffness).
 \item $I$ is the second moment of inertia of the cross-section (how the material is distributed around the neutral axis).
-\item $q(z)$ is the distributed load on the beam (in our case, inertial forces from acceleration).
+\item $\rho$ is the material density.
+\item $A$ is the shaft cross-sectional area.
+\item $q(z,t)$ is the distributed load on the shaft (in our case, inertial forces from acceleration).
 \item The product $EI$ is called the \textbf{bending stiffness}.
 \end{itemize}
+
+For quasi-static approximations where inertial effects are negligible, we use the reduced form
+\[
+EI \frac{\partial^4 w}{\partial z^4}(z) = q(z)
+\]
+
+Modal decomposition assumes each mode shape $\phi_j(z)$ satisfies the eigenproblem implied by the dynamic beam equation, and projection onto these modes produces the coupled ODEs in terms of $\eta_j(t)$.
 
 \begin{laymansbox}{Why $EI$ Matters}{laymans:ch11:ei_product}
 Imagine two shafts of the same length. One is thin and hollow; one is thick and solid. Both are made of the same material. The thin shaft bends a lot for the same force. The thick shaft is much stiffer. The product $EI$ captures this: a thicker shaft has a larger $I$, so a larger $EI$, and thus is stiffer.

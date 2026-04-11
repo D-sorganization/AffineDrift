@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-04-11T21:57:00Z
+Last-Updated: 2026-04-11T22:03:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-04-11T21:57:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.44                                           |
+| **Spec Version**        | 1.0.45                                           |
 | **Last Spec Update**    | 2026-04-11                                       |
 
 ## 2. Purpose & Mission
@@ -188,6 +188,7 @@ AffineDrift/
 | F33 | Round putting simulator injection       | ✅     | `RoundSimulator` accepts an optional prebuilt `PuttingSimulator` so tests and callers can provide calibrated green physics without relying on inline flat-green construction.                                                                                                                                                    |
 | F34 | Mypy autofix package entrypoints        | ✅     | The mypy autofix agent is split into focused modules under `scripts/mypy_autofix` while preserving the legacy `scripts/mypy_autofix_agent.py` workflow entrypoint as a compatibility wrapper.                                                                                                                                    |
 | F35 | Face-angle sensitivity consistency      | ✅     | Physics of Golf chapter 31 keeps driver face-angle offline-distance sensitivity in the documented 13--20 yards-per-degree range and regression tests block the previous 60--70 yards-per-degree contradiction.                                                                                                                   |
+| F36 | Dynamic beam model consistency          | ✅     | Physics of Golf chapter 11 uses the dynamic Euler-Bernoulli equation with explicit inertial term and a content test guards the modal consistency of the governing equation in the chapter source.                                                                                                                                |
 
 ### API / Interface Contract
 
@@ -464,6 +465,7 @@ python src/tools/code_quality_ast.py
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                      |
 | ---------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-04-11 | 1.0.45  | fix(textbook): corrected Physics of Golf chapter 11 from a static Euler-Bernoulli form to the dynamic equation including $\rho A \partial_t^2 w$, aligned supporting prose and LaTeX source, and added a regression assertion against static-only omissions.                                                                                                                 |
 | 2026-04-11 | 1.0.44  | fix(textbook): corrected Geometry of Motion chapter 1 statements about time-dependent coordinate-change eigenvalues and SO(3) tangent spaces, with source-content regression checks for the corrected mathematical claims.                                                                                                                                                   |
 | 2026-04-11 | 1.0.43  | fix(textbook): corrected Physics of Golf chapter 31 face-angle and path-angle directional sensitivity values so the later sensitivity section matches the earlier 13--20 yards-per-degree face-angle range, with regression coverage against the old 60--70 yards-per-degree claim.                                                                                          |
 | 2026-04-11 | 1.0.42  | refactor(tooling): decomposed the mypy autofix agent into a package with focused parser, strategy, file, model, and runner modules while keeping the legacy script path callable for GitHub workflow compatibility.                                                                                                                                                          |
