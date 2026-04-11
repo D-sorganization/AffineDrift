@@ -5,6 +5,10 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+import pytest
+
+pytestmark = pytest.mark.content_lint
+
 REPO_ROOT = Path(__file__).resolve().parents[1]
 AFFINE_ARTICLE = REPO_ROOT / "articles" / "affine-nature-golf-swing.qmd"
 BOOK_FILES = (

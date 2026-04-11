@@ -7,6 +7,10 @@ from collections import defaultdict
 from dataclasses import dataclass
 from pathlib import Path
 
+import pytest
+
+pytestmark = pytest.mark.content_lint
+
 ROOT = Path(__file__).resolve().parents[1]
 BIB_PATH = ROOT / "articles" / "The_Geometry_of_Motion" / "geometry_of_motion.bib"
 
