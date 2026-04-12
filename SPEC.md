@@ -29,8 +29,8 @@ Last-Updated: 2026-04-12T00:45:10Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.57                                           |
-| **Last Spec Update**    | 2026-04-11                                       |
+| **Spec Version**        | 1.0.58                                           |
+| **Last Spec Update**    | 2026-04-12                                       |
 
 ## 2. Purpose & Mission
 
@@ -527,6 +527,7 @@ python src/tools/code_quality_ast.py
 | 2026-03-30 | 1.0.0   | Consolidated frontend scroll event handlers via `requestAnimationFrame`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | 2026-03-30 | 1.0.0   | Documented PR CI dependency-audit plus rendered-site E2E gate, mock-solver opt-in behavior at `SwingOptimizer.optimize`, and bibliography duplicate-alias integrity guardrails                                                                                                                                                                                                                                                                                                                                                                                                              |
 | 2026-03-28 | 1.0.0   | Initial SPEC.md specification for AffineDrift v1.0.0 — all core features documented and implemented                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| 2026-04-12 | 1.0.58  | security(xss): Fixed DOM-based XSS vulnerability in `script.js` history URLs by sanitizing `a.href` assignments to explicitly reject `javascript:` payloads.                                                                                                                                                                                                                                                                                                                                                                                                                                |
 
 ---
 
