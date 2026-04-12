@@ -29,8 +29,8 @@ Last-Updated: 2026-04-12T00:45:10Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.57                                           |
-| **Last Spec Update**    | 2026-04-11                                       |
+| **Spec Version**        | 1.0.58                                           |
+| **Last Spec Update**    | 2026-04-12                                       |
 
 ## 2. Purpose & Mission
 
@@ -466,6 +466,7 @@ python src/tools/code_quality_ast.py
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | ---------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-04-12 | 1.0.58  | fix(ci): added RUN_UI_TESTS environment guard to matplotlib.use("QtAgg") in qt_canvases.py to allow headless verification without triggering ImportError, and removed redundant pytest-xvfb plugin. |
 | 2026-04-11 | 1.0.57  | refactor(src): decomposed ten oversized functions (`_simulate_putt`, `ILQRSolver._backward_pass`, `ILQRSolver.optimize`, `BallFlightDynamics.dynamics`, `BallFlightDynamics.simulate`, `compute_hessian_norm`, `batch_convert`, `collect_python_file_metrics`, `plot_acceleration`, `SwingOptimizer.__init__`) into thin orchestrators plus focused helpers, preserving numerical and observable behavior (issue #2362). |
 | 2026-04-12 | 1.0.56  | fix(ci): installed PyQt6 in the standard Python test job so the legacy wrist universal-joint launcher API regression can import the Qt canvas wrappers on GitHub-hosted runners.                                                                                                                                                                                                                                                                                                                                                                                                            |
 | 2026-04-11 | 1.0.55  | docs(textbook): resolved Physics of Golf citation TODO markers across `.tex` and `.qmd` sources (issue #2346). Existing `golf_physics.bib` entries (Nesbit2005, McTeigue1994, Penner2003, Jorgensen1994, Broadie2014, McGill2007, hosea1990biomechanical, DeLeva1996, Winter2009, Hume2005, Gatt1998, Kandel2013, Delp2007, etc.) were attached to the corresponding claims; remaining TODOs where no matching bib entry exists were converted to a new visible `\citeneeded{}` LaTeX placeholder (defined in `golf_physics.sty`) so unresolved citations are surfaced in the rendered PDF. |
