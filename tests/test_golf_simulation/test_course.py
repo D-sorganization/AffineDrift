@@ -41,6 +41,48 @@ class TestGolfHole:
         terrain = hole.get_terrain(365.76, 0.0)
         assert terrain == TerrainType.GREEN
 
+    def test_get_terrain_near_tee_box(self):
+        hole = GolfHole(
+            number=1,
+            par=4,
+            yardage=400.0,
+            handicap=1,
+            tee_position=(0.0, 0.0, 0.0),
+            pin_position=(365.76, 0.0, 0.0),
+            green_center=(365.76, 0.0, 0.0),
+            green_radius=15.0,
+        )
+        assert hole.get_terrain(2.0, 0.0) == TerrainType.TEE_BOX
+
+    def test_get_terrain_fairway_and_rough_corridor(self):
+        hole = GolfHole(
+            number=1,
+            par=4,
+            yardage=400.0,
+            handicap=1,
+            tee_position=(0.0, 0.0, 0.0),
+            pin_position=(365.76, 0.0, 0.0),
+            green_center=(365.76, 0.0, 0.0),
+            green_radius=15.0,
+        )
+        assert hole.get_terrain(180.0, 10.0) == TerrainType.FAIRWAY
+        assert hole.get_terrain(180.0, 35.0) == TerrainType.ROUGH
+        assert hole.get_terrain(180.0, 60.0) == TerrainType.DEEP_ROUGH
+
+    def test_custom_terrain_function_still_overrides_heuristic(self):
+        hole = GolfHole(
+            number=1,
+            par=4,
+            yardage=400.0,
+            handicap=1,
+            tee_position=(0.0, 0.0, 0.0),
+            pin_position=(365.76, 0.0, 0.0),
+            green_center=(365.76, 0.0, 0.0),
+            green_radius=15.0,
+            terrain_fn=lambda _x, _y: TerrainType.BUNKER,
+        )
+        assert hole.get_terrain(365.76, 0.0) == TerrainType.BUNKER
+
 
 class TestGolfCourse:
     def test_par3_course_creation(self):
