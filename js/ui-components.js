@@ -142,6 +142,7 @@ export function initBackToTop() {
     const backToTopBtn = document.createElement("button");
     backToTopBtn.className = "back-to-top";
     backToTopBtn.setAttribute("aria-label", "Scroll to top");
+    backToTopBtn.setAttribute("title", "Scroll to top");
 
     const radius = 21;
     const circumference = 2 * Math.PI * radius;
@@ -315,6 +316,7 @@ export function initLightbox() {
     const closeBtn = document.createElement("button");
     closeBtn.className = "lightbox-close";
     closeBtn.setAttribute("aria-label", "Close zoom");
+    closeBtn.setAttribute("title", "Close zoom");
     closeBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
 
     function closeLightbox() {
@@ -370,6 +372,7 @@ export function initLightbox() {
         img.setAttribute("tabindex", "0");
         img.setAttribute("role", "button");
         img.setAttribute("aria-label", "Zoom image");
+        img.setAttribute("title", "Zoom image");
     }
 
     const handleLightboxTrigger = (e) => {

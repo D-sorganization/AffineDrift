@@ -40,3 +40,7 @@
 ## 2026-04-11 - Actionable Empty States
 **Learning:** For optimal UX in search or filter features, empty states ('no results') should not be dead ends.
 **Action:** Always provide an actionable, one-click reset mechanism (e.g., a 'Clear Search' button) that clears the query and restores focus to the input field.
+
+## 2026-04-12 - Native Tooltips for Icon-Only Buttons
+**Learning:** While icon-only buttons rely on aria-label for screen readers, they lack native on-hover tooltips for sighted users without a title attribute, creating a gap between accessibility and standard usability.
+**Action:** Always pair aria-label with a matching title attribute on interactive icon-only elements to ensure sighted mouse users receive visual hints.
