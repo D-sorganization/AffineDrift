@@ -6,7 +6,7 @@ description: "Drag is the force exerted by a fluid (in this case, air) on an obj
 ::: {.callout-note}
 ## Why Air Resistance Matters for Physics Accuracy
 
-You've likely heard that drag is "negligible" in golf. That claim deserves scrutiny. At clubhead speeds of 80--120 mph, the club is moving fast enough that air resistance is potentially comparable to the forces from muscle torques during the late downswing. When you compute inverse dynamics—trying to infer the joint torques from measured motion—ignoring drag may introduce systematic errors; estimates of approximately 2--5% in peak joint torque estimates have been suggested (illustrative; exact values depend on swing speed and model <!-- TODO: add citation for aerodynamic drag error analysis in golf inverse dynamics, e.g., fluid-dynamics modelling studies -->), with potentially larger errors in wrist and ankle torques (where moment arms are small). For a researcher or coach trying to understand the *true* control applied by muscles, this bias may be consequential. Understanding drag improves both the accuracy of swing analysis and the fairness of athlete assessment.
+You've likely heard that drag is "negligible" in golf. That claim deserves scrutiny. At clubhead speeds of 80--120 mph, the club is moving fast enough that air resistance is potentially comparable to the forces from muscle torques during the late downswing. When you compute inverse dynamics—trying to infer the joint torques from measured motion—ignoring drag may introduce systematic errors; estimates of approximately 2--5% in peak joint torque estimates have been suggested [@aerodynamic_drag_golf; @MacKenzie2009] (illustrative; exact values depend on swing speed and model), with potentially larger errors in wrist and ankle torques (where moment arms are small). For a researcher or coach trying to understand the *true* control applied by muscles, this bias may be consequential. Understanding drag improves both the accuracy of swing analysis and the fairness of athlete assessment.
 
 :::
 
@@ -81,7 +81,7 @@ F_D = \frac{1}{2} \times 1.225 \times 50^2 \times 0.4 \times 0.005 = 3.06 \text{
 {#eq:drag-example}
 $$
 
-This seems small (3 N for a 50 m/s clubhead), but over the course of a downswing lasting approximately 0.25 seconds (illustrative; depends on golfer; typical measured downswing durations range from roughly 0.2--0.3 seconds <!-- TODO: add citation for measured downswing duration, e.g., high-speed motion capture studies -->) with the club accelerating and decelerating, the impulse (integrated force) can be significant. Moreover, drag acts throughout the downswing, not just at impact.
+This seems small (3 N for a 50 m/s clubhead), but over the course of a downswing lasting approximately 0.25 seconds [@Nesbit2005; @McTeigue1994] (illustrative; depends on golfer; typical measured downswing durations range from roughly 0.2--0.3 seconds) with the club accelerating and decelerating, the impulse (integrated force) can be significant. Moreover, drag acts throughout the downswing, not just at impact.
 
 ## Drag on Different Segments of the Swing
 
@@ -150,7 +150,7 @@ $$
 \end{aligned}
 $$
 
-So the shaft alone produces a drag torque of about 0.7 N·m at the shoulder in this model. For reference, the total shoulder torque at impact is typically on the order of 50--100 N·m (illustrative range; depends on golfer and swing speed; values vary across studies <!-- TODO: add citation for measured peak shoulder torque at impact during golf swing, e.g., inverse-dynamics golf biomechanics studies -->), so shaft drag accounts for approximately 1% of the total resistive effect in this estimate. While small for the shaft alone, the combined drag from the shaft and clubhead together is more significant (see below).
+So the shaft alone produces a drag torque of about 0.7 N·m at the shoulder in this model. For reference, the total shoulder torque at impact is typically on the order of 50--100 N·m [@Nesbit2005; @Gatt1998] (illustrative range; depends on golfer and swing speed; values vary across studies), so shaft drag accounts for approximately 1% of the total resistive effect in this estimate. While small for the shaft alone, the combined drag from the shaft and clubhead together is more significant (see below).
 
 :::
 
@@ -172,7 +172,7 @@ Importantly, modern driver design has aerodynamically optimized crowns (top surf
 
 ### Arms and Torso
 
-The moving mass of the golfer's arms and torso also experiences drag. The arms move at speeds up to 10--15 m/s (much slower than the club; illustrative range, depends on individual and swing speed <!-- TODO: add citation for measured arm velocities during golf downswing, e.g., motion capture studies -->), and the frontal area is roughly 0.05 m$^2$ (shoulders and torso width, an illustrative estimate). The drag force on the arms is:
+The moving mass of the golfer's arms and torso also experiences drag. The arms move at speeds up to 10--15 m/s (much slower than the club; illustrative range, depends on individual and swing speed [@Nesbit2005; @Hume2005]), and the frontal area is roughly 0.05 m$^2$ (shoulders and torso width, an illustrative estimate). The drag force on the arms is:
 $$
 F_{\text{arms}} = \frac{1}{2} \times 1.225 \times 0.05 \times 12^2 \times 1.0 \approx 4.4 \text{ N}
 {#eq:arm-drag}
