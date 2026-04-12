@@ -2,6 +2,10 @@
 
 from __future__ import annotations
 
+# Do not force "QtAgg" if already configured to a non-interactive backend
+# (like "headless" during tests)
+import os
+
 import matplotlib
 import numpy as np
 from PyQt6.QtCore import QEvent
@@ -18,10 +22,10 @@ from .enhanced_model_kinematics import (
 )
 from .torque_calculator import calculate_moments_of_inertia, generate_sample_torque
 
-# Do not force "QtAgg" if already configured to a non-interactive backend
-# (like "headless" during tests)
-import os
-if matplotlib.get_backend().lower() not in ("agg", "headless", "template") and os.environ.get("QT_QPA_PLATFORM") != "offscreen":
+if (
+    matplotlib.get_backend().lower() not in ("agg", "headless", "template")
+    and os.environ.get("QT_QPA_PLATFORM") != "offscreen"
+):
     matplotlib.use("QtAgg")
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
