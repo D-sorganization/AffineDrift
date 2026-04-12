@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-04-12T00:16:00Z
+Last-Updated: 2026-04-12T00:20:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-04-12T00:16:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.53                                           |
+| **Spec Version**        | 1.0.54                                           |
 | **Last Spec Update**    | 2026-04-11                                       |
 
 ## 2. Purpose & Mission
@@ -466,6 +466,7 @@ python src/tools/code_quality_ast.py
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                      |
 | ---------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-04-12 | 1.0.54  | refactor(affine-control): decomposed `ResidualMonitor.update()` into focused residual-estimation, hysteresis-counter, transition-selection, and transition-application helpers while preserving the LQR/MPC_WARN/MPC_FULL state-machine behavior.                                                                                                                            |
 | 2026-04-12 | 1.0.53  | refactor(wrist): decomposed the Qt transmission sweep plotter into focused helpers for visible series, current-angle markers, and axis metadata, with source-level regression coverage for the extracted structure.                                                                                                                                                          |
 | 2026-04-12 | 1.0.52  | test(tooling): added closeout coverage for the formerly monolithic wrist model launchers and mypy autofix script so all listed legacy entrypoints remain thin wrappers around their packaged implementations.                                                                                                                                                                |
 | 2026-04-12 | 1.0.51  | refactor(golf-simulation): decomposed `GolfHole.get_terrain()` into focused distance and play-corridor helpers while preserving tee, green, fairway, rough, and custom terrain override behavior with targeted regression coverage.                                                                                                                                          |
