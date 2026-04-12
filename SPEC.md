@@ -29,8 +29,8 @@ Last-Updated: 2026-04-12T00:45:10Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.57                                           |
-| **Last Spec Update**    | 2026-04-11                                       |
+| **Spec Version**        | 1.0.58                                           |
+| **Last Spec Update**    | 2026-04-12                                       |
 
 ## 2. Purpose & Mission
 
