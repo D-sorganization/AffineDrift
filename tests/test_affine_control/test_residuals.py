@@ -1,4 +1,6 @@
+import ast
 import unittest
+from pathlib import Path
 from typing import Any
 
 import numpy as np
@@ -9,6 +11,8 @@ from src.affine_control.residuals import (
     compute_hessian_norm,
     predict_residual_bound,
 )
+
+RESIDUALS_SOURCE = Path("src/affine_control/residuals.py")
 
 
 class TestResiduals(unittest.TestCase):
@@ -160,6 +164,25 @@ class TestResiduals(unittest.TestCase):
         valid_modes.add(monitor.mode)  # MPC_FULL (reachable via escalation)
 
         self.assertEqual(valid_modes, {"LQR", "MPC_WARN", "MPC_FULL"})
+
+    def test_monitor_update_is_decomposed(self) -> None:
+        """ResidualMonitor.update should stay a thin state-machine orchestrator."""
+        tree = ast.parse(RESIDUALS_SOURCE.read_text(encoding="utf-8"))
+        function_lengths = {
+            node.name: node.end_lineno - node.lineno + 1
+            for node in ast.walk(tree)
+            if isinstance(node, ast.FunctionDef) and node.end_lineno is not None
+        }
+
+        self.assertLessEqual(function_lengths["update"], 30)
+        for helper_name in [
+            "_estimate_residual",
+            "_update_hysteresis_counters",
+            "_next_mode",
+            "_reset_hysteresis_counters",
+            "_apply_mode_transition",
+        ]:
+            self.assertIn(helper_name, function_lengths)
 
 
 if __name__ == "__main__":
