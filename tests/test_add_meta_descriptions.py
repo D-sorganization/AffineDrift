@@ -3,7 +3,10 @@ from __future__ import annotations
 import textwrap
 from pathlib import Path
 
-from scripts.add_meta_descriptions import add_description_to_file, extract_first_paragraph
+from scripts.add_meta_descriptions import (
+    add_description_to_file,
+    extract_first_paragraph,
+)
 
 
 def test_extract_first_paragraph_skips_blockquote_epigraph() -> None:
