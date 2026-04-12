@@ -173,6 +173,34 @@ class BallFlightDynamics(DynamicalSystem):
         spin_parameter = self.radius * spin_mag / speed_rel
         return float(self.cl * (1.0 - np.exp(-GOLF_BALL_LIFT_RESPONSE * spin_parameter)))
 
+    def _drag_force(self, v_rel: np.ndarray[Any, Any], speed_rel: float) -> np.ndarray[Any, Any]:
+        """Return aerodynamic drag force: -0.5 * rho * cd(Re) * A * |v_rel| * v_rel."""
+        cd_eff = self._drag_coefficient(speed_rel)
+        return -0.5 * self.rho * cd_eff * self.area * speed_rel * v_rel
+
+    def _magnus_force(
+        self,
+        v_rel: np.ndarray[Any, Any],
+        speed_rel: float,
+        spin: np.ndarray[Any, Any],
+    ) -> np.ndarray[Any, Any]:
+        """Return Magnus (spin-induced lift) force using 0.5 * rho * v^2 * C_L * A."""
+        if speed_rel <= 0.0:
+            return np.zeros(3)
+        lift_direction = np.cross(spin, v_rel)
+        lift_direction_norm = float(np.linalg.norm(lift_direction))
+        if lift_direction_norm <= 0.0:
+            return np.zeros(3)
+        cl_eff = self._lift_coefficient(speed_rel, spin)
+        return (
+            0.5
+            * self.rho
+            * speed_rel**2
+            * cl_eff
+            * self.area
+            * (lift_direction / lift_direction_norm)
+        )
+
     def dynamics(
         self,
         x: np.ndarray[Any, Any],
@@ -189,50 +217,23 @@ class BallFlightDynamics(DynamicalSystem):
         """
         require(len(x) == 9, "state vector must have 9 elements")
 
-        # Unpack state
         velocity = x[3:6]
         spin = x[6:9]
 
-        # Velocity relative to air (accounting for wind)
         v_rel = velocity - self.wind
         speed_rel = float(np.linalg.norm(v_rel))
 
-        # Aerodynamic drag: -0.5 * rho * cd * A * |v_rel| * v_rel
-        cd_eff = self._drag_coefficient(speed_rel)
-        drag = -0.5 * self.rho * cd_eff * self.area * speed_rel * v_rel
-
-        # Magnus effect uses the standard projected-area lift formulation:
-        # F_L = 0.5 * rho * v^2 * C_L(S, Re) * A in the direction of omega x v.
-        magnus = np.zeros(3)
-        if speed_rel > 0.0:
-            lift_direction = np.cross(spin, v_rel)
-            lift_direction_norm = float(np.linalg.norm(lift_direction))
-            if lift_direction_norm > 0.0:
-                cl_eff = self._lift_coefficient(speed_rel, spin)
-                magnus = (
-                    0.5
-                    * self.rho
-                    * speed_rel**2
-                    * cl_eff
-                    * self.area
-                    * (lift_direction / lift_direction_norm)
-                )
-
-        # Gravity
+        drag = self._drag_force(v_rel, speed_rel)
+        magnus = self._magnus_force(v_rel, speed_rel, spin)
         gravity_force = np.array([0.0, 0.0, -self.mass * self.gravity])
 
-        # Acceleration
         acceleration = (drag + magnus + gravity_force) / self.mass
-
-        # Spin decay
         spin_derivative = -self.spin_decay_rate * spin
 
-        # Position derivative = velocity
         dx = np.zeros(9)
         dx[0:3] = velocity
         dx[3:6] = acceleration
         dx[6:9] = spin_derivative
-
         return dx
 
     def linearize(
@@ -278,6 +279,26 @@ class BallFlightDynamics(DynamicalSystem):
 
         return A, B
 
+    @staticmethod
+    def _state_from_vector(state_vec: np.ndarray[Any, Any]) -> BallFlightState:
+        """Build an immutable BallFlightState from a 9D raw state vector."""
+        return BallFlightState(
+            position=state_vec[0:3].copy(),
+            velocity=state_vec[3:6].copy(),
+            spin=state_vec[6:9].copy(),
+        )
+
+    def _clamp_landing(
+        self,
+        state_vec: np.ndarray[Any, Any],
+        trajectory: list[BallFlightState],
+        t: float,
+    ) -> None:
+        """Clamp the final state to ground level and log the landing."""
+        state_vec[2] = 0.0
+        trajectory[-1] = self._state_from_vector(state_vec)
+        logger.debug("Ball landed at t=%.3f s, x=%.1f, y=%.1f", t, state_vec[0], state_vec[1])
+
     def simulate(
         self,
         initial_state: BallFlightState,
@@ -308,26 +329,11 @@ class BallFlightDynamics(DynamicalSystem):
         while t < max_time:
             state_vec = self._rk4_step(state_vec, u, dt)
             t += dt
-
-            state = BallFlightState(
-                position=state_vec[0:3].copy(),
-                velocity=state_vec[3:6].copy(),
-                spin=state_vec[6:9].copy(),
-            )
-            trajectory.append(state)
+            trajectory.append(self._state_from_vector(state_vec))
 
             # Stop if ball has hit the ground (z <= 0) after initial launch
             if state_vec[2] <= 0.0 and t > dt:
-                # Clamp z to ground level
-                state_vec[2] = 0.0
-                trajectory[-1] = BallFlightState(
-                    position=state_vec[0:3].copy(),
-                    velocity=state_vec[3:6].copy(),
-                    spin=state_vec[6:9].copy(),
-                )
-                logger.debug(
-                    "Ball landed at t=%.3f s, x=%.1f, y=%.1f", t, state_vec[0], state_vec[1]
-                )
+                self._clamp_landing(state_vec, trajectory, t)
                 break
 
         return trajectory

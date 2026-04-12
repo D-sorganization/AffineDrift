@@ -341,6 +341,44 @@ class RoundSimulator:
         vy = putt_speed * math.sin(aim_angle)
         return vx, vy
 
+    def _resolve_putt_simulator(self, hole: GolfHole) -> tuple[PuttingSimulator, float]:
+        """Return a putting simulator and its stimp for the given hole.
+
+        Uses the injected simulator when provided, otherwise builds a default
+        flat green sized from the hole's green radius.
+        """
+        if self.putting_simulator is not None:
+            putt_sim = self.putting_simulator
+            return putt_sim, putt_sim.surface.stimp
+
+        green = GreenSurface.create_flat_green(
+            width=hole.green_radius * 3.0,
+            height=hole.green_radius * 3.0,
+            stimp=11.0,
+        )
+        return PuttingSimulator(surface=green), green.stimp
+
+    @staticmethod
+    def _find_putt_stopping_point(
+        putt_trajectory: list[tuple[float, float]],
+        putt_sim: PuttingSimulator,
+        hole: GolfHole,
+    ) -> tuple[float, float]:
+        """Walk the putt trajectory and return the first-holed or final point."""
+        final_x, final_y = putt_trajectory[-1]
+        for idx, (px, py) in enumerate(putt_trajectory):
+            # Approximate velocity at this point (difference from next point)
+            if idx < len(putt_trajectory) - 1:
+                nx, ny = putt_trajectory[idx + 1]
+                cvx = (nx - px) / putt_sim.dt
+                cvy = (ny - py) / putt_sim.dt
+            else:
+                cvx, cvy = 0.0, 0.0
+
+            if putt_sim.is_holed(px, py, cvx, cvy, hole.pin_position[0], hole.pin_position[1]):
+                return hole.pin_position[0], hole.pin_position[1]
+        return final_x, final_y
+
     def _simulate_putt(
         self,
         position: tuple[float, float, float],
@@ -364,35 +402,11 @@ class RoundSimulator:
                 is_penalty=False,
             )
 
-        if self.putting_simulator is not None:
-            putt_sim = self.putting_simulator
-            stimp = putt_sim.surface.stimp
-        else:
-            green = GreenSurface.create_flat_green(
-                width=hole.green_radius * 3.0,
-                height=hole.green_radius * 3.0,
-                stimp=11.0,
-            )
-            putt_sim = PuttingSimulator(surface=green)
-            stimp = green.stimp
-
+        putt_sim, stimp = self._resolve_putt_simulator(hole)
         vx, vy = self._compute_putt_velocity(dx, dy, dist, stimp)
         putt_trajectory = putt_sim.simulate(position[0], position[1], vx, vy)
 
-        final_x, final_y = putt_trajectory[-1]
-
-        for idx, (px, py) in enumerate(putt_trajectory):
-            # Approximate velocity at this point (difference from next point)
-            if idx < len(putt_trajectory) - 1:
-                nx, ny = putt_trajectory[idx + 1]
-                cvx = (nx - px) / putt_sim.dt
-                cvy = (ny - py) / putt_sim.dt
-            else:
-                cvx, cvy = 0.0, 0.0
-
-            if putt_sim.is_holed(px, py, cvx, cvy, hole.pin_position[0], hole.pin_position[1]):
-                final_x, final_y = hole.pin_position[0], hole.pin_position[1]
-                break
+        final_x, final_y = self._find_putt_stopping_point(putt_trajectory, putt_sim, hole)
 
         end_pos = (final_x, final_y, 0.0)
         traj_3d = [(px, py, 0.0) for px, py in putt_trajectory]
