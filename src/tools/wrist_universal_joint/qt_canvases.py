@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import os
+
 import matplotlib
 import numpy as np
 from PyQt6.QtCore import QEvent
@@ -18,7 +20,11 @@ from .enhanced_model_kinematics import (
 )
 from .torque_calculator import calculate_moments_of_inertia, generate_sample_torque
 
-matplotlib.use("QtAgg")
+if os.environ.get("GITHUB_ACTIONS") != "true" or os.environ.get("RUN_UI_TESTS") == "true":
+    try:
+        matplotlib.use("QtAgg")
+    except ImportError:
+        pass
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
