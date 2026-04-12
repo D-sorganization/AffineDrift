@@ -10,6 +10,7 @@ from PyQt6.QtWidgets import QMainWindow, QMessageBox, QWidget
 from .constants import DEFAULT_SIGNAL_LENGTH
 from .enhanced_model_geometry import draw_enhanced_model_diagram
 from .enhanced_model_kinematics import (
+    TransmissionSweep,
     build_info_html,
     compute_acceleration_signals,
     compute_torque_signals,
@@ -245,6 +246,12 @@ class PlotCanvas(FigureCanvas):  # type: ignore[misc]
             self.i_alpha,
             self.i_gamma,
         )
+        self._plot_transmission_sweep_lines(sweep)
+        self._plot_current_wrist_marker(sweep)
+        self._set_transmission_sweep_axes()
+
+    def _plot_transmission_sweep_lines(self, sweep: TransmissionSweep) -> None:
+        """Plot the visible transmission sweep data series."""
         if self.visible_signals["transmission_ratio"]:
             self.ax.plot(
                 sweep.wrist_angle_deg,
@@ -281,6 +288,8 @@ class PlotCanvas(FigureCanvas):  # type: ignore[misc]
                 alpha=0.7,
             )
 
+    def _plot_current_wrist_marker(self, sweep: TransmissionSweep) -> None:
+        """Plot the current wrist-angle marker on the sweep graph."""
         current_idx = int(np.argmin(np.abs(sweep.wrist_angle_deg - self.wrist_angle_deg)))
         self.ax.axvline(
             self.wrist_angle_deg,
@@ -298,6 +307,9 @@ class PlotCanvas(FigureCanvas):  # type: ignore[misc]
                 markerfacecolor="lime",
             )
         self.ax.axhline(1.0, color="gray", linestyle="--", alpha=0.5, linewidth=1)
+
+    def _set_transmission_sweep_axes(self) -> None:
+        """Set labels and title for the transmission sweep graph."""
         self.ax.set_title(
             (
                 "Universal Joint Transmission vs Wrist Deviation Angle "
