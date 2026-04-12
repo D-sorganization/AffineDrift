@@ -253,7 +253,7 @@ jobs:
             # ===== PHASE 2: Mypy Agent (intelligent type error fixing) =====
 
             echo ">>> Running mypy autofix agent..."
-            if [ -f "scripts/mypy_autofix_agent.py" ]; then
+            if command -v mypy-autofix >/dev/null 2>&1; then
               python3 scripts/mypy_autofix_agent.py \
                 --max-fixes 30 --max-files 20 --verbose \
                 --config-file pyproject.toml $CHANGED_FILES 2>&1 || true
