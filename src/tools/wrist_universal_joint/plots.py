@@ -143,6 +143,51 @@ def _compute_acceleration_signals(
     return signals.accel_alpha, signals.accel_gamma
 
 
+def _plot_acceleration_series(
+    ax: Any,
+    t: np.ndarray[Any, Any],
+    accel_alpha: np.ndarray[Any, Any],
+    accel_gamma: np.ndarray[Any, Any],
+    i_alpha: float,
+    i_gamma: float,
+    show_alpha: bool,
+    show_gamma: bool,
+) -> None:
+    """Draw the alpha/gamma acceleration curves that are enabled for display."""
+    if show_alpha:
+        ax.plot(
+            t,
+            accel_alpha,
+            label=f"\u03b1_\u03b1 (I_\u03b1={i_alpha:.4f})",
+            color="red",
+            linewidth=2,
+            linestyle="--",
+        )  # noqa: E501
+    if show_gamma:
+        ax.plot(
+            t,
+            accel_gamma,
+            label=f"\u03b1_\u03b3 (I_\u03b3={i_gamma:.4f})",
+            color="blue",
+            linewidth=2,
+            linestyle="--",
+        )  # noqa: E501
+
+
+def _style_acceleration_axes(ax: Any, grip_angle_deg: float, wrist_angle_deg: float) -> None:
+    """Apply title, labels, grid, and legend to an acceleration plot axes object."""
+    ax.set_title(
+        f"Angular Acceleration vs Time (Grip: {grip_angle_deg:.0f}\u00b0, "
+        f"Wrist: {wrist_angle_deg:.0f}\u00b0)",
+        fontsize=12,
+        fontweight="bold",
+    )
+    ax.set_xlabel("Time (s)", fontsize=10)
+    ax.set_ylabel("Angular Acceleration (rad/s\u00b2)", fontsize=10)
+    ax.grid(visible=True, alpha=0.3)
+    ax.legend(loc="best", fontsize=9)
+
+
 def plot_acceleration(
     t: np.ndarray[Any, Any],
     input_torque: np.ndarray[Any, Any],
@@ -164,34 +209,10 @@ def plot_acceleration(
     accel_alpha, accel_gamma = _compute_acceleration_signals(
         input_torque, grip_angle_deg, wrist_angle_deg, i_alpha, i_gamma
     )
-    if show_alpha:
-        ax.plot(
-            t,
-            accel_alpha,
-            label=f"\u03b1_\u03b1 (I_\u03b1={i_alpha:.4f})",
-            color="red",
-            linewidth=2,
-            linestyle="--",
-        )  # noqa: E501
-    if show_gamma:
-        ax.plot(
-            t,
-            accel_gamma,
-            label=f"\u03b1_\u03b3 (I_\u03b3={i_gamma:.4f})",
-            color="blue",
-            linewidth=2,
-            linestyle="--",
-        )  # noqa: E501
-    ax.set_title(
-        f"Angular Acceleration vs Time (Grip: {grip_angle_deg:.0f}\u00b0, "
-        f"Wrist: {wrist_angle_deg:.0f}\u00b0)",
-        fontsize=12,
-        fontweight="bold",
+    _plot_acceleration_series(
+        ax, t, accel_alpha, accel_gamma, i_alpha, i_gamma, show_alpha, show_gamma
     )
-    ax.set_xlabel("Time (s)", fontsize=10)
-    ax.set_ylabel("Angular Acceleration (rad/s\u00b2)", fontsize=10)
-    ax.grid(visible=True, alpha=0.3)
-    ax.legend(loc="best", fontsize=9)
+    _style_acceleration_axes(ax, grip_angle_deg, wrist_angle_deg)
     fig.tight_layout()
     return fig
 

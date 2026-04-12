@@ -88,6 +88,37 @@ def get_python_metrics(filepath: Path) -> dict[str, int]:
     }
 
 
+def _accumulate_python_ast_metrics(tree: ast.AST) -> PythonFileMetrics:
+    """Walk an AST and tally function/class/docstring/typed-return/branch counts."""
+    functions = 0
+    classes = 0
+    docstrings = 0
+    typed_returns = 0
+    branches = 0
+
+    for node in ast.walk(tree):
+        if isinstance(node, ast.FunctionDef | ast.AsyncFunctionDef):
+            functions += 1
+            if ast.get_docstring(node):
+                docstrings += 1
+            if node.returns:
+                typed_returns += 1
+        elif isinstance(node, ast.ClassDef):
+            classes += 1
+            if ast.get_docstring(node):
+                docstrings += 1
+        elif isinstance(node, ast.If | ast.For | ast.While | ast.ExceptHandler):
+            branches += 1
+
+    return PythonFileMetrics(
+        functions=functions,
+        classes=classes,
+        docstrings=docstrings,
+        typed_returns=typed_returns,
+        branches=branches,
+    )
+
+
 def collect_python_file_metrics(filepath: Path) -> PythonFileMetrics:
     """Extract structured metrics from a Python file using AST analysis.
 
@@ -101,48 +132,26 @@ def collect_python_file_metrics(filepath: Path) -> PythonFileMetrics:
         ``PythonFileMetrics`` instance with all counters populated.
     """
     require(filepath is not None, "filepath must not be None")
-    functions = 0
-    classes = 0
-    docstrings = 0
-    typed_returns = 0
-    branches = 0
 
     try:
         content = filepath.read_text(encoding="utf-8", errors="ignore")
         tree = ast.parse(content)
-        for node in ast.walk(tree):
-            if isinstance(node, ast.FunctionDef | ast.AsyncFunctionDef):
-                functions += 1
-                if ast.get_docstring(node):
-                    docstrings += 1
-                if node.returns:
-                    typed_returns += 1
-            elif isinstance(node, ast.ClassDef):
-                classes += 1
-                if ast.get_docstring(node):
-                    docstrings += 1
-            elif isinstance(node, ast.If | ast.For | ast.While | ast.ExceptHandler):
-                branches += 1
     except (SyntaxError, ValueError):
         logger.debug(
             "Falling back to zeroed Python metrics for %s after parse failure.",
             filepath,
             exc_info=True,
         )
+        return PythonFileMetrics(functions=0, classes=0, docstrings=0, typed_returns=0, branches=0)
     except (FileNotFoundError, OSError, KeyError):
         logger.debug(
             "Falling back to zeroed Python metrics for %s after file read failure.",
             filepath,
             exc_info=True,
         )
+        return PythonFileMetrics(functions=0, classes=0, docstrings=0, typed_returns=0, branches=0)
 
-    return PythonFileMetrics(
-        functions=functions,
-        classes=classes,
-        docstrings=docstrings,
-        typed_returns=typed_returns,
-        branches=branches,
-    )
+    return _accumulate_python_ast_metrics(tree)
 
 
 def get_detailed_function_metrics(content: str) -> list[dict[str, Any]]:
