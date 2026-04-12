@@ -25,31 +25,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # ── Dispatcher: route to self-hosted if available ──────────────────────────
-  pick-runner:
-    runs-on: ubuntu-latest
-    timeout-minutes: 2
-    outputs:
-      runner: ${{ steps.check.outputs.runner }}
-    steps:
-      - name: Check for self-hosted runner
-        id: check
-        env:
-          GH_TOKEN: ${{ secrets.RUNNER_CHECK_TOKEN }}
-        run: |
-          AVAILABLE=$(gh api /orgs/${{ github.repository_owner }}/actions/runners \
-            --jq '[.runners[] | select(.status == "online") | select(.busy == false) | select(.labels[].name == "d-sorg-fleet")] | length' \
-            2>/dev/null || echo "0")
-          if [[ "$AVAILABLE" -gt 0 ]]; then
-            echo "runner=d-sorg-fleet" >> $GITHUB_OUTPUT
-            echo "Self-hosted runner available — routing locally"
-          else
-            echo "runner=ubuntu-latest" >> $GITHUB_OUTPUT
-            echo "No available self-hosted runner — using GitHub-hosted"
-          fi
   quality-gate:
-    needs: pick-runner
-    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    runs-on: d-sorg-fleet
     timeout-minutes: 45
     env:
       PYTHONPATH: .
@@ -174,8 +151,8 @@ jobs:
           path: matlab_quality_report.txt
 
   tests:
-    needs: [pick-runner, quality-gate]
-    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    needs: [ quality-gate]
+    runs-on: d-sorg-fleet
     timeout-minutes: 20
     strategy:
       matrix:
@@ -212,8 +189,8 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
   js-tests:
-    needs: [pick-runner, quality-gate]
-    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    needs: [ quality-gate]
+    runs-on: d-sorg-fleet
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
@@ -231,8 +208,8 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
   e2e-tests:
-    needs: [pick-runner, quality-gate]
-    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    needs: [ quality-gate]
+    runs-on: d-sorg-fleet
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v6
@@ -332,8 +309,8 @@ jobs:
           retention-days: 30
 
   website-lint:
-    needs: [pick-runner, quality-gate]
-    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    needs: [ quality-gate]
+    runs-on: d-sorg-fleet
     continue-on-error: true # Non-blocking: HTML validation errors need separate fix
     steps:
       - uses: actions/checkout@v6
@@ -355,7 +332,7 @@ jobs:
   # =============================================================================
   # matlab-tests:
   #   needs: [pick-runner, quality-gate]
-  #   runs-on: ${{ needs.pick-runner.outputs.runner }}
+  #   runs-on: d-sorg-fleet
   #   steps:
   #     - uses: actions/checkout@v6
   #     - uses: matlab-actions/setup-matlab@v2
@@ -374,8 +351,7 @@ jobs:
   # Includes WASM build check since AffineDrift serves the web frontend.
   # =============================================================================
   rust-quality-gate:
-    needs: pick-runner
-    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    runs-on: d-sorg-fleet
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
