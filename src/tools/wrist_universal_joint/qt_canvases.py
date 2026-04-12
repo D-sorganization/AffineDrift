@@ -20,7 +20,8 @@ from .torque_calculator import calculate_moments_of_inertia, generate_sample_tor
 
 # Do not force "QtAgg" if already configured to a non-interactive backend
 # (like "headless" during tests)
-if matplotlib.get_backend().lower() not in ("agg", "headless", "template"):
+import os
+if matplotlib.get_backend().lower() not in ("agg", "headless", "template") and os.environ.get("QT_QPA_PLATFORM") != "offscreen":
     matplotlib.use("QtAgg")
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
