@@ -113,6 +113,36 @@ class GolfHole:
         dy = self.pin_position[1] - y
         return math.sqrt(dx * dx + dy * dy)
 
+    def _distance_to_tee(self, x: float, y: float) -> float:
+        """Compute horizontal distance from a point to the tee box."""
+        return math.sqrt((x - self.tee_position[0]) ** 2 + (y - self.tee_position[1]) ** 2)
+
+    def _distance_to_green_center(self, x: float, y: float) -> float:
+        """Compute horizontal distance from a point to the green center."""
+        return math.sqrt((x - self.green_center[0]) ** 2 + (y - self.green_center[1]) ** 2)
+
+    def _terrain_along_play_corridor(self, x: float, y: float) -> TerrainType | None:
+        """Classify fairway and rough terrain along the tee-to-pin corridor."""
+        tee_x, tee_y = self.tee_position[0], self.tee_position[1]
+        pin_x, pin_y = self.pin_position[0], self.pin_position[1]
+        hole_dx = pin_x - tee_x
+        hole_dy = pin_y - tee_y
+        hole_length = math.sqrt(hole_dx**2 + hole_dy**2)
+        if hole_length <= 1e-6:
+            return None
+
+        t = ((x - tee_x) * hole_dx + (y - tee_y) * hole_dy) / (hole_length**2)
+        proj_x = tee_x + t * hole_dx
+        proj_y = tee_y + t * hole_dy
+        perp_dist = math.sqrt((x - proj_x) ** 2 + (y - proj_y) ** 2)
+        fairway_width = 25.0 if t < 0.8 else 15.0
+
+        if 0.0 <= t <= 1.0 and perp_dist <= fairway_width:
+            return TerrainType.FAIRWAY
+        if 0.0 <= t <= 1.05 and perp_dist <= fairway_width + 15.0:
+            return TerrainType.ROUGH
+        return None
+
     def get_terrain(self, x: float, y: float) -> TerrainType:
         """Determine the terrain type at a given position.
 
@@ -130,43 +160,15 @@ class GolfHole:
         if self.terrain_fn is not None:
             return self.terrain_fn(x, y)
 
-        # Distance-based heuristic
-        dist_to_tee = math.sqrt((x - self.tee_position[0]) ** 2 + (y - self.tee_position[1]) ** 2)
-
-        # On the green
-        dist_to_green_center = math.sqrt(
-            (x - self.green_center[0]) ** 2 + (y - self.green_center[1]) ** 2
-        )
-        if dist_to_green_center <= self.green_radius:
+        if self._distance_to_green_center(x, y) <= self.green_radius:
             return TerrainType.GREEN
 
-        # Near the tee
-        if dist_to_tee < 5.0:
+        if self._distance_to_tee(x, y) < 5.0:
             return TerrainType.TEE_BOX
 
-        # Fairway corridor: within a band along the tee-to-pin line
-        tee_x, tee_y = self.tee_position[0], self.tee_position[1]
-        pin_x, pin_y = self.pin_position[0], self.pin_position[1]
-        hole_dx = pin_x - tee_x
-        hole_dy = pin_y - tee_y
-        hole_length = math.sqrt(hole_dx**2 + hole_dy**2)
-
-        if hole_length > 1e-6:
-            # Project point onto tee-to-pin line
-            t = ((x - tee_x) * hole_dx + (y - tee_y) * hole_dy) / (hole_length**2)
-            # Perpendicular distance from the fairway center line
-            proj_x = tee_x + t * hole_dx
-            proj_y = tee_y + t * hole_dy
-            perp_dist = math.sqrt((x - proj_x) ** 2 + (y - proj_y) ** 2)
-
-            # Fairway width narrows near the green
-            fairway_width = 25.0 if t < 0.8 else 15.0  # meters
-
-            if 0.0 <= t <= 1.0 and perp_dist <= fairway_width:
-                return TerrainType.FAIRWAY
-
-            if 0.0 <= t <= 1.05 and perp_dist <= fairway_width + 15.0:
-                return TerrainType.ROUGH
+        corridor_terrain = self._terrain_along_play_corridor(x, y)
+        if corridor_terrain is not None:
+            return corridor_terrain
 
         return TerrainType.DEEP_ROUGH
 

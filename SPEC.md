@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-04-12T00:00:00Z
+Last-Updated: 2026-04-12T00:08:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-04-12T00:00:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.50                                           |
+| **Spec Version**        | 1.0.51                                           |
 | **Last Spec Update**    | 2026-04-11                                       |
 
 ## 2. Purpose & Mission
@@ -466,6 +466,7 @@ python src/tools/code_quality_ast.py
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                      |
 | ---------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-04-12 | 1.0.51  | refactor(golf-simulation): decomposed `GolfHole.get_terrain()` into focused distance and play-corridor helpers while preserving tee, green, fairway, rough, and custom terrain override behavior with targeted regression coverage.                                                                                                                                          |
 | 2026-04-11 | 1.0.50  | refactor(golf-simulation): decomposed terrain bounce physics into focused validation, surface-normal normalization, velocity decomposition, and friction helpers while preserving post-impact velocity and spin behavior with edge-case tests.                                                                                                                               |
 | 2026-04-11 | 1.0.49  | refactor(golf-simulation): moved championship course hole definitions and handicaps into declarative module-level data so `create_championship_course()` stays focused on building `GolfHole` instances, with regression coverage for par, yardage, hole ordering, and handicap stability.                                                                                   |
 | 2026-04-11 | 1.0.48  | refactor(rl-funnel): centralized benchmark result, result formatting, pendulum constants, mass-matrix, and state-vector validation in `src/tools/rl_funnel_support.py`, with compatibility re-export coverage across the RL funnel modules.                                                                                                                                  |
