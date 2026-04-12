@@ -40,7 +40,7 @@ env:
 jobs:
   # ── Dispatcher: try self-hosted first, fall back to cloud ──────────────────
   pick-runner:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 2
     outputs:
       runner: ${{ steps.check.outputs.runner }}
@@ -62,7 +62,7 @@ jobs:
           fi
 
   process-comments:
-    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    runs-on: self-hosted
     needs: pick-runner
     # HARDENING: Skip bot-triggered events to prevent cascades
     if: |

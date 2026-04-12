@@ -19,7 +19,7 @@ permissions:
 jobs:
   compile-volumes:
     if: github.repository == 'D-sorganization/AffineDrift'
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     strategy:
       matrix:
         volume: [Volume_0, Volume_I, Volume_II, Volume_III, Volume_IV, Volume_V]
@@ -83,7 +83,7 @@ jobs:
 
   gather-latex-sources:
     if: github.repository == 'D-sorganization/AffineDrift'
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -103,7 +103,7 @@ jobs:
 
   render-quarto-book:
     if: github.repository == 'D-sorganization/AffineDrift'
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -141,7 +141,7 @@ jobs:
   create-release:
     if: github.repository == 'D-sorganization/AffineDrift'
     needs: [compile-volumes, gather-latex-sources, render-quarto-book]
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:

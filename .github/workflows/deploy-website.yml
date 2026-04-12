@@ -18,7 +18,7 @@ permissions:
 jobs:
   # ── Dispatcher: try self-hosted first, fall back to cloud ──────────────────
   pick-runner:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 2
     outputs:
       runner: ${{ steps.check.outputs.runner }}
@@ -41,7 +41,7 @@ jobs:
 
   build:
     if: github.repository == 'D-sorganization/AffineDrift'
-    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    runs-on: self-hosted
     needs: pick-runner
     env:
       PYTHONPATH: .
@@ -128,7 +128,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    runs-on: self-hosted
     needs: build
     steps:
       - name: Deploy to GitHub Pages

@@ -18,7 +18,7 @@ concurrency:
 jobs:
   # ── Dispatcher: route to self-hosted if available ──────────────────────────
   pick-runner:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 2
     outputs:
       runner: ${{ steps.check.outputs.runner }}
@@ -41,7 +41,7 @@ jobs:
 
   evaluate-mobile-friendliness:
     if: github.repository == 'D-sorganization/AffineDrift'
-    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    runs-on: self-hosted
     needs: pick-runner
     steps:
       - uses: actions/checkout@v6

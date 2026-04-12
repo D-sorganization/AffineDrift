@@ -45,7 +45,7 @@ concurrency:
 jobs:
   # ── Dispatcher: try self-hosted first, fall back to cloud ──────────────────
   pick-runner:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     timeout-minutes: 2
     outputs:
       runner: ${{ steps.check.outputs.runner }}
@@ -67,7 +67,7 @@ jobs:
           fi
 
   check-and-trigger:
-    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    runs-on: self-hosted
     needs: pick-runner
     # Only run for bot-authored PRs or scheduled/manual runs
     if: |
