@@ -15,7 +15,11 @@ import numpy as np
 from src.golf_simulation.ball_flight import BallFlightDynamics, BallFlightState
 from src.golf_simulation.clubs import ClubBag, ClubType, GolfClub, LaunchConditions
 from src.golf_simulation.course import METERS_TO_YARDS, GolfCourse, GolfHole
-from src.golf_simulation.putting import GreenSurface, PuttingSimulator, stimpmeter_deceleration
+from src.golf_simulation.putting import (
+    GreenSurface,
+    PuttingSimulator,
+    stimpmeter_deceleration,
+)
 from src.golf_simulation.terrain import TerrainType
 
 logger = logging.getLogger(__name__)
