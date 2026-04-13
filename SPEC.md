@@ -19,7 +19,6 @@ Last-Updated: 2026-04-12T00:45:10Z
   Write clearly, use concrete examples, and avoid ambiguity.
 -->
 
-| 2026-04-13 | 1.0.59  | security(xss): Synchronized the DOM-based XSS fix from `js/history.js` into `script.js` to ensure the monolithic script correctly validates URLs against `javascript:` URIs before assigning to `a.href`. |
 ## 1. Identity
 
 | Field                   | Value                                            |
@@ -551,4 +550,3 @@ python src/tools/code_quality_ast.py
   5. VERSION: Bump the Spec Version field when making substantive changes.
      Use semver: major (structure change), minor (new features), patch (corrections).
 -->
-| 2026-04-13 | 1.0.59  | security(xss): Synchronized the DOM-based XSS fix from `js/history.js` into `script.js` to ensure the monolithic script correctly validates URLs against `javascript:` URIs before assigning to `a.href`. |
