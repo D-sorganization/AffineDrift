@@ -78,15 +78,13 @@ class TestReadQmdWithFrontmatter:
     def test_reads_valid_frontmatter(self, tmp_path: Path) -> None:
         qmd = tmp_path / "test.qmd"
         qmd.write_text(
-            textwrap.dedent(
-                """\
+            textwrap.dedent("""\
                 ---
                 title: My Page
                 date: 2026-01-01
                 ---
                 # Content
-            """
-            ),
+            """),
             encoding="utf-8",
         )
         content, fm = read_qmd_with_frontmatter(qmd)
@@ -234,3 +232,6 @@ class TestFindFilesByExtension:
     def test_requires_non_empty_extensions(self) -> None:
         with pytest.raises(ContractViolationError):
             find_files_by_extension([])
+
+
+# fix
