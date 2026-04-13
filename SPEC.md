@@ -29,7 +29,7 @@ Last-Updated: 2026-04-12T00:45:10Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.58                                           |
+| **Spec Version**        | 1.0.59                                           |
 | **Last Spec Update**    | 2026-04-12                                       |
 
 ## 2. Purpose & Mission
@@ -529,6 +529,7 @@ python src/tools/code_quality_ast.py
 | 2026-03-30 | 1.0.0   | Documented PR CI dependency-audit plus rendered-site E2E gate, mock-solver opt-in behavior at `SwingOptimizer.optimize`, and bibliography duplicate-alias integrity guardrails                                                                                                                                                                                                                                                                                                                                                                                                              |
 | 2026-03-28 | 1.0.0   | Initial SPEC.md specification for AffineDrift v1.0.0 — all core features documented and implemented                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | 2026-04-12 | 1.0.58  | fix(tests): Guarded `matplotlib.use("QtAgg")` in `src/tools/wrist_universal_joint/qt_canvases.py` to prevent headless CI runner crashes when pytest imports the module.                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| 2026-04-12 | 1.0.59  | ci: Add fleet mode-aware `pick-runner` dispatcher to all CI workflows for self-hosted runner routing with hybrid/local/cloud modes. |
 
 ---
 
