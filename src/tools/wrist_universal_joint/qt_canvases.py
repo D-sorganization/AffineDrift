@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import os
-import sys
 
 import matplotlib
 import numpy as np
@@ -21,15 +20,15 @@ from .enhanced_model_kinematics import (
 )
 from .torque_calculator import calculate_moments_of_inertia, generate_sample_torque
 
-# Only force QtAgg if not running headless in CI
-if not os.environ.get("CI") and "pytest" not in sys.modules:
-    try:
-        matplotlib.use("QtAgg")
-    except ImportError:
-        pass
+# Do not force "QtAgg" if already configured to a non-interactive backend
+# (like "headless" during tests). Must be called before importing backend.
+_backend = matplotlib.get_backend().lower()
+_offscreen = os.environ.get("QT_QPA_PLATFORM") == "offscreen"
+if _backend not in ("agg", "headless", "template") and not _offscreen:
+    matplotlib.use("QtAgg")
 
-from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
-from matplotlib.figure import Figure
+from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas  # noqa: E402
+from matplotlib.figure import Figure  # noqa: E402
 
 
 def find_main_window_parent(widget: QWidget | None) -> QMainWindow | None:
