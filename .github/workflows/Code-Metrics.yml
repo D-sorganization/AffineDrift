@@ -17,7 +17,7 @@ permissions:
 jobs:
   complexity-metrics:
     name: Complexity Analysis (radon)
-    runs-on: ubuntu-latest
+    runs-on: d-sorg-fleet
     steps:
       - uses: actions/checkout@v6
 
@@ -95,7 +95,7 @@ jobs:
 
   duplication-metrics:
     name: Duplication Analysis (jscpd)
-    runs-on: ubuntu-latest
+    runs-on: d-sorg-fleet
     steps:
       - uses: actions/checkout@v6
 
@@ -173,7 +173,7 @@ jobs:
     name: Metrics Summary
     needs: [complexity-metrics, duplication-metrics]
     if: always()
-    runs-on: ubuntu-latest
+    runs-on: d-sorg-fleet
     steps:
       - name: Final Summary
         run: |
