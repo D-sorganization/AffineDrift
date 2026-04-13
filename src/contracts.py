@@ -4,9 +4,11 @@ from collections.abc import Callable
 from functools import wraps
 
 
-def require[**P, R](
-    condition: Callable[P, bool], message: str = "Precondition failed"
-) -> Callable[[Callable[P, R]], Callable[P, R]]:
+def require[
+    **P, R
+](condition: Callable[P, bool], message: str = "Precondition failed") -> Callable[
+    [Callable[P, R]], Callable[P, R]
+]:
     """
     Enforce a precondition on a function's arguments.
 
@@ -30,9 +32,11 @@ def require[**P, R](
     return decorator
 
 
-def ensure[**P, R](
-    condition: Callable[[R], bool], message: str = "Postcondition failed"
-) -> Callable[[Callable[P, R]], Callable[P, R]]:
+def ensure[
+    **P, R
+](condition: Callable[[R], bool], message: str = "Postcondition failed") -> Callable[
+    [Callable[P, R]], Callable[P, R]
+]:
     """
     Enforce a postcondition on a function's return value.
 
