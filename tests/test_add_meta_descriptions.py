@@ -7,8 +7,7 @@ from scripts.add_meta_descriptions import add_description_to_file, extract_first
 
 
 def test_extract_first_paragraph_skips_blockquote_epigraph() -> None:
-    content = textwrap.dedent(
-        """\
+    content = textwrap.dedent("""\
         ---
         title: "Example Chapter"
         ---
@@ -16,8 +15,7 @@ def test_extract_first_paragraph_skips_blockquote_epigraph() -> None:
 
         This chapter explains how the governing equations are assembled from
         the state, input, and constraint terms that define the local dynamics.
-        """
-    )
+        """)
 
     description = extract_first_paragraph(content)
 
@@ -28,15 +26,13 @@ def test_extract_first_paragraph_skips_blockquote_epigraph() -> None:
 def test_add_description_to_file_inserts_after_title(tmp_path: Path) -> None:
     qmd = tmp_path / "chapter.qmd"
     qmd.write_text(
-        textwrap.dedent(
-            """\
+        textwrap.dedent("""\
             ---
             title: "Example Chapter"
             subtitle: "A compact demonstration"
             ---
             This chapter explains the example.
-            """
-        ),
+            """),
         encoding="utf-8",
     )
 
@@ -52,15 +48,13 @@ def test_add_description_to_file_inserts_after_title(tmp_path: Path) -> None:
 def test_add_description_to_file_skips_existing_description(tmp_path: Path) -> None:
     qmd = tmp_path / "chapter.qmd"
     qmd.write_text(
-        textwrap.dedent(
-            """\
+        textwrap.dedent("""\
             ---
             title: "Example Chapter"
             description: "Already present"
             ---
             This chapter explains the example.
-            """
-        ),
+            """),
         encoding="utf-8",
     )
 
