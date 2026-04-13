@@ -25,7 +25,7 @@ concurrency:
 
 jobs:
   quality-gate:
-    runs-on: ubuntu-latest
+    runs-on: d-sorg-fleet
     timeout-minutes: 20
     env:
       PYTHONPATH: .
@@ -133,7 +133,7 @@ jobs:
 
   tests:
     needs: quality-gate
-    runs-on: ubuntu-latest
+    runs-on: d-sorg-fleet
     timeout-minutes: 20
     strategy:
       matrix:
@@ -165,7 +165,7 @@ jobs:
 
   js-tests:
     needs: quality-gate
-    runs-on: ubuntu-latest
+    runs-on: d-sorg-fleet
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
@@ -184,7 +184,7 @@ jobs:
 
   e2e-tests:
     needs: quality-gate
-    runs-on: ubuntu-latest
+    runs-on: d-sorg-fleet
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v6
@@ -228,7 +228,7 @@ jobs:
 
   website-lint:
     needs: quality-gate
-    runs-on: ubuntu-latest
+    runs-on: d-sorg-fleet
     continue-on-error: true # Non-blocking: HTML validation errors need separate fix
     steps:
       - uses: actions/checkout@v6
@@ -250,7 +250,7 @@ jobs:
   # =============================================================================
   # matlab-tests:
   #   needs: quality-gate
-  #   runs-on: ubuntu-latest
+  #   runs-on: d-sorg-fleet
   #   steps:
   #     - uses: actions/checkout@v6
   #     - uses: matlab-actions/setup-matlab@v2
@@ -269,7 +269,7 @@ jobs:
   # Includes WASM build check since AffineDrift serves the web frontend.
   # =============================================================================
   rust-quality-gate:
-    runs-on: ubuntu-latest
+    runs-on: d-sorg-fleet
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6

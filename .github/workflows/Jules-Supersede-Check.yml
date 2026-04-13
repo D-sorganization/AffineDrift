@@ -21,7 +21,7 @@ concurrency:
 jobs:
   check-superseded:
     name: Check for Superseded Jules PRs
-    runs-on: ubuntu-latest
+    runs-on: d-sorg-fleet
     # Skip if the push was from a Jules workflow (avoid closing our own PRs)
     if: |
       !contains(github.event.head_commit.message, 'Co-Authored-By: Jules') &&
