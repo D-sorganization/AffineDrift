@@ -65,3 +65,6 @@ def test_tangent_hyperplane_issue_2347_legacy_labels_removed() -> None:
     assert (
         leaked == []
     ), f"Legacy issue #2347 labels still present in Tangent Hyperplane docs: {leaked}"
+
+
+# fix

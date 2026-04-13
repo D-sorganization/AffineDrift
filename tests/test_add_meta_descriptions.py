@@ -60,3 +60,6 @@ def test_add_description_to_file_skips_existing_description(tmp_path: Path) -> N
 
     assert not add_description_to_file(qmd, "A replacement description.")
     assert 'description: "Already present"' in qmd.read_text(encoding="utf-8")
+
+
+# fix
