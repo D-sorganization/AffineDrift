@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import sys
 
 import matplotlib
 import numpy as np
@@ -20,11 +21,13 @@ from .enhanced_model_kinematics import (
 )
 from .torque_calculator import calculate_moments_of_inertia, generate_sample_torque
 
-if os.environ.get("GITHUB_ACTIONS") != "true" or os.environ.get("RUN_UI_TESTS") == "true":
+# Only force QtAgg if not running headless in CI
+if not os.environ.get("CI") and "pytest" not in sys.modules:
     try:
         matplotlib.use("QtAgg")
     except ImportError:
         pass
+
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 
