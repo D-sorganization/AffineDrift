@@ -172,6 +172,3 @@ def test_spacecraft_rendezvous_defaults_use_named_constants() -> None:
     assert (
         sys.m == DEFAULT_SPACECRAFT_MASS_KG
     ), "m default must equal DEFAULT_SPACECRAFT_MASS_KG from core.constants"
-
-
-# fix
