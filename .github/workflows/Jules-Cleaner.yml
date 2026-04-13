@@ -46,7 +46,7 @@ jobs:
 
   cleanup:
     if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'jules:consolidation')
-    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    runs-on: self-hosted
     needs: pick-runner
     permissions:
       pull-requests: write

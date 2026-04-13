@@ -67,7 +67,7 @@ jobs:
           fi
 
   check-and-trigger:
-    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    runs-on: self-hosted
     needs: pick-runner
     # Only run for bot-authored PRs or scheduled/manual runs
     if: |
