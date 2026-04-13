@@ -104,3 +104,6 @@ class TestDocstringCoverage:
 
         assert BenchmarkResult.__doc__ is not None, "BenchmarkResult is missing a class docstring"
         assert len(BenchmarkResult.__doc__.strip()) > 0, "BenchmarkResult docstring is empty"
+
+
+# fix

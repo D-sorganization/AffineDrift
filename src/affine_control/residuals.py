@@ -85,6 +85,35 @@ def _finite_diff_jacobian(
     return J
 
 
+def _assemble_hessian_tensor(
+    f: Callable[[np.ndarray[Any, Any], np.ndarray[Any, Any]], np.ndarray[Any, Any]],
+    x: np.ndarray[Any, Any],
+    u: np.ndarray[Any, Any],
+    n: int,
+    dx: int,
+    epsilon: float,
+) -> np.ndarray[Any, Any]:
+    """Build the Hessian tensor H[k, i, j] = dJ_ki / dx_j via central differences.
+
+    Each Hessian slice is assembled from two Jacobian evaluations, giving
+    O(n^2) dynamics calls in total.
+    """
+    H = np.zeros((dx, n, n))
+    base_x = x.copy()
+
+    for j in range(n):
+        x_plus = base_x.copy()
+        x_plus[j] += epsilon
+        x_minus = base_x.copy()
+        x_minus[j] -= epsilon
+
+        J_plus = _finite_diff_jacobian(f, x_plus, u, epsilon)
+        J_minus = _finite_diff_jacobian(f, x_minus, u, epsilon)
+        H[:, :, j] = (J_plus - J_minus) / (2 * epsilon)
+
+    return H
+
+
 def _max_spectral_norm(H: np.ndarray[Any, Any]) -> float:
     """Compute the maximum spectral norm across component Hessian slices.
 
@@ -143,21 +172,7 @@ def compute_hessian_norm(
     """
     n = len(x)
     dx = len(f(x, u))
-
-    # Hessian tensor H[k, i, j] = dJ_ki / dx_j via central differences on the Jacobian
-    H = np.zeros((dx, n, n))
-    base_x = x.copy()
-
-    for j in range(n):
-        x_plus = base_x.copy()
-        x_plus[j] += epsilon
-        x_minus = base_x.copy()
-        x_minus[j] -= epsilon
-
-        J_plus = _finite_diff_jacobian(f, x_plus, u, epsilon)
-        J_minus = _finite_diff_jacobian(f, x_minus, u, epsilon)
-        H[:, :, j] = (J_plus - J_minus) / (2 * epsilon)
-
+    H = _assemble_hessian_tensor(f, x, u, n, dx, epsilon)
     return _max_spectral_norm(H)
 
 

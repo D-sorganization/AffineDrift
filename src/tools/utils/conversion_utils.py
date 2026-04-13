@@ -17,6 +17,48 @@ from collections.abc import Iterable
 from typing import Any
 
 
+def _validate_conversion_entry(
+    entry: dict[str, Any], logger: logging.Logger
+) -> tuple[str, str] | None:
+    """Return (source, target) for a valid entry, or None if invalid or missing."""
+    source = entry.get("source")
+    target = entry.get("target")
+
+    if not isinstance(source, str) or not isinstance(target, str):
+        logger.error(
+            "Invalid conversion entry: source and target must be strings (got %r, %r)",
+            source,
+            target,
+        )
+        return None
+
+    if not os.path.exists(source):
+        logger.warning("Source file not found: %s", source)
+        return None
+
+    return source, target
+
+
+def _perform_conversion(
+    converter: Any,
+    source: str,
+    target: str,
+    dry_run: bool,
+    logger: logging.Logger,
+) -> bool:
+    """Run or stub a single conversion, returning True on success."""
+    if dry_run:
+        logger.info("Would convert: %s -> %s", source, target)
+        return True
+    try:
+        converter.convert_file(source, target)
+        logger.info("Converted: %s -> %s", source, target)
+        return True
+    except (FileNotFoundError, PermissionError, OSError, ValueError) as exc:
+        logger.error("Failed to convert %s: %s", source, exc)
+        return False
+
+
 def batch_convert(
     converter: Any,
     file_pairs: Iterable[dict[str, Any]],
@@ -42,37 +84,16 @@ def batch_convert(
     Raises:
         TypeError: If *file_pairs* is not iterable.
     """
-    success_count = 0
     error_count = 0
 
     for entry in file_pairs:
-        source = entry.get("source")
-        target = entry.get("target")
-
-        if not isinstance(source, str) or not isinstance(target, str):
-            logger.error(
-                "Invalid conversion entry: source and target must be strings (got %r, %r)",
-                source,
-                target,
-            )
+        validated = _validate_conversion_entry(entry, logger)
+        if validated is None:
             error_count += 1
             continue
 
-        if not os.path.exists(source):
-            logger.warning("Source file not found: %s", source)
+        source, target = validated
+        if not _perform_conversion(converter, source, target, dry_run, logger):
             error_count += 1
-            continue
-
-        if dry_run:
-            logger.info("Would convert: %s -> %s", source, target)
-            success_count += 1
-        else:
-            try:
-                converter.convert_file(source, target)
-                logger.info("Converted: %s -> %s", source, target)
-                success_count += 1
-            except (FileNotFoundError, PermissionError, OSError, ValueError) as exc:
-                logger.error("Failed to convert %s: %s", source, exc)
-                error_count += 1
 
     return error_count == 0

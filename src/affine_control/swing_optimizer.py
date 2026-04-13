@@ -101,6 +101,48 @@ class SwingOptimizer:
         result = optimizer.optimize(x0, dynamics)
     """
 
+    @staticmethod
+    def _resolve_ddp_solver(
+        ddp_solver: (
+            Callable[..., tuple[np.ndarray[Any, Any], np.ndarray[Any, Any], np.ndarray[Any, Any]]]
+            | None
+        ),
+        config: SwingOptimizationConfig,
+    ) -> tuple[
+        Callable[..., tuple[np.ndarray[Any, Any], np.ndarray[Any, Any], np.ndarray[Any, Any]]],
+        bool,
+    ]:
+        """Return (solver, using_mock); emit the mock-solver warning when falling back."""
+        if ddp_solver is not None:
+            return ddp_solver, False
+
+        require(
+            config.allow_mock_solver,
+            "Mock DDP solver requires allow_mock_solver=True in config. "
+            "Pass a real ddp_solver for non-test usage.",
+        )
+        warnings.warn(
+            "adaptive_timestep_ddp_mock is a non-functional mock solver. "
+            "allow_mock_solver=True explicitly opts into test-only usage. "
+            "For production, supply a real ddp_solver.",
+            UserWarning,
+            stacklevel=2,
+        )
+        return adaptive_timestep_ddp_mock, True
+
+    @staticmethod
+    def _build_cost_matrices(
+        config: SwingOptimizationConfig,
+    ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any], np.ndarray[Any, Any]]:
+        """Construct (R, Q, Q_f) cost matrices from configuration."""
+        R = config.control_weight * np.eye(config.control_dim)
+        Q = np.zeros((config.state_dim, config.state_dim))
+        # Penalize velocity deviations (second half of state vector)
+        for i in range(config.n_joints, config.state_dim):
+            Q[i, i] = 1.0
+        Q_f = config.terminal_weight * Q
+        return R, Q, Q_f
+
     def __init__(
         self,
         config: SwingOptimizationConfig,
@@ -123,34 +165,8 @@ class SwingOptimizer:
             type(config).__name__,
         )
         self._config = config
-        solver: Callable[
-            ..., tuple[np.ndarray[Any, Any], np.ndarray[Any, Any], np.ndarray[Any, Any]]
-        ]
-        if ddp_solver is None:
-            self._using_mock = True
-            require(
-                config.allow_mock_solver,
-                "Mock DDP solver requires allow_mock_solver=True in config. "
-                "Pass a real ddp_solver for non-test usage.",
-            )
-            warnings.warn(
-                "adaptive_timestep_ddp_mock is a non-functional mock solver. "
-                "allow_mock_solver=True explicitly opts into test-only usage. "
-                "For production, supply a real ddp_solver.",
-                UserWarning,
-                stacklevel=2,
-            )
-            solver = adaptive_timestep_ddp_mock
-        else:
-            self._using_mock = False
-            solver = ddp_solver
-        self._ddp_solver = solver
-        self._R = config.control_weight * np.eye(config.control_dim)
-        self._Q = np.zeros((config.state_dim, config.state_dim))
-        # Penalize velocity deviations (second half of state vector)
-        for i in range(config.n_joints, config.state_dim):
-            self._Q[i, i] = 1.0
-        self._Q_f = config.terminal_weight * self._Q
+        self._ddp_solver, self._using_mock = self._resolve_ddp_solver(ddp_solver, config)
+        self._R, self._Q, self._Q_f = self._build_cost_matrices(config)
 
     @property
     def config(self) -> SwingOptimizationConfig:
