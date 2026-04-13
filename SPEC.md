@@ -29,8 +29,8 @@ Last-Updated: 2026-04-12T00:45:10Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.58                                           |
-| **Last Spec Update**    | 2026-04-12                                       |
+| **Spec Version**        | 1.0.60                                           |
+| **Last Spec Update**    | 2026-04-13                                       |
 
 ## 2. Purpose & Mission
 
@@ -527,6 +527,9 @@ python src/tools/code_quality_ast.py
 | 2026-03-30 | 1.0.0   | Consolidated frontend scroll event handlers via `requestAnimationFrame`                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | 2026-03-30 | 1.0.0   | Documented PR CI dependency-audit plus rendered-site E2E gate, mock-solver opt-in behavior at `SwingOptimizer.optimize`, and bibliography duplicate-alias integrity guardrails                                                                                                                                                                                                                                                                                                                                                                                                              |
 | 2026-03-28 | 1.0.0   | Initial SPEC.md specification for AffineDrift v1.0.0 — all core features documented and implemented                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| 2026-04-13 | 1.0.60  | feat(ui): Added native `title` tooltips to icon-only buttons (`dark-mode-toggle`, `back-to-top`, lightbox close/zoom) in `js/dark-mode-toggle.js` and `js/ui-components.js` to improve discoverability and accessibility for pointer-device users. |
+| 2026-04-12 | 1.0.58  | fix(tests): Guarded `matplotlib.use("QtAgg")` in `src/tools/wrist_universal_joint/qt_canvases.py` to prevent headless CI runner crashes when pytest imports the module.                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| 2026-04-13 | 1.0.59  | perf(frontend): Optimized `initAriaLabels` in `script.js` by replacing `querySelectorAll` with `O(1)` live collections (`getElementsByTagName`, `getElementsByClassName`) and consolidating input loops to reduce layout thrashing.                                                                                                                                                                                                                                                                                                                                                         |
 
 ---
 
