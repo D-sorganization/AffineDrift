@@ -27,7 +27,9 @@ _offscreen = os.environ.get("QT_QPA_PLATFORM") == "offscreen"
 if _backend not in ("agg", "headless", "template") and not _offscreen:
     matplotlib.use("QtAgg")
 
-from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas  # noqa: E402
+from matplotlib.backends.backend_qtagg import (  # noqa: E402
+    FigureCanvasQTAgg as FigureCanvas,
+)
 from matplotlib.figure import Figure  # noqa: E402
 
 
