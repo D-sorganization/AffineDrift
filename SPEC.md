@@ -19,7 +19,6 @@ Last-Updated: 2026-04-12T00:45:10Z
   Write clearly, use concrete examples, and avoid ambiguity.
 -->
 
-| 2026-04-13 | 1.0.59  | security(xss): Synchronized the DOM-based XSS fix from `js/history.js` into `script.js` to ensure the monolithic script correctly validates URLs against `javascript:` URIs before assigning to `a.href`. |
 ## 1. Identity
 
 | Field                   | Value                                            |
@@ -30,8 +29,8 @@ Last-Updated: 2026-04-12T00:45:10Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.58                                           |
-| **Last Spec Update**    | 2026-04-12                                       |
+| **Spec Version**        | 1.0.59                                           |
+| **Last Spec Update**    | 2026-04-13                                       |
 
 ## 2. Purpose & Mission
 
@@ -531,6 +530,7 @@ python src/tools/code_quality_ast.py
 | 2026-03-30 | 1.0.0   | Documented PR CI dependency-audit plus rendered-site E2E gate, mock-solver opt-in behavior at `SwingOptimizer.optimize`, and bibliography duplicate-alias integrity guardrails                                                                                                                                                                                                                                                                                                                                                                                                              |
 | 2026-03-28 | 1.0.0   | Initial SPEC.md specification for AffineDrift v1.0.0 — all core features documented and implemented                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | 2026-04-12 | 1.0.58  | fix(tests): Guarded `matplotlib.use("QtAgg")` in `src/tools/wrist_universal_joint/qt_canvases.py` to prevent headless CI runner crashes when pytest imports the module.                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| 2026-04-13 | 1.0.59  | perf(frontend): Optimized `initAriaLabels` in `script.js` by replacing `querySelectorAll` with `O(1)` live collections (`getElementsByTagName`, `getElementsByClassName`) and consolidating input loops to reduce layout thrashing.                                                                                                                                                                                                                                                                                                                                                         |
 
 ---
 
@@ -550,4 +550,3 @@ python src/tools/code_quality_ast.py
   5. VERSION: Bump the Spec Version field when making substantive changes.
      Use semver: major (structure change), minor (new features), patch (corrections).
 -->
-| 2026-04-13 | 1.0.59  | security(xss): Synchronized the DOM-based XSS fix from `js/history.js` into `script.js` to ensure the monolithic script correctly validates URLs against `javascript:` URIs before assigning to `a.href`. |
