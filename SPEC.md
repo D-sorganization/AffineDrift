@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-04-12T03:00:00Z
+Last-Updated: 2026-04-13T22:00:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-04-12T03:00:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.60                                           |
+| **Spec Version**        | 1.0.61                                           |
 | **Last Spec Update**    | 2026-04-13                                       |
 
 ## 2. Purpose & Mission
@@ -531,6 +531,7 @@ python src/tools/code_quality_ast.py
 | 2026-04-13 | 1.0.60  | feat(ui): Added native `title` tooltips to icon-only buttons (`dark-mode-toggle`, `back-to-top`, lightbox close/zoom) in `js/dark-mode-toggle.js` and `js/ui-components.js` to improve discoverability and accessibility for pointer-device users. |
 | 2026-04-12 | 1.0.58  | fix(tests): Guarded `matplotlib.use("QtAgg")` in `src/tools/wrist_universal_joint/qt_canvases.py` to prevent headless CI runner crashes when pytest imports the module.                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | 2026-04-13 | 1.0.59  | perf(frontend): Optimized `initAriaLabels` in `script.js` by replacing `querySelectorAll` with `O(1)` live collections (`getElementsByTagName`, `getElementsByClassName`) and consolidating input loops to reduce layout thrashing.                                                                                                                                                                                                                                                         |
+| 2026-04-13 | 1.0.61  | content(critics): Added Critics' Comments section to `Contraction_Tangent_CRITIC.qmd` via Jules Critics Comments Writer automation; updated `.jules/critics_data/` tracking files. |
 | 2026-04-12 | 1.0.59  | ci: Add fleet mode-aware `pick-runner` dispatcher to all CI workflows for self-hosted runner routing with hybrid/local/cloud modes. |
 
 ---
