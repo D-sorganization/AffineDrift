@@ -241,9 +241,9 @@ def test_torque_decomposition_pythagorean(torque: float, theta: float) -> None:
     tau_alpha, tau_gamma = distribute_torque_by_grip_angle(torque, theta)
     lhs = float(tau_alpha) ** 2 + float(tau_gamma) ** 2
     rhs = torque**2
-    assert abs(lhs - rhs) < 1e-6 * max(
-        abs(rhs), 1.0
-    ), f"Pythagorean identity violated: {lhs} != {rhs}"
+    assert abs(lhs - rhs) < 1e-6 * max(abs(rhs), 1.0), (
+        f"Pythagorean identity violated: {lhs} != {rhs}"
+    )
 
 
 @given(
