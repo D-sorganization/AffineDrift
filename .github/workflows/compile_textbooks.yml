@@ -82,7 +82,7 @@ jobs:
       - name: Count Pages
         run: |
           apt-get update && apt-get install -y poppler-utils || echo "poppler-utils not available via apt-get"
-          sudo apt-get update && sudo apt-get install -y poppler-utils || echo "sudo not available"
+          sudo apt-get -o DPkg::Lock::Timeout=300 update && sudo apt-get -o DPkg::Lock::Timeout=300 install -y poppler-utils || echo "sudo not available"
           for vol in Volume_0 Volume_I Volume_II Volume_III Volume_IV Volume_V; do
             if [ -f articles/The_Geometry_of_Motion/$vol/main.pdf ]; then
               pages=$(pdfinfo articles/The_Geometry_of_Motion/$vol/main.pdf | grep Pages | awk '{print $2}')
