@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       workflows:
-        description: 'Which workflows to run'
+        description: "Which workflows to run"
         required: true
         type: choice
         options:
@@ -14,7 +14,7 @@ on:
           - fixes-only
           - pr-compiler-only
       dry_run:
-        description: 'Dry run (no commits/PRs)'
+        description: "Dry run (no commits/PRs)"
         required: false
         default: false
         type: boolean
@@ -26,7 +26,7 @@ permissions:
 
 jobs:
   dispatch-workflows:
-    runs-on: self-hosted
+    runs-on: d-sorg-fleet
     steps:
       - name: Dispatch Assessment Generator
         if: inputs.workflows == 'all' || inputs.workflows == 'assessments-only'
