@@ -62,6 +62,6 @@ def test_tangent_hyperplane_issue_2347_legacy_labels_removed() -> None:
         all_refs.update(refs)
 
     leaked = sorted(item for item in LEGACY_LABELS if item in all_labels or item in all_refs)
-    assert leaked == [], (
-        f"Legacy issue #2347 labels still present in Tangent Hyperplane docs: {leaked}"
-    )
+    assert (
+        leaked == []
+    ), f"Legacy issue #2347 labels still present in Tangent Hyperplane docs: {leaked}"
