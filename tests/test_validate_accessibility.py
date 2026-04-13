@@ -222,6 +222,3 @@ More content.
 
         # Should have heading hierarchy issues
         assert len(heading_issues) > 0
-
-
-# fix

@@ -100,6 +100,3 @@ def test_latex_release_workflow_integrity() -> None:
     assert "Volume_I" in content
     assert "Volume_II" in content
     assert "gh release upload" in content
-
-
-# fix
