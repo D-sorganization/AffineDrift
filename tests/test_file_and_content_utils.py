@@ -232,6 +232,3 @@ class TestFindFilesByExtension:
     def test_requires_non_empty_extensions(self) -> None:
         with pytest.raises(ContractViolationError):
             find_files_by_extension([])
-
-
-# fix
