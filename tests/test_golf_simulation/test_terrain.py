@@ -1,9 +1,11 @@
 """Tests for terrain types and bounce physics."""
 
 import numpy as np
+import pytest
 
 from src.golf_simulation.terrain import (
     TERRAIN_PROPERTIES,
+    TerrainProperties,
     TerrainType,
     compute_bounce,
 )
@@ -59,3 +61,34 @@ class TestBounce:
         fairway_vel, _ = compute_bounce(vel, spin, TERRAIN_PROPERTIES[TerrainType.FAIRWAY], normal)
         bunker_vel, _ = compute_bounce(vel, spin, TERRAIN_PROPERTIES[TerrainType.BUNKER], normal)
         assert np.linalg.norm(bunker_vel) < np.linalg.norm(fairway_vel)
+
+    def test_non_unit_surface_normal_matches_unit_normal(self):
+        vel = np.array([18.0, 3.0, -7.0])
+        spin = np.array([100.0, -50.0, 25.0])
+        props = TERRAIN_PROPERTIES[TerrainType.FAIRWAY]
+        unit_vel, unit_spin = compute_bounce(vel, spin, props, np.array([0.0, 0.0, 1.0]))
+        scaled_vel, scaled_spin = compute_bounce(vel, spin, props, np.array([0.0, 0.0, 4.0]))
+        np.testing.assert_allclose(scaled_vel, unit_vel)
+        np.testing.assert_allclose(scaled_spin, unit_spin)
+
+    def test_zero_tangential_velocity_preserves_normal_bounce(self):
+        vel = np.array([0.0, 0.0, -8.0])
+        spin = np.array([10.0, 20.0, 30.0])
+        props = TerrainProperties(
+            friction_coefficient=0.5,
+            coefficient_of_restitution=0.25,
+            spin_retention=0.4,
+            lie_quality=1.0,
+        )
+        result_vel, result_spin = compute_bounce(vel, spin, props)
+        np.testing.assert_allclose(result_vel, np.array([0.0, 0.0, 2.0]))
+        np.testing.assert_allclose(result_spin, spin * props.spin_retention)
+
+    def test_zero_surface_normal_rejected(self):
+        with pytest.raises(ValueError, match="surface_normal"):
+            compute_bounce(
+                np.array([1.0, 0.0, -1.0]),
+                np.zeros(3),
+                TERRAIN_PROPERTIES[TerrainType.FAIRWAY],
+                np.zeros(3),
+            )

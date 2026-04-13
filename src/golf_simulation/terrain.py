@@ -74,61 +74,69 @@ TERRAIN_PROPERTIES: dict[TerrainType, TerrainProperties] = {
 }
 
 
+def _normalized_surface_normal(surface_normal: np.ndarray[Any, Any] | None) -> np.ndarray[Any, Any]:
+    """Return a finite unit surface normal, defaulting to flat ground."""
+    if surface_normal is None:
+        return np.array([0.0, 0.0, 1.0])
+
+    check_finite_array(surface_normal, "surface_normal")
+    norm = float(np.linalg.norm(surface_normal))
+    require(norm > 1e-10, "surface_normal must be non-zero")
+    return surface_normal / norm
+
+
+def _validate_bounce_vectors(velocity: np.ndarray[Any, Any], spin: np.ndarray[Any, Any]) -> None:
+    """Validate pre-impact velocity and spin vectors."""
+    check_finite_array(velocity, "velocity")
+    check_finite_array(spin, "spin")
+    require(len(velocity) == 3, "velocity must be a 3D vector")
+    require(len(spin) == 3, "spin must be a 3D vector")
+
+
+def _split_velocity(
+    velocity: np.ndarray[Any, Any], surface_normal: np.ndarray[Any, Any]
+) -> tuple[float, np.ndarray[Any, Any], np.ndarray[Any, Any]]:
+    """Split velocity into signed normal magnitude, normal vector, and tangent vector."""
+    normal_magnitude = float(np.dot(velocity, surface_normal))
+    normal_velocity = normal_magnitude * surface_normal
+    tangential_velocity = velocity - normal_velocity
+    return normal_magnitude, normal_velocity, tangential_velocity
+
+
+def _apply_surface_friction(
+    tangential_velocity: np.ndarray[Any, Any],
+    normal_magnitude: float,
+    friction_coefficient: float,
+) -> np.ndarray[Any, Any]:
+    """Reduce tangential velocity by impact-scaled surface friction."""
+    tangential_speed = float(np.linalg.norm(tangential_velocity))
+    if tangential_speed <= 1e-10:
+        return tangential_velocity
+
+    friction_decel = friction_coefficient * abs(normal_magnitude)
+    reduced_speed = max(0.0, tangential_speed - friction_decel)
+    return tangential_velocity * (reduced_speed / tangential_speed)
+
+
 def compute_bounce(
     velocity: np.ndarray[Any, Any],
     spin: np.ndarray[Any, Any],
     terrain_props: TerrainProperties,
     surface_normal: np.ndarray[Any, Any] | None = None,
 ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
-    """Compute post-bounce velocity and spin after ball impacts a surface.
-
-    Uses the coefficient of restitution for the normal component and friction
-    for the tangential component of velocity.
-
-    Args:
-        velocity: Pre-impact velocity vector (3,).
-        spin: Pre-impact spin vector (3,).
-        terrain_props: Physical properties of the landing terrain.
-        surface_normal: Unit normal of the surface (default: [0, 0, 1] = flat ground).
-
-    Returns:
-        Tuple of (post_velocity, post_spin) arrays.
-    """
-    check_finite_array(velocity, "velocity")
-    check_finite_array(spin, "spin")
-    require(len(velocity) == 3, "velocity must be a 3D vector")
-    require(len(spin) == 3, "spin must be a 3D vector")
-
-    if surface_normal is None:
-        surface_normal = np.array([0.0, 0.0, 1.0])
-    else:
-        check_finite_array(surface_normal, "surface_normal")
-        norm = float(np.linalg.norm(surface_normal))
-        require(norm > 1e-10, "surface_normal must be non-zero")
-        surface_normal = surface_normal / norm
-
-    # Decompose velocity into normal and tangential components
-    v_normal_mag = np.dot(velocity, surface_normal)
-    v_normal = v_normal_mag * surface_normal
-    v_tangential = velocity - v_normal
-
-    # Apply coefficient of restitution to normal component (reverse direction)
-    cor = terrain_props.coefficient_of_restitution
-    post_v_normal = -cor * v_normal
-
-    # Apply friction to tangential component
-    friction = terrain_props.friction_coefficient
-    tangential_speed = np.linalg.norm(v_tangential)
-    if tangential_speed > 1e-10:
-        friction_decel = friction * abs(v_normal_mag)
-        reduced_speed = max(0.0, tangential_speed - friction_decel)
-        post_v_tangential = v_tangential * (reduced_speed / tangential_speed)
-    else:
-        post_v_tangential = v_tangential
-
+    """Compute post-impact velocity and spin after a ball strikes a surface."""
+    _validate_bounce_vectors(velocity, spin)
+    surface_normal = _normalized_surface_normal(surface_normal)
+    normal_magnitude, normal_velocity, tangential_velocity = _split_velocity(
+        velocity, surface_normal
+    )
+    post_v_normal = -terrain_props.coefficient_of_restitution * normal_velocity
+    post_v_tangential = _apply_surface_friction(
+        tangential_velocity,
+        normal_magnitude,
+        terrain_props.friction_coefficient,
+    )
     post_velocity = post_v_normal + post_v_tangential
-
-    # Spin retention
     post_spin = spin * terrain_props.spin_retention
 
     logger.debug(

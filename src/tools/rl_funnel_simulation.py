@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import time
 from collections.abc import Callable
-from dataclasses import dataclass, field
 from typing import Any, cast
 
 import numpy as np
@@ -14,31 +13,10 @@ from scipy.integrate import solve_ivp
 from src.core.contracts.definitions import require
 from src.core.contracts.validators import check_finite_array, check_positive
 from src.tools.rl_funnel_dynamics import (
-    CONTROL_SATURATION_DEFAULT,
     double_pendulum_B,
     double_pendulum_drift,
 )
-
-
-@dataclass
-class BenchmarkResult:
-    """Container for the output of a single benchmark run.
-
-    Attributes:
-        name: Human-readable controller name used in reports.
-        tracking_error: Integrated squared state-tracking error.
-        control_effort: Integrated squared control input norm.
-        runtime_sec: Wall-clock time for the benchmark run in seconds.
-        trajectory: State trajectory array, shape ``(T, n)``.
-        t_grid: Time grid corresponding to *trajectory*, shape ``(T,)``.
-    """
-
-    name: str
-    tracking_error: float
-    control_effort: float
-    runtime_sec: float
-    trajectory: np.ndarray = field(repr=False)
-    t_grid: np.ndarray = field(repr=False)
+from src.tools.rl_funnel_support import CONTROL_SATURATION_DEFAULT, BenchmarkResult
 
 
 def _compute_tracking_metrics(

@@ -85,6 +85,35 @@ def _finite_diff_jacobian(
     return J
 
 
+def _assemble_hessian_tensor(
+    f: Callable[[np.ndarray[Any, Any], np.ndarray[Any, Any]], np.ndarray[Any, Any]],
+    x: np.ndarray[Any, Any],
+    u: np.ndarray[Any, Any],
+    n: int,
+    dx: int,
+    epsilon: float,
+) -> np.ndarray[Any, Any]:
+    """Build the Hessian tensor H[k, i, j] = dJ_ki / dx_j via central differences.
+
+    Each Hessian slice is assembled from two Jacobian evaluations, giving
+    O(n^2) dynamics calls in total.
+    """
+    H = np.zeros((dx, n, n))
+    base_x = x.copy()
+
+    for j in range(n):
+        x_plus = base_x.copy()
+        x_plus[j] += epsilon
+        x_minus = base_x.copy()
+        x_minus[j] -= epsilon
+
+        J_plus = _finite_diff_jacobian(f, x_plus, u, epsilon)
+        J_minus = _finite_diff_jacobian(f, x_minus, u, epsilon)
+        H[:, :, j] = (J_plus - J_minus) / (2 * epsilon)
+
+    return H
+
+
 def _max_spectral_norm(H: np.ndarray[Any, Any]) -> float:
     """Compute the maximum spectral norm across component Hessian slices.
 
@@ -143,21 +172,7 @@ def compute_hessian_norm(
     """
     n = len(x)
     dx = len(f(x, u))
-
-    # Hessian tensor H[k, i, j] = dJ_ki / dx_j via central differences on the Jacobian
-    H = np.zeros((dx, n, n))
-    base_x = x.copy()
-
-    for j in range(n):
-        x_plus = base_x.copy()
-        x_plus[j] += epsilon
-        x_minus = base_x.copy()
-        x_minus[j] -= epsilon
-
-        J_plus = _finite_diff_jacobian(f, x_plus, u, epsilon)
-        J_minus = _finite_diff_jacobian(f, x_minus, u, epsilon)
-        H[:, :, j] = (J_plus - J_minus) / (2 * epsilon)
-
+    H = _assemble_hessian_tensor(f, x, u, n, dx, epsilon)
     return _max_spectral_norm(H)
 
 
@@ -239,23 +254,17 @@ class ResidualMonitor(ContractChecker):
             (lambda: self.warn_count >= 0, "warn_count must be non-negative"),
         ]
 
-    @invariant_checked
-    def update(
+    def _estimate_residual(
         self, x_meas: np.ndarray[Any, Any], x_nom: np.ndarray[Any, Any]
-    ) -> tuple[str, float]:
-        """
-        Update with new measurement.
-        Approximate residual r ~ x_meas - x_nom (assuming drift is dominant error)
-        In reality: r = x_meas - (x_nom + Phi * delta_x0)
-        """
+    ) -> float:
+        """Estimate residual magnitude between measured and nominal states."""
         check_finite_array(x_meas, "x_meas")
         check_finite_array(x_nom, "x_nom")
         require(x_meas.shape == x_nom.shape, "x_meas and x_nom must have same shape")
+        return float(np.linalg.norm(x_meas - x_nom))
 
-        r_est = np.linalg.norm(x_meas - x_nom)
-
-        next_mode = self.mode
-
+    def _update_hysteresis_counters(self, r_est: float) -> None:
+        """Update high, warning, and low residual hysteresis counters."""
         if r_est > self.eps_critical:
             self.high_count += 1
             self.warn_count += 1
@@ -268,41 +277,44 @@ class ResidualMonitor(ContractChecker):
             self.low_count += 1
             self.high_count = 0
             self.warn_count = 0
-        # else: hysteresis zone (between eps_warning and eps_critical) — no counter changes
 
-        # Three-state transitions: LQR <-> MPC_WARN <-> MPC_FULL
-        # Escalation path: LQR -> MPC_WARN -> MPC_FULL
-        # Recovery path:   MPC_FULL -> MPC_WARN -> LQR
-        if self.mode == "LQR":
-            if self.high_count >= self.n or self.warn_count >= self.n:
-                next_mode = "MPC_WARN"
-        elif self.mode == "MPC_WARN":
+    def _next_mode(self) -> str:
+        """Return the state-machine mode implied by the current counters."""
+        if self.mode == "LQR" and (self.high_count >= self.n or self.warn_count >= self.n):
+            return "MPC_WARN"
+        if self.mode == "MPC_WARN":
             if self.high_count >= self.n:
-                next_mode = "MPC_FULL"
-                self.high_count = 0
-            elif self.low_count >= self.n:
-                next_mode = "LQR"
-                self.low_count = 0
-        elif self.mode == "MPC_FULL":
+                return "MPC_FULL"
             if self.low_count >= self.n:
-                next_mode = "MPC_WARN"
-                self.low_count = 0
+                return "LQR"
+        if self.mode == "MPC_FULL" and self.low_count >= self.n:
+            return "MPC_WARN"
+        return self.mode
 
-        if next_mode != self.mode:
-            logger.debug("Switching mode: %s -> %s (r=%.4f)", self.mode, next_mode, r_est)
-            if self.mode == "LQR" and next_mode == "MPC_WARN":
-                # Start a fresh hysteresis window for escalation beyond the warning mode.
-                self.high_count = 0
-                self.warn_count = 0
-                self.low_count = 0
-            elif self.mode == "MPC_WARN" and next_mode in {"LQR", "MPC_FULL"}:
-                self.high_count = 0
-                self.warn_count = 0
-                self.low_count = 0
-            elif self.mode == "MPC_FULL" and next_mode == "MPC_WARN":
-                self.high_count = 0
-                self.warn_count = 0
-                self.low_count = 0
-            self.mode = next_mode
+    def _reset_hysteresis_counters(self) -> None:
+        """Reset all hysteresis counters after a mode transition."""
+        self.high_count = 0
+        self.warn_count = 0
+        self.low_count = 0
 
-        return self.mode, float(r_est)
+    def _apply_mode_transition(self, next_mode: str, r_est: float) -> None:
+        """Apply a pending mode transition and reset hysteresis state."""
+        if next_mode == self.mode:
+            return
+        logger.debug("Switching mode: %s -> %s (r=%.4f)", self.mode, next_mode, r_est)
+        self._reset_hysteresis_counters()
+        self.mode = next_mode
+
+    @invariant_checked
+    def update(
+        self, x_meas: np.ndarray[Any, Any], x_nom: np.ndarray[Any, Any]
+    ) -> tuple[str, float]:
+        """
+        Update with new measurement.
+        Approximate residual r ~ x_meas - x_nom (assuming drift is dominant error)
+        In reality: r = x_meas - (x_nom + Phi * delta_x0)
+        """
+        r_est = self._estimate_residual(x_meas, x_nom)
+        self._update_hysteresis_counters(r_est)
+        self._apply_mode_transition(self._next_mode(), r_est)
+        return self.mode, r_est

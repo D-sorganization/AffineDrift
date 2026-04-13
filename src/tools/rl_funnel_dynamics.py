@@ -9,48 +9,36 @@ import numpy as np
 import numpy.typing as npt
 from scipy.integrate import solve_ivp
 
-from src.core.constants import GRAVITY_M_S2
 from src.core.contracts.definitions import require
 from src.core.contracts.validators import check_finite_array, check_positive
+from src.tools.rl_funnel_support import (
+    CONTROL_SATURATION_DEFAULT,
+    DEFAULT_CONTROL_SATURATION,
+    GRAVITY_M_S2,
+    PENDULUM_L1,
+    PENDULUM_L2,
+    PENDULUM_M1,
+    PENDULUM_M2,
+    double_pendulum_mass_matrix,
+    validate_state_vector,
+)
 
 logger = logging.getLogger(__name__)
 
-# Double pendulum physical parameters (2-DoF golf swing proxy)
-PENDULUM_M1 = 1.0  # kg, mass of upper link
-PENDULUM_M2 = 1.0  # kg, mass of lower link
-PENDULUM_L1 = 0.5  # m, length of upper link
-PENDULUM_L2 = 0.5  # m, length of lower link
-
-# Default control saturation limits for the double-pendulum benchmark (N*m).
-DEFAULT_CONTROL_SATURATION = 50.0
-CONTROL_SATURATION_DEFAULT: tuple[float, float] = (-50.0, 50.0)
-
-
-def validate_state_vector(x: npt.NDArray[Any], name: str) -> None:
-    """Validate that the state vector is finite."""
-    check_finite_array(x, name)
-
-
-def double_pendulum_mass_matrix(th1: float, th2: float) -> npt.NDArray[Any]:
-    """Compute the 2x2 mass (inertia) matrix for a double pendulum.
-
-    M = [[( m1 + m2 ) * L1^2,        m2 * L1 * L2 * cos(th1-th2)],
-         [m2 * L1 * L2 * cos(th1-th2),  m2 * L2^2               ]]
-    """
-    c12 = np.cos(th1 - th2)
-    M = np.array(
-        [
-            [
-                (PENDULUM_M1 + PENDULUM_M2) * PENDULUM_L1**2,
-                PENDULUM_M2 * PENDULUM_L1 * PENDULUM_L2 * c12,
-            ],
-            [
-                PENDULUM_M2 * PENDULUM_L1 * PENDULUM_L2 * c12,
-                PENDULUM_M2 * PENDULUM_L2**2,
-            ],
-        ]
-    )
-    return M
+__all__ = [
+    "CONTROL_SATURATION_DEFAULT",
+    "DEFAULT_CONTROL_SATURATION",
+    "GRAVITY_M_S2",
+    "PENDULUM_L1",
+    "PENDULUM_L2",
+    "PENDULUM_M1",
+    "PENDULUM_M2",
+    "double_pendulum_B",
+    "double_pendulum_drift",
+    "double_pendulum_mass_matrix",
+    "generate_reference_trajectory",
+    "validate_state_vector",
+]
 
 
 def double_pendulum_drift(

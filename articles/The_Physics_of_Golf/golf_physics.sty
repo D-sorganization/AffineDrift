@@ -113,3 +113,15 @@
 \newcommand{\so}{\mathfrak{so}(3)}
 \newcommand{\SE}{\mathrm{SE}(3)}
 \newcommand{\SO}{\mathrm{SO}(3)}
+
+% ──────────────────────────────────────────────
+% Citation placeholders (tracked TODOs)
+% ──────────────────────────────────────────────
+% Renders a visible inline marker in the output PDF when a citation is
+% still needed for a specific claim. Use \citeneeded{short description of
+% the claim requiring a source} at the point of the claim. The marker is
+% intentionally eye-catching so reviewers notice unresolved citations.
+\gpdefinecolorifmissing{citeneededred}{RGB}{200, 30, 30}
+\newcommand{\citeneeded}[1]{%
+  \textsuperscript{\textcolor{citeneededred}{\textbf{[citation needed: #1]}}}%
+}
