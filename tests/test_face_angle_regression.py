@@ -42,9 +42,9 @@ class TestFaceAngleSensitivity:
         assert lateral_min < lateral_max, "Sanity check"
         # The geometric lower bound
         assert lateral_geometric > 2.0, f"Geometric: {lateral_geometric:.1f} yd must be > 2"
-        assert (
-            lateral_geometric < 10.0
-        ), f"Geometric {lateral_geometric:.1f} yd - gear effect adds more, total ≈ 17-24"
+        assert lateral_geometric < 10.0, (
+            f"Geometric {lateral_geometric:.1f} yd - gear effect adds more, total ≈ 17-24"
+        )
 
     def test_contradictory_value_60_70_is_wrong(self):
         """60-70 yd/deg would imply ~1500-1750 yard drives for typical face error."""
