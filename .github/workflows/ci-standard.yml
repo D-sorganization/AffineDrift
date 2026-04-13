@@ -85,7 +85,7 @@ jobs:
         run: |
           if sudo -n true 2>/dev/null; then
             sudo apt-get update
-            sudo apt-get install -y libgl1 libegl1 libxrandr2 libxss1 libxcursor1 libxcomposite1 libasound2t64 libxi6 libxtst6
+            sudo apt-get install -y libgl1 libegl1 libxrandr2 libxss1 libxcursor1 libxcomposite1 libxi6 libxtst6 libasound2 || sudo apt-get install -y libgl1 libegl1 libxrandr2 libxss1 libxcursor1 libxcomposite1 libxi6 libxtst6 libasound2t64
           else
             echo "No passwordless sudo — assuming system deps are pre-installed (self-hosted runner)"
           fi
@@ -295,7 +295,7 @@ jobs:
         run: |
           if sudo -n true 2>/dev/null; then
             sudo apt-get update
-            sudo apt-get install -y libgl1 libegl1 libxrandr2 libxss1 libxcursor1 libxcomposite1 libasound2t64 libxi6 libxtst6
+            sudo apt-get install -y libgl1 libegl1 libxrandr2 libxss1 libxcursor1 libxcomposite1 libxi6 libxtst6 libasound2 || sudo apt-get install -y libgl1 libegl1 libxrandr2 libxss1 libxcursor1 libxcomposite1 libxi6 libxtst6 libasound2t64
           else
             echo "No passwordless sudo — assuming system deps are pre-installed (self-hosted runner)"
           fi
