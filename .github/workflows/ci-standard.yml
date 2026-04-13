@@ -93,7 +93,9 @@ jobs:
         run: |
           if sudo -n true 2>/dev/null; then
             sudo apt-get -o DPkg::Lock::Timeout=300 update
-            sudo apt-get -o DPkg::Lock::Timeout=300 install -y libgl1 libegl1 libxrandr2 libxss1 libxcursor1 libxcomposite1 libasound2t64 libxi6 libxtst6
+            # libasound2t64 is the Ubuntu 24.04 name; Ubuntu 22.04 uses libasound2
+            apt-cache show libasound2t64 >/dev/null 2>&1 && LIBASOUND=libasound2t64 || LIBASOUND=libasound2
+            sudo apt-get -o DPkg::Lock::Timeout=300 install -y libgl1 libegl1 libxrandr2 libxss1 libxcursor1 libxcomposite1 "$LIBASOUND" libxi6 libxtst6
           else
             echo "No passwordless sudo — assuming system deps are pre-installed (self-hosted runner)"
           fi
@@ -106,7 +108,7 @@ jobs:
           python3 --version
           python -m pip --version
           ruff --version
-          black --version
+          python -m black --version
           mypy --version
 
       # FIX: Less aggressive Ruff (Errors, Warnings, Imports only)
@@ -115,7 +117,7 @@ jobs:
 
       # FIX: Enforce Black formatting (100 chars — matches pyproject.toml [tool.black] line-length)
       - name: Check Formatting
-        run: black --check --line-length 100 .
+        run: python -m black --check --line-length 100 .
 
       - run: python -m pip install mypy types-PyYAML types-requests
       - name: Verify frontend asset sync
@@ -311,7 +313,9 @@ jobs:
         run: |
           if sudo -n true 2>/dev/null; then
             sudo apt-get -o DPkg::Lock::Timeout=300 update
-            sudo apt-get -o DPkg::Lock::Timeout=300 install -y libgl1 libegl1 libxrandr2 libxss1 libxcursor1 libxcomposite1 libasound2t64 libxi6 libxtst6
+            # libasound2t64 is the Ubuntu 24.04 name; Ubuntu 22.04 uses libasound2
+            apt-cache show libasound2t64 >/dev/null 2>&1 && LIBASOUND=libasound2t64 || LIBASOUND=libasound2
+            sudo apt-get -o DPkg::Lock::Timeout=300 install -y libgl1 libegl1 libxrandr2 libxss1 libxcursor1 libxcomposite1 "$LIBASOUND" libxi6 libxtst6
           else
             echo "No passwordless sudo — assuming system deps are pre-installed (self-hosted runner)"
           fi
