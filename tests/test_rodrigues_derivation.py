@@ -28,9 +28,6 @@ def test_rodrigues_power_pattern_captures_alternating_signs() -> None:
         r"\[\\hat\{\\boldsymbol\{\\omega\}\}\]\^\{2k\+1\}\s*=\s*"
         r"\[\\hat\{\\boldsymbol\{\\omega\}\}\]"
     )
-    assert not bad_pattern.search(
-        text
-    ), "Found non-alternating odd-power pattern for [\\hat{\\boldsymbol{\\omega}}]^{2k+1}"
-
-
-# fix
+    assert not bad_pattern.search(text), (
+        "Found non-alternating odd-power pattern for [\\hat{\\boldsymbol{\\omega}}]^{2k+1}"
+    )
