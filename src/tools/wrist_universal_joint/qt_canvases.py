@@ -27,6 +27,7 @@ if (
     and os.environ.get("QT_QPA_PLATFORM") != "offscreen"
 ):
     matplotlib.use("QtAgg")
+
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 

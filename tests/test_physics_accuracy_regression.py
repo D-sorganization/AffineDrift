@@ -226,3 +226,6 @@ class TestEigenvalueInvariance:
             assert "instantaneous eigenvalues of $\\mat{A}_z$ need not match" in chapter
             assert "geometric content}---eigenvalues" not in chapter
             assert "geometric content*---eigenvalues" not in chapter
+
+
+# fix

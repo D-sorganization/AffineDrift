@@ -2,7 +2,11 @@
 
 import pytest
 
-from src.golf_simulation.putting import GreenSurface, PuttingSimulator, stimpmeter_deceleration
+from src.golf_simulation.putting import (
+    GreenSurface,
+    PuttingSimulator,
+    stimpmeter_deceleration,
+)
 
 
 class TestGreenSurface:
