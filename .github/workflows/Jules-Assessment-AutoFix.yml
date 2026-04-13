@@ -78,7 +78,7 @@ jobs:
 
   run-assessments:
     name: Run Repository Assessments (A-O)
-    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    runs-on: self-hosted
     needs: pick-runner
     permissions:
       contents: write
@@ -251,7 +251,7 @@ jobs:
     name: Auto-Fix All Issues (Consolidated)
     needs: run-assessments
     if: github.event.inputs.auto_fix != 'false' && github.event.inputs.dry_run != 'true'
-    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    runs-on: self-hosted
     permissions:
       contents: write
       pull-requests: write
@@ -426,7 +426,7 @@ jobs:
   create-github-issues:
     name: Create GitHub Issues for Untracked Problems
     needs: run-assessments
-    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    runs-on: self-hosted
     permissions:
       issues: write
 
@@ -480,7 +480,7 @@ jobs:
       inputs.source_pr_to_close != '' &&
       inputs.dry_run != 'true' &&
       needs.auto-fix-issues.result == 'success'
-    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    runs-on: self-hosted
     permissions:
       pull-requests: write
 
@@ -524,7 +524,7 @@ jobs:
   dry-run-summary:
     name: Dry Run Summary
     if: inputs.dry_run == 'true'
-    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    runs-on: self-hosted
     needs: pick-runner
 
     steps:
