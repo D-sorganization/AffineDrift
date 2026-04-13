@@ -62,7 +62,7 @@ jobs:
           fi
 
   process-comments:
-    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    runs-on: self-hosted
     needs: pick-runner
     # HARDENING: Skip bot-triggered events to prevent cascades
     if: |

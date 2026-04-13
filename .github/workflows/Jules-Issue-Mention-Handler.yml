@@ -57,7 +57,7 @@ jobs:
           esac
 
   check-mention:
-    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    runs-on: self-hosted
     needs: pick-runner
     outputs:
       should_run: ${{ steps.check.outputs.should_run }}
@@ -79,7 +79,7 @@ jobs:
   fix-issue:
     needs: check-mention
     if: needs.check-mention.outputs.should_run == 'true' && !github.event.issue.pull_request
-    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v6
         with:

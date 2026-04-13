@@ -21,7 +21,7 @@ concurrency:
 jobs:
   build_golf_textbook:
     if: github.repository == 'D-sorganization/AffineDrift'
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     name: Build Golf Physics PDF
 
     steps:
@@ -78,7 +78,7 @@ jobs:
   publish_on_merge:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: build_golf_textbook
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     name: Publish Golf Physics PDF
 
     steps:
