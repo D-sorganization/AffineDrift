@@ -266,6 +266,3 @@ def test_torque_at_90_deg_grip_goes_to_alpha(torque: float) -> None:
     tau_alpha, tau_gamma = distribute_torque_by_grip_angle(torque, np.pi / 2)
     assert abs(float(tau_alpha) - torque) < 1e-10
     assert abs(float(tau_gamma)) < 1e-10
-
-
-# fix

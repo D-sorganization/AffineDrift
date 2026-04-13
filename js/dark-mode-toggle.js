@@ -20,13 +20,13 @@
   document.addEventListener('DOMContentLoaded', function () {
     const btn = document.createElement('button');
     btn.id = 'theme-toggle';
-    btn.title = 'Toggle dark/light mode';
 
     function updateBtn(theme) {
       btn.innerHTML = theme === 'dark'
         ? '<span aria-hidden="true">☀️</span>'
         : '<span aria-hidden="true">🌙</span>';
       btn.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+      btn.title = theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode';
     }
 
     updateBtn(getPreferredTheme());
