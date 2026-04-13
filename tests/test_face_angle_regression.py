@@ -73,3 +73,6 @@ class TestFaceAngleSensitivity:
         assert "60--70 yards per degree" not in combined
         assert "65 yards per degree" not in combined
         assert "13--20" in combined
+
+
+# fix
