@@ -985,10 +985,13 @@ runOnDomReady(function () {
   // ⚡ Bolt Optimization: Defer non-critical interactive elements to runWhenIdle
   runWhenIdle(() => {
     // 🎨 Palette UX: Responsive Tables
-    const tables = document.querySelectorAll("#quarto-document-content table");
+    // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) Live Collection) instead of querySelectorAll
+    const tables = Array.from(document.getElementsByTagName("table"));
     // Use a shared set for unique IDs across all tables
     const tableUsedIds = new Set();
-    tables.forEach((table) => {
+    for (const table of tables) {
+      if (!table.closest("#quarto-document-content")) continue;
+
       // Check for existing wrapper (both class and overflow style)
       const parent = table.parentElement;
       if (
@@ -996,7 +999,7 @@ runOnDomReady(function () {
         parent.style.overflowX === "auto" ||
         window.getComputedStyle(parent).overflowX === "auto"
       ) {
-        return;
+        continue;
       }
 
       const wrapper = document.createElement("div");
@@ -1020,13 +1023,14 @@ runOnDomReady(function () {
 
       table.parentNode.insertBefore(wrapper, table);
       wrapper.appendChild(table);
-    });
+    }
 
     // Copy to Clipboard
-    const codeBlocks = document.querySelectorAll("pre");
-    codeBlocks.forEach((pre) => {
-      if (pre.parentNode.classList.contains("code-wrapper")) return;
-      if (!pre.textContent.trim()) return;
+    // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) Live Collection) instead of querySelectorAll (O(N))
+    const codeBlocks = Array.from(document.getElementsByTagName("pre"));
+    for (const pre of codeBlocks) {
+      if (pre.parentNode.classList.contains("code-wrapper")) continue;
+      if (!pre.textContent.trim()) continue;
 
       // 🎨 Palette UX: Keyboard access for overflow code
       pre.setAttribute("tabindex", "0");
@@ -1047,7 +1051,7 @@ runOnDomReady(function () {
       button.dataset.action = "copy-code";
 
       wrapper.appendChild(button);
-    });
+    }
 
     // ⚡ Bolt Optimization: Global Event Delegation for Copy Buttons
     // Reduces memory usage by removing closures and event listeners per button
