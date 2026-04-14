@@ -37,7 +37,7 @@ concurrency:
 jobs:
   # ── Dispatcher: route to self-hosted if available ──────────────────────────
   pick-runner:
-    runs-on: ubuntu-latest
+    runs-on: d-sorg-fleet
     timeout-minutes: 2
     outputs:
       runner: ${{ steps.check.outputs.runner }}
@@ -308,4 +308,3 @@ jobs:
           echo "- **Section**: ${{ steps.generate.outputs.section }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "View the updated ideas at \`.jules/ideas.md\`" >> $GITHUB_STEP_SUMMARY
-

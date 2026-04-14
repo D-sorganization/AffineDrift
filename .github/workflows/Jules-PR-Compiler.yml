@@ -29,7 +29,7 @@ concurrency:
 jobs:
   # ── Dispatcher: route to self-hosted if available ──────────────────────────
   pick-runner:
-    runs-on: ubuntu-latest
+    runs-on: d-sorg-fleet
     timeout-minutes: 2
     outputs:
       runner: ${{ steps.check.outputs.runner }}
@@ -296,4 +296,3 @@ jobs:
           # This step just cleans up tracking
           echo "Individual PRs will be auto-closed when the compiled PR is merged."
           echo "Branch cleanup happens automatically via GitHub's branch deletion on PR merge."
-

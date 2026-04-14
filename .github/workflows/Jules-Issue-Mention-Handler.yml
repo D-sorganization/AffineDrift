@@ -19,7 +19,7 @@ concurrency:
 jobs:
   # ── Dispatcher: route to self-hosted if available ──────────────────────────
   pick-runner:
-    runs-on: ubuntu-latest
+    runs-on: d-sorg-fleet
     timeout-minutes: 2
     outputs:
       runner: ${{ steps.check.outputs.runner }}
@@ -291,4 +291,3 @@ jobs:
           if [ -n "$PR_URL" ]; then
             printf '%s\n' "- **PR:** $PR_URL" >> "$GITHUB_STEP_SUMMARY"
           fi
-

@@ -15,7 +15,7 @@ permissions:
 jobs:
   # ── Dispatcher: route to self-hosted if available ──────────────────────────
   pick-runner:
-    runs-on: ubuntu-latest
+    runs-on: d-sorg-fleet
     timeout-minutes: 2
     outputs:
       runner: ${{ steps.check.outputs.runner }}
@@ -233,4 +233,3 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
             echo "Created PR with automated fixes." >> $GITHUB_STEP_SUMMARY
           fi
-

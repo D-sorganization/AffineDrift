@@ -6,7 +6,7 @@ on:
 jobs:
   # ── Dispatcher: route to self-hosted if available ──────────────────────────
   pick-runner:
-    runs-on: ubuntu-latest
+    runs-on: d-sorg-fleet
     timeout-minutes: 2
     outputs:
       runner: ${{ steps.check.outputs.runner }}
@@ -106,4 +106,3 @@ jobs:
             --repo ${{ github.repository }} \
             --session "Address code review feedback on PR #$PR_NUMBER: $(cat feedback.txt)" \
             --pr $PR_NUMBER
-

@@ -18,7 +18,7 @@ concurrency:
 jobs:
   # ── Dispatcher: route to self-hosted if available ──────────────────────────
   pick-runner:
-    runs-on: ubuntu-latest
+    runs-on: d-sorg-fleet
     timeout-minutes: 2
     outputs:
       runner: ${{ steps.check.outputs.runner }}
@@ -495,4 +495,3 @@ jobs:
           commit_message: "docs(mobile): mobile friendliness assessment $(date +%Y-%m-%d)"
           file_pattern: "docs/assessments/mobile/**"
           branch: main
-

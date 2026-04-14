@@ -31,7 +31,7 @@ concurrency:
 jobs:
   # ── Dispatcher: route to self-hosted if available ──────────────────────────
   pick-runner:
-    runs-on: ubuntu-latest
+    runs-on: d-sorg-fleet
     timeout-minutes: 2
     outputs:
       runner: ${{ steps.check.outputs.runner }}
@@ -222,4 +222,3 @@ jobs:
         with:
           commit_message: "docs(review): code quality review $(date +%Y-%m-%d)"
           file_pattern: "docs/assessments/**/*.md"
-
