@@ -32,15 +32,24 @@ jobs:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-python@v6
-        with: { python-version: "3.12" }
+
+      - name: Bootstrap Python venv
+        run: |
+          for py in python3.12 python3.11 python3.10 python3; do
+            if command -v $py &>/dev/null; then
+              $py -m venv "$RUNNER_TEMP/ci-venv"
+              break
+            fi
+          done
+          source "$RUNNER_TEMP/ci-venv/bin/activate"
+          pip install --upgrade pip setuptools wheel
+          pip install ruff==0.15.7 black==26.3.1 mypy==1.19.1 bandit==1.7.7 pydocstyle==6.3.0 pip-audit
+          echo "$RUNNER_TEMP/ci-venv/bin" >> $GITHUB_PATH
 
       - name: Install System Dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y libgl1 libegl1 libxrandr2 libxss1 libxcursor1 libxcomposite1 libasound2t64 libxi6 libxtst6
-
-      - run: pip install ruff==0.15.7 black==26.3.1 mypy==1.19.1 bandit==1.7.7 pydocstyle==6.3.0 pip-audit
 
       # Validate that environment is sane
       - name: Environment Health Check
@@ -140,10 +149,19 @@ jobs:
         python: ["3.12"]
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-python@v6
-        with:
-          python-version: ${{ matrix.python }}
-      - run: pip install -r requirements.txt pytest-timeout
+
+      - name: Bootstrap Python venv
+        run: |
+          for py in python3.12 python3.11 python3.10 python3; do
+            if command -v $py &>/dev/null; then
+              $py -m venv "$RUNNER_TEMP/ci-venv"
+              break
+            fi
+          done
+          source "$RUNNER_TEMP/ci-venv/bin/activate"
+          pip install --upgrade pip setuptools wheel
+          pip install -r requirements.txt pytest-timeout
+          echo "$RUNNER_TEMP/ci-venv/bin" >> $GITHUB_PATH
       - name: Install Tool Requirements
         run: |
           if [ -d "tools" ]; then
@@ -190,8 +208,19 @@ jobs:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
         with: { node-version: "20" }
-      - uses: actions/setup-python@v6
-        with: { python-version: "3.12" }
+
+      - name: Bootstrap Python venv
+        run: |
+          for py in python3.12 python3.11 python3.10 python3; do
+            if command -v $py &>/dev/null; then
+              $py -m venv "$RUNNER_TEMP/ci-venv"
+              break
+            fi
+          done
+          source "$RUNNER_TEMP/ci-venv/bin/activate"
+          pip install --upgrade pip setuptools wheel
+          pip install -r requirements.txt
+          echo "$RUNNER_TEMP/ci-venv/bin" >> $GITHUB_PATH
 
       - name: Install System Dependencies
         run: |
@@ -200,8 +229,6 @@ jobs:
 
       - name: Install Dependencies
         run: npm ci
-      - name: Install Python build dependencies
-        run: pip install -r requirements.txt
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps chromium
       - name: Set up Quarto
