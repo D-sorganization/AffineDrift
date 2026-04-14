@@ -6,7 +6,12 @@ from unittest.mock import patch
 import pytest
 
 # Add project root to path
-from src.tools.check_site_health import BrokenLinkRecord, check_site_health, main, parse_fail_on
+from src.tools.check_site_health import (
+    BrokenLinkRecord,
+    check_site_health,
+    main,
+    parse_fail_on,
+)
 
 
 @pytest.fixture

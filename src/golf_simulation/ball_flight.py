@@ -22,7 +22,10 @@ import numpy as np
 
 from src.core.constants import GRAVITY_M_S2
 from src.core.contracts import check_non_negative, check_positive, require
-from src.tangent_models.examples import DynamicalSystem, _central_difference_linearization
+from src.tangent_models.examples import (
+    DynamicalSystem,
+    _central_difference_linearization,
+)
 
 logger = logging.getLogger(__name__)
 
