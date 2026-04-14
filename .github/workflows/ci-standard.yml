@@ -72,14 +72,19 @@ jobs:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-python@v6
-        with:
-          python-version: "3.12"
-          cache: "pip"
-          cache-dependency-path: requirements.txt
 
-      - name: Install Python dependencies
-        run: python -m pip install -r requirements.txt
+      - name: Bootstrap Python venv
+        run: |
+          for py in python3.12 python3.11 python3.10 python3; do
+            if command -v $py &>/dev/null; then
+              $py -m venv "$RUNNER_TEMP/ci-venv"
+              break
+            fi
+          done
+          source "$RUNNER_TEMP/ci-venv/bin/activate"
+          pip install --upgrade pip setuptools wheel
+          pip install -r requirements.txt
+          echo "$RUNNER_TEMP/ci-venv/bin" >> $GITHUB_PATH
 
       - name: Reject Raw Merge Conflict Markers
         run: |
@@ -100,15 +105,15 @@ jobs:
             echo "No passwordless sudo — assuming system deps are pre-installed (self-hosted runner)"
           fi
 
-      - run: python -m pip install ruff==0.15.6 black==26.3.1 mypy==1.19.1 bandit==1.7.7 pydocstyle==6.3.0
+      - run: pip install ruff==0.15.6 black==26.3.1 mypy==1.19.1 bandit==1.7.7 pydocstyle==6.3.0
 
       # Validate that environment is sane
       - name: Environment Health Check
         run: |
           python3 --version
-          python -m pip --version
+          pip --version
           ruff --version
-          python -m black --version
+          black --version
           mypy --version
 
       # FIX: Less aggressive Ruff (Errors, Warnings, Imports only)
@@ -117,9 +122,9 @@ jobs:
 
       # FIX: Enforce Black formatting (100 chars — matches pyproject.toml [tool.black] line-length)
       - name: Check Formatting
-        run: python -m black --check --line-length 100 .
+        run: black --check --line-length 100 .
 
-      - run: python -m pip install mypy types-PyYAML types-requests
+      - run: pip install mypy types-PyYAML types-requests
       - name: Verify frontend asset sync
         # docs/ HTML is no longer committed (issue #1419); sync mirrors inside docs/
         # are rebuilt by Quarto at deploy time. Skip here if docs/ is absent.
@@ -208,10 +213,18 @@ jobs:
         python: ["3.12"]
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-python@v6
-        with:
-          python-version: ${{ matrix.python }}
-      - run: python -m pip install -r requirements.txt pytest-timeout pytest-cov PyQt6
+      - name: Bootstrap Python venv
+        run: |
+          for py in python3.12 python3.11 python3.10 python3; do
+            if command -v $py &>/dev/null; then
+              $py -m venv "$RUNNER_TEMP/ci-venv"
+              break
+            fi
+          done
+          source "$RUNNER_TEMP/ci-venv/bin/activate"
+          pip install --upgrade pip setuptools wheel
+          pip install -r requirements.txt pytest-timeout pytest-cov PyQt6
+          echo "$RUNNER_TEMP/ci-venv/bin" >> $GITHUB_PATH
       - name: Install Tool Requirements
         run: |
           if [ -d "tools" ]; then
@@ -226,7 +239,7 @@ jobs:
           PYTHONPATH: src
         run: python -m pytest --override-ini addopts= tests/ -m content_lint --timeout=120
       - name: Audit Python Dependencies
-        run: python -m pip install pip-audit && pip-audit -r requirements.txt
+        run: pip install pip-audit && pip-audit -r requirements.txt --progress-spinner=off
       - name: Critical Module Coverage Gate
         run: python3 scripts/check_critical_module_coverage.py
       - uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0
@@ -293,12 +306,19 @@ jobs:
       - uses: actions/setup-node@v6
         if: steps.e2e_changes.outputs.run == 'true'
         with: { node-version: "20" }
-      - uses: actions/setup-python@v6
+      - name: Bootstrap Python venv
         if: steps.e2e_changes.outputs.run == 'true'
-        with: { python-version: "3.12" }
-      - name: Install Python dependencies
-        if: steps.e2e_changes.outputs.run == 'true'
-        run: python -m pip install -r requirements.txt
+        run: |
+          for py in python3.12 python3.11 python3.10 python3; do
+            if command -v $py &>/dev/null; then
+              $py -m venv "$RUNNER_TEMP/ci-venv"
+              break
+            fi
+          done
+          source "$RUNNER_TEMP/ci-venv/bin/activate"
+          pip install --upgrade pip setuptools wheel
+          pip install -r requirements.txt
+          echo "$RUNNER_TEMP/ci-venv/bin" >> $GITHUB_PATH
 
       - name: Reject Raw Merge Conflict Markers
         run: |
@@ -490,4 +510,3 @@ jobs:
           echo "- ✅ rustfmt: formatted" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ clippy: no warnings" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ cargo test: all tests pass" >> $GITHUB_STEP_SUMMARY
-
