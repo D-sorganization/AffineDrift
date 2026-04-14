@@ -108,10 +108,13 @@ export function initResponsiveTables() {
  * Initialize copy to clipboard for code blocks
  */
 export function initCodeCopy() {
-    const codeBlocks = document.querySelectorAll("pre");
-    codeBlocks.forEach((pre) => {
-        if (pre.parentNode.classList.contains("code-wrapper")) return;
-        if (!pre.textContent.trim()) return;
+    // Use getElementsByTagName (O(1) live collection) then snapshot with Array.from
+    // so DOM mutations inside the loop don't cause skipping.
+    const codeBlocks = Array.from(document.getElementsByTagName("pre"));
+    for (const pre of codeBlocks) {
+        // Use `continue` (not `return`) so early-exit doesn't abort the entire callback.
+        if (pre.parentNode.classList.contains("code-wrapper")) continue;
+        if (!pre.textContent.trim()) continue;
 
         pre.setAttribute("tabindex", "0");
         pre.setAttribute("role", "region");
@@ -130,7 +133,7 @@ export function initCodeCopy() {
         button.dataset.action = "copy-code";
 
         wrapper.appendChild(button);
-    });
+    }
 
     document.addEventListener("click", async (e) => {
         const button = e.target.closest('button[data-action="copy-code"]');
