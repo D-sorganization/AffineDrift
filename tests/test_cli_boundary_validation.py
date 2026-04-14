@@ -2,7 +2,11 @@
 
 from pathlib import Path
 
-from scripts import generate_completist_data, pragmatic_programmer_review, run_assessment
+from scripts import (
+    generate_completist_data,
+    pragmatic_programmer_review,
+    run_assessment,
+)
 
 
 def test_generate_completist_data_fails_for_missing_repo_root(tmp_path: Path) -> None:

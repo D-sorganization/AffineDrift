@@ -12,10 +12,6 @@ from typing import Any
 import numpy as np
 import pytest
 
-# ---------------------------------------------------------------------------
-# Issue #1742: Double pendulum mass matrix must NOT be identity
-# ---------------------------------------------------------------------------
-
 from src.tools.rl_funnel_benchmark import (
     PENDULUM_L1,
     PENDULUM_L2,
@@ -24,6 +20,11 @@ from src.tools.rl_funnel_benchmark import (
     double_pendulum_drift,
     double_pendulum_mass_matrix,
 )
+
+# ---------------------------------------------------------------------------
+# Issue #1742: Double pendulum mass matrix must NOT be identity
+# ---------------------------------------------------------------------------
+
 
 
 class TestMassMatrixPhysics:

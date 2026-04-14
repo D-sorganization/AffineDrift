@@ -1,6 +1,9 @@
 """Tests for publish_manual_article.py — manual article publishing functions."""
 
-from src.tools.publish_manual_article import simple_markdown_to_html, wrap_in_article_section
+from src.tools.publish_manual_article import (
+    simple_markdown_to_html,
+    wrap_in_article_section,
+)
 
 
 class TestSimpleMarkdownToHtml:
