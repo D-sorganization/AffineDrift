@@ -1,0 +1,21 @@
+--- script.js
++++ script.js
+@@ -1025,8 +1025,9 @@
+     }
+
+     // Copy to Clipboard
+-    const codeBlocks = Array.from(document.getElementsByTagName("pre"));
++    // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) Live Collection) instead of querySelectorAll (O(N))
++    const codeBlocks = document.getElementsByTagName("pre");
+     for (const pre of codeBlocks) {
+-      if (pre.parentNode.classList.contains("code-wrapper")) return;
+-      if (!pre.textContent.trim()) return;
++      if (pre.parentNode.classList.contains("code-wrapper")) continue;
++      if (!pre.textContent.trim()) continue;
+
+@@ -1039,7 +1040,7 @@
+       wrapper.className = "code-wrapper";
+       pre.parentNode.insertBefore(wrapper, pre);
+       wrapper.appendChild(pre);
+-    }
++    }

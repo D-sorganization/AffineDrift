@@ -65,3 +65,11 @@
 ## 2026-04-07 - Layout Thrashing in DOM Initialization
 **Learning:** Interleaving layout reads (like `getComputedStyle`) and DOM mutations (`insertBefore`, `appendChild`) inside a loop causes forced synchronous layout (Layout Thrashing), severely impacting the main thread during initialization.
 **Action:** When iterating over elements that require layout checks before DOM modification, always batch the reads into a separate array or phase before performing the writes.
+
+## 2024-06-15 - Live Collection Arrays vs NodeLists
+**Learning:** Using `document.getElementsByTagName` returns a live `HTMLCollection`, unlike `querySelectorAll` which returns a static `NodeList`. Modifying the DOM during iteration over a live collection can cause elements to be skipped or reprocessed unexpectedly.
+**Action:** When converting global DOM queries to `getElementsByTagName` to improve performance, ensure that iterations modifying the DOM (like adding wrapper divs) either iterate backwards or copy the collection to a static array first using `Array.from()` or similar, to prevent infinite loops or missing elements.
+
+## 2024-06-15 - Live Collection Arrays vs NodeLists
+**Learning:** Using `document.getElementsByTagName` returns a live `HTMLCollection`, unlike `querySelectorAll` which returns a static `NodeList`. Modifying the DOM during iteration over a live collection can cause elements to be skipped or reprocessed unexpectedly. In a \`for...of\` loop on an array formed by \`Array.from(collection)\`, \`return\` stops the entire function while \`continue\` skips to the next item; do not substitute one for the other when translating from a \`forEach\` callback.
+**Action:** When converting global DOM queries to `getElementsByTagName` to improve performance, ensure that iterations modifying the DOM (like adding wrapper divs) either iterate backwards or copy the collection to a static array first using `Array.from()`. When replacing \`forEach\` with \`for...of\`, remember to translate \`return\` statements into \`continue\`.

@@ -1,0 +1,13 @@
+⚡ Bolt: Replace global querySelectorAll with O(1) live collections
+
+💡 What:
+Replaced expensive global DOM queries (`querySelectorAll`) in `script.js` with O(1) live collection lookups (`getElementsByTagName` and `getElementsByClassName`) for elements such as tables, code blocks, navigation tags, input elements, social links, and UI cards.
+
+🎯 Why:
+`querySelectorAll` performs a full DOM scan and parses CSS selectors, creating a static `NodeList` with O(N) complexity. Live HTMLCollections via `getElementsByTagName` or `getElementsByClassName` evaluate instantly and are highly optimized by the browser engine, dramatically reducing main-thread blocking time during global initializations.
+
+📊 Impact:
+Significantly reduces initialization latency when binding event listeners or processing bulk elements across large articles. O(1) property lookups minimize CPU cycles and browser paint blocking.
+
+🔬 Measurement:
+Run the main JavaScript tests (`pnpm test`) to ensure regressions are not introduced. Open a large, content-heavy article page and verify that ARIA labels, "Copy to Clipboard" buttons, layout adjustment loops, and UI toggles function normally.
