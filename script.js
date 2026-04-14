@@ -1023,10 +1023,15 @@ runOnDomReady(function () {
     });
 
     // Copy to Clipboard
-    const codeBlocks = document.querySelectorAll("pre");
-    codeBlocks.forEach((pre) => {
-      if (pre.parentNode.classList.contains("code-wrapper")) return;
-      if (!pre.textContent.trim()) return;
+    // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) live collection) instead of
+    // querySelectorAll (O(N) static NodeList). Array.from() snapshots the live collection
+    // so DOM mutations inside the loop (insertBefore/appendChild) don't cause skipping.
+    const codeBlocks = Array.from(document.getElementsByTagName("pre"));
+    for (const pre of codeBlocks) {
+      // Use `continue` (not `return`) so early-exit doesn't abort the entire
+      // runWhenIdle callback, which would silently skip the event delegation setup below.
+      if (pre.parentNode.classList.contains("code-wrapper")) continue;
+      if (!pre.textContent.trim()) continue;
 
       // 🎨 Palette UX: Keyboard access for overflow code
       pre.setAttribute("tabindex", "0");
@@ -1047,7 +1052,7 @@ runOnDomReady(function () {
       button.dataset.action = "copy-code";
 
       wrapper.appendChild(button);
-    });
+    }
 
     // ⚡ Bolt Optimization: Global Event Delegation for Copy Buttons
     // Reduces memory usage by removing closures and event listeners per button
