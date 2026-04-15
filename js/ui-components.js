@@ -20,13 +20,13 @@ export function initFadeAnimations() {
     if (!isMobile && !prefersReducedMotion) {
         const observerOptions = { threshold: 0.1, rootMargin: "0px 0px 0px 0px" };
         const observer = new IntersectionObserver(function (entries) {
-            entries.forEach((entry) => {
+            for (const entry of entries) {
                 if (entry.isIntersecting) {
                     entry.target.style.opacity = "1";
                     entry.target.style.transform = "translateY(0)";
                     observer.unobserve(entry.target);
                 }
-            });
+            }
         }, observerOptions);
 
         // ⚡ Bolt Optimization: Use getElementsByTagName (O(1)) and manual filtering instead of global querySelectorAll (O(N))
@@ -43,7 +43,7 @@ export function initFadeAnimations() {
             }
         }
 
-        animationStates.forEach(({ section, shouldAnimate }) => {
+        for (const { section, shouldAnimate } of animationStates) {
             if (shouldAnimate) {
                 section.style.opacity = "0";
                 section.style.transform = "translateY(20px)";
@@ -53,7 +53,7 @@ export function initFadeAnimations() {
                 section.style.opacity = "1";
                 section.style.transform = "translateY(0)";
             }
-        });
+        }
     } else {
         // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) live collection) instead of querySelectorAll (O(N))
         const allSections = document.getElementsByTagName("section");

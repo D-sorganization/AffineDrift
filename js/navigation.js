@@ -131,7 +131,7 @@ export function generateTableOfContents() {
     const pageSections = document.querySelectorAll(
         ".page-section[id], section[id]"
     );
-    pageSections.forEach((section) => {
+    for (const section of pageSections) {
         const heading = section.querySelector(".section-heading, h2, h1");
         if (heading && section.id) {
             sections.push({
@@ -141,7 +141,7 @@ export function generateTableOfContents() {
             });
             usedIds.add(section.id);
         }
-    });
+    }
 
     // ⚡ Bolt Optimization: Use getElementsByClassName (O(1) live collection) instead of querySelectorAll (O(N))
     const categories = document.getElementsByClassName("article-category");
@@ -190,7 +190,7 @@ export function generateTableOfContents() {
 
     if (sections.length > 0) {
         const fragment = document.createDocumentFragment();
-        sections.forEach((section) => {
+        for (const section of sections) {
             const li = document.createElement("li");
             const a = document.createElement("a");
             a.href = `#${section.id}`;
@@ -198,7 +198,7 @@ export function generateTableOfContents() {
             a.className = `toc-level-${section.level}`;
             li.appendChild(a);
             fragment.appendChild(li);
-        });
+        }
         tocList.appendChild(fragment);
     } else {
         if (tocSection) tocSection.style.display = "none";
@@ -232,8 +232,8 @@ export function initAnchorLinks() {
     anchorIcon.innerHTML =
         '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>';
 
-    headings.forEach((heading) => {
-        if (heading.querySelector(".anchor-link")) return;
+    for (const heading of headings) {
+        if (heading.querySelector(".anchor-link")) continue;
 
         if (!heading.id) {
             heading.id = generateUniqueId(heading.textContent, usedIds);
@@ -247,7 +247,7 @@ export function initAnchorLinks() {
         anchor.appendChild(anchorIcon.cloneNode(true));
 
         heading.appendChild(anchor);
-    });
+    }
 }
 
 /**
@@ -260,12 +260,12 @@ export function initScrollSpy() {
     if (tocLinks.length === 0) return;
 
     const linkMap = new Map();
-    Array.from(tocLinks).forEach((link) => {
+    for (const link of Array.from(tocLinks)) {
         const href = link.getAttribute("href");
         if (href && href.startsWith("#")) {
             linkMap.set(href.substring(1), link);
         }
-    });
+    }
     let currentActiveLink = null;
 
     const sections = document.querySelectorAll(
@@ -273,9 +273,10 @@ export function initScrollSpy() {
     );
 
     const sectionIndexMap = new Map();
-    sections.forEach((section, index) => {
+    for (let index = 0; index < sections.length; index++) {
+        const section = sections[index];
         sectionIndexMap.set(section.id, index);
-    });
+    }
 
     const visibleIndices = new Set();
 
@@ -286,7 +287,7 @@ export function initScrollSpy() {
     };
 
     const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
+        for (const entry of entries) {
             const index = sectionIndexMap.get(entry.target.id);
             if (index !== undefined) {
                 if (entry.isIntersecting) {
@@ -295,7 +296,7 @@ export function initScrollSpy() {
                     visibleIndices.delete(index);
                 }
             }
-        });
+        }
 
         let activeId = null;
         if (visibleIndices.size > 0) {
@@ -319,11 +320,11 @@ export function initScrollSpy() {
         }
     }, observerOptions);
 
-    sections.forEach((section) => {
+    for (const section of sections) {
         if (linkMap.has(section.id)) {
             observer.observe(section);
         }
-    });
+    }
 }
 
 /**
