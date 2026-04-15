@@ -78,20 +78,20 @@ export function initResponsiveTables() {
     const tablesToWrap = [];
 
     // Phase 1: Read Layout
-    Array.from(tables).forEach((table) => {
+    for (const table of Array.from(tables)) {
         const parent = table.parentElement;
         if (
             parent.classList.contains("table-wrapper") ||
             parent.style.overflowX === "auto" ||
             window.getComputedStyle(parent).overflowX === "auto"
         ) {
-            return;
+            continue;
         }
         tablesToWrap.push(table);
-    });
+    }
 
     // Phase 2: Mutate DOM
-    tablesToWrap.forEach((table) => {
+    for (const table of tablesToWrap) {
         const wrapper = document.createElement("div");
         wrapper.className = "table-wrapper";
         wrapper.setAttribute("tabindex", "0");
@@ -113,7 +113,7 @@ export function initResponsiveTables() {
 
         table.parentNode.insertBefore(wrapper, table);
         wrapper.appendChild(table);
-    });
+    }
 }
 
 /**
@@ -124,9 +124,9 @@ export function initCodeCopy() {
     const codeBlocks = document.getElementsByTagName("pre");
 
     // Convert to Array to avoid issues with live collections when mutating DOM
-    Array.from(codeBlocks).forEach((pre) => {
-        if (pre.parentNode.classList.contains("code-wrapper")) return;
-        if (!pre.textContent.trim()) return;
+    for (const pre of Array.from(codeBlocks)) {
+        if (pre.parentNode.classList.contains("code-wrapper")) continue;
+        if (!pre.textContent.trim()) continue;
 
         pre.setAttribute("tabindex", "0");
         pre.setAttribute("role", "region");
@@ -145,7 +145,7 @@ export function initCodeCopy() {
         button.dataset.action = "copy-code";
 
         wrapper.appendChild(button);
-    });
+    }
 
     document.addEventListener("click", async (e) => {
         const button = e.target.closest('button[data-action="copy-code"]');

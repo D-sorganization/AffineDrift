@@ -51,3 +51,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Golf swing biomechanics modeling
 - Resource hub with curated materials
 - MathJax for mathematical notation
+- Refactored `Array.prototype.forEach` to `for...of` loops in `js/forms.js`, `js/history.js`, `js/navigation.js`, `js/startup-launcher.js`, `js/ui-components.js`, and `js/bibliography.js` to improve iteration performance.

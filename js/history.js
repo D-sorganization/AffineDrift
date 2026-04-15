@@ -78,7 +78,7 @@ export function updateHistorySidebar() {
         historyList.appendChild(li);
     } else {
         const fragment = document.createDocumentFragment();
-        displayHistory.forEach((item) => {
+        for (const item of displayHistory) {
             const li = document.createElement("li");
             const a = document.createElement("a");
             a.href = typeof item.url === "string" && !item.url.replace(/[\x00-\x20]/g, "").toLowerCase().startsWith("javascript:") ? item.url : "#";
@@ -89,7 +89,7 @@ export function updateHistorySidebar() {
             a.textContent = displayTitle;
             li.appendChild(a);
             fragment.appendChild(li);
-        });
+        }
         historyList.appendChild(fragment);
     }
 }
@@ -155,14 +155,14 @@ export function initArticleHistory() {
             articlesHistoryList.appendChild(li);
         } else {
             const fragment = document.createDocumentFragment();
-            history.forEach((item) => {
+            for (const item of history) {
                 const li = document.createElement("li");
                 const a = document.createElement("a");
                 a.href = typeof item.url === "string" && !item.url.replace(/[\x00-\x20]/g, "").toLowerCase().startsWith("javascript:") ? item.url : "#";
                 a.textContent = item.title;
                 li.appendChild(a);
                 fragment.appendChild(li);
-            });
+            }
             articlesHistoryList.appendChild(fragment);
         }
     }
