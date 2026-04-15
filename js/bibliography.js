@@ -245,7 +245,7 @@
         ]
           .join(" ")
           .toLowerCase();
-      });
+      }
 
       return data;
     } catch (error) {
