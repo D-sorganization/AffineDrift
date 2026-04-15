@@ -1,270 +1,275 @@
-﻿{
-    "repository":  "AffineDrift",
-    "assessment_date":  "2026-04-12",
-    "run_at_utc":  "2026-04-12T08:06:46.6052936Z",
-    "sync_status":  "blocked",
-    "sync_notes":  "stash failed: warning: unable to access \u0027C:\\Users\\diete/.config/git/ignore\u0027: Permission denied\nwarning: unable to access \u0027C:\\Users\\diete/.config/git/ignore\u0027: Permission denied\nwarning: could not open directory \u0027.pytest-tmp/\u0027: Permission denied\nwarning: unable to access \u0027C:\\Users\\diete/.config/git/ignore\u0027: Permission denied\nwarning: unable to access \u0027C:\\Users\\diete/.config/git/ignore\u0027: Permission denied\nwarning: could not open directory \u0027.pytest-tmp/\u0027: Permission denied\nwarning: unable to access \u0027C:\\Users\\diete/.config/git/ignore\u0027: Permission denied\nwarning: unable to access \u0027C:\\Users\\diete/.config/git/ignore\u0027: Permission denied\nSaved working directory and index state On chore/force-self-hosted-runners: automation-sync-2026-04-12\nwarning: unable to access \u0027C:\\Users\\diete/.config/git/ignore\u0027: Permission denied\nwarning: could not open directory \u0027.pytest-tmp/\u0027: Permission denied\nwarning: failed to remove .pytest-tmp/: Directory not empty",
-    "overall_grade":  "C",
-    "overall_score":  74,
-    "category_grades":  [
-                            {
-                                "id":  "A",
-                                "name":  "Architecture and Boundaries",
-                                "grade":  "B",
-                                "score":  82,
-                                "evidence":  [
-                                                 "1565 tracked first-party files",
-                                                 "207 files under source-like directories"
-                                             ],
-                                "notes":  "Evaluates whether first-party code is organized into clear source boundaries."
-                            },
-                            {
-                                "id":  "B",
-                                "name":  "Build and Dependency Management",
-                                "grade":  "B",
-                                "score":  84,
-                                "evidence":  [
-                                                 "Makefile",
-                                                 "package-lock.json",
-                                                 "package.json",
-                                                 "pyproject.toml",
-                                                 "requirements.txt",
-                                                 "src/tools/wrist_universal_joint/requirements.txt"
-                                             ],
-                                "notes":  "Evidence comes from tracked build, dependency, and tool configuration files."
-                            },
-                            {
-                                "id":  "C",
-                                "name":  "Configuration and Environment Hygiene",
-                                "grade":  "C",
-                                "score":  78,
-                                "evidence":  [
-                                                 "Makefile",
-                                                 "package-lock.json",
-                                                 "package.json",
-                                                 "pyproject.toml",
-                                                 "requirements.txt",
-                                                 "src/tools/wrist_universal_joint/requirements.txt"
-                                             ],
-                                "notes":  "Checks whether runtime/build configuration is explicit and committed."
-                            },
-                            {
-                                "id":  "D",
-                                "name":  "Contracts, Types, and Domain Modeling",
-                                "grade":  "B",
-                                "score":  82,
-                                "evidence":  [
-                                                 ".gaai/core/scripts/backlog-scheduler.sh",
-                                                 "articles/motion-control/compile_book.py",
-                                                 "fix_html.py",
-                                                 "js/rotation-converter.js",
-                                                 "scripts/analyze_completist_data.py",
-                                                 "scripts/assess_repo.py",
-                                                 "scripts/check_citation_resolution.py",
-                                                 "scripts/check_coverage_gates.py"
-                                             ],
-                                "notes":  "Covers Design by Contract signals: validation, asserts, typed models, and explicit invariants."
-                            },
-                            {
-                                "id":  "E",
-                                "name":  "Reliability and Error Handling",
-                                "grade":  "C",
-                                "score":  76,
-                                "evidence":  [
-                                                 ".agent/skills/tests/SKILL.md",
-                                                 ".claude/skills/tests/SKILL.md",
-                                                 "docs/assessments/Assessment_C_Test_Coverage.md",
-                                                 "test_notes.html",
-                                                 "tests/README.md",
-                                                 ".gaai/core/scripts/backlog-scheduler.sh",
-                                                 "articles/motion-control/compile_book.py",
-                                                 "fix_html.py"
-                                             ],
-                                "notes":  "Reliability grade is based on tests plus explicit validation/error handling evidence."
-                            },
-                            {
-                                "id":  "F",
-                                "name":  "Function, Module Size, and SRP",
-                                "grade":  "F",
-                                "score":  55,
-                                "evidence":  [
-                                                 ".gaai/core/scripts/delivery-daemon.sh (1042 lines)",
-                                                 "articles/motion-control/chapter4_artifact.jsx (570 lines)",
-                                                 "js/rotation-converter.js (511 lines)",
-                                                 "script.js (1525 lines)",
-                                                 "scripts/assess_repo.py (575 lines)",
-                                                 ".gaai/core/scripts/backlog-scheduler.sh (coarse avg 150 lines/definition)",
-                                                 ".gaai/core/scripts/delivery-metrics.sh (coarse avg 195 lines/definition)",
-                                                 "articles/motion-control/compile_book.py (coarse avg 82 lines/definition)"
-                                             ],
-                                "notes":  "Evaluates function size, module size, and single responsibility using coarse static size signals."
-                            },
-                            {
-                                "id":  "G",
-                                "name":  "Testing and TDD Posture",
-                                "grade":  "B",
-                                "score":  82,
-                                "evidence":  [
-                                                 ".agent/skills/tests/SKILL.md",
-                                                 ".claude/skills/tests/SKILL.md",
-                                                 "docs/assessments/Assessment_C_Test_Coverage.md",
-                                                 "test_notes.html",
-                                                 "tests/README.md",
-                                                 "tests/__init__.py",
-                                                 "tests/bibliography.test.js",
-                                                 "tests/conftest.py",
-                                                 "tests/e2e/README.md",
-                                                 "tests/e2e/accessibility.spec.js"
-                                             ],
-                                "notes":  "TDD cannot be confirmed from static files alone; grade reflects committed automated test posture."
-                            },
-                            {
-                                "id":  "H",
-                                "name":  "CI/CD and Automation",
-                                "grade":  "C",
-                                "score":  78,
-                                "evidence":  [
-                                                 ".github/workflows/Bot-CI-Trigger.yml",
-                                                 ".github/workflows/Code-Metrics.yml",
-                                                 ".github/workflows/Comment-to-Issue-Converter.yml",
-                                                 ".github/workflows/Jules-Archivist.yml",
-                                                 ".github/workflows/Jules-Assessment-AutoFix.yml",
-                                                 ".github/workflows/Jules-Assessment-Generator.yml",
-                                                 ".github/workflows/Jules-Assessment-Remediator.yml",
-                                                 ".github/workflows/Jules-Auto-Assign-Issues.yml"
-                                             ],
-                                "notes":  "Checks for tracked continuous integration or automation workflows."
-                            },
-                            {
-                                "id":  "I",
-                                "name":  "Security and Secret Hygiene",
-                                "grade":  "F",
-                                "score":  35,
-                                "evidence":  [
-                                                 "src/tools/wrist_universal_joint/grip_angle_polynomial_evaluator.js"
-                                             ],
-                                "notes":  "Secret scan is regex-based and should be followed by dedicated secret scanning for confirmation."
-                            },
-                            {
-                                "id":  "J",
-                                "name":  "Documentation and Onboarding",
-                                "grade":  "B",
-                                "score":  82,
-                                "evidence":  [
-                                                 ".Jules/palette.md",
-                                                 ".agent/skills/issues-10-sequential/SKILL.md",
-                                                 ".agent/skills/issues-5-combined/SKILL.md",
-                                                 ".agent/skills/lint/SKILL.md",
-                                                 ".agent/skills/tests/SKILL.md",
-                                                 ".agent/skills/update-issues/SKILL.md",
-                                                 ".agent/workflows/issues-10-sequential.md",
-                                                 ".agent/workflows/issues-5-combined.md",
-                                                 ".agent/workflows/lint.md",
-                                                 ".agent/workflows/tests.md"
-                                             ],
-                                "notes":  "Checks whether docs and onboarding files are present."
-                            },
-                            {
-                                "id":  "K",
-                                "name":  "Maintainability, DRY, and Duplication",
-                                "grade":  "B",
-                                "score":  80,
-                                "evidence":  [
-                                                 "scripts/analyze_completist_data.py",
-                                                 "scripts/check_tech_debt_budget.py",
-                                                 "scripts/generate_completist_data.py",
-                                                 "scripts/pragmatic_programmer_review.py",
-                                                 "scripts/setup_hooks.py",
-                                                 "service-worker.js"
-                                             ],
-                                "notes":  "DRY grade uses duplicate-name clusters and TODO/FIXME density as static heuristics."
-                            },
-                            {
-                                "id":  "L",
-                                "name":  "API Surface and Law of Demeter",
-                                "grade":  "C",
-                                "score":  70,
-                                "evidence":  [
-                                                 ".ci_trigger.py",
-                                                 ".gaai/core/hooks/post-commit.d/01-skills-index.sh",
-                                                 ".gaai/core/hooks/post-commit.d/02-skill-lint.sh",
-                                                 ".gaai/core/hooks/post-commit.d/03-memory-index-check.sh",
-                                                 ".gaai/core/hooks/pre-push.d/01-block-production.sh",
-                                                 ".gaai/core/scripts/artefact-sync.sh",
-                                                 ".gaai/core/scripts/backlog-scheduler.sh",
-                                                 ".gaai/core/scripts/check-and-update-skills-index.js"
-                                             ],
-                                "notes":  "Law of Demeter requires semantic review; this run records static coverage and flags no confirmed violation without direct evidence."
-                            },
-                            {
-                                "id":  "M",
-                                "name":  "Observability and Operability",
-                                "grade":  "C",
-                                "score":  74,
-                                "evidence":  [
-                                                 ".gaai/core/scripts/delivery-metrics.sh",
-                                                 ".gaai/core/skills/cross/success-metrics-evaluation/SKILL.md",
-                                                 ".github/workflows/Code-Metrics.yml",
-                                                 "css/search-metrics.css",
-                                                 "docs/assessments/Assessment_L_Logging.md",
-                                                 "docs/assessments/issues/Issue_2042_Incomplete_Placeholder_in_search_metrics_css_432.md",
-                                                 "docs/css/search-metrics.css",
-                                                 "docs/js/metrics.js"
-                                             ],
-                                "notes":  "Checks for logging, metrics, monitoring, or operations-oriented files."
-                            },
-                            {
-                                "id":  "N",
-                                "name":  "Governance, Licensing, and Release Hygiene",
-                                "grade":  "C",
-                                "score":  74,
-                                "evidence":  [
-                                                 ".gaai/core/skills/cross/security-audit/SKILL.md",
-                                                 ".github/CODEOWNERS",
-                                                 "CHANGELOG.md",
-                                                 "CONTRIBUTING.md",
-                                                 "LICENSE",
-                                                 "SECURITY.md",
-                                                 "docs/assessments/Assessment_F_Security.md",
-                                                 "security_issues/ISSUE-001.md"
-                                             ],
-                                "notes":  "Checks for release, ownership, contribution, and license metadata."
-                            }
-                        ],
-    "key_risks":  [
-                      "Large modules/scripts reduce maintainability and SRP clarity.",
-                      "Potential hard-coded secret patterns require manual security review."
-                  ],
-    "recommendations":  [
-                            "Split the largest modules by responsibility and add characterization tests before refactoring."
-                        ],
-    "issue_candidates":  [
-                             {
-                                 "title":  "Split oversized modules by responsibility",
-                                 "severity":  "medium",
-                                 "problem":  "Oversized files found: .gaai/core/scripts/delivery-daemon.sh (1042 lines); articles/motion-control/chapter4_artifact.jsx (570 lines); js/rotation-converter.js (511 lines); script.js (1525 lines); scripts/assess_repo.py (575 lines); tests/tools/test_wrist_universal_joint_visual.py (550 lines)",
-                                 "impact":  "Large modules obscure ownership, complicate review, and weaken SRP.",
-                                 "fix":  "Add characterization tests, then split cohesive responsibilities into smaller modules.",
-                                 "acceptance":  "Largest files are reduced or justified; extracted modules have focused tests.",
-                                 "refs":  "SRP, function size, module size, maintainability"
-                             },
-                             {
-                                 "title":  "Investigate potential hard-coded secret patterns",
-                                 "severity":  "high",
-                                 "problem":  "Potential secret-like assignments found in: src/tools/wrist_universal_joint/grip_angle_polynomial_evaluator.js",
-                                 "impact":  "Hard-coded secrets can expose credentials and create security incidents.",
-                                 "fix":  "Manually verify findings, rotate any exposed credentials, and move secrets to environment or secret management.",
-                                 "acceptance":  "Secret scan is clean or findings are documented false positives; exposed credentials are rotated.",
-                                 "refs":  "security, reliability"
-                             }
-                         ],
-    "coverage":  {
-                     "tracked_files":  1565,
-                     "code_files":  453,
-                     "test_files":  187,
-                     "ci_files":  56,
-                     "config_files":  6,
-                     "docs_files":  519,
-                     "exclusions":  "cache/build/vendor/virtualenv/generated output directories excluded"
-                 }
+{
+  "repository": "AffineDrift",
+  "latest_run_date": "2026-04-14",
+  "latest_overall_grade": "C",
+  "latest_overall_score": 76,
+  "runs": [
+    {
+      "repository": "AffineDrift",
+      "run_date": "2026-04-14",
+      "run_time_utc": "2026-04-15T00:06:12.265377+00:00",
+      "sync_status": "blocked",
+      "sync_notes": "fetch failed: fatal: unable to access 'https://github.com/D-sorganization/AffineDrift.git/': schannel: AcquireCredentialsHandle failed: SEC_E_NO_CREDENTIALS (0x8009030e) - No credentials are available in the security package",
+      "overall_grade": "C",
+      "overall_score": 76,
+      "category_grades": [
+        {
+          "name": "A. Architecture and Boundaries",
+          "grade": "B",
+          "score": 85,
+          "description": "Assesses source organization, package boundaries, and separation of first-party concerns.",
+          "evidence": [
+            "1577 tracked first-party files",
+            "110 code files under source-like directories",
+            "src/__init__.py",
+            "src/affine_control/__init__.py",
+            "src/affine_control/ddp.py",
+            "src/affine_control/residuals.py"
+          ]
+        },
+        {
+          "name": "B. Build and Dependency Management",
+          "grade": "B",
+          "score": 85,
+          "description": "Checks whether build and dependency declarations are explicit and reproducible.",
+          "evidence": [
+            "Makefile",
+            "package-lock.json",
+            "package.json",
+            "pyproject.toml",
+            "requirements.txt",
+            "src/tools/wrist_universal_joint/requirements.txt"
+          ]
+        },
+        {
+          "name": "C. Configuration and Environment Hygiene",
+          "grade": "B",
+          "score": 85,
+          "description": "Checks committed environment/tool configuration and local setup clarity.",
+          "evidence": [
+            ".claude/settings.local.json",
+            ".gaai/core/agents/specialists.registry.yaml",
+            ".gaai/core/skills/delivery/implement/evals.yaml",
+            ".gaai/core/skills/delivery/qa-review/evals.yaml",
+            ".gaai/core/skills/skills-index.yaml",
+            ".gaai/project/contexts/backlog/active.backlog.yaml",
+            ".github/codeql-config.yml",
+            ".github/dependabot.yml"
+          ]
+        },
+        {
+          "name": "D. Contracts, Types, and Domain Modeling",
+          "grade": "C",
+          "score": 76,
+          "description": "Evaluates Design by Contract signals: validation, types, assertions, and explicit invariants.",
+          "evidence": [
+            ".gaai/core/hooks/post-commit.d/03-memory-index-check.sh",
+            ".gaai/core/scripts/artefact-sync.sh",
+            ".gaai/core/scripts/backlog-scheduler.sh",
+            ".gaai/core/scripts/daemon-setup.sh",
+            ".gaai/core/scripts/health-check.sh",
+            ".gaai/core/scripts/memory-snapshot.sh",
+            ".gaai/core/scripts/skill-lint.sh",
+            ".github/workflows/templates/test-remediation-workflow.sh"
+          ]
+        },
+        {
+          "name": "E. Reliability and Error Handling",
+          "grade": "B",
+          "score": 80,
+          "description": "Reviews tests plus explicit validation, exception, and failure-path handling.",
+          "evidence": [
+            ".agent/skills/tests/SKILL.md",
+            ".agent/workflows/tests.md",
+            ".claude/skills/tests/SKILL.md",
+            ".gaai/core/agents/specialists.registry.yaml",
+            ".gaai/core/scripts/artefact-sync.sh",
+            ".gaai/core/scripts/backlog-scheduler.sh",
+            ".gaai/core/scripts/check-and-update-skills-index.js",
+            ".gaai/core/scripts/context-bootstrap.sh"
+          ]
+        },
+        {
+          "name": "F. Function, Module Size, and SRP",
+          "grade": "F",
+          "score": 45,
+          "description": "Evaluates coarse function/module size and single responsibility risk using static size signals.",
+          "evidence": [
+            "articles/Tangent Hyperplane Articles/Advanced/Contraction_Tangent_Unification.html (3361 lines)",
+            "docs/styles.css (2723 lines)",
+            "styles.css (2723 lines)",
+            "script.js (1753 lines)",
+            "src/tools/wrist_universal_joint/grip_angle_simulator.html (1262 lines)",
+            "content/inverse-dynamics-analysis/Drafts/inverse-dynamics-claude-current/inverse_dynamics_article.html (1213 lines)",
+            ".gaai/core/scripts/delivery-daemon.sh (1189 lines)",
+            "content/wrist-as-universal-joint/Wrist_Universal_Claude.html (1047 lines)"
+          ]
+        },
+        {
+          "name": "G. Testing Discipline and TDD",
+          "grade": "B",
+          "score": 85,
+          "description": "Evaluates automated test presence and TDD support; commit history was not used to prove TDD workflow.",
+          "evidence": [
+            "202 test-like files for 449 code files",
+            ".agent/skills/tests/SKILL.md",
+            ".agent/workflows/tests.md",
+            ".claude/skills/tests/SKILL.md",
+            ".gaai/core/agents/specialists.registry.yaml",
+            ".gaai/core/skills/cross/friction-retrospective/SKILL.md",
+            ".gaai/core/skills/delivery/browser-journey-test/SKILL.md"
+          ]
+        },
+        {
+          "name": "H. CI/CD and Release Safety",
+          "grade": "B",
+          "score": 80,
+          "description": "Checks workflow files and release automation gates.",
+          "evidence": [
+            ".github/workflows/Bot-CI-Trigger.yml",
+            ".github/workflows/Code-Metrics.yml",
+            ".github/workflows/Comment-to-Issue-Converter.yml",
+            ".github/workflows/Jules-Archivist.yml",
+            ".github/workflows/Jules-Assessment-AutoFix.yml",
+            ".github/workflows/Jules-Assessment-Generator.yml",
+            ".github/workflows/Jules-Assessment-Remediator.yml",
+            ".github/workflows/Jules-Auto-Assign-Issues.yml"
+          ]
+        },
+        {
+          "name": "I. Code Style and Static Analysis",
+          "grade": "D",
+          "score": 68,
+          "description": "Looks for formatters, linters, type-checker configuration, and style enforcement.",
+          "evidence": [
+            ".claude/settings.local.json",
+            ".gaai/core/agents/specialists.registry.yaml",
+            ".gaai/core/skills/delivery/implement/evals.yaml",
+            ".gaai/core/skills/delivery/qa-review/evals.yaml",
+            ".gaai/core/skills/skills-index.yaml",
+            ".gaai/project/contexts/backlog/active.backlog.yaml",
+            ".github/codeql-config.yml",
+            ".github/dependabot.yml"
+          ]
+        },
+        {
+          "name": "J. API Design and Encapsulation",
+          "grade": "C",
+          "score": 73,
+          "description": "Evaluates API surface and Law of Demeter risk from organization and oversized modules.",
+          "evidence": [
+            "src/__init__.py",
+            "src/affine_control/__init__.py",
+            "src/affine_control/ddp.py",
+            "src/affine_control/residuals.py",
+            "src/affine_control/swing_optimizer.py",
+            "src/affine_control/swing_types.py",
+            [
+              "articles/Tangent Hyperplane Articles/Advanced/Contraction_Tangent_Unification.html",
+              3361
+            ],
+            [
+              "docs/styles.css",
+              2723
+            ]
+          ]
+        },
+        {
+          "name": "K. Data Handling and Persistence",
+          "grade": "B",
+          "score": 80,
+          "description": "Checks schema, migration, serialization, and persistence evidence.",
+          "evidence": [
+            ".gaai/core/scripts/daemon-monitor-tail.sh",
+            ".gaai/core/scripts/daemon-setup.sh",
+            ".gaai/core/scripts/delivery-daemon.sh",
+            ".gaai/core/scripts/delivery-metrics.sh",
+            ".gaai/core/scripts/post-delivery-hook.sh",
+            ".gaai/project/contexts/backlog/.delivery-locks/GH1633_run.sh",
+            ".github/workflows/templates/test-remediation-workflow.sh",
+            "_includes/article-schema.html"
+          ]
+        },
+        {
+          "name": "L. Observability and Logging",
+          "grade": "B",
+          "score": 83,
+          "description": "Checks logging, diagnostics, and operational visibility signals.",
+          "evidence": [
+            ".gaai/core/scripts/backlog-scheduler.sh",
+            ".gaai/core/scripts/check-and-update-skills-index.js",
+            ".gaai/core/scripts/delivery-daemon.sh",
+            ".gaai/core/scripts/delivery-metrics.sh",
+            ".gaai/core/scripts/post-delivery-hook.sh",
+            ".gaai/project/contexts/backlog/.delivery-locks/GH1633_run.sh",
+            "_includes/site-after-body.html",
+            "articles/motion-control/compile_book.py"
+          ]
+        },
+        {
+          "name": "M. Maintainability, DRY, DbC, LoD",
+          "grade": "F",
+          "score": 48,
+          "description": "Explicitly evaluates DRY, Design by Contract, Law of Demeter, and maintainability signals.",
+          "evidence": [
+            "DRY/SRP risk: articles/Tangent Hyperplane Articles/Advanced/Contraction_Tangent_Unification.html (3361 lines)",
+            "DRY/SRP risk: docs/styles.css (2723 lines)",
+            "DRY/SRP risk: styles.css (2723 lines)",
+            "DRY/SRP risk: script.js (1753 lines)",
+            "DRY/SRP risk: src/tools/wrist_universal_joint/grip_angle_simulator.html (1262 lines)",
+            "DRY/SRP risk: content/inverse-dynamics-analysis/Drafts/inverse-dynamics-claude-current/inverse_dynamics_article.html (1213 lines)",
+            ".gaai/core/hooks/post-commit.d/03-memory-index-check.sh",
+            ".gaai/core/scripts/artefact-sync.sh",
+            ".gaai/core/scripts/backlog-scheduler.sh",
+            ".gaai/core/scripts/daemon-setup.sh"
+          ]
+        },
+        {
+          "name": "N. Scalability and Operational Readiness",
+          "grade": "B",
+          "score": 85,
+          "description": "Checks deploy/build readiness and scaling signals from CI, config, and project structure.",
+          "evidence": [
+            ".github/workflows/Bot-CI-Trigger.yml",
+            ".github/workflows/Code-Metrics.yml",
+            ".github/workflows/Comment-to-Issue-Converter.yml",
+            ".github/workflows/Jules-Archivist.yml",
+            "Makefile",
+            "package-lock.json",
+            "package.json",
+            "pyproject.toml"
+          ]
+        }
+      ],
+      "key_risks": [
+        "Split oversized modules to restore SRP and maintainability"
+      ],
+      "prioritized_recommendations": [
+        {
+          "title": "Split oversized modules to restore SRP and maintainability",
+          "severity": "medium",
+          "problem": "Oversized first-party files indicate single responsibility and DRY risks.",
+          "evidence": [
+            "articles/Tangent Hyperplane Articles/Advanced/Contraction_Tangent_Unification.html has 3361 lines.",
+            "docs/styles.css has 2723 lines.",
+            "styles.css has 2723 lines.",
+            "script.js has 1753 lines.",
+            "src/tools/wrist_universal_joint/grip_angle_simulator.html has 1262 lines."
+          ],
+          "impact": "Large modules increase review cost, hide duplicated logic, and weaken Law of Demeter boundaries.",
+          "fix": "Extract cohesive units behind small interfaces, then pin behavior with tests before refactoring.",
+          "acceptance": [
+            "Largest modules are split by responsibility.",
+            "Extracted modules have targeted tests.",
+            "Callers depend on narrow interfaces rather than deep object traversal."
+          ]
+        }
+      ],
+      "coverage_notes": [
+        "Reviewed tracked first-party files from git ls-files, excluding cache, build, vendor, virtualenv, and generated output directories.",
+        "Reviewed 1577 tracked files, including 449 code files, 202 test-like files, 56 CI files, 6 build/dependency files, and 539 documentation files.",
+        "This is a read-only static assessment. TDD history and full Law of Demeter semantics cannot be proven without commit-by-commit workflow review and deeper call-graph analysis."
+      ]
+    }
+  ]
 }
