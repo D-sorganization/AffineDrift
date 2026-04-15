@@ -69,25 +69,30 @@ The key difference from Volume~I's $\bm{\tau} = B\bm{u}$ is that joint torques a
 no longer direct control inputs. Instead:
 \begin{equation}
   \bm{\tau}_{\text{net}} = R(\bm{q}) \bm{F}_{\text{muscle}}
-  = \sum_{i=1}^{p} \bm{r}_i(\bm{q}) \cdot F_{\text{muscle},i},
+  = \sum_{i=1}^{p} \bm{r}_i(\bm{q}) F_{\text{muscle},i},
   \label{eq:ch5:net-torque}
 \end{equation}
 where $\bm{r}_i(\bm{q}) \in \Reals^n$ is the $i$-th column of $R$, giving the moment
-arm vector of muscle $i$ across all joints.
+arm vector of muscle $i$ across all joints. This moment-arm mapping is the
+standard bridge between muscle models and generalized coordinates in
+musculoskeletal simulation \cite{Zajac1989,Delp2007}.
 
 \subsection{Bi-articular Muscles}
 
 Unlike engineering actuators that span a single joint, many muscles cross two
 or more joints. These \textbf{bi-articular} (or multi-articular) muscles create
-mechanical coupling between joints that has no analog in standard robotics.
+mechanical coupling between joints that is not captured by the simple
+one-actuator-per-joint abstraction common in introductory robotics.
 
 \begin{principle}{The Coordination Function of Bi-articular Muscles}{biarticular}
   Bi-articular muscles serve two distinct functions:
   \begin{enumerate}
-    \item \textbf{Energy transfer}: they transport mechanical energy from one joint to
-          another without metabolic cost. When the proximal joint extends (muscle
-          shortening at proximal end) and the distal joint flexes (muscle lengthening
-          at distal end), energy is transferred proximally to distally.
+    \item \textbf{Energy transfer}: they can transport mechanical energy from one joint to
+          another without requiring a separate distal actuator. When the proximal joint
+          extends (muscle shortening at the proximal end) and the distal joint flexes
+          (muscle lengthening at the distal end), mechanical power can be redistributed
+          from proximal to distal coordinates. The metabolic cost still depends on
+          activation, contraction velocity, and force history.
     \item \textbf{Coordination constraint}: they link joint motions, reducing the
           effective degrees of freedom and simplifying the control problem.
   \end{enumerate}

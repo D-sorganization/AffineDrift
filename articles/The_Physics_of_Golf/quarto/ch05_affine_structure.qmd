@@ -303,19 +303,21 @@ Actually, no. The **moment of inertia** is lower (because the mass is closer to 
 
 ## The Drift-to-Control Ratio (DCR)
 
-Here's a new concept: the **Drift-to-Control Ratio (DCR)**.
+The **Drift-to-Control Ratio (DCR)** is a modeling diagnostic, not a coordinate-free physical constant.
 
 ::: {.callout-note}
 ## Drift-to-Control Ratio
 
-At any point in the state space, the DCR is the relative magnitude of drift versus control:
+At any point in the state space, DCR compares modeled drift against bounded modeled control under an explicit norm or weighting. In this chapter, use either the acceleration block alone or a stated state-space weighting matrix $\bm{W}$:
 
 $$
-\text{DCR} = \frac{|\bm{f}(\bm{x})|}{|\bm{G}(\bm{x}) \bm{u}|}_{\text{during max muscular effort}}
+\mathrm{DCR}_{\bm{W}}(\bm{x};u_{\max})
+=
+\frac{\lVert \bm{W}\bm{f}(\bm{x}) \rVert}
+{\max_{\lVert \bm{u}\rVert \le u_{\max}} \lVert \bm{W}\bm{G}(\bm{x})\bm{u} \rVert + \varepsilon}
 $$
 
-If DCR is high, drift dominates. Muscles contribute little.
-If DCR is low, muscles dominate. Drift contributes little.
+If DCR is high under the chosen weighting, modeled drift dominates. If DCR is low, modeled control has greater leverage. Numerical thresholds depend on the model, parameters, torque limits, and selected norm.
 
 :::
 
@@ -345,7 +347,7 @@ At impact, the clubhead is accelerating at 180 $g$. This is primarily from:
 - Centrifugal force (from the high rotation speed): $\approx 50$ N m equivalent.
 - Gravity: $\approx 10$ N m equivalent.
 
-In this illustrative estimate, your muscular contribution is maybe 20 N m. DCR is extremely high (passive forces dominating).
+In this illustrative estimate, your muscular contribution is maybe 20 N m. DCR is extremely high under this simplified comparison, but the conclusion should be checked against the stated model and torque bounds.
 
 ::: {.callout-tip}
 ## The Three Regimes
@@ -522,10 +524,10 @@ All of this is encoded in understanding and exploiting the drift.
 3. **Control $\bm{G}(\bm{x}) \bm{u}$** is what muscles add: steering, not accelerating (mostly).
 4. **The Drift-to-Control Ratio (DCR)** varies through the swing.
 
-8. **Elite golfers maximize DCR** by understanding and exploiting the drift.
+8. **Skilled golfers exploit high-DCR phases** by preparing initial conditions and transition timing that let drift assist rather than fight the intended trajectory.
 9. **The golf swing is an optimal control problem**. The nervous system implicitly solves it through learning and practice.
 10. **Technique is about riding the drift**. Strength helps, but technique (understanding $\bm{f}$ and choosing $\bm{u}$ wisely) matters more.
-11. **Physics is universal**. While individual golfers vary in geometry and strength, the fundamental structure (the equations $\bm{M}, \bm{C}, \bm{g}$) is the same.
+11. **The model structure is shared**. While individual golfers vary in geometry and strength, smooth multibody models commonly share the manipulator-equation structure $\bm{M}, \bm{C}, \bm{g}$; the numerical predictions remain individual and model-dependent.
 
 :::
 
