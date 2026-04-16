@@ -64,9 +64,31 @@ According to French mathematician Michel Chasles (1830), any complex movement of
 
 
 A **Screw Axis** $\screw$ contains the full geometric map of this line. Specifically it is defined by:
-1. An origin point $q$ in Space that the line passes through.
+1. An origin point $\bm{q}$ in Space that the line passes through.
 2. A direction unit vector $\hat{\bm{s}}$ defining the line.
 3. The *Pitch* $h$, which defines the ratio of translation speed to rotation speed (how "steep" the threads of the virtual screw are).
+
+::: {.callout-note}
+## Pitch, formally
+
+For a screw motion with angular part $\bm{\omega}$ and linear (origin) velocity $\bm{v}$, the pitch is the ratio of translation along $\hat{\bm{s}} = \bm{\omega}/\|\bm{\omega}\|$ to rotation about that axis:
+$$ h = \frac{\bm{v} \cdot \hat{\bm{s}}}{\|\bm{\omega}\|} \quad \text{(units: length/radian, with } \|\bm{\omega}\| > 0\text{).} $$
+
+Two limiting cases matter in practice:
+
+- **Pure rotation** ($\bm{\omega} \neq 0$, axis passes through the origin with no translation along $\hat{\bm{s}}$): $h = 0$.
+- **Pure translation** ($\bm{\omega} = 0$): $h = \infty$. The "axis" is degenerate (a direction only), and the canonical unit screw becomes $\screw = [\bm{0};\, \hat{\bm{v}}]$.
+
+Equivalently, any 6-vector $[\bm{\omega};\, \bm{v}]$ with $\bm{\omega} \neq 0$ decomposes as a screw axis at point $\bm{q} = (\bm{\omega} \times \bm{v})/\|\bm{\omega}\|^2$ with direction $\hat{\bm{s}} = \bm{\omega}/\|\bm{\omega}\|$ and pitch $h = (\bm{\omega} \cdot \bm{v})/\|\bm{\omega}\|^2$.
+:::
+
+::: {.callout-note}
+## Plücker Coordinates for a Line
+
+A line $\ell$ in $\Reals^3$ passing through point $\bm{q}$ with unit direction $\hat{\bm{s}}$ has **Plücker coordinates**
+$$ \bm{L} = \begin{bmatrix} \hat{\bm{s}} \\ \hat{\bm{s}} \times \bm{q} \end{bmatrix} \in \Reals^6. $$
+The second triple (the *moment* of the line about the origin) is invariant to the choice of $\bm{q}$ along $\ell$. Plücker coordinates give the minimal frame-independent representation of a line and underlie the Ad / Ad$^{-T}$ duality used to transport twists and wrenches between frames (see §The Spatial Wrench below).
+:::
 
 
 ### The Spatial Twist ($\twist$)
@@ -75,10 +97,16 @@ A **Screw Axis** $\screw$ contains the full geometric map of this line. Specific
 If the Screw Axis $\screw$ is the geometric "thread," the **Twist** $\twist \in \Reals^6$ is the velocity at which the body physically slides along and spins around that thread.
 
 \begin{equation}
-   \twist = \begin{bmatrix} \omega \\ v \end{bmatrix} = \screw \dot{\theta} 
+   \twist = \begin{bmatrix} \omega \\ v \end{bmatrix} = \screw \dot{\theta}
 \end{equation}
 
 Where $\dot{\theta}$ is the speed the body moves along the Screw. A Twist completely unifies angular $\omega$ and linear $v$ velocity into a single variable. This perfectly maps the derivative (speed) of the Configuration Space map $\configspace$ we created earlier.
+
+::: {.callout-important}
+## Spatial 6-Vector Ordering
+
+Throughout *The Geometry of Motion*, spatial 6-vectors are ordered **(angular ; linear)**: $\twist = [\bm{\omega};\, \bm{v}]$, $\wrench = [\bm{m};\, \bm{f}]$, $\screw = [\hat{\bm{s}};\, \hat{\bm{s}}\times\bm{q} + h\hat{\bm{s}}]$. This matches Lynch & Park [@Lynch2017ModernRobotics], MuJoCo, and Pinocchio. Featherstone [@Featherstone2008] uses the opposite ordering **(linear ; angular)**; when interoperating with Featherstone-style code, swap the two halves. We note this convention once here and enforce it in every subsequent chapter.
+:::
 
 
 ### The Spatial Wrench ($\wrench$)
@@ -93,6 +121,36 @@ Torques ($m \in \Reals^3$) and linear pushes ($f \in \Reals^3$) are merged into 
 \end{equation}
 
 When modeling the physics engines throughout *Tangent-Space Methods*, every mechanical coupling, robotic joint, actuator limit, and contact force is calculated exclusively using $6D$ Spatial Twists and Wrenches operating in $\se$.
+
+::: {.callout-note}
+## Twist–Wrench Duality and Power
+
+Twists live in the Lie algebra $\se$; wrenches live in its dual $\se^*$. The natural pairing between them,
+$$ P = \wrench^T \twist = \bm{m} \cdot \bm{\omega} + \bm{f} \cdot \bm{v}, $$
+is the instantaneous **mechanical power** delivered by $\wrench$ to a body whose spatial velocity is $\twist$. Because power is frame-independent, twists and wrenches transform by *different* maps under change of frame—missing this distinction is a common source of sign and magnitude errors in inverse dynamics.
+:::
+
+## Adjoint (Ad) and Lie-Bracket (ad) Operators
+
+Two matrix operators appear everywhere in the recursive algorithms of the coming chapters, and both are introduced here so that later chapters can cite them without fanfare.
+
+For a homogeneous transform $T = \begin{bmatrix} R & \bm{p} \\ \bm{0} & 1 \end{bmatrix} \in \SE$, the **Adjoint map** $\operatorname{Ad}_T : \se \to \se$ transports twists between frames:
+\begin{equation}
+  \operatorname{Ad}_T = \begin{bmatrix} R & \bm{0} \\ [\bm{p}]_\times R & R \end{bmatrix} \in \Reals^{6 \times 6}.
+\end{equation}
+
+For a twist $\twist = [\bm{\omega};\, \bm{v}] \in \se$, the **Lie-bracket matrix form** $\operatorname{ad}_\twist : \se \to \se$ is
+\begin{equation}
+  \operatorname{ad}_\twist = \begin{bmatrix} [\bm{\omega}]_\times & \bm{0} \\ [\bm{v}]_\times & [\bm{\omega}]_\times \end{bmatrix} \in \Reals^{6 \times 6}.
+\end{equation}
+
+Under change of frame, **twists transform with Ad**, whereas **wrenches transform with its inverse-transpose** (which is how power stays invariant):
+$$
+\twist_A = \operatorname{Ad}_{T_{AB}}\, \twist_B, \qquad
+\wrench_A = \operatorname{Ad}_{T_{AB}}^{-T}\, \wrench_B.
+$$
+
+These operators are used immediately in Chapter 7 (RNEA / ABA velocity and wrench recursion) and Chapter 9 (Product of Exponentials). The particular block structure above is the Lynch & Park §3.3 convention; Featherstone's $[\bm{v};\, \bm{\omega}]$ ordering produces block-swapped versions of the same operators.
 
 We now finally possess the mathematical primer necessary to leave the stationary world behind, map the configuration of physical bodies flawlessly via $SE(3)$, understand their rotational matrices, and track their trajectories as infinitesimally precise 6D vectors. The fundamental mathematics are established.
 

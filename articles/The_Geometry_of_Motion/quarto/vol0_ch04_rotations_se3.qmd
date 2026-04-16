@@ -39,9 +39,15 @@ Unlike the straightforward $(X, Y, Z)$ translation vector, rotation is profoundl
 ## Euler Angles and Gimbal Lock
 
 
-The most intuitive way to describe the orientation of an aircraft, drone, or robotic arm is to split rotation into three successive angles around axes, usually denoted as Roll, Pitch, and Yaw ($X, Y, Z$). 
+The most intuitive way to describe the orientation of an aircraft, drone, or robotic arm is to split rotation into three successive angles around axes, usually denoted as Roll, Pitch, and Yaw ($X, Y, Z$).
 
 This is known as an **Euler Angle** representation: $\bm{\theta} = [\theta_1, \theta_2, \theta_3]^T$. While highly intuitive for a human pilot, Euler Angles harbor a fatal mathematical flaw known as **Gimbal Lock**.
+
+::: {.callout-important}
+## Euler-Angle Convention Used in This Book
+
+Where Euler angles appear in later chapters (e.g., for aerospace-style visualization), we use **intrinsic Tait–Bryan $Z\!-\!Y\!-\!X$** (yaw–pitch–roll). Rotations are applied to the body frame in the order yaw (about body $z$), pitch (about new body $y$), roll (about new body $x$). Other stacks use different conventions (e.g., ROS tf2 uses extrinsic $X\!-\!Y\!-\!Z$), so always translate explicitly when interoperating.
+:::
 
 
 ::: {.callout-note}
@@ -101,6 +107,33 @@ By simply enforcing that the sum of the squares of these 4 variables equals 1 ($
 
 Throughout *The Geometry of Motion*, specifically when interacting with engines like `Pinocchio` or `MuJoCo` (as wrapped by the companion platform accompanying this textbook), all 3D rotational mechanics explicitly bypass Euler Angles and map directly into Quaternions and $\SO$ Rotation Matrices.
 
+::: {.callout-important}
+## Quaternion Conventions in This Book
+
+Quaternion conventions differ between software stacks, and using the wrong one silently produces inverted rotations, broken kinematic chains, and wrong dynamics. The textbook locks a single convention and provides interop tables for downstream tools.
+
+**Layout (scalar-first Hamilton):** we write $q = [q_0,\, q_1,\, q_2,\, q_3]^T = [w,\, \bm{v}]^T$ with the scalar part $w = \cos(\theta/2)$ first, matching Lynch & Park [@Lynch2017ModernRobotics] and MuJoCo.
+
+**Multiplication (Hamilton product):**
+$$ q_1 \otimes q_2 = \begin{bmatrix} w_1 w_2 - \bm{v}_1 \cdot \bm{v}_2 \\[2pt] w_1 \bm{v}_2 + w_2 \bm{v}_1 + \bm{v}_1 \times \bm{v}_2 \end{bmatrix}. $$
+
+**Active rotation, composition, and vector action.** A quaternion rotates vectors (active convention). For two successive rotations $R_1$ then $R_2$, the composed rotation is $R = R_2 R_1$, which in quaternion form is $q = q_2 \otimes q_1$ (left-to-right temporal order). A vector transforms as $\bm{v}' = q \otimes [0,\, \bm{v}] \otimes q^*$ where $q^* = [w,\, -\bm{v}]$ is the conjugate.
+
+**Double cover:** $q$ and $-q$ represent the same rotation in $\SO$. When composing long chains or running SLERP, if $q_1 \cdot q_2 < 0$ negate $q_2$ first so interpolation stays on the short geodesic arc.
+
+**Interop with common stacks (as of 2026):**
+
+| Stack | Layout | Reorder from our $[w, x, y, z]$ |
+|---|---|---|
+| MuJoCo 3.x | scalar-first $[w, x, y, z]$ | none (`q_mj = q`) |
+| Pinocchio 3.x / Eigen | scalar-last $[x, y, z, w]$ | `q_pin = [q[1], q[2], q[3], q[0]]` |
+| ROS `tf2` / `geometry_msgs` | scalar-last $[x, y, z, w]$ | same as Pinocchio |
+| SciPy `Rotation.from_quat` | scalar-last $[x, y, z, w]$ | same as Pinocchio |
+| Unity / Unreal (games) | scalar-last, left-handed $[x, y, z, w]$ | reorder + handedness swap |
+
+When in doubt: unit-test a known $90°$ rotation about $\hat{z}$ and check that a test vector lands where you expect.
+:::
+
 
 ## Numerical Stability: A Practical Consideration
 
@@ -109,11 +142,11 @@ The choice between different rotation parameterizations has profound implication
 
 ### Rotation Matrices: Stability Through Constraints
 
-**Rotation Matrices** ($R \in \SO$) are numerically robust once computed correctly—multiplication is simple matrix multiplication, and the 9 entries intrinsically encode orthonormality constraints. However, maintaining this orthonormality over thousands of sequential matrix multiplications (as in iterative dynamics algorithms) requires periodic re-orthogonalization (e.g., QR factorization), adding computational cost. The advantage of matrices is that once you enforce $R^T R = I$ (which is cheap to check), you directly access the body-frame axes $\hat{x}_b, \hat{y}_b, \hat{z}_b$ needed for many geometric calculations. In robotics engines like MuJoCo and Pinocchio, rotation matrices are preferred for their transparency, even at the cost of occasional re-orthogonalization during long kinematic chains.
+**Rotation Matrices** ($R \in \SO$) are numerically robust once computed correctly—multiplication is simple matrix multiplication, and the 9 entries intrinsically encode orthonormality constraints. However, maintaining this orthonormality over thousands of sequential matrix multiplications (as in iterative dynamics algorithms) requires periodic re-orthogonalization, adding computational cost. Two standard techniques exist: QR factorization (simple but biased toward the first columns) and polar decomposition / SVD (the orthogonal factor $U$ from $R = U P$ is the nearest orthogonal matrix in Frobenius norm, and is symmetric in its treatment of all columns). Polar decomposition is typically preferred for re-orthogonalizing drift-corrupted matrices; QR is cheaper and acceptable when each step introduces only tiny numerical error. The advantage of matrices is that once you enforce $R^T R = I$ (which is cheap to check), you directly access the body-frame axes $\hat{x}_b, \hat{y}_b, \hat{z}_b$ needed for many geometric calculations.
 
 ### Unit Quaternions: Efficiency Meets Stability
 
-**Unit Quaternions** are typically the most numerically stable choice for continuous rotations and interpolation. They require only 4 parameters, compute quaternion multiplication very efficiently, and maintain the unit-norm constraint easily (via simple normalization). Critically, quaternion interpolation (SLERP) is geometrically smooth and well-behaved, making quaternions ideal for smoothly varying trajectories. However, the double-cover property (where $q$ and $-q$ represent the same rotation) must be handled carefully in algorithms to avoid jumping discontinuities. For real-time simulation at high frequency (e.g., 1000 Hz golf swing dynamics), quaternions are the preferred internal representation, with rotation matrices computed on-demand when the body axes are needed.
+**Unit Quaternions** are typically the most numerically stable choice for continuous rotations and interpolation. Quantitatively, over a chain of $N$ compositions rotation-matrix orthogonality drift grows as $O(N \varepsilon)$ and requires periodic re-orthogonalization, while quaternion norm drift grows as $O(\varepsilon)$ per composition and is corrected by a single division (Featherstone [@Featherstone2008], §2.11; Shoemake 1985). They require only 4 parameters, compute quaternion multiplication very efficiently, and maintain the unit-norm constraint easily (via simple normalization). Critically, quaternion interpolation (SLERP) is geometrically smooth and well-behaved, making quaternions ideal for smoothly varying trajectories. However, the double-cover property (where $q$ and $-q$ represent the same rotation) must be handled carefully in algorithms to avoid jumping discontinuities—apply the short-arc rule from the conventions box before any chain composition or SLERP step. For real-time simulation at high frequency (e.g., 1000 Hz golf swing dynamics), quaternions are the preferred internal representation, with rotation matrices computed on-demand when the body axes are needed.
 
 ### Euler Angles: Where Singularities Propagate
 

@@ -28,9 +28,21 @@ When analytical equations fail due to extreme nonlinear complexity or uncertaint
 ::: {.callout-note}
 
   In the context of dynamics and control, neural networks function as universal function approximators---they learn mappings from data rather than from analytically derived equations.
-  
+
   If we do not know the exact mathematical function mapping "Current Posture" to "Correct Motor Torque," we create a blank, highly flexible mathematical structure (a Neural Network) and slowly bend it, tweak it, and shift it until it accurately approximates the unseen, perfect function.
 
+:::
+
+::: {.callout-caution}
+## Caveats on "Universal Approximation"
+
+Cybenko's theorem (1989) and its successors say that a sufficiently wide feedforward network with a nonpolynomial activation can uniformly approximate any continuous function on a compact set. Three caveats that are easy to lose in the marketing:
+
+- **Representability is not learnability.** The theorem guarantees that *some* weight configuration exists; it says nothing about whether gradient descent will find it. Most loss landscapes are non-convex.
+- **Width or depth can be astronomical.** Worst-case approximation of a Lipschitz function to error $\varepsilon$ can require exponentially many units in the input dimension.
+- **Generalization is a separate question.** Fitting the training set perfectly does not imply good behavior on unseen states. Sample complexity, regularization, and inductive bias matter as much as expressive power.
+
+When a textbook says "neural networks can approximate anything," read it as "any particular continuous function is in the hypothesis class"—not "stochastic gradient descent will reliably find the one you want."
 :::
 
 
@@ -61,7 +73,7 @@ Where $\sigma$ is an activation function (like ReLU or Tanh) which introduces no
 How does the network "learn" the correct weights ($W_1, W_2, \dots$) to control the robot?
 We define a **Loss Function** $\mathcal{L}$, which mathematically penalizes the network for making mistakes. If the network commands the robot to punch a wall, the loss $\mathcal{L}$ spikes massively.
 
-Using basic calculus (the Chain Rule), we can evaluate the derivative of the Loss function with respect to every single weight matrix $W$ in the network. This is called the **Gradient** ($\nabla_W \mathcal{L}$). The Gradient simply points uphill towards higher error.
+Using basic calculus (the Chain Rule), we can evaluate the derivative of the Loss function with respect to every single weight matrix $W$ in the network. This is called the **Gradient** ($\nabla_W \mathcal{L}$). The gradient points in the direction of *steepest ascent* of the loss—the direction in which $\mathcal{L}$ increases fastest. Gradient *descent* therefore steps in the **negative gradient direction** to reduce the loss.
 
 We update the weights by stepping gently downhill (the opposite direction of the gradient) scaled by a Learning Rate $\alpha$:
 \begin{equation}
@@ -75,9 +87,58 @@ This incredibly robust, iterative calculus calculation is called **Backpropagati
 
 In Supervised Learning, a human must constantly provide the "correct" answer to calculate the gradient. But in robotic control, we often do not know the correct joint torques for a 15-DOF golf swing.
 
-**Reinforcement Learning (RL)** solves this by allowing the agent to explore physics entirely on its own. The network commands a torque $\control$ at state $\state$, observes the new state $\state'$, and receives a scalar **Reward** $R$ (e.g., +100 for hitting the ball, -10 for falling over). 
+**Reinforcement Learning (RL)** solves this by allowing the agent to explore physics entirely on its own. The network commands a torque $\control$ at state $\state$, observes the new state $\state'$, and receives a scalar **Reward** $R$ (e.g., +100 for hitting the ball, -10 for falling over).
 
-RL algorithms seek to learn the **Value Function** $V(\state)$, which predicts the total sum of all future rewards the robot will receive if it starts in state $\state$. By maximizing the Value Function, the neural network organically discovers complex behaviors—often outperforming classical control theory because it fully exploits passive geometric dynamics instead of fighting them.
+### The MDP Formalism
+
+Before stating what RL optimizes, we need the standard object it optimizes over. A decision process is modelled as a **Markov Decision Process** $(\mathcal{S}, \mathcal{A}, P, R, \gamma)$ where $\mathcal{S}$ is the state space, $\mathcal{A}$ the action space, $P(\state' \mid \state, \control)$ the transition kernel, $R(\state, \control)$ the reward, and $\gamma \in (0, 1)$ the **discount factor**. The discount is essential: without it, infinite-horizon sums of rewards diverge for any policy that earns nonzero reward forever.
+
+Given a policy $\pi(\control \mid \state)$, the **state value** and **action value** are
+$$
+V^\pi(\state) = \mathbb{E}_\pi\!\left[\sum_{t=0}^{\infty} \gamma^t R_t \;\middle|\; \state_0 = \state\right], \qquad
+Q^\pi(\state, \control) = \mathbb{E}_\pi\!\left[\sum_{t=0}^{\infty} \gamma^t R_t \;\middle|\; \state_0 = \state,\, \control_0 = \control\right].
+$$
+The **optimal value** is $V^*(\state) = \max_\pi V^\pi(\state)$, and it satisfies the **Bellman equation**
+$$
+V^\pi(\state) = \mathbb{E}_\pi\!\bigl[\, R(\state, \pi(\state)) + \gamma V^\pi(\state') \,\bigr].
+$$
+RL algorithms either learn $V^\pi$ / $Q^\pi$ and act greedily with respect to them, or directly optimize the policy parameters to push $\mathbb{E}[\sum_t \gamma^t R_t]$ upward.
+
+### Families of RL Algorithms
+
+Practical RL splits into three broad camps, and they differ in what function the network represents:
+
+- **Value-based** (Q-learning, DQN): learn $Q(\state, \control; \theta)$, act greedily as $\pi(\state) = \arg\max_\control Q(\state, \control; \theta)$. Sample-efficient in discrete-action domains; brittle in continuous-control settings without discretization.
+- **Policy-gradient** (REINFORCE, TRPO, PPO): parameterize $\pi_\theta(\control \mid \state)$ directly and step $\theta$ along $\nabla_\theta J(\pi_\theta) = \mathbb{E}[\nabla_\theta \log \pi_\theta(\control \mid \state)\, \hat{A}(\state, \control)]$. Naturally handles continuous controls; higher variance without a baseline.
+- **Actor–critic** (SAC, A3C, TD3): learn both $\pi_\theta$ (actor) and $V_\phi$ or $Q_\phi$ (critic) so that the critic provides a low-variance estimate of $\hat{A}$ for the actor's update. Most modern high-DOF locomotion and manipulation policies are actor–critic.
+
+By maximizing the Value Function (or by directly maximizing expected discounted reward), the neural network organically discovers complex behaviors—often outperforming classical control theory because it fully exploits passive geometric dynamics instead of fighting them.
+
+### Concrete Loss Functions
+
+Three loss templates cover most of modern control learning:
+
+$$
+\begin{aligned}
+\text{Supervised imitation:}\quad & \mathcal{L}(\theta) = \big\|\,\pi_\theta(\state) - \control_{\text{expert}}\,\big\|^2 \\[4pt]
+\text{$Q$-learning (TD target):}\quad & \mathcal{L}(\theta) = \Bigl(\, r + \gamma \max_{\control'} Q(\state', \control'; \theta^-) \;-\; Q(\state, \control; \theta)\,\Bigr)^2 \\[4pt]
+\text{Policy-gradient:}\quad & \mathcal{L}(\theta) = -\,\mathbb{E}\!\left[\log \pi_\theta(\control \mid \state)\,\hat{A}(\state, \control)\right]
+\end{aligned}
+$$
+
+The $Q$-learning loss uses a separate target network with parameters $\theta^-$ (a slow-moving copy of $\theta$) for training stability.
+
+### Practical Training Concerns
+
+Correct mathematical form is a small part of what makes RL work in practice. The gap between "theoretically correct" and "actually runs" is populated by:
+
+- **Exploration–exploitation**: ε-greedy, entropy regularization, or intrinsic curiosity bonuses are all standard; without them an early greedy collapse kills learning.
+- **Sample efficiency**: model-free RL is famously data-hungry (often $10^6$–$10^9$ environment steps). Sim-to-real transfer, domain randomization, and offline RL are common workarounds.
+- **Target networks and experience replay**: both address the non-stationarity of bootstrapped targets in value-based methods.
+- **Reward shaping and scale**: poorly scaled rewards produce vanishing or exploding gradients at the critic; clipping advantages and normalizing returns help.
+- **Sim-to-real gap**: policies learned in a clean simulator rarely survive first contact with real sensors and actuators without additional robustification.
+
+Sutton & Barto, *Reinforcement Learning: An Introduction* (2nd ed., 2018) is the canonical reference for everything in this section.
 
 
 ## Worked Example: Forward Pass in Python

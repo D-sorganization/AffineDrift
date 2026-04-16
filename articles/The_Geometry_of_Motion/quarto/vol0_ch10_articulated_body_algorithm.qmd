@@ -82,35 +82,130 @@ Here is python pseudocode demonstrating how the recursive articulated inertia lo
 import numpy as np
 
 def compute_articulated_inertias(spatial_inertias, screw_axes, n_links):
-    # Initialize Articulated Inertia matching Rigid Inertia 
-    # (assuming no child links yet)
-    I_A = list(spatial_inertias) 
-    
-    # Loop from leaf (tip) to root (base)
+    """
+    Inward sweep of the ABA inertia recursion, in isolation.  The full
+    forward-dynamics routine `aba(...)` below wraps this logic together
+    with the bias-force and acceleration passes.
+    """
+    # Initialize each link's articulated inertia from its own rigid
+    # spatial inertia.  The base link (index 0) is included because the
+    # loop below only *adds* child contributions --- it does not overwrite
+    # the base's own inertia.
+    I_A = [np.array(I, copy=True) for I in spatial_inertias]
+
+    # Loop from leaf (tip) inward to the base (index 0).  Using range(n-1, 0, -1)
+    # is correct only because the base's own I_A was already seeded above; the
+    # loop contributes each child's articulated inertia to its parent.
     for i in range(n_links - 1, 0, -1):
-        
-        # Parent Index
-        p = i - 1 
-        
-        # S is the 6D spatial screw expressing the current joint geometry
+
+        # Parent index.
+        p = i - 1
+
+        # S is the 6D spatial screw expressing joint i's geometry.
         S = screw_axes[i]
-        
-        # Propagate child's accumulated articulated inertia across its hinge S
+
+        # Propagate child's articulated inertia across its hinge S.
         U = I_A[i] @ S
-        D = np.transpose(S) @ U  # Scalar effective inertia of the joint
-        
-        # Accumulate the remaining structural inertia back onto the parent link
-        # Outer product U @ U^T divides by scalar D
+        D = np.transpose(S) @ U  # scalar effective inertia of the joint
+
+        # Outer product U U^T / D is the Schur-complement rank-1 update
+        # that removes the joint's free direction from I_A[i] before it
+        # is dropped onto the parent.
         inertia_shift = (U @ np.transpose(U)) / D
-        
-        # Add to parent's Articulated Inertia block
+
+        # Accumulate the child's structural inertia onto the parent link.
         I_A[p] = I_A[p] + I_A[i] - inertia_shift
-        
+
     return I_A
 
 # I_A[0] now contains the complete effective Spatial Inertia dragging on the base.
 
 ```
+
+### Full Three-Pass ABA
+
+The inertia recursion above computes articulated inertias assuming zero spatial velocity.  For a moving system the Coriolis and centrifugal **bias forces** must be carried through the inward sweep, and a final outward sweep is needed to recover the joint accelerations.  The complete algorithm is:
+
+```python
+def aba(q, q_dot, tau, spatial_inertias, screw_axes,
+        joint_transforms, gravity_vector=np.array([0.0, 0.0, -9.81])):
+    """
+    Full Articulated Body Algorithm for an open kinematic chain.
+    Returns joint accelerations q_ddot such that
+        M(q) q_ddot + C(q, q_dot) q_dot + G(q) == tau
+    without ever forming M(q).
+    Reference: Featherstone 2008, Rigid Body Dynamics Algorithms, Sec. 7.3.
+
+    Spatial 6-vectors use (angular ; linear) ordering throughout.
+    `ad_matrix` and `adjoint_matrix` are as defined in Chapter 7.
+    """
+    n = len(screw_axes)
+
+    # ---- Pass 1: outward --- spatial velocities and bias forces ----
+    # Gravity is injected as a fictitious base acceleration (Featherstone Sec. 6.2).
+    V = [np.zeros(6)]
+    Vdot_base = np.concatenate([np.zeros(3), -gravity_vector])
+    Vdot_seed = [Vdot_base]
+    p_bias = [None] * n     # velocity-product wrench per link
+
+    for i in range(n):
+        Ad_i = adjoint_matrix(joint_transforms[i])   # parent -> link i
+        V_i = Ad_i @ V[-1] + screw_axes[i] * q_dot[i]
+        V.append(V_i)
+        p_bias[i] = ad_matrix(V_i).T @ (spatial_inertias[i] @ V_i)
+
+    # ---- Pass 2: inward --- articulated inertias and bias forces ----
+    I_A = [np.array(I, copy=True) for I in spatial_inertias]
+    p_A = [np.array(p, copy=True) for p in p_bias]
+    U = [None] * n
+    D = np.zeros(n)
+    u = np.zeros(n)
+
+    for i in range(n - 1, 0, -1):
+        S = screw_axes[i]
+        U[i] = I_A[i] @ S
+        D[i] = float(S.T @ U[i])
+        u[i] = tau[i] - float(S.T @ p_A[i])
+
+        # Schur-complement updates projected into the parent frame.
+        Ad_ip = adjoint_matrix(joint_transforms[i])    # parent -> i
+        I_a_contrib = I_A[i] - np.outer(U[i], U[i]) / D[i]
+        p_a_contrib = p_A[i] + I_a_contrib @ (ad_matrix(V[i + 1]) @ (S * q_dot[i])) \
+                      + U[i] * (u[i] / D[i])
+        I_A[i - 1] += Ad_ip.T @ I_a_contrib @ Ad_ip
+        p_A[i - 1] += Ad_ip.T @ p_a_contrib
+
+    # ---- Pass 3: outward --- solve for joint accelerations ----
+    q_ddot = np.zeros(n)
+    Vdot = [Vdot_seed[0]]
+    for i in range(n):
+        Ad_i = adjoint_matrix(joint_transforms[i])
+        Vdot_parent_in_i = Ad_i @ Vdot[-1]
+        if i == 0:
+            q_ddot[i] = 0.0
+            Vdot.append(Vdot_parent_in_i)
+            continue
+        S = screw_axes[i]
+        q_ddot[i] = (u[i] - float(U[i].T @ Vdot_parent_in_i)) / D[i]
+        Vdot.append(Vdot_parent_in_i + S * q_ddot[i]
+                    + ad_matrix(V[i + 1]) @ (S * q_dot[i]))
+
+    return q_ddot
+```
+
+Two practical notes.  First, the inertia-only recursion at the top of this section is a special case of Pass 2 with $\dot{\bm{q}} = \bm{0}$ and $\bm{\tau} = \bm{0}$; it is genuinely useful when you only need the effective spatial inertia felt at the base.  Second, the gravity seeding must match Chapter 7's RNEA seeding exactly—otherwise `aba(q, q_dot=0, tau=G(q))` will not return $\ddot{\bm{q}} = \bm{0}$ on a system at rest, which is the cheapest correctness check available.
+
+::: {.callout-tip}
+## RNEA vs ABA vs CRBA at a Glance
+
+The three canonical recursive algorithms answer different questions and have different costs:
+
+- **RNEA** (Chapter 7): inverse dynamics, $\bm{\tau} = f(\bm{q}, \dot{\bm{q}}, \ddot{\bm{q}})$ in $O(N)$.
+- **ABA** (this chapter): forward dynamics, $\ddot{\bm{q}} = f(\bm{q}, \dot{\bm{q}}, \bm{\tau})$ in $O(N)$, **without ever constructing $M(\bm{q})$**.
+- **CRBA** (Composite Rigid-Body Algorithm): builds $M(\bm{q})$ explicitly by calling RNEA $N$ times, one per generalized coordinate, at cost $O(N^2)$.
+
+If you only need $\ddot{\bm{q}}$, use ABA; forming $M(\bm{q})$ first and inverting it wastes both arithmetic and numerical headroom. CRBA is preferred when you actually need $M$ itself (e.g. for operational-space inertia, inertia-weighted projections, or Riemannian metrics).
+:::
 
 
 This algorithm completely solves the physics of massive skeletal systems interacting with the universe without ever touching an algebraic trigonometric matrix or attempting an $N \times N$ inversion. It fundamentally drives all real-time simulation logic throughout *Tangent-Space Methods*.
