@@ -70,7 +70,13 @@ Link 1 rotates about the shoulder. Its kinetic energy is:
 
 T_1 = \frac{1}{2} I_1 \dot{\theta}_1^2
 
-where $I_1 = M_1 L_{1,\text{cm}}^2$ is the moment of inertia of link 1 about the shoulder hinge. (For simplicity, we treat each link as a point mass at its center of mass.)
+where $I_1 = M_1 L_{1,\text{cm}}^2$ is the moment of inertia of link 1 about the shoulder hinge.
+
+::: {.callout-warning}
+## Modeling Assumption: Point-Mass vs Distributed-Mass Links
+
+Throughout this chapter we model each link's mass as *concentrated at its center of mass*, so the moment of inertia about the proximal hinge is simply $I = M L_{\text{cm}}^2$. A real human upper arm is closer to a uniform rod of length $L$ and mass $M$, which has moment of inertia $I_{\text{rod}} = \tfrac{1}{3} M L^2$ about its proximal end---about 33\% larger than $M L_{\text{cm}}^2$ when $L_{\text{cm}} = L/2$. For typical adult-male arm anthropometrics the distributed-mass model raises the effective upper-arm inertia by on the order of 20--30\% over the point-mass approximation used here. The qualitative dynamics are unchanged; quantitative fits to motion-capture data require a distributed-mass (or radius-of-gyration-based) parametrization, to which we return in ch22 and ch23.
+:::
 
 ### Kinetic Energy of Link 2
 
@@ -183,6 +189,8 @@ The Lagrangian is defined as:
 
 It's the kinetic energy minus the potential energy.
 
+**Sign convention.** We take the Lagrangian as $\mathcal{L} = T - V$ (not $T + V$), where $V$ is the *total* potential energy summed with a positive sign---gravitational potential enters as $V_\text{grav} = +Mgh$ with $h$ measured upward from a chosen reference. Elastic strain energy (shaft bending, tendon stretch) is also additive in $V$; we ignore it in this chapter and pick it up in ch11 and ch12. This is the physicist's convention used throughout Vol I; all subsequent equations are written consistently with it.
+
 :::
 
 The Euler-Lagrange equations state that the equations of motion are:
@@ -251,6 +259,8 @@ Equations \ref{eq:ch03_eq1_raw} and \ref{eq:ch03_eq2_raw} are the equations of m
 - **Gravity terms on the right**: e.g., $(M_1 L_{1,\text{cm}} + M_2 L_1) g \sin \theta_1$. These are the **gravitational torques**. When $\theta_1 = 0°$ (arm down), $\sin \theta_1 = 0$, so gravity exerts no torque—the arm is in equilibrium. When $\theta_1 = 90°$ (arm horizontal), $\sin \theta_1 = 1$, so gravity exerts maximum torque, trying to pull the arm back down.
 - **The $\dot{\theta**_2 \sin \theta_2$ terms}: these are **Coriolis forces**, arising from the coupling between the two joints. When the elbow bends ($\dot{\theta}_2 \neq 0$) while the shoulder is rotating ($\dot{\theta}_1 \neq 0$), there's a cross term that affects the dynamics.
 - **The $\dot{\theta**_1^2 \sin \theta_2$ term}: this is a **centrifugal force**. When the shoulder rotates fast ($\dot{\theta}_1$ large), it creates an outward force on the elbow, trying to straighten the arm.
+
+**Vocabulary (and a common abuse).** In many popular accounts "Coriolis" and "centrifugal" are used interchangeably. In this book we use them precisely: *centrifugal* terms are quadratic in a **single** generalized velocity (e.g., $\dot{\theta}_1^2 \sin \theta_2$); *Coriolis* terms are **cross-products** of two different generalized velocities (e.g., $\dot{\theta}_1 \dot{\theta}_2 \sin \theta_2$). Both are collected together into the matrix $\bm{C}(\bm{q},\dot{\bm{q}})\dot{\bm{q}}$ in the manipulator-equation form below, but the physical origins differ: centrifugal forces arise from pure rotation about one axis, Coriolis forces arise from rotation about one axis while the radius coordinate is itself changing.
 
 These equations are complicated because the double pendulum is a coupled system. The motion of one joint affects the other.
 
@@ -355,6 +365,29 @@ In this illustrative model, gravity and centrifugal forces together contribute a
 
 But notice: if we had generated all of this torque during the downswing, the club would barely accelerate. Instead, we generate a moderate muscular torque and let gravity and momentum contribute. That's efficiency.
 
+:::
+
+::: {.callout-note}
+## Sanity Check: Energy Conservation Under $\bm{\tau} = 0$
+
+A useful debugging check for any hand-derived Lagrangian model is that with all applied torques set to zero, the total mechanical energy $E(t) = T(t) + V(t)$ must be conserved along the simulated trajectory. Any numerical drift in $E$ reveals a bug in the equations of motion, in the integrator tolerance, or in the symbolic simplifications. A minimal driver looks like:
+
+```python
+import numpy as np
+from scipy.integrate import solve_ivp
+
+def rhs(t, y):
+    # y = [theta1, theta2, dtheta1, dtheta2]; build M(q), C(q,qdot)*qdot, g(q)
+    # and return [qdot, M^{-1}(tau - Cqdot - g)] with tau = 0.
+    ...
+
+sol = solve_ivp(rhs, (0.0, 1.0), y0, method="RK45", rtol=1e-9, atol=1e-12,
+                dense_output=True)
+E = kinetic_plus_potential(sol.y)
+assert np.max(np.abs(E - E[0])) / E[0] < 1e-6   # relative energy drift
+```
+
+For the illustrative parameters above, RK45 with `rtol=1e-9` holds $|E(t)-E(0)|/E(0)$ below $10^{-6}$ across a 1 s simulation. If a student's implementation drifts substantially more than this, the equations of motion contain an error and the next step is to recheck the $\partial T / \partial \dot{q}$ time-derivative terms.
 :::
 
 ## The Interaction Torque: How the Arm Pulls the Club

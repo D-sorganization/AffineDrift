@@ -28,6 +28,18 @@ This chapter reveals the mathematics and physics of constraint forces, then show
 
 :::
 
+::: {.callout-warning}
+## Scope: Holonomic Equality Constraints
+
+This chapter treats **holonomic equality constraints** only---algebraic constraints of the form $\bm{\Phi}(\bm{q}) = \mathbf{0}$ that restrict the configuration at every instant in time. Two important generalizations are deferred:
+
+- **Inequality (unilateral) constraints** such as ground contact ($z_{\text{feet}} \geq 0$) or one-way grip coupling: active only when engaged, with a sign-definite multiplier. These are the subject of Chapter~\ref{ch:09_parallel_mechanisms} (closed kinematic chains) and Chapter~\ref{ch:15_underactuation_release} (contact breaking / under-actuation).
+- **Non-holonomic constraints** (velocity-level constraints that cannot be integrated to configuration form, e.g., rolling contact): they require Pfaffian-form treatment with different multiplier bookkeeping. No important non-holonomic constraints arise in the golf swing at the level of modeling we use here; they are flagged for completeness.
+
+Within the holonomic-equality world, the Lagrange-multiplier formulation below is exact, not an approximation.
+
+:::
+
 ## Holonomic Constraints and Their Jacobians
 
 ::: {.callout-note}
@@ -107,8 +119,74 @@ But because the force is perpendicular, it can have a large magnitude while doin
 
 ## Solving for the Constraint Forces
 
+### Derivation from the Constrained Lagrangian
+
+Before specifying the computational procedure, it is worth deriving the constraint-force term $\bm{J}_c^{\top}\bm{\lambda}$ and the multiplier formula from first principles. The derivation uses the method of Lagrange multipliers applied to the classical Lagrangian $L = T - V$.
+
+**Step 1.** Form the **augmented Lagrangian** by adding each constraint weighted by an unknown multiplier $\lambda_i$:
+
+\tilde{L}(\bm{q}, \dot{\bm{q}}, \bm{\lambda}) = L(\bm{q}, \dot{\bm{q}}) + \bm{\lambda}^{\top} \bm{\Phi}(\bm{q})
+
+The multipliers $\bm{\lambda} \in \mathbb{R}^{n_c}$ are treated as auxiliary generalized coordinates.
+
+**Step 2.** Apply the Euler--Lagrange equations to $\tilde{L}$. For the original coordinates $\bm{q}$,
+
+\frac{d}{dt}\frac{\partial \tilde{L}}{\partial \dot{\bm{q}}} - \frac{\partial \tilde{L}}{\partial \bm{q}} = \mathbf{0} \quad\Longrightarrow\quad \frac{d}{dt}\frac{\partial L}{\partial \dot{\bm{q}}} - \frac{\partial L}{\partial \bm{q}} = \underbrace{\left(\frac{\partial \bm{\Phi}}{\partial \bm{q}}\right)^{\top}}_{\bm{J}_c^{\top}} \bm{\lambda}.
+
+The left-hand side, after including the applied generalized forces $\bm{B}\bm{u}$, is exactly the manipulator equation left-hand side, so we recover
+
+\bm{M}(\bm{q})\ddot{\bm{q}} + \bm{C}(\bm{q},\dot{\bm{q}})\dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{B}(\bm{q})\bm{u} + \bm{J}_c(\bm{q})^{\top}\bm{\lambda}.
+
+For the auxiliary coordinates $\bm{\lambda}$, the Euler--Lagrange equation reproduces the constraint itself:
+
+\frac{\partial \tilde{L}}{\partial \bm{\lambda}} = \bm{\Phi}(\bm{q}) = \mathbf{0}.
+
+**Step 3.** To solve for $\bm{\lambda}$, differentiate the constraint twice in time,
+
+\ddot{\bm{\Phi}} = \bm{J}_c(\bm{q})\ddot{\bm{q}} + \dot{\bm{J}}_c(\bm{q},\dot{\bm{q}})\dot{\bm{q}} = \mathbf{0},
+
+then multiply the EOM on the left by $\bm{J}_c\bm{M}^{-1}$:
+
+\bm{J}_c\ddot{\bm{q}} = \bm{J}_c\bm{M}^{-1}\bigl[\bm{B}\bm{u} - \bm{C}\dot{\bm{q}} - \bm{g}\bigr] + \bm{J}_c\bm{M}^{-1}\bm{J}_c^{\top}\bm{\lambda}.
+
+Setting this equal to $-\dot{\bm{J}}_c\dot{\bm{q}}$ (from the twice-differentiated constraint) and solving:
+
+\boxed{\;\bm{\lambda} = \bigl[\bm{J}_c \bm{M}^{-1} \bm{J}_c^{\top}\bigr]^{-1} \Bigl(-\bm{J}_c\bm{M}^{-1}[\bm{B}\bm{u} - \bm{C}\dot{\bm{q}} - \bm{g}] - \dot{\bm{J}}_c\dot{\bm{q}}\Bigr).\;}
+
+The matrix $\bm{J}_c \bm{M}^{-1} \bm{J}_c^{\top}$, sometimes called the **operational-space inertia** or **Delassus matrix**, is a kinetic-energy-weighted Gram matrix of the constraint directions. It is $n_c \times n_c$, symmetric, and (generically) positive definite.
+
+::: {.callout-note}
+## Why the Derivation Clarifies the "Mystery" Term
+
+The procedural derivation in the previous edition of this chapter quoted the formula $\bm{\lambda} = [\bm{J}_c\bm{M}^{-1}\bm{J}_c^{\top}]^{-1}(\cdots)$ without showing where it comes from. The augmented-Lagrangian derivation makes two things clear:
+
+1. $\bm{J}_c^{\top}\bm{\lambda}$ is not a *new* physical force---it is the generalized-force expression of the constraint in the coordinates of $\bm{q}$, arising from the variational principle once we insist on $\bm{\Phi} = \mathbf{0}$.
+2. The multiplier $\bm{\lambda}$ has dimensions determined by $\bm{\Phi}$ (force if $\bm{\Phi}$ is a position constraint, torque if $\bm{\Phi}$ is an angle constraint), and its physical meaning is "how much constraint force (or torque) per unit constraint violation is required to maintain the constraint."
+
+:::
+
+### Singular Configurations
+
+The Lagrange-multiplier formula requires inverting $\bm{J}_c \bm{M}^{-1} \bm{J}_c^{\top}$. This matrix is positive definite *if and only if* $\bm{J}_c$ has full row rank ($\text{rank}(\bm{J}_c) = n_c$). When this fails, the configuration is called **constraint-singular**:
+
+- **Redundant constraints** ($n_c$ constraint equations but only $n_c - 1$ independent directions) collapse a row of $\bm{J}_c$ and send the multiplier to $+\infty$ or leave it undetermined.
+- **Geometric singularities** arise when two constraint surfaces become tangent---for example, the wrist constraint and the ground-contact constraint lined up along the same Cartesian axis at an awkward posture.
+
+In practice one regularizes with $\bm{J}_c\bm{M}^{-1}\bm{J}_c^{\top} + \varepsilon \bm{I}$ for small $\varepsilon > 0$ (Tikhonov) or falls back to an SVD-based pseudoinverse truncating the smallest singular values. Both restore numerical well-posedness at the cost of a small constraint-violation rate; in golf-swing simulations singular configurations are rare but the ground-contact + two-hand-grip combination near the top of the backswing is a realistic risk point.
+
+### Golf-Specific Constraints
+
+The formalism above applies to four concrete constraints relevant to the golf swing, all holonomic and all equality when engaged:
+
+1. **Two-hand grip coupling.** Both hands are on the grip; the trailing and lead hands must translate and rotate together. In a two-arm model this is a multi-dimensional position-and-orientation constraint reducing the relative wrist DOFs between the two arms to zero. Typical Lagrange-multiplier magnitudes at impact are in the $10^2$ N range [@cochran1968search].
+2. **Ground contact (both feet planted).** $z_{\text{L-foot}} = 0$ and $z_{\text{R-foot}} = 0$ during the address-through-downswing phase. These become inequality constraints the instant a foot lifts (heel-lift at the top of the backswing, lead-heel drop during transition); in the phases where both feet are planted they are exact holonomic equality constraints. Peak vertical ground-reaction forces exceed body weight [@penner2003physics].
+3. **Club-ball impact.** During the $\sim 0.5$ ms of ball-club contact the ball's position is constrained to the face: $\bm{x}_{\text{ball}} = \bm{x}_{\text{face-contact}}(\bm{q})$. This is a transient holonomic constraint; see Chapter~\ref{ch:28_impact_collision} for the impulse-exchange treatment that uses the multiplier formula above evaluated at the instantaneous contact configuration.
+4. **Rigid club shaft.** The idealization "shaft length is constant" is the holonomic constraint $\|\bm{x}_{\text{tip}} - \bm{x}_{\text{grip}}\| - L_{\text{shaft}} = 0$. Deviations (shaft droop, bend) are modeled as compliant rather than rigid in Chapter~\ref{ch:12_compliant_shaft}.
+
+Each of these produces a $\bm{\lambda}$ that is physically meaningful and measurable: grip force, ground-reaction force, ball contact impulse, and shaft tension. The Lagrange-multiplier framework unifies their treatment.
+
 {Computing Lagrange Multipliers}{proc:compute_multipliers}
-To find $\bm{\lambda}$, we use the constraint that $\bm{\Phi}(\bm{q}) = \mathbf{0}$ must be maintained at all times. Taking the time derivative twice:
+To find $\bm{\lambda}$ in practice, we use the constraint that $\bm{\Phi}(\bm{q}) = \mathbf{0}$ must be maintained at all times. Taking the time derivative twice:
 
 \bm{J}_c(\bm{q}) \ddot{\bm{q}} = -\dot{\bm{J}}_c(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} - \bm{J}_c(\bm{q}) \ddot{\bm{q}}_{\text{unconstrained}}
 
