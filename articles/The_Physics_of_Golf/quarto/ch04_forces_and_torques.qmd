@@ -22,13 +22,15 @@ This chapter is about that decomposition.
 
 ## The Five Sources of Force
 
-In the manipulator equation, every torque comes from one of five sources:
+In the manipulator equation, every torque comes from one of five sources in the conservative + actuator budget:
 
 1. **Inertial forces** (from $\bm{M}(\bm{q})$): forces that resist acceleration. To speed up your arm, you must overcome its inertia.
 2. **Velocity-dependent forces** (from $\bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}}$): Coriolis and centrifugal forces that arise when you move fast. They couple the motion of different joints.
 3. **Gravitational forces** (from $\bm{g}(\bm{q})$): torques that arise because gravity pulls on your mass. These depend on position.
 4. **Muscular forces** (from $\bm{\tau}$): torques you generate by contracting muscles. These are your **control**.
 5. **Constraint forces** (from rigid hinges, rigid bones, etc.): reactive forces that enforce mechanical constraints. These don't appear explicitly in the equation but appear as reaction torques at hinges.
+
+A *sixth* category---**dissipative forces** (joint friction, soft-tissue damping, hysteresis, aerodynamic drag)---is genuinely present in the real swing but is deferred: drag is the subject of ch19, and viscoelastic/damping models of soft tissue and joints are covered in ch12 and ch29. For the classical-mechanics derivations in Vol I we omit dissipative forces from the five-source accounting and add them back as $-D(\bm{q})\dot{\bm{q}}$-style corrections in the later chapters. Readers should treat the five sources here as the *lossless* core of the dynamics and the sixth as the physical correction applied on top of it.
 
 Let's understand each one.
 
@@ -226,7 +228,14 @@ Muscles can only pull, not push. So there are constraints on what $\bm{\tau}$ ca
 - $\tau_i \geq -\tau_{\text{max}, i}$ (muscles can pull in one direction up to a max).
 - $\tau_i \leq +\tau_{\text{max}, i}$ (muscles can pull in the opposite direction up to a max).
 
-The maximum depends on the muscle's strength and leverage. For the shoulder, elite golfers can generate roughly 50 N m in both directions. For the elbow, perhaps 30 N m.
+The maximum depends on the muscle's strength and leverage. Net joint torques are the *resultant* of many muscles pulling in parallel:
+
+- **Shoulder**: the rotator cuff (supraspinatus, infraspinatus, teres minor, subscapularis) stabilizes the joint, while deltoids, pectoralis major, and latissimus dorsi generate the gross torque. Peak resultant torque in elite golfers is on the order of $\tau_{\max}^{\text{sh}} \sim 40\text{--}60$ N m [@nesbit2005three].
+- **Elbow**: biceps brachii and brachialis flex; triceps extend. Peak resultant torque is on the order of $\tau_{\max}^{\text{el}} \sim 20\text{--}40$ N m, smaller than the shoulder because of the shorter moment arms.
+- **Wrist (radiocarpal)**: wrist flexors (flexor carpi radialis/ulnaris) and extensors (extensor carpi radialis longus/brevis, extensor carpi ulnaris) together drive the release. Peak resultant torque is much smaller, $\tau_{\max}^{\text{wr}} \sim 10\text{--}20$ N m, but acts at high angular velocity.
+- **Forearm pronation/supination**: pronator teres and pronator quadratus vs. supinator and biceps brachii govern face-angle control through the forearm-rotation DOF (see ch31); peak torque $\sim 5\text{--}15$ N m.
+
+These are *resultant* torques; individual muscle forces are under-determined (the redundancy problem discussed in ch18). What matters for the manipulator equation is the resultant torque at each joint, not the individual muscle forces.
 
 ### Muscular Forces Are the Only Thing You Control
 

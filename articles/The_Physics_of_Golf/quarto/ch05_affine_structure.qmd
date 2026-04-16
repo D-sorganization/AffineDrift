@@ -27,6 +27,19 @@ This decomposition is the key to understanding the golf swing. It's where drift 
 
 :::
 
+::: {.callout-warning}
+## Scope of This Chapter
+
+The control-affine form $\dot{\bm{x}} = \bm{f}(\bm{x}) + \bm{G}(\bm{x})\bm{u}$ presupposes three assumptions that are satisfied by our baseline double-pendulum model but relaxed in later chapters:
+
+1. **Unconstrained coordinates.** The generalized coordinates $\bm{q}$ are assumed to be a minimal set (two angles for the double pendulum). Holonomic constraints such as two-hand grip coupling, ground contact, or impact are treated separately in Chapter~\ref{ch:07_constraint_forces} and Chapter~\ref{ch:09_parallel_mechanisms}.
+2. **Fully actuated.** We assume $\bm{G}(\bm{x})$ has rank equal to $\dim(\bm{q})$, so every generalized coordinate has an independent actuator. Under-actuated swings (e.g., the "passive wrist release" in Chapter~\ref{ch:15_underactuation_release}) break this.
+3. **Lossless dynamics.** The drift $\bm{f}(\bm{x})$ encodes only conservative passive forces (inertia, Coriolis/centrifugal, gravity). Dissipative forces---aerodynamic drag (ch19), joint friction, and soft-tissue damping (ch12, ch29)---are added back as $-D(\bm{q})\dot{\bm{q}}$-style corrections elsewhere.
+
+Under these assumptions, $\bm{f}$ and $\bm{G}$ are uniquely determined by $\bm{M}$, $\bm{C}$, and $\bm{g}$, which is what makes the form useful.
+
+:::
+
 ## From Equations of Motion to State Space
 
 To write the system in control-affine form, we need to convert the second-order manipulator equation into a first-order system in state space.
@@ -235,14 +248,19 @@ Actually, no. The **moment of inertia** is lower (because the mass is closer to 
 Here's a new concept: the **Drift-to-Control Ratio (DCR)**.
 
 ::: {.callout-note}
-## Drift-to-Control Ratio
+## Drift-to-Control Ratio (Formal Definition)
 
-At any point in the state space, the DCR is the relative magnitude of drift versus control:
+At any point in the state space, the DCR is the relative magnitude of drift acceleration versus maximum control-induced acceleration. We measure both with the **kinetic-energy norm** $\|\bm{v}\|_{\bm{M}}^2 := \bm{v}^{\top} \bm{M}(\bm{q}) \bm{v}$ so that comparisons are independent of the choice of generalized coordinates:
 
-\text{DCR} = \frac{|\bm{f}(\bm{x})|}{|\bm{G}(\bm{x}) \bm{u}|}_{\text{during max muscular effort}}
+\text{DCR}(\bm{x}) := \frac{\|\bm{M}(\bm{q})^{-1}[-\bm{C}(\bm{q},\dot{\bm{q}})\dot{\bm{q}} - \bm{g}(\bm{q})]\|_{\bm{M}}}{\max_{\|\bm{u}\|_\infty \leq \bm{\tau}_{\max}} \|\bm{M}(\bm{q})^{-1}\bm{u}\|_{\bm{M}}}
 
-If DCR is high, drift dominates. Muscles contribute little.
-If DCR is low, muscles dominate. Drift contributes little.
+The numerator is the drift acceleration (the $\ddot{\bm{q}}$ you would see with $\bm{\tau} = 0$). The denominator is the maximum acceleration reachable by any admissible torque $\bm{u}$ subject to the per-joint limits $\bm{\tau}_{\max}$.
+
+- If $\text{DCR} \gg 1$, drift dominates. Muscles contribute little relative to passive forces.
+- If $\text{DCR} \ll 1$, control dominates. Drift contributes little.
+- $\text{DCR} \approx 1$ marks a transition regime.
+
+The $\bm{M}$-norm choice matters: it makes the numerator and denominator *energetically* comparable rather than coordinate-dependent. An acceleration of 1 rad/s$^2$ at the shoulder and 1 rad/s$^2$ at the wrist are very different energetically, and the $\bm{M}$-norm accounts for that.
 
 :::
 

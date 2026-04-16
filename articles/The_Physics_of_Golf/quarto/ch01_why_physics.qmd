@@ -120,7 +120,33 @@ This is the **manipulator equation**. Don't be intimidated. It says:
 The left side is drift: what your body and the physics want to do.
 The right side is control: what you're actively commanding.
 
+::: {.callout-note}
+## Preview: The Control-Affine Form
+
+Rearranging the manipulator equation into state-space form $\bm{x} = (\bm{q}, \dot{\bm{q}})$ gives
+$$
+\dot{\bm{x}} \;=\; \underbrace{\bigl(\dot{\bm{q}},\, -\bm{M}(\bm{q})^{-1}[\bm{C}(\bm{q},\dot{\bm{q}})\dot{\bm{q}} + \bm{g}(\bm{q})]\bigr)}_{\bm{f}(\bm{x}) \text{ — drift}}
+\;+\; \underbrace{\sum_i \bm{g}_i(\bm{x})\, u_i}_{\text{control}}
+$$
+where $u_i$ are the joint torques applied by your muscles. This is the *control-affine* form---the mathematical skeleton we return to throughout the book. The drift $\bm{f}(\bm{x})$ is what happens with all muscles silent; the control terms $\sum_i \bm{g}_i(\bm{x}) u_i$ enter linearly in the input. Ch05 develops the decomposition rigorously; for now, just note that drift and control are not metaphors---they are the two algebraic pieces of the same equation.
+
+:::
+
 This equation is the spine of the book. Everything flows from understanding its pieces.
+
+::: {.callout-tip}
+## Forward Preview: The Five Sources of Force
+
+Throughout this book we will decompose every force and torque acting on the golfer into five physical sources. Chapter 4 enumerates and works each one in detail; for this chapter it is enough to know that they exist and that the list is short. In preview:
+
+1. **Gravitational** forces (weight, gravity torque on limbs)
+2. **Inertial / fictitious** forces (Coriolis, centrifugal, velocity-dependent terms)
+3. **Constraint** forces (ground reaction, joint reactions, grip coupling)
+4. **Muscular (actuator)** forces---the $\bm{\tau}$ on the right-hand side
+5. **Aerodynamic** forces (drag on clubhead and shaft, covered in ch19)
+
+Chapter 4 also addresses *dissipative* forces (joint friction, soft-tissue damping), which do not fit cleanly into the first five and are treated separately in ch12/ch29.
+:::
 
 ## Why a Physics Textbook for Golfers?
 
