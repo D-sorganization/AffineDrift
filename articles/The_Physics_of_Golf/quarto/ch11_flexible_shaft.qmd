@@ -117,7 +117,7 @@ where:
 - $\zeta$ is the damping ratio (how much the vibration is damped by material friction).
 - $f_{\text{modal}}$ is the generalized force on the modal coordinate, arising from inertial and Coriolis forces in the joint motion.
 
-For a typical golf shaft, $\omega_n$ is in the range of 15--25 Hz (10--12 radians per second). The swing duration is about 0.2 seconds, so the shaft goes through one or two bending cycles during the entire downswing.
+For a typical golf shaft, the first-mode natural frequency is in the range of roughly 4--6 Hz ($\omega_n \approx 25$--$40$ rad/s) for a driver held at the grip, though the effective frequency during the swing is modulated by centrifugal stiffening (see below). The swing duration is about 0.2 seconds, so the shaft goes through roughly one bending cycle during the entire downswing.
 
 ## How Shaft Flexibility Enters the Drift Field
 
@@ -363,9 +363,9 @@ This is a second-order ODE coupled to the grip motion.
 Let us use realistic numbers:
 - Clubhead mass: $m_h = 0.2$ kg (about 7 oz).
 - Shaft length: $L = 1.1$ m (about 43 inches).
-- Shaft stiffness: $\shaftstiff = 7000$ N/m (typical for a mid-flex shaft).
 - Damping ratio: $\zeta = 0.08$.
-- Natural frequency: $\omega_n = 15$ rad/s, so $\shaftdamp = 2 \times 0.08 \times 15 \times m_{\text{eff}} \approx 0.3$ N$\cdot$s/m.
+- Effective tip mass (clubhead dominant): $m_{\text{eff}} \approx 0.2$ kg.
+- First-mode natural frequency: $\omega_n \approx 30$ rad/s ($\approx 5$ Hz), so shaft stiffness $\shaftstiff = \omega_n^2 m_{\text{eff}} \approx 180$ N/m and damping $\shaftdamp = 2\zeta\omega_n m_{\text{eff}} \approx 1.0$ N$\cdot$s/m.
 
 Suppose the hand (grip) starts at $y = 0$ and is prescribed to move with:
 
