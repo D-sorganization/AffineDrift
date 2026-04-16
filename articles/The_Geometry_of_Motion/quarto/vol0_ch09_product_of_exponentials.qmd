@@ -112,3 +112,9 @@ print("Final Tool X,Y Position:", np.round(T_end[0:2, 3], 3))
 
 
 By utilizing the Matrix Exponential and the global Screw Axis structure, the PoE formalism eliminates error-prone geometry tracking and instantly scales up to complex 6-DOF and 15-DOF spatial mechanisms seamlessly.
+
+::: {.callout-note}
+## Faster alternative to `scipy.linalg.expm`
+
+`scipy.linalg.expm` is a generic dense-matrix exponential based on Padé approximation with scaling-and-squaring—correct for any $[\screw]\theta \in \se(3)$ but relatively expensive for a 4×4 used inside a tight kinematics loop. For screw matrices specifically there is a **closed-form** alternative: Rodrigues' formula handles the $\SO(3)$ rotation block, and the translational part reduces to the Rodrigues-derived $G(\theta) = I\theta + (1-\cos\theta)[\hat{\bm{\omega}}] + (\theta - \sin\theta)[\hat{\bm{\omega}}]^2$ times $\bm{v}$. This is typically an order of magnitude faster than calling `expm` and is the form used in performance-sensitive PoE implementations (e.g., Lynch & Park's Modern Robotics library's `MatrixExp6`).
+:::
