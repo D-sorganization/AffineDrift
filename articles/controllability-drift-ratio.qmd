@@ -259,6 +259,20 @@ We define the Drift–Control Ratio (DCR) as the ratio of the magnitude of the d
 A naïve application of the Euclidean norm to the full state vector drift $\|f(x)\|$ mixes units of velocity ($\text{rad/s}$) and acceleration ($\text{rad/s}^2$). To ensure physical meaningfulness, we restrict our definition to the **dynamic fiber** of the tangent bundle (the acceleration subspace), comparing the **generalized forces** (or equivalent accelerations) of drift against the available control authority.
 :::
 
+::: {.callout-important}
+## Canonical DCR definition (site-wide)
+
+Across this website the **canonical** Drift–Control Ratio is the **state-dependent, inertia-weighted** ratio
+$$
+\boxed{\;\mathrm{DCR}(x) \;:=\; \frac{\|f_{acc}(x)\|_{M(q)}}{\|G_{acc}(x)\,u_{\max}\,\mathbf{1}\|_{M(q)}}\;}
+$$
+with the **mass-weighted (kinetic-energy) norm**
+$$
+\|v\|_{M(q)} \;:=\; \sqrt{v^\top M(q) v}.
+$$
+The denominator uses the **saturation torque vector** $u_{\max}\mathbf{1}$ (or, coordinate-wise, $u_{\max,i}$), i.e. the *available* physiological authority, not the instantaneous $u(t)$. This makes DCR a property of the state $x$ and the plant, not of the particular control policy in use. (The form below that uses $\|\tau(t)\|$ is a *policy-dependent* companion quantity; track both but report the canonical form first.) Alternative norms (Euclidean, $\infty$-norm) are mentioned in @sec-norms below; they are **not canonical**. Matches the definition in [Theory Part I](theory-part1.html) and the glossary in [Zero-Torque Counterfactual](zero-torque-counterfactual.html#sec-ztcf-canonical).
+:::
+
 $$
 \mathrm{DCR}(t)
 =
@@ -292,7 +306,7 @@ $$
 $$
 *(This estimate is derived from the planar model above with typical parameter values; empirical validation against instrumented swing data is needed.)*
 
-### Dimensional Analysis and Norm Dependence
+### Dimensional Analysis and Norm Dependence {#sec-norms}
 
 Now, a careful reader will wonder: does this ratio depend on how we measure things? Of course it does—and that's worth thinking about carefully, because the answer reveals what's really going on.
 

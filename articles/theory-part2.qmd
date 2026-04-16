@@ -130,6 +130,11 @@ By comparing total forces to these counterfactual constructions via inverse dyna
 
 ## Zero Torque Counterfactual (ZTCF)
 
+::: {.callout-note}
+## Canonical ZTCF convention (this part)
+This part uses the **Branched ZTCF**: the solution of $\dot x = f(x)$ initialized from the *observed* swing state at a branch time $t_0$, and compared against the observed swing for $t > t_0$. The full glossary (Trajectory ZTCF, drift vector $f(x)$ which is **not** ZTCF, and Branched ZTCF) is in the standalone [Zero-Torque Counterfactual](zero-torque-counterfactual.html#sec-ztcf-canonical) article.
+:::
+
 The drift--input decomposition separates the dynamics into a passive component $f(x)$ and a torque-driven component $g(x)u$. The *Zero Torque Counterfactual* (ZTCF) formalizes the idea of "what the system would have done under identical conditions if the golfer had applied no torques at all." It is defined strictly within the mechanical model and is used as a reference against which the actual, torque-driven motion can be compared.
 
 The vector fields $f(x)$ and $g(x)$ derived in the previous section define the *instantaneous* tendencies of the system: $f(x)$ dictates how the state evolves passively, while $g(x)$ dictates how it responds to input. However, the golf swing is not an instant; it is a ballistic process where past inputs shape current passive dynamics. The 'drift' forces experienced at impact are not merely functions of the current configuration; they are the legacy of momentum generated earlier in the downswing. To capture this history-dependent nature of drift, we must move from the tangent bundle (velocities) to the integral curves (trajectories). The ZTCF performs this integration, extending the instantaneous decomposition into a full counterfactual history.
