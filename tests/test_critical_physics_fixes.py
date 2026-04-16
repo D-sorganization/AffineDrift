@@ -26,7 +26,6 @@ from src.tools.rl_funnel_benchmark import (
 # ---------------------------------------------------------------------------
 
 
-
 class TestMassMatrixPhysics:
     """#1742: mass matrix must reflect actual double-pendulum inertia."""
 
