@@ -47,7 +47,7 @@ You swing a golf club. A motion capture system records your skeleton in three-di
 
 Yet your muscles caused this motion. Can we compute those muscle forces *backwards* from the motion we measured?
 
-For most of your body, the answer is yes. For the golf swing as a whole—held together by the two-handed grip and the planted feet—the answer is more subtle. Some aspects of muscle recruitment become fundamentally *undetectable* from motion alone.
+For most of your body, the answer is yes. For the golf swing as a whole—held together by the two-handed grip and the planted feet—the answer is more subtle. Some aspects of muscle recruitment become fundamentally *undetectable* from motion alone. To be precise: the *net* joint torques are always detectable from motion (given accurate kinematics and anthropometrics); what is ambiguous is how that net torque is *distributed* across individual muscles crossing the joint—the classic muscle-redundancy or load-sharing problem [@crowninshield1981physiologically].
 
 :::
 
@@ -252,6 +252,8 @@ For a well-posed mechanical system with constraints, the augmented matrix
 is nonsingular whenever $\bm{M}$ is positive definite and $\bm{J}_c$ has full row rank. Therefore, given $\bm{u}$, we can always solve uniquely for $\ddot{\bm{q}}$ and $\boldsymbol{\lambda}$.
 
 This means **forward dynamics always works**.
+
+**Caveat — near-singular configurations.** The full-rank condition on $\bm{J}_c$ can be lost at kinematic singularities (for example, an elbow or knee driven to full extension, or a wrist aligned with a two-hand grip axis). Near such configurations the KKT matrix becomes ill-conditioned even though it is not formally singular, and direct inversion amplifies numerical noise. In practice the augmented system is regularized by adding $\lambda I$ to the constraint block (Tikhonov regularization) or by truncating the smallest singular values of $\bm{J}_c$ (SVD truncation). Both preserve the solution near the singularity at the cost of introducing a small bias.
 :::
 
 This theorem guarantees that if you specify all muscle torques, the skeleton's acceleration is uniquely determined. Physically, this makes sense: physics is deterministic going forward.
@@ -550,7 +552,7 @@ where $\bm{B}^+ = (\bm{B}^T\bm{B})^{-1}\bm{B}^T$ is the left pseudoinverse of $\
 
 This approach yields a unique solution—but it is a **modeling choice**, not a physical fact. The assumption that muscles minimize "effort" (measured as norm of torques) is a modeling assumption. It may or may not be accurate for a real golfer.
 
-Different cost functions (e.g., minimizing total power, or metabolic cost) yield different answers. The "correct" answer depends on how the nervous system actually controls motion, which is an open neuroscience question.
+Different cost functions yield *different* solutions to the same load-sharing problem: sum of squared activations ($\sum a_i^2$) favors distributing load widely across synergists; sum of cubed muscle stresses ($\sum \sigma_i^3$, [@crowninshield1981physiologically]) produces recruitment orderings consistent with the size principle; metabolic-cost objectives further penalize slow-fatiguing muscles. These choices can change predicted individual-muscle forces by 30--50\% while producing net joint torques that match measurement to within a few percent. The "correct" cost function depends on how the nervous system actually controls motion, which remains an open neuroscience question.
 
 ### EMG-Informed Methods
 

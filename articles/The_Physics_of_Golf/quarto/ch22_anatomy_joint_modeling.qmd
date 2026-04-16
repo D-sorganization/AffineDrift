@@ -249,7 +249,7 @@ The motion is overwhelmingly flexion-extension. If you sit on a chair and move y
 - \textbf{Medial-lateral translation:} Small shifts (a few mm) occur during rotation.
 \end{enumerate}
 
-For golf analysis, these secondary motions are usually negligible. The screw-home adds $\approx 2%$ error to the model. For injury risk assessment (e.g., ACL tear prediction), these details matter.
+For golf analysis, these secondary motions are usually negligible. The screw-home contributes roughly $10^\circ$ of tibial external rotation over the flexion-to-full-extension range, which a strict revolute knee approximates as $\approx 2\%$ angular error (illustrative scaling). Propagated through a $\sim 40$ cm tibia, this translates into at most 1--2 cm of mis-location of the ankle at impact---well below mocap noise and irrelevant to clubhead-path prediction for a healthy golfer, but non-negligible for ACL injury-risk screening where small angular drifts near full extension carry clinical weight.
 :::
 
 \subsection{Modeling Recommendation}
@@ -304,7 +304,7 @@ The femoral head is nearly spherical. As long as the hip motion stays within the
 \begin{enumerate}
 - \textbf{Shift of center of rotation:} The femoral head is not perfectly spherical (it's distorted by muscle attachment sites and loading). The center of rotation shifts slightly with joint angle---on the order of $\approx 5$ mm, which is small but measurable.
 
-- \textbf{Femoroacetabular impingement (FAI):} The femur and pelvis have bony anatomy that limits motion in certain directions. When the hip is flexed and internally rotated, the femoral neck can contact the acetabular rim. This contact limits further motion and can cause pain and cartilage damage over time. FAI is one of the most common hip pathologies in athletes. Professional golfers with FAI often modify their swing to avoid impingement.
+- \textbf{Femoroacetabular impingement (FAI):} The femur and pelvis have bony anatomy that limits motion in certain directions. When the hip is flexed and internally rotated, the femoral neck can contact the acetabular rim. This contact limits further motion and can cause pain and cartilage damage over time. Two separate prevalence numbers are often conflated: cam- or pincer-type bony morphology appears on hip imaging in a very large fraction of asymptomatic athletes (commonly cited ranges run from 20\% to 70\%+ depending on the cohort), whereas \emph{clinically significant} FAI syndrome---morphology plus symptoms and positive impingement tests---is substantially less common. Professional golfers with symptomatic FAI often modify their swing to avoid impingement.
 
 - \textbf{Ligamentous envelope:} The hip ligaments are not equally tight in all directions. Iliofemoral ligament is very tight, limiting hyperextension. This means that not all combinations of flexion/abduction/rotation are equally accessible. The ``range of motion envelope'' is not a perfect ball.
 
@@ -363,11 +363,11 @@ A common simplification is to model only the glenohumeral joint as a 3-DOF spher
 
 \subsection{The Problem: Scapulohumeral Rhythm}
 
-The scapula does NOT stay fixed. There is a coupling between humeral motion and scapular motion called the \textbf{scapulohumeral rhythm}. The empirical rule is:
+The scapula does NOT stay fixed. There is a coupling between humeral motion and scapular motion called the \textbf{scapulohumeral rhythm}. The classic rule of thumb, stated as a *population-averaged* ratio, is:
 
 $$\text{For every } 2{}^\circ \text{ of glenohumeral abduction, there is approximately } 1{}^\circ \text{ of scapular rotation.}$$
 
-This means that if the humerus abducts $60{}^\circ$ from the side of the body (raising the arm), the scapula rotates an additional $30{}^\circ$. The total abduction of the arm relative to the torso is $90{}^\circ$.
+Measured ratios across individuals actually span roughly $1.5{:}1$ to $2.5{:}1$ and vary with phase of abduction (the ratio is closer to $4{:}1$ in the first $30^\circ$ of elevation and drops to near $1{:}1$ above $90^\circ$)---so treat "2:1" as a working average for mid-range motion, not a fixed biomechanical constant. Using the rule, if the humerus abducts $60{}^\circ$ from the side of the body, the scapula rotates an additional $\approx 30{}^\circ$ on average, giving a total arm-to-torso abduction of $\approx 90{}^\circ$.
 
 \textbf{Why does this matter?} The shoulder center (the location of the GH joint) is on the scapula. If the scapula rotates, the shoulder center \emph{moves}. In a task-space control problem (e.g., ``keep your hand at a fixed location''), a rotating scapula means the GH joint axis is moving in space.
 
@@ -658,7 +658,7 @@ From a modeling perspective, the spine is a parallel mechanism with loop closure
 
 The lead wrist experiences the highest angular velocities of any joint in the swing ($\sim$50--70~rad/s at impact). Combined with the impact shock (3000--5000~N over 0.5~ms from Chapter~\ref{ch:impact_collision}), the wrist is vulnerable to:
 \begin{itemize}
-- \textbf{Hamate fracture}: The hook of the hamate bone sits directly under the butt end of the club. Repeated impact shock can cause stress fractures. This is the most common wrist fracture in golf.
+- \textbf{Hamate fracture}: The hook of the hamate bone sits directly under the butt end of the club. Repeated impact shock---and especially striking a root, rock or firm turf---can cause stress or avulsion fractures. Hook-of-hamate fractures are *characteristically* golf-related (and disproportionately seen in lead hands) rather than categorically the single most common wrist fracture: scaphoid fractures also occur in golfers and remain the most common carpal fracture in the general population. The hamate injury is the one clinicians flag as "the golfer's wrist fracture" [@murray1994fractures].
 - \textbf{Extensor tendinopathy}: The wrist extensors decelerate wrist flexion after impact. At the angular velocities involved, the eccentric loads on these tendons are substantial.
 - \textbf{TFCC tears}: The triangular fibrocartilage complex stabilizes the distal radioulnar joint. Forced ulnar deviation (as occurs in the lead wrist at impact) can tear this structure.
 \end{itemize}
