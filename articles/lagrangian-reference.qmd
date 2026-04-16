@@ -119,7 +119,7 @@ where:
 
 - $C_{\mathrm{ext}}(q_{\mathrm{ext}},\dot{q}_{\mathrm{ext}})\dot{q}_{\mathrm{ext}}$ contains Coriolis and centrifugal terms,
 
-- $G_{\mathrm{ext}}(q_{\mathrm{ext}}) = \partial V/\partial q_{\mathrm{ext}}$ contains gravitational and elastic contributions,
+- $G_{\mathrm{ext}}(q_{\mathrm{ext}}) = \nabla_{q_{\mathrm{ext}}} V$ contains gravitational and elastic contributions (the gradient of the potential with respect to the extended generalized coordinates),
 
 - $\tau_{\mathrm{passive,ext}}$ gathers additional modeled passive effects (e.g. damping).
 
@@ -231,13 +231,14 @@ In the Lagrangian framework, gravity arises as part of the potential energy $V_{
 ## Connection to ZTCF and ZVCF
 
 From the Lagrangian viewpoint:
-- ZTCF corresponds to setting $u = 0$ in the Euler--Lagrange equations, so that
+
+- **ZTCF** corresponds to the *trajectory* obtained by setting $u = 0$ in the Euler--Lagrange equations and integrating forward from the actual initial condition, so that
 $$
 M_{\mathrm{ext}}\ddot{q}_{\mathrm{ext}} = \tau_{\mathrm{drift,ext}},
 $$
 and the motion is governed solely by the drift.
 
-- ZVCF corresponds to freezing $q_{\mathrm{ext}}$ and $\dot{q}_{\mathrm{ext}}$ and disabling drift contributions (including gravity), so that the only remaining generalized forces come from $\tau_{\mathrm{input,ext}} = [B u; 0]^\top$.
+- **ZVCF** is the *instantaneous-acceleration* computation performed at $\dot{q}_{\mathrm{ext}} = 0$, in which all velocity-dependent drift terms vanish and (by convention) gravity is also held off, so the only remaining generalized forces come from $\tau_{\mathrm{input,ext}} = [B u; 0]^\top$. It is a pointwise diagnostic, not a trajectory.
 Thus the Lagrangian formulation supports the same drift--input decomposition and counterfactual constructions as the Newton--Euler and screw-theoretic formulations.
 
 ## Summary

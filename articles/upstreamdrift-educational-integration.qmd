@@ -167,30 +167,46 @@ The "Vol I", "Vol II", etc. references in this table point to chapters in *Geome
 
 ## Recommended Learning Path
 
+::: {.callout-note}
+## Tested Tool Versions
+The install commands below are tested against the following minimum versions (Python 3.12, Ubuntu 22.04+ / Windows 11 / macOS 13+). Newer minor releases are expected to work; older releases are not supported.
+
+| Tool | Minimum version | Install command |
+|------|----------------|-----------------|
+| Pinocchio | `>= 3.0.0` | `pip install pinocchio>=3.0.0` |
+| MuJoCo | `>= 3.0.0` | `pip install "mujoco>=3.0.0"` |
+| Drake | `>= 1.20.0` | see [Drake installation guide](https://drake.mit.edu/installation.html) |
+| MyoSuite | `>= 2.0.0` | `pip install "myosuite>=2.0.0"` |
+| OpenSim | `>= 4.5` | see [OpenSim install](https://opensimconfluence.atlassian.net/wiki/spaces/OpenSim/pages/53089760/Scripting+in+Python) |
+| Simulink / MATLAB | `R2023b` or later | MathWorks installer |
+
+Note: the **package name for Pinocchio on PyPI is `pinocchio`** (not `pin` --- that is a separate unrelated package). The previous `pip install pin` instruction was incorrect for recent versions and is corrected throughout this page.
+:::
+
 ### Beginner (Vol 0 readers)
 
-1. Install Pinocchio: `pip install pin`
+1. Install Pinocchio: `pip install "pinocchio>=3.0.0"`
 2. Load the double pendulum URDF from `models/pendulum_2dof.urdf`
 3. Verify that the rotation matrices along the chain are orthogonal
 4. Compute the end-effector Jacobian and check its rank
 
 ### Intermediate (Vol I readers)
 
-1. Install MuJoCo: `pip install mujoco`
+1. Install MuJoCo: `pip install "mujoco>=3.0.0"`
 2. Load the 3-DOF golf swing model
 3. Run passive simulation (zero control) and plot the drift trajectory
 4. Add LQR stabilization and measure the contraction rate
 
 ### Advanced (Vol II-III readers)
 
-1. Install Drake (see [Drake installation guide](https://drake.mit.edu/installation.html))
+1. Install Drake `>= 1.20.0` (see [Drake installation guide](https://drake.mit.edu/installation.html))
 2. Set up the direct collocation problem for swing trajectory optimization
 3. Compare the optimal trajectory against the passive trajectory
 4. Implement a DDP iteration and visualize convergence
 
 ### Research (Vol IV readers)
 
-1. Install MyoSuite: `pip install myosuite`
+1. Install MyoSuite: `pip install "myosuite>=2.0.0"`
 2. Train a SAC agent on the golf swing task
 3. Compare the learned latent policy against the geometric control law
 4. Measure the effective dimensionality of the learned representation

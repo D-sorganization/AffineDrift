@@ -73,16 +73,36 @@ This tells us residuals scale **quadratically** with perturbation size, but does
 ::: {.callout-important}
 ## Theorem 1.1: Quantitative Residual Bound
 
-For a $C^2$ dynamical system $\dot{x} = f(x, u)$ with bounded Hessian $\|H_f\|_{\max} \leq M$ over the state-control trajectory, the residual satisfies:
+**Hypotheses** *(stated explicitly because the rest of this series only assumes $f \in C^1$)*:
 
+(H1) **Smoothness.** $f \in C^2(U)$ on an open neighborhood $U \subset \mathbb{R}^n \times \mathbb{R}^m$ of the nominal trajectory $\{(\bar x(t), \bar u(t)) : t \in [t_0, t_1]\}$.
+
+(H2) **Non-uniform Hessian bound.** For each $t \in [t_0, t_1]$ define
 $$
-\| r(t_1) \| \leq \frac{M}{2} \int_{t_0}^{t_1} \| \delta x(t) \|^2 \, dt
+M(t) \;:=\; \sup_{(\xi,\eta) \in \mathcal{N}(\bar x(t), \bar u(t))} \bigl\lVert H_f(\xi, \eta) \bigr\rVert,
+$$
+where $\mathcal{N}(\cdot)$ is a fixed compact neighborhood in $U$ containing all perturbed trajectories of interest. Assume $M(\cdot)$ is locally bounded and integrable on $[t_0, t_1]$. The original global-constant form $\lVert H_f \rVert \leq M$ is recovered if one takes $M = \sup_t M(t)$.
+
+(H3) **Zero initial residual.** $r(t_0) = 0$; i.e., the perturbed and nominal trajectories coincide at the branching instant (the standard ZTCF/ZVCF setup).
+
+**Conclusion.** Under (H1)--(H3),
+$$
+\| r(t_1) \| \leq \tfrac{1}{2} \int_{t_0}^{t_1} M(t)\, \| \delta x(t) \|^2 \, dt,
 $$ {#eq-residual-bound}
 
-where $\delta x(t)$ is the perturbation evolution under linearized dynamics.
+where $\delta x(t)$ is the perturbation evolution under the linearized dynamics. In the special case $M(t) \equiv M$ (uniform Hessian bound) the right-hand side reduces to $\tfrac{M}{2}\int \lVert \delta x\rVert^2 dt$ as in the older literature.
+
+*Why $M(t)$ rather than a constant.* In the golf swing the curvature of $f$ varies strongly with phase (high near the top of the backswing where gravity direction is near-orthogonal to the arm chain, lower during the downswing). A global $M$ is typically set by the worst-phase curvature and therefore dramatically overestimates the residual during the rest of the swing.
+:::
+
+::: {.callout-warning}
+## Scope of Theorem 1.1
+If the ambient Parts I--III of this series only assume $f \in C^1$, Theorem 1.1 is **not applicable** there without the C² upgrade in (H1). The prototypical failure mode is a Coulomb-friction term $\mu \operatorname{sign}(\dot q)$: $f$ is continuous but not even $C^1$, the Hessian does not exist at $\dot q = 0$, and the quadratic residual bound silently collapses. Every downstream use of the residual bound must verify (H1) or replace it with a weaker a-posteriori bound.
 :::
 
 **Proof:**
+
+*The second-order Taylor expansion below invokes hypothesis (H1) ($f \in C^2$). Without it, the remainder term $O(\lVert x - \bar x\rVert^3)$ has no meaning and the argument does not go through.*
 
 Starting from the fundamental theorem of calculus applied twice:
 
@@ -391,6 +411,19 @@ $$
 $$
 
 In practice, use a factor of $\sqrt{\cdot}$ to be conservative since $\delta x$ varies over the interval.
+
+::: {.callout-warning}
+## Chicken-and-egg: estimating $M(t)$ before integrating
+The rule @eq-adaptive-timestep sets $\Delta t$ from the Hessian bound $M$, but $M(t)$ is itself a property of the trajectory that $\Delta t$ is being chosen to compute. We resolve the circularity in one of three ways; choose whichever fits the setting:
+
+1. **Coarse-to-fine bootstrapping.** Run one pass at a conservative fixed step $\Delta t_0$ (e.g., from a worst-case global $M_{\max}$ constant). Evaluate $M(t)$ along this coarse trajectory by finite-differencing $\partial f/\partial x$, then use the resulting $M(t)$-profile to pick adaptive step sizes for a refined pass. This is cheap for smooth swing dynamics where two passes suffice.
+
+2. **Online Hessian estimation.** Maintain a running estimate $\hat M(t)$ by finite-differencing $\partial f/\partial x$ over the last few accepted steps; use $\hat M$ in the step rule for the next step. Standard in adaptive Runge--Kutta libraries; numerically inexpensive because the Jacobian is already being formed by the DDP inner loop.
+
+3. **A-posteriori residual control.** Drop the a-priori step rule entirely. Integrate with a standard embedded error estimator (e.g., Dormand--Prince 5(4)) and accept/reject steps based on the *measured* local error instead of the Hessian-bound surrogate. This sidesteps $M$ altogether at the cost of giving up Theorem 1.1 as a certificate.
+
+Options 1 and 2 retain the certificate of Theorem 1.1 (modulo the estimate $\hat M \approx M$); option 3 trades that certificate for a simpler, more robust code path. The adaptive-DDP implementation in §2.2 below uses option 2.
+:::
 
 ### Algorithm 2.1: Adaptive-Timestep DDP
 

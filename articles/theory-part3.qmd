@@ -28,10 +28,10 @@ format:
       <div class="laymans-item">
         <h3>The "Invariant" Drift</h3>
         <p>
-          We prove a property called <strong>Drift Invariance</strong>. It means that the laws of physics governing the club's passive motion (gravity, inertia) don't change just because you apply more muscle force.
+          We prove a property called <strong>Drift Invariance</strong>. It means that the laws of physics governing the club's passive motion (gravity, inertia) don't change just because you apply more muscle force&mdash;<em>as long as your grip stiffness does not change</em>. If you suddenly clench the grip mid-swing (or go slack), the effective stiffness of the hand&ndash;club interface changes, and that <em>does</em> alter the passive dynamics. The invariance is a claim about the math of applying a given torque, not a claim that your body's stiffness profile is fixed.
         </p>
         <div class="analogy">
-          <strong>Analogy:</strong> Think of a car on a road. The road's slope and the car's weight are the "drift" factors. Whether you gently tap the gas or floor it (input), the road and the car's weight remain the same. The "drift" is independent of your "input."
+          <strong>Analogy:</strong> Think of a car on a road. The road's slope and the car's weight are the "drift" factors. Whether you gently tap the gas or floor it (input), the road and the car's weight remain the same. The "drift" is independent of your "input." (What this analogy doesn't capture: if you could somehow add weight to the car by pressing the pedal harder, the analogy would break&mdash;which is exactly what a mid-swing grip-stiffness change does.)
         </div>
       </div>
 
@@ -94,9 +94,18 @@ $$\frac{\partial f(x)}{\partial u} = 0,$$
 
 meaning $f(x)$ depends only on the state $x$ and model parameters, and is strictly independent of the instantaneous control input $u$.
 
+::: {.callout-important}
+## Standing hypothesis of Proposition 1 --- constant (input-independent) impedance
+The drift-invariance proposition stated below holds **only under the hypothesis that $M(q,\eta)$, $C(q,\dot q,\eta,\dot\eta)$, $G(q,\eta)$, $K_s$, and any damping coefficients are *independent of the control input $u$*.** This is the *constant-impedance* assumption: the mass, Coriolis, and stiffness matrices are state-dependent but not input-dependent.
+
+This assumption fails when **grip stiffness and joint impedance modulate with muscle activation** --- the Milner--Cloutier impedance-modulation phenomenon well-documented in voluntary-contraction studies. In that regime one has $M_{\eta\eta} = M_{\eta\eta}(u)$ (effective stiffness rises with grip-force output), and therefore $\nabla_u f \neq 0$: the drift field itself is bent by the control. Proposition 1 is not applicable there and the system is no longer strictly control-affine but bilinear / quasi-affine. A hybrid-affine or switched-systems framework is required; we return to this in the Limitations section below.
+
+The golf-swing relevance: for downswing phases where grip pressure is near its plateau (the bulk of the release), the constant-impedance assumption is defensible. For pre-impact stiffening pulses (the "Stiffness Pulse" discussed in `intentional-constraint-collapse.qmd`), it breaks down and the analysis must be read as a parametric counterfactual rather than a strict drift-invariance result.
+:::
+
 To see this rigorously, we state the property as a formal proposition.
 
-**Proposition 1 (Drift Invariance).** The drift vector field $f(x)$ is invariant with respect to the control input $u$, i.e.,
+**Proposition 1 (Drift Invariance, under the constant-impedance hypothesis above).** Assume $M$, $C$, $G$, $F_s$ are independent of $u$. Then the drift vector field $f(x)$ is invariant with respect to the control input $u$, i.e.,
 $$
 \nabla_u f(x) \equiv 0.
 $$

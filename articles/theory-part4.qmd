@@ -555,6 +555,36 @@ $$\begin{bmatrix}
 
 **Superposition still holds.** Even though the dynamics are now richer and nonlinear in $(\theta,\eta)$, the torque input still appears linearly as $A_{\mathrm{input}}(x)\,u$. The drift term contains all flexible-shaft effects; any two solutions corresponding to inputs $u_1,u_2$ differ by the same linear map $A_{\mathrm{input}}(x)$ applied to the difference in inputs.
 
+::: {.callout-tip}
+## Worked 2-DOF example: concrete numbers for rigid + flexible-mode coupling
+To make the block structure reproducible, fix representative parameters: rod length $L = 1.1$ m, rod/hand mass $m_h = 0.40$ kg concentrated at the wrist, clubhead mass $m_c = 0.200$ kg at the tip, and a single first-bending mode with modal mass $m_\eta = 0.10$ kg, modal stiffness $k_\eta = 2500$ N/m (first-mode frequency $f_1 = \tfrac{1}{2\pi}\sqrt{k_\eta/m_\eta} \approx 25.2$ Hz --- typical for a steel iron shaft), modal damping $c_\eta = 0.8$ N·s/m, and shape function $\Phi(L) = 1.0$ at the clubhead.
+
+At the midsection configuration ($\theta = -\tfrac{\pi}{4}$, $\eta = 0$) the inertia blocks evaluate to
+$$
+M_{qq} = m_h L^2 + m_c L^2 + \text{mode contribution} \approx 0.726\ \mathrm{kg\,m^2},
+\qquad
+M_{q\eta} = m_c L \cdot \Phi(L) \approx 0.220\ \mathrm{kg\,m},
+$$
+$$
+M_{\eta q} = M_{q\eta},
+\qquad
+M_{\eta\eta} = m_\eta + m_c \Phi(L)^2 \approx 0.300\ \mathrm{kg}.
+$$
+The coupling ratio is then
+$$
+\Gamma = - M_{\eta\eta}^{-1} M_{\eta q} \approx -\frac{0.220}{0.300} \approx -0.733\ \mathrm{m^{-1}}
+$$
+(the dimension is $\mathrm{m^{-1}}$ here because $\eta$ is a linear deflection while $\theta$ is angular; in a model where $\eta$ were itself angular, $\Gamma$ would be dimensionless). The Schur complement / articulated-body inertia is
+$$
+\Delta \;=\; M_{qq} - M_{q\eta} M_{\eta\eta}^{-1} M_{\eta q}
+\;\approx\; 0.726 - \frac{(0.220)^2}{0.300}
+\;\approx\; 0.565\ \mathrm{kg\,m^2},
+$$
+so the flexible mode reduces the effective hand-swing inertia by roughly $0.161/0.726 \approx 22\%$ --- the "inertial relief" of the free flexible mode, exactly as claimed in Part I §4.2. Verifying the **sign** of $\Gamma$: apply unit torque $u = 1$ N·m; hand acceleration is $\ddot\theta = H_{qq} u = \Delta^{-1} \approx 1.77\ \mathrm{rad/s^2}$, and the modal acceleration is $\ddot\eta_{\text{input}} = \Gamma H_{qq} u \approx -1.30\ \mathrm{m/s^2}$ --- the shaft deflects *backward* (opposite the hand's motion) as expected for inertial lag. A positive-$\Gamma$ convention would predict forward-running deflection, which is physically wrong.
+
+These numbers are reproducible with a 20-line Python script that builds $M$, inverts it block-wise, and prints $\Gamma, \Delta, H_{qq}$ --- we leave the script as an exercise; the numerical values above were computed from the parameters listed at the top of this box.
+:::
+
 ### Summary: Superposition and affine structure
 
 Across both cases—planar rigid pendulum and planar flexible pendulum—the same pattern holds (and extends by the same reasoning to the spatial cases):

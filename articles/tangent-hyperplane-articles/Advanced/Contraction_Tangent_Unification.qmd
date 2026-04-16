@@ -754,7 +754,7 @@ $$ {#eq-impedance-pullback}
 
 **Contraction interpretation**: $\mathbf{K}_{\mathbf{q}}$ is a contraction metric! The CNS shapes this metric to ensure stability.
 
-### Optimal Feedback Control Model
+### Optimal Feedback Control Model — Heuristic Risk-Sensitive / Contraction-Motivated Extension {#sec-ofc-heuristic}
 
 Recent neuroscience proposes the CNS solves:
 $$
@@ -766,14 +766,30 @@ $$
 d\mathbf{x} = \mathbf{f}(\mathbf{x}, \mathbf{W} \mathbf{c}) dt + \mathbf{G} d\mathbf{w}
 $$ {#eq-stochastic-dynamics}
 
-**Proposed formulation**: A **stochastic contraction metric** $\mathbf{S}(t)$ for the mean-field dynamics satisfying:
+::: {.callout-warning}
+## Conjectural extension --- not standard stochastic LQR
+The equation presented immediately below is **not** the standard stochastic-LQR Riccati equation. It is a heuristic fusion of two different control problems (stochastic LQR and risk-sensitive / Whittle--Speyer LEQG control), offered here as a motivating conjecture for combining contraction-theoretic robustness with stochastic feedback control. **Do not** quote it as a derived result in downstream work.
+
+The **standard stochastic-LQR** formulation separates the Riccati equation from the covariance evolution:
+$$
+-\dot{\mathbf{S}} = \mathbf{Q} + \mathbf{A}^\top \mathbf{S} + \mathbf{S} \mathbf{A} - \mathbf{S} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S}
+\qquad \text{(Riccati --- identical to deterministic LQR)}
+$$
+$$
+\dot{\boldsymbol{\Sigma}}_{\mathbf{x}} = \mathbf{A}\boldsymbol{\Sigma}_{\mathbf{x}} + \boldsymbol{\Sigma}_{\mathbf{x}} \mathbf{A}^\top + \mathbf{G}\boldsymbol{\Sigma}\mathbf{G}^\top
+\qquad \text{(Lyapunov / covariance ODE)}
+$$
+Noise enters the *covariance* evolution, not the Riccati. The **quadratic-in-$\mathbf{S}$ noise term** shown below appears in **risk-sensitive** control [Jacobson 1973](https://doi.org/10.1109/TAC.1973.1100280); [Whittle 1981](https://doi.org/10.2307/1426756)) under the exponential-of-integral (LEQG) cost criterion, not under the standard quadratic expectation cost.
+:::
+
+**Proposed (heuristic) formulation.** A **stochastic contraction metric** $\mathbf{S}(t)$ for the mean-field dynamics satisfying:
 $$
 -\dot{\mathbf{S}} = \mathbf{Q} + \mathbf{A}^\top \mathbf{S} + \mathbf{S} \mathbf{A} - \mathbf{S} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S} + \frac{1}{2} \mathbf{S} \mathbf{G} \mathbf{\Sigma} \mathbf{G}^\top \mathbf{S}
-$$ {#eq-stochastic-riccati}
+$$ {#eq-stochastic-riccati-conjectural}
 
-> **Note on non-standard formulation:** The quadratic noise term $\tfrac{1}{2} \mathbf{S} \mathbf{G} \mathbf{\Sigma} \mathbf{G}^\top \mathbf{S}$ does not appear in the standard stochastic LQR/Riccati equation, which has an additive noise term of the form $+\mathbf{G} \mathbf{\Sigma} \mathbf{G}^\top$ (from the Itô correction). The equation above is a heuristic extension motivated by contraction-theoretic robustness analysis; a rigorous derivation from the stochastic Lyapunov/contraction framework would require careful application of Itô's lemma. This equation should be treated as an illustrative proposal rather than a derived result.
+The extra $\tfrac{1}{2}\mathbf{S}\mathbf{G}\boldsymbol{\Sigma}\mathbf{G}^\top\mathbf{S}$ term is imported from risk-sensitive control --- where it arises from the LEQG derivation of Jacobson (1973) and Whittle (1981) --- and is offered here by analogy with contraction-theoretic robustness bounds. A rigorous derivation from the stochastic Lyapunov / contraction framework (via Itô's lemma on $\mathbf{x}^\top\mathbf{S}\mathbf{x}$, with a carefully chosen pseudo-Lyapunov rate) is not provided in this article and is left as an open problem; it is plausible but not established.
 
-The qualitative interpretation holds regardless: noise terms tend to **oppose** contraction—the CNS must work harder to maintain stability in the presence of variability.
+The qualitative interpretation that survives this caveat: noise terms tend to **oppose** contraction --- the CNS must work harder to maintain stability in the presence of variability --- regardless of which Riccati/Lyapunov pair is used. That qualitative claim follows already from the standard stochastic-LQR covariance ODE above.
 
 ## Golf Swing Stability Margins
 
