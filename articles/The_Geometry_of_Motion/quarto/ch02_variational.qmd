@@ -247,20 +247,16 @@ For any $t_0 \leq t_1 \leq t_2$,
 \end{theorem}
 
 \begin{proof}
-Let $\Psi(t) := \Phi(t_2,t_1)\,\Phi(t_1,t_0)$. We compute
-\begin{align}
-\dot{\Psi}(t) &= \frac{\dd}{\dd t}\left[\Phi(t_2,t_1)\,\Phi(t_1,t_0)\right]\\
-&= \frac{\partial \Phi(t_2,t_1)}{\partial t}\,\Phi(t_1,t_0) + \Phi(t_2,t_1)\frac{\partial \Phi(t_1,t_0)}{\partial t}.
-\end{align}
-
-For $t_0 \leq t \leq t_1$, the first term vanishes (since $\Phi(t_2,t_1)$ does not depend on $t$ when $t<t_1$),
-and the second term gives
+Fix $t_0$ and $t_1$ with $t_1 \geq t_0$, and define $\Psi(t) := \Phi(t,t_1)\,\Phi(t_1,t_0)$ for $t \geq t_1$.
+Since $\Phi(t_1,t_0)$ is a constant matrix (independent of $t$), differentiating with respect to $t$ gives
 \begin{equation}
-\dot{\Psi}(t) = \Phi(t_2,t_1)\,\mat{A}(t)\,\Phi(t_1,t_0) = \mat{A}(t)\,\Psi(t).
+\dot{\Psi}(t) = \dot{\Phi}(t,t_1)\,\Phi(t_1,t_0) = \mat{A}(t)\,\Phi(t,t_1)\,\Phi(t_1,t_0) = \mat{A}(t)\,\Psi(t),
 \end{equation}
-
-At $t=t_0$, we have $\Psi(t_0) = \Phi(t_2,t_1)\,\Phi(t_1,t_0)|_{t_1=t_0} = \Phi(t_2,t_0)\,\mat{I}_n = \Phi(t_2,t_0)$.
-Thus $\Psi$ and $\Phi(\cdot,t_0)$ satisfy the same ODE with the same initial condition, hence they are equal.
+where we used the defining ODE~\eqref{eq:ch2:stm-ode} for $\Phi(t,t_1)$.
+At $t = t_1$, $\Psi(t_1) = \Phi(t_1,t_1)\,\Phi(t_1,t_0) = \mat{I}_n\,\Phi(t_1,t_0) = \Phi(t_1,t_0)$,
+which matches $\Phi(t_1,t_0)$. Thus $\Psi(t)$ and $\Phi(t,t_0)$ satisfy the same linear ODE with the same
+value at $t = t_1$, so by uniqueness $\Psi(t) = \Phi(t,t_0)$ for all $t \geq t_1$. Evaluating at $t = t_2$
+yields $\Phi(t_2,t_1)\,\Phi(t_1,t_0) = \Phi(t_2,t_0)$.
 \end{proof}
 
 \begin{theorem}[Invertibility]
@@ -291,18 +287,18 @@ The determinant of the state transition matrix satisfies
 \end{theorem}
 
 \begin{proof}
-We use the matrix determinant lemma (also called Jacobi's formula):
+We use Jacobi's formula for the derivative of a determinant:
 \begin{equation}
-\frac{\dd}{\dd t}\det(\Phi(t,t_0)) = \trace\left(\text{adj}(\Phi)\,\frac{\dd\Phi}{\dd t}\right)\,\frac{1}{\det(\Phi)},
+\frac{\dd}{\dd t}\det(\Phi(t,t_0)) = \trace\!\left(\text{adj}(\Phi)\,\frac{\dd\Phi}{\dd t}\right),
 \label{eq:ch2:jacobi}
 \end{equation}
-where $\text{adj}(\Phi)$ is the adjugate matrix. For a nonsingular matrix,
-$\text{adj}(\Phi) = \det(\Phi)\,\Phi^{-T}$, so
+where $\text{adj}(\Phi)$ is the adjugate (classical adjoint) matrix. For a nonsingular matrix,
+$\text{adj}(\Phi) = \det(\Phi)\,\Phi^{-1}$, so
 \begin{align}
-\frac{\dd}{\dd t}\det(\Phi) &= \trace(\Phi^{-T}\,\dot{\Phi})\\
-&= \trace(\Phi^{-T}\,\mat{A}\,\Phi)\\
-&= \trace(\mat{A}\,\Phi\,\Phi^{-T})\\
-&= \trace(\mat{A}).
+\frac{\dd}{\dd t}\det(\Phi) &= \det(\Phi)\,\trace(\Phi^{-1}\,\dot{\Phi})\\
+&= \det(\Phi)\,\trace(\Phi^{-1}\,\mat{A}\,\Phi)\\
+&= \det(\Phi)\,\trace(\mat{A}\,\Phi\,\Phi^{-1})\\
+&= \det(\Phi)\,\trace(\mat{A}).
 \end{align}
 
 Here we used the cyclic property of the trace: $\trace(ABC) = \trace(BCA) = \trace(CAB)$.

@@ -14,9 +14,9 @@ that small errors shrink under the feedback law. This chapter reveals that optim
 and stability are not separate concerns but two views of the same geometric object: the
 Riccati solution acting simultaneously as cost curvature and contraction metric. This
 connection, recognized in the 1960s by Kalman and formalized by Willems, remains one of
-the most powerful principles in modern control: the controller that minimizes energy
-consumption guarantees robustness, and the controller that maximizes robustness often
-minimizes energy. Duality is why we can design once and verify both objectives
+the most useful structural principles in modern control: under LQR assumptions, the controller that
+minimizes a quadratic energy cost also certifies exponential stability, and in the H$^\infty$ setting a
+controller tuned for robustness admits a dual LQR interpretation. Duality is why we can design once and verify both objectives
 simultaneously.
 
 :::
@@ -197,12 +197,15 @@ Introduce the gain matrix
 \mat{K}_k = (\mat{R}_k + \mat{B}_k^\T \mat{S}_{k+1} \mat{B}_k)^{-1} \mat{B}_k^\T \mat{S}_{k+1} \mat{A}_k,
 \label{eq:ch6:gain-definition}
 \end{equation}
-which allows us to rewrite the Riccati equation in the **alternative (or canonical) form**:
+which allows us to rewrite the Riccati equation in the **alternative (or canonical) form**
+(see Eq.~\eqref{eq:ch5:riccati-alt} for the equivalent form in Chapter~\ref{ch:optimal-control}):
 \begin{equation}
-\mat{S}_k = \mat{Q}_k + (\mat{A}_k - \mat{B}_k\mat{K}_k)^\T \mat{S}_{k+1} (\mat{A}_k - \mat{B}_k\mat{K}_k),
+\mat{S}_k = \mat{Q}_k + \mat{K}_k^\T\mat{R}_k\mat{K}_k
++ (\mat{A}_k - \mat{B}_k\mat{K}_k)^\T \mat{S}_{k+1} (\mat{A}_k - \mat{B}_k\mat{K}_k),
 \label{eq:ch6:riccati-alt-form}
 \end{equation}
-which is a key form that appears throughout duality theory.
+which is a key form that appears throughout duality theory. Step 5 below uses this identity in its complete
+form.
 
 Now we compute $V_{k+1} - V_k$ step by step.
 
@@ -237,43 +240,40 @@ V_{k+1}-V_k &= \dx_k^\T\!\left[
 
 **Step 3: Invoke the Riccati alternative form**. Equation~\eqref{eq:ch6:riccati-alt-form} states:
 \begin{equation}
-\mat{S}_k = \mat{Q}_k + (\mat{A}_k - \mat{B}_k\mat{K}_k)^\T \mat{S}_{k+1} (\mat{A}_k - \mat{B}_k\mat{K}_k).
+\mat{S}_k = \mat{Q}_k + \mat{K}_k^\T\mat{R}_k\mat{K}_k
++ (\mat{A}_k - \mat{B}_k\mat{K}_k)^\T \mat{S}_{k+1} (\mat{A}_k - \mat{B}_k\mat{K}_k).
 \end{equation}
 
 Therefore:
 \begin{equation}
-(\mat{A}_k-\mat{B}_k\mat{K}_k)^\T\mat{S}_{k+1}(\mat{A}_k-\mat{B}_k\mat{K}_k) = \mat{S}_k - \mat{Q}_k.
+(\mat{A}_k-\mat{B}_k\mat{K}_k)^\T\mat{S}_{k+1}(\mat{A}_k-\mat{B}_k\mat{K}_k)
+= \mat{S}_k - \mat{Q}_k - \mat{K}_k^\T\mat{R}_k\mat{K}_k.
 \label{eq:ch6:riccati-substitution}
 \end{equation}
 
 **Step 4: Substitute back**:
 \begin{align}
 V_{k+1}-V_k &= \dx_k^\T\!\left[
-(\mat{S}_k - \mat{Q}_k) - \mat{S}_k\right]\!\dx_k \notag\\
-&= \dx_k^\T\!\left[-\mat{Q}_k\right]\!\dx_k \\
-&= -\dx_k^\T\mat{Q}_k\dx_k.
-\label{eq:ch6:first-drop}
-\end{align}
-
-**Step 5: Add the control cost**. The optimal value function satisfies a fundamental recursion:
-\begin{equation}
-V_k = x_k^\T\mat{Q}_k x_k + u_k^\T\mat{R}_k u_k + V_{k+1}.
-\label{eq:ch6:cost-recursion}
-\end{equation}
-
-Rearranging for perturbations:
-\begin{equation}
-V_{k+1} - V_k = -\dx_k^\T\mat{Q}_k\dx_k - \du_k^\T\mat{R}_k\du_k.
-\label{eq:ch6:value-drop-with-control}
-\end{equation}
-
-With the optimal control $\du_k = -\mat{K}_k\dx_k$:
-\begin{align}
-V_{k+1} - V_k &= -\dx_k^\T\mat{Q}_k\dx_k - (-\mat{K}_k\dx_k)^\T\mat{R}_k(-\mat{K}_k\dx_k) \notag\\
-&= -\dx_k^\T\mat{Q}_k\dx_k - \dx_k^\T\mat{K}_k^\T\mat{R}_k\mat{K}_k\dx_k \\
+(\mat{S}_k - \mat{Q}_k - \mat{K}_k^\T\mat{R}_k\mat{K}_k) - \mat{S}_k\right]\!\dx_k \notag\\
 &= -\dx_k^\T(\mat{Q}_k + \mat{K}_k^\T\mat{R}_k\mat{K}_k)\dx_k.
 \label{eq:ch6:value-drop-final}
 \end{align}
+
+**Step 5: Interpretation via the cost recursion**. Equivalently, the optimal value function satisfies the
+Bellman recursion
+\begin{equation}
+V_k = \dx_k^\T\mat{Q}_k\dx_k + \du_k^\T\mat{R}_k\du_k + V_{k+1},
+\label{eq:ch6:cost-recursion}
+\end{equation}
+which rearranges to
+\begin{equation}
+V_{k+1} - V_k = -\dx_k^\T\mat{Q}_k\dx_k - \du_k^\T\mat{R}_k\du_k,
+\label{eq:ch6:value-drop-with-control}
+\end{equation}
+and substituting the optimal feedback $\du_k = -\mat{K}_k\dx_k$ reproduces the expression from Step 4:
+\begin{equation}
+V_{k+1} - V_k = -\dx_k^\T(\mat{Q}_k + \mat{K}_k^\T\mat{R}_k\mat{K}_k)\dx_k.
+\end{equation}
 
 Since $\mat{Q}_k \succ 0$ and $\mat{R}_k \succ 0$ by assumption (Assumption from Chapter~\ref{ch:optimal-control}),
 we have $\mat{Q}_k + \mat{K}_k^\T\mat{R}_k\mat{K}_k \succ 0$. Let $\alpha_k = \lambda_{\min}(\mat{Q}_k + \mat{K}_k^\T\mat{R}_k\mat{K}_k)$.
