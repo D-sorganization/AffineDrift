@@ -3,6 +3,13 @@ title: "Recursive Algorithms"
 ---
 
 # Recursive Algorithms
+
+::: {.callout-important}
+## Conventions Used in This Chapter
+
+All spatial 6-vectors use **(angular ; linear)** ordering: $\twist = [\bm{\omega};\, \bm{v}]$, $\wrench = [\bm{m};\, \bm{f}]$, $\screw = [\bm{\omega};\, \bm{v}]$. Matches Lynch & Park [@Lynch2017ModernRobotics] §8. The Adjoint operator $\operatorname{Ad}_T$ and the Lie-bracket matrix form $\operatorname{ad}_\twist$ are defined in Chapter 5 and used here without redefinition.
+:::
+
 ## The Curse of Dimensionality
 
 
@@ -185,7 +192,14 @@ def recursive_newton_euler(n_links, joint_angles, joint_velocities, joint_accele
 
     # OUTWARD PASS: Compute velocities and accelerations (base to tip)
     twists = [np.zeros(6)]  # Velocity of base link (ground) is zero
-    twist_derivatives = [np.zeros(6)]  # Acceleration of base link
+
+    # Gravity as a fictitious base acceleration (Featherstone 2008, Sec. 6.2):
+    # seed the base spatial acceleration with [-g] in the linear block so that
+    # the outward recursion propagates gravitational loading into every link
+    # without an explicit gravity term per link.
+    gravity = np.asarray(gravity_vector)  # e.g. [0, 0, -9.81]
+    twist_dot_base = np.concatenate([np.zeros(3), -gravity])  # [omega_dot=0 ; v_dot=-g]
+    twist_derivatives = [twist_dot_base]
     coriolis_bias_forces = []
 
     for i in range(n_links):
@@ -198,18 +212,18 @@ def recursive_newton_euler(n_links, joint_angles, joint_velocities, joint_accele
         twist_i = twist_parent_in_i + S_i * joint_velocities[i]
         twists.append(twist_i)
 
-        # Acceleration: time derivative of velocity
-        # Includes Coriolis terms from parent acceleration and centrifugal terms
+        # Acceleration: time derivative of velocity.  Coriolis/centrifugal
+        # contribution uses the Lie-bracket matrix ad_V (Chapter 5).
         twist_derivative_parent = Ad_T @ twist_derivatives[i]
         joint_accel_contrib = S_i * joint_accelerations[i]
-        coriolis_term = adjoint_matrix(S_i * joint_velocities[i]) @ twist_i
+        coriolis_term = ad_matrix(S_i * joint_velocities[i]) @ twist_i
 
         twist_derivative_i = twist_derivative_parent + joint_accel_contrib + coriolis_term
         twist_derivatives.append(twist_derivative_i)
 
-        # Spatial bias force (inertial + gravity effects with zero joint acceleration)
+        # Velocity-product (bias) wrench: ad_V^T (I V).
         I_i = spatial_inertias[i]
-        bias_wrench = I_i @ coriolis_term  # Coriolis and centrifugal
+        bias_wrench = ad_matrix(twist_i).T @ (I_i @ twist_i)
         coriolis_bias_forces.append(bias_wrench)
 
     # INWARD PASS: Compute wrenches and joint torques (tip to base)
@@ -240,7 +254,8 @@ def recursive_newton_euler(n_links, joint_angles, joint_velocities, joint_accele
 def adjoint_matrix(T):
     """
     Compute the 6x6 Adjoint matrix Ad_T for a 4x4 homogeneous transform T.
-    Used to transform spatial vectors (twists and wrenches) between frames.
+    Transports TWISTS between frames: V_A = Ad_{T_AB} V_B.
+    Wrenches transform by the inverse-transpose: F_A = Ad_{T_AB}^{-T} F_B.
     """
     R = T[0:3, 0:3]
     p = T[0:3, 3]
@@ -252,6 +267,21 @@ def adjoint_matrix(T):
     Ad[3:6, 0:3] = p_skew @ R
 
     return Ad
+
+
+def ad_matrix(V):
+    """
+    Lie-bracket matrix form ad_V for a spatial 6-vector V = [omega ; v].
+    Distinct from Ad_T: ad_V appears in Coriolis/centrifugal terms and in
+    the velocity-product wrench p = ad_V^T (I V) used in RNEA and ABA.
+    """
+    omega = V[0:3]
+    v = V[3:6]
+    A = np.zeros((6, 6))
+    A[0:3, 0:3] = skew(omega)
+    A[3:6, 0:3] = skew(v)
+    A[3:6, 3:6] = skew(omega)
+    return A
 ```
 
 
@@ -259,6 +289,18 @@ def adjoint_matrix(T):
 
   The Recursive Newton-Euler algorithm allows the inverse dynamics for a system with $N$ joints to be solved in $O(N)$ operations. Time to compute scales linearly, regardless of complexity. This is why robotics works in the real world.
 
+:::
+
+::: {.callout-tip}
+## Complexity at a Glance
+
+For a chain with $N$ joints, each recursive pass visits every joint exactly once and does a fixed number of $6\times 6$ matrix operations per visit:
+
+- **RNEA (inverse dynamics)**: one outward + one inward pass of $N$ iterations $\times$ $O(1)$ $6\times 6$ ops $= O(N)$.
+- **ABA (forward dynamics, Chapter 10)**: three passes of the same shape $= O(N)$.
+- **CRBA (explicit mass matrix)**: evaluates RNEA once per generalized coordinate to build each column of $M(\bm{q})$ $= O(N^2)$.
+
+The $6\times 6$ block size is fixed by spatial-algebra dimensionality, so the asymptotic rates above are tight; the hidden constants are small enough that 30-DOF humanoids run comfortably at kHz rates.
 :::
 
 
