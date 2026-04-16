@@ -88,13 +88,13 @@ Define:
 \begin{itemize}
 - $\bm{F}^M \in \mathbb{R}^{n_m}$: vector of muscle forces, where $n_m$ is the number of muscles.
 - $\boldsymbol{\tau} \in \mathbb{R}^{n_j}$: vector of joint torques, where $n_j$ is the number of joints.
-- $\bm{R}(\bm{q}) \in \mathbb{R}^{n_j \times n_m}$: the moment arm matrix, whose entry $R_{ij}(\bm{q})$ is the moment arm of muscle $j$ about joint $i$.
+- $\bm{R}(\bm{q}) \in \mathbb{R}^{n_m \times n_j}$: the moment arm matrix (Zajac 1989 convention [@Zajac1989]), whose entry $R_{ji}(\bm{q})$ is the moment arm of muscle $j$ about joint $i$. Equivalently, rows index muscles and columns index joints.
 \end{itemize}
 
 The relationship between muscle forces and joint torques is:
 $$\boldsymbol{\tau} = \bm{R}(\bm{q})^T \bm{F}^M.$$
 
-Note the transpose: $\bm{R}^T$, not $\bm{R}$. The moment arm matrix $\bm{R}$ maps joint velocities to muscle velocities ($\dot{\bm{\ell}} = \bm{R} \dot{\bm{q}}$), so by the principle of virtual work, forces map in the opposite direction through the transpose. This is identical to the Jacobian transpose mapping in robotics: if $\bm{J}$ maps joint velocities to end-effector velocities, then $\bm{J}^T$ maps end-effector forces to joint torques.
+Note the transpose: $\bm{R}^T$, not $\bm{R}$. The moment arm matrix $\bm{R}$ maps joint velocities to muscle-tendon length rates ($\dot{\bm{\ell}} = \bm{R} \dot{\bm{q}}$), so by the principle of virtual work, forces map in the opposite direction through the transpose. This is identical to the Jacobian transpose mapping in robotics: if $\bm{J}$ maps joint velocities to end-effector velocities, then $\bm{J}^T$ maps end-effector forces to joint torques.
 
 ::: {.callout-important}
 ## The Muscle Jacobian
@@ -109,20 +109,20 @@ This is directly analogous to the Jacobian in robotics and dynamics. For a robot
 ## Moment Arms and Joint Torques in a Two-Joint Arm
 Consider a simplified arm with two joints (shoulder and elbow) and two muscles (an extensors muscle acting at both joints and a flexor muscle acting at the elbow).
 
-Suppose the moment arm matrix is:
-$$\bm{R}(\bm{q}) = \begin{pmatrix} 0.05 & 0.02 \\ 0 & 0.04 \end{pmatrix} \, \mathrm{m}.$$
+Suppose the moment arm matrix (rows = muscles, columns = joints) is:
+$$\bm{R}(\bm{q}) = \begin{pmatrix} 0.05 & 0 \\ 0.02 & 0.04 \end{pmatrix} \, \mathrm{m}.$$
 
 This means:
-- Muscle 1 has moment arm 0.05 m at the shoulder and 0 m at the elbow (it only acts at the shoulder).
-- Muscle 2 has moment arm 0.02 m at the shoulder and 0.04 m at the elbow (biarticular---acts at both joints).
+- Muscle 1 (row 1) has moment arm 0.05 m at the shoulder and 0 m at the elbow (it only acts at the shoulder).
+- Muscle 2 (row 2) has moment arm 0.02 m at the shoulder and 0.04 m at the elbow (biarticular---acts at both joints).
 
 Suppose the muscle forces are:
 $$\bm{F}^M = \begin{pmatrix} 500 \\ 300 \end{pmatrix} \, \mathrm{N}.$$
 
 The joint torques are:
-$$\boldsymbol{\tau} = \bm{R}^T \bm{F}^M = \begin{pmatrix} 0.05 & 0 \\ 0.02 & 0.04 \end{pmatrix} \begin{pmatrix} 500 \\ 300 \end{pmatrix}.$$
+$$\boldsymbol{\tau} = \bm{R}^T \bm{F}^M = \begin{pmatrix} 0.05 & 0.02 \\ 0 & 0.04 \end{pmatrix} \begin{pmatrix} 500 \\ 300 \end{pmatrix} = \begin{pmatrix} 31 \\ 12 \end{pmatrix} \, \mathrm{N \cdot m}.$$
 
-__DISPLAY_MATH_5__
+So $\tau_{\text{shoulder}} = 0.05 \cdot 500 + 0.02 \cdot 300 = 25 + 6 = 31$ N$\cdot$m and $\tau_{\text{elbow}} = 0 \cdot 500 + 0.04 \cdot 300 = 12$ N$\cdot$m.
 
 Note that muscle 2 contributes to both joints: it generates 6 N$\cdot$m at the shoulder and 12 N$\cdot$m at the elbow.
 :::
