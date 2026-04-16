@@ -403,6 +403,25 @@ This algebraic relationship reveals that the cross-mobility $H_{\eta q}$ is not 
 \Gamma \equiv - M_{\eta\eta}^{-1} M_{\eta q}.
 $$ We define $\Gamma \in \mathbb{R}^{m \times n}$ as the **Inertial Coupling Ratio** (this is the off-diagonal block of the inverse mass matrix; we adopt the term "coupling ratio" for brevity). It acts as the system's mechanical 'gear ratio,' dictating how much acceleration is transmitted to the flexible modes for every unit of acceleration the golfer produces at the joints. Crucially, this transmission depends solely on the mass distribution ($M_{q\eta}$ and $M_{\eta\eta}$), making it a fixed property of the club's design that the golfer cannot alter during the swing.
 
+::: {.callout-tip}
+## Sign convention for $\Gamma$ --- worked 1-DOF rigid-on-spring example
+Consider the minimal rigid-on-spring system: a hand mass $m_h$ at coordinate $q$ connected through a stiff spring of stiffness $k$ (massless) to a shaft mass $m_s$ at coordinate $q + \eta$, where $\eta$ is the shaft deflection relative to the hand. Using $(q, \eta)$ as generalized coordinates, the kinetic energy is
+$$
+T = \tfrac{1}{2} m_h \dot q^2 + \tfrac{1}{2} m_s (\dot q + \dot\eta)^2,
+$$
+so the mass matrix is
+$$
+M = \begin{bmatrix} m_h + m_s & m_s \\ m_s & m_s \end{bmatrix}, \qquad M_{qq} = m_h + m_s,\; M_{q\eta} = M_{\eta q} = m_s,\; M_{\eta\eta} = m_s.
+$$
+The coupling ratio evaluates to
+$$
+\Gamma = - M_{\eta\eta}^{-1} M_{\eta q} = - \frac{m_s}{m_s} = -1.
+$$
+**Physical check.** With the spring soft ($k$ small, elastic force transient), apply a unit upward hand acceleration $\ddot q = +1$. From the block inverse relation, $\ddot\eta_{\text{input}} = \Gamma H_{qq} B u$. With $\Gamma = -1$, $\ddot\eta = -1$ relative to $q$, i.e. the shaft lags the hand --- the shaft mass is left behind by the acceleration, exactly as a freely suspended shaft would bend when the hands jerk upward. This is the correct "shaft droops away from the direction of hand acceleration" behavior.
+
+The sign in $\Gamma = -M_{\eta\eta}^{-1}M_{\eta q}$ is therefore the **only** sign consistent with the intuition that flexible modes lag rigid modes under positive drive. An accidental sign flip would predict the shaft leading the hand --- immediately falsifiable against any strobed swing video. The convention used throughout this article is the one above; no sign flip is present.
+:::
+
 Substituting the expression for $H_{\eta q}$ into equation (1): $$
 M_{qq} H_{qq} + M_{q\eta} \left( - M_{\eta\eta}^{-1} M_{\eta q} H_{qq} \right) = I_n.
 $$ Factoring out $H_{qq}$ on the right: $$
@@ -523,6 +542,21 @@ Three structural observations follow:
 3.  **The affine structure is independent of parameter values.** The decomposition does not rely on particular numerical values of masses, inertias, or shaft stiffness, only on the linearity of torque in the equations of motion. In practice, parameter uncertainty affects the *accuracy* of the decomposition but not its algebraic form.
 
 This control-affine structure is the backbone for the drift--input decomposition and the counterfactual constructions developed in the next sections.
+
+::: {.callout-note}
+## Formal definition: Drift-to-Control Ratio $\rho(x, t)$
+To avoid informal appeals to "drift dominance" throughout Parts II--V, we fix a single formal definition here. For a control-affine system $\dot x = f(x) + G(x) u$ with instantaneous input-magnitude bound $\lVert u \rVert_\infty \leq u_{\max}$, define
+$$
+\boxed{\;\rho(x) \;:=\; \frac{\lVert f(x) \rVert_{\bm{M}}}{\lVert G(x)\, u_{\max}\mathbf{1} \rVert_{\bm{M}}}\;}
+$$
+where $\lVert v \rVert_{\bm{M}} := \sqrt{v^\top \bm{M}(q) v}$ is the kinetic-energy-weighted norm induced by the configuration-dependent mass matrix $\bm{M}(q)$. (This norm measures "dynamic effort": it weights each mode by its effective inertia so that comparing drift to control is comparing like with like, in units of acceleration × $\sqrt{\text{inertia}}$.)
+
+- $\rho \gg 1$ --- **drift-dominated regime**: the passive vector field is much larger (in kinetic-energy norm) than the largest instantaneously achievable control perturbation. ZTCF is a useful baseline here.
+- $\rho \ll 1$ --- **control-dominated regime**: inputs can steer the state freely in one time step.
+- $\rho \sim 1$ --- the delicate regime where drift and control compete; counterfactual baselines must be interpreted carefully.
+
+This definition is the one referenced by the standalone article [Drift--Control Ratio](controllability-drift-ratio.html) and is used consistently in Parts II--V, the Physics-of-Golf glossary, and the `controllability-drift-ratio.qmd` reference.
+:::
 
 By isolating the torque input $u$ into the linear term $g(x)u$, we transform the nebulous question "how much force is active versus passive?" into a mathematically precise operation. The term $f(x)$ encapsulates the full history-dependent momentum of the system, while $g(x)u$ represents the instantaneous ability of the golfer to alter that momentum.
 
