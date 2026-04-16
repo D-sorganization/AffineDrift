@@ -97,10 +97,21 @@ jobs:
       - name: Install System Dependencies
         run: |
           if sudo -n true 2>/dev/null; then
-            sudo apt-get -o DPkg::Lock::Timeout=300 update
-            # libasound2t64 is the Ubuntu 24.04 name; Ubuntu 22.04 uses libasound2
-            apt-cache show libasound2t64 >/dev/null 2>&1 && LIBASOUND=libasound2t64 || LIBASOUND=libasound2
-            sudo apt-get -o DPkg::Lock::Timeout=300 install -y libgl1 libegl1 libxrandr2 libxss1 libxcursor1 libxcomposite1 "$LIBASOUND" libxi6 libxtst6
+            APT_READY=false
+            for attempt in 1 2 3; do
+              if sudo apt-get -o DPkg::Lock::Timeout=300 update; then
+                APT_READY=true
+                break
+              fi
+              sleep 20
+            done
+            if [ "$APT_READY" = "true" ]; then
+              # libasound2t64 is the Ubuntu 24.04 name; Ubuntu 22.04 uses libasound2
+              apt-cache show libasound2t64 >/dev/null 2>&1 && LIBASOUND=libasound2t64 || LIBASOUND=libasound2
+              sudo apt-get -o DPkg::Lock::Timeout=300 install -y libgl1 libegl1 libxrandr2 libxss1 libxcursor1 libxcomposite1 "$LIBASOUND" libxi6 libxtst6
+            else
+              echo "::warning::apt-get update could not acquire the package lock; continuing with existing system dependencies"
+            fi
           else
             echo "No passwordless sudo — assuming system deps are pre-installed (self-hosted runner)"
           fi
@@ -332,10 +343,21 @@ jobs:
         if: steps.e2e_changes.outputs.run == 'true'
         run: |
           if sudo -n true 2>/dev/null; then
-            sudo apt-get -o DPkg::Lock::Timeout=300 update
-            # libasound2t64 is the Ubuntu 24.04 name; Ubuntu 22.04 uses libasound2
-            apt-cache show libasound2t64 >/dev/null 2>&1 && LIBASOUND=libasound2t64 || LIBASOUND=libasound2
-            sudo apt-get -o DPkg::Lock::Timeout=300 install -y libgl1 libegl1 libxrandr2 libxss1 libxcursor1 libxcomposite1 "$LIBASOUND" libxi6 libxtst6
+            APT_READY=false
+            for attempt in 1 2 3; do
+              if sudo apt-get -o DPkg::Lock::Timeout=300 update; then
+                APT_READY=true
+                break
+              fi
+              sleep 20
+            done
+            if [ "$APT_READY" = "true" ]; then
+              # libasound2t64 is the Ubuntu 24.04 name; Ubuntu 22.04 uses libasound2
+              apt-cache show libasound2t64 >/dev/null 2>&1 && LIBASOUND=libasound2t64 || LIBASOUND=libasound2
+              sudo apt-get -o DPkg::Lock::Timeout=300 install -y libgl1 libegl1 libxrandr2 libxss1 libxcursor1 libxcomposite1 "$LIBASOUND" libxi6 libxtst6
+            else
+              echo "::warning::apt-get update could not acquire the package lock; continuing with existing system dependencies"
+            fi
           else
             echo "No passwordless sudo — assuming system deps are pre-installed (self-hosted runner)"
           fi
