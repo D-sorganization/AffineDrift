@@ -369,7 +369,10 @@ jobs:
         if: steps.e2e_changes.outputs.run == 'true'
         run: |
           if sudo -n true 2>/dev/null; then
-            npx playwright install --with-deps chromium
+            npx playwright install --with-deps chromium || {
+              echo "::warning::Playwright system dependency install failed; retrying browser-only install"
+              npx playwright install chromium
+            }
           else
             echo "No passwordless sudo — installing browser binaries only."
             npx playwright install chromium
