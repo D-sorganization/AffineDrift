@@ -297,15 +297,15 @@ This is not an approximation theory. It is the geometric foundation of nonlinear
 
       <div class="laymans-item">
         <h3>Instantaneous Linearity (Freezing Time)</h3>
-        <p>Linear approximations aren't just rough guesses; they are 100% accurate for the tiniest split second. If you freeze time, your complex movement becomes a straight line.</p>
+        <p>The <em>derivative</em> (the tangent hyperplane) is an exact object — but as a <em>predictor</em> of the system's behavior, it is only exact in the limit of zero step size. For any finite time step, it misses second-order curvature, and the error grows as the square of the step. Re-linearizing often keeps the error small.</p>
         <div class="analogy">
-<strong>Think of it like:</strong> Driving a car. If you drive cross-country, your path is curved. But if you freeze time, your car is pointing in exactly one straight direction. For that instant, you are traveling in a straight line.
+<strong>Think of it like:</strong> Driving a car. If you drive cross-country, your path is curved. But if you freeze time, your car is pointing in exactly one straight direction. Extrapolating along that direction gives you the next instant almost perfectly — and the longer you extrapolate without updating, the more wrong you get.
         </div>
       </div>
 
       <div class="laymans-item">
         <h3>Superposition (Adding Things Up)</h3>
-        <p>In complex systems, adding two inputs usually doesn't give the sum of their outputs. But locally—right where you are—it works perfectly.</p>
+        <p>In complex systems, adding two inputs usually doesn't give the sum of their outputs. But for small perturbations around a point, it works to first order — the residual is second-order in the perturbation size.</p>
         <div class="analogy">
 <strong>Think of it like:</strong> Adding salt and pepper. A pinch of salt makes soup salty. A pinch of pepper makes it spicy. Adding both makes it salty <em>and</em> spicy. For small amounts, the flavors just add up linearly. It's only if you dump in a bucket that the chemistry changes completely.
         </div>
