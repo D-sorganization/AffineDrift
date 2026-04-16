@@ -51,7 +51,7 @@ Here is pseudocode for the recursive forward kinematics algorithm:
 ::: {.callout-tip}
 ## Implementation Considerations
 
-**Near-Singular Configurations:** When a screw axis approaches alignment with the global frame normal (e.g., when $\|\omega\| \to 0$ for a prismatic joint), the matrix exponential $e^{[S]theta}$ can exhibit numerical instability. Always check the rank of the screw axis before computing; use Moore-Penrose pseudoinverse if singularity is detected.
+**Near-Singular Configurations:** When a screw axis approaches alignment with the global frame normal (e.g., when $\|\omega\| \to 0$ for a prismatic joint), the matrix exponential $e^{[\screw]\theta}$ can exhibit numerical instability. Always check the rank of the screw axis before computing; use Moore-Penrose pseudoinverse if singularity is detected.
 
 **Quaternion Representation:** While the pseudocode uses rotation matrices, consider storing rotations as unit quaternions internally for cumulative products. Matrices require periodic re-orthogonalization after many multiplications; quaternions maintain unit norm automatically and are more numerically stable for long kinematic chains.
 
@@ -85,7 +85,7 @@ def recursive_forward_kinematics(n_links, joint_angles, screw_axes, T_base):
         S_i = screw_axes[i]
         theta_i = joint_angles[i]
 
-        # Compute the 4x4 matrix exponential e^{[S_i]theta_i}
+        # Compute the 4x4 matrix exponential e^{[S_i] * theta_i}
         # [S_i] is the skew-symmetric spatial matrix form of screw S_i
         S_matrix_i = screw_to_matrix(S_i)  # Convert to 4x4 skew form
         exp_S_i = scipy.linalg.expm(S_matrix_i * theta_i)

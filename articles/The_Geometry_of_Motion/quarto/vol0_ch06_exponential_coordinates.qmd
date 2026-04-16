@@ -59,7 +59,7 @@ First, we expand the 3-element vector $\hat{\bm{\omega}}$ into a $3 \times 3$ sk
 This skew-symmetric matrix is exactly the Lie Algebra $\so$. It represents the flat tangent space attached to the identity rotation. The Matrix Exponential physically wraps this flat tangent vector around the curved surface of $\SO$ to produce our final Rotation Matrix:
 
 \begin{equation}
-   R = \exp([\hat{\bm{\omega}}]\theta) = I + \sin\theta [\hat{\bm{\omega}}] + (1 - \cos\theta)[\hat{\bm{\omega}}]^2
+   R = e^{[\hat{\bm{\omega}}]\theta} = I + \sin\theta [\hat{\bm{\omega}}] + (1 - \cos\theta)[\hat{\bm{\omega}}]^2
 \end{equation}
 
 This formula is known as **Rodrigues' Formula**. It bridges the vector world (where things are just numbers) and the geometric world (where things are rotation matrices).
@@ -72,7 +72,7 @@ Rodrigues' formula handles rotations alone. A body in free space can also transl
 Let $\screw = [\hat{\bm{\omega}};\, \bm{v}] \in \se$ with $\|\hat{\bm{\omega}}\| = 1$ and rotation angle $\theta$. The closed-form SE(3) exponential is
 
 \begin{equation}
-  \exp([\screw]\theta) = \begin{bmatrix} e^{[\hat{\bm{\omega}}]\theta} & G(\hat{\bm{\omega}}, \theta)\,\bm{v} \\ \bm{0} & 1 \end{bmatrix},
+  e^{[\screw]\theta} = \begin{bmatrix} e^{[\hat{\bm{\omega}}]\theta} & G(\hat{\bm{\omega}}, \theta)\,\bm{v} \\ \bm{0} & 1 \end{bmatrix},
 \end{equation}
 
 where $e^{[\hat{\bm{\omega}}]\theta}$ is Rodrigues' formula above and
