@@ -238,6 +238,35 @@ $$\mathrm{DOF}_{\text{closed}} = 20 - 6 = 14 \text{ DOF}$$
 **In practice:** A full-body golf swing model (including both legs) has approximately 25--30 DOF depending on how many joints we include. This is large but manageable for dynamics simulation and optimization.
 
 ::: {.callout-important}
+## Canonical Full-Body Kinematic Chain
+
+Because the DOF count depends on what you lump and what you split, this book commits to a single canonical chain. All chapters either use this chain directly or explicitly state their reduced subset.
+
+| Segment | Joint | DOF | Cumulative |
+|---|---:|---:|---:|
+| Pelvis / base | floating-base ($6$) or fixed-to-ground ($0$) | 6 or 0 | 6 |
+| Lumbar spine | lumped 3-DOF (flex/ext, lateral bend, axial rot) | 3 | 9 |
+| Thoracic spine | lumped 3-DOF | 3 | 12 |
+| Scapulothoracic (each side) | 2-DOF (upward/downward rot + pro/retraction) | $2 \times 2 = 4$ | 16 |
+| Glenohumeral (each side) | spherical, 3-DOF | $3 \times 2 = 6$ | 22 |
+| Elbow (each side) | hinge, 1-DOF | $1 \times 2 = 2$ | 24 |
+| Radioulnar (each side) | pronation/supination, 1-DOF | $1 \times 2 = 2$ | 26 |
+| Wrist (each side) | flex/ext + radial/ulnar, 2-DOF | $2 \times 2 = 4$ | 30 |
+| Hip (each side) | spherical, 3-DOF | $3 \times 2 = 6$ | 36 |
+| Knee (each side) | revolute (screw-home correction absorbed), 1-DOF | $1 \times 2 = 2$ | 38 |
+| Ankle (each side) | sagittal + frontal, 2-DOF | $2 \times 2 = 4$ | 42 |
+| **Total (full body, floating base)** | | | **$\mathbf{42}$** |
+| **Total (fixed pelvis)** | | | **$\mathbf{36}$** |
+
+Reduced subsets used elsewhere in the book:
+
+- **20-DOF upper-body model** (earlier chapters, e.g., ch01--ch10 dual-arm analyses): floating-base dropped, lumbar and thoracic kept as separate 3-DOF joints, lower body absent, wrists simplified to 1-DOF. Intended for illustrating two-handed grip kinematics, not whole-body dynamics.
+- **25--30 DOF "full-body" shorthand**: scapulothoracic often lumped into glenohumeral; ankle frequently reduced to 1-DOF sagittal; lumbar/thoracic collapsed into a single 3-DOF torso joint.
+
+When this book quotes a plain "25--30 DOF", it is using the shorthand; the 42/36 numbers above are what you get when every joint listed in the canonical chain carries its full biomechanical DOF count. Always state *which* model a given result uses.
+:::
+
+::: {.callout-important}
 ## DOF Counting in Practice
 When building a biomechanical model:
 
@@ -473,9 +502,9 @@ Given a motor task (e.g., hit a golf ball), the organism has many more DOF than 
 This is Bernstein's degrees of freedom problem. It is the fundamental challenge of motor control.
 :::
 
-The traditional answer was that the brain "freezes" extra degrees of freedom: it selects a subset of joints to control and keeps the others rigid. A beginner might lock the wrist and elbow, using only shoulder and hip rotation. This reduces the effective DOF, making the problem easier but less fluid.
+Bernstein described three coping strategies the motor system uses to tame DOF redundancy: **freeze** (lock unnecessary joints), **couple** (yoke joints together into synergies), and **exploit** (use redundancy for secondary objectives like stability, energy efficiency, and perturbation rejection). These are often summarized as a developmental progression --- novices freeze, intermediates couple, experts exploit --- and that progression is a useful teaching heuristic. But the motor-learning literature makes clear that all three operate *simultaneously* in any skilled movement: a tour-caliber golfer freezes some joints (e.g., the wrist during the initial part of the downswing), couples others into synergies (the X-factor relationship between pelvis and trunk), and exploits redundancy elsewhere (elbow swivel, null-space motion at impact). Skill acquisition shifts the *balance* between these three, not a transition through discrete stages.
 
-Experts do the opposite: they *free* degrees of freedom. An expert golfer uses all 25--30 DOF, exploiting the full redundancy. This requires more sophisticated neural control but allows optimization for energy efficiency, injury avoidance, and adaptability.
+With that qualifier: a beginner who predominantly *freezes* may lock the wrist and elbow and use only shoulder and hip rotation, reducing the effective DOF to make the task easier but less fluid. An expert who has shifted toward *coupling* and *exploiting* uses the full redundancy of the canonical chain, which requires more sophisticated neural control but enables energy-efficient transfer, injury avoidance, and adaptability.
 
 ::: {.callout-note}
 ## Freezing vs. Freeing DOF
@@ -832,7 +861,7 @@ $$\text{DOF} = 3 + 3 + 3 + 2 + 2 + 3 + 2 + 2 = 20 \text{ DOF}$$
 
 ### Segment Parameters: Anthropometry
 
-To populate the URDF with realistic inertia values, we use anthropometric data. The most widely used data comes from de Leva (1996), who measured body segment masses and moments of inertia on cadavers and living subjects.
+To populate the URDF with realistic inertia values, we use anthropometric data. The most widely used data comes from de Leva (1996) [@deleva1996adjustments], whose adjusted segment-inertia parameters (revising Zatsiorsky-Seluyanov) are the de facto standard in golf biomechanics. The URDF example below uses illustrative round numbers for readability; any reproducibility-grade model should substitute de Leva 1996 masses and inertias scaled to the subject's body weight.
 
 ::: {.callout-tip}
 ## Anthropometric Data (de Leva 1996)
@@ -1117,6 +1146,14 @@ The golf swing is chaotic in a weak sense: small changes in initial conditions l
 **Key finding:** The ZTCF (zero-torque constraint force analysis from Chapter @sec-soft_tissue_pliable) is moderately sensitive to anthropometric parameters but *extremely sensitive* to initial conditions and joint torques.
 
 This is why motion capture accuracy matters more than perfectly measured segment masses. Getting the initial arm position and velocity correct is more important than having exact segment inertias.
+
+::: {.callout-warning}
+## Forward vs. Inverse Dynamics: the Sensitivity Story Flips
+
+The statement "anthropometric uncertainty matters less than motion-capture accuracy" is true for *forward* dynamics (integrating $\bm M \ddot{\bm q} + \bm C \dot{\bm q} + \bm g = \bm \tau$ from known torques to predict motion): a $\pm 10\%$ mass error shifts predicted trajectories by only a few percent.
+
+For *inverse* dynamics, the reverse can hold. Inverse dynamics numerically differentiates marker positions twice to recover $\ddot{\bm q}$, which amplifies high-frequency noise in the kinematic signal; it then multiplies by $\bm M(\bm q)$ to solve for $\bm \tau = \bm M \ddot{\bm q} + \bm C \dot{\bm q} + \bm g$. Mass and inertia errors scale the resulting $\bm \tau$ estimates linearly, and acceleration errors are multiplied by the full inertia matrix. In this regime, good anthropometry is as important as good filtering of the mocap signal. Reports of joint torques estimated by inverse dynamics should therefore include a sensitivity band over reasonable ($\pm 10\%$) perturbations of de Leva segment masses, not just mocap error.
+:::
 
 ::: {.callout-important}
 ## Practical Implications

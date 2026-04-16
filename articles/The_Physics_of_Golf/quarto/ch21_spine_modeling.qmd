@@ -49,9 +49,9 @@ Therefore, understanding spinal rotation range of motion, spinal stiffness, and 
 ### Spine Injuries in Golf are the Most Common
 
 
-Among golfers of all levels, the most commonly injured body region is the lower back (lumbar spine). Published epidemiological surveys report the following ranges [@mchardy2006golf; @cabri2009golf; @cole2016spine]:
+Among golfers of all levels, the most commonly injured body region is the lower back (lumbar spine). Published epidemiological surveys report a wide range depending on population, definition of "pain" or "injury," and follow-up interval [@mchardy2006golf; @cabri2009golf; @cole2016spine]:
 
-- Approximately 25--50% of elite amateur and professional golfers report lower back pain
+- Reported low-back-pain prevalence in elite/professional golfers spans roughly 15--55% across studies; a commonly cited central estimate is $\sim$25--50%, but the spread is methodologically driven and the honest read is that prevalence is *high* rather than that it sits at a specific number.
 - The lumbar spine accounts for an estimated 25--50% of all golf-related injuries
 - Most common diagnosis: mechanical back pain, lumbar strain, or discogenic pain
 - Less common but more serious: intervertebral disc herniation, facet joint osteoarthritis, spondylolisthesis
@@ -460,7 +460,7 @@ At the highest level of detail, the spine is modeled using finite element analys
 
 - **Fundamental research on disc mechanics:** Use Level 4 (FEA), if computational resources permit.
 
-**Most important rule:** enforce realistic range-of-motion limits. In particular, limit lumbar rotation to  20--25$^{\circ}$ total. If your model predicts 40$^{\circ}$ of lumbar rotation, your model is wrong and will give misleading results.
+**Most important rule:** enforce realistic range-of-motion limits. In particular, lumbar rotation in vivo is typically limited to $\sim$20--25$^{\circ}$ total, with isolated cadaveric measurements reaching closer to $\sim$30$^{\circ}$ under non-physiological loading. If your model predicts 40$^{\circ}$ of lumbar rotation, it is not merely a red flag --- it is almost certainly wrong and will give misleading results.
 
 :::
 
@@ -703,10 +703,10 @@ Let me synthesize the insights from this deep chapter into practical guidance.
 
 ### Red Flags: When Your Model is Wrong
 
-If your biomechanical model predicts any of the following, it is wrong:
+If your biomechanical model predicts any of the following, treat it as a clinical red flag and re-examine the model assumptions:
 
-- Total lumbar spine rotation exceeding 30$^{\circ}$ (anatomically impossible)
-- Compression force on the L5/S1 disc exceeding 10 times body weight in normal golf (unrealistic)
+- Total lumbar spine rotation much above $\sim$25--30$^{\circ}$ (anatomically *improbable*; cadaveric and in-vivo ranges allow $\sim$20--30$^{\circ}$ in combined trunk motion, with modest lumbar contribution, so 30$^\circ$+ predicted values signal a segment-definition or coupling error rather than a strict anatomical impossibility)
+- Compression force on the L5/S1 disc much exceeding $\sim$8--10 times body weight in normal golf (professional golfers routinely reach $\sim$8$\times$ body weight at L5/S1 during the downswing [@hosea1990biomechanical, lindsay2002spinal]; predicted values far above that band deserve scrutiny)
 - Flexion-extension moment at the base of the spine exceeding 300 N$\cdot$m (too high)
 - Predicted club head speed more than 20% different from measured value (suggests fundamental error in model)
 - Muscle forces that exceed the maximum available force for that muscle (indicates non-physical solution)
@@ -719,7 +719,7 @@ If your biomechanical model predicts any of the following, it is wrong:
 - Most torso rotation during the golf swing comes from the thoracic spine, not the lumbar spine. A good swing leverages this natural anatomy.
 - The flexion-rotation coupling problem means that when the spine is bent forward (flexed), attempting to rotate creates a complex combination of actual motions that cannot be uniquely decomposed without assumptions.
 - Spinal loading peaks during the transition phase, reaching 6--10 times body weight in compression and 20--50 N$\cdot$m in torsion at the lumbar spine.
-- Cadaveric and biomechanical studies identify flexion-plus-rotation as a primary loading mode for disc herniation [@adams1985gradual]. Golfers who flex excessively and attempt heavy rotation in a flexed posture may face elevated spinal loading.
+- Cadaveric and biomechanical studies show that combined flexion-plus-rotation loading is *strongly associated* with disc herniation mechanisms [@adams1985gradual]. The causal direction is still debated: flexion-plus-rotation may drive herniation, or pre-existing disc vulnerability may preferentially manifest under that loading. Either way, golfers who flex excessively and attempt heavy rotation in a flexed posture face elevated spinal loading and should be considered higher-risk.
 - For coaching: use a simple model and focus on controlling X-factor, maintaining spinal angle, and bracing the core.
 - For research: use a three-segment model with realistic rotation limits.
 - For injury analysis: use a multi-segment model with patient-specific geometry.

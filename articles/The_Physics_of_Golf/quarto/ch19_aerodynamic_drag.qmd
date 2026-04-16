@@ -6,7 +6,7 @@ description: "Drag is the force exerted by a fluid (in this case, air) on an obj
 ::: {.callout-note}
 ## Why Air Resistance Matters for Physics Accuracy
 
-You've likely heard that drag is "negligible" in golf. That claim deserves scrutiny. At clubhead speeds of 80--120 mph, the club is moving fast enough that air resistance is potentially comparable to the forces from muscle torques during the late downswing. When you compute inverse dynamics—trying to infer the joint torques from measured motion—ignoring drag may introduce systematic errors; estimates of approximately 2--5% in peak joint torque estimates have been suggested [@aerodynamic_drag_golf; @MacKenzie2009] (illustrative; exact values depend on swing speed and model), with potentially larger errors in wrist and ankle torques (where moment arms are small). For a researcher or coach trying to understand the *true* control applied by muscles, this bias may be consequential. Understanding drag improves both the accuracy of swing analysis and the fairness of athlete assessment.
+You've likely heard that drag is "negligible" in golf. That claim deserves scrutiny. At clubhead speeds of 80--120 mph, the club is moving fast enough that air resistance is potentially comparable to the forces from muscle torques during the late downswing. When you compute inverse dynamics---trying to infer the joint torques from measured motion---ignoring drag may introduce systematic errors. The size of that bias depends on the swing, the joint, and the dynamic model; as an illustrative order-of-magnitude estimate, a simple inverse-dynamics model that neglects drag typically mis-estimates peak joint torques by a few percent, with larger relative errors at distal joints (wrist, ankle) where moment arms are small and drag torque is a bigger fraction of the total. We treat the "2--5%" figure below as an *illustrative scaling estimate* derived from the ZTCF worked example later in this chapter, not as an empirically measured constant. For a researcher or coach trying to understand the *true* control applied by muscles, this bias may be consequential. Understanding drag improves both the accuracy of swing analysis and the fairness of athlete assessment.
 
 :::
 
@@ -43,7 +43,7 @@ This is a nonlinear function of velocity—quadratic in magnitude. This is criti
 ::: {.callout-note}
 ## Drag Coefficient and Reference Area
 
-The drag coefficient $C_D$ is determined by the shape of the object and must be measured experimentally or computed via computational fluid dynamics (CFD).
+The drag coefficient $C_D$ is determined by the shape of the object and must be measured experimentally or computed via computational fluid dynamics (CFD). Critically, $C_D$ is *not* a constant of the shape --- it depends on the Reynolds number $\mathrm{Re} = \rho v L / \mu$, and for bluff bodies it varies non-monotonically because the boundary layer transitions between laminar and turbulent regimes. The clubhead operates at $\mathrm{Re} \approx 10^6$ (driver at 50 m/s), well past the drag crisis, where $C_D \approx 0.3$--$0.5$ depending on crown geometry and orientation. The golf ball in flight operates at $\mathrm{Re} \approx 2$--$3 \times 10^5$, past the *dimple-induced* drag crisis (which is why a dimpled ball has $C_D \approx 0.25$ versus $\approx 0.5$ for a smooth sphere at the same Re); see [@davies1949aerodynamics, bearman1976golf]. Readers computing drag at very different speeds should not assume the tabulated $C_D$ values apply unchanged.
 
 
 | Shape | $C_D$ | Notes 
@@ -345,7 +345,9 @@ For the *swing* itself, ball aerodynamics are post-impact physics and not releva
 - Coupled equations with drag are nonlinear and often require numerical solution.
 - Spin and velocity interact in complex ways (Magnus effect).
 
-For golfers and coaches, it's worth understanding that backspin is not always beneficial—it reduces range in calm conditions (due to drag) but improves trajectory stability (lift provides altitude). Professional golfers dial in spin rate based on wind, altitude, and desired shot shape.
+For golfers and coaches, it's worth understanding that backspin is not always beneficial---it reduces range in calm conditions (due to drag) but improves trajectory stability (lift provides altitude). Professional golfers dial in spin rate based on wind, altitude, and desired shot shape.
+
+*Theoretical vs. practical importance.* Drag is "not negligible" in the theoretical sense that a few percent of bias in peak joint torque estimates is easily demonstrable and matters for inverse-dynamics research. For day-to-day teaching, however, that few-percent bias is usually within other error bars (motion-capture noise, marker placement, anthropometric parameter uncertainty) and lands below the level at which a coaching decision would change. Drag should be modeled in research; it is not a practical correction students need to carry in their heads.
 
 :::
 
@@ -450,7 +452,9 @@ $$
 \ddot{\omega} = 2.5 \sin(\theta) - 0.25\omega^2 \quad \text{(gravity accelerates, drag decelerates)}
 $$
 
-At mid-downswing with $\omega \sim 50$ rad/s, the drag deceleration is $0.25 \times 50^2 = 625$ rad/s$^2$, which dominates the gravity acceleration (2.5 rad/s$^2$). So the system decelerates, not accelerates, after mid-downswing. Integrating with drag, the final angular velocity is $\omega_{\text{impact, with drag}} \approx 78$ rad/s—about 8% lower than without drag.
+At mid-downswing with $\omega \sim 50$ rad/s, the drag deceleration is $0.25 \times 50^2 = 625$ rad/s$^2$, which dominates the gravity acceleration (2.5 rad/s$^2$). So the system decelerates, not accelerates, after mid-downswing. Integrating with drag, the final angular velocity is $\omega_{\text{impact, with drag}} \approx 78$ rad/s---about 8% lower than without drag.
+
+*Caveat:* this 8% figure assumes $\omega^2$-scaled drag on a single rigid rotating body. In practice, the club, shaft, hands, and arms each sweep through air at different velocity profiles, and a segmented-body or CFD treatment gives a slightly different number. The figure is a *scaling estimate*, not a precise prediction; the qualitative lesson --- drag removes a few percent of clubhead speed late in the downswing --- is robust.
 
 If an experimenter measures $\omega_{\text{impact}} = 78$ rad/s and computes inverse dynamics assuming no drag (ZTCF $\omega = 85$ rad/s), they will infer that muscles must have applied a decelerating torque to slow from 85 to 78 rad/s. In reality, drag provided that deceleration passively. This is an illusion created by omitting drag from the model.
 
