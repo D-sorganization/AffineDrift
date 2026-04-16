@@ -8,7 +8,7 @@ description: "Recall from Chapters @sec-zerotorquecounterfactual and @sec-zeroto
 
 We've spent the last several chapters learning the physics: the nonlinear dynamics, the drift-dominated regime, the trade-off between control and drift. But now we must face the central mystery: *the brain solves this problem*. Not perfectly---golfers miss---but with remarkable consistency. An elite golfer produces clubhead speeds within 2% of their average, swing after swing, despite 30--50 millisecond neural delays, sensor noise, and a system where the downswing lasts only 300 milliseconds.
 
-This chapter reframes the nervous system as an engineering control system and asks: what kind of controller is the brain? How does it manage to work within such severe constraints? The answer will astonish you: the brain doesn't try to control everything. Instead, it exploits the drift field---the very physics we've been studying---to do most of the work. The brain is not fighting physics; it is using physics as its primary actuator.
+This chapter reframes the nervous system as an engineering control system and asks: what kind of controller is the brain? How does it manage to work within such severe constraints? The answer is that the brain does not attempt to regulate every detail of the trajectory. Instead, it *leverages* the drift field---the passive dynamics we've been studying---to carry most of the motion, committing active control primarily to shaping initial conditions and to targeted corrections. The language of "exploits" here is metaphorical; the underlying mechanism is that efficient feedforward plans allocate scarce control bandwidth to where it is most needed, while the passive dynamics do the rest. The brain is not fighting physics; it is working *with* physics as its primary actuator.
 
 :::
 
@@ -45,18 +45,26 @@ This is not a simple problem. It is a *nonlinear optimal control problem in real
 :::
 
 ::: {.callout-tip}
-## Delays in the Golf Swing
+## Feedback Latency Budget --- Four Distinct Loops
 
-In this illustrative delay budget, the downswing takes approximately 250--300 ms. Consider the delay budget:
+The nervous system does not have *one* feedback delay --- it has several loops operating in parallel at very different latencies. Lumping them together misrepresents what corrective feedback is and is not available during a 250--300 ms downswing.
 
-- Visual processing: $\sim$100 ms from retina to visual cortex
-- Proprioceptive processing: $\sim$50 ms from muscle spindles to cortex
-- Motor planning and command generation: $\sim$50--100 ms
-- Neural transmission to muscles: $\sim$10--20 ms
-- Electromechanical delay (muscle activation): $\sim$40--60 ms
+| Loop | Typical round-trip latency | Signal carried | Role in the swing |
+|---|---|---|---|
+| Spinal stretch reflex (monosynaptic) | 20--40 ms | Muscle spindle stretch $\to$ $\alpha$-motoneuron | Stabilizes against sudden perturbations; operates *without* cortical involvement |
+| Long-loop (transcortical) proprioceptive | 50--100 ms | Spindle/Golgi $\to$ cortex $\to$ cord | Task-dependent intramovement corrections |
+| Vestibulo-ocular / vestibulospinal | 10--20 ms (VOR), 50--100 ms (postural) | Semicircular canals, otoliths | Balance, gaze stabilization during trunk rotation |
+| Cerebellar internal-model update | $\sim$100--200 ms | Climbing-fiber error $\to$ Purkinje LTD/LTP | Trial-to-trial calibration of the forward model [@wolpert1998internal, shadmehr2010error] |
+| Visual (conscious feedback) | 100--200 ms (detection) to $\sim$300--400 ms (corrective command reaches muscle) | Retinal image $\to$ visual cortex $\to$ motor cortex | Too slow to correct the downswing itself; primary role is *trial-to-trial* learning and pre-swing planning |
 
-Total round-trip delay: approximately 250--330 ms. In this simplified timing picture, this exceeds the entire downswing duration. The implication is stark: **meaningful corrective feedback is largely unavailable during the downswing.** The downswing is predominantly a pre-programmed ballistic action. Most "corrections" you feel yourself making were likely planned before the downswing began, triggered by predicted (not actual) sensory feedback. Some limited proprioceptive correction may occur in the earliest phases of the downswing, but the scope for mid-course adjustment is severely constrained.
+Add the downstream motor-side delays --- $\sim$10--20 ms corticospinal transmission and $\sim$40--60 ms electromechanical activation --- and the picture becomes:
 
+- **Spinal and vestibular loops** *can* fire inside a 300 ms downswing and shape it. They handle local perturbation rejection, not semantic errors like clubface angle.
+- **Long-loop proprioceptive corrections** can land once, perhaps twice, during the downswing; they are the most plausible substrate for any genuine mid-swing adjustment.
+- **Visual feedback** for a 300 ms downswing is effectively post-hoc: any correction triggered by what the eye detects during the downswing arrives at the muscle *after* impact. Its role is learning the next swing, not fixing this one [@wolpert2000computational, scott2004optimal, todorov2004optimality].
+- **Cerebellar updates** are not in-swing corrections at all: they update the forward/inverse models over trials, using sensed outcomes as error signals [@shadmehrmussaivaldi2012biological].
+
+So the correct slogan is not "feedback is unavailable during the downswing" but rather: *fast subcortical loops are available and actively used; cortical/visual loops are not.* The downswing is predominantly a pre-programmed ballistic action whose robustness is provided by the fast reflex and vestibular loops, not by conscious, vision-mediated correction.
 :::
 
 ### Feedforward vs. Feedback: A Crucial Distinction
@@ -67,11 +75,11 @@ A traditional control system can work in one of two ways:
 ::: {.callout-note}
 ## Feedback (Closed-Loop) Control
 
-The controller measures the current state $\bm{x}(t)$, compares it to the desired state $\bm{x}_d(t)$, computes an error $\bm{e}(t) = \bm{x}_d(t) - \bm{x}(t)$, and adjusts the control input based on this error:
+The controller measures the current state $\bm{x}(t)$, compares it to the desired state $\bm{x}_d(t)$, computes an error $\bm{e}(t) = \bm{x}_d(t) - \bm{x}(t)$, and adjusts the control input based on this error. In the simplest linear case,
 $$
 \bm{u}(t) = \bm{K}\bm{e}(t) = \bm{K}[\bm{x}_d(t) - \bm{x}(t)]
 $$
-where $\bm{K}$ is a gain matrix.
+where $\bm{K}$ is a constant gain matrix. This is only a first-order approximation: it assumes constant gains, linear dynamics, instantaneous measurement, and no delay. Biological feedback is none of those things --- gains are state- and task-dependent, the dynamics are nonlinear, and every loop has latency (see the latency table above). More accurate biological models use *optimal feedback control* with stochastic, time-varying, task-conditioned gains [@todorov2004optimality, scott2004optimal, shadmehrmussaivaldi2012biological]. We use the linear form here to fix ideas, not as a realistic model of the nervous system.
 
 This is reactive: if things are going wrong, the controller corrects.
 
@@ -89,9 +97,9 @@ This is pre-computed, before feedback arrives. No error correction is possible d
 
 :::
 
-Now here is the critical insight: **the golf downswing appears to be dominated by feedforward control** in this simplified timing model.
+Now here is the critical insight: **the downswing trajectory is dominated by feedforward control**, but "feedforward" here means *cortical/visual* feedforward, not absence of all feedback. Fast subcortical loops (spinal, vestibular, long-loop proprioceptive) run continuously through the downswing and provide the robustness that makes a ballistic plan actually work in a noisy world.
 
-Why? The timescales don't work out. Suppose a visual feedback signal detected an error at time $t=100$ ms (early in the downswing). This signal takes 80--150 ms to reach the visual cortex. By the time it arrives, we're at $t \approx 180$--250 ms. The motor system then needs 50--100 ms to generate a corrective command. The correction reaches the muscles at $t \approx 230$--350 ms. But the swing is over by $t \approx 300$ ms. The correction arrives too late.
+Why is cortical/visual feedback ruled out for within-swing trajectory correction? The timescales don't work out. Suppose a visual feedback signal detected an error at time $t=100$ ms (early in the downswing). This signal takes 100--200 ms to reach cortex and be parsed into a motor correction; the corrective command then takes another 50--100 ms to reach the muscle. The correction reaches the muscles at $t \approx 250$--400 ms. But the swing is over by $t \approx 300$ ms. The correction arrives at or after impact.
 
 ::: {.callout-warning}
 ## The Feedback Fantasy

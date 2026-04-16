@@ -169,24 +169,30 @@ where $F_{\mathrm{asym}} \approx 1.4$ is the asymptotic eccentric force (as a fr
 
 ::: {.callout-note}
 ## Why Drift Wins at Impact
+
+The velocity that matters for Hill's Law is the *muscle fiber* shortening velocity $\dot{\ell}^M$, not the clubhead speed. The chain is:
+$$
+v_{\mathrm{club}} \xrightarrow{\text{kinematic}} \dot{\theta}_{\mathrm{joint}} \xrightarrow{\times\, r} \dot{\ell}^M \xrightarrow{f_V} F_{\mathrm{muscle}}
+$$
+Fiber velocity equals joint angular velocity times the muscle's moment arm: $\dot{\ell}^M \approx r \dot{\theta}$. Because moment arms are small (1--3 cm at the wrist, 3--5 cm at the elbow), even very fast joint rotation produces only moderately fast fiber shortening.
+
 **Drift (gravitational + inertial) forces:**
 
-- Scale as $\approx m v^2$ for inertial (quadratic in speed)
-- Gravitational torque is $mg \cdot r \sin(\theta)$, which is independent of velocity (constant for a given configuration)
-- Peak at impact when clubhead speed $v_{\mathrm{club}} \approx 50$ m/s
+- Inertial (centrifugal, Coriolis) torques scale as $\approx m r^2 \dot{\theta}^2$ --- quadratic in angular velocity
+- Gravitational torque $mg\, r \sin(\theta)$ is velocity-independent for a given configuration
+- Peak at impact when clubhead speed $v_{\mathrm{club}} \approx 50$ m/s, wrist $\dot{\theta} \approx 70$ rad/s
 - Drift torque at wrist: $\sim 50$--$100$ N$\cdot$m
-
 
 **Muscle force capacity:**
 
-- Scales as $f_V(\tilde{v}) \approx (1 - \tilde{v}/V_{\max})$ (linear decrease)
-- At impact, clubhead speed $\sim 50$ m/s, wrist muscles $V_{\max} \sim 10$ m/s
-- Normalized velocity ratio: $\tilde{v}/V_{\max} \sim 5$ (OFF THE CHART)
-- Available force: $f_V \approx 0$ or negative (muscles cannot hold on)
-- Peak controllable torque: $\sim 5$--$10$ N$\cdot$m
+- Scales as Hill's function $f_V(\tilde{v})$ where $\tilde{v} = \dot{\ell}^M / V_{\max}$
+- At impact, wrist muscle shortening $\dot{\ell}^M \approx r \dot{\theta} \approx 0.02 \times 70 = 1.4$ m/s
+- With $V_{\max} \approx 8$ m/s, normalized velocity $\tilde{v} \approx 0.18$
+- From Eq. \eqref{eq:hill-concentric} with $k = 0.4$: $f_V \approx 0.5$--$0.55$ --- roughly a 45--50% reduction from isometric
+- For upstream joints with longer effective moment arms, $\tilde{v}$ can reach $0.4$--$0.5$, giving $f_V \approx 0.25$--$0.35$
+- Peak controllable torque drops from $\sim 20$ N$\cdot$m isometric to $\sim 5$--$10$ N$\cdot$m at impact
 
-
-**Result:** The drift-to-control ratio at impact is $\approx 5$--$10$:$1$, meaning inertial and gravitational forces dominate. No amount of muscular effort can overcome this—it is written into the physics of muscle tissue itself.
+**Result:** The drift-to-control ratio at impact is $\approx 5$--$10$:$1$, meaning inertial and gravitational forces dominate. The cause is not that muscles "run off the chart" of Hill's curve --- they sit squarely on the concentric branch --- but that Hill's curve cuts their force capacity roughly in half while the inertial torques simultaneously peak. The dominance is the product of these two effects.
 :::
 
 ::: {.callout-tip}
