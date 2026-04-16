@@ -40,3 +40,8 @@
 ## 2026-04-11 - Actionable Empty States
 **Learning:** For optimal UX in search or filter features, empty states ('no results') should not be dead ends.
 **Action:** Always provide an actionable, one-click reset mechanism (e.g., a 'Clear Search' button) that clears the query and restores focus to the input field.
+
+
+## 2024-04-16 - Always specify type='button' for dynamic buttons
+**Learning:** Dynamically created HTML buttons without an explicit 'type' attribute default to 'submit', which can trigger unintended form submissions or page reloads if placed inside a form.
+**Action:** Always explicitly assign `button.type = 'button'` when creating non-submit buttons via JavaScript.

@@ -19,6 +19,7 @@
   // Create toggle button
   document.addEventListener('DOMContentLoaded', function () {
     const btn = document.createElement('button');
+    btn.type = 'button';
     btn.id = 'theme-toggle';
 
     function updateBtn(theme) {

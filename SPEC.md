@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-04-16T14:12:00Z
+Last-Updated: 2026-04-16T18:00:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-04-16T14:12:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.65                                           |
+| **Spec Version**        | 1.0.66                                           |
 | **Last Spec Update**    | 2026-04-16                                       |
 
 ## 2. Purpose & Mission
@@ -466,6 +466,7 @@ python src/tools/code_quality_ast.py
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | ---------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-04-16 | 1.0.66  | feat(palette): added explicit `type="button"` attribute to all dynamically created button elements in `js/ui-components.js`, `js/pdf.js`, and `js/dark-mode-toggle.js` to prevent unintended form submission behavior when these buttons are placed inside form elements. |
 | 2026-04-16 | 1.0.65  | ci(content): hardened `ci-standard.yml` system dependency installation so self-hosted runner apt lock contention produces a warning instead of blocking content-only validation, and documented the Contraction Tangent layman's and critics content merge resolution. |
 | 2026-04-12 | 1.0.58  | fix(ci): added RUN_UI_TESTS environment guard to matplotlib.use("QtAgg") in qt_canvases.py to allow headless verification without triggering ImportError, and removed redundant pytest-xvfb plugin. fix(test): skip legacy wrist launcher test when Qt runtime is unavailable via `pytest.skip`, and reformat test assertions to comply with black 100-char style |
 | 2026-04-11 | 1.0.57  | refactor(src): decomposed ten oversized functions (`_simulate_putt`, `ILQRSolver._backward_pass`, `ILQRSolver.optimize`, `BallFlightDynamics.dynamics`, `BallFlightDynamics.simulate`, `compute_hessian_norm`, `batch_convert`, `collect_python_file_metrics`, `plot_acceleration`, `SwingOptimizer.__init__`) into thin orchestrators plus focused helpers, preserving numerical and observable behavior (issue #2362). |
