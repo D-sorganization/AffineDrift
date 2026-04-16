@@ -25,6 +25,18 @@ Picture it this way: if you wanted to give a friend precise instructions to plac
 
 If you connect two floating, rigid steel blocks together with a perfectly rigid bar (welded so they cannot move relative to each other), you do not have 12 DOF. Since the distance and orientation between them are perfectly locked by the weld, you still only have 6 DOF for the combined assembly. The weld acts as a geometric constraint.
 
+::: {.callout-tip}
+## Constraints Subtract DOF — A Few Worked Counts
+
+Each rigid body in free 3D space begins with 6 DOF. Constraints reduce this count:
+
+- A rigid body **confined to a plane** (three independent planar contacts) has $6 - 3 = 3$ DOF (two translations + one rotation).
+- A **planar 4-bar linkage** has four bodies (nominally $4 \times 3 = 12$ planar DOF) connected by four revolute joints (each removing 2 planar DOF), leaving $12 - 8 = 4$ DOF, minus 3 for grounding one link: $\mathbf{1}$ net DOF.
+- A **human arm** modelled as shoulder (3) + elbow (1) + wrist (3) = 7 DOF, or more depending on which scapular and shoulder-complex sub-joints are resolved.
+
+Formally this is the Grübler–Kutzbach count: for $N$ bodies in a 3D mechanism with $g$ joints of allowed freedom $f_i$ each, $\mathrm{DOF} = 6(N - 1) - \sum_i (6 - f_i)$.
+:::
+
 
 ## The Configuration Space $\configspace$
 
@@ -53,7 +65,7 @@ When we model a complex physical system (such as the 15-DOF human golfer in Volu
 
 Instead, we use **Generalized Coordinates**. Since an elbow is a pin joint allowing only 1 DOF of rotation, we abandon $(x,y,z)$ mapping entirely and instead just track the single angle $\theta_\text{elbow}$. If we define the angle of the shoulder $\theta_\text{shoulder}$, and the length of the humerus bone $L_1$, the position of the elbow is instantly known.
 
-Generalized coordinates are the set of independent variables $q_1, q_2, ... q_n$ that perfectly span the Configuration Space. They are the most efficient map of the mechanism's geometry. In robotics, $q$ usually refers to the joint angles of the motors. 
+Generalized coordinates are the set of independent variables $q_1, q_2, ... q_n$ that perfectly span the Configuration Space. They are the most efficient map of the mechanism's geometry. In robotics, $q$ usually refers to the joint angles of the motors. Formally we also assume the constraints that carve out $\configspace$ are **holonomic**—each is an algebraic equation in $\bm{q}$ alone (and possibly time), not an inequality or a velocity constraint. Non-holonomic systems (rolling wheels, ice skates) require an enlarged treatment that we defer to Volume I. 
 
 
 ### Forward Kinematics
@@ -61,7 +73,7 @@ Generalized coordinates are the set of independent variables $q_1, q_2, ... q_n$
 
 The mathematical function that translates our abstract Generalized Coordinates $\bm{q}$ (the angles in our configuration space) back into the physical 3D Euclidean space of the real world is called **Forward Kinematics**.
 
-If $\bm{p}_{end} = [x, y, z]^T$ is the Cartesian position of the end of our robotic arm (or a golf clubhead), Forward Kinematics is the nonlinear function $\bm{f}_{kin}$:
+If $\bm{p}_{end} = [x, y, z]^T$ is the Cartesian position of the end of our robotic arm (or a golf clubhead), Forward Kinematics is the nonlinear function $\bm{f}_{kin}: \configspace \to \Reals^3$ (or $\configspace \to \SE$ if the full end-effector pose, not just position, is of interest):
 
 \begin{equation}
    \bm{p}_{end} = \bm{f}_{kin}(\bm{q})
@@ -82,7 +94,7 @@ Notice that to know where the physical end of the arm is, we only needed the con
 
 When controlling physical motion, you are fundamentally commanding a point to traverse through Configuration Space $\configspace$. 
 
-However, mapping $\configspace$ is vastly more complex than simple $(x,y)$ geometry. Consider a simple drone spinning freely. In physical space, it can rotate horizontally 360 degrees, and keep rotating 720 degrees, and 1080 degrees, looping back over itself physically but extending its generalized coordinate to infinity. This infinite looping implies that $\configspace$ is NOT a simple flat plane. It curves recursively onto itself like a circle or a sphere. 
+However, mapping $\configspace$ is vastly more complex than simple $(x,y)$ geometry. Consider a simple drone spinning freely. In physical space, it can rotate horizontally 360 degrees, and keep rotating 720 degrees, and 1080 degrees, looping back over itself physically but extending its generalized coordinate to infinity. This infinite looping implies that $\configspace$ is NOT a simple flat plane. Formally, the configuration space of full 3D orientation is the Lie group $\SO$: it is **compact**, **non-abelian** (rotations don't commute), and 3-dimensional. Topologically it is diffeomorphic to $\mathbb{RP}^3$ (real projective 3-space), and this is why the unit-quaternion 3-sphere $S^3$ covers $\SO$ exactly twice ($q$ and $-q$ represent the same rotation). 
 
 To govern angular movement and rotations formally—and escape the mathematical nightmares of "Gimbal Lock"—we must upgrade from Euler angles to higher matrices. We must transition to the Special Orthogonal Group $\SO$.
 

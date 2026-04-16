@@ -7,6 +7,19 @@ description: "If I had to explain the single most important idea in applied math
 
 > *The miracle is that nature can be described by mathematics at all. The deeper miracle is that the same mathematics describes everything from atoms to galaxies.* --- A recurring theme in physics
 
+::: {.callout-important}
+## Notation Conventions Used Throughout Volume 0
+
+A reader jumping into any Volume 0 chapter should not have to guess which convention is in force. The following are locked book-wide:
+
+- **Vectors** are lowercase bold: $\bm{v}, \bm{q}, \bm{\omega}$. **Matrices** are uppercase, optionally bold: $M, R, \bm{J}$. **Scalars** are italic: $m, g, \theta$.
+- **Generalized coordinates**: $\bm{q} \in \Reals^n$ is the vector; $q_i$ is its $i$-th scalar component.
+- **Spatial 6-vectors** use **(angular ; linear)** ordering: twist $\twist = [\bm{\omega};\, \bm{v}]$, wrench $\wrench = [\bm{m};\, \bm{f}]$, screw $\screw = [\bm{\omega};\, \bm{v}]$. Matches Lynch & Park. Featherstone's alternative $(v; \omega)$ ordering is noted explicitly wherever it appears.
+- **Frames**: spatial / world frame subscript $_s$, body frame $_b$. Default when unmarked is the spatial frame.
+- **Lie groups and algebras**: $\SO$ and $\SE$ for Lie groups; $\so$ and $\se$ for their Lie algebras; $\operatorname{Ad}_T$ for the adjoint map on twists; $\operatorname{ad}_{\twist}$ for the Lie-bracket matrix. Matrix exponential is written $\exp(X)$ in display math.
+- **Quaternions**: Hamilton convention, scalar-first $q = [w,\, \bm{v}]^T$. See Chapter 4 for the full interop table.
+:::
+
 ## Vectors and Matrices
 
 
@@ -83,6 +96,8 @@ For a linear system $\dot{\bm{x}} = A\bm{x}$, the real part of each eigenvalue $
 - $\text{Re}(\lambda_i) < 0$ for all $i$: the system is **asymptotically stable** (trajectories converge to zero)
 - $\text{Re}(\lambda_i) > 0$ for any $i$: the system is **unstable** (trajectories diverge)
 - $\text{Re}(\lambda_i) = 0$: marginal stability (requires further analysis)
+
+Complex conjugate pairs $\lambda = \alpha \pm i\omega$ produce **oscillatory** responses modulated by the envelope $e^{\alpha t}$: damped oscillations when $\alpha < 0$, growing oscillations when $\alpha > 0$, and pure sinusoids at angular frequency $\omega$ when $\alpha = 0$.
 :::
 
 
@@ -114,6 +129,8 @@ For a matrix $M$, there are four fundamental subspaces:
 $$\text{rank}(M) + \text{nullity}(M) = n,$$
 where $\text{nullity}(M) = \dim \mathcal{N}(M)$.
 
+**In robotics**, this is exactly what singular configurations look like. For an $n$-joint arm with Jacobian $J \in \Reals^{m \times n}$, if $\operatorname{rank}(J) < \min(m, n)$ then $\mathcal{N}(J)$ is non-trivial and its elements are the joint-velocity directions that produce **zero end-effector velocity**—the directions in which the arm has momentarily lost the ability to move.
+
 
 ## Singular Value Decomposition {#sec-svd}
 
@@ -121,7 +138,7 @@ The **Singular Value Decomposition (SVD)** is the most powerful factorization in
 
 $$M = U \Sigma V^\top,$$
 
-where $U \in \mathbb{R}^{m \times m}$ and $V \in \mathbb{R}^{n \times n}$ are orthogonal matrices (pure rotations/reflections), and $\Sigma \in \mathbb{R}^{m \times n}$ is diagonal with non-negative entries $\sigma_1 \geq \sigma_2 \geq \cdots \geq 0$ called **singular values**.
+where $U \in \mathbb{R}^{m \times m}$ and $V \in \mathbb{R}^{n \times n}$ are orthogonal matrices (pure rotations/reflections), and $\Sigma \in \mathbb{R}^{m \times n}$ is a **rectangular diagonal** matrix whose non-negative entries $\sigma_1 \geq \sigma_2 \geq \cdots \geq \sigma_r > 0$ (where $r = \operatorname{rank}(M)$) are followed by zeros, called **singular values**.
 
 The singular values quantify how much $M$ stretches space in each independent direction. A zero singular value indicates a direction that $M$ collapses entirely—a singularity.
 

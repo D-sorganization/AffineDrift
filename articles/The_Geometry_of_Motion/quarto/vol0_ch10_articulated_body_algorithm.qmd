@@ -11,12 +11,12 @@ In Chapter 6, we introduced the Recursive Newton-Euler Algorithm. That algorithm
 
 However, when programming a simulator like MuJoCo or a physics engine for Reinforcement Learning training environments, we face the exact opposite problem: **Forward Dynamics**. 
 
-Given the current position ($\bm{q}$), current speed ($\dot{\bm{q}}$), and the forces currently being produced by the motors ($\bm{\tau}$), what will the resulting acceleration ($\ddot{\bm{q}}$) be?
+Given the current position ($\bm{q}$), current speed ($\dot{\bm{q}}$), the forces currently being produced by the motors ($\bm{\tau}$), and the ambient gravity, what will the resulting acceleration ($\ddot{\bm{q}}$) be?
 \begin{equation}
-   \ddot{\bm{q}} = \text{ForwardDynamics}(\bm{q}, \dot{\bm{q}}, \bm{\tau})
+   \ddot{\bm{q}} = \text{ForwardDynamics}(\bm{q}, \dot{\bm{q}}, \bm{\tau},\ \bm{g})
 \end{equation}
 
-If we construct the monolithic inertia matrix $M(\bm{q})$ and solve $M(\bm{q})\ddot{\bm{q}} = \bm{\tau} - C(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} - G(\bm{q})$, we must invert an $N \times N$ matrix. Inverting matrices is mathematically catastrophic for large robots, scaling continuously worse at $O(N^3)$.
+If we construct the monolithic inertia matrix $M(\bm{q})$ and solve $M(\bm{q})\ddot{\bm{q}} = \bm{\tau} - C(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} - G(\bm{q})$, we must invert an $N \times N$ matrix. Inverting matrices is mathematically catastrophic for large robots, scaling continuously worse at $O(N^3)$. ABA avoids forming and inverting $M(\bm{q})$ **not** by solving a different equation, but by performing the Schur-complement projections of $M$ implicitly as the recursion sweeps inward; the answer is identical, only the arithmetic is cheaper.
 
 
 ## Featherstone's $O(N)$ Solution: Articulated Inertia
@@ -223,6 +223,8 @@ In chapters on machine learning and optimal control, we often need to compute th
 \end{equation}
 
 Rather than deriving these derivatives by hand (which quickly becomes intractable for complex systems), we can wrap the ABA algorithm in an automatic differentiation framework (such as JAX, PyTorch, or TensorFlow). The AD system automatically tracks how each intermediate computation depends on the inputs, and by the chain rule, produces exact derivatives of the final accelerations with respect to any parameter.
+
+Two modes of AD exist and match different problems cleanly. **Forward-mode** propagates a single input perturbation through the whole computation in one pass; it is efficient when you want one column of the Jacobian (e.g., sensitivity to a single design parameter). **Reverse-mode** (backpropagation) runs forward once, then backward to accumulate gradients; it is efficient when the output is scalar (a loss, a reward), because it produces the full gradient at the cost of a single extra pass. For a trajectory-optimization problem with a scalar cost and many inputs, reverse-mode is the obvious choice; for structured sensitivity analyses with few inputs and many outputs, forward-mode wins.
 
 This is not only computationally feasible—it is elegant. Libraries like Pinocchio now expose their recursive dynamics algorithms through differentiable layers, allowing practitioners to directly optimize trajectories or learn inverse models via gradient descent without manually writing down a single Jacobian or Hessian matrix.
 
