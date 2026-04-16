@@ -65,6 +65,7 @@
 ## 2026-04-07 - Layout Thrashing in DOM Initialization
 **Learning:** Interleaving layout reads (like `getComputedStyle`) and DOM mutations (`insertBefore`, `appendChild`) inside a loop causes forced synchronous layout (Layout Thrashing), severely impacting the main thread during initialization.
 **Action:** When iterating over elements that require layout checks before DOM modification, always batch the reads into a separate array or phase before performing the writes.
-## 2026-04-15 - [Refactor forEach to for...of]
+
+## 2025-02-19 - Replace forEach with for...of loops
 **Learning:** In modern JS engines (V8/SpiderMonkey), `for...of` loops execute significantly faster than `.forEach()` for array/iterable traversals because they avoid the overhead of function calls and lexical scope creation on every iteration.
 **Action:** Use `for...of` instead of `.forEach` for high-iteration code or critical start-up paths.
