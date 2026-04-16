@@ -140,6 +140,7 @@ export function initAccordions() {
  */
 export function initBackToTop() {
     const backToTopBtn = document.createElement("button");
+    backToTopBtn.type = "button";
     backToTopBtn.className = "back-to-top";
     backToTopBtn.setAttribute("aria-label", "Scroll to top");
     backToTopBtn.setAttribute("title", "Scroll to top");
@@ -242,6 +243,7 @@ export function initBackToTop() {
  */
 export function initExportToPdf() {
     const exportToPdfBtn = document.createElement("button");
+    exportToPdfBtn.type = "button";
     exportToPdfBtn.className = "export-to-pdf";
     exportToPdfBtn.setAttribute("aria-label", "Export page to PDF");
     exportToPdfBtn.innerHTML = `
@@ -314,6 +316,7 @@ export function initLightbox() {
     lightbox.setAttribute("aria-label", "Image zoom");
 
     const closeBtn = document.createElement("button");
+    closeBtn.type = "button";
     closeBtn.className = "lightbox-close";
     closeBtn.setAttribute("aria-label", "Close zoom");
     closeBtn.setAttribute("title", "Close zoom");

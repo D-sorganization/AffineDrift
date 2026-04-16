@@ -17,6 +17,7 @@ export function initPDFDownload() {
     }
 
     const pdfBtn = document.createElement("button");
+    pdfBtn.type = "button";
     pdfBtn.className = "pdf-download-btn";
     pdfBtn.setAttribute("aria-label", "Download page as PDF");
     pdfBtn.setAttribute("title", "Download as PDF");
