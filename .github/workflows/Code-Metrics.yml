@@ -203,6 +203,7 @@ jobs:
     needs: [complexity-metrics, duplication-metrics]
     if: always()
     runs-on: d-sorg-fleet
+    timeout-minutes: 5
     steps:
       - name: Final Summary
         run: |
