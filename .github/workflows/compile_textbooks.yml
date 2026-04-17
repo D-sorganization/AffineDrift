@@ -26,6 +26,7 @@ jobs:
   build_textbooks:
     if: github.repository == 'D-sorganization/AffineDrift'
     runs-on: d-sorg-fleet
+    timeout-minutes: 90
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -127,7 +128,7 @@ jobs:
           path: articles/The_Geometry_of_Motion/Volume_V/main.pdf
 
       - name: Install Python PDF tools
-        run: pip install PyPDF2
+        run: python3 -m pip install PyPDF2
 
       - name: Merge all volumes into complete textbook
         run: |

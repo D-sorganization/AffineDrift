@@ -147,6 +147,8 @@ jobs:
           fi
       - name: Verify Quarto Render Coverage
         run: python3 scripts/check_quarto_render_coverage.py
+      - name: Verify Self-Hosted Runner Timeouts
+        run: python3 scripts/check_self_hosted_timeouts.py
       - name: Validate Article Frontmatter
         run: python3 scripts/validate_frontmatter.py
       - name: Verify CSS Budget
