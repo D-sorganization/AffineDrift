@@ -18,7 +18,6 @@ Last-Updated: 2026-04-16T18:00:00Z
   AUDIENCE: This document is designed for both human developers AND AI agents.
   Write clearly, use concrete examples, and avoid ambiguity.
 -->
-| 2026-04-17 | 1.0.67  | ui(accessibility): Added rotation transform `aria-expanded="true"` for `.toggle-icon` inside `.sidebar-section-toggle` in `styles.css` to properly sync the visual state with the semantic state of collapsible sidebars. |
 
 ## 1. Identity
 
@@ -558,3 +557,4 @@ python src/tools/code_quality_ast.py
   5. VERSION: Bump the Spec Version field when making substantive changes.
      Use semver: major (structure change), minor (new features), patch (corrections).
 -->
+| 2026-04-17 | 1.0.67  | ui(accessibility): Added rotation transform `aria-expanded="true"` for `.toggle-icon` inside `.sidebar-section-toggle` in `styles.css` to properly sync the visual state with the semantic state of collapsible sidebars. |
