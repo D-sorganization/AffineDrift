@@ -38,24 +38,12 @@ jobs:
       max-parallel: 1
       matrix:
         include:
-          - id: gom-volume-0
-            label: "Geometry of Motion Volume 0"
+          - id: gom-quarto-book
+            label: "Geometry of Motion Quarto book"
             workdir: articles/The_Geometry_of_Motion/quarto
-            input: volume0.qmd
-            output: GoM_Volume_0_Primer.pdf
-            render_timeout: 20m
-          - id: gom-volume-1
-            label: "Geometry of Motion Volume 1"
-            workdir: articles/The_Geometry_of_Motion/quarto
-            input: volume1.qmd
-            output: GoM_Volume_1_Foundations.pdf
-            render_timeout: 25m
-          - id: gom-volume-2
-            label: "Geometry of Motion Volume 2"
-            workdir: articles/The_Geometry_of_Motion/quarto
-            input: volume2.qmd
-            output: GoM_Volume_2_Trajectories.pdf
-            render_timeout: 25m
+            input: .
+            output: GoM_Quarto_Book.pdf
+            render_timeout: 30m
           - id: theory-part-1
             label: "Theory Part 1"
             workdir: .
