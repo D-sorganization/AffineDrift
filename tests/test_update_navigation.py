@@ -8,10 +8,10 @@ import pytest
 
 from src.tools.update_navigation import (
     NEW_NAV,
-    update_navigation,
 )
+from src.tools.update_navigation import main as update_nav_main
 from src.tools.update_navigation import (
-    main as update_nav_main,
+    update_navigation,
 )
 
 if TYPE_CHECKING:
