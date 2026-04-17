@@ -42,25 +42,25 @@ jobs:
             label: "Geometry of Motion Volume 0"
             workdir: articles/The_Geometry_of_Motion/quarto
             input: volume0.qmd
-            output: ../../../_pdf_output/GoM_Volume_0_Primer.pdf
+            output: GoM_Volume_0_Primer.pdf
             render_timeout: 20m
           - id: gom-volume-1
             label: "Geometry of Motion Volume 1"
             workdir: articles/The_Geometry_of_Motion/quarto
             input: volume1.qmd
-            output: ../../../_pdf_output/GoM_Volume_1_Foundations.pdf
+            output: GoM_Volume_1_Foundations.pdf
             render_timeout: 25m
           - id: gom-volume-2
             label: "Geometry of Motion Volume 2"
             workdir: articles/The_Geometry_of_Motion/quarto
             input: volume2.qmd
-            output: ../../../_pdf_output/GoM_Volume_2_Trajectories.pdf
+            output: GoM_Volume_2_Trajectories.pdf
             render_timeout: 25m
           - id: theory-part-1
             label: "Theory Part 1"
             workdir: .
             input: articles/theory-part1.qmd
-            output: _pdf_output/Theory_Part1.pdf
+            output: Theory_Part1.pdf
             render_timeout: 15m
 
     steps:
@@ -103,7 +103,9 @@ jobs:
           mkdir -p "$GITHUB_WORKSPACE/_pdf_output"
           cd "${{ matrix.workdir }}"
           timeout --kill-after=90s "${{ matrix.render_timeout }}" \
-            quarto render "${{ matrix.input }}" --to pdf --output "${{ matrix.output }}"
+            quarto render "${{ matrix.input }}" --to pdf \
+              --output-dir "$GITHUB_WORKSPACE/_pdf_output" \
+              --output "${{ matrix.output }}"
 
       - name: Upload ${{ matrix.id }} artifact
         if: always()
