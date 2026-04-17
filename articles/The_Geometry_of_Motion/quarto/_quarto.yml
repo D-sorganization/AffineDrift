@@ -58,5 +58,43 @@ format:
     fontsize: 10pt
     geometry:
       - margin=1.5in
+    include-in-header:
+      text: |
+        \usepackage{amsmath,amssymb,amsthm}
+        \usepackage{algorithm}
+        \usepackage{algpseudocode}
+        \usepackage[most]{tcolorbox}
+        \newtcolorbox{intuitionbox}{breakable,colback=blue!3,colframe=blue!45!black,title=Intuition}
+        \newtcolorbox{warningbox}{breakable,colback=yellow!8,colframe=yellow!45!black,title=Warning}
+        \newtcolorbox{designbox}{breakable,colback=green!3,colframe=green!45!black,title=Design Note}
+        \newtcolorbox{axiombox}{breakable,colback=purple!3,colframe=purple!45!black,title=Axiom}
+        \newtheorem{theorem}{Theorem}[chapter]
+        \newtheorem{proposition}{Proposition}[chapter]
+        \newtheorem{corollary}{Corollary}[chapter]
+        \newtheorem{assumption}{Assumption}[chapter]
+        \newtheorem{example}{Example}[chapter]
+        \newtheorem{warning}{Warning}[chapter]
+        \theoremstyle{remark}
+        \newtheorem{remark}{Remark}[chapter]
+        \providecommand{\bm}[1]{\boldsymbol{#1}}
+        \providecommand{\mat}[1]{\mathbf{#1}}
+        \providecommand{\norm}[1]{\left\lVert #1 \right\rVert}
+        \providecommand{\Reals}{\mathbb{R}}
+        \providecommand{\R}{\mathbb{R}}
+        \providecommand{\x}{\mathbf{x}}
+        \providecommand{\state}{\mathbf{x}}
+        \providecommand{\dx}{\delta\mathbf{x}}
+        \providecommand{\control}{\mathbf{u}}
+        \providecommand{\uvec}{\mathbf{u}}
+        \providecommand{\statespace}{\mathcal{X}}
+        \providecommand{\configspace}{\mathcal{Q}}
+        \providecommand{\traj}{\xi}
+        \providecommand{\SO}{\mathrm{SO}}
+        \providecommand{\SE}{\mathrm{SE}}
+        \providecommand{\so}{\mathfrak{so}}
+        \providecommand{\se}{\mathfrak{se}}
+        \providecommand{\screw}{\mathcal{S}}
+        \providecommand{\twist}{\mathcal{V}}
+        \providecommand{\wrench}{\mathcal{F}}
     keep-tex: true
     number-sections: true

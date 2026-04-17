@@ -22,6 +22,7 @@ jobs:
   build_golf_textbook:
     if: github.repository == 'D-sorganization/AffineDrift'
     runs-on: d-sorg-fleet
+    timeout-minutes: 45
     name: Build Golf Physics PDF
 
     steps:
@@ -30,7 +31,6 @@ jobs:
 
       - name: Compile LaTeX → PDF
         uses: xu-cheng/latex-action@6549dc21effb2730855a1281407ecfcececc6c1b # v4
-        continue-on-error: true
         with:
           root_file: main.tex
           working_directory: articles/The_Physics_of_Golf
@@ -51,8 +51,9 @@ jobs:
             ls -lh articles/The_Physics_of_Golf/main.pdf
             echo "pdf_exists=true" >> "$GITHUB_OUTPUT"
           else
-            echo "WARNING: PDF was not generated"
+            echo "ERROR: PDF was not generated"
             echo "pdf_exists=false" >> "$GITHUB_OUTPUT"
+            exit 1
           fi
 
       - name: Count pages
@@ -76,9 +77,10 @@ jobs:
           retention-days: 90
 
   publish_on_merge:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.build_golf_textbook.result == 'success'
     needs: build_golf_textbook
     runs-on: d-sorg-fleet
+    timeout-minutes: 15
     name: Publish Golf Physics PDF
 
     steps:
