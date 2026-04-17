@@ -194,8 +194,9 @@ jobs:
 
       - name: Merge all volumes into complete textbook
         run: |
-          python3 -m pip install PyPDF2
-          python3 << 'PYEOF'
+          python3 -m venv "$RUNNER_TEMP/pdf-tools"
+          "$RUNNER_TEMP/pdf-tools/bin/python" -m pip install --upgrade pip PyPDF2
+          "$RUNNER_TEMP/pdf-tools/bin/python" << 'PYEOF'
           from PyPDF2 import PdfReader, PdfWriter
           import os
 
