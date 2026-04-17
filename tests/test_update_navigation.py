@@ -8,11 +8,9 @@ import pytest
 
 from src.tools.update_navigation import (
     NEW_NAV,
-)
-from src.tools.update_navigation import main as update_nav_main
-from src.tools.update_navigation import (
     update_navigation,
 )
+from src.tools.update_navigation import main as update_nav_main
 
 if TYPE_CHECKING:
     from pathlib import Path
