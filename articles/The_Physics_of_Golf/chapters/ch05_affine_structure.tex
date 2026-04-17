@@ -89,12 +89,12 @@ Then:
 \label{eq:ch05_control_affine_form}
 \end{equation}
 
-This is the \textbf{control-affine form}\index{control-affine form}. It's called ``affine'' (not ``linear'') because the dependence on control is linear, but the dependence on state is not linear.
+This is the \textbf{control-affine form}\index{control-affine form}. It is standard in nonlinear control theory \citep{Isidori1995,BulloLewis2004}. It is called ``affine'' (not ``linear'') because the dependence on control is linear, but the dependence on state is generally nonlinear. The form applies during smooth phases of the swing; impacts, stick--slip contact, and discontinuous grip changes require hybrid or compliant extensions rather than this smooth equation alone.
 
 \begin{laymansbox}{What Is a Vector Field?}{box:ch05_vector_field}
 A \textbf{vector field} assigns an arrow to every point in space. Imagine painting a tiny arrow at every point in the 4-dimensional state space. Each arrow shows the direction and speed the system would move if left to its own devices (no muscles). At a state where the arm is high and moving slowly, the arrow points downward and forward (gravity accelerates the arm). At a state where the arm is moving fast, the arrow curves---Coriolis and centrifugal effects bend the trajectory. Collectively, these arrows form a vector field: a map that tells you, at every possible state, where physics wants to take you next. The drift $\bm{f}(\bm{x})$ \emph{is} this vector field.
 
-The control field $\bm{G}(\bm{x}) \bm{u}$ adds a second arrow showing what muscle torques contribute. At any instant, the system moves in the direction of the \emph{sum} of these two arrows. Early in the downswing, the control arrow is significant. By impact, the drift arrow is so enormous that the control arrow is negligible by comparison.
+The control field $\bm{G}(\bm{x}) \bm{u}$ adds a second arrow showing what muscle torques contribute. At any instant, the system moves in the direction of the \emph{sum} of these two arrows. Early in the downswing, the control arrow can be significant. Near impact in the simplified models developed here, the drift arrow is often much larger than the bounded control arrow, so active torque behaves more like a steering correction than a primary source of acceleration.
 
 Imagine standing in a river. The current is the drift field---it carries you regardless of what you do. Your swimming strokes are the control field. In a gentle stream, your strokes dominate. In whitewater rapids, the current dominates. The golf swing transitions from gentle stream (address) to rapids (impact).
 \end{laymansbox}
@@ -313,15 +313,19 @@ No. The \textbf{moment of inertia} is lower (because the mass is closer to the a
 
 \section{The Drift-to-Control Ratio (DCR)}
 
-Here's a new concept: the \textbf{Drift-to-Control Ratio (DCR)}.
+The \textbf{Drift-to-Control Ratio (DCR)} is a diagnostic, not a coordinate-free physical constant.
 
 \begin{definition}{Drift-to-Control Ratio}{def:ch05_dcr}
-At any point in the state space, the DCR is the relative magnitude of drift versus control:
+Because $\bm{f}$ and $\bm{G}\bm{u}$ are state-derivative vectors, the ratio must be computed with an explicit norm or weighting. In this chapter we use either the acceleration block alone or a stated state-space weighting matrix $\bm{W}$:
 
 \begin{equation}
-\text{DCR} = \frac{|\bm{f}(\bm{x})|}{|\bm{G}(\bm{x}) \bm{u}|}_{\text{during max muscular effort}}
+\mathrm{DCR}_{\bm{W}}(\bm{x};u_{\max})
+=
+\frac{\lVert \bm{W}\bm{f}(\bm{x}) \rVert}
+{\max_{\lVert \bm{u}\rVert \le u_{\max}} \lVert \bm{W}\bm{G}(\bm{x})\bm{u} \rVert + \varepsilon},
 \label{eq:ch05_dcr_def}
 \end{equation}
+where $\varepsilon$ prevents division by zero in states where the selected control channel has negligible authority.
 
 If DCR is high, drift dominates. Muscles contribute little.
 If DCR is low, muscles dominate. Drift contributes little.
@@ -339,10 +343,10 @@ The following numerical regimes provide qualitative guidelines that would need t
 
 \item $\dcr \approx 1$--$5$: Control and drift contribute comparably. The system evolution depends significantly on both passive forces and muscular input. Transition and early downswing typically occupy this regime.
 
-\item $\dcr > 5$--$10$: Drift dominates. Passive forces (gravity, velocity-dependent Coriolis and centrifugal forces) produce large torques compared to muscular input. Control becomes a fine-tuning perturbation. Late downswing approaches this regime, with DCR values potentially reaching 10--30 depending on swing speed and body parameters.
+\item $\dcr > 5$--$10$: Drift dominates under the chosen weighting. Passive forces (gravity, velocity-dependent Coriolis and centrifugal forces) produce large modeled accelerations compared to bounded muscular input. Control becomes a fine-tuning perturbation. Late downswing can approach this regime in the worked examples, but the values depend on swing speed, model parameters, torque limits, and the selected norm.
 \end{itemize}
 
-\textbf{Caveat:} The exact numerical thresholds depend on swing parameters (arm segment masses and inertias), swing speed, and the magnitude of applied muscular torque. These values should be validated through simulation or experimental measurement for specific conditions.
+\textbf{Caveat:} The exact numerical thresholds depend on swing parameters (arm segment masses and inertias), swing speed, the magnitude of applied muscular torque, and the weighting matrix used in Eq.~\eqref{eq:ch05_dcr_def}. These values should be validated through simulation or experimental measurement for specific conditions.
 
 \textbf{Practical implication:} Control authority is highest early in the downswing (low DCR). As DCR increases, the window for meaningful muscular intervention narrows. Thus, deliberate control of impact conditions must be established early.
 \end{laymansbox}
@@ -501,7 +505,7 @@ The solution $\bm{u}^*(t)$ is an optimal control trajectory. For the golf swing,
 
 Computing $\bm{u}^*(t)$ in closed form is generally difficult for nonlinear systems. However, numerical methods (dynamic programming, shooting methods, etc.) can approximate the solution.
 
-\textbf{Observation:} The structure of the problem—the equations $\bm{M}(\bm{q})$, $\bm{C}(\bm{q}, \dot{\bm{q}})$, $\bm{g}(\bm{q})$—is the same for all golfers (with individual differences in body parameters). Thus, the qualitative structure of the optimal solution is universal: early control when DCR is low, passive phase exploitation when DCR is high. Individual variation arises from differences in strength, flexibility, and swing parameters, but the fundamental control structure is shared.
+\textbf{Observation:} The manipulator-equation structure---$\bm{M}(\bm{q})$, $\bm{C}(\bm{q}, \dot{\bm{q}})$, $\bm{g}(\bm{q})$---is shared across smooth multibody models \citep{Featherstone2008,Murray1994}. The qualitative prediction of this model class is therefore structural rather than universal: early control is valuable when DCR is low, and passive dynamics can be exploited when DCR is high. Individual variation enters through segment parameters, strength, flexibility, coordination strategy, and the accuracy of the model itself.
 \end{laymansbox}
 
 \section{Putting It All Together: The Unified Picture}
@@ -568,7 +572,7 @@ All of this is encoded in understanding and exploiting the drift.
 \item High at impact and beyond (drift dominates).
 \end{itemize}
 
-\item \textbf{Elite golfers maximize DCR} by understanding and exploiting the drift.
+\item \textbf{Skilled golfers exploit high-DCR phases} by preparing initial conditions and transition timing that let drift assist rather than fight the intended trajectory.
 
 \item \textbf{The golf swing is an optimal control problem}. The nervous system implicitly solves it through learning and practice.
 
