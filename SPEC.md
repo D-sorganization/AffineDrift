@@ -29,7 +29,7 @@ Last-Updated: 2026-04-16T18:00:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.66                                           |
+| **Spec Version**        | 1.0.67                                           |
 | **Last Spec Update**    | 2026-04-16                                       |
 
 ## 2. Purpose & Mission
@@ -557,3 +557,4 @@ python src/tools/code_quality_ast.py
   5. VERSION: Bump the Spec Version field when making substantive changes.
      Use semver: major (structure change), minor (new features), patch (corrections).
 -->
+| 2026-04-17 | 1.0.67  | ui(accessibility): Added rotation transform `aria-expanded="true"` for `.toggle-icon` inside `.sidebar-section-toggle` in `styles.css` to properly sync the visual state with the semantic state of collapsible sidebars. |

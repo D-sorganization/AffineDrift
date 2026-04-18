@@ -11,7 +11,7 @@ on:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -20,10 +20,7 @@ jobs:
   compile-volumes:
     if: github.repository == 'D-sorganization/AffineDrift'
     runs-on: d-sorg-fleet
-    timeout-minutes: 45
     strategy:
-      fail-fast: false
-      max-parallel: 2
       matrix:
         volume: [Volume_0, Volume_I, Volume_II, Volume_III, Volume_IV, Volume_V]
         include:
@@ -87,7 +84,6 @@ jobs:
   gather-latex-sources:
     if: github.repository == 'D-sorganization/AffineDrift'
     runs-on: d-sorg-fleet
-    timeout-minutes: 10
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -108,7 +104,6 @@ jobs:
   render-quarto-book:
     if: github.repository == 'D-sorganization/AffineDrift'
     runs-on: d-sorg-fleet
-    timeout-minutes: 45
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -120,16 +115,13 @@ jobs:
 
       - name: Render Quarto Book (HTML)
         working-directory: articles/The_Geometry_of_Motion/quarto
-        timeout-minutes: 20
         run: |
-          timeout --kill-after=90s 18m quarto render . --to html
+          quarto render . --to html
 
       - name: Render Quarto Book (PDF)
         working-directory: articles/The_Geometry_of_Motion/quarto
-        timeout-minutes: 30
-        continue-on-error: true
         run: |
-          timeout --kill-after=90s 25m quarto render . --to pdf
+          quarto render . --to pdf || echo "PDF rendering optional, continuing with HTML"
 
       - name: Upload Quarto HTML book
         uses: actions/upload-artifact@v7
@@ -150,7 +142,6 @@ jobs:
     if: github.repository == 'D-sorganization/AffineDrift'
     needs: [compile-volumes, gather-latex-sources, render-quarto-book]
     runs-on: d-sorg-fleet
-    timeout-minutes: 20
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
@@ -194,9 +185,8 @@ jobs:
 
       - name: Merge all volumes into complete textbook
         run: |
-          python3 -m venv "$RUNNER_TEMP/pdf-tools"
-          "$RUNNER_TEMP/pdf-tools/bin/python" -m pip install --upgrade pip PyPDF2
-          "$RUNNER_TEMP/pdf-tools/bin/python" << 'PYEOF'
+          python3 -m venv .pdf_venv && .pdf_venv/bin/pip install PyPDF2
+          .pdf_venv/bin/python << 'PYEOF'
           from PyPDF2 import PdfReader, PdfWriter
           import os
 
