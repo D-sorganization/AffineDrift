@@ -10,38 +10,39 @@
 ## The Wrong Question
 
 
-Open any classical control textbook and you will find, within the first few pages, a
-picture like this: a system, an error signal, a reference point, and a controller
-whose entire purpose is to drive that error to zero. The implicit promise is
-seductive---*give me a destination and I will take you there*.
+Many introductory control treatments begin with a system, an error signal, a
+reference point, and a controller whose role is to reduce that error. This is a
+useful starting point, especially for regulation problems, but it can obscure
+tasks where the object of interest is a time-varying motion rather than a final
+state.
 
 But consider the golf swing.
 
-A skilled golfer does not steer the clubhead toward the ball the way a thermostat
-drives a room toward $72^\circ$F. There is no "setpoint" floating in space that
-the club is chasing. Instead, the golfer's body executes a *motion*---a
-coordinated, whole-body trajectory through a high-dimensional configuration space.
-The clubhead arrives at the ball not because it was pointed at the ball, but because
-the entire motion was shaped so that, somewhere along its arc, the club happens to
-pass through the ball's location at enormous speed.
+A skilled golfer does not steer the clubhead toward the ball in the same way a
+thermostat regulates a room around $72^\circ$F. The relevant object is a
+coordinated, whole-body trajectory through a high-dimensional configuration
+space. The clubhead reaches impact because the motion has been shaped so that
+its path, orientation, and velocity pass through a small region of state space at
+the right time.
 
 
-  **Control is motion, not destination.**
-  The fundamental object of nonlinear control is not a setpoint, not an equilibrium,
-  and not a fixed target. It is a *trajectory*---a curve through state space
-  that the system is asked to follow, and around which disturbances are rejected.
-  The quality of control is measured not by how close the system gets to a point,
-  but by how faithfully it reproduces a desired motion.
+  **For many movement tasks, control is trajectory regulation.**
+  A setpoint or equilibrium is one important control objective, but it is not the
+  only one. For locomotion, manipulation, sport motion, and many robotic tasks,
+  the relevant object is a *trajectory*---a curve through state space that the
+  system is asked to follow, and around which disturbances are rejected.
+  Performance is then measured by trajectory error, timing, robustness, energy,
+  and task-specific tolerances rather than only by convergence to a point.
 
 
-This is not merely a philosophical reframing. It changes the mathematics. It changes
-what we optimize. It changes how we define stability. And it changes what "success"
-means in a controlled system.
+This is not merely a philosophical reframing. It changes the optimization
+problem, the stability definition, and the criteria used to decide whether the
+controlled motion succeeded.
 
-The purpose of this book is to develop control theory from this trajectory-first
-perspective, to show that the classical setpoint framework is a special (and often
-misleading) case of a much richer theory, and to build the mathematical tools needed
-to design controllers for systems whose purpose is to *move*.
+The purpose of this volume is to develop control ideas from this
+trajectory-first perspective. Setpoint regulation remains a useful special case,
+but the emphasis here is on systems whose task is to move through state space
+while staying inside acceptable error bounds.
 
 
 ::: {.content-visible when-format="pdf"}
@@ -3802,4 +3803,3 @@ Finally, we compute the verified bounds of this stability region using **Sums-of
 
 
 Through this book, we hope we have proven that the thermostat has its place, but when the objective is a sweeping, dynamic motion cutting through the physical world, "Control is Motion" provides the only mathematically truthful language.
-
