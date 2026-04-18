@@ -45,3 +45,6 @@
 ## 2024-04-16 - Always specify type='button' for dynamic buttons
 **Learning:** Dynamically created HTML buttons without an explicit 'type' attribute default to 'submit', which can trigger unintended form submissions or page reloads if placed inside a form.
 **Action:** Always explicitly assign `button.type = 'button'` when creating non-submit buttons via JavaScript.
+## 2026-04-18 - Accessible Splash Screen Loading Statuses
+**Learning:** Loading splash screens with dynamic status text (e.g., "Initializing...") may not announce status updates to screen readers.
+**Action:** Add `aria-live="polite"` and `aria-atomic="true"` to splash screen status elements to ensure loading progress is announced gracefully.
