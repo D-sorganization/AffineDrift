@@ -146,7 +146,7 @@ The backswing has three simultaneous effects:
 
 \end{enumerate}
 
-In the affine framework, the backswing is characterized by high control authority. The DCR (drift coefficient ratio) is low: the magnitude of the control field $\norm{G(\state)\control}$ exceeds the magnitude of the drift field $\norm{f(\state)}$. The muscles apply substantial torques to overcome gravity and inertial resistance and accelerate the body along the backswing trajectory.
+In the affine framework, the backswing is characterized by high control authority. The DCR (drift-control ratio) is low under the selected weighting: the magnitude of the available control field $\norm{G(\state)\control}$ exceeds or is comparable to the magnitude of the drift field $\norm{f(\state)}$. The muscles apply substantial torques to overcome gravity and inertial resistance and accelerate the body along the backswing trajectory.
 
 During the backswing, muscle activations alter the configuration $\bm{q}(t)$, changing which portion of configuration space the system will access. This configuration change will affect the drift field $f(\state)$ in the subsequent downswing, as the drift field is configuration-dependent: $f(\state) = f(\bm{q}(t), \dot{\bm{q}}(t))$.
 
@@ -212,7 +212,7 @@ The early downswing lasts from the transition (about $t=0$) to mid-downswing (ab
 
 \subsection*{Drift and Control at Early Downswing}
 
-In the early downswing, the drift coefficient (DCR) is low (approximately 0.2--0.4 	te{Nesbit2005}). Low DCR indicates high control authority: the magnitude of the control field $G(\state)\control$ can significantly alter the state evolution compared to the drift field alone.
+In the early downswing, the selected drift-control ratio (DCR) is comparatively low (illustratively about 0.2--0.4 in the cited swing model \citep{Nesbit2005}). Low DCR indicates relatively high control authority: the magnitude of the control field $G(\state)\control$ can significantly alter the state evolution compared to the drift field alone.
 
 The control inputs are primarily hip and torso rotation, driven by ground reaction forces (Chapter~\ref{ch:grf}) that push the lower body forward and upward. The muscles that drove the backswing are now being decelerated (eccentric contraction, resisting motion). The muscles that drive forward rotation are being accelerated. The transition from backward to forward motion is being managed.
 
@@ -247,7 +247,7 @@ The observed maintenance of lag during early downswing indicates that wrist musc
 \index{DCR!critical}
 \index{decision point}
 
-Mid-downswing lasts from approximately $t=0.08$ to $t=0.12$ s. During this phase, the angular velocity of the body and the magnitudes of gravitational, Coriolis, and centrifugal accelerations increase substantially. The DCR rises (approximately 0.4--0.7 	te{Nesbit2005}), indicating that the drift field magnitude increases relative to the achievable control magnitude.
+Mid-downswing lasts from approximately $t=0.08$ to $t=0.12$ s. During this phase, the angular velocity of the body and the magnitudes of gravitational, Coriolis, and centrifugal accelerations increase substantially. The selected DCR rises (illustratively about 0.4--0.7 in the cited swing model \citep{Nesbit2005}), indicating that the drift field magnitude increases relative to the achievable control magnitude.
 
 \subsection*{The Drift Field Dominance}
 
@@ -256,7 +256,7 @@ In mid-downswing, the drift field is becoming the dominant influence on the swin
 The drift field in mid-downswing includes all the components from early downswing, plus some that are now more significant:
 
 \begin{enumerate}
-\item \textbf{High centrifugal acceleration:} The rotation rate is substantial (approximately 15--20 rad/s at the shoulder 	te{Nesbit2005}). The centrifugal acceleration scales with $\omega^2$, producing large accelerations (approximately 500--1000 m/s$^2$ 	te{Nesbit2005}). This acceleration pulls the shaft outward and, through centrifugal stiffening, increases the effective bending stiffness of the shaft.
+\item \textbf{High centrifugal acceleration:} The rotation rate is substantial (approximately 15--20 rad/s at the shoulder \citep{Nesbit2005}). The centrifugal acceleration scales with $\omega^2$, producing large accelerations (approximately 500--1000 m/s$^2$ \citep{Nesbit2005}). This acceleration pulls the shaft outward and, through centrifugal stiffening, increases the effective bending stiffness of the shaft.
 
 \item \textbf{High inertial forces:} The club has mass, and it is accelerating. Inertial forces on the club (the club ``wants to'' move in a straight line due to inertia, but the constraints force it to curve) are large.
 
@@ -265,31 +265,31 @@ The drift field in mid-downswing includes all the components from early downswin
 \item \textbf{Decreasing control authority:} The muscles can still produce torques, but the inertia of the system is so large that the torques have less effect. A 10 N$\cdot$m increase in torque causes a much smaller change in acceleration now than it did early in the downswing.
 \end{enumerate}
 
-\subsection*{The Point of No Return}
+\subsection*{The Shrinking Late-Correction Window}
 
-At mid-downswing, the state evolution is increasingly determined by the drift field. The inertial resistance to changes in motion is large: the magnitude of accelerations required to substantially alter the swing path exceeds the achievable magnitude of muscle-generated torques. Quantitatively, if $\norm{f(\state)} \gg \norm{G(\state)\bm{u}_{\max}}$ (where $\bm{u}_{\max}$ represents maximum achievable muscle torques), then the control field has negligible effect on the trajectory.
+At mid-downswing, the state evolution is increasingly determined by the drift field. The inertial resistance to changes in motion is large: the magnitude of accelerations required to substantially alter the swing path may exceed the achievable magnitude of muscle-generated torques. Quantitatively, if $\norm{f(\state)} \gg \norm{G(\state)\bm{u}_{\max}}$ under the selected weighting, then the control field acts as a bounded steering term rather than as an unrestricted path-correction mechanism.
 
-This is the physical basis for the observation that mid-downswing is when the swing trajectory becomes largely predetermined by the kinematic configuration and velocities at the transition. Changing the swing path at this point would require control inputs exceeding the physiological maximum of muscle torque production.
+This is the physical basis for the observation that mid-downswing is when the swing trajectory becomes strongly conditioned by the kinematic configuration and velocities at the transition. Changing the swing path at this point may require control inputs exceeding the physiological maximum of muscle torque production or the available time before impact.
 
-Under these conditions, the nervous system typically maintains baseline muscle activation rather than attempting large corrective torques, as the corrective torques would be ineffective relative to the dominant drift field.
+Under these conditions, the nervous system can still maintain stiffness and make small corrections, but the model predicts diminishing returns for large late corrective torques relative to earlier state preparation.
 
 % ─────────────────────────────────────────────────────────────────
-\section{Phase 6: Late Downswing (Ballistic Phase, High DCR)}
+\section{Phase 6: Late Downswing (Drift-Dominated Phase, High DCR)}
 
 \index{downswing!late phase}
 \index{DCR!high}
-\index{ballistic phase}
+\index{drift-dominated phase}
 
-Late downswing lasts from approximately $t=0.12$ to $t=0.16$ s (40 milliseconds before impact). During this phase, angular velocities reach their maximum (approximately 30+ rad/s at the shoulder 	te{Nesbit2005}), and the control authority is minimal. The DCR approaches 1.0 	te{Nesbit2005}, indicating that the drift field dominates the state evolution.
+Late downswing lasts from approximately $t=0.12$ to $t=0.16$ s (40 milliseconds before impact). During this phase, angular velocities reach their maximum in the illustrative model, and late-correction authority is limited by muscle torque, activation timing, and the already large drift field. The DCR can be high under the chosen weighting, but its value is model-dependent rather than a universal 0--1 phase label \citep{Nesbit2005,MacKenzie2009}.
 
-\subsection*{The Autopilot Swing}
+\subsection*{The Feedforward-Dominated Swing}
 
-In late downswing, the muscle activation patterns reflect maintenance of baseline tension rather than dynamic trajectory correction. The state evolution is governed by $\dot{\state} \approx f(\state)$ with $G(\state)\control$ representing a small correction term. The swing path is nearly entirely determined by the drift field.
+In late downswing, voluntary feedback has little time to reshape the path before impact. Muscle activation is still present, but most useful control has already been expressed through earlier state preparation, feedforward timing, and maintained stiffness. The state evolution may be approximated by $\dot{\state} \approx f(\state)$ with $G(\state)\control$ representing a bounded correction term, not absent muscular action.
 
 The drift field in late downswing is complex and multifaceted:
 
 \begin{enumerate}
-\item \textbf{Extremely high centrifugal acceleration:} The clubhead acceleration magnitude reaches approximately 2000 m/s$^2$ or higher 	te{Nesbit2005}. The centrifugal stiffening of the shaft is at its maximum, increasing the effective bending stiffness. The elastic restoring force of the bent shaft reaches its maximum magnitude.
+\item \textbf{Extremely high centrifugal acceleration:} The clubhead acceleration magnitude reaches approximately 2000 m/s$^2$ or higher \citep{Nesbit2005}. The centrifugal stiffening of the shaft is at its maximum, increasing the effective bending stiffness. The elastic restoring force of the bent shaft reaches its maximum magnitude.
 
 \item \textbf{Coriolis deflection:} In the frame rotating with the shoulders, the clubhead is being deflected sideways by Coriolis forces. This contributes to the club path at impact.
 
@@ -320,7 +320,7 @@ Impact is the briefest phase, lasting about 0.5 milliseconds (half a millisecond
 
 \subsection*{The Impact Dynamics}
 
-At the moment of impact, the clubhead velocity is determined by the swing dynamics and typically ranges from approximately 40 m/s (irons) to 65 m/s (drivers), depending on the club specifications and the golfer's swing mechanics 	te{Nesbit2005}. The ball, initially at rest relative to the ground, experiences a sudden impulse from the clubface.
+At the moment of impact, the clubhead velocity is determined by the swing dynamics and typically ranges from approximately 40 m/s (irons) to 65 m/s (drivers), depending on the club specifications and the golfer's swing mechanics \citep{Nesbit2005}. The ball, initially at rest relative to the ground, experiences a sudden impulse from the clubface.
 
 The collision is governed by the elastic properties of the ball material. The ball deforms elastically during the contact phase (approximately 0.5 milliseconds), reaching maximum compression, then rebounds. The elastic modulus and damping properties of the rubber core and synthetic cover determine the compression profile and the energy recovery.
 
@@ -330,11 +330,11 @@ The collision is characterized by the coefficient of restitution (COR), which re
 \mathrm{COR} = \frac{\text{separation speed}}{\text{approach speed}}
 \]
 
-Typical golf ball COR values are approximately 0.80--0.82, as determined empirically 	te{Jorgensen1994, Penner2001}. This COR relates the separation speed $v_{\text{sep}}$ to the approach speed $v_{\text{app}}$ through the definition $\mathrm{COR} = v_{\text{sep}}/v_{\text{app}}$. The remaining kinetic energy (18--20%) is dissipated through internal friction in the ball material and elastic vibration of the clubface.
+Typical golf ball COR values are approximately 0.80--0.82, as determined empirically \citep{Jorgensen1994,Penner2001}. This COR relates the separation speed $v_{\text{sep}}$ to the approach speed $v_{\text{app}}$ through the definition $\mathrm{COR} = v_{\text{sep}}/v_{\text{app}}$. The remaining kinetic energy (18--20%) is dissipated through internal friction in the ball material and elastic vibration of the clubface.
 
 \subsection*{The Launch Conditions}
 
-At the moment of separation from the clubface, the ball possesses linear velocity and angular velocity (spin). The linear ball velocity is determined by the clubhead velocity and the COR through the conservation of momentum and the impact equation. The spin rate is determined by the friction coefficient between clubface and ball and the contact geometry 	te{Nesbit2005}.
+At the moment of separation from the clubface, the ball possesses linear velocity and angular velocity (spin). The linear ball velocity is determined by the clubhead velocity and the COR through the conservation of momentum and the impact equation. The spin rate is determined by the friction coefficient between clubface and ball and the contact geometry \citep{Nesbit2005}.
 
 These launch conditions (ball velocity, spin rate, launch angle, spin axis, position on clubface) are the outputs of the impact mechanics. Given these conditions and the properties of the ball (drag, Magnus coefficient), the trajectory of the ball in flight is fully determined by the equations of motion under gravity and air forces.
 
@@ -377,7 +377,7 @@ The constraint forces (Lagrange multipliers) are doing work, directing the motio
 
 From a control perspective, the follow-through is characterized by high DCR: the drift field (inertia, gravity, and constraint forces from the ground and held objects) dominates the state evolution. Muscle activations provide primarily eccentric (lengthening) contractions that resist the inertial motion, rather than generating new motion.
 
-The deceleration forces in the follow-through are distributed across multiple joints and tissues: the hands experience reaction forces from the club they are holding; the legs and lower back experience ground reaction forces and internal joint forces. The magnitude of these constraint forces is substantial, particularly in the early follow-through 	te{Nesbit2005}. The distribution of these forces across the kinetic chain depends on the configuration and muscle activation patterns.
+The deceleration forces in the follow-through are distributed across multiple joints and tissues: the hands experience reaction forces from the club they are holding; the legs and lower back experience ground reaction forces and internal joint forces. The magnitude of these constraint forces is substantial, particularly in the early follow-through \citep{Nesbit2005}. The distribution of these forces across the kinetic chain depends on the configuration and muscle activation patterns.
 
 % ─────────────────────────────────────────────────────────────────
 \section{The Complete Force Budget: Energy Flow Through the Swing}
@@ -390,7 +390,7 @@ Let us now account for all the energy in the swing, from backswing to follow-thr
 
 \subsection*{Energy Sources}
 
-The golfer's muscles are the primary source of energy input to the system. When muscles contract, they hydrolyze ATP (adenosine triphosphate) and convert the chemical energy into mechanical work. The power output of muscles varies substantially depending on the swing speed, muscle activation patterns, and biomechanical efficiency 	te{Nesbit2005, MacKenzie2009}.
+The golfer's muscles are the primary source of energy input to the system. When muscles contract, they hydrolyze ATP (adenosine triphosphate) and convert the chemical energy into mechanical work. The power output of muscles varies substantially depending on the swing speed, muscle activation patterns, and biomechanical efficiency \citep{Nesbit2005,MacKenzie2009}.
 
 During the swing, muscle power is distributed among:
 
@@ -401,7 +401,7 @@ During the swing, muscle power is distributed among:
 
 \item \textbf{Elastic energy:} Stretching muscles, tendons, and the shaft during the backswing and early downswing stores elastic energy. This energy is released in the mid-to-late downswing.
 
-\item \textbf{Heat:} The inefficiency of muscle contraction dissipates energy as heat. Muscle mechanical efficiency (mechanical work output divided by metabolic energy input) is approximately 20--25\% 	te{Nesbit2005b}; the remainder is dissipated thermally.
+\item \textbf{Heat:} The inefficiency of muscle contraction dissipates energy as heat. Muscle mechanical efficiency (mechanical work output divided by metabolic energy input) is approximately 20--25\% \citep{Nesbit2005b}; the remainder is dissipated thermally.
 
 \end{enumerate}
 
@@ -435,7 +435,7 @@ Not all the muscle power goes into the ball. Some is lost:
 \item \textbf{Collision inefficiency:} Not all the kinetic energy of the club is transferred to the ball. Some is lost as heat in the ball and on the clubface.
 \end{enumerate}
 
-The overall energy transfer efficiency from muscle input to ball kinetic energy is relatively low 	te{Nesbit2005b}. This low efficiency results from multiple dissipative mechanisms: muscle thermal losses, damping in connective tissue, air resistance, and joint friction. The energy transfer efficiency depends on the swing mechanics, biomechanical parameters, and equipment properties 	te{Nesbit2005}.
+The overall energy transfer efficiency from muscle input to ball kinetic energy is relatively low \citep{Nesbit2005b}. This low efficiency results from multiple dissipative mechanisms: muscle thermal losses, damping in connective tissue, air resistance, and joint friction. The energy transfer efficiency depends on the swing mechanics, biomechanical parameters, and equipment properties \citep{Nesbit2005}.
 
 The trajectory of the system (state evolution $\state(t)$) is determined by the balance between the drift field $f(\state)$ (which includes gravity and elastic forces requiring no muscle work) and the control field $G(\state)\control$ (which requires muscle activation and ATP hydrolysis). Swings that rely primarily on drift rather than active control may exhibit different energy transfer characteristics due to differences in muscle activation patterns and resulting force dissipation.
 
@@ -490,7 +490,7 @@ Let us now synthesize what we have learned, showing how drift, control, and cons
 \item \textbf{Drift:} Very high. The centrifugal acceleration of the clubhead is enormous; the shaft is at its maximum bend and maximum elastic force; Coriolis forces are large.
 \item \textbf{Control:} Low. Muscles are active, but the inertia of the system is so large that muscle torques have minimal effect.
 \item \textbf{Constraint forces:} Enormous. The shaft is experiencing enormous bending moments; the grip is being loaded with kilograms of force; the body is accelerating at high rates.
-\item \textbf{DCR:} Very high ($\approx 0.8{-}1.0$). Drift is nearly absolute.
+\item \textbf{DCR:} High under the selected weighting. Drift is dominant, but active stiffness and bounded corrections remain part of the model.
 \end{itemize}
 
 \subsection*{Impact and Follow-Through}
@@ -502,7 +502,7 @@ Let us now synthesize what we have learned, showing how drift, control, and cons
 \item \textbf{DCR:} Decreasing as the motion slows.
 \end{itemize}
 
-This analysis reveals the structure of the golf swing. The DCR parameter characterizes the relative magnitudes of drift and control throughout the swing phases. The backswing is characterized by low DCR (control-dominated); the transition initiates high acceleration through ground reaction forces; the downswing exhibits rising DCR as body speeds increase; the late downswing is characterized by DCR approaching 1.0 (drift-dominated). This progression in DCR reflects the changing balance between inertial resistance (which grows as velocity increases) and achievable muscle-generated torques (which are relatively constant).
+This analysis reveals the structure of the golf swing. The DCR parameter characterizes the relative magnitudes of drift and control only after the weighting, torque bound, and model parameters are stated. In the worked examples, the backswing is characterized by low DCR (control-dominated); the transition initiates high acceleration through ground reaction forces; the downswing often exhibits rising DCR as body speeds increase; and the late downswing can become drift-dominated under the selected weighting. This progression reflects the changing balance between inertial resistance and achievable muscle-generated torques, but the numerical trend must be verified in the specified model rather than assumed.
 
 % ─────────────────────────────────────────────────────────────────
 \section{What the ZTCF Reveals About Each Phase}
@@ -526,12 +526,12 @@ The ZTCF is the trajectory the clubhead would follow if all muscle torques were 
 
 \item \textbf{In mid-downswing:} The ZTCF is already producing a motion quite close to the desired motion. The control inputs are small corrections.
 
-\item \textbf{In late downswing:} The ZTCF is producing the motion almost entirely. The control inputs are negligible.
+\item \textbf{In late downswing:} The ZTCF may be close to the measured trajectory in a high-DCR model. The control inputs are bounded corrections, not literally absent.
 
-\item \textbf{At impact:} The ZTCF has determined the clubhead speed and club face angle. The ball outcome is now determined.
+\item \textbf{At impact:} The clubhead speed and face angle are strongly constrained by the state delivered into impact; the ball outcome is determined by that state and the impact collision model.
 \end{enumerate}
 
-The zero-torque counterfactual (ZTCF) at each state represents the passive evolution of the system from that state forward. By choosing the initial configuration and the control inputs in the early swing phases (when control authority is high), the system configuration and velocity at the transition determines the ZTCF for the downswing. The magnitude of the ZTCF at impact determines the clubhead velocity and orientation in the absence of further control inputs.
+The zero-torque counterfactual (ZTCF) at each state represents the passive evolution of the system from that state forward. By choosing the initial configuration and the control inputs in the early swing phases (when control authority is high), the system configuration and velocity at the transition condition the ZTCF for the downswing. The ZTCF is a diagnostic for clubhead velocity and orientation in the absence of further control inputs, not a claim that active muscle contributions vanish.
 
 Control inputs in mid-to-late downswing, when DCR is high, produce relatively small perturbations to the ZTCF trajectory. Conversely, control inputs in the early swing phases (address, backswing, transition), when DCR is low, can substantially alter the ZTCF for the downswing. This DCR gradient suggests that the early swing phases are the primary locus of control authority for determining impact conditions.
 
@@ -561,9 +561,9 @@ During the backswing and early downswing, control authority is high: the magnitu
 During the mid-to-late downswing, control authority diminishes as body velocity increases. In these phases, the drift field dominates:
 
 \begin{enumerate}
-\item \textbf{Mid-downswing:} The inertial and Coriolis terms in the drift field $f(\state)$ grow with velocity. The DCR rises above 0.5. Changes to control inputs produce comparatively small alterations to the state trajectory.
+\item \textbf{Mid-downswing:} The inertial and Coriolis terms in the drift field $f(\state)$ grow with velocity. The DCR rises under the chosen weighting. Changes to control inputs produce comparatively small alterations to the state trajectory.
 
-\item \textbf{Late downswing:} The DCR approaches 1.0. The state at impact $\state_{\text{impact}}$ is determined almost entirely by the configuration and velocity at the start of this phase, with control inputs having negligible effect on impact conditions.
+\item \textbf{Late downswing:} The DCR can be high in the model. The state at impact $\state_{\text{impact}}$ is strongly conditioned by the configuration and velocity at the start of this phase, while late control inputs act through bounded, time-limited corrections.
 
 \end{enumerate}
 
@@ -626,7 +626,7 @@ Throughout the book, we have seen how this framework illuminates every aspect of
 
 \item \textbf{Chapter~\ref{ch:05_affine_structure}} developed the affine structure that underlies all golfs physics.
 
-\item \textbf{Chapter~\ref{ch:zero_torque_counterfactual}} introduced the ZTCF, the autopilot trajectory.
+\item \textbf{Chapter~\ref{ch:zero_torque_counterfactual}} introduced the ZTCF as a passive reference trajectory.
 
 \item \textbf{Chapters~\ref{ch:constraint_forces}--10} showed how constraints and energy flow reshape the swing.
 
@@ -641,7 +641,7 @@ Throughout the book, we have seen how this framework illuminates every aspect of
 
 The core structural insight is this: \textbf{the golf swing evolves through phases of decreasing control authority and increasing drift dominance.}
 
-The affine decomposition provides a quantitative framework for this observation. The DCR parameter quantifies the transition from control-dominated to drift-dominated regimes. The impact state (which determines ball outcome) is most sensitive to perturbations in the early swing phases, when DCR is low and control authority is high. The impact state is least sensitive to perturbations in the late downswing, when DCR approaches 1.0 and control authority is minimal.
+The affine decomposition provides a quantitative framework for this observation. The DCR parameter quantifies the transition from control-dominated to drift-dominated regimes only after the weighting, torque bound, and model parameters are stated. The impact state (which determines ball outcome) is often most sensitive to perturbations in the early swing phases, when DCR is low and control authority is high. The impact state is less sensitive to late-downswing perturbations when modeled DCR is high and little time remains before impact.
 
 This structure has implications for the biomechanical and neural control strategies that produce high-speed, accurate swings. Strategies that minimize muscle power expenditure in late downswing while maintaining trajectory accuracy are characterized by careful control input specification in high-authority phases (address through early downswing) and minimal corrective control in low-authority phases (late downswing).
 
@@ -659,13 +659,13 @@ The framework unifies observations from biomechanics, control theory, and motor 
    \item Late phases (mid-to-late downswing) exhibit high DCR: drift dominates state evolution.
    \end{itemize}
 
-\item \textbf{DCR Evolution:} The Drift-Control Ratio increases monotonically through the downswing as body velocity increases. High velocities produce large inertial and Coriolis forces in the drift field.
+\item \textbf{DCR Evolution:} The Drift-Control Ratio often increases through the downswing in the worked models as body velocity increases. High velocities produce large inertial and Coriolis forces in the drift field, but monotonicity is a model result to verify rather than an axiom.
 
 \item \textbf{Impact State Sensitivity:} The impact state (which determines post-impact ball behavior) is most sensitive to perturbations in the early and middle swing phases and least sensitive to perturbations in the late downswing.
 
 \item \textbf{Energy Transfer:} Muscle power output is distributed among potential energy, kinetic energy, elastic energy storage, and thermal dissipation. The fraction of muscle power transferred to the ball is limited by multiple dissipative mechanisms.
 
-\item \textbf{Zero-Torque Counterfactual (ZTCF):} The ZTCF at any state represents the passive evolution under drift alone. The ZTCF in the late downswing is nearly identical to the actual swing trajectory when DCR is high.
+\item \textbf{Zero-Torque Counterfactual (ZTCF):} The ZTCF at any state represents the passive evolution under drift alone. The ZTCF in the late downswing can approximate the actual swing trajectory when DCR is high in the specified model.
 
 \item \textbf{Constraint Forces:} Ground reaction forces, joint constraint forces, and grip forces are significant throughout the swing. These constraint forces are largest during the transition and downswing phases.
 
@@ -673,7 +673,7 @@ The framework unifies observations from biomechanics, control theory, and motor 
 
 \item \textbf{Kinetic Chain Sequence:} The observed sequential acceleration pattern (hip, torso, arm, club) emerges from the coupled dynamics and kinematic constraints, not from independent specification of each segment.
 
-\item \textbf{Motor Control Implications:} The temporal variation in DCR suggests that motor control strategies differ between early (feedback-correctable) and late (feedforward-only) phases.
+\item \textbf{Motor Control Implications:} The temporal variation in DCR suggests that motor control strategies differ between early phases with more feedback leverage and late phases that are more feedforward dominated.
 \end{enumerate}
 \end{principle}
 
@@ -681,7 +681,7 @@ The framework unifies observations from biomechanics, control theory, and motor 
 \begin{exercises}{Chapter Exercises}{exercises:ch14}
 
 \begin{exercise}
-Derive the mathematical condition for DCR as a function of state $\state$ and time $t$. Explain why DCR increases monotonically through the downswing when body speeds are increasing uniformly.
+Derive the mathematical condition for DCR as a function of state $\state$, weighting matrix $\bm{W}$, torque bound $u_{\max}$, and time $t$. Identify the assumptions under which DCR would increase through the downswing, and give one model change that could break monotonicity.
 \end{exercise}
 
 \begin{exercise}
