@@ -670,11 +670,12 @@ is most vulnerable to disturbances.
 
 The reader may wonder: *why not simply work in coordinates?* The answer is
 that coordinate-based descriptions mix up properties of the *curve* with
-properties of the *parameterization*. A golf swing executed slowly and the
-same swing executed quickly trace the same curve in configuration space, but
-their coordinate descriptions $\bm{q}(t)$ are entirely different functions. The
-geometric tools we develop here allow us to separate what is intrinsic to the
-motion from what is merely a choice of clock.
+properties of the *parameterization*. A slow practice swing and a full-speed
+swing may trace a similar path in configuration space, but they do not trace
+the same curve in full state space because the velocity components are
+different. The geometric tools we develop here allow us to say precisely which
+claims are about the configuration path, which claims are about timing, and
+which claims require the full state trajectory.
 
 
   A trajectory has two kinds of properties:
@@ -779,28 +780,32 @@ direction of the derivative; none is hidden in its magnitude.
   the pure geometry of the curve. In control terms, it answers the question:
   *what does the motion look like if we forget how fast it goes?*
 
-  For a golf swing, the arc-length parameterized trajectory $\traj(s)$
-  describes the spatial *path* of the body through configuration space.
+  For a golf swing, the arc-length parameterized trajectory $\traj(s)$ can
+  describe the spatial *path* of the body through configuration space.
   The timing law $s(t)$---how the golfer moves along this path in real
-  time---is a separate design choice. A slow practice swing and a full-speed
-  competition swing follow the same $\traj(s)$ with different $s(t)$.
+  time---is a separate modeling choice. In full state space, however, changing
+  the timing also changes the velocity coordinates, so the state-space curve
+  must be analyzed with both geometry and speed retained.
 
 
 \begin{remark}{Arc Length in High Dimensions}{high_dim_arc}
   In $\Reals^n$ with the Euclidean metric, arc length is defined exactly as
-  above. When the state space carries a non-Euclidean metric (as it will when
-  we work on configuration manifolds in Chapter 3), the formula
-  \eqref{eq:arc_length} generalizes to
+  above. On a manifold, arc length requires an explicitly chosen Riemannian
+  metric \cite{doCarmo1992}. When the configuration manifold carries such a
+  metric (as it will in Chapter 3), the formula \eqref{eq:arc_length}
+  generalizes to
   \begin{equation}
     L = \int_a^b \sqrt{\traj'(\lambda)^\top \bm{G}(\traj(\lambda))\,
     \traj'(\lambda)} \, \dd\lambda,
   \end{equation}
-  where $\bm{G}(\state)$ is the Riemannian metric tensor (for mechanical systems,
-  this is the mass-inertia matrix). This means ``distance in configuration
-  space'' naturally accounts for how massive different parts of the body are.
-  A degree of freedom connected to a heavy segment contributes more to arc
-  length than one connected to a light segment---exactly as physical intuition
-  suggests.
+  where $\bm{G}$ is the selected metric tensor. For mechanical systems, the
+  kinetic-energy metric on configuration space is represented in local
+  coordinates by the mass-inertia matrix $\bm{M}(\bm{q})$
+  \cite{BulloLewis2004}. That statement is about configuration velocities
+  $\dot{\bm{q}}$, not automatically about arbitrary state-space coordinates
+  $(\bm{q},\dot{\bm{q}})$. Thus a mass-weighted arc length can make high-inertia
+  motions count as longer than low-inertia motions, but only after the modeling
+  metric has been stated.
 \end{remark}
 
 
@@ -1895,8 +1900,9 @@ for control are immediate:
     which lives in the Lie algebra.
 3. **Geodesics replace straight lines.** The "shortest path" between
     two configurations is not a straight line in any coordinate system---it
-    is a *geodesic* on the manifold, determined by the Riemannian metric
-    (mass-inertia matrix).
+    is a *geodesic* on the manifold, determined by the Riemannian metric.
+    In mechanical coordinates, the kinetic-energy metric is represented by
+    the mass-inertia matrix after that modeling choice has been made.
 4. **Parallel transport replaces vector addition.** To compare
     tangent vectors (velocities, errors) at different points on the trajectory,
     we must *transport* them along the manifold using the connection.
@@ -3802,4 +3808,3 @@ Finally, we compute the verified bounds of this stability region using **Sums-of
 
 
 Through this book, we hope we have proven that the thermostat has its place, but when the objective is a sweeping, dynamic motion cutting through the physical world, "Control is Motion" provides the only mathematically truthful language.
-
