@@ -5,9 +5,9 @@ description: "Control design in the tangent space."
 
 ## The Linearization-Based Control Principle
 
-If nonlinear dynamics are exactly linear at each instant, then we can use linear control tools — LQR, Riccati equations, all the machinery of linear systems theory — at each instant along a trajectory. **This is the key insight behind DDP, iLQR, and virtually every practical nonlinear control method.**
+Because the first variation of a smooth nonlinear system is linear along a specified trajectory, linear control tools can be used locally around that trajectory. This is one of the main ideas behind DDP, iLQR, and related trajectory-optimization methods.
 
-The logic is elegant: linearize around a nominal trajectory, solve a linear optimal control problem to get a feedback gain, apply that gain, and repeat. Each iteration refines the trajectory. Eventually — if the problem is well-conditioned — the iterations converge to a solution of the nonlinear optimal control problem.
+The computational pattern is: linearize around a nominal trajectory, solve a local linear-quadratic problem to get a feedback gain, apply or test that update on the nonlinear system, and repeat. Under appropriate smoothness, initialization, and regularization conditions, these iterations can converge to a local solution of the nonlinear optimal-control problem. Those conditions matter; the method is not a global guarantee.
 
 ## Linear Quadratic Regulation (LQR)
 
@@ -47,7 +47,7 @@ The matrix $S(t)$ is the **value function Hessian** — it encodes the cost-to-g
 
 ## Differential Dynamic Programming (DDP) and iLQR
 
-The power of linearization becomes clear in DDP (Differential Dynamic Programming) and iLQR (iterative Linear-Quadratic Regulator). These algorithms work as follows:
+The role of linearization becomes clear in DDP (Differential Dynamic Programming) and iLQR (iterative Linear-Quadratic Regulator). A simplified version of these algorithms is:
 
 1. **Start with a nominal trajectory** $(x̄(t), ū(t))$ — perhaps from some heuristic or previous iteration.
 
@@ -68,16 +68,16 @@ This procedure is called **successive approximation** or **shooting.** Each iter
 
 Residuals from nonlinearity — the $O(\|\delta x\|^2)$ terms we dropped — are not captured by the linearized LQR solution. However, these residuals are *handled by iteration.* You apply the control, integrate the nonlinear system forward, see what trajectory you get, linearize around it, solve LQR again, and repeat. Each iteration accounts for the mismatch between linear and nonlinear dynamics.
 
-This is why DDP/iLQR works so well: it is not trying to solve the nonlinear problem in one shot. Instead, it leverages the fact that linearization is exact infinitesimally, and uses iteration to handle the nonlinear corrections systematically.
+This is why DDP/iLQR can be effective on well-conditioned local problems: the method does not try to solve the nonlinear problem in one linearized step. It uses repeated local models and line-search or regularization logic to manage the nonlinear corrections.
 
 ## Connection to Stability and Optimality
 
-The site's [Stability-Optimality Duality](../stability-optimality-duality.qmd) framework reveals a deep connection: **The Riccati matrix $S(t)$ serves a dual role.**
+The site's [stability-optimality chapter](../tangent-hyperplane-contraction/chapters/04-stability-optimality-duality.html) discusses a narrower connection: in linear-quadratic settings, the Riccati matrix $S(t)$ can be interpreted both as a value-function Hessian and as a metric-like object for local perturbation dynamics.
 
 - **As a value function:** $S(t)$ encodes the cost-to-go from time $t$ onward under optimal control.
 - **As a contraction metric:** $S(t)$ defines a metric with respect to which the optimal feedback controller is a contraction. Perturbations decay exponentially under the optimal feedback law.
 
-This duality means that optimizing for cost and ensuring stability are not separate concerns — they are two faces of the same geometric structure. The Riccati matrix simultaneously minimizes cost and ensures robust convergence.
+This does not make optimality and stability equivalent in all nonlinear problems. It is a local relationship that is strongest for LQR-like assumptions and becomes more delicate when constraints, strong nonlinearities, mode switches, or poor conditioning are present.
 
 ## Limitations and Practical Considerations
 
@@ -93,4 +93,4 @@ This duality means that optimizing for cost and ensuring stability are not separ
 
 ## Looking Ahead
 
-We have now seen the full chain: from geometric tangent spaces to linearized dynamics to linear optimal control to iterative nonlinear control algorithms. The final piece is understanding the error: what happens when the linearization breaks down? In [Part 4](./part-4-residuals-curvature.qmd), we examine residuals and curvature — the mechanisms by which nonlinearity limits the range of validity of linear tools.
+We have now seen the chain from tangent spaces to variational dynamics and local optimal control. The final piece is understanding the error: what happens when the linearized model stops being predictive? In [Part 4](./part-4-residuals-curvature.html), we examine residuals and curvature, the mechanisms by which nonlinearity limits the range of validity of linear tools.
