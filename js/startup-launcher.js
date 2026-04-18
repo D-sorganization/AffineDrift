@@ -129,7 +129,7 @@
           <div class="ad-splash-progress-track">
             <div class="ad-splash-progress-bar" id="ad-splash-progress-bar"></div>
           </div>
-          <div class="ad-splash-status" id="ad-splash-status" aria-live="polite" aria-atomic="true">Initializing...</div>
+          <div class="ad-splash-status" id="ad-splash-status">Initializing...</div>
         </div>
 
         <div class="ad-splash-hints" id="ad-splash-hints">
