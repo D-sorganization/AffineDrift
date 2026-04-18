@@ -17,7 +17,13 @@ execute:
 ::: {.callout-note appearance="minimal"}
 ## Abstract
 
-Nonlinear dynamical systems are commonly characterized as systems where the superposition principle does not hold. This article argues that this characterization, while globally accurate, obscures a fundamental mathematical fact: nonlinear systems admit exact linear superposition in the tangent space at every point. We develop this claim rigorously, showing that linearization is not an approximation but the exact infinitesimal structure of smooth dynamics. The derivative of a vector field is, by definition, a linear map; the tangent space is, by construction, a linear vector space. We illustrate these ideas with the simple pendulum, connect them to practical techniques such as Linear Quadratic Regulation and Lyapunov stability analysis, and delineate the scope of validity—namely, systems with continuously differentiable dynamics. The geometric perspective presented here—trajectories as curves on manifolds with tangent spaces attached at each point—provides the conceptual foundation for modern nonlinear control theory.
+Nonlinear dynamical systems are commonly characterized as systems where the superposition principle does not hold. This article argues for a more precise local statement: for smooth dynamics, the first variation around a point or trajectory is governed by a linear map on a tangent space. The global nonlinear system still lacks superposition, and finite perturbations introduce residual terms. We illustrate these ideas with the simple pendulum, connect them to techniques such as Linear Quadratic Regulation and Lyapunov stability analysis, and delineate the scope of validity: systems with continuously differentiable dynamics and perturbations small enough for first-order analysis to remain informative.
+:::
+
+::: {.callout-warning}
+## Editorial Status
+
+This is an earlier manuscript in the tangent-hyperplanes sequence. It is retained for traceability, but the current landing page, compact series, and critique pages contain the more careful scope limits. Read claims about "exactness" here as infinitesimal first-order claims unless a finite-scale residual bound is stated.
 :::
 
 ## Introduction
@@ -28,11 +34,11 @@ This statement, while true in a global sense, obscures a more precise and mathem
 
 **Nonlinear systems admit exact linear superposition in the infinitesimal.**
 
-The purpose of this article is to develop that statement rigorously. The argument presented here is not heuristic, approximate, or model-dependent. It is a direct consequence of the definition of derivatives, limits, and smooth manifolds—the same mathematical foundations that underpin calculus itself. Linearization is not an approximation layered on top of nonlinear mechanics; rather, it *is* the exact local structure of the dynamics as the timestep tends to zero.
+The purpose of this article is to develop that local statement. The argument is a consequence of derivatives, limits, and smooth manifolds. Linearization is the first-order local structure of the dynamics as the perturbation tends to zero; using it over finite steps requires residual analysis.
 
-This perspective has profound implications for how we understand nonlinear systems. It explains why linear control techniques such as LQR and pole placement succeed in practice, even when applied to inherently nonlinear plants. It clarifies why stability analysis via linearization (Lyapunov's indirect method) yields rigorous conclusions about nonlinear behavior. And it provides the geometric foundation for modern nonlinear control theory, where trajectories are understood as curves on manifolds with tangent spaces attached at every point.
+This perspective helps explain why linear control techniques such as LQR and pole placement can be useful near operating points or along trajectories, even when the plant is nonlinear. It also clarifies the assumptions behind stability analysis via linearization, including Lyapunov's indirect method.
 
-The goal of this article is to formalize these ideas, prove them cleanly, and demonstrate why they underpin modern nonlinear analysis and control.
+The goal of this article is to formalize these ideas while keeping their local character explicit.
 
 ------------------------------------------------------------------------
 
@@ -46,9 +52,9 @@ $$
 
 where $x$ represents the state vector (positions, velocities, temperatures, concentrations, or any other quantities that characterize the system's configuration) and $u$ represents the control input or external forcing. The function $f$ encodes the physics of the system—it tells us how the state evolves given the current state and input.
 
-The critical assumption we make is that $f$ is continuously differentiable, denoted $C^1$, in both its arguments. This means that not only is $f$ continuous, but its partial derivatives with respect to $x$ and $u$ exist and are themselves continuous functions. This assumption is minimal in the sense that it represents the bare mathematical requirement for the derivative to be well-defined. It is also physically reasonable: virtually all systems derived from classical mechanics—pendulums, robotic arms, aircraft, chemical reactors—satisfy this smoothness condition. The laws of physics, expressed through Newton's equations, Lagrangian mechanics, or thermodynamic principles, generically produce smooth vector fields.
+The critical assumption we make is that $f$ is continuously differentiable, denoted $C^1$, in both its arguments. This means that $f$ is continuous and that its partial derivatives with respect to $x$ and $u$ exist and are themselves continuous. This is the regularity needed for the first derivative to be well defined. Many classical mechanical models satisfy this condition away from contact switches, impacts, friction discontinuities, and singular coordinates; those nonsmooth cases require separate hybrid or nonsmooth analysis.
 
-What does smoothness buy us? It guarantees that at every point in state-input space, the vector field $f$ has a well-defined derivative. This derivative, as we shall see, is a linear map—and it is through this linear map that superposition re-enters the picture.
+What does smoothness buy us? It gives a well-defined derivative at the points where the $C^1$ assumption holds. This derivative, as we shall see, is a linear map, and it is through this linear map that a first-order superposition statement re-enters the picture.
 
 ------------------------------------------------------------------------
 
@@ -154,7 +160,7 @@ $$
 
 for any scalar $\alpha$. Together, these two properties constitute what physicists and engineers call the **superposition principle**: the response to a combination of inputs equals the combination of responses to individual inputs.
 
-The profound implication is this: superposition holds exactly in the tangent space. If we apply two infinitesimal input perturbations $\delta u_1$ and $\delta u_2$ simultaneously, the resulting state perturbation is exactly the sum of the perturbations that would result from applying each input separately. There is no interaction, no coupling, no nonlinear mixing—at the infinitesimal level.
+The local implication is this: superposition holds in the variational equation on the tangent space. If we apply two infinitesimal input perturbations $\delta u_1$ and $\delta u_2$ simultaneously, the first-order state perturbation is the sum of the first-order perturbations that would result from applying each input separately. Nonlinear interaction terms reappear at higher order for finite perturbations.
 
 This is not an approximation we impose for convenience. It is a mathematical theorem, inherited directly from the properties of matrix multiplication and the definition of the derivative. The tangent space is linear by construction, and linear spaces obey superposition by definition. The nonlinearity of the original system has not disappeared; rather, it has been localized to the relationship between different tangent spaces, as we shall see in the next section.
 
@@ -290,7 +296,7 @@ This is not an approximation theory. It is the geometric foundation of nonlinear
 
       <div class="laymans-item">
         <h3>Local Flatness (Tangent Spaces)</h3>
-        <p>Complex systems are curved, but at any single point, they have a flat 'tangent space' that touches them perfectly.</p>
+    <p>Complex systems are curved, but at any regular point, a tangent space gives their first-order local geometry.</p>
         <div class="analogy">
 <strong>Think of it like:</strong> Standing on Earth. The Earth is round, but the floor of your room is flat. You can use simple geometry to arrange furniture because, on a human scale, the curvature is negligible.
         </div>
@@ -306,7 +312,7 @@ This is not an approximation theory. It is the geometric foundation of nonlinear
 
       <div class="laymans-item">
         <h3>Superposition (Adding Things Up)</h3>
-        <p>In complex systems, adding two inputs usually doesn't give the sum of their outputs. But locally—right where you are—it works perfectly.</p>
+    <p>In complex systems, adding two inputs usually does not give the sum of their outputs. In the variational equation, the first-order response is linear.</p>
         <div class="analogy">
 <strong>Think of it like:</strong> Adding salt and pepper. A pinch of salt makes soup salty. A pinch of pepper makes it spicy. Adding both makes it salty <em>and</em> spicy. For small amounts, the flavors just add up linearly. It's only if you dump in a bucket that the chemistry changes completely.
         </div>
