@@ -96,6 +96,43 @@ function generateUniqueId(text, usedIds) {
   return id;
 }
 
+const NAV_LABEL_RULES = Object.freeze([
+  { className: "toc-nav", label: "Table of contents navigation" },
+  { className: "history-nav", label: "Recent history navigation" },
+  { className: "resources-nav", label: "Resources navigation" },
+]);
+
+const SIDEBAR_LABEL_RULES = Object.freeze([
+  { className: "left-sidebar", label: "Left sidebar navigation" },
+  { className: "right-sidebar", label: "Right sidebar navigation" },
+  { className: "home-sidebar", label: "Main navigation sidebar" },
+]);
+
+function resolveLabelFromClasses(element, rules, fallbackLabel) {
+  for (const rule of rules) {
+    if (element.classList.contains(rule.className)) {
+      return rule.label;
+    }
+  }
+  return fallbackLabel;
+}
+
+function applyDefaultAriaLabel(element, label) {
+  if (!element.hasAttribute("aria-label")) {
+    element.setAttribute("aria-label", label);
+  }
+}
+
+function labelCardsFromHeading(cards, prefix) {
+  for (const card of cards) {
+    if (card.hasAttribute("aria-label")) continue;
+    const heading = card.querySelector("h3");
+    if (heading) {
+      card.setAttribute("aria-label", `${prefix}: ${heading.textContent.trim()}`);
+    }
+  }
+}
+
 runOnDomReady(function () {
   // Update offset from CSS variable once DOM is ready
   HEADER_OFFSET = getScrollOffset();
@@ -1644,34 +1681,19 @@ function initAriaLabels() {
   // Add ARIA labels to navigation elements
   const navElements = document.getElementsByTagName('nav');
   for (const nav of navElements) {
-    if (!nav.hasAttribute('aria-label')) {
-      // Determine label based on class or heading
-      if (nav.classList.contains('toc-nav')) {
-        nav.setAttribute('aria-label', 'Table of contents navigation');
-      } else if (nav.classList.contains('history-nav')) {
-        nav.setAttribute('aria-label', 'Recent history navigation');
-      } else if (nav.classList.contains('resources-nav')) {
-        nav.setAttribute('aria-label', 'Resources navigation');
-      } else {
-        nav.setAttribute('aria-label', 'Navigation');
-      }
-    }
+    applyDefaultAriaLabel(
+      nav,
+      resolveLabelFromClasses(nav, NAV_LABEL_RULES, 'Navigation')
+    );
   }
 
   // Add ARIA labels to sidebar elements
   const sidebars = document.getElementsByTagName('aside');
   for (const sidebar of sidebars) {
-    if (!sidebar.hasAttribute('aria-label')) {
-      if (sidebar.classList.contains('left-sidebar')) {
-        sidebar.setAttribute('aria-label', 'Left sidebar navigation');
-      } else if (sidebar.classList.contains('right-sidebar')) {
-        sidebar.setAttribute('aria-label', 'Right sidebar navigation');
-      } else if (sidebar.classList.contains('home-sidebar')) {
-        sidebar.setAttribute('aria-label', 'Main navigation sidebar');
-      } else {
-        sidebar.setAttribute('aria-label', 'Sidebar');
-      }
-    }
+    applyDefaultAriaLabel(
+      sidebar,
+      resolveLabelFromClasses(sidebar, SIDEBAR_LABEL_RULES, 'Sidebar')
+    );
   }
 
   // Add ARIA labels to main content areas
@@ -1711,25 +1733,11 @@ function initAriaLabels() {
 
   // Add ARIA labels to resource cards
   const resourceCards = document.getElementsByClassName('resource-card');
-  for (const card of resourceCards) {
-    if (!card.hasAttribute('aria-label')) {
-      const heading = card.querySelector('h3');
-      if (heading) {
-        card.setAttribute('aria-label', `Resource: ${heading.textContent.trim()}`);
-      }
-    }
-  }
+  labelCardsFromHeading(resourceCards, 'Resource');
 
   // Add ARIA labels to article cards
   const articleCards = document.getElementsByClassName('article-card');
-  for (const card of articleCards) {
-    if (!card.hasAttribute('aria-label')) {
-      const heading = card.querySelector('h3');
-      if (heading) {
-        card.setAttribute('aria-label', `Article: ${heading.textContent.trim()}`);
-      }
-    }
-  }
+  labelCardsFromHeading(articleCards, 'Article');
 
   // Add ARIA live region for dynamic content
   // Fallback to querySelectorAll here because id selection is a complex pattern

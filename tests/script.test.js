@@ -264,6 +264,25 @@ describe('DOM Manipulation', () => {
       const toc = document.querySelector('.toc-nav');
       expect(toc.getAttribute('aria-label')).toBe('Custom Label');
     });
+
+    test('should label resource and article cards from headings', () => {
+      document.body.innerHTML = `
+        <article class="resource-card">
+          <h3>Resource Title</h3>
+        </article>
+        <article class="article-card">
+          <h3>Article Title</h3>
+        </article>
+      `;
+
+      initAriaLabels();
+
+      const resourceCard = document.querySelector('.resource-card');
+      const articleCard = document.querySelector('.article-card');
+
+      expect(resourceCard.getAttribute('aria-label')).toBe('Resource: Resource Title');
+      expect(articleCard.getAttribute('aria-label')).toBe('Article: Article Title');
+    });
   });
 });
 
