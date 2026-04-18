@@ -26,3 +26,8 @@
 **Vulnerability:** A strict Content Security Policy (CSP) blocked the loading of essential third-party assets (MathJax from jsdelivr) and embedded YouTube videos, leading to CI smoke test failures and missing functionality.
 **Learning:** When enforcing 'default-src \'self\'', you must explicitly list every third-party domain required for fonts, stylesheets, and embedded frames. Relying solely on 'self' in a site relying on CDNs causes immediate functional breakage.
 **Prevention:** Always test CSP updates thoroughly across all page types (especially pages with embeds and math formulas) and monitor console errors or automated end-to-end tests for blocked assets.
+
+## 2026-04-18 - Prevent DOM-based XSS via document.title in PDF Export
+**Vulnerability:** DOM-based XSS via unescaped document.title used in PDF export functionality.
+**Learning:** Even internal properties like document.title can be manipulated. If an attacker can control the title (e.g., via a URL parameter in some frameworks), injecting it directly into `.innerHTML` creates an XSS vulnerability.
+**Prevention:** Always escape data from properties like document.title before injecting it into the DOM via `.innerHTML`.
