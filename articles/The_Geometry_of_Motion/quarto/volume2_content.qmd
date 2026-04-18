@@ -206,7 +206,7 @@ an extraordinary number of control-theoretic challenges into roughly 1.2~seconds
         minimal variance.
 
 
-\begin{example}{From Setpoint Thinking to Trajectory Thinking}{golf_shift}
+\begin{example}[From Setpoint Thinking to Trajectory Thinking]\label{example:golf_shift}
   Suppose we model a simplified golf swing with generalized coordinates
   $\bm{q} = (\theta_{\text{torso}},\, \theta_{\text{shoulder}},\,
   \theta_{\text{arm}},\, \theta_{\text{wrist}})^\top$ and their velocities
@@ -710,7 +710,7 @@ $\lambda = \phi(\mu)$ is a smooth, monotonically increasing reparameterization,
 then $\tilde{\traj}(\mu) = \traj(\phi(\mu))$ traces the same set of points in
 $\Reals^n$, but at different "speeds."
 
-\begin{example}{The Circle: Three Parameterizations}{circle_param}
+\begin{example}[The Circle: Three Parameterizations]\label{example:circle_param}
   Consider the unit circle in $\Reals^2$. Three natural parameterizations:
   \begin{align}
     \traj_1(t) &= (\cos t,\; \sin t), \quad t \in [0, 2\pi]
@@ -788,7 +788,7 @@ direction of the derivative; none is hidden in its magnitude.
   must be analyzed with both geometry and speed retained.
 
 
-\begin{remark}{Arc Length in High Dimensions}{high_dim_arc}
+\begin{remark}[Arc Length in High Dimensions]\label{remark:high_dim_arc}
   In $\Reals^n$ with the Euclidean metric, arc length is defined exactly as
   above. On a manifold, arc length requires an explicitly chosen Riemannian
   metric \cite{doCarmo1992}. When the configuration manifold carries such a
@@ -866,7 +866,7 @@ be computed directly:
   the result.
 \end{proof}
 
-\begin{example}{Curvature of an Elliptical Trajectory}{ellipse_curv}
+\begin{example}[Curvature of an Elliptical Trajectory]\label{example:ellipse_curv}
   Consider the ellipse $\traj(t) = (a\cos t,\; b\sin t)$ with $a > b > 0$. Then
   \begin{align}
     \traj'(t) &= (-a\sin t,\; b\cos t), \\
@@ -1028,7 +1028,7 @@ stretching. The curvatures $\kappa_1, \ldots, \kappa_{p-1}$ are the
 "angular velocities" of this rotation projected onto the various planes of
 the frame.
 
-\begin{example}{Frenet--Serret for a 3D Helix}{helix}
+\begin{example}[Frenet--Serret for a 3D Helix]\label{example:helix}
   The helix $\traj(t) = (a\cos t,\; a\sin t,\; bt)$ with speed
   $v = \sqrt{a^2 + b^2}$ has arc-length parameter $s = vt$. The Frenet--Serret
   quantities are:
@@ -1112,7 +1112,7 @@ The acceleration decomposes into:
   with curvature. This is the **curvature cost** of the trajectory.
 
 
-\begin{example}{Curvature Cost in the Golf Downswing}{golf_curv_cost}
+\begin{example}[Curvature Cost in the Golf Downswing]\label{example:golf_curv_cost}
   In the transition from backswing to downswing, a professional golfer reverses
   the direction of the club in roughly 0.15 seconds. Let us estimate the
   curvature cost.
@@ -1162,7 +1162,7 @@ twisting. For control design, the first two curvatures ($\kappa$ and $\tau$)
 capture the dominant geometric effects, with higher curvatures becoming
 relevant primarily in highly articulated systems.
 
-\begin{remark}{The Curvature Signature}{curv_signature}
+\begin{remark}[The Curvature Signature]\label{remark:curv_signature}
   The ordered set of generalized curvatures $(\kappa_1(s), \kappa_2(s),
   \ldots, \kappa_{p-1}(s))$ as functions of arc length constitutes the
   **curvature signature** of the trajectory. By the fundamental theorem
@@ -1274,7 +1274,7 @@ control problem:
   authority at every point.
 
 
-\begin{example}{Timing the Downswing}{timing_downswing}
+\begin{example}[Timing the Downswing]\label{example:timing_downswing}
   Suppose the downswing path has a curvature profile $\kappa(s)$ with a peak
   of $\kappa_{\max}$ at the transition point. The maximum centripetal
   acceleration the controller can provide is $a_{\max}$. Then the speed at
@@ -1358,7 +1358,7 @@ the nearest point on the reference), and $\xi_2, \ldots, \xi_n$ are the
 
 These coordinates have a powerful property: the reference trajectory itself
 corresponds to $\bm{\xi} = \bm{0}$, and the trajectory-tracking problem
-becomes the problem of *regulating $\bm{\xi*$ to zero while $s^*$
+becomes the problem of *regulating $\bm{\xi}$* to zero while $s^*$
 advances}. This converts the tracking problem into a regulation problem, but in
 the moving frame rather than a fixed frame.
 
@@ -1422,7 +1422,7 @@ a practical corollary for control:
 
 \end{corollary}
 
-\begin{example}{Curvature Signature of a Golf Swing}{golf_signature}
+\begin{example}[Curvature Signature of a Golf Swing]\label{example:golf_signature}
   A simplified 2-DOF model of the golf swing (arm + club) has a 4-dimensional
   state space ($\theta_{\text{arm}}, \theta_{\text{club}}, \dot{\theta}_{\text{arm}},
   \dot{\theta}_{\text{club}}$). The trajectory through this space has up to 3
@@ -1559,7 +1559,7 @@ coordinates, but no single coordinate system works *globally*. You need
 an atlas of overlapping charts, like a road atlas needs multiple pages to cover
 a country.
 
-\begin{example}{The Circle $\Sone$}{circle_manifold}
+\begin{example}[The Circle $\Sone$]\label{example:circle_manifold}
   The circle $\Sone = \{(\cos\theta, \sin\theta) : \theta \in \Reals\}$ is a
   1-dimensional manifold. It cannot be covered by a single coordinate chart:
   any angle parameterization $\theta \in [0, 2\pi)$ has a discontinuity
@@ -1683,7 +1683,7 @@ individual joint manifolds (modulo kinematic constraints):
   3-dimensional torus.
 
 
-\begin{example}{The Human Shoulder}{shoulder}
+\begin{example}[The Human Shoulder]\label{example:shoulder}
   The glenohumeral (shoulder) joint is approximately a ball-and-socket joint
   with configuration manifold $\SOthree$. Combined with the 1-DOF hinge at
   the elbow ($\Sone$) and the 1-DOF pronation/supination of the forearm
@@ -1910,7 +1910,7 @@ for control are immediate:
     meaningless.
 
 
-\begin{warning}{Euler Angle Catastrophe in Golf Modeling}{euler_golf}
+\begin{warning}[Euler Angle Catastrophe in Golf Modeling]\label{warning:euler_golf}
   Many biomechanics studies parameterize the golf swing using Euler angles for
   each joint. For the shoulder joint ($\SOthree$), this means three angles
   $(\phi_s, \theta_s, \psi_s)$. But during the backswing, the shoulder
@@ -1967,7 +1967,7 @@ For mechanical systems, nature provides a canonical Riemannian metric: the
       naturally weights each DOF by its effective inertia.
 
 
-\begin{example}{Inertia-Weighted Distance in the Swing}{inertia_distance}
+\begin{example}[Inertia-Weighted Distance in the Swing]\label{example:inertia_distance}
   Consider two configurations that differ by either:
   1. A $10^\circ$ rotation of the torso (high inertia, $I \approx 12\;\text{kg}\cdot\text{m}^2$), or
 2. A $10^\circ$ rotation of the wrist (low inertia, $I \approx 0.03\;\text{kg}\cdot\text{m}^2$).
@@ -2093,7 +2093,7 @@ demand is reduced along directions where the manifold's own curvature
 direction. The control demand increases where the trajectory fights the
 natural dynamics.
 
-\begin{example}{Geodesic Curvature of the Downswing}{downswing_geod_curv}
+\begin{example}[Geodesic Curvature of the Downswing]\label{example:downswing_geod_curv}
   During the downswing, the trajectory has two sources of curvature:
   1. **Euclidean curvature**: the path bends in coordinate space
       (the club changes direction).
@@ -2138,7 +2138,7 @@ the state space is a manifold?
   smoothly with both arguments (away from the cut locus at $\norm{\bm{e}} = \pi$).
 
 
-\begin{remark}{Why Not Just Subtract Quaternions?}{quat_subtract}
+\begin{remark}[Why Not Just Subtract Quaternions?]\label{remark:quat_subtract}
   Given two unit quaternions $\bm{q}_1$ and $\bm{q}_2$, a tempting error
   metric is $\bm{e} = \bm{q}_2 - \bm{q}_1$. But this lives in $\Reals^4$,
   not in the tangent space of $S^3$. Worse, it violates the double-cover
@@ -2229,7 +2229,7 @@ on manifold-valued configuration spaces.
       Switch to a recovery strategy.
 
 
-\begin{example}{PD Control on $\SOthree$}{pd_so3}
+\begin{example}[PD Control on $\SOthree$]\label{example:pd_so3}
   The manifold-correct PD controller for tracking a reference orientation
   $\bm{R}^*(t)$ with a rigid body (moment of inertia $\bm{J}$,
   angular velocity $\bm{\omega}$) is:
@@ -2498,7 +2498,7 @@ remaining perfectly stable. Only deviations *away from* the orbit matter.
   stability.
 
 
-\begin{example}{Limit Cycles: The Prototype}{limit_cycle}
+\begin{example}[Limit Cycles: The Prototype]\label{example:limit_cycle}
   The Van der Pol oscillator $\ddot{x} - \mu(1 - x^2)\dot{x} + x = 0$
   possesses a **limit cycle**---a periodic orbit that is asymptotically
   orbitally stable with asymptotic phase. All nearby trajectories spiral
@@ -2651,7 +2651,7 @@ $\state = \traj^*(s^*) + \bm{\xi}$ and linearizing about $\bm{\xi} = \bm{0}$:
   projector onto $\Sigma(s)$.
 \end{theorem}
 
-\begin{remark}{Understanding the Transverse $\Amat_\transverse$}{A_trans_explain}
+\begin{remark}[Understanding the Transverse $\Amat_\transverse$]\label{remark:A_trans_explain}
   Equation \eqref{eq:A_transverse} has a clear structure:
   - The first term $\bm{P}\, \frac{\partial \bm{f}}{\partial \state}\, \bm{P}$
   is the standard Jacobian projected onto the transverse space. This
@@ -2699,7 +2699,7 @@ where $\bm{f}^* = \bm{f}(\traj^*, \control^*)$ and $\dot{\bm{N}}$ accounts
 for the rotation of the transverse frame along the orbit (the Frenet--Serret
 equations).
 
-\begin{example}{Transverse Linearization of a Planar System}{planar_transverse}
+\begin{example}[Transverse Linearization of a Planar System]\label{example:planar_transverse}
   Consider the system $\dot{x}_1 = x_2$, $\dot{x}_2 = -x_1 + u$ tracking
   the circular orbit $\traj^*(t) = (\cos t,\, -\sin t)$ with $u^* = 0$.
 
@@ -2767,7 +2767,7 @@ system. Floquet theory provides the definitive stability analysis tool.
 
 \end{theorem}
 
-\begin{remark}{The Missing Multiplier}{missing_multiplier}
+\begin{remark}[The Missing Multiplier]\label{remark:missing_multiplier}
   If we had computed the monodromy matrix for the *full*
   $n$-dimensional system (not the transverse reduction), there would be
   $n$ Floquet multipliers, with one of them exactly equal to $+1$. This
@@ -2782,7 +2782,7 @@ system. Floquet theory provides the definitive stability analysis tool.
   orbitally stable.
 \end{remark}
 
-\begin{example}{Floquet Analysis of a Walking Gait}{walking_floquet}
+\begin{example}[Floquet Analysis of a Walking Gait]\label{example:walking_floquet}
   Consider a simplified compass-gait biped with 4-dimensional state space
   $(\theta_1, \theta_2, \dot{\theta}_1, \dot{\theta}_2)$. The walking gait
   is a periodic orbit with period $T$ (one stride). The transverse
@@ -2891,7 +2891,7 @@ For the golf swing, this gives us a powerful analysis tool:
   the tube narrows because the transverse dynamics are contracting.
 
 
-\begin{example}{Amplification Profile of the Golf Swing}{golf_amplification}
+\begin{example}[Amplification Profile of the Golf Swing]\label{example:golf_amplification}
   Consider the 8-dimensional state space of a 4-DOF golf swing model.
   The transverse dynamics have dimension 7. The transverse state transition
   matrix $\PhiMat_\transverse(s, 0)$ maps initial deviations to deviations at
@@ -3050,7 +3050,7 @@ layers:
     Riccati equation.
 
 
-\begin{remark}{Why Not Just Use Standard LQR?}{why_not_lqr}
+\begin{remark}[Why Not Just Use Standard LQR?]\label{remark:why_not_lqr}
   One could linearize the *full* dynamics about $\traj^*(t)$ and apply
   standard time-varying LQR to the $n$-dimensional error
   $\bm{e}(t) = \state(t) - \traj^*(t)$. This works, but:
@@ -3227,7 +3227,7 @@ The dynamics expand into two coupled equations:
 \begin{align}
   M_{11}\ddot{\theta}_1 + M_{12}\ddot{\theta}_2 + C_1 + g_1 &= u_1, \label{eq:pend_actuated} \\
   M_{21}\ddot{\theta}_1 + M_{22}\ddot{\theta}_2 + C_2 + g_2 &= 0. \label{eq:pend_unactuated}
-\end{equation}
+\end{align}
 
 Equation \eqref{eq:pend_unactuated} is the **unactuated dynamics** or **passive constraint**. It dictates the motion of the club. Notice that we cannot directly command $\ddot{\theta}_2$. However, we *can* influence it through the coupling terms:
 1. **Inertial coupling** ($M_{21}\ddot{\theta}_1$): Accelerating or decelerating the arms immediately exerts a force on the club.
@@ -3356,7 +3356,7 @@ We find a beautiful physical phenomenon:
 
 This is the manifestation of the time-varying tube (the Funnel) from Chapter 1! The passive physics naturally form a wide, loose tube that tightens into an incredibly precise singularity exactly at the moment of impact. The golfer does not need to use wrist torque to steer the clubhead to the ball; if the shoulder inputs are grossly correct, the physics of the double pendulum *pulls* the clubhead into the ball.
 
-\begin{remark}{Why Good Swings Feel Effortless}{effortless}
+\begin{remark}[Why Good Swings Feel Effortless]\label{remark:effortless}
   Novice golfers attempt to fully actuate the swing. They use their wrists to steer the club, treating it as a fully actuated robotic arm. This fights the passive dynamics, resulting in slower club speeds and higher variability. Pro golfers use their arms and torso to set up the boundary conditions for the passive wrist release. By acting primarily in the null space (letting the unactuated dynamics dominate), the swing maximizes speed and consistency. The physics does the work.
 \end{remark}
 
@@ -3473,7 +3473,7 @@ Recall from Chapter 5 that the underactuated dynamics enforce a strict algebraic
 
 When optimizing for a golf swing, direct collocation handles this underactuation organically. We do not need to explicitly partition the variables into actuated and unactuated sets for the solver. The collocation constraint $\dot{\state} - \bm{f} = \bm{0}$ already implicitly contains the passive dynamic constraints. 
 
-\begin{example}{The Golf Swing OCP}{golf_ocp}
+\begin{example}[The Golf Swing OCP]\label{example:golf_ocp}
   Consider our planar double pendulum model from Chapter 5. The solver is given the task to maximize $\dot{\theta}_2(t_f)$ (club speed). 
   
   **Initial Guess:** If we seed the NLP solver with a naive guess (e.g., constant shoulder torque), the club speed will be pitifully low.
@@ -3599,7 +3599,7 @@ We define our candidate Lyapunov function as a time-varying quadratic form:
 \end{equation}
 where $\bm{P}(t)$ is a positive definite matrix that changes continuously along the trajectory. The funnel boundary is the time-varying ellipsoid where $V=1$. By altering $\bm{P}(t)$, we alter the shape and orientation of the funnel.
 
-\begin{example}{Volume Maximization via SDP}{vol_max}
+\begin{example}[Volume Maximization via SDP]\label{example:vol_max}
   We transcribe the continuous time $t$ into discrete nodes $t_k$, just as we did in direct collocation. At each node, we set up an SDP that seeks to *maximize* the volume of the ellipsoid defined by $\bm{P}(t_k)$, subject to the SOS invariance constraints connecting it to adjacent nodes.
 
   The optimizer actively computes the exact structural limits of the golf swing's passive dynamics. It discovers that early in the downswing, the funnel can be incredibly "wide" (forgiving), but as centrifugal forces build, the SOS constraints force $\bm{P}(t_k)$ to become highly elongated along the unactuated dimensions in order to maintain the invariance guarantee. The resulting geometry is a true numerical portrait of athletic consistency.

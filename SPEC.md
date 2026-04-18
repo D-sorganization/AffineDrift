@@ -29,7 +29,7 @@ Last-Updated: 2026-04-16T18:00:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.69                                           |
+| **Spec Version**        | 1.0.70                                           |
 | **Last Spec Update**    | 2026-04-18                                       |
 
 ## 2. Purpose & Mission
@@ -466,6 +466,7 @@ python src/tools/code_quality_ast.py
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | ---------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-04-18 | 1.0.70  | fix(ci): added the Geometry of Motion LaTeX style, TikZ libraries, theorem fallbacks, and shared math macro fallbacks to the Quarto PDF configuration; normalized Quarto chapter LaTeX shorthands and fixed exposed PDF content errors so the self-hosted render completes instead of failing on HTML-only MathJax macros or stale masked errors. |
 | 2026-04-18 | 1.0.69  | fix(ci): hardened the Quarto PDF render workflow on self-hosted runners by skipping TinyTeX installation when TeX is already available, bounding install/render/upload steps with timeouts, failing on real render errors instead of masking them, and cleaning up orphaned Quarto/TeX child processes. |
 | 2026-04-16 | 1.0.66  | feat(palette): added explicit `type="button"` attribute to all dynamically created button elements in `js/ui-components.js`, `js/pdf.js`, and `js/dark-mode-toggle.js` to prevent unintended form submission behavior when these buttons are placed inside form elements. |
 | 2026-04-16 | 1.0.65  | ci(content): hardened `ci-standard.yml` system dependency installation so self-hosted runner apt lock contention produces a warning instead of blocking content-only validation, and documented the Contraction Tangent layman's and critics content merge resolution. |

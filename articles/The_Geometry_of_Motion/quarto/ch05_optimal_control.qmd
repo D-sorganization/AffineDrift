@@ -112,11 +112,11 @@ is exact (which it is, since we use the exact Jacobian at each iteration).
 ### Expanding Nonlinear Costs
 
 
-Given a nonlinear cost function $\ell_k(\x_k,\uvec_k)$ and a nominal trajectory $\{\bar\x_k, \bar\uvec_k\}$,
-we expand to second order around this trajectory. Define perturbations $\dx_k = \x_k - \bar\x_k$ and
-$\du_k = \uvec_k - \bar\uvec_k$. The Taylor expansion is:
+Given a nonlinear cost function $\ell_k(\x_k,\uvec_k)$ and a nominal trajectory $\{\bar{\x}_k, \bar{\uvec}_k\}$,
+we expand to second order around this trajectory. Define perturbations $\dx_k = \x_k - \bar{\x}_k$ and
+$\du_k = \uvec_k - \bar{\uvec}_k$. The Taylor expansion is:
 \begin{align}
-\ell_k(\bar\x_k + \dx_k, \bar\uvec_k + \du_k) &\approx \ell_k(\bar\x_k, \bar\uvec_k)
+\ell_k(\bar{\x}_k + \dx_k, \bar{\uvec}_k + \du_k) &\approx \ell_k(\bar{\x}_k, \bar{\uvec}_k)
 + \left[\begin{matrix} \ell_{k,\x}^\T \\ \ell_{k,\mathbf{u}}^\T \end{matrix}\right] \left[\begin{matrix} \dx_k \\ \du_k \end{matrix}\right] \notag \\
 &\quad + \frac{1}{2} \left[\begin{matrix} \dx_k^\T & \du_k^\T \end{matrix}\right]
 \left[\begin{matrix} \ell_{k,\xx} & \ell_{k,\xu}^\T \\ \ell_{k,\xu} & \ell_{k,\uu} \end{matrix}\right]
@@ -124,7 +124,7 @@ $\du_k = \uvec_k - \bar\uvec_k$. The Taylor expansion is:
 \label{eq:ch5:cost-expansion}
 \end{align}
 where $\ell_{k,\x}$, $\ell_{k,\mathbf{u}}$ are first derivatives, and $\ell_{k,\xx}$, $\ell_{k,\uu}$, $\ell_{k,\xu}$
-are second derivatives, all evaluated at $(\bar\x_k, \bar\uvec_k)$. Since we are interested in the relative
+are second derivatives, all evaluated at $(\bar{\x}_k, \bar{\uvec}_k)$. Since we are interested in the relative
 cost change (and optimality is insensitive to constant offsets), we drop the zero-order term and define
 the **quadratic cost matrices**:
 \begin{align}
@@ -159,8 +159,8 @@ From Chapter~\ref{ch:variational}, the linearized (variational) dynamics around 
 \dx_{k+1} = \mat{A}_k\,\dx_k + \mat{B}_k\,\du_k,
 \label{eq:ch5:perturbation}
 \end{equation}
-where $\mat{A}_k = \frac{\partial f}{\partial \x}\big|_{(\bar\x_k,\bar\uvec_k)}$ and
-$\mat{B}_k = \frac{\partial f}{\partial \uvec}\big|_{(\bar\x_k,\bar\uvec_k)}$ are the Jacobians of the
+where $\mat{A}_k = \frac{\partial f}{\partial \x}\big|_{(\bar{\x}_k,\bar{\uvec}_k)}$ and
+$\mat{B}_k = \frac{\partial f}{\partial \uvec}\big|_{(\bar{\x}_k,\bar{\uvec}_k)}$ are the Jacobians of the
 dynamics, computed exactly at the nominal trajectory.
 
 
@@ -342,30 +342,30 @@ successive linearization:
 \caption{Differential Dynamic Programming (Full)}
 \label{alg:ch5:ddp}
 \begin{algorithmic}[1]
-\Require Initial nominal trajectory $\bar\x_0^{(0)}, \bar\uvec_0^{(0)}, \ldots, \bar\x_T^{(0)}$,
+\Require Initial nominal trajectory $\bar{\x}_0^{(0)}, \bar{\uvec}_0^{(0)}, \ldots, \bar{\x}_T^{(0)}$,
          regularization parameter $\mu_0 > 0$, line-search parameters $\alpha_{\min}$, $c_1$.
-\Ensure Optimized trajectory $\bar\x_0, \ldots, \bar\x_T$ and feedback gains $\mat{K}_k$.
+\Ensure Optimized trajectory $\bar{\x}_0, \ldots, \bar{\x}_T$ and feedback gains $\mat{K}_k$.
 
 \For{iteration $i = 0, 1, 2, \ldots$ until convergence}
-  \State **Forward Pass (Rollout):**
+  \State \textbf{Forward Pass (Rollout):}
   \State \quad Roll out the nominal trajectory by integrating the nonlinear dynamics:
-  \State \quad \quad $\bar\x_{k+1}^{(i)} = f(\bar\x_k^{(i)}, \bar\uvec_k^{(i)})$ for $k = 0, \ldots, T-1$.
-  \State \quad Compute the total cost $J^{(i)} = \sum_{k=0}^{T-1} \ell_k(\bar\x_k^{(i)}, \bar\uvec_k^{(i)}) + \ell_T(\bar\x_T^{(i)})$.
+  \State \quad \quad $\bar{\x}_{k+1}^{(i)} = f(\bar{\x}_k^{(i)}, \bar{\uvec}_k^{(i)})$ for $k = 0, \ldots, T-1$.
+  \State \quad Compute the total cost $J^{(i)} = \sum_{k=0}^{T-1} \ell_k(\bar{\x}_k^{(i)}, \bar{\uvec}_k^{(i)}) + \ell_T(\bar{\x}_T^{(i)})$.
 
-  \State **Linearize Dynamics:**
+  \State \textbf{Linearize Dynamics:}
   \State \quad For each time step $k = 0, \ldots, T-1$:
-  \State \quad \quad $\mat{A}_k = \frac{\partial f}{\partial \x}|_{(\bar\x_k^{(i)}, \bar\uvec_k^{(i)})}$
-  \State \quad \quad $\mat{B}_k = \frac{\partial f}{\partial \uvec}|_{(\bar\x_k^{(i)}, \bar\uvec_k^{(i)})}$
+  \State \quad \quad $\mat{A}_k = \frac{\partial f}{\partial \x}|_{(\bar{\x}_k^{(i)}, \bar{\uvec}_k^{(i)})}$
+  \State \quad \quad $\mat{B}_k = \frac{\partial f}{\partial \uvec}|_{(\bar{\x}_k^{(i)}, \bar{\uvec}_k^{(i)})}$
 
-  \State **Quadraticize Cost:**
+  \State \textbf{Quadraticize Cost:}
   \State \quad For each time step $k = 0, \ldots, T-1$:
-  \State \quad \quad Compute second-order Taylor expansion of $\ell_k$ around $(\bar\x_k^{(i)}, \bar\uvec_k^{(i)})$:
-  \State \quad \quad \quad $\mat{Q}_{k,\xx} = \frac{\partial^2 \ell_k}{\partial \x^2}|_{(\bar\x_k^{(i)}, \bar\uvec_k^{(i)})}$
-  \State \quad \quad \quad $\mat{R}_k = \frac{\partial^2 \ell_k}{\partial \uvec^2}|_{(\bar\x_k^{(i)}, \bar\uvec_k^{(i)})}$
-  \State \quad \quad \quad $\mat{N}_k = \frac{\partial^2 \ell_k}{\partial \uvec \partial \x}|_{(\bar\x_k^{(i)}, \bar\uvec_k^{(i)})}$
-  \State \quad Compute terminal cost Hessian: $\mat{Q}_{T,\xx} = \frac{\partial^2 \ell_T}{\partial \x^2}|_{\bar\x_T^{(i)}}$
+  \State \quad \quad Compute second-order Taylor expansion of $\ell_k$ around $(\bar{\x}_k^{(i)}, \bar{\uvec}_k^{(i)})$:
+  \State \quad \quad \quad $\mat{Q}_{k,\xx} = \frac{\partial^2 \ell_k}{\partial \x^2}|_{(\bar{\x}_k^{(i)}, \bar{\uvec}_k^{(i)})}$
+  \State \quad \quad \quad $\mat{R}_k = \frac{\partial^2 \ell_k}{\partial \uvec^2}|_{(\bar{\x}_k^{(i)}, \bar{\uvec}_k^{(i)})}$
+  \State \quad \quad \quad $\mat{N}_k = \frac{\partial^2 \ell_k}{\partial \uvec \partial \x}|_{(\bar{\x}_k^{(i)}, \bar{\uvec}_k^{(i)})}$
+  \State \quad Compute terminal cost Hessian: $\mat{Q}_{T,\xx} = \frac{\partial^2 \ell_T}{\partial \x^2}|_{\bar{\x}_T^{(i)}}$
 
-  \State **Backward Pass (Riccati Recursion):**
+  \State \textbf{Backward Pass (Riccati Recursion):}
   \State \quad Initialize: $\mat{S}_T = \mat{Q}_{T,\xx}$
   \State \quad For $k = T-1, T-2, \ldots, 0$:
   \State \quad \quad Compute Q-function Hessians (full DDP):
@@ -379,25 +379,25 @@ successive linearization:
   \State \quad \quad \quad $\mat{S}_k = Q_{k,\xx} - Q_{k,\xu}Q_{k,\uu}^{-1}Q_{k,\xu}^\T$
   \EndFor
 
-  \State **Forward Rollout with Line Search:**
+  \State \textbf{Forward Rollout with Line Search:}
   \State \quad For step size $\alpha \in \{1.0, 0.5, 0.25, \ldots\}$:
   \State \quad \quad For $k = 0, \ldots, T-1$:
   \State \quad \quad \quad $\du_k^{(\text{ff})} = -\vec{k}_k$ (feedforward from last iteration)
-  \State \quad \quad \quad $\x_k = \bar\x_k^{(i)} + \alpha (\x_k - \bar\x_k^{(i)}) + \text{dynamics_integration}$
-  \State \quad \quad \quad $\uvec_k = \bar\uvec_k^{(i)} + \alpha \,\du_k^{(\text{ff})} + \mat{K}_k(\x_k - \bar\x_k^{(i)})$
+  \State \quad \quad \quad $\x_k = \bar{\x}_k^{(i)} + \alpha (\x_k - \bar{\x}_k^{(i)}) + \text{dynamics\_integration}$
+  \State \quad \quad \quad $\uvec_k = \bar{\uvec}_k^{(i)} + \alpha \,\du_k^{(\text{ff})} + \mat{K}_k(\x_k - \bar{\x}_k^{(i)})$
   \State \quad \quad Roll out full trajectory and compute cost $J_{\text{trial}}$.
   \State \quad \quad If $J_{\text{trial}} < J^{(i)} - c_1\alpha\Delta J_{\text{expected}}$: accept step with this $\alpha$ and break.
   \State \quad If no acceptable $\alpha$ found: decrease $\mu$ and retry backward pass, or exit with warning.
 
-  \State **Update:**
-  \State \quad $\bar\x_k^{(i+1)}, \bar\uvec_k^{(i+1)} \gets \text{accepted trial trajectory}$
+  \State \textbf{Update:}
+  \State \quad $\bar{\x}_k^{(i+1)}, \bar{\uvec}_k^{(i+1)} \gets \text{accepted trial trajectory}$
   \State \quad Adjust $\mu$ adaptively (decrease if step was good, increase if poor).
 
-  \State **Check Convergence:**
+  \State \textbf{Check Convergence:}
   \State \quad If $\|\Delta \uvec\|$ and cost change are below threshold: break.
 \EndFor
 
-\Return $\bar\x_0, \ldots, \bar\x_T$ and $\mat{K}_k$ for $k = 0, \ldots, T-1$.
+\Return $\bar{\x}_0, \ldots, \bar{\x}_T$ and $\mat{K}_k$ for $k = 0, \ldots, T-1$.
 \end{algorithmic}
 \end{algorithm}
 
@@ -664,7 +664,7 @@ ensuring robust balancing.
 
 
 Torque saturates: $|\tau| \leq \tau_{\max}$. In the forward rollout, after computing the desired control
-$\uvec_{\text{des}} = \bar\uvec_k + \alpha\,\du_k^{(\text{ff})} + \mat{K}_k(\x_k - \bar\x_k)$, clamp it:
+$\uvec_{\text{des}} = \bar{\uvec}_k + \alpha\,\du_k^{(\text{ff})} + \mat{K}_k(\x_k - \bar{\x}_k)$, clamp it:
 \begin{equation}
 \uvec_k = \max(-\tau_{\max}, \min(\tau_{\max}, \uvec_{\text{des}})).
 \label{eq:ch5:clamping}
@@ -772,7 +772,7 @@ Choosing the matrices $\mat{Q}$ and $\mat{R}$ is as much art as science. Here ar
 
 **Bryson's Rule** suggests normalizing each state and control by its maximum acceptable magnitude:
 \begin{align}
-\tilde\x_k &= \frac{\x_k}{x_{\max}}, \quad \tilde\uvec_k = \frac{\uvec_k}{u_{\max}}, \label{eq:ch5:bryson-norm}\\
+\tilde{\x}_k &= \frac{\x_k}{x_{\max}}, \quad \tilde{\uvec}_k = \frac{\uvec_k}{u_{\max}}, \label{eq:ch5:bryson-norm}\\
 Q &= \frac{1}{x_{\max}^2}, \quad R = \frac{1}{u_{\max}^2}. \label{eq:ch5:bryson-weights}
 \end{align}
 
@@ -784,7 +784,7 @@ constraints.
 ### Frequency-Domain Interpretation
 
 
-For a linearized system with dynamics $\dot\x = \mat{A}\x + \mat{B}\uvec$, the LQR cost $\int_0^\infty (\x^\T\mat{Q}\x + \uvec^\T\mat{R}\uvec) dt$
+For a linearized system with dynamics $\dot{\x} = \mat{A}\x + \mat{B}\uvec$, the LQR cost $\int_0^\infty (\x^\T\mat{Q}\x + \uvec^\T\mat{R}\uvec) dt$
 has a frequency-domain interpretation via Bode plots. The closed-loop bandwidth is roughly proportional to $\sqrt{Q/R}$.
 If $Q$ is large relative to $R$, the controller is aggressive and has high bandwidth. Conversely, large $R$ gives
 a slow, conservative controller.
@@ -873,7 +873,7 @@ reduces to the differential Riccati equation.
 ### Differential Riccati Equation (DRE)
 
 
-For the continuous-time linear-quadratic regulator with dynamics $\dot\x = \mat{A}(t)\x + \mat{B}(t)\uvec$
+For the continuous-time linear-quadratic regulator with dynamics $\dot{\x} = \mat{A}(t)\x + \mat{B}(t)\uvec$
 and cost
 \begin{equation}
 J = \frac{1}{2}\x(T)^\T\mat{Q}_T\x(T) + \int_0^T \frac{1}{2}(\x^\T\mat{Q}(t)\x + \uvec^\T\mat{R}(t)\uvec) dt,
@@ -962,7 +962,7 @@ $\mu \to 0$ recovers the full Newton step.
 
 After computing the feedback law, the forward rollout uses a step-size parameter $\alpha \in (0,1]$:
 \begin{equation}
-\uvec_k = \bar\uvec_k + \alpha\,\du_k^{(\text{ff})} + \mat{K}_k(\x_k - \bar\x_k),
+\uvec_k = \bar{\uvec}_k + \alpha\,\du_k^{(\text{ff})} + \mat{K}_k(\x_k - \bar{\x}_k),
 \label{eq:ch5:line-search}
 \end{equation}
 where $\du_k^{(\text{ff})}$ is the feedforward correction. Backtracking line search ensures sufficient cost decrease
@@ -1011,11 +1011,11 @@ previous solution shifted forward as the initial guess (warm-starting).
 
 
 When the system evolves smoothly, the optimal trajectory at time $t_{k+1}$ is close to
-the shifted trajectory from time $t_k$. Concretely, if $\{\bar\x_j, \bar\uvec_j\}_{j=k}^{k+N}$
+the shifted trajectory from time $t_k$. Concretely, if $\{\bar{\x}_j, \bar{\uvec}_j\}_{j=k}^{k+N}$
 was optimal at $t_k$, the warm-start for $t_{k+1}$ is:
 \begin{equation}
-\bar\x_j^{(0)} = \bar\x_{j+1}^{\text{prev}}, \quad
-\bar\uvec_j^{(0)} = \bar\uvec_{j+1}^{\text{prev}}, \quad j = k+1, \ldots, k+N-1,
+\bar{\x}_j^{(0)} = \bar{\x}_{j+1}^{\text{prev}}, \quad
+\bar{\uvec}_j^{(0)} = \bar{\uvec}_{j+1}^{\text{prev}}, \quad j = k+1, \ldots, k+N-1,
 \label{eq:ch5:warm-start}
 \end{equation}
 with the final element filled by a reasonable extrapolation.
@@ -1059,7 +1059,7 @@ per control cycle, rather than iterating DDP to convergence. The RTI scheme:
 
 1. Linearizes the dynamics and quadraticizes the cost around the current shifted trajectory.
 2. Performs one backward Riccati sweep to compute $\mat{K}_k$ and $\vec{k}_k$.
-3. Applies $\uvec_k = \bar\uvec_k + \vec{k}_k + \mat{K}_k(\x_k - \bar\x_k)$.
+3. Applies $\uvec_k = \bar{\uvec}_k + \vec{k}_k + \mat{K}_k(\x_k - \bar{\x}_k)$.
 4. Shifts the trajectory and prepares for the next cycle.
 
 This is computationally equivalent to applying a single-iteration DDP at each time step.
