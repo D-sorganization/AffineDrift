@@ -81,7 +81,7 @@ $\mat{S}$ of the algebraic Riccati equation (ARE)
 \end{equation}
 is simultaneously:
 1. The **cost curvature** matrix: the optimal cost-to-go for a state $\x$ is exactly $V^\star(\x) = \x^\T\mat{S}\x$.
-2. A **Lyapunov function** for the closed-loop system $\dot\x = (\mat{A}-\mat{B}\mat{K})\x$ with $\mat{K} = \mat{R}^{-1}\mat{B}^\T\mat{S}$.
+2. A **Lyapunov function** for the closed-loop system $\dot{\x} = (\mat{A}-\mat{B}\mat{K})\x$ with $\mat{K} = \mat{R}^{-1}\mat{B}^\T\mat{S}$.
 
 This insight unified two previously separate fields: \textit{the stability guarantee comes free from optimizing
 the cost}. This was conceptually revolutionary. Before Kalman, engineers solved LQR problems for one reason (minimize
@@ -129,7 +129,7 @@ The continuous-time LQR controller $\mat{K} = \mat{R}^{-1}\mat{B}^\T\mat{S}$ der
 
 \begin{proof}[Proof Sketch]
 The key is that the Riccati solution $\mat{S}$ serves as a Lyapunov function. Consider a perturbed controller
-$\mat{K}_\eta = \eta \mat{K}$ for $\eta > 0$. The closed-loop system becomes $\dot\x = (\mat{A} - \eta\mat{B}\mat{K})\x$.
+$\mat{K}_\eta = \eta \mat{K}$ for $\eta > 0$. The closed-loop system becomes $\dot{\x} = (\mat{A} - \eta\mat{B}\mat{K})\x$.
 Using $V = \x^\T\mat{S}\x$:
 \begin{equation}
 \dot{V} = \x^\T[(\mat{A} - \eta\mat{B}\mat{K})^\T\mat{S} + \mat{S}(\mat{A} - \eta\mat{B}\mat{K})]\x.
@@ -211,7 +211,7 @@ for some $\alpha > 0$ (the smallest eigenvalue of $\mat{Q}_k + \mat{K}_k^\T\mat{
 \end{theorem}
 
 \begin{proof}[Complete Step-by-Step Derivation]
-**Step 1: Compute $V_{k+1**$ using the closed-loop dynamics}. From~\eqref{eq:ch6:closed-loop}:
+\textbf{Step 1: Compute $V_{k+1}$ using the closed-loop dynamics.} From~\eqref{eq:ch6:closed-loop}:
 \begin{align}
 \dx_{k+1} &= (\mat{A}_k - \mat{B}_k\mat{K}_k)\,\dx_k, \\
 V_{k+1} &= \dx_{k+1}^\T\mat{S}_{k+1}\dx_{k+1} \notag\\
@@ -219,7 +219,7 @@ V_{k+1} &= \dx_{k+1}^\T\mat{S}_{k+1}\dx_{k+1} \notag\\
 \label{eq:ch6:Vk1-full}
 \end{align}
 
-**Step 2: Write $V_{k+1** - V_k$}. We have $V_k = \dx_k^\T\mat{S}_k\dx_k$, so:
+\textbf{Step 2: Write $V_{k+1} - V_k$.} We have $V_k = \dx_k^\T\mat{S}_k\dx_k$, so:
 \begin{align}
 V_{k+1}-V_k &= \dx_k^\T\!\left[
 (\mat{A}_k-\mat{B}_k\mat{K}_k)^\T\mat{S}_{k+1}(\mat{A}_k-\mat{B}_k\mat{K}_k)
@@ -227,7 +227,7 @@ V_{k+1}-V_k &= \dx_k^\T\!\left[
 \label{eq:ch6:diff-raw}
 \end{align}
 
-**Step 3: Invoke the Riccati alternative form**. Equation~\eqref{eq:ch6:riccati-alt-form} states:
+\textbf{Step 3: Invoke the Riccati alternative form.} Equation~\eqref{eq:ch6:riccati-alt-form} states:
 \begin{equation}
 \mat{S}_k = \mat{Q}_k + (\mat{A}_k - \mat{B}_k\mat{K}_k)^\T \mat{S}_{k+1} (\mat{A}_k - \mat{B}_k\mat{K}_k).
 \end{equation}
@@ -238,7 +238,7 @@ Therefore:
 \label{eq:ch6:riccati-substitution}
 \end{equation}
 
-**Step 4: Substitute back**:
+\textbf{Step 4: Substitute back.}
 \begin{align}
 V_{k+1}-V_k &= \dx_k^\T\!\left[
 (\mat{S}_k - \mat{Q}_k) - \mat{S}_k\right]\!\dx_k \notag\\
@@ -247,7 +247,7 @@ V_{k+1}-V_k &= \dx_k^\T\!\left[
 \label{eq:ch6:first-drop}
 \end{align}
 
-**Step 5: Add the control cost**. The optimal value function satisfies a fundamental recursion:
+\textbf{Step 5: Add the control cost.} The optimal value function satisfies a fundamental recursion:
 \begin{equation}
 V_k = x_k^\T\mat{Q}_k x_k + u_k^\T\mat{R}_k u_k + V_{k+1}.
 \label{eq:ch6:cost-recursion}
@@ -337,7 +337,7 @@ determined by the smallest eigenvalue of the stage cost and the condition number
 \begin{remark}[Decay Rate Interpretation]
 The decay rate $\rho = 1 - \alpha/\overline{s}$ reveals a trade-off:
 - **Larger $\alpha$** (stronger stage cost): faster decay.
-- **Larger $\overline{s**$} (larger Riccati solution): slower decay, but more robust (larger basin of attraction).
+- **Larger $\overline{s}$** (larger Riccati solution): slower decay, but more robust (larger basin of attraction).
 - The condition number $\kappa_S := \overline{s}/\underline{s}$ appears in the Euclidean norm bound: worse conditioning
   means a larger factor in front of the exponential decay.
 
@@ -529,7 +529,7 @@ The constant decay rate (last column) of $0.954$ confirms the theoretical predic
 
 For the continuous-time system:
 \begin{equation}
-\dot\x = \mat{A}\x + \mat{B}\uvec,
+\dot{\x} = \mat{A}\x + \mat{B}\uvec,
 \label{eq:ch6:ct-system}
 \end{equation}
 with cost:
@@ -727,7 +727,7 @@ under any multiplicative perturbation $\mat{K}_\eta = \eta\mat{K}$ for $\eta \in
 \end{theorem}
 
 \begin{proof}
-Consider the perturbed closed-loop system $\dot\x = (\mat{A} - \eta\mat{B}\mat{K})\x$. Using the value function
+Consider the perturbed closed-loop system $\dot{\x} = (\mat{A} - \eta\mat{B}\mat{K})\x$. Using the value function
 $V = \x^\T\mat{S}\x$:
 \begin{align}
 \dot{V} &= \x^\T[(\mat{A} - \eta\mat{B}\mat{K})^\T\mat{S} + \mat{S}(\mat{A} - \eta\mat{B}\mat{K})]\x \notag\\
@@ -851,7 +851,7 @@ that are hard to control, and convergence is slower. The designer should either:
 
 The $H^\infty$ optimal control problem is: given a system with disturbances $\mat{w}$,
 \begin{equation}
-\dot\x = \mat{A}\x + \mat{B}_u\uvec + \mat{B}_w\mat{w},
+\dot{\x} = \mat{A}\x + \mat{B}_u\uvec + \mat{B}_w\mat{w},
 \label{eq:ch6:hinf-system}
 \end{equation}
 with controlled output:
@@ -1114,7 +1114,7 @@ This section develops the estimation side of the duality.
 
 Consider the system with process noise and output measurement:
 \begin{align}
-\dot\x &= \mat{A}(t)\x + \mat{B}(t)\uvec + \mat{G}_w w, \label{eq:ch6:process-noise} \\
+\dot{\x} &= \mat{A}(t)\x + \mat{B}(t)\uvec + \mat{G}_w w, \label{eq:ch6:process-noise} \\
 \vec{y} &= \mat{C}(t)\x + v, \label{eq:ch6:measurement}
 \end{align}
 where $w \sim \mathcal{N}(0, \mat{W})$ and $v \sim \mathcal{N}(0, \mat{V})$ are process
@@ -1142,16 +1142,16 @@ gain $\mat{K} = \mat{R}^{-1}\mat{B}^T\mat{S}$.
 ### The Extended Kalman Filter as Tangent-Space Estimation
 
 
-For nonlinear systems $\dot\x = f(\x) + G(\x)\uvec + w$, the Extended Kalman Filter (EKF)
+For nonlinear systems $\dot{\x} = f(\x) + G(\x)\uvec + w$, the Extended Kalman Filter (EKF)
 propagates the state estimate and covariance using the tangent-space (linearized) dynamics:
 \begin{align}
-\dot{\hat\x} &= f(\hat\x) + G(\hat\x)\uvec
-+ \mat{L}(t)\bigl(\vec{y} - h(\hat\x)\bigr), \label{eq:ch6:ekf-state} \\
+\dot{\hat{\x}} &= f(\hat{\x}) + G(\hat{\x})\uvec
++ \mat{L}(t)\bigl(\vec{y} - h(\hat{\x})\bigr), \label{eq:ch6:ekf-state} \\
 \dot{\mat{P}} &= \mat{A}(t)\mat{P} + \mat{P}\mat{A}(t)^T + \mat{G}_w \mat{W} \mat{G}_w^T
 - \mat{P}\mat{C}(t)^T \mat{V}^{-1} \mat{C}(t)\mat{P}, \label{eq:ch6:ekf-cov}
 \end{align}
-where $\mat{A}(t) = \frac{\partial f}{\partial \x}\big|_{\hat\x(t)}$ and
-$\mat{C}(t) = \frac{\partial h}{\partial \x}\big|_{\hat\x(t)}$.
+where $\mat{A}(t) = \frac{\partial f}{\partial \x}\big|_{\hat{\x}(t)}$ and
+$\mat{C}(t) = \frac{\partial h}{\partial \x}\big|_{\hat{\x}(t)}$.
 
 \begin{intuitionbox}
 The EKF is the estimation analogue of DDP: both linearize the system along a trajectory
@@ -1168,9 +1168,9 @@ DDP propagates *cost* backward (from the terminal condition); the EKF propagates
 The EKF has no convergence guarantees for nonlinear systems---the estimate may diverge
 if the linearization is poor. Contraction theory provides a rigorous alternative.
 
-An observer $\dot{\hat\x} = f(\hat\x) + G(\hat\x)\uvec + L(\hat\x)(\vec{y} - h(\hat\x))$
+An observer $\dot{\hat{\x}} = f(\hat{\x}) + G(\hat{\x})\uvec + L(\hat{\x})(\vec{y} - h(\hat{\x}))$
 is a *contracting observer* if the observer error dynamics
-$\dot{e} = \dot\x - \dot{\hat\x}$ are contracting in some metric $\mat{M}(\x)$:
+$\dot{e} = \dot{\x} - \dot{\hat{\x}}$ are contracting in some metric $\mat{M}(\x)$:
 \begin{equation}
 \sym\left(\mat{M} \left[\frac{\partial f}{\partial \x} - L(\x)\frac{\partial h}{\partial \x}\right]\right)
 + \dot{\mat{M}} \preceq -2\lambda \mat{M}.
@@ -1226,7 +1226,7 @@ allows independent design:
 \begin{theorem}[Separation Principle]
 \label{thm:ch6:separation}
 For linear time-invariant systems, the optimal controller using estimated states
-$\uvec = -\mat{K}\hat\x$ achieves the same closed-loop eigenvalues as the full-state
+$\uvec = -\mat{K}\hat{\x}$ achieves the same closed-loop eigenvalues as the full-state
 feedback $\uvec = -\mat{K}\x$, with additional eigenvalues from the observer error
 dynamics. The controller gain $\mat{K}$ and observer gain $\mat{L}$ can be designed
 independently.

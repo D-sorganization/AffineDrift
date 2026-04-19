@@ -47,16 +47,16 @@ Superposition in this book refers to two distinct but related properties:
    infinitesimal perturbations add as vectors in the tangent space. This holds for
    *any* smooth system.
 2. **Input superposition at fixed state**: for mechanical systems with
-   control-affine dynamics $\dot\x = f(\x) + G(\x)\uvec$, the mapping from inputs
-   $\uvec$ to state derivatives $\dot\x$ is affine at each frozen state, and the
+   control-affine dynamics $\dot{\x} = f(\x) + G(\x)\uvec$, the mapping from inputs
+   $\uvec$ to state derivatives $\dot{\x}$ is affine at each frozen state, and the
    incremental mapping (relative to zero input) is *linear*.
 
 Both are exact. Neither claims that trajectories superpose globally.
 
 \begin{warningbox}
 Trajectory superposition is *false* for nonlinear systems. If $\x^{(1)}(t)$
-solves $\dot\x = f(\x)+G(\x)\uvec^{(1)}$ and $\x^{(2)}(t)$ solves
-$\dot\x = f(\x)+G(\x)\uvec^{(2)}$, then in general
+solves $\dot{\x} = f(\x)+G(\x)\uvec^{(1)}$ and $\x^{(2)}(t)$ solves
+$\dot{\x} = f(\x)+G(\x)\uvec^{(2)}$, then in general
 $\x^{(1)}(t)+\x^{(2)}(t)$ does *not* solve the system under
 $\uvec^{(1)}+\uvec^{(2)}$. This chapter is about \emph{instantaneous force and
 acceleration} superposition, not trajectory addition.
@@ -70,13 +70,13 @@ acceleration} superposition, not trajectory addition.
 
 
 Consider a mechanical system with $n$ generalized coordinates $\q\in\R^n$, velocities
-$\dot\q\in\R^n$, and state $\x = (\q, \dot\q) \in T\mathcal{Q}$ (the tangent bundle of
+$\dot{\q}\in\R^n$, and state $\x = (\q, \dot{\q}) \in T\mathcal{Q}$ (the tangent bundle of
 the configuration manifold). The standard manipulator form of the equations of motion is
 \begin{equation}
-M(\q)\ddot\q + C(\q,\dot\q)\dot\q + \vec{g}(\q) = B(\q)\uvec + J(\q)^\T\vec{f}^{\,\text{ext}},
+M(\q)\ddot{\q} + C(\q,\dot{\q})\dot{\q} + \vec{g}(\q) = B(\q)\uvec + J(\q)^\T\vec{f}^{\,\text{ext}},
 \label{eq:ch3:manipulator}
 \end{equation}
-where $M(\q)\succ 0$ is the mass matrix, $C(\q,\dot\q)\dot\q$ collects Coriolis and
+where $M(\q)\succ 0$ is the mass matrix, $C(\q,\dot{\q})\dot{\q}$ collects Coriolis and
 centrifugal terms, $\vec{g}(\q)$ is the gravity vector, $B(\q)$ maps control inputs to
 generalized forces, $J(\q)$ is the constraint/contact Jacobian, and
 $\vec{f}^{\,\text{ext}}$ represents external contact wrenches.
@@ -89,27 +89,27 @@ The mass matrix $M(\q)$ arises naturally from the kinetic energy of the system. 
 multibody system with rigid links, the total kinetic energy is the sum of translational
 and rotational energies:
 \begin{equation}
-T(\q,\dot\q) = \frac{1}{2}\sum_{i=1}^n \left[ m_i \norm{\vec{v}_i(\q,\dot\q)}^2
-+ \vec\omega_i(\q,\dot\q)^\T \mat{I}_i(\q) \vec\omega_i(\q,\dot\q) \right],
+T(\q,\dot{\q}) = \frac{1}{2}\sum_{i=1}^n \left[ m_i \norm{\vec{v}_i(\q,\dot{\q})}^2
++ \vec\omega_i(\q,\dot{\q})^\T \mat{I}_i(\q) \vec\omega_i(\q,\dot{\q}) \right],
 \label{eq:ch3:kinetic-energy}
 \end{equation}
 where $m_i$ is the mass of link $i$, $\vec{v}_i$ is its linear velocity, $\vec\omega_i$ is its
 angular velocity, and $\mat{I}_i$ is its inertia tensor (generally configuration-dependent).
 
 Each velocity $\vec{v}_i$ and $\vec\omega_i$ can be expressed as a linear function of
-$\dot\q$ via the Jacobian:
+$\dot{\q}$ via the Jacobian:
 \begin{align}
-\vec{v}_i(\q,\dot\q) &= \mat{J}_{v,i}(\q)\,\dot\q, \\
-\vec\omega_i(\q,\dot\q) &= \mat{J}_{\omega,i}(\q)\,\dot\q.
+\vec{v}_i(\q,\dot{\q}) &= \mat{J}_{v,i}(\q)\,\dot{\q}, \\
+\vec\omega_i(\q,\dot{\q}) &= \mat{J}_{\omega,i}(\q)\,\dot{\q}.
 \end{align}
 
 Substituting into the kinetic energy and expanding:
 \begin{equation}
-T(\q,\dot\q) = \frac{1}{2}\dot\q^\T \left[
+T(\q,\dot{\q}) = \frac{1}{2}\dot{\q}^\T \left[
 \sum_{i=1}^n \left( m_i \mat{J}_{v,i}^\T\mat{J}_{v,i}
 + \mat{J}_{\omega,i}^\T \mat{I}_i \mat{J}_{\omega,i} \right)
-\right] \dot\q
-= \frac{1}{2}\dot\q^\T M(\q)\,\dot\q,
+\right] \dot{\q}
+= \frac{1}{2}\dot{\q}^\T M(\q)\,\dot{\q},
 \label{eq:ch3:mass-matrix-def}
 \end{equation}
 where the mass matrix is defined as
@@ -122,16 +122,16 @@ M(\q) := \sum_{i=1}^n \left( m_i \mat{J}_{v,i}^\T(\q)\mat{J}_{v,i}(\q)
 \subsubsection*{Positive Definiteness of the Mass Matrix}
 
 A crucial property is that $M(\q) \succ 0$ (positive definite) for all $\q$. This follows
-directly from the definition of kinetic energy. For any non-zero $\dot\q \neq 0$:
+directly from the definition of kinetic energy. For any non-zero $\dot{\q} \neq 0$:
 \begin{equation}
-\dot\q^\T M(\q)\,\dot\q = 2T(\q,\dot\q) > 0,
+\dot{\q}^\T M(\q)\,\dot{\q} = 2T(\q,\dot{\q}) > 0,
 \end{equation}
 since the kinetic energy is strictly positive whenever the system is moving. The only exception
-is $\dot\q = 0$, which gives $\dot\q^\T M(\q)\,\dot\q = 0$.
+is $\dot{\q} = 0$, which gives $\dot{\q}^\T M(\q)\,\dot{\q} = 0$.
 
 This positive definiteness is the foundation for many important properties:
 - The mass matrix is invertible at every configuration.
-- The equation $M(\q)\ddot\q = \tau$ can always be solved for $\ddot\q$.
+- The equation $M(\q)\ddot{\q} = \tau$ can always be solved for $\ddot{\q}$.
 - The associated quadratic form defines a Riemannian metric on the configuration space,
   making $M(\q)$ the natural metric tensor.
 
@@ -139,7 +139,7 @@ This positive definiteness is the foundation for many important properties:
 ### Connection to Christoffel Symbols
 
 
-The Coriolis and centrifugal terms $C(\q,\dot\q)\dot\q$ arise from taking the material
+The Coriolis and centrifugal terms $C(\q,\dot{\q})\dot{\q}$ arise from taking the material
 derivative of the kinetic energy. Using the Lagrangian framework, the generalized forces
 associated with the kinetic energy are
 \begin{equation}
@@ -147,13 +147,13 @@ Q_k^{(\text{kinetic})} = \frac{\dd}{\dd t}\frac{\partial T}{\partial \dot q_k}
 - \frac{\partial T}{\partial q_k}.
 \end{equation}
 
-Expanding the kinetic energy $T = \frac{1}{2}\dot\q^\T M(\q)\,\dot\q$:
+Expanding the kinetic energy $T = \frac{1}{2}\dot{\q}^\T M(\q)\,\dot{\q}$:
 \begin{equation}
 \frac{\partial T}{\partial \dot q_k} = \sum_{i} M_{ki}(\q)\,\dot q_i,
 \end{equation}
 and
 \begin{equation}
-\frac{\partial T}{\partial q_k} = \frac{1}{2}\dot\q^\T \frac{\partial M}{\partial q_k}\,\dot\q.
+\frac{\partial T}{\partial q_k} = \frac{1}{2}\dot{\q}^\T \frac{\partial M}{\partial q_k}\,\dot{\q}.
 \end{equation}
 
 Taking the time derivative of $\partial T/\partial \dot q_k$:
@@ -166,12 +166,12 @@ Taking the time derivative of $\partial T/\partial \dot q_k$:
 
 Collecting terms and solving for accelerations yields the Euler--Lagrange equation:
 \begin{equation}
-M(\q)\ddot\q + \Gamma(\q,\dot\q)\dot\q = \tau,
+M(\q)\ddot{\q} + \Gamma(\q,\dot{\q})\dot{\q} = \tau,
 \end{equation}
 where the Coriolis/centrifugal term is expressed via the Christoffel symbols of the
 configuration-space metric:
 \begin{equation}
-[\Gamma(\q,\dot\q)\dot\q]_k = \sum_{i,j} \Gamma^k_{ij}(\q)\,\dot q_i \dot q_j,
+[\Gamma(\q,\dot{\q})\dot{\q}]_k = \sum_{i,j} \Gamma^k_{ij}(\q)\,\dot q_i \dot q_j,
 \label{eq:ch3:christoffel}
 \end{equation}
 with the Christoffel symbols defined as
@@ -192,8 +192,8 @@ forces, the system moves as a free particle on a Riemannian manifold with metric
 
 Solving~\eqref{eq:ch3:manipulator} for the generalized acceleration:
 \begin{equation}
-\ddot\q = \underbrace{-M(\q)^{-1}\bigl[C(\q,\dot\q)\dot\q + \vec{g}(\q)\bigr]}_{
-\displaystyle a_{\text{drift}}(\q,\dot\q)}
+\ddot{\q} = \underbrace{-M(\q)^{-1}\bigl[C(\q,\dot{\q})\dot{\q} + \vec{g}(\q)\bigr]}_{
+\displaystyle a_{\text{drift}}(\q,\dot{\q})}
 + \underbrace{M(\q)^{-1}B(\q)}_{
 \displaystyle H(\q)}\,\uvec
 + M(\q)^{-1}J(\q)^\T\vec{f}^{\,\text{ext}}.
@@ -202,8 +202,8 @@ Solving~\eqref{eq:ch3:manipulator} for the generalized acceleration:
 
 Writing as a first-order system on the tangent bundle:
 \begin{equation}
-\dot\x = \underbrace{
-\begin{bmatrix} \dot\q \\ a_{\text{drift}}(\q,\dot\q) \end{bmatrix}
+\dot{\x} = \underbrace{
+\begin{bmatrix} \dot{\q} \\ a_{\text{drift}}(\q,\dot{\q}) \end{bmatrix}
 }_{f(\x)}
 + \underbrace{
 \begin{bmatrix} 0 \\ H(\q) \end{bmatrix}
@@ -211,7 +211,7 @@ Writing as a first-order system on the tangent bundle:
 \label{eq:ch3:state-space}
 \end{equation}
 
-This is the **control-affine form**: $\dot\x = f(\x) + G(\x)\uvec$.
+This is the **control-affine form**: $\dot{\x} = f(\x) + G(\x)\uvec$.
 
 
 ## The Superposition Theorem
@@ -220,25 +220,25 @@ This is the **control-affine form**: $\dot\x = f(\x) + G(\x)\uvec$.
 \begin{theorem}[Input Superposition for Mechanical Systems]
 \label{thm:ch3:superposition}
 Let a mechanical system satisfy~\eqref{eq:ch3:manipulator} and define the acceleration
-map at fixed state $(\q,\dot\q)$:
+map at fixed state $(\q,\dot{\q})$:
 $$
-\Phi_{(\q,\dot\q)}(\uvec)
-:= M(\q)^{-1}\bigl[B(\q)\uvec - C(\q,\dot\q)\dot\q - \vec{g}(\q)\bigr].
+\Phi_{(\q,\dot{\q})}(\uvec)
+:= M(\q)^{-1}\bigl[B(\q)\uvec - C(\q,\dot{\q})\dot{\q} - \vec{g}(\q)\bigr].
 $$
 Then:
-1. The map $\uvec \mapsto \Phi_{(\q,\dot\q)}(\uvec)$ is **affine** in $\uvec$.
+1. The map $\uvec \mapsto \Phi_{(\q,\dot{\q})}(\uvec)$ is **affine** in $\uvec$.
 2. The incremental map
-   $\uvec \mapsto \Phi_{(\q,\dot\q)}(\uvec) - \Phi_{(\q,\dot\q)}(\vec{0})
+   $\uvec \mapsto \Phi_{(\q,\dot{\q})}(\uvec) - \Phi_{(\q,\dot{\q})}(\vec{0})
    = M(\q)^{-1}B(\q)\,\uvec$
    is **linear** in $\uvec$.
 \end{theorem}
 
 \begin{proof}
-From~\eqref{eq:ch3:forward-dynamics}, $\Phi_{(\q,\dot\q)}(\uvec)
-= a_{\text{drift}}(\q,\dot\q) + H(\q)\uvec$,
-where $a_{\text{drift}}$ and $H$ depend only on $(\q,\dot\q)$, not on $\uvec$. The
+From~\eqref{eq:ch3:forward-dynamics}, $\Phi_{(\q,\dot{\q})}(\uvec)
+= a_{\text{drift}}(\q,\dot{\q}) + H(\q)\uvec$,
+where $a_{\text{drift}}$ and $H$ depend only on $(\q,\dot{\q})$, not on $\uvec$. The
 map is therefore affine by inspection. Subtracting the zero-input value
-$\Phi_{(\q,\dot\q)}(\vec{0}) = a_{\text{drift}}(\q,\dot\q)$
+$\Phi_{(\q,\dot{\q})}(\vec{0}) = a_{\text{drift}}(\q,\dot{\q})$
 yields $H(\q)\uvec$, which is linear in $\uvec$.
 \end{proof}
 
@@ -256,12 +256,12 @@ If we decompose the input as $\uvec = \uvec^{(1)} + \uvec^{(2)} + \cdots + \uvec
 where each component represents a distinct actuator, gravity compensation, disturbance,
 etc., then
 \begin{equation}
-\ddot\q = a_{\text{drift}}(\q,\dot\q)
+\ddot{\q} = a_{\text{drift}}(\q,\dot{\q})
 + \sum_{i=1}^{p} H(\q)\,\uvec^{(i)}.
 \label{eq:ch3:decomposition}
 \end{equation}
 
-Each term $\Delta\ddot\q^{(i)} := H(\q)\uvec^{(i)}$ is the instantaneous acceleration
+Each term $\Delta\ddot{\q}^{(i)} := H(\q)\uvec^{(i)}$ is the instantaneous acceleration
 contribution of the $i$\textsuperscript{th} input channel. These contributions add
 linearly and can be computed, compared, and analyzed independently.
 
@@ -287,7 +287,7 @@ m\dot{\vec{v}} &= m\vec{g}^B + \vec{f}^{\,\text{ext}}, \label{eq:ch3:NE-lin}\\
 
 Collecting the external wrench $\uvec = (\vec{f}^{\,\text{ext}}, \vec{n}^{\,\text{ext}})^\T$:
 \begin{equation}
-\dot\x = f(\x) + G\,\uvec,
+\dot{\x} = f(\x) + G\,\uvec,
 \quad\text{with}\quad
 G = \begin{bmatrix}
 0 & 0 \\ 0 & 0 \\
@@ -339,7 +339,7 @@ effective inertia. Similarly for joint 2.
 
 In matrix form, the Newton--Euler equations yield:
 \begin{equation}
-M(\q)\ddot\q + C(\q,\dot\q)\dot\q + \vec{g}(\q) = \begin{bmatrix}\tau_1 \\ \tau_2\end{bmatrix},
+M(\q)\ddot{\q} + C(\q,\dot{\q})\dot{\q} + \vec{g}(\q) = \begin{bmatrix}\tau_1 \\ \tau_2\end{bmatrix},
 \end{equation}
 demonstrating the affine structure: the acceleration depends linearly on the input torques
 (with a configuration-dependent gain $M(\q)^{-1}$).
@@ -348,10 +348,10 @@ demonstrating the affine structure: the acceleration depends linearly on the inp
 ### Lagrangian Formulation
 
 
-Starting from the Lagrangian $L(\q,\dot\q) = T(\q,\dot\q) - V(\q)$ with kinetic energy
-$T = \frac{1}{2}\dot\q^\T M(\q)\dot\q$ and potential energy $V(\q)$, the Lagrange--d'Alembert equations yield
+Starting from the Lagrangian $L(\q,\dot{\q}) = T(\q,\dot{\q}) - V(\q)$ with kinetic energy
+$T = \frac{1}{2}\dot{\q}^\T M(\q)\dot{\q}$ and potential energy $V(\q)$, the Lagrange--d'Alembert equations yield
 \begin{equation}
-M(\q)\ddot\q + C(\q,\dot\q)\dot\q + \vec{g}(\q) = B(\q,\dot\q)\uvec.
+M(\q)\ddot{\q} + C(\q,\dot{\q})\dot{\q} + \vec{g}(\q) = B(\q,\dot{\q})\uvec.
 \label{eq:ch3:lagrange}
 \end{equation}
 
@@ -362,7 +362,7 @@ Q_k = \sum_j \vec{f}_j \cdot \frac{\partial\vec{r}_j}{\partial q_k}.
 \label{eq:ch3:generalized-force}
 \end{equation}
 This is a linear map from $\vec{f}_j$ to $Q_k$. The matrix $B(\q)$ encodes these Jacobians,
-and since the forward-dynamics solution $\ddot\q = M(\q)^{-1}[B(\q)\uvec + \ldots]$ inverts
+and since the forward-dynamics solution $\ddot{\q} = M(\q)^{-1}[B(\q)\uvec + \ldots]$ inverts
 a linear operator, the result is linear in $\uvec$.
 
 \paragraph{Example: 2-DOF Planar Arm (Lagrangian).}
@@ -402,7 +402,7 @@ m_2 g\frac{\ell_2}{2}\cos(q_1+q_2)
 
 The Coriolis/centrifugal terms come from $\frac{\dd}{\dt}\frac{\partial T}{\partial\dot q_k} - \frac{\partial T}{\partial q_k}$:
 \begin{equation}
-C(\q,\dot\q)\dot\q = \begin{bmatrix}
+C(\q,\dot{\q})\dot{\q} = \begin{bmatrix}
 -m_2\ell_1\ell_2(-2\dot q_1\dot q_2 - \dot q_2^2)\sin q_2 \\
 m_2\ell_1\ell_2\dot q_1^2\sin q_2
 \end{bmatrix}.
@@ -434,7 +434,7 @@ and can be inverted via $M(\q)^{-1}$.
 In spatial vector notation, the dynamics of a multibody chain are elegantly written as
 \begin{equation}
 \mathcal{M}(\q)\dot{\mathcal{V}}
-+ \mathcal{C}(\q,\dot\q)\mathcal{V}
++ \mathcal{C}(\q,\dot{\q})\mathcal{V}
 = \mathcal{W}(\q)\uvec + \mathcal{F}^{\text{ext}}(\q),
 \label{eq:ch3:screw}
 \end{equation}
@@ -443,7 +443,7 @@ inertia matrix, and $\mathcal{W}$ maps generalized forces to body wrenches.
 
 Solving for the spatial acceleration:
 \begin{equation}
-\dot{\mathcal{V}} = A(\q,\dot\q)
+\dot{\mathcal{V}} = A(\q,\dot{\q})
 + \mathcal{M}(\q)^{-1}\mathcal{W}(\q)\,\uvec,
 \label{eq:ch3:screw-affine}
 \end{equation}
@@ -477,7 +477,7 @@ is transparent: inverting $\mathcal{M}(\q)$ yields a linear map to $\dot{\mathca
 
 All three formulations yield the identical abstract structure:
 \begin{equation}
-\ddot\q = f_2(\q,\dot\q) + H(\q,\dot\q)\,\uvec,
+\ddot{\q} = f_2(\q,\dot{\q}) + H(\q,\dot{\q})\,\uvec,
 \label{eq:ch3:universal}
 \end{equation}
 where $f_2$ collects all state-dependent terms and $H$ is the linear input-to-acceleration
@@ -505,12 +505,12 @@ P_i = u_i \cdot \dot q_i,
 \label{eq:ch3:power-single}
 \end{equation}
 where $u_i$ is the generalized force and $\dot q_i$ is the generalized velocity. (For a
-vector input, this generalizes to $P = \uvec^\T \dot\q$.)
+vector input, this generalizes to $P = \uvec^\T \dot{\q}$.)
 
 For a decomposed input $\uvec = \uvec^{(1)} + \uvec^{(2)} + \cdots + \uvec^{(p)}$, the total
 power is
 \begin{equation}
-P_{\text{total}} = \uvec^\T \dot\q = \sum_{i=1}^p (\uvec^{(i)})^\T \dot\q = \sum_{i=1}^p P^{(i)}.
+P_{\text{total}} = \uvec^\T \dot{\q} = \sum_{i=1}^p (\uvec^{(i)})^\T \dot{\q} = \sum_{i=1}^p P^{(i)}.
 \label{eq:ch3:power-superposition}
 \end{equation}
 
@@ -524,33 +524,33 @@ powers from each input channel. This holds instantaneously at any moment in time
 By the work--energy theorem, the power $P_i$ delivered by input channel $i$ is related to the
 rate of change of kinetic energy attributed to that channel. Consider the kinetic energy:
 \begin{equation}
-T = \frac{1}{2}\dot\q^\T M(\q)\,\dot\q.
+T = \frac{1}{2}\dot{\q}^\T M(\q)\,\dot{\q}.
 \end{equation}
 
 Taking its time derivative:
 \begin{equation}
-\dot T = \dot\q^\T M(\q)\,\ddot\q + \frac{1}{2}\dot\q^\T \dot M(\q)\,\dot\q.
+\dot T = \dot{\q}^\T M(\q)\,\ddot{\q} + \frac{1}{2}\dot{\q}^\T \dot M(\q)\,\dot{\q}.
 \label{eq:ch3:energy-rate}
 \end{equation}
 
-The second term $\frac{1}{2}\dot\q^\T \dot M(\q)\,\dot\q$ accounts for the fact that the mass
+The second term $\frac{1}{2}\dot{\q}^\T \dot M(\q)\,\dot{\q}$ accounts for the fact that the mass
 matrix itself varies with configuration. Using the equation of motion
 \begin{equation}
-M(\q)\ddot\q = \uvec - C(\q,\dot\q)\dot\q - \vec{g}(\q),
+M(\q)\ddot{\q} = \uvec - C(\q,\dot{\q})\dot{\q} - \vec{g}(\q),
 \end{equation}
 we can write
 \begin{equation}
-\dot\q^\T M(\q)\,\ddot\q = \dot\q^\T \uvec - \dot\q^\T C(\q,\dot\q)\dot\q - \dot\q^\T \vec{g}(\q).
+\dot{\q}^\T M(\q)\,\ddot{\q} = \dot{\q}^\T \uvec - \dot{\q}^\T C(\q,\dot{\q})\dot{\q} - \dot{\q}^\T \vec{g}(\q).
 \end{equation}
 
 Substituting back:
 \begin{equation}
-\dot T = \dot\q^\T \uvec - \dot\q^\T C(\q,\dot\q)\dot\q - \dot\q^\T \vec{g}(\q)
-+ \frac{1}{2}\dot\q^\T \dot M(\q)\,\dot\q.
+\dot T = \dot{\q}^\T \uvec - \dot{\q}^\T C(\q,\dot{\q})\dot{\q} - \dot{\q}^\T \vec{g}(\q)
++ \frac{1}{2}\dot{\q}^\T \dot M(\q)\,\dot{\q}.
 \label{eq:ch3:energy-decomposition}
 \end{equation}
 
-The term $\dot\q^\T \uvec = P_{\text{total}}$ is the input power. The other terms represent
+The term $\dot{\q}^\T \uvec = P_{\text{total}}$ is the input power. The other terms represent
 energy dissipation or conversion due to Coriolis effects, gravity, and time variation of the
 inertia. This shows that input power superposition directly translates to the linearity of
 acceleration mapping.
@@ -567,7 +567,7 @@ and energy-based controller design. If a controller is decomposed as
 then the energy dissipated (or supplied) by the gravity compensation channel is decoupled
 from the control effort:
 \begin{equation}
-P^{(\text{grav})} + P^{(\text{control})} = \dot\q^\T \vec{g}(\q) + P^{(\text{control})}.
+P^{(\text{grav})} + P^{(\text{control})} = \dot{\q}^\T \vec{g}(\q) + P^{(\text{control})}.
 \end{equation}
 
 This decomposition is exact and enables independent analysis of each channel.
@@ -593,12 +593,12 @@ Suppose the system is subject to $m$ holonomic (integrable) constraints:
 
 Differentiating with respect to time:
 \begin{equation}
-\nabla_{\q} \phi_a(\q) \cdot \dot\q = 0,
+\nabla_{\q} \phi_a(\q) \cdot \dot{\q} = 0,
 \label{eq:ch3:constraint-velocity}
 \end{equation}
 or in matrix form,
 \begin{equation}
-J(\q)\,\dot\q = 0, \quad J(\q) = \begin{bmatrix}
+J(\q)\,\dot{\q} = 0, \quad J(\q) = \begin{bmatrix}
 \nabla_{\q} \phi_1(\q) \\
 \vdots \\
 \nabla_{\q} \phi_m(\q)
@@ -614,31 +614,31 @@ This defines the *constraint manifold*: the subspace of valid velocities.
 
 The constrained dynamics are given by:
 \begin{equation}
-M(\q)\ddot\q + C(\q,\dot\q)\dot\q + \vec{g}(\q) = B(\q)\uvec + J(\q)^\T\vec\lambda,
+M(\q)\ddot{\q} + C(\q,\dot{\q})\dot{\q} + \vec{g}(\q) = B(\q)\uvec + J(\q)^\T\vec\lambda,
 \label{eq:ch3:constrained-dynamics}
 \end{equation}
 where $\vec\lambda \in \R^m$ are Lagrange multipliers representing constraint forces, and we
 have
 \begin{equation}
-J(\q)\,\dot\q = 0, \quad \frac{\dd}{\dt}[J(\q)\,\dot\q] = 0.
+J(\q)\,\dot{\q} = 0, \quad \frac{\dd}{\dt}[J(\q)\,\dot{\q}] = 0.
 \label{eq:ch3:constraint-equations}
 \end{equation}
 
 Differentiating the velocity constraint:
 \begin{equation}
-\frac{\dd}{\dt}[J(\q)\,\dot\q] = \dot J(\q)\,\dot\q + J(\q)\,\ddot\q = 0,
+\frac{\dd}{\dt}[J(\q)\,\dot{\q}] = \dot J(\q)\,\dot{\q} + J(\q)\,\ddot{\q} = 0,
 \end{equation}
 which gives
 \begin{equation}
-J(\q)\,\ddot\q = -\dot J(\q)\,\dot\q.
+J(\q)\,\ddot{\q} = -\dot J(\q)\,\dot{\q}.
 \label{eq:ch3:constraint-acceleration}
 \end{equation}
 
 Combining with~\eqref{eq:ch3:constrained-dynamics}:
 \begin{equation}
 \begin{bmatrix} M(\q) & -J(\q)^\T \\ J(\q) & 0 \end{bmatrix}
-\begin{bmatrix} \ddot\q \\ \vec\lambda \end{bmatrix}
-= \begin{bmatrix} B(\q)\uvec - C(\q,\dot\q)\dot\q - \vec{g}(\q) \\ -\dot J(\q)\,\dot\q \end{bmatrix}.
+\begin{bmatrix} \ddot{\q} \\ \vec\lambda \end{bmatrix}
+= \begin{bmatrix} B(\q)\uvec - C(\q,\dot{\q})\dot{\q} - \vec{g}(\q) \\ -\dot J(\q)\,\dot{\q} \end{bmatrix}.
 \label{eq:ch3:DAE-system}
 \end{equation}
 
@@ -646,8 +646,8 @@ This is the *DAE form*. The key observation is:
 
 \begin{proposition}
 The input matrix $B(\q)$ appears only in the first equation. The constraint forces $J(\q)^\T\vec\lambda$
-enforce the velocity constraints $J(\q)\,\dot\q = 0$ without depending on $\uvec$ directly.
-Therefore, the control input $\uvec$ affects the system dynamics (and hence $\ddot\q$)
+enforce the velocity constraints $J(\q)\,\dot{\q} = 0$ without depending on $\uvec$ directly.
+Therefore, the control input $\uvec$ affects the system dynamics (and hence $\ddot{\q}$)
 through the affine map, while constraint forces *passively* enforce the velocity constraint.
 \end{proposition}
 
@@ -659,7 +659,7 @@ For systems with constraints, it is often useful to work directly with the reduc
 coordinates $\q_r \in \R^{n-m}$ (the minimal set after eliminating constraints). The
 constrained dynamics can be written as
 \begin{equation}
-M_r(\q_r)\ddot\q_r + C_r(\q_r,\dot\q_r)\dot\q_r + \vec{g}_r(\q_r) = B_r(\q_r)\uvec,
+M_r(\q_r)\ddot{\q}_r + C_r(\q_r,\dot{\q}_r)\dot{\q}_r + \vec{g}_r(\q_r) = B_r(\q_r)\uvec,
 \label{eq:ch3:reduced-dynamics}
 \end{equation}
 which is again control-affine. The superposition property holds on the constrained submanifold.
@@ -778,8 +778,8 @@ grows over longer integration horizons due to the nonlinear drift $f(\x) = (\dot
 ### Why Superposition Fails
 
 
-At time $t$, trajectory $\x^{(1)}(t)$ has reached state $(\q^{(1)}, \dot\q^{(1)})$, while
-trajectory $\x^{(2)}(t)$ is at state $(\q^{(2)}, \dot\q^{(2)})$. The drift acceleration at
+At time $t$, trajectory $\x^{(1)}(t)$ has reached state $(\q^{(1)}, \dot{\q}^{(1)})$, while
+trajectory $\x^{(2)}(t)$ is at state $(\q^{(2)}, \dot{\q}^{(2)})$. The drift acceleration at
 these states is:
 \begin{align}
 a_{\text{drift}}^{(1)} &= -9.81\sin(\q^{(1)}), \\
@@ -872,15 +872,15 @@ Q(\uvec) - Q(\text{inertia}) \cdot \delta\q = 0.
 \label{eq:ch3:dalembert-generalized}
 \end{equation}
 
-The generalized inertial force is $Q(\text{inertia}) = M(\q)\ddot\q$ (up to Coriolis and other
+The generalized inertial force is $Q(\text{inertia}) = M(\q)\ddot{\q}$ (up to Coriolis and other
 velocity-dependent corrections). Therefore:
 \begin{equation}
-M(\q)\ddot\q + \text{(nonlinear terms)} = Q(\uvec),
+M(\q)\ddot{\q} + \text{(nonlinear terms)} = Q(\uvec),
 \label{eq:ch3:dalembert-result}
 \end{equation}
 which is precisely the manipulator equation~\eqref{eq:ch3:manipulator} with $Q(\uvec)$ playing
 the role of $B(\q)\uvec$. Since $Q$ is linear in the input, the forward-dynamics solution for
-$\ddot\q$ is affine in $\uvec$.
+$\ddot{\q}$ is affine in $\uvec$.
 
 \begin{designbox}
 The virtual work principle guarantees that control-affine structure is not merely
@@ -1086,7 +1086,7 @@ controllers.
 ### Storage Functions and Passive Systems
 
 
-A system $\dot\x = f(\x) + G(\x)\uvec$ with output $\y = C(\x)$ is *passive* if there
+A system $\dot{\x} = f(\x) + G(\x)\uvec$ with output $\y = C(\x)$ is *passive* if there
 exists a storage function $V(\x) \geq 0$ (often the total mechanical energy) such that
 \begin{equation}
 \dot V(\x) \leq \y^\T \uvec,
@@ -1101,41 +1101,41 @@ increase of stored energy is bounded by the power input from the control.
 
 For mechanical systems, the natural storage function is the total mechanical energy:
 \begin{equation}
-E(\q,\dot\q) = T(\q,\dot\q) + V(\q)
-= \frac{1}{2}\dot\q^\T M(\q)\,\dot\q + V(\q).
+E(\q,\dot{\q}) = T(\q,\dot{\q}) + V(\q)
+= \frac{1}{2}\dot{\q}^\T M(\q)\,\dot{\q} + V(\q).
 \label{eq:ch3:total-energy}
 \end{equation}
 
 Taking its time derivative:
 \begin{equation}
-\dot E = \dot\q^\T M(\q)\,\ddot\q + \frac{1}{2}\dot\q^\T \dot M(\q)\,\dot\q + \nabla_{\q} V \cdot \dot\q.
+\dot E = \dot{\q}^\T M(\q)\,\ddot{\q} + \frac{1}{2}\dot{\q}^\T \dot M(\q)\,\dot{\q} + \nabla_{\q} V \cdot \dot{\q}.
 \label{eq:ch3:energy-rate-full}
 \end{equation}
 
-Substituting the equation of motion $M(\q)\ddot\q = B(\q)\uvec - C(\q,\dot\q)\dot\q - \nabla_{\q} V(\q)$:
+Substituting the equation of motion $M(\q)\ddot{\q} = B(\q)\uvec - C(\q,\dot{\q})\dot{\q} - \nabla_{\q} V(\q)$:
 \begin{equation}
-\dot E = \dot\q^\T [B(\q)\uvec - C(\q,\dot\q)\dot\q - \nabla_{\q} V(\q)]
-+ \frac{1}{2}\dot\q^\T \dot M(\q)\,\dot\q + \nabla_{\q} V \cdot \dot\q.
+\dot E = \dot{\q}^\T [B(\q)\uvec - C(\q,\dot{\q})\dot{\q} - \nabla_{\q} V(\q)]
++ \frac{1}{2}\dot{\q}^\T \dot M(\q)\,\dot{\q} + \nabla_{\q} V \cdot \dot{\q}.
 \label{eq:ch3:energy-substituted}
 \end{equation}
 
 The gravity terms cancel, leaving:
 \begin{equation}
-\dot E = \dot\q^\T B(\q)\uvec - \dot\q^\T C(\q,\dot\q)\dot\q + \frac{1}{2}\dot\q^\T \dot M(\q)\,\dot\q.
+\dot E = \dot{\q}^\T B(\q)\uvec - \dot{\q}^\T C(\q,\dot{\q})\dot{\q} + \frac{1}{2}\dot{\q}^\T \dot M(\q)\,\dot{\q}.
 \label{eq:ch3:energy-simplified}
 \end{equation}
 
 For many systems (especially those where $C$ and $\dot M$ have special structure), we have
 \begin{equation}
-\dot\q^\T C(\q,\dot\q)\dot\q = -\frac{1}{2}\dot\q^\T \dot M(\q)\,\dot\q,
+\dot{\q}^\T C(\q,\dot{\q})\dot{\q} = -\frac{1}{2}\dot{\q}^\T \dot M(\q)\,\dot{\q},
 \label{eq:ch3:skew-symmetry}
 \end{equation}
 which is a consequence of the Coriolis forces being orthogonal to velocity. Then:
 \begin{equation}
-\dot E = \dot\q^\T B(\q)\uvec = \y^\T\uvec,
+\dot E = \dot{\q}^\T B(\q)\uvec = \y^\T\uvec,
 \label{eq:ch3:energy-passivity}
 \end{equation}
-where $\y = B(\q)^\T\dot\q$ is the passive output.
+where $\y = B(\q)^\T\dot{\q}$ is the passive output.
 
 
 ### Implications for Control Design
@@ -1143,8 +1143,8 @@ where $\y = B(\q)^\T\dot\q$ is the passive output.
 
 This passivity property ensures:
 
-1. **Energy Stability**: Any control law $\uvec = -K(\q,\dot\q)$ with
-   $K$ such that $K^\T B(\q)^\T\dot\q > 0$ will decrease the total energy.
+1. **Energy Stability**: Any control law $\uvec = -K(\q,\dot{\q})$ with
+   $K$ such that $K^\T B(\q)^\T\dot{\q} > 0$ will decrease the total energy.
 2. **Decomposition**: Because the control-affine structure separates the input
    linearly, we can design controllers that combine conservative (energy-preserving) and
    dissipative (energy-reducing) components.
@@ -1157,7 +1157,7 @@ This passivity property ensures:
 
 A particularly powerful result is the *passive decomposition*:
 \begin{equation}
-\dot\x = f_p(\x) + f_d(\x) + G(\x)\uvec,
+\dot{\x} = f_p(\x) + f_d(\x) + G(\x)\uvec,
 \label{eq:ch3:passive-decomp}
 \end{equation}
 where $f_p$ is the passive (Hamiltonian) component and $f_d$ accounts for dissipation
@@ -1206,13 +1206,13 @@ contribution regions.
 If the actuator has significant dynamics (e.g., a hydraulic servo with low bandwidth), the
 input $\uvec$ is not the commanded signal $u_{\text{cmd}}$ but rather obeys:
 \begin{equation}
-\tau_a \dot\uvec + \uvec = G_a(u_{\text{cmd}}, \dot q),
+\tau_a \dot{\uvec} + \uvec = G_a(u_{\text{cmd}}, \dot q),
 \label{eq:ch3:actuator-dynamics}
 \end{equation}
 where $\tau_a$ is the actuator time constant and $G_a$ may depend on state (e.g., due to
 friction, pressure drops). The system becomes:
 \begin{equation}
-\dot\x = f(\x,\uvec) + G(\x)\uvec,
+\dot{\x} = f(\x,\uvec) + G(\x)\uvec,
 \label{eq:ch3:actuator-coupled}
 \end{equation}
 where the control now appears in *both* the drift and the input matrix. This is no longer
@@ -1236,7 +1236,7 @@ breaks the differentiability assumed in the control-affine framework.
 
 The equation of motion becomes:
 \begin{equation}
-M(\q)\ddot\q + C(\q,\dot\q)\dot\q + \vec{g}(\q) + f_{\text{fric}}(\dot\q) = B(\q)\uvec,
+M(\q)\ddot{\q} + C(\q,\dot{\q})\dot{\q} + \vec{g}(\q) + f_{\text{fric}}(\dot{\q}) = B(\q)\uvec,
 \label{eq:ch3:with-friction}
 \end{equation}
 and while it remains affine in $\uvec$, the friction creates regions where the effective
@@ -1268,7 +1268,7 @@ a control law designed under this assumption.
 ## Lie Brackets and Accessibility
 
 
-The control-affine structure $\dot\x = f(\x) + \sum_{i=1}^m g_i(\x) u_i$ raises a
+The control-affine structure $\dot{\x} = f(\x) + \sum_{i=1}^m g_i(\x) u_i$ raises a
 fundamental question: which states can the system reach from a given initial condition?
 The answer involves the *Lie bracket*, a geometric object that captures directions
 of motion achievable through *combinations* of drift and control, even if those
@@ -1330,9 +1330,9 @@ degrees of freedom), the direct control authority $\text{span}\{g_1, \ldots, g_m
 does not span the full state space. The Lie brackets $[f, g_i]$ generate additional
 directions through the *inertial coupling* encoded in the mass matrix.
 
-For the manipulator equation $M(\q)\ddot\q + C(\q,\dot\q)\dot\q + \vec{g}(\q) = B\uvec$
+For the manipulator equation $M(\q)\ddot{\q} + C(\q,\dot{\q})\dot{\q} + \vec{g}(\q) = B\uvec$
 with $B \in \R^{n \times m}$, $m < n$, the Lie bracket $[f, g_i]$ evaluated in
-first-order form $\x = (\q, \dot\q)$ involves the off-diagonal blocks of $M(\q)^{-1}$.
+first-order form $\x = (\q, \dot{\q})$ involves the off-diagonal blocks of $M(\q)^{-1}$.
 Specifically, the new directions generated by $[f, g_i]$ correspond to accelerations
 of the *unactuated* joints created by inertial coupling with the actuated joints.
 
@@ -1360,7 +1360,7 @@ we choose feedback to make the *entire closed-loop system* linear?
 ### Input-Output Linearization
 
 
-Given the control-affine system $\dot\x = f(\x) + g(\x) u$ (single-input for
+Given the control-affine system $\dot{\x} = f(\x) + g(\x) u$ (single-input for
 simplicity) and an output $y = h(\x)$, define the *relative degree* $r$ as
 the smallest integer such that the $r$-th derivative of $y$ depends explicitly on $u$:
 \begin{equation}
@@ -1450,11 +1450,11 @@ the input-output port.
 :::
 
 
-For mechanical systems with $\uvec = \tau$ (generalized forces) and $\vec{y} = \dot\q$
-(generalized velocities), the total energy $E(\q, \dot\q) = T + V$ serves as the
+For mechanical systems with $\uvec = \tau$ (generalized forces) and $\vec{y} = \dot{\q}$
+(generalized velocities), the total energy $E(\q, \dot{\q}) = T + V$ serves as the
 storage function:
 \begin{equation}
-\dot{E} = \dot\q^T \tau - \dot\q^T D(\q, \dot\q) \dot\q \leq \dot\q^T \tau,
+\dot{E} = \dot{\q}^T \tau - \dot{\q}^T D(\q, \dot{\q}) \dot{\q} \leq \dot{\q}^T \tau,
 \label{eq:ch3:mech-passivity}
 \end{equation}
 where $D \succeq 0$ represents dissipation. The inequality holds whenever dissipation
@@ -1466,7 +1466,7 @@ is non-negative, which is guaranteed by the second law of thermodynamics.
 
 The control-affine system can be written in port-Hamiltonian form:
 \begin{equation}
-\dot\x = \bigl[J(\x) - R(\x)\bigr] \frac{\partial H}{\partial \x}(\x) + G(\x)\uvec,
+\dot{\x} = \bigl[J(\x) - R(\x)\bigr] \frac{\partial H}{\partial \x}(\x) + G(\x)\uvec,
 \quad \vec{y} = G(\x)^T \frac{\partial H}{\partial \x}(\x),
 \label{eq:ch3:port-hamiltonian}
 \end{equation}
@@ -1517,12 +1517,12 @@ and robustness margins.
 ## Chapter Summary
 
 
-1. The manipulator equation $M(\q)\ddot\q + C(\q,\dot\q)\dot\q + \vec{g}(\q) = B(\q)\uvec$
-   arises from kinetic energy $T = \frac{1}{2}\dot\q^\T M(\q)\dot\q$, where the mass matrix
+1. The manipulator equation $M(\q)\ddot{\q} + C(\q,\dot{\q})\dot{\q} + \vec{g}(\q) = B(\q)\uvec$
+   arises from kinetic energy $T = \frac{1}{2}\dot{\q}^\T M(\q)\dot{\q}$, where the mass matrix
    is always positive definite (guaranteeing invertibility).
 2. The Coriolis and centrifugal terms are encoded in the Christoffel symbols of the
    configuration-space metric, connecting dynamics to differential geometry.
-3. At each frozen state, the acceleration map $\uvec\mapsto\ddot\q$ is linear. This is the
+3. At each frozen state, the acceleration map $\uvec\mapsto\ddot{\q}$ is linear. This is the
    **input superposition principle**.
 4. This linearity is *not* an approximation---it follows from Newton's second law,
    the linearity of generalized-force mappings (Jacobians), and mass-matrix inversion.
@@ -1551,7 +1551,7 @@ and robustness margins.
    For the 2-DOF planar arm in the text, show that $\det(M(\q)) > 0$ for all $\q$
    by direct computation. Identify the configuration where $\kappa(M)$ is maximized.
 2. **Lie bracket of the pendulum.**
-   For the pendulum system $\dot\x = f(\x) + g u$ with $f = (x_2,\; -\sin(x_1))^T$
+   For the pendulum system $\dot{\x} = f(\x) + g u$ with $f = (x_2,\; -\sin(x_1))^T$
    and $g = (0, 1)^T$, compute $[f, g]$ and $[g, [f, g]]$. Verify that
    $\text{span}\{g, [f, g]\}$ has dimension 2 at all $\x$, confirming accessibility.
 3. **Superposition failure.**
@@ -1563,9 +1563,9 @@ and robustness margins.
    relative degree, the linearizing feedback, and the zero dynamics. Is the system minimum phase?
 5. **Passivity of the 2-DOF arm.**
    For the 2-DOF arm in the text, verify that the system with input $\uvec = \tau$ and
-   output $\vec{y} = \dot\q$ is passive with storage function $E = T + V$.
+   output $\vec{y} = \dot{\q}$ is passive with storage function $E = T + V$.
 6. **Coriolis matrix properties.**
-   Show that $\dot{M}(\q) - 2C(\q, \dot\q)$ is skew-symmetric for the 2-DOF arm
+   Show that $\dot{M}(\q) - 2C(\q, \dot{\q})$ is skew-symmetric for the 2-DOF arm
    (Christoffel-form Coriolis matrix). Why does this property matter for passivity?
 7. **Underactuated bracket rank.**
    For a 3-DOF system with $B = [1, 0, 0; 0, 1, 0]^T$ (actuated at joints 1 and 2
