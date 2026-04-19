@@ -1,0 +1,38 @@
+# Minimal LaTeX image for AffineDrift mathematical textbooks.
+# Replaces ghcr.io/xu-cheng/texlive-alpine (~7.65 GB) with only the
+# packages the Geometry of Motion / Golf Physics volumes actually use.
+#
+# Required packages (from \usepackage scan across all .tex sources):
+#   amsmath amssymb amsthm array bm booktabs enumitem epigraph fancyhdr
+#   float fontenc geometry graphicx hyperref imakeidx inputenc listings
+#   lmodern mathtools microtype natbib pgfplots subcaption tabularx
+#   tcolorbox textcomp tikz titlesec wrapfig xcolor
+#
+# Debian package mapping:
+#   texlive-latex-base          — core latex, fontenc, inputenc, graphicx
+#   texlive-latex-recommended   — geometry, hyperref, float, fancyhdr, xcolor, bm
+#   texlive-latex-extra         — tcolorbox, imakeidx, titlesec, wrapfig, enumitem,
+#                                 epigraph, booktabs, subcaption, tabularx, listings,
+#                                 mathtools, microtype
+#   texlive-fonts-recommended   — lmodern, textcomp
+#   texlive-pictures            — tikz, pgf, pgfplots
+#   texlive-bibtex-extra        — natbib
+
+FROM debian:bookworm-slim
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    texlive-latex-base \
+    texlive-latex-recommended \
+    texlive-latex-extra \
+    texlive-fonts-recommended \
+    texlive-pictures \
+    texlive-bibtex-extra \
+    texlive-plain-generic \
+    latexmk \
+    make \
+    perl \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /workspace
