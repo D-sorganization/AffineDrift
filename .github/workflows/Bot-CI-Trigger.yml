@@ -8,7 +8,8 @@ name: Bot CI Trigger
 # Solution: This workflow:
 # 1. Detects bot PRs that haven't had CI run
 # 2. Re-triggers CI using workflow_dispatch or by adding an empty commit
-# 3. Has loop prevention to avoid infinite runs
+# 3. Uses REST API calls for PR polling to avoid GraphQL-backed helpers
+# 4. Has loop prevention to avoid infinite runs
 #
 # IMPORTANT: For this to work properly, set up a BOT_PAT secret with a
 # Personal Access Token that has 'repo' and 'workflow' permissions.
@@ -84,11 +85,19 @@ jobs:
         id: loop-check
         env:
           GH_TOKEN: ${{ github.token }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
         run: |
           # Check recent commits for loop indicators
           loop_count=0
           if [ "${{ github.event_name }}" == "pull_request" ]; then
-            messages=$(gh pr view "${{ github.event.pull_request.number }}" --json commits --jq '.commits[-5:][].messageHeadline')
+            messages=$(
+              gh api --method GET --paginate \
+                "repos/${{ github.repository }}/commits?sha=$HEAD_REF&per_page=100" \
+                --jq '.[] | "\(.commit.author.date)\t\(.commit.message | split("\n")[0])"' \
+              | sort \
+              | tail -n 5 \
+              | cut -f2-
+            )
           else
             messages=""
           fi
@@ -117,47 +126,71 @@ jobs:
           INPUT_PR: ${{ inputs.pr_number }}
           FORCE: ${{ inputs.force }}
         run: |
+          repo="${{ github.repository }}"
           prs_to_trigger=""
+
+          pr_needs_ci() {
+            local head_sha="$1"
+            local checks=""
+
+            checks=$(gh api --method GET --paginate \
+              "repos/${repo}/commits/${head_sha}/check-runs?per_page=100" \
+              --jq '.check_runs[].name' 2>/dev/null || true)
+
+            if echo "$checks" | grep -qE "(quality-gate|ci-standard|CI Standard)"; then
+              return 1
+            fi
+
+            checks=$(gh api --method GET \
+              "repos/${repo}/commits/${head_sha}/status" \
+              --jq '.statuses[].context' 2>/dev/null || true)
+
+            if echo "$checks" | grep -qE "(quality-gate|ci-standard|CI Standard)"; then
+              return 1
+            fi
+
+            return 0
+          }
+
+          list_open_prs() {
+            gh api --method GET --paginate \
+              "repos/${repo}/pulls?state=open&per_page=100" \
+              --jq '.[] | [.number, .user.login, .head.sha] | @tsv'
+          }
 
           if [ -n "$INPUT_PR" ]; then
             # Manual trigger for specific PR
-            prs_to_trigger="$INPUT_PR"
+            pr_info=$(gh api --method GET "repos/${repo}/pulls/${INPUT_PR}" \
+              --jq '.number' 2>/dev/null || true)
+            if [ -n "$pr_info" ]; then
+              prs_to_trigger="$pr_info"
+            else
+              prs_to_trigger="$INPUT_PR"
+            fi
           elif [ "${{ github.event_name }}" == "pull_request" ]; then
             # PR event - check this specific PR
             PR_NUMBER="${{ github.event.pull_request.number }}"
+            HEAD_SHA="${{ github.event.pull_request.head.sha }}"
 
             # Check if CI has already run
-            checks=$(gh pr checks "$PR_NUMBER" 2>/dev/null || echo "")
-
-            if [ -z "$checks" ] || [ "$FORCE" == "true" ]; then
+            if [ "$FORCE" == "true" ]; then
               prs_to_trigger="$PR_NUMBER"
             else
-              # Check if quality-gate or ci-standard passed/ran
-              if ! echo "$checks" | grep -qE "(quality-gate|ci-standard|CI Standard)"; then
+              if pr_needs_ci "$HEAD_SHA"; then
                 prs_to_trigger="$PR_NUMBER"
               fi
             fi
           else
             # Scheduled run - find all bot PRs without checks
-            bot_prs=$(gh pr list --author "github-actions[bot]" --state open --json number,author --jq '.[].number' || echo "")
-
-            for pr in $bot_prs; do
-              checks=$(gh pr checks "$pr" 2>/dev/null || echo "")
-              if [ -z "$checks" ] || ! echo "$checks" | grep -qE "(quality-gate|ci-standard|CI Standard)"; then
-                prs_to_trigger="$prs_to_trigger $pr"
-              fi
-            done
-
-            # Also check PRs from other bot-like authors
-            for author in "dependabot[bot]" "renovate[bot]" "claude[bot]" "google-labs-jules"; do
-              more_prs=$(gh pr list --author "$author" --state open --json number --jq '.[].number' 2>/dev/null || echo "")
-              for pr in $more_prs; do
-                checks=$(gh pr checks "$pr" 2>/dev/null || echo "")
-                if [ -z "$checks" ] || ! echo "$checks" | grep -qE "(quality-gate|ci-standard)"; then
-                  prs_to_trigger="$prs_to_trigger $pr"
-                fi
-              done
-            done
+            while IFS=$'\t' read -r pr_number author head_sha; do
+              case "$author" in
+                github-actions[bot]|dependabot[bot]|renovate[bot]|claude[bot]|google-labs-jules)
+                  if pr_needs_ci "$head_sha"; then
+                    prs_to_trigger="$prs_to_trigger $pr_number"
+                  fi
+                  ;;
+              esac
+            done < <(list_open_prs)
           fi
 
           # Trim whitespace and remove duplicates
@@ -175,20 +208,27 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          repo="${{ github.repository }}"
+
+          get_head_ref() {
+            local pr_number="$1"
+            gh api --method GET "repos/${repo}/pulls/${pr_number}" \
+              --jq '.head.ref' 2>/dev/null || true
+          }
+
           for pr in ${{ steps.find-prs.outputs.prs }}; do
             echo "Triggering CI for PR #$pr"
+            branch="$(get_head_ref "$pr")"
 
             # Method 1: Try to trigger workflow_dispatch on ci-standard
-            gh workflow run ci-standard.yml \
-              --ref "$(gh pr view $pr --json headRefName --jq '.headRefName')" \
-              2>/dev/null || true
-
-            # Method 2: If workflow_dispatch fails, add empty commit to trigger
-            if [ $? -ne 0 ]; then
+            if ! gh workflow run ci-standard.yml \
+              --ref "$branch" \
+              2>/dev/null; then
+              # Method 2: If workflow_dispatch fails, add empty commit to trigger
               echo "workflow_dispatch failed, trying empty commit method"
 
               # Get PR branch
-              branch=$(gh pr view $pr --json headRefName --jq '.headRefName')
+              branch="${branch:-$(get_head_ref "$pr")}"
 
               git fetch origin "$branch"
               git checkout "$branch"
