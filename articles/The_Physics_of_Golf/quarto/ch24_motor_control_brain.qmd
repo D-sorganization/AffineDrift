@@ -58,14 +58,14 @@ The nervous system does not have *one* feedback delay --- it has several loops o
 | Spinal stretch reflex (monosynaptic) | 20--40 ms | Muscle spindle stretch $\to$ $\alpha$-motoneuron | Stabilizes against sudden perturbations; operates *without* cortical involvement |
 | Long-loop (transcortical) proprioceptive | 50--100 ms | Spindle/Golgi $\to$ cortex $\to$ cord | Task-dependent intramovement corrections |
 | Vestibulo-ocular / vestibulospinal | 10--20 ms (VOR), 50--100 ms (postural) | Semicircular canals, otoliths | Balance, gaze stabilization during trunk rotation |
-| Cerebellar internal-model update | $\sim$100--200 ms | Climbing-fiber error $\to$ Purkinje LTD/LTP | Trial-to-trial calibration of the forward model [@wolpert1998internal, shadmehr2010error] |
+| Cerebellar internal-model update | $\sim$100--200 ms | Climbing-fiber error $\to$ Purkinje LTD/LTP | Trial-to-trial calibration of the forward model [@wolpert1998internal; @shadmehr2010error] |
 | Visual (conscious feedback) | 100--200 ms (detection) to $\sim$300--400 ms (corrective command reaches muscle) | Retinal image $\to$ visual cortex $\to$ motor cortex | Too slow to correct the downswing itself; primary role is *trial-to-trial* learning and pre-swing planning |
 
 Add the downstream motor-side delays --- $\sim$10--20 ms corticospinal transmission and $\sim$40--60 ms electromechanical activation --- and the picture becomes:
 
 - **Spinal and vestibular loops** *can* fire inside a 300 ms downswing and shape it. They handle local perturbation rejection, not semantic errors like clubface angle.
 - **Long-loop proprioceptive corrections** can land once, perhaps twice, during the downswing; they are the most plausible substrate for any genuine mid-swing adjustment.
-- **Visual feedback** for a 300 ms downswing is effectively post-hoc: any correction triggered by what the eye detects during the downswing arrives at the muscle *after* impact. Its role is learning the next swing, not fixing this one [@wolpert2000computational, scott2004optimal, todorov2004optimality].
+- **Visual feedback** for a 300 ms downswing is effectively post-hoc: any correction triggered by what the eye detects during the downswing arrives at the muscle *after* impact. Its role is learning the next swing, not fixing this one [@wolpert2000computational; @scott2004optimal; @todorov2004optimality].
 - **Cerebellar updates** are not in-swing corrections at all: they update the forward/inverse models over trials, using sensed outcomes as error signals [@shadmehrmussaivaldi2012biological].
 
 So the correct slogan is not "feedback is unavailable during the downswing" but rather: *fast subcortical loops are available and actively used; cortical/visual loops are not.* The downswing is predominantly a pre-programmed ballistic action whose robustness is provided by the fast reflex and vestibular loops, not by conscious, vision-mediated correction.
@@ -87,7 +87,7 @@ The controller measures the current state $\bm{x}(t)$, compares it to the desire
 $$
 \bm{u}(t) = \bm{K}\bm{e}(t) = \bm{K}[\bm{x}_d(t) - \bm{x}(t)]
 $$
-where $\bm{K}$ is a constant gain matrix. This is only a first-order approximation: it assumes constant gains, linear dynamics, instantaneous measurement, and no delay. Biological feedback is none of those things --- gains are state- and task-dependent, the dynamics are nonlinear, and every loop has latency (see the latency table above). More accurate biological models use *optimal feedback control* with stochastic, time-varying, task-conditioned gains [@todorov2004optimality, scott2004optimal, shadmehrmussaivaldi2012biological]. We use the linear form here to fix ideas, not as a realistic model of the nervous system.
+where $\bm{K}$ is a constant gain matrix. This is only a first-order approximation: it assumes constant gains, linear dynamics, instantaneous measurement, and no delay. Biological feedback is none of those things --- gains are state- and task-dependent, the dynamics are nonlinear, and every loop has latency (see the latency table above). More accurate biological models use *optimal feedback control* with stochastic, time-varying, task-conditioned gains [@todorov2004optimality; @scott2004optimal; @shadmehrmussaivaldi2012biological]. We use the linear form here to fix ideas, not as a realistic model of the nervous system.
 
 This is reactive: if things are going wrong, the controller corrects.
 
