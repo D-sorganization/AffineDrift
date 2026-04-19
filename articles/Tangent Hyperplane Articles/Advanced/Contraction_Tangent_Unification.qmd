@@ -1,6 +1,6 @@
 ---
-title: "Contraction Theory Meets Tangent Spaces: Unifying Stability and Optimality"
-description: "This article establishes a profound connection between two seemingly disparate frameworks in nonlinear control: contraction theory (Lohmiller & Slotine,..."
+title: "Contraction Theory Meets Tangent Spaces: Stability, Optimality, and Scope Limits"
+description: "Conditional notes on how contraction metrics, Riccati equations, and tangent-space trajectory optimization overlap in local nonlinear control settings."
 subtitle: "A Differential Geometric Bridge Between Exponential Stability and Optimal Control"
 author: "Dieter Olson"
 date: "2026-01-18"
@@ -27,13 +27,13 @@ bibliography: ../references.bib
 
 # Abstract {.unnumbered}
 
-This article establishes a profound connection between two seemingly disparate frameworks in nonlinear control: **contraction theory** (Lohmiller & Slotine, 1998) and **tangent space methods** for trajectory optimization. We prove that contraction metrics and optimal feedback gains are dual manifestations of the same geometric structure—the Riemannian metric on state space that governs both exponential stability and optimality (exact in the infinitesimal limit; see Part IV for residual bounds). This unification reveals:
+This article examines a conditional relationship between **contraction theory** (Lohmiller & Slotine, 1998) and **tangent-space methods** for trajectory optimization. In linear-quadratic and local differential settings, Riccati-type objects can be read both as value-function Hessians and as candidate metrics for perturbation dynamics. That overlap is exact only under stated regularity, boundedness, and basin assumptions; finite-time or global conclusions require separate residual and robustness analysis. The article develops three narrower claims:
 
-1. **Stability ↔ Optimality Duality**: Contraction metrics arise naturally as solutions to optimal control problems, while LQR gains induce contraction.
+1. **Stability and Optimality Link**: LQR-style feedback can induce local contraction under the appropriate closed-loop conditions.
 2. **Geometric Unification**: Both frameworks operate on tangent spaces, with infinitesimal dynamics governed by the same differential Riccati equation.
-3. **Design Synthesis**: A new class of algorithms that simultaneously optimize trajectories while guaranteeing exponential stability through contraction constraints.
+3. **Design Synthesis**: A proposed class of algorithms that optimize trajectories while explicitly checking contraction constraints and their regions of validity.
 
-We demonstrate applications in biomechanics (muscle synergy stability), robotics (certified manipulation), and provide complete JAX implementations for computing contraction metrics via autodifferentiation.
+The application sections in biomechanics and robotics should be read as modeling proposals. They require system-specific validation, uncertainty analysis, and empirical comparison before they can support strong performance or safety claims.
 
 **Keywords**: Contraction theory, differential dynamic programming, Riemannian geometry, exponential stability, optimal control, tangent spaces
 
@@ -242,11 +242,11 @@ This suggests a deep connection between variational mechanics and contraction th
 
 ::: {.callout-tip}
 ## Instantaneous Force-Acceleration Superposition
-While nonlinear systems do not exhibit superposition at the trajectory level, they **always** exhibit exact linear superposition at the **instantaneous tangent-space level**. For any fixed state $\mathbf{x}$, the mapping from generalized forces $\boldsymbol{\tau}$ to generalized accelerations $\ddot{\mathbf{q}}$ is an affine (and often strictly linear) mapping:
+While nonlinear systems do not exhibit superposition at the trajectory level, many mechanical models have an affine instantaneous map from generalized forces to generalized accelerations once the state, constraints, and contact mode are fixed:
 
 $$ \ddot{\mathbf{q}} = \mathbf{M}(\mathbf{q})^{-1} (\boldsymbol{\tau} - \mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})\dot{\mathbf{q}} - \mathbf{g}(\mathbf{q})) $$
 
-This instantaneous linearity is the "Tangent Hyperplane" that allows us to decompose complex motor behaviors into superposed components *at each instant*, which then integrate to form the full nonlinear motion. This principle is foundational to the **AffineDrift** framework and bridges the gap between local linearization and global nonlinear stability [@slotine1991applied].
+This instantaneous linearity is the local "Tangent Hyperplane" used here to decompose modeled motor behavior at a fixed instant. Integrating those local components into a finite motion introduces curvature, residual, and contact-mode errors that must be tracked separately [@slotine1991applied].
 :::
 
 ---
@@ -278,7 +278,7 @@ is **exponentially stable** if $\rho(\mathbf{A}_t - \mathbf{B}_t \mathbf{K}_t) <
 
 ### The Duality
 
-**Claim**: The Riccati solution $\mathbf{S}_t$ **is** a contraction metric!
+**Claim, under the LQR assumptions stated below**: The Riccati solution $\mathbf{S}_t$ can be used as a contraction metric for the local closed-loop system.
 
 ::: {.callout-important icon=false}
 ## Theorem 3.1 (Stability-Optimality Duality)
@@ -340,7 +340,7 @@ $$
 \mathbf{A}^\top \mathbf{S} + \mathbf{S} \mathbf{A} - \mathbf{S} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S} + \mathbf{Q} = 0
 $$ {#eq-algebraic-riccati}
 
-This is **precisely** the steady-state contraction metric!
+This can be read as a steady-state contraction-metric equation when the stabilizability and definiteness assumptions hold.
 
 ::: {.callout-note icon=false}
 ## Corollary 3.1 (LQR Induces Contraction)
@@ -351,7 +351,7 @@ $$ {#eq-lqr-closed-loop}
 contracting with metric $\mathbf{M} = \mathbf{S}$ and rate $\lambda = \frac{1}{2} \lambda_{\min}(\mathbf{S} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S})$.
 :::
 
-**Interpretation**: Optimal control **automatically ensures exponential stability** through the induced contraction metric!
+**Interpretation**: In this restricted setting, the optimal feedback law also provides a local exponential-stability certificate through the induced metric.
 
 ## Geometric Interpretation
 
@@ -501,7 +501,7 @@ $$
 \mathbf{A}^\top \mathbf{S}_\infty + \mathbf{S}_\infty \mathbf{A} - \mathbf{S}_\infty \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S}_\infty + \mathbf{Q} = 0
 $$ {#eq-are-minimal}
 
-guarantees contraction with the **fastest possible rate** given control cost $\mathbf{R}$.
+provides a stabilizing metric candidate for the chosen cost weights. Any claim about rate optimality requires a separate optimization statement and proof.
 :::
 
 **Proof**: The rate of contraction is determined by the most negative eigenvalue of:
@@ -829,7 +829,7 @@ This quantifies the **robustness** to perturbations at time $t$.
 
 ---
 
-# Robotics: Manipulation with Guarantees
+# Robotics: Manipulation with Local Certificates
 
 ## Contraction-Based Task Space Control
 
@@ -858,7 +858,7 @@ $$ {#eq-task-matrices}
 
 ### Contraction-Based Controller
 
-**Objective**: Track desired trajectory $\mathbf{x}_d(t)$ with guaranteed exponential convergence.
+**Objective**: Track desired trajectory $\mathbf{x}_d(t)$ with a local exponential-convergence certificate.
 
 **Design**: Choose task force:
 $$
@@ -935,7 +935,7 @@ This is feasible if the **switched system** is jointly contracting.
 If there exists a common metric $\mathbf{M}$ satisfying (@eq-common-lyapunov), then the hybrid system is exponentially stable across mode switches with rate $\lambda$.
 :::
 
-**Application**: Peg-in-hole insertion with guaranteed convergence despite intermittent contact.
+**Application**: Peg-in-hole insertion, where any convergence claim must account for intermittent contact and mode changes.
 
 ## Simulation Study: 7-DOF Robot Arm
 
@@ -1067,7 +1067,7 @@ $$ {#eq-basin-definition}
 - Basin volume: $V_{\text{contraction}} = 28.7$ (2× larger!)
 - Smooth, convex shape
 
-**Key insight**: Contraction metric produces **star-shaped basin** around nominal trajectory—guaranteed by theory.
+**Key insight**: In this illustrative simulation, the contraction metric produces a larger, smoother basin around the nominal trajectory. Treating that shape as certified requires the metric and residual assumptions to be verified.
 
 ## Computational Overhead
 
@@ -1615,23 +1615,23 @@ This article established a rigorous connection between contraction theory and ta
 
 ## Theoretical Contributions
 
-1. **Duality Theorem** (Theorem 3.1): The Riccati solution $\mathbf{S}_t$ is both:
+1. **Conditional Duality Theorem** (Theorem 3.1): Under LQR-style assumptions, the Riccati solution $\mathbf{S}_t$ can be read as both:
    - The value function (optimality)
    - A contraction metric (stability)
 
-   This unifies two previously separate frameworks.
+   This links two previously separate frameworks in a local setting.
 
-2. **Contraction-Constrained Optimization** (Theorem 4.1): Augmenting DDP with contraction penalties provides **certified exponential stability** with computable basins of attraction.
+2. **Contraction-Constrained Optimization** (Theorem 4.1): Augmenting DDP with contraction penalties can provide local stability certificates when the basin, metric, and residual assumptions are verified.
 
-3. **Coordinate-Free Formulation** (Section 6): The framework extends to arbitrary manifolds via Riemannian geometry, enabling applications to robotics (task space) and biomechanics (muscle space).
+3. **Geometric Formulation** (Section 6): The framework can be phrased with Riemannian geometry, but coordinate-free claims require careful tensor definitions and transformation rules.
 
 ## Practical Impact
 
-1. **Robotics**: Task-space controllers with guaranteed convergence rates (86% error reduction experimentally).
+1. **Robotics**: Task-space controllers with explicit local convergence checks and simulation-based comparisons that still need physical validation.
 
-2. **Biomechanics**: New interpretation of muscle synergies as contraction subspaces, explaining CNS control strategies.
+2. **Biomechanics**: A hypothesis that muscle synergies can be studied as contraction subspaces, requiring motion-capture, EMG, and perturbation evidence before drawing neural-control conclusions.
 
-3. **Algorithm Design**: Contraction-DDP provides stability certificates at modest computational cost (+60% overhead with warm starting).
+3. **Algorithm Design**: Contraction-DDP provides a route to stability certificates, with computational cost depending on solver choice, sparsity, and problem dimension.
 
 ## Future Directions
 
@@ -1676,13 +1676,13 @@ Includes:
   <div class="laymans-terms-content">
     <div class="laymans-terms-inner">
       <p class="laymans-terms-intro">
-        This article reveals that two major goals in engineering—efficiency and safety—are actually the same thing mathematically.
+        This article explains why some optimal-control calculations and some stability calculations can share the same local mathematical objects.
       </p>
 
       <div class="laymans-item">
         <h3>The Two-for-One Deal</h3>
         <p>
-          Engineers usually design a perfect path first, then add a separate safety system to keep the robot on that path. We proved that if you calculate the perfect path correctly, it automatically comes with a built-in safety system that pulls you back if you drift.
+          Engineers often plan a path first, then add feedback to keep the system near that path. In restricted LQR-like settings, the same calculation that prices deviations from a path can also help define feedback that reduces small deviations.
         </p>
         <div class="analogy">
 <strong>Think of it like:</strong> A rubber band. The tension that pulls it back to its shape is the same force that defines its shape in the first place.
@@ -1692,7 +1692,7 @@ Includes:
       <div class="laymans-item">
         <h3>The Funnel Effect</h3>
         <p>
-          Some systems behave like a funnel: no matter where you enter, you get guided toward the center. We show that optimal control naturally shapes the world into this funnel, guaranteeing that errors shrink over time.
+          Some systems behave like a funnel only inside a verified region: nearby errors move back toward the reference trajectory. The analysis here asks when an optimal-control calculation can provide that local funnel and how its limits should be checked.
         </p>
         <div class="analogy">
 <strong>Think of it like:</strong> A coin spiral at a museum. No matter how you drop the coin, the curved shape of the funnel forces it into a specific spiral path.
@@ -1702,7 +1702,7 @@ Includes:
       <div class="laymans-item">
         <h3>Curved Space Navigation</h3>
         <p>
-          To make this work, we measure distance differently. Instead of a straight line, we measure distance based on how expensive an error is. This creates a curved map where the fastest route is also the safest one.
+          To make this work, distance is measured by how costly or dynamically important an error is. That metric can guide both path correction and stability analysis, but it does not by itself prove global safety.
         </p>
         <div class="analogy">
 <strong>Think of it like:</strong> Walking on a trampoline. If you stand in the middle, the trampoline curves down and naturally pulls everything toward you.
@@ -1710,7 +1710,7 @@ Includes:
       </div>
 
       <div class="key-takeaway">
-        <strong>Key Takeaway:</strong> You don't have to choose between high performance and safety; the math shows that the ultimate performance machine constantly self-corrects to stay on the best path.
+        <strong>Key Takeaway:</strong> Under the right local assumptions, performance and error correction can be designed together. The useful question is where those assumptions hold and how the certified region is measured.
       </div>
     </div>
   </div>
@@ -1726,7 +1726,7 @@ Includes:
   <div class="critics-comments-content">
     <div class="critics-comments-inner">
       <p class="critics-intro">
-        Every theory faces scrutiny. Here's what skeptics and alternative perspectives say:
+        The main limitations are about how far local certificates can be extended:
       </p>
 
       <div class="critic-item">
@@ -1734,9 +1734,9 @@ Includes:
 <span class="critic-label">Alternative View:</span>
 <h3>Global Claims from Local Linearization</h3>
         </div>
-        <p class="critic-argument">The unification heavily relies on tangent space linearization ($\delta \dot{\mathbf{x}} = \mathbf{A}(t) \delta \mathbf{x}$). While this clearly establishes local stability, generalizing this to true "global" contraction requires the metric to be uniformly positive-definite across highly nonlinear regions. Detractors argue that pointing to path integration of pointwise LQR metrics assumes a level of uniform bounds that is rarely guaranteed in highly nonlinear systems, risking that this is just local stability masquerading as global.</p>
+        <p class="critic-argument">The unification relies on tangent-space linearization ($\delta \dot{\mathbf{x}} = \mathbf{A}(t) \delta \mathbf{x}$). This supports local analysis around a state or trajectory, but global contraction requires uniform metric bounds across the relevant region. Without those bounds, a sequence of pointwise LQR metrics is only a local certificate, not a global proof.</p>
         <div class="author-response">
-<strong>Our Response:</strong> This is a fair theoretical boundary to highlight. We emphasize in Theorem 4.1 that the certificates provided by Contraction-DDP are strictly valid within a computable basin defined by the linearization's validity. Proving true global stability for highly nonlinear systems under this unified framework remains an open and difficult challenge.
+<strong>Our Response:</strong> This is the central boundary condition. The certificates discussed here are local unless a uniformly positive-definite metric and residual bounds are established over the full region of interest. Proving global stability for strongly nonlinear systems remains outside the evidence provided by this article.
         </div>
       </div>
 
@@ -1745,9 +1745,9 @@ Includes:
 <span class="critic-label">Alternative View:</span>
 <h3>The $O(n^4)$ Computational Bottleneck</h3>
         </div>
-        <p class="critic-argument">The proposed Contraction-DDP algorithm mandates solving a Semidefinite Program (SDP) at each timestep to compute the optimal metric $\mathbf{M}_t$. Even with warm-starting, SDPs fundamentally scale as $O(n^4)$. For complex systems like humanoids with 30+ degrees of freedom, executing this at the 1 kHz frequency required for robust contact-rich control is computationally intractable on current hardware.</p>
+        <p class="critic-argument">The proposed Contraction-DDP algorithm may require repeated metric optimization, often through semidefinite programs or structured approximations. The runtime depends on problem structure and solver choice, but the computational burden can dominate high-DOF or contact-rich systems.</p>
         <div class="author-response">
-<strong>Our Response:</strong> This is an accurate assessment of the current computational limits. Presently, Contraction-DDP is most viable for offline trajectory optimization or lower-dimensional systems. Scaling this to high-DOF real-time MPC will require breakthroughs in sparse SDP solvers or machine-learning-based metric approximations.
+<strong>Our Response:</strong> This is a practical limitation. The current argument is most credible for offline studies, lower-dimensional systems, or cases with exploitable sparsity. Claims about real-time high-DOF control require timing data and solver-specific validation.
         </div>
       </div>
 
@@ -1756,15 +1756,14 @@ Includes:
 <span class="critic-label">Alternative View:</span>
 <h3>Brittleness to Unmodeled Dynamics</h3>
         </div>
-        <p class="critic-argument">The entire framework relies on precise analytical knowledge of the system dynamics $\mathbf{f}(\mathbf{x}, \mathbf{u})$. In practice, phenomena like stiction, backlash, and unmodeled link flexibilities violate these smooth continuous models. Controllers that are "optimal" for a pristine mathematical model often fail catastrophically when facing the stark realities of hardware friction and delayed contact events.</p>
+        <p class="critic-argument">The framework relies on a dynamics model $\mathbf{f}(\mathbf{x}, \mathbf{u})$ and on smoothness assumptions in the region being certified. Stiction, backlash, compliance, sensor delay, and contact transitions can violate those assumptions and invalidate a certificate computed for a cleaner model.</p>
         <div class="author-response">
-<strong>Our Response:</strong> A crucial empirical concern. While contraction metrics do theoretically quantify robustness bounds via their condition number, applying these idealized metrics to messy hardware is non-trivial. As indicated in our future directions, extending this framework to explicitly handle stochasticity and structured uncertainty is essential before broad physical deployment.
+<strong>Our Response:</strong> This is an empirical concern, not a minor implementation detail. A metric can help express sensitivity inside the model, but deployment requires model-error bounds, disturbance tests, and evidence that the certified region survives hardware effects.
         </div>
       </div>
 
       <div class="academic-note">
-        <strong>Note:</strong> Scientific discourse thrives on debate.
-        These critiques strengthen our understanding.
+        <strong>Note:</strong> These objections should be treated as scope conditions for the article's claims.
       </div>
     </div>
   </div>
