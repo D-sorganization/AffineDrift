@@ -1,11 +1,11 @@
-# Tangent Hyperplane Framework: Complete Learning Path
-**A Comprehensive Guide to Nonlinear Control Through Geometric Intuition**
+# Tangent Hyperplane Framework: Reading Path
+**A guided route through exploratory notes on nonlinear control and geometric intuition**
 
 ---
 
 ## Overview
 
-This collection presents a unified geometric framework for understanding nonlinear dynamical systems through the lens of **exact infinitesimal superposition**. The central thesis: *nonlinear systems are exactly linear at every instant—we just need to exploit that local linearity intelligently.*
+This collection presents an exploratory geometric framework for understanding nonlinear dynamical systems through local tangent-space structure. The central technical point is narrower than many of the draft pages suggest: at a fixed state, the first variation gives a linear map for infinitesimal perturbations. Finite-step prediction, accumulated error, and controller performance require residual bounds and validation.
 
 **Target Audience:**
 - Graduate students in control theory, robotics, biomechanics
@@ -40,9 +40,9 @@ We provide three learning paths depending on your goals:
 - Implement examples in Python/MATLAB
 - **Time:** 2-3 weeks
 
-### Track 3: **Theoretical Mastery** (Full rigor)
-*Goal: Deep understanding, prepare for research*
-- Read everything including appendices
+### Track 3: **Technical Review** (Full derivations and caveats)
+*Goal: Understand the claims well enough to evaluate or extend them*
+- Read the main pages, appendices, and critique pages together
 - Work through all derivations
 - Study critical reviews
 - Solve problem sets (future addition)
@@ -58,7 +58,7 @@ We provide three learning paths depending on your goals:
 **Time:** 4-6 hours
 
 **What You'll Learn:**
-- Part I: Why tangent spaces are exact, not approximate
+- Part I: Where tangent spaces provide exact infinitesimal structure
 - Part II: How integration preserves superposition of variations
 - Part III: How DDP/iLQR/MPC exploit this structure
 
@@ -67,9 +67,9 @@ We provide three learning paths depending on your goals:
 - State transition operators
 - Residuals as manifold curvature
 - Hamiltonian formulation
-- Complete DDP/iLQR algorithms with case studies
+- Worked DDP/iLQR algorithm sketches with case studies
 
-**Why Start Here:** This is the comprehensive reference. Everything else builds on or extends this.
+**Why Start Here:** This is the broadest reference in the package. Read it together with the critique pages before treating any finite-time or control-design claim as established.
 
 **Supplementary Materials:**
 - `LAYMANS_TERMS_SUMMARY.qmd` - Non-technical overview (read first if intimidated)
@@ -108,14 +108,14 @@ We provide three learning paths depending on your goals:
 - Curvature-adaptive timesteps in DDP
 - Tube MPC with geometric residual bounds
 
-**Key Innovation:** Treats residuals as **actionable control signals**, not just theoretical curiosities.
+**Working contribution:** Treats residuals as candidate diagnostics for when local models may be insufficient.
 
 **Applications:**
 - Quadrotor: Hover (low curvature) vs. aerobatics (high curvature)
 - Humanoid gait: Foot strike = curvature spike
 - Spacecraft: Gimbal lock = curvature singularity
 
-**Why Read:** Bridges theory to practice—gives you a tool (residual threshold) to decide "when do I need nonlinear methods?"
+**Why Read:** Connects the local theory to a practical question: when is a linearized prediction no longer reliable enough for the intended task?
 
 **Supplementary:**
 - `Residual-Aware_Control_LAYMAN.qmd` - Accessible explanation
@@ -129,19 +129,19 @@ We provide three learning paths depending on your goals:
 **Time:** 4-5 hours
 
 **What You'll Learn:**
-- Contraction theory (Lohmiller & Slotine) via tangent bundle
-- Duality: Stability (contraction) ↔ Optimality (DDP)
+- Contraction theory (Lohmiller & Slotine) via tangent-bundle language
+- Conditional links between stability analysis and optimal-control calculations
 - Contraction metrics as Riemannian geometry on tangent spaces
-- DDP with contraction constraints = optimality + guaranteed convergence
+- How contraction constraints can be added to trajectory optimization, and what must be checked before claiming convergence
 
-**Key Innovation:** Shows contraction analysis and trajectory optimization are **dual perspectives** on the same geometry.
+**Working contribution:** Frames contraction analysis and trajectory optimization as closely related local calculations, while leaving global or finite-time claims dependent on additional assumptions.
 
 **Applications:**
-- Proving DDP convergence for specific systems
-- Designing controllers with exponential stability guarantees
-- Understanding when LQR is globally optimal
+- Checking DDP convergence conditions for specific systems
+- Designing controllers with explicit local stability certificates
+- Understanding when LQR assumptions are strong enough for the intended claim
 
-**Why Read:** If you know contraction theory, this shows how it fits with optimization. If you know DDP, this shows how to add stability guarantees.
+**Why Read:** If you know contraction theory, this shows a possible link to optimization. If you know DDP, this shows how stability certificates might be added and where the proof obligations enter.
 
 **Supplementary:**
 - `Contraction_Tangent_LAYMAN.qmd` - Why trajectories "forget" initial conditions
@@ -456,17 +456,15 @@ We stand on the shoulders of giants. The contribution is **synthesis and geometr
 
 **If you have 30 minutes:** Read any LAYMANS summary
 **If you have 2 hours:** Read Unified Thesis Part I only
-**If you have 1 day:** Read Unified Thesis completely
-**If you have 1 week:** Unified Thesis + one advanced article + implement a case study
-**If you have 1 month:** Everything + critical reviews + implement all case studies + extend to your domain
+**If you have 1 day:** Read the Unified Thesis with the critique pages open
+**If you have 1 week:** Read the Unified Thesis, one advanced article, and implement a small case study
+**If you have 1 month:** Read the full package, compare the critiques, and test one extension in your domain
 
-**Most important:** Don't try to read everything linearly. Jump to what excites you. Use the table above to check prerequisites, then dive in.
+**Most important:** Do not read the draft pages as finished evidence summaries. Use the table above to check prerequisites and keep the limitation notes alongside the main claims.
 
-**The goal is not to memorize formulas—it's to develop geometric intuition for how nonlinear systems behave.**
+**The goal is not to memorize formulas; it is to develop geometric intuition while keeping the mathematical scope conditions visible.**
 
-Once you see trajectories winding through manifolds with tangent spaces providing exact local snapshots, you'll never look at control theory the same way.
-
-Happy learning! 🚀
+The useful habit is to separate exact local statements from finite-time conclusions that require residual bounds, model checks, and validation.
 
 ---
 
