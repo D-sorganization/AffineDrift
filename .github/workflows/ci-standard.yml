@@ -73,14 +73,13 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
       - name: Bootstrap Python venv
         run: |
-          for py in python3.12 python3.11 python3.10 python3; do
-            if command -v $py &>/dev/null; then
-              $py -m venv "$RUNNER_TEMP/ci-venv"
-              break
-            fi
-          done
+          python -m venv "$RUNNER_TEMP/ci-venv"
           source "$RUNNER_TEMP/ci-venv/bin/activate"
           pip install --upgrade pip setuptools wheel
           pip install -r requirements.txt
@@ -316,15 +315,14 @@ jobs:
       - uses: actions/setup-node@v6
         if: steps.e2e_changes.outputs.run == 'true'
         with: { node-version: "20" }
+      - uses: actions/setup-python@v6
+        if: steps.e2e_changes.outputs.run == 'true'
+        with:
+          python-version: "3.12"
       - name: Bootstrap Python venv
         if: steps.e2e_changes.outputs.run == 'true'
         run: |
-          for py in python3.12 python3.11 python3.10 python3; do
-            if command -v $py &>/dev/null; then
-              $py -m venv "$RUNNER_TEMP/ci-venv"
-              break
-            fi
-          done
+          python -m venv "$RUNNER_TEMP/ci-venv"
           source "$RUNNER_TEMP/ci-venv/bin/activate"
           pip install --upgrade pip setuptools wheel
           pip install -r requirements.txt
