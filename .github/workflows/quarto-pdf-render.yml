@@ -60,16 +60,25 @@ jobs:
       - name: Verify TinyTeX availability
         timeout-minutes: 12
         run: |
+          echo "$HOME/.TinyTeX/bin/x86_64-linux" >> "$GITHUB_PATH"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.TinyTeX/bin/x86_64-linux:$HOME/.local/bin:$PATH"
+
           if command -v xelatex >/dev/null 2>&1 || command -v pdflatex >/dev/null 2>&1; then
             echo "TeX engine already available"
           else
             timeout --kill-after=60s 10m quarto install tinytex --no-prompt --update-path
           fi
+          export PATH="$HOME/.TinyTeX/bin/x86_64-linux:$HOME/.local/bin:$PATH"
+          hash -r
           quarto --version
           if command -v xelatex >/dev/null 2>&1; then
             xelatex --version | head -1
-          else
+          elif command -v pdflatex >/dev/null 2>&1; then
             pdflatex --version | head -1
+          else
+            echo "No TeX engine found after TinyTeX setup" >&2
+            exit 1
           fi
 
       - name: Render Quarto textbook chapters as PDF
