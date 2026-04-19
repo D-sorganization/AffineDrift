@@ -1437,31 +1437,51 @@ runOnDomReady(function () {
 
 // 🎨 Palette UX: Auto-growing Textareas
 function initAutoGrowTextareas() {
-  const textareas = document.querySelectorAll("textarea");
+  // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) live collection) instead of querySelectorAll (O(N))
+  const textareas = document.getElementsByTagName("textarea");
   if (textareas.length === 0) return;
 
-  function adjustHeight(el) {
-    el.style.height = "auto";
-    const newHeight = Math.min(el.scrollHeight, 500); // Max height 500px
-    el.style.height = newHeight + "px";
-    el.style.overflowY = newHeight >= 500 ? "auto" : "hidden";
-  }
+  // ⚡ Bolt Optimization: Batch DOM reads and writes to avoid forced synchronous layout (Layout Thrashing)
+  function batchAdjustHeights() {
+    const heights = [];
 
-  textareas.forEach((textarea) => {
-    // Initial adjustment if content exists
-    if (textarea.value) {
-      // Defer slightly to ensure styles are applied
-      setTimeout(() => adjustHeight(textarea), 0);
+    // Phase 1: Write (reset heights to compute scrollHeight accurately)
+    for (const textarea of textareas) {
+      textarea.style.height = "auto";
     }
 
-    textarea.addEventListener("input", () => adjustHeight(textarea));
-  });
+    // Phase 2: Read (get scrollHeights)
+    for (let i = 0; i < textareas.length; i++) {
+      heights.push(Math.min(textareas[i].scrollHeight, 500));
+    }
+
+    // Phase 3: Write (apply new heights and overflows)
+    for (let i = 0; i < textareas.length; i++) {
+      textareas[i].style.height = heights[i] + "px";
+      textareas[i].style.overflowY = heights[i] >= 500 ? "auto" : "hidden";
+    }
+  }
+
+  // Initialize all textareas statically
+  for (const textarea of textareas) {
+    textarea.style.resize = "none";
+    textarea.style.overflow = "hidden";
+    // Handle individual input events
+    textarea.addEventListener("input", () => {
+      textarea.style.height = "auto";
+      const newHeight = Math.min(textarea.scrollHeight, 500);
+      textarea.style.height = newHeight + "px";
+      textarea.style.overflowY = newHeight >= 500 ? "auto" : "hidden";
+    });
+  }
+
+  setTimeout(() => batchAdjustHeights(), 0);
 
   // Single resize listener for all
   window.addEventListener(
     "resize",
     debounce(() => {
-      textareas.forEach(adjustHeight);
+      batchAdjustHeights();
     }, 250),
   );
 }

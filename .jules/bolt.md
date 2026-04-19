@@ -69,3 +69,6 @@
 ## 2025-02-19 - Replace forEach with for...of loops
 **Learning:** In modern JS engines (V8/SpiderMonkey), `for...of` loops execute significantly faster than `.forEach()` for array/iterable traversals because they avoid the overhead of function calls and lexical scope creation on every iteration.
 **Action:** Use `for...of` instead of `.forEach` for high-iteration code or critical start-up paths.
+## 2026-04-19 - Layout Thrashing in Resizing Loops
+**Learning:** Interleaving layout reads (like `scrollHeight`) and DOM mutations (like `style.height` updates) across multiple elements simultaneously inside a loop causes forced synchronous layout (Layout Thrashing), severely impacting the main thread during initialization and resize events.
+**Action:** When initializing or adjusting dimensions for multiple elements simultaneously (e.g. auto-growing textareas), always batch the reads into a separate array or phase before performing the style writes.
