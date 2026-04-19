@@ -74,6 +74,8 @@ jobs:
 
       - name: Render Quarto textbook chapters as PDF
         timeout-minutes: 30
+        env:
+          CODECOV_TOKEN: unused-in-pdf-render
         run: |
           mkdir -p "$GITHUB_WORKSPACE/_pdf_output"
 
