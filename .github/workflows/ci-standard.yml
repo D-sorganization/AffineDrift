@@ -10,9 +10,9 @@ on:
       - ".gitignore"
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
+    # NOTE: **.md intentionally NOT excluded so quality-gate runs on docs-only
+    # PRs and satisfies branch protection required status checks.
     paths-ignore:
-      - "docs/**"
-      - "**.md"
       - "LICENSE"
       - ".gitignore"
   workflow_dispatch:
