@@ -35,5 +35,5 @@ jobs:
       # Assessment E: Security scanning for dependency vulnerabilities
       - name: Audit Python Dependencies
         run: |
-          python3 -m pip install pip-audit
-          python3 -m pip_audit -r requirements.txt --progress-spinner=off || true
+          pip install pip-audit
+          pip-audit -r requirements.txt --progress-spinner=off || true
