@@ -74,7 +74,9 @@ jobs:
       - uses: actions/checkout@v6
         if: steps.filter.outputs.is_bot != 'true' && steps.pr_state.outputs.should_skip != 'true'
         with:
-          fetch-depth: 1
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: ${{ github.event.pull_request.head.ref || github.event.issue.number && format('refs/pull/{0}/head', github.event.issue.number) }}
 
       - name: Analyze Comment
         id: analyze
