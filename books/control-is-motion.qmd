@@ -31,7 +31,9 @@ where $\delta x_\perp$ is the component of perturbation **transverse** to $x^*(t
 - The "reference" is a trajectory (orbit), not a point.
 - Stability is orbital (convergence to $x^*(t)$ for all $t$), not asymptotic to a fixed equilibrium.
 - Control design must respect the manifold structure of state space; coordinate-free formulations are preferred.
-- Drift $f(x)$ encodes the passive geometry of motion; control $g(x)u$ deforms it.
+- Drift $f(x)$ encodes the passive geometry of motion; control $G(x)u$ deforms it.
+
+**Required guardrail:** A phase coordinate is useful only when its domain, monotonicity condition, reset behavior, and failure cases are stated. A shoulder angle, foot-contact event, or other physical marker is not automatically a global clock replacement; it must remain well defined and locally ordered over the portion of state space being controlled.
 
 **Relationship to established theory:** CIM is not a new mathematical framework. It is a design philosophy that organizes established results on maneuver regulation and transverse dynamics (Hauser & Hindman, 1995; Shiriaev, Freidovich & Gusev, 2010), virtual constraints and hybrid zero dynamics (Westervelt et al., 2007), and orbital stabilization under one conceptual lens. Volume II develops this philosophy systematically using the tangent-space machinery of Volume I.
 :::
