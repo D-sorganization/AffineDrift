@@ -1719,12 +1719,10 @@ Includes:
 ---
 
 <section class="critics-comments">
-  <h2>
   <button class="critics-comments-header" aria-expanded="false">
-    <span class="critics-comments-header-title">Critics' Comments</span>
+    <h2>Critics' Comments</h2>
     <span class="critics-comments-icon">💬</span>
   </button>
-</h2>
   <div class="critics-comments-content">
     <div class="critics-comments-inner">
       <p class="critics-intro">
@@ -1733,40 +1731,34 @@ Includes:
 
       <div class="critic-item">
         <div class="critic-perspective">
-          <span class="critic-label">Alternative View:</span>
-          <h3>Global Claims, Local Roots?</h3>
+<span class="critic-label">Alternative View:</span>
+<h3>Global Claims from Local Linearization</h3>
         </div>
-        <p class="critic-argument">
-          The unification relies heavily on tangent space linearization ($\delta \dot{\mathbf{x}} = \mathbf{A}(t) \delta \mathbf{x}$). Critics argue that while this explains local stability, extending it to global "contraction" often requires solving the metric across the entire state space, which is intractable for high-dimensional systems. Is this just "local stability with better marketing"?
-        </p>
+        <p class="critic-argument">The unification heavily relies on tangent space linearization ($\delta \dot{\mathbf{x}} = \mathbf{A}(t) \delta \mathbf{x}$). While this clearly establishes local stability, generalizing this to true "global" contraction requires the metric to be uniformly positive-definite across highly nonlinear regions. Detractors argue that pointing to path integration of pointwise LQR metrics assumes a level of uniform bounds that is rarely guaranteed in highly nonlinear systems, risking that this is just local stability masquerading as global.</p>
         <div class="author-response">
-          <strong>Our Response:</strong> This is a common misconception. Contraction theory is inherently global because it relies on path integration of the metric. The tangent space is merely the geometric "stage" where this integration happens. If the differential condition holds everywhere, global stability is mathematically guaranteed, not just locally approximated.
+<strong>Our Response:</strong> This is a fair theoretical boundary to highlight. We emphasize in Theorem 4.1 that the certificates provided by Contraction-DDP are strictly valid within a computable basin defined by the linearization's validity. Proving true global stability for highly nonlinear systems under this unified framework remains an open and difficult challenge.
         </div>
       </div>
 
       <div class="critic-item">
         <div class="critic-perspective">
-          <span class="critic-label">Practical Concern:</span>
-          <h3>The "Curse of Dimensionality" in SDPs</h3>
+<span class="critic-label">Alternative View:</span>
+<h3>The $O(n^4)$ Computational Bottleneck</h3>
         </div>
-        <p class="critic-argument">
-          The proposed "Contraction-DDP" algorithm requires solving a Semidefinite Program (SDP) at each time step to find the optimal metric $\mathbf{M}_t$. SDP solvers scale poorly ($O(n^4)$ or worse). For a humanoid robot with 30+ DOFs, this approach seems computationally impossible for real-time control (1 kHz).
-        </p>
+        <p class="critic-argument">The proposed Contraction-DDP algorithm mandates solving a Semidefinite Program (SDP) at each timestep to compute the optimal metric $\mathbf{M}_t$. Even with warm-starting, SDPs fundamentally scale as $O(n^4)$. For complex systems like humanoids with 30+ degrees of freedom, executing this at the 1 kHz frequency required for robust contact-rich control is computationally intractable on current hardware.</p>
         <div class="author-response">
-          <strong>Our Response:</strong> A valid concern for naive implementations. However, the metric $\mathbf{M}(t)$ evolves much slower than the control signal $\mathbf{u}(t)$. We can update the metric at 10-50 Hz while running the controller at 1 kHz. Furthermore, "warm-starting" the SDP solver with the previous solution drastically reduces computation time, as shown in our experimental results.
+<strong>Our Response:</strong> This is an accurate assessment of the current computational limits. Presently, Contraction-DDP is most viable for offline trajectory optimization or lower-dimensional systems. Scaling this to high-DOF real-time MPC will require breakthroughs in sparse SDP solvers or machine-learning-based metric approximations.
         </div>
       </div>
 
       <div class="critic-item">
         <div class="critic-perspective">
-          <span class="critic-label">Robustness:</span>
-          <h3>The "Perfect Model" Fallacy</h3>
+<span class="critic-label">Alternative View:</span>
+<h3>Brittleness to Unmodeled Dynamics</h3>
         </div>
-        <p class="critic-argument">
-          The theory assumes exact knowledge of the dynamics $\mathbf{f}(\mathbf{x}, \mathbf{u})$. In reality, models have friction, backlash, and unmodeled flexibility. A controller that is "optimal" for a perfect model is often fragile in the real world. Does this unification sacrifice robustness for theoretical elegance?
-        </p>
+        <p class="critic-argument">The entire framework relies on precise analytical knowledge of the system dynamics $\mathbf{f}(\mathbf{x}, \mathbf{u})$. In practice, phenomena like stiction, backlash, and unmodeled link flexibilities violate these smooth continuous models. Controllers that are "optimal" for a pristine mathematical model often fail catastrophically when facing the stark realities of hardware friction and delayed contact events.</p>
         <div class="author-response">
-          <strong>Our Response:</strong> Paradoxically, contraction metrics <em>quantify</em> robustness. The condition number of the metric $\mathbf{M}$ directly predicts how much disturbance the system can reject. Unlike standard LQR, which has fixed margins, we can explicitly add "robustness" (condition number minimization) to the cost function, trading some optimality for guaranteed stability margins.
+<strong>Our Response:</strong> A crucial empirical concern. While contraction metrics do theoretically quantify robustness bounds via their condition number, applying these idealized metrics to messy hardware is non-trivial. As indicated in our future directions, extending this framework to explicitly handle stochasticity and structured uncertainty is essential before broad physical deployment.
         </div>
       </div>
 
