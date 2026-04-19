@@ -217,7 +217,7 @@ jobs:
   tests:
     needs: [pick-runner, quality-gate]
     runs-on: self-hosted
-    timeout-minutes: 20
+    timeout-minutes: 45
     strategy:
       matrix:
         python: ["3.12"]
@@ -226,6 +226,8 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python }}
+          cache: pip
+          cache-dependency-path: requirements.txt
       - name: Bootstrap Python venv
         run: |
           python -m venv "$RUNNER_TEMP/ci-venv"
