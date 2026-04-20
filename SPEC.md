@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-04-16T18:00:00Z
+Last-Updated: 2026-04-20T10:31:11Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,8 +29,8 @@ Last-Updated: 2026-04-16T18:00:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.72                                           |
-| **Last Spec Update**    | 2026-04-18                                       |
+| **Spec Version**        | 1.0.73                                           |
+| **Last Spec Update**    | 2026-04-20                                       |
 
 ## 2. Purpose & Mission
 
@@ -564,3 +564,4 @@ python src/tools/code_quality_ast.py
 
 | 2026-04-17 | 1.0.67 | ui(accessibility): Added rotation transform `aria-expanded="true"` for `.toggle-icon` inside `.sidebar-section-toggle` in `styles.css` to properly sync the visual state with the semantic state of collapsible sidebars. |
 | 2026-04-18 | 1.0.68 | fix(security): Prevent DOM-based XSS in PDF export by escaping pageTitle before injecting via innerHTML. |
+| 2026-04-20 | 1.0.73  | chore(deps): bump html-validate/stylelint devDependencies and refresh package-lock transitive entries. |
