@@ -109,6 +109,32 @@ def read_text_safe(path: Path) -> str | None:
         return None
 
 
+def resolve_line_limit(
+    rel: str,
+    suffix: str,
+    explicit_limits: dict[str, int],
+    max_by_ext: dict[str, int],
+) -> int | None:
+    """Return the line limit for a file, or ``None`` if no limit applies.
+
+    Checks explicit per-path limits first, then falls back to extension-based
+    limits.  Returns ``None`` when no applicable limit is configured for the
+    file, signalling that the file should be skipped.
+
+    Args:
+        rel: Repo-relative POSIX path of the file (e.g. ``"src/tools/foo.py"``).
+        suffix: File extension including leading dot (e.g. ``".py"``).
+        explicit_limits: Mapping of repo-relative path → line limit.
+        max_by_ext: Mapping of lowercase extension → line limit.
+
+    Returns:
+        An integer line limit, or ``None`` if the file should be skipped.
+    """
+    if rel in explicit_limits:
+        return explicit_limits[rel]
+    return max_by_ext.get(suffix.lower())
+
+
 def report_results(
     check_name: str,
     files_scanned: int,
