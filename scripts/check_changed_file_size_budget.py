@@ -9,7 +9,12 @@ import sys
 from pathlib import Path
 
 from scripts.check_module_size_budget import line_count
-from src.tools.utils.budget_check_utils import is_included, load_config, report_results
+from src.tools.utils.budget_check_utils import (
+    is_included,
+    load_config,
+    report_results,
+    resolve_line_limit,
+)
 
 
 def _merge_base(repo_root: Path) -> str:
@@ -100,12 +105,9 @@ def main() -> int:
         if not path.exists() or not path.is_file():
             continue
 
-        if rel in explicit_limits:
-            max_lines = explicit_limits[rel]
-        else:
-            max_lines = max_by_ext.get(path.suffix.lower())
-            if max_lines is None:
-                continue
+        max_lines = resolve_line_limit(rel, path.suffix, explicit_limits, max_by_ext)
+        if max_lines is None:
+            continue
 
         checked += 1
         lines = line_count(path)
