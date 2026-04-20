@@ -71,7 +71,7 @@ jobs:
       PYTHONPATH: .
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - uses: actions/setup-python@v6
         with:
@@ -222,7 +222,7 @@ jobs:
       matrix:
         python: ["3.12"]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python }}
@@ -265,7 +265,7 @@ jobs:
     needs: [pick-runner, quality-gate]
     runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v6
         with: { node-version: "22" }
       - name: Install Dependencies
@@ -285,7 +285,7 @@ jobs:
     runs-on: self-hosted
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Detect E2E-relevant changes
@@ -416,7 +416,7 @@ jobs:
     runs-on: self-hosted
     continue-on-error: true # Non-blocking: HTML validation errors need separate fix
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v6
         with: { node-version: "22" }
       - name: Install & Lint
@@ -437,7 +437,7 @@ jobs:
   #   needs: [pick-runner, quality-gate]
   #   runs-on: self-hosted
   #   steps:
-  #     - uses: actions/checkout@v6
+  #     - uses: actions/checkout@v4
   #     - uses: matlab-actions/setup-matlab@v2
   #     - uses: matlab-actions/run-command@v2
   #       with:
@@ -458,7 +458,7 @@ jobs:
     runs-on: self-hosted
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
