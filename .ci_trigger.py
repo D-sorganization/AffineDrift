@@ -1,2 +1,1 @@
-# trigger CI 3
-# ci trigger 1775823866
+CI_TRIGGER = "2026-04-20-affinedrift-required-checks-2635"
