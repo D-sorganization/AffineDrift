@@ -14,11 +14,15 @@ from src.tools.utils.budget_check_utils import (
     report_results,
 )
 
-MARKERS = ("TRACKED" + "_TASK", "TRACKED" + "_DEFECT", "HACK", "XXX")
-MARKER_RE = re.compile(
-    r"\b(TRACKED_TASK|TRACKED_DEFECT|HACK|XXX)\b".replace("TRACKED_", "TRACKED" + "_"),
-    re.IGNORECASE,
-)
+# Marker names are built with concatenation to prevent self-detection when this
+# file is scanned by the budget check itself.
+_T = "TRACKED" + "_TASK"
+_D = "TRACKED" + "_DEFECT"
+_TO = "TO" + "DO"
+_FI = "FIX" + "ME"
+MARKERS = (_T, _D, "HACK", "XXX", _TO, _FI)
+_alt = "|".join(MARKERS)
+MARKER_RE = re.compile(r"\b(" + _alt + r")\b", re.IGNORECASE)
 
 
 def main() -> int:

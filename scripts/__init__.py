@@ -1,4 +1,4 @@
-# AffineDrift scripts package - enables `from scripts.xxx import ...` in tests.
+# AffineDrift scripts package - enables `from scripts.<name> import ...` in tests.
 #
 # DRY NOTE (#1614): ~14 check_*.py scripts each contain the identical one-liner:
 #   repo_root = Path(__file__).resolve().parent.parent
