@@ -10,6 +10,7 @@ from src.tools.utils.budget_check_utils import (
     collect_matching_files,
     load_config,
     report_results,
+    resolve_line_limit,
 )
 
 
@@ -39,12 +40,9 @@ def main() -> int:
     for path in files:
         rel = path.relative_to(repo_root).as_posix()
 
-        if rel in explicit_limits:
-            max_lines = explicit_limits[rel]
-        else:
-            max_lines = max_by_ext.get(path.suffix.lower())
-            if max_lines is None:
-                continue
+        max_lines = resolve_line_limit(rel, path.suffix, explicit_limits, max_by_ext)
+        if max_lines is None:
+            continue
 
         checked += 1
         lines = line_count(path)

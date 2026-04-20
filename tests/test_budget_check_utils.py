@@ -15,6 +15,7 @@ from src.tools.utils.budget_check_utils import (
     load_config,
     read_text_safe,
     report_results,
+    resolve_line_limit,
 )
 
 # ─── is_included ─────────────────────────────────────────────────
@@ -112,6 +113,37 @@ class TestReadTextSafe:
         f = tmp_path / "test.bin"
         f.write_bytes(b"\x00\x01\x02\xff")
         assert read_text_safe(f) is None
+
+
+# ─── resolve_line_limit ──────────────────────────────────────────
+
+
+class TestResolveLineLimit:
+    """Tests for resolve_line_limit."""
+
+    def test_explicit_limit_takes_precedence(self) -> None:
+        explicit = {"src/tools/big.py": 300}
+        by_ext = {".py": 200}
+        assert resolve_line_limit("src/tools/big.py", ".py", explicit, by_ext) == 300
+
+    def test_falls_back_to_extension_limit(self) -> None:
+        explicit: dict[str, int] = {}
+        by_ext = {".py": 200}
+        assert resolve_line_limit("src/tools/foo.py", ".py", explicit, by_ext) == 200
+
+    def test_returns_none_when_no_limit_applies(self) -> None:
+        explicit: dict[str, int] = {}
+        by_ext = {".py": 200}
+        assert resolve_line_limit("src/tools/foo.txt", ".txt", explicit, by_ext) is None
+
+    def test_extension_lookup_is_case_insensitive(self) -> None:
+        explicit: dict[str, int] = {}
+        by_ext = {".py": 150}
+        assert resolve_line_limit("src/tools/foo.PY", ".PY", explicit, by_ext) == 150
+
+    def test_empty_explicit_limits_uses_extension(self) -> None:
+        by_ext = {".js": 400}
+        assert resolve_line_limit("src/app.js", ".js", {}, by_ext) == 400
 
 
 # ─── report_results ──────────────────────────────────────────────
