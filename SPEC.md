@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-04-16T18:00:00Z
+Last-Updated: 2026-04-20T00:00:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,8 +29,8 @@ Last-Updated: 2026-04-16T18:00:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.72                                           |
-| **Last Spec Update**    | 2026-04-18                                       |
+| **Spec Version**        | 1.0.73                                           |
+| **Last Spec Update**    | 2026-04-20                                       |
 
 ## 2. Purpose & Mission
 
@@ -183,7 +183,7 @@ AffineDrift/
 | F28 | Physics of Golf numeric consistency     | ✅     | Critical textbook checks pin the chapter 3 double-pendulum numerical example to the documented `M2 = 1.5 kg` parameter set so rendered values do not drift from the stated model                                                                                                                                                                                                                 |
 | F29 | Wrist-model figure lifecycle            | ✅     | Wrist-model Streamlit visualizations create Matplotlib figures through the object-oriented `Figure` API and avoid resource-caching array-backed plot functions                                                                                                                                                                                                                                   |
 | F30 | Assessment category mappings            | ✅     | Repository assessment helpers keep `ASSESSMENT_DEFINITIONS` names synchronized with canonical A-N category labels so generated reports and category lookups use consistent terminology.                                                                                                                                                                                                          |
-| F31 | Dependency pinning and tool isolation   | ✅     | Root Python requirements use exact pins for reproducible CI installs while the Streamlit wrist tool keeps its optional UI-specific requirements in its local requirements file.                                                                                                                                                                                                                  |
+| F31 | Dependency pinning and tool isolation   | ✅     | Root Python requirements use exact pins for reproducible CI installs, including the April 2026 refresh to `hypothesis==6.152.1`, `ruff==0.15.11`, and `pydantic==2.13.2`, while the Streamlit wrist tool keeps its optional UI-specific requirements in its local requirements file.                                                                                                                                                                                                                  |
 | F32 | Stimpmeter-calibrated putting physics   | ✅     | Putting roll simulation and round-level putt speed estimation share the USGA Stimpmeter launch-speed deceleration formula, with regression coverage for Stimp 10 stopping distance.                                                                                                                                                                                                              |
 | F33 | Round putting simulator injection       | ✅     | `RoundSimulator` accepts an optional prebuilt `PuttingSimulator` so tests and callers can provide calibrated green physics without relying on inline flat-green construction.                                                                                                                                                                                                                    |
 | F34 | Mypy autofix package entrypoints        | ✅     | The mypy autofix agent is split into focused modules under `scripts/mypy_autofix` while preserving the legacy `scripts/mypy_autofix_agent.py` workflow entrypoint as a compatibility wrapper.                                                                                                                                                                                                    |
@@ -564,3 +564,4 @@ python src/tools/code_quality_ast.py
 
 | 2026-04-17 | 1.0.67 | ui(accessibility): Added rotation transform `aria-expanded="true"` for `.toggle-icon` inside `.sidebar-section-toggle` in `styles.css` to properly sync the visual state with the semantic state of collapsible sidebars. |
 | 2026-04-18 | 1.0.68 | fix(security): Prevent DOM-based XSS in PDF export by escaping pageTitle before injecting via innerHTML. |
+
