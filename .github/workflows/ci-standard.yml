@@ -208,7 +208,7 @@ jobs:
           fi
 
       - name: Upload MATLAB Report
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: matlab-quality-report
@@ -404,7 +404,7 @@ jobs:
             --project=chromium \
             --retries=0 \
             tests/e2e/smoke.spec.js
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@v4
         if: failure() && steps.e2e_changes.outputs.run == 'true'
         with:
           name: playwright-report

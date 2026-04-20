@@ -75,7 +75,7 @@ jobs:
           fi
 
       - name: Upload ${{ matrix.volume }} PDF
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: volume-${{ matrix.volume }}
           path: articles/The_Geometry_of_Motion/${{ matrix.volume }}/main.pdf
@@ -95,7 +95,7 @@ jobs:
           ls -lh geometry-of-motion-latex-sources.tar.gz
 
       - name: Upload LaTeX sources archive
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: latex-sources
           path: articles/The_Geometry_of_Motion/geometry-of-motion-latex-sources.tar.gz
@@ -124,7 +124,7 @@ jobs:
           quarto render . --to pdf || echo "PDF rendering optional, continuing with HTML"
 
       - name: Upload Quarto HTML book
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: quarto-html-book
           path: articles/The_Geometry_of_Motion/quarto/_book/
@@ -132,7 +132,7 @@ jobs:
 
       - name: Upload Quarto PDF book (if exists)
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: quarto-pdf-book
           path: articles/The_Geometry_of_Motion/quarto/_book/*.pdf
