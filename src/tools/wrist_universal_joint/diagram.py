@@ -25,8 +25,6 @@ logger = logging.getLogger(__name__)
 if TYPE_CHECKING:
     from matplotlib.figure import Figure
 
-logger = logging.getLogger(__name__)
-
 
 def _draw_club_shaft(ax: Any, wrist_x: float, wrist_y: float, shaft_length: float) -> float:
     """Draw the horizontal club shaft and return the shaft end X-coordinate."""
