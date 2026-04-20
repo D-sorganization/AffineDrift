@@ -283,8 +283,8 @@ The controller has two separate tasks:
 2. **Timing control**: regulate $\dot{s}$ to achieve the desired
         speed profile along the path.
 
-This decomposition is impossible in the setpoint framework, where time and space
-are fused together.
+This decomposition is not naturally represented by a simple setpoint framework,
+where time and space are usually fused together.
 
 
 ### Transverse Dynamics and Orbital Stability
@@ -3460,7 +3460,7 @@ Instead of using a numerical integrator, we enforce the differential equation al
 where $\tilde{\state}$ and $\tilde{\control}$ are the polynomial approximations. 
 
 
-  Direct collocation results in a massive, highly sparse NLP. Because the solver has access to the state at every grid point simultaneously, it can easily manipulate the physical trajectory to satisfy difficult path constraints without waiting to "simulate" the result. Collocation is widely considered the state-of-the-art for generating complex dynamic motions like walking, jumping, and swinging.
+  Direct collocation results in a large, sparse NLP. Because the solver has access to the state at every grid point simultaneously, it can impose dynamics and path constraints across the whole trajectory rather than advancing one simulated step at a time. Collocation is a standard method for generating complex dynamic motions such as walking, jumping, and swinging, subject to model fidelity and solver convergence.
 
 
 ## Optimizing Underactuated Geometries
@@ -3478,7 +3478,7 @@ When optimizing for a golf swing, direct collocation handles this underactuation
   
   **Initial Guess:** If we seed the NLP solver with a naive guess (e.g., constant shoulder torque), the club speed will be pitifully low.
   
-  **The Optimized Result:** The solver discovers the optimal physical orchestration entirely on its own. It will apply a massive positive $u_1$ to accelerate the arms, and then immediately reverse $u_1$ to negative maximum just prior to $t_f$. The optimizer mathematicaly "discovers" the necessary inertial coupling (the parametric excitation of $M_{21}\ddot{\theta}_1$) to whip the unactuated club link through the terminal manifold constraint! The passive dynamics are beautifully exploited to satisfy the objective.
+  **The optimized result in this model:** The solver may select a positive $u_1$ phase to accelerate the arms and then reverse $u_1$ before $t_f$ if that sequence improves the terminal objective under the imposed constraints. In that case, the solution is exploiting inertial coupling through terms such as $M_{21}\ddot{\theta}_1$. This is a model result, not evidence that every human swing uses the same torque pattern.
 \end{example}
 
 
@@ -3487,10 +3487,10 @@ When optimizing for a golf swing, direct collocation handles this underactuation
 
 The previous sections frame a deterministic problem: "Find the swing that maximizes terminal speed."
 
-But as we argued in Chapter 1, biological systems and athletes do not optimize for peak deterministic performance. If you instruct an NLP solver to maximize golf club speed without regard for motor noise, the solver will ride the very edge of the constraint boundaries. It will produce a swing so delicately timed that a 5-millisecond execution error would result in a complete whiff.
+Biological systems and athletes are not well described by peak deterministic performance alone. If an NLP solver maximizes golf club speed without a noise or robustness term, it can select trajectories near constraint boundaries. The resulting motion may be highly sensitive to timing or state errors; the size of that sensitivity must be computed for the chosen model rather than asserted generically.
 
 
-  The theoretically optimal trajectory is useless if its local topology amplifies small execution errors into catastrophic terminal misses. The true objective must account for *variance*.
+  A deterministic optimum can be poor if its local geometry amplifies small execution errors into large terminal errors. A movement objective intended to describe repeatable biological performance should include some treatment of variance, uncertainty, or robustness.
 
 
 We modify our deterministic cost $J = \phi(\state(t_f)) + \int L$ into a stochastic expectation:
@@ -3501,7 +3501,7 @@ where $\bm{w} \sim \mathcal{N}(0, \Sigma_w)$ represents signal-dependent motor n
 
 To solve this in a collocation framework without massive Monte Carlo simulations, we use **Covariance Steering** or **Linear Covariance Analysis**. We augment the state vector $\state(t)$ with its local covariance matrix $\bm{\Sigma}(t)$. The dynamics of $\bm{\Sigma}(t)$ are propagated alongside the nominal trajectory using the linearized Jacobian matrices along the path. 
 
-The optimizer is now forced to "widen the funnel" as it approaches the moving goal. It sacrifices a small amount of peak clubhead speed to select a trajectory geometry where the passive dynamics are heavily stabilizing in the transverse direction. The result is a trajectory that a human can actually *repeat*.
+The optimizer can then trade peak performance against sensitivity to noise. In a favorable model, this may select a trajectory with better transverse robustness near the moving goal. Whether the resulting trajectory is repeatable for a human depends on the accuracy of the noise model, actuator limits, and validation data.
 
 
 ## Summary
@@ -3516,7 +3516,7 @@ The optimizer is now forced to "widen the funnel" as it approaches the moving go
 | Stochastic Robustness | Augmenting the OCP with expected variance to ensure the resulting trajectory can be consistently executed by noisy nonlinear plants. |
 
 
-Determining the shape of the reference trajectory is the cornerstone of Control Is Motion. With our passive geometry understood (Chap 5) and our optimal reference trajectory computed (Chap 6), we must now surround that reference trajectory with a guaranteed, robust control tube to reject disturbances online. We turn to Funnel Synthesis in Chapter 7.
+Determining the shape of the reference trajectory is central to Control Is Motion. With a passive geometry model and a candidate reference trajectory in hand, the next step is to estimate a control tube around that trajectory and state the assumptions under which disturbances remain inside it. We turn to funnel synthesis in Chapter 7.
 
 
 ## Exercises
@@ -3544,9 +3544,9 @@ Determining the shape of the reference trajectory is the cornerstone of Control 
 
 In Chapter 4, we showed that applying time-varying Linear Quadratic Regulation (LQR) to the transverse dynamics creates a contracting envelope of stability. The Riccati equation naturally shapes this envelope into a "funnel" that narrows as the terminal constraint approaches. 
 
-However, LQR guarantees are inherently *local*. They rely on the linear approximation of the transverse dynamics $\dot{\bm{\xi}} = \bm{A}_\perp(t)\bm{\xi} + \bm{B}_\perp(t)\delta\control$. For actual physical systems traversing highly nonlinear state spaces—like a golf club accelerating to $50$ m/s while subject to massive centrifugal and Coriolis forces—this linearization quickly breaks down. If a disturbance pushes the state too far from the reference trajectory $\traj^*(t)$, the nonlinearities will dominate, the LQR restoring forces will compute the wrong corrective action, and the clubhead will completely miss the ball.
+However, LQR guarantees are inherently *local*. They rely on the linear approximation of the transverse dynamics $\dot{\bm{\xi}} = \bm{A}_\perp(t)\bm{\xi} + \bm{B}_\perp(t)\delta\control$. For highly nonlinear physical systems, a disturbance large enough to leave the local neighborhood can invalidate the linear approximation. The consequence may be large terminal error, but the threshold depends on the reference trajectory, controller, and nonlinear model.
 
-We need a mathematically rigorous way to define the *exact boundary* of our funnel. We must prove that for the fully nonlinear equations of motion, any state starting within the mouth of the funnel at time $t=0$ will remain inside the funnel for all $t \in [0, t_f]$.
+We need a mathematically explicit way to define the boundary of a funnel. For a stated nonlinear model and controller, the goal is to certify that states starting inside the candidate set remain inside it for the modeled time interval.
 
 
   Given a reference trajectory $\traj^*(t)$, a feedback controller $\control = \bm{k}(\state, t)$, and a scalar boundary function $V(\state, t)$, the set:
@@ -3571,7 +3571,7 @@ To verify invariance, we use the machinery of Lyapunov theory, adapted for traje
 If the derivative of the boundary function points inward everywhere on the boundary, trajectories may circulate inside the funnel, but they can never escape it. For a moving target problem, we want the spatial volume of $\mathcal{F}(t)$ to shrink as $t \to t_f$, terminating in a tight bounded region at impact.
 
 
-  A computed funnel is not just an analysis tool; it is the ultimate judge of repeatability. It explicitly defines the exact set of initial conditions (e.g., the kinematic state at the top of the backswing) that are mathematically guaranteed to successfully strike the ball despite the presence of extreme nonlinearities.
+  A computed funnel is an analysis tool for repeatability. Under the stated model, controller, and disturbance assumptions, it defines a certified set of initial conditions. It does not by itself prove successful ball striking in an unmodeled human swing.
 
 
 ## Sums-of-Squares (SOS) Programming
@@ -3591,7 +3591,7 @@ where $L(\state, t)$ is a strictly positive polynomial multiplier. If $V(\state,
 ## Computing the Funnel for the Golf Swing
 
 
-Let us return to the double pendulum of the golf swing. Our reference trajectory $\traj^*(t)$ from Chapter 6 gives us the nominal kinematics. Our transverse LQR from Chapter 4 gives us a feedback matrix $\bm{K}(t)$ designed to stabilize deviations. We wish to compute the largest possible funnel around this sequence that the closed-loop system is mathematically guaranteed to stay inside.
+Let us return to the double pendulum of the golf swing. Our reference trajectory $\traj^*(t)$ from Chapter 6 gives us the nominal kinematics. Our transverse LQR from Chapter 4 gives us a feedback matrix $\bm{K}(t)$ designed to stabilize deviations. We wish to compute the largest possible funnel around this sequence for which the closed-loop system satisfies the stated invariance certificate.
 
 We define our candidate Lyapunov function as a time-varying quadratic form:
 \begin{equation}
@@ -3602,7 +3602,7 @@ where $\bm{P}(t)$ is a positive definite matrix that changes continuously along 
 \begin{example}[Volume Maximization via SDP]\label{example:vol_max}
   We transcribe the continuous time $t$ into discrete nodes $t_k$, just as we did in direct collocation. At each node, we set up an SDP that seeks to *maximize* the volume of the ellipsoid defined by $\bm{P}(t_k)$, subject to the SOS invariance constraints connecting it to adjacent nodes.
 
-  The optimizer actively computes the exact structural limits of the golf swing's passive dynamics. It discovers that early in the downswing, the funnel can be incredibly "wide" (forgiving), but as centrifugal forces build, the SOS constraints force $\bm{P}(t_k)$ to become highly elongated along the unactuated dimensions in order to maintain the invariance guarantee. The resulting geometry is a true numerical portrait of athletic consistency.
+  The optimizer estimates structural limits for the modeled passive dynamics. In one model, early-downswing funnels may be wider than late-downswing funnels, and SOS constraints may elongate $\bm{P}(t_k)$ along selected unactuated directions to maintain the invariance certificate. The result is a numerical certificate for that model, not a direct measurement of athletic consistency.
 \end{example}
 
 In Chapter 8, we will explore how to make these funnels robust to temporal variation by migrating out of the time domain entirely and into the phase domain.
@@ -3694,7 +3694,7 @@ When a roboticist specifies a torque of $50\text{ Nm}$, the motor delivers $50\t
   where $\bm{W}$ is a scaling matrix representing the coefficient of variation, and $\bm{\epsilon}(t) \sim \mathcal{N}(0, I)$ is white noise. That is, the variance of the applied force grows squarely with the magnitude of the ordered force: $\text{Var}(\tilde{u}) = c u^2$.
 
 
-This simple reality crumbles deterministic optimal control. If you compute an optimal trajectory that requires maximum muscular exertion, the trajectory will mathematically possess minimum variance only if noise is constant. Under SDN, maximum exertion guarantees maximum chaotic noise.
+This complicates deterministic optimal control. If a computed trajectory requires very large muscle commands, signal-dependent noise can increase endpoint variance. The magnitude of that effect depends on the noise coefficient, the controller, and the sensitivity of the trajectory.
 
 
 ## Minimum Variance Theory of Human Movement
@@ -3702,25 +3702,25 @@ This simple reality crumbles deterministic optimal control. If you compute an op
 
 Why do humans move in smooth, bell-shaped velocity profiles rather than jerky "bang-bang" optimal control solutions when reaching for coffee?
 
-Classical control attempts to explain this via "minimum jerk" theories, positing that the nervous system explicitly encodes an optimization functional to minimize $\int \dddot{x}^2 \dt$. The trajectory-first perspective offers a much deeper, physically grounded explanation championed by Harris and Wolpert: the **Minimum Variance Theory**.
+One family of models explains smooth reaching with "minimum jerk" objectives, while another uses signal-dependent noise and endpoint variance. The trajectory-first perspective used here is closest to the **minimum variance theory** of Harris and Wolpert, but it should be read as one modeling account among several.
 
 
-  The human nervous system seeks to move in a way that minimizes the final endpoint variance evaluated across multiple trials.
+  In minimum-variance models, the nervous system is represented as selecting movements that reduce expected endpoint variance across repeated trials.
 
 
-Under SDN, the only way to minimize endpoint variance (ensure you actually grasp the coffee cup smoothly) is to minimize sudden spikes in required actuator forces, because large forces inject huge amounts of uncertainty into the dynamics. Smooth trajectories inherently possess lower peak torque commands than rapid accelerations and decelerations. Smoothness is not the explicitly programmed objective; it is an emergent property of attempting to be consistently accurate under the unavoidable reality of signal-dependent noise.
+Under signal-dependent noise, reducing sudden spikes in actuator force can reduce endpoint variance because larger commands inject more variability into the dynamics. Smooth trajectories often have lower peak torque demands than abrupt acceleration profiles, although the result depends on task constraints and the model being optimized. In this view, smoothness can emerge from accuracy under noisy actuation rather than from an explicitly imposed smoothness objective.
 
 
 ## The Speed-Accuracy Tradeoff in the Golf Swing
 
 
-Fitts's Law states that the faster you try to move to a target, the less accurate you become. In golf, we see the supreme manifestation of this. The deterministic optimal control solution (Chapter 6) tells the solver to maximize input torque to achieve theoretically maximal clubhead speed. 
+Fitts's Law captures a speed-accuracy tradeoff in targeted movement. In a golf model, a deterministic optimal-control solution may maximize clubhead speed by requesting large input torques.
 
 However, if we introduce the Stochastic OCP (via Covariance Steering) from Chapter 6 and apply the realistic premise of SDN, the optimizer faces a profound tradeoff.
 
-Applying maximum $u_1$ torque during the downswing injects enormous variance into the kinematic state. The unactuated club ($\theta_2$) begins whipping through its zero dynamics, but its exact phase progression is now highly uncertain due to the noise flooding the arms. 
+Applying maximum $u_1$ torque during the downswing can inject substantial variance into the kinematic state if the noise model scales with command magnitude. The unactuated club ($\theta_2$) may still gain speed through zero dynamics, but its phase progression can become more uncertain.
 
-To ensure the clubface squares up at the moving goal, the stochastic optimizer will *deliberately back off* the peak requested torque. It trades a deterministic $5$ mph gain in clubhead speed for a massive reduction in angular variance at the target manifold. The optimal biological swing is mathematically proven to be a sub-maximal physical exertion.
+In such a model, a stochastic optimizer may reduce peak requested torque if the variance penalty outweighs the speed benefit. The exact tradeoff, including any clubhead-speed loss, must be computed from the model; it does not prove that a biological swing is universally sub-maximal.
 
 
 # Learning to Move
@@ -3756,7 +3756,7 @@ While ILC updates the feedforward commands to zero-out deterministic tracking er
 
 Instead of computing the transverse LQR gains $\bm{K}_\perp(t)$ from an analytical Riccati equation (Chapter 4), we parameterize the controller as a policy $\pi_{\bm{\theta}}(\state)$ and search the parameter space $\bm{\theta}$ to minimize the variance at the moving goal under realistic noise.
 
-Reinforcement Learning (RL), specifically policy gradient methods, allows the agent to sample thousands of golf swings in simulation, continuously updating its policy parameters to maximize the expected reward (clubhead speed and squareness at impact). A heavily trained RL agent organically converges on the very principles we mathematically derived in earlier chapters:
+Reinforcement learning (RL), including policy-gradient methods, can sample many simulated swings and update policy parameters to maximize expected reward terms such as clubhead speed and face orientation at impact. If the simulator, reward, and constraints match the chapter assumptions, a trained policy may recover behaviors similar to the earlier control arguments:
 1. It abandons rigid time-tracking and autonomously discovers phase-variable mapping.
 2. It exploits the underactuated double-pendulum whipping motion to gain speed.
 3. It artificially widens its "funnel" during the transition phase, realizing that overly tight feedback control here merely amplifies motor noise and spoils the impact constraints.
@@ -3767,7 +3767,7 @@ Reinforcement Learning (RL), specifically policy gradient methods, allows the ag
 
 A singular optimal trajectory $\traj^*$ and its corresponding funnel $\mathcal{F}$ are highly specific to a single objective. What if the golfer wishes to fade the ball, hit a draw, or execute a punch shot out of the rough?
 
-Instead of re-running a massive NLP optimization for every scenario, biological systems and advanced controllers maintain **Trajectory Libraries**. A library consists of several distinct, pre-computed optimal trajectories and their corresponding local funnels.
+Instead of re-running a large NLP optimization for every scenario, engineered controllers can maintain **Trajectory Libraries**. A library consists of several distinct, pre-computed trajectories and their corresponding local funnels. The analogy to biological movement planning is suggestive rather than established by this chapter.
 
 When faced with a new task (e.g., striking the ball on an uneven lie), the system searches its library for the closest matching funnel. By interpolating between established funnels using techniques like LQR-Trees~\cite{Tedrake2009} or simple spatial blending, the system can instantly generate a stable, feasible motion without any online optimization.
 
@@ -3781,19 +3781,19 @@ When faced with a new task (e.g., striking the ball on an uneven lie), the syste
 ## Unifying the "Control is Motion" Framework
 
 
-Throughout this text, we have systematically deconstructed the classical control paradigm and rebuilt it to handle tasks defined uniquely by motion. We conclude by applying our holistic framework to a 15-DOF musculoskeletal model of the human golf swing in order to formally synthesize the mathematical structure of athletic perfection.
+Throughout this text, we have reframed control around trajectory geometry and local transverse correction. We conclude with a hypothetical 15-DOF musculoskeletal golf-swing model that illustrates how the framework could be assembled into a reproducible analysis.
 
-The objective is clear: maximize negative clubhead velocity at the precise spatial intersection with the golf ball, while maintaining face angle orthogonality. The exact time interval $t_f$ in which this occurs is irrelevant; only the geometric state at impact matters. Furthermore, the commanded motion must not exceed the structural limits of biological torque, and the trajectory must be highly robust to physiological signal-dependent noise (SDN).
+The objective is to maximize clubhead speed at the spatial intersection with the golf ball while controlling face orientation and respecting biological torque limits. The terminal time may be treated as a decision variable, but the formulation must still state admissible timing, contact, and phase-coordinate assumptions. Robustness is included through an explicit signal-dependent-noise model.
 
 
 ### Phase 1: Defining the Geometry and Optimization
 
 
-The system is heavily underactuated. The wrists are treated as passive pin joints, delegating the final propulsive phase entirely to inertial coupling. 
+The system is heavily underactuated in this example. The wrists are treated as passive pin joints, which is a simplifying assumption used to expose inertial coupling rather than a complete anatomical model.
 
-We formulate a **Stochastic Moving Target Optimal Control Problem** (Chapter 6). We deploy Direct Collocation to optimize the trajectory $\traj^*(s)$ parameterized over a spatial phase variable $s$ representing the shoulder angle (Chapter 8). The integral cost function strictly penalizes signal variance (Chapter 9) by incorporating local covariance propagation. 
+We formulate a **Stochastic Moving Target Optimal Control Problem** (Chapter 6). Direct collocation optimizes the trajectory $\traj^*(s)$ over a spatial phase variable $s$ representing shoulder angle, provided that this phase coordinate remains monotone over the modeled interval (Chapter 8). The integral cost penalizes signal variance through local covariance propagation (Chapter 9).
 
-The collocation solver successfully navigates the $\Bmat^\perp$ annihilator constraint (Chapter 5) and produces an optimal, smooth backswing. It discovers that a massive torque inversion (braking the torso) right before impact causes the zero dynamics of the passive wrist to wildly accelerate, perfectly squaring the face precisely as the clubhead spatial coordinate intersects the ball's location.
+In the illustrative model, the collocation solver satisfies the $\Bmat^\perp$ annihilator constraint (Chapter 5) and may produce a smooth reference motion. A torque reversal before impact can exploit passive wrist dynamics, but claims about face squaring require explicit contact geometry, grip modeling, and validation against measured swings.
 
 
 ### Phase 2: Funnel Synthesis and Robustness
@@ -3801,12 +3801,12 @@ The collocation solver successfully navigates the $\Bmat^\perp$ annihilator cons
 
 With $\traj^*(s)$ computed, we lock down the trajectory using **Transverse Linearization** (Chapter 4). We ignore errors along the tangent of the path (since chronological timing is irrelevant) and construct a time-varying LQR feedback matrix to regulate only the transverse deviations. 
 
-Finally, we compute the verified bounds of this stability region using **Sums-of-Squares Programming** (Chapter 7). The SDP calculates a rigorous boundary function $V(\state, t) = 1$ that proves the system is confined to an invariant funnel. 
+Finally, we compute candidate bounds for this stability region using **Sums-of-Squares Programming** (Chapter 7). The SDP supplies a boundary function $V(\state, t) = 1$ that certifies invariance under the polynomial model, controller, and disturbance assumptions used in the computation.
 
 
-  The final computed funnel reveals the mathematical secret of the professional golfer. During the backswing, the funnel is immensely wide; the motion is forgiving, and vast transverse deviations are easily tolerated without violating the invariant boundary.
+  The final computed funnel describes the model's certified region of attraction. During the backswing, the funnel may be wider if the modeled dynamics tolerate larger transverse deviations without violating the invariant boundary.
   
-  As the swing approaches the transition and the explosive downswing, the funnel aggressively tightens. The stochastic optimization has selected a trajectory whose passive unactuated dynamics are so profoundly stable in the final $0.15$ seconds that the funnel diameter at impact shrinks to virtually zero. Any small deviation injected by muscular noise is passively swallowed by the immense centrifugal geometry of the zero dynamics. The golfer does not aggressively steer the club to the ball; they simply set the initial conditions, and the physics irresistibly pull the clubface through the target manifold.
+  As the swing approaches the transition and downswing, the funnel may tighten because the model becomes more sensitive to timing, phase, and actuation errors. Any claim about a final $0.15$ seconds, near-zero funnel diameter, or passive absorption of muscular noise must be supported by the actual SDP solution and sensitivity analysis.
 
 
-Through this book, we hope we have proven that the thermostat has its place, but when the objective is a sweeping, dynamic motion cutting through the physical world, "Control is Motion" provides the only mathematically truthful language.
+The case study illustrates the intended use of the framework: define a motion objective, state the model assumptions, compute a trajectory, and certify the local control region. It does not replace empirical validation, and it should be read as a reproducible modeling program rather than a proof of a universal control language.
