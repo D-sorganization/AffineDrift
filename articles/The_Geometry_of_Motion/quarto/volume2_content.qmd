@@ -3775,10 +3775,10 @@ When faced with a new task (e.g., striking the ball on an uneven lie), the syste
 # Case Study: The Complete Golf Swing
 
 
-> The physics are invariant. What separates the professional is their mastery over the geometry of the resultant funnel.
+> A useful model makes its assumptions visible before it asks for trust.
 
 
-## Unifying the "Control is Motion" Framework
+## Unifying the "Control Is Motion" Framework
 
 
 Throughout this text, we have reframed control around trajectory geometry and local transverse correction. We conclude with a hypothetical 15-DOF musculoskeletal golf-swing model that illustrates how the framework could be assembled into a reproducible analysis.
@@ -3799,9 +3799,9 @@ In the illustrative model, the collocation solver satisfies the $\Bmat^\perp$ an
 ### Phase 2: Funnel Synthesis and Robustness
 
 
-With $\traj^*(s)$ computed, we lock down the trajectory using **Transverse Linearization** (Chapter 4). We ignore errors along the tangent of the path (since chronological timing is irrelevant) and construct a time-varying LQR feedback matrix to regulate only the transverse deviations. 
+With $\traj^*(s)$ computed, we analyze the trajectory using **Transverse Linearization** (Chapter 4) [@HauserHindman1995; @Shiriaev2010]. We ignore errors along the tangent of the path only within the chosen phase model and construct a time-varying LQR feedback matrix to regulate selected transverse deviations.
 
-Finally, we compute candidate bounds for this stability region using **Sums-of-Squares Programming** (Chapter 7). The SDP supplies a boundary function $V(\state, t) = 1$ that certifies invariance under the polynomial model, controller, and disturbance assumptions used in the computation.
+Finally, we compute candidate bounds for this stability region using **Sums-of-Squares Programming** (Chapter 7) [@MajumdarTedrake2017]. The SDP supplies a boundary function $V(\state, t) = 1$ that certifies invariance under the polynomial model, controller, and disturbance assumptions used in the computation.
 
 
   The final computed funnel describes the model's certified region of attraction. During the backswing, the funnel may be wider if the modeled dynamics tolerate larger transverse deviations without violating the invariant boundary.
