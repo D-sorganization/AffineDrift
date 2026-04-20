@@ -711,6 +711,7 @@ runOnDomReady(function () {
 
   // Back to Top Button
   const backToTopBtn = document.createElement("button");
+  backToTopBtn.type = "button";
   backToTopBtn.className = "back-to-top";
   backToTopBtn.setAttribute("aria-label", "Scroll to top");
 
@@ -823,6 +824,7 @@ runOnDomReady(function () {
 
   // Export to PDF Button
   const exportToPdfBtn = document.createElement("button");
+  exportToPdfBtn.type = "button";
   exportToPdfBtn.className = "export-to-pdf";
   exportToPdfBtn.setAttribute("aria-label", "Export page to PDF");
   exportToPdfBtn.innerHTML = `
@@ -1084,6 +1086,7 @@ runOnDomReady(function () {
       wrapper.appendChild(pre);
 
       const button = document.createElement("button");
+      button.type = "button";
       button.className = "copy-btn";
       button.textContent = "Copy";
       button.setAttribute("aria-label", "Copy code to clipboard");
@@ -1293,6 +1296,7 @@ runOnDomReady(function () {
 
     // 🎨 Palette UX: Create Close Button
     const closeBtn = document.createElement("button");
+    closeBtn.type = "button";
     closeBtn.className = "lightbox-close";
     closeBtn.setAttribute("aria-label", "Close zoom");
     closeBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
@@ -1537,6 +1541,7 @@ function initPDFDownload() {
 
   // Create the PDF download button
   const pdfBtn = document.createElement('button');
+  pdfBtn.type = 'button';
   pdfBtn.className = 'pdf-download-btn';
   pdfBtn.setAttribute('aria-label', 'Download page as PDF');
   pdfBtn.setAttribute('title', 'Download as PDF');
