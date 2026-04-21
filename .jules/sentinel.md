@@ -31,3 +31,7 @@
 **Vulnerability:** DOM-based XSS via unescaped document.title used in PDF export functionality.
 **Learning:** Even internal properties like document.title can be manipulated. If an attacker can control the title (e.g., via a URL parameter in some frameworks), injecting it directly into `.innerHTML` creates an XSS vulnerability.
 **Prevention:** Always escape data from properties like document.title before injecting it into the DOM via `.innerHTML`.
+## 2026-04-21 - Prevent DOM-based XSS in History URLs
+**Vulnerability:** DOM-based XSS vulnerability in history modules where URLs from localStorage were assigned to href properties using an incomplete blacklist.
+**Learning:** localStorage is an untrusted sink. Blacklisting specific protocols like javascript: is error-prone and misses data: or vbscript:.
+**Prevention:** Always validate and sanitize URLs using an allowlist approach (e.g., using the URL constructor to strictly permit http: and https: protocols) before assigning them to href attributes.
