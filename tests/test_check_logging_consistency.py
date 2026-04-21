@@ -69,6 +69,24 @@ class TestFindPrintCalls:
         result = find_print_calls(source)
         assert result == []
 
+    def test_detects_print_in_assignment(self) -> None:
+        """print() used as an r-value in assignment must be detected."""
+        source = 'x = print("msg")\n'
+        result = find_print_calls(source)
+        assert result == [1]
+
+    def test_detects_print_in_conditional(self) -> None:
+        """print() used as a condition must be detected."""
+        source = 'if print("msg"):\n    pass\n'
+        result = find_print_calls(source)
+        assert result == [1]
+
+    def test_detects_print_in_return(self) -> None:
+        """print() used in a return statement must be detected."""
+        source = 'def f():\n    return print("msg")\n'
+        result = find_print_calls(source)
+        assert result == [2]
+
 
 class TestCheckFile:
     """Integration tests for check_file()."""

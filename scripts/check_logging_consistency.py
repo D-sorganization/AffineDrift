@@ -86,7 +86,7 @@ def find_print_calls(source: str) -> list[int]:
 
     hits: list[int] = []
     for node in ast.walk(tree):
-        if isinstance(node, ast.Expr) and _has_print_call(node.value):
+        if isinstance(node, ast.Call) and _has_print_call(node):
             hits.append(node.lineno)
     return sorted(hits)
 
