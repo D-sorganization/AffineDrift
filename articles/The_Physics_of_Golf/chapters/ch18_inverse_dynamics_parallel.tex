@@ -409,7 +409,7 @@ Internal forces (those in the null space of $\mathbf{J}_c^T$) are mechanically "
 
 For example, a golfer might grip the club very tightly (large internal grip force) while maintaining identical club trajectory compared to a golfer with light grip. The kinematics are the same, but the internal stresses are very different. The tight-grip golfer may fatigue forearm muscles and risk injury from the excess internal force.
 
-This is why understanding the dual null space is crucial for predicting injury risk and coaching swing efficiency.
+This is why the dual null space matters for injury-risk and coaching discussions: it identifies quantities that require force measurements, tissue models, or explicit load-sharing assumptions before the text can make applied claims.
 \end{laymansbox}
 
 %============================================================================
@@ -662,7 +662,7 @@ This is a better-conditioned inverse-dynamics problem because the force plate pr
 
 \index{ground reaction torque}\index{free moment}\index{yaw moment}
 
-The ground reaction torque (free moment) $M_z$ is the torque applied by the ground about the vertical axis. This is a fundamental driver of pelvis rotation in the golf swing.
+The ground reaction torque (free moment) $M_z$ is the torque applied by the ground about the vertical axis. It can be an important contributor to pelvis rotation in models that include force-plate boundary conditions, but its interpretation depends on stance, foot contact, segment inertias, and the chosen pelvis coordinate convention.
 
 \subsection{Computation of Ground Reaction Torque}
 \label{subsec:ground_torque_computation}
@@ -889,6 +889,22 @@ The multipliers $\boldsymbol{\lambda}$ then require the dynamic model plus the a
 \end{equation}
 
 \end{enumerate}
+
+The following table summarizes the evidentiary status of common quantities before stronger biomechanical language is used:
+
+\begin{center}
+\begin{tabular}{p{0.25\linewidth}p{0.32\linewidth}p{0.32\linewidth}}
+\toprule
+\textbf{Quantity} & \textbf{Primary evidence needed} & \textbf{Editorial status} \\
+\midrule
+Segment kinematics & Motion capture with filtering and coordinate definitions & Measured or estimated from data \\
+Net joint loads & Kinematics, segment inertias, external loads, and contact model & Model-conditioned inverse-dynamics estimate \\
+Grip/ground boundary wrench & Instrumented grip, force plate, or declared contact model & Measured when instrumented; otherwise assumed \\
+Muscle forces and activation & EMG, musculoskeletal model, and recruitment criterion & Inferred, not identifiable from kinematics alone \\
+Tissue stress or injury risk & Tissue geometry, material model, loading history, and validation & Speculative unless separately modeled and validated \\
+\bottomrule
+\end{tabular}
+\end{center}
 
 The following quantities are \textbf{underdetermined}:
 
@@ -1155,9 +1171,9 @@ This $r = 100$ N·m is the sum of torques from the left hand and right hand: $\t
 In a parallel system with loop constraints:
 
 \begin{enumerate}
-\item Explain why constraint forces are usually \emph{uniquely} determined from kinematics, even though applied torques are not.
-\item What equation determines the constraint forces? (Hint: it comes from the constraint equations themselves.)
-\item Why are constraint forces independent of the null space ambiguity in applied torques?
+\item Explain why constraint compatibility can be checked from kinematics, while the corresponding constraint multipliers require a dynamic model plus applied-load assumptions or additional measurements.
+\item Which equations constrain the admissible accelerations, and which equations introduce the multipliers?
+\item Why can a change in applied torques be hidden in the null space without changing the observed kinematics?
 \end{enumerate}
 \end{exercise}
 
