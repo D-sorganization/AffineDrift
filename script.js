@@ -257,12 +257,13 @@ runOnDomReady(function () {
       }
     });
   } else {
-    const allSections = document.querySelectorAll("section");
-    allSections.forEach((section) => {
+    // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) live collection) instead of querySelectorAll (O(N))
+    const allSections = document.getElementsByTagName("section");
+    for (const section of allSections) {
       section.style.opacity = "1";
       section.style.transform = "translateY(0)";
       section.style.visibility = "visible";
-    });
+    }
   }
 
   // --- 1b. Lazy Loading Images ---
@@ -450,8 +451,10 @@ runOnDomReady(function () {
     });
 
     if (sections.length === 0) {
-      const h2s = document.querySelectorAll("h2");
-      h2s.forEach((h2, index) => {
+      // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) live collection) instead of querySelectorAll (O(N))
+      const h2s = document.getElementsByTagName("h2");
+      let index = 0;
+      for (const h2 of h2s) {
         let id = h2.id;
         if (!id || usedIds.has(id)) {
           id = generateUniqueId(
@@ -466,7 +469,8 @@ runOnDomReady(function () {
           text: h2.textContent.trim(),
           level: 2,
         });
-      });
+        index++;
+      }
     }
 
     // ⚡ Bolt Optimization: Use DocumentFragment for TOC generation
