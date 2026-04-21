@@ -15,11 +15,11 @@ will be added in future editions.
 \vspace{0.5cm}
 
 \begin{laymansbox}{Building a Mathematical Trough}{math_trough}
-Even if you know the mathematically perfect path for a golf swing, no human can execute it perfectly twice. Muscles twitch, timing fluctuates, and wind blows. If we want to guarantee success, we cannot just plan a single path; we need to build a "funnel" or a "tube" around that path. As long as the system stays anywhere inside this tube, it is mathematically guaranteed to reach the target. This chapter explains how to use powerful optimization algorithms to calculate the exact shape and size of this tube. We compute a boundary that the system is literally forbidden from crossing, ensuring that minor errors in the backswing are naturally corrected by the time the club hits the ball.
+Even if a model supplies a useful reference path for a golf swing, no human executes the same path exactly twice. Muscles twitch, timing fluctuates, and wind blows. A funnel or tube around the path is a way to state a local certificate: for the declared model, controller, disturbance set, and time interval, states inside the certified set remain admissible and move toward the terminal condition. The certificate is mathematical, but it is only as strong as the model and assumptions used to compute it.
 \end{laymansbox}
 
 % ══════════════════════════════════════════════
-\section{Beyond LQR: The Need for Guaranteed Invariance}
+\section{Beyond LQR: The Need for Certified Invariance}
 % ══════════════════════════════════════════════
 
 In Chapter 4, we showed that applying time-varying Linear Quadratic Regulation (LQR) to the transverse dynamics creates a contracting envelope of stability. The Riccati equation naturally shapes this envelope into a ``funnel'' that narrows as the terminal constraint approaches. The idea of composing such funnels into motion planning trees was introduced by Tedrake \cite{Tedrake2009} (LQR-Trees) and extended by Majumdar and Tedrake \cite{MajumdarTedrake2017} using sum-of-squares verification.
@@ -97,7 +97,7 @@ If the derivative of the boundary function points inward everywhere on the bound
 \end{center}
 
 \begin{keyidea}{Funnels Define the Usable State Space}{usable_space}
-  A computed funnel $\mathcal{F}(t)$ is not just an analysis tool; it is the ultimate judge of repeatability. It explicitly defines the exact set of initial conditions (e.g., the kinematic state at the top of the backswing) that are mathematically guaranteed to successfully satisfy the terminal constraint $\psi(\state(t_f)) = 0$ despite the presence of extreme nonlinearities and bounded disturbances. The time-varying geometry of the funnel---narrowing as $t \to t_f$---encodes the stability structure of the transverse dynamics along the reference trajectory.
+  A computed funnel $\mathcal{F}(t)$ is an analysis certificate for a stated closed-loop model. It defines a conservative set of initial conditions (for example, the kinematic state at the top of the backswing) that should remain inside the verified tube and satisfy the terminal constraint $\psi(\state(t_f)) = 0$ under the modeled disturbances. The time-varying geometry of the funnel---narrowing as $t \to t_f$---encodes the stability structure of the transverse dynamics along the reference trajectory.
 \end{keyidea}
 
 % ══════════════════════════════════════════════
@@ -144,7 +144,7 @@ The workflow below is the practical bridge from a nominal trajectory to a certif
 \section{Computing the Funnel for the Golf Swing}
 % ══════════════════════════════════════════════
 
-Let us return to the double pendulum of the golf swing. Our reference trajectory $\traj^*(t)$ from Chapter 6 gives us the nominal kinematics. Our transverse LQR from Chapter 4 gives us a feedback matrix $\bm{K}(t)$ designed to stabilize deviations. We wish to compute the largest possible funnel around this sequence that the closed-loop system is mathematically guaranteed to stay inside.
+Let us return to the double-pendulum golf model. The reference trajectory $\traj^*(t)$ from Chapter 6 gives nominal kinematics. The transverse LQR from Chapter 4 gives a feedback matrix $\bm{K}(t)$ designed to stabilize selected deviations. The goal is to compute a conservative funnel around this sequence and state the model assumptions under which the closed-loop system remains inside it.
 
 We define our candidate Lyapunov function as a time-varying quadratic form:
 \begin{equation}

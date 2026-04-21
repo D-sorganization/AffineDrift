@@ -248,7 +248,7 @@ When the control policy is low-dimensional, the cost landscape is badly nonconve
   Moving Target OCP & Finding a trajectory that optimizes terminal kinematics when intersecting a spatial manifold, without prescribing the clock time. \\
   Multi-Shooting & Discretizing the time domain into segments, using numerical integrators to enforce dynamics constraints between nodes. \\
   Direct Collocation & Representing the entire trajectory as splines and enforcing dynamics algebraically at discrete points arrayed along the trajectory. \\
-  Passive Exploitation & Solvers naturally optimize underactuated topologies by weaponizing coupling matrices ($M_{21}, C_2$). \\
+  Passive Exploitation & Solvers can exploit underactuated topologies through coupling matrices such as $M_{21}$ and $C_2$, subject to the stated model. \\
   Stochastic Robustness & Augmenting the OCP with expected variance to ensure the resulting trajectory can be consistently executed by noisy nonlinear plants. \\
   Evolutionary Search & A derivative-free outer loop for discovering warm starts or task-family parameters before derivative-based refinement. \\
   \bottomrule
@@ -257,7 +257,7 @@ When the control policy is low-dimensional, the cost landscape is badly nonconve
 
 \vspace{0.3cm}
 
-Determining the shape of the reference trajectory is the cornerstone of Control Is Motion. With our passive geometry understood (Chap 5) and our optimal reference trajectory computed (Chap 6), we must now surround that reference trajectory with a guaranteed, robust control tube to reject disturbances online. We turn to Funnel Synthesis in Chapter 7.
+Determining the shape of the reference trajectory is central to Control Is Motion. With a passive geometry model and a candidate reference trajectory in hand, the next step is to estimate a control tube around that trajectory and state the assumptions under which disturbances remain inside it. We turn to funnel synthesis in Chapter 7.
 
 % ══════════════════════════════════════════════
 \section{Exercises}

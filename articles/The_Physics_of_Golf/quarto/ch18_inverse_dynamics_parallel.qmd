@@ -12,7 +12,7 @@ Here is the stumbling block: from motion capture technology, we can estimate how
 
 Even for an open-chain limb, inverse dynamics identifies net joint loads under a specified model; individual muscle forces require additional assumptions because muscles are redundant [@Winter2009; @Robertson2004; @Zajac1989]. For the golf swing, loop constraints and grip/ground contact add another layer of non-identifiability. This chapter explains what remains measurable, what requires instrumentation or optimization assumptions, and how the ZTCF framework reframes part of the question as a forward simulation.
 
-This is the most technically demanding chapter in this book. Push through it. The reward is a clear-eyed understanding of what biomechanics can and cannot infer from motion capture data.
+This is the most technically demanding chapter in this book. The reward is a clearer distinction between measured kinematics, model-inferred net loads, and unobserved muscle-level causes.
 
 :::
 
@@ -44,7 +44,7 @@ The motivating question for inverse dynamics in biomechanics is straightforward:
 
 You swing a golf club. A motion capture system records your skeleton in three-dimensional space at 120 frames per second. The computer estimates how your shoulder, elbow, wrist, hips, and knees moved. But the motion capture system cannot feel your muscles. It cannot measure the electrical signals your motor cortex sends to your muscle fibers, nor the contractile forces those fibers generate.
 
-Yet your muscles caused this motion. Can we compute those muscle forces *backwards* from the motion we measured?
+Yet your muscles helped cause this motion. Can we compute those muscle forces *backwards* from the motion we measured?
 
 For net joint loads, the answer can be yes under a declared rigid-body model and measured external loads. For individual muscles, grip-force sharing, and tissue stresses, the answer is more subtle. Some aspects of recruitment are not identifiable from motion alone and require EMG, force plates, grip instrumentation, or an explicit optimization criterion.
 
@@ -116,7 +116,7 @@ Since kinetic energy is non-negative and is zero only when $\dot{\bm{q}} = \bm{0
 
 :::
 
-This is a fundamental fact of mechanics: you *cannot* have a configuration where the inertia matrix becomes singular. Nature forbids it.
+This statement depends on using independent coordinates. If the coordinates are redundant or a constraint Jacobian loses rank, the singularity belongs to the coordinate or constraint representation, not to the physical inertia of the bodies.
 
 ### The Recursive Newton-Euler Algorithm
 
@@ -463,6 +463,16 @@ The equations identify admissible accelerations. The multipliers $\boldsymbol{\l
 - **Total net moment about the center of mass:**
 For multi-body systems, the total kinetic moment can be uniquely computed from kinematics.
 
+The following evidence ladder should be checked before stronger biomechanical language is used:
+
+| Quantity | Primary evidence needed | Editorial status |
+| --- | --- | --- |
+| Segment kinematics | Motion capture with filtering and coordinate definitions | Measured or estimated from data |
+| Net joint loads | Kinematics, segment inertias, external loads, and contact model | Model-conditioned inverse-dynamics estimate |
+| Grip/ground boundary wrench | Instrumented grip, force plate, or declared contact model | Measured when instrumented; otherwise assumed |
+| Muscle forces and activation | EMG, musculoskeletal model, and recruitment criterion | Inferred, not identifiable from kinematics alone |
+| Tissue stress or injury risk | Tissue geometry, material model, loading history, and validation | Speculative unless separately modeled and validated |
+
 The following are **not uniquely determined from motion capture alone**:
 
 - **Individual muscle torques in redundant systems:** If two muscles can produce the same net effect, their individual contributions cannot be separated from kinematics alone.
@@ -636,7 +646,7 @@ Even though the system has parallel loops and redundant actuators, the forward i
 
 The ZTCF trajectory is the model-conditioned solution to the zero-control problem. There is no muscle load-sharing ambiguity, but there is still model, contact, and parameter dependence.
 
-**This is the fundamental advantage of the ZTCF approach.** It does not suffer from the underdetermined inverse problem. It is robust even in systems with complex parallel loops.
+This is the practical advantage of the ZTCF approach. It avoids muscle load-sharing ambiguity by posing a forward problem, while remaining sensitive to the chosen model, contact mode, regularity assumptions, and parameter values.
 
 :::
 
@@ -760,11 +770,11 @@ For parallel systems (two-handed grip, both feet planted, spine-girdle complex),
 ::: {.callout-important}
 ## Trustworthy Aggregates
 
-In parallel systems, you **can** trust:
+In parallel systems, you can use the following aggregates when the relevant model and measurement assumptions are stated:
 
 - Total kinetic energy and power flow into the system.
 - Net joint moments (summed across all muscles at a joint).
-- Constraint forces at connection points.
+- Boundary or constraint loads when they are measured directly or inferred from a declared contact model.
 - Center-of-mass acceleration and angular momentum.
 
 You **cannot** trust:
@@ -891,9 +901,9 @@ This $r = 100$ N·m is the sum of torques from the left hand and right hand: $\t
 
 In a parallel system with loop constraints:
 
-- Explain why constraint forces are usually *uniquely* determined from kinematics, even though applied torques are not.
-- What equation determines the constraint forces? (Hint: it comes from the constraint equations themselves.)
-- Why are constraint forces independent of the null space ambiguity in applied torques?
+- Explain why constraint compatibility can be checked from kinematics, while the corresponding constraint multipliers require a dynamic model plus applied-load assumptions or additional measurements.
+- Which equations constrain the admissible accelerations, and which equations introduce the multipliers?
+- Why can a change in applied torques be hidden in the null space without changing the observed kinematics?
 
 - **Red Flag Detection (Reading Critically)**
 
