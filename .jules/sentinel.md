@@ -35,3 +35,7 @@
 **Vulnerability:** DOM-based XSS vulnerability in history modules where URLs from localStorage were assigned to href properties using an incomplete blacklist.
 **Learning:** localStorage is an untrusted sink. Blacklisting specific protocols like javascript: is error-prone and misses data: or vbscript:.
 **Prevention:** Always validate and sanitize URLs using an allowlist approach (e.g., using the URL constructor to strictly permit http: and https: protocols) before assigning them to href attributes.
+## 2026-04-22 - Prevent DOM-based XSS in Metrics Widget
+**Vulnerability:** DOM-based XSS via `innerHTML` used with template literals to render arrays of user-controlled data in `js/metrics.js`.
+**Learning:** Using `innerHTML` with template literals to render arrays of user-controlled data (such as browsing history from `localStorage`) is brittle and can lead to XSS.
+**Prevention:** To prevent DOM-based XSS when rendering arrays of user-controlled data, do not use `innerHTML` with template literals. Instead, build the list safely using `document.createDocumentFragment()`, `document.createElement()`, and securely set values using `textContent`.
