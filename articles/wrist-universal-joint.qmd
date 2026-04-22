@@ -14,7 +14,7 @@ format:
 ::: {.abstract-section}
 ## Abstract
 
-The left wrist in the golf swing can be modeled as a universal joint with two actuated degrees of freedom (flexion/extension and radial/ulnar deviation) and one constrained degree of freedom (forearm rotation axis). Through theoretical analysis and component-level simulation in MATLAB Simulink, we demonstrate that universal joints generate constraint torques—passive torques about the constrained axis that arise from the interaction of applied torques, system momentum, and geometric constraints. These constraint torques serve as efficient pathways for force and torque transmission from proximal to distal segments but are inherently variable and uncontrollable. We hypothesize that the angle at which the club is gripped relative to the wrist joint axes fundamentally determines whether these constraint torques are transmitted into high-inertia axes (promoting clubhead speed) or low-inertia axes (increasing face angle variability). This analysis provides a mechanical framework for understanding the widely-taught principle of gripping "in the fingers" versus "in the palm" and may explain why arm and club planes are typically not aligned during the downswing.
+The left wrist in the golf swing can be approximated as a universal joint with two actuated degrees of freedom (flexion/extension and radial/ulnar deviation) and one constrained degree of freedom (forearm rotation axis). Through theoretical analysis and component-level simulation in MATLAB Simulink, this article examines how universal-joint models generate constraint torques: passive torques about the constrained axis that arise from the interaction of applied torques, system momentum, and geometric constraints. These torques may contribute to force and torque transmission from proximal to distal segments, but their magnitude and direction are model-dependent. The grip-angle hypothesis is that the angle at which the club is gripped relative to the wrist joint axes changes how these constraint torques project onto high-inertia axes or face-sensitive axes. This analysis offers a mechanical model for the widely taught distinction between gripping "in the fingers" and "in the palm"; validating that model requires full-swing 3D data.
 
 :::
 
@@ -36,24 +36,24 @@ The left wrist in the golf swing can be modeled as a universal joint with two ac
       <div class="laymans-item">
         <h3>The Wrist is a Universal Joint</h3>
         <p>
-          Your wrist acts like the universal joint in a car's driveshaft. It can bend in two directions (up/down, left/right) but can't twist (rotate like a screwdriver). This inability to twist forces torque to "leak" through the joint in predictable ways.
+          This model treats the wrist like a universal joint in a car's driveshaft. It can bend in two directions (up/down, left/right) but does not directly twist at the wrist joint itself. Under that simplification, some torque can be transmitted through constraints rather than through an actively commanded wrist twist.
         </p>
         <div class="analogy">
-          <strong>Analogy:</strong> Think of a U-joint connecting a truck's engine to its wheels. It transmits power even when bent. Your wrist does the same, transmitting arm rotation to the club without you actively twisting it.
+          <strong>Analogy:</strong> Think of a U-joint connecting a truck's engine to its wheels. It can transmit torque while bent. The wrist model asks whether a similar constraint pathway contributes to arm-to-club transmission.
         </div>
       </div>
 
       <div class="laymans-item">
         <h3>The Grip Trade-Off</h3>
         <p>
-          This leaked torque (called "constraint torque") is powerful but messy—you can't really control it.
+          This constraint torque is not directly commanded at the wrist in the simplified model.
         </p>
         <ul>
-            <li><strong>Finger Grip:</strong> Aims this messy torque at the <em>swing path</em> (helping speed).</li>
-            <li><strong>Palm Grip:</strong> Aims this messy torque at the <em>clubface rotation</em> (causing wild hooks/slices).</li>
+            <li><strong>Finger Grip:</strong> May project more of this torque into axes associated with swing-path motion.</li>
+            <li><strong>Palm Grip:</strong> May project more of this torque into axes coupled to face rotation.</li>
         </ul>
         <div class="key-takeaway">
-          Gripping in the fingers acts like a mechanical filter, channeling the body's chaotic power into speed while keeping the clubface stable.
+          The hypothesis is that grip geometry may act as a mechanical filter. That claim still needs full-swing validation.
         </div>
       </div>
 
@@ -84,7 +84,7 @@ The left wrist in the golf swing can be modeled as a universal joint with two ac
           Modeling the wrist as a perfect mechanical universal joint simplifies the complex reality of the carpus. The eight carpal bones and their ligamentous/capsular constraints allow for significant "slop" and coupled motions that do not exist in steel U-joints. Skeptics argue that soft tissue compliance absorbs or redirects much of the theoretical "constraint torque," rendering the rigid-body predictions overstated.
         </p>
         <div class="author-response">
-          <strong>Our Response:</strong> We acknowledge the biological complexity. However, soft tissue compliance acts primarily as a damper, not an actuator. While it may soften the <em>magnitude</em> of constraint torques, it does not alter the <em>topology</em> of the transmission. The fundamental lack of a third actuated degree of freedom at the radiocarpal joint remains the dominant constraint.
+          <strong>Our Response:</strong> We acknowledge the biological complexity. Soft tissue compliance may damp, redirect, or delay constraint transmission, and a rigid-joint model cannot settle how large those effects are in vivo. The lower-dimensional wrist actuation remains a useful modeling starting point, but its dominance must be tested.
         </div>
       </div>
 
@@ -97,7 +97,7 @@ The left wrist in the golf swing can be modeled as a universal joint with two ac
           The paper suggests that "Single Plane" swings (which geometrically align the shaft with the forearm, similar to a palm grip) are mechanically disadvantageous due to face-angle sensitivity. Yet, legends like Moe Norman and moderns like Bryson DeChambeau excel with exactly this alignment. They argue that "locking" the wrist reduces the number of moving parts, providing a consistency benefit that outweighs the constraint torque cost.
         </p>
         <div class="author-response">
-          <strong>Our Response:</strong> This highlights a valid trade-off. Single-plane golfers likely accept higher <em>sensitivity</em> to torque variance (High Beta-axis projection) in exchange for reduced <em>input variance</em> (simplified kinematics). Our model quantifies the mechanical cost they must overcome, explaining why such techniques often require unique equipment (e.g., jumbo grips, stiff shafts) to dampen the amplified sensitivity.
+          <strong>Our Response:</strong> This highlights a possible trade-off. Single-plane golfers may reduce input variance through simplified kinematics even if the model predicts higher sensitivity to some torque projections. Testing that trade-off would require measured face-angle variability, grip geometry, and equipment properties.
         </div>
       </div>
 
@@ -110,7 +110,7 @@ The left wrist in the golf swing can be modeled as a universal joint with two ac
           The analysis treats constraint torques as "uncontrollable disturbances." However, the forearm rotation axis <em>is</em> actuated proximally by the supinator/pronator muscles. A skilled golfer generates massive active torque about this axis. Critics argue that players don't just "suffer" constraint torques; they actively overpower them with proximal muscle activation.
         </p>
         <div class="author-response">
-          <strong>Our Response:</strong> While the axis is actuated, the control loop matters. The reaction time to sense a constraint perturbation and reflexively counter it (>100ms) is too slow for the downswing impact interval. Thus, while players do apply <em>feedforward</em> torque, they cannot use feedback to cancel the high-frequency variability of constraint torques. Geometry (grip angle) remains the primary filter for high-frequency noise.
+          <strong>Our Response:</strong> While the axis is actuated proximally, the control loop matters. Reflex and voluntary response times are long relative to the late downswing and impact interval, so high-frequency corrections may rely more on feedforward preparation and mechanics than on online feedback. Whether grip angle is the primary filter remains an empirical question.
         </div>
       </div>
 
@@ -125,19 +125,19 @@ The left wrist in the golf swing can be modeled as a universal joint with two ac
 
 ## Introduction
 
-Force and torque transmission through multi-segment kinematic chains presents fascinating challenges in both robotics and human movement. In the golf swing, torques generated by large proximal muscles must be efficiently transmitted through multiple joints to ultimately control both the speed and orientation of the clubhead. Understanding the mechanical pathways through which this transmission occurs is critical for optimizing both performance and consistency.
+Force and torque transmission through multi-segment kinematic chains presents important challenges in both robotics and human movement. In the golf swing, torques generated by large proximal muscles are transmitted through multiple joints before they influence the speed and orientation of the clubhead. Understanding the mechanical pathways through which this transmission occurs is necessary before making strong claims about performance or consistency.
 
-Traditional biomechanical analysis focuses on actively generated torques—those produced by muscular contraction about joints with actuated degrees of freedom. However, in constrained multi-body systems, passive constraint forces and torques play equally important roles in force transmission. These constraint forces arise at joints where motion is restricted, serving to maintain kinematic constraints while simultaneously transmitting forces between connected segments.
+Traditional biomechanical analysis often focuses on actively generated torques: those produced by muscular contraction about joints with actuated degrees of freedom. In constrained multibody systems, passive constraint forces and torques may also affect force transmission. These constraint forces arise at joints where motion is restricted, serving to maintain kinematic constraints while transmitting loads between connected segments.
 
-This paper explores constraint torques at the left wrist joint during the golf swing, modeled as a universal joint with two actuated rotational degrees of freedom. We demonstrate that:
+This paper explores constraint torques at the left wrist joint during the golf swing, modeled as a universal joint with two actuated rotational degrees of freedom. Within that simplified model, the analysis argues that:
 
 1. Universal joints generate constraint torques about their constrained axes
 
-2. These constraint torques provide efficient force transmission pathways
+2. These constraint torques may provide force-transmission pathways
 
-3. The angle at which the club is gripped determines how constraint torques influence clubhead motion
+3. The angle at which the club is gripped may influence how constraint torques project into clubhead motion
 
-4. Grip orientation may fundamentally affect both clubhead speed generation and face angle variability
+4. Grip orientation may affect clubhead speed generation and face-angle variability, but the size of that effect must be measured
 
 ### The Wrist as a Universal Joint
 
@@ -295,7 +295,7 @@ This demonstration reveals an important principle: *constraint torques can be ge
 
 In the golf swing, torques generated by proximal segments (trunk rotation, shoulder internal rotation, forearm pronation) must be transmitted to the club. The wrist joint, positioned between the forearm and hand, serves as a critical link in this transmission chain.
 
-The constraint torque property of universal joints provides an elegant mechanism for this transmission. Torque about the forearm rotation axis (generated by forearm pronation/supination muscles) can be transmitted through the wrist to the hand without requiring wrist muscles to actively generate this torque. The constraint properties of the joint handle the transmission automatically.
+The constraint-torque property of universal joints provides one possible mechanism for this transmission. Torque about the forearm rotation axis (generated by forearm pronation/supination muscles) can be transmitted through the wrist to the hand in the model without requiring wrist muscles to actively generate the same torque locally. Whether this mechanism is large enough to matter in vivo depends on soft-tissue compliance, joint geometry, grip configuration, and swing dynamics.
 
 However, this passive transmission comes with a critical caveat: because constraint torques cannot be directly controlled at the wrist, they inherit all the variability present in the proximal segments that generate them. As noted in discussion of this phenomenon:
 
@@ -456,7 +456,7 @@ $$
 \sigma_{\text{face angle}} \approx 1667 \text{ rad/s} \times 0.05 \text{ s} \approx 83 \text{ rad} \approx 4.8°
 $$
 
-This example illustrates how identical constraint torque variability produces dramatically different outcomes depending on grip orientation.
+This example illustrates how identical constraint-torque variability can produce different model outcomes depending on grip orientation.
 
 ## Connection to Arm-Club Plane Separation
 
@@ -663,7 +663,7 @@ The optimal grip angle for a given golfer might be determined through:
 Several limitations should be acknowledged:
 
 ##### Model Simplification
-The wrist is more complex than a simple universal joint. Ligamentous constraints, intercarpal joint mechanics, and muscle co-activation all influence behavior. However, the fundamental constraint properties should persist even in more detailed models.
+The wrist is more complex than a simple universal joint. Ligamentous constraints, intercarpal joint mechanics, and muscle co-activation all influence behavior. Some constraint-force features may persist in more detailed models, but that persistence should be demonstrated rather than assumed.
 
 ##### Measurement Challenges
 Direct measurement of constraint torques in vivo is extremely difficult. While simulation provides these values directly, validating them against experimental data requires sophisticated inverse dynamics and careful error analysis.
@@ -676,25 +676,25 @@ As noted in the original hypothesis statement: "it may be impossible to prove on
 
 ## Conclusion
 
-This paper proposes a novel mechanical framework for understanding force and torque transmission in the golf swing, focusing on constraint torques at the wrist joint. By modeling the wrist as a universal joint with two actuated and one constrained degree of freedom, we demonstrate that:
+This paper proposes a mechanical hypothesis for understanding force and torque transmission in the golf swing, focusing on constraint torques at the wrist joint. Within a simplified universal-joint model with two actuated and one constrained degree of freedom, the analysis argues that:
 
-1. Universal joints generate constraint torques about constrained axes through the interaction of applied torques, system momentum, and geometric constraints
+1. Universal-joint models can generate constraint torques about constrained axes through the interaction of applied torques, system momentum, and geometric constraints
 
-2. These constraint torques provide efficient pathways for force transmission but are inherently variable and uncontrollable
+2. These constraint torques may provide force-transmission pathways, but their magnitude and direction are model-dependent and not directly commanded
 
-3. The angle at which the club is gripped determines whether constraint torques are transmitted into high-inertia axes (promoting speed) or low-inertia axes (increasing face variability)
+3. The angle at which the club is gripped may influence whether constraint torques project more strongly into high-inertia axes or into axes coupled to face variability
 
-4. A finger grip may be mechanically advantageous because it directs constraint torques into the club's alpha axis, where high inertia filters variability while contributing to clubhead speed
+4. A finger grip may be mechanically advantageous in this model if it directs constraint torques into the club's alpha axis, where high inertia can reduce sensitivity to torque variability
 
-5. A palm grip may be disadvantageous because it directs constraint torques into the shaft rotation axis, where low inertia amplifies variability and directly affects face angle
+5. A palm grip may be disadvantageous in this model if it directs constraint torques into the shaft rotation axis, where low inertia can amplify face-angle sensitivity
 
-6. Arm-club plane separation may provide mechanical advantages related to maintaining optimal constraint torque transmission geometry
+6. Arm-club plane separation may provide mechanical advantages related to constraint-torque transmission geometry, but this remains a modeling prediction until tested against measured swings
 
-This analysis bridges robotics theory (constraint dynamics, universal joint mechanics) and golf biomechanics, providing a rigorous framework for understanding a widely-taught but poorly-understood fundamental principle. While empirical validation presents challenges, the hypothesis generates clear, testable predictions and provides mechanistic insight into force transmission in complex kinematic chains.
+This analysis connects robotics theory (constraint dynamics, universal-joint mechanics) with golf biomechanics, but it should be read as a mechanically explicit hypothesis rather than a validated account of grip instruction. Empirical validation would require 3D motion capture, club-face measurements, inverse dynamics, and sensitivity tests across grip configurations.
 
-More broadly, this work illustrates the value of constraint analysis in biomechanics. Constraint forces and torques—often overlooked because they perform no work—play critical roles in force transmission and control. Understanding these passive mechanical pathways provides insight into both optimal technique and the fundamental challenges faced by performers attempting to control complex, nonlinear multi-body systems.
+More broadly, this work illustrates why constraint analysis can matter in biomechanics. Constraint forces and torques often perform no work, but they can still redistribute loads within a model. Understanding these passive mechanical pathways may help identify testable technique mechanisms and the challenges faced by performers attempting to control complex, nonlinear multibody systems.
 
-The golf swing presents an extraordinary challenge: generating maximum clubhead speed while precisely controlling face orientation using a redundant, nonlinear kinematic chain with multiple passive degrees of freedom. By recognizing how grip orientation influences constraint torque transmission, we gain insight into one mechanism through which skilled performers may simplify this control problem—not through perfect coordination of all variables, but through mechanical configurations that naturally channel variability into performance-irrelevant directions.
+The golf swing presents a difficult coordination problem: generating clubhead speed while controlling face orientation using a redundant, nonlinear kinematic chain with passive degrees of freedom. If the grip-orientation hypothesis is supported by data, it would describe one possible mechanism by which performers reduce control sensitivity: not by coordinating every variable perfectly, but by choosing mechanical configurations that channel some variability into less performance-relevant directions.
 
 ## Theoretical Synthesis
 
@@ -702,13 +702,13 @@ The golf swing presents an extraordinary challenge: generating maximum clubhead 
 Within the control-affine formalism $\dot{x} = f(x) + g(x)u$, constraint torques occupy a unique position. Although they arise from the interaction of input forces, they are mathematically orthogonal to the local control inputs $u_{wrist}$. Consequently, they function as a component of the **Velocity Drift** (per the Part 3 Force Taxonomy)—a passive dynamic response that the controller must anticipate but cannot directly command. The 'uncontrollability' of the forearm rotation axis at the wrist means that the dimensionality of the control input ($m=2$) is lower than the dimensionality of the operational space ($n=3$), defining the wrist as a classic **underactuated subsystem**.
 
 ### Geometric Rejection of Disturbance
-The grip angle hypothesis is formally equivalent to **disturbance decoupling** in geometric control theory. By aligning the grip such that the 'noise' (variable constraint torque) acts upon the Alpha axis, the system achieves a structural invariance: the sensitivity of the output $y$ (face angle) to the disturbance $d$ (constraint torque) is minimized. This is a passive mechanical implementation of what would otherwise require complex active feedback control, effectively outsourcing stability to the mechanism's geometry.
+The grip-angle hypothesis is analogous to **disturbance decoupling** in geometric control theory. In the simplified model, aligning the grip so that variable constraint torque projects more strongly onto the Alpha axis may reduce the sensitivity of the output $y$ (face angle) to the disturbance $d$ (constraint torque). This would be a passive mechanical contribution to stability, not a substitute for active control unless the decoupling is demonstrated in a full swing model.
 
 ### The Null Space of Performance
-The distinction between the 'safe' Alpha axis and the 'critical' Beta axis illustrates the **Task-Null Space** principle. In optimal control, variance is not eliminated but 'channeled' into dimensions that do not affect the cost function. The Finger Grip configures the Jacobian $J$ such that the constrained axis maps predominantly into the null space of the face-orientation task, allowing high variance in $\tau_{constraint}$ to coexist with low variance in impact conditions.
+The distinction between the 'safe' Alpha axis and the 'critical' Beta axis illustrates the **Task-Null Space** principle. In optimal control, variance is sometimes tolerated in dimensions that weakly affect the cost function. In this model, the finger-grip configuration would need to make the constrained axis map predominantly into the null space of the face-orientation task before one could claim that high variance in $\tau_{constraint}$ can coexist with low variance in impact conditions.
 
 **Implicit Assumption: Ideal Constraints**
-This analysis relies on the idealization of the wrist as a perfect universal joint with holonomic constraints. In reality, soft tissue compliance introduces viscoelastic 'slop' that may relax these constraints, potentially adding a damping term to the transmission. However, the core topological argument—that the dimensionality of actuation is lower than the dimensionality of motion—remains robust.
+This analysis relies on the idealization of the wrist as a perfect universal joint with holonomic constraints. In reality, soft tissue compliance introduces viscoelastic 'slop' that may relax these constraints, potentially adding damping and delay to the transmission. The lower-dimensional actuation argument remains useful as a modeling constraint, but its quantitative effect needs validation in anatomically detailed models.
 
 ### Conceptual Cross-References
 *   **Underactuated Robotics:** *Lynch & Park (2017), Ch 13.5* - For formal definitions of nonholonomic and Pfaffian constraints.
