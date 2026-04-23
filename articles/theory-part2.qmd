@@ -199,13 +199,20 @@ $$\tau_{\text{total}}(t)
   +
   \underbrace{\tau_{\text{input}}(t)}_{\text{torque-driven component}},$$
 
-where the *drift torque* is defined by evaluating the passive terms at the actual state:
+where the *drift torque* is defined by evaluating the passive terms at the actual state.
+
+Taking the first $n$ rows of the equation of motion $M\,\ddot{q}_{\text{sys}} = -h(x) + [\tau;\, 0]$ and setting $u = 0$ gives:
+
+$$\big[\,M_{qq}(q,\eta)\;\;M_{q\eta}(q,\eta)\,\big]\,a_{\text{drift}}(x(t))
+  = -\big[h(x(t))\big]_{1:n},$$
+
+so the drift torque is equivalently:
 
 $$\tau_{\text{drift}}\big(x(t)\big)
-  =
-  M_{q}(q,\eta)\,\big[a_{\text{drift}}(x(t))\big]_{1:n},$$
+  = -\big[h(x(t))\big]_{1:n}
+  = -\Big[C(x)\,\dot{q}_{\text{sys}} + G(q,\eta) + \tau_{\text{pas}}(q,\dot{q})\Big]_{1:n},$$
 
-and $M_{q}$ denotes the block of the inertia matrix mapping rigid accelerations to generalized torques (see the Appendices for details).
+where $h(x)$ is the full passive-force vector defined in Part 1 (§ Control-affine state space form), $C$ is the Coriolis/centrifugal matrix, $G$ is the gravitational torque, and $\tau_{\text{pas}}$ is the passive joint impedance. The row block $[M_{qq}\;M_{q\eta}]$ is the first $n$ rows of the full inertia matrix partitioned as in Part 1; it captures the cross-coupling between rigid joint accelerations and flexible shaft accelerations, including the shaft-recoil contribution $M_{q\eta}\,\ddot{\eta}_{\text{drift}}$ that would be lost if only the diagonal block $M_{qq}$ were used.
 
 Physically, $\tau_{\text{drift}}$ represents the generalized torque required to sustain the passive acceleration $a_{\text{drift}}$ [@murray1994mathematical; @spong2005robot]. Since $a_{\text{drift}}$ is the system's natural response to its own internal state (gravity, elasticity, velocity coupling), $\tau_{\text{drift}}$ captures the 'inertial cost' of the system's current momentum and configuration. Subtracting this cost from the total torque reveals the surplus provided by the input.
 

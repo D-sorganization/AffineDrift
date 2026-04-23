@@ -198,7 +198,7 @@ provides the principal-axis decomposition for both ellipsoids:
 | Ellipsoid | Defining set | Principal axes | Semi-axes |
 |---|---|---|---|
 | **Mobility** $\{\dot{x} = J\dot{q} : \lVert\dot{q}\rVert \leq 1\}$ | image of joint unit ball | columns of $U$ | $\sigma_i$ |
-| **Force** $\{F : \lVert J^\top F\rVert \leq 1\}$ | dual via $J^\top$ | columns of $U$ | $1/\sigma_i$ |
+| **Force** $\{F : F^\top(JJ^\top)F \leq 1\}$ | Yoshikawa Gramian form | columns of $U$ | $1/\sigma_i$ |
 
 The two ellipsoids share the *same* principal axes (columns of $U$) but their semi-axes are reciprocals --- this is the origin of the mobility-vs-force trade-off. A direction with a large $\sigma_i$ is a direction of easy motion and weak force resistance; a direction with a small $\sigma_i$ is the reverse. At a **singular configuration** ($\sigma_r \to 0$), the mobility ellipsoid flattens (motion in that direction becomes unachievable) and the force ellipsoid blows up (infinite reaction force required to maintain joint-torque bound).
 
