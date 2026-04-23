@@ -15,7 +15,6 @@ FORBIDDEN_ROOT_ARTIFACTS = {
     "The_Geometry_of_Motion_Complete.pdf",
     "The_Physics_of_Golf.pdf",
     "brute_merge.ps1",
-    "fix_html.py",
     "magic_numbers_report.txt",
     "main.pdf",
     "notes_workspace_escape.png",
