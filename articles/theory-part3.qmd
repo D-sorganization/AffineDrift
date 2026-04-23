@@ -225,6 +225,29 @@ $$f(x) \ \text{independent of } u,
 
 This distinction motivates the role of ZVCF, which isolates the configuration-dependent subset of drift forces by removing all velocity dependence.
 
+### Scope: pointwise vs. trajectory-level invariance
+
+Proposition 1 is a **pointwise** result. At any fixed state $x$, the partial derivative $\partial f(x)/\partial u = 0$: the drift vector field evaluated at that configuration and velocity is unaffected by any simultaneous change in the control input.
+
+This does **not** imply that $\tau_{\text{drift}}(x(t))$, evaluated along an *actual* trajectory, is independent of the golfer's input history. The trajectory $x(t)$ is itself the solution of the full controlled system
+
+$$\dot{x}(\tau) = f(x(\tau)) + g(x(\tau))\,u(\tau), \quad \tau \leq t,$$
+
+so the state $x(t)$ encodes the integrated effect of every past input $u(\tau)$. Consequently, $\tau_{\text{drift}}(x(t)) = M(q,\eta)\,[a_{\text{drift}}(x(t))]$ depends on the entire input history through the state it inherits.
+
+What drift invariance **does** guarantee is:
+
+- **Instantaneous separability:** At each moment, the decomposition $\tau_{\text{total}} = \tau_{\text{drift}}(x) + \tau_{\text{input}}$ is exact and unambiguous.
+- **Structural independence:** The *definition* of the drift component does not depend on the magnitude or direction of the current input; there is no implicit torque buried inside $f(x)$.
+- **Counterfactual validity:** ZTCF integrates $f(x)$ forward from the same initial state; the pointwise invariance justifies that this integration is a meaningful "input-removed" baseline at each step.
+
+What it does **not** guarantee is identifiability of the drift baseline from a swing with a different torque profile, because a different torque profile would produce a different $x(t)$ and hence a different $\tau_{\text{drift}}(x(t))$. For practical identifiability concerns---particularly whether a ZTCF estimated from one swing transfers to another---see the ZTCF Identifiability Critique in `zero-torque-counterfactual.qmd`.
+
+::: {.callout-important}
+## Summary
+Drift invariance is a property of the *instantaneous decomposition*, not a claim that the drift forces a golfer experiences are the same regardless of how hard they swing. A harder swing reaches a different state at impact, and the drift forces at that state will differ. The proposition ensures the decomposition is valid at every state encountered; it says nothing about which states are encountered.
+:::
+
 ### Input constraints
 
 The affine structure admits input constraints of the form
