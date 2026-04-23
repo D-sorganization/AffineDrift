@@ -205,12 +205,14 @@ as $\norm{\dx}\to 0$:
 ### Proof of Uniqueness
 
 
-\begin{proposition}[Uniqueness of the Fréchet Derivative]\label{prop:frechet-unique}
+::: {#prp-frechet-unique}
+**Uniqueness of the Fréchet Derivative**
+
 If a linear map $\mat{A}$ satisfies Eq.~\eqref{eq:ch1:frechet} at $\bar{\x}$, then $\mat{A}$
 is unique.
-\end{proposition}
+:::
 
-\begin{proof}
+::: {.proof}
 Suppose two matrices $\mat{A}$ and $\mat{A}'$ both satisfy
 \begin{align}
 f(\bar{\x} + \dx, \bar{\uvec}) &= f(\bar{\x}, \bar{\uvec}) + \mat{A}\,\dx + o(\norm{\dx}), \\
@@ -231,7 +233,7 @@ Then
 
 As $t \to 0^+$, the term $\frac{o(t\norm{\vec{v}})}{t \cdot \norm{\vec{v}}} \to 0$ by definition of $o(\cdot)$.
 Therefore, $(\mat{A} - \mat{A}')\vec{v} = 0$ for all $\vec{v}$, implying $\mat{A} = \mat{A}'$.
-\end{proof}
+:::
 
 This uniqueness is the cornerstone of the book's philosophy. There is exactly one candidate
 for ``the infinitesimal structure'' of $f$ at $\bar{\x}$, and it is $\mat{A}$.
@@ -944,13 +946,13 @@ This textbook is most applicable when:
 ### Important Distinction: Linearization vs. Linear Approximation
 
 
-\begin{remark}
+::: {.callout-note title="Remark"}
 Throughout this book, we use ``linearization'' to mean ``computing the Jacobian
 (Fréchet derivative)''---an exact operation. We reserve ``linear approximation'' for
 the distinct act of using the Jacobian to predict finite perturbations, which introduces
 the residual of Eq.~\eqref{eq:ch1:residual-def}. Conflating these two operations is
 the source of most conceptual confusion about linearization in nonlinear systems.
-\end{remark}
+:::
 
 A linearization is always exact. A linear approximation introduces error (residual). By
 keeping these concepts distinct, we unlock the structural power of tangent spaces and

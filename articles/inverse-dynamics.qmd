@@ -69,12 +69,11 @@ The method is powerful because it allows us to infer kinetic information (forces
 The equations of motion for a rigid body like a golf club are described by Euler's laws:
 
 $$
-\sum \mathbf{F} = m\mathbf{a}_{\text{COM}}
-$$ {#eq-force_balance}
-
+\begin{align}
+\sum \mathbf{F} &= m\mathbf{a}_{\text{COM}} \
+\sum \mathbf{M}_{\text{COM}} &= \mathbf{I}\boldsymbol{\alpha} + \boldsymbol{\omega} \times (\mathbf{I}\boldsymbol{\omega}) 
+\end{align}
 $$
-\sum \mathbf{M}_{\text{COM}} = \mathbf{I}\boldsymbol{\alpha} + \boldsymbol{\omega} \times (\mathbf{I}\boldsymbol{\omega})
-$$ {#eq-moment_balance}
 
 where:
 - $\sum \mathbf{F}$ is the sum of all forces acting on the club
@@ -137,7 +136,7 @@ $$
 \sum \mathbf{M}_{P} = \sum \mathbf{M}_{\text{COM}} + (\mathbf{r}_{P} - \mathbf{r}_{\text{COM}}) \times \mathbf{F}_{\text{hands}}
 $$
 
-Since we know $\sum \mathbf{M}_{\text{COM}}$ from @eq-moment_balance, we can calculate the required moment about point $P$.
+Since we know $\sum \mathbf{M}_{\text{COM}}$ from @eq-force_balance, we can calculate the required moment about point $P$.
 
 ### Critical Assumptions in Inverse Dynamics
 
@@ -212,7 +211,10 @@ The force-couple equivalence principle converts a grip force $\mathbf{F}$ applie
 
 For a rigid body such as a golf club, if inverse dynamics yields force $\mathbf{F}_{\text{eq}}$ and couple $\mathbf{C}_{\text{eq}}$ at reference point $m$, we can transform these to an equivalent force-couple pair at any other point $i$ along the grip.
 
-**Proposition (Couple Transformation Formula).** For points along a one-dimensional grip, the equivalent couple at point $i$ is given by:
+::: {.proposition}
+**Couple Transformation Formula**
+
+For points along a one-dimensional grip, the equivalent couple at point $i$ is given by:
 
 $$
 C_i = M_m \left(1 - \frac{d_i}{d_m}\right) + C_m
@@ -228,6 +230,7 @@ where:
 - $d_m$ = signed distance from center of mass to midpoint $m$
     
 - $C_m$ = couple at midpoint from inverse dynamics
+:::
 
 This transformation reveals a crucial insight: the equivalent couple is not an intrinsic property of the force distribution but depends on the choice of reference point.
 
@@ -264,7 +267,9 @@ The range of viable equivalent couples increases linearly with the moment of for
 
 The mathematical transformation in @eq-couple_transform has a profound physical consequence: **a couple appearing in inverse dynamics results does not necessarily correspond to any actual twisting action by the golfer**.
 
-:::: {.callout-note title="Example: Single Force Creating Apparent Couple"}
+::: {.example}
+**Single Force Creating Apparent Couple**
+
 Consider a hypothetical scenario where a golfer applies a single force $F$ at a point on the grip located at distance $d_F$ from the midpoint, with no other forces acting.
 
 **Physical reality:** Only one force exists; no couple is applied.
@@ -275,7 +280,7 @@ Consider a hypothetical scenario where a golfer applies a single force $F$ at a 
 - Equivalent couple: $C_m = F \cdot d_F$ (nonzero!)
 
 The inverse dynamics creates a mathematical couple to account for the offset application point, despite no physical twisting occurring.
-::::
+:::
 
 This example reveals the core issue: inverse dynamics conflates two physically distinct phenomena:
 1. **True couples:** Opposing forces applied simultaneously (e.g., left hand pulls up while right hand pushes down)

@@ -217,7 +217,9 @@ This is the **control-affine form**: $\dot{\x} = f(\x) + G(\x)\uvec$.
 ## The Superposition Theorem
 
 
-\begin{theorem}[Input Superposition for Mechanical Systems]
+::: {.theorem}
+**Input Superposition for Mechanical Systems**
+
 \label{thm:ch3:superposition}
 Let a mechanical system satisfy~\eqref{eq:ch3:manipulator} and define the acceleration
 map at fixed state $(\q,\dot{\q})$:
@@ -231,16 +233,16 @@ Then:
    $\uvec \mapsto \Phi_{(\q,\dot{\q})}(\uvec) - \Phi_{(\q,\dot{\q})}(\vec{0})
    = M(\q)^{-1}B(\q)\,\uvec$
    is **linear** in $\uvec$.
-\end{theorem}
+:::
 
-\begin{proof}
+::: {.proof}
 From~\eqref{eq:ch3:forward-dynamics}, $\Phi_{(\q,\dot{\q})}(\uvec)
 = a_{\text{drift}}(\q,\dot{\q}) + H(\q)\uvec$,
 where $a_{\text{drift}}$ and $H$ depend only on $(\q,\dot{\q})$, not on $\uvec$. The
 map is therefore affine by inspection. Subtracting the zero-input value
 $\Phi_{(\q,\dot{\q})}(\vec{0}) = a_{\text{drift}}(\q,\dot{\q})$
 yields $H(\q)\uvec$, which is linear in $\uvec$.
-\end{proof}
+:::
 
 \begin{intuitionbox}
 The superposition theorem says: \emph{at any frozen instant, the acceleration produced
@@ -644,12 +646,12 @@ Combining with~\eqref{eq:ch3:constrained-dynamics}:
 
 This is the *DAE form*. The key observation is:
 
-\begin{proposition}
+::: {.proposition}
 The input matrix $B(\q)$ appears only in the first equation. The constraint forces $J(\q)^\T\vec\lambda$
 enforce the velocity constraints $J(\q)\,\dot{\q} = 0$ without depending on $\uvec$ directly.
 Therefore, the control input $\uvec$ affects the system dynamics (and hence $\ddot{\q}$)
 through the affine map, while constraint forces *passively* enforce the velocity constraint.
-\end{proposition}
+:::
 
 
 ### Solution via Null-Space Projection
@@ -1312,12 +1314,14 @@ iteratively:
 \Delta_k &= \Delta_{k-1} + \text{span}\{[\text{elements of } \Delta_{k-1}, f \text{ or } g_i]\}.
 \end{align}
 
-\begin{theorem}[Local Accessibility --- Chow--Rashevskii]
+::: {.theorem}
+**Local Accessibility --- Chow--Rashevskii**
+
 \label{thm:ch3:chow}
 If $\dim \Delta_k(\x_0) = n$ for some finite $k$, then the system is locally accessible
 from $\x_0$: for any $T > 0$, the reachable set from $\x_0$ in time $[0, T]$ has
 nonempty interior in $\R^n$.
-\end{theorem}
+:::
 
 The proof uses the orbit theorem from geometric control theory \cite{Isidori1995, Sastry1999}.
 
@@ -1480,12 +1484,14 @@ kinetic and potential energy, and $R$ encodes friction and damping.
 ### Interconnection of Passive Subsystems
 
 
-\begin{theorem}[Passivity of Feedback Interconnection]
+::: {.theorem}
+**Passivity of Feedback Interconnection**
+
 \label{thm:ch3:passive-interconnection}
 If two passive systems $\Sigma_1$ (storage $S_1$) and $\Sigma_2$ (storage $S_2$) are
 connected in negative feedback ($\uvec_1 = -\vec{y}_2$, $\uvec_2 = \vec{y}_1$), then the
 interconnected system is passive with storage $S = S_1 + S_2$.
-\end{theorem}
+:::
 
 This result is fundamental for multibody systems: each rigid body segment in a kinematic
 chain is individually passive, and the joint connections are power-conserving
