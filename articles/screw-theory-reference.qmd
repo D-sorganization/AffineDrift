@@ -191,12 +191,12 @@ Joint torques $\tau \in \mathbb{R}^n$ relate to input wrenches via
 $$
 \mathcal{F}_{\mathrm{input}}
 =
-J_s(q)^{-T}\tau
+(J_s(q)^\top)^+ \tau
 =
-J_s(q)^{-T} B u,
+(J_s(q)^\top)^+ B u,
 $$
 
-where $B$ is the input distribution matrix and $u$ is the vector of joint inputs. The total wrench at a given point is then
+where $B$ is the input distribution matrix, $u$ is the vector of joint inputs, and $(J_s^\top)^+$ denotes the Moore-Penrose pseudoinverse of the transpose of the screw Jacobian. This pseudoinverse is necessary because $J_s$ is generally a $6 \times n$ matrix and is not square for systems with $n \neq 6$ (redundant or underactuated). The pseudoinverse provides the minimum-norm wrench that satisfies the fundamental duality relationship $\tau = J_s^\top \mathcal{F}_{\mathrm{input}}$. The total wrench at a given point is then
 
 $$
 \mathcal{F}_{\mathrm{total}}
