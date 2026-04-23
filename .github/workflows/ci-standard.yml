@@ -49,7 +49,7 @@ jobs:
           python3 --version
           pip --version
           ruff --version
-          black --version
+          python3 -m black --version
           mypy --version
 
       # FIX: Less aggressive Ruff (Errors, Warnings, Imports only)
@@ -58,7 +58,7 @@ jobs:
 
       # FIX: Enforce Black formatting (100 chars — matches pyproject.toml [tool.black] line-length)
       - name: Check Formatting
-        run: black --check --line-length 100 .
+        run: python3 -m black --check --line-length 100 .
 
       - run: pip install mypy types-PyYAML types-requests
       - run: pip install -r requirements.txt
