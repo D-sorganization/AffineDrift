@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-04-20T23:44:59Z
+Last-Updated: 2026-04-23T02:45:24Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,8 +29,8 @@ Last-Updated: 2026-04-20T23:44:59Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.74                                           |
-| **Last Spec Update**    | 2026-04-20                                       |
+| **Spec Version**        | 1.0.75                                           |
+| **Last Spec Update**    | 2026-04-22                                       |
 
 ## 2. Purpose & Mission
 
@@ -466,6 +466,7 @@ python src/tools/code_quality_ast.py
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | ---------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-04-22 | 1.0.75  | fix(content): corrected the ZTCF Identifiability Critique link in `articles/theory-part2.qmd` and added a regression guard preventing top-level article links from escaping above the rendered article root.                                                                                                                                                                                                                                                                                                                                                                                  |
 | 2026-04-18 | 1.0.72  | fix(ci): made TinyTeX path discovery persistent across Quarto PDF workflow steps by exporting common TinyTeX/local binary directories and appending them to `GITHUB_PATH` before TeX verification and rendering.                                                                                                                                                                                                                                                                                                                                                                            |
 | 2026-04-18 | 1.0.71  | fix(ci): supplied a non-secret placeholder Codecov token for PR-only Quarto PDF rendering so dotenv validation does not block local runner PDF artifacts, removed a Quarto syntax scanner violation in the DDP pseudocode, and restored the Physics of Golf DCR glossary phrase expected by content lint.                                                                                                                                                                                                                                                                                   |
 | 2026-04-18 | 1.0.70  | fix(ci): added the Geometry of Motion LaTeX style, TikZ libraries, theorem fallbacks, and shared math macro fallbacks to the Quarto PDF configuration; normalized Quarto chapter LaTeX shorthands and fixed exposed PDF content errors so the self-hosted render completes instead of failing on HTML-only MathJax macros or stale masked errors.                                                                                                                                                                                                                                           |
