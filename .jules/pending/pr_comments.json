@@ -1,0 +1,16 @@
+{
+  "comments": [
+    {
+      "comment_id": "3114437027",
+      "pr_number": 2641,
+      "type": "review",
+      "author": "chatgpt-codex-connector[bot]",
+      "body": "**<sub><sub>![P2 Badge](https://img.shields.io/badge/P2-yellow?style=flat)</sub></sub>  Fix broken quoting in rate-limit check command**\n\nWhen the `Checking Rate Limit Status` snippet is copied into a shell, the `python3 -c \"...\"` string contains unescaped `\"` characters in `r[\"remaining\"]`/`r[\"limit\"]`, so the inner key quotes are stripped before Python evaluates the f-string. This causes a runtime `NameError` instead of printing quota data, making the documented command unusable for the exact workflow this section introduces.\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.",
+      "path": "AGENTS.md",
+      "line": 756,
+      "queued_at": "2026-04-21T00:56:39Z",
+      "repository": "D-sorganization/AffineDrift"
+    }
+  ],
+  "last_updated": "2026-04-21T00:56:39Z"
+}

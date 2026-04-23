@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
-"""Normalize the wrist article HTML with repo-root-relative path handling.
-
-The script keeps the existing HTML cleanup rules, but resolves paths relative to
-the repository root so it can run from any checkout without a hardcoded local
-Windows path.
-"""
+"""Normalize the wrist article HTML with repo-root-relative path handling."""
 
 from __future__ import annotations
 
