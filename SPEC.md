@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-04-23T09:20:00Z
+Last-Updated: 2026-04-23T09:49:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-04-23T09:20:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.81                                           |
+| **Spec Version**        | 1.0.82                                           |
 | **Last Spec Update**    | 2026-04-23                                       |
 
 ## 2. Purpose & Mission
@@ -118,6 +118,7 @@ AffineDrift/
 ├── scripts/                     # Content and repository maintenance utilities
 │   ├── check_bibliography_quality.py # Bibliography structure and metadata validation
 │   ├── check_qmd_citation_keys.py    # Quarto citation-key integrity scan for site content
+│   ├── check_quarto_render_coverage.py # Sitemap-to-source coverage guard for Quarto pages
 │   ├── cli_output.py                 # Explicit stdout/stderr helpers for intentional CLI contracts
 │   └── README.md                # Script usage and CI-facing documentation
 ├── tests/                       # Additional test organization
@@ -164,7 +165,7 @@ AffineDrift/
 | F10 | Progressive Web App Support             | ✅     | Service worker and manifest for PWA capabilities with bounded offline caching and update notices (offline access, installability)                                                                                                                                                                                                                                                                |
 | F11 | Textbook Compilation Pipeline           | ✅     | Quarto pipeline to compile educational materials into publishable textbook format                                                                                                                                                                                                                                                                                                                |
 | F12 | Textbook claim guardrail                | ✅     | PR CI blocks newly added unsupported quantitative or study claims in textbook content unless they include a citation or an explicit illustrative caveat                                                                                                                                                                                                                                          |
-| F13 | PR site-build and dependency-audit gate | ✅     | `ci-standard.yml` caches Python dependencies, audits Python dependencies with blocking `pip-audit`, measures coverage across the full `src/` tree, renders the Quarto site in PR CI, syncs frontend assets, and runs Playwright smoke tests against the generated docs, including workflow-file changes in CI triggers                                                                           |
+| F13 | PR site-build and dependency-audit gate | ✅     | `ci-standard.yml` caches Python dependencies, audits Python dependencies with blocking `pip-audit`, measures coverage across the full `src/` tree, renders the Quarto site in PR CI, validates sitemap URLs against committed Quarto source pages, syncs frontend assets, and runs Playwright smoke tests against the generated docs, including workflow-file changes in CI triggers                 |
 | F14 | Bibliography duplicate-alias guardrail  | ✅     | Reference-integrity tests require duplicate bibliography records to carry an explicit legacy-compatibility note instead of silently diverging                                                                                                                                                                                                                                                    |
 | F15 | Textbook bibliography synchronization   | ✅     | The Geometry of Motion and The Physics of Golf keep chapter-level citations synchronized with shared bibliography sources in `references/affine-drift.bib` and the book-specific `.bib` files                                                                                                                                                                                                    |
 | F16 | Website citation-resolution guardrail   | ✅     | PR CI scans website `.qmd` sources, resolves their configured bibliography files, and fails when citation keys do not map to a known bibliography entry                                                                                                                                                                                                                                          |
@@ -573,3 +574,4 @@ python src/tools/code_quality_ast.py
 | 2026-04-21 | 1.0.3 | fix(security): Prevent DOM-based XSS in history URLs by using URL constructor and allowlist for http/https |
 | 2026-04-23 | 1.0.80 | fix(content): Replace raw LaTeX theorem-like environments in AffineDrift articles with Quarto callouts, teach the Quarto syntax scanner to block those raw environments in future edits, and restore the repo-root `fix_html.py` normalization entry point used by tests and CLI workflows. |
 | 2026-04-23 | 1.0.81 | fix(content): Correct the Geometry of Motion humanoid parent-array examples so their prose matches the encoded tree topology, with a regression test guarding both chapter examples. |
+| 2026-04-23 | 1.0.82 | fix(site): Add `scripts/check_quarto_render_coverage.py` and focused tests so CI verifies every sitemap URL maps to a committed Quarto source file before site builds proceed. |
