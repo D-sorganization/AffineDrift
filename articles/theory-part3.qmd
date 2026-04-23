@@ -110,7 +110,7 @@ $$
 
 *Proof.* Recall the definition of $f(x)$ derived in Part I:
 $$
-f(x) = \begin{bmatrix} \dot{q} \\ \dot{\eta} \\ -M^{-1}(q,\eta) \left( C(x) \dot{q}_{\text{sys}} + G(q,\eta) + F_s(\eta,\dot{\eta}) \right) \end{bmatrix}.
+f(x) = \begin{bmatrix} \dot{q} \\ [a_{\text{drift}}(x)]_{1:n} \\ \dot{\eta} \\ [a_{\text{drift}}(x)]_{n+1:n+m} \end{bmatrix}.
 $$
 The terms constituting $f(x)$ are:
 1.  **Kinematic rates:** The state variables $\dot{q}, \dot{\eta}$ are independent of the input $u$ by definition in the first-order form ($\dot{x} = \dots$), so $\frac{\partial \dot{q}}{\partial u} = 0$.
@@ -123,11 +123,11 @@ We perform the differentiation explicitly block-by-block. Let $h(x) = C(x)\dot{q
 $$
 \frac{\partial f(x)}{\partial u} = \frac{\partial}{\partial u}
 \begin{bmatrix}
-\dot{q} \\ \dot{\eta} \\ -M^{-1} h(x)
+\dot{q} \\ [a_{\text{drift}}(x)]_{1:n} \\ \dot{\eta} \\ [a_{\text{drift}}(x)]_{n+1:n+m}
 \end{bmatrix}
 =
 \begin{bmatrix}
-0 \\ 0 \\ -\frac{\partial M^{-1}}{\partial u} h(x) - M^{-1} \frac{\partial h(x)}{\partial u}
+0 \\ \left[-\frac{\partial M^{-1}}{\partial u} h(x) - M^{-1} \frac{\partial h(x)}{\partial u}\right]_{1:n} \\ 0 \\ \left[-\frac{\partial M^{-1}}{\partial u} h(x) - M^{-1} \frac{\partial h(x)}{\partial u}\right]_{n+1:n+m}
 \end{bmatrix}.
 $$
 Since $M^{-1}$ depends only on $q, \eta$ and $h(x)$ depends only on $q, \eta, \dot{q}, \dot{\eta}$, both partial derivatives with respect to $u$ are zero.
@@ -163,7 +163,7 @@ Thus,
 
 $$f(x) =
   \begin{bmatrix}
-    \dot{q} \\ a_{\text{drift}}(x) \\ \dot{\eta} \\ [a_{\text{drift}}(x)]_{\text{flex}}
+    \dot{q} \\ [a_{\text{drift}}(x)]_{1:n} \\ \dot{\eta} \\ [a_{\text{drift}}(x)]_{n+1:n+m}
   \end{bmatrix}$$
 
 is an intrinsic property of the system's geometry, inertia, shaft deformation, and velocities, but **not** of the applied torques.
