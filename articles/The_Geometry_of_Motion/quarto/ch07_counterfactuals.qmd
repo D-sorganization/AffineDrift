@@ -111,7 +111,9 @@ Comparing the actual trajectory to the ZTCF reveals exactly how much the "driver
 The well-posedness of the ZTCF rests on classical existence and uniqueness theorems for
 ordinary differential equations. We formally state the conditions here.
 
-\begin{theorem}[Picard--Lindelöf Existence and Uniqueness]
+::: {.theorem}
+**Picard--Lindelöf Existence and Uniqueness**
+
 \label{thm:ch7:picard-lindelof}
 Let $f:\R^n\to\R^n$ be a vector field that is continuously differentiable (i.e., $f\in C^1$).
 Then for any initial condition $\x_0\in\R^n$, there exists a unique, continuously
@@ -121,7 +123,7 @@ differentiable trajectory $\x^{(0)}(t)$ satisfying the initial value problem
 \label{eq:ch7:ivp}
 \end{equation}
 defined on some open interval $(t_0-\epsilon, t_0+\epsilon)$ for some $\epsilon>0$.
-\end{theorem}
+:::
 
 \noindent**Proof sketch:** The Picard--Lindelöf theorem follows from the contraction
 mapping principle. Define the sequence of successive approximations
@@ -156,7 +158,9 @@ starting from $\x_0$ at $t=t_0$ (assuming $t_0=0$ for notational simplicity).
 
 The flow map has the following properties:
 
-\begin{proposition}[Properties of the Flow Map]
+::: {.proposition}
+**Properties of the Flow Map**
+
 \label{prop:ch7:flow-properties}
 Suppose $f\in C^1(\R^n)$ and the solutions of $\dot{\x} = f(\x)$ exist for all time. Then:
 1. **Initial condition:** $\phi_0^f(\x_0) = \x_0$.
@@ -171,7 +175,7 @@ Suppose $f\in C^1(\R^n)$ and the solutions of $\dot{\x} = f(\x)$ exist for all t
    \frac{\partial \phi_0^f}{\partial \x_0} = I.
    \label{eq:ch7:variational}
    \end{equation}
-\end{proposition}
+:::
 
 The variational equation~\eqref{eq:ch7:variational} is crucial: it shows how perturbations
 to the initial state propagate along the ZTCF trajectory. The Jacobian matrix
@@ -600,13 +604,15 @@ propagate along the ZTCF.
 :::
 
 
-\begin{theorem}[Drift Contraction via Eigenvalues]
+::: {.theorem}
+**Drift Contraction via Eigenvalues**
+
 \label{thm:ch7:drift-contraction}
 Suppose the drift Jacobian $J_f(\x)$ is symmetric and negative definite (all eigenvalues
 have negative real part) along a trajectory $\x(t)$. Then the ZTCF trajectory is locally
 contracting: small perturbations $\delta\x$ perpendicular to the flow direction decay
 exponentially.
-\end{theorem}
+:::
 
 \noindent**Intuition:** If the drift Jacobian has negative eigenvalues, then the
 drift vector field is "pulling inward"---a hallmark of stability. Examples include:
@@ -620,11 +626,13 @@ drift vector field is "pulling inward"---a hallmark of stability. Examples inclu
 
 When the drift is contracting, the optimal control strategy is often *minimal intervention*:
 
-\begin{proposition}[Minimal Intervention in Contracting Drift]
+::: {.proposition}
+**Minimal Intervention in Contracting Drift**
+
 \label{prop:ch7:minimal-intervention}
 If the ZTCF is contracting (drift Jacobian has negative eigenvalues), then the optimal
 control in the long term approaches zero: $\uvec^*(t) \to 0$ as $t\to\infty$.
-\end{proposition}
+:::
 
 \noindent**Rationale:** If the passive dynamics already move the state toward a stable
 attractor, actively fighting these dynamics is wasteful. The optimal controller should allow
@@ -689,12 +697,12 @@ $E_{\text{ZTCF}}(t)$ is constant:
 
 This means that the ZTCF does not lose or gain energy; it oscillates at constant energy.
 
-\begin{example}
+::: {.example}
 An unpowered pendulum released from angle $\theta_0$ will swing back and forth, with the
 energy divided between kinetic and potential as it swings. The ZTCF energy is constant: as
 it swings down, potential energy converts to kinetic; as it swings up, kinetic converts
 back to potential.
-\end{example}
+:::
 
 
 ### Dissipative Drift: Energy Decay
@@ -1020,7 +1028,9 @@ Qualitatively:
 
 We now provide a formal proof of the condition under which the drift itself is contracting.
 
-\begin{theorem}[Drift Contraction via Negative Eigenvalues]
+::: {.theorem}
+**Drift Contraction via Negative Eigenvalues**
+
 \label{thm:ch7:drift-contraction-proof}
 Let $f\in C^1(\mathcal{X})$ be the drift vector field on a domain $\mathcal{X}$. Suppose the
 drift Jacobian $J_f(\x) := \frac{\partial f}{\partial\x}$ is symmetric and has all eigenvalues
@@ -1032,7 +1042,7 @@ distance between the solutions satisfies
 \label{eq:ch7:exponential-contraction}
 \end{equation}
 for some $\alpha > 0$.
-\end{theorem}
+:::
 
 \noindent**Proof:** Consider the Lyapunov function $V(\delta\x) = \frac{1}{2}\norm{\delta\x}^2$,
 where $\delta\x = \x_1 - \x_2$ is the perturbation. Along the ZTCF, the time derivative is:
@@ -1056,7 +1066,9 @@ which implies equation~\eqref{eq:ch7:exponential-contraction}. \quad\ensuremath{
 
 We now prove that when drift dominates, the optimal control approaches zero.
 
-\begin{theorem}[Minimal Intervention Control Law]
+::: {.theorem}
+**Minimal Intervention Control Law**
+
 \label{thm:ch7:minimal-intervention-full}
 Consider the cost functional
 \begin{equation}
@@ -1073,7 +1085,7 @@ optimal control is approximately
 \end{equation}
 where the gain matrix $K(\x)$ is small: $\norm{K(\x)} \to 0$ as the drift--control ratio
 $\to\infty$.
-\end{theorem}
+:::
 
 \noindent**Sketch of proof:** The Hamilton--Jacobi--Bellman equation is:
 \begin{equation}
@@ -1095,12 +1107,14 @@ is minimal.
 ### Stability Without Control
 
 
-\begin{proposition}[ZTCF Stability Implies Easy Stabilization]
+::: {.proposition}
+**ZTCF Stability Implies Easy Stabilization**
+
 \label{prop:ch7:ztcf-stability}
 If the ZTCF is exponentially stable (all drift Jacobian eigenvalues in the left half-plane),
 then any feedback law $\uvec = K[\x - \x^*]$ with $K$ sufficiently small will stabilize the
 closed-loop system.
-\end{proposition}
+:::
 
 \noindent**Rationale:** If the drift already moves toward $\x^*$, then a small feedback
 perturbation will not destabilize the system; the drift does the work, and the feedback just
