@@ -110,8 +110,9 @@ $$
 
 *Proof.* Recall the definition of $f(x)$ derived in Part I:
 $$
-f(x) = \begin{bmatrix} \dot{q} \\ \dot{\eta} \\ -M^{-1}(q,\eta) \left( C(x) \dot{q}_{\text{sys}} + G(q,\eta) + F_s(\eta,\dot{\eta}) \right) \end{bmatrix}.
+f(x) = \begin{bmatrix} \dot{q} \\ [a_{\text{drift}}(x)]_{1:n} \\ \dot{\eta} \\ [a_{\text{drift}}(x)]_{n+1:n+m} \end{bmatrix},
 $$
+where $a_{\text{drift}}(x) = -M^{-1}(q,\eta) \left( C(x) \dot{q}_{\text{sys}} + G(q,\eta) + F_s(\eta,\dot{\eta}) \right)$.
 The terms constituting $f(x)$ are:
 1.  **Kinematic rates:** The state variables $\dot{q}, \dot{\eta}$ are treated as independent of the input $u$ in the instantaneous state-space formulation. While $u$ obviously causes future changes in velocity over time, at any fixed instant $t$, the current state $x(t)$ is independent of the current input $u(t)$, meaning the instantaneous partial derivative is zero: $\frac{\partial \dot{q}}{\partial u} = 0$.
 2.  **Inertia:** The mass matrix $M(q,\eta)$ and its inverse $M^{-1}$ are functions of the configuration manifold coordinates only. Thus, $\frac{\partial M^{-1}}{\partial u} = 0$.
@@ -123,11 +124,11 @@ We perform the differentiation explicitly block-by-block. Let $h(x) = C(x)\dot{q
 $$
 \frac{\partial f(x)}{\partial u} = \frac{\partial}{\partial u}
 \begin{bmatrix}
-\dot{q} \\ \dot{\eta} \\ -M^{-1} h(x)
+\dot{q} \\ [a_{\text{drift}}(x)]_{1:n} \\ \dot{\eta} \\ [a_{\text{drift}}(x)]_{n+1:n+m}
 \end{bmatrix}
 =
 \begin{bmatrix}
-0 \\ 0 \\ -\frac{\partial M^{-1}}{\partial u} h(x) - M^{-1} \frac{\partial h(x)}{\partial u}
+0 \\ \left[-\frac{\partial M^{-1}}{\partial u} h(x) - M^{-1} \frac{\partial h(x)}{\partial u}\right]_{1:n} \\ 0 \\ \left[-\frac{\partial M^{-1}}{\partial u} h(x) - M^{-1} \frac{\partial h(x)}{\partial u}\right]_{n+1:n+m}
 \end{bmatrix}.
 $$
 Since $M^{-1}$ depends only on $q, \eta$ and $h(x)$ depends only on $q, \eta, \dot{q}, \dot{\eta}$, both partial derivatives with respect to $u$ are zero.
