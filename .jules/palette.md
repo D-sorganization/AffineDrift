@@ -45,9 +45,3 @@
 ## 2024-04-16 - Always specify type='button' for dynamic buttons
 **Learning:** Dynamically created HTML buttons without an explicit 'type' attribute default to 'submit', which can trigger unintended form submissions or page reloads if placed inside a form.
 **Action:** Always explicitly assign `button.type = 'button'` when creating non-submit buttons via JavaScript.
-## 2024-05-30 - Visual State Synchronization for Collapsible Elements
-**Learning:** Adding `aria-expanded` and `aria-controls` is crucial for screen readers, but the visual state of the toggle (like a caret icon) must also change to reflect the expanded/collapsed state for sighted users. Without visual feedback, users may not realize the toggle's function or current state.
-**Action:** When implementing or auditing collapsible sections, ensure CSS rules utilize the `[aria-expanded="true"]` attribute selector to provide visual changes (like rotating an icon), keeping visual and semantic states synchronized.
-## 2026-04-21 - Added ARIA live region to splash screen
-**Learning:** Loading splash screens with dynamically updated text need aria-live="polite" and aria-atomic="true" so screen readers announce the progress changes properly.
-**Action:** Always add aria-live and aria-atomic to loading status elements.
