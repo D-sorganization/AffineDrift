@@ -206,9 +206,12 @@ where the *drift torque* is defined by evaluating the passive terms at the actua
 
 $$\tau_{\text{drift}}\big(x(t)\big)
   =
-  M_{q}(q,\eta)\,\big[a_{\text{drift}}(x(t))\big]_{1:n},$$
+  \begin{bmatrix}
+    M_{qq}(q,\eta) & M_{q\eta}(q,\eta)
+  \end{bmatrix}
+  a_{\text{drift}}\big(x(t)\big),$$
 
-and $M_{q}$ denotes the block of the inertia matrix mapping rigid accelerations to generalized torques (see the Appendices for details).
+where $a_{\text{drift}}(x(t))$ is the full drift acceleration vector, including both rigid and flexible components. Writing the rigid-torque row block explicitly keeps the recoil term $M_{q\eta}\ddot{\eta}_{\text{drift}}$ visible instead of hiding it behind an undefined shorthand.
 
 Physically, $\tau_{\text{drift}}$ represents the generalized torque required to sustain the passive acceleration $a_{\text{drift}}$. Since $a_{\text{drift}}$ is the system's natural response to its own internal state (gravity, elasticity, velocity coupling), $\tau_{\text{drift}}$ captures the 'inertial cost' of the system's current momentum and configuration. Subtracting this cost from the total torque reveals the surplus provided by the input.
 
