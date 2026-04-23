@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-04-23T05:35:00Z
+Last-Updated: 2026-04-23T06:54:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-04-23T05:35:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.77                                           |
+| **Spec Version**        | 1.0.78                                           |
 | **Last Spec Update**    | 2026-04-23                                       |
 
 ## 2. Purpose & Mission
@@ -467,6 +467,7 @@ python src/tools/code_quality_ast.py
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | ---------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-04-23 | 1.0.78  | fix(content): corrected Quarto cross-reference syntax in `articles/affine-nature-golf-swing.qmd` and `articles/inverse-dynamics.qmd`, replacing undefined appendix/equation citation keys with native section/equation refs, moving equation labels to renderable display-math positions, and adding content regression checks for these patterns.                                                                                                                                                                                                                                      |
 | 2026-04-23 | 1.0.77  | chore(hygiene): removed tracked root-level review, lint, generated PDF, scratch, and temporary issue-body artifacts; added regression checks that prevent these root artifacts and book-source `.tmp` files from returning; and expanded ignore rules for transient automation/review scratch outputs.                                                                                                                                                                                                                                                                                         |
 | 2026-04-22 | 1.0.75  | fix(content): corrected the ZTCF Identifiability Critique link in `articles/theory-part2.qmd` and added a regression guard preventing top-level article links from escaping above the rendered article root.                                                                                                                                                                                                                                                                                                                                                                                  |
 | 2026-04-18 | 1.0.72  | fix(ci): made TinyTeX path discovery persistent across Quarto PDF workflow steps by exporting common TinyTeX/local binary directories and appending them to `GITHUB_PATH` before TeX verification and rendering.                                                                                                                                                                                                                                                                                                                                                                            |
