@@ -25,7 +25,7 @@ In classical robotics, the goal is often full actuation: one motor for every deg
 
 But nature does not build fully actuated systems, and neither do athletes.
 
-When a gymnast swings on a high bar, their center of mass rotates around the bar, but they have no motor at the bar---that ``joint'' is a passive pin constraint. When a human walks, the foot acting as the pivot is unactuated during the single-support phase; we cannot create torque from a point contact. And crucially for our running example, when a golfer releases the club during the downswing, the wrist joint acts as a free hinge. The club undergoes rapid angular acceleration, \emph{driven entirely by the passive physics} of the coupling terms $M_{21}\ddot{\theta}_1 + C_2$ in the unactuated dynamics, not by muscular torque applied at the wrist \cite{NesbitSerrano2005}; this phenomenon was first popularized in Cochran and Stobbs' qualitative account \cite{CochranStobbs1968}.
+When a gymnast swings on a high bar, their center of mass rotates around the bar, but they have no motor at the bar---that ``joint'' is a passive pin constraint. When a human walks, the foot acting as the pivot is unactuated during the single-support phase; we cannot create torque from a point contact. In a simplified golf model, the wrist can be treated as a low-torque or passive hinge over part of the release. The club then undergoes rapid angular acceleration shaped by the coupling terms $M_{21}\ddot{\theta}_1 + C_2$ in the unactuated dynamics, not by a direct wrist motor in the model \cite{NesbitSerrano2005}; Cochran and Stobbs provide an influential qualitative account of this release mechanism \cite{CochranStobbs1968}. The assumption is useful, but it is not a claim that every real wrist torque is zero.
 
 \begin{definition}{Underactuated System}{underactuated}
   Consider a mechanical system with $n$ degrees of freedom (DOF) and configuration coordinates $\bm{q} \in \configspace \subseteq \Reals^n$. The equations of motion take the standard manipulator form:
@@ -194,13 +194,13 @@ Revisiting the concept of Transverse Linearization (Chapter~4), if we linearize 
 We find a notable physical phenomenon:
 \begin{itemize}
   \item During the early downswing, the club's zero dynamics are \emph{unstable}. If the club gets slightly out of position, the centrifugal force tends to pull it further off the optimal plane.
-  \item During the late downswing (the release phase), the club's zero dynamics become \emph{strongly stable}. The massive acceleration $\ddot{\theta}_2 \gg 0$ acts like a stiff restoring spring. The centrifugal force aligns the club perfectly with the arms. 
+  \item During the late downswing (the release phase), the club's zero dynamics may become strongly attracting in the simplified model. Large club acceleration can act like a restoring term, but the degree of alignment depends on the selected parameters, grip model, and disturbance assumptions.
 \end{itemize}
 
-This is the manifestation of the time-varying tube (the Funnel) from Chapter~1! The passive physics naturally form a wide, loose tube that tightens into an incredibly precise singularity exactly at the moment of impact. The golfer does not need to use wrist torque to steer the clubhead to the ball; if the shoulder inputs are grossly correct, the physics of the double pendulum \emph{pulls} the clubhead into the ball.
+This is the model analogue of the time-varying tube from Chapter~1. In favorable parameter regimes, passive coupling can make the admissible-error set wide early in the motion and narrower near impact. The result is not a literal singularity and not a coaching rule that wrist torque is unnecessary; it is a statement about a specified underactuated model whose phase, grip, shaft, and actuator assumptions must be checked.
 
 \begin{remark}{Why Good Swings Feel Effortless}{effortless}
-  Novice golfers attempt to fully actuate the swing. They use their wrists to steer the club, treating it as a fully actuated robotic arm. This fights the passive dynamics, resulting in slower club speeds and higher variability. Pro golfers use their arms and torso to set up the boundary conditions for the passive wrist release. By acting primarily in the null space (letting the unactuated dynamics dominate), the swing maximizes speed and consistency. The physics does the work.
+  The common coaching phrase ``let the club release'' is compatible with an underactuated model, but it should not be read as a measured neuromuscular fact. A skilled swing may use the arms and torso to set boundary conditions for passive release while still applying grip and wrist torques. Whether that strategy improves speed or consistency must be tested against measured kinematics, force data, and the assumed wrist model.
 \end{remark}
 
 % ══════════════════════════════════════════════
@@ -209,7 +209,7 @@ This is the manifestation of the time-varying tube (the Funnel) from Chapter~1! 
 
 A remarkable feature of underactuated optimal control is the existence of \textbf{abnormal extremals}---optimal trajectories where the maximum principle is satisfied in a degenerate way (the costate is proportional to the velocity). These do not appear in standard optimal control with full actuation, but are pervasive in underactuated systems. As explained by Agrachev and Sachkov \cite{AgrachevSachkov2004}, abnormal extremals correspond precisely to trajectories where the control must be ``singular''---switching instantaneously or taking on a specific form not derivable from the regular Hamiltonian maximization.
 
-In the golf swing, the club's dramatic acceleration during the wrist release is achieved partly through an abnormal arc. The control does not smoothly follow from the Hamiltonian; instead, it must switch or saturate to exploit the maximum amount of inertial coupling available. The geometry of the Lie bracket generates this singular structure automatically. Recognition of abnormal extremals is crucial for trajectory optimization: standard numerical solvers may miss them unless the problem is explicitly formulated to allow singular controls.
+In a simplified swing model, the club's rapid acceleration during release may correspond to an abnormal or near-singular arc. The control may switch or saturate to exploit inertial coupling, but this is a model prediction rather than a universal property of golf swings. Recognizing possible abnormal extremals is important for trajectory optimization because standard numerical solvers can miss them unless the problem formulation allows switching, saturation, and active-set changes.
 
 % ══════════════════════════════════════════════
 \section{Summary}
@@ -233,7 +233,7 @@ In the golf swing, the club's dramatic acceleration during the wrist release is 
 
 \vspace{0.3cm}
 
-Underactuation forces a shift from ``forcing'' a system to an equilibrium, to ``orchestrating'' the natural physics of the system. The trajectory is a choreography between the motors and gravity/inertia. In Chapter~6, we will see how numerical trajectory optimization can synthesize these choreographies automatically by solving optimal control problems that explicitly respect the $\Bmat^\perp$ constraint.
+Underactuation shifts the modeling task from forcing every coordinate independently to shaping the interaction between actuators, gravity, inertia, and constraints. In Chapter~6, numerical trajectory optimization is used to search for such motions by solving optimal-control problems that explicitly respect the $\Bmat^\perp$ constraint and the stated actuator limits.
 
 % ══════════════════════════════════════════════
 \section{Exercises}
@@ -265,4 +265,3 @@ Underactuation forces a shift from ``forcing'' a system to an equilibrium, to ``
   Control is not dominion over nature;\\
   it is an intelligent negotiation with it.}
 \end{center}
-

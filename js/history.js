@@ -81,7 +81,16 @@ export function updateHistorySidebar() {
         for (const item of displayHistory) {
             const li = document.createElement("li");
             const a = document.createElement("a");
-            a.href = typeof item.url === "string" && !item.url.replace(/[\x00-\x20]/g, "").toLowerCase().startsWith("javascript:") ? item.url : "#";
+            let safeUrl = "#";
+            if (typeof item.url === "string") {
+                try {
+                    const parsed = new URL(item.url, window.location.origin);
+                    if (parsed.protocol === "http:" || parsed.protocol === "https:") {
+                        safeUrl = item.url;
+                    }
+                } catch (e) {}
+            }
+            a.href = safeUrl;
             const displayTitle =
                 item.title.length > MAX_HISTORY_TITLE_LENGTH
                     ? item.title.substring(0, MAX_HISTORY_TITLE_LENGTH) + "..."
@@ -158,7 +167,16 @@ export function initArticleHistory() {
             for (const item of history) {
                 const li = document.createElement("li");
                 const a = document.createElement("a");
-                a.href = typeof item.url === "string" && !item.url.replace(/[\x00-\x20]/g, "").toLowerCase().startsWith("javascript:") ? item.url : "#";
+                let safeUrl = "#";
+                if (typeof item.url === "string") {
+                    try {
+                        const parsed = new URL(item.url, window.location.origin);
+                        if (parsed.protocol === "http:" || parsed.protocol === "https:") {
+                            safeUrl = item.url;
+                        }
+                    } catch (e) {}
+                }
+                a.href = safeUrl;
                 a.textContent = item.title;
                 li.appendChild(a);
                 fragment.appendChild(li);

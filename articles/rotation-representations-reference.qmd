@@ -184,23 +184,31 @@ def R_to_axis_angle(R):
 
 def R_to_quaternion(R):
     """Convert rotation matrix to unit quaternion (w, x, y, z)."""
-    w = 0.5 * np.sqrt(max(0, 1 + np.trace(R)))
-    if w < 1e-10:
-        # Degenerate case: 180° rotation
-        w = 0.0
-        x = np.sqrt(max(0, (1 + R[0, 0]) / 2))
-        y = np.sqrt(max(0, (1 + R[1, 1]) / 2))
-        z = np.sqrt(max(0, (1 + R[2, 2]) / 2))
-        if R[2, 1] - R[1, 2] < 0:
-            x = -x
-        if R[0, 2] - R[2, 0] < 0:
-            y = -y
-        if R[1, 0] - R[0, 1] < 0:
-            z = -z
+    tr = np.trace(R)
+    if tr > 0:
+        scale = 2 * np.sqrt(1 + tr)
+        w = 0.25 * scale
+        x = (R[2, 1] - R[1, 2]) / scale
+        y = (R[0, 2] - R[2, 0]) / scale
+        z = (R[1, 0] - R[0, 1]) / scale
+    elif R[0, 0] > R[1, 1] and R[0, 0] > R[2, 2]:
+        scale = 2 * np.sqrt(1 + R[0, 0] - R[1, 1] - R[2, 2])
+        w = (R[2, 1] - R[1, 2]) / scale
+        x = 0.25 * scale
+        y = (R[0, 1] + R[1, 0]) / scale
+        z = (R[0, 2] + R[2, 0]) / scale
+    elif R[1, 1] > R[2, 2]:
+        scale = 2 * np.sqrt(1 + R[1, 1] - R[0, 0] - R[2, 2])
+        w = (R[0, 2] - R[2, 0]) / scale
+        x = (R[0, 1] + R[1, 0]) / scale
+        y = 0.25 * scale
+        z = (R[1, 2] + R[2, 1]) / scale
     else:
-        x = (R[2, 1] - R[1, 2]) / (4 * w)
-        y = (R[0, 2] - R[2, 0]) / (4 * w)
-        z = (R[1, 0] - R[0, 1]) / (4 * w)
+        scale = 2 * np.sqrt(1 + R[2, 2] - R[0, 0] - R[1, 1])
+        w = (R[1, 0] - R[0, 1]) / scale
+        x = (R[0, 2] + R[2, 0]) / scale
+        y = (R[1, 2] + R[2, 1]) / scale
+        z = 0.25 * scale
     return np.array([w, x, y, z])
 
 
@@ -246,6 +254,12 @@ q = R_to_quaternion(R_orig)
 R_from_q = quaternion_to_R(q)
 psi, th, phi = R_to_euler_zyx(R_orig)
 R_from_euler = euler_zyx_to_R(psi, th, phi)
+
+axis_pi = np.array([-1.0, 2.0, -3.0])
+axis_pi = axis_pi / np.linalg.norm(axis_pi)
+q_pi = R_to_quaternion(axis_angle_to_R(axis_pi, np.pi))
+expected_q_pi = np.concatenate(([0.0], axis_pi))
+assert np.allclose(q_pi, expected_q_pi) or np.allclose(q_pi, -expected_q_pi)
 
 print(f"Axis-angle round-trip error:  {abs(theta - theta_back):.2e}")
 print(f"Quaternion round-trip error:  {np.max(np.abs(R_orig - R_from_q)):.2e}")

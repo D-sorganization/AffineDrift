@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-04-20T00:00:00Z
+Last-Updated: 2026-04-23T06:54:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,8 +29,8 @@ Last-Updated: 2026-04-20T00:00:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.73                                           |
-| **Last Spec Update**    | 2026-04-20                                       |
+| **Spec Version**        | 1.0.80                                           |
+| **Last Spec Update**    | 2026-04-23                                       |
 
 ## 2. Purpose & Mission
 
@@ -190,6 +190,7 @@ AffineDrift/
 | F35 | Face-angle sensitivity consistency      | ✅     | Physics of Golf chapter 31 keeps driver face-angle offline-distance sensitivity in the documented 13--20 yards-per-degree range and regression tests block the previous 60--70 yards-per-degree contradiction.                                                                                                                                                                                   |
 | F36 | Dynamic beam model consistency          | ✅     | Physics of Golf chapter 11 uses the dynamic Euler-Bernoulli equation with explicit inertial term and a content test guards the modal consistency of the governing equation in the chapter source.                                                                                                                                                                                                |
 | F37 | Double-pendulum parameter context       | ✅     | Physics of Golf chapters 3, 6, and 8 explicitly document when their double- or triple-pendulum parameters are canonical chapter baselines versus compact worked-example sets, with content tests guarding the modeling-context notes.                                                                                                                                                            |
+| F38 | Robust quaternion extraction            | ✅     | The rotation-representations reference article uses a numerically stable matrix-to-quaternion extraction path for trace-positive and dominant-axis cases, with executable regression coverage for 180-degree rotations about coordinate axes and arbitrary unit axes.                                                                                                                              |
 
 ### API / Interface Contract
 
@@ -466,6 +467,9 @@ python src/tools/code_quality_ast.py
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | ---------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-04-23 | 1.0.78  | fix(content): corrected Quarto cross-reference syntax in `articles/affine-nature-golf-swing.qmd` and `articles/inverse-dynamics.qmd`, replacing undefined appendix/equation citation keys with native section/equation refs, moving equation labels to renderable display-math positions, and adding content regression checks for these patterns.                                                                                                                                                                                                                                      |
+| 2026-04-23 | 1.0.77  | chore(hygiene): removed tracked root-level review, lint, generated PDF, scratch, and temporary issue-body artifacts; added regression checks that prevent these root artifacts and book-source `.tmp` files from returning; and expanded ignore rules for transient automation/review scratch outputs.                                                                                                                                                                                                                                                                                         |
+| 2026-04-22 | 1.0.75  | fix(content): corrected the ZTCF Identifiability Critique link in `articles/theory-part2.qmd` and added a regression guard preventing top-level article links from escaping above the rendered article root.                                                                                                                                                                                                                                                                                                                                                                                  |
 | 2026-04-18 | 1.0.72  | fix(ci): made TinyTeX path discovery persistent across Quarto PDF workflow steps by exporting common TinyTeX/local binary directories and appending them to `GITHUB_PATH` before TeX verification and rendering.                                                                                                                                                                                                                                                                                                                                                                            |
 | 2026-04-18 | 1.0.71  | fix(ci): supplied a non-secret placeholder Codecov token for PR-only Quarto PDF rendering so dotenv validation does not block local runner PDF artifacts, removed a Quarto syntax scanner violation in the DDP pseudocode, and restored the Physics of Golf DCR glossary phrase expected by content lint.                                                                                                                                                                                                                                                                                   |
 | 2026-04-18 | 1.0.70  | fix(ci): added the Geometry of Motion LaTeX style, TikZ libraries, theorem fallbacks, and shared math macro fallbacks to the Quarto PDF configuration; normalized Quarto chapter LaTeX shorthands and fixed exposed PDF content errors so the self-hosted render completes instead of failing on HTML-only MathJax macros or stale masked errors.                                                                                                                                                                                                                                           |
@@ -564,4 +568,7 @@ python src/tools/code_quality_ast.py
 
 | 2026-04-17 | 1.0.67 | ui(accessibility): Added rotation transform `aria-expanded="true"` for `.toggle-icon` inside `.sidebar-section-toggle` in `styles.css` to properly sync the visual state with the semantic state of collapsible sidebars. |
 | 2026-04-18 | 1.0.68 | fix(security): Prevent DOM-based XSS in PDF export by escaping pageTitle before injecting via innerHTML. |
-
+| 2026-04-20 | 1.0.73 | chore(deps): bump html-validate/stylelint devDependencies and refresh package-lock transitive entries. |
+| 2026-04-20 | 1.0.74 | chore(deps)(deps): bump hypothesis, ruff, and pydantic pins in requirements.txt. |
+| 2026-04-21 | 1.0.3 | fix(security): Prevent DOM-based XSS in history URLs by using URL constructor and allowlist for http/https |
+| 2026-04-23 | 1.0.80 | fix(content): Replace raw LaTeX theorem-like environments in AffineDrift articles with Quarto callouts, teach the Quarto syntax scanner to block those raw environments in future edits, and restore the repo-root `fix_html.py` normalization entry point used by tests and CLI workflows. |

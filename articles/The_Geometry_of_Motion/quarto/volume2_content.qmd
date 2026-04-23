@@ -192,10 +192,11 @@ an extraordinary number of control-theoretic challenges into roughly 1.2~seconds
 2. **Extreme nonlinearity.** Joint torques couple through the full rigid-body
         dynamics, including Coriolis and centrifugal terms that dominate at high
         angular velocities.
-3. **Underactuation.** Once the club is released in the downswing, the
-        wrist hinge "freewheels"---the golfer cannot directly control the club angle.
-        The clubhead speed at impact comes from *passive dynamics*, not
-        active torque.
+3. **Underactuation.** Once the club is released in the simplified downswing
+        model, the wrist hinge is treated as low-torque or passive.
+        Clubhead speed at impact is strongly shaped by passive coupling terms,
+        but the size of that contribution depends on the model, grip constraint,
+        and measured swing data.
 4. **Time-criticality with flexible timing.** The swing must produce the
         right state (clubhead position, velocity, and orientation) at impact,
         but the *exact* time of impact is not prescribed. The golfer
@@ -426,10 +427,11 @@ The tube width $\varepsilon(s)$ is a design parameter. For the golf swing:
 *[Figure: See PDF edition for TikZ diagram.]*
 :::
 
-This funnel profile encodes the physical insight that precision matters most at
-impact and least during setup. The controller "spends" its control authority
-where it matters, rather than trying to maintain uniform precision everywhere---a
-lesson that classical setpoint control cannot teach.
+This funnel profile encodes the modeling hypothesis that precision demands are
+highest near impact and lower during setup. The controller allocates authority
+where the stated terminal constraint is most sensitive, rather than maintaining
+uniform precision everywhere; this distinction is easy to obscure in a pure
+fixed-setpoint framing.
 
 
 ## What Changes When Control Is Motion
@@ -521,9 +523,11 @@ creates *geometric structure* that we can exploit.
 The set of states reachable from a given configuration through passive dynamics
 forms a submanifold of the state space. A well-designed trajectory *rides along*
 this manifold, using the passive dynamics to generate motion that active torques
-alone could not produce. This is how the golf swing works: the wrist hinge releases
-passively, and the centrifugal acceleration of the downswing *automatically*
-squares the clubface through the double pendulum effect.
+alone could not produce within the chosen actuator model. In a simplified golf
+model, a passive wrist release and centrifugal coupling can contribute to
+clubhead acceleration and face closure; whether they square the clubface in a
+real swing depends on grip mechanics, shaft dynamics, impact geometry, and
+validation against measured swings.
 
 \begin{proposition}
   For a mechanical system with $n$ degrees of freedom and $m < n$ actuators, the
@@ -565,8 +569,9 @@ increasingly sophisticated layers:
     repeatability.
 
   \item[Ch.~7] **Funnel Synthesis.**
-    Designing time-varying tubes with guaranteed invariance. Sums-of-squares
-    programming for funnel computation. Robust funnels under model uncertainty.
+    Designing time-varying tubes with certified invariance under stated model,
+    controller, and disturbance assumptions. Sums-of-squares programming for
+    funnel computation. Robust funnels under model uncertainty.
 
   \item[Ch.~8] **Phase-Variable Control**~\cite{WesterveltGrizzle2007}.
     Decoupling path shape from timing. Virtual constraints and hybrid zero dynamics
@@ -580,8 +585,8 @@ increasingly sophisticated layers:
     improve a motion over repeated trials without losing stability.
 
   \item[Ch.~11] **Case Study: The Complete Golf Swing.**
-    Full application of the entire theory to a 15-DOF musculoskeletal model of the
-    golf swing, from trajectory optimization through funnel synthesis to
+    A planned application of the theory to a declared musculoskeletal model of
+    the golf swing, from trajectory optimization through funnel synthesis to
     stochastic robustness analysis.
 \end{description}
 
@@ -628,8 +633,8 @@ the classical language throughout this book:
    even though no torque is applied at the wrist.
    2. Define a phase variable $s$ and sketch a funnel profile $\varepsilon(s)$
    appropriate for this system.
-   3. Discuss why a setpoint controller applied at impact ($s = 0.7$) would
-   produce the wrong motion.
+   3. Discuss why a setpoint controller applied only at impact ($s = 0.7$)
+   may be inadequate or misleading for a trajectory-native task.
 3. **(Philosophical.)** A thermostat, an autopilot, and a dancer's body
    are all "controlled systems." Classify each according to whether its primary
    control objective is (i)~setpoint regulation, (ii)~trajectory tracking, or
@@ -3192,7 +3197,7 @@ In classical robotics, the goal is often full actuation: one motor for every deg
 
 But nature does not build fully actuated systems, and neither do athletes.
 
-When a gymnast swings on a high bar, their center of mass rotates around the bar, but they have no motor at the bar---that "joint" is a passive pin constraint. When a human walks, the foot acting as the pivot is unactuated during the single-support phase; we cannot create torque from a point contact. And crucially for our running example, when a golfer releases the club during the downswing, the wrist joint acts as a free hinge. The club rapidly accelerates to over 100 miles per hour, *driven entirely by the passive physics* of the arms pulling the grip, not by muscular torque applied at the wrist.
+When a gymnast swings on a high bar, their center of mass rotates around the bar, but they have no motor at the bar---that "joint" is a passive pin constraint. When a human walks, the foot acting as the pivot is unactuated during the single-support phase; we cannot create torque from a point contact. In a simplified golf model, the wrist can be treated as a low-torque or passive hinge over part of the release. The club's angular acceleration is shaped by passive coupling between the arms and club, not by a direct wrist motor in that model. The assumption is useful, but it is not a claim that every real wrist torque is zero.
 
 
   Consider a mechanical system with $n$ degrees of freedom (DOF) and configuration coordinates $\bm{q} \in \configspace \subseteq \Reals^n$. The equations of motion take the standard manipulator form:
@@ -3352,12 +3357,12 @@ Revisiting the concept of Transverse Linearization (Chapter 4), if we linearize 
 
 We find a beautiful physical phenomenon:
 - During the early downswing, the club's zero dynamics are *unstable*. If the club gets slightly out of position, the centrifugal force tends to pull it further off the optimal plane.
-- During the late downswing (the release phase), the club's zero dynamics become *strongly stable*. The massive acceleration $\ddot{\theta}_2 \gg 0$ acts like a stiff restoring spring. The centrifugal force aligns the club perfectly with the arms.
+- During the late downswing (the release phase), the club's zero dynamics may become strongly attracting in the simplified model. Large club acceleration can act like a restoring term, but the degree of alignment depends on the selected parameters, grip model, and disturbance assumptions.
 
-This is the manifestation of the time-varying tube (the Funnel) from Chapter 1! The passive physics naturally form a wide, loose tube that tightens into an incredibly precise singularity exactly at the moment of impact. The golfer does not need to use wrist torque to steer the clubhead to the ball; if the shoulder inputs are grossly correct, the physics of the double pendulum *pulls* the clubhead into the ball.
+This is the model analogue of the time-varying tube from Chapter 1. In favorable parameter regimes, passive coupling can make the admissible-error set wide early in the motion and narrower near impact. The result is not a literal singularity and not a coaching rule that wrist torque is unnecessary; it is a statement about a specified underactuated model whose phase, grip, shaft, and actuator assumptions must be checked.
 
 \begin{remark}[Why Good Swings Feel Effortless]\label{remark:effortless}
-  Novice golfers attempt to fully actuate the swing. They use their wrists to steer the club, treating it as a fully actuated robotic arm. This fights the passive dynamics, resulting in slower club speeds and higher variability. Pro golfers use their arms and torso to set up the boundary conditions for the passive wrist release. By acting primarily in the null space (letting the unactuated dynamics dominate), the swing maximizes speed and consistency. The physics does the work.
+  The common coaching phrase "let the club release" is compatible with an underactuated model, but it should not be read as a measured neuromuscular fact. A skilled swing may use the arms and torso to set boundary conditions for passive release while still applying grip and wrist torques. Whether that strategy improves speed or consistency must be tested against measured kinematics, force data, and the assumed wrist model.
 \end{remark}
 
 
@@ -3374,7 +3379,7 @@ This is the manifestation of the time-varying tube (the Funnel) from Chapter 1! 
 | Zero Dynamics | The residual dynamics of the unactuated subsystem when the actuated subsystem perfectly tracks its reference. |
 
 
-Underactuation forces a shift from "forcing" a system to an equilibrium, to "orchestrating" the natural physics of the system. The trajectory is a choreography between the motors and gravity/inertia. In Chapter 6, we will see how numerical trajectory optimization can synthesize these choreographies automatically by solving optimal control problems that explicitly respect the $\Bmat^\perp$ constraint.
+Underactuation shifts the modeling task from forcing every coordinate independently to shaping the interaction between actuators, gravity, inertia, and constraints. In Chapter 6, numerical trajectory optimization is used to search for such motions by solving optimal-control problems that explicitly respect the $\Bmat^\perp$ constraint and the stated actuator limits.
 
 
 ## Exercises
@@ -3512,7 +3517,7 @@ The optimizer can then trade peak performance against sensitivity to noise. In a
 | Moving Target OCP | Finding a trajectory that optimizes terminal kinematics when intersecting a spatial manifold, without prescribing the clock time. |
 | Multi-Shooting | Discretizing the time domain into segments, using numerical integrators to enforce dynamics constraints between nodes. |
 | Direct Collocation | Representing the entire trajectory as splines and enforcing dynamics algebraically at discrete points arrayed along the trajectory. |
-| Passive Exploitation | Solvers naturally optimize underactuated topologies by weaponizing coupling matrices ($M_{21}, C_2$). |
+| Passive Exploitation | Solvers can exploit underactuated topologies through coupling matrices such as $M_{21}$ and $C_2$, subject to the stated model. |
 | Stochastic Robustness | Augmenting the OCP with expected variance to ensure the resulting trajectory can be consistently executed by noisy nonlinear plants. |
 
 
@@ -3528,8 +3533,8 @@ Determining the shape of the reference trajectory is central to Control Is Motio
 
 
 > ---
-> The perfect motion is rarely the fastest.
-> It is the one that survives reality.
+> The useful motion is rarely just the fastest.
+> It is the one that survives the stated disturbances.
 
 
 # Funnel Synthesis
@@ -3539,7 +3544,7 @@ Determining the shape of the reference trajectory is central to Control Is Motio
 > But you can build a trough to ensure it reaches the bottom.
 
 
-## Beyond LQR: The Need for Guaranteed Invariance
+## Beyond LQR: The Need for Certified Invariance
 
 
 In Chapter 4, we showed that applying time-varying Linear Quadratic Regulation (LQR) to the transverse dynamics creates a contracting envelope of stability. The Riccati equation naturally shapes this envelope into a "funnel" that narrows as the terminal constraint approaches. 
@@ -3591,7 +3596,7 @@ where $L(\state, t)$ is a strictly positive polynomial multiplier. If $V(\state,
 ## Computing the Funnel for the Golf Swing
 
 
-Let us return to the double pendulum of the golf swing. Our reference trajectory $\traj^*(t)$ from Chapter 6 gives us the nominal kinematics. Our transverse LQR from Chapter 4 gives us a feedback matrix $\bm{K}(t)$ designed to stabilize deviations. We wish to compute the largest possible funnel around this sequence for which the closed-loop system satisfies the stated invariance certificate.
+Let us return to the double-pendulum golf model. The reference trajectory $\traj^*(t)$ from Chapter 6 gives nominal kinematics. The transverse LQR from Chapter 4 gives a feedback matrix $\bm{K}(t)$ designed to stabilize selected deviations. The goal is to compute a conservative funnel around this sequence and state the model assumptions under which the closed-loop system satisfies the invariance certificate.
 
 We define our candidate Lyapunov function as a time-varying quadratic form:
 \begin{equation}
@@ -3775,10 +3780,10 @@ When faced with a new task (e.g., striking the ball on an uneven lie), the syste
 # Case Study: The Complete Golf Swing
 
 
-> The physics are invariant. What separates the professional is their mastery over the geometry of the resultant funnel.
+> A useful model makes its assumptions visible before it asks for trust.
 
 
-## Unifying the "Control is Motion" Framework
+## Unifying the "Control Is Motion" Framework
 
 
 Throughout this text, we have reframed control around trajectory geometry and local transverse correction. We conclude with a hypothetical 15-DOF musculoskeletal golf-swing model that illustrates how the framework could be assembled into a reproducible analysis.
@@ -3799,9 +3804,9 @@ In the illustrative model, the collocation solver satisfies the $\Bmat^\perp$ an
 ### Phase 2: Funnel Synthesis and Robustness
 
 
-With $\traj^*(s)$ computed, we lock down the trajectory using **Transverse Linearization** (Chapter 4). We ignore errors along the tangent of the path (since chronological timing is irrelevant) and construct a time-varying LQR feedback matrix to regulate only the transverse deviations. 
+With $\traj^*(s)$ computed, we analyze the trajectory using **Transverse Linearization** (Chapter 4) [@HauserHindman1995; @Shiriaev2010]. We ignore errors along the tangent of the path only within the chosen phase model and construct a time-varying LQR feedback matrix to regulate selected transverse deviations.
 
-Finally, we compute candidate bounds for this stability region using **Sums-of-Squares Programming** (Chapter 7). The SDP supplies a boundary function $V(\state, t) = 1$ that certifies invariance under the polynomial model, controller, and disturbance assumptions used in the computation.
+Finally, we compute candidate bounds for this stability region using **Sums-of-Squares Programming** (Chapter 7) [@MajumdarTedrake2017]. The SDP supplies a boundary function $V(\state, t) = 1$ that certifies invariance under the polynomial model, controller, and disturbance assumptions used in the computation.
 
 
   The final computed funnel describes the model's certified region of attraction. During the backswing, the funnel may be wider if the modeled dynamics tolerate larger transverse deviations without violating the invariant boundary.
