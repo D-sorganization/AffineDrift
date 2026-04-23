@@ -149,7 +149,7 @@ The golf swing is a high-speed, full-body motion executed by a mechanically comp
           The framework frequently employs rigid double-pendulum analogies to explain "drift" versus "input". However, the primary mechanism of the golf shaft is the "Catapult Effect"—the storage and release of elastic potential energy. A rigid model is structurally blind to this mechanism, potentially leading readers to underestimate the role of the shaft as an energy buffer.
         </p>
         <div class="author-response">
-          <strong>Our Response:</strong> We agree that rigid analogies have limits. For this reason, the full mathematical framework (Section @sec-affine) and the ZTCF simulation explicitly include flexible shaft modes ($\eta$). The affine control form $\dot{x} = f(x) + g(x)u$ captures all elastic dynamics within the drift vector $f(x)$, ensuring that the "Catapult Effect" is fully accounted for in the passive baseline, distinct from the active input.
+          <strong>Our Response:</strong> We agree that rigid analogies have limits. For this reason, the full mathematical framework (@sec-affine) and the ZTCF simulation explicitly include flexible shaft modes ($\eta$). The affine control form $\dot{x} = f(x) + g(x)u$ captures all elastic dynamics within the drift vector $f(x)$, ensuring that the "Catapult Effect" is fully accounted for in the passive baseline, distinct from the active input.
         </div>
       </div>
 
@@ -853,7 +853,7 @@ $$
   M_{q}(q,\eta)\,\big[a_{\text{drift}}(x(t))\big]_{1:n},
 $$
 
-and $M_{q}$ denotes the block of the inertia matrix mapping rigid accelerations to generalized torques (see Appendix~@app:derivations for details).
+and $M_{q}$ denotes the block of the inertia matrix mapping rigid accelerations to generalized torques (see Appendix~@sec-derivations for details).
 
 The *input torque* is then given by
 
@@ -1582,7 +1582,7 @@ Overall, the framework enables clearer interpretation of how golfers generate sp
 ## Appendices {.appendix}
 
 ## Mathematical Derivations
-{#app:derivations}
+{#sec-derivations}
 
 This appendix provides detailed derivations supporting the unified control-affine formulation presented in @sec-affine. The goal is to show explicitly how the coupled rigid--flexible dynamics produce the affine decomposition
 $$
@@ -1877,7 +1877,7 @@ The derivations in this appendix demonstrate explicitly that:
 This provides the mathematical backbone for the force decomposition and torque taxonomy developed in the main text.
 
 ## Modal Approximation for the Flexible Shaft
-{#app:modal}
+{#sec-modal}
 
 This appendix details the finite-dimensional modal approximation used to model shaft deformation in the unified rigid--flexible dynamics of the golfer--club system. The goal is to show how a continuous beam model reduces to the generalized modal coordinates $\eta \in \mathbb{R}^{m}$ used in @sec-affine, and why this representation preserves the linearity of the torque input in the final control-affine form.
 
@@ -2059,7 +2059,7 @@ The modal shaft model presented here:
 This makes the modal approximation both computationally efficient and theoretically compatible with the full decomposition presented in the main text.
 
 ## Pendulum Examples: Rigid and Flexible, 2D and 3D
-{#app:toy}
+{#sec-toy}
 
 This appendix presents simplified pendulum-based examples that illustrate the control-affine structure and the superposition of drift and input forces in explicit form. We treat:
 - a planar (2D) pendulum with and without a flexible shaft, and
@@ -2336,7 +2336,7 @@ Once again, the system is control-affine: all nonlinearities are encapsulated in
 
 ### C.4 \quad Spatial (3D) pendulum with flexible shaft
 
-We now attach a flexible shaft (modeled via a small set of bending modes) to the 3D pendulum. The shaft deformation is represented by modal coordinates $\eta \in \mathbb{R}^m$, just as in Appendix~@app:modal.
+We now attach a flexible shaft (modeled via a small set of bending modes) to the 3D pendulum. The shaft deformation is represented by modal coordinates $\eta \in \mathbb{R}^m$, just as in Appendix~@sec-modal.
 
 The full state is
 $$
@@ -2461,7 +2461,7 @@ These examples provide explicit, low-dimensional realizations of the general con
 
 ## Simulink Forward Dynamics Modeling and Counterfactual Evaluation {#sec-simulink}
 
-While the preceding appendices provided the analytical derivations and simplified toy examples (pendulums) to verify the internal consistency of the AffineDrift logic, the application to a full golf swing requires a numerical proof-of-concept. The pendulums of Appendix~@app:toy demonstrate that the affine superposition holds algebraically, but they do not capture the numerical challenges associated with high-speed gyroscopic coupling and stiff flexible modes.
+While the preceding appendices provided the analytical derivations and simplified toy examples (pendulums) to verify the internal consistency of the AffineDrift logic, the application to a full golf swing requires a numerical proof-of-concept. The pendulums of Appendix~@sec-toy demonstrate that the affine superposition holds algebraically, but they do not capture the numerical challenges associated with high-speed gyroscopic coupling and stiff flexible modes.
 
 The following section documents the forward-dynamics implementation used to validate these concepts in a realistic multibody environment. This serves as a necessary bridge between the idealized theory and the experimental applications, ensuring that the abstract ZTCF and ZVCF counterfactual definitions remain robust under integration error and discrete-time sampling.
 
@@ -2480,7 +2480,7 @@ The model consists of:
   
 - clubhead and hand coordinate frames for computing interaction forces.
 
-Shaft flexibility was represented using modal bending dynamics, similar to Appendix~@app:modal, and interacted with the rigid segments through base excitation. All shaft forces entered the drift term, while all applied joint torques entered linearly into the input term, consistent with the control‐affine decomposition.
+Shaft flexibility was represented using modal bending dynamics, similar to Appendix~@sec-modal, and interacted with the rigid segments through base excitation. All shaft forces entered the drift term, while all applied joint torques entered linearly into the input term, consistent with the control‐affine decomposition.
 
 **Note on parameter validity (Validation Scope).**
 The stiffness and damping parameters used in this simulation represent the "effective" passive dynamics of the system. While treated as constant for the counterfactual analysis, we acknowledge that in a biological system, these would vary with activation. The model thus represents the "Effective Plant" for the swing. **Crucially, this simulation uses constant coefficients and therefore does not validate the "Stiffness Pulse" or "Intentional Constraint Collapse" mechanisms discussed in the theoretical articles.** It validates only the algebraic consistency of the ZTCF subtraction under constant impedance.
@@ -2552,7 +2552,7 @@ Future research will incorporate these counterfactual calculations into high‐f
 The specific numerical algorithms employed to enforce the "kill switches" and compute the ZVCF within the discrete-time solver environment are detailed in the final appendix below.
 
 ## Numerical Computation of ZTCF and ZVCF
-{#app:ztcf_zvcf}
+{#sec-ztcf_zvcf}
 
 This appendix documents the numerical procedures used to compute the Zero Torque Counterfactual (ZTCF) and Zero Velocity Counterfactual (ZVCF) in simulation. The algorithms described here were developed using MATLAB and Simulink and apply to any multibody system that can be expressed in the control–affine form
 $$
