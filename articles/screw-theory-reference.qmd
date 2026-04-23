@@ -191,14 +191,20 @@ where $\mathcal{F}_g$ is a gravity wrench and $\mathcal{F}_{\mathrm{shaft}}$ is 
 
 ## Control-Affine Structure in Screw Coordinates
 
-Joint torques $\tau \in \mathbb{R}^n$ relate to input wrenches via
+Joint torques $\tau \in \mathbb{R}^n$ and task-space wrenches $\mathcal{F}_{\mathrm{input}} \in \mathbb{R}^6$ are related by the screw Jacobian $J_s(q) \in \mathbb{R}^{6 \times n}$ via the virtual-work duality (pull-back):
 
 $$
-\mathcal{F}_{\mathrm{input}}
+\tau = J_s(q)^T \mathcal{F}_{\mathrm{input}}.
+$$
+
+Because the system is kinematically redundant ($n \gg 6$), the Jacobian $J_s$ is wide and $J_s^{-T}$ is **undefined**. Recovery of a wrench estimate from measured joint torques requires the pseudoinverse:
+
+$$
+\mathcal{F}_{\mathrm{est}}
 =
-J_s(q)^{-T}\tau
+\bigl(J_s J_s^T\bigr)^{-1} J_s\, \tau
 =
-J_s(q)^{-T} B u,
+\bigl(J_s J_s^T\bigr)^{-1} J_s\, B u,
 $$
 
 where $B$ is the input distribution matrix (expressed in the **space frame**, following the convention fixed in the introduction) and $u$ is the vector of joint inputs. A body-frame input distribution $B_b$ --- natural for grip-force measurements taken in the hand frame --- relates to the spatial form as $B_s = \mathrm{Ad}_{T_{sb}}\, B_b$. The total wrench at a given point is then
@@ -211,7 +217,7 @@ $$
 \mathcal{F}_{\mathrm{input}}(x,u).
 $$
 
-This reproduces the affine decomposition: passive drift wrenches plus active input wrenches.
+In the pull-back form, the affine decomposition in joint space reads $\tau = J_s^T \mathcal{F}_{\mathrm{drift}} + J_s^T \mathcal{F}_{\mathrm{input}}$, making explicit that each wrench component contributes to joint torque through the transpose Jacobian. This reproduces the affine decomposition: passive drift wrenches plus active input wrenches.
 
 ## Flexible Shaft Forces in Screw Form
 
@@ -261,13 +267,21 @@ $$
 \mathcal{F}_{\mathrm{ZTCF}} = \mathcal{F}_{\mathrm{drift}}.
 $$
 
-In the Zero Velocity Counterfactual (ZVCF), drift mechanisms are disabled and the state is held fixed, so that only input wrenches remain:
+In the Zero Velocity Counterfactual (ZVCF), velocity is set to zero while configuration and internal state are held at their current values. Only the configuration-dependent subset of drift wrenches survives; velocity-dependent terms vanish:
 
 $$
-\mathcal{F}_{\mathrm{ZVCF}} = \mathcal{F}_{\mathrm{input}}.
+\mathcal{F}_{\mathrm{ZVCF}}(t)
+=
+\mathcal{F}_{\mathrm{drift}}\!\bigl(q(t),\, \eta(t),\, 0,\, 0\bigr)
+=
+\mathcal{F}_{g}(q)
++
+\mathcal{F}_{\mathrm{shaft}}(q, \eta)
++
+\mathcal{F}_{\mathrm{config}}(q).
 $$
 
-These constructions mirror the affine decomposition in screw space.
+Crucially, $\mathcal{F}_{\mathrm{ZVCF}} \subseteq \mathcal{F}_{\mathrm{drift}}$: it is a subset of drift, not a form of input wrench. $\mathcal{F}_{\mathrm{input}}$ does **not** appear in the ZVCF. These constructions mirror the affine decomposition in screw space.
 
 ## Summary
 
