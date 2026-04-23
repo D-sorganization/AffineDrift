@@ -35,7 +35,7 @@ jobs:
     timeout-minutes: 45
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         timeout-minutes: 5
 
       - name: Set up Python 3.12
@@ -115,7 +115,7 @@ jobs:
 
       - name: Upload Quarto PDF artifacts
         if: always()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         timeout-minutes: 5
         with:
           name: quarto-rendered-pdfs

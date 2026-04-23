@@ -11,6 +11,7 @@ pytestmark = pytest.mark.content_lint
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 AFFINE_ARTICLE = REPO_ROOT / "articles" / "affine-nature-golf-swing.qmd"
+INVERSE_DYNAMICS_ARTICLE = REPO_ROOT / "articles" / "inverse-dynamics.qmd"
 CH02_VARIATIONAL = (
     REPO_ROOT / "articles" / "The_Geometry_of_Motion" / "quarto" / "ch02_variational.qmd"
 )
@@ -91,6 +92,34 @@ def test_affine_article_internal_refs_are_resolved() -> None:
     labels = {match for match in LABEL_PATTERN.findall(text)}
     missing = sorted(ref for ref in refs if ref not in labels)
     assert missing == []
+
+
+def test_affine_article_uses_quarto_appendix_crossrefs() -> None:
+    """Appendix references should use Quarto section labels, not undefined app keys."""
+    text = AFFINE_ARTICLE.read_text(encoding="utf-8")
+    assert "@app:" not in text
+    assert "{#app:derivations}" not in text
+    assert "{#app:modal}" not in text
+    assert "{#app:toy}" not in text
+    assert "Section @sec-" not in text
+    for label in ("sec-app-derivations", "sec-app-modal", "sec-app-toy"):
+        assert f"{{#{label}}}" in text
+
+
+def test_inverse_dynamics_equation_crossrefs_are_quarto_native() -> None:
+    """Inverse-dynamics equations should use renderable Quarto labels and refs."""
+    text = INVERSE_DYNAMICS_ARTICLE.read_text(encoding="utf-8")
+    assert "[@eq:" not in text
+    assert "\n{#eq-" not in text
+    for label in (
+        "eq-force_balance",
+        "eq-moment_balance",
+        "eq-couple_transform",
+        "eq-control_affine",
+        "eq-lagrange",
+        "eq-inverse_dynamics",
+    ):
+        assert f"$$ {{#{label}}}" in text
 
 
 def test_book_pages_include_scientific_status_and_traceability() -> None:
