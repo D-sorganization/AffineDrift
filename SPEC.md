@@ -29,7 +29,7 @@ Last-Updated: 2026-04-23T06:54:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.78                                           |
+| **Spec Version**        | 1.0.79                                           |
 | **Last Spec Update**    | 2026-04-23                                       |
 
 ## 2. Purpose & Mission
@@ -571,3 +571,4 @@ python src/tools/code_quality_ast.py
 | 2026-04-20 | 1.0.73 | chore(deps): bump html-validate/stylelint devDependencies and refresh package-lock transitive entries. |
 | 2026-04-20 | 1.0.74 | chore(deps)(deps): bump hypothesis, ruff, and pydantic pins in requirements.txt. |
 | 2026-04-21 | 1.0.3 | fix(security): Prevent DOM-based XSS in history URLs by using URL constructor and allowlist for http/https |
+| 2026-04-23 | 1.0.79 | fix(content): Replace raw LaTeX theorem-like environments in AffineDrift articles with Quarto callouts and teach the Quarto syntax scanner to block those raw environments in future edits. |
