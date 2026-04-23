@@ -232,7 +232,7 @@
         throw new Error("Invalid bibliography data format");
 
       // ⚡ Bolt Optimization: Pre-compute lowercase strings for search to avoid O(N*M) allocations per keystroke
-      data.forEach((entry) => {
+      for (const entry of data) {
         entry._searchTitle = (entry.title || "").toLowerCase();
         entry._searchAuthors = (entry.authors || []).join(" ").toLowerCase();
         entry._searchConcepts = (entry.concepts || []).join(" ").toLowerCase();
@@ -245,7 +245,7 @@
         ]
           .join(" ")
           .toLowerCase();
-      });
+      }
 
       return data;
     } catch (error) {

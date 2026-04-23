@@ -30,7 +30,7 @@ The left wrist in the golf swing can be approximated as a universal joint with t
   <div class="laymans-terms-content">
     <div class="laymans-terms-inner">
       <p class="laymans-terms-intro">
-        Why does gripping in the fingers vs. the palm matter? It's not just about comfort—it changes the physics of how your wrist transmits power.
+        Why might gripping in the fingers versus the palm matter? In this model, the choice changes the mechanical pathway by which wrist and club loads may be transmitted.
       </p>
 
       <div class="laymans-item">
@@ -219,15 +219,15 @@ Solving for the constraint torque $\tau_{c,z}$:
 $$
 \tau_{c,z} = \underbrace{(\mathbf{I} \dot{\boldsymbol{\omega}} + \boldsymbol{\omega} \times (\mathbf{I} \boldsymbol{\omega}))_z}_{\text{Dynamic Requirement}} - \underbrace{(\boldsymbol{\tau}_{\text{interaction}})_z}_{\text{External Load}}
 $$
-This equation explicitly proves that the constraint torque $\tau_{c,z}$ is not zero. Instead, it is the exact torque required to bridge the gap between the external loads and the inertial dynamics of the hand/club system. Critically, the "Dynamic Requirement" term depends on $\boldsymbol{\omega}$ and $\dot{\boldsymbol{\omega}}$, which are driven by the active torques $\tau_x$ and $\tau_y$.
+Within this idealized universal-joint model, the balance shows that the constrained-axis torque $\tau_{c,z}$ need not be zero. Rather, it is the torque required by the modeled constrained-axis dynamics after accounting for the external interaction term. The "Dynamic Requirement" term depends on $\boldsymbol{\omega}$ and $\dot{\boldsymbol{\omega}}$, which in turn depend on the applied torques $\tau_x$ and $\tau_y$.
 
-Thus, **active torques about the x and y axes generate a requisite constraint torque about the z axis** via the gyroscopic coupling term $\boldsymbol{\omega} \times (\mathbf{I} \boldsymbol{\omega})$. This is the mathematical mechanism of transmission.
+Under these assumptions, **active torques about the x and y axes can induce a modeled constraint torque about the z axis** via the gyroscopic coupling term $\boldsymbol{\omega} \times (\mathbf{I} \boldsymbol{\omega})$. That is one possible mathematical pathway for transmission in the simplified model; it is not, by itself, a validation of full-swing wrist behavior.
 
 These constraint torques have several important properties:
 
 1. **No mechanical work**: Constraint torques act in directions where motion is prevented, so they perform no work: $\boldsymbol{\tau}_{\text{constraint}} \cdot \dot{\mathbf{q}} = 0$
 
-2. **Force transmission**: Despite doing no work, constraint torques efficiently transmit forces between segments
+2. **Load transmission**: Despite doing no work, constraint torques can redistribute loads between segments through the constraint equations
 
 3. **Nonlinearity**: Constraint torques depend nonlinearly on system configuration, velocities, and applied torques via the Coriolis term $\boldsymbol{\omega} \times \mathbf{I} \boldsymbol{\omega}$.
 

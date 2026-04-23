@@ -14,17 +14,17 @@ format:
 
 # Introduction: A Puzzle About Separation {#sec-introduction}
 
-## The Surprising Fact
+## A Useful Structural Fact
 
-Here is something remarkable about mechanical systems---robot arms, pendulums, walking machines, spacecraft with articulated appendages---and it is worth pausing to appreciate before we rush into equations.
+One structural feature of many mechanical models is easy to miss if one focuses only on the apparent complexity of the motion.
 
 At any instant, within the rigid-body models considered here, you can split the modeled acceleration into two pieces: what the passive dynamics contribute at the current state, and what the applied generalized forces contribute through the input map. The two pieces add to the acceleration predicted by that model.
 
-That might sound obvious at first. But think about it more carefully. A robot arm swinging through space is a complicated thing. The shoulder joint's motion flings the elbow around. Gravity pulls differently on each link depending on the arm's shape. The mass each motor "feels" changes from moment to moment as the configuration shifts. Everything is coupled to everything else, and it all depends on where you are and how fast you're going.
+The point is worth stating carefully because the models themselves are highly coupled. A robot arm swinging through space, for example, mixes link-link interactions, configuration-dependent inertia, gravity, and velocity-dependent terms. The apparent complexity can make the drift/control split look less general than it is.
 
 And yet, despite all this complexity, the stated model class still gives a clean bookkeeping separation between passive dynamics and applied inputs. The separation is not a statement about every physical effect in a real mechanism; it is a structural property of the equations once the coordinates, constraints, and actuator model have been specified.
 
-What is more, this clean separation *does not depend on the mathematical language you use to describe the motion.* You can write the equations using energy methods, or force balance on individual bodies, or spatial screws, or task-space coordinates, or the abstract language of differential geometry. In every case, the same separation exists, and the two pieces are the same physical quantities, just expressed in different notation.
+What is more, this clean separation survives across several standard derivation languages. One can write the equations using energy methods, force balance on individual bodies, spatial screws, task-space coordinates, or differential-geometric notation. The notation and assumptions differ, but the same bookkeeping split between passive dynamics and applied inputs can still be recovered within the stated model class.
 
 This article is about that separation---what it is, why it works, how to compute it, and what it reveals about the structure of mechanical systems.
 
@@ -155,7 +155,7 @@ Think of pushing a shopping cart. On smooth tile, a small push gives a big accel
 
 Two important properties:
 
-**Symmetry** ($M = M^T$): Pushing joint 1 to accelerate joint 2 takes exactly as much effort as pushing joint 2 to accelerate joint 1. This is a consequence of energy conservation and is not obvious until you think about it carefully.
+**Symmetry** ($M = M^T$): The inertial coupling between generalized coordinates is reciprocal in the kinetic-energy metric. In practice, the off-diagonal terms that describe how one coordinate's force affects another appear symmetrically.
 
 **Positive definiteness**: For an unconstrained set of independent generalized coordinates, the mass matrix assigns positive kinetic energy to every nonzero velocity direction. That property makes the acceleration solve well posed for a given force vector, as long as the coordinate chart and constraint model remain nonsingular.
 
