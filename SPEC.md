@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-04-23T02:45:24Z
+Last-Updated: 2026-04-23T04:05:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-04-23T02:45:24Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.75                                           |
+| **Spec Version**        | 1.0.76                                           |
 | **Last Spec Update**    | 2026-04-22                                       |
 
 ## 2. Purpose & Mission
@@ -190,6 +190,7 @@ AffineDrift/
 | F35 | Face-angle sensitivity consistency      | ✅     | Physics of Golf chapter 31 keeps driver face-angle offline-distance sensitivity in the documented 13--20 yards-per-degree range and regression tests block the previous 60--70 yards-per-degree contradiction.                                                                                                                                                                                   |
 | F36 | Dynamic beam model consistency          | ✅     | Physics of Golf chapter 11 uses the dynamic Euler-Bernoulli equation with explicit inertial term and a content test guards the modal consistency of the governing equation in the chapter source.                                                                                                                                                                                                |
 | F37 | Double-pendulum parameter context       | ✅     | Physics of Golf chapters 3, 6, and 8 explicitly document when their double- or triple-pendulum parameters are canonical chapter baselines versus compact worked-example sets, with content tests guarding the modeling-context notes.                                                                                                                                                            |
+| F38 | Robust quaternion extraction            | ✅     | The rotation-representations reference article uses a numerically stable matrix-to-quaternion extraction path for trace-positive and dominant-axis cases, with executable regression coverage for 180-degree rotations about coordinate axes and arbitrary unit axes.                                                                                                                              |
 
 ### API / Interface Contract
 
