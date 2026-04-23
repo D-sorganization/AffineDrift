@@ -136,14 +136,19 @@ entire body at that moment.
 
 ## The Mobility Ellipsoid
 
-The **mobility ellipsoid** is formed by mapping a unit ball of joint 
-velocities through the Jacobian:
+The **mobility ellipsoid** is the image of the closed unit ball of joint
+velocities under the Jacobian — the set of all achievable end-effector
+velocities when joint speed is bounded by one:
 $$
-    \mathcal{E}_{\text{mob}} = \left\{\, \dot{x} = J\dot{q} 
-    \; \bigg| \; \|\dot{q}\| = 1 \,\right\}.
+    \mathcal{E}_{\text{mob}} = \left\{\, \dot{x} = J\dot{q}
+    \; \bigg| \; \|\dot{q}\| \leq 1 \,\right\}
+    = \left\{\, \dot{x} \in \mathbb{R}^6 \;\bigg|\;
+      \dot{x}^{\top}(JJ^{\top})^{-1}\dot{x} \leq 1 \,\right\},
 $$
+where the quadratic form on the right is well-defined whenever $J$ has full
+row rank (i.e., at non-singular configurations).
 
-This produces an ellipsoid in task space whose principal axes represent:
+This solid ellipsoid in task space has principal axes representing:
 - directions of high mobility (large end-effector motion for a small 
     joint motion),
     
@@ -166,14 +171,24 @@ $$
     \tau = J^\top F.
 $$
 
-The **force ellipsoid** is defined as
+The **force ellipsoid** is defined via the Gramian $JJ^{\top}$:
 $$
-    \mathcal{E}_{\text{force}} = 
-    \left\{\, F \in \mathbb{R}^6 \; \bigg|
-    \|J^\top F\| = 1 \,\right\},
+    \mathcal{E}_{\text{force}} =
+    \left\{\, F \in \mathbb{R}^6 \;\bigg|\;
+    F^{\top}(JJ^{\top})F \leq 1 \,\right\}.
 $$
-which describes all end-effector force directions that correspond to unit joint 
-torque outputs.
+This is always a bounded solid ellipsoid when $J$ has full row rank.
+
+> **Note on redundant systems ($n > 6$):** The set
+> $\{F : \|J^{\top}F\| = 1\}$ — sometimes written in older texts — is
+> *unbounded* whenever $J^{\top}$ has a non-trivial null space, because
+> any $F + v$ with $v \in \ker(J^{\top})$ also satisfies the constraint,
+> forming an ellipsoidal *cylinder* rather than a bounded ellipsoid.
+> The Yoshikawa solid form $F^{\top}(JJ^{\top})F \leq 1$ avoids this
+> degeneracy and is well-defined at all non-singular configurations.
+> In redundant configurations, both ellipsoids are defined only when
+> $J$ has full row rank; at singular configurations $JJ^{\top}$ becomes
+> singular and the force ellipsoid degenerates along $\ker(J^{\top})$.
 
 Its principal axes represent:
 - directions in which the system can generate large force or resist 
@@ -198,7 +213,7 @@ provides the principal-axis decomposition for both ellipsoids:
 | Ellipsoid | Defining set | Principal axes | Semi-axes |
 |---|---|---|---|
 | **Mobility** $\{\dot{x} = J\dot{q} : \lVert\dot{q}\rVert \leq 1\}$ | image of joint unit ball | columns of $U$ | $\sigma_i$ |
-| **Force** $\{F : \lVert J^\top F\rVert \leq 1\}$ | dual via $J^\top$ | columns of $U$ | $1/\sigma_i$ |
+| **Force** $\{F : F^\top(JJ^\top)F \leq 1\}$ | Yoshikawa Gramian form | columns of $U$ | $1/\sigma_i$ |
 
 The two ellipsoids share the *same* principal axes (columns of $U$) but their semi-axes are reciprocals --- this is the origin of the mobility-vs-force trade-off. A direction with a large $\sigma_i$ is a direction of easy motion and weak force resistance; a direction with a small $\sigma_i$ is the reverse. At a **singular configuration** ($\sigma_r \to 0$), the mobility ellipsoid flattens (motion in that direction becomes unachievable) and the force ellipsoid blows up (infinite reaction force required to maintain joint-torque bound).
 
@@ -327,15 +342,26 @@ $$
     F^\top J \dot{q} = (J^\top F)^\top \dot{q}.
 $$
 
-Since this holds for all $\dot{q}$, we obtain $\tau = J^\top F$ and the 
-fundamental duality between motion and force mappings.  
+Since this holds for all $\dot{q}$, we obtain $\tau = J^\top F$ and the
+fundamental duality between motion and force mappings.
 This duality guarantees that:
 
 - directions of high mobility are directions of low force capability,
-    
+
 - directions of low mobility are directions of high force capability.
 
-This relationship is not an empirical observation but a geometric consequence of 
+More precisely, the two solid ellipsoids share the **same principal axes**
+(the left singular vectors $u_i$ of $J$), and their semi-axis lengths are
+exact reciprocals: if $\sigma_i$ is the $i$-th singular value of $J$ then
+$$
+    \sigma_i^{\text{mob}} \cdot \sigma_i^{\text{force}}
+    = \sigma_i \cdot \tfrac{1}{\sigma_i} = 1.
+$$
+That is, every principal direction that is *long* in the mobility ellipsoid
+(semi-axis $\sigma_i$) is correspondingly *short* in the force ellipsoid
+(semi-axis $1/\sigma_i$), and vice versa.
+
+This relationship is not an empirical observation but a geometric consequence of
 the system constraints.
 
 ### Synthesis: Null Space and Parallel Mechanisms
