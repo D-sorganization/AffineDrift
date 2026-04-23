@@ -403,3 +403,29 @@ class TestQuartoSyntaxScanner:
         p.write_text("Empty: $$\n")
         errors = check_file(p)
         assert any("Empty" in e[1] or "Unclosed" in e[1] for e in errors)
+
+    def test_detects_raw_latex_theorem_environments(self, tmp_path: Any) -> None:
+        from scripts.scan_quarto_syntax import check_file
+
+        p = tmp_path / "raw-env.qmd"
+        p.write_text("\\begin{proof}\nText\n\\end{proof}\n")
+        errors = check_file(p)
+        assert any("raw LaTeX proof environment" in e[1] for e in errors)
+
+    def test_ignores_raw_latex_theorem_environments_inside_code_blocks(self, tmp_path: Any) -> None:
+        from scripts.scan_quarto_syntax import check_file
+
+        p = tmp_path / "code-env.qmd"
+        p.write_text("```latex\n\\begin{proof}\nText\n\\end{proof}\n```\n")
+        assert check_file(p) == []
+
+    def test_skips_nested_textbook_qmd_for_raw_theorem_lint(
+        self, tmp_path: Any, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        from scripts.scan_quarto_syntax import check_file
+
+        monkeypatch.chdir(tmp_path)
+        p = tmp_path / "articles" / "The_Geometry_of_Motion" / "quarto" / "chapter.qmd"
+        p.parent.mkdir(parents=True)
+        p.write_text("\\begin{proof}\nText\n\\end{proof}\n")
+        assert check_file(p) == []
