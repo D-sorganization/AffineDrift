@@ -142,7 +142,7 @@ The **mobility ellipsoid** is formed by mapping a unit ball of joint
 velocities through the Jacobian:
 $$
     \mathcal{E}_{\text{mob}} = \left\{\, \dot{x} = J\dot{q} 
-    \; \bigg| \; \|\dot{q}\| = 1 \,\right\}.
+    \; \bigg| \; \|\dot{q}\| \leq 1 \,\right\}.
 $$
 
 This produces an ellipsoid in task space whose principal axes represent:
@@ -172,7 +172,7 @@ The **force ellipsoid** is defined as
 $$
     \mathcal{E}_{\text{force}} = 
     \left\{\, F \in \mathbb{R}^6 \; \bigg|
-    \|J^\top F\| = 1 \,\right\},
+    \|J^\top F\| \leq 1 \,\right\},
 $$
 which describes all end-effector force directions that correspond to unit joint 
 torque outputs.
@@ -183,6 +183,8 @@ Its principal axes represent:
     
 - directions in which very little force can be produced or resisted 
     (low constraint).
+
+*(Note: The use of the solid norm bound $\|\cdot\| \leq 1$ properly defines these as solid regions rather than merely boundary surfaces. Furthermore, if the system is underactuated in task space—meaning $J^\top$ has a null space—the force ellipsoid becomes infinitely long in directions where the linkage can passively resist external forces without requiring any joint torque.)*
 
 **Synthesis: Intentional Constraint Collapse**
 The duality of these ellipsoids offers one possible mechanical interpretation of **Intentional Constraint Collapse**. If a body-club configuration aligns high force-transmission directions with impact-relevant loads, the model predicts greater passive resistance in those directions. Whether elite golfers reliably create this alignment, and whether it stabilizes the clubface in measured swings, remains an empirical question.
