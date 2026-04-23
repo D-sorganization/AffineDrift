@@ -211,6 +211,12 @@ M^{-1}(-C\dot{q}-G)
 \end{bmatrix},
 $$
 
+where we name the acceleration fiber component the **acceleration drift**:
+
+$$
+a_{\text{drift}}(x) := M^{-1}(-C\dot{q}-G),
+$$
+
 and the control term is:
 
 $$
@@ -223,16 +229,21 @@ $$
 
 ## 2.3 Dominance of Quadratic Velocity Terms
 
+::: {.callout-important}
+## Dimensional Consistency Note
+A naïve application of the Euclidean norm to the full state vector drift $\|f(x)\|$ mixes units of velocity ($\text{rad/s}$) and acceleration ($\text{rad/s}^2$). To ensure physical meaningfulness, the magnitude argument below is scoped to the **acceleration fiber** $a_{\text{drift}}(x) = M^{-1}(-C\dot{q}-G)$, not the full state drift. The state-space norm $\|f(x)\|$ is not directly meaningful because it mixes velocity and acceleration units; the DCR is always defined on the acceleration fiber.
+:::
+
 Centripetal and Coriolis terms satisfy:
 
 $$
 C(q,\dot{q})\dot{q} \sim \mathcal{O}(\dot{q}^2)
 $$
 
-Hence:
+Hence, for the acceleration drift:
 
 $$
-\|f(x)\| \sim k\|\dot{q}\|^2.
+\|a_{\text{drift}}(x)\| \sim k\|\dot{q}\|^2.
 $$
 
 Contrast with:
@@ -241,7 +252,7 @@ $$
 \|g(x)u\| = \|M^{-1}\tau\| \sim \|\tau\|.
 $$
 
-The quadratic scaling of drift versus linear scaling of control is the core mechanism behind DCR blow-up.
+The quadratic scaling of $a_{\text{drift}}$ versus linear scaling of control is the core mechanism behind DCR blow-up.
 
 This scaling disparity is the kinetic manifestation of the **Force Taxonomy** established in Part 3 of the framework. The drift term $f(x)$ aggregates the configuration-dependent potential forces ($\tau_{\text{config}}$) and the velocity-dependent Coriolis/centripetal forces ($\tau_{\text{vel.\,drift}}$). While the former are bounded, the latter scale quadratically with swing speed. Consequently, the "Inertial Memory" of the system (embedded in $f(x)$) energetically eclipses the "Current Agency" (available via $g(x)u$), necessitating the "Early Delivery" strategy predicted by the ZTCF baseline.
 
@@ -252,12 +263,7 @@ It is critical to note that this planar model ($q \in \mathbb{R}^3$) captures th
 
 # 3. Drift–Control Ratio (DCR)
 
-We define the Drift–Control Ratio (DCR) as the ratio of the magnitude of the drift vector field to the control vector field.
-
-::: {.callout-important}
-## Dimensional Consistency Note
-A naïve application of the Euclidean norm to the full state vector drift $\|f(x)\|$ mixes units of velocity ($\text{rad/s}$) and acceleration ($\text{rad/s}^2$). To ensure physical meaningfulness, we restrict our definition to the **dynamic fiber** of the tangent bundle (the acceleration subspace), comparing the **generalized forces** (or equivalent accelerations) of drift against the available control authority.
-:::
+We define the Drift–Control Ratio (DCR) as the ratio of the magnitude of the acceleration drift $a_{\text{drift}}(x)$ to the control acceleration — always evaluated on the acceleration fiber, as established in §2.3.
 
 ::: {.callout-important}
 ## Canonical DCR definition (site-wide)
