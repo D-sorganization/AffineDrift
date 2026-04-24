@@ -190,6 +190,60 @@ export function initFormAccessibility() {
 }
 
 /**
+ * Wire inline error messages to form fields (Issue #2789 finding 1).
+ * Creates a .form-error region per group, links it via aria-describedby,
+ * and sets role="alert" so assistive tech announces errors immediately.
+ */
+export function initInlineFormErrors() {
+    const formGroups = document.querySelectorAll(".form-group");
+    formGroups.forEach((group) => {
+        const input = group.querySelector("input, textarea, select");
+        if (!input) return;
+
+        // Reuse an existing .form-error sibling, or create one.
+        let errorEl = group.querySelector(".form-error");
+        if (!errorEl) {
+            errorEl = document.createElement("span");
+            errorEl.className = "form-error";
+            errorEl.setAttribute("role", "alert");
+            errorEl.setAttribute("aria-live", "polite");
+            errorEl.hidden = true;
+            group.appendChild(errorEl);
+        } else {
+            if (!errorEl.hasAttribute("role")) errorEl.setAttribute("role", "alert");
+            if (!errorEl.hasAttribute("aria-live")) errorEl.setAttribute("aria-live", "polite");
+        }
+
+        // Assign a stable id and link to the input via aria-describedby.
+        if (!errorEl.id) {
+            const base = input.id || Math.random().toString(36).slice(2, 7);
+            errorEl.id = `${base}-error`;
+        }
+        const described = input.getAttribute("aria-describedby") || "";
+        if (!described.includes(errorEl.id)) {
+            input.setAttribute(
+                "aria-describedby",
+                described ? `${described} ${errorEl.id}` : errorEl.id
+            );
+        }
+
+        input.addEventListener("invalid", () => {
+            input.setAttribute("aria-invalid", "true");
+            errorEl.textContent = input.validationMessage;
+            errorEl.hidden = false;
+        });
+
+        input.addEventListener("input", () => {
+            if (input.validity.valid) {
+                input.setAttribute("aria-invalid", "false");
+                errorEl.hidden = true;
+                errorEl.textContent = "";
+            }
+        });
+    });
+}
+
+/**
  * Initialize auto-growing textareas
  */
 export function initAutoGrowTextareas() {
