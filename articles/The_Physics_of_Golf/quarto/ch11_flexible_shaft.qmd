@@ -58,7 +58,7 @@ where:
 
 Imagine two shafts of the same length. One is thin and hollow; one is thick and solid. Both are made of the same material. The thin shaft bends a lot for the same force. The thick shaft is much stiffer. The product $EI$ captures this: a thicker shaft has a larger $I$, so a larger $EI$, and thus is stiffer.
 
-In practical terms: a stiffer shaft ($higher$ $EI$) requires a larger force to achieve the same deflection. A flexible shaft ($lower$ $EI$) stores less elastic energy during the swing and releases it later (closer to impact).
+In practical terms: a stiffer shaft (larger $EI$) requires a larger force to achieve the same deflection. A flexible shaft (smaller $EI$) stores less elastic energy during the swing and releases it later (closer to impact).
 
 :::
 
@@ -94,7 +94,7 @@ Previously, we wrote the state as $\state = [\configvec, \configdot]^T$, where $
 
 With shaft flexibility, we extend the state to include the modal coordinates and their velocities:
 $$
-\state =  \configvec \\ \configdot \\ \shaftflex \\ \shaftflexdot
+\state = \begin{bmatrix} \configvec \\ \configdot \\ \shaftflex \\ \shaftflexdot \end{bmatrix}
 $$
 
 where $\shaftflex = \eta$ and $\shaftflexdot = \dot{\eta}$. If we keep multiple modes, $\shaftflex$ and $\shaftflexdot$ are vectors.
@@ -132,7 +132,7 @@ The drift field $f$ now includes terms from the modal dynamics. Specifically:
 2. The fifth component is $\dot{\eta}$ (the rate of shaft deformation), which is always equal to the fifth component of $\state$ by definition.
 3. The sixth component is $\ddot{\eta}$, which is driven by:
 
-   \ddot{\eta} = -2\zeta\omega_n\dot{\eta} - \omega_n^2\eta + f_{\text{modal}}(\configvec, \configdot)
+$$\ddot{\eta} = -2\zeta\omega_n\dot{\eta} - \omega_n^2\eta + f_{\text{modal}}(\configvec, \configdot)$$
 
 
 The term $f_{\text{modal}}$ deserves attention. When the hands are accelerating upward and the shaft is relatively straight, $f_{\text{modal}} > 0$, which causes $\eta$ to increase (the shaft bends in response to the acceleration mismatch). As the swing slows and the shaft geometry changes, the effective load on the shaft changes, and $f_{\text{modal}}$ may change sign, causing the shaft to snap back.
@@ -197,12 +197,12 @@ Consider a small element of the shaft at distance $r$ from the pivot, rotating w
 
 Mathematically, the effective bending stiffness becomes:
 $$
-\shaftstiff_{\text{eff}} = \shaftstiff_0 + \Delta\shaftstiff_{\text{centrifugal}}(\omega)
+K_{s,\text{eff}} = K_{s,0} + \Delta K_s^{\text{cf}}(\omega)
 $$
 
-where $\shaftstiff_0$ is the passive bending stiffness and $\Delta\shaftstiff_{\text{centrifugal}}$ is the additional stiffness due to centrifugal effects.
+where $K_{s,0}$ is the passive bending stiffness and $\Delta K_s^{\text{cf}}$ is the additional stiffness due to centrifugal effects.
 
-Early in the downswing, $\omega$ is small, so the effective stiffness is close to $\shaftstiff_0$. The shaft bends easily. Later in the downswing, $\omega$ grows, the centrifugal stiffening kicks in, and the shaft becomes harder to bend. This is another reason the shaft might snap back: it is not just that the driving force $f_{\text{modal}}$ changes sign, but also that the shaft becomes stiffer.
+Early in the downswing, $\omega$ is small, so the effective stiffness is close to $K_{s,0}$. The shaft bends easily. Later in the downswing, $\omega$ grows, the centrifugal stiffening kicks in, and the shaft becomes harder to bend. This is another reason the shaft might snap back: it is not just that the driving force $f_{\text{modal}}$ changes sign, but also that the shaft becomes stiffer.
 
 **Example: Centrifugal Stiffening in a Driver Swing**
 
@@ -225,9 +225,11 @@ Then, near impact, the hands slow sharply (they are being decelerated by the gro
 
 The result: the shaft unbends very rapidly. As it does, it does work on the clubhead, accelerating it further. This is the catapult effect.
 
-\text{Energy released by shaft} = \frac{1}{2}\shaftstiff\eta^2 \quad \text{(at the moment before snapback)}
+$$
+E_{\text{shaft}} = \frac{1}{2} K_s \eta^2 \quad \text{(elastic potential energy at moment of snapback)}
+$$
 
-The magnitude of this energy depends on how much the shaft is bent ($\eta$) and how stiff it is ($\shaftstiff$). A very flexible shaft bends a lot ($high$ $\eta$) but stores less energy per unit deflection (low $\shaftstiff$). A very stiff shaft bends less but packs more energy into that small deformation.
+The magnitude of this energy depends on how much the shaft is bent ($\eta$) and how stiff it is ($\shaftstiff$). A very flexible shaft bends a lot (large $\eta$) but stores less energy per unit deflection (low $\shaftstiff$). A very stiff shaft bends less but packs more energy into that small deformation.
 
 ::: {.callout-tip}
 ## Why Shaft Flex Profiles Matter
@@ -298,7 +300,9 @@ At the top of the backswing, the golfer has stored potential energy in the muscl
 
 The shaft acts as a temporary storage device, holding energy as elastic deformation and returning it later.
 
-\text{Muscle work} = \Delta KE_{\text{clubhead}} + E_{\text{stored in shaft}} + E_{\text{dissipated by damping}}
+$$
+W_{\text{muscles}} = \Delta KE_{\text{clubhead}} + E_{\text{stored in shaft}} + E_{\text{dissipated by damping}}
+$$
 
 For a flexible shaft, the term $E_{\text{stored in shaft}}$ is significant. In a fast swing, the shaft absorbs and releases energy very quickly (within milliseconds of mid-downswing). In a slow swing, the shaft might remain bent for most of the downswing, absorbing a larger fraction of the muscle work temporarily.
 
@@ -369,8 +373,9 @@ Let us use realistic numbers:
 
 Suppose the hand (grip) starts at $y = 0$ and is prescribed to move with:
 
-y_{\text{grip}}(t) = 0.5 \sin\left(\pi t / 0.2\right) \quad \text{for } t \in [0, 0.2]
-\text{ s}
+$$
+y_{\text{grip}}(t) = 0.5 \sin\!\left(\frac{\pi t}{0.2}\right), \quad t \in [0,\, 0.2]\text{ s}
+$$
 
 This describes a hand moving upward from $t=0$ to $t=0.1$ s, then downward from $t=0.1$ to $t=0.2$ s, reaching a maximum height of 0.5 m at mid-swing.
 
@@ -380,44 +385,26 @@ For the **flexible shaft**, the clubhead additionally experiences the shaft defo
 
 The magnitude of the effect depends on the hand acceleration profile and the shaft parameters. For typical golfer numbers, the extra clubhead displacement due to shaft flex is 5--15 cm (2--6 inches) at the moment of maximum deflection, and the extra velocity at impact is 5--15% of the clubhead speed.
 
-[h]
-\centering
-[scale=0.8]
-  [
-    xlabel={Time (s)},
-    ylabel={Clubhead position (m)},
-    title={Rigid vs.\ Flexible Shaft ZTCF},
-    grid=major,
-    legend pos=lower right
-  ]
-  % Rigid shaft trajectory (smooth sine)
-  \addplot[color=driftblue, thick, mark=none]
-    table {
-      0    0.0
-      0.05 0.24
-      0.10 0.50
-      0.15 0.26
-      0.20 0.0
-    };
-  \addlegendentry{Rigid shaft}
+::: {.callout-note}
+## Figure: Rigid vs. Flexible Shaft ZTCF (Qualitative)
 
-  % Flexible shaft trajectory (sine with oscillation)
-  \addplot[color=shaftsilver, thick, mark=none, dashed]
-    table {
-      0    0.0
-      0.05 0.23
-      0.08 0.52
-      0.10 0.48
-      0.12 0.51
-      0.15 0.27
-      0.20 0.0
-    };
-  \addlegendentry{Flexible shaft}
+**Rigid shaft** (smooth): clubhead position follows the grip trajectory
+nearly sinusoidally — rising to 0.50 m at $t = 0.10$ s, then falling back
+to 0 m at $t = 0.20$ s.
 
+**Flexible shaft** (oscillatory): the same grip motion now produces
+oscillations near the peak. The clubhead overshoots to 0.52 m at
+$t = 0.08$ s, dips to 0.48 m at $t = 0.10$ s, and recovers to 0.51 m at
+$t = 0.12$ s before returning to 0 m by $t = 0.20$ s. This extra
+oscillation is the catapult effect: elastic energy stored in the bent shaft
+is released near the peak, briefly accelerating the clubhead beyond the
+rigid-shaft trajectory.
 
-\caption{Qualitative comparison of rigid vs.\ flexible shaft ZTCF trajectories. The flexible shaft shows oscillation near the maximum height, characteristic of the catapult effect.}
+The flexible shaft does **not** produce a lower ZTCF trajectory; it produces
+a *different* one whose oscillations encode the shaft dynamics.
+:::
 
-The key insight: the flexible shaft does not produce a lower ZTCF trajectory; it produces a *different* ZTCF trajectory, one that includes oscillations due to shaft dynamics. If your swing muscles and gravity are tuned to work with a particular drift field, using a shaft with different stiffness changes that drift field, and you must adjust your muscle activation (control inputs) to compensate.
+If your swing muscles and gravity are tuned to work with a particular drift field, using a shaft with different stiffness changes that drift field, and you must adjust your muscle activation (control inputs) to compensate.
 
 ## Why Shaft Flex is in the Drift, Not the Control
 
