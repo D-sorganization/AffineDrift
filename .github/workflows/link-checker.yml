@@ -1,0 +1,40 @@
+name: Link Checker
+
+on:
+  push:
+    branches: [staging, main]
+    paths:
+      - "pages/overview.qmd"
+      - "pages/drifter-manifesto.qmd"
+      - "pages/tangent-hyperplanes.qmd"
+  pull_request:
+    paths:
+      - "pages/overview.qmd"
+      - "pages/drifter-manifesto.qmd"
+      - "pages/tangent-hyperplanes.qmd"
+  workflow_dispatch:
+
+jobs:
+  check-links:
+    name: Check internal links (overview, manifesto, tangent-hyperplanes)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install lychee
+        uses: lycheeverse/lychee-action@v1
+        with:
+          # Check only the three pages flagged in issue #2773.
+          # --include-verbatim so HTML-embedded hrefs are checked.
+          # Exclude external URLs (too flaky in CI); focus on internal refs.
+          args: >
+            --no-progress
+            --include-verbatim
+            --exclude-all-private
+            --exclude 'https?://'
+            pages/overview.qmd
+            pages/drifter-manifesto.qmd
+            pages/tangent-hyperplanes.qmd
+          fail: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

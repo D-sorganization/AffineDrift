@@ -1,6 +1,6 @@
 ---
-title: "The Drifter Manifesto"
-description: "The Drifter Manifesto — the primary theoretical reference establishing the control-affine framework for golf swing biomechanics"
+title: "Drifter Theory Series"
+description: "Drifter Theory Series — the primary theoretical reference establishing the control-affine framework for golf swing biomechanics"
 page-layout: full
 ---
 
@@ -9,20 +9,17 @@ page-layout: full
   <div class="container">
     <div class="articles-list">
       <div class="article-category">
-        <h2>The Drifter Manifesto</h2>
+        <h2>Drifter Theory Series</h2>
         <p style="margin-bottom: 1rem; font-size: 1.1rem; line-height: 1.8; color: var(--text-dark);">
-          The Drifter Manifesto is the primary theoretical reference for AffineDrift. It establishes
+          The Drifter Theory Series is the primary theoretical reference for AffineDrift. It establishes
           the control-affine framework, introduces key concepts (ZTCF, ZVCF, Drift-Control Ratio),
           and provides the notation used throughout all AffineDrift research.
         </p>
-        <div style="margin-bottom: 1.5rem; padding: 0.75rem 1rem; background: var(--bg-secondary, #f8f9fa); border-left: 3px solid var(--primary-color, #2563eb); border-radius: 4px; font-size: 0.9rem; color: var(--text-light, #6b7280);">
-          <strong>Provenance:</strong> The control-affine form &#7715; = f(x) + g(x)u is established control theory (Isidori 1995). The drift/input decomposition, ZTCF, and DCR applied to golf biomechanics are original AffineDrift synthesis &mdash; not peer-reviewed. See <a href="../critiques/index.html">Critiques &amp; Responses</a> for documented limitations.
-        </div>
 
         <div style="margin-bottom: 2rem; text-align: center;">
           <a href="../articles/drifter-manifesto.html"
              style="display: inline-block; padding: 0.75rem 2rem; background: var(--primary-blue, #2563eb); color: white; text-decoration: none; border-radius: 6px; font-size: 1.1rem; font-weight: 600;">
-            Read the Full Drifter Manifesto &rarr;
+            Read the Full Series &rarr;
           </a>
         </div>
 
@@ -48,6 +45,54 @@ page-layout: full
           <h3><a href="../articles/drifter-manifesto.html#sec-part5">Part 5 &mdash; Numerical Consistency Check (Planar Model)</a></h3>
           <p>Documents the numerical implementation, Simulink validation, and supporting technical notes for the planar golf swing model.</p>
         </div>
+
+        <!-- Scope and evidence standards — consolidated from multiple callout blocks -->
+        <div style="margin-top: 2.5rem; padding: 1rem 1.25rem; background: var(--bg-secondary, #f8f9fa); border-left: 3px solid var(--primary-color, #2563eb); border-radius: 4px; font-size: 0.9rem; color: var(--text-light, #6b7280);">
+          <strong>Scope and evidence standards</strong><br>
+          The control-affine form <span style="font-family: monospace;">&#7715; = f(x) + g(x)u</span> is established control theory (Isidori 1995). The drift/input decomposition, ZTCF, ZVCF, and DCR applied to golf biomechanics are original AffineDrift synthesis &mdash; not peer-reviewed. Claims are grounded in cited mechanics and control-theory literature; where original synthesis is involved, the reasoning is made explicit so it can be evaluated independently. See <a href="../critiques/index.html">Critiques &amp; Responses</a> for documented limitations and open questions. The claim-to-source mapping below cross-references specific claims to primary literature.
+        </div>
+
+        <!-- Claim-to-source matrix (below article list, per issue #2773) -->
+        <div style="margin-top: 2rem;">
+          <h3 style="margin-bottom: 0.75rem; color: var(--text-dark);">Claim-to-Source Reference</h3>
+          <table style="width: 100%; border-collapse: collapse; font-size: 0.88rem;">
+            <thead>
+              <tr style="background: #f3f4f6;">
+                <th style="text-align: left; padding: 0.4rem 0.75rem; border-bottom: 1px solid #d1d5db;">Claim</th>
+                <th style="text-align: left; padding: 0.4rem 0.75rem; border-bottom: 1px solid #d1d5db;">Status</th>
+                <th style="text-align: left; padding: 0.4rem 0.75rem; border-bottom: 1px solid #d1d5db;">Primary source</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td style="padding: 0.4rem 0.75rem; border-bottom: 1px solid #e5e7eb;">Control-affine structure of multibody dynamics</td>
+                <td style="padding: 0.4rem 0.75rem; border-bottom: 1px solid #e5e7eb;">Established</td>
+                <td style="padding: 0.4rem 0.75rem; border-bottom: 1px solid #e5e7eb;">Isidori 1995; Murray, Li &amp; Sastry 1994</td>
+              </tr>
+              <tr>
+                <td style="padding: 0.4rem 0.75rem; border-bottom: 1px solid #e5e7eb;">Drift/input decomposition via ZTCF</td>
+                <td style="padding: 0.4rem 0.75rem; border-bottom: 1px solid #e5e7eb;">Original synthesis</td>
+                <td style="padding: 0.4rem 0.75rem; border-bottom: 1px solid #e5e7eb;">AffineDrift (this series)</td>
+              </tr>
+              <tr>
+                <td style="padding: 0.4rem 0.75rem; border-bottom: 1px solid #e5e7eb;">Drift-Control Ratio (DCR) definition</td>
+                <td style="padding: 0.4rem 0.75rem; border-bottom: 1px solid #e5e7eb;">Original synthesis</td>
+                <td style="padding: 0.4rem 0.75rem; border-bottom: 1px solid #e5e7eb;">AffineDrift; see <a href="../articles/controllability-drift-ratio.html">DCR article</a></td>
+              </tr>
+              <tr>
+                <td style="padding: 0.4rem 0.75rem; border-bottom: 1px solid #e5e7eb;">High DCR in late downswing (100–300× growth)</td>
+                <td style="padding: 0.4rem 0.75rem; border-bottom: 1px solid #e5e7eb;">Model estimate; not yet instrumented</td>
+                <td style="padding: 0.4rem 0.75rem; border-bottom: 1px solid #e5e7eb;">AffineDrift planar model; <a href="../critiques/index.html">see critique</a></td>
+              </tr>
+              <tr>
+                <td style="padding: 0.4rem 0.75rem;">Accessibility vs. controllability distinction</td>
+                <td style="padding: 0.4rem 0.75rem;">Established</td>
+                <td style="padding: 0.4rem 0.75rem;">Nijmeijer &amp; van der Schaft 1990; Isidori 1995</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
       </div>
     </div>
   </div>
