@@ -116,21 +116,21 @@ By utilizing the Matrix Exponential and the global Screw Axis structure, the PoE
 
 ## Space-Frame vs Body-Frame PoE
 
-The formula above — $T(m{	heta}) = e^{[\screw_1]	heta_1} \cdots e^{[\screw_n]	heta_n} M$ — is the **space-frame PoE**: the screw axes $\screw_i$ are expressed in the fixed space frame at the zero configuration. A key advantage of PoE over Denavit-Hartenberg is that $M$ is completely arbitrary; choosing a convenient home pose does not force any axis alignments.
+The formula above — $T(\bm{\theta}) = e^{[\screw_1]\theta_1} \cdots e^{[\screw_n]\theta_n} M$ — is the **space-frame PoE**: the screw axes $\screw_i$ are expressed in the fixed space frame at the zero configuration. A key advantage of PoE over Denavit-Hartenberg is that $M$ is completely arbitrary; choosing a convenient home pose does not force any axis alignments.
 
 There is an equivalent **body-frame PoE** (Lynch & Park [@lynch2017modern, §4.6.2]):
 
-egin{equation}
-  T(m{	heta}) = M\, e^{[\mathcal{B}_1]	heta_1} e^{[\mathcal{B}_2]	heta_2} \cdots e^{[\mathcal{B}_n]	heta_n},
+\begin{equation}
+  T(\bm{\theta}) = M\, e^{[\mathcal{B}_1]\theta_1} e^{[\mathcal{B}_2]\theta_2} \cdots e^{[\mathcal{B}_n]\theta_n},
 \end{equation}
 
 where the body screws $\mathcal{B}_i$ are the space screws re-expressed in the end-effector (body) frame at the home configuration:
 
-egin{equation}
+\begin{equation}
   \mathcal{B}_i = \mathrm{Ad}_{M^{-1}}\,\screw_i.
 \end{equation}
 
-The two forms give identical $T(m{	heta})$ for all $m{	heta}$. The choice is a matter of convenience:
+The two forms give identical $T(\bm{\theta})$ for all $\bm{\theta}$. The choice is a matter of convenience:
 
 - **Space-frame PoE** is natural for geometric intuition — each $\screw_i$ describes a fixed line in the world.
 - **Body-frame PoE** is natural for the **body Jacobian** and for recursive dynamics (@sec-rnea and @sec-aba), because $\mathcal{B}_i$ is expressed in the frame that moves with the end-effector and directly links to body-frame velocity propagation.
@@ -146,9 +146,9 @@ The two forms give identical $T(m{	heta})$ for all $m{	heta}$. The choice is a
 
 **9.1 (Computational)** Using the `planar_2R_forward_kinematics` code from the text, verify that the Jacobian (derivative of end-effector position with respect to joint angles) matches the finite-difference approximation at several configurations. Identify a singular configuration. See [@lynch2017modern, Ch. 4].
 
-**9.2 (Conceptual)** The space-frame PoE multiplies screws left-to-right: $T = e^{[\screw_1]	heta_1} \cdots e^{[\screw_n]	heta_n} M$. Explain why this ordering is required and what would go wrong if you reversed it.
+**9.2 (Conceptual)** The space-frame PoE multiplies screws left-to-right: $T = e^{[\screw_1]\theta_1} \cdots e^{[\screw_n]\theta_n} M$. Explain why this ordering is required and what would go wrong if you reversed it.
 
-**9.3 (Computational)** For the planar 2R arm, derive the body-frame PoE by computing $\mathcal{B}_i = \operatorname{Ad}_{M^{-1}} \screw_i$ and verify both space-frame and body-frame formulas give identical $T(	heta)$ at several configurations. See [@brockett1984robotic].
+**9.3 (Computational)** For the planar 2R arm, derive the body-frame PoE by computing $\mathcal{B}_i = \operatorname{Ad}_{M^{-1}} \screw_i$ and verify both space-frame and body-frame formulas give identical $T(\theta)$ at several configurations. See [@brockett1984robotic].
 
-**9.4 (Conceptual)** Explain why the closed-form Rodrigues/$G(	heta)$ formula is preferred over `scipy.linalg.expm` for PoE in a real-time kinematic loop. Estimate the speedup factor for a 6-DOF arm running at 1 kHz.
+**9.4 (Conceptual)** Explain why the closed-form Rodrigues/$G(\theta)$ formula is preferred over `scipy.linalg.expm` for PoE in a real-time kinematic loop. Estimate the speedup factor for a 6-DOF arm running at 1 kHz.
 

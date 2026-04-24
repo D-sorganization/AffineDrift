@@ -55,7 +55,7 @@ Here is pseudocode for the recursive forward kinematics algorithm:
 
 **Quaternion Representation:** While the pseudocode uses rotation matrices, consider storing rotations as unit quaternions internally for cumulative products. Matrices require periodic re-orthogonalization after many multiplications; quaternions maintain unit norm automatically and are more numerically stable for long kinematic chains.
 
-**Numerical Precision:** For production systems, `scipy.linalg.expm` uses scaling-and-squaring with a Padé approximant (Al-Mohy & Higham 2010, *SIAM J. Matrix Anal. Appl.*) — numerically stable even for defective or near-defective matrices where eigendecomposition can fail. For the $\mathfrak{so}(3)$/$\mathfrak{se}(3)$ case specifically, the closed-form Rodrigues and $G(	heta)$ formulas (Chapter 6) are faster and more accurate than any generic `expm` call, and are what performance-sensitive implementations (Eigen, Pinocchio) use.
+**Numerical Precision:** For production systems, `scipy.linalg.expm` uses scaling-and-squaring with a Padé approximant (Al-Mohy & Higham 2010, *SIAM J. Matrix Anal. Appl.*) — numerically stable even for defective or near-defective matrices where eigendecomposition can fail. For the $\mathfrak{so}(3)$/$\mathfrak{se}(3)$ case specifically, the closed-form Rodrigues and $G(\theta)$ formulas (Chapter 6) are faster and more accurate than any generic `expm` call, and are what performance-sensitive implementations (Eigen, Pinocchio) use.
 
 :::
 
@@ -316,9 +316,9 @@ The mathematical fundamentals are established. Let us begin Volume I.
 
 **7.1 (Computational)** Implement the full RNEA for a 2-link planar arm. Verify torques match the direct Lagrangian EOM for the same trajectory. See [@featherstone2008rigid, Ch. 5] and [@lynch2017modern, Ch. 8].
 
-**7.2 (Conceptual)** Explain why RNEA computes inverse dynamics in $O(N)$ while assembling $M(m{q})$ explicitly costs $O(N^2)$.
+**7.2 (Conceptual)** Explain why RNEA computes inverse dynamics in $O(N)$ while assembling $M(\bm{q})$ explicitly costs $O(N^2)$.
 
-**7.3 (Computational)** Profile RNEA vs a direct $N	imes N$ formulation for $N=2,4,8,16,32$ joints and verify the $O(N)$ vs $O(N^2)$ asymptotics.
+**7.3 (Computational)** Profile RNEA vs a direct $N\times N$ formulation for $N=2,4,8,16,32$ joints and verify the $O(N)$ vs $O(N^2)$ asymptotics.
 
 **7.4 (Conceptual)** Near a singular configuration, how does numerical error propagate through the Adjoint-map wrench transformation in the inward pass? What condition-number metric should production code monitor?
 
