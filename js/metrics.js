@@ -177,7 +177,7 @@
       { value: stats.summary.totalSessions, label: "Sessions" }
     ];
 
-    metricsMap.forEach(item => {
+    for (const item of metricsMap) {
       const card = document.createElement("div");
       card.className = "metric-card";
 
@@ -195,7 +195,7 @@
       card.appendChild(labelSpan);
 
       summaryDiv.appendChild(card);
-    });
+    }
 
     widget.appendChild(summaryDiv);
 
@@ -210,7 +210,7 @@
       const listDiv = document.createElement("div");
       listDiv.className = "metrics-list";
 
-      stats.topSearches.forEach(([term, count]) => {
+      for (const [term, count] of stats.topSearches) {
         const itemDiv = document.createElement("div");
         itemDiv.className = "metrics-item";
 
@@ -228,7 +228,7 @@
         itemDiv.appendChild(countSpan);
 
         listDiv.appendChild(itemDiv);
-      });
+      }
 
       section.appendChild(listDiv);
       widget.appendChild(section);
@@ -245,7 +245,7 @@
       const listDiv = document.createElement("div");
       listDiv.className = "metrics-list";
 
-      stats.topEntries.forEach((entry) => {
+      for (const entry of stats.topEntries) {
         const itemDiv = document.createElement("div");
         itemDiv.className = "metrics-item";
 
@@ -264,7 +264,7 @@
         itemDiv.appendChild(countSpan);
 
         listDiv.appendChild(itemDiv);
-      });
+      }
 
       section.appendChild(listDiv);
       widget.appendChild(section);
@@ -281,13 +281,13 @@
       const cloudDiv = document.createElement("div");
       cloudDiv.className = "concept-cloud";
 
-      stats.topConcepts.forEach(([concept, count]) => {
+      for (const [concept, count] of stats.topConcepts) {
         const tagSpan = document.createElement("span");
         tagSpan.className = "concept-tag";
         tagSpan.style.fontSize = Math.min(1 + count * 0.1, 1.5) + "rem";
         tagSpan.textContent = concept;
         cloudDiv.appendChild(tagSpan);
-      });
+      }
 
       section.appendChild(cloudDiv);
       widget.appendChild(section);
