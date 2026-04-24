@@ -2,14 +2,20 @@
 title: "Machine Learning and Neural Networks"
 ---
 
-# Machine Learning and Neural Networks
+# Machine Learning and Neural Networks {#sec-ml}
+
+::: {.callout-note}
+## Scope within Volume 0
+
+This chapter is a **connecting chapter**: it shows how the mathematical foundations of Volume 0 -- spatial algebra (@sec-spatial-algebra), recursive dynamics (@sec-rnea, @sec-aba), and Lagrangian mechanics (@sec-lagrangian) -- connect to modern machine-learning-based control. The treatment is introductory; Volume V (Simulation and Learning) provides full depth on model-based and model-free RL, differentiable dynamics, and sim-to-real transfer.
+:::
 ## Scope of This Chapter
 
 This chapter focuses on **using neural networks to learn control policies and approximate inverse models** in systems where analytical physics is intractable. Specifically:
 
 - **What IS covered**: How to use function approximation and neural networks to map observed states directly to control outputs, learning from interaction data or reward signals rather than hand-derived equations. This includes policy learning via Reinforcement Learning and supervised learning of inverse dynamics models. This approach is practical for complex, uncertain, or high-dimensional systems.
 
-- **What IS NOT covered**: Learning the forward dynamics model (i.e., learning the function mapping states and actions to next states). While related and equally important, forward model learning is treated separately in Volume I under dynamics learning and model-based RL. This chapter assumes you will use the recursive algorithms from Chapter 9 when you need to predict future motion from known dynamics; here, we focus on learning what to *command*, not what will *happen*.
+- **What IS NOT covered**: Learning the forward dynamics model (i.e., learning the function mapping states and actions to next states). While related and equally important, forward model learning is treated separately in Volume I under dynamics learning and model-based RL. This chapter assumes you will use the recursive algorithms from Chapter 9 when you need to predict future motion from known dynamics (see @sec-rnea); here, we focus on learning what to *command*, not what will *happen*.
 
 With this scope in mind, we explore neural networks as tools for discovering control laws in complex systems.
 
@@ -196,3 +202,31 @@ print("Commanded Torque from Neural Network policy:", np.round(commanded_u[0, 0]
 This code block demonstrates exactly how Reinforcement Learning algorithms map physics. Millions of times per second, matrices multiply vectors and pass through ReLU functions to output physical torques inside the UpstreamDrift physics simulation.
 
 With the mathematics of Reinforcement Learning, Spatial Algebra, Recursive Dynamics, and Configuration Manifolds securely established, you are now completely prepared to tackle the advanced control theory in Volume I and Volume II of *Tangent-Space Methods*.
+
+## Exercises {#sec-ml-exercises}
+
+**12.1 (Conceptual)** Compare and contrast the Lagrangian EOM approach (@sec-lagrangian) with the RL approach for controlling a 2-DOF arm:
+(a) Which approach requires more data? Which requires more domain knowledge?
+(b) Which approach provides stability guarantees? What kind (local/global)?
+(c) For a system where joint friction is unknown and varies with temperature, which approach handles this better and why?
+
+**12.2 (Computational)** Given the neural-network policy from the worked example (4 to 8 to 1 architecture), compute by hand the gradient $
+abla_{W_1} \mathcal{L}$ for a single step where the network outputs $u = 0.5$ and the target is $u^* = 1.0$ (MSE loss). Verify using PyTorch or JAX automatic differentiation.
+
+**12.3 (Algorithmic)** Implement a minimal policy-gradient update for a one-dimensional spring-mass system ($m\ddot{x} + kx = u$, $m=1$, $k=1$):
+(a) Define a reward $R = -x^2 - 0.1 u^2$ (LQR-style).
+(b) Parameterize the policy as $u = \pi_	heta(x, \dot{x}) = 	heta_1 x + 	heta_2 \dot{x}$ (linear policy, 2 parameters).
+(c) Implement the REINFORCE gradient estimator and verify it converges toward the LQR optimal gains.
+
+## Summary {#sec-ml-summary}
+
+Volume 0 has established the mathematical foundations for describing and computing the motion of mechanical systems. This connecting chapter shows where those foundations meet modern machine learning:
+
+| Foundation | Mechanics role | ML role |
+|-----------|---------------|---------|
+| @sec-config (configuration manifolds) | Joint angles live on $\SO$, $T^n$ | State representation for policies |
+| @sec-rnea (RNEA) | Compute required torques | Ground-truth labels for inverse-dynamics learning |
+| @sec-aba (ABA) | Compute forward dynamics | Simulator for RL environment |
+| @sec-lagrangian (Lagrangian EOM) | Analytical control law design | Structure for physics-informed networks |
+
+With the mathematics of spatial algebra, recursive dynamics, Lagrangian mechanics, and their connections to learning securely established, you are prepared to tackle the advanced control theory in Volume I and the simulation and learning methods in Volume V of *Tangent-Space Methods*.

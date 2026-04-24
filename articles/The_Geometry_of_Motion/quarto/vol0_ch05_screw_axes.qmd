@@ -2,7 +2,7 @@
 title: "Twists, Wrenches, and the Screw Axis"
 ---
 
-# Twists, Wrenches, and the Screw Axis
+# Twists, Wrenches, and the Screw Axis {#sec-screw}
 
 ::: {.callout-note}
 
@@ -149,8 +149,19 @@ $$
 \wrench_A = \operatorname{Ad}_{T_{AB}}^{-T}\, \wrench_B.
 $$
 
-These operators are used immediately in Chapter 7 (RNEA / ABA velocity and wrench recursion) and Chapter 9 (Product of Exponentials). The particular block structure above is the Lynch & Park §3.3 convention; Featherstone's $[\bm{v};\, \bm{\omega}]$ ordering produces block-swapped versions of the same operators.
+These operators are used immediately in @sec-rnea (RNEA / ABA velocity and wrench recursion) and @sec-poe (Product of Exponentials). The particular block structure above is the Lynch & Park §3.3 convention; Featherstone's $[\bm{v};\, \bm{\omega}]$ ordering produces block-swapped versions of the same operators.
 
 We now finally possess the mathematical primer necessary to leave the stationary world behind, map the configuration of physical bodies flawlessly via $SE(3)$, understand their rotational matrices, and track their trajectories as infinitesimally precise 6D vectors. The fundamental mathematics are established.
 
 We may now proceed to Volume I: The Geometry of those spaces.
+
+## Exercises {#sec-screw-exercises}
+
+**5.1 (Computational)** For a revolute joint at $m{q}=(1,0,0)$ spinning about $\hat{z}$, write the unit screw $\screw=(\hat{m{\omega}};m{v})$. Verify $m{v} = -\hat{m{\omega}} 	imes m{q}$.
+
+**5.2 (Conceptual)** What is the pitch of a pure revolute joint? A pure prismatic joint? Give a physical example with nonzero finite pitch.
+
+**5.3 (Computational)** Compute instantaneous power $P=\wrench^T	wist$ and verify it is frame-independent by transforming to a shifted frame and recomputing. See [@lynch2017modern, §3.3] and [@featherstone2008rigid, Ch. 2].
+
+**5.4 (Conceptual)** Prove that wrenches transform by $\operatorname{Ad}_T^{-T}$ (not $\operatorname{Ad}_T$) in order to keep the power pairing $\wrench^T	wist$ frame-invariant.
+

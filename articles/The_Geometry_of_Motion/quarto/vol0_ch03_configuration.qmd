@@ -2,7 +2,7 @@
 title: "Configuration Space and Degrees of Freedom"
 ---
 
-# Configuration Space and Degrees of Freedom
+# Configuration Space and Degrees of Freedom {#sec-config}
 ## Degrees of Freedom (DOF)
 
 
@@ -40,7 +40,7 @@ Formally this is the Grübler–Kutzbach count: for $N$ bodies in a 3D mechanism
 ## The Configuration Space $\configspace$
 
 
-The collection of all valid configurations a system can possibly achieve—accounting for all of its physical constraints, linkages, pins, and bearings—is called its **Configuration Space**, denoted by the symbol $\configspace$.
+The collection of all valid configurations a system can possibly achieve—accounting for all of its physical constraints, linkages, pins, and bearings—is called its **Configuration Space**, denoted by the symbol $\configspace$ [@lynch2017modern, Ch. 2].
 
 Like state space, configuration space is an abstract, multi-dimensional geometric surface. It is, strictly speaking, a mathematical **manifold** (which we explore deeply in Volume I). The number of dimensions of this space is exactly equal to the Degrees of Freedom. 
 
@@ -49,7 +49,7 @@ Like state space, configuration space is an abstract, multi-dimensional geometri
 
   A system with $n$ Degrees of Freedom has a Configuration Space $\configspace$ of dimension $n$, defined completely by the vector $\bm{q} = [q_1, q_2, ..., q_n]^T$. 
 
-  The corresponding **State Space** $\statespace$ (from Chapter 1) is the configuration space multiplied by the velocity of those coordinates, meaning state space always has $2n$ dimensions.
+  The corresponding **State Space** $\statespace$ (from @sec-state-space) is the configuration space multiplied by the velocity of those coordinates, meaning state space always has $2n$ dimensions.
   
   $$ \text{State} \ \state = [\bm{q}, \dot{\bm{q}}]^T \in \statespace = \configspace \times \Reals^n $$
 
@@ -64,7 +64,7 @@ When we model a complex physical system (such as the 15-DOF human golfer in Volu
 
 Instead, we use **Generalized Coordinates**. Since an elbow is a pin joint allowing only 1 DOF of rotation, we abandon $(x,y,z)$ mapping entirely and instead just track the single angle $\theta_\text{elbow}$. If we define the angle of the shoulder $\theta_\text{shoulder}$, and the length of the humerus bone $L_1$, the position of the elbow is instantly known.
 
-Generalized coordinates are the set of independent variables $q_1, q_2, ... q_n$ that perfectly span the Configuration Space. They are the most efficient map of the mechanism's geometry. In robotics, $q$ usually refers to the joint angles of the motors. Formally we also assume the constraints that carve out $\configspace$ are **holonomic**—each is an algebraic equation in $\bm{q}$ alone (and possibly time), not an inequality or a velocity constraint. Non-holonomic systems (rolling wheels, ice skates) require an enlarged treatment that we defer to Volume I. 
+Generalized coordinates are the set of independent variables $q_1, q_2, ... q_n$ that perfectly span the Configuration Space. They are the most efficient map of the mechanism's geometry. In robotics, $q$ usually refers to the joint angles of the motors [@murray1994mathematical, Ch. 2]. Formally we also assume the constraints that carve out $\configspace$ are **holonomic**—each is an algebraic equation in $\bm{q}$ alone (and possibly time), not an inequality or a velocity constraint. Non-holonomic systems (rolling wheels, ice skates) require an enlarged treatment that we defer to Volume I. 
 
 
 ### Forward Kinematics
@@ -88,13 +88,22 @@ By using trigonometry, we stack the lengths of the links and the angles of the j
 Notice that to know where the physical end of the arm is, we only needed the configuration vector $\bm{q} \in \configspace$. 
 
 
-## Summary
+## Exercises {#sec-config-exercises}
+
+**3.1 (Conceptual)** Apply the Grübler--Kutzbach formula to: (a) a planar 3R serial robot; (b) a human finger with three phalanges and revolute joints (one grounded).
+
+**3.2 (Computational)** Implement the 2-link planar forward kinematics in Python. Verify that the end-effector traces a circle as $q_2$ varies $0$ to $2\pi$ with $q_1=0$, $L_1=L_2=1$.
+
+**3.3 (Conceptual)** Explain why the config space of a revolute joint is $S^1$ rather than $\mathbb{R}$. How does this constrain interpolation algorithm design? See [@lynch2017modern, Ch. 3].
+
+
+## Summary {#sec-config-summary}
 
 
 When controlling physical motion, you are fundamentally commanding a point to traverse through Configuration Space $\configspace$. 
 
 However, mapping $\configspace$ is vastly more complex than simple $(x,y)$ geometry. Consider a simple drone spinning freely. In physical space, it can rotate horizontally 360 degrees, and keep rotating 720 degrees, and 1080 degrees, looping back over itself physically but extending its generalized coordinate to infinity. This infinite looping implies that $\configspace$ is NOT a simple flat plane. Formally, the configuration space of full 3D orientation is the Lie group $\SO$: it is **compact**, **non-abelian** (rotations don't commute), and 3-dimensional. Topologically it is diffeomorphic to $\mathbb{RP}^3$ (real projective 3-space), and this is why the unit-quaternion 3-sphere $S^3$ covers $\SO$ exactly twice ($q$ and $-q$ represent the same rotation). 
 
-To govern angular movement and rotations formally—and escape the mathematical nightmares of "Gimbal Lock"—we must upgrade from Euler angles to higher matrices. We must transition to the Special Orthogonal Group $\SO$.
+To govern angular movement and rotations formally (see @sec-so3)—and escape the mathematical nightmares of "Gimbal Lock"—we must upgrade from Euler angles to higher matrices. We must transition to the Special Orthogonal Group $\SO$.
 
 But do not let the fancy name intimidate you. $\SO(3)$ is simply the collection of all possible ways to orient an object in space. Every rotation you have ever performed---turning a doorknob, spinning a basketball, tilting your head---is an element of $\SO(3)$. The mathematics just gives us a rigorous way to combine and compare these rotations without losing track of them. We will see in the next chapter that this "collection of all rotations" has a beautiful geometric structure: it is a smooth, curved surface (a manifold) on which we can do calculus, define tangent spaces, and ultimately build control systems that respect the geometry of rotation rather than fighting it.

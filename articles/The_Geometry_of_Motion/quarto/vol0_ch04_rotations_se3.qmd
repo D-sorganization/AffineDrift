@@ -2,7 +2,7 @@
 title: "Rotations, Quaternions, and SO(3)"
 ---
 
-# Rotations, Quaternions, and SO(3)
+# Rotations, Quaternions, and SO(3) {#sec-so3}
 
 ::: {.callout-note}
 
@@ -161,3 +161,14 @@ For real-time control and simulation, the recommendation depends on the applicat
 
 
 To merge Translation and Rotation into a single unified control framework for physical bodies mapping the full world, we must upgrade from $3 \times 3$ Rotation Matrices to the magnificent $4 \times 4$ space of $\SE$.
+
+## Exercises {#sec-so3-exercises}
+
+**4.1 (Conceptual)** Verify non-commutativity of $\SO$: compute $R_x(\pi/2)R_z(\pi/2)$ and $R_z(\pi/2)R_x(\pi/2)$ and show they differ.
+
+**4.2 (Computational)** Implement SLERP with short-arc disambiguation. Test with a $90^\circ$ rotation about $\hat{z}$; verify the midpoint ($t=0.5$) gives $45^\circ$.
+
+**4.3 (Conceptual)** Bhat & Bernstein (2000) [@bhat2000topological] prove no smooth, time-invariant feedback globally asymptotically stabilizes attitude on $\SO$. Explain why the topology forces this.
+
+**4.4 (Computational)** Compare QR vs polar decomposition re-orthogonalization over $10^4$ simulation steps. Which gives smaller Frobenius error?
+

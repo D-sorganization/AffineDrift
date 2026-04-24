@@ -2,7 +2,7 @@
 title: "The Transition to State Space"
 ---
 
-# The Transition to State Space
+# The Transition to State Space {#sec-state-space}
 ## Introduction: The Physics Abstraction
 
 
@@ -126,9 +126,18 @@ This is called the **State Space Representation**. It is universally written in 
 Whether you are controlling a single gear or a 15-DOF musculoskeletal golf swing (as discussed in Volume II), you are always, fundamentally, trying to shape the trajectory $\state(t)$ by manipulating the vector field $\bm{f}$ using your control inputs $\control$.
 
 
-## Summary
+## Exercises {#sec-state-space-exercises}
+
+**2.1 (Conceptual)** A double pendulum has two rigid rods connected at a hinge. Write down its state vector and explain why the state space dimension is $2n$.
+
+**2.2 (Computational)** For the mass-spring-damper $m\ddot{q}+c\dot{q}+kq=u$ with $m=1$, $c=0.5$, $k=2$: write in state-space form $\dot{\state}=A\state+Bu$ and find the eigenvalues of $A$.
+
+**2.3 (Conceptual)** Explain why the Markov property is essential for state-space control design. Give a physical example where a naive "state" violates it and show how to augment it.
+
+
+## Summary {#sec-state-space-summary}
 
 
 State space fundamentally decouples physics from geometry. We no longer treat a system as physical objects bumping into each other in 3D space. We treat it as a single point—a cursor—moving through hyper-dimensional coordinates based on a vector field. 
 
-But what defines those coordinates? How do we mathematically decide what the angles and positions of highly complex mechanisms are? For that, we turn to Configuration Space.
+But what defines those coordinates? How do we mathematically decide what the angles and positions of highly complex mechanisms are? For that, we turn to Configuration Space (see @sec-config).

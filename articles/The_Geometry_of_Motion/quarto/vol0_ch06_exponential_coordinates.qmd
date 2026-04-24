@@ -2,7 +2,7 @@
 title: "Exponential Coordinates and Matrix Logarithms"
 ---
 
-# Exponential Coordinates and Matrix Logarithms
+# Exponential Coordinates and Matrix Logarithms {#sec-exp-coords}
 
 ::: {.callout-note}
 
@@ -16,7 +16,7 @@ the exponential map is the road that takes you from the engine to the destinatio
 ## The Lie Algebra mapping to Lie Groups
 
 
-In Chapters 3 and 4, we established that physical orientations live in the Special Orthogonal Group $\SO$, and complete configurations live in the Special Euclidean Group $\SE$. 
+In @sec-so3 and @sec-screw, we established that physical orientations live in the Special Orthogonal Group $\SO$, and complete configurations live in the Special Euclidean Group $\SE$. 
 
 But how does a system actually *move* between two positions? If a robotic arm starts at $R_1$ and needs to rotate to $R_2$, it doesn't instantly teleport. It sweeps through a continuous arc. 
 
@@ -205,3 +205,14 @@ Recall the Quaternion definition:
 A quaternion is quite literally the Exponential Coordinate vector ($\hat{\bm{\omega}}\theta$) passed through a sine/cosine wave so that it algebraically bounds itself to a unit hypersphere. Quaternions explicitly preserve the pure geometric intention of the axis $\hat{\bm{\omega}}$ and the continuous rotation angle $\theta$.
 
 Because Quaternions map rotation so cleanly via this exponential structure, interpolating halfway between two orientations $q_1$ and $q_2$ (called Slerp - Spherical Linear Interpolation) traces the exact, perfect geodesic arc across rotation space, whereas interpolating Euler Angles creates chaotic, unpredictable wobbling.
+
+## Exercises {#sec-exp-coords-exercises}
+
+**6.1 (Computational)** Implement the three-branch `matrix_log_SO3` and verify it round-trips with Rodrigues' formula on $	heta \in \{0, \pi/6, \pi/2, \pi - 10^{-10}\}$.
+
+**6.2 (Computational)** Implement the SE(3) exponential using the closed-form $G(\hat{m{\omega}},	heta)$ formula. Compare runtime vs `scipy.linalg.expm` on $10^4$ random screws.
+
+**6.3 (Conceptual)** Give a $2	imes 2$ example with $A,B\in\mathfrak{so}(2)$ where the BCH approximation $A+B$ fails at first order and quantify the error.
+
+**6.4 (Conceptual)** Explain why SLERP traces a geodesic on $\SO$ while linear Euler-angle interpolation does not. Connect to the exponential map. See [@lynch2017modern, §3.3].
+
