@@ -26,6 +26,7 @@ import {
     initAnchorLinks,
     initScrollSpy,
     initSkipToContent,
+    initAriaCurrentPage,
 } from "./navigation.js";
 
 import {
@@ -72,6 +73,7 @@ runOnDomReady(function () {
     initAnchorLinks();
     initScrollSpy();
     initSkipToContent();
+    initAriaCurrentPage();
 
     // --- Animations & Lazy Loading ---
     initFadeAnimations();
