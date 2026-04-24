@@ -49,9 +49,7 @@ Both roles are valuable. Role (1) lets us *decompose* the torques. Role (2) lets
 
 The **Zero-Torque Counterfactual** is the trajectory $\bm{q}_{\text{ZTCF}}(t)$ obtained by solving the equations of motion from the current state $(\bm{q}(t_0), \dot{\bm{q}}(t_0))$ with all muscle torques set to zero:
 
-$$
 \bm{M}(\bm{q})\ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} + \bm{g}(\bm{q}) = \mathbf{0} \quad \text{with} \quad \bm{u} = \mathbf{0}
-$$
 
 The state evolves from the current configuration and velocities as if the muscles produce no torque whatsoever. No external forces besides gravity are applied; the system is purely passive.
 
@@ -116,9 +114,7 @@ Given the current state $\bm{x}(t_0) = (\bm{q}(t_0), \dot{\bm{q}}(t_0))$ at time
 1. **Capture the state:** Record the joint angles and angular velocities at the moment of interest (e.g., at mid-downswing).
 2. **Set up the passive equations:**
 
-$$
-\ddot{\bm{q}} = \bm{M}(\bm{q})^{-1} \left[ -\bm{C}(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} - \bm{g}(\bm{q}) \right]
-$$
+   \ddot{\bm{q}} = \bm{M}(\bm{q})^{-1} \left[ -\bm{C}(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} - \bm{g}(\bm{q}) \right]
 
    This equation gives the acceleration purely from passive forces (gravity, Coriolis).
 3. **Integrate:** Numerically integrate this ODE from $t_0$ forward in time using a standard solver (e.g., RK4). No muscle torques are applied; the system evolves under its own dynamics.
@@ -132,9 +128,7 @@ In practice, the ZTCF is computed in simulation by:
 1. Building a forward-dynamics model of the arm/club system, including all passive forces.
 2. Including a **"kill switch"** parameter, a binary flag $k_u$ that multiplies the input torques:
 
-$$
-\bm{M}(\bm{q})\ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} + \bm{g}(\bm{q}) = k_u \cdot \bm{B}(\bm{q}) \bm{u}
-$$
+   \bm{M}(\bm{q})\ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} + \bm{g}(\bm{q}) = k_u \cdot \bm{B}(\bm{q}) \bm{u}
 
 3. Running the model twice: once with $k_u = 1$ (real swing) and once with $k_u = 0$ (ZTCF).
 
@@ -252,19 +246,15 @@ Consider a two-segment arm (shoulder and elbow) during the downswing. Assume:
 - Elbow angle: $q_2 = 90°$ (arm flexed, club parallel to ground).
 - Elbow angular velocity: $\dot{q}_2 = 10$ rad/s (extending rapidly).
 
-At this configuration, Coriolis torques at the elbow are approximately:
+At this configuration, the Christoffel-symbol Coriolis torque at the elbow is approximately:
 
-$$
-\tau_{\text{Coriolis}} \approx 2 m_{\text{club}} L_1 L_2 \dot{q}_1 \dot{q}_2 \approx 2 \times 0.2 \times 0.4 \times 0.4 \times 5 \times 10 \approx 32 \text{ Nm}
-$$
+\tau_{\text{Coriolis}} \approx 2 m_{\text{club}} L_1 L_{2,cm} \sin(q_2) \dot{q}_1 \dot{q}_2 \approx 2 \times 0.2 \times 0.4 \times 0.4 \times \sin(90°) \times 5 \times 10 \approx 32 \text{ Nm}
 
-For this illustrative example, suppose the available muscular torque at the elbow is on the order of a few newton-meters. Then the DCR at this configuration is already well above 1---the passive dynamics are contributing more than muscles.
+(Here $q_2 \approx 90°$ so $\sin q_2 \approx 1$; the factor is not negligible in general and must be included for other angles.) For this illustrative example, suppose the available muscular torque at the elbow is on the order of a few newton-meters. Then the DCR at this configuration is already well above 1---the passive dynamics are contributing more than muscles.
 
-Later in the downswing, when angular velocities increase (e.g., $\dot{q}_1 \approx 15$ rad/s and $\dot{q}_2 \approx 20$ rad/s), the Coriolis torque grows quadratically:
+Later in the downswing, when angular velocities increase (e.g., $\dot{q}_1 \approx 15$ rad/s and $\dot{q}_2 \approx 20$ rad/s) and $q_2 \approx 45°$ ($\sin q_2 \approx 0.71$), the Coriolis torque grows quadratically:
 
-$$
-\tau_{\text{Coriolis}} \approx 2 \times 0.2 \times 0.4 \times 0.4 \times 15 \times 20 \approx 192 \text{ Nm}
-$$
+\tau_{\text{Coriolis}} \approx 2 \times 0.2 \times 0.4 \times 0.4 \times 0.71 \times 15 \times 20 \approx 136 \text{ Nm}
 
 The DCR grows rapidly. Because velocity-dependent torques scale with the *square* of angular velocity while muscular capacity remains roughly constant, the ratio becomes very large as impact approaches. The swing becomes increasingly ballistic.
 

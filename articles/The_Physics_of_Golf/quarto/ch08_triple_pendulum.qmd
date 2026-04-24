@@ -58,12 +58,9 @@ But the masses are also ordered: the torso is much heavier than the arm, which i
 
 The equations of motion for a planar triple pendulum are:
 
-$$
 \bm{M}(\bm{q}) \ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{u}
-$$
 
-where $\bm{M}(\bm{q})$ is the $3 \times 3$ mass matrix, $\bm{C}(\bm{q}, \dot{\bm{q}})\dot{\bm{q}}$ is the Coriolis/centrifugal vector, $\bm{g}(\bm{q})$ is gravity, and $\bm{u} = (\tau_1, \tau_2, \tau_3)^T$ are the applied torques at the three joints.
-:::
+where $\bm{M}(\bm{q})$ is the $3 \times 3$ mass matrix, $\bm{C}(\bm{q}, \dot{\bm{q}})$ is the $3\times 3$ Coriolis/centrifugal matrix (so $\bm{C}\dot{\bm{q}}$ is the Coriolis/centrifugal torque vector), $\bm{g}(\bm{q})$ is gravity, and $\bm{u} = (\tau_1, \tau_2, \tau_3)^T$ are the applied torques at the three joints.
 
 ## The Mass Matrix: Understanding Coupling
 
@@ -287,9 +284,7 @@ $$
 
 Set $\bm{u} = \mathbf{0}$ (no muscle torques) and solve:
 
-$$
 \bm{M}(\bm{q}) \ddot{\bm{q}} = -\bm{C}(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} - \bm{g}(\bm{q})
-$$
 
 Using a numerical solver with the mass matrix and Coriolis terms, the accelerations are approximately:
 
