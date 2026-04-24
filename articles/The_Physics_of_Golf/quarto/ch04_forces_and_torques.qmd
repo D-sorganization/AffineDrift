@@ -10,7 +10,9 @@ bibliography: ../golf_physics.bib
 
 Here's a central insight: the equation
 
+$$
 \bm{M}(\bm{q}) \ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{\tau}
+$$
 
 contains *all* the forces that act on your arm. But they're not all the same type. Some come from your muscles. Some come from gravity. Some come from your arm's own motion. Some come from constraints.
 
@@ -38,11 +40,11 @@ Let's understand each one.
 
 Newton's second law in the simplest form is:
 
-F = m a
+$$F = m a$$
 
 To accelerate a mass, you must apply a force proportional to its mass and acceleration. The same is true for rotation:
 
-\tau = I \alpha
+$$\tau = I \alpha$$
 
 where $I$ is the moment of inertia and $\alpha = \ddot{\theta}$ is the angular acceleration.
 
@@ -50,13 +52,15 @@ In the manipulator equation, the terms $\bm{M}(\bm{q}) \ddot{\bm{q}}$ are exactl
 
 **Example: Inertia at the Shoulder**
 
-Recall from Chapter~\ref{ch:03_double_pendulum} that the effective moment of inertia at the shoulder is about $M_{11} \approx 2.22 \text{ kg m}^2$.
+Recall from @sec-ch03-numerical that the effective moment of inertia at the shoulder is about $M_{11} \approx 2.22 \text{ kg m}^2$.
 
 If you want to accelerate the shoulder at $\ddot{\theta}_1 = 1000 \text{ deg/s}^2 = 17.45 \text{ rad/s}^2$, the inertial torque you must overcome is:
 
-\tau_{\text{inertia}} &= M_{11} \cdot \ddot{\theta}_1 = 2.22 \times 17.45 = 38.7 \text{ N m}
+$$
+\tau_{\text{inertia}} = M_{11} \cdot \ddot{\theta}_1 = 2.22 \times 17.45 = 38.7 \text{ N m}
+$$
 
-This is the baseline. Just to accelerate the arm at this rate requires 38.7 N m. If there's also gravity pulling (10.6 N m backward), then you need to generate at least $38.7 + 10.6 = 49.3$ N m of muscular torque to achieve this acceleration.
+This is the baseline. Just to accelerate the arm at this rate requires 38.7 N m. If there's also gravity pulling (a few N m depending on configuration), the total required muscular torque is correspondingly larger.
 
 But wait—there's more. There are also Coriolis and centrifugal forces.
 
@@ -79,11 +83,11 @@ In the golf swing, when your shoulder rotates fast ($\dot{\theta}_1$ large), the
 ::: {.callout-note}
 ## Centrifugal Acceleration
 
-For a point rotating at angular velocity $\omega$ at distance $r$ from the axis, the centrifugal acceleration is:
+For a point rotating at angular velocity $\omega$ at distance $r$ from the axis, the centripetal acceleration directed toward the center is:
 
-a_c = \omega^2 r
+$$a_c = \omega^2 r$$
 
-This is always positive (outward). It's not a "real" force in the sense that no object is pushing outward; instead, it's a consequence of circular motion.
+In the rotating-frame perspective this appears as an outward "centrifugal" acceleration of the same magnitude. It arises from circular motion, not from a separate force-generating agent.
 
 :::
 
@@ -91,20 +95,20 @@ This is always positive (outward). It's not a "real" force in the sense that no 
 
 At impact, the shoulder rotates at $\dot{\theta}_1 = 10.47 \text{ rad/s}$. The forearm is at distance roughly $L_1 = 0.35$ m from the shoulder.
 
-The centrifugal acceleration is:
+The centripetal acceleration at the elbow is:
 
-a_c &= \dot{\theta}_1^2 \cdot L_1 = 10.47^2 \times 0.35 = 38.3 \text{ m/s}^2 = 3.9 g
+$$
+a_c = \dot{\theta}_1^2 \cdot L_1 = 10.47^2 \times 0.35 = 38.3 \text{ m/s}^2 \approx 3.9\,g
+$$
 
-The centrifugal torque on the elbow is:
-
-\tau_c &= m_{\text{forearm}} \cdot a_c \cdot r_{\text{cm}}
-
-The full expression involves the mass distribution and geometry of the forearm-club system, which we develop rigorously in @ch:05_affine_structure. The key observation is that centrifugal force acts to straighten the arm during the downswing, contributing to the passive dynamics that accelerate the clubhead without additional muscular effort.
+The full expression for the centrifugal torque on the elbow involves the mass distribution and geometry of the forearm-club system, which we develop rigorously in @sec-affine-structure. The key observation is that centrifugal force acts to straighten the arm during the downswing, contributing to the passive dynamics that accelerate the clubhead without additional muscular effort.
 
 More precisely, the centrifugal term in $\bm{C}$ is:
 
+$$
 M_2 L_1 L_{2,\text{cm}} \dot{\theta}_1^2 \sin \theta_2 = 2.5 \times 0.35 \times 0.5 \times 10.47^2 \times \sin(-5°)
-\approx -6.6 \text{ N m}
+\approx -5.3 \text{ N m}
+$$
 
 This creates a torque at the elbow that helps straighten the arm if $\theta_2 < 0$ (bent elbow).
 
@@ -121,7 +125,7 @@ In the golf swing, the Coriolis terms in $\bm{C}$ represent the coupling between
 
 In a rotating reference frame, the Coriolis acceleration is:
 
-\bm{a}_{\text{Coriolis}} = -2 \bm{\omega} \times \bm{v}
+$$\bm{a}_{\text{Coriolis}} = -2 \bm{\omega} \times \bm{v}$$
 
 where $\bm{\omega}$ is the rotation rate and $\bm{v}$ is the velocity in the rotating frame.
 
@@ -133,13 +137,19 @@ In the manipulator equation, the Coriolis term $C_{12} \dot{\theta}_2$ represent
 
 The Coriolis term in the shoulder equation is:
 
-\text{(from $\bm{C}$)} = -M_2 L_1 L_{2,\text{cm}} (2 \dot{\theta}_1 + \dot{\theta}_2) \dot{\theta}_2 \sin \theta_2
+$$
+\text{(from }\bm{C}\text{)} = -M_2 L_1 L_{2,\text{cm}} (2 \dot{\theta}_1 + \dot{\theta}_2) \dot{\theta}_2 \sin \theta_2
+$$
 
 At impact ($\dot{\theta}_1 = 10.47 \text{ rad/s}, \dot{\theta}_2 = 8.73 \text{ rad/s}, \theta_2 = -5°$):
 
+$$
+\begin{aligned}
 \text{Coriolis} &= -2.5 \times 0.35 \times 0.5 \times (2 \times 10.47 + 8.73) \times 8.73 \times \sin(-5°) \\
 &= -2.5 \times 0.35 \times 0.5 \times 29.67 \times 8.73 \times (-0.087) \\
-&\approx +3.6 \text{ N m}
+&\approx +3.1 \text{ N m}
+\end{aligned}
+$$
 
 This torque at the shoulder is positive (forward), helping the shoulder rotation. Why? Because the elbow is releasing (increasing $\dot{\theta}_2$) in a direction that's compatible with the shoulder rotation.
 
@@ -188,9 +198,12 @@ Gravity is the force you feel constantly. It depends on position but not on velo
 
 The gravitational torque in the double pendulum is:
 
-\bm{g}(\bm{q}) =
+$$
+\bm{g}(\bm{q}) = \begin{bmatrix}
 (M_1 L_{1,\text{cm}} + M_2 L_1) g \sin \theta_1 + M_2 g L_{2,\text{cm}} \sin(\theta_1 + \theta_2) \\
 M_2 g L_{2,\text{cm}} \sin(\theta_1 + \theta_2)
+\end{bmatrix}
+$$
 
 ### Reading the Gravity Terms
 
@@ -206,7 +219,7 @@ From address to impact, your arm goes from down to down (the angles return to ne
 
 The work done by gravity is:
 
-W = \Delta V = V_{\text{initial}} - V_{\text{final}}
+$$W = \Delta V = V_{\text{initial}} - V_{\text{final}}$$
 
 If the arm is lower at the end (lower height), then $\Delta V < 0$, and gravity does positive work. But if the angles are the same, the heights are the same, so $\Delta V = 0$.
 
@@ -218,7 +231,7 @@ Later in the downswing, gravity is actually fighting you (pulling the arm down w
 
 The right side of the manipulator equation is where you come in:
 
-\bm{\tau} = \text{applied torques from muscles}
+$$\bm{\tau} = \text{applied torques from muscles}$$
 
 This is what you can directly control (approximately). Muscles pull on bones. Tendons transfer that pull to create torques at joints. The sum of all these muscular torques is $\bm{\tau}$.
 
@@ -230,7 +243,7 @@ Muscles can only pull, not push. So there are constraints on what $\bm{\tau}$ ca
 
 The maximum depends on the muscle's strength and leverage. Net joint torques are the *resultant* of many muscles pulling in parallel:
 
-- **Shoulder**: the rotator cuff (supraspinatus, infraspinatus, teres minor, subscapularis) stabilizes the joint, while deltoids, pectoralis major, and latissimus dorsi generate the gross torque. Peak resultant torque in elite golfers is on the order of $\tau_{\max}^{\text{sh}} \sim 40\text{--}60$ N m [@nesbit2005three].
+- **Shoulder**: the rotator cuff (supraspinatus, infraspinatus, teres minor, subscapularis) stabilizes the joint, while deltoids, pectoralis major, and latissimus dorsi generate the gross torque. Peak resultant torque in elite golfers is on the order of $\tau_{\max}^{\text{sh}} \sim 40\text{--}60$ N m [@Nesbit2005].
 - **Elbow**: biceps brachii and brachialis flex; triceps extend. Peak resultant torque is on the order of $\tau_{\max}^{\text{el}} \sim 20\text{--}40$ N m, smaller than the shoulder because of the shorter moment arms.
 - **Wrist (radiocarpal)**: wrist flexors (flexor carpi radialis/ulnaris) and extensors (extensor carpi radialis longus/brevis, extensor carpi ulnaris) together drive the release. Peak resultant torque is much smaller, $\tau_{\max}^{\text{wr}} \sim 10\text{--}20$ N m, but acts at high angular velocity.
 - **Forearm pronation/supination**: pronator teres and pronator quadratus vs. supinator and biceps brachii govern face-angle control through the forearm-rotation DOF (see ch31); peak torque $\sim 5\text{--}15$ N m.
@@ -239,7 +252,7 @@ These are *resultant* torques; individual muscle forces are under-determined (th
 
 ### Muscular Forces Are the Only Thing You Control
 
-This is the crucial point: **you don't directly control the forces from gravity, inertia, or velocity-dependence. You control only $\bm{\tau**$.}
+This is the crucial point: **you don't directly control the forces from gravity, inertia, or velocity-dependence. You control only $\bm{\tau}$.**
 
 Given $\bm{\tau}$ at time $t$, the manipulator equation tells you the accelerations $\ddot{\bm{q}}$. Integrate those to get the new velocities and positions. Repeat.
 
@@ -278,9 +291,9 @@ Using our illustrative double-pendulum parameters from Chapter 3, let's sketch a
 
 The clubhead is at distance $r = L_1 + L_2 = 1.35$ m from the shoulder. Using the illustrative shoulder rotation speed $\omega = 10.47 \text{ rad/s}$ from Chapter 3, the centripetal acceleration (toward the shoulder) is:
 
-a_c = \omega^2 r = 10.47^2 \times 1.35 = 147.6 \text{ m/s}^2 \approx 15\,g
+$$a_c = \omega^2 r = 10.47^2 \times 1.35 = 147.6 \text{ m/s}^2 \approx 15\,g$$
 
-With the elbow also rotating and the arm accelerating, total accelerations are higher still. Published measurements of clubhead acceleration during the golf swing report values on the order of 100$g$ or more [@cochran1968search; @penner2003physics], though exact figures depend on the golfer and measurement methodology.
+With the elbow also rotating and the arm accelerating, total accelerations are higher still. Published measurements of clubhead acceleration during the golf swing report values on the order of 100$g$ or more [@Cochran1968; @Penner2003], though exact figures depend on the golfer and measurement methodology.
 
 ### Where Do These Accelerations Come From?
 
@@ -295,25 +308,13 @@ The relative magnitudes depend on the specific model parameters and swing kinema
 
 ### The Constraint Force at the Grip
 
-The hand is holding the club. The club is accelerating at 180 $g$. The force in the hand must be:
+The hand is holding the club. The club moves in a curved path, so the hand must supply the centripetal force:
 
-F = M_{\text{club}} \times a = 0.2 \text{ kg} \times 180 \text{ m/s}^2 = 36 \text{ N}
+$$
+F_c = M_{\text{club}} \omega^2 r = 0.310 \text{ kg} \times 10.47^2 \times 1.35 \approx 45.7 \text{ N}
+$$
 
-Wait, that's not right. The club's acceleration is not purely vertical; it's centripetal. And the hand is also accelerating.
-
-Let's think about it differently. The hand exerts a force on the club. That force has two components:
-- **Centripetal**: pulling the club toward the axis of rotation (toward the shoulder).
-- **Tangential**: in the direction of motion (pulling the club forward/backward).
-
-The centripetal force is:
-
-F_c = M_{\text{club}} \omega^2 r = 0.2 \times 10.47^2 \times 1.35 = 29.5 \text{ N}
-
-The tangential force is:
-
-F_t = M_{\text{club}} \times a_t = 0.2 \times (\text{tangential acceleration})
-
-The total grip force is the vector sum. For a typical impact, it's on the order of 40–60 N.
+The hand also accelerates the club tangentially through the shoulder's angular acceleration. The total grip force is the vector sum of centripetal and tangential components; for a typical impact it's on the order of 40–80 N.
 
 ::: {.callout-tip}
 ## Why the Grip Matters
@@ -337,7 +338,9 @@ Until now, we've talked about torques at joints. But forces at the grip are diff
 
 A wrench is the combination of a force $\bm{f}$ (3D vector) and a torque $\bm{\tau}$ (3D vector). It completely describes the mechanical interaction at a point.
 
-$$\text{Wrench} =  \bm{f} \\ \bm{\tau} $$
+$$
+\text{Wrench} = \begin{bmatrix} \bm{f} \\ \bm{\tau} \end{bmatrix}
+$$
 
 :::
 
@@ -396,7 +399,7 @@ Elite golfers have trained their nervous systems to solve this control problem. 
 4. **Gravity does work during the downswing**. It's a free source of energy, converting potential to kinetic.
 5. **Muscular forces are your only control**. You can't directly control gravity or inertia; you can only control $\bm{\tau}$.
 6. **Constraint forces appear automatically**. The grip force is determined by the dynamics, not by conscious effort.
-7. **At impact, 180+ $g$ accelerations require careful force balance**. No single source (gravity, muscle, velocity-dependence) does it alone. All work together.
+7. **At impact, large accelerations require careful force balance**. No single source (gravity, muscle, velocity-dependence) does it alone. All work together.
 8. **Elite golfers ride the passive dynamics**. They use small, efficient muscular torques to steer the system toward impact.
 
 :::
@@ -405,9 +408,9 @@ Elite golfers have trained their nervous systems to solve this control problem. 
 
 1. **Inertial Torque**. The shoulder has moment of inertia $M_{11} = 2.22$ kg m$^2$. What muscular torque is needed just to accelerate the shoulder at $\ddot{\theta}_1 = 500 \text{ deg/s}^2 = 8.7 \text{ rad/s}^2$, ignoring all other forces?
 2. **Centrifugal Force**. At impact, the shoulder rotates at $\dot{\theta}_1 = 600 \text{ deg/s} = 10.47 \text{ rad/s}$. The forearm+club is 1.35 m from the shoulder. What is the centrifugal acceleration? What force would a 1 kg mass experience at that distance?
-3. **Coriolis Coupling**. Suppose the shoulder rotates at constant rate $\dot{\theta}_1 = 8 \text{ rad/s}$. The elbow suddenly starts rotating at $\dot{\theta}_2 = 5 \text{ rad/s}$. Using the Coriolis term from Chapter~\ref{ch:03_double_pendulum}, estimate the torque this creates at the shoulder.
-4. **Gravity Torque**. At the top of the backswing, $\theta_1 = 150°, \theta_2 = -70°$. Compute the gravitational torque at the shoulder (use parameters from Chapter~\ref{ch:03_double_pendulum}). Is gravity trying to rotate the shoulder forward (into the downswing) or backward?
+3. **Coriolis Coupling**. Suppose the shoulder rotates at constant rate $\dot{\theta}_1 = 8 \text{ rad/s}$. The elbow suddenly starts rotating at $\dot{\theta}_2 = 5 \text{ rad/s}$. Using the Coriolis term from @sec-ch03-numerical, estimate the torque this creates at the shoulder.
+4. **Gravity Torque**. At the top of the backswing, $\theta_1 = 150°, \theta_2 = -70°$. Compute the gravitational torque at the shoulder (use parameters from @sec-ch03-numerical). Is gravity trying to rotate the shoulder forward (into the downswing) or backward?
 5. **Force Balance at Impact**. At impact, the total shoulder acceleration is $\ddot{\theta}_1 = 200 \text{ rad/s}^2$. The gravity torque is about 5 N m (small). The Coriolis/centrifugal torques total about 20 N m. Using $M_{11} = 2.22$ kg m$^2$, how much muscular torque is needed?
-6. **Grip Force**. The club (mass 0.2 kg) is 1.35 m from the shoulder and accelerating at 150 $g$ (centripetal). What force is the hand exerting on the club?
-7. **Work Done by Gravity**. From address ($\theta_1 = 0°$) to the top ($\theta_1 = 150°$), how much does the potential energy increase? (Use parameters from Chapter~\ref{ch:03_double_pendulum}.) From the top to impact ($\theta_1 = 0°$), how much does gravity do in work?
+6. **Grip Force**. The club (mass 0.310 kg) is 1.35 m from the shoulder and the shoulder rotates at $\dot{\theta}_1 = 10.47$ rad/s. What is the centripetal grip force on the club?
+7. **Work Done by Gravity**. From address ($\theta_1 = 0°$) to the top ($\theta_1 = 150°$), how much does the potential energy increase? (Use parameters from @sec-ch03-numerical.) From the top to impact ($\theta_1 = 0°$), how much does gravity do in work?
 

@@ -8,9 +8,9 @@ bibliography: ../golf_physics.bib
 ::: {.callout-tip}
 ## Why We Need a Language
 
-Before you can apply physics to the golf swing, you need a precise way to describe it. Not in words—in mathematics.
+Before you can apply physics to the golf swing, you need a precise way to describe it. Not in words---in mathematics.
 
-When a coach says ``you're rotating your hips too early,'' that's imprecise. Rotate how much? At what point in the swing? How fast? A physicist would ask: what is the hip rotation angle at this instant? How is it changing with time?
+When a coach says "you're rotating your hips too early," that's imprecise. Rotate how much? At what point in the swing? How fast? A physicist would ask: what is the hip rotation angle at this instant? How is it changing with time?
 
 This chapter introduces the language physicists use to describe motion: **coordinates**, **state**, and **state space**. It looks abstract at first, but it's essential. Once you can describe a swing precisely, you can predict what will happen next, diagnose what went wrong, and understand the forces that shaped the motion.
 
@@ -35,7 +35,7 @@ Instead, physicists use **generalized coordinates**: a minimal set of numbers th
 
 A set of independent variables $\bm{q} = [q_1, q_2, \ldots, q_n]$ such that:
 1. Every possible position of the system can be described by choosing a value for each $q_i$.
-2. Each $q_i$ is independent—you can change one without automatically changing the others.
+2. Each $q_i$ is independent---you can change one without automatically changing the others.
 3. The number of variables $n$ equals the number of **degrees of freedom** (DOF).
 
 :::
@@ -58,7 +58,9 @@ For the golf swing, the natural choice is **joint angles**.
 
 For a two-link model (the double pendulum), we need exactly two numbers to describe the configuration.
 
-$$\bm{q} =  \theta_s \\ \theta_e $$
+$$
+\bm{q} = \begin{bmatrix} \theta_s \\ \theta_e \end{bmatrix}
+$$
 
 :::
 
@@ -69,10 +71,14 @@ Once you've chosen generalized coordinates, you can compute the Cartesian positi
 
 Suppose the upper arm has length $L_1$ and the forearm+club has length $L_2$. If the shoulder is at the origin:
 
+$$
+\begin{aligned}
 x_{\text{elbow}} &= L_1 \sin(\theta_s) \\
 y_{\text{elbow}} &= -L_1 \cos(\theta_s) \\
 x_{\text{clubhead}} &= L_1 \sin(\theta_s) + L_2 \sin(\theta_s + \theta_e) \\
 y_{\text{clubhead}} &= -L_1 \cos(\theta_s) - L_2 \cos(\theta_s + \theta_e)
+\end{aligned}
+$$
 
 So from two numbers $[\theta_s, \theta_e]$ you can compute the full 3D position of every point on the arm. The constraint (that the links are rigid) is automatically satisfied.
 
@@ -99,7 +105,7 @@ For illustration, suppose a golfer's shoulder is rotating at $\dot{\theta}_s = 6
 
 What does this mean physically? If the shoulder could hold this rotation rate steady, the golfer would rotate a full 360 degrees in $360 \text{ degrees} / 600 \text{ deg/s} = 0.6 \text{ seconds}$.
 
-Actually, $\dot{\theta}_s$ varies throughout the swing—it's slow at the top (backswing winding up), then accelerates during transition, reaches peak during the downswing, and decreases toward impact. But at any given instant, $\dot{\theta}_s$ tells you the instantaneous rotation rate.
+Actually, $\dot{\theta}_s$ varies throughout the swing---it's slow at the top (backswing winding up), then accelerates during transition, reaches peak during the downswing, and decreases toward impact. But at any given instant, $\dot{\theta}_s$ tells you the instantaneous rotation rate.
 
 Now we can define the full state:
 
@@ -108,18 +114,23 @@ Now we can define the full state:
 
 The **state** $\bm{x}$ is the complete information needed to predict the future motion. It includes both position and velocity:
 
-$$\bm{x} =  \bm{q} \\ \dot{\bm{q}}  =  q_1 \\ q_2 \\ \vdots \\ q_n \\ \dot{q}_1 \\ \dot{q}_2 \\ \vdots \\ \dot{q}_n $$
+$$
+\bm{x} = \begin{bmatrix} \bm{q} \\ \dot{\bm{q}} \end{bmatrix}
+= \begin{bmatrix} q_1 \\ q_2 \\ \vdots \\ q_n \\ \dot{q}_1 \\ \dot{q}_2 \\ \vdots \\ \dot{q}_n \end{bmatrix}
+$$
 
 For a double pendulum, the state has 4 components:
 
-$$\bm{x} =  \theta_s \\ \theta_e \\ \dot{\theta}_s \\ \dot{\theta}_e $$
+$$
+\bm{x} = \begin{bmatrix} \theta_s \\ \theta_e \\ \dot{\theta}_s \\ \dot{\theta}_e \end{bmatrix}
+$$
 
 :::
 
 ::: {.callout-tip}
 ## Why State is Necessary
 
-Imagine you're at the top of the backswing. Your shoulder angle is $\theta_s = 90°$ (horizontal). That's your \state{position}. But is the downswing about to begin? You can't tell from position alone.
+Imagine you're at the top of the backswing. Your shoulder angle is $\theta_s = 90°$ (horizontal). That's your position. But is the downswing about to begin? You can't tell from position alone.
 
 If $\dot{\theta}_s = 0$ (you're not rotating), you're just about to start. If $\dot{\theta}_s = 500 \text{ deg/s}$ (you're already rotating fast), the downswing is well underway.
 
@@ -140,14 +151,14 @@ For a double pendulum: 4 dimensions (2 angles, 2 angular velocities).
 
 :::
 
-At any instant during your swing, your arm is at some point in this 4D phase space. As you swing, that point traces out a path—a **trajectory**.
+At any instant during your swing, your arm is at some point in this 4D phase space. As you swing, that point traces out a path---a **trajectory**.
 
 ::: {.callout-tip}
 ## Thinking in 4 Dimensions
 
 Four dimensions is hard to visualize. But you can think of it as a 2D surface (the position, $\theta_s$ and $\theta_e$) with a velocity attached to each point.
 
-Imagine a piece of paper with $\theta_s$ on the horizontal axis and $\theta_e$ on the vertical axis. Every point on this paper is a possible configuration. Now, at each point, imagine a vector showing $[\dot{\theta}_s, \dot{\theta}_e]$—the direction and speed you're moving in state space.
+Imagine a piece of paper with $\theta_s$ on the horizontal axis and $\theta_e$ on the vertical axis. Every point on this paper is a possible configuration. Now, at each point, imagine a vector showing $[\dot{\theta}_s, \dot{\theta}_e]$---the direction and speed you're moving in state space.
 
 During the backswing, you might follow a path from $(90°, 0°)$ to $(150°, -50°)$ (shoulder opens, elbow closes relative to arm). As you move along this path, your velocity vector changes. At the top, you're still for a moment. Then you start the downswing.
 
@@ -204,46 +215,67 @@ Physical limitations that restrict which configurations are possible. Common con
 
 The set of reachable configurations forms a region in configuration space. Your swing must stay within this region. If you try to force your arm into an impossible configuration, something breaks (injury).
 
-{Constraints as Walls in Space}{box:ch02_constraints_walls}
+::: {.callout-note}
+## Constraints as Walls in Space
+
 Think of configuration space as a room. Some regions are forbidden (your arm can't hyperextend). The boundary of the forbidden regions are the constraints.
 
-When you hit the boundary—when you reach maximum shoulder turn, for instance—a **constraint force** appears. Your arm doesn't magically go past the limit; instead, the tissues (muscles, tendons, bone) exert a force that keeps you at the boundary.
+When you hit the boundary---when you reach maximum shoulder turn, for instance---a **constraint force** appears. Your arm doesn't magically go past the limit; instead, the tissues (muscles, tendons, bone) exert a force that keeps you at the boundary.
 
 This is crucial: constraint forces are not muscle forces. They're reactive. They appear automatically to enforce the constraint. We'll see later that they contribute to the total force in the equation of motion, but they're not part of your **control**.
-} = 0.25$m from the shoulder.
-- Forearm + club has length$L_2 = 1$m and mass$M_2 = 1$kg. Its center of mass is at distance$L_{2,\text{cm}} = 0.5$m from the elbow.
-- Generalized coordinates:$q_1 = \theta_s$(shoulder angle from vertical, in radians),$q_2 = \theta_e$(elbow angle from horizontal, in radians).
+
+:::
+
+## Worked Example: Double Pendulum Kinematics {#sec-ch02-kinematics-example}
+
+Let's make this concrete. Consider a double pendulum with:
+
+- Upper arm has length $L_1 = 0.35$ m and mass $M_1 = 2.5$ kg. Its center of mass is at distance $L_{1,\text{cm}} = 0.25$ m from the shoulder.
+- Forearm + club has length $L_2 = 1$ m and mass $M_2 = 1$ kg. Its center of mass is at distance $L_{2,\text{cm}} = 0.5$ m from the elbow.
+- Generalized coordinates: $q_1 = \theta_s$ (shoulder angle from vertical, in radians), $q_2 = \theta_e$ (elbow angle from horizontal, in radians).
 
 ### Position Kinematics
 
 The position of the elbow relative to the shoulder:
 
-\bm{r}_{\text{elbow}} &=  L_1 \sin(\theta_s) \\ -L_1 \cos(\theta_s)
+$$
+\bm{r}_{\text{elbow}} = \begin{bmatrix} L_1 \sin(\theta_s) \\ -L_1 \cos(\theta_s) \end{bmatrix}
+$$
 
 The position of the clubhead relative to the shoulder:
 
-\bm{r}_{\text{club}} &=  L_1 \sin(\theta_s) + L_2 \sin(\theta_s + \theta_e) \\ -L_1 \cos(\theta_s) - L_2 \cos(\theta_s + \theta_e)
+$$
+\bm{r}_{\text{club}} = \begin{bmatrix} L_1 \sin(\theta_s) + L_2 \sin(\theta_s + \theta_e) \\ -L_1 \cos(\theta_s) - L_2 \cos(\theta_s + \theta_e) \end{bmatrix}
+$$
 
 The center of mass of link 1:
 
-\bm{r}_{\text{cm},1} &=  L_{1,\text{cm}} \sin(\theta_s) \\ -L_{1,\text{cm}} \cos(\theta_s)
+$$
+\bm{r}_{\text{cm},1} = \begin{bmatrix} L_{1,\text{cm}} \sin(\theta_s) \\ -L_{1,\text{cm}} \cos(\theta_s) \end{bmatrix}
+$$
 
 The center of mass of link 2:
 
-\bm{r}_{\text{cm},2} &=  L_1 \sin(\theta_s) + L_{2,\text{cm}} \sin(\theta_s + \theta_e) \\ -L_1 \cos(\theta_s) - L_{2,\text{cm}} \cos(\theta_s + \theta_e)
+$$
+\bm{r}_{\text{cm},2} = \begin{bmatrix} L_1 \sin(\theta_s) + L_{2,\text{cm}} \sin(\theta_s + \theta_e) \\ -L_1 \cos(\theta_s) - L_{2,\text{cm}} \cos(\theta_s + \theta_e) \end{bmatrix}
+$$
 
 ### Velocity Kinematics
 
 To find velocity, differentiate the positions:
 
-\dot{\bm{r}}_{\text{elbow}} &=  L_1 \cos(\theta_s) \dot{\theta}_s \\ L_1 \sin(\theta_s) \dot{\theta}_s  = L_1 \dot{\theta}_s  \cos(\theta_s) \\ \sin(\theta_s)
+$$
+\dot{\bm{r}}_{\text{elbow}} = \begin{bmatrix} L_1 \cos(\theta_s) \dot{\theta}_s \\ L_1 \sin(\theta_s) \dot{\theta}_s \end{bmatrix} = L_1 \dot{\theta}_s \begin{bmatrix} \cos(\theta_s) \\ \sin(\theta_s) \end{bmatrix}
+$$
 
-\dot{\bm{r}}_{\text{club}} &=  L_1 \cos(\theta_s) \dot{\theta}_s + L_2 \cos(\theta_s + \theta_e) (\dot{\theta}_s + \dot{\theta}_e) \\ L_1 \sin(\theta_s) \dot{\theta}_s + L_2 \sin(\theta_s + \theta_e) (\dot{\theta}_s + \dot{\theta}_e)
+$$
+\dot{\bm{r}}_{\text{club}} = \begin{bmatrix} L_1 \cos(\theta_s) \dot{\theta}_s + L_2 \cos(\theta_s + \theta_e) (\dot{\theta}_s + \dot{\theta}_e) \\ L_1 \sin(\theta_s) \dot{\theta}_s + L_2 \sin(\theta_s + \theta_e) (\dot{\theta}_s + \dot{\theta}_e) \end{bmatrix}
+$$
 
 ::: {.callout-tip}
 ## Jacobian Intuition
 
-There's a beautiful relationship here. The velocities are linear in the angular velocities$\dot{\theta}_s$and$\dot{\theta}_e$. This relationship can be written compactly using the **Jacobian** matrix$\bm{J}(\bm{q})$:
+There's a beautiful relationship here. The velocities are linear in the angular velocities $\dot{\theta}_s$ and $\dot{\theta}_e$. This relationship can be written compactly using the **Jacobian** matrix $\bm{J}(\bm{q})$:
 
 $$\dot{\bm{r}} = \bm{J}(\bm{q}) \dot{\bm{q}}$$
 
@@ -255,10 +287,14 @@ This is why golfers talk about "leverage": at certain positions, small changes i
 
 ### Angular Velocity
 
-The angular velocities are simpler—they're just the derivatives of the angles:
+The angular velocities are simpler---they're just the derivatives of the angles:
 
+$$
+\begin{aligned}
 \omega_1 &= \dot{\theta}_s \quad \text{(rotation rate of the upper arm)} \\
 \omega_2 &= \dot{\theta}_s + \dot{\theta}_e \quad \text{(rotation rate of the forearm + club)}
+\end{aligned}
+$$
 
 Notice that $\omega_2$ depends on both $\dot{\theta}_s$ and $\dot{\theta}_e$. The forearm rotates at the shoulder rate plus the elbow rate. This is why the two joints are coupled.
 
@@ -266,15 +302,19 @@ Notice that $\omega_2$ depends on both $\dot{\theta}_s$ and $\dot{\theta}_e$. Th
 
 For the idealized double pendulum, there are no constraints other than rigidity (the links don't stretch). But in reality, the golf swing has constraints:
 
-{Real Constraints in Golf}{box:ch02_golf_constraints}
+::: {.callout-note}
+## Real Constraints in Golf
+
 - **Range limits**: $\theta_s \in [-90°, 150°]$, $\theta_e \in [-80°, 80°]$ (approximate).
 - **Grip constraint**: the club doesn't rotate freely at the wrist; it's held firmly. This reduces effective DOF.
 - **Friction at ground**: if you're standing (not moving), your feet don't slip. This constrains torso rotation.
 - **Inextensibility**: your arm length doesn't change (the links are rigid).
 
+:::
+
 For a first model, we ignore most of these. The double pendulum assumes rigid links and no joint limits. This makes the math tractable. Later, we'd add constraints back in.
 
-When a constraint is active (e.g., you hit the range limit of shoulder rotation), it creates a **constraint force**—a reactive force that prevents you from exceeding the limit. We'll see this in the force equations later.
+When a constraint is active (e.g., you hit the range limit of shoulder rotation), it creates a **constraint force**---a reactive force that prevents you from exceeding the limit. We'll see this in the force equations later.
 
 ## Phase Space Portrait of a Swing
 
@@ -284,7 +324,9 @@ Let's put this together and visualize what a swing looks like in phase space.
 
 Consider a golf swing with the double pendulum. At each instant $t$, the state is:
 
-$$\bm{x}(t) =  \theta_s(t) \\ \theta_e(t) \\ \dot{\theta}_s(t) \\ \dot{\theta}_e(t) $$
+$$
+\bm{x}(t) = \begin{bmatrix} \theta_s(t) \\ \theta_e(t) \\ \dot{\theta}_s(t) \\ \dot{\theta}_e(t) \end{bmatrix}
+$$
 
 The swing evolves in time:
 
@@ -349,4 +391,3 @@ From here, physics says: given the forces, the trajectory is determined. And giv
 - **Phase Space Trajectory**. Sketch a 2D "slice" of phase space: the $(\theta_s, \dot{\theta}_s)$ plane (ignoring the elbow for simplicity). Mark the location of address, top of backswing, and impact. Draw the swing trajectory connecting them. What does the trajectory look like? Does it ever loop back on itself?
 
 - **Constraints and Range**. Your shoulder can rotate from $\theta_s = -90°$ (fully across your body) to $\theta_s = +150°$ (fully behind you). What happens if you try to force $\theta_s = +160°$? Where does the force come from? Is it a muscle force or a constraint force?
-
