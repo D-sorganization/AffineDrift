@@ -277,7 +277,7 @@ The unforced dynamics (drift) satisfy the geometric equation of motion:
 $$
 \nabla_{\dot{x}}\dot{x} = -M^{-1}(\nabla V + F_{dissip}).
 $$
-This identifies the drift vector field components. The "inertial drift" corresponds to the term $-\Gamma^k_{ij} \dot{x}^i \dot{x}^j$, which appears in the mechanical equations as $-M^{-1} C(x)\dot{x}$. This geometric definition ensures that $f(x)$ is a coordinate-independent object—a global section of the tangent bundle—guaranteeing that our decomposition is intrinsic to the mechanics, not an artifact of the choice of variables.
+This identifies the drift vector field components. The "inertial drift" corresponds to the term $-\Gamma^k_{ij} \dot{x}^i \dot{x}^j$, which appears in the mechanical equations as $-M^{-1} C(x)\dot{x}$. This geometric definition treats $f(x)$ as a coordinate-independent object—a global section of the tangent bundle—so the drift term is tied to the mechanics rather than to a particular coordinate chart.
 
 ## Note on Constrained Subsystems (The Wrist)
 While the global system evolves on $T\mathcal{Q}$, specific joints may have internal constraints that reduce the local degrees of freedom. For example, the wrist joint functions as a universal joint with a constrained third axis (forearm rotation). These local constraints generate internal **constraint torques** that reside in the null space of the actuation map $B(q)$ but are critical for force transmission. For a detailed derivation of these constraint dynamics, see [Constraint Torques at the Wrist](wrist-universal-joint.qmd).
@@ -440,7 +440,7 @@ For reference, Table~@tab:notation summarizes the main symbols used in the manus
 
 The kinematic analysis in the previous section established the mass matrix structure and the coupling mechanism. We now embed these elements into the full dynamical framework.
 
-To rigorously identify the causal contribution of muscular torque, we must derive the equations of motion in a form that explicitly isolates the control inputs. Standard Kane's method or Newton-Euler formulations often yield a single implicit system of equations. Here, we employ the Lagrangian formalism specifically to reveal the *control-affine* structure—the energetic architecture that guarantees the golfer's torque enters the dynamics linearly.
+To rigorously identify the causal contribution of muscular torque, we must derive the equations of motion in a form that explicitly isolates the control inputs. Standard Kane's method or Newton-Euler formulations often yield a single implicit system of equations. Here, we employ the Lagrangian formalism specifically to reveal the *control-affine* structure—the energetic architecture that makes the golfer's torque enter linearly in the chosen model.
 
 ### Lagrangian formulation
 
@@ -516,7 +516,7 @@ The zero vector in the lower block of the forcing term is the defining feature o
 
 ### Control-affine state space form
 
-The Lagrangian formulation above guarantees energy consistency, but it presents the dynamics as an implicit balance of forces ($\text{Inertia} + \text{Coriolis} + \dots = \text{Input}$). To disentangle cause from effect, we must invert this relationship. We need an explicit mapping that reveals how a unit of torque translates into instantaneous acceleration, accounting for the complex inertial coupling between the hands and the flexible shaft.
+The Lagrangian formulation above preserves the usual energy bookkeeping of the model, but it presents the dynamics as an implicit balance of forces ($\text{Inertia} + \text{Coriolis} + \dots = \text{Input}$). To disentangle cause from effect, we must invert this relationship. We need an explicit mapping that reveals how a unit of torque translates into instantaneous acceleration, accounting for the complex inertial coupling between the hands and the flexible shaft.
 
 To isolate the accelerations, we require the inverse inertia matrix $H(q) = M^{-1}(q)$. However, a numerical inversion would obscure the mechanism of transmission. We instead derive the blockwise inverse analytically using the **Schur Complement**. This algebraic decomposition is essential because it explicitly separates the 'Effective Mobility' of the hands from the 'Reflected Inertia' of the shaft. We seek a matrix $H$ such that:
 $$
@@ -575,11 +575,11 @@ $$
 This equation provides the rigorous mechanical definition of **Input Forces**:
 
 1.  **Direct Drive:** $\ddot{q}_{in} = H_{qq} B(q) u$. The input torque generates joint acceleration scaled by the *effective mobility* $H_{qq}$ (the inverse of the articulated body inertia).
-2.  **Transmission to Flexible Modes:** $\ddot{\eta}_{in}$ depends on the **Inertial Coupling Ratio** $-M_{\eta\eta}^{-1} M_{\eta q}$. It proves that "lag" or "lead" deflection is actively induced by hand torque but is mediated strictly by the inertial coupling matrix.
+2.  **Transmission to Flexible Modes:** $\ddot{\eta}_{in}$ depends on the **Inertial Coupling Ratio** $-M_{\eta\eta}^{-1} M_{\eta q}$. Within this model, that means hand torque influences "lag" or "lead" deflection only through the inertial coupling pathway represented by the matrix product above.
 
-This result has a profound implication for swing mechanics. It means that the "lag" often attributed to specific muscular activation patterns is, at the fundamental level of the equation of motion, an inertial reaction dictated by the mass distribution of the club. The golfer creates the *acceleration* ($\ddot{q}$), but the *coupling* ($\Gamma$) determines the shaft's response. The only way to alter this ratio is to alter the physical properties of the club itself; no amount of 'technique' can change the value of $\Gamma$.
+In this parameterization, $\Gamma$ is fixed by the chosen club model. The golfer creates the *acceleration* ($\ddot{q}$), but the *coupling* ($\Gamma$) determines how that acceleration reaches the shaft modes at the same modeled state. Technique can still change the state and torque history; what it does not do is change the inertial-coupling matrix without changing the model or the club parameters.
 
-This explicit derivation of the input channel reveals the mechanical bounds of agency. The term $H_{qq} B(q)$ represents the instantaneous **Control Efficacy**—or **Mobility Ellipsoid** in geometric terms—which defines the capacity of torque to alter the system's trajectory. As we shall see in the *Drift-Control Ratio* analysis, this efficacy is purely configuration-dependent and bounded, whereas the opposing drift forces scale quadratically with velocity. This structural asymmetry is what preordains the loss of controllability in the late downswing.
+This explicit derivation of the input channel reveals the mechanical bounds of agency. The term $H_{qq} B(q)$ represents the instantaneous **Control Efficacy**—or **Mobility Ellipsoid** in geometric terms—which defines the capacity of torque to alter the system's trajectory. As discussed later in the *Drift-Control Ratio* analysis, this efficacy is configuration-dependent and bounded, whereas the opposing drift forces can scale quadratically with velocity. In the simplified models used on this site, that asymmetry motivates a late-downswing reduction in path-control authority.
 
 Substituting the actuation model, we separate the drift and input terms.
 
@@ -688,7 +688,7 @@ This vector field represents the new direction of motion generated by switching 
 
 By isolating the torque input $u$ into the linear term $g(x)u$, we transform the nebulous question "how much force is active versus passive?" into a mathematically precise operation. The term $f(x)$ encapsulates the full history-dependent momentum of the system, while $g(x)u$ represents the instantaneous ability of the golfer to alter that momentum.
 
-The derivation above transforms the equations of motion from a description of *how the system moves* to a description of *why it moves*. By isolating the input $u$ in a separate linear term, we have created a causal map. This mathematical separation forces a philosophical shift in how we view the swing. In traditional inverse dynamics, the "net moment" is a monolithic quantity. In the affine framework, it is an aggregate of two distinct physical species: the *inertial memory* of the system (drift) and the *current agency* of the player (input). The derivation above proves that these species do not mix; they are mechanically orthogonal. This orthogonality is what allows us to perform the "surgical" operations defined in the next part: amputating the input to reveal the drift.
+The derivation above transforms the equations of motion from a description of *how the system moves* to a description of *why it moves*. By isolating the input $u$ in a separate linear term, we have created a causal map. In traditional inverse dynamics, the "net moment" is a monolithic quantity. In the affine framework, it is decomposed into the *inertial memory* of the system (drift) and the *current agency* of the player (input). At the level of the model equations, the input enters additively rather than being hidden inside the passive term. This separation is what allows us to perform the counterfactual operations defined in the next part: setting the input to zero to inspect the modeled drift response.
 
 ## Drift vs.\ Input Decomposition {#sec-drift_input}
 
@@ -1086,7 +1086,7 @@ $$
 $$
 The control input $u$ appears *exclusively* in the term $M^{-1} [B(q)u; 0]^T$. Therefore, the Jacobian of the drift field with respect to the input is the zero matrix:
 $$\nabla_u f(x) \equiv 0.$$
-This orthogonality guarantees that the "passive" dynamics identified by the model are structurally unpolluted by the "active" control inputs.
+Within this modeling setup, this separation means the "passive" dynamics can be evaluated without direct torque dependence.
 
 ## Assumption of Viscous-Only Damping
 This invariance proof strictly relies on the assumption that all dissipative forces $h_{\text{dissip}}$ depend only on state $(q, \dot{q})$. Specifically, we assume damping is viscous (linear in velocity).
