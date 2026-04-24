@@ -164,7 +164,21 @@ $$
     \boxed{P = N N^\top = I - \mathbf{J}_c^\top (\mathbf{J}_c \mathbf{J}_c^\top)^{-1} \mathbf{J}_c}
 $$
 
-This is an orthogonal projector onto $\operatorname{null}(\mathbf{J}_c)$.
+This is the **Euclidean-orthogonal** projector onto $\operatorname{null}(\mathbf{J}_c)$ — orthogonal with respect to the standard inner product on $\mathbb{R}^n$.
+
+::: {.callout-important}
+## Euclidean vs. kinetic-energy-weighted projector
+
+For constrained rigid-body dynamics the physically meaningful projector uses the **kinetic-energy (mass) metric** $M(q)$:
+
+$$
+P_M = I - M^{-1} \mathbf{J}_c^\top \bigl(\mathbf{J}_c M^{-1} \mathbf{J}_c^\top\bigr)^{-1} \mathbf{J}_c
+$$
+
+$P_M$ is $M$-orthogonal: it projects forces orthogonally with respect to the kinetic-energy inner product $\langle u, v \rangle_M = u^\top M\, v$, and therefore correctly decomposes joint torques into constraint-space and null-space components in a dynamically consistent sense. The Euclidean projector $P$ above is used here for algebraic clarity when deriving the null-space basis $N$; in dynamic equations (e.g., the reduced-order equations of motion) $P_M$ should be used instead. See Khatib (1987) and Siciliano & Khatib (2016, §3.9) for the kinetic-energy-weighted formulation.
+:::
+
+
 
 **proposition:** [Properties of the Null Space Projector]
 The projector $P$ satisfies:
@@ -306,11 +320,13 @@ The separation of drift and control has a beautiful interpretation in golf:
 In golf biomechanics, we can identify the control-affine structure:
 
 $$
-    \underbrace{\ddot{\mathbf{q}}}_{\text{acceleration}} = \underbrace{-M^{-1}(\mathbf{c} + \mathbf{g})}_{\text{drift } \mathbf{a}_0(\mathbf{q}, \dot{\mathbf{q}})} + \underbrace{M^{-1} P}_{\text{control effectiveness } B(\mathbf{q})} \boldsymbol{\tau}_{\text{muscle}}
+    \underbrace{\ddot{\mathbf{q}}}_{\text{acceleration}} = \underbrace{-M^{-1}(\mathbf{c} + \mathbf{g})}_{\text{drift } \mathbf{a}_0(\mathbf{q}, \dot{\mathbf{q}})} + \underbrace{M^{-1} P_M}_{\text{control effectiveness } B(\mathbf{q})} \boldsymbol{\tau}_{\text{muscle}}
 $$
 
+Here $P_M = I - M^{-1}\mathbf{J}_c^\top(\mathbf{J}_c M^{-1}\mathbf{J}_c^\top)^{-1}\mathbf{J}_c$ is the **kinetic-energy-weighted** null-space projector (Khatib 1987; Siciliano & Khatib 2016). Using the Euclidean projector $P$ in this equation would misallocate the inertia weighting and give physically incorrect force decompositions.
+
 Key observations:
-1. The null space projector $P$ determines which muscle forces are *controllable*
+1. The null space projector $P_M$ determines which muscle forces are *dynamically effective* (i.e., produce acceleration in unconstrained directions)
     
 2. Forces in $\operatorname{range}(\mathbf{J}_c^\top)$ are absorbed by constraints (joint limits, grip forces)
     
@@ -453,13 +469,17 @@ Principal Component Analysis (PCA) of these synergies often reveals:
 
 ### The Natural Swing: Exploiting Drift
 
-Elite golfers are often described as having an "effortless" swing. From a control-theoretic perspective, this means maximally exploiting the drift dynamics:
+Elite golfers are often described as having an "effortless" swing. From a control-theoretic perspective, this reflects **timed and shaped muscle torques**: the golfer does not minimise $\|u\|$ but instead times torque application to work *with* $\mathbf{f}(\mathbf{x})$, amplifying drift contributions rather than fighting them. The control input $u$ remains non-trivial in absolute magnitude throughout the downswing.
 
 $$
-    \text{Optimal swing} \approx \mathbf{f}(\mathbf{x}) + \text{control corrections}
+    \dot{x} = \mathbf{f}(\mathbf{x}) + g(\mathbf{x})\,u, \quad \|u\| \text{ non-trivial, timed to align with drift}
 $$
 
-(The relative contribution of drift vs. control forces depends on task and skill level; see [citation]. Drift is a significant component of expert swing dynamics, but active control remains substantial — consistent with working estimates of roughly 15/85 Nm passive/active torque ratios.)
+::: {.callout-important}
+## No $\|u\| \to 0$ claim
+
+The drift-dominance argument (high DCR in the late downswing) does **not** imply that muscle torques vanish or become negligible in absolute terms. It implies that the *marginal ability to alter the trajectory* via additional torque diminishes — because drift acceleration has grown large relative to the control authority. Absolute torque levels remain substantial (consistent with working estimates of roughly 15/85 Nm passive/active ratios in the late downswing). The Drift–Control Ratio is a ratio of *magnitudes*, not a claim that active input is zero.
+:::
 
 The drift in the downswing includes:
 - Gravitational acceleration of the club
@@ -470,7 +490,7 @@ The drift in the downswing includes:
 
 ### Control Authority Analysis
 
-The control effectiveness matrix $B(\mathbf{q}) = M^{-1} P$ determines how muscle forces translate to clubhead acceleration. Key insights:
+The control effectiveness matrix $B(\mathbf{q}) = M^{-1} P_M$ (using the kinetic-energy-weighted projector $P_M$; see definition above) determines how muscle forces translate to clubhead acceleration. Key insights:
 
 $$
     \dot{v}_{\text{clubhead}} = J_{\text{club}}(\mathbf{q}) \left[ \mathbf{a}_0(\mathbf{q}, \dot{\mathbf{q}}) + B(\mathbf{q}) \boldsymbol{\tau}_{\text{muscle}} \right]
