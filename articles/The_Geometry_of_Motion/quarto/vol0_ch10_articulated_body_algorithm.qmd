@@ -3,6 +3,14 @@ title: "The Articulated Body Algorithm"
 ---
 
 # The Articulated Body Algorithm
+::: {.callout-important}
+## Indexing Convention
+
+Throughout this chapter: **body 0 is the fixed base**; bodies $1, \dots, n$ are the moving links; **joint $i$ connects parent$(i)$ to body $i$**. The screw axis $\screw_i$ is expressed in **body $i$'s frame** at the home configuration. The joint transform `joint_transforms[i]` is $T_{p(i) 	o i}$, the transform from the parent frame to body $i$'s frame. Loop bounds follow: outward pass runs $i = 1, \dots, n$ (base to tip); inward pass runs $i = n, \dots, 1$ (tip to base); final outward pass runs $i = 1, \dots, n$ again.
+
+**2-link walk-through:** Body 0 = base; Body 1 = upper link (joint 1); Body 2 = lower link (joint 2). `joint_transforms[1]` is $T_{0 	o 1}$; `joint_transforms[2]` is $T_{1 	o 2}$. Inward pass: $i = 2$ contributes Body 2's articulated inertia to Body 1; $i = 1$ contributes Body 1's to Body 0.
+:::
+
 ## Forward Dynamics
 
 
@@ -227,4 +235,10 @@ Two modes of AD exist and match different problems cleanly. **Forward-mode** pro
 
 This is not only computationally feasible—it is elegant. Libraries like Pinocchio now expose their recursive dynamics algorithms through differentiable layers, allowing practitioners to directly optimize trajectories or learn inverse models via gradient descent without manually writing down a single Jacobian or Hessian matrix.
 
+
+::: {.callout-note}
+## Autodiff vs analytical derivatives
+
+Naive reverse-mode autodiff through the three ABA passes is correct and easy to implement, but for optimization inner loops there is a better option. Carpentier & Mansard (2018, "Analytical Derivatives of Rigid Body Dynamics Algorithms", *Robotics: Science and Systems*) derive the analytical derivatives of RNEA and ABA directly, avoiding the computational graph overhead of AD. The analytical approach is reported to be 5-20x faster and numerically cleaner. Pinocchio implements both: the differentiable-layer path for ease of use, and the analytical derivative path for performance-critical applications.
+:::
 The practical consequence: in modern robotics and control, the same ABA function that drives forward simulation at 1000 Hz can simultaneously drive learning algorithms computing gradients of control loss. The mathematical recursion is the same; only the computational graph changes.

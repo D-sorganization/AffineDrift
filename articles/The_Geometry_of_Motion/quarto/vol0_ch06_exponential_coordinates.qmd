@@ -64,6 +64,27 @@ This skew-symmetric matrix is exactly the Lie Algebra $\so$. It represents the f
 
 This formula is known as **Rodrigues' Formula**. It bridges the vector world (where things are just numbers) and the geometric world (where things are rotation matrices).
 
+::: {.callout-note}
+## Derivation of Rodrigues' Formula
+
+The key algebraic identity for a unit-axis skew matrix is $[\hat{m{\omega}}]^3 = -[\hat{m{\omega}}]$
+(proved by direct computation using $\|\hat{m{\omega}}\|=1$). Applying this repeatedly gives:
+
+$$[\hat{m{\omega}}]^{2k+1} = (-1)^k [\hat{m{\omega}}], \qquad [\hat{m{\omega}}]^{2k+2} = (-1)^k [\hat{m{\omega}}]^2, \qquad k = 0,1,2,\ldots$$
+
+Expanding the matrix exponential as a Taylor series and splitting even and odd powers:
+
+$$
+e^{[\hat{m{\omega}}]	heta}
+  = I
+  + \sum_{k=0}^{\infty}rac{(-1)^k\,	heta^{2k+1}}{(2k+1)!}[\hat{m{\omega}}]
+  + \sum_{k=0}^{\infty}rac{(-1)^k\,	heta^{2k+2}}{(2k+2)!}[\hat{m{\omega}}]^2.
+$$
+
+The first sum is $\sin	heta$ and the second is $1-\cos	heta$, yielding Rodrigues' formula.
+See Murray, Li & Sastry (1994) §2.3 and Lynch & Park [@lynch2017modern] §3.2.3.
+:::
+
 
 ## The Exponential Map on SE(3)
 
@@ -105,8 +126,14 @@ We must perform the exact inverse operation: the **Matrix Logarithm**. The Matri
 
   The Matrix Logarithm is computationally critical in optimal control. If your system is at orientation $R_{current}$ and your goal is $R_{target}$, you cannot simply compute an "error" by subtracting them $(R_{target} - R_{current})$ because matrices do not live in flat space.
 
-  The true geometric error—the precise arc of the rotation needed to correct the deviation—is found using the Logarithm of their relative transform:
-  $$ \text{Error} = \log(R_{target} R_{current}^T) $$
+  The true geometric error depends on which frame you want the result expressed in:
+
+  - **Space-frame error:** $\log(R_{\mathrm{target}}\,R_{\mathrm{current}}^T)$ gives the error expressed in the *space (world) frame*.
+  - **Body-frame error:** $\log(R_{\mathrm{current}}^T\,R_{\mathrm{target}})$ gives the error expressed in the *body frame* of the current orientation.
+
+  Both are correct; which to use depends on whether your controller operates in world or body coordinates.
+
+  **Branch cut near $	heta = \pi$:** The principal matrix logarithm has a branch cut when the error angle approaches $\pi$. Small perturbations can flip the axis sign, causing a discontinuous jump in the error vector. Two common remedies: (1) track the previous-step axis sign and flip to maintain continuity, or (2) operate on the double-cover quaternion representation (no branch cut, but a sign ambiguity at identity) — see the Chapter 4 unwinding discussion. The three-branch `matrix_log_SO3` implementation below handles both near-zero and near-$\pi$ cases stably.
 
 :::
 
