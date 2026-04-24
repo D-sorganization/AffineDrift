@@ -2,12 +2,12 @@
 title: "Recursive Algorithms"
 ---
 
-# Recursive Algorithms
+# Recursive Algorithms {#sec-rnea}
 
 ::: {.callout-important}
 ## Conventions Used in This Chapter
 
-All spatial 6-vectors use **(angular ; linear)** ordering: $\twist = [\bm{\omega};\, \bm{v}]$, $\wrench = [\bm{m};\, \bm{f}]$, $\screw = [\bm{\omega};\, \bm{v}]$. Matches Lynch & Park [@lynch2017modern] §8. The Adjoint operator $\operatorname{Ad}_T$ and the Lie-bracket matrix form $\operatorname{ad}_\twist$ are defined in Chapter 5 and used here without redefinition.
+All spatial 6-vectors use **(angular ; linear)** ordering: $\twist = [\bm{\omega};\, \bm{v}]$, $\wrench = [\bm{m};\, \bm{f}]$, $\screw = [\bm{\omega};\, \bm{v}]$. Matches Lynch & Park [@lynch2017modern] §8. The Adjoint operator $\operatorname{Ad}_T$ and the Lie-bracket matrix form $\operatorname{ad}_\twist$ are defined in @sec-screw and used here without redefinition.
 :::
 
 ## The Curse of Dimensionality
@@ -297,7 +297,7 @@ def ad_matrix(V):
 For a chain with $N$ joints, each recursive pass visits every joint exactly once and does a fixed number of $6\times 6$ matrix operations per visit:
 
 - **RNEA (inverse dynamics)**: one outward + one inward pass of $N$ iterations $\times$ $O(1)$ $6\times 6$ ops $= O(N)$.
-- **ABA (forward dynamics, Chapter 10)**: three passes of the same shape $= O(N)$.
+- **ABA (forward dynamics, @sec-aba)**: three passes of the same shape $= O(N)$.
 - **CRBA (explicit mass matrix)**: evaluates RNEA once per generalized coordinate to build each column of $M(\bm{q})$ $= O(N^2)$.
 
 The $6\times 6$ block size is fixed by spatial-algebra dimensionality, so the asymptotic rates above are tight; the hidden constants are small enough that 30-DOF humanoids run comfortably at kHz rates.
@@ -311,3 +311,14 @@ The $6\times 6$ block size is fixed by spatial-algebra dimensionality, so the as
 Throughout the subsequent volumes of *Tangent-Space Methods*, physical phenomena like Contraction Metrics, Sums-of-Squares Programming, and LQR-Trees are discussed dynamically. Behind the curtain of those advanced trajectory optimizations, the physics governing the simulated bodies are invariably relying on Quaternions to map their angles and Recursive Algorithms to execute their algebraic realities in $O(N)$ time.
 
 The mathematical fundamentals are established. Let us begin Volume I.
+
+## Exercises {#sec-rnea-exercises}
+
+**7.1 (Computational)** Implement the full RNEA for a 2-link planar arm. Verify torques match the direct Lagrangian EOM for the same trajectory. See [@featherstone2008rigid, Ch. 5] and [@lynch2017modern, Ch. 8].
+
+**7.2 (Conceptual)** Explain why RNEA computes inverse dynamics in $O(N)$ while assembling $M(m{q})$ explicitly costs $O(N^2)$.
+
+**7.3 (Computational)** Profile RNEA vs a direct $N	imes N$ formulation for $N=2,4,8,16,32$ joints and verify the $O(N)$ vs $O(N^2)$ asymptotics.
+
+**7.4 (Conceptual)** Near a singular configuration, how does numerical error propagate through the Adjoint-map wrench transformation in the inward pass? What condition-number metric should production code monitor?
+

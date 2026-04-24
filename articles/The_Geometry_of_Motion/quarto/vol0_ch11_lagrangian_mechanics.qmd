@@ -2,7 +2,7 @@
 title: "Lagrangian Mechanics"
 ---
 
-# Lagrangian Mechanics
+# Lagrangian Mechanics {#sec-lagrangian}
 
 ::: {.callout-note}
 
@@ -23,7 +23,7 @@ textbook is built on Lagrangian mechanics.
 ## The Limitations of Newton
 
 
-In the Newtonian framework (utilized powerfully by the Recursive Newton-Euler algorithm in Chapter 10), motion is determined by explicit forces: $\sum F = ma$.
+In the Newtonian framework (utilized powerfully by the Recursive Newton-Euler algorithm in @sec-rnea), motion is determined by explicit forces: $\sum F = ma$.
 
 While Newton's equations are spectacular for computational algorithms evaluating rigid bodies link-by-link, they suffer from a fatal flaw when deriving mathematical models by hand: **Constraint Forces**.
 
@@ -58,7 +58,7 @@ Lagrange defined a single, massive scalar function—the **Lagrangian** ($\mathc
    \mathcal{L}(\bm{q}, \dot{\bm{q}}) = T(\bm{q}, \dot{\bm{q}}) - V(\bm{q})
 \end{equation}
 
-Where $\bm{q}$ are the generalized coordinates (the motor angles) we defined back in Chapter 3.
+Where $\bm{q}$ are the generalized coordinates (the motor angles) we defined in @sec-config.
 
 Because the Lagrangian is built on generalized coordinates, it completely ignores the "Constraint Forces". The equations naturally assume the metal rod cannot stretch; you never have to calculate its tension.
 
@@ -107,7 +107,7 @@ This matrix $C$ naturally "falls out" of the calculus derivative! Because the jo
 
 Explicitly, the canonical **Christoffel-symbol** form of $C$ is
 $$ C_{ij}(\bm{q}, \dot{\bm{q}}) = \sum_{k=1}^n \frac{1}{2}\left( \frac{\partial M_{ij}}{\partial q_k} + \frac{\partial M_{ik}}{\partial q_j} - \frac{\partial M_{jk}}{\partial q_i} \right)\dot{q}_k. $$
-This choice makes $\dot{M} - 2C$ skew-symmetric, a property used heavily in passivity-based and contraction-based control proofs in Volume I. The decomposition of the total Coriolis / centrifugal wrench as "$C(\bm{q}, \dot{\bm{q}})\dot{\bm{q}}$" is **not unique**—other choices of $C$ differ by a matrix that annihilates $\dot{\bm{q}}$, but all admissible choices must still give the same total wrench and most practically useful ones preserve skew-symmetry of $\dot{M} - 2C$. 
+This choice makes $\dot{M} - 2C$ skew-symmetric, a property used heavily in passivity-based and contraction-based control proofs in Volume I. The decomposition of the total Coriolis / centrifugal wrench as "$C(\bm{q}, \dot{\bm{q}})\dot{\bm{q}}$" is **not unique**—other choices of $C$ differ by a matrix that annihilates $\dot{\bm{q}}$, but all admissible choices must still give the same total wrench and most practically useful ones preserve skew-symmetry of $\dot{M} - 2C$. See [@slotine1991applied, §6] for an extended discussion. 
 
 
 ### 3. The Gravity Vector ($\frac{\partial V}{\partial \bm{q}}$)
@@ -120,7 +120,29 @@ The spatial derivative of the Potential Energy naturally yields the exact vector
 
 In *Tangent-Space Methods*, as with all advanced robotics platforms, you will see both Euler-Lagrange and Newton-Euler used routinely. The honest framing is that **Lagrange is elegant for analytical derivation, Newton–Euler is elegant for computational implementation**—neither is uniformly superior.
 
-\begin{itemize}
-    \item We use **Euler-Lagrange** when we are analytically designing the control law (such as Contraction Metrics in Volume I). The elegant $M, C, G$ matrices allow us to explicitly cancel gravity conceptually or prove mathematical stability.
-    \item We use **Recursive Newton-Euler** when code is executing inside the physics simulation (Volume II benchmarks). Finding the actual numerical torque pushing a 15-DOF golf club inside Python is hundreds of times faster using Newton-Euler ABA tracking than unpacking the massive $C(\dot{\bm{q}}, \bm{q})$ matrix algebraically.
-\end{itemize}
+- We use **Euler-Lagrange** when we are analytically designing the control law (such as Contraction Metrics in Volume I). The elegant $M, C, G$ matrices allow us to explicitly cancel gravity conceptually or prove mathematical stability.
+- We use **Recursive Newton-Euler** when code is executing inside the physics simulation (Volume II benchmarks). Finding the actual numerical torque pushing a 15-DOF golf club inside Python is hundreds of times faster using Newton-Euler ABA tracking than unpacking the massive $C(\dot{m{q}}, m{q})$ matrix algebraically.
+
+## Exercises {#sec-lagrangian-exercises}
+
+**11.1 (Conceptual)** Compare the Lagrangian EOM approach (this chapter) with the RL approach (@sec-ml) for controlling a 2-DOF arm:
+(a) Which requires more data? Which requires more domain knowledge?
+(b) Which provides stability guarantees? What kind (local/global)? {#sec-lagrangian-comparison}
+(c) For a system with unknown, temperature-varying joint friction, which handles this better?
+
+**11.2 (Computational)** For a double pendulum with link lengths $L_1 = L_2 = 1$ m and masses $m_1 = m_2 = 1$ kg, derive $M(m{q})$, $C(m{q}, \dot{m{q}})$, and $G(m{q})$ using the Christoffel-symbol formula. Verify $\dot{M} - 2C$ is skew-symmetric numerically at five random configurations. See [@slotine1991applied, §6].
+
+**11.3 (Computational)** Verify the RNEA--Lagrangian consistency check: implement both `recursive_newton_euler` (from @sec-rnea) and the Lagrangian EOM for a 2-link arm. Confirm they give identical torques for the same $(m{q}, \dot{m{q}}, \ddot{m{q}})$ at 100 random configurations.
+
+**11.4 (Challenge)** Prove that the Christoffel-symbol choice of $C$ is the unique choice satisfying both: (i) $\dot{M} - 2C$ is skew-symmetric, and (ii) $C_{ij}$ depends linearly on $\dot{m{q}}$. See [@marsden1999introduction, Ch. 7] for the differential-geometry perspective.
+
+## Summary {#sec-lagrangian-summary}
+
+| Concept | Role in mechanics | Key reference |
+|---------|-----------------|---------------|
+| Stationary action | Foundation of E-L EOM (unforced) | [@arnold1989mathematical, §44] |
+| Lagrange--d'Alembert | Extension to generalized forces | [@marsden1999introduction, Ch. 7] |
+| Christoffel symbols | Unique $C$ preserving skew-symmetry | [@slotine1991applied, §6] |
+| RNEA (@sec-rnea) | $O(N)$ numerical EOM evaluation | [@featherstone2008rigid, Ch. 5] |
+| ABA (@sec-aba) | Forward dynamics without inverting $M$ | [@featherstone1983calculation] |
+
