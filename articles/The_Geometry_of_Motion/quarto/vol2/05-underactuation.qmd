@@ -35,7 +35,7 @@ $$
 
 If we lack the authority to command arbitrary accelerations, the classical setpoint perspective sees this as a fundamental failing. A setpoint controller wants to cancel the nonlinearities, feedback-linearize the system, and dictate the exact motion. Underactuation prevents this brute-force cancellation. 
 
-However, from the trajectory-first perspective developed in Chapter~1, underactuation is not merely a restriction---it is a geometric feature. The *passive dynamics* (the unactuated portions of the dynamics) define a manifold of feasible trajectories. We don't fight the physics; we ride it. 
+However, from the trajectory-first perspective developed in Chapter 1, underactuation is not merely a restriction---it is a geometric feature. The *passive dynamics* (the unactuated portions of the dynamics) define a manifold of feasible trajectories. We don't fight the physics; we ride it. 
 
 
 ## The Double Pendulum: A Window into the Golf Swing
@@ -160,7 +160,7 @@ $$
 
 
 
-For control design, this means we cannot arbitrarily select a path in $\statespace$ and expect a controller to track it. The reference trajectory *must* live in the restricted subspace defined by @eq-unactuated_dynamics. The trajectory optimization algorithms in Chapter~6 will explicitly enforce this constraint.
+For control design, this means we cannot arbitrarily select a path in $\statespace$ and expect a controller to track it. The reference trajectory *must* live in the restricted subspace defined by @eq-unactuated_dynamics. The trajectory optimization algorithms in Chapter 6 will explicitly enforce this constraint.
 
 
 ## Partial Feedback Linearization
@@ -193,7 +193,7 @@ If we perfectly stabilize the actuated tracking errors to zero ($\bm{q}_a \equiv
 
 For the golf swing, the zero dynamics describe how the club moves if the golfer's arms perfectly follow the nominal swing path. Are the zero dynamics of the golf swing stable?
 
-Revisiting the concept of Transverse Linearization (Chapter~4), if we linearize the unactuated dynamics around the trajectory $\traj^*(t)$, we analyze the transverse divergence of the club from its optimal path.
+Revisiting the concept of Transverse Linearization (Chapter 4), if we linearize the unactuated dynamics around the trajectory $\traj^*(t)$, we analyze the transverse divergence of the club from its optimal path.
 
 We find a beautiful physical phenomenon:
 
@@ -201,7 +201,7 @@ We find a beautiful physical phenomenon:
 - During the late downswing (the release phase), the club's zero dynamics become *strongly stable*. The massive acceleration $\ddot{\theta}_2 \gg 0$ acts like a stiff restoring spring. The centrifugal force aligns the club perfectly with the arms.
 
 
-This is the manifestation of the time-varying tube (the Funnel) from Chapter~1! The passive physics naturally form a wide, loose tube that tightens into an incredibly precise singularity exactly at the moment of impact. The golfer does not need to use wrist torque to steer the clubhead to the ball; if the shoulder inputs are grossly correct, the physics of the double pendulum *pulls* the clubhead into the ball.
+This is the manifestation of the time-varying tube (the Funnel) from Chapter 1! The passive physics naturally form a wide, loose tube that tightens into an incredibly precise singularity exactly at the moment of impact. The golfer does not need to use wrist torque to steer the clubhead to the ball; if the shoulder inputs are grossly correct, the physics of the double pendulum *pulls* the clubhead into the ball.
 
 \begin{remark}{Why Good Swings Feel Effortless}{effortless}
   Novice golfers attempt to fully actuate the swing. They use their wrists to steer the club, treating it as a fully actuated robotic arm. This fights the passive dynamics, resulting in slower club speeds and higher variability. Pro golfers use their arms and torso to set up the boundary conditions for the passive wrist release. By acting primarily in the null space (letting the unactuated dynamics dominate), the swing maximizes speed and consistency. The physics does the work.
@@ -222,7 +222,7 @@ This is the manifestation of the time-varying tube (the Funnel) from Chapter~1! 
 
 
 
-Underactuation forces a shift from “forcing” a system to an equilibrium, to “orchestrating” the natural physics of the system. The trajectory is a choreography between the motors and gravity/inertia. In Chapter~6, we will see how numerical trajectory optimization can synthesize these choreographies automatically by solving optimal control problems that explicitly respect the $\Bmat^\perp$ constraint.
+Underactuation forces a shift from “forcing” a system to an equilibrium, to “orchestrating” the natural physics of the system. The trajectory is a choreography between the motors and gravity/inertia. In Chapter 6, we will see how numerical trajectory optimization can synthesize these choreographies automatically by solving optimal control problems that explicitly respect the $\Bmat^\perp$ constraint.
 
 
 ## Exercises

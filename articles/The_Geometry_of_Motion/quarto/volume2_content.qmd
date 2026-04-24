@@ -134,12 +134,10 @@ $$
 $$ {#eq-nonlinear_sys}
 
 where $\bm{f}$ is smooth and the state space $\statespace$ may carry additional
-geometric structure (it may be a manifold, as we will see in Chapter~3).
+geometric structure (it may be a manifold, as we will see in Chapter 3).
 
 In the classical framework, the control objective is:
-\begin{quote}
-  *Find $\control(t)$ such that $\state(t) \to \state^*$ as $t \to \infty$.*
-\end{quote}
+> *Find $\control(t)$ such that $\state(t) \to \state^*$ as $t \to \infty$.*
 The entire apparatus of Lyapunov stability, LQR, pole placement, and PID control
 is built around this question. But notice what this objective assumes:
 
@@ -579,7 +577,7 @@ squares the clubface through the double pendulum effect.
   requires understanding the geometry of this submanifold.
 \end{proposition}
 
-We will make this precise in Chapter~5 using the language of constraint manifolds
+We will make this precise in Chapter 5 using the language of constraint manifolds
 and their null-space structures.
 
 % ──────────────────────────────────────────────
@@ -723,7 +721,7 @@ the classical language throughout this book:
 
 % ══════════════════════════════════════════════
 
-In Chapter~1 we argued that control is fundamentally about *motion*---the
+In Chapter 1 we argued that control is fundamentally about *motion*---the
 faithful execution of a trajectory through state space. Before we can stabilize
 a trajectory, optimize a trajectory, or confine the system to a tube around a
 trajectory, we need to understand what a trajectory *is* as a mathematical
@@ -887,7 +885,7 @@ direction of the derivative; none is hidden in its magnitude.
 \begin{remark}{Arc Length in High Dimensions}{high_dim_arc}
   In $\Reals^n$ with the Euclidean metric, arc length is defined exactly as
   above. When the state space carries a non-Euclidean metric (as it will when
-  we work on configuration manifolds in Chapter~3), the formula
+  we work on configuration manifolds in Chapter 3), the formula
   @eq-arc_length generalizes to
   
 $$
@@ -1464,7 +1462,7 @@ the trajectory bends.
 
 We now use the Frenet--Serret frame to analyze what happens when the system
 deviates from the reference trajectory. This provides the geometric foundation
-for the transverse linearization of Chapter~4.
+for the transverse linearization of Chapter 4.
 
 
 ### Frenet--Serret Coordinates
@@ -1493,7 +1491,7 @@ $$
 
   where $s^*$ is the tangential (along-trajectory) coordinate and
   $\bm{\xi} = (\xi_2, ..., \xi_n)$ are the transverse (cross-trajectory)
-  coordinates. The transverse distance from Chapter~1 is
+  coordinates. The transverse distance from Chapter 1 is
   
 $$
 d_\perp = \norm{\bm{\xi}} = \sqrt{\xi_2^2 + \cdots + \xi_n^2}.
@@ -1621,7 +1619,7 @@ book:
 
 The key takeaway is that a trajectory is not just “a function of time.” It is a
 geometric object with intrinsic structure, and this structure directly determines
-the difficulty and requirements of controlling it. In Chapter~3, we will see that
+the difficulty and requirements of controlling it. In Chapter 3, we will see that
 the state spaces of mechanical systems are not flat $\Reals^n$---they are curved
 manifolds with their own geometry. The interplay between the geometry of the
 *curve* and the geometry of the *space* will produce the richest and
@@ -1699,7 +1697,7 @@ most practically important results of this book.
 
 % ══════════════════════════════════════════════
 
-In Chapter~2 we developed the geometry of curves in $\Reals^n$. This was a
+In Chapter 2 we developed the geometry of curves in $\Reals^n$. This was a
 necessary starting point, but it was also a simplification. The state spaces
 of real mechanical systems are *not* $\Reals^n$.
 
@@ -2212,7 +2210,7 @@ $$
 2. **Geodesics** (shortest paths) under this metric are the
   trajectories of the *unforced* system---free motions with no
   applied torques.
-3. **Arc length** from Chapter~2, computed with this metric,
+3. **Arc length** from Chapter 2, computed with this metric,
   naturally weights each DOF by its effective inertia.
 
 
@@ -2284,7 +2282,7 @@ equipped with the kinetic energy metric.
 % ══════════════════════════════════════════════
 
 With the manifold framework in place, we can extend every concept from
-Chapter~2 to non-Euclidean configuration spaces.
+Chapter 2 to non-Euclidean configuration spaces.
 
 
 ### Covariant Differentiation
@@ -2320,7 +2318,7 @@ $$
 
 
 The covariant derivative replaces the ordinary derivative in all of our
-Chapter~2 formulas. The generalized curvatures, the Frenet--Serret frame,
+Chapter 2 formulas. The generalized curvatures, the Frenet--Serret frame,
 and the transverse decomposition all carry over, with $\dd/\dd s$ replaced
 by $\nabla_{\dot{\gamma}}$.
 
@@ -2343,7 +2341,7 @@ $$
 
 
 Geodesic curvature is the manifold generalization of the curvature from
-Chapter~2, and it has the same control interpretation: *geodesic
+Chapter 2, and it has the same control interpretation: *geodesic
 curvature measures the force per unit mass needed to follow the curve*,
 beyond what the natural dynamics would provide for free.
 
@@ -2356,7 +2354,7 @@ $$
 $$
 
   where $\norm{\cdot}$ is measured in the dual (force) metric. Comparing with
-  the Euclidean formula $a_\perp = \kappa v^2$ from Chapter~2: the Euclidean
+  the Euclidean formula $a_\perp = \kappa v^2$ from Chapter 2: the Euclidean
   curvature $\kappa$ is replaced by the geodesic curvature $\kappa_g$, which
   accounts for the curvature of the manifold itself.
 \end{proposition}
@@ -2439,7 +2437,7 @@ $$
 ### The Trajectory Tube on a Manifold
 
 
-The trajectory tube from Chapter~1 now generalizes naturally:
+The trajectory tube from Chapter 1 now generalizes naturally:
 
 
 
@@ -2581,8 +2579,8 @@ introduces artificial singularities, incorrect error metrics, and
 controllers that fail when the system moves far from a nominal configuration.
 
 The trajectory-first philosophy of this book demands that we take the
-geometry seriously from the start. The curves we designed in Chapter~2 live
-on manifolds, and the stability theory we will develop in Chapter~4 must
+geometry seriously from the start. The curves we designed in Chapter 2 live
+on manifolds, and the stability theory we will develop in Chapter 4 must
 respect the manifold structure. The payoff is controllers that work globally,
 without singularities, and that correctly exploit the natural dynamics
 encoded in the manifold's Riemannian geometry.
@@ -2675,7 +2673,7 @@ encoded in the manifold's Riemannian geometry.
 % ══════════════════════════════════════════════
 
 The classical Lyapunov framework asks a simple question: *does the state
-converge to an equilibrium?* We demonstrated in Chapter~1 that this is the
+converge to an equilibrium?* We demonstrated in Chapter 1 that this is the
 wrong question for systems whose purpose is to move. But the problem goes
 deeper than philosophical framing---Lyapunov stability is *structurally
 incapable* of analyzing trajectory-tracking systems.
@@ -3034,7 +3032,7 @@ For implementation, the key quantities are computed as follows. Let
 $\bm{J}(t) = \frac{\partial \bm{f}}{\partial \state}\big|_{\traj^*, \control^*}$
 be the Jacobian along the reference. Choose any orthonormal basis
 $\{\bm{n}_1(s), ..., \bm{n}_{n-1}(s)\}$ for $\Sigma(s)$---the Frenet--Serret
-frame from Chapter~2 provides a natural choice. Collect these into the matrix
+frame from Chapter 2 provides a natural choice. Collect these into the matrix
 $\bm{N}(s) = [\bm{n}_1 \mid \cdots \mid \bm{n}_{n-1}] \in \Reals^{n \times (n-1)}$.
 Then:
 
@@ -3271,7 +3269,7 @@ $$
     toward impact)}.
 $$
 
-  This is a precise formulation of the funnel concept from Chapter~1:
+  This is a precise formulation of the funnel concept from Chapter 1:
   the tube narrows because the transverse dynamics are contracting.
 
 
@@ -3364,7 +3362,7 @@ interpretations:
   aggressive correction but may demand unrealistic actuator authority.
 - The *phase-dependent* nature of $\bm{Q}(t)$ is essential:
   we want tight tracking near impact and loose tracking during the backswing.
-  This is the time-varying tube from Chapter~1, now realized through the
+  This is the time-varying tube from Chapter 1, now realized through the
   Riccati equation.
 
 
@@ -3374,7 +3372,7 @@ interpretations:
 
 The terminal-value Riccati equation @eq-riccati naturally produces
 gains that tighten as the terminal time approaches. This is exactly the
-funnel behavior we designed geometrically in Chapter~1:
+funnel behavior we designed geometrically in Chapter 1:
 
 \begin{theorem}[Riccati Funnel]\label{thm:riccati_funnel}
   Let $\bm{S}(t)$ be the solution of @eq-riccati with terminal
@@ -3395,7 +3393,7 @@ $$
   control authority is sufficient.
 \end{theorem}
 
-This is the formal connection between the geometric funnel of Chapter~1 and
+This is the formal connection between the geometric funnel of Chapter 1 and
 the algebraic Riccati equation: **the funnel is the level set of the
 Riccati cost-to-go.**
 
@@ -3530,7 +3528,7 @@ passive transverse dynamics create a natural funnel toward impact, and the
 transverse LQR controller tightens this funnel using phase-varying gains
 that match the demands of each phase of the motion.
 
-In Chapter~5, we will see how underactuation constrains the transverse dynamics,
+In Chapter 5, we will see how underactuation constrains the transverse dynamics,
 creating geometric structure that can be *exploited* rather than merely
 tolerated.
 
@@ -3637,7 +3635,7 @@ $$
 
 If we lack the authority to command arbitrary accelerations, the classical setpoint perspective sees this as a fundamental failing. A setpoint controller wants to cancel the nonlinearities, feedback-linearize the system, and dictate the exact motion. Underactuation prevents this brute-force cancellation. 
 
-However, from the trajectory-first perspective developed in Chapter~1, underactuation is not merely a restriction---it is a geometric feature. The *passive dynamics* (the unactuated portions of the dynamics) define a manifold of feasible trajectories. We don't fight the physics; we ride it. 
+However, from the trajectory-first perspective developed in Chapter 1, underactuation is not merely a restriction---it is a geometric feature. The *passive dynamics* (the unactuated portions of the dynamics) define a manifold of feasible trajectories. We don't fight the physics; we ride it. 
 
 % ══════════════════════════════════════════════
 
@@ -3766,7 +3764,7 @@ $$
 
 
 
-For control design, this means we cannot arbitrarily select a path in $\statespace$ and expect a controller to track it. The reference trajectory *must* live in the restricted subspace defined by @eq-unactuated_dynamics. The trajectory optimization algorithms in Chapter~6 will explicitly enforce this constraint.
+For control design, this means we cannot arbitrarily select a path in $\statespace$ and expect a controller to track it. The reference trajectory *must* live in the restricted subspace defined by @eq-unactuated_dynamics. The trajectory optimization algorithms in Chapter 6 will explicitly enforce this constraint.
 
 % ══════════════════════════════════════════════
 
@@ -3803,7 +3801,7 @@ If we perfectly stabilize the actuated tracking errors to zero ($\bm{q}_a \equiv
 
 For the golf swing, the zero dynamics describe how the club moves if the golfer's arms perfectly follow the nominal swing path. Are the zero dynamics of the golf swing stable?
 
-Revisiting the concept of Transverse Linearization (Chapter~4), if we linearize the unactuated dynamics around the trajectory $\traj^*(t)$, we analyze the transverse divergence of the club from its optimal path.
+Revisiting the concept of Transverse Linearization (Chapter 4), if we linearize the unactuated dynamics around the trajectory $\traj^*(t)$, we analyze the transverse divergence of the club from its optimal path.
 
 We find a beautiful physical phenomenon:
 
@@ -3811,7 +3809,7 @@ We find a beautiful physical phenomenon:
 - During the late downswing (the release phase), the club's zero dynamics become *strongly stable*. The massive acceleration $\ddot{\theta}_2 \gg 0$ acts like a stiff restoring spring. The centrifugal force aligns the club perfectly with the arms.
 
 
-This is the manifestation of the time-varying tube (the Funnel) from Chapter~1! The passive physics naturally form a wide, loose tube that tightens into an incredibly precise singularity exactly at the moment of impact. The golfer does not need to use wrist torque to steer the clubhead to the ball; if the shoulder inputs are grossly correct, the physics of the double pendulum *pulls* the clubhead into the ball.
+This is the manifestation of the time-varying tube (the Funnel) from Chapter 1! The passive physics naturally form a wide, loose tube that tightens into an incredibly precise singularity exactly at the moment of impact. The golfer does not need to use wrist torque to steer the clubhead to the ball; if the shoulder inputs are grossly correct, the physics of the double pendulum *pulls* the clubhead into the ball.
 
 \begin{remark}{Why Good Swings Feel Effortless}{effortless}
   Novice golfers attempt to fully actuate the swing. They use their wrists to steer the club, treating it as a fully actuated robotic arm. This fights the passive dynamics, resulting in slower club speeds and higher variability. Pro golfers use their arms and torso to set up the boundary conditions for the passive wrist release. By acting primarily in the null space (letting the unactuated dynamics dominate), the swing maximizes speed and consistency. The physics does the work.
@@ -3834,7 +3832,7 @@ This is the manifestation of the time-varying tube (the Funnel) from Chapter~1! 
 
 \vspace{0.3cm}
 
-Underactuation forces a shift from “forcing” a system to an equilibrium, to “orchestrating” the natural physics of the system. The trajectory is a choreography between the motors and gravity/inertia. In Chapter~6, we will see how numerical trajectory optimization can synthesize these choreographies automatically by solving optimal control problems that explicitly respect the $\Bmat^\perp$ constraint.
+Underactuation forces a shift from “forcing” a system to an equilibrium, to “orchestrating” the natural physics of the system. The trajectory is a choreography between the motors and gravity/inertia. In Chapter 6, we will see how numerical trajectory optimization can synthesize these choreographies automatically by solving optimal control problems that explicitly respect the $\Bmat^\perp$ constraint.
 
 % ══════════════════════════════════════════════
 
