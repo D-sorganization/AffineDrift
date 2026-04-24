@@ -2,9 +2,13 @@
    AffineDrift - Modern Scientific Layout
    --- */
 
+/* Canonical breakpoints: 480px (mobile), 768px (tablet), 1024px (desktop), 1280px (wide) */
+
 @import url("css/bibliography.css");
 @import url("css/critics-corner.css");
 @import url("css/resources.css");
+
+/* === TOKENS === */
 
 /* Reset and Base Styles */
 * {
@@ -33,7 +37,9 @@
   /* Neutral scale */
   --bg-body: #fff;
   --bg-alt: #f8f9fa;
+  --bg-card: #fff;
   --bg-sidebar: #fcfcfc;
+  --text-light: #212529;
   --text-main: #212529;
   --text-muted: #6c757d;
   --border-color: #e9ecef;
@@ -77,7 +83,7 @@ body {
   line-height: 1.6;
   color: var(--text-main);
   background-color: var(--bg-body);
-  font-size: 17px;
+  font-size: clamp(0.875rem, 2vw, 1.125rem);
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
 }
@@ -142,6 +148,8 @@ a:hover {
   color: var(--primary-blue);
   text-decoration: underline;
 }
+
+/* === LAYOUT === */
 
 /* ---
    Layout Structure
@@ -693,6 +701,8 @@ nav .container {
   color: var(--primary-blue);
 }
 
+/* === COMPONENTS === */
+
 /* ---
    Cards & Content Blocks
    --- */
@@ -860,8 +870,8 @@ nav .container {
   }
 }
 
-/* Tablet: Switch to 2 columns (Left Sidebar + Content) */
-@media (width < 992px) {
+/* Tablet: Switch to 2 columns (Left Sidebar + Content) — consolidated from 992px to canonical 1024px */
+@media (width < 1024px) {
   .page-columns.page-full .standard-page-layout,
   .container .standard-page-layout,
   .standard-page-layout {
@@ -1332,6 +1342,51 @@ h3:hover .anchor-link,
 /* Print styles were moved to css/print.css to isolate high-specificity rules. */
 
 /* ---
+   Opinion Block – shared base for .laymans-terms and .critics-comments
+   --- */
+.opinion-block {
+  margin: 2rem 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.opinion-block-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 1rem 1.25rem;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  text-align: left;
+}
+
+.opinion-block-header h2 {
+  margin: 0;
+  font-family: "Playfair Display", serif;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.opinion-block-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0, 1, 0, 1);
+}
+
+.opinion-block-header[aria-expanded="true"] + .opinion-block-content {
+  max-height: 5000px;
+  transition: max-height 0.4s cubic-bezier(1, 0, 1, 0);
+}
+
+.opinion-block-inner {
+  padding: 1.5rem;
+}
+
+/* ---
    In Layman's Terms Sidebar
    --- */
 .laymans-terms {
@@ -1671,8 +1726,8 @@ form.contact-form .form-group textarea {
   background: var(--light-blue);
 }
 
-/* Responsive for Contact */
-@media (width < 900px) {
+/* Responsive for Contact — consolidated from 900px to canonical 768px tablet breakpoint */
+@media (width < 768px) {
   .contact-layout {
     flex-direction: column;
     gap: 2rem;
@@ -1956,14 +2011,14 @@ form.contact-form .form-group textarea {
    Audit Fixes (Jan 16, 2026)
    --- */
 
-/* Fix: Header text contrast */
+/* Fix: Header text contrast – specificity handles the override, no !important needed */
 .quarto-title-banner .title,
 .quarto-title-banner .subtitle,
 #quarto-header .navbar-brand,
 #quarto-header .navbar-title,
 h1.title,
 .title {
-  color: #fff !important;
+  color: #fff;
 }
 
 .accordion-header span:first-child {
@@ -2654,6 +2709,8 @@ h1.title,
   line-height: 1.7;
 }
 
+/* === DARK MODE === */
+
 /* =============================================================
    Dark Mode – automatic via prefers-color-scheme
    ============================================================= */
@@ -2663,13 +2720,42 @@ h1.title,
 
     --bg-body: #0d0d1a;
     --bg-alt: #1a1a2e;
+    --bg-card: #1e1e1e;
     --bg-sidebar: #112;
     --text-main: #dde1e7;
+    --text-light: #e0e0e0;
     --text-muted: #8b90a0;
     --border-color: #2a2a40;
     --light-blue: #0a2a40;
     --legal-pad-yellow: #1a1810;
     --shadow-color: rgb(0, 0, 0, 0.4);
+  }
+
+  /* Forms: prevent white flash */
+  input,
+  textarea,
+  select {
+    background-color: var(--bg-card, #1e1e1e);
+    color: var(--text-light, #e0e0e0);
+    border-color: var(--border-color);
+  }
+
+  /* Callout cards: replace hardcoded white backgrounds */
+  .laymans-item {
+    background: var(--bg-card, #1e1e1e);
+  }
+
+  .critic-item {
+    background: var(--bg-card, #1e1e1e);
+    border-color: var(--border-color);
+  }
+
+  .critics-comments {
+    background: linear-gradient(135deg, #1a0a0a 0%, var(--bg-card, #1e1e1e) 100%);
+  }
+
+  .contact-form-container {
+    background: var(--bg-card, #1e1e1e);
   }
 }
 
@@ -2681,13 +2767,41 @@ h1.title,
 
   --bg-body: #0d0d1a;
   --bg-alt: #1a1a2e;
+  --bg-card: #1e1e1e;
   --bg-sidebar: #112;
   --text-main: #dde1e7;
+  --text-light: #e0e0e0;
   --text-muted: #8b90a0;
   --border-color: #2a2a40;
   --light-blue: #0a2a40;
   --legal-pad-yellow: #1a1810;
   --shadow-color: rgb(0, 0, 0, 0.4);
+}
+
+/* Manual dark mode: forms + callout overrides (mirrors prefers-color-scheme block) */
+[data-theme="dark"] input,
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+  background-color: var(--bg-card, #1e1e1e);
+  color: var(--text-light, #e0e0e0);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .laymans-item {
+  background: var(--bg-card, #1e1e1e);
+}
+
+[data-theme="dark"] .critic-item {
+  background: var(--bg-card, #1e1e1e);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .critics-comments {
+  background: linear-gradient(135deg, #1a0a0a 0%, var(--bg-card, #1e1e1e) 100%);
+}
+
+[data-theme="dark"] .contact-form-container {
+  background: var(--bg-card, #1e1e1e);
 }
 
 /* =============================================================
@@ -2712,5 +2826,5 @@ h1.title,
 
 #theme-toggle:hover {
   background: var(--accent-blue);
-  color: #fff;
+  color: var(--pure-white);
 }
