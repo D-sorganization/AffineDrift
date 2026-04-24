@@ -51,11 +51,12 @@ $font-family-serif: "Playfair Display", Georgia, "Times New Roman", serif;
 }
 
 .abstract-section {
-  background: #e7f3ff;
+  /* Use callout tokens so dark mode can override without !important (Issue #2783) */
+  background: var(--callout-note-bg, #e7f3ff);
   padding: 2rem;
   border-radius: 8px;
   margin: 2rem 0;
-  border-left: 4px solid var(--color-blue);
+  border-left: 4px solid var(--callout-note-border, var(--color-blue));
 }
 
 .abstract-section h2 {
@@ -64,16 +65,16 @@ $font-family-serif: "Playfair Display", Georgia, "Times New Roman", serif;
 }
 
 .keypoint-box {
-  background: #e3f2fd;
-  border-left: 4px solid var(--color-sky-blue);
+  background: var(--callout-key-bg, #e3f2fd);
+  border-left: 4px solid var(--callout-key-border, var(--color-sky-blue));
   padding: 1.5rem;
   margin: 1.5rem 0;
   border-radius: 8px;
 }
 
 .limitation-box {
-  background: #ffebee;
-  border-left: 4px solid var(--color-vermillion);
+  background: var(--callout-limit-bg, #ffebee);
+  border-left: 4px solid var(--callout-limit-border, var(--color-vermillion));
   padding: 1.5rem;
   margin: 1.5rem 0;
   border-radius: 8px;

@@ -5,9 +5,9 @@
 
 .critics-corner {
     margin-top: 3rem;
-    border: 2px solid #dc3545;
+    border: 2px solid var(--callout-warn-border, #dc3545);
     border-radius: 12px;
-    background: linear-gradient(135deg, #fff5f5 0%, #fff 100%);
+    background: var(--callout-warn-bg, #fff5f5);
     overflow: hidden;
 }
 
@@ -174,21 +174,23 @@
 
 .criticism-severity.moderate {
     background: #ffe0b2;
-    color: #e65100;
+    /* #7a3000 on #ffe0b2 ≥ 7:1 AAA — darkened from #e65100 which failed contrast */
+    color: #7a3000;
 }
 
 .criticism-severity.moderate::before {
-    background: #e65100;
+    background: #7a3000;
     clip-path: polygon(50% 0%, 100% 100%, 0% 100%); /* triangle */
 }
 
 .criticism-severity.major {
     background: #ffcdd2;
-    color: #c62828;
+    /* #7b1010 on #ffcdd2 ≥ 7:1 AAA — darkened from #c62828 which failed contrast */
+    color: #7b1010;
 }
 
 .criticism-severity.major::before {
-    background: #c62828;
+    background: #7b1010;
     clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%); /* octagon */
 }
 

@@ -48,6 +48,7 @@ import {
     initResponsiveTables,
     initCodeCopy,
     initFormAccessibility,
+    initInlineFormErrors,
     initAutoGrowTextareas,
     initContactFormFeedback,
 } from "./forms.js";
@@ -113,6 +114,7 @@ runOnDomReady(function () {
         initResponsiveTables();
         initCodeCopy();
         initFormAccessibility();
+        initInlineFormErrors();
     });
 });
 

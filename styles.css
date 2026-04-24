@@ -75,6 +75,25 @@
   --legal-pad-yellow-accent: #f0e68c;
   --legal-pad-yellow-border: #d4c57a;
   --primary-color: #0f4c75;
+
+  /* Palette unification: alias bespoke names to Okabe-Ito canonical tokens
+     declared in custom.scss so components converge on one colorblind-safe system
+     (Issue #2789 finding 5). Hex fallbacks keep styles.css standalone. */
+  --primary-blue: var(--color-blue, #0072b2);
+  --accent-blue: var(--color-sky-blue, #56b4e9);
+
+  /* Callout / panel component tokens (Issue #2783).
+     Override under [data-theme="dark"] and prefers-color-scheme: dark below. */
+  --callout-note-bg: #e7f3ff;
+  --callout-note-border: #90caf9;
+  --callout-warn-bg: #fff5f5;
+  --callout-warn-border: #ef9a9a;
+  --callout-tip-bg: #f8fdfe;
+  --callout-tip-border: #b2ebf2;
+  --callout-key-bg: #e3f2fd;
+  --callout-key-border: #56b4e9;
+  --callout-limit-bg: #ffebee;
+  --callout-limit-border: #d55e00;
 }
 
 body {
@@ -1125,14 +1144,14 @@ nav a[aria-current="page"],
 
 h2:hover .anchor-link,
 h3:hover .anchor-link,
-.anchor-link:focus {
+.anchor-link:focus-visible {
   opacity: 1;
-  outline: none;
 }
 
-.anchor-link:focus {
-  box-shadow: 0 0 0 2px var(--accent-blue);
-  border-radius: 4px;
+.anchor-link:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+  border-radius: 2px;
 }
 
 .anchor-link:hover {
@@ -1166,15 +1185,16 @@ h3:hover .anchor-link,
   visibility: visible;
 }
 
-.back-to-top:hover,
-.back-to-top:focus {
+.back-to-top:hover {
   transform: translateY(-2px);
   background: var(--accent-blue);
 }
 
-.back-to-top:focus {
-  outline: 2px solid var(--primary-blue);
-  outline-offset: 2px;
+.back-to-top:focus-visible {
+  transform: translateY(-2px);
+  background: var(--accent-blue);
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 3px;
 }
 
 .back-to-top svg {
@@ -1210,15 +1230,16 @@ h3:hover .anchor-link,
   visibility: visible;
 }
 
-.export-to-pdf:hover,
-.export-to-pdf:focus {
+.export-to-pdf:hover {
   transform: translateY(-2px);
   background: var(--primary-blue);
 }
 
-.export-to-pdf:focus {
+.export-to-pdf:focus-visible {
+  transform: translateY(-2px);
+  background: var(--primary-blue);
   outline: 2px solid var(--accent-blue);
-  outline-offset: 2px;
+  outline-offset: 3px;
 }
 
 .export-to-pdf svg {
@@ -1248,7 +1269,7 @@ h3:hover .anchor-link,
 }
 
 .export-to-pdf:hover .tooltip,
-.export-to-pdf:focus .tooltip {
+.export-to-pdf:focus-visible .tooltip {
   opacity: 1;
   visibility: visible;
 }
@@ -1353,6 +1374,16 @@ h3:hover .anchor-link,
   fill: currentcolor;
 }
 
+/* FAB collision fix: on narrow viewports only back-to-top is shown to prevent
+   multiple fixed buttons from overlapping (Issue #2786 finding 4). */
+@media (max-width: 767.98px) {
+  .export-to-pdf,
+  .pdf-download-btn,
+  #theme-toggle {
+    display: none;
+  }
+}
+
 /* Print styles were moved to css/print.css to isolate high-specificity rules. */
 
 /* ---
@@ -1404,10 +1435,11 @@ h3:hover .anchor-link,
    In Layman's Terms Sidebar
    --- */
 .laymans-terms {
-  border: 2px solid #17a2b8;
+  border: 2px solid var(--callout-tip-border, #17a2b8);
   border-radius: 8px;
   margin: 2rem 0;
-  background: linear-gradient(135deg, #f8fdfe 0%, #e3f6f8 100%);
+  /* Token-driven background so dark mode override works (Issue #2783) */
+  background: var(--callout-tip-bg, #f8fdfe);
   overflow: hidden;
   box-shadow: var(--shadow-sm);
 }
@@ -1438,9 +1470,11 @@ h3:hover .anchor-link,
   gap: 0.5rem;
 }
 
-.laymans-terms-header h2::before {
-  content: "💡";
+/* 💡 emoji moved to HTML with aria-hidden="true" (Issue #2789 finding 2).
+   Use .laymans-terms-emoji span in markup instead of this pseudo-element. */
+.laymans-terms-emoji {
   font-size: 1.2rem;
+  line-height: 1;
 }
 
 .laymans-terms-icon {
@@ -1499,9 +1533,11 @@ h3:hover .anchor-link,
   gap: 0.5rem;
 }
 
-.laymans-item h3::before {
-  content: "📌";
+/* 📌 emoji moved to HTML with aria-hidden="true" (Issue #2789 finding 2).
+   Use .laymans-item-emoji span in markup. */
+.laymans-item-emoji {
   font-size: 0.9rem;
+  line-height: 1;
 }
 
 .laymans-item p {
@@ -1685,7 +1721,26 @@ form.contact-form .form-group textarea {
   outline: none;
   border-color: var(--accent-blue);
   box-shadow: 0 0 0 3px var(--light-blue);
-  background-color: var(--pure-white);
+  /* --bg-body instead of --pure-white prevents white flash in dark mode (Issue #2783) */
+  background-color: var(--bg-body);
+  color: var(--text-main);
+}
+
+/* Form error states — visual + semantic (Issue #2789 finding 1) */
+.form-group input:user-invalid,
+.form-group textarea:user-invalid,
+.form-group input[aria-invalid="true"],
+.form-group textarea[aria-invalid="true"] {
+  border-color: var(--color-vermillion, #d55e00);
+  box-shadow: 0 0 0 3px rgba(213, 94, 0, 0.15);
+}
+
+/* Inline error text — hidden by default, shown by initInlineFormErrors() */
+.form-error {
+  color: var(--color-vermillion, #d55e00);
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+  display: block;
 }
 
 .btn-primary {
@@ -2702,6 +2757,24 @@ h1.title,
     --light-blue: #0a2a40;
     --legal-pad-yellow: #1a1810;
     --shadow-color: rgb(0, 0, 0, 0.4);
+
+    /* Accent contrast: boost to ≥7:1 on dark canvas (Issue #2783 finding 2).
+       #0f4c75 on #0d0d1a = 1.61:1; #3282b8 on #0d0d1a = 4.31:1 — both fail. */
+    --primary-blue: #7fb3d5;
+    --accent-blue: #5dade2;
+    --primary-dark: #e3f2fd;
+
+    /* Callout panel tokens for dark mode (Issue #2783 finding 1) */
+    --callout-note-bg: color-mix(in srgb, #0d0d1a 85%, #5dade2);
+    --callout-note-border: color-mix(in srgb, #0d0d1a 60%, #5dade2);
+    --callout-warn-bg: color-mix(in srgb, #0d0d1a 85%, #d55e00);
+    --callout-warn-border: color-mix(in srgb, #0d0d1a 60%, #d55e00);
+    --callout-tip-bg: color-mix(in srgb, #0d0d1a 85%, #56b4e9);
+    --callout-tip-border: color-mix(in srgb, #0d0d1a 60%, #56b4e9);
+    --callout-key-bg: color-mix(in srgb, #0d0d1a 85%, #56b4e9);
+    --callout-key-border: color-mix(in srgb, #0d0d1a 60%, #56b4e9);
+    --callout-limit-bg: color-mix(in srgb, #0d0d1a 85%, #d55e00);
+    --callout-limit-border: color-mix(in srgb, #0d0d1a 60%, #d55e00);
   }
 
   /* Forms: prevent white flash */
@@ -2713,7 +2786,32 @@ h1.title,
     border-color: var(--border-color);
   }
 
-  /* Callout cards: replace hardcoded white backgrounds */
+  /* Callout cards: dark-mode panel backgrounds */
+  .abstract-section {
+    background: var(--callout-note-bg);
+    border-left-color: var(--callout-note-border);
+  }
+
+  .keypoint-box {
+    background: var(--callout-key-bg);
+    border-left-color: var(--callout-key-border);
+  }
+
+  .limitation-box {
+    background: var(--callout-limit-bg);
+    border-left-color: var(--callout-limit-border);
+  }
+
+  .laymans-terms {
+    background: var(--callout-tip-bg);
+    border-color: var(--callout-tip-border);
+  }
+
+  .critics-corner {
+    background: var(--callout-warn-bg);
+    border-color: var(--callout-warn-border);
+  }
+
   .laymans-item {
     background: var(--bg-card, #1e1e1e);
   }
@@ -2749,6 +2847,23 @@ h1.title,
   --light-blue: #0a2a40;
   --legal-pad-yellow: #1a1810;
   --shadow-color: rgb(0, 0, 0, 0.4);
+
+  /* Accent contrast boost (Issue #2783 finding 2) */
+  --primary-blue: #7fb3d5;
+  --accent-blue: #5dade2;
+  --primary-dark: #e3f2fd;
+
+  /* Callout panel tokens for dark mode (Issue #2783 finding 1) */
+  --callout-note-bg: color-mix(in srgb, #0d0d1a 85%, #5dade2);
+  --callout-note-border: color-mix(in srgb, #0d0d1a 60%, #5dade2);
+  --callout-warn-bg: color-mix(in srgb, #0d0d1a 85%, #d55e00);
+  --callout-warn-border: color-mix(in srgb, #0d0d1a 60%, #d55e00);
+  --callout-tip-bg: color-mix(in srgb, #0d0d1a 85%, #56b4e9);
+  --callout-tip-border: color-mix(in srgb, #0d0d1a 60%, #56b4e9);
+  --callout-key-bg: color-mix(in srgb, #0d0d1a 85%, #56b4e9);
+  --callout-key-border: color-mix(in srgb, #0d0d1a 60%, #56b4e9);
+  --callout-limit-bg: color-mix(in srgb, #0d0d1a 85%, #d55e00);
+  --callout-limit-border: color-mix(in srgb, #0d0d1a 60%, #d55e00);
 }
 
 /* Manual dark mode: forms + callout overrides (mirrors prefers-color-scheme block) */
@@ -2758,6 +2873,31 @@ h1.title,
   background-color: var(--bg-card, #1e1e1e);
   color: var(--text-light, #e0e0e0);
   border-color: var(--border-color);
+}
+
+[data-theme="dark"] .abstract-section {
+  background: var(--callout-note-bg);
+  border-left-color: var(--callout-note-border);
+}
+
+[data-theme="dark"] .keypoint-box {
+  background: var(--callout-key-bg);
+  border-left-color: var(--callout-key-border);
+}
+
+[data-theme="dark"] .limitation-box {
+  background: var(--callout-limit-bg);
+  border-left-color: var(--callout-limit-border);
+}
+
+[data-theme="dark"] .laymans-terms {
+  background: var(--callout-tip-bg);
+  border-color: var(--callout-tip-border);
+}
+
+[data-theme="dark"] .critics-corner {
+  background: var(--callout-warn-bg);
+  border-color: var(--callout-warn-border);
 }
 
 [data-theme="dark"] .laymans-item {
