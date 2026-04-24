@@ -44,7 +44,7 @@ The coefficient $c_{\text{fluid}}$ depends on joint geometry (larger joints have
 
 
 
-Recall from Chapter~\ref{ch:muscle-force-generation} that the Hill muscle model \citep{Hill1938} consists of an active contractile element (CE), a parallel elastic element (PE), and a series elastic element (SE). Crucially, the Hill model also includes a *dashpot* — a viscous element — in parallel with the contractile element. This dashpot represents the internal friction of muscle fiber sliding.
+Recall from the chapter on muscle force generation that the Hill muscle model [@Hill1938] consists of an active contractile element (CE), a parallel elastic element (PE), and a series elastic element (SE). Crucially, the Hill model also includes a *dashpot* — a viscous element — in parallel with the contractile element. This dashpot represents the internal friction of muscle fiber sliding.
 
 The force-velocity relationship in muscle is fundamentally a damping law:
 $$
@@ -79,25 +79,21 @@ These sources contribute smaller damping torques individually, but collectively 
 ### Soft Tissue Wobble Damping
 
 
-From Chapter~\ref{ch:soft_tissue_pliable}, we discussed the wobble of forearm soft tissue as the arm accelerates. This wobble involves the acceleration of skin, fat, and fascia relative to the skeleton, and internal friction within these tissues dissipates the kinetic energy of wobble. This damping is configuration-dependent and is often neglected in simple models, but becomes significant in high-acceleration maneuvers.
+From the chapter on soft tissue, we discussed the wobble of forearm soft tissue as the arm accelerates. This wobble involves the acceleration of skin, fat, and fascia relative to the skeleton, and internal friction within these tissues dissipates the kinetic energy of wobble. This damping is configuration-dependent and is often neglected in simple models, but becomes significant in high-acceleration maneuvers.
 
 ### Damping by Joint
 
 The table below provides typical damping coefficients for major joints involved in the golf swing:
 
 
-\begin{tabular}{lccc}
-\hline
-**Joint** & **Typical Range (Nm$\cdot$s/rad)** & **Primary Source** & **Notes** 
-\hline
-Shoulder (glenohumeral) & 0.5--2.0 & Synovial fluid + muscle & Large joint, high mobility 
-Shoulder (scapulothoracic) & 0.1--0.3 & Soft tissue friction & Articulation through muscle 
-Elbow & 0.15--0.5 & Synovial fluid + tendons & Tighter joint than shoulder 
-Wrist & 0.05--0.15 & Synovial fluid + ligaments & Small joint, complex kinematics 
-Trunk rotation & 2.0--5.0 & Intervertebral disc + muscle & Large muscles, distributed 
-Grip (fingers on club) & 0.02--0.1 & Skin friction + muscle & Highly variable with grip force 
-\hline
-\end{tabular}
+| Joint | Typical Range (Nm$\cdot$s/rad) | Primary Source | Notes |
+|---|---|---|---|
+| Shoulder (glenohumeral) | 0.5--2.0 | Synovial fluid + muscle | Large joint, high mobility |
+| Shoulder (scapulothoracic) | 0.1--0.3 | Soft tissue friction | Articulation through muscle |
+| Elbow | 0.15--0.5 | Synovial fluid + tendons | Tighter joint than shoulder |
+| Wrist | 0.05--0.15 | Synovial fluid + ligaments | Small joint, complex kinematics |
+| Trunk rotation | 2.0--5.0 | Intervertebral disc + muscle | Large muscles, distributed |
+| Grip (fingers on club) | 0.02--0.1 | Skin friction + muscle | Highly variable with grip force |
 
 
 These values are approximate and vary widely based on age, fitness, flexibility, and injury history. A person with arthritis might have 2--3 times higher damping in the affected joint.
@@ -106,7 +102,7 @@ These values are approximate and vary widely based on age, fitness, flexibility,
 
 
 
-Recall from Chapter~\ref{ch:parallel_mechanisms} that the unforced kinematic chain is governed by:
+Recall from earlier chapters on parallel mechanisms that the unforced kinematic chain is governed by:
 $$
 \massmat(\bm{q})\ddot{\bm{q}} + \cormat(\bm{q},\dot{\bm{q}})\dot{\bm{q}} + \gravvec(\bm{q}) = \bm{B}(\bm{q})\control + \bm{J}_c^T(\bm{q})\constraintforce
 $$
@@ -166,7 +162,7 @@ For most of this chapter, we will use linear viscous damping because:
 ### Rewriting in Control-Affine Form
 
 
-In the control-affine setting, recall that the \ztcf is:
+In the control-affine setting, recall that the ZTCF is:
 $$
 \dot{\state} = f_0(\state) + \sum_{i=1}^m g_i(\state) u_i = f_0(\state) + G(\state)\control
 $$
@@ -317,7 +313,7 @@ Your nervous system can increase damping without increasing stiffness. This is d
 
 Why would the nervous system do this? For stability. During the transition from backswing to downswing, when the direction of motion reverses, damping helps prevent overshoot and wild oscillations. The brain increases co-contraction during this phase, sacrificing a bit of energy loss for a more controlled switch.
 
-This connects to impedance control \citep{hogan1985impedance} from Chapter~\ref{ch:passive_distributed_control}. Recall that you can write:
+This connects to impedance control [@hogan1985impedance] from the chapter on passive distributed control. Recall that you can write:
 $$
 \bm{f} = \bm{K}(\bm{q} - \bm{q}_d) + \bm{D}(\dot{\bm{q}} - \dot{\bm{q}}_d)
 $$
@@ -409,7 +405,7 @@ Empirically, most golfers find that their most consistent, repeatable swings occ
 
 
 
-A typical golfer converts a significant fraction of muscular energy into useful clubhead kinetic energy, but a substantial portion is dissipated across multiple pathways. The qualitative ordering of dissipation sources---from largest to smallest---is reasonably consistent across biomechanical studies [@winter2009biomechanics], even though precise numerical budgets have not been established for the golf swing specifically.
+A typical golfer converts a significant fraction of muscular energy into useful clubhead kinetic energy, but a substantial portion is dissipated across multiple pathways. The qualitative ordering of dissipation sources---from largest to smallest---is reasonably consistent across biomechanical studies [@Winter2009], even though precise numerical budgets have not been established for the golf swing specifically.
 
 ### Sources of Dissipation
 
@@ -483,7 +479,7 @@ In a poorly timed swing, damping effects can amplify, particularly if the downsw
 ::: {.callout-warning}
 ## Practical Guidelines for Modeling Damping
 
-- **If modeling the full swing (address to follow-through)**: Include a constant damping matrix with values from the table in Section~\ref{sec:sources_damping}. Use linear viscous damping; the added complexity of nonlinear friction is not justified by the accuracy gain for most purposes.
+- **If modeling the full swing (address to follow-through)**: Include a constant damping matrix with values from the joint damping table earlier in this chapter. Use linear viscous damping; the added complexity of nonlinear friction is not justified by the accuracy gain for most purposes.
 
 - **If modeling only the downswing or impact**: Damping becomes more important. Use configuration-dependent damping $\bm{D}(\bm{q})$ with higher coefficients when joints are flexed deeply.
 
@@ -499,7 +495,7 @@ In a poorly timed swing, damping effects can amplify, particularly if the downsw
 
 
 
-Recall from Chapter~\ref{ch:flexible_shaft} that the shaft is a distributed elastic beam. In addition to stiffness, shafts have material damping — the internal friction of the composite material itself.
+Recall from the chapter on the flexible shaft that the shaft is a distributed elastic beam. In addition to stiffness, shafts have material damping — the internal friction of the composite material itself.
 
 ### Material Damping
 
