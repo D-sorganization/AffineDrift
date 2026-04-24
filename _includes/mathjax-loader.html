@@ -1,6 +1,7 @@
 <script>
   // MathJax Configuration - MUST be defined before loading MathJax
   window.MathJax = {
+    loader: { load: ['ui/lazy', 'a11y/assistive-mml', 'ui/menu'] },
     tex: {
       inlineMath: [['$', '$'], ['\\(', '\\)']],
       displayMath: [['$$', '$$'], ['\\[', '\\]']],
@@ -13,7 +14,8 @@
     },
     options: {
       skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-      ignoreHtmlClass: 'tex2jax_ignore'
+      ignoreHtmlClass: 'tex2jax_ignore',
+      menuOptions: { settings: { assistiveMml: true } }
     },
     startup: {
       ready: function() {
