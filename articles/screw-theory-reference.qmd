@@ -61,22 +61,27 @@ where $\hat{\omega}$ is the skew-symmetric matrix corresponding to the vector $\
 
 ## Twists
 
-A twist is a 6-vector
+::: {.callout-note}
+## Spatial Twist Convention
+This article adopts the **spatial (space-frame) twist** convention of Lynch and Park, *Modern Robotics* [@lynch2017modern, §3.3.2]. A spatial twist $\mathcal{V}_s \in \mathbb{R}^6$ is expressed in the fixed world frame $s$, not in the moving body frame. Body-frame twists $\mathcal{V}_b$ relate to spatial twists by $\mathcal{V}_s = \mathrm{Ad}_{T_{sb}}\,\mathcal{V}_b$, where $T_{sb} \in SE(3)$ is the body configuration relative to the space frame.
+:::
+
+A (spatial) twist is a 6-vector
 
 $$
-\mathcal{V} =
+\mathcal{V}_s =
 \begin{bmatrix}
 \omega \\ v
 \end{bmatrix},
 $$
 
-representing angular velocity $\omega$ and linear velocity $v$ of a body frame. For a reference point $q \in \mathbb{R}^3$ on the axis of motion, one has
+representing the angular velocity $\omega$ and the linear velocity $v$ of the origin of the body frame, both expressed in the space frame. For a reference point $q \in \mathbb{R}^3$ on the instantaneous screw axis expressed in the space frame, the no-slip condition gives
 
 $$
 v = -\omega \times q.
 $$
 
-This yields the Pl\"ucker representation of screws.
+This is the **spatial twist identity** in the Lynch--Park convention [@lynch2017modern, §3.3.2] and yields the Plücker representation of screws.
 
 ## Wrenches
 

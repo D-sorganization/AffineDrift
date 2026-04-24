@@ -238,7 +238,7 @@ M_{\mathrm{ext}}\ddot{q}_{\mathrm{ext}} = \tau_{\mathrm{drift,ext}},
 $$
 and the motion is governed solely by the drift.
 
-- **ZVCF** is the *instantaneous-acceleration* computation performed at $\dot{q}_{\mathrm{ext}} = 0$, in which all velocity-dependent drift terms vanish and (by convention) gravity is also held off, so the only remaining generalized forces come from $\tau_{\mathrm{input,ext}} = [B u; 0]^\top$. It is a pointwise diagnostic, not a trajectory.
+- **ZVCF** is the *instantaneous-acceleration* computation performed at $\dot{q}_{\mathrm{ext}} = 0$, in which all velocity-dependent drift terms vanish while configuration-dependent forces (gravity and elastic forces) are retained. Input is removed in this construction, so the only remaining generalized forces are the configuration-dependent subset of drift: $\tau_{\mathrm{ZVCF}} = G_{\mathrm{ext}}(q_{\mathrm{ext}}) + \tau_{\mathrm{elastic,ext}}(q_{\mathrm{ext}})$. It is a pointwise diagnostic of the drift field at zero velocity, not a trajectory. (Cross-reference: this definition agrees with the ZVCF in theory-part2 and screw-theory-reference, where $\mathcal{F}_{\mathrm{ZVCF}} = \mathcal{F}_{\mathrm{drift}}(q,\eta,0,0) \subseteq \mathcal{F}_{\mathrm{drift}}$.)
 Thus the Lagrangian formulation supports the same drift--input decomposition and counterfactual constructions as the Newton--Euler and screw-theoretic formulations.
 
 ## Summary
@@ -286,9 +286,9 @@ The Lagrangian approach, while mathematically elegant, operates under several re
 
       <div class="laymans-item">
         <h3>The "Volume Knob" Rule</h3>
-        <p>This math proves that your muscle effort adds directly to the swing's motion without getting twisted up. If you double your effort, you get double the "push" from that muscle.</p>
+        <p>This math proves that your muscle effort enters the equations of motion in a direct, linear way — it doesn't get tangled up with other forces. However, because the system as a whole is nonlinear, doubling your muscle effort does <em>not</em> simply double your clubhead speed. The swing's response to effort depends on configuration, velocity, and timing.</p>
         <div class="analogy">
-<strong>Think of it like:</strong> A volume knob on a stereo. Turning the knob doesn't change the song or the lyrics; it just makes the output louder or softer. Similarly, your muscles just "turn up the volume" on the forces acting on the club.
+<strong>Think of it like:</strong> A volume knob on a stereo connected to a complex equalizer. Turning the knob up increases the signal linearly, but the actual sound you hear also depends on the equalizer settings — which change throughout the song. Your muscles "turn up the volume" linearly on the input forces, but the final clubhead speed reflects the whole nonlinear system.
         </div>
       </div>
 
