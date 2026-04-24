@@ -22,9 +22,11 @@ We need a mathematically rigorous way to define the *exact boundary* of our funn
 
 
   Given a reference trajectory $\traj^*(t)$, a feedback controller $\control = \bm{k}(\state, t)$, and a scalar boundary function $V(\state, t)$, the set:
-  \begin{equation}
-    \mathcal{F}(t) = \{ \state \in \statespace \mid V(\state, t) \leq 1 \}
-  \end{equation}
+  
+$$
+\mathcal{F}(t) = \{ \state \in \statespace \mid V(\state, t) \leq 1 \}
+$$
+
   constitutes a valid **dynamic funnel** if the set is positively invariant under the closed-loop dynamics. That is, if $\state(0) \in \mathcal{F}(0)$, then $\state(t) \in \mathcal{F}(t)$ for all $t > 0$.
 
 
@@ -37,9 +39,11 @@ To verify invariance, we use the machinery of Lyapunov theory, adapted for traje
 
 \begin{theorem}[Funnel Invariance]
   The set $\mathcal{F}(t) = \{ \state \mid V(\state, t) \leq 1 \}$ is invariant if, on the boundary where $V(\state, t) = 1$, the function is strictly decreasing along the system trajectories:
-  \begin{equation}
-    \dot{V}(\state, t) = \frac{\partial V}{\partial t} + \nabla_{\state} V(\state, t) \cdot \bm{f}(\state, \bm{k}(\state, t)) < 0 \quad \text{for all } \state \text{ s.t. } V(\state, t) = 1.
-  \end{equation}
+  
+$$
+\dot{V}(\state, t) = \frac{\partial V}{\partial t} + \nabla_{\state} V(\state, t) \cdot \bm{f}(\state, \bm{k}(\state, t)) < 0 \quad \text{for all } \state \text{ s.t. } V(\state, t) = 1.
+$$
+
 \end{theorem}
 
 If the derivative of the boundary function points inward everywhere on the boundary, trajectories may circulate inside the funnel, but they can never escape it. For a moving target problem, we want the spatial volume of $\mathcal{F}(t)$ to shrink as $t \to t_f$, terminating in a tight bounded region at impact.
@@ -54,14 +58,16 @@ If the derivative of the boundary function points inward everywhere on the bound
 ## Sums-of-Squares (SOS) Programming
 
 
-Proving that $\dot{V} < 0$ on the boundary $V=1$ for a general nonlinear function $\bm{f}$ is famously difficult. We have an infinite number of states on the boundary to check! We circumvent this by restricting our dynamics $\bm{f}$ algorithms to polynomials (via Taylor expansion or substitution) and leveraging **Sums-of-Squares (SOS) Programming**~\cite{Boyd1994, MajumdarTedrake2017}.
+Proving that $\dot{V} < 0$ on the boundary $V=1$ for a general nonlinear function $\bm{f}$ is famously difficult. We have an infinite number of states on the boundary to check! We circumvent this by restricting our dynamics $\bm{f}$ algorithms to polynomials (via Taylor expansion or substitution) and leveraging **Sums-of-Squares (SOS) Programming**~[@Boyd1994; @MajumdarTedrake2017].
 
 A polynomial $p(x)$ is a Sum of Squares if it can be written as $p(x) = \sum_{i} q_i(x)^2$ for some polynomials $q_i(x)$. If a polynomial is SOS, it is globally non-negative. Testing if a polynomial is SOS turns out to be equivalent to solving a Semidefinite Program (SDP)—a convex optimization problem that can be solved very efficiently.
 
-We can reframe Theorem \ref{thm:funnel_invariance} using the S-procedure. To guarantee that $\dot{V}(\state, t) < 0$ whenever $V(\state, t) = 1$, we require:
-\begin{equation}
-  -\dot{V}(\state, t) - L(\state, t)(1 - V(\state, t)) \quad \text{is SOS}
-\end{equation}
+We can reframe Theorem @thm-funnel_invariance using the S-procedure. To guarantee that $\dot{V}(\state, t) < 0$ whenever $V(\state, t) = 1$, we require:
+
+$$
+-\dot{V}(\state, t) - L(\state, t)(1 - V(\state, t)) \quad \text{is SOS}
+$$
+
 where $L(\state, t)$ is a strictly positive polynomial multiplier. If $V(\state, t) = 1$, the second term vanishes, and the SOS condition forces $-\dot{V} > 0$, achieving our invariance proof!
 
 
@@ -71,9 +77,11 @@ where $L(\state, t)$ is a strictly positive polynomial multiplier. If $V(\state,
 Let us return to the double pendulum of the golf swing. Our reference trajectory $\traj^*(t)$ from Chapter 6 gives us the nominal kinematics. Our transverse LQR from Chapter 4 gives us a feedback matrix $\bm{K}(t)$ designed to stabilize deviations. We wish to compute the largest possible funnel around this sequence that the closed-loop system is mathematically guaranteed to stay inside.
 
 We define our candidate Lyapunov function as a time-varying quadratic form:
-\begin{equation}
-  V(\state, t) = (\state - \traj^*(t))^\top \bm{P}(t) (\state - \traj^*(t))
-\end{equation}
+
+$$
+V(\state, t) = (\state - \traj^*(t))^\top \bm{P}(t) (\state - \traj^*(t))
+$$
+
 where $\bm{P}(t)$ is a positive definite matrix that changes continuously along the trajectory. The funnel boundary is the time-varying ellipsoid where $V=1$. By altering $\bm{P}(t)$, we alter the shape and orientation of the funnel.
 
 \begin{example}{Volume Maximization via SDP}{vol_max}

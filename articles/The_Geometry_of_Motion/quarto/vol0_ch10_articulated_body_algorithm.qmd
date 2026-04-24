@@ -19,9 +19,11 @@ In @sec-rnea, we introduced the Recursive Newton-Euler Algorithm. That algorithm
 However, when programming a simulator like MuJoCo or a physics engine for Reinforcement Learning training environments (as used in UpstreamDrift's simulation core), we face the exact opposite problem: **Forward Dynamics**. 
 
 Given the current position ($\bm{q}$), current speed ($\dot{\bm{q}}$), the forces currently being produced by the motors ($\bm{\tau}$), and the ambient gravity, what will the resulting acceleration ($\ddot{\bm{q}}$) be?
-\begin{equation}
-   \ddot{\bm{q}} = \text{ForwardDynamics}(\bm{q}, \dot{\bm{q}}, \bm{\tau},\ \bm{g})
-\end{equation}
+
+$$
+\ddot{\bm{q}} = \text{ForwardDynamics}(\bm{q}, \dot{\bm{q}}, \bm{\tau},\ \bm{g})
+$$
+
 
 If we construct the monolithic inertia matrix $M(\bm{q})$ and solve $M(\bm{q})\ddot{\bm{q}} = \bm{\tau} - C(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} - G(\bm{q})$, we must invert an $N \times N$ matrix. Inverting matrices is mathematically catastrophic for large robots, scaling continuously worse at $O(N^3)$. ABA avoids forming and inverting $M(\bm{q})$ **not** by solving a different equation, but by performing the Schur-complement projections of $M$ implicitly as the recursion sweeps inward; the answer is identical, only the arithmetic is cheaper.
 
@@ -60,9 +62,11 @@ Starting at the root (the ground), propagate outward to the leaves (the end effe
 Starting at the leaves and propagating inward towards the root base. 
 At the tip, the Articulated Inertia is identical to the standard rigid Spatial Inertia: $\mathcal{I}_A^{tip} = \mathcal{I}_s^{tip}$.
 But as you step inward to link $i$, the Articulated Inertia of its child $i+1$ drops its massive algebraic weight across the joint hinge $\screw_i$ via a recursive equation:
-\begin{equation}
-   \mathcal{I}_A^i = \mathcal{I}_s^i + \mathcal{I}_A^{i+1} - \frac{ (\mathcal{I}_A^{i+1} \screw_{i+1}) (\mathcal{I}_A^{i+1} \screw_{i+1})^T }{ \screw_{i+1}^T \mathcal{I}_A^{i+1} \screw_{i+1} }
-\end{equation}
+
+$$
+\mathcal{I}_A^i = \mathcal{I}_s^i + \mathcal{I}_A^{i+1} - \frac{ (\mathcal{I}_A^{i+1} \screw_{i+1}) (\mathcal{I}_A^{i+1} \screw_{i+1})^T }{ \screw_{i+1}^T \mathcal{I}_A^{i+1} \screw_{i+1} }
+$$
+
 
 The denominator $\screw^T \mathcal{I}_A \screw$ acts as a scalar projection, mathematically extracting the single degree of freedom of the motor out of the massive $6 \times 6$ inertia block. The fraction is simply projecting the inertia tensor across the geometric pin joint.
 
@@ -71,9 +75,11 @@ The denominator $\screw^T \mathcal{I}_A \screw$ acts as a scalar projection, mat
 
 Once the Articulated Inertia has propagated completely to the base, we reverse direction one final time.
 Because we know the true apparent "weight" of the entire chain resting on the base link, we can immediately solve for the exact scalar acceleration $\ddot{q}_1$ of the first joint based on its applied torque $\tau_1$.
-\begin{equation}
-   \ddot{q}_i = \frac{\tau_i - \screw_i^T \bm{p}_i}{\screw_i^T \mathcal{I}_A^i \screw_i}
-\end{equation}
+
+$$
+\ddot{q}_i = \frac{\tau_i - \screw_i^T \bm{p}_i}{\screw_i^T \mathcal{I}_A^i \screw_i}
+$$
+
 
 Once we know $\ddot{q}_1$, we use it to find the absolute spatial acceleration $\dot{\twist}_1$ of link 1. Since Link 2 is attached to Link 1, we propagate this acceleration outward to instantly calculate $\ddot{q}_2, \ddot{q}_3, \dots, \ddot{q}_n$. 
 
@@ -84,7 +90,7 @@ Once we know $\ddot{q}_1$, we use it to find the absolute spatial acceleration $
 Here is python pseudocode demonstrating how the recursive articulated inertia loop works.
 
 
-```python
+“`python
 
 import numpy as np
 
@@ -127,13 +133,13 @@ def compute_articulated_inertias(spatial_inertias, screw_axes, n_links):
 
 # I_A[0] now contains the complete effective Spatial Inertia dragging on the base.
 
-```
+“`
 
 ### Full Three-Pass ABA
 
 The inertia recursion above computes articulated inertias assuming zero spatial velocity.  For a moving system the Coriolis and centrifugal **bias forces** must be carried through the inward sweep, and a final outward sweep is needed to recover the joint accelerations.  The complete algorithm is:
 
-```python
+“`python
 def aba(q, q_dot, tau, spatial_inertias, screw_axes,
         joint_transforms, gravity_vector=np.array([0.0, 0.0, -9.81])):
     """
@@ -198,7 +204,7 @@ def aba(q, q_dot, tau, spatial_inertias, screw_axes,
                     + ad_matrix(V[i + 1]) @ (S * q_dot[i]))
 
     return q_ddot
-```
+“`
 
 Two practical notes.  First, the inertia-only recursion at the top of this section is a special case of Pass 2 with $\dot{\bm{q}} = \bm{0}$ and $\bm{\tau} = \bm{0}$; it is genuinely useful when you only need the effective spatial inertia felt at the base.  Second, the gravity seeding must match Chapter 7's RNEA seeding exactly—otherwise `aba(q, q_dot=0, tau=G(q))` will not return $\ddot{\bm{q}} = \bm{0}$ on a system at rest, which is the cheapest correctness check available.
 
@@ -225,9 +231,11 @@ A subtle but profound fact emerges when combining Articulated Body Algorithm wit
 
 In chapters on machine learning and optimal control, we often need to compute the derivatives of the dynamics with respect to the state and control inputs. That is, if we have accelerations $\ddot{\bm{q}} = \text{ForwardDynamics}(\bm{q}, \dot{\bm{q}}, \bm{\tau})$, we need:
 
-\begin{equation}
-   \frac{\partial \ddot{\bm{q}}}{\partial \bm{q}}, \quad \frac{\partial \ddot{\bm{q}}}{\partial \dot{\bm{q}}}, \quad \frac{\partial \ddot{\bm{q}}}{\partial \bm{\tau}}
-\end{equation}
+
+$$
+\frac{\partial \ddot{\bm{q}}}{\partial \bm{q}}, \quad \frac{\partial \ddot{\bm{q}}}{\partial \dot{\bm{q}}}, \quad \frac{\partial \ddot{\bm{q}}}{\partial \bm{\tau}}
+$$
+
 
 Rather than deriving these derivatives by hand (which quickly becomes intractable for complex systems), we can wrap the ABA algorithm in an automatic differentiation framework (such as JAX, PyTorch, or TensorFlow). The AD system automatically tracks how each intermediate computation depends on the inputs, and by the chain rule, produces exact derivatives of the final accelerations with respect to any parameter.
 

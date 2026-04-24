@@ -22,14 +22,16 @@ Crucially, *the exact clock time that impact occurs does not matter*. A golfer h
 
 
   Find the state trajectory $\state(t)$, control input $\control(t)$, and terminal time $t_f$ that minimize the cost functional:
-  \begin{equation}
-    J = \phi(\state(t_f)) + \int_0^{t_f} L(\state(t), \control(t)) \dt
-  \end{equation}
+  
+$$
+J = \phi(\state(t_f)) + \int_0^{t_f} L(\state(t), \control(t)) \dt
+$$
+
   subject to the dynamics and constraints:
   \begin{align}
-    \dot{\state}(t) &= \bm{f}(\state(t), \control(t)) \qquad &\text{(Dynamics)}\\
-    \bm{h}(\state(t), \control(t)) &\leq \bm{0} \qquad &\text{(Path constraints)}\\
-    \psi(\state(t_f)) &= \bm{0} \qquad &\text{(Terminal manifold/Moving goal)}\\
+    \dot{\state}(t) &= \bm{f}(\state(t), \control(t)) \qquad &\text{(Dynamics)}
+    \bm{h}(\state(t), \control(t)) &\leq \bm{0} \qquad &\text{(Path constraints)}
+    \psi(\state(t_f)) &= \bm{0} \qquad &\text{(Terminal manifold/Moving goal)}
     \state(0) &= \state_0 \qquad &\text{(Initial state)}
   \end{align}
 
@@ -43,7 +45,7 @@ In the golf downswing, the terminal cost $\phi(\state(t_f))$ might be negative c
 
 The OCP described above occurs in infinite-dimensional function space. To solve it on a computer, we must transcribe it into a finite-dimensional Nonlinear Programming problem (NLP):
 \begin{align*}
-  \min_{\bm{w}} \quad & f(\bm{w}) \\
+  \min_{\bm{w}} \quad & f(\bm{w}) 
   \text{subject to} \quad & \bm{c}(\bm{w}) \leq \bm{0},
 \end{align*}
 where $\bm{w}$ is a large vector of decision variables. How we discretize the integrals and differential equations defines the transcription method. We will focus on two modern approaches: **Direct Shooting** and **Direct Collocation**.
@@ -55,9 +57,11 @@ where $\bm{w}$ is a large vector of decision variables. How we discretize the in
 In direct multi-shooting, we break the time interval $[0, t_f]$ into $N$ segments. The decision variables are the control parameters $\control_k$ on each interval and the state values $\state_k$ at the beginning of each interval.
 
 The dynamic constraint $\dot{\state} = \bm{f}(\state, \control)$ is enforced by numerical integration (e.g., Runge-Kutta). We require that the integrated state at the end of interval $k$ exactly matches the assumed starting state of interval $k+1$:
-\begin{equation}
-  \state_{k+1} - \bm{\Phi}(\state_k, \control_k, \Delta t) = \bm{0} \qquad \text{(Defect constraint)}
-\end{equation}
+
+$$
+\state_{k+1} - \bm{\Phi}(\state_k, \control_k, \Delta t) = \bm{0} \qquad \text{(Defect constraint)}
+$$
+
 where $\bm{\Phi}$ represents the numerical integrator step. Multi-shooting is excellent for highly nonlinear dynamics because it keeps the integration intervals short, preventing the massive nonlinear sensitivities that plague single-shooting methods.
 
 
@@ -67,9 +71,11 @@ where $\bm{\Phi}$ represents the numerical integrator step. Multi-shooting is ex
 Direct Collocation takes this a step further. We represent both the state trajectory and the control signal as piecewise polynomials (e.g., cubic splines for state, linear splines for control). The decision variables are the coefficients of these polynomials, typically located at discrete **collocation points**.
 
 Instead of using a numerical integrator, we enforce the differential equation algebraicaly at the collocation points:
-\begin{equation}
-  \dot{\tilde{\state}}(t_c) - \bm{f}(\tilde{\state}(t_c), \tilde{\control}(t_c)) = \bm{0} \qquad \text{(Collocation constraint)}
-\end{equation}
+
+$$
+\dot{\tilde{\state}}(t_c) - \bm{f}(\tilde{\state}(t_c), \tilde{\control}(t_c)) = \bm{0} \qquad \text{(Collocation constraint)}
+$$
+
 where $\tilde{\state}$ and $\tilde{\control}$ are the polynomial approximations. 
 
 
@@ -83,9 +89,11 @@ where $\tilde{\state}$ and $\tilde{\control}$ are the polynomial approximations.
 
 
 Recall from Chapter 5 that the underactuated dynamics enforce a strict algebraic constraint on the system:
-\begin{equation}
-  \Bmat^\perp(\state) \Bigl[ \Mmat(\state)\ddot{\state} + \Cmat(\state, \dot{\state})\dot{\state} + \gvec(\state) \Bigr] = \bm{0}.
-\end{equation}
+
+$$
+\Bmat^\perp(\state) \Bigl[ \Mmat(\state)\ddot{\state} + \Cmat(\state, \dot{\state})\dot{\state} + \gvec(\state) \Bigr] = \bm{0}.
+$$
+
 
 When optimizing for a golf swing, direct collocation handles this underactuation organically. We do not need to explicitly partition the variables into actuated and unactuated sets for the solver. The collocation constraint $\dot{\state} - \bm{f} = \bm{0}$ already implicitly contains the passive dynamic constraints. 
 
@@ -112,9 +120,11 @@ But as we argued in Chapter 1, biological systems and athletes do not optimize f
 
 
 We modify our deterministic cost $J = \phi(\state(t_f)) + \int L$ into a stochastic expectation:
-\begin{equation}
-  \min_{\traj^*} \quad \mathbb{E}\left[ \phi(\state(t_f, \bm{w})) \right] + \lambda \cdot \mathrm{Var}\left[ \psi(\state(t_f, \bm{w})) \right]
-\end{equation}
+
+$$
+\min_{\traj^*} \quad \mathbb{E}\left[ \phi(\state(t_f, \bm{w})) \right] + \lambda \cdot \mathrm{Var}\left[ \psi(\state(t_f, \bm{w})) \right]
+$$
+
 where $\bm{w} \sim \mathcal{N}(0, \Sigma_w)$ represents signal-dependent motor noise (a known property of human muscle actuation, where noise scales proportionally to the applied torque).
 
 To solve this in a collocation framework without massive Monte Carlo simulations, we use **Covariance Steering** or **Linear Covariance Analysis**. We augment the state vector $\state(t)$ with its local covariance matrix $\bm{\Sigma}(t)$. The dynamics of $\bm{\Sigma}(t)$ are propagated alongside the nominal trajectory using the linearized Jacobian matrices along the path. 
@@ -125,20 +135,13 @@ The optimizer is now forced to "widen the funnel" as it approaches the moving go
 ## Summary
 
 
-\begin{center}
-\renewcommand{\arraystretch}{1.4}
-\begin{tabular}{@{} l p{8.5cm} @{}}
-  \toprule
-  **Concept** & **Significance** \\
-  \midrule
-  Moving Target OCP & Finding a trajectory that optimizes terminal kinematics when intersecting a spatial manifold, without prescribing the clock time. \\
-  Multi-Shooting & Discretizing the time domain into segments, using numerical integrators to enforce dynamics constraints between nodes. \\
-  Direct Collocation & Representing the entire trajectory as splines and enforcing dynamics algebraically at discrete points arrayed along the trajectory. \\
-  Passive Exploitation & Solvers naturally optimize underactuated topologies by exploiting coupling matrices ($M_{21}, C_2$). \\
-  Stochastic Robustness & Augmenting the OCP with expected variance to ensure the resulting trajectory can be consistently executed by noisy nonlinear plants. \\
-  \bottomrule
-\end{tabular}
-\end{center}
+  
+  | **Concept** | **Significance** |
+| Moving Target OCP | Finding a trajectory that optimizes terminal kinematics when intersecting a spatial manifold, without prescribing the clock time. |
+| Multi-Shooting | Discretizing the time domain into segments, using numerical integrators to enforce dynamics constraints between nodes. |
+| Direct Collocation | Representing the entire trajectory as splines and enforcing dynamics algebraically at discrete points arrayed along the trajectory. |
+| Passive Exploitation | Solvers naturally optimize underactuated topologies by exploiting coupling matrices ($M_{21}, C_2$). |
+| Stochastic Robustness | Augmenting the OCP with expected variance to ensure the resulting trajectory can be consistently executed by noisy nonlinear plants. |
 
 
 
@@ -148,20 +151,13 @@ Determining the shape of the reference trajectory is the cornerstone of Control 
 ## Exercises
 
 
-\begin{enumerate}[label=**6.\arabic*.**, leftmargin=1.5cm]
 
-\item **(Free Terminal Time Formulation.)** Explain how one sets up an OCP where final time $t_f$ is a decision variable in a fixed-grid Direct Collocation solver. (Hint: consider scaling time $t = \tau \cdot t_f$, where $\tau \in [0, 1]$). Show how the dynamic constraint $\dot{\state} = \bm{f}$ changes under this substitution.
-
-\item **(Kinematic Goals vs Setpoints.)** You are optimizing a baseball bat swing. Your state is $(\theta, \dot{\theta})$. Assume the ball arrives at the plate between $t=0.5$ and $t=0.6$ seconds. Formulate the path constraint and the terminal manifold constraint $\psi$ assuming you want maximum $\dot{\theta}$ when $\theta = \pi/2$, but the exact time of impact within that window does not matter.
-
-\item **(Signal-Dependent Noise Penalty.)** Human muscle torque output $\tau$ has variance $\sigma^2 = k |\tau|^2$. Write a modified integral cost function $L(\state, \tau)$ that penalizes the introduction of variance into the system. Interpret what this does to the optimal trajectory shape.
-
-\end{enumerate}
+1. **(Free Terminal Time Formulation.)** Explain how one sets up an OCP where final time $t_f$ is a decision variable in a fixed-grid Direct Collocation solver. (Hint: consider scaling time $t = \tau \cdot t_f$, where $\tau \in [0, 1]$). Show how the dynamic constraint $\dot{\state} = \bm{f}$ changes under this substitution.
+2. **(Kinematic Goals vs Setpoints.)** You are optimizing a baseball bat swing. Your state is $(\theta, \dot{\theta})$. Assume the ball arrives at the plate between $t=0.5$ and $t=0.6$ seconds. Formulate the path constraint and the terminal manifold constraint $\psi$ assuming you want maximum $\dot{\theta}$ when $\theta = \pi/2$, but the exact time of impact within that window does not matter.
+3. **(Signal-Dependent Noise Penalty.)** Human muscle torque output $\tau$ has variance $\sigma^2 = k |\tau|^2$. Write a modified integral cost function $L(\state, \tau)$ that penalizes the introduction of variance into the system. Interpret what this does to the optimal trajectory shape.
 
 
-\begin{center}
-  \rule{0.5\textwidth}{0.4pt}\\[0.5cm]
-  {\small\itshape
-  The perfect motion is rarely the fastest.\\
-  It is the one that survives reality.}
-\end{center}
+
+---
+  *The perfect motion is rarely the fastest.
+  It is the one that survives reality.*

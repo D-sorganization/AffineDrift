@@ -38,9 +38,11 @@ Do we need to know acceleration ($\ddot{x}$) as part of the state? According to 
   The state vector $\state$ is the minimum set of mathematical variables completely describing the condition of a dynamic system at a specific point in time. Formally: $\state(t)$ is a **state** if the future evolution of the system under a known input $\control(\cdot)$ depends only on $\state(t)$ and $\control(\tau)$ for $\tau \ge t$—not on the history of $\state(\tau)$ for $\tau < t$. This is the **Markov property** and is what distinguishes a true state from a mere observation.
 
   For our train, it is a 2-dimensional vector:
-  \begin{equation}
-      \state = \begin{bmatrix} x_1 \\ x_2 \end{bmatrix} = \begin{bmatrix} \text{position} \\ \text{velocity} \end{bmatrix} = \begin{bmatrix} q \\ \dot{q} \end{bmatrix}
-  \end{equation}
+  
+$$
+\state = \begin{bmatrix} x_1  x_2 \end{bmatrix} = \begin{bmatrix} \text{position}  \text{velocity} \end{bmatrix} = \begin{bmatrix} q  \dot{q} \end{bmatrix}
+$$
+
 
 :::
 
@@ -61,7 +63,7 @@ The answer is no, and the distinction is beautiful.
 ## The Hierarchy of Motion
 
 | Quantity | What it is | Where it lives | Can you add two of them? |
-|----------|-----------|---------------|------------------------|
+| --- | --- | --- | --- |
 | Position $q$ | A point on a surface | The configuration manifold $\mathcal{Q}$ | **No** (adding two GPS coordinates is meaningless) |
 | Velocity $\dot{q}$ | An arrow at a point | The tangent space $T_q\mathcal{Q}$ | **Yes** (velocities add as vectors) |
 | Acceleration $\ddot{q}$ | How the arrow changes | The tangent space $T_q\mathcal{Q}$ | **Yes** (accelerations add as vectors) |
@@ -97,15 +99,17 @@ An astonishing realization for beginners is that when a dynamic system (like an 
 The immense power of state space is that it allows us to convert complex, higher-order physical differential equations into simple, first-order vector math.
 
 Consider a simple mass-spring-damper system governed by a second-order differential equation:
-\begin{equation}
-  m\ddot{q} + c\dot{q} + kq = u
-\end{equation}
+
+$$
+m\ddot{q} + c\dot{q} + kq = u
+$$
+
 where $q$ is position, $m$ is mass, $c$ is damping, $k$ is stiffness, and $u$ is our control force.
 
 By defining our state vector as $\state = [x_1, x_2]^T = [q, \dot{q}]^T$, we can rewrite this physical equation as purely mathematical first-order derivatives:
 
 \begin{align}
-  \dot{x}_1 &= x_2 \\
+  \dot{x}_1 &= x_2 
   \dot{x}_2 &= \frac{1}{m}(u - cx_2 - kx_1)
 \end{align}
 
@@ -115,9 +119,11 @@ This is called the **State Space Representation**. It is universally written in 
 ::: {.callout-note}
 
   Every autonomous control system can be written as a first-order vector differential equation mapping current state and current control commands to the velocity of the state vector:
-  \begin{equation}
-      \bm{\dot{x}} = \bm{f}(\state, \control, t)
-  \end{equation}
+  
+$$
+\bm{\dot{x}} = \bm{f}(\state, \control, t)
+$$
+
   This vector field $\bm{f}$ dictates how the system "flows" through the abstract geometry of the state space. 
 
 :::

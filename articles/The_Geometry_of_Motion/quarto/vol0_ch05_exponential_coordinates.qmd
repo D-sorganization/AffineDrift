@@ -19,9 +19,11 @@ To govern this continuous motion, mathematicians map the curved space of Rotatio
 Let us revisit the concept of rotating around a single fixed unit axis $\hat{\bm{\omega}}$ by an angle $\theta$. 
 
 If we multiply the physical axis $\hat{\bm{\omega}} \in \Reals^3$ by the angle $\theta \in \Reals$, we get a new 3-dimensional vector:
-\begin{equation}
-   \bm{r} = \hat{\bm{\omega}}\theta
-\end{equation}
+
+$$
+\bm{r} = \hat{\bm{\omega}}\theta
+$$
+
 
 This incredibly compact vector $\bm{r} \in \Reals^3$ contains all the information needed to describe any 3D rotation. It is known as the **Exponential Coordinate** representation of a rotation. 
 
@@ -42,15 +44,19 @@ This incredibly compact vector $\bm{r} \in \Reals^3$ contains all the informatio
 To convert our flat, 3-element Exponential Coordinate $\hat{\bm{\omega}}\theta$ into the true, curved $3 \times 3$ Rotation Matrix $R \in \SO$, we must use the **Matrix Exponential**.
 
 First, we expand the 3-element vector $\hat{\bm{\omega}}$ into a $3 \times 3$ skew-symmetric matrix, denoted as $[\hat{\bm{\omega}}]$:
-\begin{equation}
-  [\hat{\bm{\omega}}] = \begin{bmatrix} 0 & -\omega_3 & \omega_2 \\ \omega_3 & 0 & -\omega_1 \\ -\omega_2 & \omega_1 & 0 \end{bmatrix} \in \so
-\end{equation}
+
+$$
+[\hat{\bm{\omega}}] = \begin{bmatrix} 0 & -\omega_3 & \omega_2  \omega_3 & 0 & -\omega_1  -\omega_2 & \omega_1 & 0 \end{bmatrix} \in \so
+$$
+
 
 This skew-symmetric matrix is exactly the Lie Algebra $\so$. It represents the flat tangent space attached to the identity rotation. The Matrix Exponential physically wraps this flat tangent vector around the curved surface of $\SO$ to produce our final Rotation Matrix:
 
-\begin{equation}
-   R = \exp([\hat{\bm{\omega}}]\theta) = I + \sin\theta [\hat{\bm{\omega}}] + (1 - \cos\theta)[\hat{\bm{\omega}}]^2
-\end{equation}
+
+$$
+R = \exp([\hat{\bm{\omega}}]\theta) = I + \sin\theta [\hat{\bm{\omega}}] + (1 - \cos\theta)[\hat{\bm{\omega}}]^2
+$$
+
 
 This formula is known as **Rodrigues' Formula**. It bridges the vector world (where things are just numbers) and the geometric world (where things are rotation matrices).
 
@@ -62,9 +68,11 @@ What if we already have a Rotation Matrix $R$, perhaps from a camera sensor trac
 
 We must perform the exact inverse operation: the **Matrix Logarithm**. The Matrix Logarithm takes a curved element from the Lie Group $R \in \SO$ and perfectly flattens it back onto the tangent space to extract the axis-angle representation.
 
-\begin{equation}
-   [\hat{\bm{\omega}}]\theta = \log(R)
-\end{equation}
+
+$$
+[\hat{\bm{\omega}}]\theta = \log(R)
+$$
+
 
 ::: {.callout-note}
 
@@ -83,9 +91,11 @@ We must perform the exact inverse operation: the **Matrix Logarithm**. The Matri
 In Chapter 3, we briefly introduced Unit Quaternions $q \in \Reals^4$ as a blazing-fast mapping of $\SO$. Their speed and lack of singularities come directly from their deep connection to Exponential Coordinates.
 
 Recall the Quaternion definition:
-\begin{equation}
-  q = \begin{bmatrix} \cos(\theta/2) \\ \hat{\bm{\omega}} \sin(\theta/2) \end{bmatrix}
-\end{equation}
+
+$$
+q = \begin{bmatrix} \cos(\theta/2)  \hat{\bm{\omega}} \sin(\theta/2) \end{bmatrix}
+$$
+
 
 A quaternion is quite literally the Exponential Coordinate vector ($\hat{\bm{\omega}}\theta$) passed through a sine/cosine wave so that it algebraically bounds itself to a unit hypersphere. Quaternions explicitly preserve the pure geometric intention of the axis $\hat{\bm{\omega}}$ and the continuous rotation angle $\theta$.
 

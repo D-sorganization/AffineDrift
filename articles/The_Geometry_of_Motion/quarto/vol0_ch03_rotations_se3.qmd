@@ -41,9 +41,11 @@ Since our control theory and geometric motion algorithms fundamentally rely on c
 To map 3D orientation without singularities in all continuous space, we define a rotation by looking at the purely physical unit vectors defining the Body Frame $B$: the $\hat{x}_b, \hat{y}_b, \hat{z}_b$ axes.
 
 If we write these three body axes explicitly in the coordinates of the Space Frame $S$, we can stack them vertically into a $3 \times 3$ matrix:
-\begin{equation}
-   R = \begin{bmatrix} | & | & | \\ \hat{x}_b & \hat{y}_b & \hat{z}_b \\ | & | & | \end{bmatrix} \in \Reals^{3 \times 3}
-\end{equation}
+
+$$
+R = \begin{bmatrix} | & | & |  \hat{x}_b & \hat{y}_b & \hat{z}_b  | & | & | \end{bmatrix} \in \Reals^{3 \times 3}
+$$
+
 
 This is a **Rotation Matrix**. 
 
@@ -72,9 +74,11 @@ To solve this, William Rowan Hamilton invented **Quaternions** ($\mathcal{H}$) i
 2. An angle $\theta$ denoting how far to spin around that axis.
 
 A Unit Quaternion $q$ mathematically encodes these into 4 variables representing an exponential scalar and vector map:
-\begin{equation}
-  q = \begin{bmatrix} q_0 \\ q_1 \\ q_2 \\ q_3 \end{bmatrix} = \begin{bmatrix} \cos(\theta/2) \\ \hat{\bm{\omega}}_x \sin(\theta/2) \\ \hat{\bm{\omega}}_y \sin(\theta/2) \\ \hat{\bm{\omega}}_z \sin(\theta/2) \end{bmatrix} \in \Reals^4
-\end{equation}
+
+$$
+q = \begin{bmatrix} q_0  q_1  q_2  q_3 \end{bmatrix} = \begin{bmatrix} \cos(\theta/2)  \hat{\bm{\omega}}_x \sin(\theta/2)  \hat{\bm{\omega}}_y \sin(\theta/2)  \hat{\bm{\omega}}_z \sin(\theta/2) \end{bmatrix} \in \Reals^4
+$$
+
 
 By simply enforcing that the sum of the squares of these 4 variables equals 1 ($q_0^2 + q_1^2 + q_2^2 + q_3^2 = 1$), a Unit Quaternion provides a singularity-free, ultra-fast algebraic mapping of $\SO$.
 

@@ -67,9 +67,11 @@ Since our control theory and geometric motion algorithms fundamentally rely on c
 To map 3D orientation without singularities in all continuous space, we define a rotation by looking at the purely physical unit vectors defining the Body Frame $B$: the $\hat{x}_b, \hat{y}_b, \hat{z}_b$ axes.
 
 If we write these three body axes explicitly in the coordinates of the Space Frame $S$, we can stack them vertically into a $3 \times 3$ matrix:
-\begin{equation}
-   R = \begin{bmatrix} | & | & | \\ \hat{x}_b & \hat{y}_b & \hat{z}_b \\ | & | & | \end{bmatrix} \in \Reals^{3 \times 3}
-\end{equation}
+
+$$
+R = \begin{bmatrix} | & | & |  \hat{x}_b & \hat{y}_b & \hat{z}_b  | & | & | \end{bmatrix} \in \Reals^{3 \times 3}
+$$
+
 
 This is a **Rotation Matrix**. 
 
@@ -98,9 +100,11 @@ To solve this, William Rowan Hamilton invented **Quaternions** ($\mathcal{H}$) i
 2. An angle $\theta$ denoting how far to spin around that axis.
 
 A Unit Quaternion $q$ mathematically encodes these into 4 variables representing an exponential scalar and vector map:
-\begin{equation}
-  q = \begin{bmatrix} q_0 \\ q_1 \\ q_2 \\ q_3 \end{bmatrix} = \begin{bmatrix} \cos(\theta/2) \\ \hat{\bm{\omega}}_x \sin(\theta/2) \\ \hat{\bm{\omega}}_y \sin(\theta/2) \\ \hat{\bm{\omega}}_z \sin(\theta/2) \end{bmatrix} \in \Reals^4
-\end{equation}
+
+$$
+q = \begin{bmatrix} q_0  q_1  q_2  q_3 \end{bmatrix} = \begin{bmatrix} \cos(\theta/2)  \hat{\bm{\omega}}_x \sin(\theta/2)  \hat{\bm{\omega}}_y \sin(\theta/2)  \hat{\bm{\omega}}_z \sin(\theta/2) \end{bmatrix} \in \Reals^4
+$$
+
 
 By simply enforcing that the sum of the squares of these 4 variables equals 1 ($q_0^2 + q_1^2 + q_2^2 + q_3^2 = 1$), a Unit Quaternion provides a singularity-free, ultra-fast algebraic mapping of $\SO$.
 
@@ -114,7 +118,7 @@ Quaternion conventions differ between software stacks, and using the wrong one s
 **Layout (scalar-first Hamilton):** we write $q = [q_0,\, q_1,\, q_2,\, q_3]^T = [w,\, \bm{v}]^T$ with the scalar part $w = \cos(\theta/2)$ first, matching Lynch & Park [@lynch2017modern] and MuJoCo.
 
 **Multiplication (Hamilton product):**
-$$ q_1 \otimes q_2 = \begin{bmatrix} w_1 w_2 - \bm{v}_1 \cdot \bm{v}_2 \\[2pt] w_1 \bm{v}_2 + w_2 \bm{v}_1 + \bm{v}_1 \times \bm{v}_2 \end{bmatrix}. $$
+$$ q_1 \otimes q_2 = \begin{bmatrix} w_1 w_2 - \bm{v}_1 \cdot \bm{v}_2  w_1 \bm{v}_2 + w_2 \bm{v}_1 + \bm{v}_1 \times \bm{v}_2 \end{bmatrix}. $$
 
 **Active rotation, composition, and vector action.** A quaternion rotates vectors (active convention). For two successive rotations $R_1$ then $R_2$, the composed rotation is $R = R_2 R_1$, which in quaternion form is $q = q_2 \otimes q_1$ (left-to-right temporal order). A vector transforms as $\bm{v}' = q \otimes [0,\, \bm{v}] \otimes q^*$ where $q^* = [w,\, -\bm{v}]$ is the conjugate.
 
@@ -123,7 +127,6 @@ $$ q_1 \otimes q_2 = \begin{bmatrix} w_1 w_2 - \bm{v}_1 \cdot \bm{v}_2 \\[2pt] w
 **Interop with common stacks (as of 2026):**
 
 | Stack | Layout | Reorder from our $[w, x, y, z]$ |
-|---|---|---|
 | MuJoCo 3.x | scalar-first $[w, x, y, z]$ | none (`q_mj = q`) |
 | Pinocchio 3.x / Eigen | scalar-last $[x, y, z, w]$ | `q_pin = [q[1], q[2], q[3], q[0]]` |
 | ROS `tf2` / `geometry_msgs` | scalar-last $[x, y, z, w]$ | same as Pinocchio |

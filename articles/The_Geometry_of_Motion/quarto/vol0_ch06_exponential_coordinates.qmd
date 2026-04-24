@@ -29,9 +29,11 @@ To govern this continuous motion, mathematicians map the curved space of Rotatio
 Let us revisit the concept of rotating around a single fixed unit axis $\hat{\bm{\omega}}$ by an angle $\theta$. 
 
 If we multiply the physical axis $\hat{\bm{\omega}} \in \Reals^3$ by the angle $\theta \in \Reals$, we get a new 3-dimensional vector:
-\begin{equation}
-   \bm{r} = \hat{\bm{\omega}}\theta
-\end{equation}
+
+$$
+\bm{r} = \hat{\bm{\omega}}\theta
+$$
+
 
 This incredibly compact vector $\bm{r} \in \Reals^3$ contains all the information needed to describe any 3D rotation. It is known as the **Exponential Coordinate** representation of a rotation. 
 
@@ -52,15 +54,19 @@ This incredibly compact vector $\bm{r} \in \Reals^3$ contains all the informatio
 To convert our flat, 3-element Exponential Coordinate $\hat{\bm{\omega}}\theta$ into the true, curved $3 \times 3$ Rotation Matrix $R \in \SO$, we must use the **Matrix Exponential**.
 
 First, we expand the 3-element vector $\hat{\bm{\omega}}$ into a $3 \times 3$ skew-symmetric matrix, denoted as $[\hat{\bm{\omega}}]$:
-\begin{equation}
-  [\hat{\bm{\omega}}] = \begin{bmatrix} 0 & -\omega_3 & \omega_2 \\ \omega_3 & 0 & -\omega_1 \\ -\omega_2 & \omega_1 & 0 \end{bmatrix} \in \so
-\end{equation}
+
+$$
+[\hat{\bm{\omega}}] = \begin{bmatrix} 0 & -\omega_3 & \omega_2  \omega_3 & 0 & -\omega_1  -\omega_2 & \omega_1 & 0 \end{bmatrix} \in \so
+$$
+
 
 This skew-symmetric matrix is exactly the Lie Algebra $\so$. It represents the flat tangent space attached to the identity rotation. The Matrix Exponential physically wraps this flat tangent vector around the curved surface of $\SO$ to produce our final Rotation Matrix:
 
-\begin{equation}
-   R = e^{[\hat{\bm{\omega}}]\theta} = I + \sin\theta [\hat{\bm{\omega}}] + (1 - \cos\theta)[\hat{\bm{\omega}}]^2
-\end{equation}
+
+$$
+R = e^{[\hat{\bm{\omega}}]\theta} = I + \sin\theta [\hat{\bm{\omega}}] + (1 - \cos\theta)[\hat{\bm{\omega}}]^2
+$$
+
 
 This formula is known as **Rodrigues' Formula**. It bridges the vector world (where things are just numbers) and the geometric world (where things are rotation matrices).
 
@@ -70,7 +76,7 @@ This formula is known as **Rodrigues' Formula**. It bridges the vector world (wh
 The key algebraic identity for a unit-axis skew matrix is $[\hat{\bm{\omega}}]^3 = -[\hat{\bm{\omega}}]$
 (proved by direct computation using $\|\hat{\bm{\omega}}\|=1$). Applying this repeatedly gives:
 
-$$[\hat{\bm{\omega}}]^{2k+1} = (-1)^k [\hat{\bm{\omega}}], \qquad [\hat{\bm{\omega}}]^{2k+2} = (-1)^k [\hat{\bm{\omega}}]^2, \qquad k = 0,1,2,\ldots$$
+$$[\hat{\bm{\omega}}]^{2k+1} = (-1)^k [\hat{\bm{\omega}}], \qquad [\hat{\bm{\omega}}]^{2k+2} = (-1)^k [\hat{\bm{\omega}}]^2, \qquad k = 0,1,2,...$$
 
 Expanding the matrix exponential as a Taylor series and splitting even and odd powers:
 
@@ -92,15 +98,19 @@ Rodrigues' formula handles rotations alone. A body in free space can also transl
 
 Let $\screw = [\hat{\bm{\omega}};\, \bm{v}] \in \se$ with $\|\hat{\bm{\omega}}\| = 1$ and rotation angle $\theta$. The closed-form SE(3) exponential is
 
-\begin{equation}
-  e^{[\screw]\theta} = \begin{bmatrix} e^{[\hat{\bm{\omega}}]\theta} & G(\hat{\bm{\omega}}, \theta)\,\bm{v} \\ \bm{0} & 1 \end{bmatrix},
-\end{equation}
+
+$$
+e^{[\screw]\theta} = \begin{bmatrix} e^{[\hat{\bm{\omega}}]\theta} & G(\hat{\bm{\omega}}, \theta)\,\bm{v}  \bm{0} & 1 \end{bmatrix},
+$$
+
 
 where $e^{[\hat{\bm{\omega}}]\theta}$ is Rodrigues' formula above and
 
-\begin{equation}
-  G(\hat{\bm{\omega}}, \theta) = I\,\theta + (1 - \cos\theta)\,[\hat{\bm{\omega}}] + (\theta - \sin\theta)\,[\hat{\bm{\omega}}]^2.
-\end{equation}
+
+$$
+G(\hat{\bm{\omega}}, \theta) = I\,\theta + (1 - \cos\theta)\,[\hat{\bm{\omega}}] + (\theta - \sin\theta)\,[\hat{\bm{\omega}}]^2.
+$$
+
 
 Three special cases are worth committing to memory:
 
@@ -118,9 +128,11 @@ What if we already have a Rotation Matrix $R$, perhaps from a camera sensor trac
 
 We must perform the exact inverse operation: the **Matrix Logarithm**. The Matrix Logarithm takes a curved element from the Lie Group $R \in \SO$ and perfectly flattens it back onto the tangent space to extract the axis-angle representation.
 
-\begin{equation}
-   [\hat{\bm{\omega}}]\theta = \log(R)
-\end{equation}
+
+$$
+[\hat{\bm{\omega}}]\theta = \log(R)
+$$
+
 
 ::: {.callout-note}
 
@@ -141,7 +153,7 @@ We must perform the exact inverse operation: the **Matrix Logarithm**. The Matri
 
 A usable implementation of the matrix log must branch around two degenerate cases, $\theta \to 0$ and $\theta \to \pi$, where naïve formulas divide by zero or lose all significant digits. The canonical three-branch algorithm:
 
-```python
+“`python
 import numpy as np
 
 def matrix_log_SO3(R, eps=1e-8):
@@ -175,7 +187,7 @@ def matrix_log_SO3(R, eps=1e-8):
         R[1, 0] - R[0, 1],
     ])
     return omega_hat * theta
-```
+“`
 
 This routine round-trips with Rodrigues' formula to machine precision on a test suite of angles including $0$, $\pi/6$, $\pi/2$, and $\pi - \varepsilon$. References: Shoemake 1985 for numerical stability at $\theta \approx \pi$; Park & Lynch [@lynch2017modern] §3.3 for the generic branch.
 
@@ -198,9 +210,11 @@ This is the **Baker–Campbell–Hausdorff (BCH)** series. In $\se$, the matrice
 In Chapter 3, we briefly introduced Unit Quaternions $q \in \Reals^4$ as a blazing-fast mapping of $\SO$. Their speed and lack of singularities come directly from their deep connection to Exponential Coordinates.
 
 Recall the Quaternion definition:
-\begin{equation}
-  q = \begin{bmatrix} \cos(\theta/2) \\ \hat{\bm{\omega}} \sin(\theta/2) \end{bmatrix}
-\end{equation}
+
+$$
+q = \begin{bmatrix} \cos(\theta/2)  \hat{\bm{\omega}} \sin(\theta/2) \end{bmatrix}
+$$
+
 
 A quaternion is quite literally the Exponential Coordinate vector ($\hat{\bm{\omega}}\theta$) passed through a sine/cosine wave so that it algebraically bounds itself to a unit hypersphere. Quaternions explicitly preserve the pure geometric intention of the axis $\hat{\bm{\omega}}$ and the continuous rotation angle $\theta$.
 

@@ -28,9 +28,11 @@ Instead of parameterizing our optimal trajectory as $\traj^*(t)$, we parameteriz
 
 
   A phase variable $s(\state)$ is a continuously differentiable scalar function of the state $\state$ such that its time derivative is strictly positive along all feasible trajectories inside the nominal funnel:
-  \begin{equation}
-    \dot{s}(\state) > 0 \quad \text{for all } \state \in \mathcal{F}.
-  \end{equation}
+  
+$$
+\dot{s}(\state) > 0 \quad \text{for all } \state \in \mathcal{F}.
+$$
+
 
 
 
@@ -41,14 +43,18 @@ Instead of parameterizing our optimal trajectory as $\traj^*(t)$, we parameteriz
 If the goal is no longer to match a time sequence but rather to conform to a spatial path defined by $s(\state)$, we can express the control objective as a set of holonomic constraints on the state. However, because these constraints are not mechanical linkages but rather enforced by software, they are termed **Virtual Constraints**.
 
 Let our control objective be to drive the state $\state$ to the invariant manifold $\mathcal{Z}$ defined by:
-\begin{equation}
-  \mathcal{Z} = \{ \state \mid \state - \traj^*(s(\state)) = \bm{0} \}.
-\end{equation}
+
+$$
+\mathcal{Z} = \{ \state \mid \state - \traj^*(s(\state)) = \bm{0} \}.
+$$
+
 
 By using partial feedback linearization (Chapter 5), we can design a synthetic input $\bm{v}_a$ that drives the actuated degrees of freedom $\bm{q}_a$ onto their nominal surfaces proportional to the phase:
-\begin{equation}
-  y = \bm{q}_a - \traj^*_a(s(\state)) \to 0.
-\end{equation}
+
+$$
+y = \bm{q}_a - \traj^*_a(s(\state)) \to 0.
+$$
+
 As $y \to 0$, the system converges toward the virtual constraints. Crucially, the rate at which it progresses along the path is entirely governed by $\dot{s}$, which is itself determined by the current momentum and state of the system, not a stopwatch.
 
 

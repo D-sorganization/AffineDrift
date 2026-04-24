@@ -54,18 +54,22 @@ The physical trajectory of a system is the one for which the *action*---the time
 
 
 Lagrange defined a single, massive scalar function—the **Lagrangian** ($\mathcal{L}$)—which is simply the total Kinetic Energy of the entire system minus its total Potential Energy:
-\begin{equation}
-   \mathcal{L}(\bm{q}, \dot{\bm{q}}) = T(\bm{q}, \dot{\bm{q}}) - V(\bm{q})
-\end{equation}
+
+$$
+\mathcal{L}(\bm{q}, \dot{\bm{q}}) = T(\bm{q}, \dot{\bm{q}}) - V(\bm{q})
+$$
+
 
 Where $\bm{q}$ are the generalized coordinates (the motor angles) we defined in @sec-config.
 
 Because the Lagrangian is built on generalized coordinates, it completely ignores the "Constraint Forces". The equations naturally assume the metal rod cannot stretch; you never have to calculate its tension.
 
 To extract the exact Newtonian equations of motion from this single scalar function $\mathcal{L}$, we pass it through the magnificent **Euler-Lagrange Equation**:
-\begin{equation}
-   \frac{d}{dt} \left( \frac{\partial \mathcal{L}}{\partial \dot{q}_i} \right) - \frac{\partial \mathcal{L}}{\partial q_i} = \tau_i
-\end{equation}
+
+$$
+\frac{d}{dt} \left( \frac{\partial \mathcal{L}}{\partial \dot{q}_i} \right) - \frac{\partial \mathcal{L}}{\partial q_i} = \tau_i
+$$
+
 
 For every single joint coordinate $i$, this equation operates mechanically on the energy field. The time derivative of the momentum (first term) minus the spatial gradient of the energy (second term) perfectly equals the external Torque ($\tau_i$) that must be applied by the motor!
 
@@ -89,9 +93,11 @@ Because $\delta q_i$ is arbitrary, the fundamental lemma of the calculus of vari
 
 When you apply the Euler-Lagrange equation to the Kinetic Energy $T = \frac{1}{2}\dot{\bm{q}}^T M(\bm{q})\dot{\bm{q}}$ of a deeply connected robotic chain, the calculus organically unpacks into three vastly distinct physical phenomena that constitute the standard equation of motion:
 
-\begin{equation}
-   M(\bm{q})\ddot{\bm{q}} + C(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} + \frac{\partial V}{\partial \bm{q}} = \bm{\tau}
-\end{equation}
+
+$$
+M(\bm{q})\ddot{\bm{q}} + C(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} + \frac{\partial V}{\partial \bm{q}} = \bm{\tau}
+$$
+
 
 
 ### 1. The Mass Matrix ($M(\bm{q})$)
@@ -139,7 +145,7 @@ In *Tangent-Space Methods*, as with all advanced robotics platforms, you will se
 ## Summary {#sec-lagrangian-summary}
 
 | Concept | Role in mechanics | Key reference |
-|---------|-----------------|---------------|
+| --- | --- | --- |
 | Stationary action | Foundation of E-L EOM (unforced) | [@arnold1989mathematical, §44] |
 | Lagrange--d'Alembert | Extension to generalized forces | [@marsden1999introduction, Ch. 7] |
 | Christoffel symbols | Unique $C$ preserving skew-symmetry | [@slotine1991applied, §6] |

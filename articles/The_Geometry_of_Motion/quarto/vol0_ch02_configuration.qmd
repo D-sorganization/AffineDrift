@@ -60,14 +60,16 @@ The mathematical function that translates our abstract Generalized Coordinates $
 
 If $\bm{p}_{end} = [x, y, z]^T$ is the Cartesian position of the end of our robotic arm (or a golf clubhead), Forward Kinematics is the nonlinear function $\bm{f}_{kin}$:
 
-\begin{equation}
-   \bm{p}_{end} = \bm{f}_{kin}(\bm{q})
-\end{equation}
+
+$$
+\bm{p}_{end} = \bm{f}_{kin}(\bm{q})
+$$
+
 
 By using trigonometry, we stack the lengths of the links and the angles of the joints $q$ to find exactly where the end-effector sits in physical space. For a simple 2-link robotic arm rotating on a flat 2D plane (with link lengths $L_1, L_2$ and joint angles $q_1, q_2$):
 
 \begin{align}
-  x &= L_1 \cos(q_1) + L_2 \cos(q_1 + q_2) \\
+  x &= L_1 \cos(q_1) + L_2 \cos(q_1 + q_2) 
   y &= L_1 \sin(q_1) + L_2 \sin(q_1 + q_2)
 \end{align}
 

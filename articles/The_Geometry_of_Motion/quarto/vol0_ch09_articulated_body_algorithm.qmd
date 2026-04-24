@@ -11,9 +11,11 @@ In Chapter 6, we introduced the Recursive Newton-Euler Algorithm. That algorithm
 However, when programming a simulator like MuJoCo or a physics engine for Reinforcement Learning training environments (as used in UpstreamDrift's simulation core), we face the exact opposite problem: **Forward Dynamics**. 
 
 Given the current position ($\bm{q}$), current speed ($\dot{\bm{q}}$), and the forces currently being produced by the motors ($\bm{\tau}$), what will the resulting acceleration ($\ddot{\bm{q}}$) be?
-\begin{equation}
-   \ddot{\bm{q}} = \text{ForwardDynamics}(\bm{q}, \dot{\bm{q}}, \bm{\tau})
-\end{equation}
+
+$$
+\ddot{\bm{q}} = \text{ForwardDynamics}(\bm{q}, \dot{\bm{q}}, \bm{\tau})
+$$
+
 
 If we construct the monolithic inertia matrix $M(\bm{q})$ and solve $M(\bm{q})\ddot{\bm{q}} = \bm{\tau} - C(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} - G(\bm{q})$, we must invert an $N \times N$ matrix. Inverting matrices is mathematically catastrophic for large robots, scaling continuously worse at $O(N^3)$.
 
@@ -52,9 +54,11 @@ Starting at the root (the ground), propagate outward to the leaves (the end effe
 Starting at the leaves and propagating inward towards the root base. 
 At the tip, the Articulated Inertia is identical to the standard rigid Spatial Inertia: $I_A^{tip} = I_s^{tip}$.
 But as you step inward to link $i$, the Articulated Inertia of its child $i+1$ drops its massive algebraic weight across the joint hinge $S_i$ via a recursive equation:
-\begin{equation}
-   I_A^i = I_s^i + I_A^{i+1} - \frac{ (I_A^{i+1} \screw_{i+1}) (I_A^{i+1} \screw_{i+1})^T }{ \screw_{i+1}^T I_A^{i+1} \screw_{i+1} }
-\end{equation}
+
+$$
+I_A^i = I_s^i + I_A^{i+1} - \frac{ (I_A^{i+1} \screw_{i+1}) (I_A^{i+1} \screw_{i+1})^T }{ \screw_{i+1}^T I_A^{i+1} \screw_{i+1} }
+$$
+
 
 The denominator $\screw^T I_A \screw$ acts as a scalar projection, mathematically extracting the single degree of freedom of the motor out of the massive $6 \times 6$ inertia block. The fraction is simply projecting the inertia tensor across the geometric pin joint.
 
@@ -63,9 +67,11 @@ The denominator $\screw^T I_A \screw$ acts as a scalar projection, mathematicall
 
 Once the Articulated Inertia has propagated completely to the base, we reverse direction one final time.
 Because we know the true apparent "weight" of the entire chain resting on the base link, we can immediately solve for the exact scalar acceleration $\ddot{q}_1$ of the first joint based on its applied torque $\tau_1$.
-\begin{equation}
-   \ddot{q}_i = \frac{\tau_i - \screw_i^T \bm{p}_i}{\screw_i^T I_A^i \screw_i}
-\end{equation}
+
+$$
+\ddot{q}_i = \frac{\tau_i - \screw_i^T \bm{p}_i}{\screw_i^T I_A^i \screw_i}
+$$
+
 
 Once we know $\ddot{q}_1$, we use it to find the absolute spatial acceleration $\dot{\twist}_1$ of link 1. Since Link 2 is attached to Link 1, we propagate this acceleration outward to instantly calculate $\ddot{q}_2, \ddot{q}_3, \dots, \ddot{q}_n$. 
 
@@ -76,7 +82,7 @@ Once we know $\ddot{q}_1$, we use it to find the absolute spatial acceleration $
 Here is python pseudocode demonstrating how the recursive articulated inertia loop works.
 
 
-```python
+“`python
 
 import numpy as np
 
@@ -109,7 +115,7 @@ def compute_articulated_inertias(spatial_inertias, screw_axes, n_links):
 
 # I_A[0] now contains the complete effective Spatial Inertia dragging on the base.
 
-```
+“`
 
 
 This algorithm completely solves the physics of massive skeletal systems interacting with the universe without ever touching an algebraic trigonometric matrix or attempting an $N \times N$ inversion. It fundamentally drives all real-time simulation logic throughout *Tangent-Space Methods*.
