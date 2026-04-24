@@ -36,11 +36,25 @@ The spatial force cross product ($\times^*$) is simply the negative transpose of
    [\twist \times^*] = -[\twist \times]^T = \begin{bmatrix} [\omega] & [v] \\ 0 & [\omega] \end{bmatrix}
 \end{equation}
 
+This notation, $\mathrm{ad}_{	wist}$ for motion and $\mathrm{ad}_{	wist}^*$ for force, is used consistently in Chapters 7, 8, and 10. It is distinct from the familiar 3-vector bracket $[\cdot]_	imes$, which acts only on $\Reals^3$.
+
 By keeping forces and motions in their respective dual spaces, calculating the Coriolis forces tearing at the joints of a swinging golf club requires only a single line of 6D matrix multiplication rather than pages of complex calculus.
+
+::: {.callout-note}
+## Coriolis cost: per-link vs full matrix
+
+The spatial-algebra identities above give a fixed-cost ($O(1)$) matrix multiplication for each link's Coriolis contribution. However, assembling the full $n 	imes n$ Coriolis matrix $C(m{q}, \dot{m{q}})$ for a serial chain is still $O(n^2)$ because there are $n^2$ entries to compute. The RNEA (Chapter 7) deliberately avoids assembling $C$ at all, computing $C(m{q},\dot{m{q}})\dot{m{q}}$ in a single $O(n)$ sweep via the spatial Newton-Euler recursion.
+:::
 
 
 ## The Spatial Inertia Matrix
 
+
+::: {.callout-important}
+## Convention
+
+This chapter uses the **Featherstone / Lynch-Park convention** (Featherstone 2008 §2.13, Lynch \& Park [@lynch2017modern] §8.2): the off-diagonal blocks are $m[m{c}]$ (top-right) and $m[m{c}]^T = -m[m{c}]$ (bottom-left). Some references (e.g., Murray-Li-Sastry) write these blocks with the opposite sign; the matrix is symmetric either way because $[m{c}]^T = -[m{c}]$.
+:::
 
 Just as mass $m$ resists linear acceleration, and a $3 \times 3$ inertia tensor $I$ resists angular acceleration, standard 6D Spatial Algebra unifies them into a single $6 \times 6$ **Spatial Inertia Matrix** $\mathcal{I}_s$.
 
@@ -84,21 +98,26 @@ def cylinder_spatial_inertia(m, r, L, d):
     c = np.array([0.0, 0.0, d])
     c_skew = skew(c)
     
-    # 3. Assemble the 6x6 Spatial Inertia Matrix
+    # 3. Assemble the 6x6 Spatial Inertia Matrix (Featherstone/Lynch-Park convention)
     I_s = np.zeros((6, 6))
-    
-    # Top Left: I_c + m * [c][c]^T (Parallel Axis Theorem)
-    I_s[0:3, 0:3] = I_c + m * (c_skew @ np.transpose(c_skew))
-    
+
+    # Top Left: I_c + m * [c]^T [c]  (Parallel Axis Theorem)
+    # [c]^T = -c_skew, so [c]^T @ [c] = (-c_skew) @ c_skew = -c_skew @ c_skew
+    I_s[0:3, 0:3] = I_c + m * (-c_skew @ c_skew)
+
     # Top Right: m * [c]
     I_s[0:3, 3:6] = m * c_skew
-    
-    # Bottom Left: m * [c]^T
-    I_s[3:6, 0:3] = m * np.transpose(c_skew)
-    
+
+    # Bottom Left: m * [c]^T = m * (-c_skew)
+    # Written as -c_skew to make the skew-antisymmetry visible.
+    I_s[3:6, 0:3] = m * (-c_skew)
+
     # Bottom Right: m * Identity
     I_s[3:6, 3:6] = m * np.eye(3)
-    
+
+    # Sanity check: spatial inertia must be symmetric (Featherstone 2008 Sec 2.13)
+    assert np.allclose(I_s, I_s.T), "Spatial inertia must be symmetric"
+
     return I_s
 
 # Example: A 2kg forearm cylinder, 5cm radius, 30cm long, offset 15cm down

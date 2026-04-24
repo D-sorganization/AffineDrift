@@ -51,11 +51,11 @@ Here is pseudocode for the recursive forward kinematics algorithm:
 ::: {.callout-tip}
 ## Implementation Considerations
 
-**Near-Singular Configurations:** When a screw axis approaches alignment with the global frame normal (e.g., when $\|\omega\| \to 0$ for a prismatic joint), the matrix exponential $e^{[\screw]\theta}$ can exhibit numerical instability. Always check the rank of the screw axis before computing; use Moore-Penrose pseudoinverse if singularity is detected.
+**Prismatic joints and the matrix exponential:** For a prismatic joint screw $\screw = (\bm{0};\, \hat{\bm{v}})$ with $\hat{\bm{\omega}} = \bm{0}$, the Lie-algebra matrix satisfies $[\screw]^2 = 0$ identically, so the exponential collapses to the *exact* closed form $e^{[\screw]\theta} = I + [\screw]\theta$ — no series truncation, no singularity. Real kinematic singularities for systems with prismatic joints arise from Jacobian rank loss (e.g., when two revolute axes in a hybrid manipulator become parallel), not from the screw exponential itself.
 
 **Quaternion Representation:** While the pseudocode uses rotation matrices, consider storing rotations as unit quaternions internally for cumulative products. Matrices require periodic re-orthogonalization after many multiplications; quaternions maintain unit norm automatically and are more numerically stable for long kinematic chains.
 
-**Numerical Precision:** The matrix exponential is typically computed via eigendecomposition (expensive) or series expansion (fast but approximate). For production systems, use optimized libraries (e.g., Eigen, MATLAB's `expm`). Always verify orthonormality constraints: $R^T R = I$ should hold to machine precision after each link update.
+**Numerical Precision:** For production systems, `scipy.linalg.expm` uses scaling-and-squaring with a Padé approximant (Al-Mohy & Higham 2010, *SIAM J. Matrix Anal. Appl.*) — numerically stable even for defective or near-defective matrices where eigendecomposition can fail. For the $\mathfrak{so}(3)$/$\mathfrak{se}(3)$ case specifically, the closed-form Rodrigues and $G(	heta)$ formulas (Chapter 6) are faster and more accurate than any generic `expm` call, and are what performance-sensitive implementations (Eigen, Pinocchio) use.
 
 :::
 
