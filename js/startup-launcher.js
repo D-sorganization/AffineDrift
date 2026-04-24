@@ -19,12 +19,13 @@
   // Configuration
   const CONFIG = {
     MINIMUM_SPLASH_DURATION: 800,    // Minimum time to show splash (ms)
-    MAXIMUM_SPLASH_DURATION: 5000,   // Maximum time before force-hiding splash (ms)
+    MAXIMUM_SPLASH_DURATION: 3000,   // Maximum time before force-hiding splash (ms) — 3s fallback (#2787)
     PROGRESS_ANIMATION_SPEED: 50,    // Progress bar animation interval (ms)
     ENABLE_METRICS: true,            // Log performance metrics to console
     ENABLE_SKELETON: true,           // Enable skeleton loading placeholders
     SPLASH_FADE_DURATION: 400,       // Splash screen fade out duration (ms)
-    DEBUG_MODE: false                // Enable verbose logging
+    DEBUG_MODE: false,               // Enable verbose logging
+    SESSION_STORAGE_KEY: 'ad_splash_seen'  // Key for session-storage skip (#2787)
   };
 
   // Performance metrics storage
@@ -63,6 +64,17 @@
   function init() {
     metrics.splashShown = performance.now();
 
+    // Session-storage skip: returning users within the same session bypass splash (#2787)
+    try {
+      if (sessionStorage.getItem(CONFIG.SESSION_STORAGE_KEY)) {
+        log('Splash skipped (session-storage)');
+        return;
+      }
+      sessionStorage.setItem(CONFIG.SESSION_STORAGE_KEY, '1');
+    } catch (e) {
+      // Private browsing may block sessionStorage — ignore and show splash normally
+    }
+
     // Create and inject splash screen immediately
     createSplashScreen();
 
@@ -72,6 +84,14 @@
     // Set up event listeners
     setupEventListeners();
 
+    // Esc key dismisses splash (#2787)
+    document.addEventListener('keydown', function onEsc(e) {
+      if (e.key === 'Escape') {
+        document.removeEventListener('keydown', onEsc);
+        hideSplash();
+      }
+    });
+
     // Capture paint timing
     capturePaintMetrics();
 
@@ -80,7 +100,7 @@
       setupSkeletonLoading();
     }
 
-    // Safety timeout - hide splash after maximum duration
+    // Safety timeout - hide splash after maximum duration (3s fallback, #2787)
     setTimeout(forceHideSplash, CONFIG.MAXIMUM_SPLASH_DURATION);
 
     log('Startup launcher initialized');
@@ -100,11 +120,10 @@
     const splash = document.createElement('div');
     splash.id = 'ad-splash-screen';
     splash.className = 'ad-splash-screen';
-    splash.setAttribute('role', 'progressbar');
-    splash.setAttribute('aria-label', 'Loading AffineDrift');
-    splash.setAttribute('aria-valuenow', '0');
-    splash.setAttribute('aria-valuemin', '0');
-    splash.setAttribute('aria-valuemax', '100');
+    // role="dialog" + aria-label per #2787 (was role="progressbar")
+    splash.setAttribute('role', 'dialog');
+    splash.setAttribute('aria-label', 'Loading screen');
+    splash.setAttribute('aria-modal', 'true');
 
     splash.innerHTML = `
       <div class="ad-splash-content">
@@ -126,7 +145,15 @@
         </div>
 
         <div class="ad-splash-progress-container">
-          <div class="ad-splash-progress-track">
+          <div
+            class="ad-splash-progress-track"
+            role="progressbar"
+            aria-label="Loading progress"
+            aria-valuenow="0"
+            aria-valuemin="0"
+            aria-valuemax="100"
+            id="ad-splash-progress-track"
+          >
             <div class="ad-splash-progress-bar" id="ad-splash-progress-bar"></div>
           </div>
           <div class="ad-splash-status" id="ad-splash-status">Initializing...</div>
@@ -135,6 +162,11 @@
         <div class="ad-splash-hints" id="ad-splash-hints">
           <span class="ad-splash-hint">Loading resources</span>
         </div>
+
+        <!-- Skip button: allows users to dismiss splash immediately (#2787) -->
+        <button class="ad-splash-skip" id="ad-splash-skip" type="button" aria-label="Skip loading screen">
+          Skip
+        </button>
       </div>
     `;
 
@@ -151,6 +183,12 @@
     }
 
     state.splashElement = splash;
+
+    // Wire up skip button (#2787)
+    const skipBtn = splash.querySelector('#ad-splash-skip');
+    if (skipBtn) {
+      skipBtn.addEventListener('click', function () { hideSplash(); });
+    }
 
     // Add body class to prevent scrolling during splash
     document.documentElement.classList.add('ad-splash-active');
@@ -265,8 +303,9 @@
           state.progressElement.style.width = state.progressValue + '%';
         }
 
-        if (state.splashElement) {
-          state.splashElement.setAttribute('aria-valuenow', Math.round(state.progressValue));
+        const trackEl = document.getElementById('ad-splash-progress-track');
+        if (trackEl) {
+          trackEl.setAttribute('aria-valuenow', Math.round(state.progressValue));
         }
       }
     }, CONFIG.PROGRESS_ANIMATION_SPEED);

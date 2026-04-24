@@ -63,6 +63,17 @@
 
   /* Typography limits */
   --prose-width: 75ch;
+
+  /* Extended token set (fixes #2779: undefined CSS custom properties) */
+  --bg-dark: #1a1a2e;
+  --bg-card: #fff;
+  --bg-secondary: #f8f9fa;
+  --border-light: #e2d9b0;
+  --text-light: #6c757d;
+  --text-dark: #212529;
+  --legal-pad-yellow-accent: #f0e68c;
+  --legal-pad-yellow-border: #d4c57a;
+  --primary-color: #0f4c75;
 }
 
 body {
@@ -619,19 +630,11 @@ nav .container {
   width: 100%;
 }
 
-.nav-toggle {
-  display: none;
-  background: transparent;
-  border: none;
-  color: var(--pure-white);
-  font-size: 1.5rem;
-  cursor: pointer;
-}
+/* .nav-toggle removed (legacy system, fixes #2785) */
 
+/* Touch targets (44x44 px minimum per WCAG 2.5.5) */
 .navbar-brand,
 .navbar-toggler,
-.nav-toggle,
-.mobile-menu-toggle,
 #quarto-header [class*="aa-DetachedSearchButton"] {
   min-width: 44px;
   min-height: 44px;
@@ -922,29 +925,7 @@ nav .container {
     width: 100%;
   }
 
-  /* Navigation Mobile */
-  .nav-links {
-    display: none;
-
-    /* Use JS toggle */
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    flex-direction: column;
-    background: var(--bg-body);
-    padding: 1rem;
-    box-shadow: var(--shadow-md);
-    border-bottom: 1px solid var(--border-color);
-  }
-
-  .nav-links.active {
-    display: flex;
-  }
-
-  .nav-toggle {
-    display: block;
-  }
+  /* Legacy .nav-links / .nav-toggle mobile rules removed (fixes #2785) */
 
   .logo-text {
     font-size: 1.2rem;
@@ -2505,55 +2486,8 @@ h1.title,
    Mobile Responsive Design (Issue #870)
    --- */
 
-/* Mobile Menu Toggle Button */
-.mobile-menu-toggle {
-  display: none;
-  position: fixed;
-  top: 1rem;
-  left: 1rem;
-  z-index: 1001;
-  background: var(--primary-blue);
-  color: white;
-  border: none;
-  padding: 0.75rem;
-  border-radius: 8px;
-  cursor: pointer;
-  box-shadow: var(--shadow-md);
-}
-
-.mobile-menu-toggle svg {
-  width: 24px;
-  height: 24px;
-  fill: currentcolor;
-}
-
-.mobile-menu-toggle .icon-close {
-  display: none;
-}
-
-.mobile-menu-toggle.is-open .icon-menu {
-  display: none;
-}
-
-.mobile-menu-toggle.is-open .icon-close {
-  display: inline-flex;
-}
-
-/* Mobile Sidebar Overlay */
-.sidebar-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgb(0 0 0 / 50%);
-  z-index: 999;
-  display: none;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.sidebar-overlay.active {
-  display: block;
-  opacity: 1;
-}
+/* Legacy .mobile-menu-toggle + .sidebar-overlay system removed (fixes #2785).
+   Mobile navigation is handled exclusively by Quarto Bootstrap .navbar-toggler. */
 
 /* Home Page 3-Column Responsive */
 @media (width <=1200px) {
@@ -2609,10 +2543,7 @@ h1.title,
 }
 
 @media (width <=768px) {
-  /* Mobile: Show hamburger menu */
-  .mobile-menu-toggle {
-    display: block;
-  }
+  /* .mobile-menu-toggle removed (fixes #2785) */
 
   body.home-menu-open {
     overflow: hidden;
