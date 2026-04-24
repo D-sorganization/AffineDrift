@@ -56,10 +56,9 @@ For most of your body, the answer is yes. For the golf swing as a whole—held t
 
 
 Recall the equation of motion for a mechanical system with $n$ degrees of freedom:
-\begin{equation}
+$$
 \bm{M}(\bm{q})\,\ddot{\bm{q}} + \bm{C}(\bm{q},\dot{\bm{q}})\,\dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{u}
-\label{eq:eom_unconstrained}
-\end{equation}
+$$
 
 Here:
 
@@ -72,10 +71,9 @@ Here:
 
 
 For an *unconstrained* system (open chain), this equation has a unique inverse:
-\begin{equation}
+$$
 \bm{u} = \bm{M}(\bm{q})\,\ddot{\bm{q}} + \bm{C}(\bm{q},\dot{\bm{q}})\,\dot{\bm{q}} + \bm{g}(\bm{q})
-\label{eq:inverse_open}
-\end{equation}
+$$
 
 Given $\bm{q}(t)$ (from motion capture), differentiate twice to get $\ddot{\bm{q}}(t)$, compute the mass matrix and its derivatives, plug in numbers, and obtain $\bm{u}(t)$. No ambiguity. This is the foundation of biomechanical inverse dynamics, used in thousands of gait analysis labs worldwide.
 
@@ -106,15 +104,14 @@ For an open kinematic chain with $n$ generalized coordinates:
 ## Mass Matrix Invertibility
 
 The mass matrix $\bm{M}(\bm{q}) \in \mathbb{R}^{n \times n}$ is *always* symmetric and positive definite. Therefore:
-\begin{equation}
+$$
 \mathrm{det}(\bm{M}(\bm{q})) > 0 \quad \forall \bm{q}
-\label{eq:det_positive}
-\end{equation}
+$$
 
 This can be proven by direct construction of kinetic energy. The kinetic energy of a rigid-body system is:
-\begin{equation}
+$$
 T = \frac{1}{2}\,\dot{\bm{q}}^T \bm{M}(\bm{q})\,\dot{\bm{q}}
-\end{equation}
+$$
 
 Since kinetic energy is always non-negative and is zero only when $\dot{\bm{q}} = \bm{0}$, the matrix $\bm{M}$ is positive definite in the strict sense. A positive definite matrix always has full rank and is always invertible.
 
@@ -134,16 +131,20 @@ In practice, biomechanics labs do not invert the mass matrix directly. Instead, 
 A two-pass algorithm for computing joint torques from measured kinematics:
 
 **Forward Pass (base to tip):** Starting at the fixed base, compute the velocity $\bm{v}_i$ and acceleration $\bm{a}_i$ of each body $i$ by forward recursion:
-\begin{align}
+$$
+\begin{aligned}
 \bm{v}_i &= \bm{v}_{i-1} + \bm{J}_i\,\dot{q}_i \\
 \bm{a}_i &= \bm{a}_{i-1} + \bm{J}_i\,\ddot{q}_i + \dot{\bm{J}}_i\,\dot{q}_i
-\end{align}
+\end{aligned}
+$$
 
 **Backward Pass (tip to base):** Starting at the distal tip, compute the force $\bm{f}_i$ and moment $\bm{m}_i$ at each joint by backward recursion:
-\begin{align}
+$$
+\begin{aligned}
 \bm{f}_i &= \bm{f}_{i+1} + m_i\,\bm{a}_i \\
 \bm{m}_i &= \bm{m}_{i+1} + m_i\,\bm{r}_i \times \bm{a}_i + \bm{I}_i\,\boldsymbol{\alpha}_i
-\end{align}
+\end{aligned}
+$$
 
 At each joint, solve for the torque $\tau_i$ that satisfies Newton's second law for that body.
 
@@ -175,10 +176,9 @@ These constraints reduce the number of degrees of freedom but increase the numbe
 
 
 For a system with $n$ generalized coordinates and $k$ holonomic constraints, the constrained equations of motion take the form:
-\begin{equation}
+$$
 \bm{M}(\bm{q})\,\ddot{\bm{q}} + \bm{C}(\bm{q},\dot{\bm{q}})\,\dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{B}(\bm{q})\,\bm{u} + \bm{J}_c^T(\bm{q})\,\boldsymbol{\lambda}
-\label{eq:eom_constrained}
-\end{equation}
+$$
 
 where:
 
@@ -190,16 +190,14 @@ where:
 
 
 The constraint equations are:
-\begin{equation}
+$$
 \bm{\Phi}(\bm{q}) = \bm{0}
-\label{eq:constraints}
-\end{equation}
+$$
 
 Differentiating twice:
-\begin{equation}
+$$
 \bm{J}_c(\bm{q})\,\ddot{\bm{q}} + \dot{\bm{J}}_c(\bm{q},\dot{\bm{q}})\,\dot{\bm{q}} = \bm{0}
-\label{eq:constraint_acceleration}
-\end{equation}
+$$
 
 ### Counting Equations and Unknowns
 
@@ -210,7 +208,7 @@ Here is the fundamental problem:
 
 We have:
 
-- **Equations:** $n$ equations of motion (Equation \ref{eq:eom_constrained})
+- **Equations:** $n$ equations of motion (the constrained equations of motion above)
 - **Unknowns:** $p$ applied torques $\bm{u}$ plus $k$ constraint multipliers $\boldsymbol{\lambda}$, for a total of $p + k$ unknowns
 
 If $p + k > n$, the system is **underdetermined**. There are more unknowns than equations.
@@ -230,10 +228,9 @@ The constraint forces $\boldsymbol{\lambda}$ are *real forces*. Your left hand g
 ### The Augmented System
 
 To set up the inverse dynamics problem formally, consider the augmented system combining dynamics and constraints:
-\begin{equation}
+$$
 \begin{bmatrix} \bm{M}(\bm{q}) & -\bm{J}_c^T(\bm{q}) \\ \bm{J}_c(\bm{q}) & \bm{0} \end{bmatrix} \begin{bmatrix} \ddot{\bm{q}} \\ \boldsymbol{\lambda} \end{bmatrix} = \begin{bmatrix} \bm{B}(\bm{q})\,\bm{u} - \bm{h}(\bm{q},\dot{\bm{q}}) \\ -\dot{\bm{J}}_c(\bm{q},\dot{\bm{q}})\,\dot{\bm{q}} \end{bmatrix}
-\label{eq:augmented_forward}
-\end{equation}
+$$
 
 where $\bm{h}(\bm{q},\dot{\bm{q}}) = \bm{C}(\bm{q},\dot{\bm{q}})\,\dot{\bm{q}} + \bm{g}(\bm{q})$ collects velocity-dependent and gravity terms.
 
@@ -244,10 +241,9 @@ This is called the KKT (Karush-Kuhn-Tucker) or augmented system. It is square ($
 ::: {.callout-important}
 ## The Augmented System is Invertible in Forward Dynamics
 For a well-posed mechanical system with constraints, the augmented matrix
-\begin{equation}
+$$
 \bm{K} = \begin{bmatrix} \bm{M} & -\bm{J}_c^T \\ \bm{J}_c & \bm{0} \end{bmatrix}
-\label{eq:KKT_matrix}
-\end{equation}
+$$
 
 is nonsingular whenever $\bm{M}$ is positive definite and $\bm{J}_c$ has full row rank. Therefore, given $\bm{u}$, we can always solve uniquely for $\ddot{\bm{q}}$ and $\boldsymbol{\lambda}$.
 
@@ -262,36 +258,32 @@ This theorem guarantees that if you specify all muscle torques, the skeleton's a
 
 But inverse dynamics is different. Now, we know $\ddot{\bm{q}}$ (from motion capture) and want to find $\bm{u}$ and $\boldsymbol{\lambda}$.
 
-Rearrange Equation \ref{eq:eom_constrained}:
-\begin{equation}
+Rearranging the constrained equations of motion:
+$$
 \bm{B}(\bm{q})\,\bm{u} + \bm{J}_c^T(\bm{q})\,\boldsymbol{\lambda} = \bm{M}(\bm{q})\,\ddot{\bm{q}} + \bm{h}(\bm{q},\dot{\bm{q}})
-\label{eq:inverse_rearranged}
-\end{equation}
+$$
 
 Let $\bm{r} = \bm{M}(\bm{q})\,\ddot{\bm{q}} + \bm{h}(\bm{q},\dot{\bm{q}})$ be the known right-hand side (the net force required to produce the measured acceleration).
 
 We must solve:
-\begin{equation}
+$$
 \bm{B}(\bm{q})\,\bm{u} + \bm{J}_c^T(\bm{q})\,\boldsymbol{\lambda} = \bm{r}
-\label{eq:inverse_underdetermined}
-\end{equation}
+$$
 
 This is an underdetermined linear system: $n$ equations, $p + k$ unknowns, with $p + k > n$.
 
 ::: {.callout-note}
 ## Solution Space and Null Space
 
-The solution to Equation \ref{eq:inverse_underdetermined} is not unique. Instead, the general solution is:
-\begin{equation}
+The solution to the underdetermined system above is not unique. Instead, the general solution is:
+$$
 \begin{bmatrix} \bm{u} \\ \boldsymbol{\lambda} \end{bmatrix} = \begin{bmatrix} \bm{u}^* \\ \boldsymbol{\lambda}^* \end{bmatrix} + \mathcal{N}
-\label{eq:general_solution}
-\end{equation}
+$$
 
 where $\begin{bmatrix} \bm{u}^* \\ \boldsymbol{\lambda}^* \end{bmatrix}$ is any particular solution and $\mathcal{N}$ is the null space:
-\begin{equation}
+$$
 \mathcal{N} = \left\{ \begin{bmatrix} \delta\bm{u} \\ \delta\boldsymbol{\lambda} \end{bmatrix} : \bm{B}(\bm{q})\,\delta\bm{u} + \bm{J}_c^T(\bm{q})\,\delta\boldsymbol{\lambda} = \bm{0} \right\}
-\label{eq:nullspace_def}
-\end{equation}
+$$
 
 Any combination of applied torques and constraint forces in the null space produces *zero net force*. These combinations are invisible to the equations of motion: they change $\bm{u}$ and $\boldsymbol{\lambda}$ without changing the predicted kinematics.
 
@@ -299,7 +291,7 @@ Any combination of applied torques and constraint forces in the null space produ
 
 
 
-The constraint forces $\boldsymbol{\lambda}$ can usually be determined from the constraint equations themselves (given measured $\ddot{\bm{q}}$, Equation \ref{eq:constraint_acceleration} determines $\boldsymbol{\lambda}$). But the applied torques $\bm{u}$ cannot be uniquely determined without additional information or modeling assumptions.
+The constraint forces $\boldsymbol{\lambda}$ can usually be determined from the constraint equations themselves (given measured $\ddot{\bm{q}}$, the constraint acceleration equation determines $\boldsymbol{\lambda}$). But the applied torques $\bm{u}$ cannot be uniquely determined without additional information or modeling assumptions.
 
 ## A Concrete Example: The Two-Handed Golf Grip
 
@@ -316,10 +308,9 @@ Model the system as follows:
 - Total: 6 degrees of freedom without constraints.
 
 The constraint is simple: both hands must grip the same club. The constraint equation is:
-\begin{equation}
+$$
 \bm{\Phi}_{\text{grip}} = \text{(position of right hand)} - \text{(position of left hand)} - \text{(club geometry)} = \bm{0}
-\label{eq:grip_constraint}
-\end{equation}
+$$
 
 This constraint is $k = 3$ dimensional (three spatial coordinates). So the constrained system has $6 - 3 = 3$ independent DOF.
 
@@ -330,10 +321,9 @@ But we still have 6 actuators (muscles acting on 6 joint angles). The system is 
 ### Setting Up the Equations
 
 The equation of motion for the combined two-arm system (without constraints):
-\begin{equation}
+$$
 \bm{M}(q_L, q_R)\begin{bmatrix}\ddot{\bm{q}}_L \\ \ddot{\bm{q}}_R\end{bmatrix} + \bm{h} = \begin{bmatrix}\bm{\tau}_L \\ \bm{\tau}_R\end{bmatrix} + \bm{J}_c^T(\bm{q})\,\boldsymbol{\lambda}_{\text{grip}}
-\label{eq:two_arm_eom}
-\end{equation}
+$$
 
 where $\bm{\tau}_L$ and $\bm{\tau}_R$ are the torques applied by the left and right arm muscles.
 
@@ -346,10 +336,9 @@ The constraint force $\boldsymbol{\lambda}_{\text{grip}} \in \mathbb{R}^3$ repre
 Suppose a motion-capture system measures the trajectory $\bm{q}_L(t)$ and $\bm{q}_R(t)$. We compute $\ddot{\bm{q}}_L$ and $\ddot{\bm{q}}_R$ by differentiating twice.
 
 From the equations of motion:
-\begin{equation}
+$$
 \begin{bmatrix}\bm{\tau}_L \\ \bm{\tau}_R\end{bmatrix} = \bm{M}\begin{bmatrix}\ddot{\bm{q}}_L \\ \ddot{\bm{q}}_R\end{bmatrix} + \bm{h} - \bm{J}_c^T\,\boldsymbol{\lambda}_{\text{grip}}
-\label{eq:two_hand_inverse}
-\end{equation}
+$$
 
 This gives us 6 equations (three for the left arm, three for the right arm).
 
@@ -365,16 +354,14 @@ Total: $3 + 3 + 3 = 9$ unknowns, but only 6 equations.
 ## The Load-Sharing Ambiguity
 
 Suppose the constraint forces have been determined (from the constraint kinematics). We have:
-\begin{equation}
+$$
 \bm{J}_c\,\ddot{\bm{q}} + \dot{\bm{J}}_c\,\dot{\bm{q}} = \bm{0} \quad \Rightarrow \quad \boldsymbol{\lambda}_{\text{grip}} \text{ is determined}
-\label{eq:lambda_determined}
-\end{equation}
+$$
 
 Now, from the equation of motion:
-\begin{equation}
+$$
 \begin{bmatrix}\bm{\tau}_L \\ \bm{\tau}_R\end{bmatrix} = \bm{M}\begin{bmatrix}\ddot{\bm{q}}_L \\ \ddot{\bm{q}}_R\end{bmatrix} + \bm{h} - \bm{J}_c^T\,\boldsymbol{\lambda}_{\text{grip}}
-\label{eq:tau_to_solve}
-\end{equation}
+$$
 
 The right-hand side is known. Call it $\bm{r} = \bm{M}\begin{bmatrix}\ddot{\bm{q}}_L \\ \ddot{\bm{q}}_R\end{bmatrix} + \bm{h} - \bm{J}_c^T\,\boldsymbol{\lambda}_{\text{grip}}$.
 
@@ -408,14 +395,13 @@ The direction matters because causality flows forward (from forces to motion) bu
 ::: {.callout-important}
 ## Forward Dynamics is Well-Posed
 Given applied torques $\bm{u}(t)$ and an initial state $\bm{q}(0), \dot{\bm{q}}(0)$, the constrained differential equations
-\begin{equation}
+$$
 \begin{bmatrix} \bm{M}(\bm{q}) & -\bm{J}_c^T \\ \bm{J}_c & \bm{0} \end{bmatrix} \begin{bmatrix} \ddot{\bm{q}} \\ \boldsymbol{\lambda} \end{bmatrix} = \begin{bmatrix} \bm{B}\bm{u} - \bm{h} \\ -\dot{\bm{J}}_c\dot{\bm{q}} \end{bmatrix}
-\label{eq:forward_wellposed}
-\end{equation}
+$$
 
 always have a unique solution at each time instant. The motion $\bm{q}(t)$ evolves deterministically forward in time.
 
-**Why?** The coefficient matrix on the left is the KKT matrix (Equation \ref{eq:KKT_matrix}), which is nonsingular for any valid mechanical system. Therefore, the system can be solved uniquely for $\ddot{\bm{q}}$ and $\boldsymbol{\lambda}$ at each instant.
+**Why?** The coefficient matrix on the left is the KKT matrix above, which is nonsingular for any valid mechanical system. Therefore, the system can be solved uniquely for $\ddot{\bm{q}}$ and $\boldsymbol{\lambda}$ at each instant.
 :::
 
 Physically: if you know exactly what every muscle is doing, physics determines exactly what the skeleton does. There is no ambiguity.
@@ -425,10 +411,9 @@ Physically: if you know exactly what every muscle is doing, physics determines e
 ::: {.callout-important}
 ## Inverse Dynamics is Under-Determined in Parallel Systems
 Given a measured trajectory $\bm{q}(t), \dot{\bm{q}}(t), \ddot{\bm{q}}(t)$ in a system with loop constraints, the equation
-\begin{equation}
+$$
 \bm{B}(\bm{q})\,\bm{u} + \bm{J}_c^T(\bm{q})\,\boldsymbol{\lambda} = \bm{M}(\bm{q})\,\ddot{\bm{q}} + \bm{h}(\bm{q},\dot{\bm{q}})
-\label{eq:inverse_underdetermined_formal}
-\end{equation}
+$$
 
 does not have a unique solution when $\mathrm{rank}(\bm{B}) < p$ or when internal constraint forces couple with applied torques.
 
@@ -456,17 +441,17 @@ Despite the ambiguity, inverse dynamics is not useless. Many aspects of the moti
 From motion capture data of a system with loop constraints, the following quantities are **uniquely determined**:
 
 - **Net generalized force on the system:**
-\begin{equation}
+$$
 \bm{M}(\bm{q})\,\ddot{\bm{q}} + \bm{C}(\bm{q},\dot{\bm{q}})\,\dot{\bm{q}} + \bm{g}(\bm{q})
-\end{equation}
+$$
 
 This is computed directly from kinematics and is independent of which muscles did the work.
 
 - **Constraint forces $\boldsymbol{\lambda}$:**
 From the constraint equations:
-\begin{equation}
+$$
 \bm{J}_c\,\ddot{\bm{q}} + \dot{\bm{J}}_c\,\dot{\bm{q}} = \bm{0}
-\end{equation}
+$$
 
 The constraint forces are determined up to the null space of $\bm{J}_c^T$.
 
@@ -489,10 +474,9 @@ The following are **NOT uniquely determined**:
 
 To characterize exactly which combinations of applied torques are invisible, compute the null space of the force distribution matrix:
 
-\begin{equation}
+$$
 \mathcal{N} = \mathrm{null}\left(\bm{B}(\bm{q})\right) \cap \mathrm{null}\left(\bm{J}_c^T(\bm{q})\right)^\perp
-\label{eq:nullspace_compound}
-\end{equation}
+$$
 
 
 
@@ -504,9 +488,9 @@ Any torque vector in this null space produces zero observable force on the syste
 In the two-handed grip with identical left and right arms, suppose the constraint force is zero (the hands are not pushing against each other, just lightly touching).
 
 Then the null space includes all vectors of the form:
-\begin{equation}
+$$
 \begin{bmatrix} \bm{\tau}_L \\ \bm{\tau}_R \end{bmatrix} = \begin{bmatrix} \bm{\delta} \\ -\bm{\delta} \end{bmatrix}
-\end{equation}
+$$
 
 where $\bm{\delta}$ is any 3-dimensional torque vector.
 
@@ -528,21 +512,19 @@ When inverse dynamics has no unique solution, the standard approach is to minimi
 ## Minimum-Norm Solution
 
 Given the underdetermined system
-\begin{equation}
+$$
 \bm{B}(\bm{q})\,\bm{u} + \bm{J}_c^T\,\boldsymbol{\lambda} = \bm{r}(\bm{q},\dot{\bm{q}},\ddot{\bm{q}})
-\end{equation}
+$$
 
 solve:
-\begin{equation}
+$$
 \min_{\bm{u}, \boldsymbol{\lambda}} \left\|\bm{u}\right\|^2 + \alpha\left\|\boldsymbol{\lambda}\right\|^2
-\label{eq:min_norm_objective}
-\end{equation}
+$$
 
 subject to the equations of motion. The solution is given by the Moore-Penrose pseudoinverse:
-\begin{equation}
+$$
 \bm{u}^* = \bm{B}^+(\bm{r} - \bm{J}_c^T\,\boldsymbol{\lambda})
-\label{eq:pseudoinverse_solution}
-\end{equation}
+$$
 
 where $\bm{B}^+ = (\bm{B}^T\bm{B})^{-1}\bm{B}^T$ is the left pseudoinverse of $\bm{B}$.
 
@@ -565,14 +547,14 @@ Instead of assuming muscles minimize effort, measure the muscles' electrical act
 
 Record electromyographic (EMG) signals from major muscles during the swing. These signals (motor unit action potentials) are correlated with muscle activation. Use these measurements as *constraints* on the inverse dynamics problem:
 
-\begin{equation}
+$$
 \min_{\bm{u}} \left\|\bm{u} - \bm{u}_{\text{EMG}}\right\|^2
-\end{equation}
+$$
 
 subject to:
-\begin{equation}
+$$
 \bm{B}(\bm{q})\,\bm{u} + \bm{J}_c^T\,\boldsymbol{\lambda} = \bm{r}
-\end{equation}
+$$
 
 where $\bm{u}_{\text{EMG}}$ is derived from integrated and normalized EMG signals.
 
@@ -594,9 +576,9 @@ The most direct way to break the underdetermined inverse problem is to measure c
 A golf club instrumented with a 6-DOF force-torque sensor at the grip can measure the forces and torques applied by both hands simultaneously.
 
 Given these direct measurements of the grip forces, the inverse dynamics equations become:
-\begin{equation}
+$$
 \bm{B}(\bm{q})\,\bm{u} = \bm{r} - \bm{J}_c^T\,\boldsymbol{\lambda}_{\text{measured}}
-\end{equation}
+$$
 
 where $\boldsymbol{\lambda}_{\text{measured}}$ is known from the force sensor. Now, the system has $n$ equations and $p$ unknowns (the applied torques). If $p = n$, the system is square and has a unique solution.
 
@@ -637,10 +619,9 @@ This is a **forward** problem, not an inverse problem. And for forward problems,
 
 
 Recall the ZTCF governing equation:
-\begin{equation}
+$$
 \bm{M}(\bm{q})\,\ddot{\bm{q}} + \bm{C}(\bm{q},\dot{\bm{q}})\,\dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{J}_c^T(\bm{q})\,\boldsymbol{\lambda}
-\label{eq:ztcf_eom}
-\end{equation}
+$$
 
 This is forward dynamics with $\bm{u} = \bm{0}$ (the applied torques are set to zero). The only forces acting are constraint forces and gravity.
 
@@ -649,7 +630,7 @@ This is forward dynamics with $\bm{u} = \bm{0}$ (the applied torques are set to 
 
 The ZTCF trajectory is a **forward integration problem**. Given initial conditions $\bm{q}(0), \dot{\bm{q}}(0)$ and the constraint equations $\bm{\Phi}(\bm{q}) = \bm{0}$, the motion $\bm{q}(t)$ is **uniquely determined** by integrating the constrained EOM forward.
 
-Even though the system has parallel loops and redundant actuators, the forward integration is *well-posed*. The KKT matrix (Equation \ref{eq:KKT_matrix}) is nonsingular at each time step, so the constraint forces $\boldsymbol{\lambda}$ and accelerations $\ddot{\bm{q}}$ are uniquely determined.
+Even though the system has parallel loops and redundant actuators, the forward integration is *well-posed*. The KKT matrix is nonsingular at each time step, so the constraint forces $\boldsymbol{\lambda}$ and accelerations $\ddot{\bm{q}}$ are uniquely determined.
 
 The ZTCF trajectory is the unique solution to the zero-control problem. There is no ambiguity in what the motion is.
 
@@ -694,10 +675,9 @@ Even for open chains, inverse dynamics becomes numerically unreliable in certain
 
 
 For an open-chain system with $n$ joints and $n$ actuators, the inverse dynamics problem is:
-\begin{equation}
+$$
 \bm{u} = \bm{M}(\bm{q})\,\ddot{\bm{q}} + \bm{h}(\bm{q},\dot{\bm{q}})
-\label{eq:open_inverse_simple}
-\end{equation}
+$$
 
 Even though the mass matrix $\bm{M}$ is always invertible, it may be *nearly* singular in some configurations. The condition number measures this:
 
@@ -705,10 +685,9 @@ Even though the mass matrix $\bm{M}$ is always invertible, it may be *nearly* si
 ## Condition Number
 
 The condition number of a matrix $\bm{M}$ is defined as:
-\begin{equation}
+$$
 \kappa(\bm{M}) = \|\bm{M}\| \cdot \|\bm{M}^{-1}\|
-\label{eq:condition_number}
-\end{equation}
+$$
 
 A condition number of 1 means the matrix is perfectly conditioned. A large condition number means the matrix is nearly singular and difficult to invert numerically.
 
@@ -867,9 +846,9 @@ The measured accelerations are $\ddot{q}_L = 1.0$ rad/s$^2$ and $\ddot{q}_R = 0.
 - **Null Space in Redundant Systems (Theory)**
 
 Consider a system where the force balance is:
-\begin{equation}
+$$
 \bm{B}(\bm{q})\,\bm{u} + \bm{J}_c^T(\bm{q})\,\boldsymbol{\lambda} = \bm{r}
-\end{equation}
+$$
 
 where $\bm{B} \in \mathbb{R}^{3 \times 4}$ (3 equations, 4 applied torques) and $\bm{J}_c^T \in \mathbb{R}^{3 \times 2}$ (2 constraint forces).
 
@@ -884,9 +863,9 @@ Explain in one paragraph why the ZTCF (setting $\bm{u} = \bm{0}$) is more robust
 - **Conditioning of Inverse Dynamics (Numerical Thought Experiment)**
 
 Suppose an open-chain arm has a mass matrix
-\begin{equation}
+$$
 \bm{M}(q) = \begin{bmatrix} 1 & 0 \\ 0 & \epsilon \end{bmatrix}
-\end{equation}
+$$
 
 where $\epsilon$ is small (near-singular configuration).
 

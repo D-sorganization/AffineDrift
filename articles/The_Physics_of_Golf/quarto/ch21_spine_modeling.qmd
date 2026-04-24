@@ -285,21 +285,20 @@ Suppose we perform the following sequence:
 - Third, rotate about the (new) local $z$-axis by angle $\theta$ (axial rotation)
 
 The combined rotation matrix is:
-\begin{equation}
+$$
 \bm{R}_{\mathrm{total}} = \bm{R}_z(\theta) \bm{R}_y(\psi) \bm{R}_x(\phi)
-\end{equation}
+$$
 
 where each $\bm{R}_i(\alpha)$ is a rotation matrix about axis $i$ by angle $\alpha$.
 
 Expanding this (using standard rotation matrix formulas):
-\begin{equation}
+$$
 \bm{R}_{\mathrm{total}} = \begin{bmatrix}
 \cos\theta\cos\psi & -\sin\theta & \cos\theta\sin\psi \\
 \sin\theta\cos\psi & \cos\theta & \sin\theta\sin\psi \\
 -\sin\psi & 0 & \cos\psi
 \end{bmatrix}
-\label{eq:euler_angles}
-\end{equation}
+$$
 
 (For small angles, this simplifies, but the coupling is still present.)
 
@@ -395,9 +394,9 @@ Each segment has 3 rotational DOF relative to the segment below. The segments ar
 - Gravity (passive loading)
 
 Typically, each joint is modeled as:
-\begin{equation}
+$$
 I_i \ddot{\theta}_i + d_i \dot{\theta}_i + k_i \theta_i + \tau_{\mathrm{gravity},i} = \tau_{\mathrm{muscle},i} + \tau_{\mathrm{from\_segment\_below}}
-\end{equation}
+$$
 
 where $I_i$ is the moment of inertia, $d_i$ is damping, $k_i$ is stiffness, etc.
 
@@ -551,9 +550,9 @@ The mechanism in the golf swing is well-established:
 The most vulnerable location is the posterolateral corner of the disc (toward the back and to one side). A herniation at this location can compress the spinal nerve root, causing radiating pain down the leg.
 
 Mathematically, the stress in the disc annulus is:
-\begin{equation}
+$$
 \sigma_{\mathrm{annulus}} = \frac{F_{\mathrm{compression}}}{A_{\mathrm{disc}}} + \frac{M_{\mathrm{bending}} \cdot r}{I_{\mathrm{disc}}} + \frac{\tau_{\mathrm{torsion}} \cdot r}{J_{\mathrm{polar}}}
-\end{equation}
+$$
 
 where the first term is compressive stress, the second is bending stress, and the third is torsional shear stress. The disc fails when the combination of stresses exceeds the annulus strength (which varies with aging and other factors, but is typically in the range of 10--20 MPa).
 
@@ -587,14 +586,14 @@ The spine contributes significantly to the drift field. Let us break down the co
 
 
 The intervertebral disc acts as a torsional spring for axial rotation. When you rotate a vertebra relative to the one below, the annulus fibers (arranged at 30$^{\circ}$ and 150$^{\circ}$) resist the rotation. The torsional stiffness of a single motion segment is approximately:
-\begin{equation}
+$$
 k_{\mathrm{disc}} \approx 5 \text{ to } 15 \text{ N} \cdot \mathrm{m/deg}
-\end{equation}
+$$
 
 (varying with disc health and spinal level). For a segment experiencing a 5$^{\circ}$ rotation:
-\begin{equation}
+$$
 \tau_{\mathrm{disc}} = k_{\mathrm{disc}} \cdot \theta = (10 \text{ N} \cdot \mathrm{m/deg}) \times 5^{\circ} = 50 \text{ N} \cdot \mathrm{m}
-\end{equation}
+$$
 
 Over 24 spinal segments, the cumulative torsional stiffness is substantial. The entire spine acts as a torsional spring resisting axial rotation.
 
@@ -605,12 +604,12 @@ Over 24 spinal segments, the cumulative torsional stiffness is substantial. The 
 Spinal ligaments are nonlinear springs. At small angles, they are slack and exert no force. As you approach the end range of motion, the ligaments become taut and stiffen dramatically.
 
 The force-extension relationship is approximately:
-\begin{equation}
+$$
 F_{\mathrm{ligament}} = \begin{cases}
 0 & \text{if } \Delta L < L_{\mathrm{slack}} \\
 k_{\mathrm{ligament}} (L - L_0)^2 & \text{if } L > L_{\mathrm{slack}}
 \end{cases}
-\end{equation}
+$$
 
 (nonlinear, quadratic stiffening). Ligaments are "slack" (no tension) in the neutral posture, become moderately taut at moderate range of motion, and become very stiff approaching maximum range.
 
@@ -626,9 +625,9 @@ Even at rest, muscles maintain a low level of activity called ``muscle tone.'' T
 During the golf swing, the muscles may be under voluntary control (actively contracting to produce torques) or may be in a passive ``braced'' state (tensioned to provide stiffness without large torques). Co-contraction of flexors and extensors increases overall stiffness without changing the net direction of motion.
 
 Mathematically, if a group of muscles is braced (but not producing net torque), they contribute to the effective stiffness of the joint:
-\begin{equation}
+$$
 k_{\mathrm{effective}} = k_{\mathrm{ligament}} + k_{\mathrm{muscle\_tone}} + k_{\mathrm{IAP}}
-\end{equation}
+$$
 
 In particular, bracing the core (by raising intra-abdominal pressure and co-contracting the spinal stabilizers) increases $k_{\mathrm{muscle_tone}}$ significantly.
 
@@ -637,9 +636,9 @@ In particular, bracing the core (by raising intra-abdominal pressure and co-cont
 
 
 For the lumbar spine rotating about the vertical axis with angular velocity $\omega$:
-\begin{equation}
+$$
 f(\theta_{\mathrm{lumbar}}) = -k_{\mathrm{total}} \theta_{\mathrm{lumbar}} - d_{\mathrm{total}} \dot{\theta}_{\mathrm{lumbar}} + \tau_{\mathrm{gravity}}
-\end{equation}
+$$
 
 where:
 
@@ -782,8 +781,8 @@ If your biomechanical model predicts any of the following, treat it as a clinica
 
 
 - **Three-Segment Model:** Write the equations of motion for a three-segment spinal model (pelvis, lumbar, thoracic) in the form:
-   \begin{equation}
-   I_i \ddot{\theta}_i + d_i \dot{\theta}_i + k_i \theta_i = \tau_{\mathrm{muscle}, i} + \tau_{\mathrm{coupling}, i}
-   \end{equation}
+   $$
+I_i \ddot{\theta}_i + d_i \dot{\theta}_i + k_i \theta_i = \tau_{\mathrm{muscle}, i} + \tau_{\mathrm{coupling}, i}
+$$
    where the coupling term represents the torque from the adjacent segment above or below. Use realistic values for moment of inertia, damping, and stiffness.
 
