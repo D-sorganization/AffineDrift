@@ -309,6 +309,16 @@ where $\theta$ is angle, $\omega$ is angular velocity, $g$ is gravitational acce
 $b$ is friction, and $u$ is applied torque. The state is $\x = (\theta, \omega)$ and control
 is $\uvec = u$.
 
+\begin{remark}[Volume-wide pendulum sign convention]
+\label{rem:ch1:pendulum-sign}
+Throughout this volume, \textbf{$\theta = 0$ denotes the downward (stable) equilibrium}.
+Gravity is restoring, giving the $-g\sin\theta$ term above.
+When an inverted (unstable) equilibrium is needed---as in the DDP swing-up example of
+Ch05---it is introduced via the coordinate substitution $\phi = \pi - \theta$, under which
+the dynamics become $\ddot\phi = +g\sin\phi + \cdots$ at $\phi = 0$.
+Silently flipping the sign without this substitution is an error.
+\end{remark}
+
 The vector field is
 \begin{equation}
 f(\x, u) = \begin{pmatrix} \omega \\ -g\sin\theta - b\omega + u \end{pmatrix}.

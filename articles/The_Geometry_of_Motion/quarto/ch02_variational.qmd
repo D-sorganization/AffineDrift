@@ -685,15 +685,23 @@ linearized about the downward equilibrium.
 ### Pendulum Dynamics
 
 
-Consider a simple pendulum with mass $m$, length $\ell$, and a motor torque $\tau$ applied at the pivot:
+Consider a simple pendulum with mass $m$, length $\ell$, and a motor torque $\tau$ applied at the pivot.
+We measure $\theta$ from the downward (stable) equilibrium; gravity produces a restoring torque:
 \begin{equation}
-\ddot\theta = \frac{g}{\ell}\sin\theta + \frac{\tau}{m\ell^2}.
+\ddot\theta = -\frac{g}{\ell}\sin\theta + \frac{\tau}{m\ell^2}.
 \label{eq:ch2:pend-ode}
 \end{equation}
 
+\begin{remark}[Sign Convention]
+The $-$ sign reflects the restoring nature of gravity about the downward equilibrium $\theta=0$
+(see Remark~\ref{rem:ch1:pendulum-sign} in Ch01).
+If $\theta=0$ denoted the upright (inverted) equilibrium instead, gravity would be destabilizing
+and the sign would be $+g/\ell$; that case is introduced in Ch05 via $\theta \to \pi-\theta$.
+\end{remark}
+
 Writing this as a first-order system with $x_1 = \theta$ and $x_2 = \dot\theta$:
 \begin{equation}
-\begin{pmatrix}\dot x_1\\\dot x_2\end{pmatrix} = \begin{pmatrix}x_2\\\frac{g}{\ell}\sin x_1 + \frac{u}{m\ell^2}\end{pmatrix},
+\begin{pmatrix}\dot x_1\\\dot x_2\end{pmatrix} = \begin{pmatrix}x_2\\-\frac{g}{\ell}\sin x_1 + \frac{u}{m\ell^2}\end{pmatrix},
 \label{eq:ch2:pend-first}
 \end{equation}
 where $u = \tau$ is the control input.
@@ -708,7 +716,7 @@ Suppose the nominal trajectory is the equilibrium at the downward position with 
 \label{eq:ch2:pend-nominal}
 \end{equation}
 
-Verify: $\dot{\bar x}_1 = 0$, $\dot{\bar x}_2 = \frac{g}{\ell}\sin(0) + 0 = 0$. This is indeed a fixed point.
+Verify: $\dot{\bar x}_1 = 0$, $\dot{\bar x}_2 = -\frac{g}{\ell}\sin(0) + 0 = 0$. This is indeed a fixed point.
 
 
 ### Jacobians
@@ -716,14 +724,14 @@ Verify: $\dot{\bar x}_1 = 0$, $\dot{\bar x}_2 = \frac{g}{\ell}\sin(0) + 0 = 0$. 
 
 At the point $(\bar\x, \bar u) = (0,0)$:
 \begin{equation}
-\mat{A} = \frac{\partial}{\partial \x}\begin{pmatrix}x_2\\\frac{g}{\ell}\sin x_1\end{pmatrix}\bigg|_{(0,0)}
-= \begin{pmatrix}0 & 1\\\frac{g}{\ell}\cos(0) & 0\end{pmatrix}
-= \begin{pmatrix}0 & 1\\\frac{g}{\ell} & 0\end{pmatrix}.
+\mat{A} = \frac{\partial}{\partial \x}\begin{pmatrix}x_2\\-\frac{g}{\ell}\sin x_1\end{pmatrix}\bigg|_{(0,0)}
+= \begin{pmatrix}0 & 1\\-\frac{g}{\ell}\cos(0) & 0\end{pmatrix}
+= \begin{pmatrix}0 & 1\\-\frac{g}{\ell} & 0\end{pmatrix}.
 \label{eq:ch2:pend-A}
 \end{equation}
 
 \begin{equation}
-\mat{B} = \frac{\partial}{\partial u}\begin{pmatrix}x_2\\\frac{g}{\ell}\sin x_1 + \frac{u}{m\ell^2}\end{pmatrix}\bigg|_{(0,0)}
+\mat{B} = \frac{\partial}{\partial u}\begin{pmatrix}x_2\\-\frac{g}{\ell}\sin x_1 + \frac{u}{m\ell^2}\end{pmatrix}\bigg|_{(0,0)}
 = \begin{pmatrix}0\\\frac{1}{m\ell^2}\end{pmatrix}.
 \label{eq:ch2:pend-B}
 \end{equation}
@@ -731,7 +739,7 @@ At the point $(\bar\x, \bar u) = (0,0)$:
 The variational equation is thus
 \begin{equation}
 \begin{pmatrix}\delta\dot x_1\\\delta\dot x_2\end{pmatrix}
-= \begin{pmatrix}0 & 1\\\frac{g}{\ell} & 0\end{pmatrix}\begin{pmatrix}\delta x_1\\\delta x_2\end{pmatrix}
+= \begin{pmatrix}0 & 1\\-\frac{g}{\ell} & 0\end{pmatrix}\begin{pmatrix}\delta x_1\\\delta x_2\end{pmatrix}
 + \begin{pmatrix}0\\\frac{1}{m\ell^2}\end{pmatrix}\delta u.
 \label{eq:ch2:pend-variational}
 \end{equation}
@@ -742,11 +750,12 @@ The variational equation is thus
 
 For the time-invariant case, we compute the eigenvalues of $\mat{A}$:
 \begin{equation}
-\det(\lambda \mat{I} - \mat{A}) = \det\begin{pmatrix}\lambda & -1\\-\frac{g}{\ell} & \lambda\end{pmatrix}
+\det(\lambda \mat{I} - \mat{A}) = \det\begin{pmatrix}\lambda & -1\\\frac{g}{\ell} & \lambda\end{pmatrix}
 = \lambda^2 + \frac{g}{\ell} = 0.
 \end{equation}
 
-Thus $\lambda = \pm i\sqrt{g/\ell}$, which are purely imaginary. Let $\omega_0 := \sqrt{g/\ell}$ (the natural frequency).
+Thus $\lambda = \pm i\sqrt{g/\ell}$, which are purely imaginary---confirming the downward equilibrium is a
+center (oscillatory, Lyapunov stable).  Let $\omega_0 := \sqrt{g/\ell}$ (the natural frequency).
 
 The matrix exponential can be computed using the formula for a 2D system:
 \begin{equation}
@@ -759,10 +768,10 @@ The matrix exponential can be computed using the formula for a 2D system:
 Verify: $\frac{\dd}{\dd t}\Phi(t,0) = \begin{pmatrix}-\omega_0\sin(\omega_0 t) & \cos(\omega_0 t)\\\
 -\omega_0^2\cos(\omega_0 t) & -\omega_0\sin(\omega_0 t)\end{pmatrix}$. Comparing with $\mat{A}\Phi(t,0)$:
 \begin{equation}
-\begin{pmatrix}0 & 1\\\frac{g}{\ell} & 0\end{pmatrix}\begin{pmatrix}\cos(\omega_0 t) & \frac{\sin(\omega_0 t)}{\omega_0}\\
+\begin{pmatrix}0 & 1\\-\frac{g}{\ell} & 0\end{pmatrix}\begin{pmatrix}\cos(\omega_0 t) & \frac{\sin(\omega_0 t)}{\omega_0}\\
 -\omega_0\sin(\omega_0 t) & \cos(\omega_0 t)\end{pmatrix}
 = \begin{pmatrix}-\omega_0\sin(\omega_0 t) & \cos(\omega_0 t)\\
-\omega_0^2\cos(\omega_0 t) & \omega_0\sin(\omega_0 t)\end{pmatrix}.
+-\omega_0^2\cos(\omega_0 t) & -\omega_0\sin(\omega_0 t)\end{pmatrix}.
 \end{equation}
 
 Good (noting $\omega_0^2 = g/\ell$).

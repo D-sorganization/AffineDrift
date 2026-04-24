@@ -211,28 +211,32 @@ M_{qq}-M_{q\eta}M_{\eta\eta}^{-1}M_{\eta q} = \begin{bmatrix}
 \end{bmatrix}.
 \end{equation}
 
-\begin{remark}[Sign Error / Singularity Warning]
-The $(3,3)$ entry $-0.67 < 0$ implies this matrix is \textbf{not} positive definite.
-This indicates either a sign error in the numerical example or that the chosen
-configuration is near a kinematic singularity where $M_{\eta\eta}^{-1}$ is
-ill-conditioned. For a positive definite Schur complement (required for $H_{qq}$ to
-be well-defined as a mobility tensor), all diagonal entries and all eigenvalues must
-be positive. In practice, one should verify these values numerically for the actual
-robot configuration before interpreting $H_{qq}$.
-\end{remark}
+\begin{warningbox}
+\textbf{Non-physical Schur complement.}
+The $(3,3)$ entry $-0.67 < 0$ means this matrix is \textbf{not} positive definite.
+For a physical golfer--shaft system the Schur complement must be positive definite: it is
+the effective joint-space inertia after eliminating shaft compliance, and a negative
+eigenvalue would imply negative kinetic energy---impossible.
+The non-positive-definite result indicates the illustrative inertia parameters used here are
+not physically realizable.  The subsequent values for $H_{qq}$, $\Gamma$, and the drift
+acceleration are placeholders only.  A \texttt{numpy.linalg.eigvalsh} unit test on realistic
+parameters must return all-positive eigenvalues before these computations can be given
+physical meaning.
+\end{warningbox}
 
-Inverting to get $H_{qq}$:
+Inverting to get $H_{qq}$ (placeholder---see warning above):
 \begin{equation}
 H_{qq} = \begin{bmatrix}
 0.236 & -0.103 & 0.011 \\
 -0.103 & 0.584 & 0.171 \\
 0.011 & 0.171 & -1.502
-\end{bmatrix}~\text{(rad$\cdot$s)}^2/\text{N$\cdot$m},
+\end{bmatrix}~(\text{kg}\cdot\text{m}^2)^{-1},
 \label{eq:ch8:Hqq-numeric}
 \end{equation}
 
-with condition number $\kappa(H_{qq}) \approx 15$, indicating moderate but manageable
-conditioning.
+with condition number $\kappa(H_{qq}) \approx 15$.  The negative diagonal entry $-1.502$
+is an artifact of the non-positive-definite Schur complement; it would not appear with
+physically realizable parameters.
 
 \subsubsection{Inertial Coupling Ratio}
 
@@ -262,8 +266,8 @@ The coupled Lagrangian yields the control-affine form:
 \begin{equation}
 \dot\x = \underbrace{\begin{bmatrix}
 \dot\q \\ \dot{\vec\eta} \\
-H_{qq}(q_1 + q_2 + q_3 - g_q) \\
-\Gamma H_{qq}(q_1 + q_2 + q_3 - g_q)
+-H_{qq}\!\left[C(\q,\dot\q)\dot\q + \vec{g}(\q) + K_s\vec\eta\right] \\
+\Gamma\cdot\!\left(-H_{qq}\!\left[C(\q,\dot\q)\dot\q + \vec{g}(\q) + K_s\vec\eta\right]\right)
 \end{bmatrix}}_{f(\x)}
 + \underbrace{\begin{bmatrix}
 0 \\ 0 \\
@@ -275,14 +279,26 @@ H_{qq}B(\q) \\ \Gamma H_{qq}B(\q)
 where:
 \begin{itemize}
 \item $H_{qq} = (M_{qq}-M_{q\eta}M_{\eta\eta}^{-1}M_{\eta q})^{-1}$ is the
-**articulated-body inertia** inverse (effective mobility);
-\item $\Gamma = -M_{\eta\eta}^{-1}M_{\eta q}$ is the **inertial coupling ratio**---a
-``gear ratio'' governing how joint torques transmit to shaft modes;
+\textbf{articulated-body inertia} inverse (effective mobility),
+units $(\text{kg}\cdot\text{m}^2)^{-1}$;
+\item $C(\q,\dot\q)\dot\q$ is the Coriolis/centripetal torque vector (units N$\cdot$m);
+\item $\vec{g}(\q) = \partial V/\partial\q$ is the conservative-force covector (units N$\cdot$m);
+\item $K_s\vec\eta$ is the elastic restoring torque from shaft bending (units N$\cdot$m);
+\item $\Gamma = -M_{\eta\eta}^{-1}M_{\eta q}$ is the \textbf{inertial coupling ratio}
+(dimensionless), a ``gear ratio'' mapping joint torques to shaft modal accelerations;
 \item $B(\q) = I_3$ maps control inputs (shoulder, elbow, wrist torques) to generalized
 joint forces;
-\item $g_q$ includes gravitational and elastic potential energy terms;
 \item $\dot\q$ and $\dot{\vec\eta}$ are velocities in the state vector.
 \end{itemize}
+
+\begin{remark}[Dimensional consistency]
+Each block of $f(\x)$ must have units of the time-derivative of the corresponding state.
+The third block $-H_{qq}[\cdots]$ must be in rad/s$^2$ (angular acceleration).
+Since $H_{qq}$ has units $(\text{kg}\cdot\text{m}^2)^{-1}$ and each torque term
+$[C\dot\q, \vec{g}, K_s\vec\eta]$ has units N$\cdot$m $=$ kg$\cdot$m$^2$/s$^2$, the
+product gives rad/s$^2$.  Any expression that adds angles (rad) or velocities (rad/s)
+to torques (N$\cdot$m) inside the argument of $H_{qq}$ is dimensionally invalid.
+\end{remark}
 
 \subsubsection{Drift Acceleration at Mid-Downswing}
 
