@@ -3,6 +3,9 @@
 This module centralizes all physical constants, default values, and
 configuration parameters used throughout the wrist universal joint
 torque transmission model.
+
+Default club properties are derived from the PoG canonical equipment
+parameter set (``src.core.constants`` POG_DRIVER_* constants, Issue #2792).
 """
 
 from __future__ import annotations
@@ -11,7 +14,13 @@ import logging
 
 import numpy as np
 
-from src.core.constants import EPSILON  # noqa: F401 -- re-exported for backward compat
+from src.core.constants import (  # noqa: F401 -- EPSILON re-exported for backward compat
+    EPSILON,
+    POG_DRIVER_CLUBHEAD_MASS_KG,
+    POG_DRIVER_SHAFT_LENGTH_M,
+    POG_DRIVER_SHAFT_MASS_KG,
+    POG_L2_CM,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -23,11 +32,13 @@ RANDOM_SEED: int | None = 42
 # Create random number generator with controlled seed
 rng = np.random.default_rng(RANDOM_SEED)
 
-# Default golf club properties
-DEFAULT_CLUBHEAD_WEIGHT: float = 200.0  # grams
-DEFAULT_SHAFT_WEIGHT: float = 100.0  # grams
-DEFAULT_CLUB_LENGTH: float = 1.0  # meters
-DEFAULT_CLUBHEAD_CG_DISTANCE: float = 0.85  # meters
+# Default golf club properties -- sourced from PoG canonical equipment parameters
+# (POG_DRIVER_* in src.core.constants, Issue #2792).
+# Shaft weight uses canonical 55 g (graphite driver), not the old 100 g placeholder.
+DEFAULT_CLUBHEAD_WEIGHT: float = POG_DRIVER_CLUBHEAD_MASS_KG * 1000.0  # grams (= 200.0)
+DEFAULT_SHAFT_WEIGHT: float = POG_DRIVER_SHAFT_MASS_KG * 1000.0  # grams (= 55.0)
+DEFAULT_CLUB_LENGTH: float = POG_DRIVER_SHAFT_LENGTH_M  # meters (= 1.13)
+DEFAULT_CLUBHEAD_CG_DISTANCE: float = POG_L2_CM  # meters (= 0.85)
 
 # Maximum wrist angle before singularity protection (degrees)
 MAX_DELTA_DEGREES: float = 89.0
