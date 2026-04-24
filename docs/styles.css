@@ -17,8 +17,9 @@
   box-sizing: border-box;
 }
 
-/* Global Focus Visibility */
-:focus-visible {
+/* Global Focus Visibility — consolidated rule; use :focus-visible so mouse
+   clicks do not draw outlines while keyboard navigation still does. */
+:where(:focus-visible) {
   outline: 2px solid var(--accent-blue);
   outline-offset: 2px;
   border-radius: 2px;
@@ -74,6 +75,25 @@
   --legal-pad-yellow-accent: #f0e68c;
   --legal-pad-yellow-border: #d4c57a;
   --primary-color: #0f4c75;
+
+  /* Palette unification: alias bespoke names to Okabe-Ito canonical tokens
+     declared in custom.scss so components converge on one colorblind-safe system
+     (Issue #2789 finding 5).  The hex fallbacks ensure styles.css is standalone. */
+  --primary-blue: var(--color-blue, #0072b2);
+  --accent-blue: var(--color-sky-blue, #56b4e9);
+
+  /* Callout / panel component tokens (Issue #2783).
+     Override under [data-theme="dark"] and prefers-color-scheme dark below. */
+  --callout-note-bg: #e7f3ff;
+  --callout-note-border: #90caf9;
+  --callout-warn-bg: #fff5f5;
+  --callout-warn-border: #ef9a9a;
+  --callout-tip-bg: #f8fdfe;
+  --callout-tip-border: #b2ebf2;
+  --callout-key-bg: #e3f2fd;
+  --callout-key-border: #56b4e9;
+  --callout-limit-bg: #ffebee;
+  --callout-limit-border: #d55e00;
 }
 
 body {
@@ -361,10 +381,6 @@ img[loading="lazy"].loaded {
 
 /* Respect reduced motion preferences */
 @media (prefers-reduced-motion: reduce) {
-  img[loading="lazy"] {
-    animation: none;
-  }
-
   *,
   *::before,
   *::after {
@@ -419,25 +435,33 @@ figcaption {
    Header & Navigation
    --- */
 
-/* Skip to Content Link */
+/* Skip to Content Link — modern visually-hidden pattern (avoids RTL issues
+   with the deprecated top:-9999px approach). */
 .skip-to-content {
-  position: fixed;
-  top: -9999px;
-  left: 0.5rem;
+  position: absolute;
+  left: -100vw;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
   background: var(--primary-blue);
   color: var(--pure-white);
-  padding: 0.5rem 1rem;
-  z-index: 2000;
+  padding: 0.75rem 1rem;
+  z-index: 10000;
   text-decoration: none;
   font-weight: 600;
-  border-radius: 0 0 4px 4px;
-  transition: top 0.2s ease;
+  border-radius: 4px;
   box-shadow: var(--shadow-md);
 }
 
-.skip-to-content:focus {
-  top: 0;
-  outline: 3px solid var(--accent-blue);
+.skip-to-content:focus-visible {
+  position: fixed;
+  left: 1rem;
+  top: 1rem;
+  width: auto;
+  height: auto;
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
 }
 
 header {
@@ -544,15 +568,18 @@ nav .container {
   color: var(--primary-blue);
 }
 
-/* Search box styling */
+/* Search box styling — clamp prevents the search bar from pushing nav items
+   off-screen at medium viewports (992-1200px). */
 #quarto-header #quarto-search {
   margin-left: auto !important;
-  min-width: 300px;
+  min-width: clamp(180px, 25vw, 320px);
+  flex: 0 1 320px;
+}
 
-  /* Force minimum width */
-  flex-basis: 400px;
-
-  /* Target around 400px width */
+@media (max-width: 991.98px) {
+  #quarto-header #quarto-search {
+    min-width: 0;
+  }
 }
 
 /* stylelint-disable-next-line selector-class-pattern -- third-party Algolia class */
@@ -560,7 +587,7 @@ nav .container {
   width: 100%;
 
   /* Fill the container */
-  min-width: 300px;
+  min-width: 0;
 }
 
 /* stylelint-disable-next-line selector-class-pattern -- third-party Algolia class */
@@ -628,6 +655,15 @@ nav .container {
 .nav-links a:hover::after,
 .nav-links a.active::after {
   width: 100%;
+}
+
+/* aria-current="page" — active page indication for assistive tech and visual
+   users. Mirrors the .active class so both paths produce the same styling. */
+nav a[aria-current="page"],
+.sidebar a[aria-current="page"],
+.left-sidebar a[aria-current="page"] {
+  color: var(--pure-white);
+  font-weight: 600;
 }
 
 /* .nav-toggle removed (legacy system, fixes #2785) */
@@ -791,6 +827,22 @@ nav .container {
   overflow-x: auto;
   max-width: 100%;
   padding: 1rem 0;
+}
+
+/* Responsive Tables — baseline applied to ALL tables so pages outside
+   #quarto-document-content (home, resources, indices) don't overflow on
+   mobile. The .table-wrapper JS enhancement remains for richer scroll UX. */
+@media (max-width: 767.98px) {
+  table:not(.table-wrapper table) {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  table:not(.table-wrapper table) caption {
+    display: table-caption;
+  }
 }
 
 /* 🎨 Palette UX: Responsive Tables */
@@ -1092,14 +1144,14 @@ nav .container {
 
 h2:hover .anchor-link,
 h3:hover .anchor-link,
-.anchor-link:focus {
+.anchor-link:focus-visible {
   opacity: 1;
-  outline: none;
 }
 
-.anchor-link:focus {
-  box-shadow: 0 0 0 2px var(--accent-blue);
-  border-radius: 4px;
+.anchor-link:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+  border-radius: 2px;
 }
 
 .anchor-link:hover {
@@ -1133,15 +1185,16 @@ h3:hover .anchor-link,
   visibility: visible;
 }
 
-.back-to-top:hover,
-.back-to-top:focus {
+.back-to-top:hover {
   transform: translateY(-2px);
   background: var(--accent-blue);
 }
 
-.back-to-top:focus {
-  outline: 2px solid var(--primary-blue);
-  outline-offset: 2px;
+.back-to-top:focus-visible {
+  transform: translateY(-2px);
+  background: var(--accent-blue);
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 3px;
 }
 
 .back-to-top svg {
@@ -1177,15 +1230,16 @@ h3:hover .anchor-link,
   visibility: visible;
 }
 
-.export-to-pdf:hover,
-.export-to-pdf:focus {
+.export-to-pdf:hover {
   transform: translateY(-2px);
   background: var(--primary-blue);
 }
 
-.export-to-pdf:focus {
+.export-to-pdf:focus-visible {
+  transform: translateY(-2px);
+  background: var(--primary-blue);
   outline: 2px solid var(--accent-blue);
-  outline-offset: 2px;
+  outline-offset: 3px;
 }
 
 .export-to-pdf svg {
@@ -1215,7 +1269,7 @@ h3:hover .anchor-link,
 }
 
 .export-to-pdf:hover .tooltip,
-.export-to-pdf:focus .tooltip {
+.export-to-pdf:focus-visible .tooltip {
   opacity: 1;
   visibility: visible;
 }
@@ -1320,6 +1374,16 @@ h3:hover .anchor-link,
   fill: currentcolor;
 }
 
+/* FAB collision fix: on narrow viewports only back-to-top is shown to prevent
+   multiple fixed buttons from overlapping (Issue #2786 finding 4). */
+@media (max-width: 767.98px) {
+  .export-to-pdf,
+  .pdf-download-btn,
+  #theme-toggle {
+    display: none;
+  }
+}
+
 /* Print styles were moved to css/print.css to isolate high-specificity rules. */
 
 /* ---
@@ -1371,10 +1435,10 @@ h3:hover .anchor-link,
    In Layman's Terms Sidebar
    --- */
 .laymans-terms {
-  border: 2px solid #17a2b8;
+  border: 2px solid var(--callout-tip-border, #17a2b8);
   border-radius: 8px;
   margin: 2rem 0;
-  background: linear-gradient(135deg, #f8fdfe 0%, #e3f6f8 100%);
+  background: var(--callout-tip-bg, #f8fdfe);
   overflow: hidden;
   box-shadow: var(--shadow-sm);
 }
@@ -1405,9 +1469,11 @@ h3:hover .anchor-link,
   gap: 0.5rem;
 }
 
-.laymans-terms-header h2::before {
-  content: "💡";
+/* 💡 emoji moved to HTML with aria-hidden="true" — CSS ::before was inaccessible
+   to screen readers (Issue #2789 finding 2). The .laymans-terms-emoji span carries it. */
+.laymans-terms-emoji {
   font-size: 1.2rem;
+  line-height: 1;
 }
 
 .laymans-terms-icon {
@@ -1466,9 +1532,11 @@ h3:hover .anchor-link,
   gap: 0.5rem;
 }
 
-.laymans-item h3::before {
-  content: "📌";
+/* 📌 emoji moved to HTML with aria-hidden="true" — CSS ::before was inaccessible
+   (Issue #2789 finding 2). The .laymans-item-emoji span carries it. */
+.laymans-item-emoji {
   font-size: 0.9rem;
+  line-height: 1;
 }
 
 .laymans-item p {
@@ -1487,10 +1555,12 @@ h3:hover .anchor-link,
   border-left: 3px solid #ffc107;
 }
 
-.laymans-item .analogy::before {
-  content: "🎯 Analogy: ";
+/* Label moved to HTML: <span class="analogy-label"><span aria-hidden="true">🎯</span> Analogy:</span> */
+.laymans-item .analogy-label {
+  display: block;
   font-weight: 600;
   color: #856404;
+  margin-bottom: 0.25rem;
 }
 
 .laymans-item .key-takeaway {
@@ -1502,10 +1572,12 @@ h3:hover .anchor-link,
   border-left: 3px solid #28a745;
 }
 
-.laymans-item .key-takeaway::before {
-  content: "✅ Key Takeaway: ";
+/* Label moved to HTML: <span class="key-takeaway-label"><span aria-hidden="true">✅</span> Key Takeaway:</span> */
+.laymans-item .key-takeaway-label {
+  display: block;
   font-weight: 600;
   color: #155724;
+  margin-bottom: 0.25rem;
 }
 
 /* In Layman's Terms - Responsive */
@@ -1648,7 +1720,30 @@ form.contact-form .form-group textarea {
   outline: none;
   border-color: var(--accent-blue);
   box-shadow: 0 0 0 3px var(--light-blue);
-  background-color: var(--pure-white);
+  /* Use --bg-body instead of --pure-white so dark mode does not flash white */
+  background-color: var(--bg-body);
+  color: var(--text-main);
+}
+
+/* Form error states (Issue #2789 finding 1) */
+.form-group input:user-invalid,
+.form-group textarea:user-invalid {
+  border-color: var(--color-vermillion);
+  box-shadow: 0 0 0 3px rgba(213, 94, 0, 0.15);
+}
+
+.form-group input[aria-invalid="true"],
+.form-group textarea[aria-invalid="true"] {
+  border-color: var(--color-vermillion);
+  box-shadow: 0 0 0 3px rgba(213, 94, 0, 0.15);
+}
+
+/* Inline error text region */
+.form-error {
+  color: var(--color-vermillion);
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+  display: block;
 }
 
 .btn-primary {
@@ -1829,23 +1924,24 @@ form.contact-form .form-group textarea {
 
 /* Search box styling - Reverted to default/small (consolidated above) */
 
-/* Home Layout Updates */
+/* Home Layout Updates — default to column so narrow viewports never produce
+   horizontal body scroll. Row layout kicks in at ≥1025px. */
 .home-layout {
-  display: flex !important;
-  flex-flow: row nowrap !important;
-  align-items: flex-start !important;
-
-  /* Ensure top alignment */
-  justify-content: flex-start !important;
-
-  /* Changed from space-between to keep gap consistent */
-  gap: 2rem !important;
-
-  /* Explicit 1/4 inch+ gap (approx 32px) */
+  display: flex;
+  flex-flow: column wrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 2rem;
   max-width: 100%;
   margin: 0 auto;
   padding: 1rem 0;
   width: 100%;
+}
+
+@media (min-width: 1025px) {
+  .home-layout {
+    flex-flow: row nowrap;
+  }
 }
 
 .home-sidebar {
@@ -1888,7 +1984,7 @@ form.contact-form .form-group textarea {
 
 @media (width <=1024px) {
   .home-layout {
-    flex-direction: column !important;
+    flex-direction: column;
     gap: 2rem;
   }
 
@@ -2038,8 +2134,12 @@ h1.title,
 .left-sidebar .sidebar-sticky-content {
   position: sticky;
   top: calc(var(--header-offset) + 2rem);
-  height: calc(100vh - var(--header-offset) - 4rem);
+  /* Use 100dvh so mobile URL-bar collapse doesn't cause sidebar to jump.
+     max-height instead of height avoids empty scroll area on short sidebars. */
+  max-height: calc(100dvh - var(--header-offset) - 4rem);
   overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-color) transparent;
 }
 
 /* Ensure the grid doesn't collapse the main content too aggressively */
@@ -2660,6 +2760,23 @@ h1.title,
     --light-blue: #0a2a40;
     --legal-pad-yellow: #1a1810;
     --shadow-color: rgb(0, 0, 0, 0.4);
+
+    /* Accent contrast: boost to ≥7:1 on dark canvas (Issue #2783 finding 2) */
+    --primary-blue: #7fb3d5;
+    --accent-blue: #5dade2;
+    --primary-dark: #e3f2fd;
+
+    /* Callout panel tokens for dark mode (Issue #2783 finding 1) */
+    --callout-note-bg: color-mix(in srgb, #0d0d1a 85%, #5dade2);
+    --callout-note-border: color-mix(in srgb, #0d0d1a 60%, #5dade2);
+    --callout-warn-bg: color-mix(in srgb, #0d0d1a 85%, #d55e00);
+    --callout-warn-border: color-mix(in srgb, #0d0d1a 60%, #d55e00);
+    --callout-tip-bg: color-mix(in srgb, #0d0d1a 85%, #56b4e9);
+    --callout-tip-border: color-mix(in srgb, #0d0d1a 60%, #56b4e9);
+    --callout-key-bg: color-mix(in srgb, #0d0d1a 85%, #56b4e9);
+    --callout-key-border: color-mix(in srgb, #0d0d1a 60%, #56b4e9);
+    --callout-limit-bg: color-mix(in srgb, #0d0d1a 85%, #d55e00);
+    --callout-limit-border: color-mix(in srgb, #0d0d1a 60%, #d55e00);
   }
 
   /* Forms: prevent white flash */
@@ -2674,6 +2791,31 @@ h1.title,
   /* Callout cards: replace hardcoded white backgrounds */
   .laymans-item {
     background: var(--bg-card, #1e1e1e);
+  }
+
+  .abstract-section {
+    background: var(--callout-note-bg);
+    border-left-color: var(--callout-note-border);
+  }
+
+  .keypoint-box {
+    background: var(--callout-key-bg);
+    border-left-color: var(--callout-key-border);
+  }
+
+  .limitation-box {
+    background: var(--callout-limit-bg);
+    border-left-color: var(--callout-limit-border);
+  }
+
+  .laymans-terms {
+    background: var(--callout-tip-bg);
+    border-color: var(--callout-tip-border);
+  }
+
+  .critics-corner {
+    background: var(--callout-warn-bg);
+    border-color: var(--callout-warn-border);
   }
 
   .critic-item {
@@ -2707,6 +2849,23 @@ h1.title,
   --light-blue: #0a2a40;
   --legal-pad-yellow: #1a1810;
   --shadow-color: rgb(0, 0, 0, 0.4);
+
+  /* Accent contrast: boost to ≥7:1 on dark canvas (Issue #2783 finding 2) */
+  --primary-blue: #7fb3d5;
+  --accent-blue: #5dade2;
+  --primary-dark: #e3f2fd;
+
+  /* Callout panel tokens for dark mode (Issue #2783 finding 1) */
+  --callout-note-bg: color-mix(in srgb, #0d0d1a 85%, #5dade2);
+  --callout-note-border: color-mix(in srgb, #0d0d1a 60%, #5dade2);
+  --callout-warn-bg: color-mix(in srgb, #0d0d1a 85%, #d55e00);
+  --callout-warn-border: color-mix(in srgb, #0d0d1a 60%, #d55e00);
+  --callout-tip-bg: color-mix(in srgb, #0d0d1a 85%, #56b4e9);
+  --callout-tip-border: color-mix(in srgb, #0d0d1a 60%, #56b4e9);
+  --callout-key-bg: color-mix(in srgb, #0d0d1a 85%, #56b4e9);
+  --callout-key-border: color-mix(in srgb, #0d0d1a 60%, #56b4e9);
+  --callout-limit-bg: color-mix(in srgb, #0d0d1a 85%, #d55e00);
+  --callout-limit-border: color-mix(in srgb, #0d0d1a 60%, #d55e00);
 }
 
 /* Manual dark mode: forms + callout overrides (mirrors prefers-color-scheme block) */
@@ -2720,6 +2879,31 @@ h1.title,
 
 [data-theme="dark"] .laymans-item {
   background: var(--bg-card, #1e1e1e);
+}
+
+[data-theme="dark"] .abstract-section {
+  background: var(--callout-note-bg);
+  border-left-color: var(--callout-note-border);
+}
+
+[data-theme="dark"] .keypoint-box {
+  background: var(--callout-key-bg);
+  border-left-color: var(--callout-key-border);
+}
+
+[data-theme="dark"] .limitation-box {
+  background: var(--callout-limit-bg);
+  border-left-color: var(--callout-limit-border);
+}
+
+[data-theme="dark"] .laymans-terms {
+  background: var(--callout-tip-bg);
+  border-color: var(--callout-tip-border);
+}
+
+[data-theme="dark"] .critics-corner {
+  background: var(--callout-warn-bg);
+  border-color: var(--callout-warn-border);
 }
 
 [data-theme="dark"] .critic-item {
@@ -2758,4 +2942,57 @@ h1.title,
 #theme-toggle:hover {
   background: var(--accent-blue);
   color: var(--pure-white);
+}
+
+/* =============================================================
+   Audience Cards (Issue #2771 — replaces inline styles)
+   ============================================================= */
+
+.audience-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.audience-card {
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 6px;
+}
+
+.audience-card h3 {
+  margin-top: 0;
+  font-size: 1rem;
+}
+
+.audience-card p {
+  font-size: 0.9rem;
+  color: var(--text-muted, #6b7280);
+}
+
+.audience-card--practitioner {
+  border-top: 3px solid #2563eb;
+}
+
+.audience-card--mathematician {
+  border-top: 3px solid #059669;
+}
+
+.audience-card--ai {
+  border-top: 3px solid #7c3aed;
+}
+
+/* =============================================================
+   Provenance Note (Issue #2771 — replaces inline styles)
+   ============================================================= */
+
+.provenance-note {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  background: var(--bg-secondary, #f8f9fa);
+  border-left: 3px solid var(--primary-color, #2563eb);
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: var(--text-muted, #6b7280);
 }
