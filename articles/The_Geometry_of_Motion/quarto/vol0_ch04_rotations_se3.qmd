@@ -50,12 +50,16 @@ Where Euler angles appear in later chapters (e.g., for aerospace-style visualiza
 
 
 ::: {.callout-note}
+## What Gimbal Lock Actually Is
 
-  If an airplane pitches perfectly $90^\circ$ straight up into the sky, its Roll axis (pointing out its nose) now perfectly aligns with its original Yaw axis (pointing perfectly down towards the Earth). 
-  
-  Mathematically, two independent degrees of freedom have become linearly dependent—they merged into the identical physical rotation axis. A degree of freedom is literally lost during the calculation. If you attempt to control the plane passing through this "Singularity", your matrices become non-invertible and your computer instantly crashes mapping a physical impossibility.
+  If an airplane pitches exactly $90^\circ$ up, its Roll axis aligns with the original Yaw axis. Two previously independent Euler-angle axes become physically identical. The rotation matrix $R\in SO(3)$ itself is **always invertible** — it is an element of $SO(3)$ and $R^{-1}=R^T$ exists everywhere. The rotation has not become singular; the *coordinate chart* (Euler angles) has.
+
+  More precisely: the $3\times 3$ **Euler-angle Jacobian** $J(\phi,\theta,\psi)$ that maps Euler-rate vectors $(\dot\phi,\dot\theta,\dot\psi)$ to body angular velocity $\bm\omega$ is:
+  $$J_{ZYX} = \begin{bmatrix} -\sin\theta & 0 & 1 \\ \cos\theta\sin\psi & \cos\psi & 0 \\ \cos\theta\cos\psi & -\sin\psi & 0 \end{bmatrix},\qquad \det J_{ZYX} = \cos\theta$$
+  At $\theta=\pm\tfrac{\pi}{2}$, $\det J_{ZYX}=0$ and the inverse map (from $\bm\omega$ back to $\dot\phi,\dot\theta,\dot\psi$) blows up. This is a coordinate pathology — the chart fails — not a failure of the rotation itself or of the computer. Using rotation matrices or quaternions instead of Euler angles bypasses the singularity entirely.
 
 :::
+
 
 
 Since our control theory and geometric motion algorithms fundamentally rely on continuous trajectories twisting through all possible spatial angles (like chaotic golf club arcs or throwing motions), we must completely abandon Euler angles. We cannot afford mathematical singularities.
@@ -90,10 +94,10 @@ Because $\hat{x}_b, \hat{y}_b,$ and $\hat{z}_b$ are all length $1$ (unit magnitu
 
 
 
-## Unit Quaternions $\so$
+## Unit Quaternions and $S^3$
 
 
-While $\SO$ completely prevents Gimbal Lock and provides pure, continuous rotation matrices, tracking 9 independent variables inside a $3 \times 3$ grid is wildly computationally inefficient for an engine updating a 15-DOF human model at 1,000 Hertz. 
+While $\SO$ completely prevents Gimbal Lock and provides pure, continuous rotation matrices, tracking 9 independent variables inside a $3 \times 3$ grid is wildly computationally inefficient for an engine updating a 15-DOF human model at 1,000 Hertz.
 
 To solve this, William Rowan Hamilton invented **Quaternions** ($\mathcal{H}$) in 1843. Rather than tracking a full Cartesian body frame $R \in \SO$, any 3D rotation can be flawlessly described as a combination of precisely two things:
 1. A single unit vector $\hat{\bm{\omega}}$ defining the solitary physical axis of rotation.
@@ -107,6 +111,33 @@ $$
 
 
 By simply enforcing that the sum of the squares of these 4 variables equals 1 ($q_0^2 + q_1^2 + q_2^2 + q_3^2 = 1$), a Unit Quaternion provides a singularity-free, ultra-fast algebraic mapping of $\SO$.
+
+::: {.callout-important}
+## The Double Cover $S^3 \to SO(3)$
+
+Unit quaternions live on the 3-sphere $S^3 \cong SU(2)$ — they are **not** elements of $\mathfrak{so}(3)$. There is a surjective group homomorphism (the **double cover**):
+$$\pi : S^3 \to SO(3), \qquad q \mapsto R(q) = R(-q)$$
+Both $q$ and $-q$ represent the *same* rotation in $SO(3)$. This means $\pi_1(SO(3)) = \mathbb{Z}/2$ — the fundamental group of $SO(3)$ is two-element (the "belt trick"). Unwinding consequence: a naive attitude-feedback law computed from quaternion error $\tilde q = q_d \otimes q^{-1}$ can steer through the long path ($-\tilde q$ instead of $\tilde q$), producing a $360°$ detour instead of the shortest-path correction. The fix is to negate $\tilde q$ whenever $\tilde q_0 < 0$. [@bhat2000topological; @chaturvedi2011rigid]
+:::
+
+::: {.callout-tip}
+## The Lie Algebra $\mathfrak{so}(3)$
+
+The tangent space to $SO(3)$ at the identity $I$ is the **Lie algebra** $\mathfrak{so}(3)$:
+$$\mathfrak{so}(3) = T_I SO(3) = \{X \in \mathbb{R}^{3\times 3} : X^T + X = 0\}$$
+Elements are $3\times 3$ skew-symmetric matrices. The **hat isomorphism** $(\cdot)^\wedge : \mathbb{R}^3 \to \mathfrak{so}(3)$ is:
+$$\hat\omega = \begin{bmatrix}0 & -\omega_3 & \omega_2 \\ \omega_3 & 0 & -\omega_1 \\ -\omega_2 & \omega_1 & 0\end{bmatrix}, \qquad \hat\omega\,\bm{v} = \omega\times\bm{v}$$
+The Lie bracket $[A,B] = AB - BA$ on $\mathfrak{so}(3)$ corresponds to the cross product: $[\hat\alpha, \hat\beta] = \widehat{\alpha\times\beta}$. So $(\mathfrak{so}(3), [\cdot,\cdot])$ and $(\mathbb{R}^3, \times)$ are isomorphic as Lie algebras. [@hall2015lie, Ch. 3]
+:::
+
+::: {.callout-important}
+## Angular Velocity and the Rotation Derivative
+
+Differentiating $R^T R = I$ gives $\dot R^T R + R^T \dot R = 0$, so $R^T \dot R$ is skew-symmetric. We define two angular velocity representations:
+$$[\omega_b]^\wedge := R^T \dot R \in \mathfrak{so}(3) \quad\text{(body-frame angular velocity)}$$
+$$[\omega_s]^\wedge := \dot R R^T \in \mathfrak{so}(3) \quad\text{(spatial-frame angular velocity)}$$
+with the relation $[\omega_s]^\wedge = R\,[\omega_b]^\wedge\, R^T$, or equivalently $\omega_s = R\,\omega_b$. Every subsequent chapter that uses angular velocity assumes these identities. [@lynch2017modern, §3.2]
+:::
 
 Throughout *Tangent-Space Methods*, specifically when interacting with the codebase bridges connecting algorithms like `Pinocchio` or `UpstreamDrift` (which natively uses MuJoCo physics engines), all 3D rotational mechanics explicitly bypass Euler Angles and map directly into Quaternions and $\SO$ Rotation Matrices.
 

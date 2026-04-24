@@ -42,16 +42,49 @@ Formally this is the Grübler–Kutzbach count: for $N$ bodies in a 3D mechanism
 
 The collection of all valid configurations a system can possibly achieve—accounting for all of its physical constraints, linkages, pins, and bearings—is called its **Configuration Space**, denoted by the symbol $\configspace$ [@lynch2017modern, Ch. 2].
 
-Like state space, configuration space is an abstract, multi-dimensional geometric surface. It is, strictly speaking, a mathematical **manifold** (which we explore deeply in Volume I). The number of dimensions of this space is exactly equal to the Degrees of Freedom. 
+Like state space, configuration space is an abstract, multi-dimensional geometric surface. It is, strictly speaking, a mathematical **manifold**. The number of dimensions of this space is exactly equal to the Degrees of Freedom.
+
+::: {.callout-important}
+## Smooth Manifold — Formal Definition
+
+A **smooth $n$-manifold** $M$ is a second-countable Hausdorff topological space equipped with a **smooth atlas**: a collection of charts $\varphi_\alpha : U_\alpha \to \mathbb{R}^n$ (homeomorphisms from open sets $U_\alpha \subset M$ to open sets of $\mathbb{R}^n$) such that all transition maps $\varphi_\beta \circ \varphi_\alpha^{-1}$ are smooth ($C^\infty$) wherever they are defined. [@lee2013smooth, Ch. 1]
+
+Worked examples:
+
+- **$S^1$ (the circle):** two charts suffice — one covering all but the north pole, one covering all but the south pole; their transition map is smooth.
+- **$SO(3)$ (rigid rotations):** Euler-angle charts cover all rotations, but *no single chart covers all of $SO(3)$* (Euler angles have a singularity at $\cos\theta=\pm 1$). Two charts (with overlapping domains) form a valid atlas.
+
+The upshot: configuration spaces are manifolds, not flat Euclidean spaces. Calculus on them requires chart-based reasoning, and global coordinates (like Euler angles) always have at least one singular point.
+:::
+
+::: {.callout-tip}
+## Configuration Manifolds for Common Robot Topologies
+
+| System | $\configspace$ | $\dim \configspace$ |
+|--------|---------------|---------------------|
+| $n$-revolute serial arm | $T^n = S^1 \times \cdots \times S^1$ | $n$ |
+| $n$-prismatic serial arm | $\mathbb{R}^n$ | $n$ |
+| Mixed revolute/prismatic arm | $(S^1)^r \times \mathbb{R}^p$ | $r+p$ |
+| Free rigid body | $SE(3) = SO(3) \ltimes \mathbb{R}^3$ | $6$ |
+| Quadruped (free trunk + 4 three-revolute legs) | $SE(3) \times T^{12}$ | $18$ |
+
+All Lie groups in this table are parallelizable, so $T\configspace \cong \configspace \times \mathbb{R}^n$ holds globally for each. [@lynch2017modern, Ch. 2]
+:::
+
 
 
 ::: {.callout-note}
 
-  A system with $n$ Degrees of Freedom has a Configuration Space $\configspace$ of dimension $n$, defined completely by the vector $\bm{q} = [q_1, q_2, ..., q_n]^T$. 
+  A system with $n$ Degrees of Freedom has a Configuration Space $\configspace$ of dimension $n$, defined completely by the vector $\bm{q} = [q_1, q_2, ..., q_n]^T$.
 
-  The corresponding **State Space** $\statespace$ (from @sec-state-space) is the configuration space multiplied by the velocity of those coordinates, meaning state space always has $2n$ dimensions.
-  
-  $$ \text{State} \ \state = [\bm{q}, \dot{\bm{q}}]^T \in \statespace = \configspace \times \Reals^n $$
+  The corresponding **State Space** $\statespace$ (from @sec-state-space) is the **tangent bundle** $T\configspace$, which always has dimension $2n$:
+  $$\statespace = T\configspace = \bigl\{(\bm{q},\,\dot{\bm{q}}) : \bm{q}\in\configspace,\;\dot{\bm{q}}\in T_{\bm{q}}\configspace\bigr\}$$
+
+  For **parallelizable** manifolds — all Lie groups, including $\mathbb{R}^n$, the $n$-torus $T^n$, $SO(3)$, and $SE(3)$ — the tangent bundle is globally a product:
+  $$ T\configspace \cong \configspace \times \Reals^n $$
+  so the familiar notation $\statespace = \configspace \times \Reals^n$ is exact for these spaces.
+
+  For non-parallelizable manifolds (for example, $S^2$) no global product exists; the hairy-ball theorem shows that $TS^2 \not\cong S^2 \times \mathbb{R}^2$. The state space is still well-defined as $T\configspace$, but cannot be globally identified with a Cartesian product. [@lee2013smooth, Ch. 10]
 
 :::
 

@@ -117,16 +117,53 @@ This is called the **State Space Representation**. It is universally written in 
 
 
 ::: {.callout-note}
+## System Taxonomy
 
-  Every autonomous control system can be written as a first-order vector differential equation mapping current state and current control commands to the velocity of the state vector:
-  
-$$
-\bm{\dot{x}} = \bm{f}(\state, \control, t)
-$$
+  A **controlled system** can be written as a first-order vector differential equation:
+  \begin{equation}
+      \bm{\dot{x}} = \bm{f}(\state, \control, t)
+  \end{equation}
+  This vector field $\bm{f}$ dictates how the system "flows" through the abstract geometry of the state space.
 
-  This vector field $\bm{f}$ dictates how the system "flows" through the abstract geometry of the state space. 
+  Depending on whether $\bm{f}$ depends explicitly on time $t$ and on inputs $\control$, we distinguish four cases:
+
+  | Form | Name |
+  |------|------|
+  | $\dot{\state} = \bm{f}(\state)$ | **Autonomous** — no input, no explicit time |
+  | $\dot{\state} = \bm{f}(\state, t)$ | **Non-autonomous** — no input, explicit time dependence |
+  | $\dot{\state} = \bm{f}(\state, \control)$ | **Controlled autonomous** — input present, no explicit time (autonomous in the state-feedback sense once $\control = \bm{k}(\state)$) |
+  | $\dot{\state} = \bm{f}(\state, \control, t)$ | **Controlled non-autonomous** — most general form |
+
+  The mass-spring-damper above is **controlled autonomous** when $u$ is state feedback ($u = u(\state)$) or **controlled non-autonomous** when $u$ depends explicitly on time. Writing $\bm{f}(\state, \control, t)$ for a system described as "autonomous" is a contradiction — a system with explicit $t$-dependence is by definition non-autonomous.
 
 :::
+
+::: {.callout-important}
+## The State Space as a Tangent Bundle
+
+The state space $\statespace$ of a mechanical system is the **tangent bundle** $TQ$ of its configuration manifold $Q$:
+$$\statespace = TQ = \bigl\{(q, \dot q) : q \in Q,\; \dot q \in T_q Q\bigr\}$$
+
+For parallelizable manifolds (all Lie groups, including $\mathbb{R}^n$, $T^n$, $SO(3)$, $SE(3)$) this bundle is globally a product: $TQ \cong Q \times \mathbb{R}^n$.
+For non-parallelizable manifolds (e.g., $S^2$, $\mathbb{C}P^n$) no global product exists — the hairy-ball theorem shows $TS^2 \not\cong S^2 \times \mathbb{R}^2$ because $S^2$ has no nowhere-vanishing continuous vector field.
+
+**What this means in practice:** for robot arms with revolute joints only (configuration space $T^n$, a parallelizable torus), the global product $Q \times \mathbb{R}^n$ is exact. For systems whose configuration space contains $S^2$ (e.g., a free ball joint or a quaternion orientation) the Cartesian-product description is only a local approximation valid in each chart. [@lee2013smooth, Ch. 10]
+:::
+
+::: {.callout-tip}
+## Formal Definition: Tangent Space
+
+The **tangent space** $T_p M$ at a point $p$ on a smooth manifold $M$ is the vector space of equivalence classes of smooth curves through $p$, where two curves are equivalent iff they agree to first order in every chart. If $\dim M = n$, then $T_p M \cong \mathbb{R}^n$.
+
+Worked examples:
+
+- $T_q S^1 \cong \mathbb{R}$ — the tangent line to a circle at the point $q$ (one-dimensional).
+- $T_I SO(3) = \mathfrak{so}(3)$ — the set of $3\times 3$ skew-symmetric matrices (the Lie algebra of $SO(3)$); dimension 3.
+
+Velocity vectors live in tangent spaces; they can be added and scaled. Configuration points do not — adding two joint-angle vectors wrapping on a torus gives nonsense. [@lee2013smooth, Ch. 3]
+:::
+
+
 
 
 Whether you are controlling a single gear or a 15-DOF musculoskeletal golf swing (as discussed in Volume II), you are always, fundamentally, trying to shape the trajectory $\state(t)$ by manipulating the vector field $\bm{f}$ using your control inputs $\control$.

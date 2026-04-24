@@ -54,7 +54,7 @@ If $T \in \SE$ defines the complete layout of a rigid body in space, what is the
 
 Just as translation and rotation were unified into $T$, linear velocity $v \in \Reals^3$ and singular angular velocity $\omega \in \Reals^3$ are unified into a 6-dimensional **Spatial Velocity** vector.
 
-According to French mathematician Michel Chasles (1830), any complex movement of a rigid body floating in space?a gymnast twisting and flipping through the air concurrently?can be expressed geometrically as movement along a **single, specific mathematical axis** passing through space.
+Any complex movement of a rigid body floating in space — a gymnast twisting and flipping through the air concurrently — can be expressed geometrically as movement along a **single, specific mathematical axis** passing through space. This fundamental theorem was first proved by Mozzi (1763), independently restated by Chasles (1830), and developed into a comprehensive theory of screws by Ball in his landmark treatise [@mozzi1763discorso; @ball1900treatise]. The modern geometric treatment follows Selig [@selig2005geometric, Ch. 1].
 
 
 ::: {.callout-note}
@@ -105,7 +105,26 @@ $$
 $$
 
 
-Where $\dot{\theta}$ is the speed the body moves along the Screw. A Twist completely unifies angular $\omega$ and linear $v$ velocity into a single variable. This perfectly maps the derivative (speed) of the Configuration Space map $\configspace$ we created earlier.
+Where $\dot{\theta}$ is the speed the body moves along the Screw. A Twist completely unifies angular $\omega$ and linear $v$ velocity into a single variable.
+
+::: {.callout-important}
+## Twist as the Lie Algebra Element of $SE(3)$, Not the Derivative of $T$
+
+The twist is **not** the "derivative of $T$" directly — $\dot T$ is a $4\times 4$ matrix, while $\twist$ is a 6-vector. The precise relations are:
+$$[\mathcal{V}_b]^\vee := T^{-1}\dot T \in \mathfrak{se}(3) \quad\text{(body twist, skew-form)}$$
+$$[\mathcal{V}_s]^\vee := \dot T\, T^{-1} \in \mathfrak{se}(3) \quad\text{(spatial twist, skew-form)}$$
+where the $4\times 4$ **hat map** on $\mathfrak{se}(3)$ is $[\bm{\omega};\bm{v}]^\wedge = \begin{bmatrix}[\bm{\omega}]_\times & \bm{v}\\\bm{0}&0\end{bmatrix}$.
+The two twists are related by the Adjoint: $\mathcal{V}_s = \operatorname{Ad}_T\mathcal{V}_b$. [@lynch2017modern, §3.3]
+:::
+
+::: {.callout-tip}
+## Screw-Axis Closed Form
+
+For a **revolute joint** with unit axis $\hat{\bm{\omega}}$ through point $\bm{q}$ and pitch $h=0$, the unit screw is:
+$$\mathcal{S} = \begin{bmatrix}\hat{\bm{\omega}} \\ -\hat{\bm{\omega}}\times\bm{q}\end{bmatrix}$$
+**Derivation:** a point $\bm{x}$ rigidly attached to the joint has instantaneous velocity $\bm{v}_x = \bm{\omega}\times(\bm{x}-\bm{q})$ under rotation at rate $\dot\theta$ about $\hat{\bm{\omega}}$. The linear part of the twist evaluated at the space-frame origin ($\bm{x}=\bm{0}$) is $\bm{v}_0=\dot\theta\,\hat{\bm{\omega}}\times(-\bm{q})=-\hat{\bm{\omega}}\times\bm{q}$. For a prismatic joint with unit direction $\hat{\bm{v}}$, $\mathcal{S}=[\bm{0};\hat{\bm{v}}]$. [@lynch2017modern, §3.3.2]
+:::
+
 
 ::: {.callout-important}
 ## Spatial 6-Vector Ordering
