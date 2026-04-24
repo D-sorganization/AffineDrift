@@ -11,7 +11,7 @@ the finite-horizon optimal control problem by iteratively linearizing around a n
 trajectory and solving quadratic subproblems. Figure~\ref{fig:ilqr-loop} shows the algorithm structure.
 
 iLQR is a numerical method for implementing the feedback synthesis results from Agrachev \&
-Sachkov \cite{AgrachevSachkov2004}, Chapter~6: it iteratively computes the optimal feedback law
+Sachkov \cite{agrachev2004control}, Chapter~6: it iteratively computes the optimal feedback law
 via local linearization and quadratic approximation of the cost. The backward-pass computation
 of gains $K(t)$ corresponds to the solution of the Riccati equation, a central object in their
 optimal control theory.
@@ -166,7 +166,7 @@ The pendulum swing-up is a classic trajectory optimization benchmark. The goal i
 find the minimum-energy torque sequence that brings the pendulum from the downward
 (stable) equilibrium to the upright (unstable) equilibrium.
 
-This is a canonical example in Agrachev \& Sachkov \cite{AgrachevSachkov2004} (Chapter~5, Example 5.1):
+This is a canonical example in Agrachev \& Sachkov \cite{agrachev2004control} (Chapter~5, Example 5.1):
 the pendulum system is an affine control system $\ddot{\theta} = -g\sin\theta + u$, and the swing-up
 problem is optimal synthesis: find the control law that minimizes energy while ensuring convergence
 to the upright equilibrium. Their theory predicts that the optimal trajectory will exhibit

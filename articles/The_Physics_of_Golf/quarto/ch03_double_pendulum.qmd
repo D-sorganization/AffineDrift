@@ -47,16 +47,22 @@ In this book, we use relative angles. So $\theta_2 = 0$ means the two links are 
 
 :::
 
-### Numerical Parameters (Illustrative Model)
+### Canonical Parameter Set (Table 3.1) {#sec-canonical-params}
 
-For this textbook, we adopt the following illustrative parameters for the double-pendulum model. Segment lengths and masses are order-of-magnitude consistent with anthropometric data for a 50th-percentile male [@Winter2009; @deleva1996adjustments], combined with a standard golf club. The moments of inertia are computed from the assumed geometry (point-mass approximation at the center of mass).
+::: {.callout-important}
+## Canonical Parameter Set
 
-| **Parameter** | **Link 1 (Upper Arm)** | **Link 2 (Forearm + Club)** |
-| --- | --- | --- |
-| Length $L$ | 0.35 m | 1.0 m |
-| Mass $M$ | 2.5 kg | 1.5 kg |
-| CM distance from hinge | 0.175 m | 0.5 m |
-| Moment of inertia $I$ | 0.015 kg m$^2$ | 0.4 kg m$^2$ |
+The parameters below constitute the **canonical double-pendulum parameter set (Table 3.1)** for *Physics of Golf*. Every numerical example in Ch02–Ch16 either references "canonical parameter set (Table 3.1)" or explicitly labels itself "Counterfactual Example Parameters" with a stated justification for deviation. The machine-readable version is at [`data/canonical_parameters.yml`](../../../data/canonical_parameters.yml).
+:::
+
+For this textbook, we adopt the following illustrative parameters for the double-pendulum model. Segment lengths and masses are order-of-magnitude consistent with anthropometric data for a 50th-percentile male [@winter2009biomechanics; @deleva1996adjustments], combined with a standard driver. The moments of inertia are computed from the assumed geometry. **Notation follows the [AffineDrift Notation and Conventions](/pages/notation-conventions.html).**
+
+| **Parameter** | **Link 1 (Arm)** | **Link 2 (Driver)** | **Source** |
+| --- | --- | --- | --- |
+| Length $L$ | 0.60 m | 1.13 m | [@deleva1996adjustments; USGA] |
+| CoM distance from hinge $L_{cm}$ | 0.28 m | 0.85 m | [@deleva1996adjustments; @mackenzie2009shaft] |
+| Mass $M$ | 3.5 kg | 0.310 kg | [@deleva1996adjustments; USGA] |
+| Rotational inertia $I$ (about CoM) | 0.075 kg·m² | 0.058 kg·m² | [@zatsiorsky1998kinematics; @mackenzie2009shaft] |
 
 These are illustrative values chosen for pedagogical clarity. Individual golfers will have different segment properties, but the qualitative physics is the same.
 

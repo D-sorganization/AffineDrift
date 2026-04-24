@@ -1,0 +1,264 @@
+# Canonical Parameter Set for AffineDrift double- and triple-pendulum models
+# Source of truth for all numerical examples in Physics of Golf Ch02–Ch16.
+# See also: PoG Table 3.1 (ch03_double_pendulum.qmd).
+# Every numerical example MUST reference "canonical parameter set (Table 3.1)"
+# or label itself "Counterfactual Example Parameters" with justification.
+#
+# References:
+#   de_leva1996: De Leva (1996) PMID 8872316 — segment inertia adjustments
+#   zatsiorsky1998: Zatsiorsky (1998) Kinematics of Human Motion
+#   usga_rules: USGA Equipment Rules (2024)
+#   mackenzie2009: MacKenzie & Sprigings (2009) Sports Engineering
+#   nesbit2005: Nesbit (2005) J Sports Sci Med 4:1-20
+#   mcteigue1994: McTeigue et al. (1994) Golf Digest study
+
+double_pendulum:
+  description: >
+    Canonical double-pendulum model: link 1 = upper arm + forearm assembly,
+    link 2 = golf club (driver). Parameters are order-of-magnitude consistent
+    with anthropometric data for a 50th-percentile male adult combined with a
+    standard driver. See PoG Table 3.1.
+  links:
+    - id: link1
+      label: "Arm (upper arm + forearm)"
+      symbols:
+        L1:
+          {
+            value: 0.60,
+            unit: m,
+            description: "Total arm length (shoulder to wrist)",
+            source: de_leva1996,
+          }
+        L1_cm:
+          {
+            value: 0.28,
+            unit: m,
+            description: "CoM distance from proximal joint",
+            source: de_leva1996,
+          }
+        M1:
+          {
+            value: 3.5,
+            unit: kg,
+            description: "Combined arm segment mass",
+            source: de_leva1996,
+          }
+        I1:
+          {
+            value: 0.075,
+            unit: "kg*m^2",
+            description: "Rotational inertia about CoM",
+            source: zatsiorsky1998,
+          }
+    - id: link2
+      label: "Golf club (driver)"
+      symbols:
+        L2:
+          {
+            value: 1.13,
+            unit: m,
+            description: "Club length (grip to clubhead)",
+            source: usga_rules,
+          }
+        L2_cm:
+          {
+            value: 0.85,
+            unit: m,
+            description: "CoM distance from grip end (clubhead-weighted)",
+            source: mackenzie2009,
+          }
+        M2:
+          {
+            value: 0.310,
+            unit: kg,
+            description: "Total club mass (head + shaft + grip)",
+            source: usga_rules,
+          }
+        I2:
+          {
+            value: 0.058,
+            unit: "kg*m^2",
+            description: "Rotational inertia about CoM",
+            source: mackenzie2009,
+          }
+
+triple_pendulum:
+  description: >
+    Canonical triple-pendulum model adds a torso segment proximal to the arm.
+    Used for whole-body golf swing models.
+  links:
+    - id: link0
+      label: "Torso (pelvis + trunk)"
+      symbols:
+        L0:
+          {
+            value: 0.55,
+            unit: m,
+            description: "Torso length (hip to shoulder)",
+            source: de_leva1996,
+          }
+        L0_cm:
+          {
+            value: 0.28,
+            unit: m,
+            description: "CoM distance from hip joint",
+            source: de_leva1996,
+          }
+        M0:
+          {
+            value: 35.0,
+            unit: kg,
+            description: "Torso segment mass",
+            source: de_leva1996,
+          }
+        I0:
+          {
+            value: 1.80,
+            unit: "kg*m^2",
+            description: "Rotational inertia about CoM (axial)",
+            source: zatsiorsky1998,
+          }
+    - id: link1
+      label: "Arm (upper arm + forearm)"
+      symbols:
+        L1:
+          {
+            value: 0.60,
+            unit: m,
+            description: "Total arm length",
+            source: de_leva1996,
+          }
+        L1_cm:
+          {
+            value: 0.28,
+            unit: m,
+            description: "CoM distance from proximal joint",
+            source: de_leva1996,
+          }
+        M1:
+          {
+            value: 3.5,
+            unit: kg,
+            description: "Combined arm segment mass",
+            source: de_leva1996,
+          }
+        I1:
+          {
+            value: 0.075,
+            unit: "kg*m^2",
+            description: "Rotational inertia about CoM",
+            source: zatsiorsky1998,
+          }
+    - id: link2
+      label: "Golf club (driver)"
+      symbols:
+        L2:
+          {
+            value: 1.13,
+            unit: m,
+            description: "Club length",
+            source: usga_rules,
+          }
+        L2_cm:
+          {
+            value: 0.85,
+            unit: m,
+            description: "CoM distance from grip end",
+            source: mackenzie2009,
+          }
+        M2:
+          {
+            value: 0.310,
+            unit: kg,
+            description: "Total club mass",
+            source: usga_rules,
+          }
+        I2:
+          {
+            value: 0.058,
+            unit: "kg*m^2",
+            description: "Rotational inertia about CoM",
+            source: mackenzie2009,
+          }
+
+equipment:
+  description: >
+    Canonical equipment parameters for Physics of Golf impact, aerodynamic,
+    and shaft chapters (Ch14, Ch17–Ch31). See PoG Equipment Table (ch14).
+  driver:
+    clubhead_mass:
+      {
+        value: 0.200,
+        unit: kg,
+        description: "Driver clubhead mass",
+        source: usga_rules,
+      }
+    shaft_mass:
+      {
+        value: 0.055,
+        unit: kg,
+        description: "Driver shaft mass (typical)",
+        source: mackenzie2009,
+      }
+    shaft_length:
+      {
+        value: 1.13,
+        unit: m,
+        description: "Driver shaft length (USGA/tour spec)",
+        source: usga_rules,
+      }
+    shaft_stiffness:
+      {
+        value: 4200,
+        unit: "N/m",
+        description: "Equivalent bending stiffness at tip",
+        source: mackenzie2009,
+      }
+    shaft_damping:
+      {
+        value: 2.5,
+        unit: "N*s/m",
+        description: "Equivalent tip damping coefficient",
+        source: mackenzie2009,
+      }
+    grip_mass:
+      {
+        value: 0.055,
+        unit: kg,
+        description: "Grip mass (typical rubber grip)",
+        source: mackenzie2009,
+      }
+  ball:
+    mass:
+      {
+        value: 0.04593,
+        unit: kg,
+        description: "Golf ball mass (USGA rule: max 1.620 oz)",
+        source: usga_rules,
+      }
+    diameter:
+      {
+        value: 0.04267,
+        unit: m,
+        description: "Golf ball diameter (USGA rule: min 1.680 in)",
+        source: usga_rules,
+      }
+    cor_driver:
+      {
+        value: 0.822,
+        unit: dimensionless,
+        description: "Coefficient of restitution (driver test, derived from USGA CT ≤ 239 μs)",
+        source: usga_rules,
+      }
+
+swing_timing:
+  description: >
+    Canonical downswing timing. Declared once here; all worked examples use
+    this value. Local variants must be explicitly labeled.
+  downswing_duration:
+    value: 0.250
+    unit: s
+    range: [0.200, 0.300]
+    range_unit: s
+    description: "Downswing duration: 250 ms (range 200–300 ms)"
+    sources: [nesbit2005, mcteigue1994]

@@ -1,0 +1,69 @@
+name: Link Check
+
+on:
+  pull_request:
+    branches: [main, staging]
+  schedule:
+    # Weekly cron: every Monday at 07:00 UTC — catches external link rot
+    - cron: "0 7 * * 1"
+  workflow_dispatch:
+
+jobs:
+  link-check:
+    name: Check for broken links (lychee)
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write # allow weekly cron to open a GitHub issue on failure
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run lychee link checker
+        id: lychee
+        uses: lycheeverse/lychee-action@v2
+        with:
+          # Check all QMD, Markdown, HTML, and YAML files
+          args: >
+            --accept 200,201,204,206,301,302,304
+            --max-retries 3
+            --retry-wait-time 5
+            --timeout 20
+            --exclude-path docs
+            --exclude-path node_modules
+            --exclude-path .git
+            --exclude "https://scholar.google"
+            --exclude "https://www.linkedin.com"
+            --exclude "localhost"
+            --exclude "127.0.0.1"
+            --no-progress
+            --format markdown
+            "**/*.qmd"
+            "**/*.md"
+          # Fail the job on broken internal links; tolerate external timeouts on PRs
+          fail: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: ${{ github.event_name == 'schedule' }}
+
+      # On the weekly schedule, open/update an issue instead of failing the build
+      - name: Create issue for broken links (scheduled run)
+        if: >
+          github.event_name == 'schedule' &&
+          steps.lychee.outputs.exit_code != '0'
+        uses: peter-evans/create-issue-from-file@v5
+        with:
+          title: "Weekly link-rot report"
+          content-filepath: ./lychee/out.md
+          labels: |
+            link-rot
+            automated
+
+      # On PRs, fail hard if lychee found broken links
+      - name: Fail on broken links (PR)
+        if: >
+          github.event_name == 'pull_request' &&
+          steps.lychee.outputs.exit_code != '0'
+        run: |
+          echo "::error::Lychee found broken links. See the lychee step output above."
+          exit 1
