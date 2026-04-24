@@ -88,7 +88,7 @@ Setting $\tau = 0$ in either coordinate system yields the same physical motion, 
 2. The Euler-Lagrange equations are covariant under coordinate changes (this is the foundational result of analytical mechanics, proven by Lagrange himself).
 3. Therefore, the solution curve $q_A(t)$ under $\tau = 0$ and the solution curve $q_B(t) = \psi(q_A(t))$ under $\tau = 0$ describe the *same physical trajectory* in configuration space.
 
-The ZTCF is **geometrically intrinsic**: it is the geodesic of the kinetic energy metric on configuration space, modified by potential forces. Geodesics are coordinate-independent objects. Two analysts will compute different *numbers* for the generalized coordinates, but the physical motion of every body segment will be identical.
+The ZTCF is **geometrically intrinsic**: it is the geodesic of the kinetic energy metric on configuration space, modified by potential forces (note: this geodesic interpretation holds strictly in the flat-metric limit; in the presence of Coriolis terms and configuration-dependent inertia, the ZTCF trajectory is shaped by those additional terms and is not a pure Riemannian geodesic in general). Geodesics are coordinate-independent objects. Two analysts will compute different *numbers* for the generalized coordinates, but the physical motion of every body segment will be identical.
 
 **What IS coordinate-dependent** is the *decomposition of forces* into specific generalized force components. The torque required at "shoulder flexion" vs "shoulder abduction" depends on how you define these coordinates. But the ZTCF itself — the trajectory of the physical system under zero applied torque — is unique.
 
@@ -146,7 +146,7 @@ Initially: $\omega_p = 900$ deg/s, $\omega_d = 500$ deg/s (both still accelerati
 **Scenario 2: Proximal deceleration** (active sequencing)
 - The golfer applies a large negative torque to the proximal segment: $\alpha_p = -200$ deg/s² (dramatic braking).
 - The distal segment now receives coupling torque: $\tau_{\text{couple}} = -M_{dp} \alpha_p = -0.8 \times (-200) = +160$ N·m (an accelerating torque). This is the **instantaneous** coupling contribution to the distal torque balance; the resulting distal angular acceleration depends on the distal link's inertia *and* any competing torques (gravity, shaft elasticity, active wrist torque), and is **not** simply $160 / I_d$.
-- Result: The distal segment **accelerates** despite the proximal segment slowing. Angular momentum is not conserved (the golfer inputs negative work to the proximal segment), but that mechanical energy is redirected to the distal segment via the inertial coupling.
+- Result: The distal segment **accelerates** despite the proximal segment slowing. Internal torque acts on the distribution of angular momentum within the body but does not alter total angular momentum relative to the COM in the absence of external torque; what changes is the partitioning of that momentum across segments, redirected to the distal segment via the inertial coupling.
 
 The energy is not "lost" from the proximal deceleration; it is **harvested** and redirected to the distal segment through the mass matrix structure.
 
@@ -240,7 +240,7 @@ Nonlinear control theory provides a rigorous conceptual and analytical framework
         Imagine surfing. You don't create the wave—the ocean does. You just position yourself, feel the wave's motion, and at the right moment, you lean in a particular direction. The wave does almost all the work. Your paddle strokes are tiny adjustments compared to the wave's power.
       </p>
       <p>
-        A golf swing works exactly the same way. Gravity and your body's momentum create a "wave" of motion. Your muscles make tiny adjustments to that wave, steering it toward the ball. This article explains what scientists discovered: your muscles do maybe 10–20% of the work. Physics does the rest. Here is how.
+        A golf swing works exactly the same way. Gravity and your body's momentum create a "wave" of motion. Your muscles make tiny adjustments to that wave, steering it toward the ball. This article explains what scientists discovered: drift is a significant component of the work done during the swing (the relative contribution of drift vs. control forces depends on task and skill level; see [citation]). Here is how.
       </p>
 
       <div class="laymans-item">
@@ -305,7 +305,7 @@ Nonlinear control theory provides a rigorous conceptual and analytical framework
           The core assumption of "Drift Invariance"—that passive dynamics $f(x)$ are independent of input $u$—oversimplifies muscle physiology. Muscles are not pure torque generators; their stiffness and damping properties change with activation (Hill-type muscle models). Therefore, "passive" drift is not truly independent of the "active" input.
         </p>
         <div class="author-response">
-          <strong>Our Response:</strong> This is a valid physiological nuance. However, at the system level of joint torques, the control-affine approximation ($\tau = G(x)u$) remains robust. The "Skeletal Baseline" validation (Part 5) shows that treating inputs as additive torques captures over 95% of the variance in clubhead motion, suggesting that variable stiffness effects are second-order at high swing speeds.
+          <strong>Our Response:</strong> This is a valid physiological nuance. However, at the system level of joint torques, the control-affine approximation ($\tau = G(x)u$) remains robust. The "Skeletal Baseline" validation (Part 5) shows that treating inputs as additive torques captures a large fraction of the variance in clubhead motion (empirical estimate; see [citation needed]), suggesting that variable stiffness effects are second-order at high swing speeds.
         </div>
       </div>
 
