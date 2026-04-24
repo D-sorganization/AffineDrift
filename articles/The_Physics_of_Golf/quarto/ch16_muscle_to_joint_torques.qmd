@@ -88,7 +88,7 @@ Define:
 \begin{itemize}
 - $\bm{F}^M \in \mathbb{R}^{n_m}$: vector of muscle forces, where $n_m$ is the number of muscles.
 - $\boldsymbol{\tau} \in \mathbb{R}^{n_j}$: vector of joint torques, where $n_j$ is the number of joints.
-- $\bm{R}(\bm{q}) \in \mathbb{R}^{n_m \times n_j}$: the moment arm matrix (Zajac 1989 convention [@Zajac1989]), whose entry $R_{ji}(\bm{q})$ is the moment arm of muscle $j$ about joint $i$. Equivalently, rows index muscles and columns index joints.
+- $\bm{R}(\bm{q}) \in \mathbb{R}^{n_m \times n_j}$: the moment arm matrix (Zajac 1989 convention [@zajac1989determining]), whose entry $R_{ji}(\bm{q})$ is the moment arm of muscle $j$ about joint $i$. Equivalently, rows index muscles and columns index joints.
 \end{itemize}
 
 The relationship between muscle forces and joint torques is:
@@ -421,7 +421,7 @@ This modulation is achieved through coordinated muscle activation. Different pha
 
 ::: {.callout-tip}
 ## Grip Stiffness and Impact
-At impact, the club experiences a large force from the ball---estimates from ball-impact models suggest several thousand Newtons for a driver impact, depending on swing speed [@Penner2003]. This force tries to deform the shaft and move the club head. To maintain club face alignment and transmit energy efficiently, the grip must be stiff.
+At impact, the club experiences a large force from the ball---estimates from ball-impact models suggest several thousand Newtons for a driver impact, depending on swing speed [@penner2003physics]. This force tries to deform the shaft and move the club head. To maintain club face alignment and transmit energy efficiently, the grip must be stiff.
 
 Grip stiffness comes from co-contraction: simultaneous activation of muscles that would produce opposite torques. This stiffens the wrist without changing the net torque. The muscle Jacobian accounts for this implicitly: the same joint torque can be achieved with different co-contraction levels.
 :::

@@ -1,0 +1,182 @@
+---
+title: "Notation and Conventions"
+description: "Single authoritative reference for all mathematical notation and sign conventions used across AffineDrift."
+author: "Dieter Olson"
+date: "2026-04-24"
+toc: true
+toc-depth: 3
+---
+
+> **All chapters and articles on this site follow the conventions defined here.**
+> Each chapter preface notes: "Notation follows the [AffineDrift Notation and Conventions](../pages/notation-conventions.html)."
+
+---
+
+## Frames and Coordinates {#sec-frames}
+
+- **World frame** $\{W\}$: right-handed inertial frame; $x$ points right, $y$ points up, $z$ points toward the target.
+- **Body frame** $\{B\}$: attached to the rigid body; same orientation as $\{W\}$ at the reference configuration.
+- **Space frame** = world frame used in screw/twist context (Lynch–Park §3).
+- Joint angles $\theta_i$ are measured from the **downward-stable** reference unless explicitly stated otherwise (see @sec-pendulum).
+
+---
+
+## Signed Heights and Potential Energy {#sec-pe}
+
+- $h_i$ is the **signed height** of link $i$'s center of mass relative to the shoulder joint, positive upward.
+- Gravitational potential energy: $V = \sum_i M_i g h_i(\bm{q})$.
+- **Gravity covector** (generalized force): $\bm{g}(\bm{q}) := \partial V / \partial \bm{q} \in \mathbb{R}^n$ — this is a **covector**, not the physical gravity vector.
+- Physical gravity vector: $\bm{g}_{\mathrm{phys}} = [0,\; -g,\; 0]^T$ with $g = 9.81\ \text{m/s}^2 > 0$.
+
+---
+
+## Rotation Representations {#sec-rotations}
+
+| Symbol | Space | Notes |
+|--------|-------|-------|
+| $SO(3)$ | Lie group of rotations | $3\times3$ orthogonal matrices, $\det = +1$ |
+| $\mathfrak{so}(3)$ | Lie algebra of $SO(3)$ | $3\times3$ skew-symmetric matrices |
+| $[\bm{\omega}\times]$ | $\mathfrak{so}(3)$ element | Hat map: $[\bm{\omega}\times]\bm{v} = \bm{\omega}\times\bm{v}$ |
+| $S^3 \cong SU(2)$ | Unit quaternions | Double cover of $SO(3)$ via $q \mapsto RqR^{-1}$ |
+| $q = [w,\; \bm{v}]^T$ | Quaternion (scalar-first Hamilton) | $w = \cos(\theta/2)$, $\bm{v} = \hat{\bm{\omega}}\sin(\theta/2)$ |
+
+The double cover means $q$ and $-q$ represent the same rotation. Apply the **short-arc rule** ($q \cdot q_{\mathrm{ref}} \geq 0$, otherwise negate $q$) before SLERP or chain composition.
+
+---
+
+## Screw Axes and Twists {#sec-screws}
+
+**Stacking convention (Lynch–Park):** twists and wrenches are column 6-vectors ordered $[\bm{\omega};\; \bm{v}]$, i.e. angular part first:
+
+$$
+\mathcal{V} = \begin{bmatrix} \bm{\omega} \\ \bm{v} \end{bmatrix} \in \mathbb{R}^6.
+$$
+
+The Murray–Li–Sastry convention $[v;\omega]$ is **not** used here.
+
+**Screw axis** for a revolute joint with unit axis $\hat{\bm{\omega}}$ through point $\bm{q}$:
+
+$$
+\mathcal{S} = \begin{bmatrix} \hat{\bm{\omega}} \\ -\hat{\bm{\omega}} \times \bm{q} + h\hat{\bm{\omega}} \end{bmatrix},
+$$
+
+where $h$ is the pitch ($h=0$ for pure revolute).
+
+---
+
+## Adjoint Operators {#sec-adjoint}
+
+| Symbol | Type | Definition |
+|--------|------|------------|
+| $\mathrm{Ad}_T$ | $6\times6$ matrix | Transform adjoint; maps twists: $\mathcal{V}_b = \mathrm{Ad}_{T_{ab}} \mathcal{V}_a$ |
+| $\mathrm{ad}_\xi$ | $6\times6$ matrix | Lie bracket (little-ad): $\mathrm{ad}_\xi \eta = [\xi, \eta]$ |
+| $\mathrm{ad}_\xi^* = -\mathrm{ad}_\xi^T$ | $6\times6$ matrix | Co-adjoint; maps wrenches |
+
+For $\xi = [\bm{\omega};\bm{v}]$:
+
+$$
+\mathrm{ad}_\xi = \begin{bmatrix} [\bm{\omega}\times] & \bm{0} \\ [\bm{v}\times] & [\bm{\omega}\times] \end{bmatrix}.
+$$
+
+---
+
+## Spatial Inertia {#sec-spatial-inertia}
+
+Featherstone (2008) Eq. 2.63 convention. For body $i$ with mass $m$, center-of-mass offset $\bm{c}$ from the body frame origin, and rotational inertia $\bm{I}_c$ about CoM:
+
+$$
+\mathbf{I}_i = \begin{bmatrix} \bm{I}_c + m[\bm{c}\times][\bm{c}\times]^T & m[\bm{c}\times] \\ m[\bm{c}\times]^T & m\bm{1} \end{bmatrix} \in \mathbb{R}^{6\times6}.
+$$
+
+---
+
+## Equations of Motion {#sec-eom}
+
+**Standard Lagrangian form** (configuration space $Q$, state space $TQ$):
+
+$$
+\bm{M}(\bm{q})\ddot{\bm{q}} + \bm{C}(\bm{q},\dot{\bm{q}})\dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{\tau},
+$$
+
+where $\bm{C}$ contains the **Christoffel symbols** of the metric $\bm{M}$, and $\bm{g}(\bm{q}) = \partial V/\partial \bm{q}$ is the gravity covector (@sec-pe).
+
+---
+
+## Control-Affine Form {#sec-control-affine}
+
+$$
+\dot{\bm{x}} = \bm{f}(\bm{x}) + \bm{G}(\bm{x})\bm{u}, \quad \bm{x} \in TQ,\; \bm{u} \in \mathbb{R}^m.
+$$
+
+- State space is the **tangent bundle** $TQ$, not a Cartesian product $Q \times \mathbb{R}^n$.
+- $\bm{f}$ is the **drift vector field**; $\bm{G} = [\bm{g}_1,\ldots,\bm{g}_m]$ are the **control vector fields**.
+- **DCR (Drift-to-Control Ratio):** ratio of $\|\bm{f}(\bm{x})\|$ to $\|\bm{G}(\bm{x})\bm{u}_{\max}\|$. Symbol $\rho(\bm{x})$ for the scalar variant; $\bm{\rho}(\bm{x})$ for the per-joint vector variant.
+
+---
+
+## Pendulum Canonical Convention {#sec-pendulum}
+
+The **canonical pendulum** convention used throughout this site:
+
+$$
+\ddot{\theta} = -\frac{g}{\ell}\sin\theta + \frac{\tau}{m\ell^2}, \qquad \theta = 0 \text{ is the downward-stable equilibrium.}
+$$
+
+For the **inverted pendulum**, define $\phi := \pi - \theta$ so that $\phi = 0$ is the upward-unstable equilibrium:
+
+$$
+\ddot{\phi} = +\frac{g}{\ell}\sin\phi + \frac{\tau}{m\ell^2}.
+$$
+
+Any chapter using an alternative convention must declare it explicitly in its opening notation box.
+
+---
+
+## Muscle Jacobian (Moment Arm Matrix) {#sec-muscle-jacobian}
+
+Following Zajac (1989):
+
+$$
+\bm{R}(\bm{q}) \in \mathbb{R}^{n_m \times n_j}, \qquad
+\bm{\tau} = \bm{R}(\bm{q})^T \bm{F}^M,
+$$
+
+where rows index muscles and columns index joints. $\bm{F}^M \in \mathbb{R}^{n_m}$ is the vector of muscle forces.
+
+---
+
+## ZTCF and ZVCF {#sec-ztcf-zvcf}
+
+- **ZTCF (Zero-Torque Configuration Force):** the configuration-space force arising from gravity and elastic potential when all joint torques are set to zero.
+- **ZVCF (Zero-Velocity Configuration Force):** keeps gravity and elastic terms; removes velocity-dependent (Coriolis/centrifugal) and input terms. ZVCF is configuration-dependent drift; it equals ZTCF only in the quasi-static limit.
+
+---
+
+## Quarto Cross-Reference Labels {#sec-quarto-labels}
+
+- All section labels use the `{#sec-...}` form (hyphen, not colon): `{#sec-control-affine}`.
+- All citations use `[@key]` or `[@key1; @key2]` — **semicolons** separate multiple keys, not commas.
+- No prose "Chapter N" hard-coded references; use `@sec-` cross-references instead.
+
+---
+
+## Summary Table of Key Symbols {#sec-symbol-table}
+
+| Symbol | Meaning | Units |
+|--------|---------|-------|
+| $\theta_i$ | Joint angle (downward-stable $\theta=0$) | rad |
+| $\tau_i$ | Joint torque | N·m |
+| $\bm{q}$ | Generalized coordinates | — |
+| $\bm{M}(\bm{q})$ | Mass (inertia) matrix | kg·m² |
+| $\bm{C}(\bm{q},\dot{\bm{q}})$ | Coriolis/centrifugal matrix | kg·m²/s |
+| $\bm{g}(\bm{q})$ | Gravity covector $\partial V/\partial \bm{q}$ | N·m |
+| $\bm{f}(\bm{x})$ | Drift vector field | — |
+| $\bm{G}(\bm{x})$ | Control distribution matrix | — |
+| $\rho(\bm{x})$ | DCR scalar | dimensionless |
+| $\mathcal{V}$ | Twist $[\bm{\omega};\bm{v}]$ | rad/s, m/s |
+| $\mathrm{Ad}_T$ | Transform adjoint ($6\times6$) | — |
+| $\mathrm{ad}_\xi$ | Lie bracket / little-ad ($6\times6$) | — |
+| $\bm{R}(\bm{q})$ | Moment arm matrix (muscles×joints) | m |
+| $SO(3)$ | Rotation group | — |
+| $\mathfrak{so}(3)$ | Lie algebra of $SO(3)$ | — |
+| $S^3$ | Unit quaternions (double cover of $SO(3)$) | — |

@@ -111,7 +111,7 @@ Throughout *Tangent-Space Methods*, specifically when interacting with the codeb
 
 Quaternion conventions differ between software stacks, and using the wrong one silently produces inverted rotations, broken kinematic chains, and wrong dynamics. The textbook locks a single convention and provides interop tables for downstream tools.
 
-**Layout (scalar-first Hamilton):** we write $q = [q_0,\, q_1,\, q_2,\, q_3]^T = [w,\, \bm{v}]^T$ with the scalar part $w = \cos(\theta/2)$ first, matching Lynch & Park [@Lynch2017ModernRobotics] and MuJoCo.
+**Layout (scalar-first Hamilton):** we write $q = [q_0,\, q_1,\, q_2,\, q_3]^T = [w,\, \bm{v}]^T$ with the scalar part $w = \cos(\theta/2)$ first, matching Lynch & Park [@lynch2017modern] and MuJoCo.
 
 **Multiplication (Hamilton product):**
 $$ q_1 \otimes q_2 = \begin{bmatrix} w_1 w_2 - \bm{v}_1 \cdot \bm{v}_2 \\[2pt] w_1 \bm{v}_2 + w_2 \bm{v}_1 + \bm{v}_1 \times \bm{v}_2 \end{bmatrix}. $$
@@ -145,7 +145,7 @@ The choice between different rotation parameterizations has profound implication
 
 ### Unit Quaternions: Efficiency Meets Stability
 
-**Unit Quaternions** are typically the most numerically stable choice for continuous rotations and interpolation. Quantitatively, over a chain of $N$ compositions rotation-matrix orthogonality drift grows as $O(N \varepsilon)$ and requires periodic re-orthogonalization, while quaternion norm drift grows as $O(\varepsilon)$ per composition and is corrected by a single division (Featherstone [@Featherstone2008], §2.11; Shoemake 1985). They require only 4 parameters, compute quaternion multiplication very efficiently, and maintain the unit-norm constraint easily (via simple normalization). Critically, quaternion interpolation (SLERP) is geometrically smooth and well-behaved, making quaternions ideal for smoothly varying trajectories. However, the double-cover property (where $q$ and $-q$ represent the same rotation) must be handled carefully in algorithms to avoid jumping discontinuities—apply the short-arc rule from the conventions box before any chain composition or SLERP step. For real-time simulation at high frequency (e.g., 1000 Hz golf swing dynamics), quaternions are the preferred internal representation, with rotation matrices computed on-demand when the body axes are needed.
+**Unit Quaternions** are typically the most numerically stable choice for continuous rotations and interpolation. Quantitatively, over a chain of $N$ compositions rotation-matrix orthogonality drift grows as $O(N \varepsilon)$ and requires periodic re-orthogonalization, while quaternion norm drift grows as $O(\varepsilon)$ per composition and is corrected by a single division (Featherstone [@featherstone2008rigid], §2.11; Shoemake 1985). They require only 4 parameters, compute quaternion multiplication very efficiently, and maintain the unit-norm constraint easily (via simple normalization). Critically, quaternion interpolation (SLERP) is geometrically smooth and well-behaved, making quaternions ideal for smoothly varying trajectories. However, the double-cover property (where $q$ and $-q$ represent the same rotation) must be handled carefully in algorithms to avoid jumping discontinuities—apply the short-arc rule from the conventions box before any chain composition or SLERP step. For real-time simulation at high frequency (e.g., 1000 Hz golf swing dynamics), quaternions are the preferred internal representation, with rotation matrices computed on-demand when the body axes are needed.
 
 ### Euler Angles: Where Singularities Propagate
 
