@@ -13,6 +13,9 @@ from typing import Any
 try:
     import numpy as np
 except ImportError:  # pragma: no cover - numpy optional or transiently unavailable
+    # mypy: `np` is typed as ModuleType, but we assign None for optional import.
+    # This type: ignore[assignment] is intentional and necessary to support the
+    # optional numpy dependency pattern. All usage is guarded by null checks.
     np = None  # type: ignore[assignment]
 
 from src.core.contracts.definitions import require
