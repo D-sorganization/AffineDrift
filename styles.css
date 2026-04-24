@@ -17,8 +17,9 @@
   box-sizing: border-box;
 }
 
-/* Global Focus Visibility */
-:focus-visible {
+/* Global Focus Visibility — consolidated rule; use :focus-visible so mouse
+   clicks do not draw outlines while keyboard navigation still does. */
+:where(:focus-visible) {
   outline: 2px solid var(--accent-blue);
   outline-offset: 2px;
   border-radius: 2px;
@@ -361,10 +362,6 @@ img[loading="lazy"].loaded {
 
 /* Respect reduced motion preferences */
 @media (prefers-reduced-motion: reduce) {
-  img[loading="lazy"] {
-    animation: none;
-  }
-
   *,
   *::before,
   *::after {
@@ -419,25 +416,33 @@ figcaption {
    Header & Navigation
    --- */
 
-/* Skip to Content Link */
+/* Skip to Content Link — modern visually-hidden pattern (avoids RTL issues
+   with the deprecated top:-9999px approach). */
 .skip-to-content {
-  position: fixed;
-  top: -9999px;
-  left: 0.5rem;
+  position: absolute;
+  left: -100vw;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
   background: var(--primary-blue);
   color: var(--pure-white);
-  padding: 0.5rem 1rem;
-  z-index: 2000;
+  padding: 0.75rem 1rem;
+  z-index: 10000;
   text-decoration: none;
   font-weight: 600;
-  border-radius: 0 0 4px 4px;
-  transition: top 0.2s ease;
+  border-radius: 4px;
   box-shadow: var(--shadow-md);
 }
 
-.skip-to-content:focus {
-  top: 0;
-  outline: 3px solid var(--accent-blue);
+.skip-to-content:focus-visible {
+  position: fixed;
+  left: 1rem;
+  top: 1rem;
+  width: auto;
+  height: auto;
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
 }
 
 header {
@@ -544,15 +549,18 @@ nav .container {
   color: var(--primary-blue);
 }
 
-/* Search box styling */
+/* Search box styling — clamp prevents the search bar from pushing nav items
+   off-screen at medium viewports (992-1200px). */
 #quarto-header #quarto-search {
   margin-left: auto !important;
-  min-width: 300px;
+  min-width: clamp(180px, 25vw, 320px);
+  flex: 0 1 320px;
+}
 
-  /* Force minimum width */
-  flex-basis: 400px;
-
-  /* Target around 400px width */
+@media (max-width: 991.98px) {
+  #quarto-header #quarto-search {
+    min-width: 0;
+  }
 }
 
 /* stylelint-disable-next-line selector-class-pattern -- third-party Algolia class */
@@ -560,7 +568,7 @@ nav .container {
   width: 100%;
 
   /* Fill the container */
-  min-width: 300px;
+  min-width: 0;
 }
 
 /* stylelint-disable-next-line selector-class-pattern -- third-party Algolia class */
@@ -628,6 +636,15 @@ nav .container {
 .nav-links a:hover::after,
 .nav-links a.active::after {
   width: 100%;
+}
+
+/* aria-current="page" — active page indication for assistive tech and visual
+   users. Mirrors the .active class so both paths produce the same styling. */
+nav a[aria-current="page"],
+.sidebar a[aria-current="page"],
+.left-sidebar a[aria-current="page"] {
+  color: var(--pure-white);
+  font-weight: 600;
 }
 
 /* .nav-toggle removed (legacy system, fixes #2785) */
@@ -791,6 +808,22 @@ nav .container {
   overflow-x: auto;
   max-width: 100%;
   padding: 1rem 0;
+}
+
+/* Responsive Tables — baseline applied to ALL tables so pages outside
+   #quarto-document-content (home, resources, indices) don't overflow on
+   mobile. The .table-wrapper JS enhancement remains for richer scroll UX. */
+@media (max-width: 767.98px) {
+  table:not(.table-wrapper table) {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  table:not(.table-wrapper table) caption {
+    display: table-caption;
+  }
 }
 
 /* 🎨 Palette UX: Responsive Tables */
@@ -1487,10 +1520,12 @@ h3:hover .anchor-link,
   border-left: 3px solid #ffc107;
 }
 
-.laymans-item .analogy::before {
-  content: "🎯 Analogy: ";
+/* Label moved to HTML: <span class="analogy-label"><span aria-hidden="true">🎯</span> Analogy:</span> */
+.laymans-item .analogy-label {
+  display: block;
   font-weight: 600;
   color: #856404;
+  margin-bottom: 0.25rem;
 }
 
 .laymans-item .key-takeaway {
@@ -1502,10 +1537,12 @@ h3:hover .anchor-link,
   border-left: 3px solid #28a745;
 }
 
-.laymans-item .key-takeaway::before {
-  content: "✅ Key Takeaway: ";
+/* Label moved to HTML: <span class="key-takeaway-label"><span aria-hidden="true">✅</span> Key Takeaway:</span> */
+.laymans-item .key-takeaway-label {
+  display: block;
   font-weight: 600;
   color: #155724;
+  margin-bottom: 0.25rem;
 }
 
 /* In Layman's Terms - Responsive */
@@ -1829,23 +1866,24 @@ form.contact-form .form-group textarea {
 
 /* Search box styling - Reverted to default/small (consolidated above) */
 
-/* Home Layout Updates */
+/* Home Layout Updates — default to column so narrow viewports never produce
+   horizontal body scroll. Row layout kicks in at ≥1025px. */
 .home-layout {
-  display: flex !important;
-  flex-flow: row nowrap !important;
-  align-items: flex-start !important;
-
-  /* Ensure top alignment */
-  justify-content: flex-start !important;
-
-  /* Changed from space-between to keep gap consistent */
-  gap: 2rem !important;
-
-  /* Explicit 1/4 inch+ gap (approx 32px) */
+  display: flex;
+  flex-flow: column wrap;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 2rem;
   max-width: 100%;
   margin: 0 auto;
   padding: 1rem 0;
   width: 100%;
+}
+
+@media (min-width: 1025px) {
+  .home-layout {
+    flex-flow: row nowrap;
+  }
 }
 
 .home-sidebar {
@@ -1888,7 +1926,7 @@ form.contact-form .form-group textarea {
 
 @media (width <=1024px) {
   .home-layout {
-    flex-direction: column !important;
+    flex-direction: column;
     gap: 2rem;
   }
 
@@ -2038,8 +2076,12 @@ h1.title,
 .left-sidebar .sidebar-sticky-content {
   position: sticky;
   top: calc(var(--header-offset) + 2rem);
-  height: calc(100vh - var(--header-offset) - 4rem);
+  /* Use 100dvh so mobile URL-bar collapse doesn't cause sidebar to jump.
+     max-height instead of height avoids empty scroll area on short sidebars. */
+  max-height: calc(100dvh - var(--header-offset) - 4rem);
   overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-color) transparent;
 }
 
 /* Ensure the grid doesn't collapse the main content too aggressively */

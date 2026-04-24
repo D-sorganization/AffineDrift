@@ -36,13 +36,21 @@ export function initSmoothScroll() {
 
                     history.pushState(null, null, href);
 
+                    const prefersReduce = window.matchMedia(
+                        "(prefers-reduced-motion: reduce)"
+                    ).matches;
                     window.scrollTo({
                         top: offsetPosition,
-                        behavior: "smooth",
+                        behavior: prefersReduce ? "auto" : "smooth",
                     });
 
                     if (!targetElement.hasAttribute("tabindex")) {
                         targetElement.setAttribute("tabindex", "-1");
+                        targetElement.addEventListener(
+                            "blur",
+                            () => targetElement.removeAttribute("tabindex"),
+                            { once: true }
+                        );
                     }
                     targetElement.focus({ preventScroll: true });
 
@@ -320,20 +328,32 @@ export function initScrollSpy() {
 export function initSkipToContent() {
     if (document.querySelector(".skip-to-content")) return;
 
+    // Prefer the Quarto content landmark; fall back to <main> for
+    // page-layout:full pages that don't emit #quarto-document-content.
+    const targetEl =
+        document.getElementById("quarto-document-content") ||
+        document.querySelector("main");
+    const targetId = targetEl ? targetEl.id || "main-content" : "main-content";
+    if (targetEl && !targetEl.id) targetEl.id = targetId;
+
     const skipLink = document.createElement("a");
-    skipLink.href = "#quarto-document-content";
+    skipLink.href = `#${targetId}`;
     skipLink.className = "skip-to-content";
     skipLink.textContent = "Skip to main content";
     skipLink.setAttribute("aria-label", "Skip to main content");
 
     skipLink.addEventListener("click", (e) => {
-        const targetId = skipLink.getAttribute("href").substring(1);
-        const targetElement = document.getElementById(targetId);
-        if (targetElement) {
-            if (!targetElement.getAttribute("tabindex")) {
-                targetElement.setAttribute("tabindex", "-1");
+        const target = document.getElementById(targetId);
+        if (target) {
+            if (!target.getAttribute("tabindex")) {
+                target.setAttribute("tabindex", "-1");
+                target.addEventListener(
+                    "blur",
+                    () => target.removeAttribute("tabindex"),
+                    { once: true }
+                );
             }
-            targetElement.focus({ preventScroll: true });
+            target.focus({ preventScroll: true });
         }
     });
 
@@ -342,4 +362,18 @@ export function initSkipToContent() {
     } else {
         document.body.appendChild(skipLink);
     }
+}
+
+/**
+ * Set aria-current="page" on nav and sidebar links that match the current URL.
+ * This complements the TOC scrollspy which sets aria-current="location".
+ */
+export function initAriaCurrentPage() {
+    const currentPath = window.location.pathname.replace(/\/$/, "") || "/";
+    document.querySelectorAll("nav a, .sidebar a, .left-sidebar a").forEach((a) => {
+        const linkPath = a.pathname.replace(/\/$/, "") || "/";
+        if (linkPath === currentPath) {
+            a.setAttribute("aria-current", "page");
+        }
+    });
 }
