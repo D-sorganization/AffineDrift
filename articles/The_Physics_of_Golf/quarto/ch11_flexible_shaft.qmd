@@ -12,7 +12,7 @@ bibliography: ../golf_physics.bib
 
 For most of this book, we have treated the golf club as if it were a rigid stick. This simplification has been valuable---it let us understand the fundamental forces and constraints that shape the swing. But a real golf shaft is not rigid. It bends, twists, and vibrates. These are not negligible effects. Shaft flexibility contributes to energy storage and release during the swing, and ignoring it leads to inaccurate predictions of clubhead orientation, trajectory, and spin at impact.
 
-The shaft is not a passive passenger in the swing; it is an energy storage and release mechanism---a catapult that supplements the muscles and gravity.
+The shaft is not a passive passenger in the swing; it is an energy storage and release mechanism. Shaft flexibility contributes a modest but measurable boost to clubhead speed at impact---estimated at 1--5% of total clubhead kinetic energy [@nesbit2005three]---through the so-called "catapult effect."
 
 In this chapter, we develop a mathematical model of shaft flexibility, show how it enters the drift and control equations, and explain why shaft fitting is fundamentally a question about which trajectory you want the \ztcf to produce.
 
@@ -383,7 +383,7 @@ For the **rigid shaft**, the clubhead follows the hand motion plus a lag due to 
 
 For the **flexible shaft**, the clubhead additionally experiences the shaft deformation. Early in the swing, as the hand accelerates, the shaft bends (positive $\eta$). At $t \approx 0.1$ s, the hand reaches peak height and begins to decelerate. The shaft begins to unbend, and if we plot the clubhead position $y_{\text{head}} = y_{\text{grip}} + L + \eta \times \phi_1(L)$, we see an extra oscillation superimposed on the hand motion. This oscillation is the catapult effect.
 
-The magnitude of the effect depends on the hand acceleration profile and the shaft parameters. For typical golfer numbers, the extra clubhead displacement due to shaft flex is 5--15 cm (2--6 inches) at the moment of maximum deflection, and the extra velocity at impact is 5--15% of the clubhead speed.
+The magnitude of the effect depends on the hand acceleration profile and the shaft parameters. For typical golfer numbers, the extra clubhead displacement due to shaft flex is 5--15 cm (2--6 inches) at the moment of maximum deflection. The energy contribution from shaft flex at impact is estimated at 1--5% of total clubhead kinetic energy [@nesbit2005three], meaning the catapult effect is real but modest in magnitude.
 
 ::: {.callout-note}
 ## Figure: Rigid vs. Flexible Shaft ZTCF (Qualitative)
@@ -437,7 +437,7 @@ A golfer's control authority (the set of clubhead accelerations reachable by mus
 2. **Shaft deformation is described by modal coordinates.** A single coordinate $\eta$ captures the first (most important) bending mode. The modal coordinate evolves according to its own differential equation, coupled to the joint motion.
 3. **The extended state includes the modal coordinates:** $\state = [\configvec, \configdot, \eta, \dot{\eta}]^T$.
 4. **Shaft flexibility is part of the drift field.** No muscle controls the deformation directly. The shaft bends and unbends passively, responding to inertial forces.
-5. **The catapult effect is real.** Elastic energy stored in the bent shaft is released near impact, providing 5--15\% extra clubhead speed (depending on swing speed and shaft fit).
+5. **The catapult effect is real but modest.** Elastic energy stored in the bent shaft is released near impact, contributing approximately 1--5\% of total clubhead kinetic energy at impact [@nesbit2005three]. The shaft straightens during the critical 10--20 ms before impact, adding a measurable boost to clubhead speed.
 6. **Shaft fitting designs the drift field.** The choice of stiffness, damping, and flex profile changes which \ztcf trajectory the swing naturally produces. Matching these to your swing speed and biomechanics puts the autopilot trajectory close to your target.
 7. **Shaft flexibility helps slower golfers more.** Because centrifugal stiffening is weaker, the shaft remains more flexible throughout the swing and can store more elastic energy. This energy is returned at impact, partially compensating for lower muscle power.
 8. **The shaft is an energy buffer between the muscles and the clubhead.** Some of the work done by the muscles is temporarily stored as elastic deformation and released later. This allows the muscles to do work when the levers are shorter and then have that work released when the clubhead can best use it.
@@ -446,7 +446,7 @@ A golfer's control authority (the set of clubhead accelerations reachable by mus
 
 ## Chapter Exercises
 
-A golf shaft has a first bending mode with natural frequency $\omega_n = 12$ rad/s and damping ratio $\zeta = 0.05$. If the shaft is initially bent to $\eta_0 = 0.03$ m (3 cm) and released from rest, how long does it take for the deflection to decay to $e^{-1} \approx 37\%$ of its initial value?
+A golf shaft has a first bending mode with natural frequency $\omega_n = 30$ rad/s ($\approx 5$ Hz, realistic for a driver shaft held at the grip) and damping ratio $\zeta = 0.05$. If the shaft is initially bent to $\eta_0 = 0.03$ m (3 cm) and released from rest, how long does it take for the deflection to decay to $e^{-1} \approx 37\%$ of its initial value?
 
 *Hint:* In a damped oscillator, the envelope decays as $e^{-\zeta\omega_n t}$.
 

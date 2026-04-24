@@ -89,16 +89,18 @@ Consider the loop formed by:
 3. Shoulders (a rigid platform connecting the two shoulder joints).
 4. Back from shoulders to pelvis (closure).
 
-The closure constraint states: if the pelvis rotates by angle $\theta_p$, the spine rotates by angle $\theta_s$, and the shoulders rotate by angle $\theta_{sh}$, then for the loop to close, the net rotation must be zero:
+The closure constraint states: if the pelvis rotation (in the ground frame) is $\theta_p$ and the shoulders rotation is $\theta_{sh}$, then the spine must absorb the difference. Defining $\Delta\theta_{\text{spine}}$ as the rotation of the shoulders *relative to* the pelvis via the spine, the compatibility requirement is:
 
 $$
-\theta_p + \theta_s + \theta_{sh} = 0 \quad \text{(approximately, in a simplified 2D model)}
+\theta_{sh} = \theta_p + \Delta\theta_{\text{spine}} \quad \Longleftrightarrow \quad \bm{\Phi}_{\text{spine}} = \theta_{sh} - \theta_p - \Delta\theta_{\text{spine}} = 0
 $$
 
-Or more generally:
+The **X-factor** is $\Delta\theta_{\text{spine}} = \theta_p - \theta_{sh}$: the amount by which the hips lead the shoulders. For example, if $\theta_p = 60°$ (hips open) and $\theta_{sh} = 20°$ (shoulders partially open), then $\Delta\theta_{\text{spine}} = 40°$---the spine has absorbed 40° of differential rotation.
+
+Or in general vector form:
 
 $$
-\bm{\Phi}_{\text{spine}}(\theta_p, \theta_s, \theta_{sh}) = \mathbf{0}
+\bm{\Phi}_{\text{spine}}(\theta_p, \Delta\theta_{\text{spine}}, \theta_{sh}) = \mathbf{0}
 $$
 
 This is a holonomic constraint, just like the joint constraints from the chapter on constraint forces.
@@ -218,24 +220,21 @@ where $\lambda \geq 0$ is the number of redundant constraints. In the Stewart pl
 
 **Example: Grübler Applied to the Golfer**
 
-Simplify the golfer as:
-- Bodies: pelvis, torso, shoulders (3).
-- Spine: 5 revolute joints (simplified).
-- Two arms: 3 DOF each (shoulder + elbow, wrist is small) = 6 DOF.
-- Total joints: $J = 5 + 6 = 11$.
-- Constraints from ground contact: $C_{\text{passive}} = 3$ (feet fixed to ground).
+To apply Grübler's formula, every joint must be paired with the bodies it connects. Use a minimal spine-plus-arms planar model:
+
+- **Bodies ($N$):** pelvis (1), lumbar segment (2), thorax (3), shoulders platform (4), left upper arm (5), left forearm (6), right upper arm (7), right forearm (8). Total: $N = 8$.
+- **Joints ($J$):** pelvis–lumbar (1), lumbar–thorax (2), thorax–shoulders (3), left shoulder (4), left elbow (5), right shoulder (6), right elbow (7). Total: $J = 7$.
+- **Ground contact:** $C_{\text{passive}} = 3$ (two feet fix the pelvis in-plane: 2 translation + 1 rotation constraints).
 
 Mobility (planar approximation, 2D):
 
 $$
-M = 3(3-1) - 2 \times 11 + 3 = 6 - 22 + 3 = -13
+M = 3(8-1) - 2 \times 7 + 3 = 21 - 14 + 3 = 10
 $$
 
-This gives a negative mobility, which means the system is over-constrained. But the golfer is not locked—there's flexibility.
+Ten degrees of freedom is consistent with a body that can move. The formula gives a *positive* mobility because bodies and joints are enumerated consistently. When the two hands grip the club (adding loop-closure equations coupling the two arms), the effective DOF is reduced and the analysis reveals over-constraint—which is physically resolved by soft-tissue elasticity.
 
-The resolution: the body has elasticity (muscles and tendons). The "passive constraints" are not truly rigid; they allow small deviations. Gruebler's formula applies to rigid bodies. For the human body, you need to account for elasticity, which effectively increases the passive DOF.
-
-**Insight:** The fact that Gruebler's formula gives a negative mobility for a rigid body tells us that the human skeleton is over-constrained and rigid—it can't move. The only reason it *does* move is because soft tissues (ligaments, muscle tendons) have elasticity. This elasticity is crucial for defining effective DOF.
+**Insight:** The critical requirement is consistent enumeration: every joint connects two bodies, so $J$ joints imply at least $J+1$ bodies in a serial sub-chain. Mixing a joint count that includes arm joints with a body count that omits arm segments gives an incorrect (unphysically negative) result. With a properly enumerated model, Grübler confirms that the gripped-club loop creates over-constraint, resolved only because muscles and tendons are elastic.
 
 ## Over-Constrained Mechanisms and Flexibility
 

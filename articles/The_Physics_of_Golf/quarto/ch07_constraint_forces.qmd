@@ -47,9 +47,7 @@ Within the holonomic-equality world, the Lagrange-multiplier formulation below i
 
 A **holonomic constraint** is an algebraic equation that restricts the configuration of the system. It has the form:
 
-$$
-\bm{\Phi}(\bm{q}) = \mathbf{0}
-$$
+$$\bm{\Phi}(\bm{q}) = \mathbf{0}$$
 
 For a golf swing, examples include:
 - **Joint connection:** The wrist connects the arm to the club. This means the endpoint of the arm coincides with the base of the club: $\bm{\Phi}_{\text{wrist}}(\bm{q}) = \bm{x}_{\text{arm}}(\bm{q}) - \bm{x}_{\text{club}}(\bm{q}) = \mathbf{0}$.
@@ -75,9 +73,7 @@ Yet this zero-net-work force *does* redirect energy between segments.
 
 The **constraint Jacobian** is the matrix of partial derivatives of the constraint with respect to configuration:
 
-$$
-\bm{J}_c(\bm{q}) = \frac{\partial \bm{\Phi}}{\partial \bm{q}}
-$$
+$$\bm{J}_c(\bm{q}) = \frac{\partial \bm{\Phi}}{\partial \bm{q}}$$
 
 If there are $n_c$ constraint equations and $n$ configuration variables, then $\bm{J}_c$ is $n_c \times n$.
 
@@ -89,15 +85,11 @@ For a double pendulum (shoulder and elbow), suppose the wrist constraint enforce
 
 The constraint might be:
 
-$$
-\bm{\Phi}(q_1, q_2) = q_1 + q_2 - \theta_{\text{fixed}}
-$$
+$$\bm{\Phi}(q_1, q_2) = q_1 + q_2 - \theta_{\text{fixed}} = 0$$
 
 Then the constraint Jacobian is:
 
-$$
-\bm{J}_c = \begin{bmatrix} 1 & 1 \end{bmatrix}
-$$
+$$\bm{J}_c = \begin{bmatrix} 1 & 1 \end{bmatrix}$$
 
 This tells us: to maintain the constraint, motion in $q_1$ and $q_2$ must be coupled---they must move together. The rows of $\bm{J}_c$ define the directions in which motion is forbidden (the normal space) and allowed (the null space).
 
@@ -108,7 +100,7 @@ This tells us: to maintain the constraint, motion in $q_1$ and $q_2$ must be cou
 
 When constraints are present, the equations of motion take the form:
 
-\bm{M}(\bm{q})\ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{B}(\bm{q})\bm{u} + \bm{J}_c(\bm{q})^T \bm{\lambda}
+$$\bm{M}(\bm{q})\ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{B}(\bm{q})\bm{u} + \bm{J}_c(\bm{q})^T \bm{\lambda}$$
 
 where:
 - $\bm{M}(\bm{q})$ is the mass matrix.
@@ -142,47 +134,33 @@ Before specifying the computational procedure, it is worth deriving the constrai
 
 **Step 1.** Form the **augmented Lagrangian** by adding each constraint weighted by an unknown multiplier $\lambda_i$:
 
-$$
-\tilde{L}(\bm{q}, \dot{\bm{q}}, \bm{\lambda}) = L(\bm{q}, \dot{\bm{q}}) + \bm{\lambda}^{\top} \bm{\Phi}(\bm{q})
-$$
+$$\tilde{L}(\bm{q}, \dot{\bm{q}}, \bm{\lambda}) = L(\bm{q}, \dot{\bm{q}}) + \bm{\lambda}^{\top} \bm{\Phi}(\bm{q})$$
 
 The multipliers $\bm{\lambda} \in \mathbb{R}^{n_c}$ are treated as auxiliary generalized coordinates.
 
 **Step 2.** Apply the Euler--Lagrange equations to $\tilde{L}$. For the original coordinates $\bm{q}$,
 
-$$
-\frac{d}{dt}\frac{\partial \tilde{L}}{\partial \dot{\bm{q}}} - \frac{\partial \tilde{L}}{\partial \bm{q}} = \mathbf{0} \quad\Longrightarrow\quad \frac{d}{dt}\frac{\partial L}{\partial \dot{\bm{q}}} - \frac{\partial L}{\partial \bm{q}} = \underbrace{\left(\frac{\partial \bm{\Phi}}{\partial \bm{q}}\right)^{\top}}_{\bm{J}_c^{\top}} \bm{\lambda}.
-$$
+$$\frac{d}{dt}\frac{\partial \tilde{L}}{\partial \dot{\bm{q}}} - \frac{\partial \tilde{L}}{\partial \bm{q}} = \mathbf{0} \quad\Longrightarrow\quad \frac{d}{dt}\frac{\partial L}{\partial \dot{\bm{q}}} - \frac{\partial L}{\partial \bm{q}} = \underbrace{\left(\frac{\partial \bm{\Phi}}{\partial \bm{q}}\right)^{\top}}_{\bm{J}_c^{\top}} \bm{\lambda}$$
 
 The left-hand side, after including the applied generalized forces $\bm{B}\bm{u}$, is exactly the manipulator equation left-hand side, so we recover
 
-$$
-\bm{M}(\bm{q})\ddot{\bm{q}} + \bm{C}(\bm{q},\dot{\bm{q}})\dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{B}(\bm{q})\bm{u} + \bm{J}_c(\bm{q})^{\top}\bm{\lambda}.
-$$
+$$\bm{M}(\bm{q})\ddot{\bm{q}} + \bm{C}(\bm{q},\dot{\bm{q}})\dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{B}(\bm{q})\bm{u} + \bm{J}_c(\bm{q})^{\top}\bm{\lambda}$$
 
 For the auxiliary coordinates $\bm{\lambda}$, the Euler--Lagrange equation reproduces the constraint itself:
 
-$$
-\frac{\partial \tilde{L}}{\partial \bm{\lambda}} = \bm{\Phi}(\bm{q}) = \mathbf{0}.
-$$
+$$\frac{\partial \tilde{L}}{\partial \bm{\lambda}} = \bm{\Phi}(\bm{q}) = \mathbf{0}$$
 
 **Step 3.** To solve for $\bm{\lambda}$, differentiate the constraint twice in time,
 
-$$
-\ddot{\bm{\Phi}} = \bm{J}_c(\bm{q})\ddot{\bm{q}} + \dot{\bm{J}}_c(\bm{q},\dot{\bm{q}})\dot{\bm{q}} = \mathbf{0},
-$$
+$$\ddot{\bm{\Phi}} = \bm{J}_c(\bm{q})\ddot{\bm{q}} + \dot{\bm{J}}_c(\bm{q},\dot{\bm{q}})\dot{\bm{q}} = \mathbf{0}$$
 
-then multiply the EOM on the left by $\bm{J}_c\bm{M}^{-1}$:
+then substitute from the EOM $\ddot{\bm{q}} = \bm{M}^{-1}[\bm{B}\bm{u} - \bm{C}\dot{\bm{q}} - \bm{g} + \bm{J}_c^{\top}\bm{\lambda}]$:
 
-$$
-\bm{J}_c\ddot{\bm{q}} = \bm{J}_c\bm{M}^{-1}\bigl[\bm{B}\bm{u} - \bm{C}\dot{\bm{q}} - \bm{g}\bigr] + \bm{J}_c\bm{M}^{-1}\bm{J}_c^{\top}\bm{\lambda}.
-$$
+$$\bm{J}_c\bm{M}^{-1}\bigl[\bm{B}\bm{u} - \bm{C}\dot{\bm{q}} - \bm{g}\bigr] + \bm{J}_c\bm{M}^{-1}\bm{J}_c^{\top}\bm{\lambda} + \dot{\bm{J}}_c\dot{\bm{q}} = \mathbf{0}$$
 
-Setting this equal to $-\dot{\bm{J}}_c\dot{\bm{q}}$ (from the twice-differentiated constraint) and solving:
+Solving for $\bm{\lambda}$:
 
-$$
-\boxed{\;\bm{\lambda} = \bigl[\bm{J}_c \bm{M}^{-1} \bm{J}_c^{\top}\bigr]^{-1} \Bigl(-\bm{J}_c\bm{M}^{-1}[\bm{B}\bm{u} - \bm{C}\dot{\bm{q}} - \bm{g}] - \dot{\bm{J}}_c\dot{\bm{q}}\Bigr).\;}
-$$
+$$\boxed{\bm{\lambda} = \bigl[\bm{J}_c \bm{M}^{-1} \bm{J}_c^{\top}\bigr]^{-1} \Bigl(-\bm{J}_c\bm{M}^{-1}[\bm{B}\bm{u} - \bm{C}\dot{\bm{q}} - \bm{g}] - \dot{\bm{J}}_c\dot{\bm{q}}\Bigr)}$$
 
 The matrix $\bm{J}_c \bm{M}^{-1} \bm{J}_c^{\top}$, sometimes called the **operational-space inertia** or **Delassus matrix**, is a kinetic-energy-weighted Gram matrix of the constraint directions. It is $n_c \times n_c$, symmetric, and (generically) positive definite.
 
@@ -217,25 +195,14 @@ The formalism above applies to four concrete constraints relevant to the golf sw
 Each of these produces a $\bm{\lambda}$ that is physically meaningful and measurable: grip force, ground-reaction force, ball contact impulse, and shaft tension. The Lagrange-multiplier framework unifies their treatment.
 
 ::: {.callout-note}
-## Computing Lagrange Multipliers
+## Computing Lagrange Multipliers: Summary
 
-To find $\bm{\lambda}$ in practice, we use the constraint that $\bm{\Phi}(\bm{q}) = \mathbf{0}$ must be maintained at all times. Taking the time derivative twice:
+From the derivation above, the formula for the constraint multipliers is:
 
-$$
-\bm{J}_c(\bm{q}) \ddot{\bm{q}} = -\dot{\bm{J}}_c(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}}
-$$
+$$\bm{\lambda} = \bigl[\bm{J}_c \bm{M}^{-1} \bm{J}_c^{\top}\bigr]^{-1} \Bigl(-\bm{J}_c\bm{M}^{-1}[\bm{B}\bm{u} - \bm{C}\dot{\bm{q}} - \bm{g}] - \dot{\bm{J}}_c\dot{\bm{q}}\Bigr)$$
 
-Substituting the constrained EOM and solving for $\bm{\lambda}$:
-
-$$
-\bm{J}_c \bm{M}^{-1} \bm{J}_c^T \bm{\lambda} = -\bm{J}_c \bm{M}^{-1} (\bm{B}\bm{u} - \bm{C}\dot{\bm{q}} - \bm{g}) - \dot{\bm{J}}_c \dot{\bm{q}}
-$$
-
-Solving this linear system gives $\bm{\lambda}$.
+The correct derivation comes from differentiating $\bm{\Phi}(\bm{q}) = \mathbf{0}$ twice to get $\bm{J}_c\ddot{\bm{q}} + \dot{\bm{J}}_c\dot{\bm{q}} = \mathbf{0}$, then substituting the EOM for $\ddot{\bm{q}}$. There is no $\ddot{\bm{q}}_{\text{unconstrained}}$ term—that would be a double-counting error.
 :::
-
-::: {.callout-note}
-## Why This Procedure Works
 
 The constraint equation $\bm{\Phi} = 0$ is an algebraic restriction. If you differentiate it twice, you get an equation involving $\ddot{\bm{q}}$. This equation says: "the acceleration must be consistent with maintaining the constraint."
 
@@ -261,29 +228,21 @@ A fundamental property: $\text{null}(\bm{J}_c) \perp \text{range}(\bm{J}_c^T)$. 
 
 For a double pendulum with the constraint $q_1 + q_2 = \theta_{\text{fixed}}$, the constraint Jacobian is:
 
-$$
-\bm{J}_c = \begin{bmatrix} 1 & 1 \end{bmatrix}
-$$
+$$\bm{J}_c = \begin{bmatrix} 1 & 1 \end{bmatrix}$$
 
 The null space is found by solving:
 
-$$
-\begin{bmatrix} 1 & 1 \end{bmatrix} \begin{bmatrix} v_1 \\ v_2 \end{bmatrix} = 0 \implies v_1 = -v_2
-$$
+$$\begin{bmatrix} 1 & 1 \end{bmatrix} \begin{bmatrix} v_1 \\ v_2 \end{bmatrix} = 0 \implies v_1 = -v_2$$
 
 So the null space is one-dimensional:
 
-$$
-\text{null}(\bm{J}_c) = \text{span}\left\{ \begin{bmatrix} 1 \\ -1 \end{bmatrix} \right\}
-$$
+$$\text{null}(\bm{J}_c) = \text{span}\left\{ \begin{bmatrix} 1 \\ -1 \end{bmatrix} \right\}$$
 
 **Interpretation:** The only way to move while maintaining the constraint is to increase $q_1$ and decrease $q_2$ by the same amount (or vice versa). This keeps their sum constant.
 
 The range of $\bm{J}_c^T$ is:
 
-$$
-\text{range}(\bm{J}_c^T) = \text{span}\left\{ \begin{bmatrix} 1 \\ 1 \end{bmatrix} \right\}
-$$
+$$\text{range}(\bm{J}_c^T) = \text{span}\left\{ \begin{bmatrix} 1 \\ 1 \end{bmatrix} \right\}$$
 
 **Interpretation:** The constraint force acts along the direction $(1, 1)$---i.e., simultaneously at both joints. This makes sense: the constraint couples the two joints, so forces must be applied at both to maintain coupling.
 
