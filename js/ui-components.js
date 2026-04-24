@@ -213,10 +213,8 @@ export function initBackToTop() {
     updateScrollProgress();
 
     backToTopBtn.addEventListener("click", () => {
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth",
-        });
+        const prefersReduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        window.scrollTo({ top: 0, behavior: prefersReduce ? "auto" : "smooth" });
         document.body.setAttribute("tabindex", "-1");
         document.body.focus({ preventScroll: true });
         document.body.addEventListener(
