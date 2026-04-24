@@ -309,23 +309,28 @@ Integrating from $t_0$ to $t$, with initial condition $\det(\Phi(t_0,t_0)) = \de
 \end{equation}
 \end{proof}
 
-\begin{axiombox}{Axiom 5: Integration Preserves Exactness}
-The state transition matrix $\Phi(t,t_0)$ accumulates *exact* infinitesimal linear
-contributions along the trajectory. Each infinitesimal step $\dd(\dx)=\mat{A}(t)\dx\,\dd t$
-is exact in its tangent space. The integral
+\begin{axiombox}{Axiom 5: The Variational Equation is Solved Exactly (back-ref: Ch.~\ref{ch:foundations}, Sec.~\ref{sec-ch1-axioms})}
+$\Phi(t,t_0)$ is the \emph{exact} solution operator for the variational equation
+$\delta\dot\x = \mat{A}(t)\delta\x$ along a reference trajectory; it is not an
+approximation to the nonlinear flow.  The variation-of-parameters formula
 $$
 \dx(t_1) = \Phi(t_1,t_0)\dx(t_0)
 + \int_{t_0}^{t_1}\Phi(t_1,s)\mat{B}(s)\du(s)\,\dd s
 $$
-is the exact accumulation of these exact local effects. Residuals arise from curvature
-(when we compare the true finite-displacement trajectory to the linear prediction), not
-from integration itself.
+is an exact statement about the variational (linear) system.  Residuals between the
+\emph{true nonlinear} finite-displacement trajectory and this linear prediction
+accumulate from higher-order curvature terms; they are bounded by standard
+Gronwall-type estimates (see the Peano-Baker error analysis below) and vanish to
+second order in the initial perturbation $\norm{\dx(t_0)}$.
+Path-dependent integrals in the nonlinear flow do not generally close, and
+$\Phi(t,t_0)$ makes no claim about them: it governs only the variational (first-order)
+dynamics.
 \end{axiombox}
 
 
 
-## The Peano-Baker Series and Exact Solution
-
+## The Peano-Baker Series and Exact Solution {#sec-ch2-peano-baker}
+\label{sec:ch2:peano-baker}
 
 While the ODE~\eqref{eq:ch2:stm-ode} defines the STM implicitly, we can construct an explicit
 series solution called the Peano-Baker series (also known as the Dyson series in physics).
