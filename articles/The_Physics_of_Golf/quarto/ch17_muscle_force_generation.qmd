@@ -23,18 +23,14 @@ To understand how muscles generate the forces that drive the golf swing, we must
 
 A muscle is organized in nested layers:
 
-\begin{tabular}{ll}
-\toprule
-Level & Scale 
-\midrule
-Muscle (whole) & cm scale 
-Fascicle (bundle) & mm scale 
-Muscle fiber (cell) & $10$--$100$ $\mu$m diameter 
-Myofibril (protein filaments) & $1$--$2$ $\mu$m diameter 
-Sarcomere (force unit) & $2$--$3$ $\mu$m length 
-Actin--myosin complex & nm scale 
-\bottomrule
-\end{tabular}
+| Level | Scale |
+|-------|-------|
+| Muscle (whole) | cm scale |
+| Fascicle (bundle) | mm scale |
+| Muscle fiber (cell) | $10$--$100$ $\mu$m diameter |
+| Myofibril (protein filaments) | $1$--$2$ $\mu$m diameter |
+| Sarcomere (force unit) | $2$--$3$ $\mu$m length |
+| Actin--myosin complex | nm scale |
 
 The *sarcomere* is the fundamental force-generating unit. All voluntary muscle force is produced by trillions of sarcomeres contracting in parallel.
 
@@ -51,13 +47,11 @@ Not all muscle fibers are created equal. The human body contains three main fibe
 ::: {.callout-important}
 ## Muscle Fiber Types and Their Roles
 
-\begin{description}
-- Type I (slow-twitch, oxidative) Low contraction speed ($\sim 50$ ms to peak force), high fatigue resistance, moderate force production. Power primarily from aerobic metabolism. Used for endurance, posture, smooth sustained effort. About 40--50% of most muscles.
+**Type I (slow-twitch, oxidative):** Low contraction speed (~50 ms to peak force), high fatigue resistance, moderate force production. Power primarily from aerobic metabolism. Used for endurance, posture, smooth sustained effort. About 40--50% of most muscles.
 
-- Type IIa (fast-twitch oxidative) Intermediate speed ($\sim 40$ ms), high force production, moderate fatigue resistance. Oxidative capacity good. The *most powerful* fiber type. Used for athletic power movements. About 20--30% of muscles.
+**Type IIa (fast-twitch oxidative):** Intermediate speed (~40 ms), high force production, moderate fatigue resistance. Oxidative capacity good. The *most powerful* fiber type. Used for athletic power movements. About 20--30% of muscles.
 
-- Type IIx (fast-twitch glycolytic) Fastest contraction ($\sim 20$ ms), highest force production, rapid fatigue. Power from anaerobic glycolysis. Most powerful for brief bursts. About 5--15% of untrained muscles (training can increase this).
-\end{description}
+**Type IIx (fast-twitch glycolytic):** Fastest contraction (~20 ms), highest force production, rapid fatigue. Power from anaerobic glycolysis. Most powerful for brief bursts. About 5--15% of untrained muscles (training can increase this).
 
 Elite golfers have higher proportions of Type II fibers, especially IIa, which explains their ability to generate explosive power while maintaining some endurance for tournament play.
 
@@ -79,7 +73,7 @@ Most muscles do not run straight from origin to insertion. Instead, muscle fiber
 - $\sigma_{\max}$ = specific tension (force per unit area), typically 30--60 N/cm$^2$ for healthy muscle
 - Maximum isometric force: $F_0 = \sigma_{\max} \times A_{\mathrm{PCSA}}$
 
-For example, published cadaveric and MRI studies place the latissimus dorsi PCSA in the $\approx 25$--$40$ cm$^2$ range for adult males [@zajac1989determining; @veeger1997parameters], with a central estimate of $\sim 30$ cm$^2$; that gives a maximum isometric force of $\sim 900$--1400 N at $\sigma_{\max} = 35$ N/cm$^2$. Individual values vary with body size, training history, and measurement method (anatomical cross-section vs. fiber-angle-corrected PCSA), so the chapter's $\sim 30$ cm$^2$ / $\sim 1000$ N figure is a representative midpoint rather than a fixed value.
+For example, published cadaveric and MRI studies place the latissimus dorsi PCSA in the $\approx 25$--$40$ cm$^2$ range for adult males [@Zajac1989; @veeger1997parameters], with a central estimate of $\sim 30$ cm$^2$; that gives a maximum isometric force of $\sim 900$--1400 N at $\sigma_{\max} = 35$ N/cm$^2$. Individual values vary with body size, training history, and measurement method (anatomical cross-section vs. fiber-angle-corrected PCSA), so the chapter's $\sim 30$ cm$^2$ / $\sim 1000$ N figure is a representative midpoint rather than a fixed value.
 
 :::
 
@@ -111,13 +105,11 @@ The force-length curve has three distinct regions:
 ::: {.callout-important}
 ## Regions of the Force-Length Curve
 
-\begin{description}
-- Ascending limb ($\tilde{\ell} < 1$) Muscle shorter than optimal. Sarcomere overlap incomplete. Force increases with length. This is where muscles are weak because they cannot be fully recruited.
+**Ascending limb ($\tilde{\ell} < 1$):** Muscle shorter than optimal. Sarcomere overlap incomplete. Force increases with length. This is where muscles are weak because they cannot be fully recruited.
 
-- Plateau ($0.9 < \tilde{\ell} < 1.1$) Near optimal length. Force is constant and maximal. Minimal sensitivity to small length changes. Most powerful configuration.
+**Plateau ($0.9 < \tilde{\ell} < 1.1$):** Near optimal length. Force is constant and maximal. Minimal sensitivity to small length changes. Most powerful configuration.
 
-- Descending limb ($\tilde{\ell} > 1.1$) Muscle longer than optimal. Excessive stretch reduces sarcomere overlap. Passive elastic elements begin to dominate. Force decreases with further lengthening. At extreme stretch, passive force dominates.
-\end{description}
+**Descending limb ($\tilde{\ell} > 1.1$):** Muscle longer than optimal. Excessive stretch reduces sarcomere overlap. Passive elastic elements begin to dominate. Force decreases with further lengthening. At extreme stretch, passive force dominates.
 
 :::
 
@@ -372,11 +364,7 @@ G(\bm{x}) &= \text{control input gain (how control affects state)}
 
 But muscles do not directly produce joint torques—they produce *neural activation commands* $u_{\mathrm{neural}}(t)$. The chain from neural command to joint torque is:
 
-
-\begin{tabular}{ccccc}
-$u_{\mathrm{neural}}$ & $\to$ & $a(t)$ & $\to$ & $F_{\mathrm{muscle}}$ 
-neural command & activation dynamics & muscle force & moment arm & joint torque
-\end{tabular}
+$$u_{\mathrm{neural}} \xrightarrow{\text{activation}} a(t) \xrightarrow{\times F_0 f_L f_V} F_{\mathrm{muscle}} \xrightarrow{\times r(\bm{q})\cos\alpha} \tau_{\mathrm{joint}}$$
 
 
 More precisely:
@@ -449,16 +437,13 @@ Let's put numbers on actual muscle forces and torques during a golf swing. These
 ::: {.callout-important}
 ## Peak Torques at Major Golf Joints
 
-\begin{description}
-- Shoulder (internal rotation): Peak torque $\approx 100$--$150$ N·m. This rotates the upper arm to accelerate the club. Generated primarily by the subscapularis and latissimus dorsi. Occurs around mid-downswing when acceleration is high but speed is still manageable.
+**Shoulder (internal rotation):** Peak torque $\approx 100$--$150$ N·m. This rotates the upper arm to accelerate the club. Generated primarily by the subscapularis and latissimus dorsi. Occurs around mid-downswing when acceleration is high but speed is still manageable.
 
-- Elbow (extension): Peak torque $\approx 50$--$80$ N·m. The triceps extends the arm to apply force to the club. Occurs late in downswing as the arm releases. At this point, the arm is moving fast, so force-velocity effects reduce available force.
+**Elbow (extension):** Peak torque $\approx 50$--$80$ N·m. The triceps extends the arm to apply force to the club. Occurs late in downswing as the arm releases. At this point, the arm is moving fast, so force-velocity effects reduce available force.
 
-- Wrist (extension/radial deviation): Peak torque $\approx 15$--$30$ N·m. The wrist muscles must control the club's motion about the wrist joint. Very high speeds mean very low force capacity. This is the most vulnerable joint for loss of control.
+**Wrist (extension/radial deviation):** Peak torque $\approx 15$--$30$ N·m. The wrist muscles must control the club's motion about the wrist joint. Very high speeds mean very low force capacity. This is the most vulnerable joint for loss of control.
 
-- Hip (internal rotation): Peak torque $\approx 80$--$120$ N·m. The lower body initiates the downswing by rotating the hips, driving the torso. Large muscles (glutes, hip flexors) and favorable moment arms allow high torque despite high speeds.
-
-\end{description}
+**Hip (internal rotation):** Peak torque $\approx 80$--$120$ N·m. The lower body initiates the downswing by rotating the hips, driving the torso. Large muscles (glutes, hip flexors) and favorable moment arms allow high torque despite high speeds.
 
 Note: Peak torques vary with swing speed (professional vs. amateur), body composition, and training.
 
@@ -466,7 +451,7 @@ Note: Peak torques vary with swing speed (professional vs. amateur), body compos
 
 ::: {.callout-note}
 ## Where Muscles Are Strongest vs. Drift-Dominated
-\begin{minipage}[t]{0.48\textwidth}
+
 **Transition & early downswing:**
 
 - Angular velocities: $\lesssim 50$ rad/s
@@ -477,8 +462,6 @@ Note: Peak torques vary with swing speed (professional vs. amateur), body compos
 - Drift torque: MODERATE ($\sim 10$--$30$ N$\cdot$m)
 - Result: **CONTROL DOMINANT**
 
-\end{minipage}\hfill
-\begin{minipage}[t]{0.48\textwidth}
 **Late downswing & impact:**
 
 - Angular velocities: $\gtrsim 80$ rad/s
@@ -489,7 +472,6 @@ Note: Peak torques vary with swing speed (professional vs. amateur), body compos
 - Drift torque: DOMINANT ($\sim 50$--$150$ N$\cdot$m)
 - Result: **DRIFT DOMINANT**
 
-\end{minipage}
 :::
 
 This pattern explains the fundamental structure of the efficient golf swing:
@@ -507,14 +489,13 @@ This pattern explains the fundamental structure of the efficient golf swing:
 Understanding muscle force generation reveals why certain coaching cues are effective and others are counterintuitive.
 
 ::: {.callout-warning}
-## Myth: ``Accelerate the club all the way to impact''
-\begin{description}
-- **The Myth:** A golfer should produce maximum muscle torque all the way to impact. Bigger muscles = bigger torque = longer drive.
+## Myth: "Accelerate the club all the way to impact"
 
-- **The Reality:** At impact speeds ($v > 50$ m/s), muscle force-velocity limitations mean muscles produce $\lesssim 20\%$ of isometric force. Trying to ``accelerate into the ball'' at this point is both ineffective (muscles are weak) and risky (joints experience extreme reactive forces). The efficient swing accelerates heavily in the transition and early downswing (when muscles are capable) and then *coasts* (controlled descent of inertia) into impact. Deceleration forces at impact are controlled by eccentric muscle activation (muscles braking), not concentric acceleration.
+**The Myth:** A golfer should produce maximum muscle torque all the way to impact. Bigger muscles = bigger torque = longer drive.
 
-- **Coaching Cue Reframe:** Instead of ``accelerate to impact,'' say ``accelerate the transition''—this is where muscles are most effective. The downswing should feel like release and flow, not continued muscular effort at the end.
-\end{description}
+**The Reality:** At impact speeds ($v > 50$ m/s), muscle force-velocity limitations mean muscles produce $\lesssim 20\%$ of isometric force. Trying to "accelerate into the ball" at this point is both ineffective (muscles are weak) and risky (joints experience extreme reactive forces). The efficient swing accelerates heavily in the transition and early downswing (when muscles are capable) and then *coasts* (controlled descent of inertia) into impact. Deceleration forces at impact are controlled by eccentric muscle activation (muscles braking), not concentric acceleration.
+
+**Coaching Cue Reframe:** Instead of "accelerate to impact," say "accelerate the transition"---this is where muscles are most effective. The downswing should feel like release and flow, not continued muscular effort at the end.
 :::
 
 ::: {.callout-important}
@@ -534,8 +515,9 @@ Understanding muscle force generation reveals why certain coaching cues are effe
 
 :::
 
-\subsection*{Looking Ahead}
-Muscle biology sets the envelope of what is physically possible: maximum forces, activation speeds, and the velocity--force tradeoff. But there is one more force we have not yet accounted for---aerodynamic drag. Chapter~\ref{ch:aerodynamic-drag} shows why drag is *not* negligible in the golf swing, and why omitting it leads to systematic errors in inverse dynamics calculations.
+## Looking Ahead
+
+Muscle biology sets the envelope of what is physically possible: maximum forces, activation speeds, and the velocity--force tradeoff. But there is one more force we have not yet accounted for---aerodynamic drag. The next chapter shows why drag is *not* negligible in the golf swing, and why omitting it leads to systematic errors in inverse dynamics calculations.
 
 ## Chapter Exercises
 
