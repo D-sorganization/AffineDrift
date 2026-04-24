@@ -11,6 +11,7 @@ import pytest
 
 from src.tools.utils.budget_check_utils import (
     collect_matching_files,
+    get_repo_root,
     is_included,
     load_config,
     read_text_safe,
@@ -41,6 +42,29 @@ class TestIsIncluded:
 
     def test_backslash_normalization(self) -> None:
         assert is_included(Path("src\\tools\\foo.py"), ["src"], [])
+
+
+# ─── get_repo_root ───────────────────────────────────────────────
+
+
+class TestGetRepoRoot:
+    """Tests for get_repo_root."""
+
+    def test_returns_path_object(self) -> None:
+        root = get_repo_root()
+        assert isinstance(root, Path)
+
+    def test_returns_existing_directory(self) -> None:
+        root = get_repo_root()
+        assert root.is_dir()
+
+    def test_root_contains_config_directory(self) -> None:
+        root = get_repo_root()
+        assert (root / "config").is_dir()
+
+    def test_root_contains_scripts_directory(self) -> None:
+        root = get_repo_root()
+        assert (root / "scripts").is_dir()
 
 
 # ─── load_config ─────────────────────────────────────────────────

@@ -7,7 +7,7 @@ import re
 import sys
 from pathlib import Path
 
-from src.tools.utils.budget_check_utils import load_config, report_results
+from src.tools.utils.budget_check_utils import get_repo_root, load_config, report_results
 
 IMPORT_RE = re.compile(r"""import\s+(?:[^"']+?\s+from\s+)?["']([^"']+)["']""")
 DYNAMIC_IMPORT_RE = re.compile(r"""import\(\s*["']([^"']+)["']\s*\)""")
@@ -86,7 +86,7 @@ def check_rules(repo_root: Path) -> list[str]:
 
 def main() -> int:
     """Run the JavaScript dependency boundary check."""
-    repo_root = Path(__file__).resolve().parent.parent
+    repo_root = get_repo_root()
     violations = check_rules(repo_root)
     return report_results(
         "JavaScript dependency boundary check",

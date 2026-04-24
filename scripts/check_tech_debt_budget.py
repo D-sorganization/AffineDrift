@@ -5,10 +5,10 @@ from __future__ import annotations
 
 import re
 import sys
-from pathlib import Path
 
 from src.tools.utils.budget_check_utils import (
     collect_matching_files,
+    get_repo_root,
     load_config,
     read_text_safe,
     report_results,
@@ -27,7 +27,7 @@ MARKER_RE = re.compile(r"\b(" + _alt + r")\b", re.IGNORECASE)
 
 def main() -> int:
     """Check technical-debt marker counts against budget limits."""
-    repo_root = Path(__file__).resolve().parent.parent
+    repo_root = get_repo_root()
     config = load_config(repo_root, "tech_debt_budget.json")
 
     allowed_exts = set(config["file_extensions"])

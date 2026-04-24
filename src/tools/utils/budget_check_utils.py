@@ -109,6 +109,18 @@ def read_text_safe(path: Path) -> str | None:
         return None
 
 
+def get_repo_root() -> Path:
+    """Get the repository root relative to the calling script.
+
+    Assumes the calling script is in the ``scripts/`` subdirectory, and
+    computes the root by traversing up the directory tree from ``__file__``.
+
+    Returns:
+        Repository root path.
+    """
+    return Path(__file__).resolve().parent.parent.parent.parent
+
+
 def resolve_line_limit(
     rel: str,
     suffix: str,
