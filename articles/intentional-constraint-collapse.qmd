@@ -73,7 +73,7 @@ format:
           Critics argue that "Jacobian Collapse" implies a kinematic singularity (rank loss), which provides infinite force advantage but infinite inertia (loss of control). Biomechanists contend this is actually "Variable Impedance Control" (stiffness modulation), which requires metabolic energy, unlike a true geometric constraint. Conflating the two obscures the active cost of stability.
         </p>
         <div class="author-response">
-          <strong>Our Response:</strong> We acknowledge the distinction. "Collapse" is used here to describe the <em>limiting behavior</em> of high-impedance control. While not a geometric singularity (bone-on-bone), the neuromuscular co-contraction creates a 'virtual constraint' that mimics rank loss to stabilize the clubface against impact shock.
+          <strong>Our Response:</strong> We acknowledge the distinction. "Collapse" is used here to describe the <em>limiting behavior</em> of high-impedance control. While not a geometric singularity (bone-on-bone), the neuromuscular co-contraction creates a stiffness-induced functional constraint that mimics rank loss to stabilize the clubface against impact shock (not a "virtual constraint" in the HZD sense of Grizzle et al.).
         </div>
       </div>
 
@@ -107,7 +107,7 @@ Elite players simultaneously produce **very large forces at the hands and clubhe
 This article proposes a more precise interpretation:
 **near impact, skilled golfers intentionally collapse portions of the constraint Jacobian of the golfer–club system**, selectively reducing mobility in destabilizing directions while preserving mobility in force-productive directions.
 
-In mechanical terms, this is not brute stiffness, nor passive locking. It is **targeted constraint shaping**, achieved through configuration, redundancy, and internal force generation.
+In mechanical terms, this is not brute stiffness, nor passive locking. It is **targeted constraint shaping**, achieved through configuration, redundancy, and internal force generation. The neuromuscular mechanism is impedance control [@hogan1985impedance] — the nervous system modulates the apparent stiffness and damping at the endpoint by co-contracting antagonist muscles, a strategy shown to stabilize unstable dynamics [@burdet2001cns] and adapted specifically for task-relevant variability [@franklin2008specificity].
 
 ---
 
@@ -115,10 +115,12 @@ In mechanical terms, this is not brute stiffness, nor passive locking. It is **t
 
 The term “intentional constraint collapse” requires a rigorous mathematical definition to distinguish it from kinematic singularities and to clarify the role of impedance modulation.
 
-<div class=”definition-box” style=”margin: 1.5rem 0; padding: 1.25rem 1.5rem; background: var(--bg-secondary, #f8f9fa); border: 1px solid var(--border-color, #dee2e6); border-left: 4px solid var(--accent-secondary, #6c757d); border-radius: 6px;”>
+<div class="definition-box" style="margin: 1.5rem 0; padding: 1.25rem 1.5rem; background: var(--bg-secondary, #f8f9fa); border: 1px solid var(--border-color, #dee2e6); border-left: 4px solid var(--accent-secondary, #6c757d); border-radius: 6px;">
 <strong style=”display: block; font-size: 1rem; margin-bottom: 0.75rem;”>Definition 2.1 — Intentional Constraint Collapse (ICC)</strong>
 
-Let $q(t) \in \mathcal{Q}$ be the generalized coordinates of the golfer–club system and let $K_{\mathrm{eff}}(q, t)$ denote the effective joint-space impedance (stiffness) matrix arising from passive tissue properties and active neuromuscular co-contraction. Let $J(q)$ be the task-space Jacobian mapping joint velocities to clubhead velocity, and let $K_{\mathrm{task}}(q, t) = J(q)^{-T} K_{\mathrm{eff}}(q, t)\, J(q)^{-1}$ be the resulting task-space stiffness.
+Let $q(t) \in \mathcal{Q}$ be the generalized coordinates of the golfer–club system and let $K_{\mathrm{eff}}(q, t)$ denote the effective joint-space impedance (stiffness) matrix arising from passive tissue properties and active neuromuscular co-contraction. Let $J(q) \in \mathbb{R}^{m \times n}$ be the task-space Jacobian (with $m \leq n$ for the redundant golfer–club system) mapping joint velocities to clubhead velocity. Following Khatib's operational-space formulation [@khatib1987unified], the task-space stiffness is:
+$$K_{\mathrm{task}}(q, t) = \bigl(J(q)\, K_{\mathrm{eff}}(q,t)^{-1}\, J(q)^T\bigr)^{-1},$$
+where the inversion is taken on the positive-definite $m \times m$ matrix $J K_{\mathrm{eff}}^{-1} J^T$. For a non-square (redundant) $J$, no assumption of $J^{-1}$ is required.
 
 **Intentional Constraint Collapse** is the neuromuscular control strategy in which, over a preparation interval $[t^* - \tau,\, t^*]$ of duration $\tau \sim 50$–$100\,\text{ms}$ terminating at impact time $t^*$, the co-contraction component $\Delta K_{\mathrm{co}}(t)$ of the joint-space stiffness satisfies:
 
@@ -139,17 +141,22 @@ where $P$ is the projection onto the perturbation-sensitive subspace. The collap
 
 - **Impedance Constraint**: The effective stiffness increases while the Jacobian structure remains unchanged. This is a *dynamic* property controlled by muscle activation; it can be selective (applied to certain directions only) and transient (duration ~50–100 ms).
 
-The neuromuscular co-contraction creates a “virtual constraint” that mimics the behavior of a kinematic constraint (suppressed motion in certain directions) without actually changing the geometric degrees of freedom. The system *appears* to have fewer degrees of freedom, but this appearance arises from high damping, not from bone-on-bone locking.
+The neuromuscular co-contraction creates a **stiffness-induced functional constraint** — a high-impedance suppression of motion in selected directions — that mimics the kinematic effect of a true geometric constraint without actually reducing the number of degrees of freedom. The system *appears* to have fewer degrees of freedom, but this appearance arises from high impedance, not from bone-on-bone locking.
+
+::: {.callout-note}
+## Terminology Note: “Virtual Constraint”
+The phrase “virtual constraint” is *not* used here in the Hybrid Zero Dynamics (HZD) sense of Grizzle et al. [@westervelt2007feedback], where it refers to an output function driven to zero by feedback control to define a lower-dimensional invariant surface for bipedal locomotion. The mechanism described here — stiffness-induced functional constraint — is phenomenologically different: it arises from impedance modulation, not from zeroing a controlled output. We use “stiffness-induced functional constraint” to avoid this ambiguity.
+:::
 
 ### Effective Impedance in Configuration Space
 
-The effective impedance observed at the clubhead can be expressed in task space as:
+The effective impedance observed at the clubhead can be expressed in task space using the operational-space stiffness formulation of Khatib [@khatib1987unified; @siciliano2016springer]:
 
 $$
-K_{\text{task}} = J(q)^{-T} K_{\text{eff}}(q) J(q)^{-1},
+K_{\text{task}} = \bigl(J(q)\, K_{\text{eff}}(q)^{-1}\, J(q)^T\bigr)^{-1},
 $$
 
-where $J(q)$ is the task Jacobian. During constraint collapse, the eigenvalues of $K_{\text{task}}$ in destabilizing directions (e.g., clubface twist, loft perturbation) increase dramatically:
+where $J(q) \in \mathbb{R}^{m \times n}$ is the task Jacobian. This form is valid for both square ($m = n$) and redundant ($m < n$) Jacobians, since it inverts the $m \times m$ matrix $J K_{\text{eff}}^{-1} J^T$ rather than $J$ itself. During constraint collapse, the eigenvalues of $K_{\text{task}}$ in destabilizing directions (e.g., clubface twist, loft perturbation) increase dramatically:
 
 $$
 \lambda_{\text{face twist}}(t) \to \infty \quad \text{as } t \to t_{\text{impact}},
@@ -191,13 +198,13 @@ Crucially, **forces transmitted to the club are mediated by $\lambda$**, not dir
 
 ## 4. Constraint-Space Inertia and Force Amplification
 
-The relationship between applied torques and constraint forces depends on the **constraint-space inertia**:
+The relationship between applied torques and constraint forces depends on the **constraint-space (operational-space) inertia** [@khatib1987unified; @siciliano2016springer]:
 
 $$
 \Lambda_c = \left(J_c M^{-1} J_c^\top\right)^{-1}
 $$
 
-When $\Lambda_c$ becomes large in a particular direction, small joint torques can generate **large constraint forces** without requiring large accelerations.
+$\Lambda_c$ is the **apparent inertia felt at the constraint** — it is the inertia the constraint would need to accelerate in task space, analogous to the mass in $F = ma$ at the operational point. When $\Lambda_c$ is **large** in a particular direction (which occurs near kinematic singularities, where $J_c M^{-1} J_c^T$ becomes small), a given constraint acceleration requires **large constraint forces**. Equivalently, small joint torques mapped through an ill-conditioned Jacobian can generate **large constraint forces** without requiring large joint-space accelerations.
 
 This is the mechanical origin of force amplification near kinematic singularities and poorly conditioned Jacobians in robotics. The same mathematics applies to human movement.
 
@@ -212,7 +219,7 @@ A “collapsed” constraint Jacobian does **not** imply complete loss of motion
 
 In golf, the goal is *not* to collapse the entire Jacobian. That would sacrifice control and robustness. Instead, elite golfers exhibit **anisotropic collapse**:
 
-- **High mechanical impedance (stiffness/damping)** approaching the limit of a kinematic constraint. While not a true geometric singularity (which would imply bone-on-bone locking), the neuromuscular co-contraction creates a 'virtual constraint' that mimics a reduction in degrees of freedom in:
+- **High mechanical impedance (stiffness/damping)** approaching the limit of a kinematic constraint. While not a true geometric singularity (which would imply bone-on-bone locking), the neuromuscular co-contraction creates a **stiffness-induced functional constraint** that mimics a reduction in degrees of freedom in:
   - Clubface twist about the shaft axis,
   - Loft and lie perturbations,
   - Handle motion orthogonal to the intended delivery direction.
@@ -340,34 +347,29 @@ where $f_2(x) \neq f_1(x)$ (due to increased impedance effects) but both are sti
 
 The **switching transition** at $t = t_{\text{impact}} - \tau$ is a discrete event controlled by the nervous system (a deliberate intervention), not a dynamical discontinuity. Once the system switches to Mode 2, it evolves under affine dynamics with the modified drift.
 
-#### How This Resolves the Drift Invariance Concern
-
-The apparent violation of “drift invariance” (the claim that $f(x)$ is independent of $u$) is resolved by recognizing that:
-
-1. **Impedance modulation is achieved via internal forces**, which are control actions living in the nullspace of the task Jacobian. These internal forces modify the *effective* drift without violating the mathematical structure of the control term.
-
-2. **The stiffness pulse is a timed, intentional intervention**, not a continuous function of $u$. The golfer switches control strategies (Mode 1 → Mode 2) at a specific instant, not as a feedback function of current state or control.
-
-3. **Within each mode, affine structure is preserved**, ensuring the Zero Torque Counterfactual (ZTCF) baseline remains valid (though mode-dependent: ZTCF_Mode1 ≠ ZTCF_Mode2).
+#### ICC Violates Drift Invariance in the Impact Window
 
 ::: {.callout-important}
-## Resolving the Drift Invariance Concern
+## CRITICAL: ICC Violates Drift Invariance in the Impact Window
 
-The switched affine model may appear to violate Drift Invariance, because the nervous system (an “input”) selects the impedance regime. We resolve this by distinguishing two types of control authority:
+**Impedance modulated by co-contraction is input-history-dependent.** The effective stiffness $K_{\text{eff}}(t)$ in Mode 2 is not a function of configuration $x$ alone — it depends on the history of muscle activation commands, which are themselves control inputs. This is precisely the situation that Drift Invariance (as formulated in theory-part3) forbids: $\nabla_u f(x) \neq 0$ when the drift field parameters are co-contraction-dependent.
 
-**Continuous control** $u(t)$: Joint torques that enter linearly through $g(x)u$. Drift invariance holds: $\partial f/\partial u \equiv 0$.
+**Consequence:** ICC, as described here, **violates Drift Invariance** as formulated in theory-part3. The switched-affine argument above — which separates a discrete scheduling variable $\sigma$ from the continuous input $u$ — does not fully resolve this, because co-contraction is itself a continuous, input-driven process that accumulates over the preparation interval. The drift field in Mode 2 is not independent of the input history.
 
-**Discrete control** $\sigma(t)$: Impedance regime selection (e.g., compliant vs. stiff). This modifies the plant parameters but does NOT enter through the continuous channel.
+**Implication for the ZTCF:** The Zero Torque Counterfactual (ZTCF) decomposition is **invalidated in the impact window** where ICC is active. The ZTCF asks “what would happen if torque ceased?” — but if the impedance schedule was itself driven by prior torque commands, the counterfactual baseline is ill-defined without specifying whether the impedance schedule also ceases or continues. The ZTCF should be interpreted as a **Parametric Counterfactual** in this regime: “What if torque ceased but the impedance schedule continued?” rather than a purely passive mechanical baseline.
 
-Formally, the system is a **controlled hybrid automaton**:
-$$
-\dot{x} = f_\sigma(x) + g_\sigma(x) u, \quad \sigma \in \{1, 2, \ldots, N\}
-$$
-
-Within each mode $\sigma$, the drift $f_\sigma(x)$ is independent of $u$. The mode transitions are governed by a separate discrete controller (the motor planning system) that operates on a slower timescale. The ZTCF is well-defined within each mode: set $u = 0$ and evolve under $f_\sigma(x)$.
-
-This formulation is standard in hybrid control theory (Branicky 1998, Goebel et al. 2012) and resolves the apparent paradox: the golfer can modulate impedance (change $\sigma$) without violating the force-level superposition that holds within each mode.
+**ICC as a hypothesis outside the affine framework:** ICC is best understood as a neuromuscular control strategy that *operates outside* the strictly control-affine framework of theory-part3. It does not contradict the affine model's validity during the free-swing phase, but it represents a qualitatively different control mode — one that involves bilinear or state-parameter coupling — during the impact preparation window. A rigorous treatment requires the framework of switched/hybrid affine systems or bilinear control (deferred to a future volume). **Cite:** Hogan [@hogan1985impedance] on impedance control as a control strategy that modifies apparent dynamics; Burdet et al. [@burdet2001cns] on CNS stabilization of unstable dynamics through learned impedance modulation.
 :::
+
+Within each mode, the affine structure *formally* holds:
+
+1. **Each mode preserves the affine form.** Within a fixed mode $\sigma$, the drift $f_\sigma(x)$ does not depend on the instantaneous $u$ — so the ZTCF is well-defined *within* the mode.
+
+2. **The stiffness pulse is anticipatory**, not a real-time feedback function of the current state. This is what the mode-switching model captures.
+
+3. **However**, the mode transition itself is driven by the input history — co-contraction is a continuous muscular process, not a discrete switch. This makes the mode boundary a continuous-time artifact of control, not a true discrete event, and means the full switched system does not cleanly separate $f_\sigma$ from $u$.
+
+The upshot: the switched-affine framing provides a useful approximation but does not eliminate the Drift Invariance violation. The ZTCF_Mode2 baseline is the best available approximation within the affine setting, acknowledging that it is a parametric counterfactual rather than a purely passive one.
 
 
 ### The Effective Plant as a Control Reserve
@@ -432,13 +434,18 @@ Understanding it requires moving beyond kinematics alone—and taking constraint
 ## 12. Synthesis: The AffineDrift Context
 
 **The "Effective Plant" and Drift Invariance**
-This constraint shaping mechanism offers a **quasi-static resolution** to the "Input-Dependent Boundary Conditions" critique (detailed in Part 3 Limitations). By treating the high-impedance state as a temporary "Effective Plant," we can analyze the impact dynamics *as if* they evolved on a restricted manifold, acknowledging that the transition to this state is itself input-driven. While the Affine Control framework assumes a separation of passive drift ($f(x)$) and active input ($g(x)u$), constraint collapse illustrates how input $u$ modifies the *effective* topology of the system. By stiffening the constraint Jacobian $J_c$, the golfer temporarily alters the manifold on which the drift dynamics evolve, essentially creating a transient "effective plant" without violating the causal independence of the underlying Lagrangian mechanics.
+This constraint shaping mechanism does **not** offer a clean resolution to the "Input-Dependent Boundary Conditions" critique (detailed in Part 3 Limitations). While we can analyze the impact dynamics *as if* the system evolved on a restricted manifold in the high-impedance state, the transition to this state is itself driven by the input history — co-contraction is a continuous neuromuscular process controlled by prior commands. The Affine Control framework assumes drift $f(x)$ is input-independent, but constraint collapse violates this by making $f$ depend on the history of muscle activation inputs.
 
 ::: {.callout-important}
-## Limitation: The Stiffness Pulse Paradox
-We must strictly qualify this "Effective Plant" argument. The "Stiffness Pulse" described in Section 6 implies a rapid time-variation of the impedance parameters $\dot{K} \neq 0$ during the counterfactual integration window. This violates the strict **Drift Invariance** condition ($\nabla_u f(x) = 0$) because the drift field parameters are changing in correlation with the input strategy. Consequently, the ZTCF in this regime should be interpreted as a **Parametric Counterfactual** ("What if torque ceased but the impedance schedule continued?") rather than a purely passive mechanical baseline.
+## Limitation: ICC Violates Drift Invariance — ZTCF Invalidated in the Impact Window
 
-*Forward reference:* a rigorous treatment of switched or input-dependent control-affine systems --- where $M_{\eta\eta}(u)$ and $K(u)$ enter the drift coefficient itself, rather than as additive inputs --- requires the framework of switched/hybrid affine systems or bilinear control, and is **deferred to a future volume** (tentatively *Geometry of Motion*, Vol. II, Ch. on hybrid/switched dynamics). The parametric-counterfactual reading here is the best one-shot approximation available within the strictly control-affine setting.
+**ICC violates Drift Invariance as formulated in theory-part3.** The impedance co-contraction that defines ICC is input-history-dependent: $K_{\text{eff}}(t)$ depends on the neuromuscular activation commands over the preparation interval $[t^* - \tau, t^*]$, which are themselves inputs. Consequently, the drift field parameters change in correlation with the input strategy, and $\nabla_u f(x) \neq 0$ in the impact window. This is not merely a parametric reconfiguration — it is a genuine violation of the Drift Invariance condition [@hogan1985impedance; @burdet2001cns].
+
+**The ZTCF decomposition is invalidated in the impact window.** Because the drift field is input-history-dependent during ICC, the Zero Torque Counterfactual cannot be cleanly separated from the input channel. The ZTCF in this regime must be interpreted as a **Parametric Counterfactual**: "What if torque ceased but the impedance schedule continued?" — which is a different and weaker claim than the purely passive mechanical baseline the ZTCF represents in the free-swing phase.
+
+**ICC is a hypothesis outside the affine framework.** Rather than being a consequence of the control-affine structure, ICC represents a qualitatively different control mode — one that involves bilinear or state-parameter coupling between inputs and drift field parameters. It should be presented as a hypothesis about neuromuscular strategy that operates *outside* the strictly affine framework, not as something the affine model can accommodate.
+
+*Forward reference:* a rigorous treatment of switched or input-dependent control-affine systems — where $M_{\eta\eta}(u)$ and $K(u)$ enter the drift coefficient itself, rather than as additive inputs — requires the framework of switched/hybrid affine systems or bilinear control, and is **deferred to a future volume** (tentatively *Geometry of Motion*, Vol. II, Ch. on hybrid/switched dynamics). The parametric-counterfactual reading here is the best one-shot approximation available within the strictly control-affine setting. See Hogan [@hogan1985impedance] and Burdet et al. [@burdet2001cns] for the foundational impedance-control framework that underpins the ICC hypothesis.
 :::
 
 **Steering the Zero-Torque Counterfactual (ZTCF)**
