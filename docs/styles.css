@@ -78,12 +78,12 @@
 
   /* Palette unification: alias bespoke names to Okabe-Ito canonical tokens
      declared in custom.scss so components converge on one colorblind-safe system
-     (Issue #2789 finding 5).  The hex fallbacks ensure styles.css is standalone. */
+     (Issue #2789 finding 5). Hex fallbacks keep styles.css standalone. */
   --primary-blue: var(--color-blue, #0072b2);
   --accent-blue: var(--color-sky-blue, #56b4e9);
 
   /* Callout / panel component tokens (Issue #2783).
-     Override under [data-theme="dark"] and prefers-color-scheme dark below. */
+     Override under [data-theme="dark"] and prefers-color-scheme: dark below. */
   --callout-note-bg: #e7f3ff;
   --callout-note-border: #90caf9;
   --callout-warn-bg: #fff5f5;
@@ -289,15 +289,16 @@ a:hover {
   /* Align to top of grid */
 }
 
-/* Sticky Content in Sidebars */
+/* Sticky Content in Sidebars — use 100dvh so mobile URL-bar collapse
+   does not cause sidebar to jump (dynamic viewport height). */
 .sidebar-sticky-content {
   position: sticky;
   top: calc(var(--header-offset) + 2rem);
-  max-height: calc(100vh - var(--header-offset) - 4rem);
+  max-height: calc(100dvh - var(--header-offset) - 4rem);
   overflow-y: auto;
   padding-right: 0.5rem;
-
-  /* Space for scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-color) transparent;
 }
 
 /* Main Content Area */
@@ -603,6 +604,15 @@ nav .container {
   background: rgb(255 255 255 / 0.15);
 }
 
+/* Search placeholder contrast — ensures ≥4.5:1 against the dark header
+   background (fixes #2790 finding 2: contrast ~2.8:1 with default #999). */
+/* stylelint-disable-next-line selector-class-pattern -- third-party Algolia class */
+#quarto-header [class*="aa-DetachedSearchButton-placeholder"],
+#quarto-header input::placeholder {
+  color: rgb(255 255 255 / 0.9);
+  opacity: 1;
+}
+
 .logo-link {
   display: flex;
   align-items: center;
@@ -679,6 +689,64 @@ nav a[aria-current="page"],
 .rss-feed-link {
   width: 2.75rem;
   height: 2.75rem;
+}
+
+/* ---
+   Breadcrumbs — themed to match site palette (fixes #2790 finding 8).
+   bread-crumbs: true is set in _quarto.yml; without these rules the
+   Quarto-emitted breadcrumbs inherit unstyled Bootstrap defaults.
+   --- */
+.breadcrumb,
+.quarto-title-breadcrumbs .breadcrumb {
+  margin: 0.5rem 0 1rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  padding: 0;
+  background: none;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+}
+
+.breadcrumb-item {
+  color: var(--text-muted);
+}
+
+.breadcrumb-item a {
+  color: var(--accent-blue);
+  text-decoration: none;
+}
+
+.breadcrumb-item a:hover {
+  color: var(--primary-blue);
+  text-decoration: underline;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+  content: "›";
+  color: var(--text-muted);
+  padding: 0 0.4rem;
+}
+
+/* Bootstrap's .active breadcrumb item */
+.breadcrumb-item.active {
+  color: var(--text-main);
+}
+
+/* ---
+   Reading Time Estimate — move styling out of JS inline styles
+   (fixes #2790 finding 11: --text-light undefined, inline styles harder
+   to theme). The JS injects .reading-time-estimate; we style it here.
+   --- */
+.reading-time-estimate {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-style: italic;
+  font-weight: 500;
 }
 
 /* ---
@@ -1438,6 +1506,7 @@ h3:hover .anchor-link,
   border: 2px solid var(--callout-tip-border, #17a2b8);
   border-radius: 8px;
   margin: 2rem 0;
+  /* Token-driven background so dark mode override works (Issue #2783) */
   background: var(--callout-tip-bg, #f8fdfe);
   overflow: hidden;
   box-shadow: var(--shadow-sm);
@@ -1469,8 +1538,8 @@ h3:hover .anchor-link,
   gap: 0.5rem;
 }
 
-/* 💡 emoji moved to HTML with aria-hidden="true" — CSS ::before was inaccessible
-   to screen readers (Issue #2789 finding 2). The .laymans-terms-emoji span carries it. */
+/* 💡 emoji moved to HTML with aria-hidden="true" (Issue #2789 finding 2).
+   Use .laymans-terms-emoji span in markup instead of this pseudo-element. */
 .laymans-terms-emoji {
   font-size: 1.2rem;
   line-height: 1;
@@ -1532,8 +1601,8 @@ h3:hover .anchor-link,
   gap: 0.5rem;
 }
 
-/* 📌 emoji moved to HTML with aria-hidden="true" — CSS ::before was inaccessible
-   (Issue #2789 finding 2). The .laymans-item-emoji span carries it. */
+/* 📌 emoji moved to HTML with aria-hidden="true" (Issue #2789 finding 2).
+   Use .laymans-item-emoji span in markup. */
 .laymans-item-emoji {
   font-size: 0.9rem;
   line-height: 1;
@@ -1720,27 +1789,23 @@ form.contact-form .form-group textarea {
   outline: none;
   border-color: var(--accent-blue);
   box-shadow: 0 0 0 3px var(--light-blue);
-  /* Use --bg-body instead of --pure-white so dark mode does not flash white */
+  /* --bg-body instead of --pure-white prevents white flash in dark mode (Issue #2783) */
   background-color: var(--bg-body);
   color: var(--text-main);
 }
 
-/* Form error states (Issue #2789 finding 1) */
+/* Form error states — visual + semantic (Issue #2789 finding 1) */
 .form-group input:user-invalid,
-.form-group textarea:user-invalid {
-  border-color: var(--color-vermillion);
-  box-shadow: 0 0 0 3px rgba(213, 94, 0, 0.15);
-}
-
+.form-group textarea:user-invalid,
 .form-group input[aria-invalid="true"],
 .form-group textarea[aria-invalid="true"] {
-  border-color: var(--color-vermillion);
+  border-color: var(--color-vermillion, #d55e00);
   box-shadow: 0 0 0 3px rgba(213, 94, 0, 0.15);
 }
 
-/* Inline error text region */
+/* Inline error text — hidden by default, shown by initInlineFormErrors() */
 .form-error {
-  color: var(--color-vermillion);
+  color: var(--color-vermillion, #d55e00);
   font-size: 0.85rem;
   margin-top: 0.25rem;
   display: block;
@@ -2445,9 +2510,12 @@ h1.title,
   transition: max-height 0.3s ease-out;
 }
 
+/* Use a large but finite value so the CSS transition still animates
+   (animating to max-height:none has no easing). 4000px is sufficient
+   for any realistic sidebar list and won't clip 11+ links. */
 .sidebar-section-content.show {
-  max-height: 500px;
-  transition: max-height 0.3s ease-in;
+  max-height: 4000px;
+  transition: max-height 0.4s ease-in;
 }
 
 /* ---
@@ -2632,9 +2700,9 @@ h1.title,
     margin-bottom: 0;
   }
 
-  /* Expand all sections on tablet */
+  /* Expand all sections on tablet — unconstrained so all links show */
   .sidebar-section-content {
-    max-height: 500px;
+    max-height: 4000px;
   }
 
   .sidebar-section-toggle .toggle-icon {
@@ -2684,7 +2752,7 @@ h1.title,
   }
 
   .sidebar-section-content.show {
-    max-height: 500px;
+    max-height: 4000px;
   }
 
   /* Featured grid adjustments */
@@ -2761,7 +2829,8 @@ h1.title,
     --legal-pad-yellow: #1a1810;
     --shadow-color: rgb(0, 0, 0, 0.4);
 
-    /* Accent contrast: boost to ≥7:1 on dark canvas (Issue #2783 finding 2) */
+    /* Accent contrast: boost to ≥7:1 on dark canvas (Issue #2783 finding 2).
+       #0f4c75 on #0d0d1a = 1.61:1; #3282b8 on #0d0d1a = 4.31:1 — both fail. */
     --primary-blue: #7fb3d5;
     --accent-blue: #5dade2;
     --primary-dark: #e3f2fd;
@@ -2788,7 +2857,32 @@ h1.title,
     border-color: var(--border-color);
   }
 
-  /* Callout cards: replace hardcoded white backgrounds */
+  /* Callout cards: dark-mode panel backgrounds */
+  .abstract-section {
+    background: var(--callout-note-bg);
+    border-left-color: var(--callout-note-border);
+  }
+
+  .keypoint-box {
+    background: var(--callout-key-bg);
+    border-left-color: var(--callout-key-border);
+  }
+
+  .limitation-box {
+    background: var(--callout-limit-bg);
+    border-left-color: var(--callout-limit-border);
+  }
+
+  .laymans-terms {
+    background: var(--callout-tip-bg);
+    border-color: var(--callout-tip-border);
+  }
+
+  .critics-corner {
+    background: var(--callout-warn-bg);
+    border-color: var(--callout-warn-border);
+  }
+
   .laymans-item {
     background: var(--bg-card, #1e1e1e);
   }
@@ -2850,7 +2944,7 @@ h1.title,
   --legal-pad-yellow: #1a1810;
   --shadow-color: rgb(0, 0, 0, 0.4);
 
-  /* Accent contrast: boost to ≥7:1 on dark canvas (Issue #2783 finding 2) */
+  /* Accent contrast boost (Issue #2783 finding 2) */
   --primary-blue: #7fb3d5;
   --accent-blue: #5dade2;
   --primary-dark: #e3f2fd;
@@ -2875,6 +2969,31 @@ h1.title,
   background-color: var(--bg-card, #1e1e1e);
   color: var(--text-light, #e0e0e0);
   border-color: var(--border-color);
+}
+
+[data-theme="dark"] .abstract-section {
+  background: var(--callout-note-bg);
+  border-left-color: var(--callout-note-border);
+}
+
+[data-theme="dark"] .keypoint-box {
+  background: var(--callout-key-bg);
+  border-left-color: var(--callout-key-border);
+}
+
+[data-theme="dark"] .limitation-box {
+  background: var(--callout-limit-bg);
+  border-left-color: var(--callout-limit-border);
+}
+
+[data-theme="dark"] .laymans-terms {
+  background: var(--callout-tip-bg);
+  border-color: var(--callout-tip-border);
+}
+
+[data-theme="dark"] .critics-corner {
+  background: var(--callout-warn-bg);
+  border-color: var(--callout-warn-border);
 }
 
 [data-theme="dark"] .laymans-item {
