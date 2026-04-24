@@ -94,6 +94,14 @@ jobs:
         run: python3 scripts/check_logging_consistency.py
       - name: Verify Bibliography Quality
         run: python3 scripts/check_bibliography_quality.py
+      - name: Validate Quarto Cross-References
+        # Checks that every @sec-/@fig-/@eq-/@tbl- reference in .qmd files
+        # resolves to a defined label somewhere in the project. Orphan pages
+        # (rendered but unreachable from nav) are reported as warnings only
+        # to avoid blocking on large refactors; xref errors are blocking.
+        run: |
+          python3 scripts/check_quarto_xrefs.py --xrefs-only
+          python3 scripts/check_quarto_xrefs.py --orphans-only --warn-orphans
       - name: Install Tool Requirements
         run: |
           if [ -d "tools" ]; then
