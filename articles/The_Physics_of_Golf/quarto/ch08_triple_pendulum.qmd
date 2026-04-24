@@ -58,9 +58,9 @@ But the masses are also ordered: the torso is much heavier than the arm, which i
 
 The equations of motion for a planar triple pendulum are:
 
-\bm{M}(\bm{q}) \ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{u}
+$$\bm{M}(\bm{q}) \ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{u}$$
 
-where $\bm{M}(\bm{q})$ is the $3 \times 3$ mass matrix, $\bm{C}(\bm{q}, \dot{\bm{q}})$ is the $3\times 3$ Coriolis/centrifugal matrix (so $\bm{C}\dot{\bm{q}}$ is the Coriolis/centrifugal torque vector), $\bm{g}(\bm{q})$ is gravity, and $\bm{u} = (\tau_1, \tau_2, \tau_3)^T$ are the applied torques at the three joints.
+where $\bm{M}(\bm{q})$ is the $3 \times 3$ mass matrix, $\bm{C}(\bm{q}, \dot{\bm{q}})$ is the $3\times 3$ Coriolis/centrifugal matrix (so $\bm{C}\dot{\bm{q}}$ gives the torque vector), $\bm{g}(\bm{q})$ is gravity, and $\bm{u} = (\tau_1, \tau_2, \tau_3)^T$ are the applied torques at the three joints.
 
 ## The Mass Matrix: Understanding Coupling
 
@@ -69,33 +69,27 @@ where $\bm{M}(\bm{q})$ is the $3 \times 3$ mass matrix, $\bm{C}(\bm{q}, \dot{\bm
 
 The mass matrix is:
 
-$$
-\bm{M}(\bm{q}) = \begin{bmatrix}
+$$\bm{M}(\bm{q}) = \begin{bmatrix}
 M_{11} & M_{12} & M_{13} \\
 M_{12} & M_{22} & M_{23} \\
 M_{13} & M_{23} & M_{33}
-\end{bmatrix}
-$$
+\end{bmatrix}$$
 
 The diagonal entries are:
 
-$$
-\begin{aligned}
-M_{11} &= I_1 + m_1(L_1/2)^2 + I_2 + m_2(L_1^2 + L_1 L_2 \cos q_2) + I_3 + m_3(L_1^2 + L_1 L_2 \cos q_2 + L_2^2 + 2L_1 L_2 \cos q_2)\\
+$$\begin{aligned}
+M_{11} &= I_1 + m_1(L_1/2)^2 + I_2 + m_2(L_1^2 + L_1 L_2 \cos q_2) + I_3 + m_3(L_1^2 + 3L_1 L_2 \cos q_2 + L_2^2)\\
 M_{22} &= I_2 + m_2(L_2/2)^2 + I_3 + m_3(L_2^2 + L_1 L_2 \cos q_2)\\
 M_{33} &= I_3 + m_3(L_3/2)^2
-\end{aligned}
-$$
+\end{aligned}$$
 
 The off-diagonal terms capture the coupling between segments:
 
-$$
-\begin{aligned}
-M_{12} &= I_2 + m_2 L_1 L_2 \cos q_2 + I_3 + m_3(L_2^2 + L_1 L_2 \cos q_2)\\
+$$\begin{aligned}
+M_{12} &= I_2 + m_2 L_1 (L_2/2) \cos q_2 + I_3 + m_3(L_2^2 + L_1 L_2 \cos q_2)\\
 M_{13} &= I_3 + m_3(L_2^2 + L_1 L_2 \cos q_2)\\
 M_{23} &= I_3 + m_3(L_2^2/2)
-\end{aligned}
-$$
+\end{aligned}$$
 
 (These expressions simplify if we ignore the inertias of distal segments about proximal joints, which is reasonable for golf swings.)
 
@@ -125,27 +119,25 @@ For this illustrative example, assume the following model parameters (chosen to 
 - Segment 2 (forearm): $L_2 = 0.3$ m, $m_2 = 0.5$ kg, $I_2 = 0.01$ kg$\cdot$m$^2$.
 - Segment 3 (club): $L_3 = 0.5$ m, $m_3 = 0.2$ kg, $I_3 = 0.01$ kg$\cdot$m$^2$.
 
-At a downswing configuration where $q_2 = 90°$ (elbow straight, perpendicular to arm), the mass matrix is approximately:
+At a downswing configuration where $q_2 = 90°$ ($\cos q_2 = 0$, so cross-coupling terms vanish), the mass matrix evaluates to:
 
-$$
-\bm{M} \approx \begin{bmatrix}
-0.5 & 0.15 & 0.10 \\
-0.15 & 0.08 & 0.05 \\
-0.10 & 0.05 & 0.02
-\end{bmatrix} \text{ kg} \cdot \text{m}^2
-$$
+$$\bm{M} \approx \begin{bmatrix}
+0.280 & 0.038 & 0.028 \\
+0.038 & 0.049 & 0.019 \\
+0.028 & 0.019 & 0.023
+\end{bmatrix} \text{ kg} \cdot \text{m}^2$$
+
+The determinant is approximately $1.8 \times 10^{-4} > 0$, and all leading principal minors are positive ($M_{11} > 0$, $M_{11}M_{22} - M_{12}^2 > 0$), confirming this matrix is symmetric positive definite — as required for any physical mass matrix.
 
 The diagonal entries decrease as we move down (from shoulder to club). The off-diagonal terms show decreasing coupling strength.
 
-To see this more clearly, let's invert:
+To see this more clearly, the approximate inverse is:
 
-$$
-\bm{M}^{-1} \approx \begin{bmatrix}
-15.0 & -20.0 & 10.0 \\
--20.0 & 50.0 & -10.0 \\
-10.0 & -10.0 & 80.0
-\end{bmatrix}
-$$
+$$\bm{M}^{-1} \approx \begin{bmatrix}
+4.5 & -3.0 & -1.8 \\
+-3.0 & 23.5 & -16.5 \\
+-1.8 & -16.5 & 55.0
+\end{bmatrix}$$
 
 The entry $(\bm{M}^{-1})_{33} = 80$ is much larger than $(\bm{M}^{-1})_{11} = 15$. This means the wrist (joint 3) is much easier to accelerate than the shoulder (joint 1). In other words, it takes far less torque to get the wrist spinning at high speed than to spin the shoulders.
 
@@ -174,17 +166,13 @@ To illustrate the magnitude of Coriolis coupling, suppose at a representative mo
 
 The Coriolis term affecting the club (joint 3) includes contributions like:
 
-$$
-C_3 \approx \frac{\partial M_{23}}{\partial q_2} \dot{q}_2 \dot{q}_3 + \text{(cross terms)}
-$$
+$$C_{3\cdot} \approx \frac{\partial M_{23}}{\partial q_2} \dot{q}_2 \dot{q}_3 + \text{(cross terms)}$$
 
 The term $\frac{\partial M_{23}}{\partial q_2}$ depends on how the elbow angle affects the coupling between forearm and club. When $q_2$ is near $90°$ (arm extended), this derivative is large. The product $\dot{q}_2 \dot{q}_3 = 20 \times 30 = 600$ rad$^2$/s$^2$ is large.
 
 Even if $\frac{\partial M_{23}}{\partial q_2} \approx 0.01$ (a small number), the Coriolis torque is:
 
-$$
-C_3 \approx 0.01 \times 600 = 6 \text{ Nm}
-$$
+$$C_{3\cdot} \approx 0.01 \times 600 = 6 \text{ N}\cdot\text{m}$$
 
 This is comparable to or exceeding muscular torque at the wrist, and it's purely a consequence of the kinematics, not active effort. The club is yanked forward by the rotating arm, and this yank is encoded in the Coriolis term.
 
@@ -274,27 +262,23 @@ The difference: by releasing late, the club inherits the arm's higher velocity, 
 
 Using our model parameters and starting from a representative downswing configuration:
 
-$$
-\begin{aligned}
-q_1 &= 50° \quad \dot{q}_1 = 12 \text{ rad/s} \quad \tau_1 = 0\\
-q_2 &= 80° \quad \dot{q}_2 = 20 \text{ rad/s} \quad \tau_2 = 0\\
-q_3 &= 100° \quad \dot{q}_3 = 25 \text{ rad/s} \quad \tau_3 = 0
-\end{aligned}
-$$
+$$\begin{aligned}
+q_1 &= 50°, \quad \dot{q}_1 = 12 \text{ rad/s}, \quad \tau_1 = 0\\
+q_2 &= 80°, \quad \dot{q}_2 = 20 \text{ rad/s}, \quad \tau_2 = 0\\
+q_3 &= 100°, \quad \dot{q}_3 = 25 \text{ rad/s}, \quad \tau_3 = 0
+\end{aligned}$$
 
 Set $\bm{u} = \mathbf{0}$ (no muscle torques) and solve:
 
-\bm{M}(\bm{q}) \ddot{\bm{q}} = -\bm{C}(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} - \bm{g}(\bm{q})
+$$\bm{M}(\bm{q}) \ddot{\bm{q}} = -\bm{C}(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} - \bm{g}(\bm{q})$$
 
 Using a numerical solver with the mass matrix and Coriolis terms, the accelerations are approximately:
 
-$$
-\begin{aligned}
+$$\begin{aligned}
 \ddot{q}_1^{\text{ZTCF}} &\approx -2 \text{ rad/s}^2 \quad \text{(shoulder decelerating)}\\
 \ddot{q}_2^{\text{ZTCF}} &\approx 15 \text{ rad/s}^2 \quad \text{(elbow accelerating)}\\
 \ddot{q}_3^{\text{ZTCF}} &\approx 40 \text{ rad/s}^2 \quad \text{(club accelerating rapidly)}
-\end{aligned}
-$$
+\end{aligned}$$
 
 **Interpretation:**
 
@@ -302,23 +286,19 @@ With no muscle torques, the shoulder decelerates slightly (gravity slowing the r
 
 Integrating this trajectory forward 0.05 seconds (50 ms, roughly late downswing), the ZTCF predicts:
 
-$$
-\begin{aligned}
-q_1(0.05) &\approx 50° + 12 \times 0.05 - 0.5 \times 2 \times 0.0025 \approx 50.6°\\
-q_2(0.05) &\approx 80° + 20 \times 0.05 + 0.5 \times 15 \times 0.0025 \approx 81.0°\\
-q_3(0.05) &\approx 100° + 25 \times 0.05 + 0.5 \times 40 \times 0.0025 \approx 102.9°
-\end{aligned}
-$$
+$$\begin{aligned}
+q_1(0.05) &\approx 50° + 12 \times 0.05 \cdot \tfrac{180°}{\pi} - \tfrac{1}{2} \times 2 \times 0.0025 \cdot \tfrac{180°}{\pi} \approx 50.6°\\
+q_2(0.05) &\approx 80° + 20 \times 0.05 \cdot \tfrac{180°}{\pi} + \tfrac{1}{2} \times 15 \times 0.0025 \cdot \tfrac{180°}{\pi} \approx 81.0°\\
+q_3(0.05) &\approx 100° + 25 \times 0.05 \cdot \tfrac{180°}{\pi} + \tfrac{1}{2} \times 40 \times 0.0025 \cdot \tfrac{180°}{\pi} \approx 102.9°
+\end{aligned}$$
 
 And velocities:
 
-$$
-\begin{aligned}
+$$\begin{aligned}
 \dot{q}_1(0.05) &\approx 12 - 2 \times 0.05 = 11.9 \text{ rad/s}\\
 \dot{q}_2(0.05) &\approx 20 + 15 \times 0.05 = 20.75 \text{ rad/s}\\
 \dot{q}_3(0.05) &\approx 25 + 40 \times 0.05 = 27 \text{ rad/s}
-\end{aligned}
-$$
+\end{aligned}$$
 
 The club's angular velocity increased by 2 rad/s (from 25 to 27) in just 50 ms, with *zero* muscle torque. This is the whip effect: passive Coriolis acceleration at the club.
 
