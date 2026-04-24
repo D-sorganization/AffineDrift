@@ -44,9 +44,10 @@
     border-radius: 12px 12px 0 0;
 }
 
-.critics-corner-title::before {
-    content: "⚠️";
+/* Emoji moved to HTML with aria-hidden — CSS pseudo-element was inaccessible */
+.critics-corner-title-emoji {
     font-size: 1.5rem;
+    line-height: 1;
 }
 
 .critics-corner-label {
@@ -99,9 +100,7 @@
     gap: 0.5rem;
 }
 
-.criticism-item h3::before {
-    content: "🔍";
-}
+/* Emoji moved to HTML — see .criticism-item-emoji */
 
 .criticism-item p {
     margin-bottom: 0.75rem;
@@ -132,20 +131,20 @@
     gap: 0.5rem;
 }
 
-.criticism-response h4::before {
-    content: "💡";
-}
+/* Emoji moved to HTML — see .criticism-response-emoji */
 
 .criticism-response p {
     margin-bottom: 0;
     font-size: 0.95rem;
 }
 
-/* Severity indicators */
+/* Severity indicators — differentiated by color AND shape so colorblind
+   users can still distinguish tiers (WCAG 1.4.1). Text label is required
+   in the markup; the ::before shape is decorative reinforcement only. */
 .criticism-severity {
     display: inline-flex;
     align-items: center;
-    gap: 0.25rem;
+    gap: 0.35rem;
     padding: 0.25rem 0.75rem;
     border-radius: 100px;
     font-size: 0.75rem;
@@ -154,9 +153,23 @@
     letter-spacing: 0.05em;
 }
 
+/* Shape icon — aria-hidden decorative indicator */
+.criticism-severity::before {
+    content: "";
+    display: inline-block;
+    width: 0.65rem;
+    height: 0.65rem;
+    flex-shrink: 0;
+}
+
 .criticism-severity.minor {
     background: #fff3cd;
     color: #856404;
+}
+
+.criticism-severity.minor::before {
+    background: #856404;
+    border-radius: 50%; /* circle */
 }
 
 .criticism-severity.moderate {
@@ -164,9 +177,19 @@
     color: #e65100;
 }
 
+.criticism-severity.moderate::before {
+    background: #e65100;
+    clip-path: polygon(50% 0%, 100% 100%, 0% 100%); /* triangle */
+}
+
 .criticism-severity.major {
     background: #ffcdd2;
     color: #c62828;
+}
+
+.criticism-severity.major::before {
+    background: #c62828;
+    clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%); /* octagon */
 }
 
 /* Empty state */
@@ -177,11 +200,4 @@
     font-style: italic;
 }
 
-.critics-corner-empty::before {
-    content: "✓";
-    display: block;
-    font-size: 3rem;
-    color: #4caf50;
-    margin-bottom: 1rem;
-    font-style: normal;
-}
+/* Checkmark emoji moved to HTML — see .critics-corner-empty-icon */

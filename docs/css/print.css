@@ -1,7 +1,6 @@
 /* Print optimization extracted from styles.css to reduce layout coupling. */
 @media print {
   @page {
-    size: a4;
     margin: 1in;
   }
 
@@ -122,7 +121,8 @@
     text-decoration: underline;
   }
 
-  a[href^="http"]::after {
+  .main-content-area a[href^="http"]::after,
+  main a[href^="http"]::after {
     content: " (" attr(href) ")";
     font-size: 9pt;
     color: #666;
@@ -131,7 +131,9 @@
 
   a[href^="#"]::after,
   a.resource-link::after,
-  .sidebar-links a::after {
+  .sidebar-links a::after,
+  #TOC a[href^="http"]::after,
+  nav a[href^="http"]::after {
     content: none;
   }
 
