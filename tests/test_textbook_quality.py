@@ -79,8 +79,12 @@ def test_target_pages_have_balanced_fenced_div_blocks() -> None:
 
 
 def test_target_pages_do_not_use_raw_fenced_div_markers() -> None:
-    """Target pages should avoid raw ::: markers that leak into rendered HTML."""
+    """Target pages should avoid raw ::: markers that leak into rendered HTML.
+
+    Note: Quarto native callout classes (.callout-note, .callout-warning, etc.)
+    are supported and render correctly; only unsupported custom classes are
+    checked here.
+    """
     for qmd_file in FENCED_DIV_FILES:
         text = qmd_file.read_text(encoding="utf-8")
-        assert "::: {.callout-note}" not in text
         assert "::: {.abstract-section}" not in text

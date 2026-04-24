@@ -178,7 +178,7 @@ $$
 
 ### 2.1 Natural torque field
 
-We define the **natural (drift) torque field** as the part entirely determined by the motion and environment:
+We define the **natural torque balance** (also written $\tau_{\text{nat}}$ throughout this article) as the inverse-dynamics balance determined entirely by the observed motion and environment:
 
 $$
 \tau_{\text{nat}}(q,\dot{q},\ddot{q},\lambda)
@@ -190,9 +190,17 @@ $$
 \tag{2.4}
 $$
 
+::: {.callout-note}
+## Naming note: $\tau_{\text{nat}}$ versus the drift vector field $f(x)$
+
+$\tau_{\text{nat}}$ is the **inverse-dynamics balance** — it equals the net joint torque required to reproduce a given trajectory, regardless of whether that torque is applied actively or passively. It is *not* the drift vector field $f(x)$ of the state-space system $\dot{x} = f(x) + G(x)u$.
+
+The state-space drift $f(x)$ describes the system's autonomous evolution when $u = 0$; it lives in the tangent bundle $T(\mathcal{Q} \times \dot{\mathcal{Q}})$. The quantity $\tau_{\text{nat}}$ lives in the joint-torque space $\mathbb{R}^n$; they are related (Section 3 introduces $f_{\text{nat}}$ for the state-space version) but are distinct objects. Keeping this distinction explicit avoids conflating an inverse-dynamics calculation with the geometric notion of drift.
+:::
+
 Interpretation:
 
-- $\tau_{\text{nat}}$ is **what the world contributes**:
+- $\tau_{\text{nat}}$ is **what the mechanics require**:
   - inertial reaction torques,
   - velocity-dependent terms,
   - gravity,
@@ -370,6 +378,12 @@ $$
 w \approx \big(J(q)^\top\big)^{+}\,\tau.
 \tag{4.3}
 $$
+
+::: {.callout-note}
+## Pseudoinverse and null-space torques
+
+The mapping $\tau \mapsto \big(J^\top\big)^{+}\tau$ is not unique. The pseudoinverse returns the **minimum-norm wrench** that is consistent with the work-producing component of $\tau$. Any torque in $\ker(J^\top)$ — the null space of $J^\top$ — produces no net wrench at the end-effector and is silently discarded by this mapping. In redundant systems, these null-space (internal) torques can be substantial; reporting $w$ from the pseudoinverse captures only the work-producing component of joint loading.
+:::
 
 ### 4.1 Natural wrench
 

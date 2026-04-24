@@ -94,7 +94,13 @@ Because the stroke axis is not fixed in orientation or magnitude, the club’s a
 - off-plane “wobble” during the stroke,
 - large corrective torques applied subconsciously.
 
-This behavior is best viewed as the forced version of the intermediate-axis phenomenon.
+::: {.callout-important}
+## Primary mechanism: principal-axis alignment
+
+At putting speeds, the dominant physical content of this section is **principal-axis alignment**, not intermediate-axis instability. When the putter's principal axes are misaligned with the stroke plane, the inertia tensor contains off-diagonal terms in the stroke frame. This creates **inertial coupling** — a linear effect proportional to $\omega$, not $\omega^2$ — where a pure rotation torque induces parasitic accelerations in orthogonal directions. This misalignment effect is present at all stroke speeds and is the primary driver of face-angle inconsistency at putting speeds.
+
+The intermediate-axis theorem (an $\omega^2$ effect) is an illustrative analogy that becomes the dominant mechanism only at full-swing angular velocities ($\omega \gg 10 \, \text{rad/s}$). At putting speeds, treat the intermediate-axis discussion above as a motivating analogy, not the central mechanism.
+:::
 
 # Conventional Putter Design and Its Limitations
 
@@ -116,9 +122,9 @@ $$
 \tau_{\text{impact}} = I_z \dot{\omega}_z.
 $$
 
-However, maximizing $I_z$ does not control the dynamic stability of rotation about other axes encountered during the stroke. Increasing separation between $I_1, I_2, I_3$ can actually sharpen the intermediate-axis instability, making the putter more sensitive to small deviations in stroke plane and lie angle.
+However, maximizing $I_z$ does not control the alignment of the other principal axes relative to the stroke plane. Increasing separation between $I_1, I_2, I_3$ through extreme perimeter weighting can increase off-diagonal inertia terms in the stroke frame (worsening principal-axis misalignment), making the putter more sensitive to small deviations in stroke plane and lie angle through inertial coupling. At full-swing speeds, this also sharpens the intermediate-axis instability.
 
-Thus, high-MOI perimeter weighting improves static impact robustness, but may degrade dynamic rotational robustness.
+Thus, high-MOI perimeter weighting improves static impact robustness, but may degrade dynamic rotational robustness through inertial coupling and, at high angular velocities, intermediate-axis sensitivity.
 
 # Central-Axis Spine Concept: Mass Concentration for Stability
 

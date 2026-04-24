@@ -210,7 +210,13 @@ The force-couple equivalence principle converts a grip force $\mathbf{F}$ applie
 For a rigid body such as a golf club, if inverse dynamics yields force $\mathbf{F}_{\text{eq}}$ and couple $\mathbf{C}_{\text{eq}}$ at reference point $m$, we can transform these to an equivalent force-couple pair at any other point $i$ along the grip.
 
 \begin{proposition}[Couple Transformation Formula]
-For points along a one-dimensional grip, the equivalent couple at point $i$ is given by:
+The general relation for transforming a force-couple pair from reference point $m$ to point $i$ is:
+
+$$
+C_i = C_m + (\mathbf{r}_m - \mathbf{r}_i) \times \mathbf{F},
+$$
+
+where $\mathbf{r}_m$ and $\mathbf{r}_i$ are position vectors of points $m$ and $i$ respectively and $\mathbf{F}$ is the resultant force. For a one-dimensional grip with the force **perpendicular to the grip axis** (a standard simplifying assumption for this scalar form), $|(\mathbf{r}_m - \mathbf{r}_i) \times \mathbf{F}| = F \cdot (d_m - d_i)$, which gives:
 
 $$
 {#eq-couple_transform}
@@ -219,14 +225,16 @@ $$
 
 where:
 - $C_i$ = equivalent couple at point $i$
-    
-- $M_m$ = moment of force about the midpoint ($M_m = F \cdot d_m$ for perpendicular force)
-    
+
+- $M_m$ = moment of force about the midpoint ($M_m = F \cdot d_m$, valid when $\mathbf{F} \perp$ grip axis)
+
 - $d_i$ = signed distance from center of mass to point $i$
-    
+
 - $d_m$ = signed distance from center of mass to midpoint $m$
-    
+
 - $C_m$ = couple at midpoint from inverse dynamics
+
+**Note:** The scalar formula above assumes the resultant grip force is perpendicular to the grip axis. When the force is oblique to the axis, the full vector form $C_i = C_m + (\mathbf{r}_m - \mathbf{r}_i) \times \mathbf{F}$ must be used.
 \end{proposition}
 
 This transformation reveals a crucial insight: the equivalent couple is not an intrinsic property of the force distribution but depends on the choice of reference point.
