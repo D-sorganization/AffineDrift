@@ -61,7 +61,7 @@ Yet the brain finds a good solution in milliseconds. How?
 
 The brain doesn't solve this high-dimensional problem directly. Instead, it exploits structure in the problem. Several constraints dramatically reduce the effective dimensionality:
 
-- **Synergies:** Instead of controlling 200 muscles independently, the brain activates muscle *synergies*---fixed patterns of muscle co-activation. Within a given movement class (e.g., reaching tasks), synergies account for roughly 80--90% of the variance in muscle activations \citep{bizzi2008motor, cheung2009simultaneous}. Across diverse movement types, the explained variance drops to 60--75%, suggesting that synergies are context-dependent building blocks rather than universal motor primitives.
+- **Synergies:** Instead of controlling 200 muscles independently, the brain activates muscle *synergies*---fixed patterns of muscle co-activation. Within a given movement class (e.g., reaching tasks), synergies account for roughly 80--90% of the variance in muscle activations [@bizzi2008motor; @cheung2009simultaneous]. Across diverse movement types, the explained variance drops to 60--75%, suggesting that synergies are context-dependent building blocks rather than universal motor primitives.
 
   A synergy might be: ``activate shoulder internal rotator + elbow extensor + wrist extensor,'' which produces a synergistic motion. By reducing from 200 independent muscles to 8 synergies, the dimensionality drops from $7^{200}$ to $7^8 \approx 5.7$ million.
 
@@ -104,7 +104,7 @@ The most severe constraint is temporal:
 
 This is not a limitation of the brain; it's a fundamental constraint of the system. Even with infinite neural processing power, real-time feedback control of the downswing is impossible. The solution: learn a feedforward program that works.
 
-\cite{todorov2004optimality}
+[@todorov2004optimality]
 
 ## How the Brain Manages: Strategies for a Bandwidth-Limited Controller
 
@@ -136,7 +136,7 @@ This is an enormous advantage for the brain. The brain doesn't need to generate 
 The ball's final position is determined primarily by the drift field physics, not by precise real-time muscle control. The brain exploits this by using a *high-level setpoint control strategy*: specify where the system *should be* at key points, and let physics carry it there.
 :::
 
-This is why the ZTCF framework (Chapter \ref{ch:zero_torque_counterfactual}) is so important. The brain is using the mathematical structure of drift-dominated systems to simplify its control problem.
+This is why the ZTCF framework (discussed in earlier chapters on zero-torque counterfactual analysis) is so important. The brain is using the mathematical structure of drift-dominated systems to simplify its control problem.
 
 Compare this to trying to control a tennis racket where control forces are comparable to drift forces. This would require much more sophisticated real-time feedback control. The brain couldn't handle it. Tennis players would have no consistency. But golf players do, because gravity (drift) dominates, and the brain exploits this.
 
@@ -164,11 +164,10 @@ Instead of the brain commanding: ``Move the shoulder to 90 degrees at 3 degrees 
 This is a passive control strategy. The stiffness is a mechanical property of the musculoskeletal system. Once set, the joint naturally resists perturbations without requiring active correction.
 
 Mathematically, impedance control commands the effective stiffness $\bm{K}$ and damping $\bm{D}$:
-\begin{equation}
-\bm{u} = -\bm{K}(\bm{q} - \bm{q}_d) - \bm{D}\dot{\bm{q}}
-\end{equation}
 
-where $\bm{q}_d$ is a desired (but ``soft'') target position. Small deviations from $\bm{q}_d$ produce restoring torques. Large deviations don't.
+$$\bm{u} = -\bm{K}(\bm{q} - \bm{q}_d) - \bm{D}\dot{\bm{q}}$$
+
+where $\bm{q}_d$ is a desired (but "soft") target position. Small deviations from $\bm{q}_d$ produce restoring torques. Large deviations don't.
 
 This is much simpler than controlling exact position because the stiffness is set once, not recomputed at each time step.
 
@@ -191,7 +190,7 @@ For the golf swing, impedance control explains several phenomena:
 
 Setting impedance is more efficient than precise position control because it doesn't require fast computation. The brain can set impedance once and let mechanics handle the rest.
 
-\cite{hogan1985impedance, mussa1998modular}
+[@hogan1985impedance; @mussa1998modular]
 
 ### Strategy 3: Synergies---Reduce Dimensionality Through Coordination
 
@@ -223,11 +222,11 @@ The advantage: instead of commanding 200 muscles independently, the brain comman
 
 :::
 
-Evidence for synergies comes from electromyography (EMG) recordings of muscle activation during movement. Researchers have found that most of the variance in muscle activations across many different movements can be explained by 4--8 synergy vectors \cite{bizzi2008motor, cheung2009simultaneous}.
+Evidence for synergies comes from electromyography (EMG) recordings of muscle activation during movement. Researchers have found that most of the variance in muscle activations across many different movements can be explained by 4--8 synergy vectors [@bizzi2008motor; @cheung2009simultaneous].
 
 Why would synergies evolve? One hypothesis: they simplify learning. Instead of learning a 200-dimensional control space, the brain learns a 5-dimensional space. This is much easier and happens faster.
 
-\cite{bizzi2008motor, cheung2009simultaneous, torres2013beyond}
+[@bizzi2008motor; @cheung2009simultaneous; @torres2013beyond]
 
 ### Strategy 4: Predictive Control and Anticipatory Activation
 
@@ -263,7 +262,7 @@ This is why the pre-swing motion and address posture are so critical. Elite golf
 
 
 
-Chapters \ref{ch:motor_control_brain} and \ref{ch:motor_learning} established that the brain learns internal models. Let's now think carefully about what, exactly, the brain learns.
+The previous two chapters established that the brain learns internal models. Let's now think carefully about what, exactly, the brain learns.
 
 ::: {.callout-important}
 ## Three Things the Brain Learns
@@ -304,7 +303,7 @@ Within 100 putts, the golfer has learned the putter physics. They can hit putts 
 
 If the brain didn't learn physics, this wouldn't happen. The brain would have no way to generalize from driver swings to putter strokes. But it does generalize, by updating its internal model.
 
-**Experiment 2: Perturbed feedback.** Researchers study learning in a 2D reaching task where the visual feedback is systematically rotated \citep{wolpert2011motor}. For example, when you try to move your hand right, the feedback shows it moving at a rotated angle.
+**Experiment 2: Perturbed feedback.** Researchers study learning in a 2D reaching task where the visual feedback is systematically rotated [@wolpert2011motor]. For example, when you try to move your hand right, the feedback shows it moving at a rotated angle.
 
 Initially, people make large errors. But within tens of trials, they adapt. Their reaching becomes accurate again.
 
@@ -318,7 +317,7 @@ Why? The internal model has learned something about the general transformation--
 
 :::
 
-\cite{wolpert2011motor, shadmehr2010computational}
+[@wolpert2011motor; @shadmehr2010computational]
 
 ## What Makes Biological Motor Learning Distinctive
 
@@ -334,27 +333,16 @@ The brain's approach to learning the golf swing differs fundamentally from engin
 ::: {.callout-important}
 ## Biological vs. Engineered Learning Mechanisms
 
-\begin{tabular}{|l|l|l|}
-\hline
-Aspect & Brain & Engineered Control
-\hline
-Data efficiency & 10,000--100,000 trials & $10^6$--$10^8$ simulated episodes
-\hline
-Learning time & Hours to years & Seconds to hours (simulated)
-\hline
-Sensory input & Rich (proprioception, vision, touch, vestibular) & Impoverished (usually joint angles only)
-\hline
-Built-in structure & Yes (cerebellar circuit, motor cortex hierarchy) & Often not (generic architecture)
-\hline
-Error signals & Multiple (proprioceptive error, outcome error, dopamine) & Usually single reward signal
-\hline
-Learning rule & Local (synaptic level) & Global (backpropagation)
-\hline
-Online vs. offline & Both & Typically offline
-\hline
-Interpretability & Some (we understand cerebellar circuit) & Poor (black box)
-\hline
-\end{tabular}
+| **Aspect** | **Brain** | **Engineered Control** |
+|---|---|---|
+| Data efficiency | 10,000--100,000 trials | $10^6$--$10^8$ simulated episodes |
+| Learning time | Hours to years | Seconds to hours (simulated) |
+| Sensory input | Rich (proprioception, vision, touch, vestibular) | Impoverished (usually joint angles only) |
+| Built-in structure | Yes (cerebellar circuit, motor cortex hierarchy) | Often not (generic architecture) |
+| Error signals | Multiple (proprioceptive error, outcome error, dopamine) | Usually single reward signal |
+| Learning rule | Local (synaptic level) | Global (backpropagation) |
+| Online vs. offline | Both | Typically offline |
+| Interpretability | Some (we understand cerebellar circuit) | Poor (black box) |
 
 :::
 
@@ -404,7 +392,7 @@ Several factors:
 
 :::
 
-\cite{lake2017building}
+[@lake2017building]
 
 ## Principles of Biological Motor Intelligence
 
@@ -436,7 +424,7 @@ This hierarchical decomposition is a general principle of complex control system
 
 :::
 
-\cite{barto2003recent}
+[@barto2003recent]
 
 ### Internal Forward Models
 
@@ -455,7 +443,7 @@ This mechanism allows the brain to learn from every repetition, not just from tr
 
 :::
 
-\cite{wolpert2011motor, shadmehr2010computational}
+[@wolpert2011motor; @shadmehr2010computational]
 
 ### Embodiment and Physics Exploitation
 
@@ -482,7 +470,7 @@ More generally, the brain exploits:
 
 This principle---exploiting passive dynamics and using active control only for refinement---connects directly to the drift-control decomposition developed throughout this book. The brain is, in essence, a controller that has learned to ride the drift field.
 
-\cite{ijspeert2013biorobotics, ghazi2009central}
+[@ijspeert2013biorobotics; @ghazi2009central]
 
 ### Prediction-Driven Learning
 
@@ -502,7 +490,7 @@ No external reward is needed. The novice does not have to hit a good shot to lea
 
 :::
 
-\cite{wolpert2011motor}
+[@wolpert2011motor]
 
 ## The Golf Swing as a Window into Intelligence
 
@@ -550,7 +538,7 @@ Several research groups have used golf to study motor control. Examples:
 
 :::
 
-\cite{vickers2007perception, schoellhorn2015learning}
+[@vickers2007perception; @schoellhorn2015learning]
 
 ### Open Questions in Motor Control That Golf Helps Address
 
@@ -619,7 +607,7 @@ The yips teach us that motor control is fragile. Once you've learned a movement,
 
 This has a significant implication: overanalyzing the swing is counterproductive. The more one thinks about mechanics, the more the automatic system is disrupted. Paradoxically, the most effective path to improvement is often to stop thinking and let the trained motor program execute.
 
-\cite{beilock2010choke, adler2011focus}
+[@beilock2010choke; @adler2011focus]
 
 ### Choking Under Pressure
 
@@ -640,7 +628,7 @@ What happened? Under pressure, something changed in how your brain controlled th
 
 :::
 
-Choking is well-studied in psychology. The leading theory: *conscious processing hypothesis* \cite{beilock2010choke}.
+Choking is well-studied in psychology. The leading theory: *conscious processing hypothesis* [@beilock2010choke].
 
 ::: {.callout-important}
 ## Why We Choke Under Pressure
@@ -676,7 +664,7 @@ How do experts resist choking? Several strategies:
 
 These observations have led to coaching approaches that emphasize routine, external focus, and stress management.
 
-\cite{beilock2010choke, baumeister1984choking}
+[@beilock2010choke; @baumeister1984choking]
 
 ## The Humbling Conclusion
 
@@ -720,8 +708,6 @@ This is not a flaw in the design. It's a fundamental feature of how biological i
 The lesson: the brain is not a universal, robust controller. It's a specialized, evolved system optimized for learning and automatic execution. It's fast and efficient because it's automatic. It's automatic because it has learned patterns from thousands of repetitions. Those same patterns can be disrupted.
 
 Understanding this---that power and fragility are two sides of the same coin---is perhaps the most important insight motor control science offers.
-
-\cite{nicholson2005human}
 
 ::: {.callout-important}
 ## Key Takeaways
@@ -771,7 +757,3 @@ Understanding this---that power and fragility are two sides of the same coin---i
 - What would a robot need to match human golf performance? List at least 5 capabilities and explain why each is difficult.
 
 - Explain the paradox: your brain solves an extraordinarily complex control problem while also being vulnerable to failure under pressure. Why are these two things related?
-
-
-
-\newpage
