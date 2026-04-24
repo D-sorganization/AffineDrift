@@ -46,7 +46,7 @@ $$
 \dot{x} = f(x, u), \quad f \in C^1
 $$ {#eq-smooth-dynamics}
 
-This guarantees:
+Under the smoothness assumption, this gives:
 
 1. The Jacobian $A(x,u) = \frac{\partial f}{\partial x}$ exists and is continuous
 2. Tangent spaces $T_x \mathcal{M}$ are well-defined at every state $x$
@@ -1655,7 +1655,7 @@ Hybrid DDP generates a stabilizing walking gait in 10-15 iterations. The feedbac
 
 **Comparison to contact-implicit:**
 
-Contact-implicit can discover novel gaits (e.g., skipping, galloping) but struggles with local minima. Hybrid DDP, given a feasible gait pattern, converges faster and provides clearer stability guarantees.
+Contact-implicit can discover novel gaits (e.g., skipping, galloping) but struggles with local minima. In the examples discussed here, Hybrid DDP converges faster once a feasible gait pattern is supplied and makes the local stability discussion more explicit.
 
 ## Golf Swing (Club-Ball Impact)
 
@@ -1725,9 +1725,9 @@ $$
 \frac{\partial v_b^+}{\partial v_c^-} = \frac{m_c(1+e)}{m_c + m_b}, \quad \frac{\partial v_b^+}{\partial v_b^-} = \frac{m_b - e m_c}{m_c + m_b}
 $$
 
-**DDP result:**
+**Illustrative optimization result:**
 
-Hybrid DDP finds the optimal swing trajectory in 8-12 iterations. Key insight: The clubhead should **decelerate slightly** before impact to maximize energy transfer (counter-intuitive but predicted by the saltation matrix analysis).
+In the worked example, Hybrid DDP converges in 8-12 iterations for the chosen initialization and model settings. A safer interpretation is that the optimizer reduces **active torque** before impact to let the modeled release unfold, rather than that the clubhead should decelerate to maximize energy transfer. Any stronger golf claim would require the objective definition, parameter values, and validation plots.
 
 ## Manipulation with Contact Switches
 
