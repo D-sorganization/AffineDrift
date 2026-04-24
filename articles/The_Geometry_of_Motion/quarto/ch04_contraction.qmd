@@ -435,20 +435,24 @@ giving
 \mat{A}^\T\mat{I} + \mat{I}\mat{A} = \begin{bmatrix} -4 & 1 \\ 1 & -6 \end{bmatrix}.
 \end{equation}
 
-For this to satisfy the contraction condition with rate $\lambda$:
+For this to satisfy the contraction condition with rate $\lambda$ we need:
 \begin{equation}
-\begin{bmatrix} -4 & 1 \\ 1 & -6 \end{bmatrix} \preceq -2\lambda \mat{I} = \begin{bmatrix} -2\lambda & 0 \\ 0 & -2\lambda \end{bmatrix}.
+\begin{bmatrix} -4 & 1 \\ 1 & -6 \end{bmatrix} + 2\lambda \mat{I}
+= \begin{bmatrix} -4+2\lambda & 1 \\ 1 & -6+2\lambda \end{bmatrix} \preceq 0.
 \end{equation}
 
-The off-diagonal elements require $1 \leq 0$, which is false. This means $\mat{M} = \mat{I}$
-does not certify contraction at rate $2\lambda$ for any $\lambda > 0$ (the LMI is infeasible
-for the off-diagonal structure), but the system is still contracting—one must use a
-non-identity metric $\mat{M}$.
+The matrix inequality $\mat{A}^\T\mat{M} + \mat{M}\mat{A} \preceq -2\lambda\mat{M}$ is a
+\emph{matrix} (positive-semidefinite) inequality, \textbf{not} an elementwise comparison.
+The off-diagonal entry $1$ does not need to satisfy $1 \le 0$ individually; what matters is
+whether the matrix above is negative-semidefinite as a whole.
+Its eigenvalues are $-5 \pm \tfrac{\sqrt{2}}{2} + 2\lambda$, so for $\lambda < 1.79$
+they are both negative.
+Hence $\mat{M} = \mat{I}$ \emph{does} certify contraction at any rate $\lambda < 1.79$;
+the erroneous infeasibility claim in some presentations of this example should be ignored.
 
-For reference, the symmetric part $\sym(\mat{A}) = \tfrac{1}{2}(\mat{A}^\T + \mat{A})$ has
-eigenvalues approximately $-1.79$ and $-3.21$, confirming $\lambda_{\max}(\sym(\mat{A})) \approx -1.79$.
-The contraction rate with the identity metric (ignoring the off-diagonal constraint) would
-be $\lambda = |\lambda_{\max}(\sym(\mat{A}))| = 1.79$ rad/s directly—\textbf{no additional
+The symmetric part $\sym(\mat{A}) = \tfrac{1}{2}(\mat{A}^\T + \mat{A})$ has
+eigenvalues approximately $-1.79$ and $-3.21$, so the tightest rate certified by
+$\mat{M} = \mat{I}$ is $\lambda = 1.79$ rad/s directly---\textbf{no additional
 factor of $1/2$} is needed, since $\sym(\mat{A}) = \tfrac{1}{2}(\mat{A}+\mat{A}^\T)$
 already incorporates the scaling.
 

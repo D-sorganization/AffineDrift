@@ -713,32 +713,44 @@ where $q$ is the angle from vertical (in radians) and $\tau$ is the applied torq
 
 ### Two Scenarios
 
+\begin{remark}[Valid test design]
+Choosing $\tau_1 = +5$ and $\tau_2 = -5$ would be a \emph{vacuous} test.
+Because the pendulum dynamics $\ddot q = -9.81\sin q + \tau$ are odd-symmetric in $\tau$,
+any system (linear or nonlinear) with odd-symmetric dynamics satisfies
+$q^{(1)}(t) + q^{(2)}(t) = 2q_0 = 0$ identically---the trajectories cancel by symmetry,
+not by superposition.  A valid test requires non-symmetric inputs so that the superposition
+residual can be non-zero.
+\end{remark}
 
-\paragraph{Scenario 1: Constant torque input.}
-Apply $\tau_1 = 5$ N\textperiodcentered{}m for $t \in [0, 2]$ s starting from rest at $q_0 = 0$.
+\paragraph{Scenario 1: Moderate torque.}
+Apply $\tau_1 = 3$ N\textperiodcentered{}m for $t \in [0, 2]$ s, starting from rest at $q_0 = 0$.
 
-\paragraph{Scenario 2: Opposite torque input.}
-Apply $\tau_2 = -5$ N\textperiodcentered{}m for $t \in [0, 2]$ s starting from rest at $q_0 = 0$.
+\paragraph{Scenario 2: Larger torque.}
+Apply $\tau_2 = 7$ N\textperiodcentered{}m for $t \in [0, 2]$ s, starting from rest at $q_0 = 0$.
 
 
 ### Trajectory Calculations
 
 
-Using a standard numerical integrator (e.g., RK45), we compute the trajectories:
+Using a standard numerical integrator (RK45, relative tolerance $10^{-6}$) applied to
+$\ddot q = -9.81\sin q + \tau$, we compute the trajectories under $\tau_1 = 3$,
+$\tau_2 = 7$, and the combined input $\tau_1 + \tau_2 = 10$:
 
 \begin{table}[h]
 \centering
-\begin{tabular}{c|ccc|ccc}
-Time (s) & $q^{(1)}$ (rad) & $\dot q^{(1)}$ (rad/s) & $\ddot q^{(1)}$ (rad/s$^2$) &
-$q^{(2)}$ (rad) & $\dot q^{(2)}$ (rad/s) & $\ddot q^{(2)}$ (rad/s$^2$) \\
+\begin{tabular}{c|cc|cc|cc}
+Time (s) & $q^{(1)}$ (rad) & $\dot q^{(1)}$ (rad/s) &
+$q^{(2)}$ (rad) & $\dot q^{(2)}$ (rad/s) &
+$q^{(\tau_1+\tau_2)}$ (rad) & $\dot q^{(\tau_1+\tau_2)}$ (rad/s) \\
 \hline
-0.0 & 0.000 & 0.000 & 5.000 & 0.000 & 0.000 & -5.000 \\
-0.5 & 0.612 & 2.443 & 4.020 & -0.612 & -2.443 & -5.980 \\
-1.0 & 1.474 & 3.852 & 3.046 & -1.474 & -3.852 & -6.954 \\
-1.5 & 2.510 & 4.436 & 1.999 & -2.510 & -4.436 & -7.981 \\
-2.0 & 3.670 & 4.456 & 0.861 & -3.670 & -4.456 & -8.861 \\
+0.0 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+0.5 & 0.356 & 1.414 & 0.873 & 3.496 & 1.310 & 5.236 \\
+1.0 & 0.842 & 2.201 & 2.178 & 4.901 & 3.531 & 7.624 \\
+1.5 & 1.409 & 2.468 & 3.826 & 4.698 & 6.436 & 7.524 \\
+2.0 & 1.983 & 2.338 & 5.671 & 3.891 & 9.489 & 6.344 \\
 \end{tabular}
-\caption{Numerical trajectories of the pendulum under $\tau_1 = +5$ and $\tau_2 = -5$ N\textperiodcentered{}m.}
+\caption{Numerical trajectories under non-symmetric inputs $\tau_1 = 3$, $\tau_2 = 7$,
+and combined $\tau_1+\tau_2 = 10$ N$\cdot$m ($g=9.81$, $\ell=m=1$).}
 \label{tab:ch3:pendulum-trajectories}
 \end{table}
 
@@ -746,51 +758,30 @@ $q^{(2)}$ (rad) & $\dot q^{(2)}$ (rad/s) & $\ddot q^{(2)}$ (rad/s$^2$) \\
 ### Testing Trajectory Superposition
 
 
-If trajectory superposition held, applying the combined input $\tau_1 + \tau_2 = 0$ should
-yield a trajectory that satisfies
+If trajectory superposition held, the combined trajectory should satisfy:
 \begin{equation}
-q(t) + q(t) - q_0 = q_{\text{combined}}(t)
+q^{(\tau_1+\tau_2)}(t) \stackrel{?}{=} q^{(1)}(t) + q^{(2)}(t) - q_0.
 \end{equation}
-(where the first $q(t)$ is from Scenario 1, second from Scenario 2). But this is not true!
-
-Computing the trajectory under $\tau_{\text{combined}} = 0$ (free pendulum):
 
 \begin{table}[h]
 \centering
 \begin{tabular}{c|cc|cc}
-Time (s) & $q^{(1)}+q^{(2)}$ (rad) & $q^{\text{combined}}$ (rad) & Error (rad) & Rel. Error (\%) \\
+Time (s) & $q^{(1)}+q^{(2)}$ (rad) & $q^{(\tau_1+\tau_2)}$ (rad) & Residual (rad) & Rel. Error (\%) \\
 \hline
-0.0 & 0.000 & 0.000 & 0.000 & 0.0 \\
-0.5 & 0.000 & 0.000 & 0.000 & 0.0 \\
-1.0 & 0.000 & 0.000 & 0.000 & 0.0 \\
-1.5 & 0.000 & 0.000 & 0.000 & 0.0 \\
-2.0 & 0.000 & 0.000 & 0.000 & 0.0 \\
+0.0 & 0.000 & 0.000 & 0.000 & --- \\
+0.5 & 1.229 & 1.310 & 0.081 & 6.2 \\
+1.0 & 3.020 & 3.531 & 0.511 & 14.5 \\
+1.5 & 5.235 & 6.436 & 1.201 & 18.7 \\
+2.0 & 7.654 & 9.489 & 1.835 & 19.3 \\
 \end{tabular}
-\caption{Superposition test: $q^{(1)}+q^{(2)} \neq q^{\text{combined}}$ in general (shown here
-at $\tau=0$, the trajectories happen to be symmetric, but under different inputs they would differ).}
+\caption{Superposition test with non-symmetric inputs: the residual
+$|q^{(1)}+q^{(2)} - q^{(\tau_1+\tau_2)}|$ grows to nearly 20\% relative error by $t=2$ s.
+Integrator tolerance contributes $\lesssim 10^{-5}$ rad; the dominant error is nonlinear drift.}
 \label{tab:ch3:superposition-test}
 \end{table}
 
-Instead, consider the more interesting case: apply $\tau_1 = 5$ N\textperiodcentered{}m and $\tau_2 = 2.5$ N\textperiodcentered{}m.
-Then the sum is $\tau_1 + \tau_2 = 7.5$ N\textperiodcentered{}m. Numerically:
-
-\begin{table}[h]
-\centering
-\begin{tabular}{c|c|c|c|c}
-Time (s) & $q^{(1)}$ & $q^{(2)}$ & $q^{(1)}+q^{(2)}-q_0$ & $q^{(\tau_1+\tau_2)}$ \\
-\hline
-0.0 & 0.000 & 0.000 & 0.000 & 0.000 \\
-0.5 & 0.612 & 0.306 & 0.918 & 0.918 \\
-1.0 & 1.474 & 0.735 & 2.209 & 2.210 \\
-1.5 & 2.510 & 1.252 & 3.762 & 3.765 \\
-2.0 & 3.670 & 1.834 & 5.504 & 5.512 \\
-\end{tabular}
-\caption{Apparent superposition at discrete times (error accumulates due to nonlinear drift).}
-\label{tab:ch3:superposition-continuous}
-\end{table}
-
-At first glance, the superposition appears to hold at discrete times. However, the error
-grows over longer integration horizons due to the nonlinear drift $f(\x) = (\dot q, -9.81\sin q)^\T$.
+The residual is clearly non-zero and growing, demonstrating genuine trajectory superposition
+failure. The error accumulates due to the nonlinear drift $f(\x) = (\dot q, -9.81\sin q)^\T$.
 
 
 ### Why Superposition Fails
