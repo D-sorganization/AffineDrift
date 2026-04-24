@@ -121,7 +121,7 @@ The spatial derivative of the Potential Energy naturally yields the exact vector
 In *Tangent-Space Methods*, as with all advanced robotics platforms, you will see both Euler-Lagrange and Newton-Euler used routinely. The honest framing is that **Lagrange is elegant for analytical derivation, Newton–Euler is elegant for computational implementation**—neither is uniformly superior.
 
 - We use **Euler-Lagrange** when we are analytically designing the control law (such as Contraction Metrics in Volume I). The elegant $M, C, G$ matrices allow us to explicitly cancel gravity conceptually or prove mathematical stability.
-- We use **Recursive Newton-Euler** when code is executing inside the physics simulation (Volume II benchmarks). Finding the actual numerical torque pushing a 15-DOF golf club inside Python is hundreds of times faster using Newton-Euler ABA tracking than unpacking the massive $C(\dot{m{q}}, m{q})$ matrix algebraically.
+- We use **Recursive Newton-Euler** when code is executing inside the physics simulation (Volume II benchmarks). Finding the actual numerical torque pushing a 15-DOF golf club inside Python is hundreds of times faster using Newton-Euler ABA tracking than unpacking the massive $C(\dot{\bm{q}}, \bm{q})$ matrix algebraically.
 
 ## Exercises {#sec-lagrangian-exercises}
 
@@ -130,11 +130,11 @@ In *Tangent-Space Methods*, as with all advanced robotics platforms, you will se
 (b) Which provides stability guarantees? What kind (local/global)? {#sec-lagrangian-comparison}
 (c) For a system with unknown, temperature-varying joint friction, which handles this better?
 
-**11.2 (Computational)** For a double pendulum with link lengths $L_1 = L_2 = 1$ m and masses $m_1 = m_2 = 1$ kg, derive $M(m{q})$, $C(m{q}, \dot{m{q}})$, and $G(m{q})$ using the Christoffel-symbol formula. Verify $\dot{M} - 2C$ is skew-symmetric numerically at five random configurations. See [@slotine1991applied, §6].
+**11.2 (Computational)** For a double pendulum with link lengths $L_1 = L_2 = 1$ m and masses $m_1 = m_2 = 1$ kg, derive $M(\bm{q})$, $C(\bm{q}, \dot{\bm{q}})$, and $G(\bm{q})$ using the Christoffel-symbol formula. Verify $\dot{M} - 2C$ is skew-symmetric numerically at five random configurations. See [@slotine1991applied, §6].
 
-**11.3 (Computational)** Verify the RNEA--Lagrangian consistency check: implement both `recursive_newton_euler` (from @sec-rnea) and the Lagrangian EOM for a 2-link arm. Confirm they give identical torques for the same $(m{q}, \dot{m{q}}, \ddot{m{q}})$ at 100 random configurations.
+**11.3 (Computational)** Verify the RNEA--Lagrangian consistency check: implement both `recursive_newton_euler` (from @sec-rnea) and the Lagrangian EOM for a 2-link arm. Confirm they give identical torques for the same $(\bm{q}, \dot{\bm{q}}, \ddot{\bm{q}})$ at 100 random configurations.
 
-**11.4 (Challenge)** Prove that the Christoffel-symbol choice of $C$ is the unique choice satisfying both: (i) $\dot{M} - 2C$ is skew-symmetric, and (ii) $C_{ij}$ depends linearly on $\dot{m{q}}$. See [@marsden1999introduction, Ch. 7] for the differential-geometry perspective.
+**11.4 (Challenge)** Prove that the Christoffel-symbol choice of $C$ is the unique choice satisfying both: (i) $\dot{M} - 2C$ is skew-symmetric, and (ii) $C_{ij}$ depends linearly on $\dot{\bm{q}}$. See [@marsden1999introduction, Ch. 7] for the differential-geometry perspective.
 
 ## Summary {#sec-lagrangian-summary}
 

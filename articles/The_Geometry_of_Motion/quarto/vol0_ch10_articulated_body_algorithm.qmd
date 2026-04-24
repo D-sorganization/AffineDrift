@@ -6,9 +6,9 @@ title: "The Articulated Body Algorithm"
 ::: {.callout-important}
 ## Indexing Convention
 
-Throughout this chapter: **body 0 is the fixed base**; bodies $1, \dots, n$ are the moving links; **joint $i$ connects parent$(i)$ to body $i$**. The screw axis $\screw_i$ is expressed in **body $i$'s frame** at the home configuration. The joint transform `joint_transforms[i]` is $T_{p(i) 	o i}$, the transform from the parent frame to body $i$'s frame. Loop bounds follow: outward pass runs $i = 1, \dots, n$ (base to tip); inward pass runs $i = n, \dots, 1$ (tip to base); final outward pass runs $i = 1, \dots, n$ again.
+Throughout this chapter: **body 0 is the fixed base**; bodies $1, \dots, n$ are the moving links; **joint $i$ connects parent$(i)$ to body $i$**. The screw axis $\screw_i$ is expressed in **body $i$'s frame** at the home configuration. The joint transform `joint_transforms[i]` is $T_{p(i) \to i}$, the transform from the parent frame to body $i$'s frame. Loop bounds follow: outward pass runs $i = 1, \dots, n$ (base to tip); inward pass runs $i = n, \dots, 1$ (tip to base); final outward pass runs $i = 1, \dots, n$ again.
 
-**2-link walk-through:** Body 0 = base; Body 1 = upper link (joint 1); Body 2 = lower link (joint 2). `joint_transforms[1]` is $T_{0 	o 1}$; `joint_transforms[2]` is $T_{1 	o 2}$. Inward pass: $i = 2$ contributes Body 2's articulated inertia to Body 1; $i = 1$ contributes Body 1's to Body 0.
+**2-link walk-through:** Body 0 = base; Body 1 = upper link (joint 1); Body 2 = lower link (joint 2). `joint_transforms[1]` is $T_{0 \to 1}$; `joint_transforms[2]` is $T_{1 \to 2}$. Inward pass: $i = 2$ contributes Body 2's articulated inertia to Body 1; $i = 1$ contributes Body 1's to Body 0.
 :::
 
 ## Forward Dynamics
@@ -247,9 +247,9 @@ The practical consequence: in modern robotics and control, the same ABA function
 
 **10.1 (Computational)** Implement the `compute_articulated_inertias` function from the text for a 3-link chain. Verify that $\mathcal{I}_A^0$ equals the total mass-matrix diagonal element at joint 1 for a chain at rest (all velocities zero, all torques zero). See [@featherstone2008rigid, Ch. 7].
 
-**10.2 (Computational)** Implement the full `aba` function and verify against the Lagrangian EOM: for a 2-link planar arm, check that `aba(q, qdot=0, tau=G(q))` returns $\ddot{m{q}} pprox m{0}$ (equilibrium under gravity).
+**10.2 (Computational)** Implement the full `aba` function and verify against the Lagrangian EOM: for a 2-link planar arm, check that `aba(q, qdot=0, tau=G(q))` returns $\ddot{\bm{q}} \approx \bm{0}$ (equilibrium under gravity).
 
-**10.3 (Conceptual)** Compare the arithmetic cost of ABA vs (CRBA + matrix solve): count the number of $6 	imes 6$ matrix multiplications for a 7-DOF arm in each approach. When is CRBA preferable?
+**10.3 (Conceptual)** Compare the arithmetic cost of ABA vs (CRBA + matrix solve): count the number of $6 \times 6$ matrix multiplications for a 7-DOF arm in each approach. When is CRBA preferable?
 
-**10.4 (Computational)** Wrap `aba` in JAX's `jax.jacobian` to compute $\partial \ddot{m{q}} / \partial m{	au}$ automatically. Compare the result to the analytical expression $M(m{q})^{-1}$ and verify agreement. See [@carpentier2018analytical] for the analytical derivative approach.
+**10.4 (Computational)** Wrap `aba` in JAX's `jax.jacobian` to compute $\partial \ddot{\bm{q}} / \partial \bm{\tau}$ automatically. Compare the result to the analytical expression $M(\bm{q})^{-1}$ and verify agreement. See [@carpentier2018analytical] for the analytical derivative approach.
 
