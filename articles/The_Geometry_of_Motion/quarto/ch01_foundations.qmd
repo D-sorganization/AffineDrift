@@ -167,6 +167,45 @@ principle for analyzing and controlling nonlinear systems.
 
 
 
+## Axiomatic Framework {#sec-ch1-axioms}
+
+This chapter builds the tangent-space framework on five axioms. They are stated
+here for orientation; each is derived formally in the section indicated.
+
+\begin{enumerate}
+\item \textbf{Axiom 1 — The Derivative is Exact.}
+  The Fréchet derivative $\mat{A}$ is the \emph{unique} first-order structure of $f$
+  at $\bar\x$; it is not an approximation.
+  (Section~\ref{sec:frechet}, Proposition~\ref{prop:frechet-unique}.)
+
+\item \textbf{Axiom 2 — Superposition Lives in Tangent Spaces.}
+  Tangent spaces are vector spaces by construction; infinitesimal perturbation addition
+  is exact.
+  (Section~\ref{sec:tangent}.)
+
+\item \textbf{Axiom 3 — Residuals Are Geometry, Not Error.}
+  The residual $r(\dx)$ between the true dynamics and its linearization measures
+  manifold curvature; it is not an approximation error.
+  (Section~\ref{sec:residuals}.)
+
+\item \textbf{Axiom 4 — Nonlinearity Re-enters Through Transport.}
+  Moving between tangent spaces along a trajectory encodes the manifold curvature;
+  this transport is handled exactly by the state-transition matrix.
+  (Section~\ref{sec:transport}.)
+
+\item \textbf{Axiom 5 — The Variational Equation is Solved Exactly.}
+  $\Phi(t,t_0)$ is the exact solution operator for $\delta\dot\x = \mat{A}(t)\delta\x$
+  along a reference trajectory. Residuals between the true nonlinear flow and its
+  linearization accumulate from higher-order curvature terms, bounded by Gronwall-type
+  estimates.
+  (Chapter~\ref{ch:variational}, Peano-Baker derivation, Section~\ref{sec:ch2:peano-baker}.)
+\end{enumerate}
+
+Subsequent sections introduce each axiom in context. Later chapters invoke them by
+number (e.g.\ ``by Axiom~3''). The full collection is also reproduced in the chapter
+summary (Section~\ref{sec:ch1:axiom-summary}).
+
+
 ## Smooth Dynamical Systems
 
 
@@ -574,6 +613,23 @@ and the Jacobian transforms as
 \end{equation}
 ensuring that the *geometric content*---eigenvalues, contraction rates, stability
 conclusions---is coordinate-invariant.
+
+\begin{remark}[Total vs.\ partial derivative of the coordinate map]
+\label{rem:ch1:Tdot}
+When $\mat{T} = \mat{T}(\x, t)$ depends on both state and time, $\dot{\mat{T}}$ in
+Eq.~\eqref{eq:ch1:jacobian-transform} denotes the \emph{total} (material) time
+derivative along the flow:
+\begin{equation}
+\dot{\mat{T}} = \frac{\partial \mat{T}}{\partial t}
+  + \frac{\partial \mat{T}}{\partial \x}\,\dot\x.
+\label{eq:ch1:Tdot-total}
+\end{equation}
+This distinction matters: $\partial\mat{T}/\partial t$ (partial) gives only the explicit
+time dependence; the full push-forward of $\mat{A}$ along the flow requires the
+additional $(\partial\mat{T}/\partial\x)\dot\x$ term arising from the state trajectory.
+When $\mat{T} = \mat{T}(t)$ only (no state dependence), the second term vanishes and
+$\dot{\mat{T}} = \partial\mat{T}/\partial t$ recovers the familiar formula.
+\end{remark}
 
 
 
@@ -1147,8 +1203,8 @@ its boundaries is essential for applying it responsibly.
 
 
 
-## The Five Axioms: A Summary
-
+## The Five Axioms: A Summary {#sec-ch1-axiom-summary}
+\label{sec:ch1:axiom-summary}
 
 The conceptual framework of this book rests on five axioms, each a consequence of
 standard differential geometry but rarely stated explicitly in control texts.
@@ -1166,9 +1222,11 @@ Deviations from linearity measure curvature, not modeling failure.
 \item **Nonlinearity re-enters through transport.**
 Moving between tangent spaces requires navigating the manifold's curvature.
 
-\item **Integration preserves exactness.**
-Accumulating infinitesimal linear contributions is itself exact; residuals
-arise from curvature, not from integration.
+\item **The variational equation is solved exactly by the state-transition matrix.**
+$\Phi(t,t_0)$ is the exact solution operator for $\delta\dot\x = \mat{A}(t)\delta\x$
+along a reference trajectory; residuals between the true nonlinear flow and its
+linearization accumulate from higher-order curvature terms and are bounded by
+standard Gronwall-type estimates (see Ch.~\ref{ch:variational}, Peano-Baker derivation).
 \end{enumerate}
 
 These axioms inform every derivation in the chapters that follow. When we write a
