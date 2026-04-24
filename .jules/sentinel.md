@@ -39,3 +39,8 @@
 **Vulnerability:** DOM-based XSS via `innerHTML` used with template literals to render arrays of user-controlled data in `js/metrics.js`.
 **Learning:** Using `innerHTML` with template literals to render arrays of user-controlled data (such as browsing history from `localStorage`) is brittle and can lead to XSS.
 **Prevention:** To prevent DOM-based XSS when rendering arrays of user-controlled data, do not use `innerHTML` with template literals. Instead, build the list safely using `document.createDocumentFragment()`, `document.createElement()`, and securely set values using `textContent`.
+
+## 2026-05-20 - Prevent DOM-based XSS in Bibliography Links
+**Vulnerability:** DOM-based XSS vulnerability in `js/bibliography.js` where untrusted URLs from JSON data were directly interpolated into `href` attributes within `.innerHTML`.
+**Learning:** Escaping HTML entities (`<`, `>`, `&`, `"`, `'`) is insufficient for preventing XSS in `href` attributes, as `javascript:` URIs do not require these characters to execute malicious code.
+**Prevention:** Always parse and validate URLs with a strict allowlist (e.g., `http:` and `https:`) using the `URL` constructor before injecting them into `href` attributes, even if the data comes from seemingly trusted static JSON files.

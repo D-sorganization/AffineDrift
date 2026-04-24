@@ -69,9 +69,9 @@ format:
         \gomdeclaretheorems
         \gomdeclarealgorithms
         \providecommand{\gomdeclareextraquartoenvs}{%
-          \newtheorem{assumption}[theorem]{Assumption}%
-          \newtheorem{corollary}[theorem]{Corollary}%
-          \newtheorem{warning}[theorem]{Warning}%
+          \@ifundefined{assumption}{\newtheorem{assumption}[theorem]{Assumption}}{}%
+          \@ifundefined{corollary}{\newtheorem{corollary}[theorem]{Corollary}}{}%
+          \@ifundefined{warning}{\newtheorem{warning}[theorem]{Warning}}{}%
         }%
         \gomdeclareextraquartoenvs
         \newtcolorbox{intuitionbox}[1][]{colback=chapblue!5,colframe=chapblue!70!black,title={Intuition},breakable,#1}
