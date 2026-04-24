@@ -56,7 +56,7 @@ The dot product (or inner product) is a scalar (a single number). It measures ho
 \begin{equation}
    \bm{a} \cdot \bm{b} = a_x b_x + a_y b_y + a_z b_z = \norm{\bm{a}}\norm{\bm{b}}\cos(\theta)
 \end{equation}
-If two vectors are perfectly perpendicular ($90^\circ$), their dot product is exactly 0. In control theory, we use dot products to compute kinetic energy ($E = \frac{1}{2}\bm{v}^T M \bm{v}$) and to project forces mathematically onto specific mechanical joints.
+If two vectors are perfectly perpendicular ($90^\circ$), their dot product is exactly 0. In control theory, we use dot products to project forces onto specific mechanical joints. The kinetic energy $T = \frac{1}{2}\dot{\bm{q}}^T M(\bm{q}) \dot{\bm{q}}$ is *not* a plain dot product but a **quadratic form** — an $M$-weighted inner product where the mass matrix $M(\bm{q})$ acts as a configuration-dependent metric tensor on velocity space. The distinction matters: the dot product treats all directions equally, while the kinetic-energy metric weights directions by their inertia (see @sec-rank for the rank structure of $M$, and the full Riemannian interpretation in later chapters).
 
 
 ### The Cross Product
@@ -80,7 +80,7 @@ These vectors are called **eigenvectors** ($\bm{v}$), and the corresponding scal
    M\bm{v} = \lambda\bm{v}
 \end{equation}
 
-Here is a physical picture that makes eigenvalues unforgettable. Imagine you are standing on a trampoline and someone pushes you. In most directions, you bounce off at some angle---the trampoline redirects your motion. But there are special directions (straight down, for instance) where you bounce right back the same way you came in, just higher or lower. Those special "bounce-back" directions are the eigenvectors. How much higher or lower you bounce is the eigenvalue.
+Here is a physical picture that makes eigenvalues unforgettable. Consider the diagonal matrix $A = \operatorname{diag}(2,\, 0.5)$ acting on $\mathbb{R}^2$. A vector along the $x$-axis is stretched by factor 2 (eigenvalue $\lambda_1 = 2$); a vector along the $y$-axis is compressed to half its length (eigenvalue $\lambda_2 = 0.5$). These axis-aligned directions are the eigenvectors — the special directions that $A$ stretches without rotating. Any other vector is both stretched *and* rotated, so it is not an eigenvector. Contrast this with a 90-degree rotation matrix: its eigenvalues are $\pm i$ (complex), and it has **no real eigenvectors** — rotation has no invariant direction in the real plane. This is why eigenvectors are so informative: they reveal the principal axes of a transformation. For rotation matrices, the absence of real eigenvectors is the first hint that complex numbers (and eventually quaternions) are the natural language for 3D rotation.
 
 For a rotating gyroscope, the eigenvector of the angular momentum is the spin axis---the one direction that does not precess. For a vibrating guitar string, the eigenvectors are the harmonic modes---the shapes the string naturally wants to vibrate in. Eigenvalues and eigenvectors are not abstract mathematical curiosities; they are the skeleton of every physical system.
 
@@ -116,14 +116,16 @@ The **span** of a set of vectors is the collection of all possible linear combin
 
 The **rank** of a matrix $M \in \mathbb{R}^{m \times n}$ is the number of linearly independent rows (equivalently, columns). It tells you how much independent information $M$ transmits.
 
-For a matrix $M$, there are four fundamental subspaces:
+For a matrix $M \in \mathbb{R}^{m \times n}$, there are four fundamental subspaces:
 
-| Subspace | Definition | Physical meaning |
-|----------|-----------|-----------------|
-| Column space $\mathcal{C}(M)$ | All possible outputs $M\bm{v}$ | Reachable configurations |
-| Null space $\mathcal{N}(M)$ | Inputs $\bm{v}$ with $M\bm{v} = 0$ | Unobservable/uncontrollable modes |
-| Row space $\mathcal{C}(M^\top)$ | All possible inputs that affect output | Observable input directions |
-| Left null space $\mathcal{N}(M^\top)$ | Outputs unreachable from any input | Unobservable outputs |
+| Subspace | Formal definition | Intuition |
+|----------|------------------|-----------|
+| Column space $\mathcal{C}(M)$ | $\{M\bm{v} : \bm{v} \in \mathbb{R}^n\} \subseteq \mathbb{R}^m$ | Reachable outputs |
+| Null space $\mathcal{N}(M)$ | $\{\bm{v} \in \mathbb{R}^n : M\bm{v} = \mathbf{0}\} = \mathcal{C}(M^\top)^\perp$ | Inputs that produce no output |
+| Row space $\mathcal{C}(M^\top)$ | $\{M^\top \bm{w} : \bm{w} \in \mathbb{R}^m\} = \mathcal{N}(M)^\perp \subseteq \mathbb{R}^n$ | Input directions that affect output |
+| Left null space $\mathcal{N}(M^\top)$ | $\{\bm{w} \in \mathbb{R}^m : M^\top \bm{w} = \mathbf{0}\} = \mathcal{C}(M)^\perp$ | Output directions unreachable from any input |
+
+The orthogonality relations $\mathcal{N}(M) = \mathcal{C}(M^\top)^\perp$ and $\mathcal{N}(M^\top) = \mathcal{C}(M)^\perp$ are the key structural fact: every input either contributes to the output (lies in the row space) or is invisible (lies in the null space), and these two sets partition $\mathbb{R}^n$ orthogonally.
 
 **The rank-nullity theorem** connects these:
 $$\text{rank}(M) + \text{nullity}(M) = n,$$
@@ -134,23 +136,36 @@ where $\text{nullity}(M) = \dim \mathcal{N}(M)$.
 
 ## Singular Value Decomposition {#sec-svd}
 
-The **Singular Value Decomposition (SVD)** is the most powerful factorization in applied linear algebra. Every matrix $M \in \mathbb{R}^{m \times n}$ can be written as:
+The **Singular Value Decomposition (SVD)** is the most powerful factorization in applied linear algebra. Every matrix $M \in \mathbb{R}^{m \times n}$ admits two related forms:
 
-$$M = U \Sigma V^\top,$$
+**Full SVD:** $M = U \Sigma V^\top$, where $U \in \mathbb{R}^{m \times m}$ and $V \in \mathbb{R}^{n \times n}$ are square orthogonal matrices, and $\Sigma \in \mathbb{R}^{m \times n}$ is *pseudo-diagonal* (zero-padded whenever $m \neq n$) with non-negative diagonal entries $\sigma_1 \geq \sigma_2 \geq \cdots \geq \sigma_r > 0$ (the **singular values**), where $r = \operatorname{rank}(M)$.
 
-where $U \in \mathbb{R}^{m \times m}$ and $V \in \mathbb{R}^{n \times n}$ are orthogonal matrices (pure rotations/reflections), and $\Sigma \in \mathbb{R}^{m \times n}$ is a **rectangular diagonal** matrix whose non-negative entries $\sigma_1 \geq \sigma_2 \geq \cdots \geq \sigma_r > 0$ (where $r = \operatorname{rank}(M)$) are followed by zeros, called **singular values**.
+**Thin (economy) SVD:** $M = U_r \Sigma_r V_r^\top$, where $U_r \in \mathbb{R}^{m \times r}$, $\Sigma_r \in \mathbb{R}^{r \times r}$ (square diagonal), and $V_r \in \mathbb{R}^{n \times r}$. This form is more compact and sufficient for most applications.
 
-The singular values quantify how much $M$ stretches space in each independent direction. A zero singular value indicates a direction that $M$ collapses entirely—a singularity.
+Over $\mathbb{C}$, the factorization is $M = U \Sigma V^*$ with $U, V$ unitary (not merely orthogonal); this is needed when analyzing eigenvalues of rotation matrices, which are complex.
+
+The singular values quantify how much $M$ stretches space in each independent direction. A zero singular value indicates a direction that $M$ collapses entirely — a singularity.
 
 ::: {.callout-note}
 ## SVD in Robotics: The Jacobian Pseudoinverse
 
-When computing inverse kinematics for a robot, we need to invert the Jacobian $J$. If $J$ is not square or is near-singular, we use the **Moore-Penrose pseudoinverse**:
+When computing inverse kinematics for a robot, we need to invert the Jacobian $J$. If $J$ is not square or is rank-deficient, we use the **Moore-Penrose pseudoinverse**:
 
 $$J^+ = V \Sigma^+ U^\top,$$
 
-where $\Sigma^+$ replaces each nonzero singular value $\sigma_i$ with $1/\sigma_i$ and leaves zeros as zeros. This gives the minimum-norm solution and is numerically stable even near singularities.
+where $\Sigma^+$ replaces each nonzero singular value $\sigma_i$ with $1/\sigma_i$ and leaves zeros as zeros.
+
+- If $J$ has full row rank ($m \leq n$, overdetermined or square system): $J^+$ gives the **minimum-norm solution** to $J\bm{x} = \bm{b}$.
+- If $J$ has full column rank ($m \geq n$): $J^+$ gives the **least-squares solution**.
+
+**Important:** $J^+$ is *not* numerically stable near singularities. As $\sigma_i \to 0$, the factor $1/\sigma_i$ diverges and $\|J^+\|_2 \to \infty$. The numerically stable variant for near-singular configurations is the **damped (Levenberg-Marquardt) pseudoinverse**:
+
+$$J^+_\lambda = J^\top(JJ^\top + \lambda^2 I)^{-1},$$
+
+which bounds the inverse gain and trades a small constraint-violation error for numerical stability [@nakamura1991advanced; @whitney1969resolved].
 :::
+
+**Connection to the four subspaces:** The columns of $U_r$ span $\mathcal{C}(J)$; the columns of $V_r$ span $\mathcal{C}(J^\top)$; the remaining columns of $V$ span $\mathcal{N}(J)$. The SVD thus reveals all four fundamental subspaces simultaneously.
 
 
 ## Worked Examples {#sec-examples}
@@ -167,9 +182,9 @@ since $R^\top R = I$ (orthogonality). This shows rotation matrices preserve all 
 
 **Eigenvalues:** The eigenvalues of $R(\theta)$ are $e^{\pm i\theta}$—complex numbers on the unit circle. For $\theta \neq 0, \pi$, there are no real eigenvectors, confirming that rotation (in 2D) has no invariant direction.
 
-### Example 1.2: Dot Product for Joint Torque Projection
+### Example 1.2: Cross Product for Joint Torque
 
-A golf club shaft exerts a force $\bm{F} = [0, -10, 0]$ N (downward) at a point $\bm{r} = [0.5, 0, 0]$ m from the wrist joint. The torque about the wrist is:
+A golf club shaft exerts a force $\bm{F} = [0, -10, 0]$ N (downward) at a point $\bm{r} = [0.5, 0, 0]$ m from the wrist joint. The torque about the wrist is the **cross product** $\bm{\tau} = \bm{r} \times \bm{F}$ (not a dot product — the dot product $\bm{r} \cdot \bm{F} = 0$ would give zero here, since $\bm{r}$ and $\bm{F}$ are perpendicular):
 
 $$\bm{\tau} = \bm{r} \times \bm{F} = \begin{bmatrix} 0.5 \\ 0 \\ 0 \end{bmatrix} \times \begin{bmatrix} 0 \\ -10 \\ 0 \end{bmatrix} = \begin{bmatrix} (0)(0) - (0)(-10) \\ (0)(0) - (0.5)(0) \\ (0.5)(-10) - (0)(0) \end{bmatrix} = \begin{bmatrix} 0 \\ 0 \\ -5 \end{bmatrix} \text{ N·m}.$$
 
