@@ -86,10 +86,10 @@
 }{laymans}
 
 \theoremstyle{plain}
-\newtheorem{proposition}{Proposition}[chapter]
-\newtheorem{theorem}{Theorem}[chapter]
-\newtheorem{lemma}[theorem]{Lemma}
-\newtheorem{corollary}[theorem]{Corollary}
+\@ifundefined{proposition}{\newtheorem{proposition}{Proposition}[chapter]}{}
+\@ifundefined{theorem}{\newtheorem{theorem}{Theorem}[chapter]}{}
+\@ifundefined{lemma}{\newtheorem{lemma}[theorem]{Lemma}}{}
+\@ifundefined{corollary}{\newtheorem{corollary}[theorem]{Corollary}}{}
 
 % ──────────────────────────────────────────────
 % Chapter formatting

@@ -117,9 +117,9 @@
 }{laymans}
 
 \theoremstyle{plain}
-\newtheorem{proposition}{Proposition}[chapter]
-\newtheorem{theorem}{Theorem}[chapter]
-\newtheorem{lemma}[theorem]{Lemma}
+\@ifundefined{proposition}{\newtheorem{proposition}{Proposition}[chapter]}{}
+\@ifundefined{theorem}{\newtheorem{theorem}{Theorem}[chapter]}{}
+\@ifundefined{lemma}{\newtheorem{lemma}[theorem]{Lemma}}{}
 
 % ──────────────────────────────────────────────
 % Chapter formatting
