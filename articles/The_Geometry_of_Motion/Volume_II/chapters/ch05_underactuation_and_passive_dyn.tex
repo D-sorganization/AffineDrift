@@ -25,7 +25,7 @@ In classical robotics, the goal is often full actuation: one motor for every deg
 
 But nature does not build fully actuated systems, and neither do athletes.
 
-When a gymnast swings on a high bar, their center of mass rotates around the bar, but they have no motor at the bar---that ``joint'' is a passive pin constraint. When a human walks, the foot acting as the pivot is unactuated during the single-support phase; we cannot create torque from a point contact. In a simplified golf model, the wrist can be treated as a low-torque or passive hinge over part of the release. The club then undergoes rapid angular acceleration shaped by the coupling terms $M_{21}\ddot{\theta}_1 + C_2$ in the unactuated dynamics, not by a direct wrist motor in the model \cite{NesbitSerrano2005}; Cochran and Stobbs provide an influential qualitative account of this release mechanism \cite{CochranStobbs1968}. The assumption is useful, but it is not a claim that every real wrist torque is zero.
+When a gymnast swings on a high bar, their center of mass rotates around the bar, but they have no motor at the bar---that ``joint'' is a passive pin constraint. When a human walks, the foot acting as the pivot is unactuated during the single-support phase; we cannot create torque from a point contact. In a simplified golf model, the wrist can be treated as a low-torque or passive hinge over part of the release. The club then undergoes rapid angular acceleration shaped by the coupling terms $M_{21}\ddot{\theta}_1 + C_2$ in the unactuated dynamics, not by a direct wrist motor in the model \cite{NesbitSerrano2005}. The assumption is useful, but it is not a claim that every real wrist torque is zero.
 
 \begin{definition}{Underactuated System}{underactuated}
   Consider a mechanical system with $n$ degrees of freedom (DOF) and configuration coordinates $\bm{q} \in \configspace \subseteq \Reals^n$. The equations of motion take the standard manipulator form:
@@ -39,7 +39,7 @@ When a gymnast swings on a high bar, their center of mass rotates around the bar
 
 If we lack the authority to command arbitrary accelerations, the classical setpoint perspective sees this as a fundamental limitation. A setpoint controller wants to cancel the nonlinearities, feedback-linearize the system, and dictate the exact motion. Underactuation prevents this brute-force cancellation. 
 
-However, from the trajectory-first perspective developed in Chapter~1, underactuation is not merely a restriction---it is a geometric feature. The \emph{passive dynamics} (the unactuated portions of the dynamics) define a manifold of feasible trajectories. We don't fight the physics; we ride it. 
+However, from the trajectory-first perspective developed in Chapter~1, underactuation is not merely a restriction---it is a geometric feature. The \emph{passive dynamics} (the unactuated portions of the dynamics) define a manifold of feasible trajectories. The design task is to work with that structure rather than cancel it outright.
 
 % ══════════════════════════════════════════════
 \section{The Double Pendulum: A Window into the Golf Swing}
@@ -49,7 +49,7 @@ To understand how passive dynamics can be exploited, we study the simplest model
 
 Let the first link (the arms) have angle $\theta_1$, length $l_1$, mass $m_1$, and inertia $I_1$. Let the second link (the club) have angle $\theta_2$, length $l_2$, mass $m_2$, and inertia $I_2$. The configuration is $\bm{q} = (\theta_1, \theta_2)^\top$.
 
-Crucially, we assume there is a motor at the shoulder (controlling torque $u_1 = \tau_{\text{shoulder}}$) but \emph{no motor} at the wrist ($\tau_{\text{wrist}} = 0$).
+Crucially, in this reduced model we assume there is a motor at the shoulder (controlling torque $u_1 = \tau_{\text{shoulder}}$) but \emph{no motor} at the wrist ($\tau_{\text{wrist}} = 0$).
 
 The input matrix is therefore:
 \begin{equation}
@@ -165,7 +165,7 @@ where $\bm{v}_a$ is our new synthetic control input. The unactuated dynamics bec
   \Mmat_{uu}(\bm{q})\ddot{\bm{q}}_u + \Mmat_{ua}(\bm{q})\bm{v}_a + \text{nonlinear terms} = 0.
 \end{equation}
 
-If we force the actuated coordinates to track a reference trajectory (e.g., using a high-gain PD controller, $\bm{v}_a = \ddot{\bm{q}}_a^* - K_d \dot{\tilde{\bm{q}}}_a - K_p \tilde{\bm{q}}_a$), the unactuated coordinates are left to evolve according to \eqref{eq:zero_dynamics}. The stability of the resulting motion depends entirely on whether \eqref{eq:zero_dynamics} is a stable differential equation when forced by $\bm{q}_a^*$. This leads us to the concept of the \emph{zero dynamics}.
+If we force the actuated coordinates to track a reference trajectory (e.g., using a high-gain PD controller, $\bm{v}_a = \ddot{\bm{q}}_a^* - K_d \dot{\tilde{\bm{q}}}_a - K_p \tilde{\bm{q}}_a$), the unactuated coordinates are left to evolve according to \eqref{eq:zero_dynamics}. The resulting behavior depends on whether this forced subsystem remains bounded or convergent for the chosen reference, parameters, and feedback gains. This leads us to the concept of the \emph{zero dynamics}.
 
 % ══════════════════════════════════════════════
 \section{Accessibility, Chow's Theorem, and the Orbit Theorem}
@@ -187,11 +187,11 @@ For the double pendulum of the golf swing, even though we cannot directly comman
 
 If we perfectly stabilize the actuated tracking errors to zero ($\bm{q}_a \equiv \bm{q}_a^*$), the remaining dynamics governing $\bm{q}_u$ are called the \textbf{zero dynamics}.
 
-For the golf swing, the zero dynamics describe how the club moves if the golfer's arms perfectly follow the nominal swing path. Are the zero dynamics of the golf swing stable?
+For the golf swing model, the zero dynamics describe how the club moves when the arm trajectory is prescribed and the wrist DOF remains unactuated in the reduced system. The practical question is not whether ``the golf swing'' is globally stable, but whether a specified phase interval of a specified model has locally attracting transverse behavior.
 
 Revisiting the concept of Transverse Linearization (Chapter~4), if we linearize the unactuated dynamics around the trajectory $\traj^*(t)$, we analyze the transverse divergence of the club from its optimal path.
 
-We find a notable physical phenomenon:
+We obtain a phase-dependent picture rather than a universal law:
 \begin{itemize}
   \item During the early downswing, the club's zero dynamics are \emph{unstable}. If the club gets slightly out of position, the centrifugal force tends to pull it further off the optimal plane.
   \item During the late downswing (the release phase), the club's zero dynamics may become strongly attracting in the simplified model. Large club acceleration can act like a restoring term, but the degree of alignment depends on the selected parameters, grip model, and disturbance assumptions.
@@ -199,7 +199,7 @@ We find a notable physical phenomenon:
 
 This is the model analogue of the time-varying tube from Chapter~1. In favorable parameter regimes, passive coupling can make the admissible-error set wide early in the motion and narrower near impact. The result is not a literal singularity and not a coaching rule that wrist torque is unnecessary; it is a statement about a specified underactuated model whose phase, grip, shaft, and actuator assumptions must be checked.
 
-\begin{remark}{Why Good Swings Feel Effortless}{effortless}
+\begin{remark}{Why Passive Release Can Feel Effortless}{effortless}
   The common coaching phrase ``let the club release'' is compatible with an underactuated model, but it should not be read as a measured neuromuscular fact. A skilled swing may use the arms and torso to set boundary conditions for passive release while still applying grip and wrist torques. Whether that strategy improves speed or consistency must be tested against measured kinematics, force data, and the assumed wrist model.
 \end{remark}
 
@@ -207,9 +207,9 @@ This is the model analogue of the time-varying tube from Chapter~1. In favorable
 \section{Abnormal Extremals and Singular Arcs}
 % ══════════════════════════════════════════════
 
-A remarkable feature of underactuated optimal control is the existence of \textbf{abnormal extremals}---optimal trajectories where the maximum principle is satisfied in a degenerate way (the costate is proportional to the velocity). These do not appear in standard optimal control with full actuation, but are pervasive in underactuated systems. As explained by Agrachev and Sachkov \cite{AgrachevSachkov2004}, abnormal extremals correspond precisely to trajectories where the control must be ``singular''---switching instantaneously or taking on a specific form not derivable from the regular Hamiltonian maximization.
+A notable feature of underactuated optimal control is the possibility of \textbf{abnormal extremals}---optimal trajectories for which the usual regularity condition in Pontryagin's Maximum Principle degenerates. In such cases, the multiplier on the running cost can vanish, and the control is not recovered from the regular Hamiltonian maximization alone. Agrachev and Sachkov discuss how singular controls arise in this setting \cite{AgrachevSachkov2004}. These objects can occur in underactuated problems, but whether they appear depends on the formulated cost, bounds, coordinates, and boundary conditions.
 
-In a simplified swing model, the club's rapid acceleration during release may correspond to an abnormal or near-singular arc. The control may switch or saturate to exploit inertial coupling, but this is a model prediction rather than a universal property of golf swings. Recognizing possible abnormal extremals is important for trajectory optimization because standard numerical solvers can miss them unless the problem formulation allows switching, saturation, and active-set changes.
+In a simplified swing model, the rapid release phase may correspond to an abnormal or near-singular segment. That is useful to keep in mind when solving the optimization numerically, because standard smooth solvers can miss switching, saturation, or active-set changes. It is not, by itself, evidence that measured golfers execute a literal bang-bang or singular control law.
 
 % ══════════════════════════════════════════════
 \section{Summary}
