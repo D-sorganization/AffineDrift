@@ -2521,7 +2521,8 @@ timing information.
 
 Critically, orbital stability does not require $\norm{\state(t) - \traj^*(t)}
 \to 0$. The system may drift along the orbit (ahead or behind schedule) while
-remaining perfectly stable. Only deviations *away from* the orbit matter.
+still satisfying the orbital-stability condition. Only deviations *away from*
+the orbit matter.
 
 
   A trajectory is orbitally stable **with asymptotic phase** if it is
@@ -3402,7 +3403,7 @@ where $\bm{v}_a$ is our new synthetic control input. The unactuated dynamics bec
   \Mmat_{uu}(\bm{q})\ddot{\bm{q}}_u + \Mmat_{ua}(\bm{q})\bm{v}_a + \text{nonlinear terms} = 0.
 \end{equation}
 
-If we force the actuated coordinates to track a reference trajectory (e.g., using a high-gain PD controller, $\bm{v}_a = \ddot{\bm{q}}_a^* - K_d \dot{\tilde{\bm{q}}}_a - K_p \tilde{\bm{q}}_a$), the unactuated coordinates are left to evolve according to \eqref{eq:zero_dynamics}. The stability of the resulting motion depends entirely on whether \eqref{eq:zero_dynamics} is a stable differential equation when forced by $\bm{q}_a^*$. This leads us to the concept of the *zero dynamics*.
+If we force the actuated coordinates to track a reference trajectory (e.g., using a high-gain PD controller, $\bm{v}_a = \ddot{\bm{q}}_a^* - K_d \dot{\tilde{\bm{q}}}_a - K_p \tilde{\bm{q}}_a$), the unactuated coordinates are left to evolve according to \eqref{eq:zero_dynamics}. The resulting behavior depends on whether this forced subsystem remains bounded or convergent for the chosen reference, parameters, and feedback gains. This leads us to the concept of the *zero dynamics*.
 
 
 ## Zero Dynamics and the Golf Swing Funnel
@@ -3410,20 +3411,20 @@ If we force the actuated coordinates to track a reference trajectory (e.g., usin
 
 If we perfectly stabilize the actuated tracking errors to zero ($\bm{q}_a \equiv \bm{q}_a^*$), the remaining dynamics governing $\bm{q}_u$ are called the **zero dynamics**.
 
-For the golf swing, the zero dynamics describe how the club moves if the golfer's arms perfectly follow the nominal swing path. Are the zero dynamics of the golf swing stable?
+For the golf swing model, the zero dynamics describe how the club moves when the arm trajectory is prescribed and the wrist DOF remains unactuated in the reduced system. The practical question is not whether "the golf swing" is globally stable, but whether a specified phase interval of a specified model has locally attracting transverse behavior.
 
 Revisiting the concept of Transverse Linearization (Chapter 4), if we linearize the unactuated dynamics around the trajectory $\traj^*(t)$, we analyze the transverse divergence of the club from its optimal path.
 
-We find a beautiful physical phenomenon:
+We obtain a phase-dependent picture rather than a universal law:
 - During the early downswing, the club's zero dynamics are *unstable*. If the club gets slightly out of position, the centrifugal force tends to pull it further off the optimal plane.
-- During the late downswing (the release phase), the club's zero dynamics become *strongly stable*. The massive acceleration $\ddot{\theta}_2 \gg 0$ acts like a stiff restoring spring. The centrifugal force aligns the club perfectly with the arms.
+- During the late downswing (the release phase), the club's zero dynamics may become strongly attracting in the simplified model. Large club acceleration can act like a restoring term, but the degree of alignment depends on the selected parameters, grip model, and disturbance assumptions.
 
-This is the manifestation of the time-varying tube (the Funnel) from Chapter 1! The passive physics naturally form a wide, loose tube that tightens into an incredibly precise singularity exactly at the moment of impact. The golfer does not need to use wrist torque to steer the clubhead to the ball; if the shoulder inputs are grossly correct, the physics of the double pendulum *pulls* the clubhead into the ball.
+This is the model analogue of the time-varying tube from Chapter 1. In favorable parameter regimes, passive coupling can make the admissible-error set wide early in the motion and narrower near impact. The result is not a literal singularity and not a coaching rule that wrist torque is unnecessary; it is a statement about a specified underactuated model whose phase, grip, shaft, and actuator assumptions must be checked.
 
 ::: {.callout-note title="Remark"}
-**Why Good Swings Feel Effortless**
+**Why Passive Release Can Feel Effortless**
 
-  Novice golfers attempt to fully actuate the swing. They use their wrists to steer the club, treating it as a fully actuated robotic arm. This fights the passive dynamics, resulting in slower club speeds and higher variability. Pro golfers use their arms and torso to set up the boundary conditions for the passive wrist release. By acting primarily in the null space (letting the unactuated dynamics dominate), the swing maximizes speed and consistency. The physics does the work.
+  The common coaching phrase "let the club release" is compatible with an underactuated model, but it should not be read as a measured neuromuscular fact. A skilled swing may use the arms and torso to set boundary conditions for passive release while still applying grip and wrist torques. Whether that strategy improves speed or consistency must be tested against measured kinematics, force data, and the assumed wrist model.
 :::
 
 
@@ -3621,7 +3622,7 @@ We need a mathematically explicit way to define the boundary of a funnel. For a 
   \begin{equation}
     \mathcal{F}(t) = \{ \state \in \statespace \mid V(\state, t) \leq 1 \}
   \end{equation}
-  constitutes a valid **dynamic funnel** if the set is positively invariant under the closed-loop dynamics. That is, if $\state(0) \in \mathcal{F}(0)$, then $\state(t) \in \mathcal{F}(t)$ for all $t > 0$.
+  constitutes a valid **dynamic funnel** if the set is positively invariant under the closed-loop dynamics. That is, if $\state(0) \in \mathcal{F}(0)$, then $\state(t) \in \mathcal{F}(t)$ for all $t \in [0, t_f]$.
 
 
 ## Time-Varying Lyapunov Functions for Trajectories
@@ -3641,7 +3642,7 @@ To verify invariance, we use the machinery of Lyapunov theory, adapted for traje
 If the derivative of the boundary function points inward everywhere on the boundary, trajectories may circulate inside the funnel, but they can never escape it. For a moving target problem, we want the spatial volume of $\mathcal{F}(t)$ to shrink as $t \to t_f$, terminating in a tight bounded region at impact.
 
 
-  A computed funnel is an analysis tool for repeatability. Under the stated model, controller, and disturbance assumptions, it defines a certified set of initial conditions. It does not by itself prove successful ball striking in an unmodeled human swing.
+  A computed funnel is an analysis tool for repeatability. Under the stated model, controller, and disturbance assumptions, it defines a certified set of initial conditions. It does not by itself prove successful ball striking in an unmodeled human swing, and it should not be identified with the full reachable set of the nonlinear system.
 
 
 ## Sums-of-Squares (SOS) Programming

@@ -14,11 +14,13 @@ will be added in future editions.
 
 \section{The Inverse Dynamics Pipeline}
 
-Inverse dynamics is the most widely used computational tool in biomechanics: given
-measured kinematics $\bm{q}(t)$, $\dot{\bm{q}}(t)$, $\ddot{\bm{q}}(t)$ and external
-forces $\bm{F}_{\text{ext}}(t)$, compute the net joint torques. The complete pipeline,
-illustrated in Figure~\ref{fig:ch6:id-pipeline}, transforms raw experimental data into
-mechanistic estimates of the forces acting on the system:
+Inverse dynamics is one of the central tools in biomechanics \cite{Winter2009,Delp2007}:
+given measured kinematics $\bm{q}(t)$, $\dot{\bm{q}}(t)$, $\ddot{\bm{q}}(t)$ and external
+forces $\bm{F}_{\text{ext}}(t)$, compute the net joint torques. By itself, however, the
+calculation stops at net generalized loads; moving from those loads to individual muscle
+forces requires an additional redundancy-resolution or forward-simulation model. The
+complete pipeline, illustrated in Figure~\ref{fig:ch6:id-pipeline}, transforms raw
+experimental data into progressively more model-dependent estimates:
 \begin{equation}
   \bm{\tau}(t) = M(\bm{q})\ddot{\bm{q}} + C(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} + g(\bm{q})
   - J_c^T(\bm{q}) \bm{F}_{\text{ext}}.
@@ -32,7 +34,7 @@ mechanistic estimates of the forces acting on the system:
   \node[draw, thick, minimum width=2.5cm, fill=blue!10, align=center, right of=collect] (process) {Marker\\Processing};
   \node[draw, thick, minimum width=2.5cm, fill=green!10, align=center, right of=process] (ik) {Inverse\\Kinematics};
   \node[draw, thick, minimum width=2.5cm, fill=green!10, align=center, right of=ik] (id) {Inverse\\Dynamics};
-  \node[draw, thick, minimum width=2.5cm, fill=red!10, align=center, right of=id] (muscle) {Muscle Force\\Estimation};
+  \node[draw, thick, minimum width=2.5cm, fill=red!10, align=center, right of=id] (muscle) {Muscle-Force\\Inference};
 
   \draw[->, thick] (collect) -- (process);
   \draw[->, thick] (process) -- (ik);
@@ -42,9 +44,9 @@ mechanistic estimates of the forces acting on the system:
   \node[below, font=\small] at (collect.south) {Observables};
   \node[below, font=\small] at (ik.south) {Kinematics};
   \node[below, font=\small] at (id.south) {Net torques};
-  \node[below, font=\small] at (muscle.south) {Individual forces};
+  \node[below, font=\small] at (muscle.south) {Model-based estimates};
 \end{tikzpicture}
-\caption{The inverse dynamics pipeline: from raw experimental data to individual muscle force estimates.}
+\caption{The inverse dynamics pipeline: from raw experimental data to net joint moments and subsequent model-based muscle-force estimation.}
 \label{fig:ch6:id-pipeline}
 \end{figure}
 
@@ -54,8 +56,13 @@ The standard pipeline comprises five stages:
   \item \textbf{Marker Processing}: Filtering, gap-filling, labeling
   \item \textbf{Inverse Kinematics}: Fit skeleton model to marker data
   \item \textbf{Inverse Dynamics}: Compute joint torques from RNEA
-  \item \textbf{Muscle Force Estimation}: Distribute torques among muscles
+  \item \textbf{Muscle Force Estimation}: Infer candidate muscle-force distributions using optimization or controller assumptions
 \end{enumerate}
+
+Stages~1--4 are the standard inverse-kinematics/inverse-dynamics pipeline. Stage~5 is an
+additional modeling layer: it does not follow uniquely from the measured motion and
+external-force data, and different optimization or control assumptions can produce
+different muscle-force histories for the same net joint moments.
 
 \subsection{Inverse Kinematics}
 
@@ -132,13 +139,11 @@ underdetermined:
 \end{equation}
 
 \noindent
-From a control-theoretic perspective, this is an \emph{accessibility} problem. The system
-can reach a desired joint torque $\bm{\tau}$ if and only if $\bm{\tau}$ lies in the image
-of $R(\bm{q})$---the reachable torque set. When $p > n$, the system is over-actuated:
-multiple control inputs (muscle activation patterns) can produce the same output (joint torque).
-Agrachev \& Sachkov \cite{AgrachevSachkov2004}, Chapter~3, develop this theory for general affine
-systems: the reachable set and controllability are characterized by Lie bracket conditions on
-the control vector fields, of which $R(\bm{q})$ is a concrete instance.
+From a modeling perspective, this is a constrained input-allocation problem. At a fixed
+configuration, the reachable torque set is the image of $R(\bm{q})$ intersected with the
+nonnegative muscle-force constraints. When $p > n$, multiple muscle-force vectors can
+produce the same joint torque history, so additional physiological or optimization
+assumptions are needed to select among them.
 
 \subsection{Static Optimization}
 
@@ -154,11 +159,12 @@ metabolic energy proxy). The constraint $F_i \leq a_i \cdot f_L \cdot F_{0,i}$ e
 the force-length and activation constraints from Chapter~3.
 
 \noindent
-This cost-based resolution naturally emerges from geometric optimal control: Agrachev \&
-Sachkov's framework \cite{AgrachevSachkov2004}, Chapters~5--6, shows that for over-actuated
-affine systems, optimal synthesis automatically selects among the infinitely many solutions
-to the constraint. The choice of cost function $\mathcal{L}(\bm{F})$ implicitly defines
-the reachable set and which solutions are `naturally' preferred by the dynamics.
+This optimization is one way to regularize the nonuniqueness of
+\eqref{eq:ch6:redundancy}. The objective does not arise uniquely from the equations of
+motion; it encodes modeling priorities such as effort minimization, smoothness, or
+physiological plausibility. Different choices of $\alpha$, reserve actuators,
+activation dynamics, or regularization can yield different force-sharing solutions while
+reproducing the same net torque history \cite{Zajac1989,Delp2007}.
 
 \subsection{Computed Muscle Control (CMC)}
 
@@ -172,11 +178,12 @@ the desired muscle excitations:
 \end{equation}
 where $K_v$ and $K_p$ are velocity and position feedback gains.
 
-CMC is a tracking control law: it ensures that the system follows a reference trajectory
-despite the nonlinearity and redundancy of the muscle-driven system. Agrachev \& Sachkov
-\cite{AgrachevSachkov2004}, Chapter~6, develop general feedback synthesis theory for
-nonlinear systems, showing that stability can be guaranteed via suitable Lyapunov functions
-and feedback design---exactly the principle underlying CMC's success.
+CMC is a tracking algorithm rather than a direct measurement technique. It can produce
+dynamically consistent motion in a forward simulation, but its output depends on model
+fidelity, actuator limits, controller tuning, and how closely the measured kinematics can
+actually be realized by the muscle-driven model. General nonlinear-control results explain
+why feedback can reduce tracking error, yet they do not by themselves validate a particular
+muscle-force reconstruction \cite{AgrachevSachkov2004,Thelen2003}.
 
 \section{Parameter Estimation}
 
