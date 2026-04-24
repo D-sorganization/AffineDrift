@@ -176,11 +176,17 @@ The matrix is singular when $\theta = \pm \pi/2$ (gimbal lock), causing numerica
 
 **Where it enters:** Rotation kinematic equations are state-dependent nonlinear transformations linking angular velocity to angle rates. This appears in the state-equation coupling.
 
-**Does it preserve affinity?** The equations of motion in terms of angular velocity $\omega$ remain affine in torque:
+**Does it preserve affinity?** The canonical body-frame Euler equations are affine in torque:
 $$
-I_{\text{world}} \dot{\omega} = \tau - \omega \times (I_{\text{world}}\omega),
+I_b \dot{\omega}_b + \omega_b \times (I_b \omega_b) = \tau_b,
 $$
-where the $\omega \times$ term (gyroscopic effect) is state-dependent but input-independent. However, when integrating to recover orientation (using Euler angles or another parameterization), the kinematic equations introduce state-dependent nonlinearity in the orientation update.
+where $I_b$ is constant in the body frame, $\omega_b$ is the angular velocity expressed in body coordinates, and $\tau_b$ is the applied torque in body coordinates. The gyroscopic term $\omega_b \times (I_b \omega_b)$ is state-dependent but input-independent, so affinity is preserved.
+
+**Note on world-frame formulation:** If one instead writes the equation in the world frame using the time-varying inertia tensor $I_{\text{world}}(t) = R(t) I_b R(t)^\top$, then an additional term $\dot{I}_{\text{world}} \omega$ must be included:
+$$
+I_{\text{world}} \dot{\omega} + \dot{I}_{\text{world}} \omega = \tau - \omega \times (I_{\text{world}}\omega).
+$$
+Omitting $\dot{I}_{\text{world}}$ in the world-frame equation gives an inconsistent result; the body-frame form is preferred precisely because $I_b$ is constant and this term vanishes. However, when integrating to recover orientation (using Euler angles or another parameterization), the kinematic equations introduce state-dependent nonlinearity in the orientation update.
 
 **Force superposition:** Torques still sum linearly. Gyroscopic effects are velocity-dependent and enter the drift.
 
@@ -224,7 +230,7 @@ When $\dot{q} = 0$ and $|\tau_u| < \tau_{\text{break}}$, the joint "sticks," and
 
 **Force superposition:** Forces sum, but the presence of stiction means that applying two small torques simultaneously may have a different effect than applying them sequentially. If torque 1 is below breakaway and torque 2 is below breakaway, together they might exceed breakaway, creating a nonlinear interaction.
 
-**Implication for ZTCF:** Static friction complicates the ZTCF. The passive drift at $u = 0$ includes stiction, which "holds" the joint in place. But stiction also modifies the response to small perturbations. Careful experimental design (or high-frequency dither) is needed to separate friction effects from intrinsic dynamics.
+**Implication for ZTCF:** Static friction complicates the ZTCF. The passive drift at $u = 0$ includes stiction, which "holds" the joint in place. But stiction also modifies the response to small perturbations. Careful experimental design (or high-frequency dither) is needed to separate friction effects from intrinsic dynamics. For a rigorous DAE and complementarity formulation of rigid-body dynamics with friction, see [@stewart2000rigid].
 
 ### 3.2 Stribeck Effect
 
