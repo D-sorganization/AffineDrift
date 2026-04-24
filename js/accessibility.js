@@ -196,6 +196,8 @@ export function initReadingTime() {
     const minutes = Math.ceil(wordCount / wordsPerMinute);
 
     const timeDiv = document.createElement("div");
+    // Styling is in CSS (.reading-time-estimate) — no inline styles needed.
+    // This fixes #2790: inline style used undefined --text-light token.
     timeDiv.className = "reading-time-estimate";
     timeDiv.innerHTML = `
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clock" viewBox="0 0 16 16" style="vertical-align: text-bottom; margin-right: 5px; opacity: 0.8;" aria-hidden="true">
@@ -204,16 +206,6 @@ export function initReadingTime() {
     </svg>
     <span>${minutes} min read</span>
   `;
-
-    Object.assign(timeDiv.style, {
-        marginBottom: "1.5rem",
-        color: "var(--text-light)",
-        fontStyle: "italic",
-        display: "flex",
-        alignItems: "center",
-        fontSize: "0.95rem",
-        fontWeight: "500",
-    });
 
     timeDiv.setAttribute(
         "aria-label",

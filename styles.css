@@ -289,15 +289,16 @@ a:hover {
   /* Align to top of grid */
 }
 
-/* Sticky Content in Sidebars */
+/* Sticky Content in Sidebars — use 100dvh so mobile URL-bar collapse
+   does not cause sidebar to jump (dynamic viewport height). */
 .sidebar-sticky-content {
   position: sticky;
   top: calc(var(--header-offset) + 2rem);
-  max-height: calc(100vh - var(--header-offset) - 4rem);
+  max-height: calc(100dvh - var(--header-offset) - 4rem);
   overflow-y: auto;
   padding-right: 0.5rem;
-
-  /* Space for scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-color) transparent;
 }
 
 /* Main Content Area */
@@ -603,6 +604,15 @@ nav .container {
   background: rgb(255 255 255 / 0.15);
 }
 
+/* Search placeholder contrast — ensures ≥4.5:1 against the dark header
+   background (fixes #2790 finding 2: contrast ~2.8:1 with default #999). */
+/* stylelint-disable-next-line selector-class-pattern -- third-party Algolia class */
+#quarto-header [class*="aa-DetachedSearchButton-placeholder"],
+#quarto-header input::placeholder {
+  color: rgb(255 255 255 / 0.9);
+  opacity: 1;
+}
+
 .logo-link {
   display: flex;
   align-items: center;
@@ -679,6 +689,64 @@ nav a[aria-current="page"],
 .rss-feed-link {
   width: 2.75rem;
   height: 2.75rem;
+}
+
+/* ---
+   Breadcrumbs — themed to match site palette (fixes #2790 finding 8).
+   bread-crumbs: true is set in _quarto.yml; without these rules the
+   Quarto-emitted breadcrumbs inherit unstyled Bootstrap defaults.
+   --- */
+.breadcrumb,
+.quarto-title-breadcrumbs .breadcrumb {
+  margin: 0.5rem 0 1rem;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  padding: 0;
+  background: none;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+}
+
+.breadcrumb-item {
+  color: var(--text-muted);
+}
+
+.breadcrumb-item a {
+  color: var(--accent-blue);
+  text-decoration: none;
+}
+
+.breadcrumb-item a:hover {
+  color: var(--primary-blue);
+  text-decoration: underline;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+  content: "›";
+  color: var(--text-muted);
+  padding: 0 0.4rem;
+}
+
+/* Bootstrap's .active breadcrumb item */
+.breadcrumb-item.active {
+  color: var(--text-main);
+}
+
+/* ---
+   Reading Time Estimate — move styling out of JS inline styles
+   (fixes #2790 finding 11: --text-light undefined, inline styles harder
+   to theme). The JS injects .reading-time-estimate; we style it here.
+   --- */
+.reading-time-estimate {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-style: italic;
+  font-weight: 500;
 }
 
 /* ---
@@ -2445,9 +2513,12 @@ h1.title,
   transition: max-height 0.3s ease-out;
 }
 
+/* Use a large but finite value so the CSS transition still animates
+   (animating to max-height:none has no easing). 4000px is sufficient
+   for any realistic sidebar list and won't clip 11+ links. */
 .sidebar-section-content.show {
-  max-height: 500px;
-  transition: max-height 0.3s ease-in;
+  max-height: 4000px;
+  transition: max-height 0.4s ease-in;
 }
 
 /* ---
@@ -2632,9 +2703,9 @@ h1.title,
     margin-bottom: 0;
   }
 
-  /* Expand all sections on tablet */
+  /* Expand all sections on tablet — unconstrained so all links show */
   .sidebar-section-content {
-    max-height: 500px;
+    max-height: 4000px;
   }
 
   .sidebar-section-toggle .toggle-icon {
@@ -2684,7 +2755,7 @@ h1.title,
   }
 
   .sidebar-section-content.show {
-    max-height: 500px;
+    max-height: 4000px;
   }
 
   /* Featured grid adjustments */
