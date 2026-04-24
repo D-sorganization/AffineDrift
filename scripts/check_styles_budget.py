@@ -5,9 +5,8 @@ from __future__ import annotations
 
 import re
 import sys
-from pathlib import Path
 
-from src.tools.utils.budget_check_utils import load_config, report_results
+from src.tools.utils.budget_check_utils import get_repo_root, load_config, report_results
 
 
 def count_important(text: str) -> int:
@@ -17,7 +16,7 @@ def count_important(text: str) -> int:
 
 def main() -> int:
     """Check CSS stylesheet against quality budgets."""
-    repo_root = Path(__file__).resolve().parent.parent
+    repo_root = get_repo_root()
     config = load_config(repo_root, "css_quality_budget.json")
 
     styles_path = repo_root / config["styles_path"]
