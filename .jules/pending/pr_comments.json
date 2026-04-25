@@ -32,18 +32,7 @@
       "line": 139,
       "queued_at": "2026-04-23T08:33:55Z",
       "repository": "D-sorganization/AffineDrift"
-    },
-    {
-      "comment_id": "3142039025",
-      "pr_number": 2843,
-      "type": "review",
-      "author": "chatgpt-codex-connector[bot]",
-      "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Preserve relative history links when sanitizing URLs**\n\nUsing `parsed.href` here rewrites stored history entries to be rooted at the site origin, but `updateHistorySidebar` stores only the basename (`window.location.pathname.split('/').pop()` / `urlFromPath`). For pages under subdirectories (for example `/articles/...` or `/models/...`), an entry like `theory-part1.html` now becomes `https://<host>/theory-part1.html`, dropping its directory and leading to broken navigation (often 404) when users click recent-history links. This regression is introduced by replacing the original relative `item.url` assignment with origin-normalized `parsed.href`.\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.",
-      "path": "js/history.js",
-      "line": 89,
-      "queued_at": "2026-04-25T14:04:37Z",
-      "repository": "D-sorganization/AffineDrift"
     }
   ],
-  "last_updated": "2026-04-25T14:04:37Z"
+  "last_updated": "2026-04-23T08:33:55Z"
 }
