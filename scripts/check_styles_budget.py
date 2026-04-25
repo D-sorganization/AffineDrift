@@ -6,7 +6,11 @@ from __future__ import annotations
 import re
 import sys
 
-from src.tools.utils.budget_check_utils import get_repo_root, load_config, report_results
+from src.tools.utils.budget_check_utils import (
+    get_repo_root,
+    load_config,
+    report_results,
+)
 
 
 def count_important(text: str) -> int:

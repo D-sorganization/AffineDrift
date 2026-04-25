@@ -7,7 +7,11 @@ import re
 import sys
 from pathlib import Path
 
-from src.tools.utils.budget_check_utils import get_repo_root, load_config, report_results
+from src.tools.utils.budget_check_utils import (
+    get_repo_root,
+    load_config,
+    report_results,
+)
 
 IMPORT_RE = re.compile(r"""import\s+(?:[^"']+?\s+from\s+)?["']([^"']+)["']""")
 DYNAMIC_IMPORT_RE = re.compile(r"""import\(\s*["']([^"']+)["']\s*\)""")
