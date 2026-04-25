@@ -123,7 +123,7 @@ For a typical golf shaft, the first-mode natural frequency is in the range of ro
 
 The extended dynamics are still affine:
 $$
-\dot{\state} = f(\state) + G(\state) \control
+\dot{\state} = f(\state) + G(\state) \bm{u}
 $$
 
 The drift field $f$ now includes terms from the modal dynamics. Specifically:
@@ -172,10 +172,10 @@ where $\shaftstiff = \omega_n^2 m_{\text{eff}}$ is an effective shaft stiffness.
 
 The **damping term** can be written as:
 $$
-F_{\text{damping}} = -\shaftdamp \dot{\eta}
+F_{\text{damping}} = -c_s \dot{\eta}
 $$
 
-where $\shaftdamp = 2\zeta\omega_n m_{\text{eff}}$ is an effective damping coefficient.
+where $c_s = 2\zeta\omega_n m_{\text{eff}}$ is an effective damping coefficient.
 
 These are the terms that slow down the shaft's oscillation and dissipate its energy. In the absence of any driving force ($f_{\text{modal}} = 0$), the shaft would oscillate and gradually come to rest. The damping ratio $\zeta$ controls how quickly the oscillation decays.
 
@@ -184,7 +184,7 @@ These are the terms that slow down the shaft's oscillation and dissipate its ene
 
 The shaft experiences two passive forces:
 - An elastic restoring force $-\shaftstiff\eta$ that tries to straighten the shaft.
-- A damping force $-\shaftdamp\dot{\eta}$ that opposes the shaft's deformation rate.
+- A damping force $-c_s\dot{\eta}$ that opposes the shaft's deformation rate.
 These forces are proportional to the deformation and its rate, respectively. Neither requires muscle action. Both are part of the drift field.
 
 :::
@@ -369,7 +369,7 @@ Let us use realistic numbers:
 - Shaft length: $L = 1.1$ m (about 43 inches).
 - Damping ratio: $\zeta = 0.08$.
 - Effective tip mass (clubhead dominant): $m_{\text{eff}} \approx 0.2$ kg.
-- First-mode natural frequency: $\omega_n \approx 30$ rad/s ($\approx 5$ Hz), so shaft stiffness $\shaftstiff = \omega_n^2 m_{\text{eff}} \approx 180$ N/m and damping $\shaftdamp = 2\zeta\omega_n m_{\text{eff}} \approx 1.0$ N$\cdot$s/m.
+- First-mode natural frequency: $\omega_n \approx 30$ rad/s ($\approx 5$ Hz), so shaft stiffness $K_s = \omega_n^2 m_{\text{eff}} \approx 180$ N/m and damping $c_s = 2\zeta\omega_n m_{\text{eff}} \approx 1.0$ N$\cdot$s/m.
 
 Suppose the hand (grip) starts at $y = 0$ and is prescribed to move with:
 
