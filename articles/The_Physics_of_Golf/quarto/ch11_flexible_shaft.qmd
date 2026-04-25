@@ -131,7 +131,7 @@ For a typical golf shaft, the first bending mode natural frequency is in the ran
 
 The extended dynamics are still affine:
 $$
-\dot{\mathbf{x}} = f(\mathbf{x}) + G(\mathbf{x}) \control
+\dot{\mathbf{x}} = f(\mathbf{x}) + G(\mathbf{x}) \bm{u}
 $$
 
 The drift field $f$ now includes terms from the modal dynamics. Specifically:
@@ -180,10 +180,10 @@ where $k_{\text{shaft}} = \omega_n^2 m_{\text{eff}}$ is an effective shaft stiff
 
 The **damping term** can be written as:
 $$
-F_{\text{damping}} = -\shaftdamp \dot{\eta}
+F_{\text{damping}} = -c_s \dot{\eta}
 $$
 
-where $\shaftdamp = 2\zeta\omega_n m_{\text{eff}}$ is an effective damping coefficient.
+where $c_s = 2\zeta\omega_n m_{\text{eff}}$ is an effective damping coefficient.
 
 These are the terms that slow down the shaft's oscillation and dissipate its energy. In the absence of any driving force ($f_{\text{modal}} = 0$), the shaft would oscillate and gradually come to rest. The damping ratio $\zeta$ controls how quickly the oscillation decays.
 
@@ -192,7 +192,7 @@ These are the terms that slow down the shaft's oscillation and dissipate its ene
 
 The shaft experiences two passive forces:
 - An elastic restoring force $-k_{\text{shaft}}\eta$ that tries to straighten the shaft.
-- A damping force $-\shaftdamp\dot{\eta}$ that opposes the shaft's deformation rate.
+- A damping force $-c_s\dot{\eta}$ that opposes the shaft's deformation rate.
 These forces are proportional to the deformation and its rate, respectively. Neither requires muscle action. Both are part of the drift field.
 
 :::
@@ -373,7 +373,7 @@ Let us use realistic numbers:
 - Shaft length: $L = 1.1$ m (about 43 inches).
 - Shaft stiffness: $k_{\text{shaft}} = 7000$ N/m [illustrative value for a mid-flex shaft].
 - Damping ratio: $\zeta = 0.08$.
-- Natural frequency: $\omega_n = 15$ rad/s, so $\shaftdamp = 2 \times 0.08 \times 15 \times m_{\text{eff}} \approx 0.3$ N$\cdot$s/m.
+- Natural frequency: $\omega_n = 15$ rad/s, so $c_s = 2 \times 0.08 \times 15 \times m_{\text{eff}} \approx 0.3$ N$\cdot$s/m.
 
 Suppose the hand (grip) starts at $y = 0$ and is prescribed to move with:
 
