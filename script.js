@@ -220,13 +220,13 @@ runOnDomReady(function () {
   if (!isMobile && !prefersReducedMotion) {
     const observerOptions = { threshold: 0.1, rootMargin: "0px 0px 0px 0px" };
     const observer = new IntersectionObserver(function (entries) {
-      entries.forEach((entry) => {
+      for (const entry of entries) {
         if (entry.isIntersecting) {
           entry.target.style.opacity = "1";
           entry.target.style.transform = "translateY(0)";
           observer.unobserve(entry.target); // ⚡ Bolt Optimization: Stop observing once visible
         }
-      });
+      }
     }, observerOptions);
 
     const sectionsToAnimate = document.querySelectorAll(
@@ -236,16 +236,16 @@ runOnDomReady(function () {
 
     // ⚡ Bolt Optimization: Batch DOM reads to prevent layout thrashing
     // Phase 1: Read (getBoundingClientRect)
-    sectionsToAnimate.forEach((section) => {
+    for (const section of sectionsToAnimate) {
       const rect = section.getBoundingClientRect();
       animationStates.push({
         section,
         shouldAnimate: rect.top > window.innerHeight,
       });
-    });
+    }
 
     // Phase 2: Write (style updates)
-    animationStates.forEach(({ section, shouldAnimate }) => {
+    for (const { section, shouldAnimate } of animationStates) {
       if (shouldAnimate) {
         section.style.opacity = "0";
         section.style.transform = "translateY(20px)";
@@ -255,7 +255,7 @@ runOnDomReady(function () {
         section.style.opacity = "1";
         section.style.transform = "translateY(0)";
       }
-    });
+    }
   } else {
     // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) live collection) instead of querySelectorAll (O(N))
     const allSections = document.getElementsByTagName("section");
@@ -355,7 +355,7 @@ runOnDomReady(function () {
       historyList.appendChild(li);
     } else {
       const fragment = document.createDocumentFragment();
-      displayHistory.forEach((item) => {
+      for (const item of displayHistory) {
         const li = document.createElement("li");
         const a = document.createElement("a");
         let safeUrl = "#";
@@ -375,7 +375,7 @@ runOnDomReady(function () {
         a.textContent = displayTitle;
         li.appendChild(a);
         fragment.appendChild(li);
-      });
+      }
       historyList.appendChild(fragment);
     }
   }
@@ -426,7 +426,7 @@ runOnDomReady(function () {
     const pageSections = document.querySelectorAll(
       ".page-section[id], section[id]",
     );
-    pageSections.forEach((section) => {
+    for (const section of pageSections) {
       const heading = section.querySelector(".section-heading, h2, h1");
       if (heading && section.id) {
         sections.push({
@@ -436,10 +436,10 @@ runOnDomReady(function () {
         });
         usedIds.add(section.id);
       }
-    });
+    }
 
     const categories = document.querySelectorAll(".article-category");
-    categories.forEach((category) => {
+    for (const category of categories) {
       const heading = category.querySelector("h3");
       if (heading) {
         let id = category.id;
@@ -457,7 +457,7 @@ runOnDomReady(function () {
           level: 2,
         });
       }
-    });
+    }
 
     if (sections.length === 0) {
       // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) live collection) instead of querySelectorAll (O(N))
@@ -485,7 +485,7 @@ runOnDomReady(function () {
     // ⚡ Bolt Optimization: Use DocumentFragment for TOC generation
     if (sections.length > 0) {
       const fragment = document.createDocumentFragment();
-      sections.forEach((section) => {
+      for (const section of sections) {
         const li = document.createElement("li");
         const a = document.createElement("a");
         a.href = `#${section.id}`;
@@ -493,7 +493,7 @@ runOnDomReady(function () {
         a.className = `toc-level-${section.level}`;
         li.appendChild(a);
         fragment.appendChild(li);
-      });
+      }
       tocList.appendChild(fragment);
     } else {
       if (tocSection) tocSection.style.display = "none";
@@ -530,9 +530,9 @@ runOnDomReady(function () {
     anchorIcon.innerHTML =
       '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>';
 
-    headings.forEach((heading) => {
+    for (const heading of headings) {
       // Skip if already has anchor
-      if (heading.querySelector(".anchor-link")) return;
+      if (heading.querySelector(".anchor-link")) continue;
 
       // Ensure ID exists
       if (!heading.id) {
@@ -548,7 +548,7 @@ runOnDomReady(function () {
       anchor.appendChild(anchorIcon.cloneNode(true));
 
       heading.appendChild(anchor);
-    });
+    }
   }
   initAnchorLinks();
 
@@ -559,12 +559,12 @@ runOnDomReady(function () {
 
     // ⚡ Bolt Optimization: Pre-calculate map for O(1) lookup
     const linkMap = new Map();
-    tocLinks.forEach((link) => {
+    for (const link of tocLinks) {
       const href = link.getAttribute("href");
       if (href && href.startsWith("#")) {
         linkMap.set(href.substring(1), link);
       }
-    });
+    }
     let currentActiveLink = null;
 
     const sections = document.querySelectorAll(
@@ -573,9 +573,9 @@ runOnDomReady(function () {
 
     // ⚡ Bolt Optimization: Map section IDs to their DOM index for O(1) sort
     const sectionIndexMap = new Map();
-    sections.forEach((section, index) => {
-      sectionIndexMap.set(section.id, index);
-    });
+    for (let index = 0; index < sections.length; index++) {
+      sectionIndexMap.set(sections[index].id, index);
+    }
 
     // ⚡ Bolt Optimization: Track visible sections by index rather than ID
     // This allows finding the "first" visible section using Math.min() (O(k))
@@ -589,7 +589,7 @@ runOnDomReady(function () {
     };
 
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
+      for (const entry of entries) {
         const index = sectionIndexMap.get(entry.target.id);
         if (index !== undefined) {
           if (entry.isIntersecting) {
@@ -598,7 +598,7 @@ runOnDomReady(function () {
             visibleIndices.delete(index);
           }
         }
-      });
+      }
 
       // ⚡ Bolt Optimization: Find first visible section via index math
       let activeId = null;
@@ -624,11 +624,11 @@ runOnDomReady(function () {
       }
     }, observerOptions);
 
-    sections.forEach((section) => {
+    for (const section of sections) {
       if (linkMap.has(section.id)) {
         observer.observe(section);
       }
-    });
+    }
   }
   initScrollSpy();
 
@@ -657,7 +657,8 @@ runOnDomReady(function () {
   // ⚡ Bolt Optimization: Event Delegation for Accordions
   // Separate initialization from event handling to reduce memory usage (1 listener vs N)
   const accordionHeaders = document.querySelectorAll(".accordion-header");
-  accordionHeaders.forEach((header, index) => {
+  for (let index = 0; index < accordionHeaders.length; index++) {
+    const header = accordionHeaders[index];
     const content = header.nextElementSibling;
     if (content && content.classList.contains("accordion-content")) {
       if (!content.id) {
@@ -667,7 +668,7 @@ runOnDomReady(function () {
       const isExpanded = header.getAttribute("aria-expanded") === "true";
       content.setAttribute("aria-hidden", !isExpanded);
     }
-  });
+  }
 
   document.addEventListener("click", (e) => {
     const header = e.target.closest(".accordion-header");
@@ -682,12 +683,11 @@ runOnDomReady(function () {
   });
 
   // Repository links
-  document
-    .querySelectorAll('.navbar-nav a[href^="https://github.com"]')
-    .forEach((link) => {
-      link.setAttribute("target", "_blank");
-      // rel handled by secure external links below
-    });
+  const repoLinks = document.querySelectorAll('.navbar-nav a[href^="https://github.com"]');
+  for (const link of repoLinks) {
+    link.setAttribute("target", "_blank");
+    // rel handled by secure external links below
+  }
 
   // Secure external links
   // ⚡ Bolt Optimization: Use document.links (O(1)) instead of querySelectorAll (O(N))
@@ -965,7 +965,7 @@ runOnDomReady(function () {
         articlesHistoryList.appendChild(li);
       } else {
         const fragment = document.createDocumentFragment();
-        history.forEach((item) => {
+        for (const item of history) {
           const li = document.createElement("li");
           const a = document.createElement("a");
           let safeUrl = "#";
@@ -981,7 +981,7 @@ runOnDomReady(function () {
           a.textContent = item.title;
           li.appendChild(a);
           fragment.appendChild(li);
-        });
+        }
         articlesHistoryList.appendChild(fragment);
       }
     }
@@ -1638,11 +1638,12 @@ function preparePDFPrint() {
 function initLaymansTermsToggle() {
   const laymansSections = document.querySelectorAll(".laymans-terms");
 
-  laymansSections.forEach((section, index) => {
+  for (let index = 0; index < laymansSections.length; index++) {
+    const section = laymansSections[index];
     const header = section.querySelector(".laymans-terms-header");
     const content = section.querySelector(".laymans-terms-content");
 
-    if (!header || !content) return;
+    if (!header || !content) continue;
 
     if (!content.id) {
       content.id = `laymans-terms-content-${index + 1}`;
@@ -1658,14 +1659,15 @@ function initLaymansTermsToggle() {
       header.setAttribute("aria-expanded", String(!expanded));
       content.setAttribute("aria-hidden", String(expanded));
     });
-  });
+  }
 }
 
 // --- Critics Corner Functionality ---
 function initCriticsCorner() {
   const criticsCorners = document.querySelectorAll('.critics-corner');
 
-  criticsCorners.forEach((corner, index) => {
+  for (let index = 0; index < criticsCorners.length; index++) {
+    const corner = criticsCorners[index];
     const header = corner.querySelector('.critics-corner-header');
     const content = corner.querySelector('.critics-corner-content');
 
@@ -1704,18 +1706,19 @@ function initCriticsCorner() {
         }
       });
     }
-  });
+  }
 }
 
 // --- Critics Comments Functionality ---
 function initCriticsCommentsToggle() {
   const criticsSections = document.querySelectorAll(".critics-comments");
 
-  criticsSections.forEach((section, index) => {
+  for (let index = 0; index < criticsSections.length; index++) {
+    const section = criticsSections[index];
     const header = section.querySelector(".critics-comments-header");
     const content = section.querySelector(".critics-comments-content");
 
-    if (!header || !content) return;
+    if (!header || !content) continue;
 
     if (!content.id) {
       content.id = `critics-comments-content-${index + 1}`;
@@ -1731,7 +1734,7 @@ function initCriticsCommentsToggle() {
       header.setAttribute("aria-expanded", String(!expanded));
       content.setAttribute("aria-hidden", String(expanded));
     });
-  });
+  }
 }
 
 // Utility function for future features
