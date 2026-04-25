@@ -44,3 +44,8 @@
 **Vulnerability:** DOM-based XSS vulnerability in `js/bibliography.js` where untrusted URLs from JSON data were directly interpolated into `href` attributes within `.innerHTML`.
 **Learning:** Escaping HTML entities (`<`, `>`, `&`, `"`, `'`) is insufficient for preventing XSS in `href` attributes, as `javascript:` URIs do not require these characters to execute malicious code.
 **Prevention:** Always parse and validate URLs with a strict allowlist (e.g., `http:` and `https:`) using the `URL` constructor before injecting them into `href` attributes, even if the data comes from seemingly trusted static JSON files.
+
+## 2026-06-01 - DOM-based XSS via URL Normalization Bypass
+**Vulnerability:** Untrusted URLs from `localStorage` were validated using `new URL(url, origin)` but the raw, unnormalized input string was assigned to the `href` attribute if the protocol check passed. This allows bypasses using URI-encoded or whitespace-padded schemes (e.g., `javascript%0A:alert(1)`), which parse as relative paths during validation but execute as malicious schemes when interpreted by the browser in the DOM.
+**Learning:** Checking the protocol of a parsed URL is insufficient if the original, un-sanitized string is used for DOM assignment. The browser's HTML parser applies its own normalization which can differ from the URL constructor's parsing logic.
+**Prevention:** Always assign the normalized output of the URL parser (e.g., `parsed.href`) back to the DOM attribute, rather than reusing the original untrusted input string.
