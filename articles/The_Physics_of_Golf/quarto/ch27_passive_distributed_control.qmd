@@ -73,7 +73,7 @@ where $\bm{K}$ is the stiffness matrix, $\bm{D}$ is the damping matrix, $\bm{q}$
 
 This equation assumes the desired velocity is zero ($\dot{\bm{q}}_d = 0$), appropriate for posture maintenance. During the swing, the full impedance control law includes a feedforward term and desired trajectory:
 $$\bm{\tau} = \bm{\tau}_{\mathrm{ff}}(t) - \bm{K}(\bm{q} - \bm{q}_d(t)) - \bm{D}(\dot{\bm{q}} - \dot{\bm{q}}_d(t))$$
-where $\bm{\tau}_{\mathrm{ff}}$ is the feedforward torque computed from the internal model, and $\bm{q}_d(t)$, $\dot{\bm{q}}_d(t)$ are the desired trajectory and velocity. The brain sets all three---feedforward torque, desired trajectory, and impedance gains---before the downswing begins.
+where $\bm{\tau}_{\mathrm{ff}}$ is the feedforward torque computed from the internal model, and $\bm{q}_d(t)$, $\dot{\bm{q}}_d(t)$ are the desired trajectory and velocity. The impedance gains $\bm{K}$ and $\bm{D}$ can be set once at the start of a swing; the feedforward torque $\bm{\tau}_{\mathrm{ff}}(t)$ and desired trajectory $\bm{q}_d(t)$ remain time-varying. The computational saving is in eliminating real-time feedback corrections to $\bm{K}$ and $\bm{D}$, not all time-varying signals.
 
 **High impedance:** stiff, resistant to perturbation, low compliance.
 **Low impedance:** soft, compliant, allows motion.
@@ -280,7 +280,7 @@ Skeletal muscles contain specialized sensory receptors called *muscle spindles*.
 - Muscle contracts and resists the stretch
 
 
-In this illustrative reflex timing budget, this is called the *monosynaptic stretch reflex* because it involves only one synapse in the spinal cord. The latency is remarkably short: 20--30 ms. By contrast, conscious reflexes (routing through the brain) have latencies of 100--300 ms.
+In this illustrative reflex timing budget, this is called the *monosynaptic stretch reflex* because it involves only one synapse in the spinal cord. The latency is remarkably short: 20--30 ms (lower limb), 35--50 ms (upper limb) [@Kandel2012]. By contrast, conscious reflexes (routing through the brain) have latencies of 100--300 ms.
 
 The stretch reflex is a *local, automatic, distributed controller*. Each muscle has its own feedback loop built into the spinal cord. The brain does not have to manage it.
 
@@ -590,7 +590,7 @@ This is not instinct or magic. It is physics, tuned through practice.
 
 - **Impedance control:** One plausible strategy is to set impedance before and during the swing so passive mechanics and fast local feedback handle part of the execution burden.
 
-- **Pre-tuning reduces computation:** Pre-tuning can shift some stabilization burden to mechanics and local feedback, though the exact dimensionality depends on the model.
+- **Pre-tuning reduces computation:** The impedance gains $\bm{K}$ and $\bm{D}$ (approximately 40 parameters: 20 stiffness + 20 damping) can be set once before the swing. The feedforward torque $\bm{\tau}_{\mathrm{ff}}(t)$ and desired trajectory $\bm{q}_d(t)$ remain time-varying but are pre-computed, not updated via real-time feedback. This eliminates the need to continuously re-compute feedback corrections to $\bm{K}$ and $\bm{D}$.
 
 - **Passive stability:** With well-chosen impedance, some perturbations can be partly resisted by spring forces and damping.
 
@@ -615,7 +615,7 @@ Explain why the impedance profile changes across the phases of the golf swing (a
 A Lyapunov function measures "distance from the desired state." Explain in plain language why a decreasing Lyapunov function ($\dot{V} < 0$) implies that perturbations shrink and the system returns to the desired trajectory.
 
 - {#ex:bandwidth_reduction}
-The traditional control model requires the brain to compute $\sim$20,000 decisions per second. The impedance control model requires the brain to compute $\sim$40 parameters once. Explain how this 500-fold reduction in computational rate is achieved, and why it does not sacrifice precision.
+The traditional control model requires the brain to compute $\sim$20,000 decisions per second. The impedance control model requires the brain to compute $\sim$40 impedance gains ($\bm{K}$, $\bm{D}$) once before the swing, while the feedforward torque and desired trajectory remain time-varying but pre-computed. Explain how this reduction in real-time feedback computation is achieved, and why the time-varying feedforward signals do not eliminate the computational advantage.
 
 - {#ex:spinal_reflex}
 What is the stretch reflex? Explain how it operates without conscious involvement of the brain. How does the brain modulate the stretch reflex using gamma motor neurons?

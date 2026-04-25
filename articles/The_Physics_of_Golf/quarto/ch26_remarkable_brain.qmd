@@ -42,9 +42,9 @@ Let's quantify exactly what the brain accomplishes in a 300 millisecond downswin
 
 - **Time points during the swing:** At 100 Hz temporal resolution (10 milliseconds per time step, reasonable for neural control), a 300 ms downswing has 30 time points. At each time point, you could independently command each muscle.
 
-- **Control space size:** If you could independently vary muscle activations at each time point, the total number of possible swings would be roughly $(7^{200})^{30}$. This thought experiment produces an astronomically large space: $\approx 10^{4000}$ distinct swings.
+- **Control space size:** If you could independently vary muscle activations at each time point, the total number of possible swings would be roughly $(7^{200})^{30}$. Since $7^{6000} = 10^{6000 \\log_{10} 7} \\approx 10^{5070}$, this thought experiment produces an astronomically large space (well above $10^{5000}$ distinct swings).
 
-- **Computational challenge:** To find the optimal swing by exhaustive search would require evaluating $10^{4000}$ candidates. Even if each evaluation took a nanosecond, this would take $10^{3991}$ seconds---far longer than the age of the universe.
+- **Computational challenge:** To find the optimal swing by exhaustive search would require evaluating an astronomically large number of candidates. Even if each evaluation took a nanosecond, this would take far longer than the age of the universe.
 
 :::
 
@@ -67,7 +67,7 @@ The brain doesn't solve this high-dimensional problem directly. Instead, it expl
 
 - **Learned motor primitives:** The brain doesn't solve the problem from scratch each swing. It retrieves a learned primitive---a pre-computed motor program---and applies it. This is like having a solution template that only needs minor tuning.
 
-These constraints reduce the effective dimensionality from $10^{4000}$ to something manageable: perhaps a few dozen parameters to tune, though the exact number is heuristic rather than literal.
+These constraints reduce the effective dimensionality from the astronomically large naive space to something manageable: perhaps a few dozen parameters to tune, though the exact number is heuristic rather than literal.
 
 ### The Constraint of Time
 
@@ -641,7 +641,7 @@ Let's return to the central observation. Every time you swing a golf club, your 
 
 - **Exploits physics: uses the drift field (gravity, centrifugal effects) to do most of the work, rather than fighting physics.**
 
-- **Uses minimal power: accomplishes all of this with  20 watts of energy.**
+- **Uses minimal neural power: cortical computation uses ~20 W; spinal control ~10 W; muscular actuation during a swing ~200–500 W. The brain's computational efficiency is remarkable precisely because the expensive part is outsourced to biochemical muscle.**
 
 - **Does this automatically, without conscious attention, often while thinking about something completely different.**
 

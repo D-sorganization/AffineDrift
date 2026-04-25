@@ -84,13 +84,28 @@ Consider the loop formed by:
 3. Shoulders (a rigid platform connecting the two shoulder joints).
 4. Back from shoulders to pelvis (closure).
 
-The closure constraint states: if the pelvis rotates by angle $\theta_p$, the spine rotates by angle $\theta_s$, and the shoulders rotate by angle $\theta_{sh}$, then for the loop to close, the net rotation must be zero:
+The X-factor is the shoulder rotation relative to the pelvis:
 
-\theta_p + \theta_s + \theta_{sh} = 0 \quad \text{(approximately, in a simplified 2D model)}
+$$\text{X-factor} = \theta_{\text{shoulder}} - \theta_{\text{pelvis}} = \Delta\theta_{\text{spine}}(\bm{q}_{\text{spine}})$$
 
-Or more generally:
+The rigid coupling is: shoulder rotation equals pelvis rotation plus the spine's relative
+rotation:
 
-\bm{\Phi}_{\text{spine}}(\theta_p, \theta_s, \theta_{sh}) = \mathbf{0}
+$$\theta_{\text{shoulder}} = \theta_{\text{pelvis}} + \Delta\theta_{\text{spine}}(\bm{q}_{\text{spine}})$$
+
+::: {.callout-warning}
+## Correction: Absolute-Angle Sum Is Not a Valid Closure Equation
+
+Writing $\theta_p + \theta_s + \theta_{sh} = 0$ (absolute angles summing to zero) is incorrect:
+if the pelvis is at 60° and the shoulders are at 20° (both in the lab frame), their sum is
+80°, not zero. A numerical example would give $60° + 40° + 20° = 120° \neq 0$, which shows the
+inconsistency. The correct constraint uses *relative* angles. The X-factor is a
+**difference** (shoulder minus pelvis), not a sum.
+:::
+
+Or in general vector form:
+
+$$\bm{\Phi}_{\text{spine}}(\theta_{\text{pelvis}}, \Delta\theta_{\text{spine}}, \theta_{\text{shoulder}}) = \theta_{\text{shoulder}} - \theta_{\text{pelvis}} - \Delta\theta_{\text{spine}} = 0$$
 
 This is a holonomic constraint, just like the joint constraints from Chapter @sec-constraint_forces.
 
@@ -175,24 +190,48 @@ A Stewart platform is a 6-DOF mechanism with a well-conditioned rigid platform: 
 
 The same count would be different if any leg family was missing constraints, but this is the topology the platform is designed to realize.
 
-**Example: Gruebler Applied to the Golfer**
+**Example: Grübler Applied to the Golfer**
 
-Simplify the golfer as:
-- Bodies: pelvis, torso, shoulders (3).
-- Spine: 5 revolute joints (simplified).
-- Two arms: 3 DOF each (shoulder + elbow, wrist is small) = 6 DOF.
-- Total joints: $J = 5 + 6 = 11$.
-- Constraints from ground contact: $C_{\text{passive}} = 3$ (feet fixed to ground).
+To apply Grübler's formula correctly, every joint must be paired with the bodies it connects.
+A minimal spine-plus-arms planar model requires:
+
+- **Bodies ($N$):** pelvis (1), lumbar segment (2), thorax (3), shoulder girdle (4), left upper
+  arm (5), left forearm (6), right upper arm (7), right forearm (8). Total: $N = 8$.
+- **Joints ($J$):** pelvis–lumbar (1), lumbar–thorax (2), thorax–shoulder girdle (3), left
+  shoulder (4), left elbow (5), right shoulder (6), right elbow (7). Total: $J = 7$.
+- **Ground contact:** $C_{\text{passive}} = 3$ (two feet fix the pelvis in-plane: 2 translation
+  + 1 rotation).
 
 Mobility (planar approximation, 2D):
 
-M = 3(3-1) - 2 \times 11 - 3 = 6 - 22 - 3 = -19
+$$M = 3(8-1) - 2 \times 7 + 3 = 21 - 14 + 3 = 10$$
 
-This gives a negative mobility, which means the system is over-constrained. But the golfer is not locked—there's flexibility.
+::: {.callout-warning}
+## Note: Body Count N=3 Underestimates the Skeletal Model
 
-The resolution: the body has elasticity (muscles and tendons). The "passive constraints" are not truly rigid; they allow small deviations. Gruebler's formula applies to rigid bodies. For the human body, you need to account for elasticity, which effectively increases the passive DOF.
+An earlier version of this text used $N=3$ (pelvis, torso, shoulders), $J=11$, and obtained
+$M = 3(3-1) - 2(11) - 3 = -19$. This is incorrect because it mixes an arm-joint count ($J=11$
+includes shoulder + elbow joints for both arms) with a body count that omits the arm segments
+those joints connect. A minimal 5-joint spine alone requires 6 rigid bodies; including the
+pelvis, thorax, shoulder girdle, and upper arms gives $N \geq 13$.
 
-**Insight:** The fact that Gruebler's formula gives a negative mobility for a rigid body tells us that the human skeleton is over-constrained and rigid—it can't move. The only reason it *does* move is because soft tissues (ligaments, muscle tendons) have elasticity. This elasticity is crucial for defining effective DOF.
+Using a consistent model with $N=13$, $J=11$, $C_{\text{passive}}=3$:
+$$M = 3(13-1) - 2(11) - 3 = 36 - 22 - 3 = 11 \text{ DOF (upper body, planar)}$$
+
+The key result is unchanged: when the grip constraint closes the two-arm loop, effective DOF
+drops sharply and the system becomes over-constrained — resolved by soft-tissue elasticity.
+:::
+
+Ten degrees of freedom is consistent with a body that can move. The formula gives a *positive*
+mobility because bodies and joints are enumerated consistently. When the two hands grip the
+club (adding loop-closure equations coupling the two arms), the effective DOF is reduced and
+the analysis reveals over-constraint — which is physically resolved by soft-tissue elasticity.
+
+**Insight:** The critical requirement is consistent enumeration: every joint connects two bodies,
+so $J$ joints imply at least $J+1$ bodies in a serial sub-chain. Mixing a joint count that
+includes arm joints with a body count that omits arm segments gives an incorrect (unphysically
+negative) result. With a properly enumerated model, Grübler confirms that the gripped-club loop
+creates over-constraint, resolved only because muscles and tendons are elastic.
 
 ## Over-Constrained Mechanisms and Flexibility
 
@@ -238,13 +277,20 @@ A professional golfer's X-factor rotation creates large internal compressive and
 
 Consider the spine loop: pelvis → spine → shoulders. If the pelvis rotates $\theta_p = 60°$ and the shoulders rotate $\theta_{sh} = 20°$ (X-factor), the spine must absorb the difference: $\theta_s = 40°$.
 
-The loop constraint is:
+The correct loop closure uses relative angles. With pelvis at $\theta_p = 60°$ and shoulders at
+$\theta_{sh} = 20°$, the X-factor is $\theta_p - \theta_{sh} = 40°$, and the spine must absorb
+exactly this difference: $\Delta\theta_{\text{spine}} = 40°$. The constraint is:
 
-\bm{\Phi}_{\text{spine}} = \theta_p + \theta_s + \theta_{sh} = 60° + 40° + 20° = 120° \neq 0
+$$\bm{\Phi}_{\text{spine}} = \theta_{sh} - \theta_p - \Delta\theta_{\text{spine}} = 20° - 60° + 40° = 0 \checkmark$$
 
-If all rotations are measured from a common reference frame (not relative), and the constraint is that the total rotations must sum to zero in the loop:
+::: {.callout-warning}
+## Corrected Form
 
-\bm{\Phi}_{\text{spine}} = \theta_p - \theta_{sh} - \Delta\theta_{\text{spine}} = 0
+An earlier version of this text wrote
+$\bm{\Phi}_{\text{spine}} = \theta_p + \theta_s + \theta_{sh} = 60° + 40° + 20° = 120° \neq 0$,
+which is inconsistent: absolute-angle sums do not form a valid loop closure equation. The
+correct form uses the relative-angle difference as shown above.
+:::
 
 where $\Delta\theta_{\text{spine}}$ is the rotation of the spine relative to the pelvis.
 
@@ -407,7 +453,7 @@ In the early 1980s, biomechanist C.L. Vaughan published foundational work on the
 
 ## Vaughan's Contributions to Constraint Biomechanics
 
-`r cite_key("Vaughan1981,Vaughan1983")` were among the first to recognize that the golf swing is a *closed kinematic chain* and to formalize the mathematics of loop constraints in biomechanics. His work addressed the fundamental problem: when both hands grip a club and both feet touch the ground, how can inverse dynamics resolve the ambiguity in force distribution?
+[@Vaughan1981; @Vaughan1983] were among the first to recognize that the golf swing is a *closed kinematic chain* and to formalize the mathematics of loop constraints in biomechanics. His work addressed the fundamental problem: when both hands grip a club and both feet touch the ground, how can inverse dynamics resolve the ambiguity in force distribution?
 
 Vaughan's resolution strategy:
 
@@ -431,13 +477,13 @@ Parallel mechanisms have been studied extensively in the robotics and mechanical
 
 **The Stewart Platform (1965)**
 
-`r cite_key("Stewart1965")` published the foundational paper on the Stewart platform, a hexapod parallel manipulator with 6 legs connecting a base to a moving platform. The Stewart platform has become ubiquitous in precision engineering, flight simulators, and machine tools.
+[@Stewart1965] published the foundational paper on the Stewart platform, a hexapod parallel manipulator with 6 legs connecting a base to a moving platform. The Stewart platform has become ubiquitous in precision engineering, flight simulators, and machine tools.
 
 Stewart's key insight: a parallel mechanism with $n$ legs can be designed to have $n$ DOF (one per leg) or more if the legs are redundantly constrained. The stiffness and precision of a parallel mechanism often exceed those of a serial robot because loads are distributed across multiple paths.
 
 **Merlet's Parallel Robots (2006)**
 
-`r cite_key("Merlet2006")` provides a comprehensive treatise on parallel robots that systematized the theory of parallel mechanisms, including:
+[@Merlet2006] provides a comprehensive treatise on parallel robots that systematized the theory of parallel mechanisms, including:
 
 - Forward and inverse kinematics algorithms.
 - Singularity analysis.
@@ -448,11 +494,11 @@ Merlet's work is essential reading for anyone serious about understanding parall
 
 **Hunt's Kinematic Geometry (1978)**
 
-`r cite_key("Hunt1978")` provided foundational work on the geometry and algebraic foundations of kinematic mechanisms, including parallel systems. Hunt's screw theory approach is particularly relevant to understanding constraint forces.
+[@Hunt1978] provided foundational work on the geometry and algebraic foundations of kinematic mechanisms, including parallel systems. Hunt's screw theory approach is particularly relevant to understanding constraint forces.
 
 **Gosselin & Angeles' Singularity Analysis (1990)**
 
-`r cite_key("GosselinAngeles1990")` developed comprehensive methods for analyzing singularities in parallel mechanisms. Their classification of singularities into workspace boundaries, leg singularities, and architecture singularities has become standard in robotics.
+[@GosselinAngeles1990] developed comprehensive methods for analyzing singularities in parallel mechanisms. Their classification of singularities into workspace boundaries, leg singularities, and architecture singularities has become standard in robotics.
 
 ## Formal Mapping: Robotics Terminology to Golf Swing
 
@@ -520,7 +566,7 @@ In the context of the golf swing:
 - The constraint forces (grip force) form wrenches reciprocal to the allowed twists.
 - The internal forces (null space forces) also form reciprocal wrenches and do no work on allowed motions.
 
-Screw theory provides a coordinate-free, elegant way to analyze these relationships. Interested readers are referred to `r cite_key("Murray1994,BulloLewis2004")`.
+Screw theory provides a coordinate-free, elegant way to analyze these relationships. Interested readers are referred to [@Murray1994; @BulloLewis2004].
 
 ## Chapter Exercises: Parallel Mechanisms
 
