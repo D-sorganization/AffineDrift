@@ -600,12 +600,12 @@ The backspin rate in revolutions per minute is approximately:
 
 $$
 \begin{aligned}
-RPM_{\text{backspin}} \approx 96 \times \text{(Spin loft in degrees)} + \text{(adjustments for speed, friction)}
+RPM_{\text{backspin}} \approx 200 \times \text{(Spin loft in degrees)}
 {#eq:spin_rate_approx}
 \end{aligned}
 $$
 
-This is a rule of thumb; the exact relationship depends on the coefficient of friction and the ball construction. But the rule captures the essence: higher spin loft means more backspin.
+(empirical, from TrackMan launch-monitor data [@trackman_launch]). This is a rule of thumb; the exact relationship depends on the coefficient of friction, clubhead speed, and ball construction. But the rule captures the essence: higher spin loft means more backspin.
 
 ::: {.callout-tip}
 ## Spin Rate Calculation
@@ -622,21 +622,11 @@ Spin loft = 12$^{\circ}$.
 Using the rule of thumb:
 $$
 \begin{aligned}
-RPM \approx 96 \times 12 + \text{(speed adjustments)} \approx 1152 + 200 \approx 1350 \text{ RPM}
+RPM \approx 200 \times 12 \approx 2400 \text{ RPM}
 \end{aligned}
 $$
 
-Wait, this seems low. The formula is actually more sensitive to clubhead speed. A better empirical formula is:
-
-$$
-\begin{aligned}
-RPM \approx 100 \times \text{(Spin loft)} \times \left(1 + 0.0005 \times (v_c - 100)\right)
-\end{aligned}
-$$
-
-With $v_c = 100$ mph, this gives $\approx 1200$ RPM. At $v_c = 110$ mph, the factor is $1.005$, so RPM $\approx 1260$. This is still lower than the 2600 RPM we'd expect for a good driver spin rate.
-
-The reality is that the empirical relationship is complex and depends heavily on the club design, ball construction, and friction conditions. Modern launch monitors measure spin rate directly via high-speed camera imaging.
+This is consistent with typical driver spin rates of 2000--3000 RPM measured by modern launch monitors. The exact relationship depends on the club design, ball construction, and friction conditions. Modern launch monitors measure spin rate directly via high-speed camera imaging.
 
 :::
 

@@ -275,9 +275,9 @@ Damping trades energy loss for stability.
 
 A joint can be classified by its *damping ratio*:
 $$
-\zeta = \frac{c}{2\sqrt{km}}
+\zeta = \frac{c}{2\sqrt{kI}}
 $$
-where $c$ is the damping coefficient, $k$ the stiffness, and $m$ the effective mass.
+where $c$ is the damping coefficient, $k$ the stiffness, and $I$ the moment of inertia (for rotational systems, $m$ is replaced by the moment of inertia $I$).
 
 ::: {.callout-note}
 ## Damping Ratio Regimes
@@ -502,14 +502,14 @@ For an oscillating beam, the quality factor is:
 $$
 Q = 2\pi \frac{\text{Peak energy stored}}{\text{Energy dissipated per cycle}} = \frac{\omega_0}{2\zeta \omega_0} = \frac{1}{2\zeta}
 $$
-where $\zeta$ is the damping ratio. High Q (high stiffness, low damping) means oscillations persist. Low Q means oscillations decay quickly.
+where $\zeta$ is the damping ratio (valid for light damping, $\zeta \ll 1$). High Q (high stiffness, low damping) means oscillations persist. Low Q means oscillations decay quickly.
 
 :::
 
 Typical Q-factors:
 
 - Steel shaft: $Q \approx 50--100$ (low damping, oscillations ring for many cycles).
-- Graphite (carbon fiber) shaft: $Q \approx 100--300$ (higher damping, oscillations decay slower).
+- Graphite (carbon fiber) shaft: $Q \approx 100--300$ (lower damping, oscillations decay more slowly).
 - Composite (mixed fiber) shaft: $Q \approx 50--150$ (intermediate).
 
 The paradoxical result: carbon fiber, which is stiffer and lighter than steel, actually has *lower* material damping. So a graphite shaft rings longer after impact than a steel shaft of equal flex. Is this good or bad?
