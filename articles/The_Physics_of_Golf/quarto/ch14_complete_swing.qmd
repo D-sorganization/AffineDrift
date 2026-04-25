@@ -210,7 +210,15 @@ $$
 \mathrm{COR} = \frac{\text{separation speed}}{\text{approach speed}}
 $$
 
-Modern golf balls have COR values around 0.8 or above [@penner2003physics], meaning most of the kinetic energy of the clubface is transferred to the ball, with the remainder lost to heat, internal friction in the ball, and vibration of the clubface.
+Modern golf balls have COR values around 0.8 or above [@penner2003physics]. Note: the COR is a *velocity* ratio, not an energy ratio. The fraction of kinetic energy transferred from club to ball depends on both the COR and the mass ratio $m_{\text{ball}}/m_{\text{club}}$.
+
+For a 1D central collision with clubhead mass $M$, ball mass $m$, and COR $e$, the ball\'s post-impact velocity is
+$$v_b = \frac{M(1+e)}{M+m}\,v_c,$$
+where $v_c$ is the pre-impact clubhead speed. The ratio of ball kinetic energy to initial clubhead kinetic energy is therefore
+$$\frac{\tfrac{1}{2}m v_b^2}{\tfrac{1}{2}M v_c^2} = \frac{m M(1+e)^2}{(M+m)^2}.$$
+For typical driver parameters ($M = 0.200\ \mathrm{kg}$, $m = 0.046\ \mathrm{kg}$, $e = 0.83$) this gives
+$$\frac{0.046 \times 0.200 \times 1.83^2}{0.246^2} \approx 51\%.$$
+The correct 1D energy transfer is $(m v_b^2)/(M v_c^2) = m M(1+e)^2/(M+m)^2 \approx 51\%$ for typical driver parameters --- see @Daish1972 *The Physics of Ball Games*. The remaining $\sim\!49\%$ of clubhead kinetic energy is retained by the club, with a small additional fraction lost to heat, internal friction in the ball, and vibration of the clubface.
 
 ### The Launch Conditions
 
