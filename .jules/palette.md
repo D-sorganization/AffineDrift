@@ -51,3 +51,7 @@
 ## 2026-04-21 - Added ARIA live region to splash screen
 **Learning:** Loading splash screens with dynamically updated text need aria-live="polite" and aria-atomic="true" so screen readers announce the progress changes properly.
 **Action:** Always add aria-live and aria-atomic to loading status elements.
+
+## 2026-04-25 - Actionable Empty States in History
+**Learning:** The "No recent articles yet" message in the browsing history sidebar was a dead end. Providing a one-click actionable link transforms an empty state into a discovery opportunity.
+**Action:** Always provide a helpful call-to-action link (like "Explore Articles") in empty history states.
