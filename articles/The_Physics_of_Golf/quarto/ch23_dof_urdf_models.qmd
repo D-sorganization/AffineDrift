@@ -87,56 +87,23 @@ Both methods agree for a tree structure.
 
 ::: {.callout-tip}
 ## 4-Bar Mechanism (Linkage)
-Consider a classic 4-bar linkage: 4 bars (links) connected by 4 revolute joints. The links form a closed loop: link 1 connects to link 2, link 2 to link 3, link 3 to link 4, and link 4 back to link 1.
 
-**Bodies:** Ground (if we consider the base fixed) + 3 moving links = 4 bodies. Actually, let's say the ground is the reference and we have 4 rigid bodies total in the chain: $N = 4$.
+Consider a classic planar 4-bar linkage: 4 rigid links connected by 4 revolute joints in a closed loop (ground → link 1 → link 2 → link 3 → ground). All motion is in the plane.
 
-Wait, a 4-bar mechanism has 4 links forming a loop. One link is the ground frame (fixed). So $N = 4$ (ground + 3 moving links).
+Apply the **planar Grübler formula** directly:
+$$
+\mathrm{DOF}_{\text{planar}} = 3(N-1) - \sum_{i=1}^{J} c_i^{\text{planar}}
+$$
 
-**Joints:** 4 revolute joints. $J = 4$. Each has $f_i = 1$, so $\sum c_i = 20$.
+where each planar revolute joint imposes $c^{\text{planar}} = 2$ constraints (it removes 2 translational DOF while leaving the 1 rotational DOF free).
 
-**Grübler calculation (open chain):**
-$$\mathrm{DOF} = 6(4-1) - 20 = 18 - 20 = -2$$
+**Count:**
+- $N = 4$ bodies (ground + 3 moving links)
+- $J = 4$ revolute joints, each with $c^{\text{planar}} = 2$
 
-Negative DOF? This is wrong! The issue is that the formula gives a negative answer when there's a loop. We need to account for loop closure constraints.
+$$\mathrm{DOF} = 3(4-1) - 4 \times 2 = 9 - 8 = 1$$
 
-**Loop constraints:** The four bars form a closed loop. This loop closure imposes a constraint: the end of bar 1 and the start of bar 2 must meet (position match), AND the end of bar 3 and the start of bar 4 must meet. These are 6 constraints per loop (3 position + 3 orientation) ... but wait, in a planar 4-bar mechanism, only some of these constraints are active.
-
-Actually, the correct formula for a mechanism with loops is:
-$$\mathrm{DOF}_{\text{mechanism}} = 6(N-1) - \sum c_i - (\text{loop closure constraints})$$
-
-For a planar 4-bar mechanism, the loop closure imposes 3 constraints (2 position + 1 orientation in the plane). So:
-$$\mathrm{DOF} = 18 - 20 - (-2) = 18 - 20 + 2 = 0$$
-
-Hmm, still off. Let me reconsider. Actually, the Grübler formula for a planar mechanism (where all DOFs are in a plane) is:
-
-$$\mathrm{DOF}_{\text{planar}} = 3(N-1) - \sum c_i^{\text{planar}}$$
-
-For a planar 4-bar: $N = 4$, each revolute imposes $c^{\text{planar}} = 1$ constraint.
-$$\mathrm{DOF} = 3(3) - 4(1) = 9 - 4 = 5$$
-
-Still wrong! Let me look this up mentally... A 4-bar linkage should have 1 DOF (you can input one angle and the rest of the mechanism follows).
-
-Ah, I see the issue. We need to count more carefully. In a planar mechanism:
-
-- Each body has 3 DOF: 2 translations + 1 rotation in the plane.
-- Ground is fixed: 0 DOF.
-- Each moving body contributes 3 DOF: $N-1$ moving bodies × 3 = $3(N-1)$.
-
-For a 4-bar with 4 bodies (1 ground + 3 moving): $3(4-1) = 9$ unconstrained DOF.
-
-Each revolute in a plane allows 1 rotation, imposes 2 constraints (prevents 2 translations).
-
-Actually, in 2D:
-
-- Revolute joint: $f = 1$ (rotation), $c = 2$ (prevents 2 translations)
-- Prismatic joint: $f = 1$ (translation), $c = 2$ (prevents perpendicular translation + rotation)
-
-For a 4-bar: $N = 4$, $J = 4$ revolutes, $\sum c = 4 \times 2 = 8$.
-
-$$\mathrm{DOF} = 3(4-1) - 8 = 9 - 8 = 1$$
-
-Yes! A 4-bar linkage has 1 DOF. $\checkmark$
+**Result:** A 4-bar linkage has **1 DOF**. Specify one joint angle and the entire mechanism is determined. $\checkmark$
 :::
 
 **Lesson:** The Grübler formula is powerful but requires careful counting. For a tree structure (no loops), use the simple formula $\sum f_i$. For a mechanism with loops, you must account for loop closure constraints, and the planar formula differs from the 3D formula.
@@ -952,23 +919,57 @@ A complete URDF would include all segment masses and inertias computed from de L
     </inertial>
   </link>
 
-  <!-- Lumbar-thorax joint (3-DOF spherical) -->
-  <joint name="lumbar_joint" type="revolute">
+  <!-- Lumbar spine: 3-DOF implemented as three sequential revolutes.           -->
+  <!-- URDF has no native type="spherical"; three 1-DOF revolutes are used     -->
+  <!-- with massless intermediate links to approximate a spherical joint.       -->
+  <link name="lumbar_flex_intermediate">
+    <!-- massless intermediate link -->
+    <inertial>
+      <mass value="0.001"/>
+      <inertia ixx="0.000001" ixy="0" ixz="0" iyy="0.000001" iyz="0" izz="0.000001"/>
+    </inertial>
+  </link>
+  <link name="lumbar_bend_intermediate">
+    <!-- massless intermediate link -->
+    <inertial>
+      <mass value="0.001"/>
+      <inertia ixx="0.000001" ixy="0" ixz="0" iyy="0.000001" iyz="0" izz="0.000001"/>
+    </inertial>
+  </link>
+
+  <!-- Lumbar flexion/extension about y-axis -->
+  <joint name="lumbar_flexion" type="revolute">
     <parent link="pelvis"/>
+    <child link="lumbar_flex_intermediate"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-0.7" upper="0.7" effort="200" velocity="2.0"/>
+  </joint>
+
+  <!-- Lumbar lateral bending about x-axis -->
+  <joint name="lumbar_lateral_bend" type="revolute">
+    <parent link="lumbar_flex_intermediate"/>
+    <child link="lumbar_bend_intermediate"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <axis xyz="1 0 0"/>
+    <limit lower="-0.35" upper="0.35" effort="150" velocity="2.0"/>
+  </joint>
+
+  <!-- Lumbar axial rotation about z-axis -->
+  <joint name="lumbar_axial_rotation" type="revolute">
+    <parent link="lumbar_bend_intermediate"/>
     <child link="lumbar"/>
     <origin xyz="0 0 0" rpy="0 0 0"/>
     <axis xyz="0 0 1"/>
     <limit lower="-0.5" upper="0.5" effort="100" velocity="1.0"/>
   </joint>
 
-  <!-- Note: A complete 3-DOF joint would require three revolutes -->
-  <!-- We'll simplify and use 1-DOF revolutes for each axis -->
   <!-- ... (additional joints for thorax, shoulders, elbows, wrists) ...-->
 
 </robot>
 ```
 
-**Note:** This is a *simplified* excerpt. A complete URDF would include all 20 joints (3 per arm shoulder, 2 per elbow, 2 per wrist, 3 for lumbar, 3 for thorax) and would require careful definition of each axis.
+**Note on URDF spherical joints:** URDF does not natively support `type="spherical"`. The standard workaround is three sequential single-axis revolute joints connected by massless intermediate links, as shown above for the lumbar spine. This correctly models 3-DOF behavior; the massless intermediate links have negligible effect on dynamics but allow each rotational axis to be independently specified. Engines such as Drake and MuJoCo provide their own spherical-joint extensions that circumvent this limitation.
 
 ## From URDF to Simulation --- Drake, MuJoCo, and Pinocchio {#sec-simulation-engines}
 

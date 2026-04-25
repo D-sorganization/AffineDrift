@@ -284,11 +284,15 @@ Damping trades energy loss for stability.
 
 ### Underdamped vs. Overdamped Joints
 
-A joint can be classified by its *damping ratio*:
+A joint can be classified by its *damping ratio*. For a **translational** system ($m\ddot{x} + c\dot{x} + kx = 0$):
 $$
 \zeta = \frac{c}{2\sqrt{km}}
 $$
-where $c$ is the damping coefficient, $k$ the stiffness, and $m$ the effective mass.
+where $c$ is the damping coefficient, $k$ the stiffness, and $m$ the effective mass. For a **rotational** system ($I\ddot{\theta} + c\dot{\theta} + k\theta = 0$) — the relevant case for joints — the moment of inertia $I$ replaces mass:
+$$
+\zeta_{\text{rot}} = \frac{c}{2\sqrt{kI}}
+$$
+Throughout this chapter, joint dynamics are rotational, so $I$ is the appropriate inertial quantity.
 
 ::: {.callout-note}
 ## Damping Ratio Regimes

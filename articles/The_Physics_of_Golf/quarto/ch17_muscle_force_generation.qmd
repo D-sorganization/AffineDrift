@@ -69,7 +69,7 @@ Most muscles do not run straight from origin to insertion. Instead, muscle fiber
 - $\ell^M$ = physiological fiber length (along the fiber direction), typically 5--15 cm
 - $\ell^M_{\mathrm{opt}}$ = optimal fiber length, where force is maximal
 - $\alpha$ = pennation angle, the angle between fibers and the tendon
-- $A_{\mathrm{PCSA}}$ = physiological cross-sectional area, $\approx \frac{M}{\rho \ell^M}$ where $M$ is muscle mass and $\rho \approx 1.06$ g/cm$^3$
+- $A_{\mathrm{PCSA}}$ = physiological cross-sectional area, $\approx \frac{M \cos\alpha}{\rho \ell^M_{\mathrm{opt}}}$ where $M$ is muscle mass and $\rho \approx 1.06$ g/cm$^3$; the $\cos\alpha$ factor accounts for the pennation angle
 - $\sigma_{\max}$ = specific tension (force per unit area), typically 30--60 N/cm$^2$ for healthy muscle
 - Maximum isometric force: $F_0 = \sigma_{\max} \times A_{\mathrm{PCSA}}$
 
@@ -158,11 +158,11 @@ where:
 - $k$ is a dimensionless parameter, typically $0.3$--$0.5$
 - $f_V$ ranges from 1 at zero velocity to 0 at $\tilde{v} = V_{\max}$
 
-For *eccentric contraction* (lengthening under load, e.g., a muscle applying brakes), Hill's equation is different and shows a counterintuitive result: force *increases* beyond $F_0$:
+For *eccentric contraction* (lengthening under load, e.g., a muscle applying brakes), Hill's equation is different and shows a counterintuitive result: force *increases* beyond $F_0$. The Thelen [-@thelen2003adjustment] form, which avoids the spurious singularity of the original Hill eccentric expression, is:
 $$
-f_V^{\mathrm{ecc}}(\tilde{v}) = 1 + \frac{a_{\mathrm{ecc}} |\tilde{v}|}{a_{\mathrm{ecc}} - k_{\mathrm{ecc}} |\tilde{v}|}
+f_V^{\mathrm{ecc}}(\tilde{v}) = \frac{(F_{\mathrm{asym}} - 1)\,|\tilde{v}|/V_{\max}}{|\tilde{v}|/V_{\max} + k_{\mathrm{ecc}}} + 1
 $$
-where $a_{\mathrm{ecc}} \approx 0.3$ and $k_{\mathrm{ecc}} \approx 0.8$. This gives $f_V^{\mathrm{ecc}} > 1$ for increasing velocity, meaning eccentric contractions can produce 1.2--1.5 times the isometric force.
+where $F_{\mathrm{asym}} \approx 1.4$--$1.5$ is the asymptotic eccentric force ceiling and $k_{\mathrm{ecc}} \approx 0.3$--$0.5$. Boundary checks: $f_V^{\mathrm{ecc}}(0) = 1$ (matches isometric) and $f_V^{\mathrm{ecc}} \to F_{\mathrm{asym}}$ as speed increases. This gives $f_V^{\mathrm{ecc}} > 1$ for increasing velocity, meaning eccentric contractions can produce 1.4--1.5 times the isometric force at high lengthening rates.
 
 ::: {.callout-important}
 ## Concentric vs. Eccentric: The Asymmetry
