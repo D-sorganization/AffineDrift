@@ -59,11 +59,13 @@ Attack angle $\gamma_{\text{atk}}$ is the angle of the club path component perpe
 
 :::
 
-The relationship between attack angle and swing plane tilt is subtle but important. If a golfer swings along a plane tilted at angle $\theta_{\text{plane}}$ and descends along that plane with speed $v_{\text{down-plane}}$, then:
+The relationship between attack angle and swing plane tilt is subtle but important. Attack angle is derived from the velocity components of the clubhead at impact:
 
 $$
-\gamma_{\text{atk}} \approx \theta_{\text{plane}} + \text{(vertical acceleration component)}
+\gamma_{\text{atk}} = \arctan\!\left(\frac{v_z}{\sqrt{v_x^2 + v_y^2}}\right)
 $$
+
+where $v_x$, $v_y$ are the horizontal velocity components (along and across the target line) and $v_z$ is the vertical velocity component.
 
 For a driver, typical attack angles are $+4^{\circ}$ to $+8^{\circ}$ (slightly upward). For a 7-iron, typical attack angles are $-4^{\circ}$ to $-6^{\circ}$ (downward).
 
@@ -238,12 +240,15 @@ The spin axis of the ball is the axis of rotation of the ball about its center. 
 
 However, most golf impacts have some degree of gear effect because the contact is not exactly at the ball's center. The effective spin axis is rotated away from the perpendicular by an amount dependent on the side-spin rate and gear effect.
 
-A simplified model is:
-$$
-\hat{\omega}_{\text{spin}} \propto \vec{P} \times \vec{F}
-$$
+A simplified model depends on the strike geometry:
 
-where $\times$ denotes the cross product. The spin axis magnitude is related to the side-spin rate and affects the curvature of the ball flight.
+For backspin (no gear effect), the spin axis is approximately perpendicular to the plane of the face-normal and the relative ball–clubface velocity:
+$$
+\hat{\omega}_{\text{spin}} \approx \frac{\mathbf{v}_{\text{club}} \times \hat{n}_{\text{face}}}{|\mathbf{v}_{\text{club}} \times \hat{n}_{\text{face}}|}
+$$
+where $\hat{n}_{\text{face}}$ is the outward face normal. For oblique strikes producing gear-effect sidespin, validated launch-monitor models are required [@trackman_launch].
+
+The spin axis magnitude is related to the side-spin rate and affects the curvature of the ball flight.
 
 ### The Face-to-Path Difference and Shot Shape
 
