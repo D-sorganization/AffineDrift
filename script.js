@@ -363,7 +363,7 @@ runOnDomReady(function () {
             try {
                 const parsed = new URL(item.url, window.location.origin);
                 if (parsed.protocol === "http:" || parsed.protocol === "https:") {
-                    safeUrl = item.url;
+                    safeUrl = parsed.href;
                 }
             } catch (e) {}
         }
@@ -973,7 +973,7 @@ runOnDomReady(function () {
               try {
                   const parsed = new URL(item.url, window.location.origin);
                   if (parsed.protocol === "http:" || parsed.protocol === "https:") {
-                      safeUrl = item.url;
+                      safeUrl = parsed.href;
                   }
               } catch (e) {}
           }

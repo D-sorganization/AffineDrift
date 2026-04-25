@@ -86,7 +86,7 @@ export function updateHistorySidebar() {
                 try {
                     const parsed = new URL(item.url, window.location.origin);
                     if (parsed.protocol === "http:" || parsed.protocol === "https:") {
-                        safeUrl = item.url;
+                        safeUrl = parsed.href;
                     }
                 } catch (e) {}
             }
@@ -172,7 +172,7 @@ export function initArticleHistory() {
                     try {
                         const parsed = new URL(item.url, window.location.origin);
                         if (parsed.protocol === "http:" || parsed.protocol === "https:") {
-                            safeUrl = item.url;
+                            safeUrl = parsed.href;
                         }
                     } catch (e) {}
                 }

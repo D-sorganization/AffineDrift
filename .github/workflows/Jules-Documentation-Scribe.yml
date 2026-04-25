@@ -87,7 +87,7 @@ jobs:
       - name: Install & Auth Jules
         if: steps.changes.outputs.files != ''
         run: |
-          npm install -g @google/jules
+          npm install -g @google/jules@latest
           jules auth --token ${{ secrets.JULES_API_KEY }}
 
       - name: Create Docs Branch

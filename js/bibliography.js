@@ -107,7 +107,7 @@
         try {
           const parsed = new URL(url, window.location.origin);
           if (parsed.protocol === "http:" || parsed.protocol === "https:") {
-            safeUrl = url;
+            safeUrl = parsed.href;
           }
         } catch (e) {}
         return `<li><a href="${escapeHtml(
