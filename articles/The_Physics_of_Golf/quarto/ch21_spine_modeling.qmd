@@ -294,15 +294,16 @@ where each $\bm{R}_i(\alpha)$ is a rotation matrix about axis $i$ by angle $\alp
 Expanding this (using standard rotation matrix formulas):
 $$
 \bm{R}_{\mathrm{total}} = \begin{bmatrix}
-\cos\theta\cos\psi & -\sin\theta & \cos\theta\sin\psi \\
-\sin\theta\cos\psi & \cos\theta & \sin\theta\sin\psi \\
--\sin\psi & 0 & \cos\psi
+\cos\theta\cos\psi & \cos\theta\sin\psi\sin\phi - \sin\theta\cos\phi & \cos\theta\sin\psi\cos\phi + \sin\theta\sin\phi \\
+\sin\theta\cos\psi & \sin\theta\sin\psi\sin\phi + \cos\theta\cos\phi & \sin\theta\sin\psi\cos\phi - \cos\theta\sin\phi \\
+-\sin\psi & \cos\psi\sin\phi & \cos\psi\cos\phi
 \end{bmatrix}
+{#eq:euler_angles}
 $$
 
 (For small angles, this simplifies, but the coupling is still present.)
 
-The key observation: the orientation matrix $\bm{R}_{\mathrm{total}}$ depends on **all three angles**: $\phi$, $\psi$, and $\theta$. You cannot decompose the motion cleanly into independent components. The angle $\phi$ (flexion) appears in all entries of the matrix. This is the essence of coupling: the flexion angle influences how the spine responds to attempted rotations.
+The key observation: the orientation matrix $\bm{R}_{\mathrm{total}}$ depends on **all three angles**: $\phi$, $\psi$, and $\theta$. You cannot decompose the motion cleanly into independent components. The roll angle $\phi$ (flexion) appears in all columns of the matrix except the first column of the first two rows, where it combines with $\psi$. This is the essence of coupling: the flexion angle influences how the spine responds to attempted rotations.
 
 ### From Local to Global Coordinates
 
