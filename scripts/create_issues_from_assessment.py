@@ -25,7 +25,7 @@ def get_existing_issues() -> list[dict[str, Any]]:
     """Fetch existing GitHub issues."""
     try:
         result = subprocess.run(
-            ["gh", "issue", "list", "--limit", "200", "--json", "number,title,state,labels"],
+            ["gh", "issue", "list", "--limit", "200", "--json", "number,title,state,labels"],  # noqa: S607, S603
             capture_output=True,
             text=True,
             check=True,
@@ -63,7 +63,7 @@ def create_github_issue(
         if labels:
             cmd.extend(["--label", ",".join(labels)])
 
-        result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+        result = subprocess.run(cmd, capture_output=True, text=True, check=True)  # noqa: S603
         issue_url = result.stdout.strip()
         logger.info(f"✓ Created issue: {issue_url}")
         return True
