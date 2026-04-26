@@ -13,7 +13,7 @@ import logging
 from typing import Any
 
 import numpy as np
-from simpleeval import EvalWithCompoundTypes  # type: ignore[import-untyped]
+from simpleeval import EvalWithCompoundTypes
 
 from src.core.contracts import check_positive, ensure, require
 

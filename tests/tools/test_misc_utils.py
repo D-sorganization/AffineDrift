@@ -3,9 +3,12 @@
 from __future__ import annotations
 
 import subprocess
+import sys
 from typing import Any
 
 import pytest
+
+from src.tools.utils.shell_utils import run_tool
 
 
 class TestAssessmentUtils:
@@ -138,19 +141,12 @@ class TestShellUtils:
 
     def test_run_tool_with_valid_command(self) -> None:
         """Should return dict with exit_code for valid command."""
-        import sys
-
-        from src.tools.utils.shell_utils import run_tool
-
         result = run_tool([sys.executable, "-c", "print('hello')"], "python")
         assert "exit_code" in result
         assert result["exit_code"] == 0
 
     def test_run_tool_with_result_processor(self) -> None:
         """Should use result_processor when provided."""
-        import sys
-
-        from src.tools.utils.shell_utils import run_tool
 
         def processor(result: subprocess.CompletedProcess) -> dict[str, Any]:
             """Return custom dict."""

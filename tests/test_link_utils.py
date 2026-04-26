@@ -147,8 +147,8 @@ class TestPathExistsInSearchRoots:
         # Use an absolute path outside root that doesn't exist
         # The function first checks target.exists() (returns False), then is_relative_to
         target = Path(
-            "/tmp/__gaai_nonexistent_target_xyz_12345/page.html"
-        )  # nosec B108  # noqa: S108
+            "/tmp/__gaai_nonexistent_target_xyz_12345/page.html"  # noqa: S108
+        )
         # Ensure it doesn't exist and is not relative to tmp_path
         assert not target.exists()
         assert path_exists_in_search_roots(root=tmp_path, target=target) is False
