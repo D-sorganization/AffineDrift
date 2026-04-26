@@ -1,0 +1,16 @@
+{
+  "comments": [
+    {
+      "comment_id": "3142853533",
+      "pr_number": 2857,
+      "type": "review",
+      "author": "chatgpt-codex-connector[bot]",
+      "body": "**<sub><sub>![P1 Badge](https://img.shields.io/badge/P1-orange?style=flat)</sub></sub>  Remove S rules from Ruff until existing violations are fixed**\n\nAdding `\"S\"` to Ruff\u2019s global `select` list immediately turns existing security-style findings into hard lint failures, which breaks the default CI lint gate (`.github/workflows/ci-standard.yml` runs `ruff check .`). On this commit, `ruff check .` reports dozens of `S*` errors (e.g., `S603`, `S607`, `S108`) in untouched files, so unrelated PRs will fail until a large repo-wide cleanup happens. This should be introduced only with staged ignores or alongside remediation.\n\nUseful? React with \ud83d\udc4d\u00a0/ \ud83d\udc4e.",
+      "path": "pyproject.toml",
+      "line": 92,
+      "queued_at": "2026-04-26T01:59:23Z",
+      "repository": "D-sorganization/AffineDrift"
+    }
+  ],
+  "last_updated": "2026-04-26T01:59:23Z"
+}
