@@ -74,7 +74,7 @@ jobs:
           esac
 
   analyze:
-    runs-on: self-hosted
+    runs-on: d-sorg-fleet
     needs: pick-runner
     outputs:
       violations_found: ${{ steps.analyze.outputs.violations_found }}
@@ -225,7 +225,7 @@ jobs:
   create-issues:
     needs: analyze
     if: needs.analyze.outputs.violations_found == 'true' && inputs.create_issues != false
-    runs-on: self-hosted
+    runs-on: d-sorg-fleet
     strategy:
       matrix:
         category: [path, logging, imports, datetime, config, exceptions, env]
@@ -300,7 +300,7 @@ jobs:
   summary:
     needs: [analyze, create-issues]
     if: always()
-    runs-on: self-hosted
+    runs-on: d-sorg-fleet
     steps:
       - name: Final Summary
         env:

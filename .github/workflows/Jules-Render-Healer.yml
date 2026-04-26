@@ -51,7 +51,7 @@ jobs:
     if:
       github.event.deployment.environment == 'production' && github.event.deployment_status.state ==
       'failure'
-    runs-on: self-hosted
+    runs-on: d-sorg-fleet
     needs: pick-runner
     steps:
       - uses: actions/checkout@v4
