@@ -107,6 +107,8 @@
 % Optional shared theorem primitives
 \makeatletter
 \newcommand{\gomdeclaretheorems}{%
+  \let\example\relax
+  \let\endexample\relax
   \@ifundefined{theorem}{\newtheorem{theorem}{Theorem}[chapter]}{}%
   \@ifundefined{proposition}{\newtheorem{proposition}[theorem]{Proposition}}{}%
   \@ifundefined{definition}{\newtheorem{definition}[theorem]{Definition}}{}%

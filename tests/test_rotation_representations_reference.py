@@ -12,7 +12,7 @@ def _load_reference_namespace() -> dict[str, object]:
     assert match is not None
     implementation = match.group(1).split("# --- Verification", maxsplit=1)[0]
     namespace: dict[str, object] = {}
-    exec(compile(implementation, str(REFERENCE_ARTICLE), "exec"), namespace)  # noqa: S102
+    exec(compile(implementation, str(REFERENCE_ARTICLE), "exec"), namespace)
     return namespace
 
 

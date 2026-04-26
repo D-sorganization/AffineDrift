@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 def run_command(cmd: list[str], check: bool = True) -> subprocess.CompletedProcess:
     """Run a command and return the result."""
     logger.info("  Running: %s", " ".join(cmd))
-    return subprocess.run(cmd, check=check, capture_output=True, text=True)  # noqa: S603
+    return subprocess.run(cmd, check=check, capture_output=True, text=True)
 
 
 def check_pre_commit_installed() -> bool:

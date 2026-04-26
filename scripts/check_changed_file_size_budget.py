@@ -17,8 +17,8 @@ def _merge_base(repo_root: Path) -> str:
     candidates = ["origin/main", "main", "HEAD~1"]
     for candidate in candidates:
         try:
-            result = subprocess.run(  # noqa: S603
-                ["git", "merge-base", "HEAD", candidate],  # noqa: S607
+            result = subprocess.run(
+                ["git", "merge-base", "HEAD", candidate],
                 cwd=repo_root,
                 check=True,
                 capture_output=True,
@@ -36,8 +36,8 @@ def _changed_files(repo_root: Path, base_ref: str) -> list[str]:
     """Return repo-relative changed file paths."""
     ci_base_ref = os.getenv("GITHUB_BASE_REF", "").strip()
     if ci_base_ref:
-        subprocess.run(  # noqa: S603
-            ["git", "fetch", "--depth=1", "origin", ci_base_ref],  # noqa: S607
+        subprocess.run(
+            ["git", "fetch", "--depth=1", "origin", ci_base_ref],
             cwd=repo_root,
             check=False,
             capture_output=True,
@@ -59,7 +59,7 @@ def _changed_files(repo_root: Path, base_ref: str) -> list[str]:
     )
     for cmd in commands:
         try:
-            result = subprocess.run(  # noqa: S603
+            result = subprocess.run(
                 cmd,
                 cwd=repo_root,
                 check=True,
