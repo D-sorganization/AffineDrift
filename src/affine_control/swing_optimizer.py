@@ -397,8 +397,8 @@ class SwingOptimizer:
                 break
             u_init = u_traj
 
-        assert best_x_traj is not None
-        assert best_u_traj is not None
+        assert best_x_traj is not None  # noqa: S101
+        assert best_u_traj is not None  # noqa: S101
         return best_x_traj, best_u_traj, best_cost, converged, iteration
 
     def _package_result(

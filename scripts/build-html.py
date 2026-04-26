@@ -105,7 +105,7 @@ def main() -> None:
 
     # Generate bibliography data
     try:
-        subprocess.run(
+        subprocess.run(  # noqa: S603
             [sys.executable, "scripts/generate_bibliography_data.py"],
             check=True,
         )  # noqa: S603
