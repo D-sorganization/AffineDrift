@@ -1,5 +1,5 @@
 name: CI Standard
-# Refreshed to verify path resolution
+Refreshed to verify path resolution
 on:
   push:
     branches: [main]
@@ -10,8 +10,8 @@ on:
       - ".gitignore"
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
-    # NOTE: **.md intentionally NOT excluded so quality-gate runs on docs-only
-    # PRs and satisfies branch protection required status checks.
+    NOTE: **.md intentionally NOT excluded so quality-gate runs on docs-only
+    PRs and satisfies branch protection required status checks.
     paths-ignore:
       - "LICENSE"
       - ".gitignore"
@@ -25,7 +25,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # ── Dispatcher: route to self-hosted if available ──────────────────────────
+  ── Dispatcher: route to self-hosted if available ──────────────────────────
   pick-runner:
     runs-on: d-sorg-fleet
     timeout-minutes: 2
@@ -105,7 +105,7 @@ jobs:
               sleep 20
             done
             if [ "$APT_READY" = "true" ]; then
-              # libasound2t64 is the Ubuntu 24.04 name; Ubuntu 22.04 uses libasound2
+              libasound2t64 is the Ubuntu 24.04 name; Ubuntu 22.04 uses libasound2
               apt-cache show libasound2t64 >/dev/null 2>&1 && LIBASOUND=libasound2t64 || LIBASOUND=libasound2
               sudo apt-get -o DPkg::Lock::Timeout=300 install -y libgl1 libegl1 libxrandr2 libxss1 libxcursor1 libxcomposite1 "$LIBASOUND" libxi6 libxtst6
             else
@@ -117,7 +117,7 @@ jobs:
 
       - run: pip install ruff==0.15.6 black==26.3.1 mypy==1.19.1 bandit==1.7.7 pydocstyle==6.3.0
 
-      # Validate that environment is sane
+      Validate that environment is sane
       - name: Environment Health Check
         run: |
           python3 --version
@@ -126,18 +126,18 @@ jobs:
           black --version
           mypy --version
 
-      # FIX: Less aggressive Ruff (Errors, Warnings, Imports only)
+      FIX: Less aggressive Ruff (Errors, Warnings, Imports only)
       - name: Lint
         run: ruff check .
 
-      # FIX: Enforce Black formatting (100 chars — matches pyproject.toml [tool.black] line-length)
+      FIX: Enforce Black formatting (100 chars — matches pyproject.toml [tool.black] line-length)
       - name: Check Formatting
         run: black --check --line-length 100 .
 
       - run: pip install mypy types-PyYAML types-requests
       - name: Verify frontend asset sync
-        # docs/ HTML is no longer committed (issue #1419); sync mirrors inside docs/
-        # are rebuilt by Quarto at deploy time. Skip here if docs/ is absent.
+        docs/ HTML is no longer committed (issue #1419); sync mirrors inside docs/
+        are rebuilt by Quarto at deploy time. Skip here if docs/ is absent.
         run: |
           if [ -d "docs" ] && [ -f "docs/index.html" ]; then
             python3 scripts/sync_frontend_assets.py --check
@@ -184,10 +184,10 @@ jobs:
         run: python3 -m src.tools.code_quality_check
 
       - name: Verify Site Health (Broken Links Blocking)
-        # docs/ HTML is no longer committed (issue #1419); site health runs in
-        # deploy-website.yml after Quarto renders the site. This step will always
-        # skip in ci-standard.yml because docs/index.html is never present here —
-        # that is intentional and expected. The check runs post-deploy instead.
+        docs/ HTML is no longer committed (issue #1419); site health runs in
+        deploy-website.yml after Quarto renders the site. This step will always
+        skip in ci-standard.yml because docs/index.html is never present here —
+        that is intentional and expected. The check runs post-deploy instead.
         run: |
           if [ -f "docs/index.html" ]; then
             python3 -m src.tools.check_site_health --fail-on broken
@@ -195,10 +195,9 @@ jobs:
             echo "docs/ HTML not present (expected: built by deploy workflow). Skipping site health check."
           fi
 
-      # FIX: Run Python-based MATLAB Quality Check (Works without License)
-      # Non-blocking: Script not present in all repos
+      FIX: Run Python-based MATLAB Quality Check (Works without License)
+      Non-blocking: Script not present in all repos
       - name: MATLAB Quality Check
-        continue-on-error: true
         run: |
           if [ -f "tools/matlab_utilities/scripts/matlab_quality_check.py" ]; then
             python3 tools/matlab_utilities/scripts/matlab_quality_check.py --output-format text > matlab_quality_report.txt
@@ -253,17 +252,17 @@ jobs:
         run: pip install pip-audit && pip-audit -r requirements.txt --progress-spinner=off
       - name: Critical Module Coverage Gate
         run: python3 scripts/check_critical_module_coverage.py
-      - uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0
+      - uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 v6.0.0
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         if: env.CODECOV_TOKEN != ''
         with:
-          fail_ci_if_error: false # Non-blocking: CODECOV_TOKEN may not be configured in all forks
+          fail_ci_if_error: false Non-blocking: CODECOV_TOKEN may not be configured in all forks
           token: ${{ secrets.CODECOV_TOKEN }}
 
   js-tests:
     needs: [pick-runner, quality-gate]
-    runs-on: self-hosted
+    runs-on: d-sorg-fleet
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v6
@@ -272,7 +271,7 @@ jobs:
         run: npm ci
       - name: Run JS Tests
         run: npm test -- --coverage
-      - uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0
+      - uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 v6.0.0
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         if: env.CODECOV_TOKEN != ''
@@ -351,7 +350,7 @@ jobs:
               sleep 20
             done
             if [ "$APT_READY" = "true" ]; then
-              # libasound2t64 is the Ubuntu 24.04 name; Ubuntu 22.04 uses libasound2
+              libasound2t64 is the Ubuntu 24.04 name; Ubuntu 22.04 uses libasound2
               apt-cache show libasound2t64 >/dev/null 2>&1 && LIBASOUND=libasound2t64 || LIBASOUND=libasound2
               sudo apt-get -o DPkg::Lock::Timeout=300 install -y libgl1 libegl1 libxrandr2 libxss1 libxcursor1 libxcomposite1 "$LIBASOUND" libxi6 libxtst6
             else
@@ -379,17 +378,17 @@ jobs:
 
       - name: Set up Quarto
         if: steps.e2e_changes.outputs.run == 'true'
-        uses: quarto-dev/quarto-actions/setup@8a96df13519ee81fd526f2dfca5962811136661b # v2.2.0
+        uses: quarto-dev/quarto-actions/setup@8a96df13519ee81fd526f2dfca5962811136661b v2.2.0
         with:
           version: "1.6.39"
       - name: Remove .env.example
         if: steps.e2e_changes.outputs.run == 'true'
         run: rm -f .env.example
-        # Quarto's dotenv validation requires non-empty example values, but CI
-        # doesn't need the example file during the E2E render.
+        Quarto's dotenv validation requires non-empty example values, but CI
+        doesn't need the example file during the E2E render.
       - name: Build site for E2E
         if: steps.e2e_changes.outputs.run == 'true'
-        uses: quarto-dev/quarto-actions/render@8a96df13519ee81fd526f2dfca5962811136661b # v2.2.0
+        uses: quarto-dev/quarto-actions/render@8a96df13519ee81fd526f2dfca5962811136661b v2.2.0
         with:
           to: html
           path: .
@@ -414,7 +413,7 @@ jobs:
   website-lint:
     needs: [pick-runner, quality-gate]
     runs-on: self-hosted
-    continue-on-error: true # Non-blocking: HTML validation errors need separate fix
+    continue-on-error: true Non-blocking: HTML validation errors need separate fix
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v6
@@ -425,34 +424,34 @@ jobs:
           npm run lint:css
           npm run lint:html || echo "::warning::HTML validation has issues - fix separately"
 
-  # =============================================================================
-  # MATLAB TESTS - COMMENTED OUT BY DEFAULT
-  # =============================================================================
-  # This job requires a MATLAB license which is NOT available in GitHub CI.
-  # DO NOT uncomment unless you have configured MATLAB licensing for your CI.
-  # To enable: remove the comment markers below and configure matlab-actions.
-  # Users with local MATLAB can run: matlab/run_all.m for equivalent tests.
-  # =============================================================================
-  # matlab-tests:
-  #   needs: [pick-runner, quality-gate]
-  #   runs-on: self-hosted
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - uses: matlab-actions/setup-matlab@v2
-  #     - uses: matlab-actions/run-command@v2
-  #       with:
-  #         command: |
-  #           addpath('matlab');
-  #           run_all
+  =============================================================================
+  MATLAB TESTS - COMMENTED OUT BY DEFAULT
+  =============================================================================
+  This job requires a MATLAB license which is NOT available in GitHub CI.
+  DO NOT uncomment unless you have configured MATLAB licensing for your CI.
+  To enable: remove the comment markers below and configure matlab-actions.
+  Users with local MATLAB can run: matlab/run_all.m for equivalent tests.
+  =============================================================================
+  matlab-tests:
+    needs: [pick-runner, quality-gate]
+    runs-on: d-sorg-fleet
+    steps:
+      - uses: actions/checkout@v4
+      - uses: matlab-actions/setup-matlab@v2
+      - uses: matlab-actions/run-command@v2
+        with:
+          command: |
+            addpath('matlab');
+            run_all
 
-  # Cost optimization enforced
+  Cost optimization enforced
 
-  # =============================================================================
-  # RUST QUALITY GATE
-  # =============================================================================
-  # Only runs when Rust source files or Cargo manifests change.
-  # Includes WASM build check since AffineDrift serves the web frontend.
-  # =============================================================================
+  =============================================================================
+  RUST QUALITY GATE
+  =============================================================================
+  Only runs when Rust source files or Cargo manifests change.
+  Includes WASM build check since AffineDrift serves the web frontend.
+  =============================================================================
   rust-quality-gate:
     needs: pick-runner
     runs-on: self-hosted
@@ -494,7 +493,7 @@ jobs:
 
       - name: Install Rust toolchain
         if: steps.rust-changes.outputs.has_changes == 'true'
-        uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # stable
+        uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 stable
         with:
           components: rustfmt, clippy
           targets: wasm32-unknown-unknown
@@ -530,7 +529,7 @@ jobs:
       - name: Rust Quality Gate Summary
         if: steps.rust-changes.outputs.has_changes == 'true'
         run: |
-          echo "## Rust Quality Gate" >> $GITHUB_STEP_SUMMARY
+          echo "#Rust Quality Gate" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ rustfmt: formatted" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ clippy: no warnings" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ cargo test: all tests pass" >> $GITHUB_STEP_SUMMARY

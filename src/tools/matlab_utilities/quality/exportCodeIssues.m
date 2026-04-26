@@ -49,7 +49,7 @@ function T = exportCodeIssues(targetPath, varargin)
 %
 %   See also: CHECKCODE, STRUCT2TABLE, WRITETABLE
 
-% ---- Parse & validate inputs ------------------------------------------------
+% =- Parse & validate inputs ================
 p = inputParser;
 p.addRequired('targetPath', @(s)ischar(s) || (isstring(s) && isscalar(s)));
 p.addParameter('Output', '', @(s)ischar(s) || isstring(s));
@@ -80,7 +80,7 @@ if isempty(opts.Root)
 end
 opts.Root = stripTrailingFilesep(opts.Root);
 
-% ---- Build file list --------------------------------------------------------
+% =- Build file list ==================--
 fileList = {};
 if isfolder(opts.targetPath)
     fileList = listFiles(opts.targetPath, includeExt, excludeDirs, excludeFiles, opts.Recursive);
@@ -106,7 +106,7 @@ if isempty(fileList)
     return;
 end
 
-% ---- Run checkcode ----------------------------------------------------------
+% =- Run checkcode ===================-
 allIssues = issuesTable();
 for i = 1:numel(fileList)
     f = fileList{i};
@@ -170,7 +170,7 @@ end
 % Sort for stable, readable output
 allIssues = sortrows(allIssues, {'RelFile','Line','Column','Identifier'});
 
-% ---- Write output if requested ---------------------------------------------
+% =- Write output if requested ===============
 if ~isempty(opts.Output)
     writeOutput(allIssues, opts.Output, opts.Root);
     if ~opts.Quiet
@@ -183,7 +183,7 @@ T = allIssues;
 
 end
 
-% = Local helpers ---
+% = Local helpers =
 function tf = iscellstrlike(c)
     tf = iscell(c) && all(cellfun(@(s)ischar(s) || isstring(s), c));
 end
@@ -252,7 +252,7 @@ end
 
 function s = stripTrailingFilesep(s)
     s = char(string(s));
-    if ~isempty(s) && (s(end) = filesep)
+    if ~isempty(s) && (s(end) == filesep)
         s(end) = [];
     end
 end

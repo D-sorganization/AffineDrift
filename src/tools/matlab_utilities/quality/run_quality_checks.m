@@ -57,12 +57,12 @@ function results = run_quality_checks(target_path, varargin)
     results.target_path = char(target_path);
 
     if opts.Verbose
-        fprintf('\n---\n');
+        fprintf('\n=\n');
         fprintf('MATLAB Quality Checks\n');
-        fprintf('---\n');
+        fprintf('=\n');
         fprintf('Target: %s\n', target_path);
         fprintf('Timestamp: %s\n', results.timestamp);
-        fprintf('---\n\n');
+        fprintf('=\n\n');
     end
 
     % Run exportCodeIssues for comprehensive analysis
@@ -128,9 +128,9 @@ function results = run_quality_checks(target_path, varargin)
 
     % Print summary
     if opts.Verbose
-        fprintf('\n---\n');
+        fprintf('\n=\n');
         fprintf('%s\n', results.summary);
-        fprintf('---\n\n');
+        fprintf('=\n\n');
 
         if results.total_issues > 0 && results.total_issues < 20
             fprintf('Issues found:\n');
