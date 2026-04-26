@@ -17,6 +17,7 @@ export function initPDFDownload() {
     }
 
     const pdfBtn = document.createElement("button");
+    pdfBtn.type = "button";
     pdfBtn.className = "pdf-download-btn";
     pdfBtn.setAttribute("aria-label", "Download page as PDF");
     pdfBtn.setAttribute("title", "Download as PDF");
@@ -47,8 +48,20 @@ export function preparePDFPrint() {
         printTitleBlock = document.createElement("div");
         printTitleBlock.className = "print-title-block";
         printTitleBlock.style.display = "none";
+
+        // Escape HTML to prevent XSS from document.title
+        const escapeHtml = (text) => {
+            if (text == null) return "";
+            return String(text)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#39;");
+        };
+
         printTitleBlock.innerHTML = `
-      <h1>${pageTitle}</h1>
+      <h1>${escapeHtml(pageTitle)}</h1>
       <div class="print-author">AffineDrift</div>
       <div class="print-date">${new Date().toLocaleDateString("en-US", {
             year: "numeric",

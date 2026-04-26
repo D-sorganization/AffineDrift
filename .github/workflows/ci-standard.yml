@@ -10,9 +10,9 @@ on:
       - ".gitignore"
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
+    # NOTE: **.md intentionally NOT excluded so quality-gate runs on docs-only
+    # PRs and satisfies branch protection required status checks.
     paths-ignore:
-      - "docs/**"
-      - "**.md"
       - "LICENSE"
       - ".gitignore"
   workflow_dispatch:
@@ -36,9 +36,9 @@ jobs:
         id: check
         env:
           GH_TOKEN: ${{ secrets.RUNNER_CHECK_TOKEN }}
-          FLEET_MODE: ${{ vars.FLEET_RUNNER_MODE }}
+          LOCAL_MODE: ${{ vars.LOCAL_RUNNER_MODE }}
         run: |
-          MODE="${FLEET_MODE:-hybrid}"
+          MODE="${LOCAL_MODE:-local}"
           echo "Fleet mode: $MODE"
 
           case "$MODE" in
@@ -46,11 +46,11 @@ jobs:
               echo "runner=d-sorg-fleet" >> $GITHUB_OUTPUT
               echo "Routing to self-hosted fleet (mode=local)"
               ;;
-            cloud)
-              echo "runner=ubuntu-latest" >> $GITHUB_OUTPUT
-              echo "Routing to GitHub-hosted (mode=cloud)"
+            disabled)
+              echo "::error::No local self-hosted runner available; failing closed"
+              exit 1
               ;;
-            hybrid|*)
+            *)
               AVAILABLE=$(gh api /orgs/${{ github.repository_owner }}/actions/runners \
                 --jq '[.runners[] | select(.status == "online") | select(.busy == false) | select(.labels[].name == "d-sorg-fleet")] | length' \
                 2>/dev/null || echo "0")
@@ -58,8 +58,8 @@ jobs:
                 echo "runner=d-sorg-fleet" >> $GITHUB_OUTPUT
                 echo "$AVAILABLE idle fleet runner(s) - routing locally"
               else
-                echo "runner=ubuntu-latest" >> $GITHUB_OUTPUT
-                echo "No idle fleet runners - falling back to GitHub-hosted"
+                echo "::error::No local self-hosted runner available; failing closed"
+                exit 1
               fi
               ;;
           esac
@@ -71,16 +71,15 @@ jobs:
       PYTHONPATH: .
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
 
       - name: Bootstrap Python venv
         run: |
-          for py in python3.12 python3.11 python3.10 python3; do
-            if command -v $py &>/dev/null; then
-              $py -m venv "$RUNNER_TEMP/ci-venv"
-              break
-            fi
-          done
+          python -m venv "$RUNNER_TEMP/ci-venv"
           source "$RUNNER_TEMP/ci-venv/bin/activate"
           pip install --upgrade pip setuptools wheel
           pip install -r requirements.txt
@@ -97,10 +96,21 @@ jobs:
       - name: Install System Dependencies
         run: |
           if sudo -n true 2>/dev/null; then
-            sudo apt-get -o DPkg::Lock::Timeout=300 update
-            # libasound2t64 is the Ubuntu 24.04 name; Ubuntu 22.04 uses libasound2
-            apt-cache show libasound2t64 >/dev/null 2>&1 && LIBASOUND=libasound2t64 || LIBASOUND=libasound2
-            sudo apt-get -o DPkg::Lock::Timeout=300 install -y libgl1 libegl1 libxrandr2 libxss1 libxcursor1 libxcomposite1 "$LIBASOUND" libxi6 libxtst6
+            APT_READY=false
+            for attempt in 1 2 3; do
+              if sudo apt-get -o DPkg::Lock::Timeout=300 update; then
+                APT_READY=true
+                break
+              fi
+              sleep 20
+            done
+            if [ "$APT_READY" = "true" ]; then
+              # libasound2t64 is the Ubuntu 24.04 name; Ubuntu 22.04 uses libasound2
+              apt-cache show libasound2t64 >/dev/null 2>&1 && LIBASOUND=libasound2t64 || LIBASOUND=libasound2
+              sudo apt-get -o DPkg::Lock::Timeout=300 install -y libgl1 libegl1 libxrandr2 libxss1 libxcursor1 libxcomposite1 "$LIBASOUND" libxi6 libxtst6
+            else
+              echo "::warning::apt-get update could not acquire the package lock; continuing with existing system dependencies"
+            fi
           else
             echo "No passwordless sudo — assuming system deps are pre-installed (self-hosted runner)"
           fi
@@ -198,7 +208,7 @@ jobs:
           fi
 
       - name: Upload MATLAB Report
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: matlab-quality-report
@@ -207,21 +217,22 @@ jobs:
   tests:
     needs: [pick-runner, quality-gate]
     runs-on: self-hosted
-    timeout-minutes: 20
+    timeout-minutes: 45
     strategy:
       matrix:
         python: ["3.12"]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+          cache-dependency-path: requirements.txt
       - name: Bootstrap Python venv
         run: |
-          for py in python3.12 python3.11 python3.10 python3; do
-            if command -v $py &>/dev/null; then
-              $py -m venv "$RUNNER_TEMP/ci-venv"
-              break
-            fi
-          done
+          python -m venv "$RUNNER_TEMP/ci-venv"
           source "$RUNNER_TEMP/ci-venv/bin/activate"
+          python --version
           pip install --upgrade pip setuptools wheel
           pip install -r requirements.txt pytest-timeout pytest-cov PyQt6
           echo "$RUNNER_TEMP/ci-venv/bin" >> $GITHUB_PATH
@@ -254,9 +265,9 @@ jobs:
     needs: [pick-runner, quality-gate]
     runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v6
-        with: { node-version: "20" }
+        with: { node-version: "22" }
       - name: Install Dependencies
         run: npm ci
       - name: Run JS Tests
@@ -274,7 +285,7 @@ jobs:
     runs-on: self-hosted
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Detect E2E-relevant changes
@@ -305,16 +316,15 @@ jobs:
           fi
       - uses: actions/setup-node@v6
         if: steps.e2e_changes.outputs.run == 'true'
-        with: { node-version: "20" }
+        with: { node-version: "22" }
+      - uses: actions/setup-python@v6
+        if: steps.e2e_changes.outputs.run == 'true'
+        with:
+          python-version: "3.12"
       - name: Bootstrap Python venv
         if: steps.e2e_changes.outputs.run == 'true'
         run: |
-          for py in python3.12 python3.11 python3.10 python3; do
-            if command -v $py &>/dev/null; then
-              $py -m venv "$RUNNER_TEMP/ci-venv"
-              break
-            fi
-          done
+          python -m venv "$RUNNER_TEMP/ci-venv"
           source "$RUNNER_TEMP/ci-venv/bin/activate"
           pip install --upgrade pip setuptools wheel
           pip install -r requirements.txt
@@ -332,10 +342,21 @@ jobs:
         if: steps.e2e_changes.outputs.run == 'true'
         run: |
           if sudo -n true 2>/dev/null; then
-            sudo apt-get -o DPkg::Lock::Timeout=300 update
-            # libasound2t64 is the Ubuntu 24.04 name; Ubuntu 22.04 uses libasound2
-            apt-cache show libasound2t64 >/dev/null 2>&1 && LIBASOUND=libasound2t64 || LIBASOUND=libasound2
-            sudo apt-get -o DPkg::Lock::Timeout=300 install -y libgl1 libegl1 libxrandr2 libxss1 libxcursor1 libxcomposite1 "$LIBASOUND" libxi6 libxtst6
+            APT_READY=false
+            for attempt in 1 2 3; do
+              if sudo apt-get -o DPkg::Lock::Timeout=300 update; then
+                APT_READY=true
+                break
+              fi
+              sleep 20
+            done
+            if [ "$APT_READY" = "true" ]; then
+              # libasound2t64 is the Ubuntu 24.04 name; Ubuntu 22.04 uses libasound2
+              apt-cache show libasound2t64 >/dev/null 2>&1 && LIBASOUND=libasound2t64 || LIBASOUND=libasound2
+              sudo apt-get -o DPkg::Lock::Timeout=300 install -y libgl1 libegl1 libxrandr2 libxss1 libxcursor1 libxcomposite1 "$LIBASOUND" libxi6 libxtst6
+            else
+              echo "::warning::apt-get update could not acquire the package lock; continuing with existing system dependencies"
+            fi
           else
             echo "No passwordless sudo — assuming system deps are pre-installed (self-hosted runner)"
           fi
@@ -347,7 +368,10 @@ jobs:
         if: steps.e2e_changes.outputs.run == 'true'
         run: |
           if sudo -n true 2>/dev/null; then
-            npx playwright install --with-deps chromium
+            npx playwright install --with-deps chromium || {
+              echo "::warning::Playwright system dependency install failed; retrying browser-only install"
+              npx playwright install chromium
+            }
           else
             echo "No passwordless sudo — installing browser binaries only."
             npx playwright install chromium
@@ -380,7 +404,7 @@ jobs:
             --project=chromium \
             --retries=0 \
             tests/e2e/smoke.spec.js
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@v4
         if: failure() && steps.e2e_changes.outputs.run == 'true'
         with:
           name: playwright-report
@@ -392,9 +416,9 @@ jobs:
     runs-on: self-hosted
     continue-on-error: true # Non-blocking: HTML validation errors need separate fix
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v6
-        with: { node-version: "20" }
+        with: { node-version: "22" }
       - name: Install & Lint
         run: |
           npm ci
@@ -413,7 +437,7 @@ jobs:
   #   needs: [pick-runner, quality-gate]
   #   runs-on: self-hosted
   #   steps:
-  #     - uses: actions/checkout@v6
+  #     - uses: actions/checkout@v4
   #     - uses: matlab-actions/setup-matlab@v2
   #     - uses: matlab-actions/run-command@v2
   #       with:
@@ -434,7 +458,7 @@ jobs:
     runs-on: self-hosted
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 

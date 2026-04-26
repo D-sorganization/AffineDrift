@@ -62,7 +62,7 @@ $$
 f(x_0 + \delta x, u_0) = f(x_0, u_0) + A \cdot \delta x + o(\|\delta x\|)
 $$
 
-The notation $o(\|\delta x\|)$ denotes terms that vanish faster than $\|\delta x\|$ as $\|\delta x\| \to 0$. This is little-o notation from asymptotic analysis, and it captures precisely what we mean by "the error becomes negligible." The equation states that near the point $(x_0, u_0)$, the nonlinear function $f$ is exactly equal to a linear function plus terms that become arbitrarily small relative to the perturbation size.
+The notation $o(\|\delta x\|)$ denotes terms that vanish faster than $\|\delta x\|$ as $\|\delta x\| \to 0$. This is little-o notation from asymptotic analysis, and it makes the limiting statement precise. The equation does not say that finite perturbations are linear. It says that the first-order part is the unique linear map that remains after the higher-order residual is scaled away.
 
 An equivalent definition, perhaps more intuitive, uses directional derivatives. For any direction $h \in \mathbb{R}^n$:
 
@@ -94,7 +94,7 @@ $$
 \delta \dot{x} = A \, \delta x + B \, \delta u
 $$
 
-This equation deserves careful attention. It states that in the tangent space, the dynamics are *exactly* linear. The perturbation $\delta \dot{x}$ depends linearly on $\delta x$ and $\delta u$, with coefficients given by the Jacobian matrices. This is not an approximation of the nonlinear system—it *is* the differential structure of the system at that state. The linearization captures the infinitesimal behavior exactly, in the same sense that the derivative of a curve gives its exact instantaneous velocity.
+This equation deserves careful attention. It states that the first-order differential of the dynamics is linear in the tangent space. The perturbation $\delta \dot{x}$ depends linearly on $\delta x$ and $\delta u$, with coefficients given by the Jacobian matrices. This is the differential structure of the system at that state. For finite perturbations, the omitted higher-order residual must still be bounded before the linearization can be used as a quantitative approximation.
 
 ------------------------------------------------------------------------
 
@@ -154,7 +154,7 @@ $$
 
 for any scalar $\alpha$. Together, these two properties constitute what physicists and engineers call the **superposition principle**: the response to a combination of inputs equals the combination of responses to individual inputs.
 
-The profound implication is this: superposition holds exactly in the tangent space. If we apply two infinitesimal input perturbations $\delta u_1$ and $\delta u_2$ simultaneously, the resulting state perturbation is exactly the sum of the perturbations that would result from applying each input separately. There is no interaction, no coupling, no nonlinear mixing—at the infinitesimal level.
+The local implication is this: superposition holds for the first-order tangent-space map. If we apply two infinitesimal input perturbations $\delta u_1$ and $\delta u_2$ simultaneously, the first-order state-derivative perturbation is the sum of the first-order perturbations that would result from applying each input separately. Nonlinear interactions enter through the higher-order residual and through the way tangent spaces change along a finite trajectory.
 
 This is not an approximation we impose for convenience. It is a mathematical theorem, inherited directly from the properties of matrix multiplication and the definition of the derivative. The tangent space is linear by construction, and linear spaces obey superposition by definition. The nonlinearity of the original system has not disappeared; rather, it has been localized to the relationship between different tangent spaces, as we shall see in the next section.
 
@@ -170,7 +170,7 @@ $$
 A(t) = \frac{\partial f}{\partial x}(x(t),u(t)), \quad B(t) = \frac{\partial f}{\partial u}(x(t),u(t))
 $$
 
-At each instant, the tangent space provides an exact linear description of the local dynamics. But the tangent space itself moves as the system evolves. Imagine a hiker walking along a mountain ridge: at each point, the ground is locally flat (the tangent plane), but the tangent plane rotates and tilts as the hiker moves. The mountain is curved even though every tangent plane is flat.
+At each instant, the tangent space provides the exact first-order description of the local dynamics. But the tangent space itself moves as the system evolves. Imagine a hiker walking along a mountain ridge: at each point, the ground is locally flat (the tangent plane), but the tangent plane rotates and tilts as the hiker moves. The mountain is curved even though every tangent plane is flat.
 
 This is precisely the geometric picture for nonlinear dynamics. The state space is a manifold—possibly curved, possibly with complex topology—and at each point there is a tangent space where the dynamics are exactly linear. As a trajectory winds through state space, it passes through a continuous family of tangent spaces, each with its own linearization.
 
@@ -202,7 +202,7 @@ This is what we mean when we say the linearization is exact in the limit. The fi
 
 **Linearization is exact in the limit $\Delta t \to 0$.**
 
-This is not a weaker form of exactness than we find elsewhere in mathematics. It is the same sense in which derivatives, integrals, and differential equations themselves are exact. The derivative $\dot{x} = f(x,u)$ is defined as a limit; it tells us the instantaneous rate of change, not the change over any finite interval. Linearization inherits this same infinitesimal exactness. The tangent space is not an approximation to the nonlinear system—it is the infinitesimal structure of the system, captured exactly.
+This exactness is a limiting statement. The derivative $\dot{x} = f(x,u)$ tells us the instantaneous rate of change, not the change over an arbitrary finite interval. Linearization inherits this infinitesimal exactness. For finite-time prediction or control, the residual terms, timestep, operating region, and smoothness assumptions determine whether the tangent-space model is accurate enough.
 
 ------------------------------------------------------------------------
 
@@ -226,17 +226,17 @@ Importantly, these deviations are not errors or approximation artifacts. They ar
 
 ## Connection to Linear Quadratic Regulation
 
-The theoretical framework developed in this article is not merely of academic interest—it underlies some of the most successful techniques in control engineering. Linear Quadratic Regulation (LQR) provides a striking example.
+The theoretical framework developed in this article underlies many local techniques in control engineering. Linear Quadratic Regulation (LQR) provides a clear example.
 
 LQR solves the following problem: given a linear system $\dot{x} = Ax + Bu$ and a quadratic cost functional that penalizes state deviations and control effort, find the optimal feedback control law. The solution is elegant—a linear state feedback $u = -Kx$ where the gain matrix $K$ can be computed by solving an algebraic Riccati equation.
 
-But real systems are rarely linear. Why, then, does LQR work so well in practice? The answer lies in the exactness of tangent space linearization. When we apply LQR to a nonlinear system, we are not making a crude approximation. At each operating point, the linearization $(A, B)$ captures the exact infinitesimal dynamics. The quadratic cost approximation is similarly justified: any smooth cost function is quadratic to leading order near a minimum.
+But real systems are rarely linear. Why, then, is LQR useful in nonlinear settings? The answer lies in the local structure of tangent-space linearization. At each operating point, the linearization $(A, B)$ captures the first-order dynamics. A quadratic cost model can also be justified locally near a reference point or minimum, provided the higher-order terms remain small enough over the intended operating region.
 
-The resulting controller operates in a sequence of tangent spaces along the trajectory. At each instant, it computes the optimal action based on the local linear-quadratic structure—and this local structure is exact, not approximate. The success of LQR stems from exploiting the exactness of the tangent-space representation, not from any assumption that the true system is globally linear.
+The resulting controller operates in a sequence of tangent spaces along the trajectory. At each instant, it computes an action based on the local linear-quadratic structure. Its reliability depends on how well the residual terms, model uncertainty, constraints, and timestep are controlled; it does not follow from local exactness alone.
 
 This connection extends beyond control to stability analysis. Lyapunov's indirect method—one of the most powerful tools for analyzing nonlinear stability—relies on the same principle. The method states that the stability of an equilibrium point of a nonlinear system can be determined by examining the eigenvalues of the linearization $A$. If all eigenvalues have strictly negative real parts, the equilibrium is locally asymptotically stable: trajectories starting nearby will converge to the equilibrium. If any eigenvalue has a positive real part, the equilibrium is unstable.
 
-This is a remarkable result. We are drawing conclusions about a nonlinear system—which may exhibit chaos, limit cycles, or other complex behaviors—based solely on a linear analysis. The justification is precisely the exactness we have established: near the equilibrium, the tangent space dynamics dominate, and the linear analysis captures the essential character of nearby trajectories.
+This is a strong local result, not a global one. We are drawing conclusions about behavior near an equilibrium based on the linearized system and the hypotheses of the theorem. The justification is that, close enough to a hyperbolic equilibrium, the tangent-space dynamics dominate the residual terms and capture the essential character of nearby trajectories.
 
 ------------------------------------------------------------------------
 
@@ -264,24 +264,26 @@ For all these cases, generalizations of the tangent space framework exist—diff
 
 ## Conclusion
 
-The central message of this article can be stated simply: nonlinearity does not invalidate superposition—it relocates it.
+The central message of this article can be stated simply: nonlinearity does not give finite trajectories a global superposition law, but smooth systems do have a linear first-order structure at each state.
 
 We began with the observation that nonlinear systems are often described as systems where superposition fails. This characterization, while not incorrect, is incomplete. It obscures the deeper geometric truth that at every point in state space, for every smooth nonlinear system, there exists a tangent space where superposition holds exactly. The failure of global superposition arises not from any local breakdown of linearity, but from the way these tangent spaces vary across the manifold.
 
-This perspective offers both conceptual clarity and practical power. Conceptually, it reveals linearization not as an engineering expedient or a first-order approximation, but as the exact infinitesimal structure of nonlinear dynamics. The tangent space is not approximately linear—it is exactly linear, by construction. The derivative is not almost a linear map—it is a linear map, by definition.
+This perspective offers conceptual clarity. Linearization is the exact first-order differential structure of nonlinear dynamics, while finite-step prediction remains approximate unless the residual is controlled. The derivative is not almost a linear map; it is a linear map by definition.
 
-Practically, this perspective explains why linear techniques work so well for nonlinear systems. LQR succeeds because it exploits exact local structure. Lyapunov's indirect method provides rigorous stability conclusions because the linearization captures the essential character of nearby dynamics. The entire edifice of modern nonlinear control—gain scheduling, feedback linearization, model predictive control—rests on the foundation we have described.
+Practically, this perspective explains why linear techniques can be useful for nonlinear systems. LQR, Lyapunov's indirect method, gain scheduling, feedback linearization, and model predictive control all use local models in different ways. Their validity depends on the assumptions each method imposes, not on a blanket claim that local linearity solves the nonlinear problem.
 
-The geometric picture is worth holding in mind: a trajectory winding through state space, passing through a continuous family of tangent spaces, each providing an exact linear snapshot of the local dynamics. The complexity of nonlinear behavior emerges from how these snapshots fit together—from the curvature and topology of the underlying manifold. But at each instant, in each tangent space, the dynamics are as linear and superposable as any textbook example.
+The geometric picture is worth holding in mind: a trajectory winding through state space, passing through a continuous family of tangent spaces, each providing the first-order linear snapshot of the local dynamics. The complexity of nonlinear behavior emerges from how these snapshots fit together, from the residual terms, and from the curvature, topology, constraints, and mode changes of the underlying system.
 
 This is not an approximation theory. It is the geometric foundation of nonlinear mechanics.
 
 ```{=html}
 <section class="laymans-terms">
+  <h2>
   <button class="laymans-terms-header" aria-expanded="false">
-    <h2>In Layman's Terms</h2>
+    <span class="laymans-terms-header-title">In Layman's Terms</span>
     <span class="laymans-terms-icon">▼</span>
   </button>
+</h2>
   <div class="laymans-terms-content">
     <div class="laymans-terms-inner">
       <p class="laymans-terms-intro">

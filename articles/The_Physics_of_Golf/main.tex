@@ -64,6 +64,9 @@
 \definecolor{constraintgold}{RGB}{180, 140, 30}
 \definecolor{fasciarust}{RGB}{160, 90, 50}
 \definecolor{shaftsilver}{RGB}{140, 140, 160}
+\definecolor{lightblue}{RGB}{173, 216, 230}
+\definecolor{lightyellow}{RGB}{255, 255, 224}
+\definecolor{lightcoral}{RGB}{240, 128, 128}
 
 % ──────────────────────────────────────────────
 % Theorem Environments
@@ -209,7 +212,7 @@ This book exists to answer those questions with mathematical precision, but in a
 
 The central idea is deceptively simple. When you swing a golf club, two fundamentally different kinds of forces are at work. The first kind---we call it \textbf{drift}---is everything that would happen if your muscles went limp mid-swing: momentum carrying the club forward, gravity pulling it down, the shaft springing back from its bend. These are the forces of physics acting on autopilot. The second kind---we call it \textbf{control}---is the direct effect of your muscles applying torque at the joints. The mathematical framework that separates these two is called \emph{control-affine decomposition}, and it is the backbone of this entire book.
 
-Why does this separation matter? Because it reveals something fundamental about the golf swing that decades of traditional biomechanics could not cleanly articulate: \emph{by the time you reach the fastest part of the downswing, the drift forces overwhelm the control forces by a substantial margin---typically 5:1 to 30:1 at the wrist, depending on swing speed and body parameters (Chapter~\ref{ch:05_affine_structure}).} The swing is effectively on autopilot. The outcome was determined earlier, by how you set up the conditions that drift would exploit. Elite golfers are not necessarily stronger; they are better at arranging physics to work in their favor.
+Why does this separation matter? Because it gives a precise way to ask how much of the swing is being produced by the modeled passive dynamics and how much by active generalized torque. In the worked double-pendulum and multibody examples, the late downswing often falls into a high drift-to-control regime; the numerical ratios depend on the chosen model, norm, body parameters, and torque bounds (Chapter~\ref{ch:05_affine_structure}). This does not mean the golfer is passive at impact. It means that many impact conditions must be prepared earlier, while muscular input still has favorable leverage. Elite golfers are not merely stronger; they are often better at arranging the initial and transitional conditions that let physics work in their favor.
 
 This book will take you on a journey from the simplest possible model of a golf swing---a double pendulum, which is just two sticks hinged together---through the constraint forces that silently redirect enormous amounts of energy, through the parallel mechanisms that make the human body a closed kinematic chain, all the way to the flexible shaft and the biological tissues that connect it all together. Along the way, we will not shy away from equations. Every equation in this book is motivated by a physical question that a golfer would care about, and every equation is followed by a plain-language explanation of what it means and why it matters.
 

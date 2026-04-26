@@ -38,7 +38,7 @@ env:
   MAX_ISSUES_PER_RUN: 5
 
 jobs:
-  # ── Dispatcher: try self-hosted first, fall back to cloud ──────────────────
+  # ── Dispatcher: require a local self-hosted runner and fail closed ──────────────────
   pick-runner:
     runs-on: d-sorg-fleet
     timeout-minutes: 2
@@ -57,8 +57,8 @@ jobs:
             echo "runner=d-sorg-fleet" >> $GITHUB_OUTPUT
             echo "Self-hosted runner online - routing locally"
           else
-            echo "runner=ubuntu-latest" >> $GITHUB_OUTPUT
-            echo "No self-hosted runner - using GitHub-hosted"
+            echo "::error::No local self-hosted runner available; failing closed"
+            exit 1
           fi
 
   process-comments:
@@ -75,7 +75,7 @@ jobs:
        github.actor != 'google-labs-jules' &&
        github.actor != 'copilot-pull-request-reviewer[bot]')
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 

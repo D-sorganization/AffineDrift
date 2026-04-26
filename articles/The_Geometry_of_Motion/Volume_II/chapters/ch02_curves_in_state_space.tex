@@ -32,11 +32,12 @@ is most vulnerable to disturbances.
 
 The reader may wonder: \emph{why not simply work in coordinates?} The answer is
 that coordinate-based descriptions mix up properties of the \emph{curve} with
-properties of the \emph{parameterization}. A golf swing executed slowly and the
-same swing executed quickly trace the same curve in configuration space, but
-their coordinate descriptions $\bm{q}(t)$ are entirely different functions. The
-geometric tools we develop here allow us to separate what is intrinsic to the
-motion from what is merely a choice of clock.
+properties of the \emph{parameterization}. A slow practice swing and a
+full-speed swing may trace a similar path in configuration space, but they do
+not trace the same curve in full state space because the velocity components
+are different. The geometric tools we develop here allow us to say precisely
+which claims are about the configuration path, which claims are about timing,
+and which claims require the full state trajectory.
 
 \begin{keyidea}{Intrinsic vs.\ Extrinsic}{intrinsic}
   A trajectory has two kinds of properties:
@@ -143,28 +144,32 @@ direction of the derivative; none is hidden in its magnitude.
   the pure geometry of the curve. In control terms, it answers the question:
   \emph{what does the motion look like if we forget how fast it goes?}
 
-  For a golf swing, the arc-length parameterized trajectory $\traj(s)$
-  describes the spatial \emph{path} of the body through configuration space.
+  For a golf swing, the arc-length parameterized trajectory $\traj(s)$ can
+  describe the spatial \emph{path} of the body through configuration space.
   The timing law $s(t)$---how the golfer moves along this path in real
-  time---is a separate design choice. A slow practice swing and a full-speed
-  competition swing follow the same $\traj(s)$ with different $s(t)$.
+  time---is a separate modeling choice. In full state space, however, changing
+  the timing also changes the velocity coordinates, so the state-space curve
+  must be analyzed with both geometry and speed retained.
 \end{principle}
 
 \begin{remark}{Arc Length in High Dimensions}{high_dim_arc}
   In $\Reals^n$ with the Euclidean metric, arc length is defined exactly as
-  above. When the state space carries a non-Euclidean metric (as it will when
-  we work on configuration manifolds in Chapter~3), the formula
-  \eqref{eq:arc_length} generalizes to
+  above. On a manifold, arc length requires an explicitly chosen Riemannian
+  metric \cite{doCarmo1992}. When the configuration manifold carries such a
+  metric (as it will in Chapter~3), the formula \eqref{eq:arc_length}
+  generalizes to
   \begin{equation}
     L = \int_a^b \sqrt{\traj'(\lambda)^\top \bm{G}(\traj(\lambda))\,
     \traj'(\lambda)} \, \dd\lambda,
   \end{equation}
-  where $\bm{G}(\state)$ is the Riemannian metric tensor (for mechanical systems,
-  this is the mass-inertia matrix). This means ``distance in configuration
-  space'' naturally accounts for how massive different parts of the body are.
-  A degree of freedom connected to a heavy segment contributes more to arc
-  length than one connected to a light segment---exactly as physical intuition
-  suggests.
+  where $\bm{G}$ is the selected metric tensor. For mechanical systems, the
+  kinetic-energy metric on configuration space is represented in local
+  coordinates by the mass-inertia matrix $\bm{M}(\bm{q})$
+  \cite{BulloLewis2004}. That statement is about configuration velocities
+  $\dot{\bm{q}}$, not automatically about arbitrary state-space coordinates
+  $(\bm{q},\dot{\bm{q}})$. Thus a mass-weighted arc length can make high-inertia
+  motions count as longer than low-inertia motions, but only after the modeling
+  metric has been stated.
 \end{remark}
 
 % ══════════════════════════════════════════════
@@ -901,4 +906,3 @@ most practically important results of this book.
   The story of a motion is written the same way.\\[0.3cm]
   Learn to read the curvature, and you read the motion.}
 \end{center}
-

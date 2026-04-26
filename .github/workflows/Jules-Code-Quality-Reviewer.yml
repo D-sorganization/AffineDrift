@@ -40,9 +40,9 @@ jobs:
         id: check
         env:
           GH_TOKEN: ${{ secrets.RUNNER_CHECK_TOKEN }}
-          FLEET_MODE: ${{ vars.FLEET_RUNNER_MODE }}
+          LOCAL_MODE: ${{ vars.LOCAL_RUNNER_MODE }}
         run: |
-          MODE="${FLEET_MODE:-hybrid}"
+          MODE="${LOCAL_MODE:-local}"
           echo "Fleet mode: $MODE"
 
           case "$MODE" in
@@ -50,11 +50,11 @@ jobs:
               echo "runner=d-sorg-fleet" >> $GITHUB_OUTPUT
               echo "Routing to self-hosted fleet (mode=local)"
               ;;
-            cloud)
-              echo "runner=ubuntu-latest" >> $GITHUB_OUTPUT
-              echo "Routing to GitHub-hosted (mode=cloud)"
+            disabled)
+              echo "::error::No local self-hosted runner available; failing closed"
+              exit 1
               ;;
-            hybrid|*)
+            *)
               AVAILABLE=$(gh api /orgs/${{ github.repository_owner }}/actions/runners \
                 --jq '[.runners[] | select(.status == "online") | select(.busy == false) | select(.labels[].name == "d-sorg-fleet")] | length' \
                 2>/dev/null || echo "0")
@@ -62,8 +62,8 @@ jobs:
                 echo "runner=d-sorg-fleet" >> $GITHUB_OUTPUT
                 echo "$AVAILABLE idle fleet runner(s) - routing locally"
               else
-                echo "runner=ubuntu-latest" >> $GITHUB_OUTPUT
-                echo "No idle fleet runners - falling back to GitHub-hosted"
+                echo "::error::No local self-hosted runner available; failing closed"
+                exit 1
               fi
               ;;
           esac
@@ -72,7 +72,7 @@ jobs:
     runs-on: self-hosted
     needs: pick-runner
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -82,12 +82,12 @@ jobs:
 
       - uses: actions/setup-node@v6
         with:
-          node-version: "20"
+          node-version: "22"
 
       - name: Install Dependencies
         run: |
           pip install -r requirements.txt || true
-          npm install -g @google/jules
+          npm install -g @google/jules@latest
 
       - name: Gather Git History
         id: history

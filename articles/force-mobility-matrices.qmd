@@ -14,11 +14,11 @@ format:
 ::: {.abstract-section}
 ## Abstract
 
-In the biomechanics of the golf swing, the force ellipsoid and mobility ellipsoid 
-provide a complete geometric description of how easily the club can move and how 
-strongly the body can resist or transmit force at any instant.  
-These ellipsoids are derived from the Jacobian of the multibody system and reveal 
-precise directions of high mobility, low mobility, high force capability, and low 
+In a specified golf-swing model, the force ellipsoid and mobility ellipsoid
+provide a geometric description of how easily the club can move and how
+strongly the modeled linkage can resist or transmit force at an instant.
+These ellipsoids are derived from the Jacobian of the multibody system and identify
+model-dependent directions of high mobility, low mobility, high force capability, and low
 force capability.  
 This article presents a clear, self-contained explanation of these concepts using 
 the classical double pendulum and the mechanical advantage of an inclined plane 
@@ -29,10 +29,12 @@ as intuition-building analogies.
 ```{=html}
 <!-- Critics' Comments Section - Skeptical perspectives and counterarguments -->
 <section class="critics-comments">
+  <h2>
   <button class="critics-comments-header" aria-expanded="false">
-    <h2>Critics' Comments</h2>
+    <span class="critics-comments-header-title">Critics' Comments</span>
     <span class="critics-comments-icon">💬</span>
   </button>
+</h2>
   <div class="critics-comments-content">
     <div class="critics-comments-inner">
       <p class="critics-intro">
@@ -103,13 +105,13 @@ These instantaneous capabilities are captured compactly by two geometric objects
 
 Both ellipsoids arise directly from the Jacobian matrix of the system, and they 
 are geometric duals of one another.  
-Understanding these ellipsoids reveals why certain phases of the swing offer great 
-mechanical leverage while others offer almost none.
+Understanding these ellipsoids helps explain why certain modeled configurations offer stronger
+mechanical leverage than others.
 
 ::: {.callout-note}
 ## Connection to AffineDrift Framework: The "Effective Plant"
 
-In the broader context of nonlinear control, these ellipsoids define the instantaneous "Effective Plant"—the mechanical hardware through which the golfer's intent must pass. The shape of the **mobility ellipsoid** directly informs the **Drift-Control Ratio (DCR)**: directions of high mobility are where the system is most susceptible to passive drift ($f(x)$), requiring little input to move but offering little resistance to inertial fling. Conversely, the **force ellipsoid** dictates where the "Control Cone" is strongest. A "collapsed" mobility ellipsoid in a specific direction (low mobility) implies an enormous capacity to transmit force in that same direction, a property elite golfers exploit to stabilize the clubface at impact.
+In the broader context of nonlinear control, these ellipsoids describe one part of the instantaneous "Effective Plant": the modeled mechanical pathway through which intent is expressed as force or motion. The shape of the **mobility ellipsoid** can inform **Drift-Control Ratio (DCR)** analysis because high-mobility directions are often directions where small joint motion produces large task-space motion. Conversely, the **force ellipsoid** identifies directions where the linkage can transmit larger reaction forces in the model. Whether golfers exploit a specific ellipsoid alignment at impact is a hypothesis that requires measured swing data.
 :::
 
 ## The Jacobian: The Mapping Between Joint Space and Club Motion
@@ -149,14 +151,14 @@ This produces an ellipsoid in task space whose principal axes represent:
     
 - directions of low mobility (joint motion produces little club motion).
 
-In the context of the unified control-affine derivation ($\dot{x} = f(x) + g(x)u$) presented in Part 1, this ellipsoid is the geometric representation of the input efficacy term $H_{qq} B(q)$. The principal axes of the mobility ellipsoid correspond directly to the directions where the input vector field $g(x)$ has the greatest magnitude. Consequently, these are the directions where the golfer has the most *agency* to change the path, but also—paradoxically—where the system is most susceptible to being steered off-course by passive drift.
+In the context of the control-affine derivation ($\dot{x} = f(x) + g(x)u$) presented in Part 1, this ellipsoid is a geometric representation of input efficacy in the chosen model. The principal axes of the mobility ellipsoid correspond to directions where the input map can produce larger task-space motion for a given joint-rate constraint. They should not be interpreted as a complete measure of biological agency, because muscle capacity, timing, noise, and inertia are not fully captured by the kinematic Jacobian alone.
 
 These directions change continuously throughout the golf swing.  
-Near impact, the club has extremely high mobility in its tangential direction, 
-explaining why even tiny joint motions can dramatically alter clubhead speed.
+Near impact, the model predicts high tangential mobility,
+which is one reason small joint motions can have large task-space effects.
 
 **Synthesis: Drift Dominance**
-This geometric mobility is the kinematic root of **Drift Dominance**. As the mobility ellipsoid elongates along the tangential path, the system's "Inertial Memory" (accumulated momentum) dominates. The golfer cannot "steer" effectively in high-mobility directions because the control input ($g(x)u$) is dwarfed by the massive passive dynamics ($f(x)$) already present in that subspace.
+This geometric mobility is one kinematic contributor to **Drift Dominance** in the model. As the mobility ellipsoid elongates along the tangential path, accumulated momentum can become large relative to available control. The resulting "steering" limit is a model prediction that should be separated from direct claims about a golfer's perception or intent.
 
 ## The Force Ellipsoid
 
@@ -183,7 +185,7 @@ Its principal axes represent:
     (low constraint).
 
 **Synthesis: Intentional Constraint Collapse**
-The duality of these ellipsoids explains the mechanism of **Intentional Constraint Collapse**. By orienting the body such that the force ellipsoid's major axis aligns with the critical stability vectors (e.g., clubface normal), the golfer utilizes the skeleton's geometric stiffness rather than active muscle torque to stabilize the club. This "collapses" the mobility in that direction, effectively turning the linkage into a solid structure at the moment of impact without requiring infinite muscular effort.
+The duality of these ellipsoids offers one possible mechanical interpretation of **Intentional Constraint Collapse**. If a body-club configuration aligns high force-transmission directions with impact-relevant loads, the model predicts greater passive resistance in those directions. Whether elite golfers reliably create this alignment, and whether it stabilizes the clubface in measured swings, remains an empirical question.
 
 ## The Double Pendulum Analogy
 
@@ -313,7 +315,7 @@ The force and mobility ellipsoids are more than geometric curiosities—they def
 
 This is the essence of drift dominance: near impact, when the club has extremely high tangential mobility (a tiny wrist adjustment creates huge clubhead motion), the system is most susceptible to being steered off course by its own momentum. The golfer cannot "steer" effectively in high-mobility directions because the control input is dwarfed by the massive passive forces already present.
 
-Conversely, in low-mobility directions, the force ellipsoid bulges outward—the golfer has tremendous "structural stiffness" but cannot move easily. This is where stability lives. Elite golfers exploit this duality by arranging their bodies at impact so that the force ellipsoid's major axis aligns with the critical stability vectors (clubface normal), allowing the skeleton's geometry to stabilize the club without active muscular effort.
+Conversely, in low-mobility directions, the force ellipsoid bulges outward: the model predicts greater structural resistance but less ease of motion. This is where passive stability may arise. The stronger claim that elite golfers deliberately exploit a particular ellipsoid alignment should be treated as a testable hypothesis, not as a conclusion established by this article.
 
 ## Conclusion
 
@@ -325,11 +327,7 @@ resists force most strongly along the links.
 This illustrates the universal rule: mobility and force capabilities are
 geometric duals arising from the Jacobian and its constraints.  
 
-These ellipsoids explain why release occurs naturally, why impact loads joints, 
-and why certain swing positions feel "strong" or "weak" independent of muscle 
-strength.  
-Ultimately, they reveal that the geometry of the body--club system, not muscular
-effort, determines what motions and forces are possible at each instant.
+These ellipsoids help explain why release, impact loading, and mechanically strong or weak positions can appear in a modeled swing. They do not replace physiological analysis: muscle capacity, tissue compliance, timing, and measurement uncertainty still determine what motions and forces are possible for a real golfer.
 
 :::{.callout-warning}
 ## Scope and Limitations
@@ -345,10 +343,12 @@ effort, determines what motions and forces are possible at each instant.
 ```{=html}
 <!-- In Layman's Terms Section - Simplified overview for non-technical readers -->
 <section class="laymans-terms">
+  <h2>
   <button class="laymans-terms-header" aria-expanded="false">
-    <h2>In Layman's Terms</h2>
+    <span class="laymans-terms-header-title">In Layman's Terms</span>
     <span class="laymans-terms-icon">▼</span>
   </button>
+</h2>
   <div class="laymans-terms-content">
     <div class="laymans-terms-inner">
       <p class="laymans-terms-intro">

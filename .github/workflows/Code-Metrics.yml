@@ -19,7 +19,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # ── Dispatcher: try self-hosted first, fall back to cloud ──────────────────
+  # ── Dispatcher: require a local self-hosted runner and fail closed ──────────────────
   pick-runner:
     runs-on: d-sorg-fleet
     timeout-minutes: 2
@@ -38,8 +38,8 @@ jobs:
             echo "runner=d-sorg-fleet" >> $GITHUB_OUTPUT
             echo "Self-hosted runner online - routing locally"
           else
-            echo "runner=ubuntu-latest" >> $GITHUB_OUTPUT
-            echo "No self-hosted runner - using GitHub-hosted"
+            echo "::error::No local self-hosted runner available; failing closed"
+            exit 1
           fi
 
   complexity-metrics:
@@ -47,7 +47,7 @@ jobs:
     runs-on: self-hosted
     needs: pick-runner
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - name: Setup Python
         uses: actions/setup-python@v6
@@ -126,12 +126,12 @@ jobs:
     runs-on: self-hosted
     needs: pick-runner
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: "20"
+          node-version: "22"
 
       - name: Install jscpd
         run: npm install -g jscpd
@@ -202,7 +202,7 @@ jobs:
     name: Metrics Summary
     needs: [complexity-metrics, duplication-metrics]
     if: always()
-    runs-on: d-sorg-fleet
+    runs-on: ubuntu-latest
     steps:
       - name: Final Summary
         run: |

@@ -37,14 +37,14 @@ The golfer--club--shaft system is a coupled rigid--flexible multibody chain:
   (Euler--Bernoulli bending modes).
 - **Clubhead**: Rigid body attached to the shaft tip.
 
-The state vector is $\x = (\q, \vec\eta, \dot\q, \dot{\vec\eta}) \in \R^{2(n+m)}$,
+The state vector is $\x = (\q, \vec\eta, \dot{\q}, \dot{\vec\eta}) \in \R^{2(n+m)}$,
 living on the tangent bundle of the configuration manifold.
 
 For a 3-DOF simplified model (shoulder, elbow, wrist), we parameterize:
 \begin{align}
 \q &= (q_1, q_2, q_3)^\T \quad \text{(shoulder, elbow, wrist angles in radians)} \\
 \vec\eta &= (\eta_1, \eta_2)^\T \quad \text{(first two shaft bending modes)} \\
-\x &= (\q^\T, \vec\eta^\T, \dot\q^\T, \dot{\vec\eta}^\T)^\T \in \R^{10}.
+\x &= (\q^\T, \vec\eta^\T, \dot{\q}^\T, \dot{\vec\eta}^\T)^\T \in \R^{10}.
 \end{align}
 
 
@@ -209,7 +209,9 @@ M_{qq}-M_{q\eta}M_{\eta\eta}^{-1}M_{\eta q} = \begin{bmatrix}
 \end{bmatrix}.
 \end{equation}
 
-\begin{remark}[Sign Error / Singularity Warning]
+::: {.callout-note title="Remark"}
+**Sign Error / Singularity Warning**
+
 The $(3,3)$ entry $-0.67 < 0$ implies this matrix is \textbf{not} positive definite.
 This indicates either a sign error in the numerical example or that the chosen
 configuration is near a kinematic singularity where $M_{\eta\eta}^{-1}$ is
@@ -217,7 +219,7 @@ ill-conditioned. For a positive definite Schur complement (required for $H_{qq}$
 be well-defined as a mobility tensor), all diagonal entries and all eigenvalues must
 be positive. In practice, one should verify these values numerically for the actual
 robot configuration before interpreting $H_{qq}$.
-\end{remark}
+:::
 
 Inverting to get $H_{qq}$:
 \begin{equation}
@@ -258,8 +260,8 @@ to store and release elastic energy.
 
 The coupled Lagrangian yields the control-affine form:
 \begin{equation}
-\dot\x = \underbrace{\begin{bmatrix}
-\dot\q \\ \dot{\vec\eta} \\
+\dot{\x} = \underbrace{\begin{bmatrix}
+\dot{\q} \\ \dot{\vec\eta} \\
 H_{qq}(q_1 + q_2 + q_3 - g_q) \\
 \Gamma H_{qq}(q_1 + q_2 + q_3 - g_q)
 \end{bmatrix}}_{f(\x)}
@@ -278,11 +280,11 @@ where:
 - $B(\q) = I_3$ maps control inputs (shoulder, elbow, wrist torques) to generalized
   joint forces;
 - $g_q$ includes gravitational and elastic potential energy terms;
-- $\dot\q$ and $\dot{\vec\eta}$ are velocities in the state vector.
+- $\dot{\q}$ and $\dot{\vec\eta}$ are velocities in the state vector.
 
 \subsubsection{Drift Acceleration at Mid-Downswing}
 
-At the configuration above with velocities $\dot\q = (50, -100, -80)^\T$ rad/s and
+At the configuration above with velocities $\dot{\q} = (50, -100, -80)^\T$ rad/s and
 $\dot{\vec\eta} = (0.5, -0.3)^\T$ rad/s (shaft bending in progress), the drift
 acceleration in joint coordinates is:
 
@@ -334,7 +336,7 @@ are model-dependent and illustrative):
 \centering
 \begin{tabular}{@{}lccccl@{}}
 \toprule
-**Phase** & **Time (s)** & $\rho$ & $\dot\q$ (rad/s) & Club speed (m/s) & **Dynamics** \\
+**Phase** & **Time (s)** & $\rho$ & $\dot{\q}$ (rad/s) & Club speed (m/s) & **Dynamics** \\
 \midrule
 Backswing & $[0.0, 0.3]$ & $0.5$ & $0 \to 100$ & $0 \to 15$ & Muscles accelerate; drift small \\
 Transition & $[0.3, 0.45]$ & $1.0$ & $100$ & $15$ & Drift and control balanced \\
@@ -351,7 +353,7 @@ state at each swing instant. For a 0.1-second window in the downswing (say, $t \
 we compute the ZTCF trajectory:
 
 \begin{equation}
-\dot\x_{\text{ZTCF}} = f(\x_{\text{ZTCF}}), \quad \x_{\text{ZTCF}}(0.6) = \x_{\text{actual}}(0.6).
+\dot{\x}_{\text{ZTCF}} = f(\x_{\text{ZTCF}}), \quad \x_{\text{ZTCF}}(0.6) = \x_{\text{actual}}(0.6).
 \end{equation}
 
 Numerically integrating (Runge--Kutta 4th order, 1~ms time step):
@@ -382,7 +384,7 @@ energy release.
 The drift acceleration includes inertial forces (centrifugal/Coriolis from accumulated
 velocities), gravity, and elastic restoring forces from shaft deformation:
 \begin{equation}
-a_{\text{drift}} = -H\!\left[\mat{C}\dot\q_{\text{sys}} + \vec{g}
+a_{\text{drift}} = -H\!\left[\mat{C}\dot{\q}_{\text{sys}} + \vec{g}
 + \begin{pmatrix} 0 \\ K_s\vec\eta + C_s\dot{\vec\eta} \end{pmatrix}\right].
 \label{eq:ch8:drift-golf}
 \end{equation}
@@ -454,7 +456,7 @@ and any violation of this order degrades performance.
 
 
 For a robot manipulator tracking a task-space trajectory $\vec{y}_d(t)$ with task
-Jacobian $J(\q)$ such that $\dot{\vec{y}} = J(\q)\dot\q$, the pullback metric from
+Jacobian $J(\q)$ such that $\dot{\vec{y}} = J(\q)\dot{\q}$, the pullback metric from
 task space to joint space is
 \begin{equation}
 \mat{M}(\q) = J(\q)^\T\mat{W}\!\bigl(\vec{y}\bigr)\,J(\q),
@@ -1015,7 +1017,7 @@ where:
 
 The system is control-affine with drift:
 \begin{equation}
-\dot\x = \begin{bmatrix}
+\dot{\x} = \begin{bmatrix}
 v\cos\psi \\ v\sin\psi \\ (v/L)\tan\delta \\ 0
 \end{bmatrix} + \begin{bmatrix}
 0 & 0 \\ 0 & 0 \\ 0 & v/L \sec^2\delta \\ 1 & 0
@@ -1133,23 +1135,23 @@ This section summarizes the steps for applying the framework to a new applicatio
    that fully parameterize the system's position and orientation.
 2. **Write the kinetic and potential energy:**
    \begin{equation}
-   T(\q, \dot\q) = \frac{1}{2}\dot\q^\T M(\q)\dot\q, \quad V(\q).
+   T(\q, \dot{\q}) = \frac{1}{2}\dot{\q}^\T M(\q)\dot{\q}, \quad V(\q).
    \end{equation}
 3. **Compute the Lagrangian:** $L = T - V$.
 4. **Apply Lagrange equations with control forces:**
    \begin{equation}
-   \frac{d}{dt}\frac{\partial L}{\partial\dot\q} - \frac{\partial L}{\partial\q} = \tau,
+   \frac{d}{dt}\frac{\partial L}{\partial\dot{\q}} - \frac{\partial L}{\partial\q} = \tau,
    \end{equation}
    where $\tau$ is the generalized force vector.
 5. **Solve for accelerations:** Invert the mass matrix to write
    \begin{equation}
-   \ddot\q = M(\q)^{-1}[\tau + f_{\text{nonlinear}}(\q, \dot\q)].
+   \ddot{\q} = M(\q)^{-1}[\tau + f_{\text{nonlinear}}(\q, \dot{\q})].
    \end{equation}
 6. **Identify control inputs:** Decompose $\tau$ into actuated $\tau = B(\q)\,\uvec$ and
    unactuated components.
-7. **Augment to first-order form:** Define $\x = (\q, \dot\q)$ and write
+7. **Augment to first-order form:** Define $\x = (\q, \dot{\q})$ and write
    \begin{equation}
-   \dot\x = f(\x) + G(\x)\,\uvec.
+   \dot{\x} = f(\x) + G(\x)\,\uvec.
    \end{equation}
 8. **Verify control-affine structure:** Ensure $G(\x)$ does not depend on $\uvec$.
 
@@ -1211,7 +1213,7 @@ Once the Riccati solution $\mat{S}_k$ or $\mat{S}$ is computed, verify contracti
 leading to numerical errors and fragile gains.
 
 **Remedies:**
-- Rescale coordinates: use dimensionless variables $\tilde\q = \q/\q_{\text{ref}}$.
+- Rescale coordinates: use dimensionless variables $\tilde{\q} = \q/\q_{\text{ref}}$.
 - Add regularization: $\mat{S} \to \mat{S} + \varepsilon\,\mat{I}$.
 - Use higher-precision arithmetic (e.g., quadruple precision for prototyping).
 
@@ -1395,7 +1397,7 @@ using the following protocol:
 
 1. **Run the system under optimal control:** Record $\x^{\text{opt}}(t)$ and
    $\uvec^{\text{opt}}(t)$ over the trajectory.
-2. **Simulate the ZTCF:** Integrate $\dot\x = f(\x)$ with $u = 0$ starting from
+2. **Simulate the ZTCF:** Integrate $\dot{\x} = f(\x)$ with $u = 0$ starting from
    the same initial condition, obtaining $\x^{\text{ZTCF}}(t)$.
 3. **Compute the difference:**
    \begin{equation}
@@ -1415,7 +1417,7 @@ using the following protocol:
    \end{equation}
 
 \paragraph{Example protocol (golf swing):}
-Given motion-capture data with joint markers, one can estimate $\dot\q(t)$ and $\ddot\q(t)$
+Given motion-capture data with joint markers, one can estimate $\dot{\q}(t)$ and $\ddot{\q}(t)$
 via filtered numerical differentiation (e.g., Savitzky--Golay). Combined with a segmental
 mass matrix from published anthropometric data, inverse dynamics yields the required
 acceleration decomposition. The expected qualitative behavior is:
@@ -1446,11 +1448,11 @@ $\vec\eta = (\eta_1, \eta_2, \ldots)^T$, where only the first few modes carry si
 energy. The modal equations of motion are:
 \begin{equation}
 M_{\eta\eta}\ddot{\vec\eta} + C_{\eta}\dot{\vec\eta} + K_{\eta}\vec\eta
-= -M_{\eta q}\ddot\q,
+= -M_{\eta q}\ddot{\q},
 \label{eq:ch8:shaft-modal}
 \end{equation}
 where $K_{\eta}$ is the modal stiffness matrix, $C_{\eta}$ is modal damping, and
-the right-hand side $-M_{\eta q}\ddot\q$ is the inertial forcing from joint accelerations.
+the right-hand side $-M_{\eta q}\ddot{\q}$ is the inertial forcing from joint accelerations.
 The shaft modes are driven entirely by the coupling term $M_{\eta q}$---they are
 underactuated degrees of freedom with no direct input.
 
@@ -1465,12 +1467,12 @@ E_{\text{shaft}}(t) = \frac{1}{2}\vec\eta(t)^T K_\eta \vec\eta(t)
 
 The energy flow is governed by the work done by the coupling forces:
 \begin{equation}
-\dot{E}_{\text{shaft}} = -\dot{\vec\eta}^T M_{\eta q}\ddot\q
+\dot{E}_{\text{shaft}} = -\dot{\vec\eta}^T M_{\eta q}\ddot{\q}
 - \dot{\vec\eta}^T C_\eta \dot{\vec\eta}.
 \label{eq:ch8:shaft-power}
 \end{equation}
 
-When the handle accelerates ($\ddot\q$ large and aligned with the coupling $M_{\eta q}$),
+When the handle accelerates ($\ddot{\q}$ large and aligned with the coupling $M_{\eta q}$),
 energy flows from the rigid segments into the shaft (loading). When the handle decelerates,
 energy flows back out (unloading), contributing to clubhead velocity at impact. The
 timing of this exchange depends on the relationship between modal natural frequencies

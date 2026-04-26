@@ -129,7 +129,7 @@
           <div class="ad-splash-progress-track">
             <div class="ad-splash-progress-bar" id="ad-splash-progress-bar"></div>
           </div>
-          <div class="ad-splash-status" id="ad-splash-status">Initializing...</div>
+          <div class="ad-splash-status" id="ad-splash-status" aria-live="polite" aria-atomic="true">Initializing...</div>
         </div>
 
         <div class="ad-splash-hints" id="ad-splash-hints">
@@ -386,18 +386,18 @@
         '.main-content-area, #quarto-document-content, .home-content'
       );
 
-      contentAreas.forEach(function (area) {
+      for (const area of contentAreas) {
         if (!area.classList.contains('ad-skeleton-ready')) {
           area.classList.add('ad-skeleton-container');
         }
-      });
+      }
 
       // Remove skeleton loading after page is revealed
       document.addEventListener('affinedrift:ready', function () {
-        contentAreas.forEach(function (area) {
+        for (const area of contentAreas) {
           area.classList.remove('ad-skeleton-container');
           area.classList.add('ad-skeleton-ready');
-        });
+        }
       });
     });
   }
@@ -426,9 +426,9 @@
     };
 
     console.group('%c AffineDrift Performance Metrics', 'color: #3282b8; font-weight: bold;');
-    Object.entries(summary).forEach(function ([key, value]) {
+    for (const [key, value] of Object.entries(summary)) {
       console.info(`%c${key}: %c${value}`, 'color: #666;', 'color: #0f4c75; font-weight: bold;');
-    });
+    }
     console.groupEnd();
 
     // Store metrics in window for debugging

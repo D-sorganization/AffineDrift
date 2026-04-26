@@ -27,11 +27,11 @@ bibliography: references.bib
 ::: {.callout-note appearance="minimal"}
 ## Thesis Abstract
 
-Nonlinear dynamical systems are commonly characterized as systems where the superposition principle does not hold. This thesis challenges that characterization, arguing that it obscures a fundamental mathematical fact: **at each fixed state (and fixed contact/constraint mode), the instantaneous mapping from inputs to state derivatives is exactly linear in the tangent space, and this exact local superposition integrates to yield exact variation accumulation over finite time intervals**. We do not claim that motion trajectories superpose—nonlinear flows are generally not additive. Superposition here refers to the instantaneous tangent-space structure.
+Nonlinear dynamical systems are commonly characterized as systems where the superposition principle does not hold. This thesis challenges that characterization, arguing that it obscures a more precise mathematical fact: **at each fixed state (and fixed contact/constraint mode), the instantaneous mapping from inputs to state derivatives is exactly linear in the tangent space, and the associated variational equations accumulate perturbations linearly along a chosen reference trajectory**. We do not claim that motion trajectories superpose—nonlinear flows are generally not additive. Superposition here refers to the instantaneous tangent-space structure.
 
-We develop this claim rigorously across three interconnected frameworks. Part I establishes that linearization is not an approximation but the exact infinitesimal structure of smooth dynamics—the derivative of a vector field is, by definition, a linear map operating on a linear tangent space. Part II demonstrates that integration preserves this exact superposition, yielding a state transition operator that accumulates variations linearly. Part III connects these geometric foundations to optimal control through Hamiltonian structures and adjoint dynamics.
+We develop this claim across three interconnected frameworks. Part I establishes that linearization is not an approximation but the exact infinitesimal structure of smooth dynamics—the derivative of a vector field is, by definition, a linear map operating on a linear tangent space. Part II shows how the linear variational system propagates perturbations along a reference trajectory. Part III connects these geometric foundations to optimal control through Hamiltonian structures and adjoint dynamics.
 
-This unified perspective explains why linear control techniques succeed for nonlinear plants, why stability analysis via linearization yields rigorous conclusions, and provides the geometric foundation for modern nonlinear control theory. We illustrate with worked examples including the pendulum, demonstrate connections to LQR and Lyapunov stability, and delineate scope of validity. Throughout, we distinguish between local exactness (in tangent spaces) and global approximation (due to manifold curvature), with residuals quantified as geometric rather than modeling errors.
+This unified perspective helps explain why linear control techniques can remain useful for nonlinear plants and why linearization can yield rigorous local conclusions once the hypotheses are stated explicitly. We illustrate with worked examples including the pendulum, demonstrate connections to LQR and Lyapunov stability, and delineate scope of validity. Throughout, we distinguish between local exactness (in tangent spaces) and finite-scale approximation limits (due to curvature, mode changes, and model scope), with residuals treated as geometric terms that must still be bounded in context.
 
 **Keywords:** Tangent spaces, linearization, variational dynamics, state transition operator, Hamiltonian mechanics, optimal control, differential geometry
 :::
@@ -39,7 +39,7 @@ This unified perspective explains why linear control techniques succeed for nonl
 :::{.callout-note}
 ## A Note on "Exactness"
 
-Throughout this thesis, "exact" means *exact in the infinitesimal limit*. The tangent space captures the system's instantaneous behavior with complete mathematical fidelity — this is the definition of the derivative, not an approximation. For finite perturbations, second-order residuals arise with magnitude $O(\|\delta x\|^2)$. These residuals are quantified in [Part IV: Residual-Aware Control](Advanced/Residual-Aware_Control.html) and can be bounded and managed algorithmically.
+Throughout this thesis, "exact" means *exact in the infinitesimal limit*. The tangent space captures the system's instantaneous behavior with complete mathematical fidelity — this is the definition of the derivative, not an approximation. For finite perturbations, second-order residuals arise with magnitude $O(\|\delta x\|^2)$. [Part IV: Residual-Aware Control](Advanced/Residual-Aware_Control.html) discusses how such residual terms might be bounded and used in algorithm design when the needed smoothness and estimation assumptions hold.
 :::
 
 \newpage
@@ -57,7 +57,7 @@ This statement, while true in a global sense, obscures a more precise and mathem
 ::: {.callout-important}
 ## Central Claim
 
-**At each fixed state and fixed contact/constraint mode, nonlinear systems admit exact linear superposition in the instantaneous tangent-space mapping, and this infinitesimal superposition integrates to exact variation accumulation.**
+**At each fixed state and fixed contact/constraint mode, nonlinear systems admit exact linear structure in the instantaneous tangent-space mapping; along a chosen reference trajectory, the associated variational equations accumulate perturbations linearly.**
 :::
 
 ::: {.callout-warning}
@@ -72,7 +72,7 @@ We will never claim that *motion trajectories* superpose in nonlinear systems. T
 The term "tangent hyperplane" is used colloquially throughout this series to evoke the geometric intuition of a flat structure touching a curved space. More precisely, the relevant geometric object is an **affine subspace** of the tangent space. When the input distribution $\text{span}\{g_i(x)\}$ has codimension greater than 1, the reachable set within the tangent space is an affine subspace, not strictly a hyperplane (which implies codimension 1). We retain the term for accessibility while noting this distinction for mathematical precision.
 :::
 
-The purpose of this thesis is to develop that statement rigorously. The argument presented here is not heuristic, approximate, or model-dependent. It is a direct consequence of the definition of derivatives, limits, smooth manifolds, and integration—the same mathematical foundations that underpin calculus itself.
+The purpose of this thesis is to develop that statement rigorously. The differential-geometric core is not heuristic, but its mechanics interpretations still depend on the model class, smoothness assumptions, and contact mode being held fixed. Within that scope, the argument rests on the same calculus and variational machinery used throughout modern nonlinear dynamics.
 
 ::: {.callout-warning}
 ## What This Is **NOT**
@@ -2892,10 +2892,12 @@ The practical payoff is substantial: it explains why LQR works, why Lyapunov ana
 
 ```{=html}
 <section class="laymans-terms">
+  <h2>
   <button class="laymans-terms-header" aria-expanded="false">
-    <h2>In Layman's Terms</h2>
+    <span class="laymans-terms-header-title">In Layman's Terms</span>
     <span class="laymans-terms-icon">▼</span>
   </button>
+</h2>
   <div class="laymans-terms-content">
     <div class="laymans-terms-inner">
       <p class="laymans-terms-intro">

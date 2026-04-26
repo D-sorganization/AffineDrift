@@ -151,29 +151,49 @@ The total "drift" torque (what the system produces passively) is split into:
 
 For a golfer, this distinction matters because gravity is always present (and predictable), while Coriolis effects depend on how fast you're moving. A faster downswing creates stronger Coriolis whipping.
 
-## The Drift-Control Ratio (DCR) and the Blow-Up in Late Downswing
+## The Drift-Control Ratio (DCR) and Late-Downswing Authority
 
 ::: {.callout-note}
 ## Drift-Control Ratio (DCR)
 
-At any time during the swing, the **Drift-Control Ratio (DCR)** quantifies the relative magnitudes of passive and active torques. For a single joint:
+At any time during the swing, the **Drift-Control Ratio (DCR)** compares modeled drift against bounded modeled control under an explicit norm or weighting. In the raw textbook framing, it is a ratio of passive to active torques; in the more general control-authority framing below, the same idea is expressed as drift magnitude relative to bounded control magnitude. Consistent with Chapter @sec-05_affine_structure, use:
 
 $$
-\text{DCR} = \frac{|\bm{\tau}_{\text{drift}}|}{|\bm{\tau}_{\text{input}}|}
+\mathrm{DCR}_{\bm{W}}(\bm{x};u_{\max})
+=
+\frac{\lVert \bm{W}\bm{f}(\bm{x}) \rVert}
+{\max_{\lVert \bm{u}\rVert \le u_{\max}} \lVert \bm{W}\bm{G}(\bm{x})\bm{u} \rVert + \varepsilon}
 $$
 
-When DCR $\approx 1$, passive and active torques are comparable. When DCR $\gg 1$, passive dynamics dominate; the muscle input is tiny relative to what physics produces.
+Here $\bm{W}$ states which coordinates or acceleration block are being compared, $u_{\max}$ states the admissible torque bound, and $\varepsilon$ prevents division by zero. A single-joint torque ratio is a useful special case only after those modeling choices are fixed.
+
+When DCR $\approx 1$, modeled drift and bounded control have comparable magnitude under the chosen weighting. When DCR $\gg 1$, modeled drift dominates that comparison; it does not imply that the golfer is passive or that muscle activation is absent.
 
 :::
 
-### The DCR Tells You Who's in Charge {#constraint:dcr_meaning}
-The Drift-Control Ratio is a *control authority metric*. It asks: **How much is the system being driven by its own physics vs. by active muscle control?**
+::: {.callout-warning}
+## Minimum Reporting Standard for DCR
 
-- **Early backswing (DCR $\approx 0.5$--$1$):** Muscles and gravity are comparable. Active control is substantial.
-- **Early downswing (DCR $\approx 2$--$5$):** Gravity and Coriolis start to dominate. Muscles apply restraint.
-- **Late downswing (DCR $\approx 50$--$300$):** Passive dynamics overwhelm muscular control. The system is ballistically committed.
+Any numerical DCR claim should report enough information for another reader to reproduce or challenge it:
 
-The late-downswing blow-up is the most shocking and revealing finding from ZTCF analysis.
+1. the state vector, coordinate convention, and whether $\bm{f}$ and $\bm{G}$ are expressed in generalized coordinates, task coordinates, or acceleration coordinates;
+2. the weighting matrix $\bm{W}$, norm, and small denominator regularizer $\varepsilon$;
+3. the admissible torque or activation bound $u_{\max}$ and whether it is joint-specific, time-varying, or muscle-model-derived;
+4. the anthropometric, club, shaft, contact, and damping parameters used by the model; and
+5. a sensitivity check showing whether the qualitative conclusion survives plausible perturbations of $\bm{W}$, $u_{\max}$, and the inertial parameters.
+
+Without these declarations, a value such as DCR $=10$ should be read only as an illustrative scale, not as an experimentally established phase boundary.
+
+:::
+
+### DCR as a Control-Authority Diagnostic {#constraint:dcr_meaning}
+The Drift-Control Ratio is a *model-dependent control-authority diagnostic*. It asks: **How large is the modeled drift field compared with the control acceleration available under the stated torque bound and weighting?**
+
+- **Early backswing (low DCR):** modeled control has substantial leverage over the subsequent state.
+- **Early downswing (moderate DCR):** gravity, inertia, and Coriolis terms become comparable with bounded control.
+- **Late downswing (high DCR):** modeled drift can substantially exceed late corrective authority, so impact conditions are more sensitive to earlier state preparation than to last-instant intervention.
+
+The increase in DCR during the downswing is a hypothesis to evaluate in a specified model, not a universal numerical law.
 
 **Example: The DCR Growth in a Typical Swing**
 
@@ -211,12 +231,12 @@ Even in this toy model, the passive term still grows quadratically with speed. I
 
 **Interpretation:** In this simplified interpretation, the main point is the quadratic scaling of passive torque with velocity. The late downswing still demands careful timing, but this toy example should not be read as a literal hundreds-of-Nm Coriolis estimate.
 
-### Why the DCR Blows Up {#inplain:dcr_blowup_reason}
-Centrifugal and Coriolis torques scale with the *square of velocity*. Muscular torques scale with muscle activation, which is more or less constant. So as you accelerate the downswing—spinning your hips faster, extending your arm faster—the passive torques grow quadratically while muscular torques grow linearly (if at all; often muscles are relaxing, not activating).
+### Why the DCR Can Rise Quickly {#inplain:dcr_blowup_reason}
+Centrifugal and Coriolis torques scale with the *square of velocity*. Muscular torque is bounded by physiology, activation history, and force--velocity effects. So as the downswing accelerates--spinning the hips faster and extending the arm faster--the modeled drift terms can grow rapidly while late corrective torque remains bounded.
 
-This means there's a *threshold velocity* beyond which the swing becomes ballistic. Once you cross that threshold, further speed comes from passive dynamics, not from muscular effort.
+This means a specified model can have a threshold beyond which late correction has little leverage. That threshold is not universal; it depends on body parameters, club parameters, the selected norm, and the torque bound.
 
-Elite golfers don't swing faster because they have stronger muscles. They swing faster because they've optimized the *initial conditions* (setup and backswing) and the *timing of control inputs* to let passive physics accelerate the system as much as possible while maintaining control over direction.
+Elite golfers do not swing faster only because they have stronger muscles. They prepare *initial conditions* (setup and backswing) and *timing of control inputs* that let passive physics assist clubhead acceleration while preserving enough directional control.
 
 ## Double Pendulum ZTCF: A Worked Example
 
@@ -401,52 +421,52 @@ Suppose your estimate of the club's moment of inertia is off by 20%. This affect
 
 This is why researchers spend so much effort on accurate biomechanical parameter estimation. The ZTCF analysis is only as good as the model underneath.
 
-However—and this is important—the ZTCF is still *qualitatively* correct even with parameter uncertainty. The key insights (that passive dynamics dominate, that DCR blows up, that the swing is ballistically committed) hold even if the exact numbers shift by 20--30%.
+However—and this is important—the ZTCF can still be *qualitatively* useful under parameter uncertainty when the sensitivity is reported. The defensible insight is not a universal DCR blow-up threshold; it is that velocity-dependent drift terms can rapidly reduce late correction authority in the specified model, so the conclusion should be checked against plausible parameter ranges.
 
-## Implications: The Swing is Ballistically Committed
+## Implications: Late Downswing Has a Narrow Correction Window
 
 ::: {.callout-important}
-## Ballistic Commitment in the Downswing
+## Late-Downswing Commitment
 
-The ZTCF analysis reveals a profound fact: **the downswing is ballistically committed well before impact**.
+The ZTCF analysis suggests: **the late downswing becomes strongly conditioned by the state established before impact**.
 
-In this simplified threshold model, once you reach a certain velocity threshold—typically when the club speed exceeds 50 mph (22 m/s) and shoulder rotation reaches 8--10 rad/s—the Drift-Control Ratio becomes so large that active muscular control is negligible.
+As club and body speeds increase, velocity-dependent drift terms often grow faster than the late corrective authority available from bounded muscle torques. A rough illustrative speed scale such as club speed on the order of 50 mph (22 m/s) with shoulder rotation on the order of 8--10 rad/s should be treated as model input, not a universal threshold.
 
 At this point:
-- The direction and speed of the club are *already determined* by the kinematics and initial conditions.
-- Muscular torques are too small to change the trajectory in any meaningful way.
-- The only control remaining is *fine timing*—the exact instant of impact, which can shift the club face by a few degrees if timed precisely.
+- The direction and speed of the club are strongly conditioned by the kinematics and velocities already present.
+- Muscular torques still contribute to stiffness, release timing, and small steering corrections, but large path changes have little time and limited leverage.
+- The remaining control is best modeled as bounded timing and impedance regulation rather than a fresh plan for the whole trajectory.
 
-This explains why golf swings look so consistent when performed at full speed: once you commit to the downswing acceleration, the physics takes over and produces a nearly deterministic trajectory. The "consistency" is not because muscles are controlling tightly; it's because the system is ballistic.
+This helps explain why golf swings can look consistent when performed at full speed: after the downswing acceleration is established, the modeled drift field strongly constrains the trajectory. The consistency is not evidence that muscles are absent; it is evidence that much of the useful control must be expressed through earlier state preparation and feedforward timing.
 
-It also explains why trying to "add speed" or "accelerate through impact" with muscular force is ineffective. The club is already accelerating at 50 times faster than muscles can push. The speed is determined much earlier—in the initial acceleration phase and the buildup of rotational momentum.
+It also explains why trying to "add speed" at the last instant is a poor model of elite impact mechanics. The speed is determined substantially earlier—in the initial acceleration phase, rotational momentum buildup, release timing, and elastic energy exchange—while late muscle action mainly modulates stiffness and timing.
 
 :::
 
 ::: {.callout-important}
 ## Drift Dominance in Late Downswing
 
-**Drift:** In this simplified description, in the final 50 ms before impact, the system is purely passive. Coriolis and gravity drive acceleration.
+**Drift:** In the final tens of milliseconds before impact, Coriolis, centrifugal, gravity, and elastic terms can dominate the selected state derivatives.
 
-**Control:** The golfer is essentially a passenger, making tiny adjustments to the grip and the plane to guide the ballistic motion.
+**Control:** The golfer is not a passenger. Muscle activation remains important for impedance, grip stability, release timing, and bounded corrections.
 
-**Implication:** The real skill is in the *setup and early downswing*—building the right momentum and position such that passive physics delivers the club to impact with maximum speed and accuracy.
+**Implication:** The skill is concentrated in *setup, transition, and early downswing*—building the momentum and configuration that make late bounded control sufficient.
 
 :::
 
 **Example: Impact Time and the Margin for Control**
 
-For this illustrative example, assume the club head reaches $100$ mph (44.7 m/s) at impact, with an angular velocity of $50$ rad/s about the shoulder. The DCR at this moment is approximately $40:1$.
+For this illustrative example, assume the club head reaches $100$ mph (44.7 m/s) at impact, with an angular velocity of $50$ rad/s about the shoulder. Under the chosen weighting and torque bound, the DCR at this moment may be high, for example on the order of 10--20:1.
 
-The only muscular torques available are perhaps $10$ Nm. The passive (Coriolis) torques are $400$ Nm.
+If late corrective muscular torques are on the order of $10$ Nm, while passive Coriolis and centrifugal terms are on the order of 20--50 Nm, the correction margin is narrow rather than zero.
 
 If the golfer tries to make a 1° correction (0.0175 rad) in club face angle, this requires a tangential acceleration at the club head. But the club is already accelerating at $44.7 \times 50 = 2235$ m/s$^2$ (228 G's). Adding a 10% correction requires additional acceleration of 224 m/s$^2$.
 
 With the club mass of $0.2$ kg, this requires a force of $44.8$ N, or a torque of $44.8 \times 0.3 = 13.4$ Nm—just barely within reach of muscular capacity.
 
-But the timing window is brutal: the contact lasts only $0.5$ ms in this illustrative timing example. To achieve a 1° correction requires the muscular torque to be applied *exactly* during this window. Miss by even 5 ms, and the correction is too late.
+But the timing window is small: the contact lasts only $0.5$ ms in this illustrative timing example. A correction that is delayed until impact cannot materially reshape the incoming state; effective steering must occur earlier than the collision interval.
 
-**Conclusion:** The control margin is razor-thin. The downswing is essentially ballistic, and the skill is in having set things up correctly beforehand.
+**Conclusion:** The control margin is narrow. The late downswing is drift dominated in this model, and the skill is in preparing the state early enough that only bounded late corrections are required.
 
 ## Summary and Preview
 
@@ -456,11 +476,11 @@ But the timing window is brutal: the contact lasts only $0.5$ ms in this illustr
 1. **What the ZTCF is:** A thought experiment that isolates what physics would do with zero muscle input. It's a reference trajectory showing "how much is passive."
 2. **The decomposition:** Total torque = drift (passive) + control (muscular). Knowing this split is essential for understanding where effort matters.
 3. **The ZVCF refinement:** Further isolates gravity from velocity-dependent forces, revealing the role of initial momentum.
-4. **The DCR blow-up:** As velocity increases, passive torques grow as $v^2$, while muscular torques stay roughly constant. The Drift-Control Ratio explodes in late downswing, reaching 50:1 or higher.
+4. **DCR growth:** As velocity increases, several passive terms grow with speed, while bounded muscular torques do not necessarily scale with the same law. The Drift-Control Ratio can become large in late downswing, but its magnitude depends on the weighting, torque bound, and model parameters.
 5. **Double pendulum example:** Showed concretely how gravity and Coriolis produce large torques, while muscles apply restraint and correction.
-6. **Model-dependence:** ZTCF requires a biomechanical model; it cannot be measured directly. But the qualitative conclusions are robust.
-7. **Ballistic commitment:** The downswing becomes ballistic once velocity reaches a threshold. The real skill is in setup and early-downswing momentum building.
-8. **Practical implication:** Stop trying to "accelerate through impact." Your muscles are too weak to move the club at that speed. Instead, build momentum early and let physics do the work.
+6. **Model-dependence:** ZTCF requires a biomechanical model; it cannot be measured directly. Qualitative conclusions should be reported with the DCR weighting, torque bound, parameter set, and sensitivity checks rather than asserted as model-independent facts.
+7. **Late correction window:** The downswing can become strongly conditioned by earlier state preparation once velocity-dependent terms are large. The real skill is in setup, transition, and early-downswing momentum building.
+8. **Practical implication:** Last-instant effort is a weak substitute for earlier state preparation. Build momentum early, preserve timing, and use late control for stiffness and bounded steering.
 
 :::
 
@@ -490,7 +510,7 @@ Set up the double pendulum ZTCF from Section @sec:double_pendulum_ztcf in a nume
 4. Qualitatively describe the motion: does the shoulder continue rotating? Does the elbow extend further?
 
 {Analysis}
-The Drift-Control Ratio (DCR) is defined as the ratio of passive to active torques. In early downswing, DCR $\approx 2:1$. In late downswing, DCR $\approx 50:1$.
+The Drift-Control Ratio (DCR) compares modeled drift with bounded modeled control under a stated weighting and torque bound. Choose plausible early- and late-downswing values for $\bm{W}$ and $u_{\max}$, declare the model parameters that matter most, then estimate how the DCR changes under at least two sensitivity perturbations.
 
 What does this imply about the *type* of muscular effort needed in each phase? Is "harder work" required early or late?
 

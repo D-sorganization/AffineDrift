@@ -18,55 +18,55 @@ permissions:
 jobs:
   compile-and-release:
     if: github.repository == 'D-sorganization/AffineDrift'
-    runs-on: d-sorg-fleet
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Compile Volume 0
-        uses: xu-cheng/latex-action@6549dc21effb2730855a1281407ecfcececc6c1b # v4
+        uses: xu-cheng/latex-action@v3
         with:
           root_file: main.tex
           working_directory: articles/The_Geometry_of_Motion/Volume_0
           pre_compile: "rm -f *.aux chapters/*.aux"
 
       - name: Compile Volume I
-        uses: xu-cheng/latex-action@6549dc21effb2730855a1281407ecfcececc6c1b # v4
+        uses: xu-cheng/latex-action@v3
         with:
           root_file: main.tex
           working_directory: articles/The_Geometry_of_Motion/Volume_I
           pre_compile: "rm -f *.aux chapters/*.aux"
 
       - name: Compile Volume II
-        uses: xu-cheng/latex-action@6549dc21effb2730855a1281407ecfcececc6c1b # v4
+        uses: xu-cheng/latex-action@v3
         with:
           root_file: main.tex
           working_directory: articles/The_Geometry_of_Motion/Volume_II
           pre_compile: "rm -f *.aux chapters/*.aux"
 
       - name: Compile Volume III
-        uses: xu-cheng/latex-action@6549dc21effb2730855a1281407ecfcececc6c1b # v4
+        uses: xu-cheng/latex-action@v3
         with:
           root_file: main.tex
           working_directory: articles/The_Geometry_of_Motion/Volume_III
           pre_compile: "rm -f *.aux chapters/*.aux"
 
       - name: Compile Volume IV
-        uses: xu-cheng/latex-action@6549dc21effb2730855a1281407ecfcececc6c1b # v4
+        uses: xu-cheng/latex-action@v3
         with:
           root_file: main.tex
           working_directory: articles/The_Geometry_of_Motion/Volume_IV
           pre_compile: "rm -f *.aux chapters/*.aux"
 
       - name: Compile Volume V
-        uses: xu-cheng/latex-action@6549dc21effb2730855a1281407ecfcececc6c1b # v4
+        uses: xu-cheng/latex-action@v3
         with:
           root_file: main.tex
           working_directory: articles/The_Geometry_of_Motion/Volume_V
           pre_compile: "rm -f *.aux chapters/*.aux"
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: geometry-of-motion-pdfs
           path: |

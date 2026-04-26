@@ -21,15 +21,15 @@ concurrency:
 jobs:
   build_golf_textbook:
     if: github.repository == 'D-sorganization/AffineDrift'
-    runs-on: d-sorg-fleet
+    runs-on: ubuntu-latest
     name: Build Golf Physics PDF
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Compile LaTeX → PDF
-        uses: xu-cheng/latex-action@6549dc21effb2730855a1281407ecfcececc6c1b # v4
+        uses: xu-cheng/latex-action@v3
         continue-on-error: true
         with:
           root_file: main.tex
@@ -69,7 +69,7 @@ jobs:
 
       - name: Upload PDF artifact
         if: steps.verify.outputs.pdf_exists == 'true'
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: The_Physics_of_Golf
           path: articles/The_Physics_of_Golf/The_Physics_of_Golf.pdf
@@ -78,7 +78,7 @@ jobs:
   publish_on_merge:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: build_golf_textbook
-    runs-on: d-sorg-fleet
+    runs-on: ubuntu-latest
     name: Publish Golf Physics PDF
 
     steps:
@@ -88,7 +88,7 @@ jobs:
           name: The_Physics_of_Golf
 
       - name: Create or update release
-        uses: softprops/action-gh-release@153bb8e04406b158c6c84fc1615b65b24149a1fe # v2.6.1
+        uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda # v3.0.0
         with:
           tag_name: golf-textbook-latest
           name: "The Physics of Golf — Latest Build"

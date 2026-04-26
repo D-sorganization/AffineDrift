@@ -25,13 +25,13 @@ concurrency:
 jobs:
   build_textbooks:
     if: github.repository == 'D-sorganization/AffineDrift'
-    runs-on: d-sorg-fleet
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Compile Volume 0
-        uses: xu-cheng/latex-action@6549dc21effb2730855a1281407ecfcececc6c1b # v4
+        uses: xu-cheng/latex-action@v3
         continue-on-error: true
         with:
           root_file: main.tex
@@ -50,31 +50,31 @@ jobs:
           fi
 
       - name: Compile Volume I
-        uses: xu-cheng/latex-action@6549dc21effb2730855a1281407ecfcececc6c1b # v4
+        uses: xu-cheng/latex-action@v3
         with:
           root_file: main.tex
           working_directory: articles/The_Geometry_of_Motion/Volume_I
 
       - name: Compile Volume II
-        uses: xu-cheng/latex-action@6549dc21effb2730855a1281407ecfcececc6c1b # v4
+        uses: xu-cheng/latex-action@v3
         with:
           root_file: main.tex
           working_directory: articles/The_Geometry_of_Motion/Volume_II
 
       - name: Compile Volume III
-        uses: xu-cheng/latex-action@6549dc21effb2730855a1281407ecfcececc6c1b # v4
+        uses: xu-cheng/latex-action@v3
         with:
           root_file: main.tex
           working_directory: articles/The_Geometry_of_Motion/Volume_III
 
       - name: Compile Volume IV
-        uses: xu-cheng/latex-action@6549dc21effb2730855a1281407ecfcececc6c1b # v4
+        uses: xu-cheng/latex-action@v3
         with:
           root_file: main.tex
           working_directory: articles/The_Geometry_of_Motion/Volume_IV
 
       - name: Compile Volume V
-        uses: xu-cheng/latex-action@6549dc21effb2730855a1281407ecfcececc6c1b # v4
+        uses: xu-cheng/latex-action@v3
         with:
           root_file: main.tex
           working_directory: articles/The_Geometry_of_Motion/Volume_V
@@ -91,47 +91,47 @@ jobs:
           done
 
       - name: Upload Volume 0 Artifact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: Geometry_of_Motion_Volume_0
           path: articles/The_Geometry_of_Motion/Volume_0/main.pdf
 
       - name: Upload Volume I Artifact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: Geometry_of_Motion_Volume_1
           path: articles/The_Geometry_of_Motion/Volume_I/main.pdf
 
       - name: Upload Volume II Artifact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: Geometry_of_Motion_Volume_2
           path: articles/The_Geometry_of_Motion/Volume_II/main.pdf
 
       - name: Upload Volume III Artifact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: Geometry_of_Motion_Volume_3
           path: articles/The_Geometry_of_Motion/Volume_III/main.pdf
 
       - name: Upload Volume IV Artifact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: Geometry_of_Motion_Volume_4
           path: articles/The_Geometry_of_Motion/Volume_IV/main.pdf
 
       - name: Upload Volume V Artifact
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: Geometry_of_Motion_Volume_5
           path: articles/The_Geometry_of_Motion/Volume_V/main.pdf
 
       - name: Install Python PDF tools
-        run: pip install PyPDF2
+        run: python3 -m venv .pdf_venv && .pdf_venv/bin/pip install PyPDF2
 
       - name: Merge all volumes into complete textbook
         run: |
-          python3 << 'PYEOF'
+          .pdf_venv/bin/python << 'PYEOF'
           from PyPDF2 import PdfReader, PdfWriter
           import os
 
@@ -167,7 +167,7 @@ jobs:
           PYEOF
 
       - name: Upload Complete Textbook
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: Geometry_of_Motion_Complete_Textbook
           path: articles/The_Geometry_of_Motion/The_Geometry_of_Motion_Complete.pdf

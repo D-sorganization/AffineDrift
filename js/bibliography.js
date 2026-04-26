@@ -102,12 +102,18 @@
 
     const links = [entry.url, entry.scholar_url]
       .filter(Boolean)
-      .map(
-        (url) =>
-          `<li><a href="${escapeHtml(
-            url,
-          )}" target="_blank" rel="noopener noreferrer">${escapeHtml(url)}</a></li>`,
-      )
+      .map((url) => {
+        let safeUrl = "#";
+        try {
+          const parsed = new URL(url, window.location.origin);
+          if (parsed.protocol === "http:" || parsed.protocol === "https:") {
+            safeUrl = parsed.href;
+          }
+        } catch (e) {}
+        return `<li><a href="${escapeHtml(
+          safeUrl,
+        )}" target="_blank" rel="noopener noreferrer">${escapeHtml(url)}</a></li>`;
+      })
       .join("");
 
     detailsEl.innerHTML = `
@@ -232,7 +238,7 @@
         throw new Error("Invalid bibliography data format");
 
       // ⚡ Bolt Optimization: Pre-compute lowercase strings for search to avoid O(N*M) allocations per keystroke
-      data.forEach((entry) => {
+      for (const entry of data) {
         entry._searchTitle = (entry.title || "").toLowerCase();
         entry._searchAuthors = (entry.authors || []).join(" ").toLowerCase();
         entry._searchConcepts = (entry.concepts || []).join(" ").toLowerCase();
@@ -245,7 +251,7 @@
         ]
           .join(" ")
           .toLowerCase();
-      });
+      }
 
       return data;
     } catch (error) {

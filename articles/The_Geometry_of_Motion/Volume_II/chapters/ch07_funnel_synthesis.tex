@@ -15,29 +15,29 @@ will be added in future editions.
 \vspace{0.5cm}
 
 \begin{laymansbox}{Building a Mathematical Trough}{math_trough}
-Even if you know the mathematically perfect path for a golf swing, no human can execute it perfectly twice. Muscles twitch, timing fluctuates, and wind blows. If we want to guarantee success, we cannot just plan a single path; we need to build a "funnel" or a "tube" around that path. As long as the system stays anywhere inside this tube, it is mathematically guaranteed to reach the target. This chapter explains how to use powerful optimization algorithms to calculate the exact shape and size of this tube. We compute a boundary that the system is literally forbidden from crossing, ensuring that minor errors in the backswing are naturally corrected by the time the club hits the ball.
+Even if a model supplies a useful reference path for a golf swing, no human executes the same path exactly twice. Muscles twitch, timing fluctuates, and wind blows. A funnel or tube around the path is a way to state a local certificate: for the declared model, controller, disturbance set, and time interval, states inside the certified set remain admissible and move toward the terminal condition. The certificate is mathematical, but it is only as strong as the model and assumptions used to compute it.
 \end{laymansbox}
 
 % ══════════════════════════════════════════════
-\section{Beyond LQR: The Need for Guaranteed Invariance}
+\section{Beyond LQR: The Need for Certified Invariance}
 % ══════════════════════════════════════════════
 
-In Chapter 4, we showed that applying time-varying Linear Quadratic Regulation (LQR) to the transverse dynamics creates a contracting envelope of stability. The Riccati equation naturally shapes this envelope into a ``funnel'' that narrows as the terminal constraint approaches. The idea of composing such funnels into motion planning trees was introduced by Tedrake \cite{Tedrake2009} (LQR-Trees) and extended by Majumdar and Tedrake \cite{MajumdarTedrake2017} using sum-of-squares verification.
+In Chapter 4, we showed that applying time-varying Linear Quadratic Regulation (LQR) to the transverse dynamics creates a locally contracting envelope of stability. The Riccati equation naturally shapes this envelope into a ``funnel'' that narrows as the terminal constraint approaches. The idea of composing such funnels into motion planning trees was introduced by Tedrake \cite{Tedrake2009} (LQR-Trees) and extended by Majumdar and Tedrake \cite{MajumdarTedrake2017} using sum-of-squares verification.
 
-However, LQR guarantees are inherently \emph{local}. They rely on the linear approximation of the transverse dynamics $\dot{\bm{\xi}} = \bm{A}_\perp(t)\bm{\xi} + \bm{B}_\perp(t)\delta\control$. For actual physical systems traversing highly nonlinear state spaces—like a golf club accelerating to $50$ m/s while subject to massive centrifugal and Coriolis forces—this linearization quickly breaks down. If a disturbance pushes the state too far from the reference trajectory $\traj^*(t)$, the nonlinearities will dominate, the LQR restoring forces will compute the wrong corrective action, and the clubhead will completely miss the ball.
+However, LQR guarantees are inherently \emph{local}. They rely on the linear approximation of the transverse dynamics $\dot{\bm{\xi}} = \bm{A}_\perp(t)\bm{\xi} + \bm{B}_\perp(t)\delta\control$. For highly nonlinear physical systems, a disturbance large enough to leave the local neighborhood can invalidate the linear approximation. The consequence may be large terminal error or loss of the target constraint, but the threshold depends on the reference trajectory, controller, and nonlinear model.
 
-We need a mathematically rigorous way to define the \emph{exact boundary} of our funnel. We must prove that for the fully nonlinear equations of motion, any state starting within the mouth of the funnel at time $t=0$ will remain inside the funnel for all $t \in [0, t_f]$.
+We need a mathematically rigorous way to define a \emph{verified boundary} for the funnel. For the fully nonlinear equations of motion, the goal is to certify that any state starting inside the candidate set at time $t=0$ remains inside it for the modeled interval $t \in [0, t_f]$.
 
 \begin{definition}{Dynamic Funnel}{dynamic_funnel}
   Given a reference trajectory $\traj^*(t)$, a feedback controller $\control = \bm{k}(\state, t)$, and a scalar boundary function $V(\state, t)$, the set:
   \begin{equation}
     \mathcal{F}(t) = \{ \state \in \statespace \mid V(\state, t) \leq 1 \}
   \end{equation}
-  constitutes a valid \textbf{dynamic funnel} if the set is positively invariant under the closed-loop dynamics. That is, if $\state(0) \in \mathcal{F}(0)$, then $\state(t) \in \mathcal{F}(t)$ for all $t > 0$.
+  constitutes a valid \textbf{dynamic funnel} if the set is positively invariant under the closed-loop dynamics. That is, if $\state(0) \in \mathcal{F}(0)$, then $\state(t) \in \mathcal{F}(t)$ for all $t \in [0, t_f]$.
 \end{definition}
 
-\begin{remark}{Funnels as Attainable Sets and Symplectic Structure}{funnels_attainable_sets}
-  The dynamic funnel can be reinterpreted through the framework of \textbf{attainable sets} developed in Agrachev and Sachkov \cite{AgrachevSachkov2004}. At time $t$, the funnel boundary $V(\state, t) = 1$ defines the set of states that are on the margin of being able to reach the terminal manifold $\psi(\state(t_f)) = \bm{0}$ at time $t_f$. States strictly inside the funnel ($V < 1$) can reach the target with robustness to spare; states outside cannot reach it at all. As $t \to t_f$, the attainable set shrinks to a single point (or lower-dimensional manifold if the terminal constraint has slack). The Lyapunov function $V(\state, t)$ encodes this shrinking geometry. Furthermore, the Hamiltonian structure from the Pontryagin framework implies that the level sets $V = \text{const}$ are transverse to the true optimal trajectories in the sense of symplectic geometry. The funnel is thus not merely a Euclidean tube, but a geometric object reflecting the Hamiltonian symplectic structure of optimal motion.
+\begin{remark}{Funnels, Reachable Sets, and What is Actually Certified}{funnels_attainable_sets}
+  Attainable-set language from geometric control \cite{AgrachevSachkov2004} is useful here, but the objects should not be conflated. A computed funnel is a verified subset of states for a chosen closed-loop model, controller, and time horizon. It may sit inside the true reachable set, coincide with only part of it, or become conservative because of the Lyapunov ansatz and SOS relaxation. Hamiltonian or symplectic structure can inform the underlying optimal-control problem, yet the numerical certificate still stands or falls on the stated closed-loop dynamics and the boundary condition $\dot V < 0$ on $V=1$.
 \end{remark}
 
 % ══════════════════════════════════════════════
@@ -97,7 +97,7 @@ If the derivative of the boundary function points inward everywhere on the bound
 \end{center}
 
 \begin{keyidea}{Funnels Define the Usable State Space}{usable_space}
-  A computed funnel $\mathcal{F}(t)$ is not just an analysis tool; it is the ultimate judge of repeatability. It explicitly defines the exact set of initial conditions (e.g., the kinematic state at the top of the backswing) that are mathematically guaranteed to successfully satisfy the terminal constraint $\psi(\state(t_f)) = 0$ despite the presence of extreme nonlinearities and bounded disturbances. The time-varying geometry of the funnel---narrowing as $t \to t_f$---encodes the stability structure of the transverse dynamics along the reference trajectory.
+  A computed funnel $\mathcal{F}(t)$ is an analysis certificate for a stated closed-loop model. It defines a conservative set of initial conditions (for example, the kinematic state at the top of the backswing) that should remain inside the verified tube and satisfy the terminal constraint $\psi(\state(t_f)) = 0$ under the modeled disturbances. The time-varying geometry of the funnel---narrowing as $t \to t_f$---encodes the stability structure of the transverse dynamics along the reference trajectory.
 \end{keyidea}
 
 % ══════════════════════════════════════════════
@@ -144,7 +144,7 @@ The workflow below is the practical bridge from a nominal trajectory to a certif
 \section{Computing the Funnel for the Golf Swing}
 % ══════════════════════════════════════════════
 
-Let us return to the double pendulum of the golf swing. Our reference trajectory $\traj^*(t)$ from Chapter 6 gives us the nominal kinematics. Our transverse LQR from Chapter 4 gives us a feedback matrix $\bm{K}(t)$ designed to stabilize deviations. We wish to compute the largest possible funnel around this sequence that the closed-loop system is mathematically guaranteed to stay inside.
+Let us return to the double-pendulum golf model. The reference trajectory $\traj^*(t)$ from Chapter 6 gives nominal kinematics. The transverse LQR from Chapter 4 gives a feedback matrix $\bm{K}(t)$ designed to stabilize selected deviations. The goal is to compute a conservative funnel around this sequence and state the model assumptions under which the closed-loop system remains inside it.
 
 We define our candidate Lyapunov function as a time-varying quadratic form:
 \begin{equation}

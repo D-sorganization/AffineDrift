@@ -14,10 +14,12 @@ format:
 ```{=html}
 <!-- In Layman's Terms Section - Simplified overview for non-technical readers -->
 <section class="laymans-terms">
+  <h2>
   <button class="laymans-terms-header" aria-expanded="false">
-    <h2>In Layman's Terms</h2>
+    <span class="laymans-terms-header-title">In Layman's Terms</span>
     <span class="laymans-terms-icon">▼</span>
   </button>
+</h2>
   <div class="laymans-terms-content">
     <div class="laymans-terms-inner">
       <p class="laymans-terms-intro">
@@ -134,7 +136,7 @@ $$
 \frac{\partial f(x)}{\partial u} \equiv 0.
 $$
 
-The control input $u$ appears *exclusively* in the term $M^{-1} [B(q)u; 0]^T$. This orthogonality is structural: it is not an approximation but a property of the Lagrangian formulation where generalized forces are dual to generalized velocities. It guarantees that the "passive" dynamics identified by the model are structurally unpolluted by the "active" control inputs.
+The control input $u$ appears *exclusively* in the term $M^{-1} [B(q)u; 0]^T$. This separation is structural: it is not an approximation but a property of the Lagrangian formulation where generalized forces are dual to generalized velocities. Within this modeling setup, it means the "passive" dynamics can be evaluated without direct torque dependence.
 
 ::: {.callout-note}
 ## Assumption of Viscous-Only Damping
@@ -410,7 +412,7 @@ In simulation (as developed in [Theory Part 4](theory-part4.html) and [Theory Pa
 - identification of torque timing patterns,
 - mapping of how individual torque bursts shape the club path.
 
-This taxonomy completes the theoretical framework, providing a deterministic map from observed forces to their mechanical causes. However, the exactness of this map is bounded by the fidelity of the territory it describes. While the decomposition is algebraically perfect within the model, its application to reality is constrained by the simplifications made in Part I. We now catalogue these limitations to define the precise scope of validity for our causal claims.
+This taxonomy completes the theoretical framework, providing a model-based map from observed forces to the mechanical categories used here. However, the exactness of that map is bounded by the fidelity of the model itself. While the decomposition is algebraically exact within the model, its application to reality is constrained by the simplifications made in Part I. We now catalogue these limitations to define the scope of validity for the causal claims made on this site.
 
 
 ## Limitations (Theoretical Scope)
@@ -540,10 +542,10 @@ The resulting taxonomy classifies generalized forces into configuration drift, v
 This paper is intentionally limited to theory. No simulation data, parameter estimation, or empirical results have been presented. However, the theoretical structure developed here is not self-validating. It relies on complex subtraction operations $\tau_{input} = \tau_{total} - \tau_{drift}$ which are analytically exact but potentially unstable in practice. To address this, the subsequent components of this series provide the necessary verification:
 
 - **Part IV: Mathematical Appendices.**
-  These appendices provide the **algebraic guarantee** of the theory. They contain the detailed block matrix inversion proofs and modal approximation derivations that justify the affine separation for flexible multibody systems.
+  These appendices provide the supporting derivations. They contain the detailed block matrix inversion proofs and modal approximation steps that justify the affine separation for flexible multibody systems.
 
 - **Part V: Numerical Validation (Simulink).**
-  This section provides the **numerical stress test**. By implementing the full forward dynamics in a stiff solver environment, Part V demonstrates that the delicate counterfactual subtractions remain stable under integration error, proving that the theory survives the transition from the page to the processor.
+  This section provides the **numerical stress test**. By implementing the full forward dynamics in a stiff solver environment, Part V tests whether the delicate counterfactual subtractions remain stable under integration error and whether the implementation preserves the algebraic separation developed on the page.
 
 Beyond these verifications, future work will focus on experimental application...
 
