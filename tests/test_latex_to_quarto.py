@@ -86,7 +86,10 @@ def test_prompt_for_files_returns_selected_paths() -> None:
     """GUI fallback should normalize selected file paths to Path instances."""
     mock_root = MagicMock()
     mock_dialog = MagicMock()
-    mock_dialog.askopenfilenames.return_value = ("/tmp/a.tex", "/tmp/b.tex")  # nosec B108  # noqa: S108
+    mock_dialog.askopenfilenames.return_value = (
+        "/tmp/a.tex",
+        "/tmp/b.tex",
+    )  # nosec B108  # noqa: S108
     mock_tk_module = MagicMock()
     mock_tk_module.Tk.return_value = mock_root
     mock_tk_module.filedialog = mock_dialog

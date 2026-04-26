@@ -1,8 +1,7 @@
+import sys
+
 from src.tools.utils import shell_utils
 from src.tools.utils.shell_utils import run_black_check, run_ruff_check, run_tool
-
-
-import sys
 
 
 def test_imports():
