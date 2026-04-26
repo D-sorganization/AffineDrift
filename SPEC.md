@@ -29,8 +29,8 @@ Last-Updated: 2026-04-13T22:00:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.64                                           |
-| **Last Spec Update**    | 2026-04-13                                       |
+| **Spec Version**        | 1.0.65                                           |
+| **Last Spec Update**    | 2026-04-26                                       |
 
 ## 2. Purpose & Mission
 
@@ -466,6 +466,7 @@ python src/tools/code_quality_ast.py
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | ---------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-04-26 | 1.0.65  | fix(physics): resolved Coriolis matrix error in Ch03 and Euler rotation matrix expansion in Ch21; fix(ui): resolved dual mobile nav conflict on homepage by relocating sidebar toggle to footer; style: added missing design system tokens to styles.css (issue #2726). |
 | 2026-04-12 | 1.0.58  | fix(ci): added RUN_UI_TESTS environment guard to matplotlib.use("QtAgg") in qt_canvases.py to allow headless verification without triggering ImportError, and removed redundant pytest-xvfb plugin. fix(test): skip legacy wrist launcher test when Qt runtime is unavailable via `pytest.skip`, and reformat test assertions to comply with black 100-char style |
 | 2026-04-11 | 1.0.57  | refactor(src): decomposed ten oversized functions (`_simulate_putt`, `ILQRSolver._backward_pass`, `ILQRSolver.optimize`, `BallFlightDynamics.dynamics`, `BallFlightDynamics.simulate`, `compute_hessian_norm`, `batch_convert`, `collect_python_file_metrics`, `plot_acceleration`, `SwingOptimizer.__init__`) into thin orchestrators plus focused helpers, preserving numerical and observable behavior (issue #2362). |
 | 2026-04-12 | 1.0.56  | fix(ci): installed PyQt6 in the standard Python test job so the legacy wrist universal-joint launcher API regression can import the Qt canvas wrappers on GitHub-hosted runners.                                                                                                                                                                                                                                                                                                                                                                                                            |
