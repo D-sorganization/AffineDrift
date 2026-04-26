@@ -233,8 +233,8 @@ def compile_pdf(tex_file: str) -> str | None:
 
         # Run pdflatex twice for proper cross-references
         for i in range(2):
-            result = subprocess.run(
-                ["pdflatex", "-interaction=nonstopmode", tex_path.name],
+            result = subprocess.run(  # noqa: S603
+                ["pdflatex", "-interaction=nonstopmode", tex_path.name],  # noqa: S607
                 capture_output=True,
                 text=True,
             )

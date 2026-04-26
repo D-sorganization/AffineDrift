@@ -27,7 +27,7 @@ def run_mypy(config_file: str | None = None, targets: list[str] | None = None) -
     # Add non-interactive and ignore-missing-imports for agent use
     cmd.extend(["--ignore-missing-imports", "--non-interactive"])
 
-    result = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
+    result = subprocess.run(cmd, capture_output=True, text=True, timeout=600)  # noqa: S603
     return result.stdout + result.stderr
 
 
