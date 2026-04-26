@@ -65,7 +65,7 @@ jobs:
           esac
   quality-gate:
     needs: pick-runner
-    runs-on: self-hosted
+    runs-on: ${{ needs.pick-runner.outputs.runner }}
     timeout-minutes: 45
     env:
       PYTHONPATH: .
@@ -216,7 +216,7 @@ jobs:
 
   tests:
     needs: [pick-runner, quality-gate]
-    runs-on: self-hosted
+    runs-on: ${{ needs.pick-runner.outputs.runner }}
     timeout-minutes: 45
     strategy:
       matrix:
@@ -263,7 +263,7 @@ jobs:
 
   js-tests:
     needs: [pick-runner, quality-gate]
-    runs-on: self-hosted
+    runs-on: ${{ needs.pick-runner.outputs.runner }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v6
@@ -282,7 +282,7 @@ jobs:
 
   e2e-tests:
     needs: [pick-runner, quality-gate]
-    runs-on: self-hosted
+    runs-on: ${{ needs.pick-runner.outputs.runner }}
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
@@ -413,7 +413,7 @@ jobs:
 
   website-lint:
     needs: [pick-runner, quality-gate]
-    runs-on: self-hosted
+    runs-on: ${{ needs.pick-runner.outputs.runner }}
     continue-on-error: true # Non-blocking: HTML validation errors need separate fix
     steps:
       - uses: actions/checkout@v4
@@ -455,7 +455,7 @@ jobs:
   # =============================================================================
   rust-quality-gate:
     needs: pick-runner
-    runs-on: self-hosted
+    runs-on: ${{ needs.pick-runner.outputs.runner }}
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
