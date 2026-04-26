@@ -438,7 +438,8 @@ runOnDomReady(function () {
       }
     }
 
-    const categories = document.querySelectorAll(".article-category");
+    // ⚡ Bolt Optimization: Use getElementsByClassName (O(1) live collection) instead of querySelectorAll (O(N))
+    const categories = document.getElementsByClassName("article-category");
     for (const category of categories) {
       const heading = category.querySelector("h3");
       if (heading) {
@@ -656,7 +657,8 @@ runOnDomReady(function () {
   // Accordion functionality
   // ⚡ Bolt Optimization: Event Delegation for Accordions
   // Separate initialization from event handling to reduce memory usage (1 listener vs N)
-  const accordionHeaders = document.querySelectorAll(".accordion-header");
+  // ⚡ Bolt Optimization: Use getElementsByClassName (O(1) live collection) instead of querySelectorAll (O(N))
+  const accordionHeaders = document.getElementsByClassName("accordion-header");
   for (let index = 0; index < accordionHeaders.length; index++) {
     const header = accordionHeaders[index];
     const content = header.nextElementSibling;
@@ -1636,7 +1638,8 @@ function preparePDFPrint() {
 
 // --- Layman's Terms Functionality ---
 function initLaymansTermsToggle() {
-  const laymansSections = document.querySelectorAll(".laymans-terms");
+  // ⚡ Bolt Optimization: Use getElementsByClassName (O(1) live collection) instead of querySelectorAll (O(N))
+  const laymansSections = document.getElementsByClassName("laymans-terms");
 
   for (let index = 0; index < laymansSections.length; index++) {
     const section = laymansSections[index];
@@ -1664,7 +1667,8 @@ function initLaymansTermsToggle() {
 
 // --- Critics Corner Functionality ---
 function initCriticsCorner() {
-  const criticsCorners = document.querySelectorAll('.critics-corner');
+  // ⚡ Bolt Optimization: Use getElementsByClassName (O(1) live collection) instead of querySelectorAll (O(N))
+  const criticsCorners = document.getElementsByClassName("critics-corner");
 
   for (let index = 0; index < criticsCorners.length; index++) {
     const corner = criticsCorners[index];
@@ -1711,7 +1715,8 @@ function initCriticsCorner() {
 
 // --- Critics Comments Functionality ---
 function initCriticsCommentsToggle() {
-  const criticsSections = document.querySelectorAll(".critics-comments");
+  // ⚡ Bolt Optimization: Use getElementsByClassName (O(1) live collection) instead of querySelectorAll (O(N))
+  const criticsSections = document.getElementsByClassName("critics-comments");
 
   for (let index = 0; index < criticsSections.length; index++) {
     const section = criticsSections[index];

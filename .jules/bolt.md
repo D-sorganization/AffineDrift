@@ -73,3 +73,6 @@
 ## 2025-02-19 - Safe Refactoring to for...of loops
 **Learning:** When refactoring `forEach` loops to `for...of`, `continue` statements should be used to simulate returning from the `forEach` callback. `return` in a `for...of` loop will prematurely exit the entire enclosing function.
 **Action:** Pay close attention to early exits when refactoring to `for...of` loops and change them from `return` to `continue`.
+## 2026-05-18 - Replacing querySelectorAll with getElementsByClassName
+**Learning:** `querySelectorAll` parses a CSS selector string and returns a static `NodeList`, which takes O(N) where N is the number of all nodes scanned. `getElementsByClassName` returns a live `HTMLCollection` and is highly optimized in browsers for simple class lookups (taking effectively O(1) time to create the collection). When iterating over elements that don't add or remove the queried classes (which avoids infinite loops with live collections), `getElementsByClassName` provides a measureable performance improvement for global DOM lookups.
+**Action:** When finding multiple elements solely by their class name and subsequently iterating over them without modifying their class attributes, always prefer `document.getElementsByClassName("class-name")` over `document.querySelectorAll(".class-name")`.
