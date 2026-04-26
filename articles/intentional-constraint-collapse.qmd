@@ -119,8 +119,8 @@ In mechanical terms, this is not brute stiffness, nor passive locking. It is **t
 
 The term “intentional constraint collapse” requires a rigorous mathematical definition to distinguish it from kinematic singularities and to clarify the role of impedance modulation.
 
-<div class=”definition-box” style=”margin: 1.5rem 0; padding: 1.25rem 1.5rem; background: var(--bg-secondary, #f8f9fa); border: 1px solid var(--border-color, #dee2e6); border-left: 4px solid var(--accent-secondary, #6c757d); border-radius: 6px;”>
-<strong style=”display: block; font-size: 1rem; margin-bottom: 0.75rem;”>Definition 2.1 — Intentional Constraint Collapse (ICC)</strong>
+<div class="definition-box" style="margin: 1.5rem 0; padding: 1.25rem 1.5rem; background: var(--bg-secondary, #f8f9fa); border: 1px solid var(--border-color, #dee2e6); border-left: 4px solid var(--accent-secondary, #6c757d); border-radius: 6px;">
+<strong style="display: block; font-size: 1rem; margin-bottom: 0.75rem;">Definition 2.1 — Intentional Constraint Collapse (ICC)</strong>
 
 Let $q(t) \in \mathcal{Q}$ be the generalized coordinates of the golfer–club system and let $K_{\mathrm{eff}}(q, t)$ denote the effective joint-space impedance (stiffness) matrix arising from passive tissue properties and active neuromuscular co-contraction. Let $J(q)$ be the task-space Jacobian mapping joint velocities to clubhead velocity, and let $K_{\mathrm{task}}(q, t) = J(q)^{-T} K_{\mathrm{eff}}(q, t)\, J(q)^{-1}$ be the resulting task-space stiffness.
 
@@ -439,8 +439,8 @@ Understanding it requires moving beyond kinematics alone—and taking constraint
 This constraint shaping mechanism offers a **quasi-static resolution** to the "Input-Dependent Boundary Conditions" critique (detailed in Part 3 Limitations). By treating the high-impedance state as a temporary "Effective Plant," we can analyze the impact dynamics *as if* they evolved on a restricted manifold, acknowledging that the transition to this state is itself input-driven. While the Affine Control framework assumes a separation of passive drift ($f(x)$) and active input ($g(x)u$), constraint collapse illustrates how input $u$ modifies the *effective* topology of the system. By stiffening the constraint Jacobian $J_c$, the golfer temporarily alters the manifold on which the drift dynamics evolve, essentially creating a transient "effective plant" without violating the causal independence of the underlying Lagrangian mechanics.
 
 ::: {.callout-important}
-## Limitation: The Stiffness Pulse Paradox
-We must strictly qualify this "Effective Plant" argument. The "Stiffness Pulse" described in Section 6 implies a rapid time-variation of the impedance parameters $\dot{K} \neq 0$ during the counterfactual integration window. This violates the strict **Drift Invariance** condition ($\nabla_u f(x) = 0$) because the drift field parameters are changing in correlation with the input strategy. Consequently, the ZTCF in this regime should be interpreted as a **Parametric Counterfactual** ("What if torque ceased but the impedance schedule continued?") rather than a purely passive mechanical baseline.
+## Context: Parametric Counterfactuals
+Because the "Stiffness Pulse" introduces time-varying impedance parameters during the impact window, a naive single-mode affine model would appear to violate **Drift Invariance**. As resolved in Section 8, we rigorously model this as a controlled hybrid automaton. Consequently, the ZTCF in this regime must be interpreted as a **Parametric Counterfactual** within the high-impedance mode ("What if continuous torque ceased but the discrete impedance schedule continued?") rather than a globally passive mechanical baseline. This preserves the mathematical validity of the ZTCF while acknowledging the active nature of the constraint collapse.
 :::
 
 **Steering the Zero-Torque Counterfactual (ZTCF)**
