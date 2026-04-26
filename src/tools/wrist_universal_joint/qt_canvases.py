@@ -41,7 +41,7 @@ def find_main_window_parent(widget: QWidget | None) -> QMainWindow | None:
     return parent if isinstance(parent, QMainWindow) else None
 
 
-class DiagramCanvas(FigureCanvas):  # type: ignore[misc]
+class DiagramCanvas(FigureCanvas):
     """Canvas showing the forearm-hand-club diagram."""
 
     def __init__(self, grip_angle_deg: float, wrist_angle_deg: float) -> None:
@@ -72,7 +72,7 @@ class DiagramCanvas(FigureCanvas):  # type: ignore[misc]
         self.update_diagram()
 
 
-class PlotCanvas(FigureCanvas):  # type: ignore[misc]
+class PlotCanvas(FigureCanvas):
     """Canvas showing torque, acceleration, or transmission plots."""
 
     DEFAULT_POLYNOMIAL = "t**2 - t"

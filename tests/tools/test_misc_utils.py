@@ -138,21 +138,23 @@ class TestShellUtils:
 
     def test_run_tool_with_valid_command(self) -> None:
         """Should return dict with exit_code for valid command."""
+        import sys
         from src.tools.utils.shell_utils import run_tool
 
-        result = run_tool(["echo", "hello"], "echo")
+        result = run_tool([sys.executable, "-c", "print('hello')"], "python")
         assert "exit_code" in result
         assert result["exit_code"] == 0
 
     def test_run_tool_with_result_processor(self) -> None:
         """Should use result_processor when provided."""
+        import sys
         from src.tools.utils.shell_utils import run_tool
 
         def processor(result: subprocess.CompletedProcess) -> dict[str, Any]:
             """Return custom dict."""
             return {"custom": result.returncode}
 
-        result = run_tool(["echo", "hello"], "echo", result_processor=processor)
+        result = run_tool([sys.executable, "-c", "print('hello')"], "python", result_processor=processor)
         assert result == {"custom": 0}
 
     def test_run_tool_returns_error_when_not_installed(self) -> None:

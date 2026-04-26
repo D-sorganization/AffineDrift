@@ -3,9 +3,20 @@
 from __future__ import annotations
 
 import sys
+from typing import cast
 
-from PyQt6.QtCore import QEvent, Qt
-from PyQt6.QtWidgets import QApplication, QMainWindow, QScrollArea, QWidget
+from PyQt6.QtCore import QEvent, QObject, Qt
+from PyQt6.QtGui import QWheelEvent
+from PyQt6.QtWidgets import (
+    QApplication,
+    QCheckBox,
+    QComboBox,
+    QLabel,
+    QLineEdit,
+    QMainWindow,
+    QScrollArea,
+    QSlider,
+)
 
 from .constants import (
     DEFAULT_CLUB_LENGTH,
@@ -13,13 +24,47 @@ from .constants import (
     DEFAULT_CLUBHEAD_WEIGHT,
     DEFAULT_SHAFT_WEIGHT,
 )
-from .qt_canvases import current_inertia_values, current_info_html
+from .qt_canvases import (
+    DiagramCanvas,
+    PlotCanvas,
+    current_inertia_values,
+    current_info_html,
+)
 from .qt_dialogs import DocumentationDialog
 from .qt_ui_sections import build_main_widget
 
 
-class MainWindow(QMainWindow):  # type: ignore[misc]
+class MainWindow(QMainWindow):
     """Main application window for the enhanced universal-joint model."""
+
+    # UI components set by build_main_widget
+    grip_slider: QSlider
+    grip_textbox: QLineEdit
+    wrist_slider: QSlider
+    wrist_textbox: QLineEdit
+    clubhead_weight: QLineEdit
+    shaft_weight: QLineEdit
+    club_length: QLineEdit
+    cg_distance: QLineEdit
+    inertia_label: QLabel
+    noise_type_combo: QComboBox
+    polynomial_label: QLabel
+    polynomial_input: QLineEdit
+    plot_type_combo: QComboBox
+    show_input_check: QCheckBox
+    show_transmitted_check: QCheckBox
+    show_alpha_torque_check: QCheckBox
+    show_gamma_torque_check: QCheckBox
+    show_alpha_accel_check: QCheckBox
+    show_gamma_accel_check: QCheckBox
+    show_transmission_check: QCheckBox
+    show_velocity_check: QCheckBox
+    show_accel_alpha_ratio_check: QCheckBox
+    show_accel_gamma_ratio_check: QCheckBox
+    plot_canvas: PlotCanvas
+    diagram_canvas: DiagramCanvas
+    info_label: QLabel
+    main_scroll: QScrollArea
 
     def __init__(self) -> None:
         """Initialize the main window."""
@@ -30,15 +75,15 @@ class MainWindow(QMainWindow):  # type: ignore[misc]
 
     def init_ui(self) -> None:
         """Initialize UI components."""
-        self.scroll = QScrollArea()
-        self.scroll.setWidgetResizable(True)
-        self.scroll.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
-        self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
-        self.scroll.installEventFilter(self)
+        self.main_scroll = QScrollArea()
+        self.main_scroll.setWidgetResizable(True)
+        self.main_scroll.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        self.main_scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        self.main_scroll.installEventFilter(self)
         self.installEventFilter(self)
 
-        self.scroll.setWidget(build_main_widget(self))
-        self.setCentralWidget(self.scroll)
+        self.main_scroll.setWidget(build_main_widget(self))
+        self.setCentralWidget(self.main_scroll)
         self.update_inertia()
 
     def get_inertia_values(self) -> tuple[float, float]:
@@ -65,7 +110,7 @@ class MainWindow(QMainWindow):  # type: ignore[misc]
 
     def _apply_numeric_textbox_update(
         self,
-        widget: QWidget,
+        widget: QLineEdit,
         *,
         minimum: float,
         maximum: float,
@@ -75,13 +120,13 @@ class MainWindow(QMainWindow):  # type: ignore[misc]
         """Normalize one numeric textbox and refresh inertia-dependent outputs."""
         text_widget = widget
         try:
-            value = self._read_float(text_widget.text(), default)  # type: ignore[attr-defined]
+            value = self._read_float(text_widget.text(), default)
             value = self._clamp_value(value, minimum, maximum)
         except AttributeError:
             return
-        text_widget.blockSignals(True)  # type: ignore[attr-defined]
-        text_widget.setText(formatter.format(value))  # type: ignore[attr-defined]
-        text_widget.blockSignals(False)  # type: ignore[attr-defined]
+        text_widget.blockSignals(True)
+        text_widget.setText(formatter.format(value))
+        text_widget.blockSignals(False)
         self.update_inertia()
 
     def update_clubhead_from_textbox(self) -> None:
@@ -131,11 +176,11 @@ class MainWindow(QMainWindow):  # type: ignore[misc]
         if hasattr(self, "plot_canvas"):
             self.update_all()
 
-    def _sync_slider_textbox(self, textbox: QWidget, value: int) -> None:
+    def _sync_slider_textbox(self, textbox: QLineEdit, value: int) -> None:
         """Mirror the given slider value into its paired textbox."""
-        textbox.blockSignals(True)  # type: ignore[attr-defined]
-        textbox.setText(str(value))  # type: ignore[attr-defined]
-        textbox.blockSignals(False)  # type: ignore[attr-defined]
+        textbox.blockSignals(True)
+        textbox.setText(str(value))
+        textbox.blockSignals(False)
 
     def update_grip_label(self, value: int) -> None:
         """Update grip-angle textbox from the slider."""
@@ -154,20 +199,20 @@ class MainWindow(QMainWindow):  # type: ignore[misc]
     def _update_angle_from_textbox(
         self,
         *,
-        textbox: QWidget,
-        slider: QWidget,
+        textbox: QLineEdit,
+        slider: QSlider,
         minimum: int,
         maximum: int,
     ) -> None:
         """Clamp one angle textbox, sync its slider, and refresh the views."""
         value = self._clamp_value(
-            self._read_float(textbox.text(), slider.value()),  # type: ignore[attr-defined]
+            self._read_float(textbox.text(), slider.value()),
             minimum,
             maximum,
         )
-        slider.blockSignals(True)  # type: ignore[attr-defined]
-        slider.setValue(int(value))  # type: ignore[attr-defined]
-        slider.blockSignals(False)  # type: ignore[attr-defined]
+        slider.blockSignals(True)
+        slider.setValue(int(value))
+        slider.blockSignals(False)
         self._sync_slider_textbox(textbox, int(value))
         if hasattr(self, "plot_canvas"):
             self.update_all()
@@ -243,14 +288,16 @@ class MainWindow(QMainWindow):  # type: ignore[misc]
         if hasattr(self, "plot_canvas"):
             self.plot_canvas.set_polynomial_expression(expression)
 
-    def eventFilter(self, obj: QWidget, event: QEvent) -> bool:
+    def eventFilter(self, obj: QObject | None, event: QEvent | None) -> bool:
         """Redirect wheel events to the scroll area instead of nested controls."""
-        if event.type() == QEvent.Type.Wheel:
+        if event and event.type() == QEvent.Type.Wheel:
             scroll = self.centralWidget()
             if isinstance(scroll, QScrollArea):
                 scroll_bar = scroll.verticalScrollBar()
                 if scroll_bar and scroll_bar.isVisible():
-                    delta = event.angleDelta().y()
+                    # Cast to QWheelEvent to access angleDelta
+                    wheel_event = cast(QWheelEvent, event)
+                    delta = wheel_event.angleDelta().y()
                     scroll_bar.setValue(scroll_bar.value() - delta // 8)
                     return True
         result = super().eventFilter(obj, event)
