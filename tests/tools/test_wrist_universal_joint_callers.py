@@ -12,7 +12,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
 def _assert_keyword_calls(path: Path) -> None:
-    source = path.read_text()
+    source = path.read_text(encoding="utf-8")
     tree = ast.parse(source, filename=str(path))
 
     calls = [

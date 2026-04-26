@@ -2,21 +2,23 @@
 
 from __future__ import annotations
 
-from PyQt6.QtCore import QEvent
+from PyQt6.QtGui import QWheelEvent
 from PyQt6.QtWidgets import QLineEdit, QSlider
 
 
-class WheelIgnoringSlider(QSlider):  # type: ignore[misc]
+class WheelIgnoringSlider(QSlider):
     """Slider that ignores wheel events so the parent scroll area handles them."""
 
-    def wheelEvent(self, event: QEvent) -> None:
+    def wheelEvent(self, event: QWheelEvent | None) -> None:
         """Ignore wheel events and let them bubble upward."""
-        event.ignore()
+        if event:
+            event.ignore()
 
 
-class WheelIgnoringLineEdit(QLineEdit):  # type: ignore[misc]
+class WheelIgnoringLineEdit(QLineEdit):
     """Line edit that ignores wheel events so the parent scroll area handles them."""
 
-    def wheelEvent(self, event: QEvent) -> None:
+    def wheelEvent(self, event: QWheelEvent | None) -> None:
         """Ignore wheel events and let them bubble upward."""
-        event.ignore()
+        if event:
+            event.ignore()

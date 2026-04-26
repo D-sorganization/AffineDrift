@@ -46,7 +46,7 @@ jobs:
 
   cleanup:
     if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'jules:consolidation')
-    runs-on: self-hosted
+    runs-on: d-sorg-fleet
     needs: pick-runner
     permissions:
       pull-requests: write

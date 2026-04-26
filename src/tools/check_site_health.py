@@ -112,8 +112,8 @@ def _tag_classes(tag: Tag | None) -> list[str]:
     """Return the class list for a tag-like node."""
     if tag is None:
         return []
-    classes = tag.get("class", [])
-    return classes if isinstance(classes, list) else []
+    classes = tag.get("class")
+    return list(classes) if isinstance(classes, (list, tuple)) else []
 
 
 def _anchor_href(anchor: Tag) -> str:
@@ -212,8 +212,6 @@ def _find_broken_links_for_file(
         soup = BeautifulSoup(file_handle, "html.parser")
 
     for anchor in soup.find_all("a", href=True):
-        if not isinstance(anchor, Tag):
-            continue
         candidate = SiteHealthLinkCandidate.from_anchor(
             anchor=anchor,
             source_file=file_path,
