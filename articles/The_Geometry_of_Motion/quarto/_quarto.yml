@@ -68,11 +68,13 @@ format:
         \usetikzlibrary{arrows.meta,decorations.markings,calc,patterns,positioning,3d}
         \gomdeclaretheorems
         \gomdeclarealgorithms
+        \makeatletter
         \providecommand{\gomdeclareextraquartoenvs}{%
           \@ifundefined{assumption}{\newtheorem{assumption}[theorem]{Assumption}}{}%
           \@ifundefined{corollary}{\newtheorem{corollary}[theorem]{Corollary}}{}%
           \@ifundefined{warning}{\newtheorem{warning}[theorem]{Warning}}{}%
         }%
+        \makeatother
         \gomdeclareextraquartoenvs
         \newtcolorbox{intuitionbox}[1][]{colback=chapblue!5,colframe=chapblue!70!black,title={Intuition},breakable,#1}
         \newtcolorbox{designbox}[1][]{colback=trajgreen!5,colframe=trajgreen!60!black,title={Design Note},breakable,#1}
