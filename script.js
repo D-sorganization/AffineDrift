@@ -306,9 +306,13 @@ runOnDomReady(function () {
       pageTitle = "Home";
     }
 
+    // ⚡ Bolt Optimization: Use lastIndexOf/substring instead of split().pop()
+    const path = window.location.pathname;
+    const urlFromPath = path.substring(path.lastIndexOf("/") + 1);
+
     const currentPage = {
       title: pageTitle,
-      url: window.location.pathname.split("/").pop() || "index.html",
+      url: urlFromPath || "index.html",
       fullUrl: window.location.href,
     };
 
@@ -555,7 +559,9 @@ runOnDomReady(function () {
 
   // ScrollSpy for Table of Contents
   function initScrollSpy() {
-    const tocLinks = document.querySelectorAll("#toc-list a");
+    const tocList = document.getElementById("toc-list");
+    if (!tocList) return;
+    const tocLinks = tocList.getElementsByTagName("a");
     if (tocLinks.length === 0) return;
 
     // ⚡ Bolt Optimization: Pre-calculate map for O(1) lookup
@@ -701,14 +707,19 @@ runOnDomReady(function () {
       link.hostname !== currentHostname &&
       link.protocol.startsWith("http")
     ) {
-      if (!link.hasAttribute("target")) {
-        link.setAttribute("target", "_blank");
+      // ⚡ Bolt Optimization: Use property access and DOMTokenList
+      if (!link.target) {
+        link.target = "_blank";
       }
-      const rel = link.getAttribute("rel") || "";
-      const parts = rel.split(" ").filter((p) => p);
-      if (!parts.includes("noopener")) parts.push("noopener");
-      if (!parts.includes("noreferrer")) parts.push("noreferrer");
-      link.setAttribute("rel", parts.join(" "));
+      if (link.relList) {
+        link.relList.add("noopener", "noreferrer");
+      } else {
+        const rel = link.getAttribute("rel") || "";
+        const parts = rel.split(" ").filter((p) => p);
+        if (!parts.includes("noopener")) parts.push("noopener");
+        if (!parts.includes("noreferrer")) parts.push("noreferrer");
+        link.setAttribute("rel", parts.join(" "));
+      }
       if (
         !link.querySelector("img, svg") &&
         !link.classList.contains("external-link")
@@ -931,7 +942,8 @@ runOnDomReady(function () {
 
     const STORAGE_KEY = "affinedrift_articles_history";
     const currentPath = window.location.pathname;
-    const currentUrl = currentPath.split("/").pop() || "";
+    // ⚡ Bolt Optimization: Use lastIndexOf/substring instead of split().pop()
+    const currentUrl = currentPath.substring(currentPath.lastIndexOf("/") + 1) || "";
     const isArticlePage =
       currentPath.includes("/articles/") && currentUrl.endsWith(".html");
 

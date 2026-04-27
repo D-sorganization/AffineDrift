@@ -76,3 +76,7 @@
 ## 2026-05-18 - Replacing querySelectorAll with getElementsByClassName
 **Learning:** `querySelectorAll` parses a CSS selector string and returns a static `NodeList`, which takes O(N) where N is the number of all nodes scanned. `getElementsByClassName` returns a live `HTMLCollection` and is highly optimized in browsers for simple class lookups (taking effectively O(1) time to create the collection). When iterating over elements that don't add or remove the queried classes (which avoids infinite loops with live collections), `getElementsByClassName` provides a measureable performance improvement for global DOM lookups.
 **Action:** When finding multiple elements solely by their class name and subsequently iterating over them without modifying their class attributes, always prefer `document.getElementsByClassName("class-name")` over `document.querySelectorAll(".class-name")`.
+
+## 2026-04-27 - Synchronizing modular code optimizations
+**Learning:** Performance optimizations applied to modular codebase files might exist in duplicate forms inside monolithic files like `script.js`.
+**Action:** When working on modular optimizations or after observing them in memory, always `grep` through older monolithic entry points to ensure identical logic was not overlooked.
