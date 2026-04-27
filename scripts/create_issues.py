@@ -12,7 +12,8 @@ from scripts.cli_output import write_stdout
 def create_issue(title: str, body: str) -> None:
     """Create a GitHub issue using the gh CLI."""
     subprocess.run(  # noqa: S603
-        ["gh", "issue", "create", "--title", title, "--body", body], check=True  # noqa: S607
+        ["gh", "issue", "create", "--title", title, "--body", body],
+        check=True,  # noqa: S607
     )
 
 
