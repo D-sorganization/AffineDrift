@@ -578,3 +578,4 @@ python src/tools/code_quality_ast.py
 | 2026-04-23 | 1.0.82 | fix(site): Add `scripts/check_quarto_render_coverage.py` and focused tests so CI verifies every sitemap URL maps to a committed Quarto source file before site builds proceed. |
 | 2026-04-26 | 1.0.84 | fix(html): fixed website-lint failures in Wrist_Universal_Claude.html by properly closing paragraph tags before list elements and removing stray </p> tags. |
 | 2026-04-27 | 1.0.85 | perf(frontend): synchronized performance optimizations from modular JS files to the monolithic `script.js` (replaced querySelectorAll with live collections, optimized string methods, etc.). |
+ 
