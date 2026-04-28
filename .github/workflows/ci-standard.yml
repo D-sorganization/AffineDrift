@@ -44,7 +44,6 @@ jobs:
           case "$MODE" in
             local)
               mkdir -p "$(dirname "$GITHUB_OUTPUT")"
-              mkdir -p "$(dirname "$GITHUB_OUTPUT")"
               echo "runner=d-sorg-fleet" >> "$GITHUB_OUTPUT"
               echo "Routing to self-hosted fleet (mode=local)"
               ;;
@@ -57,7 +56,6 @@ jobs:
                 --jq '[.runners[] | select(.status == "online") | select(.busy == false) | select(.labels[].name == "d-sorg-fleet")] | length' \
                 2>/dev/null || echo "0")
               if [[ "$AVAILABLE" -gt 0 ]]; then
-                mkdir -p "$(dirname "$GITHUB_OUTPUT")"
                 mkdir -p "$(dirname "$GITHUB_OUTPUT")"
                 echo "runner=d-sorg-fleet" >> "$GITHUB_OUTPUT"
                 echo "$AVAILABLE idle fleet runner(s) - routing locally"
@@ -548,4 +546,4 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python scripts/check_local_only_workflows.py
+          python3 scripts/check_local_only_workflows.py
