@@ -31,7 +31,7 @@ def _run_coverage(module: str, tests: list[str], threshold: int) -> int:
         f"--cov-fail-under={threshold}",
     ]
     logger.info("[coverage] module=%s threshold=%d tests=%s", module, threshold, ",".join(tests))
-    result = subprocess.run(cmd, check=False)  # noqa: S603
+    result = subprocess.run(cmd, check=False)
     return result.returncode
 
 

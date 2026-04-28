@@ -9,7 +9,7 @@ from unittest.mock import MagicMock, patch
 class TestConvertAllLatex:
     """Tests for src.tools.convert_all_latex.convert_all()."""
 
-    def _import_convert_all_latex(self):  # noqa: ANN201
+    def _import_convert_all_latex(self):  # noqa: ANN201  # reason: legacy type hint omission
         """Import convert_all_latex through package-qualified imports."""
         import src.tools.convert_all_latex as m
 
@@ -51,7 +51,7 @@ class TestConvertAllLatex:
 class TestConvertAllToQuarto:
     """Tests for src.tools.convert_all_to_quarto.convert_all()."""
 
-    def _import_convert_all_to_quarto(self):  # noqa: ANN201
+    def _import_convert_all_to_quarto(self):  # noqa: ANN201  # reason: legacy type hint omission
         """Import convert_all_to_quarto through package-qualified imports."""
         import src.tools.convert_all_to_quarto as m
 

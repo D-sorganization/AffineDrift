@@ -87,8 +87,8 @@ def test_prompt_for_files_returns_selected_paths() -> None:
     mock_root = MagicMock()
     mock_dialog = MagicMock()
     mock_dialog.askopenfilenames.return_value = (
-        "/tmp/a.tex",  # noqa: S108
-        "/tmp/b.tex",  # noqa: S108
+        "/tmp/a.tex",
+        "/tmp/b.tex",
     )
     mock_tk_module = MagicMock()
     mock_tk_module.Tk.return_value = mock_root
@@ -102,4 +102,4 @@ def test_prompt_for_files_returns_selected_paths() -> None:
     with patch.dict(sys.modules, module_overrides):
         paths = prompt_for_files()
 
-    assert paths == [Path("/tmp/a.tex"), Path("/tmp/b.tex")]  # noqa: S108
+    assert paths == [Path("/tmp/a.tex"), Path("/tmp/b.tex")]
