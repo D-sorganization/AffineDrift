@@ -534,3 +534,14 @@ jobs:
           echo "- ✅ rustfmt: formatted" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ clippy: no warnings" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ cargo test: all tests pass" >> $GITHUB_STEP_SUMMARY
+
+  local-only-workflows:
+    name: Reject hosted runner routing
+    runs-on: d-sorg-fleet
+    steps:
+      - uses: actions/checkout@v6
+      - name: Run local-only workflow guard
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/check_local_only_workflows.py
