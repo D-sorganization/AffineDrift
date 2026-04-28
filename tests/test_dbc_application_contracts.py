@@ -18,18 +18,18 @@ from typing import Any
 import numpy as np
 import pytest
 
-from src.affine_control.ddp import (  # noqa: E402
+from src.affine_control.ddp import (  # noqa: E402  # reason: import ordering constraint
     _resample_controls,
     _simulate_trajectory,
     adaptive_timestep_ddp_mock,
     estimate_perturbation_size,
 )
-from src.affine_control.residuals import (  # noqa: E402
+from src.affine_control.residuals import (  # noqa: E402  # reason: import ordering constraint
     ResidualMonitor,
     compute_hessian_bound,
     predict_residual_bound,
 )
-from src.core.contracts import (  # noqa: E402
+from src.core.contracts import (  # noqa: E402  # reason: import ordering constraint
     ContractViolationError,
     check_finite_array,
     check_positive,

@@ -44,7 +44,9 @@ def sitemap_loc_to_source_path(loc: str, repo_root: Path) -> Path:
 
 def load_sitemap_paths(sitemap_path: Path) -> list[str]:
     """Return all sitemap <loc> URLs."""
-    root = ET.fromstring(sitemap_path.read_text(encoding="utf-8"))  # noqa: S314
+    root = ET.fromstring(  # noqa: S314  # reason: XML parsing from trusted internal source
+        sitemap_path.read_text(encoding="utf-8")
+    )
     return [
         loc.text.strip()
         for loc in root.findall("sm:url/sm:loc", SITEMAP_NAMESPACE)

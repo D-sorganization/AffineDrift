@@ -27,10 +27,10 @@ _offscreen = os.environ.get("QT_QPA_PLATFORM") == "offscreen"
 if _backend not in ("agg", "headless", "template") and not _offscreen:
     matplotlib.use("QtAgg")
 
-from matplotlib.backends.backend_qtagg import (  # noqa: E402
+from matplotlib.backends.backend_qtagg import (  # noqa: E402  # reason: import ordering constraint
     FigureCanvasQTAgg as FigureCanvas,
 )
-from matplotlib.figure import Figure  # noqa: E402
+from matplotlib.figure import Figure  # noqa: E402  # reason: import ordering constraint
 
 
 def find_main_window_parent(widget: QWidget | None) -> QMainWindow | None:
@@ -41,7 +41,7 @@ def find_main_window_parent(widget: QWidget | None) -> QMainWindow | None:
     return parent if isinstance(parent, QMainWindow) else None
 
 
-class DiagramCanvas(FigureCanvas):
+class DiagramCanvas(FigureCanvas):  # type: ignore[misc]
     """Canvas showing the forearm-hand-club diagram."""
 
     def __init__(self, grip_angle_deg: float, wrist_angle_deg: float) -> None:
@@ -72,7 +72,7 @@ class DiagramCanvas(FigureCanvas):
         self.update_diagram()
 
 
-class PlotCanvas(FigureCanvas):
+class PlotCanvas(FigureCanvas):  # type: ignore[misc]
     """Canvas showing torque, acceleration, or transmission plots."""
 
     DEFAULT_POLYNOMIAL = "t**2 - t"

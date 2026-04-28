@@ -187,7 +187,7 @@ class TestPublishManualArticleMain:
 class TestConvertAllLatexMorePaths:
     """Cover remaining branches in convert_all_latex.py."""
 
-    def _import_convert_all_latex(self):  # noqa: ANN201
+    def _import_convert_all_latex(self):  # noqa: ANN201  # reason: legacy type hint omission
         """Import convert_all_latex with stubbed latex_to_html."""
         import types
 

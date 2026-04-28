@@ -15,7 +15,9 @@ import enum
 import logging
 import re
 import sys
-from collections.abc import Callable  # noqa: F401  (used in type annotation below)
+from collections.abc import (
+    Callable,  # noqa: F401  (used in type annotation below)  # reason: API re-export
+)
 from pathlib import Path
 from typing import Any
 

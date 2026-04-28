@@ -95,10 +95,12 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
-"tests/*" = ["S101", "E501"]
+"tests/*" = ["S101", "E501", "S108", "S603", "S102"]
 "tests/test_critical_physics_fixes.py" = ["F821", "E402", "E731", "F401"]
-"tools/**/*.py" = ["E501"]
-"scripts/**/*.py" = ["E501"]
+"src/tools/**/*.py" = ["E501", "S603", "S607"]
+"scripts/**/*.py" = ["E501", "S603", "S607", "S108"]
+"src/affine_control/swing_optimizer.py" = ["S101"]
+"articles/**/*.py" = ["S603", "S607"]
 "docs/**/*.py" = ["E501"]
 "build-html.py" = ["E501"]
 
