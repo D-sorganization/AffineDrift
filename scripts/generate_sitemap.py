@@ -29,8 +29,8 @@ def get_git_last_modified(filepath: str) -> str:
         return datetime.now().strftime("%Y-%m-%d")
 
     try:
-        result = subprocess.run(  # noqa: S603
-            [git_cmd, "log", "-1", "--format=%cI", "--", filepath],  # noqa: S603
+        result = subprocess.run(
+            [git_cmd, "log", "-1", "--format=%cI", "--", filepath],
             capture_output=True,
             text=True,
             cwd=Path(__file__).parent.parent,

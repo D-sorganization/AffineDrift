@@ -57,7 +57,7 @@ def run_tool(
     require(len(command) > 0, "command must not be empty")
     require(len(tool_name) > 0, "tool_name must not be empty")
     try:
-        result = subprocess.run(  # noqa: S603
+        result = subprocess.run(
             command,
             capture_output=True,
             text=True,

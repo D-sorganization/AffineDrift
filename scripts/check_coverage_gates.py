@@ -130,7 +130,7 @@ def _run_gate(gate: CoverageGate) -> bool:
         gate.threshold,
         ", ".join(gate.test_paths),
     )
-    result = subprocess.run(cmd, check=False)  # noqa: S603
+    result = subprocess.run(cmd, check=False)
     passed = result.returncode == 0
     status = "PASS" if passed else "FAIL"
     logger.info("  -> %s", status)

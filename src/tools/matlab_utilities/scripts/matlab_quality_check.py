@@ -144,7 +144,7 @@ class MATLABQualityChecker:
         """Try a single MATLAB command. Returns result dict on success, None on failure."""
         try:
             logger.info(f"Trying command: {' '.join(cmd)}")
-            result = subprocess.run(  # noqa: S603
+            result = subprocess.run(
                 cmd,
                 capture_output=True,
                 text=True,

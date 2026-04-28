@@ -17,7 +17,7 @@ def test_main_writes_normalized_html_to_output(tmp_path: Path) -> None:
     input_file.parent.mkdir(parents=True)
     input_file.write_text("<p>\n<ul></li><li><p>\\begin{quote}", encoding="utf-8")
 
-    result = subprocess.run(  # noqa: S603
+    result = subprocess.run(
         [
             sys.executable,
             str(SCRIPT_PATH),
@@ -48,7 +48,7 @@ def test_main_dry_run_does_not_write_output(tmp_path: Path) -> None:
     input_file.parent.mkdir(parents=True)
     input_file.write_text("<p>\n<ul></li><li>", encoding="utf-8")
 
-    result = subprocess.run(  # noqa: S603
+    result = subprocess.run(
         [
             sys.executable,
             str(SCRIPT_PATH),
