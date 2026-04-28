@@ -1,9 +1,36 @@
-def test_benchmark_basic(benchmark):
-    """Baseline benchmark: measure overhead of an empty callable via pytest-benchmark."""
+import numpy as np
+
+from src.tools.rl_funnel_dynamics import (
+    double_pendulum_drift,
+    double_pendulum_mass_matrix,
+    generate_reference_trajectory,
+)
+
+
+def test_benchmark_drift(benchmark):
+    """Benchmark the double pendulum drift dynamics function."""
+    x = np.array([np.pi / 2, np.pi / 4, 1.0, -1.0])
 
     def run():
-        """No-op target used to establish the benchmark floor."""
-        # Intentionally empty — measures raw benchmark harness overhead
-        return None
+        return double_pendulum_drift(0.0, x)
+
+    benchmark(run)
+
+
+def test_benchmark_mass_matrix(benchmark):
+    """Benchmark the double pendulum mass matrix calculation."""
+
+    def run():
+        return double_pendulum_mass_matrix(np.pi / 2, np.pi / 4)
+
+    benchmark(run)
+
+
+def test_benchmark_trajectory_generation(benchmark):
+    """Benchmark the full reference trajectory generation."""
+
+    # We use a very short time span to keep the benchmark fast
+    def run():
+        return generate_reference_trajectory((0.0, 0.1), dt=0.01)
 
     benchmark(run)
