@@ -233,8 +233,8 @@ def compile_pdf(tex_file: str) -> str | None:
 
         # Run pdflatex twice for proper cross-references
         for i in range(2):
-            result = subprocess.run(  # noqa: S603
-                ["pdflatex", "-interaction=nonstopmode", tex_path.name],  # noqa: S607
+            result = subprocess.run(
+                ["pdflatex", "-interaction=nonstopmode", tex_path.name],
                 capture_output=True,
                 text=True,
             )
@@ -252,7 +252,9 @@ def compile_pdf(tex_file: str) -> str | None:
             logger.info("PDF file not found after compilation")
             return None
 
-    except Exception as e:  # noqa: BLE001
+    except (
+        Exception
+    ) as e:  # noqa: BLE001  # reason: catch-all exception handler for top-level guard
         logger.info(f"Error during compilation: {e}")
         return None
 

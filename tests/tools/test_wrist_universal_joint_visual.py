@@ -666,7 +666,7 @@ class TestStreamlitAppFunctions:
     def test_import_has_no_side_effects(self) -> None:
         """Importing streamlit_app must not call set_page_config or UI functions."""
         with _streamlit_context() as st_mock:
-            import src.tools.wrist_universal_joint.streamlit_app  # noqa: F401
+            import src.tools.wrist_universal_joint.streamlit_app  # noqa: F401  # reason: API re-export
 
             st_mock.set_page_config.assert_not_called()
             st_mock.title.assert_not_called()

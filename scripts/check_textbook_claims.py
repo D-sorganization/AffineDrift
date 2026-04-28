@@ -80,8 +80,8 @@ def _merge_base(repo_root: Path) -> str:
             if isinstance(base, dict):
                 base_ref = str(base.get("ref", "")).strip()
                 if base_ref:
-                    subprocess.run(  # noqa: S603
-                        ["git", "fetch", "origin", base_ref],  # noqa: S607
+                    subprocess.run(
+                        ["git", "fetch", "origin", base_ref],
                         cwd=repo_root,
                         check=False,
                         capture_output=True,
@@ -90,8 +90,8 @@ def _merge_base(repo_root: Path) -> str:
                         errors="replace",
                     )
                     try:
-                        result = subprocess.run(  # noqa: S603
-                            ["git", "merge-base", "HEAD", f"origin/{base_ref}"],  # noqa: S607
+                        result = subprocess.run(
+                            ["git", "merge-base", "HEAD", f"origin/{base_ref}"],
                             cwd=repo_root,
                             check=True,
                             capture_output=True,
@@ -118,8 +118,8 @@ def _merge_base(repo_root: Path) -> str:
                 default_base if candidate in {f"origin/{default_base}", default_base} else "main"
             )
             if not fetched_default or remote_ref != default_base:
-                subprocess.run(  # noqa: S603
-                    ["git", "fetch", "origin", remote_ref],  # noqa: S607
+                subprocess.run(
+                    ["git", "fetch", "origin", remote_ref],
                     cwd=repo_root,
                     check=False,
                     capture_output=True,
@@ -130,8 +130,8 @@ def _merge_base(repo_root: Path) -> str:
                 if remote_ref == default_base:
                     fetched_default = True
         try:
-            result = subprocess.run(  # noqa: S603
-                ["git", "merge-base", "HEAD", candidate],  # noqa: S607
+            result = subprocess.run(
+                ["git", "merge-base", "HEAD", candidate],
                 cwd=repo_root,
                 check=True,
                 capture_output=True,
@@ -151,8 +151,8 @@ def _diff_text(repo_root: Path, base_ref: str) -> str:
     """Return unified diff text for candidate textbook changes."""
     ci_base_ref = os.getenv("GITHUB_BASE_REF", "").strip()
     if ci_base_ref:
-        subprocess.run(  # noqa: S603
-            ["git", "fetch", "origin", ci_base_ref],  # noqa: S607
+        subprocess.run(
+            ["git", "fetch", "origin", ci_base_ref],
             cwd=repo_root,
             check=False,
             capture_output=True,
@@ -177,7 +177,7 @@ def _diff_text(repo_root: Path, base_ref: str) -> str:
 
     for cmd in commands:
         try:
-            result = subprocess.run(  # noqa: S603
+            result = subprocess.run(
                 cmd,
                 cwd=repo_root,
                 check=True,

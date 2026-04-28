@@ -9,7 +9,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 
-def _import_convert_all_to_quarto():  # noqa: ANN201
+def _import_convert_all_to_quarto():  # noqa: ANN201  # reason: legacy type hint omission
     """Import convert_all_to_quarto through package-qualified imports."""
     if "src.tools.convert_all_to_quarto" in sys.modules:
         del sys.modules["src.tools.convert_all_to_quarto"]
