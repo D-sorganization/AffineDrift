@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import ast
 import sys
 from pathlib import Path
 from unittest.mock import patch
@@ -40,6 +41,18 @@ def test_code_quality_shim_declares_explicit_public_api() -> None:
     assert "main" in cq_shim.__all__
     assert "check_file" in cq_shim.__all__
     assert "logger" not in cq_shim.__all__
+
+
+def test_src_tree_has_no_bare_except_handlers() -> None:
+    """Production modules must not use bare ``except:`` handlers."""
+    bare_handlers: list[str] = []
+    for path in Path("src").rglob("*.py"):
+        tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+        for node in ast.walk(tree):
+            if isinstance(node, ast.ExceptHandler) and node.type is None:
+                bare_handlers.append(f"{path}:{node.lineno}")
+
+    assert bare_handlers == []
 
 
 def test_check_file_returns_error_tuple_on_oserror(tmp_path: Path) -> None:
