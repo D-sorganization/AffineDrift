@@ -13,11 +13,8 @@ from unittest.mock import MagicMock
 import numpy as np
 import pytest
 
-# _build_hessian_tensor was not backported from staging
-try:
-    from src.affine_control.residuals import ResidualMonitor, _build_hessian_tensor
-except ImportError:
-    pytest.skip("Hessian tensor builder not yet implemented", allow_module_level=True)
+from src.affine_control.residuals import ResidualMonitor
+from src.affine_control.residuals import _assemble_hessian_tensor as _build_hessian_tensor
 from src.golf_simulation.ball_flight import BallFlightDynamics
 from src.golf_simulation.course import (
     _CHAMPIONSHIP_HANDICAPS,

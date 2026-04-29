@@ -85,3 +85,24 @@ HTML_FIX_PATTERNS: tuple[tuple[str, str, str], ...] = (
     (r'crossorigin=""', "crossorigin", "boolean attribute normalization"),
     (r'\s+role="link"', "", "redundant role='link' on anchors"),
 )
+
+# ── LaTeX regex patterns ───────────────────────────────────────────────────
+# Shared regex patterns for parsing LaTeX source files.
+
+LATEX_ABSTRACT_PATTERN: str = r"\\begin\{abstract\}.*?\\end\{abstract\}"
+"""Match a LaTeX abstract environment (DOTALL)."""
+
+LATEX_EQUATION_BEGIN_PATTERN: str = r"\\begin\{equation\}"
+"""Match the start of a LaTeX equation environment."""
+
+LATEX_ALIGN_BEGIN_PATTERN: str = r"\\begin\{align\*?\}"
+"""Match the start of a LaTeX align or align* environment."""
+
+LATEX_TIKZ_PATTERN: str = r"\\begin\{tikzpicture\}.*?\\end\{tikzpicture\}"
+"""Match a TikZ picture environment (DOTALL)."""
+
+LATEX_KEYPOINT_PATTERN: str = r"\\keypoint\{[^}]*\}"
+"""Match a \\keypoint{} command."""
+
+LATEX_LIMITATION_PATTERN: str = r"\\limitation\{[^}]*\}"
+"""Match a \\limitation{} command."""
