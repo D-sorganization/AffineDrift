@@ -62,9 +62,7 @@ class TestOptimizerBenchmarks:
         Instantaneous costs are computed frequently during optimization
         iterations (once per timestep per iteration), making their speed critical.
         """
-        config = SwingOptimizationConfig(
-            n_joints=3, horizon_steps=50, allow_mock_solver=True
-        )
+        config = SwingOptimizationConfig(n_joints=3, horizon_steps=50, allow_mock_solver=True)
         optimizer = SwingOptimizer(config)
 
         state = np.zeros(config.state_dim)
@@ -86,9 +84,7 @@ class TestOptimizerBenchmarks:
         Terminal costs are computed once per optimization iteration but with
         a higher weight, making their computational cost significant.
         """
-        config = SwingOptimizationConfig(
-            n_joints=3, horizon_steps=50, allow_mock_solver=True
-        )
+        config = SwingOptimizationConfig(n_joints=3, horizon_steps=50, allow_mock_solver=True)
         optimizer = SwingOptimizer(config)
 
         state = np.zeros(config.state_dim)
@@ -110,9 +106,7 @@ class TestOptimizerBenchmarks:
         Trajectory cost requires summing costs over the entire time horizon,
         so this tests computational scaling with horizon length.
         """
-        config = SwingOptimizationConfig(
-            n_joints=2, horizon_steps=10, allow_mock_solver=True
-        )
+        config = SwingOptimizationConfig(n_joints=2, horizon_steps=10, allow_mock_solver=True)
         optimizer = SwingOptimizer(config)
 
         trajectory = [np.zeros(config.state_dim) for _ in range(11)]
@@ -134,9 +128,7 @@ class TestOptimizerBenchmarks:
         This tests scalability of cost computation to longer planning horizons,
         which is important for high-resolution trajectory planning.
         """
-        config = SwingOptimizationConfig(
-            n_joints=2, horizon_steps=100, allow_mock_solver=True
-        )
+        config = SwingOptimizationConfig(n_joints=2, horizon_steps=100, allow_mock_solver=True)
         optimizer = SwingOptimizer(config)
 
         trajectory = [np.zeros(config.state_dim) for _ in range(101)]
@@ -185,9 +177,7 @@ def test_benchmark_optimizer_cost_matrix_construction(
     This is a module-level benchmark measuring the time to build Q, R, and Q_f
     matrices, which scales with state and control dimensions.
     """
-    config = SwingOptimizationConfig(
-        n_joints=4, horizon_steps=50, allow_mock_solver=True
-    )
+    config = SwingOptimizationConfig(n_joints=4, horizon_steps=50, allow_mock_solver=True)
 
     def create_optimizer_and_access_matrices() -> tuple[np.ndarray, np.ndarray, np.ndarray]:
         optimizer = SwingOptimizer(config)
@@ -209,9 +199,7 @@ def test_benchmark_full_trajectory_cost_realistic_problem(
     problem with 3 joints and 50-step horizon, executed 10 times (typical for
     optimization convergence checks).
     """
-    config = SwingOptimizationConfig(
-        n_joints=3, horizon_steps=50, allow_mock_solver=True
-    )
+    config = SwingOptimizationConfig(n_joints=3, horizon_steps=50, allow_mock_solver=True)
     optimizer = SwingOptimizer(config)
 
     # Generate a realistic trajectory (e.g., from a DDP solver)
