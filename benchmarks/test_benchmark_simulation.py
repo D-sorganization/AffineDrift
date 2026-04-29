@@ -21,7 +21,8 @@ class TestSimulationBenchmarks:
     """Benchmark suite for simulation engine performance."""
 
     def test_benchmark_ball_flight_dynamics_step(
-        self, benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
+        self,
+        benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
     ) -> None:
         """Benchmark single step of ball flight dynamics.
 
@@ -54,7 +55,8 @@ class TestSimulationBenchmarks:
         assert np.isfinite(result).all()
 
     def test_benchmark_ball_flight_state_creation(
-        self, benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
+        self,
+        benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
     ) -> None:
         """Benchmark BallFlightState instantiation.
 
@@ -72,7 +74,8 @@ class TestSimulationBenchmarks:
         assert state.speed >= 0.0
 
     def test_benchmark_ball_flight_linearization(
-        self, benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
+        self,
+        benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
     ) -> None:
         """Benchmark linearization of ball flight dynamics.
 
@@ -94,7 +97,8 @@ class TestSimulationBenchmarks:
         assert B.shape == (9, 3)
 
     def test_benchmark_trajectory_simulation_10_steps(
-        self, benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
+        self,
+        benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
     ) -> None:
         """Benchmark trajectory simulation for 10 integration steps.
 
@@ -123,7 +127,8 @@ class TestSimulationBenchmarks:
         assert all(s.shape == (9,) for s in trajectory)
 
     def test_benchmark_trajectory_simulation_100_steps(
-        self, benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
+        self,
+        benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
     ) -> None:
         """Benchmark trajectory simulation for 100 integration steps.
 
@@ -150,7 +155,8 @@ class TestSimulationBenchmarks:
         assert len(trajectory) == num_steps + 1
 
     def test_benchmark_trajectory_simulation_1000_steps(
-        self, benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
+        self,
+        benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
     ) -> None:
         """Benchmark trajectory simulation for 1000 integration steps.
 
@@ -177,7 +183,8 @@ class TestSimulationBenchmarks:
         assert len(trajectory) == num_steps + 1
 
     def test_benchmark_ddp_mock_initialization(
-        self, benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
+        self,
+        benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
     ) -> None:
         """Benchmark DDP solver mock initialization.
 
@@ -194,9 +201,7 @@ class TestSimulationBenchmarks:
             xf = np.array([1.0, 1.0, 0.0, 0.0])
             u_init = np.zeros((50, 2))
 
-            return adaptive_timestep_ddp_mock(
-                dynamics_fn, x0, xf, u_init
-            )
+            return adaptive_timestep_ddp_mock(dynamics_fn, x0, xf, u_init)
 
         result = benchmark(init_ddp)
         assert len(result) == 3  # (x_traj, u_traj, t_traj)
@@ -215,9 +220,7 @@ def test_benchmark_complete_ball_flight_simulation(
     dt = 0.001  # 1ms timesteps for accuracy
     max_time = 7.0  # 7 seconds (typical golf ball flight)
 
-    initial_state = np.array(
-        [0.0, 0.0, 0.0, 40.0, 0.0, 30.0, 0.0, 0.0, 3000.0]
-    )
+    initial_state = np.array([0.0, 0.0, 0.0, 40.0, 0.0, 30.0, 0.0, 0.0, 3000.0])
     control = np.zeros(3)
 
     def simulate_full_flight() -> list[np.ndarray]:

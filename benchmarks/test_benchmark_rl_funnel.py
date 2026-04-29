@@ -25,7 +25,8 @@ class TestRLFunnelBenchmarks:
     """Benchmark suite for RL Funnel double-pendulum control algorithms."""
 
     def test_benchmark_double_pendulum_drift(
-        self, benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
+        self,
+        benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
     ) -> None:
         """Benchmark the passive dynamics computation of the double pendulum.
 
@@ -43,7 +44,8 @@ class TestRLFunnelBenchmarks:
         assert np.isfinite(result).all()
 
     def test_benchmark_setpoint_lqr_controller(
-        self, benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
+        self,
+        benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
     ) -> None:
         """Benchmark setpoint LQR controller evaluation.
 
@@ -63,7 +65,8 @@ class TestRLFunnelBenchmarks:
         assert np.isfinite(result).all()
 
     def test_benchmark_trajectory_tracking_lqr(
-        self, benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
+        self,
+        benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
     ) -> None:
         """Benchmark trajectory-tracking LQR law evaluation.
 
@@ -84,7 +87,8 @@ class TestRLFunnelBenchmarks:
         assert np.isfinite(result).all()
 
     def test_benchmark_reference_trajectory_generation(
-        self, benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
+        self,
+        benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
     ) -> None:
         """Benchmark reference trajectory generation.
 
@@ -102,13 +106,15 @@ class TestRLFunnelBenchmarks:
         assert x_ref.shape[1] == len(t_ref)
 
     def test_benchmark_full_simulation_loop(
-        self, benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
+        self,
+        benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
     ) -> None:
         """Benchmark the complete simulation loop using setpoint LQR.
 
         This measures end-to-end performance of the control-simulation loop,
         which is the primary use case for the RL Funnel algorithm.
         """
+
         # Create a setpoint controller function factory
         def create_controller() -> callable:  # type: ignore[name-defined]
             target = np.array([0.5, 0.3, 0.1, -0.2])
