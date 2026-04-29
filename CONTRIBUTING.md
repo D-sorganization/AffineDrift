@@ -272,6 +272,23 @@ Pull requests need independent, meaningful review before merge.
 - Architecture-impacting changes should include an ADR or a clear rationale in
   the PR description before review is requested.
 
+### Required Repository Review Enforcement
+
+The default branch ruleset should enforce the review policy, not rely only on
+contributor discipline. Repository administrators should keep the default-branch
+ruleset aligned with these settings:
+
+- Require a pull request before merging to `main`.
+- Require at least one approving review from someone other than the PR author.
+- Require approval from someone other than the last pusher when available.
+- Dismiss stale approvals when new commits are pushed.
+- Require all review threads to be resolved before merge.
+- Keep direct pushes, branch deletion, and non-fast-forward updates blocked.
+
+Until those settings are active, maintainers should treat a PR as not ready to
+merge if the author is the only approver, the author is attempting to self-merge,
+or material commits have landed after the latest independent review.
+
 ### Architecture Decision Records (ADR)
 
 For architecture-impacting changes, add or update an ADR in `docs/adr/`.
