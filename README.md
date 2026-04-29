@@ -96,6 +96,37 @@ See [Repository Inventory](docs/development/repository_inventory.md) for mainten
   pip install -r requirements.txt
   ```
 
+## 🐳 Docker
+
+AffineDrift ships a local preview image for reproducible static-site checks. The
+container renders the Quarto site into `docs/`, serves the rendered output on
+container port 8000, and uses environment variables for runtime configuration.
+
+Build and run with Docker:
+
+```bash
+docker build -t affinedrift:local .
+docker run --rm -p 8080:8000 affinedrift:local
+```
+
+Or use Compose:
+
+```bash
+docker compose up --build
+```
+
+The preview is available at `http://localhost:8080`. Override the bind target
+with `AFFINEDRIFT_PORT`; do not bake secrets into the image. Runtime secrets, if
+ever needed, should be passed with environment variables or an external secret
+store.
+
+Tag and push an image with:
+
+```bash
+docker tag affinedrift:local ghcr.io/d-sorganization/affinedrift:latest
+docker push ghcr.io/d-sorganization/affinedrift:latest
+```
+
 ## 🔄 CI/CD Pipeline
 
 This repository includes an automated CI/CD pipeline that:
