@@ -15,7 +15,6 @@ import pytest
 from src.tools.rl_funnel_benchmark import (
     double_pendulum_drift,
     generate_reference_trajectory,
-    run_benchmark,
     setpoint_lqr_controller,
     trajectory_tracking_lqr,
 )
