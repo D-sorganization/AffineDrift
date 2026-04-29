@@ -11,10 +11,11 @@ packages = []
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
-testpaths = ["tests"]
+testpaths = ["tests", "benchmarks"]
 markers = [
     "integration: marks tests requiring cross-module or I/O integration",
     "content_lint: marks repository-content assertions that are skipped by default",
+    "benchmark: marks tests as benchmark measurements (group=name for categorization)",
 ]
 addopts = "-m 'not content_lint' --tb=short"
 
