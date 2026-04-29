@@ -1,8 +1,11 @@
 # CI/CD Workflow Audit & Consolidation Plan
 
-**Status:** In Progress  
-**Date:** 2026-04-28  
-**Related Issue:** #2915 (Consolidate and audit 21 CI/CD workflow files)  
+**Status:** In Progress
+
+**Date:** 2026-04-28
+
+**Related Issue:** #2915 (Consolidate and audit 21 CI/CD workflow files)
+
 **Related Epic:** #2873 (P0 CI health - 42 workflow files)
 
 ## Executive Summary
