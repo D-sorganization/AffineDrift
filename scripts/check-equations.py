@@ -18,68 +18,74 @@ from src.tools.utils import find_html_files, find_qmd_files, setup_logging
 logger = setup_logging(__name__)
 
 
-def find_equations(content: str, filepath: str) -> list[tuple[int, str, str]]:
-    """Find all equations in content and return line numbers and equations."""
-    issues = []
-    lines = content.split("\n")
-
-    # Check for display equations
-    for line_num, line in enumerate(lines, 1):
-        # Check for \[ ... \] patterns
-        if r"\[" in line or r"\]" in line:
-            # Count opening and closing brackets
-            open_count = line.count(r"\[")
-            close_count = line.count(r"\]")
-            if open_count != close_count:
-                issues.append(
-                    (
-                        line_num,
-                        "unbalanced",
-                        f"Unbalanced \\[ \\] delimiters: {open_count} open, {close_count} close",
-                    ),
-                )
-
-            # Check for proper pairing
-            if r"\[" in line and r"\]" in line:
-                # Extract equation content
-                matches = re.findall(r"\\\[(.*?)\\\]", line)
-                for match in matches:
-                    if not match.strip():
-                        issues.append((line_num, "empty", "Empty equation block \\[\\]"))
-
-        # Check for $$ ... $$ patterns
-        dollar_count = line.count("$$")
-        if dollar_count > 0 and dollar_count % 2 != 0:
+def _check_display_brackets(line: str, line_num: int, issues: list):
+    r"""Check \[ ... \] delimiters."""
+    if r"\[" in line or r"\]" in line:
+        open_count = line.count(r"\[")
+        close_count = line.count(r"\]")
+        if open_count != close_count:
             issues.append(
                 (
                     line_num,
                     "unbalanced",
-                    f"Unbalanced $$ delimiters: {dollar_count} found  (should be even)",
-                ),
+                    f"Unbalanced \\[ \\] delimiters: {open_count} open, {close_count} close",
+                )
+            )
+        if r"\[" in line and r"\]" in line:
+            matches = re.findall(r"\\\[(.*?)\\\]", line)
+            for match in matches:
+                if not match.strip():
+                    issues.append((line_num, "empty", "Empty equation block \\[\\]"))
+
+
+def _check_display_dollars(line: str, line_num: int, issues: list):
+    """Check $$ ... $$ delimiters."""
+    dollar_count = line.count("$$")
+    if dollar_count > 0 and dollar_count % 2 != 0:
+        issues.append(
+            (
+                line_num,
+                "unbalanced",
+                f"Unbalanced $$ delimiters: {dollar_count} found  (should be even)",
+            )
+        )
+
+
+def _check_inline_brackets(line: str, line_num: int, issues: list):
+    r"""Check \( ... \) delimiters."""
+    if r"\(" in line or r"\)" in line:
+        open_count = line.count(r"\(")
+        close_count = line.count(r"\)")
+        if open_count != close_count:
+            issues.append(
+                (
+                    line_num,
+                    "unbalanced",
+                    f"Unbalanced \\( \\) delimiters: {open_count} open, {close_count} close",
+                )
             )
 
-        # Check for \( ... \) patterns
-        if r"\(" in line or r"\)" in line:
-            open_count = line.count(r"\(")
-            close_count = line.count(r"\)")
-            if open_count != close_count:
-                issues.append(
-                    (
-                        line_num,
-                        "unbalanced",
-                        f"Unbalanced \\( \\) delimiters: {open_count} open, {close_count} close",
-                    ),
-                )
 
-        # Check for single $ patterns (inline math, but not $$)
-        # This is tricky - we need to avoid matching $$
-        single_dollar_pattern = r"(?<!\$)\$(?!\$)[^$]*\$(?!\$)"
-        if re.search(single_dollar_pattern, line):
-            # Check if properly closed
-            dollar_matches = re.findall(r"(?<!\$)\$([^$]*)\$(?!\$)", line)
-            for match in dollar_matches:
-                if not match.strip():
-                    issues.append((line_num, "empty", "Empty inline equation $ $"))
+def _check_inline_dollars(line: str, line_num: int, issues: list):
+    """Check $ ... $ delimiters."""
+    dollar_matches = re.findall(r"(?<!\$)\$([^$]*)\$(?!\$)", line)
+    for match in dollar_matches:
+        if not match.strip():
+            issues.append((line_num, "empty", "Empty inline equation $ $"))
+
+
+def find_equations(content: str, filepath: str) -> list[tuple[int, str, str]]:
+    """Find all equations in content and return line numbers and equations."""
+    issues: list[tuple[int, str, str]] = []
+    lines = content.split("\n")
+
+    for line_num, line in enumerate(lines, 1):
+        _check_display_brackets(line, line_num, issues)
+        _check_display_dollars(line, line_num, issues)
+        _check_inline_brackets(line, line_num, issues)
+        _check_inline_dollars(line, line_num, issues)
+
+    return issues
 
     return issues
 
@@ -132,52 +138,66 @@ def check_quarto_math_config(quarto_yml: Path) -> list[str]:
     return issues
 
 
-def main() -> int:
-    """Main function to check equations in all relevant files."""
-    root = Path()
-    issues_found = False
-
-    # Check _quarto.yml for MathJax configuration
+def _check_quarto_config(root: Path) -> bool:
+    """Check _quarto.yml config and log issues."""
     quarto_yml = root / "_quarto.yml"
-    if quarto_yml.exists():
-        config_issues = check_quarto_math_config(quarto_yml)
-        if config_issues:
-            for issue in config_issues:
-                logger.warning("_quarto.yml: %s", issue)
-            issues_found = True
+    if not quarto_yml.exists():
+        return False
+    config_issues = check_quarto_math_config(quarto_yml)
+    if config_issues:
+        for issue in config_issues:
+            logger.warning("_quarto.yml: %s", issue)
+        return True
+    return False
 
-    # Check all .qmd files using shared utility
+
+def _check_qmd_files(root: Path) -> bool:
+    """Check equations in all .qmd files and log issues."""
+    issues_found = False
     qmd_files = find_qmd_files(root)
-
     for qmd_file in qmd_files:
         try:
             with open(qmd_file, encoding="utf-8") as f:
                 content = f.read()
-
             equation_issues = find_equations(content, str(qmd_file))
-
             if equation_issues:
                 for line_num, issue_type, message in equation_issues:
                     logger.warning("%s:%d [%s] %s", qmd_file, line_num, issue_type, message)
                 issues_found = True
-
         except (OSError, UnicodeDecodeError) as e:
             logger.error("Error processing %s: %s", qmd_file, e)
             issues_found = True
+    return issues_found
 
-    # Check rendered HTML files in docs/ for MathJax configuration
+
+def _check_html_files(root: Path) -> bool:
+    """Check MathJax in rendered HTML files and log issues."""
+    issues_found = False
     html_files = find_html_files(root, limit=10)
-
     for html_file in html_files:
         config_issues = check_mathjax_config(str(html_file))
         if config_issues:
             for issue in config_issues:
                 logger.warning("%s: %s", html_file, issue)
             issues_found = True
+    return issues_found
 
-    if not issues_found:
-        return 0
-    return 1
+
+def main() -> int:
+    """Main function to check equations in all relevant files."""
+    root = Path()
+    issues_found = False
+
+    if _check_quarto_config(root):
+        issues_found = True
+
+    if _check_qmd_files(root):
+        issues_found = True
+
+    if _check_html_files(root):
+        issues_found = True
+
+    return 1 if issues_found else 0
 
 
 if __name__ == "__main__":
