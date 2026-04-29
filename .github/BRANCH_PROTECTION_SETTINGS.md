@@ -3,6 +3,19 @@
 This file documents the required branch protection settings for the `main` branch.
 These settings should be configured via GitHub Settings > Branches > Branch protection rules.
 
+## Current API-Observed Gap
+
+The GitHub App token used by automation can read that `main` is protected, but
+the branch-protection detail endpoint currently returns
+`403 Resource not accessible by integration`. A ruleset read showed the active `Protect Main`
+ruleset still needs admin verification for review enforcement: required
+approvals, stale-review dismissal, latest-push approval, code-owner review, and
+review-thread resolution were not confirmed as enforced through that API view.
+
+An administrator or token with branch-administration permission should verify
+and update the live settings before closing #2912 or treating #2918 as fully
+enforced.
+
 ## Settings to Enable
 
 ### Apply to main branch

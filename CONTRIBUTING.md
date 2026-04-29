@@ -255,6 +255,23 @@ const scrollToElement = (elementId, offset = 140) => {
 
 ## Pull Request Process
 
+### Review Policy
+
+Pull requests need independent, meaningful review before merge.
+
+- The PR author must not approve or merge their own PR.
+- At least one reviewer who is not the author should approve every code, workflow,
+  dependency, deployment, or content-architecture change.
+- Reviews should check correctness, tests, security, maintainability, and
+  ownership impact; approval means those areas were considered, not just that CI
+  passed.
+- New commits after approval should be treated as stale until the reviewer has
+  checked the updated diff.
+- Rotate reviewers across modules when possible so knowledge is not concentrated
+  in one author or one subsystem owner.
+- Architecture-impacting changes should include an ADR or a clear rationale in
+  the PR description before review is requested.
+
 ### Architecture Decision Records (ADR)
 
 For architecture-impacting changes, add or update an ADR in `docs/adr/`.
@@ -369,6 +386,7 @@ git commit -m "test(scripts): add tests for sitemap generator"
    - Address reviewer comments promptly
    - Push additional commits to the same branch
    - Mark conversations as resolved when addressed
+   - Re-request review after pushing material changes
 
 ### PR Checklist
 
@@ -376,6 +394,9 @@ git commit -m "test(scripts): add tests for sitemap generator"
 - [ ] All linting checks pass (`ruff`, `mypy`)
 - [ ] Tests added/updated and passing
 - [ ] Documentation updated (if needed)
+- [ ] Independent reviewer requested; self-approval/self-merge avoided
+- [ ] Review focus areas and ownership risks documented
+- [ ] Reviewer rotation considered for cross-module or repeated-author changes
 - [ ] Commit messages follow conventional format
 - [ ] PR description is clear and complete
 - [ ] No merge conflicts with main branch
