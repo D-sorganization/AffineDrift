@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-04-29T02:10:00Z
+Last-Updated: 2026-04-29T05:42:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -580,3 +580,4 @@ python src/tools/code_quality_ast.py
 | 2026-04-26 | 1.0.84 | fix(html): fixed website-lint failures in Wrist_Universal_Claude.html by properly closing paragraph tags before list elements and removing stray </p> tags. |
 | 2026-04-27 | 1.0.85 | perf(frontend): synchronized performance optimizations from modular JS files to the monolithic `script.js` (replaced querySelectorAll with live collections, optimized string methods, etc.). |
 | 2026-04-28 | 1.0.87 | ci(workflows): harden runner-routing workflows to create the `GITHUB_OUTPUT` parent directory before writing outputs, remove unnecessary full-history checkout from comment conversion, and run the local-only workflow guard with `python3` in CI. |
+| 2026-04-29 | 1.0.88 | style: fix formatting with black and ruff in tests/test_container_config.py and other python files. |
