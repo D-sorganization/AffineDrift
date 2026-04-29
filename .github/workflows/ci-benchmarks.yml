@@ -18,7 +18,7 @@ permissions:
 jobs:
   benchmark:
     name: Run Performance Benchmarks
-    runs-on: ubuntu-latest
+    runs-on: d-sorg-fleet
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
@@ -140,7 +140,7 @@ jobs:
     name: Benchmark Summary
     needs: benchmark
     if: always()
-    runs-on: ubuntu-latest
+    runs-on: d-sorg-fleet
     steps:
       - name: Report status
         run: |
