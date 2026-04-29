@@ -13,6 +13,7 @@ from src.core.contracts import check_finite_array, require
 STATE_DIM = 4
 CONTROL_DIM = 2
 DEFAULT_CONTROL_SATURATION = 50.0
+CONTROL_SATURATION_DEFAULT = DEFAULT_CONTROL_SATURATION
 PENDULUM_MASS_1_KG = 1.0
 PENDULUM_MASS_2_KG = 1.0
 PENDULUM_LINK_1_M = 0.5
@@ -70,6 +71,7 @@ def validate_reference_trajectory(t_ref: npt.NDArray[Any], x_ref: npt.NDArray[An
 
 __all__ = [
     "CONTROL_DIM",
+    "CONTROL_SATURATION_DEFAULT",
     "DEFAULT_CONTROL_SATURATION",
     "GRAVITY_M_S2",
     "PENDULUM_LINK_1_M",
