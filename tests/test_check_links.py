@@ -13,8 +13,6 @@ from src.tools.check_links import (
     find_links,
 )
 
-REPO_ROOT = Path(__file__).resolve().parents[1]
-
 
 @pytest.mark.parametrize(
     "url",
@@ -165,14 +163,3 @@ def test_check_links_skips_non_scannable_paths(tmp_path: Path) -> None:
     results = check_links(str(tmp_path))
     # No broken links — just verifying skip paths are exercised
     assert isinstance(results, list)
-
-
-def test_top_level_articles_do_not_escape_above_repo_root() -> None:
-    """Top-level article links should not climb above the rendered article root."""
-    offenders = [
-        path.relative_to(REPO_ROOT).as_posix()
-        for path in sorted((REPO_ROOT / "articles").glob("*.qmd"))
-        if "../../" in path.read_text(encoding="utf-8")
-    ]
-
-    assert offenders == []

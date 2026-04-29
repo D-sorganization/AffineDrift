@@ -4,10 +4,6 @@ from __future__ import annotations
 
 from unittest.mock import patch
 
-import pytest
-
-pytest.importorskip("streamlit")
-
 from src.tools.wrist_universal_joint import streamlit_app
 
 

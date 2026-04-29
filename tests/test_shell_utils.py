@@ -1,5 +1,3 @@
-import sys
-
 from src.tools.utils import shell_utils
 from src.tools.utils.shell_utils import run_black_check, run_ruff_check, run_tool
 
@@ -9,8 +7,8 @@ def test_imports():
 
 
 def test_run_tool_echo():
-    # Use sys.executable to run a portable print command
-    result = shell_utils.run_tool([sys.executable, "-c", "print('hello')"], "python")
+    # Simple test using echo to verify structure
+    result = shell_utils.run_tool(["echo", "hello"], "echo")
     assert isinstance(result, dict)
     assert "exit_code" in result
     assert result["exit_code"] == 0
@@ -32,7 +30,7 @@ def test_run_tool_with_result_processor() -> None:
         """Process result."""
         return {"custom": result.returncode}
 
-    result = run_tool([sys.executable, "-c", "print('test')"], "python", result_processor=processor)
+    result = run_tool(["echo", "test"], "echo", result_processor=processor)
     assert "custom" in result
     assert result["custom"] == 0
 
