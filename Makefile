@@ -10,9 +10,10 @@
 #   make check       Verify no drift between canonical assets and mirrors
 #   make lint        Run CSS and HTML linters
 #   make test        Run unit and integration tests
+#   make benchmark   Run performance benchmarks
 #   make all         build + check + lint
 
-.PHONY: all build check lint test
+.PHONY: all build check lint test benchmark
 
 all: build check lint
 
@@ -27,3 +28,6 @@ lint:
 
 test:
 	npm test -- --coverage
+
+benchmark:
+	python3 -m pytest benchmarks --benchmark-only --benchmark-autosave -v
