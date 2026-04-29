@@ -19,10 +19,10 @@ import logging
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 from urllib.parse import urldefrag
 
-from bs4 import BeautifulSoup, Tag
+from bs4 import BeautifulSoup
 
 from src.core.contracts import require
 from src.tools.utils import setup_logging
@@ -49,55 +49,6 @@ class BrokenLinkRecord:
     text: str
 
 
-@dataclass(frozen=True)
-class SiteHealthLinkCandidate:
-    """Narrow view of an internal anchor link during site-health scans."""
-
-    href: str
-    target: Path
-    text: str
-
-    @classmethod
-    def from_anchor(
-        cls,
-        *,
-        anchor: Tag,
-        source_file: Path,
-        docs_dir: Path,
-        ignore_quarto_alternate_formats: bool,
-    ) -> "SiteHealthLinkCandidate | None":
-        """Build a candidate from a BeautifulSoup anchor when it is actionable."""
-        if ignore_quarto_alternate_formats and is_inside_quarto_alternate_formats(anchor):
-            return None
-
-        href = _anchor_href(anchor)
-        if not href or is_external_url(href) or is_fragment_only(href):
-            return None
-
-        target_rel_path = _resolve_internal_target(
-            source_file=source_file,
-            href=href,
-            docs_dir=docs_dir,
-        )
-        if target_rel_path is None:
-            return None
-
-        return cls(
-            href=href,
-            target=target_rel_path,
-            text=_anchor_text(anchor),
-        )
-
-    def to_broken_link_record(self, *, source_file: Path) -> BrokenLinkRecord:
-        """Convert the candidate to the public broken-link record."""
-        return BrokenLinkRecord(
-            source=str(source_file),
-            target=str(self.target),
-            href=self.href,
-            text=self.text,
-        )
-
-
 def parse_fail_on(raw: str) -> set[str]:
     """Parse --fail-on input into a normalized set."""
     return parse_csv_enum(
@@ -108,43 +59,26 @@ def parse_fail_on(raw: str) -> set[str]:
     )
 
 
-def _tag_classes(tag: Tag | None) -> list[str]:
-    """Return the class list for a tag-like node."""
-    if tag is None:
-        return []
-    classes = tag.get("class")
-    return list(classes) if isinstance(classes, (list, tuple)) else []
-
-
-def _anchor_href(anchor: Tag) -> str:
-    """Return the normalized href string for an anchor."""
-    href_value = anchor.get("href")
-    return str(href_value) if href_value is not None else ""
-
-
-def _anchor_text(anchor: Tag) -> str:
-    """Return a short, stable text summary for an anchor."""
-    return anchor.get_text(strip=True)[:50]
-
-
 def is_inside_quarto_alternate_formats(tag: Any) -> bool:
     """Return True when the tag sits inside Quarto's alternate-format nav."""
-    current = tag if isinstance(tag, Tag) else None
+    current = tag
     while current is not None:
-        if "quarto-alternate-formats" in _tag_classes(current):
+        classes = current.get("class", []) if hasattr(current, "get") else []
+        if isinstance(classes, list) and "quarto-alternate-formats" in classes:
             return True
-        parent = getattr(current, "parent", None)
-        current = parent if isinstance(parent, Tag) else None
+        current = getattr(current, "parent", None)
     return False
 
 
 def _collect_html_files(*, docs_dir: Path) -> list[Path]:
     """Return all HTML files relative to docs directory."""
-    return [
-        full_path.relative_to(docs_dir)
-        for full_path in docs_dir.rglob("*.html")
-        if not any(part in IGNORED_ARTIFACT_DIRS for part in full_path.relative_to(docs_dir).parts)
-    ]
+    html_files: list[Path] = []
+    for full_path in docs_dir.rglob("*.html"):
+        relative = full_path.relative_to(docs_dir)
+        if any(part in IGNORED_ARTIFACT_DIRS for part in relative.parts):
+            continue
+        html_files.append(relative)
+    return html_files
 
 
 def _collect_all_files(*, docs_dir: Path) -> set[Path]:
@@ -212,18 +146,33 @@ def _find_broken_links_for_file(
         soup = BeautifulSoup(file_handle, "html.parser")
 
     for anchor in soup.find_all("a", href=True):
-        candidate = SiteHealthLinkCandidate.from_anchor(
-            anchor=anchor,
-            source_file=file_path,
-            docs_dir=docs_dir,
-            ignore_quarto_alternate_formats=ignore_quarto_alternate_formats,
-        )
-        if candidate is None:
+        if ignore_quarto_alternate_formats and is_inside_quarto_alternate_formats(anchor):
             continue
-        if candidate.target not in all_files:
-            broken_links.append(candidate.to_broken_link_record(source_file=file_path))
+
+        href_value = cast("Any", anchor).get("href")
+        href = str(href_value) if href_value is not None else ""
+        if not href:
+            continue
+        if is_external_url(href) or is_fragment_only(href):
+            continue
+
+        target_rel_path = _resolve_internal_target(
+            source_file=file_path, href=href, docs_dir=docs_dir
+        )
+        if target_rel_path is None:
+            continue
+
+        if target_rel_path not in all_files:
+            broken_links.append(
+                BrokenLinkRecord(
+                    source=str(file_path),
+                    target=str(target_rel_path),
+                    href=href,
+                    text=anchor.get_text(strip=True)[:50],
+                ),
+            )
         else:
-            referenced_targets.add(candidate.target)
+            referenced_targets.add(target_rel_path)
     return broken_links, referenced_targets
 
 

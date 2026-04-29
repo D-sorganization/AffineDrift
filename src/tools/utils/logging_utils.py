@@ -92,16 +92,12 @@ def setup_logging(
     resolved_level = level if level is not None else _resolve_log_level()
     resolved_format = format_string if format_string is not None else _resolve_log_format()
 
-    logger = logging.getLogger(name)
-    logger.setLevel(resolved_level)
+    logging.basicConfig(
+        level=resolved_level,
+        format=resolved_format,
+    )
 
-    if name is None or name == "__main__":
-        logging.basicConfig(
-            level=resolved_level,
-            format=resolved_format,
-        )
-
-    return logger
+    return logging.getLogger(name)
 
 
 def setup_logging_with_timestamp(
