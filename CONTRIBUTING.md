@@ -253,6 +253,67 @@ const scrollToElement = (elementId, offset = 140) => {
 - Include "Layman's Terms" sections for complex topics
 - Add "Critics Corner" for addressing potential objections
 
+## Code Review Guidelines
+
+To maintain code quality and distribute knowledge across the team, we enforce a peer review process for all pull requests.
+
+### Review Requirements
+
+1. **Every PR requires at least one review** from a different author before merge
+2. **The PR author cannot approve their own changes** (self-merges are blocked by automation)
+3. **Reviews are mandatory** — self-approved PRs will fail CI/CD checks
+
+### What Reviewers Should Check
+
+Code reviews should assess these dimensions:
+
+- **Code Quality**
+  - Does the code follow project style guidelines (`ruff`, `mypy`)?
+  - Are there any obvious bugs or logic errors?
+  - Is error handling appropriate?
+  - Are all functions type-hinted and documented?
+
+- **Test Coverage**
+  - Are new functions/features covered by tests?
+  - Do tests follow AAA pattern (Arrange-Act-Assert)?
+  - Is coverage adequate for the change scope?
+  - Are edge cases tested?
+
+- **Design & Architecture**
+  - Does the change align with the project structure?
+  - Are there any potential performance issues?
+  - Does the change introduce technical debt?
+  - Should an ADR be added for architecture-impacting changes?
+
+- **Documentation**
+  - Are docstrings present and accurate?
+  - Is CONTRIBUTING.md or README updated if needed?
+  - Are inline comments provided for non-obvious code?
+
+### Review Checklist
+
+Use this checklist when reviewing PRs:
+
+- [ ] Code style and formatting pass all linting checks
+- [ ] Type hints are present and correct (mypy passes)
+- [ ] All new functions have docstrings
+- [ ] Tests are added/updated and passing
+- [ ] No `print()` statements (use `logging`)
+- [ ] Error handling is specific (no bare `except:`)
+- [ ] Performance implications considered
+- [ ] Documentation updated (if applicable)
+- [ ] Commit messages follow conventional format
+- [ ] No merge conflicts with target branch
+
+### Tips for Effective Reviews
+
+1. **Be constructive** — offer suggestions, not just criticism
+2. **Ask questions** — if something seems unclear, ask for clarification
+3. **Acknowledge good code** — point out well-written sections
+4. **Review promptly** — aim for <24 hour turnaround
+5. **Respect author intent** — understand the problem being solved before critiquing
+6. **Learn together** — reviews are two-way knowledge sharing opportunities
+
 ## Pull Request Process
 
 ### Architecture Decision Records (ADR)
