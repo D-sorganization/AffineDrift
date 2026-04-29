@@ -10,6 +10,20 @@ from src.tools.utils.budget_check_utils import report_results
 
 
 def _requires_token(path: Path, token: str) -> str | None:
+    """Check that a file contains a required token string.
+
+    Parameters
+    ----------
+    path : Path
+        Path to the file to inspect.
+    token : str
+        String that must appear in the file.
+
+    Returns
+    -------
+    str | None
+        An error message if the token is missing, otherwise None.
+    """
     text = path.read_text(encoding="utf-8")
     if token not in text:
         return f"{path.as_posix()} missing token: {token}"

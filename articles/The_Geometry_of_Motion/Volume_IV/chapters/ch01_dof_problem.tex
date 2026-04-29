@@ -1,6 +1,12 @@
 \chapter{The Degrees-of-Freedom Problem}
 \label{ch:dof-problem}
 
+\begin{gomdraftnotice}
+This chapter is under active development and contains only a structural outline
+with preliminary material. Full exposition, worked examples, proofs, and exercises
+will be added in future editions.
+\end{gomdraftnotice}
+
 \epigraph{%
   The coordination of movement is the process of mastering redundant
   degrees of freedom of the moving organ, in other words its conversion
@@ -53,6 +59,35 @@ The nervous system must select from $\sim$400-dimensional muscle activation patt
 to satisfy 6 constraints, while accounting for interaction torques, gravity, and
 neural delays---\emph{in a quarter of a second}. This is the problem.
 
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1.2]
+  % Task space (low-dim)
+  \draw[->, thick] (0, 0) -- (1, 0) node[align=center, anchor=north] {Task DOF = 6};
+  \draw[->, thick] (0, 0) -- (0, 1) node[align=center, anchor=east] {Position + Orientation};
+
+  % Mapping to configuration space
+  \draw (2.5, 0.5) ellipse (0.6 and 1.5) node[align=center, anchor=center] {\footnotesize Config};
+
+  % Null space visualization
+  \draw (5, 0) ellipse (1.5 and 2);
+  \draw (5, 0.1) node[align=center, anchor=center] {Null space};
+  \draw (5, -0.8) node[align=center, anchor=center] {\footnotesize (task-irrelevant};
+  \draw (5, -1.2) node[align=center, anchor=center] {\footnotesize variability)};
+
+  % Arrow showing redundancy
+  \draw[->, thick, dashed] (1.8, 0.5) -- (2.9, 0.5) node[align=center, anchor=south, midway] {\small redundant DOF};
+  \draw[->, thick] (3.2, 0.5) -- (3.5, 0.5);
+
+  % Label
+  \draw (2.5, 2.5) node[align=center, anchor=center] {\textbf{Bernstein's DOF Problem}};
+  \draw (2.5, 2.1) node[align=center, anchor=center] {\small Many solutions satisfy the task constraints};
+\end{tikzpicture}
+\caption{The degrees-of-freedom problem: redundancy in configuration space allows
+task-irrelevant variability in the null space of the task Jacobian.}
+\label{fig:ch1:dof-illustration}
+\end{figure}
+
 \section{From Problem to Resource: Motor Abundance}
 
 Modern motor control theory has reframed Bernstein's ``problem'' as an
@@ -102,7 +137,7 @@ is the orthogonal complement of the null space---precisely the mechanism underly
 \begin{laymansbox}{Mathematical Reminder: The Geometry of the UCM}{ucm_geometry_reminder}
 Recall our differential geometry from Volume 0: a manifold is a curved surface representing valid states. The \textbf{Uncontrolled Manifold} (UCM) is quite literally a geometric submanifold embedded inside the larger configuration space $\mathcal{Q}$. 
 
-Because the task geometry is non-linear (e.g., the arc of a swinging robot arm), the UCM is curved. We calculate its flat \textbf{Tangent Space} mathematically using the null space of the Jacobian ($J_h \delta\bm{q} = \bm{0}$). As long as the nervous system's noise vectors point exclusively into this tangent space, the physical position of the hand will not budge from the target. The nervous system is actively shaping its noise ellipsoid to align with the tangent space of the target manifold!
+Because the task geometry is non-linear (e.g., the arc of a swinging robot arm), the UCM is curved. We calculate its flat \textbf{Tangent Space} mathematically using the null space of the Jacobian ($J_h \delta\bm{q} = \bm{0}$). As long as the nervous system's noise vectors point exclusively into this tangent space, the physical position of the hand will not budge from the target. The nervous system is actively shaping its noise ellipsoid to align with the tangent space of the target manifold.
 \end{laymansbox}
 
 The UCM hypothesis predicts that the nervous system:

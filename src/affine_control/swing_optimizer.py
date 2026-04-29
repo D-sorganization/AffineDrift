@@ -28,7 +28,11 @@ Usage
         SwingOptimizer,
     )
 
-    config = SwingOptimizationConfig(n_joints=3, horizon_steps=50)
+    config = SwingOptimizationConfig(
+        n_joints=3,
+        horizon_steps=50,
+        allow_mock_solver=True,  # explicit opt-in while using the placeholder solver
+    )
     optimizer = SwingOptimizer(config)
     result = optimizer.optimize(initial_state, dynamics_fn)
     logger.debug(f"Achieved velocity: {result.final_velocity:.2f} m/s")
@@ -79,7 +83,11 @@ class SwingOptimizer:
     -------
     ::
 
-        config = SwingOptimizationConfig(n_joints=3, horizon_steps=50)
+        config = SwingOptimizationConfig(
+            n_joints=3,
+            horizon_steps=50,
+            allow_mock_solver=True,
+        )
         optimizer = SwingOptimizer(config)
 
         def dynamics(x, u):
@@ -92,6 +100,48 @@ class SwingOptimizer:
         x0 = np.zeros(config.state_dim)
         result = optimizer.optimize(x0, dynamics)
     """
+
+    @staticmethod
+    def _resolve_ddp_solver(
+        ddp_solver: (
+            Callable[..., tuple[np.ndarray[Any, Any], np.ndarray[Any, Any], np.ndarray[Any, Any]]]
+            | None
+        ),
+        config: SwingOptimizationConfig,
+    ) -> tuple[
+        Callable[..., tuple[np.ndarray[Any, Any], np.ndarray[Any, Any], np.ndarray[Any, Any]]],
+        bool,
+    ]:
+        """Return (solver, using_mock); emit the mock-solver warning when falling back."""
+        if ddp_solver is not None:
+            return ddp_solver, False
+
+        require(
+            config.allow_mock_solver,
+            "Mock DDP solver requires allow_mock_solver=True in config. "
+            "Pass a real ddp_solver for non-test usage.",
+        )
+        warnings.warn(
+            "adaptive_timestep_ddp_mock is a non-functional mock solver. "
+            "allow_mock_solver=True explicitly opts into test-only usage. "
+            "For production, supply a real ddp_solver.",
+            UserWarning,
+            stacklevel=2,
+        )
+        return adaptive_timestep_ddp_mock, True
+
+    @staticmethod
+    def _build_cost_matrices(
+        config: SwingOptimizationConfig,
+    ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any], np.ndarray[Any, Any]]:
+        """Construct (R, Q, Q_f) cost matrices from configuration."""
+        R = config.control_weight * np.eye(config.control_dim)
+        Q = np.zeros((config.state_dim, config.state_dim))
+        # Penalize velocity deviations (second half of state vector)
+        for i in range(config.n_joints, config.state_dim):
+            Q[i, i] = 1.0
+        Q_f = config.terminal_weight * Q
+        return R, Q, Q_f
 
     def __init__(
         self,
@@ -114,34 +164,9 @@ class SwingOptimizer:
             "config must be a SwingOptimizationConfig instance",
             type(config).__name__,
         )
-        if ddp_solver is None:
-            warnings.warn(
-                "adaptive_timestep_ddp_mock is a non-functional mock implementation. "
-                "The backward pass and Riccati equation solving are not implemented. "
-                "Trajectories produced are mathematically incorrect. "
-                "Do not use in production optimisation pipelines. "
-                "See: docs/assessments/issues/ISSUE_Completist_Critical_DDPMock_2026-01-30.md",
-                UserWarning,
-                stacklevel=2,
-            )
         self._config = config
-        self._ddp_solver = ddp_solver if ddp_solver is not None else adaptive_timestep_ddp_mock
-        self._R = config.control_weight * np.eye(config.control_dim)
-        self._Q = np.zeros((config.state_dim, config.state_dim))
-        # Penalize velocity deviations (second half of state vector)
-        for i in range(config.n_joints, config.state_dim):
-            self._Q[i, i] = 1.0
-        self._Q_f = config.terminal_weight * self._Q
-
-    def _build_target_state(self) -> np.ndarray[Any, Any]:
-        """Build the target state vector (zeros for positions, target_velocity for velocities).
-
-        Returns:
-            Target state vector of dimension ``state_dim``.
-        """
-        x_target = np.zeros(self._config.state_dim)
-        x_target[self._config.n_joints :] = self._config.target_velocity
-        return x_target
+        self._ddp_solver, self._using_mock = self._resolve_ddp_solver(ddp_solver, config)
+        self._R, self._Q, self._Q_f = self._build_cost_matrices(config)
 
     @property
     def config(self) -> SwingOptimizationConfig:
@@ -200,7 +225,10 @@ class SwingOptimizer:
             "control",
         )
 
-        x_target = self._build_target_state()
+        # Build the target state (zeros for positions, target_velocity for velocities)
+        x_target = np.zeros(self._config.state_dim)
+        x_target[self._config.n_joints :] = self._config.target_velocity
+
         dx = state - x_target
         state_cost = float(dx @ self._Q @ dx)
         control_cost = float(control @ self._R @ control)
@@ -224,7 +252,9 @@ class SwingOptimizer:
         check_finite_array(state, "state")
         check_shape(state, (self._config.state_dim,), "state")
 
-        x_target = self._build_target_state()
+        x_target = np.zeros(self._config.state_dim)
+        x_target[self._config.n_joints :] = self._config.target_velocity
+
         dx = state - x_target
         cost = float(dx @ self._Q_f @ dx)
         ensure(cost >= -EPSILON, "terminal cost must be non-negative", cost)
@@ -274,7 +304,8 @@ class SwingOptimizer:
             Tuple of (x_target, u_init) where x_target is the desired terminal
             state and u_init is the zero initial control sequence.
         """
-        x_target = self._build_target_state()
+        x_target = np.zeros(cfg.state_dim)
+        x_target[cfg.n_joints :] = cfg.target_velocity
         u_init = np.zeros((cfg.horizon_steps, cfg.control_dim))
         return x_target, u_init
 
@@ -302,8 +333,8 @@ class SwingOptimizer:
             eps_residual=cfg.convergence_tol,
             max_iters=min(5, cfg.max_iterations),
         )
-        traj_list = [x_traj[i] for i in range(len(x_traj))]
-        ctrl_list = [u_traj[i] for i in range(len(u_traj))]
+        traj_list = list(x_traj)
+        ctrl_list = list(u_traj)
         current_cost = self.compute_trajectory_cost(traj_list, ctrl_list)
         return x_traj, u_traj, current_cost
 
@@ -397,8 +428,8 @@ class SwingOptimizer:
         final_velocity = float(np.linalg.norm(velocity_portion))
 
         result = SwingOptimizationResult(
-            optimal_controls=[best_u_traj[i] for i in range(len(best_u_traj))],
-            optimal_trajectory=[best_x_traj[i] for i in range(len(best_x_traj))],
+            optimal_controls=list(best_u_traj),
+            optimal_trajectory=list(best_x_traj),
             final_velocity=final_velocity,
             cost=best_cost,
             converged=converged,
@@ -443,8 +474,9 @@ class SwingOptimizer:
         check_shape(initial_state, (self._config.state_dim,), "initial_state")
         require(callable(dynamics_fn), "dynamics_fn must be callable")
         require(
-            self._config.allow_mock_solver or self._ddp_solver is not adaptive_timestep_ddp_mock,
-            "mock DDP solver requires explicit opt-in via allow_mock_solver=True",
+            not self._using_mock or self._config.allow_mock_solver,
+            "Mock DDP solver requires allow_mock_solver=True in config. "
+            "Pass a real solver or set allow_mock_solver=True for testing.",
         )
 
         cfg = self._config

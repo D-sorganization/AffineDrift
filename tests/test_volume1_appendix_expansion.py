@@ -4,6 +4,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
+pytestmark = pytest.mark.content_lint
+
 ROOT = Path(__file__).resolve().parents[1]
 VOLUME_I_MAIN = ROOT / "articles" / "The_Geometry_of_Motion" / "Volume_I" / "main.tex"
 

@@ -38,8 +38,32 @@ env:
   MAX_ISSUES_PER_RUN: 5
 
 jobs:
-  process-comments:
+  # ── Dispatcher: try self-hosted first, fall back to cloud ──────────────────
+  pick-runner:
     runs-on: d-sorg-fleet
+    timeout-minutes: 2
+    outputs:
+      runner: ${{ steps.check.outputs.runner }}
+    steps:
+      - name: Check for self-hosted runner
+        id: check
+        env:
+          GH_TOKEN: ${{ secrets.RUNNER_CHECK_TOKEN }}
+        run: |
+          ONLINE=$(gh api /orgs/${{ github.repository_owner }}/actions/runners \
+            --jq '[.runners[] | select(.status == "online") | select(.labels[].name == "d-sorg-fleet")] | length' \
+            2>/dev/null || echo "0")
+          if [[ "$ONLINE" -gt 0 ]]; then
+            echo "runner=d-sorg-fleet" >> $GITHUB_OUTPUT
+            echo "Self-hosted runner online - routing locally"
+          else
+            echo "runner=ubuntu-latest" >> $GITHUB_OUTPUT
+            echo "No self-hosted runner - using GitHub-hosted"
+          fi
+
+  process-comments:
+    runs-on: self-hosted
+    needs: pick-runner
     # HARDENING: Skip bot-triggered events to prevent cascades
     if: |
       github.event_name == 'workflow_dispatch' ||
@@ -57,7 +81,7 @@ jobs:
 
       - uses: actions/setup-python@v6
         with:
-          python-version: "3.11"
+          python-version: "3.12"
 
       - name: Collect Review Comments
         id: collect

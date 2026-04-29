@@ -153,13 +153,25 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     if (history.length === 0) {
-      datasetsHistoryList.innerHTML = '<li class="history-empty">No recent datasets yet</li>';
+      datasetsHistoryList.textContent = '';
+      const li = document.createElement('li');
+      li.className = 'history-empty';
+      li.textContent = 'No recent datasets yet';
+      datasetsHistoryList.appendChild(li);
       return;
     }
 
-    datasetsHistoryList.innerHTML = history.map(item => 
-      `<li><a href="${item.url}">${item.title}</a></li>`
-    ).join('');
+    datasetsHistoryList.textContent = '';
+    const fragment = document.createDocumentFragment();
+    history.forEach((item) => {
+      const li = document.createElement("li");
+      const a = document.createElement("a");
+      a.href = typeof item.url === "string" && !item.url.replace(/[\x00-\x20]/g, "").toLowerCase().startsWith("javascript:") ? item.url : "#";
+      a.textContent = item.title;
+      li.appendChild(a);
+      fragment.appendChild(li);
+    });
+    datasetsHistoryList.appendChild(fragment);
   }
 
   updateDatasetsHistory();

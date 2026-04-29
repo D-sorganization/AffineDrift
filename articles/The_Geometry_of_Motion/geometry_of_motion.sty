@@ -1,8 +1,13 @@
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{geometry_of_motion}[2026/02/27 Shared style primitives for the Tangent-Space Methods series]
+\ProvidesPackage{geometry_of_motion}[2026/03/27 Shared style primitives for the Geometry of Motion series]
 
 \RequirePackage{xcolor}
 \RequirePackage{listings}
+\RequirePackage{bm}
+\RequirePackage{float}
+\RequirePackage{enumitem}
+\RequirePackage{tcolorbox}
+\tcbuselibrary{theorems, breakable, skins}
 
 \makeatletter
 \newcommand{\gomdefinecolorifmissing}[3]{%
@@ -43,13 +48,105 @@
 }
 \newcommand{\gomapplylistingstyle}{\lstset{style=gompython}}
 
+% ──────────────────────────────────────────────
+% Shared mathematical notation fallbacks
+% ──────────────────────────────────────────────
+% These \providecommand definitions ensure that every macro referenced across
+% volumes is always available, regardless of which volume is compiled.  Each
+% volume may \renewcommand any of these in its own preamble; the fallbacks
+% here simply prevent "undefined control sequence" errors when content is
+% shared or cross-referenced between volumes.
+%
+% Reals symbol — canonical form is \Reals; \R is provided as alias
+\providecommand{\Reals}{\mathbb{R}}
+\providecommand{\R}{\Reals}
+%
+% Lie groups — parameterless forms (caller appends dimension as needed)
+\providecommand{\SO}{\mathrm{SO}}
+\providecommand{\SE}{\mathrm{SE}}
+\providecommand{\so}{\mathfrak{so}}
+\providecommand{\se}{\mathfrak{se}}
+%
+% State / control vectors (bold italic convention)
+\providecommand{\state}{\bm{x}}
+\providecommand{\control}{\bm{u}}
+\providecommand{\traj}{\bm{\gamma}}
+%
+% Differential shorthand
+\providecommand{\dd}{\mathrm{d}}
+\providecommand{\dt}{\,\dd t}
+%
+% Operators
+\providecommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\providecommand{\inner}[2]{\left\langle #1,\, #2 \right\rangle}
+%
+% Transpose — sans-serif T (Volume I convention, harmless in other volumes)
+\providecommand{\T}{\mathsf{T}}
+%
+% Matrix shorthand
+\providecommand{\mat}[1]{\mathbf{#1}}
+
+% ──────────────────────────────────────────────
+% Draft-status notice environment for incomplete chapters
+% ──────────────────────────────────────────────
+% Usage: \begin{gomdraftnotice} ... \end{gomdraftnotice}
+% Uses basic fcolorbox so it works without tcolorbox.
+\newenvironment{gomdraftnotice}{%
+  \par\medskip\noindent
+  \begin{center}
+  \begin{minipage}{0.92\textwidth}
+  \hrule height 0.8pt \smallskip
+  \textbf{Draft Notice.}\enspace
+}{%
+  \smallskip \hrule height 0.8pt
+  \end{minipage}
+  \end{center}
+  \par\medskip
+}
+
 % Optional shared theorem primitives
+\makeatletter
 \newcommand{\gomdeclaretheorems}{%
-  \makeatletter
   \@ifundefined{theorem}{\newtheorem{theorem}{Theorem}[chapter]}{}%
   \@ifundefined{proposition}{\newtheorem{proposition}[theorem]{Proposition}}{}%
   \@ifundefined{definition}{\newtheorem{definition}[theorem]{Definition}}{}%
   \@ifundefined{example}{\newtheorem{example}[theorem]{Example}}{}%
   \@ifundefined{remark}{\newtheorem{remark}[theorem]{Remark}}{}%
-  \makeatother
 }
+
+\newcommand{\gomdeclarealgorithms}{%
+  \@ifundefined{c@algorithm}{%
+    \newfloat{algorithm}{htbp}{loa}[chapter]%
+    \floatname{algorithm}{Algorithm}%
+  }{}%
+  \@ifundefined{algorithmic}{%
+    \newenvironment{algorithmic}[1][]{%
+      \begin{enumerate}[label=\arabic*:,leftmargin=2em]
+    }{%
+      \end{enumerate}
+    }%
+  }{}%
+  \providecommand{\STATE}{\item}%
+  \providecommand{\State}{\item}%
+  \providecommand{\REQUIRE}{\item[\textbf{Require:}]}%
+  \providecommand{\Require}{\item[\textbf{Require:}]}%
+  \providecommand{\ENSURE}{\item[\textbf{Ensure:}]}%
+  \providecommand{\Ensure}{\item[\textbf{Ensure:}]}%
+  \providecommand{\FOR}[1]{\item \textbf{for} ##1 \textbf{do}}%
+  \providecommand{\For}[1]{\item \textbf{for} ##1 \textbf{do}}%
+  \providecommand{\ENDFOR}{\item \textbf{end for}}%
+  \providecommand{\EndFor}{\item \textbf{end for}}%
+  \providecommand{\IF}[1]{\item \textbf{if} ##1 \textbf{then}}%
+  \providecommand{\If}[1]{\item \textbf{if} ##1 \textbf{then}}%
+  \providecommand{\ELSE}{\item \textbf{else}}%
+  \providecommand{\Else}{\item \textbf{else}}%
+  \providecommand{\ENDIF}{\item \textbf{end if}}%
+  \providecommand{\EndIf}{\item \textbf{end if}}%
+  \providecommand{\WHILE}[1]{\item \textbf{while} ##1 \textbf{do}}%
+  \providecommand{\While}[1]{\item \textbf{while} ##1 \textbf{do}}%
+  \providecommand{\ENDWHILE}{\item \textbf{end while}}%
+  \providecommand{\EndWhile}{\item \textbf{end while}}%
+  \providecommand{\RETURN}[1]{\item \textbf{return} ##1}%
+  \providecommand{\Return}[1]{\item \textbf{return} ##1}%
+}
+\makeatother

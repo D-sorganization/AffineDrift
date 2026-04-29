@@ -28,6 +28,10 @@ biomechanically feasible and which require additional degrees of freedom or feed
 
 \subsection{System Definition and Parameterization}
 
+Real-world applications of geometric mechanics and contraction theory have been extensively studied
+in robotics \cite{Murray1994, Spong2006, Lynch2017} and biomechanics \cite{FlashHogan1985, WesterveltGrizzle2007}.
+This section demonstrates the framework's applicability to complex, high-dimensional systems.
+
 The golfer--club--shaft system is a coupled rigid--flexible multibody chain:
 \begin{itemize}
 \item \textbf{Golfer}: Rigid body segments (torso, upper arm, forearm, hand) with
@@ -205,21 +209,22 @@ M_{qq}-M_{q\eta}M_{\eta\eta}^{-1}M_{\eta q} = \begin{bmatrix}
 \end{bmatrix}.
 \end{equation}
 
-(Note: The third eigenvalue becomes small but remains positive, indicating the system
-is on the edge of a kinematic singularity.)
+(Note: The $(3,3)$ entry is $-0.67$, which means this Schur complement is \emph{not}
+positive definite. The system is near a kinematic singularity where the mobility tensor
+loses physical consistency. The numerical results below should therefore be treated as
+\emph{illustrative of the computational procedure} rather than as physically reliable
+predictions for this particular configuration.)
 
-Inverting to get $H_{qq}$:
+Inverting to get $H_{qq}$ (noting the matrix is indefinite, so this inverse does not
+represent a valid mobility tensor):
 \begin{equation}
 H_{qq} = \begin{bmatrix}
 0.236 & -0.103 & 0.011 \\
 -0.103 & 0.584 & 0.171 \\
 0.011 & 0.171 & -1.502
-\end{bmatrix}~\text{(rad$\cdot$s)}^2/\text{N$\cdot$m},
+\end{bmatrix}~\text{(rad$\cdot$s)}^2/\text{N$\cdot$m}.
 \label{eq:ch8:Hqq-numeric}
 \end{equation}
-
-with condition number $\kappa(H_{qq}) \approx 15$, indicating moderate but manageable
-conditioning.
 
 \subsubsection{Inertial Coupling Ratio}
 
@@ -413,17 +418,21 @@ which accelerates the wrist and club, a pure geometric effect requiring no extra
 work.
 
 \begin{designbox}
-Elite athletes do not generate clubhead speed through muscular force at impact. They
-create it through \emph{sequential proximal-to-distal deceleration}: each body segment
-actively brakes, transferring its inertia to the next segment down the chain. By impact,
-the distal segments (wrist, club) are moving far faster than any single muscle group
-could produce directly. The affine framework reveals this as an optimal exploitation of
-the drift--input structure.
+Biomechanical studies suggest that skilled athletes generate clubhead speed primarily through
+\emph{sequential proximal-to-distal energy transfer} \cite{Putnam1993, NesbitSerrano2005}:
+each body segment decelerates in sequence, transferring kinetic energy to the next segment
+down the chain. By impact, the distal segments (wrist, club) can be moving faster than any
+single muscle group could produce in isolation. Published data shows that elite golfers
+generate \emph{more} total joint torque than amateur golfers, but with superior timing
+of the proximal-to-distal sequence \cite{NesbitSerrano2005}. The affine framework offers
+one lens for interpreting this as exploitation of the drift--input structure, though a
+complete biomechanical account involves many factors beyond what our simplified model captures.
 
-The sequencing principle is not unique to golf: it appears in baseball pitching, tennis
-serves, and martial arts strikes. The framework predicts that the optimal swing has a
-specific temporal profile where deceleration peaks propagate from proximal to distal,
-and any violation of this order degrades performance.
+The proximal-to-distal sequencing principle appears across many athletic movements, including
+baseball pitching, tennis serves, and martial arts strikes \cite{Putnam1993}. The framework
+suggests that deceleration peaks should propagate from proximal to distal joints, consistent
+with experimental observations, though the degree to which violations degrade performance
+depends on the specific biomechanical context.
 \end{designbox}
 
 %% ==========================================================================
@@ -734,9 +743,9 @@ where:
 \item $m$ is the deputy spacecraft mass.
 \end{itemize}
 
-For a typical low-Earth orbit at $r_0 = 6.7 \times 10^6$~m (geosynchronous altitude):
+For a typical low-Earth orbit at $r_0 = 6.7 \times 10^6$~m (approximately 300~km altitude):
 \begin{equation}
-n = 1.07 \times 10^{-3}~\text{rad/s}, \quad T_{\text{orbit}} = 2\pi/n \approx 86400~\text{s}.
+n = 1.07 \times 10^{-3}~\text{rad/s}, \quad T_{\text{orbit}} = 2\pi/n \approx 5870~\text{s} \approx 98~\text{min}.
 \end{equation}
 
 \subsubsection{State-Space Representation}
@@ -1677,6 +1686,51 @@ biomechanics, robotics, aerospace, and automotive systems. The common thread is 
 exactly in the tangent space, verify contraction, exploit the drift, and let duality guarantee both
 performance and robustness from a single computation.
 
+\begin{center}
+\begin{tikzpicture}[scale=1.0, every node/.style={font=\small}]
+  % Central system box
+  \node[draw, very thick, red, rounded corners=4pt, minimum width=3cm, minimum height=0.8cm, font=\small\bfseries] at (3, 2.5) {Nonlinear System};
+
+  % Four analytic tools radiating out
+  \node[draw, thick, blue, rounded corners=3pt, minimum width=2cm, minimum height=0.6cm, font=\small, align=center] at (0.75, 4) {Tangent-space\\linearization};
+
+  \node[draw, thick, blue, rounded corners=3pt, minimum width=2cm, minimum height=0.6cm, font=\small, align=center] at (5.25, 4) {Contraction\\metrics};
+
+  \node[draw, thick, blue, rounded corners=3pt, minimum width=2cm, minimum height=0.6cm, font=\small, align=center] at (0.75, 1) {Optimal\\control};
+
+  \node[draw, thick, blue, rounded corners=3pt, minimum width=2cm, minimum height=0.6cm, font=\small, align=center] at (5.25, 1) {Drift--input\\decomposition};
+
+  % Arrows from system to tools
+  \draw[<->, thick, black] (1.5, 2.5) -- (1.5, 4);
+  \draw[<->, thick, black] (4.5, 2.5) -- (4.5, 4);
+  \draw[<->, thick, black] (1.5, 2.5) -- (1.5, 1);
+  \draw[<->, thick, black] (4.5, 2.5) -- (4.5, 1);
+
+  % Application domains below
+  \draw[thick, green, rectangle, minimum width=1.3cm, minimum height=0.5cm]
+    (0.2, -0.8) to (1.3, -0.8);
+  \node[font=\small, green] at (0.75, -0.8) {Golf swing};
+
+  \draw[thick, green, rectangle, minimum width=1.3cm, minimum height=0.5cm]
+    (2, -0.8) to (3.1, -0.8);
+  \node[font=\small, green] at (2.55, -0.8) {Robotics};
+
+  \draw[thick, green, rectangle, minimum width=1.3cm, minimum height=0.5cm]
+    (3.8, -0.8) to (4.9, -0.8);
+  \node[font=\small, green] at (4.35, -0.8) {Aerospace};
+
+  \draw[thick, green, rectangle, minimum width=1.3cm, minimum height=0.5cm]
+    (5.6, -0.8) to (6.7, -0.8);
+  \node[font=\small, green] at (6.15, -0.8) {Automotive};
+
+  % Arrows down to applications
+  \draw[<-, thick, black] (1.5, 2.5) -- (0.75, -0.3);
+  \draw[<-, thick, black] (3, 2.5) -- (2.55, -0.3);
+  \draw[<-, thick, black] (4.5, 2.5) -- (4.35, -0.3);
+  \draw[<-, thick, black] (4.5, 2.5) -- (6.15, -0.3);
+\end{tikzpicture}
+\end{center}
+
 \section*{Exercises}
 
 \begin{enumerate}
@@ -1686,7 +1740,7 @@ performance and robustness from a single computation.
       at three configurations.
 
 \item \textbf{Drift-control ratio computation.}
-      Implement the 5-step experimental protocol from Section~\ref{sec:ch8:experimental}
+      Implement the 5-step experimental protocol described earlier in this chapter
       for simulated data from a double pendulum under LQR control. Plot $\rho(t)$ and identify
       the transition from control-dominated to drift-dominated regimes.
 

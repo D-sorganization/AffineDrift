@@ -1,6 +1,12 @@
 \chapter{Applications of Control Theory to Biological Systems}
 \label{ch:control-bio}
 
+\begin{gomdraftnotice}
+This chapter is under active development and contains only a structural outline
+with preliminary material. Full exposition, worked examples, proofs, and exercises
+will be added in future editions.
+\end{gomdraftnotice}
+
 \epigraph{%
   The body is not a robot that happens to be made of meat.
   It is a system that has evolved to exploit its own physics.
@@ -9,7 +15,39 @@
 \section{Forward Dynamics Simulation}
 
 Forward dynamics simulation integrates the equations of motion given muscle
-excitations $\bm{u}(t)$:
+excitations $\bm{u}(t)$. A feedback control loop for biological systems is illustrated
+in Figure~\ref{fig:ch10:control-loop}.
+
+\begin{figure}[htbp]
+\centering
+\begin{tikzpicture}[scale=0.9, >=Stealth, node distance=2.2cm]
+  % CNS / Goal
+  \node[draw, thick, fill=blue!10, minimum width=2.2cm, align=center] (cns) {CNS\\(Goal)};
+
+  % Neural command
+  \node[draw, thick, fill=green!10, minimum width=2.2cm, align=center, right of=cns] (neural) {Neural\\Excitation $\bm{u}(t)$};
+
+  % Muscle dynamics
+  \node[draw, thick, fill=green!10, minimum width=2.2cm, align=center, right of=neural] (muscle) {Muscle\\Dynamics};
+
+  % Skeletal dynamics
+  \node[draw, thick, fill=green!10, minimum width=2.2cm, align=center, right of=muscle] (skeletal) {Skeletal\\Dynamics};
+
+  % Measurement
+  \node[draw, thick, fill=orange!10, minimum width=2.2cm, align=center, below of=skeletal] (measure) {Proprioceptive\\Feedback};
+
+  \draw[->, thick] (cns) -- (neural);
+  \draw[->, thick] (neural) -- (muscle);
+  \draw[->, thick] (muscle) -- (skeletal);
+  \draw[->, thick] (skeletal) -- (measure);
+  \draw[->, thick, bend right] (measure) to (cns);
+
+  \node[below] at (neural.south) {Neural input};
+  \node[below] at (skeletal.south) {Motion output};
+\end{tikzpicture}
+\caption{Biological feedback control loop: CNS goal signals drive neural excitations through muscle and skeletal dynamics, with proprioceptive feedback closing the loop.}
+\label{fig:ch10:control-loop}
+\end{figure}
 \begin{equation}
   \ddot{\bm{q}} = M(\bm{q})^{-1}\left[R(\bm{q})\bm{F}_{\text{muscle}} + J_c^T \bm{F}_c
   - C(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} - g(\bm{q})\right],
@@ -98,8 +136,8 @@ def forward_dynamics_simulation(
 
         # Activation dynamics
         u = excitation_func(t)
-        tau_act = 0.015  # 15 ms activation
-        tau_deact = 0.050  # 50 ms deactivation
+        tau_act = 0.015  # Illustrative placeholder; replace with a cited model value.
+        tau_deact = 0.050  # Illustrative placeholder; replace with a cited model value.
         adot = np.where(
             u > a,
             (u - a) / tau_act,
@@ -139,57 +177,6 @@ Agrachev \& Sachkov \cite{AgrachevSachkov2004}, Theorem~8.1 (Pontryagin's Maximu
 establishes the fundamental existence and optimality conditions for such optimal control problems.
 Their treatment covers affine systems with constraints and provides both theoretical guarantees
 and computational methods (the method of characteristics) for solving OCPs of this form.
-
-\subsection{Metabolic Cost Models}
-
-Predictive simulation requires a physiologically meaningful running cost. The
-most widely used choice in gait simulation is a \emph{metabolic energy rate} model,
-which converts muscle state and force into an estimate of the whole-body
-rate of ATP consumption. Umberger et al.\ \cite{umberger2003metabolic} proposed a
-four-term decomposition in which the instantaneous metabolic rate of muscle $i$
-is written as
-\[
-  \dot{E}_i = \dot{h}_i^{A} + \dot{h}_i^{M} + \dot{h}_i^{SL} + \dot{w}_i^{CE},
-\]
-summing activation heat, maintenance heat, shortening/lengthening heat, and the
-mechanical work done by the contractile element, each calibrated against in-vitro
-muscle energetics. Bhargava et al.\ \cite{bhargava2004metabolic} offer a closely
-related formulation that separates activation and maintenance using fast and slow
-fiber fractions, and is the model shipped with OpenSim
-\cite{delp2007opensim,rajagopal2016full}. Whole-body metabolic cost is obtained by
-summing $\dot{E}_i$ across all muscles and adding a constant basal rate.
-
-In practice, minimizing $\int_0^T \sum_i \dot{E}_i \dt$ is expensive and nonsmooth,
-so many optimal-control studies substitute a surrogate such as $\sum_i a_i^p$ or
-$\sum_i (F_i/F_i^0)^p$ with $p \in \{2, 3\}$
-\cite{pandy2001computer,anderson2001dynamic}. Surrogates and calibrated metabolic
-models generally agree on qualitative patterns (preferred walking speed, stride
-frequency) but can disagree on absolute cost.
-
-\subsection{Muscle Synergies}
-
-Predictive simulation of a 600-muscle model has many more inputs than degrees of
-freedom, reproducing the motor-redundancy problem of Chapter~1 at the control
-level. A long line of neuroscience research has proposed that the central nervous
-system sidesteps this curse of dimensionality by driving muscles in low-dimensional
-patterns called \emph{muscle synergies}: a small set of time-invariant activation
-vectors $\bm{w}_k \in \Reals^{n_{\text{m}}}$ modulated by time-varying coefficients
-$c_k(t)$ so that the full activation is
-\[
-  \bm{a}(t) \approx \sum_{k=1}^{K} c_k(t)\, \bm{w}_k,
-  \qquad K \ll n_{\text{m}}.
-\]
-Bizzi \& Cheung \cite{bizzi2008combining} summarize the evidence for synergies as
-building blocks of motor behavior across species, while d'Avella et al.\
-\cite{davella2003combinations} showed that a handful of time-varying synergies
-account for most of the EMG variance in natural arm reaching. Non-negative matrix
-factorization \cite{HarrisWolpert1998} is the standard extraction technique because
-activations and synergies are non-negative.
-
-For control-theoretic purposes, synergies provide a rationale for low-dimensional
-parameterizations of the input in optimal-control problems, reducing the effective
-control dimension from $n_{\text{m}}$ to $K$ and making predictive simulation
-tractable at whole-body scale.
 
 \section{Prosthetics and Exoskeleton Control}
 
@@ -235,14 +222,14 @@ The progression through this volume mirrors the progression through the series:
 \toprule
 \textbf{Volume} & \textbf{Concept} & \textbf{Biomechanical Application} & \textbf{Agrachev \& Sachkov} \\
 \midrule
-Vol~0   & Screw axes, PoE      & Joint kinematics, ISA analysis            & \cite[Ch.~2]{AgrachevSachkov2004} \\
-Vol~I   & Contraction theory   & Stability of muscle-driven systems        & \cite[Ch.~4]{AgrachevSachkov2004} \\
-Vol~I   & DDP/iLQR             & Optimal muscle excitation patterns        & \cite[Ch.~8]{AgrachevSachkov2004} \\
-Vol~II  & Trajectory tubes     & Motor variability envelopes               & \cite[Ch.~3]{AgrachevSachkov2004} \\
-Vol~II  & Phase variables      & Gait cycle parameterization               & \cite[Ch.~7]{AgrachevSachkov2004} \\
-Vol~III & Hill model           & Force prediction                          & \cite[Ch.~6]{AgrachevSachkov2004} \\
-Vol~III & Inverse dynamics     & Joint torque estimation                   & \cite[Ch.~5]{AgrachevSachkov2004} \\
-Vol~IV  & Motor control        & Neural command generation                 & \cite[Ch.~8]{AgrachevSachkov2004} \\
+Vol~0 & Screw axes, PoE & Joint kinematics, ISA analysis \\
+Vol~I & Contraction theory & Stability of muscle-driven systems \\
+Vol~I & DDP/iLQR & Optimal muscle excitation patterns \\
+Vol~II & Trajectory tubes & Motor variability envelopes \\
+Vol~II & Phase variables & Gait cycle parameterization \\
+Vol~III & Hill model & Force prediction \\
+Vol~III & Inverse dynamics & Joint torque estimation \\
+Vol~IV & Motor control & Neural command generation \\
 \bottomrule
 \end{tabular}
 \end{center}

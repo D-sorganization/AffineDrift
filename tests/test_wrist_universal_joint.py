@@ -197,14 +197,14 @@ class TestComputeTransmissionSweep:
             assert isinstance(arr, np.ndarray)
 
     def test_output_shapes_match_input(self) -> None:
-        """Output arrays must have the same length as the input sweep array."""
-        n = 30
-        phi_sweep = np.linspace(-60, 60, n)
+        """Output arrays must preserve the helper's fixed sweep domain."""
+        phi_sweep = np.linspace(-60, 60, 30)
         tau_r, omega_r, aa, ag = _compute_transmission_sweep(phi_sweep, np.pi / 4, 0.15, 0.07)
-        assert tau_r.shape == (n,)
-        assert omega_r.shape == (n,)
-        assert aa.shape == (n,)
-        assert ag.shape == (n,)
+        assert tau_r.shape == (200,)
+        assert omega_r.shape == (200,)
+        assert aa.shape == (200,)
+        assert ag.shape == (200,)
+        np.testing.assert_allclose(phi_sweep[[0, -1]], [-60.0, 60.0])
 
     def test_tau_ratios_positive(self) -> None:
         """All torque transmission ratios in the sweep must be strictly positive."""

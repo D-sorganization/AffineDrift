@@ -18,6 +18,10 @@ confront the numerical challenges in computing it accurately.
 
 \subsection{Setup: Nominal and Perturbed Trajectories}
 
+The variational equation is one of the most important tools in dynamical systems theory \cite{Khalil2002, Sastry1999}.
+It provides an exact linear characterization of infinitesimal perturbations around a nominal trajectory and is
+fundamental to stability analysis, sensitivity computation, and optimal control \cite{pontryagin1962, SlotineLi1991}.
+
 Given the control-affine dynamics
 \begin{equation}
 \dot\x = f(\x) + G(\x)\,\uvec, \quad \x\in\R^n,\;\uvec\in\R^m,
@@ -63,7 +67,7 @@ R_f(\dx) := \frac{1}{2}\int_0^1(1-\tau)\frac{\partial^2 f}{\partial\x^2}\bigg|_{
 \]
 Then
 \begin{equation}
-f(\bar\x+\dx) = f(\bar\x) + J_f(\bar\x))\dx + R_f(\dx), \quad \|R_f(\dx)\| = O(\|\dx\|^2).
+f(\bar\x+\dx) = f(\bar\x) + J_f(\bar\x)\dx + R_f(\dx), \quad \|R_f(\dx)\| = O(\|\dx\|^2).
 \label{eq:ch2:f-expanded}
 \end{equation}
 
@@ -144,13 +148,6 @@ Then~\eqref{eq:ch2:variational-unsimplified} becomes:
 This is the \textbf{variational equation}: a linear, time-varying ODE that governs the
 evolution of infinitesimal perturbations.
 
-The variational equation describes evolution in the tangent bundle $T\mathcal{M}$, where infinitesimal
-perturbations $\delta\x$ live. As Agrachev and Sachkov \cite[Part~I]{AgrachevSachkov2004} develop in detail,
-this equation is central to understanding attainable sets and the reachable region from the nominal trajectory:
-each point in the attainable set can be characterized by how perturbations to initial conditions and controls
-propagate forward in time via the variational equations. This makes the tangent-space linearization not merely
-an approximation tool but the exact framework for studying global accessibility properties.
-
 \begin{designbox}
 The error incurred by dropping the $O(\|\dx\|^2)$ terms in the derivation is the residual.
 For initial conditions with $\|\dx(t_0)\| \ll 1$, this residual remains small (growing only
@@ -164,11 +161,48 @@ system that lives in the tangent space along $\bar\x(t)$. It describes how infin
 perturbations propagate. The matrices $\mat{A}(t)$ and $\mat{B}(t)$ change as the
 nominal trajectory evolves, reflecting the fact that the tangent space itself moves with
 the base point. Notice that $\mat{A}$ depends on the nominal input $\bar\uvec(t)$: different
-reference inputs generate different tangent-space dynamics!
+reference inputs generate different tangent-space dynamics.
 \end{intuitionbox}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.0]
+  % Draw nominal trajectory in state space
+  \draw[very thick, black] (0,0) to[out=30, in=180] (3, 2) to[out=0, in=130] (5.5, 2.5);
+  \filldraw[black] (3, 2) circle (0.08cm);
+  \node[below left, font=\small] at (3, 2) {$\bar\x(t_1)$};
+
+  % Draw perturbed trajectory close to nominal
+  \draw[dashed, blue] (0.2, 0.3) to[out=30, in=180] (3.2, 2.3) to[out=0, in=130] (5.7, 2.8);
+  \filldraw[blue] (3.2, 2.3) circle (0.06cm);
+
+  % Draw tangent space at nominal trajectory point
+  \draw[gray, thin, densely dashed] (2, 1) -- (4, 3);
+  \draw[gray, thin, densely dashed] (2, 3) -- (4, 1);
+
+  % Draw perturbation vector
+  \draw[->, red, thick] (3, 2) -- (3.2, 2.3);
+  \node[right, red, font=\small] at (3.15, 2.15) {$\dx(t_1)$};
+
+  % Arrows showing evolution
+  \draw[->, gray, thick, loosely dashed] (1.5, 0.5) -- (1.5, 0);
+  \node[below, font=\small, gray] at (1.5, 0) {time $t$};
+
+  % Labels
+  \node[font=\small] at (0, -0.5) {Nominal trajectory: $\bar\x(t)$};
+  \node[font=\small, blue] at (0.3, -1) {Perturbed trajectory: $\x(t) = \bar\x(t) + \dx(t)$};
+
+\end{tikzpicture}
+\end{center}
+
+The key insight is that the perturbation $\dx(t)$ evolves linearly in the tangent space along the nominal trajectory,
+governed by the variational equation~\eqref{eq:ch2:variational}. This linear evolution is exact at the infinitesimal level.
 
 
 \section{The State Transition Matrix}
+
+The state transition matrix (STM) is the fundamental solution object for linear time-varying systems.
+It is covered extensively in classical control texts \cite{Khalil2002, Sastry1999} and forms the basis
+for sensitivity analysis and optimal control computations.
 
 \subsection{Definition and Fundamental ODE}
 
@@ -214,20 +248,20 @@ For any $t_0 \leq t_1 \leq t_2$,
 \end{theorem}
 
 \begin{proof}
-Let $\Psi(t) := \Phi(t_2,t_1)\,\Phi(t_1,t_0)$. We compute
-\begin{align}
-\dot{\Psi}(t) &= \frac{\dd}{\dd t}\left[\Phi(t_2,t_1)\,\Phi(t_1,t_0)\right]\\
-&= \frac{\partial \Phi(t_2,t_1)}{\partial t}\,\Phi(t_1,t_0) + \Phi(t_2,t_1)\frac{\partial \Phi(t_1,t_0)}{\partial t}.
-\end{align}
+For any initial condition $\dx_0 \in \R^n$, define
+$\dx(t) := \Phi(t,t_0)\dx_0$, which is the unique solution to $\dot{\dx} = \mat{A}(t)\dx$
+with $\dx(t_0) = \dx_0$.
 
-For $t_0 \leq t \leq t_1$, the first term vanishes (since $\Phi(t_2,t_1)$ does not depend on $t$ when $t<t_1$),
-and the second term gives
-\begin{equation}
-\dot{\Psi}(t) = \Phi(t_2,t_1)\,\mat{A}(t)\,\Phi(t_1,t_0) = \mat{A}(t)\,\Psi(t).
-\end{equation}
+At time $t_1$, we have $\dx(t_1) = \Phi(t_1,t_0)\dx_0$.
+The solution on $[t_1, t_2]$ with initial condition $\dx(t_1)$ is, by definition,
+$\dx(t) = \Phi(t,t_1)\dx(t_1) = \Phi(t,t_1)\Phi(t_1,t_0)\dx_0$.
 
-At $t=t_0$, we have $\Psi(t_0) = \Phi(t_2,t_1)\,\Phi(t_1,t_0)|_{t_1=t_0} = \Phi(t_2,t_0)\,\mat{I}_n = \Phi(t_2,t_0)$.
-Thus $\Psi$ and $\Phi(\cdot,t_0)$ satisfy the same ODE with the same initial condition, hence they are equal.
+Evaluating at $t = t_2$:
+\[
+\dx(t_2) = \Phi(t_2,t_1)\,\Phi(t_1,t_0)\,\dx_0.
+\]
+But also $\dx(t_2) = \Phi(t_2,t_0)\dx_0$ by the definition of $\Phi(t_2,t_0)$.
+Since $\dx_0$ was arbitrary, $\Phi(t_2,t_0) = \Phi(t_2,t_1)\,\Phi(t_1,t_0)$.
 \end{proof}
 
 \begin{theorem}[Invertibility]
@@ -258,21 +292,17 @@ The determinant of the state transition matrix satisfies
 \end{theorem}
 
 \begin{proof}
-We use the matrix determinant lemma (also called Jacobi's formula):
+We use Jacobi's formula:
 \begin{equation}
-\frac{\dd}{\dd t}\det(\Phi(t,t_0)) = \trace\left(\text{adj}(\Phi)\,\frac{\dd\Phi}{\dd t}\right)\,\frac{1}{\det(\Phi)},
+\frac{\dd}{\dd t}\det(\Phi(t,t_0)) = \det(\Phi)\,\trace\!\left(\Phi^{-1}\,\frac{\dd\Phi}{\dd t}\right).
 \label{eq:ch2:jacobi}
 \end{equation}
-where $\text{adj}(\Phi)$ is the adjugate matrix. For a nonsingular matrix,
-$\text{adj}(\Phi) = \det(\Phi)\,\Phi^{-T}$, so
+Since $\dot{\Phi} = \mat{A}\,\Phi$, this gives
 \begin{align}
-\frac{\dd}{\dd t}\det(\Phi) &= \trace(\Phi^{-T}\,\dot{\Phi})\\
-&= \trace(\Phi^{-T}\,\mat{A}\,\Phi)\\
-&= \trace(\mat{A}\,\Phi\,\Phi^{-T})\\
-&= \trace(\mat{A}).
+\frac{\dd}{\dd t}\det(\Phi) &= \det(\Phi)\,\trace(\Phi^{-1}\,\mat{A}\,\Phi)\\
+&= \det(\Phi)\,\trace(\mat{A}),
 \end{align}
-
-Here we used the cyclic property of the trace: $\trace(ABC) = \trace(BCA) = \trace(CAB)$.
+where the last step uses the similarity invariance of the trace: $\trace(\Phi^{-1}\mat{A}\Phi) = \trace(\mat{A})$.
 
 Integrating from $t_0$ to $t$, with initial condition $\det(\Phi(t_0,t_0)) = \det(\mat{I}_n) = 1$:
 \begin{equation}
@@ -280,7 +310,7 @@ Integrating from $t_0$ to $t$, with initial condition $\det(\Phi(t_0,t_0)) = \de
 \end{equation}
 \end{proof}
 
-\begin{axiombox}{Axiom 5: Integration Preserves Exactness}
+\begin{axiombox}{Principle 5: Integration Preserves Exactness}
 The state transition matrix $\Phi(t,t_0)$ accumulates \emph{exact} infinitesimal linear
 contributions along the trajectory. Each infinitesimal step $\dd(\dx)=\mat{A}(t)\dx\,\dd t$
 is exact in its tangent space. The integral
@@ -294,23 +324,11 @@ from integration itself.
 \end{axiombox}
 
 
-The state transition matrix is the differential of the flow map---it tells us how the manifold of solutions
-is mapped forward in time. Precisely, if $\Phi_t: \x_0 \mapsto \x(t; \x_0)$ denotes the flow map
-(the solution operator at time $t$), then $\mathrm{D}\Phi_t = \mat{\Phi}(t; t_0)$ (in coordinates).
-This identification between dynamics and differential geometry is a cornerstone of Agrachev and Sachkov's
-control theory \cite[Ch.~2]{AgrachevSachkov2004}, where the flow map's differential encodes how
-trajectories and their tangent spaces evolve together.
 \section{The Peano-Baker Series and Exact Solution}
 
 While the ODE~\eqref{eq:ch2:stm-ode} defines the STM implicitly, we can construct an explicit
 series solution called the Peano-Baker series \cite{Magnus1954} (also known as the Dyson series in physics).
-The path-ordered structure---where time is strictly ordered in the nested integrals---reflects the non-commutativity of matrix multiplication
-and is fundamental in symplectic geometry. As Agrachev and Sachkov detail \cite[Ch.~5]{AgrachevSachkov2004},
-the flow of a Hamiltonian vector field preserves the symplectic form, and understanding the structure of the linearized flow
-(the state transition matrix) is essential for the Pontryagin Maximum Principle and optimal control analysis, where the costate
-dynamics evolve via the adjoint of the state transition matrix.
 This series has deep connections to Lie group theory and geometric analysis \cite{doCarmo1992, AbrahamMarsden1978}.
-series solution called the Peano-Baker series (also known as the Dyson series in physics).
 
 \subsection{Derivation of the Series}
 
@@ -388,6 +406,7 @@ differently to emphasize commutators.
 
 
 \section{Numerical Computation of the State Transition Matrix}
+\label{sec:ch2:numerical-stm}
 
 For practical implementation, we rarely sum the Peano-Baker series explicitly. Instead, we
 integrate the matrix ODE~\eqref{eq:ch2:stm-ode} numerically.
@@ -639,13 +658,13 @@ linearized about the downward equilibrium.
 
 Consider a simple pendulum with mass $m$, length $\ell$, and a motor torque $\tau$ applied at the pivot:
 \begin{equation}
-\ddot\theta = \frac{g}{\ell}\sin\theta + \frac{\tau}{m\ell^2}.
+\ddot\theta = -\frac{g}{\ell}\sin\theta + \frac{\tau}{m\ell^2}.
 \label{eq:ch2:pend-ode}
 \end{equation}
 
 Writing this as a first-order system with $x_1 = \theta$ and $x_2 = \dot\theta$:
 \begin{equation}
-\begin{pmatrix}\dot x_1\\\dot x_2\end{pmatrix} = \begin{pmatrix}x_2\\\frac{g}{\ell}\sin x_1 + \frac{u}{m\ell^2}\end{pmatrix},
+\begin{pmatrix}\dot x_1\\\dot x_2\end{pmatrix} = \begin{pmatrix}x_2\\-\frac{g}{\ell}\sin x_1 + \frac{u}{m\ell^2}\end{pmatrix},
 \label{eq:ch2:pend-first}
 \end{equation}
 where $u = \tau$ is the control input.
@@ -658,20 +677,20 @@ Suppose the nominal trajectory is the equilibrium at the downward position with 
 \label{eq:ch2:pend-nominal}
 \end{equation}
 
-Verify: $\dot{\bar x}_1 = 0$, $\dot{\bar x}_2 = \frac{g}{\ell}\sin(0) + 0 = 0$. This is indeed a fixed point.
+Verify: $\dot{\bar x}_1 = 0$, $\dot{\bar x}_2 = -\frac{g}{\ell}\sin(0) + 0 = 0$. This is indeed a fixed point.
 
 \subsection{Jacobians}
 
 At the point $(\bar\x, \bar u) = (0,0)$:
 \begin{equation}
-\mat{A} = \frac{\partial}{\partial \x}\begin{pmatrix}x_2\\\frac{g}{\ell}\sin x_1\end{pmatrix}\bigg|_{(0,0)}
-= \begin{pmatrix}0 & 1\\\frac{g}{\ell}\cos(0) & 0\end{pmatrix}
-= \begin{pmatrix}0 & 1\\\frac{g}{\ell} & 0\end{pmatrix}.
+\mat{A} = \frac{\partial}{\partial \x}\begin{pmatrix}x_2\\-\frac{g}{\ell}\sin x_1\end{pmatrix}\bigg|_{(0,0)}
+= \begin{pmatrix}0 & 1\\-\frac{g}{\ell}\cos(0) & 0\end{pmatrix}
+= \begin{pmatrix}0 & 1\\-\frac{g}{\ell} & 0\end{pmatrix}.
 \label{eq:ch2:pend-A}
 \end{equation}
 
 \begin{equation}
-\mat{B} = \frac{\partial}{\partial u}\begin{pmatrix}x_2\\\frac{g}{\ell}\sin x_1 + \frac{u}{m\ell^2}\end{pmatrix}\bigg|_{(0,0)}
+\mat{B} = \frac{\partial}{\partial u}\begin{pmatrix}x_2\\-\frac{g}{\ell}\sin x_1 + \frac{u}{m\ell^2}\end{pmatrix}\bigg|_{(0,0)}
 = \begin{pmatrix}0\\\frac{1}{m\ell^2}\end{pmatrix}.
 \label{eq:ch2:pend-B}
 \end{equation}
@@ -679,7 +698,7 @@ At the point $(\bar\x, \bar u) = (0,0)$:
 The variational equation is thus
 \begin{equation}
 \begin{pmatrix}\delta\dot x_1\\\delta\dot x_2\end{pmatrix}
-= \begin{pmatrix}0 & 1\\\frac{g}{\ell} & 0\end{pmatrix}\begin{pmatrix}\delta x_1\\\delta x_2\end{pmatrix}
+= \begin{pmatrix}0 & 1\\-\frac{g}{\ell} & 0\end{pmatrix}\begin{pmatrix}\delta x_1\\\delta x_2\end{pmatrix}
 + \begin{pmatrix}0\\\frac{1}{m\ell^2}\end{pmatrix}\delta u.
 \label{eq:ch2:pend-variational}
 \end{equation}
@@ -688,7 +707,7 @@ The variational equation is thus
 
 For the time-invariant case, we compute the eigenvalues of $\mat{A}$:
 \begin{equation}
-\det(\lambda \mat{I} - \mat{A}) = \det\begin{pmatrix}\lambda & -1\\-\frac{g}{\ell} & \lambda\end{pmatrix}
+\det(\lambda \mat{I} - \mat{A}) = \det\begin{pmatrix}\lambda & -1\\\frac{g}{\ell} & \lambda\end{pmatrix}
 = \lambda^2 + \frac{g}{\ell} = 0.
 \end{equation}
 
@@ -705,17 +724,17 @@ The matrix exponential can be computed using the formula for a 2D system:
 Verify: $\frac{\dd}{\dd t}\Phi(t,0) = \begin{pmatrix}-\omega_0\sin(\omega_0 t) & \cos(\omega_0 t)\\\
 -\omega_0^2\cos(\omega_0 t) & -\omega_0\sin(\omega_0 t)\end{pmatrix}$. Comparing with $\mat{A}\Phi(t,0)$:
 \begin{equation}
-\begin{pmatrix}0 & 1\\\frac{g}{\ell} & 0\end{pmatrix}\begin{pmatrix}\cos(\omega_0 t) & \frac{\sin(\omega_0 t)}{\omega_0}\\
+\begin{pmatrix}0 & 1\\-\frac{g}{\ell} & 0\end{pmatrix}\begin{pmatrix}\cos(\omega_0 t) & \frac{\sin(\omega_0 t)}{\omega_0}\\
 -\omega_0\sin(\omega_0 t) & \cos(\omega_0 t)\end{pmatrix}
 = \begin{pmatrix}-\omega_0\sin(\omega_0 t) & \cos(\omega_0 t)\\
-\omega_0^2\cos(\omega_0 t) & \omega_0\sin(\omega_0 t)\end{pmatrix}.
+-\omega_0^2\cos(\omega_0 t) & -\omega_0\sin(\omega_0 t)\end{pmatrix}.
 \end{equation}
 
-Good (noting $\omega_0^2 = g/\ell$).
+Good (noting $-\omega_0^2 = -g/\ell$).
 
 \subsection{Numerical Example}
 
-For concreteness, let $\ell = 1$ m and $g = 10$ m/s$^2$, so $\omega_0 = \sqrt{10} \approx 3.162$ rad/s.
+For concreteness, let $\ell = 1$ m and $g = 10$ m/s$^2$ (rounded for clarity; other chapters use $g = 9.81$ m/s$^2$), so $\omega_0 = \sqrt{10} \approx 3.162$ rad/s.
 The natural period is $T = 2\pi/\omega_0 \approx 1.987$ s.
 
 At time $t = 0.5$ s:
@@ -829,6 +848,14 @@ The adjoint equation is
 \label{eq:ch2:adjoint}
 \end{equation}
 
+\begin{remark}
+The sign convention $\lambda(T) = -\partial\ell/\partial\x|_{x(T)}$ follows from defining
+$\lambda$ as $\partial J/\partial \x$. An alternative convention used in Pontryagin's
+Maximum Principle defines $\lambda(T) = +\partial\ell/\partial\x|_{x(T)}$, which reverses
+the sign of the Hamiltonian. Both conventions are self-consistent; the reader should verify
+signs when consulting different references.
+\end{remark}
+
 This equation is integrated backward from $T$ to $t_0$. Once $\lambda(t)$ is known, the gradient is
 \begin{equation}
 \frac{\partial J}{\partial p} = \int_{t_0}^{T}\left[\lambda^T\frac{\partial f}{\partial p} + \frac{\partial \ell_t}{\partial p}\right]\dd t
@@ -862,8 +889,9 @@ incorporated into machine learning infrastructure.
 
 
 \section{Liouville's Formula and Phase Space\index{Phase Space} Volume}
+\label{sec:ch2:liouville}
 
-Liouville's formula (Theorem~\ref{thm:ch2:liouville}) has a beautiful geometric interpretation related
+Liouville's formula (Theorem~\ref{thm:ch2:liouville}) has a natural geometric interpretation related
 to the evolution of phase-space volumes.
 
 \subsection{Interpretation via Divergence}
@@ -1219,7 +1247,7 @@ with variational principles provides a fully structure-preserving computational 
 
 \item \textbf{Peano-Baker Series:}
       The STM admits an explicit infinite series solution (Peano-Baker series), which converges uniformly
-      for bounded $\mat{A}(t)$. This series elegantly handles non-commutativity in the matrix product.
+      for bounded $\mat{A}(t)$. This series naturally handles non-commutativity in the matrix product.
 
 \item \textbf{Numerical Integration:}
       Computing $\Phi$ typically requires integrating the $n \times n$ matrix ODE. For time-invariant systems,
@@ -1290,7 +1318,7 @@ geometric tracking control, and neural network training dynamics.
 
 \item \textbf{Input sensitivity.}
       For the control-affine system $\dot\x = \mat{A}\x + \mat{B}\uvec$ with $\mat{A}$, $\mat{B}$
-      from the pendulum example in Section~\ref{sec:ch2:pendulum-example}, use the variation of
+      from the pendulum example earlier in this chapter, use the variation of
       constants formula to compute the response to a unit pulse input $\uvec(t) = \delta(t - t_0)$.
 
 \item \textbf{Symplectic integrator comparison.}

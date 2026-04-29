@@ -56,7 +56,7 @@ AffineDrift/
 │   └── quality-check.py             # Python quality checks
 ├── docs/                             # Generated documentation
 ├── _site/                            # Built website (GitHub Pages)
-├── ruff.toml                         # Ruff configuration
+├── pyproject.toml                    # Ruff configuration under [tool.ruff]
 ├── mypy.ini                          # Mypy configuration
 └── requirements.txt                  # Python dependencies (if needed)
 ```

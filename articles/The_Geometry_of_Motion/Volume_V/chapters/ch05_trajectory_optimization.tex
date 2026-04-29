@@ -1,6 +1,12 @@
 \chapter{Trajectory Optimization in Practice}
 \label{ch:traj-opt}
 
+\begin{gomdraftnotice}
+This chapter is under active development and contains only a structural outline
+with preliminary material. Full exposition, worked examples, proofs, and exercises
+will be added in future editions.
+\end{gomdraftnotice}
+
 \epigraph{Theory without practice is empty. Practice without theory is blind.}{}
 
 \section{DDP/iLQR Implementation}
@@ -9,12 +15,6 @@ Differential Dynamic Programming (DDP) and iterative Linear Quadratic Regulator 
 related algorithms for trajectory optimization \cite{Mayne1966, jacobson1970dpp}. They solve
 the finite-horizon optimal control problem by iteratively linearizing around a nominal
 trajectory and solving quadratic subproblems. Figure~\ref{fig:ilqr-loop} shows the algorithm structure.
-
-iLQR is a numerical method for implementing the feedback synthesis results from Agrachev \&
-Sachkov \cite{AgrachevSachkov2004}, Chapter~6: it iteratively computes the optimal feedback law
-via local linearization and quadratic approximation of the cost. The backward-pass computation
-of gains $K(t)$ corresponds to the solution of the Riccati equation, a central object in their
-optimal control theory.
 
 \begin{figure}[h]
   \centering
@@ -54,8 +54,6 @@ optimal control theory.
 \end{figure}
 
 Here we implement iLQR end-to-end:
-Differential Dynamic Programming (Volume~I, Chapter~5) is the workhorse for
-trajectory optimization. Here we implement it end-to-end:
 
 \begin{lstlisting}[language=Python, caption={iLQR implementation for trajectory optimization.}]
 import numpy as np
@@ -162,22 +160,21 @@ def ilqr_solve(
 
 \section{Application: Optimal Pendulum Swing-Up}
 
+The classic control benchmark: swing a pendulum from the hanging position to
+the inverted equilibrium.
+
+\section{Application: Optimal Pendulum Swing-Up}
+
 The pendulum swing-up is a classic trajectory optimization benchmark. The goal is to
 find the minimum-energy torque sequence that brings the pendulum from the downward
 (stable) equilibrium to the upright (unstable) equilibrium.
 
-This is a canonical example in Agrachev \& Sachkov \cite{AgrachevSachkov2004} (Chapter~5, Example 5.1):
-the pendulum system is an affine control system $\ddot{\theta} = -g\sin\theta + u$, and the swing-up
-problem is optimal synthesis: find the control law that minimizes energy while ensuring convergence
-to the upright equilibrium. Their theory predicts that the optimal trajectory will exhibit
-``bang-bang'' control (maximum torque in one direction) followed by a final feedback phase---
-which is exactly what occurs in practice.
-The classic control benchmark: swing a pendulum from the hanging position to
-the inverted equilibrium.
-
 \section{Application: Golf Swing Optimization}
 
-Applying DDP to a 3-DOF golf model to optimize clubhead speed at impact.
+DDP can be applied to a simplified golf model (3-5 DOF) to optimize clubhead speed
+at ball impact. The cost function would penalize control effort while maximizing
+endpoint velocity. In practice, golf swing optimization requires careful handling
+of contact constraints at impact.
 
 \section*{Exercises}
 \begin{enumerate}

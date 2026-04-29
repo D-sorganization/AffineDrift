@@ -60,23 +60,29 @@ export function initSmoothScroll() {
  */
 export function initNavbarCollapse() {
     const navbarCollapse = document.getElementById("navbarCollapse");
-    const navLinks = document.querySelectorAll(
-        '.navbar-nav a.nav-link[href^="#"]'
-    );
-    navLinks.forEach((link) => {
-        link.addEventListener("click", () => {
-            if (navbarCollapse && navbarCollapse.classList.contains("show")) {
-                const collapseInstance = window.bootstrap?.Collapse?.getInstance
-                    ? window.bootstrap.Collapse.getInstance(navbarCollapse)
-                    : null;
-                if (collapseInstance) {
-                    collapseInstance.hide();
-                } else {
-                    navbarCollapse.classList.remove("show");
-                }
+    // ⚡ Bolt Optimization: Use document.links (O(1)) instead of querySelectorAll (O(N))
+    for (const link of document.links) {
+        if (
+            link.classList.contains("nav-link") &&
+            link.closest(".navbar-nav")
+        ) {
+            const href = link.getAttribute("href");
+            if (href && href.startsWith("#")) {
+                link.addEventListener("click", () => {
+                    if (navbarCollapse && navbarCollapse.classList.contains("show")) {
+                        const collapseInstance = window.bootstrap?.Collapse?.getInstance
+                            ? window.bootstrap.Collapse.getInstance(navbarCollapse)
+                            : null;
+                        if (collapseInstance) {
+                            collapseInstance.hide();
+                        } else {
+                            navbarCollapse.classList.remove("show");
+                        }
+                    }
+                });
             }
-        });
-    });
+        }
+    }
 }
 
 /**
@@ -125,7 +131,7 @@ export function generateTableOfContents() {
     const pageSections = document.querySelectorAll(
         ".page-section[id], section[id]"
     );
-    pageSections.forEach((section) => {
+    for (const section of pageSections) {
         const heading = section.querySelector(".section-heading, h2, h1");
         if (heading && section.id) {
             sections.push({
@@ -135,10 +141,11 @@ export function generateTableOfContents() {
             });
             usedIds.add(section.id);
         }
-    });
+    }
 
-    const categories = document.querySelectorAll(".article-category");
-    categories.forEach((category) => {
+    // ⚡ Bolt Optimization: Use getElementsByClassName (O(1) live collection) instead of querySelectorAll (O(N))
+    const categories = document.getElementsByClassName("article-category");
+    for (const category of categories) {
         const heading = category.querySelector("h3");
         if (heading) {
             let id = category.id;
@@ -156,11 +163,13 @@ export function generateTableOfContents() {
                 level: 2,
             });
         }
-    });
+    }
 
     if (sections.length === 0) {
-        const h2s = document.querySelectorAll("h2");
-        h2s.forEach((h2, index) => {
+        // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) live collection) instead of querySelectorAll (O(N))
+        const h2s = document.getElementsByTagName("h2");
+        let index = 0;
+        for (const h2 of h2s) {
             let id = h2.id;
             if (!id || usedIds.has(id)) {
                 id = generateUniqueId(
@@ -175,12 +184,13 @@ export function generateTableOfContents() {
                 text: h2.textContent.trim(),
                 level: 2,
             });
-        });
+            index++;
+        }
     }
 
     if (sections.length > 0) {
         const fragment = document.createDocumentFragment();
-        sections.forEach((section) => {
+        for (const section of sections) {
             const li = document.createElement("li");
             const a = document.createElement("a");
             a.href = `#${section.id}`;
@@ -188,7 +198,7 @@ export function generateTableOfContents() {
             a.className = `toc-level-${section.level}`;
             li.appendChild(a);
             fragment.appendChild(li);
-        });
+        }
         tocList.appendChild(fragment);
     } else {
         if (tocSection) tocSection.style.display = "none";
@@ -222,8 +232,8 @@ export function initAnchorLinks() {
     anchorIcon.innerHTML =
         '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>';
 
-    headings.forEach((heading) => {
-        if (heading.querySelector(".anchor-link")) return;
+    for (const heading of headings) {
+        if (heading.querySelector(".anchor-link")) continue;
 
         if (!heading.id) {
             heading.id = generateUniqueId(heading.textContent, usedIds);
@@ -237,23 +247,25 @@ export function initAnchorLinks() {
         anchor.appendChild(anchorIcon.cloneNode(true));
 
         heading.appendChild(anchor);
-    });
+    }
 }
 
 /**
  * Initialize ScrollSpy for Table of Contents
  */
 export function initScrollSpy() {
-    const tocLinks = document.querySelectorAll("#toc-list a");
+    const tocList = document.getElementById("toc-list");
+    if (!tocList) return;
+    const tocLinks = tocList.getElementsByTagName("a");
     if (tocLinks.length === 0) return;
 
     const linkMap = new Map();
-    tocLinks.forEach((link) => {
+    for (const link of Array.from(tocLinks)) {
         const href = link.getAttribute("href");
         if (href && href.startsWith("#")) {
             linkMap.set(href.substring(1), link);
         }
-    });
+    }
     let currentActiveLink = null;
 
     const sections = document.querySelectorAll(
@@ -261,9 +273,10 @@ export function initScrollSpy() {
     );
 
     const sectionIndexMap = new Map();
-    sections.forEach((section, index) => {
+    for (let index = 0; index < sections.length; index++) {
+        const section = sections[index];
         sectionIndexMap.set(section.id, index);
-    });
+    }
 
     const visibleIndices = new Set();
 
@@ -274,7 +287,7 @@ export function initScrollSpy() {
     };
 
     const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
+        for (const entry of entries) {
             const index = sectionIndexMap.get(entry.target.id);
             if (index !== undefined) {
                 if (entry.isIntersecting) {
@@ -283,7 +296,7 @@ export function initScrollSpy() {
                     visibleIndices.delete(index);
                 }
             }
-        });
+        }
 
         let activeId = null;
         if (visibleIndices.size > 0) {
@@ -307,11 +320,11 @@ export function initScrollSpy() {
         }
     }, observerOptions);
 
-    sections.forEach((section) => {
+    for (const section of sections) {
         if (linkMap.has(section.id)) {
             observer.observe(section);
         }
-    });
+    }
 }
 
 /**

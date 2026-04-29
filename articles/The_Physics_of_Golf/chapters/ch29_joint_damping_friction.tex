@@ -93,12 +93,49 @@ Grip (fingers on club) & 0.02--0.1 & Skin friction + muscle & Highly variable wi
 \end{tabular}
 \end{center}
 
-These values are approximate and vary widely based on age, fitness, flexibility, and injury history. A person with arthritis might have 2--3 times higher damping in the affected joint.
+These values are \textbf{illustrative estimates} compiled from passive joint impedance studies \citep{Riener1999, Amankwah2004} and should be treated as order-of-magnitude ranges rather than definitive values. They vary widely based on age, fitness, flexibility, joint angular velocity, and injury history. A person with arthritis might have 2--3 times higher damping in the affected joint. Readers requiring precise values for simulation should consult the primary literature and ideally measure damping for their specific subject population.
 
 \section{Adding Damping to the Equations of Motion}
 \label{sec:damping_eom}
 
 \index{equations of motion!with damping}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1.0]
+  % Spring-dashpot system
+  \draw[thick] (0, 0) -- (1, 0);
+  \node at (0.5, -0.3) {Wall};
+
+  % Spring element
+  \draw[thick] (1, 0) -- (1.5, 0);
+  \draw[thick] (1.5, -0.2) -- (1.6, 0.2) -- (1.7, -0.2) -- (1.8, 0.2) -- (1.9, -0.2) -- (2.0, 0);
+  \node at (1.75, 0.6) {$k$ (stiffness)};
+
+  % Dashpot (damper) element
+  \draw[thick, rounded corners=0.1] (2.2, -0.2) rectangle (2.8, 0.2);
+  \draw[thick] (2.5, -0.15) -- (2.5, 0.15);
+  \node at (2.5, 0.6) {$c$ (damping)};
+
+  % Connection
+  \draw[thick] (2.8, 0) -- (3.2, 0);
+
+  % Mass element
+  \draw[thick, fill=lightgray] (3.2, -0.35) rectangle (4.0, 0.35);
+  \node at (3.6, 0) {$m$};
+
+  % Velocity vector
+  \draw[thick, ->, color=blue] (4.0, 0) -- (5.0, 0);
+  \node[color=blue] at (4.5, 0.4) {$\dot{x}$};
+
+  % Below: forces
+  \node at (1.0, -1.0) {Spring force: $F_s = -kx$};
+  \node at (2.5, -1.0) {Damping force: $F_d = -c\dot{x}$};
+  \node at (1.75, -1.5) {Equation: $m\ddot{x} + c\dot{x} + kx = 0$};
+\end{tikzpicture}
+\caption{Linear spring-dashpot (mass-spring-damper) model of a joint with stiffness $k$, damping coefficient $c$, and inertial mass $m$. The damping force opposes velocity; the spring force opposes displacement.}
+\label{fig:damping_model}
+\end{figure}
 
 Recall from Chapter~\ref{ch:parallel_mechanisms} that the unforced kinematic chain is governed by:
 \[
@@ -173,7 +210,7 @@ The "effective damping" $\bm{D}_{\text{eff}}$ includes not just $\bm{D}(\bm{q})$
 
 \index{kinematic chain!coupling}
 
-This is the key insight. Damping at one joint does not affect only that joint. It propagates through the entire chain via the mass matrix coupling, Coriolis coupling, and constraint coupling.
+A key observation is that damping at one joint does not affect only that joint. It propagates through the entire chain via the mass matrix coupling, Coriolis coupling, and constraint coupling.
 
 \subsection{Direct Effect: Local Damping}
 
@@ -240,7 +277,7 @@ In a serial kinematic chain, damping at proximal (root-side) joints dissipates e
 
 \index{energy cascade}
 
-Why? Because the proximal joint has higher angular velocity (relative to body-fixed rates) and moves a larger inertia. The power dissipated by damping is $P_d = c \omega^2$. Since the shoulder velocity is substantially larger than the wrist velocity relative to the body, equal damping coefficients at both joints cause the shoulder to dissipate considerably more power---the exact ratio depends on the golfer's geometry and swing speed, but the qualitative ordering is consistent across swings.
+Why? Because the proximal joint has higher angular velocity (relative to body-fixed rates) and moves a larger inertia. The power dissipated by damping is $P_d = c \omega^2$. In a maximally extended arm, the shoulder rotates at $\sim 7000^\circ$/s (122 rad/s), whereas the wrist rotates at $\sim 3000^\circ$/s relative to the body \citep{Nesbit2005,Hume2005}. Even if both have the same damping coefficient $c$, the shoulder dissipates $\sim 17 \times$ more power.
 
 \subsection{Constraint Coupling in Parallel Mechanisms}
 \label{subsec:constraint_coupling}
@@ -309,15 +346,13 @@ This connects to impedance control \citep{hogan1985impedance} from Chapter~\ref{
 \]
 where $\bm{K}$ and $\bm{D}$ are task-space stiffness and damping. Both are under nervous system control. The brain does not choose $\bm{K}$ and $\bm{D}$ independently; they are correlated. Higher impedance environments (like hitting off hardpan) tend to cause increased co-contraction, which increases both $\bm{K}$ and $\bm{D}$.
 
-\subsection{The Loose Grip Debate}
+\subsection{Grip Force and Hand-Club Interface Damping}
 
-A long-standing debate in golf coaching: should the grip be loose or firm?
+The grip force applied by the hand to the club determines the mechanical coupling at the hand-club interface. This coupling affects the boundary condition for the shaft dynamics. A higher grip force compresses tissue in the grip region, increasing the friction between hand and club and reducing oscillation amplitude at the grip end. A lower grip force allows greater relative motion and reduced damping at the interface.
 
-From a damping perspective, a firm grip increases the damping of the hand-club interface. The grip force compresses tissue, increasing friction. A loose grip reduces this damping, allowing the club to oscillate more freely.
+The relationship can be characterized as: higher grip force \(\to\) higher interface damping \(\to\) reduced shaft oscillation amplitude but increased energy dissipation at the grip. Conversely, lower grip force \(\to\) lower interface damping \(\to\) greater shaft oscillation potential but reduced energy loss at the grip.
 
-A tighter grip \(\to\) higher damping \(\to\) more energy loss but better control. A looser grip \(\to\) lower damping \(\to\) more energy transmission to the club but less damping of impact shock.
-
-The empirical data suggests that golfers find an intermediate grip pressure: tight enough to avoid the club slipping (which would be disastrous), but loose enough to allow some vibration that aids energy transfer. This is an implicit optimum balancing control and efficiency.
+The effective grip force during the downswing and at impact is determined by the neural control commands to the hand muscles, which are modulated based on proprioceptive feedback, swing intent, and learned patterns. The grip force dynamics interact with shaft stiffness and the inertial properties of the club to determine the overall mechanical response of the system.
 
 \section{Friction Models for Joints}
 \label{sec:friction_models}
@@ -398,36 +433,47 @@ Empirically, most golfers find that their most consistent, repeatable swings occ
 
 \index{energy!budget}
 
-A typical golfer converts a significant fraction of muscular energy into useful clubhead kinetic energy, but a substantial portion is dissipated across multiple pathways. The qualitative ordering of dissipation sources---from largest to smallest---is reasonably consistent across biomechanical studies \citep{Winter2009}, even though precise numerical budgets have not been established for the golf swing specifically.
+Let's add up the numbers. A typical amateur golfer generates approximately:
+- Total muscle energy per swing: 300--400 J
+- Kinetic energy at clubhead impact: 120--150 J
+- Missing energy: 150--280 J
+
+Where does this energy go?
 
 \subsection{Sources of Dissipation}
 
-The primary dissipation pathways, in qualitative order of magnitude, are:
+\begin{center}
+\begin{tabular}{lrr}
+\hline
+\textbf{Dissipation Source} & \textbf{Energy (J)} & \textbf{\% of Total} \\
+\hline
+Joint damping (all joints) & 40--60 & 13--15\% \\
+Tendon hysteresis & 20--30 & 6--8\% \\
+Muscle internal friction & 30--50 & 10--13\% \\
+Body segment soft tissue & 15--25 & 5--8\% \\
+Aerodynamic drag (arm/torso) & 10--15 & 3--5\% \\
+Ground deformation / contact friction & 5--15 & 2--5\% \\
+Grip/hand friction losses & 5--10 & 2--3\% \\
+Swing-to-impact transition inefficiency & 20--40 & 7--10\% \\
+\hline
+\textbf{Total dissipation} & \textbf{145--245} & \textbf{48--65\%} \\
+\hline
+\end{tabular}
+\end{center}
 
-\begin{enumerate}
-\item \textbf{Muscle internal friction and metabolic cost}: The largest single category; muscles do not convert chemical energy to mechanical work with perfect efficiency.
-\item \textbf{Tendon hysteresis}: Tendons store and release elastic energy, but with some loss per cycle.
-\item \textbf{Joint damping}: Viscous resistance at all joints in the kinematic chain.
-\item \textbf{Swing-to-impact transition inefficiency}: Energy in arm and trunk motion that is not fully transferred to the club.
-\item \textbf{Body segment soft tissue}: Muscle, fat, and skin oscillation.
-\item \textbf{Ground deformation and contact friction}: Typically small.
-\item \textbf{Aerodynamic drag on arms and torso}: Small compared to mechanical losses.
-\item \textbf{Grip and hand interface friction}: Small.
-\end{enumerate}
-
-The key qualitative insight is that roughly half of total muscular energy does not reach the club. Precise figures vary widely with individual swing mechanics, body composition, and equipment, and a reliable quantitative budget for the golf swing remains an open research question.
+\textbf{Important:} These values are \textbf{illustrative estimates} constructed from published biomechanical energy analyses \citep{Nesbit2005} and general musculoskeletal dissipation data, not from direct measurement of all dissipation channels in a single study. The exact breakdown varies widely with individual swing mechanics, body composition, and equipment. The table is intended to convey relative magnitudes and should not be cited as definitive measured values.
 
 \subsection{Interpretation}
 
-The crucial insight: a large fraction of muscular energy does not reach the club. This is not a failure; it's unavoidable. The question is whether the energy is dissipated efficiently (in a way that improves control and stability) or wastefully (in a way that reduces distance without improving anything).
+The crucial insight: roughly half of the muscular energy generated does not reach the club. This is not a failure; it's unavoidable. The question is whether the energy is dissipated efficiently (in a way that improves control and stability) or wastefully (in a way that reduces distance without improving anything).
 
 Key observations:
 \begin{itemize}
-\item Joint damping is a significant but not dominant loss pathway. Changes in damping coefficient produce correspondingly modest changes in club speed.
+\item Joint damping accounts for 13--15\% loss. This is significant and not negligible. A $\pm 50\%$ change in damping would shift distance by roughly 6--8\%, all else being equal.
 
-\item Tendon hysteresis is one of the larger dissipative sources. Yet tendons also store elastic energy. The net effect of tendon mechanics is beneficial: they act as elastic accumulators, releasing energy at optimal moments.
+\item Tendon hysteresis is one of the largest dissipative sources. Yet tendons also store elastic energy. The net effect of tendon mechanics is beneficial: they act as elastic accumulators, releasing energy at optimal moments.
 
-\item Body segment soft tissue wobble dissipates energy through oscillation of muscle, fat, and skin. The magnitude varies substantially with body composition.
+\item Body segment soft tissue wobble dissipates 5--8\%. This is the "shake" of muscle, fat, and skin. Stronger individuals with less soft tissue wobble (i.e., low body fat) dissipate less here.
 
 \item Aerodynamic drag is small in golf (unlike baseball). The arm and club move through air, but the drag is not the primary energy sink.
 
@@ -457,19 +503,25 @@ Damping effects are largest when:
 2. Joints are transitioning (reversal points like mid-downswing swing changes).
 3. Joints are moving against viscous resistance (e.g., wrist supination-pronation, which involves heavy tendon routing).
 
-During the final 100 ms of the downswing, club speed is rising rapidly. At these velocities, a damping torque of even 1 Nm becomes significant relative to the constraint torques in the chain.
+During the final 100 ms of the downswing, club speed is changing at a rate of $\sim 50$ m/s$^2$ (local acceleration) \citep{Nesbit2005}. At these speeds, a damping torque of even 1 Nm becomes significant.
 
 \subsection{Sensitivity Analysis}
 
-We can frame the effect of damping on predicted clubhead speed via a first-order approximation:
+We can estimate the effect of damping on predicted club head speed. A first-order approximation:
 
 \[
 \Delta v_{\text{club}} \approx -\frac{\partial v_{\text{club}}}{\partial D} \cdot \Delta D
 \]
 
-The sign of this derivative is negative (more damping reduces club speed), and its magnitude is small relative to the sensitivity of club speed to muscular timing and force magnitude. Published biomechanical swing models suggest that a substantial change in joint damping (say, a 50\% increase) produces a modest reduction in predicted club speed---the damping pathway is real but not dominant. Most of the sensitivity in club speed comes from muscular timing and force magnitude, not from damping.
+Empirically, this derivative is approximately $-0.02$ m/s per (Nm$\cdot$s/rad) of damping.\citeneeded{sensitivity-analysis or simulation source for club-speed derivative with respect to joint damping} Thus:
+\begin{itemize}
+\item $50\%$ increase in damping ($+5$ Nm$\cdot$s/rad): $\Delta v \approx -0.1$ m/s, or $\sim 2$ mph loss.
+\item $50\%$ decrease in damping ($-5$ Nm$\cdot$s/rad): $\Delta v \approx +0.1$ m/s, or $\sim 2$ mph gain.
+\end{itemize}
 
-In a poorly timed swing, damping effects can amplify, particularly if the downswing phase is extended. Good technique (efficient sequencing, minimal wasted motion) reduces the energy consumed by damping pathways.
+For a driver swing (club speed 80--90 mph), a 2 mph change is about 5\% of club speed. This is not negligible, but it's not dominant either. Most of the sensitivity in club speed comes from muscular timing and force magnitude, not from damping.
+
+However, in a poorly timed swing, damping effects can amplify, especially if the downswing phase is extended (slow-motion downswing). In such cases, damping may account for 10--15\% of the club speed variation.
 
 \subsection{Recommendations for Modelers}
 
@@ -506,14 +558,9 @@ Q = 2\pi \frac{\text{Peak energy stored}}{\text{Energy dissipated per cycle}} = 
 where $\zeta$ is the damping ratio. High Q (high stiffness, low damping) means oscillations persist. Low Q means oscillations decay quickly.
 \end{definition}
 
-Typical Q-factors:
-\begin{itemize}
-\item Steel shaft: $Q \approx 50--100$ (low damping, oscillations ring for many cycles).
-\item Graphite (carbon fiber) shaft: $Q \approx 100--300$ (higher damping, oscillations decay slower).
-\item Composite (mixed fiber) shaft: $Q \approx 50--150$ (intermediate).
-\end{itemize}
+Typical Q-factors vary significantly depending on material composition, fiber orientation, and resin system used in the composite. Material damping in shafts is determined by both the fiber material and the matrix properties. For golf shaft applications, measured Q-factors depend on the specific design and loading conditions; direct comparisons between materials require careful experimental control \citep{MacKenzie2009}.
 
-The paradoxical result: carbon fiber, which is stiffer and lighter than steel, actually has \emph{lower} material damping. So a graphite shaft rings longer after impact than a steel shaft of equal flex. Is this good or bad?
+The relationship between material type and damping behavior is complex. While graphite composites offer design flexibility through fiber orientation and resin selection, the effective damping depends on the complete material system rather than material type alone. Modern shaft design optimizes material properties to achieve desired performance characteristics including vibration characteristics, frequency response, and feel.
 
 \subsection{Lead-Lag Dynamics and Damping}
 
@@ -535,9 +582,11 @@ A lighter, lower-damping shaft (like a lightweight graphite) provides:
 
 Modern drivers use relatively low-damping graphite shafts precisely because the efficiency gain (higher ball speed for a given muscular effort) outweighs the aesthetic loss of transient vibrations.
 
-\begin{mythreality}{Myth: "Steel shafts are better for control because they don't vibrate."}{mythreality:steel_shaft}
-\textbf{Reality:} Steel shafts are more heavily damped, so they vibrate less \emph{after impact}. But during the downswing, the difference in oscillation is minimal if the shaft is loaded predominantly in bending (not torsion). The "control" benefit of steel is more about tradition, feel, and perhaps placebo than about physics. Graphite shafts can be equally controllable if the golfer has proper timing and technique.
-\end{mythreality}
+\subsection{Material Damping and Shaft Behavior}
+
+Steel and graphite shafts differ in material composition and resulting mechanical properties. The damping behavior of a shaft is determined by multiple factors including fiber orientation, resin system, wall thickness, and the frequency of vibration being examined. Direct comparisons between materials require careful specification of the frequency range, loading conditions, and measurement methods.
+
+The transient vibrations observed after impact depend on the damping characteristics at the frequencies excited by the collision. Different shaft materials and designs can produce different vibration signatures. However, the dynamic behavior during the swing phase (before impact) is determined primarily by the shaft stiffness and mass distribution, with damping playing a secondary role compared to the inertial and elastic properties.
 
 \section{The Control-Affine Perspective on Damping}
 \label{sec:damping_control_affine}

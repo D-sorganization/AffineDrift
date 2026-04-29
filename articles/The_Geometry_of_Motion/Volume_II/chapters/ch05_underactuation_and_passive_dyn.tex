@@ -1,6 +1,12 @@
 \chapter{Underactuation and Passive Dynamics}
 \label{ch:underactuation}
 
+\begin{gomdraftnotice}
+This chapter is under active development and contains only a structural outline
+with preliminary material. Full exposition, worked examples, proofs, and exercises
+will be added in future editions.
+\end{gomdraftnotice}
+
 \epigraph{%
   Do not force the motion. Let the physics do the work.
 }{}
@@ -19,7 +25,7 @@ In classical robotics, the goal is often full actuation: one motor for every deg
 
 But nature does not build fully actuated systems, and neither do athletes.
 
-When a gymnast swings on a high bar, their center of mass rotates around the bar, but they have no motor at the bar---that ``joint'' is a passive pin constraint. When a human walks, the foot acting as the pivot is unactuated during the single-support phase; we cannot create torque from a point contact. And crucially for our running example, when a golfer releases the club during the downswing, the wrist joint acts as a free hinge. The club rapidly accelerates to over 100 miles per hour, \emph{driven entirely by the passive physics} of the arms pulling the grip, not by muscular torque applied at the wrist.
+When a gymnast swings on a high bar, their center of mass rotates around the bar, but they have no motor at the bar---that ``joint'' is a passive pin constraint. When a human walks, the foot acting as the pivot is unactuated during the single-support phase; we cannot create torque from a point contact. And crucially for our running example, when a golfer releases the club during the downswing, the wrist joint acts as a free hinge. The club undergoes rapid angular acceleration, \emph{driven entirely by the passive physics} of the coupling terms $M_{21}\ddot{\theta}_1 + C_2$ in the unactuated dynamics, not by muscular torque applied at the wrist \cite{NesbitSerrano2005}; this phenomenon was first popularized in Cochran and Stobbs' qualitative account \cite{CochranStobbs1968}.
 
 \begin{definition}{Underactuated System}{underactuated}
   Consider a mechanical system with $n$ degrees of freedom (DOF) and configuration coordinates $\bm{q} \in \configspace \subseteq \Reals^n$. The equations of motion take the standard manipulator form:
@@ -30,13 +36,6 @@ When a gymnast swings on a high bar, their center of mass rotates around the bar
   
   The system is \textbf{underactuated} if $m < n$, meaning there are fewer actuators than degrees of freedom. In this case, the matrix $\Bmat$ is not full rank (it maps a lower-dimensional control space into the $n$-dimensional configuration space).
 \end{definition}
-
-\index{underactuation}\index{passive dynamics}\index{zero dynamics}%
-\index{feedback linearization}\index{actuation matrix}%
-\index{double pendulum}\index{parametric excitation}%
-\index{inertial coupling}\index{Coriolis matrix}\index{mass matrix}%
-\index{annihilator}\index{constraint!dynamic}%
-\index{control Lie algebra}\index{bang-bang control}\index{singular arc}
 
 If we lack the authority to command arbitrary accelerations, the classical setpoint perspective sees this as a fundamental limitation. A setpoint controller wants to cancel the nonlinearities, feedback-linearize the system, and dictate the exact motion. Underactuation prevents this brute-force cancellation. 
 
@@ -192,7 +191,7 @@ For the golf swing, the zero dynamics describe how the club moves if the golfer'
 
 Revisiting the concept of Transverse Linearization (Chapter~4), if we linearize the unactuated dynamics around the trajectory $\traj^*(t)$, we analyze the transverse divergence of the club from its optimal path.
 
-We find a beautiful physical phenomenon:
+We find a notable physical phenomenon:
 \begin{itemize}
   \item During the early downswing, the club's zero dynamics are \emph{unstable}. If the club gets slightly out of position, the centrifugal force tends to pull it further off the optimal plane.
   \item During the late downswing (the release phase), the club's zero dynamics become \emph{strongly stable}. The massive acceleration $\ddot{\theta}_2 \gg 0$ acts like a stiff restoring spring. The centrifugal force aligns the club perfectly with the arms. 

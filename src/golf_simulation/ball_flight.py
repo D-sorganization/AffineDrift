@@ -22,12 +22,15 @@ import numpy as np
 
 from src.core.constants import GRAVITY_M_S2
 from src.core.contracts import check_non_negative, check_positive, require
-from src.tangent_models.examples import (
-    DynamicalSystem,
-    _central_difference_linearization,
-)
+from src.tangent_models.examples import DynamicalSystem
 
 logger = logging.getLogger(__name__)
+
+AIR_DYNAMIC_VISCOSITY_PAS = 1.81e-5
+GOLF_BALL_ZERO_LIFT_DRAG = 0.47
+GOLF_BALL_DRAG_TRANSITION_RE = 1.6e5
+GOLF_BALL_DRAG_TRANSITION_WIDTH = 2.5e4
+GOLF_BALL_LIFT_RESPONSE = 4.5
 
 
 @dataclass(frozen=True)
@@ -103,8 +106,8 @@ class BallFlightDynamics(DynamicalSystem):
             mass: Ball mass in kg (regulation: 0.04593 kg).
             radius: Ball radius in meters (regulation: 0.02135 m).
             rho: Air density in kg/m^3 (sea level: 1.225).
-            cd: Drag coefficient (dimensionless).
-            cl: Lift coefficient for Magnus effect (dimensionless).
+            cd: High-Reynolds-number drag coefficient asymptote.
+            cl: Lift-scale parameter for the spin-dependent Magnus model.
             gravity: Gravitational acceleration in m/s^2.
             wind: 3D wind velocity vector [wx, wy, wz] in m/s (default: no wind).
             spin_decay_rate: Exponential spin decay rate in 1/s.
@@ -133,6 +136,71 @@ class BallFlightDynamics(DynamicalSystem):
         """Cross-sectional area of the ball in m^2."""
         return np.pi * self.radius**2
 
+    def _reynolds_number(self, speed_rel: float) -> float:
+        """Compute the ball Reynolds number for a relative air speed."""
+        return (self.rho * speed_rel * (2.0 * self.radius)) / AIR_DYNAMIC_VISCOSITY_PAS
+
+    def _drag_coefficient(self, speed_rel: float) -> float:
+        """Return a velocity-dependent drag coefficient.
+
+        The curve blends a low-speed sphere-like drag coefficient toward the
+        golf-ball asymptote as Reynolds number rises through the drag crisis.
+        """
+        if speed_rel <= 0.0:
+            return self.cd
+
+        reynolds = self._reynolds_number(speed_rel)
+        blend = 1.0 / (
+            1.0
+            + np.exp((reynolds - GOLF_BALL_DRAG_TRANSITION_RE) / GOLF_BALL_DRAG_TRANSITION_WIDTH)
+        )
+        return float(self.cd + (GOLF_BALL_ZERO_LIFT_DRAG - self.cd) * blend)
+
+    def _lift_coefficient(self, speed_rel: float, spin: np.ndarray[Any, Any]) -> float:
+        """Return a spin-dependent lift coefficient.
+
+        The coefficient scales with the spin parameter r * |omega| / |v| and
+        saturates smoothly so the force uses the standard 0.5 * rho * v^2 * C_L * A
+        form rather than a volumetric proxy.
+        """
+        if speed_rel <= 0.0:
+            return 0.0
+
+        spin_mag = float(np.linalg.norm(spin))
+        if spin_mag <= 0.0:
+            return 0.0
+
+        spin_parameter = self.radius * spin_mag / speed_rel
+        return float(self.cl * (1.0 - np.exp(-GOLF_BALL_LIFT_RESPONSE * spin_parameter)))
+
+    def _drag_force(self, v_rel: np.ndarray[Any, Any], speed_rel: float) -> np.ndarray[Any, Any]:
+        """Return aerodynamic drag force: -0.5 * rho * cd(Re) * A * |v_rel| * v_rel."""
+        cd_eff = self._drag_coefficient(speed_rel)
+        return -0.5 * self.rho * cd_eff * self.area * speed_rel * v_rel
+
+    def _magnus_force(
+        self,
+        v_rel: np.ndarray[Any, Any],
+        speed_rel: float,
+        spin: np.ndarray[Any, Any],
+    ) -> np.ndarray[Any, Any]:
+        """Return Magnus (spin-induced lift) force using 0.5 * rho * v^2 * C_L * A."""
+        if speed_rel <= 0.0:
+            return np.zeros(3)
+        lift_direction = np.cross(spin, v_rel)
+        lift_direction_norm = float(np.linalg.norm(lift_direction))
+        if lift_direction_norm <= 0.0:
+            return np.zeros(3)
+        cl_eff = self._lift_coefficient(speed_rel, spin)
+        return (
+            0.5
+            * self.rho
+            * speed_rel**2
+            * cl_eff
+            * self.area
+            * (lift_direction / lift_direction_norm)
+        )
+
     def dynamics(
         self,
         x: np.ndarray[Any, Any],
@@ -149,38 +217,23 @@ class BallFlightDynamics(DynamicalSystem):
         """
         require(len(x) == 9, "state vector must have 9 elements")
 
-        # Unpack state
         velocity = x[3:6]
         spin = x[6:9]
 
-        # Velocity relative to air (accounting for wind)
         v_rel = velocity - self.wind
         speed_rel = float(np.linalg.norm(v_rel))
 
-        # Aerodynamic drag: -0.5 * rho * cd * A * |v_rel| * v_rel
-        drag = -0.5 * self.rho * self.cd * self.area * speed_rel * v_rel
-
-        # Magnus effect via Kutta-Joukowski for a spinning sphere with dimple
-        # enhancement: F = cl * (4/3) * pi * r^3 * rho * (spin x v_rel).
-        # The cl parameter scales for dimple-enhanced lift (~2-3x smooth sphere).
-        kj_coeff = self.cl * (4.0 / 3.0) * np.pi * self.radius**3 * self.rho
-        magnus = kj_coeff * np.cross(spin, v_rel)
-
-        # Gravity
+        drag = self._drag_force(v_rel, speed_rel)
+        magnus = self._magnus_force(v_rel, speed_rel, spin)
         gravity_force = np.array([0.0, 0.0, -self.mass * self.gravity])
 
-        # Acceleration
         acceleration = (drag + magnus + gravity_force) / self.mass
-
-        # Spin decay
         spin_derivative = -self.spin_decay_rate * spin
 
-        # Position derivative = velocity
         dx = np.zeros(9)
         dx[0:3] = velocity
         dx[3:6] = acceleration
         dx[6:9] = spin_derivative
-
         return dx
 
     def linearize(
@@ -197,29 +250,54 @@ class BallFlightDynamics(DynamicalSystem):
         Returns:
             Tuple of (A, B) Jacobian matrices.
         """
-        return _central_difference_linearization(self, np.asarray(x, dtype=float), u)
+        x_arr = np.array(x, dtype=float)
+        u_arr = np.array(u, dtype=float) if not isinstance(u, float) else np.array([u])
+        require(len(x_arr) == 9, "state vector must have 9 elements")
 
-    def _clamp_to_ground(
-        self,
-        state_vec: np.ndarray[Any, Any],
-        t: float,
-    ) -> BallFlightState:
-        """Clamp ball z-coordinate to ground level and return the updated state.
+        n = len(x_arr)
+        m = len(u_arr)
+        epsilon = 1e-6
 
-        Args:
-            state_vec: Current 9D state vector (modified in-place).
-            t: Current simulation time in seconds (used for logging).
+        A = np.zeros((n, n))
+        B = np.zeros((n, m))
 
-        Returns:
-            BallFlightState with z clamped to 0.
-        """
-        state_vec[2] = 0.0
-        logger.debug("Ball landed at t=%.3f s, x=%.1f, y=%.1f", t, state_vec[0], state_vec[1])
+        # Compute A via central differences
+        for i in range(n):
+            x_plus = x_arr.copy()
+            x_minus = x_arr.copy()
+            x_plus[i] += epsilon
+            x_minus[i] -= epsilon
+            A[:, i] = (self.dynamics(x_plus, u_arr) - self.dynamics(x_minus, u_arr)) / (2 * epsilon)
+
+        # Compute B via central differences
+        for i in range(m):
+            u_plus = u_arr.copy()
+            u_minus = u_arr.copy()
+            u_plus[i] += epsilon
+            u_minus[i] -= epsilon
+            B[:, i] = (self.dynamics(x_arr, u_plus) - self.dynamics(x_arr, u_minus)) / (2 * epsilon)
+
+        return A, B
+
+    @staticmethod
+    def _state_from_vector(state_vec: np.ndarray[Any, Any]) -> BallFlightState:
+        """Build an immutable BallFlightState from a 9D raw state vector."""
         return BallFlightState(
             position=state_vec[0:3].copy(),
             velocity=state_vec[3:6].copy(),
             spin=state_vec[6:9].copy(),
         )
+
+    def _clamp_landing(
+        self,
+        state_vec: np.ndarray[Any, Any],
+        trajectory: list[BallFlightState],
+        t: float,
+    ) -> None:
+        """Clamp the final state to ground level and log the landing."""
+        state_vec[2] = 0.0
+        trajectory[-1] = self._state_from_vector(state_vec)
+        logger.debug("Ball landed at t=%.3f s, x=%.1f, y=%.1f", t, state_vec[0], state_vec[1])
 
     def simulate(
         self,
@@ -251,15 +329,11 @@ class BallFlightDynamics(DynamicalSystem):
         while t < max_time:
             state_vec = self._rk4_step(state_vec, u, dt)
             t += dt
-            trajectory.append(
-                BallFlightState(
-                    position=state_vec[0:3].copy(),
-                    velocity=state_vec[3:6].copy(),
-                    spin=state_vec[6:9].copy(),
-                )
-            )
+            trajectory.append(self._state_from_vector(state_vec))
+
+            # Stop if ball has hit the ground (z <= 0) after initial launch
             if state_vec[2] <= 0.0 and t > dt:
-                trajectory[-1] = self._clamp_to_ground(state_vec, t)
+                self._clamp_landing(state_vec, trajectory, t)
                 break
 
         return trajectory

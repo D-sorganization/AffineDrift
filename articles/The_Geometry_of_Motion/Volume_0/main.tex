@@ -1,4 +1,4 @@
-\documentclass[11pt,letterpaper,openany]{book}
+\documentclass[10pt,letterpaper,openany]{book}
 
 % ──────────────────────────────────────────────
 % Packages
@@ -14,7 +14,7 @@
 \DeclareUnicodeCharacter{00B2}{\textsuperscript{2}}
 \DeclareUnicodeCharacter{00B3}{\textsuperscript{3}}
 \DeclareUnicodeCharacter{03A9}{\ensuremath{\Omega}}
-\usepackage[margin=1.2in]{geometry}
+\usepackage[margin=1.5in]{geometry}
 \usepackage{amsmath, amssymb, amsthm}
 \usepackage{mathtools}
 \usepackage{bm}
@@ -22,8 +22,6 @@
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
 \usetikzlibrary{arrows.meta, decorations.markings, calc, patterns, positioning, 3d}
-\usepackage{tcolorbox}
-\tcbuselibrary{theorems, breakable, skins}
 \usepackage{hyperref}
 \usepackage{imakeidx}
 \makeindex[intoc, title=Index]
@@ -137,7 +135,9 @@
 \newenvironment{derivation}{\begin{proof}[Derivation]}{\end{proof}}
 \newenvironment{argument}{\begin{proof}[Argument]}{\end{proof}}
 \newenvironment{listing}{\begin{center}\begin{minipage}{0.9\textwidth}}{\end{minipage}\end{center}}
-\newenvironment{algorithmic}{\begin{ttfamily}\small}{\end{ttfamily}}
+\newenvironment{pseudocode}{\begin{ttfamily}\small}{\end{ttfamily}}
+% Backward-compat alias so existing \begin{algorithmic} still compiles:
+\newenvironment{algorithmic}{\begin{pseudocode}}{\end{pseudocode}}
 
 % ──────────────────────────────────────────────
 % Chapter formatting
@@ -159,28 +159,42 @@
 \setlength{\headheight}{14.5pt}
 
 % ──────────────────────────────────────────────
+% Notation Concordance — Volume 0
+% ──────────────────────────────────────────────
+% This volume uses the "primer" notation conventions:
+%   Vectors:    bold italic via \bm{}     e.g. \state = \bm{x}
+%   Reals:      \Reals  (alias \R also available via geometry_of_motion.sty)
+%   Lie groups: \SO, \SE expand to SO(3), SE(3) with the (3) baked in
+%   Transpose:  bare ^T  (no macro — the shared \T alias is available but unused here)
+%
+% See geometry_of_motion.sty for the canonical fallback definitions shared
+% across all volumes.  Any \renewcommand below overrides the \providecommand
+% fallback in the .sty file.
+% ──────────────────────────────────────────────
+
+% ──────────────────────────────────────────────
 % Custom commands
 % ──────────────────────────────────────────────
-\newcommand{\state}{\bm{x}}
-\newcommand{\control}{\bm{u}}
-\newcommand{\traj}{\bm{\gamma}}
+\renewcommand{\state}{\bm{x}}
+\renewcommand{\control}{\bm{u}}
+\renewcommand{\traj}{\bm{\gamma}}
 \newcommand{\manifold}{\mathcal{M}}
 \newcommand{\configspace}{\mathcal{Q}}
 \newcommand{\statespace}{\mathcal{X}}
 \newcommand{\tube}{\mathcal{T}}
-\newcommand{\Reals}{\mathbb{R}}
-\newcommand{\dd}{\mathrm{d}}
-\newcommand{\dt}{\,\dd t}
+\renewcommand{\Reals}{\mathbb{R}}
+\renewcommand{\dd}{\mathrm{d}}
+\renewcommand{\dt}{\,\dd t}
 
 \DeclareMathOperator*{\argmin}{arg\,min}
 \DeclareMathOperator*{\argmax}{arg\,max}
 
-\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
-\newcommand{\inner}[2]{\left\langle #1,\, #2 \right\rangle}
-\newcommand{\se}{\mathfrak{se}(3)}
-\newcommand{\so}{\mathfrak{so}(3)}
-\newcommand{\SE}{\mathrm{SE}(3)}
-\newcommand{\SO}{\mathrm{SO}(3)}
+\renewcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\renewcommand{\inner}[2]{\left\langle #1,\, #2 \right\rangle}
+\renewcommand{\se}{\mathfrak{se}(3)}
+\renewcommand{\so}{\mathfrak{so}(3)}
+\renewcommand{\SE}{\mathrm{SE}(3)}
+\renewcommand{\SO}{\mathrm{SO}(3)}
 \newcommand{\screw}{\mathcal{S}}
 \newcommand{\twist}{\mathcal{V}}
 \newcommand{\wrench}{\mathcal{F}}
@@ -189,7 +203,7 @@
 % Title Page
 % ──────────────────────────────────────────────
 \title{%
-  {\Huge\bfseries\color{chapblue} Tangent-Space Methods for Nonlinear Control and Biomechanics}\\[0.4cm]
+  {\Huge\bfseries\color{chapblue} The Geometry of Motion}\\[0.4cm]
   {\Large Volume 0: The Mathematical Primer\\
   A Foundational Guide to Kinematics, Configuration, and State Space}\\[0.6cm]
   {\color{chapblue}\rule{\textwidth}{2pt}}
@@ -212,7 +226,7 @@
 
 Before we can begin to analyze the geometry of moving physical bodies or command them to navigate the world via control theory, we must establish a common language. The physics of movement happens in the real world, but our understanding of it happens entirely within mathematical spaces.
 
-This primer, **Volume 0** of *Tangent-Space Methods for Nonlinear Control and Biomechanics*, is designed to bridge the gap between basic calculus/algebra and the rigorous differential geometry required for modern nonlinear control theory. By intuitively introducing State Space, Configuration Manifolds, SO(3) Rotations, and Screw Theory, this text ensures that the "lay user" possesses the foundational armor needed to attack the subsequent volumes on Tangent Spaces (Volume I) and Trajectory Control (Volume II).
+This primer, \textbf{Volume 0} of \textit{The Geometry of Motion}, is designed to bridge the gap between basic calculus/algebra and the rigorous differential geometry required for modern nonlinear control theory. By intuitively introducing State Space, Configuration Manifolds, SO(3) Rotations, and Screw Theory, this text ensures that the "lay user" possesses the foundational armor needed to attack the subsequent volumes on Tangent Spaces (Volume I) and Trajectory Control (Volume II).
 
 The philosophy of this primer maintains our overarching theme: mathematics should be driven by the physical reality of motion, not abstract algebra for its own sake.
 

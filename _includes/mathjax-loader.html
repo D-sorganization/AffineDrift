@@ -1,6 +1,11 @@
 <script>
   // MathJax Configuration - MUST be defined before loading MathJax
   window.MathJax = {
+    loader: {
+      // ⚡ Bolt Optimization: Lazy typesetting defers MathJax rendering until
+      // equations enter the viewport, significantly improving initial page load time.
+      load: ['ui/lazy']
+    },
     tex: {
       inlineMath: [['$', '$'], ['\\(', '\\)']],
       displayMath: [['$$', '$$'], ['\\[', '\\]']],

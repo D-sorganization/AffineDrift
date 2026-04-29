@@ -1,6 +1,6 @@
 ---
 title: "Ground Reaction Forces: The Silent Foundation"
-bibliography: ../golf_physics.bib
+description: "Every golfer stands on the ground. This seems obvious, almost trivial. But it is not. The ground is a constraint on your motion. You cannot pass through..."
 ---
 
 ::: {.callout-note}
@@ -11,7 +11,6 @@ When you stand at address, you feel the ground beneath your feet. When you swing
 :::
 
 ## What Are Ground Reaction Forces?
-
 
 
 Every golfer stands on the ground. This seems obvious, almost trivial. But it is not. The ground is a constraint on your motion. You cannot pass through the ground; your feet cannot sink below it. This constraint is enforced by a force.
@@ -37,7 +36,7 @@ The normal force exactly cancels gravity. This is Newton's Third Law: you push d
 
 Stand with your feet shoulder-width apart. Now shift your weight rapidly to your left foot. You felt the ground push harder under your left foot and softer under your right. Now jump. For a brief moment, the ground pushed you upward with more force than your body weight---that extra force is what launched you into the air.
 
-In the golf swing, this weight shift happens dynamically throughout the motion. Force-plate studies report that at the top of the backswing, a majority of the vertical ground reaction force shifts to the trail foot, and by impact, the preponderance shifts to the lead foot. The specific percentages vary with swing style and measurement protocol. This transfer of ground reaction force is not just a consequence of the swing---it is an integral part of the driving mechanism.
+In illustrative force-plate examples from golf swing studies, this weight shift happens dynamically throughout the motion. Roughly 60--80% of the ground reaction force is under the trail foot at the top of the backswing, and at impact, approximately 80--95% is under the lead foot [@Nesbit2005, @vena2011kinematic]. This transfer of ground reaction force is not just a consequence of the swing---it is an integral part of the driving mechanism.
 
 :::
 
@@ -54,7 +53,7 @@ The total GRF vector is $\bm{F}_{\mathrm{GRF}} = (F_x, F_y, F_z)$.
 
 :::
 
-During a golf swing, the ground exerts forces in all three directions simultaneously. A force plate---an instrument embedded in the ground---measures these forces. Force plate studies of the golf swing report that the vertical component commonly reaches $1.2$ to $1.5$ times body weight at peak downswing, because the golfer is accelerating his center of mass upward and forward [@Winter2009].
+During a golf swing, the ground exerts forces in all three directions simultaneously. A force plate---an instrument embedded in the ground---measures these forces.  The vertical component is often $1.2$ to $1.5$ times body weight at peak downswing, because the golfer is accelerating his center of mass upward and forward.
 
 ### The Center of Pressure
 
@@ -67,9 +66,7 @@ The center of pressure is the point on the ground where the net GRF vector acts.
 
 :::
 
-During a static stance, the CoP is roughly beneath the center of mass. During a dynamic swing, the CoP moves. Standard sign and coordinate conventions for GRF and CoP follow Winter's biomechanics conventions [@Winter2009], with vertical force positive upward and the CoP defined as the point at which the net horizontal moment of the distributed contact traction vanishes.
-
-Horizontal GRF components are additionally bounded by the friction-cone inequality, $\sqrt{F_x^2 + F_y^2} \le \mu_s F_z$, where $\mu_s$ is the static coefficient of friction between shoe and turf. If a golfer tries to produce a horizontal impulse that violates this bound, the feet slip and the effective ground constraint is lost. Early in the downswing, the CoP may move forward (toward the target), indicating that the golfer is shifting weight anteriorly. Later in the downswing, as the golfer extends through the ball, the CoP may migrate toward the medial (inner) foot or the heel, depending on the swing mechanics.
+During a static stance, the CoP is roughly beneath the center of mass. During a dynamic swing, the CoP moves. Early in the downswing, the CoP may move forward (toward the target), indicating that the golfer is shifting weight anteriorly. Later in the downswing, as the golfer extends through the ball, the CoP may migrate toward the medial (inner) foot or the heel, depending on the swing mechanics.
 
 Tracking CoP movement is a powerful diagnostic tool: it reveals whether weight is shifting as intended, whether the golfer is sway-ing (CoP moving laterally in an uncontrolled way), or whether early extension is forcing the pelvis forward prematurely.
 
@@ -84,7 +81,6 @@ To understand GRF rigorously, draw a free body diagram. The golfer's entire body
 The golfer does not have rockets or invisible cables. The only forces from the external world are gravity and the GRF. This is crucial: **the GRF is the only external force available to change the golfer's linear momentum**.
 
 ## The Impulse-Momentum Perspective
-
 
 
 The impulse-momentum perspective answers: How does the ground shape the golfer's motion?
@@ -142,16 +138,12 @@ The impulse delivered by the ground (the integral of GRF over time) equals the c
 ::: {.callout-tip}
 ## Computing COM Acceleration from Force Plate Data
 
-The following values are chosen to illustrate the calculation; they are not measurements from a specific subject. Suppose a 90 kg golfer stands on a force plate during the downswing. The force plate records:
+Suppose a 90 kg golfer stands on a force plate during the downswing. The force plate records:
 
-\begin{tabular}{lll}
-\hline
-**Time** & **Vertical GRF** & **Anterior-Posterior GRF** 
-\hline
-$t = 0.0$ s & $900$ N (standing) & $0$ N 
-$t = 0.2$ s & $1200$ N (peak) & $200$ N (forward) 
-\hline
-\end{tabular}
+| **Time** | **Vertical GRF** | **Anterior-Posterior GRF** |
+|----------|-----------------|---------------------------|
+| $t = 0.0$ s | $900$ N (standing) | $0$ N |
+| $t = 0.2$ s | $1200$ N (peak) | $200$ N (forward) |
 
 
 At $t = 0.2$ s, compute the center-of-mass acceleration.
@@ -171,7 +163,8 @@ $$
 $$
 \ddot{z}_{\mathrm{COM}} = \frac{1200 + 883}{90} = 23.1 \text{ m/s}^2.
 $$
-This is an upward acceleration of $23.1 / 9.81 \approx 2.35$ g's.
+
+Note: In the sign convention used here, $F_z = m\ddot{z} - mg$ (with upward positive), so $\ddot{z} = (F_z + mg)/m$. This is an upward acceleration of $23.1 / 9.81 \approx 2.35$ g's. This reflects the golfer actively extending the legs during the downswing push-off phase.
 
 Anterior-Posterior component:
 $$
@@ -190,7 +183,6 @@ The center of mass accelerates forward at $2.22$ m/s$^2$.
 ### The Kinetic Chain and the Ground-Up Sequence
 
 
-
 The impulse perspective explains the **kinetic chain** or **ground-up sequence**. The motion of the golf swing appears to flow from the ground up: the legs push, the hips rotate, the torso follows, the shoulders unwind, the arms extend, and finally the club head meets the ball.
 
 Why does the motion flow this way? Because the GRF is the source of external impulse. The feet push into the ground (via muscular effort), the ground pushes back with GRF, and this GRF impulse must be transmitted through the body.
@@ -205,7 +197,6 @@ Think of the kinetic chain like a whip. You don't accelerate the entire whip at 
 :::
 
 ## The Work-Energy Perspective: GRF Does No Work
-
 
 
 Here is a stunning fact: the ground reaction force does zero work.
@@ -283,7 +274,7 @@ This says: the constraint force does no work. Work is the power times time: $P =
 
  
 
-In the control-affine framework (Chapter~\ref{ch:05_affine_structure}), the dynamics are:
+In the control-affine framework (Chapter @sec-05_affine_structure), the dynamics are:
 $$
 \dot{\bm{x}} = f(\bm{x}) + G(\bm{x})\bm{u},
 $$
@@ -313,7 +304,7 @@ $$
 $$
 where $\bm{r}_{\mathrm{COM}}$ is computed from the joint angles $\bm{q}(t)$ via forward kinematics.
 
-### Zero-Torque Controlled Flight (ZTCF)
+### Zero-Torque Counterfactual (ZTCF)
 
 Consider a thought experiment: suppose all muscle torques are set to zero ($\boldsymbol{\tau}_{\mathrm{muscle}} = 0$), but the golfer remains in contact with the ground. What GRF exists?
 
@@ -339,13 +330,12 @@ This distinction is powerful. By comparing actual measured GRF (from a force pla
 ## Drift GRF vs. Control-Induced GRF
 **Drift GRF:** The GRF that arises purely from gravity and Coriolis effects, without any muscular effort. This includes static weight and inertial terms.
 
-**Control-Induced GRF:** The additional GRF resulting from muscular torques. This is what the golfer ``creates'' through effort.
+**Control-Induced GRF:** The additional GRF resulting from muscular torques. This is what the golfer "creates" through effort.
 
 **Why it matters:** Force plate data measures total GRF. To extract muscle torques from force plates, we must separate these two components. The drift component is kinematic (determined by configuration and velocity). The control component is dynamic (determined by muscle activation).
 :::
 
 ## GRF Induced by Torques at Remote Joints
-
 
 
 This section addresses a counterintuitive fact: a muscle torque applied at one joint can induce a change in GRF at the feet, even if the feet are not directly involved.
@@ -368,7 +358,7 @@ If the shoulder torque accelerates the arm forward and the center of mass forwar
 ::: {.callout-tip}
 ## From Shoulder Torque to GRF Change
 
-The following values are chosen to illustrate the calculation; they are not measurements from a specific subject. Consider a 90 kg golfer with a 5 kg arm. Suppose the golfer applies a torque of 100 N$\cdot$m at the shoulder, causing the arm to accelerate.
+Consider a 90 kg golfer with a 5 kg arm. Suppose the golfer applies a torque of 100 N$\cdot$m at the shoulder, causing the arm to accelerate.
 
 Assume (for simplicity) that the arm's center of mass is 0.5 m from the shoulder, and the whole body's center of mass is 1.0 m from the shoulder horizontally. When the arm rotates with angular acceleration $\alpha$, the arm's center of mass has tangential acceleration $a_{\mathrm{arm}} = \alpha \cdot 0.5$.
 
@@ -397,7 +387,7 @@ $$
 \Delta F_x = m \cdot \ddot{x}_{\mathrm{COM}} = 90 \times 2.22 = 200 \, \mathrm{N}.
 $$
 
-**Conclusion:** A 100 N$\cdot$m torque at the shoulder induces a 200 N change in anterior-posterior GRF at the feet. This is why force plate data reveals information about remote joints: the feet ``feel'' the effects of muscle torques throughout the body.
+**Conclusion:** A 100 N$\cdot$m torque at the shoulder induces a 200 N change in anterior-posterior GRF at the feet. This is why force plate data reveals information about remote joints: the feet "feel" the effects of muscle torques throughout the body.
 
 :::
 
@@ -427,7 +417,7 @@ Elite golfers exhibit a characteristic GRF pattern during the downswing and impa
 
 The lateral GRF (medial-lateral component) also changes: as the golfer rotates the hips, the lead leg may push outward against the ground, creating a lateral GRF that helps rotate the torso.
 
-Coaches often cue golfers to ``push into the ground'' or ``drive off the back foot.'' This cue is intuitive: it emphasizes the impulse perspective. But it is incomplete. The impulse is essential for transferring energy from the lower body to the upper body. However, the work perspective shows that the ground itself adds no energy---the muscles are the true source.
+Coaches often cue golfers to "push into the ground" or "drive off the back foot." This cue is intuitive: it emphasizes the impulse perspective. But it is incomplete. The impulse is essential for transferring energy from the lower body to the upper body. However, the work perspective shows that the ground itself adds no energy---the muscles are the true source.
 
 ### GRF Asymmetry: Lead vs. Trail Foot
 
@@ -450,7 +440,7 @@ Early extension occurs when the hips rise (extend) too soon during the downswing
 
 - A sharp increase in vertical GRF too early (before the torso is fully loaded).
 - A rapid anterior-posterior GRF (the golfer is jumping forward rather than rotating).
-- The center of pressure moving forward prematurely (losing the ``ground'' as a platform).
+- The center of pressure moving forward prematurely (losing the "ground" as a platform).
 
 A proper swing maintains relatively constant vertical GRF during the loading phase, then increases it during extension, allowing the torso to rotate efficiently against the ground's resistance.
 
@@ -473,7 +463,7 @@ A proper backswing maintains a stable center of pressure, loading the trail side
 
 Modern golf biomechanics labs use dual force plates (one under each foot) to measure GRF with high precision. The data reveals:
 
-- Vertical GRF over time (the classic ``force curve'').
+- Vertical GRF over time (the classic "force curve").
 - Anterior-posterior GRF (forward push during extension).
 - Medial-lateral GRF (side-to-side balance and rotation).
 - Center of pressure path (the trajectory of the balance point).
@@ -500,8 +490,8 @@ This data feeds into coaching: golfers can see whether their GRF pattern matches
 
 :::
 
-\subsection*{Looking Ahead}
-Ground reaction forces provide the impulse that changes the body's momentum, but the internal mechanism that generates motion is muscular torque at the joints. How do individual muscle forces combine to produce joint torques? Chapter~\ref{ch:muscle-to-torque} develops the *muscle Jacobian* that maps hundreds of muscle forces into the handful of joint torques that appear in our equations of motion.
+### Looking Ahead
+Ground reaction forces provide the impulse that changes the body's momentum, but the internal mechanism that generates motion is muscular torque at the joints. How do individual muscle forces combine to produce joint torques? Chapter @sec-muscle-to-torque develops the *muscle Jacobian* that maps hundreds of muscle forces into the handful of joint torques that appear in our equations of motion.
 
 ## Chapter Exercises
 
@@ -520,4 +510,3 @@ Ground reaction forces provide the impulse that changes the body's momentum, but
 - A golfer performing a reverse weight shift (moving weight backward instead of forward during the downswing) would likely show what pattern in the anterior-posterior GRF?
 
 - Use the equation $\bm{F}_{\mathrm{GRF}} = m\ddot{\bm{r}}_{\mathrm{COM}} - m\bm{g}$ to explain why GRF must be less than body weight if the center of mass is accelerating downward (e.g., during a deep squat descent).
-

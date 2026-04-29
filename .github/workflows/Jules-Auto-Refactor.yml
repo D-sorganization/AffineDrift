@@ -13,8 +13,48 @@ permissions:
   pull-requests: write
 
 jobs:
-  auto-refactor:
+  # ── Dispatcher: route to self-hosted if available ──────────────────────────
+  pick-runner:
     runs-on: d-sorg-fleet
+    timeout-minutes: 2
+    outputs:
+      runner: ${{ steps.check.outputs.runner }}
+    steps:
+      - name: Check for self-hosted runner
+        id: check
+        env:
+          GH_TOKEN: ${{ secrets.RUNNER_CHECK_TOKEN }}
+          FLEET_MODE: ${{ vars.FLEET_RUNNER_MODE }}
+        run: |
+          MODE="${FLEET_MODE:-hybrid}"
+          echo "Fleet mode: $MODE"
+
+          case "$MODE" in
+            local)
+              echo "runner=d-sorg-fleet" >> $GITHUB_OUTPUT
+              echo "Routing to self-hosted fleet (mode=local)"
+              ;;
+            cloud)
+              echo "runner=ubuntu-latest" >> $GITHUB_OUTPUT
+              echo "Routing to GitHub-hosted (mode=cloud)"
+              ;;
+            hybrid|*)
+              AVAILABLE=$(gh api /orgs/${{ github.repository_owner }}/actions/runners \
+                --jq '[.runners[] | select(.status == "online") | select(.busy == false) | select(.labels[].name == "d-sorg-fleet")] | length' \
+                2>/dev/null || echo "0")
+              if [[ "$AVAILABLE" -gt 0 ]]; then
+                echo "runner=d-sorg-fleet" >> $GITHUB_OUTPUT
+                echo "$AVAILABLE idle fleet runner(s) - routing locally"
+              else
+                echo "runner=ubuntu-latest" >> $GITHUB_OUTPUT
+                echo "No idle fleet runners - falling back to GitHub-hosted"
+              fi
+              ;;
+          esac
+
+  auto-refactor:
+    runs-on: self-hosted
+    needs: pick-runner
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -25,11 +65,11 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          python-version: "3.11"
+          python-version: "3.12"
 
       - name: Install Tools
         run: |
-          pip install ruff isort autoflake
+          pip install ruff black isort autoflake
 
       - name: Configure Git
         run: |
@@ -103,10 +143,10 @@ jobs:
           ruff check --fix --unsafe-fixes "$TARGET" 2>/dev/null && \
             FIXES_APPLIED="$FIXES_APPLIED ruff-unsafe"
 
-          # 5. Ruff format
-          echo "Running ruff format..."
-          ruff format "$TARGET" 2>/dev/null && \
-            FIXES_APPLIED="$FIXES_APPLIED ruff-format"
+          # 5. Black formatting
+          echo "Running black..."
+          black "$TARGET" 2>/dev/null && \
+            FIXES_APPLIED="$FIXES_APPLIED black"
 
           echo "fixes=$FIXES_APPLIED" >> $GITHUB_OUTPUT
 

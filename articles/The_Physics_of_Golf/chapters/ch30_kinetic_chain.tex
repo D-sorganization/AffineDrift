@@ -21,7 +21,7 @@ The golf swing operates on the same principle. The golfer's body is that whip:
   \item The shoulders then drive the arms, the arms drive the wrists, and finally the wrists release the club.
 \end{itemize}
 
-By the time the club reaches impact, it has been accelerated through a \emph{sequence} of torques, each applied at just the right moment. The result: very high club speeds emerge from much lower body-segment velocities---a velocity amplification made possible by the coupled chain geometry. This is the kinetic chain, and it is a matter of \emph{timing}, not raw muscular force.
+By the time the club reaches impact, it has been accelerated through a \emph{sequence} of torques, each applied at just the right moment. The result: club speeds of 80--160 mph emerge from body velocities of 5--20 mph \citep{Nesbit2005,McTeigue1994}. This is the kinetic chain, and it is a matter of \emph{timing}, not raw muscular force.
 
 A common misconception is that the golfer ``drives the clubhead'' with muscular effort. In reality, beyond a certain point in the downswing, muscular effort would \emph{slow down} the club. Instead, the golfer's muscles provide the timing signal and the initial torques; the whipping motion and the geometry of the body then concentrate velocity into the distal segments, culminating at the club.
 
@@ -77,10 +77,52 @@ In a well-executed golf swing, the following sequence occurs:
 
   \item \textbf{Wrists} ($i=5$): The wrists, constrained to lag the club during the acceleration phase, release suddenly near impact. Peak wrist velocity occurs very close to impact.
 
-  \item \textbf{Club} ($i=6$): The club, driven by the decelerating arms and wrists, reaches maximum velocity at or very close to impact---the precise timing depends on the golfer and club geometry.
+  \item \textbf{Club} ($i=6$): The club, driven by the decelerating arms and wrists, reaches maximum velocity at or shortly after impact, typically 0--5 ms after impact depending on the golfer and club.
 \end{enumerate}
 
 This staggered timing is the essence of the kinetic chain. Each segment acts as a whip segment: it receives torque from its proximal neighbor, accelerates, reaches a peak velocity, and then transfers its momentum to the distal neighbor as constraint forces.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[thick, font=\small]
+  % Time axis
+  \draw[->] (0,0) -- (10,0) node[anchor=west] {Downswing Time (\%)};
+
+  % Velocity traces for each segment
+  % Hips (earliest)
+  \draw[color=red, thick] plot coordinates {(1,4) (3,5) (5,3) (7,1) (9,0.5)};
+  \node[red] at (5.5, 5.5) {Hips};
+
+  % Torso (medium)
+  \draw[color=orange, thick] plot coordinates {(1.5,3.5) (4,5) (6.5,2.5) (8.5,0.5)};
+  \node[orange] at (6.5, 5.5) {Torso};
+
+  % Shoulders (later)
+  \draw[color=green, thick] plot coordinates {(2.5,3) (5.5,5) (7.5,2) (9,0.3)};
+  \node[green] at (7.5, 5.5) {Shoulders};
+
+  % Arms/Wrists (latest)
+  \draw[color=blue, thick] plot coordinates {(4,2) (7.5,5) (8.5,1)};
+  \node[blue] at (8, 5.5) {Arms/Wrists};
+
+  % Club (maximum velocity late)
+  \draw[color=purple, thick, dashed] plot coordinates {(5,1) (9,5.5)};
+  \node[purple] at (9.5, 5.5) {Club};
+
+  % Mark events
+  \draw[dashed, gray] (5, 0) -- (5, 6);
+  \node[gray] at (5, -0.5) {Early};
+
+  \draw[dashed, gray] (7.5, 0) -- (7.5, 6);
+  \node[gray] at (7.5, -0.5) {Late};
+
+  % Y-axis label
+  \node[rotate=90] at (-0.8, 3) {Rotational Velocity};
+
+\end{tikzpicture}
+\caption{Kinetic chain sequencing: proximal-to-distal timing of segment velocities. Each segment's peak velocity is staggered in time, with proximal segments (hips, torso) reaching peak velocity earlier and distal segments (arms, wrists, club) reaching peak velocity progressively later. This staggered timing concentrates energy and velocity into the distal segments, culminating in maximum club speed near impact.}
+\label{fig:ch30_kinetic_chain_timing}
+\end{figure}
 
 \subsection{Peak Velocity Timing and the Energy Cascade}
 
@@ -265,7 +307,7 @@ where $\theta_{\text{club}}$ is the rotation of the club relative to the grip.
 
 \subsection{Why the Wrist Cannot Drive the Club}
 
-At first glance, it seems that the wrist should be a major power source: the wrist muscles are substantial, and a violent wrist snap seems to intuitively contribute to club speed. However, Chapter~\ref{ch:muscle-force-generation} showed that skeletal muscles operate under a fundamental constraint: they are weak at high speeds (Hill's force-velocity relation). By the time the club reaches near-impact speeds, the angular velocities involved are large enough that the wrist muscles cannot exert significant force under Hill's curve constraints.
+At first glance, it seems that the wrist should be a major power source: the wrist muscles are substantial, and a violent wrist snap seems to intuitively contribute to club speed. However, Chapter~\ref{ch:muscle-force-generation} showed that skeletal muscles operate under a fundamental constraint: they are weak at high speeds (Hill's force-velocity relation). By the time the club reaches near-impact speeds (say, 80 mph at the hands, which is $\sim 1200^{\circ}$/s in rotational terms), the muscle cannot exert much force.
 
 Moreover, the wrist is a small, light segment at the distal end of the chain. For the wrist to actively drive the club, it would need to exert a torque $\tau_{\text{wrist}}$ on the club against the dynamic resistance (inertia and centrifugal effects) of the club. However, the work-energy theorem tells us:
 
@@ -289,10 +331,10 @@ The wrist release is not an active drive of the club by the wrist muscles. Rathe
 Consider the wrist and club as a coupled system. Let $\theta_a$ be the arm rotation angle and $\theta_c$ be the club rotation angle. The club is subject to a constraint torque from the arm:
 
 \[
-I_{\text{club}} \ddot{\theta}_c = \tau_{\text{arm}} + \tau_{\text{gravity}} + \tau_{\text{air}}
+I_{\text{club}} \ddot{\theta}_c = \tau_{\text{arm}} + \tau_{\text{gravity}} + \tau_{\text{air}} + \tau_{\text{centrifugal}}
 \]
 
-where $\tau_{\text{arm}}$ is the constraint torque transmitted through the wrist from the arm. During the lag phase (when the wrist is cocked and constrained), the lag angle $\phi = \theta_a - \theta_c$ is maintained by a constraint:
+where $\tau_{\text{arm}}$ is the constraint torque transmitted through the wrist from the arm and $\tau_{\text{centrifugal}}$ is the centrifugal torque arising from the rotating arm reference frame (this is the dominant force driving club acceleration after release; see below). During the lag phase (when the wrist is cocked and constrained), the lag angle $\phi = \theta_a - \theta_c$ is maintained by a constraint:
 
 \[
 \phi = \text{const} \quad \Rightarrow \quad \dot{\theta}_c = \dot{\theta}_a, \quad \ddot{\theta}_c = \ddot{\theta}_a
@@ -301,12 +343,12 @@ where $\tau_{\text{arm}}$ is the constraint torque transmitted through the wrist
 This means the wrist is acting like a rigid link, transmitting all acceleration from the arm to the club. The constraint force is whatever torque is necessary to maintain this rigid coupling:
 
 \[
-\tau_{\text{arm}} = I_{\text{club}} \ddot{\theta}_a - \tau_{\text{gravity}} - \tau_{\text{air}}
+\tau_{\text{arm}} = I_{\text{club}} \ddot{\theta}_a - \tau_{\text{gravity}} - \tau_{\text{air}} - \tau_{\text{centrifugal}}
 \]
 
-As long as the wrist muscles can maintain this constraint (i.e., as long as the required torque does not exceed the maximum torque the wrist muscles can exert), the lag angle remains constant. However, as the arm accelerates faster and faster, the required constraint torque grows. Eventually, the constraint becomes infeasible (the wrist muscles cannot provide enough torque), and the lag angle begins to decrease. The wrist is now \emph{releasing} not by active uncocking, but by the relaxation of the constraint.
+As long as the wrist muscles can maintain this constraint (i.e., as long as the required torque does not exceed the maximum torque the wrist muscles can exert), the lag angle remains constant. However, as the arm accelerates faster and faster, the required constraint torque grows---especially the centrifugal contribution, which scales as $\dot{\theta}_a^2$. Eventually, the constraint becomes infeasible (the wrist muscles cannot provide enough torque), and the lag angle begins to decrease. The wrist is now \emph{releasing} not by active uncocking, but by the relaxation of the constraint.
 
-Once the constraint is released, the club experiences only the torque from gravity and air resistance, which are small compared to the inertial forces from the arm. The club then accelerates under its own inertia, driven by Coriolis forces and the centrifugal effects of the rotating reference frame of the arm.
+Once the constraint is released, the club accelerates primarily under the centrifugal torque from the rotating arm reference frame, with Coriolis forces contributing additional acceleration. Gravity and air drag are comparatively small at these speeds. The centrifugal acceleration from the rotating arm is the \emph{dominant} force driving the club to high angular velocities in the final phase before impact.
 
 \subsection{Late Release vs. Early Release: A Quantitative Comparison}
 
@@ -424,17 +466,17 @@ The CoP movement is not arbitrary; it is tightly coordinated with hip and should
 
 \index{peak GRF!timing}
 
-High-speed force plate measurements reveal a characteristic pattern in the timing of GRF during the downswing \citep{Winter2009}. For a driver swing, the general pattern is:
+High-speed force plate measurements reveal a characteristic pattern in the timing of GRF during the downswing.\citeneeded{force-plate study documenting GRF timing patterns during golf downswing (e.g., Okuda 2010, McNitt-Gray 2013, Barrentine 1994)} For a driver swing:
 
 \begin{itemize}
-  \item \textbf{Maximum vertical GRF (lead foot)}: Peaks well \emph{before} impact---reported values in the literature range from approximately 50--120 ms prior to impact depending on the golfer and measurement method. At this time, the golfer is pushing down hard to drive the hips and rotate the torso.
+  \item \textbf{Maximum vertical GRF (lead foot)}: Typically peaks 80--100 ms \emph{before} impact. At this time, the golfer is pushing down hard to drive the hips and rotate the torso.
 
-  \item \textbf{Peak horizontal GRF (toward target)}: Occurs somewhat later than peak vertical GRF, still before impact, correlating with the maximum horizontal velocity of the center of mass.
+  \item \textbf{Peak horizontal GRF (toward target)}: Occurs roughly 30--50 ms before impact, correlating with the maximum horizontal velocity of the center of mass.
 
-  \item \textbf{Peak rotational torque}: The GRF torque about the vertical axis also peaks before impact, driving the final acceleration of hip rotation.
+  \item \textbf{Peak rotational torque}: The GRF torque about the vertical axis peaks around 30--50 ms before impact, driving the final acceleration of hip rotation.
 \end{itemize}
 
-The fact that peak GRF precedes impact is crucial: it means that the golfer is not pushing at impact, but rather has already built up the hip rotation and momentum before the club reaches the ball.
+The fact that peak GRF precedes impact by a significant time interval is crucial: it means that the golfer is not pushing at impact, but rather has already built up the hip rotation and momentum before the club reaches the ball.
 
 \subsection{The Push-Off and Rotational Momentum Transfer}
 
@@ -458,14 +500,14 @@ Skilled golfers optimize this GRF sequencing: they apply a large vertical GRF ea
 
 \begin{example}{Quantifying the Torque from Ground Reaction Forces}{ex:grf_torque}
 
-Consider a golfer with the following \emph{illustrative} parameters (not empirically measured values):
+Consider a golfer with the following measurements:
 
 \begin{itemize}
   \item Moment of inertia of hips and torso about vertical axis: $I = 1.5 \text{ kg} \cdot \text{m}^2$
 
   \item Distance from rotation axis to lead foot: $r = 0.4 \text{ m}$
 
-  \item Peak vertical GRF at lead foot: $F_z = 1.5 \times \text{body weight} = 1200 \text{ N}$ (for an 80 kg golfer)
+  \item Peak vertical GRF at lead foot: $F_z = 1.5 \times \text{body weight} = 1200 \text{ N}$ (for a 80 kg golfer)
 
   \item Peak horizontal GRF (toward target) at lead foot: $F_x = 0.8 \times \text{body weight} = 640 \text{ N}$
 \end{itemize}
@@ -486,13 +528,13 @@ The torques are:
 \ddot{\theta} = \frac{\tau}{I} = \frac{480 + 640}{1.5} \approx 750 \text{ rad/s}^2
 \]
 
-This is a substantial angular acceleration. Integrated over an illustrative time interval of 50 ms:
+This is a substantial angular acceleration. Integrated over a time interval of 50 ms (early downswing), the change in angular velocity is:
 
 \[
 \Delta \dot{\theta} = \ddot{\theta} \times \Delta t = 750 \times 0.05 = 37.5 \text{ rad/s} \approx 2150^{\circ}/\text{s}
 \]
 
-This illustrates the order of magnitude of GRF-driven torques: even with conservative parameter choices, the ground can provide very large rotational accelerations. The GRF is the primary driver of hip rotation.
+This explains how the hips can rotate from a slow start at the top of the backswing to rotational velocities of 300--400 deg/s: the GRF provides enormous external torques.
 
 \end{example}
 
@@ -569,22 +611,22 @@ The constraint forces redistribute energy among the segments: $P_i^{(c)}$ can be
 
 \index{energy budget!golf swing}
 
-Measurements of elite golfers reveal the following approximate energy distribution (from \citep{Hume2005, Sprigings2005}):
+Measurements of elite golfers suggest approximate energy distributions during the downswing (from \citep{Hume2005, Sprigings2005}). The following table presents illustrative values of kinetic energy at various phases:
 
 \begin{center}
-\begin{tabular}{lcc}
+\begin{tabular}{lc}
 \toprule
-Segment & Peak KE (J) & \% of Total KE at Impact \\
+Segment & Estimated KE Range (J) \\
 \midrule
-Hips and torso & 50--80 & 15--25\% \\
-Shoulders and arms & 40--60 & 15--20\% \\
-Wrists and forearms & 20--40 & 8--15\% \\
-Club & 200--300 & 50--60\% \\
+Hips and torso & 50--80 \\
+Shoulders and arms & 40--60 \\
+Wrists and forearms & 20--40 \\
+Club & 200--300 \\
 \bottomrule
 \end{tabular}
 \end{center}
 
-The club contains the majority of the kinetic energy at impact, even though it represents a small fraction of the body mass. This is the result of the velocity amplification produced by the kinetic chain: the body's segments transfer their kinetic energy progressively into smaller, faster-moving segments, with the final concentration in the club.
+The club contains the majority of the kinetic energy at impact, even though it represents a small fraction of the body mass. This is the result of the velocity amplification produced by the kinetic chain: the body's segments transfer their kinetic energy progressively into smaller, faster-moving segments, with the final concentration in the club. Note: The exact energy distribution at impact depends on how kinetic energy is defined (simultaneous vs. peak values at different times) and may vary significantly between individuals.
 
 The muscular power input occurs primarily during the backswing and the early downswing. By the time the club approaches impact, most of the muscles are acting eccentrically (decelerating), transmitting their kinetic energy forward. The muscles are not ``driving'' the club at impact; they are \emph{restraining} the body while the club catches up.
 
@@ -653,7 +695,7 @@ Specifically, the constraint force $\tau_i^{(c)}$ at joint $i$ is determined by 
 \tau_i^{(c)} = \sum_j M_{ij}^{-1} (I_j \ddot{\theta}_j - \tau_j^{(m)})
 \]
 
-where $M_{ij}^{-1}$ are the elements of the inverted mass matrix. This equation encodes the physical fact that each segment's acceleration is coupled to every other segment through the mass matrix.
+where $M_{ij}^{-1}$ are the elements of the inverted mass matrix. This equation encodes the physical fact that each segment's acceleration is coupled to every other segment through the mass matrix. The biomechanics community has developed a rigorous methodology---\emph{induced acceleration analysis}---for decomposing the total joint acceleration into contributions from individual muscles and velocity-dependent terms, precisely by exploiting this mass-matrix inversion. We explore this methodology in detail in Chapter~\ref{ch:induced_acceleration}, where the connection between mass-matrix coupling and the drift--control decomposition is made quantitative.
 
 \begin{principle}{Kinetic Chain as Natural Dynamics}{prin:kinetic_chain_natural}
 
@@ -845,15 +887,4 @@ Consider a three-segment kinetic chain: hips ($I_1 = 2.0$), shoulders ($I_2 = 1.
 
   \item[(b)] Rank the segments by natural frequency.
 
-  \item[(c)] For a system excited by a transient hip impulse, which segment reaches its peak velocity first, second, and third? Explain using the natural frequency ordering.
-
-  \item[(d)] Estimate the time delay between successive peak velocities using $\Delta t \approx \pi / (2 \omega_i)$.
-
-  \item[(e)] Discuss how the natural frequency hierarchy contributes to the proximal-to-distal sequencing.
-\end{itemize}
-
-\end{enumerate}
-
-\end{exercises}
-
-% End of chapter
+  \item[(c)] For a system excited by a transient hip impulse

@@ -23,7 +23,7 @@ The computational efficiency crisis in robotics was born in the 1970s. As roboti
 
 In the early 1980s, \textbf{Orin}, \textbf{McGhee}, and \textbf{Luh} \cite{luh1980} independently developed recursive formulations of robot dynamics. Instead of solving the global inverse dynamics problem as a monolithic matrix equation, they recognized that the sequential tree structure of a kinematic chain could be exploited: each joint only directly interacts with its immediate neighbors. Their key insight was that by organizing calculations to respect this local structure, one could reduce the computational complexity from $O(N^3)$ (matrix inversion) or even $O(N^4)$ (symbolic algebra) down to $O(N)$ (linear in the number of joints).
 
-In 1987, \textbf{Roy Featherstone} completed this revolution \cite{Featherstone2008}. His reformulation using spatial vector algebra (Chapter \ref{ch:spatial_algebra}) and adjoint transformations made recursive dynamics not merely efficient, but \emph{elegant}. The Recursive Newton-Euler Algorithm (RNEA) became the standard approach used in every modern physics engine: MuJoCo, PyBullet, Drake, Gazebo, and UpstreamDrift all rely fundamentally on Featherstone's recursive framework, executed as purely numerical matrix operations rather than symbolic manipulation.
+In 1987, \textbf{Roy Featherstone} completed this revolution \cite{Featherstone2008}. His reformulation using spatial vector algebra (Chapter \ref{ch:spatial_algebra}) and adjoint transformations made recursive dynamics not merely efficient, but \emph{concise}. The Recursive Newton-Euler Algorithm (RNEA) became the standard approach used in every modern physics engine: MuJoCo, PyBullet, Drake, Gazebo, and UpstreamDrift all rely fundamentally on Featherstone's recursive framework, executed as purely numerical matrix operations rather than symbolic manipulation.
 
 \section{The Curse of Dimensionality in Dynamics}
 
@@ -39,6 +39,33 @@ Here, $\mathbf{M}$ is the $N \times N$ mass matrix, $\mathbf{C}$ contains Coriol
 If you attempt to write the analytical Coriolis matrix explicitly for a 15-DOF human model on a piece of paper, the resulting trigonometric expansion ($\sin(\theta_1 + \theta_2)\cos(\theta_3)\dots$) will literally fill thousands of pages. Each entry in $\mathbf{C}$ is a sum of products of sines, cosines, and Denavit-Hartenberg parameters; for even a moderately complex chain, these expressions become unmaintainable.
 
 To control complex mechanisms in the real world at thousands of Hertz, modern engines (such as MuJoCo, Drake, Pinocchio, and UpstreamDrift) completely abandon building these massive equations explicitly. Instead, they rely entirely on \textbf{Recursive Algorithms} executing purely numerical matrix multiplications in $O(N)$ time.
+
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}[scale=1.0]
+  % Base
+  \draw[fill=gray] (-0.5,-0.5) rectangle (0.5,0) node[pos=0.5] {Base (0)};
+
+  % Link 1
+  \draw[thick,->,black] (0,0) -- (0,1.2) node[midway,right,xshift=0.2cm] {Joint 1};
+  \draw[fill=blue] (-0.3,1.2) rectangle (0.3,1.8) node[pos=0.5] {Link 1};
+
+  % Children of Link 1
+  \draw[thick,->,black] (-0.3,1.8) -- (-1.2,2.8) node[midway,left,xshift=-0.2cm] {Joint 2};
+  \draw[fill=blue] (-1.5,2.8) rectangle (-0.9,3.4) node[pos=0.5] {Link 2};
+
+  \draw[thick,->,black] (0.3,1.8) -- (1.2,2.8) node[midway,right,xshift=0.2cm] {Joint 3};
+  \draw[fill=blue] (0.9,2.8) rectangle (1.5,3.4) node[pos=0.5] {Link 3};
+
+  % Children of Link 3
+  \draw[thick,->,black] (1.5,3.4) -- (2.0,4.4) node[midway,right,xshift=0.2cm] {Joint 4};
+  \draw[fill=blue] (1.7,4.4) rectangle (2.3,5.0) node[pos=0.5] {Link 4};
+
+  \node at (3.5,2.5) {Kinematic Tree: Parent-Child Relationships};
+\end{tikzpicture}
+\caption{A kinematic tree representation of a robot with a base link and three movable links forming a branching structure. Each link connects to its parent through a joint. Recursive algorithms exploit this tree structure to compute dynamics in linear time O(N) rather than cubic time.}
+\label{fig:kinematic_tree}
+\end{figure}
 
 \section{Kinematic Tree Representation}
 \label{sec:tree_structure}
@@ -573,7 +600,7 @@ one RNEA call at $O(N)$ suffices.  Forming the entire mass matrix
 $\mathbf{M}$ and then multiplying $\mathbf{M}\ddot{\mathbf{q}}$ would
 be slower ($O(N^2)$) and wasteful.  The Lagrangian form is primarily
 useful for analysis---stability proofs, passivity arguments---while
-the RNEA is the workhorse for simulation and control~\cite{lynch2017}.
+the RNEA is the workhorse for simulation and control~\cite{Lynch2017}.
 \end{laymansbox}
 
 % ------------------------------------------------------------------
@@ -838,12 +865,14 @@ def rnea(q, dq, ddq, links, joints, gravity=np.array([0, 0, -9.81])):
     """
     N = len(links)
 
-    # Build gravity in spatial form (angular, linear)
+    # Base link has zero velocity; gravity enters as a fictitious
+    # base acceleration (Featherstone convention: a_0 = -g so that
+    # the algorithm produces correct gravity-compensating torques).
     V = [np.zeros(6) for _ in range(N)]
-    V[0] = np.concatenate([np.zeros(3), gravity])
+    # V[0] remains zero -- the base is stationary
 
     dV = [np.zeros(6) for _ in range(N)]
-    dV[0] = np.concatenate([np.zeros(3), gravity])
+    dV[0] = np.concatenate([np.zeros(3), -gravity])
 
     # Outward pass: compute velocities and accelerations
     T = [np.eye(4) for _ in range(N)]
@@ -947,11 +976,11 @@ The original computational Newton-Euler formulation for robot manipulators was p
 
 The definitive modern treatment of recursive dynamics is Featherstone \cite{Featherstone2008}, which develops the RNEA, the Articulated Body Algorithm (ABA), and the Composite Rigid Body Algorithm within a unified spatial vector framework. Featherstone's monograph is the primary reference for anyone implementing multi-body dynamics from scratch and contains detailed pseudocode, complexity proofs, and numerical considerations that go well beyond our presentation here.
 
-Lynch and Park \cite{lynch2017}, Chapter~8, present inverse dynamics within the product of exponentials framework, offering a complementary geometric perspective to Featherstone's spatial vector approach. Their treatment emphasizes the connection between the Lie-algebraic formulation of kinematics (Chapters~\ref{ch:screw_axes}--\ref{ch:exponential_coordinates}) and the recursive dynamics algorithms developed here.
+Lynch and Park \cite{Lynch2017}, Chapter~8, present inverse dynamics within the product of exponentials framework, offering a complementary geometric perspective to Featherstone's spatial vector approach. Their treatment emphasizes the connection between the Lie-algebraic formulation of kinematics (Chapters~\ref{ch:screw_axes}--\ref{ch:exponential_coordinates}) and the recursive dynamics algorithms developed here.
 
 For practical implementation considerations---including numerical conditioning, joint friction models, and real-time scheduling---Siciliano et al.\ \cite{siciliano2009} provide an engineering-oriented treatment with extensive discussion of industrial applications.
 
-The forward dynamics problem, which is the computational inverse of the RNEA, requires the more sophisticated Articulated Body Algorithm developed in Chapter~\ref{ch:articulated_body}. Readers eager to understand how physics engines like MuJoCo, Drake, and PyBullet actually simulate forward in time should proceed to that chapter after mastering the RNEA presented here.
+The forward dynamics problem, which is the computational inverse of the RNEA, requires the more sophisticated Articulated Body Algorithm developed in Chapter~\ref{ch:articulated_body_algorithm}. Readers eager to understand how physics engines like MuJoCo, Drake, and PyBullet actually simulate forward in time should proceed to that chapter after mastering the RNEA presented here.
 
 \section{Exercises}
 

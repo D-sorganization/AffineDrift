@@ -1,7 +1,15 @@
 // AffineDrift Service Worker for offline support
-// Version 3: Updated 2026-03-13 (batch fixes for content accuracy, CSS, PWA manifest)
+// Version 5: Updated 2026-04-11 (drop legacy script.js runtime path)
 // TODO #1459: Replace hardcoded version with content-hash cache busting via build pipeline
-const CACHE_NAME = 'affinedrift-v4-1a0bcd4a';
+importScripts('/js/service-worker-utils.js');
+
+const {
+  MAX_CACHE_ENTRIES,
+  UPDATE_MESSAGE_TYPE,
+  broadcastUpdate,
+  trimCacheEntries,
+} = self.AffineDriftServiceWorkerUtils;
+const CACHE_NAME = 'affinedrift-v5-legacy-js-removed';
 const OFFLINE_URL = '/offline.html';
 
 // Critical startup assets - loaded first for fast splash screen
@@ -19,10 +27,23 @@ const PRECACHE_ASSETS = [
   '/index.html',
   ...STARTUP_ASSETS,
   '/styles.css',
+  '/js/main.js',
   '/favicon.ico',
   '/manifest.json',
   OFFLINE_URL
 ];
+
+async function storeResponse(cache, request, response, shouldNotify = false) {
+  await cache.put(request, response.clone());
+  await trimCacheEntries(cache, MAX_CACHE_ENTRIES);
+
+  if (shouldNotify) {
+    await broadcastUpdate(self.clients, {
+      type: UPDATE_MESSAGE_TYPE,
+      url: request.url,
+    });
+  }
+}
 
 // Install event - precache essential assets
 self.addEventListener('install', (event) => {
@@ -69,9 +90,9 @@ self.addEventListener('fetch', (event) => {
     return fetch(event.request)
       .then((response) => {
         if (response && response.status === 200) {
-          return caches.open(CACHE_NAME).then((cache) => {
-            return cache.put(event.request, response.clone());
-          });
+          return caches.open(CACHE_NAME).then((cache) =>
+            storeResponse(cache, event.request, response, true)
+          );
         }
       })
       .catch(() => {/* Network failed, but we have cache */ });
@@ -95,11 +116,9 @@ self.addEventListener('fetch', (event) => {
             }
 
             // Cache successful responses
-            const responseClone = response.clone();
-            caches.open(CACHE_NAME)
-              .then((cache) => {
-                cache.put(event.request, responseClone);
-              });
+            caches.open(CACHE_NAME).then((cache) => {
+              storeResponse(cache, event.request, response);
+            });
 
             return response;
           })

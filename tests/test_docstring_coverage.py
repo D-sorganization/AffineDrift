@@ -36,13 +36,13 @@ def _collect_docstring_stats(src_root: Path) -> tuple[int, int, list[tuple[str, 
 
         for node in ast.walk(tree):
             if not isinstance(
-                node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef, ast.Module)
+                node, ast.FunctionDef | ast.AsyncFunctionDef | ast.ClassDef | ast.Module
             ):
                 continue
 
             # Skip dunder methods and private helpers (they are not public API)
             name = getattr(node, "name", "<module>")
-            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and name.startswith("_"):
+            if isinstance(node, ast.FunctionDef | ast.AsyncFunctionDef) and name.startswith("_"):
                 continue
 
             total += 1

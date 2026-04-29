@@ -25,9 +25,9 @@ $$
 \mathrm{DCR}(t)=\frac{\|f(x(t))\|}{\|g(x(t))u(t)\|},
 $$
 
-We show analytically and numerically that DCR increases by more than two orders of magnitude from the top of the backswing to impact, leading to a collapse of **gross trajectory controllability** during the downswing.
+Within the simplified planar model used here, example calculations suggest that DCR can increase by more than two orders of magnitude from the top of the backswing to impact. The resulting interpretation is a model-bounded loss of **gross path authority** during the downswing, not a direct empirical measurement of every golfer.
 
-We introduce a novel analogy to **relativistic time cones**, showing that a golf swing has an evolving **control cone**—a shrinking reachable set of future states that collapses as drift overwhelms control. This analogy provides conceptual clarity and quantitative insight: as swing speed increases, the golfer’s attainable future states narrow dramatically, rendering late-downswing manipulation of the *trajectory* physically impossible, though micro-adjustments to the *outcome* may remain. We conclude with an analysis of stability near impact and show how high DCR amplifies small upstream deviations into clubface closure variability.
+We use an analogy to **relativistic time cones** to describe an evolving **control cone**: a reachable-set picture in which future states narrow as drift becomes large relative to available control. The analogy is pedagogical rather than literal. It helps explain why the model predicts severe limits on late-downswing path redirection while still allowing small outcome-relevant adjustments. We conclude by discussing how high DCR can amplify upstream deviations into clubface-closure variability in the modeled system.
 
 ```{=html}
 <!-- In Layman's Terms Section - Simplified overview for non-technical readers -->
@@ -126,7 +126,7 @@ We introduce a novel analogy to **relativistic time cones**, showing that a golf
           The affine model $\dot{x} = f(x) + g(x)u$ treats control purely as torque ($u$). Critics argue that skilled golfers modulate **Mechanical Impedance** (stiffness/damping) to reject disturbances without active feedback. By stiffening the wrists ("Effective Plant"), the golfer can maintain control even when DCR suggests torque authority is lost.
         </p>
         <div class="author-response">
-          <strong>Our Response:</strong> Stiffness is a critical stabilization mechanism, but it is energetically passive. It can reject small perturbations around a trajectory, but it cannot perform **net work** to redirect a massive ballistic object onto a new path. The ZTCF baseline explicitly accounts for this "Effective Plant" stiffness; the DCR blow-up persists even when maximizing physiological stiffness, confirming that the gross trajectory remains dominated by drift.
+          <strong>Our Response:</strong> Stiffness is a critical stabilization mechanism, but it is energetically passive. It can reject small perturbations around a trajectory, but it cannot perform **net work** to redirect a massive ballistic object onto a new path. In this model, adding effective-plant stiffness does not remove the high-DCR regime; the extent to which that holds for real golfers requires subject-specific measurement.
         </div>
       </div>
 
@@ -147,14 +147,14 @@ This mirrors a common theme in high-speed movement: **the system transitions fro
 
 Building on the foundational framework established in *Affine Control Interpretation of the Golf Swing*, we analyze this transition not as a vague loss of coordination, but as a precise algebraic consequence of the equation of motion $\dot{x} = f(x) + g(x)u$. While the primary manuscript focused on *decomposing* these forces to identify causality, this article focuses on their *relative magnitude* to quantify controllability.
 
-Our goal is to provide a rigorous treatment of this phenomenon through:
+Our goal is to provide a model-bounded treatment of this phenomenon through:
 
 1. **Multibody dynamic derivations** of drift and control.
 2. **Nonlinear controllability analysis** (Lie algebraic).
 3. **Reachable set / control cone analysis** using an analogy to relativistic time cones.
 4. **Impact stability analysis** showing how DCR predicts clubface variance.
 
-This unified approach establishes the Drift–Control Ratio as a foundational concept in golf biomechanics.
+This approach treats the Drift-Control Ratio as a useful diagnostic for the model's drift-versus-input balance. Its empirical value depends on calibration against measured swing data.
 
 # 2. System Modeling: The 3-Link Arm–Forearm–Club Model
 
@@ -243,7 +243,7 @@ $$
 
 The quadratic scaling of drift versus linear scaling of control is the core mechanism behind DCR blow-up.
 
-This scaling disparity is the kinetic manifestation of the **Force Taxonomy** established in Part 3 of the framework. The drift term $f(x)$ aggregates the configuration-dependent potential forces ($\tau_{\text{config}}$) and the velocity-dependent Coriolis/centripetal forces ($\tau_{\text{vel.\,drift}}$). While the former are bounded, the latter scale quadratically with swing speed. Consequently, the "Inertial Memory" of the system (embedded in $f(x)$) energetically eclipses the "Current Agency" (available via $g(x)u$), necessitating the "Early Delivery" strategy predicted by the ZTCF baseline.
+This scaling disparity is the kinetic manifestation of the **Force Taxonomy** established in Part 3 of the framework. The drift term $f(x)$ aggregates the configuration-dependent potential forces ($\tau_{\text{config}}$) and the velocity-dependent Coriolis/centripetal forces ($\tau_{\text{vel.\,drift}}$). While the former are bounded, the latter scale quadratically with swing speed. Consequently, the "Inertial Memory" of the system (embedded in $f(x)$) can become large relative to the "Current Agency" available through $g(x)u$. In this model, that scaling supports the early-delivery interpretation used by the ZTCF baseline, but it does not by itself prove a universal coaching rule.
 
 ::: {.callout-note}
 ## Scope Limitation: Planar vs. Axial Dynamics
@@ -298,7 +298,7 @@ $$
 }
 $$
 
-Since $\tau(t)$ typically *decreases* during peak velocity due to muscle force–velocity constraints, the denominator shrinks while the numerator explodes.
+If available torque decreases during peak velocity because of force-velocity constraints, the denominator shrinks while the numerator grows. The timing and magnitude of that effect should be checked against subject-specific data.
 
 **Estimated result (planar model):**
 $$
@@ -351,7 +351,7 @@ Why? Because $M(q)$ is the mass (inertia) matrix. This norm measures acceleratio
 
 The physically meaningful conclusion is therefore:
 
-**"The ratio of drift-generated acceleration to control-available acceleration increases monotonically and dramatically—by two to three orders of magnitude—from the top of the backswing to impact, rendering gross trajectory controllability impossible by the late downswing. This conclusion is independent of the chosen norm; only the specific numerical threshold depends on how we measure."**
+**"In the planar examples considered here, the ratio of drift-generated acceleration to control-available acceleration increases strongly from the top of the backswing to impact. The qualitative pattern is robust in these examples, but exact monotonicity and numerical thresholds remain norm- and model-dependent."**
 
 For practice:
 1. **Always report the norm** used in DCR calculations.
@@ -411,7 +411,7 @@ $$
 
 ::: {.callout-note}
 ## DCR > 10: A Heuristic Threshold
-The specific value DCR > 10 (equivalently, α < 0.1) is a **rough heuristic** derived from setting the control authority fraction below 10%. It depends on the chosen norm and the 10% threshold level, both of which are arbitrary. What is norm-independent and physically meaningful is the **qualitative pattern**: DCR grows monotonically through the downswing, increasing by 100–300× from the top of the backswing to impact. The absolute threshold should be treated as illustrative, not universal.
+The specific value DCR > 10 (equivalently, α < 0.1) is a **rough heuristic** derived from setting the control authority fraction below 10%. It depends on the chosen norm and the 10% threshold level, both of which are arbitrary. The **qualitative pattern** in the simplified examples is that DCR grows substantially through the downswing. The absolute threshold and 100-300x growth estimate should be treated as illustrative model output, not as a universal biomechanical constant.
 :::
 
 
@@ -419,11 +419,11 @@ The planar model predicts (estimates, not empirically validated):
 
 - Collapse begins approximately 70–120 ms before impact.
 - Drift dominance peaks 40–60 ms before impact (DCR ≈ 50–200).
-- Late downswing is effectively uncontrollable.
+- Late-downswing gross path control is severely constrained in the planar model.
 
-These values are estimates from the simplified planar model; instrumented swing capture data would be needed to confirm. The qualitative pattern (progressive loss of controllability approaching impact) is consistent with the timing described in athlete EMG studies and coaching intuition.
+These values are estimates from the simplified planar model; instrumented swing capture data would be needed to confirm. The qualitative pattern (progressive loss of gross path authority approaching impact) is plausible for high-speed swings, but the specific timing should be validated with measured data.
 
-The DCR blow-up provides the rigorous justification for the **Zero Torque Counterfactual (ZTCF)** as the primary baseline for swing analysis. In low-DCR regimes (putting, takeaway), the ZTCF diverges significantly from the actual path because input authorities are comparable to passive dynamics. However, in the high-DCR downswing, the actual trajectory asymptotically approaches the ZTCF. Thus, the ZTCF is not merely a hypothetical "passive" swing; it is the **dominant attractor** of the high-velocity dynamics.
+The DCR calculation provides a model-based reason to compare the actual swing with the **Zero Torque Counterfactual (ZTCF)**. In low-DCR regimes such as putting or the takeaway, the ZTCF can diverge substantially from the actual path because input authorities remain comparable to passive dynamics. In the high-DCR downswing, the model predicts a smaller separation between the actual trajectory and the passive baseline. This makes the ZTCF a useful diagnostic reference, not a claim that real swings literally converge to a universal passive attractor.
 
 # 6. The Control Cone Analogy: A Relativistic Perspective
 
@@ -540,7 +540,7 @@ Just like a narrowing time cone restricts your causal influence, a narrowing con
 
 This explains why golfers feel “along for the ride,” even as they execute subtle hand actions to square the face.
 
-Crucially, the narrowing of the Control Cone implies that "steering" is impossible, but "selecting the tube" is not. This aligns with the **Intentional Constraint Collapse** theory: elite golfers do not fight the cone collapse; they structurally engineer the initial conditions (the "Effective Plant") at the top of the backswing so that the collapsing cone naturally centers on the target state. They manage the manifold, not the trajectory.
+Crucially, the narrowing of the Control Cone suggests that late "steering" is limited, while earlier setup of the reachable corridor remains important. This is consistent with the **Intentional Constraint Collapse** hypothesis, but it should be treated as a model interpretation until it is tested against swing data.
 
 ### Limits of the Analogy: When the Parallel Breaks Down
 
@@ -559,7 +559,7 @@ In relativity, causal structure is reversible—if an event A can causally influ
 
 #### The Pedagogical Value
 
-Despite these differences, the control cone remains conceptually powerful because it captures a true qualitative phenomenon: **as drift dominates, the space of reachable future states shrinks to a lower-dimensional tube**. This is the key insight, and it holds rigorously under the mathematics of reachability analysis (Lie brackets, Hamiltonian flow). The relativistic analogy *visualizes* this shrinkage but should not be confused with the underlying mathematical structure.
+Despite these differences, the control cone remains useful because it captures the model's qualitative prediction: **as drift dominates, the reachable future states shrink toward a narrower tube**. The relativistic analogy *visualizes* this shrinkage but should not be confused with the underlying reachability calculation.
 
 #### Appropriate Use of the Analogy
 
@@ -567,7 +567,7 @@ The control cone should be understood as:
 - A **pedagogical tool** for visualizing controllability loss,
 - NOT a claim that golf swings obey Lorentz transformations,
 - NOT a suggestion that relativistic constants or metrics apply,
-- A **qualitative guide** to understanding why late corrections are futile, rooted in the mathematics of Hamiltonian reachability (which is distinct from relativistic causality).
+- A **qualitative guide** to understanding why late corrections may be limited in this model, rooted in Hamiltonian reachability rather than relativistic causality.
 
 ## Anisotropy of the Control Cone: The "Pancake" Hypothesis {#sec-anisotropy}
 

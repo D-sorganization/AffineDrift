@@ -26,7 +26,7 @@ But control theorists and kinematic engineers almost never look at the physical 
 \label{sec:kalman_history}
 
 \begin{laymansbox}{Historical Context: From Transfer Functions to State Space}{history_box}
-In the 1950s, control engineers exclusively used \textbf{transfer functions}\index{Transfer Function}, which relate outputs to inputs in the frequency domain via Laplace transforms. Transfer functions are elegant for single-input single-output (SISO) systems and for analyzing stability via Nyquist diagrams and Bode plots. However, they fail catastrophically for multi-input multi-output (MIMO) systems and provide no insight into what is happening \emph{inside} the system.
+In the 1950s, control engineers exclusively used \textbf{transfer functions}\index{Transfer Function}, which relate outputs to inputs in the frequency domain via Laplace transforms. Transfer functions are well suited for single-input single-output (SISO) systems and for analyzing stability via Nyquist diagrams and Bode plots. However, they fail catastrophically for multi-input multi-output (MIMO) systems and provide no insight into what is happening \emph{inside} the system.
 
 In 1960, \textbf{Rudolf E. Kalman} introduced the state-space representation of linear dynamical systems and the structural concepts of \textbf{controllability}\index{Controllability} and \textbf{observability}\index{Observability}~\cite{Kalman1960}. The state-space formulation made the analysis of multi-input multi-output systems systematic, opened the door to optimal linear-quadratic control, and led within a few years to the recursive estimation problem now known as the Kalman filter. Within a decade, state space had become the standard working language of quantitative control engineering.
 \end{laymansbox}
@@ -42,6 +42,37 @@ The fundamental advantage of state-space methods over transfer functions is \emp
 \end{itemize}
 
 The rest of this chapter builds the state-space framework from first principles. By the end, the reader should understand why Kalman's formulation became the standard and why state space is the working representation for almost every modern control problem.
+
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}[scale=1.1]
+  % Input
+  \node[draw,rectangle,minimum width=1.5cm, minimum height=0.8cm] (u) at (0,1.5) {$\mathbf{u}$: Input};
+
+  % Dynamics block
+  \node[draw,rectangle,minimum width=2cm, minimum height=1cm] (dyn) at (2.5,1.5) {$\dot{\mathbf{x}} = \mathbf{Ax} + \mathbf{Bu}$};
+
+  % State integrator
+  \node[draw,rectangle,minimum width=1.8cm, minimum height=0.8cm] (int) at (5,1.5) {$\int \, \dd t$};
+  \draw[->,thick] (int) -- (5,-0.5) node[anchor=north] {$\mathbf{x}(t)$: State};
+
+  % Output
+  \node[draw,rectangle,minimum width=1.5cm, minimum height=0.8cm] (out) at (7,1.5) {$\mathbf{y} = \mathbf{Cx} + \mathbf{Du}$};
+  \draw[->,thick] (out) -- (7,-0.5) node[anchor=north] {$\mathbf{y}$: Output};
+
+  % Connections
+  \draw[->,thick] (u) -- (dyn);
+  \draw[->,thick] (dyn) -- (int);
+  \draw[->,thick] (int) -- (out);
+
+  % Feedback (optional)
+  \draw[->,thick,dashed] (5,-0.3) -- (5,-1.2) -- (1.25,-1.2) -- (1.25,1) node[anchor=east,xshift=-0.5cm] {feedback};
+
+  \node at (3.75,3) {State-Space System Architecture};
+\end{tikzpicture}
+\caption{Block diagram of a continuous-time linear state-space system. The input $\mathbf{u}$ drives the dynamics, producing state changes. The state $\mathbf{x}$ is obtained by integrating the state derivative. The output $\mathbf{y}$ is a linear combination of state and input.}
+\label{fig:statespace_architecture}
+\end{figure}
 
 \section{Constructing a State Vector}
 \label{sec:state_vector}
@@ -225,7 +256,7 @@ Now, substitute the state variables ($x_1 = q, x_2 = \dot{q}$):
 This is called the \textbf{State Space Representation}\index{State Space Representation}. It is universally written in nonlinear control literature as:
 
 \begin{principle}{The Fundamental Equation of Control Theory}{fund_eq}
-  Every autonomous control system can be written as a first-order vector differential equation mapping the current state and current control commands to the velocity of the state vector:
+  Every forced control system can be written as a first-order vector differential equation mapping the current state and current control commands to the velocity of the state vector:
   \begin{equation}
       \dot{\mathbf{x}} = f(\mathbf{x}, \mathbf{u}, t)
   \end{equation}
@@ -253,7 +284,7 @@ If we package our mass-spring equations into matrices, we get:
 \end{equation}
 
 \begin{itemize}
-    \item \textbf{The A Matrix}: $\mathbf{A} = \begin{bmatrix} 0 & 1 \\ -k/m & -c/m \end{bmatrix}$. This matrix defines the "drift" of the system. If you turn off all motors ($u=0$), the $\mathbf{A}$ matrix dictates exactly how the system will coast to a stop, oscillate, or explode. Its eigenvalues completely define the system's natural stability!
+    \item \textbf{The A Matrix}: $\mathbf{A} = \begin{bmatrix} 0 & 1 \\ -k/m & -c/m \end{bmatrix}$. This matrix defines the "drift" of the system. If you turn off all motors ($u=0$), the $\mathbf{A}$ matrix dictates exactly how the system will coast to a stop, oscillate, or explode. Its eigenvalues completely define the system's natural stability.
 
     \item \textbf{The B Matrix}: $\mathbf{B} = \begin{bmatrix} 0 \\ 1/m \end{bmatrix}$. This matrix defines how your control inputs $u$ actually inject energy into the state. Notice that the top value is $0$, meaning our motor cannot instantly teleport the position ($x_1$); it can only directly push the velocity ($x_2$).
 \end{itemize}
@@ -339,14 +370,14 @@ State vector: $\mathbf{x} = [\theta, \dot{\theta}]^T$. The vector field is:
 
 Equilibria: $f(\mathbf{x}^*) = \mathbf{0}$ when $x_2 = 0$ and $\sin(x_1) = 0$, so $\mathbf{x}^* = [k\pi, 0]^T$ for $k \in \mathbb{Z}$.
 
-**Bottom equilibrium** ($\theta = 0$): The Jacobian is:
+\textbf{Bottom equilibrium} ($\theta = 0$): The Jacobian is:
 \begin{equation}
   \mathbf{J}_f = \begin{bmatrix} 0 & 1 \\ -\frac{g}{L}\cos(\theta) & 0 \end{bmatrix}\bigg|_{\theta=0} = \begin{bmatrix} 0 & 1 \\ -\frac{g}{L} & 0 \end{bmatrix}
 \end{equation}
 
 The linearized system near the bottom is $\ddot{\theta} = -\frac{g}{L}\theta$, a harmonic oscillator.
 
-**Top equilibrium** ($\theta = \pi$):
+\textbf{Top equilibrium} ($\theta = \pi$):
 \begin{equation}
   \mathbf{J}_f\bigg|_{\theta=\pi} = \begin{bmatrix} 0 & 1 \\ \frac{g}{L} & 0 \end{bmatrix}
 \end{equation}
@@ -428,7 +459,7 @@ For a linear time-invariant (LTI) system $\dot{\mathbf{x}} = \mathbf{A}\mathbf{x
   \end{equation}
 \end{proof}
 
-**Practical Computation:** For small-dimensional systems, the matrix exponential can be computed via diagonalization. If $\mathbf{A} = \mathbf{P} \boldsymbol{\Lambda} \mathbf{P}^{-1}$ where $\boldsymbol{\Lambda} = \text{diag}(\lambda_1, \ldots, \lambda_n)$, then:
+\textbf{Practical Computation:} For small-dimensional systems, the matrix exponential can be computed via diagonalization. If $\mathbf{A} = \mathbf{P} \boldsymbol{\Lambda} \mathbf{P}^{-1}$ where $\boldsymbol{\Lambda} = \text{diag}(\lambda_1, \ldots, \lambda_n)$, then:
 \begin{equation}
   e^{\mathbf{A}t} = \mathbf{P} e^{\boldsymbol{\Lambda}t} \mathbf{P}^{-1} = \mathbf{P} \text{diag}(e^{\lambda_1 t}, \ldots, e^{\lambda_n t}) \mathbf{P}^{-1}
 \end{equation}
@@ -474,7 +505,7 @@ The key question in control is: \emph{Can we steer the system from any initial s
   being positive definite, which is equivalent to $\mathbf{C}_{\text{rank}}$ having full rank.
 \end{proof}
 
-**Physical Interpretation:** If the system is not controllable, it means some mode or degree of freedom cannot be directly influenced by the available inputs. For a DC motor whose position is $\theta$ and current is $i$, if the only measurement is current and there is no direct control over electrical resistance, the position might be uncontrollable.
+\textbf{Physical Interpretation:} If the system is not controllable, it means some mode or degree of freedom cannot be directly influenced by the available inputs. For a DC motor whose position is $\theta$ and current is $i$, if the only measurement is current and there is no direct control over electrical resistance, the position might be uncontrollable.
 
 \section{Observability}
 \label{sec:observability}
@@ -612,7 +643,7 @@ Substitute into the output equation:
   \mathbf{Y}(s) = \left[\mathbf{C}(s\mathbf{I} - \mathbf{A})^{-1}\mathbf{B} + \mathbf{D}\right]\mathbf{U}(s) = G(s)\mathbf{U}(s)
 \end{equation}
 
-**Conversion from transfer function to state space** is not unique—there are many valid state representations. The most common choice is the controllable canonical form (the companion matrix form from Section~\ref{sec:ode_conversion}).
+\textbf{Conversion from transfer function to state space} is not unique—there are many valid state representations. The most common choice is the controllable canonical form (the companion matrix form from Section~\ref{sec:ode_conversion}).
 
 % ==================================================================
 %  Section: Discrete-Time State Space
@@ -704,7 +735,7 @@ The linearization is valid in a neighborhood of the equilibrium. For large pertu
 \section{Python Worked Example: State Space Simulation and Phase Portrait}
 \label{sec:python_example}
 
-Consider the underdamped mass-spring-damper system: $m=1$, $c=0.5$, $k=2$, with initial conditions $q_0 = 1$, $\dot{q}_0 = 0$.
+Consider the underdamped mass-spring-damper system with \emph{illustrative numerical values}: $m=1\,\text{kg}$, $c=0.5\,\text{N}\cdot\text{s/m}$, $k=2\,\text{N/m}$, with initial conditions $q_0 = 1\,\text{m}$, $\dot{q}_0 = 0$.
 
 \begin{verbatim}
 import numpy as np
@@ -961,7 +992,7 @@ those dynamics---is essential for modern robotics.
 \newpage
 
 \section{Exercises}
-\label{sec:exercises}
+\label{sec:ch2_exercises}
 
 \subsection*{Computational Exercises}
 

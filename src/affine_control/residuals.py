@@ -53,9 +53,7 @@ def compute_hessian_bound(
     check_finite_array(x, "x")
     check_finite_array(u, "u")
     check_positive(epsilon, "epsilon")
-    result = compute_hessian_norm(f, x, u, epsilon)
-    ensure(result >= 0, "hessian bound must be non-negative", result)
-    return result
+    return compute_hessian_norm(f, x, u, epsilon)
 
 
 def _finite_diff_jacobian(
@@ -87,6 +85,35 @@ def _finite_diff_jacobian(
     return J
 
 
+def _assemble_hessian_tensor(
+    f: Callable[[np.ndarray[Any, Any], np.ndarray[Any, Any]], np.ndarray[Any, Any]],
+    x: np.ndarray[Any, Any],
+    u: np.ndarray[Any, Any],
+    n: int,
+    dx: int,
+    epsilon: float,
+) -> np.ndarray[Any, Any]:
+    """Build the Hessian tensor H[k, i, j] = dJ_ki / dx_j via central differences.
+
+    Each Hessian slice is assembled from two Jacobian evaluations, giving
+    O(n^2) dynamics calls in total.
+    """
+    H = np.zeros((dx, n, n))
+    base_x = x.copy()
+
+    for j in range(n):
+        x_plus = base_x.copy()
+        x_plus[j] += epsilon
+        x_minus = base_x.copy()
+        x_minus[j] -= epsilon
+
+        J_plus = _finite_diff_jacobian(f, x_plus, u, epsilon)
+        J_minus = _finite_diff_jacobian(f, x_minus, u, epsilon)
+        H[:, :, j] = (J_plus - J_minus) / (2 * epsilon)
+
+    return H
+
+
 def _max_spectral_norm(H: np.ndarray[Any, Any]) -> float:
     """Compute the maximum spectral norm across component Hessian slices.
 
@@ -96,45 +123,9 @@ def _max_spectral_norm(H: np.ndarray[Any, Any]) -> float:
     Returns:
         Maximum spectral norm across all output components.
     """
-    M = 0.0
-    for k in range(H.shape[0]):
-        norm_k = np.linalg.norm(H[k, :, :], ord=2)
-        M = max(M, float(norm_k))
-    return M
-
-
-def _build_hessian_tensor(
-    f: Callable[[np.ndarray[Any, Any], np.ndarray[Any, Any]], np.ndarray[Any, Any]],
-    x: np.ndarray[Any, Any],
-    u: np.ndarray[Any, Any],
-    epsilon: float,
-) -> np.ndarray[Any, Any]:
-    """Build the Hessian tensor H[k, i, j] = d^2f_k / dx_i dx_j via finite differences.
-
-    Args:
-        f: Dynamics function dx = f(x, u).
-        x: State vector.
-        u: Control vector.
-        epsilon: Finite difference step size.
-
-    Returns:
-        Hessian tensor of shape (output_dim, state_dim, state_dim).
-    """
-    n = len(x)
-    dx = len(f(x, u))
-    H = np.zeros((dx, n, n))
-    base_x = x.copy()
-
-    for j in range(n):
-        x_plus = base_x.copy()
-        x_plus[j] += epsilon
-        x_minus = base_x.copy()
-        x_minus[j] -= epsilon
-        J_plus = _finite_diff_jacobian(f, x_plus, u, epsilon)
-        J_minus = _finite_diff_jacobian(f, x_minus, u, epsilon)
-        H[:, :, j] = (J_plus - J_minus) / (2 * epsilon)
-
-    return H
+    # Vectorized: compute spectral norm for each component Hessian slice
+    norms = np.array([np.linalg.norm(H[k, :, :], ord=2) for k in range(H.shape[0])])
+    return float(np.max(norms)) if norms.size > 0 else 0.0
 
 
 def compute_hessian_norm(
@@ -149,9 +140,20 @@ def compute_hessian_norm(
     The norm used is the maximum spectral norm of the component Hessians.
 
     **Complexity:** O(n^3) dynamics evaluations, where n = len(x).
+    The outer loop iterates n times (one per state dimension j); for each
+    iteration, ``_finite_diff_jacobian`` calls f 2n times (central
+    differences over all n state components), giving 2n^2 calls total.
+    For a 6-DOF spacecraft (n=6) this is 72 evaluations per Hessian;
+    for the double pendulum (n=4) it is 32 evaluations.
 
-    **Performance note:** For production use, prefer automatic differentiation
-    via JAX (``jax.hessian``) or CasADi (``casadi.hessian``).
+    **Performance note:** This implementation is acceptable for n<=6 but
+    will not scale to higher-dimensional systems.  For production use,
+    prefer automatic differentiation via JAX (``jax.hessian``) or CasADi
+    (``casadi.hessian``), which compute exact Hessians in O(n) passes via
+    reverse-mode AD.  Jacobian caching is also worth exploring when the
+    trajectory changes slowly: if consecutive calls share the same or
+    similar (x, u), caching the Jacobian from the previous step can
+    reduce dynamics evaluations by up to n-fold.
 
     Args:
         f: Dynamics function dx = f(x, u).
@@ -161,11 +163,17 @@ def compute_hessian_norm(
 
     Returns:
         Maximum spectral norm of the component Hessians.
+
+    Notes:
+        The nested central-difference construction here requires O(n^3)
+        dynamics evaluations in the state dimension n because each of the n
+        Hessian slices is assembled from two Jacobian evaluations, and each
+        Jacobian evaluation perturbs all n state coordinates.
     """
-    H = _build_hessian_tensor(f, x, u, epsilon)
-    result = _max_spectral_norm(H)
-    ensure(result >= 0, "hessian norm must be non-negative", result)
-    return result
+    n = len(x)
+    dx = len(f(x, u))
+    H = _assemble_hessian_tensor(f, x, u, n, dx, epsilon)
+    return _max_spectral_norm(H)
 
 
 def predict_residual_bound(
@@ -193,11 +201,8 @@ def predict_residual_bound(
         (len(M_traj), len(delta_x_traj), len(dt_traj)),
     )
 
-    r_accum = 0.0
-
-    for i in range(len(dt_traj)):
-        rate = float((M_traj[i] / 2.0) * (delta_x_traj[i] ** 2))
-        r_accum += rate * float(dt_traj[i])
+    # Vectorized: r = sum( (M_i / 2) * delta_x_i^2 * dt_i )
+    r_accum = float(np.sum((M_traj / 2.0) * (delta_x_traj**2) * dt_traj))
 
     ensure(r_accum >= 0, "residual bound must be non-negative", r_accum)
     return r_accum
@@ -249,12 +254,17 @@ class ResidualMonitor(ContractChecker):
             (lambda: self.warn_count >= 0, "warn_count must be non-negative"),
         ]
 
-    def _update_hysteresis_counters(self, r_est: float) -> None:
-        """Update high/warn/low counters based on current residual magnitude.
+    def _estimate_residual(
+        self, x_meas: np.ndarray[Any, Any], x_nom: np.ndarray[Any, Any]
+    ) -> float:
+        """Estimate residual magnitude between measured and nominal states."""
+        check_finite_array(x_meas, "x_meas")
+        check_finite_array(x_nom, "x_nom")
+        require(x_meas.shape == x_nom.shape, "x_meas and x_nom must have same shape")
+        return float(np.linalg.norm(x_meas - x_nom))
 
-        Args:
-            r_est: Estimated residual norm.
-        """
+    def _update_hysteresis_counters(self, r_est: float) -> None:
+        """Update high, warning, and low residual hysteresis counters."""
         if r_est > self.eps_critical:
             self.high_count += 1
             self.warn_count += 1
@@ -266,62 +276,45 @@ class ResidualMonitor(ContractChecker):
         else:
             self.low_count += 1
             self.high_count = 0
+            self.warn_count = 0
 
-    def _compute_next_mode(self) -> str:
-        """Compute the next control mode based on hysteresis counters.
-
-        Implements three-state transitions: LQR <-> MPC_WARN <-> MPC_FULL.
-
-        Returns:
-            The next mode string (may equal the current mode if no transition).
-        """
-        next_mode = self.mode
-        if self.mode == "LQR":
-            if self.high_count >= self.n or self.warn_count >= self.n:
-                next_mode = "MPC_WARN"
-        elif self.mode == "MPC_WARN":
+    def _next_mode(self) -> str:
+        """Return the state-machine mode implied by the current counters."""
+        if self.mode == "LQR" and (self.high_count >= self.n or self.warn_count >= self.n):
+            return "MPC_WARN"
+        if self.mode == "MPC_WARN":
             if self.high_count >= self.n:
-                next_mode = "MPC_FULL"
-                self.high_count = 0
-            elif self.low_count >= self.n:
-                next_mode = "LQR"
-                self.low_count = 0
-        elif self.mode == "MPC_FULL":
+                return "MPC_FULL"
             if self.low_count >= self.n:
-                next_mode = "MPC_WARN"
-                self.low_count = 0
-        return next_mode
+                return "LQR"
+        if self.mode == "MPC_FULL" and self.low_count >= self.n:
+            return "MPC_WARN"
+        return self.mode
 
-    def _apply_mode_transition(self, next_mode: str, r_est: float) -> None:
-        """Apply a mode transition and reset hysteresis counters.
-
-        Args:
-            next_mode: The mode to transition to.
-            r_est: Current residual (for logging).
-        """
-        logger.debug("Switching mode: %s -> %s (r=%.4f)", self.mode, next_mode, r_est)
+    def _reset_hysteresis_counters(self) -> None:
+        """Reset all hysteresis counters after a mode transition."""
         self.high_count = 0
         self.warn_count = 0
         self.low_count = 0
+
+    def _apply_mode_transition(self, next_mode: str, r_est: float) -> None:
+        """Apply a pending mode transition and reset hysteresis state."""
+        if next_mode == self.mode:
+            return
+        logger.debug("Switching mode: %s -> %s (r=%.4f)", self.mode, next_mode, r_est)
+        self._reset_hysteresis_counters()
         self.mode = next_mode
 
     @invariant_checked
     def update(
         self, x_meas: np.ndarray[Any, Any], x_nom: np.ndarray[Any, Any]
     ) -> tuple[str, float]:
-        """Update with new measurement and return (mode, residual_norm).
-
-        Approximate residual r ~ x_meas - x_nom (assuming drift is dominant error).
-        In reality: r = x_meas - (x_nom + Phi * delta_x0).
         """
-        check_finite_array(x_meas, "x_meas")
-        check_finite_array(x_nom, "x_nom")
-        require(x_meas.shape == x_nom.shape, "x_meas and x_nom must have same shape")
-
-        r_est = float(np.linalg.norm(x_meas - x_nom))
+        Update with new measurement.
+        Approximate residual r ~ x_meas - x_nom (assuming drift is dominant error)
+        In reality: r = x_meas - (x_nom + Phi * delta_x0)
+        """
+        r_est = self._estimate_residual(x_meas, x_nom)
         self._update_hysteresis_counters(r_est)
-        next_mode = self._compute_next_mode()
-        if next_mode != self.mode:
-            self._apply_mode_transition(next_mode, r_est)
-
+        self._apply_mode_transition(self._next_mode(), r_est)
         return self.mode, r_est

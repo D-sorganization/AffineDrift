@@ -1,6 +1,6 @@
 ---
 title: "Motor Control I: The Brain as Controller"
-bibliography: ../golf_physics.bib
+description: "Recall from Chapters @sec-zerotorquecounterfactual and @sec-zerotorquecounterfactual that the golf swing is a control-affine system:"
 ---
 
 ::: {.callout-note}
@@ -8,22 +8,18 @@ bibliography: ../golf_physics.bib
 
 We've spent the last several chapters learning the physics: the nonlinear dynamics, the drift-dominated regime, the trade-off between control and drift. But now we must face the central mystery: *the brain solves this problem*. Not perfectly---golfers miss---but with remarkable consistency. An elite golfer produces clubhead speeds within 2% of their average, swing after swing, despite 30--50 millisecond neural delays, sensor noise, and a system where the downswing lasts only 300 milliseconds.
 
-This chapter reframes the nervous system as an engineering control system and asks: what kind of controller is the brain? How does it manage to work within such severe constraints? The answer is that the brain does not attempt to regulate every detail of the trajectory. Instead, it *leverages* the drift field---the passive dynamics we've been studying---to carry most of the motion, committing active control primarily to shaping initial conditions and to targeted corrections. The language of "exploits" here is metaphorical; the underlying mechanism is that efficient feedforward plans allocate scarce control bandwidth to where it is most needed, while the passive dynamics do the rest. The brain is not fighting physics; it is working *with* physics as its primary actuator.
+This chapter reframes the nervous system as an engineering control system and asks: what kind of controller is the brain? How does it manage to work within such severe constraints? The answer will astonish you: the brain doesn't try to control everything. Instead, it exploits the drift field---the very physics we've been studying---to do most of the work. The brain is not fighting physics; it is using physics as its primary actuator.
 
 :::
 
 ## The Control Problem: What the Brain Must Solve
 
 
-
-
-
-
-Recall from Chapters \ref{ch:zero_torque_counterfactual} and \ref{ch:zero_torque_counterfactual} that the golf swing is a control-affine system:
-\begin{equation}
+Recall from Chapters @sec-zero_torque_counterfactual and @sec-zero_torque_counterfactual that the golf swing is a control-affine system:
+$$
 \dot{\bm{x}} = f(\bm{x}) + G(\bm{x})\bm{u}(t)
-\label{eq:ch24_control_affine}
-\end{equation}
+{#eq:ch24_control_affine}
+$$
 
 The state vector $\bm{x}$ contains all joint angles and angular velocities. The drift term $f(\bm{x})$ represents gravity and centrifugal effects---the physics does for free. The control term $G(\bm{x})\bm{u}(t)$ represents what the muscles can accomplish. The control input $\bm{u}(t)$ is the vector of muscle torques, subject to physical bounds: $|\bm{u}| \leq \bm{u}_{\mathrm{max}}$.
 
@@ -40,42 +36,30 @@ This is not a simple problem. It is a *nonlinear optimal control problem in real
 
 - **Sensory feedback delay:** Information about body position (proprioception) reaches the brain in 30--50 milliseconds. Visual feedback takes 80--150 milliseconds. For vestibular (balance) feedback: 10--20 milliseconds. The downswing lasts 300 milliseconds.
 
-- **Noisy sensors:** Proprioceptive acuity varies by joint and is coarser at proximal joints than distal ones [@Kandel2013]. Vision has high acuity but slow feedback. The nervous system must work with uncertain, delayed measurements.
+- **Noisy sensors:** Proprioceptive acuity varies by joint. At the wrist, you can detect a 1--2 degree change in angle. At the shoulder, it's 3--5 degrees. Vision has high acuity but slow feedback. The nervous system must work with uncertain, delayed measurements.
 
 - **Noisy actuators:** Muscle force variability is 5--10% even when you're trying to produce exactly the same torque twice. This is called *signal-dependent noise* and increases with force level.
 
-- **Bounded control:** Maximum torques are limited. The proximal joints (shoulder, elbow) produce far more torque than the distal joints (wrist, fingers). The brain cannot exceed these physical limits.
+- **Bounded control:** Maximum torques are limited. In this illustrative range, the shoulder can produce roughly 100--200 N$\cdot$m of torque, the elbow 100--150 N$\cdot$m, the wrist 30--50 N$\cdot$m. The brain cannot exceed these.
 
 :::
 
 ::: {.callout-tip}
-## Feedback Latency Budget --- Four Distinct Loops
+## Delays in the Golf Swing
 
-The nervous system does not have *one* feedback delay --- it has several loops operating in parallel at very different latencies. Lumping them together misrepresents what corrective feedback is and is not available during a 250--300 ms downswing.
+In this illustrative delay budget, the downswing takes approximately 250--300 ms. Consider the delay budget:
 
-| Loop | Typical round-trip latency | Signal carried | Role in the swing |
-|---|---|---|---|
-| Spinal stretch reflex (monosynaptic) | 20--40 ms | Muscle spindle stretch $\to$ $\alpha$-motoneuron | Stabilizes against sudden perturbations; operates *without* cortical involvement |
-| Long-loop (transcortical) proprioceptive | 50--100 ms | Spindle/Golgi $\to$ cortex $\to$ cord | Task-dependent intramovement corrections |
-| Vestibulo-ocular / vestibulospinal | 10--20 ms (VOR), 50--100 ms (postural) | Semicircular canals, otoliths | Balance, gaze stabilization during trunk rotation |
-| Cerebellar internal-model update | $\sim$100--200 ms | Climbing-fiber error $\to$ Purkinje LTD/LTP | Trial-to-trial calibration of the forward model [@wolpert1998internal, shadmehr2010error] |
-| Visual (conscious feedback) | 100--200 ms (detection) to $\sim$300--400 ms (corrective command reaches muscle) | Retinal image $\to$ visual cortex $\to$ motor cortex | Too slow to correct the downswing itself; primary role is *trial-to-trial* learning and pre-swing planning |
+- Visual processing: $\sim$100 ms from retina to visual cortex
+- Proprioceptive processing: $\sim$50 ms from muscle spindles to cortex
+- Motor planning and command generation: $\sim$50--100 ms
+- Neural transmission to muscles: $\sim$10--20 ms
+- Electromechanical delay (muscle activation): $\sim$40--60 ms
 
-Add the downstream motor-side delays --- $\sim$10--20 ms corticospinal transmission and $\sim$40--60 ms electromechanical activation --- and the picture becomes:
+Total round-trip delay: approximately 250--330 ms. In this simplified timing picture, this exceeds the entire downswing duration. The implication is stark: **meaningful corrective feedback is largely unavailable during the downswing.** The downswing is predominantly a pre-programmed ballistic action. Most "corrections" you feel yourself making were likely planned before the downswing began, triggered by predicted (not actual) sensory feedback. Some limited proprioceptive correction may occur in the earliest phases of the downswing, but the scope for mid-course adjustment is severely constrained.
 
-- **Spinal and vestibular loops** *can* fire inside a 300 ms downswing and shape it. They handle local perturbation rejection, not semantic errors like clubface angle.
-- **Long-loop proprioceptive corrections** can land once, perhaps twice, during the downswing; they are the most plausible substrate for any genuine mid-swing adjustment.
-- **Visual feedback** for a 300 ms downswing is effectively post-hoc: any correction triggered by what the eye detects during the downswing arrives at the muscle *after* impact. Its role is learning the next swing, not fixing this one [@wolpert2000computational, scott2004optimal, todorov2004optimality].
-- **Cerebellar updates** are not in-swing corrections at all: they update the forward/inverse models over trials, using sensed outcomes as error signals [@shadmehrmussaivaldi2012biological].
-
-So the correct slogan is not "feedback is unavailable during the downswing" but rather: *fast subcortical loops are available and actively used; cortical/visual loops are not.* The downswing is predominantly a pre-programmed ballistic action whose robustness is provided by the fast reflex and vestibular loops, not by conscious, vision-mediated correction.
 :::
 
 ### Feedforward vs. Feedback: A Crucial Distinction
-
-
-
-
 
 
 A traditional control system can work in one of two ways:
@@ -83,11 +67,11 @@ A traditional control system can work in one of two ways:
 ::: {.callout-note}
 ## Feedback (Closed-Loop) Control
 
-The controller measures the current state $\bm{x}(t)$, compares it to the desired state $\bm{x}_d(t)$, computes an error $\bm{e}(t) = \bm{x}_d(t) - \bm{x}(t)$, and adjusts the control input based on this error. In the simplest linear case,
+The controller measures the current state $\bm{x}(t)$, compares it to the desired state $\bm{x}_d(t)$, computes an error $\bm{e}(t) = \bm{x}_d(t) - \bm{x}(t)$, and adjusts the control input based on this error:
 $$
 \bm{u}(t) = \bm{K}\bm{e}(t) = \bm{K}[\bm{x}_d(t) - \bm{x}(t)]
 $$
-where $\bm{K}$ is a constant gain matrix. This is only a first-order approximation: it assumes constant gains, linear dynamics, instantaneous measurement, and no delay. Biological feedback is none of those things --- gains are state- and task-dependent, the dynamics are nonlinear, and every loop has latency (see the latency table above). More accurate biological models use *optimal feedback control* with stochastic, time-varying, task-conditioned gains [@todorov2004optimality, scott2004optimal, shadmehrmussaivaldi2012biological]. We use the linear form here to fix ideas, not as a realistic model of the nervous system.
+where $\bm{K}$ is a gain matrix.
 
 This is reactive: if things are going wrong, the controller corrects.
 
@@ -97,17 +81,17 @@ This is reactive: if things are going wrong, the controller corrects.
 ## Feedforward (Open-Loop) Control
 
 The controller uses a *model* of the system to compute the required control input in advance:
-\begin{equation}
+$$
 \bm{u}(t) = \bm{u}_{\mathrm{planned}}(t)
-\end{equation}
+$$
 
 This is pre-computed, before feedback arrives. No error correction is possible during execution.
 
 :::
 
-Now here is the critical insight: **the downswing trajectory is dominated by feedforward control**, but "feedforward" here means *cortical/visual* feedforward, not absence of all feedback. Fast subcortical loops (spinal, vestibular, long-loop proprioceptive) run continuously through the downswing and provide the robustness that makes a ballistic plan actually work in a noisy world.
+Now here is the critical insight: **the golf downswing appears to be dominated by feedforward control** in this simplified timing model.
 
-Why is cortical/visual feedback ruled out for within-swing trajectory correction? The timescales don't work out. Suppose a visual feedback signal detected an error at time $t=100$ ms (early in the downswing). This signal takes 100--200 ms to reach cortex and be parsed into a motor correction; the corrective command then takes another 50--100 ms to reach the muscle. The correction reaches the muscles at $t \approx 250$--400 ms. But the swing is over by $t \approx 300$ ms. The correction arrives at or after impact.
+Why? The timescales don't work out. Suppose a visual feedback signal detected an error at time $t=100$ ms (early in the downswing). This signal takes 80--150 ms to reach the visual cortex. By the time it arrives, we're at $t \approx 180$--250 ms. The motor system then needs 50--100 ms to generate a corrective command. The correction reaches the muscles at $t \approx 230$--350 ms. But the swing is over by $t \approx 300$ ms. The correction arrives too late.
 
 ::: {.callout-warning}
 ## The Feedback Fantasy
@@ -116,26 +100,22 @@ Why is cortical/visual feedback ruled out for within-swing trajectory correction
 **Reality:** By the time visual information about clubface angle reaches your motor cortex, the downswing is finished. The correction arrives after impact. What you *think* is feedback is actually *learning from your last swing*. The golf swing is planned and executed as a feedforward command.
 :::
 
-Proprioceptive feedback is faster (30--50 ms) but still problematic. A proprioceptive error signal arrives in time for maybe one correction cycle. The elite golfer does not rely on this. Instead, the swing is executed as a *ballistic* movement---once it starts, it unfolds according to a pre-planned motor program, with only minimal real-time adjustments.
+Proprioceptive feedback is faster (30--50 ms) but still problematic in this illustrative timing budget. A proprioceptive error signal arrives in time for maybe one correction cycle. The elite golfer likely does not rely heavily on this. Instead, the swing is executed predominantly as a *ballistic* movement---once it starts, it unfolds largely according to a pre-planned motor program, with only minimal real-time adjustments.
 
-This realization has direct implications. It means the brain does its real work *before* the swing starts: encoding the initial conditions, setting muscle stiffness, and preparing the motor program. The execution phase is largely deterministic.
+This realization has significant implications. It suggests that the brain does its most important work *before* the swing starts: encoding the initial conditions, setting muscle stiffness, and preparing the motor program. The execution phase is largely pre-programmed, though not perfectly deterministic.
 
 ## Internal Models: The Brain's Simulator
 
 
-
-
-
-
-If the golf swing is feedforward, how does the brain know what command to send? It has a model. The brain maintains an *internal model*---a neural simulation of the body's dynamics.
+If the golf swing is feedforward, how does the brain know what command to send? It has a model. In this illustrative model, the brain maintains an *internal model*---a neural simulation of the body's dynamics.
 
 ::: {.callout-note}
 ## Forward Model
 
 A forward model predicts the sensory consequences of a motor command. Given the current state $\bm{x}(t)$ and a motor command $\bm{u}(t)$, the forward model predicts the next state:
-\begin{equation}
+$$
 \hat{\bm{x}}(t+\Delta t) = \hat{f}(\bm{x}(t)) + \hat{G}(\bm{x}(t))\bm{u}(t)
-\end{equation}
+$$
 
 Mathematically, it IS solving the nonlinear dynamics equation. The brain becomes a physicist in practice, even if not in theory.
 
@@ -145,20 +125,17 @@ Mathematically, it IS solving the nonlinear dynamics equation. The brain becomes
 ## Inverse Model
 
 An inverse model computes the motor command needed to achieve a desired sensory outcome. Given a desired state change $\bm{x}_d(t)$, the inverse model computes:
-\begin{equation}
+$$
 \bm{u}(t) = \hat{G}(\bm{x}(t))^{-1}[\dot{\bm{x}}_d(t) - \hat{f}(\bm{x}(t))]
-\end{equation}
+$$
 
-This is the inverse dynamics problem: ``What muscles do I fire to move the club from here to there?''
+This is the inverse dynamics problem: "What muscles do I fire to move the club from here to there?"
 
 :::
 
 The forward and inverse models are intimately related. The brain learns them together. A forward model is easy to differentiate numerically to obtain an approximate inverse model: $\bm{u} \approx \hat{G}^{-1}(\bm{x}_d - \hat{f})$.
 
 ### The Cerebellum as the Seat of Internal Models
-
-
-
 
 
 Where in the brain do these internal models live? The leading candidate is the *cerebellum*, a structure at the base of the brain.
@@ -168,9 +145,9 @@ The cerebellum is remarkable for several reasons:
 ::: {.callout-important}
 ## Cerebellar Architecture
 
-- **Size:** The cerebellum is only ~10% of the brain's volume, but contains ~70% of all neurons (approximately 69 billion granule cells---making it the most neuron-dense structure in the brain. It also contains roughly 15 million Purkinje cells, the large output neurons that project to the deep cerebellar nuclei).
+- **Size:** The cerebellum is approximately 10% of the brain's volume, but contains an estimated 70% of all neurons (approximately 69 billion granule cells---making it one of the most neuron-dense structures in the brain [@azevedo2009equal]. It also contains roughly 15 million Purkinje cells, the large output neurons that project to the deep cerebellar nuclei).
 
-- **Computational density:** This makes the cerebellum the most densely packed neural tissue in the brain---a parallel processor of extraordinary power.
+- **Computational density:** This makes the cerebellum among the most densely packed neural tissue in the brain---a parallel processor of extraordinary capacity.
 
 - **Simple circuit:** The cerebellar circuit is highly stereotyped and mathematically simple. It's one of the few neural circuits we nearly understand.
 
@@ -183,16 +160,16 @@ The cerebellum is remarkable for several reasons:
 Cerebellar damage produces catastrophic loss of motor coordination---a condition called *ataxia*. Patients with cerebellar ataxia cannot perform smooth, coordinated movements. They cannot hit a golf ball. They cannot reach smoothly for a cup. This is because they have lost their internal model of how their body works.
 
 The cerebellar learning rule is thought to implement the following algorithm:
-\begin{equation}
-\label{eq:ch24_cerebellar_learning}
+$$
+{#eq:ch24_cerebellar_learning}
 \Delta w_{ij} = -\eta \cdot e(t) \cdot x_i(t) \cdot y_j(t)
-\end{equation}
+$$
 
 where $w_{ij}$ is the synaptic weight between parallel fiber $i$ and Purkinje cell $j$, $e(t)$ is the climbing fiber error signal, $x_i(t)$ is the firing rate of parallel fiber $i$, and $y_j(t)$ is the firing rate of the Purkinje cell. The negative sign indicates that errors drive depression of relevant synapses. Over time, this makes the forward model more accurate.
 
 This is a simplified form of the Marr-Albus-Ito hypothesis. More precisely, the climbing fiber carries an error signal, and parallel fiber synapses that are co-active with climbing fiber input undergo long-term depression (LTD). The learning rule above captures the essential structure: weights decrease when error and pre-synaptic activity coincide.
 
-\cite{wolpert1998internal, flanagan2003control, kawato1999internal}
+[@wolpert1998internal, flanagan2003control, kawato1999internal]
 
 ### Why Internal Models Matter
 
@@ -212,11 +189,7 @@ The forward model enables *predictive control*. The inverse model enables *plann
 ## The Predictive Processing Framework
 
 
-
-
-
-
-Modern neuroscience has converged on a powerful unifying idea: the brain is fundamentally a *prediction machine*. This framework, developed by Karl Friston and others, is called the *free energy principle* and the *predictive processing* framework \cite{friston2010action, clark2013whatever}.
+Modern neuroscience has converged on a powerful unifying idea: the brain is fundamentally a *prediction machine*. This framework, developed by Karl Friston and others, is called the *free energy principle* and the *predictive processing* framework [@friston2010action, clark2013whatever].
 
 ::: {.callout-note}
 ## Predictive Processing
@@ -227,7 +200,7 @@ The brain doesn't passively receive sensory information. Instead, it constantly 
 
 For the golf swing, this framework explains several phenomena:
 
-- **Pre-swing planning:** Before you swing, your brain generates a predicted trajectory. This is your forward model running forward: ``If I fire these muscles at these times, the club will follow this path, and the ball will land there.'' This is an *active inference*---you're inferring which motor command will make the world match your prediction (the target).
+- **Pre-swing planning:** Before you swing, your brain generates a predicted trajectory. This is your forward model running forward: "If I fire these muscles at these times, the club will follow this path, and the ball will land there." This is an *active inference*---you're inferring which motor command will make the world match your prediction (the target).
 
 - **During-swing monitoring:** As you swing, your brain continuously compares predicted sensory signals with actual signals. The proprioceptive feedback is compared against the forward model's predictions. If they match, all is well. If they don't, there's a prediction error.
 
@@ -235,17 +208,14 @@ For the golf swing, this framework explains several phenomena:
 
 - **Lack of time for correction:** During a 300 ms downswing, the brain has time for maybe one or two prediction error cycles. Thus, most corrections cannot happen mid-swing. The brain relies on the prior learning.
 
-This framework has significant implications. It says that action is not fundamentally different from perception. Both work through prediction and error correction. The goal of a motor action is to make the actual sensory consequences match your predicted sensory consequences. For the golf swing, the predicted sensory consequence is the *feeling* of a well-struck shot---the proprioceptive pattern that you've learned corresponds to good contact.
+This framework has profound implications. It says that action is not fundamentally different from perception. Both work through prediction and error correction. The goal of a motor action is to make the actual sensory consequences match your predicted sensory consequences. For the golf swing, the predicted sensory consequence is the *feeling* of a well-struck shot---the proprioceptive pattern that you've learned corresponds to good contact.
 
 ## Ideomotor Theory: Think the Result, Not the Process
 
 
-
-
-
 William James, in his 1890 *Principles of Psychology*, proposed a radical idea: **actions are represented by their effects, not by their motor commands**. When you think about throwing a ball, you think about the trajectory of the ball, not the sequence of muscle contractions. Your motor system then computes the commands needed to produce that trajectory.
 
-Modern ideomotor theory \cite{prinz2002perception, hommel2009theory} has formalized this insight:
+Modern ideomotor theory [@prinz2002perception, hommel2009theory] has formalized this insight:
 
 ::: {.callout-important}
 ## Ideomotor Principle
@@ -259,11 +229,11 @@ This has a striking implication for golf coaching: **the coach should focus the 
 
 Consider two coaching approaches:
 
-**Mechanics-focused:** ``Keep your head still. Shift your weight to your front side. Lag the club. Extend through the ball.''
+**Mechanics-focused:** "Keep your head still. Shift your weight to your front side. Lag the club. Extend through the ball."
 
-**Outcome-focused:** ``Feel the swing shape. See the ball flight. Feel the contact. Swing to the target.''
+**Outcome-focused:** "Feel the swing shape. See the ball flight. Feel the contact. Swing to the target."
 
-According to ideomotor theory, the second approach is more effective. Here's why: when you think about mechanics, you're thinking about motor commands (``fire the pectoral muscle'', ``lag the club''). This bypasses the action effect pathway. Your motor system is confused---it's trying to both retrieve learned commands and generate new commands based on mechanical rules.
+According to ideomotor theory, the second approach is more effective. Here's why: when you think about mechanics, you're thinking about motor commands ("fire the pectoral muscle", "lag the club"). This bypasses the action effect pathway. Your motor system is confused---it's trying to both retrieve learned commands and generate new commands based on mechanical rules.
 
 When you think about the outcome (the ball flight, the feeling of good contact), you activate the action effect. Your motor system automatically retrieves the learned motor program that produces that effect. No confusion. No conflict.
 
@@ -273,13 +243,9 @@ This explains why great coaches talk about feel and target, not mechanics.
 
 The ideomotor principle also connects to the drift field. In the ZTCF framework, the brain doesn't need to control every detail of the trajectory. Instead, it specifies the initial conditions and lets physics (the drift field) carry the system to the outcome. In ideomotor terms, the brain specifies the desired sensory consequence (impact with the ball, ball trajectory), and the motor system retrieves the commands that, given physics, produce that consequence.
 
-\cite{prinz2002perception, hommel2009theory, wolfensteller2016action}
+[@prinz2002perception, hommel2009theory, wolfensteller2016action]
 
 ## The Nervous System Architecture: Hardware Specifications
-
-
-
-
 
 
 To understand how the brain controls movement, we need to understand its hardware architecture. The nervous system is not a single, monolithic controller. It's a hierarchy of controllers, each operating at a different timescale and with different capabilities.
@@ -295,7 +261,7 @@ The major pathway for voluntary motor control. Fibers originate in the motor cor
 
 :::
 
-Signal transmission in these fibers is fast---roughly 70--120 m/s in myelinated fibers [@Kandel2013]. This means a motor command takes on the order of 30--50 ms to reach the upper limb muscles.
+Signal transmission in these fibers is fast---roughly 120 m/s in myelinated fibers. This means a motor command takes about 30 ms to reach the hand muscles, and about 50 ms to reach the foot muscles.
 
 An important principle:
 
@@ -324,12 +290,9 @@ A rapid response to muscle stretch. When a muscle is stretched, spindle receptor
 
 :::
 
-For the golf swing, the spinal cord implements local stabilizing reflexes. If a gust of wind pushes your arm off its intended path, spinal reflexes resist the perturbation. The brain doesn't have time to react---visual feedback latencies far exceed the duration of a single correction cycle---so the spinal cord handles it automatically [@Kandel2013].
+For the golf swing, the spinal cord implements local stabilizing reflexes. If a gust of wind pushes your arm off its intended path, spinal reflexes resist the perturbation. The brain doesn't have time to react (visual feedback wouldn't arrive for 150 ms), so the spinal cord handles it automatically.
 
 ### The Basal Ganglia: Action Selection
-
-
-
 
 
 The basal ganglia are a set of nuclei deep in the brain. Their primary function is *action selection*---deciding which motor program to execute.
@@ -363,12 +326,9 @@ This is *reinforcement learning* implemented in neural circuits.
 
 :::
 
-Parkinson's disease, which damages dopamine neurons, produces severe difficulty in action selection. Patients know what they want to do, but they cannot initiate movement. They can stand frozen, unable to take a step. This illustrates how critical the basal ganglia are for movement initiation.
+Parkinson's disease, which damages dopamine neurons, produces profound difficulty in action selection. Patients know what they want to do, but they cannot initiate movement. They can stand frozen, unable to take a step. This illustrates how critical the basal ganglia are for movement initiation.
 
 ### Motor Unit Recruitment: Henneman's Size Principle
-
-
-
 
 
 A motor unit is a motor neuron and all the muscle fibers it innervates. A single motor neuron controls 10--1000 muscle fibers, depending on the muscle. The smaller the motor neuron, the fewer fibers it controls.
@@ -376,7 +336,7 @@ A motor unit is a motor neuron and all the muscle fibers it innervates. A single
 ::: {.callout-important}
 ## Henneman's Size Principle
 
-Motor neurons are recruited in order of size: small (slow, weak) units first, large (fast, strong) units last \cite{henneman1965relation}. This ordering is automatic and doesn't require brain control. It's determined by the electrophysiology of the motor neuron pool.
+Motor neurons are recruited in order of size: small (slow, weak) units first, large (fast, strong) units last [@henneman1965relation]. This ordering is automatic and doesn't require brain control. It's determined by the electrophysiology of the motor neuron pool.
 
 :::
 
@@ -388,12 +348,9 @@ This principle has important consequences:
 
 - **At high effort, you lose precision.** At maximum effort, all motor units are active, and you can't fine-tune force. This is why maximum-effort movements are ballistic and imprecise.
 
-- **The golf swing transitions from low force to high force.** During setup and the backswing, forces are moderate and the system is highly controllable. As the transition approaches, forces increase. By the downswing, the system is in a high-force regime where ballistic execution is the only option.
+- **The golf swing transitions from low force to high force.** During setup and the backswing, forces are moderate and the system is highly controllable. As the transition approaches, forces increase. By the downswing, the system is in a high-force regime where ballistic execution is the predominant mode.
 
 ## Bandwidth Limitations: The Brain's Processing Speed
-
-
-
 
 
 A fundamental constraint on any controller is its bandwidth---the rate at which it can process information and generate corrections.
@@ -405,7 +362,7 @@ The maximum frequency at which a controller can detect errors and generate corre
 
 :::
 
-The conscious brain updates motor plans at roughly 4--10~Hz (one update every 100--250~ms). Visual flicker fusion occurs at $\sim$60~Hz, but conscious decision-making and motor replanning are far slower. This mismatch is critical: sensory data arrives faster than the brain can act on it.
+The conscious brain updates motor plans at roughly 4--10 Hz (one update every 100--250 ms). Visual flicker fusion occurs at $\sim$60 Hz, but conscious decision-making and motor replanning are far slower. This mismatch is critical: sensory data arrives faster than the brain can act on it.
 
 ::: {.callout-tip}
 ## Flicker Fusion Frequency
@@ -429,30 +386,27 @@ This is barely enough for one feedback correction cycle. Moreover, sensory feedb
 
 In contrast, the golf club itself oscillates at roughly 50--200 Hz during the swing (the fundamental resonance frequencies of the club). The brain's 10 Hz bandwidth is much slower than the club's 100 Hz dynamics.
 
-This is a *mismatch between the controller bandwidth and the plant dynamics*---a classic problem in control engineering, which we encountered as the Disturbance Rejection vs. Control (DCR) problem in Chapter \ref{ch:zero_torque_counterfactual}.
+This is a *mismatch between the controller bandwidth and the plant dynamics*---a classic problem in control engineering, which we encountered as the Disturbance Rejection vs. Control (DCR) problem in Chapter @sec-zero_torque_counterfactual.
 
 :::
 
 The solution, as we learned in the physics chapters, is to exploit drift. When the plant (the golf swing) is drift-dominated, a slow controller can still achieve good performance by specifying initial conditions and letting physics do the rest. The brain doesn't need to correct the swing trajectory moment-by-moment. It only needs to get the initial conditions right.
 
-\cite{todorov2005generalized, shadmehr2005computational}
+[@todorov2005generalized, shadmehr2005computational]
 
 ## The Brain's Processing Power: Energy and Computation
 
 
-
-
-
-How much ``horsepower'' does the brain have for controlling movement?
+How much "horsepower" does the brain have for controlling movement?
 
 ::: {.callout-important}
 ## Brain Power Budget
 
 - **Energy consumption:** The brain uses roughly 20 watts of power at rest, about 20% of the body's total metabolic rate. This seems like a lot, but it's actually quite efficient for the amount of computation being performed.
 
-- **Computational capacity:** Estimates of the brain's computational capacity vary widely depending on what counts as an `operation.' If each of the brain's $\sim 10^{14}$ synapses fires at $\sim$10~Hz, the brain performs roughly $10^{15}$ synaptic operations per second \citep{wolpert2011motor}. Under more liberal definitions (including subthreshold integration), estimates reach $10^{16}$--$10^{18}$. These numbers are uncertain, but the order of magnitude is instructive.
+- **Computational capacity:** Estimates of the brain's computational capacity vary widely depending on what counts as an `operation.' If each of the brain's $\sim 10^{14}$ synapses fires at $\sim$10 Hz, the brain performs roughly $10^{15}$ synaptic operations per second [@wolpert2011motor]. Under more liberal definitions (including subthreshold integration), estimates reach $10^{16}$--$10^{18}$. These numbers are uncertain, but the order of magnitude is instructive.
 
-- **Per-neuron computation:** With ~100 billion neurons, this is about $10^5$ operations per neuron per second, or roughly 100 floating-point operations per action potential. This is much less than a CPU/GPU (which can do $10^9$ operations per cycle per core). The brain compensates with massive parallelism.
+- **Per-neuron computation:** With  100 billion neurons, this is about $10^5$ operations per neuron per second, or roughly 100 floating-point operations per action potential. This is much less than a CPU/GPU (which can do $10^9$ operations per cycle per core). The brain compensates with massive parallelism.
 
 :::
 
@@ -492,13 +446,13 @@ This distinction is fundamental to understanding biological motor control. The b
 
 ## Chapter Exercises
 
-- In Chapter \ref{ch:zero_torque_counterfactual}, we introduced the Disturbance Rejection vs. Control (DCR) problem: high control of small disturbances, or low control of large changes. How does the bandwidth limitation of the brain (10--40 Hz) relate to the plant bandwidth (50--200 Hz) in the context of DCR?
+- In Chapter @sec-zero_torque_counterfactual, we introduced the Disturbance Rejection vs. Control (DCR) problem: high control of small disturbances, or low control of large changes. How does the bandwidth limitation of the brain (10--40 Hz) relate to the plant bandwidth (50--200 Hz) in the context of DCR?
 
-- A professional golfer produces clubhead speeds with a coefficient of variation of 1--3%. Given the neural noise (5--10% muscle force variability) and sensory noise (~1--5 degree proprioceptive acuity), explain how this high consistency is possible. Hint: what does the drift field contribute?
+- A professional golfer produces clubhead speeds with a coefficient of variation of 1--3%. Given the neural noise (5--10% muscle force variability) and sensory noise ( 1--5 degree proprioceptive acuity), explain how this high consistency is possible. Hint: what does the drift field contribute?
 
 - Suppose you wanted to teach a robot to swing a golf club using online optimal control (computing the motor command at each millisecond). What would be the minimum computation time required? Assume the downswing lasts 300 ms and the robot must solve a 20-dimensional optimal control problem at each millisecond.
 
-- In Section \ref{subsec:ch24_recruitment}, we discussed Henneman's size principle: motor units are recruited in order of size. Why is this principle important for control? What would happen if large motor units were recruited first?
+- In Section @subsec:ch24_recruitment, we discussed Henneman's size principle: motor units are recruited in order of size. Why is this principle important for control? What would happen if large motor units were recruited first?
 
 - Feedback delays are 30--150 milliseconds, while the downswing is 300 milliseconds. Can the brain use visual feedback to correct a timing error early in the downswing? Explain.
 
@@ -512,6 +466,3 @@ This distinction is fundamental to understanding biological motor control. The b
 
 - Compare and contrast feedback control (like a thermostat) with feedforward control (like a toaster). Why is the golf swing more like a toaster than a thermostat?
 
-
-
-\newpage

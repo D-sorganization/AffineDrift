@@ -15,19 +15,22 @@
     const target = document.getElementById(targetId);
     if (!target) return;
 
+    button.setAttribute("aria-controls", targetId);
     button.setAttribute("aria-expanded", String(expanded));
+    target.setAttribute("aria-hidden", String(!expanded));
     target.classList.toggle("show", expanded);
   }
 
   function initCollapsibleSections() {
-    const toggleButtons = document.querySelectorAll(".sidebar-section-toggle");
-    toggleButtons.forEach((button) => {
+    // ⚡ Bolt Optimization: Use getElementsByClassName (O(1) live collection) instead of querySelectorAll (O(N))
+    const toggleButtons = document.getElementsByClassName("sidebar-section-toggle");
+    for (const button of toggleButtons) {
       setSectionExpanded(button, isTrue(button.getAttribute("aria-expanded")));
       button.addEventListener("click", () => {
         const expanded = isTrue(button.getAttribute("aria-expanded"));
         setSectionExpanded(button, !expanded);
       });
-    });
+    }
   }
 
   function setMobileMenuState({ sidebar, overlay, button }, open) {
@@ -54,13 +57,15 @@
 
     overlay.addEventListener("click", () => setMobileMenuState(state, false));
 
-    sidebar.querySelectorAll("a").forEach((link) => {
+    // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) live collection) instead of querySelectorAll (O(N))
+    const links = sidebar.getElementsByTagName("a");
+    for (const link of links) {
       link.addEventListener("click", () => {
         if (window.innerWidth <= 768) {
           setMobileMenuState(state, false);
         }
       });
-    });
+    }
   }
 
   function init() {

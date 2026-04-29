@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=82.0.1"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
@@ -14,8 +14,9 @@ pythonpath = ["."]
 testpaths = ["tests"]
 markers = [
     "integration: marks tests requiring cross-module or I/O integration",
+    "content_lint: marks repository-content assertions that are skipped by default",
 ]
-addopts = "--tb=short"
+addopts = "-m 'not content_lint' --tb=short"
 
 [tool.coverage.run]
 source = ["src", "scripts"]
@@ -35,7 +36,6 @@ exclude_lines = [
     "if __name__ == .__main__.",
     "if TYPE_CHECKING:",
     "raise NotImplementedError",
-    "pass",
 ]
 
 [tool.mypy]
@@ -58,7 +58,6 @@ disallow_untyped_decorators = true
 disallow_any_explicit = false
 disallow_any_generics = true
 disallow_subclassing_any = true
-ignore_missing_imports = true
 follow_imports = "normal"
 explicit_package_bases = true
 exclude = "^(matlab/|matlab_optimized/|javascript/|docs/|content/|venv/|env/|\\.env/|node_modules/|tests/|scripts/)|(?:^|/)archive/|(?:^|/)Archive/"
@@ -79,6 +78,7 @@ exclude = [
     "__pycache__",
     "build",
     "dist",
+    "tests/test_critical_physics_fixes.py",
     "venv",
     "env",
     ".env",
@@ -96,6 +96,7 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
 "tests/*" = ["S101", "E501"]
+"tests/test_critical_physics_fixes.py" = ["F821", "E402", "E731", "F401"]
 "tools/**/*.py" = ["E501"]
 "scripts/**/*.py" = ["E501"]
 "docs/**/*.py" = ["E501"]

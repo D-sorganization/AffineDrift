@@ -33,7 +33,9 @@ def _central_difference_linearization(
     epsilon: float = 1e-6,
 ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
     """Numerically linearize a system with central differences."""
+    check_positive(epsilon, "epsilon")
     x_arr = np.array(x, dtype=float)
+    check_finite_array(x_arr, "x")
     u_arr = np.array(u, dtype=float)
     n = len(x_arr)
     m = len(u_arr)
@@ -173,10 +175,16 @@ class SpacecraftRendezvous(DynamicalSystem):
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> np.ndarray[Any, Any]:
         """Compute spacecraft rendezvous dynamics."""
-        if isinstance(u, float | int):
-            raise ValueError("Control input must be a vector for SpacecraftRendezvous")
+        check_finite_array(x, "state vector")
+        require(len(x) == 6, "state vector must have 6 elements")
+        require(
+            not isinstance(u, float | int),
+            "Control input must be a vector for SpacecraftRendezvous",
+        )
         rx, ry, rz, vx, vy, vz = x
-        ux, uy, uz = u
+        u_vec = np.asarray(u, dtype=float)
+        require(u_vec.shape == (3,), "control input must have 3 elements")
+        ux, uy, uz = u_vec
 
         rc = np.sqrt((self.r_t + rx) ** 2 + ry**2 + rz**2)
 
@@ -199,8 +207,9 @@ class SpacecraftRendezvous(DynamicalSystem):
         Computes the analytical Jacobian of the nonlinear relative motion
         dynamics, yielding A and B matrices for the tangent linear model.
         """
-        if isinstance(u, float | int):
-            raise ValueError("Control input must be a vector")
+        check_finite_array(x, "state vector")
+        require(len(x) == 6, "state vector must have 6 elements")
+        require(not isinstance(u, float | int), "Control input must be a vector")
 
         rx, ry, rz, _, _, _ = x
         n = self.n
@@ -256,10 +265,13 @@ class PlanarQuadrotor(DynamicalSystem):
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> np.ndarray[Any, Any]:
         """Compute planar quadrotor dynamics."""
-        if isinstance(u, float | int):
-            raise ValueError("Control input must be a vector")
+        check_finite_array(x, "state vector")
+        require(len(x) == 6, "state vector must have 6 elements")
+        require(not isinstance(u, float | int), "Control input must be a vector")
         px, py, theta, vx, vy, omega = x
-        u1, u2 = u
+        u_vec = np.asarray(u, dtype=float)
+        require(u_vec.shape == (2,), "control input must have 2 elements")
+        u1, u2 = u_vec
 
         # Total thrust
         T = u1 + u2
@@ -274,10 +286,13 @@ class PlanarQuadrotor(DynamicalSystem):
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any]]:
         """Linearize planar quadrotor dynamics."""
-        if isinstance(u, float | int):
-            raise ValueError("Control input must be a vector")
+        check_finite_array(x, "state vector")
+        require(len(x) == 6, "state vector must have 6 elements")
+        require(not isinstance(u, float | int), "Control input must be a vector")
         px, py, theta, vx, vy, omega = x
-        u1, u2 = u
+        u_vec = np.asarray(u, dtype=float)
+        require(u_vec.shape == (2,), "control input must have 2 elements")
+        u1, u2 = u_vec
         T = u1 + u2
 
         A = np.zeros((6, 6))
@@ -334,10 +349,13 @@ class RobotArm(DynamicalSystem):
         self, x: np.ndarray[Any, Any], u: np.ndarray[Any, Any] | float | list[float]
     ) -> np.ndarray[Any, Any]:
         """Compute robot arm dynamics."""
-        if isinstance(u, float | int):
-            raise ValueError("Control input must be a vector")
+        check_finite_array(x, "state vector")
+        require(len(x) == 4, "state vector must have 4 elements")
+        require(not isinstance(u, float | int), "Control input must be a vector")
         q1, q2, dq1, dq2 = x
-        tau1, tau2 = u
+        u_vec = np.asarray(u, dtype=float)
+        require(u_vec.shape == (2,), "control input must have 2 elements")
+        tau1, tau2 = u_vec
 
         m1, m2, l1, l2, g = self.m1, self.m2, self.l1, self.l2, self.g
 
@@ -358,7 +376,11 @@ class RobotArm(DynamicalSystem):
         C2 = h * dq1**2
         C = np.array([C1, C2])
 
-        # Gravity
+        # Gravity — angles measured from horizontal (q=0 is horizontal).
+        # With this convention the gravitational potential energy is
+        # V = m*g*l*sin(q), so the gravity torque dV/dq = m*g*l*cos(q).
+        # If angles were measured from vertical (q=0 is straight down) the
+        # terms would use sin(q) instead of cos(q).
         G1 = (m1 + m2) * g * l1 * np.cos(q1) + m2 * g * l2 * np.cos(q1 + q2)
         G2 = m2 * g * l2 * np.cos(q1 + q2)
         G = np.array([G1, G2])
@@ -366,8 +388,7 @@ class RobotArm(DynamicalSystem):
         # M * ddq + C + G = tau
         # ddq = M_inv * (tau - C - G)
 
-        invM = np.linalg.inv(M)
-        ddq = invM @ (np.array([tau1, tau2]) - C - G)
+        ddq = np.linalg.solve(M, np.array([tau1, tau2]) - C - G)
 
         return np.array([dq1, dq2, ddq[0], ddq[1]])
 
@@ -379,6 +400,32 @@ class RobotArm(DynamicalSystem):
         Central differences give O(epsilon^2) accuracy vs O(epsilon) for forward differences,
         consistent with _finite_diff_jacobian in residuals.py.
         """
-        if isinstance(u, float | int):
-            raise ValueError("Control input must be a vector")
-        return _central_difference_linearization(self, x, u)
+        check_finite_array(x, "state vector")
+        require(len(x) == 4, "state vector must have 4 elements")
+        require(not isinstance(u, float | int), "Control input must be a vector")
+        # Using numerical linearization for the 2-link arm due to complexity
+        epsilon = 1e-6
+        n = 4
+        m = 2
+
+        A = np.zeros((n, n))
+        B = np.zeros((n, m))
+
+        # Compute A using central differences: (f(x+eps) - f(x-eps)) / (2*eps)
+        for i in range(n):
+            x_plus = x.copy()
+            x_plus[i] += epsilon
+            x_minus = x.copy()
+            x_minus[i] -= epsilon
+            A[:, i] = (self.dynamics(x_plus, u) - self.dynamics(x_minus, u)) / (2 * epsilon)
+
+        # Compute B using central differences: (f(u+eps) - f(u-eps)) / (2*eps)
+        u_arr = np.array(u, dtype=float)
+        for i in range(m):
+            u_plus = u_arr.copy()
+            u_plus[i] += epsilon
+            u_minus = u_arr.copy()
+            u_minus[i] -= epsilon
+            B[:, i] = (self.dynamics(x, u_plus) - self.dynamics(x, u_minus)) / (2 * epsilon)
+
+        return A, B

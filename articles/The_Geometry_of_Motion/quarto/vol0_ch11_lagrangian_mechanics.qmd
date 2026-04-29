@@ -1,5 +1,6 @@
 ---
 title: "Lagrangian Mechanics"
+description: "In the Newtonian framework (utilized powerfully by the Recursive Newton-Euler algorithm in Chapter 10), motion is determined by explicit forces: ."
 ---
 
 # Lagrangian Mechanics
@@ -30,10 +31,10 @@ While Newton's equations are spectacular for computational algorithms evaluating
 If a bead slides down a curved wire, or a pendulum swings on a rigid rod, Newton demands that you calculate the exact, microscopic physical force the wire exerts on the bead, or the tension the rod pulls on the bob, just to ensure they don't break. For a 15-DOF mechanism, solving for 15 unknown internal constraint forces pulling against each other is mathematically agonizing.
 
 
-## The Principle of Stationary Action
+## The Principle of Least Action
 
 
-Joseph-Louis Lagrange developed an alternative formulation that bypasses forces entirely, relying instead on the **Principle of Stationary Action** (historically called the Principle of Least Action, though the correct name is "stationary" because realized trajectories can be minima *or* saddle points of the action functional).
+Joseph-Louis Lagrange developed an alternative formulation that bypasses forces entirely, relying instead on the **Principle of Stationary Action** (historically called the Principle of Least Action).
 
 The physical trajectory of a system is the one for which the *action*---the time integral of the difference between kinetic energy ($T$) and potential energy ($V$)---is stationary (typically a minimum, though saddle points are possible in general).
 
@@ -47,7 +48,6 @@ The physical trajectory of a system is the one for which the *action*---the time
   $$ V = mgh $$
 
 :::
-
 
 
 ## The Lagrangian ($\mathcal{L}$) and the Euler-Lagrange Equations
@@ -69,20 +69,6 @@ To extract the exact Newtonian equations of motion from this single scalar funct
 
 For every single joint coordinate $i$, this equation operates mechanically on the energy field. The time derivative of the momentum (first term) minus the spatial gradient of the energy (second term) perfectly equals the external Torque ($\tau_i$) that must be applied by the motor!
 
-::: {.callout-note}
-## A Sketch of the Derivation
-
-The Euler–Lagrange equation falls out of the stationary-action principle in four lines. Define the action $S[\bm{q}] = \int_{t_0}^{t_1} \mathcal{L}(\bm{q}(t), \dot{\bm{q}}(t))\,dt$. Perturb the path by an arbitrary $\delta \bm{q}(t)$ that vanishes at the endpoints, and demand $\delta S = 0$:
-$$
-\delta S = \int_{t_0}^{t_1}\!\left( \frac{\partial \mathcal{L}}{\partial q_i}\delta q_i + \frac{\partial \mathcal{L}}{\partial \dot{q}_i}\delta \dot{q}_i \right)\! dt.
-$$
-Integrate the second term by parts and use $\delta \bm{q}(t_0) = \delta \bm{q}(t_1) = \bm{0}$ to cancel the boundary term, leaving
-$$
-\delta S = \int_{t_0}^{t_1}\!\left( \frac{\partial \mathcal{L}}{\partial q_i} - \frac{d}{dt}\frac{\partial \mathcal{L}}{\partial \dot{q}_i} \right)\! \delta q_i \, dt.
-$$
-Because $\delta q_i$ is arbitrary, the fundamental lemma of the calculus of variations forces the bracketed quantity to vanish for every $i$, yielding the Euler–Lagrange equation above.
-:::
-
 
 ## Deriving the Standard Form
 
@@ -103,11 +89,7 @@ The strict mass/inertia of the configuration. This is exactly what the Articulat
 
 This matrix $C$ naturally "falls out" of the calculus derivative! Because the joints of a robot spin, the coordinate frames themselves are accelerating.
 *   **Centripetal Forces:** Proportional to $\dot{q}_i^2$. They pull the arm outward as a joint spins.
-*   **Coriolis Forces:** Proportional to $\dot{q}_i \dot{q}_j$, where $i \neq j$. If your torso is spinning violently, and you attempt to punch your arm straight out, the Coriolis force violently yanks your fist to the side.
-
-Explicitly, the canonical **Christoffel-symbol** form of $C$ is
-$$ C_{ij}(\bm{q}, \dot{\bm{q}}) = \sum_{k=1}^n \frac{1}{2}\left( \frac{\partial M_{ij}}{\partial q_k} + \frac{\partial M_{ik}}{\partial q_j} - \frac{\partial M_{jk}}{\partial q_i} \right)\dot{q}_k. $$
-This choice makes $\dot{M} - 2C$ skew-symmetric, a property used heavily in passivity-based and contraction-based control proofs in Volume I. The decomposition of the total Coriolis / centrifugal wrench as "$C(\bm{q}, \dot{\bm{q}})\dot{\bm{q}}$" is **not unique**—other choices of $C$ differ by a matrix that annihilates $\dot{\bm{q}}$, but all admissible choices must still give the same total wrench and most practically useful ones preserve skew-symmetry of $\dot{M} - 2C$. 
+*   **Coriolis Forces:** Proportional to $\dot{q}_i \dot{q}_j$, where $i \neq j$. If your torso is spinning violently, and you attempt to punch your arm straight out, the Coriolis force violently yanks your fist to the side. 
 
 
 ### 3. The Gravity Vector ($\frac{\partial V}{\partial \bm{q}}$)
@@ -118,9 +100,7 @@ The spatial derivative of the Potential Energy naturally yields the exact vector
 ## Why Both Formulations Exist
 
 
-In *Tangent-Space Methods*, as with all advanced robotics platforms, you will see both Euler-Lagrange and Newton-Euler used routinely. The honest framing is that **Lagrange is elegant for analytical derivation, Newton–Euler is elegant for computational implementation**—neither is uniformly superior.
+In *Tangent-Space Methods*, as with all advanced robotics platforms, you will see both Euler-Lagrange and Newton-Euler used routinely, depending on the computational goal.
 
-\begin{itemize}
-    \item We use **Euler-Lagrange** when we are analytically designing the control law (such as Contraction Metrics in Volume I). The elegant $M, C, G$ matrices allow us to explicitly cancel gravity conceptually or prove mathematical stability.
-    \item We use **Recursive Newton-Euler** when code is executing inside the physics simulation (Volume II benchmarks). Finding the actual numerical torque pushing a 15-DOF golf club inside Python is hundreds of times faster using Newton-Euler ABA tracking than unpacking the massive $C(\dot{\bm{q}}, \bm{q})$ matrix algebraically.
-\end{itemize}
+- We use **Euler-Lagrange** when we are analytically designing the control law (such as Contraction Metrics in Volume I). The elegant $M, C, G$ matrices allow us to explicitly cancel gravity conceptually or prove mathematical stability.
+- We use **Recursive Newton-Euler** when code is executing inside the physics simulation (Volume II benchmarks). Finding the actual numerical torque pushing a 15-DOF golf club inside Python is hundreds of times faster using Newton-Euler ABA tracking than unpacking the massive $C(\dot{\bm{q}}, \bm{q})$ matrix algebraically.

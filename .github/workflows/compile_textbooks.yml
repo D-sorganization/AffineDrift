@@ -4,12 +4,19 @@ on:
   push:
     branches:
       - main
+      - staging
       - geometry-of-motion-series
     paths:
       - "articles/The_Geometry_of_Motion/**"
   pull_request:
+    branches:
+      - main
     paths:
       - "articles/The_Geometry_of_Motion/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -24,7 +31,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Compile Volume 0
-        uses: xu-cheng/latex-action@v4
+        uses: xu-cheng/latex-action@6549dc21effb2730855a1281407ecfcececc6c1b # v4
         continue-on-error: true
         with:
           root_file: main.tex
@@ -43,31 +50,31 @@ jobs:
           fi
 
       - name: Compile Volume I
-        uses: xu-cheng/latex-action@v4
+        uses: xu-cheng/latex-action@6549dc21effb2730855a1281407ecfcececc6c1b # v4
         with:
           root_file: main.tex
           working_directory: articles/The_Geometry_of_Motion/Volume_I
 
       - name: Compile Volume II
-        uses: xu-cheng/latex-action@v4
+        uses: xu-cheng/latex-action@6549dc21effb2730855a1281407ecfcececc6c1b # v4
         with:
           root_file: main.tex
           working_directory: articles/The_Geometry_of_Motion/Volume_II
 
       - name: Compile Volume III
-        uses: xu-cheng/latex-action@v4
+        uses: xu-cheng/latex-action@6549dc21effb2730855a1281407ecfcececc6c1b # v4
         with:
           root_file: main.tex
           working_directory: articles/The_Geometry_of_Motion/Volume_III
 
       - name: Compile Volume IV
-        uses: xu-cheng/latex-action@v4
+        uses: xu-cheng/latex-action@6549dc21effb2730855a1281407ecfcececc6c1b # v4
         with:
           root_file: main.tex
           working_directory: articles/The_Geometry_of_Motion/Volume_IV
 
       - name: Compile Volume V
-        uses: xu-cheng/latex-action@v4
+        uses: xu-cheng/latex-action@6549dc21effb2730855a1281407ecfcececc6c1b # v4
         with:
           root_file: main.tex
           working_directory: articles/The_Geometry_of_Motion/Volume_V
@@ -75,7 +82,7 @@ jobs:
       - name: Count Pages
         run: |
           apt-get update && apt-get install -y poppler-utils || echo "poppler-utils not available via apt-get"
-          sudo apt-get update && sudo apt-get install -y poppler-utils || echo "sudo not available"
+          sudo apt-get -o DPkg::Lock::Timeout=300 update && sudo apt-get -o DPkg::Lock::Timeout=300 install -y poppler-utils || echo "sudo not available"
           for vol in Volume_0 Volume_I Volume_II Volume_III Volume_IV Volume_V; do
             if [ -f articles/The_Geometry_of_Motion/$vol/main.pdf ]; then
               pages=$(pdfinfo articles/The_Geometry_of_Motion/$vol/main.pdf | grep Pages | awk '{print $2}')
@@ -120,11 +127,11 @@ jobs:
           path: articles/The_Geometry_of_Motion/Volume_V/main.pdf
 
       - name: Install Python PDF tools
-        run: pip install PyPDF2
+        run: python3 -m venv .pdf_venv && .pdf_venv/bin/pip install PyPDF2
 
       - name: Merge all volumes into complete textbook
         run: |
-          python3 << 'PYEOF'
+          .pdf_venv/bin/python << 'PYEOF'
           from PyPDF2 import PdfReader, PdfWriter
           import os
 

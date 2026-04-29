@@ -10,15 +10,24 @@ from __future__ import annotations
 import logging
 import math
 
-from src.core.constants import (
-    GRAVITY_M_S2,
-    HOLE_CAPTURE_SPEED_MS,
-    REGULATION_HOLE_RADIUS_M,
-    STIMPMETER_CALIBRATION_FACTOR,
-)
+from src.core.constants import GRAVITY_M_S2
 from src.core.contracts import check_positive, check_range, require
 
 logger = logging.getLogger(__name__)
+
+STIMPMETER_INITIAL_SPEED_M_S = 1.83
+FEET_TO_METERS = 0.3048
+
+
+def stimpmeter_deceleration(stimp: float) -> float:
+    """Return constant rolling deceleration implied by a Stimpmeter reading.
+
+    A Stimpmeter launches the ball at about 1.83 m/s. The reported stimp is
+    the stopping distance in feet, so v^2 = 2ad gives a = v^2 / (2S).
+    """
+    check_range(stimp, 4.0, 16.0, "stimp")
+    stimp_meters = stimp * FEET_TO_METERS
+    return STIMPMETER_INITIAL_SPEED_M_S**2 / (2.0 * stimp_meters)
 
 
 class GreenSurface:
@@ -197,7 +206,7 @@ class PuttingSimulator:
         self,
         surface: GreenSurface,
         dt: float = 0.001,
-        hole_radius: float = REGULATION_HOLE_RADIUS_M,
+        hole_radius: float = 0.054,
     ) -> None:
         """Initialize putting simulator.
 
@@ -212,36 +221,6 @@ class PuttingSimulator:
         self.surface = surface
         self.dt = dt
         self.hole_radius = hole_radius
-
-    def _euler_step(
-        self,
-        x: float,
-        y: float,
-        vx: float,
-        vy: float,
-        deceleration: float,
-    ) -> tuple[float, float, float, float]:
-        """Advance the putt state by one Euler step.
-
-        Args:
-            x: Current x position in meters.
-            y: Current y position in meters.
-            vx: Current x velocity in m/s.
-            vy: Current y velocity in m/s.
-            deceleration: Stimpmeter-calibrated friction deceleration (m/s^2).
-
-        Returns:
-            Updated (x, y, vx, vy) after one timestep.
-        """
-        speed = math.sqrt(vx * vx + vy * vy)
-        slope_x, slope_y = self.surface.evaluate_slope(x, y)
-        ax = -GRAVITY_M_S2 * slope_x - deceleration * vx / max(speed, 1e-10)
-        ay = -GRAVITY_M_S2 * slope_y - deceleration * vy / max(speed, 1e-10)
-        vx += ax * self.dt
-        vy += ay * self.dt
-        x += vx * self.dt
-        y += vy * self.dt
-        return x, y, vx, vy
 
     def simulate(
         self,
@@ -268,21 +247,98 @@ class PuttingSimulator:
         """
         check_positive(max_time, "max_time")
 
-        x, y, vx, vy = start_x, start_y, velocity_x, velocity_y
-        deceleration = STIMPMETER_CALIBRATION_FACTOR / self.surface.stimp
+        x = start_x
+        y = start_y
+        vx = velocity_x
+        vy = velocity_y
+
+        # Stimpmeter-based deceleration from v^2 = 2ad.
+        # Higher stimp = lower deceleration = faster green
+        deceleration = stimpmeter_deceleration(self.surface.stimp)
+
         trajectory: list[tuple[float, float]] = [(x, y)]
         t = 0.0
 
         while t < max_time:
             speed = math.sqrt(vx * vx + vy * vy)
+
+            # Stop if the ball has effectively stopped
             if speed < 0.005:
                 logger.debug("Putt stopped at (%.3f, %.3f) after %.2f s", x, y, t)
                 break
-            x, y, vx, vy = self._euler_step(x, y, vx, vy, deceleration)
+
+            # RK4 integration for improved accuracy over Euler
+            x, y, vx, vy = self._rk4_putt_step(x, y, vx, vy, deceleration)
+
             t += self.dt
             trajectory.append((x, y))
 
         return trajectory
+
+    def _putt_derivatives(
+        self,
+        x: float,
+        y: float,
+        vx: float,
+        vy: float,
+        deceleration: float,
+    ) -> tuple[float, float, float, float]:
+        """Compute state derivatives for the putting dynamics.
+
+        Returns:
+            Tuple of (dx/dt, dy/dt, dvx/dt, dvy/dt).
+        """
+        speed = math.sqrt(vx * vx + vy * vy)
+        slope_x, slope_y = self.surface.evaluate_slope(x, y)
+        grav_ax = -GRAVITY_M_S2 * slope_x
+        grav_ay = -GRAVITY_M_S2 * slope_y
+        friction_ax = -deceleration * vx / max(speed, 1e-10)
+        friction_ay = -deceleration * vy / max(speed, 1e-10)
+        ax = grav_ax + friction_ax
+        ay = grav_ay + friction_ay
+        return vx, vy, ax, ay
+
+    def _rk4_putt_step(
+        self,
+        x: float,
+        y: float,
+        vx: float,
+        vy: float,
+        deceleration: float,
+    ) -> tuple[float, float, float, float]:
+        """Advance the putting state by one RK4 step.
+
+        Returns:
+            Updated (x, y, vx, vy) after one timestep.
+        """
+        dt = self.dt
+        k1 = self._putt_derivatives(x, y, vx, vy, deceleration)
+        k2 = self._putt_derivatives(
+            x + 0.5 * dt * k1[0],
+            y + 0.5 * dt * k1[1],
+            vx + 0.5 * dt * k1[2],
+            vy + 0.5 * dt * k1[3],
+            deceleration,
+        )
+        k3 = self._putt_derivatives(
+            x + 0.5 * dt * k2[0],
+            y + 0.5 * dt * k2[1],
+            vx + 0.5 * dt * k2[2],
+            vy + 0.5 * dt * k2[3],
+            deceleration,
+        )
+        k4 = self._putt_derivatives(
+            x + dt * k3[0],
+            y + dt * k3[1],
+            vx + dt * k3[2],
+            vy + dt * k3[3],
+            deceleration,
+        )
+        x += (dt / 6.0) * (k1[0] + 2.0 * k2[0] + 2.0 * k3[0] + k4[0])
+        y += (dt / 6.0) * (k1[1] + 2.0 * k2[1] + 2.0 * k3[1] + k4[1])
+        vx += (dt / 6.0) * (k1[2] + 2.0 * k2[2] + 2.0 * k3[2] + k4[2])
+        vy += (dt / 6.0) * (k1[3] + 2.0 * k2[3] + 2.0 * k3[3] + k4[3])
+        return x, y, vx, vy
 
     def is_holed(
         self,
@@ -313,4 +369,6 @@ class PuttingSimulator:
         speed = math.sqrt(vx * vx + vy * vy)
 
         # Ball must be within hole radius and slow enough to drop in
-        return dist <= self.hole_radius and speed < HOLE_CAPTURE_SPEED_MS
+        # Maximum capture speed: ~1.5 m/s (empirical)
+        max_capture_speed = 1.5
+        return dist <= self.hole_radius and speed < max_capture_speed

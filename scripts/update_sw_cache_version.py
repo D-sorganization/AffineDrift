@@ -28,6 +28,8 @@ HASH_SOURCES = [
     "js/script.js",
     "js/bibliography.js",
     "js/main.js",
+    "js/service-worker-utils.js",
+    "js/service-worker-updates.js",
     "css/styles.css",
     "css/base.css",
     "custom.scss",

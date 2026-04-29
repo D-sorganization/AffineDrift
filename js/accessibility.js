@@ -16,16 +16,25 @@ export function initSecureExternalLinks() {
             link.hostname !== currentHostname &&
             link.protocol.startsWith("http")
         ) {
-            if (!link.hasAttribute("target")) {
-                link.setAttribute("target", "_blank");
+            // ⚡ Bolt Optimization: Use property access and DOMTokenList
+            // Avoids O(N) memory allocation from string split/join for every external link
+            if (!link.target) {
+                link.target = "_blank";
             }
-            const rel = link.getAttribute("rel") || "";
-            const parts = rel.split(" ").filter((p) => p);
-            if (!parts.includes("noopener")) parts.push("noopener");
-            if (!parts.includes("noreferrer")) parts.push("noreferrer");
-            link.setAttribute("rel", parts.join(" "));
+
+            if (link.relList) {
+                link.relList.add("noopener", "noreferrer");
+            } else {
+                const rel = link.getAttribute("rel") || "";
+                const parts = rel.split(" ").filter((p) => p);
+                if (!parts.includes("noopener")) parts.push("noopener");
+                if (!parts.includes("noreferrer")) parts.push("noreferrer");
+                link.setAttribute("rel", parts.join(" "));
+            }
+
             if (
-                !link.querySelector("img, svg") &&
+                link.getElementsByTagName("img").length === 0 &&
+                link.getElementsByTagName("svg").length === 0 &&
                 !link.classList.contains("external-link")
             ) {
                 link.classList.add("external-link");
@@ -43,122 +52,132 @@ export function initSecureExternalLinks() {
  * Set external links on GitHub repos
  */
 export function initRepoLinks() {
-    document
-        .querySelectorAll('.navbar-nav a[href^="https://github.com"]')
-        .forEach((link) => {
+    // ⚡ Bolt Optimization: Use document.links (O(1)) instead of querySelectorAll (O(N))
+    for (const link of document.links) {
+        if (
+            link.href.startsWith("https://github.com") &&
+            link.closest(".navbar-nav")
+        ) {
             link.setAttribute("target", "_blank");
-        });
+        }
+    }
+}
+
+const NAV_LABEL_RULES = Object.freeze([
+    { className: "toc-nav", label: "Table of contents navigation" },
+    { className: "history-nav", label: "Recent history navigation" },
+    { className: "resources-nav", label: "Resources navigation" },
+]);
+
+const SIDEBAR_LABEL_RULES = Object.freeze([
+    { className: "left-sidebar", label: "Left sidebar navigation" },
+    { className: "right-sidebar", label: "Right sidebar navigation" },
+    { className: "home-sidebar", label: "Main navigation sidebar" },
+]);
+
+function resolveLabelFromClasses(element, rules, fallbackLabel) {
+    for (const rule of rules) {
+        if (element.classList.contains(rule.className)) {
+            return rule.label;
+        }
+    }
+    return fallbackLabel;
+}
+
+function applyDefaultAriaLabel(element, label) {
+    if (!element.hasAttribute("aria-label")) {
+        element.setAttribute("aria-label", label);
+    }
+}
+
+function labelCardsFromHeading(cards, prefix) {
+    for (const card of cards) {
+        if (card.hasAttribute("aria-label")) continue;
+        const heading = card.querySelector("h3");
+        if (heading) {
+            card.setAttribute("aria-label", `${prefix}: ${heading.textContent.trim()}`);
+        }
+    }
 }
 
 /**
  * Initialize all ARIA labels for accessibility
  */
 export function initAriaLabels() {
+    // ⚡ Bolt Optimization: Use getElementsByTagName and getElementsByClassName
+    // (O(1) Live Collections) instead of querySelectorAll (O(N) Traversal)
+
     // Navigation elements
-    const navElements = document.querySelectorAll("nav");
-    navElements.forEach((nav) => {
-        if (!nav.hasAttribute("aria-label")) {
-            if (nav.classList.contains("toc-nav")) {
-                nav.setAttribute("aria-label", "Table of contents navigation");
-            } else if (nav.classList.contains("history-nav")) {
-                nav.setAttribute("aria-label", "Recent history navigation");
-            } else if (nav.classList.contains("resources-nav")) {
-                nav.setAttribute("aria-label", "Resources navigation");
-            } else {
-                nav.setAttribute("aria-label", "Navigation");
-            }
-        }
-    });
+    const navElements = document.getElementsByTagName("nav");
+    for (const nav of navElements) {
+        applyDefaultAriaLabel(
+            nav,
+            resolveLabelFromClasses(nav, NAV_LABEL_RULES, "Navigation")
+        );
+    }
 
     // Sidebar elements
-    const sidebars = document.querySelectorAll("aside");
-    sidebars.forEach((sidebar) => {
-        if (!sidebar.hasAttribute("aria-label")) {
-            if (sidebar.classList.contains("left-sidebar")) {
-                sidebar.setAttribute("aria-label", "Left sidebar navigation");
-            } else if (sidebar.classList.contains("right-sidebar")) {
-                sidebar.setAttribute("aria-label", "Right sidebar navigation");
-            } else if (sidebar.classList.contains("home-sidebar")) {
-                sidebar.setAttribute("aria-label", "Main navigation sidebar");
-            } else {
-                sidebar.setAttribute("aria-label", "Sidebar");
-            }
-        }
-    });
+    const sidebars = document.getElementsByTagName("aside");
+    for (const sidebar of sidebars) {
+        applyDefaultAriaLabel(
+            sidebar,
+            resolveLabelFromClasses(sidebar, SIDEBAR_LABEL_RULES, "Sidebar")
+        );
+    }
 
     // Main content areas
-    const mainElements = document.querySelectorAll("main");
-    mainElements.forEach((main) => {
+    const mainElements = document.getElementsByTagName("main");
+    for (const main of mainElements) {
         if (!main.hasAttribute("aria-label") && !main.hasAttribute("role")) {
             main.setAttribute("role", "main");
             main.setAttribute("aria-label", "Main content");
         }
-    });
+    }
 
-    // Search inputs
-    const searchInputs = document.querySelectorAll('input[type="search"]');
-    searchInputs.forEach((input) => {
-        if (!input.hasAttribute("aria-label") && !input.id) {
+
+    // Single pass over all inputs
+    const inputs = document.getElementsByTagName("input");
+    for (const input of inputs) {
+        // Search inputs
+        if (input.type === "search" && !input.hasAttribute("aria-label") && !input.id) {
             input.setAttribute("aria-label", "Search");
         }
-    });
+
+        // Form inputs without labels
+        if (!input.hasAttribute("aria-label") && !input.id) {
+            const placeholder = input.getAttribute("placeholder");
+            if (placeholder) {
+                input.setAttribute("aria-label", placeholder);
+            }
+        }
+    }
 
     // Social links
-    const socialLinks = document.querySelectorAll(".social-link");
-    socialLinks.forEach((link) => {
+    const socialLinks = document.getElementsByClassName("social-link");
+    for (const link of socialLinks) {
         if (!link.hasAttribute("aria-label")) {
             const text = link.textContent.trim();
             link.setAttribute("aria-label", `Visit ${text}`);
         }
-    });
+    }
 
     // Resource cards
-    const resourceCards = document.querySelectorAll(".resource-card");
-    resourceCards.forEach((card) => {
-        if (!card.hasAttribute("aria-label")) {
-            const heading = card.querySelector("h3");
-            if (heading) {
-                card.setAttribute(
-                    "aria-label",
-                    `Resource: ${heading.textContent.trim()}`
-                );
-            }
-        }
-    });
+    const resourceCards = document.getElementsByClassName("resource-card");
+    labelCardsFromHeading(resourceCards, "Resource");
 
     // Article cards
-    const articleCards = document.querySelectorAll(".article-card");
-    articleCards.forEach((card) => {
-        if (!card.hasAttribute("aria-label")) {
-            const heading = card.querySelector("h3");
-            if (heading) {
-                card.setAttribute(
-                    "aria-label",
-                    `Article: ${heading.textContent.trim()}`
-                );
-            }
-        }
-    });
+    const articleCards = document.getElementsByClassName("article-card");
+    labelCardsFromHeading(articleCards, "Article");
 
     // History lists - live regions
+    // Fallback to querySelectorAll here because id selection is a complex pattern
     const historyLists = document.querySelectorAll('[id$="-history-list"]');
-    historyLists.forEach((list) => {
+    for (const list of historyLists) {
         if (!list.hasAttribute("aria-live")) {
             list.setAttribute("aria-live", "polite");
             list.setAttribute("aria-atomic", "false");
         }
-    });
-
-    // Form inputs without labels
-    const formInputs = document.querySelectorAll(
-        "input:not([aria-label]):not([id])"
-    );
-    formInputs.forEach((input) => {
-        const placeholder = input.getAttribute("placeholder");
-        if (placeholder) {
-            input.setAttribute("aria-label", placeholder);
-        }
-    });
+    }
 }
 
 /**

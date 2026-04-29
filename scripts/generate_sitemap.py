@@ -11,6 +11,16 @@ from src.tools.utils.content_utils import collect_qmd_files, read_qmd_with_front
 
 logger = setup_logging(__name__)
 
+SITEMAP_CONTENT_DIRS = [
+    ".",
+    "articles",
+    "books",
+    "models",
+    "pages",
+    "repositories",
+    "resources",
+]
+
 
 def get_git_last_modified(filepath: str) -> str:
     """Get last modified date from git history."""
@@ -68,16 +78,22 @@ def get_changefreq(filepath: str) -> str:
     return "monthly"
 
 
+def qmd_path_to_url_path(filepath: Path) -> str:
+    """Convert a QMD path to the corresponding site URL path."""
+    url_path = filepath.with_suffix(".html").as_posix()
+    if url_path == "index.html":
+        return ""
+    return url_path
+
+
 def main() -> None:
     """Generate sitemap.xml."""
     base_url = "https://affinedrift.com"
     pages: list[dict[str, str]] = []
 
-    for filepath in collect_qmd_files():
+    for filepath in collect_qmd_files(SITEMAP_CONTENT_DIRS):
         relative_path = str(filepath)
-        url_path = relative_path.replace(".qmd", ".html")
-        if url_path == "index.html":
-            url_path = ""
+        url_path = qmd_path_to_url_path(filepath)
 
         _content, frontmatter = read_qmd_with_frontmatter(filepath)
 

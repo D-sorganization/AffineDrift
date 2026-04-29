@@ -1,6 +1,6 @@
 ---
 title: "Motor Control III: The Remarkable Brain"
-bibliography: ../golf_physics.bib
+description: "Let's quantify exactly what the brain accomplishes in a 300 millisecond downswing."
 ---
 
 ::: {.callout-note}
@@ -14,22 +14,19 @@ When you swing a golf club, your brain is simultaneously:
 - Working with 30--50 millisecond neural delays
 - Processing 80--150 millisecond sensory delays
 - Generating force within 50--100 millisecond muscle activation delays
-- Solving a nonlinear optimal control problem in real time
+- Approximating something like a nonlinear optimal control problem in real time
 - Managing transitions between high-control and high-drift phases
 - Doing all of this in 300 milliseconds with only 20 watts of power
 
-No robot can currently do this. No engineered control system has come close. Yet the human brain does it every day, without conscious effort. This is the chapter that asks: how? And what does this remarkable biological achievement reveal about the organization of intelligent motor control?
+As of this writing, no widely deployed robot or AI system matches this exact combination of speed, dimensionality, adaptability, and low-power execution in an everyday athletic setting. Yet your brain does something close to it every day, without conscious calculation. This is the chapter that asks: how? And what does this remarkable biological achievement suggest about the nature of intelligence?
 
 We also ask the inverse question: why does the brain occasionally fail catastrophically? Why do the yips happen? Why do skilled golfers sometimes choke? The answers reveal surprising truths about how the brain works.
 
-Finally, we consider what the brain's motor control strategies reveal about the principles of intelligent control more broadly.
+Finally, we consider what artificial intelligence could learn from the brain, and what the golf swing reveals about the future of AI.
 
 :::
 
 ## The Scale of the Problem the Brain Solves
-
-
-
 
 
 Let's quantify exactly what the brain accomplishes in a 300 millisecond downswing.
@@ -39,46 +36,40 @@ Let's quantify exactly what the brain accomplishes in a 300 millisecond downswin
 ::: {.callout-important}
 ## The Golf Swing Control Problem: Numbers
 
-- **Degrees of freedom:** The golf swing involves roughly 7 major joints: shoulders (2 DOF each = 4), elbows (1 each = 2), wrists (2 each = 4), torso rotation (1), hip rotation (1), knee bend (1), ankle (1). Total: ~13 DOF for major joints. Including smaller joints (fingers, feet) and the club as a separate dynamic object: 20+ DOF.
+- **Degrees of freedom:** The golf swing involves roughly 7 major joints: shoulders (2 DOF each = 4), elbows (1 each = 2), wrists (2 each = 4), torso rotation (1), hip rotation (1), knee bend (1), ankle (1). Total:  13 DOF for major joints. Including smaller joints (fingers, feet) and the club as a separate dynamic object: 20+ DOF.
 
-- **Muscles:** Roughly 200 muscles are involved in the swing, from large muscles (pectoralis, latissimus dorsi) to small stabilizer muscles. Each muscle can be activated at a different level, producing roughly 7 ordinal levels (off, 1/6, 2/6, ..., 6/6 maximum). The muscle activation space is a 200-dimensional continuous manifold $[0,1]^{200}$. Even discretizing each muscle to just 7 activation levels gives $7^{200} \approx 10^{169}$ states---a number so large it exceeds the number of atoms in the observable universe ($\sim 10^{80}$). The brain cannot search this space; it must exploit structure.
+- **Muscles:** Roughly 200 muscles are involved in the swing, from large muscles (pectoralis, latissimus dorsi) to small stabilizer muscles. Each muscle can be activated at a different level, producing a huge control space. As a thought experiment, even discretizing each muscle to just 7 activation levels gives $7^{200} \approx 10^{169}$ states---a number so large it exceeds the number of atoms in the observable universe ($\sim 10^{80}$). The point is not that the brain literally searches this space; the point is that structure must drastically reduce the effective control problem.
 
-- **Time points during the swing:** At a coarse temporal resolution (e.g., 10 ms per time step, rough order of magnitude for neural control), a 300 ms downswing has roughly 30 time points. At each time point, you could independently command each muscle.
+- **Time points during the swing:** At 100 Hz temporal resolution (10 milliseconds per time step, reasonable for neural control), a 300 ms downswing has 30 time points. At each time point, you could independently command each muscle.
 
-- **Control space size:** If you could independently vary muscle activations at each time point, the total number of possible swings would be roughly $(7^{200})^{30}$. This is an astronomically large space: $\approx 10^{4000}$ distinct swings.
+- **Control space size:** If you could independently vary muscle activations at each time point, the total number of possible swings would be roughly $(7^{200})^{30}$. This thought experiment produces an astronomically large space: $\approx 10^{4000}$ distinct swings.
 
 - **Computational challenge:** To find the optimal swing by exhaustive search would require evaluating $10^{4000}$ candidates. Even if each evaluation took a nanosecond, this would take $10^{3991}$ seconds---far longer than the age of the universe.
 
 :::
 
-Yet the brain finds a good solution in milliseconds. How?
+Yet the brain produces workable solutions in milliseconds. How?
 
 ### Constraints Reduce the Space
 
 
-
-
-
 The brain doesn't solve this high-dimensional problem directly. Instead, it exploits structure in the problem. Several constraints dramatically reduce the effective dimensionality:
 
-- **Synergies:** Instead of controlling 200 muscles independently, the brain activates muscle *synergies*---fixed patterns of muscle co-activation. Within a given movement class (e.g., reaching tasks), synergies account for roughly 80--90% of the variance in muscle activations \citep{bizzi2008motor, cheung2009simultaneous}. Across diverse movement types, the explained variance drops to 60--75%, suggesting that synergies are context-dependent building blocks rather than universal motor primitives.
+- **Synergies:** Instead of controlling 200 muscles independently, the brain activates muscle *synergies*---fixed patterns of muscle co-activation. Within a given movement class (e.g., reaching tasks), synergies account for roughly 80--90% of the variance in muscle activations [@bizzi2008motor, cheung2009simultaneous]. Across diverse movement types, the explained variance drops to 60--75%, suggesting that synergies are context-dependent building blocks rather than universal motor primitives.
 
-  A synergy might be: ``activate shoulder internal rotator + elbow extensor + wrist extensor,'' which produces a synergistic motion. By reducing from 200 independent muscles to 8 synergies, the dimensionality drops from $7^{200}$ to $7^8 \approx 5.7$ million.
+  A synergy might be: "activate shoulder internal rotator + elbow extensor + wrist extensor," which produces a synergistic motion. By reducing from 200 independent muscles to 8 synergies, the dimensionality drops from $7^{200}$ to $7^8 \approx 5.7$ million.
 
 - **Temporal structure:** The brain doesn't command each of the 30 time points independently. Instead, it specifies a *trajectory*---a smooth function of time. Smooth functions can be represented with fewer parameters. For example, a cubic polynomial has 4 parameters but can describe a complex trajectory.
 
   By using smooth trajectories for each synergy, the control dimensionality drops to perhaps 30--50 parameters.
 
-- **Physics constraints:** The dynamics are highly nonlinear, but they have structure. The drift field dominates; control is weak. This means many motor commands produce nearly the same outcome. The brain exploits this: it only needs to set initial conditions and let physics do the rest.
+- **Physics constraints:** The dynamics are highly nonlinear, but they have structure. In the affine-control perspective developed in this book, late-swing drift can become large relative to newly applied control inputs. If that picture is approximately right, then many nearby motor commands may lead to similar outcomes, allowing the brain to rely more on state preparation and less on continuous correction.
 
 - **Learned motor primitives:** The brain doesn't solve the problem from scratch each swing. It retrieves a learned primitive---a pre-computed motor program---and applies it. This is like having a solution template that only needs minor tuning.
 
-These constraints reduce the effective dimensionality from $10^{4000}$ to something manageable: perhaps 30--50 parameters to optimize.
+These constraints reduce the effective dimensionality from $10^{4000}$ to something manageable: perhaps a few dozen parameters to tune, though the exact number is heuristic rather than literal.
 
 ### The Constraint of Time
-
-
-
 
 
 The most severe constraint is temporal:
@@ -96,21 +87,17 @@ The most severe constraint is temporal:
 
 - By the time visual feedback about the swing reaches your brain, the swing is over. By the time proprioceptive feedback produces a corrective motor command, the swing is over.
 
-- Given the 300 ms downswing duration and ~100 ms sensorimotor loop delay, the brain can process at most 1--2 feedback correction cycles during the swing. This is barely enough for any feedback-based control.
+- The brain can likely process only a very small number of meaningful feedback correction cycles during the downswing.
 
-- Conclusion: the swing *must* be ballistic---pre-planned and executed without real-time feedback correction.
+- Conclusion: the downswing is likely to be heavily pre-planned, with limited opportunity for deliberate real-time correction.
 
 :::
 
-This is not a limitation of the brain; it's a fundamental constraint of the system. Even with infinite neural processing power, real-time feedback control of the downswing is impossible. The solution: learn a feedforward program that works.
+This is not a limitation of the brain; it is a fundamental constraint of the system. Even with very fast neural processing, real-time feedback control of the downswing would be limited by sensory and actuator delays. The practical solution is to rely heavily on feedforward structure, while still allowing fast reflexive and stabilizing feedback to contribute where it can.
 
-\cite{todorov2004optimality}
+[@todorov2004optimality]
 
 ## How the Brain Manages: Strategies for a Bandwidth-Limited Controller
-
-
-
-
 
 
 Given these constraints, how does the brain manage to swing a golf club?
@@ -118,33 +105,26 @@ Given these constraints, how does the brain manage to swing a golf club?
 ### Strategy 1: Exploit Drift---Use Physics as the Primary Actuator
 
 
-
-
-
-This is the central insight of the entire textbook, viewed from the motor control perspective.
+This is the central insight of the textbook, viewed from the motor control perspective.
 
 ::: {.callout-important}
 ## Drift Exploitation in Neural Control
-The golf swing is drift-dominated. The drift forces (gravity, centrifugal effects, elastic restoring forces) are much larger than the control forces (muscle torques).
+In the affine-control interpretation developed in this book, the golf swing can become drift-dominated late in the downswing. In that view, the state-dependent mechanical terms (gravity, inertial effects, elastic restoring forces) can become large relative to newly applied control torques.
 
-This is an enormous advantage for the brain. The brain doesn't need to generate the whole trajectory. It only needs to:
+If that interpretation is correct, it gives the brain an enormous advantage. The brain does not need to generate the whole trajectory from scratch. It mainly needs to:
 
 - Set the initial conditions correctly (address position, grip orientation, muscle stiffness).
 - Apply an early-swing control input that initiates the acceleration.
-- Let the drift field carry the system through the mid- and late-swing phases.
+- Let the drift field carry much of the system through the mid- and late-swing phases.
 
-The ball's final position is determined primarily by the drift field physics, not by precise real-time muscle control. The brain exploits this by using a *high-level setpoint control strategy*: specify where the system *should be* at key points, and let physics carry it there.
+Shot outcome is then shaped strongly by the evolving system state and passive dynamics, not only by precise real-time muscle control. In that case, the brain can exploit a *high-level setpoint control strategy*: specify where the system *should be* at key points, and let physics carry much of the motion between them.
 :::
 
-This is why the ZTCF framework (Chapter \ref{ch:zero_torque_counterfactual}) is so important. The brain is using the mathematical structure of drift-dominated systems to simplify its control problem.
+This is why the ZTCF framework (Chapter @sec-zero_torque_counterfactual) is so important. It offers a way to ask whether a seemingly complicated motion contains a large state-driven component that reduces the burden on moment-to-moment control.
 
-Compare this to trying to control a tennis racket where control forces are comparable to drift forces. This would require much more sophisticated real-time feedback control. The brain couldn't handle it. Tennis players would have no consistency. But golf players do, because gravity (drift) dominates, and the brain exploits this.
+Compare this to trying to control a tennis racket during a return, where the control forces may be more comparable to drift forces and the time window is even shorter. This would require more sophisticated real-time feedback control. The hypothesis is that the drift-dominated structure of the golf swing is part of what makes learned consistency possible, though this comparison has not been rigorously tested across sports.
 
 ### Strategy 2: Impedance Control---Command Stiffness, Not Position
-
-
-
-
 
 
 A second strategy the brain uses is *impedance control*. Instead of commanding exact joint angles or forces, the brain commands *stiffness*.
@@ -159,16 +139,16 @@ The resistance of a joint to perturbation. A very stiff joint (high co-contracti
 ::: {.callout-important}
 ## Impedance Control Strategy
 
-Instead of the brain commanding: ``Move the shoulder to 90 degrees at 3 degrees per millisecond,'' it commands: ``Set shoulder stiffness to [some appropriate level].''
+Instead of the brain commanding: "Move the shoulder to this exact angle at this exact rate," it may command something closer to: "Set shoulder stiffness to a task-appropriate level."
 
-This is a passive control strategy. The stiffness is a mechanical property of the musculoskeletal system. Once set, the joint naturally resists perturbations without requiring active correction.
+This is a partly passive control strategy. The stiffness is a mechanical property of the musculoskeletal system once it has been established through muscle activity. After it is set, the joint naturally resists perturbations without requiring continuous active correction.
 
 Mathematically, impedance control commands the effective stiffness $\bm{K}$ and damping $\bm{D}$:
-\begin{equation}
+$$
 \bm{u} = -\bm{K}(\bm{q} - \bm{q}_d) - \bm{D}\dot{\bm{q}}
-\end{equation}
+$$
 
-where $\bm{q}_d$ is a desired (but ``soft'') target position. Small deviations from $\bm{q}_d$ produce restoring torques. Large deviations don't.
+where $\bm{q}_d$ is a desired (but "soft") target position. Small deviations from $\bm{q}_d$ produce restoring torques. Large deviations don't.
 
 This is much simpler than controlling exact position because the stiffness is set once, not recomputed at each time step.
 
@@ -185,18 +165,15 @@ For the golf swing, impedance control explains several phenomena:
 
 - **Reactive responses:** If the ball suddenly moves (unlikely in golf, but imagine it), or if wind perturbs the swing, a joint with higher impedance resists the perturbation more. The golfer doesn't need to consciously correct; the mechanical impedance does it.
 
-- **Injury prevention:** High-impedance impact absorption spreads forces across multiple joints, reducing injury risk at the point of impact.
+- **Load distribution at impact:** High-impedance impact absorption spreads forces across multiple joints, which biomechanical models suggest may help distribute peak loads at impact.
 
 :::
 
 Setting impedance is more efficient than precise position control because it doesn't require fast computation. The brain can set impedance once and let mechanics handle the rest.
 
-\cite{hogan1985impedance, mussa1998modular}
+[@hogan1985impedance, mussa1998modular]
 
 ### Strategy 3: Synergies---Reduce Dimensionality Through Coordination
-
-
-
 
 
 We mentioned synergies earlier. Let's examine them in detail.
@@ -211,11 +188,11 @@ A fixed pattern of muscle activations that produces a coordinated action. Instea
 ::: {.callout-tip}
 ## Synergies in the Golf Swing
 
-Synergy 1 (pulling): ``Activate latissimus dorsi + pectoralis + internal shoulder rotators.'' This produces a pulling motion---useful in the downswing.
+Synergy 1 (pulling): "Activate latissimus dorsi + pectoralis + internal shoulder rotators." This produces a pulling motion---useful in the downswing.
 
-Synergy 2 (pushing): ``Activate deltoid (posterior) + triceps + wrist extensors.'' This produces a pushing/extending motion.
+Synergy 2 (pushing): "Activate deltoid (posterior) + triceps + wrist extensors." This produces a pushing/extending motion.
 
-Synergy 3 (stabilizing): ``Co-activate all shoulder muscles equally.'' This stabilizes the shoulder without moving it.
+Synergy 3 (stabilizing): "Co-activate all shoulder muscles equally." This stabilizes the shoulder without moving it.
 
 By combining these 3--5 synergies at different activation levels across time, the brain produces the full complexity of the golf swing.
 
@@ -223,16 +200,13 @@ The advantage: instead of commanding 200 muscles independently, the brain comman
 
 :::
 
-Evidence for synergies comes from electromyography (EMG) recordings of muscle activation during movement. Researchers have found that most of the variance in muscle activations across many different movements can be explained by 4--8 synergy vectors \cite{bizzi2008motor, cheung2009simultaneous}.
+Evidence for synergies comes from electromyography (EMG) recordings of muscle activation during movement. Researchers have found that most of the variance in muscle activations across many different movements can be explained by 4--8 synergy vectors [@bizzi2008motor, cheung2009simultaneous].
 
 Why would synergies evolve? One hypothesis: they simplify learning. Instead of learning a 200-dimensional control space, the brain learns a 5-dimensional space. This is much easier and happens faster.
 
-\cite{bizzi2008motor, cheung2009simultaneous, torres2013beyond}
+[@bizzi2008motor, cheung2009simultaneous, torres2013beyond]
 
 ### Strategy 4: Predictive Control and Anticipatory Activation
-
-
-
 
 
 The brain uses its internal model to predict what will happen and pre-activate stabilizing muscles.
@@ -248,22 +222,24 @@ For the golf swing:
 
 - The clubhead will soon hit the ball. The brain pre-activates muscles that will stabilize impact.
 
-- These pre-activations happen well before the event, anticipating it using the forward model.
+- These pre-activations happen tens of milliseconds before the event, anticipating it using the forward model.
 
-- By pre-positioning muscles, the brain avoids the neural delays. The muscles are already primed when the event occurs.
+
+::: {.callout-warning}
+## Pedagogical Simplification
+The numerical values, claims, and parameters discussed in this section are formulated as illustrative model outputs and didactic simplifications. They are intended for pedagogical purposes and do not represent published, empirical biomechanical measurements.
+:::
+
+- In this illustrative anticipatory sequence, by pre-positioning muscles, the brain avoids the neural delays. The muscles are already primed when the event occurs [@kawato1999internal, @wolpert1998multiple].
 
 :::
 
-This is why the pre-swing motion and address posture are so critical. Elite golfers spend 5--10 seconds setting up precisely. They're not just getting comfortable; they're pre-positioning the musculoskeletal system and pre-activating muscles. The actual swing, when it comes, unfolds from a precisely prepared state.
+This is why the pre-swing motion and address posture are so critical. Elite golfers often spend several seconds setting up precisely. They're not just getting comfortable; they're pre-positioning the musculoskeletal system and pre-activating muscles. The actual swing, when it comes, unfolds from a carefully prepared state.
 
 ## The Brain as an Internal Model: What It Learns
 
 
-
-
-
-
-Chapters \ref{ch:motor_control_brain} and \ref{ch:motor_learning} established that the brain learns internal models. Let's now think carefully about what, exactly, the brain learns.
+Chapters @sec-motor_control_brain and @sec-motor_learning established that the brain learns internal models. Let's now think carefully about what, exactly, the brain learns.
 
 ::: {.callout-important}
 ## Three Things the Brain Learns
@@ -288,9 +264,6 @@ Learning the drift field IS learning physics. The brain becomes a physicist, eve
 ### How Do We Know the Brain Learns Physics?
 
 
-
-
-
 Several lines of evidence show that the brain learns a model of physics:
 
 ::: {.callout-tip}
@@ -304,9 +277,9 @@ Within 100 putts, the golfer has learned the putter physics. They can hit putts 
 
 If the brain didn't learn physics, this wouldn't happen. The brain would have no way to generalize from driver swings to putter strokes. But it does generalize, by updating its internal model.
 
-**Experiment 2: Perturbed feedback.** Researchers study learning in a 2D reaching task where the visual feedback is systematically rotated \citep{wolpert2011motor}. For example, when you try to move your hand right, the feedback shows it moving at a rotated angle.
+**Experiment 2: Perturbed feedback.** Researchers study learning in a 2D reaching task where the visual feedback is systematically rotated. For example, when you try to move your hand right, the feedback shows it moving at a 30-degree angle.
 
-Initially, people make large errors. But within tens of trials, they adapt. Their reaching becomes accurate again.
+Initially, people make large errors. But within 30--40 trials, they adapt. Their reaching becomes accurate again.
 
 Critically, when the perturbation is removed, performance is initially poor (negative aftereffects), then recovers. This shows that the brain has internally updated its model to compensate for the perturbation.
 
@@ -318,105 +291,85 @@ Why? The internal model has learned something about the general transformation--
 
 :::
 
-\cite{wolpert2011motor, shadmehr2010computational}
+[@wolpert2011motor, shadmehr2010computational]
 
-## What Makes Biological Motor Learning Distinctive
-
-
+## Comparison with Artificial Intelligence: What Can Machines Learn?
 
 
+The brain is an existence proof that biological neural networks can learn to control the golf swing. Can artificial neural networks do the same?
 
-
-The brain's approach to learning the golf swing differs fundamentally from engineered control systems. Understanding these differences illuminates why biological motor control achieves such remarkable performance under the severe constraints outlined above.
-
-### Distinctive Features of Biological Motor Learning
+### How Brain Learning Differs from AI Learning
 
 ::: {.callout-important}
-## Biological vs. Engineered Learning Mechanisms
+## Brain vs. AI: Learning Mechanisms
 
-\begin{tabular}{|l|l|l|}
-\hline
-Aspect & Brain & Engineered Control
-\hline
-Data efficiency & 10,000--100,000 trials & $10^6$--$10^8$ simulated episodes
-\hline
-Learning time & Hours to years & Seconds to hours (simulated)
-\hline
-Sensory input & Rich (proprioception, vision, touch, vestibular) & Impoverished (usually joint angles only)
-\hline
-Built-in structure & Yes (cerebellar circuit, motor cortex hierarchy) & Often not (generic architecture)
-\hline
-Error signals & Multiple (proprioceptive error, outcome error, dopamine) & Usually single reward signal
-\hline
-Learning rule & Local (synaptic level) & Global (backpropagation)
-\hline
-Online vs. offline & Both & Typically offline
-\hline
-Interpretability & Some (we understand cerebellar circuit) & Poor (black box)
-\hline
-\end{tabular}
+| Aspect | Brain | AI (Reinforcement Learning) 
+Data efficiency | 10,000--100,000 trials | $10^6$--$10^8$ simulated episodes 
+Learning time | Hours to years | Seconds to hours (simulated) 
+Sensory input | Rich (proprioception, vision, touch, vestibular) | Impoverished (usually joint angles only) 
+Built-in structure | Yes (cerebellar circuit, motor cortex hierarchy) | Often not (generic architecture) 
+Error signals | Multiple (proprioceptive error, outcome error, dopamine) | Usually single reward signal 
+Learning rule | Local (synaptic level) | Global (backpropagation) 
+Online vs. offline | Both | Typically offline 
+Interpretability | Some (we understand cerebellar circuit) | Poor (black box) |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 
 :::
 
-The brain is *sample-efficient*. It learns from roughly 10,000 repetitions. Engineered learning algorithms often require $10^6$ to $10^8$ simulated episodes. Why?
+The brain is *sample-efficient*. It learns from roughly 10,000 repetitions. Reinforcement learning algorithms often need $10^6$ to $10^8$ simulated episodes. Why?
 
 Several factors:
 
 - **Richer feedback:** The brain gets proprioceptive feedback at every moment (prediction errors on the trajectory), not just a final reward. This means more learning signals per trial.
 
-- **Built-in structure:** The brain's neural circuits are not random. The cerebellum has a stereotyped architecture well suited to learning dynamics. This prior structure accelerates learning.
+- **Built-in structure:** The brain's neural circuits are not random. The cerebellum has a stereotyped architecture that's good for learning dynamics. This prior structure accelerates learning.
 
-- **Transfer learning:** The brain leverages prior knowledge from other movements. A tennis player learning golf already has some internal models for rotational motion.
+- **Transfer learning:** The brain leverages prior knowledge from other movements. A tennis player learning golf already has some internal models for rotational motion. An AI starting from random weights has no prior knowledge.
 
 - **Hierarchical control:** The brain decomposes the problem. High-level planning, mid-level trajectory generation, low-level muscle control. This decomposition makes learning at each level easier.
 
-### Strengths of Biological Motor Learning
+### What the Brain Does Better
 
 ::: {.callout-important}
-## Dimensions Where Biological Learning Excels
+## Dimensions Where the Brain Excels
 
-- **Transfer learning:** Humans transfer skills across very different contexts (tennis to golf, squash to badminton).
+- **Transfer learning:** Humans transfer skills across very different contexts (tennis to golf, squash to badminton). AI systems are often brittle and task-specific.
 
-- **Robustness:** Humans handle perturbations gracefully. If the wind blows during the swing, the golfer adjusts. If fatigued, the golfer adapts.
+- **Robustness:** Humans handle perturbations gracefully. If the wind blows during your swing, you adjust. If you're tired, you adapt. AI systems often fail on out-of-distribution inputs.
 
-- **Compositionality:** Humans combine learned skills in novel ways. A golfer who has played tennis and baseball might discover a unique swing combining elements of both.
+- **Compositionality:** Humans combine learned skills in novel ways. A golfer who's played tennis and baseball might discover a unique swing combining elements of both. AI systems rarely compose skills.
 
-- **One-shot learning:** Humans can sometimes learn from a single demonstration.
+- **One-shot learning:** Humans can sometimes learn from a single demonstration ("Do it this way"). Deep RL typically needs thousands of examples.
 
-- **Physical understanding:** Humans develop intuitive physics through play and exploration. A heavier club naturally prompts a slower swing.
+- **Physical understanding:** Humans develop intuitive physics through play and exploration. "That club is heavier, so I need to swing slower." AI systems don't naturally develop this understanding.
 
 :::
 
-### Constraints of Biological Motor Learning
+### What AI Does Better
 
 ::: {.callout-important}
-## Dimensions Where Biological Learning is Constrained
+## Dimensions Where AI Excels
 
-- **Consistency:** Biological motor control is subject to noise and variability. The brain sometimes produces the yips.
+- **Consistency:** A trained neural network produces the same output for the same input, every time. The brain sometimes gets the yips.
 
-- **Speed of deliberation:** The brain processes at roughly 10--40 Hz for conscious motor planning, limiting the rate of explicit search.
+- **Speed:** Modern AI can evaluate millions of candidates per second. The brain processes at 10--40 Hz.
 
-- **Global optimization:** The brain typically settles into local optima that are good enough rather than performing exhaustive search.
+- **Global optimization:** AI can find globally optimal solutions using large-scale search. The brain may find local optima. (Though in practice, local optima are often good enough.)
 
-- **Scalability of practice:** The brain's learning is limited by the physical time humans can spend practicing.
+- **Scalability:** AI can be trained on massive datasets. The brain's learning is limited by the time humans can spend practicing.
 
-- **Precision:** Biological motor commands have irreducible noise and delays.
+- **Precise control:** AI can command exact forces with millisecond precision. The brain has noise and delays.
 
 :::
 
-\cite{lake2017building}
+[@lake2017building, hassibi2017intelligence]
 
-## Principles of Biological Motor Intelligence
-
-
+## What Artificial Intelligence Could Learn from the Brain
 
 
-
-The brain's approach to motor control embodies several principles that illuminate how complex movement is organized.
+If the brain is so impressive at learning motor control, what could AI learn from it?
 
 ### Hierarchical Control
-
-
 
 
 The brain doesn't try to solve one massive optimization problem. Instead, it decomposes:
@@ -424,46 +377,44 @@ The brain doesn't try to solve one massive optimization problem. Instead, it dec
 ::: {.callout-important}
 ## Hierarchical Decomposition in the Brain
 
-- **Strategic level** (prefrontal cortex): Choose goal. ``I want to hit my target 150 yards away with a smooth swing.''
+- **Strategic level** (prefrontal cortex): Choose goal. "I want to hit my target 150 yards away with a smooth swing."
 
-- **Tactical level** (premotor cortex): Plan trajectory. ``I need the club to reach maximum speed at impact, with face angle matching target line.''
+- **Tactical level** (premotor cortex): Plan trajectory. "I need the club to reach maximum speed at impact, with face angle matching target line."
 
-- **Execution level** (motor cortex + cerebellum + spinal cord): Generate commands. ``Fire these muscles in this sequence.''
+- **Execution level** (motor cortex + cerebellum + spinal cord): Generate commands. "Fire these muscles in this sequence."
 
 This hierarchy reduces the problem at each level. The strategic level doesn't think about muscles; the execution level doesn't think about goals.
 
-This hierarchical decomposition is a general principle of complex control systems, also formalized in robotics through layered architectures and in control theory through cascaded controllers.
+Modern AI research has begun exploring similar hierarchies. The *options framework* in reinforcement learning formalizes this: high-level actions (options) are themselves learned policies for lower-level control.
 
 :::
 
-\cite{barto2003recent}
+[@barto2003recent, sutton2011temporal]
 
-### Internal Forward Models
-
-
+### Internal Models and Model-Based RL
 
 
+The brain builds an explicit forward model of the world. Modern AI has been dominated by *model-free* RL (like Q-learning), which learns value functions without learning a model.
 
-The brain builds explicit forward models of the body and the world. When the cerebellum issues a motor command, it simultaneously predicts the sensory consequences of that command. This predictive capability is central to how biological motor control achieves sample efficiency: the brain can evaluate candidate actions using an internal simulation before committing to execute them.
+But there's growing recognition that model-based RL is more sample-efficient. If an agent has a forward model, it can imagine many trajectories without actually executing them.
 
 ::: {.callout-tip}
-## The Forward Model in the Golf Swing
+## Model-Based vs. Model-Free RL
 
-When the golfer initiates the downswing, the cerebellum has already generated a prediction of what the proprioceptive trajectory should look like: the expected sequence of joint angles, velocities, and muscle tensions. As the swing unfolds, the actual sensory signals are compared against the predicted signals. Mismatches are flagged as prediction errors and used to refine the internal model for future swings.
+**Model-free approach:** The robot tries a motor command. It gets a reward. It updates its value function. It tries another command. After a million trials, it learns which commands are good.
 
-This mechanism allows the brain to learn from every repetition, not just from trials that produce good outcomes. Each swing yields a stream of prediction errors at every time point, providing vastly more information per trial than a single outcome-based reward signal.
+**Model-based approach:** The robot learns a forward model: "If I move in this direction with this force, I'll end up here." Now it can *imagine* many trajectories using the model, without physically executing them. It can plan offline and execute online.
+
+The brain uses model-based approach. Modern AI is moving toward it.
 
 :::
 
-\cite{wolpert2011motor, shadmehr2010computational}
+[@deisenroth2013tutorial, dreamer2020scalable]
 
 ### Embodiment and Physics Exploitation
 
 
-
-
-
-A striking insight from motor control research is that the nervous system doesn't try to control every DOF. Instead, it exploits the body's morphology and the environment's physics.
+A profound insight from the brain is that it doesn't try to control every DOF. Instead, it exploits the body's morphology and the environment's physics.
 
 ::: {.callout-important}
 ## Embodied Control: Using Physics as Actuator
@@ -480,34 +431,33 @@ More generally, the brain exploits:
 
 :::
 
-This principle---exploiting passive dynamics and using active control only for refinement---connects directly to the drift-control decomposition developed throughout this book. The brain is, in essence, a controller that has learned to ride the drift field.
+Most roboticists try to control everything actively. A better approach: design the robot to exploit passive dynamics, and use active control only for the fine adjustments.
 
-\cite{ijspeert2013biorobotics, ghazi2009central}
+[@ijspeert2013biorobotics, ghazi2009central]
 
 ### Prediction-Driven Learning
 
 
+The brain learns from *prediction errors*. At every moment during the swing, the brain predicts what proprioceptive signals it expects, compares to actual signals, and learns from the mismatch.
 
+This is *self-supervised learning*: the agent generates its own learning signal by predicting its own sensory feedback.
 
-The brain learns from *prediction errors*. At every moment during the swing, the brain predicts what proprioceptive signals it expects, compares to actual signals, and learns from the mismatch. The agent generates its own learning signal by predicting its own sensory feedback---no external teacher is required.
+Modern AI has begun exploring self-supervised learning. Instead of learning from hand-labeled data (expensive) or reward signals (sparse), agents learn by predicting future observations.
 
 ::: {.callout-tip}
-## The Novice Golfer's First Practice Session
+## Self-Supervised Learning in AI
 
-Consider a novice picking up a golf club for the first time. On the initial swing, the cerebellum has no reliable forward model for this specific body-club system. It generates a motor command based on prior experience with similar rotational movements (a tennis swing, perhaps, or a baseball bat). The predicted proprioceptive trajectory diverges substantially from the actual trajectory: the club is heavier than expected, the grip point is farther from the body, the moment of inertia is unfamiliar.
+**Traditional approach:** Train a robot arm on 1000 manually labeled examples of "reaching to target."
 
-Every mismatch between predicted and actual proprioception is a prediction error. These errors are routed to the cerebellum, where they drive synaptic changes in the circuits that generated the original command. On the next swing, the motor command is subtly adjusted to reduce the predicted error. After hundreds of repetitions, the prediction errors shrink, and the forward model has captured the dynamics of this particular club in this particular body [@wolpert2011motor].
+**Self-supervised approach:** Let the robot arm move randomly for an hour. For each action, predict the resulting arm configuration. Learn a forward model by predicting its own sensory consequences. Now the robot can use this forward model for planning without any labeled data.
 
-No external reward is needed. The novice does not have to hit a good shot to learn---the mere fact that the actual sensory feedback differs from the predicted feedback is enough.
+This is closer to how the brain learns. A baby doesn't have labeled data. Instead, it acts, observes consequences, and builds a forward model of its body.
 
 :::
 
-\cite{wolpert2011motor}
+[@pathak2016curiosity, dreamer2020scalable]
 
 ## The Golf Swing as a Window into Intelligence
-
-
-
 
 
 The golf swing is a perfect test case for understanding intelligence. Let's see why.
@@ -550,7 +500,7 @@ Several research groups have used golf to study motor control. Examples:
 
 :::
 
-\cite{vickers2007perception, schoellhorn2015learning}
+[@vickers2007perception, schoellhorn2015learning]
 
 ### Open Questions in Motor Control That Golf Helps Address
 
@@ -578,15 +528,9 @@ These are deep questions in neuroscience and motor control. Each has implication
 ## Why the Brain Sometimes Fails: The Remarkable Failures
 
 
-
-
-
 The brain solves the golf swing problem remarkably well, most of the time. But sometimes it fails spectacularly. These failures are informative.
 
 ### The Yips: A Corrupted Motor Program
-
-
-
 
 
 The yips are a condition where a golfer loses the ability to perform a previously automatic task. Typically, it strikes short putting (4-footers and closer) but can affect other aspects of the swing.
@@ -617,14 +561,11 @@ What causes the yips?
 
 The yips teach us that motor control is fragile. Once you've learned a movement, you can't easily unlearn it or consciously control it. The more automatic the movement, the harder it is to consciously correct.
 
-This has a significant implication: overanalyzing the swing is counterproductive. The more one thinks about mechanics, the more the automatic system is disrupted. Paradoxically, the most effective path to improvement is often to stop thinking and let the trained motor program execute.
+This has a profound implication: overanalyzing your swing is dangerous. The more you think about mechanics, the more you disrupt the automatic system. Paradoxically, the best way to improve is often to stop thinking and just feel.
 
-\cite{beilock2010choke, adler2011focus}
+[@beilock2010choke, adler2011focus]
 
 ### Choking Under Pressure
-
-
-
 
 
 Another interesting failure mode is choking---a sudden, temporary decrement in performance under high pressure.
@@ -640,14 +581,14 @@ What happened? Under pressure, something changed in how your brain controlled th
 
 :::
 
-Choking is well-studied in psychology. The leading theory: *conscious processing hypothesis* \cite{beilock2010choke}.
+Choking is well-studied in psychology. The leading theory: *conscious processing hypothesis* [@beilock2010choke].
 
 ::: {.callout-important}
 ## Why We Choke Under Pressure
 
 Normally, skilled movements are automatic. The golf swing unfolds without conscious attention. The golfer thinks about the target, not the mechanics.
 
-Under pressure, the golfer becomes anxious. Anxiety triggers conscious, explicit attention. Instead of automatically swinging, the golfer starts thinking about mechanics: ``Keep your head still. Smooth tempo. Follow through.''
+Under pressure, the golfer becomes anxious. Anxiety triggers conscious, explicit attention. Instead of automatically swinging, the golfer starts thinking about mechanics: "Keep your head still. Smooth tempo. Follow through."
 
 But explicit, conscious control is slow and imprecise. The autonomous system, which is fast and precise, is disrupted by the explicit system trying to micromanage.
 
@@ -668,20 +609,17 @@ How do experts resist choking? Several strategies:
 
 - **Stress inoculation:** Practice under pressure conditions. High-level golfers practice in tournaments, with gallery watching, with real stakes. This trains the nervous system to perform under stress.
 
-- **Memory of success:** Recalling previous success under pressure. ``I've made this putt in high-pressure situations before. I can do it.'' This activates the learned automatic program.
+- **Memory of success:** Recalling previous success under pressure. "I've made this putt in high-pressure situations before. I can do it." This activates the learned automatic program.
 
-- **Reappraisal:** Reframing pressure as excitement. ``My heart is pounding because I'm excited and ready,'' not ``because I'm nervous and afraid.'' This changes how the amygdala modulates motor control.
+- **Reappraisal:** Reframing pressure as excitement. "My heart is pounding because I'm excited and ready," not "because I'm nervous and afraid." This changes how the amygdala modulates motor control.
 
 :::
 
 These observations have led to coaching approaches that emphasize routine, external focus, and stress management.
 
-\cite{beilock2010choke, baumeister1984choking}
+[@beilock2010choke, baumeister1984choking]
 
 ## The Humbling Conclusion
-
-
-
 
 
 Let's return to the central observation. Every time you swing a golf club, your brain accomplishes the following in 300 milliseconds:
@@ -703,13 +641,13 @@ Let's return to the central observation. Every time you swing a golf club, your 
 
 - **Exploits physics: uses the drift field (gravity, centrifugal effects) to do most of the work, rather than fighting physics.**
 
-- **Uses minimal power: accomplishes all of this with ~20 watts of energy.**
+- **Uses minimal power: accomplishes all of this with  20 watts of energy.**
 
 - **Does this automatically, without conscious attention, often while thinking about something completely different.**
 
 :::
 
-No robot can do this. No engineered control system has come close. We do not yet know how to build one that could.
+As of this writing, no robot matches this combination of dimensionality, adaptability, and energy efficiency. No AI system has demonstrated comparable performance in embodied dexterity tasks of this complexity, though the field is advancing rapidly.
 
 And yet, the brain shanks.
 
@@ -721,7 +659,7 @@ The lesson: the brain is not a universal, robust controller. It's a specialized,
 
 Understanding this---that power and fragility are two sides of the same coin---is perhaps the most important insight motor control science offers.
 
-\cite{nicholson2005human}
+[@nicholson2005human]
 
 ::: {.callout-important}
 ## Key Takeaways
@@ -730,9 +668,9 @@ Understanding this---that power and fragility are two sides of the same coin---i
 
 - The brain learns three things through practice: the drift field (physics), the control effectiveness of muscles, and the optimal motor policy for achieving goals.
 
-- The brain is sample-efficient, building accurate models from 10,000--100,000 repetitions, while engineered learning methods often require millions. The brain achieves this through built-in structure, hierarchical control, and rich sensory feedback.
+- The brain is sample-efficient, building accurate models from 10,000--100,000 repetitions, while AI methods often require millions. The brain achieves this through built-in structure, hierarchical control, and rich sensory feedback.
 
-- Biological motor control embodies several general principles of intelligent control: hierarchical decomposition, model-based planning, embodied exploitation of physics, and prediction-driven learning.
+- Artificial intelligence could benefit from the brain's approaches: hierarchical control, model-based planning, embodied exploitation of physics, and prediction-driven learning.
 
 - The golf swing is an ideal model system for studying intelligence because it's complex, measurable, learnable, and has interesting failure modes.
 
@@ -756,9 +694,9 @@ Understanding this---that power and fragility are two sides of the same coin---i
 
 - How does the brain demonstrate that it learns physics? What experiments provide evidence?
 
-- Compare model-based and model-free learning. Which approach does the brain use, and what is the evidence?
+- Compare model-based and model-free reinforcement learning. Which approach is the brain using? Which approach is modern AI typically using?
 
-- Describe three principles of biological motor control that illuminate how complex movement is organized. Explain each with reference to the golf swing.
+- What could AI systems learn from the brain's approach to motor control? List three specific strategies.
 
 - Explain the yips using the setpoint hypothesis. Why might a corrupted reference trajectory lead to jerky, unstable movements?
 
@@ -772,6 +710,3 @@ Understanding this---that power and fragility are two sides of the same coin---i
 
 - Explain the paradox: your brain solves an extraordinarily complex control problem while also being vulnerable to failure under pressure. Why are these two things related?
 
-
-
-\newpage

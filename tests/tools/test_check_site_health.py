@@ -8,6 +8,7 @@ import pytest
 
 from src.tools.check_site_health import (
     BrokenLinkRecord,
+    SiteHealthLinkCandidate,
     _collect_all_files,
     _collect_html_files,
     _initial_orphaned_files,
@@ -71,6 +72,49 @@ class TestIsInsideQuartoAlternateFormats:
         soup = BeautifulSoup(html, "html.parser")
         anchor = soup.find("a")
         assert is_inside_quarto_alternate_formats(anchor) is True
+
+
+class TestSiteHealthLinkCandidate:
+    """Tests for SiteHealthLinkCandidate."""
+
+    def test_extracts_internal_link_details(self, tmp_path: Path) -> None:
+        """Should capture href, target, and display text through the candidate facade."""
+        from bs4 import BeautifulSoup
+
+        docs = tmp_path / "docs"
+        docs.mkdir()
+        html = '<a href="../other.html">Next Article</a>'
+        soup = BeautifulSoup(html, "html.parser")
+        anchor = soup.find("a")
+        assert anchor is not None
+        candidate = SiteHealthLinkCandidate.from_anchor(
+            anchor=anchor,
+            source_file=Path("articles/page.html"),
+            docs_dir=docs,
+            ignore_quarto_alternate_formats=False,
+        )
+        assert candidate is not None
+        assert candidate.href == "../other.html"
+        assert candidate.target == Path("other.html")
+        assert candidate.text == "Next Article"
+
+    def test_skips_quarto_alternate_format_links(self, tmp_path: Path) -> None:
+        """Should ignore Quarto alternate-format links when configured to do so."""
+        from bs4 import BeautifulSoup
+
+        docs = tmp_path / "docs"
+        docs.mkdir()
+        html = '<div class="quarto-alternate-formats"><a href="page.pdf">PDF</a></div>'
+        soup = BeautifulSoup(html, "html.parser")
+        anchor = soup.find("a")
+        assert anchor is not None
+        candidate = SiteHealthLinkCandidate.from_anchor(
+            anchor=anchor,
+            source_file=Path("index.html"),
+            docs_dir=docs,
+            ignore_quarto_alternate_formats=True,
+        )
+        assert candidate is None
 
 
 class TestCollectHtmlFiles:

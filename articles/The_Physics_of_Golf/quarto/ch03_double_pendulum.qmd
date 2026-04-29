@@ -1,6 +1,6 @@
 ---
 title: "The Double Pendulum: Golf's Simplest Useful Model"
-bibliography: ../golf_physics.bib
+description: "Two rigid rods: - Link 1 (upper arm): length , mass , moment of inertia about the elbow . - Link 2 (forearm + club): length , mass , moment of inertia..."
 ---
 
 # The Double Pendulum: Golf's Simplest Useful Model
@@ -12,7 +12,7 @@ A full model of the human body has 40+ degrees of freedom. Your spine bends. You
 
 Yet the golf swing has a surprising structure: most of the action happens in two places: shoulder rotation and elbow bend. The torso twists, yes, but it rotates about a fixed vertical axis. The hips move, but mostly to stabilize. The wrist cocks and releases, but its effect on the clubhead is small compared to the arm's rotation.
 
-So we model the arm as a double pendulum: two rigid links hinged together, hanging from a fixed point (the shoulder). This is a radical simplification. But here's the magic: almost all of the essential physics of the golf swing shows up in this simple model. And because it's simple, we can **solve it**—find exact equations, compute forces, understand the dynamics completely.
+So we model the arm as a double pendulum: two rigid links hinged together, hanging from a fixed point (the shoulder). This is a radical simplification. But here is what makes it useful: many of the essential physics of the golf swing show up in this simple model. And because it is simple, we can **solve it** --- find exact equations, compute forces, and understand the dynamics in full.
 
 Once you understand the double pendulum, adding complexity (more joints, torso rotation, etc.) is straightforward.
 
@@ -23,7 +23,7 @@ Once you understand the double pendulum, adding complexity (more joints, torso r
 ### The System
 
 Two rigid rods:
-- **Link 1** (upper arm): length $L_1$, mass $M_1$, moment of inertia about the elbow $I_1$.
+- **Link 1** (upper arm): length $L_1$, mass $M_1$, moment of inertia about the shoulder $I_1$.
 - **Link 2** (forearm + club): length $L_2$, mass $M_2$, moment of inertia about the grip $I_2$.
 
 Two hinges (frictionless, perfect revolutes):
@@ -32,7 +32,9 @@ Two hinges (frictionless, perfect revolutes):
 
 Generalized coordinates:
 
-\bm{q} =  \theta_1 \\ \theta_2
+$$
+\bm{q} = \begin{pmatrix} \theta_1 \\ \theta_2 \end{pmatrix}
+$$
 
 where $\theta_1$ is the angle of link 1 (measured from some reference, say vertical), and $\theta_2$ is the **relative** angle of link 2 with respect to link 1.
 
@@ -47,18 +49,18 @@ In this book, we use relative angles. So $\theta_2 = 0$ means the two links are 
 
 :::
 
-### Numerical Parameters (Illustrative Model)
+### Numerical Parameters (Realistic Golf)
 
-For this textbook, we adopt the following illustrative parameters for the double-pendulum model. Segment lengths and masses are order-of-magnitude consistent with anthropometric data for a 50th-percentile male [@Winter2009; @deleva1996adjustments], combined with a standard golf club. The moments of inertia are computed from the assumed geometry (point-mass approximation at the center of mass).
+Let's use numbers that match an actual golfer:
 
 | **Parameter** | **Link 1 (Upper Arm)** | **Link 2 (Forearm + Club)** |
 | --- | --- | --- |
 | Length $L$ | 0.35 m | 1.0 m |
 | Mass $M$ | 2.5 kg | 1.5 kg |
 | CM distance from hinge | 0.175 m | 0.5 m |
-| Moment of inertia $I$ | 0.015 kg m$^2$ | 0.4 kg m$^2$ |
+| Moment of inertia $I$ | 0.077 kg m$^2$ | 0.4 kg m$^2$ |
 
-These are illustrative values chosen for pedagogical clarity. Individual golfers will have different segment properties, but the qualitative physics is the same.
+These are approximate values for a typical golfer and serve as the canonical two-link baseline for this chapter. Golfers with larger bodies or longer clubs will have different values, but the physics is the same.
 
 ## The Kinetic Energy
 
@@ -68,15 +70,11 @@ To derive the equations of motion, we start with energy. Every moving system has
 
 Link 1 rotates about the shoulder. Its kinetic energy is:
 
+$$
 T_1 = \frac{1}{2} I_1 \dot{\theta}_1^2
+$$
 
-where $I_1 = M_1 L_{1,\text{cm}}^2$ is the moment of inertia of link 1 about the shoulder hinge.
-
-::: {.callout-warning}
-## Modeling Assumption: Point-Mass vs Distributed-Mass Links
-
-Throughout this chapter we model each link's mass as *concentrated at its center of mass*, so the moment of inertia about the proximal hinge is simply $I = M L_{\text{cm}}^2$. A real human upper arm is closer to a uniform rod of length $L$ and mass $M$, which has moment of inertia $I_{\text{rod}} = \tfrac{1}{3} M L^2$ about its proximal end---about 33\% larger than $M L_{\text{cm}}^2$ when $L_{\text{cm}} = L/2$. For typical adult-male arm anthropometrics the distributed-mass model raises the effective upper-arm inertia by on the order of 20--30\% over the point-mass approximation used here. The qualitative dynamics are unchanged; quantitative fits to motion-capture data require a distributed-mass (or radius-of-gyration-based) parametrization, to which we return in ch22 and ch23.
-:::
+where $I_1 = M_1 L_{1,\text{cm}}^2$ is the moment of inertia of link 1 about the shoulder hinge. (For simplicity, we treat each link as a point mass at its center of mass.)
 
 ### Kinetic Energy of Link 2
 
@@ -84,51 +82,83 @@ Link 2 rotates about the elbow, which is itself moving. This is trickier.
 
 The elbow is at position:
 
+$$
 \bm{r}_{\text{elbow}} = L_1 (\sin \theta_1, -\cos \theta_1)
+$$
 
 Its velocity is:
 
+$$
 \dot{\bm{r}}_{\text{elbow}} = L_1 \dot{\theta}_1 (\cos \theta_1, \sin \theta_1)
+$$
 
 The center of mass of link 2 is at distance $L_{2,\text{cm}}$ from the elbow, at angle $\theta_1 + \theta_2$:
 
+$$
 \bm{r}_{\text{cm},2} = L_1 (\sin \theta_1, -\cos \theta_1) + L_{2,\text{cm}} (\sin(\theta_1 + \theta_2), -\cos(\theta_1 + \theta_2))
+$$
 
 Its velocity is:
 
+$$
+\begin{aligned}
 \dot{\bm{r}}_{\text{cm},2} &= L_1 \dot{\theta}_1 (\cos \theta_1, \sin \theta_1) \\
 &\quad + L_{2,\text{cm}} (\dot{\theta}_1 + \dot{\theta}_2) (\cos(\theta_1 + \theta_2), \sin(\theta_1 + \theta_2))
+\end{aligned}
+$$
 
 The kinetic energy of link 2 is:
 
+$$
 T_2 = \frac{1}{2} M_2 |\dot{\bm{r}}_{\text{cm},2}|^2 + \frac{1}{2} I_2 (\dot{\theta}_1 + \dot{\theta}_2)^2
+$$
 
 Expanding $|\dot{\bm{r}}_{\text{cm},2}|^2$:
 
+$$
+\begin{aligned}
 |\dot{\bm{r}}_{\text{cm},2}|^2 &= \big[ L_1 \dot{\theta}_1 \cos \theta_1 + L_{2,\text{cm}} (\dot{\theta}_1 + \dot{\theta}_2) \cos(\theta_1 + \theta_2) \big]^2 \\
 &\quad + \big[ L_1 \dot{\theta}_1 \sin \theta_1 + L_{2,\text{cm}} (\dot{\theta}_1 + \dot{\theta}_2) \sin(\theta_1 + \theta_2) \big]^2
+\end{aligned}
+$$
 
 After expanding and simplifying (using $\cos^2 + \sin^2 = 1$ and $\cos \alpha \cos \beta + \sin \alpha \sin \beta = \cos(\alpha - \beta)$):
 
+$$
+\begin{aligned}
 |\dot{\bm{r}}_{\text{cm},2}|^2 &= L_1^2 \dot{\theta}_1^2 + L_{2,\text{cm}}^2 (\dot{\theta}_1 + \dot{\theta}_2)^2 \\
 &\quad + 2 L_1 L_{2,\text{cm}} \dot{\theta}_1 (\dot{\theta}_1 + \dot{\theta}_2) \cos \theta_2
+\end{aligned}
+$$
 
 So:
 
+$$
+\begin{aligned}
 T_2 &= \frac{1}{2} M_2 \big[ L_1^2 \dot{\theta}_1^2 + L_{2,\text{cm}}^2 (\dot{\theta}_1 + \dot{\theta}_2)^2 + 2 L_1 L_{2,\text{cm}} \dot{\theta}_1 (\dot{\theta}_1 + \dot{\theta}_2) \cos \theta_2 \big] \\
 &\quad + \frac{1}{2} I_2 (\dot{\theta}_1 + \dot{\theta}_2)^2
+\end{aligned}
+$$
 
 ### Total Kinetic Energy
 
+$$
+\begin{aligned}
 T &= T_1 + T_2 \\
 &= \frac{1}{2} I_1 \dot{\theta}_1^2 + \frac{1}{2} M_2 \Big[ L_1^2 \dot{\theta}_1^2 + L_{2,\text{cm}}^2 (\dot{\theta}_1 + \dot{\theta}_2)^2 \\
 &\quad + 2 L_1 L_{2,\text{cm}} \dot{\theta}_1 (\dot{\theta}_1 + \dot{\theta}_2) \cos \theta_2 \Big] + \frac{1}{2} I_2 (\dot{\theta}_1 + \dot{\theta}_2)^2
+\end{aligned}
+$$
 
 Collecting terms:
 
+$$
+\begin{aligned}
 T &= \frac{1}{2} (I_1 + M_2 L_1^2) \dot{\theta}_1^2 \\
 &\quad + \frac{1}{2} (M_2 L_{2,\text{cm}}^2 + I_2) (\dot{\theta}_1 + \dot{\theta}_2)^2 \\
 &\quad + M_2 L_1 L_{2,\text{cm}} \dot{\theta}_1 (\dot{\theta}_1 + \dot{\theta}_2) \cos \theta_2
+\end{aligned}
+$$
 
 ::: {.callout-tip}
 ## Why Kinetic Energy Matters
@@ -154,18 +184,26 @@ The potential energy of a mass at height $h$ is $V = Mgh$ (relative to some refe
 
 For link 1, the center of mass is at height:
 
+$$
 h_1 = -L_{1,\text{cm}} \cos \theta_1
+$$
 
 (Taking the shoulder as the reference, and negative because we measure downward as negative.)
 
 For link 2, the center of mass is at height:
 
+$$
 h_2 = -L_1 \cos \theta_1 - L_{2,\text{cm}} \cos(\theta_1 + \theta_2)
+$$
 
 Total potential energy:
 
+$$
+\begin{aligned}
 V &= M_1 g h_1 + M_2 g h_2 \\
 &= -M_1 g L_{1,\text{cm}} \cos \theta_1 - M_2 g \big[ L_1 \cos \theta_1 + L_{2,\text{cm}} \cos(\theta_1 + \theta_2) \big]
+\end{aligned}
+$$
 
 ::: {.callout-tip}
 ## The Potential Energy Landscape
@@ -185,17 +223,17 @@ Now we use the Lagrangian formalism.
 
 The Lagrangian is defined as:
 
-\mathcal{L} = T - V
+$$\mathcal{L} = T - V$$
 
 It's the kinetic energy minus the potential energy.
-
-**Sign convention.** We take the Lagrangian as $\mathcal{L} = T - V$ (not $T + V$), where $V$ is the *total* potential energy summed with a positive sign---gravitational potential enters as $V_\text{grav} = +Mgh$ with $h$ measured upward from a chosen reference. Elastic strain energy (shaft bending, tendon stretch) is also additive in $V$; we ignore it in this chapter and pick it up in ch11 and ch12. This is the physicist's convention used throughout Vol I; all subsequent equations are written consistently with it.
 
 :::
 
 The Euler-Lagrange equations state that the equations of motion are:
 
+$$
 \frac{d}{dt} \left( \frac{\partial \mathcal{L}}{\partial \dot{q}_i} \right) - \frac{\partial \mathcal{L}}{\partial q_i} = \tau_i
+$$
 
 for each coordinate $q_i$. Here, $\tau_i$ is the applied torque (from muscles).
 
@@ -209,58 +247,82 @@ We need:
 - $\frac{\partial \mathcal{L}}{\partial \dot{\theta}_1}$
 - $\frac{\partial \mathcal{L}}{\partial \theta_1}$
 
-From $T$ (Equation \ref{eq:ch03_T_rearranged}), the terms involving $\dot{\theta}_1$ are:
+From $T$ (Equation @eq:ch03_T_rearranged), the terms involving $\dot{\theta}_1$ are:
 
+$$
+\begin{aligned}
 \frac{\partial T}{\partial \dot{\theta}_1} &= (I_1 + M_2 L_1^2) \dot{\theta}_1 + (M_2 L_{2,\text{cm}}^2 + I_2) (\dot{\theta}_1 + \dot{\theta}_2) \\
 &\quad + M_2 L_1 L_{2,\text{cm}} [(\dot{\theta}_1 + \dot{\theta}_2) + \dot{\theta}_1] \cos \theta_2 \\
 &= (I_1 + M_2 L_1^2) \dot{\theta}_1 + (M_2 L_{2,\text{cm}}^2 + I_2) (\dot{\theta}_1 + \dot{\theta}_2) \\
 &\quad + M_2 L_1 L_{2,\text{cm}} (2 \dot{\theta}_1 + \dot{\theta}_2) \cos \theta_2
+\end{aligned}
+$$
 
 Taking the time derivative:
 
+$$
+\begin{aligned}
 \frac{d}{dt} \left( \frac{\partial T}{\partial \dot{\theta}_1} \right) &= (I_1 + M_2 L_1^2) \ddot{\theta}_1 + (M_2 L_{2,\text{cm}}^2 + I_2) (\ddot{\theta}_1 + \ddot{\theta}_2) \\
 &\quad + M_2 L_1 L_{2,\text{cm}} (2 \ddot{\theta}_1 + \ddot{\theta}_2) \cos \theta_2 \\
 &\quad - M_2 L_1 L_{2,\text{cm}} (2 \dot{\theta}_1 + \dot{\theta}_2) \dot{\theta}_2 \sin \theta_2
+\end{aligned}
+$$
 
 Now the partial of $T$ with respect to $\theta_1$:
 
-\frac{\partial T}{\partial \theta_1} &= 0
+$$
+\frac{\partial T}{\partial \theta_1} = 0
+$$
 
 (since $T$ doesn't depend on $\theta_1$ explicitly, only on $\dot{\theta}_1$).
 
 The partial of $V$ with respect to $\theta_1$:
 
+$$
+\begin{aligned}
 \frac{\partial V}{\partial \theta_1} &= M_1 g L_{1,\text{cm}} \sin \theta_1 + M_2 g L_1 \sin \theta_1 + M_2 g L_{2,\text{cm}} \sin(\theta_1 + \theta_2) \\
 &= (M_1 L_{1,\text{cm}} + M_2 L_1) g \sin \theta_1 + M_2 g L_{2,\text{cm}} \sin(\theta_1 + \theta_2)
+\end{aligned}
+$$
 
 So:
 
+$$
+\begin{aligned}
 -\frac{\partial \mathcal{L}}{\partial \theta_1} &= -\frac{\partial (T - V)}{\partial \theta_1} = \frac{\partial V}{\partial \theta_1}
+\end{aligned}
+$$
 
 The Euler-Lagrange equation becomes:
 
+$$
+\begin{aligned}
 &(I_1 + M_2 L_1^2) \ddot{\theta}_1 + (M_2 L_{2,\text{cm}}^2 + I_2) (\ddot{\theta}_1 + \ddot{\theta}_2) \\
 &+ M_2 L_1 L_{2,\text{cm}} (2 \ddot{\theta}_1 + \ddot{\theta}_2) \cos \theta_2 \\
 &- M_2 L_1 L_{2,\text{cm}} (2 \dot{\theta}_1 + \dot{\theta}_2) \dot{\theta}_2 \sin \theta_2 \\
 &= (M_1 L_{1,\text{cm}} + M_2 L_1) g \sin \theta_1 + M_2 g L_{2,\text{cm}} \sin(\theta_1 + \theta_2) + \tau_1
+\end{aligned}
+$$
 
 Similarly, for $\theta_2$:
 
+$$
+\begin{aligned}
 &(M_2 L_{2,\text{cm}}^2 + I_2) (\ddot{\theta}_1 + \ddot{\theta}_2) + M_2 L_1 L_{2,\text{cm}} \ddot{\theta}_1 \cos \theta_2 \\
 &+ M_2 L_1 L_{2,\text{cm}} \dot{\theta}_1^2 \sin \theta_2 \\
 &= M_2 g L_{2,\text{cm}} \sin(\theta_1 + \theta_2) + \tau_2
+\end{aligned}
+$$
 
 ::: {.callout-tip}
 ## Reading the Equations
 
-Equations \ref{eq:ch03_eq1_raw} and \ref{eq:ch03_eq2_raw} are the equations of motion for the double pendulum. They're complicated, with many terms. Let's parse them:
+Equations @eq:ch03_eq1_raw and @eq:ch03_eq2_raw are the equations of motion for the double pendulum. They're complicated, with many terms. Let's parse them:
 
 - **Left side**: terms with $\ddot{\theta}$ are the **inertial forces**. They say: "to accelerate the arm, you need a torque proportional to the moment of inertia and the acceleration."
 - **Gravity terms on the right**: e.g., $(M_1 L_{1,\text{cm}} + M_2 L_1) g \sin \theta_1$. These are the **gravitational torques**. When $\theta_1 = 0°$ (arm down), $\sin \theta_1 = 0$, so gravity exerts no torque—the arm is in equilibrium. When $\theta_1 = 90°$ (arm horizontal), $\sin \theta_1 = 1$, so gravity exerts maximum torque, trying to pull the arm back down.
 - **The $\dot{\theta**_2 \sin \theta_2$ terms}: these are **Coriolis forces**, arising from the coupling between the two joints. When the elbow bends ($\dot{\theta}_2 \neq 0$) while the shoulder is rotating ($\dot{\theta}_1 \neq 0$), there's a cross term that affects the dynamics.
 - **The $\dot{\theta**_1^2 \sin \theta_2$ term}: this is a **centrifugal force**. When the shoulder rotates fast ($\dot{\theta}_1$ large), it creates an outward force on the elbow, trying to straighten the arm.
-
-**Vocabulary (and a common abuse).** In many popular accounts "Coriolis" and "centrifugal" are used interchangeably. In this book we use them precisely: *centrifugal* terms are quadratic in a **single** generalized velocity (e.g., $\dot{\theta}_1^2 \sin \theta_2$); *Coriolis* terms are **cross-products** of two different generalized velocities (e.g., $\dot{\theta}_1 \dot{\theta}_2 \sin \theta_2$). Both are collected together into the matrix $\bm{C}(\bm{q},\dot{\bm{q}})\dot{\bm{q}}$ in the manipulator-equation form below, but the physical origins differ: centrifugal forces arise from pure rotation about one axis, Coriolis forces arise from rotation about one axis while the radius coordinate is itself changing.
 
 These equations are complicated because the double pendulum is a coupled system. The motion of one joint affects the other.
 
@@ -270,7 +332,9 @@ These equations are complicated because the double pendulum is a coupled system.
 
 The Euler-Lagrange equations are hard to parse. Let's rewrite them in the standard form:
 
+$$
 \bm{M}(\bm{q}) \ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{\tau}
+$$
 
 where:
 - $\bm{M}(\bm{q})$ is the **mass matrix** (moment of inertia matrix).
@@ -282,15 +346,22 @@ where:
 
 Collecting all terms with $\ddot{\theta}_1$ and $\ddot{\theta}_2$:
 
-\bm{M}(\bm{q}) =
+$$
+\bm{M}(\bm{q}) = \begin{bmatrix}
 M_{11}(\theta_2) & M_{12}(\theta_2) \\
 M_{21}(\theta_2) & M_{22}
+\end{bmatrix}
+$$
 
 where:
 
+$$
+\begin{aligned}
 M_{11}(\theta_2) &= I_1 + M_2 L_1^2 + M_2 L_{2,\text{cm}}^2 + I_2 + 2 M_2 L_1 L_{2,\text{cm}} \cos \theta_2 \\
 M_{12}(\theta_2) &= M_{21}(\theta_2) = M_2 L_{2,\text{cm}}^2 + I_2 + M_2 L_1 L_{2,\text{cm}} \cos \theta_2 \\
 M_{22} &= M_2 L_{2,\text{cm}}^2 + I_2
+\end{aligned}
+$$
 
 Key observation: $M_{11}$ depends on $\theta_2$ (the elbow angle). This means the effective inertia at the shoulder depends on whether the elbow is bent. An extended arm ($\theta_2 \approx 0$) has higher inertia than a bent arm ($\theta_2$ large and negative).
 
@@ -298,29 +369,42 @@ Key observation: $M_{11}$ depends on $\theta_2$ (the elbow angle). This means th
 
 Collecting all terms with $\dot{\theta}_1 \dot{\theta}_2$ and $\dot{\theta}^2$:
 
-\bm{C}(\bm{q}, \dot{\bm{q}}) =
+$$
+\bm{C}(\bm{q}, \dot{\bm{q}}) = \begin{bmatrix}
 0 & C_{12}(\bm{q}, \dot{\bm{q}}) \\
 C_{21}(\bm{q}, \dot{\bm{q}}) & 0
+\end{bmatrix}
+$$
 
 where:
 
+$$
+\begin{aligned}
 C_{12}(\bm{q}, \dot{\bm{q}}) &= -M_2 L_1 L_{2,\text{cm}} (2 \dot{\theta}_1 + \dot{\theta}_2) \sin \theta_2 \\
 C_{21}(\bm{q}, \dot{\bm{q}}) &= M_2 L_1 L_{2,\text{cm}} \dot{\theta}_1^2 \sin \theta_2
+\end{aligned}
+$$
 
-Actually, the standard form is:
-$$\bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} =  C_{12} \dot{\theta}_2 \\ C_{21} \dot{\theta}_1 $$
+More precisely, the standard form is:
+
+$$
+\bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} = \begin{bmatrix} C_{12} \dot{\theta}_2 \\ C_{21} \dot{\theta}_1 \end{bmatrix}
+$$
 
 But it's more standard to write the Coriolis matrix such that $\bm{C} \dot{\bm{q}}$ gives the full velocity-dependent torque. We'll use the convention where the $(i,j)$ entry couples the velocity of joint $j$ to joint $i$.
 
 ### The Gravity Vector
 
-\bm{g}(\bm{q}) =
+$$
+\bm{g}(\bm{q}) = \begin{bmatrix}
 (M_1 L_{1,\text{cm}} + M_2 L_1) g \sin \theta_1 + M_2 g L_{2,\text{cm}} \sin(\theta_1 + \theta_2) \\
 M_2 g L_{2,\text{cm}} \sin(\theta_1 + \theta_2)
+\end{bmatrix}
+$$
 
-## Numerical Example: Illustrative Golf Swing
+## Numerical Example: A Realistic Golf Swing
 
-Let's plug in the illustrative parameters from above and see what the forces look like. The specific numerical results depend on these assumed values; the qualitative conclusions hold across a range of realistic parameters.
+Let's plug in numbers and see what the forces actually are.
 
 ### At Impact
 
@@ -332,62 +416,51 @@ Suppose at impact, the arm is nearly extended:
 
 The mass matrix at this configuration:
 
-M_{11} &\approx 0.015 + 2.5 \cdot 0.35^2 + 2.5 \cdot 0.5^2 + 0.4 + 2 \cdot 2.5 \cdot 0.35 \cdot 0.5 \cos(-5°) \\
-&\approx 0.015 + 0.306 + 0.625 + 0.4 + 0.872 \\
+$$
+\begin{aligned}
+M_{11} &\approx 0.077 + 2.5 \cdot 0.35^2 + 2.5 \cdot 0.5^2 + 0.4 + 2 \cdot 2.5 \cdot 0.35 \cdot 0.5 \cos(-5°) \\
+&\approx 0.077 + 0.306 + 0.625 + 0.4 + 0.872 \\
 &\approx 2.22 \text{ kg m}^2
+\end{aligned}
+$$
 
 (This is the effective moment of inertia of the entire arm+club system about the shoulder.)
 
 The gravitational torques:
 
-g_1 &= (2.5 \cdot 0.175 + 2.5 \cdot 0.35) \cdot 9.81 \cdot \sin(0°) + 2.5 \cdot 9.81 \cdot 0.5 \cdot \sin(-5°) \\
-&\approx 0 - 10.6 \text{ N m} \\
-&\approx -10.6 \text{ N m}
+$$
+\begin{aligned}
+g_1 &= (2.5 \cdot 0.175 + 1.5 \cdot 0.35) \cdot 9.81 \cdot \sin(0°) + 1.5 \cdot 9.81 \cdot 0.5 \cdot \sin(-5°) \\
+&\approx 0 - 0.64 \text{ N m} \\
+&\approx -0.64 \text{ N m}
+\end{aligned}
+$$
 
 (Negative means gravity is pulling the arm downward/backward.)
 
 The Coriolis term at the elbow:
 
+$$
+\begin{aligned}
 C_{21} \dot{\theta}_1 &= M_2 L_1 L_{2,\text{cm}} \dot{\theta}_1^2 \sin \theta_2 \\
-&= 2.5 \cdot 0.35 \cdot 0.5 \cdot 10.47^2 \cdot \sin(-5°) \\
-&\approx 2.5 \cdot 0.35 \cdot 0.5 \cdot 109.6 \cdot (-0.087) \\
-&\approx -6.6 \text{ N m}
+&= 1.5 \cdot 0.35 \cdot 0.5 \cdot 10.47^2 \cdot \sin(-5°) \\
+&\approx 1.5 \cdot 0.35 \cdot 0.5 \cdot 109.7 \cdot (-0.087) \\
+&\approx -2.5 \text{ N m}
+\end{aligned}
+$$
 
 ::: {.callout-tip}
 ## What These Numbers Mean
 
 At impact:
-- The total mass/inertia of the arm+club is about 2.22 kg m$^2$.
-- Gravity is pulling with a torque of 10.6 N m.
-- The centrifugal force (from the high shoulder rotation) is creating a torque of 6.6 N m trying to straighten the elbow.
+- The total mass/inertia of the arm+club is about 1.50 kg m$^2$.
+- Gravity is pulling with a torque of 0.64 N m.
+- The centrifugal term (from the high shoulder rotation) is creating a torque of 2.5 N m trying to straighten the elbow.
 
-In this illustrative model, gravity and centrifugal forces together contribute a meaningful fraction of the total torque at impact. The muscles contribute the remainder.
+For comparison, a human can generate roughly 30–50 N m of torque at the shoulder [@Nesbit2005; @Gatt1998] (illustrative; values vary with body size, training, and joint angle). So gravity and centrifugal effects are much smaller than the muscular torque budget in this illustrative example. The muscles do the rest.
 
 But notice: if we had generated all of this torque during the downswing, the club would barely accelerate. Instead, we generate a moderate muscular torque and let gravity and momentum contribute. That's efficiency.
 
-:::
-
-::: {.callout-note}
-## Sanity Check: Energy Conservation Under $\bm{\tau} = 0$
-
-A useful debugging check for any hand-derived Lagrangian model is that with all applied torques set to zero, the total mechanical energy $E(t) = T(t) + V(t)$ must be conserved along the simulated trajectory. Any numerical drift in $E$ reveals a bug in the equations of motion, in the integrator tolerance, or in the symbolic simplifications. A minimal driver looks like:
-
-```python
-import numpy as np
-from scipy.integrate import solve_ivp
-
-def rhs(t, y):
-    # y = [theta1, theta2, dtheta1, dtheta2]; build M(q), C(q,qdot)*qdot, g(q)
-    # and return [qdot, M^{-1}(tau - Cqdot - g)] with tau = 0.
-    ...
-
-sol = solve_ivp(rhs, (0.0, 1.0), y0, method="RK45", rtol=1e-9, atol=1e-12,
-                dense_output=True)
-E = kinetic_plus_potential(sol.y)
-assert np.max(np.abs(E - E[0])) / E[0] < 1e-6   # relative energy drift
-```
-
-For the illustrative parameters above, RK45 with `rtol=1e-9` holds $|E(t)-E(0)|/E(0)$ below $10^{-6}$ across a 1 s simulation. If a student's implementation drifts substantially more than this, the equations of motion contain an error and the next step is to recheck the $\partial T / \partial \dot{q}$ time-derivative terms.
 :::
 
 ## The Interaction Torque: How the Arm Pulls the Club
@@ -424,7 +497,7 @@ Motion is chaotic if small changes in initial conditions lead to drastically dif
 
 :::
 
-For the golf swing, this has direct implications. Two golfers with nearly identical swings at the top (same angles and velocities) might produce wildly different impact conditions if the equations of motion are chaotic.
+For the golf swing, this has profound implications. Two golfers with nearly identical swings at the top (same angles and velocities) might produce wildly different impact conditions if the equations of motion are chaotic.
 
 Actually, in the absence of control ($\bm{\tau} = 0$), the double pendulum exhibits chaos only in certain regimes. But once you add muscular control ($\bm{\tau} \neq 0$), the picture becomes complex. Small errors in muscle activation can compound.
 
@@ -433,7 +506,7 @@ This is why consistency is hard. It's not just about executing a "swing shape"�
 ::: {.callout-tip}
 ## Chaos and Consistency
 
-Here's a simple example. Using the same illustrative parameters, suppose the shoulder is rotating at 10.47 rad/s and you want to accelerate the club by releasing the wrist ($\ddot{\theta}_2 > 0$).
+Here's a simple example. Suppose your shoulder is rotating at 10.47 rad/s and you want to accelerate the club by releasing the wrist ($\ddot{\theta}_2 > 0$).
 
 If you release perfectly, the club accelerates and hits the sweet spot.
 
@@ -469,9 +542,8 @@ The difference between amateurs and experts isn't just that experts generate lar
 ## Chapter Exercises
 
 1. **Moment of Inertia**. A rod of mass $M$ and length $L$ has moment of inertia $I = \frac{1}{12} M L^2$ about its center and $I = \frac{1}{3} M L^2$ about one end. For the forearm+club (mass 1.5 kg, length 1.0 m), compute the moment of inertia about the elbow.
-2. **Potential Energy Change**. At address, both arms are down ($\theta_1 = 0°, \theta_2 = 0°$). At the top of the backswing, $\theta_1 = 150°, \theta_2 = -70°$. Using the parameters in Section \ref{ch03_numerical}, compute the change in potential energy. How much gravitational work is available during the downswing?
+2. **Potential Energy Change**. At address, both arms are down ($\theta_1 = 0°, \theta_2 = 0°$). At the top of the backswing, $\theta_1 = 150°, \theta_2 = -70°$. Using the parameters in Section @ch03_numerical, compute the change in potential energy. How much gravitational work is available during the downswing?
 3. **Centrifugal Force**. At impact, $\dot{\theta}_1 = 10.47 \text{ rad/s}$. The centrifugal acceleration at the clubhead (distance $L_1 + L_2 = 1.35$ m from shoulder) is $a_c = \dot{\theta}_1^2 \cdot r$. Compute this acceleration in units of $g$.
 4. **Impact Accelerations**. A golf club at impact often experiences accelerations of $170g$ or more. Using the double pendulum model, estimate what shoulder and elbow accelerations ($\ddot{\theta}_1, \ddot{\theta}_2$) are needed to produce this. (Hint: the clubhead acceleration is $a = L_1 \ddot{\theta}_1 + \text{other terms}$.)
 5. **Gravity Torque**. At the top of the backswing ($\theta_1 = 150°, \theta_2 = -70°$), compute the gravitational torque at the shoulder. Is gravity trying to pull the arm backward or forward? Why?
 6. **Chaotic Dynamics**. Look up the properties of the (unforced) double pendulum. In what regime does it exhibit chaos? Does the golf swing operate in that regime?
-

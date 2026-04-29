@@ -20,7 +20,7 @@ on:
 
   # Also run on a schedule to catch any missed PRs
   schedule:
-    - cron: "0 8 * * 0,4" # Every 2 hours (reduced from 15 min for cost control)
+    - cron: "0 8 * * 0,4" # Sundays and Thursdays at 08:00 UTC
 
   workflow_dispatch:
     inputs:
@@ -33,13 +33,42 @@ on:
         type: boolean
         default: false
 
+permissions:
+  actions: write
+  contents: write
+  pull-requests: read
+
 concurrency:
   group: bot-ci-trigger-${{ github.event.pull_request.number || github.run_id }}
   cancel-in-progress: false
 
 jobs:
-  check-and-trigger:
+  # ── Dispatcher: try self-hosted first, fall back to cloud ──────────────────
+  pick-runner:
     runs-on: d-sorg-fleet
+    timeout-minutes: 2
+    outputs:
+      runner: ${{ steps.check.outputs.runner }}
+    steps:
+      - name: Check for self-hosted runner
+        id: check
+        env:
+          GH_TOKEN: ${{ secrets.RUNNER_CHECK_TOKEN }}
+        run: |
+          ONLINE=$(gh api /orgs/${{ github.repository_owner }}/actions/runners \
+            --jq '[.runners[] | select(.status == "online") | select(.labels[].name == "d-sorg-fleet")] | length' \
+            2>/dev/null || echo "0")
+          if [[ "$ONLINE" -gt 0 ]]; then
+            echo "runner=d-sorg-fleet" >> $GITHUB_OUTPUT
+            echo "Self-hosted runner online - routing locally"
+          else
+            echo "runner=ubuntu-latest" >> $GITHUB_OUTPUT
+            echo "No self-hosted runner - using GitHub-hosted"
+          fi
+
+  check-and-trigger:
+    runs-on: self-hosted
+    needs: pick-runner
     # Only run for bot-authored PRs or scheduled/manual runs
     if: |
       github.event_name == 'schedule' ||
@@ -51,24 +80,27 @@ jobs:
         github.event.pull_request.user.type == 'Bot'))
 
     steps:
-      - uses: actions/checkout@v6
-        with:
-          token: ${{ secrets.BOT_PAT || secrets.GITHUB_TOKEN }}
-          fetch-depth: 5
-
       - name: Check Loop Prevention
         id: loop-check
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           # Check recent commits for loop indicators
           loop_count=0
-          for msg in $(git log --format="%s" -n 5); do
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            messages=$(gh pr view "${{ github.event.pull_request.number }}" --json commits --jq '.commits[-5:][].messageHeadline')
+          else
+            messages=""
+          fi
+
+          while IFS= read -r msg; do
             if [[ "$msg" == *"[skip ci]"* ]] || [[ "$msg" == *"[ci skip]"* ]]; then
               continue
             fi
             if [[ "$msg" == *"trigger-ci"* ]] || [[ "$msg" == *"bot-ci-trigger"* ]]; then
               ((loop_count++))
             fi
-          done
+          done <<< "$messages"
 
           if [ $loop_count -ge 3 ]; then
             echo "skip=true" >> $GITHUB_OUTPUT
@@ -81,7 +113,7 @@ jobs:
         id: find-prs
         if: steps.loop-check.outputs.skip != 'true'
         env:
-          GH_TOKEN: ${{ secrets.BOT_PAT || secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
           INPUT_PR: ${{ inputs.pr_number }}
           FORCE: ${{ inputs.force }}
         run: |
@@ -141,7 +173,7 @@ jobs:
       - name: Trigger CI for PRs
         if: steps.loop-check.outputs.skip != 'true' && steps.find-prs.outputs.prs != ''
         env:
-          GH_TOKEN: ${{ secrets.BOT_PAT || secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           for pr in ${{ steps.find-prs.outputs.prs }}; do
             echo "Triggering CI for PR #$pr"

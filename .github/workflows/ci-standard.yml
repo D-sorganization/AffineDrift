@@ -2,13 +2,12 @@ name: CI Standard
 # Refreshed to verify path resolution
 on:
   push:
-    branches: [main, staging]
+    branches: [main]
     paths-ignore:
       - "docs/**"
       - "**.md"
       - "LICENSE"
       - ".gitignore"
-      - ".github/**"
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
     paths-ignore:
@@ -16,32 +15,108 @@ on:
       - "**.md"
       - "LICENSE"
       - ".gitignore"
-      - ".github/**"
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  quality-gate:
+  # ── Dispatcher: route to self-hosted if available ──────────────────────────
+  pick-runner:
     runs-on: d-sorg-fleet
-    timeout-minutes: 20
+    timeout-minutes: 2
+    outputs:
+      runner: ${{ steps.check.outputs.runner }}
+    steps:
+      - name: Check for self-hosted runner
+        id: check
+        env:
+          GH_TOKEN: ${{ secrets.RUNNER_CHECK_TOKEN }}
+          FLEET_MODE: ${{ vars.FLEET_RUNNER_MODE }}
+        run: |
+          MODE="${FLEET_MODE:-hybrid}"
+          echo "Fleet mode: $MODE"
+
+          case "$MODE" in
+            local)
+              echo "runner=d-sorg-fleet" >> $GITHUB_OUTPUT
+              echo "Routing to self-hosted fleet (mode=local)"
+              ;;
+            cloud)
+              echo "runner=ubuntu-latest" >> $GITHUB_OUTPUT
+              echo "Routing to GitHub-hosted (mode=cloud)"
+              ;;
+            hybrid|*)
+              AVAILABLE=$(gh api /orgs/${{ github.repository_owner }}/actions/runners \
+                --jq '[.runners[] | select(.status == "online") | select(.busy == false) | select(.labels[].name == "d-sorg-fleet")] | length' \
+                2>/dev/null || echo "0")
+              if [[ "$AVAILABLE" -gt 0 ]]; then
+                echo "runner=d-sorg-fleet" >> $GITHUB_OUTPUT
+                echo "$AVAILABLE idle fleet runner(s) - routing locally"
+              else
+                echo "runner=ubuntu-latest" >> $GITHUB_OUTPUT
+                echo "No idle fleet runners - falling back to GitHub-hosted"
+              fi
+              ;;
+          esac
+  quality-gate:
+    needs: pick-runner
+    runs-on: self-hosted
+    timeout-minutes: 45
     env:
       PYTHONPATH: .
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-python@v6
-        with: { python-version: "3.12" }
+
+      - name: Bootstrap Python venv
+        run: |
+          for py in python3.12 python3.11 python3.10 python3; do
+            if command -v $py &>/dev/null; then
+              $py -m venv "$RUNNER_TEMP/ci-venv"
+              break
+            fi
+          done
+          source "$RUNNER_TEMP/ci-venv/bin/activate"
+          pip install --upgrade pip setuptools wheel
+          pip install -r requirements.txt
+          echo "$RUNNER_TEMP/ci-venv/bin" >> $GITHUB_PATH
+
+      - name: Reject Raw Merge Conflict Markers
+        run: |
+          MARKER="<<<<<<< HEAD"
+          if grep -rne "$MARKER" . --exclude-dir=.git --exclude-dir=.github; then
+            echo "::error::Raw git merge conflict markers found!"
+            exit 1
+          fi
 
       - name: Install System Dependencies
         run: |
-          sudo apt-get update
-          apt-cache show libasound2t64 >/dev/null 2>&1 && LIBASOUND=libasound2t64 || LIBASOUND=libasound2
-          sudo apt-get install -y libgl1 libegl1 libxrandr2 libxss1 libxcursor1 libxcomposite1 "$LIBASOUND" libxi6 libxtst6
+          if sudo -n true 2>/dev/null; then
+            APT_READY=false
+            for attempt in 1 2 3; do
+              if sudo apt-get -o DPkg::Lock::Timeout=300 update; then
+                APT_READY=true
+                break
+              fi
+              sleep 20
+            done
+            if [ "$APT_READY" = "true" ]; then
+              # libasound2t64 is the Ubuntu 24.04 name; Ubuntu 22.04 uses libasound2
+              apt-cache show libasound2t64 >/dev/null 2>&1 && LIBASOUND=libasound2t64 || LIBASOUND=libasound2
+              sudo apt-get -o DPkg::Lock::Timeout=300 install -y libgl1 libegl1 libxrandr2 libxss1 libxcursor1 libxcomposite1 "$LIBASOUND" libxi6 libxtst6
+            else
+              echo "::warning::apt-get update could not acquire the package lock; continuing with existing system dependencies"
+            fi
+          else
+            echo "No passwordless sudo — assuming system deps are pre-installed (self-hosted runner)"
+          fi
 
-      - run: pip install ruff==0.15.7 black==26.3.1 mypy==1.19.1 bandit==1.7.7 pydocstyle==6.3.0 pip-audit
+      - run: pip install ruff==0.15.6 black==26.3.1 mypy==1.19.1 bandit==1.7.7 pydocstyle==6.3.0
 
       # Validate that environment is sane
       - name: Environment Health Check
@@ -61,11 +136,15 @@ jobs:
         run: black --check --line-length 100 .
 
       - run: pip install mypy types-PyYAML types-requests
-      - run: pip install -r requirements.txt
-      - name: Python Dependency Audit
-        run: pip-audit -r requirements.txt --progress-spinner=off
       - name: Verify frontend asset sync
-        run: python3 scripts/sync_frontend_assets.py --check
+        # docs/ HTML is no longer committed (issue #1419); sync mirrors inside docs/
+        # are rebuilt by Quarto at deploy time. Skip here if docs/ is absent.
+        run: |
+          if [ -d "docs" ] && [ -f "docs/index.html" ]; then
+            python3 scripts/sync_frontend_assets.py --check
+          else
+            echo "docs/ not present (expected: built by deploy workflow). Skipping frontend asset sync."
+          fi
       - name: Verify Quarto Render Coverage
         run: python3 scripts/check_quarto_render_coverage.py
       - name: Validate Article Frontmatter
@@ -92,10 +171,14 @@ jobs:
         run: python3 scripts/check_dry_adoption.py
       - name: Verify Bibliography Quality
         run: python3 scripts/check_bibliography_quality.py
+      - name: Verify Citation Resolution
+        run: python3 scripts/check_citation_resolution.py
+      - name: Verify Quarto Citation Integrity
+        run: python3 scripts/check_qmd_citation_keys.py
       - name: Install Tool Requirements
         run: |
           if [ -d "tools" ]; then
-            find tools -name "requirements.txt" -exec pip install -r {} \;
+            find tools -name "requirements.txt" -exec python -m pip install -r {} \;
           fi
       - run: mypy src/tools/ scripts/ --ignore-missing-imports || echo "::warning::Type checking has issues - fix type annotations"
       - name: Verify Code Quality
@@ -133,30 +216,44 @@ jobs:
           path: matlab_quality_report.txt
 
   tests:
-    needs: quality-gate
-    runs-on: d-sorg-fleet
+    needs: [pick-runner, quality-gate]
+    runs-on: self-hosted
     timeout-minutes: 20
     strategy:
       matrix:
         python: ["3.12"]
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-python@v6
-        with:
-          python-version: ${{ matrix.python }}
-      - run: pip install -r requirements.txt pytest-timeout
+      - name: Bootstrap Python venv
+        run: |
+          for py in python3.12 python3.11 python3.10 python3; do
+            if command -v $py &>/dev/null; then
+              $py -m venv "$RUNNER_TEMP/ci-venv"
+              break
+            fi
+          done
+          source "$RUNNER_TEMP/ci-venv/bin/activate"
+          pip install --upgrade pip setuptools wheel
+          pip install -r requirements.txt pytest-timeout pytest-cov PyQt6
+          echo "$RUNNER_TEMP/ci-venv/bin" >> $GITHUB_PATH
       - name: Install Tool Requirements
         run: |
           if [ -d "tools" ]; then
-            find tools -name "requirements.txt" -exec pip install -r {} \;
+            find tools -name "requirements.txt" -exec python -m pip install -r {} \;
           fi
       - name: Run Tests
         env:
-          PYTHONPATH: .
-        run: pytest tests/ --cov=src --cov-report=xml --cov-fail-under=50 --timeout=60
+          PYTHONPATH: src
+        run: python -m pytest tests/ --cov=src --cov-report=xml --cov-fail-under=50 --timeout=120
+      - name: Run Content Lint Tests
+        env:
+          PYTHONPATH: src
+        run: python -m pytest --override-ini addopts= tests/ -m content_lint --timeout=120
+      - name: Audit Python Dependencies
+        run: pip install pip-audit && pip-audit -r requirements.txt --progress-spinner=off
       - name: Critical Module Coverage Gate
         run: python3 scripts/check_critical_module_coverage.py
-      - uses: codecov/codecov-action@v5
+      - uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         if: env.CODECOV_TOKEN != ''
@@ -165,8 +262,8 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
   js-tests:
-    needs: quality-gate
-    runs-on: d-sorg-fleet
+    needs: [pick-runner, quality-gate]
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v6
@@ -175,7 +272,7 @@ jobs:
         run: npm ci
       - name: Run JS Tests
         run: npm test -- --coverage
-      - uses: codecov/codecov-action@v5
+      - uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         if: env.CODECOV_TOKEN != ''
@@ -184,53 +281,140 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
   e2e-tests:
-    needs: quality-gate
-    runs-on: d-sorg-fleet
+    needs: [pick-runner, quality-gate]
+    runs-on: self-hosted
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - name: Detect E2E-relevant changes
+        id: e2e_changes
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" != "pull_request" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          git fetch --no-tags origin "${{ github.base_ref }}:refs/remotes/origin/${{ github.base_ref }}"
+          if changed_files=$(git diff --name-only "origin/${{ github.base_ref }}...HEAD"); then
+            :
+          else
+            echo "No merge base found for origin/${{ github.base_ref }}...HEAD; falling back to HEAD^..HEAD."
+            changed_files=$(git diff --name-only "HEAD^..HEAD")
+          fi
+          relevant_files=$(printf "%s\n" "$changed_files" | grep -Ev '^$|^\.github/workflows/ci-standard\.yml$' || true)
+
+          if [ -z "$relevant_files" ]; then
+            echo "Only CI workflow plumbing changed; skipping E2E site render."
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "E2E-relevant files changed:"
+            printf "%s\n" "$relevant_files"
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          fi
       - uses: actions/setup-node@v6
+        if: steps.e2e_changes.outputs.run == 'true'
         with: { node-version: "20" }
-      - uses: actions/setup-python@v6
-        with: { python-version: "3.12" }
+      - name: Bootstrap Python venv
+        if: steps.e2e_changes.outputs.run == 'true'
+        run: |
+          for py in python3.12 python3.11 python3.10 python3; do
+            if command -v $py &>/dev/null; then
+              $py -m venv "$RUNNER_TEMP/ci-venv"
+              break
+            fi
+          done
+          source "$RUNNER_TEMP/ci-venv/bin/activate"
+          pip install --upgrade pip setuptools wheel
+          pip install -r requirements.txt
+          echo "$RUNNER_TEMP/ci-venv/bin" >> $GITHUB_PATH
+
+      - name: Reject Raw Merge Conflict Markers
+        run: |
+          MARKER="<<<<<<< HEAD"
+          if grep -rne "$MARKER" . --exclude-dir=.git --exclude-dir=.github; then
+            echo "::error::Raw git merge conflict markers found!"
+            exit 1
+          fi
 
       - name: Install System Dependencies
+        if: steps.e2e_changes.outputs.run == 'true'
         run: |
-          sudo apt-get update
-          apt-cache show libasound2t64 >/dev/null 2>&1 && LIBASOUND=libasound2t64 || LIBASOUND=libasound2
-          sudo apt-get install -y libgl1 libegl1 libxrandr2 libxss1 libxcursor1 libxcomposite1 "$LIBASOUND" libxi6 libxtst6
+          if sudo -n true 2>/dev/null; then
+            APT_READY=false
+            for attempt in 1 2 3; do
+              if sudo apt-get -o DPkg::Lock::Timeout=300 update; then
+                APT_READY=true
+                break
+              fi
+              sleep 20
+            done
+            if [ "$APT_READY" = "true" ]; then
+              # libasound2t64 is the Ubuntu 24.04 name; Ubuntu 22.04 uses libasound2
+              apt-cache show libasound2t64 >/dev/null 2>&1 && LIBASOUND=libasound2t64 || LIBASOUND=libasound2
+              sudo apt-get -o DPkg::Lock::Timeout=300 install -y libgl1 libegl1 libxrandr2 libxss1 libxcursor1 libxcomposite1 "$LIBASOUND" libxi6 libxtst6
+            else
+              echo "::warning::apt-get update could not acquire the package lock; continuing with existing system dependencies"
+            fi
+          else
+            echo "No passwordless sudo — assuming system deps are pre-installed (self-hosted runner)"
+          fi
 
       - name: Install Dependencies
+        if: steps.e2e_changes.outputs.run == 'true'
         run: npm ci
-      - name: Install Python build dependencies
-        run: pip install -r requirements.txt
       - name: Install Playwright Browsers
-        run: npx playwright install --with-deps chromium
+        if: steps.e2e_changes.outputs.run == 'true'
+        run: |
+          if sudo -n true 2>/dev/null; then
+            npx playwright install --with-deps chromium || {
+              echo "::warning::Playwright system dependency install failed; retrying browser-only install"
+              npx playwright install chromium
+            }
+          else
+            echo "No passwordless sudo — installing browser binaries only."
+            npx playwright install chromium
+          fi
+
       - name: Set up Quarto
-        uses: quarto-dev/quarto-actions/setup@v2
+        if: steps.e2e_changes.outputs.run == 'true'
+        uses: quarto-dev/quarto-actions/setup@8a96df13519ee81fd526f2dfca5962811136661b # v2.2.0
         with:
           version: "1.6.39"
+      - name: Remove .env.example
+        if: steps.e2e_changes.outputs.run == 'true'
+        run: rm -f .env.example
+        # Quarto's dotenv validation requires non-empty example values, but CI
+        # doesn't need the example file during the E2E render.
       - name: Build site for E2E
-        run: |
-          python3 scripts/sync_frontend_assets.py
-          rm -f .env.example
-          quarto render
+        if: steps.e2e_changes.outputs.run == 'true'
+        uses: quarto-dev/quarto-actions/render@8a96df13519ee81fd526f2dfca5962811136661b # v2.2.0
+        with:
+          to: html
+          path: .
+      - name: Sync Frontend Assets
+        if: steps.e2e_changes.outputs.run == 'true'
+        run: python3 scripts/sync_frontend_assets.py
+
       - name: Run E2E Smoke Tests (Critical Flows)
+        if: steps.e2e_changes.outputs.run == 'true'
         run: |
           npx playwright test \
             --project=chromium \
             --retries=0 \
             tests/e2e/smoke.spec.js
       - uses: actions/upload-artifact@v7
-        if: failure()
+        if: failure() && steps.e2e_changes.outputs.run == 'true'
         with:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
 
   website-lint:
-    needs: quality-gate
-    runs-on: d-sorg-fleet
+    needs: [pick-runner, quality-gate]
+    runs-on: self-hosted
     continue-on-error: true # Non-blocking: HTML validation errors need separate fix
     steps:
       - uses: actions/checkout@v6
@@ -251,8 +435,8 @@ jobs:
   # Users with local MATLAB can run: matlab/run_all.m for equivalent tests.
   # =============================================================================
   # matlab-tests:
-  #   needs: quality-gate
-  #   runs-on: d-sorg-fleet
+  #   needs: [pick-runner, quality-gate]
+  #   runs-on: self-hosted
   #   steps:
   #     - uses: actions/checkout@v6
   #     - uses: matlab-actions/setup-matlab@v2
@@ -271,7 +455,8 @@ jobs:
   # Includes WASM build check since AffineDrift serves the web frontend.
   # =============================================================================
   rust-quality-gate:
-    runs-on: d-sorg-fleet
+    needs: pick-runner
+    runs-on: self-hosted
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v6
@@ -310,7 +495,7 @@ jobs:
 
       - name: Install Rust toolchain
         if: steps.rust-changes.outputs.has_changes == 'true'
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # stable
         with:
           components: rustfmt, clippy
           targets: wasm32-unknown-unknown

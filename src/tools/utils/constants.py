@@ -68,6 +68,7 @@ PATH_REPLACEMENT_PATTERNS: tuple[tuple[str, str], ...] = (
     ('src="site_libs/', 'src="{prefix}site_libs/'),
     ('href="site_libs/', 'href="{prefix}site_libs/'),
     # Specific asset replacements
+    ('src="js/main.js"', 'src="{prefix}js/main.js"'),
     ('src="script.js"', 'src="{prefix}script.js"'),
     ('href="styles.css"', 'href="{prefix}styles.css"'),
     ('src="logo/', 'src="{prefix}logo/'),

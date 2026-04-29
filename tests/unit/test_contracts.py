@@ -6,9 +6,7 @@ domain-specific helpers, and the tri-state enforcement level system.
 
 from __future__ import annotations
 
-import os
 from collections.abc import Callable
-from unittest.mock import patch
 
 import numpy as np
 import pytest
@@ -32,8 +30,16 @@ from src.core.contracts import (
     postcondition,
     precondition,
     require,
-    set_contract_level,
 )
+
+
+def _set_contract_level(monkeypatch: pytest.MonkeyPatch, level: ContractLevel) -> None:
+    """Temporarily set the active contract level for a single test."""
+    monkeypatch.setattr("src.core.contracts.definitions.DBC_LEVEL", level)
+    monkeypatch.setattr(
+        "src.core.contracts.definitions.CONTRACTS_ENABLED", level != ContractLevel.OFF
+    )
+
 
 # _enforce_contracts fixture is inherited from tests/conftest.py (issue #1251)
 
@@ -75,12 +81,12 @@ class TestRequire:
         with pytest.raises(ContractViolationError, match="pre-condition"):
             require(False, "value must be positive", -1)
 
-    def test_skipped_when_off(self) -> None:
-        set_contract_level(ContractLevel.OFF)
+    def test_skipped_when_off(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        _set_contract_level(monkeypatch, ContractLevel.OFF)
         require(False, "should not raise")
 
-    def test_warns_when_warn(self) -> None:
-        set_contract_level(ContractLevel.WARN)
+    def test_warns_when_warn(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        _set_contract_level(monkeypatch, ContractLevel.WARN)
         require(False, "check warning mode")
 
 
@@ -258,27 +264,27 @@ class TestArrayHelpers:
 class TestContractLevelControls:
     """Tests for the tri-state enforcement level system."""
 
-    def test_set_and_get(self) -> None:
-        set_contract_level(ContractLevel.WARN)
+    def test_set_and_get(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        _set_contract_level(monkeypatch, ContractLevel.WARN)
         assert get_contract_level() == ContractLevel.WARN
 
-    def test_off_skips_all_checks(self) -> None:
-        set_contract_level(ContractLevel.OFF)
+    def test_off_skips_all_checks(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        _set_contract_level(monkeypatch, ContractLevel.OFF)
         require(False, "should not raise")
         ensure(False, "should not raise")
         invariant(False, "should not raise")
 
-    def test_enforce_raises(self) -> None:
-        set_contract_level(ContractLevel.ENFORCE)
+    def test_enforce_raises(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        _set_contract_level(monkeypatch, ContractLevel.ENFORCE)
         with pytest.raises(ContractViolationError):
             require(False, "should raise")
 
-    def test_env_var_controls_level(self) -> None:
-        with patch.dict(os.environ, {"DBC_LEVEL": "warn"}):
-            from src.core.contracts.definitions import _resolve_contract_level
+    def test_env_var_controls_level(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        monkeypatch.setenv("DBC_LEVEL", "warn")
+        from src.core.contracts.definitions import _resolve_contract_level
 
-            level = _resolve_contract_level()
-            assert level == ContractLevel.WARN
+        level = _resolve_contract_level()
+        assert level == ContractLevel.WARN
 
 
 # ─── Integration: ResidualMonitor ─────────────────────────────

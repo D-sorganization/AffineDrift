@@ -5,7 +5,7 @@
 \label{ch:poe}
 
 \epigraph{%
-  You do not need to invent abstract coordinate frames at every joint of a robot. The kinematics of the entire complex machine can be elegantly described by a single product of twisting screws.
+  You do not need to invent abstract coordinate frames at every joint of a robot. The kinematics of the entire complex machine can be compactly described by a single product of twisting screws.
 }{}
 
 \begin{laymansbox}{Context \& Use Case: Universal Forward Kinematics}{context_box}
@@ -17,7 +17,7 @@
 \section{Historical Context and the Evolution of Kinematic Formalisms}
 \label{sec:poe_history}
 
-The theory of robotic kinematics has undergone a profound transformation over the past four decades. For nearly two centuries—from the mechanical linkage analysis of James Watt through the 1960s development of automated manufacturing—kinematic chains were described using local, Euclidean coordinate frames attached sequentially to each link. This frame-by-frame approach reached formal codification in 1955 with the \textit{Denavit-Hartenberg (D-H)} parametrization \cite{dh1955}, which became the dominant convention in robotics education and industrial practice.
+The theory of robotic kinematics has undergone a significant transformation over the past four decades. For nearly two centuries—from the mechanical linkage analysis of James Watt through the 1960s development of automated manufacturing—kinematic chains were described using local, Euclidean coordinate frames attached sequentially to each link. This frame-by-frame approach reached formal codification in 1955 with the \textit{Denavit-Hartenberg (D-H)} parametrization \cite{dh1955}, which became the dominant convention in robotics education and industrial practice.
 
 The D-H convention, while algebraically complete, carries three fundamental drawbacks:
 \begin{enumerate}
@@ -28,7 +28,38 @@ The D-H convention, while algebraically complete, carries three fundamental draw
 
 In the 1990s, Richard Murray, Zexiang Li, and Shankar Sastry—building on Lie group theory developed in differential geometry—published \textit{A Mathematical Introduction to Robotic Manipulation} \cite{Murray1994}, which reformulated forward kinematics through the lens of exponential maps on the Lie group $SE(3)$ and its Lie algebra $\se(3)$. Their \textbf{Product of Exponentials (PoE)} formula unified kinematics under a single, coordinate-free framework: the composition of exponential twists in a global reference frame.
 
-This approach was further refined and popularized by Kevin Lynch and Frank Park \cite{lynch2017}, whose textbook \textit{Modern Robotics: Mechanics, Planning, and Control} established PoE as the modern standard. Today, PoE is the default kinematics formalism in advanced robotics research, computational mechanics, and biomechanics.
+This approach was further refined and popularized by Kevin Lynch and Frank Park \cite{Lynch2017}, whose textbook \textit{Modern Robotics: Mechanics, Planning, and Control} established PoE as the modern standard. Today, PoE is the default kinematics formalism in advanced robotics research, computational mechanics, and biomechanics.
+
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}[scale=1.0]
+  % Base frame
+  \draw[thick] (0,0) circle (0.15);
+  \node[below] at (0,-0.3) {Base $\mathbf{M}$ (home)};
+
+  % Joint 1 axis
+  \draw[->,thick,red] (0,0) -- (1.5,0.5) node[anchor=south] {Axis 1};
+
+  % After first twist
+  \draw[thick] (1.5,0.5) circle (0.15);
+  \node[right] at (1.7,0.7) {$e^{[\mathcal{S}_1]\theta_1} \mathbf{M}$};
+
+  % Joint 2 axis
+  \draw[->,thick,blue] (1.5,0.5) -- (2.7,1.8) node[anchor=south] {Axis 2};
+
+  % After second twist
+  \draw[thick] (2.7,1.8) circle (0.15);
+  \node[right] at (2.9,2.0) {$e^{[\mathcal{S}_2]\theta_2} e^{[\mathcal{S}_1]\theta_1} \mathbf{M}$};
+
+  % Final pose
+  \draw[thick] (2.7,1.8) -- (3.5,2.8);
+  \node[right] at (3.6,2.8) {End-Effector};
+
+  \node at (1.3,3.5) {Product of Exponentials: PoE};
+\end{tikzpicture}
+\caption{Product of Exponentials formula for forward kinematics. Each joint contributes an exponential twist applied to the previous configuration. The final end-effector pose is the product: $\mathbf{T}(\boldsymbol{\theta}) = e^{[\mathcal{S}_n]\theta_n} \cdots e^{[\mathcal{S}_2]\theta_2} e^{[\mathcal{S}_1]\theta_1} \mathbf{M}$.}
+\label{fig:product_exponentials}
+\end{figure}
 
 \section{Abandoning Denavit-Hartenberg}
 \label{sec:dh_limitations}
@@ -577,7 +608,7 @@ The \textbf{force manipulability ellipsoid} is the dual of the velocity ellipsoi
 \end{definition}
 
 \begin{laymansbox}{Velocity--Force Duality}{manipulability_duality}
-\textbf{Key insight:} Where the robot is fast, it is weak; where it is slow, it is strong. A configuration that allows rapid end-effector motion along a direction (large $\sigma_i$) can exert only small forces along that same direction ($1/\sigma_i$), and conversely. This is a direct consequence of the principle of virtual work \cite{lynch2017}.
+\textbf{Key insight:} Where the robot is fast, it is weak; where it is slow, it is strong. A configuration that allows rapid end-effector motion along a direction (large $\sigma_i$) can exert only small forces along that same direction ($1/\sigma_i$), and conversely. This is a direct consequence of the principle of virtual work \cite{Lynch2017}.
 \end{laymansbox}
 
 \begin{example}[Manipulability of a Planar 2R Arm]
@@ -752,7 +783,7 @@ The Product of Exponentials formula provides a modern, geometrically transparent
 \section{Further Reading and References}
 \label{sec:ch9_further_reading}
 
-The Product of Exponentials formula has its intellectual roots in the Lie-theoretic treatment of rigid-body kinematics pioneered by Brockett \cite{brockett1984}, who first showed that the forward kinematics of a serial chain could be expressed as a product of matrix exponentials on $SE(3)$. Murray, Li, and Sastry \cite{Murray1994} developed this insight into a comprehensive framework for robotic manipulation, providing the definitive mathematical treatment of screw theory, spatial velocities, and the PoE formula that forms the backbone of this chapter. For a modern, pedagogically oriented presentation of PoE-based kinematics---including extensive worked examples and software implementations---the reader is referred to Lynch and Park \cite{lynch2017}, whose \textit{Modern Robotics} textbook has become the standard reference for graduate instruction.
+The Product of Exponentials formula has its intellectual roots in the Lie-theoretic treatment of rigid-body kinematics pioneered by Brockett \cite{brockett1984}, who first showed that the forward kinematics of a serial chain could be expressed as a product of matrix exponentials on $SE(3)$. Murray, Li, and Sastry \cite{Murray1994} developed this insight into a comprehensive framework for robotic manipulation, providing the definitive mathematical treatment of screw theory, spatial velocities, and the PoE formula that forms the backbone of this chapter. For a modern, pedagogically oriented presentation of PoE-based kinematics---including extensive worked examples and software implementations---the reader is referred to Lynch and Park \cite{Lynch2017}, whose \textit{Modern Robotics} textbook has become the standard reference for graduate instruction.
 
 The classical Denavit-Hartenberg convention, introduced in its original form by Denavit and Hartenberg \cite{dh1955}, remains historically important and is still widely used in industrial robotics; understanding its relationship to PoE deepens one's appreciation of why the modern formalism is preferred. For singularity analysis and manipulability theory beyond what is covered here, Siciliano et al.\ \cite{siciliano2009} provide an excellent treatment that bridges classical and modern perspectives. Numerical methods for inverse kinematics---including damped least-squares, pseudo-inverse techniques, and optimization-based approaches---are discussed in depth by Spong, Hutchinson, and Vidyasagar \cite{Spong2006}, who also cover the stability and convergence properties of Newton-Raphson iterations in the context of robotic systems.
 

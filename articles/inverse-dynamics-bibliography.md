@@ -1,5 +1,6 @@
 ---
 title: "Bibliography: Interpretation of Inverse Dynamics"
+description: "- Inverse Dynamics Limitations: The core theme, decomposing the ambiguity in calculating forces from motion. - Equivalent Couple Problem: The inherent..."
 editor: source
 ---
 

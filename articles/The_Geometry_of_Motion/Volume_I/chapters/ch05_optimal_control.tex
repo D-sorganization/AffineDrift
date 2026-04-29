@@ -38,13 +38,13 @@ quadratic, this recursion becomes the Riccati equation, which we derive below.
 
 \subsection{Pontryagin's Maximum Principle (1962)}
 
-From the geometric perspective of Agrachev and Sachkov \cite[Ch.~5]{AgrachevSachkov2004}, the Pontryagin 
-Maximum Principle is fundamentally a statement about the structure of optimal trajectories in the 
+From the geometric perspective of Agrachev and Sachkov \cite[Ch.~5]{AgrachevSachkov2004}, the Pontryagin
+Maximum Principle is fundamentally a statement about the structure of optimal trajectories in the
 cotangent bundle $T^*\mathcal{M}$. The costate $\boldsymbol{\lambda}$ is a covector (element of the cotangent space),
-and the Hamiltonian $H(\x, \boldsymbol{\lambda}, \uvec) = \boldsymbol{\lambda}^\top \mathbf{f}(\x, \uvec) + L(\x, \uvec)$ defines 
-a Hamiltonian vector field on the symplectic manifold $(T^*\mathcal{M}, \omega)$. Optimality is characterized by the 
-conditions that costate and state evolve via the Hamiltonian flow, and that the control maximizes the Hamiltonian 
-at each point. This Hamiltonian structure is essential: it explains why the adjoint (backward) and forward-time 
+and the Hamiltonian $H(\x, \boldsymbol{\lambda}, \uvec) = \boldsymbol{\lambda}^\top \mathbf{f}(\x, \uvec) + L(\x, \uvec)$ defines
+a Hamiltonian vector field on the symplectic manifold $(T^*\mathcal{M}, \omega)$. Optimality is characterized by the
+conditions that costate and state evolve via the Hamiltonian flow, and that the control maximizes the Hamiltonian
+at each point. This Hamiltonian structure is essential: it explains why the adjoint (backward) and forward-time
 equations have the form they do, and why sensitivity to parameters follows naturally from symplectic geometry.
 
 Independently and nearly simultaneously, Lev Pontryagin and colleagues developed the \emph{maximum principle}
@@ -200,6 +200,33 @@ $Q_{k,\xu} = 0$) recovers the \emph{iLQR} algorithm, which often works well in p
 compute.
 \end{intuitionbox}
 
+\begin{center}
+\begin{tikzpicture}[scale=1.0]
+  % Draw cost functional
+  \draw[thick, black] (0, 0) to[out=0, in=180] (2, 0.8) to[out=0, in=150] (4, 1.2);
+
+  % Mark nominal trajectory
+  \filldraw[black] (0, 0) circle (0.06cm);
+  \filldraw[black] (2, 0.8) circle (0.06cm);
+  \filldraw[black] (4, 1.2) circle (0.06cm);
+
+  % Draw cost function as a bowl (quadratic)
+  \draw[dashed, red] (1.5, -0.3) to[bend right] (2.5, -0.3);
+  \draw[dashed, red] (1.7, -0.1) to[bend right] (2.3, -0.1);
+  \draw[dashed, red] (1.9, 0.1) to[bend right] (2.1, 0.1);
+
+  % Annotation
+  \node[font=\small, above] at (2, 1.8) {Trajectory optimization: minimize cost along path};
+  \node[font=\small, right] at (3, -0.5) {Local quadratic cost};
+
+  % Legend
+  \draw[-,black, thick] (5, 1.5) -- (5.5, 1.5);
+  \node[right, font=\small] at (5.6, 1.5) {Nominal trajectory};
+  \draw[dashed, red, thick] (5, 1) -- (5.5, 1);
+  \node[right, font=\small] at (5.6, 1) {Local quadratic approximation};
+\end{tikzpicture}
+\end{center}
+
 \subsection{Intuition: Hessian Curvature as Control Sensitivity}
 
 The matrix $Q_{k,\uu}$ is the \emph{Hessian of the Q-function with respect to control}. A large eigenvalue indicates
@@ -269,14 +296,15 @@ we arrive at the \textbf{backward Riccati recursion}:
 
 \subsection{The iLQR Simplification}
 
-\emph{Iterative Linear Quadratic Regulator} (iLQR) drops the cross-coupling term $\mat{N}_k$ and the second-order
-dynamics term $\mat{B}_k^\T\mat{S}_{k+1}\mat{A}_k$ from $Q_{k,\xu}$. This is valid when:
+\emph{Iterative Linear Quadratic Regulator} (iLQR) drops the cross-coupling term $\mat{N}_k$ from $Q_{k,\xu}$
+but \emph{retains} the dynamics coupling $\mat{B}_k^\T\mat{S}_{k+1}\mat{A}_k$. This is valid when:
 \begin{enumerate}
 \item The cost function has no explicit cross-coupling, i.e., $\ell_{k,\xu} = 0$.
-\item The effect of future cost on control via state dynamics is considered second-order and acceptable to ignore.
+\item The second-order dynamics terms in $Q_{k,\xx}$ and $Q_{k,\uu}$ are neglected (the Gauss--Newton
+      approximation), but the first-order coupling $\mat{B}_k^\T\mat{S}_{k+1}\mat{A}_k$ is kept.
 \end{enumerate}
 
-Under these assumptions, $Q_{k,\xu} \approx 0$, and the Riccati recursion simplifies to:
+Under these assumptions, $Q_{k,\xu} \approx \mat{B}_k^\T\mat{S}_{k+1}\mat{A}_k$, and the Riccati recursion simplifies to:
 \begin{align}
 \mat{K}_k &\approx (\mat{R}_k + \mat{B}_k^\T\mat{S}_{k+1}\mat{B}_k)^{-1}\mat{B}_k^\T\mat{S}_{k+1}\mat{A}_k, \label{eq:ch5:gain-ilqr}\\[4pt]
 \mat{S}_k &\approx \mat{Q}_{k,\xx} + \mat{A}_k^\T\mat{S}_{k+1}\mat{A}_k - \mat{A}_k^\T\mat{S}_{k+1}\mat{B}_k
@@ -379,6 +407,58 @@ successive linearization:
 \EndFor
 
 \Return $\bar\x_0, \ldots, \bar\x_T$ and $\mat{K}_k$ for $k = 0, \ldots, T-1$.
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Implementation Ladder}
+
+The large DDP loop becomes easier to implement and debug when broken into two reusable subroutines: a backward pass that computes local quadratic models and gains, and a globalization wrapper that decides whether a candidate step is trustworthy.
+
+\begin{algorithm}[htbp]
+\caption{Discrete Riccati Backward Pass for iLQR / DDP}
+\label{alg:ch5:riccati-backward-pass}
+\begin{algorithmic}[1]
+\Require Linearized dynamics $(\mat{A}_k, \mat{B}_k)$, quadraticized cost terms, terminal Hessian $\mat{S}_T$, regularization $\mu$.
+\Ensure Feedback gains $\mat{K}_k$, feedforward steps $\vec{k}_k$, and updated value Hessians $\mat{S}_k$.
+\State Set $\mat{S}_T \gets \nabla_{\x \x}^2 \ell_T(\bar\x_T)$ and $\vec{s}_T \gets \nabla_{\x} \ell_T(\bar\x_T)$.
+\For{$k = T-1, T-2, \ldots, 0$}
+  \State Assemble the local Q-function blocks:
+  \State \quad $Q_{k,\uu} \gets \mat{R}_k + \mat{B}_k^\T \mat{S}_{k+1} \mat{B}_k + \mu \mat{I}$
+  \State \quad $Q_{k,\xu} \gets \mat{N}_k + \mat{B}_k^\T \mat{S}_{k+1} \mat{A}_k$
+  \State \quad $Q_{k,\mathbf{u}} \gets \vec{r}_k + \mat{B}_k^\T \vec{s}_{k+1}$
+  \State Check that $Q_{k,\uu}$ is positive definite; if not, increase $\mu$ and restart.
+  \State Compute the local policy:
+  \State \quad $\vec{k}_k \gets -Q_{k,\uu}^{-1} Q_{k,\mathbf{u}}$
+  \State \quad $\mat{K}_k \gets -Q_{k,\uu}^{-1} Q_{k,\xu}$
+  \State Update the quadratic model of the cost-to-go:
+  \State \quad $\vec{s}_k \gets Q_{k,\x} + \mat{K}_k^\T Q_{k,\uu} \vec{k}_k + \mat{K}_k^\T Q_{k,\mathbf{u}} + Q_{k,\xu}^\T \vec{k}_k$
+  \State \quad $\mat{S}_k \gets Q_{k,\xx} + \mat{K}_k^\T Q_{k,\uu} \mat{K}_k + \mat{K}_k^\T Q_{k,\xu} + Q_{k,\xu}^\T \mat{K}_k$
+\EndFor
+\Return $\{\vec{k}_k, \mat{K}_k, \mat{S}_k\}_{k=0}^{T-1}$
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[htbp]
+\caption{Globalized iLQR / DDP Step Acceptance}
+\label{alg:ch5:ddp-globalization}
+\begin{algorithmic}[1]
+\Require Nominal trajectory $(\bar\x_k, \bar\uvec_k)$, local policy $(\vec{k}_k, \mat{K}_k)$, trial step sizes $\alpha$, regularization $\mu$.
+\Ensure Accepted trajectory update or a regularization increase.
+\For{each trial step size $\alpha \in \{1, 1/2, 1/4, \ldots, \alpha_{\min}\}$}
+  \State Reset $x_0 \gets \bar\x_0$.
+  \For{$k = 0, 1, \ldots, T-1$}
+    \State Form the trial control:
+    \State \quad $\uvec_k^{\text{trial}} \gets \bar\uvec_k + \alpha \vec{k}_k + \mat{K}_k (x_k - \bar\x_k)$
+    \State Propagate the nonlinear dynamics: $x_{k+1} \gets f(x_k, \uvec_k^{\text{trial}})$.
+  \EndFor
+  \State Evaluate the realized cost decrease $\Delta J_{\text{actual}}$.
+  \If{$\Delta J_{\text{actual}}$ is sufficiently negative}
+    \State Decrease $\mu$ and accept the trial trajectory.
+    \Return Accepted update.
+  \EndIf
+\EndFor
+\State Increase $\mu$ and repeat the backward pass around the same nominal trajectory.
+\Return No acceptable step found at the current regularization.
 \end{algorithmic}
 \end{algorithm}
 

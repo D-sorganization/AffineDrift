@@ -46,7 +46,6 @@ jobs:
   pragmatic-review:
     name: Pragmatic Programmer Review
     runs-on: d-sorg-fleet
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -56,7 +55,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          python-version: "3.11"
+          python-version: "3.12"
 
       - name: Run Pragmatic Programmer Review
         id: review
@@ -175,7 +174,7 @@ jobs:
           fi
 
       - name: Commit and Push Report
-        uses: stefanzweifel/git-auto-commit-action@v7
+        uses: stefanzweifel/git-auto-commit-action@04702edda442b2e678b25b537cec683a1493fcb9 # v7.1.0
         with:
           commit_message: "docs(assessment): Pragmatic Programmer Review ${{ steps.review.outputs.score }}/10"
           file_pattern: "docs/assessments/pragmatic_programmer/*"

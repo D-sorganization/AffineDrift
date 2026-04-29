@@ -4,6 +4,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
+pytestmark = pytest.mark.content_lint
+
 ROOT = Path(__file__).resolve().parents[1]
 STYLE_FILE = ROOT / "articles" / "The_Geometry_of_Motion" / "geometry_of_motion.sty"
 VOLUME_MAIN_FILES = (
@@ -23,8 +27,9 @@ def test_shared_style_file_exists_with_core_primitives() -> None:
     assert "chapblue" in text
     assert r"\gomapplylistingstyle" in text
     assert r"\gomdeclaretheorems" in text
-    assert r"\RequirePackage{tcolorbox}" not in text
-    assert r"\providecommand{\dd}" not in text
+    assert r"\RequirePackage[most]{tcolorbox}" not in text
+    assert r"\RequirePackage{tcolorbox}" in text
+    assert r"\providecommand{\dd}" in text
 
 
 def test_all_volumes_import_shared_style_package() -> None:

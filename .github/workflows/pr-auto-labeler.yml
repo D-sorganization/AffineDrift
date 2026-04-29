@@ -8,9 +8,37 @@ permissions:
   contents: read
   pull-requests: write
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  label:
+  # ── Dispatcher: try self-hosted first, fall back to cloud ──────────────────
+  pick-runner:
     runs-on: d-sorg-fleet
+    timeout-minutes: 2
+    outputs:
+      runner: ${{ steps.check.outputs.runner }}
+    steps:
+      - name: Check for self-hosted runner
+        id: check
+        env:
+          GH_TOKEN: ${{ secrets.RUNNER_CHECK_TOKEN }}
+        run: |
+          ONLINE=$(gh api /orgs/${{ github.repository_owner }}/actions/runners \
+            --jq '[.runners[] | select(.status == "online") | select(.labels[].name == "d-sorg-fleet")] | length' \
+            2>/dev/null || echo "0")
+          if [[ "$ONLINE" -gt 0 ]]; then
+            echo "runner=d-sorg-fleet" >> $GITHUB_OUTPUT
+            echo "Self-hosted runner online - routing locally"
+          else
+            echo "runner=ubuntu-latest" >> $GITHUB_OUTPUT
+            echo "No self-hosted runner - using GitHub-hosted"
+          fi
+
+  label:
+    runs-on: self-hosted
+    needs: pick-runner
     steps:
       - uses: actions/checkout@v6
 
@@ -31,16 +59,22 @@ jobs:
             const labels = new Set();
 
             // Language/Component labels
-            if (changedFiles.some(f => f.startsWith('python/'))) {
+            if (changedFiles.some(f =>
+              f.startsWith('src/') || f.startsWith('scripts/') || f.endsWith('.py')
+            )) {
               labels.add('python');
             }
-            if (changedFiles.some(f => f.startsWith('javascript/'))) {
+            if (changedFiles.some(f =>
+              f.startsWith('js/') || f === 'script.js' || f === 'service-worker.js' || f.endsWith('.js')
+            )) {
               labels.add('javascript');
             }
-            if (changedFiles.some(f => f.startsWith('matlab/'))) {
+            if (changedFiles.some(f =>
+              f.includes('matlab_utilities/') || f.endsWith('.m')
+            )) {
               labels.add('matlab');
             }
-            if (changedFiles.some(f => f.startsWith('arduino/'))) {
+            if (changedFiles.some(f => f.endsWith('.ino'))) {
               labels.add('arduino');
             }
 
@@ -58,15 +92,17 @@ jobs:
             }
 
             // Test labels
-            if (changedFiles.some(f => f.includes('/test'))) {
+            if (changedFiles.some(f => f.startsWith('tests/') || f.includes('/test'))) {
               labels.add('tests');
             }
 
             // Quality/Tooling labels
-            if (changedFiles.some(f => f.startsWith('tools/'))) {
+            if (changedFiles.some(f =>
+              f.startsWith('tools/') || f.startsWith('scripts/') || f.startsWith('src/tools/')
+            )) {
               labels.add('tooling');
             }
-            if (changedFiles.some(f => f.match(/^(ruff\.toml|mypy\.ini|\.pre-commit-config\.yaml|pytest\.ini)$/))) {
+            if (changedFiles.some(f => f.match(/^(pyproject\.toml|ruff\.toml|mypy\.ini|\.pre-commit-config\.yaml|pytest\.ini)$/))) {
               labels.add('quality-control');
             }
 

@@ -12,12 +12,14 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from src.core.constants import REGULATION_HOLE_RADIUS_M, STIMPMETER_CALIBRATION_FACTOR
-from src.core.contracts import require
 from src.golf_simulation.ball_flight import BallFlightDynamics, BallFlightState
 from src.golf_simulation.clubs import ClubBag, ClubType, GolfClub, LaunchConditions
 from src.golf_simulation.course import METERS_TO_YARDS, GolfCourse, GolfHole
-from src.golf_simulation.putting import GreenSurface, PuttingSimulator
+from src.golf_simulation.putting import (
+    GreenSurface,
+    PuttingSimulator,
+    stimpmeter_deceleration,
+)
 from src.golf_simulation.terrain import TerrainType
 
 logger = logging.getLogger(__name__)
@@ -114,6 +116,7 @@ class RoundSimulator:
         club_bag: ClubBag | None = None,
         ball_flight: BallFlightDynamics | None = None,
         rng_seed: int | None = None,
+        putting_simulator: PuttingSimulator | None = None,
     ) -> None:
         """Initialize the round simulator.
 
@@ -122,20 +125,13 @@ class RoundSimulator:
             club_bag: Club bag to use. Defaults to standard set.
             ball_flight: Ball flight dynamics model. Defaults to standard params.
             rng_seed: Random seed for shot dispersion (None = non-deterministic).
+            putting_simulator: Fully built PuttingSimulator instance to use for all greens.
         """
-        require(isinstance(course, GolfCourse), "course must be a GolfCourse instance")
-        require(
-            club_bag is None or isinstance(club_bag, ClubBag),
-            "club_bag must be a ClubBag instance or None",
-        )
-        require(
-            ball_flight is None or isinstance(ball_flight, BallFlightDynamics),
-            "ball_flight must be a BallFlightDynamics instance or None",
-        )
         self.course = course
         self.club_bag = club_bag if club_bag is not None else ClubBag()
         self.ball_flight = ball_flight if ball_flight is not None else BallFlightDynamics()
         self.rng = np.random.default_rng(rng_seed)
+        self.putting_simulator = putting_simulator
 
     def simulate_round(self) -> RoundResult:
         """Simulate a complete round of golf.
@@ -200,7 +196,7 @@ class RoundSimulator:
 
             # Check if holed
             dist_remaining = hole.distance_to_pin(position[0], position[1])
-            if dist_remaining < REGULATION_HOLE_RADIUS_M:
+            if dist_remaining < 0.054:  # Within hole radius
                 logger.debug("Hole %d completed in %d strokes", hole.number, stroke_count)
                 break
 
@@ -232,28 +228,21 @@ class RoundSimulator:
 
         return self.club_bag.select_club(max(dist_yards, 1.0), terrain)
 
-    def _build_launch_conditions(
+    def _create_launch_conditions(
         self,
         position: tuple[float, float, float],
         hole: GolfHole,
         club: GolfClub,
     ) -> LaunchConditions:
-        """Create launch conditions with realistic dispersion toward the pin.
-
-        Args:
-            position: Starting position (x, y, z) in meters.
-            hole: The current hole.
-            club: The club to use.
-
-        Returns:
-            LaunchConditions with randomised speed and direction.
-        """
+        """Create initial launch conditions with realistic dispersion."""
         speed_variation = 1.0 + self.rng.normal(0.0, 0.02)
         ball_speed = club.typical_speed_ms * max(speed_variation, 0.5)
         direction_error = self.rng.normal(0.0, np.radians(2.0))
-        dx = hole.pin_x - position[0]
-        dy = hole.pin_y - position[1]
+
+        dx = hole.pin_position[0] - position[0]
+        dy = hole.pin_position[1] - position[1]
         aim_direction = math.atan2(dy, dx)
+
         return LaunchConditions(
             ball_speed=ball_speed,
             launch_angle=club.typical_launch_rad,
@@ -262,35 +251,33 @@ class RoundSimulator:
             sidespin=self.rng.normal(0.0, 10.0),
         )
 
-    def _apply_hazard_penalty(
+    def _handle_shot_penalty(
         self,
-        position: tuple[float, float, float],
+        start_pos: tuple[float, float, float],
         end_pos: tuple[float, float, float],
-        terrain_at_rest: TerrainType,
+        terrain: TerrainType,
         hole: GolfHole,
     ) -> tuple[tuple[float, float, float], TerrainType, bool]:
-        """Apply a penalty drop if the ball landed in water or OB.
-
-        Args:
-            position: Shot start position in meters.
-            end_pos: Ball landing position in meters.
-            terrain_at_rest: Terrain type at landing.
-            hole: The current hole.
-
-        Returns:
-            Tuple of (adjusted_end_pos, adjusted_terrain, is_penalty).
-        """
-        is_penalty = terrain_at_rest in (TerrainType.WATER, TerrainType.OUT_OF_BOUNDS)
+        """Handle out of bounds and water hazards."""
+        is_penalty = terrain in (TerrainType.WATER, TerrainType.OUT_OF_BOUNDS)
         if not is_penalty:
-            return end_pos, terrain_at_rest, False
+            return end_pos, terrain, False
+
+        dx_shot = end_pos[0] - start_pos[0]
+        dy_shot = end_pos[1] - start_pos[1]
+        drop_fraction = 0.8
+        drop_x = start_pos[0] + drop_fraction * dx_shot
+        drop_y = start_pos[1] + drop_fraction * dy_shot
+        new_end = (drop_x, drop_y, 0.0)
+        new_terrain = hole.get_terrain(drop_x, drop_y)
+
         logger.debug(
-            "Penalty: ball in %s at (%.1f, %.1f)", terrain_at_rest.value, end_pos[0], end_pos[1]
+            "Penalty: ball in %s at (%.1f, %.1f)",
+            terrain.value,
+            end_pos[0],
+            end_pos[1],
         )
-        dx_shot = end_pos[0] - position[0]
-        dy_shot = end_pos[1] - position[1]
-        drop_x = position[0] + 0.8 * dx_shot
-        drop_y = position[1] + 0.8 * dy_shot
-        return (drop_x, drop_y, 0.0), hole.get_terrain(drop_x, drop_y), True
+        return new_end, new_terrain, True
 
     def _simulate_shot(
         self,
@@ -298,41 +285,40 @@ class RoundSimulator:
         hole: GolfHole,
         club: GolfClub,
     ) -> ShotResult:
-        """Simulate a full shot (tee shot, approach, chip, etc.).
-
-        Args:
-            position: Starting position (x, y, z) in meters.
-            hole: The current hole.
-            club: The club to use.
-
-        Returns:
-            ShotResult with trajectory and landing info.
-        """
-        launch = self._build_launch_conditions(position, hole, club)
+        """Simulate a full shot (tee shot, approach, chip, etc.)."""
+        launch = self._create_launch_conditions(position, hole, club)
         initial = launch.to_ball_flight_state()
+
         offset_initial = BallFlightState(
             position=np.array(position, dtype=float),
             velocity=initial.velocity,
             spin=initial.spin,
         )
+
         trajectory_states = self.ball_flight.simulate(offset_initial, dt=0.01, max_time=15.0)
-        traj_points: list[tuple[float, float, float]] = [
+
+        traj_points = [
             (float(s.position[0]), float(s.position[1]), float(s.position[2]))
             for s in trajectory_states
         ]
+
         final_state = trajectory_states[-1]
         end_pos = (
             float(final_state.position[0]),
             float(final_state.position[1]),
             float(final_state.position[2]),
         )
+
         terrain_at_rest = hole.get_terrain(end_pos[0], end_pos[1])
+
         dx_shot = end_pos[0] - position[0]
         dy_shot = end_pos[1] - position[1]
         distance_yards = math.sqrt(dx_shot**2 + dy_shot**2) * METERS_TO_YARDS
-        end_pos, terrain_at_rest, is_penalty = self._apply_hazard_penalty(
+
+        end_pos, terrain_at_rest, is_penalty = self._handle_shot_penalty(
             position, end_pos, terrain_at_rest, hole
         )
+
         return ShotResult(
             club=club,
             start_position=position,
@@ -343,58 +329,58 @@ class RoundSimulator:
             is_penalty=is_penalty,
         )
 
-    def _compute_putt_initial_velocity(
-        self,
-        dx: float,
-        dy: float,
-        dist: float,
-        stimp: float,
+    def _compute_putt_velocity(
+        self, dx: float, dy: float, dist: float, stimp: float
     ) -> tuple[float, float]:
-        """Compute the initial velocity components for a putt.
-
-        Args:
-            dx: X-component of the vector from ball to pin.
-            dy: Y-component of the vector from ball to pin.
-            dist: Distance from ball to pin in meters.
-            stimp: Stimpmeter reading of the green.
-
-        Returns:
-            Tuple of (vx, vy) in m/s.
-        """
+        """Compute the initial velocity vector for a putt."""
         direction_error = self.rng.normal(0.0, np.radians(1.0))
         aim_angle = math.atan2(dy, dx) + direction_error
-        deceleration = STIMPMETER_CALIBRATION_FACTOR / stimp
+
+        deceleration = stimpmeter_deceleration(stimp)
         target_speed = math.sqrt(2.0 * deceleration * dist) * 1.1
         speed_variation = 1.0 + self.rng.normal(0.0, 0.05)
         putt_speed = target_speed * max(speed_variation, 0.3)
-        return putt_speed * math.cos(aim_angle), putt_speed * math.sin(aim_angle)
 
-    def _find_holed_position(
-        self,
+        vx = putt_speed * math.cos(aim_angle)
+        vy = putt_speed * math.sin(aim_angle)
+        return vx, vy
+
+    def _resolve_putt_simulator(self, hole: GolfHole) -> tuple[PuttingSimulator, float]:
+        """Return a putting simulator and its stimp for the given hole.
+
+        Uses the injected simulator when provided, otherwise builds a default
+        flat green sized from the hole's green radius.
+        """
+        if self.putting_simulator is not None:
+            putt_sim = self.putting_simulator
+            return putt_sim, putt_sim.surface.stimp
+
+        green = GreenSurface.create_flat_green(
+            width=hole.green_radius * 3.0,
+            height=hole.green_radius * 3.0,
+            stimp=11.0,
+        )
+        return PuttingSimulator(surface=green), green.stimp
+
+    @staticmethod
+    def _find_putt_stopping_point(
         putt_trajectory: list[tuple[float, float]],
         putt_sim: PuttingSimulator,
         hole: GolfHole,
     ) -> tuple[float, float]:
-        """Scan the putt trajectory for a hole-capture event.
-
-        Args:
-            putt_trajectory: List of (x, y) positions from the putting simulator.
-            putt_sim: The putting simulator (provides dt and is_holed).
-            hole: The current hole (provides pin position).
-
-        Returns:
-            Final (x, y) position: pin position if holed, last trajectory point otherwise.
-        """
+        """Walk the putt trajectory and return the first-holed or final point."""
         final_x, final_y = putt_trajectory[-1]
         for idx, (px, py) in enumerate(putt_trajectory):
+            # Approximate velocity at this point (difference from next point)
             if idx < len(putt_trajectory) - 1:
                 nx, ny = putt_trajectory[idx + 1]
                 cvx = (nx - px) / putt_sim.dt
                 cvy = (ny - py) / putt_sim.dt
             else:
                 cvx, cvy = 0.0, 0.0
-            if putt_sim.is_holed(px, py, cvx, cvy, hole.pin_x, hole.pin_y):
-                return hole.pin_x, hole.pin_y
+
+            if putt_sim.is_holed(px, py, cvx, cvy, hole.pin_position[0], hole.pin_position[1]):
+                return hole.pin_position[0], hole.pin_position[1]
         return final_x, final_y
 
     def _simulate_putt(
@@ -402,18 +388,11 @@ class RoundSimulator:
         position: tuple[float, float, float],
         hole: GolfHole,
     ) -> ShotResult:
-        """Simulate a putt on the green.
-
-        Args:
-            position: Starting position (x, y, z) in meters.
-            hole: The current hole.
-
-        Returns:
-            ShotResult for the putt.
-        """
+        """Simulate a putt on the green."""
         putter = self.club_bag.get_club(ClubType.PUTTER)
-        dx = hole.pin_x - position[0]
-        dy = hole.pin_y - position[1]
+
+        dx = hole.pin_position[0] - position[0]
+        dy = hole.pin_position[1] - position[1]
         dist = math.sqrt(dx * dx + dy * dy)
 
         if dist < 1e-6:
@@ -427,23 +406,23 @@ class RoundSimulator:
                 is_penalty=False,
             )
 
-        green = GreenSurface.create_flat_green(
-            width=hole.green_radius * 3.0, height=hole.green_radius * 3.0, stimp=11.0
-        )
-        putt_sim = PuttingSimulator(surface=green)
-        vx, vy = self._compute_putt_initial_velocity(dx, dy, dist, green.stimp)
+        putt_sim, stimp = self._resolve_putt_simulator(hole)
+        vx, vy = self._compute_putt_velocity(dx, dy, dist, stimp)
         putt_trajectory = putt_sim.simulate(position[0], position[1], vx, vy)
-        final_x, final_y = self._find_holed_position(putt_trajectory, putt_sim, hole)
+
+        final_x, final_y = self._find_putt_stopping_point(putt_trajectory, putt_sim, hole)
 
         end_pos = (final_x, final_y, 0.0)
-        traj_3d: list[tuple[float, float, float]] = [(px, py, 0.0) for px, py in putt_trajectory]
+        traj_3d = [(px, py, 0.0) for px, py in putt_trajectory]
         putt_dist_m = math.sqrt((final_x - position[0]) ** 2 + (final_y - position[1]) ** 2)
+        putt_dist_yards = putt_dist_m * METERS_TO_YARDS
+
         return ShotResult(
             club=putter,
             start_position=position,
             end_position=end_pos,
             trajectory=traj_3d,
             terrain_at_rest=TerrainType.GREEN,
-            distance_yards=putt_dist_m * METERS_TO_YARDS,
+            distance_yards=putt_dist_yards,
             is_penalty=False,
         )

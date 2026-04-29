@@ -11,21 +11,43 @@ project:
     - "books/**/*.qmd"
     - "critiques/index.qmd"
     - "critiques/*.md"
-    - "!critiques/INLINE_SUGGESTIONS.md"
-    - "!critiques/*-bibliography.md"
   resources:
     - data/
     - manifest.json
     - service-worker.js
     - offline.html
     - js/
-    - content/
 
 website:
   title: "AffineDrift"
   site-url: "https://affinedrift.com"
   favicon: favicon.ico
   bread-crumbs: true
+
+  sidebar:
+    - id: books-nav
+      title: "Books"
+      style: "docked"
+      collapse-level: 2
+      contents:
+        - text: "Book Series"
+          href: books/index.html
+        - section: "Core Textbooks"
+          contents:
+            - text: "The Physics of Golf"
+              href: articles/The_Physics_of_Golf/quarto/index.html
+            - text: "The Geometry of Motion"
+              href: articles/The_Geometry_of_Motion/quarto/index.html
+        - section: "Book Series Volumes"
+          contents:
+            - text: "Volume I: Tangent-Space Methods"
+              href: books/tangent-space-methods.html
+            - text: "Volume II: Control Is Motion"
+              href: books/control-is-motion.html
+            - text: "Volume III: Biomechanics"
+              href: books/biomechanics-biology-to-systems.html
+            - text: "Volume IV: Human Motor Control"
+              href: books/human-motor-control.html
 
   navbar:
     logo: logo/logo_transparent_1.png
@@ -39,20 +61,24 @@ website:
             href: pages/overview.html
           - text: "---"
           - text: "Textbooks"
-          - text: "Website Book Series"
-            href: books/index.html
-          - text: "Dynamics and Control of the Golf Swing"
+          - text: "The Physics of Golf"
             href: articles/The_Physics_of_Golf/quarto/index.html
-          - text: "Geometric Control of Nonlinear Systems"
+          - text: "The Geometry of Motion"
             href: articles/The_Geometry_of_Motion/quarto/index.html
+          - text: "Book Series Volumes"
+            href: books/index.html
           - text: "---"
-          - text: "Articles & Theory"
+          - text: "Series, Articles, and Reviews"
           - text: "Drifter Manifesto"
-            href: articles/drifter-manifesto.html
-          - text: "Tangent Hyperplanes"
+            href: pages/drifter-manifesto.html
+          - text: "Tangent-Space Series"
             href: pages/tangent-hyperplanes.html
           - text: "Article Index"
             href: resources/articles.html
+          - text: "Research Reviews"
+            href: resources/research-reviews.html
+          - text: "Book Reviews"
+            href: pages/book-reviews.html
           - text: "Critiques & Responses"
             href: critiques/index.html
           - text: "Daydreams & Doodles"
@@ -67,7 +93,7 @@ website:
             href: resources/resources-websites.html
           - text: "Datasets"
             href: resources/resources-datasets.html
-          - text: "Reference Books"
+          - text: "Books"
             href: resources/resources-books.html
           - text: "Papers"
             href: resources/resources-papers.html
@@ -75,6 +101,10 @@ website:
             href: resources/resources-researchers.html
           - text: "NotebookLM"
             href: resources/resources-notebooklm.html
+          - text: "Programs & Tools"
+            href: pages/tools.html
+          - text: "Repositories"
+            href: repositories/repositories.html
           - text: "---"
           - text: "Bibliography"
             href: resources/bibliography.html

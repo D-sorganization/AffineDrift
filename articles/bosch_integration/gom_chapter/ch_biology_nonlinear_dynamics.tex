@@ -1,0 +1,1130 @@
+\chapter{The Interplay of Biology and Dynamics of Nonlinear Systems}
+\label{ch:biology-nonlinear}
+
+\epigraph{%
+  Biological systems are not noisy versions of engineering machines.
+  They are nonlinear dynamical systems where the constraints themselves---
+  tissue properties, neural architecture, self-organization---
+  shape the landscape on which movement emerges.
+}{--- Frans Bosch}
+
+\section{Introduction: Why Biology Matters for Dynamics}
+
+The rigid-body dynamics of Chapters~1--6 provide the mechanical skeleton of motor control.
+Yet between these skeletal mechanics and actual biological movement lies a gap.
+Muscles are not ideal actuators with instantaneous force production.
+Neural commands do not arise from magical inverse models.
+Movement patterns do not emerge from centralized computation.
+
+This chapter bridges that gap by reconceptualizing the dynamics problem:
+biology does not merely \emph{add complications} to rigid-body mechanics.
+Rather, biological constraints fundamentally reshape the dynamical landscape---
+the space of possible motions, the cost of different trajectories, the attractors
+that self-organize without active control.
+
+\begin{insight}{Three Levels of Biological Constraint}{bio-levels}
+  Biological systems intersect with dynamics at three hierarchical levels:
+
+  \begin{enumerate}
+    \item \textbf{Tissue Properties} (Level 1): muscle visco-elasticity, tendon compliance,
+          fascial stiffness. These modify the drift field $\drift(\state)$ itself,
+          changing the natural dynamics without any neural command.
+
+    \item \textbf{Neural Architecture} (Level 2): the structure of afferent and efferent
+          connections (spinal reflexes, CPG circuits, feedback gains). These shape
+          the control structure $G(\state)$ and the feedback laws available to the
+          nervous system.
+
+    \item \textbf{Self-Organization} (Level 3): the spontaneous emergence of coordination
+          patterns from the interaction of Levels 1 and 2. Synergies, attractors,
+          and bifurcations arise not from explicit computation but from nonlinear
+          dynamics.
+  \end{enumerate}
+
+  The key insight: \textbf{each level is incomplete without the others.}
+  Muscles alone produce passive oscillations but no goal-directed movement.
+  Neural circuits alone cannot compute fast enough for real-time control.
+  Self-organization alone cannot solve the task without constraints that channel it.
+\end{insight}
+
+\subsection{The Bernstein Problem Revisited}
+
+In Volume~I, Chapter~1, we introduced Bernstein's problem: a 7-DOF arm with hundreds
+of muscles cannot be controlled by specifying each muscle independently.
+The dimensional mismatch (task variables vs. available DOFs) is not a flaw to be
+corrected by a clever inverse model.
+Instead, Bernstein argued, it is a \emph{design feature}: redundancy allows the
+nervous system to solve the problem in lower dimensions through synergies.
+
+From a dynamical systems perspective, this means the control system does not
+command the full state $\state \in \mathbb{R}^{2n}$ (positions and velocities of all joints).
+Instead, it commands a lower-dimensional attractor space, and the biological constraints
+(muscle properties, spinal circuits) handle the details of execution.
+
+\subsection{Bosch's Constraints-Led Approach}
+
+Frans Bosch's framework \citep{Bosch2020, Bosch2015} provides the bridge between
+biomechanics and neural organization. His central claim: movement emerges from the
+interaction of three constraint systems:
+
+\begin{center}
+\begin{tikzpicture}[scale=1.1]
+  % Triangle
+  \draw (0, 0) -- (3, 0) -- (1.5, 2.6) -- (0, 0);
+
+  % Labels
+  \draw (1.5, -0.4) node[align=center, font=\bf\small] {Task Constraints};
+  \draw (-0.5, 1.3) node[align=center, font=\bf\small] {Organism};
+  \draw (4, 1.3) node[align=center, font=\bf\small] {Environment};
+
+  % Center
+  \draw (1.5, 1.0) circle (0.5);
+  \draw (1.5, 1.0) node[align=center, font=\small] {Movement\\Emerges};
+
+  % Descriptions
+  \draw (1.5, -0.8) node[align=center, font=\tiny] {(goal, rules, implements)};
+  \draw (-0.5, 0.8) node[align=center, font=\tiny] {(anatomy, strength,};
+  \draw (-0.5, 0.4) node[align=center, font=\tiny] {tissue properties)};
+  \draw (4, 0.8) node[align=center, font=\tiny] {(gravity, friction,};
+  \draw (4, 0.4) node[align=center, font=\tiny] {reaction forces)};
+\end{tikzpicture}
+\end{center}
+
+In dynamical systems language: the attractor landscape of the controlled system
+is determined by the \emph{intersection} of these three constraint sets.
+The role of the nervous system is to \textbf{set the initial conditions and modulate
+the constraints} so that the intersection produces the desired movement.
+
+This is not inverse kinematics. This is not trajectory tracking.
+This is \textbf{constraint modulation}: the CNS shapes the landscape so that
+self-organization produces the goal.
+
+\section{Visco-Elastic Properties and Intrinsic Dynamics}
+
+\subsection{Muscle as a Nonlinear Spring-Damper}
+
+The Hill model (1938) remains the standard description of muscle force production:
+
+\begin{definition}{The Hill Muscle Model}{hill-model}
+  A muscle generates force $F$ based on three components:
+  \begin{itemize}
+    \item \textbf{Contractile element (CE)}: force depends on length and velocity
+    \item \textbf{Series elastic element (SEE)}: tendon and aponeurosis compliance
+    \item \textbf{Parallel elastic element (PEE)}: passive muscle tissue stiffness
+  \end{itemize}
+
+  The standard formulation \citep{Hill1938}:
+  \begin{equation}
+    F_{\text{total}} = F_{\text{CE}}(l_{\text{CE}}, \dot{l}_{\text{CE}}, a) + F_{\text{PEE}}(l_{\text{muscle}})
+    \label{eq:ch8:hill-model}
+  \end{equation}
+  where:
+  \begin{itemize}
+    \item $l_{\text{CE}}$ is contractile element length
+    \item $\dot{l}_{\text{CE}}$ is contractile element velocity
+    \item $a \in [0, 1]$ is neural activation
+    \item $l_{\text{muscle}}$ is total muscle length
+    \item $F_{\text{PEE}}$ is the passive elastic force
+  \end{itemize}
+
+  The force-length (F/L) curve $F_{\text{CE}}(l_{\text{CE}}, a)$ is nonlinear,
+  peaked around optimal length $l_0$. The force-velocity (F/V) curve shows that
+  muscles generate less force when shortening quickly---a fundamental asymmetry
+  that shapes coordinated movement.
+\end{definition}
+
+The nonlinearity is crucial. A muscle at optimal length with maximal activation
+produces force $F_{\max}$. But the same muscle at sub-optimal length produces
+significantly less force, even with full activation:
+
+\begin{equation}
+  F_{\text{CE}}(l, a) = a \cdot f_L(l) \cdot f_V(\dot{l}) \cdot F_{\max},
+  \label{eq:ch8:force-production}
+\end{equation}
+
+where $f_L(l)$ (the F/L curve) typically ranges from 0 to 1 as length varies over
+$\pm 30\%$ from $l_0$, and $f_V(\dot{l})$ (the F/V curve) is:
+
+\begin{equation}
+  f_V(\dot{l}) = \begin{cases}
+    \frac{1 - b\dot{l}/v_{\max}}{1 + c\dot{l}/v_{\max}} & \text{if } \dot{l} < 0 \text{ (shortening)} \\
+    1 & \text{if } \dot{l} = 0 \\
+    \frac{F_{\max}/P_{\max} - \dot{l}/v_{\max}}{1/c + \dot{l}/v_{\max}} & \text{if } \dot{l} > 0 \text{ (lengthening)}
+  \end{cases}
+  \label{eq:ch8:force-velocity}
+\end{equation}
+
+The constants $b$ and $c$ are empirically fit (typical values: $b \approx 0.3$, $c \approx 0.6$).
+
+\subsection{The Preflex: Zero-Delay Mechanical Feedback}
+
+Muscles are not passive springs. When a muscle is stretched, the mechanical properties
+themselves generate a restoring force \emph{without any neural signal}:
+
+\begin{insight}{The Preflex Concept}{preflex}
+  The \textbf{preflex} (Loeb, 1995; Bosch, 2020) is the mechanical response of muscle
+  and tendon to perturbation, arising purely from visco-elastic properties---
+  zero neural delay.
+
+  When a muscle of length $l$ and velocity $\dot{l}$ experiences a sudden
+  stretch (e.g., from a disturbance), the force increase is immediate:
+
+  \begin{equation}
+    \Delta F = K_{\text{muscle}}(a) \cdot \Delta l + D_{\text{muscle}}(a) \cdot \Delta \dot{l},
+    \label{eq:ch8:preflex-force}
+  \end{equation}
+
+  where $K_{\text{muscle}}(a)$ is activation-dependent stiffness and $D_{\text{muscle}}(a)$
+  is damping. For a muscle under steady activation, a 1~cm stretch produces a
+  restoring force within milliseconds---before any spinal reflex can transmit
+  a signal (which requires $\geq 20$~ms).
+
+  This is profoundly important: small perturbations are automatically stabilized
+  by the muscle's own mechanics, without involving the nervous system.
+\end{insight}
+
+The biological consequence is remarkable: even an anesthetized animal (no spinal reflexes)
+can maintain postural stability for brief durations through the preflex alone \citep{Loeb1995}.
+
+\subsection{Tendon Elasticity and the Catapult Mechanism}
+
+The series elastic element (SEE) is not merely a passive compliance to be overcome.
+In ballistic movements (throwing, striking, jumping), the SEE becomes a
+\textbf{catapult}: elastic energy stored during a loading phase is released
+explosively during the ballistic phase.
+
+Consider a simple model of jumping:
+
+\begin{enumerate}
+  \item \textbf{Loading phase}: muscles contract while the body is still in contact
+        with the ground. The SEE (tendon and aponeurosis) stores elastic energy.
+  \item \textbf{Ballistic phase}: muscles relax slightly, but the stored elastic energy
+        accelerates the body upward. Peak power output exceeds what the muscles could
+        produce alone.
+\end{enumerate}
+
+For human jumping, stored elastic energy contributes $\sim$50\% of the mechanical energy
+for the jump. The SEE acts as a mechanical transformer: slow muscle contraction (which
+can be powerful) becomes fast skeletal motion (which can be coordinated precisely).
+
+In the language of nonlinear dynamics, the SEE changes the \textbf{time scaling} of the
+system: the equation of motion for the body is not directly the muscle force, but the
+force transmitted through an elastic element:
+
+\begin{equation}
+  M(\configvec) \configddot + C(\configvec, \configdot) + G(\configvec) = J^T(\configvec) F_{\text{SEE}},
+  \label{eq:ch8:body-dynamics}
+\end{equation}
+
+where $F_{\text{SEE}} = K_{\text{tendon}}(l_{\text{tendon}} - l_{\text{muscle}})$ depends on
+the elastic deformation of the tendon.
+
+\subsection{How Visco-Elasticity Modifies the Drift Field}
+
+Putting this together: the intrinsic tissue properties change the effective drift field
+of the mechanical system.
+
+\begin{definition}{The Modified Drift Field}{modified-drift}
+  In the absence of neural activation ($u = 0$), the uncontrolled dynamics with
+  visco-elastic properties is:
+
+  \begin{equation}
+    \dot{\state} = \drift_{\text{bio}}(\state) = \begin{pmatrix}
+      \configdot \\
+      M^{-1}(\configvec) \left[ -C(\configvec, \configdot) - G(\configvec) + J^T(\configvec) F_{\text{visco}}(\configvec, \configdot) \right]
+    \end{pmatrix},
+    \label{eq:ch8:bio-drift}
+  \end{equation}
+
+  where $F_{\text{visco}}(\configvec, \configdot)$ includes:
+  \begin{itemize}
+    \item Muscle visco-elasticity: $F_{\text{damping}} = D(\configvec, a) \cdot \configdot$
+    \item Tendon elasticity: $F_{\text{tendon}} = K_{\text{SEE}}(l_{\text{SE}})$
+    \item Passive tissue stiffness: added to the effective stiffness matrix
+  \end{itemize}
+
+  This modified drift field $\drift_{\text{bio}}(\state)$ has attractors and basins
+  of attraction that differ fundamentally from the gravity-only case.
+\end{definition}
+
+The practical consequence: the CNS does not command every muscle to produce every motion.
+Instead, it exploits the intrinsic dynamics. For many movements, activating a few muscles
+is sufficient; the tissue properties handle the details of force distribution and
+stabilization.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1.0]
+  % Contractile element
+  \draw (0.5, 2) -- (1.5, 2);
+  \draw (1.5, 1.7) rectangle (2.5, 2.3);
+  \draw (2, 2) node[align=center, anchor=center, font=\tiny] {CE};
+  \draw (2.5, 2) -- (3.5, 2);
+
+  % Series elastic element (spring)
+  \draw (3.5, 2) -- (3.8, 2);
+  \draw (3.8, 1.7) -- (4.2, 2.3) -- (4.6, 1.7) -- (5.0, 2.3);
+  \draw (5.0, 2) -- (5.3, 2);
+  \draw (4.4, 2.5) node[align=center, anchor=south, font=\tiny] {SEE};
+
+  % Parallel elastic element (spring in parallel)
+  \draw (2, 2) -- (2, 1.2);
+  \draw (2, 1.2) -- (2.3, 0.7) -- (2.7, 1.2) -- (3.1, 0.7) -- (3.5, 1.2);
+  \draw (3.5, 1.2) -- (3.5, 2);
+  \draw (2.7, 0.5) node[align=center, anchor=north, font=\tiny] {PEE};
+
+  % Attachment points
+  \draw (0.5, 2) circle (0.1);
+  \draw (5.3, 2) circle (0.1);
+
+  % Labels
+  \draw (0.5, 2) node[align=center, anchor=east, font=\tiny] {origin};
+  \draw (5.3, 2) node[align=center, anchor=west, font=\tiny] {insertion};
+
+  % Forces
+  \draw[->, thick, blue] (2, 2.6) -- (2, 3.2);
+  \draw (2, 3.4) node[align=center, anchor=south, font=\tiny] {$F(l, \dot{l}, a)$};
+
+  \draw[->, thick, red] (5.5, 2) -- (6.2, 2);
+  \draw (6.4, 2) node[align=center, anchor=west, font=\tiny] {Skeletal force};
+
+  % Title
+  \draw (2.75, 3.8) node[align=center, anchor=center, font=\small\bf] {Hill Muscle Model};
+\end{tikzpicture}
+\caption{The Hill muscle model: contractile element (CE) produces force based on
+length, velocity, and activation. Series elastic element (SEE) couples the muscle
+to the skeleton. Parallel elastic element (PEE) provides passive restoring force.
+The SEE introduces a time delay and filtering effect on muscle force transmission.}
+\label{fig:ch8:hill-model}
+\end{figure}
+
+\section{The Attractor-Fluctuation Framework}
+
+\subsection{Formal Definitions: Attractors in State Space}
+
+From Chapter~2, recall that a dynamical system $\dot{\state} = f(\state)$ has
+an attractor if there exists a set $A \subset \mathbb{R}^{2n}$ such that:
+
+\begin{definition}{Attractor (Formal)}{attractor-formal}
+  A set $A$ is an \textbf{attractor} if:
+  \begin{enumerate}
+    \item \textbf{Invariance}: if $\state(0) \in A$, then $\state(t) \in A$ for all $t \geq 0$
+    \item \textbf{Attraction}: there exists an open neighborhood $U \supset A$ such that
+          for any $\state_0 \in U$, $\lim_{t \to \infty} \text{dist}(\state(t), A) = 0$
+    \item \textbf{Minimality}: no proper subset of $A$ satisfies properties 1 and 2
+  \end{enumerate}
+
+  Common attractors in motor control:
+  \begin{itemize}
+    \item \textbf{Fixed points}: equilibrium postures (sitting, standing)
+    \item \textbf{Limit cycles}: periodic motions (walking, running, swimming)
+    \item \textbf{Tori}: quasi-periodic motions (multi-frequency oscillations)
+    \item \textbf{Chaos}: deterministic but unpredictable trajectories (rare in motor control)
+  \end{itemize}
+\end{definition}
+
+\subsection{Lyapunov Stability and Movement Patterns}
+
+An attractor is \textbf{stable} if nearby trajectories converge to it. The Lyapunov
+exponent $\lambda$ quantifies the convergence rate:
+
+\begin{equation}
+  \text{dist}(\state_1(t), \state_2(t)) \approx e^{\lambda t} \cdot \text{dist}(\state_1(0), \state_2(0)),
+  \label{eq:ch8:lyapunov}
+\end{equation}
+
+where $\lambda < 0$ for stable attractors and $\lambda > 0$ for unstable repellors.
+
+For a movement pattern to be \textbf{self-stabilizing}, small perturbations must
+converge back to the nominal trajectory. This requires negative Lyapunov exponents
+at the attractor.
+
+\begin{insight}{Why Attractors Are Biologically Efficient}{attractor-efficiency}
+  An attractor requires no active feedback control to maintain stability---perturbations
+  are automatically corrected by the dynamics itself. This is profoundly efficient:
+
+  \begin{itemize}
+    \item \textbf{No feedback loop delay}: a passive walking gait stays stable without
+          sensing or neural computation, purely through mechanical feedback
+    \item \textbf{Robustness}: small variations in parameters (muscle activation, limb
+          stiffness) do not destroy the motion---the attractor adjusts automatically
+    \item \textbf{Metabolic economy}: energy goes into maintaining the attractor, not
+          correcting for instability
+  \end{itemize}
+
+  Conversely, a motion that is \textbf{not} an attractor requires continuous active control.
+  Every instant, the nervous system must sense and correct deviations. This is metabolically
+  expensive and requires precise sensing.
+
+  Bernstein's insight about redundancy connects here: the nervous system should exploit
+  (or create) attractors so that most of the motion stabilizes itself. The nervous system
+  then uses its limited computation budget to modulate the attractor---change the location,
+  size, or stability---rather than controlling every variable independently.
+\end{insight}
+
+\subsection{Bosch's Attractor-Fluctuation Landscape}
+
+Bosch's key contribution is to classify all movements on a spectrum from attractors
+(low energy cost, self-stabilizing) to fluctuations (require active control):
+
+\begin{definition}{Attractor vs. Fluctuation}{attractor-fluctuation}
+  In a movement task:
+
+  \begin{itemize}
+    \item \textbf{Attractors} are patterns that emerge naturally from the system's
+          intrinsic dynamics. They have low energy cost and require minimal active control.
+          Examples: the natural gait of bipedal walking, the postural stability of standing,
+          the rhythmic oscillation of arm swinging.
+
+    \item \textbf{Fluctuations} are deviations from the attractor landscape that require
+          active neural control to maintain. They have high energy cost. Examples: standing
+          on one leg (vs. standing on two), walking at a non-preferred cadence, precise
+          reaching under time pressure.
+  \end{itemize}
+
+  In the framework of Bosch and constraints-led learning: expert movement is the
+  exploitation of attractors. The learner's task is to discover which configurations of
+  the body (posture, stiffness, muscle tone) produce attractors that satisfy the task goal.
+\end{definition}
+
+\subsection{Bifurcation Theory: Phase Transitions in Movement}
+
+As a control parameter changes, attractors can appear, disappear, or lose stability---
+a phenomenon called \textbf{bifurcation}.
+
+The canonical example is the human gait transition. At low speeds, humans walk; at high speeds,
+they run. In between (typically 1.5--2.5 m/s), a transition occurs: walking becomes
+unstable and running becomes stable. Biomechanical models reveal this is a bifurcation
+in the cost function (metabolic energy):
+
+\begin{equation}
+  C_{\text{walk}}(v) = a + b \cdot v^2, \quad C_{\text{run}}(v) = c + d \cdot v^2 + e,
+  \label{eq:ch8:gait-cost}
+\end{equation}
+
+where for $v < v^*$, walking is cheaper, but for $v > v^*$, running is cheaper.
+The transition speed $v^*$ depends on leg length, body weight, and gravity.
+
+In human subjects, the observed gait transition speed is close to the predicted optimal
+value (Margaria, 1976; Minetti et al., 1994). This suggests the nervous system selects
+the gait with lower energy cost---another example of exploiting natural dynamics.
+
+\subsection{The HKB Model: Self-Organization in Bimanual Coordination}
+
+The Haken-Kelso-Bunz (HKB) model (Haken et al., 1985; Kelso, 1995) is the canonical
+example of self-organization in motor control. Two limbs oscillate in either in-phase
+(both forward) or anti-phase (mirror) coordination, and the transition between them
+is a bifurcation:
+
+\begin{equation}
+  \ddot{\phi} + \gamma \dot{\phi} + A(\omega) \sin(\phi) + 2B(\omega) \sin(2\phi) = Q \sin(\omega t),
+  \label{eq:ch8:hkb-model}
+\end{equation}
+
+where $\phi$ is the phase difference between the two limbs, $\omega$ is the driving
+frequency, and $A$, $B$ are control parameters that depend on movement speed.
+
+The key observation: \textbf{no central command specifies the coordination mode}.
+Instead, as movement speed increases, the in-phase mode becomes unstable and the
+system spontaneously transitions to anti-phase. This is a dynamic phase transition
+(bifurcation), not a decision.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.9]
+  % Axes
+  \draw[->] (0, 0) -- (6, 0) node[anchor=west, font=\tiny] {$\omega$ (freq)};
+  \draw[->] (0, 0) -- (0, 4) node[anchor=south, font=\tiny] {Stability};
+
+  % In-phase stable curve
+  \draw[thick, blue] (0.5, 3.5) -- (2.5, 3.2) -- (4, 2) -- (5.5, 0.5);
+  \draw (2.2, 3.5) node[anchor=south, font=\tiny, color=blue] {In-phase};
+
+  % Anti-phase stable curve
+  \draw[thick, red] (0.5, 0.8) -- (1.8, 1.2) -- (3.5, 2.5) -- (5.5, 3.5);
+  \draw (3.5, 2.8) node[anchor=south, font=\tiny, color=red] {Anti-phase};
+
+  % Bifurcation point
+  \draw (4, 2) circle (0.15);
+  \draw (4, 2) node[anchor=north, font=\tiny] {Bifurcation};
+
+  % Arrows showing transition
+  \draw[->, thick, purple] (3.2, 2.8) -- (3.8, 2.3);
+  \draw (3.5, 3.1) node[anchor=center, font=\tiny, color=purple] {freq increase};
+\end{tikzpicture}
+\caption{HKB bifurcation: In-phase coordination is stable at low frequencies but becomes
+unstable above a critical frequency (bifurcation point). Anti-phase coordination takes over.
+The transition is automatic---no neural command needed. As frequency increases further,
+the stability of anti-phase increases.}
+\label{fig:ch8:hkb-bifurcation}
+\end{figure}
+
+The HKB model demonstrates that complex, coordinated motor behavior can emerge from
+simple nonlinear dynamics. There is no explicit "coordination module" in the brain
+that decides when to switch from in-phase to anti-phase. Instead, the dynamics itself
+undergoes a phase transition, and behavior changes as a consequence.
+
+\section{Synergies and the Uncontrolled Manifold}
+
+\subsection{Bernstein's Synergies: Reducing Dimensionality}
+
+A human arm has $\sim$40 muscles and $\geq 7$ DOFs. Yet the nervous system often
+activates multiple muscles in synchrony---\textbf{synergies}.
+
+Synergies reduce the effective dimensionality of control. Instead of commanding
+40 independent muscle activations, the nervous system commands, say, 5 synergy amplitudes.
+
+\begin{definition}{Muscle Synergy}{synergy-def}
+  A \textbf{muscle synergy} is a time-invariant weighting vector $\mathbf{w}_i \in \mathbb{R}^p$
+  (where $p$ is the number of muscles) such that the total muscle activation is:
+
+  \begin{equation}
+    \mathbf{u}(t) = \sum_{i=1}^{k} c_i(t) \mathbf{w}_i = W \mathbf{c}(t),
+    \label{eq:ch8:synergy-decomp}
+  \end{equation}
+
+  where $c_i(t)$ are synergy activations (time-varying, $k \ll p$), and $W$ is the
+  synergy matrix ($p \times k$).
+
+  The variance explained is:
+  \begin{equation}
+    \text{VAF} = 1 - \frac{\|\mathbf{u} - W\hat{\mathbf{c}}\|^2}{\|\mathbf{u}\|^2} \times 100\%,
+    \label{eq:ch8:vaf}
+  \end{equation}
+
+  where $\hat{\mathbf{c}}$ is the least-squares fit of synergy activations.
+\end{definition}
+
+Empirical evidence is striking:
+\begin{itemize}
+  \item Frog leg motor output: $\sim$5 synergies explain $>85\%$ of variance across 7 behaviors
+  \item Human reaching: $\sim$4--6 synergies explain $>90\%$ of variance across 15 reach directions
+  \item Human walking: $\sim$4 synergies explain $>80\%$ of variance across speeds and slopes
+\end{itemize}
+
+\subsection{The Uncontrolled Manifold: Separating Task-Relevant from Task-Irrelevant Variation}
+
+Synergies often align with the \textbf{uncontrolled manifold} (UCM) ---the set of all
+configurations that produce the same task-relevant output.
+
+Suppose the task is to place your hand at position $\mathbf{p} = (p_x, p_y, p_z)$.
+Your arm's forward kinematics is:
+
+\begin{equation}
+  \mathbf{p} = \mathbf{h}(\configvec),
+  \label{eq:ch8:fk}
+\end{equation}
+
+where $\configvec \in \mathbb{R}^7$ is the joint configuration (shoulder and elbow angles).
+The Jacobian is:
+
+\begin{equation}
+  J(\configvec) = \frac{\partial \mathbf{h}}{\partial \configvec} \in \mathbb{R}^{3 \times 7},
+  \label{eq:ch8:jacobian}
+\end{equation}
+
+The UCM is the null space of $J$:
+
+\begin{definition}{Uncontrolled Manifold}{ucm-def}
+  The uncontrolled manifold for task $\mathbf{p} = \mathbf{h}(\configvec)$ is:
+
+  \begin{equation}
+    \text{UCM} = \{ \configvec : J(\configvec) \Delta\configvec = 0 \},
+    \label{eq:ch8:ucm}
+  \end{equation}
+
+  i.e., the set of all infinitesimal changes in configuration that do not change
+  the task variable. Movements within the UCM are \textbf{task-irrelevant}---
+  they do not affect the goal. Movements orthogonal to the UCM are
+  \textbf{task-relevant}---they move toward or away from the goal.
+
+  Variance decomposition \citep{Scholz1999, Latash2012}:
+  \begin{itemize}
+    \item $V_{\text{UCM}}$: variance within the UCM (task-irrelevant)
+    \item $V_{\text{ORT}}$: variance orthogonal to the UCM (task-relevant)
+  \end{itemize}
+
+  Skilled performance is characterized by $V_{\text{UCM}} \gg V_{\text{ORT}}$:
+  the nervous system allows large variability in joint configurations (exploiting
+  redundancy) but constrains variability in the task outcome.
+\end{definition}
+
+The practical insight: synergies align with the UCM. They activate muscles in combinations
+that preserve the task variable while allowing flexibility in execution. This is
+Bernstein's solution to the degrees-of-freedom problem: not all DOFs are controlled
+independently, but rather organized to keep the task on track while allowing variation
+in the details.
+
+\subsection{Connection to the Affine Framework}
+
+In the control-affine framework of Volume~I:
+
+\begin{equation}
+  \dot{\state} = \drift(\state) + \sum_{i=1}^{m} u_i \inputfield_i(\state),
+  \label{eq:ch8:affine}
+\end{equation}
+
+the control input space is spanned by the vector fields $\{\inputfield_1, \ldots, \inputfield_m\}$.
+If there are $m$ muscles (or $m$ synergies), there are (at most) $m$ independent input
+directions in state space.
+
+Synergies reduce this further: if $k$ synergies are sufficient, the effective control
+input space has dimension $k$. The remaining $m - k$ dimensions are \textbf{uncontrollable}---
+perturbations in these directions cannot be corrected by any combination of inputs.
+
+The uncontrollable subspace must then be \textbf{unobservable in the task variables}.
+This is exactly the UCM: movement within the UCM does not change the task, and therefore
+does not need to be controlled.
+
+This is the deep connection between Bernstein's synergies and control theory: synergies
+are not just empirical regularities. They are the \textbf{structure of controllability}
+imposed by biological constraints.
+
+\section{Impedance Control and the Stiffness-Damping Trade-off}
+
+\subsection{Impedance Control Framework}
+
+Instead of tracking a trajectory exactly, an alternative control strategy is to
+regulate the mechanical impedance of the system:
+
+\begin{definition}{Mechanical Impedance}{impedance-def}
+  The \textbf{impedance} is the relationship between applied force $F$ and resulting
+  displacement $x$. In the Laplace domain:
+
+  \begin{equation}
+    Z(s) = \frac{F(s)}{X(s)} = M s^2 + D s + K,
+    \label{eq:ch8:impedance-laplace}
+  \end{equation}
+
+  where:
+  \begin{itemize}
+    \item $M$ is inertia (mass)
+    \item $D$ is damping (viscous friction)
+    \item $K$ is stiffness (elastic restoring force)
+  \end{itemize}
+
+  Equivalently, in the time domain, the equation of motion under external force $F_{\text{ext}}$ is:
+
+  \begin{equation}
+    M \ddot{x} + D \dot{x} + K x = F_{\text{ext}}.
+    \label{eq:ch8:impedance-time}
+  \end{equation}
+\end{definition}
+
+A stiff system ($K$ large) resists displacement; a compliant system ($K$ small)
+deflects easily. Similarly, a damped system dissipates energy; an underdamped system
+oscillates.
+
+\subsection{Co-Contraction as Impedance Modulation}
+
+Muscles work in antagonistic pairs: for every flexor, there is an extensor. When both
+are activated simultaneously (co-contraction), the joint becomes stiffer:
+
+\begin{equation}
+  K = K_{\text{flexor}}(a_f) + K_{\text{extensor}}(a_e),
+  \label{eq:ch8:cocontraction-stiffness}
+\end{equation}
+
+where $a_f$ and $a_e$ are activation levels. By varying the co-contraction level,
+the nervous system can tune the stiffness of the joint without changing the mean
+torque.
+
+Co-contraction is observed when:
+\begin{itemize}
+  \item \textbf{Making contact with an object}: the nervous system increases stiffness
+        to reduce instability upon impact
+  \item \textbf{Reaching to an uncertain target}: increased stiffness reduces sensitivity
+        to execution error
+  \item \textbf{Reacting to an unpredictable disturbance}: higher stiffness speeds up
+        the response time
+\end{itemize}
+
+The trade-off: increased stiffness requires metabolic energy (both muscles working against each other)
+and reduces flexibility (a stiff joint cannot follow a changing target as easily).
+
+\subsection{Optimal Impedance}
+
+The question becomes: what stiffness and damping are optimal?
+
+For a reach to a fixed target under uncertainty, increasing stiffness reduces the
+cost of endpoint error (because forces are corrected faster) but increases the cost
+of actuation. There is a trade-off. Optimal impedance balances these costs:
+
+\begin{definition}{Optimal Impedance}{optimal-impedance}
+  For a reach task with cost:
+
+  \begin{equation}
+    J = \mathbb{E}[\|x(T) - x_{\text{target}}\|^2] + \int_0^T c_u(\control(t)) \, dt,
+    \label{eq:ch8:impedance-cost}
+  \end{equation}
+
+  where the first term is endpoint error and the second is actuation cost, the optimal
+  impedance satisfies:
+
+  \begin{equation}
+    K^* = \arg\min_K J(K).
+    \label{eq:ch8:optimal-k}
+  \end{equation}
+
+  For Gaussian noise and quadratic costs, the optimal stiffness is proportional to
+  the signal-to-noise ratio: if the target is uncertain, stiffness increases; if
+  actuation is costly, stiffness decreases \citep{Hogan1984, Flash1985}.
+\end{definition}
+
+Empirical evidence supports this theory: human subjects reaching to uncertain targets
+increase arm stiffness proportionally to the target uncertainty \citep{Hogan1984}.
+
+\subsection{Connection to Robust Control Theory}
+
+In modern control theory, the H∞ norm characterizes the worst-case response to
+disturbances. A control law is robust if its H∞ norm is small---meaning even large
+disturbances produce bounded output.
+
+For a mechanical system with impedance $Z(s) = Ms^2 + Ds + K$, the H∞ norm depends
+on the relative magnitudes of $M$, $D$, and $K$. Under-damping ($D$ too small) leads
+to resonance and poor disturbance rejection. Over-damping ($D$ too large) leads to
+sluggishness. Optimal impedance tuning achieves robust control with minimal energy.
+
+The nervous system, through co-contraction and muscle activation patterns, is
+continuously tuning impedance to match the robustness requirements of the current task.
+
+\subsection{The Metabolic Cost of Impedance}
+
+Increasing stiffness requires sustained muscular effort. In biomechanics, the
+metabolic cost of isometric muscle contraction (holding a position against force)
+is roughly proportional to the sustained force:
+
+\begin{equation}
+  \text{Metabolic cost} \propto \int K \, dt,
+  \label{eq:ch8:metabolic-cost-impedance}
+\end{equation}
+
+This means maximum stiffness is \emph{never} optimal---the metabolic cost becomes prohibitive.
+Skilled movement balances impedance (robustness against perturbations) against metabolic
+economy.
+
+In expert athletes, impedance tuning is often implicit and adaptive: as the environment
+changes, stiffness adjusts automatically without conscious thought. This is an example of
+motor learning as the discovery of optimal impedance landscapes for different tasks.
+
+\section{Self-Organization in Biological Systems}
+
+\subsection{Dynamic Systems Theory Applied to Motor Control}
+
+The modern framework for understanding self-organization in biological movement comes from
+dynamic systems theory, pioneered by Kelso, Turvey, and Schöner.
+
+The key idea: behavior emerges from the interaction of multiple coupled nonlinear oscillators
+(neurons, muscles, limbs) without explicit central command. The nervous system does not
+compute trajectories; it shapes the dynamics so that self-organization produces the goal.
+
+\begin{insight}{The Paradigm Shift}{paradigm-shift}
+  \textbf{Before} (computational/representational view): the brain computes an optimal
+  trajectory and sends it to muscles.
+
+  \textbf{After} (dynamical systems view): the brain modulates the control parameters
+  (stiffness, damping, attractors) and lets the coupled dynamics produce the motion.
+
+  The difference is profound:
+  \begin{itemize}
+    \item \textbf{Computation}: trajectory requires solving an inverse problem (expensive);
+          parameter modulation is local and simple
+    \item \textbf{Adaptation}: if the environment changes, the brain adapts parameters,
+          and the new dynamics automatically produces a new motion
+    \item \textbf{Robustness}: self-organized attractors are inherently stable to
+          perturbations; computed trajectories must be continuously corrected
+  \end{itemize}
+\end{insight}
+
+\subsection{Order Parameters and Control Parameters}
+
+In a complex system with many degrees of freedom, a small number of \textbf{order parameters}
+capture the essential behavior:
+
+\begin{definition}{Order Parameter and Control Parameter}{order-control-params}
+  An \textbf{order parameter} $\phi$ is a collective variable that captures the
+  macro-scale behavior of a system. For bimanual coordination, $\phi$ is the phase
+  difference between the hands.
+
+  A \textbf{control parameter} $\lambda$ is an external or internal variable that
+  the experimenter (or the nervous system) can adjust. For bimanual coordination,
+  $\lambda$ is the movement frequency.
+
+  The dynamics of the order parameter is:
+
+  \begin{equation}
+    \tau \dot{\phi} = f(\phi, \lambda) + \text{noise},
+    \label{eq:ch8:order-param-dynamics}
+  \end{equation}
+
+  where $\tau$ is a time constant and $f$ captures the interaction between the
+  coupled oscillators.
+
+  The signature of self-organization is a \textbf{phase transition}: as $\lambda$ changes,
+  the fixed points of $f(\phi, \lambda)$ change qualitatively (bifurcation), and
+  behavior undergoes a spontaneous transition.
+\end{definition}
+
+The HKB model (Section~4.5) is exactly this framework: the order parameter is phase
+difference, the control parameter is oscillation frequency, and the dynamics shows
+a bifurcation as frequency increases.
+
+\subsection{Biotensegrity: The Body as a Pre-Stressed Structure}
+
+Ingber (1998) and Levin (2002) proposed that the body is not a system of rigid links
+connected by passive joints. Rather, it is a \textbf{tensegrity structure}:
+a framework where compression (bones) and tension (muscles, tendons, fascia) are
+distributed throughout, creating a pre-stressed network.
+
+\begin{definition}{Tensegrity}{tensegrity-def}
+  A \textbf{tensegrity structure} is a system where:
+  \begin{itemize}
+    \item Compression elements (struts) resist squeezing
+    \item Tension elements (cables) resist pulling
+    \item The system is pre-stressed: internal forces exceed external forces
+    \item Stability emerges from the balance of compression and tension, not from
+          rigid connection
+  \end{itemize}
+
+  In biology, bones are compression elements, muscles and tendons are tension elements,
+  and fascia provides distributed stiffness. The key insight: the shape and stability
+  of the structure are determined by the distribution of tension (muscle tone),
+  not by the shape of the bones alone.
+\end{definition}
+
+This has profound implications: by modulating muscle tone (maintaining baseline activation
+without conscious movement), the nervous system pre-stresses the body. This pre-stress
+creates the "landscape" on which self-organization operates.
+
+For example, standing balance involves maintaining baseline activation in leg muscles.
+This is not to generate force (gravity does that) but to pre-stress the structure.
+When a disturbance occurs, the pre-stressed structure responds more quickly and stably
+than if the muscles were initially slack.
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=0.95]
+  % Simple tensegrity: octahedron
+  % Top vertices
+  \draw (1, 2.5) circle (0.08);
+  \draw (3, 2.5) circle (0.08);
+
+  % Middle vertices
+  \draw (0, 1.2) circle (0.08);
+  \draw (2, 1.5) circle (0.08);
+  \draw (4, 1.2) circle (0.08);
+
+  % Bottom vertices
+  \draw (1, 0) circle (0.08);
+  \draw (3, 0) circle (0.08);
+
+  % Compression elements (thick lines)
+  \draw[thick, blue] (1, 2.5) -- (2, 1.5);
+  \draw[thick, blue] (3, 2.5) -- (2, 1.5);
+  \draw[thick, blue] (2, 1.5) -- (1, 0);
+  \draw[thick, blue] (2, 1.5) -- (3, 0);
+
+  % Tension elements (thin lines)
+  \draw[thin, red] (1, 2.5) -- (0, 1.2);
+  \draw[thin, red] (1, 2.5) -- (4, 1.2);
+  \draw[thin, red] (3, 2.5) -- (0, 1.2);
+  \draw[thin, red] (3, 2.5) -- (4, 1.2);
+  \draw[thin, red] (0, 1.2) -- (1, 0);
+  \draw[thin, red] (0, 1.2) -- (3, 0);
+  \draw[thin, red] (4, 1.2) -- (1, 0);
+  \draw[thin, red] (4, 1.2) -- (3, 0);
+  \draw[thin, red] (1, 0) -- (3, 0);
+
+  % Labels
+  \draw (1, 2.8) node[anchor=south, font=\tiny] {Node};
+  \draw (2.2, 2) node[anchor=west, font=\tiny, color=blue] {Compression (strut)};
+  \draw (0.2, 0.6) node[anchor=west, font=\tiny, color=red] {Tension (cable)};
+
+  % Title
+  \draw (2, 3.2) node[anchor=center, font=\small\bf] {Tensegrity Structure};
+  \draw (2, -0.5) node[anchor=center, font=\tiny] {Stability from balance of compression and tension};
+\end{tikzpicture}
+\caption{A simplified tensegrity structure: compression elements (blue struts) and
+tension elements (red cables) distribute forces throughout. Stability emerges from
+the pre-stressed balance, not from rigid geometry.}
+\label{fig:ch8:tensegrity}
+\end{figure}
+
+\subsection{How Pre-Stress Shapes the Drift Field}
+
+In the language of dynamical systems, muscle tone modifies the drift field:
+
+\begin{equation}
+  \drift(\state) = \drift_0(\state) + f_{\text{tone}}(a_{\text{baseline}}, \state),
+  \label{eq:ch8:drift-with-tone}
+\end{equation}
+
+where $a_{\text{baseline}}$ is the baseline (tonic) muscle activation. Increasing
+baseline activation increases the stiffness of the system and shifts the locations
+of attractors.
+
+For postural control, the baseline activation (set by the brainstem and cerebellum)
+is set to create stable equilibria at standing, sitting, and other common postures.
+These equilibria are attractors: small perturbations are automatically corrected.
+
+\section{The Assembly Line: From Micro to Macro Stability}
+
+Bosch's concept of the "assembly line" describes how the nervous system organizes
+stability at multiple hierarchical levels:
+
+\begin{definition}{The Assembly Line: Three Levels of Organization}{assembly-line}
+  Movement stability is not achieved at a single level but through a hierarchy:
+
+  \begin{enumerate}
+    \item \textbf{Level 1: Intramuscular Stability}
+    \begin{itemize}
+      \item Muscle force-length and force-velocity properties
+      \item Muscle slack and pennation angle
+      \item The preflex: mechanical feedback through visco-elasticity
+      \item Time scale: 10--50 ms (faster than neural feedback)
+    \end{itemize}
+
+    \item \textbf{Level 2: Intermuscular Cooperation}
+    \begin{itemize}
+      \item Antagonistic co-contraction for stiffness modulation
+      \item Agonistic synergies for force closure (multiple muscles stabilizing a joint)
+      \item Kinetic chains: sequential activation of muscles along the limb
+      \item Time scale: 50--200 ms (spinal reflexes and central pattern generators)
+    \end{itemize}
+
+    \item \textbf{Level 3: Intentional Patterns}
+    \begin{itemize}
+      \item Task-level attractors and attractor hierarchies
+      \item Deliberate modulation of control parameters
+      \item Learning: modification of the control policy based on performance feedback
+      \item Time scale: 200 ms to seconds (cortical and cerebellar processing)
+    \end{itemize}
+  \end{enumerate}
+\end{definition}
+
+Each level maps onto the control-affine structure:
+
+\begin{enumerate}
+  \item \textbf{Level 1} modifies the element-level dynamics (the mass matrix $M(\configvec)$,
+        damping $C(\configvec, \configdot)$, and gravity term $G(\configvec)$)
+  \item \textbf{Level 2} shapes the constraint Jacobian and the effective stiffness $K$
+  \item \textbf{Level 3} determines the reference trajectories and the overall control law
+\end{enumerate}
+
+\begin{theorem}[Nested Lyapunov Argument for Composite Stability]{nested-lyapunov}
+  For a hierarchically organized system, if:
+  \begin{enumerate}
+    \item Level 1 dynamics are stable (Lyapunov function $V_1$)
+    \item Level 2 dynamics are stable given Level 1 (Lyapunov function $V_2$)
+    \item Level 3 dynamics are stable given Levels 1 and 2 (Lyapunov function $V_3$)
+  \end{enumerate}
+
+  Then the composite system is stable (Lyapunov function $V = V_1 + V_2 + V_3$ works).
+
+  \textbf{Implication}: Bosch's assembly line is not just an organizational metaphor.
+  It is a mathematically rigorous way to decompose the stability analysis of a complex
+  system. By ensuring stability at each level, the nervous system avoids the curse of
+  dimensionality: instead of analyzing a single high-dimensional system, it analyzes
+  three lower-dimensional problems.
+\end{theorem}
+
+\section{Implications for Computational Modeling}
+
+\subsection{Why Rigid-Body Models Miss Crucial Dynamics}
+
+The standard inverse dynamics model (Chapters~4--6) assumes:
+\begin{itemize}
+  \item Muscles produce force instantaneously upon neural command
+  \item Tendons are inextensible (rigid coupling to the skeleton)
+  \item Damping is negligible
+\end{itemize}
+
+These assumptions are reasonable for \emph{quick ballistic movements} (e.g., a throw).
+But for \emph{sustained movements} (postural control, slow reaching) and \emph{reflexive responses},
+they fail:
+
+\begin{itemize}
+  \item Tendons store and release elastic energy (catapult effect)
+  \item Muscle visco-elasticity provides damping and stabilizes equilibria
+  \item Neural delays (20+ ms) mean feedback is essential; open-loop inverse models are unreliable
+\end{itemize}
+
+The practical consequence: a controller designed using only rigid-body inverse dynamics
+will be unstable or inefficient when implemented on a real (biological or robotic) system
+with elastic elements and delays.
+
+\subsection{Adding Visco-Elastic Elements to Multibody Simulation}
+
+Modern simulation platforms (MuJoCo, Gazebo) allow specification of:
+\begin{itemize}
+  \item Joint damping: $\tau_{\text{damp}} = -D \dot{\theta}$
+  \item Tendon compliance: elastic force $F = K (\ell - \ell_{\text{slack}})$
+  \item Passive muscle stiffness: F/L curves
+  \item Muscle activation dynamics: delay and first-order filtering
+\end{itemize}
+
+The improved model is closer to biology and exhibits richer dynamics:
+\begin{enumerate}
+  \item Attractors emerge naturally (no explicit trajectory tracking needed)
+  \item Perturbations are stabilized automatically (preflex)
+  \item Resonance phenomena appear (muscles/tendons oscillate at natural frequency)
+  \item Energy transfer improves (elastic storage in ballistic motions)
+\end{enumerate}
+
+\subsection{Parameter Identification Challenges}
+
+A difficulty: muscle parameters vary dramatically with activation level, fatigue,
+temperature, and training state. A simple static model is insufficient.
+
+Parameters that must be measured or estimated:
+\begin{itemize}
+  \item Force-length curves: typically 3--5 parameters per muscle
+  \item Force-velocity curves: 4--6 parameters per muscle
+  \item Tendon slack length and stiffness: 2 parameters per muscle
+  \item Muscle fiber length and pennation angle: 2--3 parameters per muscle
+  \item Total: $\sim$50--100 parameters for a 7-DOF arm with 10 muscles
+\end{itemize}
+
+Techniques for parameter identification:
+\begin{enumerate}
+  \item \textbf{Direct measurement}: dissect cadavers, image tissue (invasive, limited)
+  \item \textbf{Inverse dynamics}: fit model to measured movements (requires high-quality motion capture)
+  \item \textbf{Optimization}: search parameter space to match simulation to biological data (computationally expensive)
+\end{enumerate}
+
+\subsection{Hybrid Control Architectures}
+
+The most successful approaches combine multiple layers:
+
+\begin{enumerate}
+  \item \textbf{Reflexive layer}: local feedback loops (Renshaw inhibition, spindle feedback)
+        Operating at 10--50 ms timescale, requiring no CNS involvement
+
+  \item \textbf{Feedforward layer}: central pattern generators or learned motor primitives
+        Pre-computed patterns that generate baseline movement kinematics
+
+  \item \textbf{Optimizing layer}: task-level feedback control
+        Compares actual motion to desired motion and adjusts control parameters
+        Operating at 100--500 ms timescale
+\end{enumerate}
+
+A hybrid architecture avoids the speed-accuracy trade-off: the fast reflexive and
+feedforward layers handle real-time stabilization; the slower optimizing layer
+handles task adaptation and learning.
+
+\subsection{Current Limitations and Open Problems}
+
+Despite advances, several key challenges remain:
+
+\begin{itemize}
+  \item \textbf{Plasticity}: how do neural circuits learn? How do muscle and tendon properties
+        adapt to training? Most models are static.
+
+  \item \textbf{Fatigue}: muscles weaken during sustained contraction, yet animals continue
+        to move. What adaptation mechanisms maintain performance?
+
+  \item \textbf{Noise and variability}: biological systems are noisy. How does the nervous
+        system exploit noise for exploration (learning) while maintaining stability?
+
+  \item \textbf{Integration with perception}: movement control is tightly linked to sensing
+        (vision, proprioception, balance). How do sensorimotor loops emerge during development?
+
+  \item \textbf{Scale}: models of a single limb work reasonably well. Models of whole-body
+        movement coordinating 200+ muscles and 60+ DOFs are still primitive.
+\end{itemize}
+
+These are not technical obstacles but conceptual challenges: we lack frameworks for
+understanding learning, adaptation, and integration at the system level.
+
+\section{Summary and Connection to the Series}
+
+This chapter bridges Volume~III (biomechanics: how the body is structured) and
+Volume~IV (motor control: how the nervous system commands movement).
+
+The key insights:
+
+\begin{enumerate}
+  \item \textbf{Biology is not noise}: muscle visco-elasticity, tendon compliance,
+        and neural architecture are not complications added to ideal rigid-body mechanics.
+        They are fundamental features that enable stable, efficient movement.
+
+  \item \textbf{Self-organization reduces control burden}: by exploiting attractors and
+        pre-stressing the body (tensegrity), the nervous system offloads computation
+        to the mechanics. The CNS modulates parameters; the dynamics produces motion.
+
+  \item \textbf{Hierarchy enables stability}: stability at multiple levels (intramuscular,
+        intermuscular, intentional) allows the nervous system to avoid the curse of
+        dimensionality and achieve real-time control.
+
+  \item \textbf{Synergies and the UCM are not post-hoc descriptions}: they are direct
+        consequences of the control structure (which inputs are available?) and the task
+        structure (which outputs matter?).
+\end{enumerate}
+
+The chapters ahead build on this foundation:
+
+\begin{itemize}
+  \item \textbf{Chapter~8 (CPGs)}: central pattern generators are a concrete realization
+        of self-organization in the nervous system, producing rhythmic attractors without
+        conscious control.
+
+  \item \textbf{Chapter~9 (Motor Learning)}: learning involves discovering the landscape
+        of attractors and control parameters that are optimal for a task.
+
+  \item \textbf{Chapter~10 (Computational Models)}: building biologically plausible models
+        requires integrating all the insights from this chapter.
+
+  \item \textbf{Chapter~11 (Robotics)}: designing robots that move as efficiently as animals
+        requires exploiting passive dynamics, elastic elements, and self-organization---
+        the same principles used by biology.
+\end{itemize}
+
+The central message: dynamics and biology are not separate disciplines.
+They are two sides of the same coin.
+The best models of motor control integrate both: the physics of the body and
+the biology of the nervous system must be understood together.
+
+\section*{Exercises}
+
+\begin{enumerate}
+
+\item \textbf{Hill Muscle Modeling.}
+  Implement a Hill muscle model with force-length and force-velocity curves.
+  Simulate a muscle contracting from $l = 0.8 l_0$ to $l = 1.2 l_0$ with a step
+  in activation from $a = 0$ to $a = 0.8$.
+  Plot force output over time. How does the SEE compliance affect the rise time?
+
+\item \textbf{Attractors and Stability.}
+  Construct a 2D dynamical system representing arm reaching:
+  \begin{equation}
+    \ddot{x} + D\dot{x} + K(x - x_{\text{target}}) = 0
+  \end{equation}
+  For three values of $D$ (underdamped, critically damped, overdamped), simulate
+  the response to a step command $x_{\text{target}} = 1$ and a sinusoidal disturbance.
+  Which has the best robustness to disturbances?
+
+\item \textbf{Uncontrolled Manifold.}
+  Simulate a 3-link planar arm ($n = 3$ DOFs) reaching to a fixed hand position $(p_x, p_y)$.
+  Calculate the Jacobian $J(\theta)$, find the null space (UCM), and decompose endpoint
+  variability into $V_{\text{UCM}}$ and $V_{\text{ORT}}$ across 100 trials with random joint noise.
+  Verify that $V_{\text{UCM}} / V_{\text{ORT}} > 1$ (redundancy exploitation).
+
+\item \textbf{Bifurcation in Bimanual Coordination.}
+  Implement the HKB model:
+  \begin{equation}
+    \ddot{\phi} + \gamma \dot{\phi} + A(\omega)\sin(\phi) + 2B(\omega)\sin(2\phi) = 0
+  \end{equation}
+  where $A$ and $B$ are control parameters that vary with $\omega$. Simulate the system
+  starting in in-phase ($\phi = 0$) coordination and gradually increase $\omega$ (driving frequency).
+  Observe and plot the bifurcation point at which the in-phase state becomes unstable
+  and transitions to anti-phase. What frequency triggers the transition?
+
+\item \textbf{(Programming)} Impedance Control and Robustness.
+  Design a controller that reaches a target while rejecting disturbances.
+  Compare two approaches: (1) impedance control with fixed stiffness $K = 100$, and
+  (2) adaptive impedance that increases $K$ if disturbances are detected.
+  Measure endpoint accuracy and energy cost for a sequence of random disturbances.
+  Which approach is more efficient?
+
+\end{enumerate}
+

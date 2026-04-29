@@ -37,9 +37,49 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # ── Dispatcher: route to self-hosted if available ──────────────────────────
+  pick-runner:
+    runs-on: d-sorg-fleet
+    timeout-minutes: 2
+    outputs:
+      runner: ${{ steps.check.outputs.runner }}
+    steps:
+      - name: Check for self-hosted runner
+        id: check
+        env:
+          GH_TOKEN: ${{ secrets.RUNNER_CHECK_TOKEN }}
+          FLEET_MODE: ${{ vars.FLEET_RUNNER_MODE }}
+        run: |
+          MODE="${FLEET_MODE:-hybrid}"
+          echo "Fleet mode: $MODE"
+
+          case "$MODE" in
+            local)
+              echo "runner=d-sorg-fleet" >> $GITHUB_OUTPUT
+              echo "Routing to self-hosted fleet (mode=local)"
+              ;;
+            cloud)
+              echo "runner=ubuntu-latest" >> $GITHUB_OUTPUT
+              echo "Routing to GitHub-hosted (mode=cloud)"
+              ;;
+            hybrid|*)
+              AVAILABLE=$(gh api /orgs/${{ github.repository_owner }}/actions/runners \
+                --jq '[.runners[] | select(.status == "online") | select(.busy == false) | select(.labels[].name == "d-sorg-fleet")] | length' \
+                2>/dev/null || echo "0")
+              if [[ "$AVAILABLE" -gt 0 ]]; then
+                echo "runner=d-sorg-fleet" >> $GITHUB_OUTPUT
+                echo "$AVAILABLE idle fleet runner(s) - routing locally"
+              else
+                echo "runner=ubuntu-latest" >> $GITHUB_OUTPUT
+                echo "No idle fleet runners - falling back to GitHub-hosted"
+              fi
+              ;;
+          esac
+
   run-assessments:
     name: Run Repository Assessments (A-O)
-    runs-on: d-sorg-fleet
+    runs-on: self-hosted
+    needs: pick-runner
     permissions:
       contents: write
       pull-requests: write
@@ -64,7 +104,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          python-version: "3.11"
+          python-version: "3.12"
 
       - name: Install dependencies
         run: |
@@ -211,7 +251,7 @@ jobs:
     name: Auto-Fix All Issues (Consolidated)
     needs: run-assessments
     if: github.event.inputs.auto_fix != 'false' && github.event.inputs.dry_run != 'true'
-    runs-on: d-sorg-fleet
+    runs-on: self-hosted
     permissions:
       contents: write
       pull-requests: write
@@ -226,7 +266,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          python-version: "3.11"
+          python-version: "3.12"
 
       - name: Install dependencies
         run: |
@@ -386,7 +426,7 @@ jobs:
   create-github-issues:
     name: Create GitHub Issues for Untracked Problems
     needs: run-assessments
-    runs-on: d-sorg-fleet
+    runs-on: self-hosted
     permissions:
       issues: write
 
@@ -402,7 +442,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          python-version: "3.11"
+          python-version: "3.12"
 
       - name: Create issues for critical findings
         env:
@@ -440,7 +480,7 @@ jobs:
       inputs.source_pr_to_close != '' &&
       inputs.dry_run != 'true' &&
       needs.auto-fix-issues.result == 'success'
-    runs-on: d-sorg-fleet
+    runs-on: self-hosted
     permissions:
       pull-requests: write
 
@@ -484,7 +524,8 @@ jobs:
   dry-run-summary:
     name: Dry Run Summary
     if: inputs.dry_run == 'true'
-    runs-on: d-sorg-fleet
+    runs-on: self-hosted
+    needs: pick-runner
 
     steps:
       - name: Generate dry run report

@@ -13,9 +13,9 @@ export function initEmailCopy() {
     if (links.length === 0) return;
 
     const copyIcon =
-        '<svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
+        '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>';
     const checkIcon =
-        '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>';
+        '<svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>';
 
     for (const link of links) {
         if (link.protocol !== "mailto:") continue;
@@ -67,19 +67,31 @@ export function initEmailCopy() {
  * Initialize responsive table wrappers
  */
 export function initResponsiveTables() {
-    const tables = document.querySelectorAll("#quarto-document-content table");
+    const container = document.getElementById("quarto-document-content");
+    if (!container) return;
+
+    // ⚡ Bolt Optimization: Scope tag lookup to specific container instead of global querySelectorAll (O(N))
+    const tables = container.getElementsByTagName("table");
     const tableUsedIds = new Set();
 
-    tables.forEach((table) => {
+    // ⚡ Bolt Optimization: Batch DOM reads (getComputedStyle) and writes (insertBefore/appendChild) separately to eliminate forced synchronous layout (Layout Thrashing)
+    const tablesToWrap = [];
+
+    // Phase 1: Read Layout
+    for (const table of Array.from(tables)) {
         const parent = table.parentElement;
         if (
             parent.classList.contains("table-wrapper") ||
             parent.style.overflowX === "auto" ||
             window.getComputedStyle(parent).overflowX === "auto"
         ) {
-            return;
+            continue;
         }
+        tablesToWrap.push(table);
+    }
 
+    // Phase 2: Mutate DOM
+    for (const table of tablesToWrap) {
         const wrapper = document.createElement("div");
         wrapper.className = "table-wrapper";
         wrapper.setAttribute("tabindex", "0");
@@ -101,18 +113,18 @@ export function initResponsiveTables() {
 
         table.parentNode.insertBefore(wrapper, table);
         wrapper.appendChild(table);
-    });
+    }
 }
 
 /**
  * Initialize copy to clipboard for code blocks
  */
 export function initCodeCopy() {
-    // Use getElementsByTagName (O(1) live collection) then snapshot with Array.from
-    // so DOM mutations inside the loop don't cause skipping.
-    const codeBlocks = Array.from(document.getElementsByTagName("pre"));
-    for (const pre of codeBlocks) {
-        // Use `continue` (not `return`) so early-exit doesn't abort the entire callback.
+    // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) live collection) instead of querySelectorAll (O(N))
+    const codeBlocks = document.getElementsByTagName("pre");
+
+    // Convert to Array to avoid issues with live collections when mutating DOM
+    for (const pre of Array.from(codeBlocks)) {
         if (pre.parentNode.classList.contains("code-wrapper")) continue;
         if (!pre.textContent.trim()) continue;
 
@@ -169,51 +181,82 @@ export function initCodeCopy() {
  * Initialize form accessibility features
  */
 export function initFormAccessibility() {
-    const requiredInputs = document.querySelectorAll(
-        "input[required], textarea[required], select[required]"
-    );
-    requiredInputs.forEach((input) => {
-        if (input.id) {
-            const label = document.querySelector(`label[for="${input.id}"]`);
-            if (label && !label.querySelector(".required-indicator")) {
-                const indicator = document.createElement("span");
-                indicator.className = "required-indicator";
-                indicator.textContent = " *";
-                indicator.style.color = "var(--accent-blue)";
-                indicator.style.fontWeight = "bold";
-                indicator.setAttribute("aria-hidden", "true");
-                indicator.title = "Required field";
-                label.appendChild(indicator);
-            }
+    // ⚡ Bolt Optimization: Use getElementsByTagName and input.labels instead of querySelectorAll for O(1) live collection iteration and label access
+    const processInput = (input) => {
+        if (!input.required) return;
+
+        let label = null;
+        if (input.labels && input.labels.length > 0) {
+            label = input.labels[0];
+        } else if (input.id) {
+            label = document.querySelector(`label[for="${input.id}"]`);
         }
-    });
+
+        if (label && !label.querySelector(".required-indicator")) {
+            const indicator = document.createElement("span");
+            indicator.className = "required-indicator";
+            indicator.textContent = " *";
+            indicator.style.color = "var(--accent-blue)";
+            indicator.style.fontWeight = "bold";
+            indicator.setAttribute("aria-hidden", "true");
+            indicator.title = "Required field";
+            label.appendChild(indicator);
+        }
+    };
+
+    for (const input of document.getElementsByTagName("input")) processInput(input);
+    for (const textarea of document.getElementsByTagName("textarea")) processInput(textarea);
+    for (const select of document.getElementsByTagName("select")) processInput(select);
 }
 
 /**
  * Initialize auto-growing textareas
  */
 export function initAutoGrowTextareas() {
-    const textareas = document.querySelectorAll("textarea");
+    // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) live collection) instead of querySelectorAll (O(N))
+    const textareas = document.getElementsByTagName("textarea");
     if (textareas.length === 0) return;
 
-    function adjustHeight(el) {
-        el.style.height = "auto";
-        const newHeight = Math.min(el.scrollHeight, 500);
-        el.style.height = newHeight + "px";
-        el.style.overflowY = newHeight >= 500 ? "auto" : "hidden";
+    // ⚡ Bolt Optimization: Batch DOM reads and writes to avoid forced synchronous layout (Layout Thrashing)
+    function batchAdjustHeights() {
+        const heights = [];
+
+        // Phase 1: Write (reset heights to compute scrollHeight accurately)
+        for (const textarea of textareas) {
+            textarea.style.height = "auto";
+        }
+
+        // Phase 2: Read (get scrollHeights)
+        for (let i = 0; i < textareas.length; i++) {
+            heights.push(Math.min(textareas[i].scrollHeight, 500));
+        }
+
+        // Phase 3: Write (apply new heights and overflows)
+        for (let i = 0; i < textareas.length; i++) {
+            textareas[i].style.height = heights[i] + "px";
+            textareas[i].style.overflowY = heights[i] >= 500 ? "auto" : "hidden";
+        }
     }
 
-    textareas.forEach((textarea) => {
-        if (textarea.value) {
-            setTimeout(() => adjustHeight(textarea), 0);
-        }
-        textarea.addEventListener("input", () => adjustHeight(textarea));
-    });
+    // Initialize all textareas statically
+    for (const textarea of textareas) {
+        textarea.style.resize = "none";
+        textarea.style.overflow = "hidden";
+        // Handle individual input events (single element adjust doesn't cause O(N) thrashing loop, but batching is safe)
+        textarea.addEventListener("input", () => {
+            textarea.style.height = "auto";
+            const newHeight = Math.min(textarea.scrollHeight, 500);
+            textarea.style.height = newHeight + "px";
+            textarea.style.overflowY = newHeight >= 500 ? "auto" : "hidden";
+        });
+    }
+
+    setTimeout(() => batchAdjustHeights(), 0);
 
     window.addEventListener(
         "resize",
         debounce(() => {
-            textareas.forEach(adjustHeight);
+            batchAdjustHeights();
         }, 250)
     );
 }

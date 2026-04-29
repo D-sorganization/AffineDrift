@@ -81,16 +81,15 @@ def collect_matching_files(
     """
     require(repo_root.is_dir(), "repo_root must be an existing directory")
     require(len(include_roots) > 0, "include_roots must not be empty")
-    matched: list[Path] = []
-    for path in repo_root.rglob("*"):
-        if not path.is_file():
-            continue
-        rel = path.relative_to(repo_root)
-        if not is_included(rel, include_roots, exclude_substrings):
-            continue
-        if allowed_extensions and path.suffix and path.suffix.lower() not in allowed_extensions:
-            continue
-        matched.append(path)
+    matched = [
+        path
+        for path in repo_root.rglob("*")
+        if path.is_file()
+        and is_included(path.relative_to(repo_root), include_roots, exclude_substrings)
+        and not (
+            allowed_extensions and path.suffix and path.suffix.lower() not in allowed_extensions
+        )
+    ]
     return sorted(matched)
 
 
@@ -126,6 +125,8 @@ def report_results(
     Returns:
         ``0`` if no errors, ``1`` otherwise.
     """
+    require(len(check_name) > 0, "check_name must not be empty")
+    require(files_scanned >= 0, "files_scanned must be non-negative", files_scanned)
     logger.info(check_name)
     logger.info("- files scanned: %d", files_scanned)
     for detail in details:

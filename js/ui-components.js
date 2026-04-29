@@ -20,29 +20,30 @@ export function initFadeAnimations() {
     if (!isMobile && !prefersReducedMotion) {
         const observerOptions = { threshold: 0.1, rootMargin: "0px 0px 0px 0px" };
         const observer = new IntersectionObserver(function (entries) {
-            entries.forEach((entry) => {
+            for (const entry of entries) {
                 if (entry.isIntersecting) {
                     entry.target.style.opacity = "1";
                     entry.target.style.transform = "translateY(0)";
                     observer.unobserve(entry.target);
                 }
-            });
+            }
         }, observerOptions);
 
-        const sectionsToAnimate = document.querySelectorAll(
-            "section:not(.page-header):not(.article-section)"
-        );
+        // ⚡ Bolt Optimization: Use getElementsByTagName (O(1)) and manual filtering instead of global querySelectorAll (O(N))
+        const allSections = document.getElementsByTagName("section");
         const animationStates = [];
 
-        sectionsToAnimate.forEach((section) => {
-            const rect = section.getBoundingClientRect();
-            animationStates.push({
-                section,
-                shouldAnimate: rect.top > window.innerHeight,
-            });
-        });
+        for (const section of allSections) {
+            if (!section.classList.contains("page-header") && !section.classList.contains("article-section")) {
+                const rect = section.getBoundingClientRect();
+                animationStates.push({
+                    section,
+                    shouldAnimate: rect.top > window.innerHeight,
+                });
+            }
+        }
 
-        animationStates.forEach(({ section, shouldAnimate }) => {
+        for (const { section, shouldAnimate } of animationStates) {
             if (shouldAnimate) {
                 section.style.opacity = "0";
                 section.style.transform = "translateY(20px)";
@@ -52,14 +53,15 @@ export function initFadeAnimations() {
                 section.style.opacity = "1";
                 section.style.transform = "translateY(0)";
             }
-        });
+        }
     } else {
-        const allSections = document.querySelectorAll("section");
-        allSections.forEach((section) => {
+        // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) live collection) instead of querySelectorAll (O(N))
+        const allSections = document.getElementsByTagName("section");
+        for (const section of allSections) {
             section.style.opacity = "1";
             section.style.transform = "translateY(0)";
             section.style.visibility = "visible";
-        });
+        }
     }
 }
 
@@ -67,19 +69,21 @@ export function initFadeAnimations() {
  * Initialize lazy loading for images
  */
 export function initLazyImages() {
-    const lazyImages = document.querySelectorAll('img[loading="lazy"]');
-    lazyImages.forEach((img) => {
-        if (img.complete) {
-            img.classList.add("loaded");
-        } else {
-            img.addEventListener("load", function () {
-                this.classList.add("loaded");
-            });
-            img.addEventListener("error", function () {
-                this.classList.add("loaded");
-            });
+    // ⚡ Bolt Optimization: Use document.images (O(1)) instead of querySelectorAll (O(N))
+    for (const img of document.images) {
+        if (img.getAttribute("loading") === "lazy") {
+            if (img.complete) {
+                img.classList.add("loaded");
+            } else {
+                img.addEventListener("load", function () {
+                    this.classList.add("loaded");
+                });
+                img.addEventListener("error", function () {
+                    this.classList.add("loaded");
+                });
+            }
         }
-    });
+    }
 
     if ("loading" in HTMLImageElement.prototype) {
         for (const img of document.images) {
@@ -103,8 +107,9 @@ export function initLazyImages() {
  * Initialize accordion functionality
  */
 export function initAccordions() {
-    const accordionHeaders = document.querySelectorAll(".accordion-header");
-    accordionHeaders.forEach((header, index) => {
+    const accordionHeaders = document.getElementsByClassName("accordion-header");
+    let index = 0;
+    for (const header of accordionHeaders) {
         const content = header.nextElementSibling;
         if (content && content.classList.contains("accordion-content")) {
             if (!content.id) {
@@ -114,7 +119,8 @@ export function initAccordions() {
             const isExpanded = header.getAttribute("aria-expanded") === "true";
             content.setAttribute("aria-hidden", !isExpanded);
         }
-    });
+        index++;
+    }
 
     document.addEventListener("click", (e) => {
         const header = e.target.closest(".accordion-header");
@@ -134,14 +140,16 @@ export function initAccordions() {
  */
 export function initBackToTop() {
     const backToTopBtn = document.createElement("button");
+    backToTopBtn.type = "button";
     backToTopBtn.className = "back-to-top";
     backToTopBtn.setAttribute("aria-label", "Scroll to top");
+    backToTopBtn.setAttribute("title", "Scroll to top");
 
     const radius = 21;
     const circumference = 2 * Math.PI * radius;
 
     backToTopBtn.innerHTML = `
-    <svg class="progress-ring" width="48" height="48" viewBox="0 0 48 48">
+    <svg class="progress-ring" width="48" height="48" viewBox="0 0 48 48" aria-hidden="true">
       <circle
         class="progress-ring-circle"
         stroke="white"
@@ -153,9 +161,10 @@ export function initBackToTop() {
         style="stroke-dasharray: ${circumference}; stroke-dashoffset: ${circumference};"
       />
     </svg>
-    <svg class="back-to-top-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <svg class="back-to-top-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
       <path d="M12 4l-8 8h6v8h4v-8h6z"/>
     </svg>
+    <span class="tooltip">Back to top</span>
   `;
     document.body.appendChild(backToTopBtn);
 
@@ -234,10 +243,11 @@ export function initBackToTop() {
  */
 export function initExportToPdf() {
     const exportToPdfBtn = document.createElement("button");
+    exportToPdfBtn.type = "button";
     exportToPdfBtn.className = "export-to-pdf";
     exportToPdfBtn.setAttribute("aria-label", "Export page to PDF");
     exportToPdfBtn.innerHTML = `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
       <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
       <polyline points="14 2 14 8 20 8"></polyline>
       <line x1="12" y1="18" x2="12" y2="12"></line>
@@ -306,9 +316,11 @@ export function initLightbox() {
     lightbox.setAttribute("aria-label", "Image zoom");
 
     const closeBtn = document.createElement("button");
+    closeBtn.type = "button";
     closeBtn.className = "lightbox-close";
     closeBtn.setAttribute("aria-label", "Close zoom");
-    closeBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
+    closeBtn.setAttribute("title", "Close zoom");
+    closeBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
 
     function closeLightbox() {
         lightbox.classList.remove("active");
@@ -363,6 +375,7 @@ export function initLightbox() {
         img.setAttribute("tabindex", "0");
         img.setAttribute("role", "button");
         img.setAttribute("aria-label", "Zoom image");
+        img.setAttribute("title", "Zoom image");
     }
 
     const handleLightboxTrigger = (e) => {
@@ -388,13 +401,23 @@ export function initLightbox() {
         lightbox.appendChild(closeBtn);
 
         const figure = img.closest("figure");
+        let captionAdded = false;
+
         if (figure) {
             const figcaption = figure.querySelector("figcaption");
             if (figcaption) {
                 const captionClone = figcaption.cloneNode(true);
                 captionClone.className = "lightbox-caption";
                 lightbox.appendChild(captionClone);
+                captionAdded = true;
             }
+        }
+
+        if (!captionAdded && img.alt) {
+            const altCaption = document.createElement("div");
+            altCaption.className = "lightbox-caption";
+            altCaption.textContent = img.alt;
+            lightbox.appendChild(altCaption);
         }
 
         lightbox.classList.add("active");
@@ -416,13 +439,22 @@ export function initLightbox() {
  * Initialize Critics Corner toggle
  */
 export function initCriticsCorner() {
-    const criticsCorners = document.querySelectorAll(".critics-corner");
-
-    criticsCorners.forEach((corner) => {
+    const criticsCorners = document.getElementsByClassName("critics-corner");
+    let index = 0;
+    for (const corner of criticsCorners) {
         const header = corner.querySelector(".critics-corner-header");
         const content = corner.querySelector(".critics-corner-content");
 
         if (header && content) {
+            if (!content.id) {
+                content.id = `critics-corner-content-${index + 1}`;
+            }
+
+            header.setAttribute("aria-controls", content.id);
+
+            const isExpandedInitial = header.getAttribute("aria-expanded") === "true";
+            content.setAttribute("aria-hidden", String(!isExpandedInitial));
+
             content.style.maxHeight = "0";
             content.style.overflow = "hidden";
             content.style.transition =
@@ -436,29 +468,35 @@ export function initCriticsCorner() {
                     content.style.paddingTop = "0";
                     content.style.paddingBottom = "0";
                     header.setAttribute("aria-expanded", "false");
+                    content.setAttribute("aria-hidden", "true");
                 } else {
                     content.style.maxHeight =
                         content.scrollHeight + CRITICS_CORNER_PADDING_OFFSET + "px";
                     content.style.paddingTop = "1rem";
                     content.style.paddingBottom = "1rem";
                     header.setAttribute("aria-expanded", "true");
+                    content.setAttribute("aria-hidden", "false");
                 }
             });
         }
-    });
+        index++;
+    }
 }
 
 /**
  * Initialize Layman's Terms toggle
  */
 export function initLaymansTermsToggle() {
-    const laymansSections = document.querySelectorAll(".laymans-terms");
-
-    laymansSections.forEach((section, index) => {
+    const laymansSections = document.getElementsByClassName("laymans-terms");
+    let index = 0;
+    for (const section of laymansSections) {
         const header = section.querySelector(".laymans-terms-header");
         const content = section.querySelector(".laymans-terms-content");
 
-        if (!header || !content) return;
+        if (!header || !content) {
+            index++;
+            continue;
+        }
 
         if (!content.id) {
             content.id = `laymans-terms-content-${index + 1}`;
@@ -473,20 +511,24 @@ export function initLaymansTermsToggle() {
             header.setAttribute("aria-expanded", String(!expanded));
             content.setAttribute("aria-hidden", String(expanded));
         });
-    });
+        index++;
+    }
 }
 
 /**
  * Initialize Critics Comments toggle
  */
 export function initCriticsCommentsToggle() {
-    const criticsSections = document.querySelectorAll(".critics-comments");
-
-    criticsSections.forEach((section, index) => {
+    const criticsSections = document.getElementsByClassName("critics-comments");
+    let index = 0;
+    for (const section of criticsSections) {
         const header = section.querySelector(".critics-comments-header");
         const content = section.querySelector(".critics-comments-content");
 
-        if (!header || !content) return;
+        if (!header || !content) {
+            index++;
+            continue;
+        }
 
         if (!content.id) {
             content.id = `critics-comments-content-${index + 1}`;
@@ -501,5 +543,6 @@ export function initCriticsCommentsToggle() {
             header.setAttribute("aria-expanded", String(!expanded));
             content.setAttribute("aria-hidden", String(expanded));
         });
-    });
+        index++;
+    }
 }

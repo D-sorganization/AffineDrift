@@ -1,4 +1,6 @@
+import ast
 import unittest
+from pathlib import Path
 from typing import Any
 
 import numpy as np
@@ -9,6 +11,8 @@ from src.affine_control.residuals import (
     compute_hessian_norm,
     predict_residual_bound,
 )
+
+RESIDUALS_SOURCE = Path("src/affine_control/residuals.py")
 
 
 class TestResiduals(unittest.TestCase):
@@ -48,7 +52,12 @@ class TestResiduals(unittest.TestCase):
 
     def test_monitor_switching(self) -> None:
         """
-        Test mode switching logic with three-state machine: LQR -> MPC_WARN -> MPC_FULL.
+        Test mode switching logic: LQR -> MPC_WARN -> MPC_FULL -> MPC_WARN -> LQR.
+
+        The three-state machine escalates from MPC_WARN to MPC_FULL when
+        high_count >= n_hysteresis while in MPC_WARN, then recovers via low
+        residuals: MPC_FULL -> MPC_WARN -> LQR (each transition requires
+        n_hysteresis=2 consecutive low-residual samples).
         """
         monitor = ResidualMonitor(eps_warning=0.1, eps_critical=0.5, n_hysteresis=2)
 
@@ -61,31 +70,27 @@ class TestResiduals(unittest.TestCase):
         monitor.update(np.array([0.6]), x_nom)
         self.assertEqual(monitor.mode, "LQR")
 
-        # 3. Critical error (0.6) for 2nd step -> Transition to MPC_WARN (not MPC_FULL)
+        # 3. Critical error (0.6) for 2nd step -> Transition to MPC_WARN (resets counters)
         monitor.update(np.array([0.6]), x_nom)
         self.assertEqual(monitor.mode, "MPC_WARN")
 
-        # 4. Critical error (0.6) for 1 step in MPC_WARN -> Still MPC_WARN (n=2)
+        # 4. Critical error (0.6) for 1 step in MPC_WARN -> Still MPC_WARN (n=2 needed)
         monitor.update(np.array([0.6]), x_nom)
         self.assertEqual(monitor.mode, "MPC_WARN")
 
-        # 5. Critical error (0.6) for 2nd step in MPC_WARN -> Switch to MPC_FULL
+        # 5. Critical error (0.6) for 2nd step in MPC_WARN -> Escalates to MPC_FULL
         monitor.update(np.array([0.6]), x_nom)
         self.assertEqual(monitor.mode, "MPC_FULL")
 
-        # 6. Low error (0.05) for 1 step -> No Switch
+        # 6-7. Low errors in MPC_FULL: after 2 steps, recovers to MPC_WARN
         monitor.update(np.array([0.05]), x_nom)
         self.assertEqual(monitor.mode, "MPC_FULL")
-
-        # 7. Low error (0.05) for 2nd step -> Switch back to MPC_WARN
         monitor.update(np.array([0.05]), x_nom)
         self.assertEqual(monitor.mode, "MPC_WARN")
 
-        # 8. Low error (0.05) for 1 step in MPC_WARN -> Still MPC_WARN
+        # 8-9. Low errors in MPC_WARN: after 2 steps, recovers to LQR
         monitor.update(np.array([0.05]), x_nom)
         self.assertEqual(monitor.mode, "MPC_WARN")
-
-        # 9. Low error (0.05) for 2nd step -> Switch back to LQR
         monitor.update(np.array([0.05]), x_nom)
         self.assertEqual(monitor.mode, "LQR")
 
@@ -124,20 +129,28 @@ class TestResiduals(unittest.TestCase):
         self.assertEqual(monitor.mode, "MPC_WARN")
 
     def test_mpc_warn_to_lqr_direct(self) -> None:
-        """Test MPC_WARN -> LQR transition when residual recovers fully."""
+        """MPC_WARN recovers to LQR when residual drops below eps_warning.
+
+        With n_hysteresis=1, a single low-residual sample in MPC_WARN is
+        sufficient to trigger the MPC_WARN -> LQR recovery transition.
+        """
         monitor = ResidualMonitor(eps_warning=0.1, eps_critical=0.5, n_hysteresis=1)
         x_nom = np.array([0.0])
 
-        # Enter MPC_WARN
+        # Enter MPC_WARN (counters reset on transition)
         monitor.update(np.array([0.6]), x_nom)
         self.assertEqual(monitor.mode, "MPC_WARN")
 
-        # Full recovery -> MPC_WARN -> LQR
+        # One low-residual sample triggers MPC_WARN -> LQR recovery
         monitor.update(np.array([0.05]), x_nom)
         self.assertEqual(monitor.mode, "LQR")
 
     def test_all_modes_in_invariant(self) -> None:
-        """Test that mode invariant holds for all three valid modes."""
+        """Test that all three modes (LQR, MPC_WARN, MPC_FULL) are reachable.
+
+        With n_hysteresis=1, a critical residual takes LQR -> MPC_WARN
+        and a second critical residual takes MPC_WARN -> MPC_FULL.
+        """
         monitor = ResidualMonitor(eps_warning=0.1, eps_critical=0.5, n_hysteresis=1)
         x_nom = np.array([0.0])
 
@@ -148,9 +161,28 @@ class TestResiduals(unittest.TestCase):
         valid_modes.add(monitor.mode)  # MPC_WARN
 
         monitor.update(np.array([0.6]), x_nom)
-        valid_modes.add(monitor.mode)  # MPC_FULL
+        valid_modes.add(monitor.mode)  # MPC_FULL (reachable via escalation)
 
         self.assertEqual(valid_modes, {"LQR", "MPC_WARN", "MPC_FULL"})
+
+    def test_monitor_update_is_decomposed(self) -> None:
+        """ResidualMonitor.update should stay a thin state-machine orchestrator."""
+        tree = ast.parse(RESIDUALS_SOURCE.read_text(encoding="utf-8"))
+        function_lengths = {
+            node.name: node.end_lineno - node.lineno + 1
+            for node in ast.walk(tree)
+            if isinstance(node, ast.FunctionDef) and node.end_lineno is not None
+        }
+
+        self.assertLessEqual(function_lengths["update"], 30)
+        for helper_name in [
+            "_estimate_residual",
+            "_update_hysteresis_counters",
+            "_next_mode",
+            "_reset_hysteresis_counters",
+            "_apply_mode_transition",
+        ]:
+            self.assertIn(helper_name, function_lengths)
 
 
 if __name__ == "__main__":

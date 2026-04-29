@@ -24,6 +24,7 @@ except (ImportError, ModuleNotFoundError):  # pragma: no cover - lightweight CI 
     # Fallback for minimal CI environments where optional runtime deps (e.g. numpy)
     # are unavailable during syntax-only scans.
     def setup_logging_with_timestamp(name: str) -> logging.Logger:
+        """Configure basic timestamped logging and return a named logger."""
         logging.basicConfig(
             level=logging.INFO,
             format="%(asctime)s - %(levelname)s - %(message)s",
@@ -31,6 +32,7 @@ except (ImportError, ModuleNotFoundError):  # pragma: no cover - lightweight CI 
         return logging.getLogger(name)
 
     def find_markdown_files() -> list[Path]:
+        """Return all .md and .qmd files under the current working directory."""
         root = Path(".")
         suffixes = {".md", ".qmd"}
         found: list[Path] = []
@@ -74,6 +76,13 @@ class QuartoSyntaxScanner:
     """
 
     def __init__(self, content: str) -> None:
+        """Initialise scanner with file content to be analysed.
+
+        Parameters
+        ----------
+        content : str
+            Full text of the Quarto / Markdown file.
+        """
         self.content = content
         self.length = len(content)
         self.errors: list[tuple[int, str, str]] = []
@@ -104,6 +113,7 @@ class QuartoSyntaxScanner:
     # ── state handlers ─────────────────────────────────────────
 
     def _handle_text(self, char: str) -> None:
+        """Handle a single character while in the TEXT parser state."""
         c = self.content
         i = self.i
 
@@ -151,6 +161,7 @@ class QuartoSyntaxScanner:
         self.i += 1
 
     def _handle_code_block(self, char: str) -> None:
+        """Handle a single character while inside a fenced code block."""
         c = self.content
         i = self.i
         if char == "`" and i + 2 < self.length and c[i + 1] == "`" and c[i + 2] == "`":
@@ -160,11 +171,13 @@ class QuartoSyntaxScanner:
             self.i += 1
 
     def _handle_inline_code(self, char: str) -> None:
+        """Handle a single character while inside an inline code span."""
         if char == "`":
             self.state = _State.TEXT
         self.i += 1
 
     def _handle_display_math(self, char: str) -> None:
+        """Handle a single character while inside a display-math ($$) block."""
         c = self.content
         i = self.i
         if char == "$" and i + 1 < self.length and c[i + 1] == "$":
@@ -179,6 +192,7 @@ class QuartoSyntaxScanner:
             self.i += 1
 
     def _handle_inline_math(self, char: str) -> None:
+        """Handle a single character while inside an inline math ($) span."""
         c = self.content
         i = self.i
 

@@ -1,45 +1,47 @@
 ---
 title: "Tangent Hyperplanes II: Dynamics"
 description: "Infinitesimal dynamics and moving tangent spaces."
-bibliography: ../../references/affine-drift.bib
-csl: ../../references/chicago-author-date.csl
 ---
 
-## Linearization Along a Nonlinear Trajectory
+## The Hidden Linearity of Nonlinear Systems
 
-The tangent-space construction becomes useful when applied to a flow. Consider a smooth nonlinear dynamical system:
+The tangent space is not only a geometric construction; it is the natural home of variational dynamics. Consider a smooth nonlinear control system:
 
 $$
 \dot{x} = f(x, u)
 $$
 
-where $x \in \mathbb{R}^n$ is the state, $u \in \mathbb{R}^m$ is the control input, and $f$ is a smooth vector field. This system is genuinely nonlinear. The future state depends on $x$ in a complex, nonlinear way.
+where $x \in \mathbb{R}^n$ is the state, $u \in \mathbb{R}^m$ is the control input, and $f$ is a smooth vector field. The state evolution may be strongly nonlinear; the claim below concerns only the first variation along a specified trajectory.
 
-At a specified reference trajectory, the first variation of the dynamics is linear. The matrices $A(t)$ and $B(t)$ are the Jacobians of the vector field evaluated along that trajectory. They encode the instantaneous first-order response of the system, not the full finite-amplitude nonlinear flow.
+The key insight is narrower and stronger than a generic "local linear model" slogan: **at every instant on a reference trajectory, the first variation of the equations of motion is a linear system on the tangent space. The matrices $A(t)$ and $B(t)$ are Jacobians of the dynamics evaluated on that trajectory.**
 
-This is the standard variational equation used in nonlinear systems analysis and trajectory optimization [@khalil2002nonlinear; @slotine1991applied; @tedrake2023underactuated].
+This does not make the nonlinear system globally linear. It says that the derivative -- the infinitesimal response to perturbations -- is a linear operator by definition. Standard treatments of nonlinear systems, applied nonlinear control, and differential dynamic programming use this same variational object [@khalil2002nonlinear; @slotine1991applied; @jacobson1970ddp].
 
 ## Linearization Along a Reference Trajectory
 
-Suppose we have a reference trajectory $(x̄(t), ū(t))$ satisfying:
+Suppose we have a reference trajectory $(x^*(t), u^*(t))$ satisfying:
 
 $$
-\dot{x̄}(t) = f(x̄(t), ū(t))
+\dot{x}^*(t) = f(x^*(t), u^*(t)).
 $$
 
-Now consider a perturbed trajectory $x(t) = x̄(t) + \delta x(t)$ driven by a perturbed control $u(t) = ū(t) + \delta u(t)$. The perturbed system satisfies:
+Now consider a perturbed trajectory $x(t) = x^*(t) + \delta x(t)$ driven by a perturbed control $u(t) = u^*(t) + \delta u(t)$. The perturbed system satisfies:
 
 $$
-\dot{x̄}(t) + \delta\dot{x}(t) = f(x̄(t) + \delta x(t), ū(t) + \delta u(t))
+\dot{x}^*(t) + \delta\dot{x}(t) = f(x^*(t) + \delta x(t), u^*(t) + \delta u(t)).
 $$
 
-Subtracting the reference trajectory equation and expanding the right-hand side to first order gives:
+Subtracting the reference trajectory equation and expanding the right-hand side to first order using the Taylor series:
 
 $$
-f(x̄ + \delta x, ū + \delta u) = f(x̄, ū) + \frac{\partial f}{\partial x}\bigg|_{(x̄,ū)} \delta x + \frac{\partial f}{\partial u}\bigg|_{(x̄,ū)} \delta u + O(\|\delta x\|^2, \|\delta u\|^2)
+f(x^* + \delta x, u^* + \delta u) =
+f(x^*, u^*) +
+\frac{\partial f}{\partial x}\bigg|_{(x^*,u^*)} \delta x +
+\frac{\partial f}{\partial u}\bigg|_{(x^*,u^*)} \delta u +
+R_2(\delta x,\delta u),
 $$
 
-This gives us the perturbation equation:
+where $R_2(\delta x,\delta u)$ collects terms of second order and higher. Dropping that residual gives the variational equation:
 
 $$
 \delta\dot{x}(t) = A(t)\delta x(t) + B(t)\delta u(t)
@@ -48,34 +50,34 @@ $$
 where the Jacobian matrices are defined as:
 
 $$
-A(t) = \frac{\partial f}{\partial x}\bigg|_{(x̄(t),ū(t))}
+A(t) = \frac{\partial f}{\partial x}\bigg|_{(x^*(t),u^*(t))}
 $$
 
 $$
-B(t) = \frac{\partial f}{\partial u}\bigg|_{(x̄(t),ū(t))}
+B(t) = \frac{\partial f}{\partial u}\bigg|_{(x^*(t),u^*(t))}.
 $$
 
-These are $n \times n$ and $n \times m$ matrices, respectively, evaluated along the reference trajectory at each time $t$. The omitted terms are second order in the perturbations.
+These are $n \times n$ and $n \times m$ matrices, respectively, evaluated along the reference trajectory at each time $t$.
 
 ## Moving Tangent Spaces
 
 ![Moving tangent spaces](./figures/moving_tangent.svg)
 
-The tangent space at the reference state $x̄(t)$ is the space in which this first-order perturbation model evolves. As the reference state moves, the tangent space moves with it. At each instant $t$, the tangent hyperplane is:
+The tangent space at the reference state $x^*(t)$ is the space in which this linearized perturbation system evolves. As the system evolves, the reference state moves along the trajectory, and the tangent space moves with it. At each instant $t$, the tangent hyperplane is:
 
 $$
-H_{x̄(t)} = x̄(t) + T_{x̄(t)} M
+H_{x^*(t)} = x^*(t) + T_{x^*(t)} M.
 $$
 
-The perturbation $\delta x(t)$ lives in this moving linear subspace. The matrices $A(t)$ and $B(t)$ describe how first-order perturbations grow, shrink, or couple within it.
+The perturbation $\delta x(t)$ lives in this moving linear subspace. The matrices $A(t)$ and $B(t)$ describe how perturbations grow or shrink within this space.
 
 ## Superposition in the Variational Equation
 
-The variational equation is linear. Therefore, within that equation, superposition holds exactly:
+Here is the crucial property: **superposition holds exactly for the variational equation.** If two perturbations solve the same linearized dynamics, their sum solves the same linearized dynamics with summed inputs.
 
 If $\delta x_1(t)$ is a solution to $\delta\dot{x} = A(t)\delta x + B(t)\delta u_1$ and $\delta x_2(t)$ is a solution to $\delta\dot{x} = A(t)\delta x + B(t)\delta u_2$, then $\delta x_1(t) + \delta x_2(t)$ is exactly a solution to $\delta\dot{x} = A(t)\delta x + B(t)(\delta u_1 + \delta u_2)$.
 
-This statement is about the linearized perturbation model. The original nonlinear system does not generally superpose over finite perturbations, because the second-order and higher-order terms introduce interactions.
+The statement is exact for the differential equation after the residual $R_2$ has been removed. It is not an exact statement about finite perturbations of the original nonlinear system.
 
 ## The State Transition Matrix
 
@@ -91,20 +93,20 @@ $$
 \delta x(t) = \Phi(t, t_0)\delta x(t_0) + \int_{t_0}^{t} \Phi(t, \tau) B(\tau) \delta u(\tau) \, d\tau
 $$
 
-This is the exact solution of the linear perturbation equation. Its accuracy as a prediction of the nonlinear system depends on the size of the neglected remainder terms.
+This is the exact solution of the variational equation. Its accuracy as a prediction of the original nonlinear trajectory is limited by the omitted residual $R_2$.
 
 ## Limitations: Finite Perturbations and Nonlinearity
 
 The linearized system is exact infinitesimally. For finite perturbations, the story is more complicated:
 
 :::{.callout-warning}
-**Higher-Order Terms Neglected:** The error from dropping $O(\|\delta x\|^2, \|\delta u\|^2)$ terms is bounded under smoothness assumptions but non-zero. Locally, the leading bound scales quadratically with perturbation size.
+**Higher-Order Terms Neglected:** The error from dropping $R_2(\delta x,\delta u)$ is non-zero for finite perturbations. Under bounded second derivatives, the leading residual scales quadratically with perturbation size.
 
 **Superposition Breaks Down:** Superposition holds exactly for the linearized system. But when you add the higher-order correction terms back in, two small perturbations no longer combine linearly — there are interaction terms.
 
 **Validity Range:** The linearized system is trustworthy only when $\|\delta x(t)\|$ and $\|\delta u(t)\|$ remain small. In nonlinear systems, small initial perturbations can grow exponentially. Eventually, the linearization fails.
 :::
 
-## Next
+## Looking Ahead
 
-The variational equation is the entry point for local control design. [Part 3](./part-3-control.qmd) explains how LQR, DDP, and iLQR use this first-order structure.
+The ability to extract a first-order linear system from smooth nonlinear dynamics is the local fact used by many trajectory-optimization methods. In [Part 3](./part-3-control.html), we will see how differential dynamic programming and iterative linear-quadratic regulation use this variational equation inside iterative nonlinear-control algorithms.

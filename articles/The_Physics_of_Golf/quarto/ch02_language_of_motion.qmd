@@ -1,6 +1,6 @@
 ---
 title: "The Language of Motion"
-bibliography: ../golf_physics.bib
+description: "One way is Cartesian coordinates. Point your finger at the club head. In space, you can describe its location with three numbers: its distance east, its..."
 ---
 
 # The Language of Motion
@@ -10,7 +10,7 @@ bibliography: ../golf_physics.bib
 
 Before you can apply physics to the golf swing, you need a precise way to describe it. Not in words—in mathematics.
 
-When a coach says ``you're rotating your hips too early,'' that's imprecise. Rotate how much? At what point in the swing? How fast? A physicist would ask: what is the hip rotation angle at this instant? How is it changing with time?
+When a coach says "you're rotating your hips too early," that's imprecise. Rotate how much? At what point in the swing? How fast? A physicist would ask: what is the hip rotation angle at this instant? How is it changing with time?
 
 This chapter introduces the language physicists use to describe motion: **coordinates**, **state**, and **state space**. It looks abstract at first, but it's essential. Once you can describe a swing precisely, you can predict what will happen next, diagnose what went wrong, and understand the forces that shaped the motion.
 
@@ -69,10 +69,14 @@ Once you've chosen generalized coordinates, you can compute the Cartesian positi
 
 Suppose the upper arm has length $L_1$ and the forearm+club has length $L_2$. If the shoulder is at the origin:
 
+$$
+\begin{aligned}
 x_{\text{elbow}} &= L_1 \sin(\theta_s) \\
 y_{\text{elbow}} &= -L_1 \cos(\theta_s) \\
 x_{\text{clubhead}} &= L_1 \sin(\theta_s) + L_2 \sin(\theta_s + \theta_e) \\
 y_{\text{clubhead}} &= -L_1 \cos(\theta_s) - L_2 \cos(\theta_s + \theta_e)
+\end{aligned}
+$$
 
 So from two numbers $[\theta_s, \theta_e]$ you can compute the full 3D position of every point on the arm. The constraint (that the links are rigid) is automatically satisfied.
 
@@ -95,7 +99,7 @@ For example, $\dot{\theta}_s$ is the rate of rotation of the shoulder (in radian
 
 **Example: Shoulder Rotation Speed**
 
-For illustration, suppose a golfer's shoulder is rotating at $\dot{\theta}_s = 600 \text{ degrees/second} = 10.5 \text{ rad/s}$ during the downswing.
+During the downswing, a golfer's shoulder might be rotating at $\dot{\theta}_s = 600 \text{ degrees/second} = 10.5 \text{ rad/s}$ [@Nesbit2005; @Hume2005] (illustrative; typical values vary across skill levels and swing styles).
 
 What does this mean physically? If the shoulder could hold this rotation rate steady, the golfer would rotate a full 360 degrees in $360 \text{ degrees} / 600 \text{ deg/s} = 0.6 \text{ seconds}$.
 
@@ -119,7 +123,7 @@ $$\bm{x} =  \theta_s \\ \theta_e \\ \dot{\theta}_s \\ \dot{\theta}_e $$
 ::: {.callout-tip}
 ## Why State is Necessary
 
-Imagine you're at the top of the backswing. Your shoulder angle is $\theta_s = 90°$ (horizontal). That's your \state{position}. But is the downswing about to begin? You can't tell from position alone.
+Imagine you're at the top of the backswing. Your shoulder angle is $\theta_s = 90°$ (horizontal). That's your $\bm{x}$ position. But is the downswing about to begin? You can't tell from position alone.
 
 If $\dot{\theta}_s = 0$ (you're not rotating), you're just about to start. If $\dot{\theta}_s = 500 \text{ deg/s}$ (you're already rotating fast), the downswing is well underway.
 
@@ -134,7 +138,7 @@ Once we have the concept of state, we can visualize it geometrically.
 ::: {.callout-note}
 ## Phase Space
 
-The space of all possible states. For an *unconstrained* $n$-degree-of-freedom system, phase space has $2n$ dimensions: $n$ for position and $n$ for velocity. For a constrained system---one with $k$ holonomic constraint equations of the form $\phi(\bm{q}) = 0$---the independent phase space is reduced to $2(n-k)$ dimensions, because the constraint fixes $k$ of the positions (and, by differentiation, their velocities). Constraint handling is developed in ch07; for most of this chapter we treat the double pendulum as unconstrained.
+The space of all possible states. If there are $n$ degrees of freedom, phase space has $2n$ dimensions: $n$ for position and $n$ for velocity.
 
 For a double pendulum: 4 dimensions (2 angles, 2 angular velocities).
 
@@ -204,41 +208,85 @@ Physical limitations that restrict which configurations are possible. Common con
 
 The set of reachable configurations forms a region in configuration space. Your swing must stay within this region. If you try to force your arm into an impossible configuration, something breaks (injury).
 
-{Constraints as Walls in Space}{box:ch02_constraints_walls}
+### Constraints as Walls in Space {#box:ch02_constraints_walls}
 Think of configuration space as a room. Some regions are forbidden (your arm can't hyperextend). The boundary of the forbidden regions are the constraints.
 
 When you hit the boundary—when you reach maximum shoulder turn, for instance—a **constraint force** appears. Your arm doesn't magically go past the limit; instead, the tissues (muscles, tendons, bone) exert a force that keeps you at the boundary.
 
 This is crucial: constraint forces are not muscle forces. They're reactive. They appear automatically to enforce the constraint. We'll see later that they contribute to the total force in the equation of motion, but they're not part of your **control**.
-} = 0.25$m from the shoulder.
-- Forearm + club has length$L_2 = 1$m and mass$M_2 = 1$kg. Its center of mass is at distance$L_{2,\text{cm}} = 0.5$m from the elbow.
-- Generalized coordinates:$q_1 = \theta_s$(shoulder angle from vertical, in radians),$q_2 = \theta_e$(elbow angle from horizontal, in radians).
+
+For the double-pendulum model used below:
+- Upper arm has length $L_1 = 0.5$ m and mass $M_1 = 2$ kg. Its center of mass is at distance $L_{1,\text{cm}} = 0.25$ m from the shoulder.
+- Forearm + club has length $L_2 = 1$ m and mass $M_2 = 1$ kg. Its center of mass is at distance $L_{2,\text{cm}} = 0.5$ m from the elbow.
+- Generalized coordinates: $q_1 = \theta_s$ (shoulder angle from vertical, in radians), $q_2 = \theta_e$ (elbow angle from horizontal, in radians).
 
 ### Position Kinematics
 
 The position of the elbow relative to the shoulder:
 
-\bm{r}_{\text{elbow}} &=  L_1 \sin(\theta_s) \\ -L_1 \cos(\theta_s)
+$$
+\bm{r}_{\text{elbow}} =
+\begin{bmatrix}
+L_1 \sin(\theta_s) \\
+-L_1 \cos(\theta_s)
+\end{bmatrix}
+$$
 
 The position of the clubhead relative to the shoulder:
 
-\bm{r}_{\text{club}} &=  L_1 \sin(\theta_s) + L_2 \sin(\theta_s + \theta_e) \\ -L_1 \cos(\theta_s) - L_2 \cos(\theta_s + \theta_e)
+$$
+\bm{r}_{\text{club}} =
+\begin{bmatrix}
+L_1 \sin(\theta_s) + L_2 \sin(\theta_s + \theta_e) \\
+-L_1 \cos(\theta_s) - L_2 \cos(\theta_s + \theta_e)
+\end{bmatrix}
+$$
 
 The center of mass of link 1:
 
-\bm{r}_{\text{cm},1} &=  L_{1,\text{cm}} \sin(\theta_s) \\ -L_{1,\text{cm}} \cos(\theta_s)
+$$
+\bm{r}_{\text{cm},1} =
+\begin{bmatrix}
+L_{1,\text{cm}} \sin(\theta_s) \\
+-L_{1,\text{cm}} \cos(\theta_s)
+\end{bmatrix}
+$$
 
 The center of mass of link 2:
 
-\bm{r}_{\text{cm},2} &=  L_1 \sin(\theta_s) + L_{2,\text{cm}} \sin(\theta_s + \theta_e) \\ -L_1 \cos(\theta_s) - L_{2,\text{cm}} \cos(\theta_s + \theta_e)
+$$
+\bm{r}_{\text{cm},2} =
+\begin{bmatrix}
+L_1 \sin(\theta_s) + L_{2,\text{cm}} \sin(\theta_s + \theta_e) \\
+-L_1 \cos(\theta_s) - L_{2,\text{cm}} \cos(\theta_s + \theta_e)
+\end{bmatrix}
+$$
 
 ### Velocity Kinematics
 
 To find velocity, differentiate the positions:
 
-\dot{\bm{r}}_{\text{elbow}} &=  L_1 \cos(\theta_s) \dot{\theta}_s \\ L_1 \sin(\theta_s) \dot{\theta}_s  = L_1 \dot{\theta}_s  \cos(\theta_s) \\ \sin(\theta_s)
+$$
+\dot{\bm{r}}_{\text{elbow}} =
+\begin{bmatrix}
+L_1 \cos(\theta_s) \dot{\theta}_s \\
+L_1 \sin(\theta_s) \dot{\theta}_s
+\end{bmatrix}
+=
+L_1 \dot{\theta}_s
+\begin{bmatrix}
+\cos(\theta_s) \\
+\sin(\theta_s)
+\end{bmatrix}
+$$
 
-\dot{\bm{r}}_{\text{club}} &=  L_1 \cos(\theta_s) \dot{\theta}_s + L_2 \cos(\theta_s + \theta_e) (\dot{\theta}_s + \dot{\theta}_e) \\ L_1 \sin(\theta_s) \dot{\theta}_s + L_2 \sin(\theta_s + \theta_e) (\dot{\theta}_s + \dot{\theta}_e)
+$$
+\dot{\bm{r}}_{\text{club}} =
+\begin{bmatrix}
+L_1 \cos(\theta_s) \dot{\theta}_s + L_2 \cos(\theta_s + \theta_e) (\dot{\theta}_s + \dot{\theta}_e) \\
+L_1 \sin(\theta_s) \dot{\theta}_s + L_2 \sin(\theta_s + \theta_e) (\dot{\theta}_s + \dot{\theta}_e)
+\end{bmatrix}
+$$
 
 ::: {.callout-tip}
 ## Jacobian Intuition
@@ -257,8 +305,12 @@ This is why golfers talk about "leverage": at certain positions, small changes i
 
 The angular velocities are simpler—they're just the derivatives of the angles:
 
+$$
+\begin{aligned}
 \omega_1 &= \dot{\theta}_s \quad \text{(rotation rate of the upper arm)} \\
 \omega_2 &= \dot{\theta}_s + \dot{\theta}_e \quad \text{(rotation rate of the forearm + club)}
+\end{aligned}
+$$
 
 Notice that $\omega_2$ depends on both $\dot{\theta}_s$ and $\dot{\theta}_e$. The forearm rotates at the shoulder rate plus the elbow rate. This is why the two joints are coupled.
 
@@ -266,7 +318,7 @@ Notice that $\omega_2$ depends on both $\dot{\theta}_s$ and $\dot{\theta}_e$. Th
 
 For the idealized double pendulum, there are no constraints other than rigidity (the links don't stretch). But in reality, the golf swing has constraints:
 
-{Real Constraints in Golf}{box:ch02_golf_constraints}
+### Real Constraints in Golf {#box:ch02_golf_constraints}
 - **Range limits**: $\theta_s \in [-90°, 150°]$, $\theta_e \in [-80°, 80°]$ (approximate).
 - **Grip constraint**: the club doesn't rotate freely at the wrist; it's held firmly. This reduces effective DOF.
 - **Friction at ground**: if you're standing (not moving), your feet don't slip. This constrains torso rotation.
@@ -349,4 +401,3 @@ From here, physics says: given the forces, the trajectory is determined. And giv
 - **Phase Space Trajectory**. Sketch a 2D "slice" of phase space: the $(\theta_s, \dot{\theta}_s)$ plane (ignoring the elbow for simplicity). Mark the location of address, top of backswing, and impact. Draw the swing trajectory connecting them. What does the trajectory look like? Does it ever loop back on itself?
 
 - **Constraints and Range**. Your shoulder can rotate from $\theta_s = -90°$ (fully across your body) to $\theta_s = +150°$ (fully behind you). What happens if you try to force $\theta_s = +160°$? Where does the force come from? Is it a muscle force or a constraint force?
-

@@ -1,6 +1,6 @@
 ---
 title: "Glossary"
-bibliography: ../golf_physics.bib
+description: "Acceleration: The rate of change of velocity with respect to time. In the golf swing, the clubhead experiences enormous accelerations, especially during..."
 ---
 
 
@@ -9,7 +9,7 @@ bibliography: ../golf_physics.bib
 
 **Acceleration**: The rate of change of velocity with respect to time. In the golf swing, the clubhead experiences enormous accelerations, especially during the downswing and impact.
 
-**Affine control system**: A system whose dynamics can be written as $\dot{\state} = f(\state) + G(\state)\control$, where the control inputs enter linearly. Most mechanical systems, including the golf swing, have affine structure.
+**Affine control system**: A system whose dynamics can be written as $\dot{\mathbf{x}} = f(\mathbf{x}) + G(\mathbf{x})\control$, where the control inputs enter linearly. Most mechanical systems, including the golf swing, have affine structure.
 
 **Affine decomposition**: The separation of dynamics into drift (passive, autonomous) and control (active, driven by inputs) components. This decomposition is the foundation of the AffineDrift framework.
 
@@ -35,9 +35,9 @@ bibliography: ../golf_physics.bib
 
 **Clubhead**: The striking end of the golf club, typically made of steel, titanium, or composite materials. The clubhead's velocity and orientation at impact determine the ball's initial trajectory.
 
-**Clubhead speed**: The velocity of the clubhead at impact. This is the primary determinant of ball distance (along with launch angle and spin rate). Clubhead speed varies widely across skill levels; representative ranges are published by launch monitor manufacturers and in the biomechanics literature [@penner2003physics; @cochran1968search].
+**Clubhead speed**: The velocity of the clubhead at impact. This is the primary determinant of ball distance (along with launch angle and spin rate). Clubhead speed varies widely: roughly 60--80 mph for recreational amateurs, approximately 110--125 mph for PGA Tour professionals, and typically 140--155 mph for long-drive competitors [@Broadie2014; @trackman_launch] (these ranges are illustrative and based on commonly cited statistics from launch monitor and tour data; individual values vary widely and depend on measurement methodology).
 
-**Coefficient of restitution (COR)**: The ratio of the separation speed to the approach speed in a collision. The USGA limits COR for drivers to 0.83; typical measured values for conforming equipment are near this limit [@penner2003physics]. Note: COR is a speed ratio, not an energy ratio; the fraction of kinetic energy transferred also depends on the mass ratio of ball to clubhead.
+**Coefficient of restitution (COR)**: The ratio of the separation speed to the approach speed in a collision. Golf balls have a COR of approximately 0.82, meaning the ball leaves the face at 82\% of the relative approach speed. Note: COR is a speed ratio, not an energy ratio; the fraction of kinetic energy transferred also depends on the mass ratio of ball to clubhead.
 
 **Collagen**: A protein that provides tensile strength and stiffness to connective tissues like tendons and fascia. Collagen is the most abundant protein in the human body.
 
@@ -61,9 +61,11 @@ bibliography: ../golf_physics.bib
 
 **Cortical bone**: The dense, hard outer layer of bone. Cortical bone is much stiffer (higher elastic modulus) than cancellous (spongy) bone.
 
-**DCR**: Abbreviation for drift coefficient ratio. The ratio of drift magnitude to control magnitude, ranging from 0 (pure control) to 1 (pure drift). In late downswing, DCR approaches 1.
+**DCR**: Abbreviation for drift-to-control ratio. The raw textbook usage is the ratio of passive to active torques or, more generally, drift magnitude to control magnitude. In the late downswing, DCR can be much greater than 1.
 
-**Degrees of freedom**: The number of independent ways a system can move. A single rigid body in 3D space has 6 degrees of freedom (3 translational, 3 rotational). The number of degrees of freedom in a human arm depends on the modeling assumptions for shoulder, elbow, and wrist joints.
+**Normalized drift fraction**: A separate normalized quantity, defined as drift / (drift + control), ranging from 0 (pure control) to 1 (pure drift).
+
+**Degrees of freedom**: The number of independent ways a system can move. A single rigid body in 3D space has 6 degrees of freedom (3 translational, 3 rotational). A human arm with shoulder, elbow, and wrist joints has approximately 7--9 degrees of freedom [@Delp2007; @Rajagopal2016] (illustrative; exact counts depend on the joint model and which sub-axes are included; values vary across biomechanical models).
 
 **Dorsiflexion**: Upward bending of the foot or hand at the ankle or wrist, respectively. In the golf swing, wrist dorsiflexion (extension) during the backswing cocks the wrists, storing elastic energy.
 
@@ -73,7 +75,7 @@ bibliography: ../golf_physics.bib
 
 **Drift coefficient ratio (DCR)**: See DCR.
 
-**Drift field**: The vector field $f(\state)$ that describes how the state evolves in the absence of control inputs. The drift field encodes gravity, Coriolis forces, elastic restoring forces, and damping.
+**Drift field**: The vector field $f(\mathbf{x})$ that describes how the state evolves in the absence of control inputs. The drift field encodes gravity, Coriolis forces, elastic restoring forces, and damping.
 
 **Dynamics**: The study of how systems evolve over time under the influence of forces. The dynamics of the golf swing are governed by Newton's laws and the constraints of the body.
 
@@ -121,7 +123,7 @@ bibliography: ../golf_physics.bib
 
 **Flight**: The trajectory of the ball in the air from impact to landing. Ball flight is determined by launch angle, spin rate, spin axis, and ball speed.
 
-**Follow-through**: The phase after impact where the golfer decelerates the club and body, coming to rest. The follow-through is important for balance and injury prevention.
+**Follow-through**: The phase after impact where the golfer decelerates the club and body, coming to rest. The follow-through is important for balance and controlled deceleration.
 
 **Force**: A push or pull, measured in Newtons (N). Forces include gravity, muscle force, friction, and constraint forces.
 
@@ -195,7 +197,7 @@ bibliography: ../golf_physics.bib
 
 **Infraspinatus**: A rotator cuff muscle responsible for external rotation of the shoulder. The infraspinatus is active during the downswing.
 
-**Injury prevention**: Strategies to reduce the risk of injury through training, technique, and equipment selection. Understanding force distribution is key to injury prevention.
+**Injury prevention**: Strategies that may reduce the risk of injury through training, technique, and equipment selection. Understanding force distribution can inform injury prevention strategies.
 
 **Input-output behavior**: The relationship between system inputs and outputs. In golf, the input is muscle torque; the output is ball trajectory.
 
@@ -203,7 +205,7 @@ bibliography: ../golf_physics.bib
 
 **Intramuscular coordination**: The coordination of different muscle fibers within a single muscle. Intramuscular coordination affects the force and power output of the muscle.
 
-**Intermuscular coordination**: The coordination of different muscles around a joint. Good intermuscular coordination allows efficient force production and injury prevention.
+**Intermuscular coordination**: The coordination of different muscles around a joint. Good intermuscular coordination allows efficient force production and may help manage joint loading.
 
 **Inverse dynamics**: Computing the forces or torques required to produce a given motion. Inverse dynamics solve for control inputs that achieve a desired trajectory.
 
@@ -235,7 +237,7 @@ bibliography: ../golf_physics.bib
 
 **Lagrangian mechanics**: A formulation of classical mechanics using energy (kinetic and potential) rather than forces. Lagrangian mechanics is elegant for complex systems like the golf swing.
 
-**Launch angle**: The *vertical* angle (elevation) at which the ball leaves the clubface at impact, measured from the horizontal. Launch angle significantly affects carry distance and ball flight. The *horizontal* component of the ball's initial direction---how far left or right of the target line it starts---is a separate quantity, sometimes called the **launch azimuth** or **horizontal launch angle**; launch monitors typically report the two independently.
+**Launch angle**: The vertical angle at which the ball leaves the clubface at impact, measured from horizontal. Launch angle significantly affects carry distance and ball flight.
 
 **Launch monitor**: A device that measures the ball and club at impact using radar, cameras, or other sensors. Launch monitors provide data on ball speed, spin rate, launch angle, and ball flight.
 
@@ -363,7 +365,7 @@ bibliography: ../golf_physics.bib
 
 **Overload principle**: The training principle that muscles adapt to loads exceeding their normal capacity. Strength training uses progressive overload.
 
-**Overstretching**: Stretching beyond the normal limit, potentially causing injury to muscle or connective tissue. Proper warm-up reduces the risk of overstretching.
+**Overstretching**: Stretching beyond the normal range of motion, which may cause strain to muscle or connective tissue. Adequate warm-up is generally recommended before vigorous activity.
 
 **Oxidative metabolism**: Energy production in cells using oxygen. Oxidative metabolism provides energy for sustained muscle activity, like a full round of golf.
 
@@ -467,7 +469,7 @@ bibliography: ../golf_physics.bib
 
 **Rotational kinetic energy**: Kinetic energy of a rotating body, proportional to angular velocity squared. Rotational kinetic energy of the torso and arms peaks during the downswing.
 
-**Rotator cuff**: A group of four muscles (supraspinatus, infraspinatus, teres minor, subscapularis) surrounding the shoulder joint, responsible for shoulder stability and motion. The rotator cuff is vulnerable to injury in golf.
+**Rotator cuff**: A group of four muscles (supraspinatus, infraspinatus, teres minor, subscapularis) surrounding the shoulder joint, responsible for shoulder stability and motion. The rotator cuff experiences significant loading during the golf swing.
 
 **Rough**: Longer grass on the golf course outside the fairway. Hitting from the rough typically results in a poorer lie and higher ball spin.
 
@@ -609,7 +611,7 @@ bibliography: ../golf_physics.bib
 
 **Supinator**: A muscle responsible for supination of the forearm. The supinator is active late in the downswing.
 
-**Supraspinatus**: A rotator cuff muscle responsible for abduction of the shoulder. The supraspinatus is the most commonly injured rotator cuff muscle.
+**Supraspinatus**: A rotator cuff muscle responsible for abduction of the shoulder. The supraspinatus is frequently cited as the most commonly injured rotator cuff muscle in the clinical literature.
 
 **Surface drag**: Friction between an object and the air or other fluid it moves through. Surface drag on the golfer and club is negligible compared to other forces.
 
@@ -862,5 +864,4 @@ bibliography: ../golf_physics.bib
 **ZVCF**: The zero-velocity counterfactual, the trajectory if velocities were set to zero while maintaining position. Related to ZTCF but not identical.
 
 **Zygapophysial joint**: See facet joint. These small joints between vertebrae can be sources of back pain in golfers.
-
 

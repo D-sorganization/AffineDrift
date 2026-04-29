@@ -6,7 +6,10 @@ on:
   pull_request:
     branches: [main, master]
   schedule:
-    - cron: "0 8 * * 0,4" # Run every night at midnight
+    - cron: "0 8 * * 0,4" # Sundays and Thursdays at 08:00 UTC
+
+permissions:
+  contents: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

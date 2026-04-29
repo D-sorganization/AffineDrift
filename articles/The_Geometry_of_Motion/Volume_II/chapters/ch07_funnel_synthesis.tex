@@ -8,6 +8,12 @@
 \index{time-varying LQR}\index{TV-LQR}%
 \index{funnel library}\index{trajectory library}\index{composition of funnels}
 
+\begin{gomdraftnotice}
+This chapter is under active development and contains only a structural outline
+with preliminary material. Full exposition, worked examples, proofs, and exercises
+will be added in future editions.
+\end{gomdraftnotice}
+
 \epigraph{%
   You cannot control the exact trajectory a stone will take down a mountain.\\
   But you can build a trough to ensure it reaches the bottom.
@@ -23,7 +29,7 @@ Even if you know the mathematically perfect path for a golf swing, no human can 
 \section{Beyond LQR: The Need for Guaranteed Invariance}
 % ══════════════════════════════════════════════
 
-In Chapter 4, we showed that applying time-varying Linear Quadratic Regulation (LQR) to the transverse dynamics creates a contracting envelope of stability. The Riccati equation naturally shapes this envelope into a "funnel" that narrows as the terminal constraint approaches. 
+In Chapter 4, we showed that applying time-varying Linear Quadratic Regulation (LQR) to the transverse dynamics creates a contracting envelope of stability. The Riccati equation naturally shapes this envelope into a ``funnel'' that narrows as the terminal constraint approaches. The idea of composing such funnels into motion planning trees was introduced by Tedrake \cite{Tedrake2009} (LQR-Trees) and extended by Majumdar and Tedrake \cite{MajumdarTedrake2017} using sum-of-squares verification.
 
 However, LQR guarantees are inherently \emph{local}. They rely on the linear approximation of the transverse dynamics $\dot{\bm{\xi}} = \bm{A}_\perp(t)\bm{\xi} + \bm{B}_\perp(t)\delta\control$. For actual physical systems traversing highly nonlinear state spaces—like a golf club accelerating to $50$ m/s while subject to massive centrifugal and Coriolis forces—this linearization quickly breaks down. If a disturbance pushes the state too far from the reference trajectory $\traj^*(t)$, the nonlinearities will dominate, the LQR restoring forces will compute the wrong corrective action, and the clubhead will completely miss the ball.
 
@@ -56,15 +62,56 @@ To verify invariance, we use the machinery of Lyapunov theory, adapted for traje
 
 If the derivative of the boundary function points inward everywhere on the boundary, trajectories may circulate inside the funnel, but they can never escape it. For a moving target problem, we want the spatial volume of $\mathcal{F}(t)$ to shrink as $t \to t_f$, terminating in a tight bounded region at impact.
 
+\begin{center}
+\begin{tikzpicture}[scale=1.2]
+  % Reference trajectory
+  \draw[very thick, trajgreen, decoration={markings,
+      mark=at position 0.4 with {\arrow{Stealth[length=2mm]}},
+      mark=at position 0.8 with {\arrow{Stealth[length=2mm]}}
+    }, postaction={decorate}]
+    (0, 0) .. controls (1, 2) and (2, 1.5) .. (3.5, 0.2);
+  \node[trajgreen!80!black, font=\small\bfseries] at (1.5, 2.3) {$\traj^*(t)$};
+
+  % Funnel boundaries - ellipses at different times
+  \draw[thick, accentred, dotted] (0, 0) circle (0.6);
+  \node[accentred, font=\scriptsize] at (-0.4, -0.8) {$t=0$};
+
+  \draw[thick, accentred, dotted] (1.5, 1.8) ellipse (0.5 and 0.35);
+  \node[accentred, font=\scriptsize] at (1.0, 2.5) {$t=t_1$};
+
+  \draw[thick, accentred, dotted] (2.8, 0.8) ellipse (0.3 and 0.2);
+  \node[accentred, font=\scriptsize] at (3.3, 1.2) {$t=t_2$};
+
+  \draw[thick, accentred, dotted] (3.5, 0.2) circle (0.12);
+  \node[accentred, font=\scriptsize] at (3.5, -0.35) {$t=t_f$};
+
+  % Invariant tube boundary
+  \draw[dashed, chapblue!60, line width=1pt] (0, 0.6) .. controls (1.2, 2.2) and (2.2, 1.85) .. (3.62, 0.32);
+  \draw[dashed, chapblue!60, line width=1pt] (0, -0.6) .. controls (1.2, 1.4) and (2.2, 0.85) .. (3.38, 0.08);
+
+  % Target manifold
+  \draw[thick, accentred] (3.4, -0.15) -- (3.4, 0.55);
+  \node[accentred, font=\small] at (3.85, 0.2) {$\psi = 0$};
+
+  % Disturbance example
+  \draw[-{Stealth[length=2mm]}, thick, red!70] (1.2, 1.3) -- (1.5, 0.9);
+  \node[red!70, font=\small] at (0.9, 0.7) {disturbance};
+
+  % Axes
+  \draw[-{Stealth[length=2mm]}, thick, gray] (-0.5, -1.2) -- (4.2, -1.2) node[right, font=\small] {$t$};
+  \draw[-{Stealth[length=2mm]}, thick, gray] (-0.5, -1.2) -- (-0.5, 2.8) node[above, font=\small] {$\state$};
+\end{tikzpicture}
+\end{center}
+
 \begin{keyidea}{Funnels Define the Usable State Space}{usable_space}
-  A computed funnel is not just an analysis tool; it is the ultimate judge of repeatability. It explicitly defines the exact set of initial conditions (e.g., the kinematic state at the top of the backswing) that are mathematically guaranteed to successfully strike the ball despite the presence of extreme nonlinearities.
+  A computed funnel $\mathcal{F}(t)$ is not just an analysis tool; it is the ultimate judge of repeatability. It explicitly defines the exact set of initial conditions (e.g., the kinematic state at the top of the backswing) that are mathematically guaranteed to successfully satisfy the terminal constraint $\psi(\state(t_f)) = 0$ despite the presence of extreme nonlinearities and bounded disturbances. The time-varying geometry of the funnel---narrowing as $t \to t_f$---encodes the stability structure of the transverse dynamics along the reference trajectory.
 \end{keyidea}
 
 % ══════════════════════════════════════════════
 \section{Sums-of-Squares (SOS) Programming}
 % ══════════════════════════════════════════════
 
-Proving that $\dot{V} < 0$ on the boundary $V=1$ for a general nonlinear function $\bm{f}$ is famously difficult. We have an infinite number of states on the boundary to check! We circumvent this by restricting our dynamics $\bm{f}$ algorithms to polynomials (via Taylor expansion or substitution) and leveraging \textbf{Sums-of-Squares (SOS) Programming}~\cite{Boyd1994, MajumdarTedrake2017}.
+Proving that $\dot{V} < 0$ on the boundary $V=1$ for a general nonlinear function $\bm{f}$ is famously difficult. We have an infinite number of states on the boundary to check. We circumvent this by restricting our dynamics $\bm{f}$ algorithms to polynomials (via Taylor expansion or substitution) and leveraging \textbf{Sums-of-Squares (SOS) Programming}~\cite{Boyd1994, MajumdarTedrake2017}.
 
 A polynomial $p(x)$ is a Sum of Squares if it can be written as $p(x) = \sum_{i} q_i(x)^2$ for some polynomials $q_i(x)$. If a polynomial is SOS, it is globally non-negative. Testing if a polynomial is SOS turns out to be equivalent to solving a Semidefinite Program (SDP)—a convex optimization problem that can be solved very efficiently.
 
@@ -72,7 +119,33 @@ We can reframe Theorem \ref{thm:funnel_invariance} using the S-procedure. To gua
 \begin{equation}
   -\dot{V}(\state, t) - L(\state, t)(1 - V(\state, t)) \quad \text{is SOS}
 \end{equation}
-where $L(\state, t)$ is a strictly positive polynomial multiplier. If $V(\state, t) = 1$, the second term vanishes, and the SOS condition forces $-\dot{V} > 0$, achieving our invariance proof!
+where $L(\state, t)$ is a strictly positive polynomial multiplier. If $V(\state, t) = 1$, the second term vanishes, and the SOS condition forces $-\dot{V} > 0$, achieving the invariance proof.
+
+\subsection{Implementation Sketch: Funnel Synthesis}
+
+The workflow below is the practical bridge from a nominal trajectory to a certifiable tube of allowable perturbations.
+
+\begin{algorithm}[htbp]
+\caption{Trajectory-Centered Funnel Synthesis}
+\label{alg:ch7:funnel-synthesis}
+\begin{algorithmic}[1]
+\Require Nominal trajectory $\traj^*(t)$, feedback law $\control = \bm{k}(\state, t)$, polynomial closed-loop model, time grid $\{t_k\}$.
+\Ensure Time-varying Lyapunov matrices $\bm{P}(t_k)$ defining a verified funnel.
+\State Linearize or polynomially approximate the closed-loop dynamics around $\traj^*(t)$.
+\State Initialize $\bm{P}(t_k)$ from the transverse Riccati solution or another stabilizing quadratic form.
+\For{each node $t_k$}
+  \State Define the candidate boundary $V_k(\state) = (\state - \traj^*(t_k))^\top \bm{P}(t_k) (\state - \traj^*(t_k))$.
+  \State Introduce SOS multipliers enforcing $-\dot{V}_k - L_k(1 - V_k)$ to be nonnegative on the boundary.
+  \State Add positive-definiteness constraints on $\bm{P}(t_k)$.
+\EndFor
+\While{the SDP remains feasible}
+  \State Maximize the ellipsoid volume or a surrogate such as $-\log \det \bm{P}(t_k)$ across the grid.
+  \State If infeasibility appears, shrink the candidate funnel, refine the polynomial model, or shorten the horizon.
+\EndWhile
+\State Interpolate the verified $\bm{P}(t_k)$ between nodes to obtain a continuous funnel approximation.
+\Return The verified funnel family $\mathcal{F}(t) = \{\state \mid V(\state, t) \leq 1\}$
+\end{algorithmic}
+\end{algorithm}
 
 % ══════════════════════════════════════════════
 \section{Computing the Funnel for the Golf Swing}
@@ -100,5 +173,26 @@ where $\bm{P}(t)$ is a positive definite matrix that changes continuously along 
   The optimizer actively computes the exact structural limits of the golf swing's passive dynamics. It discovers that early in the downswing, the funnel can be incredibly "wide" (forgiving), but as centrifugal forces build, the SOS constraints force $\bm{P}(t_k)$ to become highly elongated along the unactuated dimensions in order to maintain the invariance guarantee. The resulting geometry is a true numerical portrait of athletic consistency.
 \end{example}
 
-In Chapter 8, we will explore how to make these funnels robust to temporal variation by migrating out of the time domain entirely and into the phase domain.
+% ══════════════════════════════════════════════
+\section{Summary}
+% ══════════════════════════════════════════════
 
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{@{} l p{7.5cm} @{}}
+  \toprule
+  \textbf{Concept} & \textbf{Role in Funnel Synthesis} \\
+  \midrule
+  Lyapunov Function & Time-varying scalar $V(\state, t)$ that measures distance from the reference trajectory; boundary $V = 1$ defines the funnel surface. \\
+  Positive Invariance & Mathematical property ensuring that $\state(0) \in \mathcal{F}(0)$ implies $\state(t) \in \mathcal{F}(t)$ for all $t \in [0, t_f]$. \\
+  Sums-of-Squares (SOS) & Convex optimization technique to verify that $\dot{V} < 0$ on the funnel boundary, eliminating the need for numerical sampling. \\
+  Semidefinite Program & Optimization problem solved to compute the time-varying matrix $\bm{P}(t)$ that maximizes funnel volume subject to SOS constraints. \\
+  Transverse LQR & Provides initial feedback gains $\bm{K}(t)$ for stabilizing deviations orthogonal to the reference trajectory. \\
+  Funnel Synthesis Workflow & Practical sequence of polynomial approximation, SOS certification, and ellipsoid-volume maximization around the nominal trajectory. \\
+  \bottomrule
+\end{tabular}
+\end{center}
+
+\vspace{0.3cm}
+
+In Chapter 8, we will explore how to make these funnels robust to temporal variation by migrating out of the time domain entirely and into the phase domain.

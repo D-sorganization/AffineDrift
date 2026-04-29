@@ -1,6 +1,12 @@
 \chapter{Joint Kinematics and Soft Tissue}
 \label{ch:joint-kinematics}
 
+\begin{gomdraftnotice}
+This chapter is under active development and contains only a structural outline
+with preliminary material. Full exposition, worked examples, proofs, and exercises
+will be added in future editions.
+\end{gomdraftnotice}
+
 \epigraph{%
   The knee is not a hinge. The shoulder is not a ball-and-socket.
   These are useful fictions that biology tolerates but does not enforce.
@@ -14,6 +20,21 @@ Biological joints achieve constraint through a fundamentally different mechanism
 the interaction of articular surfaces, ligaments, joint capsule, and muscle forces.
 This section develops the kinematics of biological joints using the screw theory
 framework of Volume~0, extended to handle the additional complexity.
+
+\begin{center}
+\begin{tikzpicture}[scale=0.85, >=Stealth]
+  % Gimbal lock illustration
+  \node at (0, 3.5) {\textbf{Engineering Revolute}};
+  \draw[thick, fill=gray!20] (0, 0.5) circle (0.8);
+  \draw[->, thick, blue] (0, 0.5) -- (0.8, 0.5) node[right] {1-DOF axis (fixed)};
+
+  \node at (4, 3.5) {\textbf{Biological Joint}};
+  \draw[thick] (4, 0) ellipse (1.2 and 0.6);
+  \draw[thick] (4, 1) ellipse (1.0 and 0.5);
+  \draw[->, thick, red] (4, 0.5) -- (4.8, 0.8) node[right, font=\small] {ISA migrates};
+  \node[font=\tiny, gray, text width=2cm, align=center] at (4, -0.8) {Coupled rotation\\+ translation};
+\end{tikzpicture}
+\end{center}
 
 \subsection{The Instantaneous Screw Axis}
 
@@ -42,14 +63,15 @@ flexion from $0^\circ$ to $90^\circ$:
 \begin{enumerate}
   \item The femoral condyles \textbf{roll} on the tibial plateaus (like a wheel on a road)
   \item They simultaneously \textbf{slide} posteriorly (the contact point moves backward)
-  \item The tibia undergoes coupled \textbf{internal rotation} of approximately
-        $15^\circ$ (the ``screw-home'' mechanism) \cite{walker1972quantitative,komistek2003invivo}
+  \item The tibia undergoes coupled \textbf{internal rotation} of approximately $15^\circ$
+        (the ``screw-home'' mechanism)
   \item The contact area shifts, changing the effective moment arm
 \end{enumerate}
 
 This coupled motion means the knee ISA migrates superiorly and posteriorly during
-flexion. The four-bar linkage model \cite{OConnor1989} provides a simplified but
-insightful mechanical analog:
+flexion. The position and velocity of the ISA are key outputs of kinematic analysis
+\cite{Crisco2000, Wretenberg1995}. The four-bar linkage model provides a simplified but
+insightful mechanical analog for understanding coupled knee kinematics \cite{OConnor1989}:
 
 \begin{lstlisting}[language=Python, caption={Instantaneous screw axis computation for a biological joint.}]
 import numpy as np
@@ -101,20 +123,14 @@ def knee_isa_trajectory(
         Array of flexion angles in degrees.
     roll_slide_ratio : float
         Ratio of rolling to total contact displacement.
-        Pure rolling = 1.0, pure sliding = 0.0. A value of
-        approximately 0.6 is consistent with the in-vitro
-        tibiofemoral measurements of Walker et al. (1972)
-        [walker1972quantitative].
+        Pure rolling = 1.0, pure sliding = 0.0.
 
     Returns
     -------
     np.ndarray, shape (N, 3)
         ISA positions in the tibial reference frame.
     """
-    # Approximate femoral condyle radius (m); representative
-    # adult value from Walker et al. (1972) [walker1972quantitative]
-    # and standard knee-anatomy references [nigg2007biomechanics].
-    R_condyle = 0.030
+    R_condyle = 0.030  # approximate femoral condyle radius (m)
     isa_positions = np.zeros((len(flexion_angles), 3))
 
     for i, theta in enumerate(np.radians(flexion_angles)):
@@ -132,13 +148,14 @@ def knee_isa_trajectory(
 
 The glenohumeral joint has the largest range of motion of any joint in the body,
 achieved at the expense of stability. The ``ball-and-socket'' description is a
-gross simplification: the humeral head translates $2$--$4$~mm during abduction
-\cite{harryman1990translation}, and the instantaneous center of rotation shifts
-continuously.
+gross simplification: quantitative measurements show the humeral head translates during
+abduction \cite{Karduna2000, Dickerson2005}, and the instantaneous center of rotation
+shifts continuously. The instantaneous screw axis of the shoulder is not fixed and
+migrates through the joint during arm motion \cite{Halder2000}.
 
 The shoulder complex involves four joints:
 \begin{enumerate}
-  \item \textbf{Glenohumeral} (GH): primary ball-and-socket, 3 DOF rotation + $\sim$3~mm translation \cite{harryman1990translation}
+  \item \textbf{Glenohumeral} (GH): primary ball-and-socket, 3 DOF rotation + $\sim$3~mm translation
   \item \textbf{Acromioclavicular} (AC): 3 DOF rotation, small range
   \item \textbf{Sternoclavicular} (SC): 3 DOF rotation, small range
   \item \textbf{Scapulothoracic} (ST): not a true synovial joint; the scapula glides on

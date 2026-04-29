@@ -13,6 +13,31 @@ motion. The International Society of Biomechanics (ISB) has published recommenda
 for joint coordinate systems \cite{Wu2002, Wu2005} that serve as the international
 standard.
 
+\begin{center}
+\begin{tikzpicture}[scale=1.0, >=Stealth]
+  % Global frame
+  \draw[thick, ->, red] (0, 0, 0) -- (2, 0, 0) node[right] {$\hat{\bm{x}}_G$ (anterior)};
+  \draw[thick, ->, green] (0, 0, 0) -- (0, 2, 0) node[above] {$\hat{\bm{y}}_G$ (superior)};
+  \draw[thick, ->, blue] (0, 0, 0) -- (0, 0, 2) node[below right] {$\hat{\bm{z}}_G$ (lateral)};
+
+  \node at (-0.3, -0.3, 0) {$\{G\}$};
+
+  % Segment frame (offset)
+  \draw[thick, ->, red!60] (3, 1, 0) -- (4.5, 1.2, 0) node[right, font=\small] {$\hat{\bm{x}}_S$};
+  \draw[thick, ->, green!60] (3, 1, 0) -- (3, 2.5, 0) node[above, font=\small] {$\hat{\bm{y}}_S$};
+  \draw[thick, ->, blue!60] (3, 1, 0) -- (3, 1, 1.5) node[right, font=\small] {$\hat{\bm{z}}_S$};
+
+  \node at (2.7, 0.5, 0) {$\{S\}$};
+
+  % Bony landmarks on segment
+  \filldraw[fill=black] (3, 1, 0) circle (3pt) node[below, font=\tiny] {Origin};
+  \filldraw[fill=gray] (3.5, 2.8, 0) circle (2pt);
+  \filldraw[fill=gray] (3.8, 2.5, 0) circle (2pt);
+
+  \node[font=\tiny, gray] at (4.2, 2.9) {Landmarks};
+\end{tikzpicture}
+\end{center}
+
 \subsection{The Anatomical Position}
 
 All references to body position begin from the \textbf{anatomical position}: the subject
@@ -36,7 +61,7 @@ stands upright, feet together, arms at sides, palms facing forward. This defines
 
 Each body segment has a local reference frame attached to it, defined by bony landmarks
 that can be palpated or identified from medical imaging. The ISB recommendations specify
-these landmarks for each segment.
+these landmarks for each segment \cite{Wu2002, Wu2005}.
 
 \begin{example}{The Thigh Reference Frame}{thigh-frame}
   The ISB-recommended thigh reference frame $\{T\}$ is defined by:
@@ -49,7 +74,7 @@ these landmarks for each segment.
           (anterior direction)
   \end{itemize}
   The hip joint center is estimated from the pelvis landmarks using regression
-  equations (e.g., Harrington et al.\ 2007).
+  equations (e.g., \cite{Harrington2007}).
 \end{example}
 
 \subsection{Connection to Screw Theory}

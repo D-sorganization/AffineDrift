@@ -237,6 +237,12 @@ class TestRemoveComments:
         result = remove_comments("content % inline comment")
         assert "inline comment" not in result
 
+    def test_preserves_escaped_percent_signs(self) -> None:
+        """Should keep escaped percent signs used as LaTeX content."""
+        result = remove_comments(r"\text{100\% complete} % trailing comment")
+        assert r"\text{100\% complete}" in result
+        assert "trailing comment" not in result
+
 
 class TestRemoveDocumentStructure:
     """Tests for remove_document_structure()."""

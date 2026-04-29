@@ -5,7 +5,7 @@
 \chapter{The Flexible Shaft: Elastic Energy and the Catapult Effect}
 \label{ch:flexible_shaft}
 
-\epigraph{A rigid shaft is an abstraction; a flexible shaft is a machine.}{}
+\epigraph{A rigid shaft is an abstraction; a flexible shaft is a machine.}{---AffineDrift}
 
 % ─────────────────────────────────────────────────────────────────
 \begin{laymansbox}{Why the Shaft Matters}{laymans:ch11:why_shaft}
@@ -18,6 +18,24 @@ In this chapter, we develop a mathematical model of shaft flexibility, show how 
 
 % ─────────────────────────────────────────────────────────────────
 \section{Why Rigid Models Fail}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1.2]
+  \draw[thick, color=blue] (0,0) -- (5,0);
+  \draw[dashed, gray, thin] (0,-1) -- (5,-1);
+  \draw[thick, color=red] (0,0) .. controls (1.5,-0.3) and (3.5,-0.8) .. (5,-1);
+  \node at (2.5,-1.5) {\small Bending mode 1 (lowest frequency)};
+  \node at (2.5,-2) {\small Elastic deformation};
+  \fill[black] (0,0) circle (0.15);
+  \node[above] at (0,0) {\small Grip};
+  \fill[black] (5,-1) circle (0.15);
+  \node[above right] at (5,-1) {\small Clubhead};
+\end{tikzpicture}
+\caption{Shaft bending modes: fundamental bending creates elastic energy storage.}
+\label{fig:shaft_bending}
+\end{figure}
+
 
 \index{shaft!flexibility}
 \index{Euler-Bernoulli beam}
@@ -34,9 +52,10 @@ A typical golf shaft is made of composite fibers (carbon fiber or graphite) wrap
 All three effects matter. The bending deformation is largest and most relevant to the swing trajectory, so we focus primarily on that.
 
 \begin{example}{Shaft Deflection Magnitudes}{ex:ch11:deflection}
-At the moment of impact in a typical swing, the clubhead is accelerating upward at roughly $2500 \, \mathrm{m/s^2}$ (about $250g$). The shaft grip end is accelerating at only $300 \, \mathrm{m/s^2}$ (about $30g$). This huge difference in acceleration means the shaft experiences an enormous differential force that bends it.
+During the late downswing, the clubhead experiences centripetal accelerations on the order of $2000$--$2500 \, \mathrm{m/s^2}$ ($\sim$200--250$g$), while the grip end accelerates at only $\sim$300~m/s$^2$ ($\sim$30$g$). (Note: these are substantially larger than the $\sim$18$g$ swing-phase acceleration computed in Chapter~\ref{ch:04_forces_and_torques} because they include the full centripetal acceleration of the clubhead about the instantaneous center of rotation, not just the shoulder-referenced centripetal term.) This huge difference in acceleration means the shaft experiences an enormous differential force that bends it.
 
-For a modern driver shaft (about 44 inches long, $50 \, \mathrm{g}$ mass), this differential loading produces measurable deflection at the clubhead. The magnitude depends on the shaft's flexural rigidity ($EI$) and the loading profile; shorter, stiffer shafts exhibit smaller deflection but the effect is never eliminated.
+For a modern driver shaft (typically around 44--46 inches long, with shaft mass on the order of 50--80\,g depending on flex and material), this can produce a deflection of several inches at the clubhead. Published estimates range from roughly 1--5 inches depending on shaft flex, clubhead mass, and swing speed \citep{Penner2001,MacKenzie2009}.\citeneeded{instrumented strain-gauge or high-speed video measurement of driver shaft deflection magnitude at impact}
+In shorter, stiffer shafts (like driver shafts designed to be whip-resistant), this is reduced but never eliminated.
 \end{example}
 
 The rigid model predicts that the clubhead would be at the end of a straight line from the grip. The flexible model correctly predicts that the clubhead lags behind, causing shaft lag at impact. This lag is where the catapult effect comes in: the shaft is storing elastic energy as it bends, and that energy is released as the shaft snaps back toward impact.
@@ -50,19 +69,28 @@ The rigid model predicts that the clubhead would be at the end of a straight lin
 
 To model shaft flexibility mathematically, we use \textbf{Euler-Bernoulli beam theory}, a classical result from mechanics. A beam (our shaft) can be described by how much it bends at each point along its length.
 
-The fundamental equation for the shape of a bent beam is:
+The governing dynamic equation for transverse shaft deflection is:
 \[
-EI \frac{\partial^4 w}{\partial z^4} = q(z)
+EI \frac{\partial^4 w}{\partial z^4}(z,t) + \rho A \frac{\partial^2 w}{\partial t^2}(z,t) = q(z,t)
 \]
 
 where:
 \begin{itemize}
-\item $w(z)$ is the vertical deflection of the beam at position $z$ along the shaft.
+\item $w(z,t)$ is the vertical deflection of the shaft at position $z$ and time $t$.
 \item $E$ is the material's elastic modulus (stiffness).
 \item $I$ is the second moment of inertia of the cross-section (how the material is distributed around the neutral axis).
-\item $q(z)$ is the distributed load on the beam (in our case, inertial forces from acceleration).
+\item $\rho$ is the material density.
+\item $A$ is the shaft cross-sectional area.
+\item $q(z,t)$ is the distributed load on the shaft (in our case, inertial forces from acceleration).
 \item The product $EI$ is called the \textbf{bending stiffness}.
 \end{itemize}
+
+For quasi-static approximations where inertial effects are negligible, we use the reduced form
+\[
+EI \frac{\partial^4 w}{\partial z^4}(z) = q(z)
+\]
+
+Modal decomposition assumes each mode shape $\phi_j(z)$ satisfies the eigenproblem implied by the dynamic beam equation, and projection onto these modes produces the coupled ODEs in terms of $\eta_j(t)$.
 
 \begin{laymansbox}{Why $EI$ Matters}{laymans:ch11:ei_product}
 Imagine two shafts of the same length. One is thin and hollow; one is thick and solid. Both are made of the same material. The thin shaft bends a lot for the same force. The thick shaft is much stiffer. The product $EI$ captures this: a thicker shaft has a larger $I$, so a larger $EI$, and thus is stiffer.
@@ -262,7 +290,7 @@ The magnitude of this energy depends on how much the shaft is bent ($\eta$) and 
 \begin{laymansbox}{Why Shaft Flex Profiles Matter}{laymans:ch11:flex_profile}
 Real golf shafts are not uniformly flexible. They are often stiffer at the grip end (where they need to handle the hand loads) and more flexible toward the tip (the free end). This creates a nonuniform bending profile.
 
-The consequences are significant: a more flexible tip means more bend and more stored energy, but the bend is concentrated near the clubhead, which affects the timing of energy release and the orientation of the clubhead at impact. A stiffer tip means less stored energy but potentially better control of the clubhead orientation.
+The consequences are far-reaching: a more flexible tip means more bend and more stored energy, but the bend is concentrated near the clubhead, which affects the timing of energy release and the orientation of the clubhead at impact. A stiffer tip means less stored energy but potentially better control of the clubhead orientation.
 
 Shaft fitting is fundamentally the art of choosing the right combination of length, overall stiffness, flex profile, and weight to match your swing speed and swing characteristics. Different profiles produce different $f_{\text{modal}}$ functions, which means different $\ztcf$ trajectories.
 \end{laymansbox}
@@ -300,7 +328,7 @@ Consider two golfers with identical biomechanics (same joint angles, angular vel
 
 For a high-speed golfer (say, 90+ mph swing speed), the centrifugal stiffening effect is so large that even a relatively flexible shaft is effectively stiff by mid-downswing. So a flexible shaft is useful. For a slower golfer, the centrifugal stiffening is weaker, and a flexible shaft might still be oscillating at impact, causing control problems.
 
-This is why amateur golfers benefit from shafts matched to their swing speed: the goal is to have the shaft reach its maximum elasticity just before impact, releasing all its energy at the optimal moment.
+For a given swing speed, the goal is to have the shaft reach its maximum elasticity just before impact, releasing all its energy at the optimal moment. The choice of shaft characteristics (flex, profile, weight) should match the golfer's swing parameters (speed, acceleration profile) to optimize energy transfer.
 \end{example}
 
 % ─────────────────────────────────────────────────────────────────
@@ -323,7 +351,7 @@ A shaft with the wrong stiffness changes the drift field in a way that moves the
 The task of shaft fitting is to adjust $\shaftstiff$, $\zeta$, the flex profile, and the total shaft mass to produce a drift field whose $\ztcf$ closely matches the golfer's target trajectory for their measured swing speed and swing geometry.
 
 \begin{principle}{Shaft Fitting as Drift Design}{princ:ch11:shaft_fitting}
-A properly fitted shaft does two things:
+The shaft design should accomplish the following:
 \begin{enumerate}
 \item It aligns the drift field $f(\state)$ with your swing characteristics, so that the zero-torque counterfactual (the autopilot trajectory) naturally points toward the target.
 \item It maximizes the energy transfer from the muscles and gravity to the clubhead by timing the catapult effect to release its energy at the optimal moment.
@@ -352,7 +380,7 @@ For a flexible shaft, the term $E_{\text{stored in shaft}}$ is significant. In a
 The benefit of this storage mechanism is that it allows the muscles to do work earlier in the downswing (when the torque levers are shorter and the muscles are fresh) and have that energy released later, when the clubhead can best use it (near impact, when the lever arm is longest).
 
 \begin{laymansbox}{Why Flexible Shafts Help Slower Golfers More}{laymans:ch11:slow_golfer}
-For a slower golfer---say, one with a relatively low swing speed---there is less centrifugal stiffening throughout the swing. The shaft remains more flexible. This means:
+A slower golfer (for illustration, consider a driver swing speed around 70 mph, which is below tour-professional levels \citep{Jorgensen1994}) has less centrifugal stiffening throughout the swing. The shaft remains more flexible. This means:
 \begin{enumerate}
 \item The shaft can absorb and hold more energy per unit bend (because $\shaftstiff$ is lower).
 \item The catapult effect, when it occurs, releases this energy directly to the clubhead at a critical moment.
@@ -535,7 +563,7 @@ Explain in plain language why a stiffer shaft stores less elastic energy for a g
 \end{exercise}
 
 \begin{exercise}
-For this illustrative exercise, consider two golfers with identical swing speeds and identical biomechanics, but one uses a lighter shaft and the other uses a heavier shaft. How might the different shaft mass affect the modal dynamics? (Consider how mass affects $\omega_n$ and the effective driving force $f_{\text{modal}}$.)
+Two golfers have identical swing speeds (85 mph) and identical biomechanics, but one uses a 65-gram shaft and the other uses a 75-gram shaft. How might the different shaft mass affect the modal dynamics? (Consider how mass affects $\omega_n$ and the effective driving force $f_{\text{modal}}$.)
 \end{exercise}
 
 \begin{exercise}

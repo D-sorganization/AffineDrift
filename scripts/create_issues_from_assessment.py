@@ -149,7 +149,7 @@ def process_assessment_findings(
     return 0
 
 
-def main():
+def main() -> None:
     """Parse command-line arguments and create GitHub issues from assessment."""
     parser = argparse.ArgumentParser(description="Create GitHub issues from assessment")
     parser.add_argument(

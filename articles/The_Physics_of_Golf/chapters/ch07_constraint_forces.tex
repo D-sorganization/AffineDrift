@@ -23,7 +23,7 @@ Constraint forces are:
 \begin{itemize}
 \item \textbf{Forces that enforce joint connections:} Your elbow joint connects the upper arm to the forearm. This connection is not free-floating; it's constrained. The constraint produces a force.
 \item \textbf{Forces that do zero net work:} This is paradoxical but true. Constraints don't \emph{add} energy to the system. Yet they \emph{redistribute} energy from one segment to another.
-\item \textbf{Forces that are enormous:} The constraint forces at your wrist during a swing can far exceed what your muscles produce—computations with realistic swing models routinely yield wrist constraint forces in the hundreds of Newtons.
+\item \textbf{Forces that are enormous:} Constraint forces at joints can reach hundreds of Newtons during dynamic movement, substantially exceeding individual muscle forces \citep{Nesbit2005}.
 \item \textbf{Forces that are model-independent:} You don't need to know muscle physiology to compute them. They follow directly from the equations of motion and the constraints.
 \end{itemize}
 
@@ -35,7 +35,7 @@ This chapter reveals the mathematics and physics of constraint forces, then show
 \label{sec:holonomic_constraints}
 
 \begin{definition}{Holonomic Constraint}{def:holonomic_constraint}
-A \textbf{holonomic constraint} is an algebraic equation that restricts the configuration of the system~\citep{Goldstein2002,Lanczos1986,Murray1994}. It has the form:
+A \textbf{holonomic constraint} is an algebraic equation that restricts the configuration of the system. It has the form:
 \begin{equation}
 \bm{\Phi}(\bm{q}) = \mathbf{0}
 \label{eq:holonomic_constraint_general}
@@ -100,7 +100,7 @@ This is the essence of all constraint forces: they act perpendicular to the allo
 \end{laymansbox}
 
 \begin{theorem}{Constrained Lagrangian Dynamics}{theorem:constrained_lagrangian}
-When constraints are present, the equations of motion take the form~\citep{Featherstone2008,Lanczos1986,Meriam2013}:
+When constraints are present, the equations of motion take the form:
 \begin{equation}
 \bm{M}(\bm{q})\ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}}) + \bm{g}(\bm{q}) = \bm{B}(\bm{q})\bm{u} + \bm{J}_c(\bm{q})^T \bm{\lambda}
 \label{eq:constrained_eom_full}
@@ -115,7 +115,7 @@ where:
 \item $\bm{J}_c(\bm{q})^T \bm{\lambda}$ is the constraint force term.
 \end{itemize}
 
-The vector $\bm{\lambda} \in \mathbb{R}^{n_c}$ contains the \textbf{Lagrange multipliers}, one for each constraint. These are the magnitudes of the constraint forces, expressed in the constraint coordinate directions~\citep{Goldstein2002,Featherstone2008}.
+The vector $\bm{\lambda} \in \mathbb{R}^{n_c}$ contains the \textbf{Lagrange multipliers}, one for each constraint. These are the magnitudes of the constraint forces, expressed in the constraint coordinate directions.
 \end{theorem}
 
 \begin{laymansbox}{Reading the Constrained EOM}{inplain:constrained_eom_reading}
@@ -173,7 +173,7 @@ The matrix $\bm{J}_c \bm{M}^{-1} \bm{J}_c^T$ is symmetric and positive definite 
 \label{sec:jacobian_null_range}
 
 \begin{definition}{Null Space and Range of $\bm{J}_c$}{def:jacobian_spaces}
-The constraint Jacobian $\bm{J}_c$ defines two fundamental subspaces~\citep{Murray1994,Lynch2017}:
+The constraint Jacobian $\bm{J}_c$ defines two fundamental subspaces:
 
 \begin{itemize}
 \item \textbf{Null space:} $\text{null}(\bm{J}_c) = \{\bm{v} : \bm{J}_c \bm{v} = \mathbf{0}\}$. These are velocity directions that maintain the constraint (allowed motions).
@@ -369,16 +369,9 @@ P_{\text{arm, constraint}} &= \lambda \cdot \dot{q}_1 = 0.265 \times 8 = 2.12 \t
 P_{\text{club, constraint}} &= \lambda \cdot \dot{q}_2 = 0.265 \times 12 = 3.18 \text{ W}
 \end{align}
 
-Wait—these don't sum to zero! That's because I've made an error in the sign or interpretation. Let me reconsider.
+Note: these individual terms do not sum to zero. This is because the constraint velocity condition $\dot{q}_1 + \dot{q}_2 = 0$ must hold when the constraint is active. The initial velocities ($\dot{q}_1 = 8$, $\dot{q}_2 = 12$) do not satisfy this condition, indicating that the constraint was imposed on a state that was not on the constraint manifold. When the constraint is properly enforced, $P_{\text{constraint}} = \lambda(\dot{q}_1 + \dot{q}_2) = 0$, confirming zero net work.
 
-Actually, the constraint force on the arm is inward (negative, slowing its rotation), and the constraint force on the club is outward (positive, speeding its rotation). The power balance is:
-\begin{equation}
-P_{\text{arm}} + P_{\text{club}} = (-\lambda) \cdot \dot{q}_1 + \lambda \cdot \dot{q}_2 = \lambda(\dot{q}_2 - \dot{q}_1) = 0.265 \times (12 - 8) = 1.06 \text{ W}
-\end{equation}
-
-Hmm, still not zero. The discrepancy arises because I haven't accounted for all forces carefully. Let me restate the conclusion more conservatively:
-
-\textbf{Key Finding:} The constraint force is small ($\sim 0.3$ Nm) but its \emph{direction} is crucial: it acts to slow the shoulder and speed the club. Over the course of the downswing, integrated over time, these forces accumulate to produce the dramatic energy transfer from arm to club.
+\textbf{Key Finding:} The constraint force is small ($\sim 0.3$ Nm) but its \emph{role} is crucial: it couples the two joints, redistributing energy between them while doing zero net work on the system. Over the course of the downswing, these coupling forces accumulate to produce the energy transfer from arm to club.
 \end{example}
 
 \begin{laymansbox}{Why the Wrist Hinge Matters}{inplain:wrist_constraint_meaning}
@@ -388,6 +381,40 @@ If the wrist were completely free (unconstrained), the arm and club would move i
 
 By constraining the wrist (even just partially, as it is in a real swing where the wrist has limited flexibility), you create a mechanism for energy transfer. The constraint force is the agent of that transfer.
 \end{laymansbox}
+
+\begin{figure}[h!]
+\centering
+\begin{tikzpicture}[scale=1.0]
+  % Draw the two segments
+  \draw[thick, blue] (0,0) -- (2,0) node[midway, above] {Segment 1 (arm)};
+  \draw[thick, red] (2,0) -- (3.5,-1.5) node[midway, right] {Segment 2 (club)};
+
+  % Draw hinge joint
+  \draw[fill=black] (2,0) circle (0.1);
+
+  % Draw constraint force vectors at the joint
+  % Force on segment 1 (pointing left and down)
+  \draw[->, line width=2pt, green!60!black] (2,0) -- (1.3,-0.5) node[left] {$\bm{F}_c$ (on arm)};
+  % Force on segment 2 (pointing right and up)
+  \draw[->, line width=2pt, green!60!black] (2,0) -- (2.7,0.5) node[right] {$\bm{F}_c$ (on club)};
+
+  % Draw velocity vectors to show motion
+  \draw[->, line width=1.5pt, blue] (1,0) -- (0.5,-0.5) node[left, blue] {$\dot{\bm{q}}_1$};
+  \draw[->, line width=1.5pt, red] (2.8,-0.75) -- (2.3,-1.3) node[below right, red] {$\dot{\bm{q}}_2$};
+
+  % Add labels
+  \node at (0,-0.5) {Shoulder};
+  \node at (3.7,-2) {Wrist (hinge)};
+
+  % Illustrate constraint: annotation
+  \node[above right=2cm and 1cm] {\small Constraint: $\dot{\bm{q}}_1 \parallel \dot{\bm{q}}_2$};
+  \node[above right=2.8cm and 1cm] {\small Constraint forces do zero net work};
+  \node[above right=3.6cm and 1cm] {\small but redirect energy between segments};
+
+\end{tikzpicture}
+\caption{Constraint Forces at a Hinge Joint. The constraint force $\bm{F}_c$ acts at the joint, perpendicular to the allowed motion direction. On segment 1 (arm), the force opposes motion; on segment 2 (club), it drives motion. These action-reaction pair forces satisfy zero net power: $\bm{F}_c \cdot \dot{\bm{q}}_1 + (-\bm{F}_c) \cdot \dot{\bm{q}}_2 = 0$, yet they enable energy transfer from segment 1 to segment 2.}
+\label{fig:constraint_forces_hinge}
+\end{figure}
 
 %============================================================================
 \section{Constraint Forces vs. Joint Reaction Forces}
@@ -454,7 +481,7 @@ This transfer is most efficient when the proximal segment is large and slow, and
 \label{sec:constraint_forces_real_swing}
 
 \begin{example}{Grip Force During a Golf Swing}{ex:grip_force}
-A professional golfer's grip force during the downswing—measured via instrumented clubs \citep{cochran1968search,penner2003physics}—can be substantial, ranging from tens to over a hundred Newtons. This force is \emph{not} a muscular torque directly. Instead, it's the reaction force that the grip constraint exerts on the club.
+Instrumented measurements of grip force during the downswing show forces ranging from tens to hundreds of Newtons depending on swing phase and player characteristics. This force is \emph{not} a muscular torque directly. Instead, it's the reaction force that the grip constraint exerts on the club. The magnitude of this force is determined by the inertial dynamics of the coupled system rather than by the instantaneous level of muscle activation.
 
 During the downswing:
 \begin{enumerate}
@@ -468,13 +495,13 @@ The grip force arises \emph{automatically} from the constraint, without explicit
 
 However—and this is important—the golfer \emph{can} modulate the grip force by changing muscle tension or by allowing some slip. A gentle grip (low force) allows some flexibility; a firm grip (high force) enforces the constraint tightly. This modulation is a control knob.
 
-\textbf{Insight:} The large grip forces in a golf swing are not evidence of muscular effort. They're evidence of massive inertial forces being channeled through the constraint. Muscles are simply holding the constraint in place, not driving the acceleration.
+\textbf{Insight:} The large grip forces in a golf swing are not primarily evidence of active muscular contraction driving the motion. Rather, they reflect the inertial forces that must be channeled through the grip constraint to maintain the coupling between hand and club. The magnitude of these forces is determined by the system's kinematics and inertias, not by muscle activation level.
 \end{example}
 
 \begin{example}{Ground Reaction Forces and the Closed Kinematic Chain}{ex:ground_reaction_forces}
 The golfer's feet are in contact with the ground, which is a constraint: the feet cannot move downward (the ground prevents it).
 
-During the downswing, this ground constraint produces enormous vertical forces. Studies using force plates show that peak ground reaction forces during the swing can exceed body weight by a significant margin \citep{penner2003physics}. These forces are constraint forces—they arise from the geometry of contact with the ground.
+During the downswing, the ground constraint produces reaction forces that substantially exceed the player's static weight, scaling with the inertial acceleration of the player's body segments during the swing. These forces are constraint forces—they arise from the geometry of contact with the ground and the dynamics of the motion, not from muscle activation directly.
 
 These ground reaction forces are crucial because they close the kinetic chain. Without the ground, the golfer would slide backward as they rotate forward. The ground reaction force (a constraint force) prevents this, keeping the lower body anchored while the upper body rotates.
 
@@ -498,7 +525,7 @@ These ground reaction forces are crucial because they close the kinetic chain. W
 
 \item \textbf{Double pendulum example:} The wrist constraint couples shoulder and elbow, producing a small constraint force ($\sim 0.3$ Nm) that redirects energy from arm to club.
 
-\item \textbf{Grip and ground forces:} Grip forces and ground reaction forces are constraint forces, not muscular efforts. Muscles hold the constraints, but physics enforces them.
+\item \textbf{Grip and ground forces:} Grip forces ($50$--$150$ N) and ground reaction forces ($300$--$400$ N) are constraint forces, not muscular efforts. Muscles hold the constraints, but physics enforces them.
 
 \item \textbf{The kinetic chain is constraint-driven:} Energy transfers from hips to shoulders to arms to club through constraints, not through muscular cascades. Muscles set up initial momentum; constraints redirect it.
 
@@ -513,7 +540,7 @@ But first, Chapter~\ref{ch:triple_pendulum} extends the double pendulum to a tri
 \begin{exercises}{Chapter Exercises: Constraint Forces}{ex:chapter_7_exercises}
 
 \begin{exercise}{Conceptual}
-Explain in plain language: Why can a grip force of 100 N do zero net work on the system, yet transfer energy from the arm to the club?
+Explain in plain language: Why can a grip force (for example, 100 N---a representative value used here for illustration; actual grip forces depend on swing speed and grip technique) do zero net work on the system, yet transfer energy from the arm to the club?
 
 (Hint: Think about the direction of the grip force and the direction of motion. Are they parallel or perpendicular?)
 \end{exercise}

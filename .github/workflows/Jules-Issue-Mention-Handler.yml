@@ -17,8 +17,48 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  check-mention:
+  # ── Dispatcher: route to self-hosted if available ──────────────────────────
+  pick-runner:
     runs-on: d-sorg-fleet
+    timeout-minutes: 2
+    outputs:
+      runner: ${{ steps.check.outputs.runner }}
+    steps:
+      - name: Check for self-hosted runner
+        id: check
+        env:
+          GH_TOKEN: ${{ secrets.RUNNER_CHECK_TOKEN }}
+          FLEET_MODE: ${{ vars.FLEET_RUNNER_MODE }}
+        run: |
+          MODE="${FLEET_MODE:-hybrid}"
+          echo "Fleet mode: $MODE"
+
+          case "$MODE" in
+            local)
+              echo "runner=d-sorg-fleet" >> $GITHUB_OUTPUT
+              echo "Routing to self-hosted fleet (mode=local)"
+              ;;
+            cloud)
+              echo "runner=ubuntu-latest" >> $GITHUB_OUTPUT
+              echo "Routing to GitHub-hosted (mode=cloud)"
+              ;;
+            hybrid|*)
+              AVAILABLE=$(gh api /orgs/${{ github.repository_owner }}/actions/runners \
+                --jq '[.runners[] | select(.status == "online") | select(.busy == false) | select(.labels[].name == "d-sorg-fleet")] | length' \
+                2>/dev/null || echo "0")
+              if [[ "$AVAILABLE" -gt 0 ]]; then
+                echo "runner=d-sorg-fleet" >> $GITHUB_OUTPUT
+                echo "$AVAILABLE idle fleet runner(s) - routing locally"
+              else
+                echo "runner=ubuntu-latest" >> $GITHUB_OUTPUT
+                echo "No idle fleet runners - falling back to GitHub-hosted"
+              fi
+              ;;
+          esac
+
+  check-mention:
+    runs-on: self-hosted
+    needs: pick-runner
     outputs:
       should_run: ${{ steps.check.outputs.should_run }}
     steps:
@@ -39,7 +79,7 @@ jobs:
   fix-issue:
     needs: check-mention
     if: needs.check-mention.outputs.should_run == 'true' && !github.event.issue.pull_request
-    runs-on: d-sorg-fleet
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v6
         with:
@@ -49,6 +89,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
+          TRIGGERED_BY: ${{ github.event.comment.user.login }}
         run: |
           gh issue comment "$ISSUE_NUMBER" --body "$(cat <<'EOF'
           👋 **Jules here!** I've received your request and I'm analyzing this issue now.
@@ -56,7 +97,7 @@ jobs:
           I'll create a PR with a fix shortly. Stay tuned! 🔧
 
           ---
-          *Triggered by @${{ github.event.comment.user.login }}*
+          *Triggered by @${TRIGGERED_BY}*
           EOF
           )"
 
@@ -234,13 +275,19 @@ jobs:
 
       - name: Summary
         if: always()
+        env:
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          TRIGGERED_BY: ${{ github.event.comment.user.login }}
+          STATUS: ${{ steps.jules.outputs.status || 'N/A' }}
+          PR_URL: ${{ steps.jules.outputs.pr_url }}
         run: |
           echo "## Jules Issue Fixer Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "- **Issue:** #${{ github.event.issue.number }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Title:** ${{ github.event.issue.title }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Triggered by:** @${{ github.event.comment.user.login }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Status:** ${{ steps.jules.outputs.status || 'N/A' }}" >> $GITHUB_STEP_SUMMARY
-          if [ -n "${{ steps.jules.outputs.pr_url }}" ]; then
-            echo "- **PR:** ${{ steps.jules.outputs.pr_url }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Issue:** #$ISSUE_NUMBER" >> $GITHUB_STEP_SUMMARY
+          printf '%s\n' "- **Title:** $ISSUE_TITLE" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **Triggered by:** @$TRIGGERED_BY" >> $GITHUB_STEP_SUMMARY
+          echo "- **Status:** $STATUS" >> $GITHUB_STEP_SUMMARY
+          if [ -n "$PR_URL" ]; then
+            printf '%s\n' "- **PR:** $PR_URL" >> "$GITHUB_STEP_SUMMARY"
           fi

@@ -139,7 +139,7 @@ class LaunchConditions:
         # to the launch direction; sidespin is rotation about the vertical axis.
         # In the body frame: backspin -> wy (pitch-back), sidespin -> wz (yaw)
         wx = 0.0
-        wy = -self.backspin  # Negative because backspin opposes forward motion
+        wy = self.backspin  # Positive for backspin (creates upward Magnus lift)
         wz = self.sidespin
 
         return BallFlightState(

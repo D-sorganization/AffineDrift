@@ -3,8 +3,8 @@
 
 \epigraph{``The secret of good swinging is knowing which parts you control and which parts physics controls for you.''}{}
 
-\begin{laymansbox}{The Control-Affine Decomposition}{box:ch05_big_reveal}
-The previous four chapters have developed the equations of motion piece by piece. Now we assemble them into the form that separates passive physics from active control.
+\begin{laymansbox}{The Big Reveal}{box:ch05_big_reveal}
+We've been building toward this chapter for four chapters. Now it's time to reveal the structure that makes the golf swing work.
 
 The manipulator equation:
 \begin{equation}
@@ -19,14 +19,14 @@ can be rewritten in a form that separates passive physics from active control:
 \label{eq:ch05_affine_repeat}
 \end{equation}
 
-This is the \textbf{control-affine form}\index{control-affine}, a standard object in nonlinear control theory \cite{Isidori1995, Khalil2002}. It says:
+This is the \textbf{control-affine form}\index{control-affine}. It says:
 \begin{itemize}
 \item The system evolves in state space ($\bm{x}$).
 \item Left alone, the system follows the \textbf{drift} $\bm{f}(\bm{x})$.
 \item Your muscles add a \textbf{control} term $\bm{G}(\bm{x}) \bm{u}$ on top.
 \end{itemize}
 
-The control-affine structure is central to the analysis in this book for a reason that is easy to state: it is the largest class of nonlinear systems in which the contribution of the input is additive and therefore linearly separable from the passive dynamics. A generic nonlinear system $\dot{\bm{x}} = F(\bm{x}, \bm{u})$ does not admit such a separation. Mechanical systems derived from a Lagrangian with control torques entering linearly in the generalized forces do, and the golfer--club system is one of them \cite{Murray1994}.
+This decomposition is the key to understanding the golf swing. It's where drift and control become concrete.
 \end{laymansbox}
 
 \section{From Equations of Motion to State Space}
@@ -89,15 +89,17 @@ Then:
 \label{eq:ch05_control_affine_form}
 \end{equation}
 
-This is the \textbf{control-affine form}\index{control-affine form}. It's called ``affine'' (not ``linear'') because the dependence on control is linear, but the dependence on state is not linear.
+This is the \textbf{control-affine form}\index{control-affine form}. It is standard in nonlinear control theory \citep{Isidori1995,BulloLewis2004}. It is called ``affine'' (not ``linear'') because the dependence on control is linear, but the dependence on state is generally nonlinear. The form applies during smooth phases of the swing; impacts, stick--slip contact, and discontinuous grip changes require hybrid or compliant extensions rather than this smooth equation alone.
 
 \begin{laymansbox}{What Is a Vector Field?}{box:ch05_vector_field}
-A \textbf{vector field} assigns an arrow to every point in space. The drift field $f(\state)$ assigns an arrow to every possible state of the golfer---it tells you which direction the system would move next if all muscles went limp. The control field $G(\state)\control$ adds a second arrow showing what muscle torques contribute.
+A \textbf{vector field} assigns an arrow to every point in space. Imagine painting a tiny arrow at every point in the 4-dimensional state space. Each arrow shows the direction and speed the system would move if left to its own devices (no muscles). At a state where the arm is high and moving slowly, the arrow points downward and forward (gravity accelerates the arm). At a state where the arm is moving fast, the arrow curves---Coriolis and centrifugal effects bend the trajectory. Collectively, these arrows form a vector field: a map that tells you, at every possible state, where physics wants to take you next. The drift $\bm{f}(\bm{x})$ \emph{is} this vector field.
 
-At any instant, the system moves in the direction of the \emph{sum} of these two arrows. Early in the downswing, the control arrow is significant. By impact, the drift arrow is so enormous that the control arrow is negligible by comparison.
+The control field $\bm{G}(\bm{x}) \bm{u}$ adds a second arrow showing what muscle torques contribute. At any instant, the system moves in the direction of the \emph{sum} of these two arrows. Early in the downswing, the control arrow can be significant. Near impact in the simplified models developed here, the drift arrow is often much larger than the bounded control arrow, so active torque behaves more like a steering correction than a primary source of acceleration.
 
 Imagine standing in a river. The current is the drift field---it carries you regardless of what you do. Your swimming strokes are the control field. In a gentle stream, your strokes dominate. In whitewater rapids, the current dominates. The golf swing transitions from gentle stream (address) to rapids (impact).
 \end{laymansbox}
+
+The distinction between drift and control is not merely mathematical—it is fundamental to understanding the mechanics of the swing. The drift field $\bm{f}(\bm{x})$ represents the "shape" of the system's natural dynamics. Control input $\bm{G}(\bm{x}) \bm{u}$ adds perturbations to this natural trajectory.
 
 \begin{definition}{Control-Affine Systems}{def:ch05_control_affine}
 A system of the form:
@@ -113,8 +115,10 @@ where:
 \item $\bm{u}$ is the \textbf{control input}.
 \end{itemize}
 
-The term ``affine'' means the system is linear in the control but possibly nonlinear in the state. The class is treated in depth in standard references on nonlinear control \cite{Isidori1995, Khalil2002}, and its application to mechanical systems is developed in \cite{Murray1994}.
+The term ``affine'' means the system is linear in the control but possibly nonlinear in the state.
 \end{definition}
+
+To build intuition for why this form is important, consider how it encodes control authority:
 
 \begin{laymansbox}{Why ``Affine'' Matters}{box:ch05_why_affine}
 Why is this form so important?
@@ -190,9 +194,48 @@ The drift $\bm{f}(\bm{x})$ is a vector field on state space. At each point $\bm{
 A function that assigns a vector to each point in space. In our case, at each state $\bm{x}$ in phase space, $\bm{f}(\bm{x})$ tells you which direction the state is moving if there's no control.
 \end{definition}
 
-\begin{laymansbox}{What Is a Vector Field?}{box:ch05_vector_field}
-Imagine painting a tiny arrow at every point in the 4-dimensional state space. Each arrow shows the direction and speed the system would move if left to its own devices (no muscles). At a state where the arm is high and moving slowly, the arrow points downward and forward (gravity accelerates the arm). At a state where the arm is moving fast, the arrow curves---Coriolis and centrifugal effects bend the trajectory. Collectively, these arrows form a \textbf{vector field}: a map that tells you, at every possible state, where physics wants to take you next. The drift $\bm{f}(\bm{x})$ \emph{is} this vector field.
-\end{laymansbox}
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=1.0]
+% Draw axes for a 2D slice of state space (theta_1 and theta_1_dot)
+\draw [thick, ->] (-0.5, 0) -- (5, 0) node [right] {$\theta_1$};
+\draw [thick, ->] (0, -0.5) -- (0, 5) node [above] {$\dot{\theta}_1$};
+
+% Add grid and labels
+\node at (-0.3, -0.5) {$O$};
+\node at (4.8, -0.3) {Forward};
+\node at (-0.3, 4.8) {Fast};
+
+% Draw sample vector field arrows (qualitative drift field)
+% Low position, zero velocity (gravity pulling down)
+\draw [->, thick, red] (1, 0.2) -- (1, 0.8);
+\draw [->, thick, red] (1.5, 0.2) -- (1.5, 0.9);
+\draw [->, thick, red] (2, 0.2) -- (2, 1.0);
+
+% Medium position, moderate velocity (accelerating forward and down)
+\draw [->, thick, blue] (1, 2) -- (1.6, 2.6);
+\draw [->, thick, blue] (1.5, 2.5) -- (2.2, 3.1);
+\draw [->, thick, blue] (2, 3) -- (2.7, 3.7);
+
+% High velocity states (continued forward motion, may curve)
+\draw [->, thick, green] (2.5, 4) -- (3.2, 4.3);
+\draw [->, thick, green] (3, 4.2) -- (3.7, 4.4);
+\draw [->, thick, green] (3.5, 4.3) -- (4.2, 4.4);
+
+% Add trajectory curves
+\draw [thick, dashed, black] (1, 0.3) -- (1.8, 2.0) -- (3.2, 4.2) -- (4.5, 4.5);
+\node at (3.5, 1.5) [font=\small] {Integral curve};
+\node at (3.5, 1.2) [font=\small] {(actual trajectory)};
+
+% Add legend
+\node at (0.5, 3.5) [font=\small, color=red] {\textbullet~Low velocity};
+\node at (0.5, 3.2) [font=\small, color=blue] {\textbullet~Medium velocity};
+\node at (0.5, 2.9) [font=\small, color=green] {\textbullet~High velocity};
+
+\end{tikzpicture}
+\caption{Qualitative drift vector field in a 2D slice of state space (shoulder angle $\theta_1$ and angular velocity $\dot{\theta}_1$). Each arrow shows the direction the system evolves with zero muscle torque. The trajectory (dashed curve) follows the vector field, accelerating downward (gravity) and forward (momentum).}
+\label{fig:ch05_drift_vector_field}
+\end{figure}
 
 \begin{example}{Drift in the Double Pendulum at Rest}{ex:ch05_drift_at_rest}
 Suppose you're at address ($\theta_1 = 0°, \theta_2 = 0°, \dot{\theta}_1 = 0, \dot{\theta}_2 = 0$) and you suddenly remove all muscular control ($\bm{\tau} = 0$).
@@ -218,7 +261,7 @@ So the arm doesn't accelerate if it's at rest and perfectly vertical. That makes
 Now suppose you're at an angle, say $\theta_1 = 45°$. Then:
 \begin{align}
 \ddot{\theta}_1 &= \bm{M}^{-1}_{11} \cdot (-(M_1 L_{1,cm} + M_2 L_1) g \sin(45°)) \\
-&= \bm{M}^{-1}_{11} \cdot (-(2.5 \times 0.175 + 2.5 \times 0.35) \times 9.81 \times 0.707) \\
+&= \bm{M}^{-1}_{11} \cdot (-(2.5 \times 0.175 + 1.5 \times 0.35) \times 9.81 \times 0.707) \\
 &\approx -20 \text{ N m} \times 0.45 \text{ kg m}^{-2} \\
 &\approx -9 \text{ rad/s}^2
 \end{align}
@@ -235,15 +278,13 @@ This trajectory is called an \textbf{integral curve}\index{integral curve} or \t
 In the golf swing, the drift is what happens if you let go of the club at any point. Gravity will pull it down. The momentum will carry it forward. The trajectory is set by $\bm{f}$.
 
 \begin{laymansbox}{Why Understanding Drift Matters}{box:ch05_drift_importance}
-Here is the key observation: elite golfers understand the drift.
+A useful structural observation is that the system dynamics separate into passive and active components. Understanding the drift $\bm{f}(\bm{x})$ is the foundation for any control strategy.
 
-When they release the club, they're not fighting the physics. They're timing the release so that gravity and momentum naturally accelerate the club toward impact.
+Consider a system in the downswing phase. At each instant, the equation $\dot{\bm{x}} = \bm{f}(\bm{x}) + \bm{G}(\bm{x}) \bm{u}$ predicts how the state evolves. If the control input $\bm{u}$ is chosen to align with the drift field—rather than oppose it—the system reaches desired states more efficiently.
 
-When they stop muscles at the top of the backswing, they're not ``pausing''—they're \emph{catching} the drift. The drift is already accelerating them down. They're just riding it.
+More specifically: when muscular torques are directed to modulate (rather than dominate) the natural trajectory, the overall motion emerges from the cooperation of passive forces and active steering. This is energetically favorable because the gravitational and centrifugal forces are already doing substantial work. By directing these passive forces, rather than fighting them, the system achieves large accelerations with modest muscular effort.
 
-Novices, on the other hand, often fight the drift. They generate muscular torques that oppose the natural accelerations. This is exhausting and inconsistent.
-
-By understanding $\bm{f}(\bm{x})$, you can plan your muscular control ($\bm{u}$) to work \emph{with} the drift, not against it.
+The drift vector field $\bm{f}(\bm{x})$ encodes this natural trajectory. Understanding it enables the design of control inputs that work synergistically with the passive dynamics.
 \end{laymansbox}
 
 \section{Control as a Steering Input}
@@ -259,26 +300,32 @@ In the golf swing, the drift is the natural motion of your arm under gravity and
 The control matrix $\bm{G}(\bm{x})$ depends on the state (specifically, on the configuration $\bm{q}$). This is the leverage: how much does a given muscle torque affect the state acceleration?
 
 \begin{example}{Control Leverage at Different Configurations}{ex:ch05_leverage}
-The inverse mass matrix $\bm{M}^{-1}(\bm{q})$ is the leverage operator: it maps applied torques to resulting accelerations. Its diagonal entries are particularly interpretable --- $M^{-1}_{ii}$ gives the angular acceleration of the $i$-th generalized coordinate per unit of applied torque, with all other torques held at zero.
+The inverse mass matrix $\bm{M}^{-1}(\bm{q})$ tells you the leverage.
 
-\textbf{At address} ($\theta_1 = 0^\circ$, $\theta_2 = 0^\circ$), using the double-pendulum parameters adopted in Chapter~\ref{ch:03_double_pendulum} ($L_1 = 0.35$~m, $M_1 = 2.5$~kg, $L_2 = 1.0$~m, $M_2 = 1.5$~kg, with the point-mass-at-CM approximation), a direct calculation of $M_{11}(\bm{q}) = I_1 + I_2 + M_2 L_1^2 + 2 M_2 L_1 L_{2,\mathrm{cm}} \cos\theta_2$ gives $M_{11} \approx 2.19$~kg~m$^2$, so $M^{-1}_{11} \approx 0.46$~(rad/s$^2$)/(N~m). An arbitrary order-of-magnitude shoulder torque on the order of tens of N~m therefore produces an order-of-magnitude angular acceleration of tens of rad/s$^2$ at address. We deliberately avoid stating a single ``typical'' torque number here because the peak shoulder torques reported in the golf biomechanics literature span roughly an order of magnitude across amateur and professional populations \cite{Nesbit2005, Mackenzie2006}; Chapter~\ref{ch:kinetic_chain} discusses the reported ranges in detail.
+\textbf{At address} ($\theta_1 = 0°, \theta_2 = 0°$): the arm is extended. The moment of inertia is high ($M_{11} \approx 1.54$ kg m$^2$). So $M^{-1}_{11} \approx 0.64$ rad/s$^2$ per N m. A 50 N m torque produces $50 \times 0.64 = 32$ rad/s$^2$ of acceleration.
 
-\textbf{At the top of the backswing} ($\theta_1 \approx 150^\circ$, $\theta_2 \approx -70^\circ$), the elbow angle brings the second link closer to the shoulder axis, so the rigid-body term $2 M_2 L_1 L_{2,\mathrm{cm}} \cos\theta_2$ becomes small (and briefly negative), pulling $M_{11}$ down. Consequently $M^{-1}_{11}$ rises and a given muscle torque produces a larger angular acceleration.
+\textbf{At the top of the backswing} ($\theta_1 = 150°, \theta_2 = -70°$): the arm is bent. The effective moment of inertia is lower. So $M^{-1}_{11}$ is higher. A given muscle torque produces a larger acceleration.
 
-This initially sounds wrong --- surely a shorter lever should be ``harder'' to accelerate? --- but it is exactly what the mass matrix tells us. A bent arm has a smaller moment of inertia about the shoulder because the mass is closer to the axis, and so it is easier to accelerate angularly. This is the same physics that makes a figure skater spin up when she pulls her arms in.
+This may seem counterintuitive: if the arm is shorter (bent), should it not be harder to accelerate?
+
+No. The \textbf{moment of inertia} is lower (because the mass is closer to the axis). So $M^{-1}$ is higher (easier to accelerate). This is why it's easier to accelerate a bent arm than an extended one.
 \end{example}
 
 \section{The Drift-to-Control Ratio (DCR)}
 
-Here's a new concept: the \textbf{Drift-to-Control Ratio (DCR)}.
+The \textbf{Drift-to-Control Ratio (DCR)} is a diagnostic, not a coordinate-free physical constant.
 
 \begin{definition}{Drift-to-Control Ratio}{def:ch05_dcr}
-At any point in the state space, the DCR is the relative magnitude of drift versus control:
+Because $\bm{f}$ and $\bm{G}\bm{u}$ are state-derivative vectors, the ratio must be computed with an explicit norm or weighting. In this chapter we use either the acceleration block alone or a stated state-space weighting matrix $\bm{W}$:
 
 \begin{equation}
-\text{DCR} = \frac{|\bm{f}(\bm{x})|}{|\bm{G}(\bm{x}) \bm{u}|}_{\text{during max muscular effort}}
+\mathrm{DCR}_{\bm{W}}(\bm{x};u_{\max})
+=
+\frac{\lVert \bm{W}\bm{f}(\bm{x}) \rVert}
+{\max_{\lVert \bm{u}\rVert \le u_{\max}} \lVert \bm{W}\bm{G}(\bm{x})\bm{u} \rVert + \varepsilon},
 \label{eq:ch05_dcr_def}
 \end{equation}
+where $\varepsilon$ prevents division by zero in states where the selected control channel has negligible authority.
 
 If DCR is high, drift dominates. Muscles contribute little.
 If DCR is low, muscles dominate. Drift contributes little.
@@ -287,25 +334,21 @@ If DCR is low, muscles dominate. Drift contributes little.
 The DCR varies throughout the swing.
 
 \begin{laymansbox}{Reading the DCR}{box:ch05_reading_dcr}
-The Drift-to-Control Ratio answers a simple question: \emph{how much of the instantaneous state derivative is generated by the passive dynamics, and how much by the active input?}
-\begin{itemize}
-\item $\dcr \ll 1$: active torques dominate the state derivative. The system is in a control-authoritative regime --- the muscles decide where it goes next. The static phases of the swing (address, the static portion of the backswing, the transition pause at the top) live here.
-\item $\dcr \sim 1$: the two contributions are comparable. This is where the classical "riding the drift" observation applies --- small changes in input have meaningful but not overwhelming effect.
-\item $\dcr \gg 1$: passive terms dominate. Gravity, centrifugal, and Coriolis effects grow quadratically with joint velocity, and by mid- to late-downswing the passive contribution typically exceeds the active contribution in any simulation we have run against the Chapter~\ref{ch:03_double_pendulum} parameters. Muscular torques become small corrections.
-\end{itemize}
-We deliberately avoid fixing numerical thresholds (such as ``$\dcr > 50$ means the swing is on autopilot'') in the definition itself. Threshold values depend on how $|\bm{f}|$ and $|\bm{G}\bm{u}|$ are normed, on the specific parameters of the pendulum model, and on whether the ratio is evaluated jointwise or aggregated into a single scalar. Two reasonable choices of norm can give answers that differ by an order of magnitude. The practical takeaway is the qualitative one: if you want to change impact conditions, you must act \emph{early}, while the input is still competing on equal terms with the drift. The numerical quantification of when this window closes requires a simulation with stated parameters (see Chapter~\ref{ch:14_complete_swing}).
-\end{laymansbox}
+The Drift-to-Control Ratio answers a simple question: \emph{how much of the motion is passive physics, and how much is active control?}
 
-\begin{laymansbox}{Technical Note on DCR and Its Norms}{box:ch05_dcr_norms}
-A formally careful reader will object that the quantity
-\[
-\dcr = \frac{|\bm{f}(\bm{x})|}{|\bm{G}(\bm{x})\bm{u}|}
-\]
-is not a pure number without further specification. The drift vector field $\bm{f}$ and the input contribution $\bm{G}\bm{u}$ are vectors in a tangent space whose components can have mixed units (angles and angular velocities in the state-space form, or generalized forces if the ratio is taken at the level of $\bm{\tau}$). Two choices make this precise. The first is a jointwise scalar:
-\[
-\dcr_i = \frac{\big|[\bm{M}^{-1}(\bm{C}\dot{\bm{q}} + \bm{g})]_i\big|}{\big|[\bm{M}^{-1}\bm{\tau}]_i\big|}
-\]
-evaluated at each generalized coordinate $i$, which gives a per-joint number without any cross-coordinate aggregation. The second is a matrix-norm ratio based on a chosen inner product on the tangent space (typically the inertia-weighted inner product, in which case the numerator becomes the energy rate of change from passive forces). Throughout this book we use the per-joint form unless stated otherwise and we report the drift/control magnitudes separately rather than a single scalar when the distinction matters. Readers interested in the formal mathematics should consult the geometric control literature \cite{Khalil2002}.
+The following numerical regimes provide qualitative guidelines that would need to be validated by simulation or experiment with realistic biomechanical parameters:
+
+\begin{itemize}
+\item $\dcr < 1$: Control input dominates. Muscular torques are the primary driver of state evolution. This regime corresponds roughly to address and backswing, where velocities are low.
+
+\item $\dcr \approx 1$--$5$: Control and drift contribute comparably. The system evolution depends significantly on both passive forces and muscular input. Transition and early downswing typically occupy this regime.
+
+\item $\dcr > 5$--$10$: Drift dominates under the chosen weighting. Passive forces (gravity, velocity-dependent Coriolis and centrifugal forces) produce large modeled accelerations compared to bounded muscular input. Control becomes a fine-tuning perturbation. Late downswing can approach this regime in the worked examples, but the values depend on swing speed, model parameters, torque limits, and the selected norm.
+\end{itemize}
+
+\textbf{Caveat:} The exact numerical thresholds depend on swing parameters (arm segment masses and inertias), swing speed, the magnitude of applied muscular torque, and the weighting matrix used in Eq.~\eqref{eq:ch05_dcr_def}. These values should be validated through simulation or experimental measurement for specific conditions.
+
+\textbf{Practical implication:} Control authority is highest early in the downswing (low DCR). As DCR increases, the window for meaningful muscular intervention narrows. Thus, deliberate control of impact conditions must be established early.
 \end{laymansbox}
 
 \subsection*{Address: Low DCR}
@@ -328,63 +371,86 @@ DCR is very high (drift is doing most of the work).
 
 \subsection*{Impact and Beyond: Extremely High DCR}
 
-At impact, the clubhead acceleration is enormous. The centripetal and Coriolis forces---which grow quadratically with angular velocity---dominate the dynamics. The muscular contribution is small relative to the total forces in play, and DCR is very high (passive forces dominating). The exact ratio depends on swing parameters and modeling assumptions.
+At impact, the clubhead is accelerating at $\sim$180~m/s$^2$ ($\approx 18g$; see Chapter~\ref{ch:04_forces_and_torques}, Eq.~\ref{eq:ch04_total_accel_impact}). This is primarily from:
+\begin{itemize}
+\item Centrifugal force (from the high rotation speed): $\approx 50$ N m equivalent.
+\item Gravity: $\approx 10$ N m equivalent.
+\end{itemize}
+
+Your muscular contribution is perhaps on the order of 10--30 N m (estimates vary widely; exact values depend on golfer strength and technique---see \citep{Nesbit2005} for inverse-dynamics measurements). DCR is extremely high (passive forces dominating).
 
 \begin{laymansbox}{The Three Regimes}{box:ch05_three_regimes}
-We can characterize the golf swing by DCR:
+The golf swing naturally decomposes into three regimes characterized by the Drift-to-Control Ratio:
 
 \textbf{Regime 1: Low DCR (Address, Backswing)}
 \begin{itemize}
-\item Drift is minimal (arm at rest, gravity balanced or nearly so).
-\item Muscles do most of the work.
-\item Feel: effortful, conscious control.
-\item What elite golfers do: smooth, controlled acceleration building tension.
-\item What novices do: jerky, trying to generate force without understanding drift.
+\item Drift is minimal (arm at rest or slow motion, velocity-dependent forces negligible).
+\item Control input is the dominant term in $\dot{\bm{x}} = \bm{f}(\bm{x}) + \bm{G}(\bm{x}) \bm{u}$.
+\item Muscles must generate torques to overcome inertia and initiate acceleration.
+\item The system response is primarily determined by the control input; small changes in $\bm{u}$ produce significant changes in state evolution.
 \end{itemize}
 
 \textbf{Regime 2: Medium DCR (Transition)}
 \begin{itemize}
-\item Drift is ramping up (gravity pulling, velocities increasing).
-\item Muscles and drift work together.
-\item Feel: transitional, sensing acceleration.
-\item What elite golfers do: smoothly integrate drift into the motion, ``letting it happen.''
-\item What novices do: fight or ignore the drift, maintaining muscle-only control.
+\item Drift is ramping up as velocities increase; velocity-dependent forces (Coriolis, centrifugal) become significant.
+\item Muscles and drift contribute comparably to $\dot{\bm{x}}$.
+\item Gravity does positive work, assisting the downswing motion.
+\item The control input must be modulated to maintain desired trajectory as passive forces increase.
 \end{itemize}
 
 \textbf{Regime 3: High DCR (Downswing, Impact, Follow-through)}
 \begin{itemize}
-\item Drift is dominant (gravity, centrifugal forces accelerating the arm faster than muscles could alone).
-\item Muscles mostly steer, not accelerate.
-\item Feel: effortless, on autopilot, the club ``taking over.''
-\item What elite golfers do: trust the drift, apply minimal corrective torques, let physics happen.
-\item What novices do: continue to fight the drift, braking when they should accelerate, inconsistent results.
+\item Drift dominates the state evolution; passive dynamics overwhelm the control term.
+\item Velocity-dependent forces (Coriolis, centrifugal) produce torques vastly larger than muscular input.
+\item Control input contributes steering and fine-tuning, not primary acceleration.
+\item The system trajectory is largely determined by initial conditions and the drift field; control has minimal influence on the overall motion.
 \end{itemize}
 \end{laymansbox}
 
 \section{Riding the Drift: The Essence of Skill}
 
-Here's the secret that elite golfers know (often intuitively, not necessarily consciously):
+The control-affine framework reveals a fundamental structure: the golf swing decomposes into passive dynamics and active control.
 
-\textbf{The best golf swing is one that maximizes DCR while maintaining control.}
+\textbf{The optimal control problem in golf is to choose muscular torques $\bm{\tau}(t)$ that achieve desired impact conditions while respecting constraints on muscular effort.}
 
-In other words:
+From the perspective of control theory:
 \begin{itemize}
-\item Understand the drift (where gravity and momentum are pushing you).
-\item Generate muscular torques that work \emph{with} the drift.
-\item Minimize muscular work by letting physics do what it wants to do.
-\item Use muscles only to steer, not to force.
+\item The drift $\bm{f}(\bm{x})$ represents the natural evolution of the system under gravity, inertia, and velocity-dependent forces.
+\item The control term $\bm{G}(\bm{x}) \bm{u}$ represents muscular perturbations to this natural trajectory.
+\item When DCR is low (early swing), control significantly influences the trajectory. Muscular torques must be substantial.
+\item When DCR is high (late swing), the drift dominates. Control becomes a fine-tuning adjustment.
 \end{itemize}
 
-This is what coaches mean by ``let the club do the work,'' ``don't muscle the swing,'' ``trust the process,'' and ``flow with the motion.''
+A key insight from optimal control is that \textbf{the most efficient solution minimizes muscular effort (cost) while reaching the target}. This typically means:
+\begin{itemize}
+\item Apply control input early, when its effect is large (low DCR).
+\item Allow passive forces to carry the motion in phases where drift is strong.
+\item Time final corrections to synchronize with impact.
+\end{itemize}
 
-It's not mystical. It's physics.
+This framework provides a scientific foundation for understanding the role of control strategy in achieving efficient, repeatable motion.
 
-\begin{example}{A Schematic Tour Pro Descent}{ex:ch05_tour_pro}
-Consider a schematic descent traced through state space by the control-affine decomposition. We describe it qualitatively rather than putting numbers on it, because peak torques, timing windows, and muscle loads vary widely across golfer populations and are reported in the biomechanics literature with a wide spread \cite{Nesbit2005, Mackenzie2006}. The numerical illustrations needed to make this concrete live in Chapter~\ref{ch:14_complete_swing}, where we trace the double-pendulum trajectory end to end with stated parameters.
+\begin{example}{Hypothetical Control Profile in the Downswing}{ex:ch05_tour_pro}
+Consider a hypothetical control trajectory during the downswing. Let the control input $\bm{u}(t)$ vary as a function of state and time.
 
-At the top of the backswing, the state has $\theta_1$ near its maximum and both velocities near zero. Gravity supplies a nontrivial drift torque; centrifugal and Coriolis contributions are small because $\dot{\bm{q}}$ is small. A skilled golfer \emph{initiates} the downswing by adding a modest active torque on top of this drift, then --- and this is the structural observation --- progressively \emph{reduces} the active torque as the velocity-dependent drift builds. The passive terms in $\bm{f}(\bm{x})$ grow quadratically in the angular velocities, so what started as a control-dominated regime at the transition becomes drift-dominated by the middle of the downswing. Near impact, active muscular effort is small relative to the passive contributions, and the swing finishes largely on the momentum it has accumulated.
+\textbf{Scenario: State Space Control}
 
-A less efficient swing pattern looks qualitatively different in the same picture: the active torque is not reduced as the drift builds, so the golfer continues to add muscular effort when the vector field is already delivering acceleration, and the two contributions compete rather than compound. Energetically the latter strategy costs more muscular work for the same (or a smaller) clubhead speed. The affine framework makes this observation formal; what the numbers look like in any individual swing is a simulation question, not a theoretical one.
+Suppose the system evolves as $\dot{\bm{x}} = \bm{f}(\bm{x}) + \bm{G}(\bm{x}) \bm{u}(t)$. We can analyze three possible control strategies:
+
+\textbf{Strategy 1: Constant Feedforward Control}
+
+Apply a fixed torque input $\bm{u} = \text{const}$ throughout the downswing (say, $u_1 = 10$ N m). The resulting state trajectory $\bm{x}(t)$ depends on both $\bm{f}(\bm{x})$ and the constant input. In early downswing (low DCR), this input significantly shapes the trajectory. In late downswing (high DCR), the drift dominates and the control term becomes a small correction.
+
+\textbf{Strategy 2: Feedback Control (State-Dependent)}
+
+Apply control that adjusts based on the current state: $\bm{u}(t) = -K(\bm{x}(t) - \bm{x}_{\text{ref}})$ (a simple proportional law). This controller steers the system toward a reference trajectory. The effectiveness of feedback control depends on DCR—when DCR is high, feedback gains must be large, but muscular constraints limit achievable input magnitudes.
+
+\textbf{Strategy 3: Optimal Control}
+
+Solve the optimal control problem: choose $\bm{u}^*(t)$ to minimize a cost functional (e.g., effort $\int |\bm{u}|^2 dt$ subject to reaching target impact state). The optimal solution exploits the drift field, applying control primarily when DCR is low and allowing drift to dominate when DCR is high.
+
+\textbf{Key Insight:} Strategies that achieve desired outcomes with low muscular effort are those that recognize the DCR regime and modulate control accordingly. Early in the downswing, where DCR is low, control must be applied to initiate acceleration. Later, when DCR is high, the same control magnitude contributes only small course corrections because drift so vastly dominates the dynamics.
+
 \end{example}
 
 \section{The Geometry of the Golf Swing}
@@ -415,24 +481,31 @@ This is why technique matters more than strength.
 
 \section{Optimal Control and the Swing}
 
-In principle, you could pose the golf swing as an optimal control problem:
+In principle, the golf swing can be formulated as an optimal control problem \citep{Penner2001}:
 
-\textbf{Problem}: Given the dynamics $\dot{\bm{x}} = \bm{f}(\bm{x}) + \bm{G}(\bm{x}) \bm{u}$ and constraints on $\bm{u}$ (muscle strength), find the control $\bm{u}^*(t)$ that maximizes distance (or minimizes dispersion, or achieves a target).
+\textbf{Problem}: Given the dynamics $\dot{\bm{x}} = \bm{f}(\bm{x}) + \bm{G}(\bm{x}) \bm{u}$ and constraints on $\bm{u}$ (muscle strength limits), find the control $\bm{u}^*(t)$ that optimizes a performance criterion (e.g., maximize clubhead speed, minimize energy expenditure, minimize accuracy dispersion).
 
-\textbf{Solution}: Solve the Hamiltonian equations from optimal control theory.
+\textbf{Solution}: Apply optimal control theory (Pontryagin's maximum principle or dynamic programming) to solve the resulting two-point boundary value problem.
 
-\textbf{Result}: An optimal control $\bm{u}^*(t)$ that tells you what torques to apply at each instant.
+\textbf{Result}: An optimal control trajectory $\bm{u}^*(t)$ that specifies the muscular torques to apply at each instant to achieve the optimization goal while respecting the system dynamics and constraints.
 
-\begin{laymansbox}{Why Brains Learn Better Than Equations}{box:ch05_learning}
-In principle, we could compute $\bm{u}^*(t)$ exactly using optimal control theory. In practice, no golfer does this consciously.
+\begin{laymansbox}{Solving the Optimal Control Problem}{box:ch05_learning}
+In principle, the optimal control problem can be formulated as:
 
-Instead, golfers learn through practice. Over thousands of reps, the nervous system implicitly solves the optimal control problem. Golfers develop a feel for the drift, for how to apply forces at the right time.
+\textbf{Minimize:} $J(\bm{u}) = \int_0^T L(\bm{x}(t), \bm{u}(t)) dt$ (a cost functional, e.g., muscular effort)
 
-This is why coaching and practice are valuable: they accelerate the learning of the implicit optimal control solution.
+\textbf{Subject to:} $\dot{\bm{x}} = \bm{f}(\bm{x}) + \bm{G}(\bm{x}) \bm{u}$, initial condition $\bm{x}(0)$, terminal constraint $\bm{x}(T) \in \mathcal{X}_{\text{target}}$.
 
-But here's the thing: the physics—the equations $\bm{M}, \bm{C}, \bm{g}$—is the same for everyone. So while individual golfers vary in strength, flexibility, and body geometry, the fundamental structure of drift and control is universal.
+The solution $\bm{u}^*(t)$ is an optimal control trajectory. For the golf swing, this solution depends on:
+\begin{itemize}
+\item The system dynamics (inertias, masses, gravity).
+\item The cost functional (what is being optimized—distance, accuracy, energy, or some combination).
+\item The constraints (muscle strength, joint limits, impact requirements).
+\end{itemize}
 
-Understanding this structure is the shortcut to improvement. Instead of endless practice, you can understand what you're optimizing (DCR) and practice the specific things that maximize it.
+Computing $\bm{u}^*(t)$ in closed form is generally difficult for nonlinear systems. However, numerical methods (dynamic programming, shooting methods, etc.) can approximate the solution.
+
+\textbf{Observation:} The manipulator-equation structure---$\bm{M}(\bm{q})$, $\bm{C}(\bm{q}, \dot{\bm{q}})$, $\bm{g}(\bm{q})$---is shared across smooth multibody models \citep{Featherstone2008,Murray1994}. The qualitative prediction of this model class is therefore structural rather than universal: early control is valuable when DCR is low, and passive dynamics can be exploited when DCR is high. Individual variation enters through segment parameters, strength, flexibility, coordination strategy, and the accuracy of the model itself.
 \end{laymansbox}
 
 \section{Putting It All Together: The Unified Picture}
@@ -499,11 +572,11 @@ All of this is encoded in understanding and exploiting the drift.
 \item High at impact and beyond (drift dominates).
 \end{itemize}
 
-\item \textbf{Elite golfers maximize DCR} by understanding and exploiting the drift.
+\item \textbf{Skilled golfers exploit high-DCR phases} by preparing initial conditions and transition timing that let drift assist rather than fight the intended trajectory.
 
 \item \textbf{The golf swing is an optimal control problem}. The nervous system implicitly solves it through learning and practice.
 
-\item \textbf{Technique is about riding the drift}. Strength helps, but technique (understanding $\bm{f}$ and choosing $\bm{u}$ wisely) matters more.
+\item \textbf{Technique involves working with the drift}. Strength sets the ceiling on available control torques, but efficient technique aligns muscular commands with the passive dynamics rather than opposing them.
 
 \item \textbf{Physics is universal}. While individual golfers vary in geometry and strength, the fundamental structure (the equations $\bm{M}, \bm{C}, \bm{g}$) is the same.
 \end{enumerate}
@@ -544,15 +617,27 @@ What is the DCR in each phase?
 
 \section*{Closing Thoughts: The Unity of Physics and Swing}
 
-We've traveled from first principles through the double pendulum model to the control-affine structure that unifies drift and control.
+We have traveled from first principles through the double pendulum model to the control-affine structure that unifies drift and control. This mathematical framework provides a scientific foundation for understanding the golf swing.
 
-The takeaway is this: \textbf{the golf swing is not a mystery. It's mechanics.}
+The key insight is: \textbf{the golf swing obeys the equations of classical mechanics}.
 
-Every great golfer, whether they know it in equations or in their bones, has internalized the structure we've described:
+The manipulator equation:
+\begin{equation}
+\bm{M}(\bm{q}) \ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{\tau}
+\end{equation}
 
-1. Recognize where gravity and momentum are pushing.
-2. Generate muscular forces that work with this push, not against it.
-3. Time the application of force to exploit maximum DCR.
-4. Trust the physics to do what it's designed to do.
+and its control-affine decomposition:
+\begin{equation}
+\dot{\bm{x}} = \bm{f}(\bm{x}) + \bm{G}(\bm{x}) \bm{u}
+\end{equation}
 
-This is the physics of golf. Now go apply it.
+form a complete description of the arm-club dynamics. The optimal choice of control input $\bm{\tau}(t)$ depends on the task objectives (e.g., maximize distance, minimize dispersion), the constraints (muscle strength, anatomical limits), and the initial conditions. A natural question follows: given this decomposition, how much does each individual muscle contribute to the acceleration of each joint at any given instant? This is precisely the question addressed by \emph{induced acceleration analysis}, a methodology developed in the biomechanics literature that exploits the invertibility of $\bm{M}(\bm{q})$ to decompose accelerations into per-muscle and per-force contributions. We take up this question in Chapter~\ref{ch:induced_acceleration}.
+
+The structural insights from this analysis are:
+
+1. Passive forces (gravity, velocity-dependent coupling) dominate the late downswing.
+2. Control authority is highest early, when DCR is low.
+3. An efficient swing exploits drift rather than opposes it.
+4. The fundamental dynamics are universal; individual variation reflects differences in body parameters and strength.
+
+Understanding this structure provides a scientific perspective on swing mechanics and the role of control strategy in achieving performance objectives.

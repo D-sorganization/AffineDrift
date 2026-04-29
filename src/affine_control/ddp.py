@@ -181,12 +181,10 @@ def adaptive_timestep_ddp_mock(
 
     u_traj, x_traj, t = _initialize_ddp_trajectory(f, x0, u_init)
 
-    for iteration in range(max_iters):
+    for _iteration in range(max_iters):
         u_traj, x_traj, t = _run_ddp_iteration(
             f, x0, x_traj, u_traj, t, eps_residual, compute_hessian_bound_func
         )
-        if iteration > 2:  # Break early for prototype
-            break
 
     return x_traj, u_traj, t
 
@@ -213,17 +211,41 @@ def _compute_adaptive_timesteps(
     m_traj = np.array(
         [compute_hessian_bound_func(f, x_traj[i], u_traj[i]) for i in range(len(u_traj))]
     )
-    delta_x_max = np.array(
-        [estimate_perturbation_size(x_traj[i], u_traj[i]) for i in range(len(u_traj))]
-    )
 
     # Avoid division by zero
-    delta_x_max = np.maximum(delta_x_max, EPSILON)
     m_traj = np.maximum(m_traj, EPSILON)
 
-    # Adaptive timestep: dt = sqrt( 2 * eps / (M * delta_x^2) )
-    dt_adaptive = np.sqrt(2 * eps_residual / (m_traj * delta_x_max**2))
+    # Adaptive timestep: dt = sqrt( 2 * eps / M )
+    # The residual bound is (M/2)*dt^2, so solving for dt gives sqrt(2*eps/M).
+    dt_adaptive = np.sqrt(2 * eps_residual / m_traj)
     return cast(np.ndarray[Any, Any], np.clip(dt_adaptive, DT_CLIP_MIN, DT_CLIP_MAX))
+
+
+def _rk4_step(
+    f: Callable[..., np.ndarray[Any, Any]],
+    x: np.ndarray[Any, Any],
+    u: np.ndarray[Any, Any],
+    dt: float,
+) -> np.ndarray[Any, Any]:
+    """Perform a single 4th-order Runge-Kutta integration step.
+
+    Uses the classical RK4 method for improved accuracy over Euler integration.
+    The control input ``u`` is held constant over the step (zero-order hold).
+
+    Args:
+        f: Dynamics function f(x, u) returning dx/dt.
+        x: Current state vector.
+        u: Control input (constant over the step).
+        dt: Timestep size.
+
+    Returns:
+        Next state vector after one RK4 step.
+    """
+    k1 = f(x, u)
+    k2 = f(x + 0.5 * dt * k1, u)
+    k3 = f(x + 0.5 * dt * k2, u)
+    k4 = f(x + dt * k3, u)
+    return cast(np.ndarray[Any, Any], x + (dt / 6.0) * (k1 + 2.0 * k2 + 2.0 * k3 + k4))
 
 
 def _simulate_trajectory(
@@ -232,7 +254,11 @@ def _simulate_trajectory(
     u_traj: np.ndarray[Any, Any],
     t_grid: np.ndarray[Any, Any],
 ) -> np.ndarray[Any, Any]:
-    """Euler integration simulation (mock approximation — full RK4 not implemented)."""
+    """Simulate a trajectory using RK4 integration.
+
+    Uses 4th-order Runge-Kutta for each step, holding the control input
+    constant within each interval (zero-order hold).
+    """
     require(
         len(u_traj) == len(t_grid) - 1,
         "u_traj length must equal t_grid length - 1",
@@ -242,8 +268,7 @@ def _simulate_trajectory(
     curr_x = x0
     for i in range(len(u_traj)):
         dt = t_grid[i + 1] - t_grid[i]
-        dx = f(curr_x, u_traj[i])
-        curr_x = curr_x + dx * dt
+        curr_x = _rk4_step(f, curr_x, u_traj[i], dt)
         x.append(curr_x)
     return np.array(x)
 
@@ -255,30 +280,10 @@ def _resample_controls(
     require(len(u_old) > 0, "u_old must not be empty")
     require(len(t_old) > 0, "t_old must not be empty")
     require(len(t_new) > 0, "t_new must not be empty")
-    u_resampled = []
-
-    # Zero-order hold: map each new time point to nearest preceding control
-    for t in t_new:
-        idx = int(np.searchsorted(t_old, t, side="right")) - 1
-        idx = np.clip(idx, 0, len(u_old) - 1)
-        u_resampled.append(u_old[idx])
+    # Zero-order hold: map each new time point to the last preceding control
+    u_resampled = [
+        u_old[np.clip(int(np.searchsorted(t_old, t, side="right")) - 1, 0, len(u_old) - 1)]
+        for t in t_new
+    ]
 
     return np.array(u_resampled)
-
-
-class MockDDPSolver:
-    """Callable wrapper around adaptive_timestep_ddp_mock for the swing optimizer."""
-
-    def __call__(
-        self,
-        f: Callable[..., np.ndarray[Any, Any]],
-        x0: np.ndarray[Any, Any],
-        xf: np.ndarray[Any, Any],
-        u_init: np.ndarray[Any, Any],
-        eps_residual: float = DEFAULT_EPS_RESIDUAL,
-        max_iters: int = DEFAULT_MAX_ITERS,
-    ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any], np.ndarray[Any, Any]]:
-        """Delegate to adaptive_timestep_ddp_mock."""
-        return adaptive_timestep_ddp_mock(
-            f=f, x0=x0, xf=xf, u_init=u_init, eps_residual=eps_residual, max_iters=max_iters
-        )

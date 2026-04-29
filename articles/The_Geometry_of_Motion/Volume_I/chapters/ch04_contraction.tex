@@ -41,8 +41,8 @@ and it provides the certificate we need.
 \subsection{The Lohmiller--Slotine Framework (1998)}
 
 The modern contraction theory for nonlinear systems was formalized by \textbf{Lohmiller and
-Slotine} in 1998~\cite{LohmillerSlotine1998}. Their key insight was to study how \emph{tangent
-vectors} between trajectories evolve under the flow. If all such vectors shrink in a
+Slotine} in 1998 \cite{LohmillerSlotine1998}. Their key insight was to study how \emph{tangent
+vectors} between trajectories evolve under the flow \cite{ManchesterSlotine2017}. If all such vectors shrink in a
 suitably chosen metric, then the geodesic distance between any two trajectories shrinks
 exponentially.
 
@@ -54,10 +54,11 @@ a practical tool for nonlinear system analysis and design.
 \subsection{Demidovich's Condition (1961): An Historical Precursor}
 
 The mathematical seeds of contraction theory are rooted in work by \textbf{Demidovich}
-in 1961~\cite{Demidovich1961}, who studied conditions for \emph{global asymptotic stability}
+in 1961 \cite{Demidovich1961}, who studied conditions for \emph{global asymptotic stability}
 based on the symmetric part of the Jacobian\index{Jacobian}. Demidovich showed that if the symmetric part
 of the system's Jacobian\index{Jacobian} is uniformly negative definite, all nearby solutions converge
-to a single trajectory.
+to a single trajectory. This foundational result \cite{Khalil2002} predated modern contraction theory
+by decades and provides important context for understanding contemporary approaches.
 
 Although Demidovich did not use the language of Riemannian metrics or contraction, his
 condition is in fact a special case of modern contraction theory: it corresponds to
@@ -167,6 +168,33 @@ rate $\lambda$ corresponds directly to the exponential decay rate of perturbatio
 condition is called a \textbf{matrix inequality} because it compares two matrices in the
 partial order defined by positive semidefiniteness.
 \end{remark}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.0]
+  % Draw two trajectories converging
+  \draw[very thick, black] (0, 0.5) to[out=30, in=200] (2, 1.5) to[out=0, in=130] (4, 2);
+  \draw[very thick, black] (0, -0.5) to[out=30, in=200] (2.1, 1.3) to[out=0, in=130] (4, 2);
+
+  % Mark initial separation
+  \filldraw[black] (0, 0.5) circle (0.08cm);
+  \filldraw[black] (0, -0.5) circle (0.08cm);
+  \draw[<->, red, thick] (0.15, 0.5) -- (0.15, -0.5);
+  \node[right, red, font=\small] at (0.2, 0) {$d_0$};
+
+  % Mark later separation (much smaller)
+  \filldraw[black] (4, 2) circle (0.08cm);
+  \filldraw[black] (4.05, 1.98) circle (0.08cm);
+  \draw[<->, red, thick] (4.12, 2) -- (4.12, 1.98);
+  \node[right, red, font=\small] at (4.18, 1.99) {$d(t) \approx e^{-\lambda t}d_0$};
+
+  % Time direction
+  \draw[->, gray, dashed] (0.5, -1.2) -- (3.5, -1.2);
+  \node[below, gray, font=\small] at (2, -1.3) {Time $t \to$};
+
+  % Labels
+  \node[font=\small, above] at (2, 2.5) {Contracting trajectories: distance decays exponentially};
+\end{tikzpicture}
+\end{center}
 
 
 \section{Complete Proof of Exponential Convergence}
@@ -323,6 +351,7 @@ is the central computational challenge.
 
 
 \section{Worked Example: A Simple Linear System}
+\label{sec:ch4:example}
 
 \subsection{Problem Setup}
 
@@ -388,18 +417,15 @@ giving
 \mat{A}^\T\mat{I} + \mat{I}\mat{A} = \begin{bmatrix} -4 & 1 \\ 1 & -6 \end{bmatrix}.
 \end{equation}
 
-For this to satisfy the contraction condition with rate $\lambda$:
-\begin{equation}
-\begin{bmatrix} -4 & 1 \\ 1 & -6 \end{bmatrix} \preceq -2\lambda \mat{I} = \begin{bmatrix} -2\lambda & 0 \\ 0 & -2\lambda \end{bmatrix}.
-\end{equation}
-
-The off-diagonal elements require $1 \leq 0$, which is false. However, the diagonal
-eigenvalues are approximately $-3.2$ and $-1.8$, suggesting $\lambda \approx 0.9$
-(half the smallest eigenvalue magnitude).
-
-For simplicity, if we use $\mat{M}=\mat{I}$ and check the eigenvalues of $\mat{A}^\T + \mat{A}$
-(scaled by 1/2), we get approximately $-1.79$ and $-3.21$, confirming $\lambda_{\max}(\sym(\mat{A})) \approx -1.79$.
-Thus the contraction rate is $\lambda \approx 1.79 / 2 \approx 0.895$ or roughly $\lambda = 1.79$ from the eigenvalue.
+The contraction condition $\mat{A}^\T\mat{M} + \mat{M}\mat{A} \preceq -2\lambda\mat{M}$ is a
+\emph{matrix inequality} (i.e., an eigenvalue condition), not an entry-wise condition.
+For $\mat{M} = \mat{I}$, we need the eigenvalues of $\mat{A}^\T + \mat{A}$ to satisfy
+$\lambda_{\max}(\mat{A}^\T + \mat{A}) \leq -2\lambda$. The eigenvalues of
+$\mat{A}^\T + \mat{A} = \begin{bmatrix} -4 & 1 \\ 1 & -6 \end{bmatrix}$
+are approximately $-1.79$ and $-3.21$ (computed in the symmetric part analysis above), both negative.
+Therefore the identity metric \emph{does} certify contraction, with rate
+$\lambda = |\lambda_{\max}(\sym(\mat{A}))| / 2 \approx 1.79 / 2 \approx 0.895$
+(since the condition requires $\lambda_{\max} \leq -2\lambda$).
 
 \begin{designbox}
 In practice, for linear systems, one solves the LMI \eqref{eq:ch4:example-LMI} using
@@ -410,6 +436,7 @@ this simple system, the identity metric already achieves excellent contraction.
 
 
 \section{Partial Contraction: Hierarchical Structure}
+\label{sec:ch4:partial}
 
 \subsection{When Not All Directions Contract}
 
@@ -470,6 +497,7 @@ and all solutions synchronize to the reference motion.
 
 
 \section{Control Contraction Metrics: Design and Duality}
+\label{sec:ch4:ccm}
 
 
 Contraction metrics provide a natural dual certificate to control distributions and accessibility. 
@@ -576,6 +604,7 @@ approximation to the true metric.
 
 
 \section{Discrete-Time Contraction}
+\label{sec:ch4:discrete}
 
 \subsection{Discrete Contraction Condition}
 
@@ -630,7 +659,7 @@ $V_k = \dx_k^\T \mat{M}_k \dx_k$ satisfies $V_{k+1} \leq \rho^2 V_k$ by the cond
 
 For linear discrete-time systems, the discrete contraction metric can be related to
 the solution of a discrete-time algebraic Riccati equation (DARE), which is studied
-in detail in Chapter~\ref{ch:riccati}. Both frameworks certify stability and convergence,
+in detail in Chapter~\ref{ch:optimal-control}. Both frameworks certify stability and convergence,
 but contraction provides tighter guarantees on trajectory convergence rates.
 
 \begin{remark}
@@ -641,6 +670,7 @@ is fast enough that the discrete assumption is valid.
 
 
 \section{Numerical Example: Van der Pol Oscillator}
+\label{sec:ch4:vdp}
 
 \subsection{System Description}
 
@@ -687,6 +717,17 @@ For constant metrics $m_1 = a$, $m_2 = b$ (diagonal constants), the conditions r
 The second condition requires $\epsilon(1-x_1^2) \leq -\lambda$, which is violated when
 $|x_1| < 1$ (where the oscillator spends most of its time). Thus, a constant metric
 does not suffice.
+
+\begin{remark}[Why the Van der Pol oscillator is not globally contracting]
+The Van der Pol oscillator possesses a stable limit cycle, toward which all nonzero
+initial conditions converge. This means the system is \emph{not} globally contracting:
+global contraction would require all trajectories to converge to each other (and hence
+to a single trajectory), but the limit cycle is an attractor of dimension one, not zero.
+Instead, the system exhibits \emph{partial} contraction---trajectories converge to the
+limit cycle (contraction transverse to the cycle) while maintaining a phase offset along it.
+A state-dependent metric can certify contraction in the transverse direction, but no
+globally valid metric can certify contraction in all directions simultaneously.
+\end{remark}
 
 \subsection{Solution Strategy}
 

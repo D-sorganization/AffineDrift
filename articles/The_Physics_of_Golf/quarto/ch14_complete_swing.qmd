@@ -1,8 +1,7 @@
 ---
 title: "The Complete Swing"
-bibliography: ../golf_physics.bib
+description: "1. The body (torso, pelvis, legs): Rigid segments connected by rotating joints. The legs transfer force from the ground; the torso rotates; the pelvis..."
 ---
-
 
 
 # The Complete Golf Swing: Putting It All Together
@@ -16,7 +15,7 @@ In this final chapter, we put it all together. We walk through a complete swing,
 
 The central theme is this: the golf swing is not a series of isolated positions or movements. It is a continuous, integrated dynamic system where every moment is connected to every other moment through the equations of motion. Understanding the swing means understanding how the system evolves from setup to impact and beyond.
 
-This chapter synthesizes the preceding material into a unified analysis of the full swing, applying the drift-control decomposition to each phase of the motion.
+This chapter is the culmination of the book. If you grasp the full swing through the lens of drift and control, you will understand golf physics as deeply as any modern biomechanist or engineer.
 
 :::
 
@@ -33,7 +32,7 @@ A complete model of the golf swing includes:
 The full state vector is enormous: 20+ joint angles, 20+ joint angular velocities, plus the modal coordinates for shaft flexibility, plus the ground reaction forces (which are determined by the constraints). But despite the dimensionality, the affine structure holds:
 
 $$
-\dot{\state} = f(\state) + G(\state) \control
+\dot{\mathbf{x}} = f(\mathbf{x}) + G(\mathbf{x}) \control
 $$
 
 The drift field $f$ includes gravity, Coriolis forces, elastic forces from the shaft, and passive damping. The control field $G$ is the mapping from muscle torques to accelerations. The constraints are managed through Lagrange multipliers (the constraint forces).
@@ -46,7 +45,7 @@ The swing begins at address, with the golfer standing still (or nearly still) at
 
 At address, the golfer's body is in static equilibrium with the ground. The feet press on the ground; the ground pushes back with normal forces (vertical) and potential friction forces (horizontal). The muscles are in low-level contraction, maintaining posture against gravity.
 
-In terms of the affine framework, the velocity and acceleration are zero (or small). The drift field $f(\state)$ at address points downward (gravity). But muscle torques (control inputs) are active, holding the body in position. The control authority $G(\state)$ is fully available.
+In terms of the affine framework, the velocity and acceleration are zero (or small). The drift field $f(\mathbf{x})$ at address points downward (gravity). But muscle torques (control inputs) are active, holding the body in position. The control authority $G(\mathbf{x})$ is fully available.
 
 The golf swing begins when the golfer deliberately breaks this equilibrium. The muscles that were holding the body in static posture begin to activate in a coordinated sequence. This is the beginning of the backswing.
 
@@ -58,7 +57,7 @@ The initial configuration at address is crucial. It determines:
 2. **The initial constraint configuration:** The hand position, grip angle, and club face angle at address determine how the constraints will guide the motion.
 3. **The initial muscle state:** The baseline muscle activation level (how tensioned the muscles are) affects the rate at which muscle torques can increase.
 
-Small changes in address can significantly change the swing that follows. This is because the drift field is sensitive to the initial conditions. A slightly different hand position at address means a slightly different trajectory for the \ztcf, which requires different control inputs to correct.
+Small changes in address can significantly change the swing that follows. This is because the drift field is sensitive to the initial conditions. A slightly different hand position at address means a slightly different trajectory for the ZTCF, which requires different control inputs to correct.
 
 This is why swing consistency begins with consistent setup. A golfer who is careful about address (foot position, ball position, hand position, alignment) is setting the initial conditions for a consistent drift field.
 
@@ -113,7 +112,7 @@ The transition reveals the kinetic chain in action. The sequence is:
 4. **Forearms and hands:** The hands lag behind the arm rotation. This lag stores angular momentum.
 5. **Club:** The shaft bends and the clubhead lags even more than the hands. The shaft lag stores energy.
 
-This sequence is not consciously controlled. It emerges from the mechanics. The golfer does not think "hips first, then torso, then arms." Instead, the golfer initiates hip rotation (a simple, conscious command), and the mechanical constraints and drift naturally sequence the rest of the body.
+This sequence is not primarily consciously controlled. It emerges largely from the mechanics. The golfer does not think "hips first, then torso, then arms." Instead, the golfer initiates hip rotation (a simple, conscious command), and the mechanical constraints and drift naturally sequence the rest of the body.
 
 This is the power of understanding drift. The golfer does not have to control every segment separately. By exploiting the drift field, the golfer can achieve complex, coordinated motion with relatively simple muscle commands.
 
@@ -123,7 +122,7 @@ The early downswing lasts from the transition (about $t=0$) to mid-downswing (ab
 
 ### Drift and Control at Early Downswing
 
-In the early downswing, the drift coefficient (DCR) is still low (perhaps 0.2--0.4). This means the control authority is high. The golfer can make adjustments to the swing path, the club face angle, and the timing without drastically affecting the outcome.
+In the early downswing, the selected drift-control ratio (DCR) is still comparatively low in the illustrative model (perhaps 0.2--0.4). This means control authority remains relatively high. The golfer can still affect sequencing, clubface orientation, and timing before the later high-speed phases reduce the room for large path corrections.
 
 The control inputs are primarily hip and torso rotation. The muscles that drove the backswing are now being decelerated (eccentric contraction, resisting motion). The muscles that drive forward rotation are being accelerated. The transition from backward to forward motion is being managed.
 
@@ -147,7 +146,7 @@ Maintaining lag requires active control: the hand muscles must resist the urge t
 
 ## Phase 5: Mid-Downswing (Critical Phase, DCR Rising)
 
-Mid-downswing lasts from about $t=0.08$ to $t=0.12$ s. During this phase, the angular velocity of the body continues to increase, and the control authority is noticeably decreasing. The DCR is rising (perhaps 0.4--0.7), and the golfer's ability to make large corrections is fading.
+Mid-downswing lasts from about $t=0.08$ to $t=0.12$ s. During this phase, the angular velocity of the body continues to increase, and control authority is noticeably decreasing in the simplified model. The selected DCR is rising (perhaps 0.4--0.7), and the golfer's ability to make large corrections is fading.
 
 ### The Drift Field Dominance
 
@@ -155,26 +154,26 @@ In mid-downswing, the drift field is becoming the dominant influence on the swin
 
 The drift field in mid-downswing includes all the components from early downswing, plus some that are now more significant:
 
-1. **High centrifugal acceleration:** The rotation rate is now large at the shoulder. The centrifugal acceleration of the clubhead is enormous. This is pulling the shaft outward and stiffening it simultaneously.
+1. **High centrifugal acceleration:** In this representative illustrative estimate, the rotation rate is now large (perhaps $15{-}20$ rad/s at the shoulder). The centrifugal acceleration of the clubhead is enormous (perhaps 500--1000 m/s$^2$). This is pulling the shaft outward and stiffening it simultaneously.
 2. **High inertial forces:** The club has mass, and it is accelerating. Inertial forces on the club (the club "wants to" move in a straight line due to inertia, but the constraints force it to curve) are large.
 3. **Increasing elastic restoring force:** The shaft is bent significantly now. The elastic restoring force $-K_s \eta$ is larger. The shaft is storing more and more elastic energy.
-4. **Decreasing control authority:** The muscles can still produce torques, but the inertia of the system is so large that the torques have less effect. The same increase in torque causes a much smaller change in acceleration now than it did early in the downswing.
+4. **Decreasing control authority:** The muscles can still produce torques, but the inertia of the system is so large that the torques have less effect. A 10 N$\cdot$m increase in torque causes a much smaller change in acceleration now than it did early in the downswing.
 
-### The Point of No Return
+### The Shrinking Late-Correction Window
 
-Mid-downswing is where the swing becomes ballistic. The motor cortex can still send commands, and muscles can still produce torque. But the effects of these commands are small. The drift field is so strong that changing the control inputs would require enormous torques to have any effect.
+Mid-downswing is where the swing becomes increasingly drift dominated in the simplified models used here. The motor cortex can still send commands, and muscles can still produce torque. But the effects of these commands are smaller relative to the drift forces than they were earlier. Changing the path substantially now may require torques or timing changes outside the assumed physiological bounds.
 
-This is the physical basis for the saying ``once you start the downswing, it's too late to change.'' It is not that the golfer is incapable of producing torque; it is that the torque required to make a large change in the swing path is so large that the muscles cannot produce it. The drift has taken over.
+This is the defensible version of the coaching saying "once you start the downswing, it's too late to change." It is not that the golfer is incapable of producing torque; it is that the model predicts a narrowing window for large corrections as speed and drift terms grow.
 
-Golfers intuitively understand this. A golfer who tries to "hold on" to the club in mid-downswing (trying to resist the centrifugal and Coriolis forces) will produce poor results. The golfer must commit to the motion and let the drift carry it through.
+Golfers intuitively understand this. A golfer who tries to "hold on" to the club in mid-downswing is attempting a large late correction against high inertial and Coriolis loads. The more reliable strategy is to prepare the state earlier and use late control mainly for bounded steering.
 
-## Phase 6: Late Downswing (Ballistic Phase, High DCR)
+## Phase 6: Late Downswing (Drift-Dominated Phase, High DCR)
 
-Late downswing lasts from about $t=0.12$ to $t=0.16$ s, the final 40 milliseconds before impact. During this phase, the rotation rate is at its peak (perhaps 30+ rad/s at the shoulder), and the control authority is nearly zero. The DCR is very high (perhaps 0.9--1.0), and the swing is effectively on autopilot.
+Late downswing lasts from about $t=0.12$ to $t=0.16$ s, the final 40 milliseconds before impact. During this phase, the rotation rate is near its peak in the illustrative model, and the late-correction authority is limited by muscle torque, activation timing, and the already large drift field. The DCR can be high under the chosen weighting, but its value is model-dependent rather than a universal 0--1 phase label.
 
-### The Autopilot Swing
+### The Feedforward-Dominated Swing
 
-In late downswing, the motor cortex is no longer sending commands to adjust the swing path. Instead, the motor cortex is simply maintaining the baseline muscle activation level necessary to keep the muscles from completely relaxing. The swing is following the drift field with high fidelity.
+In late downswing, voluntary feedback has little time to reshape the path before impact. Muscle activation is still present, but most useful control has already been expressed through earlier state preparation, feedforward timing, and maintained stiffness. In this sense the swing follows the drift field with high fidelity in the model, not because the golfer is passive, but because late corrections are bounded.
 
 The drift field in late downswing is complex and multifaceted:
 
@@ -185,7 +184,7 @@ The drift field in late downswing is complex and multifaceted:
 
 ### The Catapult Effect in Action
 
-This is where the shaft flexibility (Chapter~\ref{ch:flexible_shaft}) matters most. The elastic energy stored in the bent shaft is now being released. As the shaft snaps back toward straight, it does work on the clubhead, accelerating it further.
+This is where the shaft flexibility (Chapter @sec-flexible_shaft) matters most. The elastic energy stored in the bent shaft is now being released. As the shaft snaps back toward straight, it does work on the clubhead, accelerating it further.
 
 The magnitude of this effect depends on the shaft's stiffness and damping, which are parameters of the drift field. A more flexible shaft stores more energy and releases it more powerfully (if the timing is right). A stiffer shaft stores less energy but might be harder to bend in the first place.
 
@@ -199,9 +198,9 @@ Impact is the briefest phase, lasting about 0.5 milliseconds (half a millisecond
 
 ### The Impact Dynamics
 
-At the moment of impact, the clubhead speed depends on the club and the golfer's swing [@penner2003physics]. The ball is initially stationary (relative to the ground). The clubface contacts the ball at the center of the ball's surface.
+At the moment of impact, in this representative illustrative estimate, the clubhead is traveling at perhaps 100--140 mph (45--62 m/s), depending on the club and the golfer's swing speed. The ball is initially stationary (relative to the ground). The clubface contacts the ball at the center of the ball's surface.
 
-In the reference frame of the ball, the clubface is approaching at high speed. The ball compresses. The elastic properties of the ball (determined by the rubber core and the cover) determine how much the ball compresses and how quickly it bounces back.
+In the reference frame of the ball, the clubface is approaching at 100--140 mph. The ball compresses. The elastic properties of the ball (determined by the rubber core and the cover) determine how much the ball compresses and how quickly it bounces back.
 
 The collision is characterized by the coefficient of restitution (COR), which relates the separation speed to the approach speed:
 
@@ -209,7 +208,7 @@ $$
 \mathrm{COR} = \frac{\text{separation speed}}{\text{approach speed}}
 $$
 
-Modern golf balls have COR values around 0.8 or above [@penner2003physics], meaning most of the kinetic energy of the clubface is transferred to the ball, with the remainder lost to heat, internal friction in the ball, and vibration of the clubface.
+Modern golf balls have COR $\approx 0.83$ (the USGA limit). Note: the COR is a *velocity* ratio, not an energy ratio. The fraction of kinetic energy transferred from club to ball depends on both COR$^2$ and the mass ratio $m_{\text{club}}/m_{\text{ball}}$. For a typical driver (clubhead mass $\approx 200$ g, ball mass $\approx 46$ g), the energy transfer is approximately 85--90%. The remaining energy is lost to heat, internal friction in the ball, and vibration of the clubface.
 
 ### The Launch Conditions
 
@@ -231,7 +230,7 @@ The follow-through lasts from impact until the golfer comes to rest. It lasts ab
 
 ### Deceleration
 
-After impact, the clubhead is still moving at high speed (reduced from the pre-impact speed by the energy transferred to the ball). The body is still rotating at high angular velocity. The golfer must decelerate these motions safely, without injury.
+After impact, in this illustrative post-impact estimate, the clubhead is moving at perhaps 80--120 mph (depending on the club and how much energy was transferred to the ball). The body is still rotating at high angular velocity. The golfer must decelerate these motions in a controlled manner.
 
 The deceleration is managed by:
 
@@ -248,7 +247,7 @@ The constraint forces (Lagrange multipliers) are doing work, directing the motio
 
 From a control perspective, the follow-through is a low-control, high-drift phase, similar to late downswing. The motor cortex is not planning the follow-through; it is simply letting the body decelerate under the influence of muscle damping and gravity.
 
-But the follow-through is important for injury prevention. A golfer who decelerates poorly (too quickly, or with uneven loads) risks injury. A golfer who decelerates smoothly, distributing the load across the entire body, stays healthy.
+The follow-through may also play a role in load management. Biomechanical reasoning suggests that a golfer who decelerates too abruptly or with uneven loads places higher peak stresses on individual joints, while smoother deceleration distributes loads more broadly. However, the direct relationship between follow-through mechanics and injury incidence has not been established through controlled studies.
 
 This is where training matters. The muscles and connective tissue must be strong enough to handle the deceleration forces. The motor control must be good enough to distribute the load evenly. The proprioceptive feedback must be sharp enough to sense the motion and adjust muscle activation in real time.
 
@@ -258,7 +257,7 @@ Let us now account for all the energy in the swing, from backswing to follow-thr
 
 ### Energy Sources
 
-The golfer's muscles are the primary source of energy. When muscles contract, they hydrolyze ATP (adenosine triphosphate) and convert the chemical energy into mechanical work. The power output of muscles can be very high during the swing (perhaps 2000--5000 watts for an elite golfer, 500--1500 watts for an amateur).
+The golfer's muscles are the primary source of energy. When muscles contract, they hydrolyze ATP (adenosine triphosphate) and convert the chemical energy into mechanical work. The power output of muscles can be very high during the swing [estimated values; direct measurement of total muscular power during a golf swing is difficult and published values vary widely].
 
 This muscle power is converted into:
 
@@ -291,7 +290,7 @@ Not all the muscle power goes into the ball. Some is lost:
 4. **Inefficiencies in joints:** Friction in the joints dissipates some energy.
 5. **Collision inefficiency:** Not all the kinetic energy of the club is transferred to the ball. Some is lost as heat in the ball and on the clubface.
 
-The fraction of muscular power output ultimately transferred to the ball varies by swing and has not been precisely quantified across the full population. However, biomechanical studies generally support the view that elite golfers are more efficient at transferring energy to the clubhead than amateurs, losing less energy to heat, damping, and suboptimal sequencing [@nesbit2005work].
+The fraction of muscular power output ultimately transferred to the ball is not well established in the literature [citation needed for specific efficiency values]. However, biomechanical studies generally support the view that elite golfers are more efficient at transferring energy to the clubhead than amateurs, losing less energy to heat, damping, and suboptimal sequencing [@Nesbit2005].
 
 How? By exploiting the drift field. By setting up the body so that gravity and elastic energy do much of the work (drift), elite golfers reduce the reliance on muscle power (control). Less muscle work means less heat loss and more energy available for the ball.
 
@@ -332,7 +331,7 @@ Let us now synthesize what we have learned, showing how drift, control, and cons
 - **Drift:** Very high. The centrifugal acceleration of the clubhead is enormous; the shaft is at its maximum bend and maximum elastic force; Coriolis forces are large.
 - **Control:** Low. Muscles are active, but the inertia of the system is so large that muscle torques have minimal effect.
 - **Constraint forces:** Enormous. The shaft is experiencing enormous bending moments; the grip is being loaded with kilograms of force; the body is accelerating at high rates.
-- **DCR:** Very high ($\approx 0.8{-}1.0$). Drift is nearly absolute.
+- **DCR:** High under the selected weighting. Drift is dominant, but active stiffness and bounded corrections are still part of the model.
 
 ### Impact and Follow-Through
 
@@ -341,7 +340,7 @@ Let us now synthesize what we have learned, showing how drift, control, and cons
 - **Constraint forces:** Decreasing as the motion slows, but still significant during the follow-through.
 - **DCR:** Decreasing as the motion slows.
 
-This picture reveals the structure of the golf swing. The backswing is controlled and positioned. The transition initiates the drift. The downswing is increasingly dominated by drift, with control authority fading as the body accelerates. By late downswing, the swing is entirely on autopilot, with drift determining the trajectory.
+This picture reveals the structure of the golf swing. The backswing is controlled and positioned. The transition initiates the drift. The downswing is increasingly dominated by drift, with control authority fading as the body accelerates. By late downswing, the swing is feedforward dominated, with drift strongly constraining the trajectory and late control acting as bounded steering.
 
 ## What the ZTCF Reveals About Each Phase
 
@@ -356,16 +355,16 @@ The ZTCF is the trajectory the clubhead would follow if all muscle torques were 
 3. **At the top of the backswing:** The ZTCF would cause the upper body to fall backward (gravity and lack of forward motion). The control inputs must reverse this and initiate the downswing.
 4. **In the early downswing:** The ZTCF would cause a motion toward the ball, but perhaps with the wrong sequencing (arms falling independently of the body). The control inputs fine-tune the sequence.
 5. **In mid-downswing:** The ZTCF is already producing a motion quite close to the desired motion. The control inputs are small corrections.
-6. **In late downswing:** The ZTCF is producing the motion almost entirely. The control inputs are negligible.
-7. **At impact:** The ZTCF has determined the clubhead speed and club face angle. The ball outcome is now determined.
+6. **In late downswing:** The ZTCF may be close to the measured trajectory in a high-DCR model. The control inputs are bounded corrections, not literally absent.
+7. **At impact:** The clubhead speed and face angle are strongly constrained by the state delivered into impact; the ball outcome is determined by that state and the impact collision model.
 
-The goal of learning and practice is to adjust the setup and the early swing so that the ZTCF naturally points toward the target. A golfer who achieves this can swing on autopilot (high DCR, low control) and still hit the target consistently.
+The goal of learning and practice is to adjust the setup and the early swing so that the ZTCF naturally points toward the target. A golfer who achieves this can rely more on feedforward timing and high-DCR drift assistance while still preserving active stiffness and bounded correction.
 
 A golfer who has a ZTCF that points away from the target must use high control inputs in mid-to-late downswing to correct. This is inefficient and unreliable. It is why coaching often focuses on setup and the early swing: these determine the ZTCF.
 
 ## Lessons for Golfers: What You Can Control, and When
 
-Understanding drift and control teaches a key lesson: *most of the swing is beyond your control.*
+Understanding drift and control teaches an important lesson: *much of the swing, particularly in its later phases, is largely beyond your conscious control.*
 
 In the late downswing, when the clubhead speed is highest and the ball outcome is being determined, you cannot effectively control the swing. The drift field is too strong. Any attempt to make large adjustments will either have no effect (the inertia is too great) or will have delayed effects (your control input delays its effect by 50+ milliseconds, which is too slow for the swing).
 
@@ -378,13 +377,13 @@ What you CAN control is:
 
 What you CANNOT effectively control is:
 
-1. **The late downswing clubhead path:** Once you are in mid-to-late downswing, the path is determined by drift. You cannot steer it without impossibly large muscle torques.
-2. **The club face angle at impact:** This is determined by the early swing setup and the mid-downswing drift. You cannot adjust it in the last 50 milliseconds.
+1. **Large late-downswing path changes:** Once you are in mid-to-late downswing, the path is strongly conditioned by drift and the state already present. Large steering changes may require torques or timing shifts outside practical capacity.
+2. **Large clubface changes at impact:** The clubface state is strongly conditioned by setup, release timing, and mid-downswing dynamics. Last-instant corrections are bounded and cannot replace earlier preparation.
 3. **The ball outcome:** Once impact occurs, the ball's outcome is determined by physics. You have no further influence.
 
-This is liberating and terrifying in equal measure. It is liberating because it means that once you have set up the swing correctly, you can relax and let the physics carry you through. It is terrifying because it means that the outcome is essentially determined before the swing is even half-finished.
+This is clarifying because it shifts attention from last-instant rescue to earlier preparation. Once the swing state is well prepared, late control can focus on stiffness, release timing, and bounded steering instead of wholesale path repair.
 
-The implication for golfers is this: **practice the early swing, trust the drift, and be confident in the late swing.**
+The implication for golfers is this: **practice the early swing, prepare the state, and use late control as bounded steering.**
 
 ## The Paradox of the Golf Swing
 
@@ -402,7 +401,7 @@ In contrast, when a golfer sets up the swing so that the ZTCF points toward the 
 
 The setup determines the initial conditions. The early backswing and downswing determine the drift field. Once this is done, the golfer can relax and let the drift carry the swing through. The muscles can fire in a simple, pre-learned sequence, without real-time adjustment. The drift handles the large-scale dynamics automatically. The result is a powerful, consistent swing.
 
-This is the secret that elite golfers know intuitively and that physics-informed coaches can teach explicitly: *power comes from exploiting drift, not from controlling it.*
+This is what our framework suggests elite golfers learn intuitively and what physics-informed coaches can teach explicitly: *power comes from exploiting drift, not from fighting it.*
 
 ## Final Synthesis: The Golf Swing as a Masterpiece of Managed Drift
 
@@ -410,19 +409,18 @@ We began this book with a simple question: what forces are at work in the golf s
 
 Throughout the book, we have seen how this framework illuminates every aspect of the swing:
 
-- **Chapter~\ref{ch:03_double_pendulum}** showed how even a simple double pendulum exhibits drift and control.
-- **Chapter~\ref{ch:05_affine_structure}** developed the affine structure that underlies all golfs physics.
-- **Chapter~\ref{ch:zero_torque_counterfactual}** introduced the ZTCF, the autopilot trajectory.
-- **Chapters~\ref{ch:constraint_forces}--10** showed how constraints and energy flow reshape the swing.
-- **Chapter~\ref{ch:flexible_shaft}** revealed how shaft flexibility contributes entirely to drift.
-- **Chapter~\ref{ch:fascia}** debunked myths about fascia and placed it correctly in the framework.
-- **Chapter~\ref{ch:interdisciplinary}** showed how multiple disciplines all speak the language of drift and control.
+- **Chapter @sec-03_double_pendulum** showed how even a simple double pendulum exhibits drift and control.
+- **Chapter @sec-05_affine_structure** developed the affine structure that underlies all golfs physics.
+- **Chapter @sec-zero_torque_counterfactual** introduced the ZTCF as a passive reference trajectory.
+- **Chapters @sec-constraint_forces--10** showed how constraints and energy flow reshape the swing.
+- **Chapter @sec-flexible_shaft** revealed how shaft flexibility contributes entirely to drift.
+- **Chapter @sec-fascia** debunked myths about fascia and placed it correctly in the framework.
+- **Chapter @sec-interdisciplinary** showed how multiple disciplines all speak the language of drift and control.
 - **This chapter** brought it all together, walking through the swing and revealing the dominance of drift in the late downswing.
-  The core insight is this: **the golf swing is a masterpiece of managed drift.**
-  The golfer's job is not to control every part of the swing. The golfer's job is to set up the initial conditions and the early motion so that the drift field naturally produces the desired outcome. Then, in execution, trust the drift. Let physics do the work. Use control sparingly, for fine-tuning, not for driving the entire motion.
-  This is counterintuitive. Our everyday experience is that we control our bodies. We decide to move our arm, and it moves. But the golf swing is different. The swing is so fast and so powerful that physics dominates. The golfer's conscious control is most effective in the slow, early phases (setup, backswing) and least effective in the fast, late phases (downswing, impact).
-  Understanding this is the gateway to better golf. Not stronger muscles (though strength helps). Not faster swings (though speed helps). But understanding where drift and control actually matter, and managing them accordingly.
-  This is the physics of golf. This is why the game is so hard and so beautiful: because it requires the golfer to understand the dance between conscious control and unconscious physics, and to know when to lead and when to follow.
+  The core insight is this: **the golf swing is managed drift under constraints.**
+  The golfer's job is not to control every part of the swing at every instant. The golfer's job is to set up the initial conditions and the early motion so that the drift field helps produce the desired impact state. Then, in execution, late control is used as bounded steering and stiffness regulation rather than as unlimited path correction.
+  This is counterintuitive. Our everyday experience is that we control our bodies. We decide to move our arm, and it moves. But the golf swing is fast enough that the modeled drift field can dominate late dynamics. The golfer's conscious control is most effective in the slow, early phases (setup, backswing) and least effective in the fast, late phases (downswing, impact).
+  Understanding this clarifies what should be trained: not strength alone, and not speed alone, but the timing and state preparation that determine when drift and control actually matter.
   ::: {.callout-important}
   ## Key Takeaways
   1. **The swing has distinct phases:** address, backswing, transition, early downswing, mid-downswing, late downswing, impact, and follow-through.
@@ -431,14 +429,14 @@ Throughout the book, we have seen how this framework illuminates every aspect of
   3. Early phases (address, backswing) are high-control, low-drift.
   4. Middle phases (transition, early downswing) are moderate drift and control.
   5. Late phases (mid-to-late downswing) are high-drift, low-control.
-6. **Drift dominance increases throughout the downswing.** The DCR rises from near zero in early downswing to nearly one in late downswing.
+6. **Drift dominance often increases throughout the downswing.** The DCR should be reported with its weighting, torque bound, and model parameters.
 7. **The ZTCF is the key.** By setting up the early swing so the ZTCF points toward the target, the golfer minimizes the control needed.
 8. **Control is most effective early.** Setup, backswing positioning, and early downswing sequence are where the golfer has the most influence.
-9. **Control is ineffective late.** In mid-to-late downswing, the drift is so strong that muscle torques have negligible effect.
-10. **Power comes from drift.** The fastest, most powerful swings are those that exploit drift optimally, not those that fight it with muscle force.
-11. **The shaft catapult effect is real.** Stored elastic energy in the bent shaft is released near impact, providing a meaningful boost to clubhead speed.
-12. **The paradox of control:** trying to control the late swing reduces power and consistency. Trusting the drift increases both.
-13. **The lesson for golfers:** practice the early swing, perfect the setup, then let physics carry you through.
+9. **Control has less late leverage.** In mid-to-late downswing, muscle torques can have greatly diminished path-correction effect while still regulating stiffness and release timing.
+10. **Power comes from timed interaction.** The fastest, most powerful swings are those that coordinate muscular work, elastic storage, and drift rather than treating late muscle force as the only source of speed.
+11. **The shaft catapult effect is model-dependent but important.** Stored elastic energy in the bent shaft can be released near impact; representative models estimate a modest clubhead-speed contribution [@Nesbit2005; @MacKenzie2009].
+12. **The paradox of control:** large late path corrections can reduce power and consistency, while earlier state preparation lets the drift field assist the intended motion.
+13. **The lesson for golfers:** practice the early swing, refine setup and sequencing, then use late control as bounded steering rather than wholesale path repair.
 
 :::
 
@@ -448,7 +446,7 @@ Explain why the DCR is low in the backswing and early downswing, and high in the
 
 At the moment of impact, where does the clubhead speed come from? Is it primarily from muscle torque or from drift? Explain.
 
-A golfer wants to meaningfully increase their clubhead speed. Based on the affine framework, where in the swing would additional effort be most effective? Why?
+A golfer asks: "How can I add 10 mph to my clubhead speed?" Based on the affine framework, where in the swing would this be most effective? Why?
 
 Explain the paradox: why does a golfer who tries to control late downswing produce a slower, weaker swing than a golfer who trusts the drift?
 
@@ -463,5 +461,3 @@ In the transition, the golfer shifts from backward rotation to forward rotation.
 Explain why ground reaction forces are low in the backswing and follow-through, but high during the downswing. What are the ground reaction forces "doing" during the downswing?
 
 Suppose a golfer changes from a steel shaft to a graphite shaft (more flexible). How would this change the ZTCF trajectory, particularly in late downswing? Would the golfer need to change their swing, or would the swing naturally adapt?
-
-

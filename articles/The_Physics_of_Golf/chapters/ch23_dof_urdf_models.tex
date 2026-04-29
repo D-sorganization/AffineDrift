@@ -29,7 +29,7 @@ Suppose you have a model of the human body made from the joints we discussed in 
 
 That's approximately 35 numbers. Are all 35 independent? Is there a systematic way to count?
 
-The answer is the \textbf{Grübler-Kutzbach formula}, a tool from mechanism design that counts the degrees of freedom of any kinematic chain~\citep{Uicker1993,Hunt1978}. In this chapter, we'll learn to use it, build a complete golf swing model in URDF (Unified Robot Description Format)~\citep{Lynch2017,Featherstone2008}, and show how to simulate that model using robotics software.
+The answer is the \textbf{Grübler-Kutzbach formula}, a tool from mechanism design that counts the degrees of freedom of any kinematic chain. In this chapter, we'll learn to use it, build a complete golf swing model in URDF (Unified Robot Description Format), and show how to simulate that model using robotics software.
 
 This is where biomechanics meets robotics. The human body is a robot. The laws are the same.
 \end{laymansbox}
@@ -43,7 +43,7 @@ This is where biomechanics meets robotics. The human body is a robot. The laws a
 
 \subsection{The Formula}
 
-The \textbf{Grübler-Kutzbach formula} (also called the Chebychev-Grübler-Kutzbach formula) counts the total degrees of freedom of a kinematic system~\citep{Uicker1993,Hunt1978,Merlet2006}.
+The \textbf{Grübler-Kutzbach formula} (also called the Chebychev-Grübler-Kutzbach formula) counts the total degrees of freedom of a kinematic system.
 
 \begin{theorem}{Grübler-Kutzbach Formula}{thm:grubler}
 For a kinematic chain of $N$ rigid bodies (links) connected by $J$ joints, where joint $i$ has $f_i$ degrees of freedom, the total degrees of freedom of the system is:
@@ -59,7 +59,7 @@ The constant 6 reflects the dimension of rigid-body motion in three-dimensional 
 
 \subsection{Interpretation}
 
-Let's build intuition. Suppose we have $N$ bodies floating freely in space with no constraints. Each body can translate and rotate independently: $6(N-1)$ DOF total (the first body is the reference frame).
+Consider $N$ bodies floating freely in space with no constraints. Each body can translate and rotate independently: $6(N-1)$ DOF total, with the first body serving as the reference frame.
 
 Each joint imposes constraints. A revolute joint (1 DOF) imposes $c = 6 - 1 = 5$ constraints: it prevents translation in 3 directions and rotation about 2 axes (perpendicular to the joint axis). A spherical joint (3 DOF) imposes $c = 6 - 3 = 3$ constraints: only translation is prevented.
 
@@ -70,7 +70,7 @@ The formula subtracts the total constraints from the free DOF.
 \begin{example}{3-Link Robot Arm}{ex:robot_arm_dof}
 Consider a robot arm with a fixed base and three revolute joints in series:
 
-\textbf{Bodies:} Ground (base, fixed) + Link 1 + Link 2 + Link 3 = 4 total. But the ground is the reference frame, so $N = 4$ bodies are connected. Actually, let's be careful: we include ground as one of the $N$, so $N = 4$.
+\textbf{Bodies:} Ground (base, fixed) + Link 1 + Link 2 + Link 3 = 4 total. Count the ground as one of the $N$ bodies, so $N = 4$.
 
 \textbf{Joints:} 3 revolute joints (one between ground and link 1, one between link 1 and link 2, one between link 2 and link 3). So $J = 3$.
 
@@ -79,7 +79,7 @@ Consider a robot arm with a fixed base and three revolute joints in series:
 \textbf{Grübler calculation:}
 $$\mathrm{DOF} = 6(4-1) - 15 = 18 - 15 = 3$$
 
-\textbf{Sanity check:} A 3-link planar arm (all revolutes in the same plane) should have 3 DOF. Yes! The end-effector position in the plane has 2 DOF (x and y), and the end-effector orientation has 1 DOF (angle). Total: 3 DOF. $\checkmark$
+\textbf{Sanity check:} A 3-link planar arm (all revolutes in the same plane) should have 3 DOF. The end-effector position in the plane has 2 DOF (x and y), and the end-effector orientation has 1 DOF (angle). Total: 3 DOF. $\checkmark$
 
 \textbf{Alternative calculation (tree formula):} For a tree structure (no loops), the DOF is simply the sum of joint DOFs:
 $$\mathrm{DOF} = \sum_{i=1}^{J} f_i = 1 + 1 + 1 = 3$$
@@ -90,72 +90,61 @@ Both methods agree for a tree structure.
 \subsection{Worked Example 2: A Closed Kinematic Loop}
 
 \begin{example}{4-Bar Mechanism (Linkage)}{ex:four_bar_loop}
-Consider a classic 4-bar linkage: 4 bars (links) connected by 4 revolute joints. The links form a closed loop: link 1 connects to link 2, link 2 to link 3, link 3 to link 4, and link 4 back to link 1.
+Consider a classic 4-bar linkage: 4 bars (links) connected by 4 revolute joints forming a closed loop. One link is the ground frame (fixed), so $N = 4$ (ground + 3 moving links).
 
-\textbf{Bodies:} Ground (if we consider the base fixed) + 3 moving links = 4 bodies. Actually, let's say the ground is the reference and we have 4 rigid bodies total in the chain: $N = 4$.
-
-Wait, a 4-bar mechanism has 4 links forming a loop. One link is the ground frame (fixed). So $N = 4$ (ground + 3 moving links).
-
-\textbf{Joints:} 4 revolute joints. $J = 4$. Each has $f_i = 1$, so $\sum c_i = 20$.
-
-\textbf{Grübler calculation (open chain):}
-$$\mathrm{DOF} = 6(4-1) - 20 = 18 - 20 = -2$$
-
-Negative DOF? This is wrong! The issue is that the formula gives a negative answer when there's a loop. We need to account for loop closure constraints.
-
-\textbf{Loop constraints:} The four bars form a closed loop. This loop closure imposes a constraint: the end of bar 1 and the start of bar 2 must meet (position match), AND the end of bar 3 and the start of bar 4 must meet. These are 6 constraints per loop (3 position + 3 orientation) ... but wait, in a planar 4-bar mechanism, only some of these constraints are active.
-
-Actually, the correct formula for a mechanism with loops is:
-$$\mathrm{DOF}_{\text{mechanism}} = 6(N-1) - \sum c_i - (\text{loop closure constraints})$$
-
-For a planar 4-bar mechanism, the loop closure imposes 3 constraints (2 position + 1 orientation in the plane). So:
-$$\mathrm{DOF} = 18 - 20 - (-2) = 18 - 20 + 2 = 0$$
-
-Hmm, still off. Let me reconsider. Actually, the Grübler formula for a planar mechanism (where all DOFs are in a plane) is:
+\textbf{Key insight:} Because this is a planar mechanism, we must use the \textbf{planar Gr\"ubler formula}, not the spatial one. In 2D, each free body has 3~DOF (two translations + one rotation), and each revolute joint imposes 2 constraints (prevents the two translations at the joint, while permitting rotation):
 
 $$\mathrm{DOF}_{\text{planar}} = 3(N-1) - \sum c_i^{\text{planar}}$$
 
-For a planar 4-bar: $N = 4$, each revolute imposes $c^{\text{planar}} = 1$ constraint.
-$$\mathrm{DOF} = 3(3) - 4(1) = 9 - 4 = 5$$
+With $N = 4$ bodies and $J = 4$ planar revolutes ($c = 2$ each):
+$$\mathrm{DOF} = 3(4-1) - 4 \times 2 = 9 - 8 = 1$$
 
-Still wrong! Let me look this up mentally... A 4-bar linkage should have 1 DOF (you can input one angle and the rest of the mechanism follows).
+A 4-bar linkage has 1~DOF. $\checkmark$ You can input one angle and the geometry of the closed loop determines all other positions.
 
-Ah, I see the issue. We need to count more carefully. In a planar mechanism:
-- Each body has 3 DOF: 2 translations + 1 rotation in the plane.
-- Ground is fixed: 0 DOF.
-- Each moving body contributes 3 DOF: $N-1$ moving bodies × 3 = 3(N-1)$.
-
-For a 4-bar with 4 bodies (1 ground + 3 moving): $3(4-1) = 9$ unconstrained DOF.
-
-Each revolute in a plane allows 1 rotation, imposes 2 constraints (prevents 2 translations + 1 perpendicular rotation ... wait, let me think again.
-
-Actually, in 2D:
-- Revolute joint: $f = 1$ (rotation), $c = 2$ (prevents 2 translations)
-- Prismatic joint: $f = 1$ (translation), $c = 2$ (prevents perpendicular translation + rotation)
-
-For a 4-bar: $N = 4$, $J = 4$ revolutes, $\sum c = 4 \times 2 = 8$.
-
-$$\mathrm{DOF} = 3(4-1) - 8 = 9 - 8 = 1$$
-
-Yes! A 4-bar linkage has 1 DOF. $\checkmark$
+\textbf{Common pitfall:} Applying the \emph{spatial} Gr\"ubler formula ($6(N-1) - \sum(6-f_i)$) to a planar mechanism gives $6 \times 3 - 4 \times 5 = 18 - 20 = -2$, which is meaningless. The spatial formula overcounts constraints because planar revolutes implicitly constrain out-of-plane motion that was never available.
 \end{example}
 
 \textbf{Lesson:} The Grübler formula is powerful but requires careful counting. For a tree structure (no loops), use the simple formula $\sum f_i$. For a mechanism with loops, you must account for loop closure constraints, and the planar formula differs from the 3D formula.
 
 \section{Worked Example --- The Golf Swing Model}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[font=\tiny, level distance=1.5cm, sibling distance=1.8cm]
+  \node[draw] {Base}
+    child {node[draw] {Torso}
+      child {node[draw] {Arm}
+        child {node[draw] {Forearm}
+          child {node[draw] {Hand}}
+          }
+        }
+      }
+    child {node[draw] {Pelvis}
+      child {node[draw] {Leg-L}
+        child {node[draw] {Foot-L}}
+        }
+      child {node[draw] {Leg-R}
+        child {node[draw] {Foot-R}}
+        }
+      };
+\end{tikzpicture}
+\caption{URDF kinematic tree: rigid bodies connected by joints defining the kinematic chain.}
+\label{fig:urdf_tree}
+\end{figure}
+
 \label{sec:golf_swing_dof}
 
 \index{golf swing model}
 \index{kinematic structure}
 
-Let's build a golf swing model from scratch and count its degrees of freedom.
+Consider a golf swing model and count its degrees of freedom.
 
 \subsection{Model Definition}
 
 The model consists of the following kinematic chain:
 
 \begin{enumerate}
-\item \textbf{Base:} Pelvis (fixed to ground). We'll define the pelvis in the global frame. The pelvis orientation is fixed (for now), or we can allow small pelvis rotations in the $z$-axis (azimuth, yaw).
+\item \textbf{Base:} Pelvis (fixed to ground). Define the pelvis in the global frame. The pelvis orientation is fixed, or small pelvis rotations can be allowed about the $z$-axis (azimuth, yaw).
 
 \item \textbf{Spine:}
    \begin{itemize}
@@ -172,17 +161,25 @@ The model consists of the following kinematic chain:
    \item Club: (0-DOF, rigidly attached to lead hand)
    \end{itemize}
 
-\item \textbf{Trail side (right arm for right-handed golfer):}
+\item \textbf{Trail arm (right arm for right-handed golfer):}
    \begin{itemize}
+   \item Trail shoulder: 3-DOF (spherical) connecting thorax to upper arm
+   \item Trail elbow: 2-DOF (1R flexion + 1R pronation) connecting upper arm to forearm
+   \item Trail wrist: 2-DOF (universal joint) connecting forearm to hand
+   \end{itemize}
+
+\item \textbf{Lower body (both legs):}
+   \begin{itemize}
+   \item Lead hip: 3-DOF (spherical) connecting pelvis to lead upper leg
+   \item Lead knee: 1-DOF (revolute) connecting upper leg to lower leg
+   \item Lead ankle: 2-DOF connecting lower leg to foot
    \item Trail hip: 3-DOF (spherical) connecting pelvis to trail upper leg
    \item Trail knee: 1-DOF (revolute) connecting upper leg to lower leg
    \item Trail ankle: 2-DOF connecting lower leg to foot
-   \item Lead hip: 3-DOF connecting pelvis to lead upper leg
-   \item Lead knee: 1-DOF connecting upper leg to lower leg
-   \item Lead ankle: 2-DOF connecting lower leg to foot
    \end{itemize}
+\end{enumerate}
 
-Actually, let me simplify for now. Let's focus on the upper body and arms (ignore legs for this calculation).
+For the DOF calculation below, we focus on the upper body and arms (ignoring legs).
 
 \subsection{Simplified Upper Body Model}
 
@@ -209,17 +206,14 @@ Actually, let me simplify for now. Let's focus on the upper body and arms (ignor
 
 \textbf{Joints:} 8 joints as listed.
 
-\textbf{Grübler check (open chain):}
-$$\mathrm{DOF} = 6(10-1) - \sum c_i = 54 - (6-3 \times 3) - (6-3) - (6-2) - ... $$
-
-Actually, let's use the simpler formula for a tree:
-$$\mathrm{DOF}_{\text{tree}} = \sum f_i = 20$$
+\textbf{Gr\"ubler check (tree):} Since this is an open kinematic tree (no loops), the DOF is simply the sum of joint freedoms:
+$$\mathrm{DOF}_{\text{tree}} = \sum f_i = 3 + 3 + 3 + 2 + 2 + 3 + 2 + 2 = 20$$
 
 So without any closure constraints, 20 DOF.
 
 \subsection{The Grip Constraint (Loop Closure)}
 
-Here's the critical part: the two hands grip the \emph{same club}. The lead hand holds one end of the grip, and the trail hand holds the other end. The club is a rigid body.
+The key constraint is that the two hands grip the \emph{same club}. The lead hand holds one end of the grip, and the trail hand holds the other end. The club is a rigid body.
 
 This creates a \textbf{loop closure constraint}: the position and orientation of the club relative to the lead hand must be consistent with the position and orientation relative to the trail hand.
 
@@ -265,7 +259,7 @@ For the golf swing, we have roughly 25--30 DOF. The task (hit a golf ball to a t
 \index{null space}
 \index{self-motion}
 
-The human arm is a fascinating example of a redundant manipulator~\citep{Murray1994,Siciliano2009}. Let's analyze it in detail.
+The human arm is a fascinating example of a redundant manipulator. Let's analyze it in detail.
 
 \subsection{DOF Count}
 
@@ -319,7 +313,7 @@ Elite golfers exploit this redundancy to:
 \item Adjust grip tension (allowing more pronation or wrist bow through the swing)
 \end{itemize}
 
-This is why no two golfers swing identically. The task (club trajectory) is constrained, but the arm configuration is not. Different golfers choose different null-space motions.
+This is why motion capture data shows that no two golfers swing identically.\citeneeded{biomechanics study documenting inter-individual variability in golf-swing kinematics (e.g., Glazier 2011, Myers et al. 2008)} The task (club trajectory) is constrained, but the arm configuration is not. Different golfers choose different null-space motions.
 
 \begin{example}{Elbow Swivel in the Golf Swing}{ex:elbow_swivel}
 Consider a golfer at the top of the backswing. The club is at a specific position and orientation. Now, without moving the club, the golfer could:
@@ -367,7 +361,7 @@ Your shoulder can rotate, your elbow can flex or extend, your wrist can bend and
 
 This is redundancy. Your body has more degrees of freedom than the task requires.
 
-The golf swing is the same. A golfer has approximately 25--30 degrees of freedom \citep{Winter2009}. But the task --- place the club face square to the target with maximum speed at impact --- requires control of only 6 variables: the position (3) and orientation (3) of the club head.
+The golf swing is the same. A golfer has approximately 25--30 degrees of freedom (the exact count depends on the biomechanical model used---see the URDF specification later in this chapter).\citeneeded{reference biomechanical model enumerating upper-limb DOF count (e.g., Holzbaur et al. 2005)} But the task --- place the club face square to the target with maximum speed at impact --- requires control of only 6 variables: the position (3) and orientation (3) of the club head.
 
 That leaves 20--25 DOF unspecified. There are \emph{infinitely many} joint configurations that produce the same club position. This is not a problem. It's a feature. It's how the brain exploits redundancy to adapt, optimize, and recover from perturbations.
 
@@ -474,7 +468,7 @@ This explains why two elite golfers can look completely different in slow motion
 
 \subsection{Bernstein's Degrees of Freedom Problem}
 
-In 1967, the Soviet biomechanist Nikolai Bernstein posed the fundamental question: \emph{How does the brain choose among infinitely many solutions?}~\citep{bernstein1967coordination,Todorov2002}
+In 1967, the Soviet biomechanist Nikolai Bernstein posed the fundamental question: \emph{How does the brain choose among infinitely many solutions?}
 
 \begin{definition}{Bernstein's Degrees of Freedom Problem}{def:ch23_bernstein_problem}
 Given a motor task (e.g., hit a golf ball), the organism has many more DOF than required by the task. This creates a problem:
@@ -507,7 +501,7 @@ As the golfer learns, the brain develops these patterns. It learns to exploit re
 
 \subsection{Self-Organization Through Constraints}
 
-So how does the brain actually choose? The answer is not that it picks one solution at random. Rather, the solution is dramatically constrained by physics and physiology~\citep{todorov2004optimality,scott2004optimal,HarrisWolpert1998}:
+So how does the brain actually choose? The answer is not that it picks one solution at random. Rather, the solution is dramatically constrained by physics and physiology:
 
 \begin{itemize}
 \item \textbf{Joint limits:} Each joint has a maximum range of motion. This reduces the feasible set to a smaller manifold (the intersection of the solution manifold with the joint-limit constraints).
@@ -521,7 +515,7 @@ These physical constraints do the work. The brain doesn't need to pick from infi
 
 \subsection{Compensation Patterns}
 
-A beautiful consequence of the solution manifold is \textbf{compensation}. When one DOF is limited (due to injury, immobility, or asymmetry), the redundancy allows other DOF to compensate.
+A notable consequence of the solution manifold is \textbf{compensation}. When one DOF is limited (due to injury, immobility, or asymmetry), the redundancy allows other DOF to compensate.
 
 \textbf{Example:} A golfer with reduced hip mobility cannot rotate the hips as much. But because the solution manifold is high-dimensional, other joints can take up the slack. The thoracic spine can rotate more, or the shoulders can shift, or the timing can change. The golfer can still hit the same shot, but the null-space motion is different.
 
@@ -664,7 +658,7 @@ The structure of the golf swing emerges from redundancy:
 \index{Unified Robot Description Format}
 \index{robot description}
 
-URDF is an XML-based format that describes the kinematic and dynamic structure of a robot~\citep{Lynch2017,Siciliano2009}. It was originally developed for ROS (Robot Operating System) at Willow Garage. Today, URDF is the standard format for describing humanoid robots, industrial arms, and increasingly, human body models~\citep{koo2009application,Delp2007}.
+URDF is an XML-based format that describes the kinematic and dynamic structure of a robot. It was originally developed for ROS (Robot Operating System) at Willow Garage. Today, URDF is the standard format for describing humanoid robots, industrial arms, and increasingly, human body models.
 
 \subsection{Basic Structure}
 
@@ -862,7 +856,7 @@ $$\text{DOF} = 3 + 3 + 3 + 2 + 2 + 3 + 2 + 2 = 20 \text{ DOF}$$
 
 \subsection{Segment Parameters: Anthropometry}
 
-To populate the URDF with realistic inertia values, we use anthropometric data~\citep{Winter2009,Hamill2015}. The most widely used data comes from de Leva (1996), who measured body segment masses and moments of inertia on cadavers and living subjects~\citep{Zatsiorsky1998}.
+To populate the URDF with realistic inertia values, we use anthropometric data. The most widely used data comes from de Leva (1996), who measured body segment masses and moments of inertia on cadavers and living subjects.
 
 \begin{example}{Anthropometric Data (de Leva 1996)}{ex:anthropometry}
 For a 70 kg male, typical segment masses are:
@@ -1033,11 +1027,11 @@ A complete URDF would include all segment masses and inertias computed from de L
 \index{Pinocchio}
 \index{dynamics engine}
 
-Once you have a URDF, you can load it into a dynamics engine~\citep{Featherstone2008,Lynch2017}. These engines compute the equations of motion automatically using recursive rigid-body algorithms~\citep{pandy2001computer}.
+Once you have a URDF, you can load it into a dynamics engine. These engines compute the equations of motion automatically.
 
 \subsection{Drake (MIT)}
 
-Drake is a C++/Python library for dynamics, control, and optimization~\citep{Featherstone2008}. It includes:
+Drake is a C++/Python library for dynamics, control, and optimization. It includes:
 \begin{itemize}
 \item Symbolic and numerical differentiation
 \item Inverse and forward dynamics
@@ -1054,7 +1048,7 @@ For a golf swing, Drake can:
 
 \subsection{MuJoCo (DeepMind)}
 
-MuJoCo (Multi-Joint dynamics with Contact) is a physics engine designed for robotics and biomechanics~\citep{todorov2005generalized}. It's fast, accurate, and widely used for reinforcement learning.
+MuJoCo (Multi-Joint dynamics with Contact) is a physics engine designed for robotics and biomechanics. It's fast, accurate, and widely used for reinforcement learning.
 
 Key features:
 \begin{itemize}
@@ -1068,7 +1062,7 @@ For the golf swing, MuJoCo is ideal for learning-based approaches. You can train
 
 \subsection{Pinocchio (INRIA)}
 
-Pinocchio is a lightweight library focused on efficient computation of dynamics algorithms~\citep{Featherstone2008}. It computes:
+Pinocchio is a lightweight library focused on efficient computation of dynamics algorithms. It computes:
 \begin{itemize}
 \item Forward kinematics: given $\bm{q}$ and $\dot{\bm{q}}$, compute link positions and velocities
 \item Jacobians: $\bm{J}(\bm{q})$ and time derivatives $\dot{\bm{J}}(\bm{q},\dot{\bm{q}})$
@@ -1191,7 +1185,7 @@ Elite golfers exploit this redundancy:
 \item Over a career, they learn the null-space motions that work best for their body
 \end{itemize}
 
-A robot with redundancy is more adaptable, more robust to perturbations, and more efficient~\citep{Siciliano2009,bernstein1967coordination}. The human body is a redundant robot.
+A robot with redundancy is more adaptable, more robust to perturbations, and more efficient. The human body is a redundant robot.
 
 \subsection{The Identification Problem}
 
@@ -1199,7 +1193,7 @@ If we want to understand how a golfer produces a particular swing, we face an in
 
 With 20 DOF, this is underdetermined: there are infinitely many solutions. The nervous system must choose one. Which one?
 
-Optimization theory suggests the nervous system minimizes some cost (muscle activation, energy, jerks, joint torques)~\citep{Todorov2002,Flash1985,scott2004optimal}. Different costs lead to different solutions. Biomechanics must find the right cost.
+Optimization theory suggests the nervous system minimizes some cost (muscle activation, energy, jerks, joint torques). Different costs lead to different solutions. Biomechanics must find the right cost.
 
 A URDF + dynamics engine allows us to:
 1. Propose a cost function
@@ -1226,7 +1220,7 @@ This is the future of golf biomechanics: mathematical models that explain not ju
 \end{principle}
 
 \subsection*{Looking Ahead}
-We now have a complete musculoskeletal model: joints with defined degrees of freedom, kinematic chains described in URDF, and dynamics engines to simulate them. But a model without a controller is just a ragdoll. Who---or what---controls the swing? Part~VIII turns to the remarkable organ that orchestrates all of this: the human brain. Chapter~\ref{ch:motor_control_brain} examines how the brain solves the control problem under severe constraints of delay, noise, and bandwidth.
+We now have a complete musculoskeletal model: joints with defined degrees of freedom, kinematic chains described in URDF, and dynamics engines to simulate them. But a model without a controller is just a ragdoll. Who---or what---controls the swing? Part~VIII turns to the organ that orchestrates all of this: the human brain. Chapter~\ref{ch:motor_control_brain} examines how the brain solves the control problem under severe constraints of delay, noise, and bandwidth.
 
 \begin{exercises}{Chapter Exercises}{ex:ch23_exercises}
 \begin{enumerate}

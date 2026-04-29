@@ -1,6 +1,12 @@
 \chapter{The Curse of Dimensionality --- And How Humans Solve It}
 \label{ch:curse-dim}
 
+\begin{gomdraftnotice}
+This chapter is under active development and contains only a structural outline
+with preliminary material. Full exposition, worked examples, proofs, and exercises
+will be added in future editions.
+\end{gomdraftnotice}
+
 \epigraph{%
   In ten dimensions, the unit hypercube has $2^{10} = 1024$ corners.
   In a hundred, it has $2^{100} \approx 10^{30}$.
@@ -23,6 +29,38 @@ needed to solve many problems grow \emph{exponentially} with the state dimension
           per iteration --- the only scalable approach for deterministic systems
   \end{itemize}
 \end{definition}
+
+\begin{figure}[h]
+\centering
+\begin{tikzpicture}[scale=1.0]
+  % Axes
+  \draw[->, thick] (0, 0) -- (6, 0) node[align=center, anchor=north] {Dimension ($n$)};
+  \draw[->, thick] (0, 0) -- (0, 5) node[align=center, anchor=east, rotate=90] {Computational Cost};
+
+  % Grid-based (exponential)
+  \draw[red, thick, smooth] plot coordinates {
+    (1, 0.3) (1.5, 0.6) (2, 1.2) (2.5, 2.4) (3, 4.8)
+  } node[anchor=west] {\small Grid: $O(N^n)$};
+
+  % DDP (cubic)
+  \draw[blue, thick, smooth] plot coordinates {
+    (1, 0.2) (2, 0.5) (3, 1.0) (4, 1.5) (5, 2.5) (6, 3.5)
+  } node[anchor=west] {\small DDP: $O(n^3)$};
+
+  % Synergy reduction (flat)
+  \draw[green, thick] (0, 0.3) -- (6, 0.3) node[align=center, anchor=west] {\small Synergies: $O(k^3)$};
+
+  % Shaded region (infeasible)
+  \fill[red, opacity=0.1] (4, 5) -- (6, 5) -- (6, 0) -- (4, 0) -- cycle;
+  \draw (5, 3) node[anchor=center, align=center] {\small Curse\\ \small region};
+
+  \draw (3, 4.2) node[align=center, anchor=center, font=\small] {Exponential growth};
+\end{tikzpicture}
+\caption{The curse of dimensionality: computational cost grows exponentially with dimension
+for grid-based methods, cubically for DDP, and remains constant when using synergy-based
+dimensionality reduction (where $k \ll n$).}
+\label{fig:ch2:curse-viz}
+\end{figure}
 
 \section{Biological Solutions}
 

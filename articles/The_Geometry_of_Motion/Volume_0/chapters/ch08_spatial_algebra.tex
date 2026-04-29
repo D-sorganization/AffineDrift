@@ -25,7 +25,31 @@ In 1900, Sir \textbf{Robert Stawell Ball} \cite{ball1900} developed the theory o
 
 However, the true synthesis came when \textbf{Roy Featherstone}, in the 1980s and 1990s, recognized that Ball's geometric screws and Plücker's algebraic coordinates could be married with Lie algebra to create a unified computational framework for multi-body dynamics. Featherstone's \textbf{Spatial Vector Algebra} \cite{Featherstone2008} standardized the representation, showed how to compose inertias of linked chains (composite rigid body algorithm), and proved that careful use of spatial algebra enables $O(N)$ inverse dynamics.
 
-Modern robotics and physics engines (MuJoCo \cite{todorov2012}, Drake, UpstreamDrift) are built entirely on Featherstone's spatial framework.
+Modern robotics and physics engines (MuJoCo \cite{todorov2012}, Drake, Pinocchio) are built entirely on Featherstone's spatial framework. The companion platform accompanying this textbook builds on the same foundation.
+
+\begin{figure}[htb]
+\centering
+\begin{tikzpicture}[scale=1.0]
+  % Coordinate frame
+  \draw[->,thick,black] (0,0,0) -- (2,0,0) node[anchor=north] {$x$};
+  \draw[->,thick,black] (0,0,0) -- (0,2,0) node[anchor=east] {$y$};
+  \draw[->,thick,black] (0,0,0) -- (0,0,2) node[anchor=south] {$z$};
+
+  % Force vector at center
+  \draw[->,thick,red,scale=1.2] (0,0,0) -- (1.2,0.8,0) node[anchor=west] {$\mathbf{f}$ (linear force)};
+
+  % Torque/moment vector
+  \draw[->,thick,blue,scale=1.2] (0,0,0) -- (0,0,1.5) node[anchor=south] {$\boldsymbol{\tau}$ (torque/moment)};
+
+  % Spatial wrench = [f; tau]
+  \node[draw,rectangle,minimum width=2cm,minimum height=1cm] at (3.5,0.5) {Wrench $\mathcal{F} = \begin{bmatrix} \mathbf{f} \\ \boldsymbol{\tau} \end{bmatrix}$};
+
+  % Similarly for velocity
+  \node at (0,-1.5,-0.5) {Spatial vectors unify translation (linear) and rotation (angular) quantities};
+\end{tikzpicture}
+\caption{A spatial wrench is a 6-dimensional vector combining linear forces and torques (moments). Similarly, spatial twists combine linear and angular velocities. This unification allows forces and velocities to be manipulated using unified algebraic operations.}
+\label{fig:spatial_wrench}
+\end{figure}
 
 \section{Plücker Coordinates and Lines in 3D}
 \label{sec:plucker}
@@ -61,7 +85,7 @@ Similarly, a spatial force (Wrench) $\mathcal{F} = (\mathbf{m}, \mathbf{f})$ is 
 \section{Spatial Vectors: Twists and Wrenches}
 \label{sec:spatial_vectors}
 
-In Chapter \ref{ch:lie_groups}, we introduced spatial vectors as elements of the Lie algebras $\se(3)$ and $\se^*(3)$. Here we formalize them as vectors and define their algebra.
+In Chapter~\ref{ch:exponential_coordinates}, we introduced spatial vectors as elements of the Lie algebras $\se(3)$ and $\se^*(3)$. Here we formalize them as vectors and define their algebra.
 
 \begin{definition}{Spatial Velocity (Twist)}{twist_def}
 A spatial velocity or Twist is a 6D vector:
@@ -154,6 +178,15 @@ The motion and force cross products are dual in the sense that:
 for any Twist $\mathcal{V}$, Twist-like vector $\mathcal{W}$, and Wrench $\mathcal{G}$. This ensures that the bilinear form (power) is preserved under transformations.
 \end{principle}
 
+\begin{principle}{$\text{Ad}$ vs.\ $\text{ad}$: Two Distinct Operators}{ad_vs_Ad}
+The notation in spatial algebra distinguishes two fundamentally different operators that are easily confused:
+\begin{itemize}
+  \item $[\text{Ad}_{\mathbf{T}}] \in \Reals^{6 \times 6}$: The \textbf{Adjoint} of a rigid body transform $\mathbf{T} \in \SE(3)$. This is a coordinate transformation that re-expresses a spatial velocity (or acceleration) measured in one frame into another frame. It depends on a \emph{pose} (position and orientation).
+  \item $[\text{ad}_{\mathcal{V}}] = [\mathcal{V} \times] \in \Reals^{6 \times 6}$: The \textbf{adjoint} (lowercase), also called the \emph{Lie bracket} or \emph{spatial motion cross product}. This maps a spatial velocity $\mathcal{V}$ to its cross-product operator, which computes Coriolis and centrifugal accelerations. It depends on a \emph{velocity}, not a pose.
+\end{itemize}
+In recursive dynamics algorithms such as the RNEA, both operators appear: $[\text{Ad}_{\mathbf{T}}]$ propagates velocities across frames (a coordinate change), while $[\text{ad}_{\mathcal{V}}] = [\mathcal{V} \times]$ computes the velocity-dependent acceleration terms (Coriolis). Confusing the two produces incorrect dynamics \cite{Featherstone2008, Murray1994}.
+\end{principle}
+
 \section{The Spatial Inertia Matrix}
 \label{sec:spatial_inertia}
 
@@ -193,18 +226,16 @@ When the reference frame origin is \emph{at} the center of mass ($\mathbf{c} = \
 The Spatial Inertia Matrix $\mathcal{I}$ is symmetric and positive definite.
 
 \textbf{Proof (Symmetry)}:
-The matrix $\mathcal{I}$ has:
-\begin{itemize}
-  \item Top-left block: $\mathbf{I}_c - m[\mathbf{c}][\mathbf{c}]$ is symmetric (both $\mathbf{I}_c$ and the parallel-axis correction are symmetric).
-  \item Off-diagonal blocks: $m[\mathbf{c}]$ (top-right) and $-m[\mathbf{c}]$ (bottom-left) are not the same, but note that $[\mathbf{c}]^T = -[\mathbf{c}]$ (skew-symmetric), so the off-diagonals satisfy $m[\mathbf{c}] = -m(-[\mathbf{c}])$, making the matrix symmetric under the structure.
-  \item Bottom-right block: $m\mathbf{I}_{3 \times 3}$ is symmetric.
-\end{itemize}
-
-Actually, the standard form is:
+Write the spatial inertia in standard form:
 \[
-  \mathcal{I} = \begin{bmatrix} \mathbf{I}_c - m[\mathbf{c}][\mathbf{c}]^T & m[\mathbf{c}]^T \\ m[\mathbf{c}] & m\mathbf{I}_{3 \times 3} \end{bmatrix}
+  \mathcal{I} = \begin{bmatrix} \mathbf{I}_c - m[\mathbf{c}][\mathbf{c}]^T & m[\mathbf{c}]^T \\ m[\mathbf{c}] & m\mathbf{I}_{3 \times 3} \end{bmatrix}.
 \]
-with $[\mathbf{c}]^T = -[\mathbf{c}]$, and this is manifestly symmetric.
+Since $[\mathbf{c}]$ is skew-symmetric ($[\mathbf{c}]^T = -[\mathbf{c}]$), each block is symmetric or correctly transposed:
+\begin{itemize}
+  \item Top-left block: $\mathbf{I}_c - m[\mathbf{c}][\mathbf{c}]^T$ is symmetric (both $\mathbf{I}_c$ and the product $[\mathbf{c}][\mathbf{c}]^T$ are symmetric).
+  \item Off-diagonal blocks: The top-right block is $m[\mathbf{c}]^T = -m[\mathbf{c}]$, and the bottom-left block is $m[\mathbf{c}]$. Their transposes satisfy $(m[\mathbf{c}]^T)^T = m[\mathbf{c}]$, confirming $\mathcal{I}^T = \mathcal{I}$.
+  \item Bottom-right block: $m\mathbf{I}_{3 \times 3}$ is trivially symmetric.
+\end{itemize}
 
 \textbf{Proof (Positive Definite)}:
 For any non-zero spatial vector $\mathcal{V} = (\boldsymbol{\omega}, \mathbf{v})$, we compute:
@@ -386,7 +417,7 @@ Transforming to a body-fixed frame using the adjoint, the time derivative picks 
 
 \subsection{Brief Overview}
 
-Dual quaternions extend quaternions (Chapter \ref{ch:quaternions}) by using dual numbers instead of real numbers. A dual quaternion is:
+Dual quaternions extend quaternions (Section~\ref{sec:quaternions}) by using dual numbers instead of real numbers. A dual quaternion is:
 \[
   \mathbf{q}_d = q_0 + q_1 \mathbf{i} + q_2 \mathbf{j} + q_3 \mathbf{k} + \epsilon(q_4 + q_5 \mathbf{i} + q_6 \mathbf{j} + q_7 \mathbf{k})
 \]
@@ -717,7 +748,7 @@ The primary reference for spatial vector algebra is Featherstone \cite{Featherst
 
 The mathematical foundations connecting spatial vectors to the Lie algebra $\se(3)$ and its dual $\se^*(3)$ are developed rigorously by Murray, Li, and Sastry \cite{Murray1994}. Their perspective clarifies why twists and wrenches live in dual vector spaces and why the adjoint and coadjoint representations have the specific transformation properties used throughout this chapter.
 
-For the classical treatment of rigid body dynamics, inertia tensors, and the parallel axis theorem in their traditional $3 \times 3$ form, Goldstein, Poole, and Safko \cite{goldstein2002} remains the standard graduate-level reference. Comparing their development with the $6 \times 6$ spatial inertia formulation of this chapter illuminates how spatial algebra unifies and streamlines results that classically require separate angular and translational analyses.
+For the classical treatment of rigid body dynamics, inertia tensors, and the parallel axis theorem in their traditional $3 \times 3$ form, Goldstein, Poole, and Safko \cite{Goldstein2002} remains the standard graduate-level reference. Comparing their development with the $6 \times 6$ spatial inertia formulation of this chapter illuminates how spatial algebra unifies and streamlines results that classically require separate angular and translational analyses.
 
 Marsden and Ratiu \cite{marsden1999} place spatial algebra within the broader framework of geometric mechanics, connecting spatial inertia to momentum maps and showing how the Euler equations for rigid body motion arise naturally from reduction on $\SE(3)$. Their treatment is more abstract but reveals the deep geometric structures underlying the computational framework.
 

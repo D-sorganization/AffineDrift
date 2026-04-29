@@ -212,13 +212,25 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     if (history.length === 0) {
-      historyList.innerHTML = '<li class="history-empty">No recent notebooklm yet</li>';
+      historyList.textContent = '';
+      const li = document.createElement('li');
+      li.className = 'history-empty';
+      li.textContent = 'No recent notebooklm yet';
+      historyList.appendChild(li);
       return;
     }
 
-    historyList.innerHTML = history.map(item => 
-      `<li><a href="${item.url}">${item.title}</a></li>`
-    ).join('');
+    historyList.textContent = '';
+    const fragment = document.createDocumentFragment();
+    history.forEach((item) => {
+      const li = document.createElement("li");
+      const a = document.createElement("a");
+      a.href = typeof item.url === "string" && !item.url.replace(/[\x00-\x20]/g, "").toLowerCase().startsWith("javascript:") ? item.url : "#";
+      a.textContent = item.title;
+      li.appendChild(a);
+      fragment.appendChild(li);
+    });
+    historyList.appendChild(fragment);
   }
 
   updateHistory();

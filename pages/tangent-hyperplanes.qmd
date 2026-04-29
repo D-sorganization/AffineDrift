@@ -1,125 +1,78 @@
 ---
 title: "Tangent Hyperplanes Series"
-description: "Tangent-space linearization, local control, and residual bounds for nonlinear dynamics"
+description: "Exploratory series on tangent-space formulations for nonlinear dynamics and control"
 page-layout: full
+toc: true
+toc-depth: 2
 ---
 
-```{=html}
-<section class="article-section">
-  <div class="container">
-    <div class="articles-list">
-      <div class="article-category">
-        <h2>Tangent Hyperplanes: Local Linear Structure in Nonlinear Dynamics</h2>
-        <p style="margin-bottom: 2rem; font-size: 1.1rem; line-height: 1.8; color: var(--text-dark);">
-          This series explains what tangent-space linearization does and does not justify. Nonlinear flows
-          generally do <em>not</em> superpose over finite time, but their first-order variations are linear
-          at a specified state, trajectory, and contact mode. The articles below distinguish infinitesimal
-          exactness from finite-step approximation and make the residual terms explicit.
-        </p>
+This section gathers the AffineDrift material on tangent-space formulations for nonlinear dynamics, contraction-style reasoning, and related control questions. It is exploratory work. The central local claim is that, at a fixed state and contact mode, the mapping from applied generalized forces to instantaneous generalized acceleration is linear within the tangent description being used. Finite-time conclusions require additional assumptions, residual bounds, and empirical validation where the argument is applied to measured movement.
 
-        <div class="article-card">
-          <h3>
-            <a href="../articles/tangent-hyperplanes-series/part-1-geometry.html">
-              Part I &mdash; Geometry
-            </a>
-          </h3>
-          <p>Defines tangent spaces and tangent hyperplanes, with emphasis on first-order exactness and the limits of finite perturbations.</p>
-        </div>
+::: {.callout-warning}
+## Provenance and status
 
-        <div class="article-card">
-          <h3>
-            <a href="../articles/tangent-hyperplanes-series/part-2-dynamics.html">
-              Part II &mdash; Dynamics
-            </a>
-          </h3>
-          <p>Derives the variational equation along a nonlinear trajectory and explains why superposition applies to the linearized perturbation model, not to the full nonlinear flow.</p>
-        </div>
+This series is original AffineDrift synthesis and has not been peer reviewed. The linearity of the tangent map and the use of local linear approximations are standard ingredients in differential geometry and mechanics. The site's additional interpretive claims about force attribution, accumulation over time, and control design should be read as in-development arguments, not settled results.
+:::
 
-        <div class="article-card">
-          <h3>
-            <a href="../articles/tangent-hyperplanes-series/part-3-control.html">
-              Part III &mdash; Control
-            </a>
-          </h3>
-          <p>Connects local linear models to LQR, DDP, and iLQR while stating the assumptions and local convergence limits of those methods.</p>
-        </div>
+## How to Read This Material
 
-        <div class="article-card">
-          <h3>
-            <a href="../articles/tangent-hyperplanes-series/part-4-residuals-curvature.html">
-              Part IV &mdash; Residuals and Curvature
-            </a>
-          </h3>
-          <p>Shows how second-order residuals arise from nonlinear curvature and how those residuals bound the useful range of a tangent approximation.</p>
-        </div>
+- Start with the [series landing and table of contents](../articles/Tangent%20Hyperplane%20Articles/TABLE_OF_CONTENTS.html) if you want the full exploratory package.
+- Use the [Critiques and Responses](../critiques/index.html) section alongside these pages; it contains the main limitations and objections that currently matter most.
+- If you want the textbook-style continuation of this line of work, use the [Tangent Hyperplane Contraction](../articles/tangent-hyperplane-contraction/index.html) workspace.
 
-        <div class="article-card">
-          <h3>
-            <a href="../articles/tangent-hyperplane-articles/Tangent_Hyperplanes_Unified_Thesis.html">
-              Extended Manuscript &mdash; Instantaneous Superposition
-            </a>
-          </h3>
-          <p>Long-form manuscript developing the instantaneous force-acceleration superposition claim and its caveats.</p>
-          <div style="margin-top: 0.5rem;">
-            <a href="../articles/tangent-hyperplane-articles/LAYMANS_TERMS_SUMMARY.html" style="font-size: 0.9rem; margin-right: 1rem;">Plain-language summary</a>
-            <a href="../articles/tangent-hyperplane-articles/CRITICS_CORNER.html" style="font-size: 0.9rem; margin-right: 1rem;">Critic's Corner</a>
-            <a href="../articles/tangent-hyperplane-articles/TABLE_OF_CONTENTS.html" style="font-size: 0.9rem;">Table of Contents</a>
-          </div>
-        </div>
+## Main Entries
 
-        <div class="article-card">
-          <h3>
-            <a href="../articles/tangent-hyperplane-articles/Advanced/Contraction_Tangent_Unification.html">
-              Part II &mdash; Contraction Theory Meets Tangent Spaces
-            </a>
-          </h3>
-          <p>Examines proposed links between contraction analysis, tangent-space dynamics, and local optimal control.</p>
-          <div style="margin-top: 0.5rem;">
-            <a href="../articles/tangent-hyperplane-articles/Advanced/Contraction_Tangent_LAYMAN.html" style="font-size: 0.9rem; margin-right: 1rem;">Plain-language summary</a>
-            <a href="../articles/tangent-hyperplane-articles/Advanced/Contraction_Tangent_CRITIC.html" style="font-size: 0.9rem;">Critic's Corner</a>
-          </div>
-        </div>
+- [Part I: Tangent Hyperplanes Unified Thesis](../articles/Tangent%20Hyperplane%20Articles/Tangent_Hyperplanes_Unified_Thesis.html): main statement of the framework and its intended implications.
+- [Part II: Contraction Theory Meets Tangent Spaces](../articles/Tangent%20Hyperplane%20Articles/Advanced/Contraction_Tangent_Unification.html): explores links between differential stability arguments and local optimal-control structure.
+- [Part III: Hybrid Tangent Spaces](../articles/Tangent%20Hyperplane%20Articles/Advanced/Hybrid_Tangent_Spaces.html): extends the discussion to systems with discrete mode changes.
+- [Part IV: Residual-Aware Control](../articles/Tangent%20Hyperplane%20Articles/Advanced/Residual-Aware_Control.html): examines controller-design ideas that keep curvature and residual terms explicit.
+- [Tangent Hyperplane Contraction](../articles/tangent-hyperplane-contraction/index.html): web-first chapter workspace that develops related material in a textbook format.
 
-        <div class="article-card">
-          <h3>
-            <a href="../articles/tangent-hyperplane-articles/Advanced/Hybrid_Tangent_Spaces.html">
-              Part III &mdash; Hybrid Tangent Spaces
-            </a>
-          </h3>
-          <p>Studies how tangent-space reasoning changes when dynamics include discrete transitions and contact-mode changes.</p>
-          <div style="margin-top: 0.5rem;">
-            <a href="../articles/tangent-hyperplane-articles/Advanced/Hybrid_Tangent_LAYMAN.html" style="font-size: 0.9rem; margin-right: 1rem;">Plain-language summary</a>
-            <a href="../articles/tangent-hyperplane-articles/Advanced/Hybrid_Tangent_CRITIC.html" style="font-size: 0.9rem;">Critic's Corner</a>
-          </div>
-        </div>
+## Compact Four-Part Series
 
-        <div class="article-card">
-          <h3>
-            <a href="../articles/tangent-hyperplane-articles/Advanced/Residual-Aware_Control.html">
-              Part IV &mdash; Residual-Aware Control
-            </a>
-          </h3>
-          <p>Control design notes for cases where finite perturbations make tangent-space residuals operationally important.</p>
-          <div style="margin-top: 0.5rem;">
-            <a href="../articles/tangent-hyperplane-articles/Advanced/Residual-Aware_Control_LAYMAN.html" style="font-size: 0.9rem; margin-right: 1rem;">Plain-language summary</a>
-            <a href="../articles/tangent-hyperplane-articles/Advanced/Residual-Aware_Control_CRITIC.html" style="font-size: 0.9rem;">Critic's Corner</a>
-          </div>
-        </div>
+These shorter pages cover the same theme in a more concise format. They are useful as orientation pages, but they do not replace the caveats and critique pages linked below.
 
-        <div class="article-card">
-          <h3>
-            <a href="../articles/tangent-hyperplane-contraction/index.html">
-              Textbook Hub &mdash; Tangent Hyperplane Contraction
-            </a>
-          </h3>
-          <p>A chapterized workspace for a longer treatment of nonlinear control in high-dimensional systems.</p>
-          <div style="margin-top: 0.5rem;">
-            <a href="../articles/tangent-hyperplane-contraction/textbook-main.html" style="font-size: 0.9rem; margin-right: 1rem;">Consolidated manuscript</a>
-            <a href="../articles/tangent-hyperplane-contraction/chapters/01-foundations.html" style="font-size: 0.9rem;">Start Reading</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-```
+- [Part 1: Geometry](../articles/tangent-hyperplanes-series/part-1-geometry.html)
+- [Part 2: Dynamics](../articles/tangent-hyperplanes-series/part-2-dynamics.html)
+- [Part 3: Control](../articles/tangent-hyperplanes-series/part-3-control.html)
+- [Part 4: Residuals and Curvature](../articles/tangent-hyperplanes-series/part-4-residuals-curvature.html)
+
+## Textbook Workspace
+
+The [Tangent Hyperplane Contraction](../articles/tangent-hyperplane-contraction/index.html) workspace includes a consolidated manuscript and chapter pages:
+
+- [Consolidated working manuscript](../articles/tangent-hyperplane-contraction/textbook-main.html)
+- [Chapter 1: Foundations and Motivation](../articles/tangent-hyperplane-contraction/chapters/01-foundations.html)
+- [Chapter 2: Variational Dynamics and Linearization](../articles/tangent-hyperplane-contraction/chapters/02-variational-dynamics.html)
+- [Chapter 3: Local Optimal Control](../articles/tangent-hyperplane-contraction/chapters/03-local-optimal-control.html)
+- [Chapter 4: Stability-Optimality Duality](../articles/tangent-hyperplane-contraction/chapters/04-stability-optimality-duality.html)
+- [Chapter 5: Coordinate-Free and Riemannian View](../articles/tangent-hyperplane-contraction/chapters/05-coordinate-free-riemannian.html)
+- [Chapter 6: Computation and Certification](../articles/tangent-hyperplane-contraction/chapters/06-computation-and-certification.html)
+- [Chapter 7: High-Dimensional Applications](../articles/tangent-hyperplane-contraction/chapters/07-high-dimensional-applications.html)
+- [Chapter 8: Implementation and Validation Checklist](../articles/tangent-hyperplane-contraction/chapters/08-implementation-and-validation.html)
+
+## Companion Pages
+
+- [Lay summary](../articles/Tangent%20Hyperplane%20Articles/LAYMANS_TERMS_SUMMARY.html)
+- [Critic's Corner](../articles/Tangent%20Hyperplane%20Articles/CRITICS_CORNER.html)
+- [Table of contents](../articles/Tangent%20Hyperplane%20Articles/TABLE_OF_CONTENTS.html)
+- [Part II lay summary](../articles/Tangent%20Hyperplane%20Articles/Advanced/Contraction_Tangent_LAYMAN.html)
+- [Part II critique](../articles/Tangent%20Hyperplane%20Articles/Advanced/Contraction_Tangent_CRITIC.html)
+- [Part III lay summary](../articles/Tangent%20Hyperplane%20Articles/Advanced/Hybrid_Tangent_LAYMAN.html)
+- [Part III critique](../articles/Tangent%20Hyperplane%20Articles/Advanced/Hybrid_Tangent_CRITIC.html)
+- [Part IV lay summary](../articles/Tangent%20Hyperplane%20Articles/Advanced/Residual-Aware_Control_LAYMAN.html)
+- [Part IV critique](../articles/Tangent%20Hyperplane%20Articles/Advanced/Residual-Aware_Control_CRITIC.html)
+
+## Scope Limits
+
+- The strongest statements here are local statements about instantaneous mappings and linearized objects.
+- Claims about finite-time superposition, accumulated error, or controller performance depend on how residual terms are bounded and how mode changes are handled.
+- The hybrid and contraction-oriented extensions remain under active development.
+
+## Legacy Draft Packages
+
+Several older draft packages are still rendered for traceability. They should be treated as archival working notes rather than polished articles:
+
+- [Original tangent-hyperplanes package](../articles/Tangent%20Hyperplane%20Articles/Drafts_Original_Articles/Tangent_Hyperplanes_Series_Package/Landing_Manifesto.html)
+- [Integral-superposition package](../articles/Tangent%20Hyperplane%20Articles/Drafts_Original_Articles/Integral_Superposition_Series_Package/Landing_Integral_Superposition.html)
+- [Advanced integral-expansions package](../articles/Tangent%20Hyperplane%20Articles/Drafts_Original_Articles/Advanced_Integral_Expansions_Package/01_Hamiltonian_and_Adjoint.html)

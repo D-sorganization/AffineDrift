@@ -1,18 +1,18 @@
 ---
-title: "Incomplete Placeholder in styles.css:2624"
+title: "Incomplete Placeholder in resources-software.qmd:39"
 labels: ['incomplete-implementation,critical']
 assignee: "unassigned"
 status: "open"
 ---
 
 # Issue Description
-Found critical incomplete implementation in `styles.css` at line 2624.
+Found critical incomplete implementation in `resources-software.qmd` at line 39.
 
 ## Context
-**Type**: Placeholder | **Location**: `styles.css:2624`
+**Type**: Placeholder | **Location**: `resources-software.qmd:39`
 
 ```python
-Placeholder Content Styling (Issue #869)
+<img src="static/images/placeholder.svg" alt="OpenSim Logo" class="software-logo">
 ```
 
 ## Audit Metrics

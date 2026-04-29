@@ -20,6 +20,37 @@ $\x_1(t)$ and $\x_2(t)$ are solutions, then so is $\alpha\x_1(t)+\beta\x_2(t)$--
 systems deny this convenience. The narrative typically stops there, leaving the impression
 that nonlinearity and superposition are fundamentally incompatible.
 
+\begin{center}
+\begin{tikzpicture}[scale=1.0]
+  % Draw curved manifold
+  \draw[thick, black] (0,0) to[out=20, in=200] (4, 0.5) to[out=20, in=160] (6, 2) to[out=20, in=180] (7, 3);
+
+  % Draw a point on the manifold
+  \filldraw[black] (3, 0.2) circle (0.08cm);
+  \node[below right, font=\small] at (3, 0.2) {$p$};
+
+  % Draw tangent space at that point (as a flat plane)
+  \draw[dashed, thin, gray] (2.5, -0.5) -- (3.5, -0.5);
+  \draw[dashed, thin, gray] (2.5, 1) -- (3.5, 1);
+  \fill[gray!10] (2.5, -0.5) rectangle (3.5, 1);
+
+  % Draw tangent vectors
+  \draw[->, red, thick] (3, 0.2) -- (3.6, 0.2);
+  \draw[->, blue, thick] (3, 0.2) -- (3, 0.8);
+  \node[right, font=\small, red] at (3.6, 0.2) {$\mathbf{v}_1$};
+  \node[right, font=\small, blue] at (3, 0.8) {$\mathbf{v}_2$};
+
+  % Label tangent space
+  \node[font=\small] at (3, 0.15) {$T_p\mathcal{M}$};
+
+  % Add label for manifold
+  \node[font=\small, above] at (5, 1.5) {Nonlinear manifold $\mathcal{M}$};
+\end{tikzpicture}
+\end{center}
+
+\noindent The key insight of this chapter is that while trajectories cannot be superposed on the manifold itself,
+\emph{infinitesimal perturbations} live in the tangent space $T_p\mathcal{M}$, where superposition holds exactly.
+
 That impression is incomplete. It is true that \emph{trajectories} in a nonlinear system
 do not generally superpose. But at each point in state space, there exists a tangent space
 that is a genuine vector space, and within that vector space, superposition holds exactly.
@@ -63,7 +94,7 @@ from the practical concerns of mechanics and the rigorous formalization of analy
 \subsection{Newton, Leibniz, and the Birth of the Infinitesimal}
 
 The modern concept of tangent space originates in the Newton--Leibniz calculus of the late
-17th century. Newton's method of ``fluxions'' (rates of change) and Leibniz's differential
+17th century \cite{Goldstein2002, Arnold1989}. Newton's method of ``fluxions'' (rates of change) and Leibniz's differential
 notation $\dd x$ both captured an intuitive idea: at each point on a smooth curve, there is
 a direction of motion, a ``tangent line.'' For a curve $y = f(x)$ in the plane, the tangent
 line at $(x_0, f(x_0))$ has slope $f'(x_0)$ and can be written as
@@ -79,7 +110,7 @@ the original calculus allowed.
 \subsection{Cauchy, Weierstrass, and the Rigorous Foundation}
 
 By the 19th century, Cauchy and especially Weierstrass placed the derivative on a rigorous
-footing. The limit definition
+footing \cite{Goldstein2002}. The limit definition
 \begin{equation}
 f'(x_0) := \lim_{h \to 0} \frac{f(x_0 + h) - f(x_0)}{h}
 \label{eq:ch1:derivative-limit}
@@ -95,27 +126,27 @@ write the function as $y = f(x)$ or in any other smooth parameterization.
 \subsection{Riemann's Vision of Intrinsic Geometry}
 
 Bernhard Riemann's 1854 paper \emph{Über die Hypothesen, welche der Geometrie zu Grunde
-liegen} (On the Hypotheses Which Lie at the Foundations of Geometry) was the pivotal moment.
+liegen} (On the Hypotheses Which Lie at the Foundations of Geometry) was the pivotal moment \cite{doCarmo1992}.
 Riemann observed that just as Newton and Leibniz could construct a local approximation
 (the tangent line) at each point of a curve, one could construct a local vector space
 (the tangent space) at each point of any smooth manifold, even if the manifold itself were
 curved, high-dimensional, or not embedded in Euclidean space.
 
 Riemann's innovation---and its modern development by Élie Cartan, Hermann Weyl, and
-others---fundamentally separated two ideas:
+others \cite{doCarmo1992, Arnold1989}---fundamentally separated two ideas:
 \begin{enumerate}
 \item The \emph{manifold itself}: a geometric object that may be curved.
 \item The \emph{tangent space at a point}: a vector space, always flat and linear.
 \end{enumerate}
 
-This separation is conceptually profound. Curvature is not a failure of linearity; it is
+This separation is conceptually important. Curvature is not a failure of linearity; it is
 the nonlinearity of how tangent spaces connect as you move through the manifold.
 
 \subsection{From Approximation to Exact Structure}
 
-For most of the 20th century, even when differential geometry was fully developed, the
-relationship between a nonlinear dynamical system and its tangent-space (linearized)
-dynamics remained framed as an \emph{approximation}. Textbooks would write:
+For most of the 20th century, even when differential geometry was fully developed \cite{AbrahamMarsden1978, Arnold1989},
+the relationship between a nonlinear dynamical system and its tangent-space (linearized)
+dynamics remained framed as an \emph{approximation} \cite{Khalil2002}. Textbooks would write:
 \begin{quote}
 To study the qualitative behavior of a nonlinear system $\dot\x = f(\x)$ near an
 equilibrium $\bar\x$, we linearize: $\dot{\dx} = \mat{A}\,\dx$ where $\mat{A} = \frac{\partial f}{\partial \x}|_{\bar\x}$.
@@ -139,8 +170,8 @@ then there is \emph{exactly one} matrix $\mat{A}$ satisfying this property (at t
 scale). The matrix $\mat{A}$ is not an approximation; it is the \emph{definition} of what
 smoothness means at that point.
 
-This modern viewpoint---which permeates contemporary differential geometry, control theory,
-and optimization (especially gradient-based learning)---is the foundation of this book.
+This modern viewpoint---which permeates contemporary differential geometry \cite{doCarmo1992},
+control theory \cite{Khalil2002, Sastry1999}, and optimization (especially gradient-based learning)---is the foundation of this book.
 We do not linearize for convenience and accept error. We recognize that linearization
 \emph{is} the exact infinitesimal description, and we use this exactness as a structural
 principle for analyzing and controlling nonlinear systems.
@@ -231,7 +262,7 @@ Therefore, $(\mat{A} - \mat{A}')\vec{v} = 0$ for all $\vec{v}$, implying $\mat{A
 This uniqueness is the cornerstone of the book's philosophy. There is exactly one candidate
 for ``the infinitesimal structure'' of $f$ at $\bar\x$, and it is $\mat{A}$.
 
-\begin{axiombox}{Axiom 1: The Derivative is Exact}
+\begin{axiombox}{Principle 1: The Derivative is Exact}
 The linear map $\mat{A}$ is not an approximation to $f$. It \emph{is} the exact
 infinitesimal structure of $f$ at $\bar\x$. There is no ``better'' first-order
 description---$\mat{A}$ is unique by the definition of the Fréchet derivative.
@@ -316,19 +347,19 @@ Consider perturbations of increasing size. At equilibrium, $f(\bar\theta, 0, \ba
 For $\dx = (0.01, 0)$ (small angle perturbation):
 \begin{align}
 \text{True:} \quad f(\bar\theta + 0.01, 0, \bar{u}) &= \begin{pmatrix} 0 \\ -g(\sin(\pi/6 + 0.01) - \sin(\pi/6)) \end{pmatrix} \\
-&= \begin{pmatrix} 0 \\ -10(0.5145 - 0.5) \end{pmatrix} = \begin{pmatrix} 0 \\ -0.1450 \end{pmatrix}, \\
+&= \begin{pmatrix} 0 \\ -10(0.5087 - 0.5) \end{pmatrix} = \begin{pmatrix} 0 \\ -0.0867 \end{pmatrix}, \\
 \text{Linear:} \quad \mat{A}\,\dx &= \begin{pmatrix} 0 & 1 \\ -8.66 & -0.1 \end{pmatrix} \begin{pmatrix} 0.01 \\ 0 \end{pmatrix} = \begin{pmatrix} 0 \\ -0.0866 \end{pmatrix}, \\
-\text{Residual:} \quad r(\dx) &= \begin{pmatrix} 0 \\ -0.0584 \end{pmatrix}, \quad \norm{r(\dx)} = 0.0584, \quad \frac{\norm{r(\dx)}}{\norm{\dx}} = 5.84.
+\text{Residual:} \quad r(\dx) &= \begin{pmatrix} 0 \\ -0.0001 \end{pmatrix}, \quad \norm{r(\dx)} \approx 4.3 \times 10^{-4}, \quad \frac{\norm{r(\dx)}}{\norm{\dx}} = 0.043.
 \end{align}
 
 For $\dx = (0.001, 0)$ (one-tenth the size):
 \begin{align}
-\text{Residual:} \quad \norm{r(\dx)} &\approx 0.000585, \quad \frac{\norm{r(\dx)}}{\norm{\dx}} = 0.585.
+\text{Residual:} \quad \norm{r(\dx)} &\approx 4.3 \times 10^{-6}, \quad \frac{\norm{r(\dx)}}{\norm{\dx}} = 0.0043.
 \end{align}
 
 For $\dx = (0.0001, 0)$:
 \begin{align}
-\text{Residual:} \quad \norm{r(\dx)} &\approx 0.0000585, \quad \frac{\norm{r(\dx)}}{\norm{\dx}} = 0.0585.
+\text{Residual:} \quad \norm{r(\dx)} &\approx 4.3 \times 10^{-8}, \quad \frac{\norm{r(\dx)}}{\norm{\dx}} = 0.00043.
 \end{align}
 
 The ratio $\norm{r(\dx)}/\norm{\dx}$ decreases approximately as $\norm{\dx}$ (i.e., $o(\norm{\dx})$
@@ -406,7 +437,7 @@ equations in Chapter~\ref{ch:variational}.
 
 \subsection{Why Tangent Spaces Are the Natural Home of Superposition}
 
-\begin{axiombox}{Axiom 2: Superposition Lives in Tangent Spaces}
+\begin{axiombox}{Principle 2: Superposition Lives in Tangent Spaces}
 Vector addition $\dx_1 + \dx_2$ is only defined in vector spaces. Tangent spaces are
 vector spaces \emph{by construction}. Therefore, superposition of infinitesimal
 perturbations is exact---not because the nonlinear system is ``approximately linear,''
@@ -437,8 +468,14 @@ and the Jacobian transforms as
 \mat{A}_z = \mat{T}\,\mat{A}\,\mat{T}^{-1} + \dot{\mat{T}}\,\mat{T}^{-1},
 \label{eq:ch1:jacobian-transform}
 \end{equation}
-ensuring that the \emph{geometric content}---eigenvalues, contraction rates, stability
-conclusions---is coordinate-invariant.
+so the extra $\dot{\mat{T}}\mat{T}^{-1}$ term must be retained whenever the
+coordinate chart varies along the trajectory. For a time-independent coordinate
+change, $\dot{\mat{T}}=0$ and the transformation is a similarity transform, so
+the eigenvalues of $\mat{A}$ are unchanged. For a time-dependent coordinate
+change, the instantaneous eigenvalues of $\mat{A}_z$ need not match those of
+$\mat{A}$; invariant statements must instead be made about the underlying
+geometric dynamics, such as stability conclusions, Lyapunov exponents, or
+contraction rates.
 
 
 \section{Residuals: Geometry, Not Error}
@@ -459,7 +496,7 @@ sharper bound holds via the mean-value form of Taylor's theorem:
 \label{eq:ch1:residual-bound}
 \end{equation}
 
-\begin{axiombox}{Axiom 3: Residuals Are Geometry, Not Error}
+\begin{axiombox}{Principle 3: Residuals Are Geometry, Not Error}
 The residual $r(\dx)$ measures how far the true dynamics deviate from the tangent-space
 prediction. This deviation comes from \emph{manifold curvature} (second-order geometry),
 not from ``our approximation being bad.'' A large residual at a point means the manifold
@@ -561,15 +598,30 @@ with determinant $+1$:
 \end{equation}
 
 $\SO(3)$ is a 3-dimensional Lie group: it is a smooth manifold that is also a group under
-matrix multiplication. The tangent space to $\SO(3)$ at any point $\mat{R} \in \SO(3)$ is
-the space of skew-symmetric matrices:
+matrix multiplication. At the identity, the tangent space is the space of
+skew-symmetric matrices, called the Lie algebra $\mathfrak{so}(3)$:
 \begin{equation}
-T_{\mat{R}}\SO(3) = \{\mat{S} \in \R^{3 \times 3} : \mat{S} + \mat{S}\T = 0\}.
+T_{\mat{I}}\SO(3) = \mathfrak{so}(3)
+= \{\mat{S} \in \R^{3 \times 3} : \mat{S} + \mat{S}\T = 0\}.
 \label{eq:ch1:so3-tangent}
 \end{equation}
 
-This space is 3-dimensional and is often denoted $\mathfrak{so}(3)$, the Lie algebra of $\SO(3)$. The Lie algebra structure---defined through the commutator bracket $[\mathbf{S}_1, \mathbf{S}_2] = \mathbf{S}_1\mathbf{S}_2 - \mathbf{S}_2\mathbf{S}_1$---is exactly the Lie bracket of vector fields on the manifold $\SO(3)$. This bridge between algebraic (Lie algebra) and geometric (Lie bracket) structures is central to Agrachev and Sachkov's treatment of geometric control on Lie groups \cite[Ch.~2]{AgrachevSachkov2004}.
-This space is 3-dimensional and is often denoted $\mathfrak{so}(3)$, the Lie algebra of $\SO(3)$.
+At an arbitrary rotation $\mat{R}$, the tangent space is the left translation of
+that Lie algebra:
+\begin{equation}
+T_{\mat{R}}\SO(3) = \{\mat{R}\mat{S} : \mat{S} \in \mathfrak{so}(3)\}
+= \mat{R}\mathfrak{so}(3).
+\label{eq:ch1:SO3-tangent-at-R}
+\end{equation}
+
+This space is 3-dimensional, but its elements are generally not themselves
+skew-symmetric unless $\mat{R}=\mat{I}$. The Lie algebra structure---defined
+through the commutator bracket $[\mathbf{S}_1, \mathbf{S}_2] =
+\mathbf{S}_1\mathbf{S}_2 - \mathbf{S}_2\mathbf{S}_1$---is exactly the Lie
+bracket of vector fields on the manifold $\SO(3)$. This bridge between
+algebraic (Lie algebra) and geometric (Lie bracket) structures is central to
+Agrachev and Sachkov's treatment of geometric control on Lie groups
+\cite[Ch.~2]{AgrachevSachkov2004}.
 
 \subsubsection{Jacobian on SO(3)}
 
@@ -592,8 +644,11 @@ The Jacobian of this system with respect to a perturbation in angular velocity i
 \end{equation}
 
 This reveals a key point: perturbations to the angular velocity propagate through the system
-as skew-symmetric matrices, which is precisely the tangent space structure. The linear
-perturbation dynamics lives naturally in $\mathfrak{so}(3)$, the Lie algebra.
+as skew-symmetric matrices. More precisely, the tangent space at the identity
+$T_I\SO(3) = \mathfrak{so}(3)$ consists of skew-symmetric matrices. The tangent space at an
+arbitrary element $R \in \SO(3)$ is $T_R\SO(3) = \{R \cdot S : S \in \mathfrak{so}(3)\}$.
+The linear perturbation dynamics lives naturally in $\mathfrak{so}(3)$ when expressed in
+body-frame coordinates (i.e., left-trivialized).
 
 \subsubsection{Why SO(3) Matters}
 
@@ -624,7 +679,7 @@ This is the Lie algebra $\mathfrak{se}(3)$, a 6-dimensional space.
 
 \subsubsection{Kinematics\index{Kinematics} and Dynamics}
 
-For a rigid body in space with configuration $\mat{T}(t) \in \SE(3)$ and twist (spatial
+For a rigid body in space with configuration $\mat{T}(t) \in \SE(3)$ and twist (body
 velocity) $\boldsymbol{\xi} = (\vec{v}, \boldsymbol{\omega})$, the kinematic equation is
 \begin{equation}
 \dot{\mat{T}} = \mat{T} \, \begin{pmatrix} [\boldsymbol{\omega}]_{\times} & \vec{v} \\ 0 & 0 \end{pmatrix}.
@@ -677,10 +732,11 @@ real variables miss this structure.
 
 
 \section{Nonlinearity Re-enters Through Transport}
+\label{sec:transport}
 
 \subsection{Transport as Curved Geometry}
 
-\begin{axiombox}{Axiom 4: Transport Between Tangent Spaces}
+\begin{axiombox}{Principle 4: Transport Between Tangent Spaces}
 Moving along a trajectory from $\bar\x(t_0)$ to $\bar\x(t_1)$ means moving between
 tangent spaces $T_{\bar\x(t_0)}\mathcal{M}$ and $T_{\bar\x(t_1)}\mathcal{M}$. The
 connection between these spaces---parallel transport, Christoffel symbols in Riemannian
@@ -907,7 +963,7 @@ Chapter~\ref{ch:contraction} introduces contractivity and metric tensors, transl
 intuition that ``some directions are more stable than others'' into a precise geometric
 framework.
 
-Chapter~\ref{ch:optimal} applies these ideas to optimal control, showing how DDP and iLQR
+Chapter~\ref{ch:optimal-control} applies these ideas to optimal control, showing how DDP and iLQR
 are exact local algorithms operating in tangent spaces, with control constraints and
 terminal costs handled via their residual geometry.
 

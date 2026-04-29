@@ -17,23 +17,6 @@ very definition of what ``smooth'' means.
 
 :::
 
-::: {.callout-note}
-
-If you are new to differential geometry, or if the words "manifold," "tangent space,"
-and "Fréchet derivative" sound intimidating, take a breath. Every single one of these
-ideas comes from something you already understand intuitively.
-
-You know what a tangent line is---you learned it in calculus. A tangent *space* is just
-the higher-dimensional version of that same idea: instead of a line touching a curve,
-it is a flat plane touching a curved surface. That is the entire concept.
-
-The rest of this chapter simply takes that intuition and makes it precise. We will show
-that this precision is not just mathematical formalism---it is the key to understanding
-why linear control theory works as well as it does, and exactly when it stops working.
-
-Read slowly. Reread the intuition boxes. The mathematics rewards patience.
-:::
-
 
 ## Motivation: Why Geometry Matters for Control
 
@@ -61,7 +44,6 @@ and local optimality calculations happen in these moving tangent planes. A metri
 local ruler; changing the metric changes which perturbation directions count as ``large''
 or ``small.''
 \end{intuitionbox}
-
 
 
 ## Historical Context: From Newton to Modern Differential Geometry
@@ -119,10 +101,8 @@ curved, high-dimensional, or not embedded in Euclidean space.
 
 Riemann's innovation---and its modern development by Élie Cartan, Hermann Weyl, and
 others---fundamentally separated two ideas:
-\begin{enumerate}
-\item The *manifold itself*: a geometric object that may be curved.
-\item The *tangent space at a point*: a vector space, always flat and linear.
-\end{enumerate}
+1. The *manifold itself*: a geometric object that may be curved.
+2. The *tangent space at a point*: a vector space, always flat and linear.
 
 This separation is conceptually profound. Curvature is not a failure of linearity; it is
 the nonlinearity of how tangent spaces connect as you move through the manifold.
@@ -166,7 +146,6 @@ We do not linearize for convenience and accept error. We recognize that lineariz
 principle for analyzing and controlling nonlinear systems.
 
 
-
 ## Smooth Dynamical Systems
 
 
@@ -195,9 +174,7 @@ treatment. We address smooth systems exclusively and note hybrid extensions wher
 \end{warningbox}
 
 
-
 ## The Fréchet Derivative: Linearization as Exact Structure
-
 
 
 ### Definition and Uniqueness
@@ -268,11 +245,9 @@ description---$\mat{A}$ is unique by the definition of the Fréchet derivative.
 This distinction is the conceptual foundation of the entire book. The standard
 narrative---``we linearize for convenience and accept some error''---conflates two
 distinct operations:
-\begin{enumerate}
-\item **Computing the derivative** (exact, by definition);
-\item **Using the linear model for finite perturbations** (introduces residuals
-      proportional to curvature).
-\end{enumerate}
+1. **Computing the derivative** (exact, by definition);
+2. **Using the linear model for finite perturbations** (introduces residuals
+   proportional to curvature).
 
 
 ### Relationship to the Gâteaux Derivative
@@ -348,9 +323,9 @@ Consider perturbations of increasing size. At equilibrium, $f(\bar\theta, 0, \ba
 For $\dx = (0.01, 0)$ (small angle perturbation):
 \begin{align}
 \text{True:} \quad f(\bar\theta + 0.01, 0, \bar{u}) &= \begin{pmatrix} 0 \\ -g(\sin(\pi/6 + 0.01) - \sin(\pi/6)) \end{pmatrix} \\
-&= \begin{pmatrix} 0 \\ -10(0.5145 - 0.5) \end{pmatrix} = \begin{pmatrix} 0 \\ -0.1450 \end{pmatrix}, \\
+&= \begin{pmatrix} 0 \\ -10(0.50866 - 0.5) \end{pmatrix} \approx \begin{pmatrix} 0 \\ -0.08635 \end{pmatrix}, \\
 \text{Linear:} \quad \mat{A}\,\dx &= \begin{pmatrix} 0 & 1 \\ -8.66 & -0.1 \end{pmatrix} \begin{pmatrix} 0.01 \\ 0 \end{pmatrix} = \begin{pmatrix} 0 \\ -0.0866 \end{pmatrix}, \\
-\text{Residual:} \quad r(\dx) &= \begin{pmatrix} 0 \\ -0.0584 \end{pmatrix}, \quad \norm{r(\dx)} = 0.0584, \quad \frac{\norm{r(\dx)}}{\norm{\dx}} = 5.84.
+\text{Residual:} \quad r(\dx) &\approx \begin{pmatrix} 0 \\ 0.00025 \end{pmatrix}, \quad \norm{r(\dx)} \approx 0.00025, \quad \frac{\norm{r(\dx)}}{\norm{\dx}} \approx 0.025.
 \end{align}
 
 For $\dx = (0.001, 0)$ (one-tenth the size):
@@ -389,13 +364,10 @@ sensitivity of the dynamics at $(\bar\x, \bar\uvec)$. These are the objects that
 subsequent chapter will build upon.
 
 
-
 ## Tangent Spaces as Vector Spaces
 
 
-
 ### Abstract Definition
-
 
 
 ::: {.callout-note}
@@ -464,84 +436,6 @@ variations in the tangent space. This is not an approximation---it is the defini
 the tangent space as a vector space.
 
 
-### Tangent Spaces and the Physics of Motion: Position, Velocity, Acceleration
-
-To make the abstract definition of tangent spaces concrete, let us connect it directly
-to the quantities every physicist cares about: position, velocity, and acceleration.
-
-\subsubsection{Position Lives on the Manifold}
-
-A robot arm's joint angles define a **position** on the configuration manifold. If
-the arm has two joints with angles $\theta_1$ and $\theta_2$, each wrapping around
-from $0$ to $2\pi$, the configuration manifold is a **torus** $T^2$. The position
-$(\theta_1, \theta_2)$ is a *point* on this donut-shaped surface.
-
-Crucially, you cannot ``add'' two positions. What would it mean to add the
-configuration $(\pi/4, \pi/3)$ to the configuration $(\pi/2, \pi)$? If you naively
-add the angles, you get $(3\pi/4, 4\pi/3)$, which might wrap around past $2\pi$.
-Addition on a curved surface is not well-defined in general.
-
-\subsubsection{Velocity Lives in the Tangent Space}
-
-But now consider the *velocity* of the arm: how fast each joint is rotating. The
-angular velocities $(\dot\theta_1, \dot\theta_2)$ are a **tangent vector** at the
-current position. They live in the tangent space $T_{(\theta_1,\theta_2)}T^2 \cong \R^2$.
-
-And here is the key: velocities *can* be added. If Joint 1 is rotating at $2$ rad/s
-from one motor and getting an additional $0.5$ rad/s push from Coriolis coupling,
-the total angular velocity is simply $2.5$ rad/s. Vector addition works because
-the tangent space is a vector space.
-
-This is not a mathematical convenience---it is a physical fact. Velocities superpose.
-Forces superpose. Accelerations superpose. All of these are tangent-space objects,
-and superposition is the defining property of a vector space.
-
-\subsubsection{Acceleration Also Lives in the Tangent Space}
-
-For systems evolving in $\R^n$, acceleration $\ddot{q}$ lives in the same tangent
-space as velocity. Newton's second law $M(q)\ddot{q} = F$ is a statement about
-tangent vectors: given a force $F$ (also a tangent-space object---technically a
-\emph{co}tangent vector, but we defer that distinction), the mass matrix $M$ determines
-the resulting acceleration in the tangent space.
-
-On curved manifolds, the story is slightly more subtle. Acceleration requires a
-**connection** (a rule for comparing tangent vectors at different points). The
-``covariant acceleration'' $\nabla_{\dot{q}}\dot{q}$ is the proper generalization:
-it accounts for the fact that the tangent space itself rotates as you move along
-the manifold. The Christoffel symbols $\Gamma^k_{ij}$ that appear in the equations of
-motion of mechanical systems are precisely this connection---they encode how the
-``coordinate grid'' of the tangent space twists as you move through configuration space.
-
-\begin{intuitionbox}
-\textbf{The physical hierarchy:}
-\begin{itemize}
-\item \textbf{Position} ($q$): where you are on the surface. Cannot be added.
-\item \textbf{Velocity} ($\dot{q}$): which direction and how fast you are moving.
-      Lives in the tangent space. Can be added.
-\item \textbf{Acceleration} ($\ddot{q}$): how the velocity is changing. Also lives
-      in the tangent space (with a connection correction on curved manifolds). Can be added.
-\item \textbf{Force/Torque}: what causes acceleration. Lives in the cotangent space
-      (dual to the tangent space). Can be added.
-\end{itemize}
-Everything that obeys superposition lives in a vector space (tangent or cotangent).
-Everything that does not (position) lives on the manifold itself.
-\end{intuitionbox}
-
-\subsubsection{Why This Matters for Control}
-
-The entire edifice of linear control---PID, LQR, Kalman filtering, pole placement---works
-because it operates on quantities that live in vector spaces. When we ``linearize'' a
-nonlinear system, we are not making a crude approximation; we are recognizing that
-*perturbations* to position are velocities (tangent vectors), and velocities are
-the natural objects for linear analysis.
-
-The failure mode of linearization is not that ``the tangent space is wrong.'' It is
-that we are trying to use one tangent space to describe a region that spans multiple
-tangent spaces---a region where the manifold's curvature has rotated the local geometry.
-This is the transport problem of Axiom~4, and its resolution through iterative methods
-(DDP, iLQR) is the practical payoff of understanding the tangent-space structure.
-
-
 ### Coordinate Representation
 
 
@@ -562,9 +456,14 @@ and the Jacobian transforms as
 \mat{A}_z = \mat{T}\,\mat{A}\,\mat{T}^{-1} + \dot{\mat{T}}\,\mat{T}^{-1},
 \label{eq:ch1:jacobian-transform}
 \end{equation}
-ensuring that the *geometric content*---eigenvalues, contraction rates, stability
-conclusions---is coordinate-invariant.
-
+so the extra $\dot{\mat{T}}\mat{T}^{-1}$ term must be retained whenever the
+coordinate chart varies along the trajectory. For a time-independent coordinate
+change, $\dot{\mat{T}}=0$ and the transformation is a similarity transform, so
+the eigenvalues of $\mat{A}$ are unchanged. For a time-dependent coordinate
+change, the instantaneous eigenvalues of $\mat{A}_z$ need not match those of
+$\mat{A}$; invariant statements must instead be made about the underlying
+geometric dynamics, such as stability conclusions, Lyapunov exponents, or
+contraction rates.
 
 
 ## Residuals: Geometry, Not Error
@@ -677,152 +576,6 @@ view, the residual is information: it tells us about the curvature of the state-
 and this information is essential for understanding transport and nonlinear phenomena.
 
 
-## What Curvature Actually Means: A Physical Guide
-
-The word "curvature" appears throughout this book, and it deserves a careful, patient
-explanation---not just as a mathematical abstraction, but as something you can *feel*.
-
-### The Everyday Experience of Curvature
-
-Think about driving a car on a winding mountain road. On a straight stretch, your steering
-wheel sits dead center and you coast along effortlessly. The road is *flat* in the
-geometric sense: your direction of travel does not change. Now the road bends. To follow
-the curve, you turn the steering wheel. The sharper the bend, the more you turn. That
-"amount of turning per unit of road traveled" is, quite literally, the curvature of the road.
-
-But here is the deeper point. While you are on the straight stretch, a small nudge to
-your steering wheel produces a predictable, proportional response: turn a little left,
-drift a little left. The relationship between input and output is *linear*. On the sharp
-bend, the same small nudge has a dramatically different effect because you are already
-turning hard. The relationship between what you do and what happens is no longer simple---it
-depends on *where you are on the curve*. This is exactly what curvature means for
-dynamical systems.
-
-\begin{intuitionbox}
-Curvature measures how quickly the ``rules of the game'' change as you move through
-state space. In a region of low curvature, the linearized model (tangent space) remains
-accurate over a wide neighborhood. In a region of high curvature, the linearized model
-is only trustworthy in a tiny neighborhood---not because the model is bad, but because
-the landscape is changing rapidly.
-\end{intuitionbox}
-
-
-### Curvature in State Space: The Geometric Picture
-
-Imagine a marble rolling on a surface. If the surface is a flat table, the marble rolls
-in a straight line (in the absence of friction). If the surface is a bowl, the marble
-curves inward. If the surface is a saddle, the marble curves in one direction and diverges
-in another.
-
-The surface itself has *intrinsic curvature*. You do not need to see the surface from
-the outside to measure this curvature---you can detect it by watching how nearby paths
-diverge or converge. Two ants walking side by side on a sphere will gradually drift
-apart, even if they both walk ``straight ahead'' (along geodesics). On a saddle, the
-same two ants would diverge even faster. On a flat plane, they stay parallel forever.
-
-This is precisely the situation in state-space dynamics:
-
-\begin{itemize}
-\item Two trajectories starting close together in a **low-curvature region** remain close
-      for a long time. The tangent-space (linear) prediction is accurate over large
-      perturbations and long time horizons.
-\item Two trajectories starting close together in a **high-curvature region** diverge
-      rapidly. The tangent-space prediction is accurate only for tiny perturbations and
-      short time windows.
-\item The **residual** $r(\delta\mathbf{x})$ from Eq.~\eqref{eq:ch1:residual-def}
-      is the direct measurement of this curvature: it tells you how much the true
-      trajectory deviates from the flat (tangent-space) prediction.
-\end{itemize}
-
-
-### Curvature and the Hessian: Making It Quantitative
-
-For a $C^2$ vector field $f$, the curvature at a point $\bar{\mathbf{x}}$ is encoded
-in the **Hessian tensor**---the matrix of second derivatives:
-\begin{equation}
-H_{ijk} = \frac{\partial^2 f_i}{\partial x_j \partial x_k}\bigg|_{\bar{\mathbf{x}}}.
-\end{equation}
-
-This tensor tells you exactly how the Jacobian (the tangent-space ``ruler'') changes
-as you move in each direction. If $H$ is large in some direction, the Jacobian is
-changing rapidly there---the manifold is sharply curved. If $H$ is small or zero, the
-Jacobian is nearly constant---the manifold is locally flat.
-
-The residual bound from Eq.~\eqref{eq:ch1:residual-bound} makes this precise:
-\begin{equation}
-\|r(\delta\mathbf{x})\| \leq \frac{1}{2} C_H \|\delta\mathbf{x}\|^2,
-\end{equation}
-where $C_H = \sup \|H\|$ is the **curvature constant**. A large $C_H$ means high
-curvature; a small $C_H$ means the system is nearly linear in that region.
-
-\begin{intuitionbox}
-\textbf{The curvature constant $C_H$ is the single most important number for understanding
-when linearization ``works'' in practice.} It is not that linearization is approximate---it
-is always exact at the infinitesimal level. But $C_H$ tells you how quickly that exact
-infinitesimal picture degrades as you zoom out to finite perturbations. Small $C_H$:
-you can zoom out far. Large $C_H$: stay close to the operating point.
-\end{intuitionbox}
-
-
-### Physical Examples of Curvature
-
-\subsubsection{The Pendulum: Curvature Varies with Position}
-
-Consider a pendulum with dynamics $\ddot\theta = -(g/L)\sin\theta$. The
-nonlinearity lives in $\sin\theta$. Near the bottom ($\theta \approx 0$),
-$\sin\theta \approx \theta$, and the dynamics are nearly linear. The curvature is low:
-the Hessian contribution from $\sin''(0) = -\sin(0) = 0$ vanishes. The tangent-space
-model works beautifully for large perturbations.
-
-Near the top ($\theta \approx \pi$), $\sin\theta \approx -(\theta - \pi)$, and the
-dynamics are also locally linear---but *unstable*. The curvature is again low at the
-exact top. However, *between* the bottom and the top ($\theta \approx \pi/2$),
-$|\sin''(\pi/2)| = |\!-\!\sin(\pi/2)| = 1$ is maximal. This is where the pendulum's
-state-space manifold is most curved, where the linear model degrades fastest, and where
-iterative methods like DDP gain the most by re-linearizing.
-
-\subsubsection{The Golf Swing: Curvature Explodes at High Speed}
-
-In a multibody system like the golf swing, curvature comes primarily from two sources:
-
-\begin{enumerate}
-\item \textbf{Centrifugal and Coriolis terms}, which scale as $\dot{q}^2$ (the square
-      of joint velocities). During the slow backswing, these are small and the curvature
-      is low. During the explosive downswing, velocities are enormous and curvature
-      dominates. This is why the late downswing is the hardest phase to model linearly.
-\item \textbf{Inertial coupling} between the rigid golfer and the flexible shaft. As the
-      club sweeps through large angles, the effective mass distribution changes rapidly,
-      causing the Jacobian to rotate and stretch. The rate of this change is curvature.
-\end{enumerate}
-
-\subsubsection{Walking and Running: Curvature at Transitions}
-
-In locomotion, the highest curvature occurs at phase transitions---heel strike, toe-off,
-double support to single support. These are moments where the effective dynamics shift
-abruptly (though still smoothly, in a well-modeled system). A controller that linearizes
-once at mid-stance and holds constant gains will fail at the transition. This is not a
-failure of theory; it is a signal that the controller needs to re-linearize at the
-high-curvature moment.
-
-
-### Why ``Curvature, Not Error'' Changes How You Think
-
-The standard engineering reflex when a linear model fails is to apologize: *``the model
-is only valid for small perturbations.''* The geometric perspective reframes this
-entirely:
-
-\begin{enumerate}
-\item The linear model is \textbf{always valid}---it is exact at the infinitesimal level.
-\item The question is not ``is the model good enough?'' but ``how curved is the landscape here?''
-\item High curvature is not a problem to be solved; it is \textbf{information to be exploited}.
-      A region of high curvature tells you that the system is sensitive there, that control
-      effort is amplified there, and that re-linearization is most valuable there.
-\end{enumerate}
-
-This shift from ``error tolerance'' to ``curvature awareness'' is, in our view, the
-most practically important conceptual contribution of the tangent-space framework.
-
-
 ## Manifold Examples: From Theory to Application
 
 
@@ -841,14 +594,24 @@ with determinant $+1$:
 \end{equation}
 
 $\SO(3)$ is a 3-dimensional Lie group: it is a smooth manifold that is also a group under
-matrix multiplication. The tangent space to $\SO(3)$ at any point $\mat{R} \in \SO(3)$ is
-the space of skew-symmetric matrices:
+matrix multiplication. At the identity, the tangent space is the space of
+skew-symmetric matrices, called the Lie algebra $\mathfrak{so}(3)$:
 \begin{equation}
-T_{\mat{R}}\SO(3) = \{\mat{S} \in \R^{3 \times 3} : \mat{S} + \mat{S}\T = 0\}.
+T_{\mat{I}}\SO(3) = \mathfrak{so}(3)
+= \{\mat{S} \in \R^{3 \times 3} : \mat{S} + \mat{S}\T = 0\}.
 \label{eq:ch1:so3-tangent}
 \end{equation}
 
-This space is 3-dimensional and is often denoted $\mathfrak{so}(3)$, the Lie algebra of $\SO(3)$.
+At an arbitrary rotation $\mat{R}$, the tangent space is the left translation of
+that Lie algebra:
+\begin{equation}
+T_{\mat{R}}\SO(3) = \{\mat{R}\mat{S} : \mat{S} \in \mathfrak{so}(3)\}
+= \mat{R}\mathfrak{so}(3).
+\label{eq:ch1:SO3-tangent-at-R}
+\end{equation}
+
+This space is 3-dimensional, but its elements are generally not themselves
+skew-symmetric unless $\mat{R}=\mat{I}$.
 
 \subsubsection{Jacobian on SO(3)}
 
@@ -946,22 +709,18 @@ and similarly for $\theta_2$.
 \subsubsection{Nonlinear Effects and Coupling}
 
 The double pendulum exhibits rich nonlinear phenomena:
-\begin{itemize}
-\item **Tangent-space superposition.** Small perturbations around a nominal trajectory add linearly in the tangent space.
-\item **Residual geometry.** The residual $r(\dx)$ from Eq.~\eqref{eq:ch1:residual-def} is large when
-the nominal trajectory passes through regions of high kinetic-energy curvature or steep potential gradients.
-\item **Transport and coupling.** As the system evolves, the principal directions of stability rotate
-through the torus. The state-transition matrix (Section~\ref{sec:transport}) encodes this rotation exactly.
-\end{itemize}
+- **Tangent-space superposition.** Small perturbations around a nominal trajectory add linearly in the tangent space.
+- **Residual geometry.** The residual $r(\dx)$ from Eq.~\eqref{eq:ch1:residual-def} is large when
+  the nominal trajectory passes through regions of high kinetic-energy curvature or steep potential gradients.
+- **Transport and coupling.** As the system evolves, the principal directions of stability rotate
+  through the torus. The state-transition matrix (Section~\ref{sec:transport}) encodes this rotation exactly.
 
 The torus structure is essential: wraparound in angles is handled correctly only by recognizing
 that the manifold is curved (topologically), not flat. Standard treatments that treat $\theta_i$ as
 real variables miss this structure.
 
 
-
 ## Nonlinearity Re-enters Through Transport
-
 
 
 ### Transport as Curved Geometry
@@ -1023,17 +782,14 @@ approximation), but it encodes the manifold's curvature.
 
 In Differential Dynamic Programming (DDP) and iLQR (discussed in later chapters), the algorithm
 repeatedly:
-\begin{enumerate}
-\item Linearize the dynamics along a nominal trajectory, computing $\mat{A}(t), \mat{B}(t)$.
-\item Solve a linear-quadratic problem in the tangent spaces, obtaining optimal perturbations $\dx(t), \du(t)$.
-\item Transport these perturbations back to the full manifold via $\Phi(t, t_0)$, updating the nominal trajectory.
-\item Repeat.
-\end{enumerate}
+1. Linearize the dynamics along a nominal trajectory, computing $\mat{A}(t), \mat{B}(t)$.
+2. Solve a linear-quadratic problem in the tangent spaces, obtaining optimal perturbations $\dx(t), \du(t)$.
+3. Transport these perturbations back to the full manifold via $\Phi(t, t_0)$, updating the nominal trajectory.
+4. Repeat.
 
 Each iteration solves an *exact* local problem (Axiom 1) within the tangent spaces,
 then accounts for curvature via *exact* transport (Axiom 4). The algorithm does not
 approximate; it refines the nominal trajectory by exploiting the local structure at each point.
-
 
 
 ## Scope of Exactness: When the Tangent-Space Picture Breaks Down
@@ -1136,37 +892,29 @@ The exactness of the tangent-space picture is one of its greatest strengths, and
 its boundaries is essential for applying it responsibly.
 
 
-
 ## The Five Axioms: A Summary
 
 
 The conceptual framework of this book rests on five axioms, each a consequence of
 standard differential geometry but rarely stated explicitly in control texts.
 
-\begin{enumerate}
-\item **Tangent spaces are exact, not approximate.**
-The derivative is the unique first-order structure at a point.
-
-\item **Superposition lives in tangent spaces.**
-Tangent spaces are vector spaces; perturbation addition is well-defined and exact.
-
-\item **Residuals are geometry, not error.**
-Deviations from linearity measure curvature, not modeling failure.
-
-\item **Nonlinearity re-enters through transport.**
-Moving between tangent spaces requires navigating the manifold's curvature.
-
-\item **Integration preserves exactness.**
-Accumulating infinitesimal linear contributions is itself exact; residuals
-arise from curvature, not from integration.
-\end{enumerate}
+1. **Tangent spaces are exact, not approximate.**
+   The derivative is the unique first-order structure at a point.
+2. **Superposition lives in tangent spaces.**
+   Tangent spaces are vector spaces; perturbation addition is well-defined and exact.
+3. **Residuals are geometry, not error.**
+   Deviations from linearity measure curvature, not modeling failure.
+4. **Nonlinearity re-enters through transport.**
+   Moving between tangent spaces requires navigating the manifold's curvature.
+5. **Integration preserves exactness.**
+   Accumulating infinitesimal linear contributions is itself exact; residuals
+   arise from curvature, not from integration.
 
 These axioms inform every derivation in the chapters that follow. When we write a
 Jacobian, we are not approximating. When we solve a Riccati equation in tangent
 coordinates, we are solving an exact local problem. When we iterate (as in DDP), we
 are re-centering the exact local analysis at a new base point. The ``error'' is always
 transport cost---the price of moving through curved space.
-
 
 
 ## Scope and Limitations
@@ -1186,13 +934,11 @@ complementarity systems for contact---and we note these extensions where appropr
 
 
 This textbook is most applicable when:
-\begin{itemize}
-\item The system dynamics arise from conservation laws (energy, momentum) or classical mechanics.
-\item The control inputs are continuous and bounded (not discontinuous switching).
-\item The state evolves on a smooth manifold (including $\R^n$, $\SO(3)$, $\SE(3)$, and their products).
-\item Local behavior around trajectories is of primary interest (not global existence or long-time stability in highly chaotic regimes).
-\item Numerical precision and computational efficiency are important, justifying exploitation of local structure.
-\end{itemize}
+- The system dynamics arise from conservation laws (energy, momentum) or classical mechanics.
+- The control inputs are continuous and bounded (not discontinuous switching).
+- The state evolves on a smooth manifold (including $\R^n$, $\SO(3)$, $\SE(3)$, and their products).
+- Local behavior around trajectories is of primary interest (not global existence or long-time stability in highly chaotic regimes).
+- Numerical precision and computational efficiency are important, justifying exploitation of local structure.
 
 
 ### Important Distinction: Linearization vs. Linear Approximation
@@ -1231,7 +977,6 @@ structure and pragmatism: we leverage the exactness of the tangent space to buil
 that are both conceptually clear and computationally efficient.
 
 
-
 ## Preview: Why These Ideas Matter for the Golf Swing
 
 
@@ -1253,7 +998,6 @@ how small changes propagate.
 :::
 
 
-
 ### The Golfer's Tangent Space
 
 
@@ -1262,8 +1006,8 @@ manifold: joint angles, angular velocities, shaft bending amplitudes, and their 
 The tangent space at this point is the space of all infinitesimal variations---a slightly
 different wrist angle, a marginally faster shoulder rotation, a small change in shaft flex.
 
-By Axiom~1, the Jacobian at this point is the *exact* description of how these small
-variations evolve over the next instant. By Axiom~2, these variations add as vectors.
+By Axiom 1, the Jacobian at this point is the *exact* description of how these small
+variations evolve over the next instant. By Axiom 2, these variations add as vectors.
 A small wrist perturbation and a small shoulder perturbation evolve independently at
 first order, even though the full nonlinear swing couples them through centrifugal and
 Coriolis forces.
@@ -1280,21 +1024,19 @@ large. This is not a failure of the theory; it is a geometric signal that the sy
 is passing through a high-curvature region.
 
 Practically, this means:
-\begin{itemize}
-\item Controllers (biological or engineered) that linearize once and hold the gain
-      constant work well in the backswing but deteriorate in the downswing.
-\item Iterative methods (DDP, iLQR) that re-linearize at each time step
-      naturally adapt to the changing curvature.
-\item The transition from ``control-dominated'' to ``drift-dominated'' dynamics
-      (Chapter~\ref{ch:counterfactuals}) is precisely the transition from small
-      to large residuals.
-\end{itemize}
+- Controllers (biological or engineered) that linearize once and hold the gain
+  constant work well in the backswing but deteriorate in the downswing.
+- Iterative methods (DDP, iLQR) that re-linearize at each time step
+  naturally adapt to the changing curvature.
+- The transition from ``control-dominated'' to ``drift-dominated'' dynamics
+  (Chapter~\ref{ch:counterfactuals}) is precisely the transition from small
+  to large residuals.
 
 
 ### Transport and the Kinematic Chain
 
 
-Axiom~4 (transport) is especially vivid in the golf swing. As the club sweeps through
+Axiom 4 (transport) is especially vivid in the golf swing. As the club sweeps through
 a large arc, the tangent space rotates and stretches. The state transition
 matrix $\Phi(t_1, t_0)$ maps perturbations at one phase of the swing to perturbations at
 another. A small error in wrist lag at the top of the backswing may amplify into a large
@@ -1308,47 +1050,38 @@ quantitative answer.
 
 \section*{Exercises}
 
-\begin{enumerate}
-\item **Fréchet derivative computation.**
-      Compute the Fréchet derivative of $f(x, y) = (x^2 y,\; \sin(xy))$ at the point $(1, \pi)$.
-      Verify that the residual $\|f(\bar\x + \dx) - f(\bar\x) - Df(\bar\x)\dx\| = O(\|\dx\|^2)$
-      by evaluating at $\dx = (0.1, 0.1)$, $(0.01, 0.01)$, and $(0.001, 0.001)$.
-
-\item **Residual scaling table.**
-      Construct a residual scaling table (analogous to Table~\ref{tab:ch1:sin-residual}) for
-      $f(x) = e^x$ at $\bar{x} = 0$. Compute $r/(\delta x)^2$ for $\delta x = 0.1, 0.01, 0.001, 0.0001$.
-      What value does the ratio converge to? Relate this to the Taylor series of $e^x$.
-
-\item **Tangent space of SO(3).**
-      The rotation group SO(3) consists of $3 \times 3$ orthogonal matrices with determinant 1.
-      Using the constraint $R^T R = I$, show that the tangent space at $R = I$ consists of
-      skew-symmetric matrices. What is the dimension of this tangent space?
-
-\item **Tangent space of a torus.**
-      The torus $\mathbb{T}^2$ is parameterized by two angles $(\theta_1, \theta_2) \in [0, 2\pi)^2$.
-      Describe the tangent space at an arbitrary point. Is it isomorphic to $\R^2$? Explain why
-      the tangent space is ``flat'' even though the torus is curved.
-
-\item **When linearization is not an approximation.**
-      Consider the system $\dot{x} = ax + bx^3$ for constants $a, b$. Compute the linearization
-      at $\bar{x} = 0$. In what sense is this linearization ``exact''? In what sense is it ``approximate''?
-      Use the language of Axiom 1 (tangent-space exactness) to articulate the distinction.
-
-\item **Curvature and residual.**
-      For $f(x) = \tan(x)$ at $\bar{x} = 0$, compute $f''(0)$ and predict the leading-order
-      residual behavior. Construct a scaling table to verify. Compare with the $\sin(x)$ example
-      in the text.
-
-\item **Connection (Axiom 3).**
-      For a 2D system $\dot{x}_1 = x_2$, $\dot{x}_2 = -\sin(x_1)$ (simple pendulum), compute
-      the Jacobian $A(\bar\x)$ at three different equilibria: $\bar\x = (0,0)$, $(\pi, 0)$,
-      and $(0, 1)$. How do the eigenvalues change? Interpret the change geometrically.
-
-\item **Programming exercise.**
-      Implement a function that, given $f: \R^n \to \R^n$ and a point $\bar\x$, computes the
-      Fréchet derivative numerically using finite differences. Test it on the pendulum
-      system from Exercise 7. Compare with the analytical Jacobian.
-\end{enumerate}
+1. **Fréchet derivative computation.**
+   Compute the Fréchet derivative of $f(x, y) = (x^2 y,\; \sin(xy))$ at the point $(1, \pi)$.
+   Verify that the residual $\|f(\bar\x + \dx) - f(\bar\x) - Df(\bar\x)\dx\| = O(\|\dx\|^2)$
+   by evaluating at $\dx = (0.1, 0.1)$, $(0.01, 0.01)$, and $(0.001, 0.001)$.
+2. **Residual scaling table.**
+   Construct a residual scaling table (analogous to Table~\ref{tab:ch1:sin-residual}) for
+   $f(x) = e^x$ at $\bar{x} = 0$. Compute $r/(\delta x)^2$ for $\delta x = 0.1, 0.01, 0.001, 0.0001$.
+   What value does the ratio converge to? Relate this to the Taylor series of $e^x$.
+3. **Tangent space of SO(3).**
+   The rotation group SO(3) consists of $3 \times 3$ orthogonal matrices with determinant 1.
+   Using the constraint $R^T R = I$, show that the tangent space at $R = I$ consists of
+   skew-symmetric matrices. What is the dimension of this tangent space?
+4. **Tangent space of a torus.**
+   The torus $\mathbb{T}^2$ is parameterized by two angles $(\theta_1, \theta_2) \in [0, 2\pi)^2$.
+   Describe the tangent space at an arbitrary point. Is it isomorphic to $\R^2$? Explain why
+   the tangent space is ``flat'' even though the torus is curved.
+5. **When linearization is not an approximation.**
+   Consider the system $\dot{x} = ax + bx^3$ for constants $a, b$. Compute the linearization
+   at $\bar{x} = 0$. In what sense is this linearization ``exact''? In what sense is it ``approximate''?
+   Use the language of Axiom 1 (tangent-space exactness) to articulate the distinction.
+6. **Curvature and residual.**
+   For $f(x) = \tan(x)$ at $\bar{x} = 0$, compute $f''(0)$ and predict the leading-order
+   residual behavior. Construct a scaling table to verify. Compare with the $\sin(x)$ example
+   in the text.
+7. **Connection (Axiom 3).**
+   For a 2D system $\dot{x}_1 = x_2$, $\dot{x}_2 = -\sin(x_1)$ (simple pendulum), compute
+   the Jacobian $A(\bar\x)$ at three different equilibria: $\bar\x = (0,0)$, $(\pi, 0)$,
+   and $(0, 1)$. How do the eigenvalues change? Interpret the change geometrically.
+8. **Programming exercise.**
+   Implement a function that, given $f: \R^n \to \R^n$ and a point $\bar\x$, computes the
+   Fréchet derivative numerically using finite differences. Test it on the pendulum
+   system from Exercise 7. Compare with the analytical Jacobian.
 
 
 ## Python Implementations {#sec-ch1-python}
