@@ -22,7 +22,7 @@ from pathlib import Path
 from typing import Any, cast
 from urllib.parse import urldefrag
 
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 
 from src.core.contracts import require
 from src.tools.utils import setup_logging
@@ -49,6 +49,55 @@ class BrokenLinkRecord:
     text: str
 
 
+@dataclass(frozen=True)
+class SiteHealthLinkCandidate:
+    """Narrow view of an internal anchor link during site-health scans."""
+
+    href: str
+    target: Path
+    text: str
+
+    @classmethod
+    def from_anchor(
+        cls,
+        *,
+        anchor: Tag,
+        source_file: Path,
+        docs_dir: Path,
+        ignore_quarto_alternate_formats: bool,
+    ) -> "SiteHealthLinkCandidate | None":
+        """Build a candidate from a BeautifulSoup anchor when it is actionable."""
+        if ignore_quarto_alternate_formats and is_inside_quarto_alternate_formats(anchor):
+            return None
+
+        href = _anchor_href(anchor)
+        if not href or is_external_url(href) or is_fragment_only(href):
+            return None
+
+        target_rel_path = _resolve_internal_target(
+            source_file=source_file,
+            href=href,
+            docs_dir=docs_dir,
+        )
+        if target_rel_path is None:
+            return None
+
+        return cls(
+            href=href,
+            target=target_rel_path,
+            text=_anchor_text(anchor),
+        )
+
+    def to_broken_link_record(self, *, source_file: Path) -> BrokenLinkRecord:
+        """Convert the candidate to the public broken-link record."""
+        return BrokenLinkRecord(
+            source=str(source_file),
+            target=str(self.target),
+            href=self.href,
+            text=self.text,
+        )
+
+
 def parse_fail_on(raw: str) -> set[str]:
     """Parse --fail-on input into a normalized set."""
     return parse_csv_enum(
@@ -57,6 +106,17 @@ def parse_fail_on(raw: str) -> set[str]:
         aliases={"all": {"broken", "orphaned"}},
         value_name="--fail-on value",
     )
+
+
+def _anchor_href(anchor: Tag) -> str:
+    """Return the normalized href string for an anchor."""
+    href_value = anchor.get("href")
+    return str(href_value) if href_value is not None else ""
+
+
+def _anchor_text(anchor: Tag) -> str:
+    """Return a short, stable text summary for an anchor."""
+    return anchor.get_text(strip=True)[:50]
 
 
 def is_inside_quarto_alternate_formats(tag: Any) -> bool:

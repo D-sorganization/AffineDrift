@@ -13,6 +13,7 @@ Example:
 
 import logging
 import sys
+from dataclasses import dataclass
 from pathlib import Path
 
 from src.core.contracts import require
@@ -38,6 +39,48 @@ SKIP_FILES = {
     "EMBEDDING_GUIDE.md",
     "CONTRIBUTING.md",
 }
+
+
+@dataclass(frozen=True)
+class LinkResolutionContext:
+    """Facade for resolving links relative to a project root and source file."""
+
+    root_path: Path
+    source_file: Path
+
+    def resolve_target_path(self, url: str) -> Path:
+        """Resolve a normalized internal URL to its candidate target path."""
+        return _resolve_target_path(root_path=self.root_path, file_path=self.source_file, url=url)
+
+    def path_exists(self, target_path: Path) -> bool:
+        """Return whether the target exists in one of the supported search roots."""
+        return _path_exists_in_search_roots(root_path=self.root_path, target_path=target_path)
+
+    def _html_candidate_paths(self, target_path: Path) -> tuple[Path, Path, Path]:
+        """Return candidate source/generated paths for an HTML target."""
+        return (
+            target_path.with_suffix(".qmd"),
+            target_path.with_suffix(".md"),
+            target_path,
+        )
+
+    def is_html_target_resolvable(self, target_path: Path) -> bool:
+        """Return whether an HTML link maps to a supported source or output artifact."""
+        if any(
+            self.path_exists(candidate) for candidate in self._html_candidate_paths(target_path)
+        ):
+            return True
+        return target_path.is_dir() and self.path_exists(target_path / "index.qmd")
+
+    def is_broken(self, link: str) -> bool:
+        """Return True when the link is internal and cannot be resolved."""
+        url = _normalize_internal_url(link)
+        if url is None:
+            return False
+        target_path = self.resolve_target_path(url)
+        if target_path.suffix == ".html":
+            return not self.is_html_target_resolvable(target_path)
+        return not self.path_exists(target_path)
 
 
 def find_links(file_path: Path) -> list[tuple[str, int]]:

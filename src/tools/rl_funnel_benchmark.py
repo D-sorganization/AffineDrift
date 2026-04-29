@@ -6,7 +6,6 @@ import argparse
 import logging
 import time
 from collections.abc import Callable
-from dataclasses import dataclass, field
 from typing import Any, cast
 
 import numpy as np
@@ -14,55 +13,29 @@ import numpy.typing as npt
 from scipy.integrate import solve_ivp
 from scipy.linalg import solve_continuous_are
 
-from src.core.constants import GRAVITY_M_S2
 from src.core.contracts.definitions import require
 from src.core.contracts.validators import check_finite_array, check_positive
+from src.tools.rl_funnel_support import (
+    CONTROL_SATURATION_DEFAULT,
+    DEFAULT_CONTROL_SATURATION,
+    GRAVITY_M_S2,
+    PENDULUM_L1,
+    PENDULUM_L2,
+    PENDULUM_LINK_1_M,
+    PENDULUM_LINK_2_M,
+    PENDULUM_M1,
+    PENDULUM_M2,
+    PENDULUM_MASS_1_KG,
+    PENDULUM_MASS_2_KG,
+    BenchmarkResult,
+    double_pendulum_mass_matrix,
+    format_results,
+    validate_reference_trajectory,
+    validate_state_vector,
+    validate_time_span,
+    validate_weight_matrix,
+)
 
-
-def validate_state_vector(x: npt.NDArray[Any], name: str) -> None:
-    """Validate that a state vector is finite and well-formed."""
-    check_finite_array(x, name)
-
-
-def validate_weight_matrix(Q: npt.NDArray[Any], shape: tuple[int, int], name: str) -> None:
-    """Validate that a weight matrix is finite and has the expected shape."""
-    check_finite_array(Q, name)
-
-
-def format_results(results: list[BenchmarkResult]) -> str:
-    """Format benchmark results as a human-readable multi-line string."""
-    return "\n".join([f"{r.name}: error={r.tracking_error:.4f}" for r in results])
-
-
-def double_pendulum_mass_matrix(th1: float, th2: float) -> npt.NDArray[Any]:
-    """Return the 2x2 inertia (mass) matrix for the double-pendulum benchmark.
-
-    M[0,0] = (m1 + m2) * L1^2
-    M[1,1] = m2 * L2^2
-    M[0,1] = M[1,0] = m2 * L1 * L2 * cos(th1 - th2)
-    """
-    m1, m2 = PENDULUM_M1, PENDULUM_M2
-    L1, L2 = PENDULUM_L1, PENDULUM_L2
-    off_diag = m2 * L1 * L2 * np.cos(th1 - th2)
-    return np.array(
-        [
-            [(m1 + m2) * L1**2, off_diag],
-            [off_diag, m2 * L2**2],
-        ]
-    )
-
-
-# Default control saturation limits for the double-pendulum benchmark (N*m).
-# The value 50 N*m is appropriate for a 1 kg, 0.5 m double pendulum; adjust
-# for different systems by passing `control_limits` to run_benchmark().
-DEFAULT_CONTROL_SATURATION = 50.0
-CONTROL_SATURATION_DEFAULT: tuple[float, float] = (-50.0, 50.0)
-
-# Double pendulum physical parameters (2-DoF golf swing proxy)
-PENDULUM_M1 = 1.0  # kg, mass of upper link
-PENDULUM_M2 = 1.0  # kg, mass of lower link
-PENDULUM_L1 = 0.5  # m, length of upper link
-PENDULUM_L2 = 0.5  # m, length of lower link
 
 logger = logging.getLogger(__name__)
 
@@ -155,27 +128,6 @@ def generate_reference_trajectory(
 # ---------------------------------------------------------------------------
 # Controllers
 # ---------------------------------------------------------------------------
-
-
-@dataclass
-class BenchmarkResult:
-    """Container for the output of a single benchmark run.
-
-    Attributes:
-        name: Human-readable controller name used in reports.
-        tracking_error: Integrated squared state-tracking error.
-        control_effort: Integrated squared control input norm.
-        runtime_sec: Wall-clock time for the benchmark run in seconds.
-        trajectory: State trajectory array, shape ``(T, n)``.
-        t_grid: Time grid corresponding to *trajectory*, shape ``(T,)``.
-    """
-
-    name: str
-    tracking_error: float
-    control_effort: float
-    runtime_sec: float
-    trajectory: np.ndarray = field(repr=False)
-    t_grid: np.ndarray = field(repr=False)
 
 
 def setpoint_lqr_controller(
