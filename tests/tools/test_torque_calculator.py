@@ -357,7 +357,7 @@ class TestEvaluatePolynomial:
             result, err = _evaluate_polynomial(t, "undefined_var + t")
             # If caught, result is fallback array
             assert isinstance(result, np.ndarray)
-        except Exception:
+        except Exception:  # noqa: S110
             # If not caught, that's also acceptable behavior
             pass
 
