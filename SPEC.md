@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-04-29T20:45:00Z
+Last-Updated: 2026-04-29T21:00:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -197,6 +197,7 @@ AffineDrift/
 | F38 | Robust quaternion extraction            | ✅     | The rotation-representations reference article uses a numerically stable matrix-to-quaternion extraction path for trace-positive and dominant-axis cases, with executable regression coverage for 180-degree rotations about coordinate axes and arbitrary unit axes.                                                                                                                            |
 | F39 | Workflow documentation hygiene          | ✅     | `.github/workflows/` is kept to executable workflow definitions; workflow-directory documentation is tracked through `docs/development/repository_inventory.md` and `SPEC.md` so non-workflow Markdown does not live beside Actions YAML files.                                                                                                                                               |
 | F40 | Opt-in benchmark suite                  | ✅     | `benchmarks/` provides pytest-benchmark-compatible baseline timing checks for double-pendulum dynamics and trajectory-cost helpers; normal `pytest` remains scoped to `tests/` so routine validation does not run benchmark timing.                                                                                                                                                          |
+| F41 | Distributed code review enforcement     | ✅     | `.github/workflows/block-self-merge.yml` prevents PR authors from approving their own pull requests; enforced at the review stage with branch protection rules as the authoritative gate                                                                                                                                                                                  |
 
 ### API / Interface Contract
 
@@ -277,8 +278,10 @@ AffineDrift/
 
 - Python version: 3.12
 - Core runtime dependencies pinned to exact versions in `requirements.txt`
-- Test discovery paths
+- Test discovery paths: `tests/` for unit/integration tests and `benchmarks/` for performance benchmarks
+- pytest markers: `integration`, `content_lint`, and `benchmark` for test categorization
 - Coverage configuration (minimum 50%)
+- Opt-in pytest-benchmark suite (`benchmarks/` directory scoped separately from `tests/`)
 
 **Code Quality Settings:**
 
@@ -301,6 +304,7 @@ AffineDrift follows a **test pyramid** strategy: unit tests form the base (fast,
 | Integration                      | `tests/test_integration/`                                                      | pytest                | `@pytest.mark.integration` |
 | Content/Structure                | `tests/test_content/`                                                          | pytest                | `@pytest.mark.content`     |
 | Specialized (DbC, RL benchmarks) | `tests/test_specialized/`                                                      | pytest                | `@pytest.mark.specialized` |
+| Performance Benchmarks           | `benchmarks/`                                                                  | pytest-benchmark      | `@pytest.mark.benchmark`   |
 | JavaScript/Bibliography          | `tests/`                                                                       | Jest                  | N/A                        |
 | End-to-End                       | `tests/e2e/`                                                                   | Playwright (Chromium) | N/A                        |
 
@@ -361,6 +365,7 @@ AffineDrift follows a **test pyramid** strategy: unit tests form the base (fast,
 | `link-check.yml`          | Push/PR         | Validate all links in content                                                                   | Yes                |
 | `css-budget.yml`          | Push/PR         | Enforce CSS file size limits                                                                    | Yes                |
 | `module-size-budget.yml`  | Push/PR         | Enforce Python module complexity                                                                | Yes                |
+| `block-self-merge.yml`    | PR review/open  | Prevent PR author self-approval; enforce distributed code review requirement                   | Yes                |
 | `dry-tracker.yml`         | Nightly         | Identify code duplication patterns                                                              | No (informational) |
 | `Jules automation agents` | Various         | Automated code review, refactoring suggestions                                                  | No (informational) |
 
@@ -585,3 +590,5 @@ python src/tools/code_quality_ast.py
 | 2026-04-27 | 1.0.85 | perf(frontend): synchronized performance optimizations from modular JS files to the monolithic `script.js` (replaced querySelectorAll with live collections, optimized string methods, etc.). |
 | 2026-04-28 | 1.0.87 | ci(workflows): harden runner-routing workflows to create the `GITHUB_OUTPUT` parent directory before writing outputs, remove unnecessary full-history checkout from comment conversion, and run the local-only workflow guard with `python3` in CI. |
 | 2026-04-29 | 1.0.89 | test(benchmarks): add opt-in pytest-benchmark scaffolding, lightweight baseline benchmarks, and local benchmarking documentation for issue #2919. |
+| 2026-04-29 | 1.0.90 | feat(ci): add `.github/workflows/block-self-merge.yml` to enforce distributed code review policy, preventing PR authors from approving their own pull requests with branch protection as the authoritative enforcement gate (issue #2918). |
+| 2026-04-29 | 1.0.91 | docs(spec): document code review enforcement and benchmark suite integration in SPEC.md with feature entry F41, test organization updates, and pytest configuration details. |
