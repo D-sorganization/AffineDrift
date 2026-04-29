@@ -1,0 +1,151 @@
+# Gitleaks Configuration for AffineDrift
+# Detects hardcoded secrets, API keys, tokens, passwords, and credentials
+# Updated: 2026-04-29
+
+title = "AffineDrift Gitleaks Configuration"
+
+# ============================================================================
+# Rules: Secrets to block
+# ============================================================================
+
+[[rules]]
+description = "AWS Access Key ID"
+id = "aws-access-key"
+regex = '''(?i)(aws_access_key_id|AKIA[0-9A-Z]{16})'''
+keywords = ["aws_access_key_id", "AKIA"]
+entropy = 3.5
+
+[[rules]]
+description = "AWS Secret Access Key"
+id = "aws-secret-key"
+regex = '''(?i)(aws_secret_access_key)\s*[=:]\s*["\']?([A-Za-z0-9/+=]{40})["\']?'''
+keywords = ["aws_secret_access_key"]
+
+[[rules]]
+description = "GitHub Personal Access Token"
+id = "github-token"
+regex = '''(gh[pousr]_[A-Za-z0-9_]{36,255})'''
+keywords = ["gh_", "github_token"]
+
+[[rules]]
+description = "GitHub OAuth Token"
+id = "github-oauth"
+regex = '''(?i)(github_token|github_oauth_token)\s*[=:]\s*["\']?([A-Za-z0-9_-]{20,})["\']?'''
+keywords = ["github_token", "github_oauth"]
+
+[[rules]]
+description = "Anthropic API Key"
+id = "anthropic-api-key"
+regex = '''(?i)(anthropic[_-]?api[_-]?key|ANTHROPIC_API_KEY)\s*[=:]\s*["\']?(sk-ant-[A-Za-z0-9_-]{40,})["\']?'''
+keywords = ["anthropic", "api_key", "sk-ant"]
+
+[[rules]]
+description = "OpenAI API Key"
+id = "openai-api-key"
+regex = '''(?i)(openai[_-]?api[_-]?key|OPENAI_API_KEY)\s*[=:]\s*["\']?(sk-[A-Za-z0-9_-]{40,})["\']?'''
+keywords = ["openai", "api_key", "sk-"]
+
+[[rules]]
+description = "Stripe Live API Key"
+id = "stripe-live-key"
+regex = '''sk_live_[A-Za-z0-9_-]{20,}'''
+keywords = ["sk_live_"]
+
+[[rules]]
+description = "Stripe Test API Key"
+id = "stripe-test-key"
+regex = '''sk_test_[A-Za-z0-9_-]{20,}'''
+keywords = ["sk_test_"]
+
+[[rules]]
+description = "Generic API Key in Code"
+id = "generic-api-key"
+regex = '''(?i)(api[_-]?key|apikey|api_secret)\s*[=:]\s*["\']([^"\']{20,})["\']'''
+keywords = ["api_key", "apikey", "api_secret"]
+
+[[rules]]
+description = "Database Connection String with Credentials"
+id = "database-url-with-creds"
+regex = '''(?i)(database[_-]?url|db[_-]?url|connection[_-]?string)\s*[=:]\s*["\']?([a-z]+://[^:]+:[^@]+@[^"\']+)["\']?'''
+keywords = ["database_url", "connection_string", "://"]
+
+[[rules]]
+description = "Generic Password Assignment"
+id = "password-assignment"
+regex = '''(?i)(password|passwd)\s*[=:]\s*["\']([^"\']{8,})["\']'''
+keywords = ["password", "passwd"]
+entropy = 3.0
+
+[[rules]]
+description = "Bearer Token in Authorization"
+id = "bearer-token"
+regex = '''(?i)authorization\s*[=:]\s*["\']?(Bearer|Bearer\s+[A-Za-z0-9_\-\.]{20,})["\']?'''
+keywords = ["bearer", "authorization", "token"]
+
+[[rules]]
+description = "Slack Webhook URL"
+id = "slack-webhook"
+regex = '''https://hooks\.slack\.com/services/T[A-Z0-9]{8}/B[A-Z0-9]{8}/[A-Za-z0-9_-]{24}'''
+keywords = ["hooks.slack.com"]
+
+[[rules]]
+description = "Private SSH Key"
+id = "private-ssh-key"
+regex = '''-----BEGIN (RSA|EC|OPENSSH|PGP|DSA) PRIVATE KEY-----'''
+keywords = ["PRIVATE KEY"]
+
+# ============================================================================
+# Allowlists: False positives to exclude
+# ============================================================================
+
+[[allowlist]]
+description = "Allowlist: .env.example (template file, no real secrets)"
+paths = ['''\.env\.example$''']
+regexes = [
+    '''(?i)(api[_-]?key|password|secret|token|credential)'''
+]
+
+[[allowlist]]
+description = "Allowlist: Example/template code in comments"
+paths = ['''(\.py|\.js|\.md|\.rst)$''']
+regexes = [
+    '''# Example:|# TODO:|# FIXME:|# Example usage'''
+]
+
+[[allowlist]]
+description = "Allowlist: Documentation and README"
+paths = ['''(README|readme|CONTRIBUTING|contributing|docs)\.md$''']
+regexes = [
+    '''(api[_-]?key|password|secret|token)'''
+]
+
+[[allowlist]]
+description = "Allowlist: GitHub Actions secrets syntax (safe - uses secret context)"
+paths = ['''\.github/workflows/.*\.ya?ml$''']
+regexes = [
+    '''secrets\..+|GITHUB_TOKEN|CODECOV_TOKEN'''
+]
+
+# ============================================================================
+# Configuration
+# ============================================================================
+
+[source]
+exclude_paths = [
+    "\.git/",
+    "__pycache__/",
+    "\.pytest_cache/",
+    "node_modules/",
+    "\.venv/",
+    "\.mypy_cache/",
+    "\.ruff_cache/",
+    "build/",
+    "dist/",
+]
+
+[output]
+json = false
+csv = false
+sarif = false
+
+[verbose]

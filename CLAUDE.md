@@ -39,18 +39,19 @@ quarto render                                          # build the site
 
 ## CI Requirements (All Must Pass)
 
-1. `ruff check` — zero violations
-2. `black --check --line-length 100` — zero diffs (NOT ruff format)
-3. CSS budget validation — stylesheet sizes within configured limits
-4. Bibliography quality check — BibTeX well-formed, no broken refs
-5. DRY adoption tracking — duplication metrics monitored
-6. Module size budget — enforced per-file
-7. pytest with **50% coverage minimum** — coverage must not decrease
-8. Jest — all JS tests pass
-9. Playwright E2E — critical user flows pass
-10. CSS mirror enforcement — `css/` must be mirrored in `docs/` (never edit `docs/` CSS directly)
-11. No `print()` in `src/` — use logging
-12. No TODO/FIXME unless tied to a tracked GitHub issue
+1. **Gitleaks secret scan** — zero hardcoded secrets detected (API keys, tokens, passwords)
+2. `ruff check` — zero violations
+3. `black --check --line-length 100` — zero diffs (NOT ruff format)
+4. CSS budget validation — stylesheet sizes within configured limits
+5. Bibliography quality check — BibTeX well-formed, no broken refs
+6. DRY adoption tracking — duplication metrics monitored
+7. Module size budget — enforced per-file
+8. pytest with **50% coverage minimum** — coverage must not decrease
+9. Jest — all JS tests pass
+10. Playwright E2E — critical user flows pass
+11. CSS mirror enforcement — `css/` must be mirrored in `docs/` (never edit `docs/` CSS directly)
+12. No `print()` in `src/` — use logging
+13. No TODO/FIXME unless tied to a tracked GitHub issue
 
 ## Content Authoring
 
