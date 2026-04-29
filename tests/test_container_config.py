@@ -11,7 +11,9 @@ def test_dockerfile_uses_multistage_python_312_runtime() -> None:
     assert "QUARTO_VERSION=1.6.39" in dockerfile
     assert "python -m pip install --no-cache-dir -r requirements.txt" in dockerfile
     assert "quarto render . --to html" in dockerfile
-    assert "COPY --from=builder --chown=affinedrift:affinedrift /workspace/docs/ /site/" in dockerfile
+    assert (
+        "COPY --from=builder --chown=affinedrift:affinedrift /workspace/docs/ /site/" in dockerfile
+    )
 
 
 def test_dockerfile_runs_as_non_root_static_server() -> None:
