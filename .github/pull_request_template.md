@@ -10,7 +10,10 @@
 
 ## Review Readiness
 
-- [ ] Independent reviewer requested; PR author will not self-approve or self-merge
+- [ ] Independent reviewer requested and is not the PR author
+- [ ] PR author will not self-approve or self-merge
+- [ ] Latest material commit will be reviewed by someone other than its pusher
+- [ ] All review threads will be resolved before merge
 - [ ] Review focus areas listed (correctness, tests, security, maintainability, ownership)
 - [ ] Ownership and reviewer-rotation needs documented for cross-module changes
 - [ ] Material follow-up commits will re-request review before merge
