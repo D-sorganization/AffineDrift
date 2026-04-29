@@ -21,21 +21,14 @@ from src.tools.rl_funnel_support import (
     GRAVITY_M_S2,
     PENDULUM_L1,
     PENDULUM_L2,
-    PENDULUM_LINK_1_M,
-    PENDULUM_LINK_2_M,
     PENDULUM_M1,
     PENDULUM_M2,
-    PENDULUM_MASS_1_KG,
-    PENDULUM_MASS_2_KG,
     BenchmarkResult,
     double_pendulum_mass_matrix,
     format_results,
-    validate_reference_trajectory,
     validate_state_vector,
-    validate_time_span,
     validate_weight_matrix,
 )
-
 
 logger = logging.getLogger(__name__)
 

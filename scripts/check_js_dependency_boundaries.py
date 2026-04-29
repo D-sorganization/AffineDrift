@@ -45,6 +45,38 @@ def _to_repo_relative(repo_root: Path, candidate: str) -> str | None:
     return candidate.replace("\\", "/")
 
 
+def _check_file_rules(
+    repo_root: Path, file_path: Path, rules: list, excludes: list
+) -> list[str]:
+    """Check dependency rules for a single file."""
+    rel = file_path.relative_to(repo_root).as_posix()
+    if not file_path.is_file() or "node_modules/" in rel:
+        return []
+    if any(excl in rel for excl in excludes):
+        return []
+
+    violations: list[str] = []
+    imports = _extract_imports(file_path)
+    for line_no, specifier in imports:
+        candidate = _resolve_import_target(repo_root, rel, specifier)
+        if not candidate:
+            continue
+        imported_rel = _to_repo_relative(repo_root, candidate)
+        if not imported_rel:
+            continue
+
+        for rule in rules:
+            source_prefix = rule["source_prefix"]
+            if rel.startswith(source_prefix):
+                for forbidden in rule["forbidden_prefixes"]:
+                    if imported_rel.startswith(forbidden):
+                        violations.append(
+                            f"{rel}:{line_no} {source_prefix} must not import "
+                            f"{forbidden} (found: {specifier})"
+                        )
+    return violations
+
+
 def check_rules(repo_root: Path) -> list[str]:
     """Check all JS dependency boundary rules from config."""
     config = load_config(repo_root, "js_dependency_boundaries.json")
@@ -53,33 +85,7 @@ def check_rules(repo_root: Path) -> list[str]:
 
     violations: list[str] = []
     for file_path in repo_root.rglob("*.js"):
-        rel = file_path.relative_to(repo_root).as_posix()
-        if not file_path.is_file():
-            continue
-        if "node_modules/" in rel:
-            continue
-        if any(excl in rel for excl in excludes):
-            continue
-
-        imports = _extract_imports(file_path)
-        for line_no, specifier in imports:
-            candidate = _resolve_import_target(repo_root, rel, specifier)
-            if not candidate:
-                continue
-            imported_rel = _to_repo_relative(repo_root, candidate)
-            if not imported_rel:
-                continue
-
-            for rule in rules:
-                source_prefix = rule["source_prefix"]
-                if not rel.startswith(source_prefix):
-                    continue
-                for forbidden_prefix in rule["forbidden_prefixes"]:
-                    if imported_rel.startswith(forbidden_prefix):
-                        violations.append(
-                            f"{rel}:{line_no} {source_prefix} must not import "
-                            f"{forbidden_prefix} (found: {specifier})"
-                        )
+        violations.extend(_check_file_rules(repo_root, file_path, rules, excludes))
 
     return violations
 
