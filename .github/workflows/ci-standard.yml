@@ -32,8 +32,17 @@ jobs:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
     steps:
       - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
       - uses: actions/setup-python@v6
         with: { python-version: "3.12" }
+
+      - name: Scan for Hardcoded Secrets (Gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+        with:
+          verbose: true
+          fail: true
+          config: .gitleaks.toml
 
       - name: Install System Dependencies
         run: |
