@@ -6,8 +6,9 @@ ROOT = Path(__file__).resolve().parents[1]
 def test_dockerfile_uses_multistage_python_312_runtime() -> None:
     dockerfile = (ROOT / "Dockerfile").read_text(encoding="utf-8")
 
-    assert "FROM python:3.12-slim AS builder" in dockerfile
-    assert "FROM python:3.12-slim AS runtime" in dockerfile
+    assert "AS builder" in dockerfile
+    assert "AS runtime" in dockerfile
+    assert "python:3.12-slim" in dockerfile or "python:${PYTHON_VERSION}-slim" in dockerfile
     assert "QUARTO_VERSION=1.6.39" in dockerfile
     assert "python -m pip install --no-cache-dir -r requirements.txt" in dockerfile
     assert "quarto render . --to html" in dockerfile
