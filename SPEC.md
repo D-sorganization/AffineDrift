@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-04-27T10:02:00Z
+Last-Updated: 2026-04-29T02:10:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,8 +29,8 @@ Last-Updated: 2026-04-27T10:02:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.87                                           |
-| **Last Spec Update**    | 2026-04-28                                       |
+| **Spec Version**        | 1.0.88                                           |
+| **Last Spec Update**    | 2026-04-29                                       |
 
 ## 2. Purpose & Mission
 
@@ -192,6 +192,7 @@ AffineDrift/
 | F36 | Dynamic beam model consistency          | ✅     | Physics of Golf chapter 11 uses the dynamic Euler-Bernoulli equation with explicit inertial term and a content test guards the modal consistency of the governing equation in the chapter source.                                                                                                                                                                                                |
 | F37 | Double-pendulum parameter context       | ✅     | Physics of Golf chapters 3, 6, and 8 explicitly document when their double- or triple-pendulum parameters are canonical chapter baselines versus compact worked-example sets, with content tests guarding the modeling-context notes.                                                                                                                                                            |
 | F38 | Robust quaternion extraction            | ✅     | The rotation-representations reference article uses a numerically stable matrix-to-quaternion extraction path for trace-positive and dominant-axis cases, with executable regression coverage for 180-degree rotations about coordinate axes and arbitrary unit axes.                                                                                                                            |
+| F39 | Workflow documentation hygiene          | ✅     | `.github/workflows/` is kept to executable workflow definitions; workflow-directory documentation is tracked through `docs/development/repository_inventory.md` and `SPEC.md` so non-workflow Markdown does not live beside Actions YAML files.                                                                                                                                               |
 
 ### API / Interface Contract
 
