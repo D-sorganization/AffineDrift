@@ -810,6 +810,35 @@ Relates to #789
 
 ````
 
+## Code Review Guidelines
+
+Branch protection requires **1 approving review** before any PR can be merged. Self-merges are blocked at the GitHub level.
+
+### For Reviewers
+
+**What to check:**
+
+1. **Correctness** — Does the logic do what the description claims? Are edge cases handled?
+2. **Tests** — Are new behaviors covered by tests? Do existing tests still pass?
+3. **Documentation** — Are public functions/modules documented? Is CONTRIBUTING.md or a relevant guide updated if the change affects workflows?
+4. **Style** — Does the code follow project conventions (`ruff`, `mypy`, conventional commits, type hints, no `print()`)?
+5. **Scope** — Is the PR focused? Flag unrelated changes for a follow-up PR.
+
+**How to respond:**
+
+- **Approve** when all blockers are resolved and the change is ready to ship.
+- **Request changes** for anything that must be fixed before merging. Leave clear, actionable comments.
+- **Comment** (no approval/block) for suggestions, questions, or non-blocking nits — label these `[nit]` or `[optional]` so the author knows they are not required.
+
+**Review SLA:** Aim to leave a first response within **48 hours** of PR creation. If you cannot review in time, say so in a comment so another reviewer can step in.
+
+### For Authors
+
+- Assign at least one reviewer before marking a PR ready for review.
+- Respond to review comments within 48 hours or leave a note if you need more time.
+- Mark conversations as resolved only after addressing them (not to dismiss them).
+- Do not force-push to a branch under active review without notifying reviewers.
+
 ## Code of Conduct
 
 ### Be Respectful
