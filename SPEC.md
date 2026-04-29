@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-04-29T22:00:00Z
+Last-Updated: 2026-04-29T23:00:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-04-29T22:00:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.91                                           |
+| **Spec Version**        | 1.0.92                                           |
 | **Last Spec Update**    | 2026-04-29                                       |
 
 ## 2. Purpose & Mission
@@ -197,7 +197,8 @@ AffineDrift/
 | F38 | Robust quaternion extraction            | ✅     | The rotation-representations reference article uses a numerically stable matrix-to-quaternion extraction path for trace-positive and dominant-axis cases, with executable regression coverage for 180-degree rotations about coordinate axes and arbitrary unit axes.                                                                                                                            |
 | F39 | Workflow documentation hygiene          | ✅     | `.github/workflows/` is kept to executable workflow definitions; workflow-directory documentation is tracked through `docs/development/repository_inventory.md` and `SPEC.md` so non-workflow Markdown does not live beside Actions YAML files.                                                                                                                                               |
 | F40 | Opt-in benchmark suite                  | ✅     | `benchmarks/` provides pytest-benchmark-compatible baseline timing checks for double-pendulum dynamics and trajectory-cost helpers; normal `pytest` remains scoped to `tests/` so routine validation does not run benchmark timing.                                                                                                                                                          |
-| F41 | Distributed code review enforcement     | ✅     | `.github/workflows/block-self-merge.yml` prevents PR authors from approving their own pull requests; enforced at the review stage with branch protection rules as the authoritative gate                                                                                                                                                                                  |
+| F41 | Distributed code review enforcement     | ✅     | .github/workflows/block-self-merge.yml prevents PR authors from approving their own pull requests; enforced at the review stage with branch protection rules as the authoritative gate |
+| F42 | Cyclomatic complexity (McCabe) gate     | ✅     | Enforces `max-complexity = 10` in Ruff CI to maintain code quality |
 
 ### API / Interface Contract
 
