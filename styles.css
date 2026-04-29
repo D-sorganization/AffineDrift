@@ -2,6 +2,7 @@
    AffineDrift - Modern Scientific Layout
    --- */
 
+@import url("css/breakpoints.css");
 @import url("css/bibliography.css");
 @import url("css/critics-corner.css");
 @import url("css/resources.css");
@@ -859,6 +860,11 @@ nav .container {
   border: 1px solid rgb(255, 255, 255, 0.2);
   color: #fff;
   padding: 0.5rem 0.75rem;
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
   /* Increased for better touch targets (min 44px tap area) */
   font-size: var(--fs-xs);
@@ -889,7 +895,7 @@ nav .container {
    --- */
 
 /* Large Tablet / Small Laptop: Collapse Right Sidebar first if needed, or shrink sidebars */
-@media (width < 1200px) {
+@media (width < var(--breakpoint-xl)) {
   :root {
     --sidebar-width: 240px;
     --sidebar-gap: 2rem;
@@ -897,7 +903,7 @@ nav .container {
 }
 
 /* Tablet: Switch to 2 columns (Left Sidebar + Content) */
-@media (width < 992px) {
+@media (width < var(--breakpoint-lg)) {
   .page-columns.page-full .standard-page-layout,
   .container .standard-page-layout,
   .standard-page-layout {
@@ -912,7 +918,7 @@ nav .container {
 }
 
 /* Mobile: Single Column */
-@media (width < 768px) {
+@media (width < var(--breakpoint-md)) {
   :root {
     --header-height: 60px;
   }
@@ -1277,6 +1283,8 @@ h3:hover .anchor-link,
   justify-content: center;
   margin-left: 0.5rem;
   padding: 0.25rem;
+  min-height: 44px;
+  min-width: 44px;
   background: transparent;
   border: 1px solid transparent;
   border-radius: 4px;
@@ -1492,7 +1500,7 @@ h3:hover .anchor-link,
 }
 
 /* In Layman's Terms - Responsive */
-@media (width < 768px) {
+@media (width < var(--breakpoint-md)) {
   .laymans-terms-header {
     padding: 0.875rem 1rem;
   }
@@ -1611,6 +1619,7 @@ form.contact-form .form-group textarea {
   width: 100%;
   box-sizing: border-box;
   padding: 0.75rem;
+  min-height: 44px;
   border: 1px solid var(--border-color);
   border-radius: 4px;
   font-family: "Noto Sans", sans-serif;
@@ -1653,7 +1662,7 @@ form.contact-form .form-group textarea {
   /* Full width button on mobile, auto on desktop? */
 }
 
-@media (width > 768px) {
+@media (width >= var(--breakpoint-md)) {
   .btn-primary {
     width: auto;
   }
@@ -1679,6 +1688,7 @@ form.contact-form .form-group textarea {
   display: flex;
   align-items: center;
   padding: 0.5rem;
+  min-height: 44px;
   background: var(--bg-body);
   border: 1px solid var(--border-color);
   border-radius: 4px;
@@ -1693,7 +1703,7 @@ form.contact-form .form-group textarea {
 }
 
 /* Responsive for Contact */
-@media (width < 900px) {
+@media (width < var(--breakpoint-lg)) {
   .contact-layout {
     flex-direction: column;
     gap: 2rem;
@@ -1863,7 +1873,7 @@ form.contact-form .form-group textarea {
 }
 
 /* Responsive Home Layout */
-@media (width <=1200px) {
+@media (width <= var(--breakpoint-xl)) {
   .home-toc {
     display: none;
 
@@ -1871,7 +1881,7 @@ form.contact-form .form-group textarea {
   }
 }
 
-@media (width <=1024px) {
+@media (width <= var(--breakpoint-lg)) {
   .home-layout {
     flex-direction: column;
     gap: 2rem;
@@ -1951,7 +1961,7 @@ form.contact-form .form-group textarea {
 }
 
 /* Responsive for List View */
-@media (width < 768px) {
+@media (width < var(--breakpoint-md)) {
   .resource-list .resource-card {
     flex-direction: column;
   }
@@ -2030,7 +2040,7 @@ h1.title,
 /* Ensure the grid doesn't collapse the main content too aggressively */
 
 /* Using high specificity to override Quarto's .page-columns defaults */
-@media (width >=1200px) {
+@media (width >= var(--breakpoint-xl)) {
   div.standard-page-layout,
   .standard-page-layout {
     display: grid !important;
@@ -2077,7 +2087,7 @@ h1.title,
   }
 }
 
-@media (width < 1200px) {
+@media (width < var(--breakpoint-xl)) {
   .standard-page-layout {
     display: grid;
     grid-template-columns: 240px minmax(0, 1fr);
@@ -2481,7 +2491,7 @@ h1.title,
 /* Homepage sidebar remains but uses standard navbar-toggler button */
 
 /* Home Page 3-Column Responsive */
-@media (width <=1200px) {
+@media (width <= var(--breakpoint-xl)) {
   .home-layout-3col {
     grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
     gap: 2rem;
@@ -2492,7 +2502,7 @@ h1.title,
   }
 }
 
-@media (width <=1024px) {
+@media (width <= var(--breakpoint-lg)) {
   .home-layout-3col {
     display: flex;
     flex-direction: column;
@@ -2533,7 +2543,7 @@ h1.title,
   }
 }
 
-@media (width <=768px) {
+@media (width <= var(--breakpoint-md)) {
   /* Mobile: Hamburger menu shown by Quarto navbar (see navigation.js) */
   /* CONSOLIDATED: Mobile sidebar no longer uses .mobile-menu-toggle */
   /* Now uses standard .navbar-toggler with unified keyboard/ARIA support */
