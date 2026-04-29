@@ -33,4 +33,3 @@ def benchmark_config(benchmark: pytest.BenchmarkFixture) -> None:  # type: ignor
     """
     # These settings are applied via pytest-benchmark's built-in mechanisms
     # and CLI arguments (--benchmark-disable-gc, --benchmark-warmup, etc.)
-    pass

@@ -34,6 +34,7 @@ class TestTrajectoryCostBenchmarks:
         target = np.array([3.0])
 
         def compute_cost() -> float:
+            """Compute setpoint cost for the small trajectory."""
             return setpoint_cost(trajectory, target)
 
         result = benchmark(compute_cost)
@@ -53,6 +54,7 @@ class TestTrajectoryCostBenchmarks:
         target = np.array([5.0])
 
         def compute_cost() -> float:
+            """Compute setpoint cost for the medium trajectory."""
             return setpoint_cost(trajectory, target)
 
         result = benchmark(compute_cost)
@@ -72,6 +74,7 @@ class TestTrajectoryCostBenchmarks:
         trajectory = reference.copy()
 
         def compute_cost() -> float:
+            """Compute trajectory tracking cost for the small reference."""
             return trajectory_tracking_cost(trajectory, reference)
 
         result = benchmark(compute_cost)
@@ -91,6 +94,7 @@ class TestTrajectoryCostBenchmarks:
         trajectory = reference.copy()
 
         def compute_cost() -> float:
+            """Compute trajectory tracking cost for the medium reference."""
             return trajectory_tracking_cost(trajectory, reference)
 
         result = benchmark(compute_cost)
@@ -110,6 +114,7 @@ class TestTrajectoryCostBenchmarks:
         trajectory = reference.copy() + np.random.normal(0, 0.01, reference.shape)
 
         def compute_cost() -> float:
+            """Compute trajectory tracking cost for the large reference."""
             return trajectory_tracking_cost(trajectory, reference)
 
         result = benchmark(compute_cost)
@@ -131,6 +136,7 @@ class TestTrajectoryCostBenchmarks:
         trajectory[20:30] += 0.5  # Introduce 0.5 unit deviation
 
         def compute_cost() -> float:
+            """Compute trajectory tracking cost when actual deviates from reference."""
             return trajectory_tracking_cost(trajectory, reference)
 
         result = benchmark(compute_cost)
@@ -148,6 +154,7 @@ class TestTrajectoryCostBenchmarks:
         """
 
         def compute_gap() -> dict[str, float]:
+            """Compute the cost gap between setpoint and tracking objectives."""
             return benchmark_cost_gap()
 
         result = benchmark(compute_gap)
@@ -172,6 +179,7 @@ def test_benchmark_cost_computation_scaling(
     trajectory = reference.copy() + np.random.normal(0, 0.05, reference.shape)
 
     def compute_cost() -> float:
+        """Compute tracking cost for the 4D scaling trajectory."""
         return trajectory_tracking_cost(trajectory, reference)
 
     benchmark(compute_cost)

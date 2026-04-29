@@ -37,6 +37,7 @@ class TestRLFunnelBenchmarks:
         t = 0.0
 
         def drift_step() -> np.ndarray:
+            """Invoke double_pendulum_drift for one timestep."""
             return double_pendulum_drift(t, x)
 
         result = benchmark(drift_step)
@@ -57,6 +58,7 @@ class TestRLFunnelBenchmarks:
         time = 0.0
 
         def controller_eval() -> np.ndarray:
+            """Build and evaluate the setpoint LQR controller."""
             controller = setpoint_lqr_controller(target)
             return controller(time, state)
 
@@ -80,6 +82,7 @@ class TestRLFunnelBenchmarks:
         x_eval = np.array([0.5, 0.3, 0.1, -0.2])
 
         def tracking_eval() -> np.ndarray:
+            """Evaluate the trajectory-tracking LQR law at the given state."""
             return trajectory_tracking_lqr(t_ref, x_ref)(t_eval, x_eval)
 
         result = benchmark(tracking_eval)
@@ -98,6 +101,7 @@ class TestRLFunnelBenchmarks:
         time_span = (0.0, 1.0)
 
         def gen_trajectory() -> tuple[np.ndarray, np.ndarray]:
+            """Generate a reference trajectory for the given time span."""
             return generate_reference_trajectory(time_span)
 
         t_ref, x_ref = benchmark(gen_trajectory)
@@ -117,6 +121,7 @@ class TestRLFunnelBenchmarks:
 
         # Create a setpoint controller function factory
         def create_controller() -> callable:  # type: ignore[name-defined]
+            """Build a setpoint LQR controller targeting the given state."""
             target = np.array([0.5, 0.3, 0.1, -0.2])
             return setpoint_lqr_controller(target)
 
@@ -125,6 +130,7 @@ class TestRLFunnelBenchmarks:
         time = 0.0
 
         def full_sim() -> None:
+            """Execute one control step of the setpoint LQR simulation."""
             # Simulate one control step
             _ = controller(time, state)
 

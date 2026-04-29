@@ -31,6 +31,7 @@ class TestAPIAndModuleLoadBenchmarks:
         """
 
         def import_core() -> Any:
+            """Import src.core from scratch, bypassing the module cache."""
             # Remove from cache to force fresh import
             if "src.core" in sys.modules:
                 del sys.modules["src.core"]
@@ -50,6 +51,7 @@ class TestAPIAndModuleLoadBenchmarks:
         """
 
         def import_contracts() -> Any:
+            """Import src.core.contracts from scratch, bypassing the module cache."""
             if "src.core.contracts" in sys.modules:
                 del sys.modules["src.core.contracts"]
             return importlib.import_module("src.core.contracts")
@@ -68,6 +70,7 @@ class TestAPIAndModuleLoadBenchmarks:
         """
 
         def import_optimizer() -> Any:
+            """Import swing_optimizer from scratch, bypassing the module cache."""
             if "src.affine_control.swing_optimizer" in sys.modules:
                 del sys.modules["src.affine_control.swing_optimizer"]
             return importlib.import_module("src.affine_control.swing_optimizer")
@@ -86,6 +89,7 @@ class TestAPIAndModuleLoadBenchmarks:
         """
 
         def import_ball_flight() -> Any:
+            """Import ball_flight from scratch, bypassing the module cache."""
             if "src.golf_simulation.ball_flight" in sys.modules:
                 del sys.modules["src.golf_simulation.ball_flight"]
             return importlib.import_module("src.golf_simulation.ball_flight")
@@ -105,6 +109,7 @@ class TestAPIAndModuleLoadBenchmarks:
         data = np.random.randn(100)
 
         def serialize_small() -> bytes:
+            """Serialize the small array to raw bytes."""
             return data.tobytes()
 
         result = benchmark(serialize_small)
@@ -123,6 +128,7 @@ class TestAPIAndModuleLoadBenchmarks:
         data = np.random.randn(10000)
 
         def serialize_large() -> bytes:
+            """Serialize the large array to raw bytes."""
             return data.tobytes()
 
         result = benchmark(serialize_large)
@@ -140,6 +146,7 @@ class TestAPIAndModuleLoadBenchmarks:
         data = np.random.randn(100).tobytes()
 
         def deserialize_small() -> np.ndarray:
+            """Deserialize the small byte buffer back to a NumPy array."""
             return np.frombuffer(data, dtype=np.float64)
 
         result = benchmark(deserialize_small)
@@ -156,6 +163,7 @@ class TestAPIAndModuleLoadBenchmarks:
         data = np.random.randn(10000).tobytes()
 
         def deserialize_large() -> np.ndarray:
+            """Deserialize the large byte buffer back to a NumPy array."""
             return np.frombuffer(data, dtype=np.float64)
 
         result = benchmark(deserialize_large)
@@ -185,6 +193,7 @@ class TestAPIAndModuleLoadBenchmarks:
         }
 
         def serialize_json() -> str:
+            """Serialize the metadata dict to a JSON string."""
             return json.dumps(metadata)
 
         result = benchmark(serialize_json)
@@ -202,6 +211,7 @@ class TestAPIAndModuleLoadBenchmarks:
         trajectory = np.random.randn(4, 100)  # 4D state, 100 timesteps
 
         def compute_summary() -> dict[str, Any]:
+            """Compute summary statistics for the trajectory."""
             return {
                 "n_states": trajectory.shape[1],
                 "state_dim": trajectory.shape[0],
@@ -225,6 +235,7 @@ def test_benchmark_full_module_startup(
     """
 
     def startup() -> None:
+        """Import all essential modules in dependency order."""
         # Import core modules in dependency order
         importlib.import_module("src.core.constants")
         importlib.import_module("src.core.contracts")
@@ -251,6 +262,7 @@ def test_benchmark_result_preparation_query_response(
     controls = np.random.randn(2, 49)
 
     def prepare_response() -> str:
+        """Format and JSON-serialize a complete optimization result."""
         response = {
             "status": "success",
             "trajectory": {
