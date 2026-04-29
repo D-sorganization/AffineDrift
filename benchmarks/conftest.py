@@ -22,8 +22,8 @@ def _enforce_contracts() -> Generator[None, None, None]:
     set_contract_level(original)
 
 
-@pytest.fixture(scope="session")
-def benchmark_config(benchmark: pytest.BenchmarkFixture) -> None:  # type: ignore[name-defined]
+@pytest.fixture(scope="session", autouse=True)
+def benchmark_config() -> None:
     """Configure benchmark execution parameters for scientific reproducibility.
 
     This fixture runs once per session and configures pytest-benchmark to:
