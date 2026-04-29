@@ -1,7 +1,28 @@
-version: '3.8'
-
 services:
-  affine_drift:
-    build: .
-    volumes:
-      - .:/app
+  affinedrift:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: affinedrift:local
+    environment:
+      AFFINEDRIFT_PORT: 8000
+    ports:
+      - "8080:8000"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/index.html', timeout=3).read(1)",
+        ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    read_only: true
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
