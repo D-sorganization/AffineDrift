@@ -57,17 +57,6 @@
 
   /* Typography limits */
   --prose-width: 75ch;
-
-  /* Missing Tokens (Issue #2726) */
-  --bg-card: var(--bg-body);
-  --bg-dark: var(--primary-dark);
-  --border-light: var(--border-color);
-  --legal-pad-yellow-accent: #fef9c3;
-  --legal-pad-yellow-border: #fde047;
-  --text-dark: var(--primary-dark);
-  --text-light: var(--text-muted);
-  --bg-secondary: var(--bg-alt);
-  --primary-color: var(--accent-blue);
 }
 
 body {
@@ -411,6 +400,28 @@ figcaption {
    Header & Navigation
    --- */
 
+/*
+ * UNIFIED MOBILE NAVIGATION (Issue #2955)
+ *
+ * All mobile navigation (desktop & mobile) uses Quarto's navbar system:
+ * - Primary handler: .navbar-toggler (Bootstrap collapse button)
+ * - Collapse target: #navbarCollapse (Bootstrap collapse element)
+ * - JavaScript: js/navigation.js::initNavbarCollapse()
+ *
+ * Enhanced with:
+ * - Keyboard support: Escape to close, arrow keys to navigate
+ * - ARIA attributes: aria-expanded, aria-controls, role="navigation"
+ * - Touch targets: 44x44px minimum (WCAG 2.5.5)
+ *
+ * Removed:
+ * - Legacy .nav-toggle implementation (lines 614-621)
+ * - Homepage-specific .mobile-menu-toggle (lines 2435-2482)
+ * - Unused .sidebar-overlay (lines 2469-2482)
+ *
+ * This consolidation eliminates duplicate navigation code and ensures
+ * consistent mobile behavior across all pages.
+ */
+
 /* Skip to Content Link */
 .skip-to-content {
   position: fixed;
@@ -622,19 +633,11 @@ nav .container {
   width: 100%;
 }
 
-.nav-toggle {
-  display: none;
-  background: transparent;
-  border: none;
-  color: var(--pure-white);
-  font-size: 1.5rem;
-  cursor: pointer;
-}
+/* CONSOLIDATED: .nav-toggle removed - all mobile navigation uses unified navbar handler */
 
+/* WCAG 2.5.5 Target Size: Minimum 44x44px for touch targets */
 .navbar-brand,
 .navbar-toggler,
-.nav-toggle,
-.mobile-menu-toggle,
 #quarto-header [class*="aa-DetachedSearchButton"] {
   min-width: 44px;
   min-height: 44px;
@@ -923,29 +926,7 @@ nav .container {
     width: 100%;
   }
 
-  /* Navigation Mobile */
-  .nav-links {
-    display: none;
-
-    /* Use JS toggle */
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    flex-direction: column;
-    background: var(--bg-body);
-    padding: 1rem;
-    box-shadow: var(--shadow-md);
-    border-bottom: 1px solid var(--border-color);
-  }
-
-  .nav-links.active {
-    display: flex;
-  }
-
-  .nav-toggle {
-    display: block;
-  }
+  /* Navigation Mobile: Unified navbar collapse handled by Bootstrap and navigation.js */
 
   .logo-text {
     font-size: 1.2rem;
@@ -2473,54 +2454,9 @@ h1.title,
    --- */
 
 /* Mobile Menu Toggle Button */
-.mobile-menu-toggle {
-  display: none;
-  position: fixed;
-  top: 1rem;
-  left: 1rem;
-  z-index: 1001;
-  background: var(--primary-blue);
-  color: white;
-  border: none;
-  padding: 0.75rem;
-  border-radius: 8px;
-  cursor: pointer;
-  box-shadow: var(--shadow-md);
-}
-
-.mobile-menu-toggle svg {
-  width: 24px;
-  height: 24px;
-  fill: currentcolor;
-}
-
-.mobile-menu-toggle .icon-close {
-  display: none;
-}
-
-.mobile-menu-toggle.is-open .icon-menu {
-  display: none;
-}
-
-.mobile-menu-toggle.is-open .icon-close {
-  display: inline-flex;
-}
-
-/* Mobile Sidebar Overlay */
-.sidebar-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgb(0 0 0 / 50%);
-  z-index: 999;
-  display: none;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.sidebar-overlay.active {
-  display: block;
-  opacity: 1;
-}
+/* CONSOLIDATED: .mobile-menu-toggle and .sidebar-overlay removed */
+/* All mobile navigation now uses unified navbar handler (see navigation.js) */
+/* Homepage sidebar remains but uses standard navbar-toggler button */
 
 /* Home Page 3-Column Responsive */
 @media (width <=1200px) {
@@ -2576,34 +2512,26 @@ h1.title,
 }
 
 @media (width <=768px) {
-  /* Mobile: Show hamburger menu */
-  .mobile-menu-toggle {
-    display: block;
-    top: auto;
-    bottom: 1.5rem;
-    left: 1.5rem;
-  }
+  /* Mobile: Hamburger menu shown by Quarto navbar (see navigation.js) */
+  /* CONSOLIDATED: Mobile sidebar no longer uses .mobile-menu-toggle */
+  /* Now uses standard .navbar-toggler with unified keyboard/ARIA support */
 
-  body.home-menu-open {
-    overflow: hidden;
-  }
-
-  /* Mobile Sidebar Slide-in */
+  /* Home sidebar remains visible but no longer slides in */
   .home-sidebar {
-    position: fixed;
-    left: -320px;
-    top: 0;
-    height: 100vh;
-    width: 300px;
-    z-index: 1000;
-    overflow-y: auto;
-    transition: left 0.3s ease;
-    border-radius: 0;
-    padding-top: 4rem;
+    position: relative;
+    left: auto;
+    top: auto;
+    height: auto;
+    width: 100%;
+    z-index: auto;
+    overflow-y: visible;
+    transition: none;
+    border-radius: auto;
+    padding-top: auto;
   }
 
   .home-sidebar.open {
-    left: 0;
+    left: auto;
   }
 
   .home-sidebar .sidebar-sticky-content {
