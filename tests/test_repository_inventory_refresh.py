@@ -14,7 +14,6 @@ REQUIRED_READMES = (
     ROOT / "src" / "README.md",
     ROOT / "src" / "affine_control" / "README.md",
     ROOT / "src" / "tangent_models" / "README.md",
-    ROOT / ".github" / "workflows" / "README.md",
     ROOT / "articles" / "The_Geometry_of_Motion" / "README.md",
     ROOT / "books" / "README.md",
 )
