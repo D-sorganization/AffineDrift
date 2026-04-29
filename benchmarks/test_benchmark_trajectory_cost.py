@@ -22,7 +22,8 @@ class TestTrajectoryCostBenchmarks:
     """Benchmark suite for trajectory cost computation."""
 
     def test_benchmark_setpoint_cost_small(
-        self, benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
+        self,
+        benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
     ) -> None:
         """Benchmark setpoint cost for a small trajectory (4 states).
 
@@ -40,7 +41,8 @@ class TestTrajectoryCostBenchmarks:
         assert result >= 0.0
 
     def test_benchmark_setpoint_cost_medium(
-        self, benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
+        self,
+        benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
     ) -> None:
         """Benchmark setpoint cost for a medium trajectory (100 states).
 
@@ -58,7 +60,8 @@ class TestTrajectoryCostBenchmarks:
         assert result >= 0.0
 
     def test_benchmark_trajectory_tracking_cost_small(
-        self, benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
+        self,
+        benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
     ) -> None:
         """Benchmark trajectory tracking cost for a small reference (4 states).
 
@@ -76,7 +79,8 @@ class TestTrajectoryCostBenchmarks:
         assert result >= 0.0
 
     def test_benchmark_trajectory_tracking_cost_medium(
-        self, benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
+        self,
+        benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
     ) -> None:
         """Benchmark trajectory tracking cost for a medium reference (100 states).
 
@@ -94,7 +98,8 @@ class TestTrajectoryCostBenchmarks:
         assert result >= 0.0
 
     def test_benchmark_trajectory_tracking_cost_large(
-        self, benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
+        self,
+        benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
     ) -> None:
         """Benchmark trajectory tracking cost for a large reference (1000 states).
 
@@ -112,7 +117,8 @@ class TestTrajectoryCostBenchmarks:
         assert result >= 0.0
 
     def test_benchmark_trajectory_tracking_with_deviation(
-        self, benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
+        self,
+        benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
     ) -> None:
         """Benchmark trajectory tracking cost when actual deviates from reference.
 
@@ -132,7 +138,8 @@ class TestTrajectoryCostBenchmarks:
         assert result > 0.0
 
     def test_benchmark_setpoint_vs_tracking_gap(
-        self, benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
+        self,
+        benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
     ) -> None:
         """Benchmark the cost gap analysis between setpoint and tracking objectives.
 
@@ -161,7 +168,7 @@ def test_benchmark_cost_computation_scaling(
     # 4D state space trajectory (e.g., double pendulum: [th1, th2, dth1, dth2])
     reference = np.zeros((4, 100))
     reference[0, :] = np.linspace(0.0, np.pi, 100)
-    reference[1, :] = np.linspace(0.0, np.pi/2, 100)
+    reference[1, :] = np.linspace(0.0, np.pi / 2, 100)
     trajectory = reference.copy() + np.random.normal(0, 0.05, reference.shape)
 
     def compute_cost() -> float:

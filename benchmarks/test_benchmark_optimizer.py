@@ -15,9 +15,7 @@ from src.affine_control.swing_optimizer import SwingOptimizer
 from src.affine_control.swing_types import SwingOptimizationConfig
 
 
-def simple_double_integrator_dynamics(
-    x: np.ndarray, u: np.ndarray
-) -> np.ndarray:
+def simple_double_integrator_dynamics(x: np.ndarray, u: np.ndarray) -> np.ndarray:
     """Simple linear double-integrator dynamics for benchmarking.
 
     State: [q1, q2, ..., qn, dq1, dq2, ..., dqn] (n positions + n velocities)
@@ -34,7 +32,8 @@ class TestOptimizerBenchmarks:
     """Benchmark suite for swing optimization algorithms."""
 
     def test_benchmark_optimizer_instantiation(
-        self, benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
+        self,
+        benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
     ) -> None:
         """Benchmark SwingOptimizer initialization.
 
@@ -54,7 +53,8 @@ class TestOptimizerBenchmarks:
         assert optimizer.config.n_joints == 3
 
     def test_benchmark_instantaneous_cost_computation(
-        self, benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
+        self,
+        benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
     ) -> None:
         """Benchmark instantaneous cost c(x, u) computation.
 
@@ -75,7 +75,8 @@ class TestOptimizerBenchmarks:
         assert result >= 0.0
 
     def test_benchmark_terminal_cost_computation(
-        self, benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
+        self,
+        benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
     ) -> None:
         """Benchmark terminal cost c_f(x_T) computation.
 
@@ -96,7 +97,8 @@ class TestOptimizerBenchmarks:
         assert result >= 0.0
 
     def test_benchmark_trajectory_cost_short_horizon(
-        self, benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
+        self,
+        benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
     ) -> None:
         """Benchmark trajectory cost computation for short horizon (10 steps).
 
@@ -117,7 +119,8 @@ class TestOptimizerBenchmarks:
         assert result >= 0.0
 
     def test_benchmark_trajectory_cost_long_horizon(
-        self, benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
+        self,
+        benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
     ) -> None:
         """Benchmark trajectory cost computation for long horizon (100 steps).
 
@@ -138,7 +141,8 @@ class TestOptimizerBenchmarks:
         assert result >= 0.0
 
     def test_benchmark_high_dimensional_optimizer(
-        self, benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
+        self,
+        benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
     ) -> None:
         """Benchmark optimizer for high-dimensional system (6 joints).
 
@@ -173,9 +177,7 @@ def test_benchmark_optimizer_cost_matrix_construction(
     """
     config = SwingOptimizationConfig(n_joints=4, horizon_steps=50)
 
-    def create_optimizer_and_access_matrices() -> tuple[
-        np.ndarray, np.ndarray, np.ndarray
-    ]:
+    def create_optimizer_and_access_matrices() -> tuple[np.ndarray, np.ndarray, np.ndarray]:
         optimizer = SwingOptimizer(config)
         return optimizer.Q, optimizer.R, optimizer.Q_f
 

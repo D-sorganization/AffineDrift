@@ -21,7 +21,8 @@ class TestAPIAndModuleLoadBenchmarks:
     """Benchmark suite for module loading and API-like operations."""
 
     def test_benchmark_core_module_import(
-        self, benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
+        self,
+        benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
     ) -> None:
         """Benchmark core module import time.
 
@@ -39,7 +40,8 @@ class TestAPIAndModuleLoadBenchmarks:
         assert module is not None
 
     def test_benchmark_contracts_module_import(
-        self, benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
+        self,
+        benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
     ) -> None:
         """Benchmark contracts module import.
 
@@ -56,7 +58,8 @@ class TestAPIAndModuleLoadBenchmarks:
         assert module is not None
 
     def test_benchmark_swing_optimizer_import(
-        self, benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
+        self,
+        benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
     ) -> None:
         """Benchmark swing optimizer module import.
 
@@ -73,7 +76,8 @@ class TestAPIAndModuleLoadBenchmarks:
         assert module is not None
 
     def test_benchmark_ball_flight_import(
-        self, benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
+        self,
+        benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
     ) -> None:
         """Benchmark ball flight dynamics module import.
 
@@ -90,7 +94,8 @@ class TestAPIAndModuleLoadBenchmarks:
         assert module is not None
 
     def test_benchmark_numpy_serialization_small(
-        self, benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
+        self,
+        benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
     ) -> None:
         """Benchmark serialization of small NumPy array (100 elements).
 
@@ -107,7 +112,8 @@ class TestAPIAndModuleLoadBenchmarks:
         assert len(result) == 100 * 8  # 8 bytes per float64
 
     def test_benchmark_numpy_serialization_large(
-        self, benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
+        self,
+        benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
     ) -> None:
         """Benchmark serialization of large NumPy array (10000 elements).
 
@@ -123,7 +129,8 @@ class TestAPIAndModuleLoadBenchmarks:
         assert isinstance(result, bytes)
 
     def test_benchmark_numpy_deserialization_small(
-        self, benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
+        self,
+        benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
     ) -> None:
         """Benchmark deserialization of small NumPy array (100 elements).
 
@@ -139,7 +146,8 @@ class TestAPIAndModuleLoadBenchmarks:
         assert len(result) == 100
 
     def test_benchmark_numpy_deserialization_large(
-        self, benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
+        self,
+        benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
     ) -> None:
         """Benchmark deserialization of large NumPy array (10000 elements).
 
@@ -154,7 +162,8 @@ class TestAPIAndModuleLoadBenchmarks:
         assert len(result) == 10000
 
     def test_benchmark_json_serialization_trajectory_metadata(
-        self, benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
+        self,
+        benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
     ) -> None:
         """Benchmark JSON serialization of trajectory metadata.
 
@@ -182,7 +191,8 @@ class TestAPIAndModuleLoadBenchmarks:
         assert isinstance(result, str)
 
     def test_benchmark_trajectory_length_query(
-        self, benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
+        self,
+        benchmark: pytest.BenchmarkFixture,  # type: ignore[name-defined]
     ) -> None:
         """Benchmark computing trajectory summary statistics.
 
