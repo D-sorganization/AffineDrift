@@ -109,6 +109,10 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 [tool.ruff.lint.isort]
 known-first-party = ["src", "games", "tools"]
 
+[tool.bandit]
+exclude_dirs = ["tests", "benchmarks"]
+skips = ["B101"]  # assert used in tests
+
 [tool.black]
 line-length = 100
 target-version = ['py312']

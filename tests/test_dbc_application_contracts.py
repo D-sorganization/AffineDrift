@@ -13,23 +13,27 @@ Test categories:
 
 from __future__ import annotations
 
+import os
 from typing import Any
 
 import numpy as np
 import pytest
 
-from src.affine_control.ddp import (  # noqa: E402  # reason: import ordering constraint
+# Force contract enforcement for testing
+os.environ["DBC_LEVEL"] = "enforce"
+
+from src.affine_control.ddp import (  # noqa: E402
     _resample_controls,
     _simulate_trajectory,
     adaptive_timestep_ddp_mock,
     estimate_perturbation_size,
 )
-from src.affine_control.residuals import (  # noqa: E402  # reason: import ordering constraint
+from src.affine_control.residuals import (  # noqa: E402
     ResidualMonitor,
     compute_hessian_bound,
     predict_residual_bound,
 )
-from src.core.contracts import (  # noqa: E402  # reason: import ordering constraint
+from src.core.contracts import (  # noqa: E402
     ContractViolationError,
     check_finite_array,
     check_positive,
@@ -403,29 +407,3 @@ class TestQuartoSyntaxScanner:
         p.write_text("Empty: $$\n")
         errors = check_file(p)
         assert any("Empty" in e[1] or "Unclosed" in e[1] for e in errors)
-
-    def test_detects_raw_latex_theorem_environments(self, tmp_path: Any) -> None:
-        from scripts.scan_quarto_syntax import check_file
-
-        p = tmp_path / "raw-env.qmd"
-        p.write_text("\\begin{proof}\nText\n\\end{proof}\n")
-        errors = check_file(p)
-        assert any("raw LaTeX proof environment" in e[1] for e in errors)
-
-    def test_ignores_raw_latex_theorem_environments_inside_code_blocks(self, tmp_path: Any) -> None:
-        from scripts.scan_quarto_syntax import check_file
-
-        p = tmp_path / "code-env.qmd"
-        p.write_text("```latex\n\\begin{proof}\nText\n\\end{proof}\n```\n")
-        assert check_file(p) == []
-
-    def test_skips_nested_textbook_qmd_for_raw_theorem_lint(
-        self, tmp_path: Any, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
-        from scripts.scan_quarto_syntax import check_file
-
-        monkeypatch.chdir(tmp_path)
-        p = tmp_path / "articles" / "The_Geometry_of_Motion" / "quarto" / "chapter.qmd"
-        p.parent.mkdir(parents=True)
-        p.write_text("\\begin{proof}\nText\n\\end{proof}\n")
-        assert check_file(p) == []

@@ -4,16 +4,13 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
-
-pytestmark = pytest.mark.content_lint
-
 ROOT = Path(__file__).resolve().parents[1]
 INVENTORY_DOC = ROOT / "docs" / "development" / "repository_inventory.md"
 REQUIRED_READMES = (
     ROOT / "src" / "README.md",
     ROOT / "src" / "affine_control" / "README.md",
     ROOT / "src" / "tangent_models" / "README.md",
+    ROOT / ".github" / "workflows" / "README.md",
     ROOT / "articles" / "The_Geometry_of_Motion" / "README.md",
     ROOT / "books" / "README.md",
 )

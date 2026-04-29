@@ -29,17 +29,17 @@ from .constants import (
     DEFAULT_SHAFT_WEIGHT,
     DEFAULT_SIGNAL_LENGTH,
 )
-from .streamlit_visualization import (
-    draw_diagram,
-    plot_acceleration,
-    plot_torque,
-    plot_transmission_sweep,
-)
 from .torque_calculator import (
     calculate_moments_of_inertia,
     distribute_torque_by_grip_angle,
     generate_sample_torque,
     universal_joint_transmission_ratio,
+)
+from .visualization import (
+    draw_diagram,
+    plot_acceleration,
+    plot_torque,
+    plot_transmission_sweep,
 )
 
 logger = logging.getLogger(__name__)
@@ -318,6 +318,58 @@ def _create_plot_figure(
     t: npt.NDArray[Any],
     input_torque: npt.NDArray[Any],
 ) -> Figure:
+    """Create a torque vs time figure."""
+    return plot_torque(  # type: ignore[no-any-return]
+        t,
+        input_torque,
+        params["grip_angle"],
+        params["wrist_angle"],
+        params["I_alpha"],
+        params["I_gamma"],
+        params["show_input"],
+        params["show_transmitted"],
+        params["show_alpha"],
+        params["show_gamma"],
+    )
+
+
+def _plot_acceleration_figure(
+    params: dict[str, Any],
+    t: np.ndarray,  # type: ignore[type-arg]
+    input_torque: np.ndarray,  # type: ignore[type-arg]
+) -> Figure:
+    """Create an angular acceleration vs time figure."""
+    return plot_acceleration(  # type: ignore[no-any-return]
+        t,
+        input_torque,
+        params["grip_angle"],
+        params["wrist_angle"],
+        params["I_alpha"],
+        params["I_gamma"],
+        params["show_alpha"],
+        params["show_gamma"],
+    )
+
+
+def _plot_transmission_figure(params: dict[str, Any]) -> Figure:
+    """Create a transmission ratio sweep figure."""
+    return plot_transmission_sweep(  # type: ignore[no-any-return]
+        params["grip_angle"],
+        params["wrist_angle"],
+        params["I_alpha"],
+        params["I_gamma"],
+        params["show_transmission"],
+        params["show_velocity"],
+        params["show_accel_alpha"],
+        params["show_accel_gamma"],
+    )
+
+
+def _create_plot_figure(
+    params: dict[str, Any],
+    t: npt.NDArray[Any],
+    input_torque: npt.NDArray[Any],
+) -> Figure:
     """Create the appropriate plot figure based on selected plot type.
 
     Args:
@@ -382,10 +434,7 @@ def _compute_info_metrics(params: dict[str, Any], input_torque: Any) -> dict[str
     wrist_angle = params["wrist_angle"]
     theta_grip_rad = np.radians(grip_angle)
     phi_wrist_rad = np.radians(wrist_angle)
-    omega_ratio, tau_ratio = universal_joint_transmission_ratio(
-        phi_rad=phi_wrist_rad,
-        delta_rad=theta_grip_rad,
-    )
+    omega_ratio, tau_ratio = universal_joint_transmission_ratio(phi_wrist_rad, theta_grip_rad)
     torque_transmitted = np.mean(input_torque) * tau_ratio
     torque_alpha, torque_gamma = distribute_torque_by_grip_angle(torque_transmitted, theta_grip_rad)
     return {
