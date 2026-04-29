@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-04-29T02:10:00Z
+Last-Updated: 2026-04-29T05:10:06Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-04-29T02:10:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.88                                           |
+| **Spec Version**        | 1.0.89                                           |
 | **Last Spec Update**    | 2026-04-29                                       |
 
 ## 2. Purpose & Mission
@@ -45,6 +45,7 @@ AffineDrift is a research platform that explores golf swing biomechanics through
 - Implement swing trajectory optimization using differential dynamic programming (DDP) and iLQR solvers
 - Model golf-ball flight with velocity-dependent drag and spin-dependent Magnus lift using the standard projected-area aerodynamic formulation
 - Achieve and maintain >50% test coverage with property-based testing (Hypothesis) across all critical modules
+- Maintain opt-in performance benchmarks for stable computational paths without slowing routine CI
 - Provide comprehensive educational resources that bridge control theory and applied biomechanics
 - Maintain textbook bibliographies and chapter citations with explicit scientific sourcing for biomechanics, multibody dynamics, geometry, and control-theory claims
 - Present the textbook volumes with shared algorithm and pseudocode conventions so implementation guidance is consistent across the series
@@ -90,6 +91,7 @@ AffineDrift/
 │   ├── test_tools/              # Tool and CI/CD tests
 │   ├── test_content/            # Content structure and validation
 │   └── test_integration/        # Cross-module integration tests
+├── benchmarks/                  # Opt-in pytest-benchmark performance suite
 ├── js/                          # JavaScript interactive features
 │   ├── rotation-converter/      # 3D rotation visualization
 │   ├── search.js                # Site search functionality
@@ -146,6 +148,7 @@ AffineDrift/
 | Search Functionality  | `js/search.js`                          | Full-text search across website content                    |
 | Quarto Configuration  | `_quarto.yml`                           | Website build and rendering configuration                  |
 | Test Suite            | `tests/`                                | 80+ pytest and Jest test files                             |
+| Benchmark Suite       | `benchmarks/`                           | Opt-in pytest-benchmark timing checks for stable paths     |
 
 ## 5. Desired Functionality
 
@@ -193,6 +196,7 @@ AffineDrift/
 | F37 | Double-pendulum parameter context       | ✅     | Physics of Golf chapters 3, 6, and 8 explicitly document when their double- or triple-pendulum parameters are canonical chapter baselines versus compact worked-example sets, with content tests guarding the modeling-context notes.                                                                                                                                                            |
 | F38 | Robust quaternion extraction            | ✅     | The rotation-representations reference article uses a numerically stable matrix-to-quaternion extraction path for trace-positive and dominant-axis cases, with executable regression coverage for 180-degree rotations about coordinate axes and arbitrary unit axes.                                                                                                                            |
 | F39 | Workflow documentation hygiene          | ✅     | `.github/workflows/` is kept to executable workflow definitions; workflow-directory documentation is tracked through `docs/development/repository_inventory.md` and `SPEC.md` so non-workflow Markdown does not live beside Actions YAML files.                                                                                                                                               |
+| F40 | Opt-in benchmark suite                  | ✅     | `benchmarks/` provides pytest-benchmark-compatible baseline timing checks for double-pendulum dynamics and trajectory-cost helpers; normal `pytest` remains scoped to `tests/` so routine validation does not run benchmark timing.                                                                                                                                                          |
 
 ### API / Interface Contract
 
@@ -580,3 +584,4 @@ python src/tools/code_quality_ast.py
 | 2026-04-26 | 1.0.84 | fix(html): fixed website-lint failures in Wrist_Universal_Claude.html by properly closing paragraph tags before list elements and removing stray </p> tags. |
 | 2026-04-27 | 1.0.85 | perf(frontend): synchronized performance optimizations from modular JS files to the monolithic `script.js` (replaced querySelectorAll with live collections, optimized string methods, etc.). |
 | 2026-04-28 | 1.0.87 | ci(workflows): harden runner-routing workflows to create the `GITHUB_OUTPUT` parent directory before writing outputs, remove unnecessary full-history checkout from comment conversion, and run the local-only workflow guard with `python3` in CI. |
+| 2026-04-29 | 1.0.89 | test(benchmarks): add opt-in pytest-benchmark scaffolding, lightweight baseline benchmarks, and local benchmarking documentation for issue #2919. |
