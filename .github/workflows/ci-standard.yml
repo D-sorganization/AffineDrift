@@ -25,46 +25,19 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # ── Dispatcher: route to self-hosted if available ──────────────────────────
+  # ── Dispatcher: enforce local-only routing (NO GitHub-hosted runners) ──────
   pick-runner:
     runs-on: d-sorg-fleet
     timeout-minutes: 2
     outputs:
       runner: ${{ steps.check.outputs.runner }}
     steps:
-      - name: Check for self-hosted runner
+      - name: Enforce local-only runner routing
         id: check
-        env:
-          GH_TOKEN: ${{ secrets.RUNNER_CHECK_TOKEN }}
-          LOCAL_MODE: ${{ vars.LOCAL_RUNNER_MODE }}
         run: |
-          MODE="${LOCAL_MODE:-local}"
-          echo "Fleet mode: $MODE"
-
-          case "$MODE" in
-            local)
-              mkdir -p "$(dirname "$GITHUB_OUTPUT")"
-              echo "runner=d-sorg-fleet" >> "$GITHUB_OUTPUT"
-              echo "Routing to self-hosted fleet (mode=local)"
-              ;;
-            disabled)
-              echo "::error::No local self-hosted runner available; failing closed"
-              exit 1
-              ;;
-            *)
-              AVAILABLE=$(gh api /orgs/${{ github.repository_owner }}/actions/runners \
-                --jq '[.runners[] | select(.status == "online") | select(.busy == false) | select(.labels[].name == "d-sorg-fleet")] | length' \
-                2>/dev/null || echo "0")
-              if [[ "$AVAILABLE" -gt 0 ]]; then
-                mkdir -p "$(dirname "$GITHUB_OUTPUT")"
-                echo "runner=d-sorg-fleet" >> "$GITHUB_OUTPUT"
-                echo "$AVAILABLE idle fleet runner(s) - routing locally"
-              else
-                echo "::error::No local self-hosted runner available; failing closed"
-                exit 1
-              fi
-              ;;
-          esac
+          mkdir -p "$(dirname "$GITHUB_OUTPUT")"
+          echo "runner=d-sorg-fleet" >> "$GITHUB_OUTPUT"
+          echo "Enforcing local-only runner routing (d-sorg-fleet)"
   quality-gate:
     needs: pick-runner
     runs-on: ${{ needs.pick-runner.outputs.runner }}
