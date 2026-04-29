@@ -188,6 +188,17 @@ class SwingOptimizer:
         """Terminal state cost weight matrix (read-only copy)."""
         return self._Q_f.copy()
 
+    def _build_target_state(self) -> np.ndarray[Any, Any]:
+        """Build the target state vector (zero positions, target velocity).
+
+        Returns:
+            Array of shape (state_dim,): zeros for joint positions,
+            target_velocity for joint velocities.
+        """
+        x_target = np.zeros(self._config.state_dim)
+        x_target[self._config.n_joints :] = self._config.target_velocity
+        return x_target
+
     def compute_cost(
         self,
         state: np.ndarray[Any, Any],
@@ -225,10 +236,7 @@ class SwingOptimizer:
             "control",
         )
 
-        # Build the target state (zeros for positions, target_velocity for velocities)
-        x_target = np.zeros(self._config.state_dim)
-        x_target[self._config.n_joints :] = self._config.target_velocity
-
+        x_target = self._build_target_state()
         dx = state - x_target
         state_cost = float(dx @ self._Q @ dx)
         control_cost = float(control @ self._R @ control)
@@ -252,9 +260,7 @@ class SwingOptimizer:
         check_finite_array(state, "state")
         check_shape(state, (self._config.state_dim,), "state")
 
-        x_target = np.zeros(self._config.state_dim)
-        x_target[self._config.n_joints :] = self._config.target_velocity
-
+        x_target = self._build_target_state()
         dx = state - x_target
         cost = float(dx @ self._Q_f @ dx)
         ensure(cost >= -EPSILON, "terminal cost must be non-negative", cost)

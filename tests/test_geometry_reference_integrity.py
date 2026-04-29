@@ -7,10 +7,6 @@ from collections import defaultdict
 from dataclasses import dataclass
 from pathlib import Path
 
-import pytest
-
-pytestmark = pytest.mark.content_lint
-
 ROOT = Path(__file__).resolve().parents[1]
 BIB_PATH = ROOT / "articles" / "The_Geometry_of_Motion" / "geometry_of_motion.bib"
 
@@ -39,7 +35,15 @@ def _norm(text: str) -> str:
 
 def test_article_and_proceedings_entries_have_identifier() -> None:
     """Each article/proceedings entry should include a DOI or URL."""
-    return
+    entries = _parse_bib_entries(BIB_PATH.read_text(encoding="utf-8"))
+    missing_ids = [
+        entry.key
+        for entry in entries
+        if entry.kind in {"article", "inproceedings"}
+        and "doi" not in entry.fields
+        and "url" not in entry.fields
+    ]
+    assert not missing_ids, f"Missing DOI/URL for: {missing_ids}"
 
 
 def test_known_high_risk_attributions_are_correct() -> None:

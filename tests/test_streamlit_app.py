@@ -6,6 +6,7 @@ from unittest.mock import patch
 
 import pytest
 
+# Streamlit is an optional dependency; skip tests if not installed
 pytest.importorskip("streamlit")
 
 from src.tools.wrist_universal_joint import streamlit_app
