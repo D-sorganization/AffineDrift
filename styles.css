@@ -2,6 +2,8 @@
    AffineDrift - Modern Scientific Layout
    --- */
 
+@import "css/tokens/design-tokens.css";
+@import url("css/breakpoints.css");
 @import url("css/bibliography.css");
 @import url("css/critics-corner.css");
 @import url("css/resources.css");
@@ -24,7 +26,7 @@
   /* Modern Scientific Palette */
   --primary-dark: #1a1a2e;
   --primary-blue: #0f4c75;
-  --accent-blue: #3282b8;
+  --accent-blue: #205d86;
   --light-blue: #e3f2fd;
   --pure-white: #fff;
   --white-transparent: rgb(255, 255, 255, 0.9);
@@ -57,7 +59,29 @@
 
   /* Typography limits */
   --prose-width: 75ch;
-}
+
+  /* Fluid Typography (Phase 3: responsive scaling with clamp())
+     Benefits: Scales smoothly between breakpoints, eliminates hardcoded media queries for font sizes,
+     improves readability at all viewport sizes */
+  --fs-body: clamp(16px, 1rem + 0.2vw, 18px);
+  --fs-h1: clamp(2rem, 4vw + 1rem, 2.75rem);
+  --fs-h2: clamp(1.75rem, 3vw + 0.5rem, 2.25rem);
+  --fs-h3: clamp(1.35rem, 2vw + 0.5rem, 1.75rem);
+  --fs-h4: clamp(1.15rem, 1.5vw + 0.5rem, 1.35rem);
+  --fs-h5: clamp(1rem, 1.2vw + 0.4rem, 1.25rem);
+  --fs-h6: clamp(0.95rem, 1vw + 0.3rem, 1.1rem);
+  --fs-large: clamp(1.1rem, 1.2vw + 0.3rem, 1.35rem);
+  --fs-base: clamp(1rem, 1vw + 0.2rem, 1.15rem);
+  --fs-small: clamp(0.85rem, 0.8vw + 0.1rem, 0.95rem);
+  --fs-xs: clamp(0.75rem, 0.7vw, 0.85rem);
+
+  /* Fluid Spacing (Phase 3: responsive padding/margins using clamp())
+     Creates responsive layout spacing that scales with viewport */
+  --spacing-xs: clamp(0.25rem, 0.5vw, 0.5rem);
+  --spacing-sm: clamp(0.5rem, 1vw, 1rem);
+  --spacing-md: clamp(1rem, 2vw, 2rem);
+  --spacing-lg: clamp(1.5rem, 3vw, 3rem);
+  --spacing-xl: clamp(2rem, 4vw, 4rem);}
 
 body {
   font-family:
@@ -76,8 +100,12 @@ body {
     "Noto Color Emoji";
   line-height: 1.6;
   color: var(--text-main);
+<<<<<<< Updated upstream
   background-color: var(--bg-body);
   font-size: clamp(16px, 1rem + 0.2vw, 18px);
+=======
+  background-color: var(--bg-body); font-size: var(--fs-body);
+>>>>>>> Stashed changes
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
 }
@@ -111,6 +139,7 @@ h6 {
   margin-bottom: 1rem;
 }
 
+<<<<<<< Updated upstream
 h1 {
   font-size: clamp(2rem, 4vw + 1rem, 2.75rem);
   letter-spacing: -0.02em;
@@ -118,18 +147,33 @@ h1 {
 
 h2 {
   font-size: clamp(1.75rem, 3vw + 0.5rem, 2.25rem);
+=======
+h1 { font-size: var(--fs-h1);
+  letter-spacing: -0.02em;
+}
+
+h2 { font-size: var(--fs-h2);
+>>>>>>> Stashed changes
   letter-spacing: -0.01em;
   margin-top: 2rem;
 }
 
+<<<<<<< Updated upstream
 h3 {
   font-size: clamp(1.35rem, 2vw + 0.5rem, 1.75rem);
+=======
+h3 { font-size: var(--fs-h3);
+>>>>>>> Stashed changes
   margin-top: 1.5rem;
   color: var(--primary-blue);
 }
 
+<<<<<<< Updated upstream
 h4 {
   font-size: clamp(1.15rem, 1.5vw + 0.5rem, 1.35rem);
+=======
+h4 { font-size: var(--fs-h4);
+>>>>>>> Stashed changes
 }
 
 a {
@@ -169,7 +213,7 @@ a:hover {
 
 /* Hide Quarto's default title block to prevent vertical space issues */
 #title-block-header {
-  display: none !important;
+  display: none;
 }
 
 /* Article pages: keep margins tighter and sidebars visible */
@@ -367,7 +411,7 @@ figure img {
 }
 
 figcaption {
-  font-size: 0.9rem;
+  font-size: var(--fs-small);
   color: var(--text-muted);
   text-align: center;
   margin-top: 0.75rem;
@@ -485,7 +529,7 @@ nav .container {
 }
 
 #quarto-header .navbar {
-  background: transparent !important;
+  background: transparent;
   padding: 0.5rem 0;
   max-width: 100%;
   width: 100%;
@@ -506,7 +550,7 @@ nav .container {
   color: var(--pure-white);
   font-family: "Playfair Display", serif;
   font-weight: 700;
-  font-size: 1.5rem;
+  font-size: var(--fs-large);
 }
 
 #quarto-header .navbar-title {
@@ -538,7 +582,7 @@ nav .container {
 #quarto-header .dropdown-item {
   color: var(--text-main);
   padding: 0.6rem 1.25rem;
-  font-size: 0.95rem;
+  font-size: var(--fs-small);
   transition: all 0.2s ease;
 }
 
@@ -549,7 +593,7 @@ nav .container {
 
 /* Search box styling */
 #quarto-header #quarto-search {
-  margin-left: auto !important;
+  margin-left: auto;
   min-width: 300px;
 
   /* Force minimum width */
@@ -586,7 +630,7 @@ nav .container {
   color: var(--pure-white);
   font-weight: 700;
   font-family: "Playfair Display", serif;
-  font-size: 1.5rem;
+  font-size: var(--fs-large);
   text-decoration: none;
 }
 
@@ -606,7 +650,7 @@ nav .container {
 .nav-links a {
   color: var(--white-transparent);
   font-weight: 500;
-  font-size: 0.95rem;
+  font-size: var(--fs-small);
   text-decoration: none;
   padding: 0.5rem 0;
   position: relative;
@@ -652,7 +696,7 @@ nav .container {
    Sidebar Navigation Styles
    --- */
 .sidebar-heading {
-  font-size: 0.85rem;
+  font-size: var(--fs-xs);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--text-muted);
@@ -678,7 +722,7 @@ nav .container {
   padding: 0.75rem 1rem;
   color: var(--text-main);
   border-radius: 4px;
-  font-size: 0.95rem;
+  font-size: var(--fs-small);
   text-decoration: none;
   border-left: 2px solid transparent;
 }
@@ -698,7 +742,7 @@ nav .container {
 
 /* TOC Specifics */
 .toc-nav .sidebar-links a {
-  font-size: 0.9rem;
+  font-size: var(--fs-small);
   color: var(--text-muted);
 }
 
@@ -747,7 +791,7 @@ nav .container {
   border: none;
   cursor: pointer;
   text-align: left;
-  font-size: 1.1rem;
+  font-size: var(--fs-base);
   font-weight: 600;
   color: var(--primary-dark);
   font-family: "Playfair Display", serif;
@@ -761,7 +805,7 @@ nav .container {
 .accordion-icon {
   display: inline-block;
   transition: transform 0.3s ease;
-  font-size: 1.5rem;
+  font-size: var(--fs-large);
   line-height: 1;
 }
 
@@ -864,7 +908,7 @@ nav .container {
   overflow-x: auto;
   font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier,
     monospace;
-  font-size: 0.9rem;
+  font-size: var(--fs-small);
   margin: 1.5rem 0;
 }
 
@@ -887,7 +931,7 @@ nav .container {
   justify-content: center;
 
   /* Increased for better touch targets (min 44px tap area) */
-  font-size: 0.8rem;
+  font-size: var(--fs-xs);
   border-radius: 4px;
   cursor: pointer;
   opacity: 0;
@@ -914,16 +958,14 @@ nav .container {
    Responsiveness
    --- */
 
-/* Large Tablet / Small Laptop: Collapse Right Sidebar first if needed, or shrink sidebars */
-@media (width < 1200px) {
-  :root {
-    --sidebar-width: 240px;
-    --sidebar-gap: 2rem;
-  }
+/* Mobile and above: Set sidebar dimensions (mobile-first base) */
+:root {
+  --sidebar-width: 240px;
+  --sidebar-gap: 2rem;
 }
 
-/* Tablet: Switch to 2 columns (Left Sidebar + Content) */
-@media (width < 992px) {
+/* Tablet and up: Switch to 2-column layout (Left Sidebar + Content) */
+@media (width >= var(--breakpoint-md)) {
   .page-columns.page-full .standard-page-layout,
   .container .standard-page-layout,
   .standard-page-layout {
@@ -938,18 +980,18 @@ nav .container {
 }
 
 /* Mobile: Single Column */
-@media (width < 768px) {
+@media (width < var(--breakpoint-md)) {
   :root {
     --header-height: 60px;
   }
 
   /* Mobile typography scaling for better readability on small screens */
   h1 {
-    font-size: 1.75rem;
+    font-size: var(--fs-large);
   }
 
   h2 {
-    font-size: 1.5rem;
+    font-size: var(--fs-large);
   }
 
   h3 {
@@ -957,7 +999,7 @@ nav .container {
   }
 
   h4 {
-    font-size: 1.1rem;
+    font-size: var(--fs-base);
   }
 
   .page-columns.page-full .standard-page-layout,
@@ -977,7 +1019,7 @@ nav .container {
   /* Navigation Mobile: Unified navbar collapse handled by Bootstrap and navigation.js */
 
   .logo-text {
-    font-size: 1.2rem;
+    font-size: var(--fs-base);
   }
 }
 
@@ -1029,7 +1071,7 @@ nav .container {
   padding: 1.5rem 2rem;
   background: linear-gradient(to top, rgb(0 0 0 / 0.9), transparent);
   font-family: "Playfair Display", serif;
-  font-size: 1.1rem;
+  font-size: var(--fs-base);
   line-height: 1.4;
   pointer-events: none;
 
@@ -1253,7 +1295,7 @@ h3:hover .anchor-link,
   padding: 0.5rem 0.75rem;
   background: var(--bg-dark);
   color: white;
-  font-size: 0.8rem;
+  font-size: var(--fs-xs);
   border-radius: 4px;
   white-space: nowrap;
   opacity: 0;
@@ -1351,7 +1393,7 @@ h3:hover .anchor-link,
   border: none;
   padding: 0.75rem 1.25rem;
   border-radius: 8px;
-  font-size: 0.9rem;
+  font-size: var(--fs-small);
   font-weight: 600;
   cursor: pointer;
   display: flex;
@@ -1407,7 +1449,7 @@ h3:hover .anchor-link,
 .laymans-terms-header h2,
 .laymans-terms-header .laymans-terms-header-title {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: var(--fs-base);
   color: var(--pure-white);
   font-family: "Playfair Display", serif;
   display: flex;
@@ -1418,12 +1460,12 @@ h3:hover .anchor-link,
 .laymans-terms-header h2::before,
 .laymans-terms-header .laymans-terms-header-title::before {
   content: "💡";
-  font-size: 1.2rem;
+  font-size: var(--fs-base);
 }
 
 .laymans-terms-icon {
   color: var(--pure-white);
-  font-size: 0.9rem;
+  font-size: var(--fs-small);
   transition: transform 0.3s ease;
 }
 
@@ -1447,7 +1489,7 @@ h3:hover .anchor-link,
 }
 
 .laymans-terms-intro {
-  font-size: 0.95rem;
+  font-size: var(--fs-small);
   color: var(--text-muted);
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
@@ -1469,7 +1511,7 @@ h3:hover .anchor-link,
 }
 
 .laymans-item h3 {
-  font-size: 1rem;
+  font-size: var(--fs-base);;
   color: var(--primary-dark);
   margin: 0 0 0.75rem;
   display: flex;
@@ -1479,11 +1521,11 @@ h3:hover .anchor-link,
 
 .laymans-item h3::before {
   content: "📌";
-  font-size: 0.9rem;
+  font-size: var(--fs-small);
 }
 
 .laymans-item p {
-  font-size: 0.95rem;
+  font-size: var(--fs-small);
   line-height: 1.7;
   color: var(--text-main);
   margin: 0;
@@ -1494,7 +1536,7 @@ h3:hover .anchor-link,
   border-radius: 4px;
   padding: 0.75rem 1rem;
   margin-top: 0.75rem;
-  font-size: 0.9rem;
+  font-size: var(--fs-small);
   border-left: 3px solid #ffc107;
 }
 
@@ -1509,7 +1551,7 @@ h3:hover .anchor-link,
   border-radius: 4px;
   padding: 0.75rem 1rem;
   margin-top: 0.75rem;
-  font-size: 0.9rem;
+  font-size: var(--fs-small);
   border-left: 3px solid #28a745;
 }
 
@@ -1520,14 +1562,14 @@ h3:hover .anchor-link,
 }
 
 /* In Layman's Terms - Responsive */
-@media (width < 768px) {
+@media (width < var(--breakpoint-md)) {
   .laymans-terms-header {
     padding: 0.875rem 1rem;
   }
 
   .laymans-terms-header h2,
   .laymans-terms-header .laymans-terms-header-title {
-    font-size: 1rem;
+    font-size: var(--fs-base);;
   }
 
   .laymans-terms-inner {
@@ -1547,7 +1589,7 @@ h3:hover .anchor-link,
   }
 
   .laymans-terms-content {
-    max-height: none !important;
+    max-height: none;
     overflow: visible;
   }
 
@@ -1556,13 +1598,13 @@ h3:hover .anchor-link,
   }
 
   .laymans-terms-header {
-    background: #e3f6f8 !important;
-    color: #17a2b8 !important;
+    background: #e3f6f8;
+    color: #17a2b8;
   }
 
   .laymans-terms-header h2,
   .laymans-terms-header .laymans-terms-header-title {
-    color: #17a2b8 !important;
+    color: #17a2b8;
   }
 }
 
@@ -1610,7 +1652,7 @@ h3:hover .anchor-link,
 
 .contact-intro {
   margin-bottom: 2rem;
-  font-size: 1.1rem;
+  font-size: var(--fs-base);
   line-height: 1.7;
 }
 
@@ -1643,7 +1685,7 @@ form.contact-form .form-group textarea {
   border: 1px solid var(--border-color);
   border-radius: 4px;
   font-family: "Noto Sans", sans-serif;
-  font-size: 1rem;
+  font-size: var(--fs-base);;
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease;
@@ -1671,7 +1713,7 @@ form.contact-form .form-group textarea {
   color: var(--pure-white);
   border: none;
   padding: 0.8rem 2rem;
-  font-size: 1rem;
+  font-size: var(--fs-base);;
   font-weight: 600;
   border-radius: 4px;
   cursor: pointer;
@@ -1682,7 +1724,7 @@ form.contact-form .form-group textarea {
   /* Full width button on mobile, auto on desktop? */
 }
 
-@media (width > 768px) {
+@media (width >= var(--breakpoint-md)) {
   .btn-primary {
     width: auto;
   }
@@ -1713,7 +1755,7 @@ form.contact-form .form-group textarea {
   border: 1px solid var(--border-color);
   border-radius: 4px;
   transition: all 0.2s ease;
-  font-size: 0.95rem;
+  font-size: var(--fs-small);
 }
 
 .contact-info .social-link:hover {
@@ -1723,7 +1765,7 @@ form.contact-form .form-group textarea {
 }
 
 /* Responsive for Contact */
-@media (width < 900px) {
+@media (width < var(--breakpoint-lg)) {
   .contact-layout {
     flex-direction: column;
     gap: 2rem;
@@ -1751,7 +1793,7 @@ form.contact-form .form-group textarea {
 
 .home-sidebar h3 {
   color: var(--primary-blue);
-  font-size: 0.95rem;
+  font-size: var(--fs-small);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -1781,7 +1823,7 @@ form.contact-form .form-group textarea {
   min-height: 44px;
   color: var(--text-dark);
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: var(--fs-small);
   padding: 0.7rem 0.75rem;
   border-radius: 4px;
   transition: all 0.2s ease;
@@ -1830,7 +1872,7 @@ form.contact-form .form-group textarea {
   margin-bottom: 1.5rem;
   line-height: 1.8;
   color: var(--text-dark);
-  font-size: 1.15rem;
+  font-size: var(--fs-base);
   font-family: "Playfair Display", serif;
 }
 
@@ -1846,15 +1888,15 @@ form.contact-form .form-group textarea {
 
 /* Home Layout Updates */
 .home-layout {
-  display: flex !important;
-  flex-flow: row nowrap !important;
-  align-items: flex-start !important;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: flex-start;
 
   /* Ensure top alignment */
-  justify-content: flex-start !important;
+  justify-content: flex-start;
 
   /* Changed from space-between to keep gap consistent */
-  gap: 2rem !important;
+  gap: var(--spacing-lg);
 
   /* Explicit 1/4 inch+ gap (approx 32px) */
   max-width: 100%;
@@ -1893,17 +1935,17 @@ form.contact-form .form-group textarea {
 }
 
 /* Responsive Home Layout */
-@media (width <=1200px) {
+@media (width < var(--breakpoint-xl)) {
   .home-toc {
-    display: none !important;
+    display: none;
 
     /* Hide TOC on smaller screens */
   }
 }
 
-@media (width <=1024px) {
+@media (width < var(--breakpoint-lg)) {
   .home-layout {
-    flex-direction: column !important;
+    flex-direction: column;
     gap: 2rem;
   }
 
@@ -1963,7 +2005,7 @@ form.contact-form .form-group textarea {
 .resource-description ul {
   margin-top: 0.5rem;
   padding-left: 1.2rem;
-  font-size: 0.9rem;
+  font-size: var(--fs-small);
   color: var(--text-muted);
 }
 
@@ -1981,7 +2023,7 @@ form.contact-form .form-group textarea {
 }
 
 /* Responsive for List View */
-@media (width < 768px) {
+@media (width < var(--breakpoint-md)) {
   .resource-list .resource-card {
     flex-direction: column;
   }
@@ -2014,7 +2056,7 @@ form.contact-form .form-group textarea {
 #quarto-header .navbar-title,
 h1.title,
 .title {
-  color: #fff !important;
+  color: #fff;
 }
 
 .accordion-header span:first-child {
@@ -2044,7 +2086,7 @@ h1.title,
 }
 
 .left-sidebar.blue-sidebar .drift-intro-text p {
-  font-size: 0.95rem;
+  font-size: var(--fs-small);
   line-height: 1.6;
   color: rgb(255, 255, 255, 0.9);
   margin-bottom: 1rem;
@@ -2060,14 +2102,14 @@ h1.title,
 /* Ensure the grid doesn't collapse the main content too aggressively */
 
 /* Using high specificity to override Quarto's .page-columns defaults */
-@media (width >=1200px) {
+@media (width >= var(--breakpoint-xl)) {
   div.standard-page-layout,
   .standard-page-layout {
     display: grid !important;
     grid-template-columns: 280px minmax(0, 1fr) 250px !important;
 
     /* Default: 3 columns */
-    gap: 2rem !important;
+    gap: var(--spacing-lg);
     align-items: start !important;
     width: 100% !important;
     max-width: 1400px !important;
@@ -2107,7 +2149,7 @@ h1.title,
   }
 }
 
-@media (width < 1200px) {
+@media (width < var(--breakpoint-xl)) {
   .standard-page-layout {
     display: grid;
     grid-template-columns: 240px minmax(0, 1fr);
@@ -2156,7 +2198,7 @@ h1.title,
 
 .critics-comments-header h2 {
   margin: 0;
-  font-size: 1.2rem;
+  font-size: var(--fs-base);
   color: white;
   font-family: "Playfair Display", serif;
   display: flex;
@@ -2165,7 +2207,7 @@ h1.title,
 }
 
 .critics-comments-icon {
-  font-size: 1.2rem;
+  font-size: var(--fs-base);
   transition: transform 0.3s ease;
 }
 
@@ -2192,7 +2234,7 @@ h1.title,
 }
 
 .critics-intro {
-  font-size: 0.95rem;
+  font-size: var(--fs-small);
   color: var(--text-muted);
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
@@ -2220,7 +2262,7 @@ h1.title,
 
 .critic-label {
   display: block;
-  font-size: 0.75rem;
+  font-size: var(--fs-xs);
   text-transform: uppercase;
   color: #dc3545;
   font-weight: 700;
@@ -2230,12 +2272,12 @@ h1.title,
 
 .critic-perspective h3 {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: var(--fs-base);
   color: var(--primary-dark);
 }
 
 .critic-argument {
-  font-size: 0.95rem;
+  font-size: var(--fs-small);
   line-height: 1.6;
   color: var(--text-main);
   margin-bottom: 1rem;
@@ -2246,7 +2288,7 @@ h1.title,
   border-left: 3px solid #28a745;
   padding: 0.75rem 1rem;
   border-radius: 4px;
-  font-size: 0.9rem;
+  font-size: var(--fs-small);
   color: var(--text-main);
 }
 
@@ -2257,7 +2299,7 @@ h1.title,
 }
 
 .academic-note {
-  font-size: 0.85rem;
+  font-size: var(--fs-xs);
   color: var(--text-muted);
   text-align: center;
   margin-top: 1rem;
@@ -2299,7 +2341,7 @@ h1.title,
   display: block;
   color: var(--text-muted);
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: var(--fs-small);
   padding: 0.4rem 0.6rem;
   border-left: 2px solid transparent;
   transition: all 0.2s ease;
@@ -2348,7 +2390,7 @@ h1.title,
 }
 
 .toggle-icon {
-  font-size: 0.75rem;
+  font-size: var(--fs-xs);
   color: var(--text-muted);
   transition: transform 0.3s ease;
   flex-shrink: 0;
@@ -2406,13 +2448,13 @@ h1.title,
 
 .featured-card-content h3 {
   color: var(--primary-dark);
-  font-size: 1.1rem;
+  font-size: var(--fs-base);
   margin: 0 0 0.75rem;
 }
 
 .featured-card-content p {
   color: var(--text-muted);
-  font-size: 0.9rem;
+  font-size: var(--fs-small);
   margin: 0;
   line-height: 1.6;
 }
@@ -2462,7 +2504,7 @@ h1.title,
 
 .quick-link-text {
   color: var(--text-main);
-  font-size: 0.9rem;
+  font-size: var(--fs-small);
   font-weight: 500;
 }
 
@@ -2474,7 +2516,7 @@ h1.title,
 }
 
 .welcome-intro p {
-  font-size: 1.1rem;
+  font-size: var(--fs-base);
   line-height: 1.8;
   color: var(--text-main);
   margin-bottom: 1rem;
@@ -2496,7 +2538,7 @@ h1.title,
 }
 
 .approach-content p {
-  font-size: 1rem;
+  font-size: var(--fs-base);;
   line-height: 1.8;
   margin-bottom: 1rem;
 }
@@ -2511,7 +2553,7 @@ h1.title,
 /* Homepage sidebar remains but uses standard navbar-toggler button */
 
 /* Home Page 3-Column Responsive */
-@media (width <=1200px) {
+@media (width < var(--breakpoint-xl)) {
   .home-layout-3col {
     grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
     gap: 2rem;
@@ -2522,7 +2564,7 @@ h1.title,
   }
 }
 
-@media (width <=1024px) {
+@media (width < var(--breakpoint-lg)) {
   .home-layout-3col {
     display: flex;
     flex-direction: column;
@@ -2563,7 +2605,7 @@ h1.title,
   }
 }
 
-@media (width <=768px) {
+@media (width < var(--breakpoint-md)) {
   /* Mobile: Hamburger menu shown by Quarto navbar (see navigation.js) */
   /* CONSOLIDATED: Mobile sidebar no longer uses .mobile-menu-toggle */
   /* Now uses standard .navbar-toggler with unified keyboard/ARIA support */
@@ -2621,7 +2663,7 @@ h1.title,
   }
 
   .welcome-header .subtitle {
-    font-size: 1rem;
+    font-size: var(--fs-base);;
   }
 }
 
@@ -2654,15 +2696,15 @@ h1.title,
 }
 
 .page-intro .lead {
-  font-size: 1.1rem;
+  font-size: var(--fs-base);
   color: var(--text-muted);
   line-height: 1.7;
 }
 
 /* =============================================================
-   Dark Mode – automatic via prefers-color-scheme
+   Dark Mode – automatic via prefers-color-scheme or manual toggle
    ============================================================= */
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark), [data-theme="dark"] {
   :root {
     color-scheme: dark;
 
@@ -2709,7 +2751,7 @@ h1.title,
   border-radius: 50%;
   width: 2.5rem;
   height: 2.5rem;
-  font-size: 1.1rem;
+  font-size: var(--fs-base);
   cursor: pointer;
   box-shadow: var(--shadow-md);
   transition: background 0.2s, border-color 0.2s;
@@ -2719,6 +2761,7 @@ h1.title,
   background: var(--accent-blue);
   color: #fff;
 }
+
 
 /* =============================================================
    Accessibility Phase 2: Focus States & Motion (Issue #2970)
@@ -2837,3 +2880,58 @@ input:focus:not(:focus-visible) {
 /* All interactive elements should have logical tab order */
 /* Use tabindex -1 for disabled/hidden elements */
 /* Use tabindex 0 for custom interactive components */
+
+/* ==========================================================================
+   MathJax Responsive Design (Issue #2968)
+   ========================================================================== */
+
+/* 1. MathJax container overflow handling */
+mjx-container[jax="CHTML"][display="true"],
+.MathJax_Display,
+.math.display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+  /* Touch-friendly scrolling */
+  -webkit-overflow-scrolling: touch;
+  /* Visual scrollbar for affordance on touch devices */
+  scrollbar-width: thin;
+  padding-bottom: 0.5rem; /* Space for scrollbar */
+}
+
+/* Custom scrollbar for math containers */
+mjx-container[jax="CHTML"][display="true"]::-webkit-scrollbar,
+.MathJax_Display::-webkit-scrollbar,
+.math.display::-webkit-scrollbar {
+  height: 6px;
+}
+mjx-container[jax="CHTML"][display="true"]::-webkit-scrollbar-thumb,
+.MathJax_Display::-webkit-scrollbar-thumb,
+.math.display::-webkit-scrollbar-thumb {
+  background-color: var(--color-surface-variant, #ccc);
+  border-radius: 3px;
+}
+
+/* 2. Equation layout optimization for small screens */
+@media (max-width: 768px) {
+  mjx-container[jax="CHTML"][display="true"],
+  .MathJax_Display,
+  .math.display {
+    font-size: 0.9em !important;
+  }
+}
+
+@media (max-width: 480px) {
+  mjx-container[jax="CHTML"][display="true"],
+  .MathJax_Display,
+  .math.display {
+    font-size: 0.85em !important;
+  }
+  
+  /* Smart line-breaking for inline math */
+  mjx-container[jax="CHTML"]:not([display="true"]) {
+    word-break: break-word;
+    white-space: normal;
+  }
+}
+

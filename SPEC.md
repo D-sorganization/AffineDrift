@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-04-29T23:00:00Z
+Last-Updated: 2026-04-30T02:00:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -590,6 +590,11 @@ python src/tools/code_quality_ast.py
 | 2026-04-26 | 1.0.84 | fix(html): fixed website-lint failures in Wrist_Universal_Claude.html by properly closing paragraph tags before list elements and removing stray </p> tags. |
 | 2026-04-27 | 1.0.85 | perf(frontend): synchronized performance optimizations from modular JS files to the monolithic `script.js` (replaced querySelectorAll with live collections, optimized string methods, etc.). |
 | 2026-04-28 | 1.0.87 | ci(workflows): harden runner-routing workflows to create the `GITHUB_OUTPUT` parent directory before writing outputs, remove unnecessary full-history checkout from comment conversion, and run the local-only workflow guard with `python3` in CI. |
+| 2026-04-29 | 1.0.88 | style: fix formatting with black and ruff in tests/test_container_config.py and other python files. |
 | 2026-04-29 | 1.0.89 | test(benchmarks): add opt-in pytest-benchmark scaffolding, lightweight baseline benchmarks, and local benchmarking documentation for issue #2919. |
 | 2026-04-29 | 1.0.90 | feat(ci): add `.github/workflows/block-self-merge.yml` to enforce distributed code review policy, preventing PR authors from approving their own pull requests with branch protection as the authoritative enforcement gate (issue #2918). |
 | 2026-04-29 | 1.0.91 | docs(spec): document code review enforcement and benchmark suite integration in SPEC.md with feature entry F41, test organization updates, and pytest configuration details. |
+< ! - -   U p d a t e d :   2 0 2 6 - 0 4 - 2 9 T 1 8 : 1 7 : 5 0   - - >  
+ < ! - -   U p d a t e d :   2 0 2 6 - 0 4 - 2 9 T 1 9 : 2 0 : 3 8   - - >  
+ < ! - -   U p d a t e d :   2 0 2 6 - 0 4 - 2 9 T 1 9 : 2 7 : 3 0   - - >  
+ 

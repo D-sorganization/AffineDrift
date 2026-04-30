@@ -44,3 +44,7 @@
 ## 2026-04-12 - Native Tooltips for Icon-Only Buttons
 **Learning:** While icon-only buttons rely on aria-label for screen readers, they lack native on-hover tooltips for sighted users without a title attribute, creating a gap between accessibility and standard usability.
 **Action:** Always pair aria-label with a matching title attribute on interactive icon-only elements to ensure sighted mouse users receive visual hints.
+
+## 2026-04-29 - MathJax Overflow on Mobile Devices
+**Learning:** Display math equations (MathJax) often exceed standard viewport widths on mobile devices. Without explicit container constraints, they cause horizontal page scrolling, breaking responsive layout and causing frustration for touch users.
+**Action:** Always wrap or target `.math.display` and `mjx-container[display="true"]` with `overflow-x: auto; max-width: 100%; -webkit-overflow-scrolling: touch;` to ensure they scroll internally without breaking the main viewport layout.

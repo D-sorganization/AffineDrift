@@ -13,73 +13,75 @@ Exit codes:
   2: Warnings (external URL failures with retries)
 """
 
-import os
+import argparse
 import re
 import sys
 import time
-import argparse
 from pathlib import Path
-from urllib.parse import urlparse
-from urllib.request import urlopen, Request
 from urllib.error import HTTPError, URLError
-from collections import defaultdict
-from typing import Set, Dict, List, Tuple
+from urllib.parse import urlparse
+from urllib.request import Request, urlopen
 
 # Configuration
-INTERNAL_REF_PATTERN = r'@(sec|fig|eq|tbl|lst|exr)-[\w-]+'
-EXTERNAL_URL_PATTERN = r'https?://[^\s\)\]\}]+'
+INTERNAL_REF_PATTERN = r"@(sec|fig|eq|tbl|lst|exr)-[\w-]+"
+EXTERNAL_URL_PATTERN = r"https?://[^\s\)\]\}]+"
 KNOWN_FRAGILE_URLS = {
-    'github.com',
-    'arxiv.org',
-    'stackoverflow.com',
+    "github.com",
+    "arxiv.org",
+    "stackoverflow.com",
 }
 TIMEOUT = 5
 MAX_RETRIES = 2
 RETRY_DELAY = 1
 
 
-def find_markdown_files(root_dir: str) -> List[Path]:
-    """Find all markdown and qmd files."""
+def find_markdown_files(root_dir: str) -> list[Path]:
+    """Find all markdown and qmd files, excluding cache and environment directories."""
     files = []
-    for pattern in ['**/*.md', '**/*.qmd']:
-        files.extend(Path(root_dir).glob(pattern))
+    ignore_dirs = {".pytest_cache", ".venv", ".ruff_cache", "node_modules", ".git"}
+    
+    root_path = Path(root_dir)
+    for pattern in ["**/*.md", "**/*.qmd"]:
+        for path in root_path.glob(pattern):
+            if not any(part in ignore_dirs for part in path.parts):
+                files.append(path)
     return files
 
 
-def extract_internal_refs(content: str) -> Set[str]:
+def extract_internal_refs(content: str) -> set[str]:
     """Extract Quarto internal references (@sec-, @fig-, etc)."""
     matches = re.findall(INTERNAL_REF_PATTERN, content)
     return set(matches)
 
 
-def extract_external_urls(content: str) -> Set[str]:
+def extract_external_urls(content: str) -> set[str]:
     """Extract external URLs from content."""
     matches = re.findall(EXTERNAL_URL_PATTERN, content)
     # Clean up URLs (remove trailing punctuation)
     urls = set()
     for url in matches:
-        url = url.rstrip('.,;:!?\'")')
-        if url.startswith('http'):
+        url = url.rstrip(".,;:!?'\")")
+        if url.startswith("http"):
             urls.add(url)
     return urls
 
 
-def find_ref_definitions(root_dir: str) -> Set[str]:
+def find_ref_definitions(root_dir: str) -> set[str]:
     """Find all defined Quarto references (labels)."""
     defined_refs = set()
     for file_path in find_markdown_files(root_dir):
         try:
-            with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
+            with open(file_path, encoding="utf-8", errors="ignore") as f:
                 content = f.read()
                 # Look for {#sec-xxx} or {#fig-xxx} patterns (label definitions)
-                labels = re.findall(r'\{#(sec|fig|eq|tbl|lst|exr)-[\w-]+\}', content)
+                labels = re.findall(r"\{#(sec|fig|eq|tbl|lst|exr)-[\w-]+\}", content)
                 defined_refs.update(labels)
         except Exception as e:
             print(f"Warning: Could not read {file_path}: {e}", file=sys.stderr)
     return defined_refs
 
 
-def validate_url(url: str, retries: int = MAX_RETRIES) -> Tuple[bool, str]:
+def validate_url(url: str, retries: int = MAX_RETRIES) -> tuple[bool, str]:  # noqa: C901
     """Validate URL with retry logic."""
     domain = urlparse(url).netloc
 
@@ -88,8 +90,8 @@ def validate_url(url: str, retries: int = MAX_RETRIES) -> Tuple[bool, str]:
 
     for attempt in range(retries):
         try:
-            req = Request(url, headers={'User-Agent': 'Link-Checker/1.0'})
-            with urlopen(req, timeout=TIMEOUT) as response:
+            req = Request(url, headers={"User-Agent": "Link-Checker/1.0"})  # noqa: S310
+            with urlopen(req, timeout=TIMEOUT) as response:  # noqa: S310
                 if response.status < 400:
                     return True, f"OK ({response.status})"
                 elif response.status < 500:
@@ -117,13 +119,15 @@ def validate_url(url: str, retries: int = MAX_RETRIES) -> Tuple[bool, str]:
     return False, "Max retries exceeded"
 
 
-def check_file(file_path: Path, defined_refs: Set[str], external_only: bool = False) -> Tuple[List[str], List[str]]:
+def check_file(
+    file_path: Path, defined_refs: set[str], external_only: bool = False
+) -> tuple[list[str], list[str]]:
     """Check a single file for broken references and URLs."""
     errors = []
     warnings = []
 
     try:
-        with open(file_path, 'r', encoding='utf-8', errors='ignore') as f:
+        with open(file_path, encoding="utf-8", errors="ignore") as f:
             content = f.read()
 
         # Check internal references
@@ -146,12 +150,12 @@ def check_file(file_path: Path, defined_refs: Set[str], external_only: bool = Fa
     return errors, warnings
 
 
-def main():
-    parser = argparse.ArgumentParser(description='Validate Quarto references and URLs')
-    parser.add_argument('--root', default='.', help='Root directory to check')
-    parser.add_argument('--external-only', action='store_true', help='Only check external URLs')
-    parser.add_argument('--verbose', action='store_true', help='Verbose output')
-    parser.add_argument('--file', help='Check specific file')
+def main():  # noqa: C901
+    parser = argparse.ArgumentParser(description="Validate Quarto references and URLs")
+    parser.add_argument("--root", default=".", help="Root directory to check")
+    parser.add_argument("--external-only", action="store_true", help="Only check external URLs")
+    parser.add_argument("--verbose", action="store_true", help="Verbose output")
+    parser.add_argument("--file", help="Check specific file")
     args = parser.parse_args()
 
     root_dir = args.root
@@ -206,5 +210,5 @@ def main():
     return 0
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     sys.exit(main())

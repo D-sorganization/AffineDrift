@@ -106,7 +106,7 @@
 }
 
 /* Responsive resource grid */
-@media (width < 768px) {
+@media (width < var(--breakpoint-md)) {
   .resource-grid {
     grid-template-columns: 1fr;
     gap: 1.5rem;
@@ -114,14 +114,6 @@
 
   .resource-card.has-media {
     grid-template-columns: 1fr;
-  }
-}
-
-/* Legacy-equivalent fallback with context notation */
-@media (width <= 767.98px) {
-  .resource-grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
   }
 }
 
@@ -210,24 +202,13 @@
   margin-top: auto;
 }
 
-@media (width < 992px) {
+@media (width < var(--breakpoint-lg)) {
   .resources-layout {
     grid-template-columns: 1fr;
   }
 
   .resources-sidebar {
     order: 2;
-  }
-
-  .resources-layout > .resources-sidebar,
-  .resources-layout > .resources-main {
-    grid-column: 1 !important;
-  }
-}
-
-@media (width <= 991.98px) {
-  .resources-layout {
-    grid-template-columns: 1fr;
   }
 
   .resources-layout > .resources-sidebar,
