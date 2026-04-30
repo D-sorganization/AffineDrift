@@ -2,6 +2,7 @@
    AffineDrift - Modern Scientific Layout
    --- */
 
+@import "css/tokens/design-tokens.css";
 @import url("css/breakpoints.css");
 @import url("css/bibliography.css");
 @import url("css/critics-corner.css");
@@ -914,16 +915,14 @@ nav .container {
    Responsiveness
    --- */
 
-/* Large Tablet / Small Laptop: Collapse Right Sidebar first if needed, or shrink sidebars */
-@media (width < var(--breakpoint-xl)) {
-  :root {
-    --sidebar-width: 240px;
-    --sidebar-gap: 2rem;
-  }
+/* Mobile and above: Set sidebar dimensions (mobile-first base) */
+:root {
+  --sidebar-width: 240px;
+  --sidebar-gap: 2rem;
 }
 
-/* Tablet: Switch to 2 columns (Left Sidebar + Content) */
-@media (width < var(--breakpoint-lg)) {
+/* Tablet and up: Switch to 2-column layout (Left Sidebar + Content) */
+@media (width >= var(--breakpoint-md)) {
   .page-columns.page-full .standard-page-layout,
   .container .standard-page-layout,
   .standard-page-layout {
@@ -1893,7 +1892,7 @@ form.contact-form .form-group textarea {
 }
 
 /* Responsive Home Layout */
-@media (width <= var(--breakpoint-xl)) {
+@media (width < var(--breakpoint-xl)) {
   .home-toc {
     display: none;
 
@@ -1901,7 +1900,7 @@ form.contact-form .form-group textarea {
   }
 }
 
-@media (width <= var(--breakpoint-lg)) {
+@media (width < var(--breakpoint-lg)) {
   .home-layout {
     flex-direction: column;
     gap: 2rem;
@@ -2511,7 +2510,7 @@ h1.title,
 /* Homepage sidebar remains but uses standard navbar-toggler button */
 
 /* Home Page 3-Column Responsive */
-@media (width <= var(--breakpoint-xl)) {
+@media (width < var(--breakpoint-xl)) {
   .home-layout-3col {
     grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
     gap: 2rem;
@@ -2522,7 +2521,7 @@ h1.title,
   }
 }
 
-@media (width <= var(--breakpoint-lg)) {
+@media (width < var(--breakpoint-lg)) {
   .home-layout-3col {
     display: flex;
     flex-direction: column;
@@ -2563,7 +2562,7 @@ h1.title,
   }
 }
 
-@media (width <= var(--breakpoint-md)) {
+@media (width < var(--breakpoint-md)) {
   /* Mobile: Hamburger menu shown by Quarto navbar (see navigation.js) */
   /* CONSOLIDATED: Mobile sidebar no longer uses .mobile-menu-toggle */
   /* Now uses standard .navbar-toggler with unified keyboard/ARIA support */
@@ -2660,9 +2659,9 @@ h1.title,
 }
 
 /* =============================================================
-   Dark Mode – automatic via prefers-color-scheme
+   Dark Mode – automatic via prefers-color-scheme or manual toggle
    ============================================================= */
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark), [data-theme="dark"] {
   :root {
     color-scheme: dark;
 
