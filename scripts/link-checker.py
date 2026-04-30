@@ -60,7 +60,7 @@ def extract_external_urls(content: str) -> set[str]:
     # Clean up URLs (remove trailing punctuation)
     urls = set()
     for url in matches:
-        url = url.rstrip(".,;:!?'\")")
+        url = url.rstrip(".,;:!?'\")\`")
         if url.startswith("http"):
             urls.add(url)
     return urls
