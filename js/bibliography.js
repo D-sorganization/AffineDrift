@@ -315,6 +315,17 @@
       );
       if (!entry) return;
       renderDetails(entry);
+
+      // 🎨 Palette UX: Add focus management so screen readers announce the details pane
+      // Make it programmatically focusable but not in the tab sequence
+      detailsEl.setAttribute("tabindex", "-1");
+      detailsEl.focus({ preventScroll: true });
+
+      // Remove tabindex on blur to keep DOM clean
+      detailsEl.addEventListener("blur", () => {
+        detailsEl.removeAttribute("tabindex");
+      }, { once: true });
+
       if (window.AffineDriftMetrics) {
         window.AffineDriftMetrics.trackEntryClick(entry.id, entry.title);
       }

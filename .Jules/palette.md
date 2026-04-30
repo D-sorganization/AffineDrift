@@ -48,3 +48,7 @@
 ## 2026-04-29 - MathJax Overflow on Mobile Devices
 **Learning:** Display math equations (MathJax) often exceed standard viewport widths on mobile devices. Without explicit container constraints, they cause horizontal page scrolling, breaking responsive layout and causing frustration for touch users.
 **Action:** Always wrap or target `.math.display` and `mjx-container[display="true"]` with `overflow-x: auto; max-width: 100%; -webkit-overflow-scrolling: touch;` to ensure they scroll internally without breaking the main viewport layout.
+
+## 2026-06-01 - Focus Management for Sidebar Detail Views
+**Learning:** When a list item dynamically updates a separate details pane (like a sidebar), screen reader users are left unaware of the change unless focus is explicitly moved to the new content.
+**Action:** Add `tabindex="-1"` and call `.focus({ preventScroll: true })` on the details container after updating its content, cleaning up the `tabindex` on blur.
