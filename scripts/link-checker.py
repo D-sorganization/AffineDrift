@@ -38,8 +38,11 @@ RETRY_DELAY = 1
 def find_markdown_files(root_dir: str) -> list[Path]:
     """Find all markdown and qmd files."""
     files = []
+    ignore_dirs = {".venv", "node_modules", ".pytest_cache", ".git", ".ruff_cache"}
     for pattern in ["**/*.md", "**/*.qmd"]:
-        files.extend(Path(root_dir).glob(pattern))
+        for path in Path(root_dir).glob(pattern):
+            if not any(part in ignore_dirs for part in path.parts):
+                files.append(path)
     return files
 
 
