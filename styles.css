@@ -26,7 +26,7 @@
   /* Modern Scientific Palette */
   --primary-dark: #1a1a2e;
   --primary-blue: #0f4c75;
-  --accent-blue: #3282b8;
+  --accent-blue: #205d86;
   --light-blue: #e3f2fd;
   --pure-white: #fff;
   --white-transparent: rgb(255, 255, 255, 0.9);
@@ -2717,4 +2717,57 @@ h1.title,
 #theme-toggle:hover {
   background: var(--accent-blue);
   color: #fff;
+}
+/* ==========================================================================
+   MathJax Responsive Design (Issue #2968)
+   ========================================================================== */
+
+/* 1. MathJax container overflow handling */
+mjx-container[jax="CHTML"][display="true"],
+.MathJax_Display,
+.math.display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+  /* Touch-friendly scrolling */
+  -webkit-overflow-scrolling: touch;
+  /* Visual scrollbar for affordance on touch devices */
+  scrollbar-width: thin;
+  padding-bottom: 0.5rem; /* Space for scrollbar */
+}
+
+/* Custom scrollbar for math containers */
+mjx-container[jax="CHTML"][display="true"]::-webkit-scrollbar,
+.MathJax_Display::-webkit-scrollbar,
+.math.display::-webkit-scrollbar {
+  height: 6px;
+}
+mjx-container[jax="CHTML"][display="true"]::-webkit-scrollbar-thumb,
+.MathJax_Display::-webkit-scrollbar-thumb,
+.math.display::-webkit-scrollbar-thumb {
+  background-color: var(--color-surface-variant, #ccc);
+  border-radius: 3px;
+}
+
+/* 2. Equation layout optimization for small screens */
+@media (max-width: 768px) {
+  mjx-container[jax="CHTML"][display="true"],
+  .MathJax_Display,
+  .math.display {
+    font-size: 0.9em !important;
+  }
+}
+
+@media (max-width: 480px) {
+  mjx-container[jax="CHTML"][display="true"],
+  .MathJax_Display,
+  .math.display {
+    font-size: 0.85em !important;
+  }
+  
+  /* Smart line-breaking for inline math */
+  mjx-container[jax="CHTML"]:not([display="true"]) {
+    word-break: break-word;
+    white-space: normal;
+  }
 }
