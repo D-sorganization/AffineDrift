@@ -1,0 +1,77 @@
+name: Link Checker
+
+on:
+  pull_request:
+    paths:
+      - '**.md'
+      - '**.qmd'
+      - 'scripts/link-checker.py'
+      - '.github/workflows/link-checker.yml'
+  workflow_dispatch:
+  schedule:
+    - cron: '0 2 * * *'  # Daily at 2 AM UTC
+
+jobs:
+  check-links:
+    runs-on: ubuntu-latest
+    name: Validate Quarto references and URLs
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Check internal references
+        run: |
+          python scripts/link-checker.py --root . --verbose
+        continue-on-error: true
+        id: internal-refs
+
+      - name: Check external URLs
+        run: |
+          python scripts/link-checker.py --root . --external-only --verbose
+        continue-on-error: true
+        id: external-urls
+
+      - name: Report results
+        if: always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const internalStatus = '${{ steps.internal-refs.outcome }}';
+            const externalStatus = '${{ steps.external-urls.outcome }}';
+
+            let summary = '## Link Checker Results\n\n';
+
+            if (internalStatus === 'success') {
+              summary += '✅ Internal references: All valid\n';
+            } else {
+              summary += '❌ Internal references: Some broken (see job logs)\n';
+            }
+
+            if (externalStatus === 'success' || externalStatus === 'skipped') {
+              summary += '✅ External URLs: All valid\n';
+            } else {
+              summary += '⚠️ External URLs: Some timeouts/errors (see job logs)\n';
+            }
+
+            summary += '\n**Note:** Internal reference failures block this check. External URL warnings are non-blocking.';
+
+            console.log(summary);
+
+            // Fail if internal refs are broken
+            if (internalStatus === 'failure') {
+              core.setFailed('Internal reference validation failed');
+            }
+
+      - name: Enforce check
+        if: steps.internal-refs.outcome == 'failure'
+        run: |
+          echo '::error::Link checker found broken Quarto references'
+          exit 1
