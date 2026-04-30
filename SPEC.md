@@ -66,6 +66,7 @@ AffineDrift operates as a standalone research and education platform within the 
 
 ```
 AffineDrift/
+├── PARAMETERS.md       # Canonical parameters reference table
 ├── src/
 │   ├── affine_control/          # Swing optimization and control algorithms
 │   │   ├── swing_optimizer.py   # DDP and iLQR solvers for swing trajectories
