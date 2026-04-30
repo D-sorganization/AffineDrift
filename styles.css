@@ -790,8 +790,51 @@ nav .container {
    --- */
 .math.display {
   overflow-x: auto;
+  overflow-y: visible;
   max-width: 100%;
   padding: 1rem 0;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+/* Mobile-optimized MathJax containers */
+@media (max-width: 768px) {
+  .math.display {
+    font-size: clamp(0.85rem, 2vw, 1rem);
+    padding: 0.75rem 0;
+  }
+
+  /* Reduce font size for complex equations on very small screens */
+  @media (max-width: 480px) {
+    .math.display {
+      font-size: clamp(0.75rem, 1.5vw, 0.9rem);
+      padding: 0.5rem 0;
+    }
+  }
+}
+
+/* Inline math on mobile */
+.math.inline {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Add visual indicator for scrollable equations */
+.math.display::-webkit-scrollbar {
+  height: 6px;
+}
+
+.math.display::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.math.display::-webkit-scrollbar-thumb {
+  background: var(--text-light, rgba(0, 0, 0, 0.2));
+  border-radius: 3px;
+}
+
+.math.display::-webkit-scrollbar-thumb:hover {
+  background: var(--text-lighter, rgba(0, 0, 0, 0.4));
 }
 
 /* 🎨 Palette UX: Responsive Tables */
