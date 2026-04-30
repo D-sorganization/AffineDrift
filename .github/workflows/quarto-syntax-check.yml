@@ -1,0 +1,39 @@
+name: Quarto Syntax Check
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  schedule:
+    - cron: "0 8 * * 0,4" # Sundays and Thursdays at 08:00 UTC
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check-syntax:
+    if: github.repository == 'D-sorganization/AffineDrift'
+    runs-on: d-sorg-fleet
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Run Quarto Syntax Scanner
+        run: |
+          export PYTHONPATH=$PYTHONPATH:.
+          python3 scripts/scan_quarto_syntax.py
+
+      # Assessment E: Security scanning for dependency vulnerabilities
+      - name: Audit Python Dependencies
+        run: |
+          pip install pip-audit
+          pip-audit -r requirements.txt --progress-spinner=off || true

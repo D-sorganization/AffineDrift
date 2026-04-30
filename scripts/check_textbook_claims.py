@@ -66,73 +66,82 @@ def _is_textbook_path(rel_path: str) -> bool:
     )
 
 
-def _get_pr_base_info(event_path: str) -> tuple[str, str] | None:
-    """Extract base ref and sha from GITHUB_EVENT_PATH."""
-    if not event_path:
-        return None
-    try:
-        event = json.loads(Path(event_path).read_text(encoding="utf-8"))
-    except (json.JSONDecodeError, OSError):
-        return None
-    pr = event.get("pull_request") if isinstance(event, dict) else None
-    if not isinstance(pr, dict):
-        return None
-    base = pr.get("base")
-    if not isinstance(base, dict):
-        return None
-    return (str(base.get("ref", "")).strip(), str(base.get("sha", "")).strip())
-
-
-def _get_merge_base(repo_root: Path, target: str) -> str | None:
-    """Calculate merge-base for a given target."""
-    try:
-        result = subprocess.run(
-            ["git", "merge-base", "HEAD", target],
-            cwd=repo_root,
-            check=True,
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
-            errors="replace",
-        )
-        return result.stdout.strip() or None
-    except subprocess.CalledProcessError:
-        return None
-
-
-def _fetch_ref(repo_root: Path, ref: str) -> None:
-    """Fetch a specific ref from origin."""
-    subprocess.run(
-        ["git", "fetch", "origin", ref],
-        cwd=repo_root,
-        check=False,
-        capture_output=True,
-        text=True,
-        encoding="utf-8",
-        errors="replace",
-    )
-
-
 def _merge_base(repo_root: Path) -> str:
     """Resolve a stable merge base for changed-file comparisons."""
     event_path = os.getenv("GITHUB_EVENT_PATH", "").strip()
-    pr_info = _get_pr_base_info(event_path)
-    if pr_info:
-        base_ref, base_sha = pr_info
-        if base_ref:
-            _fetch_ref(repo_root, base_ref)
-            sha = _get_merge_base(repo_root, f"origin/{base_ref}")
-            if sha:
-                return sha
-        if base_sha:
-            return base_sha
+    if event_path:
+        try:
+            event = json.loads(Path(event_path).read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError):
+            event = {}
+        pull_request = event.get("pull_request") if isinstance(event, dict) else None
+        if isinstance(pull_request, dict):
+            base = pull_request.get("base")
+            if isinstance(base, dict):
+                base_ref = str(base.get("ref", "")).strip()
+                if base_ref:
+                    subprocess.run(
+                        ["git", "fetch", "origin", base_ref],
+                        cwd=repo_root,
+                        check=False,
+                        capture_output=True,
+                        text=True,
+                        encoding="utf-8",
+                        errors="replace",
+                    )
+                    try:
+                        result = subprocess.run(
+                            ["git", "merge-base", "HEAD", f"origin/{base_ref}"],
+                            cwd=repo_root,
+                            check=True,
+                            capture_output=True,
+                            text=True,
+                            encoding="utf-8",
+                            errors="replace",
+                        )
+                    except subprocess.CalledProcessError:
+                        result = None
+                    if result is not None:
+                        sha = result.stdout.strip()
+                        if sha:
+                            return sha
+                base_sha = str(base.get("sha", "")).strip()
+                if base_sha:
+                    return base_sha
 
     default_base = os.getenv("GITHUB_BASE_REF", "").strip() or "main"
+    fetched_default = False
     candidates = [f"origin/{default_base}", default_base, "origin/main", "main", "HEAD~1"]
     for candidate in candidates:
-        if "/" in candidate:
-            _fetch_ref(repo_root, candidate.split("/")[-1])
-        sha = _get_merge_base(repo_root, candidate)
+        if candidate in {f"origin/{default_base}", default_base, "origin/main", "main"}:
+            remote_ref = (
+                default_base if candidate in {f"origin/{default_base}", default_base} else "main"
+            )
+            if not fetched_default or remote_ref != default_base:
+                subprocess.run(
+                    ["git", "fetch", "origin", remote_ref],
+                    cwd=repo_root,
+                    check=False,
+                    capture_output=True,
+                    text=True,
+                    encoding="utf-8",
+                    errors="replace",
+                )
+                if remote_ref == default_base:
+                    fetched_default = True
+        try:
+            result = subprocess.run(
+                ["git", "merge-base", "HEAD", candidate],
+                cwd=repo_root,
+                check=True,
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+            )
+        except subprocess.CalledProcessError:
+            continue
+        sha = result.stdout.strip()
         if sha:
             return sha
     return "HEAD~1"

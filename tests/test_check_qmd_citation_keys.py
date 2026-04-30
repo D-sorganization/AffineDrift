@@ -63,5 +63,4 @@ def test_find_unresolved_citations_reports_missing_keys(tmp_path: Path) -> None:
 
     diagnostics = find_unresolved_citations(repo_root)
 
-    normalized = [d.replace("\\", "/") for d in diagnostics]
-    assert normalized == ["articles/demo/chapter.qmd: unresolved citation keys: missing2024"]
+    assert diagnostics == ["articles/demo/chapter.qmd: unresolved citation keys: missing2024"]

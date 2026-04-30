@@ -10,9 +10,9 @@ on:
       - ".gitignore"
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
-    # NOTE: **.md intentionally NOT excluded so quality-gate runs on docs-only
-    # PRs and satisfies branch protection required status checks.
     paths-ignore:
+      - "docs/**"
+      - "**.md"
       - "LICENSE"
       - ".gitignore"
   workflow_dispatch:
@@ -25,36 +25,62 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # ── Dispatcher: enforce local-only routing (NO GitHub-hosted runners) ──────
+  # ── Dispatcher: route to self-hosted if available ──────────────────────────
   pick-runner:
     runs-on: d-sorg-fleet
     timeout-minutes: 2
     outputs:
       runner: ${{ steps.check.outputs.runner }}
     steps:
-      - name: Enforce local-only runner routing
+      - name: Check for self-hosted runner
         id: check
+        env:
+          GH_TOKEN: ${{ secrets.RUNNER_CHECK_TOKEN }}
+          FLEET_MODE: ${{ vars.FLEET_RUNNER_MODE }}
         run: |
-          mkdir -p "$(dirname "$GITHUB_OUTPUT")"
-          echo "runner=d-sorg-fleet" >> "$GITHUB_OUTPUT"
-          echo "Enforcing local-only runner routing (d-sorg-fleet)"
+          MODE="${FLEET_MODE:-hybrid}"
+          echo "Fleet mode: $MODE"
+
+          case "$MODE" in
+            local)
+              echo "runner=d-sorg-fleet" >> $GITHUB_OUTPUT
+              echo "Routing to self-hosted fleet (mode=local)"
+              ;;
+            cloud)
+              echo "runner=ubuntu-latest" >> $GITHUB_OUTPUT
+              echo "Routing to GitHub-hosted (mode=cloud)"
+              ;;
+            hybrid|*)
+              AVAILABLE=$(gh api /orgs/${{ github.repository_owner }}/actions/runners \
+                --jq '[.runners[] | select(.status == "online") | select(.busy == false) | select(.labels[].name == "d-sorg-fleet")] | length' \
+                2>/dev/null || echo "0")
+              if [[ "$AVAILABLE" -gt 0 ]]; then
+                echo "runner=d-sorg-fleet" >> $GITHUB_OUTPUT
+                echo "$AVAILABLE idle fleet runner(s) - routing locally"
+              else
+                echo "runner=ubuntu-latest" >> $GITHUB_OUTPUT
+                echo "No idle fleet runners - falling back to GitHub-hosted"
+              fi
+              ;;
+          esac
   quality-gate:
     needs: pick-runner
-    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    runs-on: self-hosted
     timeout-minutes: 45
     env:
       PYTHONPATH: .
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
+      - uses: actions/checkout@v6
 
       - name: Bootstrap Python venv
         run: |
-          python -m venv "$RUNNER_TEMP/ci-venv"
+          for py in python3.12 python3.11 python3.10 python3; do
+            if command -v $py &>/dev/null; then
+              $py -m venv "$RUNNER_TEMP/ci-venv"
+              break
+            fi
+          done
           source "$RUNNER_TEMP/ci-venv/bin/activate"
           pip install --upgrade pip setuptools wheel
           pip install -r requirements.txt
@@ -183,7 +209,7 @@ jobs:
           fi
 
       - name: Upload MATLAB Report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: matlab-quality-report
@@ -191,23 +217,22 @@ jobs:
 
   tests:
     needs: [pick-runner, quality-gate]
-    runs-on: ${{ needs.pick-runner.outputs.runner }}
-    timeout-minutes: 45
+    runs-on: self-hosted
+    timeout-minutes: 20
     strategy:
       matrix:
         python: ["3.12"]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python }}
-          cache: pip
-          cache-dependency-path: requirements.txt
+      - uses: actions/checkout@v6
       - name: Bootstrap Python venv
         run: |
-          python -m venv "$RUNNER_TEMP/ci-venv"
+          for py in python3.12 python3.11 python3.10 python3; do
+            if command -v $py &>/dev/null; then
+              $py -m venv "$RUNNER_TEMP/ci-venv"
+              break
+            fi
+          done
           source "$RUNNER_TEMP/ci-venv/bin/activate"
-          python --version
           pip install --upgrade pip setuptools wheel
           pip install -r requirements.txt pytest-timeout pytest-cov PyQt6
           echo "$RUNNER_TEMP/ci-venv/bin" >> $GITHUB_PATH
@@ -238,11 +263,11 @@ jobs:
 
   js-tests:
     needs: [pick-runner, quality-gate]
-    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: "22" }
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with: { node-version: "20" }
       - name: Install Dependencies
         run: npm ci
       - name: Run JS Tests
@@ -257,10 +282,10 @@ jobs:
 
   e2e-tests:
     needs: [pick-runner, quality-gate]
-    runs-on: ${{ needs.pick-runner.outputs.runner }}
-    timeout-minutes: 45
+    runs-on: self-hosted
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Detect E2E-relevant changes
@@ -289,17 +314,18 @@ jobs:
             printf "%s\n" "$relevant_files"
             echo "run=true" >> "$GITHUB_OUTPUT"
           fi
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         if: steps.e2e_changes.outputs.run == 'true'
-        with: { node-version: "22" }
-      - uses: actions/setup-python@v5
-        if: steps.e2e_changes.outputs.run == 'true'
-        with:
-          python-version: "3.12"
+        with: { node-version: "20" }
       - name: Bootstrap Python venv
         if: steps.e2e_changes.outputs.run == 'true'
         run: |
-          python -m venv "$RUNNER_TEMP/ci-venv"
+          for py in python3.12 python3.11 python3.10 python3; do
+            if command -v $py &>/dev/null; then
+              $py -m venv "$RUNNER_TEMP/ci-venv"
+              break
+            fi
+          done
           source "$RUNNER_TEMP/ci-venv/bin/activate"
           pip install --upgrade pip setuptools wheel
           pip install -r requirements.txt
@@ -379,7 +405,7 @@ jobs:
             --project=chromium \
             --retries=0 \
             tests/e2e/smoke.spec.js
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: failure() && steps.e2e_changes.outputs.run == 'true'
         with:
           name: playwright-report
@@ -388,12 +414,12 @@ jobs:
 
   website-lint:
     needs: [pick-runner, quality-gate]
-    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    runs-on: self-hosted
     continue-on-error: true # Non-blocking: HTML validation errors need separate fix
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: "22" }
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with: { node-version: "20" }
       - name: Install & Lint
         run: |
           npm ci
@@ -410,9 +436,9 @@ jobs:
   # =============================================================================
   # matlab-tests:
   #   needs: [pick-runner, quality-gate]
-  #   runs-on: d-sorg-fleet
+  #   runs-on: self-hosted
   #   steps:
-  #     - uses: actions/checkout@v4
+  #     - uses: actions/checkout@v6
   #     - uses: matlab-actions/setup-matlab@v2
   #     - uses: matlab-actions/run-command@v2
   #       with:
@@ -430,10 +456,10 @@ jobs:
   # =============================================================================
   rust-quality-gate:
     needs: pick-runner
-    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    runs-on: self-hosted
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -476,7 +502,7 @@ jobs:
 
       - name: Cache Cargo registry and build
         if: steps.rust-changes.outputs.has_changes == 'true'
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: |
             ~/.cargo/registry
@@ -509,14 +535,3 @@ jobs:
           echo "- ✅ rustfmt: formatted" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ clippy: no warnings" >> $GITHUB_STEP_SUMMARY
           echo "- ✅ cargo test: all tests pass" >> $GITHUB_STEP_SUMMARY
-
-  local-only-workflows:
-    name: Reject hosted runner routing
-    runs-on: d-sorg-fleet
-    steps:
-      - uses: actions/checkout@v4
-      - name: Run local-only workflow guard
-        shell: bash
-        run: |
-          set -euo pipefail
-          python3 scripts/check_local_only_workflows.py

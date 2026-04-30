@@ -16,7 +16,7 @@ permissions:
   id-token: write
 
 jobs:
-  # ── Dispatcher: require a local self-hosted runner and fail closed ──────────────────
+  # ── Dispatcher: try self-hosted first, fall back to cloud ──────────────────
   pick-runner:
     runs-on: d-sorg-fleet
     timeout-minutes: 2
@@ -28,30 +28,29 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.RUNNER_CHECK_TOKEN }}
         run: |
-          ONLINE=$(gh api /orgs/${{ github.repository_owner }}/actions/runners --paginate \
-              --jq 'if .runners then [.runners[] | select(.status == "online") | select(.labels[].name == "d-sorg-fleet")] | length else 0 end' \
-              2>/dev/null || echo "0")
+          ONLINE=$(gh api /orgs/${{ github.repository_owner }}/actions/runners \
+            --jq '[.runners[] | select(.status == "online") | select(.labels[].name == "d-sorg-fleet")] | length' \
+            2>/dev/null || echo "0")
           if [[ "$ONLINE" -gt 0 ]]; then
-            mkdir -p "$(dirname "$GITHUB_OUTPUT")"
-            echo "runner=d-sorg-fleet" >> "$GITHUB_OUTPUT"
+            echo "runner=d-sorg-fleet" >> $GITHUB_OUTPUT
             echo "Self-hosted runner online - routing locally"
           else
-            echo "::error::No local self-hosted runner available; failing closed"
-            exit 1
+            echo "runner=ubuntu-latest" >> $GITHUB_OUTPUT
+            echo "No self-hosted runner - using GitHub-hosted"
           fi
 
   build:
     if: github.repository == 'D-sorganization/AffineDrift'
-    runs-on: d-sorg-fleet
+    runs-on: self-hosted
     needs: pick-runner
     env:
       PYTHONPATH: .
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: "3.12"
           cache: "pip"
@@ -120,7 +119,7 @@ jobs:
         uses: actions/configure-pages@v6
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v5
+        uses: actions/upload-pages-artifact@v4
         with:
           path: docs
 
@@ -129,7 +128,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: d-sorg-fleet
+    runs-on: self-hosted
     needs: build
     steps:
       - name: Deploy to GitHub Pages

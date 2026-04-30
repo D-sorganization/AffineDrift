@@ -8,9 +8,9 @@ will be added in future editions.
 \end{gomdraftnotice}
 
 \epigraph{%
-  The human body is a high-dimensional articulated system with
-  changing contacts and compliant tissues. Rigid-body dynamics is
-  a useful approximation, but never the whole story.
+  The human body is the most complex open kinematic chain in nature.
+  Analyzing it with the tools of rigid-body dynamics is both
+  necessary and insufficient.
 }{}
 
 \section{Open-Chain vs.\ Closed-Chain Biomechanics}
@@ -91,8 +91,8 @@ one-actuator-per-joint abstraction common in introductory robotics.
           another without requiring a separate distal actuator. When the proximal joint
           extends (muscle shortening at the proximal end) and the distal joint flexes
           (muscle lengthening at the distal end), mechanical power can be redistributed
-          from proximal to distal coordinates \cite{Zajac1989,Neptune2001}. The metabolic
-          cost still depends on activation, contraction velocity, and force history.
+          from proximal to distal coordinates. The metabolic cost still depends on
+          activation, contraction velocity, and force history.
     \item \textbf{Coordination constraint}: they link joint motions, reducing the
           effective degrees of freedom and simplifying the control problem.
   \end{enumerate}
@@ -102,13 +102,12 @@ one-actuator-per-joint abstraction common in introductory robotics.
   plantarflexion during the push-off phase of gait.
 
   \noindent
-  \textbf{Control-Theoretic Perspective:} The matrix $R(\bm{q})$ can be read as a
-  state-dependent input map from muscle forces to generalized torques. Bi-articular
-  muscles may create dependencies among its columns, which is one reason the effective
-  control directions in a musculoskeletal model can be lower-dimensional than the raw
-  muscle count. Geometric control language is useful for describing that reduction
-  \cite{AgrachevSachkov2004}, but the specific structure of $R(\bm{q})$ remains
-  anatomy- and model-dependent.
+  \textbf{Control-Theoretic Perspective:} In the language of Agrachev \& Sachkov's geometric
+  control theory \cite{AgrachevSachkov2004}, the moment arm matrix $R(\bm{q})$ is a covector
+  field describing how muscle forces map to joint torques. Bi-articular muscles induce dependencies
+  in the columns of $R(\bm{q})$, effectively constraining the input distribution $G(\bm{x})$ of the
+  system. This reduces the effective control dimension and is formalized in Chapter~3 of
+  \cite{AgrachevSachkov2004} (reachability and controllability of affine systems).
 \end{principle}
 
 \begin{lstlisting}[language=Python, caption={Computing joint torques from muscle forces through moment arms.}]
@@ -169,16 +168,15 @@ where $\partial F / \partial \ell^M$ is the short-range stiffness of the muscle,
 depends on activation level.
 
 Co-contraction is metabolically expensive but biomechanically important: it allows the
-nervous system to modulate joint \emph{impedance} independently of net joint
-\emph{torque}. This is better understood as a biologically compliant analogue of
-impedance control rather than a literal duplicate of a rigid torque source
-\cite{Zajac1989,MillardEvans2013}.
+nervous system to modulate joint \emph{impedance} independently of joint
+\emph{torque}. This is a form of \textbf{variable impedance control} that has no direct
+analog in rigid robots with torque-controlled joints.
 
-Position-dependent stiffness modulation gives a useful control vocabulary for
-discussing state-dependent actuation. Geometric control theory describes how
-state-dependent inputs change closed-loop structure \cite{AgrachevSachkov2004},
-but the actual stiffness law in biomechanics still has to come from muscle,
-tendon, and contact modeling rather than from control theory alone.
+Position-dependent stiffness modulation is a nonlinear phenomenon central to the geometric
+analysis of affine control systems. Agrachev \& Sachkov \cite{AgrachevSachkov2004} develop
+the theory of feedback linearization and stabilization via nonlinear drift terms (Chapter~6),
+which encompasses exactly this scenario: using position-dependent actuation to achieve
+desired closed-loop dynamics.
 
 \section{The Mass Matrix of the Human Body}
 

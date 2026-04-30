@@ -14,24 +14,22 @@ will be added in future editions.
 \vspace{0.5cm}
 
 \begin{laymansbox}{Ditching the Clock}{ditching_clock}
-If a robot is programmed to walk across a room in exactly 10 seconds, and you push it backwards halfway through, a naive time-tracking controller can interpret the lag as a large positional error. A human, by contrast, often organizes walking around physical milestones: "When my left foot hits the ground, swing my right leg forward." This is called using a "phase variable" instead of clock time. A phase variable is a physical marker (like the angle of the left leg) that tells the system where it is in the motion. The benefit is not automatic robustness; it depends on choosing a marker that remains observable, monotone, and well behaved over the operating region.
+If a robot is programmed to walk across a room in exactly 10 seconds, and you push it backwards halfway through, the robot will try to instantly teleport to where it was "supposed" to be at second 6. It will fall over. A human, on the other hand, doesn't walk by the clock. A human walks by physical milestones: "When my left foot hits the ground, swing my right leg forward." This is called using a "phase variable" instead of time. A phase variable is a physical marker (like the angle of the left leg) that tells the system where it is in the motion. By throwing away the clock and linking all actions to physical progress, the motion becomes incredibly resilient to being slowed down, sped up, or paused.
 \end{laymansbox}
 
 % ══════════════════════════════════════════════
 \section{Spatial Paths vs. Temporal Execution}
 % ══════════════════════════════════════════════
 
-One common limitation of direct time-tracking architectures, when applied to biomechanics or advanced robotics, is their rigid adherence to the clock. If you construct a time-varying trajectory $\traj^*(t)$ for a robotic arm and command a tracking controller to follow it, the controller evaluates the error as $\bm{e}(t) = \state(t) - \traj^*(t)$.
+The most glaring flaw in classical control architecture, when applied to biomechanics or advanced robotics, is its rigid adherence to the clock. If you construct a time-varying trajectory $\traj^*(t)$ for a robotic arm and command a tracking controller to follow it, the controller will evaluate the error as $\bm{e}(t) = \state(t) - \traj^*(t)$. 
 
-If the robot hits an unmodeled friction patch and slows down, the reference trajectory $\traj^*(t)$ continues advancing. The controller can calculate a large position error not because the robot has left the intended path, but because it is behind schedule. Depending on gains, actuator limits, and saturation handling, this can produce excessive catch-up commands.
+If the robot hits an unmodeled friction patch and slows down, the reference trajectory $\traj^*(t)$ continues advancing relentlessly. The controller calculates a massive position error not because the robot deviated physically from the path, but simply because it is *behind schedule*. In a desperate attempt to catch up, the actuators max out, applying violent torques that throw the system entirely off the stable path.
 
 \begin{keyidea}{The Autonomy of Time}{autonomy_of_time}
-  A system executing a motion can often be controlled more safely when progress is measured by state-dependent phase rather than by clock time alone. If the system is impeded, the reference can slow down. The mathematical task is to decouple the spatial geometry of the motion from its temporal execution by replacing chronological time $t$ with a locally monotone \textbf{phase variable} $s$.
+  A system executing a motion should dictate its own progress. If the system is impeded, the reference should slow down. We must decouple the spatial geometry of the motion from its temporal execution. We achieve this by replacing chronological time $t$ with a monotonically increasing \textbf{phase variable} $s$.
 \end{keyidea}
 
-Instead of parameterizing our optimal trajectory as $\traj^*(t)$, we parameterize it as a function of the phase: $\traj^*(s)$. The phase $s \in [0, 1]$ represents the percentage of motion completed. For a walking robot, $s$ could be the forward position of the hip. For a golf swing, $s$ could be the angular position of the shoulder relative to the ball. The reference trajectory is now a spatial curve with a separately modeled timing law.
-
-This construction is publication-safe only after the phase variable's domain, monotonicity condition, and reset behavior are specified. This is the same practical issue that appears in maneuver regulation, transverse linearization, and hybrid zero dynamics \cite{HauserHindman1995, WesterveltGrizzle2007, Shiriaev2010}.
+Instead of parameterizing our optimal trajectory as $\traj^*(t)$, we parameterize it as a function of the phase: $\traj^*(s)$. The phase $s \in [0, 1]$ represents the percentage of motion completed. For a walking robot, $s$ could be the forward position of the hip. For a golf swing, $s$ could be the angular position of the shoulder relative to the ball. The reference trajectory is now a purely spatial curve.
 
 \begin{center}
 \begin{tikzpicture}[scale=1.1]
@@ -120,9 +118,9 @@ By enforcing HZD, we can design rhythmic walking gaits that are astonishingly ro
 \section{Application: The Golf Downswing}
 % ══════════════════════════════════════════════
 
-While the golf swing is not a periodic walking gait, a phase-variable approach can still be useful if the selected marker remains monotone through the interval being modeled. A candidate phase might be shoulder angle, hand path progress, or another measured progress coordinate; none is automatically valid outside the stated model. The target event is impact, not a universal manifold $s=1.0$ independent of the coordinate choice.
+While the golf swing is not a periodic walking gait, the phase-variable approach perfectly encapsulates the athletic reality of the swing. The golfer's shoulder angle defines the phase $s$. The target manifold is $s = 1.0$ (the impact location). 
 
-By structuring a model through virtual constraints, the analysis can separate spatial deviations from timing delays. A transverse feedback law (Chapter 4) can correct selected spatial errors, while the phase variable schedules arm actuation ($u_1$) relative to measured progress rather than clock time. This can improve timing robustness, but it does not guarantee perfect passive impact dynamics; impact quality still depends on state estimation, actuator limits, contact modeling, and the validity of the chosen phase coordinate.
+By structuring the control scheme computationally through Virtual Constraints, the golfer is impervious to slight hesitations at the top of the backswing. The transverse feedback LQR (Chapter 4) corrects spatial deviations from the unactuated club ($\theta_2$), while the phase variable ensures the arm actuation ($u_1$) applies the necessary parametric braking entirely in synchrony with the physical location of the arms, leading to perfectly timed passive impact dynamics regardless of chronological speed.
 
 % ══════════════════════════════════════════════
 \section{Summary}
@@ -144,3 +142,4 @@ By structuring a model through virtual constraints, the analysis can separate sp
 \end{center}
 
 \vspace{0.3cm}
+

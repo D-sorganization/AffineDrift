@@ -32,14 +32,13 @@ def collect_qmd_files(
         Sorted list of Path objects for QMD files (excluding _ prefixed).
     """
     dirs = content_dirs or DEFAULT_CONTENT_DIRS
-    files: list[Path] = []
-    for content_dir in dirs:
-        dir_path = Path(content_dir)
-        if not dir_path.exists():
-            continue
-        for filepath in dir_path.glob("*.qmd"):
-            if not filepath.name.startswith("_"):
-                files.append(filepath)
+    files: list[Path] = [
+        filepath
+        for content_dir in dirs
+        if (dir_path := Path(content_dir)).exists()
+        for filepath in dir_path.glob("*.qmd")
+        if not filepath.name.startswith("_")
+    ]
     return sorted(files)
 
 

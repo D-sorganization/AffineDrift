@@ -65,16 +65,7 @@ from .html_utils import (
 )
 from .issue_utils import format_issue_body, get_repo_short_name
 from .logging_utils import setup_logging, setup_logging_with_timestamp
-from .profiling_utils import (
-    BenchmarkResult,
-    MemoryResult,
-    ProfilingReport,
-    TimingResult,
-    benchmark,
-    memory_tracking,
-    profile_execution_time,
-    profile_memory,
-)
+from .profiling_utils import profile_execution_time
 from .report_utils import (
     AssessmentFinding,
     generate_issue_document,
@@ -148,14 +139,7 @@ __all__ = [
     "run_async_task",
     "run_sync_in_thread",
     # Profiling utilities
-    "BenchmarkResult",
-    "MemoryResult",
-    "ProfilingReport",
-    "TimingResult",
-    "benchmark",
-    "memory_tracking",
     "profile_execution_time",
-    "profile_memory",
     # Validation utilities
     "BaseValidator",
 ]

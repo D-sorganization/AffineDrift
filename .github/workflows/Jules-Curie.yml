@@ -1,0 +1,74 @@
+name: Jules Curie (Data Hygiene)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 8 * * 0,4" # Weekly on Friday at 5:30 AM PST (13:30 UTC)
+
+jobs:
+  # ── Dispatcher: route to self-hosted if available ──────────────────────────
+  pick-runner:
+    runs-on: d-sorg-fleet
+    timeout-minutes: 2
+    outputs:
+      runner: ${{ steps.check.outputs.runner }}
+    steps:
+      - name: Check for self-hosted runner
+        id: check
+        env:
+          GH_TOKEN: ${{ secrets.RUNNER_CHECK_TOKEN }}
+          FLEET_MODE: ${{ vars.FLEET_RUNNER_MODE }}
+        run: |
+          MODE="${FLEET_MODE:-hybrid}"
+          echo "Fleet mode: $MODE"
+
+          case "$MODE" in
+            local)
+              echo "runner=d-sorg-fleet" >> $GITHUB_OUTPUT
+              echo "Routing to self-hosted fleet (mode=local)"
+              ;;
+            cloud)
+              echo "runner=ubuntu-latest" >> $GITHUB_OUTPUT
+              echo "Routing to GitHub-hosted (mode=cloud)"
+              ;;
+            hybrid|*)
+              AVAILABLE=$(gh api /orgs/${{ github.repository_owner }}/actions/runners \
+                --jq '[.runners[] | select(.status == "online") | select(.busy == false) | select(.labels[].name == "d-sorg-fleet")] | length' \
+                2>/dev/null || echo "0")
+              if [[ "$AVAILABLE" -gt 0 ]]; then
+                echo "runner=d-sorg-fleet" >> $GITHUB_OUTPUT
+                echo "$AVAILABLE idle fleet runner(s) - routing locally"
+              else
+                echo "runner=ubuntu-latest" >> $GITHUB_OUTPUT
+                echo "No idle fleet runners - falling back to GitHub-hosted"
+              fi
+              ;;
+          esac
+
+  hygiene-check:
+    runs-on: self-hosted
+    needs: pick-runner
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Find Large Files (>10MB)
+        id: large_files
+        run: |
+          find . -type f -size +10M -not -path "./.git/*" > large_files.txt
+
+      - name: Curie Journal Entry
+        run: |
+          echo "## $(date +'%Y-%m-%d') - Weekly Hygiene Check" >> .jules/curie.md
+          if [ -s large_files.txt ]; then
+            echo "**⚠️ Large Files Detected:**" >> .jules/curie.md
+            cat large_files.txt >> .jules/curie.md
+          else
+            echo "✅ No large files detected." >> .jules/curie.md
+          fi
+          echo "" >> .jules/curie.md
+
+      - name: Commit Journal Updates
+        uses: stefanzweifel/git-auto-commit-action@04702edda442b2e678b25b537cec683a1493fcb9 # v7.1.0
+        with:
+          commit_message: "docs(curie): weekly hygiene report"
+          file_pattern: ".jules/curie.md"

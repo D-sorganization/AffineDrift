@@ -15,7 +15,7 @@ will be added in future editions.
 \vspace{0.5cm}
 
 \begin{laymansbox}{Discovering the Best Motion}{discovering_motion}
-How does a model propose a motion when the final task is specified but the path is not? Up until now, we have talked about how to follow a path; this chapter asks where a candidate path comes from. A trajectory optimizer can search over many admissible motions for a declared objective, such as maximizing clubhead speed at a terminal surface, while enforcing the equations of motion and actuator limits. The output is not a perfect human swing. It is a model-conditioned candidate trajectory whose usefulness depends on the cost function, constraints, parameter values, and validation data.
+How does an athlete instinctively know exactly how to move their arms to swing a bat as fast as possible? Up until now, we've talked about how to follow a path, but where does the path come from? This chapter is about how computers can simulate and "discover" these optimal paths. By giving the computer a goal—like "maximize the speed of the clubhead exactly when it hits the ball"—it can test thousands of different ways to swing, constrained by the laws of physics, until it discovers the perfect motion. You don't have to tell it how to swing; you just tell it what the goal is, and the math figures out the rest.
 \end{laymansbox}
 
 % ══════════════════════════════════════════════
@@ -119,7 +119,7 @@ Instead of using a numerical integrator, we enforce the differential equation al
 where $\tilde{\state}$ and $\tilde{\control}$ are the polynomial approximations.
 
 \begin{remark}{Pontryagin Maximum Principle and Optimal Control}{pontryagin_ocp}
-  While direct collocation provides a practical numerical algorithm, the theoretical foundation for trajectory optimization comes from the \textbf{Pontryagin Maximum Principle} \cite{AgrachevSachkov2004}. This principle states that along an optimal trajectory, a Hamiltonian function $\mathcal{H}(\state, \control, \bm{\lambda}) = L(\state, \control) + \bm{\lambda}^\top \bm{f}(\state, \control)$ must be maximized with respect to $\control$ at each instant, where the costate $\bm{\lambda}(t)$ evolves backward according to adjoint dynamics. For underactuated systems, \textbf{bang-bang} structures can emerge when the Hamiltonian is linear in $\control$, and \textbf{singular arcs} can occur when higher-order conditions are needed to determine $\control$. A simplified golf-release model may show a control structure resembling a singular arc, but that is a hypothesis about the chosen model and bounds, not a direct prediction of measured wrist muscle activation.
+  While direct collocation provides a practical numerical algorithm, the theoretical foundation for trajectory optimization comes from the \textbf{Pontryagin Maximum Principle} \cite{AgrachevSachkov2004}. This principle states that along an optimal trajectory, a Hamiltonian function $\mathcal{H}(\state, \control, \bm{\lambda}) = L(\state, \control) + \bm{\lambda}^\top \bm{f}(\state, \control)$ must be maximized with respect to $\control$ at each instant, where the costate $\bm{\lambda}(t)$ evolves backward according to adjoint dynamics. For underactuated systems, \textbf{bang-bang} structures emerge (control saturates at bounds) when the Hamiltonian is linear in $\control$. \textbf{Singular arcs} occur when the Hamiltonian is affine but not linear, requiring higher-order conditions to determine $\control$. The golf swing's explosive wrist release is precisely such a singular arc: the optimal control structure is predicted by Agrachev and Sachkov's geometric analysis of the control Lie algebra and its role in the maximization condition.
 \end{remark} 
 where $\tilde{\state}$ and $\tilde{\control}$ are the polynomial approximations. 
 
@@ -248,7 +248,7 @@ When the control policy is low-dimensional, the cost landscape is badly nonconve
   Moving Target OCP & Finding a trajectory that optimizes terminal kinematics when intersecting a spatial manifold, without prescribing the clock time. \\
   Multi-Shooting & Discretizing the time domain into segments, using numerical integrators to enforce dynamics constraints between nodes. \\
   Direct Collocation & Representing the entire trajectory as splines and enforcing dynamics algebraically at discrete points arrayed along the trajectory. \\
-  Passive Exploitation & Solvers can exploit underactuated topologies through coupling matrices such as $M_{21}$ and $C_2$, subject to the stated model. \\
+  Passive Exploitation & Solvers naturally optimize underactuated topologies by weaponizing coupling matrices ($M_{21}, C_2$). \\
   Stochastic Robustness & Augmenting the OCP with expected variance to ensure the resulting trajectory can be consistently executed by noisy nonlinear plants. \\
   Evolutionary Search & A derivative-free outer loop for discovering warm starts or task-family parameters before derivative-based refinement. \\
   \bottomrule
@@ -257,7 +257,7 @@ When the control policy is low-dimensional, the cost landscape is badly nonconve
 
 \vspace{0.3cm}
 
-Determining the shape of the reference trajectory is central to Control Is Motion. With a passive geometry model and a candidate reference trajectory in hand, the next step is to estimate a control tube around that trajectory and state the assumptions under which disturbances remain inside it. We turn to funnel synthesis in Chapter 7.
+Determining the shape of the reference trajectory is the cornerstone of Control Is Motion. With our passive geometry understood (Chap 5) and our optimal reference trajectory computed (Chap 6), we must now surround that reference trajectory with a guaranteed, robust control tube to reject disturbances online. We turn to Funnel Synthesis in Chapter 7.
 
 % ══════════════════════════════════════════════
 \section{Exercises}
@@ -277,6 +277,6 @@ Determining the shape of the reference trajectory is central to Control Is Motio
 \begin{center}
   \rule{0.5\textwidth}{0.4pt}\\[0.5cm]
   {\small\itshape
-  The useful motion is rarely just the fastest.\\
-  It is the one that survives the stated disturbances.}
+  The perfect motion is rarely the fastest.\\
+  It is the one that survives reality.}
 \end{center}

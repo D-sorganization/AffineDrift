@@ -220,13 +220,13 @@ runOnDomReady(function () {
   if (!isMobile && !prefersReducedMotion) {
     const observerOptions = { threshold: 0.1, rootMargin: "0px 0px 0px 0px" };
     const observer = new IntersectionObserver(function (entries) {
-      for (const entry of entries) {
+      entries.forEach((entry) => {
         if (entry.isIntersecting) {
           entry.target.style.opacity = "1";
           entry.target.style.transform = "translateY(0)";
           observer.unobserve(entry.target); // ⚡ Bolt Optimization: Stop observing once visible
         }
-      }
+      });
     }, observerOptions);
 
     const sectionsToAnimate = document.querySelectorAll(
@@ -236,16 +236,16 @@ runOnDomReady(function () {
 
     // ⚡ Bolt Optimization: Batch DOM reads to prevent layout thrashing
     // Phase 1: Read (getBoundingClientRect)
-    for (const section of sectionsToAnimate) {
+    sectionsToAnimate.forEach((section) => {
       const rect = section.getBoundingClientRect();
       animationStates.push({
         section,
         shouldAnimate: rect.top > window.innerHeight,
       });
-    }
+    });
 
     // Phase 2: Write (style updates)
-    for (const { section, shouldAnimate } of animationStates) {
+    animationStates.forEach(({ section, shouldAnimate }) => {
       if (shouldAnimate) {
         section.style.opacity = "0";
         section.style.transform = "translateY(20px)";
@@ -255,15 +255,14 @@ runOnDomReady(function () {
         section.style.opacity = "1";
         section.style.transform = "translateY(0)";
       }
-    }
+    });
   } else {
-    // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) live collection) instead of querySelectorAll (O(N))
-    const allSections = document.getElementsByTagName("section");
-    for (const section of allSections) {
+    const allSections = document.querySelectorAll("section");
+    allSections.forEach((section) => {
       section.style.opacity = "1";
       section.style.transform = "translateY(0)";
       section.style.visibility = "visible";
-    }
+    });
   }
 
   // --- 1b. Lazy Loading Images ---
@@ -306,13 +305,9 @@ runOnDomReady(function () {
       pageTitle = "Home";
     }
 
-    // ⚡ Bolt Optimization: Use lastIndexOf/substring instead of split().pop()
-    const path = window.location.pathname;
-    const urlFromPath = path.substring(path.lastIndexOf("/") + 1);
-
     const currentPage = {
       title: pageTitle,
-      url: urlFromPath || "index.html",
+      url: window.location.pathname.split("/").pop() || "index.html",
       fullUrl: window.location.href,
     };
 
@@ -359,19 +354,10 @@ runOnDomReady(function () {
       historyList.appendChild(li);
     } else {
       const fragment = document.createDocumentFragment();
-      for (const item of displayHistory) {
+      displayHistory.forEach((item) => {
         const li = document.createElement("li");
         const a = document.createElement("a");
-        let safeUrl = "#";
-        if (typeof item.url === "string") {
-            try {
-                const parsed = new URL(item.url, window.location.origin);
-                if (parsed.protocol === "http:" || parsed.protocol === "https:") {
-                    safeUrl = parsed.href;
-                }
-            } catch (e) {}
-        }
-        a.href = safeUrl;
+        a.href = typeof item.url === "string" && !item.url.replace(/[\x00-\x20]/g, "").toLowerCase().startsWith("javascript:") ? item.url : "#";
         const displayTitle =
           item.title.length > MAX_HISTORY_TITLE_LENGTH
             ? item.title.substring(0, MAX_HISTORY_TITLE_LENGTH) + "..."
@@ -379,7 +365,7 @@ runOnDomReady(function () {
         a.textContent = displayTitle;
         li.appendChild(a);
         fragment.appendChild(li);
-      }
+      });
       historyList.appendChild(fragment);
     }
   }
@@ -430,7 +416,7 @@ runOnDomReady(function () {
     const pageSections = document.querySelectorAll(
       ".page-section[id], section[id]",
     );
-    for (const section of pageSections) {
+    pageSections.forEach((section) => {
       const heading = section.querySelector(".section-heading, h2, h1");
       if (heading && section.id) {
         sections.push({
@@ -440,11 +426,10 @@ runOnDomReady(function () {
         });
         usedIds.add(section.id);
       }
-    }
+    });
 
-    // ⚡ Bolt Optimization: Use getElementsByClassName (O(1) live collection) instead of querySelectorAll (O(N))
-    const categories = document.getElementsByClassName("article-category");
-    for (const category of categories) {
+    const categories = document.querySelectorAll(".article-category");
+    categories.forEach((category) => {
       const heading = category.querySelector("h3");
       if (heading) {
         let id = category.id;
@@ -462,13 +447,11 @@ runOnDomReady(function () {
           level: 2,
         });
       }
-    }
+    });
 
     if (sections.length === 0) {
-      // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) live collection) instead of querySelectorAll (O(N))
-      const h2s = document.getElementsByTagName("h2");
-      let index = 0;
-      for (const h2 of h2s) {
+      const h2s = document.querySelectorAll("h2");
+      h2s.forEach((h2, index) => {
         let id = h2.id;
         if (!id || usedIds.has(id)) {
           id = generateUniqueId(
@@ -483,14 +466,13 @@ runOnDomReady(function () {
           text: h2.textContent.trim(),
           level: 2,
         });
-        index++;
-      }
+      });
     }
 
     // ⚡ Bolt Optimization: Use DocumentFragment for TOC generation
     if (sections.length > 0) {
       const fragment = document.createDocumentFragment();
-      for (const section of sections) {
+      sections.forEach((section) => {
         const li = document.createElement("li");
         const a = document.createElement("a");
         a.href = `#${section.id}`;
@@ -498,7 +480,7 @@ runOnDomReady(function () {
         a.className = `toc-level-${section.level}`;
         li.appendChild(a);
         fragment.appendChild(li);
-      }
+      });
       tocList.appendChild(fragment);
     } else {
       if (tocSection) tocSection.style.display = "none";
@@ -535,9 +517,9 @@ runOnDomReady(function () {
     anchorIcon.innerHTML =
       '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>';
 
-    for (const heading of headings) {
+    headings.forEach((heading) => {
       // Skip if already has anchor
-      if (heading.querySelector(".anchor-link")) continue;
+      if (heading.querySelector(".anchor-link")) return;
 
       // Ensure ID exists
       if (!heading.id) {
@@ -553,25 +535,23 @@ runOnDomReady(function () {
       anchor.appendChild(anchorIcon.cloneNode(true));
 
       heading.appendChild(anchor);
-    }
+    });
   }
   initAnchorLinks();
 
   // ScrollSpy for Table of Contents
   function initScrollSpy() {
-    const tocList = document.getElementById("toc-list");
-    if (!tocList) return;
-    const tocLinks = tocList.getElementsByTagName("a");
+    const tocLinks = document.querySelectorAll("#toc-list a");
     if (tocLinks.length === 0) return;
 
     // ⚡ Bolt Optimization: Pre-calculate map for O(1) lookup
     const linkMap = new Map();
-    for (const link of tocLinks) {
+    tocLinks.forEach((link) => {
       const href = link.getAttribute("href");
       if (href && href.startsWith("#")) {
         linkMap.set(href.substring(1), link);
       }
-    }
+    });
     let currentActiveLink = null;
 
     const sections = document.querySelectorAll(
@@ -580,9 +560,9 @@ runOnDomReady(function () {
 
     // ⚡ Bolt Optimization: Map section IDs to their DOM index for O(1) sort
     const sectionIndexMap = new Map();
-    for (let index = 0; index < sections.length; index++) {
-      sectionIndexMap.set(sections[index].id, index);
-    }
+    sections.forEach((section, index) => {
+      sectionIndexMap.set(section.id, index);
+    });
 
     // ⚡ Bolt Optimization: Track visible sections by index rather than ID
     // This allows finding the "first" visible section using Math.min() (O(k))
@@ -596,7 +576,7 @@ runOnDomReady(function () {
     };
 
     const observer = new IntersectionObserver((entries) => {
-      for (const entry of entries) {
+      entries.forEach((entry) => {
         const index = sectionIndexMap.get(entry.target.id);
         if (index !== undefined) {
           if (entry.isIntersecting) {
@@ -605,7 +585,7 @@ runOnDomReady(function () {
             visibleIndices.delete(index);
           }
         }
-      }
+      });
 
       // ⚡ Bolt Optimization: Find first visible section via index math
       let activeId = null;
@@ -631,11 +611,11 @@ runOnDomReady(function () {
       }
     }, observerOptions);
 
-    for (const section of sections) {
+    sections.forEach((section) => {
       if (linkMap.has(section.id)) {
         observer.observe(section);
       }
-    }
+    });
   }
   initScrollSpy();
 
@@ -663,10 +643,8 @@ runOnDomReady(function () {
   // Accordion functionality
   // ⚡ Bolt Optimization: Event Delegation for Accordions
   // Separate initialization from event handling to reduce memory usage (1 listener vs N)
-  // ⚡ Bolt Optimization: Use getElementsByClassName (O(1) live collection) instead of querySelectorAll (O(N))
-  const accordionHeaders = document.getElementsByClassName("accordion-header");
-  for (let index = 0; index < accordionHeaders.length; index++) {
-    const header = accordionHeaders[index];
+  const accordionHeaders = document.querySelectorAll(".accordion-header");
+  accordionHeaders.forEach((header, index) => {
     const content = header.nextElementSibling;
     if (content && content.classList.contains("accordion-content")) {
       if (!content.id) {
@@ -676,7 +654,7 @@ runOnDomReady(function () {
       const isExpanded = header.getAttribute("aria-expanded") === "true";
       content.setAttribute("aria-hidden", !isExpanded);
     }
-  }
+  });
 
   document.addEventListener("click", (e) => {
     const header = e.target.closest(".accordion-header");
@@ -691,11 +669,12 @@ runOnDomReady(function () {
   });
 
   // Repository links
-  const repoLinks = document.querySelectorAll('.navbar-nav a[href^="https://github.com"]');
-  for (const link of repoLinks) {
-    link.setAttribute("target", "_blank");
-    // rel handled by secure external links below
-  }
+  document
+    .querySelectorAll('.navbar-nav a[href^="https://github.com"]')
+    .forEach((link) => {
+      link.setAttribute("target", "_blank");
+      // rel handled by secure external links below
+    });
 
   // Secure external links
   // ⚡ Bolt Optimization: Use document.links (O(1)) instead of querySelectorAll (O(N))
@@ -707,19 +686,14 @@ runOnDomReady(function () {
       link.hostname !== currentHostname &&
       link.protocol.startsWith("http")
     ) {
-      // ⚡ Bolt Optimization: Use property access and DOMTokenList
-      if (!link.target) {
-        link.target = "_blank";
+      if (!link.hasAttribute("target")) {
+        link.setAttribute("target", "_blank");
       }
-      if (link.relList) {
-        link.relList.add("noopener", "noreferrer");
-      } else {
-        const rel = link.getAttribute("rel") || "";
-        const parts = rel.split(" ").filter((p) => p);
-        if (!parts.includes("noopener")) parts.push("noopener");
-        if (!parts.includes("noreferrer")) parts.push("noreferrer");
-        link.setAttribute("rel", parts.join(" "));
-      }
+      const rel = link.getAttribute("rel") || "";
+      const parts = rel.split(" ").filter((p) => p);
+      if (!parts.includes("noopener")) parts.push("noopener");
+      if (!parts.includes("noreferrer")) parts.push("noreferrer");
+      link.setAttribute("rel", parts.join(" "));
       if (
         !link.querySelector("img, svg") &&
         !link.classList.contains("external-link")
@@ -737,7 +711,6 @@ runOnDomReady(function () {
 
   // Back to Top Button
   const backToTopBtn = document.createElement("button");
-  backToTopBtn.type = "button";
   backToTopBtn.className = "back-to-top";
   backToTopBtn.setAttribute("aria-label", "Scroll to top");
 
@@ -850,7 +823,6 @@ runOnDomReady(function () {
 
   // Export to PDF Button
   const exportToPdfBtn = document.createElement("button");
-  exportToPdfBtn.type = "button";
   exportToPdfBtn.className = "export-to-pdf";
   exportToPdfBtn.setAttribute("aria-label", "Export page to PDF");
   exportToPdfBtn.innerHTML = `
@@ -942,8 +914,7 @@ runOnDomReady(function () {
 
     const STORAGE_KEY = "affinedrift_articles_history";
     const currentPath = window.location.pathname;
-    // ⚡ Bolt Optimization: Use lastIndexOf/substring instead of split().pop()
-    const currentUrl = currentPath.substring(currentPath.lastIndexOf("/") + 1) || "";
+    const currentUrl = currentPath.split("/").pop() || "";
     const isArticlePage =
       currentPath.includes("/articles/") && currentUrl.endsWith(".html");
 
@@ -979,23 +950,14 @@ runOnDomReady(function () {
         articlesHistoryList.appendChild(li);
       } else {
         const fragment = document.createDocumentFragment();
-        for (const item of history) {
+        history.forEach((item) => {
           const li = document.createElement("li");
           const a = document.createElement("a");
-          let safeUrl = "#";
-          if (typeof item.url === "string") {
-              try {
-                  const parsed = new URL(item.url, window.location.origin);
-                  if (parsed.protocol === "http:" || parsed.protocol === "https:") {
-                      safeUrl = parsed.href;
-                  }
-              } catch (e) {}
-          }
-          a.href = safeUrl;
+          a.href = typeof item.url === "string" && !item.url.replace(/[\x00-\x20]/g, "").toLowerCase().startsWith("javascript:") ? item.url : "#";
           a.textContent = item.title;
           li.appendChild(a);
           fragment.appendChild(li);
-        }
+        });
         articlesHistoryList.appendChild(fragment);
       }
     }
@@ -1122,7 +1084,6 @@ runOnDomReady(function () {
       wrapper.appendChild(pre);
 
       const button = document.createElement("button");
-      button.type = "button";
       button.className = "copy-btn";
       button.textContent = "Copy";
       button.setAttribute("aria-label", "Copy code to clipboard");
@@ -1168,32 +1129,24 @@ runOnDomReady(function () {
     });
 
     // Form Accessibility - Required Field Indicators
-    // ⚡ Bolt Optimization: Use getElementsByTagName and input.labels instead of querySelectorAll for O(1) live collection iteration and label access
-    const processInput = (input) => {
-      if (!input.required) return;
-
-      let label = null;
-      if (input.labels && input.labels.length > 0) {
-        label = input.labels[0];
-      } else if (input.id) {
-        label = document.querySelector(`label[for="${input.id}"]`);
+    const requiredInputs = document.querySelectorAll(
+      "input[required], textarea[required], select[required]",
+    );
+    requiredInputs.forEach((input) => {
+      if (input.id) {
+        const label = document.querySelector(`label[for="${input.id}"]`);
+        if (label && !label.querySelector(".required-indicator")) {
+          const indicator = document.createElement("span");
+          indicator.className = "required-indicator";
+          indicator.textContent = " *";
+          indicator.style.color = "var(--accent-blue)";
+          indicator.style.fontWeight = "bold";
+          indicator.setAttribute("aria-hidden", "true");
+          indicator.title = "Required field";
+          label.appendChild(indicator);
+        }
       }
-
-      if (label && !label.querySelector(".required-indicator")) {
-        const indicator = document.createElement("span");
-        indicator.className = "required-indicator";
-        indicator.textContent = " *";
-        indicator.style.color = "var(--accent-blue)";
-        indicator.style.fontWeight = "bold";
-        indicator.setAttribute("aria-hidden", "true");
-        indicator.title = "Required field";
-        label.appendChild(indicator);
-      }
-    };
-
-    for (const input of document.getElementsByTagName("input")) processInput(input);
-    for (const textarea of document.getElementsByTagName("textarea")) processInput(textarea);
-    for (const select of document.getElementsByTagName("select")) processInput(select);
+    });
   });
 
   // Skip to Content Link
@@ -1332,7 +1285,6 @@ runOnDomReady(function () {
 
     // 🎨 Palette UX: Create Close Button
     const closeBtn = document.createElement("button");
-    closeBtn.type = "button";
     closeBtn.className = "lightbox-close";
     closeBtn.setAttribute("aria-label", "Close zoom");
     closeBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
@@ -1477,50 +1429,31 @@ runOnDomReady(function () {
 
 // 🎨 Palette UX: Auto-growing Textareas
 function initAutoGrowTextareas() {
-  // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) live collection) instead of querySelectorAll (O(N))
-  const textareas = document.getElementsByTagName("textarea");
+  const textareas = document.querySelectorAll("textarea");
   if (textareas.length === 0) return;
 
-  // ⚡ Bolt Optimization: Batch DOM reads and writes to avoid forced synchronous layout (Layout Thrashing)
-  function batchAdjustHeights() {
-    const heights = [];
-
-    // Phase 1: Write (reset heights to compute scrollHeight accurately)
-    for (const textarea of textareas) {
-      textarea.style.height = "auto";
-    }
-
-    // Phase 2: Read (get scrollHeights)
-    for (let i = 0; i < textareas.length; i++) {
-      heights.push(Math.min(textareas[i].scrollHeight, 500));
-    }
-
-    // Phase 3: Write (apply new heights and overflows)
-    for (let i = 0; i < textareas.length; i++) {
-      textareas[i].style.height = heights[i] + "px";
-      textareas[i].style.overflowY = heights[i] >= 500 ? "auto" : "hidden";
-    }
+  function adjustHeight(el) {
+    el.style.height = "auto";
+    const newHeight = Math.min(el.scrollHeight, 500); // Max height 500px
+    el.style.height = newHeight + "px";
+    el.style.overflowY = newHeight >= 500 ? "auto" : "hidden";
   }
 
-  // Initialize all textareas
-  for (const textarea of textareas) {
-    textarea.style.resize = "none";
-    textarea.style.overflow = "hidden";
-    textarea.addEventListener("input", () => {
-      textarea.style.height = "auto";
-      const newHeight = Math.min(textarea.scrollHeight, 500);
-      textarea.style.height = newHeight + "px";
-      textarea.style.overflowY = newHeight >= 500 ? "auto" : "hidden";
-    });
-  }
+  textareas.forEach((textarea) => {
+    // Initial adjustment if content exists
+    if (textarea.value) {
+      // Defer slightly to ensure styles are applied
+      setTimeout(() => adjustHeight(textarea), 0);
+    }
 
-  setTimeout(() => batchAdjustHeights(), 0);
+    textarea.addEventListener("input", () => adjustHeight(textarea));
+  });
 
   // Single resize listener for all
   window.addEventListener(
     "resize",
     debounce(() => {
-      batchAdjustHeights();
+      textareas.forEach(adjustHeight);
     }, 250),
   );
 }
@@ -1577,7 +1510,6 @@ function initPDFDownload() {
 
   // Create the PDF download button
   const pdfBtn = document.createElement('button');
-  pdfBtn.type = 'button';
   pdfBtn.className = 'pdf-download-btn';
   pdfBtn.setAttribute('aria-label', 'Download page as PDF');
   pdfBtn.setAttribute('title', 'Download as PDF');
@@ -1650,15 +1582,13 @@ function preparePDFPrint() {
 
 // --- Layman's Terms Functionality ---
 function initLaymansTermsToggle() {
-  // ⚡ Bolt Optimization: Use getElementsByClassName (O(1) live collection) instead of querySelectorAll (O(N))
-  const laymansSections = document.getElementsByClassName("laymans-terms");
+  const laymansSections = document.querySelectorAll(".laymans-terms");
 
-  for (let index = 0; index < laymansSections.length; index++) {
-    const section = laymansSections[index];
+  laymansSections.forEach((section, index) => {
     const header = section.querySelector(".laymans-terms-header");
     const content = section.querySelector(".laymans-terms-content");
 
-    if (!header || !content) continue;
+    if (!header || !content) return;
 
     if (!content.id) {
       content.id = `laymans-terms-content-${index + 1}`;
@@ -1674,16 +1604,14 @@ function initLaymansTermsToggle() {
       header.setAttribute("aria-expanded", String(!expanded));
       content.setAttribute("aria-hidden", String(expanded));
     });
-  }
+  });
 }
 
 // --- Critics Corner Functionality ---
 function initCriticsCorner() {
-  // ⚡ Bolt Optimization: Use getElementsByClassName (O(1) live collection) instead of querySelectorAll (O(N))
-  const criticsCorners = document.getElementsByClassName("critics-corner");
+  const criticsCorners = document.querySelectorAll('.critics-corner');
 
-  for (let index = 0; index < criticsCorners.length; index++) {
-    const corner = criticsCorners[index];
+  criticsCorners.forEach((corner, index) => {
     const header = corner.querySelector('.critics-corner-header');
     const content = corner.querySelector('.critics-corner-content');
 
@@ -1722,20 +1650,18 @@ function initCriticsCorner() {
         }
       });
     }
-  }
+  });
 }
 
 // --- Critics Comments Functionality ---
 function initCriticsCommentsToggle() {
-  // ⚡ Bolt Optimization: Use getElementsByClassName (O(1) live collection) instead of querySelectorAll (O(N))
-  const criticsSections = document.getElementsByClassName("critics-comments");
+  const criticsSections = document.querySelectorAll(".critics-comments");
 
-  for (let index = 0; index < criticsSections.length; index++) {
-    const section = criticsSections[index];
+  criticsSections.forEach((section, index) => {
     const header = section.querySelector(".critics-comments-header");
     const content = section.querySelector(".critics-comments-content");
 
-    if (!header || !content) continue;
+    if (!header || !content) return;
 
     if (!content.id) {
       content.id = `critics-comments-content-${index + 1}`;
@@ -1751,7 +1677,7 @@ function initCriticsCommentsToggle() {
       header.setAttribute("aria-expanded", String(!expanded));
       content.setAttribute("aria-hidden", String(expanded));
     });
-  }
+  });
 }
 
 // Utility function for future features

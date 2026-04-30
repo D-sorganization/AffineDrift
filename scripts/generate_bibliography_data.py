@@ -67,59 +67,6 @@ def normalize_item(item: dict[str, Any]) -> dict[str, Any]:
     return item
 
 
-def _load_base_bibliography(all_refs: dict[str, dict[str, Any]]) -> None:
-    """Load base bibliography.yaml into all_refs."""
-    base_bib_path = Path("data/bibliography.yaml")
-    if not base_bib_path.exists():
-        return
-    try:
-        with open(base_bib_path) as f:
-            base_data = yaml.safe_load(f)
-            if base_data:
-                for item in base_data:
-                    if "id" in item:
-                        all_refs[item["id"]] = normalize_item(item)
-    except (OSError, yaml.YAMLError, UnicodeDecodeError) as e:
-        logger.error("Error loading base bibliography: %s", e)
-
-
-def _load_article_bibliographies(all_refs: dict[str, dict[str, Any]]) -> None:
-    """Load bibliographies from articles/ directory."""
-    articles_dir = Path("articles")
-    if not articles_dir.exists():
-        return
-    for md_file in articles_dir.glob("*-bibliography.md"):
-        items = extract_yaml_from_markdown(md_file)
-        for item in items:
-            norm_item = normalize_item(item)
-            if norm_item["id"] not in all_refs:
-                all_refs[norm_item["id"]] = norm_item
-            else:
-                _merge_reference(all_refs[norm_item["id"]], norm_item)
-
-
-def _merge_reference(existing: dict[str, Any], new: dict[str, Any]) -> None:
-    """Merge missing fields from new into existing reference."""
-    for k, v in new.items():
-        if k not in existing or not existing[k]:
-            existing[k] = v
-
-
-def _process_reading_paths(output_dir: Path) -> None:
-    """Process reading_paths.yaml into JSON."""
-    paths_source = Path("data/reading_paths.yaml")
-    paths_output = output_dir / "reading_paths.json"
-    if not paths_source.exists():
-        return
-    try:
-        with open(paths_source) as f:
-            paths_data = yaml.safe_load(f)
-        with open(paths_output, "w") as f:
-            json.dump(paths_data, f, indent=2)
-    except (OSError, yaml.YAMLError, UnicodeDecodeError) as e:
-        logger.error("Error processing reading paths: %s", e)
-
-
 def main() -> None:
     """Generate JSON data for the interactive bibliography from YAML sources.
     Reads 'data/bibliography.yaml' and 'articles/*-bibliography.md',
@@ -129,11 +76,43 @@ def main() -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
 
     all_refs: dict[str, dict[str, Any]] = {}
-    _load_base_bibliography(all_refs)
-    _load_article_bibliographies(all_refs)
 
-    # Convert to list and sort
+    # 1. Load base bibliography.yaml
+    base_bib_path = Path("data/bibliography.yaml")
+    if base_bib_path.exists():
+        try:
+            with open(base_bib_path) as f:
+                base_data = yaml.safe_load(f)
+                if base_data:
+                    for item in base_data:
+                        if "id" in item:
+                            all_refs[item["id"]] = normalize_item(item)
+        except (OSError, yaml.YAMLError, UnicodeDecodeError) as e:
+            logger.error("Error loading base bibliography: %s", e)
+
+    # 2. Load from articles/*-bibliography.md
+    articles_dir = Path("articles")
+    if articles_dir.exists():
+        for md_file in articles_dir.glob("*-bibliography.md"):
+            items = extract_yaml_from_markdown(md_file)
+            for item in items:
+                norm_item = normalize_item(item)
+                # Overwrite or merge? For now, let's assume if ID exists, we keep the one we have
+                # OR we prefer the one from markdown if it has more info?
+                # Let's trust the one we have, but if it's new, add it.
+                if norm_item["id"] not in all_refs:
+                    all_refs[norm_item["id"]] = norm_item
+                else:
+                    # Optional: merge fields if missing
+                    existing = all_refs[norm_item["id"]]
+                    for k, v in norm_item.items():
+                        if k not in existing or not existing[k]:
+                            existing[k] = v
+
+    # Convert to list
     final_refs = list(all_refs.values())
+
+    # Sort by year (desc) then title
     final_refs.sort(key=lambda x: (-int(x.get("year", 0)), x.get("title", "")))
 
     # Write bibliography.json
@@ -141,7 +120,18 @@ def main() -> None:
     with open(bib_output_path, "w") as f:
         json.dump(final_refs, f, indent=2)
 
-    _process_reading_paths(output_dir)
+    # 3. Process Reading Paths
+    paths_source = Path("data/reading_paths.yaml")
+    paths_output = output_dir / "reading_paths.json"
+
+    if paths_source.exists():
+        try:
+            with open(paths_source) as f:
+                paths_data = yaml.safe_load(f)
+            with open(paths_output, "w") as f:
+                json.dump(paths_data, f, indent=2)
+        except (OSError, yaml.YAMLError, UnicodeDecodeError) as e:
+            logger.error("Error processing reading paths: %s", e)
 
 
 if __name__ == "__main__":

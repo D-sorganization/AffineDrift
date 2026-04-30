@@ -1,0 +1,155 @@
+# Pragmatic Programmer Review: AffineDrift
+**Date**: 2026-02-12
+**Files**: 117
+
+## Findings
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\build-html.py, C:\Users\diete\Repositories\AffineDrift\src\tools\publish_manual_article.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\build-html.py, C:\Users\diete\Repositories\AffineDrift\src\tools\publish_manual_article.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\build-html.py, C:\Users\diete\Repositories\AffineDrift\src\tools\publish_manual_article.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\build-html.py, C:\Users\diete\Repositories\AffineDrift\src\tools\publish_manual_article.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\build-html.py, C:\Users\diete\Repositories\AffineDrift\src\tools\publish_manual_article.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 4 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\scripts\add_meta_descriptions.py, C:\Users\diete\Repositories\AffineDrift\scripts\generate_search_index.py, C:\Users\diete\Repositories\AffineDrift\scripts\seo_audit.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\scripts\baseline_assessments.py, C:\Users\diete\Repositories\AffineDrift\src\tools\wrap_sidebars.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 3 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\scripts\check_contract_coverage.py, C:\Users\diete\Repositories\AffineDrift\scripts\check_module_size_budget.py, C:\Users\diete\Repositories\AffineDrift\scripts\check_quarto_render_coverage.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 3 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\scripts\check_contract_coverage.py, C:\Users\diete\Repositories\AffineDrift\scripts\check_dependency_boundaries.py, C:\Users\diete\Repositories\AffineDrift\scripts\check_styles_budget.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 4 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\scripts\check_contract_coverage.py, C:\Users\diete\Repositories\AffineDrift\scripts\check_css_architecture.py, C:\Users\diete\Repositories\AffineDrift\scripts\check_dependency_boundaries.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 4 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\scripts\check_contract_coverage.py, C:\Users\diete\Repositories\AffineDrift\scripts\check_css_architecture.py, C:\Users\diete\Repositories\AffineDrift\scripts\check_dependency_boundaries.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 5 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\scripts\check_contract_coverage.py, C:\Users\diete\Repositories\AffineDrift\scripts\check_css_architecture.py, C:\Users\diete\Repositories\AffineDrift\scripts\check_dependency_boundaries.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 6 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\scripts\check_css_architecture.py, C:\Users\diete\Repositories\AffineDrift\scripts\check_js_dependency_boundaries.py, C:\Users\diete\Repositories\AffineDrift\scripts\check_styles_budget.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 3 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\scripts\check_css_architecture.py, C:\Users\diete\Repositories\AffineDrift\scripts\check_js_dependency_boundaries.py, C:\Users\diete\Repositories\AffineDrift\scripts\check_styles_budget.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 3 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\scripts\check_module_size_budget.py, C:\Users\diete\Repositories\AffineDrift\scripts\check_tech_debt_budget.py, C:\Users\diete\Repositories\AffineDrift\scripts\check_ui_ux_budget.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\scripts\check_tech_debt_budget.py, C:\Users\diete\Repositories\AffineDrift\scripts\check_ui_ux_budget.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\scripts\check_tech_debt_budget.py, C:\Users\diete\Repositories\AffineDrift\scripts\check_ui_ux_budget.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\scripts\check_tech_debt_budget.py, C:\Users\diete\Repositories\AffineDrift\scripts\check_ui_ux_budget.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\scripts\check_tech_debt_budget.py, C:\Users\diete\Repositories\AffineDrift\scripts\check_ui_ux_budget.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\scripts\check_tech_debt_budget.py, C:\Users\diete\Repositories\AffineDrift\scripts\check_ui_ux_budget.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\scripts\check_tech_debt_budget.py, C:\Users\diete\Repositories\AffineDrift\scripts\check_ui_ux_budget.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 6 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\scripts\generate_bibliography_data.py, C:\Users\diete\Repositories\AffineDrift\scripts\validate_accessibility.py, C:\Users\diete\Repositories\AffineDrift\src\tools\convert_all_latex.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\scripts\generate_completist_data.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\scripts\generate_completist_data.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 3 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\scripts\generate_completist_data.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\scripts\generate_completist_data.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\scripts\generate_completist_data.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\scripts\generate_completist_data.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\scripts\generate_completist_data.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\scripts\generate_search_index.py, C:\Users\diete\Repositories\AffineDrift\scripts\seo_audit.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\scripts\generate_search_index.py, C:\Users\diete\Repositories\AffineDrift\scripts\seo_audit.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\scripts\mypy_autofix_agent.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\scripts\pragmatic_programmer_review.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\scripts\pragmatic_programmer_review.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\scripts\seo_audit.py, C:\Users\diete\Repositories\AffineDrift\scripts\validate_accessibility.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\scripts\seo_audit.py, C:\Users\diete\Repositories\AffineDrift\scripts\validate_accessibility.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 3 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\scripts\validate_accessibility.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 4 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\scripts\validate_accessibility.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 4 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\scripts\validate_accessibility.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 3 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\scripts\validate_accessibility.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 13 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\src\affine_control\residuals.py, C:\Users\diete\Repositories\AffineDrift\src\tangent_models\examples.py, C:\Users\diete\Repositories\AffineDrift\src\tools\code_quality_check.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 3 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\src\tools\utils\issue_utils.py, C:\Users\diete\Repositories\AffineDrift\src\tools\utils\report_utils.py, C:\Users\diete\Repositories\AffineDrift\tests\test_budget_check_utils.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 4 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\tests\test_check_contract_coverage.py, C:\Users\diete\Repositories\AffineDrift\tests\test_check_css_architecture.py, C:\Users\diete\Repositories\AffineDrift\tests\test_check_dependency_boundaries.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\tests\test_check_contract_coverage.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\tests\test_check_contract_coverage.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\tests\test_check_contract_coverage.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\tests\test_check_contract_coverage.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\tests\test_check_contract_coverage.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\tests\test_check_css_architecture.py
+- **DRY** [MAJOR]: Duplicate code block
+  - Found in 2 locations
+  - Files: C:\Users\diete\Repositories\AffineDrift\tests\test_check_css_architecture.py

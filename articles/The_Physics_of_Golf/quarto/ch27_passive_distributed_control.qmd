@@ -1,5 +1,5 @@
 ---
-title: "Passive and Distributed Control: A Self-Organizing Swing Model"
+title: "Passive and Distributed Control: The Self-Organizing Swing"
 description: "In Chapters @sec-motorcontrolbrain--@ch:motorlearning, we encountered the bandwidth problem: the brain has limited computational resources, slow feedback..."
 ---
 
@@ -404,26 +404,26 @@ If damping is sufficiently large, the term $-\dot{\bm{q}}^T \bm{D} \dot{\bm{q}}$
 
 ::: {.callout-important}
 ## Passive Stability Condition
-If a linearized impedance-controlled model is locally accurate and the damping term dominates the neglected perturbation terms in a neighborhood, then:
+If a system is controlled by a passive impedance (stiffness + damping) and the damping is sufficiently large, then:
 
 $$
 \dot{V} = -\dot{\bm{q}}^T \bm{D} \dot{\bm{q}} + \text{(small perturbation terms)} < 0.
 $$
 
-This supports a local Lyapunov-stability claim for the model. It does not by itself establish exponential return of a full golf swing under large perturbations, delayed feedback, contact changes, or parameter uncertainty.
+This implies the Lyapunov function decreases, and the system is Lyapunov-stable: perturbations decay exponentially, and the system returns to the desired trajectory.
 :::
 
 ### Conditions for Self-Correction
 {#subsec:self_correction}
 
-For a modeled golf swing to show partly self-correcting behavior, three conditions should hold:
+For the golf swing to be self-correcting, three conditions must be met:
 
 - **Sufficient stiffness:** The spring constant $\bm{K}$ must be large enough that restoring forces overcome small perturbations. Too soft, and the swing drifts off course.
 - **Sufficient damping:** The damping matrix $\bm{D}$ must dissipate perturbation energy. Without damping, perturbations oscillate indefinitely.
 - **Correct equilibrium:** The reference position $\bm{q}_0$ must be chosen so the spring's natural rest position aligns with the desired swing trajectory. Misalignment introduces systematic errors.
 
 
-Elite golfers may approximate all three conditions more closely than novices. In that case, damping can absorb part of an over-speed perturbation and passive stiffness can resist part of a displacement. That is a robustness hypothesis, not a proof that every elite swing self-corrects.
+Elite golfers unconsciously satisfy all three conditions. Their swings are self-correcting. If they swing slightly faster, the damping absorbs the extra energy. If wind perturbs the club, the spring restores it. The swing is robust.
 
 Novices often fail at condition 1 or 2. A weak golfer may have insufficient co-contraction, leading to low stiffness and a drifting swing. A tense golfer may have excessive co-contraction, leading to high damping and a slower, more rigid swing.
 
@@ -431,11 +431,11 @@ Novices often fail at condition 1 or 2. A weak golfer may have insufficient co-c
 ## Why Expert Swings Look Effortless
 The paradox is striking: an expert golfer swings with apparent ease, while a novice looks tense and strains.
 
-The resolution may be that an expert has a better-matched impedance profile, so fewer large active corrections are needed once the swing starts. Passive tissues and fast local feedback then carry more of the stabilization burden.
+The resolution: an expert has *superior passive stability*. Their pre-tuned impedance profile is so well-matched to their body and the task that the swing requires minimal active correction. The passive system does most of the work.
 
 A novice, without practice, has not yet learned the optimal impedance parameters. They compensate by increasing overall muscle tension---trying to muscle the swing under voluntary control. This looks effortful because it *is* effortful.
 
-With training, the novice's motor system may discover a better impedance profile. The swing can then become more automatic, more robust, and apparently easier.
+With training, the novice's motor system discovers the right impedance profile. The swing becomes more automatic, more robust, and apparently easier.
 :::
 
 ## Training and the Discovery of Impedance
@@ -574,12 +574,12 @@ This small feedforward signal, combined with passive stability, produces the fin
 This is a fundamentally different view from the traditional picture of the brain as an all-knowing controller. Here, the brain is a *smart configurator*. It sets conditions and allows the laws of physics and the body's mechanical properties to produce the desired motion.
 
 ::: {.callout-note}
-## Why Effortless Movement Can Look Stable
+## The Miracle of Effortless Movement
 Why do expert golfers swing with such apparent ease? Why does their swing repeat so reliably, even without conscious thought?
 
-The answer need not be that the swing is fully self-organizing. A more careful interpretation is that skilled golfers tune stiffness, damping, reflex gain, and coordination so passive impedance and fast local feedback handle part of the stabilization problem. That can create a local basin of attraction in a simplified model, but the size of that basin depends on the model, perturbation type, and measured task conditions.
+The answer is not that they are superhuman. It is that they have tuned the mechanics of their body to create a self-organizing system. Their muscles are pre-tensioned to the right levels. Their spinal reflexes are configured to the right sensitivity. The passive impedance of their tissues creates a basin of attraction---any small perturbation is automatically pulled back toward the desired trajectory.
 
-Once set, this system can reduce the amount of explicit moment-to-moment cortical correction required, but it does not eliminate neural control.
+Once set, this self-organized system requires minimal brain effort. The golfer is not thinking about the swing. They are simply allowing the pre-tuned mechanical system to execute.
 
 This is not instinct or magic. It is physics, tuned through practice.
 :::
@@ -588,15 +588,15 @@ This is not instinct or magic. It is physics, tuned through practice.
 ## Key Takeaways
 - **The bandwidth problem:** The brain cannot compute torques for 20 DOF at 1000 Hz. The traditional control model is unrealistic.
 
-- **Impedance control:** One plausible strategy is to set impedance before and during the swing so passive mechanics and fast local feedback handle part of the execution burden.
+- **Impedance control:** The brain solves this by pre-setting impedance (stiffness and damping) once before the swing, then allowing the passive mechanical system to execute.
 
-- **Pre-tuning reduces computation:** Pre-tuning can shift some stabilization burden to mechanics and local feedback, though the exact dimensionality depends on the model.
+- **Pre-tuning reduces computation:** Instead of computing 20,000 control decisions per second, the brain computes $\sim$40 impedance parameters once before the swing.
 
-- **Passive stability:** With well-chosen impedance, some perturbations can be partly resisted by spring forces and damping.
+- **Passive stability:** With the right impedance, the swing is self-correcting. Perturbations are automatically resisted by spring forces and dissipated by damping.
 
-- **Distributed control:** Spinal reflexes, muscle spindles, and local feedback circuits are candidate mechanisms for part of the moment-to-moment stabilization.
+- **Distributed control:** Spinal reflexes, muscle spindles, and local feedback circuits handle moment-to-moment stability. The brain sets the configuration, and the spinal cord executes.
 
-- **Emergent behaviors:** Complex behaviors like the whip effect and distal acceleration can emerge from the kinetic chain physics and the impedance profile without being scripted joint by joint.
+- **Emergent behaviors:** Complex behaviors like the whip effect and distal acceleration emerge automatically from the kinetic chain physics and the impedance profile. They are not explicitly controlled.
 
 - **Training discovers impedance:** Through practice, the motor system discovers the impedance parameters that work best for each golfer's body. Expert performance reflects discovered, encoded impedance.
 

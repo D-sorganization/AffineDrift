@@ -145,8 +145,7 @@ timing information.
 
 Critically, orbital stability does not require $\norm{\state(t) - \traj^*(t)}
 \to 0$. The system may drift along the orbit (ahead or behind schedule) while
-still satisfying the orbital-stability condition. Only deviations \emph{away from}
-the orbit matter.
+remaining perfectly stable. Only deviations \emph{away from} the orbit matter.
 
 \begin{definition}{Orbital Stability with Asymptotic Phase}{orbital_phase}
   A trajectory is orbitally stable \textbf{with asymptotic phase} if it is
@@ -562,20 +561,18 @@ For the golf swing, this gives us a powerful analysis tool:
       This is the unstable phase---the high curvature and speed change
       amplify deviations. Without feedback, errors grow here.
     \item $s \in [0.5, 0.7]$ (late downswing): $\rho$ \emph{decreases}.
-      In some simplified release models, the transverse dynamics contract
-      over this phase interval. Interpreted carefully, the wrist-release
-      geometry narrows the admissible error tube for that model; it is not
-      proof that every real swing is open-loop self-stabilizing.
+      The passive dynamics of the double-pendulum release are
+      self-stabilizing in the transverse directions. The wrist release
+      ``funnels'' the club toward the correct impact state.
     \item $s = 0.75$ (impact): $\rho(0, 0.75) < 1$. The net effect over
       the entire swing is transverse contraction---deviations are smaller
       at impact than at address.
   \end{itemize}
 
-  This profile shows one way skilled golfers could remain accurate despite the
-  extreme nonlinearity of the swing: a well-posed model may exhibit passive
-  transverse contraction near impact, and feedback can exploit that
-  contraction. The result is a model-level funnel, not a blanket claim that
-  errors vanish without sensing or control.
+  This profile explains why skilled golfers are accurate despite the
+  extreme nonlinearity of the swing: the trajectory is designed so that its
+  \emph{passive transverse dynamics} are contracting near impact, creating
+  a natural funnel that corrects errors without active feedback.
 \end{example}
 
 % ══════════════════════════════════════════════
@@ -780,10 +777,10 @@ tools of LTV control theory. The Floquet/Poincar\'e framework provides both
 analytical insight and numerical algorithms for assessing stability.
 
 The key insight for the golf swing is that orbital stability---not Lyapunov
-stability---is the correct framework. The most defensible golf interpretation
-is that some models exhibit transverse contraction near impact, and that
-transverse LQR can tighten the admissible tube with phase-varying gains
-matched to the modeled motion.
+stability---is the correct framework. The swing is designed so that its
+passive transverse dynamics create a natural funnel toward impact, and the
+transverse LQR controller tightens this funnel using phase-varying gains
+that match the demands of each phase of the motion.
 
 In Chapter~5, we will see how underactuation constrains the transverse dynamics,
 creating geometric structure that can be \emph{exploited} rather than merely

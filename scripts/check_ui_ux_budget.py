@@ -6,7 +6,6 @@ from __future__ import annotations
 import re
 import sys
 from pathlib import Path
-from typing import Any
 
 from src.tools.utils.budget_check_utils import (
     collect_matching_files,
@@ -29,7 +28,7 @@ def main() -> int:
     )
 
     check_configs = config["checks"]
-    compiled: dict[str, dict[str, Any]] = {
+    compiled = {
         name: {
             "regex": re.compile(check["pattern"], re.IGNORECASE | re.MULTILINE),
             "max_count": int(check["max_count"]),

@@ -61,7 +61,6 @@ def run_tool(
             command,
             capture_output=True,
             text=True,
-            timeout=300,
         )
         if result_processor:
             return result_processor(result)
@@ -77,8 +76,6 @@ def run_tool(
         }
     except FileNotFoundError:
         return {"exit_code": -1, "output": "", "errors": f"{tool_name} not installed"}
-    except subprocess.TimeoutExpired:
-        return {"exit_code": -1, "output": "", "errors": f"{tool_name} timed out after 300 seconds"}
 
 
 def run_ruff_check(path: str = ".") -> dict[str, Any]:

@@ -25,12 +25,10 @@ The golf swing is a high-speed, full-body motion executed by a mechanically comp
 ```{=html}
 <!-- In Layman's Terms Section - Simplified overview for non-technical readers -->
 <section class="laymans-terms">
-  <h2>
   <button class="laymans-terms-header" aria-expanded="false">
-    <span class="laymans-terms-header-title">In Layman's Terms</span>
+    <h2>In Layman's Terms</h2>
     <span class="laymans-terms-icon">▼</span>
   </button>
-</h2>
   <div class="laymans-terms-content">
     <div class="laymans-terms-inner">
       <p class="laymans-terms-intro">
@@ -86,12 +84,10 @@ The golf swing is a high-speed, full-body motion executed by a mechanically comp
 
 <!-- Critics' Comments Section - Skeptical perspectives and counterarguments -->
 <section class="critics-comments">
-  <h2>
   <button class="critics-comments-header" aria-expanded="false">
-    <span class="critics-comments-header-title">Critics' Comments</span>
+    <h2>Critics' Comments</h2>
     <span class="critics-comments-icon">💬</span>
   </button>
-</h2>
   <div class="critics-comments-content">
     <div class="critics-comments-inner">
       <p class="critics-intro">
@@ -149,7 +145,7 @@ The golf swing is a high-speed, full-body motion executed by a mechanically comp
           The framework frequently employs rigid double-pendulum analogies to explain "drift" versus "input". However, the primary mechanism of the golf shaft is the "Catapult Effect"—the storage and release of elastic potential energy. A rigid model is structurally blind to this mechanism, potentially leading readers to underestimate the role of the shaft as an energy buffer.
         </p>
         <div class="author-response">
-          <strong>Our Response:</strong> We agree that rigid analogies have limits. For this reason, the full mathematical framework (@sec-affine) and the ZTCF simulation explicitly include flexible shaft modes ($\eta$). The affine control form $\dot{x} = f(x) + g(x)u$ captures all elastic dynamics within the drift vector $f(x)$, ensuring that the "Catapult Effect" is fully accounted for in the passive baseline, distinct from the active input.
+          <strong>Our Response:</strong> We agree that rigid analogies have limits. For this reason, the full mathematical framework (Section @sec-affine) and the ZTCF simulation explicitly include flexible shaft modes ($\eta$). The affine control form $\dot{x} = f(x) + g(x)u$ captures all elastic dynamics within the drift vector $f(x)$, ensuring that the "Catapult Effect" is fully accounted for in the passive baseline, distinct from the active input.
         </div>
       </div>
 
@@ -277,7 +273,7 @@ The unforced dynamics (drift) satisfy the geometric equation of motion:
 $$
 \nabla_{\dot{x}}\dot{x} = -M^{-1}(\nabla V + F_{dissip}).
 $$
-This identifies the drift vector field components. The "inertial drift" corresponds to the term $-\Gamma^k_{ij} \dot{x}^i \dot{x}^j$, which appears in the mechanical equations as $-M^{-1} C(x)\dot{x}$. This geometric definition treats $f(x)$ as a coordinate-independent object—a global section of the tangent bundle—so the drift term is tied to the mechanics rather than to a particular coordinate chart.
+This identifies the drift vector field components. The "inertial drift" corresponds to the term $-\Gamma^k_{ij} \dot{x}^i \dot{x}^j$, which appears in the mechanical equations as $-M^{-1} C(x)\dot{x}$. This geometric definition ensures that $f(x)$ is a coordinate-independent object—a global section of the tangent bundle—guaranteeing that our decomposition is intrinsic to the mechanics, not an artifact of the choice of variables.
 
 ## Note on Constrained Subsystems (The Wrist)
 While the global system evolves on $T\mathcal{Q}$, specific joints may have internal constraints that reduce the local degrees of freedom. For example, the wrist joint functions as a universal joint with a constrained third axis (forearm rotation). These local constraints generate internal **constraint torques** that reside in the null space of the actuation map $B(q)$ but are critical for force transmission. For a detailed derivation of these constraint dynamics, see [Constraint Torques at the Wrist](wrist-universal-joint.qmd).
@@ -440,7 +436,7 @@ For reference, Table~@tab:notation summarizes the main symbols used in the manus
 
 The kinematic analysis in the previous section established the mass matrix structure and the coupling mechanism. We now embed these elements into the full dynamical framework.
 
-To rigorously identify the causal contribution of muscular torque, we must derive the equations of motion in a form that explicitly isolates the control inputs. Standard Kane's method or Newton-Euler formulations often yield a single implicit system of equations. Here, we employ the Lagrangian formalism specifically to reveal the *control-affine* structure—the energetic architecture that makes the golfer's torque enter linearly in the chosen model.
+To rigorously identify the causal contribution of muscular torque, we must derive the equations of motion in a form that explicitly isolates the control inputs. Standard Kane's method or Newton-Euler formulations often yield a single implicit system of equations. Here, we employ the Lagrangian formalism specifically to reveal the *control-affine* structure—the energetic architecture that guarantees the golfer's torque enters the dynamics linearly.
 
 ### Lagrangian formulation
 
@@ -516,7 +512,7 @@ The zero vector in the lower block of the forcing term is the defining feature o
 
 ### Control-affine state space form
 
-The Lagrangian formulation above preserves the usual energy bookkeeping of the model, but it presents the dynamics as an implicit balance of forces ($\text{Inertia} + \text{Coriolis} + \dots = \text{Input}$). To disentangle cause from effect, we must invert this relationship. We need an explicit mapping that reveals how a unit of torque translates into instantaneous acceleration, accounting for the complex inertial coupling between the hands and the flexible shaft.
+The Lagrangian formulation above guarantees energy consistency, but it presents the dynamics as an implicit balance of forces ($\text{Inertia} + \text{Coriolis} + \dots = \text{Input}$). To disentangle cause from effect, we must invert this relationship. We need an explicit mapping that reveals how a unit of torque translates into instantaneous acceleration, accounting for the complex inertial coupling between the hands and the flexible shaft.
 
 To isolate the accelerations, we require the inverse inertia matrix $H(q) = M^{-1}(q)$. However, a numerical inversion would obscure the mechanism of transmission. We instead derive the blockwise inverse analytically using the **Schur Complement**. This algebraic decomposition is essential because it explicitly separates the 'Effective Mobility' of the hands from the 'Reflected Inertia' of the shaft. We seek a matrix $H$ such that:
 $$
@@ -575,11 +571,11 @@ $$
 This equation provides the rigorous mechanical definition of **Input Forces**:
 
 1.  **Direct Drive:** $\ddot{q}_{in} = H_{qq} B(q) u$. The input torque generates joint acceleration scaled by the *effective mobility* $H_{qq}$ (the inverse of the articulated body inertia).
-2.  **Transmission to Flexible Modes:** $\ddot{\eta}_{in}$ depends on the **Inertial Coupling Ratio** $-M_{\eta\eta}^{-1} M_{\eta q}$. Within this model, that means hand torque influences "lag" or "lead" deflection only through the inertial coupling pathway represented by the matrix product above.
+2.  **Transmission to Flexible Modes:** $\ddot{\eta}_{in}$ depends on the **Inertial Coupling Ratio** $-M_{\eta\eta}^{-1} M_{\eta q}$. It proves that "lag" or "lead" deflection is actively induced by hand torque but is mediated strictly by the inertial coupling matrix.
 
-In this parameterization, $\Gamma$ is fixed by the chosen club model. The golfer creates the *acceleration* ($\ddot{q}$), but the *coupling* ($\Gamma$) determines how that acceleration reaches the shaft modes at the same modeled state. Technique can still change the state and torque history; what it does not do is change the inertial-coupling matrix without changing the model or the club parameters.
+This result has a profound implication for swing mechanics. It means that the "lag" often attributed to specific muscular activation patterns is, at the fundamental level of the equation of motion, an inertial reaction dictated by the mass distribution of the club. The golfer creates the *acceleration* ($\ddot{q}$), but the *coupling* ($\Gamma$) determines the shaft's response. The only way to alter this ratio is to alter the physical properties of the club itself; no amount of 'technique' can change the value of $\Gamma$.
 
-This explicit derivation of the input channel reveals the mechanical bounds of agency. The term $H_{qq} B(q)$ represents the instantaneous **Control Efficacy**—or **Mobility Ellipsoid** in geometric terms—which defines the capacity of torque to alter the system's trajectory. As discussed later in the *Drift-Control Ratio* analysis, this efficacy is configuration-dependent and bounded, whereas the opposing drift forces can scale quadratically with velocity. In the simplified models used on this site, that asymmetry motivates a late-downswing reduction in path-control authority.
+This explicit derivation of the input channel reveals the mechanical bounds of agency. The term $H_{qq} B(q)$ represents the instantaneous **Control Efficacy**—or **Mobility Ellipsoid** in geometric terms—which defines the capacity of torque to alter the system's trajectory. As we shall see in the *Drift-Control Ratio* analysis, this efficacy is purely configuration-dependent and bounded, whereas the opposing drift forces scale quadratically with velocity. This structural asymmetry is what preordains the loss of controllability in the late downswing.
 
 Substituting the actuation model, we separate the drift and input terms.
 
@@ -688,7 +684,7 @@ This vector field represents the new direction of motion generated by switching 
 
 By isolating the torque input $u$ into the linear term $g(x)u$, we transform the nebulous question "how much force is active versus passive?" into a mathematically precise operation. The term $f(x)$ encapsulates the full history-dependent momentum of the system, while $g(x)u$ represents the instantaneous ability of the golfer to alter that momentum.
 
-The derivation above transforms the equations of motion from a description of *how the system moves* to a description of *why it moves*. By isolating the input $u$ in a separate linear term, we have created a causal map. In traditional inverse dynamics, the "net moment" is a monolithic quantity. In the affine framework, it is decomposed into the *inertial memory* of the system (drift) and the *current agency* of the player (input). At the level of the model equations, the input enters additively rather than being hidden inside the passive term. This separation is what allows us to perform the counterfactual operations defined in the next part: setting the input to zero to inspect the modeled drift response.
+The derivation above transforms the equations of motion from a description of *how the system moves* to a description of *why it moves*. By isolating the input $u$ in a separate linear term, we have created a causal map. This mathematical separation forces a philosophical shift in how we view the swing. In traditional inverse dynamics, the "net moment" is a monolithic quantity. In the affine framework, it is an aggregate of two distinct physical species: the *inertial memory* of the system (drift) and the *current agency* of the player (input). The derivation above proves that these species do not mix; they are mechanically orthogonal. This orthogonality is what allows us to perform the "surgical" operations defined in the next part: amputating the input to reveal the drift.
 
 ## Drift vs.\ Input Decomposition {#sec-drift_input}
 
@@ -853,7 +849,7 @@ $$
   M_{q}(q,\eta)\,\big[a_{\text{drift}}(x(t))\big]_{1:n},
 $$
 
-and $M_{q}$ denotes the block of the inertia matrix mapping rigid accelerations to generalized torques (see @sec-app-derivations for details).
+and $M_{q}$ denotes the block of the inertia matrix mapping rigid accelerations to generalized torques (see Appendix~@app:derivations for details).
 
 The *input torque* is then given by
 
@@ -1086,7 +1082,7 @@ $$
 $$
 The control input $u$ appears *exclusively* in the term $M^{-1} [B(q)u; 0]^T$. Therefore, the Jacobian of the drift field with respect to the input is the zero matrix:
 $$\nabla_u f(x) \equiv 0.$$
-Within this modeling setup, this separation means the "passive" dynamics can be evaluated without direct torque dependence.
+This orthogonality guarantees that the "passive" dynamics identified by the model are structurally unpolluted by the "active" control inputs.
 
 ## Assumption of Viscous-Only Damping
 This invariance proof strictly relies on the assumption that all dissipative forces $h_{\text{dissip}}$ depend only on state $(q, \dot{q})$. Specifically, we assume damping is viscous (linear in velocity).
@@ -1581,7 +1577,8 @@ Overall, the framework enables clearer interpretation of how golfers generate sp
 
 ## Appendices {.appendix}
 
-## Mathematical Derivations {#sec-app-derivations}
+## Mathematical Derivations
+{#app:derivations}
 
 This appendix provides detailed derivations supporting the unified control-affine formulation presented in @sec-affine. The goal is to show explicitly how the coupled rigid--flexible dynamics produce the affine decomposition
 $$
@@ -1875,7 +1872,8 @@ The derivations in this appendix demonstrate explicitly that:
 
 This provides the mathematical backbone for the force decomposition and torque taxonomy developed in the main text.
 
-## Modal Approximation for the Flexible Shaft {#sec-app-modal}
+## Modal Approximation for the Flexible Shaft
+{#app:modal}
 
 This appendix details the finite-dimensional modal approximation used to model shaft deformation in the unified rigid--flexible dynamics of the golfer--club system. The goal is to show how a continuous beam model reduces to the generalized modal coordinates $\eta \in \mathbb{R}^{m}$ used in @sec-affine, and why this representation preserves the linearity of the torque input in the final control-affine form.
 
@@ -2056,7 +2054,8 @@ The modal shaft model presented here:
 
 This makes the modal approximation both computationally efficient and theoretically compatible with the full decomposition presented in the main text.
 
-## Pendulum Examples: Rigid and Flexible, 2D and 3D {#sec-app-toy}
+## Pendulum Examples: Rigid and Flexible, 2D and 3D
+{#app:toy}
 
 This appendix presents simplified pendulum-based examples that illustrate the control-affine structure and the superposition of drift and input forces in explicit form. We treat:
 - a planar (2D) pendulum with and without a flexible shaft, and
@@ -2333,7 +2332,7 @@ Once again, the system is control-affine: all nonlinearities are encapsulated in
 
 ### C.4 \quad Spatial (3D) pendulum with flexible shaft
 
-We now attach a flexible shaft (modeled via a small set of bending modes) to the 3D pendulum. The shaft deformation is represented by modal coordinates $\eta \in \mathbb{R}^m$, just as in @sec-app-modal.
+We now attach a flexible shaft (modeled via a small set of bending modes) to the 3D pendulum. The shaft deformation is represented by modal coordinates $\eta \in \mathbb{R}^m$, just as in Appendix~@app:modal.
 
 The full state is
 $$
@@ -2458,7 +2457,7 @@ These examples provide explicit, low-dimensional realizations of the general con
 
 ## Simulink Forward Dynamics Modeling and Counterfactual Evaluation {#sec-simulink}
 
-While the preceding appendices provided the analytical derivations and simplified toy examples (pendulums) to verify the internal consistency of the AffineDrift logic, the application to a full golf swing requires a numerical proof-of-concept. The pendulums of @sec-app-toy demonstrate that the affine superposition holds algebraically, but they do not capture the numerical challenges associated with high-speed gyroscopic coupling and stiff flexible modes.
+While the preceding appendices provided the analytical derivations and simplified toy examples (pendulums) to verify the internal consistency of the AffineDrift logic, the application to a full golf swing requires a numerical proof-of-concept. The pendulums of Appendix~@app:toy demonstrate that the affine superposition holds algebraically, but they do not capture the numerical challenges associated with high-speed gyroscopic coupling and stiff flexible modes.
 
 The following section documents the forward-dynamics implementation used to validate these concepts in a realistic multibody environment. This serves as a necessary bridge between the idealized theory and the experimental applications, ensuring that the abstract ZTCF and ZVCF counterfactual definitions remain robust under integration error and discrete-time sampling.
 
@@ -2477,7 +2476,7 @@ The model consists of:
   
 - clubhead and hand coordinate frames for computing interaction forces.
 
-Shaft flexibility was represented using modal bending dynamics, similar to @sec-app-modal, and interacted with the rigid segments through base excitation. All shaft forces entered the drift term, while all applied joint torques entered linearly into the input term, consistent with the control‐affine decomposition.
+Shaft flexibility was represented using modal bending dynamics, similar to Appendix~@app:modal, and interacted with the rigid segments through base excitation. All shaft forces entered the drift term, while all applied joint torques entered linearly into the input term, consistent with the control‐affine decomposition.
 
 **Note on parameter validity (Validation Scope).**
 The stiffness and damping parameters used in this simulation represent the "effective" passive dynamics of the system. While treated as constant for the counterfactual analysis, we acknowledge that in a biological system, these would vary with activation. The model thus represents the "Effective Plant" for the swing. **Crucially, this simulation uses constant coefficients and therefore does not validate the "Stiffness Pulse" or "Intentional Constraint Collapse" mechanisms discussed in the theoretical articles.** It validates only the algebraic consistency of the ZTCF subtraction under constant impedance.

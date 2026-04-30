@@ -14,15 +14,15 @@ logger = logging.getLogger(__name__)
 
 # Assessment definitions (Standardized A-O)
 ASSESSMENT_DEFINITIONS = {
-    "A": {"name": "Architecture", "description": "Code structure and organization"},
-    "B": {"name": "Hygiene & Quality", "description": "Linting, formatting, code quality"},
-    "C": {"name": "Documentation", "description": "README, docstrings, comments"},
-    "D": {"name": "User Experience", "description": "CLI, API usability"},
+    "A": {"name": "Code Structure", "description": "Architecture, structure, organization"},
+    "B": {"name": "Documentation", "description": "README, docstrings, comments"},
+    "C": {"name": "Test Coverage", "description": "Test coverage and test quality"},
+    "D": {"name": "Error Handling", "description": "Exception handling and robustness"},
     "E": {"name": "Performance", "description": "Efficiency, optimization"},
-    "F": {"name": "Installation", "description": "Setup, dependencies, packaging"},
-    "G": {"name": "Testing", "description": "Test coverage, test quality"},
-    "H": {"name": "Error Handling", "description": "Exception handling, logging"},
-    "I": {"name": "Security", "description": "Vulnerabilities, best practices"},
+    "F": {"name": "Security", "description": "Vulnerabilities and best practices"},
+    "G": {"name": "Dependencies", "description": "Setup, dependencies, packaging"},
+    "H": {"name": "CI/CD", "description": "Continuous integration and deployment"},
+    "I": {"name": "Code Style", "description": "Linting, formatting, code quality"},
     "J": {"name": "API Design", "description": "Interface consistency"},
     "K": {"name": "Data Handling", "description": "Data validation, serialization"},
     "L": {"name": "Logging", "description": "Logging practices"},

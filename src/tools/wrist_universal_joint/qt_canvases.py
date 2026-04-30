@@ -27,10 +27,10 @@ _offscreen = os.environ.get("QT_QPA_PLATFORM") == "offscreen"
 if _backend not in ("agg", "headless", "template") and not _offscreen:
     matplotlib.use("QtAgg")
 
-from matplotlib.backends.backend_qtagg import (  # noqa: E402  # reason: import ordering constraint
+from matplotlib.backends.backend_qtagg import (  # noqa: E402
     FigureCanvasQTAgg as FigureCanvas,
 )
-from matplotlib.figure import Figure  # noqa: E402  # reason: import ordering constraint
+from matplotlib.figure import Figure  # noqa: E402
 
 
 def find_main_window_parent(widget: QWidget | None) -> QMainWindow | None:

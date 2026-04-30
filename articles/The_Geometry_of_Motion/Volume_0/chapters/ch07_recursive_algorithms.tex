@@ -97,10 +97,9 @@ Read as: Link 0 has no parent, link 1's parent is link 0, link 2's parent is lin
 
 For a humanoid with two legs, the parent array might be:
 \[
-  \lambda = [-1, 0, 1, 0, 3, 0, \ldots]
+  \lambda = [-1, 0, 0, 1, 2, 1, 2, 0, \ldots]
 \]
-with link 0 as the pelvis, links 1-2 the left leg, links 3-4 the right leg,
-link 5 the torso, etc.
+with link 0 as the pelvis, links 1-2 the left leg, links 3-4 the right leg, etc.
 \end{example}
 
 Once the kinematic tree structure is defined via $\lambda$, the recursive algorithms simply iterate: for each link $i = 1, 2, \ldots, N$, they access data from the parent link $\lambda(i)$ and compute updated values for link $i$.
@@ -479,15 +478,14 @@ The modification is minimal: in the inward pass (force recursion), if link $i$ h
 The rest of the algorithm remains identical. Because the tree is acyclic, there is a unique topological ordering, and all parents are processed before their children in the inward pass.
 
 \begin{example}{Humanoid Robot with Branching}{humanoid_branch}
-A humanoid robot with a main body/torso (link 0), two legs (links 1–2 and 3–4),
-and two arms (links 5–7 and 8–10) has the parent array:
+A humanoid robot with a pelvis (link 0), two legs (links 1–2 and 3–4), and a torso with two arms (links 5–7 and 8–10) has the parent array:
 \[
   \lambda = [-1, 0, 1, 0, 3, 0, 5, 6, 0, 8, 9]
 \]
 
-In the inward pass, when computing $\mathcal{F}_0$ (torso wrench), we sum:
+In the inward pass, when computing $\mathcal{F}_0$ (pelvis wrench), we sum:
 \[
-  \mathcal{F}_0 = (\text{torso inertia term}) + [\text{Ad}_{1,0}]^{-T}\mathcal{F}_1 + [\text{Ad}_{3,0}]^{-T}\mathcal{F}_3 + [\text{Ad}_{5,0}]^{-T}\mathcal{F}_5 + [\text{Ad}_{8,0}]^{-T}\mathcal{F}_8
+  \mathcal{F}_0 = (\text{pelvis inertia term}) + [\text{Ad}_{1,0}]^{-T}\mathcal{F}_1 + [\text{Ad}_{3,0}]^{-T}\mathcal{F}_3 + [\text{Ad}_{5,0}]^{-T}\mathcal{F}_5 + [\text{Ad}_{8,0}]^{-T}\mathcal{F}_8
 \]
 
 Still $O(N)$ in the total number of links.

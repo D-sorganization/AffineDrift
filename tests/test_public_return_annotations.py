@@ -28,7 +28,7 @@ def _collect_missing_return_annotations(path: Path, repo_root: Path) -> list[str
 
 def test_public_functions_in_src_and_scripts_have_return_annotations() -> None:
     """Public Python functions in src/ and scripts/ should declare return types."""
-    if sys.version_info < (3, 12):  # noqa: UP036  # reason: version compatibility guard
+    if sys.version_info < (3, 12):  # noqa: UP036
         pytest.skip("Repository source uses Python 3.12 syntax; run this check on Python 3.12+.")
 
     repo_root = Path(__file__).resolve().parents[1]

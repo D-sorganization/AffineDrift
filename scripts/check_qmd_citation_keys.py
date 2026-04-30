@@ -9,7 +9,6 @@ import logging
 import re
 import sys
 from pathlib import Path
-from typing import Any
 
 import yaml
 
@@ -42,7 +41,7 @@ IGNORED_CITATION_PREFIXES = (
 IGNORED_CITATION_PATTERNS = (re.compile(r"^ch\d+[_-]"),)
 
 
-def extract_frontmatter(text: str) -> dict[str, Any]:
+def extract_frontmatter(text: str) -> dict:
     """Return parsed YAML frontmatter when present."""
     match = FRONTMATTER_PATTERN.match(text)
     if not match:

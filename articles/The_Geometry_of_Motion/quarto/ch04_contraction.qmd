@@ -140,12 +140,12 @@ convergence.
 
 Consider the autonomous system
 \begin{equation}
-\dot{\x} = f(\x, t), \quad \x\in\R^n.
+\dot\x = f(\x, t), \quad \x\in\R^n.
 \label{eq:ch4:system}
 \end{equation}
 The variational dynamics (Chapter~\ref{ch:variational}) are
 \begin{equation}
-\dot{\dx} = \mat{A}(\x,t)\,\dx,
+\dot\dx = \mat{A}(\x,t)\,\dx,
 \quad \mat{A}(\x,t) = \frac{\partial f}{\partial\x}(\x,t).
 \label{eq:ch4:variational}
 \end{equation}
@@ -190,20 +190,18 @@ holds for all $(\x,t)\in\mathcal{D}\times[0,\infty)$.
 :::
 
 
-::: {.callout-note title="Remark"}
+\begin{remark}
 The factor of $2$ on the right-hand side is conventional and ensures that the contraction
 rate $\lambda$ corresponds directly to the exponential decay rate of perturbations. The
 condition is called a **matrix inequality** because it compares two matrices in the
 partial order defined by positive semidefiniteness.
-:::
+\end{remark}
 
 
 ## Complete Proof of Exponential Convergence
 
 
-::: {.theorem}
-**Exponential Convergence of Trajectories**
-
+\begin{theorem}[Exponential Convergence of Trajectories]
 \label{thm:ch4:convergence}
 Assume $\mathcal{D}$ is forward-invariant and geodesically convex in the metric
 $\mat{M}(\x,t)$. Suppose there exist constants $0<\underline{m}\leq\overline{m}<\infty$
@@ -229,9 +227,9 @@ $\mat{M}$ at time $t$. Moreover, in Euclidean norm:
 e^{-\lambda t}\,\norm{\x_1(0)-\x_2(0)}.
 \label{eq:ch4:euclidean-decay}
 \end{equation}
-:::
+\end{theorem}
 
-::: {.proof}
+\begin{proof}
 **Step 1: Geodesic Parametrization and Tangent Vector Evolution.**
 
 Let $\gamma(\x_1, \x_2; s)$ be a geodesic curve of minimal length connecting $\x_1$ and
@@ -321,14 +319,14 @@ metric bounds. For any two points $\x_1,\x_2$ in the geodesically convex region:
 \end{equation}
 
 Taking square roots yields \eqref{eq:ch4:euclidean-decay}. \qed
-:::
+\end{proof}
 
-::: {.callout-note title="Remark"}
+\begin{remark}
 The proof relies on three essential ingredients: (i) the variational equation governing
 tangent vectors, (ii) the metric-dependent Lyapunov function capturing shrinking, and
 (iii) the metric bounds providing translation between geodesic and Euclidean distance.
 The contraction condition ensures all three work together.
-:::
+\end{remark}
 
 
 ## The Identity Metric: Symmetric Jacobian Condition
@@ -347,12 +345,12 @@ negative. While restrictive (most interesting systems do not satisfy this global
 it provides useful intuition: contraction in the identity metric requires that the
 vector field be ``uniformly squeezing'' in every direction.
 
-::: {.callout-note title="Remark"}
+\begin{remark}
 The power of contraction theory lies in the freedom to choose $\mat{M}$. A system that
 is not contracting in the identity metric may be contracting in a different metric that
 ``stretches'' certain directions to compensate for local expansion. Finding such a metric
 is the central computational challenge.
-:::
+\end{remark}
 
 
 ## Worked Example: A Simple Linear System
@@ -476,9 +474,7 @@ may drift. We can still harness the contraction in $\x_2$ to establish synchroni
 ### The Hierarchical Contraction Theorem
 
 
-::: {.theorem}
-**Partial Contraction via Hierarchical Decomposition**
-
+\begin{theorem}[Partial Contraction via Hierarchical Decomposition]
 \label{thm:ch4:partial}
 Partition $\x = [\x_1; \x_2]$ with dimensions $n_1$ and $n_2$. Suppose:
 1. The reduced system for $\x_2$ is globally contracting with rate $\lambda_2 > 0$
@@ -491,20 +487,16 @@ in the block-diagonal metric
 \mat{M}_{\text{block}} = \begin{bmatrix} \mat{M}_1 & 0 \\ 0 & \mat{M}_2 \end{bmatrix}.
 \label{eq:ch4:block-metric}
 \end{equation}
-:::
+\end{theorem}
 
-::: {.proof}
-**Proof Sketch**
-
+\begin{proof}[Proof Sketch]
 If $\x_2$ is contracting, then by Theorem~\ref{thm:ch4:convergence}, perturbations
 $\dx_2$ decay exponentially. Once $\dx_2$ is small, the variation $\dx_1$ sees the
 driven trajectory $\x_2(t)$ as ``nearly fixed'' and contracts around it. The block-diagonal
 structure ensures that the coupled system inherits contraction from both subsystems.
-:::
+\end{proof}
 
-::: {.example}
-**Mechanical System: Position Synchronization via Velocity Contraction**
-
+\begin{example}[Mechanical System: Position Synchronization via Velocity Contraction]
 Consider a kinematic system
 \begin{equation}
 \dot{q} = v, \quad \dot{v} = -\gamma(v - u(t)),
@@ -517,7 +509,7 @@ The $v$-subsystem $\dot{v} = -\gamma(v-u)$ is contracting in $v$ with rate $\gam
 The $q$-subsystem, driven by $v(t)$, is $\dot{q} = v(t)$, which inherits the contraction
 of $v$. Thus the full system is contracting with rate $\gamma$ (the slower of the two rates),
 and all solutions synchronize to the reference motion.
-:::
+\end{example}
 
 
 ## Control Contraction Metrics: Design and Duality
@@ -637,9 +629,7 @@ approximation to the true metric.
 Many digital control systems and learning algorithms operate in discrete time. The
 discrete-time analogue of Theorem~\ref{thm:ch4:convergence} is:
 
-::: {.theorem}
-**Discrete-Time Exponential Convergence**
-
+\begin{theorem}[Discrete-Time Exponential Convergence]
 \label{thm:ch4:discrete-contraction}
 Consider the discrete-time system
 \begin{equation}
@@ -674,16 +664,14 @@ with Euclidean norm bound
 \norm{\x_0^{(1)} - \x_0^{(2)}}.
 \label{eq:ch4:discrete-euclidean-decay}
 \end{equation}
-:::
+\end{theorem}
 
-::: {.proof}
-**Proof Sketch**
-
+\begin{proof}[Proof Sketch]
 The proof parallels the continuous case. The tangent vector $\dx_k = \x_{k+1}^{(1)} - \x_{k+1}^{(2)}$
 evolves via $\dx_{k+1} = \mat{J}_k \, \dx_k$. The Lyapunov function
 $V_k = \dx_k^\T \mat{M}_k \dx_k$ satisfies $V_{k+1} \leq \rho^2 V_k$ by the condition
 \eqref{eq:ch4:discrete-contraction-condition}. Iterating yields $V_k \leq \rho^{2k} V_0$.
-:::
+\end{proof}
 
 
 ### Connection to Riccati Analysis
@@ -694,11 +682,11 @@ the solution of a discrete-time algebraic Riccati equation (DARE), which is stud
 in detail in Chapter~\ref{ch:riccati}. Both frameworks certify stability and convergence,
 but contraction provides tighter guarantees on trajectory convergence rates.
 
-::: {.callout-note title="Remark"}
+\begin{remark}
 Discrete-time contraction is especially relevant for iterative learning control,
 reinforcement learning, and digital controller implementations where the sampling time
 is fast enough that the discrete assumption is valid.
-:::
+\end{remark}
 
 
 ## Numerical Example: Van der Pol Oscillator
@@ -802,9 +790,7 @@ If the unperturbed system $\dot{\x} = f(\x,t)$ is contracting with rate $\lambda
 metric $\mat{M}$, then the perturbed system exhibits **bounded-input bounded-state**
 (BIBS) behavior and **incremental input-to-state stability** (ISS).
 
-::: {.theorem}
-**Disturbance Rejection Bound**
-
+\begin{theorem}[Disturbance Rejection Bound]
 \label{thm:ch4:disturbance-rejection}
 Suppose $\dot{\x} = f(\x,t)$ is contracting with rate $\lambda$ in metric $\mat{M}$
 satisfying the metric bounds \eqref{eq:ch4:metric-bounds}. Consider the perturbed system
@@ -822,16 +808,14 @@ The ultimate bound (steady-state limit as $t \to \infty$) is
 \limsup_{t\to\infty} \norm{\x_1(t) - \x_2(t)} \leq \frac{\sqrt{\overline{m}}}{\lambda\sqrt{\underline{m}}} \, D.
 \label{eq:ch4:ultimate-bound-steady}
 \end{equation}
-:::
+\end{theorem}
 
-::: {.proof}
-**Proof Sketch**
-
+\begin{proof}[Proof Sketch]
 Perturbing the trajectory by small $d(t)$ shifts the vector field. The contraction rate
 $\lambda$ ensures that perturbations are damped exponentially at rate $\lambda$. For
 bounded disturbances, this damping is balanced by the steady-state input magnitude,
 yielding an ultimate bound proportional to $D/\lambda$.
-:::
+\end{proof}
 
 
 ### Practical Implications
@@ -868,9 +852,7 @@ relate to each other.
 **Incremental ISS** (or differential ISS) is a stronger property: bounded input differences
 lead to bounded state differences. Contraction *implies* incremental ISS, but not vice versa.
 
-::: {.proposition}
-**Contraction Implies Incremental ISS**
-
+\begin{proposition}[Contraction Implies Incremental ISS]
 \label{prop:ch4:contraction-iss}
 If the system $\dot{\x} = f(\x) + G(\x)\uvec$ is contracting with rate $\lambda$ in
 metric $\mat{M}$ (with metric bounds \eqref{eq:ch4:metric-bounds}), then for any two
@@ -882,13 +864,13 @@ input signals $\uvec_1(t)$ and $\uvec_2(t)$:
 \label{eq:ch4:diff-ISS-bound}
 \end{equation}
 where $\overline{G} = \sup_{\x} \norm{G(\x)}$.
-:::
+\end{proposition}
 
-::: {.callout-note title="Remark"}
+\begin{remark}
 Contraction is strictly stronger than ISS. A system can be ISS (bounded inputs $\implies$
 bounded states) without being contracting (different trajectories can diverge). Conversely,
 contraction guarantees not only ISS but also trajectory synchronization.
-:::
+\end{remark}
 
 
 ## Extended Lyapunov Comparison
@@ -925,9 +907,7 @@ each other, independent of a particular equilibrium.}
 ### Formal Relationships
 
 
-::: {.proposition}
-**Contraction Implies Lyapunov Stability**
-
+\begin{proposition}[Contraction Implies Lyapunov Stability]
 \label{prop:ch4:contraction-lyapunov}
 If $\dot{\x} = f(\x)$ with $f(\x^*) = 0$ is contracting with rate $\lambda$ in metric $\mat{M}$
 on a forward-invariant neighborhood $\mathcal{N}(\x^*)$, then $\x^*$ is a globally attractive
@@ -938,13 +918,13 @@ V(\x) = \norm{\x - \x^*}_{\mat{M}(\x)}^2 = (\x-\x^*)^\T \mat{M}(\x)(\x-\x^*)
 \end{equation}
 satisfies $\dot{V} \leq -2\lambda V$ along trajectories, certifying exponential stability
 of $\x^*$ at rate $\lambda$.
-:::
+\end{proposition}
 
-::: {.callout-note title="Remark"}
+\begin{remark}
 Conversely, not every Lyapunov function induces contraction. A system can have an
 equilibrium that is exponentially stable without all trajectories converging at the
 same rate---a scenario that contraction explicitly rules out.
-:::
+\end{remark}
 
 
 ## Contraction in Biomechanical Systems
@@ -1069,9 +1049,7 @@ must be augmented to account for the noise.
 ### The Stochastic Contraction Condition
 
 
-::: {.theorem}
-**Stochastic Contraction --- adapted from Pham, Tabuada, and Slotine**
-
+\begin{theorem}[Stochastic Contraction --- adapted from Pham, Tabuada, and Slotine]
 \label{thm:ch4:stochastic-contraction}
 Consider two solutions $\x_1(t), \x_2(t)$ of~\eqref{eq:ch4:sde} with different initial
 conditions but the same noise realization. If the deterministic contraction condition
@@ -1083,7 +1061,7 @@ holds with rate $\lambda$, then the expected squared distance satisfies:
 \label{eq:ch4:stochastic-bound}
 \end{equation}
 where $C_\sigma$ depends on the diffusion coefficient $\sigma$ and the metric $\mat{M}$.
-:::
+\end{theorem}
 
 The bound~\eqref{eq:ch4:stochastic-bound} shows that contraction dominates at large
 separations (exponential decay), while noise dominates at small separations (the
@@ -1121,9 +1099,9 @@ to converge to the nominal at rate $\lambda$.
 
 
 Given a contracting system with rate $\lambda$ and metric $\mat{M}$, define the tube
-of radius $r$ around a nominal trajectory $\bar{\x}(t)$:
+of radius $r$ around a nominal trajectory $\bar\x(t)$:
 \begin{equation}
-\mathcal{T}_r(t) = \left\{ \x \in \R^n \mid \|\x - \bar{\x}(t)\|_{\mat{M}(t)} \leq r \right\}.
+\mathcal{T}_r(t) = \left\{ \x \in \R^n \mid \|\x - \bar\x(t)\|_{\mat{M}(t)} \leq r \right\}.
 \label{eq:ch4:tube}
 \end{equation}
 
@@ -1205,11 +1183,11 @@ feedback design.
 \section*{Exercises}
 
 1. **Contraction of a linear system.**
-   For $\dot{\x} = \mat{A}\x$ with $\mat{A} = \begin{bmatrix} -1 & 2 \\ 0 & -3 \end{bmatrix}$,
+   For $\dot\x = \mat{A}\x$ with $\mat{A} = \begin{bmatrix} -1 & 2 \\ 0 & -3 \end{bmatrix}$,
    find the contraction rate using the identity metric $\mat{M} = \mat{I}$. Then find a
    diagonal metric $\mat{M} = \text{diag}(m_1, m_2)$ that maximizes the contraction rate.
 2. **LMI feasibility.**
-   For the system $\dot{\x} = f(\x) + g(\x)u$ with
+   For the system $\dot\x = f(\x) + g(\x)u$ with
    $f = (-x_1 + x_2^2,\; -2x_2)^T$ and $g = (0, 1)^T$, formulate the LMI condition
    for finding a constant contraction metric $\mat{M}$ and rate $\lambda > 0$
    (with $u = -kx_2$). Solve it for $k = 1$.

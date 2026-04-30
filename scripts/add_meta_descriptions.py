@@ -13,9 +13,7 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from src.tools.utils.content_utils import (  # noqa: E402  # reason: import ordering constraint
-    read_qmd_with_frontmatter,
-)
+from src.tools.utils.content_utils import read_qmd_with_frontmatter  # noqa: E402
 
 # Manual overrides for better descriptions
 DESCRIPTION_OVERRIDES = {

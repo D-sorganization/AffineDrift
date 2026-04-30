@@ -108,15 +108,6 @@ DEFAULT_N_HYSTERESIS: int = _env_int("AD_N_HYSTERESIS", 3)
 GRAVITY_M_S2 = 9.81
 """Standard gravitational acceleration on Earth's surface (m/s^2)."""
 
-REGULATION_HOLE_RADIUS_M: float = 0.054
-"""Regulation golf hole radius per USGA/R&A rules (m). Diameter = 4.25 inches."""
-
-HOLE_CAPTURE_SPEED_MS: float = 1.5
-"""Maximum ball speed at which the hole captures a putt (m/s)."""
-
-STIMPMETER_CALIBRATION_FACTOR: float = 1.285
-"""Calibration factor converting stimpmeter reading to friction deceleration."""
-
 EARTH_MU: float = 3.986e14
 """Earth's gravitational parameter mu (m^3/s^2)."""
 

@@ -11,10 +11,7 @@ from scripts.cli_output import write_stdout
 
 def create_issue(title: str, body: str) -> None:
     """Create a GitHub issue using the gh CLI."""
-    subprocess.run(  # noqa: S603
-        ["gh", "issue", "create", "--title", title, "--body", body],  # noqa: S607,
-        check=True,  # noqa: S607
-    )
+    subprocess.run(["gh", "issue", "create", "--title", title, "--body", body], check=True)
 
 
 def _iter_report_issue_specs(report_path: Path) -> Iterable[tuple[str, str]]:

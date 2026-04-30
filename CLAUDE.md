@@ -37,34 +37,6 @@ npx playwright test                                    # E2E browser tests
 quarto render                                          # build the site
 ```
 
-## Docker (Reproducible Environment)
-
-Use Docker to get an environment that exactly matches CI — Python 3.12, Quarto, and Node.js 20 pre-installed.
-
-```bash
-# Build the dev image (includes all Python + JS deps)
-docker build --target dev -t affinedrift:dev .
-
-# Run pytest (default CMD)
-docker run --rm affinedrift:dev
-
-# Run Jest tests
-docker run --rm affinedrift:dev npm test
-
-# Run a shell inside the dev container
-docker run --rm -it affinedrift:dev bash
-
-# Build and serve the rendered site locally (production image)
-docker build -t affinedrift:latest .
-docker run --rm -p 8080:8000 affinedrift:latest
-# Visit http://localhost:8080
-
-# Or use docker-compose (wraps the production image)
-docker compose up
-```
-
-The `dev` stage is the entry point for new contributors: it avoids installing Quarto, Python 3.12, and Node.js locally.
-
 ## CI Requirements (All Must Pass)
 
 1. `ruff check` — zero violations

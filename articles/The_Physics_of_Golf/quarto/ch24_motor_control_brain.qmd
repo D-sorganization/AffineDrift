@@ -1,14 +1,14 @@
 ---
 title: "Motor Control I: The Brain as Controller"
-description: "A model-bounded account of feedforward planning, feedback delay, internal models, and motor learning in the golf downswing."
+description: "Recall from Chapters @sec-zerotorquecounterfactual and @sec-zerotorquecounterfactual that the golf swing is a control-affine system:"
 ---
 
 ::: {.callout-note}
 ## What This Chapter Is About
 
-The previous chapters described the swing as a nonlinear mechanical system with drift, bounded actuation, feedback delay, and sensor noise. This chapter asks a narrower question: what kind of control architecture is plausible when the downswing lasts only a few hundred milliseconds?
+We've spent the last several chapters learning the physics: the nonlinear dynamics, the drift-dominated regime, the trade-off between control and drift. But now we must face the central mystery: *the brain solves this problem*. Not perfectly---golfers miss---but with remarkable consistency. An elite golfer produces clubhead speeds within 2% of their average, swing after swing, despite 30--50 millisecond neural delays, sensor noise, and a system where the downswing lasts only 300 milliseconds.
 
-The discussion treats the nervous system as a controller with feedforward planning, internal models, and delayed feedback. It does not claim that the brain solves an explicit engineering optimization problem on each swing. The useful claim is more limited: because mid-downswing correction is time constrained, skilled movement likely depends heavily on learned preparation, predictive control, and mechanical structure.
+This chapter reframes the nervous system as an engineering control system and asks: what kind of controller is the brain? How does it manage to work within such severe constraints? The answer will astonish you: the brain doesn't try to control everything. Instead, it exploits the drift field---the very physics we've been studying---to do most of the work. The brain is not fighting physics; it is using physics as its primary actuator.
 
 :::
 
@@ -149,7 +149,7 @@ The cerebellum is remarkable for several reasons:
 
 - **Computational density:** This makes the cerebellum among the most densely packed neural tissue in the brain---a parallel processor of extraordinary capacity.
 
-- **Stereotyped circuit:** The cerebellar circuit is highly organized and unusually well characterized compared with many cortical circuits, although it is not fully understood.
+- **Simple circuit:** The cerebellar circuit is highly stereotyped and mathematically simple. It's one of the few neural circuits we nearly understand.
 
 - **Learning rule:** The cerebellum uses a clear, identified learning mechanism: long-term depression (LTD) of synapses. When a Purkinje cell receives simultaneous input from a climbing fiber (error signal) and parallel fibers (motor plan), the parallel fiber--Purkinje synapses are weakened. This is an error-correction learning rule.
 
@@ -157,7 +157,7 @@ The cerebellum is remarkable for several reasons:
 
 :::
 
-Cerebellar damage can produce severe loss of motor coordination---a condition called *ataxia*. Patients with cerebellar ataxia often struggle to perform smooth, coordinated movements, including reaching tasks and skilled striking actions. This is consistent with impaired prediction, timing, and error-correction mechanisms, though the clinical picture varies by lesion and task.
+Cerebellar damage produces catastrophic loss of motor coordination---a condition called *ataxia*. Patients with cerebellar ataxia cannot perform smooth, coordinated movements. They cannot hit a golf ball. They cannot reach smoothly for a cup. This is because they have lost their internal model of how their body works.
 
 The cerebellar learning rule is thought to implement the following algorithm:
 $$
@@ -169,18 +169,18 @@ where $w_{ij}$ is the synaptic weight between parallel fiber $i$ and Purkinje ce
 
 This is a simplified form of the Marr-Albus-Ito hypothesis. More precisely, the climbing fiber carries an error signal, and parallel fiber synapses that are co-active with climbing fiber input undergo long-term depression (LTD). The learning rule above captures the essential structure: weights decrease when error and pre-synaptic activity coincide.
 
-[@wolpert1998internal; @flanagan2003control; @kawato1999internal]
+[@wolpert1998internal, flanagan2003control, kawato1999internal]
 
 ### Why Internal Models Matter
 
-Without prediction, the brain would have limited ability to plan a fast golf swing. Here's why:
+Without an internal model, the brain cannot solve the golf swing. Here's why:
 
 ::: {.callout-tip}
 ## Controlling Without a Model
 
-Suppose you did not use a predictive model. You swing the club and see, after a visual delay, that the clubface was open. Any correction based only on that delayed information refers to a previous body and club state. Because the dynamics are nonlinear, the effect of a torque at position $\bm{x}_1$ differs from the effect of the same torque at position $\bm{x}_2$. Delayed feedback can still support learning and early corrections, but it is poorly suited to precise late-downswing adjustment.
+Suppose you didn't have an internal model. You swing the club and see (after 150 ms) that the clubface was open. You generate a correction. But this correction is based on what your muscles did 150 milliseconds ago, when the club was in a different position. The dynamics are nonlinear---the effect of a torque at position $\bm{x}_1$ is different from the effect of the same torque at position $\bm{x}_2$. Applying a correction based on delayed feedback at the wrong state is futile.
 
-With an internal model, the nervous system can predict likely sensory consequences before they occur. If the planned motion predicts an open clubface, the plan can be adjusted before or early in the swing.
+With an internal model, you *predict* what will happen before it happens. You mentally simulate the swing. If the simulation predicts an open clubface, you adjust the plan *before* you swing.
 
 :::
 
@@ -189,7 +189,7 @@ The forward model enables *predictive control*. The inverse model enables *plann
 ## The Predictive Processing Framework
 
 
-Predictive-processing theories model the brain as continuously generating and updating predictions about sensory input. The free energy principle and related predictive-processing frameworks are influential accounts, but they are not the only active theories of motor control [@friston2010action; @clark2013whatever].
+Modern neuroscience has converged on a powerful unifying idea: the brain is fundamentally a *prediction machine*. This framework, developed by Karl Friston and others, is called the *free energy principle* and the *predictive processing* framework [@friston2010action, clark2013whatever].
 
 ::: {.callout-note}
 ## Predictive Processing
@@ -215,7 +215,7 @@ This framework has profound implications. It says that action is not fundamental
 
 William James, in his 1890 *Principles of Psychology*, proposed a radical idea: **actions are represented by their effects, not by their motor commands**. When you think about throwing a ball, you think about the trajectory of the ball, not the sequence of muscle contractions. Your motor system then computes the commands needed to produce that trajectory.
 
-Modern ideomotor theory [@prinz2002perception; @hommel2009theory] has formalized this insight:
+Modern ideomotor theory [@prinz2002perception, hommel2009theory] has formalized this insight:
 
 ::: {.callout-important}
 ## Ideomotor Principle
@@ -243,7 +243,7 @@ This explains why great coaches talk about feel and target, not mechanics.
 
 The ideomotor principle also connects to the drift field. In the ZTCF framework, the brain doesn't need to control every detail of the trajectory. Instead, it specifies the initial conditions and lets physics (the drift field) carry the system to the outcome. In ideomotor terms, the brain specifies the desired sensory consequence (impact with the ball, ball trajectory), and the motor system retrieves the commands that, given physics, produce that consequence.
 
-[@prinz2002perception; @hommel2009theory; @wolfensteller2016action]
+[@prinz2002perception, hommel2009theory, wolfensteller2016action]
 
 ## The Nervous System Architecture: Hardware Specifications
 
@@ -371,7 +371,7 @@ A light flickering at 60 Hz appears steady to your eye, even though it's actuall
 
 :::
 
-For the golf swing, this bandwidth limitation is severe:
+For the golf swing, this bandwidth limitation is catastrophic:
 
 ::: {.callout-warning}
 ## The Bandwidth Problem in Golf
@@ -390,9 +390,9 @@ This is a *mismatch between the controller bandwidth and the plant dynamics*---a
 
 :::
 
-One model-based response is to exploit drift and mechanical structure. When a motion is partly drift-dominated, a slow controller can perform better by preparing initial conditions, stiffness, and feedforward commands rather than relying on moment-by-moment correction. This does not mean initial conditions are the only thing that matters, but it explains why preparation and learned timing are central.
+The solution, as we learned in the physics chapters, is to exploit drift. When the plant (the golf swing) is drift-dominated, a slow controller can still achieve good performance by specifying initial conditions and letting physics do the rest. The brain doesn't need to correct the swing trajectory moment-by-moment. It only needs to get the initial conditions right.
 
-[@todorov2005generalized; @shadmehr2005computational]
+[@todorov2005generalized, shadmehr2005computational]
 
 ## The Brain's Processing Power: Energy and Computation
 
@@ -465,3 +465,4 @@ This distinction is fundamental to understanding biological motor control. The b
 - Sketch a block diagram of the golf swing control system. Include the motor cortex, motor command, muscles, dynamics, sensory feedback, and feedback delays. Indicate which components operate on which timescale.
 
 - Compare and contrast feedback control (like a thermostat) with feedforward control (like a toaster). Why is the golf swing more like a toaster than a thermostat?
+

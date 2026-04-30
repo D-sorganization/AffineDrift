@@ -81,7 +81,7 @@ $\mat{S}$ of the algebraic Riccati equation (ARE)
 \end{equation}
 is simultaneously:
 1. The **cost curvature** matrix: the optimal cost-to-go for a state $\x$ is exactly $V^\star(\x) = \x^\T\mat{S}\x$.
-2. A **Lyapunov function** for the closed-loop system $\dot{\x} = (\mat{A}-\mat{B}\mat{K})\x$ with $\mat{K} = \mat{R}^{-1}\mat{B}^\T\mat{S}$.
+2. A **Lyapunov function** for the closed-loop system $\dot\x = (\mat{A}-\mat{B}\mat{K})\x$ with $\mat{K} = \mat{R}^{-1}\mat{B}^\T\mat{S}$.
 
 This insight unified two previously separate fields: \textit{the stability guarantee comes free from optimizing
 the cost}. This was conceptually revolutionary. Before Kalman, engineers solved LQR problems for one reason (minimize
@@ -116,9 +116,7 @@ energy (in the $\mat{S}$-weighted sense) at a rate equal to the optimal cost.
 Anderson and Moore's foundational book (1971) and subsequent work by Doyle and Stein emphasized that LQR not only
 optimizes the cost but also delivers remarkable robustness properties *for free*:
 
-::: {.proposition}
-**Guaranteed Robustness Margins of LQR**
-
+\begin{proposition}[Guaranteed Robustness Margins of LQR]
 \label{prop:ch6:lqr-margins}
 The continuous-time LQR controller $\mat{K} = \mat{R}^{-1}\mat{B}^\T\mat{S}$ derived from the ARE guarantees:
 1. **Gain margin**: multiplicative perturbations to the control input satisfying $\|\Delta\mat{K}\|$ remain
@@ -127,13 +125,11 @@ The continuous-time LQR controller $\mat{K} = \mat{R}^{-1}\mat{B}^\T\mat{S}$ der
    for any $\eta \in (1/2, \infty)$.
 3. **Phase margin**: the loop margin under phase perturbations is at least $60^\circ$ on both sides.
 4. **Disk margin**: the closed-loop poles lie outside a disk of radius $1/2$ centered at $(-1, 0)$.
-:::
+\end{proposition}
 
-::: {.proof}
-**Proof Sketch**
-
+\begin{proof}[Proof Sketch]
 The key is that the Riccati solution $\mat{S}$ serves as a Lyapunov function. Consider a perturbed controller
-$\mat{K}_\eta = \eta \mat{K}$ for $\eta > 0$. The closed-loop system becomes $\dot{\x} = (\mat{A} - \eta\mat{B}\mat{K})\x$.
+$\mat{K}_\eta = \eta \mat{K}$ for $\eta > 0$. The closed-loop system becomes $\dot\x = (\mat{A} - \eta\mat{B}\mat{K})\x$.
 Using $V = \x^\T\mat{S}\x$:
 \begin{equation}
 \dot{V} = \x^\T[(\mat{A} - \eta\mat{B}\mat{K})^\T\mat{S} + \mat{S}(\mat{A} - \eta\mat{B}\mat{K})]\x.
@@ -158,7 +154,7 @@ Rewriting,
 For the system to remain stable, we need $\dot{V} < 0$. This requires the term in brackets to be negative definite.
 The critical value occurs when the gain margin is half: at $\eta = 1/2$, the perturbation magnitude reaches the
 threshold. For $\eta \in (1/2, \infty)$, the dissipation inequality continues to hold, guaranteeing stability.
-:::
+\end{proof}
 
 This proposition is not academic: it explains why tuning an LQR controller by scaling the gain (increasing $\eta$ to be
 more aggressive) fails only when $\eta \leq 1/2$—and by then, the system is already far too aggressive for practical use.
@@ -202,9 +198,7 @@ which is a key form that appears throughout duality theory.
 
 Now we compute $V_{k+1} - V_k$ step by step.
 
-::: {.theorem}
-**Value Decrease = Contraction Certificate**
-
+\begin{theorem}[Value Decrease = Contraction Certificate]
 \label{thm:ch6:duality}
 Under the LQR-optimal feedback with gain defined by~\eqref{eq:ch6:gain-definition}:
 \begin{equation}
@@ -214,12 +208,10 @@ V_{k+1} - V_k = -\dx_k^\T\bigl(\mat{Q}_k + \mat{K}_k^\T\mat{R}_k\mat{K}_k\bigr)\
 \label{eq:ch6:value-drop}
 \end{equation}
 for some $\alpha > 0$ (the smallest eigenvalue of $\mat{Q}_k + \mat{K}_k^\T\mat{R}_k\mat{K}_k$).
-:::
+\end{theorem}
 
-::: {.proof}
-**Complete Step-by-Step Derivation**
-
-\textbf{Step 1: Compute $V_{k+1}$ using the closed-loop dynamics.} From~\eqref{eq:ch6:closed-loop}:
+\begin{proof}[Complete Step-by-Step Derivation]
+**Step 1: Compute $V_{k+1**$ using the closed-loop dynamics}. From~\eqref{eq:ch6:closed-loop}:
 \begin{align}
 \dx_{k+1} &= (\mat{A}_k - \mat{B}_k\mat{K}_k)\,\dx_k, \\
 V_{k+1} &= \dx_{k+1}^\T\mat{S}_{k+1}\dx_{k+1} \notag\\
@@ -227,7 +219,7 @@ V_{k+1} &= \dx_{k+1}^\T\mat{S}_{k+1}\dx_{k+1} \notag\\
 \label{eq:ch6:Vk1-full}
 \end{align}
 
-\textbf{Step 2: Write $V_{k+1} - V_k$.} We have $V_k = \dx_k^\T\mat{S}_k\dx_k$, so:
+**Step 2: Write $V_{k+1** - V_k$}. We have $V_k = \dx_k^\T\mat{S}_k\dx_k$, so:
 \begin{align}
 V_{k+1}-V_k &= \dx_k^\T\!\left[
 (\mat{A}_k-\mat{B}_k\mat{K}_k)^\T\mat{S}_{k+1}(\mat{A}_k-\mat{B}_k\mat{K}_k)
@@ -235,7 +227,7 @@ V_{k+1}-V_k &= \dx_k^\T\!\left[
 \label{eq:ch6:diff-raw}
 \end{align}
 
-\textbf{Step 3: Invoke the Riccati alternative form.} Equation~\eqref{eq:ch6:riccati-alt-form} states:
+**Step 3: Invoke the Riccati alternative form**. Equation~\eqref{eq:ch6:riccati-alt-form} states:
 \begin{equation}
 \mat{S}_k = \mat{Q}_k + (\mat{A}_k - \mat{B}_k\mat{K}_k)^\T \mat{S}_{k+1} (\mat{A}_k - \mat{B}_k\mat{K}_k).
 \end{equation}
@@ -246,7 +238,7 @@ Therefore:
 \label{eq:ch6:riccati-substitution}
 \end{equation}
 
-\textbf{Step 4: Substitute back.}
+**Step 4: Substitute back**:
 \begin{align}
 V_{k+1}-V_k &= \dx_k^\T\!\left[
 (\mat{S}_k - \mat{Q}_k) - \mat{S}_k\right]\!\dx_k \notag\\
@@ -255,7 +247,7 @@ V_{k+1}-V_k &= \dx_k^\T\!\left[
 \label{eq:ch6:first-drop}
 \end{align}
 
-\textbf{Step 5: Add the control cost.} The optimal value function satisfies a fundamental recursion:
+**Step 5: Add the control cost**. The optimal value function satisfies a fundamental recursion:
 \begin{equation}
 V_k = x_k^\T\mat{Q}_k x_k + u_k^\T\mat{R}_k u_k + V_{k+1}.
 \label{eq:ch6:cost-recursion}
@@ -282,18 +274,16 @@ Then:
 V_{k+1} - V_k \leq -\alpha_k \norm{\dx_k}^2.
 \label{eq:ch6:value-drop-alpha}
 \end{equation}
-:::
+\end{proof}
 
-::: {.callout-note title="Remark"}
-**Interpretation**
-
+\begin{remark}[Interpretation]
 The value decrease identity reveals the fundamental bargain of LQR: the cost is paid in two parts at each step:
 1. **State penalty**: $\dx_k^\T\mat{Q}_k\dx_k$ penalizes the state deviation from the reference.
 2. **Control penalty**: $\du_k^\T\mat{R}_k\du_k = \dx_k^\T\mat{K}_k^\T\mat{R}_k\mat{K}_k\dx_k$ penalizes the energy cost of the optimal control action.
 
 The sum of these two terms is the rate at which the Lyapunov function (Riccati-weighted squared norm) decreases.
 This is why LQR is so well-behaved: every unit of perturbation energy is forced to be paid down via the optimal control.
-:::
+\end{remark}
 
 
 ### Extracting Exponential Decay
@@ -344,17 +334,15 @@ and converting to Euclidean norm via the bounds on $\mat{S}_k$:
 This is a **discrete contraction inequality** with the Riccati matrix as the metric. The contraction rate $\rho$ is
 determined by the smallest eigenvalue of the stage cost and the condition number of the value matrix.
 
-::: {.callout-note title="Remark"}
-**Decay Rate Interpretation**
-
+\begin{remark}[Decay Rate Interpretation]
 The decay rate $\rho = 1 - \alpha/\overline{s}$ reveals a trade-off:
 - **Larger $\alpha$** (stronger stage cost): faster decay.
-- **Larger $\overline{s}$** (larger Riccati solution): slower decay, but more robust (larger basin of attraction).
+- **Larger $\overline{s**$} (larger Riccati solution): slower decay, but more robust (larger basin of attraction).
 - The condition number $\kappa_S := \overline{s}/\underline{s}$ appears in the Euclidean norm bound: worse conditioning
   means a larger factor in front of the exponential decay.
 
 Good LQR design balances aggressiveness (large $\alpha$) with robustness (well-conditioned $\mat{S}$).
-:::
+\end{remark}
 
 
 ## Worked Numerical Example: The Discrete Pendulum
@@ -541,7 +529,7 @@ The constant decay rate (last column) of $0.954$ confirms the theoretical predic
 
 For the continuous-time system:
 \begin{equation}
-\dot{\x} = \mat{A}\x + \mat{B}\uvec,
+\dot\x = \mat{A}\x + \mat{B}\uvec,
 \label{eq:ch6:ct-system}
 \end{equation}
 with cost:
@@ -732,16 +720,14 @@ This is precisely the contraction condition: **the Riccati solution simultaneous
 ### Gain Margin
 
 
-::: {.theorem}
-**Gain Margin of Continuous-Time LQR**
-
+\begin{theorem}[Gain Margin of Continuous-Time LQR]
 \label{thm:ch6:gain-margin}
 The continuous-time LQR controller with gain $\mat{K} = \mat{R}^{-1}\mat{B}^\T\mat{S}$ guarantees stability
 under any multiplicative perturbation $\mat{K}_\eta = \eta\mat{K}$ for $\eta \in (1/2, \infty)$.
-:::
+\end{theorem}
 
-::: {.proof}
-Consider the perturbed closed-loop system $\dot{\x} = (\mat{A} - \eta\mat{B}\mat{K})\x$. Using the value function
+\begin{proof}
+Consider the perturbed closed-loop system $\dot\x = (\mat{A} - \eta\mat{B}\mat{K})\x$. Using the value function
 $V = \x^\T\mat{S}\x$:
 \begin{align}
 \dot{V} &= \x^\T[(\mat{A} - \eta\mat{B}\mat{K})^\T\mat{S} + \mat{S}(\mat{A} - \eta\mat{B}\mat{K})]\x \notag\\
@@ -770,19 +756,17 @@ Thus:
 
 The condition $\dot{V} < 0$ requires the bracketed term to be positive definite. Assuming $\eta > 1/2$, we have
 $2\eta > 1$, which means the positive definite matrix $2\eta\mat{K}^\T\mat{R}\mat{K}$ dominates, and $\dot{V} < 0$ is maintained.
-:::
+\end{proof}
 
 
 ### Phase Margin
 
 
-::: {.theorem}
-**Phase Margin of Continuous-Time LQR**
-
+\begin{theorem}[Phase Margin of Continuous-Time LQR]
 \label{thm:ch6:phase-margin}
 The continuous-time LQR controller guarantees a phase margin of at least $60^\circ$ on both sides of the nominal
 open-loop transfer function.
-:::
+\end{theorem}
 
 The complete derivation connecting the return-difference inequality to the specific $60^\circ$ bound can be found in Anderson \& Moore, \emph{Optimal Control: Linear Quadratic Methods} (1990), Chapter 5, or Safonov \& Athans (1977). The key insight: the Riccati solution makes the closed-loop system ``strictly positive real,'' and by the Passivity Theorem, the allowable phase perturbation is bounded to $60^\circ$. This is a well-known classical result; we state it here as a reference, citing the established sources rather than reproducing the full derivation.
 
@@ -867,7 +851,7 @@ that are hard to control, and convergence is slower. The designer should either:
 
 The $H^\infty$ optimal control problem is: given a system with disturbances $\mat{w}$,
 \begin{equation}
-\dot{\x} = \mat{A}\x + \mat{B}_u\uvec + \mat{B}_w\mat{w},
+\dot\x = \mat{A}\x + \mat{B}_u\uvec + \mat{B}_w\mat{w},
 \label{eq:ch6:hinf-system}
 \end{equation}
 with controlled output:
@@ -1130,7 +1114,7 @@ This section develops the estimation side of the duality.
 
 Consider the system with process noise and output measurement:
 \begin{align}
-\dot{\x} &= \mat{A}(t)\x + \mat{B}(t)\uvec + \mat{G}_w w, \label{eq:ch6:process-noise} \\
+\dot\x &= \mat{A}(t)\x + \mat{B}(t)\uvec + \mat{G}_w w, \label{eq:ch6:process-noise} \\
 \vec{y} &= \mat{C}(t)\x + v, \label{eq:ch6:measurement}
 \end{align}
 where $w \sim \mathcal{N}(0, \mat{W})$ and $v \sim \mathcal{N}(0, \mat{V})$ are process
@@ -1158,16 +1142,16 @@ gain $\mat{K} = \mat{R}^{-1}\mat{B}^T\mat{S}$.
 ### The Extended Kalman Filter as Tangent-Space Estimation
 
 
-For nonlinear systems $\dot{\x} = f(\x) + G(\x)\uvec + w$, the Extended Kalman Filter (EKF)
+For nonlinear systems $\dot\x = f(\x) + G(\x)\uvec + w$, the Extended Kalman Filter (EKF)
 propagates the state estimate and covariance using the tangent-space (linearized) dynamics:
 \begin{align}
-\dot{\hat{\x}} &= f(\hat{\x}) + G(\hat{\x})\uvec
-+ \mat{L}(t)\bigl(\vec{y} - h(\hat{\x})\bigr), \label{eq:ch6:ekf-state} \\
+\dot{\hat\x} &= f(\hat\x) + G(\hat\x)\uvec
++ \mat{L}(t)\bigl(\vec{y} - h(\hat\x)\bigr), \label{eq:ch6:ekf-state} \\
 \dot{\mat{P}} &= \mat{A}(t)\mat{P} + \mat{P}\mat{A}(t)^T + \mat{G}_w \mat{W} \mat{G}_w^T
 - \mat{P}\mat{C}(t)^T \mat{V}^{-1} \mat{C}(t)\mat{P}, \label{eq:ch6:ekf-cov}
 \end{align}
-where $\mat{A}(t) = \frac{\partial f}{\partial \x}\big|_{\hat{\x}(t)}$ and
-$\mat{C}(t) = \frac{\partial h}{\partial \x}\big|_{\hat{\x}(t)}$.
+where $\mat{A}(t) = \frac{\partial f}{\partial \x}\big|_{\hat\x(t)}$ and
+$\mat{C}(t) = \frac{\partial h}{\partial \x}\big|_{\hat\x(t)}$.
 
 \begin{intuitionbox}
 The EKF is the estimation analogue of DDP: both linearize the system along a trajectory
@@ -1184,9 +1168,9 @@ DDP propagates *cost* backward (from the terminal condition); the EKF propagates
 The EKF has no convergence guarantees for nonlinear systems---the estimate may diverge
 if the linearization is poor. Contraction theory provides a rigorous alternative.
 
-An observer $\dot{\hat{\x}} = f(\hat{\x}) + G(\hat{\x})\uvec + L(\hat{\x})(\vec{y} - h(\hat{\x}))$
+An observer $\dot{\hat\x} = f(\hat\x) + G(\hat\x)\uvec + L(\hat\x)(\vec{y} - h(\hat\x))$
 is a *contracting observer* if the observer error dynamics
-$\dot{e} = \dot{\x} - \dot{\hat{\x}}$ are contracting in some metric $\mat{M}(\x)$:
+$\dot{e} = \dot\x - \dot{\hat\x}$ are contracting in some metric $\mat{M}(\x)$:
 \begin{equation}
 \sym\left(\mat{M} \left[\frac{\partial f}{\partial \x} - L(\x)\frac{\partial h}{\partial \x}\right]\right)
 + \dot{\mat{M}} \preceq -2\lambda \mat{M}.
@@ -1198,16 +1182,14 @@ the observer error dynamics. The observer gain $L(\x)$ plays the same role as th
 feedback gain $\mat{K}$ in control contraction metrics: it shapes the closed-loop
 dynamics to achieve contraction.
 
-::: {.theorem}
-**Observer-Controller Duality**
-
+\begin{theorem}[Observer-Controller Duality]
 \label{thm:ch6:observer-duality}
 The observer design problem --- find $L(\x)$ such that~\eqref{eq:ch6:contracting-observer}
 holds --- is the *dual* of the controller design problem via the substitutions
 $\mat{A} \leftrightarrow \mat{A}^T$, $\mat{B} \leftrightarrow \mat{C}^T$,
 $\mat{K} \leftrightarrow L^T$. A contraction metric for the observer is a contraction
 metric for the dual controller, and vice versa.
-:::
+\end{theorem}
 
 
 ### The Observability Gramian
@@ -1241,16 +1223,14 @@ anisotropy.
 When both observer and controller are available, the celebrated *separation principle*
 allows independent design:
 
-::: {.theorem}
-**Separation Principle**
-
+\begin{theorem}[Separation Principle]
 \label{thm:ch6:separation}
 For linear time-invariant systems, the optimal controller using estimated states
-$\uvec = -\mat{K}\hat{\x}$ achieves the same closed-loop eigenvalues as the full-state
+$\uvec = -\mat{K}\hat\x$ achieves the same closed-loop eigenvalues as the full-state
 feedback $\uvec = -\mat{K}\x$, with additional eigenvalues from the observer error
 dynamics. The controller gain $\mat{K}$ and observer gain $\mat{L}$ can be designed
 independently.
-:::
+\end{theorem}
 
 For nonlinear systems, the separation principle does not hold in general. However,
 when both the controller and observer are designed via contraction metrics, the

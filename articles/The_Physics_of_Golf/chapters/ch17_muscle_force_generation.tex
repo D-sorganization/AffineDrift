@@ -4,7 +4,7 @@
 \epigraph{``The power of a golf swing does not come from the club, nor from the body's size. It comes from the orchestra of muscles, each tuned to fire at the precise moment, each limited by the physics of how molecules generate force.''}{Adapted from biomechanics principle}
 
 \begin{laymansbox}{Why Muscle Biology Matters for Your Swing}{context:muscle-matters}
-Muscle tissue has speed-dependent force limits. During concentric shortening, faster contraction generally reduces available force, while activation dynamics delay the conversion of neural command into joint torque. These facts do not by themselves prove a specific coaching rule, but they help explain why late-downswing corrections are difficult and why impact-phase control claims require model-specific support.
+You've been told to ``stay strong through impact'' or ``accelerate down the line.'' But here's what physics reveals: your muscles have built-in speed limitations. The faster they contract, the \emph{less} force they can produce. This isn't a flaw—it's a fundamental law written into the molecular structure of muscle. When you swing at your maximum speed, your muscles are actually at their weakest. This is why the drift-to-control ratio explodes at impact. Understanding muscle biology doesn't just explain your limitations; it shows you where your swing is most vulnerable to loss of control.
 \end{laymansbox}
 
 \section{Muscle Architecture: What a Muscle Actually Is}
@@ -51,7 +51,7 @@ Not all muscle fibers are created equal. The human body contains three main fibe
 \item[Type IIx (fast-twitch glycolytic)] Highest maximum shortening velocity, highest force production per fiber, rapid fatigue. Power from anaerobic glycolysis. Most powerful for brief bursts. About 5--15\% of untrained muscles (training and selection can increase this). \cite{Neumann2017}
 \end{description}
 
-Elite golfers often exhibit higher proportions of Type II fibers, especially IIa, which are suited to explosive movements. However, individual variation is large, and golf performance depends more on skill and technique than on fiber type distribution. \cite{Hume2005}
+Elite golfers often exhibit higher proportions of Type II fibers, especially IIa, which are suited to explosive movements. However, individual variation is large, and golf performance depends more on skill and technique than on fiber type distribution. \cite{HumeKeogh2005}
 \end{principle}
 
 \index{PCSA}
@@ -189,8 +189,8 @@ The force-velocity relationship for eccentric contractions shows that muscle can
 \textbf{Illustrative example:} Consider the extensor carpi radialis brevis (ECRB), a wrist extensor involved in club control. The following parameters are representative values typical of forearm muscles, but individual variation is substantial and depends on anatomical variation, training, and measurement technique. \cite{Delp1990, Rajagopal2016}
 \begin{itemize}
 \item Maximum isometric force: estimated from PCSA and specific tension (individual values vary)
-\item Maximum fiber velocity: model- and muscle-specific; use the fiber-velocity parameter from the selected Hill-type model rather than a generic hand/wrist constant \cite{Thelen2006, Rajagopal2016}
-\item Moment arm about wrist: configuration-dependent; use the value from the selected musculoskeletal model or measurement source rather than treating 0.015--0.035 m as universal \cite{Delp1990, Delp2007, Rajagopal2016}
+\item Maximum fiber velocity: typical values for hand/wrist muscles range 5--10 m/s \cite{Neumann2017}
+\item Moment arm about wrist: configuration-dependent; ranges 0.015--0.035 m across the range of wrist motion \cite{Murray2000}
 \item Maximum isometric torque: product of force and moment arm, varies with position and individual
 \end{itemize}
 
@@ -409,7 +409,7 @@ G(\bm{x})\bm{u} = \sum_{i} r_{j,i}(\bm{q}) a_i(\bm{q}, \dot{\bm{q}}, u_{\mathrm{
 \end{equation}
 
 \begin{laymansbox}{Why the Control Gain Decreases at High Speed}{context:gain-decreases}
-The effective control gain is not constant. It depends on state $\bm{x}$ through muscle length, contraction velocity, activation, pennation, and moment arms. In concentric shortening, the force-velocity factor $f_V(\dot{\ell})$ usually decreases as shortening speed increases, so the available torque in a chosen direction can be smaller when the system is moving fast. Combined with inertial terms that grow with speed, this can increase a model's drift-to-control ratio near impact. The conclusion depends on the selected muscle-tendon model and should not be inferred from clubhead speed alone.
+The control gain $G(\bm{x})$ is not constant—it depends on state $\bm{x}$, particularly on the angular velocity $\dot{\bm{q}}$. The force-velocity factor $f_V(\dot{\ell})$ decreases as velocity increases, so $G(\bm{x})$ is \emph{smaller} when the system is moving fast. At impact, when $\dot{\bm{q}}$ is maximal, the effective control authority is minimal. This is a fundamental constraint built into muscle tissue: you cannot apply large forces when moving fast. Combined with the drift forces (gravity and inertia) that \emph{increase} with velocity, the result is the drift-to-control ratio divergence at impact.
 \end{laymansbox}
 
 \begin{example}{Numerical Estimate: Effective Control Gain at Wrist}{ex:control-gain}
@@ -421,7 +421,7 @@ Consider the wrist joint with activation $a = 1$ (fully recruited):
 \item At maximum speed ($\dot{\theta}_{\mathrm{wrist}} = 100$ rad/s): $f_V \approx 0.1$, torque $\approx 2$ N·m
 \end{itemize}
 
-These numbers are illustrative parameter choices, not subject-independent measurements. A defensible estimate would use fiber velocity, tendon compliance, moment arms, and activation timing from a declared musculoskeletal model. Under the illustrative assumptions above, the available concentric torque drops sharply as shortening speed rises. Meanwhile, the drift force (inertial torque from swinging the club) is:
+The control gain has dropped by \emph{an order of magnitude} from rest to impact. Meanwhile, the drift force (inertial torque from swinging the club) is:
 \begin{equation}
 \tau_{\mathrm{drift}} = I_{\mathrm{club}} \ddot{\theta} + \text{(centrifugal, Coriolis)}
 \label{eq:drift-torque}
@@ -505,9 +505,9 @@ Understanding muscle force generation reveals why certain coaching cues are effe
 \begin{description}
 \item[\textbf{The Myth:}] A golfer should produce maximum muscle torque all the way to impact. Bigger muscles = bigger torque = longer drive.
 
-\item[\textbf{Model-bounded interpretation:}] Force-velocity limits and activation delay make late concentric corrections less effective than earlier planned acceleration in many musculoskeletal models. Stronger claims about injury risk, exact force loss, or an ideal coaching cue need swing-speed data, joint kinematics, EMG timing, and subject-specific muscle parameters.
+\item[\textbf{The Reality:}] At impact speeds ($v > 50$ m/s), muscle force-velocity limitations mean muscles produce $\lesssim 20\%$ of isometric force. Trying to ``accelerate into the ball'' at this point is both ineffective (muscles are weak) and risky (joints experience extreme reactive forces). The efficient swing accelerates heavily in the transition and early downswing (when muscles are capable) and then \emph{coasts} (controlled descent of inertia) into impact. Deceleration forces at impact are controlled by eccentric muscle activation (muscles braking), not concentric acceleration.
 
-\item[\textbf{Coaching cue reframe:}] The model supports caution about over-interpreting late muscular effort. It does not by itself prescribe a universal cue for every golfer.
+\item[\textbf{Coaching Cue Reframe:}] Instead of ``accelerate to impact,'' say ``accelerate the transition''—this is where muscles are most effective. The downswing should feel like release and flow, not continued muscular effort at the end.
 \end{description}
 \end{mythreality}
 

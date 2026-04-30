@@ -8,24 +8,13 @@ to avoid duplicated logic (DRY — Phase 2 consolidation).
 
 from __future__ import annotations
 
+import logging
 import os
 import re
 import sys
 from pathlib import Path
 
 from src.tools.utils import setup_logging
-from src.tools.utils.constants import (
-    LATEX_ABSTRACT_PATTERN,
-    LATEX_ALIGN_BEGIN_PATTERN,
-    LATEX_ALIGN_END_PATTERN,
-    LATEX_CUSTOM_COMMAND_BVEC_PATTERN,
-    LATEX_CUSTOM_COMMAND_SYMBOLS_PATTERN,
-    LATEX_EQUATION_BEGIN_PATTERN,
-    LATEX_EQUATION_END_PATTERN,
-    LATEX_KEYPOINT_PATTERN,
-    LATEX_LIMITATION_PATTERN,
-    LATEX_TIKZ_PATTERN,
-)
 from src.tools.utils.latex_utils import (
     clean_common_latex,
     convert_lists_to_html,
@@ -37,6 +26,8 @@ from src.tools.utils.latex_utils import (
     extract_body,
     extract_title,
 )
+
+logger = logging.getLogger(__name__)
 
 logger = setup_logging(__name__)
 
@@ -71,7 +62,7 @@ class LaTeXToHTMLConverter:
 
         # Convert abstract environment (HTML-specific styling)
         html = re.sub(
-            LATEX_ABSTRACT_PATTERN,
+            r"\\begin\{abstract\}(.*?)\\end\{abstract\}",
             r'<div class="abstract-section">\n<h2>Abstract</h2>\n<p>\1</p>\n</div>',
             html,
             flags=re.DOTALL,
@@ -84,8 +75,8 @@ class LaTeXToHTMLConverter:
         html = self.convert_equations(html)
 
         # Convert align environments
-        html = re.sub(LATEX_ALIGN_BEGIN_PATTERN, r"\\begin{align}", html)
-        html = re.sub(LATEX_ALIGN_END_PATTERN, r"\\end{align}", html)
+        html = re.sub(r"\\begin\{align\}", r"\\begin{align}", html)
+        html = re.sub(r"\\end\{align\}", r"\\end{align}", html)
 
         html = convert_references(html)
         html = convert_quotes(html)
@@ -101,7 +92,7 @@ class LaTeXToHTMLConverter:
         """Convert LaTeX equation environments to MathJax-friendly format."""
         # Display equations
         content = re.sub(
-            LATEX_EQUATION_BEGIN_PATTERN + r"(.*?)" + LATEX_EQUATION_END_PATTERN,
+            r"\\begin\{equation\}(.*?)\\end\{equation\}",
             r'<div class="equation">\n\\[\1\\]\n</div>',
             content,
             flags=re.DOTALL,
@@ -109,7 +100,7 @@ class LaTeXToHTMLConverter:
 
         # Already wrapped equations
         return re.sub(
-            r"\\\[(.*?)\\\]",
+            r'(?<!<div class="equation">\n)\\\[(.*?)\\\]',
             r'<div class="equation">\n\\[\1\\]\n</div>',
             content,
             flags=re.DOTALL,
@@ -140,13 +131,13 @@ class LaTeXToHTMLConverter:
 
         # Handle special colored boxes — convert to styled divs
         content = re.sub(
-            LATEX_KEYPOINT_PATTERN,
+            r"\\begin\{keypoint\}(?:\[[^\]]*\])?(.*?)\\end\{keypoint\}",
             r'<div class="keypoint-box"><strong>Key Point:</strong>\1</div>',
             content,
             flags=re.DOTALL,
         )
         content = re.sub(
-            LATEX_LIMITATION_PATTERN,
+            r"\\begin\{limitation\}(?:\[[^\]]*\])?(.*?)\\end\{limitation\}",
             r'<div class="limitation-box"><strong>Fundamental Limitation:</strong>\1</div>',
             content,
             flags=re.DOTALL,
@@ -165,12 +156,12 @@ class LaTeXToHTMLConverter:
         content = re.sub(r"\\caption\{[^}]+\}", "", content)
 
         # Convert custom commands to styled text
-        content = re.sub(LATEX_CUSTOM_COMMAND_BVEC_PATTERN, r"<strong>\1</strong>", content)
-        content = re.sub(LATEX_CUSTOM_COMMAND_SYMBOLS_PATTERN, r"<strong>\1</strong>", content)
+        content = re.sub(r"\\bvec\{([^}]+)\}", r"<strong>\1</strong>", content)
+        content = re.sub(r"\\(Feq|Ceq|Rdrift|Rinput)", r"<strong>\1</strong>", content)
 
         # Remove tikz and pgfplots entirely
         return re.sub(
-            LATEX_TIKZ_PATTERN,
+            r"\\begin\{tikzpicture\}.*?\\end\{tikzpicture\}",
             "[Figure: See PDF version]",
             content,
             flags=re.DOTALL,

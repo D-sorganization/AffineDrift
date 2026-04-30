@@ -74,27 +74,14 @@ export function updateHistorySidebar() {
     if (displayHistory.length === 0) {
         const li = document.createElement("li");
         li.className = "history-empty";
-        li.textContent = "No recent articles yet. ";
-        const a = document.createElement("a");
-        a.href = "/resources/articles.html";
-        a.textContent = "Explore articles";
-        li.appendChild(a);
+        li.textContent = "No recent articles yet";
         historyList.appendChild(li);
     } else {
         const fragment = document.createDocumentFragment();
         for (const item of displayHistory) {
             const li = document.createElement("li");
             const a = document.createElement("a");
-            let safeUrl = "#";
-            if (typeof item.url === "string") {
-                try {
-                    const parsed = new URL(item.url, window.location.origin);
-                    if (parsed.protocol === "http:" || parsed.protocol === "https:") {
-                        safeUrl = parsed.href;
-                    }
-                } catch (e) {}
-            }
-            a.href = safeUrl;
+            a.href = typeof item.url === "string" && !item.url.replace(/[\x00-\x20]/g, "").toLowerCase().startsWith("javascript:") ? item.url : "#";
             const displayTitle =
                 item.title.length > MAX_HISTORY_TITLE_LENGTH
                     ? item.title.substring(0, MAX_HISTORY_TITLE_LENGTH) + "..."
@@ -164,27 +151,14 @@ export function initArticleHistory() {
         if (!history || history.length === 0) {
             const li = document.createElement("li");
             li.className = "history-empty";
-            li.textContent = "No recent articles yet. ";
-            const a = document.createElement("a");
-            a.href = "/resources/articles.html";
-            a.textContent = "Explore articles";
-            li.appendChild(a);
+            li.textContent = "No recent articles yet";
             articlesHistoryList.appendChild(li);
         } else {
             const fragment = document.createDocumentFragment();
             for (const item of history) {
                 const li = document.createElement("li");
                 const a = document.createElement("a");
-                let safeUrl = "#";
-                if (typeof item.url === "string") {
-                    try {
-                        const parsed = new URL(item.url, window.location.origin);
-                        if (parsed.protocol === "http:" || parsed.protocol === "https:") {
-                            safeUrl = parsed.href;
-                        }
-                    } catch (e) {}
-                }
-                a.href = safeUrl;
+                a.href = typeof item.url === "string" && !item.url.replace(/[\x00-\x20]/g, "").toLowerCase().startsWith("javascript:") ? item.url : "#";
                 a.textContent = item.title;
                 li.appendChild(a);
                 fragment.appendChild(li);

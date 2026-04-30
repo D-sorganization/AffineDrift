@@ -102,18 +102,12 @@
 
     const links = [entry.url, entry.scholar_url]
       .filter(Boolean)
-      .map((url) => {
-        let safeUrl = "#";
-        try {
-          const parsed = new URL(url, window.location.origin);
-          if (parsed.protocol === "http:" || parsed.protocol === "https:") {
-            safeUrl = parsed.href;
-          }
-        } catch (e) {}
-        return `<li><a href="${escapeHtml(
-          safeUrl,
-        )}" target="_blank" rel="noopener noreferrer">${escapeHtml(url)}</a></li>`;
-      })
+      .map(
+        (url) =>
+          `<li><a href="${escapeHtml(
+            url,
+          )}" target="_blank" rel="noopener noreferrer">${escapeHtml(url)}</a></li>`,
+      )
       .join("");
 
     detailsEl.innerHTML = `

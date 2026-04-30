@@ -126,9 +126,9 @@ where:
 
 \item $P_{\text{Coriolis}} = -\dot{\bm{q}}^T \bm{C} \dot{\bm{q}} = 0$: Coriolis/centrifugal power. This is \emph{identically zero} by the skew-symmetry of $(\dot{\bm{M}} - 2\bm{C})$. Coriolis forces redistribute energy among coordinates but cannot change the total kinetic energy.
 
-\item $P_{\text{input}} = \bm{u}^T \dot{\bm{q}}$: power from muscular torques. This term can be positive or negative; eccentric muscle action and braking phases absorb mechanical energy rather than add it.
+\item $P_{\text{input}} = \bm{u}^T \dot{\bm{q}}$: power from muscular torques (always non-negative; muscles do positive work).
 
-\item $P_{\text{constraint}} = \bm{\lambda}^T \bm{J}_c \dot{\bm{q}} = 0$: power from ideal bilateral constraint forces in the declared generalized-coordinate model. This statement assumes the constraint is holonomic, time-independent, and lossless; compliant grips, slip, impact, and damping belong in separate force or loss terms.
+\item $P_{\text{constraint}} = \bm{\lambda}^T \bm{J}_c \dot{\bm{q}} = 0$: power from constraint forces (always zero, by the constraint condition).
 \end{itemize}
 \end{theorem}
 
@@ -185,13 +185,13 @@ P_{\text{constraint}} = \mathbf{0}
 \end{theorem}
 
 \begin{laymansbox}{The Physical Meaning}{inplain:constraint_power_meaning}
-For an ideal time-independent constraint, admissible velocities satisfy $\bm{J}_c\dot{\bm{q}}=\bm{0}$, so $\dot{\bm{q}}$ lies in the null space of $\bm{J}_c$. The associated ideal constraint forces act in the range of $\bm{J}_c^T$, which is perpendicular to that null space.
+The velocity $\dot{\bm{q}}$ is always in the null space of $\bm{J}_c$ (it's the only direction that maintains the constraint). Constraint forces act in the range of $\bm{J}_c^T$, which is perpendicular to the null space.
 
-Thus the ideal constraint contribution is perpendicular to the admissible generalized velocity and does zero work on the total constrained system. This is a model statement, not a claim that real grips, joints, and tissues are perfectly lossless.
+So constraint forces are always perpendicular to velocity, and perpendicular forces do zero work. This is fundamental: a force perpendicular to motion cannot change the kinetic energy directly.
 
-Yet this does not mean constraints cannot change energy partition between segments. It means the ideal constraint equations redistribute energy internally while total energy changes are accounted for by muscles, gravity, damping, compliance, aerodynamic drag, and impact.
+Yet this doesn't mean constraints can't change energy partition between segments. It means they do so while keeping total energy constant—they're pure redistribution mechanisms.
 
-This is why constraint forces are useful in the golf swing model: they can transfer energy from the arm to the club without adding net work in the idealized system. In a measured swing, the size of non-ideal losses must be estimated rather than assumed away.
+This is why constraint forces are so useful in the golf swing: they can transfer energy from the arm to the club without "using up" the total energy. It's lossless energy transfer.
 \end{laymansbox}
 
 %============================================================================
@@ -582,7 +582,7 @@ At $384$ W, the club's kinetic energy is increasing at an enormous rate. Over ju
 
 \item \textbf{Power decomposition:} Power comes from gravity (during downswing), Coriolis effects, muscular input (early downswing), and constraint forces (which contribute zero net power but enable local transfers).
 
-\item \textbf{Constraint forces redistribute energy in the ideal model:} Ideal bilateral constraints do zero net work on the total constrained system, but they redistribute energy between segments. Real grips, joints, damping, and impact can add losses or external work that must be modeled separately.
+\item \textbf{Constraint forces enable lossless energy transfer:} Constraint forces do zero net work to the system, but they redistribute energy between segments. This is the mechanism of the kinetic chain.
 
 \item \textbf{Energy partition:} Energy starts concentrated in the torso (hips and shoulders) and gradually flows to the arm and club. By impact, more than 50\% of kinetic energy is in the club.
 

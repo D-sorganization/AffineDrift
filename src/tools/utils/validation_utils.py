@@ -4,11 +4,14 @@ This module provides base classes and utilities for validating data structures
 using Pydantic models.
 """
 
+import logging
 from typing import Any, TypeVar
 
 from pydantic import BaseModel, ConfigDict, ValidationError
 
 from .logging_utils import setup_logging
+
+logger = logging.getLogger(__name__)
 
 logger = setup_logging(__name__)
 

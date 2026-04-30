@@ -5,11 +5,7 @@ from typing import Any
 
 from src.core.contracts import check_finite_array, check_positive, require
 
-from .ilqr_solver import (  # noqa: F401  # reason: API re-export
-    ILQRSolver,
-    NDArray,
-    TrajectoryOptimizer,
-)
+from .ilqr_solver import ILQRSolver, NDArray, TrajectoryOptimizer  # noqa: F401
 
 
 def get_default_optimizer() -> TrajectoryOptimizer:

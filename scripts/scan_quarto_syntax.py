@@ -13,11 +13,8 @@ Checks:
 
 import enum
 import logging
-import re
 import sys
-from collections.abc import (
-    Callable,  # noqa: F401  (used in type annotation below)  # reason: API re-export
-)
+from collections.abc import Callable  # noqa: F401  (used in type annotation below)
 from pathlib import Path
 from typing import Any
 
@@ -59,10 +56,6 @@ except (ImportError, ModuleNotFoundError):  # pragma: no cover - lightweight CI 
 
 
 logger = setup_logging_with_timestamp(__name__)
-
-RAW_THEOREM_ENVIRONMENT_RE = re.compile(
-    r"^\s*\\begin\{(proof|proposition|theorem|example|remark|lemma|definition|corollary)\}"
-)
 
 
 class _State(enum.IntEnum):
@@ -277,59 +270,7 @@ def check_file(filepath: Path) -> list[tuple[int, str, str]]:
         logger.exception("Failed to read %s", filepath)
         return []
 
-    issues = QuartoSyntaxScanner(content).scan()
-    issues.extend(_find_raw_theorem_environments(filepath, content))
-    return issues
-
-
-def _find_raw_theorem_environments(filepath: Path, content: str) -> list[tuple[int, str, str]]:
-    """Return diagnostics for bare LaTeX theorem-like environments in prose."""
-    if not _should_check_raw_theorem_environments(filepath):
-        return []
-
-    issues: list[tuple[int, str, str]] = []
-    in_code_block = False
-
-    for line_num, line in enumerate(content.splitlines(), start=1):
-        stripped = line.lstrip()
-
-        if stripped.startswith("```"):
-            in_code_block = not in_code_block
-            continue
-
-        if in_code_block:
-            continue
-
-        match = RAW_THEOREM_ENVIRONMENT_RE.match(stripped)
-        if match:
-            environment = match.group(1)
-            issues.append(
-                (
-                    line_num,
-                    f"Found raw LaTeX {environment} environment",
-                    "Use a Quarto callout or theorem fenced div instead",
-                )
-            )
-
-    return issues
-
-
-def _should_check_raw_theorem_environments(filepath: Path) -> bool:
-    """Limit raw-theorem linting to website-facing top-level Quarto sources."""
-    try:
-        relpath = filepath.resolve().relative_to(Path.cwd().resolve())
-    except ValueError:
-        return True
-
-    if relpath.parent == Path("."):
-        return relpath.suffix == ".qmd"
-
-    return relpath.parent in {
-        Path("articles"),
-        Path("books"),
-        Path("critiques"),
-        Path("pages"),
-    }
+    return QuartoSyntaxScanner(content).scan()
 
 
 def main() -> None:

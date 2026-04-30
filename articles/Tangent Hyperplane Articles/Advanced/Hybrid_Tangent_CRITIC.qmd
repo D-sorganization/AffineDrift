@@ -1142,58 +1142,6 @@ To make this article **defensible against expert review**, prioritize:
 
 **After revision:** This article can serve as a **bridge** between the smooth Tangent Hyperplane framework and non-smooth mechanics, making hybrid systems accessible to readers who understand linearization but not impact mechanics.
 
-<section class="critics-comments">
-  <button class="critics-comments-header" aria-expanded="false">
-    <h2>Critics' Comments</h2>
-    <span class="critics-comments-icon">💬</span>
-  </button>
-  <div class="critics-comments-content">
-    <div class="critics-comments-inner">
-      <p class="critics-intro">
-        Every theory faces scrutiny. Here's what skeptics and alternative perspectives say:
-      </p>
-
-      <div class="critic-item">
-        <div class="critic-perspective">
-          <span class="critic-label">Alternative View:</span>
-          <h3>Measure Theory Limitations in Hybrid Environments</h3>
-        </div>
-        <p class="critic-argument">While the attempt to provide measure-theoretic grounding (claiming jump sets as measure-zero) handles simpler cases effectively, rigid assumptions about bounded variation break down entirely for systems with non-trivial chattering, singular reset maps, and Zeno behaviors without straightforward closure paths. Bounding jump contribution costs strictly to jump duration neglects impulsive costs intrinsic to real-world transitions (like cumulative energy loss in stochastic, rather than isolated, impacts), undermining generalization claims.</p>
-        <div class="author-response">
-          <strong>Our Response:</strong> This is a fair concern; our assumptions inherently model simple, isolated impacts correctly but over-index on ideal environments. More extensive formal theorems handling infinite-cost scenarios without arbitrary bounded variation closures should be explored in future extensions to maintain accuracy in generalized cases.
-        </div>
-      </div>
-
-      <div class="critic-item">
-        <div class="critic-perspective">
-          <span class="critic-label">Alternative View:</span>
-          <h3>Assumed Generalization of Saltation Matrices</h3>
-        </div>
-        <p class="critic-argument">The derivation of the saltation matrix depends fundamentally on scalar, affine guard functions mapping smoothly separated regions. Critics from non-smooth control theory would argue the model inappropriately glosses over multi-constraint configurations (e.g., intersection states requiring pseudoinverse techniques) and configuration-dependent guards exhibiting curvature, leaving practitioners implementing these equations for complex robots with unpredictable sensitivity issues.</p>
-        <div class="author-response">
-          <strong>Our Response:</strong> We acknowledge this limitation. We've structured the mathematical foundation for single-constraint, basic affine systems specifically for pedagogical accessibility, but bridging the framework to robust multibody system applications requires defining explicit constraints on curvature and transversality, which are missing here.
-        </div>
-      </div>
-
-      <div class="critic-item">
-        <div class="critic-perspective">
-          <span class="critic-label">Alternative View:</span>
-          <h3>Applicability vs Theoretical Optimism</h3>
-        </div>
-        <p class="critic-argument">Practical implementations in the paper rely heavily on custom unverified gradients within JAX and generalizations from over-simplified systems (like bouncing balls) to infer usefulness in high-degree-of-freedom contexts. Observers highlight the absence of empirical proofs mapping optimal bounds from idealized states to dynamic physical robots where parameter uncertainty is prevalent.</p>
-        <div class="author-response">
-          <strong>Our Response:</strong> True. Presenting unverified or conceptual autodiff code can be construed as preemptive. The framework establishes a structural template, but demands significant real-world convergence plotting and baseline benchmarking before substantiating robust physical implementation claims.
-        </div>
-      </div>
-
-      <div class="academic-note">
-        <strong>Note:</strong> Scientific discourse thrives on debate.
-        These critiques strengthen our understanding.
-      </div>
-    </div>
-  </div>
-</section>
-
 ---
 
 **Word count:** ~3,800 words

@@ -11,7 +11,7 @@
 
 ## Executive Summary
 
-This article claims a close relationship between contraction theory and tangent-space methods, asserting that the Riccati solution can serve as both a contraction metric and a value-function object. The mathematical observations are often useful in restricted settings, but the article needs clearer conditions:
+This article claims a "profound connection" between contraction theory and tangent space methods, asserting that the Riccati solution serves as both a contraction metric and a value function. While the mathematical observations are often correct in restricted settings, the article exhibits significant weaknesses:
 
 1. **Overstated duality claims**: The "stability ↔ optimality duality" is presented as bidirectional and universal, when it is actually unidirectional (LQR → contraction) and limited to specific problem classes.
 
@@ -1354,21 +1354,19 @@ With the remedies outlined above—tightening claims, adding missing proofs, val
 **Outcome**: This article is now harder to dismiss, harder to misunderstand, and harder to attack—if the suggested remedies are implemented.
 
 <section class="laymans-terms">
-  <h2>
   <button class="laymans-terms-header" aria-expanded="false">
-    <span class="laymans-terms-header-title">In Layman's Terms</span>
+    <h2>In Layman's Terms</h2>
     <span class="laymans-terms-icon">▼</span>
   </button>
-</h2>
   <div class="laymans-terms-content">
     <div class="laymans-terms-inner">
       <p class="laymans-terms-intro">
-        This critique highlights places where a useful local control argument is stated too broadly or without the needed assumptions.
+        This critique highlights significant flaws in a paper that tries to connect perfect mathematical safety with perfect efficiency. The reviewer found several instances where the mathematical claims are either exaggerated or unsupported.
       </p>
 
       <div class="laymans-item">
         <h3>A One-Way Street, Not a Two-Way Street</h3>
-        <p>The original paper presents optimality and stability as if they were interchangeable. The safer statement is that some optimal-control calculations can produce local stability certificates, while the reverse direction is generally non-unique.</p>
+        <p>The original paper claims that the best, most efficient way to do something is automatically the safest, and vice versa. However, the math only proves that the most efficient method is safe, but there are many safe methods that are not efficient at all.</p>
         <div class="analogy">
 <strong>Think of it like:</strong> wearing a seatbelt. All good drivers wear seatbelts, but just wearing a seatbelt doesn't automatically make you a good driver.
         </div>
@@ -1384,7 +1382,7 @@ With the remedies outlined above—tightening claims, adding missing proofs, val
 
       <div class="laymans-item">
         <h3>Humans Aren't Perfect Robots</h3>
-        <p>The paper treats human movement as if a stability-focused control model were sufficient. Real movement also reflects physiology, fatigue, sensory delay, learning history, comfort, and task strategy.</p>
+        <p>The paper assumes human muscles behave exactly like perfectly programmed machines prioritizing mathematical stability. It ignores real-world biology, where people often prioritize comfort, energy savings, or simply move out of habit.</p>
         <div class="analogy">
 <strong>Think of it like:</strong> assuming every commuter will take the exact mathematically shortest route to work. In reality, people take the scenic route, avoid bad intersections, or just stick to the path they know best.
         </div>
@@ -1392,14 +1390,14 @@ With the remedies outlined above—tightening claims, adding missing proofs, val
 
       <div class="laymans-item">
         <h3>Missing the Fine Print</h3>
-        <p>The article uses language associated with certified safety, but the proof obligations are not fully documented. A safety claim needs explicit assumptions, residual bounds, basin estimates, and independent verification.</p>
+        <p>The article makes huge promises about providing certified safety guarantees for critical systems. However, it completely skips providing the actual step-by-step mathematical proofs required to back those promises up.</p>
         <div class="analogy">
 <strong>Think of it like:</strong> a car salesman promising a vehicle is completely crash-proof but refusing to show you the safety crash test results. You can't just take their word for it when safety is on the line.
         </div>
       </div>
 
       <div class="key-takeaway">
-        <strong>Key Takeaway:</strong> The connection between efficiency and local stability can be useful, but broad safety claims need complete proofs and system-specific evidence.
+        <strong>Key Takeaway:</strong> While connecting efficiency and safety is a great idea in theory, you can't make absolute claims without bulletproof math and real-world evidence to back them up.
       </div>
     </div>
   </div>
@@ -1407,16 +1405,14 @@ With the remedies outlined above—tightening claims, adding missing proofs, val
 
 
 <section class="critics-comments">
-  <h2>
   <button class="critics-comments-header" aria-expanded="false">
-    <span class="critics-comments-header-title">Critics' Comments</span>
+    <h2>Critics' Comments</h2>
     <span class="critics-comments-icon">💬</span>
   </button>
-</h2>
   <div class="critics-comments-content">
     <div class="critics-comments-inner">
       <p class="critics-intro">
-        These alternative views identify where the critique itself should be stated carefully:
+        Every theory faces scrutiny. Here's what skeptics and alternative perspectives say:
       </p>
 
       <div class="critic-item">
@@ -1424,9 +1420,9 @@ With the remedies outlined above—tightening claims, adding missing proofs, val
 <span class="critic-label">Alternative View:</span>
 <h3>The Pragmatic Value of the "Duality" Heuristic</h3>
         </div>
-        <p class="critic-argument">The critique that the stability-optimality mapping is strictly unidirectional is mathematically important, but the relationship can still be useful as an engineering heuristic. Riccati-like structures can guide metric searches and controller design even when they do not establish a formal equivalence. The key is to label the result as a heuristic or sufficient-condition argument, not as a bidirectional theorem.</p>
+        <p class="critic-argument">The critique that the stability-optimality mapping is strictly unidirectional (LQR yields contraction, but the inverse is non-unique) is mathematically accurate, yet arguably misses the broader engineering context. In modern computational control, treating this relationship as a bidirectional "duality" is not a mathematical error, but a highly productive heuristic. By bridging these concepts, practitioners can systematically transform the notoriously non-convex search for Lyapunov functions into tractable, convex Semi-Definite Programs (SDPs). Insisting on perfect mathematical isomorphism ignores the operational reality that this heuristic reliably generates safe, high-performance controllers in high-dimensional systems where formal inverse optimality is practically impossible.</p>
         <div class="author-response">
-<strong>Our Response:</strong> Agreed. Riccati-like structures are useful for numerical metric searches, but the article should distinguish a design heuristic from a proved equivalence. Reframing the claim as a sufficient local construction preserves the method's utility without overstating the theorem.
+<strong>Our Response:</strong> We fully acknowledge the immense operational power of this heuristic. Leveraging Riccati-like structures to guide numerical metric searches is indeed a cornerstone of modern robust control. However, our critique centers on pedagogical clarity. When the text frames this as a formal "duality" without qualifying it as a pragmatic tool, it misleads students and theorists into assuming a deep geometric equivalence that does not exist. A simple reframing from "Mathematical Equivalence" to "Computational Heuristic" resolves this tension while preserving the method's utility.
         </div>
       </div>
 
@@ -1435,14 +1431,15 @@ With the remedies outlined above—tightening claims, adding missing proofs, val
 <span class="critic-label">Alternative View:</span>
 <h3>Local Stability is Sufficient for Receding Horizon Methods</h3>
         </div>
-        <p class="critic-argument">The objection regarding time-varying metrics and the Differential Riccati Equation can be too strong if it demands global, infinite-horizon guarantees from a finite-horizon method. In a receding-horizon setting, local tubes, recursive feasibility, and monitored metric conditioning may be the relevant proof objects.</p>
+        <p class="critic-argument">The objection regarding time-varying metrics and the Differential Riccati Equation (DRE)—specifically that DRE solutions do not guarantee uniform global bounds across arbitrary time horizons—applies classical, infinite-horizon Lyapunov standards to finite-horizon optimal control. In practice, algorithms like Contraction-DDP operate in a receding horizon framework (Model Predictive Control). As long as the time-varying metric establishes a local region of forward-invariance (a "tube") and the SDP solver ensures recursive feasibility step-by-step, the system is mathematically safe. Demanding a globally bounded, uniformly valid metric across all time is an unnecessarily rigid standard that would invalidate most modern, successful predictive control architectures.</p>
         <div class="author-response">
-<strong>Our Response:</strong> This is a valid limitation on the critique. The issue is not that finite-horizon or receding-horizon methods are invalid; it is that the article must state the required recursive-feasibility, tube, and conditioning assumptions if it wants to claim a certified local guarantee.
+<strong>Our Response:</strong> This is a strong and valid point; receding horizon control correctly trades global, infinite-horizon guarantees for verifiable, step-by-step local safety. The core of our critique is not that the method is unsafe, but rather that the article fails to explicitly document these necessary conditions. If the paper explicitly stated that stability relies on step-by-step recursive feasibility and required monitoring the metric's condition number to prevent local numerical ill-conditioning, it would align perfectly with modern MPC standards while remaining rigorous.
         </div>
       </div>
 
       <div class="academic-note">
-        <strong>Note:</strong> These comments narrow both the article's claims and this critique's claims.
+        <strong>Note:</strong> Scientific discourse thrives on debate.
+        These critiques strengthen our understanding.
       </div>
     </div>
   </div>

@@ -50,7 +50,7 @@ CONTRACTS_ENABLED = DBC_LEVEL != ContractLevel.OFF
 
 def set_contract_level(level: ContractLevel) -> None:
     """Set the global contract enforcement level at runtime."""
-    global DBC_LEVEL, CONTRACTS_ENABLED  # noqa: PLW0603  # reason: global state modification is intentional
+    global DBC_LEVEL, CONTRACTS_ENABLED  # noqa: PLW0603
     DBC_LEVEL = level
     CONTRACTS_ENABLED = level != ContractLevel.OFF
     logger.info("Contract enforcement level set to %s", level.value)
@@ -263,7 +263,7 @@ class ContractChecker:
         return True
 
 
-def invariant_checked(func: F) -> F:  # noqa: UP047  # reason: type variable requirement
+def invariant_checked(func: F) -> F:  # noqa: UP047
     """Decorator to check class invariants after method execution."""
     if DBC_LEVEL == ContractLevel.OFF:
         return func

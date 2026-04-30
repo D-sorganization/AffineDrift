@@ -18,8 +18,6 @@ def test_entrypoints_are_now_thin(relative_path: str) -> None:
     """Legacy wrist launchers should stay thin after the module split."""
     repo_root = Path(__file__).resolve().parents[2]
     entrypoint = repo_root / relative_path
-    if not entrypoint.exists():
-        pytest.skip(f"Path does not exist: {entrypoint}")
     line_count = len(entrypoint.read_text(encoding="utf-8").splitlines())
     assert line_count <= 80
 
@@ -38,5 +36,4 @@ def test_split_modules_compile() -> None:
         repo_root / "src" / "tools" / "wrist_universal_joint" / "qt_window.py",
     ]
     for path in module_paths:
-        if path.exists():
-            py_compile.compile(str(path), doraise=True)
+        py_compile.compile(str(path), doraise=True)

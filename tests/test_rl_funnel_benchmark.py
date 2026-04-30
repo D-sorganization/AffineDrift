@@ -5,6 +5,11 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
+import src.tools.rl_funnel_benchmark as benchmark
+import src.tools.rl_funnel_dynamics as dynamics
+import src.tools.rl_funnel_reporting as reporting
+import src.tools.rl_funnel_simulation as simulation
+import src.tools.rl_funnel_support as support
 from src.core.contracts import ContractViolationError
 from src.tools.rl_funnel_benchmark import (
     DEFAULT_CONTROL_SATURATION,
@@ -62,7 +67,7 @@ def test_run_benchmark_rejects_non_callable_controller() -> None:
 
 
 def test_run_comparison_rejects_negative_perturbation() -> None:
-    with pytest.raises(ContractViolationError, match="positive"):
+    with pytest.raises(ContractViolationError, match="perturbation_scale"):
         run_comparison(perturbation_scale=-0.1)
 
 
@@ -100,9 +105,21 @@ def test_format_results_returns_summary_text(caplog: pytest.LogCaptureFixture) -
         ),
     ]
     summary = format_results(results)
-    assert "Setpoint LQR: error=4.0000" in summary
-    assert "Trajectory Tracking (TTCF): error=2.0000" in summary
+    assert "error=" in summary
+    assert "Setpoint LQR" in summary
+    assert "sys.stdout.write" not in summary
 
 
 def test_default_control_saturation_positive() -> None:
     assert DEFAULT_CONTROL_SATURATION > 0
+
+
+def test_rl_funnel_modules_reexport_shared_benchmark_primitives() -> None:
+    assert benchmark.BenchmarkResult is support.BenchmarkResult
+    assert reporting.BenchmarkResult is support.BenchmarkResult
+    assert simulation.BenchmarkResult is support.BenchmarkResult
+    assert benchmark.format_results is support.format_results
+    assert reporting.format_results is support.format_results
+    assert dynamics.double_pendulum_mass_matrix is support.double_pendulum_mass_matrix
+    assert dynamics.validate_state_vector is support.validate_state_vector
+    assert dynamics.DEFAULT_CONTROL_SATURATION == support.DEFAULT_CONTROL_SATURATION

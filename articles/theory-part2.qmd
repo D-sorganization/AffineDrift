@@ -14,12 +14,10 @@ format:
 ```{=html}
 <!-- In Layman's Terms Section - Simplified overview for non-technical readers -->
 <section class="laymans-terms">
-  <h2>
   <button class="laymans-terms-header" aria-expanded="false">
-    <span class="laymans-terms-header-title">In Layman's Terms</span>
+    <h2>In Layman's Terms</h2>
     <span class="laymans-terms-icon">▼</span>
   </button>
-</h2>
   <div class="laymans-terms-content">
     <div class="laymans-terms-inner">
       <p class="laymans-terms-intro">
@@ -206,12 +204,9 @@ where the *drift torque* is defined by evaluating the passive terms at the actua
 
 $$\tau_{\text{drift}}\big(x(t)\big)
   =
-  \begin{bmatrix}
-    M_{qq}(q,\eta) & M_{q\eta}(q,\eta)
-  \end{bmatrix}
-  a_{\text{drift}}\big(x(t)\big),$$
+  M_{q}(q,\eta)\,\big[a_{\text{drift}}(x(t))\big]_{1:n},$$
 
-where $a_{\text{drift}}(x(t))$ is the full drift acceleration vector, including both rigid and flexible components. Writing the rigid-torque row block explicitly keeps the recoil term $M_{q\eta}\ddot{\eta}_{\text{drift}}$ visible instead of hiding it behind an undefined shorthand.
+and $M_{q}$ denotes the block of the inertia matrix mapping rigid accelerations to generalized torques (see the Appendices for details).
 
 Physically, $\tau_{\text{drift}}$ represents the generalized torque required to sustain the passive acceleration $a_{\text{drift}}$. Since $a_{\text{drift}}$ is the system's natural response to its own internal state (gravity, elasticity, velocity coupling), $\tau_{\text{drift}}$ captures the 'inertial cost' of the system's current momentum and configuration. Subtracting this cost from the total torque reveals the surplus provided by the input.
 
@@ -274,7 +269,7 @@ A critical practical limitation is that the ZTCF trajectory is **not directly ob
 
 3. **Initial condition sensitivity.** Because $\dot{x}^{\text{ZTCF}} = f(x^{\text{ZTCF}})$ is a nonlinear ODE, small errors in the initial state $(q_0, \dot{q}_0)$ at the moment of ZTCF branching will cause the counterfactual trajectory to diverge exponentially over time. The ZTCF is most reliable over short time horizons (tens of milliseconds) near the branch point.
 
-These challenges mean that ZTCF-based analyses must be validated against simulation data with known ground truth, not directly against raw motion capture. See [ZTCF Identifiability Critique](../critiques/ztcf_identifiability.html) for a more detailed treatment.
+These challenges mean that ZTCF-based analyses must be validated against simulation data with known ground truth, not directly against raw motion capture. See [ZTCF Identifiability Critique](../../critiques/ztcf_identifiability.html) for a more detailed treatment.
 :::
 
 ### Decomposing the drift

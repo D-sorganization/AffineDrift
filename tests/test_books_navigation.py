@@ -4,6 +4,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
+pytestmark = pytest.mark.content_lint
+
 REPO_ROOT = Path(__file__).resolve().parents[1]
 QUARTO_CONFIG = REPO_ROOT / "_quarto.yml"
 BOOKS_DIR = REPO_ROOT / "books"
@@ -23,12 +27,24 @@ def test_quarto_render_includes_books_folder() -> None:
     assert "books/**/*.qmd" in quarto
 
 
-def test_navbar_includes_books_and_textbooks() -> None:
-    """Learn menu should expose the website books hub and both full textbooks."""
+def test_navbar_includes_books_tab() -> None:
+    """Book-related pages are linked from the navbar.
+
+    Issue #2343: Add books section to top-level navigation now that the four
+    book pages are rendered and expected to be navigable.
+    """
     quarto = QUARTO_CONFIG.read_text(encoding="utf-8")
     assert "books/index.html" in quarto
-    assert "articles/The_Physics_of_Golf/quarto/index.html" in quarto
-    assert "articles/The_Geometry_of_Motion/quarto/index.html" in quarto
+
+
+def test_navbar_includes_tools_and_repositories() -> None:
+    """Program/tools and repository hubs should be present in navbar links.
+
+    Issue #2343 identified these rendered sections as missing from navigation.
+    """
+    quarto = QUARTO_CONFIG.read_text(encoding="utf-8")
+    assert "pages/tools.html" in quarto
+    assert "repositories/repositories.html" in quarto
 
 
 def test_books_pages_exist_and_use_shared_sidebar() -> None:

@@ -113,16 +113,6 @@ class GolfHole:
         dy = self.pin_position[1] - y
         return math.sqrt(dx * dx + dy * dy)
 
-    @property
-    def pin_x(self) -> float:
-        """X coordinate of the pin in meters."""
-        return self.pin_position[0]
-
-    @property
-    def pin_y(self) -> float:
-        """Y coordinate of the pin in meters."""
-        return self.pin_position[1]
-
     def _distance_to_tee(self, x: float, y: float) -> float:
         """Compute horizontal distance from a point to the tee box."""
         return math.sqrt((x - self.tee_position[0]) ** 2 + (y - self.tee_position[1]) ** 2)

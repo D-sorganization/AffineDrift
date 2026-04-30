@@ -1,11 +1,24 @@
+---
+title: "Tangent Hyperplane Framework: Reading Path"
+description: "Reading guide for exploratory tangent-space articles, critiques, and draft packages"
+toc: true
+toc-depth: 2
+---
+
 # Tangent Hyperplane Framework: Reading Path
-**A guided route through exploratory notes on nonlinear control and geometric intuition**
+**A guide to exploratory tangent-space articles, critiques, and draft packages**
 
 ---
 
 ## Overview
 
-This collection presents an exploratory geometric framework for understanding nonlinear dynamical systems through local tangent-space structure. The central technical point is narrower than many of the draft pages suggest: at a fixed state, the first variation gives a linear map for infinitesimal perturbations. Finite-step prediction, accumulated error, and controller performance require residual bounds and validation.
+This collection presents an AffineDrift synthesis about tangent-space descriptions of nonlinear dynamical systems. The narrow mathematical premise is standard: for smooth dynamics, the first variation along a trajectory is governed by a linear variational equation. The broader claims about control design, finite-time accumulation, and cross-domain interpretation remain exploratory and should be read together with the critique pages.
+
+::: {.callout-warning}
+## Editorial Status
+
+These pages are working notes and draft articles, not peer-reviewed reference material. Treat statements about "exactness" as first-order or infinitesimal statements unless a page gives explicit finite-scale residual bounds and assumptions.
+:::
 
 **Target Audience:**
 - Graduate students in control theory, robotics, biomechanics
@@ -23,14 +36,14 @@ This collection presents an exploratory geometric framework for understanding no
 
 ## Learning Tracks
 
-We provide three learning paths depending on your goals:
+The following reading paths describe emphasis rather than prerequisites for a finished textbook.
 
 ### Track 1: **Conceptual Understanding** (No equations)
 *Goal: Understand "why" without "how"*
 - Start with Layman's Terms summaries
 - Read motivational sections only
 - Skip mathematical derivations
-- **Time:** 2-3 hours
+- **Estimated time:** 2-3 hours
 
 ### Track 2: **Applied Practitioner** (Implement algorithms)
 *Goal: Use methods in your work*
@@ -38,27 +51,27 @@ We provide three learning paths depending on your goals:
 - Focus on algorithm pseudocode
 - Study case studies closely
 - Implement examples in Python/MATLAB
-- **Time:** 2-3 weeks
+- **Estimated time:** 2-3 weeks
 
-### Track 3: **Technical Review** (Full derivations and caveats)
-*Goal: Understand the claims well enough to evaluate or extend them*
-- Read the main pages, appendices, and critique pages together
+### Track 3: **Theoretical Mastery** (Full rigor)
+*Goal: Deep understanding, prepare for research*
+- Read everything including appendices
 - Work through all derivations
 - Study critical reviews
 - Solve problem sets (future addition)
-- **Time:** 1-2 months
+- **Estimated time:** 1-2 months
 
 ---
 
 ## Part I: Foundations (Required for All)
 
-### 1. **Tangent_Hyperplanes_Unified_Thesis.qmd** 📘 CORE DOCUMENT
+### 1. **Tangent_Hyperplanes_Unified_Thesis.qmd** - Core Draft
 **Prerequisite:** None (self-contained)
 **Difficulty:** ⭐⭐⭐ Moderate
 **Time:** 4-6 hours
 
-**What You'll Learn:**
-- Part I: Where tangent spaces provide exact infinitesimal structure
+**What it covers:**
+- Part I: Why tangent spaces are exact, not approximate
 - Part II: How integration preserves superposition of variations
 - Part III: How DDP/iLQR/MPC exploit this structure
 
@@ -67,9 +80,9 @@ We provide three learning paths depending on your goals:
 - State transition operators
 - Residuals as manifold curvature
 - Hamiltonian formulation
-- Worked DDP/iLQR algorithm sketches with case studies
+- Complete DDP/iLQR algorithms with case studies
 
-**Why Start Here:** This is the broadest reference in the package. Read it together with the critique pages before treating any finite-time or control-design claim as established.
+**Why start here:** It is the longest current statement of the framework. It should still be cross-read with the critique pages.
 
 **Supplementary Materials:**
 - `LAYMANS_TERMS_SUMMARY.qmd` - Non-technical overview (read first if intimidated)
@@ -79,17 +92,17 @@ We provide three learning paths depending on your goals:
 
 ---
 
-### 2. **Tangent_Hyperplanes_Golf_Application.md** 🏌️ OPTIONAL SUPPLEMENT
+### 2. **Tangent_Hyperplanes_Golf_Application.md** - Optional Supplement
 **Prerequisite:** Unified Thesis (Part I only)
 **Difficulty:** ⭐⭐ Easy
 **Time:** 1 hour
 
-**What You'll Learn:**
+**What it covers:**
 - Application to biomechanics (golf swing)
 - Why coaching decomposition makes mathematical sense
 - Connection to sports science
 
-**Why Read:** If you're interested in human movement, this makes the abstract concrete.
+**Why read:** If you are interested in human movement, this provides an application-oriented bridge. It should not be treated as empirical validation by itself.
 
 ---
 
@@ -97,25 +110,25 @@ We provide three learning paths depending on your goals:
 
 *After mastering Part I, these articles extend the framework in specific directions.*
 
-### 3. **Residual-Aware_Control.qmd** 📊 NEW
+### 3. **Residual-Aware_Control.qmd**
 **Prerequisite:** Unified Thesis (Parts I-III)
 **Difficulty:** ⭐⭐⭐⭐ Advanced
 **Time:** 3-4 hours
 
-**What You'll Learn:**
+**What it covers:**
 - Quantitative residual bounds with explicit constants
 - Real-time residual monitoring for control switching
 - Curvature-adaptive timesteps in DDP
 - Tube MPC with geometric residual bounds
 
-**Working contribution:** Treats residuals as candidate diagnostics for when local models may be insufficient.
+**Working claim:** Residual estimates may be useful as control-design diagnostics.
 
 **Applications:**
 - Quadrotor: Hover (low curvature) vs. aerobatics (high curvature)
 - Humanoid gait: Foot strike = curvature spike
 - Spacecraft: Gimbal lock = curvature singularity
 
-**Why Read:** Connects the local theory to a practical question: when is a linearized prediction no longer reliable enough for the intended task?
+**Why read:** It is the most direct draft on finite-scale error terms and when a local linear model needs to be refreshed.
 
 **Supplementary:**
 - `Residual-Aware_Control_LAYMAN.qmd` - Accessible explanation
@@ -123,25 +136,25 @@ We provide three learning paths depending on your goals:
 
 ---
 
-### 4. **Contraction_Tangent_Unification.qmd** 🔄 NEW
+### 4. **Contraction_Tangent_Unification.qmd**
 **Prerequisite:** Unified Thesis + familiarity with Lyapunov stability
 **Difficulty:** ⭐⭐⭐⭐⭐ Expert
 **Time:** 4-5 hours
 
-**What You'll Learn:**
-- Contraction theory (Lohmiller & Slotine) via tangent-bundle language
-- Conditional links between stability analysis and optimal-control calculations
+**What it covers:**
+- Contraction theory (Lohmiller & Slotine) via tangent bundle
+- Local relationships between contraction-style metrics and Riccati-style objects
 - Contraction metrics as Riemannian geometry on tangent spaces
-- How contraction constraints can be added to trajectory optimization, and what must be checked before claiming convergence
+- How contraction constraints might be combined with trajectory optimization
 
-**Working contribution:** Frames contraction analysis and trajectory optimization as closely related local calculations, while leaving global or finite-time claims dependent on additional assumptions.
+**Working claim:** Certain contraction and local optimal-control objects can be compared through tangent-space metrics. The strongest version of this claim is limited to specific assumptions.
 
 **Applications:**
-- Checking DDP convergence conditions for specific systems
-- Designing controllers with explicit local stability certificates
-- Understanding when LQR assumptions are strong enough for the intended claim
+- Proving DDP convergence for specific systems
+- Designing controllers with explicit stability certificates when the required assumptions hold
+- Understanding when LQR is globally optimal
 
-**Why Read:** If you know contraction theory, this shows a possible link to optimization. If you know DDP, this shows how stability certificates might be added and where the proof obligations enter.
+**Why read:** It identifies where stability certificates and optimization recursions use related local objects, while the critique page records the current limits.
 
 **Supplementary:**
 - `Contraction_Tangent_LAYMAN.qmd` - Why trajectories "forget" initial conditions
@@ -149,26 +162,26 @@ We provide three learning paths depending on your goals:
 
 ---
 
-### 5. **Hybrid_Tangent_Spaces.qmd** 🔀 NEW
+### 5. **Hybrid_Tangent_Spaces.qmd**
 **Prerequisite:** Unified Thesis + basic knowledge of hybrid systems
 **Difficulty:** ⭐⭐⭐⭐ Advanced
 **Time:** 3-4 hours
 
-**What You'll Learn:**
+**What it covers:**
 - Extending tangent space framework to discontinuous systems
 - Each mode has smooth dynamics (tangent space applies)
 - Guard conditions = tangent space jumps
-- Impact maps as instantaneous rotations in tangent bundle
+- Impact maps as jump maps acting on perturbations
 - DDP for hybrid systems (mode-aware optimization)
 
-**Key Innovation:** Addresses "C¹ smoothness is unrealistic" criticism—shows framework extends to impacts, friction, switches.
+**Working claim:** Smooth tangent-space reasoning can be used within modes, while guards and jumps require separate hybrid-system treatment.
 
 **Applications:**
 - Bipedal walking (foot strike = impact → discrete jump in tangent space)
 - Robotic grasping (contact = mode switch)
 - Chemical reactors (phase transitions = guard crossings)
 
-**Why Read:** Most real systems are hybrid (contact, switches, saturation). This makes the framework applicable to actual robots and biomechanics.
+**Why read:** It is the relevant draft for contact, impact, saturation, and switching examples.
 
 **Supplementary:**
 - `Hybrid_Tangent_LAYMAN.qmd` - Hopping on one foot (intuitive hybrid example)
@@ -298,7 +311,7 @@ For when you need to remember "what was that formula?"
 
 ### Pitfall 1: "Linearization is approximate, so results are approximate"
 
-**Why it's wrong:** The tangent space (derivative) is **exact**. What's approximate is using it far from the linearization point. DDP/iLQR re-linearize constantly, maintaining exactness.
+**More precise statement:** The derivative is the first-order object. Using it at finite scale introduces residual terms; iterative methods manage those terms by re-linearizing and checking improvement.
 
 **Where to learn more:** Unified Thesis Ch. 1, CRITICS_CORNER.qmd Criticism #2
 
@@ -306,7 +319,7 @@ For when you need to remember "what was that formula?"
 
 ### Pitfall 2: "This only works for small perturbations"
 
-**Why it's misleading:** A single linearization only works locally. But **iterative methods** (DDP, MPC) keep taking small steps with fresh linearizations. You can reach anywhere via many small steps.
+**More precise statement:** A single linearization is local. Iterative methods can expand practical reach when initialization, smoothness, constraints, and numerical conditioning are favorable.
 
 **Where to learn more:** Unified Thesis Ch. 10-11, Residual-Aware Control Part II
 
@@ -314,7 +327,7 @@ For when you need to remember "what was that formula?"
 
 ### Pitfall 3: "Residuals are errors I need to minimize"
 
-**Why it's misleading:** Residuals are **geometric features** (curvature), not modeling errors. They're inevitable for nonlinear systems. Goal is to **understand and account for** them, not eliminate them.
+**More precise statement:** In an ideal smooth model, residuals come from higher-order terms. In empirical models, residuals may also include modeling error, measurement noise, or unmodeled effects. The task is to estimate which source matters.
 
 **Where to learn more:** Unified Thesis Ch. 4, Residual-Aware Control Part I
 
@@ -322,7 +335,7 @@ For when you need to remember "what was that formula?"
 
 ### Pitfall 4: "Contraction is for stability, optimization is separate"
 
-**Why it's wrong:** Contraction and optimization are **dual perspectives**. Contraction = "trajectories converge," Optimization = "cost decreases." Both use Jacobians, both exploit tangent geometry.
+**More precise statement:** Contraction and optimization both use local differential information, but they are not generally equivalent. Any duality claim needs the problem class and assumptions stated.
 
 **Where to learn more:** Contraction Unification, entire article
 
@@ -350,8 +363,8 @@ A: Unified Thesis Part I (Ch. 3: Lyapunov) → Contraction Unification
 **Q: I'm implementing a walking robot with foot impacts. Relevant article?**
 A: Unified Thesis Parts I-II → Hybrid Systems (all parts)
 
-**Q: I want to write a paper using this framework. What's novel?**
-A: Read CRITICAL_REVIEW.md and CRITICS_CORNER.qmd carefully. Novel aspects: geometric framing, residual-as-feature, unification across methods.
+**Q: I want to write a paper using this framework. What should I verify first?**
+A: Read CRITICAL_REVIEW.md and CRITICS_CORNER.qmd carefully. Separate standard mathematical facts from AffineDrift's interpretive synthesis before claiming novelty.
 
 **Q: I'm an advisor evaluating a student's thesis using this. Quality assessment?**
 A: TECHNICAL_ASSESSMENT.md (overall B+/A-) + CRITICAL_REVIEW.md (lists weaknesses)
@@ -448,7 +461,7 @@ This framework synthesizes ideas from:
 - Trajectory optimization (Bryson, Ho, Tassa)
 - Biomechanics (McMahon, Alexander)
 
-We stand on the shoulders of giants. The contribution is **synthesis and geometric framing**, not invention of new mathematics.
+The contribution claimed here is synthesis and geometric framing, not invention of new mathematics.
 
 ---
 
@@ -456,15 +469,15 @@ We stand on the shoulders of giants. The contribution is **synthesis and geometr
 
 **If you have 30 minutes:** Read any LAYMANS summary
 **If you have 2 hours:** Read Unified Thesis Part I only
-**If you have 1 day:** Read the Unified Thesis with the critique pages open
-**If you have 1 week:** Read the Unified Thesis, one advanced article, and implement a small case study
-**If you have 1 month:** Read the full package, compare the critiques, and test one extension in your domain
+**If you have 1 day:** Read Unified Thesis completely
+**If you have 1 week:** Unified Thesis + one advanced article + implement a case study
+**If you have 1 month:** Everything + critical reviews + implement all case studies + extend to your domain
 
-**Most important:** Do not read the draft pages as finished evidence summaries. Use the table above to check prerequisites and keep the limitation notes alongside the main claims.
+**Most important:** Do not read these pages as final claims. Use the table above to choose a route, and check the critique pages before relying on a result.
 
-**The goal is not to memorize formulas; it is to develop geometric intuition while keeping the mathematical scope conditions visible.**
+**The goal is not to memorize formulas. It is to develop geometric intuition while keeping the assumptions visible.**
 
-The useful habit is to separate exact local statements from finite-time conclusions that require residual bounds, model checks, and validation.
+The useful takeaway is local: trajectories move through state spaces, tangent objects describe first-order perturbations, and residuals determine how far that local description can be trusted.
 
 ---
 

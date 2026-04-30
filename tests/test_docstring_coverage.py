@@ -36,13 +36,13 @@ def _collect_docstring_stats(src_root: Path) -> tuple[int, int, list[tuple[str, 
 
         for node in ast.walk(tree):
             if not isinstance(
-                node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef, ast.Module)
+                node, ast.FunctionDef | ast.AsyncFunctionDef | ast.ClassDef | ast.Module
             ):
                 continue
 
             # Skip dunder methods and private helpers (they are not public API)
             name = getattr(node, "name", "<module>")
-            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and name.startswith("_"):
+            if isinstance(node, ast.FunctionDef | ast.AsyncFunctionDef) and name.startswith("_"):
                 continue
 
             total += 1
@@ -92,10 +92,9 @@ class TestDocstringCoverage:
         _, _, missing = _collect_docstring_stats(src_root)
         # Filter out module-level items (lineno == 0)
         public_missing = [(p, ln, n) for p, ln, n in missing if ln > 0]
-        assert (
-            public_missing == []
-        ), "Public functions/classes missing docstrings in affine_control:\n" + "\n".join(
-            f"  {p}:{ln} — {n}" for p, ln, n in public_missing
+        assert public_missing == [], (
+            "Public functions/classes missing docstrings in affine_control:\n"
+            + "\n".join(f"  {p}:{ln} — {n}" for p, ln, n in public_missing)
         )
 
     def test_benchmark_result_has_docstring(self) -> None:

@@ -363,9 +363,9 @@ The lesson is that skilled golfers maintain a passive wrist position (neither co
 The kinetic chain would not exist without the ground. The ground provides the only external torque about the vertical axis (the $z$-axis in a typical coordinate system) that can drive the hips' rotation. This ground reaction force (GRF) sequencing is intimately connected to the proximal-to-distal motion of the kinetic chain.
 
 ::: {.callout-important}
-## Ground as the External Torque Channel
+## Ground as the Primary Torque Source
 
-In a grounded golf swing, net external yaw moments on the golfer-club system are transmitted through the feet-ground interaction. Muscles generate internal torques and posture changes that shape these reaction forces, but without an external reaction they cannot change the whole-body angular momentum about the vertical axis. In that sense, GRF is the external channel through which hip rotation is redirected or sustained during stance.
+In the golf swing, the hips rotate about the vertical axis. For this rotation to occur, an external torque must be applied. The only source of external torque about the vertical axis is the ground reaction force at the feet. Therefore, the GRF, not the muscles, is the primary driver of hip rotation. The muscles *control* the GRF by adjusting the stance and the direction of force application, but they do not create torque in the absence of ground contact.
 
 :::
 
@@ -557,10 +557,10 @@ A better approach is to improve sequencing and efficiency. A golfer with excelle
 
 :::
 
-## The ZTCF Perspective: Kinetic Chain as a Model Prediction
+## The ZTCF Perspective: Kinetic Chain Emerges from the Dynamics
 
 
-One useful hypothesis from the ZTCF formalism (Chapter @sec-zero_torque_counterfactual) is that some proximal-to-distal sequencing can be explained by passive coupling after the model, contact mode, mass distribution, and stiffness parameters are specified. This is not a claim that the sequence is automatic in every real swing; it is a testable prediction of a coupled kinetic-chain model.
+One of the most profound insights from the ZTCF formalism (Chapter @sec-zero_torque_counterfactual) is that the proximal-to-distal sequencing of the kinetic chain does *not* need to be programmed into the motor control system. Instead, it *emerges naturally* from the structure of the equations of motion when the body is modeled as a coupled kinetic chain with realistic mass, geometry, and stiffness parameters.
 
 ### Natural Frequencies and Coupling
 
@@ -571,9 +571,9 @@ $$
 \omega_i \approx \sqrt{\frac{k_i}{I_i}}
 $$
 
-In many simplified body-segment models, distal segments have smaller inertias and may have higher effective natural frequencies. The exact hierarchy depends on posture, muscle activation, joint stiffness, and how the segment model is parameterized.
+In the human body, distal segments have smaller inertias and higher stiffnesses (due to smaller structures and tighter joints), so they have higher natural frequencies. The hip joint has a lower natural frequency than the shoulder joint, which has a lower natural frequency than the wrist. This frequency hierarchy is built into the body's structure.
 
-When a muscular input is applied at the hip in such a coupled model, the response can exhibit a frequency cascade: the hip oscillates at $\omega_1$, the shoulder at $\omega_2 > \omega_1$, and the wrist at $\omega_3 > \omega_2$. If the assumed stiffness and inertia values produce that ordering, the peaks of these oscillations are staggered in time, offering one mechanism for proximal-to-distal sequencing.
+When a muscular input is applied at the hip, the coupled system's response naturally exhibits a frequency cascade: the hip oscillates at $\omega_1$, the shoulder at $\omega_2 > \omega_1$, the wrist at $\omega_3 > \omega_2$. The peaks of these oscillations are staggered in time due to the frequency differences, producing the proximal-to-distal sequencing *automatically*.
 
 ### The Drift Field Encodes the Kinetic Chain
 
@@ -599,7 +599,7 @@ where $M_{ij}^{-1}$ are the elements of the inverted mass matrix. This equation 
 ::: {.callout-important}
 ## Kinetic Chain as Natural Dynamics
 
-In a coupled model with specified mass distribution, stiffness, damping, and contact assumptions, proximal-to-distal sequencing can emerge from the equations of motion. The golfer's motor control still matters; the model asks whether the controller can exploit passive coupling by specifying:
+The proximal-to-distal sequencing of the kinetic chain emerges naturally from the equations of motion for a coupled system with realistic mass distribution and stiffness. The golfer's motor control does not need to explicitly program the sequence; instead, the motor control specifies:
 
   - **The timing of muscle activation**: When are muscles activated (concentric contraction) vs. when are they deactivated or stretched (eccentric)?
 
@@ -607,7 +607,7 @@ In a coupled model with specified mass distribution, stiffness, damping, and con
 
   - **The overall rhythm**: Is the downswing fast or slow, smooth or jerky?
 
-Given these control inputs, the drift field may produce a proximal-to-distal sequence if the model parameters and initial conditions support it. A golfer with better motor control may achieve a sharper, more efficient sequence because the control inputs are better matched to the natural dynamics of the body, but that claim should be checked against measured kinematics and force data.
+Given these control inputs, the drift field automatically produces the proximal-to-distal sequence. A golfer with better motor control (more refined timing and magnitude control) achieves a sharper, more efficient sequence because the control inputs are better matched to the natural dynamics of the body.
 
 :::
 
@@ -618,13 +618,13 @@ If the kinetic chain sequence is a natural consequence of the dynamics, what rol
 
 The drift field equation shows that the output depends on $\control(t)$, the temporal pattern of muscle activation. The specific timing of when muscles turn on and off determines whether the natural dynamics are exploited effectively.
 
-For example, consider the transition from the backswing to the downswing. At the top of the backswing, all segments are momentarily at rest. One simplified timing hypothesis is:
+For example, consider the transition from the backswing to the downswing. At the top of the backswing, all segments are momentarily at rest. The initiation of the downswing requires a specific timing pattern:
 
-  - Hip muscles become active early, producing torques that help establish the stance and GRF pattern associated with hip rotation.
+  - The hip muscles must activate first, producing a muscle torque that initiates hip rotation.
 
-  - In the model, that timing can include a brief hip-acceleration interval followed by greater contribution from segment coupling as the torso accelerates.
+  - The timing must be such that the hip accelerates for a brief period, then the torque diminishes as the constraint forces from the decelerating hips (which will accelerate the torso) take over.
 
-  - Torso muscles may shift between eccentric and concentric roles over the sequence; the exact timing should be validated against EMG, force-plate, and kinematic data rather than asserted universally.
+  - Simultaneously, the torso muscles must shift from eccentric activation (resisting the hip's pull) to quiescence, allowing the constraint forces to accelerate the torso.
 
 A golfer with poor timing might activate the arm muscles too early, or fail to deactivate the torso muscles in time, disrupting the sequence. A golfer with excellent timing synchronizes the muscle activations to match the natural frequencies and time scales of the coupled system.
 
@@ -637,9 +637,9 @@ The Drift-Correction-Response (DCR, introduced in Chapter @sec-zero_torque_count
 
 For instance, if the hip rotation is slightly delayed, the constraint force that drives the torso will arrive slightly late. The torso will then accelerate slightly later, which cascades to the arms, and finally to the club. The result might be a slightly slower club speed, or a timing error that affects the strike quality.
 
-A skilled golfer (with a low modeled DCR latency) might correct such timing errors with small adjustments: slightly increasing the muscle activation magnitude or duration to compensate. Over many trials, the motor system may learn to anticipate and reduce timing errors, lowering the correction demand.
+A skilled golfer (with a low DCR latency) might correct such timing errors with small adjustments: slightly increasing the muscle activation magnitude or duration to compensate. Over many trials, the motor system learns to anticipate and prevent timing errors, reducing the DCR demand.
 
-Conversely, a golfer with a high modeled DCR latency may not adjust quickly enough to keep the kinetic-chain sequence synchronized. The predicted result is higher variability in club speed and strike quality; that claim should be supported by the model definition, timing data, and repeated-swing measurements.
+Conversely, a golfer with a high DCR latency (slow correction) cannot adjust quickly enough to keep the kinetic chain sequence synchronized. The result is high variability in club speed and strike quality, a hallmark of amateur swings.
 
 ## Practical Implications and Instruction
 
@@ -658,24 +658,24 @@ In the drift field formalism, smooth high acceleration corresponds to a smooth, 
 
 Another common instruction is to "stay behind the ball" or "maintain forward lean" at impact. The physics interpretation is that the golfer should maintain hip rotation velocity into impact, which keeps the hips ahead of the shoulders and maximizes the X-factor. However, the phrase "staying behind" can be misinterpreted as not transferring weight or not rotating the hips fully, which actually reduces power.
 
-The safer interpretation is that useful hip rotation should be assessed from measured pelvis angular velocity, timing, and force-plate data rather than from a slogan. Some golfers continue rotating strongly through impact; others show different deceleration patterns. The claim should be tied to the kinematic dataset being analyzed.
+The correct interpretation is that the hips should *continue* to rotate all the way through impact and into the follow-through. The hips do not decelerate at impact; they continue accelerating until late in the follow-through. This sustained hip rotation keeps the shoulders and arms on a tighter rotational path, which effectively increases the X-factor and produces the whipping motion of the club.
 
 ### Training Proximal-to-Distal Sequencing
 
 
-If a model predicts that the kinetic-chain sequence can emerge from passive coupling, how can a golfer improve sequencing? The practical answer is to practice with measured kinematics and feedback so that the motor control system learns a timing pattern that works for that golfer's body and equipment.
+If the kinetic chain sequence emerges naturally from the dynamics, how can a golfer improve their sequencing? The answer is to practice with proper kinematics so that the motor control system learns the correct timing pattern.
 
 Several training methods are effective:
 
-  - **Slow-motion practice**: Swinging slowly may help the golfer feel the sequence and develop awareness of the timing. As speed increases, passive dynamics matter more, and the golfer's trained timing can become more repeatable.
+  - **Slow-motion practice**: Swinging slowly allows the golfer to feel the sequence and develop awareness of the timing. As speed increases, the natural dynamics dominate, and the golfer's trained timing becomes automatic.
 
   - **Pressure-based feedback**: Using force plates or insoles that measure weight distribution, a golfer can learn to synchronize the weight transfer with hip rotation. The feedback helps calibrate the DCR.
 
   - **Video analysis**: High-speed video allows a golfer to observe the angles and velocities of each segment, providing a visual reference for the desired sequence. Comparing to reference swings of elite golfers highlights timing differences.
 
-  - **Repetitive practice**: The motor system learns timing through repetition and feedback, not through explicit understanding of the physics. Training dosage and transfer should be measured rather than assumed.
+  - **Repetitive practice**: The motor system learns the timing through repetition, not through explicit understanding of the physics. A golfer who hits 50 balls per day with focused attention on the sequence will gradually ingrain the correct motor pattern.
 
-The key hypothesis is that training can exploit the body's coupled dynamics: rather than fighting the coupled structure, the golfer learns to align muscular control with measurable timing and force patterns.
+The key is that the training exploits the natural dynamics: rather than fighting the body's coupled structure, the golfer learns to align muscular control with the natural frequencies and time scales.
 
 ## Problems: Kinetic Chain and Energy Flow
 

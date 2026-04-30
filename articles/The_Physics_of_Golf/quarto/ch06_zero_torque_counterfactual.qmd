@@ -156,7 +156,7 @@ For a golfer, this distinction matters because gravity is always present (and pr
 ::: {.callout-note}
 ## Drift-Control Ratio (DCR)
 
-At any time during the swing, the **Drift-Control Ratio (DCR)** compares modeled drift against bounded modeled control under an explicit norm or weighting. In the raw textbook framing, it is a ratio of passive to active torques; in the more general control-authority framing below, the same idea is expressed as drift magnitude relative to bounded control magnitude. Consistent with Chapter @sec-05_affine_structure, use:
+At any time during the swing, the **Drift-Control Ratio (DCR)** compares modeled drift against bounded modeled control under an explicit norm or weighting. Consistent with Chapter @sec-05_affine_structure, use:
 
 $$
 \mathrm{DCR}_{\bm{W}}(\bm{x};u_{\max})
@@ -168,21 +168,6 @@ $$
 Here $\bm{W}$ states which coordinates or acceleration block are being compared, $u_{\max}$ states the admissible torque bound, and $\varepsilon$ prevents division by zero. A single-joint torque ratio is a useful special case only after those modeling choices are fixed.
 
 When DCR $\approx 1$, modeled drift and bounded control have comparable magnitude under the chosen weighting. When DCR $\gg 1$, modeled drift dominates that comparison; it does not imply that the golfer is passive or that muscle activation is absent.
-
-:::
-
-::: {.callout-warning}
-## Minimum Reporting Standard for DCR
-
-Any numerical DCR claim should report enough information for another reader to reproduce or challenge it:
-
-1. the state vector, coordinate convention, and whether $\bm{f}$ and $\bm{G}$ are expressed in generalized coordinates, task coordinates, or acceleration coordinates;
-2. the weighting matrix $\bm{W}$, norm, and small denominator regularizer $\varepsilon$;
-3. the admissible torque or activation bound $u_{\max}$ and whether it is joint-specific, time-varying, or muscle-model-derived;
-4. the anthropometric, club, shaft, contact, and damping parameters used by the model; and
-5. a sensitivity check showing whether the qualitative conclusion survives plausible perturbations of $\bm{W}$, $u_{\max}$, and the inertial parameters.
-
-Without these declarations, a value such as DCR $=10$ should be read only as an illustrative scale, not as an experimentally established phase boundary.
 
 :::
 
@@ -478,7 +463,7 @@ But the timing window is small: the contact lasts only $0.5$ ms in this illustra
 3. **The ZVCF refinement:** Further isolates gravity from velocity-dependent forces, revealing the role of initial momentum.
 4. **DCR growth:** As velocity increases, several passive terms grow with speed, while bounded muscular torques do not necessarily scale with the same law. The Drift-Control Ratio can become large in late downswing, but its magnitude depends on the weighting, torque bound, and model parameters.
 5. **Double pendulum example:** Showed concretely how gravity and Coriolis produce large torques, while muscles apply restraint and correction.
-6. **Model-dependence:** ZTCF requires a biomechanical model; it cannot be measured directly. Qualitative conclusions should be reported with the DCR weighting, torque bound, parameter set, and sensitivity checks rather than asserted as model-independent facts.
+6. **Model-dependence:** ZTCF requires a biomechanical model; it cannot be measured directly. Qualitative conclusions should be reported with sensitivity checks rather than asserted as model-independent facts.
 7. **Late correction window:** The downswing can become strongly conditioned by earlier state preparation once velocity-dependent terms are large. The real skill is in setup, transition, and early-downswing momentum building.
 8. **Practical implication:** Last-instant effort is a weak substitute for earlier state preparation. Build momentum early, preserve timing, and use late control for stiffness and bounded steering.
 
@@ -510,7 +495,7 @@ Set up the double pendulum ZTCF from Section @sec:double_pendulum_ztcf in a nume
 4. Qualitatively describe the motion: does the shoulder continue rotating? Does the elbow extend further?
 
 {Analysis}
-The Drift-Control Ratio (DCR) compares modeled drift with bounded modeled control under a stated weighting and torque bound. Choose plausible early- and late-downswing values for $\bm{W}$ and $u_{\max}$, declare the model parameters that matter most, then estimate how the DCR changes under at least two sensitivity perturbations.
+The Drift-Control Ratio (DCR) compares modeled drift with bounded modeled control under a stated weighting and torque bound. Choose plausible early- and late-downswing values for $\bm{W}$ and $u_{\max}$, then estimate how the DCR changes.
 
 What does this imply about the *type* of muscular effort needed in each phase? Is "harder work" required early or late?
 

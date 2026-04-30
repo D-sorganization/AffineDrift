@@ -147,6 +147,18 @@ class TestSetupComparison(unittest.TestCase):
         )
         np.testing.assert_array_equal(x_target, x_ref[:, -1])
 
+    def test_uses_requested_dt_for_reference_grid(self) -> None:
+        _, t_ref, x_ref, _ = _setup_comparison(
+            perturbation_scale=0.1,
+            t_span=(0.0, 0.2),
+            dt=0.05,
+            seed=0,
+        )
+
+        np.testing.assert_allclose(np.diff(t_ref), 0.05)
+        assert len(t_ref) == 4
+        assert x_ref.shape == (4, len(t_ref))
+
     def test_rejects_zero_dt(self) -> None:
         with self.assertRaises(ContractViolationError):
             _setup_comparison(0.1, (0.0, 0.2), dt=0.0, seed=0)

@@ -203,11 +203,10 @@ an extraordinary number of control-theoretic challenges into roughly 1.2~seconds
   \item \textbf{Extreme nonlinearity.} Joint torques couple through the full rigid-body
         dynamics, including Coriolis and centrifugal terms that dominate at high
         angular velocities.
-  \item \textbf{Underactuation.} Once the club is released in the simplified
-        downswing model, the wrist hinge is treated as low-torque or passive.
-        Clubhead speed at impact is strongly shaped by passive coupling terms,
-        but the size of that contribution depends on the model, grip constraint,
-        and measured swing data.
+  \item \textbf{Underactuation.} Once the club is released in the downswing, the
+        wrist hinge ``freewheels''---the golfer cannot directly control the club angle.
+        The clubhead speed at impact comes from \emph{passive dynamics}, not
+        active torque.
   \item \textbf{Time-criticality with flexible timing.} The swing must produce the
         right state (clubhead position, velocity, and orientation) at impact,
         but the \emph{exact} time of impact is not prescribed. The golfer
@@ -421,11 +420,10 @@ The tube width $\varepsilon(s)$ is a design parameter. For the golf swing:
 \end{tikzpicture}
 \end{center}
 
-This funnel profile encodes the modeling hypothesis that precision demands are
-highest near impact and lower during setup. The controller allocates authority
-where the stated terminal constraint is most sensitive, rather than maintaining
-uniform precision everywhere; this distinction is easy to obscure in a pure
-fixed-setpoint framing.
+This funnel profile encodes the physical insight that precision matters most at
+impact and least during setup. The controller ``spends'' its control authority
+where it matters, rather than trying to maintain uniform precision everywhere---a
+lesson that classical setpoint control cannot teach.
 
 % ──────────────────────────────────────────────
 \section{What Changes When Control Is Motion}
@@ -513,11 +511,9 @@ creates \emph{geometric structure} that we can exploit.
 The set of states reachable from a given configuration through passive dynamics
 forms a submanifold of the state space. A well-designed trajectory \emph{rides along}
 this manifold, using the passive dynamics to generate motion that active torques
-alone could not produce within the chosen actuator model. In a simplified golf
-model, a passive wrist release and centrifugal coupling can contribute to
-clubhead acceleration and face closure; whether they square the clubface in a
-real swing depends on grip mechanics, shaft dynamics, impact geometry, and
-validation against measured swings.
+alone could not produce. This is how the golf swing works: the wrist hinge releases
+passively, and the centrifugal acceleration of the downswing \emph{automatically}
+squares the clubface through the double pendulum effect.
 
 \begin{proposition}
   For a mechanical system with $n$ degrees of freedom and $m < n$ actuators, the
@@ -559,9 +555,8 @@ increasingly sophisticated layers:
     repeatability.
 
   \item[Ch.~7] \textbf{Funnel Synthesis.}
-    Designing time-varying tubes with certified invariance under stated model,
-    controller, and disturbance assumptions. Sums-of-squares programming for
-    funnel computation. Robust funnels under model uncertainty.
+    Designing time-varying tubes with guaranteed invariance. Sums-of-squares
+    programming for funnel computation. Robust funnels under model uncertainty.
 
   \item[Ch.~8] \textbf{Phase-Variable Control}~\cite{WesterveltGrizzle2007}.
     Decoupling path shape from timing. Virtual constraints and hybrid zero dynamics
@@ -575,8 +570,8 @@ increasingly sophisticated layers:
     improve a motion over repeated trials without losing stability.
 
   \item[Ch.~11] \textbf{Case Study: The Complete Golf Swing.}
-    A planned application of the theory to a declared musculoskeletal model of
-    the golf swing, from trajectory optimization through funnel synthesis to
+    Full application of the entire theory to a 15-DOF musculoskeletal model of the
+    golf swing, from trajectory optimization through funnel synthesis to
     stochastic robustness analysis.
 \end{description}
 
@@ -645,8 +640,8 @@ the classical language throughout this book:
           even though no torque is applied at the wrist.
     \item Define a phase variable $s$ and sketch a funnel profile $\varepsilon(s)$
           appropriate for this system.
-    \item Discuss why a setpoint controller applied only at impact ($s = 0.7$)
-          may be inadequate or misleading for a trajectory-native task.
+    \item Discuss why a setpoint controller applied at impact ($s = 0.7$) would
+          produce the wrong motion.
   \end{enumerate}
 
 \item \textbf{(Philosophical.)} A thermostat, an autopilot, and a dancer's body
@@ -666,3 +661,4 @@ the classical language throughout this book:
   It becomes the follow-through.\\[0.3cm]
   Control is motion.}
 \end{center}
+

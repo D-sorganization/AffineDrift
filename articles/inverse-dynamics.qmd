@@ -14,12 +14,10 @@ format:
 ```{=html}
 <!-- In Layman's Terms Section - Simplified overview for non-technical readers -->
 <section class="laymans-terms">
-  <h2>
   <button class="laymans-terms-header" aria-expanded="false">
-    <span class="laymans-terms-header-title">In Layman's Terms</span>
+    <h2>In Layman's Terms</h2>
     <span class="laymans-terms-icon">▼</span>
   </button>
-</h2>
   <div class="laymans-terms-content">
     <div class="laymans-terms-inner">
       <p class="laymans-terms-intro">
@@ -68,12 +66,12 @@ The method is powerful because it allows us to infer kinetic information (forces
 
 The equations of motion for a rigid body like a golf club are described by Euler's laws:
 
-$$ {#eq-force_balance}
+$$
 \begin{align}
-\sum \mathbf{F} &= m\mathbf{a}_{\text{COM}} \
-\sum \mathbf{M}_{\text{COM}} &= \mathbf{I}\boldsymbol{\alpha} + \boldsymbol{\omega} \times (\mathbf{I}\boldsymbol{\omega}) 
+\sum \mathbf{F} &= m\mathbf{a}_{\text{COM}} {#eq-force_balance}\\
+\sum \mathbf{M}_{\text{COM}} &= \mathbf{I}\boldsymbol{\alpha} + \boldsymbol{\omega} \times (\mathbf{I}\boldsymbol{\omega}) {#eq-moment_balance}
 \end{align}
-$$ {#eq-force_balance}
+$$
 
 where:
 - $\sum \mathbf{F}$ is the sum of all forces acting on the club
@@ -122,7 +120,7 @@ where $\mathbf{g} = [0, 0, -9.81]$ m/s$^2$ (if z is vertical).
 
 **Step 4: Solve for Unknown Forces**
 
-From @eq-force_balance, the sum of unknown forces (from the golfer's hands) is:
+From Equation~[@eq:force_balance], the sum of unknown forces (from the golfer's hands) is:
 
 $$
 \mathbf{F}_{\text{hands}} = m\mathbf{a}_{\text{COM}} - \mathbf{F}_{\text{gravity}}
@@ -132,11 +130,11 @@ $$
 
 The moment balance about an arbitrary reference point $P$ (typically the grip midpoint) is:
 
-$$ {#eq-moment_balance}
+$$
 \sum \mathbf{M}_{P} = \sum \mathbf{M}_{\text{COM}} + (\mathbf{r}_{P} - \mathbf{r}_{\text{COM}}) \times \mathbf{F}_{\text{hands}}
-$$ {#eq-moment_balance}
+$$
 
-Since we know $\sum \mathbf{M}_{\text{COM}}$ from @eq-force_balance, we can calculate the required moment about point $P$.
+Since we know $\sum \mathbf{M}_{\text{COM}}$ from Equation~[@eq:moment_balance], we can calculate the required moment about point $P$.
 
 ### Critical Assumptions in Inverse Dynamics
 
@@ -211,14 +209,13 @@ The force-couple equivalence principle converts a grip force $\mathbf{F}$ applie
 
 For a rigid body such as a golf club, if inverse dynamics yields force $\mathbf{F}_{\text{eq}}$ and couple $\mathbf{C}_{\text{eq}}$ at reference point $m$, we can transform these to an equivalent force-couple pair at any other point $i$ along the grip.
 
-::: {.proposition}
-**Couple Transformation Formula**
-
+\begin{proposition}[Couple Transformation Formula]
 For points along a one-dimensional grip, the equivalent couple at point $i$ is given by:
 
 $$
+{#eq-couple_transform}
 C_i = M_m \left(1 - \frac{d_i}{d_m}\right) + C_m
-$$ {#eq-couple_transform}
+$$
 
 where:
 - $C_i$ = equivalent couple at point $i$
@@ -230,7 +227,7 @@ where:
 - $d_m$ = signed distance from center of mass to midpoint $m$
     
 - $C_m$ = couple at midpoint from inverse dynamics
-:::
+\end{proposition}
 
 This transformation reveals a crucial insight: the equivalent couple is not an intrinsic property of the force distribution but depends on the choice of reference point.
 
@@ -238,7 +235,7 @@ In a standard golf grip, contact forces are distributed across multiple finger s
 
 ### The Range of Equivalent Couples
 
-From @eq-couple_transform, we can determine the range of equivalent couples for a given inverse dynamics result as the reference point varies along the grip.
+From Equation~[@eq:couple_transform], we can determine the range of equivalent couples for a given inverse dynamics result as the reference point varies along the grip.
 
 At the top of the grip:
 
@@ -265,11 +262,9 @@ The range of viable equivalent couples increases linearly with the moment of for
 
 ### Physical Interpretation: The Non-Uniqueness Problem
 
-The mathematical transformation in @eq-couple_transform has a profound physical consequence: **a couple appearing in inverse dynamics results does not necessarily correspond to any actual twisting action by the golfer**.
+The mathematical transformation in Equation~[@eq:couple_transform] has a profound physical consequence: **a couple appearing in inverse dynamics results does not necessarily correspond to any actual twisting action by the golfer**.
 
-::: {.example}
-**Single Force Creating Apparent Couple**
-
+\begin{example}[Single Force Creating Apparent Couple]
 Consider a hypothetical scenario where a golfer applies a single force $F$ at a point on the grip located at distance $d_F$ from the midpoint, with no other forces acting.
 
 **Physical reality:** Only one force exists; no couple is applied.
@@ -280,7 +275,7 @@ Consider a hypothetical scenario where a golfer applies a single force $F$ at a 
 - Equivalent couple: $C_m = F \cdot d_F$ (nonzero!)
 
 The inverse dynamics creates a mathematical couple to account for the offset application point, despite no physical twisting occurring.
-:::
+\end{example}
 
 This example reveals the core issue: inverse dynamics conflates two physically distinct phenomena:
 1. **True couples:** Opposing forces applied simultaneously (e.g., left hand pulls up while right hand pushes down)
@@ -322,8 +317,9 @@ The spatial ambiguity discussed in Section 2 is compounded by a deeper challenge
 A control-affine system is a dynamical system of the form:
 
 $$
+{#eq-control_affine}
 \dot{\mathbf{x}} = \mathbf{f}(\mathbf{x}) + \mathbf{G}(\mathbf{x})\mathbf{u}
-$$ {#eq-control_affine}
+$$
 
 where:
 - $\mathbf{x} \in \mathbb{R}^n$ is the state vector (positions and velocities)
@@ -352,8 +348,9 @@ The input component represents what the golfer consciously controls and experien
 To understand what inverse dynamics calculates, we examine the Lagrangian formulation. For a system with generalized coordinates $\mathbf{q}$, the equations of motion are:
 
 $$
+{#eq-lagrange}
 \mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q},\dot{\mathbf{q}})\dot{\mathbf{q}} + \mathbf{G}(\mathbf{q}) = \boldsymbol{\tau}
-$$ {#eq-lagrange}
+$$
 
 where:
 - $\mathbf{M}(\mathbf{q})$ is the mass/inertia matrix
@@ -367,8 +364,9 @@ where:
 Inverse dynamics solves for $\boldsymbol{\tau}$ given observed $\mathbf{q}(t)$, $\dot{\mathbf{q}}(t)$, and $\ddot{\mathbf{q}}(t)$:
 
 $$
+{#eq-inverse_dynamics}
 \boldsymbol{\tau} = \mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q},\dot{\mathbf{q}})\dot{\mathbf{q}} + \mathbf{G}(\mathbf{q})
-$$ {#eq-inverse_dynamics}
+$$
 
 ### The Fundamental Problem: Inseparability of Drift and Input
 
@@ -776,12 +774,10 @@ Understanding these limitations enables more informed use of inverse dynamics in
 
 ```{=html}
 <section class="critics-comments">
-  <h2>
   <button class="critics-comments-header" aria-expanded="false">
-    <span class="critics-comments-header-title">Critics' Comments</span>
+    <h2>Critics' Comments</h2>
     <span class="critics-comments-icon">💬</span>
   </button>
-</h2>
   <div class="critics-comments-content">
     <div class="critics-comments-inner">
       <p class="critics-intro">

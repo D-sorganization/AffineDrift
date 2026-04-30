@@ -1,0 +1,704 @@
+F821 Undefined name `os`
+  --> src\affine_control\ddp.py:51:37
+   |
+49 | def _is_running_under_pytest() -> bool:
+50 |     """Return True if the current call occurs inside a pytest session."""
+51 |     return "PYTEST_CURRENT_TEST" in os.environ or "pytest" in os.environ.get("PYTHONPATH", "")
+   |                                     ^^
+   |
+
+F821 Undefined name `os`
+  --> src\affine_control\ddp.py:51:63
+   |
+49 | def _is_running_under_pytest() -> bool:
+50 |     """Return True if the current call occurs inside a pytest session."""
+51 |     return "PYTEST_CURRENT_TEST" in os.environ or "pytest" in os.environ.get("PYTHONPATH", "")
+   |                                                               ^^
+   |
+
+F811 Redefinition of unused `DEFAULT_HORIZON_STEPS` from line 50
+  --> src\affine_control\swing_optimizer.py:69:1
+   |
+67 | # ── Default configuration values ────────────────────────────────────────────
+68 |
+69 | DEFAULT_HORIZON_STEPS: int = 50
+   | ^^^^^^^^^^^^^^^^^^^^^ `DEFAULT_HORIZON_STEPS` redefined here
+70 | """Default number of time steps in the optimization horizon."""
+   |
+  ::: src\affine_control\swing_optimizer.py:50:5
+   |
+48 |     DEFAULT_CONVERGENCE_TOL,
+49 |     DEFAULT_DT,
+50 |     DEFAULT_HORIZON_STEPS,
+   |     --------------------- previous definition of `DEFAULT_HORIZON_STEPS` here
+51 |     DEFAULT_MAX_ITERATIONS,
+52 |     DEFAULT_TARGET_VELOCITY,
+   |
+help: Remove definition: `DEFAULT_HORIZON_STEPS`
+
+F811 Redefinition of unused `DEFAULT_DT` from line 49
+  --> src\affine_control\swing_optimizer.py:72:1
+   |
+70 | """Default number of time steps in the optimization horizon."""
+71 |
+72 | DEFAULT_DT: float = 0.01
+   | ^^^^^^^^^^ `DEFAULT_DT` redefined here
+73 | """Default time step size in seconds."""
+   |
+  ::: src\affine_control\swing_optimizer.py:49:5
+   |
+47 |     DEFAULT_CONTROL_WEIGHT,
+48 |     DEFAULT_CONVERGENCE_TOL,
+49 |     DEFAULT_DT,
+   |     ---------- previous definition of `DEFAULT_DT` here
+50 |     DEFAULT_HORIZON_STEPS,
+51 |     DEFAULT_MAX_ITERATIONS,
+   |
+help: Remove definition: `DEFAULT_DT`
+
+F811 Redefinition of unused `DEFAULT_MAX_ITERATIONS` from line 51
+  --> src\affine_control\swing_optimizer.py:75:1
+   |
+73 | """Default time step size in seconds."""
+74 |
+75 | DEFAULT_MAX_ITERATIONS: int = 100
+   | ^^^^^^^^^^^^^^^^^^^^^^ `DEFAULT_MAX_ITERATIONS` redefined here
+76 | """Default maximum DDP iterations."""
+   |
+  ::: src\affine_control\swing_optimizer.py:51:5
+   |
+49 |     DEFAULT_DT,
+50 |     DEFAULT_HORIZON_STEPS,
+51 |     DEFAULT_MAX_ITERATIONS,
+   |     ---------------------- previous definition of `DEFAULT_MAX_ITERATIONS` here
+52 |     DEFAULT_TARGET_VELOCITY,
+53 |     DEFAULT_TERMINAL_WEIGHT,
+   |
+help: Remove definition: `DEFAULT_MAX_ITERATIONS`
+
+F811 Redefinition of unused `DEFAULT_CONVERGENCE_TOL` from line 48
+  --> src\affine_control\swing_optimizer.py:78:1
+   |
+76 | """Default maximum DDP iterations."""
+77 |
+78 | DEFAULT_CONVERGENCE_TOL: float = 1e-6
+   | ^^^^^^^^^^^^^^^^^^^^^^^ `DEFAULT_CONVERGENCE_TOL` redefined here
+79 | """Default convergence tolerance for the cost function."""
+   |
+  ::: src\affine_control\swing_optimizer.py:48:5
+   |
+46 | from src.affine_control.swing_types import (
+47 |     DEFAULT_CONTROL_WEIGHT,
+48 |     DEFAULT_CONVERGENCE_TOL,
+   |     ----------------------- previous definition of `DEFAULT_CONVERGENCE_TOL` here
+49 |     DEFAULT_DT,
+50 |     DEFAULT_HORIZON_STEPS,
+   |
+help: Remove definition: `DEFAULT_CONVERGENCE_TOL`
+
+F811 Redefinition of unused `DEFAULT_CONTROL_WEIGHT` from line 47
+  --> src\affine_control\swing_optimizer.py:81:1
+   |
+79 | """Default convergence tolerance for the cost function."""
+80 |
+81 | DEFAULT_CONTROL_WEIGHT: float = 0.01
+   | ^^^^^^^^^^^^^^^^^^^^^^ `DEFAULT_CONTROL_WEIGHT` redefined here
+82 | """Default weight on control effort (R matrix scaling)."""
+   |
+  ::: src\affine_control\swing_optimizer.py:47:5
+   |
+45 | from src.affine_control.ddp import MockDDPSolver
+46 | from src.affine_control.swing_types import (
+47 |     DEFAULT_CONTROL_WEIGHT,
+   |     ---------------------- previous definition of `DEFAULT_CONTROL_WEIGHT` here
+48 |     DEFAULT_CONVERGENCE_TOL,
+49 |     DEFAULT_DT,
+   |
+help: Remove definition: `DEFAULT_CONTROL_WEIGHT`
+
+F811 Redefinition of unused `DEFAULT_TARGET_VELOCITY` from line 52
+  --> src\affine_control\swing_optimizer.py:84:1
+   |
+82 | """Default weight on control effort (R matrix scaling)."""
+83 |
+84 | DEFAULT_TARGET_VELOCITY: float = 50.0
+   | ^^^^^^^^^^^^^^^^^^^^^^^ `DEFAULT_TARGET_VELOCITY` redefined here
+85 | """Default target clubhead velocity in m/s (~112 mph, tour average)."""
+   |
+  ::: src\affine_control\swing_optimizer.py:52:5
+   |
+50 |     DEFAULT_HORIZON_STEPS,
+51 |     DEFAULT_MAX_ITERATIONS,
+52 |     DEFAULT_TARGET_VELOCITY,
+   |     ----------------------- previous definition of `DEFAULT_TARGET_VELOCITY` here
+53 |     DEFAULT_TERMINAL_WEIGHT,
+54 |     SwingOptimizationConfig,
+   |
+help: Remove definition: `DEFAULT_TARGET_VELOCITY`
+
+F811 Redefinition of unused `DEFAULT_TERMINAL_WEIGHT` from line 53
+  --> src\affine_control\swing_optimizer.py:87:1
+   |
+85 | """Default target clubhead velocity in m/s (~112 mph, tour average)."""
+86 |
+87 | DEFAULT_TERMINAL_WEIGHT: float = 100.0
+   | ^^^^^^^^^^^^^^^^^^^^^^^ `DEFAULT_TERMINAL_WEIGHT` redefined here
+88 | """Default terminal cost weight scaling."""
+   |
+  ::: src\affine_control\swing_optimizer.py:53:5
+   |
+51 |     DEFAULT_MAX_ITERATIONS,
+52 |     DEFAULT_TARGET_VELOCITY,
+53 |     DEFAULT_TERMINAL_WEIGHT,
+   |     ----------------------- previous definition of `DEFAULT_TERMINAL_WEIGHT` here
+54 |     SwingOptimizationConfig,
+55 |     SwingOptimizationResult,
+   |
+help: Remove definition: `DEFAULT_TERMINAL_WEIGHT`
+
+F821 Undefined name `dataclass`
+  --> src\affine_control\swing_optimizer.py:94:2
+   |
+94 | @dataclass(frozen=True)
+   |  ^^^^^^^^^
+95 | class SwingOptimizationConfig:
+96 |     """Configuration for the swing optimization pipeline.
+   |
+
+F811 Redefinition of unused `SwingOptimizationConfig` from line 54
+  --> src\affine_control\swing_optimizer.py:95:7
+   |
+94 | @dataclass(frozen=True)
+95 | class SwingOptimizationConfig:
+   |       ^^^^^^^^^^^^^^^^^^^^^^^ `SwingOptimizationConfig` redefined here
+96 |     """Configuration for the swing optimization pipeline.
+   |
+  ::: src\affine_control\swing_optimizer.py:54:5
+   |
+52 |     DEFAULT_TARGET_VELOCITY,
+53 |     DEFAULT_TERMINAL_WEIGHT,
+54 |     SwingOptimizationConfig,
+   |     ----------------------- previous definition of `SwingOptimizationConfig` here
+55 |     SwingOptimizationResult,
+56 | )
+   |
+help: Remove definition: `SwingOptimizationConfig`
+
+F821 Undefined name `check_positive`
+   --> src\affine_control\swing_optimizer.py:139:9
+    |
+137 |             self.horizon_steps,
+138 |         )
+139 |         check_positive(self.dt, "dt")
+    |         ^^^^^^^^^^^^^^
+140 |         require(
+141 |             isinstance(self.max_iterations, int),
+    |
+
+F821 Undefined name `check_positive`
+   --> src\affine_control\swing_optimizer.py:150:9
+    |
+148 |             self.max_iterations,
+149 |         )
+150 |         check_positive(self.convergence_tol, "convergence_tol")
+    |         ^^^^^^^^^^^^^^
+151 |         check_non_negative(self.control_weight, "control_weight")
+152 |         check_positive(self.target_velocity, "target_velocity")
+    |
+
+F821 Undefined name `check_non_negative`
+   --> src\affine_control\swing_optimizer.py:151:9
+    |
+149 |         )
+150 |         check_positive(self.convergence_tol, "convergence_tol")
+151 |         check_non_negative(self.control_weight, "control_weight")
+    |         ^^^^^^^^^^^^^^^^^^
+152 |         check_positive(self.target_velocity, "target_velocity")
+153 |         check_non_negative(self.terminal_weight, "terminal_weight")
+    |
+
+F821 Undefined name `check_positive`
+   --> src\affine_control\swing_optimizer.py:152:9
+    |
+150 |         check_positive(self.convergence_tol, "convergence_tol")
+151 |         check_non_negative(self.control_weight, "control_weight")
+152 |         check_positive(self.target_velocity, "target_velocity")
+    |         ^^^^^^^^^^^^^^
+153 |         check_non_negative(self.terminal_weight, "terminal_weight")
+    |
+
+F821 Undefined name `check_non_negative`
+   --> src\affine_control\swing_optimizer.py:153:9
+    |
+151 |         check_non_negative(self.control_weight, "control_weight")
+152 |         check_positive(self.target_velocity, "target_velocity")
+153 |         check_non_negative(self.terminal_weight, "terminal_weight")
+    |         ^^^^^^^^^^^^^^^^^^
+154 |
+155 |     @property
+    |
+
+F821 Undefined name `dataclass`
+   --> src\affine_control\swing_optimizer.py:166:2
+    |
+166 | @dataclass
+    |  ^^^^^^^^^
+167 | class SwingOptimizationResult:
+168 |     """Result container for a swing optimization run.
+    |
+
+F811 Redefinition of unused `SwingOptimizationResult` from line 55
+   --> src\affine_control\swing_optimizer.py:167:7
+    |
+166 | @dataclass
+167 | class SwingOptimizationResult:
+    |       ^^^^^^^^^^^^^^^^^^^^^^^ `SwingOptimizationResult` redefined here
+168 |     """Result container for a swing optimization run.
+    |
+   ::: src\affine_control\swing_optimizer.py:55:5
+    |
+ 53 |     DEFAULT_TERMINAL_WEIGHT,
+ 54 |     SwingOptimizationConfig,
+ 55 |     SwingOptimizationResult,
+    |     ----------------------- previous definition of `SwingOptimizationResult` here
+ 56 | )
+ 57 | from src.core.constants import EPSILON
+    |
+help: Remove definition: `SwingOptimizationResult`
+
+F821 Undefined name `check_non_negative`
+   --> src\affine_control\swing_optimizer.py:196:9
+    |
+194 |             "optimal_trajectory must be a list",
+195 |         )
+196 |         check_non_negative(self.final_velocity, "final_velocity")
+    |         ^^^^^^^^^^^^^^^^^^
+197 |         check_non_negative(self.cost, "cost")
+198 |         require(
+    |
+
+F821 Undefined name `check_non_negative`
+   --> src\affine_control\swing_optimizer.py:197:9
+    |
+195 |         )
+196 |         check_non_negative(self.final_velocity, "final_velocity")
+197 |         check_non_negative(self.cost, "cost")
+    |         ^^^^^^^^^^^^^^^^^^
+198 |         require(
+199 |             isinstance(self.converged, bool),
+    |
+
+F821 Undefined name `adaptive_timestep_ddp_mock`
+   --> src\affine_control\swing_optimizer.py:421:35
+    |
+419 |             Tuple of (x_traj, u_traj, current_cost).
+420 |         """
+421 |         x_traj, u_traj, _t_traj = adaptive_timestep_ddp_mock(
+    |                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^
+422 |             f=dynamics_fn,
+423 |             x0=initial_state,
+    |
+
+F841 Local variable `m1` is assigned to but never used
+  --> src\tools\rl_funnel_benchmark.py:50:5
+   |
+48 |     check_positive(g, "g")
+49 |
+50 |     m1, m2, L1, L2 = PENDULUM_M1, PENDULUM_M2, PENDULUM_L1, PENDULUM_L2
+   |     ^^
+51 |     th1, th2, dth1, dth2 = x
+52 |     s12 = np.sin(th1 - th2)
+   |
+help: Remove assignment to unused variable `m1`
+
+F841 Local variable `m2` is assigned to but never used
+  --> src\tools\rl_funnel_benchmark.py:50:9
+   |
+48 |     check_positive(g, "g")
+49 |
+50 |     m1, m2, L1, L2 = PENDULUM_M1, PENDULUM_M2, PENDULUM_L1, PENDULUM_L2
+   |         ^^
+51 |     th1, th2, dth1, dth2 = x
+52 |     s12 = np.sin(th1 - th2)
+   |
+help: Remove assignment to unused variable `m2`
+
+F841 Local variable `L1` is assigned to but never used
+  --> src\tools\rl_funnel_benchmark.py:50:13
+   |
+48 |     check_positive(g, "g")
+49 |
+50 |     m1, m2, L1, L2 = PENDULUM_M1, PENDULUM_M2, PENDULUM_L1, PENDULUM_L2
+   |             ^^
+51 |     th1, th2, dth1, dth2 = x
+52 |     s12 = np.sin(th1 - th2)
+   |
+help: Remove assignment to unused variable `L1`
+
+F841 Local variable `L2` is assigned to but never used
+  --> src\tools\rl_funnel_benchmark.py:50:17
+   |
+48 |     check_positive(g, "g")
+49 |
+50 |     m1, m2, L1, L2 = PENDULUM_M1, PENDULUM_M2, PENDULUM_L1, PENDULUM_L2
+   |                 ^^
+51 |     th1, th2, dth1, dth2 = x
+52 |     s12 = np.sin(th1 - th2)
+   |
+help: Remove assignment to unused variable `L2`
+
+F821 Undefined name `double_pendulum_mass_matrix`
+  --> src\tools\rl_funnel_benchmark.py:53:9
+   |
+51 |     th1, th2, dth1, dth2 = x
+52 |     s12 = np.sin(th1 - th2)
+53 |     M = double_pendulum_mass_matrix(th1, th2)
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+54 |     rhs = np.array(
+55 |         [
+   |
+
+F821 Undefined name `PENDULUM_MASS_2_KG`
+  --> src\tools\rl_funnel_benchmark.py:56:14
+   |
+54 |     rhs = np.array(
+55 |         [
+56 |             -PENDULUM_MASS_2_KG * PENDULUM_LINK_1_M * PENDULUM_LINK_2_M * dth2**2 * s12
+   |              ^^^^^^^^^^^^^^^^^^
+57 |             - (PENDULUM_MASS_1_KG + PENDULUM_MASS_2_KG) * g * PENDULUM_LINK_1_M * np.sin(th1),
+58 |             PENDULUM_MASS_2_KG * PENDULUM_LINK_1_M * PENDULUM_LINK_2_M * dth1**2 * s12
+   |
+
+F821 Undefined name `PENDULUM_LINK_1_M`
+  --> src\tools\rl_funnel_benchmark.py:56:35
+   |
+54 |     rhs = np.array(
+55 |         [
+56 |             -PENDULUM_MASS_2_KG * PENDULUM_LINK_1_M * PENDULUM_LINK_2_M * dth2**2 * s12
+   |                                   ^^^^^^^^^^^^^^^^^
+57 |             - (PENDULUM_MASS_1_KG + PENDULUM_MASS_2_KG) * g * PENDULUM_LINK_1_M * np.sin(th1),
+58 |             PENDULUM_MASS_2_KG * PENDULUM_LINK_1_M * PENDULUM_LINK_2_M * dth1**2 * s12
+   |
+
+F821 Undefined name `PENDULUM_LINK_2_M`
+  --> src\tools\rl_funnel_benchmark.py:56:55
+   |
+54 |     rhs = np.array(
+55 |         [
+56 |             -PENDULUM_MASS_2_KG * PENDULUM_LINK_1_M * PENDULUM_LINK_2_M * dth2**2 * s12
+   |                                                       ^^^^^^^^^^^^^^^^^
+57 |             - (PENDULUM_MASS_1_KG + PENDULUM_MASS_2_KG) * g * PENDULUM_LINK_1_M * np.sin(th1),
+58 |             PENDULUM_MASS_2_KG * PENDULUM_LINK_1_M * PENDULUM_LINK_2_M * dth1**2 * s12
+   |
+
+F821 Undefined name `PENDULUM_MASS_1_KG`
+  --> src\tools\rl_funnel_benchmark.py:57:16
+   |
+55 |         [
+56 |             -PENDULUM_MASS_2_KG * PENDULUM_LINK_1_M * PENDULUM_LINK_2_M * dth2**2 * s12
+57 |             - (PENDULUM_MASS_1_KG + PENDULUM_MASS_2_KG) * g * PENDULUM_LINK_1_M * np.sin(th1),
+   |                ^^^^^^^^^^^^^^^^^^
+58 |             PENDULUM_MASS_2_KG * PENDULUM_LINK_1_M * PENDULUM_LINK_2_M * dth1**2 * s12
+59 |             - PENDULUM_MASS_2_KG * g * PENDULUM_LINK_2_M * np.sin(th2),
+   |
+
+F821 Undefined name `PENDULUM_MASS_2_KG`
+  --> src\tools\rl_funnel_benchmark.py:57:37
+   |
+55 |         [
+56 |             -PENDULUM_MASS_2_KG * PENDULUM_LINK_1_M * PENDULUM_LINK_2_M * dth2**2 * s12
+57 |             - (PENDULUM_MASS_1_KG + PENDULUM_MASS_2_KG) * g * PENDULUM_LINK_1_M * np.sin(th1),
+   |                                     ^^^^^^^^^^^^^^^^^^
+58 |             PENDULUM_MASS_2_KG * PENDULUM_LINK_1_M * PENDULUM_LINK_2_M * dth1**2 * s12
+59 |             - PENDULUM_MASS_2_KG * g * PENDULUM_LINK_2_M * np.sin(th2),
+   |
+
+F821 Undefined name `PENDULUM_LINK_1_M`
+  --> src\tools\rl_funnel_benchmark.py:57:63
+   |
+55 |         [
+56 |             -PENDULUM_MASS_2_KG * PENDULUM_LINK_1_M * PENDULUM_LINK_2_M * dth2**2 * s12
+57 |             - (PENDULUM_MASS_1_KG + PENDULUM_MASS_2_KG) * g * PENDULUM_LINK_1_M * np.sin(th1),
+   |                                                               ^^^^^^^^^^^^^^^^^
+58 |             PENDULUM_MASS_2_KG * PENDULUM_LINK_1_M * PENDULUM_LINK_2_M * dth1**2 * s12
+59 |             - PENDULUM_MASS_2_KG * g * PENDULUM_LINK_2_M * np.sin(th2),
+   |
+
+F821 Undefined name `PENDULUM_MASS_2_KG`
+  --> src\tools\rl_funnel_benchmark.py:58:13
+   |
+56 |             -PENDULUM_MASS_2_KG * PENDULUM_LINK_1_M * PENDULUM_LINK_2_M * dth2**2 * s12
+57 |             - (PENDULUM_MASS_1_KG + PENDULUM_MASS_2_KG) * g * PENDULUM_LINK_1_M * np.sin(th1),
+58 |             PENDULUM_MASS_2_KG * PENDULUM_LINK_1_M * PENDULUM_LINK_2_M * dth1**2 * s12
+   |             ^^^^^^^^^^^^^^^^^^
+59 |             - PENDULUM_MASS_2_KG * g * PENDULUM_LINK_2_M * np.sin(th2),
+60 |         ]
+   |
+
+F821 Undefined name `PENDULUM_LINK_1_M`
+  --> src\tools\rl_funnel_benchmark.py:58:34
+   |
+56 |             -PENDULUM_MASS_2_KG * PENDULUM_LINK_1_M * PENDULUM_LINK_2_M * dth2**2 * s12
+57 |             - (PENDULUM_MASS_1_KG + PENDULUM_MASS_2_KG) * g * PENDULUM_LINK_1_M * np.sin(th1),
+58 |             PENDULUM_MASS_2_KG * PENDULUM_LINK_1_M * PENDULUM_LINK_2_M * dth1**2 * s12
+   |                                  ^^^^^^^^^^^^^^^^^
+59 |             - PENDULUM_MASS_2_KG * g * PENDULUM_LINK_2_M * np.sin(th2),
+60 |         ]
+   |
+
+F821 Undefined name `PENDULUM_LINK_2_M`
+  --> src\tools\rl_funnel_benchmark.py:58:54
+   |
+56 |             -PENDULUM_MASS_2_KG * PENDULUM_LINK_1_M * PENDULUM_LINK_2_M * dth2**2 * s12
+57 |             - (PENDULUM_MASS_1_KG + PENDULUM_MASS_2_KG) * g * PENDULUM_LINK_1_M * np.sin(th1),
+58 |             PENDULUM_MASS_2_KG * PENDULUM_LINK_1_M * PENDULUM_LINK_2_M * dth1**2 * s12
+   |                                                      ^^^^^^^^^^^^^^^^^
+59 |             - PENDULUM_MASS_2_KG * g * PENDULUM_LINK_2_M * np.sin(th2),
+60 |         ]
+   |
+
+F821 Undefined name `PENDULUM_MASS_2_KG`
+  --> src\tools\rl_funnel_benchmark.py:59:15
+   |
+57 |             - (PENDULUM_MASS_1_KG + PENDULUM_MASS_2_KG) * g * PENDULUM_LINK_1_M * np.sin(th1),
+58 |             PENDULUM_MASS_2_KG * PENDULUM_LINK_1_M * PENDULUM_LINK_2_M * dth1**2 * s12
+59 |             - PENDULUM_MASS_2_KG * g * PENDULUM_LINK_2_M * np.sin(th2),
+   |               ^^^^^^^^^^^^^^^^^^
+60 |         ]
+61 |     )
+   |
+
+F821 Undefined name `PENDULUM_LINK_2_M`
+  --> src\tools\rl_funnel_benchmark.py:59:40
+   |
+57 |             - (PENDULUM_MASS_1_KG + PENDULUM_MASS_2_KG) * g * PENDULUM_LINK_1_M * np.sin(th1),
+58 |             PENDULUM_MASS_2_KG * PENDULUM_LINK_1_M * PENDULUM_LINK_2_M * dth1**2 * s12
+59 |             - PENDULUM_MASS_2_KG * g * PENDULUM_LINK_2_M * np.sin(th2),
+   |                                        ^^^^^^^^^^^^^^^^^
+60 |         ]
+61 |     )
+   |
+
+F841 Local variable `m1` is assigned to but never used
+  --> src\tools\rl_funnel_benchmark.py:75:5
+   |
+73 |     check_finite_array(x, "x")
+74 |
+75 |     m1, m2, L1, L2 = PENDULUM_M1, PENDULUM_M2, PENDULUM_L1, PENDULUM_L2
+   |     ^^
+76 |     th1, th2, _, _ = x
+77 |     M_inv = np.linalg.inv(double_pendulum_mass_matrix(th1, th2))
+   |
+help: Remove assignment to unused variable `m1`
+
+F841 Local variable `m2` is assigned to but never used
+  --> src\tools\rl_funnel_benchmark.py:75:9
+   |
+73 |     check_finite_array(x, "x")
+74 |
+75 |     m1, m2, L1, L2 = PENDULUM_M1, PENDULUM_M2, PENDULUM_L1, PENDULUM_L2
+   |         ^^
+76 |     th1, th2, _, _ = x
+77 |     M_inv = np.linalg.inv(double_pendulum_mass_matrix(th1, th2))
+   |
+help: Remove assignment to unused variable `m2`
+
+F841 Local variable `L1` is assigned to but never used
+  --> src\tools\rl_funnel_benchmark.py:75:13
+   |
+73 |     check_finite_array(x, "x")
+74 |
+75 |     m1, m2, L1, L2 = PENDULUM_M1, PENDULUM_M2, PENDULUM_L1, PENDULUM_L2
+   |             ^^
+76 |     th1, th2, _, _ = x
+77 |     M_inv = np.linalg.inv(double_pendulum_mass_matrix(th1, th2))
+   |
+help: Remove assignment to unused variable `L1`
+
+F841 Local variable `L2` is assigned to but never used
+  --> src\tools\rl_funnel_benchmark.py:75:17
+   |
+73 |     check_finite_array(x, "x")
+74 |
+75 |     m1, m2, L1, L2 = PENDULUM_M1, PENDULUM_M2, PENDULUM_L1, PENDULUM_L2
+   |                 ^^
+76 |     th1, th2, _, _ = x
+77 |     M_inv = np.linalg.inv(double_pendulum_mass_matrix(th1, th2))
+   |
+help: Remove assignment to unused variable `L2`
+
+F821 Undefined name `double_pendulum_mass_matrix`
+  --> src\tools\rl_funnel_benchmark.py:77:27
+   |
+75 |     m1, m2, L1, L2 = PENDULUM_M1, PENDULUM_M2, PENDULUM_L1, PENDULUM_L2
+76 |     th1, th2, _, _ = x
+77 |     M_inv = np.linalg.inv(double_pendulum_mass_matrix(th1, th2))
+   |                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+78 |     B_full = np.zeros((4, 2))
+79 |     B_full[2:, :] = M_inv  # torques affect angular accelerations
+   |
+
+F821 Undefined name `validate_state_vector`
+   --> src\tools\rl_funnel_benchmark.py:105:5
+    |
+103 |     if x0 is None:
+104 |         x0 = np.array([np.pi / 2, np.pi / 4, 0.0, 0.0])
+105 |     validate_state_vector(x0, "x0")
+    |     ^^^^^^^^^^^^^^^^^^^^^
+106 |
+107 |     sol = solve_ivp(
+    |
+
+F821 Undefined name `dataclass`
+   --> src\tools\rl_funnel_benchmark.py:124:2
+    |
+124 | @dataclass
+    |  ^^^^^^^^^
+125 | class BenchmarkResult:
+126 |     """Container for the output of a single benchmark run.
+    |
+
+F821 Undefined name `field`
+   --> src\tools\rl_funnel_benchmark.py:141:30
+    |
+139 |     control_effort: float
+140 |     runtime_sec: float
+141 |     trajectory: np.ndarray = field(repr=False)
+    |                              ^^^^^
+142 |     t_grid: np.ndarray = field(repr=False)
+    |
+
+F821 Undefined name `field`
+   --> src\tools\rl_funnel_benchmark.py:142:26
+    |
+140 |     runtime_sec: float
+141 |     trajectory: np.ndarray = field(repr=False)
+142 |     t_grid: np.ndarray = field(repr=False)
+    |                          ^^^^^
+    |
+
+F821 Undefined name `validate_state_vector`
+   --> src\tools\rl_funnel_benchmark.py:164:5
+    |
+162 |     n = 4
+163 |     m = 2
+164 |     validate_state_vector(x_target, "x_target")
+    |     ^^^^^^^^^^^^^^^^^^^^^
+165 |     if Q_sp is None:
+166 |         Q_sp = np.diag([10.0, 10.0, 1.0, 1.0])
+    |
+
+F821 Undefined name `validate_weight_matrix`
+   --> src\tools\rl_funnel_benchmark.py:169:5
+    |
+167 |     if R_sp is None:
+168 |         R_sp = 0.1 * np.eye(m)
+169 |     validate_weight_matrix(Q_sp, (n, n), "Q_sp")
+    |     ^^^^^^^^^^^^^^^^^^^^^^
+170 |     validate_weight_matrix(R_sp, (m, m), "R_sp")
+    |
+
+F821 Undefined name `validate_weight_matrix`
+   --> src\tools\rl_funnel_benchmark.py:170:5
+    |
+168 |         R_sp = 0.1 * np.eye(m)
+169 |     validate_weight_matrix(Q_sp, (n, n), "Q_sp")
+170 |     validate_weight_matrix(R_sp, (m, m), "R_sp")
+    |     ^^^^^^^^^^^^^^^^^^^^^^
+171 |
+172 |     # Linearize at target
+    |
+
+F821 Undefined name `DEFAULT_CONTROL_SATURATION`
+   --> src\tools\rl_funnel_benchmark.py:438:28
+    |
+436 |     dt: float = 0.001,
+437 |     seed: int = 42,
+438 |     control_limit: float = DEFAULT_CONTROL_SATURATION,
+    |                            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+439 | ) -> list[BenchmarkResult]:
+440 |     """Run full benchmark comparison: setpoint vs TTCF vs passive."""
+    |
+
+F821 Undefined name `DEFAULT_CONTROL_SATURATION`
+   --> src\tools\rl_funnel_benchmark.py:500:17
+    |
+498 |         "--control-limit",
+499 |         type=float,
+500 |         default=DEFAULT_CONTROL_SATURATION,
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+501 |         help="Symmetric control saturation limit in N·m (default: 50.0)",
+502 |     )
+    |
+
+F821 Undefined name `format_results`
+   --> src\tools\rl_funnel_benchmark.py:514:28
+    |
+512 |         control_limit=args.control_limit,
+513 |     )
+514 |     logger.warning("\n%s", format_results(results))
+    |                            ^^^^^^^^^^^^^^
+    |
+
+F401 [*] `typing.cast` imported but unused
+  --> src\tools\wrist_universal_joint\streamlit_app.py:15:25
+   |
+13 | import logging
+14 | from pathlib import Path
+15 | from typing import Any, cast
+   |                         ^^^^
+16 |
+17 | import matplotlib.pyplot as plt
+   |
+help: Remove unused import: `typing.cast`
+
+F401 [*] `.streamlit_bootstrap.configure_page` imported but unused
+  --> src\tools\wrist_universal_joint\streamlit_app.py:32:34
+   |
+30 |     DEFAULT_SIGNAL_LENGTH,
+31 | )
+32 | from .streamlit_bootstrap import configure_page, initialize_session_state, inject_custom_css
+   |                                  ^^^^^^^^^^^^^^
+33 | from .torque_calculator import (
+34 |     calculate_moments_of_inertia,
+   |
+help: Remove unused import
+
+F401 [*] `.streamlit_bootstrap.initialize_session_state` imported but unused
+  --> src\tools\wrist_universal_joint\streamlit_app.py:32:50
+   |
+30 |     DEFAULT_SIGNAL_LENGTH,
+31 | )
+32 | from .streamlit_bootstrap import configure_page, initialize_session_state, inject_custom_css
+   |                                                  ^^^^^^^^^^^^^^^^^^^^^^^^
+33 | from .torque_calculator import (
+34 |     calculate_moments_of_inertia,
+   |
+help: Remove unused import
+
+F401 [*] `.streamlit_bootstrap.inject_custom_css` imported but unused
+  --> src\tools\wrist_universal_joint\streamlit_app.py:32:76
+   |
+30 |     DEFAULT_SIGNAL_LENGTH,
+31 | )
+32 | from .streamlit_bootstrap import configure_page, initialize_session_state, inject_custom_css
+   |                                                                            ^^^^^^^^^^^^^^^^^
+33 | from .torque_calculator import (
+34 |     calculate_moments_of_inertia,
+   |
+help: Remove unused import
+
+F401 [*] `.constants.DEFAULT_GAMMA_TO_ALPHA_RATIO` imported but unused
+  --> src\tools\wrist_universal_joint\torque_calculator.py:20:24
+   |
+18 | from src.core.contracts import check_positive, ensure, require
+19 |
+20 | from .constants import DEFAULT_GAMMA_TO_ALPHA_RATIO, MAX_DELTA_DEGREES, rng
+   |                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+21 |
+22 | logger = logging.getLogger(__name__)
+   |
+help: Remove unused import: `.constants.DEFAULT_GAMMA_TO_ALPHA_RATIO`
+
+Found 57 errors.
+[*] 5 fixable with the `--fix` option (8 hidden fixes can be enabled with the `--unsafe-fixes` option).

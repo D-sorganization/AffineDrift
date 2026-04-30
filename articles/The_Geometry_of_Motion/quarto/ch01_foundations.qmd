@@ -115,8 +115,8 @@ For most of the 20th century, even when differential geometry was fully develope
 relationship between a nonlinear dynamical system and its tangent-space (linearized)
 dynamics remained framed as an *approximation*. Textbooks would write:
 \begin{quote}
-To study the qualitative behavior of a nonlinear system $\dot{\x} = f(\x)$ near an
-equilibrium $\bar{\x}$, we linearize: $\dot{\dx} = \mat{A}\,\dx$ where $\mat{A} = \frac{\partial f}{\partial \x}|_{\bar{\x}}$.
+To study the qualitative behavior of a nonlinear system $\dot\x = f(\x)$ near an
+equilibrium $\bar\x$, we linearize: $\dot{\dx} = \mat{A}\,\dx$ where $\mat{A} = \frac{\partial f}{\partial \x}|_{\bar\x}$.
 This linear system is ``close'' to the original system for small perturbations.
 \end{quote}
 
@@ -132,7 +132,7 @@ The recognition that linearization is *exact* at the infinitesimal level, not an
 approximation, came from careful attention to the definition of the Fr\'echet derivative.
 If we define smoothness via the condition
 \begin{equation}
-f(\bar{\x} + \dx) = f(\bar{\x}) + \mat{A}\,\dx + o(\norm{\dx}),
+f(\bar\x + \dx) = f(\bar\x) + \mat{A}\,\dx + o(\norm{\dx}),
 \label{eq:ch1:frechet-heuristic}
 \end{equation}
 then there is *exactly one* matrix $\mat{A}$ satisfying this property (at the infinitesimal
@@ -151,7 +151,7 @@ principle for analyzing and controlling nonlinear systems.
 
 Consider a dynamical system
 \begin{equation}
-\dot{\x} = f(\x, \uvec), \quad \x \in \R^n, \quad \uvec \in \R^m,
+\dot\x = f(\x, \uvec), \quad \x \in \R^n, \quad \uvec \in \R^m,
 \label{eq:ch1:dynamics}
 \end{equation}
 where $\x$ is the state vector and $\uvec$ is the control input. We impose the following
@@ -180,16 +180,16 @@ treatment. We address smooth systems exclusively and note hybrid extensions wher
 ### Definition and Uniqueness
 
 
-At a fixed operating point $(\bar{\x}, \bar{\uvec})$, the **Jacobian** of the vector
+At a fixed operating point $(\bar\x, \bar\uvec)$, the **Jacobian** of the vector
 field with respect to the state is the matrix
 \begin{equation}
-\mat{A} := \frac{\partial f}{\partial \x}\bigg|_{(\bar{\x},\bar{\uvec})} \in \R^{n\times n},
+\mat{A} := \frac{\partial f}{\partial \x}\bigg|_{(\bar\x,\bar\uvec)} \in \R^{n\times n},
 \label{eq:ch1:jacobian-A}
 \end{equation}
 defined as the unique linear map satisfying the Fréchet derivative condition:
 \begin{equation}
-f(\bar{\x} + \dx, \bar{\uvec})
-= f(\bar{\x}, \bar{\uvec}) + \mat{A}\,\dx + o(\norm{\dx}).
+f(\bar\x + \dx, \bar\uvec)
+= f(\bar\x, \bar\uvec) + \mat{A}\,\dx + o(\norm{\dx}).
 \label{eq:ch1:frechet}
 \end{equation}
 
@@ -197,7 +197,7 @@ The notation $o(\norm{\dx})$ denotes a remainder that vanishes faster than $\nor
 as $\norm{\dx}\to 0$:
 \begin{equation}
 \lim_{\norm{\dx}\to 0}
-\frac{\norm{f(\bar{\x}+\dx,\bar{\uvec}) - f(\bar{\x},\bar{\uvec}) - \mat{A}\dx}}{\norm{\dx}} = 0.
+\frac{\norm{f(\bar\x+\dx,\bar\uvec) - f(\bar\x,\bar\uvec) - \mat{A}\dx}}{\norm{\dx}} = 0.
 \label{eq:ch1:frechet-limit}
 \end{equation}
 
@@ -205,18 +205,16 @@ as $\norm{\dx}\to 0$:
 ### Proof of Uniqueness
 
 
-::: {#prp-frechet-unique}
-**Uniqueness of the Fréchet Derivative**
-
-If a linear map $\mat{A}$ satisfies Eq.~\eqref{eq:ch1:frechet} at $\bar{\x}$, then $\mat{A}$
+\begin{proposition}[Uniqueness of the Fréchet Derivative]\label{prop:frechet-unique}
+If a linear map $\mat{A}$ satisfies Eq.~\eqref{eq:ch1:frechet} at $\bar\x$, then $\mat{A}$
 is unique.
-:::
+\end{proposition}
 
-::: {.proof}
+\begin{proof}
 Suppose two matrices $\mat{A}$ and $\mat{A}'$ both satisfy
 \begin{align}
-f(\bar{\x} + \dx, \bar{\uvec}) &= f(\bar{\x}, \bar{\uvec}) + \mat{A}\,\dx + o(\norm{\dx}), \\
-f(\bar{\x} + \dx, \bar{\uvec}) &= f(\bar{\x}, \bar{\uvec}) + \mat{A}'\,\dx + o(\norm{\dx}).
+f(\bar\x + \dx, \bar\uvec) &= f(\bar\x, \bar\uvec) + \mat{A}\,\dx + o(\norm{\dx}), \\
+f(\bar\x + \dx, \bar\uvec) &= f(\bar\x, \bar\uvec) + \mat{A}'\,\dx + o(\norm{\dx}).
 \end{align}
 
 Subtracting these equations gives
@@ -233,14 +231,14 @@ Then
 
 As $t \to 0^+$, the term $\frac{o(t\norm{\vec{v}})}{t \cdot \norm{\vec{v}}} \to 0$ by definition of $o(\cdot)$.
 Therefore, $(\mat{A} - \mat{A}')\vec{v} = 0$ for all $\vec{v}$, implying $\mat{A} = \mat{A}'$.
-:::
+\end{proof}
 
 This uniqueness is the cornerstone of the book's philosophy. There is exactly one candidate
-for ``the infinitesimal structure'' of $f$ at $\bar{\x}$, and it is $\mat{A}$.
+for ``the infinitesimal structure'' of $f$ at $\bar\x$, and it is $\mat{A}$.
 
 \begin{axiombox}{Axiom 1: The Derivative is Exact}
 The linear map $\mat{A}$ is not an approximation to $f$. It *is* the exact
-infinitesimal structure of $f$ at $\bar{\x}$. There is no ``better'' first-order
+infinitesimal structure of $f$ at $\bar\x$. There is no ``better'' first-order
 description---$\mat{A}$ is unique by the definition of the Fréchet derivative.
 \end{axiombox}
 
@@ -256,12 +254,12 @@ distinct operations:
 
 
 The Fréchet derivative is stronger than the more permissive Gâteaux derivative. The
-**Gâteaux derivative** of $f$ at $\bar{\x}$ in direction $\vec{v}$ is
+**Gâteaux derivative** of $f$ at $\bar\x$ in direction $\vec{v}$ is
 \begin{equation}
-D_{\vec{v}} f(\bar{\x}) := \lim_{t \to 0} \frac{f(\bar{\x} + t\vec{v}) - f(\bar{\x})}{t},
+D_{\vec{v}} f(\bar\x) := \lim_{t \to 0} \frac{f(\bar\x + t\vec{v}) - f(\bar\x)}{t},
 \label{eq:ch1:gateaux}
 \end{equation}
-provided the limit exists. If $f$ is Fréchet-differentiable at $\bar{\x}$ with derivative
+provided the limit exists. If $f$ is Fréchet-differentiable at $\bar\x$ with derivative
 $\mat{A}$, then the Gâteaux derivative in any direction $\vec{v}$ exists and equals $\mat{A}\vec{v}$.
 
 However, the converse is false: a function can have all Gâteaux derivatives in all directions
@@ -351,18 +349,18 @@ in the $\sin$ function, which is $O(\norm{\dx}^2)$.
 
 Similarly, the Jacobian with respect to the input is
 \begin{equation}
-\mat{B} := \frac{\partial f}{\partial \uvec}\bigg|_{(\bar{\x},\bar{\uvec})} \in \R^{n\times m},
+\mat{B} := \frac{\partial f}{\partial \uvec}\bigg|_{(\bar\x,\bar\uvec)} \in \R^{n\times m},
 \label{eq:ch1:jacobian-B}
 \end{equation}
 satisfying
 \begin{equation}
-f(\bar{\x}, \bar{\uvec} + \du)
-= f(\bar{\x}, \bar{\uvec}) + \mat{B}\,\du + o(\norm{\du}).
+f(\bar\x, \bar\uvec + \du)
+= f(\bar\x, \bar\uvec) + \mat{B}\,\du + o(\norm{\du}).
 \label{eq:ch1:frechet-u}
 \end{equation}
 
 Together, the pair $(\mat{A}, \mat{B})$ encodes the complete first-order
-sensitivity of the dynamics at $(\bar{\x}, \bar{\uvec})$. These are the objects that every
+sensitivity of the dynamics at $(\bar\x, \bar\uvec)$. These are the objects that every
 subsequent chapter will build upon.
 
 
@@ -442,9 +440,9 @@ the tangent space as a vector space.
 
 
 In local coordinates $\x = (x_1,\dots,x_n)$ on a chart of $\mathcal{M}$, a tangent
-vector $\dx \in T_{\bar{\x}}\mathcal{M}$ is represented by its components
+vector $\dx \in T_{\bar\x}\mathcal{M}$ is represented by its components
 $(\delta x_1, \dots, \delta x_n) \in \R^n$. The Jacobian $\mat{A}$ then acts as a
-linear map $\mat{A}: T_{\bar{\x}}\mathcal{M} \to T_{\bar{\x}}\mathcal{M}$, sending one
+linear map $\mat{A}: T_{\bar\x}\mathcal{M} \to T_{\bar\x}\mathcal{M}$, sending one
 tangent vector to another.
 
 Under a smooth coordinate change $\vec{z} = \phi(\x)$ with Jacobian
@@ -474,15 +472,15 @@ contraction rates.
 When we use the linear model $\mat{A}\dx$ to predict the evolution of a *finite*
 perturbation, a residual appears:
 \begin{equation}
-f(\bar{\x} + \dx, \bar{\uvec}) - f(\bar{\x}, \bar{\uvec}) - \mat{A}\dx
+f(\bar\x + \dx, \bar\uvec) - f(\bar\x, \bar\uvec) - \mat{A}\dx
 = r(\dx),
 \label{eq:ch1:residual-def}
 \end{equation}
 where $\norm{r(\dx)} = o(\norm{\dx})$ by the Fréchet property. If $f$ is $C^2$, a
 sharper bound holds via the mean-value form of Taylor's theorem:
 \begin{equation}
-\norm{r(\dx)} \leq \frac{1}{2}\,\sup_{\xi \in [\bar{\x},\,\bar{\x}+\dx]}
-\left\lVert \frac{\partial^2 f}{\partial \x^2}(\xi,\bar{\uvec})\right\rVert
+\norm{r(\dx)} \leq \frac{1}{2}\,\sup_{\xi \in [\bar\x,\,\bar\x+\dx]}
+\left\lVert \frac{\partial^2 f}{\partial \x^2}(\xi,\bar\uvec)\right\rVert
 \cdot \norm{\dx}^2.
 \label{eq:ch1:residual-bound}
 \end{equation}
@@ -729,8 +727,8 @@ real variables miss this structure.
 
 
 \begin{axiombox}{Axiom 4: Transport Between Tangent Spaces}
-Moving along a trajectory from $\bar{\x}(t_0)$ to $\bar{\x}(t_1)$ means moving between
-tangent spaces $T_{\bar{\x}(t_0)}\mathcal{M}$ and $T_{\bar{\x}(t_1)}\mathcal{M}$. The
+Moving along a trajectory from $\bar\x(t_0)$ to $\bar\x(t_1)$ means moving between
+tangent spaces $T_{\bar\x(t_0)}\mathcal{M}$ and $T_{\bar\x(t_1)}\mathcal{M}$. The
 connection between these spaces---parallel transport, Christoffel symbols in Riemannian
 geometry---encodes the nonlinearity. Optimal control (DDP, iLQR) is therefore
 *exact local optimization + careful transport*, not ``global optimization with
@@ -745,15 +743,15 @@ Chapter~\ref{ch:variational}. For now, we sketch the idea.
 ### State Transition Matrix and Variational Equations
 
 
-Consider the system $\dot{\x} = f(\x)$ and a reference trajectory $\bar{\x}(t)$. A nearby trajectory
-with initial condition $\bar{\x}(t_0) + \dx(t_0)$ follows
+Consider the system $\dot\x = f(\x)$ and a reference trajectory $\bar\x(t)$. A nearby trajectory
+with initial condition $\bar\x(t_0) + \dx(t_0)$ follows
 \begin{equation}
-\x(t) = \bar{\x}(t) + \dx(t) + o(\norm{\dx(t_0)}),
+\x(t) = \bar\x(t) + \dx(t) + o(\norm{\dx(t_0)}),
 \label{eq:ch1:perturbed-traj}
 \end{equation}
 where $\dx(t)$ satisfies the variational equation:
 \begin{equation}
-\dot{\dx}(t) = \mat{A}(t) \, \dx(t), \quad \mat{A}(t) := \frac{\partial f}{\partial \x}\bigg|_{\bar{\x}(t)}.
+\dot{\dx}(t) = \mat{A}(t) \, \dx(t), \quad \mat{A}(t) := \frac{\partial f}{\partial \x}\bigg|_{\bar\x(t)}.
 \label{eq:ch1:variational-eq}
 \end{equation}
 
@@ -773,7 +771,7 @@ vector along a curve while keeping it ``as parallel as possible'' (minimizing ro
 to the manifold curvature). This is formalized by the Christoffel symbols $\Gamma^k_{ij}$, which
 measure how basis vectors change as you move along the manifold.
 
-For our nonlinear dynamics, an analogous concept applies: as the reference trajectory $\bar{\x}(t)$
+For our nonlinear dynamics, an analogous concept applies: as the reference trajectory $\bar\x(t)$
 evolves, the linearized dynamics at successive points are not simply comparable; they must be
 ``transported'' via the state transition matrix $\Phi(t, t_1)$. The transport is exact (no
 approximation), but it encodes the manifold's curvature.
@@ -946,13 +944,13 @@ This textbook is most applicable when:
 ### Important Distinction: Linearization vs. Linear Approximation
 
 
-::: {.callout-note title="Remark"}
+\begin{remark}
 Throughout this book, we use ``linearization'' to mean ``computing the Jacobian
 (Fréchet derivative)''---an exact operation. We reserve ``linear approximation'' for
 the distinct act of using the Jacobian to predict finite perturbations, which introduces
 the residual of Eq.~\eqref{eq:ch1:residual-def}. Conflating these two operations is
 the source of most conceptual confusion about linearization in nonlinear systems.
-:::
+\end{remark}
 
 A linearization is always exact. A linear approximation introduces error (residual). By
 keeping these concepts distinct, we unlock the structural power of tangent spaces and
@@ -1054,7 +1052,7 @@ quantitative answer.
 
 1. **Fréchet derivative computation.**
    Compute the Fréchet derivative of $f(x, y) = (x^2 y,\; \sin(xy))$ at the point $(1, \pi)$.
-   Verify that the residual $\|f(\bar{\x} + \dx) - f(\bar{\x}) - Df(\bar{\x})\dx\| = O(\|\dx\|^2)$
+   Verify that the residual $\|f(\bar\x + \dx) - f(\bar\x) - Df(\bar\x)\dx\| = O(\|\dx\|^2)$
    by evaluating at $\dx = (0.1, 0.1)$, $(0.01, 0.01)$, and $(0.001, 0.001)$.
 2. **Residual scaling table.**
    Construct a residual scaling table (analogous to Table~\ref{tab:ch1:sin-residual}) for
@@ -1078,10 +1076,10 @@ quantitative answer.
    in the text.
 7. **Connection (Axiom 3).**
    For a 2D system $\dot{x}_1 = x_2$, $\dot{x}_2 = -\sin(x_1)$ (simple pendulum), compute
-   the Jacobian $A(\bar{\x})$ at three different equilibria: $\bar{\x} = (0,0)$, $(\pi, 0)$,
+   the Jacobian $A(\bar\x)$ at three different equilibria: $\bar\x = (0,0)$, $(\pi, 0)$,
    and $(0, 1)$. How do the eigenvalues change? Interpret the change geometrically.
 8. **Programming exercise.**
-   Implement a function that, given $f: \R^n \to \R^n$ and a point $\bar{\x}$, computes the
+   Implement a function that, given $f: \R^n \to \R^n$ and a point $\bar\x$, computes the
    Fréchet derivative numerically using finite differences. Test it on the pendulum
    system from Exercise 7. Compare with the analytical Jacobian.
 

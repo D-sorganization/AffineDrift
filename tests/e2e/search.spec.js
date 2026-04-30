@@ -28,15 +28,13 @@ test.describe("Search Functionality", () => {
     if ((await searchButton.count()) > 0) {
       await searchButton.click();
 
-      // Wait for modal to appear
-      await page.waitForTimeout(300);
-
       // Check for search modal or input
       const searchModal = page.locator(
         '.search-modal, .search-container, [role="dialog"]',
       );
       const searchInput = page.locator('input[type="search"]');
 
+      await expect(searchModal.or(searchInput).first()).toBeVisible();
       const modalVisible =
         (await searchModal.count()) > 0 || (await searchInput.count()) > 0;
       expect(modalVisible).toBeTruthy();
@@ -53,8 +51,6 @@ test.describe("Search Functionality", () => {
     } else {
       await page.keyboard.press("Control+K");
     }
-
-    await page.waitForTimeout(300);
 
     // Check if search opened
     const searchInput = page.locator('input[type="search"]');

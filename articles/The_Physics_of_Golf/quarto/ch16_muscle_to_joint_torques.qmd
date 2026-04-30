@@ -84,16 +84,16 @@ Now consider a whole limb with multiple joints and multiple muscles acting acros
 Define:
 - $\bm{F}^M \in \mathbb{R}^{n_m}$: vector of muscle forces, where $n_m$ is the number of muscles.
 - $\boldsymbol{\tau} \in \mathbb{R}^{n_j}$: vector of joint torques, where $n_j$ is the number of joints.
-- $\bm{R}(\bm{q}) \in \mathbb{R}^{n_m \times n_j}$: the muscle-length Jacobian, whose entry $R_{ji}(\bm{q}) = \partial \ell_j / \partial q_i$ is the signed moment arm of muscle $j$ about joint $i$.
+- $\bm{R}(\bm{q}) \in \mathbb{R}^{n_j \times n_m}$: the moment arm matrix, whose entry $R_{ij}(\bm{q})$ is the moment arm of muscle $j$ about joint $i$.
 
 The relationship between muscle forces and joint torques is:
 $$\boldsymbol{\tau} = \bm{R}(\bm{q})^T \bm{F}^M.$$
 
-Note the transpose: $\bm{R}^T$, not $\bm{R}$. The muscle-length Jacobian $\bm{R}$ maps joint velocities to muscle lengthening velocities ($\dot{\bm{\ell}} = \bm{R} \dot{\bm{q}}$), so by the principle of virtual work, forces map in the opposite direction through the transpose. This is analogous to the Jacobian transpose mapping in robotics: if $\bm{J}$ maps joint velocities to end-effector velocities, then $\bm{J}^T$ maps end-effector forces to joint torques.
+Note the transpose: $\bm{R}^T$, not $\bm{R}$. The moment arm matrix $\bm{R}$ maps joint velocities to muscle velocities ($\dot{\bm{\ell}} = \bm{R} \dot{\bm{q}}$), so by the principle of virtual work, forces map in the opposite direction through the transpose. This is identical to the Jacobian transpose mapping in robotics: if $\bm{J}$ maps joint velocities to end-effector velocities, then $\bm{J}^T$ maps end-effector forces to joint torques.
 
 ::: {.callout-important}
 ## The Muscle Jacobian
-The muscle Jacobian $\bm{R}(\bm{q})^T$ maps muscle forces to joint torques. It is the transpose of the muscle-length Jacobian. Each entry of $\bm{R}(\bm{q})$ encodes how much one joint coordinate changes one muscle-tendon length; each entry of $\bm{R}(\bm{q})^T$ gives the corresponding signed torque contribution by virtual work.
+The muscle Jacobian $\bm{R}(\bm{q})^T$ maps muscle forces to joint torques. It is the transpose of the moment arm matrix. Each entry of $\bm{R}(\bm{q})^T$ encodes how much a unit muscle force contributes to a joint torque.
 :::
 
 This is directly analogous to the Jacobian in robotics and dynamics. For a robot with a linear actuator pulling on a rigid link, $\bm{J}^T \bm{F} = \boldsymbol{\tau}$.
@@ -150,7 +150,7 @@ For a local region, say the arm, the disparity is even more dramatic:
 - Functional DOF: \textasciitilde 7-10 (shoulder, elbow, wrist, and a few finger joints).
 
 
-This means $n_m > n_j$: the torque map $\bm{R}^T$ is wide ($n_j \times n_m$ with $n_j < n_m$). The system is **redundant**: many different muscle force combinations can produce the same joint torque.
+This means $n_m > n_j$: the muscle Jacobian $\bm{R}^T$ is tall and wide ($n_j \times n_m$ with $n_j < n_m$). The system is **redundant**: many different muscle force combinations can produce the same joint torque.
 
 ### The Null Space of the Muscle Jacobian
 
@@ -184,7 +184,7 @@ The central question in motor control is: **how does the nervous system resolve 
 
 ### In the Control-Affine Framework
 
-In the control-affine model $\dot{\bm{x}} = f(\bm{x}) + G(\bm{x})\bm{u}$, the control input $\bm{u}$ represents the **net equivalent joint torque**. This is a single generalized input per joint or actuated coordinate, subsuming the redundancy of the underlying muscles.
+In the control-affine model $\dot{\bm{x}} = f(\bm{x}) + G(\bm{x})\bm{u}$, the control input $\bm{u}$ represents the **net equivalent joint torque**. This is a single number per joint, subsume all of the redundancy of the underlying muscles.
 
 The mapping from muscle forces to net joint torque involves the muscle Jacobian, but once we work at the level of joint torques, the redundancy is no longer explicitly visible. We have traded detail (individual muscles) for simplicity (equivalent torques).
 
@@ -273,11 +273,11 @@ These **biarticular muscles** create coupling between joints: activating a biart
 
 ### The Moment Arm Matrix for Biarticular Muscles
 
-For a biarticular muscle connecting joints $i$ and $j$, the muscle-length Jacobian $\bm{R}(\bm{q})$ has non-zero entries in the same muscle row and in both joint columns. For example, if muscle $k$ is biarticular (acts at joints 2 and 3), then:
-$$R_{k,2}(\bm{q}) \neq 0 \quad \text{and} \quad R_{k,3}(\bm{q}) \neq 0.$$
+For a biarticular muscle connecting joints $i$ and $j$, the moment arm matrix $\bm{R}(\bm{q})$ has non-zero entries in both row $i$ and row $j$. For example, if muscle $k$ is biarticular (acts at joints 2 and 3), then:
+$$R_{2,k}(\bm{q}) \neq 0 \quad \text{and} \quad R_{3,k}(\bm{q}) \neq 0.$$
 
 This means that muscle $k$ contributes to both $\tau_2$ and $\tau_3$:
-$$\tau_2 = R_{k,2} F_k^M + \ldots, \quad \tau_3 = R_{k,3} F_k^M + \ldots$$
+$$\tau_2 = R_{2,k} F_k^M + \ldots, \quad \tau_3 = R_{3,k} F_k^M + \ldots$$
 
 ::: {.callout-important}
 ## Biarticular Coupling
@@ -324,7 +324,7 @@ From the muscle Jacobian relation:
 $$\boldsymbol{\tau} = \bm{R}(\bm{q})^T \bm{F}^M,$$
 we want to solve for $\bm{F}^M$ given $\boldsymbol{\tau}$ and $\bm{q}$.
 
-But $\bm{R}^T$ is a wide matrix ($n_j \times n_m$ with $n_j < n_m$). The equation $\boldsymbol{\tau} = \bm{R}^T \bm{F}^M$ is underdetermined: it has infinitely many solutions (or no solutions, if $\boldsymbol{\tau}$ is not in the column space of $\bm{R}^T$).
+But $\bm{R}^T$ is a tall, wide matrix ($n_j \times n_m$ with $n_j < n_m$). The equation $\boldsymbol{\tau} = \bm{R}^T \bm{F}^M$ is underdetermined: it has infinitely many solutions (or no solutions, if $\boldsymbol{\tau}$ is not in the column space of $\bm{R}^T$).
 
 ### Optimization Approaches
 
@@ -413,7 +413,7 @@ As the grip changes (different grip styles: strong, weak, neutral), the geometry
 
 For example, in a strong grip (club positioned more closed), the flexor carpi ulnaris has a larger moment arm about the wrist, allowing more torque for a given force. In a weak grip (club positioned more open), the flexor carpi radialis is more effective.
 
-Different grip styles effectively change the local muscle-length Jacobian $\bm{R}(\bm{q})$, making different muscle groups more or less effective for producing specific wrist torques.
+Different grip styles essentially change the muscle Jacobian $\bm{R}(\bm{q})$, making different muscle groups more or less effective for producing specific wrist torques.
 
 ### Grip Force Modulation During the Swing
 
@@ -440,7 +440,7 @@ Grip stiffness comes from co-contraction: simultaneous activation of muscles tha
 
 - Muscles generate linear forces along their line of action. Joints rotate about axes. The moment arm is the geometric bridge: moment arm = perpendicular distance from line of action to axis. Torque = force × moment arm.
 
-- The muscle-length Jacobian $\bm{R}(\bm{q})$ maps joint velocity to muscle lengthening velocity. The torque map is $\bm{R}^T$, and the relation is $\boldsymbol{\tau} = \bm{R}^T \bm{F}^M$.
+- The moment arm matrix $\bm{R}(\bm{q})$ maps muscle space to joint space. The muscle Jacobian is $\bm{R}^T$, and the relation is $\boldsymbol{\tau} = \bm{R}^T \bm{F}^M$.
 
 - Moment arms are configuration-dependent. As joints move, the moment arms change, altering the mapping from muscle forces to joint torques.
 

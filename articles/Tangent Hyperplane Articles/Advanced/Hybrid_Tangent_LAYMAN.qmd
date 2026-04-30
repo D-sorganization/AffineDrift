@@ -7,13 +7,13 @@
 
 ## The Big Idea in One Sentence
 
-**"Many real-world systems flow smoothly for a while, then jump, collide, or switch modes; tangent-space reasoning can still help, but only when the jump conditions and mode changes are modeled explicitly."**
+**"Most real-world systems don't just flow smoothly—they jump, collide, and switch modes suddenly—but we can still understand them using the same tangent space framework, with a few special tools for handling the jumps."**
 
 ---
 
 ## The Problem with Smoothness
 
-Remember the main tangent space idea? A smooth system has a linear tangent description at each instant, like a winding road that looks nearly flat if you zoom in close enough.
+Remember the main tangent space idea? Systems are secretly linear at each instant, like a winding road that's flat if you zoom in close enough.
 
 **But that story had a hidden assumption:** The road is smooth. No potholes, no sudden cliffs, no jumps.
 
@@ -359,9 +359,11 @@ Let's revisit the examples from the beginning and see how the framework handles 
 - Perturbations in club speed map linearly to perturbations in ball speed via this factor
 
 **Optimization insight:**
-In a hypothetical hybrid-DDP study, the optimizer would test how pre-impact torque, clubhead speed, shaft vibration, and impact restitution interact. A claim that slight pre-impact deceleration improves the outcome would need the objective, model parameters, and validation plots before it should be treated as a golf result.
+Using hybrid DDP (differential dynamic programming) to optimize the swing, the algorithm discovers:
+- The club should decelerate *slightly* just before impact (counter-intuitive!)
+- This maximizes energy transfer and minimizes vibration losses
 
-What the hybrid model adds is not a guaranteed coaching conclusion; it is the ability to represent the impact discontinuity instead of smoothing it away.
+This would be missed by a smooth approximation that doesn't respect the discontinuity.
 
 ### Application 3: Spacecraft Docking
 
@@ -398,7 +400,7 @@ The transition is sudden—cutting forces don't "gradually appear," they jump to
 - The jump in forces at contact excites vibrations
 - Hybrid models predict these and allow the optimizer to plan feed rates that avoid resonance
 
-**Result:** A validated hybrid machining model can represent the switch from free motion to cutting contact and can be used to study feed-rate and vibration tradeoffs. Claims about production CNC controllers or safe operating limits require machine-specific evidence.
+**Result:** Modern CNC controllers use hybrid models to plan tool paths that maximize material removal while staying within safe vibration limits.
 
 ---
 
@@ -535,7 +537,7 @@ With $k$ very large, this approximates a hard collision.
 $$\text{Gap} \times \text{Force} = 0, \quad \text{Gap} \geq 0, \quad \text{Force} \geq 0$$
 
 **Pros:**
-- Can optimize contact timings instead of requiring every jump time to be pre-specified
+- Automatically discovers contact timings (don't need to pre-specify when jumps occur)
 - Handles multiple simultaneous contacts
 
 **Cons:**
@@ -550,7 +552,7 @@ $$\text{Gap} \times \text{Force} = 0, \quad \text{Gap} \geq 0, \quad \text{Force
 Use **hybrid explicit** when:
 - Contact sequence is known (e.g., walking: left-right-left-right)
 - Accuracy and speed matter
-- You need local convergence or stability certificates and can state the assumptions behind them
+- You need guarantees (convergence, stability)
 
 Use **contact-implicit** when:
 - Contact sequence is unknown (e.g., exploring novel gaits)
@@ -642,7 +644,7 @@ But for systems like walking robots, bouncing balls, golf swings, and spacecraft
 ## Connections to the Main Tangent Space Thesis
 
 The main thesis said:
-**"Smooth nonlinear systems have linear tangent descriptions at each instant."**
+**"Nonlinear systems are secretly linear at every instant."**
 
 This article adds a crucial caveat:
 **"...as long as the system is smooth. When it jumps, the tangent space jumps too, but in a predictable linear way."**

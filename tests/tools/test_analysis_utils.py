@@ -62,6 +62,19 @@ class TestGetPythonMetrics:
         result = get_python_metrics(f)
         assert isinstance(result, dict)
 
+    def test_logs_syntax_error_file_fallback(
+        self,
+        tmp_path: Path,
+        caplog: pytest.LogCaptureFixture,
+    ) -> None:
+        """Should log a debug message when AST parsing fails."""
+        f = tmp_path / "bad.py"
+        f.write_text("def foo(\n", encoding="utf-8")
+        with caplog.at_level("DEBUG"):
+            result = collect_python_file_metrics(f)
+        assert isinstance(result, PythonFileMetrics)
+        assert "Falling back to zeroed Python metrics" in caplog.text
+
 
 class TestCollectPythonFileMetrics:
     """Tests for collect_python_file_metrics()."""
@@ -95,6 +108,16 @@ class TestCollectPythonFileMetrics:
         f = tmp_path / "nonexistent.py"
         result = collect_python_file_metrics(f)
         assert isinstance(result, PythonFileMetrics)
+
+    def test_logs_missing_file_fallback(
+        self, tmp_path: Path, caplog: pytest.LogCaptureFixture
+    ) -> None:
+        """Should log a debug message when a file cannot be read."""
+        f = tmp_path / "missing.py"
+        with caplog.at_level("DEBUG"):
+            result = collect_python_file_metrics(f)
+        assert isinstance(result, PythonFileMetrics)
+        assert "Falling back to zeroed Python metrics" in caplog.text
 
     def test_async_functions_counted(self, tmp_path: Path) -> None:
         """Should count async functions."""
@@ -152,6 +175,13 @@ class TestCollectFunctionDetails:
         """Should return empty list for invalid Python."""
         result = collect_function_details("def foo(\n")
         assert result == []
+
+    def test_logs_function_detail_parse_fallback(self, caplog: pytest.LogCaptureFixture) -> None:
+        """Should log a debug message when function-detail parsing fails."""
+        with caplog.at_level("DEBUG"):
+            result = collect_function_details("def foo(\n")
+        assert result == []
+        assert "Falling back to empty function details" in caplog.text
 
 
 class TestCalculateComplexity:

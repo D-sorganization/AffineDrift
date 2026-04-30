@@ -186,7 +186,6 @@ This paper explores constraint torques at the left wrist joint during the golf s
 
 <p>
 The radiocarpal (wrist) joint exhibits two primary degrees of freedom:
-</p>
 <ul>
 <li><strong>Flexion/Extension</strong>: Movement in the sagittal plane relative to the forearm</li>
 <li><strong>Radial/Ulnar Deviation</strong>: Movement in the frontal plane</li>
@@ -228,7 +227,6 @@ In constrained mechanical systems, the equations of motion can be written in the
 
 <p>
 where:
-</p>
 <ul>
 <li>$\mathbf{q}$ represents generalized coordinates (joint angles)
 </li>
@@ -291,7 +289,6 @@ In MATLAB Simulink's Simscape Multibody environment, joint blocks allow specific
 
 <p>
 where:
-</p>
 <ul>
 <li>Subscripts $x$ and $y$ represent the two actuated axes (e.g., flexion/extension and radial/ulnar)
 </li>
@@ -305,7 +302,6 @@ where:
 
 <p>
 The presence of $\tau_{z,\text{constraint}} \neq 0$ despite no direct actuation about the $z$-axis is the signature of constraint torque generation. This torque emerges from the interaction of:
-</p>
 <ol>
 <li>Applied torques about the actuated axes
 </li>
@@ -362,6 +358,7 @@ However, this passive transmission comes with a critical caveat: because constra
 \begin{quote}
 <em>"[Constraint torques] are dependent on motion of other components—any rotation or torque in the forearm will directly affect these and there are no degrees of freedom in the wrist to modulate or control any of these torques induced from the forearm axis. It is forced to transmit whatever it receives on the rotational axis."</em>
 \end{quote}
+</p>
 
 <p>
 This creates a control challenge: the wrist transmits constraint torques from proximal segments to the club, but has no mechanism to filter or modulate these torques. Whatever variability exists in forearm motion, trunk rotation, or their interaction will be transmitted directly through the wrist via constraint torques.
@@ -404,7 +401,6 @@ To analyze grip angle effects, we must define coordinate systems for the relevan
 
 <p>
 \paragraph{Wrist coordinate system:}
-</p>
 <ul>
 <li>$x$-axis: Flexion/extension rotation axis (approximately dorsal-palmar direction)
 </li>

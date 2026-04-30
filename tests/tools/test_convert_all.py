@@ -1,46 +1,19 @@
-"""Tests for convert_all_latex.py and convert_all_to_quarto.py batch converters.
-
-Both modules use legacy top-level relative imports (``from latex_to_html import ...``,
-``from latex_to_qmd import ...``) that only work when run from the project root as scripts.
-We stub those modules in sys.modules before importing so pytest can load them.
-"""
+"""Tests for convert_all_latex.py and convert_all_to_quarto.py batch converters."""
 
 from __future__ import annotations
 
-import sys
-import types
 from pathlib import Path
 from unittest.mock import MagicMock, patch
-
-
-def _make_stub_module(name: str) -> types.ModuleType:
-    """Return a stub module with a single MagicMock class attribute."""
-    mod = types.ModuleType(name)
-    mod.LaTeXToHTMLConverter = MagicMock  # type: ignore[attr-defined]
-    mod.LaTeXToQuartoConverter = MagicMock  # type: ignore[attr-defined]
-    return mod
 
 
 class TestConvertAllLatex:
     """Tests for src.tools.convert_all_latex.convert_all()."""
 
     def _import_convert_all_latex(self):  # noqa: ANN201
-        """Import convert_all_latex with stubbed latex_to_html."""
-        stub = _make_stub_module("latex_to_html")
-        old = sys.modules.get("latex_to_html")
-        sys.modules["latex_to_html"] = stub
-        try:
-            # Force reimport
-            if "src.tools.convert_all_latex" in sys.modules:
-                del sys.modules["src.tools.convert_all_latex"]
-            import src.tools.convert_all_latex as m
+        """Import convert_all_latex through package-qualified imports."""
+        import src.tools.convert_all_latex as m
 
-            return m
-        finally:
-            if old is None:
-                del sys.modules["latex_to_html"]
-            else:
-                sys.modules["latex_to_html"] = old
+        return m
 
     def test_dry_run_all_missing_returns_false(self) -> None:
         """dry_run=True with all missing sources returns False."""
@@ -79,21 +52,10 @@ class TestConvertAllToQuarto:
     """Tests for src.tools.convert_all_to_quarto.convert_all()."""
 
     def _import_convert_all_to_quarto(self):  # noqa: ANN201
-        """Import convert_all_to_quarto with stubbed latex_to_qmd."""
-        stub = _make_stub_module("latex_to_qmd")
-        old = sys.modules.get("latex_to_qmd")
-        sys.modules["latex_to_qmd"] = stub
-        try:
-            if "src.tools.convert_all_to_quarto" in sys.modules:
-                del sys.modules["src.tools.convert_all_to_quarto"]
-            import src.tools.convert_all_to_quarto as m
+        """Import convert_all_to_quarto through package-qualified imports."""
+        import src.tools.convert_all_to_quarto as m
 
-            return m
-        finally:
-            if old is None:
-                del sys.modules["latex_to_qmd"]
-            else:
-                sys.modules["latex_to_qmd"] = old
+        return m
 
     def test_dry_run_all_missing_returns_false(self) -> None:
         """dry_run with all missing sources returns False."""

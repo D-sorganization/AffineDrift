@@ -31,9 +31,7 @@ where $\delta x_\perp$ is the component of perturbation **transverse** to $x^*(t
 - The "reference" is a trajectory (orbit), not a point.
 - Stability is orbital (convergence to $x^*(t)$ for all $t$), not asymptotic to a fixed equilibrium.
 - Control design must respect the manifold structure of state space; coordinate-free formulations are preferred.
-- Drift $f(x)$ encodes the passive geometry of motion; control $G(x)u$ deforms it.
-
-**Required guardrail:** A phase coordinate is useful only when its domain, monotonicity condition, reset behavior, and failure cases are stated. A shoulder angle, foot-contact event, or other physical marker is not automatically a global clock replacement; it must remain well defined and locally ordered over the portion of state space being controlled.
+- Drift $f(x)$ encodes the passive geometry of motion; control $g(x)u$ deforms it.
 
 **Relationship to established theory:** CIM is not a new mathematical framework. It is a design philosophy that organizes established results on maneuver regulation and transverse dynamics (Hauser & Hindman, 1995; Shiriaev, Freidovich & Gusev, 2010), virtual constraints and hybrid zero dynamics (Westervelt et al., 2007), and orbital stabilization under one conceptual lens. Volume II develops this philosophy systematically using the tangent-space machinery of Volume I.
 :::
@@ -46,10 +44,6 @@ where $\delta x_\perp$ is the component of perturbation **transverse** to $x^*(t
 
 This volume is an active manuscript under ongoing development.
 Content is intended for transparent technical iteration and should be interpreted as provisional unless corroborated by primary literature and experiments.
-
-## Publication Guardrail
-
-The golf examples in this volume are modeling programs, not settled empirical claims. Strong statements about passive wrist release, funnel narrowing, face orientation, or repeatability require a declared mechanical model, phase coordinate, contact and grip assumptions, actuator limits, disturbance model, and either a reproducible notebook or an explicit citation to external validation data. A computed funnel certifies invariance only for the model and controller used to produce it. Claims that a release or late-downswing contraction is "self-correcting" should also state whether the argument comes from open-loop model contraction, closed-loop feedback, hybrid zero dynamics, or a numerical funnel on a declared disturbance set. Chapter 5 and Chapter 7, in particular, should distinguish open-loop underactuated behavior, closed-loop correction, and verified invariance certificates from coaching language that treats the release as automatic or recovery as inevitable.
 
 ## Source Traceability
 
@@ -96,7 +90,7 @@ Defines cycle stability and phase-consistent perturbation treatment.
 
 ## Chapter 5: Underactuation and Passive Dynamics {#book2-ch5}
 
-Explains how passive structure and limited actuation cooperate in simplified skill models.
+Explains how passive structure and limited actuation cooperate in skilled motion.
 
 [Source `.tex`](https://github.com/D-sorganization/AffineDrift/blob/main/articles/The_Geometry_of_Motion/Volume_II/chapters/ch05_underactuation_and_passive_dyn.tex){.resource-link}
 [Open Notebook in Colab](https://colab.research.google.com/github/D-sorganization/AffineDrift/blob/main/notebooks/geometry_of_motion/vol2_ch5_underactuation_and_passive_dynamics.ipynb){.resource-link target="_blank"}
@@ -112,7 +106,7 @@ Develops iterative optimization on curved state spaces with dynamics constraints
 
 ## Chapter 7: Funnel Synthesis {#book2-ch7}
 
-Constructs model- and controller-dependent trajectory tubes that certify convergence under stated disturbances.
+Constructs robust trajectory tubes that preserve convergence under disturbance.
 
 [Source `.tex`](https://github.com/D-sorganization/AffineDrift/blob/main/articles/The_Geometry_of_Motion/Volume_II/chapters/ch07_funnel_synthesis.tex){.resource-link}
 [Open Notebook in Colab](https://colab.research.google.com/github/D-sorganization/AffineDrift/blob/main/notebooks/geometry_of_motion/vol2_ch7_funnel_synthesis.ipynb){.resource-link target="_blank"}
