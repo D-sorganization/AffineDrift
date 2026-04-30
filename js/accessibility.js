@@ -253,3 +253,103 @@ export function initReadingTime() {
         articleContent.insertBefore(timeDiv, articleContent.firstChild);
     }
 }
+
+/**
+ * Accessibility Phase 2: Motion preferences (prefers-reduced-motion)
+ */
+export function initMotionPreferences() {
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (prefersReduced) {
+        document.documentElement.setAttribute('data-motion-reduced', 'true');
+    }
+
+    // Listen for changes
+    window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (e) => {
+        if (e.matches) {
+            document.documentElement.setAttribute('data-motion-reduced', 'true');
+        } else {
+            document.documentElement.removeAttribute('data-motion-reduced');
+        }
+    });
+}
+
+/**
+ * Accessibility Phase 2: High contrast mode support
+ */
+export function initHighContrastMode() {
+    const prefersContrast = window.matchMedia('(prefers-contrast: more)').matches;
+
+    if (prefersContrast) {
+        document.documentElement.setAttribute('data-high-contrast', 'true');
+    }
+
+    window.matchMedia('(prefers-contrast: more)').addEventListener('change', (e) => {
+        if (e.matches) {
+            document.documentElement.setAttribute('data-high-contrast', 'true');
+        } else {
+            document.documentElement.removeAttribute('data-high-contrast');
+        }
+    });
+}
+
+/**
+ * Accessibility Phase 2: Focus management
+ * Ensure focus is properly managed and visible
+ */
+export function initFocusManagement() {
+    // Add visual indicator for keyboard navigation
+    let isKeyboardUsing = false;
+
+    document.addEventListener('keydown', () => {
+        isKeyboardUsing = true;
+        document.body.setAttribute('data-keyboard-active', 'true');
+    });
+
+    document.addEventListener('mousedown', () => {
+        isKeyboardUsing = false;
+        document.body.removeAttribute('data-keyboard-active');
+    });
+
+    // Trap focus in modals if any exist
+    const modals = document.querySelectorAll('[role="dialog"]');
+    for (const modal of modals) {
+        const focusableElements = modal.querySelectorAll(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+
+        if (focusableElements.length > 0) {
+            const firstElement = focusableElements[0];
+            const lastElement = focusableElements[focusableElements.length - 1];
+
+            modal.addEventListener('keydown', (e) => {
+                if (e.key === 'Tab') {
+                    if (e.shiftKey && document.activeElement === firstElement) {
+                        lastElement.focus();
+                        e.preventDefault();
+                    } else if (!e.shiftKey && document.activeElement === lastElement) {
+                        firstElement.focus();
+                        e.preventDefault();
+                    }
+                }
+            });
+        }
+    }
+}
+
+/**
+ * Screen reader announcement helper
+ */
+export function announce(message, priority = 'polite') {
+    let liveRegion = document.querySelector(`[aria-live="${priority}"]`);
+
+    if (!liveRegion) {
+        liveRegion = document.createElement('div');
+        liveRegion.setAttribute('aria-live', priority);
+        liveRegion.setAttribute('aria-atomic', 'true');
+        liveRegion.className = 'sr-only';
+        document.body.appendChild(liveRegion);
+    }
+
+    liveRegion.textContent = message;
+}
