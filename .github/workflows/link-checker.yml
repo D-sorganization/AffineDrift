@@ -25,11 +25,10 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          cache: 'pip'
 
       - name: Check internal references
         run: |
-          python scripts/link-checker.py --root . --verbose
+          python scripts/link-checker.py --root . --internal-only --verbose
         continue-on-error: true
         id: internal-refs
 

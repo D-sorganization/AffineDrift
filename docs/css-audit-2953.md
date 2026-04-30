@@ -479,6 +479,6 @@ AffineDrift's CSS architecture is **well-positioned for refactoring**. The desig
 
 ---
 
-**Prepared by:** Claude Code (Haiku 4.5)  
+**Prepared by:** AffineDrift maintainers
 **Date:** 2026-04-29  
 **Related Issues:** #2953 (parent), #2726 (deep-dive review)

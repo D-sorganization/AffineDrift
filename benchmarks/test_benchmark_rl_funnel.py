@@ -152,6 +152,7 @@ def test_benchmark_rl_funnel_solver_convergence(
     x_ref[0, :] = np.linspace(0.0, np.pi, 11)
 
     def solve_problem() -> tuple[np.ndarray, np.ndarray]:
+        """Construct the trajectory-tracking LQR solver output."""
         return trajectory_tracking_lqr(t_ref, x_ref)
 
     result = benchmark(solve_problem)

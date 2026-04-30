@@ -47,6 +47,7 @@ class TestOptimizerBenchmarks:
         )
 
         def create_optimizer() -> SwingOptimizer:
+            """Instantiate a representative swing optimizer."""
             return SwingOptimizer(config)
 
         optimizer = benchmark(create_optimizer)
@@ -69,6 +70,7 @@ class TestOptimizerBenchmarks:
         control = np.ones(config.control_dim) * 0.1
 
         def compute_cost() -> float:
+            """Compute the instantaneous optimizer cost."""
             return optimizer.compute_cost(state, control)
 
         result = benchmark(compute_cost)
@@ -91,6 +93,7 @@ class TestOptimizerBenchmarks:
         state[config.n_joints :] = 5.0  # Target velocity
 
         def compute_terminal_cost() -> float:
+            """Compute the terminal optimizer cost."""
             return optimizer.compute_terminal_cost(state)
 
         result = benchmark(compute_terminal_cost)
@@ -113,6 +116,7 @@ class TestOptimizerBenchmarks:
         controls = [np.ones(config.control_dim) * 0.1 for _ in range(10)]
 
         def compute_trajectory_cost() -> float:
+            """Compute trajectory cost for a short horizon."""
             return optimizer.compute_trajectory_cost(trajectory, controls)
 
         result = benchmark(compute_trajectory_cost)
@@ -135,6 +139,7 @@ class TestOptimizerBenchmarks:
         controls = [np.ones(config.control_dim) * 0.1 for _ in range(100)]
 
         def compute_trajectory_cost() -> float:
+            """Compute trajectory cost for a long horizon."""
             return optimizer.compute_trajectory_cost(trajectory, controls)
 
         result = benchmark(compute_trajectory_cost)
@@ -161,6 +166,7 @@ class TestOptimizerBenchmarks:
         control = np.ones(config.control_dim) * 0.1
 
         def compute_cost() -> float:
+            """Compute cost for a high-dimensional optimizer state."""
             return optimizer.compute_cost(state, control)
 
         result = benchmark(compute_cost)
@@ -180,6 +186,7 @@ def test_benchmark_optimizer_cost_matrix_construction(
     config = SwingOptimizationConfig(n_joints=4, horizon_steps=50, allow_mock_solver=True)
 
     def create_optimizer_and_access_matrices() -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+        """Create an optimizer and return its cost matrices."""
         optimizer = SwingOptimizer(config)
         return optimizer.Q, optimizer.R, optimizer.Q_f
 
@@ -207,6 +214,7 @@ def test_benchmark_full_trajectory_cost_realistic_problem(
     controls = [np.random.normal(0, 0.01, config.control_dim) for _ in range(50)]
 
     def compute_full_cost() -> float:
+        """Compute trajectory cost for the realistic swing problem."""
         return optimizer.compute_trajectory_cost(trajectory, controls)
 
     benchmark(compute_full_cost)

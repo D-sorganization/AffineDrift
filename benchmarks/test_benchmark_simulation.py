@@ -48,6 +48,7 @@ class TestSimulationBenchmarks:
         control = np.zeros(3)  # No active control during flight
 
         def compute_dynamics() -> np.ndarray:
+            """Evaluate one ball-flight dynamics step."""
             return dynamics.dynamics(state, control)
 
         result = benchmark(compute_dynamics)
@@ -68,6 +69,7 @@ class TestSimulationBenchmarks:
         spin = np.array([0.0, 0.0, 2500.0])
 
         def create_state() -> BallFlightState:
+            """Instantiate a representative ball-flight state."""
             return BallFlightState(position, velocity, spin)
 
         state = benchmark(create_state)
@@ -89,6 +91,7 @@ class TestSimulationBenchmarks:
         control = np.zeros(3)
 
         def linearize() -> tuple[np.ndarray, np.ndarray]:
+            """Compute local dynamics Jacobians for the benchmark state."""
             # Use the built-in linearization method
             return dynamics.linearize(state, control)
 
@@ -113,6 +116,7 @@ class TestSimulationBenchmarks:
         control = np.zeros(3)
 
         def simulate_trajectory() -> list[np.ndarray]:
+            """Integrate a short ball-flight trajectory."""
             trajectory = [state.copy()]
             current_state = state.copy()
             for _i in range(num_steps):
@@ -143,6 +147,7 @@ class TestSimulationBenchmarks:
         control = np.zeros(3)
 
         def simulate_trajectory() -> list[np.ndarray]:
+            """Integrate a one-second ball-flight trajectory."""
             trajectory = [state.copy()]
             current_state = state.copy()
             for _i in range(num_steps):
@@ -171,6 +176,7 @@ class TestSimulationBenchmarks:
         control = np.zeros(3)
 
         def simulate_trajectory() -> list[np.ndarray]:
+            """Integrate a long high-resolution ball-flight trajectory."""
             trajectory = [state.copy()]
             current_state = state.copy()
             for _i in range(num_steps):
@@ -193,8 +199,11 @@ class TestSimulationBenchmarks:
         """
 
         def init_ddp() -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+            """Initialize the adaptive-timestep DDP mock problem."""
+
             # Mock dynamics
             def dynamics_fn(x: np.ndarray, u: np.ndarray) -> np.ndarray:
+                """Evaluate double-integrator mock dynamics."""
                 return np.concatenate([x[2:4], u])
 
             x0 = np.zeros(4)
@@ -224,6 +233,7 @@ def test_benchmark_complete_ball_flight_simulation(
     control = np.zeros(3)
 
     def simulate_full_flight() -> list[np.ndarray]:
+        """Simulate a complete launch-to-landing ball flight."""
         trajectory = [initial_state.copy()]
         current_state = initial_state.copy()
         t = 0.0

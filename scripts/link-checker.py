@@ -129,7 +129,10 @@ def validate_url(url: str, retries: int = MAX_RETRIES) -> tuple[bool, str]:  # n
 
 
 def check_file(
-    file_path: Path, defined_refs: set[str], external_only: bool = False
+    file_path: Path,
+    defined_refs: set[str],
+    external_only: bool = False,
+    internal_only: bool = False,
 ) -> tuple[list[str], list[str]]:
     """Check a single file for broken references and URLs."""
     errors = []
@@ -147,11 +150,12 @@ def check_file(
                     errors.append(f"{file_path}: Undefined reference: @{ref}")
 
         # Check external URLs
-        urls = extract_external_urls(content)
-        for url in urls:
-            is_valid, reason = validate_url(url)
-            if not is_valid:
-                warnings.append(f"{file_path}: Invalid URL: {url} ({reason})")
+        if not internal_only:
+            urls = extract_external_urls(content)
+            for url in urls:
+                is_valid, reason = validate_url(url)
+                if not is_valid:
+                    warnings.append(f"{file_path}: Invalid URL: {url} ({reason})")
 
     except Exception as e:
         errors.append(f"{file_path}: Error reading file: {e}")
@@ -163,6 +167,11 @@ def main():  # noqa: C901
     parser = argparse.ArgumentParser(description="Validate Quarto references and URLs")
     parser.add_argument("--root", default=".", help="Root directory to check")
     parser.add_argument("--external-only", action="store_true", help="Only check external URLs")
+    parser.add_argument(
+        "--internal-only",
+        action="store_true",
+        help="Only check Quarto internal references",
+    )
     parser.add_argument("--verbose", action="store_true", help="Verbose output")
     parser.add_argument("--file", help="Check specific file")
     args = parser.parse_args()
@@ -178,6 +187,9 @@ def main():  # noqa: C901
         print(f"Found {len(files)} markdown files", file=sys.stderr)
 
     # Find all defined references
+    if args.external_only and args.internal_only:
+        parser.error("--external-only and --internal-only cannot be used together")
+
     defined_refs = set() if args.external_only else find_ref_definitions(root_dir)
     if args.verbose and defined_refs:
         print(f"Found {len(defined_refs)} defined references", file=sys.stderr)
@@ -187,7 +199,12 @@ def main():  # noqa: C901
     all_warnings = []
 
     for file_path in files:
-        errors, warnings = check_file(file_path, defined_refs, args.external_only)
+        errors, warnings = check_file(
+            file_path,
+            defined_refs,
+            external_only=args.external_only,
+            internal_only=args.internal_only,
+        )
         all_errors.extend(errors)
         all_warnings.extend(warnings)
 
@@ -195,25 +212,25 @@ def main():  # noqa: C901
     if all_errors:
         print("ERRORS (critical):", file=sys.stderr)
         for error in all_errors:
-            print(f"  ✗ {error}")
+            print(f"  ERROR {error}")
 
     if all_warnings:
         print("WARNINGS (non-critical):", file=sys.stderr)
         for warning in all_warnings[:10]:  # Limit to first 10
-            print(f"  ⚠ {warning}")
+            print(f"  WARN {warning}")
         if len(all_warnings) > 10:
             print(f"  ... and {len(all_warnings) - 10} more warnings")
 
     if not all_errors and not all_warnings:
-        print("✓ All links valid!")
+        print("All links valid!")
         return 0
 
     if all_errors:
-        print(f"\n✗ {len(all_errors)} critical errors", file=sys.stderr)
+        print(f"\n{len(all_errors)} critical errors", file=sys.stderr)
         return 1
 
     if all_warnings:
-        print(f"\n⚠ {len(all_warnings)} warnings (external URLs)", file=sys.stderr)
+        print(f"\n{len(all_warnings)} warnings (external URLs)", file=sys.stderr)
         return 2
 
     return 0
