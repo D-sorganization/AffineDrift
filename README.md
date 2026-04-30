@@ -30,6 +30,8 @@ This is a static website hosted on GitHub Pages at `AffineDrift.com`.
 AffineDrift/
 ├── index.qmd           # Main homepage (Quarto markdown)
 ├── _quarto.yml         # Quarto configuration
+├── NOTATION.md         # Mathematical notation conventions (authoritative reference)
+├── SPEC.md             # Repository specification
 ├── styles.css          # Custom styling
 ├── script.js           # Interactive features
 ├── docs/               # Additional documentation
@@ -42,6 +44,11 @@ AffineDrift/
 │       └── quarto-syntax-check.yml # Quarto syntax validation
 └── *.qmd               # Content pages (Quarto markdown)
 ```
+
+### Key Documentation Files
+
+- **[NOTATION.md](NOTATION.md)** — Unified reference for mathematical symbols, sign conventions, and notation across all content. Essential reading for authors and technical reviewers.
+- **[SPEC.md](SPEC.md)** — Repository specification and architecture guidelines.
 
 ## 🚀 Quick Start
 
