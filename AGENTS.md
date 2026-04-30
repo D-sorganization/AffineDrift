@@ -294,6 +294,7 @@ AffineDrift is an educational textbook rendered with Quarto. The following rules
 - ✅ **Edit CSS only in `css/`** — never edit `docs/` CSS directly.
 - CI enforces that `docs/` mirrors match `css/` exactly.
 - CSS file sizes are enforced by `check_styles_budget.py`.
+- **MathJax Responsive Design:** Math equations on mobile must scroll horizontally. Do not use fixed font sizes that break mobile layouts. See `styles.css` for `mjx-container` responsive rules.
 
 #### 7d. DRY for Content
 
