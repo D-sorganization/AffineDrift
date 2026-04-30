@@ -30,8 +30,8 @@ def _install_streamlit_mock() -> None:
     """Install a minimal streamlit mock so plots/diagram/streamlit_app can be imported."""
     if "streamlit" not in sys.modules:
         st = types.ModuleType("streamlit")
-        st.cache_resource = lambda **kw: lambda f: f  # type: ignore[attr-defined]
-        st.cache_data = lambda **kw: lambda f: f  # type: ignore[attr-defined]
+        st.cache_resource = lambda **kw: (lambda f: f)  # type: ignore[attr-defined]
+        st.cache_data = lambda **kw: (lambda f: f)  # type: ignore[attr-defined]
 
         class _FakeState(dict):  # type: ignore[type-arg]
             def __getattr__(self, k: str) -> Any:
