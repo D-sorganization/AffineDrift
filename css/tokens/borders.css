@@ -11,6 +11,7 @@
 
 :root {
   /* ========== Border Radius Scale ========== */
+
   /* Rounded corners for different component types */
   --radius-none: 0;
   --radius-xs: 0.125rem;    /* 2px - minimal rounding */
@@ -30,6 +31,7 @@
   --radius-pill: var(--radius-full);
 
   /* ========== Border Width Scale ========== */
+
   /* Thickness of borders in different contexts */
   --border-width-0: 0px;
   --border-width-xs: 0.5px;     /* Hairline */
@@ -44,6 +46,7 @@
   --border-width-focus: var(--border-width-md);
 
   /* ========== Border Styles ========== */
+
   /* Border style declarations */
   --border-style-solid: solid;
   --border-style-dashed: dashed;
@@ -56,7 +59,9 @@
   --border-style-none: none;
 
   /* ========== Border Color Tokens ========== */
+
   /* Border colors are inherited from color tokens */
+
   /* Use CSS custom properties from colors.css */
   --border-color-default: var(--border-color);
   --border-color-light: var(--border-light);
@@ -68,6 +73,7 @@
   --border-color-info: var(--color-info);
 
   /* ========== Component-Specific Borders ========== */
+
   /* Button borders */
   --button-border-width: var(--border-width-default);
   --button-border-style: solid;
@@ -91,6 +97,7 @@
   --modal-border-radius: var(--radius-modal);
 
   /* ========== Focus Ring Borders ========== */
+
   /* For keyboard navigation accessibility */
   --focus-ring-width: 2px;
   --focus-ring-color: var(--color-primary-main);
@@ -101,27 +108,37 @@
   --focus-ring: var(--focus-ring-width) var(--focus-ring-style) var(--focus-ring-color);
 
   /* ========== Divider Borders ========== */
+
   /* For separator lines between content sections */
   --divider-width: var(--border-width-sm);
   --divider-color: var(--border-color-default);
   --divider-style: solid;
 
   /* ========== Border Transitions ========== */
+
   /* Smooth transitions for border property changes */
   --transition-border: border-color var(--duration-normal) var(--ease-standard),
                        border-width var(--duration-normal) var(--ease-standard);
 }
 
 /* ========== Dark Mode Border Adjustments ========== */
-@media (prefers-color-scheme: dark), [data-theme="dark"] {
+@media (prefers-color-scheme: dark) {
   :root {
     /* Adjust border colors for dark mode visibility */
     --border-color-default: var(--color-neutral-700);
     --border-color-light: var(--color-neutral-800);
     --border-color-dark: var(--color-neutral-400);
     --border-color-accent: var(--color-primary-light);
-
     --input-border-color: var(--color-neutral-700);
     --card-border-color: var(--color-neutral-700);
   }
+}
+
+[data-theme="dark"] {
+  --border-color-default: var(--color-neutral-700);
+  --border-color-light: var(--color-neutral-800);
+  --border-color-dark: var(--color-neutral-400);
+  --border-color-accent: var(--color-primary-light);
+  --input-border-color: var(--color-neutral-700);
+  --card-border-color: var(--color-neutral-700);
 }

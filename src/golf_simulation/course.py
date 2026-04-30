@@ -62,6 +62,10 @@ CHAMPIONSHIP_HANDICAPS: tuple[int, ...] = (
     4,
 )
 
+# Backward-compatible private aliases retained for refactor-contract tests.
+_CHAMPIONSHIP_HOLE_SPECS = CHAMPIONSHIP_HOLE_SPECS
+_CHAMPIONSHIP_HANDICAPS = CHAMPIONSHIP_HANDICAPS
+
 
 @dataclass(frozen=True)
 class GolfHole:
@@ -152,6 +156,20 @@ class GolfHole:
         if 0.0 <= t <= 1.05 and perp_dist <= fairway_width + 15.0:
             return TerrainType.ROUGH
         return None
+
+    def _fairway_projection(self, x: float, y: float) -> tuple[float, float]:
+        """Return projected progress and perpendicular distance along the hole."""
+        tee_x, tee_y = self.tee_position[0], self.tee_position[1]
+        pin_x, pin_y = self.pin_position[0], self.pin_position[1]
+        hole_dx = pin_x - tee_x
+        hole_dy = pin_y - tee_y
+        hole_length = math.sqrt(hole_dx**2 + hole_dy**2)
+        require(hole_length > 1e-6, "hole length must be positive")
+        t = ((x - tee_x) * hole_dx + (y - tee_y) * hole_dy) / (hole_length**2)
+        proj_x = tee_x + t * hole_dx
+        proj_y = tee_y + t * hole_dy
+        perp_dist = math.sqrt((x - proj_x) ** 2 + (y - proj_y) ** 2)
+        return t, perp_dist
 
     def get_terrain(self, x: float, y: float) -> TerrainType:
         """Determine the terrain type at a given position.

@@ -251,6 +251,15 @@ class RoundSimulator:
             sidespin=self.rng.normal(0.0, 10.0),
         )
 
+    def _build_launch_conditions(
+        self,
+        position: tuple[float, float, float],
+        hole: GolfHole,
+        club: GolfClub,
+    ) -> LaunchConditions:
+        """Backward-compatible alias for launch-condition construction."""
+        return self._create_launch_conditions(position, hole, club)
+
     def _handle_shot_penalty(
         self,
         start_pos: tuple[float, float, float],
@@ -278,6 +287,16 @@ class RoundSimulator:
             end_pos[1],
         )
         return new_end, new_terrain, True
+
+    def _apply_hazard_penalty(
+        self,
+        start_pos: tuple[float, float, float],
+        end_pos: tuple[float, float, float],
+        terrain: TerrainType,
+        hole: GolfHole,
+    ) -> tuple[tuple[float, float, float], TerrainType, bool]:
+        """Backward-compatible alias for shot penalty handling."""
+        return self._handle_shot_penalty(start_pos, end_pos, terrain, hole)
 
     def _simulate_shot(
         self,
@@ -345,6 +364,12 @@ class RoundSimulator:
         vy = putt_speed * math.sin(aim_angle)
         return vx, vy
 
+    def _compute_putt_initial_velocity(
+        self, dx: float, dy: float, dist: float, stimp: float
+    ) -> tuple[float, float]:
+        """Backward-compatible alias for putt launch velocity."""
+        return self._compute_putt_velocity(dx, dy, dist, stimp)
+
     def _resolve_putt_simulator(self, hole: GolfHole) -> tuple[PuttingSimulator, float]:
         """Return a putting simulator and its stimp for the given hole.
 
@@ -382,6 +407,15 @@ class RoundSimulator:
             if putt_sim.is_holed(px, py, cvx, cvy, hole.pin_position[0], hole.pin_position[1]):
                 return hole.pin_position[0], hole.pin_position[1]
         return final_x, final_y
+
+    @staticmethod
+    def _find_holed_position(
+        putt_trajectory: list[tuple[float, float]],
+        putt_sim: PuttingSimulator,
+        hole: GolfHole,
+    ) -> tuple[float, float]:
+        """Backward-compatible alias for resolving the final putt position."""
+        return RoundSimulator._find_putt_stopping_point(putt_trajectory, putt_sim, hole)
 
     def _simulate_putt(
         self,

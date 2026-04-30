@@ -12,6 +12,7 @@
 
 :root {
   /* ========== Transition Durations ========== */
+
   /* Standard timing in milliseconds */
   --duration-instant: 0ms;
   --duration-fastest: 50ms;
@@ -30,6 +31,7 @@
   --transition-duration-longer: var(--duration-slower);
 
   /* ========== Timing Functions (Easing) ========== */
+
   /* Cubic Bezier curves for natural motion */
   --ease-linear: linear;
   --ease-in: cubic-bezier(0.4, 0, 1, 1);
@@ -47,6 +49,7 @@
   --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
 
   /* ========== Composite Transition Definitions ========== */
+
   /* Pre-configured transition strings for common properties */
   --transition-all: all var(--duration-normal) var(--ease-standard);
   --transition-colors: color var(--duration-normal) var(--ease-standard),
@@ -68,20 +71,21 @@
                          transform var(--duration-fast) var(--ease-standard);
 
   /* ========== Animation Definitions ========== */
+
   /* Pre-defined keyframe animations available */
 
   /* Fade animation (opacity change) */
-  --animation-fade-in: fadeIn var(--duration-normal) var(--ease-out);
-  --animation-fade-out: fadeOut var(--duration-normal) var(--ease-in);
+  --animation-fade-in: fadein var(--duration-normal) var(--ease-out);
+  --animation-fade-out: fadeout var(--duration-normal) var(--ease-in);
 
   /* Slide animations */
-  --animation-slide-in-up: slideInUp var(--duration-slow) var(--ease-out);
-  --animation-slide-in-down: slideInDown var(--duration-slow) var(--ease-out);
-  --animation-slide-in-left: slideInLeft var(--duration-slow) var(--ease-out);
-  --animation-slide-in-right: slideInRight var(--duration-slow) var(--ease-out);
+  --animation-slide-in-up: slideinup var(--duration-slow) var(--ease-out);
+  --animation-slide-in-down: slideindown var(--duration-slow) var(--ease-out);
+  --animation-slide-in-left: slideinleft var(--duration-slow) var(--ease-out);
+  --animation-slide-in-right: slideinright var(--duration-slow) var(--ease-out);
 
   /* Scale animation */
-  --animation-scale-in: scaleIn var(--duration-normal) var(--ease-out);
+  --animation-scale-in: scalein var(--duration-normal) var(--ease-out);
 
   /* Bounce animation */
   --animation-bounce: bounce var(--duration-slower) infinite;
@@ -93,6 +97,7 @@
   --animation-spin: spin 1s linear infinite;
 
   /* ========== Animation Fill Mode ========== */
+
   /* Controls the state of animated elements before/after animation */
   --animation-fill-mode-both: both;
   --animation-fill-mode-forwards: forwards;
@@ -107,75 +112,83 @@
 }
 
 /* ========== Keyframe Definitions ========== */
+
 /* These keyframes are referenced by animation variable values above */
 
-@keyframes fadeIn {
+@keyframes fadein {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
 }
 
-@keyframes fadeOut {
+@keyframes fadeout {
   from {
     opacity: 1;
   }
+
   to {
     opacity: 0;
   }
 }
 
-@keyframes slideInUp {
+@keyframes slideinup {
   from {
     opacity: 0;
     transform: translateY(2rem);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-@keyframes slideInDown {
+@keyframes slideindown {
   from {
     opacity: 0;
     transform: translateY(-2rem);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-@keyframes slideInLeft {
+@keyframes slideinleft {
   from {
     opacity: 0;
     transform: translateX(-2rem);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
   }
 }
 
-@keyframes slideInRight {
+@keyframes slideinright {
   from {
     opacity: 0;
     transform: translateX(2rem);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
   }
 }
 
-@keyframes scaleIn {
+@keyframes scalein {
   from {
     opacity: 0;
     transform: scale(0.95);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
@@ -186,6 +199,7 @@
   0%, 100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.5;
   }
@@ -195,6 +209,7 @@
   0%, 100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-0.5rem);
   }
@@ -204,12 +219,14 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
 }
 
 /* ========== Reduced Motion Support ========== */
+
 /* Disable animations for users who prefer reduced motion */
 @media (prefers-reduced-motion: reduce) {
   :root {
