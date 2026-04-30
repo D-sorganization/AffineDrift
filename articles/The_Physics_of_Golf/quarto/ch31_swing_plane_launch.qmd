@@ -115,11 +115,11 @@ $$
 
 where:
 
--$\alpha_{\text{forearm}}$is the supination/pronation (rotation about the long axis of the forearm). Supination (palm-up rotation) opens the face; pronation (palm-down rotation) closes it. This is the **dominant** contributor, accounting for approximately 70\% of total face angle change from address to impact. 
+-$\alpha_{\text{forearm}}$ is the supination/pronation (rotation about the long axis of the forearm). Supination (palm-up rotation) opens the face; pronation (palm-down rotation) closes it. This is the **dominant** contributor to face angle change from address to impact (illustrative estimate: $\sim$70\% of total change, though the exact proportion varies with swing style).
 
--$\alpha_{\text{wrist}}$is the ulnar/radial deviation of the wrist in the plane perpendicular to the forearm axis. Ulnar deviation (wrist curl toward the pinky) closes the face; radial deviation (wrist curl toward the thumb) opens it. This contributes approximately 20\% of total face angle change. 
+-$\alpha_{\text{wrist}}$ is the ulnar/radial deviation of the wrist in the plane perpendicular to the forearm axis. Ulnar deviation (wrist curl toward the pinky) closes the face; radial deviation (wrist curl toward the thumb) opens it. This contributes a secondary portion (illustrative estimate: $\sim$20\%) of total face angle change.
 
--$\alpha_{\text{shaft twist}}$is the torsional twisting of the shaft itself due to aerodynamic and impact forces. For a modern driver, this typically contributes 5--10$^{\circ}$of change during the downswing. 
+-$\alpha_{\text{shaft twist}}$ is the torsional twisting of the shaft itself due to off-center loading and dynamic forces. For a modern driver, shaft twist during the downswing is typically 1--3$^{\circ}$ [@MacKenzie2009]; older or softer designs may exhibit somewhat more.
 
 
 ### Sensitivity Analysis: Joint Angle Errors
@@ -154,7 +154,7 @@ $$
 \text{Gate width} \approx 3\text{--}5\text{ degrees}
 $$
 
-This narrow window is why face angle control is so critical. A 5$^{\circ}$error in face angle will produce a shot 30--40 yards offline, while a 5$^{\circ}$error in club path produces a much smaller offline error (because path has a smaller effect on launch direction than face angle does, as we will discuss in Section @sec:d_plane).
+This narrow window is why face angle control is so critical. In the illustrative sensitivity model used below, a 5$^{\circ}$ face-angle error can produce a shot tens of yards offline, while a 5$^{\circ}$ club-path error produces a smaller offline error because path has a smaller effect on launch direction than face angle does (Section @sec:d_plane).
 
 ### Drift vs. Control: The Final 50 Milliseconds
 
@@ -303,6 +303,11 @@ where SMF is the smash factor, typically ranging from 1.40 to 1.50 for drivers o
 
 For a golfer with a 100 mph clubhead speed and a smash factor of approximately 1.48, the ball speed is roughly 148 mph (a typical well-struck driver; smash factor varies with strike quality and equipment; approximately 1.40--1.50 is an illustrative range [@Broadie2014; @trackman_launch]).
 
+::: {.callout-note}
+## Source Contract for Launch and Direction Numbers
+Launch monitor quantities such as club speed, ball speed, launch angle, spin rate, face angle, path, and attack angle are directly measured when radar or camera systems are used. Carry distance, optimal launch windows, and lateral-dispersion sensitivities are model- or regression-conditioned summaries based on launch-monitor datasets and ball-flight models [@Broadie2014; @trackman_launch; @trackman_ball_flight]. The numeric windows in this chapter are approximate and illustrative unless the text explicitly ties them to a named dataset or equipment rule.
+:::
+
 ### Optimal Launch Angle for Distance
 
 
@@ -363,7 +368,7 @@ Modern driver design targets specific launch conditions by manipulating:
 
 - **Center of gravity (CG) position:** By moving the CG lower and deeper in the clubhead, manufacturers increase the effective loft and reduce dynamic spin rate. A lower CG increases the launch angle; a deeper CG shifts the center of rotation further from the contact point, reducing spin. [@club_design_cg]
 
-- **Clubface flexibility:** The coefficient of restitution (COR) of the clubface affects the smash factor. High COR faces (within legal limits, which cap COR at 0.83) produce higher ball speeds, which in turn increases the optimal launch angle.
+- **Clubface flexibility:** The coefficient of restitution (COR) of the clubface affects the smash factor. High COR faces (within legal limits, which cap COR near 0.83 under equipment standards) produce higher ball speeds, which in turn changes the optimal launch window [@club_design_cg].
 
 - **Mass distribution:** Perimeter-weighted designs reduce the twisting of the club upon off-center impacts, resulting in more consistent face angle and launch direction on mishits.
 
@@ -389,7 +394,7 @@ $$
 {#eq:sensitivity_speed}
 $$
 
-This means that a 1 mph increase in ball speed produces approximately 2.5 additional yards of carry distance.
+This means that, in the local illustrative model, a 1 mph increase in ball speed produces approximately 2.5 additional yards of carry distance.
 
 $$
 \frac{\partial d_{\text{carry}}}{\partial \theta_{\text{launch}}} \approx 4--6 \text{ yards/degree (near optimum)}
@@ -441,7 +446,7 @@ $$
 \sigma_{d_{\text{carry}}} = \frac{\partial d}{\partial v_{\text{ball}}} \times \sigma_{v_{\text{ball}}} = 2.5 \times 5 = 12.5 \text{ yards}
 $$
 
-Reducing the smash factor variance to 0.03 would reduce carry distance variance to 7.5 yards—an improvement of 5 yards in the dispersion. This is more valuable than increasing average clubhead speed by 2 mph (which increases average carry by only 5 yards but doesn't reduce variance).
+In this illustrative variance calculation, reducing the smash factor variance to 0.03 would reduce carry distance variance to 7.5 yards, an improvement of 5 yards in the dispersion. The comparison with a 2 mph speed gain is model-conditioned and should not be read as a universal coaching rule.
 
 ## The ZTCF{ Perspective on Launch}
 

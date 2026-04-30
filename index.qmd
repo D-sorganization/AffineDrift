@@ -1,6 +1,6 @@
 ---
 title: "Home"
-description: "Welcome to AffineDrift - technical notes on golf mechanics and control"
+description: "AffineDrift - scientific notes on golf mechanics, modeling, and control"
 toc: false
 page-layout: full
 ---
@@ -55,7 +55,7 @@ page-layout: full
           <div id="models-section" class="sidebar-section-content">
             <ul class="resource-links">
               <li><a href="models/models.html">Golf Modeling Suite</a></li>
-              <li><a href="https://github.com/D-sorganization/Golf_Modeling_Suite" target="_blank" rel="noopener">GitHub Repository</a></li>
+              <li><a href="https://github.com/D-sorganization/UpstreamDrift" target="_blank" rel="noopener">UpstreamDrift Repository</a></li>
             </ul>
           </div>
         </div>
@@ -97,17 +97,51 @@ page-layout: full
       <!-- Welcome Section -->
       <section id="welcome" class="welcome-section">
         <div class="welcome-header">
-          <h1>Welcome to AffineDrift</h1>
-          <p class="subtitle">Technical Notes on Golf Mechanics and Control</p>
+          <h1>AffineDrift</h1>
+          <p class="subtitle">Scientific Notes on Golf Mechanics, Modeling, and Control</p>
         </div>
 
         <div class="welcome-intro">
           <p>
-            AffineDrift collects technical articles, textbook chapters, and reference material on multibody dynamics, control, biomechanics, and the golf swing. The site distinguishes established mathematical structure from AffineDrift's own model-dependent interpretations and working hypotheses.
+            AffineDrift is a technical research portfolio on golf swing mechanics, multibody dynamics, and nonlinear control. It collects textbook-style chapters, source maps, reproducible model links, validation notes, and critique responses so that claims can be read with their assumptions and evidence in view.
           </p>
           <p>
-            The material is organized into two main textbooks, exploratory article series, critique pages, and a reference library of external resources.
+            The established material is the mathematics and mechanics literature behind the models. The AffineDrift contribution is the golf-specific application, synthesis, and review workflow: some pages are polished exposition, while others remain exploratory hypotheses or implementation notes.
           </p>
+        </div>
+      </section>
+
+      <!-- Technical Reviewer Path -->
+      <section id="reviewers" class="reviewer-section" style="margin-top: 2rem;">
+        <h2>For Technical Reviewers</h2>
+        <p>
+          Start with the clearest evidence path: the golf mechanics chapters, the control-affine derivation, the bibliography, the critique log, and the executable model entry points.
+        </p>
+        <div class="quick-links-grid">
+          <a href="articles/The_Physics_of_Golf/quarto/index.html" class="quick-link-card">
+            <span class="quick-link-icon"><i class="bi bi-book" aria-hidden="true"></i></span>
+            <span class="quick-link-text">Physics of Golf</span>
+          </a>
+          <a href="articles/theory-part1.html" class="quick-link-card">
+            <span class="quick-link-icon"><i class="bi bi-diagram-3" aria-hidden="true"></i></span>
+            <span class="quick-link-text">Theory Part 1</span>
+          </a>
+          <a href="resources/bibliography.html" class="quick-link-card">
+            <span class="quick-link-icon"><i class="bi bi-journals" aria-hidden="true"></i></span>
+            <span class="quick-link-text">Bibliography</span>
+          </a>
+          <a href="critiques/index.html" class="quick-link-card">
+            <span class="quick-link-icon"><i class="bi bi-chat-square-text" aria-hidden="true"></i></span>
+            <span class="quick-link-text">Critiques &amp; Responses</span>
+          </a>
+          <a href="models/models.html" class="quick-link-card">
+            <span class="quick-link-icon"><i class="bi bi-laptop" aria-hidden="true"></i></span>
+            <span class="quick-link-text">Model Entry Point</span>
+          </a>
+          <a href="https://github.com/D-sorganization/UpstreamDrift" class="quick-link-card" target="_blank" rel="noopener">
+            <span class="quick-link-icon"><i class="bi bi-github" aria-hidden="true"></i></span>
+            <span class="quick-link-text">UpstreamDrift</span>
+          </a>
         </div>
       </section>
 
@@ -117,18 +151,18 @@ page-layout: full
         <div class="audience-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
           <div class="audience-card" style="padding: 1.5rem; background: var(--bg-secondary, #f8f9fa); border-radius: 8px; border-top: 4px solid var(--primary-color, #2563eb);">
             <h3><i class="bi bi-person-badge"></i> For Practitioners</h3>
-            <p><strong>Focus:</strong> Actionable numbers, validated ranges, reproducible methods.</p>
-            <p>Coaches and analysts will find explicitly defined mechanical thresholds, simulation-backed insights on swing path optimization, and concrete parameter ranges for golf biomechanics.</p>
+            <p><strong>Focus:</strong> model assumptions, parameter definitions, and reproducible methods.</p>
+            <p>Coaches and analysts should treat golf-specific metrics as model outputs or hypotheses unless a page identifies a cited source or validation artifact.</p>
           </div>
           <div class="audience-card" style="padding: 1.5rem; background: var(--bg-secondary, #f8f9fa); border-radius: 8px; border-top: 4px solid #10b981;">
             <h3><i class="bi bi-person"></i> For Laypersons</h3>
             <p><strong>Focus:</strong> Intuitive explanations, motivated examples, plain English.</p>
-            <p>Look for the "Layman's Terms" boxes throughout our articles, which translate abstract control theory concepts into relatable analogies and real-world golf scenarios without the math.</p>
+            <p>Plain-language sections translate technical arguments without removing the page-level caveats about model scope and evidence status.</p>
           </div>
           <div class="audience-card" style="padding: 1.5rem; background: var(--bg-secondary, #f8f9fa); border-radius: 8px; border-top: 4px solid #8b5cf6;">
             <h3><i class="bi bi-calculator"></i> For Mathematicians</h3>
             <p><strong>Focus:</strong> Precise definitions, complete derivations, consistent notation.</p>
-            <p>Explore the textbooks and theory articles for rigorous formulations of the golf swing as an affine controllable system, complete with differential dynamic programming (DDP) solutions.</p>
+            <p>Use the textbooks and theory articles to inspect the control-affine framing, derivation choices, notation, and boundaries between standard results and AffineDrift synthesis.</p>
           </div>
         </div>
       </section>
@@ -136,7 +170,7 @@ page-layout: full
       <!-- Math Showcase -->
       <section id="framework" class="math-section" style="margin-top: 3rem;">
         <h2>The Core Framework</h2>
-        <p>The golf swing can be modeled as a control-affine system:</p>
+        <p>Several pages model the golf swing as a control-affine system:</p>
         <div class="math-showcase">
           $$\dot{x} = f(x) + g(x)u$$
         </div>
@@ -148,15 +182,15 @@ page-layout: full
         </div>
       </section>
 
-      <!-- About the Approach Section -->
-      <section id="approach" class="approach-section" style="margin-top: 3rem;">
-        <h2>AI Methodology and Review Process</h2>
+      <!-- Verification and Review Section -->
+      <section id="verification" class="approach-section" style="margin-top: 3rem;">
+        <h2>Verification and Review Workflow</h2>
         <div class="approach-content">
           <p>
-            AffineDrift represents a novel approach to scientific synthesis: <strong>AI-Assisted Research</strong>. The site is assembled through a highly structured, mixed drafting and review workflow utilizing advanced AI agents to accelerate literature synthesis, code generation, and mathematical derivations.
+            AffineDrift prioritizes artifacts that can be inspected: equations, citations, executable model links, validation reports, issue-linked review notes, and CI results. Syntax checks, tests, and repository inventories help catch mechanical errors, but they do not convert exploratory biomechanical interpretations into established results.
           </p>
           <p>
-            However, all AI outputs are subjected to rigorous constraints: assumptions must be made explicit, and claims must be tied to stated mathematical models or cited sources. Priority is given to material that can be checked directly: equations that can be inspected, code that can be reviewed, and references that can be traced independently.
+            AI assistance is used as a constrained drafting, refactoring, and review workflow. It helps surface inconsistencies, generate candidate edits, and run repeatable checks; the scientific claims still have to be tied to stated assumptions, cited sources, model code, or explicit numerical experiments.
           </p>
           <p>
             Not every page is at the same editorial stage. Some pages are polished expositions, while others remain exploratory notes or literature-review scaffolds and should be read with the status notes on each page in mind.
@@ -197,9 +231,9 @@ page-layout: full
         <h3 class="sidebar-heading">On This Page</h3>
         <ul class="toc-links">
           <li><a href="#welcome">Welcome</a></li>
-
+          <li><a href="#reviewers">For Reviewers</a></li>
           <li><a href="#framework">Core Framework</a></li>
-          <li><a href="#approach">AI-Assisted Research</a></li>
+          <li><a href="#verification">Verification</a></li>
           <li><a href="#quickstart">Quick Start</a></li>
         </ul>
       </div>
