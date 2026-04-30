@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-04-30T02:00:00Z
+Last-Updated: 2026-04-30T18:00:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -30,7 +30,7 @@ Last-Updated: 2026-04-30T02:00:00Z
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
 | **Spec Version**        | 1.0.93                                           |
-| **Last Spec Update**    | 2026-04-29                                       |
+| **Last Spec Update**    | 2026-04-30                                       |
 
 ## 2. Purpose & Mission
 
@@ -196,10 +196,10 @@ AffineDrift/
 | F36 | Dynamic beam model consistency          | ✅     | Physics of Golf chapter 11 uses the dynamic Euler-Bernoulli equation with explicit inertial term and a content test guards the modal consistency of the governing equation in the chapter source.                                                                                                                                                                                                |
 | F37 | Double-pendulum parameter context       | ✅     | Physics of Golf chapters 3, 6, and 8 explicitly document when their double- or triple-pendulum parameters are canonical chapter baselines versus compact worked-example sets, with content tests guarding the modeling-context notes.                                                                                                                                                            |
 | F38 | Robust quaternion extraction            | ✅     | The rotation-representations reference article uses a numerically stable matrix-to-quaternion extraction path for trace-positive and dominant-axis cases, with executable regression coverage for 180-degree rotations about coordinate axes and arbitrary unit axes.                                                                                                                            |
-| F39 | Workflow documentation hygiene          | ✅     | `.github/workflows/` is kept to executable workflow definitions; workflow-directory documentation is tracked through `docs/development/repository_inventory.md` and `SPEC.md` so non-workflow Markdown does not live beside Actions YAML files.                                                                                                                                               |
-| F40 | Opt-in benchmark suite                  | ✅     | `benchmarks/` provides pytest-benchmark-compatible baseline timing checks for double-pendulum dynamics and trajectory-cost helpers; normal `pytest` remains scoped to `tests/` so routine validation does not run benchmark timing.                                                                                                                                                          |
-| F41 | Distributed code review enforcement     | ✅     | .github/workflows/block-self-merge.yml prevents PR authors from approving their own pull requests; enforced at the review stage with branch protection rules as the authoritative gate |
-| F42 | Cyclomatic complexity (McCabe) gate     | ✅     | Enforces `max-complexity = 10` in Ruff CI to maintain code quality |
+| F39 | Workflow documentation hygiene          | ✅     | `.github/workflows/` is kept to executable workflow definitions; workflow-directory documentation is tracked through `docs/development/repository_inventory.md` and `SPEC.md` so non-workflow Markdown does not live beside Actions YAML files.                                                                                                                                                  |
+| F40 | Opt-in benchmark suite                  | ✅     | `benchmarks/` provides pytest-benchmark-compatible baseline timing checks for double-pendulum dynamics and trajectory-cost helpers; normal `pytest` remains scoped to `tests/` so routine validation does not run benchmark timing.                                                                                                                                                              |
+| F41 | Distributed code review enforcement     | ✅     | .github/workflows/block-self-merge.yml prevents PR authors from approving their own pull requests; enforced at the review stage with branch protection rules as the authoritative gate                                                                                                                                                                                                           |
+| F42 | Cyclomatic complexity (McCabe) gate     | ✅     | Enforces `max-complexity = 10` in Ruff CI to maintain code quality                                                                                                                                                                                                                                                                                                                               |
 
 ### API / Interface Contract
 
@@ -367,7 +367,7 @@ AffineDrift follows a **test pyramid** strategy: unit tests form the base (fast,
 | `link-check.yml`          | Push/PR         | Validate all links in content                                                                   | Yes                |
 | `css-budget.yml`          | Push/PR         | Enforce CSS file size limits                                                                    | Yes                |
 | `module-size-budget.yml`  | Push/PR         | Enforce Python module complexity                                                                | Yes                |
-| `block-self-merge.yml`    | PR review/open  | Prevent PR author self-approval; enforce distributed code review requirement                   | Yes                |
+| `block-self-merge.yml`    | PR review/open  | Prevent PR author self-approval; enforce distributed code review requirement                    | Yes                |
 | `dry-tracker.yml`         | Nightly         | Identify code duplication patterns                                                              | No (informational) |
 | `Jules automation agents` | Various         | Automated code review, refactoring suggestions                                                  | No (informational) |
 
@@ -595,7 +595,12 @@ python src/tools/code_quality_ast.py
 | 2026-04-29 | 1.0.89 | test(benchmarks): add opt-in pytest-benchmark scaffolding, lightweight baseline benchmarks, and local benchmarking documentation for issue #2919. |
 | 2026-04-29 | 1.0.90 | feat(ci): add `.github/workflows/block-self-merge.yml` to enforce distributed code review policy, preventing PR authors from approving their own pull requests with branch protection as the authoritative enforcement gate (issue #2918). |
 | 2026-04-29 | 1.0.91 | docs(spec): document code review enforcement and benchmark suite integration in SPEC.md with feature entry F41, test organization updates, and pytest configuration details. |
+<<<<<<< HEAD
 < ! - -   U p d a t e d :   2 0 2 6 - 0 4 - 2 9 T 1 8 : 1 7 : 5 0   - - >  
  < ! - -   U p d a t e d :   2 0 2 6 - 0 4 - 2 9 T 1 9 : 2 0 : 3 8   - - >  
  < ! - -   U p d a t e d :   2 0 2 6 - 0 4 - 2 9 T 1 9 : 2 7 : 3 0   - - >  
  | 2026-04-30 | 1.0.93 | ui(accessibility): Enhanced the bibliography search empty state with ARIA live region and query reflection for better screen reader support. |
+=======
+| 2026-04-30 | 1.0.92 | ui: Bibliography focus management for bibliography details |
+< ! - - U p d a t e d : 2 0 2 6 - 0 4 - 3 0 T 1 0 : 0 0 : 0 0 - - >
+>>>>>>> 934b39b (fix: resolve quality-gate format, SPEC.md freshness, and link-checker flakiness)
