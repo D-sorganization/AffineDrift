@@ -200,6 +200,7 @@ class TestSimulationBenchmarks:
 
         def init_ddp() -> tuple[np.ndarray, np.ndarray, np.ndarray]:
             """Initialize the adaptive-timestep DDP mock problem."""
+
             # Mock dynamics
             def dynamics_fn(x: np.ndarray, u: np.ndarray) -> np.ndarray:
                 """Evaluate double-integrator mock dynamics."""
