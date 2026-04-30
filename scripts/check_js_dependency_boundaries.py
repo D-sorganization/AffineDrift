@@ -45,9 +45,7 @@ def _to_repo_relative(repo_root: Path, candidate: str) -> str | None:
     return candidate.replace("\\", "/")
 
 
-def _check_file_rules(
-    repo_root: Path, file_path: Path, rules: list, excludes: list
-) -> list[str]:
+def _check_file_rules(repo_root: Path, file_path: Path, rules: list, excludes: list) -> list[str]:
     """Check dependency rules for a single file."""
     rel = file_path.relative_to(repo_root).as_posix()
     if not file_path.is_file() or "node_modules/" in rel:

@@ -107,8 +107,7 @@ def is_legitimate_pass_context(lines: list[str], line_num: int) -> bool:
         if prev_line.startswith("def "):
             return False
         if prev_line.endswith(":") and any(
-            kw in prev_line
-            for kw in ["try:", "except", "finally:", "with ", "if __name__"]
+            kw in prev_line for kw in ["try:", "except", "finally:", "with ", "if __name__"]
         ):
             return True
 
