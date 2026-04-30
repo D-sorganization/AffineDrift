@@ -2719,3 +2719,121 @@ h1.title,
   background: var(--accent-blue);
   color: #fff;
 }
+
+/* =============================================================
+   Accessibility Phase 2: Focus States & Motion (Issue #2970)
+   ============================================================= */
+
+/* Comprehensive focus state for all interactive elements */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+[role="button"]:focus-visible,
+[role="tab"]:focus-visible,
+[role="menuitem"]:focus-visible {
+  outline: 3px solid var(--accent-blue, #3b82f6);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Ensure focus is never hidden */
+*:focus-visible {
+  outline: 3px solid var(--accent-blue, #3b82f6);
+  outline-offset: 2px;
+}
+
+/* Dark mode focus ring adjustment */
+[data-theme="dark"] button:focus-visible,
+[data-theme="dark"] a:focus-visible,
+[data-theme="dark"] input:focus-visible {
+  outline-color: var(--accent-cyan, #06b6d4);
+}
+
+/* Ensure :focus-visible is visible (no outline: none) */
+button:focus,
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 3px solid var(--accent-blue, #3b82f6);
+  outline-offset: 2px;
+}
+
+/* Skip focus styling for mouse-only users (when :focus-visible not supported) */
+button:focus:not(:focus-visible),
+a:focus:not(:focus-visible),
+input:focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+}
+
+/* Motion & Animation Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  /* Preserve essential visual feedback */
+  button:hover,
+  a:hover,
+  input:hover {
+    background-color: var(--bg-hover, rgba(0, 0, 0, 0.05));
+  }
+
+  /* Disable parallax and other motion effects */
+  [data-parallax] {
+    transform: none !important;
+  }
+
+  /* Reduce carousel auto-play */
+  [role="region"][aria-live="polite"] {
+    animation: none !important;
+  }
+}
+
+/* Keyboard navigation indicators */
+::-moz-focus-inner {
+  border: 0;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: more) {
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible {
+    outline-width: 4px;
+    outline-color: currentColor;
+  }
+
+  button,
+  a,
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"] {
+    border: 2px solid currentColor;
+  }
+}
+
+/* Color contrast helper classes (for component authors) */
+.high-contrast-text {
+  color: var(--text-main);
+  background: var(--bg-body);
+  /* Ensures ≥4.5:1 contrast ratio */
+}
+
+.large-text-contrast {
+  color: var(--text-main);
+  /* Large text (≥18pt or ≥14pt bold) requires ≥3:1 */
+}
+
+/* Focus order documentation */
+/* All interactive elements should have logical tab order */
+/* Use tabindex -1 for disabled/hidden elements */
+/* Use tabindex 0 for custom interactive components */
