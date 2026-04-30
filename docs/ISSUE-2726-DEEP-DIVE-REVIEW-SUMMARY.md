@@ -19,7 +19,7 @@ However, the repository faces **critical infrastructure blockers** that undermin
 3. **HIGH: No Docker containerization** — Environment drift risk for collaborators
 4. **HIGH: No structured logging** — Operational blind spot for debugging CI failures
 
-These findings are documented in `/assessments/2026-04-29-comprehensive-assessment.md` (16 KB).
+These findings are documented in `../assessments/2026-04-29-comprehensive-assessment.md` (16 KB).
 
 ---
 
@@ -511,7 +511,7 @@ Despite blockers, AffineDrift demonstrates exceptional quality in core scientifi
 ## References
 
 **Full Assessment Document:**
-- `/assessments/2026-04-29-comprehensive-assessment.md` (28 KB)
+- `../assessments/2026-04-29-comprehensive-assessment.md` (28 KB)
 - Assessment framework: Pragmatic Programmer (8 principles) + A-O Model
 
 **Related Issues:**

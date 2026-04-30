@@ -319,7 +319,7 @@ Despite blockers, AffineDrift demonstrates exceptional quality:
 
 ### Deep-Dive Review (Issue #2726)
 1. `docs/ISSUE-2726-DEEP-DIVE-REVIEW-SUMMARY.md` — Strategic analysis (NEW)
-2. References: `/assessments/2026-04-29-comprehensive-assessment.md` (existing)
+2. References: `../assessments/2026-04-29-comprehensive-assessment.md` (existing)
 
 ### This Document
 1. `docs/STRATEGIC-WORK-SUMMARY.md` — Executive summary (NEW)
