@@ -29,7 +29,7 @@ Last-Updated: 2026-04-30T02:00:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.92                                           |
+| **Spec Version**        | 1.0.93                                           |
 | **Last Spec Update**    | 2026-04-29                                       |
 
 ## 2. Purpose & Mission
@@ -598,4 +598,4 @@ python src/tools/code_quality_ast.py
 < ! - -   U p d a t e d :   2 0 2 6 - 0 4 - 2 9 T 1 8 : 1 7 : 5 0   - - >  
  < ! - -   U p d a t e d :   2 0 2 6 - 0 4 - 2 9 T 1 9 : 2 0 : 3 8   - - >  
  < ! - -   U p d a t e d :   2 0 2 6 - 0 4 - 2 9 T 1 9 : 2 7 : 3 0   - - >  
- 
+ | 2026-04-30 | 1.0.93 | ui(accessibility): Enhanced the bibliography search empty state with ARIA live region and query reflection for better screen reader support. |

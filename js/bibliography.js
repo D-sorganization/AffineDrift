@@ -159,9 +159,9 @@
 
     if (state.filtered.length === 0) {
       listEl.innerHTML = `
-        <div class="bib-empty-state">
-          <p>No matches found. Try a broader query.</p>
-          <button type="button" class="sort-btn" id="bib-clear-search" style="margin-top: 1rem;">Clear Search</button>
+        <div class="bib-empty-state" role="status" aria-live="polite">
+          <p>No matches found for "<strong>${escapeHtml(state.query)}</strong>". Try a broader query.</p>
+          <button type="button" class="sort-btn" id="bib-clear-search" style="margin-top: 1rem;" aria-label="Clear search and show all references">Clear Search</button>
         </div>
       `;
       return;
@@ -315,6 +315,17 @@
       );
       if (!entry) return;
       renderDetails(entry);
+
+      // 🎨 Palette UX: Add focus management so screen readers announce the details pane
+      // Make it programmatically focusable but not in the tab sequence
+      detailsEl.setAttribute("tabindex", "-1");
+      detailsEl.focus({ preventScroll: true });
+
+      // Remove tabindex on blur to keep DOM clean
+      detailsEl.addEventListener("blur", () => {
+        detailsEl.removeAttribute("tabindex");
+      }, { once: true });
+
       if (window.AffineDriftMetrics) {
         window.AffineDriftMetrics.trackEntryClick(entry.id, entry.title);
       }

@@ -39,7 +39,7 @@ def find_markdown_files(root_dir: str) -> list[Path]:
     """Find all markdown and qmd files, excluding cache and environment directories."""
     files = []
     ignore_dirs = {".pytest_cache", ".venv", ".ruff_cache", "node_modules", ".git"}
-    
+
     root_path = Path(root_dir)
     for pattern in ["**/*.md", "**/*.qmd"]:
         for path in root_path.glob(pattern):
@@ -60,7 +60,7 @@ def extract_external_urls(content: str) -> set[str]:
     # Clean up URLs (remove trailing punctuation)
     urls = set()
     for url in matches:
-        url = url.rstrip(".,;:!?'\")")
+        url = url.rstrip(".,;:!?'\")\`")
         if url.startswith("http"):
             urls.add(url)
     return urls
