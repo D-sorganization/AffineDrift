@@ -597,3 +597,4 @@ python src/tools/code_quality_ast.py
 | 2026-04-29 | 1.0.91 | docs(spec): document code review enforcement and benchmark suite integration in SPEC.md with feature entry F41, test organization updates, and pytest configuration details. |
 | 2026-04-30 | 1.0.92 | ui: Bibliography focus management for bibliography details |
 | 2026-04-30 | 1.0.93 | ui(accessibility): Enhanced the bibliography search empty state with ARIA live region and query reflection for better screen reader support. |
+| 2026-04-30 | 1.0.94 | fix(spec): resolve SPEC.md merge conflict markers and bump spec version for focus management feature. |
