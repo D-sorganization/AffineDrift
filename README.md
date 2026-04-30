@@ -45,13 +45,12 @@ Start with these paths:
 - [Golf Modeling Suite](models/models.qmd) for the site-level model entry point.
 - [UpstreamDrift](https://github.com/D-sorganization/UpstreamDrift) for related executable model and workflow implementation.
 
-## AI Assistance and Review Workflow
+## Assumptions, Review, and Validation
 
-AI tools are used as constrained drafting, refactoring, and review aids. They are
-not the scientific claim of the project. Generated or assisted material is
-expected to pass through explicit checks: assumptions must be stated, claims must
-be tied to sources or models, and limitations should remain visible when the
-evidence is incomplete.
+Computational tools support drafting, refactoring, and repeatable checks. They
+are not the scientific claim of the project. Technical claims are expected to be
+tied to stated assumptions, cited sources, model code, or explicit numerical
+experiments, with limitations visible when evidence is incomplete.
 
 In practice, the workflow emphasizes inspectable artifacts: equations, scripts,
 references, diffs, tests, and issue-linked review notes.
