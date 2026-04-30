@@ -99,6 +99,19 @@ h4 {
   margin-bottom: 0.5rem;
 }
 
+/* MathJax Layout & Overflow Control */
+/* stylelint-disable selector-class-pattern */
+.math.display, 
+.MathJax_Display,
+mjx-container[display="true"] {
+  overflow: auto hidden;
+  max-width: 100%;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+/* stylelint-enable selector-class-pattern */
+
 /* Mobile Responsiveness Enhancements */
 @media (width < var(--breakpoint-md)) {
   .equation {
@@ -106,6 +119,14 @@ h4 {
     margin: 1rem 0;
     font-size: 0.9rem;
   }
+  
+  /* stylelint-disable selector-class-pattern */
+  .math.display, 
+  .MathJax_Display,
+  mjx-container[display="true"] {
+    font-size: 0.9em;
+  }
+  /* stylelint-enable selector-class-pattern */
   
   .abstract-section {
     padding: 1.25rem;
