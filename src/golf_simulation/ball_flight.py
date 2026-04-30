@@ -299,6 +299,13 @@ class BallFlightDynamics(DynamicalSystem):
         trajectory[-1] = self._state_from_vector(state_vec)
         logger.debug("Ball landed at t=%.3f s, x=%.1f, y=%.1f", t, state_vec[0], state_vec[1])
 
+    def _clamp_to_ground(self, state_vec: np.ndarray[Any, Any], t: float) -> BallFlightState:
+        """Backward-compatible helper that clamps a raw state vector to ground level."""
+        state_vec = state_vec.copy()
+        trajectory = [self._state_from_vector(state_vec)]
+        self._clamp_landing(state_vec, trajectory, t)
+        return trajectory[-1]
+
     def simulate(
         self,
         initial_state: BallFlightState,
