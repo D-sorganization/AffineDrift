@@ -31,11 +31,14 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
+        timeout-minutes: 10
+        env:
+          PIP_DEFAULT_TIMEOUT: "60"
         run: |
           python -m venv "$RUNNER_TEMP/benchmark-venv"
           source "$RUNNER_TEMP/benchmark-venv/bin/activate"
           python -m pip install --upgrade pip setuptools
-          python -m pip install -r requirements.txt
+          python -m pip install --no-cache-dir -r requirements.txt
           echo "$RUNNER_TEMP/benchmark-venv/bin" >> "$GITHUB_PATH"
 
       - name: Run benchmarks and compare with baseline

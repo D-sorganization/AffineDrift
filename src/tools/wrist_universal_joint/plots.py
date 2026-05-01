@@ -9,11 +9,10 @@ This module contains matplotlib-based plotting functions:
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
-import matplotlib.pyplot as plt
 import numpy as np
-import streamlit as st
+from matplotlib.figure import Figure
 
 from src.core.contracts import check_positive, check_range
 
@@ -24,9 +23,6 @@ from .torque_calculator import (
 )
 
 logger = logging.getLogger(__name__)
-
-if TYPE_CHECKING:
-    from matplotlib.figure import Figure
 
 logger = logging.getLogger(__name__)
 
@@ -81,9 +77,6 @@ def _plot_torque_lines(
         ax.plot(t, torque_gamma, label="\u03c4_\u03b3 (lowest MOI axis)", color="blue", linewidth=2)
 
 
-# Cache figure generation to prevent expensive redraws
-# Limit entries to prevent OOM when sliding through many angles
-@st.cache_resource(max_entries=20)
 def plot_torque(
     t: np.ndarray[Any, Any],
     input_torque: np.ndarray[Any, Any],
@@ -102,7 +95,8 @@ def plot_torque(
     check_positive(i_alpha, "i_alpha")
     check_positive(i_gamma, "i_gamma")
 
-    fig, ax = plt.subplots(figsize=(10, 6))
+    fig = Figure(figsize=(10, 6))
+    ax = fig.add_subplot(111)
     torque_transmitted, torque_alpha, torque_gamma, tau_ratio = _compute_torque_signals(
         input_torque, grip_angle_deg, wrist_angle_deg
     )
@@ -128,7 +122,7 @@ def plot_torque(
     ax.set_ylabel("Torque (N\u00b7m)", fontsize=10)
     ax.grid(visible=True, alpha=0.3)
     ax.legend(loc="best", fontsize=9)
-    plt.tight_layout()
+    fig.tight_layout()
     return fig
 
 
@@ -152,9 +146,6 @@ def _compute_acceleration_signals(
     return accel_alpha, accel_gamma
 
 
-# Cache figure generation to prevent expensive redraws
-# Limit entries to prevent OOM when sliding through many angles
-@st.cache_resource(max_entries=20)
 def plot_acceleration(
     t: np.ndarray[Any, Any],
     input_torque: np.ndarray[Any, Any],
@@ -171,7 +162,8 @@ def plot_acceleration(
     check_positive(i_alpha, "i_alpha")
     check_positive(i_gamma, "i_gamma")
 
-    fig, ax = plt.subplots(figsize=(10, 6))
+    fig = Figure(figsize=(10, 6))
+    ax = fig.add_subplot(111)
     accel_alpha, accel_gamma = _compute_acceleration_signals(
         input_torque, grip_angle_deg, wrist_angle_deg, i_alpha, i_gamma
     )
@@ -203,7 +195,7 @@ def plot_acceleration(
     ax.set_ylabel("Angular Acceleration (rad/s\u00b2)", fontsize=10)
     ax.grid(visible=True, alpha=0.3)
     ax.legend(loc="best", fontsize=9)
-    plt.tight_layout()
+    fig.tight_layout()
     return fig
 
 
@@ -324,9 +316,6 @@ def _annotate_current_wrist_angle(
     ax.axhline(1.0, color="gray", linestyle="--", alpha=0.5, linewidth=1)
 
 
-# Cache figure generation to prevent expensive redraws
-# Limit entries to prevent OOM when sliding through many angles
-@st.cache_resource(max_entries=20)
 def plot_transmission_sweep(
     grip_angle_deg: float,
     wrist_angle_deg: float,
@@ -343,7 +332,8 @@ def plot_transmission_sweep(
     check_positive(i_alpha, "i_alpha")
     check_positive(i_gamma, "i_gamma")
 
-    fig, ax = plt.subplots(figsize=(10, 6))
+    fig = Figure(figsize=(10, 6))
+    ax = fig.add_subplot(111)
     theta_grip_rad = np.radians(grip_angle_deg)
     phi_sweep = np.linspace(-60, 60, 200)
     tau_ratios, omega_ratios, accel_alpha_ratios, accel_gamma_ratios = _compute_transmission_sweep(
@@ -371,5 +361,5 @@ def plot_transmission_sweep(
     ax.set_ylabel("Transmission Ratio", fontsize=10)
     ax.grid(visible=True, alpha=0.3)
     ax.legend(loc="best", fontsize=9)
-    plt.tight_layout()
+    fig.tight_layout()
     return fig

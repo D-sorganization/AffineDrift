@@ -163,7 +163,7 @@ def check_file(
     return errors, warnings
 
 
-def main():  # noqa: C901
+def main() -> None:  # noqa: C901
     parser = argparse.ArgumentParser(description="Validate Quarto references and URLs")
     parser.add_argument("--root", default=".", help="Root directory to check")
     parser.add_argument("--external-only", action="store_true", help="Only check external URLs")

@@ -111,6 +111,9 @@ Or use Compose:
 docker compose up --build
 ```
 
+do not bake secrets into the image; pass credentials through local environment
+variables or your deployment platform's secret store.
+
 The container preview is available at `http://localhost:8080`.
 
 ## Contributing

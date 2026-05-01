@@ -297,11 +297,14 @@ jobs:
           python-version: "3.12"
       - name: Bootstrap Python venv
         if: steps.e2e_changes.outputs.run == 'true'
+        timeout-minutes: 10
+        env:
+          PIP_DEFAULT_TIMEOUT: "60"
         run: |
           python -m venv "$RUNNER_TEMP/ci-venv"
           source "$RUNNER_TEMP/ci-venv/bin/activate"
           pip install --upgrade pip setuptools wheel
-          pip install -r requirements.txt
+          pip install --no-cache-dir -r requirements.txt
           echo "$RUNNER_TEMP/ci-venv/bin" >> $GITHUB_PATH
 
       - name: Reject Raw Merge Conflict Markers

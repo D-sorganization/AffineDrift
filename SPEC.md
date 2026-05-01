@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-05-01T00:20:00Z
+Last-Updated: 2026-05-01T01:05:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,8 +29,8 @@ Last-Updated: 2026-05-01T00:20:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.96                                           |
-| **Last Spec Update**    | 2026-04-30                                       |
+| **Spec Version**        | 1.0.97                                           |
+| **Last Spec Update**    | 2026-05-01                                       |
 
 ## 2. Purpose & Mission
 
