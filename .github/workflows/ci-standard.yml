@@ -203,12 +203,15 @@ jobs:
           cache: pip
           cache-dependency-path: requirements.txt
       - name: Bootstrap Python venv
+        timeout-minutes: 10
+        env:
+          PIP_DEFAULT_TIMEOUT: "60"
         run: |
           python -m venv "$RUNNER_TEMP/ci-venv"
           source "$RUNNER_TEMP/ci-venv/bin/activate"
           python --version
           pip install --upgrade pip setuptools wheel
-          pip install -r requirements.txt pytest-timeout pytest-cov PyQt6
+          pip install --no-cache-dir -r requirements.txt pytest-timeout pytest-cov PyQt6
           echo "$RUNNER_TEMP/ci-venv/bin" >> $GITHUB_PATH
       - name: Install Tool Requirements
         run: |
