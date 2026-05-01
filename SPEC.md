@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-05-01T00:00:00Z
+Last-Updated: 2026-05-01T00:20:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-05-01T00:00:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.95                                           |
+| **Spec Version**        | 1.0.96                                           |
 | **Last Spec Update**    | 2026-04-30                                       |
 
 ## 2. Purpose & Mission
@@ -600,3 +600,4 @@ python src/tools/code_quality_ast.py
 | 2026-04-30 | 1.0.93 | ui(accessibility): Enhanced the bibliography search empty state with ARIA live region and query reflection for better screen reader support. |
 | 2026-04-30 | 1.0.94 | fix(spec): resolve SPEC.md merge conflict markers and bump spec version for focus management feature. |
 | 2026-04-30 | 1.0.95 | ci: document the refactored-helper compatibility restoration from the employer-readiness follow-up, isolate benchmark dependencies without shared pip cache state, and repair deploy-blocking site links to media, placeholder assets, legacy redirects, and tangent-space reference material. |
+| 2026-04-30 | 1.0.96 | ci: bound the non-blocking external URL scan in the link-checker workflow and isolate website-deploy dependency installs in a workflow-local virtual environment so network and shared-runner state cannot stall otherwise valid employer-readiness PRs. |

@@ -33,6 +33,7 @@ jobs:
         id: internal-refs
 
       - name: Check external URLs
+        timeout-minutes: 5
         run: |
           python scripts/link-checker.py --root . --external-only --verbose
         continue-on-error: true
