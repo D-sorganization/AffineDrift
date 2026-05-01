@@ -57,7 +57,12 @@ jobs:
           cache: "pip"
 
       - name: Install Python dependencies
-        run: pip install -r requirements.txt
+        run: |
+          python -m venv "$RUNNER_TEMP/deploy-venv"
+          source "$RUNNER_TEMP/deploy-venv/bin/activate"
+          python -m pip install --upgrade pip setuptools
+          python -m pip install -r requirements.txt
+          echo "$RUNNER_TEMP/deploy-venv/bin" >> "$GITHUB_PATH"
 
       - name: Verify Quarto Render Coverage
         run: python3 scripts/check_quarto_render_coverage.py
