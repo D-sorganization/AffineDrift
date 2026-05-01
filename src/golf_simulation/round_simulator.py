@@ -12,6 +12,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
+from src.core.contracts import require
 from src.golf_simulation.ball_flight import BallFlightDynamics, BallFlightState
 from src.golf_simulation.clubs import ClubBag, ClubType, GolfClub, LaunchConditions
 from src.golf_simulation.course import METERS_TO_YARDS, GolfCourse, GolfHole
@@ -127,6 +128,24 @@ class RoundSimulator:
             rng_seed: Random seed for shot dispersion (None = non-deterministic).
             putting_simulator: Fully built PuttingSimulator instance to use for all greens.
         """
+        require(
+            isinstance(course, GolfCourse), "course must be a GolfCourse", type(course).__name__
+        )
+        require(
+            club_bag is None or isinstance(club_bag, ClubBag),
+            "club_bag must be a ClubBag or None",
+            type(club_bag).__name__,
+        )
+        require(
+            ball_flight is None or isinstance(ball_flight, BallFlightDynamics),
+            "ball_flight must be a BallFlightDynamics or None",
+            type(ball_flight).__name__,
+        )
+        require(
+            putting_simulator is None or isinstance(putting_simulator, PuttingSimulator),
+            "putting_simulator must be a PuttingSimulator or None",
+            type(putting_simulator).__name__,
+        )
         self.course = course
         self.club_bag = club_bag if club_bag is not None else ClubBag()
         self.ball_flight = ball_flight if ball_flight is not None else BallFlightDynamics()

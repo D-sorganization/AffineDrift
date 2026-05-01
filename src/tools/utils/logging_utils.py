@@ -54,12 +54,26 @@ def _resolve_log_level() -> int:
 
 def _resolve_log_format() -> str:
     """Return the log format from ``LOG_FORMAT`` env var, or the default."""
-    return os.environ.get("LOG_FORMAT", "").strip() or _DEFAULT_FORMAT
+    raw = os.environ.get("LOG_FORMAT", "").strip()
+    if not raw or raw.lower() == "json":
+        return _DEFAULT_FORMAT
+    try:
+        logging.Formatter(raw)
+    except ValueError:
+        return _DEFAULT_FORMAT
+    return raw
 
 
 def _resolve_log_format_timestamp() -> str:
     """Return the timestamp format from ``LOG_FORMAT_TIMESTAMP`` env var."""
-    return os.environ.get("LOG_FORMAT_TIMESTAMP", "").strip() or _DEFAULT_TIMESTAMP_FORMAT
+    raw = os.environ.get("LOG_FORMAT_TIMESTAMP", "").strip()
+    if not raw or raw.lower() == "json":
+        return _DEFAULT_TIMESTAMP_FORMAT
+    try:
+        logging.Formatter(raw)
+    except ValueError:
+        return _DEFAULT_TIMESTAMP_FORMAT
+    return raw
 
 
 # ── Public factory functions ─────────────────────────────────────────────────
