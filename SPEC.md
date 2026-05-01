@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-04-30T18:00:00Z
+Last-Updated: 2026-05-01T00:00:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-04-30T18:00:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.94                                           |
+| **Spec Version**        | 1.0.95                                           |
 | **Last Spec Update**    | 2026-04-30                                       |
 
 ## 2. Purpose & Mission
@@ -200,6 +200,7 @@ AffineDrift/
 | F40 | Opt-in benchmark suite                  | ✅     | `benchmarks/` provides pytest-benchmark-compatible baseline timing checks for double-pendulum dynamics and trajectory-cost helpers; normal `pytest` remains scoped to `tests/` so routine validation does not run benchmark timing.                                                                                                                                                              |
 | F41 | Distributed code review enforcement     | ✅     | .github/workflows/block-self-merge.yml prevents PR authors from approving their own pull requests; enforced at the review stage with branch protection rules as the authoritative gate                                                                                                                                                                                                           |
 | F42 | Cyclomatic complexity (McCabe) gate     | ✅     | Enforces `max-complexity = 10` in Ruff CI to maintain code quality                                                                                                                                                                                                                                                                                                                               |
+| F43 | Isolated benchmark CI environment       | ✅     | The performance benchmark workflow installs dependencies into a workflow-local virtual environment and guards PR comment/artifact steps when benchmark output is unavailable, keeping benchmark failures attributable to the benchmark command instead of shared runner state                                                                                                                       |
 
 ### API / Interface Contract
 
@@ -598,3 +599,4 @@ python src/tools/code_quality_ast.py
 | 2026-04-30 | 1.0.92 | ui: Bibliography focus management for bibliography details |
 | 2026-04-30 | 1.0.93 | ui(accessibility): Enhanced the bibliography search empty state with ARIA live region and query reflection for better screen reader support. |
 | 2026-04-30 | 1.0.94 | fix(spec): resolve SPEC.md merge conflict markers and bump spec version for focus management feature. |
+| 2026-04-30 | 1.0.95 | ci: document the refactored-helper compatibility restoration from the employer-readiness follow-up, isolate benchmark dependencies without shared pip cache state, and repair deploy-blocking site links to media, placeholder assets, legacy redirects, and tangent-space reference material. |
