@@ -29,8 +29,8 @@ Last-Updated: 2026-05-01T01:42:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.97                                           |
-| **Last Spec Update**    | 2026-05-01                                       |
+| **Spec Version**        | 1.0.98                                           |
+| **Last Spec Update**    | 2026-05-03                                       |
 
 ## 2. Purpose & Mission
 
@@ -601,3 +601,4 @@ python src/tools/code_quality_ast.py
 | 2026-04-30 | 1.0.94 | fix(spec): resolve SPEC.md merge conflict markers and bump spec version for focus management feature. |
 | 2026-04-30 | 1.0.95 | ci: document the refactored-helper compatibility restoration from the employer-readiness follow-up, isolate benchmark dependencies without shared pip cache state, and repair deploy-blocking site links to media, placeholder assets, legacy redirects, and tangent-space reference material. |
 | 2026-04-30 | 1.0.96 | ci: bound the non-blocking external URL scan in the link-checker workflow and isolate website-deploy dependency installs in a workflow-local virtual environment so network and shared-runner state cannot stall otherwise valid employer-readiness PRs. |
+| 2026-05-03 | 1.0.98 | fix(sentinel): Fixed Client-Side Code Injection (XSS) via `new Function` in the polynomial signal generator of the grip angle simulator by validating the expression string. |
