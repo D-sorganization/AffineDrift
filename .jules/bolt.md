@@ -80,3 +80,7 @@
 ## 2026-04-27 - Synchronizing modular code optimizations
 **Learning:** Performance optimizations applied to modular codebase files might exist in duplicate forms inside monolithic files like `script.js`.
 **Action:** When working on modular optimizations or after observing them in memory, always `grep` through older monolithic entry points to ensure identical logic was not overlooked.
+
+## 2026-05-01 - Optimizing Suffix ID Selectors
+**Learning:** Complex CSS selectors targeting ID suffixes (e.g., `querySelectorAll('[id$="-history-list"]')`) are slow to parse and require scanning the entire DOM tree. Retrieving all elements of a specific tag via `getElementsByTagName` and manually performing a string match on the ID (`id.endsWith() `) avoids the CSS engine completely and executes in O(1) collection lookup time plus a fast O(M) string iteration.
+**Action:** Replace `querySelectorAll` utilizing attribute prefix/suffix matching with tag-specific `getElementsByTagName` live collections paired with manual string filtering.

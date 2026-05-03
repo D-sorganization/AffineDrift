@@ -170,12 +170,14 @@ export function initAriaLabels() {
     labelCardsFromHeading(articleCards, "Article");
 
     // History lists - live regions
-    // Fallback to querySelectorAll here because id selection is a complex pattern
-    const historyLists = document.querySelectorAll('[id$="-history-list"]');
-    for (const list of historyLists) {
-        if (!list.hasAttribute("aria-live")) {
-            list.setAttribute("aria-live", "polite");
-            list.setAttribute("aria-atomic", "false");
+    // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) Live Collection) instead of querySelectorAll('[id$="..."]')
+    const uls = document.getElementsByTagName("ul");
+    for (const ul of uls) {
+        if (ul.id && ul.id.endsWith("-history-list")) {
+            if (!ul.hasAttribute("aria-live")) {
+                ul.setAttribute("aria-live", "polite");
+                ul.setAttribute("aria-atomic", "false");
+            }
         }
     }
 }

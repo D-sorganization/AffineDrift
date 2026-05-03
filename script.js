@@ -691,10 +691,12 @@ runOnDomReady(function () {
   });
 
   // Repository links
-  const repoLinks = document.querySelectorAll('.navbar-nav a[href^="https://github.com"]');
-  for (const link of repoLinks) {
-    link.setAttribute("target", "_blank");
-    // rel handled by secure external links below
+  // ⚡ Bolt Optimization: Use document.links (O(1)) instead of querySelectorAll (O(N))
+  for (const link of document.links) {
+    if (link.href.startsWith("https://github.com") && link.closest(".navbar-nav")) {
+      link.setAttribute("target", "_blank");
+      // rel handled by secure external links below
+    }
   }
 
   // Secure external links
@@ -1826,12 +1828,14 @@ function initAriaLabels() {
   labelCardsFromHeading(articleCards, 'Article');
 
   // Add ARIA live region for dynamic content
-  // Fallback to querySelectorAll here because id selection is a complex pattern
-  const historyLists = document.querySelectorAll('[id$="-history-list"]');
-  for (const list of historyLists) {
-    if (!list.hasAttribute('aria-live')) {
-      list.setAttribute('aria-live', 'polite');
-      list.setAttribute('aria-atomic', 'false');
+  // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) Live Collection) instead of querySelectorAll('[id$="..."]')
+  const uls = document.getElementsByTagName("ul");
+  for (const ul of uls) {
+    if (ul.id && ul.id.endsWith("-history-list")) {
+      if (!ul.hasAttribute("aria-live")) {
+        ul.setAttribute("aria-live", "polite");
+        ul.setAttribute("aria-atomic", "false");
+      }
     }
   }
 }
