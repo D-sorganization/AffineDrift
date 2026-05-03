@@ -42,7 +42,12 @@ def _compute_torque_signals(
     _omega_ratio, tau_ratio = universal_joint_transmission_ratio(phi_wrist_rad, theta_grip_rad)
     torque_transmitted = input_torque * tau_ratio
     torque_alpha, torque_gamma = distribute_torque_by_grip_angle(torque_transmitted, theta_grip_rad)
-    return torque_transmitted, torque_alpha, torque_gamma, float(tau_ratio)
+    return (
+        np.asarray(torque_transmitted),
+        np.asarray(torque_alpha),
+        np.asarray(torque_gamma),
+        float(tau_ratio),
+    )
 
 
 def _plot_torque_lines(

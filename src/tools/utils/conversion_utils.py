@@ -102,7 +102,7 @@ def batch_convert(
     all_ok = True
     for entry in file_pairs:
         source, target = _validate_conversion_entry(entry, logger)
-        if source is None:
+        if source is None or target is None:
             all_ok = False
             continue
         if not _execute_single_conversion(converter, source, target, dry_run, logger):
