@@ -641,6 +641,12 @@
                 const expr = document.getElementById('polynomial-expr').value || 't**2 - t';
                 polynomialError = null;
                 try {
+                    // Pre-validate expression to prevent XSS via new Function
+                    const sanitized = expr.replace(/(?:Math\.)?(?:sin|cos|exp|sqrt|log|PI|E)|t/g, '');
+                    if (!/^[0-9\s\+\-\*\/\(\)\.\,eE]*$/.test(sanitized)) {
+                        throw new Error("Invalid characters in expression");
+                    }
+
                     // Safe evaluation - only allow specific functions
                     const safeEval = (t_val) => {
                         const sin = Math.sin;
