@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-05-01T01:42:00Z
+Last-Updated: 2026-05-03T16:30:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-05-01T01:42:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.98                                           |
+| **Spec Version**        | 1.0.99                                           |
 | **Last Spec Update**    | 2026-05-03                                       |
 
 ## 2. Purpose & Mission
@@ -111,13 +111,13 @@ AffineDrift/
 │   └── [other articles]         # Additional research content
 ├── books/                       # Quarto book projects
 │   └── control-theory-guide.qmd # Comprehensive control theory textbook
-├── .github/workflows/           # 54 GitHub Actions workflows
+├── .github/workflows/           # 6 executable GitHub Actions workflows plus templates/docs
 │   ├── ci-standard.yml          # Main CI pipeline
 │   ├── deploy-website.yml       # Quarto site build and deployment
-│   ├── test-coverage.yml        # Test coverage reporting
-│   ├── link-check.yml           # Link validation
-│   ├── css-budget.yml           # CSS size enforcement
-│   └── [other workflows]        # Jules agents, specialized tests, etc.
+│   ├── ci-benchmarks.yml        # Opt-in performance benchmark gate
+│   ├── link-checker.yml         # Link validation
+│   ├── spec-check.yml           # SPEC freshness enforcement
+│   └── block-self-merge.yml     # Distributed review guard
 ├── scripts/                     # Content and repository maintenance utilities
 │   ├── check_bibliography_quality.py # Bibliography structure and metadata validation
 │   ├── check_qmd_citation_keys.py    # Quarto citation-key integrity scan for site content
@@ -165,7 +165,7 @@ AffineDrift/
 | F6  | Property-Based Testing with Hypothesis  | ✅     | Comprehensive property-based testing strategy using Hypothesis framework                                                                                                                                                                                                                                                                                                                         |
 | F7  | CSS Budget Enforcement                  | ✅     | Automated CI enforcement of CSS file size limits to maintain performance                                                                                                                                                                                                                                                                                                                         |
 | F8  | Mirror Validation                       | ✅     | Ensures duplicate stylesheets match canonical versions across the codebase                                                                                                                                                                                                                                                                                                                       |
-| F9  | GitHub Actions Automation               | ✅     | 54 CI/CD workflows including Jules automation agents for code analysis and deployment; third-party actions are pinned to immutable SHAs where practical                                                                                                                                                                                                                                          |
+| F9  | GitHub Actions Automation               | ✅     | The executable GitHub Actions workflow set is limited to the repository's production CI, deployment, benchmark, link-check, spec-check, and self-review guard workflows; third-party actions are pinned to immutable SHAs and checked by CI.                                                                                                                                                    |
 | F10 | Progressive Web App Support             | ✅     | Service worker and manifest for PWA capabilities with bounded offline caching and update notices (offline access, installability)                                                                                                                                                                                                                                                                |
 | F11 | Textbook Compilation Pipeline           | ✅     | Quarto pipeline to compile educational materials into publishable textbook format                                                                                                                                                                                                                                                                                                                |
 | F12 | Textbook claim guardrail                | ✅     | PR CI blocks newly added unsupported quantitative or study claims in textbook content unless they include a citation or an explicit illustrative caveat                                                                                                                                                                                                                                          |
@@ -196,11 +196,12 @@ AffineDrift/
 | F36 | Dynamic beam model consistency          | ✅     | Physics of Golf chapter 11 uses the dynamic Euler-Bernoulli equation with explicit inertial term and a content test guards the modal consistency of the governing equation in the chapter source.                                                                                                                                                                                                |
 | F37 | Double-pendulum parameter context       | ✅     | Physics of Golf chapters 3, 6, and 8 explicitly document when their double- or triple-pendulum parameters are canonical chapter baselines versus compact worked-example sets, with content tests guarding the modeling-context notes.                                                                                                                                                            |
 | F38 | Robust quaternion extraction            | ✅     | The rotation-representations reference article uses a numerically stable matrix-to-quaternion extraction path for trace-positive and dominant-axis cases, with executable regression coverage for 180-degree rotations about coordinate axes and arbitrary unit axes.                                                                                                                            |
-| F39 | Workflow documentation hygiene          | ✅     | `.github/workflows/` is kept to executable workflow definitions; workflow-directory documentation is tracked through `docs/development/repository_inventory.md` and `SPEC.md` so non-workflow Markdown does not live beside Actions YAML files.                                                                                                                                                  |
+| F39 | Workflow documentation hygiene          | ✅     | `.github/workflows/` contains the active workflow YAML files plus workflow-local README/template assets; repository-level workflow inventory remains documented through `docs/development/repository_inventory.md` and `SPEC.md`.                                                                                                                                                                |
 | F40 | Opt-in benchmark suite                  | ✅     | `benchmarks/` provides pytest-benchmark-compatible baseline timing checks for double-pendulum dynamics and trajectory-cost helpers; normal `pytest` remains scoped to `tests/` so routine validation does not run benchmark timing.                                                                                                                                                              |
 | F41 | Distributed code review enforcement     | ✅     | .github/workflows/block-self-merge.yml prevents PR authors from approving their own pull requests; enforced at the review stage with branch protection rules as the authoritative gate                                                                                                                                                                                                           |
 | F42 | Cyclomatic complexity (McCabe) gate     | ✅     | Enforces `max-complexity = 10` in Ruff CI to maintain code quality                                                                                                                                                                                                                                                                                                                               |
 | F43 | Isolated benchmark CI environment       | ✅     | The performance benchmark workflow installs dependencies into a workflow-local virtual environment and guards PR comment/artifact steps when benchmark output is unavailable, keeping benchmark failures attributable to the benchmark command instead of shared runner state                                                                                                                       |
+| F44 | Production-readiness CI hardening       | ✅     | `ci-standard.yml` now treats mypy over `src/tools/` plus the production-readiness policy scripts, generated-agent-artifact checks, and GitHub Actions pinning checks as blocking quality gates, while the website-lint job fails on HTML validation errors instead of downgrading them to warnings.                                                                                              |
 
 ### API / Interface Contract
 
@@ -360,17 +361,14 @@ AffineDrift follows a **test pyramid** strategy: unit tests form the base (fast,
 
 ### CI/CD Pipeline
 
-| Workflow                  | Trigger         | Purpose                                                                                         | Blocking?          |
-| ------------------------- | --------------- | ----------------------------------------------------------------------------------------------- | ------------------ |
-| `ci-standard.yml`         | Push/PR to main | Lint, type-check, blocking dependency audit, full-`src/` coverage, site render, E2E smoke tests | Yes                |
-| `deploy-website.yml`      | Merge to main   | Build Quarto site, deploy to GitHub Pages                                                       | Yes                |
-| `test-coverage.yml`       | Push/PR         | Report coverage metrics                                                                         | Yes (50% minimum)  |
-| `link-check.yml`          | Push/PR         | Validate all links in content                                                                   | Yes                |
-| `css-budget.yml`          | Push/PR         | Enforce CSS file size limits                                                                    | Yes                |
-| `module-size-budget.yml`  | Push/PR         | Enforce Python module complexity                                                                | Yes                |
-| `block-self-merge.yml`    | PR review/open  | Prevent PR author self-approval; enforce distributed code review requirement                    | Yes                |
-| `dry-tracker.yml`         | Nightly         | Identify code duplication patterns                                                              | No (informational) |
-| `Jules automation agents` | Various         | Automated code review, refactoring suggestions                                                  | No (informational) |
+| Workflow               | Trigger            | Purpose                                                                                                  | Blocking?         |
+| ---------------------- | ------------------ | -------------------------------------------------------------------------------------------------------- | ----------------- |
+| `ci-standard.yml`      | Push/PR/manual     | Lint, formatting, blocking mypy, repository policy checks, tests, dependency audit, JS, E2E, HTML lint   | Yes               |
+| `deploy-website.yml`   | Merge/manual       | Build Quarto site, validate generated assets and health, deploy to GitHub Pages                          | Yes               |
+| `ci-benchmarks.yml`    | Push/PR/manual     | Run opt-in performance benchmarks and fail regressions above the configured hard threshold                | Yes               |
+| `link-checker.yml`     | PR/scheduled/manual | Validate internal Quarto references and report bounded external URL checks                               | Yes for internals |
+| `spec-check.yml`       | PR                 | Block source changes that do not update `SPEC.md` unless explicitly labeled `spec-exempt`                | Yes               |
+| `block-self-merge.yml` | PR review/open     | Prevent PR author self-approval and surface distributed review requirements                              | Yes               |
 
 ## 9. Dependencies
 
@@ -396,7 +394,7 @@ AffineDrift follows a **test pyramid** strategy: unit tests form the base (fast,
 | hypothesis | 6.151.12 | Property-based testing library   |
 | ruff       | 0.15.9   | Linting and code quality         |
 | black      | 26.3.1   | Code formatting (100-char lines) |
-| mypy       | 1.20.0   | Type checking                    |
+| mypy       | 1.19.1   | Type checking                    |
 | jest       | Latest   | JavaScript testing framework     |
 | playwright | Latest   | Browser automation for E2E tests |
 
@@ -481,6 +479,7 @@ python src/tools/code_quality_ast.py
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | ---------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-05-03 | 1.0.99  | fix(ci): hardened production-readiness gates by making mypy and HTML validation blocking, pinning workflow actions to immutable SHAs with a CI policy check, removing tracked generated agent automation artifacts, blocking those artifacts from returning, and tightening the site CSP by removing `unsafe-eval`.                                                                                                                                                                                                                                                                             |
 | 2026-04-23 | 1.0.78  | fix(content): corrected Quarto cross-reference syntax in `articles/affine-nature-golf-swing.qmd` and `articles/inverse-dynamics.qmd`, replacing undefined appendix/equation citation keys with native section/equation refs, moving equation labels to renderable display-math positions, and adding content regression checks for these patterns.                                                                                                                                                                                                                                          |
 | 2026-04-23 | 1.0.77  | chore(hygiene): removed tracked root-level review, lint, generated PDF, scratch, and temporary issue-body artifacts; added regression checks that prevent these root artifacts and book-source `.tmp` files from returning; and expanded ignore rules for transient automation/review scratch outputs.                                                                                                                                                                                                                                                                                      |
 | 2026-04-22 | 1.0.75  | fix(content): corrected the ZTCF Identifiability Critique link in `articles/theory-part2.qmd` and added a regression guard preventing top-level article links from escaping above the rendered article root.                                                                                                                                                                                                                                                                                                                                                                                |
