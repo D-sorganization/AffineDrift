@@ -25,8 +25,8 @@ jobs:
   spec-freshness:
     name: Verify SPEC.md freshness
     runs-on: d-sorg-fleet
-    # Skip if spec-exempt label is applied
-    if: ${{ !contains(github.event.pull_request.labels.*.name, 'spec-exempt') }}
+    # Skip if spec-exempt label is applied or if actor is dependabot
+    if: ${{ !contains(github.event.pull_request.labels.*.name, 'spec-exempt') && github.actor != 'dependabot[bot]' }}
     timeout-minutes: 5
 
     steps:
