@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-05-04T04:13:00Z
+Last-Updated: 2026-05-04T04:59:59Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-05-04T04:13:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.104                                          |
+| **Spec Version**        | 1.0.105                                          |
 | **Last Spec Update**    | 2026-05-04                                       |
 
 ## 2. Purpose & Mission
@@ -127,7 +127,9 @@ AffineDrift/
 ├── tests/                       # Additional test organization
 │   └── e2e/                     # End-to-end Playwright tests
 ├── _quarto.yml                  # Quarto configuration
+├── Dockerfile                   # Verified multi-stage container build for preview/runtime
 ├── pyproject.toml               # Python project metadata and dependencies
+├── requirements-docker.lock     # Hash-locked Python dependency set for container builds
 ├── package.json                 # JavaScript dependencies
 ├── SPEC.md                      # This specification document
 └── README.md                    # Project overview and quick start
@@ -148,6 +150,7 @@ AffineDrift/
 | Rotation Converter    | `js/rotation-converter/`                | Interactive 3D rotation visualization and converter        |
 | Search Functionality  | `js/search.js`                          | Full-text search across website content                    |
 | Quarto Configuration  | `_quarto.yml`                           | Website build and rendering configuration                  |
+| Container Build       | `Dockerfile`, `requirements-docker.lock` | Verified preview/runtime image build with provenance output |
 | Test Suite            | `tests/`                                | 80+ pytest and Jest test files                             |
 | Benchmark Suite       | `benchmarks/`                           | Opt-in pytest-benchmark timing checks for stable paths     |
 
@@ -178,6 +181,7 @@ AffineDrift/
 | F19 | Script CLI output contracts             | ✅     | Maintenance scripts route intentional terminal output through `scripts/cli_output.py`, making stdout/stderr behavior explicit and easier to test without weakening logging semantics                                                                                                                                                                                                             |
 | F20 | RL benchmark modular split              | ✅     | `src/tools/rl_funnel_benchmark.py` now stays under the repo file-size budget by delegating dynamics, controllers, and simulation concerns to focused helper modules while preserving the benchmark module's public API, including caller-provided reference trajectory timesteps                                                                                                                 |
 | F21 | Tooling Demeter facades                 | ✅     | Link and site-health utilities isolate DOM/path traversal behind small façade objects so repository-governance checks depend on narrower interfaces instead of nested reach-through                                                                                                                                                                                                              |
+| F45 | Verified container build inputs         | ✅     | The Docker preview/runtime path pins the Python base image by digest, verifies the Quarto release checksum, installs Python dependencies from `requirements-docker.lock` in hash-checking mode, and emits `docs/build-provenance.json` with the commit, Quarto artifact hash, lock hash, and rendered-site checksum.                                                                                                                                 |
 | F22 | Wrist-model Qt module split             | ✅     | The legacy `content/wrist-as-universal-joint/Universal_Joint_Model_Enhanced.py` launcher now delegates geometry, kinematics, Qt canvas rendering, and window assembly to focused modules under `src/tools/wrist_universal_joint`, keeping the entrypoint thin while preserving its public surface; the launcher re-export test gracefully skips when the Qt runtime is unavailable (headless CI) |
 | F23 | Analysis helper fallback logging        | ✅     | `src/tools/utils/analysis_utils.py` logs recoverable parse and file-read failures at debug level when it falls back to zeroed or empty analysis results, keeping repository-quality scans observable without turning invalid files into hard failures                                                                                                                                            |
 | F24 | Developer test target coverage          | ✅     | `make test` runs Python `src/` coverage and JavaScript coverage so local developer checks exercise both primary test stacks before code reaches CI                                                                                                                                                                                                                                               |
@@ -609,4 +613,5 @@ python src/tools/code_quality_ast.py
 | 2026-05-04 | 1.0.102 | ci(benchmarks): raise the benchmark dependency-install step timeout to 20 minutes so the isolated benchmark virtualenv can finish installing the full pinned stack on slower fleet runners. |
 | 2026-05-04 | 1.0.103 | ci(benchmarks): install the benchmark workflow from `requirements-benchmarks.txt` so the opt-in performance suite skips notebook and QA tooling packages that were timing out before benchmark execution began. |
 | 2026-05-04 | 1.0.104 | test(e2e): split rendered-site smoke routes into per-page checks, replace the fragile homepage `networkidle` wait with explicit load-state asset verification, and make the Playwright static web server command work on Windows and Linux for local validation parity. |
+| 2026-05-04 | 1.0.105 | fix(container): pin the Python base image by digest, verify the Quarto `.deb`, install Python dependencies from `requirements-docker.lock` in hash-checking mode, and emit `docs/build-provenance.json` for the rendered site. |
 | 2026-05-03 | 1.0.98 | fix(sentinel): Fixed Client-Side Code Injection (XSS) via `new Function` in the polynomial signal generator of the grip angle simulator by validating the expression string. |
