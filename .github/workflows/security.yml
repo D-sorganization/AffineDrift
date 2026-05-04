@@ -45,11 +45,28 @@ jobs:
         run: pip install detect-secrets==1.4.0
 
       - name: Scan for new secrets against baseline
-        # Fails if any secrets are found that are not already in the baseline
+        # Fails if any secrets are found that are not already in the baseline.
+        # Use a fresh scan and compare only the hashed results — not the full
+        # JSON (scan rewrites metadata like timestamps, causing git diff to fire
+        # even when no new secrets exist).
         run: |
-          detect-secrets scan --baseline .secrets.baseline
-          # Exit non-zero if the baseline changed (new secrets detected)
-          if ! git diff --exit-code .secrets.baseline; then
-            echo "::error::New secrets detected that are not in .secrets.baseline. Review and update the baseline if they are false positives."
-            exit 1
-          fi
+          detect-secrets scan > /tmp/current-scan.json
+          python3 - <<'EOF'
+          import json, sys
+          with open("/tmp/current-scan.json") as f:
+              found = json.load(f).get("results", {})
+          with open(".secrets.baseline") as f:
+              baseline = json.load(f).get("results", {})
+          new_secrets = []
+          for path, secrets in found.items():
+              known = {s["hashed_secret"] for s in baseline.get(path, [])}
+              for s in secrets:
+                  if s["hashed_secret"] not in known:
+                      new_secrets.append(f"{path}: {s['type']}")
+          if new_secrets:
+              print("::error::New secrets detected not in .secrets.baseline:")
+              for ns in new_secrets:
+                  print(f"  {ns}")
+              sys.exit(1)
+          print("No new secrets detected.")
+          EOF
