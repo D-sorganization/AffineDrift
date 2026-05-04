@@ -29,7 +29,7 @@ Last-Updated: 2026-05-03T16:30:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.99                                           |
+| **Spec Version**        | 1.0.100                                          |
 | **Last Spec Update**    | 2026-05-03                                       |
 
 ## 2. Purpose & Mission
@@ -208,8 +208,8 @@ AffineDrift/
 **Python API:**
 
 - `affine_control.swing_optimizer.SwingOptimizer` — Main optimization interface
-  - Constructor requires a real `ddp_solver` unless `SwingOptimizationConfig.allow_mock_solver=True` explicitly opts into the documented mock implementation for test-only usage
-  - `optimize(...)` may execute the mock solver only after that explicit opt-in
+  - Constructor requires a real `ddp_solver` unless `SwingOptimizationConfig.allow_mock_solver=True` is paired with a pytest session or the explicit demo flag `AFFINEDRIFT_ENABLE_MOCK_DDP=1`
+  - `optimize(...)` may execute the mock solver only after both the config opt-in and the test/demo environment gate are satisfied
   - `optimize(swing_model, constraints) -> OptimizedTrajectory` — Run trajectory optimization
 - `core.optimizers.iLQR` — iLQR solver
   - `solve(dynamics, cost_fn, initial_trajectory) -> Solution` — Compute optimal trajectory
@@ -600,4 +600,5 @@ python src/tools/code_quality_ast.py
 | 2026-04-30 | 1.0.94 | fix(spec): resolve SPEC.md merge conflict markers and bump spec version for focus management feature. |
 | 2026-04-30 | 1.0.95 | ci: document the refactored-helper compatibility restoration from the employer-readiness follow-up, isolate benchmark dependencies without shared pip cache state, and repair deploy-blocking site links to media, placeholder assets, legacy redirects, and tangent-space reference material. |
 | 2026-04-30 | 1.0.96 | ci: bound the non-blocking external URL scan in the link-checker workflow and isolate website-deploy dependency installs in a workflow-local virtual environment so network and shared-runner state cannot stall otherwise valid employer-readiness PRs. |
+| 2026-05-03 | 1.0.100 | fix(optimizer): gate the mock DDP solver behind both `allow_mock_solver=True` and an explicit test/demo environment (`pytest` or `AFFINEDRIFT_ENABLE_MOCK_DDP=1`), and update swing-optimizer docs/examples to stop advertising the mock production path. |
 | 2026-05-03 | 1.0.98 | fix(sentinel): Fixed Client-Side Code Injection (XSS) via `new Function` in the polynomial signal generator of the grip angle simulator by validating the expression string. |

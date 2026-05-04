@@ -10,8 +10,11 @@ This module provides 25+ tests covering:
 
 from __future__ import annotations
 
+import os
 import unittest
+import warnings
 from typing import Any
+from unittest.mock import patch
 
 import numpy as np
 
@@ -487,6 +490,35 @@ class TestSwingOptimizerOptimize(unittest.TestCase):
         config = SwingOptimizationConfig(n_joints=1, horizon_steps=5, max_iterations=1)
         with self.assertRaises(ContractViolationError):
             SwingOptimizer(config)
+
+    def test_mock_solver_requires_test_or_demo_environment(self) -> None:
+        """Mock fallback must reject production-like environments even with config opt-in."""
+        config = SwingOptimizationConfig(
+            n_joints=1,
+            horizon_steps=5,
+            max_iterations=1,
+            allow_mock_solver=True,
+        )
+        with patch("src.affine_control.ddp._is_running_under_pytest", return_value=False):
+            with patch.dict(os.environ, {}, clear=True):
+                with self.assertRaises(ContractViolationError):
+                    SwingOptimizer(config)
+
+    def test_mock_solver_allows_explicit_demo_environment(self) -> None:
+        """Mock fallback may run outside pytest only with the explicit demo env flag."""
+        config = SwingOptimizationConfig(
+            n_joints=1,
+            horizon_steps=5,
+            max_iterations=1,
+            allow_mock_solver=True,
+        )
+        with patch("src.affine_control.ddp._is_running_under_pytest", return_value=False):
+            with patch.dict(os.environ, {"AFFINEDRIFT_ENABLE_MOCK_DDP": "1"}, clear=True):
+                with warnings.catch_warnings():
+                    warnings.simplefilter("ignore", UserWarning)
+                    optimizer = SwingOptimizer(config)
+
+        self.assertIsInstance(optimizer, SwingOptimizer)
 
 
 # ── Property and accessor tests ─────────────────────────────────────────────
