@@ -10,19 +10,34 @@
   const STORAGE_KEY = "affinedrift_metrics";
   const SESSION_KEY = "affinedrift_session";
 
+  // Schema version for the metrics object stored in localStorage.
+  // Increment this constant whenever the shape of the stored object changes so
+  // that getMetrics() can detect stale data and migrate/reset gracefully.
+  const STORAGE_VERSION = 1;
+
   // Initialize metrics storage
   function getMetrics() {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
-      return stored ? JSON.parse(stored) : initializeMetrics();
+      if (!stored) return initializeMetrics();
+      const parsed = JSON.parse(stored);
+      // Detect schema version mismatch — reset to a fresh object rather than
+      // operating on data whose shape we don't recognise.
+      if (!parsed || typeof parsed !== "object" || parsed.version !== STORAGE_VERSION) {
+        try { localStorage.removeItem(STORAGE_KEY); } catch { /* storage disabled */ }
+        return initializeMetrics();
+      }
+      return parsed;
     } catch {
+      // Corrupt JSON — clear it and start fresh
+      try { localStorage.removeItem(STORAGE_KEY); } catch { /* storage disabled */ }
       return initializeMetrics();
     }
   }
 
   function initializeMetrics() {
     return {
-      version: 1,
+      version: STORAGE_VERSION,
       firstVisit: new Date().toISOString(),
       totalPageViews: 0,
       totalSearches: 0,

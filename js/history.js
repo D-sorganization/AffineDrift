@@ -3,7 +3,7 @@
  * Handles browsing history sidebar and article history tracking
  */
 
-import { runWhenIdle } from "./utils.js";
+import { runWhenIdle, safeGetStorage } from "./utils.js";
 
 const MAX_HISTORY_TITLE_LENGTH = 40;
 const MAX_HISTORY_ITEMS = 10;
@@ -15,9 +15,7 @@ export function updateHistorySidebar() {
     const historyList = document.getElementById("history-list");
     if (!historyList) return;
 
-    let history = JSON.parse(
-        localStorage.getItem("affinedrift_history") || "[]"
-    );
+    let history = safeGetStorage("affinedrift_history", []);
 
     let pageTitle = document.title;
     if (pageTitle.includes(" - AffineDrift")) {
@@ -124,7 +122,7 @@ export function initArticleHistory() {
         currentPath.includes("/articles/") && currentUrl.endsWith(".html");
 
     if (isArticlePage && ARTICLE_PAGES.includes(currentUrl)) {
-        let history = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        let history = safeGetStorage(STORAGE_KEY, []);
         const currentPage = {
             title: document.title
                 .replace(" - AffineDrift", "")
@@ -140,7 +138,7 @@ export function initArticleHistory() {
 
     const articlesHistoryList = document.getElementById("articles-history-list");
     if (articlesHistoryList) {
-        const history = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        const history = safeGetStorage(STORAGE_KEY, []);
         articlesHistoryList.textContent = "";
         if (!history || history.length === 0) {
             const li = document.createElement("li");
