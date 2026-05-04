@@ -38,6 +38,9 @@ from src.core.contracts import (
 
 logger = logging.getLogger(__name__)
 
+MOCK_SOLVER_ENV_VAR = "AFFINEDRIFT_ENABLE_MOCK_DDP"
+"""Environment flag that explicitly enables the mock DDP solver outside tests."""
+
 _DDP_MOCK_WARNING = (
     "adaptive_timestep_ddp_mock is a non-functional mock implementation. "
     "The backward pass and Riccati equation solving are not implemented. "
@@ -50,6 +53,20 @@ _DDP_MOCK_WARNING = (
 def _is_running_under_pytest() -> bool:
     """Return True if the current call occurs inside a pytest session."""
     return "PYTEST_CURRENT_TEST" in os.environ or "pytest" in os.environ.get("PYTHONPATH", "")
+
+
+def mock_solver_environment_allows_usage() -> bool:
+    """Return True when the mock solver is allowed to execute in this environment."""
+    return _is_running_under_pytest() or os.environ.get(MOCK_SOLVER_ENV_VAR) == "1"
+
+
+def _require_mock_solver_environment() -> None:
+    """Fail closed unless the caller is running in a test/demo environment."""
+    require(
+        mock_solver_environment_allows_usage(),
+        "adaptive_timestep_ddp_mock is test/demo-only. "
+        f"Run under pytest or set {MOCK_SOLVER_ENV_VAR}=1 for an explicit demo environment.",
+    )
 
 
 def estimate_perturbation_size(
@@ -170,6 +187,7 @@ def adaptive_timestep_ddp_mock(
     Returns:
         Tuple of (x_traj, u_traj, t_traj).
     """
+    _require_mock_solver_environment()
     warnings.warn(_DDP_MOCK_WARNING, UserWarning, stacklevel=2)
 
     check_finite_array(x0, "x0")
