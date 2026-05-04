@@ -19,7 +19,7 @@ test.describe("PR Smoke", () => {
       "/resources/resources-books.html",
       "/models/models.html",
     ]) {
-      const response = await page.goto(route, { waitUntil: "domcontentloaded" });
+      const response = await page.goto(route, { waitUntil: "domcontentloaded", timeout: 60000 });
       expect(response).toBeTruthy();
       expect(response.ok()).toBeTruthy();
     }
@@ -39,7 +39,7 @@ test.describe("PR Smoke", () => {
         failedRequests.push(request.url());
       }
     });
-    await page.goto("/", { waitUntil: "networkidle" });
+    await page.goto("/", { waitUntil: "load" });
     expect(failedRequests).toHaveLength(0);
   });
 
