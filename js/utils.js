@@ -3,6 +3,10 @@
  * Shared utility functions used across all modules
  */
 
+// Storage schema version — bump when the shape of any persisted key changes
+// so that readers can detect stale/incompatible data and migrate gracefully.
+export const STORAGE_VERSION = 1;
+
 // Constants for scroll offsets
 export const MAX_ID_GENERATION_ATTEMPTS = 100;
 export const MATHJAX_RENDER_DELAY_MS = 100;
@@ -119,4 +123,27 @@ export function scrollToTop() {
 export function updateOffsets() {
     HEADER_OFFSET = getScrollOffset();
     TOC_SCROLL_OFFSET = HEADER_OFFSET;
+}
+
+/**
+ * Safely read and parse a JSON value from localStorage.
+ *
+ * Returns `fallback` (default `[]`) when the key is absent, when
+ * JSON.parse throws (corrupt data), or when localStorage is unavailable.
+ * Corrupt entries are removed from storage so the next write starts clean.
+ *
+ * @param {string} key - localStorage key to read
+ * @param {*} [fallback=[]] - value to return on any failure
+ * @returns {*} Parsed value or fallback
+ */
+export function safeGetStorage(key, fallback = []) {
+    try {
+        const raw = localStorage.getItem(key);
+        if (raw === null) return fallback;
+        return JSON.parse(raw);
+    } catch {
+        // Corrupt data — clear the key so the next write starts fresh
+        try { localStorage.removeItem(key); } catch { /* storage disabled */ }
+        return fallback;
+    }
 }
