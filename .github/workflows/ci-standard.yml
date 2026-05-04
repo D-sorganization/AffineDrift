@@ -118,7 +118,8 @@ jobs:
           if [ -d "tools" ]; then
             find tools -name "requirements.txt" -exec pip install -r {} \;
           fi
-      - run: mypy src/tools/ scripts/ --ignore-missing-imports || echo "::warning::Type checking has issues - fix type annotations"
+      - name: Type Check
+        run: mypy src/tools/ scripts/ --ignore-missing-imports
       - name: Verify Code Quality
         run: python3 -m src.tools.code_quality_check
 
@@ -174,7 +175,7 @@ jobs:
       - name: Run Tests
         env:
           PYTHONPATH: .
-        run: pytest tests/ --cov=src --cov-report=xml --cov-fail-under=50 --timeout=60
+        run: pytest tests/ --cov=src --cov-report=xml --cov-fail-under=70 --timeout=60
       - name: Critical Module Coverage Gate
         run: python3 scripts/check_critical_module_coverage.py
       - uses: codecov/codecov-action@v5
