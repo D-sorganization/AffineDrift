@@ -32,3 +32,95 @@ def test_ilqr_line_search_reduces_alpha_until_cost_decreases(
 
     assert u_traj[0, 0] == pytest.approx(1.0)
     assert x_traj[-1, 0] == pytest.approx(1.0)
+    assert solver.last_diagnostics.status == "max_iterations"
+    assert solver.last_diagnostics.iterations == 1
+
+
+def test_ilqr_reports_convergence_when_gain_below_tolerance(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    solver = ILQRSolver()
+
+    def dynamics(x: np.ndarray, u: np.ndarray) -> np.ndarray:
+        return np.array([u[0]], dtype=np.float64)
+
+    def backward_pass(*_args: object) -> tuple[np.ndarray, np.ndarray, float]:
+        return (
+            np.array([[0.0]], dtype=np.float64),
+            np.zeros((1, 1, 1), dtype=np.float64),
+            0.0,
+        )
+
+    monkeypatch.setattr(solver, "_backward_pass", backward_pass)
+    solver.optimize(
+        dynamics,
+        np.array([0.0], dtype=np.float64),
+        np.array([1.0], dtype=np.float64),
+        np.array([[0.0]], dtype=np.float64),
+        dt=1.0,
+        max_iters=5,
+        tol=1e-3,
+    )
+
+    assert solver.last_diagnostics.converged is True
+    assert solver.last_diagnostics.status == "converged"
+    assert solver.last_diagnostics.reason == "feedforward gain below tolerance"
+
+
+def test_ilqr_reports_line_search_failure(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    solver = ILQRSolver()
+
+    def dynamics(x: np.ndarray, u: np.ndarray) -> np.ndarray:
+        return np.array([u[0]], dtype=np.float64)
+
+    def backward_pass(*_args: object) -> tuple[np.ndarray, np.ndarray, float]:
+        return (
+            np.array([[10.0]], dtype=np.float64),
+            np.zeros((1, 1, 1), dtype=np.float64),
+            10.0,
+        )
+
+    monkeypatch.setattr(solver, "_backward_pass", backward_pass)
+    solver.optimize(
+        dynamics,
+        np.array([0.0], dtype=np.float64),
+        np.array([0.0], dtype=np.float64),
+        np.array([[0.0]], dtype=np.float64),
+        dt=1.0,
+        max_iters=3,
+    )
+
+    assert solver.last_diagnostics.converged is False
+    assert solver.last_diagnostics.status == "line_search_failed"
+
+
+def test_ilqr_rejects_wrong_shape_dynamics_output() -> None:
+    solver = ILQRSolver()
+
+    def bad_dynamics(_x: np.ndarray, _u: np.ndarray) -> np.ndarray:
+        return np.array([0.0, 1.0], dtype=np.float64)
+
+    with pytest.raises(Exception, match="dynamics_fn output"):
+        solver.optimize(
+            bad_dynamics,
+            np.array([0.0], dtype=np.float64),
+            np.array([1.0], dtype=np.float64),
+            np.array([[0.0]], dtype=np.float64),
+        )
+
+
+def test_ilqr_rejects_non_finite_dynamics_output() -> None:
+    solver = ILQRSolver()
+
+    def bad_dynamics(_x: np.ndarray, _u: np.ndarray) -> np.ndarray:
+        return np.array([np.nan], dtype=np.float64)
+
+    with pytest.raises(Exception, match="finite"):
+        solver.optimize(
+            bad_dynamics,
+            np.array([0.0], dtype=np.float64),
+            np.array([1.0], dtype=np.float64),
+            np.array([[0.0]], dtype=np.float64),
+        )

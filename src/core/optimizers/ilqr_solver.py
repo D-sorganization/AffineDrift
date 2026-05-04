@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable
+from dataclasses import dataclass
 from typing import Protocol
 
 import numpy as np
@@ -9,6 +10,22 @@ import numpy.typing as npt
 from src.core.contracts import check_finite_array, check_positive, require
 
 type NDArray = npt.NDArray[np.float64]
+
+ILQR_STATUS_NOT_STARTED = "not_started"
+ILQR_STATUS_CONVERGED = "converged"
+ILQR_STATUS_LINE_SEARCH_FAILED = "line_search_failed"
+ILQR_STATUS_MAX_ITERATIONS = "max_iterations"
+
+
+@dataclass(frozen=True)
+class ILQRDiagnostics:
+    """Structured status from the most recent iLQR run."""
+
+    status: str
+    converged: bool
+    iterations: int
+    final_cost: float | None
+    reason: str
 
 
 class TrajectoryOptimizer(Protocol):
@@ -32,6 +49,18 @@ class ILQRSolver:
         self.state_weight = 1.0
         self.terminal_weight = 100.0
         self.control_weight = 0.01
+        self._last_diagnostics = ILQRDiagnostics(
+            status=ILQR_STATUS_NOT_STARTED,
+            converged=False,
+            iterations=0,
+            final_cost=None,
+            reason="optimize has not been called",
+        )
+
+    @property
+    def last_diagnostics(self) -> ILQRDiagnostics:
+        """Return diagnostics from the most recent optimize call."""
+        return self._last_diagnostics
 
     def _validate_inputs(
         self,
@@ -49,9 +78,28 @@ class ILQRSolver:
         check_finite_array(xf, "xf")
         require(x0.shape == xf.shape, "x0 and xf must have same shape")
         require(len(u_init) > 0, "u_init must not be empty")
+        check_finite_array(u_init, "u_init")
         check_positive(dt, "dt")
         require(max_iters >= 1, "max_iters must be >= 1", max_iters)
         check_positive(tol, "tol")
+
+    @staticmethod
+    def _validated_dynamics_output(
+        dynamics_fn: Callable[[NDArray, NDArray], NDArray],
+        x: NDArray,
+        u: NDArray,
+        expected_shape: tuple[int, ...],
+    ) -> NDArray:
+        """Evaluate dynamics and require a finite derivative matching state shape."""
+        raw_dx = dynamics_fn(x, u)
+        dx = np.asarray(raw_dx, dtype=np.float64)
+        require(
+            dx.shape == expected_shape,
+            "dynamics_fn output must match state shape",
+            {"expected": expected_shape, "actual": dx.shape},
+        )
+        check_finite_array(dx, "dynamics_fn output")
+        return dx
 
     def _linearize_dynamics(
         self,
@@ -66,15 +114,18 @@ class ILQRSolver:
         A = np.zeros((n_x, n_x))
         B = np.zeros((n_x, n_u))
         eps = 1e-5
-        f0 = dynamics_fn(x, u)
+        expected_shape = x.shape
+        f0 = self._validated_dynamics_output(dynamics_fn, x, u, expected_shape)
         for i in range(n_x):
             x_pert = x.copy()
             x_pert[i] += eps
-            A[:, i] = (dynamics_fn(x_pert, u) - f0) / eps
+            dx = self._validated_dynamics_output(dynamics_fn, x_pert, u, expected_shape)
+            A[:, i] = (dx - f0) / eps
         for j in range(n_u):
             u_pert = u.copy()
             u_pert[j] += eps
-            B[:, j] = (dynamics_fn(x, u_pert) - f0) / eps
+            dx = self._validated_dynamics_output(dynamics_fn, x, u_pert, expected_shape)
+            B[:, j] = (dx - f0) / eps
 
         Ad = np.eye(n_x) + A * dt
         Bd = B * dt
@@ -218,7 +269,10 @@ class ILQRSolver:
                     + alpha * k_traj[k_idx]
                     + K_traj[k_idx] @ (x_new[k_idx] - x_traj[k_idx])
                 )
-                x_new[k_idx + 1] = x_new[k_idx] + dynamics_fn(x_new[k_idx], u_new[k_idx]) * dt
+                dx = self._validated_dynamics_output(
+                    dynamics_fn, x_new[k_idx], u_new[k_idx], x0.shape
+                )
+                x_new[k_idx + 1] = x_new[k_idx] + dx * dt
             candidate_cost = self._trajectory_cost(x_new, u_new, xf, Q, R, Q_f)
             if np.isfinite(candidate_cost) and candidate_cost < current_cost:
                 best_x_traj = x_new
@@ -247,7 +301,12 @@ class ILQRSolver:
         )
         current_cost = self._trajectory_cost(x_traj, u_traj, xf, Q, R, Q_f)
 
-        for _iteration in range(max_iters):
+        status = ILQR_STATUS_MAX_ITERATIONS
+        reason = "maximum iterations reached"
+        iterations = 0
+        converged = False
+        for iteration in range(1, max_iters + 1):
+            iterations = iteration
             k_traj, K_traj, max_k = self._backward_pass(
                 x_traj, u_traj, xf, dt, n_x, n_u, Q, R, Q_f, dynamics_fn
             )
@@ -267,10 +326,24 @@ class ILQRSolver:
                 dynamics_fn,
             )
 
-            if not accepted or max_k < tol:
+            if max_k < tol:
+                status = ILQR_STATUS_CONVERGED
+                reason = "feedforward gain below tolerance"
+                converged = True
+                break
+            if not accepted:
+                status = ILQR_STATUS_LINE_SEARCH_FAILED
+                reason = "line search failed to reduce cost"
                 break
 
         t_traj: NDArray = np.asarray(np.linspace(0, N * dt, N + 1))
+        self._last_diagnostics = ILQRDiagnostics(
+            status=status,
+            converged=converged,
+            iterations=iterations,
+            final_cost=float(current_cost),
+            reason=reason,
+        )
         return x_traj, u_traj, t_traj
 
     def _trajectory_cost(
@@ -307,5 +380,6 @@ class ILQRSolver:
         x_traj = np.zeros((N + 1, len(x0)))
         x_traj[0] = x0
         for i in range(N):
-            x_traj[i + 1] = x_traj[i] + dynamics_fn(x_traj[i], u_traj[i]) * dt
+            dx = self._validated_dynamics_output(dynamics_fn, x_traj[i], u_traj[i], x0.shape)
+            x_traj[i + 1] = x_traj[i] + dx * dt
         return x_traj

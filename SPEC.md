@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-05-03T16:30:00Z
+Last-Updated: 2026-05-04T04:13:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,8 +29,8 @@ Last-Updated: 2026-05-03T16:30:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.100                                          |
-| **Last Spec Update**    | 2026-05-03                                       |
+| **Spec Version**        | 1.0.104                                          |
+| **Last Spec Update**    | 2026-05-04                                       |
 
 ## 2. Purpose & Mission
 
@@ -202,6 +202,7 @@ AffineDrift/
 | F42 | Cyclomatic complexity (McCabe) gate     | ✅     | Enforces `max-complexity = 10` in Ruff CI to maintain code quality                                                                                                                                                                                                                                                                                                                               |
 | F43 | Isolated benchmark CI environment       | ✅     | The performance benchmark workflow installs dependencies into a workflow-local virtual environment and guards PR comment/artifact steps when benchmark output is unavailable, keeping benchmark failures attributable to the benchmark command instead of shared runner state                                                                                                                       |
 | F44 | Production-readiness CI hardening       | ✅     | `ci-standard.yml` now treats mypy over `src/tools/` plus the production-readiness policy scripts, generated-agent-artifact checks, and GitHub Actions pinning checks as blocking quality gates, while the website-lint job fails on HTML validation errors instead of downgrading them to warnings.                                                                                              |
+| F45 | Optimizer and browser-state hardening   | ✅     | The core iLQR solver records `last_diagnostics` for convergence, iteration count, final cost, failure reason, and rollout/callback errors while preserving the existing return contract; dynamics outputs are validated for shape and finite values during rollout, linearization, and line search. Browser persistence helpers for history, metrics, and notes now delete corrupted `localStorage` payloads and bound notes recycle-bin retention to 30 days. |
 
 ### API / Interface Contract
 
@@ -213,6 +214,8 @@ AffineDrift/
   - `optimize(swing_model, constraints) -> OptimizedTrajectory` — Run trajectory optimization
 - `core.optimizers.iLQR` — iLQR solver
   - `solve(dynamics, cost_fn, initial_trajectory) -> Solution` — Compute optimal trajectory
+  - `last_diagnostics` exposes the most recent solve status without changing the tuple-style solution return value; callers can inspect convergence, failure reason, final cost, and iteration count after a solve attempt
+  - Dynamics callbacks must return finite state vectors matching the current state shape; invalid outputs fail fast instead of being silently propagated through rollout or line search
 - `golf_simulation.ball_flight.BallFlightDynamics` — Golf-ball flight integrator
   - Uses Reynolds-dependent drag and spin-parameter lift to compute aerodynamic forces during free flight
 - `tangent_models.TangentSpaceModel` — Tangent space abstraction
@@ -223,6 +226,7 @@ AffineDrift/
 - `RotationConverter` — Interactive 3D rotation tool
   - `convert(matrix, target_format) -> string` — Convert rotation representations
 - `SearchIndex.query(term) -> SearchResults` — Full-text search across content
+- Browser persistence utilities must fail closed on corrupted `localStorage` JSON by removing invalid keys and returning empty/default state; notes recycle-bin entries are retained for 30 days before cleanup
 
 **CLI Tools:**
 
@@ -601,4 +605,8 @@ python src/tools/code_quality_ast.py
 | 2026-04-30 | 1.0.95 | ci: document the refactored-helper compatibility restoration from the employer-readiness follow-up, isolate benchmark dependencies without shared pip cache state, and repair deploy-blocking site links to media, placeholder assets, legacy redirects, and tangent-space reference material. |
 | 2026-04-30 | 1.0.96 | ci: bound the non-blocking external URL scan in the link-checker workflow and isolate website-deploy dependency installs in a workflow-local virtual environment so network and shared-runner state cannot stall otherwise valid employer-readiness PRs. |
 | 2026-05-03 | 1.0.100 | fix(optimizer): gate the mock DDP solver behind both `allow_mock_solver=True` and an explicit test/demo environment (`pytest` or `AFFINEDRIFT_ENABLE_MOCK_DDP=1`), and update swing-optimizer docs/examples to stop advertising the mock production path. |
+| 2026-05-04 | 1.0.101 | fix(readiness): add iLQR diagnostic state and finite/shape validation for dynamics callbacks, preserve the existing solver return contract, and harden browser history, metrics, and notes storage against corrupted `localStorage` values with bounded recycle-bin retention. |
+| 2026-05-04 | 1.0.102 | ci(benchmarks): raise the benchmark dependency-install step timeout to 20 minutes so the isolated benchmark virtualenv can finish installing the full pinned stack on slower fleet runners. |
+| 2026-05-04 | 1.0.103 | ci(benchmarks): install the benchmark workflow from `requirements-benchmarks.txt` so the opt-in performance suite skips notebook and QA tooling packages that were timing out before benchmark execution began. |
+| 2026-05-04 | 1.0.104 | test(e2e): split rendered-site smoke routes into per-page checks, replace the fragile homepage `networkidle` wait with explicit load-state asset verification, and make the Playwright static web server command work on Windows and Linux for local validation parity. |
 | 2026-05-03 | 1.0.98 | fix(sentinel): Fixed Client-Side Code Injection (XSS) via `new Function` in the polynomial signal generator of the grip angle simulator by validating the expression string. |

@@ -10,11 +10,21 @@
   const STORAGE_KEY = "affinedrift_metrics";
   const SESSION_KEY = "affinedrift_session";
 
+  function parseStoredJson(storage, key, fallback) {
+    const raw = storage.getItem(key);
+    if (!raw) return fallback;
+    try {
+      return JSON.parse(raw);
+    } catch {
+      storage.removeItem(key);
+      return fallback;
+    }
+  }
+
   // Initialize metrics storage
   function getMetrics() {
     try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      return stored ? JSON.parse(stored) : initializeMetrics();
+      return parseStoredJson(localStorage, STORAGE_KEY, initializeMetrics());
     } catch {
       return initializeMetrics();
     }
