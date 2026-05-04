@@ -111,6 +111,14 @@ Or use Compose:
 docker compose up --build
 ```
 
+The container build now verifies the Quarto `.deb` checksum, installs Python
+dependencies from the hash-locked `requirements-docker.lock`, and emits
+`docs/build-provenance.json` inside the rendered site. Refresh the lock with:
+
+```bash
+py -3.12 -m piptools compile --allow-unsafe --generate-hashes --resolver=backtracking --output-file requirements-docker.lock requirements.txt
+```
+
 do not bake secrets into the image; pass credentials through local environment
 variables or your deployment platform's secret store.
 
