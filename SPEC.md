@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-05-04T00:00:00Z
+Last-Updated: 2026-05-04T03:20:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-05-04T00:00:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.101                                          |
+| **Spec Version**        | 1.0.102                                          |
 | **Last Spec Update**    | 2026-05-04                                       |
 
 ## 2. Purpose & Mission
@@ -606,4 +606,5 @@ python src/tools/code_quality_ast.py
 | 2026-04-30 | 1.0.96 | ci: bound the non-blocking external URL scan in the link-checker workflow and isolate website-deploy dependency installs in a workflow-local virtual environment so network and shared-runner state cannot stall otherwise valid employer-readiness PRs. |
 | 2026-05-03 | 1.0.100 | fix(optimizer): gate the mock DDP solver behind both `allow_mock_solver=True` and an explicit test/demo environment (`pytest` or `AFFINEDRIFT_ENABLE_MOCK_DDP=1`), and update swing-optimizer docs/examples to stop advertising the mock production path. |
 | 2026-05-04 | 1.0.101 | fix(readiness): add iLQR diagnostic state and finite/shape validation for dynamics callbacks, preserve the existing solver return contract, and harden browser history, metrics, and notes storage against corrupted `localStorage` values with bounded recycle-bin retention. |
+| 2026-05-04 | 1.0.102 | ci(benchmarks): raise the benchmark dependency-install step timeout to 20 minutes so the isolated benchmark virtualenv can finish installing the full pinned stack on slower fleet runners. |
 | 2026-05-03 | 1.0.98 | fix(sentinel): Fixed Client-Side Code Injection (XSS) via `new Function` in the polynomial signal generator of the grip angle simulator by validating the expression string. |
