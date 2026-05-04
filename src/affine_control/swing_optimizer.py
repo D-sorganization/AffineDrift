@@ -62,6 +62,7 @@ from src.core.contracts import (
     ensure,
     require,
 )
+from src.core.optimizers.ilqr_solver import OptimizeResult
 
 logger = logging.getLogger(__name__)
 
@@ -294,7 +295,7 @@ class SwingOptimizer:
         Returns:
             Tuple of (x_traj, u_traj, current_cost).
         """
-        x_traj, u_traj, _t_traj = self._ddp_solver(
+        solver_result = self._ddp_solver(
             f=dynamics_fn,
             x0=initial_state,
             xf=x_target,
@@ -302,8 +303,12 @@ class SwingOptimizer:
             eps_residual=cfg.convergence_tol,
             max_iters=min(5, cfg.max_iterations),
         )
-        traj_list = [x_traj[i] for i in range(len(x_traj))]
-        ctrl_list = [u_traj[i] for i in range(len(u_traj))]
+        if isinstance(solver_result, OptimizeResult):
+            x_traj, u_traj = solver_result.x_traj, solver_result.u_traj
+        else:
+            x_traj, u_traj, _t_traj = solver_result
+        traj_list = list(x_traj)
+        ctrl_list = list(u_traj)
         current_cost = self.compute_trajectory_cost(traj_list, ctrl_list)
         return x_traj, u_traj, current_cost
 
