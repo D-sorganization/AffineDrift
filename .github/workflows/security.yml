@@ -1,0 +1,55 @@
+name: Security Gates
+
+on:
+  push:
+    branches: [main, staging]
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  bandit-sast:
+    name: Bandit SAST
+    runs-on: d-sorg-fleet
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install Bandit
+        run: pip install bandit==1.7.7
+
+      - name: Run Bandit SAST (medium+ severity, blocking)
+        # -ll = medium and high severity only; -r = recursive; non-zero exit on findings
+        run: bandit -r src/ -ll
+
+  detect-secrets:
+    name: detect-secrets Scan
+    runs-on: d-sorg-fleet
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install detect-secrets
+        run: pip install detect-secrets==1.4.0
+
+      - name: Scan for new secrets against baseline
+        # Fails if any secrets are found that are not already in the baseline
+        run: |
+          detect-secrets scan --baseline .secrets.baseline
+          # Exit non-zero if the baseline changed (new secrets detected)
+          if ! git diff --exit-code .secrets.baseline; then
+            echo "::error::New secrets detected that are not in .secrets.baseline. Review and update the baseline if they are false positives."
+            exit 1
+          fi
