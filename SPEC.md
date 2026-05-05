@@ -28,9 +28,9 @@ Last-Updated: 2026-05-05T16:30:00Z
 | **Owner**               | D-sorganization                                  |
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
-| **Current Version**     | 1.0.7                                            |
-| **Spec Version**        | 1.0.106                                          |
-| **Last Spec Update**    | 2026-05-04                                       |
+| **Current Version**     | 1.0.8                                            |
+| **Spec Version**        | 1.0.69                                           |
+| **Last Spec Update**    | 2026-05-05                                       |
 
 ## 2. Purpose & Mission
 
@@ -586,33 +586,6 @@ python src/tools/code_quality_ast.py
   5. VERSION: Bump the Spec Version field when making substantive changes.
      Use semver: major (structure change), minor (new features), patch (corrections).
 -->
-
-| 2026-04-17 | 1.0.67 | ui(accessibility): Added rotation transform `aria-expanded="true"` for `.toggle-icon` inside `.sidebar-section-toggle` in `styles.css` to properly sync the visual state with the semantic state of collapsible sidebars. |
-| 2026-04-27 | 1.0.86 | chore(deps): bump python-minor-patch dependencies (PR #2899). |
-| 2026-04-18 | 1.0.68 | fix(security): Prevent DOM-based XSS in PDF export by escaping pageTitle before injecting via innerHTML. |
-| 2026-04-20 | 1.0.73 | chore(deps): bump html-validate/stylelint devDependencies and refresh package-lock transitive entries. |
-| 2026-04-20 | 1.0.74 | chore(deps)(deps): bump hypothesis, ruff, and pydantic pins in requirements.txt. |
-| 2026-04-21 | 1.0.3 | fix(security): Prevent DOM-based XSS in history URLs by using URL constructor and allowlist for http/https |
-| 2026-04-23 | 1.0.80 | fix(content): Replace raw LaTeX theorem-like environments in AffineDrift articles with Quarto callouts, teach the Quarto syntax scanner to block those raw environments in future edits, and restore the repo-root `fix_html.py` normalization entry point used by tests and CLI workflows. |
-| 2026-04-23 | 1.0.81 | fix(content): Correct the Geometry of Motion humanoid parent-array examples so their prose matches the encoded tree topology, with a regression test guarding both chapter examples. |
-| 2026-04-23 | 1.0.82 | fix(site): Add `scripts/check_quarto_render_coverage.py` and focused tests so CI verifies every sitemap URL maps to a committed Quarto source file before site builds proceed. |
-| 2026-04-26 | 1.0.84 | fix(html): fixed website-lint failures in Wrist_Universal_Claude.html by properly closing paragraph tags before list elements and removing stray </p> tags. |
-| 2026-04-27 | 1.0.85 | perf(frontend): synchronized performance optimizations from modular JS files to the monolithic `script.js` (replaced querySelectorAll with live collections, optimized string methods, etc.). |
-| 2026-04-28 | 1.0.87 | ci(workflows): harden runner-routing workflows to create the `GITHUB_OUTPUT` parent directory before writing outputs, remove unnecessary full-history checkout from comment conversion, and run the local-only workflow guard with `python3` in CI. |
-| 2026-04-29 | 1.0.88 | style: fix formatting with black and ruff in tests/test_container_config.py and other python files. |
-| 2026-04-29 | 1.0.89 | test(benchmarks): add opt-in pytest-benchmark scaffolding, lightweight baseline benchmarks, and local benchmarking documentation for issue #2919. |
-| 2026-04-29 | 1.0.90 | feat(ci): add `.github/workflows/block-self-merge.yml` to enforce distributed code review policy, preventing PR authors from approving their own pull requests with branch protection as the authoritative enforcement gate (issue #2918). |
-| 2026-04-29 | 1.0.91 | docs(spec): document code review enforcement and benchmark suite integration in SPEC.md with feature entry F41, test organization updates, and pytest configuration details. |
-| 2026-04-30 | 1.0.92 | ui: Bibliography focus management for bibliography details |
-| 2026-04-30 | 1.0.93 | ui(accessibility): Enhanced the bibliography search empty state with ARIA live region and query reflection for better screen reader support. |
-| 2026-04-30 | 1.0.94 | fix(spec): resolve SPEC.md merge conflict markers and bump spec version for focus management feature. |
-| 2026-04-30 | 1.0.95 | ci: document the refactored-helper compatibility restoration from the employer-readiness follow-up, isolate benchmark dependencies without shared pip cache state, and repair deploy-blocking site links to media, placeholder assets, legacy redirects, and tangent-space reference material. |
-| 2026-04-30 | 1.0.96 | ci: bound the non-blocking external URL scan in the link-checker workflow and isolate website-deploy dependency installs in a workflow-local virtual environment so network and shared-runner state cannot stall otherwise valid employer-readiness PRs. |
-| 2026-05-03 | 1.0.100 | fix(optimizer): gate the mock DDP solver behind both `allow_mock_solver=True` and an explicit test/demo environment (`pytest` or `AFFINEDRIFT_ENABLE_MOCK_DDP=1`), and update swing-optimizer docs/examples to stop advertising the mock production path. |
-| 2026-05-04 | 1.0.101 | fix(readiness): add iLQR diagnostic state and finite/shape validation for dynamics callbacks, preserve the existing solver return contract, and harden browser history, metrics, and notes storage against corrupted `localStorage` values with bounded recycle-bin retention. |
-| 2026-05-04 | 1.0.102 | ci(benchmarks): raise the benchmark dependency-install step timeout to 20 minutes so the isolated benchmark virtualenv can finish installing the full pinned stack on slower fleet runners. |
-| 2026-05-04 | 1.0.103 | ci(benchmarks): install the benchmark workflow from `requirements-benchmarks.txt` so the opt-in performance suite skips notebook and QA tooling packages that were timing out before benchmark execution began. |
-| 2026-05-04 | 1.0.104 | test(e2e): split rendered-site smoke routes into per-page checks, replace the fragile homepage `networkidle` wait with explicit load-state asset verification, and make the Playwright static web server command work on Windows and Linux for local validation parity. |
-| 2026-05-04 | 1.0.105 | fix(container): pin the Python base image by digest, verify the Quarto `.deb`, install Python dependencies from `requirements-docker.lock` in hash-checking mode, and emit `docs/build-provenance.json` for the rendered site. |
-| 2026-05-03 | 1.0.98 | fix(sentinel): Fixed Client-Side Code Injection (XSS) via `new Function` in the polynomial signal generator of the grip angle simulator by validating the expression string. |
-| 2026-05-04 | 1.0.106 | perf(frontend): Replace querySelectorAll for history lists with getElementsByTagName |
+| 2026-04-17 | 1.0.67  | ui(accessibility): Added rotation transform `aria-expanded="true"` for `.toggle-icon` inside `.sidebar-section-toggle` in `styles.css` to properly sync the visual state with the semantic state of collapsible sidebars. |
+| 2026-04-18 | 1.0.68  | fix(security): Prevent DOM-based XSS in PDF export by escaping pageTitle before injecting via innerHTML. |
+| 2026-05-05 | 1.0.69  | security(xss): Fixed CRITICAL client-side code injection vulnerability in polynomial signal generator (`WristPolynomialEvaluator`) by replacing unsafe `new Function` evaluation with a custom AST-based parser and evaluator. The vulnerability could allow arbitrary JavaScript execution when processing malicious mathematical expressions. Verified against test cases including `1; alert(1)` and confirmed correct parsing of valid expressions with mathematical functions and scientific notation. |
