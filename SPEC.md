@@ -615,4 +615,4 @@ python src/tools/code_quality_ast.py
 | 2026-05-04 | 1.0.104 | test(e2e): split rendered-site smoke routes into per-page checks, replace the fragile homepage `networkidle` wait with explicit load-state asset verification, and make the Playwright static web server command work on Windows and Linux for local validation parity. |
 | 2026-05-04 | 1.0.105 | fix(container): pin the Python base image by digest, verify the Quarto `.deb`, install Python dependencies from `requirements-docker.lock` in hash-checking mode, and emit `docs/build-provenance.json` for the rendered site. |
 | 2026-05-03 | 1.0.98 | fix(sentinel): Fixed Client-Side Code Injection (XSS) via `new Function` in the polynomial signal generator of the grip angle simulator by validating the expression string. |
-| 2026-05-05 | 1.0.106 | fix(sentinel): Removed `new Function` from `src/tools/wrist_universal_joint/grip_angle_simulator.html` to fix XSS, replacing it with a secure `WristPolynomialEvaluator`. |
+| 2026-05-04 | 1.0.106 | perf(frontend): Replace querySelectorAll for history lists with getElementsByTagName |
