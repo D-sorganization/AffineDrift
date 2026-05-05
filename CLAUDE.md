@@ -66,6 +66,21 @@ quarto render                                          # build the site
 - **Playwright** requires `npx playwright install` for browser binaries before first run.
 - **CSS lives in two places:** edit in `css/`, CI validates that `docs/` mirrors match. Never edit rendered CSS directly.
 
+## Logging Standard
+
+**Source Code (src/):** Logging only. `print()` is forbidden.
+```python
+import logging
+logger = logging.getLogger(__name__)
+logger.info("message")  # Use for diagnostics
+```
+
+**Scripts & Tools:** May use `print()` for user-facing output; use logging for diagnostics.
+
+**Tests:** Logging for diagnostics; print acceptable for test formatting.
+
+See `.logging-standard.md` for full details.
+
 ## Coding Standards (Enforced by CI and QA)
 
 - **DRY:** CI tracks duplication. Extract shared Quarto includes and Python utilities. No copy-paste between chapters.
