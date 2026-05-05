@@ -1,0 +1,104 @@
+/**
+ * Design Tokens: Shadows
+ * Shadow system for elevation and depth in the AffineDrift design system
+ *
+ * Shadow scales are organized by elevation level (sm, md, lg, xl)
+ * Each shadow includes both color and blur patterns for depth perception
+ */
+
+:root {
+  /* ========== Shadow Scale ========== */
+
+  /* Based on Material Design elevation system */
+
+  /* Extra Small - for subtle emphasis */
+  --shadow-xs: 0 1px 1px 0 rgb(0 0 0 / 0.05);
+
+  /* Small - for slight elevation */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+
+  /* Medium - for cards and components */
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -1px rgb(0 0 0 / 0.06);
+
+  /* Large - for modals and overlays */
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.05);
+
+  /* Extra Large - for prominent elements */
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 10px 10px -5px rgb(0 0 0 / 0.04);
+
+  /* 2XL - for maximum elevation */
+  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+
+  /* ========== Inner Shadows ========== */
+
+  /* For inset effects and depth */
+  --shadow-inner-sm: inset 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-inner-md: inset 0 2px 4px 0 rgb(0 0 0 / 0.1);
+
+  /* ========== Shadow Colors ========== */
+
+  /* Base shadow color with transparency levels */
+  --shadow-color: rgb(0, 0, 0, 0.1);
+  --shadow-color-light: rgb(0, 0, 0, 0.05);
+  --shadow-color-dark: rgb(0, 0, 0, 0.2);
+
+  /* ========== Semantic Shadow Usage ========== */
+
+  /* Map elevation semantics to shadow levels */
+  --shadow-elevation-low: var(--shadow-sm);
+  --shadow-elevation-medium: var(--shadow-md);
+  --shadow-elevation-high: var(--shadow-lg);
+  --shadow-elevation-maximum: var(--shadow-xl);
+
+  /* Component-specific shadows */
+  --shadow-button: var(--shadow-sm);
+  --shadow-button-hover: var(--shadow-md);
+  --shadow-button-active: var(--shadow-xs);
+  --shadow-card: var(--shadow-md);
+  --shadow-card-hover: var(--shadow-lg);
+  --shadow-dropdown: var(--shadow-lg);
+  --shadow-modal: var(--shadow-xl);
+  --shadow-tooltip: var(--shadow-lg);
+
+  /* ========== Transition for Shadow Changes ========== */
+
+  /* Smooth transitions when shadows change on interaction */
+  --shadow-transition: box-shadow 0.2s ease-in-out;
+
+  /* ========== None Shadow (reset) ========== */
+  --shadow-none: 0 0 0 0 rgb(0, 0, 0, 0);
+}
+
+/* ========== Dark Mode Shadow Adjustments ========== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Increase shadow opacity in dark mode for better contrast */
+    --shadow-xs: 0 1px 1px 0 rgb(0 0 0 / 0.2);
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.15);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.2), 0 2px 4px -1px rgb(0 0 0 / 0.15);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.25), 0 4px 6px -2px rgb(0 0 0 / 0.2);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.25), 0 10px 10px -5px rgb(0 0 0 / 0.15);
+    --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.4);
+    --shadow-inner-sm: inset 0 1px 2px 0 rgb(0 0 0 / 0.15);
+    --shadow-inner-md: inset 0 2px 4px 0 rgb(0 0 0 / 0.25);
+
+    /* Adjust shadow colors for dark mode visibility */
+    --shadow-color: rgb(0, 0, 0, 0.3);
+    --shadow-color-light: rgb(0, 0, 0, 0.15);
+    --shadow-color-dark: rgb(0, 0, 0, 0.5);
+  }
+}
+
+[data-theme="dark"] {
+  --shadow-xs: 0 1px 1px 0 rgb(0 0 0 / 0.2);
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.15);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.2), 0 2px 4px -1px rgb(0 0 0 / 0.15);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.25), 0 4px 6px -2px rgb(0 0 0 / 0.2);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.25), 0 10px 10px -5px rgb(0 0 0 / 0.15);
+  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.4);
+  --shadow-inner-sm: inset 0 1px 2px 0 rgb(0 0 0 / 0.15);
+  --shadow-inner-md: inset 0 2px 4px 0 rgb(0 0 0 / 0.25);
+  --shadow-color: rgb(0, 0, 0, 0.3);
+  --shadow-color-light: rgb(0, 0, 0, 0.15);
+  --shadow-color-dark: rgb(0, 0, 0, 0.5);
+}

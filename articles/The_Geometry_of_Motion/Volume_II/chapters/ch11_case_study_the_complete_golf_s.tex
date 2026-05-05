@@ -8,43 +8,43 @@ will be added in future editions.
 \end{gomdraftnotice}
 
 \epigraph{%
-  The physics are invariant. What separates the professional is their mastery over the geometry of the resultant funnel.
+  A useful model makes its assumptions visible before it asks for trust.
 }{}
 
 \vspace{0.5cm}
 
 \begin{laymansbox}{Putting It All Together}{putting_it_together}
-Everything we've learned so far comes together in the golf swing. We started by throwing away the idea of a fixed target and instead focusing on the path (Chapter 1). We looked at the geometry of that path (Chapters 2 and 3), how to stay on it regardless of timing (Chapter 4), and how to let momentum do the heavy lifting for the wrists (Chapter 5). Then we let a computer discover the optimal path (Chapter 6) and built a mathematical funnel around it to guarantee it works every time (Chapter 7), throwing away the clock entirely (Chapter 8) because trying too hard just makes things worse (Chapter 9). Finally, we saw how the human body learns these funnels through repetition (Chapter 10). This final chapter is the grand finale, tying all these concepts together to explain, in pure mathematical terms, what makes a professional golf swing so effortlessly powerful and wildly consistent.
+Everything we have developed so far can be assembled into a golf-swing model, but the case study should be read as a reproducible modeling program rather than as a proof of a universal swing law. Chapters 1--4 define the trajectory, state-space geometry, and transverse-error language. Chapters 5--8 add underactuation, trajectory optimization, funnels, and phase coordinates. Chapters 9--10 add signal-dependent noise and learning. This chapter shows how those pieces could be combined, and it states the assumptions that would have to be checked before stronger claims about expert performance are justified.
 \end{laymansbox}
 
 % ══════════════════════════════════════════════
-\section{Unifying the "Control is Motion" Framework}
+\section{Unifying the "Control Is Motion" Framework}
 % ══════════════════════════════════════════════
 
-Throughout this text, we have systematically deconstructed the classical control paradigm and rebuilt it to handle tasks defined uniquely by motion. We conclude by applying our holistic framework to a 15-DOF musculoskeletal model of the human golf swing in order to formally synthesize the mathematical structure of athletic perfection.
+Throughout this text, we have reframed control around trajectory geometry and local transverse correction. We conclude with a hypothetical 15-DOF musculoskeletal golf-swing model that illustrates how the framework could be assembled into a testable analysis.
 
-The objective is clear: maximize negative clubhead velocity at the precise spatial intersection with the golf ball, while maintaining face angle orthogonality. The exact time interval $t_f$ in which this occurs is irrelevant; only the geometric state at impact matters. Furthermore, the commanded motion must not exceed the structural limits of biological torque, and the trajectory must be highly robust to physiological signal-dependent noise (SDN).
+The objective is to maximize clubhead speed at the spatial intersection with the golf ball while controlling face orientation and respecting biological torque limits. The terminal time may be treated as a decision variable, but the formulation must still state admissible timing, contact, and phase-coordinate assumptions. Robustness is included through an explicit signal-dependent-noise model.
 
 \subsection{Phase 1: Defining the Geometry and Optimization}
 
-The system is heavily underactuated. The wrists are treated as passive pin joints, delegating the final propulsive phase entirely to inertial coupling. 
+The system is heavily underactuated in this example. The wrists are treated as passive pin joints, which is a simplifying assumption used to expose inertial coupling rather than a complete anatomical model.
 
-We formulate a \textbf{Stochastic Moving Target Optimal Control Problem} (Chapter 6). We deploy Direct Collocation to optimize the trajectory $\traj^*(s)$ parameterized over a spatial phase variable $s$ representing the shoulder angle (Chapter 8). The integral cost function strictly penalizes signal variance (Chapter 9) by incorporating local covariance propagation. 
+We formulate a \textbf{Stochastic Moving Target Optimal Control Problem} (Chapter 6). Direct collocation optimizes the trajectory $\traj^*(s)$ over a spatial phase variable $s$ representing shoulder angle, provided that this phase coordinate remains monotone over the modeled interval (Chapter 8). The integral cost penalizes signal variance through local covariance propagation (Chapter 9).
 
-The collocation solver successfully navigates the $\Bmat^\perp$ annihilator constraint (Chapter 5) and produces an optimal, smooth backswing. It discovers that a massive torque inversion (braking the torso) right before impact causes the zero dynamics of the passive wrist to wildly accelerate, perfectly squaring the face precisely as the clubhead spatial coordinate intersects the ball's location.
+In the illustrative model, the collocation solver satisfies the $\Bmat^\perp$ annihilator constraint (Chapter 5) and may produce a smooth reference motion. A torque reversal before impact can exploit passive wrist dynamics, but claims about face squaring require explicit contact geometry, grip modeling, and validation against measured swings.
 
 \subsection{Phase 2: Funnel Synthesis and Robustness}
 
-With $\traj^*(s)$ computed, we lock down the trajectory using \textbf{Transverse Linearization} (Chapter 4). We ignore errors along the tangent of the path (since chronological timing is irrelevant) and construct a time-varying LQR feedback matrix to regulate only the transverse deviations. 
+With $\traj^*(s)$ computed, we analyze the trajectory using \textbf{Transverse Linearization} (Chapter 4) \cite{HauserHindman1995,Shiriaev2010}. We ignore errors along the tangent of the path only within the chosen phase model and construct a time-varying LQR feedback matrix to regulate selected transverse deviations.
 
-Finally, we compute the verified bounds of this stability region using \textbf{Sums-of-Squares Programming} (Chapter 7). The SDP calculates a rigorous boundary function $V(\state, t) = 1$ that proves the system is confined to an invariant funnel. 
+Finally, we compute candidate bounds for this stability region using \textbf{Sums-of-Squares Programming} (Chapter 7) \cite{MajumdarTedrake2017}. The SDP supplies a boundary function $V(\state, t) = 1$ that certifies invariance under the polynomial model, controller, and disturbance assumptions used in the computation.
 
 \begin{principle}{Time-Varying Funnel Geometry}{funnel_geometry}
-  The computed funnel $\mathcal{F}(t) = \{\state \mid V(\state, t) \leq 1\}$ exhibits a time-dependent volume structure, $\text{Vol}(\mathcal{F}(t))$, whose evolution reflects the stability properties of the transverse feedback subsystem. The Lyapunov function $V(\state, t) = (\state - \traj^*(t))^\top \mathbf{P}(t) (\state - \traj^*(t))$ (Chapter 7) contains a time-varying matrix $\mathbf{P}(t)$ determined by the Riccati equation of the transverse linearization (Chapter 4).
+  The computed funnel $\mathcal{F}(t) = \{\state \mid V(\state, t) \leq 1\}$ describes the model's certified region of attraction. The Lyapunov function $V(\state, t) = (\state - \traj^*(t))^\top \mathbf{P}(t) (\state - \traj^*(t))$ (Chapter 7) contains a time-varying matrix $\mathbf{P}(t)$ determined by the Riccati equation of the transverse linearization (Chapter 4).
 
-  During the early phases of motion, the eigenvalues of the transverse feedback matrix $\mathbf{A}_\perp(t) - \mathbf{B}_\perp(t)\mathbf{K}(t)$ may be negative but bounded in magnitude, permitting larger initial condition deviations. As $t \to t_f$, the contraction rates increase (more negative eigenvalues), and the Lyapunov ellipsoid contracts accordingly. The rate of contraction is governed by the stochastic cost functional (Chapter 6), which balances terminal objective maximization against variance amplification through the zero dynamics (Chapter 5).
+  During the early phases of motion, the funnel may be wider if the modeled dynamics tolerate larger transverse deviations without violating the invariant boundary. As the swing approaches transition and downswing, the funnel may tighten because the model becomes more sensitive to timing, phase, and actuation errors.
 
-  At the terminal manifold constraint $\psi(\state(t_f)) = 0$, the funnel width is constrained by the SOS program's requirement that $(V(\state(t_f), t_f) - 1)$ defines an invariant boundary. This width is not arbitrary; it emerges from the solution of a semidefinite program (Chapter 7) and represents the mathematically verified margin of success.
+  Any claim about a final $0.15$ seconds, near-zero funnel diameter, or passive absorption of muscular noise must be supported by the actual SDP solution and sensitivity analysis. The funnel is a certificate for the stated model, not a general proof of athletic consistency.
 \end{principle}
 
-Through this book, we hope we have proven that the thermostat has its place, but when the objective is a sweeping, dynamic motion cutting through the physical world, "Control is Motion" provides the only mathematically truthful language.
+This case study illustrates the intended use of the framework: define a motion objective, state the model assumptions, compute a trajectory, and certify the local control region. It does not replace empirical validation, and it should be read as a reproducible modeling program rather than a proof of a universal control language.

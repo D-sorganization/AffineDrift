@@ -30,7 +30,7 @@ def get_git_last_modified(filepath: str) -> str:
 
     try:
         result = subprocess.run(
-            [git_cmd, "log", "-1", "--format=%cI", "--", filepath],  # noqa: S603
+            [git_cmd, "log", "-1", "--format=%cI", "--", filepath],
             capture_output=True,
             text=True,
             cwd=Path(__file__).parent.parent,

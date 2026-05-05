@@ -133,7 +133,7 @@
         </div>
 
         <div class="ad-splash-hints" id="ad-splash-hints">
-          <span class="ad-splash-hint">Loading resources</span>
+          <span class="ad-splash-hint">Loading resources (Click to skip)</span>
         </div>
       </div>
     `;
@@ -154,6 +154,10 @@
 
     // Add body class to prevent scrolling during splash
     document.documentElement.classList.add('ad-splash-active');
+
+    // Add dismissibility
+    splash.addEventListener('click', forceHideSplash);
+    splash.style.cursor = 'pointer';
 
     log('Splash screen created');
   }

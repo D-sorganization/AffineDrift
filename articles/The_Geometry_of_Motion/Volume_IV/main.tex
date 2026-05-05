@@ -103,9 +103,11 @@
   breakable
 }{laymans}
 
+\makeatletter
 \theoremstyle{plain}
-\newtheorem{proposition}{Proposition}[chapter]
-\newtheorem{theorem}{Theorem}[chapter]
+\@ifundefined{theorem}{\newtheorem{theorem}{Theorem}[chapter]}{}
+\@ifundefined{proposition}{\newtheorem{proposition}[theorem]{Proposition}}{}
+\makeatother
 
 % ──────────────────────────────────────────────
 % Notation Concordance — Volume IV

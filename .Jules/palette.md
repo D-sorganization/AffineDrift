@@ -41,10 +41,14 @@
 **Learning:** For optimal UX in search or filter features, empty states ('no results') should not be dead ends.
 **Action:** Always provide an actionable, one-click reset mechanism (e.g., a 'Clear Search' button) that clears the query and restores focus to the input field.
 
+## 2026-04-12 - Native Tooltips for Icon-Only Buttons
+**Learning:** While icon-only buttons rely on aria-label for screen readers, they lack native on-hover tooltips for sighted users without a title attribute, creating a gap between accessibility and standard usability.
+**Action:** Always pair aria-label with a matching title attribute on interactive icon-only elements to ensure sighted mouse users receive visual hints.
 
-## 2024-04-16 - Always specify type='button' for dynamic buttons
-**Learning:** Dynamically created HTML buttons without an explicit 'type' attribute default to 'submit', which can trigger unintended form submissions or page reloads if placed inside a form.
-**Action:** Always explicitly assign `button.type = 'button'` when creating non-submit buttons via JavaScript.
-## 2026-04-18 - Accessible Splash Screen Loading Statuses
-**Learning:** Loading splash screens with dynamic status text (e.g., "Initializing...") may not announce status updates to screen readers.
-**Action:** Add `aria-live="polite"` and `aria-atomic="true"` to splash screen status elements to ensure loading progress is announced gracefully.
+## 2026-04-29 - MathJax Overflow on Mobile Devices
+**Learning:** Display math equations (MathJax) often exceed standard viewport widths on mobile devices. Without explicit container constraints, they cause horizontal page scrolling, breaking responsive layout and causing frustration for touch users.
+**Action:** Always wrap or target `.math.display` and `mjx-container[display="true"]` with `overflow-x: auto; max-width: 100%; -webkit-overflow-scrolling: touch;` to ensure they scroll internally without breaking the main viewport layout.
+
+## 2026-06-01 - Focus Management for Sidebar Detail Views
+**Learning:** When a list item dynamically updates a separate details pane (like a sidebar), screen reader users are left unaware of the change unless focus is explicitly moved to the new content.
+**Action:** Add `tabindex="-1"` and call `.focus({ preventScroll: true })` on the details container after updating its content, cleaning up the `tabindex` on blur.

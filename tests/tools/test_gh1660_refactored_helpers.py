@@ -19,7 +19,6 @@ from __future__ import annotations
 
 import sys
 import types
-import warnings
 from typing import Any
 from unittest.mock import MagicMock
 
@@ -31,8 +30,8 @@ def _install_streamlit_mock() -> None:
     """Install a minimal streamlit mock so plots/diagram/streamlit_app can be imported."""
     if "streamlit" not in sys.modules:
         st = types.ModuleType("streamlit")
-        st.cache_resource = lambda **kw: (lambda f: f)  # type: ignore[attr-defined]
-        st.cache_data = lambda **kw: (lambda f: f)  # type: ignore[attr-defined]
+        st.cache_resource = lambda **kw: lambda f: f  # type: ignore[attr-defined]
+        st.cache_data = lambda **kw: lambda f: f  # type: ignore[attr-defined]
 
         class _FakeState(dict):  # type: ignore[type-arg]
             def __getattr__(self, k: str) -> Any:
@@ -344,9 +343,7 @@ class TestSelectBestTrajectory:
         config = SwingOptimizationConfig(
             n_joints=1, horizon_steps=5, max_iterations=3, allow_mock_solver=True
         )
-        with warnings.catch_warnings():
-            warnings.simplefilter("ignore", UserWarning)
-            return SwingOptimizer(config)
+        return SwingOptimizer(config)
 
     def test_returns_new_when_lower_cost(self) -> None:
         optimizer = self._make_optimizer()

@@ -55,7 +55,7 @@ def load_and_validate(path: Path) -> list[dict[str, Any]]:
     if not isinstance(raw, list):
         raise BibliographyError(f"Bibliography must be a JSON list, got {type(raw).__name__}")
 
-    return raw  # type: ignore[return-value]
+    return raw
 
 
 # ─── checks ──────────────────────────────────────────────────────────────────
@@ -182,13 +182,15 @@ def main() -> int:
 
     all_violations: list[str] = []
 
-    for check_fn, kwargs in [
+    check_list: list[tuple[Any, dict[str, Any]]] = [
         (check_required_fields, {}),
         (check_no_et_al_authors, {"budget_path": budget_path}),
         (check_no_duplicate_ids, {}),
         (check_papers_have_doi_or_url, {"budget_path": budget_path}),
-    ]:
-        violations = check_fn(entries, **kwargs)  # type: ignore[call-arg]
+    ]
+
+    for check_fn, kwargs in check_list:
+        violations = check_fn(entries, **kwargs)
         all_violations.extend(violations)
 
     if all_violations:

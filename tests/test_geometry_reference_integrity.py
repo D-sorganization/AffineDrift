@@ -7,12 +7,57 @@ from collections import defaultdict
 from dataclasses import dataclass
 from pathlib import Path
 
-import pytest
-
-pytestmark = pytest.mark.content_lint
-
 ROOT = Path(__file__).resolve().parents[1]
 BIB_PATH = ROOT / "articles" / "The_Geometry_of_Motion" / "geometry_of_motion.bib"
+KNOWN_LEGACY_IDENTIFIER_GAPS = {
+    "Albus1971",
+    "Alexander1991",
+    "Caruthers2016",
+    "Challis2011",
+    "Clark2013",
+    "Cohen1980",
+    "Cohen2005",
+    "dAvellaBizzi2005",
+    "Friston2010",
+    "Friston2016",
+    "Georgopoulos1986",
+    "Gershman2017",
+    "Greenwald1970",
+    "Grillner1975",
+    "Halder2000",
+    "HansenOstermeier2001",
+    "HerculanoHouzel2010",
+    "Hill1950",
+    "Hirashima2007control",
+    "Hirashima2008kinetic",
+    "HirashimaOhtsuki2008",
+    "Hommel2001",
+    "Kawato1987",
+    "Kepple1997",
+    "Lephart2007",
+    "Marr1969",
+    "Matsuoka1985",
+    "McGeer1990",
+    "Mountcastle1997",
+    "Neptune2001",
+    "OConnor1989",
+    "Putnam1993",
+    "RileyKerrigan1999",
+    "Schmidt1975",
+    "Schultz1997",
+    "Schutte1993",
+    "Shadmehr1994",
+    "Solis2005",
+    "StornPrice1997",
+    "TingMacpherson2005",
+    "Tresch2006",
+    "Winters1984",
+    "WolpertKawato1998",
+    "Wretenberg1995",
+    "Zajac2002",
+    "Zajac2003",
+    "ZajacGordon1989",
+}
 
 
 @dataclass(frozen=True)
@@ -39,7 +84,16 @@ def _norm(text: str) -> str:
 
 def test_article_and_proceedings_entries_have_identifier() -> None:
     """Each article/proceedings entry should include a DOI or URL."""
-    return
+    entries = _parse_bib_entries(BIB_PATH.read_text(encoding="utf-8"))
+    missing_ids = [
+        entry.key
+        for entry in entries
+        if entry.kind in {"article", "inproceedings"}
+        and "doi" not in entry.fields
+        and "url" not in entry.fields
+    ]
+    unexpected = sorted(set(missing_ids) - KNOWN_LEGACY_IDENTIFIER_GAPS)
+    assert not unexpected, f"Missing DOI/URL for: {unexpected}"
 
 
 def test_known_high_risk_attributions_are_correct() -> None:

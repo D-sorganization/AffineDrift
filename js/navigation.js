@@ -56,31 +56,126 @@ export function initSmoothScroll() {
 }
 
 /**
- * Initialize navbar collapse behavior
+ * Initialize navbar collapse behavior with unified mobile navigation
+ *
+ * UNIFIED MOBILE MENU IMPLEMENTATION
+ * This consolidates three separate mobile navigation implementations:
+ * 1. Quarto navbar (.navbar-toggler) - PRIMARY
+ * 2. Legacy custom nav-toggle - REMOVED
+ * 3. Homepage mobile-menu-toggle - CONSOLIDATED
+ *
+ * All mobile menus now use Quarto's navbar with enhanced keyboard support.
+ * Handles: click collapse, keyboard navigation (Escape, arrows), ARIA attributes.
  */
 export function initNavbarCollapse() {
     const navbarCollapse = document.getElementById("navbarCollapse");
-    // ⚡ Bolt Optimization: Use document.links (O(1)) instead of querySelectorAll (O(N))
+    const navbarToggler = document.querySelector(".navbar-toggler");
+
+    // Get all nav links within the navbar
+    const navLinks = [];
     for (const link of document.links) {
         if (
             link.classList.contains("nav-link") &&
             link.closest(".navbar-nav")
         ) {
-            const href = link.getAttribute("href");
-            if (href && href.startsWith("#")) {
-                link.addEventListener("click", () => {
-                    if (navbarCollapse && navbarCollapse.classList.contains("show")) {
-                        const collapseInstance = window.bootstrap?.Collapse?.getInstance
-                            ? window.bootstrap.Collapse.getInstance(navbarCollapse)
-                            : null;
-                        if (collapseInstance) {
-                            collapseInstance.hide();
-                        } else {
-                            navbarCollapse.classList.remove("show");
-                        }
-                    }
-                });
+            navLinks.push(link);
+        }
+    }
+
+    // Ensure Quarto navbar has proper ARIA attributes
+    if (navbarCollapse) {
+        navbarCollapse.setAttribute("role", "navigation");
+        if (!navbarCollapse.getAttribute("aria-label")) {
+            navbarCollapse.setAttribute("aria-label", "Site navigation");
+        }
+    }
+
+    if (navbarToggler) {
+        // Set initial ARIA state on toggle button
+        navbarToggler.setAttribute("aria-controls", "navbarCollapse");
+        if (!navbarToggler.getAttribute("aria-label")) {
+            navbarToggler.setAttribute("aria-label", "Toggle navigation menu");
+        }
+
+        // Update ARIA state when menu state changes
+        const updateToggleState = () => {
+            const isOpen = navbarCollapse && navbarCollapse.classList.contains("show");
+            navbarToggler.setAttribute("aria-expanded", String(isOpen));
+        };
+
+        // Listen for collapse changes and update ARIA
+        if (navbarCollapse) {
+            navbarCollapse.addEventListener("show.bs.collapse", updateToggleState);
+            navbarCollapse.addEventListener("hide.bs.collapse", updateToggleState);
+            navbarCollapse.addEventListener("shown.bs.collapse", updateToggleState);
+            navbarCollapse.addEventListener("hidden.bs.collapse", updateToggleState);
+        }
+
+        // Keyboard navigation: Escape key closes menu
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && navbarCollapse && navbarCollapse.classList.contains("show")) {
+                const collapseInstance = window.bootstrap?.Collapse?.getInstance
+                    ? window.bootstrap.Collapse.getInstance(navbarCollapse)
+                    : null;
+                if (collapseInstance) {
+                    collapseInstance.hide();
+                } else {
+                    navbarCollapse.classList.remove("show");
+                }
+                // Return focus to toggle button for accessibility
+                if (navbarToggler) {
+                    navbarToggler.focus();
+                }
             }
+        });
+
+        // Arrow key navigation within menu
+        if (navbarCollapse) {
+            navbarCollapse.addEventListener("keydown", (e) => {
+                if (["ArrowDown", "ArrowUp", "Home", "End"].includes(e.key) && navLinks.length > 0) {
+                    e.preventDefault();
+                    const focusedIndex = navLinks.findIndex(link => link === document.activeElement);
+                    let nextIndex = 0;
+
+                    switch (e.key) {
+                        case "ArrowDown":
+                            nextIndex = focusedIndex === -1 ? 0 : Math.min(focusedIndex + 1, navLinks.length - 1);
+                            break;
+                        case "ArrowUp":
+                            nextIndex = focusedIndex <= 0 ? navLinks.length - 1 : focusedIndex - 1;
+                            break;
+                        case "Home":
+                            nextIndex = 0;
+                            break;
+                        case "End":
+                            nextIndex = navLinks.length - 1;
+                            break;
+                    }
+
+                    if (navLinks[nextIndex]) {
+                        navLinks[nextIndex].focus();
+                    }
+                }
+            });
+        }
+    }
+
+    // Close menu when a nav link is clicked (maintains existing behavior)
+    for (const link of navLinks) {
+        const href = link.getAttribute("href");
+        if (href && href.startsWith("#")) {
+            link.addEventListener("click", () => {
+                if (navbarCollapse && navbarCollapse.classList.contains("show")) {
+                    const collapseInstance = window.bootstrap?.Collapse?.getInstance
+                        ? window.bootstrap.Collapse.getInstance(navbarCollapse)
+                        : null;
+                    if (collapseInstance) {
+                        collapseInstance.hide();
+                    } else {
+                        navbarCollapse.classList.remove("show");
+                    }
+                }
+            });
         }
     }
 }

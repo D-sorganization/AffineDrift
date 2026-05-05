@@ -1,11 +1,14 @@
 import logging
+import os
 import unittest
 import warnings
 from typing import Any
+from unittest.mock import patch
 
 import numpy as np
 
 from src.affine_control.ddp import _DDP_MOCK_WARNING, adaptive_timestep_ddp_mock
+from src.core.contracts import ContractViolationError
 
 logger = logging.getLogger(__name__)
 
@@ -81,6 +84,31 @@ class TestAdaptiveDDPMockWarning(unittest.TestCase):
         self.assertIn("ISSUE_Completist_Critical_DDPMock_2026-01-30.md", _DDP_MOCK_WARNING)
         self.assertIn("non-functional mock", _DDP_MOCK_WARNING)
         self.assertIn("mathematically incorrect", _DDP_MOCK_WARNING)
+
+    def test_mock_solver_blocked_outside_test_or_demo_environment(self) -> None:
+        """The direct mock entrypoint must fail closed outside test/demo environments."""
+        double_integrator = _make_double_integrator()
+        x0 = np.array([0.0, 0.0])
+        xf = np.array([1.0, 0.0])
+        u_init = np.zeros((5, 1))
+
+        with patch("src.affine_control.ddp._is_running_under_pytest", return_value=False):
+            with patch.dict(os.environ, {}, clear=True):
+                with self.assertRaises(ContractViolationError):
+                    adaptive_timestep_ddp_mock(double_integrator, x0, xf, u_init)
+
+    def test_mock_solver_allows_explicit_demo_environment(self) -> None:
+        """The direct mock entrypoint should run when the demo env flag is set."""
+        double_integrator = _make_double_integrator()
+        x0 = np.array([0.0, 0.0])
+        xf = np.array([1.0, 0.0])
+        u_init = np.zeros((5, 1))
+
+        with patch("src.affine_control.ddp._is_running_under_pytest", return_value=False):
+            with patch.dict(os.environ, {"AFFINEDRIFT_ENABLE_MOCK_DDP": "1"}, clear=True):
+                with warnings.catch_warnings():
+                    warnings.simplefilter("ignore", UserWarning)
+                    adaptive_timestep_ddp_mock(double_integrator, x0, xf, u_init)
 
 
 if __name__ == "__main__":
