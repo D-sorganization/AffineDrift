@@ -499,18 +499,19 @@ All conversion functions implement the same algorithms as the Python reference i
     const det = 1 - detError;   // approximate
     const qnorm = Math.sqrt(quaternion.reduce((s,v)=>s+v*v,0));
 
+    // Single determinant computation (consolidated: prior duplicate write removed)
+    const detR = R[0]*(R[4]*R[8]-R[5]*R[7]) - R[1]*(R[3]*R[8]-R[5]*R[6]) + R[2]*(R[3]*R[7]-R[4]*R[6]);
+
     $("rc-prop-angle").textContent = `${fmtAngle(angle)} ${angleDeg?"°":"rad"}`;
     $("rc-prop-axis").textContent  =
       Math.abs(angle) < 1e-8 ? "(identity — axis undefined)" :
       `[${axis.map(v=>fmt(v,4)).join(", ")}]`;
-    $("rc-prop-det").textContent   = fmt(1 - detError + (RC.validateR(R).detError), 8);
+    $("rc-prop-det").textContent   = fmt(detR, 8);
     $("rc-prop-orth").textContent  = orthogError.toExponential(2);
     $("rc-prop-qnorm").textContent = fmt(qnorm, 8);
-
-    // Recompute det properly
-    const [r] = [R];
-    const detR = r[0]*(r[4]*r[8]-r[5]*r[7]) - r[1]*(r[3]*r[8]-r[5]*r[6]) + r[2]*(r[3]*r[7]-r[4]*r[6]);
-    $("rc-prop-det").textContent = fmt(detR, 8);
+    // Note on quaternion continuity: this converter performs single-shot conversions and
+    // does not require a "short-path" choice. Callers composing a *sequence* of rotations
+    // should negate q if q · q_prev < 0 to avoid 2π hops in interpolation/differentiation.
   }
 
   /* ── Formula text panel ─────────────────────────────────────────────────── */

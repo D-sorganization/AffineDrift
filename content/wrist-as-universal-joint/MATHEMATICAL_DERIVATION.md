@@ -341,14 +341,16 @@ I_α = I_head,α + I_shaft,α = m_head · r_cg² + (1/3) · m_shaft · L²
 For typical golf clubs, the moment of inertia about the axis perpendicular to the shaft is approximately:
 
 ```
-I_γ ≈ 2.0 · I_α
+I_γ ≈ 2.0 · I_α       (illustrative order-of-magnitude)
 ```
+
+The factor of 2 is an **illustrative order-of-magnitude estimate** for modeling and sensitivity studies, not a measured value from a specific club. Reported driver/iron inertia ratios in the published golf-equipment literature range roughly 1.5× to 3× depending on head design, shaft length, and axis choice --- see [Hocknell (2002)](https://doi.org/10.1243/095440602320216336) on driver-head inertia measurement and [Whittaker & Jones (1998), *Proc. IMechE Part L*, on golf-club dynamic behavior], as well as the USGA COR/MOI measurement protocols. A specific club should be characterized empirically (pendulum swing or CMM + density model) before drawing design conclusions; here the 2× factor is adequate for the qualitative transmission arguments in §5--§6.
 
 More accurate calculation requires detailed clubhead geometry.
 
-**Typical values (driver):**
-- I_α ≈ 0.004-0.006 kg·m²
-- I_γ ≈ 0.008-0.012 kg·m²
+**Typical values (driver, illustrative):**
+- I_α ≈ 0.004--0.006 kg·m²
+- I_γ ≈ 0.008--0.012 kg·m²
 
 ### 5.2 Angular Acceleration from Torque
 

@@ -40,7 +40,7 @@ plt.fill_between(t, lower, upper, alpha=0.3)
 # Nominal trajectory (zero deviation line)
 plt.plot(t, np.zeros_like(t), linestyle="--", linewidth=2)
 
-plt.title("Control Cone: Shrinking Reachable Set as the Swing Approaches Impact")
+plt.title("Schematic of shrinking reachable set as the swing approaches impact\n(illustrative, not computed from dynamics)")
 plt.xlabel("Normalized Swing Phase (0 = Start, 1 = Impact)")
 plt.ylabel("Reachable State Deviation (Abstract Units)")
 plt.grid(True)
@@ -53,3 +53,5 @@ plt.text(0.8, 0.05, "Late Downswing:\nCone Collapse", fontsize=10)
 plt.tight_layout()
 plt.show()
 ```
+
+> **Schematic, not a computed reachability set.** The $\exp(-3 t^{2})$ envelope above is chosen purely for visual clarity --- it is **not** derived from the golf-swing dynamics. A proper reachability computation would integrate the control-affine dynamics $\dot{x} = f(x) + G(x) u$ forward from the current state under the max-torque constraint $\lVert u \rVert_{\infty} \leq \tau_{\max}$ (e.g., via Hamilton--Jacobi reachability or funnel-library methods), and the resulting tube would in general be non-Gaussian, asymmetric, and task-dependent. This figure is a cartoon whose only purpose is to convey the qualitative *direction* of the effect: reachable-set volume collapses monotonically as the swing approaches impact.

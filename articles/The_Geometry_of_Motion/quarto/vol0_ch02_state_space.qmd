@@ -36,8 +36,8 @@ Do we need to know acceleration ($\ddot{x}$) as part of the state? According to 
 
 ::: {.callout-note}
 
-  The state vector $\state$ is the minimum set of mathematical variables completely describing the condition of a dynamic system at a specific point in time. 
-  
+  The state vector $\state$ is the minimum set of mathematical variables completely describing the condition of a dynamic system at a specific point in time. Formally: $\state(t)$ is a **state** if the future evolution of the system under a known input $\control(\cdot)$ depends only on $\state(t)$ and $\control(\tau)$ for $\tau \ge t$—not on the history of $\state(\tau)$ for $\tau < t$. This is the **Markov property** and is what distinguishes a true state from a mere observation.
+
   For our train, it is a 2-dimensional vector:
   \begin{equation}
       \state = \begin{bmatrix} x_1 \\ x_2 \end{bmatrix} = \begin{bmatrix} \text{position} \\ \text{velocity} \end{bmatrix} = \begin{bmatrix} q \\ \dot{q} \end{bmatrix}
