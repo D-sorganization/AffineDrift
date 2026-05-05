@@ -96,7 +96,7 @@ The `dev` stage is the entry point for new contributors: it avoids installing Qu
 
 ## Coding Standards (Enforced by CI and QA)
 
-- **DRY:** CI tracks duplication. Extract shared Quarto includes and Python utilities. No copy-paste between chapters.
+- **DRY:** CI tracks duplication. Extract shared Quarto includes and Python utilities. No copy-paste between chapters. Reusable patterns go in `src/tools/utils/` (see `.dry-improvements.md`).
 - **DbC:** Validation functions check inputs, raise clear errors with context.
 - **LOD:** No method chains >2 levels. Keep rendering logic separate from content logic. Complex Python goes in importable modules, not inline in QMD.
 - **TDD:** New Python utilities need pytest tests. New interactive features need Jest tests. Coverage stays above 50%.
