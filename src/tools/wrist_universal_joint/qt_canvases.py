@@ -27,10 +27,10 @@ _offscreen = os.environ.get("QT_QPA_PLATFORM") == "offscreen"
 if _backend not in ("agg", "headless", "template") and not _offscreen:
     matplotlib.use("QtAgg")
 
-from matplotlib.backends.backend_qtagg import (  # noqa: E402
+from matplotlib.backends.backend_qtagg import (  # noqa: E402  # reason: import ordering constraint
     FigureCanvasQTAgg as FigureCanvas,
 )
-from matplotlib.figure import Figure  # noqa: E402
+from matplotlib.figure import Figure  # noqa: E402  # reason: import ordering constraint
 
 
 def find_main_window_parent(widget: QWidget | None) -> QMainWindow | None:
@@ -41,13 +41,13 @@ def find_main_window_parent(widget: QWidget | None) -> QMainWindow | None:
     return parent if isinstance(parent, QMainWindow) else None
 
 
-class DiagramCanvas(FigureCanvas):  # type: ignore[misc]
+class DiagramCanvas(FigureCanvas):
     """Canvas showing the forearm-hand-club diagram."""
 
     def __init__(self, grip_angle_deg: float, wrist_angle_deg: float) -> None:
         """Initialize diagram canvas with grip and wrist angles."""
         self.figure = Figure(figsize=(12, 4))
-        super().__init__(self.figure)
+        super().__init__(self.figure)  # type: ignore[no-untyped-call]
         self.setMinimumSize(800, 300)
         self.ax = self.figure.add_subplot(111)
         self.grip_angle_deg = grip_angle_deg
@@ -63,7 +63,7 @@ class DiagramCanvas(FigureCanvas):  # type: ignore[misc]
         self.ax.clear()
         draw_enhanced_model_diagram(self.ax, self.grip_angle_deg, self.wrist_angle_deg)
         self.figure.tight_layout()
-        self.draw()
+        self.draw()  # type: ignore[no-untyped-call]
 
     def update_angles(self, grip_angle_deg: float, wrist_angle_deg: float) -> None:
         """Update angles and redraw the diagram."""
@@ -72,7 +72,7 @@ class DiagramCanvas(FigureCanvas):  # type: ignore[misc]
         self.update_diagram()
 
 
-class PlotCanvas(FigureCanvas):  # type: ignore[misc]
+class PlotCanvas(FigureCanvas):
     """Canvas showing torque, acceleration, or transmission plots."""
 
     DEFAULT_POLYNOMIAL = "t**2 - t"
@@ -86,7 +86,7 @@ class PlotCanvas(FigureCanvas):  # type: ignore[misc]
     ) -> None:
         """Initialize plot canvas with angles and inertia values."""
         self.figure = Figure(figsize=(10, 6))
-        super().__init__(self.figure)
+        super().__init__(self.figure)  # type: ignore[no-untyped-call]
         self.setMinimumSize(700, 500)
         self.ax = self.figure.add_subplot(111)
         self.grip_angle_deg = grip_angle_deg
@@ -157,7 +157,7 @@ class PlotCanvas(FigureCanvas):  # type: ignore[misc]
         self.ax.grid(True, alpha=0.3)
         self.ax.legend(loc="best", fontsize=9)
         self.figure.tight_layout()
-        self.draw()
+        self.draw()  # type: ignore[no-untyped-call]
 
     def _plot_torque(self) -> None:
         """Plot torque traces for the current configuration."""

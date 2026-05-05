@@ -1,5 +1,10 @@
 const { defineConfig, devices } = require('@playwright/test');
 
+const webServerCommand =
+  process.platform === 'win32'
+    ? 'py -3 -m http.server 8000 --directory docs'
+    : 'python3 -m http.server 8000 --directory docs';
+
 module.exports = defineConfig({
   testDir: './tests/e2e',
   fullyParallel: true,
@@ -37,7 +42,7 @@ module.exports = defineConfig({
   ],
 
   webServer: {
-    command: 'python3 -m http.server 8000 --directory docs',
+    command: webServerCommand,
     port: 8000,
     reuseExistingServer: !process.env.CI,
   },

@@ -1,0 +1,114 @@
+/**
+ * Design Tokens: Z-Index
+ * Stacking order and layering for the AffineDrift design system
+ *
+ * Organized by use case with clear separation of concerns
+ * Prevents z-index conflicts and maintains a predictable layer hierarchy
+ *
+ * Pattern: Use 10-unit gaps (0, 10, 20, 30, etc.) to allow insertion of new layers
+ */
+
+:root {
+  /* ========== Base Layer ========== */
+  --z-index-hide: -1;
+  --z-index-base: 0;
+
+  /* ========== Layout Layers ========== */
+
+  /* Background elements, backdrops */
+  --z-index-backdrop: 10;
+  --z-index-sticky: 20;
+  --z-index-fixed: 30;
+
+  /* ========== Content Layers ========== */
+
+  /* Regular content, cards, sections */
+  --z-index-content-low: 1;
+  --z-index-content-normal: 10;
+  --z-index-content-high: 20;
+
+  /* ========== Overlay Layers ========== */
+
+  /* Modals, dropdowns, tooltips */
+  --z-index-overlay: 100;
+  --z-index-dropdown: 110;
+  --z-index-sticky-nav: 120;
+  --z-index-modal: 130;
+  --z-index-popover: 140;
+  --z-index-tooltip: 150;
+
+  /* ========== Special Layers ========== */
+
+  /* Notifications, alerts, debugging */
+  --z-index-notification: 160;
+  --z-index-alert: 170;
+  --z-index-banner: 180;
+
+  /* Topmost layer */
+  --z-index-max: 999;
+  --z-index-debug: 9999;
+
+  /* ========== Component-Specific Z-Index ========== */
+
+  /* Header and Navigation */
+  --z-index-navbar: var(--z-index-sticky-nav);
+  --z-index-header: var(--z-index-sticky-nav);
+  --z-index-hamburger-menu: var(--z-index-modal);
+
+  /* Sidebar */
+  --z-index-sidebar: var(--z-index-fixed);
+  --z-index-sidebar-menu: var(--z-index-dropdown);
+
+  /* Forms and Inputs */
+  --z-index-input-focus: var(--z-index-content-normal);
+  --z-index-form-validation: var(--z-index-overlay);
+
+  /* Cards and Components */
+  --z-index-card: var(--z-index-content-normal);
+  --z-index-card-shadow: var(--z-index-content-normal);
+
+  /* Modals and Dialogs */
+  --z-index-modal-backdrop: var(--z-index-overlay);
+  --z-index-modal-content: var(--z-index-modal);
+
+  /* Dropdowns and Menus */
+  --z-index-dropdown-menu: var(--z-index-dropdown);
+  --z-index-autocomplete-menu: var(--z-index-dropdown);
+  --z-index-select-menu: var(--z-index-dropdown);
+
+  /* Tooltips and Popovers */
+  --z-index-tooltip-content: var(--z-index-tooltip);
+  --z-index-popover-content: var(--z-index-popover);
+
+  /* Notifications and Alerts */
+  --z-index-toast: var(--z-index-notification);
+  --z-index-snackbar: var(--z-index-notification);
+  --z-index-banner-notice: var(--z-index-banner);
+
+  /* Floating Elements */
+  --z-index-floating-button: var(--z-index-modal);
+  --z-index-scroll-to-top: var(--z-index-notification);
+
+  /* Skip to Content Link (accessibility) */
+  --z-index-skip-link: var(--z-index-modal);
+
+  /* ========== Z-Index Documentation ========== */
+
+  /*
+   * Layer Hierarchy (lowest to highest):
+   *
+   * -1 to 0    — Hidden/Base layers
+   * 1-30       — Layout layers (sticky, fixed)
+   * 100-150    — Overlays and dropdowns
+   * 160-180    — Notifications and banners
+   * 999        — Maximum normal layer
+   * 9999       — Debug layer (temporary use only)
+   *
+   * Guidelines:
+   * 1. Use semantic names instead of numbers when possible
+   * 2. Keep 10-unit gaps for adding new layers
+   * 3. Never use values > 999 except for debugging
+   * 4. Review z-index conflicts when adding new modal layers
+   * 5. Test stacking order at all responsive breakpoints
+   */
+}

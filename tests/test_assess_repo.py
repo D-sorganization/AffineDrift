@@ -193,8 +193,7 @@ def test_assess_cicd():
 def test_assess_code_style():
     """Test code style assessment."""
     root = MagicMock()
-    (root / "pyproject.toml").exists.return_value = True
-    (root / "pyproject.toml").read_text.return_value = "[tool.ruff]\nline-length = 100\n"
+    (root / "ruff.toml").exists.return_value = True
     (root / ".pre-commit-config.yaml").exists.return_value = True
 
     result = assess_repo.assess_code_style(root)

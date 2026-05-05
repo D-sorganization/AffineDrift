@@ -15,8 +15,8 @@ logger = logging.getLogger(__name__)
 # ─── Configuration ────────────────────────────────────────────
 
 BANNED_PATTERNS = [
-    (re.compile(r"\bTO" + r"DO\b"), "TRACKED_TASK placeholder found"),
-    (re.compile(r"\bFIX" + r"ME\b"), "TRACKED_DEFECT placeholder found"),
+    (re.compile(r"\bTODO\b"), "TRACKED_TASK placeholder found"),
+    (re.compile(r"\bFIXME\b"), "TRACKED_DEFECT placeholder found"),
     # (re.compile(r"^\s*\.\.\.\s*$"), "Ellipsis placeholder"), # Allow for abstract methods
     (re.compile(r"NotImplementedError"), "NotImplementedError placeholder"),
     # (re.compile(r"<.*>"), "Angle bracket placeholder"), # Too aggressive for HTML
@@ -96,29 +96,19 @@ def is_legitimate_pass_context(lines: list[str], line_num: int) -> bool:
     if line != "pass":
         return False
 
-    # Check if this is in a class definition (legitimate)
+    # Check for legitimate parent keywords by searching backwards
+    # for the parent block header (max 10 lines)
     for i in range(line_num - 1, max(0, line_num - 10), -1):
         prev_line = lines[i - 1].strip()
+        if not prev_line or prev_line.startswith("#"):
+            continue
         if prev_line.startswith("class "):
             return True
         if prev_line.startswith("def "):
             return False
         if prev_line.endswith(":") and any(
-            keyword in prev_line
-            for keyword in ["try:", "except", "finally:", "with ", "if __name__"]
+            kw in prev_line for kw in ["try:", "except", "finally:", "with ", "if __name__"]
         ):
-            return True
-
-    # Check if this is in a try/except block (legitimate)
-    for i in range(line_num - 1, max(0, line_num - 5), -1):
-        prev_line = lines[i - 1].strip()
-        if "try:" in prev_line or "except" in prev_line:
-            return True
-
-    # Check if this is in a context manager (legitimate)
-    for i in range(line_num - 1, max(0, line_num - 3), -1):
-        prev_line = lines[i - 1].strip()
-        if prev_line.startswith("with "):
             return True
 
     return False

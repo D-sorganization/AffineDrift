@@ -32,10 +32,12 @@ We use an analogy to **relativistic time cones** to describe an evolving **contr
 ```{=html}
 <!-- In Layman's Terms Section - Simplified overview for non-technical readers -->
 <section class="laymans-terms">
+  <h2>
   <button class="laymans-terms-header" aria-expanded="false">
-    <h2>In Layman's Terms</h2>
+    <span class="laymans-terms-header-title">In Layman's Terms</span>
     <span class="laymans-terms-icon">▼</span>
   </button>
+</h2>
   <div class="laymans-terms-content">
     <div class="laymans-terms-inner">
       <p class="laymans-terms-intro">
@@ -81,10 +83,12 @@ We use an analogy to **relativistic time cones** to describe an evolving **contr
 
 <!-- Critics' Comments Section - Skeptical perspectives and counterarguments -->
 <section class="critics-comments">
+  <h2>
   <button class="critics-comments-header" aria-expanded="false">
-    <h2>Critics' Comments</h2>
+    <span class="critics-comments-header-title">Critics' Comments</span>
     <span class="critics-comments-icon">💬</span>
   </button>
+</h2>
   <div class="critics-comments-content">
     <div class="critics-comments-inner">
       <p class="critics-intro">
@@ -221,6 +225,11 @@ M^{-1}\tau
 \end{bmatrix}.
 $$
 
+::: {.callout-important}
+## Dimensional Consistency Note
+A naïve application of the Euclidean norm to the full state vector drift $\|f(x)\|$ mixes units of velocity ($\text{rad/s}$) and acceleration ($\text{rad/s}^2$). To ensure physical meaningfulness, we restrict our definition to the **dynamic fiber** of the tangent bundle (the acceleration subspace), comparing the **generalized forces** (or equivalent accelerations) of drift against the available control authority.
+:::
+
 ## 2.3 Dominance of Quadratic Velocity Terms
 
 Centripetal and Coriolis terms satisfy:
@@ -229,10 +238,10 @@ $$
 C(q,\dot{q})\dot{q} \sim \mathcal{O}(\dot{q}^2)
 $$
 
-Hence:
+Hence, the acceleration block satisfies:
 
 $$
-\|f(x)\| \sim k\|\dot{q}\|^2.
+\|a_{\text{drift}}(x)\| \sim k\|\dot{q}\|^2.
 $$
 
 Contrast with:
@@ -242,6 +251,8 @@ $$
 $$
 
 The quadratic scaling of drift versus linear scaling of control is the core mechanism behind DCR blow-up.
+
+The full state-space norm $\|f(x)\|$ is dimensionally heterogeneous, so this scaling argument applies only to the acceleration block $a_{\text{drift}}(x)$.
 
 This scaling disparity is the kinetic manifestation of the **Force Taxonomy** established in Part 3 of the framework. The drift term $f(x)$ aggregates the configuration-dependent potential forces ($\tau_{\text{config}}$) and the velocity-dependent Coriolis/centripetal forces ($\tau_{\text{vel.\,drift}}$). While the former are bounded, the latter scale quadratically with swing speed. Consequently, the "Inertial Memory" of the system (embedded in $f(x)$) can become large relative to the "Current Agency" available through $g(x)u$. In this model, that scaling supports the early-delivery interpretation used by the ZTCF baseline, but it does not by itself prove a universal coaching rule.
 
@@ -336,7 +347,7 @@ Here is the key insight: while the numerical value of DCR depends on the norm, t
 The intuitive argument is: drift magnitude grows with $\|\dot{q}\|^2$ (Coriolis/centrifugal scaling) while physiological torque capacity decreases under peak velocity, so the ratio should grow under any norm. However, this reasoning assumes **component-wise** monotonicity — that every drift component grows and every control component shrinks — which is not necessarily true. Individual components can increase or decrease in complex ways along a nonlinear trajectory. A rigorous proof would require either (a) showing the argument holds for the specific norm families of interest, or (b) providing empirical evidence from multi-subject simulation data showing the monotonic trend is consistent across norm choices. Until such a proof or validation is available, this claim should be treated as a well-motivated empirical observation rather than a mathematical theorem.
 :::
 
-The qualitative claim — that DCR increases dramatically from backswing to impact — is supported by the planar model simulations cited in this article. The conjecture that this trend is norm-independent follows from physical reasoning but remains to be formally verified.
+The qualitative claim — that DCR increases substantially from backswing to impact in the cited planar simulations — is supported by the examples in this article. The conjecture that this trend is norm-independent follows from physical reasoning but remains to be formally verified.
 
 #### The Physically Natural Norm: Inertia-Weighted
 

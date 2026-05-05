@@ -60,11 +60,12 @@ At every moment:
 
 Linear systems are easy to work with. Engineers have powerful tools (like "LQR controllers" and "Riccati equations") that only work on linear systems.
 
-**The breakthrough:** Since the system is linear *at each instant*, we can:
-- Use those simple tools repeatedly at each moment
-- String the results together to control the nonlinear system
+**The useful observation:** Since a smooth model has a linear tangent description at each state, we can:
+- Use linear tools locally around a reference state or trajectory
+- Recompute those local models as the system moves
+- Track residuals before treating the assembled local predictions as a controller for the nonlinear system
 
-It's like solving 1,000 easy problems instead of one impossible problem.
+It is like solving many local problems while checking how much error is introduced when those local pieces are assembled.
 
 ### 2. **We Can Predict Errors**
 
@@ -75,9 +76,9 @@ When you "linearize" (replace the curve with a straight line), you make an error
 
 ### 3. **We Understand Why Things Work**
 
-Many control techniques (like gain scheduling, model predictive control, trajectory optimization) work well in practice but seemed like black boxes.
+Many control techniques, including gain scheduling, model predictive control, and trajectory optimization, repeatedly use local models or local approximations.
 
-**This framework explains why:** They're all secretly using the same trick—exploiting the exact linear structure at each moment, even though they don't always say it that way.
+**This framework gives one interpretation:** these methods can be read as ways of exploiting local linear structure while managing residual error, constraints, and finite-step effects. That interpretation is useful, but it does not replace the separate convergence and robustness assumptions each method needs.
 
 ---
 
@@ -126,20 +127,20 @@ This isn't just intuition—it's **mathematically justified** by the tangent spa
 
 ### Part I: **Geometry** (Why it works)
 
-Explains **why** tangent spaces are exact, not approximate. Uses pictures and analogies to show:
+Explains what is exact about the tangent construction and what remains approximate when it is used over a finite step. Uses pictures and analogies to show:
 - A tangent plane is the "best flat approximation" to a curvy surface
-- At the limit (infinitesimally small), it's **perfect**, not approximate
-- The rules of calculus guarantee this
+- At a point, the derivative is the exact first-order object for a smooth map
+- Finite displacements still have residual terms that depend on curvature and step size
 
-**Takeaway:** Linearization isn't a hack—it's the exact local structure of smooth systems.
+**Takeaway:** Linearization is not merely a hack; it is the local first-order structure of smooth systems, and its finite-step use must be checked against residuals.
 
 ### Part II: **Integration** (Accumulating over time)
 
 Shows what happens when you **add up** lots of tiny linear steps to get a full trajectory.
 
-**Key point:** Even though each individual effect is linear (at its moment), when you integrate over time, you get the full nonlinear behavior. But the errors (residuals) are small and predictable.
+**Key point:** Even though each local effect is linearized at its moment, integrating over time produces nonlinear behavior. The residuals can be estimated or bounded only when the required smoothness, curvature, and step-size assumptions are stated.
 
-**Takeaway:** You can "integrate superposition"—the sum of variations is the variation of the sum.
+**Takeaway:** You can use superposition locally, then account for the residual terms introduced by moving along a nonlinear trajectory.
 
 ### Part III: **Algorithms** (How to actually do it)
 
@@ -156,13 +157,13 @@ Provides concrete algorithms for:
 
 ### **"But linearization is an approximation!"**
 
-**Answer:** The derivative (the tangent space) is **exact**. What's approximate is using the tangent space to predict behavior *far away* from the point. But if you only step a tiny bit, or if you re-linearize constantly, the approximation error is negligible.
+**Answer:** The derivative is the exact first-order object at the point. What is approximate is using that tangent description to predict behavior away from the point. Small steps and frequent re-linearization can reduce the error, but "negligible" must be justified by residual estimates for the system being studied.
 
 Think of it like a map: A flat map of the Earth is "wrong" globally, but a street map of your neighborhood is "exact enough" for walking around the block.
 
 ### **"This sounds like it only works for small perturbations."**
 
-**Answer:** True for a single linearization. But **iterative methods** (like DDP) keep re-linearizing as the system moves. So you're always working with a fresh, accurate tangent space.
+**Answer:** True for a single linearization. **Iterative methods** such as DDP keep re-linearizing as the system moves, so each solve uses a local model near the current reference trajectory. The quality of the result still depends on step size, conditioning, constraints, and how well the reference trajectory represents the motion.
 
 It's like climbing stairs: Each step is small and linear, but you can climb a tall building by taking many steps.
 

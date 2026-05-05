@@ -16,6 +16,12 @@
 # =============================================================================
 
 repos:
+  # Gitleaks - Fast secrets scanning
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.18.2
+    hooks:
+      - id: gitleaks
+
   # -------------------------------------------------------------------------
   # Stage 1: Code Formatting (auto-fix) - PYTHON FILES ONLY
   # -------------------------------------------------------------------------
@@ -70,6 +76,14 @@ repos:
         language: pygrep
         files: ^src/
         exclude: ^(src/.*/__main__\.py|tests/|\.github/)
+
+      # Check for unjustified noqa
+      - id: check-noqa-justification
+        name: "check for unjustified noqa"
+        entry: "(?i)#\\s*noqa(?!.*(reason:|—|--|placeholder|covers))"
+        language: pygrep
+        types: [python]
+        exclude: ^(env/|\.venv/|node_modules/|__pycache__/)
 
   # -------------------------------------------------------------------------
   # Stage 3: Config File Formatting - ALWAYS RUNS

@@ -12,7 +12,7 @@ from PyQt6.QtWidgets import (
 )
 
 
-class DocumentationDialog(QDialog):  # type: ignore[misc]
+class DocumentationDialog(QDialog):
     """Dialog showing the model's documentation summary."""
 
     def __init__(self, parent: QWidget | None = None) -> None:

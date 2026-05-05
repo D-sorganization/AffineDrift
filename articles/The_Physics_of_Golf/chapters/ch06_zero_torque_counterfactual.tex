@@ -251,6 +251,18 @@ where $\bm{W}$ states which coordinates or acceleration block are being compared
 When DCR $\approx 1$, modeled drift and bounded control have comparable magnitude under the chosen weighting. When DCR $\gg 1$, modeled drift dominates that comparison; it does not imply that the golfer is passive or that muscle activation is absent.
 \end{definition}
 
+\begin{constraintbox}{Minimum Reporting Standard for DCR}{constraint:dcr_reporting}
+Any numerical DCR claim should report enough information for another reader to reproduce or challenge it:
+\begin{enumerate}
+\item the state vector, coordinate convention, and whether $\bm{f}$ and $\bm{G}$ are expressed in generalized coordinates, task coordinates, or acceleration coordinates;
+\item the weighting matrix $\bm{W}$, norm, and small denominator regularizer $\varepsilon$;
+\item the admissible torque or activation bound $u_{\max}$ and whether it is joint-specific, time-varying, or muscle-model-derived;
+\item the anthropometric, club, shaft, contact, and damping parameters used by the model; and
+\item a sensitivity check showing whether the qualitative conclusion survives plausible perturbations of $\bm{W}$, $u_{\max}$, and the inertial parameters.
+\end{enumerate}
+Without these declarations, a value such as DCR $=10$ should be read only as an illustrative scale, not as an experimentally established phase boundary.
+\end{constraintbox}
+
 \begin{constraintbox}{DCR as a Control-Authority Diagnostic}{constraint:dcr_meaning}
 The Drift-Control Ratio is a \emph{model-dependent control-authority diagnostic}. It asks: \textbf{How large is the modeled drift field compared with the control acceleration available under the stated torque bound and weighting?}
 
@@ -547,7 +559,7 @@ But the timing window is small: the contact lasts only approximately $0.5$ ms \c
 
 \item \textbf{Double pendulum example:} Showed concretely how gravity and Coriolis produce large torques, while muscles apply restraint and correction.
 
-\item \textbf{Model-dependence:} ZTCF requires a biomechanical model; it cannot be measured directly. Qualitative conclusions should be reported with sensitivity checks rather than asserted as model-independent facts.
+\item \textbf{Model-dependence:} ZTCF requires a biomechanical model; it cannot be measured directly. Qualitative conclusions should be reported with the DCR weighting, torque bound, parameter set, and sensitivity checks rather than asserted as model-independent facts.
 
 \item \textbf{Late correction window:} The downswing can become strongly conditioned by earlier state preparation once velocity-dependent terms are large. The real skill is in setup, transition, and early-downswing momentum building.
 
@@ -588,7 +600,7 @@ Set up the double pendulum ZTCF from Section \ref{sec:double_pendulum_ztcf} in a
 \end{exercise}
 
 \begin{exercise}{Analysis}
-The Drift-Control Ratio (DCR) compares modeled drift with bounded modeled control under a stated weighting and torque bound. Choose plausible early- and late-downswing values for $\bm{W}$ and $u_{\max}$, then estimate how the DCR changes.
+The Drift-Control Ratio (DCR) compares modeled drift with bounded modeled control under a stated weighting and torque bound. Choose plausible early- and late-downswing values for $\bm{W}$ and $u_{\max}$, declare the model parameters that matter most, then estimate how the DCR changes under at least two sensitivity perturbations.
 
 What does this imply about the \emph{type} of muscular effort needed in each phase? Is "harder work" required early or late?
 \end{exercise}

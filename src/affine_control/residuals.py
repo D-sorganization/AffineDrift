@@ -89,15 +89,17 @@ def _assemble_hessian_tensor(
     f: Callable[[np.ndarray[Any, Any], np.ndarray[Any, Any]], np.ndarray[Any, Any]],
     x: np.ndarray[Any, Any],
     u: np.ndarray[Any, Any],
-    n: int,
-    dx: int,
-    epsilon: float,
+    n: int | None = None,
+    dx: int | None = None,
+    epsilon: float = FINITE_DIFF_STEP_HESSIAN_NORM,
 ) -> np.ndarray[Any, Any]:
     """Build the Hessian tensor H[k, i, j] = dJ_ki / dx_j via central differences.
 
     Each Hessian slice is assembled from two Jacobian evaluations, giving
     O(n^2) dynamics calls in total.
     """
+    n = len(x) if n is None else n
+    dx = len(f(x, u)) if dx is None else dx
     H = np.zeros((dx, n, n))
     base_x = x.copy()
 
@@ -290,6 +292,10 @@ class ResidualMonitor(ContractChecker):
         if self.mode == "MPC_FULL" and self.low_count >= self.n:
             return "MPC_WARN"
         return self.mode
+
+    def _compute_next_mode(self) -> str:
+        """Backward-compatible alias for the residual mode state machine."""
+        return self._next_mode()
 
     def _reset_hysteresis_counters(self) -> None:
         """Reset all hysteresis counters after a mode transition."""

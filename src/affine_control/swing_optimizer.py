@@ -31,9 +31,8 @@ Usage
     config = SwingOptimizationConfig(
         n_joints=3,
         horizon_steps=50,
-        allow_mock_solver=True,  # explicit opt-in while using the placeholder solver
     )
-    optimizer = SwingOptimizer(config)
+    optimizer = SwingOptimizer(config, ddp_solver=real_ddp_solver)
     result = optimizer.optimize(initial_state, dynamics_fn)
     logger.debug(f"Achieved velocity: {result.final_velocity:.2f} m/s")
 """
@@ -47,7 +46,11 @@ from typing import Any
 
 import numpy as np
 
-from src.affine_control.ddp import adaptive_timestep_ddp_mock
+from src.affine_control.ddp import (
+    MOCK_SOLVER_ENV_VAR,
+    adaptive_timestep_ddp_mock,
+    mock_solver_environment_allows_usage,
+)
 from src.affine_control.swing_types import (
     DEFAULT_CONTROL_WEIGHT,
     DEFAULT_CONVERGENCE_TOL,
@@ -86,9 +89,8 @@ class SwingOptimizer:
         config = SwingOptimizationConfig(
             n_joints=3,
             horizon_steps=50,
-            allow_mock_solver=True,
         )
-        optimizer = SwingOptimizer(config)
+        optimizer = SwingOptimizer(config, ddp_solver=real_ddp_solver)
 
         def dynamics(x, u):
             # Simple double-integrator per joint
@@ -121,9 +123,14 @@ class SwingOptimizer:
             "Mock DDP solver requires allow_mock_solver=True in config. "
             "Pass a real ddp_solver for non-test usage.",
         )
+        require(
+            mock_solver_environment_allows_usage(),
+            "Mock DDP solver is test/demo-only. "
+            f"Run under pytest or set {MOCK_SOLVER_ENV_VAR}=1 for explicit demo usage.",
+        )
         warnings.warn(
             "adaptive_timestep_ddp_mock is a non-functional mock solver. "
-            "allow_mock_solver=True explicitly opts into test-only usage. "
+            "allow_mock_solver=True and an explicit test/demo environment are both required. "
             "For production, supply a real ddp_solver.",
             UserWarning,
             stacklevel=2,
@@ -188,6 +195,17 @@ class SwingOptimizer:
         """Terminal state cost weight matrix (read-only copy)."""
         return self._Q_f.copy()
 
+    def _build_target_state(self) -> np.ndarray[Any, Any]:
+        """Build the target state vector (zero positions, target velocity).
+
+        Returns:
+            Array of shape (state_dim,): zeros for joint positions,
+            target_velocity for joint velocities.
+        """
+        x_target = np.zeros(self._config.state_dim)
+        x_target[self._config.n_joints :] = self._config.target_velocity
+        return x_target
+
     def compute_cost(
         self,
         state: np.ndarray[Any, Any],
@@ -225,10 +243,7 @@ class SwingOptimizer:
             "control",
         )
 
-        # Build the target state (zeros for positions, target_velocity for velocities)
-        x_target = np.zeros(self._config.state_dim)
-        x_target[self._config.n_joints :] = self._config.target_velocity
-
+        x_target = self._build_target_state()
         dx = state - x_target
         state_cost = float(dx @ self._Q @ dx)
         control_cost = float(control @ self._R @ control)
@@ -252,9 +267,7 @@ class SwingOptimizer:
         check_finite_array(state, "state")
         check_shape(state, (self._config.state_dim,), "state")
 
-        x_target = np.zeros(self._config.state_dim)
-        x_target[self._config.n_joints :] = self._config.target_velocity
-
+        x_target = self._build_target_state()
         dx = state - x_target
         cost = float(dx @ self._Q_f @ dx)
         ensure(cost >= -EPSILON, "terminal cost must be non-negative", cost)

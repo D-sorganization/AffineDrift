@@ -5,6 +5,7 @@
     active: "affinedrift_notes_workspace_v1",
     recycleBin: "affinedrift_notes_recycle_bin_v1",
   });
+  const RECYCLE_BIN_RETENTION_MS = 30 * 24 * 60 * 60 * 1000;
 
   function nowIso() {
     return new Date().toISOString();
@@ -19,6 +20,24 @@
     }
   }
 
+  function readJsonFromStorage(storage, key, fallback) {
+    const raw = storage.getItem(key);
+    if (!raw) return fallback;
+    const parsed = safeParseJson(raw, null);
+    if (parsed === null) {
+      storage.removeItem(key);
+      return fallback;
+    }
+    return parsed;
+  }
+
+  function isExpiredIsoTimestamp(timestamp, retentionMs) {
+    if (typeof timestamp !== "string") return false;
+    const parsed = Date.parse(timestamp);
+    if (Number.isNaN(parsed)) return false;
+    return Date.now() - parsed > retentionMs;
+  }
+
   class NotesWorkspaceStore {
     constructor(storage) {
       if (!storage || typeof storage.getItem !== "function" || typeof storage.setItem !== "function") {
@@ -28,7 +47,7 @@
     }
 
     loadActive() {
-      const parsed = safeParseJson(this.storage.getItem(STORAGE_KEYS.active), null);
+      const parsed = readJsonFromStorage(this.storage, STORAGE_KEYS.active, null);
       if (!parsed || typeof parsed.content !== "string") {
         return { content: "", updatedAt: null };
       }
@@ -49,8 +68,12 @@
     }
 
     loadRecycleBin() {
-      const parsed = safeParseJson(this.storage.getItem(STORAGE_KEYS.recycleBin), null);
+      const parsed = readJsonFromStorage(this.storage, STORAGE_KEYS.recycleBin, null);
       if (!parsed || typeof parsed.content !== "string") {
+        return { content: "", deletedAt: null };
+      }
+      if (isExpiredIsoTimestamp(parsed.deletedAt, RECYCLE_BIN_RETENTION_MS)) {
+        this.storage.removeItem(STORAGE_KEYS.recycleBin);
         return { content: "", deletedAt: null };
       }
       return { content: parsed.content, deletedAt: parsed.deletedAt || null };
@@ -193,8 +216,8 @@
           '<h2 style="margin-top:0;">AffineDrift Project Notes</h2>' +
           '<textarea id="notes" style="width:100%; min-height:360px;"></textarea>' +
           '<div style="margin-top:0.75rem;">' +
-            '<button id="save">Save</button>' +
-            '<button id="close">Close</button>' +
+            '<button type="button" id="save">Save</button>' +
+            '<button type="button" id="close">Close</button>' +
           '</div>' +
           '<scr' + 'ipt>' +
             'const area = document.getElementById("notes");' +
