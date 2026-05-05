@@ -49,3 +49,7 @@
 **Vulnerability:** Untrusted URLs from `localStorage` were validated using `new URL(url, origin)` but the raw, unnormalized input string was assigned to the `href` attribute if the protocol check passed. This allows bypasses using URI-encoded or whitespace-padded schemes (e.g., `javascript%0A:alert(1)`), which parse as relative paths during validation but execute as malicious schemes when interpreted by the browser in the DOM.
 **Learning:** Checking the protocol of a parsed URL is insufficient if the original, un-sanitized string is used for DOM assignment. The browser's HTML parser applies its own normalization which can differ from the URL constructor's parsing logic.
 **Prevention:** Always assign the normalized output of the URL parser (e.g., `parsed.href`) back to the DOM attribute, rather than reusing the original untrusted input string.
+## 2025-05-25 - Use custom AST evaluator instead of `new Function`
+**Vulnerability:** Client-Side Code Injection (XSS) via `new Function` in `src/tools/wrist_universal_joint/grip_angle_simulator.html`.
+**Learning:** Even with regex sanitization, `new Function` is susceptible to XSS because filtering characters safely without breaking valid inputs is extremely error-prone.
+**Prevention:** Use a dedicated safe AST evaluator that only supports mathematical operations instead of dynamically compiling code via `new Function` or `eval`.
