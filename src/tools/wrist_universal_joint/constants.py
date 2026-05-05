@@ -15,6 +15,19 @@ from src.core.constants import EPSILON  # noqa: F401 -- re-exported for backward
 
 logger = logging.getLogger(__name__)
 
+__all__ = [
+    "DEFAULT_CLUBHEAD_CG_DISTANCE",
+    "DEFAULT_CLUBHEAD_WEIGHT",
+    "DEFAULT_CLUB_LENGTH",
+    "DEFAULT_GAMMA_TO_ALPHA_RATIO",
+    "DEFAULT_SHAFT_WEIGHT",
+    "DEFAULT_SIGNAL_LENGTH",
+    "EPSILON",
+    "MAX_DELTA_DEGREES",
+    "RANDOM_SEED",
+    "rng",
+]
+
 # Random seed for reproducibility
 # Set to None for non-reproducible random behavior, or an integer for reproducibility
 # Reference: Essential for scientific reproducibility per AGENTS.md guidelines

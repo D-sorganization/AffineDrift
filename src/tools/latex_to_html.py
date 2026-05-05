@@ -109,7 +109,7 @@ class LaTeXToHTMLConverter:
 
         # Already wrapped equations
         return re.sub(
-            r'(?<!<div class="equation">\n)\\\[(.*?)\\\]',
+            r"\\\[(.*?)\\\]",
             r'<div class="equation">\n\\[\1\\]\n</div>',
             content,
             flags=re.DOTALL,

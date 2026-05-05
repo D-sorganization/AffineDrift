@@ -131,13 +131,10 @@ class MATLABQualityChecker:
 
     def _build_matlab_commands(self, script_path: Path) -> list[list[str]]:
         """Return ordered list of MATLAB/Octave commands to attempt."""
-        # Sanitize the file path by escaping single quotes for MATLAB.
-        # MATLAB escapes single quotes by doubling them.
-        safe_path = str(script_path).replace("'", "''")
         return [
-            ["matlab", "-batch", f"run('{safe_path}')"],
-            ["matlab", "-nosplash", "-nodesktop", "-batch", f"run('{safe_path}')"],
-            ["octave", "--no-gui", "--eval", f"run('{safe_path}')"],
+            ["matlab", "-batch", f"run('{script_path}')"],
+            ["matlab", "-nosplash", "-nodesktop", "-batch", f"run('{script_path}')"],
+            ["octave", "--no-gui", "--eval", f"run('{script_path}')"],
         ]
 
     def _try_matlab_command(self, cmd: list[str]) -> dict[str, object] | None:

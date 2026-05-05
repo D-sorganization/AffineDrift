@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enhanced Wrist Universal Joint Model</title>
     <script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
-    <script src="grip_angle_polynomial_evaluator.js"></script>
     <style>
         * {
             margin: 0;
@@ -349,6 +348,7 @@
             margin-bottom: 15px;
         }
     </style>
+    <script src="grip_angle_polynomial_evaluator.js"></script>
 </head>
 <body>
     <div class="container">
@@ -576,7 +576,7 @@
             const cos_delta = Math.cos(delta_rad);
             const sin_phi = Math.sin(phi_rad);
 
-            const denominator = 1.0 - sin_delta * sin_delta * sin_phi * sin_phi;
+            const denominator = Math.sqrt(1.0 - sin_delta * sin_delta * sin_phi * sin_phi);
             const omega_ratio = cos_delta / denominator;
             const tau_ratio = denominator / cos_delta;
 
@@ -642,19 +642,6 @@
                 const expr = document.getElementById('polynomial-expr').value || 't**2 - t';
                 polynomialError = null;
                 try {
-                    // 🛡️ Sentinel: XSS Prevention
-                    // Remove all allowed function names, variables, and math object properties.
-                    // IMPORTANT: We do NOT remove 'e' alone, because that breaks scientific notation
-                    // (like '1e-3'). Instead we explicitly remove 'Math.E', 'pi', etc.
-                    let sanitized = expr.replace(/Math\.(sin|cos|exp|sqrt|log|PI|E)/g, '');
-                    sanitized = sanitized.replace(/\b(sin|cos|exp|sqrt|log|pi|t)\b/g, '');
-
-                    // The remaining string should strictly be numbers (including scientific e/E),
-                    // operators, and parenthesis. We add e/E to the regex whitelist.
-                    if (!/^[0-9\s\+\-\*\/\(\)\.\,eE]*$/.test(sanitized)) {
-                        throw new Error("Invalid expression: Only basic math operations and 't' are allowed.");
-                    }
-
                     for (let i = 0; i < length; i++) {
                         noise.push(WristPolynomialEvaluator.evaluatePolynomialExpression(expr, t[i]));
                     }

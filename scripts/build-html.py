@@ -108,7 +108,7 @@ def main() -> None:
         subprocess.run(
             [sys.executable, "scripts/generate_bibliography_data.py"],
             check=True,
-        )  # noqa: S603
+        )
     except subprocess.CalledProcessError as e:
         logger.warning("Failed to generate bibliography data: %s", e)
 

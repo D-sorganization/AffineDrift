@@ -92,14 +92,15 @@ def find_links(file_path: Path) -> list[tuple[str, int]]:
     links: list[tuple[str, int]] = []
     for line_number, line in enumerate(lines, start=1):
         for pattern in ALL_LINK_PATTERNS:
-            links.extend([(match.strip(), line_number) for match in pattern.findall(line)])
+            for match in pattern.findall(line):
+                links.append((match.strip(), line_number))
     return links
 
 
 def unique_broken(links: list[tuple[str, int, str]]) -> list[tuple[str, int, str]]:
     """Remove duplicate broken links."""
-    seen: set[tuple[str, int, str]] = set()
-    unique: list[tuple[str, int, str]] = []
+    seen = set()
+    unique = []
     for link in links:
         if link not in seen:
             unique.append(link)
@@ -140,13 +141,26 @@ def _path_exists_in_search_roots(*, root_path: Path, target_path: Path) -> bool:
 
 def _is_html_link_resolvable(*, root_path: Path, target_path: Path) -> bool:
     """Check whether an HTML link can map to source or generated files."""
-    context = LinkResolutionContext(root_path=root_path, source_file=root_path)
-    return context.is_html_target_resolvable(target_path)
+    p_qmd = target_path.with_suffix(".qmd")
+    p_md = target_path.with_suffix(".md")
+    if _path_exists_in_search_roots(root_path=root_path, target_path=p_qmd):
+        return True
+    if _path_exists_in_search_roots(root_path=root_path, target_path=p_md):
+        return True
+    if _path_exists_in_search_roots(root_path=root_path, target_path=target_path):
+        return True
+    return target_path.is_dir() and (target_path / "index.qmd").exists()
 
 
 def _is_broken_link(*, root_path: Path, file_path: Path, link: str) -> bool:
     """Return True if a link is internal and unresolved."""
-    return LinkResolutionContext(root_path=root_path, source_file=file_path).is_broken(link)
+    url = _normalize_internal_url(link)
+    if url is None:
+        return False
+    target_path = _resolve_target_path(root_path=root_path, file_path=file_path, url=url)
+    if target_path.suffix == ".html":
+        return not _is_html_link_resolvable(root_path=root_path, target_path=target_path)
+    return not _path_exists_in_search_roots(root_path=root_path, target_path=target_path)
 
 
 def check_links(root_dir: str) -> list[tuple[str, int, str]]:
@@ -167,11 +181,9 @@ def check_links(root_dir: str) -> list[tuple[str, int, str]]:
             logger.exception(f"Error reading {file_path}: {e}")
             continue
 
-        broken_links.extend(
-            (str(file_path.relative_to(root_path)), line_num, link)
-            for link, line_num in links
-            if _is_broken_link(root_path=root_path, file_path=file_path, link=link)
-        )
+        for link, line_num in links:
+            if _is_broken_link(root_path=root_path, file_path=file_path, link=link):
+                broken_links.append((str(file_path.relative_to(root_path)), line_num, link))
 
     return unique_broken(broken_links)
 

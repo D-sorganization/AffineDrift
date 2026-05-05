@@ -2,7 +2,7 @@
 \label{ch:swing_plane_launch}
 
 \begin{laymansbox}{Why Launch Conditions Matter More Than Swing Speed}{lay:launch_primacy}
-A golfer who swings at 100 mph but launches the ball at 8$^{\circ}$ with 1500 RPM of backspin will hit it 220 yards. Another golfer swinging at the same speed but launching at 14$^{\circ}$ with 2400 RPM will hit it 270 yards—50 yards further despite identical clubhead speed \citep{Broadie2014,trackman_launch}. This difference comes not from how fast the club moves, but from \textit{where} the club is moving and \textit{how} it is oriented when it strikes the ball. This chapter examines the geometry of the swing plane and clubface orientation that convert clubhead velocity into optimal ball flight. The physics is precise, the tolerances are narrow, and the payoff is enormous: understanding launch conditions separates good golfers from great ones.
+In a simplified ball-flight model, a golfer who swings at 100 mph but launches the ball at 8$^{\circ}$ with 1500 RPM of backspin can produce a materially different carry estimate than a golfer swinging at the same speed but launching at 14$^{\circ}$ with 2400 RPM \citep{Broadie2014,trackman_launch}. The example illustrates why launch conditions matter; it is not a universal distance or skill threshold. This chapter examines the geometry of the swing plane and clubface orientation that convert clubhead velocity into launch conditions.
 \end{laymansbox}
 
 \section{Defining the Swing Plane}
@@ -124,6 +124,10 @@ Driver & 56--58$^{\circ}$ from vert. & 45--50$^{\circ}$ & $+4$--$+8$^{\circ}$ \\
 \caption{Typical swing plane and attack angle parameters by club. (Note: Lie angle is measured from vertical; plane angle is measured from horizontal.)}
 \label{tab:plane_by_club}
 \end{table}
+
+\begin{reference}{Source Contract for Launch and Direction Numbers}{ref:ch31_source_contract}
+Launch monitor quantities such as club speed, ball speed, launch angle, spin rate, face angle, path, and attack angle are directly measured when radar or camera systems are used. Carry distance, optimal launch windows, and lateral-dispersion sensitivities are model- or regression-conditioned summaries based on launch-monitor datasets and ball-flight models \citep{Broadie2014,trackman_launch,trackman_ball_flight}. The numeric windows in this chapter are approximate and illustrative unless the text explicitly ties them to a named dataset or equipment rule.
+\end{reference}
 
 The steeper planes for short irons are a consequence of the shorter shafts and the biomechanical requirement to deliver a steeper blow to generate the requisite spin and carry distance.
 
@@ -396,7 +400,7 @@ d_{\text{carry}}(\Omega_{\text{spin}}) = a \cdot v_{\text{ball}}^2 - b \cdot \Om
 \label{eq:spin_distance}
 \end{equation}
 
-For typical driver conditions (100 mph club speed, 14$^{\circ}$ launch angle), the optimal spin rate is approximately 2200--2600 RPM. Below this range, the ball doesn't carry far enough. Above this range, excess spin increases air resistance and reduces distance.
+For typical driver conditions (100 mph club speed, 14$^{\circ}$ launch angle), an illustrative optimal spin range is approximately 2200--2600 RPM \citep{Broadie2014,trackman_launch}. Below this range, the ball may not carry far enough for the modeled launch condition. Above this range, excess spin can increase air resistance and reduce distance.
 \end{principle}
 
 \subsection{The Launch Window}
@@ -417,11 +421,11 @@ Spin rate & 2200--2600 RPM & $\pm 200$ RPM \\
 Smash factor & 1.48--1.50 & $\pm 0.02$ \\
 \hline
 \end{tabular}
-\caption{Typical launch window for a driver with 100 mph clubhead speed.}
+\caption{Illustrative launch window for a driver with 100 mph clubhead speed; actual fitting should use the golfer's launch-monitor data and ball-flight model.}
 \label{tab:launch_window}
 \end{table}
 
-Hitting within this window consistently produces carry distances within 10--15 yards of the golfer's maximum, with directional consistency $\pm 10$ yards laterally (for a square face angle).
+In this illustrative model, hitting within this window would keep carry distances within roughly 10--15 yards of the golfer's modeled maximum, with lateral variation on the order of $\pm 10$ yards for a square face angle. These are not universal performance guarantees.
 
 \subsection{Equipment Design and Launch Optimization}
 
@@ -434,7 +438,7 @@ Modern driver design targets specific launch conditions by manipulating:
 
 \item \textbf{Center of gravity (CG) position:} By moving the CG lower and deeper in the clubhead, manufacturers increase the effective loft and reduce dynamic spin rate. A lower CG increases the launch angle; a deeper CG shifts the center of rotation further from the contact point, reducing spin. \cite{club_design_cg}
 
-\item \textbf{Clubface flexibility:} The coefficient of restitution (COR) of the clubface affects the smash factor. High COR faces (within legal limits, which cap COR at 0.83) produce higher ball speeds, which in turn increases the optimal launch angle.
+\item \textbf{Clubface flexibility:} The coefficient of restitution (COR) of the clubface affects the smash factor. High COR faces (within legal limits, which cap COR near 0.83 under equipment standards) produce higher ball speeds, which in turn changes the optimal launch window \citep{club_design_cg}.
 
 \item \textbf{Mass distribution:} Perimeter-weighted designs reduce the twisting of the club upon off-center impacts, resulting in more consistent face angle and launch direction on mishits.
 
@@ -536,25 +540,25 @@ The launch conditions observed at impact are the outcome of:
 
 \item \textbf{Acceleration phase:} The first 70--80\% of the downswing, during which the golfer actively accelerates the club and controls the kinematics of the body segments.
 
-\item \textbf{Drift phase:} The final 50--100 milliseconds before impact, during which the club's trajectory toward impact is determined by inertia, ground reaction forces, and the geometry of the kinetic chain—not by conscious motor control.
+\item \textbf{Drift phase:} The final 50--100 milliseconds before impact, during which the model treats the club's trajectory toward impact as dominated by inertia, ground reaction forces, and the geometry of the kinetic chain rather than late conscious motor control.
 
 \end{enumerate}
 
-The implication is far-reaching: \textit{the golfer cannot consciously control launch conditions by ``steering'' or ``feeling'' in the final moments}. Instead, launch conditions are determined by the setup and acceleration phases.
+The implication is model-conditioned: \textit{late ``steering'' or ``feeling'' is expected to have limited leverage over launch conditions in the final moments}. Instead, launch conditions are primarily determined by the setup and acceleration phases.
 \end{principle}
 
 \subsection{The Control Window Closes 50--100 ms Before Impact}
 
 \index{control window!closure timing}
 
-Neurophysiological research on the golf swing indicates that conscious motor control of individual muscles ceases approximately 100--150 milliseconds before ball contact. After this point, the body's proprioceptive and visual feedback systems can no longer produce corrective motor commands that will affect the club's motion at impact.
+In this model, conscious motor control over face angle is treated as limited over the final 100--150 milliseconds before ball contact. The magnitude of that limitation should be checked against measured kinematics, feedback timing, EMG evidence, and player-specific data.
 
-The practical implication is that the golfer's ``feel'' during the final phase of the swing is largely illusory:
+The practical implication is that ``feel'' during the final phase of the swing may not correspond to effective late correction:
 
 \begin{example}{Conscious Control Limitations in the Final Phase}{ex:control_illusion}
-A golfer who tries to ``release the club'' or ``rotate the hips faster'' in the final 50 ms before impact is experiencing the sensation of drift, not producing the motion. If the acceleration phase ended with inadequate clubhead speed, no late conscious effort will restore it. The golfer's only recourse is to improve the setup and acceleration phase on the next swing.
+A golfer who tries to ``release the club'' or ``rotate the hips faster'' in the final 50 ms before impact may be experiencing the sensation of drift more than producing a new corrective motion. If the acceleration phase ended with inadequate clubhead speed, late conscious effort is unlikely to restore it. The golfer's main recourse is to improve the setup and acceleration phase on the next swing.
 
-This explains why great golfers have such efficient swings: they do the hard work early (acceleration phase), and then they let drift carry them to a predictable outcome (impact).
+This frames efficient swings as early organization followed by a more predictable drift phase, not as a guaranteed description of every elite player.
 \end{example}
 
 \subsection{Determinants of the Drift Phase: Setup and Acceleration Phase}

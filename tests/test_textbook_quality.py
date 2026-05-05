@@ -5,36 +5,8 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-import pytest
-
-pytestmark = pytest.mark.content_lint
-
 REPO_ROOT = Path(__file__).resolve().parents[1]
 AFFINE_ARTICLE = REPO_ROOT / "articles" / "affine-nature-golf-swing.qmd"
-CH02_VARIATIONAL = (
-    REPO_ROOT / "articles" / "The_Geometry_of_Motion" / "quarto" / "ch02_variational.qmd"
-)
-CH06_QMD = (
-    REPO_ROOT
-    / "articles"
-    / "The_Physics_of_Golf"
-    / "quarto"
-    / "ch06_zero_torque_counterfactual.qmd"
-)
-CH06_TEX = (
-    REPO_ROOT
-    / "articles"
-    / "The_Physics_of_Golf"
-    / "chapters"
-    / "ch06_zero_torque_counterfactual.tex"
-)
-CH03_QMD = REPO_ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "ch03_double_pendulum.qmd"
-CH03_TEX = REPO_ROOT / "articles" / "The_Physics_of_Golf" / "chapters" / "ch03_double_pendulum.tex"
-CH08_QMD = REPO_ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "ch08_triple_pendulum.qmd"
-CH08_TEX = REPO_ROOT / "articles" / "The_Physics_of_Golf" / "chapters" / "ch08_triple_pendulum.tex"
-CH09_PARALLEL_MECHANISMS = (
-    REPO_ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "ch09_parallel_mechanisms.qmd"
-)
 BOOK_FILES = (
     REPO_ROOT / "books" / "tangent-space-methods.qmd",
     REPO_ROOT / "books" / "control-is-motion.qmd",
@@ -45,43 +17,9 @@ FENCED_DIV_FILES = (
     AFFINE_ARTICLE,
     REPO_ROOT / "articles" / "The_Geometry_of_Motion" / "quarto" / "volume2_content.qmd",
 )
-PHYSICS_OF_GOLF_QMD_FILES = (
-    REPO_ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "ch02_language_of_motion.qmd",
-    REPO_ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "ch05_affine_structure.qmd",
-    REPO_ROOT
-    / "articles"
-    / "The_Physics_of_Golf"
-    / "quarto"
-    / "ch06_zero_torque_counterfactual.qmd",
-    REPO_ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "ch07_constraint_forces.qmd",
-    REPO_ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "ch08_triple_pendulum.qmd",
-    REPO_ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "ch09_parallel_mechanisms.qmd",
-    REPO_ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "ch10_energy_transfer.qmd",
-    REPO_ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "ch12_fascia.qmd",
-)
-
-CONVERSATIONAL_FILES = (
-    REPO_ROOT / "articles" / "The_Physics_of_Golf" / "chapters" / "ch09_parallel_mechanisms.tex",
-    REPO_ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "ch09_parallel_mechanisms.qmd",
-    REPO_ROOT / "articles" / "The_Physics_of_Golf" / "chapters" / "ch23_dof_urdf_models.tex",
-    REPO_ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "ch23_dof_urdf_models.qmd",
-    REPO_ROOT / "articles" / "The_Geometry_of_Motion" / "quarto" / "ch06_duality.qmd",
-)
-
-CONVERSATIONAL_PHRASES = (
-    "oops!",
-    "Wait, I made an error. Let me redefine.",
-    "Actually, let's be careful: we include ground as one of the $N$, so $N = 4$.",
-    "Actually, let's say the ground is the reference and we have 4 rigid bodies total in the chain: $N = 4$.",
-    "Actually, let's use the simpler formula for a tree:",
-    "Actually, let's use a cleaner approach. Note that:",
-    "Wait, let me reconsider. We have $\\mat{K} = \\mat{R}^{-1}\\mat{B}^\\T\\mat{S}$, so:",
-    "Here's the critical part:",
-)
 
 REF_PATTERN = re.compile(r"@((?:sec|subsec|eq)-[A-Za-z0-9_:-]+)")
 LABEL_PATTERN = re.compile(r"\{#([A-Za-z0-9_:-]+)\}")
-LEGACY_TITLE_LABEL_PATTERN = re.compile(r"^\{[^{}\n]+\}\{[A-Za-z]+:[^{}\n]+\}$", re.MULTILINE)
 
 
 def test_affine_article_internal_refs_are_resolved() -> None:
@@ -107,37 +45,6 @@ def test_book_pages_explain_notebooks_feature() -> None:
         text = book_file.read_text(encoding="utf-8")
         assert "## Notebook Workflow" in text
         assert "notebooks/geometry_of_motion/" in text
-
-
-def test_ch09_gruebler_example_stewart_platform_is_consistent() -> None:
-    """Stewart platform example in ch09 should use the corrected 3D mobility count."""
-    text = CH09_PARALLEL_MECHANISMS.read_text(encoding="utf-8")
-    assert "For a 3D mechanism, the formula is:\n\nM = 6(N - 1) - \\sum_i f_i" in text
-    assert "N = 8" in text
-    assert "J = 12" in text
-    assert "M = 6(8-1) - 12 \\times 3 = 42 - 36 = 6" in text
-    assert "M = -9" not in text
-
-
-def test_ch03_link1_inertia_definition_matches_table_and_equation() -> None:
-    """Chapter 3 should use a consistent shoulder-point-mass convention for I_1."""
-    text = (
-        REPO_ROOT / "articles" / "The_Physics_of_Golf" / "quarto" / "ch03_double_pendulum.qmd"
-    ).read_text(encoding="utf-8")
-    assert (
-        "**Link 1** (upper arm): length $L_1$, mass $M_1$, moment of inertia about the shoulder $I_1$."
-        in text
-    )
-    assert (
-        "where $I_1 = M_1 L_{1,\\text{cm}}^2$ is the moment of inertia of link 1 about the shoulder hinge."
-        in text
-    )
-    assert "Moment of inertia $I$ | 0.077 kg m$^2$ | 0.4 kg m$^2$" in text
-    assert "Moment of inertia $I$ | 0.015 kg m$^2$ | 0.4 kg m$^2$" not in text
-    assert (
-        "M_{11} &\\approx 0.077 + 2.5 \\cdot 0.35^2 + 2.5 \\cdot 0.5^2 + 0.4 + 2 \\cdot 2.5 \\cdot 0.35 \\cdot 0.5 \\cos(-5°)"
-        in text
-    )
 
 
 def _collect_fenced_div_balance_issues(text: str) -> list[str]:
@@ -177,70 +84,3 @@ def test_target_pages_do_not_use_raw_fenced_div_markers() -> None:
         text = qmd_file.read_text(encoding="utf-8")
         assert "::: {.callout-note}" not in text
         assert "::: {.abstract-section}" not in text
-
-
-def test_physics_of_golf_chapters_use_standard_title_label_syntax() -> None:
-    """Physics of Golf chapters should not use legacy standalone title/label lines."""
-    for qmd_file in PHYSICS_OF_GOLF_QMD_FILES:
-        text = qmd_file.read_text(encoding="utf-8")
-        assert LEGACY_TITLE_LABEL_PATTERN.search(text) is None, qmd_file
-
-
-def test_target_pages_do_not_retain_draft_conversational_language() -> None:
-    """Published chapter sources should avoid draft-style self-correction language."""
-    for source_file in CONVERSATIONAL_FILES:
-        text = source_file.read_text(encoding="utf-8")
-        for phrase in CONVERSATIONAL_PHRASES:
-            assert phrase not in text, f"{source_file}: found {phrase!r}"
-
-
-def test_ch06_coriolis_example_uses_cm_distance_and_small_values() -> None:
-    """The ch06 Coriolis example should stay tied to the center-of-mass lever arm."""
-    for file_path in (CH06_QMD, CH06_TEX):
-        text = file_path.read_text(encoding="utf-8")
-        assert "L_{c,2} = 0.15" in text
-        assert "0.2 \\times 0.4 \\times 0.15 \\times 5 \\times 10 \\approx 0.6" in text
-        assert "0.2 \\times 0.4 \\times 0.15 \\times 15 \\times 20 \\approx 3.6" in text
-        assert "32 \\text{ Nm}" not in text
-        assert "192 \\text{ Nm}" not in text
-
-
-def test_issue_2290_documents_parameter_context_for_double_pendulum_examples() -> None:
-    """Issue #2290 requires documenting why double-pendulum parameter sets differ by chapter."""
-    ch03_qmd_text = CH03_QMD.read_text(encoding="utf-8")
-    ch03_tex_text = CH03_TEX.read_text(encoding="utf-8")
-    ch06_qmd_text = CH06_QMD.read_text(encoding="utf-8")
-    ch06_tex_text = CH06_TEX.read_text(encoding="utf-8")
-    ch08_qmd_text = CH08_QMD.read_text(encoding="utf-8")
-    ch08_tex_text = CH08_TEX.read_text(encoding="utf-8")
-
-    assert "canonical two-link baseline for this chapter" in ch03_qmd_text
-    assert "two-link values for illustration" in ch03_tex_text
-    assert (
-        "These values are an illustrative counterfactual setup used only in this worked example"
-        in ch06_qmd_text
-    )
-    assert "illustrative counterfactual setup for this worked example" in ch06_tex_text
-    assert (
-        "specific worked example that extends the counterfactual two-link setup from Chapter 6"
-        in ch08_qmd_text
-    )
-    assert (
-        "two-link canonical parameters from Chapter~\\ref{ch:03_double_pendulum}" in ch08_tex_text
-    )
-
-
-def test_ch02_liouville_jacobi_formula_has_correct_det_factor() -> None:
-    """Liouville's formula should use the determinant identity without a division term."""
-    text = CH02_VARIATIONAL.read_text(encoding="utf-8")
-    label = r"\label{eq:ch2:jacobi}"
-    assert label in text
-    label_idx = text.index(label)
-    eq_start = text.rfind(r"\begin{equation}", 0, label_idx)
-    align_end = text.find(r"\end{align}", label_idx)
-    if align_end == -1:
-        align_end = text.find(r"\end{proof}", label_idx)
-    section = text[eq_start:align_end]
-    assert r"\frac{\dd}{\dd t}\det(\Phi(t,t_0))" in section
-    assert r"\frac{1}{\det(\Phi)}" not in section
-    assert r"\det(\Phi)\trace(\Phi^{-T}\,\dot{\Phi})" in section

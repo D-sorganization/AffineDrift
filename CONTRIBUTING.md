@@ -253,7 +253,102 @@ const scrollToElement = (elementId, offset = 140) => {
 - Include "Layman's Terms" sections for complex topics
 - Add "Critics Corner" for addressing potential objections
 
+## Code Review Guidelines
+
+To maintain code quality and distribute knowledge across the team, we enforce a peer review process for all pull requests.
+
+### Review Requirements
+
+1. **Every PR requires at least one review** from a different author before merge
+2. **The PR author cannot approve their own changes** (self-merges are blocked by automation)
+3. **Reviews are mandatory** — self-approved PRs will fail CI/CD checks
+
+### What Reviewers Should Check
+
+Code reviews should assess these dimensions:
+
+- **Code Quality**
+  - Does the code follow project style guidelines (`ruff`, `mypy`)?
+  - Are there any obvious bugs or logic errors?
+  - Is error handling appropriate?
+  - Are all functions type-hinted and documented?
+
+- **Test Coverage**
+  - Are new functions/features covered by tests?
+  - Do tests follow AAA pattern (Arrange-Act-Assert)?
+  - Is coverage adequate for the change scope?
+  - Are edge cases tested?
+
+- **Design & Architecture**
+  - Does the change align with the project structure?
+  - Are there any potential performance issues?
+  - Does the change introduce technical debt?
+  - Should an ADR be added for architecture-impacting changes?
+
+- **Documentation**
+  - Are docstrings present and accurate?
+  - Is CONTRIBUTING.md or README updated if needed?
+  - Are inline comments provided for non-obvious code?
+
+### Review Checklist
+
+Use this checklist when reviewing PRs:
+
+- [ ] Code style and formatting pass all linting checks
+- [ ] Type hints are present and correct (mypy passes)
+- [ ] All new functions have docstrings
+- [ ] Tests are added/updated and passing
+- [ ] No `print()` statements (use `logging`)
+- [ ] Error handling is specific (no bare `except:`)
+- [ ] Performance implications considered
+- [ ] Documentation updated (if applicable)
+- [ ] Commit messages follow conventional format
+- [ ] No merge conflicts with target branch
+
+### Tips for Effective Reviews
+
+1. **Be constructive** — offer suggestions, not just criticism
+2. **Ask questions** — if something seems unclear, ask for clarification
+3. **Acknowledge good code** — point out well-written sections
+4. **Review promptly** — aim for <24 hour turnaround
+5. **Respect author intent** — understand the problem being solved before critiquing
+6. **Learn together** — reviews are two-way knowledge sharing opportunities
+
 ## Pull Request Process
+
+### Review Policy
+
+Pull requests need independent, meaningful review before merge.
+
+- The PR author must not approve or merge their own PR.
+- At least one reviewer who is not the author should approve every code, workflow,
+  dependency, deployment, or content-architecture change.
+- Reviews should check correctness, tests, security, maintainability, and
+  ownership impact; approval means those areas were considered, not just that CI
+  passed.
+- New commits after approval should be treated as stale until the reviewer has
+  checked the updated diff.
+- Rotate reviewers across modules when possible so knowledge is not concentrated
+  in one author or one subsystem owner.
+- Architecture-impacting changes should include an ADR or a clear rationale in
+  the PR description before review is requested.
+
+### Required Repository Review Enforcement
+
+The default branch ruleset should enforce the review policy, not rely only on
+contributor discipline. Repository administrators should keep the default-branch
+ruleset aligned with these settings:
+
+- Require a pull request before merging to `main`.
+- Require at least one approving review from someone other than the PR author.
+- Require approval from someone other than the last pusher when available.
+- Dismiss stale approvals when new commits are pushed.
+- Require all review threads to be resolved before merge.
+- Keep direct pushes, branch deletion, and non-fast-forward updates blocked.
+
+Until those settings are active, maintainers should treat a PR as not ready to
+merge if the author is the only approver, the author is attempting to self-merge,
+or material commits have landed after the latest independent review.
 
 ### Architecture Decision Records (ADR)
 
@@ -369,6 +464,7 @@ git commit -m "test(scripts): add tests for sitemap generator"
    - Address reviewer comments promptly
    - Push additional commits to the same branch
    - Mark conversations as resolved when addressed
+   - Re-request review after pushing material changes
 
 ### PR Checklist
 
@@ -376,6 +472,9 @@ git commit -m "test(scripts): add tests for sitemap generator"
 - [ ] All linting checks pass (`ruff`, `mypy`)
 - [ ] Tests added/updated and passing
 - [ ] Documentation updated (if needed)
+- [ ] Independent reviewer requested; self-approval/self-merge avoided
+- [ ] Review focus areas and ownership risks documented
+- [ ] Reviewer rotation considered for cross-module or repeated-author changes
 - [ ] Commit messages follow conventional format
 - [ ] PR description is clear and complete
 - [ ] No merge conflicts with main branch

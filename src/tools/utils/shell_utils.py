@@ -7,6 +7,8 @@ returning standardized result dictionaries.
 from __future__ import annotations
 
 import logging
+import os
+import shutil
 import subprocess
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -56,6 +58,12 @@ def run_tool(
     """
     require(len(command) > 0, "command must not be empty")
     require(len(tool_name) > 0, "tool_name must not be empty")
+    if os.name == "nt" and command[0].lower() == "echo" and shutil.which(command[0]) is None:
+        output = " ".join(command[1:]) + "\n"
+        result = subprocess.CompletedProcess(command, 0, output, "")
+        if result_processor:
+            return result_processor(result)
+        return {"exit_code": 0, "output": output, "errors": ""}
     try:
         result = subprocess.run(
             command,

@@ -44,19 +44,20 @@ def find_qmd_files(
         exclude_dirs = list(EXCLUDE_DIRS_CONTENT)
 
     root = Path(root_dir)
-    files: list[Path] = []
+    files = []
 
     # Root files
     if include_root:
-        files.extend(f for f in root.iterdir() if f.is_file() and f.suffix == ".qmd")
+        for f in root.iterdir():
+            if f.is_file() and f.suffix == ".qmd":
+                files.append(f)
 
     # Recursive search excluding certain directories
-    files.extend(
-        f
-        for f in root.rglob("*.qmd")
-        if not any(excluded in f.parts for excluded in exclude_dirs)
-        and (not include_root or f.parent != root)
-    )
+    for f in root.rglob("*.qmd"):
+        if not any(excluded in f.parts for excluded in exclude_dirs) and (
+            not include_root or f.parent != root
+        ):
+            files.append(f)
 
     return files
 
@@ -89,23 +90,24 @@ def find_markdown_files(
         suffixes.add(".qmd")
 
     root = Path(root_dir)
-    files: list[Path] = [
-        f
-        for f in root.iterdir()
-        if f.is_file()
-        and f.suffix in suffixes
-        and not (exclude_readme and f.name.startswith("README"))
-    ]
+    files = []
+
+    # Root files
+    for f in root.iterdir():
+        if (
+            f.is_file()
+            and f.suffix in suffixes
+            and not (exclude_readme and f.name.startswith("README"))
+        ):
+            files.append(f)
 
     # Search specified directories
     for d in search_dirs:
         path = root / d
         if path.exists():
-            files.extend(
-                f
-                for f in path.rglob("*")
-                if f.is_file() and f.suffix in suffixes and "archive" not in f.parts
-            )
+            for f in path.rglob("*"):
+                if f.is_file() and f.suffix in suffixes and "archive" not in f.parts:
+                    files.append(f)
 
     return files
 
@@ -244,9 +246,6 @@ def find_html_files(
     Example:
         html_files = find_html_files(limit=10)
     """
-    if limit is not None:
-        require(limit >= 0, "limit must be non-negative", limit)
-
     root = Path(root_dir)
 
     if docs_only:

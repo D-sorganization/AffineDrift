@@ -1,12 +1,12 @@
-\chapter{Passive and Distributed Control: The Self-Organizing Swing}
+\chapter{Passive and Distributed Control: A Self-Organizing Swing Model}
 \label{ch:passive_distributed_control}
 
 \epigraph{The swing is not made by conscious effort but by giving the conditions where the swing can happen.}{After Frans Bosch}
 
 \begin{laymansbox}{What You'll Learn}{lab:intro_passive}
-Most people think the brain controls the golf swing by sending constant commands to every muscle: ``tighten this, relax that, rotate here, extend there.'' But this view ignores a fundamental problem: the brain is slow and its bandwidth is limited. This chapter reveals an alternative---one that explains why expert golfers look effortless while novices look tense.
+Most people think the brain controls the golf swing by sending constant commands to every muscle: ``tighten this, relax that, rotate here, extend there.'' But this view ignores a fundamental problem: the brain is slow and its bandwidth is limited. This chapter develops a more defensible modeling alternative---one that can help explain why expert golfers look effortless while novices look tense.
 
-The body doesn't control the swing by micromanaging every degree of freedom. Instead, it sets up the right \emph{mechanical conditions}---the stiffness, damping, and baseline tension of muscles and tendons---\emph{before the swing begins}. Once these conditions are set, the swing executes itself. The body's tissues become a self-organizing mechanical system that automatically resists perturbations and produces a stable, repeatable motion. This is passive control, and it's why the best golfers appear to swing without thinking.
+The body does not need to control the swing by micromanaging every degree of freedom. A more defensible hypothesis is that the nervous system sets mechanical conditions---including stiffness, damping, and baseline tension of muscles and tendons---before and during the swing. Those tissue properties can resist some perturbations and reduce feedback burden, but they do not make the swing autonomous or eliminate neural control. This is the passive-control perspective; its golf-specific claims still require empirical support from measured swings.
 \end{laymansbox}
 
 \section{The Computational Problem: Why the Brain Can't Micromanage}
@@ -50,7 +50,7 @@ If displaced, the spring force $kx$ restores the mass toward equilibrium, and th
 \begin{laymansbox}{Building Stability into Hardware}{lab:hardware_stability}
 Think of a skilled golfer's body as a pre-tuned spring-mass-damper system. Before the swing, the golfer's muscles are pre-tensioned to create the right amount of stiffness (via the ``spring'' component) and damping. This is not voluntary muscular effort during the swing---it's the \emph{baseline condition} set before the swing begins.
 
-Once set, this mechanical system is self-correcting. If a gust of wind pushes the club, the muscles' stiffness automatically resists the perturbation. If the downswing is slightly faster than average, the damping automatically absorbs the extra energy. The swing self-organizes without the brain's moment-to-moment intervention.
+Once set, this mechanical system can be partly self-correcting. If a perturbation moves the club, muscle and tendon stiffness can resist some of that displacement. If the downswing is slightly faster than average, damping can dissipate some extra energy. This reduces the required feedback burden; it does not eliminate active neural control.
 
 This is why expert golfers can swing with apparent ease. They are not working harder; they have tuned the mechanical system better.
 \end{laymansbox}
@@ -440,18 +440,18 @@ Substituting the equation of motion $\bm{M}\ddot{\bm{q}} = -\bm{K}(\bm{q}-\bm{q}
 If damping is sufficiently large, the term $-\dot{\bm{q}}^T \bm{D} \dot{\bm{q}}$ dominates. Since this term is negative (damping always dissipates energy), we have $\dot{V} < 0$.
 
 \begin{theorem}{Passive Stability Condition}{lab:thm_passive_stability}
-If a system is controlled by a passive impedance (stiffness + damping) and the damping is sufficiently large, then:
+If a linearized impedance-controlled model is locally accurate and the damping term dominates the neglected perturbation terms in a neighborhood, then:
 \[
 \dot{V} = -\dot{\bm{q}}^T \bm{D} \dot{\bm{q}} + \text{(small perturbation terms)} < 0.
 \]
 
-This implies the Lyapunov function decreases, and the system is Lyapunov-stable: perturbations decay exponentially, and the system returns to the desired trajectory.
+This supports a local Lyapunov-stability claim for the model. It does not by itself establish exponential return of a full golf swing under large perturbations, delayed feedback, contact changes, or parameter uncertainty.
 \end{theorem}
 
 \subsection{Conditions for Self-Correction}
 \label{subsec:self_correction}
 
-For the golf swing to be self-correcting, three conditions must be met:
+For a modeled golf swing to show partly self-correcting behavior, three conditions should hold:
 
 \begin{enumerate}
 \item \textbf{Sufficient stiffness:} The spring constant $\bm{K}$ must be large enough that restoring forces overcome small perturbations. Too soft, and the swing drifts off course.
@@ -459,18 +459,18 @@ For the golf swing to be self-correcting, three conditions must be met:
 \item \textbf{Correct equilibrium:} The reference position $\bm{q}_0$ must be chosen so the spring's natural rest position aligns with the desired swing trajectory. Misalignment introduces systematic errors.
 \end{enumerate}
 
-Elite golfers unconsciously satisfy all three conditions. Their swings are self-correcting. If they swing slightly faster, the damping absorbs the extra energy. If wind perturbs the club, the spring restores it. The swing is robust.
+Elite golfers may approximate all three conditions more closely than novices. In that case, damping can absorb part of an over-speed perturbation and passive stiffness can resist part of a displacement. That is a robustness hypothesis, not a proof that every elite swing self-corrects.
 
 Novices often fail at condition~1 or~2. A weak golfer may have insufficient co-contraction, leading to low stiffness and a drifting swing. A tense golfer may have excessive co-contraction, leading to high damping and a slower, more rigid swing.
 
 \begin{laymansbox}{Why Expert Swings Look Effortless}{lab:effortless_swing}
 The paradox is striking: an expert golfer swings with apparent ease, while a novice looks tense and strains.
 
-The resolution: an expert has \emph{superior passive stability}. Their pre-tuned impedance profile is so well-matched to their body and the task that the swing requires minimal active correction. The passive system does most of the work.
+The resolution may be that an expert has a better-matched impedance profile, so fewer large active corrections are needed once the swing starts. Passive tissues and fast local feedback then carry more of the stabilization burden.
 
 A novice, without practice, has not yet learned the optimal impedance parameters. They compensate by increasing overall muscle tension---trying to muscle the swing under voluntary control. This looks effortful because it \emph{is} effortful.
 
-With training, the novice's motor system discovers the right impedance profile. The swing becomes more automatic, more robust, and apparently easier.
+With training, the novice's motor system may discover a better impedance profile. The swing can then become more automatic, more robust, and apparently easier.
 \end{laymansbox}
 
 \section{Training and the Discovery of Impedance}
@@ -577,15 +577,15 @@ This is a fundamentally different view from the traditional picture of the brain
 \begin{enumerate}
 \item \textbf{The bandwidth problem:} The brain cannot compute torques for 20 DOF at 1000 Hz. The traditional control model is unrealistic.
 
-\item \textbf{Impedance control:} The brain solves this by pre-setting impedance (stiffness and damping) once before the swing, then allowing the passive mechanical system to execute.
+\item \textbf{Impedance control:} One plausible strategy is to set impedance before and during the swing so passive mechanics and fast local feedback handle part of the execution burden.
 
-\item \textbf{Pre-tuning reduces computation:} Instead of computing 20,000 control decisions per second, the brain computes $\sim$40 impedance parameters once before the swing.
+\item \textbf{Pre-tuning reduces computation:} Pre-tuning can shift some stabilization burden to mechanics and local feedback, though the exact dimensionality depends on the model.
 
-\item \textbf{Passive stability:} With the right impedance, the swing is self-correcting. Perturbations are automatically resisted by spring forces and dissipated by damping.
+\item \textbf{Passive stability:} With well-chosen impedance, some perturbations can be partly resisted by spring forces and damping.
 
-\item \textbf{Distributed control:} Spinal reflexes, muscle spindles, and local feedback circuits handle moment-to-moment stability. The brain sets the configuration, and the spinal cord executes.
+\item \textbf{Distributed control:} Spinal reflexes, muscle spindles, and local feedback circuits are candidate mechanisms for part of the moment-to-moment stabilization.
 
-\item \textbf{Emergent behaviors:} Complex behaviors like the whip effect and distal acceleration emerge automatically from the kinetic chain physics and the impedance profile. They are not explicitly controlled.
+\item \textbf{Emergent behaviors:} Complex behaviors like the whip effect and distal acceleration can emerge from the kinetic chain physics and the impedance profile without being scripted joint by joint.
 
 \item \textbf{Training discovers impedance:} Through practice, the motor system discovers the impedance parameters that work best for each golfer's body. Expert performance reflects discovered, encoded impedance.
 

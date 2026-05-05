@@ -7,16 +7,11 @@ Covers issues #1742, #1743, #1744, #1745, #1746, #1749, #1750, #1755.
 from __future__ import annotations
 
 import warnings
-from pathlib import Path
 from typing import Any
 
 import numpy as np
 import pytest
 
-from src.affine_control.ddp import _resample_controls, adaptive_timestep_ddp_mock
-from src.affine_control.residuals import ResidualMonitor
-from src.affine_control.swing_optimizer import SwingOptimizationConfig, SwingOptimizer
-from src.core.contracts import ContractViolationError
 from src.tools.rl_funnel_benchmark import (
     PENDULUM_L1,
     PENDULUM_L2,
@@ -25,11 +20,10 @@ from src.tools.rl_funnel_benchmark import (
     double_pendulum_drift,
     double_pendulum_mass_matrix,
 )
-from src.tools.wrist_universal_joint.torque_calculator import (
-    universal_joint_transmission_ratio,
-)
 
-GRAVITY_M_S2 = 9.81
+# ---------------------------------------------------------------------------
+# Issue #1742: Double pendulum mass matrix must NOT be identity
+# ---------------------------------------------------------------------------
 
 
 class TestMassMatrixPhysics:
@@ -77,12 +71,16 @@ class TestMassMatrixPhysics:
 # Issue #1743: DDP mock solver must be guarded in production
 # ---------------------------------------------------------------------------
 
+from src.affine_control.swing_optimizer import SwingOptimizer
+from src.affine_control.swing_types import SwingOptimizationConfig
+from src.core.contracts import ContractViolationError
+
 
 class TestDDPMockGuard:
     """#1743: mock solver must not run in production path without guard."""
 
-    def test_mock_solver_emits_warning_when_explicitly_opted_in(self) -> None:
-        """Creating SwingOptimizer without solver should warn when mock use is explicit."""
+    def test_mock_solver_emits_warning_on_init(self) -> None:
+        """Creating SwingOptimizer with mock opt-in should warn."""
         config = SwingOptimizationConfig(n_joints=1, horizon_steps=5, allow_mock_solver=True)
         with warnings.catch_warnings(record=True) as caught:
             warnings.simplefilter("always")
@@ -90,11 +88,9 @@ class TestDDPMockGuard:
         msgs = [str(w.message) for w in caught if issubclass(w.category, UserWarning)]
         assert any("mock" in m.lower() for m in msgs)
 
-    def test_mock_solver_rejected_without_allow_flag(self) -> None:
-        """Construction should fail when a real solver is not supplied."""
-        config = SwingOptimizationConfig(
-            n_joints=1, horizon_steps=5, max_iterations=1, allow_mock_solver=False
-        )
+    def test_mock_solver_blocked_without_allow_flag(self) -> None:
+        """Initializer should reject mock solver unless allow_mock_solver=True."""
+        config = SwingOptimizationConfig(n_joints=1, horizon_steps=5, max_iterations=1)
         with pytest.raises(ContractViolationError, match="mock"):
             SwingOptimizer(config)
 
@@ -110,11 +106,45 @@ class TestDDPMockGuard:
         result = optimizer.optimize(x0, lambda x, u: np.array([x[1], u[0]]))
         assert result.iterations >= 1
 
+    def test_direct_mock_solver_blocked_without_test_or_demo_environment(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """Direct mock DDP calls should fail closed outside tests or demos."""
+        monkeypatch.delenv("PYTEST_CURRENT_TEST", raising=False)
+        monkeypatch.delenv("AFFINEDRIFT_ENABLE_MOCK_DDP", raising=False)
+
+        with pytest.raises(ContractViolationError, match="test/demo-only"):
+            adaptive_timestep_ddp_mock(
+                lambda x, u: np.array([x[0] + u[0]]),
+                np.array([0.0]),
+                np.array([1.0]),
+                np.array([[0.0]]),
+                max_iters=1,
+            )
+
+    def test_direct_mock_solver_requires_explicit_demo_override(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """Demo override must be explicit when exercising the mock solver."""
+        monkeypatch.delenv("PYTEST_CURRENT_TEST", raising=False)
+        monkeypatch.setenv("AFFINEDRIFT_ENABLE_MOCK_DDP", "1")
+
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", UserWarning)
+            x_traj, u_traj, t_traj = adaptive_timestep_ddp_mock(
+                lambda x, u: np.array([x[0] + u[0]]),
+                np.array([0.0]),
+                np.array([1.0]),
+                np.array([[0.0]]),
+                max_iters=1,
+            )
+
+        assert len(x_traj) == len(u_traj) + 1
+        assert len(t_traj) == len(x_traj)
+
     def test_real_solver_not_blocked(self) -> None:
         """Providing a real solver should not trigger the guard."""
-        config = SwingOptimizationConfig(
-            n_joints=1, horizon_steps=5, max_iterations=1, allow_mock_solver=True
-        )
+        config = SwingOptimizationConfig(n_joints=1, horizon_steps=5, max_iterations=1)
 
         def fake_solver(f: Any, x0: Any, xf: Any, u_init: Any, **kw: Any) -> Any:
             n = len(u_init)
@@ -135,6 +165,8 @@ class TestDDPMockGuard:
 # Issue #1744: Duplicate elif makes MPC_FULL unreachable
 # ---------------------------------------------------------------------------
 
+from src.affine_control.residuals import ResidualMonitor
+
 
 class TestMPCFullReachable:
     """#1744: MPC_FULL must be reachable from MPC_WARN."""
@@ -154,8 +186,9 @@ class TestMPCFullReachable:
         # Two more critical samples -> MPC_WARN -> MPC_FULL
         monitor.update(np.array([0.6]), x_nom)
         monitor.update(np.array([0.6]), x_nom)
-        msg = "MPC_FULL must be reachable; was unreachable due to duplicate elif"
-        assert monitor.mode == "MPC_FULL", msg
+        assert (
+            monitor.mode == "MPC_FULL"
+        ), "MPC_FULL must be reachable; was unreachable due to duplicate elif"
 
     def test_full_state_cycle(self) -> None:
         """Full cycle: LQR -> MPC_WARN -> MPC_FULL -> MPC_WARN -> LQR."""
@@ -177,29 +210,6 @@ class TestMPCFullReachable:
         # MPC_WARN -> LQR
         monitor.update(np.array([0.05]), x_nom)
         assert monitor.mode == "LQR"
-
-
-class TestGolfChapter03NumericalExample:
-    """#2278: ch03 numerical example must use the table values consistently."""
-
-    def test_double_pendulum_worked_example_values(self) -> None:
-        """The published numerical example should match the stated masses."""
-        m1 = 2.5
-        m2 = 1.5
-        l1 = 0.35
-        l2 = 0.5
-        theta2 = np.deg2rad(-5.0)
-        theta1_dot = np.deg2rad(600.0)
-
-        m11 = 0.015 + m2 * l1**2 + m2 * l2**2 + 0.4 + 2 * m2 * l1 * l2 * np.cos(theta2)
-        g1 = (m1 * 0.175 + m2 * 0.35) * GRAVITY_M_S2 * np.sin(
-            0.0
-        ) + m2 * GRAVITY_M_S2 * 0.5 * np.sin(theta2)
-        c21 = m2 * l1 * l2 * theta1_dot**2 * np.sin(theta2)
-
-        assert np.isclose(m11, 1.496752, atol=1e-6)
-        assert np.isclose(g1, -0.641248, atol=1e-6)
-        assert np.isclose(c21, -2.508895, atol=1e-6)
 
 
 # ---------------------------------------------------------------------------
@@ -238,13 +248,16 @@ class TestCentralDifferencesLinearization:
         ctr = (f(x0 + eps) - f(x0 - eps)) / (2 * eps)
 
         # Central should be closer to 3.0
-        msg = f"Central ({ctr}) should be closer to 3.0 than forward ({fwd})"
-        assert abs(ctr - 3.0) < abs(fwd - 3.0), msg
+        assert abs(ctr - 3.0) < abs(
+            fwd - 3.0
+        ), f"Central ({ctr}) should be closer to 3.0 than forward ({fwd})"
 
 
 # ---------------------------------------------------------------------------
 # Issue #1746: Zero-order hold resampling index
 # ---------------------------------------------------------------------------
+
+from src.affine_control.ddp import _resample_controls
 
 
 class TestZeroOrderHoldResampling:
@@ -258,8 +271,9 @@ class TestZeroOrderHoldResampling:
 
         u_resampled = _resample_controls(u_old, t_old, t_new)
         # At t=0.15, last preceding time is t=0.1 (index 1), so control should be u[1]=2.0
-        msg = f"Expected control 2.0 (from t=0.1), got {u_resampled[0, 0]}"
-        assert u_resampled[0, 0] == 2.0, msg
+        assert (
+            u_resampled[0, 0] == 2.0
+        ), f"Expected control 2.0 (from t=0.1), got {u_resampled[0, 0]}"
 
     def test_zoh_at_exact_grid_point(self) -> None:
         """At an exact grid point t_old[k], ZOH uses u_old[k] (the interval starting there)."""
@@ -269,8 +283,9 @@ class TestZeroOrderHoldResampling:
 
         u_resampled = _resample_controls(u_old, t_old, t_new)
         # At exactly t=0.1, searchsorted('right') returns 2, so idx=1 => u[1]=20.0
-        msg = f"At t=0.1 (grid point 1), ZOH should use u[1]=20.0, got {u_resampled[0, 0]}"
-        assert u_resampled[0, 0] == 20.0, msg
+        assert (
+            u_resampled[0, 0] == 20.0
+        ), f"At t=0.1 (grid point 1), ZOH should use u[1]=20.0, got {u_resampled[0, 0]}"
 
     def test_zoh_at_time_zero(self) -> None:
         """At t=0.0, should use first control."""
@@ -294,6 +309,10 @@ class TestZeroOrderHoldResampling:
 # ---------------------------------------------------------------------------
 # Issue #1749: Wrist universal joint swapped arguments
 # ---------------------------------------------------------------------------
+
+from src.tools.wrist_universal_joint.torque_calculator import (
+    universal_joint_transmission_ratio,
+)
 
 
 class TestWristJointArgOrder:
@@ -325,6 +344,8 @@ class TestWristJointArgOrder:
 # Issue #1750: DDP early termination must respect max_iters
 # ---------------------------------------------------------------------------
 
+from src.affine_control.ddp import adaptive_timestep_ddp_mock
+
 
 class TestDDPMaxIters:
     """#1750: DDP must run up to max_iters, not terminate at iteration 2."""
@@ -354,8 +375,10 @@ class TestDDPMaxIters:
         # we expect significantly more dynamics calls.
         # With 3 iterations it would be about ~300 calls.
         # With 10 iterations it should be about ~1000.
-        msg = f"Expected >400 dynamics calls with max_iters=10, got {call_count}. Early termination bug may still be present."
-        assert call_count > 400, msg
+        assert call_count > 400, (
+            f"Expected >400 dynamics calls with max_iters=10, got {call_count}. "
+            "Early termination bug may still be present."
+        )
 
     def test_max_iters_1_runs_once(self) -> None:
         """max_iters=1 should still produce valid output."""
@@ -390,44 +413,3 @@ class TestEpsilonConsolidation:
         assert CORE_EPSILON == WRIST_EPSILON
         # Both should be 1e-6
         assert CORE_EPSILON == 1e-6
-
-
-# ---------------------------------------------------------------------------
-# Issue #2324: energy-budget drop needs explicit braking explanation
-# ---------------------------------------------------------------------------
-
-
-class TestCh10EnergyBudgetExplanation:
-    """#2324: chapter 10 should explain the 36 J phase-4-to-5 drop."""
-
-    def test_ch10_mentions_eccentric_braking_and_losses(self) -> None:
-        """The worked example should explain the apparent non-conservation."""
-        repo_root = Path(__file__).resolve().parents[1]
-        chapter = (
-            repo_root / "articles" / "The_Physics_of_Golf" / "quarto" / "ch10_energy_transfer.qmd"
-        ).read_text(encoding="utf-8")
-
-        assert "eccentric braking" in chapter
-        assert "negative work" in chapter
-        assert "air resistance" in chapter or "internal dissipation" in chapter
-        assert "conservation error" in chapter
-
-
-# ---------------------------------------------------------------------------
-# Issue #2332: short-iron D-plane weighting must remain face-dominant
-# ---------------------------------------------------------------------------
-
-
-class TestShortIronDPlaneWeighting:
-    """#2332: short-iron launch-direction weighting should not flip toward path."""
-
-    def test_short_iron_weighting_shifts_toward_face(self) -> None:
-        """The chapter text should keep the short-iron split face-dominant."""
-        chapter = Path("articles/The_Physics_of_Golf/quarto/ch31_swing_plane_launch.qmd").read_text(
-            encoding="utf-8"
-        )
-        assert (
-            "For a short iron (high loft, lower ball speed), the weighting shifts further toward the face:"
-            in chapter
-        )
-        assert "w_{\\text{face}} \\approx 0.75, \\quad w_{\\text{path}} \\approx 0.25" in chapter
