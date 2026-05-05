@@ -54,12 +54,26 @@ def _resolve_log_level() -> int:
 
 def _resolve_log_format() -> str:
     """Return the log format from ``LOG_FORMAT`` env var, or the default."""
-    return os.environ.get("LOG_FORMAT", "").strip() or _DEFAULT_FORMAT
+    raw = os.environ.get("LOG_FORMAT", "").strip()
+    if not raw or raw.lower() == "json":
+        return _DEFAULT_FORMAT
+    try:
+        logging.Formatter(raw)
+    except ValueError:
+        return _DEFAULT_FORMAT
+    return raw
 
 
 def _resolve_log_format_timestamp() -> str:
     """Return the timestamp format from ``LOG_FORMAT_TIMESTAMP`` env var."""
-    return os.environ.get("LOG_FORMAT_TIMESTAMP", "").strip() or _DEFAULT_TIMESTAMP_FORMAT
+    raw = os.environ.get("LOG_FORMAT_TIMESTAMP", "").strip()
+    if not raw or raw.lower() == "json":
+        return _DEFAULT_TIMESTAMP_FORMAT
+    try:
+        logging.Formatter(raw)
+    except ValueError:
+        return _DEFAULT_TIMESTAMP_FORMAT
+    return raw
 
 
 # ── Public factory functions ─────────────────────────────────────────────────
@@ -92,16 +106,12 @@ def setup_logging(
     resolved_level = level if level is not None else _resolve_log_level()
     resolved_format = format_string if format_string is not None else _resolve_log_format()
 
-    logger = logging.getLogger(name)
-    logger.setLevel(resolved_level)
+    logging.basicConfig(
+        level=resolved_level,
+        format=resolved_format,
+    )
 
-    if name is None or name == "__main__":
-        logging.basicConfig(
-            level=resolved_level,
-            format=resolved_format,
-        )
-
-    return logger
+    return logging.getLogger(name)
 
 
 def setup_logging_with_timestamp(

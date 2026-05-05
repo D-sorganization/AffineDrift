@@ -1,0 +1,33 @@
+/* ---
+   CSS Breakpoints - Standard Scale
+   Phase 1: Design Tokens (Consolidated)
+
+   Standard breakpoints established for consistent responsive design.
+   These are the canonical values - all @media queries should reference
+   these breakpoints only (or use CSS variables).
+
+   Mobile-first approach: base styles for xs, then enhance at larger breakpoints
+   --- */
+
+:root {
+  /* Standard responsive breakpoints (in pixels) */
+  --breakpoint-xs: 320px;   /* Extra small (phones) */
+  --breakpoint-sm: 640px;   /* Small (landscape phones) */
+  --breakpoint-md: 768px;   /* Medium (tablets) */
+  --breakpoint-lg: 1024px;  /* Large (tablets, laptops) */
+  --breakpoint-xl: 1440px;  /* Extra large (desktops) */
+}
+
+/* Breakpoint reference for documentation:
+
+   xs (320px)  : Small phones, mobile devices
+   sm (640px)  : Landscape phones, larger mobile devices
+   md (768px)  : Tablets, small laptops
+   lg (1024px) : Tablets (landscape), standard laptops
+   xl (1440px) : Large desktops, wide screens
+
+   Common patterns:
+   - Mobile-first: @media (width >= var(--breakpoint-md)) { ... }
+   - Desktop-down: @media (width < var(--breakpoint-md)) { ... }
+   - Range: @media (width >= var(--breakpoint-md)) and (width < var(--breakpoint-lg)) { ... }
+*/

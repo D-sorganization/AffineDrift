@@ -42,9 +42,10 @@ def main() -> int:
         if rel in explicit_limits:
             max_lines = explicit_limits[rel]
         else:
-            max_lines = max_by_ext.get(path.suffix.lower())
-            if max_lines is None:
+            val = max_by_ext.get(path.suffix.lower())
+            if val is None:
                 continue
+            max_lines = val
 
         checked += 1
         lines = line_count(path)

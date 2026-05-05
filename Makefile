@@ -12,7 +12,7 @@
 #   make test        Run unit and integration tests
 #   make all         build + check + lint
 
-.PHONY: all build check lint test
+.PHONY: all build check lint test security
 
 all: build check lint
 
@@ -28,3 +28,7 @@ lint:
 test:
 	python3 -m pytest tests/ --cov=src --cov-fail-under=50
 	npm test -- --coverage
+
+security:
+	bandit -r src/ -c pyproject.toml
+	pip-audit

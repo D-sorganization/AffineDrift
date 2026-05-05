@@ -13,10 +13,14 @@ Test categories:
 
 from __future__ import annotations
 
+import os
 from typing import Any
 
 import numpy as np
 import pytest
+
+# Force contract enforcement for testing
+os.environ["DBC_LEVEL"] = "enforce"
 
 from src.affine_control.ddp import (  # noqa: E402
     _resample_controls,

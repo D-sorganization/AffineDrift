@@ -1,13 +1,20 @@
 ---
 title: "Home"
-description: "Welcome to AffineDrift - AI-Assisted Golf Research"
+description: "AffineDrift - scientific notes on golf mechanics, modeling, and control"
 toc: false
 page-layout: full
 ---
 
 ```{=html}
-<!-- NOTE (issue #1461): Custom mobile menu removed; Quarto handles responsive navigation.
-     The home-sidebar below is desktop-only layout; on mobile, Quarto's navbar suffices. -->
+<!-- Mobile menu toggle for home-sidebar (Desktop-first layout) -->
+<button class="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+  <svg class="icon-menu" viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+  <svg class="icon-close" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+</button>
+<div class="sidebar-overlay"></div>
+
+<!-- NOTE (issue #1461): Custom mobile menu restored as secondary nav to support sidebar links on mobile.
+     Quarto handles primary top-level navigation; this toggle handles the Articles/Models sidebar. -->
 
 <div class="container">
   <div class="home-layout home-layout-3col">
@@ -25,14 +32,17 @@ page-layout: full
               <li><strong style="font-size: 0.85em; color: var(--text-light, #6b7280);">Textbooks</strong></li>
               <li><a href="articles/The_Physics_of_Golf/quarto/index.html">The Physics of Golf</a></li>
               <li><a href="articles/The_Geometry_of_Motion/quarto/index.html">The Geometry of Motion</a></li>
+              <li><a href="books/index.html">All Books and Textbooks</a></li>
               <li><strong style="font-size: 0.85em; color: var(--text-light, #6b7280); margin-top: 0.5rem; display: block;">Articles</strong></li>
-              <li><a href="resources/articles.html">Articles Home</a></li>
+              <li><a href="resources/articles.html">Article Index</a></li>
               <li><a href="pages/drifter-manifesto.html">Drifter Manifesto</a></li>
-              <li><a href="pages/tangent-hyperplanes.html">Tangent Hyperplanes</a></li>
+              <li><a href="pages/tangent-hyperplanes.html">Tangent-Space Series</a></li>
+              <li><a href="articles/tangent-hyperplane-contraction/index.html">Tangent Hyperplane Contraction</a></li>
               <li><a href="resources/research-reviews.html">Research Reviews</a></li>
               <li><a href="pages/book-reviews.html">Book Reviews</a></li>
               <li><a href="resources/bibliography.html">Bibliography</a></li>
-              <li><a href="pages/overview.html">Technical Overview</a></li>
+              <li><a href="critiques/index.html">Critiques &amp; Responses</a></li>
+              <li><a href="pages/overview.html">Overview</a></li>
             </ul>
           </div>
         </div>
@@ -45,7 +55,7 @@ page-layout: full
           <div id="models-section" class="sidebar-section-content">
             <ul class="resource-links">
               <li><a href="models/models.html">Golf Modeling Suite</a></li>
-              <li><a href="https://github.com/D-sorganization/Golf_Modeling_Suite" target="_blank" rel="noopener">GitHub Repository</a></li>
+              <li><a href="https://github.com/D-sorganization/UpstreamDrift" target="_blank" rel="noopener">UpstreamDrift Repository</a></li>
             </ul>
           </div>
         </div>
@@ -58,7 +68,7 @@ page-layout: full
           <div id="resources-section" class="sidebar-section-content">
             <ul class="resource-links">
               <li><a href="resources/resources-videos.html">Educational Videos</a></li>
-              <li><a href="resources/resources-books.html">Books</a></li>
+              <li><a href="resources/resources-books.html">Reference Books</a></li>
               <li><a href="resources/resources-papers.html">Research Papers</a></li>
               <li><a href="resources/resources-websites.html">Websites</a></li>
               <li><a href="resources/resources-datasets.html">Datasets</a></li>
@@ -87,26 +97,80 @@ page-layout: full
       <!-- Welcome Section -->
       <section id="welcome" class="welcome-section">
         <div class="welcome-header">
-          <h1>Welcome to AffineDrift</h1>
-          <p class="subtitle">AI-Assisted Golf Biomechanics Research</p>
+          <h1>AffineDrift</h1>
+          <p class="subtitle">Scientific Notes on Golf Mechanics, Modeling, and Control</p>
         </div>
 
         <div class="welcome-intro">
           <p>
-            AffineDrift applies control theory and multibody dynamics to the biomechanics of the golf swing. This site collects research notes, textbook chapters, and curated resources for researchers and engineers interested in the intersection of robotics, biomechanics, and sport science.
+            AffineDrift is a technical research portfolio on golf swing mechanics, multibody dynamics, and nonlinear control. It collects textbook-style chapters, source maps, reproducible model links, validation notes, and critique responses so that claims can be read with their assumptions and evidence in view.
           </p>
           <p>
-            The material is organized into two textbooks, a collection of standalone articles, and a curated resource library of external references.
+            The established material is the mathematics and mechanics literature behind the models. The AffineDrift contribution is the golf-specific application, synthesis, and review workflow: some pages are polished exposition, while others remain exploratory hypotheses or implementation notes.
           </p>
         </div>
       </section>
 
+      <!-- Technical Reviewer Path -->
+      <section id="reviewers" class="reviewer-section" style="margin-top: 2rem;">
+        <h2>For Technical Reviewers</h2>
+        <p>
+          Start with the clearest evidence path: the golf mechanics chapters, the control-affine derivation, the bibliography, the critique log, and the executable model entry points.
+        </p>
+        <div class="quick-links-grid">
+          <a href="articles/The_Physics_of_Golf/quarto/index.html" class="quick-link-card">
+            <span class="quick-link-icon"><i class="bi bi-book" aria-hidden="true"></i></span>
+            <span class="quick-link-text">Physics of Golf</span>
+          </a>
+          <a href="articles/theory-part1.html" class="quick-link-card">
+            <span class="quick-link-icon"><i class="bi bi-diagram-3" aria-hidden="true"></i></span>
+            <span class="quick-link-text">Theory Part 1</span>
+          </a>
+          <a href="resources/bibliography.html" class="quick-link-card">
+            <span class="quick-link-icon"><i class="bi bi-journals" aria-hidden="true"></i></span>
+            <span class="quick-link-text">Bibliography</span>
+          </a>
+          <a href="critiques/index.html" class="quick-link-card">
+            <span class="quick-link-icon"><i class="bi bi-chat-square-text" aria-hidden="true"></i></span>
+            <span class="quick-link-text">Critiques &amp; Responses</span>
+          </a>
+          <a href="models/models.html" class="quick-link-card">
+            <span class="quick-link-icon"><i class="bi bi-laptop" aria-hidden="true"></i></span>
+            <span class="quick-link-text">Model Entry Point</span>
+          </a>
+          <a href="https://github.com/D-sorganization/UpstreamDrift" class="quick-link-card" target="_blank" rel="noopener">
+            <span class="quick-link-icon"><i class="bi bi-github" aria-hidden="true"></i></span>
+            <span class="quick-link-text">UpstreamDrift</span>
+          </a>
+        </div>
+      </section>
 
+      <!-- Audience Segmentation -->
+      <section id="audiences" class="audience-section" style="margin-top: 2rem;">
+        <h2>How to Read AffineDrift</h2>
+        <div class="audience-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+          <div class="audience-card" style="padding: 1.5rem; background: var(--bg-secondary, #f8f9fa); border-radius: 8px; border-top: 4px solid var(--primary-color, #2563eb);">
+            <h3><i class="bi bi-person-badge"></i> For Practitioners</h3>
+            <p><strong>Focus:</strong> model assumptions, parameter definitions, and reproducible methods.</p>
+            <p>Coaches and analysts should treat golf-specific metrics as model outputs or hypotheses unless a page identifies a cited source or validation artifact.</p>
+          </div>
+          <div class="audience-card" style="padding: 1.5rem; background: var(--bg-secondary, #f8f9fa); border-radius: 8px; border-top: 4px solid #10b981;">
+            <h3><i class="bi bi-person"></i> For Laypersons</h3>
+            <p><strong>Focus:</strong> Intuitive explanations, motivated examples, plain English.</p>
+            <p>Plain-language sections translate technical arguments without removing the page-level caveats about model scope and evidence status.</p>
+          </div>
+          <div class="audience-card" style="padding: 1.5rem; background: var(--bg-secondary, #f8f9fa); border-radius: 8px; border-top: 4px solid #8b5cf6;">
+            <h3><i class="bi bi-calculator"></i> For Mathematicians</h3>
+            <p><strong>Focus:</strong> Precise definitions, complete derivations, consistent notation.</p>
+            <p>Use the textbooks and theory articles to inspect the control-affine framing, derivation choices, notation, and boundaries between standard results and AffineDrift synthesis.</p>
+          </div>
+        </div>
+      </section>
 
       <!-- Math Showcase -->
-      <section id="framework" class="math-section">
+      <section id="framework" class="math-section" style="margin-top: 3rem;">
         <h2>The Core Framework</h2>
-        <p>The golf swing can be modeled as a control-affine system:</p>
+        <p>Several pages model the golf swing as a control-affine system:</p>
         <div class="math-showcase">
           $$\dot{x} = f(x) + g(x)u$$
         </div>
@@ -118,21 +182,21 @@ page-layout: full
         </div>
       </section>
 
-      <!-- About the Approach Section -->
-      <section id="approach" class="approach-section">
-        <h2>AI-Assisted Research</h2>
+      <!-- Verification and Review Section -->
+      <section id="verification" class="approach-section" style="margin-top: 3rem;">
+        <h2>Verification and Review Workflow</h2>
         <div class="approach-content">
           <p>
-            This site uses AI-assisted content generation with iterative human review. Articles and topics are outlined by the author, then developed with AI assistance and refined through multiple review cycles. The emphasis is on producing verifiable mathematical expressions, reviewable code, and traceable source references rather than unconstrained text generation.
+            AffineDrift prioritizes artifacts that can be inspected: equations, citations, executable model links, validation reports, issue-linked review notes, and CI results. Syntax checks, tests, and repository inventories help catch mechanical errors, but they do not convert exploratory biomechanical interpretations into established results.
           </p>
           <p>
-            The methodology prioritizes verifiable outputs: mathematical expressions that can be validated, code that can be reviewed, and source references that can be traced independently.
+            Computational tools support drafting, refactoring, and repeatable checks. Scientific claims still have to be tied to stated assumptions, cited sources, model code, or explicit numerical experiments.
           </p>
           <p>
-            The review process employs specialized AI agents with distinct roles: editorial review for prose quality, curation for topic development, bibliography management for cross-linked references, and mathematical validation for equation verification.
+            Not every page is at the same editorial stage. Some pages are polished expositions, while others remain exploratory notes or literature-review scaffolds and should be read with the status notes on each page in mind.
           </p>
           <p>
-            The review process also includes critical evaluation. The edge cases and shortcomings of a given paradigm often reveal important boundary conditions and modeling limitations.
+            Critical review is part of the publication model. Limitations, objections, and unresolved evidence gaps are surfaced alongside the main articles in dedicated "Critics' Comments" sections, rather than hidden behind them.
           </p>
         </div>
       </section>
@@ -167,9 +231,9 @@ page-layout: full
         <h3 class="sidebar-heading">On This Page</h3>
         <ul class="toc-links">
           <li><a href="#welcome">Welcome</a></li>
-
+          <li><a href="#reviewers">For Reviewers</a></li>
           <li><a href="#framework">Core Framework</a></li>
-          <li><a href="#approach">AI-Assisted Research</a></li>
+          <li><a href="#verification">Verification</a></li>
           <li><a href="#quickstart">Quick Start</a></li>
         </ul>
       </div>

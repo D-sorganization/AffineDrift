@@ -2,9 +2,13 @@
   // MathJax Configuration - MUST be defined before loading MathJax
   window.MathJax = {
     loader: {
+      paths: {
+        a11y: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/a11y'
+      },
       // ⚡ Bolt Optimization: Lazy typesetting defers MathJax rendering until
       // equations enter the viewport, significantly improving initial page load time.
-      load: ['ui/lazy']
+      // 🎯 Accessibility: Load assistive-mml for screen reader support of mathematics
+      load: ['ui/lazy', '[a11y]/assistive-mml']
     },
     tex: {
       inlineMath: [['$', '$'], ['\\(', '\\)']],
@@ -18,7 +22,8 @@
     },
     options: {
       skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-      ignoreHtmlClass: 'tex2jax_ignore'
+      ignoreHtmlClass: 'tex2jax_ignore',
+      enableAssistiveMml: true  // Enable hidden MathML for screen readers
     },
     startup: {
       ready: function() {

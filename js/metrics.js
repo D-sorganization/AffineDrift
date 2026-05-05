@@ -10,11 +10,21 @@
   const STORAGE_KEY = "affinedrift_metrics";
   const SESSION_KEY = "affinedrift_session";
 
+  function parseStoredJson(storage, key, fallback) {
+    const raw = storage.getItem(key);
+    if (!raw) return fallback;
+    try {
+      return JSON.parse(raw);
+    } catch {
+      storage.removeItem(key);
+      return fallback;
+    }
+  }
+
   // Initialize metrics storage
   function getMetrics() {
     try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      return stored ? JSON.parse(stored) : initializeMetrics();
+      return parseStoredJson(localStorage, STORAGE_KEY, initializeMetrics());
     } catch {
       return initializeMetrics();
     }
@@ -157,111 +167,160 @@
     if (!container) return;
 
     const stats = getStatistics();
+    container.textContent = ''; // clear
 
-    const html = `
-      <div class="metrics-widget">
-        <h4 class="metrics-heading">Your Usage Statistics</h4>
+    const widget = document.createElement("div");
+    widget.className = "metrics-widget";
 
-        <div class="metrics-summary">
-          <div class="metric-card">
-            <span class="metric-value">${stats.summary.totalPageViews}</span>
-            <span class="metric-label">Page Views</span>
-          </div>
-          <div class="metric-card">
-            <span class="metric-value">${stats.summary.totalSearches}</span>
-            <span class="metric-label">Searches</span>
-          </div>
-          <div class="metric-card">
-            <span class="metric-value">${stats.summary.totalBibClicks}</span>
-            <span class="metric-label">References Viewed</span>
-          </div>
-          <div class="metric-card">
-            <span class="metric-value">${stats.summary.totalSessions}</span>
-            <span class="metric-label">Sessions</span>
-          </div>
-        </div>
+    const heading = document.createElement("h4");
+    heading.className = "metrics-heading";
+    heading.textContent = "Your Usage Statistics";
+    widget.appendChild(heading);
 
-        ${
-          stats.topSearches.length > 0
-            ? `
-          <div class="metrics-section">
-            <h5>Your Top Searches</h5>
-            <div class="metrics-list">
-              ${stats.topSearches
-                .map(
-                  ([term, count]) => `
-                <div class="metrics-item">
-                  <span class="item-name">${escapeHtml(term)}</span>
-                  <span class="item-count">${count}</span>
-                </div>
-              `,
-                )
-                .join("")}
-            </div>
-          </div>
-        `
-            : ""
-        }
+    const summaryDiv = document.createElement("div");
+    summaryDiv.className = "metrics-summary";
 
-        ${
-          stats.topEntries.length > 0
-            ? `
-          <div class="metrics-section">
-            <h5>Most Viewed References</h5>
-            <div class="metrics-list">
-              ${stats.topEntries
-                .map(
-                  (entry) => `
-                <div class="metrics-item">
-                  <span class="item-name" title="${escapeHtml(
-                    entry.title,
-                  )}">${escapeHtml(truncate(entry.title, 40))}</span>
-                  <span class="item-count">${entry.count}</span>
-                </div>
-              `,
-                )
-                .join("")}
-            </div>
-          </div>
-        `
-            : ""
-        }
+    const metricsMap = [
+      { value: stats.summary.totalPageViews, label: "Page Views" },
+      { value: stats.summary.totalSearches, label: "Searches" },
+      { value: stats.summary.totalBibClicks, label: "References Viewed" },
+      { value: stats.summary.totalSessions, label: "Sessions" }
+    ];
 
-        ${
-          stats.topConcepts.length > 0
-            ? `
-          <div class="metrics-section">
-            <h5>Popular Concepts</h5>
-            <div class="concept-cloud">
-              ${stats.topConcepts
-                .map(
-                  ([concept, count]) => `
-                <span class="concept-tag" style="font-size: ${Math.min(
-                  1 + count * 0.1,
-                  1.5,
-                )}rem">${escapeHtml(concept)}</span>
-              `,
-                )
-                .join("")}
-            </div>
-          </div>
-        `
-            : ""
-        }
+    for (const item of metricsMap) {
+      const card = document.createElement("div");
+      card.className = "metric-card";
 
-        <div class="metrics-footer">
-          <small>Data stored locally in your browser. <button type="button" class="clear-btn" data-action="clear-metrics">Clear data</button></small>
-        </div>
-      </div>
-    `;
+      const valSpan = document.createElement("span");
+      valSpan.className = "metric-value";
+      valSpan.textContent = item.value;
+      card.appendChild(valSpan);
 
-    container.innerHTML = html;
-    const clearButton = container.querySelector(
-      '[data-action="clear-metrics"]',
-    );
-    if (clearButton) {
-      clearButton.addEventListener("click", clearData);
+      // Add a space between value and label
+      card.appendChild(document.createTextNode(" "));
+
+      const labelSpan = document.createElement("span");
+      labelSpan.className = "metric-label";
+      labelSpan.textContent = item.label;
+      card.appendChild(labelSpan);
+
+      summaryDiv.appendChild(card);
     }
+
+    widget.appendChild(summaryDiv);
+
+    if (stats.topSearches.length > 0) {
+      const section = document.createElement("div");
+      section.className = "metrics-section";
+
+      const h5 = document.createElement("h5");
+      h5.textContent = "Your Top Searches";
+      section.appendChild(h5);
+
+      const listDiv = document.createElement("div");
+      listDiv.className = "metrics-list";
+
+      for (const [term, count] of stats.topSearches) {
+        const itemDiv = document.createElement("div");
+        itemDiv.className = "metrics-item";
+
+        const nameSpan = document.createElement("span");
+        nameSpan.className = "item-name";
+        nameSpan.textContent = term;
+        itemDiv.appendChild(nameSpan);
+
+        // Add a space between value and label
+        itemDiv.appendChild(document.createTextNode(" "));
+
+        const countSpan = document.createElement("span");
+        countSpan.className = "item-count";
+        countSpan.textContent = count;
+        itemDiv.appendChild(countSpan);
+
+        listDiv.appendChild(itemDiv);
+      }
+
+      section.appendChild(listDiv);
+      widget.appendChild(section);
+    }
+
+    if (stats.topEntries.length > 0) {
+      const section = document.createElement("div");
+      section.className = "metrics-section";
+
+      const h5 = document.createElement("h5");
+      h5.textContent = "Most Viewed References";
+      section.appendChild(h5);
+
+      const listDiv = document.createElement("div");
+      listDiv.className = "metrics-list";
+
+      for (const entry of stats.topEntries) {
+        const itemDiv = document.createElement("div");
+        itemDiv.className = "metrics-item";
+
+        const nameSpan = document.createElement("span");
+        nameSpan.className = "item-name";
+        nameSpan.title = entry.title;
+        nameSpan.textContent = truncate(entry.title, 40);
+        itemDiv.appendChild(nameSpan);
+
+        // Add a space between value and label
+        itemDiv.appendChild(document.createTextNode(" "));
+
+        const countSpan = document.createElement("span");
+        countSpan.className = "item-count";
+        countSpan.textContent = entry.count;
+        itemDiv.appendChild(countSpan);
+
+        listDiv.appendChild(itemDiv);
+      }
+
+      section.appendChild(listDiv);
+      widget.appendChild(section);
+    }
+
+    if (stats.topConcepts.length > 0) {
+      const section = document.createElement("div");
+      section.className = "metrics-section";
+
+      const h5 = document.createElement("h5");
+      h5.textContent = "Popular Concepts";
+      section.appendChild(h5);
+
+      const cloudDiv = document.createElement("div");
+      cloudDiv.className = "concept-cloud";
+
+      for (const [concept, count] of stats.topConcepts) {
+        const tagSpan = document.createElement("span");
+        tagSpan.className = "concept-tag";
+        tagSpan.style.fontSize = Math.min(1 + count * 0.1, 1.5) + "rem";
+        tagSpan.textContent = concept;
+        cloudDiv.appendChild(tagSpan);
+      }
+
+      section.appendChild(cloudDiv);
+      widget.appendChild(section);
+    }
+
+    const footer = document.createElement("div");
+    footer.className = "metrics-footer";
+
+    const small = document.createElement("small");
+    small.textContent = "Data stored locally in your browser. ";
+
+    const clearButton = document.createElement("button");
+    clearButton.type = "button";
+    clearButton.className = "clear-btn";
+    clearButton.setAttribute("data-action", "clear-metrics");
+    clearButton.textContent = "Clear data";
+    clearButton.addEventListener("click", clearData);
+
+    small.appendChild(clearButton);
+    footer.appendChild(small);
+    widget.appendChild(footer);
+
+    container.appendChild(widget);
   }
 
   // Helper functions

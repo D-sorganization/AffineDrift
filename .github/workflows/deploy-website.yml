@@ -16,7 +16,7 @@ permissions:
   id-token: write
 
 jobs:
-  # ── Dispatcher: try self-hosted first, fall back to cloud ──────────────────
+  # ── Dispatcher: require a local self-hosted runner and fail closed ──────────────────
   pick-runner:
     runs-on: d-sorg-fleet
     timeout-minutes: 2
@@ -28,35 +28,41 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.RUNNER_CHECK_TOKEN }}
         run: |
-          ONLINE=$(gh api /orgs/${{ github.repository_owner }}/actions/runners \
-            --jq '[.runners[] | select(.status == "online") | select(.labels[].name == "d-sorg-fleet")] | length' \
-            2>/dev/null || echo "0")
+          ONLINE=$(gh api /orgs/${{ github.repository_owner }}/actions/runners --paginate \
+              --jq 'if .runners then [.runners[] | select(.status == "online") | select(.labels[].name == "d-sorg-fleet")] | length else 0 end' \
+              2>/dev/null || echo "0")
           if [[ "$ONLINE" -gt 0 ]]; then
-            echo "runner=d-sorg-fleet" >> $GITHUB_OUTPUT
+            mkdir -p "$(dirname "$GITHUB_OUTPUT")"
+            echo "runner=d-sorg-fleet" >> "$GITHUB_OUTPUT"
             echo "Self-hosted runner online - routing locally"
           else
-            echo "runner=ubuntu-latest" >> $GITHUB_OUTPUT
-            echo "No self-hosted runner - using GitHub-hosted"
+            echo "::error::No local self-hosted runner available; failing closed"
+            exit 1
           fi
 
   build:
     if: github.repository == 'D-sorganization/AffineDrift'
-    runs-on: self-hosted
+    runs-on: d-sorg-fleet
     needs: pick-runner
     env:
       PYTHONPATH: .
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Set up Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
         with:
           python-version: "3.12"
           cache: "pip"
 
       - name: Install Python dependencies
-        run: pip install -r requirements.txt
+        run: |
+          python -m venv "$RUNNER_TEMP/deploy-venv"
+          source "$RUNNER_TEMP/deploy-venv/bin/activate"
+          python -m pip install --upgrade pip setuptools
+          python -m pip install -r requirements.txt
+          echo "$RUNNER_TEMP/deploy-venv/bin" >> "$GITHUB_PATH"
 
       - name: Verify Quarto Render Coverage
         run: python3 scripts/check_quarto_render_coverage.py
@@ -116,10 +122,10 @@ jobs:
         run: python3 -m src.tools.check_site_health --fail-on broken
 
       - name: Setup Pages
-        uses: actions/configure-pages@v6
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
         with:
           path: docs
 
@@ -128,12 +134,12 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: self-hosted
+    runs-on: d-sorg-fleet
     needs: build
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v5
+        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5
 
       - name: Verify Deployment
         run: |

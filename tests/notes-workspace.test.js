@@ -40,6 +40,26 @@ describe("Notes Workspace", () => {
     expect(store.loadActive().content).toBe("");
   });
 
+  test("corrupt active notes are discarded during recovery", () => {
+    localStorage.setItem(STORAGE_KEYS.active, "{not-json");
+    const store = new NotesWorkspaceStore(localStorage);
+
+    expect(store.loadActive().content).toBe("");
+    expect(localStorage.getItem(STORAGE_KEYS.active)).toBeNull();
+  });
+
+  test("expired recycle bin notes are removed", () => {
+    const oldDate = new Date(Date.now() - 31 * 24 * 60 * 60 * 1000).toISOString();
+    localStorage.setItem(
+      STORAGE_KEYS.recycleBin,
+      JSON.stringify({ content: "Old note", deletedAt: oldDate }),
+    );
+    const store = new NotesWorkspaceStore(localStorage);
+
+    expect(store.loadRecycleBin().content).toBe("");
+    expect(localStorage.getItem(STORAGE_KEYS.recycleBin)).toBeNull();
+  });
+
   test("delete to recycle bin and restore", () => {
     const store = new NotesWorkspaceStore(localStorage);
     store.saveActive("Important note");

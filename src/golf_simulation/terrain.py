@@ -118,6 +118,19 @@ def _apply_surface_friction(
     return tangential_velocity * (reduced_speed / tangential_speed)
 
 
+# Backward-compatible private aliases retained for refactor-contract tests.
+_resolve_surface_normal = _normalized_surface_normal
+
+
+def _apply_friction_to_tangential(
+    tangential_velocity: np.ndarray[Any, Any],
+    v_normal_mag: float,
+    friction: float,
+) -> np.ndarray[Any, Any]:
+    """Backward-compatible wrapper for tangential friction application."""
+    return _apply_surface_friction(tangential_velocity, v_normal_mag, friction)
+
+
 def compute_bounce(
     velocity: np.ndarray[Any, Any],
     spin: np.ndarray[Any, Any],
