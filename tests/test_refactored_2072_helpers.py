@@ -13,7 +13,7 @@ from unittest.mock import MagicMock
 import numpy as np
 import pytest
 
-from src.affine_control.residuals import ResidualMonitor, _build_hessian_tensor
+from src.affine_control.residuals import ResidualMonitor, _assemble_hessian_tensor
 from src.golf_simulation.ball_flight import BallFlightDynamics
 from src.golf_simulation.course import (
     _CHAMPIONSHIP_HANDICAPS,
@@ -38,11 +38,11 @@ from src.tools.wrist_universal_joint.torque_calculator import (
 )
 
 # ─────────────────────────────────────────────────────────────────────────────
-# residuals._build_hessian_tensor
+# residuals._assemble_hessian_tensor
 # ─────────────────────────────────────────────────────────────────────────────
 
 
-class TestBuildHessianTensor:
+class TestAssembleHessianTensor:
     def test_shape(self):
         """Hessian tensor has shape (output_dim, n, n)."""
 
@@ -51,7 +51,7 @@ class TestBuildHessianTensor:
 
         x = np.array([1.0, 2.0])
         u = np.array([0.0])
-        H = _build_hessian_tensor(f, x, u, epsilon=1e-4)
+        H = _assemble_hessian_tensor(f, x, u, epsilon=1e-4)
         assert H.shape == (2, 2, 2)
 
     def test_quadratic_diagonal(self):
@@ -62,7 +62,7 @@ class TestBuildHessianTensor:
 
         x = np.array([1.0])
         u = np.array([0.0])
-        H = _build_hessian_tensor(f, x, u, epsilon=1e-4)
+        H = _assemble_hessian_tensor(f, x, u, epsilon=1e-4)
         assert abs(H[0, 0, 0] - 2.0) < 0.01
 
     def test_linear_function_near_zero_hessian(self):
@@ -73,7 +73,7 @@ class TestBuildHessianTensor:
 
         x = np.array([1.0, 0.5])
         u = np.array([0.0])
-        H = _build_hessian_tensor(f, x, u, epsilon=1e-4)
+        H = _assemble_hessian_tensor(f, x, u, epsilon=1e-4)
         assert np.max(np.abs(H)) < 1e-6
 
 
