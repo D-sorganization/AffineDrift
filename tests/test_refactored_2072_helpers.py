@@ -13,8 +13,7 @@ from unittest.mock import MagicMock
 import numpy as np
 import pytest
 
-from src.affine_control.residuals import ResidualMonitor
-from src.affine_control.residuals import _assemble_hessian_tensor as _build_hessian_tensor
+from src.affine_control.residuals import ResidualMonitor, _build_hessian_tensor
 from src.golf_simulation.ball_flight import BallFlightDynamics
 from src.golf_simulation.course import (
     _CHAMPIONSHIP_HANDICAPS,

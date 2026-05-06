@@ -1826,12 +1826,14 @@ function initAriaLabels() {
   labelCardsFromHeading(articleCards, 'Article');
 
   // Add ARIA live region for dynamic content
-  // Fallback to querySelectorAll here because id selection is a complex pattern
-  const historyLists = document.querySelectorAll('[id$="-history-list"]');
-  for (const list of historyLists) {
-    if (!list.hasAttribute('aria-live')) {
-      list.setAttribute('aria-live', 'polite');
-      list.setAttribute('aria-atomic', 'false');
+  // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) live collection) and manual filtering instead of querySelectorAll (O(N))
+  const uls = document.getElementsByTagName("ul");
+  for (const list of uls) {
+    if (list.id && list.id.endsWith("-history-list")) {
+      if (!list.hasAttribute("aria-live")) {
+        list.setAttribute("aria-live", "polite");
+        list.setAttribute("aria-atomic", "false");
+      }
     }
   }
 }

@@ -73,16 +73,19 @@ Key paths:
 
 ```text
 AffineDrift/
-├── index.qmd
-├── _quarto.yml
-├── articles/
-├── books/
-├── critiques/
-├── models/
-├── resources/
-├── docs/
-├── tests/
-└── .github/workflows/
+├── index.qmd           # Main homepage (Quarto markdown)
+├── _quarto.yml         # Quarto configuration
+├── styles.css          # Custom styling
+├── js/                # JavaScript ES6 modules (main.js entry point)
+├── docs/               # Additional documentation
+│   └── assessments/    # Quality assessments
+├── tests/              # Python tests
+├── .github/
+│   └── workflows/      # CI/CD pipelines
+│       ├── ci-standard.yml      # Core quality gates and tests
+│       ├── deploy-website.yml   # GitHub Pages deployment
+│       └── quarto-syntax-check.yml # Quarto syntax validation
+└── *.qmd               # Content pages (Quarto markdown)
 ```
 
 ## Documentation
