@@ -33,7 +33,7 @@ import pytest
             "script.js",
         ),
         (
-            "articles/Tangent Hyperplane Articles/Advanced/Contraction_Tangent_Unification.html",
+            "articles/tangent-hyperplane-articles/Advanced/Contraction_Tangent_Unification.html",
             "script.js",
         ),
     ],
