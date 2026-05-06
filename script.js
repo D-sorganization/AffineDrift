@@ -229,14 +229,14 @@ runOnDomReady(function () {
       }
     }, observerOptions);
 
-    const sectionsToAnimate = document.querySelectorAll(
-      "section:not(.page-header):not(.article-section)",
-    );
+    // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) live collection) instead of querySelectorAll (O(N))
+    const allSections = document.getElementsByTagName("section");
     const animationStates = [];
 
     // ⚡ Bolt Optimization: Batch DOM reads to prevent layout thrashing
     // Phase 1: Read (getBoundingClientRect)
-    for (const section of sectionsToAnimate) {
+    for (const section of allSections) {
+      if (section.classList.contains("page-header") || section.classList.contains("article-section")) continue;
       const rect = section.getBoundingClientRect();
       animationStates.push({
         section,

@@ -84,3 +84,7 @@
 ## 2026-05-04 - QuerySelector Attribute Selector vs Live Collection Filtering
 **Learning:** `document.querySelectorAll('[id$="-history-list"]')` performs a full DOM scan and parses a complex attribute substring selector which is notoriously slow in V8 when DOM nodes are plentiful. Using `document.getElementsByTagName('ul')` returns an O(1) live collection almost instantly, and manually checking `.endsWith("-history-list")` avoids the CSS engine overhead entirely.
 **Action:** Replace `querySelectorAll` with attribute suffix matching (`[id$="..."]`) by fetching the tags via `getElementsByTagName` and manually performing JavaScript string filtering like `element.id.endsWith("...")`.
+
+## 2026-05-06 - querySelectorAll with :not() vs getElementsByTagName
+**Learning:** Complex CSS selectors using `:not()` pseudo-classes (e.g., `querySelectorAll("section:not(.page-header):not(.article-section)")`) require the browser's CSS selector engine to perform a full DOM scan and evaluate multiple rule exclusions on every node. Retrieving all sections via the O(1) live collection `getElementsByTagName("section")` and filtering excluded classes directly in JavaScript using `element.classList.contains` is significantly faster, reducing initialization overhead and main-thread blocking.
+**Action:** When filtering out elements based on classes while querying by tag, prefer using `getElementsByTagName` combined with manual JavaScript `classList` filtering over complex `:not()` CSS selectors.
