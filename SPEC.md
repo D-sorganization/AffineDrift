@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-05-05T16:30:00Z
+Last-Updated: 2026-05-06T16:45:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,8 +29,8 @@ Last-Updated: 2026-05-05T16:30:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.8                                            |
-| **Spec Version**        | 1.0.69                                           |
-| **Last Spec Update**    | 2026-05-05                                       |
+| **Spec Version**        | 1.0.70                                           |
+| **Last Spec Update**    | 2026-05-06                                       |
 
 ## 2. Purpose & Mission
 
@@ -589,3 +589,4 @@ python src/tools/code_quality_ast.py
 | 2026-04-17 | 1.0.67  | ui(accessibility): Added rotation transform `aria-expanded="true"` for `.toggle-icon` inside `.sidebar-section-toggle` in `styles.css` to properly sync the visual state with the semantic state of collapsible sidebars. |
 | 2026-04-18 | 1.0.68  | fix(security): Prevent DOM-based XSS in PDF export by escaping pageTitle before injecting via innerHTML. |
 | 2026-05-05 | 1.0.69  | security(xss): Fixed CRITICAL client-side code injection vulnerability in polynomial signal generator (`WristPolynomialEvaluator`) by replacing unsafe `new Function` evaluation with a custom AST-based parser and evaluator. The vulnerability could allow arbitrary JavaScript execution when processing malicious mathematical expressions. Verified against test cases including `1; alert(1)` and confirmed correct parsing of valid expressions with mathematical functions and scientific notation. |
+| 2026-05-06 | 1.0.70  | perf(frontend): Reduced legacy section-animation startup overhead in `script.js` by replacing the `section:not(...)` selector scan with `getElementsByTagName("section")` plus class filtering, and aligned article/test fixtures with the current tangent-hyperplane article path and canonical-definition formatting. |
