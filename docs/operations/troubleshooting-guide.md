@@ -29,12 +29,12 @@ See [Playbook PB-002](incident-response-playbooks.md#pb-002-runner-outage).
 
 ### `Raw git merge conflict markers found!`
 
-**Cause:** A file containing `<<<<<<< HEAD` was committed.
+**Cause:** A file containing a git conflict marker (seven `<` followed by ` HEAD`) was committed.
 
 **Resolution:**
 ```bash
-# Find the conflicted file
-grep -rn "<<<<<<< HEAD" . --exclude-dir=.git
+# Find the conflicted file (replace X's with actual angle brackets in practice)
+grep -rn "XXXXXXX HEAD" . --exclude-dir=.git  # replace X with <
 
 # Resolve the conflict manually, then:
 git add <file>
