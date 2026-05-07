@@ -509,9 +509,11 @@ runOnDomReady(function () {
 
   // 🎨 Palette UX: Add Permalink Anchors
   function initAnchorLinks() {
-    const headings = document.querySelectorAll(
-      ".main-content-area h2, .main-content-area h3",
-    );
+    const mainArea = document.querySelector(".main-content-area");
+    if (!mainArea) return;
+    const h2s = mainArea.getElementsByTagName("h2");
+    const h3s = mainArea.getElementsByTagName("h3");
+    const headings = [...h2s, ...h3s];
 
     // ⚡ Bolt Optimization: Use empty set and check DOM on demand
     // Removing the full DOM scan (querySelectorAll("[id]")) improves performance

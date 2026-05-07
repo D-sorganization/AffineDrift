@@ -88,3 +88,7 @@
 ## 2026-05-06 - querySelectorAll with :not() vs getElementsByTagName
 **Learning:** Complex CSS selectors using `:not()` pseudo-classes (e.g., `querySelectorAll("section:not(.page-header):not(.article-section)")`) require the browser's CSS selector engine to perform a full DOM scan and evaluate multiple rule exclusions on every node. Retrieving all sections via the O(1) live collection `getElementsByTagName("section")` and filtering excluded classes directly in JavaScript using `element.classList.contains` is significantly faster, reducing initialization overhead and main-thread blocking.
 **Action:** When filtering out elements based on classes while querying by tag, prefer using `getElementsByTagName` combined with manual JavaScript `classList` filtering over complex `:not()` CSS selectors.
+
+## 2026-05-08 - Fast Heading Lookups
+**Learning:** Replaced querySelectorAll('.main-content-area h2, h3') with targeted getElementsByTagName to avoid scanning the entire DOM for anchor links.
+**Action:** Use getElementsByTagName combined with array spreading for high-performance localized queries.
