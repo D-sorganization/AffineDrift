@@ -29,7 +29,7 @@ Last-Updated: 2026-05-07T08:32:01Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.8                                            |
-| **Spec Version**        | 1.0.100                                          |
+| **Spec Version**        | 1.0.101                                          |
 | **Last Spec Update**    | 2026-05-07                                       |
 
 ## 2. Purpose & Mission
@@ -591,3 +591,4 @@ python src/tools/code_quality_ast.py
 | 2026-04-18 | 1.0.68  | fix(security): Prevent DOM-based XSS in PDF export by escaping pageTitle before injecting via innerHTML. |
 | 2026-05-05 | 1.0.69  | security(xss): Fixed CRITICAL client-side code injection vulnerability in polynomial signal generator (`WristPolynomialEvaluator`) by replacing unsafe `new Function` evaluation with a custom AST-based parser and evaluator. The vulnerability could allow arbitrary JavaScript execution when processing malicious mathematical expressions. Verified against test cases including `1; alert(1)` and confirmed correct parsing of valid expressions with mathematical functions and scientific notation. |
 | 2026-05-06 | 1.0.70  | perf(frontend): Replaced the animated-section `querySelectorAll(...:not(...))` scan in `script.js` with live `<section>` collection filtering, preserved the zero-torque canonical definition note with compliant markdown in `affine-nature-golf-swing.qmd`, and aligned tangent-article regression tests with the lowercase article path plus the renamed residual Hessian helper. |
+| 2026-05-07 | 1.0.101 | ci(workflows): pin the redundant Jules issue/PR closer workflows to immutable `create-github-app-token`, `checkout`, and `setup-python` SHAs so workflow pinning passes on PR branches and `main`. |
