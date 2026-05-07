@@ -45,7 +45,9 @@ IGNORE_DIRS = {
 # Each entry: (pattern, severity, description, exception_marker)
 SECURITY_PATTERNS: list[tuple[re.Pattern[str], str, str, str | None]] = [
     (
-        re.compile(r"(?<![.\w])\bsubprocess\.(run|call|Popen|check_output|check_call)\b.*shell\s*=\s*True"),
+        re.compile(
+            r"(?<![.\w])\bsubprocess\.(run|call|Popen|check_output|check_call)\b.*shell\s*=\s*True"
+        ),
         "HIGH",
         "shell=True in subprocess call — command injection risk if args contain user input",
         "# nosec",
@@ -111,7 +113,6 @@ EXEMPTIONS: dict[str, list[str]] = {
 }
 
 
-
 def find_python_files(scan_dirs: list[str]) -> list[Path]:
     """Find all Python files in scan directories, excluding ignored dirs."""
     files: list[Path] = []
@@ -137,9 +138,7 @@ def is_exempt(file_path: Path, description: str) -> bool:
     return False
 
 
-def _check_security_patterns(
-    file_path: Path, line_num: int, line: str
-) -> list[dict[str, str]]:
+def _check_security_patterns(file_path: Path, line_num: int, line: str) -> list[dict[str, str]]:
     """Check a single line for security anti-patterns."""
     findings: list[dict[str, str]] = []
     for pattern, severity, description, exception_marker in SECURITY_PATTERNS:
@@ -214,7 +213,6 @@ def audit_file(file_path: Path) -> list[dict[str, str]]:
         findings.extend(_check_credential_patterns(file_path, line_num, line, stripped))
 
     return findings
-
 
 
 def main() -> int:

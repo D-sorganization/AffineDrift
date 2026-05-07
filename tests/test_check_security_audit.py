@@ -29,33 +29,27 @@ class TestSecurityPatternDetection:
         return _check_security_patterns(path, 1, line)
 
     def test_shell_true_detected(self) -> None:
-        findings = self._check_line(
-            'subprocess.run(["ls"], shell=True)', "test_module.py"
-        )
+        findings = self._check_line('subprocess.run(["ls"], shell=True)', "test_module.py")
         assert len(findings) == 1
         assert findings[0]["severity"] == "HIGH"
         assert "shell=True" in findings[0]["description"]
 
     def test_shell_false_not_detected(self) -> None:
-        findings = self._check_line(
-            'subprocess.run(["ls"], shell=False)', "test_module.py"
-        )
+        findings = self._check_line('subprocess.run(["ls"], shell=False)', "test_module.py")
         assert findings == []
 
     def test_eval_builtin_detected(self) -> None:
-        findings = self._check_line('result = eval(user_input)', "test_module.py")
+        findings = self._check_line("result = eval(user_input)", "test_module.py")
         assert len(findings) == 1
         assert "eval()" in findings[0]["description"]
 
     def test_method_eval_not_detected(self) -> None:
         """evaluator.eval() is a method call, not Python built-in eval()."""
-        findings = self._check_line(
-            'result = evaluator.eval(expression)', "test_module.py"
-        )
+        findings = self._check_line("result = evaluator.eval(expression)", "test_module.py")
         assert findings == []
 
     def test_exec_builtin_detected(self) -> None:
-        findings = self._check_line('exec(code_string)', "test_module.py")
+        findings = self._check_line("exec(code_string)", "test_module.py")
         assert len(findings) == 1
         assert "exec()" in findings[0]["description"]
 
@@ -65,16 +59,12 @@ class TestSecurityPatternDetection:
         assert _check_security_patterns(Path("qt_window.py"), 1, "dialog.exec()") == []
 
     def test_ssl_verify_false_detected(self) -> None:
-        findings = self._check_line(
-            'requests.get(url, verify=False)', "test_module.py"
-        )
+        findings = self._check_line("requests.get(url, verify=False)", "test_module.py")
         assert len(findings) == 1
         assert "SSL" in findings[0]["description"]
 
     def test_nosec_suppresses_finding(self) -> None:
-        findings = self._check_line(
-            'subprocess.run(cmd, shell=True)  # nosec', "test_module.py"
-        )
+        findings = self._check_line("subprocess.run(cmd, shell=True)  # nosec", "test_module.py")
         assert findings == []
 
     def test_os_system_detected(self) -> None:
@@ -83,7 +73,7 @@ class TestSecurityPatternDetection:
         assert findings[0]["severity"] == "MEDIUM"
 
     def test_pickle_load_detected(self) -> None:
-        findings = self._check_line('data = pickle.load(f)', "test_module.py")
+        findings = self._check_line("data = pickle.load(f)", "test_module.py")
         assert len(findings) == 1
         assert findings[0]["severity"] == "MEDIUM"
 
@@ -102,9 +92,7 @@ class TestSecurityPatternDetection:
 class TestCredentialPatternDetection:
     """Tests for hardcoded credential detection."""
 
-    def _check_cred_line(
-        self, line: str, file_name: str = "module.py"
-    ) -> list[dict]:
+    def _check_cred_line(self, line: str, file_name: str = "module.py") -> list[dict]:
         stripped = line.strip()
         return _check_credential_patterns(Path(file_name), 1, line, stripped)
 
@@ -125,9 +113,7 @@ class TestCredentialPatternDetection:
 
     def test_test_files_skipped(self) -> None:
         """Credential patterns should not be checked in test files."""
-        findings = self._check_cred_line(
-            'password = "test_password"', file_name="test_auth.py"
-        )
+        findings = self._check_cred_line('password = "test_password"', file_name="test_auth.py")
         assert findings == []
 
     def test_comment_line_not_flagged(self) -> None:
@@ -160,10 +146,7 @@ class TestAuditIntegration:
 
     def test_clean_file_passes(self, tmp_path: Path) -> None:
         f = tmp_path / "clean.py"
-        f.write_text(
-            "import subprocess\n"
-            'result = subprocess.run(["ls"], capture_output=True)\n'
-        )
+        f.write_text("import subprocess\n" 'result = subprocess.run(["ls"], capture_output=True)\n')
         findings = audit_file(f)
         assert findings == []
 
