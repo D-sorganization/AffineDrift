@@ -88,7 +88,7 @@ Three special cases are worth committing to memory:
 - **Pure translation** ($\hat{\bm{\omega}} = \bm{0}$): $e^{[\hat{\bm{\omega}}]\theta} = I$ and $G = I \theta$, so the transform is simply $T = \bigl[\, I \;|\; \bm{v}\theta \,\bigr]$.
 - **Pure screw with finite pitch $h$**: $\bm{v} = -\hat{\bm{\omega}} \times \bm{q} + h\hat{\bm{\omega}}$ for some point $\bm{q}$ on the screw axis. The body rotates by $\theta$ about the axis while sliding by $h\theta$ along it.
 
-See Murray, Li, & Sastry (1994) §2.3 and Lynch & Park [@Lynch2017ModernRobotics] §3.3 for derivations.
+See Murray, Li, & Sastry (1994) §2.3 and Lynch & Park [@Lynch2017] §3.3 for derivations.
 
 
 ## The Matrix Logarithm
@@ -151,7 +151,7 @@ def matrix_log_SO3(R, eps=1e-8):
     return omega_hat * theta
 ```
 
-This routine round-trips with Rodrigues' formula to machine precision on a test suite of angles including $0$, $\pi/6$, $\pi/2$, and $\pi - \varepsilon$. References: Shoemake 1985 for numerical stability at $\theta \approx \pi$; Park & Lynch [@Lynch2017ModernRobotics] §3.3 for the generic branch.
+This routine round-trips with Rodrigues' formula to machine precision on a test suite of angles including $0$, $\pi/6$, $\pi/2$, and $\pi - \varepsilon$. References: Shoemake 1985 for numerical stability at $\theta \approx \pi$; Park & Lynch [@Lynch2017] §3.3 for the generic branch.
 
 
 ## Non-Commutativity and the BCH Formula
