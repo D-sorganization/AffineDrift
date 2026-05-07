@@ -27,6 +27,7 @@ from .constants import (
 )
 from .qt_canvases import DiagramCanvas, PlotCanvas
 from .qt_widgets import WheelIgnoringLineEdit, WheelIgnoringSlider
+from ....shared.python.qt_utils.wheel_event_filter import suppress_wheel_on_widgets
 
 _SLIDER_WIDTH = 300
 _TEXTBOX_WIDTH = 80
@@ -280,6 +281,7 @@ def _build_signal_group(window: Any, main_layout: QVBoxLayout) -> None:
     signal_type_label.setStyleSheet("font-size: 11pt; font-weight: bold;")
     noise_layout.addWidget(signal_type_label)
     window.noise_type_combo = QComboBox()
+    suppress_wheel_on_widgets(window.noise_type_combo)
     window.noise_type_combo.addItems(
         [
             "Golf-like Random",
@@ -331,6 +333,7 @@ def _build_plot_controls_group(window: Any, main_layout: QVBoxLayout) -> None:
     plot_type_label.setStyleSheet("font-size: 11pt; font-weight: bold;")
     plot_control_layout.addWidget(plot_type_label)
     window.plot_type_combo = QComboBox()
+    suppress_wheel_on_widgets(window.plot_type_combo)
     window.plot_type_combo.addItems(
         ["Torque", "Angular Acceleration", "Transmission Ratio vs Wrist Angle"]
     )
