@@ -20,7 +20,7 @@ def test_find_unpinned_actions_allows_local_and_docker_refs(tmp_path):
     workflow_dir = tmp_path / ".github" / "workflows"
     workflow_dir.mkdir(parents=True)
     (workflow_dir / "ci.yml").write_text(
-        "steps:\n" "  - uses: ./actions/local\n" "  - uses: docker://alpine:3.20\n",
+        "steps:\n  - uses: ./actions/local\n  - uses: docker://alpine:3.20\n",
         encoding="utf-8",
     )
 

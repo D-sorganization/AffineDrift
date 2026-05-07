@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-05-06T17:35:00Z
+Last-Updated: 2026-05-07T08:32:01Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,8 +29,8 @@ Last-Updated: 2026-05-06T17:35:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.8                                            |
-| **Spec Version**        | 1.0.70                                           |
-| **Last Spec Update**    | 2026-05-06                                       |
+| **Spec Version**        | 1.0.100                                          |
+| **Last Spec Update**    | 2026-05-07                                       |
 
 ## 2. Purpose & Mission
 
@@ -487,6 +487,7 @@ python src/tools/code_quality_ast.py
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | ---------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-05-07 | 1.0.100 | fix(ci): normalized the PR 3062 touched regression tests to the repository's required Black 100-column formatting and recorded the no-behavior-change test-maintenance update so SPEC freshness tracks the branch's quality-gate-only edits.                                                                                                                                                                                                                                                                                                                                           |
 | 2026-05-03 | 1.0.99  | fix(ci): hardened production-readiness gates by making mypy and HTML validation blocking, pinning workflow actions to immutable SHAs with a CI policy check, removing tracked generated agent automation artifacts, blocking those artifacts from returning, and tightening the site CSP by removing `unsafe-eval`.                                                                                                                                                                                                                                                                             |
 | 2026-04-23 | 1.0.78  | fix(content): corrected Quarto cross-reference syntax in `articles/affine-nature-golf-swing.qmd` and `articles/inverse-dynamics.qmd`, replacing undefined appendix/equation citation keys with native section/equation refs, moving equation labels to renderable display-math positions, and adding content regression checks for these patterns.                                                                                                                                                                                                                                          |
 | 2026-04-23 | 1.0.77  | chore(hygiene): removed tracked root-level review, lint, generated PDF, scratch, and temporary issue-body artifacts; added regression checks that prevent these root artifacts and book-source `.tmp` files from returning; and expanded ignore rules for transient automation/review scratch outputs.                                                                                                                                                                                                                                                                                      |
