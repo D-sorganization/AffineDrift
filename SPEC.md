@@ -29,7 +29,7 @@ Last-Updated: 2026-05-07T08:32:01Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.8                                            |
-| **Spec Version**        | 1.0.103                                          |
+| **Spec Version**        | 1.0.104                                          |
 | **Last Spec Update**    | 2026-05-08                                       |
 
 ## 2. Purpose & Mission
@@ -594,3 +594,4 @@ python src/tools/code_quality_ast.py
 | 2026-05-07 | 1.0.101 | ci(workflows): pin the redundant Jules issue/PR closer workflows to immutable `create-github-app-token`, `checkout`, and `setup-python` SHAs so workflow pinning passes on PR branches and `main`. |
 | 2026-05-07 | 1.0.102 | fix(content): remove orphaned Geometry of Motion split chapter `.qmd` files so Volume 0 matches the canonical include list and Volume II renders solely from `volume2_content.qmd`, restoring the cleanup regression guard on PR branches. |
 | 2026-05-08 | 1.0.103 | perf(frontend): Optimized initAnchorLinks by replacing querySelectorAll with getElementsByTagName for faster heading lookup. |
+| 2026-05-08 | 1.0.104 | 🎨 Palette: Add `aria-hidden="true"` to purely decorative SVG icons within the `.mobile-menu-toggle` button in `index.qmd` to improve screen reader accessibility. |
