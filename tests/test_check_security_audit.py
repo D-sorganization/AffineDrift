@@ -146,7 +146,7 @@ class TestAuditIntegration:
 
     def test_clean_file_passes(self, tmp_path: Path) -> None:
         f = tmp_path / "clean.py"
-        f.write_text("import subprocess\n" 'result = subprocess.run(["ls"], capture_output=True)\n')
+        f.write_text('import subprocess\nresult = subprocess.run(["ls"], capture_output=True)\n')
         findings = audit_file(f)
         assert findings == []
 
