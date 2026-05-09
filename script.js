@@ -693,10 +693,15 @@ runOnDomReady(function () {
   });
 
   // Repository links
-  const repoLinks = document.querySelectorAll('.navbar-nav a[href^="https://github.com"]');
-  for (const link of repoLinks) {
-    link.setAttribute("target", "_blank");
-    // rel handled by secure external links below
+  // ⚡ Bolt Optimization: Use document.links (O(1)) instead of querySelectorAll (O(N))
+  for (const link of document.links) {
+    if (
+      link.href.startsWith("https://github.com") &&
+      link.closest(".navbar-nav")
+    ) {
+      link.setAttribute("target", "_blank");
+      // rel handled by secure external links below
+    }
   }
 
   // Secure external links
@@ -1066,44 +1071,52 @@ runOnDomReady(function () {
   // ⚡ Bolt Optimization: Defer non-critical interactive elements to runWhenIdle
   runWhenIdle(() => {
     // 🎨 Palette UX: Responsive Tables
-    // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) Live Collection) instead of querySelectorAll
-    const tables = Array.from(document.getElementsByTagName("table"));
-    // Use a shared set for unique IDs across all tables
-    const tableUsedIds = new Set();
-    for (const table of tables) {
-      if (!table.closest("#quarto-document-content")) continue;
+    const container = document.getElementById("quarto-document-content");
+    if (container) {
+      // ⚡ Bolt Optimization: Scope tag lookup to specific container instead of global DOM scan
+      const tables = container.getElementsByTagName("table");
+      const tableUsedIds = new Set();
 
-      // Check for existing wrapper (both class and overflow style)
-      const parent = table.parentElement;
-      if (
-        parent.classList.contains("table-wrapper") ||
-        parent.style.overflowX === "auto" ||
-        window.getComputedStyle(parent).overflowX === "auto"
-      ) {
-        continue;
-      }
+      // ⚡ Bolt Optimization: Batch DOM reads (getComputedStyle) and writes (insertBefore) to eliminate Layout Thrashing
+      const tablesToWrap = [];
 
-      const wrapper = document.createElement("div");
-      wrapper.className = "table-wrapper";
-      wrapper.setAttribute("tabindex", "0");
-      wrapper.setAttribute("role", "region");
-
-      const caption = table.querySelector("caption");
-      if (caption) {
-        if (!caption.id) {
-          caption.id = generateUniqueId(
-            caption.textContent || "table",
-            tableUsedIds,
-          );
+      // Phase 1: Read Layout
+      for (const table of Array.from(tables)) {
+        const parent = table.parentElement;
+        if (
+          parent.classList.contains("table-wrapper") ||
+          parent.style.overflowX === "auto" ||
+          window.getComputedStyle(parent).overflowX === "auto"
+        ) {
+          continue;
         }
-        tableUsedIds.add(caption.id);
-        wrapper.setAttribute("aria-labelledby", caption.id);
-      } else {
-        wrapper.setAttribute("aria-label", "Table content");
+        tablesToWrap.push(table);
       }
 
-      table.parentNode.insertBefore(wrapper, table);
-      wrapper.appendChild(table);
+      // Phase 2: Mutate DOM
+      for (const table of tablesToWrap) {
+        const wrapper = document.createElement("div");
+        wrapper.className = "table-wrapper";
+        wrapper.setAttribute("tabindex", "0");
+        wrapper.setAttribute("role", "region");
+
+        const caption = table.querySelector("caption");
+        if (caption) {
+          if (!caption.id) {
+            caption.id = generateUniqueId(
+              caption.textContent || "table",
+              tableUsedIds,
+            );
+          }
+          tableUsedIds.add(caption.id);
+          wrapper.setAttribute("aria-labelledby", caption.id);
+        } else {
+          wrapper.setAttribute("aria-label", "Table content");
+        }
+
+        table.parentNode.insertBefore(wrapper, table);
+        wrapper.appendChild(table);
+      }
     }
 
     // Copy to Clipboard
