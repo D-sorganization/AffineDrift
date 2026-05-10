@@ -90,7 +90,7 @@ def find_ref_definitions(root_dir: str) -> set[str]:
     return defined_refs
 
 
-def validate_url(url: str, retries: int = MAX_RETRIES) -> tuple[bool, str]:  # noqa: C901
+def validate_url(url: str, retries: int = MAX_RETRIES) -> tuple[bool, str]:
     """Validate URL with retry logic."""
     domain = urlparse(url).netloc
 
@@ -99,8 +99,8 @@ def validate_url(url: str, retries: int = MAX_RETRIES) -> tuple[bool, str]:  # n
 
     for attempt in range(retries):
         try:
-            req = Request(url, headers={"User-Agent": "Link-Checker/1.0"})  # noqa: S310
-            with urlopen(req, timeout=TIMEOUT) as response:  # noqa: S310
+            req = Request(url, headers={"User-Agent": "Link-Checker/1.0"})  # nosec B310
+            with urlopen(req, timeout=TIMEOUT) as response:  # nosec B310
                 if response.status < 400:
                     return True, f"OK ({response.status})"
                 elif response.status < 500:
@@ -163,7 +163,7 @@ def check_file(
     return errors, warnings
 
 
-def main() -> None:  # noqa: C901
+def main() -> None:
     parser = argparse.ArgumentParser(description="Validate Quarto references and URLs")
     parser.add_argument("--root", default=".", help="Root directory to check")
     parser.add_argument("--external-only", action="store_true", help="Only check external URLs")

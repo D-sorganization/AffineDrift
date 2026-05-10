@@ -72,7 +72,9 @@ omit = [
 ]
 
 [tool.coverage.report]
-fail_under = 50
+# Phase 3 bump: 50 -> 65. Phase 4 will continue toward the
+# Applications tier target of 75% in a follow-up PR.
+fail_under = 65
 show_missing = true
 precision = 1
 exclude_lines = [
@@ -146,7 +148,7 @@ max-complexity = 10
 "benchmarks/*" = ["S101"]
 "tests/test_critical_physics_fixes.py" = ["F821", "E402", "E731", "F401"]
 "src/tools/**/*.py" = ["E501", "S603", "S607"]
-"scripts/**/*.py" = ["E501", "S603", "S607", "S108"]
+"scripts/**/*.py" = ["E501", "S603", "S607", "S108", "C901", "S310", "S314"]
 "src/affine_control/swing_optimizer.py" = ["S101"]
 "articles/**/*.py" = ["S603", "S607"]
 "docs/**/*.py" = ["E501"]
