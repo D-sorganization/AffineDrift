@@ -26,7 +26,7 @@ lint:
 	npm run lint:css
 
 test:
-	python3 -m pytest tests/ --cov=src --cov-fail-under=50
+	python3 -m pytest tests/ --cov=src --cov-fail-under=65
 	npm test -- --coverage
 
 security:

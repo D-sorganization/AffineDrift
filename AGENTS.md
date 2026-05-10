@@ -29,6 +29,7 @@
 ## 🐍 Python Coding Standards
 
 > **AffineDrift-specific tooling:**
+>
 > - **Formatter:** `black --line-length 100` (NOT `ruff format`). CI runs `black --check --line-length 100`.
 > - **Linter:** `ruff check` (rules: E, F, W, I, B, UP). Target Python 3.12.
 > - **Line limit:** 100 characters.
@@ -68,20 +69,22 @@ project_name/
 
 - Use `pytest` (not `unittest`).
 - Write unit tests for individual functions and integration tests for workflows.
-- **Coverage requirement: 50% minimum** (`--cov-fail-under=50`). Coverage must not decrease.
+- **Coverage requirement: 65% minimum** (`--cov-fail-under=65`). Coverage must not decrease.
 - Place all tests in `tests/`. Mark cross-module or I/O tests with `@pytest.mark.integration`.
-- Run with: `pytest tests/ --cov=src/tools --cov-report=xml --cov-fail-under=50 --timeout=60`
+- Run with: `pytest tests/ --cov=src/tools --cov-report=xml --cov-fail-under=65 --timeout=60`
 
 ### 4. Test-Driven Development (TDD) - RED, GREEN, REFACTOR
 
 **MANDATORY**: All new code must follow the Test-Driven Development methodology:
 
 1. **RED - Write a Failing Test First**
+
    - Before writing any production code, write a unit test that defines the new functionality or behavior.
    - The test MUST fail initially because the production code has not yet been written.
    - This ensures you understand the requirements before implementation.
 
 2. **GREEN - Make the Test Pass**
+
    - Write the **minimal** amount of production code necessary to make the failing test pass.
    - The goal is purely to pass the test, not to write perfect or optimized code.
    - Resist the temptation to add features not covered by tests.
@@ -97,10 +100,10 @@ project_name/
 
 **Coverage Gate (AffineDrift-specific):**
 
-- CI enforces **50% minimum line coverage** on `src/tools/`. PRs that drop below this threshold will fail.
+- CI enforces **65% minimum line coverage** on `src/tools/`. PRs that drop below this threshold will fail.
 - Every new Python utility added to `src/` MUST have a corresponding `tests/` module.
 - Every new interactive JavaScript feature MUST have a corresponding Jest test.
-- Use `python3 -m pytest --cov --cov-fail-under=50` locally before pushing.
+- Use `python3 -m pytest --cov --cov-fail-under=65` locally before pushing.
 
 **Benefits of TDD:**
 
@@ -275,7 +278,7 @@ AffineDrift is an educational textbook rendered with Quarto. The following rules
 #### 7a. Quarto File Format
 
 - Write content in `.qmd` using Quarto markdown.
-- Executable code cells use `` {python} `` or `` {javascript} `` fenced blocks.
+- Executable code cells use `{python}` or `{javascript}` fenced blocks.
 - Cross-references: `@sec-`, `@fig-`, `@eq-` syntax.
 - Bibliography citations: `[@key]` syntax. Add entries to the `references/` directory.
 - New chapters MUST have an entry in `_quarto.yml`.
@@ -335,7 +338,7 @@ general Python standards above.
 - **Formatter:** Black with `--line-length 100`. **Never** run `ruff format` in this repo.
 - **Linter:** `ruff check` only (not `ruff format`).
 - **Python version:** 3.12. Always use `python3`.
-- **Tests:** `pytest --cov --cov-fail-under=50` (50% coverage minimum).
+- **Tests:** `pytest --cov --cov-fail-under=65` (65% coverage minimum).
 
 ### Quarto Authoring Standards
 
@@ -797,8 +800,7 @@ for k in ['core', 'graphql']:
 "
 ```
 
-<!-- END FLEET-MANAGED: network-api-hygiene -->
----
+## <!-- END FLEET-MANAGED: network-api-hygiene -->
 
 <!-- BEGIN FLEET-MANAGED: reasoning-engagement -->
 
@@ -807,19 +809,18 @@ for k in ['core', 'graphql']:
 > This section is managed centrally by Repository_Management and synced fleet-wide.
 > Do NOT edit it directly in individual repositories — edit the source in Repository_Management/AGENTS.md.
 
-These rules govern *how* you engage with a task before and during implementation. They exist because LLM agents tend to pick an interpretation silently, overcomplicate the solution, and edit code they were not asked to touch. Each rule directly counteracts one of those failure modes.
+These rules govern _how_ you engage with a task before and during implementation. They exist because LLM agents tend to pick an interpretation silently, overcomplicate the solution, and edit code they were not asked to touch. Each rule directly counteracts one of those failure modes.
 
 - **Surface ambiguity. Do not guess silently.** If the request has more than one plausible interpretation, list the options and ask before implementing. Picking one and running with it is the single most common cause of rework in this fleet.
 - **Push back on overcomplication.** If a simpler approach would satisfy the request, say so before you build the complicated one. Do not implement bloated 1000-line constructions when 100 would do. The senior-engineer test: would they call this overcomplicated? If yes, simplify.
 - **Stay surgical.** Every changed line must trace directly to the user's request. Do not "improve" adjacent code, comments, formatting, or imports. Do not refactor things that are not broken. Match existing style even if you would do it differently.
-- **Spotted ≠ fix.** If you notice unrelated dead code, latent bugs, or stylistic problems while working, *mention them in the PR body or as a follow-up issue* — do not fix them in the same PR. (The `mcp__ccd_session__spawn_task` tool is the right channel when working interactively.)
+- **Spotted ≠ fix.** If you notice unrelated dead code, latent bugs, or stylistic problems while working, _mention them in the PR body or as a follow-up issue_ — do not fix them in the same PR. (The `mcp__ccd_session__spawn_task` tool is the right channel when working interactively.)
 - **Clean up only your own orphans.** If your changes leave imports, variables, or functions newly unused, remove them. Do not delete pre-existing dead code unless the task asked for it.
 - **State a verifiable success criterion before coding.** For a bug fix, that's a failing test that reproduces it (RED → GREEN, see TDD section below). For a feature, the explicit check that says "done." "Make it work" is not a success criterion.
 
 **The diff test:** every line in your final diff should answer "this is here because the user asked for X." If you cannot answer that for a given line, remove it.
 
-<!-- END FLEET-MANAGED: reasoning-engagement -->
----
+## <!-- END FLEET-MANAGED: reasoning-engagement -->
 
 ## Specification
 

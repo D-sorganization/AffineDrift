@@ -74,7 +74,7 @@ RUN npm ci --prefer-offline
 COPY . .
 
 # Default: run pytest (mirrors CI quality gate)
-CMD ["python", "-m", "pytest", "--cov=src", "--cov-fail-under=50", "-v"]
+CMD ["python", "-m", "pytest", "--cov=src", "--cov-fail-under=65", "-v"]
 
 # ---------------------------------------------------------------------------
 # builder: renders Quarto site to docs/

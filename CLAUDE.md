@@ -31,7 +31,7 @@ interactive code cells, and mathematical visualizations.
 python3 -m ruff check .                               # lint
 python3 -m black --check --line-length 100 .           # format check (Black!)
 python3 -m black --line-length 100 .                   # auto-format
-python3 -m pytest --cov --cov-fail-under=50            # Python tests (50% min)
+python3 -m pytest --cov --cov-fail-under=65            # Python tests (65% min)
 npx jest                                               # JavaScript tests
 npx playwright test                                    # E2E browser tests
 quarto render                                          # build the site
@@ -73,7 +73,7 @@ The `dev` stage is the entry point for new contributors: it avoids installing Qu
 4. Bibliography quality check — BibTeX well-formed, no broken refs
 5. DRY adoption tracking — duplication metrics monitored
 6. Module size budget — enforced per-file
-7. pytest with **50% coverage minimum** — coverage must not decrease
+7. pytest with **65% coverage minimum** — coverage must not decrease
 8. Jest — all JS tests pass
 9. Playwright E2E — critical user flows pass
 10. CSS mirror enforcement — `css/` must be mirrored in `docs/` (never edit `docs/` CSS directly)
@@ -97,6 +97,7 @@ The `dev` stage is the entry point for new contributors: it avoids installing Qu
 ## Logging Standard
 
 **Source Code (src/):** Logging only. `print()` is forbidden.
+
 ```python
 import logging
 logger = logging.getLogger(__name__)
@@ -114,7 +115,7 @@ See `.logging-standard.md` for full details.
 - **DRY:** CI tracks duplication. Extract shared Quarto includes and Python utilities. No copy-paste between chapters. Reusable patterns go in `src/tools/utils/` (see `.dry-improvements.md`).
 - **DbC:** Validation functions check inputs, raise clear errors with context.
 - **LOD:** No method chains >2 levels. Keep rendering logic separate from content logic. Complex Python goes in importable modules, not inline in QMD.
-- **TDD:** New Python utilities need pytest tests. New interactive features need Jest tests. Coverage stays above 50%.
+- **TDD:** New Python utilities need pytest tests. New interactive features need Jest tests. Coverage stays above 65%.
 
 ## Cross-Repo Dependencies
 
