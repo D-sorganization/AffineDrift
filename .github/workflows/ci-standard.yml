@@ -198,6 +198,8 @@ jobs:
     needs: [pick-runner, quality-gate]
     runs-on: ${{ needs.pick-runner.outputs.runner }}
     timeout-minutes: 45
+    env:
+      BASELINE_TEST_COUNT: 2044
     strategy:
       matrix:
         python: ["3.12"]
@@ -224,6 +226,13 @@ jobs:
           if [ -d "tools" ]; then
             find tools -name "requirements.txt" -exec python -m pip install -r {} \;
           fi
+      - name: Test count regression guard
+        env:
+          PYTHONPATH: src
+        run: |
+          COUNT=$(python -m pytest tests/ --collect-only -q --override-ini="addopts=" 2>&1 | tail -3 | grep -oE "[0-9]+ tests collected" | grep -oE "^[0-9]+" | head -1)
+          echo "Collected $COUNT tests; baseline is ${{ env.BASELINE_TEST_COUNT }}"
+          [ "$COUNT" -ge "${{ env.BASELINE_TEST_COUNT }}" ] || (echo "::error::Test count $COUNT < baseline ${{ env.BASELINE_TEST_COUNT }}"; exit 1)
       - name: Run Tests
         env:
           PYTHONPATH: src
