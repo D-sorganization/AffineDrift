@@ -92,3 +92,7 @@
 ## 2026-05-08 - Fast Heading Lookups
 **Learning:** Replaced querySelectorAll('.main-content-area h2, h3') with targeted getElementsByTagName to avoid scanning the entire DOM for anchor links.
 **Action:** Use getElementsByTagName combined with array spreading for high-performance localized queries.
+
+## 2026-05-18 - Replacing Multi-Selector querySelectorAll with Live Collections
+**Learning:** Using `querySelectorAll(".class, tag, #id")` forces the CSS engine to perform a full DOM traversal matching against a complex union of rules, which blocks the main thread during startup/layout initialization.
+**Action:** When gathering known elements across multiple criteria (like `.main-content-area`, `.home-content`, and `#quarto-document-content`), fetch each set using native O(1) live collections (`getElementsByClassName`, `getElementsByTagName`, `getElementById`) and manually merge them into a single Array or Set in JavaScript instead.
