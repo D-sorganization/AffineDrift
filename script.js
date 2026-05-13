@@ -427,10 +427,12 @@ runOnDomReady(function () {
     const sections = [];
     const usedIds = new Set();
 
-    const pageSections = document.querySelectorAll(
-      ".page-section[id], section[id]",
-    );
+    // ⚡ Bolt Optimization: Use live collections instead of querySelectorAll for O(1) collection fetching
+    const sectionTags = document.getElementsByTagName("section");
+    const pageSectionClasses = document.getElementsByClassName("page-section");
+    const pageSections = new Set([...sectionTags, ...pageSectionClasses]);
     for (const section of pageSections) {
+      if (!section.id) continue;
       const heading = section.querySelector(".section-heading, h2, h1");
       if (heading && section.id) {
         sections.push({
@@ -576,9 +578,10 @@ runOnDomReady(function () {
     }
     let currentActiveLink = null;
 
-    const sections = document.querySelectorAll(
-      ".page-section[id], section[id]",
-    );
+    // ⚡ Bolt Optimization: Use live collections instead of querySelectorAll for O(1) collection fetching
+    const sectionTags = document.getElementsByTagName("section");
+    const pageSectionClasses = document.getElementsByClassName("page-section");
+    const sections = Array.from(new Set([...sectionTags, ...pageSectionClasses])).filter(s => s.id);
 
     // ⚡ Bolt Optimization: Map section IDs to their DOM index for O(1) sort
     const sectionIndexMap = new Map();
