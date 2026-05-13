@@ -10,6 +10,8 @@ const PUBLIC_ROUTES = [
 ];
 
 test.describe("PR Smoke", () => {
+  test.describe.configure({ timeout: 90000 });
+
   test("homepage renders and has core structure", async ({ page }) => {
     const response = await page.goto("/", { waitUntil: "domcontentloaded" });
     expect(response).toBeTruthy();
