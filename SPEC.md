@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-05-13T16:17:00Z
+Last-Updated: 2026-05-14T14:12:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,8 +29,8 @@ Last-Updated: 2026-05-13T16:17:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.8                                            |
-| **Spec Version**        | 1.0.105                                          |
-| **Last Spec Update**    | 2026-05-13                                       |
+| **Spec Version**        | 1.0.106                                          |
+| **Last Spec Update**    | 2026-05-14                                       |
 
 ## 2. Purpose & Mission
 
@@ -487,6 +487,7 @@ python src/tools/code_quality_ast.py
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | ---------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-05-14 | 1.0.106 | fix(accessibility): Marked decorative repository accordion `+` icons as `aria-hidden="true"` so screen readers rely on the button label and `aria-expanded` state instead of announcing redundant icon text, with regression coverage for the repositories page. |
 | 2026-05-13 | 1.0.105 | perf(frontend): Replaced startup and navigation `querySelectorAll` scans in `js/navigation.js`, `js/startup-launcher.js`, and `script.js` with direct DOM collection lookups to reduce initialization overhead, and extended the Playwright smoke timeout so the rendered-site E2E gate remains stable on slower runners while exercising the same critical flows. |
 | 2026-05-07 | 1.0.100 | fix(ci): normalized the PR 3062 touched regression tests to the repository's required Black 100-column formatting and recorded the no-behavior-change test-maintenance update so SPEC freshness tracks the branch's quality-gate-only edits.                                                                                                                                                                                                                                                                                                                                                |
 | 2026-05-03 | 1.0.99  | fix(ci): hardened production-readiness gates by making mypy and HTML validation blocking, pinning workflow actions to immutable SHAs with a CI policy check, removing tracked generated agent automation artifacts, blocking those artifacts from returning, and tightening the site CSP by removing `unsafe-eval`.                                                                                                                                                                                                                                                                         |
