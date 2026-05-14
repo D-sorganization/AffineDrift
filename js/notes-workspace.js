@@ -153,6 +153,8 @@
     panel.className = "ad-notes-panel";
     panel.setAttribute("aria-label", "Project notes workspace");
     panel.setAttribute("aria-hidden", "true");
+    panel.setAttribute("role", "dialog");
+    panel.setAttribute("aria-modal", "true");
     panel.innerHTML = `
       <div class="ad-notes-header">
         <h3>Project Notes</h3>
@@ -255,6 +257,30 @@
     document.addEventListener("keydown", function (event) {
       if (event.key === "Escape" && panel.classList.contains("open")) {
         closePanel();
+      }
+    });
+
+    panel.addEventListener("keydown", function (event) {
+      if (event.key !== "Tab") return;
+
+      const focusableSelector = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+      const focusableContent = panel.querySelectorAll(focusableSelector);
+
+      if (focusableContent.length === 0) return;
+
+      const firstFocusable = focusableContent[0];
+      const lastFocusable = focusableContent[focusableContent.length - 1];
+
+      if (event.shiftKey) {
+        if (document.activeElement === firstFocusable) {
+          lastFocusable.focus();
+          event.preventDefault();
+        }
+      } else {
+        if (document.activeElement === lastFocusable) {
+          firstFocusable.focus();
+          event.preventDefault();
+        }
       }
     });
 
