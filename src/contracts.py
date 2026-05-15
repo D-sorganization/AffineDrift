@@ -2,9 +2,13 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from functools import wraps
+from typing import ParamSpec, TypeVar
+
+P = ParamSpec("P")
+R = TypeVar("R")
 
 
-def require[**P, R](
+def require(  # noqa: UP047  # reason: TypeVar/ParamSpec kept for Python 3.10 compatibility
     condition: Callable[P, bool], message: str = "Precondition failed"
 ) -> Callable[[Callable[P, R]], Callable[P, R]]:
     """
@@ -30,7 +34,7 @@ def require[**P, R](
     return decorator
 
 
-def ensure[**P, R](
+def ensure(  # noqa: UP047  # reason: TypeVar/ParamSpec kept for Python 3.10 compatibility
     condition: Callable[[R], bool], message: str = "Postcondition failed"
 ) -> Callable[[Callable[P, R]], Callable[P, R]]:
     """
