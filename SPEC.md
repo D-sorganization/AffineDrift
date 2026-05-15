@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-05-14T14:31:00Z
+Last-Updated: 2026-05-15T19:00:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,8 +29,8 @@ Last-Updated: 2026-05-14T14:31:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.8                                            |
-| **Spec Version**        | 1.0.107                                          |
-| **Last Spec Update**    | 2026-05-14                                       |
+| **Spec Version**        | 1.0.108                                          |
+| **Last Spec Update**    | 2026-05-15                                       |
 
 ## 2. Purpose & Mission
 
@@ -207,6 +207,7 @@ AffineDrift/
 | F43 | Isolated benchmark CI environment       | ✅     | The performance benchmark workflow installs dependencies into a workflow-local virtual environment and guards PR comment/artifact steps when benchmark output is unavailable, keeping benchmark failures attributable to the benchmark command instead of shared runner state                                                                                                                                                                                  |
 | F44 | Production-readiness CI hardening       | ✅     | `ci-standard.yml` now treats mypy over `src/tools/` plus the production-readiness policy scripts, generated-agent-artifact checks, and GitHub Actions pinning checks as blocking quality gates, while the website-lint job fails on HTML validation errors instead of downgrading them to warnings.                                                                                                                                                            |
 | F45 | Optimizer and browser-state hardening   | ✅     | The core iLQR solver records `last_diagnostics` for convergence, iteration count, final cost, failure reason, and rollout/callback errors while preserving the existing return contract; dynamics outputs are validated for shape and finite values during rollout, linearization, and line search. Browser persistence helpers for history, metrics, and notes now delete corrupted `localStorage` payloads and bound notes recycle-bin retention to 30 days. |
+| F46 | Python 3.10 contract compatibility      | ✅     | `src/contracts.py` uses explicit `TypeVar`/`ParamSpec` declarations instead of Python 3.12+ PEP 695 type parameter syntax, restoring import compatibility for environments running Python 3.10 or 3.11. Ruff UP047 is suppressed with `# noqa: UP047` on the affected generic function definitions. |
 
 ### API / Interface Contract
 
