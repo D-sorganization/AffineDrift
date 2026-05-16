@@ -93,14 +93,15 @@ export function initNavbarCollapse() {
     if (navbarToggler) {
         // Set initial ARIA state on toggle button
         navbarToggler.setAttribute("aria-controls", "navbarCollapse");
-        if (!navbarToggler.getAttribute("aria-label")) {
-            navbarToggler.setAttribute("aria-label", "Toggle navigation menu");
+        if (!navbarToggler.getAttribute("aria-label") || navbarToggler.getAttribute("aria-label") === "Toggle navigation menu") {
+            navbarToggler.setAttribute("aria-label", "Open navigation menu");
         }
 
         // Update ARIA state when menu state changes
         const updateToggleState = () => {
             const isOpen = navbarCollapse && navbarCollapse.classList.contains("show");
             navbarToggler.setAttribute("aria-expanded", String(isOpen));
+            navbarToggler.setAttribute("aria-label", isOpen ? "Close navigation menu" : "Open navigation menu");
         };
 
         // Listen for collapse changes and update ARIA
