@@ -96,3 +96,11 @@
 ## 2026-05-18 - Replacing Multi-Selector querySelectorAll with Live Collections
 **Learning:** Using `querySelectorAll(".class, tag, #id")` forces the CSS engine to perform a full DOM traversal matching against a complex union of rules, which blocks the main thread during startup/layout initialization.
 **Action:** When gathering known elements across multiple criteria (like `.main-content-area`, `.home-content`, and `#quarto-document-content`), fetch each set using native O(1) live collections (`getElementsByClassName`, `getElementsByTagName`, `getElementById`) and manually merge them into a single Array or Set in JavaScript instead.
+
+## 2026-05-18 - Replacing Multi-Selector querySelectorAll with Live Collections for Tab Focus
+**Learning:** Calling `querySelectorAll` with a complex union selector like `'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'` on every Tab key press creates immense overhead due to CSS parsing and full subtree traversal.
+**Action:** Replace dynamic focusable element queries in keydown handlers with a manual iteration over the `getElementsByTagName('*')` live collection, checking for the `el.tabIndex >= 0` property to efficiently collect focusable elements.
+
+## 2026-05-18 - QuerySelector Descendant Check vs HTMLCollection
+**Learning:** Checking for specific descendants using `element.querySelector(".class")` or `element.querySelector("tag")` inside loops requires the browser's CSS selector engine to re-parse the string and traverse the subtree on every iteration, causing significant overhead during initialization.
+**Action:** When replacing expensive CSS selectors within descendant checks, prefer direct lookups using `getElementsByTagName()[0]` or `getElementsByClassName()[0]` to avoid the overhead of parsing CSS selectors for every iterated element.

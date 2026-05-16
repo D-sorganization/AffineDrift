@@ -243,7 +243,7 @@ export function generateTableOfContents() {
     // ⚡ Bolt Optimization: Use getElementsByClassName (O(1) live collection) instead of querySelectorAll (O(N))
     const categories = document.getElementsByClassName("article-category");
     for (const category of categories) {
-        const heading = category.querySelector("h3");
+        const heading = category.getElementsByTagName("h3")[0];
         if (heading) {
             let id = category.id;
             if (!id) {
