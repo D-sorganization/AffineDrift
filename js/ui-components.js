@@ -345,9 +345,19 @@ export function initLightbox() {
     lightbox.addEventListener("keydown", (e) => {
         if (e.key !== "Tab") return;
 
-        const focusableSelector =
-            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
-        const focusableContent = lightbox.querySelectorAll(focusableSelector);
+        // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) live collection) and manual filtering instead of querySelectorAll (O(N))
+        const elements = lightbox.getElementsByTagName('*');
+        const focusableContent = [];
+        for (const el of elements) {
+            const tag = el.tagName;
+            if (tag === 'BUTTON' || tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') {
+                if (!el.disabled && el.tabIndex >= 0) focusableContent.push(el);
+            } else if (tag === 'A' && el.hasAttribute('href')) {
+                if (el.tabIndex >= 0) focusableContent.push(el);
+            } else if (el.hasAttribute('tabindex') && el.getAttribute('tabindex') !== '-1') {
+                focusableContent.push(el);
+            }
+        }
 
         if (focusableContent.length === 0) return;
 
@@ -442,8 +452,8 @@ export function initCriticsCorner() {
     const criticsCorners = document.getElementsByClassName("critics-corner");
     let index = 0;
     for (const corner of criticsCorners) {
-        const header = corner.querySelector(".critics-corner-header");
-        const content = corner.querySelector(".critics-corner-content");
+        const header = corner.getElementsByClassName("critics-corner-header")[0];
+        const content = corner.getElementsByClassName("critics-corner-content")[0];
 
         if (header && content) {
             if (!content.id) {
@@ -490,8 +500,8 @@ export function initLaymansTermsToggle() {
     const laymansSections = document.getElementsByClassName("laymans-terms");
     let index = 0;
     for (const section of laymansSections) {
-        const header = section.querySelector(".laymans-terms-header");
-        const content = section.querySelector(".laymans-terms-content");
+        const header = section.getElementsByClassName("laymans-terms-header")[0];
+        const content = section.getElementsByClassName("laymans-terms-content")[0];
 
         if (!header || !content) {
             index++;
@@ -522,8 +532,8 @@ export function initCriticsCommentsToggle() {
     const criticsSections = document.getElementsByClassName("critics-comments");
     let index = 0;
     for (const section of criticsSections) {
-        const header = section.querySelector(".critics-comments-header");
-        const content = section.querySelector(".critics-comments-content");
+        const header = section.getElementsByClassName("critics-comments-header")[0];
+        const content = section.getElementsByClassName("critics-comments-content")[0];
 
         if (!header || !content) {
             index++;

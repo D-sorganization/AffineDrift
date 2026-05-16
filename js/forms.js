@@ -97,7 +97,7 @@ export function initResponsiveTables() {
         wrapper.setAttribute("tabindex", "0");
         wrapper.setAttribute("role", "region");
 
-        const caption = table.querySelector("caption");
+        const caption = table.getElementsByTagName("caption")[0];
         if (caption) {
             if (!caption.id) {
                 caption.id = generateUniqueId(
@@ -192,7 +192,7 @@ export function initFormAccessibility() {
             label = document.querySelector(`label[for="${input.id}"]`);
         }
 
-        if (label && !label.querySelector(".required-indicator")) {
+        if (label && !label.getElementsByClassName("required-indicator")[0]) {
             const indicator = document.createElement("span");
             indicator.className = "required-indicator";
             indicator.textContent = " *";

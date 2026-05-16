@@ -263,8 +263,19 @@
     panel.addEventListener("keydown", function (event) {
       if (event.key !== "Tab") return;
 
-      const focusableSelector = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
-      const focusableContent = panel.querySelectorAll(focusableSelector);
+      // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) live collection) and manual filtering instead of querySelectorAll (O(N))
+      const elements = panel.getElementsByTagName('*');
+      const focusableContent = [];
+      for (const el of elements) {
+          const tag = el.tagName;
+          if (tag === 'BUTTON' || tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') {
+              if (!el.disabled && el.tabIndex >= 0) focusableContent.push(el);
+          } else if (tag === 'A' && el.hasAttribute('href')) {
+              if (el.tabIndex >= 0) focusableContent.push(el);
+          } else if (el.hasAttribute('tabindex') && el.getAttribute('tabindex') !== '-1') {
+              focusableContent.push(el);
+          }
+      }
 
       if (focusableContent.length === 0) return;
 

@@ -93,7 +93,7 @@ function applyDefaultAriaLabel(element, label) {
 function labelCardsFromHeading(cards, prefix) {
     for (const card of cards) {
         if (card.hasAttribute("aria-label")) continue;
-        const heading = card.querySelector("h3");
+        const heading = card.getElementsByTagName("h3")[0];
         if (heading) {
             card.setAttribute("aria-label", `${prefix}: ${heading.textContent.trim()}`);
         }
@@ -316,9 +316,19 @@ export function initFocusManagement() {
     // Trap focus in modals if any exist
     const modals = document.querySelectorAll('[role="dialog"]');
     for (const modal of modals) {
-        const focusableElements = modal.querySelectorAll(
-            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-        );
+        // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) live collection) and manual filtering instead of querySelectorAll (O(N))
+        const elements = modal.getElementsByTagName('*');
+        const focusableElements = [];
+        for (const el of elements) {
+            const tag = el.tagName;
+            if (tag === 'BUTTON' || tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') {
+                if (!el.disabled && el.tabIndex >= 0) focusableElements.push(el);
+            } else if (tag === 'A' && el.hasAttribute('href')) {
+                if (el.tabIndex >= 0) focusableElements.push(el);
+            } else if (el.hasAttribute('tabindex') && el.getAttribute('tabindex') !== '-1') {
+                focusableElements.push(el);
+            }
+        }
 
         if (focusableElements.length > 0) {
             const firstElement = focusableElements[0];
