@@ -254,6 +254,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
   js-tests:
+    timeout-minutes: 30
     needs: [pick-runner, quality-gate]
     runs-on: ${{ needs.pick-runner.outputs.runner }}
     steps:
@@ -407,6 +408,7 @@ jobs:
           retention-days: 30
 
   website-lint:
+    timeout-minutes: 30
     needs: [pick-runner, quality-gate]
     runs-on: ${{ needs.pick-runner.outputs.runner }}
     steps:
@@ -530,6 +532,7 @@ jobs:
           echo "- ✅ cargo test: all tests pass" >> $GITHUB_STEP_SUMMARY
 
   local-only-workflows:
+    timeout-minutes: 30
     name: Reject hosted runner routing
     runs-on: ubuntu-latest
     steps:
