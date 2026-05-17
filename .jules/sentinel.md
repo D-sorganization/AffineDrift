@@ -53,3 +53,7 @@
 **Vulnerability:** Client-Side Code Injection (XSS) via `new Function` in `src/tools/wrist_universal_joint/grip_angle_simulator.html`.
 **Learning:** Even with regex sanitization, `new Function` is susceptible to XSS because filtering characters safely without breaking valid inputs is extremely error-prone.
 **Prevention:** Use a dedicated safe AST evaluator that only supports mathematical operations instead of dynamically compiling code via `new Function` or `eval`.
+## 2026-07-20 - Prevent DOM-based XSS in DOM construction
+**Vulnerability:** DOM-based XSS risk via `innerHTML` used with template literals in `addCheckbox` of the grip angle simulator.
+**Learning:** Using `innerHTML` to construct DOM elements by interpolating variables is brittle and introduces XSS risks, even if the current inputs appear safe.
+**Prevention:** To prevent DOM-based XSS when constructing DOM elements, always use native DOM methods like `document.createElement()` and securely set properties using `textContent`, `id`, `htmlFor`, etc.
