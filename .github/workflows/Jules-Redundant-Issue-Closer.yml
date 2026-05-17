@@ -43,7 +43,7 @@ permissions:
 
 concurrency:
   group: jules-redundant-issue-closer-${{ github.repository }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   close-redundant:
@@ -52,7 +52,7 @@ jobs:
     steps:
       - name: Generate Jules app token
         id: app-token
-        uses: actions/create-github-app-token@1b10c78c7865c340bc4f6099eb2f838309f1e8c3 # v1
+        uses: actions/create-github-app-token@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           app-id: ${{ secrets.JULES_APP_ID }}
           private-key: ${{ secrets.JULES_APP_PRIVATE_KEY }}
