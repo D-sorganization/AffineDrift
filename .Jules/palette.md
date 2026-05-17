@@ -52,3 +52,7 @@
 ## 2026-06-01 - Focus Management for Sidebar Detail Views
 **Learning:** When a list item dynamically updates a separate details pane (like a sidebar), screen reader users are left unaware of the change unless focus is explicitly moved to the new content.
 **Action:** Add `tabindex="-1"` and call `.focus({ preventScroll: true })` on the details container after updating its content, cleaning up the `tabindex` on blur.
+
+## 2026-06-02 - Accessible Dynamic Empty States
+**Learning:** When dynamic UI areas like history sidebars become empty (e.g., initially loaded without data or cleared), screen readers must be notified.
+**Action:** Always provide `role="status"` and `aria-live="polite"` on dynamically rendered empty state elements so that the absence of data is clearly communicated to assistive technologies.
