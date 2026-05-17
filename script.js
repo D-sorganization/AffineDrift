@@ -1165,7 +1165,8 @@ runOnDomReady(function () {
       const wrapper = button.closest(".code-wrapper");
       if (!wrapper) return;
 
-      const pre = wrapper.querySelector("pre");
+      // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) live collection) instead of querySelector (O(N))
+      const pre = wrapper.getElementsByTagName("pre")[0];
       if (!pre) return;
 
       try {
