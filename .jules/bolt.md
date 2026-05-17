@@ -104,3 +104,7 @@
 ## 2026-05-18 - QuerySelector Descendant Check vs HTMLCollection
 **Learning:** Checking for specific descendants using `element.querySelector(".class")` or `element.querySelector("tag")` inside loops requires the browser's CSS selector engine to re-parse the string and traverse the subtree on every iteration, causing significant overhead during initialization.
 **Action:** When replacing expensive CSS selectors within descendant checks, prefer direct lookups using `getElementsByTagName()[0]` or `getElementsByClassName()[0]` to avoid the overhead of parsing CSS selectors for every iterated element.
+
+## 2026-05-20 - Replace Descendant querySelector with Native Lookup
+**Learning:** Checking for a specific descendant node via `element.querySelector("tag")` inside highly interactive paths (like copy-to-clipboard clicks) invokes the browser's CSS selector engine, which is slower than native DOM lookups. Accessing index `[0]` on an `HTMLCollection` returned by `getElementsByTagName` performs an equivalent falsy evaluation (`undefined` instead of `null`) while avoiding CSS parsing overhead entirely.
+**Action:** Safely replace simple descendant `querySelector` calls with `getElementsByTagName("tag")[0]` or `getElementsByClassName("class")[0]` to eliminate CSS parsing overhead in interactive DOM event handlers.
