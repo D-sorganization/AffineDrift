@@ -9,6 +9,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: local-only-runner-guard-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   local-only-workflows:
     timeout-minutes: 30
