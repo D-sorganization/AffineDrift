@@ -196,12 +196,13 @@ jobs:
           path: matlab_quality_report.txt
 
   tests:
-    needs: [pick-runner, quality-gate]
+    needs: pick-runner
     runs-on: ${{ needs.pick-runner.outputs.runner }}
     timeout-minutes: 45
     env:
       BASELINE_TEST_COUNT: 2042
     strategy:
+      fail-fast: false
       matrix:
         python: ["3.12"]
     steps:
@@ -257,7 +258,7 @@ jobs:
 
   js-tests:
     timeout-minutes: 30
-    needs: [pick-runner, quality-gate]
+    needs: pick-runner
     runs-on: ${{ needs.pick-runner.outputs.runner }}
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -278,7 +279,7 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
 
   e2e-tests:
-    needs: [pick-runner, quality-gate]
+    needs: pick-runner
     runs-on: ${{ needs.pick-runner.outputs.runner }}
     timeout-minutes: 45
     steps:
@@ -416,7 +417,7 @@ jobs:
 
   website-lint:
     timeout-minutes: 30
-    needs: [pick-runner, quality-gate]
+    needs: pick-runner
     runs-on: ${{ needs.pick-runner.outputs.runner }}
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
