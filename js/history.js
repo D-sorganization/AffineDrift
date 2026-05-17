@@ -84,6 +84,8 @@ export function updateHistorySidebar() {
     if (displayHistory.length === 0) {
         const li = document.createElement("li");
         li.className = "history-empty";
+        li.setAttribute("role", "status");
+        li.setAttribute("aria-live", "polite");
         li.textContent = "No recent articles yet. ";
         const a = document.createElement("a");
         a.href = "/resources/articles.html";
@@ -174,6 +176,8 @@ export function initArticleHistory() {
         if (!history || history.length === 0) {
             const li = document.createElement("li");
             li.className = "history-empty";
+            li.setAttribute("role", "status");
+            li.setAttribute("aria-live", "polite");
             li.textContent = "No recent articles yet. ";
             const a = document.createElement("a");
             a.href = "/resources/articles.html";
