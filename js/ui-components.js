@@ -414,7 +414,8 @@ export function initLightbox() {
         let captionAdded = false;
 
         if (figure) {
-            const figcaption = figure.querySelector("figcaption");
+            // ⚡ Bolt Optimization: Replace descendant querySelector with native getElementsByTagName lookup for O(1) evaluation without CSS parsing overhead in interactive path
+            const figcaption = figure.getElementsByTagName("figcaption")[0];
             if (figcaption) {
                 const captionClone = figcaption.cloneNode(true);
                 captionClone.className = "lightbox-caption";
