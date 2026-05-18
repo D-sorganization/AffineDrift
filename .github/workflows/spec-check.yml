@@ -25,6 +25,9 @@ concurrency:
   group: spec-check-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 jobs:
   spec-freshness:
     name: Verify SPEC.md freshness

@@ -10,11 +10,14 @@ concurrency:
   cancel-in-progress: true
 
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 jobs:
   block-self-approval:
     timeout-minutes: 30
     name: Prevent author from approving own PR
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Check for self-approval
         env:
