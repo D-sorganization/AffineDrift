@@ -19,6 +19,12 @@
     button.setAttribute("aria-expanded", String(expanded));
     target.setAttribute("aria-hidden", String(!expanded));
     target.classList.toggle("show", expanded);
+
+    const titleEl = button.getElementsByTagName("h3")[0];
+    const titleText = titleEl ? titleEl.textContent.trim() : "section";
+    const actionText = expanded ? "Collapse" : "Expand";
+    button.setAttribute("aria-label", `${actionText} ${titleText}`);
+    button.setAttribute("title", `${actionText} ${titleText}`);
   }
 
   function initCollapsibleSections() {
