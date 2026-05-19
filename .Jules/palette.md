@@ -56,3 +56,6 @@
 ## 2026-06-02 - Accessible Dynamic Empty States
 **Learning:** When dynamic UI areas like history sidebars become empty (e.g., initially loaded without data or cleared), screen readers must be notified.
 **Action:** Always provide `role="status"` and `aria-live="polite"` on dynamically rendered empty state elements so that the absence of data is clearly communicated to assistive technologies.
+## 2026-05-18 - Dynamic ARIA Labels on Collapsible Components
+**Learning:** Static labels on collapsible components (like accordions) fail to communicate their current state and available action. Hardcoding `aria-expanded` is insufficient if the base label doesn't update.
+**Action:** Always dynamically update both `aria-label` and native `title` tooltips on collapsible headers (e.g., "Expand [Title]" vs "Collapse [Title]") based on their `aria-expanded` state.

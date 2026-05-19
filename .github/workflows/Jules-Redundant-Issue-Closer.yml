@@ -45,6 +45,9 @@ concurrency:
   group: jules-redundant-issue-closer-${{ github.repository }}
   cancel-in-progress: true
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 jobs:
   close-redundant:
     runs-on: d-sorg-fleet

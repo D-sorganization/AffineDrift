@@ -23,6 +23,9 @@ concurrency:
   group: performance-benchmarks-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 jobs:
   benchmark:
     name: Run Performance Benchmarks

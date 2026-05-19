@@ -5,12 +5,19 @@ on:
     types: [submitted]
   pull_request:
     types: [opened, synchronize, reopened]
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 
 jobs:
   block-self-approval:
     timeout-minutes: 30
     name: Prevent author from approving own PR
-    runs-on: d-sorg-fleet
+    runs-on: ubuntu-24.04
     steps:
       - name: Check for self-approval
         env:
