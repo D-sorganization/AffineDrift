@@ -38,6 +38,7 @@ jobs:
         id: internal-refs
 
       - name: Check external URLs
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
         timeout-minutes: 5
         run: |
           python scripts/link-checker.py --root . --external-only --verbose
