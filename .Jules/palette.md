@@ -59,3 +59,7 @@
 ## 2026-05-18 - Dynamic ARIA Labels on Collapsible Components
 **Learning:** Static labels on collapsible components (like accordions) fail to communicate their current state and available action. Hardcoding `aria-expanded` is insufficient if the base label doesn't update.
 **Action:** Always dynamically update both `aria-label` and native `title` tooltips on collapsible headers (e.g., "Expand [Title]" vs "Collapse [Title]") based on their `aria-expanded` state.
+
+## 2026-05-19 - Improved collapsible sidebar accessibility
+**Learning:** In the home page collapsible sidebar menu, the toggle buttons (`.sidebar-section-toggle`) only updated `aria-expanded` attributes without updating the `aria-label` or `title` to explicitly indicate the new action ("Expand" or "Collapse") to screen readers. This created an accessibility issue where users are not properly informed of what clicking the button will do next based on the current state.
+**Action:** Update both the `aria-label` and `title` attributes dynamically when the sidebar section toggle state changes to explicitly read "Expand [Section Name]" or "Collapse [Section Name]" based on the new `aria-expanded` state.
