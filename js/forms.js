@@ -156,7 +156,8 @@ export function initCodeCopy() {
         const wrapper = button.closest(".code-wrapper");
         if (!wrapper) return;
 
-        const pre = wrapper.querySelector("pre");
+        // ⚡ Bolt Optimization: Replace descendant querySelector with native getElementsByTagName lookup for O(1) evaluation without CSS parsing overhead in interactive path
+        const pre = wrapper.getElementsByTagName("pre")[0];
         if (!pre) return;
 
         try {

@@ -108,6 +108,15 @@ export function initLazyImages() {
  */
 export function initAccordions() {
     const accordionHeaders = document.getElementsByClassName("accordion-header");
+
+    const updateHeaderAria = (header, isExpanded) => {
+        const titleSpan = header.querySelector("span:not(.accordion-icon)");
+        const titleText = titleSpan ? titleSpan.textContent.trim() : "content";
+        const actionText = isExpanded ? "Collapse" : "Expand";
+        header.setAttribute("aria-label", `${actionText} ${titleText}`);
+        header.setAttribute("title", `${actionText} ${titleText}`);
+    };
+
     let index = 0;
     for (const header of accordionHeaders) {
         const content = header.nextElementSibling;
@@ -117,7 +126,8 @@ export function initAccordions() {
             }
             header.setAttribute("aria-controls", content.id);
             const isExpanded = header.getAttribute("aria-expanded") === "true";
-            content.setAttribute("aria-hidden", !isExpanded);
+            content.setAttribute("aria-hidden", String(!isExpanded));
+            updateHeaderAria(header, isExpanded);
         }
         index++;
     }
@@ -129,8 +139,9 @@ export function initAccordions() {
         const content = header.nextElementSibling;
         if (content && content.classList.contains("accordion-content")) {
             const isExpanded = header.getAttribute("aria-expanded") === "true";
-            header.setAttribute("aria-expanded", !isExpanded);
-            content.setAttribute("aria-hidden", isExpanded);
+            header.setAttribute("aria-expanded", String(!isExpanded));
+            content.setAttribute("aria-hidden", String(isExpanded));
+            updateHeaderAria(header, !isExpanded);
         }
     });
 }
@@ -414,7 +425,8 @@ export function initLightbox() {
         let captionAdded = false;
 
         if (figure) {
-            const figcaption = figure.querySelector("figcaption");
+            // ⚡ Bolt Optimization: Replace descendant querySelector with native getElementsByTagName lookup for O(1) evaluation without CSS parsing overhead in interactive path
+            const figcaption = figure.getElementsByTagName("figcaption")[0];
             if (figcaption) {
                 const captionClone = figcaption.cloneNode(true);
                 captionClone.className = "lightbox-caption";
