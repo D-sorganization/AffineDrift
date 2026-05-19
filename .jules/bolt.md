@@ -108,3 +108,7 @@
 ## 2026-05-20 - Replace Descendant querySelector with Native Lookup
 **Learning:** Checking for a specific descendant node via `element.querySelector("tag")` inside highly interactive paths (like copy-to-clipboard clicks) invokes the browser's CSS selector engine, which is slower than native DOM lookups. Accessing index `[0]` on an `HTMLCollection` returned by `getElementsByTagName` performs an equivalent falsy evaluation (`undefined` instead of `null`) while avoiding CSS parsing overhead entirely.
 **Action:** Safely replace simple descendant `querySelector` calls with `getElementsByTagName("tag")[0]` or `getElementsByClassName("class")[0]` to eliminate CSS parsing overhead in interactive DOM event handlers.
+
+## 2024-05-19 - Single Scroll Listener
+**Learning:** Found two separate `window.addEventListener("scroll", ...)` attachments on the main page (one for back-to-top progress, one for export-to-PDF button visibility), causing duplicate DOM reads and writes on every frame. Batching DOM mutations in a scroll event is crucial to avoid layout thrashing.
+**Action:** Consolidate scroll-dependent logic into a single debounced/requestAnimationFrame scroll listener that batches all scroll-dependent UI updates, preventing layout thrashing and improving overall scrolling performance.
