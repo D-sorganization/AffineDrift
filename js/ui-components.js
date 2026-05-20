@@ -7,6 +7,36 @@ import { debounce, CRITICS_CORNER_PADDING_OFFSET, MATHJAX_RENDER_DELAY_MS } from
 
 const SCROLL_THRESHOLD = 300;
 
+// ⚡ Bolt Optimization: Batch scroll event listeners to prevent layout thrashing
+const scrollCallbacks = new Set();
+let isScrollTicking = false;
+
+function handleGlobalScroll() {
+    if (!isScrollTicking) {
+        window.requestAnimationFrame(() => {
+            const scrollTop = window.scrollY;
+            scrollCallbacks.forEach(cb => cb(scrollTop));
+            isScrollTicking = false;
+        });
+        isScrollTicking = true;
+    }
+}
+
+export function registerScrollCallback(callback) {
+    if (scrollCallbacks.size === 0) {
+        window.addEventListener("scroll", handleGlobalScroll, { passive: true });
+    }
+    scrollCallbacks.add(callback);
+}
+
+export function unregisterScrollCallback(callback) {
+    scrollCallbacks.delete(callback);
+    if (scrollCallbacks.size === 0) {
+        window.removeEventListener("scroll", handleGlobalScroll);
+    }
+}
+
+
 /**
  * Initialize fade-in animations for sections
  */
@@ -180,7 +210,6 @@ export function initBackToTop() {
     document.body.appendChild(backToTopBtn);
 
     const progressCircle = backToTopBtn.querySelector(".progress-ring-circle");
-    let isScrollTicking = false;
     let isBackToTopVisible = false;
     let maxScroll = 0;
 
@@ -200,9 +229,7 @@ export function initBackToTop() {
         resizeObserver.observe(document.body);
     }
 
-    function updateScrollProgress() {
-        const scrollTop = window.scrollY;
-
+    function updateScrollProgress(scrollTop = window.scrollY) {
         const shouldBeVisible = scrollTop > SCROLL_THRESHOLD;
         if (shouldBeVisible !== isBackToTopVisible) {
             isBackToTopVisible = shouldBeVisible;
@@ -218,18 +245,9 @@ export function initBackToTop() {
             const offset = circumference - scrollPercent * circumference;
             progressCircle.style.strokeDashoffset = offset;
         }
-
-        isScrollTicking = false;
     }
 
-    function onScroll() {
-        if (!isScrollTicking) {
-            window.requestAnimationFrame(updateScrollProgress);
-            isScrollTicking = true;
-        }
-    }
-
-    window.addEventListener("scroll", onScroll, { passive: true });
+    registerScrollCallback(updateScrollProgress);
     updateScrollProgress();
 
     backToTopBtn.addEventListener("click", () => {
@@ -268,8 +286,7 @@ export function initExportToPdf() {
   `;
     document.body.appendChild(exportToPdfBtn);
 
-    function updateExportButtonVisibility() {
-        const scrollTop = window.scrollY;
+    function updateExportButtonVisibility(scrollTop = window.scrollY) {
         const shouldBeVisible = scrollTop > SCROLL_THRESHOLD;
         if (shouldBeVisible) {
             exportToPdfBtn.classList.add("visible");
@@ -278,11 +295,7 @@ export function initExportToPdf() {
         }
     }
 
-    window.addEventListener(
-        "scroll",
-        debounce(updateExportButtonVisibility, 100),
-        { passive: true }
-    );
+    registerScrollCallback(updateExportButtonVisibility);
     updateExportButtonVisibility();
 
     exportToPdfBtn.addEventListener("click", () => {
@@ -462,6 +475,15 @@ export function initLightbox() {
  */
 export function initCriticsCorner() {
     const criticsCorners = document.getElementsByClassName("critics-corner");
+
+    const updateHeaderAria = (header, isExpanded) => {
+        const titleSpan = header.querySelector(".critics-corner-title, span:not(.critics-corner-icon)");
+        const titleText = titleSpan ? titleSpan.textContent.trim() : "Critics' Corner";
+        const actionText = isExpanded ? "Collapse" : "Expand";
+        header.setAttribute("aria-label", `${actionText} ${titleText}`);
+        header.setAttribute("title", `${actionText} ${titleText}`);
+    };
+
     let index = 0;
     for (const corner of criticsCorners) {
         const header = corner.getElementsByClassName("critics-corner-header")[0];
@@ -476,6 +498,7 @@ export function initCriticsCorner() {
 
             const isExpandedInitial = header.getAttribute("aria-expanded") === "true";
             content.setAttribute("aria-hidden", String(!isExpandedInitial));
+            updateHeaderAria(header, isExpandedInitial);
 
             content.style.maxHeight = "0";
             content.style.overflow = "hidden";
@@ -491,6 +514,7 @@ export function initCriticsCorner() {
                     content.style.paddingBottom = "0";
                     header.setAttribute("aria-expanded", "false");
                     content.setAttribute("aria-hidden", "true");
+                    updateHeaderAria(header, false);
                 } else {
                     content.style.maxHeight =
                         content.scrollHeight + CRITICS_CORNER_PADDING_OFFSET + "px";
@@ -498,6 +522,7 @@ export function initCriticsCorner() {
                     content.style.paddingBottom = "1rem";
                     header.setAttribute("aria-expanded", "true");
                     content.setAttribute("aria-hidden", "false");
+                    updateHeaderAria(header, true);
                 }
             });
         }
@@ -510,6 +535,15 @@ export function initCriticsCorner() {
  */
 export function initLaymansTermsToggle() {
     const laymansSections = document.getElementsByClassName("laymans-terms");
+
+    const updateHeaderAria = (header, isExpanded) => {
+        const titleSpan = header.querySelector(".laymans-terms-header-title");
+        const titleText = titleSpan ? titleSpan.textContent.trim() : "In Layman's Terms";
+        const actionText = isExpanded ? "Collapse" : "Expand";
+        header.setAttribute("aria-label", `${actionText} ${titleText}`);
+        header.setAttribute("title", `${actionText} ${titleText}`);
+    };
+
     let index = 0;
     for (const section of laymansSections) {
         const header = section.getElementsByClassName("laymans-terms-header")[0];
@@ -527,11 +561,13 @@ export function initLaymansTermsToggle() {
         header.setAttribute("aria-controls", content.id);
         const isExpanded = header.getAttribute("aria-expanded") === "true";
         content.setAttribute("aria-hidden", String(!isExpanded));
+        updateHeaderAria(header, isExpanded);
 
         header.addEventListener("click", () => {
             const expanded = header.getAttribute("aria-expanded") === "true";
             header.setAttribute("aria-expanded", String(!expanded));
             content.setAttribute("aria-hidden", String(expanded));
+            updateHeaderAria(header, !expanded);
         });
         index++;
     }
@@ -542,6 +578,15 @@ export function initLaymansTermsToggle() {
  */
 export function initCriticsCommentsToggle() {
     const criticsSections = document.getElementsByClassName("critics-comments");
+
+    const updateHeaderAria = (header, isExpanded) => {
+        const titleSpan = header.querySelector(".critics-comments-header-title");
+        const titleText = titleSpan ? titleSpan.textContent.trim() : "Critics' Comments";
+        const actionText = isExpanded ? "Collapse" : "Expand";
+        header.setAttribute("aria-label", `${actionText} ${titleText}`);
+        header.setAttribute("title", `${actionText} ${titleText}`);
+    };
+
     let index = 0;
     for (const section of criticsSections) {
         const header = section.getElementsByClassName("critics-comments-header")[0];
@@ -559,11 +604,13 @@ export function initCriticsCommentsToggle() {
         header.setAttribute("aria-controls", content.id);
         const isExpanded = header.getAttribute("aria-expanded") === "true";
         content.setAttribute("aria-hidden", String(!isExpanded));
+        updateHeaderAria(header, isExpanded);
 
         header.addEventListener("click", () => {
             const expanded = header.getAttribute("aria-expanded") === "true";
             header.setAttribute("aria-expanded", String(!expanded));
             content.setAttribute("aria-hidden", String(expanded));
+            updateHeaderAria(header, !expanded);
         });
         index++;
     }

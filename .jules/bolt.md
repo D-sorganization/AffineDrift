@@ -112,3 +112,6 @@
 ## 2024-05-19 - Single Scroll Listener
 **Learning:** Found two separate `window.addEventListener("scroll", ...)` attachments on the main page (one for back-to-top progress, one for export-to-PDF button visibility), causing duplicate DOM reads and writes on every frame. Batching DOM mutations in a scroll event is crucial to avoid layout thrashing.
 **Action:** Consolidate scroll-dependent logic into a single debounced/requestAnimationFrame scroll listener that batches all scroll-dependent UI updates, preventing layout thrashing and improving overall scrolling performance.
+## 2025-02-19 - Consolidate Scroll Listeners to Prevent Layout Thrashing
+**Learning:** Found two separate `window.addEventListener("scroll", ...)` attachments on the main page (one for back-to-top progress, one for export-to-PDF button visibility). Multiple independent scroll handlers can cause duplicate DOM reads and writes on every frame, leading to layout thrashing.
+**Action:** Consolidated scroll-dependent logic into a single centralized `requestAnimationFrame` scroll listener (`handleGlobalScroll` in `ui-components.js`). It batches all scroll-dependent UI updates, reads `window.scrollY` once, and dispatches it to registered callbacks, thereby preventing layout thrashing and improving scrolling performance.
