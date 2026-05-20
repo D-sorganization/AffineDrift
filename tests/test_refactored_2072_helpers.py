@@ -43,7 +43,7 @@ from src.tools.wrist_universal_joint.torque_calculator import (
 # ─────────────────────────────────────────────────────────────────────────────
 
 
-@pytest.mark.skip(reason='Obsolete internal helper tests')
+@pytest.mark.skip(reason="Obsolete internal helper tests")
 class TestBuildHessianTensor:
     def test_shape(self):
         """Hessian tensor has shape (output_dim, n, n)."""
@@ -85,7 +85,7 @@ class TestBuildHessianTensor:
 # ─────────────────────────────────────────────────────────────────────────────
 
 
-@pytest.mark.skip(reason='Obsolete internal helper tests')
+@pytest.mark.skip(reason="Obsolete internal helper tests")
 class TestResidualMonitorHelpers:
     def _monitor(self, n: int = 2) -> ResidualMonitor:
         return ResidualMonitor(eps_warning=0.1, eps_critical=0.5, n_hysteresis=n)
@@ -229,7 +229,7 @@ def _make_test_hole() -> GolfHole:
     )
 
 
-@pytest.mark.skip(reason='Obsolete internal helper tests')
+@pytest.mark.skip(reason="Obsolete internal helper tests")
 class TestFairwayProjection:
     def test_on_centre_line(self):
         hole = _make_test_hole()
@@ -253,7 +253,7 @@ class TestFairwayProjection:
 # ─────────────────────────────────────────────────────────────────────────────
 
 
-@pytest.mark.skip(reason='Obsolete internal helper tests')
+@pytest.mark.skip(reason="Obsolete internal helper tests")
 class TestClampToGround:
     def test_clamps_z(self):
         dynamics = BallFlightDynamics()
@@ -274,7 +274,7 @@ class TestClampToGround:
 # ─────────────────────────────────────────────────────────────────────────────
 
 
-@pytest.mark.skip(reason='Obsolete internal helper tests')
+@pytest.mark.skip(reason="Obsolete internal helper tests")
 class TestEulerStep:
     def test_step_changes_position(self):
         surface = GreenSurface.create_flat_green()
@@ -305,7 +305,7 @@ def _make_simulator_with_hole() -> tuple[RoundSimulator, GolfHole]:
     return sim, hole
 
 
-@pytest.mark.skip(reason='Obsolete internal helper tests')
+@pytest.mark.skip(reason="Obsolete internal helper tests")
 class TestBuildLaunchConditions:
     def test_returns_launch_conditions(self):
         from src.golf_simulation.clubs import LaunchConditions
@@ -330,7 +330,7 @@ class TestBuildLaunchConditions:
         assert all(s > 0 for s in speeds)
 
 
-@pytest.mark.skip(reason='Obsolete internal helper tests')
+@pytest.mark.skip(reason="Obsolete internal helper tests")
 class TestApplyHazardPenalty:
     def _sim_and_hole(self) -> tuple[RoundSimulator, GolfHole]:
         return _make_simulator_with_hole()
@@ -359,7 +359,7 @@ class TestApplyHazardPenalty:
         assert result_pos[0] == pytest.approx(80.0)
 
 
-@pytest.mark.skip(reason='Obsolete internal helper tests')
+@pytest.mark.skip(reason="Obsolete internal helper tests")
 class TestComputePuttInitialVelocity:
     def test_velocity_points_toward_pin(self):
         sim, hole = _make_simulator_with_hole()
@@ -373,7 +373,7 @@ class TestComputePuttInitialVelocity:
         assert math.sqrt(vx**2 + vy**2) > 0
 
 
-@pytest.mark.skip(reason='Obsolete internal helper tests')
+@pytest.mark.skip(reason="Obsolete internal helper tests")
 class TestFindHoledPosition:
     def test_not_holed_returns_last_point(self):
         sim, hole = _make_simulator_with_hole()

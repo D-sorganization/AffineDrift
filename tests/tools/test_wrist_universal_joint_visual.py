@@ -23,8 +23,8 @@ def _build_streamlit_mock() -> types.ModuleType:
     st = types.ModuleType("streamlit")
 
     # Decorator that passes through the function unmodified
-    st.cache_resource = lambda **kw: (lambda f: f)  # type: ignore[attr-defined]
-    st.cache_data = lambda **kw: (lambda f: f)  # type: ignore[attr-defined]
+    st.cache_resource = lambda **kw: lambda f: f  # type: ignore[attr-defined]
+    st.cache_data = lambda **kw: lambda f: f  # type: ignore[attr-defined]
 
     # Session state
     class FakeSessionState(dict):  # type: ignore[type-arg]
