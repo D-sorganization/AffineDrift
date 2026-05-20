@@ -174,12 +174,17 @@
           .slice(0, 4)
           .map((c) => `<span class="concept-tag">${escapeHtml(c)}</span>`)
           .join(" ");
+        const type = entry.type || "reference";
+        const typeClass = `type-${type.toLowerCase()}`;
 
         return `
-          <article class="resource-card" data-entry-id="${escapeHtml(
+          <article class="resource-card bib-entry bibliography-entry reference-item" data-entry-id="${escapeHtml(
             entry.id,
           )}">
-            <h3>${escapeHtml(entry.title)}</h3>
+            <div class="bib-header">
+              <h3 class="bib-title">${escapeHtml(entry.title)}</h3>
+              <span class="type-badge entry-type ${escapeHtml(typeClass)}">${escapeHtml(type)}</span>
+            </div>
             <p class="resource-description"><strong>${escapeHtml(
               String(entry.year || ""),
             )}</strong> · ${escapeHtml(authors || "Unknown authors")}</p>
@@ -223,7 +228,7 @@
 
   const loadEntries = async () => {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout
     try {
       const dataUrl = window.BIBLIOGRAPHY_DATA_URL || "data/bibliography.json";
       const response = await fetch(dataUrl, {
@@ -239,18 +244,25 @@
 
       // ⚡ Bolt Optimization: Pre-compute lowercase strings for search to avoid O(N*M) allocations per keystroke
       for (const entry of data) {
+        const authorsList = Array.isArray(entry.authors) ? entry.authors : (entry.authors ? [entry.authors] : []);
+        const conceptsList = Array.isArray(entry.concepts) ? entry.concepts : (entry.concepts ? [entry.concepts] : []);
+        
         entry._searchTitle = (entry.title || "").toLowerCase();
-        entry._searchAuthors = (entry.authors || []).join(" ").toLowerCase();
-        entry._searchConcepts = (entry.concepts || []).join(" ").toLowerCase();
+        entry._searchAuthors = authorsList.join(" ").toLowerCase();
+        entry._searchConcepts = conceptsList.join(" ").toLowerCase();
         entry._searchText = [
-          entry.title,
-          entry.venue,
-          entry.description,
-          ...(entry.authors || []),
-          ...(entry.concepts || []),
+          entry.title || "",
+          entry.venue || "",
+          entry.description || "",
+          ...authorsList,
+          ...conceptsList,
         ]
           .join(" ")
           .toLowerCase();
+          
+        // Ensure the fields are arrays for rendering
+        entry.authors = authorsList;
+        entry.concepts = conceptsList;
       }
 
       return data;
@@ -309,9 +321,11 @@
       }
 
       const button = event.target.closest("button[data-details-id]");
-      if (!button) return;
+      const card = event.target.closest("article[data-entry-id]");
+      if (!button && !card) return;
+      const entryId = button ? button.dataset.detailsId : card.dataset.entryId;
       const entry = state.entries.find(
-        (item) => item.id === button.dataset.detailsId,
+        (item) => item.id === entryId,
       );
       if (!entry) return;
       renderDetails(entry);

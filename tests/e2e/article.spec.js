@@ -1,6 +1,7 @@
 const { test, expect } = require('@playwright/test');
 
 test.describe('Article Pages', () => {
+  test.use({ viewport: { width: 1440, height: 900 } });
   test('should load article with math equations', async ({ page }) => {
     await page.goto('/articles/inverse-dynamics.html');
 
@@ -15,14 +16,16 @@ test.describe('Article Pages', () => {
   test('should render MathJax equations', async ({ page }) => {
     await page.goto('/articles/inverse-dynamics.html');
 
-    // Wait for MathJax to process
-    await page.waitForTimeout(2000);
+    // Scroll down to trigger lazy loading of MathJax if needed
+    await page.evaluate(() => window.scrollBy(0, 1000));
 
     // Look for rendered math (MathJax creates SVG or mjx- elements)
     const mathElements = page.locator('.MathJax, mjx-container, .mjx-chtml, svg[class*="MathJax"]');
-    const count = await mathElements.count();
+    
+    // Check if at least one math element is visible (gives time for rendering to finish)
+    await expect(mathElements.first()).toBeVisible({ timeout: 15000 });
 
-    // Should have at least some math rendered
+    const count = await mathElements.count();
     expect(count).toBeGreaterThan(0);
   });
 
@@ -43,7 +46,7 @@ test.describe('Article Pages', () => {
       await page.waitForTimeout(500);
 
       // URL should contain the anchor
-      expect(page.url()).toContain(href);
+      expect(decodeURIComponent(page.url())).toContain(href);
     }
   });
 

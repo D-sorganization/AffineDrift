@@ -429,16 +429,7 @@ def run_comparison(
     def _rb(ctrl: Callable[[float, np.ndarray], np.ndarray], label: str) -> BenchmarkResult:
         """Run a single named benchmark and return its result."""
         logger.info("Running %s benchmark...", label)
-        return run_benchmark(
-            ctrl,
-            x0_perturbed,
-            t_span,
-            t_ref,
-            x_ref,
-            label,
-            dt=dt,
-            control_limits=(-control_limit, control_limit),
-        )
+        return run_benchmark(ctrl, x0_perturbed, t_span, t_ref, x_ref, label, dt=dt)
 
     return [
         _rb(setpoint_lqr_controller(x_target), "Setpoint LQR"),

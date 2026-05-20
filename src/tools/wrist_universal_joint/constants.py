@@ -11,7 +11,7 @@ import logging
 
 import numpy as np
 
-from src.core.constants import EPSILON  # noqa: F401 -- re-exported for backward compat
+from src.core.constants import EPSILON as EPSILON  # noqa: F401 -- re-exported for backward compat
 
 logger = logging.getLogger(__name__)
 
