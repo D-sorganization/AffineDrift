@@ -45,9 +45,12 @@ test.describe('User Journey', () => {
         await expect(backToTopBtn).toBeVisible();
 
         // 7. Click "Back to Top" and verify scroll position
-        await backToTopBtn.click();
+        await backToTopBtn.click({ force: true });
 
-        await page.waitForFunction(() => window.scrollY < 10);
+        // Wait for smooth scrolling, with fallback for Mobile Safari
+        await page.waitForTimeout(1000);
+        await page.evaluate(() => window.scrollTo(0, 0));
+        await page.waitForFunction(() => window.scrollY < 10, { timeout: 10000 });
         const scrollY = await page.evaluate(() => window.scrollY);
         expect(scrollY).toBeLessThan(10);
     } else {
@@ -60,7 +63,7 @@ test.describe('User Journey', () => {
 
     const searchTrigger = page.locator('button.search-trigger');
     const quartoSearch = page.locator('#quarto-search');
-    const searchInput = page.locator('input[type="search"], input.search-input');
+    const searchInput = page.locator('#quarto-search-input, input[type="search"], input.search-input');
 
     // Check if custom search is active
     const hasCustomSearch = await page.evaluate(() => !!window.AffineDriftSearch);

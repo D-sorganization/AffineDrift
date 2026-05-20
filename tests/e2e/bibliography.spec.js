@@ -2,7 +2,7 @@ const { test, expect } = require('@playwright/test');
 
 test.describe('Bibliography Page', () => {
   test('should load bibliography page', async ({ page }) => {
-    await page.goto('/bibliography.html');
+    await page.goto('/resources/bibliography.html');
 
     // Check page loads
     await expect(page).toHaveTitle(/Bibliography|References|AffineDrift/);
@@ -13,23 +13,21 @@ test.describe('Bibliography Page', () => {
   });
 
   test('should display bibliography entries', async ({ page }) => {
-    await page.goto('/bibliography.html');
+    page.on('console', msg => console.log(`BROWSER CONSOLE: ${msg.text()}`));
+    page.on('pageerror', err => console.log(`BROWSER ERROR: ${err.message}`));
+    await page.goto('/resources/bibliography.html');
 
-    // Wait for bibliography to load
-    await page.waitForSelector('.bib-entry, .bibliography-entry, .reference-item', {
-      timeout: 10000
-    }).catch(() => {});
+    // Wait for bibliography entries to load and render
+    const entries = page.locator('.bib-entry, .bibliography-entry, .reference-item');
+    await expect(entries.first()).toBeVisible({ timeout: 30000 });
 
     // Check for entries
-    const entries = page.locator('.bib-entry, .bibliography-entry, .reference-item');
     const count = await entries.count();
-
-    // Should have bibliography entries
     expect(count).toBeGreaterThan(0);
   });
 
   test('should have working search functionality', async ({ page }) => {
-    await page.goto('/bibliography.html');
+    await page.goto('/resources/bibliography.html');
 
     // Wait for page to load
     await page.waitForLoadState('networkidle');
@@ -55,7 +53,7 @@ test.describe('Bibliography Page', () => {
   });
 
   test('should have working sort controls', async ({ page }) => {
-    await page.goto('/bibliography.html');
+    await page.goto('/resources/bibliography.html');
 
     // Wait for page to load
     await page.waitForLoadState('networkidle');
@@ -83,7 +81,7 @@ test.describe('Bibliography Page', () => {
   });
 
   test('should show entry details when clicked', async ({ page }) => {
-    await page.goto('/bibliography.html');
+    await page.goto('/resources/bibliography.html');
 
     // Wait for entries to load
     await page.waitForSelector('.bib-entry, .bibliography-entry', {
@@ -108,7 +106,7 @@ test.describe('Bibliography Page', () => {
   });
 
   test('should display entry type badges', async ({ page }) => {
-    await page.goto('/bibliography.html');
+    await page.goto('/resources/bibliography.html');
 
     // Wait for entries to load
     await page.waitForSelector('.bib-entry, .bibliography-entry', {
@@ -124,7 +122,7 @@ test.describe('Bibliography Page', () => {
   });
 
   test('should display concept tags', async ({ page }) => {
-    await page.goto('/bibliography.html');
+    await page.goto('/resources/bibliography.html');
 
     // Wait for entries to load
     await page.waitForSelector('.bib-entry, .bibliography-entry', {
@@ -140,7 +138,7 @@ test.describe('Bibliography Page', () => {
   });
 
   test('should handle empty search results gracefully', async ({ page }) => {
-    await page.goto('/bibliography.html');
+    await page.goto('/resources/bibliography.html');
 
     // Wait for page to load
     await page.waitForLoadState('networkidle');
