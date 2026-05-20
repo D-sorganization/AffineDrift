@@ -7,6 +7,36 @@ import { debounce, CRITICS_CORNER_PADDING_OFFSET, MATHJAX_RENDER_DELAY_MS } from
 
 const SCROLL_THRESHOLD = 300;
 
+// ⚡ Bolt Optimization: Batch scroll event listeners to prevent layout thrashing
+const scrollCallbacks = new Set();
+let isScrollTicking = false;
+
+function handleGlobalScroll() {
+    if (!isScrollTicking) {
+        window.requestAnimationFrame(() => {
+            const scrollTop = window.scrollY;
+            scrollCallbacks.forEach(cb => cb(scrollTop));
+            isScrollTicking = false;
+        });
+        isScrollTicking = true;
+    }
+}
+
+export function registerScrollCallback(callback) {
+    if (scrollCallbacks.size === 0) {
+        window.addEventListener("scroll", handleGlobalScroll, { passive: true });
+    }
+    scrollCallbacks.add(callback);
+}
+
+export function unregisterScrollCallback(callback) {
+    scrollCallbacks.delete(callback);
+    if (scrollCallbacks.size === 0) {
+        window.removeEventListener("scroll", handleGlobalScroll);
+    }
+}
+
+
 /**
  * Initialize fade-in animations for sections
  */
@@ -180,7 +210,6 @@ export function initBackToTop() {
     document.body.appendChild(backToTopBtn);
 
     const progressCircle = backToTopBtn.querySelector(".progress-ring-circle");
-    let isScrollTicking = false;
     let isBackToTopVisible = false;
     let maxScroll = 0;
 
@@ -200,9 +229,7 @@ export function initBackToTop() {
         resizeObserver.observe(document.body);
     }
 
-    function updateScrollProgress() {
-        const scrollTop = window.scrollY;
-
+    function updateScrollProgress(scrollTop = window.scrollY) {
         const shouldBeVisible = scrollTop > SCROLL_THRESHOLD;
         if (shouldBeVisible !== isBackToTopVisible) {
             isBackToTopVisible = shouldBeVisible;
@@ -218,18 +245,9 @@ export function initBackToTop() {
             const offset = circumference - scrollPercent * circumference;
             progressCircle.style.strokeDashoffset = offset;
         }
-
-        isScrollTicking = false;
     }
 
-    function onScroll() {
-        if (!isScrollTicking) {
-            window.requestAnimationFrame(updateScrollProgress);
-            isScrollTicking = true;
-        }
-    }
-
-    window.addEventListener("scroll", onScroll, { passive: true });
+    registerScrollCallback(updateScrollProgress);
     updateScrollProgress();
 
     backToTopBtn.addEventListener("click", () => {
@@ -268,8 +286,7 @@ export function initExportToPdf() {
   `;
     document.body.appendChild(exportToPdfBtn);
 
-    function updateExportButtonVisibility() {
-        const scrollTop = window.scrollY;
+    function updateExportButtonVisibility(scrollTop = window.scrollY) {
         const shouldBeVisible = scrollTop > SCROLL_THRESHOLD;
         if (shouldBeVisible) {
             exportToPdfBtn.classList.add("visible");
@@ -278,11 +295,7 @@ export function initExportToPdf() {
         }
     }
 
-    window.addEventListener(
-        "scroll",
-        debounce(updateExportButtonVisibility, 100),
-        { passive: true }
-    );
+    registerScrollCallback(updateExportButtonVisibility);
     updateExportButtonVisibility();
 
     exportToPdfBtn.addEventListener("click", () => {
