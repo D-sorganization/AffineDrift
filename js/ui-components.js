@@ -477,6 +477,11 @@ export function initCriticsCorner() {
             const isExpandedInitial = header.getAttribute("aria-expanded") === "true";
             content.setAttribute("aria-hidden", String(!isExpandedInitial));
 
+            const titleEl = header.getElementsByClassName("critics-corner-title")[0];
+            const titleText = titleEl ? titleEl.textContent.trim() : "Critics Corner";
+            header.setAttribute("aria-label", `${isExpandedInitial ? "Collapse" : "Expand"} ${titleText}`);
+            header.setAttribute("title", `${isExpandedInitial ? "Collapse" : "Expand"} ${titleText}`);
+
             content.style.maxHeight = "0";
             content.style.overflow = "hidden";
             content.style.transition =
@@ -491,6 +496,8 @@ export function initCriticsCorner() {
                     content.style.paddingBottom = "0";
                     header.setAttribute("aria-expanded", "false");
                     content.setAttribute("aria-hidden", "true");
+                    header.setAttribute("aria-label", `Expand ${titleText}`);
+                    header.setAttribute("title", `Expand ${titleText}`);
                 } else {
                     content.style.maxHeight =
                         content.scrollHeight + CRITICS_CORNER_PADDING_OFFSET + "px";
@@ -498,6 +505,8 @@ export function initCriticsCorner() {
                     content.style.paddingBottom = "1rem";
                     header.setAttribute("aria-expanded", "true");
                     content.setAttribute("aria-hidden", "false");
+                    header.setAttribute("aria-label", `Collapse ${titleText}`);
+                    header.setAttribute("title", `Collapse ${titleText}`);
                 }
             });
         }
@@ -525,13 +534,19 @@ export function initLaymansTermsToggle() {
         }
 
         header.setAttribute("aria-controls", content.id);
-        const isExpanded = header.getAttribute("aria-expanded") === "true";
-        content.setAttribute("aria-hidden", String(!isExpanded));
+        const isExpandedInitial = header.getAttribute("aria-expanded") === "true";
+        content.setAttribute("aria-hidden", String(!isExpandedInitial));
+
+        const titleText = "Layman's Terms";
+        header.setAttribute("aria-label", `${isExpandedInitial ? "Collapse" : "Expand"} ${titleText}`);
+        header.setAttribute("title", `${isExpandedInitial ? "Collapse" : "Expand"} ${titleText}`);
 
         header.addEventListener("click", () => {
             const expanded = header.getAttribute("aria-expanded") === "true";
             header.setAttribute("aria-expanded", String(!expanded));
             content.setAttribute("aria-hidden", String(expanded));
+            header.setAttribute("aria-label", `${expanded ? "Expand" : "Collapse"} ${titleText}`);
+            header.setAttribute("title", `${expanded ? "Expand" : "Collapse"} ${titleText}`);
         });
         index++;
     }
@@ -557,13 +572,19 @@ export function initCriticsCommentsToggle() {
         }
 
         header.setAttribute("aria-controls", content.id);
-        const isExpanded = header.getAttribute("aria-expanded") === "true";
-        content.setAttribute("aria-hidden", String(!isExpanded));
+        const isExpandedInitial = header.getAttribute("aria-expanded") === "true";
+        content.setAttribute("aria-hidden", String(!isExpandedInitial));
+
+        const titleText = "Critics Comments";
+        header.setAttribute("aria-label", `${isExpandedInitial ? "Collapse" : "Expand"} ${titleText}`);
+        header.setAttribute("title", `${isExpandedInitial ? "Collapse" : "Expand"} ${titleText}`);
 
         header.addEventListener("click", () => {
             const expanded = header.getAttribute("aria-expanded") === "true";
             header.setAttribute("aria-expanded", String(!expanded));
             content.setAttribute("aria-hidden", String(expanded));
+            header.setAttribute("aria-label", `${expanded ? "Expand" : "Collapse"} ${titleText}`);
+            header.setAttribute("title", `${expanded ? "Expand" : "Collapse"} ${titleText}`);
         });
         index++;
     }
