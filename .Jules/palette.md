@@ -44,3 +44,22 @@
 ## 2026-04-12 - Native Tooltips for Icon-Only Buttons
 **Learning:** While icon-only buttons rely on aria-label for screen readers, they lack native on-hover tooltips for sighted users without a title attribute, creating a gap between accessibility and standard usability.
 **Action:** Always pair aria-label with a matching title attribute on interactive icon-only elements to ensure sighted mouse users receive visual hints.
+
+## 2026-04-29 - MathJax Overflow on Mobile Devices
+**Learning:** Display math equations (MathJax) often exceed standard viewport widths on mobile devices. Without explicit container constraints, they cause horizontal page scrolling, breaking responsive layout and causing frustration for touch users.
+**Action:** Always wrap or target `.math.display` and `mjx-container[display="true"]` with `overflow-x: auto; max-width: 100%; -webkit-overflow-scrolling: touch;` to ensure they scroll internally without breaking the main viewport layout.
+
+## 2026-06-01 - Focus Management for Sidebar Detail Views
+**Learning:** When a list item dynamically updates a separate details pane (like a sidebar), screen reader users are left unaware of the change unless focus is explicitly moved to the new content.
+**Action:** Add `tabindex="-1"` and call `.focus({ preventScroll: true })` on the details container after updating its content, cleaning up the `tabindex` on blur.
+
+## 2026-06-02 - Accessible Dynamic Empty States
+**Learning:** When dynamic UI areas like history sidebars become empty (e.g., initially loaded without data or cleared), screen readers must be notified.
+**Action:** Always provide `role="status"` and `aria-live="polite"` on dynamically rendered empty state elements so that the absence of data is clearly communicated to assistive technologies.
+## 2026-05-18 - Dynamic ARIA Labels on Collapsible Components
+**Learning:** Static labels on collapsible components (like accordions) fail to communicate their current state and available action. Hardcoding `aria-expanded` is insufficient if the base label doesn't update.
+**Action:** Always dynamically update both `aria-label` and native `title` tooltips on collapsible headers (e.g., "Expand [Title]" vs "Collapse [Title]") based on their `aria-expanded` state.
+
+## 2026-05-19 - Improved collapsible sidebar accessibility
+**Learning:** In the home page collapsible sidebar menu, the toggle buttons (`.sidebar-section-toggle`) only updated `aria-expanded` attributes without updating the `aria-label` or `title` to explicitly indicate the new action ("Expand" or "Collapse") to screen readers. This created an accessibility issue where users are not properly informed of what clicking the button will do next based on the current state.
+**Action:** Update both the `aria-label` and `title` attributes dynamically when the sidebar section toggle state changes to explicitly read "Expand [Section Name]" or "Collapse [Section Name]" based on the new `aria-expanded` state.

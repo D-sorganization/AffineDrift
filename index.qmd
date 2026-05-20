@@ -1,15 +1,15 @@
 ---
 title: "Home"
-description: "Welcome to AffineDrift - technical notes on golf mechanics and control"
+description: "AffineDrift - scientific notes on golf mechanics, modeling, and control"
 toc: false
 page-layout: full
 ---
 
 ```{=html}
 <!-- Mobile menu toggle for home-sidebar (Desktop-first layout) -->
-<button class="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
-  <svg class="icon-menu" viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
-  <svg class="icon-close" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+<button type="button" class="mobile-menu-toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+  <svg class="icon-menu" aria-hidden="true" viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+  <svg class="icon-close" aria-hidden="true" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
 </button>
 <div class="sidebar-overlay"></div>
 
@@ -23,9 +23,9 @@ page-layout: full
       <div class="sidebar-sticky-content">
 
         <div class="sidebar-section collapsible-section">
-          <button class="sidebar-section-toggle" aria-expanded="true" data-target="articles-section">
+          <button type="button" class="sidebar-section-toggle" aria-expanded="true" data-target="articles-section">
             <h3>Articles & Theory</h3>
-            <span class="toggle-icon">&#9660;</span>
+            <span class="toggle-icon" aria-hidden="true">&#9660;</span>
           </button>
           <div id="articles-section" class="sidebar-section-content show">
             <ul class="resource-links">
@@ -48,22 +48,22 @@ page-layout: full
         </div>
 
         <div class="sidebar-section collapsible-section">
-          <button class="sidebar-section-toggle" aria-expanded="false" data-target="models-section">
+          <button type="button" class="sidebar-section-toggle" aria-expanded="false" data-target="models-section">
             <h3>Models</h3>
-            <span class="toggle-icon">&#9660;</span>
+            <span class="toggle-icon" aria-hidden="true">&#9660;</span>
           </button>
           <div id="models-section" class="sidebar-section-content">
             <ul class="resource-links">
               <li><a href="models/models.html">Golf Modeling Suite</a></li>
-              <li><a href="https://github.com/D-sorganization/Golf_Modeling_Suite" target="_blank" rel="noopener">GitHub Repository</a></li>
+              <li><a href="https://github.com/D-sorganization/UpstreamDrift" target="_blank" rel="noopener">UpstreamDrift Repository</a></li>
             </ul>
           </div>
         </div>
 
         <div class="sidebar-section collapsible-section">
-          <button class="sidebar-section-toggle" aria-expanded="false" data-target="resources-section">
+          <button type="button" class="sidebar-section-toggle" aria-expanded="false" data-target="resources-section">
             <h3>Resources</h3>
-            <span class="toggle-icon">&#9660;</span>
+            <span class="toggle-icon" aria-hidden="true">&#9660;</span>
           </button>
           <div id="resources-section" class="sidebar-section-content">
             <ul class="resource-links">
@@ -77,9 +77,9 @@ page-layout: full
         </div>
 
         <div class="sidebar-section collapsible-section">
-          <button class="sidebar-section-toggle" aria-expanded="false" data-target="connect-section">
+          <button type="button" class="sidebar-section-toggle" aria-expanded="false" data-target="connect-section">
             <h3>Connect</h3>
-            <span class="toggle-icon">&#9660;</span>
+            <span class="toggle-icon" aria-hidden="true">&#9660;</span>
           </button>
           <div id="connect-section" class="sidebar-section-content">
             <ul class="resource-links">
@@ -97,26 +97,80 @@ page-layout: full
       <!-- Welcome Section -->
       <section id="welcome" class="welcome-section">
         <div class="welcome-header">
-          <h1>Welcome to AffineDrift</h1>
-          <p class="subtitle">Technical Notes on Golf Mechanics and Control</p>
+          <h1>AffineDrift</h1>
+          <p class="subtitle">Scientific Notes on Golf Mechanics, Modeling, and Control</p>
         </div>
 
         <div class="welcome-intro">
           <p>
-            AffineDrift collects technical articles, textbook chapters, and reference material on multibody dynamics, control, biomechanics, and the golf swing. The site distinguishes established mathematical structure from AffineDrift's own model-dependent interpretations and working hypotheses.
+            AffineDrift is a technical research portfolio on golf swing mechanics, multibody dynamics, and nonlinear control. It collects textbook-style chapters, source maps, reproducible model links, validation notes, and critique responses so that claims can be read with their assumptions and evidence in view.
           </p>
           <p>
-            The material is organized into two main textbooks, exploratory article series, critique pages, and a reference library of external resources.
+            The established material is the mathematics and mechanics literature behind the models. The AffineDrift contribution is the golf-specific application, synthesis, and review workflow: some pages are polished exposition, while others remain exploratory hypotheses or implementation notes.
           </p>
         </div>
       </section>
 
+      <!-- Technical Reviewer Path -->
+      <section id="reviewers" class="reviewer-section" style="margin-top: 2rem;">
+        <h2>For Technical Reviewers</h2>
+        <p>
+          Start with the clearest evidence path: the golf mechanics chapters, the control-affine derivation, the bibliography, the critique log, and the executable model entry points.
+        </p>
+        <div class="quick-links-grid">
+          <a href="articles/The_Physics_of_Golf/quarto/index.html" class="quick-link-card" title="Read The Physics of Golf">
+            <span class="quick-link-icon"><i class="bi bi-book" aria-hidden="true"></i></span>
+            <span class="quick-link-text">Physics of Golf</span>
+          </a>
+          <a href="articles/theory-part1.html" class="quick-link-card" title="Read Theory Part 1">
+            <span class="quick-link-icon"><i class="bi bi-diagram-3" aria-hidden="true"></i></span>
+            <span class="quick-link-text">Theory Part 1</span>
+          </a>
+          <a href="resources/bibliography.html" class="quick-link-card" title="View Bibliography">
+            <span class="quick-link-icon"><i class="bi bi-journals" aria-hidden="true"></i></span>
+            <span class="quick-link-text">Bibliography</span>
+          </a>
+          <a href="critiques/index.html" class="quick-link-card" title="Read Critiques &amp; Responses">
+            <span class="quick-link-icon"><i class="bi bi-chat-square-text" aria-hidden="true"></i></span>
+            <span class="quick-link-text">Critiques &amp; Responses</span>
+          </a>
+          <a href="models/models.html" class="quick-link-card" title="Explore Model Entry Point">
+            <span class="quick-link-icon"><i class="bi bi-laptop" aria-hidden="true"></i></span>
+            <span class="quick-link-text">Model Entry Point</span>
+          </a>
+          <a href="https://github.com/D-sorganization/UpstreamDrift" class="quick-link-card" target="_blank" rel="noopener" title="Visit UpstreamDrift GitHub Repo">
+            <span class="quick-link-icon"><i class="bi bi-github" aria-hidden="true"></i></span>
+            <span class="quick-link-text">UpstreamDrift</span>
+          </a>
+        </div>
+      </section>
 
+      <!-- Audience Segmentation -->
+      <section id="audiences" class="audience-section" style="margin-top: 2rem;">
+        <h2>How to Read AffineDrift</h2>
+        <div class="audience-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+          <div class="audience-card" style="padding: 1.5rem; background: var(--bg-secondary, #f8f9fa); border-radius: 8px; border-top: 4px solid var(--primary-color, #2563eb);">
+            <h3><i class="bi bi-person-badge" aria-hidden="true"></i> For Practitioners</h3>
+            <p><strong>Focus:</strong> model assumptions, parameter definitions, and reproducible methods.</p>
+            <p>Coaches and analysts should treat golf-specific metrics as model outputs or hypotheses unless a page identifies a cited source or validation artifact.</p>
+          </div>
+          <div class="audience-card" style="padding: 1.5rem; background: var(--bg-secondary, #f8f9fa); border-radius: 8px; border-top: 4px solid #10b981;">
+            <h3><i class="bi bi-person" aria-hidden="true"></i> For Laypersons</h3>
+            <p><strong>Focus:</strong> Intuitive explanations, motivated examples, plain English.</p>
+            <p>Plain-language sections translate technical arguments without removing the page-level caveats about model scope and evidence status.</p>
+          </div>
+          <div class="audience-card" style="padding: 1.5rem; background: var(--bg-secondary, #f8f9fa); border-radius: 8px; border-top: 4px solid #8b5cf6;">
+            <h3><i class="bi bi-calculator" aria-hidden="true"></i> For Mathematicians</h3>
+            <p><strong>Focus:</strong> Precise definitions, complete derivations, consistent notation.</p>
+            <p>Use the textbooks and theory articles to inspect the control-affine framing, derivation choices, notation, and boundaries between standard results and AffineDrift synthesis.</p>
+          </div>
+        </div>
+      </section>
 
       <!-- Math Showcase -->
-      <section id="framework" class="math-section">
+      <section id="framework" class="math-section" style="margin-top: 3rem;">
         <h2>The Core Framework</h2>
-        <p>The golf swing can be modeled as a control-affine system:</p>
+        <p>Several pages model the golf swing as a control-affine system:</p>
         <div class="math-showcase">
           $$\dot{x} = f(x) + g(x)u$$
         </div>
@@ -128,21 +182,21 @@ page-layout: full
         </div>
       </section>
 
-      <!-- About the Approach Section -->
-      <section id="approach" class="approach-section">
-        <h2>Editorial and Review Process</h2>
+      <!-- Verification and Review Section -->
+      <section id="verification" class="approach-section" style="margin-top: 3rem;">
+        <h2>Verification and Review Workflow</h2>
         <div class="approach-content">
           <p>
-            The site is assembled through a mixed drafting and review workflow. Mathematical derivations, code, and references are revised iteratively with the goal of making assumptions explicit and keeping claims tied to stated models or cited sources.
+            AffineDrift prioritizes artifacts that can be inspected: equations, citations, executable model links, validation reports, issue-linked review notes, and CI results. Syntax checks, tests, and repository inventories help catch mechanical errors, but they do not convert exploratory biomechanical interpretations into established results.
           </p>
           <p>
-            Priority is given to material that can be checked directly: equations that can be inspected, code that can be reviewed, and references that can be traced independently.
+            Computational tools support drafting, refactoring, and repeatable checks. Scientific claims still have to be tied to stated assumptions, cited sources, model code, or explicit numerical experiments.
           </p>
           <p>
             Not every page is at the same editorial stage. Some pages are polished expositions, while others remain exploratory notes or literature-review scaffolds and should be read with the status notes on each page in mind.
           </p>
           <p>
-            Critical review is part of the publication model. Limitations, objections, and unresolved evidence gaps are surfaced alongside the main articles rather than hidden behind them.
+            Critical review is part of the publication model. Limitations, objections, and unresolved evidence gaps are surfaced alongside the main articles in dedicated "Critics' Comments" sections, rather than hidden behind them.
           </p>
         </div>
       </section>
@@ -151,19 +205,19 @@ page-layout: full
       <section id="quickstart" class="quick-links-section">
         <h2>Quick Start</h2>
         <div class="quick-links-grid">
-          <a href="pages/overview.html" class="quick-link-card">
+          <a href="pages/overview.html" class="quick-link-card" title="Read Technical Overview">
             <span class="quick-link-icon"><i class="bi bi-file-text" aria-hidden="true"></i></span>
             <span class="quick-link-text">Technical Overview</span>
           </a>
-          <a href="models/models.html" class="quick-link-card">
+          <a href="models/models.html" class="quick-link-card" title="Explore Model Entry Point">
             <span class="quick-link-icon"><i class="bi bi-laptop" aria-hidden="true"></i></span>
             <span class="quick-link-text">Golf Modeling Suite</span>
           </a>
-          <a href="resources/bibliography.html" class="quick-link-card">
+          <a href="resources/bibliography.html" class="quick-link-card" title="View Bibliography">
             <span class="quick-link-icon"><i class="bi bi-journals" aria-hidden="true"></i></span>
             <span class="quick-link-text">Bibliography</span>
           </a>
-          <a href="pages/contact.html" class="quick-link-card">
+          <a href="pages/contact.html" class="quick-link-card" title="Contact Us">
             <span class="quick-link-icon"><i class="bi bi-envelope" aria-hidden="true"></i></span>
             <span class="quick-link-text">Contact</span>
           </a>
@@ -177,9 +231,9 @@ page-layout: full
         <h3 class="sidebar-heading">On This Page</h3>
         <ul class="toc-links">
           <li><a href="#welcome">Welcome</a></li>
-
+          <li><a href="#reviewers">For Reviewers</a></li>
           <li><a href="#framework">Core Framework</a></li>
-          <li><a href="#approach">AI-Assisted Research</a></li>
+          <li><a href="#verification">Verification</a></li>
           <li><a href="#quickstart">Quick Start</a></li>
         </ul>
       </div>

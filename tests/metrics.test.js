@@ -75,6 +75,7 @@ describe("Metrics Module", () => {
       localStorage.setItem(STORAGE_KEY, "invalid json");
       const metrics = getMetrics();
       expect(metrics).toHaveProperty("totalPageViews", 0);
+      expect(localStorage.getItem(STORAGE_KEY)).toBeNull();
     });
   });
 

@@ -84,24 +84,13 @@ def is_safe_path(filepath: str) -> bool:
     return path.suffix == ".py"
 
 
-def _ensure_import(lines: list[str], import_statement: str) -> bool:
-    """Add an import statement if not already present.
-
-    Inserts after the last existing import from the same module.
-    Returns True if import was added.
-    """
-    # Check if already imported
-    for line in lines:
-        if import_statement in line:
-            return False
-
-    # Find the right place to insert
-    # Look for the last import line before any code
+def _find_insertion_point(lines: list[str]) -> int:
+    """Find the best index to insert a new import."""
     last_import_idx = -1
     in_docstring = False
     for i, line in enumerate(lines):
         stripped = line.strip()
-        if stripped.startswith('"""') or stripped.startswith("'''"):
+        if stripped.startswith(('"""', "'''")):
             if in_docstring:
                 in_docstring = False
                 continue
@@ -113,27 +102,41 @@ def _ensure_import(lines: list[str], import_statement: str) -> bool:
         if stripped.startswith(("import ", "from ")):
             last_import_idx = i
         elif stripped and not stripped.startswith("#") and last_import_idx >= 0:
-            break  # Hit non-import code after imports
+            return last_import_idx + 1
 
     if last_import_idx >= 0:
-        lines.insert(last_import_idx + 1, import_statement + "\n")
-    else:
-        # No imports found, add after module docstring or at top
-        insert_at = 0
-        for i, line in enumerate(lines):
-            stripped = line.strip()
-            if stripped.startswith('"""') or stripped.startswith("'''"):
-                # Skip past docstring
-                if stripped.count('"""') >= 2 or stripped.count("'''") >= 2:
-                    insert_at = i + 1
-                    break
-                for j in range(i + 1, len(lines)):
-                    if '"""' in lines[j] or "'''" in lines[j]:
-                        insert_at = j + 1
-                        break
-                break
-            elif stripped and not stripped.startswith("#"):
-                insert_at = i
-                break
-        lines.insert(insert_at, import_statement + "\n")
+        return last_import_idx + 1
+
+    return _find_after_docstring(lines)
+
+
+def _find_after_docstring(lines: list[str]) -> int:
+    """Find insertion point after module docstring."""
+    for i, line in enumerate(lines):
+        stripped = line.strip()
+        if stripped.startswith(('"""', "'''")):
+            if stripped.count('"""') >= 2 or stripped.count("'''") >= 2:
+                return i + 1
+            for j in range(i + 1, len(lines)):
+                if '"""' in lines[j] or "'''" in lines[j]:
+                    return j + 1
+            return i + 1
+        if stripped and not stripped.startswith("#"):
+            return i
+    return 0
+
+
+def _ensure_import(lines: list[str], import_statement: str) -> bool:
+    """Add an import statement if not already present.
+
+    Inserts after the last existing import from the same module.
+    Returns True if import was added.
+    """
+    # Check if already imported
+    for line in lines:
+        if import_statement in line:
+            return False
+
+    insert_at = _find_insertion_point(lines)
+    lines.insert(insert_at, import_statement + "\n")
     return True

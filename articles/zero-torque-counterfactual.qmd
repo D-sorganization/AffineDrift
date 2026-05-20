@@ -14,9 +14,9 @@ format:
 <!-- In Layman's Terms Section - Simplified overview for non-technical readers -->
 <section class="laymans-terms">
   <h2>
-  <button class="laymans-terms-header" aria-expanded="false">
+  <button type="button" class="laymans-terms-header" aria-expanded="false">
     <span class="laymans-terms-header-title">In Layman's Terms</span>
-    <span class="laymans-terms-icon">▼</span>
+    <span class="laymans-terms-icon" aria-hidden="true">▼</span>
   </button>
 </h2>
   <div class="laymans-terms-content">
@@ -53,6 +53,9 @@ format:
         <p>
           A golfer cannot actually apply zero torque — muscles are always doing something. The ZTCF is a mathematical tool, not a physical experiment. It is computed from the model equations, not measured directly. Think of it like the "expected path" that a physicist would predict before watching the swing.
         </p>
+        <p>
+          <strong>Caveat on "relaxed muscles":</strong> The "let go of the wheel" analogy is intuitive but imprecise. The ZTCF does <em>not</em> simulate a flaccid collapse of the body — it simulates the dynamics with <em>active driving torques</em> set to zero while the <em>structural impedance</em> (joint stiffness, damping, identified from the active swing) is held fixed. See the canonical definitions below and the Critical Assumption callout in <a href="theory-part3.html">Part III</a> for the full technical statement.
+        </p>
       </div>
 
     </div>
@@ -66,6 +69,22 @@ format:
 - **Established (textbook):** Lagrangian drift/input decomposition of control-affine systems; counterfactual simulation as a diagnostic technique in mechanics.
 - **Novel application:** Applying the ZTCF framework specifically to golf swing biomechanics; using it as a standard diagnostic tool for practitioners and researchers.
 - **Terminology:** "Zero Torque Counterfactual (ZTCF)" is the authors' label for this construction in the golf context; the underlying mathematics is standard rigid-body dynamics.
+:::
+
+::: {.callout-important}
+## Canonical ZTCF definitions (glossary) {#sec-ztcf-canonical}
+
+This article is the **canonical reference** for "ZTCF" across the AffineDrift site. All other articles should link here on first use. Three distinct objects are in circulation; the site uses the following names and conventions:
+
+1. **Trajectory ZTCF** — $x^{\mathrm{ZTCF}}(t; x_0, t_0)$, the solution of
+    $$\dot{x}^{\mathrm{ZTCF}}(t) = f\!\left(x^{\mathrm{ZTCF}}(t)\right), \qquad x^{\mathrm{ZTCF}}(t_0) = x_0, \qquad t \in [t_0, t_1].$$
+    A **trajectory**, not a vector. This is the default meaning of "ZTCF" in this series.
+
+2. **Drift vector** $f(x)$ — the **instantaneous** drift, an acceleration-valued vector evaluated at a single state. This object is **not called ZTCF** on this site. Calling the value $f(x(t))$ the "ZTCF at time $t$" is a terminology error; use "drift vector at $x(t)$" or simply $f(x(t))$.
+
+3. **Branched ZTCF** — the Trajectory ZTCF (1) with initial condition set to the **observed** swing state $x_0 = x^{\mathrm{actual}}(t_0)$ at a branch time $t_0$, compared against $x^{\mathrm{actual}}(t)$ for $t > t_0$. This is the construct used throughout numerical validation (e.g., the kill-switch algorithm of @sec-kill-switch, and Parts 2 and 5 of the theory series). When we say "ZTCF" in downswing-analysis contexts without further qualification, we mean Branched ZTCF with $t_0$ chosen inside the downswing.
+
+Articles that use a variant other than (1) — in particular anywhere the context is "the ZTCF from the top of backswing" vs "the ZTCF from mid-downswing" — should either link to this definition or state the variant explicitly in a local convention box.
 :::
 
 ## Motivation
@@ -198,7 +217,7 @@ Let:
 - $f(x_k)$ denote the drift acceleration vector at $x_k$,
 - $x^{\mathrm{ZTCF}}_k$ denote the ZTCF state at time $t_k$.
 
-### Kill-Switch Approach (Simulink)
+### Kill-Switch Approach (Simulink) {#sec-kill-switch}
 
 In the Simulink forward-dynamics environment, the ZTCF was evaluated using a "kill-switch" method:
 

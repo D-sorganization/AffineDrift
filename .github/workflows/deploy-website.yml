@@ -15,6 +15,9 @@ permissions:
   pages: write
   id-token: write
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 jobs:
   # ── Dispatcher: require a local self-hosted runner and fail closed ──────────────────
   pick-runner:
@@ -41,6 +44,7 @@ jobs:
           fi
 
   build:
+    timeout-minutes: 60
     if: github.repository == 'D-sorganization/AffineDrift'
     runs-on: d-sorg-fleet
     needs: pick-runner
@@ -48,16 +52,21 @@ jobs:
       PYTHONPATH: .
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
         with:
           python-version: "3.12"
           cache: "pip"
 
       - name: Install Python dependencies
-        run: pip install -r requirements.txt
+        run: |
+          python -m venv "$RUNNER_TEMP/deploy-venv"
+          source "$RUNNER_TEMP/deploy-venv/bin/activate"
+          python -m pip install --upgrade pip setuptools
+          python -m pip install -r requirements.txt
+          echo "$RUNNER_TEMP/deploy-venv/bin" >> "$GITHUB_PATH"
 
       - name: Verify Quarto Render Coverage
         run: python3 scripts/check_quarto_render_coverage.py
@@ -117,14 +126,15 @@ jobs:
         run: python3 -m src.tools.check_site_health --fail-on broken
 
       - name: Setup Pages
-        uses: actions/configure-pages@v6
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v5
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
         with:
           path: docs
 
   deploy:
+    timeout-minutes: 30
     if: github.repository == 'D-sorganization/AffineDrift'
     environment:
       name: github-pages
@@ -134,7 +144,7 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v5
+        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5
 
       - name: Verify Deployment
         run: |

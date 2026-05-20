@@ -21,6 +21,14 @@ This directory contains a **comprehensive enhancement** of the wrist-as-universa
 - Varies cyclically with wrist angle (not constant!)
 - Matches known Hooke/Cardan joint behavior
 
+> **Notation box — canonical definitions (used throughout this README).**
+> Let φ denote the dynamic wrist flexion angle and δ ≡ θ_grip the static grip angle (angle between the club shaft and the wrist-joint axes). Then:
+> ```
+> R_τ(φ, θ_grip) = √[ 1 − sin²(θ_grip) · sin²(φ) ] / cos(θ_grip)     (torque ratio)
+> R_ω(φ, θ_grip) = 1 / R_τ(φ, θ_grip)                                 (velocity ratio, by power conservation)
+> ```
+> Everywhere this README writes `R_τ(φ, δ)`, the argument δ is the grip angle θ_grip. The full derivation --- including the degenerate case cos(θ_grip) → 0 and the sign conventions --- lives in [`MATHEMATICAL_DERIVATION.md`](MATHEMATICAL_DERIVATION.md) (§3, eq. for `R_τ`).
+
 ✅ **Enhanced Visualizations**
 - Top: Torque transmission at current wrist angle
 - Middle: Angular accelerations

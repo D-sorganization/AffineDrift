@@ -11,7 +11,7 @@ AffineDrift/
 │   ├── theory-part*.qmd         # Core 5-part theory series
 │   ├── affine-nature-golf-swing.qmd
 │   ├── controllability-drift-ratio.qmd
-│   ├── Tangent Hyperplane Articles/   # Tangent hyperplane series (legacy location)
+│   ├── tangent-hyperplane-articles/   # Tangent hyperplane series (legacy location)
 │   ├── tangent-hyperplane-contraction/ # THC textbook (structured chapters)
 │   └── The_Geometry_of_Motion/        # GoM textbook (LaTeX + Quarto mirror)
 ├── books/                       # Book-format landing pages (marketing pages for series)
@@ -28,15 +28,15 @@ The theoretical material on tangent hyperplanes, contraction, and golf swing dyn
 | Topic                     | Canonical Source                                    | Other Forms                                                                         |
 | ------------------------- | --------------------------------------------------- | ----------------------------------------------------------------------------------- |
 | Core affine theory        | `articles/theory-part*.qmd`                         | `articles/affine-nature-golf-swing.qmd` (comprehensive version)                     |
-| Tangent hyperplane series | `articles/Tangent Hyperplane Articles/`             | `articles/tangent-hyperplane-contraction/` (more structured)                        |
+| Tangent hyperplane series | `articles/tangent-hyperplane-articles/`             | `articles/tangent-hyperplane-contraction/` (more structured)                        |
 | GoM textbook              | `articles/The_Geometry_of_Motion/Volume_*/` (LaTeX) | `articles/The_Geometry_of_Motion/quarto/` (website mirror)                          |
-| THC textbook              | `articles/tangent-hyperplane-contraction/`          | Supersedes draft content in `Tangent Hyperplane Articles/Drafts_Original_Articles/` |
+| THC textbook              | `articles/tangent-hyperplane-contraction/`          | Supersedes draft content in `tangent-hyperplane-articles/Drafts_Original_Articles/` |
 
 ## Content Relationship Notes
 
 - **`articles/theory-part1.qmd` through `theory-part5.qmd`**: The primary 5-part theoretical series. Each part builds on the previous. `affine-nature-golf-swing.qmd` is a more comprehensive single-document version.
-- **`articles/Tangent Hyperplane Articles/`**: Contains the published tangent hyperplane articles. The `Advanced/` subdirectory has the primary series (Contraction_Tangent_Unification, Hybrid_Tangent, Residual-Aware_Control). The `Drafts_Original_Articles/` subdirectory is legacy content superseded by the THC textbook.
-- **`articles/tangent-hyperplane-contraction/`**: The structured textbook version (8 chapters + index). More pedagogically organized than the individual articles in `Tangent Hyperplane Articles/`. These are website-rendered chapters.
+- **`articles/tangent-hyperplane-articles/`**: Contains the published tangent hyperplane articles. The `Advanced/` subdirectory has the primary series (Contraction_Tangent_Unification, Hybrid_Tangent, Residual-Aware_Control). The `Drafts_Original_Articles/` subdirectory is legacy content superseded by the THC textbook.
+- **`articles/tangent-hyperplane-contraction/`**: The structured textbook version (8 chapters + index). More pedagogically organized than the individual articles in `tangent-hyperplane-articles/`. These are website-rendered chapters.
 - **`articles/The_Geometry_of_Motion/`**: The formal LaTeX manuscript series. The Quarto files in `quarto/` are website-adapted mirrors of the LaTeX chapters. LaTeX is canonical for print/PDF; Quarto for web rendering.
 - **`content/`**: Legacy draft content, visualizations, and working materials. This directory is **not** part of the Quarto render pipeline and is not served to the website. It serves as a working archive.
 - **`books/`**: Marketing/landing pages for the book series. These link to the relevant article or textbook chapters but do not duplicate the content.
@@ -44,7 +44,7 @@ The theoretical material on tangent hyperplanes, contraction, and golf swing dyn
 ## Known Issues
 
 - `content/` contains some material that overlaps with `articles/` — migration of usable content from `content/` to `articles/` is desirable but not yet prioritized.
-- `articles/Tangent Hyperplane Articles/Drafts_Original_Articles/` contains superseded drafts — these should eventually be archived.
+- `articles/tangent-hyperplane-articles/Drafts_Original_Articles/` contains superseded drafts — these should eventually be archived.
 - Root-level QMD files (40+) create a cluttered root — tracked in issue #1383.
 
 ## Rendering Pipeline

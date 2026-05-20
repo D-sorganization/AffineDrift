@@ -15,9 +15,9 @@ format:
 <!-- In Layman's Terms Section - Simplified overview for non-technical readers -->
 <section class="laymans-terms">
   <h2>
-  <button class="laymans-terms-header" aria-expanded="false">
+  <button type="button" class="laymans-terms-header" aria-expanded="false">
     <span class="laymans-terms-header-title">In Layman's Terms</span>
-    <span class="laymans-terms-icon">▼</span>
+    <span class="laymans-terms-icon" aria-hidden="true">▼</span>
   </button>
 </h2>
   <div class="laymans-terms-content">
@@ -543,7 +543,7 @@ $$
     
 - With drag consideration: $C_\alpha = -11.1$ Nm
 
-This represents a **40% reduction** in the calculated couple magnitude when drag is accounted for.
+Accounting for drag reduces the required hand couple in our inverse-dynamics solution by $\approx 7.3$ Nm (about 40%) --- **not because drag removes effort**, but because the naive calculation mis-attributes an aerodynamic moment arm to the golfer's hands. The drag moment itself ($\approx 2.0$ Nm at the grip) is smaller than the re-attribution ($\approx 7.3$ Nm); the larger number reflects the $F_{\text{drag}} \times r_{\text{hand}}$ lever arm that disappears from the hand-couple side of the ledger once it is correctly assigned to aerodynamics.
 
 ::: {.callout-note}
 ## Figure Pending
@@ -777,9 +777,9 @@ Understanding these limitations enables more informed use of inverse dynamics in
 ```{=html}
 <section class="critics-comments">
   <h2>
-  <button class="critics-comments-header" aria-expanded="false">
+  <button type="button" class="critics-comments-header" aria-expanded="false">
     <span class="critics-comments-header-title">Critics' Comments</span>
-    <span class="critics-comments-icon">💬</span>
+    <span class="critics-comments-icon" aria-hidden="true">💬</span>
   </button>
 </h2>
   <div class="critics-comments-content">

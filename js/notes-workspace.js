@@ -5,6 +5,7 @@
     active: "affinedrift_notes_workspace_v1",
     recycleBin: "affinedrift_notes_recycle_bin_v1",
   });
+  const RECYCLE_BIN_RETENTION_MS = 30 * 24 * 60 * 60 * 1000;
 
   function nowIso() {
     return new Date().toISOString();
@@ -19,6 +20,24 @@
     }
   }
 
+  function readJsonFromStorage(storage, key, fallback) {
+    const raw = storage.getItem(key);
+    if (!raw) return fallback;
+    const parsed = safeParseJson(raw, null);
+    if (parsed === null) {
+      storage.removeItem(key);
+      return fallback;
+    }
+    return parsed;
+  }
+
+  function isExpiredIsoTimestamp(timestamp, retentionMs) {
+    if (typeof timestamp !== "string") return false;
+    const parsed = Date.parse(timestamp);
+    if (Number.isNaN(parsed)) return false;
+    return Date.now() - parsed > retentionMs;
+  }
+
   class NotesWorkspaceStore {
     constructor(storage) {
       if (!storage || typeof storage.getItem !== "function" || typeof storage.setItem !== "function") {
@@ -28,7 +47,7 @@
     }
 
     loadActive() {
-      const parsed = safeParseJson(this.storage.getItem(STORAGE_KEYS.active), null);
+      const parsed = readJsonFromStorage(this.storage, STORAGE_KEYS.active, null);
       if (!parsed || typeof parsed.content !== "string") {
         return { content: "", updatedAt: null };
       }
@@ -49,8 +68,12 @@
     }
 
     loadRecycleBin() {
-      const parsed = safeParseJson(this.storage.getItem(STORAGE_KEYS.recycleBin), null);
+      const parsed = readJsonFromStorage(this.storage, STORAGE_KEYS.recycleBin, null);
       if (!parsed || typeof parsed.content !== "string") {
+        return { content: "", deletedAt: null };
+      }
+      if (isExpiredIsoTimestamp(parsed.deletedAt, RECYCLE_BIN_RETENTION_MS)) {
+        this.storage.removeItem(STORAGE_KEYS.recycleBin);
         return { content: "", deletedAt: null };
       }
       return { content: parsed.content, deletedAt: parsed.deletedAt || null };
@@ -130,6 +153,8 @@
     panel.className = "ad-notes-panel";
     panel.setAttribute("aria-label", "Project notes workspace");
     panel.setAttribute("aria-hidden", "true");
+    panel.setAttribute("role", "dialog");
+    panel.setAttribute("aria-modal", "true");
     panel.innerHTML = `
       <div class="ad-notes-header">
         <h3>Project Notes</h3>
@@ -232,6 +257,41 @@
     document.addEventListener("keydown", function (event) {
       if (event.key === "Escape" && panel.classList.contains("open")) {
         closePanel();
+      }
+    });
+
+    panel.addEventListener("keydown", function (event) {
+      if (event.key !== "Tab") return;
+
+      // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) live collection) and manual filtering instead of querySelectorAll (O(N))
+      const elements = panel.getElementsByTagName('*');
+      const focusableContent = [];
+      for (const el of elements) {
+          const tag = el.tagName;
+          if (tag === 'BUTTON' || tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') {
+              if (!el.disabled && el.tabIndex >= 0) focusableContent.push(el);
+          } else if (tag === 'A' && el.hasAttribute('href')) {
+              if (el.tabIndex >= 0) focusableContent.push(el);
+          } else if (el.hasAttribute('tabindex') && el.getAttribute('tabindex') !== '-1') {
+              focusableContent.push(el);
+          }
+      }
+
+      if (focusableContent.length === 0) return;
+
+      const firstFocusable = focusableContent[0];
+      const lastFocusable = focusableContent[focusableContent.length - 1];
+
+      if (event.shiftKey) {
+        if (document.activeElement === firstFocusable) {
+          lastFocusable.focus();
+          event.preventDefault();
+        }
+      } else {
+        if (document.activeElement === lastFocusable) {
+          firstFocusable.focus();
+          event.preventDefault();
+        }
       }
     });
 

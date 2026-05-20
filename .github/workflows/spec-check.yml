@@ -21,17 +21,24 @@ permissions:
   contents: read
   pull-requests: write
 
+concurrency:
+  group: spec-check-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
 jobs:
   spec-freshness:
     name: Verify SPEC.md freshness
     runs-on: d-sorg-fleet
-    # Skip if spec-exempt label is applied
-    if: ${{ !contains(github.event.pull_request.labels.*.name, 'spec-exempt') }}
+    # Skip if spec-exempt label is applied or if actor is dependabot
+    if: ${{ !contains(github.event.pull_request.labels.*.name, 'spec-exempt') && github.actor != 'dependabot[bot]' }}
     timeout-minutes: 5
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
 
@@ -82,7 +89,7 @@ jobs:
 
       - name: Post warning comment
         if: steps.check.outputs.needs_update == 'true'
-        uses: actions/github-script@v7
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           script: |
             const body = `## ⚠️ SPEC.md Update Required

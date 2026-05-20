@@ -1,6 +1,6 @@
 ---
 title: "NotebookLM Notebooks"
-description: "AI-generated notebooks for deep dives into key references"
+description: "Machine-assisted study notebooks for deep dives into key references"
 page-layout: full
 ---
 
@@ -32,12 +32,12 @@ page-layout: full
       <main class="main-content-area">
         <div class="page-section">
           <h2 class="section-heading">NotebookLM Notebooks</h2>
-          <p class="page-subtitle">AI-generated summaries and deep dives into key technical references.</p>
+          <p class="page-subtitle">Machine-assisted study notes for key technical references.</p>
         </div>
 
         <div class="resources-intro">
           <p>
-            These notebooks are generated using <a href="https://notebooklm.google.com/">Google NotebookLM</a>, leveraging large language models to provide summaries, Q&A, and insights into complex technical texts.
+            These notebooks use <a href="https://notebooklm.google.com/">Google NotebookLM</a> to organize reading notes and Q&A around complex technical texts. Source publications remain authoritative.
           </p>
         </div>
 
@@ -225,7 +225,16 @@ document.addEventListener('DOMContentLoaded', function() {
     history.forEach((item) => {
       const li = document.createElement("li");
       const a = document.createElement("a");
-      a.href = typeof item.url === "string" && !item.url.replace(/[\x00-\x20]/g, "").toLowerCase().startsWith("javascript:") ? item.url : "#";
+      let safeUrl = "#";
+      if (typeof item.url === "string") {
+        try {
+          const parsed = new URL(item.url, window.location.origin);
+          if (parsed.protocol === "http:" || parsed.protocol === "https:") {
+            safeUrl = parsed.href;
+          }
+        } catch (e) {}
+      }
+      a.href = safeUrl;
       a.textContent = item.title;
       li.appendChild(a);
       fragment.appendChild(li);

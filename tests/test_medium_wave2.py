@@ -21,16 +21,11 @@ import pytest
 
 from src.affine_control.residuals import compute_hessian_bound, compute_hessian_norm
 from src.affine_control.swing_optimizer import SwingOptimizationConfig, SwingOptimizer
-
-# These constants were not yet backported from staging
-try:
-    from src.core.constants import (
-        HOLE_CAPTURE_SPEED_MS,
-        REGULATION_HOLE_RADIUS_M,
-        STIMPMETER_CALIBRATION_FACTOR,
-    )
-except ImportError:
-    pytest.skip("Medium wave 2 constants not yet implemented", allow_module_level=True)
+from src.core.constants import (
+    HOLE_CAPTURE_SPEED_MS,
+    REGULATION_HOLE_RADIUS_M,
+    STIMPMETER_CALIBRATION_FACTOR,
+)
 from src.core.contracts import ContractViolationError
 from src.golf_simulation.course import GolfHole, create_par3_course
 from src.golf_simulation.putting import GreenSurface, PuttingSimulator

@@ -220,7 +220,7 @@ def process_file(file_path: Path) -> dict[str, str]:
 - Avoid global variables
 - Use strict equality (`===`, `!==`)
 - Test in multiple browsers
-- Follow patterns in existing `script.js`
+- Follow patterns in existing `js/` modules (utils.js, navigation.js, ui-components.js, etc.)
 
 **Example:**
 
@@ -252,6 +252,67 @@ const scrollToElement = (elementId, offset = 140) => {
 - Cite sources appropriately
 - Include "Layman's Terms" sections for complex topics
 - Add "Critics Corner" for addressing potential objections
+
+## Code Review Guidelines
+
+To maintain code quality and distribute knowledge across the team, we enforce a peer review process for all pull requests.
+
+### Review Requirements
+
+1. **Every PR requires at least one review** from a different author before merge
+2. **The PR author cannot approve their own changes** (self-merges are blocked by automation)
+3. **Reviews are mandatory** — self-approved PRs will fail CI/CD checks
+
+### What Reviewers Should Check
+
+Code reviews should assess these dimensions:
+
+- **Code Quality**
+  - Does the code follow project style guidelines (`ruff`, `mypy`)?
+  - Are there any obvious bugs or logic errors?
+  - Is error handling appropriate?
+  - Are all functions type-hinted and documented?
+
+- **Test Coverage**
+  - Are new functions/features covered by tests?
+  - Do tests follow AAA pattern (Arrange-Act-Assert)?
+  - Is coverage adequate for the change scope?
+  - Are edge cases tested?
+
+- **Design & Architecture**
+  - Does the change align with the project structure?
+  - Are there any potential performance issues?
+  - Does the change introduce technical debt?
+  - Should an ADR be added for architecture-impacting changes?
+
+- **Documentation**
+  - Are docstrings present and accurate?
+  - Is CONTRIBUTING.md or README updated if needed?
+  - Are inline comments provided for non-obvious code?
+
+### Review Checklist
+
+Use this checklist when reviewing PRs:
+
+- [ ] Code style and formatting pass all linting checks
+- [ ] Type hints are present and correct (mypy passes)
+- [ ] All new functions have docstrings
+- [ ] Tests are added/updated and passing
+- [ ] No `print()` statements (use `logging`)
+- [ ] Error handling is specific (no bare `except:`)
+- [ ] Performance implications considered
+- [ ] Documentation updated (if applicable)
+- [ ] Commit messages follow conventional format
+- [ ] No merge conflicts with target branch
+
+### Tips for Effective Reviews
+
+1. **Be constructive** — offer suggestions, not just criticism
+2. **Ask questions** — if something seems unclear, ask for clarification
+3. **Acknowledge good code** — point out well-written sections
+4. **Review promptly** — aim for <24 hour turnaround
+5. **Respect author intent** — understand the problem being solved before critiquing
+6. **Learn together** — reviews are two-way knowledge sharing opportunities
 
 ## Pull Request Process
 
@@ -477,7 +538,7 @@ AffineDrift/
 │   └── tools/            # Tool-specific assets
 ├── _quarto.yml           # Quarto configuration
 ├── custom.scss           # Custom styles
-├── script.js             # Main JavaScript
+
 ├── styles.css            # Compiled styles
 └── requirements.txt      # Python dependencies
 ```
@@ -486,7 +547,7 @@ AffineDrift/
 
 - `_quarto.yml` - Site configuration, navigation, metadata
 - `custom.scss` - SCSS variables and custom styles
-- `script.js` - Interactive features and navigation
+- `js/main.js` - ES6 module entry point (imports all js/ modules)
 - `requirements.txt` - Python package dependencies
 
 ## Common Tasks
@@ -541,7 +602,7 @@ AffineDrift/
 
 ### Adding JavaScript Features
 
-1. Edit `script.js` or create module in `src/js/`
+1. Create or edit a module in `js/` (utils.js, navigation.js, ui-components.js, etc.)
 2. Follow existing patterns and conventions
 3. Test in multiple browsers
 4. Add JSDoc comments
@@ -730,7 +791,7 @@ export const myFeature = {
 };
 ```
 
-Import in `script.js`:
+Import in `js/main.js`:
 
 ```javascript
 import { myFeature } from "./src/js/my-module.js";

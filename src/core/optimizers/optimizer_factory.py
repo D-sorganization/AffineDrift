@@ -6,6 +6,7 @@ from typing import Any
 from src.core.contracts import check_finite_array, check_positive, require
 
 from .ilqr_solver import (  # noqa: F401  # reason: API re-export
+    ILQRDiagnostics,
     ILQRSolver,
     NDArray,
     TrajectoryOptimizer,

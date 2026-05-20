@@ -145,7 +145,7 @@ Initially: $\omega_p = 900$ deg/s, $\omega_d = 500$ deg/s (both still accelerati
 
 **Scenario 2: Proximal deceleration** (active sequencing)
 - The golfer applies a large negative torque to the proximal segment: $\alpha_p = -200$ deg/s² (dramatic braking).
-- The distal segment now receives coupling torque: $\tau_{\text{couple}} = -M_{dp} \alpha_p = -0.8 \times (-200) = +160$ N·m (an accelerating torque).
+- The distal segment now receives coupling torque: $\tau_{\text{couple}} = -M_{dp} \alpha_p = -0.8 \times (-200) = +160$ N·m (an accelerating torque). This is the **instantaneous** coupling contribution to the distal torque balance; the resulting distal angular acceleration depends on the distal link's inertia *and* any competing torques (gravity, shaft elasticity, active wrist torque), and is **not** simply $160 / I_d$.
 - Result: The distal segment **accelerates** despite the proximal segment slowing. Angular momentum is not conserved (the golfer inputs negative work to the proximal segment), but that mechanical energy is redirected to the distal segment via the inertial coupling.
 
 The energy is not "lost" from the proximal deceleration; it is **harvested** and redirected to the distal segment through the mass matrix structure.
@@ -231,9 +231,9 @@ Nonlinear control theory provides a rigorous conceptual and analytical framework
 
 <section class="laymans-terms">
   <h2>
-  <button class="laymans-terms-header" aria-expanded="false">
+  <button type="button" class="laymans-terms-header" aria-expanded="false">
     <span class="laymans-terms-header-title">In Layman's Terms</span>
-    <span class="laymans-terms-icon">▼</span>
+    <span class="laymans-terms-icon" aria-hidden="true">▼</span>
   </button>
 </h2>
   <div class="laymans-terms-content">
@@ -289,9 +289,9 @@ Nonlinear control theory provides a rigorous conceptual and analytical framework
 
 <section class="critics-comments">
   <h2>
-  <button class="critics-comments-header" aria-expanded="false">
+  <button type="button" class="critics-comments-header" aria-expanded="false">
     <span class="critics-comments-header-title">Critics' Comments</span>
-    <span class="critics-comments-icon">💬</span>
+    <span class="critics-comments-icon" aria-hidden="true">💬</span>
   </button>
 </h2>
   <div class="critics-comments-content">

@@ -340,6 +340,18 @@ class PuttingSimulator:
         vy += (dt / 6.0) * (k1[3] + 2.0 * k2[3] + 2.0 * k3[3] + k4[3])
         return x, y, vx, vy
 
+    def _euler_step(
+        self,
+        x: float,
+        y: float,
+        vx: float,
+        vy: float,
+        deceleration: float,
+    ) -> tuple[float, float, float, float]:
+        """Backward-compatible one-step putting integrator."""
+        dx, dy, ax, ay = self._putt_derivatives(x, y, vx, vy, deceleration)
+        return x + self.dt * dx, y + self.dt * dy, vx + self.dt * ax, vy + self.dt * ay
+
     def is_holed(
         self,
         x: float,

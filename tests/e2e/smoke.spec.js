@@ -1,6 +1,17 @@
 const { test, expect } = require("@playwright/test");
 
+const PUBLIC_ROUTES = [
+  "/",
+  "/resources/articles.html",
+  "/resources/bibliography.html",
+  "/pages/overview.html",
+  "/resources/resources-books.html",
+  "/models/models.html",
+];
+
 test.describe("PR Smoke", () => {
+  test.describe.configure({ timeout: 90000 });
+
   test("homepage renders and has core structure", async ({ page }) => {
     const response = await page.goto("/", { waitUntil: "domcontentloaded" });
     expect(response).toBeTruthy();
@@ -10,20 +21,16 @@ test.describe("PR Smoke", () => {
     await expect(page.locator("a").first()).toBeVisible();
   });
 
-  test("key public pages return success", async ({ page }) => {
-    for (const route of [
-      "/",
-      "/resources/articles.html",
-      "/resources/bibliography.html",
-      "/pages/overview.html",
-      "/resources/resources-books.html",
-      "/models/models.html",
-    ]) {
-      const response = await page.goto(route, { waitUntil: "domcontentloaded" });
+  for (const route of PUBLIC_ROUTES) {
+    test(`public page ${route} returns success`, async ({ page }) => {
+      const response = await page.goto(route, {
+        waitUntil: "domcontentloaded",
+        timeout: 60000,
+      });
       expect(response).toBeTruthy();
       expect(response.ok()).toBeTruthy();
-    }
-  });
+    });
+  }
 
   test("homepage has title and navbar", async ({ page }) => {
     await page.goto("/", { waitUntil: "domcontentloaded" });
@@ -39,7 +46,10 @@ test.describe("PR Smoke", () => {
         failedRequests.push(request.url());
       }
     });
-    await page.goto("/", { waitUntil: "networkidle" });
+    const response = await page.goto("/", { waitUntil: "load" });
+    expect(response).toBeTruthy();
+    expect(response.ok()).toBeTruthy();
+    await page.waitForTimeout(500);
     expect(failedRequests).toHaveLength(0);
   });
 

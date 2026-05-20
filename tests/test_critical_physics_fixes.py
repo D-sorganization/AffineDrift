@@ -80,8 +80,8 @@ class TestDDPMockGuard:
     """#1743: mock solver must not run in production path without guard."""
 
     def test_mock_solver_emits_warning_on_init(self) -> None:
-        """Creating SwingOptimizer without solver should warn."""
-        config = SwingOptimizationConfig(n_joints=1, horizon_steps=5)
+        """Creating SwingOptimizer with mock opt-in should warn."""
+        config = SwingOptimizationConfig(n_joints=1, horizon_steps=5, allow_mock_solver=True)
         with warnings.catch_warnings(record=True) as caught:
             warnings.simplefilter("always")
             SwingOptimizer(config)
@@ -89,14 +89,10 @@ class TestDDPMockGuard:
         assert any("mock" in m.lower() for m in msgs)
 
     def test_mock_solver_blocked_without_allow_flag(self) -> None:
-        """optimize() should reject mock solver unless allow_mock_solver=True."""
+        """Initializer should reject mock solver unless allow_mock_solver=True."""
         config = SwingOptimizationConfig(n_joints=1, horizon_steps=5, max_iterations=1)
-        with warnings.catch_warnings():
-            warnings.simplefilter("ignore", UserWarning)
-            optimizer = SwingOptimizer(config)
-        x0 = np.zeros(2)
         with pytest.raises(ContractViolationError, match="mock"):
-            optimizer.optimize(x0, lambda x, u: np.array([x[1], u[0]]))
+            SwingOptimizer(config)
 
     def test_mock_solver_allowed_with_flag(self) -> None:
         """optimize() should succeed when allow_mock_solver=True."""
@@ -109,6 +105,42 @@ class TestDDPMockGuard:
         x0 = np.zeros(2)
         result = optimizer.optimize(x0, lambda x, u: np.array([x[1], u[0]]))
         assert result.iterations >= 1
+
+    def test_direct_mock_solver_blocked_without_test_or_demo_environment(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """Direct mock DDP calls should fail closed outside tests or demos."""
+        monkeypatch.delenv("PYTEST_CURRENT_TEST", raising=False)
+        monkeypatch.delenv("AFFINEDRIFT_ENABLE_MOCK_DDP", raising=False)
+
+        with pytest.raises(ContractViolationError, match="test/demo-only"):
+            adaptive_timestep_ddp_mock(
+                lambda x, u: np.array([x[0] + u[0]]),
+                np.array([0.0]),
+                np.array([1.0]),
+                np.array([[0.0]]),
+                max_iters=1,
+            )
+
+    def test_direct_mock_solver_requires_explicit_demo_override(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """Demo override must be explicit when exercising the mock solver."""
+        monkeypatch.delenv("PYTEST_CURRENT_TEST", raising=False)
+        monkeypatch.setenv("AFFINEDRIFT_ENABLE_MOCK_DDP", "1")
+
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", UserWarning)
+            x_traj, u_traj, t_traj = adaptive_timestep_ddp_mock(
+                lambda x, u: np.array([x[0] + u[0]]),
+                np.array([0.0]),
+                np.array([1.0]),
+                np.array([[0.0]]),
+                max_iters=1,
+            )
+
+        assert len(x_traj) == len(u_traj) + 1
+        assert len(t_traj) == len(x_traj)
 
     def test_real_solver_not_blocked(self) -> None:
         """Providing a real solver should not trigger the guard."""

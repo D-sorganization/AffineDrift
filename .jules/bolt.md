@@ -80,3 +80,35 @@
 ## 2026-04-27 - Synchronizing modular code optimizations
 **Learning:** Performance optimizations applied to modular codebase files might exist in duplicate forms inside monolithic files like `script.js`.
 **Action:** When working on modular optimizations or after observing them in memory, always `grep` through older monolithic entry points to ensure identical logic was not overlooked.
+
+## 2026-05-04 - QuerySelector Attribute Selector vs Live Collection Filtering
+**Learning:** `document.querySelectorAll('[id$="-history-list"]')` performs a full DOM scan and parses a complex attribute substring selector which is notoriously slow in V8 when DOM nodes are plentiful. Using `document.getElementsByTagName('ul')` returns an O(1) live collection almost instantly, and manually checking `.endsWith("-history-list")` avoids the CSS engine overhead entirely.
+**Action:** Replace `querySelectorAll` with attribute suffix matching (`[id$="..."]`) by fetching the tags via `getElementsByTagName` and manually performing JavaScript string filtering like `element.id.endsWith("...")`.
+
+## 2026-05-06 - querySelectorAll with :not() vs getElementsByTagName
+**Learning:** Complex CSS selectors using `:not()` pseudo-classes (e.g., `querySelectorAll("section:not(.page-header):not(.article-section)")`) require the browser's CSS selector engine to perform a full DOM scan and evaluate multiple rule exclusions on every node. Retrieving all sections via the O(1) live collection `getElementsByTagName("section")` and filtering excluded classes directly in JavaScript using `element.classList.contains` is significantly faster, reducing initialization overhead and main-thread blocking.
+**Action:** When filtering out elements based on classes while querying by tag, prefer using `getElementsByTagName` combined with manual JavaScript `classList` filtering over complex `:not()` CSS selectors.
+
+## 2026-05-08 - Fast Heading Lookups
+**Learning:** Replaced querySelectorAll('.main-content-area h2, h3') with targeted getElementsByTagName to avoid scanning the entire DOM for anchor links.
+**Action:** Use getElementsByTagName combined with array spreading for high-performance localized queries.
+
+## 2026-05-18 - Replacing Multi-Selector querySelectorAll with Live Collections
+**Learning:** Using `querySelectorAll(".class, tag, #id")` forces the CSS engine to perform a full DOM traversal matching against a complex union of rules, which blocks the main thread during startup/layout initialization.
+**Action:** When gathering known elements across multiple criteria (like `.main-content-area`, `.home-content`, and `#quarto-document-content`), fetch each set using native O(1) live collections (`getElementsByClassName`, `getElementsByTagName`, `getElementById`) and manually merge them into a single Array or Set in JavaScript instead.
+
+## 2026-05-18 - Replacing Multi-Selector querySelectorAll with Live Collections for Tab Focus
+**Learning:** Calling `querySelectorAll` with a complex union selector like `'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'` on every Tab key press creates immense overhead due to CSS parsing and full subtree traversal.
+**Action:** Replace dynamic focusable element queries in keydown handlers with a manual iteration over the `getElementsByTagName('*')` live collection, checking for the `el.tabIndex >= 0` property to efficiently collect focusable elements.
+
+## 2026-05-18 - QuerySelector Descendant Check vs HTMLCollection
+**Learning:** Checking for specific descendants using `element.querySelector(".class")` or `element.querySelector("tag")` inside loops requires the browser's CSS selector engine to re-parse the string and traverse the subtree on every iteration, causing significant overhead during initialization.
+**Action:** When replacing expensive CSS selectors within descendant checks, prefer direct lookups using `getElementsByTagName()[0]` or `getElementsByClassName()[0]` to avoid the overhead of parsing CSS selectors for every iterated element.
+
+## 2026-05-20 - Replace Descendant querySelector with Native Lookup
+**Learning:** Checking for a specific descendant node via `element.querySelector("tag")` inside highly interactive paths (like copy-to-clipboard clicks) invokes the browser's CSS selector engine, which is slower than native DOM lookups. Accessing index `[0]` on an `HTMLCollection` returned by `getElementsByTagName` performs an equivalent falsy evaluation (`undefined` instead of `null`) while avoiding CSS parsing overhead entirely.
+**Action:** Safely replace simple descendant `querySelector` calls with `getElementsByTagName("tag")[0]` or `getElementsByClassName("class")[0]` to eliminate CSS parsing overhead in interactive DOM event handlers.
+
+## 2024-05-19 - Single Scroll Listener
+**Learning:** Found two separate `window.addEventListener("scroll", ...)` attachments on the main page (one for back-to-top progress, one for export-to-PDF button visibility), causing duplicate DOM reads and writes on every frame. Batching DOM mutations in a scroll event is crucial to avoid layout thrashing.
+**Action:** Consolidate scroll-dependent logic into a single debounced/requestAnimationFrame scroll listener that batches all scroll-dependent UI updates, preventing layout thrashing and improving overall scrolling performance.

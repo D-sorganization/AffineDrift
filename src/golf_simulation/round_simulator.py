@@ -12,6 +12,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
+from src.core.contracts import require
 from src.golf_simulation.ball_flight import BallFlightDynamics, BallFlightState
 from src.golf_simulation.clubs import ClubBag, ClubType, GolfClub, LaunchConditions
 from src.golf_simulation.course import METERS_TO_YARDS, GolfCourse, GolfHole
@@ -127,6 +128,24 @@ class RoundSimulator:
             rng_seed: Random seed for shot dispersion (None = non-deterministic).
             putting_simulator: Fully built PuttingSimulator instance to use for all greens.
         """
+        require(
+            isinstance(course, GolfCourse), "course must be a GolfCourse", type(course).__name__
+        )
+        require(
+            club_bag is None or isinstance(club_bag, ClubBag),
+            "club_bag must be a ClubBag or None",
+            type(club_bag).__name__,
+        )
+        require(
+            ball_flight is None or isinstance(ball_flight, BallFlightDynamics),
+            "ball_flight must be a BallFlightDynamics or None",
+            type(ball_flight).__name__,
+        )
+        require(
+            putting_simulator is None or isinstance(putting_simulator, PuttingSimulator),
+            "putting_simulator must be a PuttingSimulator or None",
+            type(putting_simulator).__name__,
+        )
         self.course = course
         self.club_bag = club_bag if club_bag is not None else ClubBag()
         self.ball_flight = ball_flight if ball_flight is not None else BallFlightDynamics()
@@ -251,6 +270,15 @@ class RoundSimulator:
             sidespin=self.rng.normal(0.0, 10.0),
         )
 
+    def _build_launch_conditions(
+        self,
+        position: tuple[float, float, float],
+        hole: GolfHole,
+        club: GolfClub,
+    ) -> LaunchConditions:
+        """Backward-compatible alias for launch-condition construction."""
+        return self._create_launch_conditions(position, hole, club)
+
     def _handle_shot_penalty(
         self,
         start_pos: tuple[float, float, float],
@@ -278,6 +306,16 @@ class RoundSimulator:
             end_pos[1],
         )
         return new_end, new_terrain, True
+
+    def _apply_hazard_penalty(
+        self,
+        start_pos: tuple[float, float, float],
+        end_pos: tuple[float, float, float],
+        terrain: TerrainType,
+        hole: GolfHole,
+    ) -> tuple[tuple[float, float, float], TerrainType, bool]:
+        """Backward-compatible alias for shot penalty handling."""
+        return self._handle_shot_penalty(start_pos, end_pos, terrain, hole)
 
     def _simulate_shot(
         self,
@@ -345,6 +383,12 @@ class RoundSimulator:
         vy = putt_speed * math.sin(aim_angle)
         return vx, vy
 
+    def _compute_putt_initial_velocity(
+        self, dx: float, dy: float, dist: float, stimp: float
+    ) -> tuple[float, float]:
+        """Backward-compatible alias for putt launch velocity."""
+        return self._compute_putt_velocity(dx, dy, dist, stimp)
+
     def _resolve_putt_simulator(self, hole: GolfHole) -> tuple[PuttingSimulator, float]:
         """Return a putting simulator and its stimp for the given hole.
 
@@ -382,6 +426,15 @@ class RoundSimulator:
             if putt_sim.is_holed(px, py, cvx, cvy, hole.pin_position[0], hole.pin_position[1]):
                 return hole.pin_position[0], hole.pin_position[1]
         return final_x, final_y
+
+    @staticmethod
+    def _find_holed_position(
+        putt_trajectory: list[tuple[float, float]],
+        putt_sim: PuttingSimulator,
+        hole: GolfHole,
+    ) -> tuple[float, float]:
+        """Backward-compatible alias for resolving the final putt position."""
+        return RoundSimulator._find_putt_stopping_point(putt_trajectory, putt_sim, hole)
 
     def _simulate_putt(
         self,

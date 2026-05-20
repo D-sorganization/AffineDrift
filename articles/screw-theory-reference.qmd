@@ -19,6 +19,11 @@ This simplicity is powerful. Instead of tracking six separate numbers (three rot
 
 Screw theory provides a compact and geometrically natural language for representing rigid-body motions and forces. Its central objects are twists (instantaneous motions) and wrenches (forces and moments), related to the Lie group $SE(3)$ and its Lie algebra $\mathfrak{se}(3)$. This reference document summarizes the formalism needed to interpret the control-affine multibody golf swing model in screw-theoretic terms.
 
+::: {.callout-note}
+## Frame Convention
+All 6-vectors (twists $\mathcal{V}$, wrenches $\mathcal{F}$) and matrices ($J$, $B$) in this article are expressed in the **space frame** (fixed world frame $s$) unless explicitly subscripted $_b$ for the body frame. Body-frame quantities transform via the adjoint: $\mathcal{V}_s = \mathrm{Ad}_{T_{sb}} \mathcal{V}_b$ and $\mathcal{F}_s = \mathrm{Ad}_{T_{sb}}^\top \mathcal{F}_b$.
+:::
+
 ## The Lie Group $SE(3)$ and Its Algebra
 
 Rigid-body configurations belong to the special Euclidean group
@@ -196,7 +201,7 @@ J_s(q)^{-T}\tau
 J_s(q)^{-T} B u,
 $$
 
-where $B$ is the input distribution matrix and $u$ is the vector of joint inputs. The total wrench at a given point is then
+where $B$ is the input distribution matrix (expressed in the **space frame**, following the convention fixed in the introduction) and $u$ is the vector of joint inputs. A body-frame input distribution $B_b$ --- natural for grip-force measurements taken in the hand frame --- relates to the spatial form as $B_s = \mathrm{Ad}_{T_{sb}}\, B_b$. The total wrench at a given point is then
 
 $$
 \mathcal{F}_{\mathrm{total}}
@@ -282,9 +287,9 @@ Screw theory provides a powerful geometric language for rigid-body mechanics, bu
 
 <section class="laymans-terms">
   <h2>
-  <button class="laymans-terms-header" aria-expanded="false">
+  <button type="button" class="laymans-terms-header" aria-expanded="false">
     <span class="laymans-terms-header-title">In Layman's Terms</span>
-    <span class="laymans-terms-icon">▼</span>
+    <span class="laymans-terms-icon" aria-hidden="true">▼</span>
   </button>
 </h2>
   <div class="laymans-terms-content">

@@ -11,12 +11,56 @@ packages = []
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
-testpaths = ["tests"]
+testpaths = ["tests", "benchmarks"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+timeout = 60
+timeout_method = "thread"
+
+# Default lane: fast, deterministic, offline.
+addopts = """
+  -ra
+  -q
+  --strict-markers
+  --strict-config
+  --durations=20
+  --tb=short
+  -p no:xvfb
+  -m "not slow and not live_simulation and not e2e and not requires_network and not content_lint"
+"""
+
 markers = [
-    "integration: marks tests requiring cross-module or I/O integration",
-    "content_lint: marks repository-content assertions that are skipped by default",
+  # ---- tier markers ----
+  "unit: pure logic, fully mocked, < 100 ms wall-clock",
+  "integration: cross-module / file-system / process boundaries, < 5 s",
+  "e2e: full-stack smoke tests; nightly + release gate only",
+  "slow: > 1 s wall-clock; deselect with -m 'not slow'",
+  "live_simulation: requires a real physics / math engine; deselect by default",
+
+  # ---- environment markers ----
+  "requires_network: needs real outbound network; deselect by default",
+  "requires_gpu: needs CUDA / Metal / ROCm",
+  "requires_gl: needs OpenGL or a display",
+  "headless_safe: verified under QT_QPA_PLATFORM=offscreen",
+
+  # ---- per-engine markers ----
+  "requires_mujoco: skip when import mujoco fails",
+  "requires_drake: skip when import pydrake fails",
+  "requires_pinocchio: skip when pinocchio is the stub PyPI wheel",
+  "requires_opensim: skip when import opensim fails",
+  "requires_matlab: skip when MATLAB Engine for Python is unavailable",
+
+  # ---- workflow markers ----
+  "serial: must run with -n 0 (xdist parallel breaks this test)",
+  "benchmark: deterministic perf smoke; not a primary correctness gate",
+  "smoke: release-blocking smoke; subset of e2e",
+
+  # ---- repo-specific markers ----
+  "content_lint: marks repository-content assertions that are skipped by default",
 ]
-addopts = "-m 'not content_lint' --tb=short"
 
 [tool.coverage.run]
 source = ["src", "scripts"]
@@ -28,7 +72,9 @@ omit = [
 ]
 
 [tool.coverage.report]
-fail_under = 50
+# Phase 4 step 2 bump: 65 -> 70. Continuing toward the
+# Applications tier target of 75% (EPIC #1140).
+fail_under = 75
 show_missing = true
 precision = 1
 exclude_lines = [
@@ -89,9 +135,12 @@ exclude = [
 ]
 
 [tool.ruff.lint]
-select = ["E", "F", "W", "I", "B", "UP", "S"]
+select = ["E", "F", "W", "I", "B", "UP", "S", "C90"]
 ignore = ["D", "RUF001"]
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
@@ -99,7 +148,7 @@ dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 "benchmarks/*" = ["S101"]
 "tests/test_critical_physics_fixes.py" = ["F821", "E402", "E731", "F401"]
 "src/tools/**/*.py" = ["E501", "S603", "S607"]
-"scripts/**/*.py" = ["E501", "S603", "S607", "S108"]
+"scripts/**/*.py" = ["E501", "S603", "S607", "S108", "C901", "S310", "S314"]
 "src/affine_control/swing_optimizer.py" = ["S101"]
 "articles/**/*.py" = ["S603", "S607"]
 "docs/**/*.py" = ["E501"]

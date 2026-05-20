@@ -16,9 +16,9 @@ format:
 <!-- In Layman's Terms Section - Simplified overview for non-technical readers -->
 <section class="laymans-terms">
   <h2>
-  <button class="laymans-terms-header" aria-expanded="false">
+  <button type="button" class="laymans-terms-header" aria-expanded="false">
     <span class="laymans-terms-header-title">In Layman's Terms</span>
-    <span class="laymans-terms-icon">▼</span>
+    <span class="laymans-terms-icon" aria-hidden="true">▼</span>
   </button>
 </h2>
   <div class="laymans-terms-content">
@@ -57,9 +57,9 @@ format:
 <!-- Critics' Comments Section - Skeptical perspectives and counterarguments -->
 <section class="critics-comments">
   <h2>
-  <button class="critics-comments-header" aria-expanded="false">
+  <button type="button" class="critics-comments-header" aria-expanded="false">
     <span class="critics-comments-header-title">Critics' Comments</span>
-    <span class="critics-comments-icon">💬</span>
+    <span class="critics-comments-icon" aria-hidden="true">💬</span>
   </button>
 </h2>
   <div class="critics-comments-content">
@@ -439,8 +439,10 @@ Understanding it requires moving beyond kinematics alone—and taking constraint
 This constraint shaping mechanism offers a **quasi-static resolution** to the "Input-Dependent Boundary Conditions" critique (detailed in Part 3 Limitations). By treating the high-impedance state as a temporary "Effective Plant," we can analyze the impact dynamics *as if* they evolved on a restricted manifold, acknowledging that the transition to this state is itself input-driven. While the Affine Control framework assumes a separation of passive drift ($f(x)$) and active input ($g(x)u$), constraint collapse illustrates how input $u$ modifies the *effective* topology of the system. By stiffening the constraint Jacobian $J_c$, the golfer temporarily alters the manifold on which the drift dynamics evolve, essentially creating a transient "effective plant" without violating the causal independence of the underlying Lagrangian mechanics.
 
 ::: {.callout-important}
-## Context: Parametric Counterfactuals
-Because the "Stiffness Pulse" introduces time-varying impedance parameters during the impact window, a naive single-mode affine model would appear to violate **Drift Invariance**. As resolved in Section 8, we rigorously model this as a controlled hybrid automaton. Consequently, the ZTCF in this regime must be interpreted as a **Parametric Counterfactual** within the high-impedance mode ("What if continuous torque ceased but the discrete impedance schedule continued?") rather than a globally passive mechanical baseline. This preserves the mathematical validity of the ZTCF while acknowledging the active nature of the constraint collapse.
+## Limitation: The Stiffness Pulse Paradox
+We must strictly qualify this "Effective Plant" argument. The "Stiffness Pulse" described in Section 6 implies a rapid time-variation of the impedance parameters $\dot{K} \neq 0$ during the counterfactual integration window. This violates the strict **Drift Invariance** condition ($\nabla_u f(x) = 0$) because the drift field parameters are changing in correlation with the input strategy. Consequently, the ZTCF in this regime should be interpreted as a **Parametric Counterfactual** ("What if torque ceased but the impedance schedule continued?") rather than a purely passive mechanical baseline.
+
+*Forward reference:* a rigorous treatment of switched or input-dependent control-affine systems --- where $M_{\eta\eta}(u)$ and $K(u)$ enter the drift coefficient itself, rather than as additive inputs --- requires the framework of switched/hybrid affine systems or bilinear control, and is **deferred to a future volume** (tentatively *Geometry of Motion*, Vol. II, Ch. on hybrid/switched dynamics). The parametric-counterfactual reading here is the best one-shot approximation available within the strictly control-affine setting.
 :::
 
 **Steering the Zero-Torque Counterfactual (ZTCF)**

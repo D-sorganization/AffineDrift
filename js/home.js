@@ -19,6 +19,12 @@
     button.setAttribute("aria-expanded", String(expanded));
     target.setAttribute("aria-hidden", String(!expanded));
     target.classList.toggle("show", expanded);
+
+    const titleEl = button.getElementsByTagName("h3")[0];
+    const titleText = titleEl ? titleEl.textContent.trim() : "section";
+    const actionText = expanded ? "Collapse" : "Expand";
+    button.setAttribute("aria-label", `${actionText} ${titleText}`);
+    button.setAttribute("title", `${actionText} ${titleText}`);
   }
 
   function initCollapsibleSections() {
@@ -33,39 +39,19 @@
     }
   }
 
-  function setMobileMenuState({ sidebar, overlay, button }, open) {
-    sidebar.classList.toggle("open", open);
-    overlay.classList.toggle("active", open);
-    button.setAttribute("aria-expanded", String(open));
-    button.classList.toggle("is-open", open);
-    document.body.classList.toggle("home-menu-open", open);
-  }
+  // setMobileMenuState removed - functionality consolidated to navbar handler
 
   function initMobileMenu() {
-    const button = document.querySelector(".mobile-menu-toggle");
-    const sidebar = document.getElementById("home-sidebar");
-    const overlay = document.querySelector(".sidebar-overlay");
-    if (!button || !sidebar || !overlay) return;
-
-    const state = { button, sidebar, overlay };
-    setMobileMenuState(state, false);
-
-    button.addEventListener("click", () => {
-      const open = !isTrue(button.getAttribute("aria-expanded"));
-      setMobileMenuState(state, open);
-    });
-
-    overlay.addEventListener("click", () => setMobileMenuState(state, false));
-
-    // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) live collection) instead of querySelectorAll (O(N))
-    const links = sidebar.getElementsByTagName("a");
-    for (const link of links) {
-      link.addEventListener("click", () => {
-        if (window.innerWidth <= 768) {
-          setMobileMenuState(state, false);
-        }
-      });
-    }
+    // CONSOLIDATED: Mobile menu handling moved to unified navbar implementation
+    // The navbar-toggler (.navbar-toggler) and navbarCollapse (#navbarCollapse)
+    // are now the single source of truth for mobile navigation across all pages.
+    //
+    // See js/navigation.js::initNavbarCollapse() for the unified implementation
+    // that handles Escape key, arrow key navigation, and ARIA attributes.
+    //
+    // This function is retained for compatibility but does nothing.
+    // TODO (Issue #2955): Remove this empty function after confirming no other
+    // dependencies exist on it.
   }
 
   function init() {

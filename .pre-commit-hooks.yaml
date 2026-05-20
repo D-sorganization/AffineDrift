@@ -1,0 +1,17 @@
+- id: link-checker-internal
+  name: Check Quarto references
+  entry: python scripts/link-checker.py
+  language: python
+  types: [markdown]
+  stages: [commit]
+  pass_filenames: false
+  additional_dependencies: []
+
+- id: link-checker-external
+  name: Check external URLs
+  entry: python scripts/link-checker.py --external-only
+  language: python
+  types: [markdown]
+  stages: [push]
+  pass_filenames: false
+  additional_dependencies: []

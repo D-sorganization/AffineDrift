@@ -2,7 +2,7 @@
 
 > **GAAI Fleet Member.** GAAI framework installed in `.gaai/`. Read `.gaai/core/GAAI.md` for full governance spec.
 > Rules: `@.gaai/core/contexts/rules/base.rules.md` and `@.gaai/project/contexts/rules/project.rules.md`
-> All work on `staging` branch. PRs target `staging`. Never push directly to `main`.
+> All work on `main` branch. PRs target `main`.
 
 ## What This Is
 
@@ -31,11 +31,39 @@ interactive code cells, and mathematical visualizations.
 python3 -m ruff check .                               # lint
 python3 -m black --check --line-length 100 .           # format check (Black!)
 python3 -m black --line-length 100 .                   # auto-format
-python3 -m pytest --cov --cov-fail-under=50            # Python tests (50% min)
+python3 -m pytest --cov --cov-fail-under=65            # Python tests (65% min)
 npx jest                                               # JavaScript tests
 npx playwright test                                    # E2E browser tests
 quarto render                                          # build the site
 ```
+
+## Docker (Reproducible Environment)
+
+Use Docker to get an environment that exactly matches CI — Python 3.12, Quarto, and Node.js 20 pre-installed.
+
+```bash
+# Build the dev image (includes all Python + JS deps)
+docker build --target dev -t affinedrift:dev .
+
+# Run pytest (default CMD)
+docker run --rm affinedrift:dev
+
+# Run Jest tests
+docker run --rm affinedrift:dev npm test
+
+# Run a shell inside the dev container
+docker run --rm -it affinedrift:dev bash
+
+# Build and serve the rendered site locally (production image)
+docker build -t affinedrift:latest .
+docker run --rm -p 8080:8000 affinedrift:latest
+# Visit http://localhost:8080
+
+# Or use docker-compose (wraps the production image)
+docker compose up
+```
+
+The `dev` stage is the entry point for new contributors: it avoids installing Quarto, Python 3.12, and Node.js locally.
 
 ## CI Requirements (All Must Pass)
 
@@ -45,12 +73,12 @@ quarto render                                          # build the site
 4. Bibliography quality check — BibTeX well-formed, no broken refs
 5. DRY adoption tracking — duplication metrics monitored
 6. Module size budget — enforced per-file
-7. pytest with **50% coverage minimum** — coverage must not decrease
+7. pytest with **65% coverage minimum** — coverage must not decrease
 8. Jest — all JS tests pass
 9. Playwright E2E — critical user flows pass
 10. CSS mirror enforcement — `css/` must be mirrored in `docs/` (never edit `docs/` CSS directly)
 11. No `print()` in `src/` — use logging
-12. No TRACKED_TASK/TRACKED_DEFECT unless tied to a tracked GitHub issue
+12. No TODO/FIXME unless tied to a tracked GitHub issue
 
 ## Content Authoring
 
@@ -66,12 +94,28 @@ quarto render                                          # build the site
 - **Playwright** requires `npx playwright install` for browser binaries before first run.
 - **CSS lives in two places:** edit in `css/`, CI validates that `docs/` mirrors match. Never edit rendered CSS directly.
 
+## Logging Standard
+
+**Source Code (src/):** Logging only. `print()` is forbidden.
+
+```python
+import logging
+logger = logging.getLogger(__name__)
+logger.info("message")  # Use for diagnostics
+```
+
+**Scripts & Tools:** May use `print()` for user-facing output; use logging for diagnostics.
+
+**Tests:** Logging for diagnostics; print acceptable for test formatting.
+
+See `.logging-standard.md` for full details.
+
 ## Coding Standards (Enforced by CI and QA)
 
-- **DRY:** CI tracks duplication. Extract shared Quarto includes and Python utilities. No copy-paste between chapters.
+- **DRY:** CI tracks duplication. Extract shared Quarto includes and Python utilities. No copy-paste between chapters. Reusable patterns go in `src/tools/utils/` (see `.dry-improvements.md`).
 - **DbC:** Validation functions check inputs, raise clear errors with context.
 - **LOD:** No method chains >2 levels. Keep rendering logic separate from content logic. Complex Python goes in importable modules, not inline in QMD.
-- **TDD:** New Python utilities need pytest tests. New interactive features need Jest tests. Coverage stays above 50%.
+- **TDD:** New Python utilities need pytest tests. New interactive features need Jest tests. Coverage stays above 65%.
 
 ## Cross-Repo Dependencies
 

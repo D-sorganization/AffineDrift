@@ -56,31 +56,127 @@ export function initSmoothScroll() {
 }
 
 /**
- * Initialize navbar collapse behavior
+ * Initialize navbar collapse behavior with unified mobile navigation
+ *
+ * UNIFIED MOBILE MENU IMPLEMENTATION
+ * This consolidates three separate mobile navigation implementations:
+ * 1. Quarto navbar (.navbar-toggler) - PRIMARY
+ * 2. Legacy custom nav-toggle - REMOVED
+ * 3. Homepage mobile-menu-toggle - CONSOLIDATED
+ *
+ * All mobile menus now use Quarto's navbar with enhanced keyboard support.
+ * Handles: click collapse, keyboard navigation (Escape, arrows), ARIA attributes.
  */
 export function initNavbarCollapse() {
     const navbarCollapse = document.getElementById("navbarCollapse");
-    // ⚡ Bolt Optimization: Use document.links (O(1)) instead of querySelectorAll (O(N))
+    const navbarToggler = document.querySelector(".navbar-toggler");
+
+    // Get all nav links within the navbar
+    const navLinks = [];
     for (const link of document.links) {
         if (
             link.classList.contains("nav-link") &&
             link.closest(".navbar-nav")
         ) {
-            const href = link.getAttribute("href");
-            if (href && href.startsWith("#")) {
-                link.addEventListener("click", () => {
-                    if (navbarCollapse && navbarCollapse.classList.contains("show")) {
-                        const collapseInstance = window.bootstrap?.Collapse?.getInstance
-                            ? window.bootstrap.Collapse.getInstance(navbarCollapse)
-                            : null;
-                        if (collapseInstance) {
-                            collapseInstance.hide();
-                        } else {
-                            navbarCollapse.classList.remove("show");
-                        }
-                    }
-                });
+            navLinks.push(link);
+        }
+    }
+
+    // Ensure Quarto navbar has proper ARIA attributes
+    if (navbarCollapse) {
+        navbarCollapse.setAttribute("role", "navigation");
+        if (!navbarCollapse.getAttribute("aria-label")) {
+            navbarCollapse.setAttribute("aria-label", "Site navigation");
+        }
+    }
+
+    if (navbarToggler) {
+        // Set initial ARIA state on toggle button
+        navbarToggler.setAttribute("aria-controls", "navbarCollapse");
+        if (!navbarToggler.getAttribute("aria-label") || navbarToggler.getAttribute("aria-label") === "Toggle navigation menu") {
+            navbarToggler.setAttribute("aria-label", "Open navigation menu");
+        }
+
+        // Update ARIA state when menu state changes
+        const updateToggleState = () => {
+            const isOpen = navbarCollapse && navbarCollapse.classList.contains("show");
+            navbarToggler.setAttribute("aria-expanded", String(isOpen));
+            navbarToggler.setAttribute("aria-label", isOpen ? "Close navigation menu" : "Open navigation menu");
+        };
+
+        // Listen for collapse changes and update ARIA
+        if (navbarCollapse) {
+            navbarCollapse.addEventListener("show.bs.collapse", updateToggleState);
+            navbarCollapse.addEventListener("hide.bs.collapse", updateToggleState);
+            navbarCollapse.addEventListener("shown.bs.collapse", updateToggleState);
+            navbarCollapse.addEventListener("hidden.bs.collapse", updateToggleState);
+        }
+
+        // Keyboard navigation: Escape key closes menu
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && navbarCollapse && navbarCollapse.classList.contains("show")) {
+                const collapseInstance = window.bootstrap?.Collapse?.getInstance
+                    ? window.bootstrap.Collapse.getInstance(navbarCollapse)
+                    : null;
+                if (collapseInstance) {
+                    collapseInstance.hide();
+                } else {
+                    navbarCollapse.classList.remove("show");
+                }
+                // Return focus to toggle button for accessibility
+                if (navbarToggler) {
+                    navbarToggler.focus();
+                }
             }
+        });
+
+        // Arrow key navigation within menu
+        if (navbarCollapse) {
+            navbarCollapse.addEventListener("keydown", (e) => {
+                if (["ArrowDown", "ArrowUp", "Home", "End"].includes(e.key) && navLinks.length > 0) {
+                    e.preventDefault();
+                    const focusedIndex = navLinks.findIndex(link => link === document.activeElement);
+                    let nextIndex = 0;
+
+                    switch (e.key) {
+                        case "ArrowDown":
+                            nextIndex = focusedIndex === -1 ? 0 : Math.min(focusedIndex + 1, navLinks.length - 1);
+                            break;
+                        case "ArrowUp":
+                            nextIndex = focusedIndex <= 0 ? navLinks.length - 1 : focusedIndex - 1;
+                            break;
+                        case "Home":
+                            nextIndex = 0;
+                            break;
+                        case "End":
+                            nextIndex = navLinks.length - 1;
+                            break;
+                    }
+
+                    if (navLinks[nextIndex]) {
+                        navLinks[nextIndex].focus();
+                    }
+                }
+            });
+        }
+    }
+
+    // Close menu when a nav link is clicked (maintains existing behavior)
+    for (const link of navLinks) {
+        const href = link.getAttribute("href");
+        if (href && href.startsWith("#")) {
+            link.addEventListener("click", () => {
+                if (navbarCollapse && navbarCollapse.classList.contains("show")) {
+                    const collapseInstance = window.bootstrap?.Collapse?.getInstance
+                        ? window.bootstrap.Collapse.getInstance(navbarCollapse)
+                        : null;
+                    if (collapseInstance) {
+                        collapseInstance.hide();
+                    } else {
+                        navbarCollapse.classList.remove("show");
+                    }
+                }
+            });
         }
     }
 }
@@ -128,10 +224,12 @@ export function generateTableOfContents() {
     const sections = [];
     const usedIds = new Set();
 
-    const pageSections = document.querySelectorAll(
-        ".page-section[id], section[id]"
-    );
+    // ⚡ Bolt Optimization: Use live collections instead of querySelectorAll for O(1) collection fetching
+    const sectionTags = document.getElementsByTagName("section");
+    const pageSectionClasses = document.getElementsByClassName("page-section");
+    const pageSections = new Set([...sectionTags, ...pageSectionClasses]);
     for (const section of pageSections) {
+        if (!section.id) continue;
         const heading = section.querySelector(".section-heading, h2, h1");
         if (heading && section.id) {
             sections.push({
@@ -146,7 +244,7 @@ export function generateTableOfContents() {
     // ⚡ Bolt Optimization: Use getElementsByClassName (O(1) live collection) instead of querySelectorAll (O(N))
     const categories = document.getElementsByClassName("article-category");
     for (const category of categories) {
-        const heading = category.querySelector("h3");
+        const heading = category.getElementsByTagName("h3")[0];
         if (heading) {
             let id = category.id;
             if (!id) {
@@ -210,9 +308,11 @@ export function generateTableOfContents() {
  * Initialize anchor links for headings
  */
 export function initAnchorLinks() {
-    const headings = document.querySelectorAll(
-        ".main-content-area h2, .main-content-area h3"
-    );
+    const mainArea = document.querySelector(".main-content-area");
+    if (!mainArea) return;
+    const h2s = mainArea.getElementsByTagName("h2");
+    const h3s = mainArea.getElementsByTagName("h3");
+    const headings = [...h2s, ...h3s];
 
     const usedIds = new Set();
 
@@ -233,7 +333,8 @@ export function initAnchorLinks() {
         '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>';
 
     for (const heading of headings) {
-        if (heading.querySelector(".anchor-link")) continue;
+        // ⚡ Bolt Optimization: Replace descendant querySelector with native getElementsByClassName lookup for O(1) evaluation without CSS parsing overhead
+        if (heading.getElementsByClassName("anchor-link")[0]) continue;
 
         if (!heading.id) {
             heading.id = generateUniqueId(heading.textContent, usedIds);
@@ -268,9 +369,10 @@ export function initScrollSpy() {
     }
     let currentActiveLink = null;
 
-    const sections = document.querySelectorAll(
-        ".page-section[id], section[id]"
-    );
+    // ⚡ Bolt Optimization: Use live collections instead of querySelectorAll for O(1) collection fetching
+    const sectionTags = document.getElementsByTagName("section");
+    const pageSectionClasses = document.getElementsByClassName("page-section");
+    const sections = Array.from(new Set([...sectionTags, ...pageSectionClasses])).filter(s => s.id);
 
     const sectionIndexMap = new Map();
     for (let index = 0; index < sections.length; index++) {

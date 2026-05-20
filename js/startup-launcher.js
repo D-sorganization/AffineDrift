@@ -386,9 +386,14 @@
   function setupSkeletonLoading() {
     // Add skeleton class to main content areas
     document.addEventListener('DOMContentLoaded', function () {
-      const contentAreas = document.querySelectorAll(
-        '.main-content-area, #quarto-document-content, .home-content'
-      );
+      // ⚡ Bolt Optimization: Use live collections instead of querySelectorAll for O(1) collection fetching
+      const contentAreas = [];
+      const mainAreas = document.getElementsByClassName("main-content-area");
+      for (const a of mainAreas) contentAreas.push(a);
+      const quartoDoc = document.getElementById("quarto-document-content");
+      if (quartoDoc) contentAreas.push(quartoDoc);
+      const homeContent = document.getElementsByClassName("home-content");
+      for (const a of homeContent) contentAreas.push(a);
 
       for (const area of contentAreas) {
         if (!area.classList.contains('ad-skeleton-ready')) {

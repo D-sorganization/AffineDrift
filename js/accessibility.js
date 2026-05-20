@@ -93,7 +93,7 @@ function applyDefaultAriaLabel(element, label) {
 function labelCardsFromHeading(cards, prefix) {
     for (const card of cards) {
         if (card.hasAttribute("aria-label")) continue;
-        const heading = card.querySelector("h3");
+        const heading = card.getElementsByTagName("h3")[0];
         if (heading) {
             card.setAttribute("aria-label", `${prefix}: ${heading.textContent.trim()}`);
         }
@@ -170,12 +170,14 @@ export function initAriaLabels() {
     labelCardsFromHeading(articleCards, "Article");
 
     // History lists - live regions
-    // Fallback to querySelectorAll here because id selection is a complex pattern
-    const historyLists = document.querySelectorAll('[id$="-history-list"]');
-    for (const list of historyLists) {
-        if (!list.hasAttribute("aria-live")) {
-            list.setAttribute("aria-live", "polite");
-            list.setAttribute("aria-atomic", "false");
+    // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) live collection) and manual filtering instead of querySelectorAll (O(N))
+    const uls = document.getElementsByTagName("ul");
+    for (const list of uls) {
+        if (list.id && list.id.endsWith("-history-list")) {
+            if (!list.hasAttribute("aria-live")) {
+                list.setAttribute("aria-live", "polite");
+                list.setAttribute("aria-atomic", "false");
+            }
         }
     }
 }
@@ -252,4 +254,114 @@ export function initReadingTime() {
     } else {
         articleContent.insertBefore(timeDiv, articleContent.firstChild);
     }
+}
+
+/**
+ * Accessibility Phase 2: Motion preferences (prefers-reduced-motion)
+ */
+export function initMotionPreferences() {
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (prefersReduced) {
+        document.documentElement.setAttribute('data-motion-reduced', 'true');
+    }
+
+    // Listen for changes
+    window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (e) => {
+        if (e.matches) {
+            document.documentElement.setAttribute('data-motion-reduced', 'true');
+        } else {
+            document.documentElement.removeAttribute('data-motion-reduced');
+        }
+    });
+}
+
+/**
+ * Accessibility Phase 2: High contrast mode support
+ */
+export function initHighContrastMode() {
+    const prefersContrast = window.matchMedia('(prefers-contrast: more)').matches;
+
+    if (prefersContrast) {
+        document.documentElement.setAttribute('data-high-contrast', 'true');
+    }
+
+    window.matchMedia('(prefers-contrast: more)').addEventListener('change', (e) => {
+        if (e.matches) {
+            document.documentElement.setAttribute('data-high-contrast', 'true');
+        } else {
+            document.documentElement.removeAttribute('data-high-contrast');
+        }
+    });
+}
+
+/**
+ * Accessibility Phase 2: Focus management
+ * Ensure focus is properly managed and visible
+ */
+export function initFocusManagement() {
+    // Add visual indicator for keyboard navigation
+    let isKeyboardUsing = false;
+
+    document.addEventListener('keydown', () => {
+        isKeyboardUsing = true;
+        document.body.setAttribute('data-keyboard-active', 'true');
+    });
+
+    document.addEventListener('mousedown', () => {
+        isKeyboardUsing = false;
+        document.body.removeAttribute('data-keyboard-active');
+    });
+
+    // Trap focus in modals if any exist
+    const modals = document.querySelectorAll('[role="dialog"]');
+    for (const modal of modals) {
+        // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) live collection) and manual filtering instead of querySelectorAll (O(N))
+        const elements = modal.getElementsByTagName('*');
+        const focusableElements = [];
+        for (const el of elements) {
+            const tag = el.tagName;
+            if (tag === 'BUTTON' || tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') {
+                if (!el.disabled && el.tabIndex >= 0) focusableElements.push(el);
+            } else if (tag === 'A' && el.hasAttribute('href')) {
+                if (el.tabIndex >= 0) focusableElements.push(el);
+            } else if (el.hasAttribute('tabindex') && el.getAttribute('tabindex') !== '-1') {
+                focusableElements.push(el);
+            }
+        }
+
+        if (focusableElements.length > 0) {
+            const firstElement = focusableElements[0];
+            const lastElement = focusableElements[focusableElements.length - 1];
+
+            modal.addEventListener('keydown', (e) => {
+                if (e.key === 'Tab') {
+                    if (e.shiftKey && document.activeElement === firstElement) {
+                        lastElement.focus();
+                        e.preventDefault();
+                    } else if (!e.shiftKey && document.activeElement === lastElement) {
+                        firstElement.focus();
+                        e.preventDefault();
+                    }
+                }
+            });
+        }
+    }
+}
+
+/**
+ * Screen reader announcement helper
+ */
+export function announce(message, priority = 'polite') {
+    let liveRegion = document.querySelector(`[aria-live="${priority}"]`);
+
+    if (!liveRegion) {
+        liveRegion = document.createElement('div');
+        liveRegion.setAttribute('aria-live', priority);
+        liveRegion.setAttribute('aria-atomic', 'true');
+        liveRegion.className = 'sr-only';
+        document.body.appendChild(liveRegion);
+    }
+
+    liveRegion.textContent = message;
 }

@@ -29,6 +29,7 @@
 ## 🐍 Python Coding Standards
 
 > **AffineDrift-specific tooling:**
+>
 > - **Formatter:** `black --line-length 100` (NOT `ruff format`). CI runs `black --check --line-length 100`.
 > - **Linter:** `ruff check` (rules: E, F, W, I, B, UP). Target Python 3.12.
 > - **Line limit:** 100 characters.
@@ -68,20 +69,22 @@ project_name/
 
 - Use `pytest` (not `unittest`).
 - Write unit tests for individual functions and integration tests for workflows.
-- **Coverage requirement: 50% minimum** (`--cov-fail-under=50`). Coverage must not decrease.
+- **Coverage requirement: 65% minimum** (`--cov-fail-under=65`). Coverage must not decrease.
 - Place all tests in `tests/`. Mark cross-module or I/O tests with `@pytest.mark.integration`.
-- Run with: `pytest tests/ --cov=src/tools --cov-report=xml --cov-fail-under=50 --timeout=60`
+- Run with: `pytest tests/ --cov=src/tools --cov-report=xml --cov-fail-under=65 --timeout=60`
 
 ### 4. Test-Driven Development (TDD) - RED, GREEN, REFACTOR
 
 **MANDATORY**: All new code must follow the Test-Driven Development methodology:
 
 1. **RED - Write a Failing Test First**
+
    - Before writing any production code, write a unit test that defines the new functionality or behavior.
    - The test MUST fail initially because the production code has not yet been written.
    - This ensures you understand the requirements before implementation.
 
 2. **GREEN - Make the Test Pass**
+
    - Write the **minimal** amount of production code necessary to make the failing test pass.
    - The goal is purely to pass the test, not to write perfect or optimized code.
    - Resist the temptation to add features not covered by tests.
@@ -97,10 +100,10 @@ project_name/
 
 **Coverage Gate (AffineDrift-specific):**
 
-- CI enforces **50% minimum line coverage** on `src/tools/`. PRs that drop below this threshold will fail.
+- CI enforces **65% minimum line coverage** on `src/tools/`. PRs that drop below this threshold will fail.
 - Every new Python utility added to `src/` MUST have a corresponding `tests/` module.
 - Every new interactive JavaScript feature MUST have a corresponding Jest test.
-- Use `python3 -m pytest --cov --cov-fail-under=50` locally before pushing.
+- Use `python3 -m pytest --cov --cov-fail-under=65` locally before pushing.
 
 **Benefits of TDD:**
 
@@ -137,8 +140,8 @@ All code produced must adhere to the following design principles. These are eval
 #### 5a. DRY — Don't Repeat Yourself
 
 - ❌ **DO NOT** duplicate logic across modules, functions, or files.
-- ✅ **Extract** shared logic into utility functions, base classes, or shared libraries.
-- ✅ **Use** the `ud-tools` shared package for cross-repository utilities.
+- ✅ **Extract** shared logic into utility functions, base classes, or shared modules in `src/`.
+- ✅ **Extract** shared Quarto content into reusable `_includes/` partials or shared `.qmd` fragments.
 - **Threshold:** Any logic block >5 lines appearing in 2+ locations MUST be refactored.
 
 #### 5b. Design by Contract (DbC)
@@ -275,7 +278,7 @@ AffineDrift is an educational textbook rendered with Quarto. The following rules
 #### 7a. Quarto File Format
 
 - Write content in `.qmd` using Quarto markdown.
-- Executable code cells use `` {python} `` or `` {javascript} `` fenced blocks.
+- Executable code cells use `{python}` or `{javascript}` fenced blocks.
 - Cross-references: `@sec-`, `@fig-`, `@eq-` syntax.
 - Bibliography citations: `[@key]` syntax. Add entries to the `references/` directory.
 - New chapters MUST have an entry in `_quarto.yml`.
@@ -294,6 +297,7 @@ AffineDrift is an educational textbook rendered with Quarto. The following rules
 - ✅ **Edit CSS only in `css/`** — never edit `docs/` CSS directly.
 - CI enforces that `docs/` mirrors match `css/` exactly.
 - CSS file sizes are enforced by `check_styles_budget.py`.
+- **MathJax Responsive Design:** Math equations on mobile must scroll horizontally. Do not use fixed font sizes that break mobile layouts. See `styles.css` for `mjx-container` responsive rules.
 
 #### 7d. DRY for Content
 
@@ -321,6 +325,51 @@ matlab_project/
 - Use clear comment blocks for function documentation.
 - Avoid `.asv` and `.m~` files in commits (add to `.gitignore`).
 - Use `functiontests` for testing.
+
+---
+
+## 📖 AffineDrift-Specific Standards
+
+AffineDrift is a **Quarto-based educational textbook**. The following standards apply in addition to the
+general Python standards above.
+
+### Toolchain (Non-Negotiable)
+
+- **Formatter:** Black with `--line-length 100`. **Never** run `ruff format` in this repo.
+- **Linter:** `ruff check` only (not `ruff format`).
+- **Python version:** 3.12. Always use `python3`.
+- **Tests:** `pytest --cov --cov-fail-under=65` (65% coverage minimum).
+
+### Quarto Authoring Standards
+
+- **Source files:** Author in `.qmd` (Quarto Markdown). Do not edit rendered `docs/` HTML directly.
+- **Code cells:** Use `{python}` or `{javascript}` fenced blocks for executable content.
+- **Cross-references:** Use `@sec-`, `@fig-`, `@eq-` syntax. Register new chapters in `_quarto.yml`.
+- **Bibliography:** Add entries to `references/` directory. Cite with `[@key]`. Validate with the
+  bibliography quality check CI gate.
+- **Images:** All `<img>` tags and Quarto figure blocks must have descriptive alt text.
+- **Math:** Use MathJax/KaTeX syntax. Prefer `$$...$$` for display math, `$...$` for inline.
+
+### CSS Discipline
+
+- **Edit CSS only in `css/`** — never in `docs/`. CI enforces mirroring; direct `docs/` CSS edits
+  will fail the CSS mirror enforcement gate.
+- **CSS budget:** Stylesheet sizes are enforced by CI. Do not bloat stylesheets.
+
+### Module Size & Complexity (AffineDrift)
+
+- **No inline complex Python in `.qmd` files.** Complex logic (>20 lines) MUST live in importable
+  modules under `src/`, with corresponding `tests/` coverage.
+- **File size limit:** 400 lines for `.py` files; >800 lines is a critical violation (same as §5d).
+
+### TDD for AffineDrift Python Utilities
+
+When adding new Python utilities (e.g., data loaders, figure generators, calculation helpers):
+
+1. Write the test in `tests/` first (RED phase).
+2. Implement the minimal code in `src/` to pass (GREEN phase).
+3. Refactor and ensure coverage does not drop below 50% (REFACTOR phase).
+4. New interactive JavaScript features require Jest tests in `tests/`.
 
 ---
 
@@ -609,21 +658,14 @@ powershell -Command "gh run view [RUN_ID]"
 
 ```bash
 # Python files - run ALL of these before committing:
-python3 -m ruff check .                          # Linting errors (E, F, W, I, B, UP rules)
+python3 -m ruff check .                          # Linting errors
 python3 -m ruff check --fix .                    # Auto-fix what can be fixed
-python3 -m black --line-length 100 .             # Format with Black (100-char line limit)
+# NOTE: Do NOT run ruff format in this repo — Black is the formatter
+python3 -m black --line-length 100 .             # Format code (Black, 100-char limit)
+python3 -m black --check --line-length 100 .     # Verify formatting is correct
 
-# Type checking (src and scripts only):
-mypy src/tools/ scripts/ --ignore-missing-imports
-
-# Run tests with coverage:
-python3 -m pytest tests/ --cov=src/tools --cov-fail-under=50 --timeout=60
-
-# JavaScript tests:
-npx jest
-
-# Verify no linting issues remain:
-python3 -m ruff check . && python3 -m black --check --line-length 100 . && echo "All checks passed"
+# Verify no issues remain:
+python3 -m ruff check . && echo "✓ All checks passed"
 ```
 
 ### Common Python Linting Issues to Avoid
@@ -712,6 +754,7 @@ To maintain a clean repository root, all development-related documentation (summ
 - Prefer creating issues for task tracking rather than temporary markdown files.
 
 <!-- BEGIN FLEET-MANAGED: network-api-hygiene -->
+
 ## 🛑 NETWORK & API HYGIENE (CRITICAL)
 
 > This section is managed centrally by Repository_Management and synced fleet-wide.
@@ -719,16 +762,16 @@ To maintain a clean repository root, all development-related documentation (summ
 
 ### GitHub API Quotas
 
-| API Type | Quota | Consumed By |
-|----------|-------|-------------|
-| REST (`gh api repos/...`) | 5,000 req/hr | Safe for polling |
-| GraphQL | 5,000 req/hr | `gh pr list --json`, `gh pr checks`, `gh pr create`, `gh pr merge` |
+| API Type                  | Quota        | Consumed By                                                        |
+| ------------------------- | ------------ | ------------------------------------------------------------------ |
+| REST (`gh api repos/...`) | 5,000 req/hr | Safe for polling                                                   |
+| GraphQL                   | 5,000 req/hr | `gh pr list --json`, `gh pr checks`, `gh pr create`, `gh pr merge` |
 
 GraphQL and REST have **separate** quotas. Exhausting GraphQL blocks PR creation and merging fleet-wide for an entire hour.
 
 ### Mandatory Rules
 
-- **NO MASS POLLING**: Agents MUST NEVER use `gh pr list`, `gh issue list`, or arbitrary REST/GraphQL loops to "scan" or "sweep" the repository fleet. Single, scoped repository lookups are allowed when needed.
+- **NO MASS POLLING**: Agents MUST NEVER use `gh pr list`, `gh issue list`, or arbitrary REST/GraphQL loops in a bulk manner to "scan" or "sweep" the repository fleet. Single, scoped repository lookups are allowed when needed (e.g., checking if a specific PR exists).
 - **LOCAL FIRST**: Rely on local `.md` files, previously generated `issues.json` artifacts, or user assistance to find task context — do not query GitHub to discover what to work on.
 - **NO PARALLELIZED GITHUB CLI**: Never write or execute scripts that loop over multiple repositories performing `gh` operations (automated PR merge scripts, fleet-wide status sweeps, etc.).
 - **NO TIGHT POLLING LOOPS**: Never implement `while true; do gh pr checks $PR; sleep 30; done` patterns. Each iteration of such a loop costs 1–3 GraphQL calls; at 30-second intervals that drains the 5,000/hr quota in under 3 hours.
@@ -753,16 +796,27 @@ d = json.load(sys.stdin)['resources']
 for k in ['core', 'graphql']:
     r = d[k]
     reset = datetime.datetime.fromtimestamp(r['reset']).strftime('%H:%M:%S')
-    rem, lim = r['remaining'], r['limit']
-    print(f'{k}: {rem}/{lim} remaining — resets {reset}')
+    print(f'{k}: {r["remaining"]}/{r["limit"]} remaining — resets {reset}')
 "
 ```
 
 <!-- END FLEET-MANAGED: network-api-hygiene -->
+
 ---
 
-## Specification
+<!-- BEGIN FLEET-MANAGED: repo-context-codemap -->
 
-This repository's specification is defined in `SPEC.md` at the repo root.
-Read SPEC.md before making any changes. Update it when your changes
-affect documented functionality, features, or architecture.
+## 🧭 Repo Context & Codemap Freshness
+
+> This section is managed centrally by Repository_Management and synced fleet-wide.
+> Do NOT edit it directly in individual repositories — edit the source in Repository_Management/AGENTS.md.
+
+Use repo-local context before broad exploration:
+
+- Read `AGENTS.md` first, then check `docs/codemap.md` or `docs/operations/codemap_freshness_runbook.md` when present.
+- If `.codemap/` exists, treat it as a generated local cache for navigation; verify important claims against source files before editing.
+- If `.codemap/` is missing or stale, use source search (`rg`), focused file reads, and tests as the fallback. Report the missing/stale index as a rollout gap instead of blocking unrelated work.
+- Do not commit `.codemap/` or `.codemap/index.db`. Codemap indexes are cache/artifact data and must stay ignored.
+- To audit local fleet posture, run `python -m scripts.codemap_context_inventory --root .. --format markdown` from `Repository_Management`. This is a local, network-free inventory; it is not a substitute for repo-specific validation.
+
+<!-- END FLEET-MANAGED: repo-context-codemap -->

@@ -16,15 +16,17 @@ format:
 
 The left wrist in the golf swing can be approximated as a universal joint with two actuated degrees of freedom (flexion/extension and radial/ulnar deviation) and one constrained degree of freedom (forearm rotation axis). Through theoretical analysis and component-level simulation in MATLAB Simulink, this article examines how universal-joint models generate constraint torques: passive torques about the constrained axis that arise from the interaction of applied torques, system momentum, and geometric constraints. These torques may contribute to force and torque transmission from proximal to distal segments, but their magnitude and direction are model-dependent. The grip-angle hypothesis is that the angle at which the club is gripped relative to the wrist joint axes changes how these constraint torques project onto high-inertia axes or face-sensitive axes. This analysis offers a mechanical model for the widely taught distinction between gripping "in the fingers" and "in the palm"; validating that model requires full-swing 3D data.
 
+*Scope note: this analysis is developed and validated for **planar (2D) swing dynamics only**. The universal-joint reduction ignores ligament compliance, treats the wrist as a passive transmission (no active wrist torques), and couples flexion/extension with radial/ulnar deviation differently from the biological wrist. Full 3D swing validation against marker-cluster kinematics remains future work --- see §7.4 for the detailed limitations list.*
+
 :::
 
 ```{=html}
 <!-- In Layman's Terms Section - Simplified overview for non-technical readers -->
 <section class="laymans-terms">
   <h2>
-  <button class="laymans-terms-header" aria-expanded="false">
+  <button type="button" class="laymans-terms-header" aria-expanded="false">
     <span class="laymans-terms-header-title">In Layman's Terms</span>
-    <span class="laymans-terms-icon">▼</span>
+    <span class="laymans-terms-icon" aria-hidden="true">▼</span>
   </button>
 </h2>
   <div class="laymans-terms-content">
@@ -64,9 +66,9 @@ The left wrist in the golf swing can be approximated as a universal joint with t
 <!-- Critics' Comments Section - Skeptical perspectives and counterarguments -->
 <section class="critics-comments">
   <h2>
-  <button class="critics-comments-header" aria-expanded="false">
+  <button type="button" class="critics-comments-header" aria-expanded="false">
     <span class="critics-comments-header-title">Critics' Comments</span>
-    <span class="critics-comments-icon">💬</span>
+    <span class="critics-comments-icon" aria-hidden="true">💬</span>
   </button>
 </h2>
   <div class="critics-comments-content">

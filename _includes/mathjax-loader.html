@@ -7,6 +7,7 @@
       },
       // ⚡ Bolt Optimization: Lazy typesetting defers MathJax rendering until
       // equations enter the viewport, significantly improving initial page load time.
+      // 🎯 Accessibility: Load assistive-mml for screen reader support of mathematics
       load: ['ui/lazy', '[a11y]/assistive-mml']
     },
     tex: {
@@ -21,7 +22,8 @@
     },
     options: {
       skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-      ignoreHtmlClass: 'tex2jax_ignore'
+      ignoreHtmlClass: 'tex2jax_ignore',
+      enableAssistiveMml: true  // Enable hidden MathML for screen readers
     },
     startup: {
       ready: function() {

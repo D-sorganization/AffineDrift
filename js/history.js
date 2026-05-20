@@ -8,6 +8,18 @@ import { runWhenIdle } from "./utils.js";
 const MAX_HISTORY_TITLE_LENGTH = 40;
 const MAX_HISTORY_ITEMS = 10;
 
+function parseStoredHistory(key) {
+    const raw = localStorage.getItem(key);
+    if (!raw) return [];
+    try {
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+    } catch (_error) {
+        localStorage.removeItem(key);
+        return [];
+    }
+}
+
 /**
  * Update the history sidebar with recently visited pages
  */
@@ -15,9 +27,7 @@ export function updateHistorySidebar() {
     const historyList = document.getElementById("history-list");
     if (!historyList) return;
 
-    let history = JSON.parse(
-        localStorage.getItem("affinedrift_history") || "[]"
-    );
+    let history = parseStoredHistory("affinedrift_history");
 
     let pageTitle = document.title;
     if (pageTitle.includes(" - AffineDrift")) {
@@ -74,7 +84,11 @@ export function updateHistorySidebar() {
     if (displayHistory.length === 0) {
         const li = document.createElement("li");
         li.className = "history-empty";
-        li.textContent = "No recent articles yet. ";
+        const span = document.createElement("span");
+        span.setAttribute("role", "status");
+        span.setAttribute("aria-live", "polite");
+        span.textContent = "No recent articles yet. ";
+        li.appendChild(span);
         const a = document.createElement("a");
         a.href = "/resources/articles.html";
         a.textContent = "Explore articles";
@@ -143,7 +157,7 @@ export function initArticleHistory() {
         currentPath.includes("/articles/") && currentUrl.endsWith(".html");
 
     if (isArticlePage && ARTICLE_PAGES.includes(currentUrl)) {
-        let history = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        let history = parseStoredHistory(STORAGE_KEY);
         const currentPage = {
             title: document.title
                 .replace(" - AffineDrift", "")
@@ -159,12 +173,16 @@ export function initArticleHistory() {
 
     const articlesHistoryList = document.getElementById("articles-history-list");
     if (articlesHistoryList) {
-        const history = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        const history = parseStoredHistory(STORAGE_KEY);
         articlesHistoryList.textContent = "";
         if (!history || history.length === 0) {
             const li = document.createElement("li");
             li.className = "history-empty";
-            li.textContent = "No recent articles yet. ";
+            const span = document.createElement("span");
+            span.setAttribute("role", "status");
+            span.setAttribute("aria-live", "polite");
+            span.textContent = "No recent articles yet. ";
+            li.appendChild(span);
             const a = document.createElement("a");
             a.href = "/resources/articles.html";
             a.textContent = "Explore articles";

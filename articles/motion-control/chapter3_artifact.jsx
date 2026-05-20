@@ -309,7 +309,7 @@ function NavSidebar({ sections, activeSection, onNav }) {
       <div className="bg-white/90 backdrop-blur rounded-lg shadow-lg p-3 border">
         <div className="font-bold text-gray-500 mb-2 uppercase tracking-wider" style={{ fontSize: 10 }}>Sections</div>
         {sections.map((s) => (
-          <button key={s.id} onClick={() => onNav(s.id)}
+          <button type="button" key={s.id} onClick={() => onNav(s.id)}
             className={`block w-full text-left px-2 py-1.5 rounded transition-colors ${activeSection === s.id ? "font-bold" : "text-gray-500 hover:text-gray-800"}`}
             style={activeSection === s.id ? { color: colors.chapblue, backgroundColor: colors.lightblue } : {}}>
             {s.short}

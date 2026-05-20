@@ -147,6 +147,8 @@ $$
     \mathbf{J}_c N = \boldsymbol{0}, \quad N^\top N = I_{n-m}
 $$
 
+The identity $N^\top N = I_{n-m}$ holds *only for an orthonormal basis* $N$ of $\operatorname{null}(\mathbf{J}_c)$. A generic null-space basis (e.g., the raw output of a symbolic kernel computation) satisfies $\mathbf{J}_c N = \mathbf{0}$ but not $N^\top N = I_{n-m}$; it must be orthonormalized first (via QR or Gram--Schmidt). The projector formula below likewise assumes orthonormal $N$.
+
 Any kinematically admissible velocity can be expressed as:
 
 $$
@@ -573,9 +575,9 @@ The null space framework provides elegant mathematical structure but operates un
 <!-- In Layman's Terms Section - Simplified overview for non-technical readers -->
 <section class="laymans-terms">
   <h2>
-  <button class="laymans-terms-header" aria-expanded="false">
+  <button type="button" class="laymans-terms-header" aria-expanded="false">
     <span class="laymans-terms-header-title">In Layman's Terms</span>
-    <span class="laymans-terms-icon">▼</span>
+    <span class="laymans-terms-icon" aria-hidden="true">▼</span>
   </button>
 </h2>
   <div class="laymans-terms-content">
@@ -623,9 +625,9 @@ The null space framework provides elegant mathematical structure but operates un
 <!-- Critics' Comments Section - Skeptical perspectives and counterarguments -->
 <section class="critics-comments">
   <h2>
-  <button class="critics-comments-header" aria-expanded="false">
+  <button type="button" class="critics-comments-header" aria-expanded="false">
     <span class="critics-comments-header-title">Critics' Comments</span>
-    <span class="critics-comments-icon">💬</span>
+    <span class="critics-comments-icon" aria-hidden="true">💬</span>
   </button>
 </h2>
   <div class="critics-comments-content">

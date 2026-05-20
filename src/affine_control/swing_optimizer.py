@@ -31,9 +31,8 @@ Usage
     config = SwingOptimizationConfig(
         n_joints=3,
         horizon_steps=50,
-        allow_mock_solver=True,  # explicit opt-in while using the placeholder solver
     )
-    optimizer = SwingOptimizer(config)
+    optimizer = SwingOptimizer(config, ddp_solver=real_ddp_solver)
     result = optimizer.optimize(initial_state, dynamics_fn)
     logger.debug(f"Achieved velocity: {result.final_velocity:.2f} m/s")
 """
@@ -47,7 +46,11 @@ from typing import Any
 
 import numpy as np
 
-from src.affine_control.ddp import adaptive_timestep_ddp_mock
+from src.affine_control.ddp import (
+    MOCK_SOLVER_ENV_VAR,
+    adaptive_timestep_ddp_mock,
+    mock_solver_environment_allows_usage,
+)
 from src.affine_control.swing_types import (
     DEFAULT_CONTROL_WEIGHT,
     DEFAULT_CONVERGENCE_TOL,
@@ -86,9 +89,8 @@ class SwingOptimizer:
         config = SwingOptimizationConfig(
             n_joints=3,
             horizon_steps=50,
-            allow_mock_solver=True,
         )
-        optimizer = SwingOptimizer(config)
+        optimizer = SwingOptimizer(config, ddp_solver=real_ddp_solver)
 
         def dynamics(x, u):
             # Simple double-integrator per joint
@@ -121,9 +123,14 @@ class SwingOptimizer:
             "Mock DDP solver requires allow_mock_solver=True in config. "
             "Pass a real ddp_solver for non-test usage.",
         )
+        require(
+            mock_solver_environment_allows_usage(),
+            "Mock DDP solver is test/demo-only. "
+            f"Run under pytest or set {MOCK_SOLVER_ENV_VAR}=1 for explicit demo usage.",
+        )
         warnings.warn(
             "adaptive_timestep_ddp_mock is a non-functional mock solver. "
-            "allow_mock_solver=True explicitly opts into test-only usage. "
+            "allow_mock_solver=True and an explicit test/demo environment are both required. "
             "For production, supply a real ddp_solver.",
             UserWarning,
             stacklevel=2,

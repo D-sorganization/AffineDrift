@@ -10,8 +10,11 @@ This module provides 25+ tests covering:
 
 from __future__ import annotations
 
+import os
 import unittest
+import warnings
 from typing import Any
+from unittest.mock import patch
 
 import numpy as np
 
@@ -484,14 +487,38 @@ class TestSwingOptimizerOptimize(unittest.TestCase):
 
     def test_optimize_rejects_mock_solver_without_opt_in(self) -> None:
         """Mock DDP should require explicit config opt-in via allow_mock_solver=True."""
-        import warnings
-
         config = SwingOptimizationConfig(n_joints=1, horizon_steps=5, max_iterations=1)
-        with warnings.catch_warnings():
-            warnings.simplefilter("ignore", UserWarning)
-            optimizer = SwingOptimizer(config)
         with self.assertRaises(ContractViolationError):
-            optimizer.optimize(np.zeros(2), double_integrator_1dof)
+            SwingOptimizer(config)
+
+    def test_mock_solver_requires_test_or_demo_environment(self) -> None:
+        """Mock fallback must reject production-like environments even with config opt-in."""
+        config = SwingOptimizationConfig(
+            n_joints=1,
+            horizon_steps=5,
+            max_iterations=1,
+            allow_mock_solver=True,
+        )
+        with patch("src.affine_control.ddp._is_running_under_pytest", return_value=False):
+            with patch.dict(os.environ, {}, clear=True):
+                with self.assertRaises(ContractViolationError):
+                    SwingOptimizer(config)
+
+    def test_mock_solver_allows_explicit_demo_environment(self) -> None:
+        """Mock fallback may run outside pytest only with the explicit demo env flag."""
+        config = SwingOptimizationConfig(
+            n_joints=1,
+            horizon_steps=5,
+            max_iterations=1,
+            allow_mock_solver=True,
+        )
+        with patch("src.affine_control.ddp._is_running_under_pytest", return_value=False):
+            with patch.dict(os.environ, {"AFFINEDRIFT_ENABLE_MOCK_DDP": "1"}, clear=True):
+                with warnings.catch_warnings():
+                    warnings.simplefilter("ignore", UserWarning)
+                    optimizer = SwingOptimizer(config)
+
+        self.assertIsInstance(optimizer, SwingOptimizer)
 
 
 # ── Property and accessor tests ─────────────────────────────────────────────

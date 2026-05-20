@@ -11,19 +11,14 @@ This module contains the forearm-hand-club diagram rendering:
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Any, cast
+from typing import Any, cast
 
-import matplotlib.pyplot as plt
 import numpy as np
 import streamlit as st
+from matplotlib.figure import Figure
 from matplotlib.patches import Ellipse, Polygon
 
 from src.core.contracts import check_range
-
-logger = logging.getLogger(__name__)
-
-if TYPE_CHECKING:
-    from matplotlib.figure import Figure
 
 logger = logging.getLogger(__name__)
 
@@ -352,7 +347,8 @@ def draw_diagram(
     check_range(grip_angle_deg, 0, 90, "grip_angle_deg")
     check_range(wrist_angle_deg, -60, 60, "wrist_angle_deg")
     logger.debug("Drawing diagram: grip=%.1f deg, wrist=%.1f deg", grip_angle_deg, wrist_angle_deg)
-    fig, ax = plt.subplots(figsize=(12, 4))
+    fig = Figure(figsize=(12, 4))
+    ax = fig.add_subplot(111)
 
     theta_grip_rad = np.radians(grip_angle_deg)
     phi_wrist_rad = np.radians(wrist_angle_deg)
@@ -374,5 +370,5 @@ def draw_diagram(
     forearm_y = wrist_y + (hand_length / 2) * hand_dir_y
     _draw_wrist_angle_arc(ax, forearm_x, forearm_y, theta_grip_rad, phi_wrist_rad)
     _setup_diagram_axes(ax)
-    plt.tight_layout()
+    fig.tight_layout()
     return fig

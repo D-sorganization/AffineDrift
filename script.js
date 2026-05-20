@@ -229,14 +229,14 @@ runOnDomReady(function () {
       }
     }, observerOptions);
 
-    const sectionsToAnimate = document.querySelectorAll(
-      "section:not(.page-header):not(.article-section)",
-    );
+    // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) live collection) instead of querySelectorAll (O(N))
+    const allSections = document.getElementsByTagName("section");
     const animationStates = [];
 
     // ⚡ Bolt Optimization: Batch DOM reads to prevent layout thrashing
     // Phase 1: Read (getBoundingClientRect)
-    for (const section of sectionsToAnimate) {
+    for (const section of allSections) {
+      if (section.classList.contains("page-header") || section.classList.contains("article-section")) continue;
       const rect = section.getBoundingClientRect();
       animationStates.push({
         section,
@@ -427,10 +427,12 @@ runOnDomReady(function () {
     const sections = [];
     const usedIds = new Set();
 
-    const pageSections = document.querySelectorAll(
-      ".page-section[id], section[id]",
-    );
+    // ⚡ Bolt Optimization: Use live collections instead of querySelectorAll for O(1) collection fetching
+    const sectionTags = document.getElementsByTagName("section");
+    const pageSectionClasses = document.getElementsByClassName("page-section");
+    const pageSections = new Set([...sectionTags, ...pageSectionClasses]);
     for (const section of pageSections) {
+      if (!section.id) continue;
       const heading = section.querySelector(".section-heading, h2, h1");
       if (heading && section.id) {
         sections.push({
@@ -509,9 +511,11 @@ runOnDomReady(function () {
 
   // 🎨 Palette UX: Add Permalink Anchors
   function initAnchorLinks() {
-    const headings = document.querySelectorAll(
-      ".main-content-area h2, .main-content-area h3",
-    );
+    const mainArea = document.querySelector(".main-content-area");
+    if (!mainArea) return;
+    const h2s = mainArea.getElementsByTagName("h2");
+    const h3s = mainArea.getElementsByTagName("h3");
+    const headings = [...h2s, ...h3s];
 
     // ⚡ Bolt Optimization: Use empty set and check DOM on demand
     // Removing the full DOM scan (querySelectorAll("[id]")) improves performance
@@ -574,9 +578,10 @@ runOnDomReady(function () {
     }
     let currentActiveLink = null;
 
-    const sections = document.querySelectorAll(
-      ".page-section[id], section[id]",
-    );
+    // ⚡ Bolt Optimization: Use live collections instead of querySelectorAll for O(1) collection fetching
+    const sectionTags = document.getElementsByTagName("section");
+    const pageSectionClasses = document.getElementsByClassName("page-section");
+    const sections = Array.from(new Set([...sectionTags, ...pageSectionClasses])).filter(s => s.id);
 
     // ⚡ Bolt Optimization: Map section IDs to their DOM index for O(1) sort
     const sectionIndexMap = new Map();
@@ -691,10 +696,15 @@ runOnDomReady(function () {
   });
 
   // Repository links
-  const repoLinks = document.querySelectorAll('.navbar-nav a[href^="https://github.com"]');
-  for (const link of repoLinks) {
-    link.setAttribute("target", "_blank");
-    // rel handled by secure external links below
+  // ⚡ Bolt Optimization: Use document.links (O(1)) instead of querySelectorAll (O(N))
+  for (const link of document.links) {
+    if (
+      link.href.startsWith("https://github.com") &&
+      link.closest(".navbar-nav")
+    ) {
+      link.setAttribute("target", "_blank");
+      // rel handled by secure external links below
+    }
   }
 
   // Secure external links
@@ -811,6 +821,22 @@ runOnDomReady(function () {
     resizeObserver.observe(document.body);
   }
 
+  // Export to PDF Button
+  const exportToPdfBtn = document.createElement("button");
+  exportToPdfBtn.type = "button";
+  exportToPdfBtn.className = "export-to-pdf";
+  exportToPdfBtn.setAttribute("aria-label", "Export page to PDF");
+  exportToPdfBtn.innerHTML = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+      <polyline points="14 2 14 8 20 8"></polyline>
+      <line x1="12" y1="18" x2="12" y2="12"></line>
+      <line x1="9" y1="15" x2="15" y2="15"></line>
+    </svg>
+    <span class="tooltip">Export to PDF</span>
+  `;
+  document.body.appendChild(exportToPdfBtn);
+
   function updateScrollProgress() {
     const scrollTop = window.scrollY;
 
@@ -820,8 +846,11 @@ runOnDomReady(function () {
       isBackToTopVisible = shouldBeVisible;
       if (shouldBeVisible) {
         backToTopBtn.classList.add("visible");
+        // ⚡ Bolt Optimization: Batch DOM operations by updating both buttons at once
+        exportToPdfBtn.classList.add("visible");
       } else {
         backToTopBtn.classList.remove("visible");
+        exportToPdfBtn.classList.remove("visible");
       }
     }
 
@@ -843,47 +872,11 @@ runOnDomReady(function () {
   }
 
   // Update on scroll (passive listener for better performance)
+  // ⚡ Bolt Optimization: Single scroll listener for all scroll-dependent UI
   window.addEventListener("scroll", onScroll, { passive: true });
 
   // Initial check
   updateScrollProgress();
-
-  // Export to PDF Button
-  const exportToPdfBtn = document.createElement("button");
-  exportToPdfBtn.type = "button";
-  exportToPdfBtn.className = "export-to-pdf";
-  exportToPdfBtn.setAttribute("aria-label", "Export page to PDF");
-  exportToPdfBtn.innerHTML = `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-      <polyline points="14 2 14 8 20 8"></polyline>
-      <line x1="12" y1="18" x2="12" y2="12"></line>
-      <line x1="9" y1="15" x2="15" y2="15"></line>
-    </svg>
-    <span class="tooltip">Export to PDF</span>
-  `;
-  document.body.appendChild(exportToPdfBtn);
-
-  // Show/hide export button based on scroll (same as back-to-top)
-  function updateExportButtonVisibility() {
-    const scrollTop = window.scrollY;
-    const shouldBeVisible = scrollTop > SCROLL_THRESHOLD;
-    if (shouldBeVisible) {
-      exportToPdfBtn.classList.add("visible");
-    } else {
-      exportToPdfBtn.classList.remove("visible");
-    }
-  }
-
-  // Update visibility on scroll
-  window.addEventListener(
-    "scroll",
-    debounce(updateExportButtonVisibility, 100),
-    { passive: true },
-  );
-
-  // Initial visibility check
-  updateExportButtonVisibility();
 
   // Export to PDF functionality
   exportToPdfBtn.addEventListener("click", () => {
@@ -1064,44 +1057,52 @@ runOnDomReady(function () {
   // ⚡ Bolt Optimization: Defer non-critical interactive elements to runWhenIdle
   runWhenIdle(() => {
     // 🎨 Palette UX: Responsive Tables
-    // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) Live Collection) instead of querySelectorAll
-    const tables = Array.from(document.getElementsByTagName("table"));
-    // Use a shared set for unique IDs across all tables
-    const tableUsedIds = new Set();
-    for (const table of tables) {
-      if (!table.closest("#quarto-document-content")) continue;
+    const container = document.getElementById("quarto-document-content");
+    if (container) {
+      // ⚡ Bolt Optimization: Scope tag lookup to specific container instead of global DOM scan
+      const tables = container.getElementsByTagName("table");
+      const tableUsedIds = new Set();
 
-      // Check for existing wrapper (both class and overflow style)
-      const parent = table.parentElement;
-      if (
-        parent.classList.contains("table-wrapper") ||
-        parent.style.overflowX === "auto" ||
-        window.getComputedStyle(parent).overflowX === "auto"
-      ) {
-        continue;
-      }
+      // ⚡ Bolt Optimization: Batch DOM reads (getComputedStyle) and writes (insertBefore) to eliminate Layout Thrashing
+      const tablesToWrap = [];
 
-      const wrapper = document.createElement("div");
-      wrapper.className = "table-wrapper";
-      wrapper.setAttribute("tabindex", "0");
-      wrapper.setAttribute("role", "region");
-
-      const caption = table.querySelector("caption");
-      if (caption) {
-        if (!caption.id) {
-          caption.id = generateUniqueId(
-            caption.textContent || "table",
-            tableUsedIds,
-          );
+      // Phase 1: Read Layout
+      for (const table of Array.from(tables)) {
+        const parent = table.parentElement;
+        if (
+          parent.classList.contains("table-wrapper") ||
+          parent.style.overflowX === "auto" ||
+          window.getComputedStyle(parent).overflowX === "auto"
+        ) {
+          continue;
         }
-        tableUsedIds.add(caption.id);
-        wrapper.setAttribute("aria-labelledby", caption.id);
-      } else {
-        wrapper.setAttribute("aria-label", "Table content");
+        tablesToWrap.push(table);
       }
 
-      table.parentNode.insertBefore(wrapper, table);
-      wrapper.appendChild(table);
+      // Phase 2: Mutate DOM
+      for (const table of tablesToWrap) {
+        const wrapper = document.createElement("div");
+        wrapper.className = "table-wrapper";
+        wrapper.setAttribute("tabindex", "0");
+        wrapper.setAttribute("role", "region");
+
+        const caption = table.querySelector("caption");
+        if (caption) {
+          if (!caption.id) {
+            caption.id = generateUniqueId(
+              caption.textContent || "table",
+              tableUsedIds,
+            );
+          }
+          tableUsedIds.add(caption.id);
+          wrapper.setAttribute("aria-labelledby", caption.id);
+        } else {
+          wrapper.setAttribute("aria-label", "Table content");
+        }
+
+        table.parentNode.insertBefore(wrapper, table);
+        wrapper.appendChild(table);
+      }
     }
 
     // Copy to Clipboard
@@ -1147,7 +1148,8 @@ runOnDomReady(function () {
       const wrapper = button.closest(".code-wrapper");
       if (!wrapper) return;
 
-      const pre = wrapper.querySelector("pre");
+      // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) live collection) instead of querySelector (O(N))
+      const pre = wrapper.getElementsByTagName("pre")[0];
       if (!pre) return;
 
       try {
@@ -1826,12 +1828,14 @@ function initAriaLabels() {
   labelCardsFromHeading(articleCards, 'Article');
 
   // Add ARIA live region for dynamic content
-  // Fallback to querySelectorAll here because id selection is a complex pattern
-  const historyLists = document.querySelectorAll('[id$="-history-list"]');
-  for (const list of historyLists) {
-    if (!list.hasAttribute('aria-live')) {
-      list.setAttribute('aria-live', 'polite');
-      list.setAttribute('aria-atomic', 'false');
+  // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) live collection) and manual filtering instead of querySelectorAll (O(N))
+  const uls = document.getElementsByTagName("ul");
+  for (const list of uls) {
+    if (list.id && list.id.endsWith("-history-list")) {
+      if (!list.hasAttribute("aria-live")) {
+        list.setAttribute("aria-live", "polite");
+        list.setAttribute("aria-atomic", "false");
+      }
     }
   }
 }

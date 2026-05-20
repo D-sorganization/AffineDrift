@@ -348,6 +348,7 @@
             margin-bottom: 15px;
         }
     </style>
+    <script src="grip_angle_polynomial_evaluator.js"></script>
 </head>
 <body>
     <div class="container">
@@ -641,23 +642,8 @@
                 const expr = document.getElementById('polynomial-expr').value || 't**2 - t';
                 polynomialError = null;
                 try {
-                    // Safe evaluation - only allow specific functions
-                    const safeEval = (t_val) => {
-                        const sin = Math.sin;
-                        const cos = Math.cos;
-                        const exp = Math.exp;
-                        const sqrt = Math.sqrt;
-                        const log = Math.log;
-                        const pi = Math.PI;
-                        const e = Math.E;
-                        const t = t_val;
-                        // Use Function constructor for safer evaluation
-                        const func = new Function('t', 'sin', 'cos', 'exp', 'sqrt', 'log', 'pi', 'e', 
-                            `return ${expr}`);
-                        return func(t, sin, cos, exp, sqrt, log, pi, e);
-                    };
                     for (let i = 0; i < length; i++) {
-                        noise.push(safeEval(t[i]));
+                        noise.push(WristPolynomialEvaluator.evaluatePolynomialExpression(expr, t[i]));
                     }
                 } catch (error) {
                     polynomialError = `Error: ${error.message}`;
@@ -724,10 +710,21 @@
         function addCheckbox(container, id, label, checked) {
             const div = document.createElement('div');
             div.className = 'checkbox-group';
-            div.innerHTML = `
-                <input type="checkbox" id="${id}" ${checked ? 'checked' : ''} onchange="updateAll()">
-                <label for="${id}">${label}</label>
-            `;
+
+            const input = document.createElement('input');
+            input.type = 'checkbox';
+            input.id = id;
+            input.checked = checked;
+            input.addEventListener('change', updateAll);
+
+            const labelEl = document.createElement('label');
+            labelEl.htmlFor = id;
+            labelEl.textContent = label;
+
+            div.appendChild(input);
+            div.appendChild(document.createTextNode(' '));
+            div.appendChild(labelEl);
+
             container.appendChild(div);
         }
 
