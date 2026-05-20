@@ -84,7 +84,7 @@ jobs:
           python -m venv "$RUNNER_TEMP/ci-venv"
           source "$RUNNER_TEMP/ci-venv/bin/activate"
           pip install --upgrade pip setuptools wheel
-          pip install -r requirements.txt
+          for i in 1 2 3 4 5; do pip install -r requirements.txt && break || sleep 15; done
           echo "$RUNNER_TEMP/ci-venv/bin" >> $GITHUB_PATH
 
       - name: Reject Raw Merge Conflict Markers
@@ -236,7 +236,7 @@ jobs:
           source "$RUNNER_TEMP/ci-venv/bin/activate"
           python --version
           pip install --upgrade pip setuptools wheel
-          pip install -r requirements.txt pytest-timeout pytest-cov PyQt6
+          for i in 1 2 3 4 5; do pip install -r requirements.txt pytest-timeout pytest-cov PyQt6 && break || sleep 15; done
           echo "$RUNNER_TEMP/ci-venv/bin" >> $GITHUB_PATH
       - name: Install Tool Requirements
         run: |
@@ -329,7 +329,7 @@ jobs:
           python -m venv "$RUNNER_TEMP/ci-venv"
           source "$RUNNER_TEMP/ci-venv/bin/activate"
           pip install --upgrade pip setuptools wheel
-          pip install -r requirements.txt
+          for i in 1 2 3 4 5; do pip install -r requirements.txt && break || sleep 15; done
           echo "$RUNNER_TEMP/ci-venv/bin" >> $GITHUB_PATH
 
       - name: Reject Raw Merge Conflict Markers
