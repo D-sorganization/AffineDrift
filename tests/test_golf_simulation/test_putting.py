@@ -83,3 +83,13 @@ class TestHoleDetection:
         sim = PuttingSimulator(green, hole_radius=0.054)
         # Ball going too fast over hole
         assert not sim.is_holed(15.0, 15.0, 0.0, 5.0, 15.0, 15.0)
+
+    def test_is_holed_invalid_inputs(self):
+        green = GreenSurface.create_flat_green(30.0, 30.0, 10.0)
+        sim = PuttingSimulator(green, hole_radius=0.054)
+        from src.core.contracts import ContractViolationError
+
+        with pytest.raises(ContractViolationError):
+            sim.is_holed(float("nan"), 15.0, 0.0, 0.1, 15.0, 15.0)
+        with pytest.raises(ContractViolationError):
+            sim.is_holed(15.0, 15.0, float("inf"), 0.1, 15.0, 15.0)

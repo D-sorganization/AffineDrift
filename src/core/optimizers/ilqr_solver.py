@@ -110,22 +110,27 @@ class ILQRSolver:
         n_u: int,
         dt: float,
     ) -> tuple[NDArray, NDArray]:
-        """Compute linearized dynamics A, B matrices via finite differences."""
+        """Compute linearized dynamics A, B matrices via central finite differences."""
         A = np.zeros((n_x, n_x))
         B = np.zeros((n_x, n_u))
         eps = 1e-5
         expected_shape = x.shape
-        f0 = self._validated_dynamics_output(dynamics_fn, x, u, expected_shape)
         for i in range(n_x):
-            x_pert = x.copy()
-            x_pert[i] += eps
-            dx = self._validated_dynamics_output(dynamics_fn, x_pert, u, expected_shape)
-            A[:, i] = (dx - f0) / eps
+            x_plus = x.copy()
+            x_plus[i] += eps
+            x_minus = x.copy()
+            x_minus[i] -= eps
+            dx_plus = self._validated_dynamics_output(dynamics_fn, x_plus, u, expected_shape)
+            dx_minus = self._validated_dynamics_output(dynamics_fn, x_minus, u, expected_shape)
+            A[:, i] = (dx_plus - dx_minus) / (2.0 * eps)
         for j in range(n_u):
-            u_pert = u.copy()
-            u_pert[j] += eps
-            dx = self._validated_dynamics_output(dynamics_fn, x, u_pert, expected_shape)
-            B[:, j] = (dx - f0) / eps
+            u_plus = u.copy()
+            u_plus[j] += eps
+            u_minus = u.copy()
+            u_minus[j] -= eps
+            dx_plus = self._validated_dynamics_output(dynamics_fn, x, u_plus, expected_shape)
+            dx_minus = self._validated_dynamics_output(dynamics_fn, x, u_minus, expected_shape)
+            B[:, j] = (dx_plus - dx_minus) / (2.0 * eps)
 
         Ad = np.eye(n_x) + A * dt
         Bd = B * dt
