@@ -15,7 +15,9 @@ function handleGlobalScroll() {
     if (!isScrollTicking) {
         window.requestAnimationFrame(() => {
             const scrollTop = window.scrollY;
-            scrollCallbacks.forEach(cb => cb(scrollTop));
+            for (const cb of scrollCallbacks) {
+                cb(scrollTop);
+            }
             isScrollTicking = false;
         });
         isScrollTicking = true;
