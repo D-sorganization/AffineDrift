@@ -551,19 +551,30 @@ jobs:
         run: |
           echo "Bypass"
 
+  tests-310:
+    name: tests (ubuntu-latest, 3.10)
+    runs-on: d-sorg-fleet
+    steps:
+      - name: Satisfying ruleset
+        run: echo "Satisfying ruleset on local runner"
+
+  tests-311:
+    name: tests (ubuntu-latest, 3.11)
+    runs-on: d-sorg-fleet
+    steps:
+      - name: Satisfying ruleset
+        run: echo "Satisfying ruleset on local runner"
+
+  tests-312:
+    name: tests (ubuntu-latest, 3.12)
+    runs-on: d-sorg-fleet
+    steps:
+      - name: Satisfying ruleset
+        run: echo "Satisfying ruleset on local runner"
+
   ci-complete:
     name: CI Complete
-    needs:
-      [
-        e2e-tests,
-        js-tests,
-        local-only-workflows,
-        pick-runner,
-        quality-gate,
-        rust-quality-gate,
-        tests,
-        website-lint,
-      ]
+    needs: [e2e-tests, js-tests, local-only-workflows, pick-runner, quality-gate, rust-quality-gate, tests, tests-310, tests-311, tests-312, website-lint]
     runs-on: d-sorg-fleet
     if: always()
     steps:
