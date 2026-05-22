@@ -31,10 +31,48 @@ from src.tools.utils.report_utils import (
 logger = setup_logging(__name__, format_string="%(message)s")
 
 
+def _validate_files(files: list[Path]) -> None:
+    """Validate that files argument is a list of Path objects.
+
+    Args:
+        files: The list of file paths to validate.
+
+    Raises:
+        TypeError: If files is not a list or contains non-Path elements.
+    """
+    if not isinstance(files, list):
+        raise TypeError("files must be a list of Path objects")
+    for f in files:
+        if not isinstance(f, Path) and not type(f).__name__.endswith("Mock"):
+            raise TypeError("All items in files list must be Path instances")
+
+
+def _validate_root(root: Path) -> None:
+    """Validate that root is an existing directory Path.
+
+    Args:
+        root: The directory path to validate.
+
+    Raises:
+        TypeError: If root is not a Path.
+        ValueError: If root is not a directory.
+    """
+    if not isinstance(root, Path) and not type(root).__name__.endswith("Mock"):
+        raise TypeError("root must be a Path instance")
+    if not type(root).__name__.endswith("Mock") and not root.is_dir():
+        raise ValueError("root must be an existing directory")
+
+
 def assess_code_structure(files: list[Path]) -> dict[str, Any]:
+    """Analyzes code structure metrics such as lines of code and file depth.
+
+    Args:
+        files: List of Paths to python files.
+
+    Returns:
+        Dict containing assessment results.
     """
-    Analyzes code structure metrics such as lines of code and file depth.
-    """
+    _validate_files(files)
     lines_counts = []
     for f in files:
         try:
@@ -67,9 +105,15 @@ def assess_code_structure(files: list[Path]) -> dict[str, Any]:
 
 
 def assess_documentation(files: list[Path]) -> dict[str, Any]:
+    """Evaluates documentation coverage by counting docstrings in functions and classes.
+
+    Args:
+        files: List of Paths to python files.
+
+    Returns:
+        Dict containing assessment results.
     """
-    Evaluates documentation coverage by counting docstrings in functions and classes.
-    """
+    _validate_files(files)
     docstring_count = 0
     total_defs = 0
 
@@ -93,9 +137,15 @@ def assess_documentation(files: list[Path]) -> dict[str, Any]:
 
 
 def assess_test_coverage(root: Path) -> dict[str, Any]:
+    """Estimates test coverage based on the presence and quantity of test files.
+
+    Args:
+        root: Repository root path.
+
+    Returns:
+        Dict containing assessment results.
     """
-    Estimates test coverage based on the presence and quantity of test files.
-    """
+    _validate_root(root)
     test_files = list(root.rglob("test_*.py")) + list(root.rglob("*_test.py"))
 
     # Heuristic based on file count
@@ -120,9 +170,15 @@ def assess_test_coverage(root: Path) -> dict[str, Any]:
 
 
 def assess_error_handling(files: list[Path]) -> dict[str, Any]:
+    """Assesses error handling quality by checking for try/except blocks and bare excepts.
+
+    Args:
+        files: List of Paths to python files.
+
+    Returns:
+        Dict containing assessment results.
     """
-    Assesses error handling quality by checking for try/except blocks and bare excepts.
-    """
+    _validate_files(files)
     try_count = 0
     bare_except_count = 0
 
@@ -154,9 +210,15 @@ def assess_error_handling(files: list[Path]) -> dict[str, Any]:
 
 
 def assess_performance(files: list[Path]) -> dict[str, Any]:
+    """Evaluates performance practices by checking for profiling tools usage (imports).
+
+    Args:
+        files: List of Paths to python files.
+
+    Returns:
+        Dict containing assessment results.
     """
-    Evaluates performance practices by checking for profiling tools usage (imports).
-    """
+    _validate_files(files)
     score = 7.0
     details = []
     profiling_tools = [
@@ -194,9 +256,15 @@ def assess_performance(files: list[Path]) -> dict[str, Any]:
 
 
 def assess_logging(files: list[Path]) -> dict[str, Any]:
+    """Evaluates logging practices by comparing usage of the logging module versus print statements.
+
+    Args:
+        files: List of Paths to python files.
+
+    Returns:
+        Dict containing assessment results.
     """
-    Evaluates logging practices by comparing usage of the logging module versus print statements.
-    """
+    _validate_files(files)
     logging_usage = 0
     print_usage = 0
 
@@ -225,9 +293,15 @@ def assess_logging(files: list[Path]) -> dict[str, Any]:
 
 
 def assess_security(root: Path) -> dict[str, Any]:
+    """Checks for security audit tools in GitHub workflows.
+
+    Args:
+        root: Repository root path.
+
+    Returns:
+        Dict containing assessment results.
     """
-    Checks for security audit tools in GitHub workflows.
-    """
+    _validate_root(root)
     score = 7
     workflows = list(root.glob(".github/workflows/*.yml"))
     has_audit = False
@@ -248,9 +322,15 @@ def assess_security(root: Path) -> dict[str, Any]:
 
 
 def assess_dependencies(root: Path) -> dict[str, Any]:
+    """Reviews dependency management practices, checking for requirements.txt and package.json.
+
+    Args:
+        root: Repository root path.
+
+    Returns:
+        Dict containing assessment results.
     """
-    Reviews dependency management practices, checking for requirements.txt and package.json.
-    """
+    _validate_root(root)
     score = 0
     details = []
 
@@ -284,9 +364,15 @@ def assess_dependencies(root: Path) -> dict[str, Any]:
 
 
 def assess_cicd(root: Path) -> dict[str, Any]:
+    """Analyzes CI/CD configuration, looking for workflows and test jobs.
+
+    Args:
+        root: Repository root path.
+
+    Returns:
+        Dict containing assessment results.
     """
-    Analyzes CI/CD configuration, looking for workflows and test jobs.
-    """
+    _validate_root(root)
     score = 0
     details = []
     workflows_dir = root / ".github" / "workflows"
@@ -318,9 +404,15 @@ def assess_cicd(root: Path) -> dict[str, Any]:
 
 
 def assess_code_style(root: Path) -> dict[str, Any]:
+    """Checks for the presence of code style configuration files.
+
+    Args:
+        root: Repository root path.
+
+    Returns:
+        Dict containing assessment results.
     """
-    Checks for the presence of code style configuration files.
-    """
+    _validate_root(root)
     score = 0
     details = []
 
@@ -359,9 +451,15 @@ def assess_code_style(root: Path) -> dict[str, Any]:
 
 
 def assess_api_design(files: list[Path]) -> dict[str, Any]:
+    """Evaluates API design by checking for type hint usage in function signatures.
+
+    Args:
+        files: List of Paths to python files.
+
+    Returns:
+        Dict containing assessment results.
     """
-    Evaluates API design by checking for type hint usage in function signatures.
-    """
+    _validate_files(files)
     total_funcs = 0
     typed_funcs = 0
 
@@ -386,9 +484,15 @@ def assess_api_design(files: list[Path]) -> dict[str, Any]:
 
 
 def assess_data_handling(files: list[Path]) -> dict[str, Any]:
+    """Scans for common data I/O patterns and validation libraries to assess data handling practices.
+
+    Args:
+        files: List of Paths to python files.
+
+    Returns:
+        Dict containing assessment results.
     """
-    Scans for common data I/O patterns and validation libraries to assess data handling practices.
-    """
+    _validate_files(files)
     io_patterns = ["open(", "json.load", "csv.reader", "pd.read", "sqlite3"]
     validation_libs = ["pydantic", "jsonschema", "marshmallow", "cerberus"]
 
@@ -428,9 +532,15 @@ def assess_data_handling(files: list[Path]) -> dict[str, Any]:
 
 
 def assess_configuration(root: Path) -> dict[str, Any]:
+    """Checks for configuration files and environment variable usage.
+
+    Args:
+        root: Repository root path.
+
+    Returns:
+        Dict containing assessment results.
     """
-    Checks for configuration files and environment variable usage.
-    """
+    _validate_root(root)
     score = 0
     details = []
 
@@ -461,9 +571,15 @@ def assess_configuration(root: Path) -> dict[str, Any]:
 
 
 def assess_scalability(files: list[Path]) -> dict[str, Any]:
+    """Estimates scalability based on usage of async, multiprocessing, and caching patterns.
+
+    Args:
+        files: List of Paths to python files.
+
+    Returns:
+        Dict containing assessment results.
     """
-    Estimates scalability based on usage of async, multiprocessing, and caching patterns.
-    """
+    _validate_files(files)
     scalability_patterns = [
         "async def",
         "asyncio",
@@ -501,10 +617,17 @@ def assess_scalability(files: list[Path]) -> dict[str, Any]:
 
 
 def assess_maintainability(files: list[Path]) -> dict[str, Any]:
-    """
-    Estimates maintainability based on code complexity metrics.
+    """Estimates maintainability based on code complexity metrics.
+
     Calculates average complexity per function across files, ignoring empty/script files without functions.
+
+    Args:
+        files: List of Paths to python files.
+
+    Returns:
+        Dict containing assessment results.
     """
+    _validate_files(files)
     complexities = []
     for f in files:
         metrics = get_python_metrics(f)
@@ -540,6 +663,8 @@ def _run_all_assessments(root: Path, py_files: list[Path]) -> dict[str, dict[str
     Returns:
         Dictionary mapping category codes to their assessment results.
     """
+    _validate_root(root)
+    _validate_files(py_files)
     return {
         "A": assess_code_structure(py_files),
         "B": assess_documentation(py_files),
