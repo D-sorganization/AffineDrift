@@ -302,10 +302,10 @@ jobs:
             echo "No merge base found for origin/${{ github.base_ref }}...HEAD; falling back to HEAD^..HEAD."
             changed_files=$(git diff --name-only "HEAD^..HEAD")
           fi
-          relevant_files=$(printf "%s\n" "$changed_files" | grep -Ev '^$|^\.github/workflows/ci-standard\.yml$' || true)
+          relevant_files=$(printf "%s\n" "$changed_files" | grep -E '(^_quarto\.yml$|^package(-lock)?\.json$|^playwright\.config\.|^tests/e2e/|^scripts/sync_frontend_assets\.py$|^scripts/update_sw_cache_version\.py$|^styles\.css$|^js/|^src/js/|^pages/|^posts/|^resources/|^books/|^docs/.*\.(html|css|js|qmd)$|\.qmd$)' || true)
 
           if [ -z "$relevant_files" ]; then
-            echo "Only CI workflow plumbing changed; skipping E2E site render."
+            echo "No site-facing files changed; skipping E2E site render."
             echo "run=false" >> "$GITHUB_OUTPUT"
           else
             echo "E2E-relevant files changed:"

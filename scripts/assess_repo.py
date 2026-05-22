@@ -9,6 +9,7 @@ import statistics
 from pathlib import Path
 from typing import Any
 
+from scripts.assessment_report_builder import build_comprehensive_report
 from src.tools.utils import (
     get_python_files,
     setup_logging,
@@ -709,80 +710,6 @@ def _calculate_final_grade(scores: dict[str, dict[str, Any]]) -> float:
     return weighted_sum / total_weight if total_weight > 0 else 0
 
 
-def _build_comprehensive_report(scores: dict[str, dict[str, Any]], final_grade: float) -> str:
-    """Build the comprehensive assessment markdown report.
-
-    Args:
-        scores: Category assessment results.
-        final_grade: Weighted average grade.
-
-    Returns:
-        Complete markdown report string.
-    """
-    lines = [
-        "# Comprehensive Repository Assessment",
-        "",
-        f"## Overall Grade: {final_grade:.2f}/10",
-        f"**Weighted Average:** {final_grade:.2f}/10 (Code 25%, Testing 15%, Docs 10%, Security 15%, Perf 15%, Ops 10%, Design 10%)",
-        "",
-        "## Category Breakdown",
-        "",
-        "| Category | Grade | Weight |",
-        "|----------|-------|--------|",
-    ]
-    for cat_code, info in scores.items():
-        weight = f"{GROUP_WEIGHTS.get(GROUP_MAPPING.get(cat_code, 'Code'), 0) * 100:.0f}%"
-        lines.append(f"| {CATEGORIES[cat_code]} | {info['grade']:.1f} | {weight} |")
-
-    # Top 5 recommendations (lowest scores first)
-    recommendations_list = sorted(
-        [
-            {
-                "name": CATEGORIES[cat_code],
-                "grade": info["grade"],
-                "text": info["recommendation"],
-            }
-            for cat_code, info in scores.items()
-        ],
-        key=lambda x: x["grade"],
-    )[:5]
-
-    lines.append("")
-    lines.append("## Top Recommendations")
-    lines.append("")
-    for i, item in enumerate(recommendations_list, 1):
-        lines.append(f"{i}. **{item['name']}** (Grade: {item['grade']:.1f}): {item['text']}")
-
-    # Issue creation for low scores
-    lines.append("")
-    lines.append("## Issues Created")
-    lines.append("")
-    issues_dir = Path("docs/assessments/issues")
-    issues_dir.mkdir(parents=True, exist_ok=True)
-
-    for cat_code, info in scores.items():
-        if info["grade"] < 5:
-            issue_path = generate_issue_document(
-                category_id=cat_code,
-                category_name=CATEGORIES[cat_code],
-                grade=info["grade"],
-                details=info["details"],
-            )
-            lines.append(f"- Created issue: `{issue_path.name}` (Grade: {info['grade']:.1f})")
-
-    # Preserve any extra sections (like "Additional Audits") from existing file
-    existing_file = Path("docs/assessments/Comprehensive_Assessment.md")
-    if existing_file.exists():
-        content = existing_file.read_text(encoding="utf-8")
-        if "## Additional Audits" in content:
-            extra_content = content.split("## Additional Audits", 1)[1]
-            lines.append("")
-            lines.append("## Additional Audits")
-            lines.append(extra_content.strip())
-
-    return "\n".join(lines) + "\n"
-
-
 def main() -> None:
     """Execute the full repository assessment and generate reports."""
     root = Path.cwd()
@@ -802,7 +729,11 @@ def main() -> None:
 
     # Generate comprehensive report
     final_grade = _calculate_final_grade(scores)
-    comp_content = _build_comprehensive_report(scores, final_grade)
+    comp_content = build_comprehensive_report(
+        scores,
+        final_grade,
+        issue_generator=generate_issue_document,
+    )
 
     Path("docs/assessments/Comprehensive_Assessment.md").write_text(comp_content, encoding="utf-8")
     logger.info("Assessment complete.")
