@@ -29,7 +29,7 @@ Last-Updated: 2026-05-22T04:25:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.8                                            |
-| **Spec Version**        | 1.0.110                                          |
+| **Spec Version**        | 1.0.111                                          |
 | **Last Spec Update**    | 2026-05-22                                       |
 
 ## 2. Purpose & Mission
@@ -281,7 +281,13 @@ AffineDrift/
 - Output format (HTML for GitHub Pages)
 - Theme and CSS customization
 - MathJax and KaTeX rendering settings
-- Navigation menu structure
+- Navigation: three top-level dropdowns (`Read` / `Build` / `Connect`) plus `Home`. Each dropdown is capped at 10 items; see `tests/test_navbar_ia.py` for the enforced contract.
+
+**Website design contract** (EPIC #3140):
+
+- Palette is anchored to the design tokens in `css/tokens/colors.css` (`--color-primary-dark: #1a1a2e`, `--color-primary-main: #0f4c75`, `--color-primary-light: #3282b8`) — the UpstreamDrift launcher palette.
+- Forbidden patterns in any top-level QMD page (anything outside `articles/**`): inline `style="..."` attributes, `linear-gradient(...)`, and hardcoded hex colors. Enforced by `scripts/check_style_discipline.py` and the `style-discipline-qmd` pre-commit hook.
+- Canonical primitives live under `css/components/`: `site-card`, `site-button`, `section-stack`, `page-sidebar`, `entry-list`, `provenance-note`, `home-hero`, `status-banner`. Pages must consume these instead of bespoke per-page styles.
 
 **GitHub Actions Secrets:**
 

@@ -85,6 +85,16 @@ repos:
         types: [python]
         exclude: ^(env/|\.venv/|node_modules/|__pycache__/)
 
+      # Style discipline — forbid inline style=, linear-gradient, and
+      # hardcoded hex in top-level QMD pages. The CSS scope is excluded
+      # until EPIC #3140 phases B1/B4 land.
+      - id: style-discipline-qmd
+        name: "style discipline (QMD: no inline style/gradient/hex)"
+        entry: python3 -m scripts.check_style_discipline --qmd-only
+        language: system
+        pass_filenames: false
+        always_run: true
+
   # -------------------------------------------------------------------------
   # Stage 3: Config File Formatting - ALWAYS RUNS
   # -------------------------------------------------------------------------

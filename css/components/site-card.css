@@ -1,0 +1,72 @@
+/* Site card — the canonical container primitive.
+   Use instead of: .quick-link-card, .audience-card, .resource-card,
+   .featured-card, .category-section, .laymans-item. See EPIC #3140 B3. */
+
+.site-card {
+  display: block;
+  padding: 1.25rem 1.5rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--color-neutral-200);
+  border-radius: 6px;
+  color: inherit;
+  text-decoration: none;
+  transition:
+    border-color var(--duration-fast) var(--ease-standard),
+    background-color var(--duration-fast) var(--ease-standard);
+}
+
+.site-card:hover,
+.site-card:focus-visible {
+  border-color: var(--color-primary-light);
+  background: var(--bg-secondary);
+  text-decoration: none;
+}
+
+.site-card:focus-visible {
+  outline: 2px solid var(--color-primary-light);
+  outline-offset: 2px;
+}
+
+/* Tighter variant for compact rows */
+.site-card--inline {
+  padding: 0.75rem 1rem;
+}
+
+/* Larger variant for hero callouts */
+.site-card--feature {
+  padding: 2rem;
+}
+
+/* Brand-fill variant: solid primary background, white text. Used for the
+   single hero card per page where the brand needs to assert itself. */
+.site-card--brand {
+  background: var(--color-primary-main);
+  color: var(--color-neutral-0);
+  border-color: var(--color-primary-main);
+}
+
+.site-card--brand h1,
+.site-card--brand h2,
+.site-card--brand h3,
+.site-card--brand a {
+  color: var(--color-neutral-0);
+}
+
+.site-card--brand:hover {
+  background: var(--color-primary-dark);
+  border-color: var(--color-primary-dark);
+}
+
+/* Callout variant: left accent bar, neutral fill. */
+.site-card--callout {
+  border-left: 4px solid var(--color-primary-light);
+  background: var(--bg-secondary);
+}
+
+.site-card > :first-child {
+  margin-top: 0;
+}
+
+.site-card > :last-child {
+  margin-bottom: 0;
+}

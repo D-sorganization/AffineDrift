@@ -31,28 +31,28 @@ page-layout: full
         <div class="resource-grid">
 
           <!-- Overview Section -->
-          <div id="overview" class="resource-card" style="background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-blue) 100%); color: white; padding: 2rem; border-radius: 12px; margin-bottom: 2rem;">
-            <h2 style="color: white; margin-bottom: 1rem;">Golf Modeling Suite</h2>
-            <p style="font-size: 1.15rem; line-height: 1.8; margin-bottom: 1.5rem;">
+          <div id="overview" class="site-card site-card--feature site-card--brand u-mb-4">
+            <h2 class="u-mb-2">Golf Modeling Suite</h2>
+            <p class="page-lede">
               A unified biomechanical analysis platform consolidating golf swing modeling across multiple physics simulation frameworks. The suite enables comprehensive analysis from simple educational pendulums to complex 290-muscle musculoskeletal models.
             </p>
-            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-              <a href="https://github.com/D-sorganization/Golf_Modeling_Suite" target="_blank" rel="noopener" class="resource-link" style="background: white; color: var(--primary-blue); padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600;">
+            <div class="button-row">
+              <a href="https://github.com/D-sorganization/Golf_Modeling_Suite" target="_blank" rel="noopener" class="site-button site-button--on-brand">
                 View Repository on GitHub
               </a>
-              <a href="#getting-started" class="resource-link" style="background: rgba(255,255,255,0.2); color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; border: 2px solid white;">
+              <a href="#getting-started" class="site-button site-button--on-brand-ghost">
                 Quick Start Guide
               </a>
             </div>
           </div>
 
           <!-- About This Website -->
-          <div class="resource-card" style="background: var(--surface-light); border-left: 4px solid var(--accent-blue); padding: 1.5rem; margin-bottom: 2rem;">
-            <h3 style="margin-bottom: 0.75rem;">About This Companion Website</h3>
+          <aside class="site-card site-card--callout u-mb-4">
+            <h3 class="u-mb-1">About This Companion Website</h3>
             <p class="resource-description">
               This website serves as a <strong>companion resource</strong> to the Golf Modeling Suite repository. While the repository contains the actual implementation code, simulation models, and technical documentation, this website provides:
             </p>
-            <ul style="margin: 1rem 0; padding-left: 1.5rem;">
+            <ul class="model-bullet-list">
               <li><strong>Advanced Theory</strong> - Mathematical foundations and control-affine system theory</li>
               <li><strong>Research Context</strong> - Links to academic papers, books, and foundational resources</li>
               <li><strong>Learning Pathways</strong> - Curated educational materials for each physics engine</li>
@@ -68,17 +68,17 @@ page-layout: full
             <h3 class="category-title">Getting Started</h3>
           </div>
 
-          <div class="resource-card" style="margin-bottom: 1.5rem;">
+          <div class="resource-card u-mb-3">
             <h4>Requirements</h4>
-            <ul style="margin: 1rem 0; padding-left: 1.5rem; line-height: 1.8;">
+            <ul class="model-bullet-list model-bullet-list--leading">
               <li><strong>Python 3.11+</strong> (3.13 recommended)</li>
               <li><strong>Git with LFS support</strong> for large model files</li>
               <li><strong>MATLAB R2023a+</strong> (optional, for Simscape models)</li>
               <li><strong>Conda</strong> recommended for managing binary dependencies</li>
             </ul>
 
-            <h4 style="margin-top: 1.5rem;">Quick Installation</h4>
-            <pre style="background: #1a1a2e; color: #e0e0e0; padding: 1rem; border-radius: 8px; overflow-x: auto; margin: 1rem 0;"><code>git clone https://github.com/D-sorganization/Golf_Modeling_Suite.git
+            <h4 class="u-mt-3">Quick Installation</h4>
+            <pre class="code-block"><code>git clone https://github.com/D-sorganization/Golf_Modeling_Suite.git
 cd Golf_Modeling_Suite
 conda env create -f environment.yml
 conda activate golf-modeling</code></pre>
@@ -101,15 +101,15 @@ conda activate golf-modeling</code></pre>
               <p class="resource-description">
                 <strong>Multi-Joint dynamics with Contact</strong> - The recommended engine for most use cases. MuJoCo provides fast, accurate physics simulation ideal for biomechanical analysis with full musculoskeletal models and contact dynamics.
               </p>
-              <h4 style="margin: 1rem 0 0.5rem;">Key Capabilities:</h4>
-              <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
+              <h4 class="model-section-h4">Key Capabilities:</h4>
+              <ul class="model-bullet-list">
                 <li>Full musculoskeletal models with realistic contact</li>
                 <li>Model-based optimization and trajectory planning</li>
                 <li>Real-time visualization and analysis</li>
                 <li>Integration with reinforcement learning frameworks</li>
               </ul>
               <h4>Learning Resources:</h4>
-              <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
+              <ul class="model-bullet-list">
                 <li><a href="https://mujoco.readthedocs.io/en/stable/" target="_blank" rel="noopener">MuJoCo Documentation</a></li>
                 <li><a href="https://mujoco.readthedocs.io/en/stable/programming.html" target="_blank" rel="noopener">Programming Guide</a></li>
                 <li><a href="https://github.com/google-deepmind/mujoco/discussions" target="_blank" rel="noopener">Community Discussions</a></li>
@@ -126,15 +126,15 @@ conda activate golf-modeling</code></pre>
               <p class="resource-description">
                 <strong>MIT Robot Locomotion Group Toolkit</strong> - Specialized for trajectory optimization and model-based design. Drake excels at underactuated systems analysis, making it ideal for studying the control-affine nature of the golf swing.
               </p>
-              <h4 style="margin: 1rem 0 0.5rem;">Key Capabilities:</h4>
-              <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
+              <h4 class="model-section-h4">Key Capabilities:</h4>
+              <ul class="model-bullet-list">
                 <li>Trajectory optimization and motion planning</li>
                 <li>Underactuated systems analysis</li>
                 <li>Control-affine dynamics modeling</li>
                 <li>Mathematical program solvers</li>
               </ul>
               <h4>Learning Resources:</h4>
-              <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
+              <ul class="model-bullet-list">
                 <li><a href="https://underactuated.mit.edu/" target="_blank" rel="noopener">Underactuated Robotics (MIT Course)</a></li>
                 <li><a href="https://manipulation.mit.edu/" target="_blank" rel="noopener">Robotic Manipulation (MIT Course)</a></li>
                 <li><a href="https://drake.mit.edu/pydrake/" target="_blank" rel="noopener">PyDrake API Documentation</a></li>
@@ -151,15 +151,15 @@ conda activate golf-modeling</code></pre>
               <p class="resource-description">
                 <strong>High-Performance Rigid Body Dynamics</strong> - Based on Roy Featherstone's algorithms, Pinocchio provides efficient computation of forward/inverse dynamics, Jacobians, and constraint handling for multibody systems.
               </p>
-              <h4 style="margin: 1rem 0 0.5rem;">Key Capabilities:</h4>
-              <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
+              <h4 class="model-section-h4">Key Capabilities:</h4>
+              <ul class="model-bullet-list">
                 <li>Efficient forward/inverse dynamics</li>
                 <li>Analytical Jacobian computation</li>
                 <li>Constraint handling for closed-loop mechanisms</li>
                 <li>Spatial algebra operations</li>
               </ul>
               <h4>Learning Resources:</h4>
-              <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
+              <ul class="model-bullet-list">
                 <li><a href="https://stack-of-tasks.github.io/pinocchio/" target="_blank" rel="noopener">Pinocchio Documentation</a></li>
                 <li><a href="https://royfeatherstone.org/" target="_blank" rel="noopener">Roy Featherstone's Website</a></li>
                 <li><a href="https://www.amazon.com/dp/1447113341" target="_blank" rel="noopener">Rigid Body Dynamics Algorithms (Book)</a></li>
@@ -176,15 +176,15 @@ conda activate golf-modeling</code></pre>
               <p class="resource-description">
                 <strong>Stanford Biomechanics Platform</strong> - The gold standard for biomechanical validation and analysis. OpenSim provides detailed musculoskeletal models with muscle-tendon units, inverse kinematics/dynamics, and motion capture integration.
               </p>
-              <h4 style="margin: 1rem 0 0.5rem;">Key Capabilities:</h4>
-              <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
+              <h4 class="model-section-h4">Key Capabilities:</h4>
+              <ul class="model-bullet-list">
                 <li>Biomechanical validation and analysis</li>
                 <li>Inverse kinematics and dynamics</li>
                 <li>Motion capture data integration</li>
                 <li>Muscle activation analysis</li>
               </ul>
               <h4>Learning Resources:</h4>
-              <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
+              <ul class="model-bullet-list">
                 <li><a href="https://simtk.org/projects/opensim" target="_blank" rel="noopener">OpenSim on SimTK</a></li>
                 <li><a href="https://simtk-confluence.stanford.edu:8443/display/OpenSim" target="_blank" rel="noopener">OpenSim Documentation</a></li>
                 <li><a href="https://simtk.org/forums/viewforum.php?f=91" target="_blank" rel="noopener">Community Forums</a></li>
@@ -201,15 +201,15 @@ conda activate golf-modeling</code></pre>
               <p class="resource-description">
                 <strong>Realistic Muscle Dynamics</strong> - MyoSuite provides 290-muscle musculoskeletal models for detailed muscle-driven movement simulation. Ideal for studying muscle activation patterns and force generation in complex movements.
               </p>
-              <h4 style="margin: 1rem 0 0.5rem;">Key Capabilities:</h4>
-              <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
+              <h4 class="model-section-h4">Key Capabilities:</h4>
+              <ul class="model-bullet-list">
                 <li>290-muscle full-body models</li>
                 <li>Realistic muscle dynamics and activation</li>
                 <li>Integration with MuJoCo physics</li>
                 <li>Reinforcement learning ready</li>
               </ul>
               <h4>Learning Resources:</h4>
-              <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
+              <ul class="model-bullet-list">
                 <li><a href="https://sites.google.com/view/myosuite" target="_blank" rel="noopener">MyoSuite Project Page</a></li>
                 <li><a href="https://github.com/MyoHub/myosuite" target="_blank" rel="noopener">GitHub Repository</a></li>
               </ul>
@@ -225,15 +225,15 @@ conda activate golf-modeling</code></pre>
               <p class="resource-description">
                 <strong>MathWorks Simulation Environment</strong> - MATLAB Simscape models implement the control-affine theoretical framework from the Drifter Manifesto series, providing drift-input decomposition and numerical analysis tools.
               </p>
-              <h4 style="margin: 1rem 0 0.5rem;">Key Capabilities:</h4>
-              <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
+              <h4 class="model-section-h4">Key Capabilities:</h4>
+              <ul class="model-bullet-list">
                 <li>Control-affine system implementation</li>
                 <li>Drift-input decomposition analysis</li>
                 <li>Integration with MATLAB analysis tools</li>
                 <li>Simulink block diagrams</li>
               </ul>
               <h4>Related Theory:</h4>
-              <ul style="padding-left: 1.5rem; margin-bottom: 1rem;">
+              <ul class="model-bullet-list">
                 <li><a href="../articles/theory-part5.html">Theory Part 5 - Simulink Model Documentation</a></li>
                 <li><a href="https://www.mathworks.com/products/simscape-multibody.html" target="_blank" rel="noopener">Simscape Multibody</a></li>
               </ul>
@@ -245,8 +245,8 @@ conda activate golf-modeling</code></pre>
             <h3 class="category-title">Project Structure</h3>
           </div>
 
-          <div class="resource-card" style="margin-bottom: 1.5rem;">
-            <pre style="background: #1a1a2e; color: #e0e0e0; padding: 1rem; border-radius: 8px; overflow-x: auto; font-size: 0.9rem;"><code>Golf_Modeling_Suite/
+          <div class="resource-card u-mb-3">
+            <pre class="code-block code-block--compact"><code>Golf_Modeling_Suite/
 ├── docs/                    # Comprehensive guides and API documentation
 ├── launchers/               # Unified launch applications
 ├── engines/
@@ -262,20 +262,20 @@ conda activate golf-modeling</code></pre>
             <h3 class="category-title">Key Features</h3>
           </div>
 
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
-            <div class="resource-card" style="padding: 1.5rem;">
+          <div class="resource-grid resource-grid--wide u-mb-4">
+            <div class="resource-card resource-card--padded">
               <h4>Advanced Biomechanics</h4>
               <p class="resource-description">Inverse kinematics/dynamics, motion capture integration, and muscle dynamics analysis.</p>
             </div>
-            <div class="resource-card" style="padding: 1.5rem;">
+            <div class="resource-card resource-card--padded">
               <h4>Real-Time Visualization</h4>
               <p class="resource-description">3D rendering with multiple analysis plot types for immediate feedback during simulation.</p>
             </div>
-            <div class="resource-card" style="padding: 1.5rem;">
+            <div class="resource-card resource-card--padded">
               <h4>Cross-Engine Validation</h4>
               <p class="resource-description">Compare results across different simulators to validate models and build confidence.</p>
             </div>
-            <div class="resource-card" style="padding: 1.5rem;">
+            <div class="resource-card resource-card--padded">
               <h4>Data Export</h4>
               <p class="resource-description">CSV and JSON formats for external analysis and integration with other tools.</p>
             </div>
@@ -286,26 +286,26 @@ conda activate golf-modeling</code></pre>
             <h3 class="category-title">Theory Resources on This Website</h3>
           </div>
 
-          <div class="resource-card" style="margin-bottom: 1.5rem;">
+          <div class="resource-card u-mb-3">
             <p class="resource-description">
               This companion website provides theoretical background and advanced concepts to complement the practical implementations in the repository:
             </p>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 1rem;">
-              <a href="../pages/drifter-manifesto.html" class="resource-link" style="display: block; padding: 1rem; background: var(--surface-light); border-radius: 8px; text-decoration: none;">
+            <div class="resource-grid resource-grid--narrow u-mt-2">
+              <a href="../pages/drifter-manifesto.html" class="resource-link" class="site-card site-card--inline">
                 <strong>Drifter Manifesto</strong>
-                <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.5rem;">Control-affine theory applied to golf swing dynamics</p>
+                <p class="resource-meta">Control-affine theory applied to golf swing dynamics</p>
               </a>
-              <a href="../articles/theory-part1.html" class="resource-link" style="display: block; padding: 1rem; background: var(--surface-light); border-radius: 8px; text-decoration: none;">
+              <a href="../articles/theory-part1.html" class="resource-link" class="site-card site-card--inline">
                 <strong>Theory Series</strong>
-                <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.5rem;">Mathematical foundations and derivations</p>
+                <p class="resource-meta">Mathematical foundations and derivations</p>
               </a>
-              <a href="../articles/inverse-dynamics.html" class="resource-link" style="display: block; padding: 1rem; background: var(--surface-light); border-radius: 8px; text-decoration: none;">
+              <a href="../articles/inverse-dynamics.html" class="resource-link" class="site-card site-card--inline">
                 <strong>Inverse Dynamics</strong>
-                <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.5rem;">Computing joint torques from motion data</p>
+                <p class="resource-meta">Computing joint torques from motion data</p>
               </a>
-              <a href="../articles/drift-components-wrench-double-pendulum.html" class="resource-link" style="display: block; padding: 1rem; background: var(--surface-light); border-radius: 8px; text-decoration: none;">
+              <a href="../articles/drift-components-wrench-double-pendulum.html" class="resource-link" class="site-card site-card--inline">
                 <strong>Drift & Wrench Analysis</strong>
-                <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.5rem;">Passive dynamics in multibody systems</p>
+                <p class="resource-meta">Passive dynamics in multibody systems</p>
               </a>
             </div>
           </div>
@@ -355,9 +355,9 @@ conda activate golf-modeling</code></pre>
               <li><a href="https://github.com/D-sorganization/Golf_Modeling_Suite/discussions" target="_blank" rel="noopener">Discussions</a></li>
             </ul>
           </nav>
-          <nav class="history-nav" style="margin-top: 1.5rem;">
+          <nav class="history-nav u-mt-3">
             <h3 class="sidebar-heading">License</h3>
-            <p style="font-size: 0.85rem; color: var(--text-muted); padding: 0 0.5rem;">
+            <p class="resource-meta-inline">
               MIT License - Open source with permissive terms for research and commercial use.
             </p>
           </nav>

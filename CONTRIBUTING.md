@@ -188,12 +188,33 @@ def process_file(file_path: Path) -> dict[str, str]:
 
 ### CSS
 
-- Use existing CSS variables for colors (defined in `custom.scss`)
+- Use existing design tokens (`css/tokens/colors.css`, `css/tokens/spacing.css`, …) for every color and dimension. **No hardcoded hex** outside `css/tokens/**`.
 - Follow BEM naming convention for new classes
 - Keep specificity low (avoid `!important`)
 - Add comments for non-obvious styles
 - Test responsive behavior (mobile-first approach)
 - Use `stylelint` for linting
+
+**Style discipline (EPIC #3140).** The CI hook `style-discipline-qmd` (see `.pre-commit-config.yaml`) rejects any of the following in a top-level QMD page:
+
+| Forbidden | Replace with |
+| --- | --- |
+| `style="..."` inline attribute | A class in `css/components/` or `css/utilities/` |
+| `linear-gradient(...)` on a card or section | A solid token-driven background |
+| `#abc` / `#abcdef` hardcoded hex | `var(--color-*)` from `css/tokens/colors.css` |
+| Emoji in `content:` rules | An inline `<span>` if absolutely required |
+
+**Canonical primitives.** Use these instead of rolling new card / button / sidebar styling per page:
+
+- `.site-card`, `.site-card--inline`, `.site-card--feature`, `.site-card--brand`, `.site-card--callout`
+- `.site-button`, `.site-button--ghost`, `.site-button--on-brand`, `.site-button--on-brand-ghost`
+- `.section-stack` for vertical rhythm with a divider between children
+- `.page-sidebar` for sticky structural sidebars
+- `.entry-list` (with `__item`, `__title`, `__dek`) for typographic link lists
+- `.provenance-note` for citation / scope-limitation asides
+- `.home-hero` for the home page only
+- `.status-banner` (`--info`, `--success`, `--warning`, `--exploratory`) for page-status callouts
+- `.status-pill` for inline labels
 
 **Example:**
 
@@ -201,14 +222,18 @@ def process_file(file_path: Path) -> dict[str, str]:
 /* Component: Article Card */
 .article-card {
   /* Block */
+  border: 1px solid var(--color-neutral-200);
+  border-radius: 6px;
 }
 
 .article-card__title {
   /* Element */
+  color: var(--text-primary);
 }
 
 .article-card--featured {
   /* Modifier */
+  border-color: var(--color-primary-light);
 }
 ```
 

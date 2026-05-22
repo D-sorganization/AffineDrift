@@ -1,0 +1,54 @@
+/* Page sidebar — shared structural sidebar primitive.
+   Replaces .home-sidebar, .left-sidebar, .resources-sidebar copies. */
+
+.page-sidebar {
+  position: sticky;
+  top: var(--space-4, 1rem);
+  align-self: start;
+  padding-right: 1rem;
+  border-right: 1px solid var(--color-neutral-200);
+}
+
+.page-sidebar__heading {
+  margin: 0 0 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.page-sidebar__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.page-sidebar__list li + li {
+  margin-top: 0.4rem;
+}
+
+.page-sidebar__list a {
+  display: block;
+  padding: 0.25rem 0;
+  color: var(--text-primary);
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  padding-left: 0.5rem;
+  transition:
+    color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard);
+}
+
+.page-sidebar__list a:hover,
+.page-sidebar__list a:focus-visible {
+  color: var(--color-primary-main);
+  border-left-color: var(--color-primary-light);
+}
+
+.page-sidebar__list a[aria-current="page"],
+.page-sidebar__list a.is-active {
+  color: var(--color-primary-main);
+  border-left-color: var(--color-primary-main);
+  font-weight: 600;
+}

@@ -1,0 +1,79 @@
+/* Site button — two-variant button primitive.
+   Use instead of: .cta-button, .resource-link with inline styles. */
+
+.site-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.1rem;
+  background: var(--color-primary-main);
+  color: var(--color-neutral-0);
+  border: 1px solid var(--color-primary-main);
+  border-radius: 4px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard);
+}
+
+.site-button:hover,
+.site-button:focus-visible {
+  background: var(--color-primary-dark);
+  border-color: var(--color-primary-dark);
+  color: var(--color-neutral-0);
+  text-decoration: none;
+}
+
+.site-button:focus-visible {
+  outline: 2px solid var(--color-primary-light);
+  outline-offset: 2px;
+}
+
+.site-button[disabled],
+.site-button[aria-disabled="true"] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Ghost variant — transparent fill, primary border */
+.site-button--ghost {
+  background: transparent;
+  color: var(--color-primary-main);
+}
+
+.site-button--ghost:hover,
+.site-button--ghost:focus-visible {
+  background: var(--bg-secondary);
+  color: var(--color-primary-dark);
+}
+
+/* On-brand variants: usable when a .site-button sits on top of a
+   .site-card--brand surface (filled white-on-brand button + ghost). */
+.site-button--on-brand {
+  background: var(--color-neutral-0);
+  color: var(--color-primary-main);
+  border-color: var(--color-neutral-0);
+}
+
+.site-button--on-brand:hover,
+.site-button--on-brand:focus-visible {
+  background: var(--bg-secondary);
+  color: var(--color-primary-dark);
+  border-color: var(--bg-secondary);
+}
+
+.site-button--on-brand-ghost {
+  background: transparent;
+  color: var(--color-neutral-0);
+  border-color: var(--color-neutral-0);
+}
+
+.site-button--on-brand-ghost:hover,
+.site-button--on-brand-ghost:focus-visible {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--color-neutral-0);
+  border-color: var(--color-neutral-0);
+}
