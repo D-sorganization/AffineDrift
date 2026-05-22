@@ -24,7 +24,9 @@ def _make_stub_module(name: str) -> types.ModuleType:
 class TestConvertAllLatex:
     """Tests for src.tools.convert_all_latex.convert_all()."""
 
-    def _import_convert_all_latex(self):  # noqa: ANN201
+    def _import_convert_all_latex(
+        self,
+    ):  # noqa: ANN201 -- reason: test helper import method return type is omitted
         """Import convert_all_latex with stubbed latex_to_html."""
         stub = _make_stub_module("latex_to_html")
         old = sys.modules.get("latex_to_html")
@@ -78,7 +80,9 @@ class TestConvertAllLatex:
 class TestConvertAllToQuarto:
     """Tests for src.tools.convert_all_to_quarto.convert_all()."""
 
-    def _import_convert_all_to_quarto(self):  # noqa: ANN201
+    def _import_convert_all_to_quarto(
+        self,
+    ):  # noqa: ANN201 -- reason: test helper import method return type is omitted
         """Import convert_all_to_quarto with stubbed latex_to_qmd."""
         stub = _make_stub_module("latex_to_qmd")
         old = sys.modules.get("latex_to_qmd")

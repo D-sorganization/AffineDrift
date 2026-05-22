@@ -14,7 +14,7 @@
 
 import logging
 
-from src.tools.code_quality import (  # noqa: F401
+from src.tools.code_quality import (  # noqa: F401 -- reason: backward-compatibility shim imports are unused
     Colors,
     check_ast_issues,
     check_banned_patterns,
@@ -25,7 +25,7 @@ from src.tools.code_quality import (  # noqa: F401
 )
 
 # Re-export configuration constants for callers that accessed them directly
-from src.tools.code_quality.pattern_checker import (  # noqa: F401
+from src.tools.code_quality.pattern_checker import (  # noqa: F401 -- reason: backward-compatibility shim imports are unused
     ALLOWED_CONSTANTS,
     BANNED_PATTERNS,
     MAGIC_NUMBERS,
