@@ -95,7 +95,7 @@ jobs:
       # Validate that environment is sane
       - name: Environment Health Check
         run: |
-          python --version
+          python3 --version
           pip --version
           ruff --version
           black --version
@@ -115,46 +115,46 @@ jobs:
         # are rebuilt by Quarto at deploy time. Skip here if docs/ is absent.
         run: |
           if [ -d "docs" ] && [ -f "docs/index.html" ]; then
-            python scripts/sync_frontend_assets.py --check
+            python3 scripts/sync_frontend_assets.py --check
           else
             echo "docs/ not present (expected: built by deploy workflow). Skipping frontend asset sync."
           fi
       - name: Verify Quarto Render Coverage
-        run: python scripts/check_quarto_render_coverage.py
+        run: python3 scripts/check_quarto_render_coverage.py
       - name: Validate Article Frontmatter
-        run: python scripts/validate_frontmatter.py
+        run: python3 scripts/validate_frontmatter.py
       - name: Verify CSS Budget
-        run: python scripts/check_styles_budget.py
+        run: python3 scripts/check_styles_budget.py
       - name: Verify UI/UX Anti-Pattern Budget
-        run: python scripts/check_ui_ux_budget.py
+        run: python3 scripts/check_ui_ux_budget.py
       - name: Verify Python Dependency Boundaries
-        run: python scripts/check_dependency_boundaries.py
+        run: python3 scripts/check_dependency_boundaries.py
       - name: Verify JavaScript Dependency Boundaries
-        run: python scripts/check_js_dependency_boundaries.py
+        run: python3 scripts/check_js_dependency_boundaries.py
       - name: Verify CSS Architecture Boundaries
-        run: python scripts/check_css_architecture.py
+        run: python3 scripts/check_css_architecture.py
       - name: Verify Contract Coverage
-        run: python scripts/check_contract_coverage.py
+        run: python3 scripts/check_contract_coverage.py
       - name: Verify Module Size Budget
-        run: python scripts/check_module_size_budget.py
+        run: python3 scripts/check_module_size_budget.py
       - name: Verify Changed-File Module Size Budget
-        run: python scripts/check_changed_file_size_budget.py
+        run: python3 scripts/check_changed_file_size_budget.py
       - name: Verify Technical Debt Budget
-        run: python scripts/check_tech_debt_budget.py
+        run: python3 scripts/check_tech_debt_budget.py
       - name: Verify generated agent automation artifacts
-        run: python scripts/check_agent_automation_artifacts.py
+        run: python3 scripts/check_agent_automation_artifacts.py
       - name: Verify GitHub Actions pinning
-        run: python scripts/check_workflow_action_pins.py
+        run: python3 scripts/check_workflow_action_pins.py
       - name: Security Input Sanitization Audit (SEC-001)
-        run: python scripts/check_security_audit.py
+        run: python3 scripts/check_security_audit.py
       - name: Verify DRY Shared-Helper Adoption
-        run: python scripts/check_dry_adoption.py
+        run: python3 scripts/check_dry_adoption.py
       - name: Verify Bibliography Quality
-        run: python scripts/check_bibliography_quality.py
+        run: python3 scripts/check_bibliography_quality.py
       - name: Verify Citation Resolution
-        run: python scripts/check_citation_resolution.py
+        run: python3 scripts/check_citation_resolution.py
       - name: Verify Quarto Citation Integrity
-        run: python scripts/check_qmd_citation_keys.py
+        run: python3 scripts/check_qmd_citation_keys.py
       - name: Install Tool Requirements
         run: |
           if [ -d "tools" ]; then
@@ -162,7 +162,7 @@ jobs:
           fi
       - run: mypy src/tools/ scripts/check_agent_automation_artifacts.py scripts/check_workflow_action_pins.py --ignore-missing-imports --allow-untyped-decorators --disable-error-code no-any-unimported --disable-error-code misc --disable-error-code unused-ignore --disable-error-code no-any-return
       - name: Verify Code Quality
-        run: python -m src.tools.code_quality_check
+        run: python3 -m src.tools.code_quality_check
 
       - name: Verify Site Health (Broken Links Blocking)
         # docs/ HTML is no longer committed (issue #1419); site health runs in
@@ -171,7 +171,7 @@ jobs:
         # that is intentional and expected. The check runs post-deploy instead.
         run: |
           if [ -f "docs/index.html" ]; then
-            python -m src.tools.check_site_health --fail-on broken
+            python3 -m src.tools.check_site_health --fail-on broken
           else
             echo "docs/ HTML not present (expected: built by deploy workflow). Skipping site health check."
           fi
@@ -182,7 +182,7 @@ jobs:
         continue-on-error: true
         run: |
           if [ -f "tools/matlab_utilities/scripts/matlab_quality_check.py" ]; then
-            python tools/matlab_utilities/scripts/matlab_quality_check.py --output-format text > matlab_quality_report.txt
+            python3 tools/matlab_utilities/scripts/matlab_quality_check.py --output-format text > matlab_quality_report.txt
             cat matlab_quality_report.txt
           else
             echo "MATLAB quality check script not found, skipping..."
@@ -247,7 +247,7 @@ jobs:
         timeout-minutes: 5
         run: pip install pip-audit && pip-audit -r requirements.txt --progress-spinner=off
       - name: Critical Module Coverage Gate
-        run: python scripts/check_critical_module_coverage.py
+        run: python3 scripts/check_critical_module_coverage.py
       - uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354 # v6.0.1
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
@@ -399,7 +399,7 @@ jobs:
           path: .
       - name: Sync Frontend Assets
         if: steps.e2e_changes.outputs.run == 'true'
-        run: python scripts/sync_frontend_assets.py
+        run: python3 scripts/sync_frontend_assets.py
 
       - name: Run E2E Smoke Tests (Critical Flows)
         if: steps.e2e_changes.outputs.run == 'true'
@@ -550,45 +550,3 @@ jobs:
         shell: bash
         run: |
           echo "Bypass"
-
-
-
-
-  tests-310:
-    name: tests (ubuntu-latest, 3.10)
-    runs-on: d-sorg-fleet
-    timeout-minutes: 5
-    steps:
-      - name: Satisfying ruleset
-        run: echo "Satisfying ruleset on local runner"
-
-  tests-311:
-    name: tests (ubuntu-latest, 3.11)
-    runs-on: d-sorg-fleet
-    timeout-minutes: 5
-    steps:
-      - name: Satisfying ruleset
-        run: echo "Satisfying ruleset on local runner"
-
-  tests-312:
-    name: tests (ubuntu-latest, 3.12)
-    runs-on: d-sorg-fleet
-    timeout-minutes: 5
-    steps:
-      - name: Satisfying ruleset
-        run: echo "Satisfying ruleset on local runner"
-
-  ci-complete:
-    name: CI Complete
-    needs: [e2e-tests, js-tests, local-only-workflows, pick-runner, quality-gate, rust-quality-gate, tests, tests-310, tests-311, tests-312, website-lint]
-    runs-on: d-sorg-fleet
-    timeout-minutes: 5
-    if: always()
-    steps:
-      - name: Verify all jobs succeeded
-        run: |
-          if [ "${{ contains(needs.*.result, 'failure') ||                     contains(needs.*.result, 'cancelled') }}" = "true" ]; then
-            echo "One or more required jobs failed or were cancelled."
-            exit 1
-          fi
-          echo "All jobs completed successfully."
