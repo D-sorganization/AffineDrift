@@ -281,7 +281,7 @@ jobs:
   e2e-tests:
     needs: pick-runner
     runs-on: ${{ needs.pick-runner.outputs.runner }}
-    timeout-minutes: 45
+    timeout-minutes: 75
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
@@ -324,7 +324,7 @@ jobs:
           cache: "pip"
       - name: Bootstrap Python venv
         if: steps.e2e_changes.outputs.run == 'true'
-        timeout-minutes: 20
+        timeout-minutes: 40
         env:
           PIP_DEFAULT_TIMEOUT: "60"
         run: |
