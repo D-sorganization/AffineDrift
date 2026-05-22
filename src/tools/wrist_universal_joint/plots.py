@@ -66,7 +66,7 @@ def _plot_torque_lines(
     if show_input:
         ax.plot(
             t, input_torque, label="Input Torque (forearm)", color="gray", alpha=0.7, linewidth=1.5
-        )  # noqa: E501
+        )  # noqa: E501 -- reason: plot label text is intentionally descriptive
     if show_transmitted:
         ax.plot(
             t,
@@ -74,7 +74,7 @@ def _plot_torque_lines(
             label=f"Transmitted (ratio={tau_ratio:.3f})",
             color="purple",
             linewidth=2,
-        )  # noqa: E501
+        )  # noqa: E501 -- reason: plot label text is intentionally descriptive
     if show_alpha:
         ax.plot(t, torque_alpha, label="\u03c4_\u03b1 (higher MOI axis)", color="red", linewidth=2)
     if show_gamma:
@@ -83,7 +83,7 @@ def _plot_torque_lines(
 
 # Cache figure generation to prevent expensive redraws
 # Limit entries to prevent OOM when sliding through many angles
-@st.cache_resource(max_entries=20)
+@st.cache_resource(max_entries=20)  # type: ignore[misc]
 def plot_torque(
     t: np.ndarray[Any, Any],
     input_torque: np.ndarray[Any, Any],
@@ -155,7 +155,7 @@ def _compute_acceleration_signals(
 
 # Cache figure generation to prevent expensive redraws
 # Limit entries to prevent OOM when sliding through many angles
-@st.cache_resource(max_entries=20)
+@st.cache_resource(max_entries=20)  # type: ignore[misc]
 def plot_acceleration(
     t: np.ndarray[Any, Any],
     input_torque: np.ndarray[Any, Any],
@@ -185,7 +185,7 @@ def plot_acceleration(
             color="red",
             linewidth=2,
             linestyle="--",
-        )  # noqa: E501
+        )  # noqa: E501 -- reason: plot label text is intentionally descriptive
     if show_gamma:
         ax.plot(
             t,
@@ -194,7 +194,7 @@ def plot_acceleration(
             color="blue",
             linewidth=2,
             linestyle="--",
-        )  # noqa: E501
+        )  # noqa: E501 -- reason: plot label text is intentionally descriptive
     ax.set_title(
         f"Angular Acceleration vs Time (Grip: {grip_angle_deg:.0f}\u00b0, "
         f"Wrist: {wrist_angle_deg:.0f}\u00b0)",
@@ -273,7 +273,7 @@ def _plot_transmission_series(
             label="Torque Transmission Ratio (\u03c4_out/\u03c4_in)",
             color="purple",
             linewidth=2.5,
-        )  # noqa: E501
+        )  # noqa: E501 -- reason: plot label text is intentionally descriptive
     if show_velocity:
         ax.plot(
             phi_sweep,
@@ -282,7 +282,7 @@ def _plot_transmission_series(
             color="orange",
             linewidth=2,
             linestyle="--",
-        )  # noqa: E501
+        )  # noqa: E501 -- reason: plot label text is intentionally descriptive
     if show_accel_alpha:
         ax.plot(
             phi_sweep,
@@ -291,7 +291,7 @@ def _plot_transmission_series(
             color="red",
             linewidth=1.5,
             alpha=0.7,
-        )  # noqa: E501
+        )  # noqa: E501 -- reason: plot label text is intentionally descriptive
     if show_accel_gamma:
         ax.plot(
             phi_sweep,
@@ -300,7 +300,7 @@ def _plot_transmission_series(
             color="blue",
             linewidth=1.5,
             alpha=0.7,
-        )  # noqa: E501
+        )  # noqa: E501 -- reason: plot label text is intentionally descriptive
 
 
 def _annotate_current_wrist_angle(
@@ -318,17 +318,17 @@ def _annotate_current_wrist_angle(
         linestyle=":",
         linewidth=2,
         label=f"Current wrist angle ({wrist_angle_deg:.0f}\u00b0)",
-    )  # noqa: E501
+    )  # noqa: E501 -- reason: plot label text is intentionally descriptive
     if show_transmission:
         ax.plot(
             wrist_angle_deg, tau_ratios[current_idx], "go", markersize=10, markerfacecolor="lime"
-        )  # noqa: E501
+        )  # noqa: E501 -- reason: plot label text is intentionally descriptive
     ax.axhline(1.0, color="gray", linestyle="--", alpha=0.5, linewidth=1)
 
 
 # Cache figure generation to prevent expensive redraws
 # Limit entries to prevent OOM when sliding through many angles
-@st.cache_resource(max_entries=20)
+@st.cache_resource(max_entries=20)  # type: ignore[misc]
 def plot_transmission_sweep(
     grip_angle_deg: float,
     wrist_angle_deg: float,
