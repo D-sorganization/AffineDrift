@@ -63,7 +63,6 @@
 ## 2026-05-19 - Improved collapsible sidebar accessibility
 **Learning:** In the home page collapsible sidebar menu, the toggle buttons (`.sidebar-section-toggle`) only updated `aria-expanded` attributes without updating the `aria-label` or `title` to explicitly indicate the new action ("Expand" or "Collapse") to screen readers. This created an accessibility issue where users are not properly informed of what clicking the button will do next based on the current state.
 **Action:** Update both the `aria-label` and `title` attributes dynamically when the sidebar section toggle state changes to explicitly read "Expand [Section Name]" or "Collapse [Section Name]" based on the new `aria-expanded` state.
-
 ## 2026-06-03 - Dynamic ARIA Labels on Collapsible Components (Laymans & Critics)
 **Learning:** While the newly refactored `laymans-terms` and `critics-corner` elements correctly set `aria-expanded`, their `aria-label` and `title` attributes were not dynamically updated. Sighted users did not receive native tooltips about what the expand/collapse icon does, and screen readers did not receive context about the upcoming action.
 **Action:** Dynamically update both `aria-label` and `title` on these components based on their `aria-expanded` state, explicitly declaring "Expand [Title]" or "Collapse [Title]".
