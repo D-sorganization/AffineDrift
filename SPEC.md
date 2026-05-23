@@ -604,4 +604,3 @@ python src/tools/code_quality_ast.py
 | 2026-07-20 | 1.0.105 | fix(security): Prevent DOM-based XSS in grip angle simulator by refactoring `addCheckbox` to use native DOM methods instead of `innerHTML`. |
 | 2026-05-19 | 1.0.109 | chore(deps): consolidated compatible npm, Python, benchmark, and GitHub Actions dependency bumps into one repo-level PR; workflow action pins remain immutable and the benchmark workflow preserves a single top-level concurrency policy. |
 | 2026-05-22 | 1.0.110 | fix(ci): normalized pre-commit hook execution by formatting the wrist universal-joint Streamlit app, removing duplicate golf constants, and documenting Streamlit cache decorator type ignores so mypy and noqa-justification hooks pass without bypasses. |
-| 2026-05-23 | 1.0.107 | 🎨 Palette: Enhanced mobile navbar toggle button accessibility by adding dynamic `title` attributes matching the `aria-label` for native tooltips. |
