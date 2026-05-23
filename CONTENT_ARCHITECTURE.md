@@ -54,3 +54,35 @@ The theoretical material on tangent hyperplanes, contraction, and golf swing dyn
 ```
 
 Only files listed in `_quarto.yml` render paths are part of the website. The `content/` directory is intentionally excluded.
+
+## Design Primitives (issue #3140 B3)
+
+Canonical CSS primitive classes live in `css/components/` and `css/layout/`. Use these instead of ad-hoc inline styles or one-off classes.
+
+### `.site-card` (`css/components/site-card.css`)
+
+A bordered, rounded content card with hover state.
+
+- **Use instead of:** `.quick-link-card`, `.audience-card`, `.resource-card`, inline `padding`/`background`/`border-radius` combos
+- Modifiers: `.site-card--inline` (compact padding), `.site-card--feature` (generous padding)
+
+### `.site-button` (`css/components/site-button.css`)
+
+An inline-flex call-to-action button/link.
+
+- **Use instead of:** `.cta-button`, inline `background`/`color`/`padding`/`border-radius` on `<a>` elements
+- Modifiers: `.site-button--ghost` (transparent background, colored text)
+
+### `.section-stack` (`css/layout/section-stack.css`)
+
+Vertical stacked sections separated by a top border divider.
+
+- **Use instead of:** repeated `margin-top` / `border-top` patterns between sibling sections
+- Apply to a container; all direct children except the first get a top margin and border.
+
+### `.page-sidebar` (`css/layout/page-sidebar.css`)
+
+A sticky structural sidebar that stays in viewport while content scrolls.
+
+- **Use instead of:** inline `position: sticky; top: ...; overflow-y: auto` on sidebar elements
+- Includes `.sidebar-heading` for uppercase label headings inside the sidebar.
