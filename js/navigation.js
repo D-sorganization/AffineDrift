@@ -95,13 +95,16 @@ export function initNavbarCollapse() {
         navbarToggler.setAttribute("aria-controls", "navbarCollapse");
         if (!navbarToggler.getAttribute("aria-label") || navbarToggler.getAttribute("aria-label") === "Toggle navigation menu") {
             navbarToggler.setAttribute("aria-label", "Open navigation menu");
+            navbarToggler.setAttribute("title", "Open navigation menu");
         }
 
         // Update ARIA state when menu state changes
         const updateToggleState = () => {
             const isOpen = navbarCollapse && navbarCollapse.classList.contains("show");
             navbarToggler.setAttribute("aria-expanded", String(isOpen));
-            navbarToggler.setAttribute("aria-label", isOpen ? "Close navigation menu" : "Open navigation menu");
+            const actionText = isOpen ? "Close navigation menu" : "Open navigation menu";
+            navbarToggler.setAttribute("aria-label", actionText);
+            navbarToggler.setAttribute("title", actionText);
         };
 
         // Listen for collapse changes and update ARIA

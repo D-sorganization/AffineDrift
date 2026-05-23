@@ -67,3 +67,7 @@
 ## 2026-06-03 - Dynamic ARIA Labels on Collapsible Components (Laymans & Critics)
 **Learning:** While the newly refactored `laymans-terms` and `critics-corner` elements correctly set `aria-expanded`, their `aria-label` and `title` attributes were not dynamically updated. Sighted users did not receive native tooltips about what the expand/collapse icon does, and screen readers did not receive context about the upcoming action.
 **Action:** Dynamically update both `aria-label` and `title` on these components based on their `aria-expanded` state, explicitly declaring "Expand [Title]" or "Collapse [Title]".
+
+## 2024-05-24 - Native Tooltips for Mobile Navbar Toggle
+**Learning:** Mobile menu toggle buttons (hamburger icons) often rely solely on `aria-label` for screen readers but lack a native tooltip (`title`) for sighted users using hover (e.g., zoomed desktop or pen users).
+**Action:** Always pair `aria-label` with a corresponding `title` attribute on `.navbar-toggler` to ensure all users receive context about the menu's state and action.
