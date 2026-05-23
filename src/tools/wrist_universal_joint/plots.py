@@ -81,9 +81,6 @@ def _plot_torque_lines(
         ax.plot(t, torque_gamma, label="\u03c4_\u03b3 (lowest MOI axis)", color="blue", linewidth=2)
 
 
-# Cache figure generation to prevent expensive redraws
-# Limit entries to prevent OOM when sliding through many angles
-@st.cache_resource(max_entries=20)  # type: ignore[misc]
 def plot_torque(
     t: np.ndarray[Any, Any],
     input_torque: np.ndarray[Any, Any],
@@ -153,9 +150,6 @@ def _compute_acceleration_signals(
     return accel_alpha, accel_gamma
 
 
-# Cache figure generation to prevent expensive redraws
-# Limit entries to prevent OOM when sliding through many angles
-@st.cache_resource(max_entries=20)  # type: ignore[misc]
 def plot_acceleration(
     t: np.ndarray[Any, Any],
     input_torque: np.ndarray[Any, Any],
@@ -326,9 +320,6 @@ def _annotate_current_wrist_angle(
     ax.axhline(1.0, color="gray", linestyle="--", alpha=0.5, linewidth=1)
 
 
-# Cache figure generation to prevent expensive redraws
-# Limit entries to prevent OOM when sliding through many angles
-@st.cache_resource(max_entries=20)  # type: ignore[misc]
 def plot_transmission_sweep(
     grip_angle_deg: float,
     wrist_angle_deg: float,
