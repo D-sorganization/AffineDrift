@@ -12,6 +12,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
+from src.core.constants import REGULATION_HOLE_RADIUS_M
 from src.core.contracts import require
 from src.golf_simulation.ball_flight import BallFlightDynamics, BallFlightState
 from src.golf_simulation.clubs import ClubBag, ClubType, GolfClub, LaunchConditions
@@ -215,7 +216,7 @@ class RoundSimulator:
 
             # Check if holed
             dist_remaining = hole.distance_to_pin(position[0], position[1])
-            if dist_remaining < 0.054:  # Within hole radius
+            if dist_remaining < REGULATION_HOLE_RADIUS_M:  # Within hole radius
                 logger.debug("Hole %d completed in %d strokes", hole.number, stroke_count)
                 break
 

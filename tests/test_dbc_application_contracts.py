@@ -22,18 +22,18 @@ import pytest
 # Force contract enforcement for testing
 os.environ["DBC_LEVEL"] = "enforce"
 
-from src.affine_control.ddp import (  # noqa: E402
+from src.affine_control.ddp import (  # noqa: E402 -- reason: os.environ must be set before importing modules under contract
     _resample_controls,
     _simulate_trajectory,
     adaptive_timestep_ddp_mock,
     estimate_perturbation_size,
 )
-from src.affine_control.residuals import (  # noqa: E402
+from src.affine_control.residuals import (  # noqa: E402 -- reason: os.environ must be set before importing modules under contract
     ResidualMonitor,
     compute_hessian_bound,
     predict_residual_bound,
 )
-from src.core.contracts import (  # noqa: E402
+from src.core.contracts import (  # noqa: E402 -- reason: os.environ must be set before importing modules under contract
     ContractViolationError,
     check_finite_array,
     check_positive,

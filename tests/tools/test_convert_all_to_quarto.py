@@ -17,7 +17,7 @@ def _stub_latex_to_qmd() -> tuple[types.ModuleType, object]:
     return stub
 
 
-def _import_convert_all_to_quarto():  # noqa: ANN201
+def _import_convert_all_to_quarto():  # noqa: ANN201 -- reason: test helper import method return type is omitted
     """Import convert_all_to_quarto with stubbed latex_to_qmd."""
     stub = _stub_latex_to_qmd()
     old = sys.modules.get("latex_to_qmd")
