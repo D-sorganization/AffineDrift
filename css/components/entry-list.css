@@ -1,0 +1,58 @@
+/* Entry list — typographic list of links + deks.
+   The "Latest writing" / "Books" / "Connect" blocks on the home page,
+   the article index, and the resources listings all consume this. */
+
+.entry-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.entry-list__item {
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--color-neutral-200);
+}
+
+.entry-list__item:first-child {
+  padding-top: 0;
+}
+
+.entry-list__item:last-child {
+  border-bottom: none;
+}
+
+.entry-list__title {
+  display: inline-block;
+  font-family: var(--font-display, "Playfair Display"), Georgia, serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+
+.entry-list__title:hover,
+.entry-list__title:focus-visible {
+  color: var(--color-primary-main);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.entry-list__dek {
+  margin: 0.35rem 0 0;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.entry-list__meta {
+  margin-top: 0.2rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.02em;
+}
+
+/* Compact variant: titles only, no deks. */
+.entry-list--compact .entry-list__item {
+  padding: 0.5rem 0;
+}
