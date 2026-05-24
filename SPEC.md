@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-05-22T04:25:00Z
+Last-Updated: 2026-05-23T11:10:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,8 +29,8 @@ Last-Updated: 2026-05-22T04:25:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.8                                            |
-| **Spec Version**        | 1.0.110                                          |
-| **Last Spec Update**    | 2026-05-22                                       |
+| **Spec Version**        | 1.0.111                                          |
+| **Last Spec Update**    | 2026-05-23                                       |
 
 ## 2. Purpose & Mission
 
@@ -208,6 +208,8 @@ AffineDrift/
 | F44 | Production-readiness CI hardening       | ✅     | `ci-standard.yml` now treats mypy over `src/tools/` plus the production-readiness policy scripts, generated-agent-artifact checks, and GitHub Actions pinning checks as blocking quality gates, while the website-lint job fails on HTML validation errors instead of downgrading them to warnings.                                                                                                                                                            |
 | F45 | Optimizer and browser-state hardening   | ✅     | The core iLQR solver records `last_diagnostics` for convergence, iteration count, final cost, failure reason, and rollout/callback errors while preserving the existing return contract; dynamics outputs are validated for shape and finite values during rollout, linearization, and line search. Browser persistence helpers for history, metrics, and notes now delete corrupted `localStorage` payloads and bound notes recycle-bin retention to 30 days. |
 | F46 | Python 3.10 contract compatibility      | ✅     | `src/contracts.py` uses explicit `TypeVar`/`ParamSpec` declarations instead of Python 3.12+ PEP 695 type parameter syntax, restoring import compatibility for environments running Python 3.10 or 3.11. Ruff UP047 is suppressed with `# noqa: UP047` on the affected generic function definitions.                                                                                                                                                            |
+| F47 | Website design primitives               | ✅     | The homepage and content architecture use canonical CSS primitives for site cards, buttons, section stacks, and sticky page sidebars so reusable layout semantics live in `css/components/` and `css/layout/` instead of one-off inline styles.                                                                                                                                                                                                                |
+| F48 | QMD style-discipline linting            | ✅     | `src/tools/check_style_discipline.py` scans rendered-source `.qmd` files outside excluded generated/content directories and fails on inline `style=` attributes, gradient functions, or hardcoded hex colors, with unit tests covering clean files and each violation category.                                                                                                                                                                                |
 
 ### API / Interface Contract
 
@@ -238,6 +240,7 @@ AffineDrift/
 - `link-checker.py` — Validate all documentation links
 - `site-health.py` — Generate health report on website assets
 - `code-quality-ast.py` — Analyze Python code structure and metrics
+- `check_style_discipline.py` — Enforce QMD style-discipline rules that keep page styling in canonical CSS primitives
 - `scripts/cli_output.py` — Shared helper for scripts that intentionally emit user-facing stdout/stderr lines as part of their CLI contract
 
 **Website (HTTP):**
@@ -488,6 +491,7 @@ python src/tools/code_quality_ast.py
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | ---------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-05-23 | 1.0.111 | feat(website): Documented the content-first homepage cleanup, canonical CSS design primitives, and `check_style_discipline.py` QMD lint contract that blocks inline style attributes, gradient functions, and hardcoded hex colors outside excluded generated/content directories.                                                                                                                                                                                                                                                                                                          |
 | 2026-05-14 | 1.0.107 | fix(deploy): Normalized Tangent-Space Series source links from legacy spaced generated-path URLs to source-backed `tangent-hyperplane-articles` paths, replaced stale `CRITICAL_REVIEW.md` references with `CRITICS_CORNER.md`, and added regression coverage for those internal links so clean deploy checkouts do not depend on rendered `docs/` artifacts.                                                                                                                                                                                                                               |
 | 2026-05-14 | 1.0.106 | fix(accessibility): Marked decorative repository accordion `+` icons as `aria-hidden="true"` so screen readers rely on the button label and `aria-expanded` state instead of announcing redundant icon text, with regression coverage for the repositories page.                                                                                                                                                                                                                                                                                                                            |
 | 2026-05-23 | 1.0.107 | 🎨 Palette: Enhanced mobile navbar toggle button accessibility by adding dynamic `title` attributes matching the `aria-label` for native tooltips. |
