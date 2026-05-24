@@ -9,6 +9,8 @@ Measures the performance of double-pendulum control algorithms including:
 
 from __future__ import annotations
 
+from collections.abc import Callable
+
 import numpy as np
 import pytest
 
@@ -120,7 +122,7 @@ class TestRLFunnelBenchmarks:
         """
 
         # Create a setpoint controller function factory
-        def create_controller() -> callable:  # type: ignore[name-defined]
+        def create_controller() -> Callable[[float, np.ndarray], np.ndarray]:
             """Build a setpoint LQR controller targeting the given state."""
             target = np.array([0.5, 0.3, 0.1, -0.2])
             return setpoint_lqr_controller(target)
@@ -151,7 +153,7 @@ def test_benchmark_rl_funnel_solver_convergence(
     x_ref = np.zeros((4, 11))
     x_ref[0, :] = np.linspace(0.0, np.pi, 11)
 
-    def solve_problem() -> tuple[np.ndarray, np.ndarray]:
+    def solve_problem() -> Callable[[float, np.ndarray], np.ndarray]:
         """Construct the trajectory-tracking LQR solver output."""
         return trajectory_tracking_lqr(t_ref, x_ref)
 

@@ -72,18 +72,18 @@ class TestCleanPagesStayClean:
         offenders = [
             v for v in find_violations_in_text(text, suffix=".qmd") if v.rule == "inline-style"
         ]
-        assert offenders == [], (
-            f"{rel_path}: inline style= at line(s) " f"{[v.line for v in offenders[:5]]}"
-        )
+        assert (
+            offenders == []
+        ), f"{rel_path}: inline style= at line(s) {[v.line for v in offenders[:5]]}"
 
     def test_no_linear_gradient(self, rel_path: str) -> None:
         text = (REPO_ROOT / rel_path).read_text(encoding="utf-8")
         offenders = [
             v for v in find_violations_in_text(text, suffix=".qmd") if v.rule == "gradient"
         ]
-        assert offenders == [], (
-            f"{rel_path}: linear/radial gradient at line(s) " f"{[v.line for v in offenders[:5]]}"
-        )
+        assert (
+            offenders == []
+        ), f"{rel_path}: linear/radial gradient at line(s) {[v.line for v in offenders[:5]]}"
 
     def test_no_hardcoded_hex(self, rel_path: str) -> None:
         text = (REPO_ROOT / rel_path).read_text(encoding="utf-8")

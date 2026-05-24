@@ -19,7 +19,6 @@ from PyQt6.QtWidgets import (
     QWidget,
 )
 
-from ....shared.python.qt_utils.wheel_event_filter import suppress_wheel_on_widgets
 from .constants import (
     DEFAULT_CLUB_LENGTH,
     DEFAULT_CLUBHEAD_CG_DISTANCE,
@@ -27,7 +26,7 @@ from .constants import (
     DEFAULT_SHAFT_WEIGHT,
 )
 from .qt_canvases import DiagramCanvas, PlotCanvas
-from .qt_widgets import WheelIgnoringLineEdit, WheelIgnoringSlider
+from .qt_widgets import WheelIgnoringLineEdit, WheelIgnoringSlider, suppress_wheel_on_widgets
 
 _SLIDER_WIDTH = 300
 _TEXTBOX_WIDTH = 80

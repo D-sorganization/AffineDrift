@@ -91,9 +91,9 @@ class TestStyleDiscipline:
         violations = [
             v for v in find_violations_in_text(home_text, suffix=".qmd") if v.rule == "inline-style"
         ]
-        assert violations == [], (
-            "Inline style= still present at line(s): " f"{[v.line for v in violations]}"
-        )
+        assert (
+            violations == []
+        ), f"Inline style= still present at line(s): {[v.line for v in violations]}"
 
     def test_no_linear_gradient(self, home_text: str) -> None:
         violations = [
