@@ -1,6 +1,6 @@
 export default {
   extends: ["stylelint-config-standard"],
-  ignoreFiles: ["docs/**", "_site/**", "node_modules/**"],
+  ignoreFiles: ["docs/**", "_site/**", "node_modules/**", "playwright-report/**", "test-results/**"],
   rules: {
     "color-function-notation": null,
     "alpha-value-notation": null,
@@ -17,7 +17,7 @@ export default {
     "rule-empty-line-before": null,
     "value-keyword-case": null,
     "selector-class-pattern": [
-      "^(?:[a-z0-9\\-]+|MathJax|MathJax_Display)$",
+      "^(?:[a-z0-9\\-_]+|MathJax|MathJax_Display)$",
       {
         resolveNestedSelectors: true,
       },
