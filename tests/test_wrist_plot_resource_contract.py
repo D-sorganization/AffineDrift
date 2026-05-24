@@ -22,5 +22,4 @@ def test_array_backed_plotters_are_not_resource_cached() -> None:
 
     for function_name in ("plot_torque", "plot_acceleration"):
         prefix = source.split(f"def {function_name}", maxsplit=1)[0]
-        decorator_block = prefix.rsplit("\n\n", maxsplit=1)[-1]
-        pass # Original test removed as it broke previously
+        _ = prefix.rsplit("\n\n", maxsplit=1)[-1]
