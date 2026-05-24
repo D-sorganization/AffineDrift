@@ -15,6 +15,7 @@ EXCLUDED_DIRS = {"articles", "site_libs", "docs", ".git", "node_modules"}
 
 
 def check_file(path: Path) -> list[str]:
+    """Return style-discipline violations found in one Quarto source file."""
     if not path.is_file():
         raise ValueError(f"Expected file: {path}")
     violations: list[str] = []
@@ -31,6 +32,7 @@ def check_file(path: Path) -> list[str]:
 
 
 def main() -> int:
+    """Scan repository Quarto files and exit nonzero when violations exist."""
     root = Path(__file__).parent.parent.parent
     qmd_files = [
         p for p in root.rglob("*.qmd") if not any(part in EXCLUDED_DIRS for part in p.parts)
@@ -40,9 +42,9 @@ def main() -> int:
         all_violations.extend(check_file(qmd))
     if all_violations:
         for v in all_violations:
-            print(v)
+            sys.stderr.write(f"{v}\n")
         return 1
-    print(f"Checked {len(qmd_files)} QMD files — no violations.")
+    sys.stdout.write(f"Checked {len(qmd_files)} QMD files — no violations.\n")
     return 0
 
 
