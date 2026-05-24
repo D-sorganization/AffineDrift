@@ -13,64 +13,38 @@ page-layout: full
 </button>
 <div class="sidebar-overlay"></div>
 
-<!-- NOTE (issue #1461): Custom mobile menu restored as secondary nav to support sidebar links on mobile.
-     Quarto handles primary top-level navigation; this toggle handles the Articles/Models sidebar. -->
-
 <div class="container">
   <div class="home-layout home-layout-3col">
-    <!-- Left Sidebar with Collapsible Sections -->
+    <!-- Left Sidebar: three sections matching the new IA (Read / Build / Connect) -->
     <aside class="home-sidebar" id="home-sidebar">
       <div class="sidebar-sticky-content">
 
         <div class="sidebar-section collapsible-section">
-          <button type="button" class="sidebar-section-toggle" aria-expanded="true" data-target="articles-section">
-            <h3>Articles & Theory</h3>
+          <button type="button" class="sidebar-section-toggle" aria-expanded="true" data-target="read-section">
+            <h3>Read</h3>
             <span class="toggle-icon" aria-hidden="true">&#9660;</span>
           </button>
-          <div id="articles-section" class="sidebar-section-content show">
+          <div id="read-section" class="sidebar-section-content show">
             <ul class="resource-links">
-              <li><strong style="font-size: 0.85em; color: var(--text-light, #6b7280);">Textbooks</strong></li>
               <li><a href="articles/The_Physics_of_Golf/quarto/index.html">The Physics of Golf</a></li>
               <li><a href="articles/The_Geometry_of_Motion/quarto/index.html">The Geometry of Motion</a></li>
               <li><a href="books/index.html">All Books and Textbooks</a></li>
-              <li><strong style="font-size: 0.85em; color: var(--text-light, #6b7280); margin-top: 0.5rem; display: block;">Articles</strong></li>
               <li><a href="resources/articles.html">Article Index</a></li>
-              <li><a href="pages/drifter-manifesto.html">Drifter Manifesto</a></li>
-              <li><a href="pages/tangent-hyperplanes.html">Tangent-Space Series</a></li>
-              <li><a href="articles/tangent-hyperplane-contraction/index.html">Tangent Hyperplane Contraction</a></li>
-              <li><a href="resources/research-reviews.html">Research Reviews</a></li>
-              <li><a href="pages/book-reviews.html">Book Reviews</a></li>
-              <li><a href="resources/bibliography.html">Bibliography</a></li>
               <li><a href="critiques/index.html">Critiques &amp; Responses</a></li>
-              <li><a href="pages/overview.html">Overview</a></li>
+              <li><a href="resources/bibliography.html">Bibliography</a></li>
             </ul>
           </div>
         </div>
 
         <div class="sidebar-section collapsible-section">
-          <button type="button" class="sidebar-section-toggle" aria-expanded="false" data-target="models-section">
-            <h3>Models</h3>
+          <button type="button" class="sidebar-section-toggle" aria-expanded="false" data-target="build-section">
+            <h3>Build</h3>
             <span class="toggle-icon" aria-hidden="true">&#9660;</span>
           </button>
-          <div id="models-section" class="sidebar-section-content">
+          <div id="build-section" class="sidebar-section-content">
             <ul class="resource-links">
               <li><a href="models/models.html">Golf Modeling Suite</a></li>
-              <li><a href="https://github.com/D-sorganization/UpstreamDrift" target="_blank" rel="noopener">UpstreamDrift Repository</a></li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="sidebar-section collapsible-section">
-          <button type="button" class="sidebar-section-toggle" aria-expanded="false" data-target="resources-section">
-            <h3>Resources</h3>
-            <span class="toggle-icon" aria-hidden="true">&#9660;</span>
-          </button>
-          <div id="resources-section" class="sidebar-section-content">
-            <ul class="resource-links">
-              <li><a href="resources/resources-videos.html">Educational Videos</a></li>
-              <li><a href="resources/resources-books.html">Reference Books</a></li>
-              <li><a href="resources/resources-papers.html">Research Papers</a></li>
-              <li><a href="resources/resources-websites.html">Websites</a></li>
+              <li><a href="repositories/repositories.html">Repositories</a></li>
               <li><a href="resources/resources-datasets.html">Datasets</a></li>
             </ul>
           </div>
@@ -83,7 +57,7 @@ page-layout: full
           </button>
           <div id="connect-section" class="sidebar-section-content">
             <ul class="resource-links">
-              <li><a href="pages/about.html">About Dieter</a></li>
+              <li><a href="pages/about.html">About</a></li>
               <li><a href="pages/contact.html">Contact</a></li>
               <li><a href="pages/collaborate.html">Collaborate</a></li>
             </ul>
@@ -93,82 +67,18 @@ page-layout: full
     </aside>
 
     <!-- Main Content Area -->
-    <main class="home-content">
-      <!-- Welcome Section -->
-      <section id="welcome" class="welcome-section">
-        <div class="welcome-header">
-          <h1>AffineDrift</h1>
-          <p class="subtitle">Scientific Notes on Golf Mechanics, Modeling, and Control</p>
-        </div>
-
-        <div class="welcome-intro">
-          <p>
-            AffineDrift is a technical research portfolio on golf swing mechanics, multibody dynamics, and nonlinear control. It collects textbook-style chapters, source maps, reproducible model links, validation notes, and critique responses so that claims can be read with their assumptions and evidence in view.
-          </p>
-          <p>
-            The established material is the mathematics and mechanics literature behind the models. The AffineDrift contribution is the golf-specific application, synthesis, and review workflow: some pages are polished exposition, while others remain exploratory hypotheses or implementation notes.
-          </p>
-        </div>
-      </section>
-
-      <!-- Technical Reviewer Path -->
-      <section id="reviewers" class="reviewer-section" style="margin-top: 2rem;">
-        <h2>For Technical Reviewers</h2>
-        <p>
-          Start with the clearest evidence path: the golf mechanics chapters, the control-affine derivation, the bibliography, the critique log, and the executable model entry points.
+    <main class="home-content section-stack">
+      <!-- Hero -->
+      <section id="welcome" class="home-hero">
+        <h1>AffineDrift</h1>
+        <p class="home-hero__subtitle">Scientific Notes on Golf Mechanics, Modeling, and Control</p>
+        <p class="home-hero__lede">
+          AffineDrift is a technical research portfolio on golf swing mechanics, multibody dynamics, and nonlinear control. It collects textbook-style chapters, source maps, reproducible model links, validation notes, and critique responses so claims can be read with their assumptions and evidence in view.
         </p>
-        <div class="quick-links-grid">
-          <a href="articles/The_Physics_of_Golf/quarto/index.html" class="quick-link-card" title="Read The Physics of Golf">
-            <span class="quick-link-icon"><i class="bi bi-book" aria-hidden="true"></i></span>
-            <span class="quick-link-text">Physics of Golf</span>
-          </a>
-          <a href="articles/theory-part1.html" class="quick-link-card" title="Read Theory Part 1">
-            <span class="quick-link-icon"><i class="bi bi-diagram-3" aria-hidden="true"></i></span>
-            <span class="quick-link-text">Theory Part 1</span>
-          </a>
-          <a href="resources/bibliography.html" class="quick-link-card" title="View Bibliography">
-            <span class="quick-link-icon"><i class="bi bi-journals" aria-hidden="true"></i></span>
-            <span class="quick-link-text">Bibliography</span>
-          </a>
-          <a href="critiques/index.html" class="quick-link-card" title="Read Critiques &amp; Responses">
-            <span class="quick-link-icon"><i class="bi bi-chat-square-text" aria-hidden="true"></i></span>
-            <span class="quick-link-text">Critiques &amp; Responses</span>
-          </a>
-          <a href="models/models.html" class="quick-link-card" title="Explore Model Entry Point">
-            <span class="quick-link-icon"><i class="bi bi-laptop" aria-hidden="true"></i></span>
-            <span class="quick-link-text">Model Entry Point</span>
-          </a>
-          <a href="https://github.com/D-sorganization/UpstreamDrift" class="quick-link-card" target="_blank" rel="noopener" title="Visit UpstreamDrift GitHub Repo">
-            <span class="quick-link-icon"><i class="bi bi-github" aria-hidden="true"></i></span>
-            <span class="quick-link-text">UpstreamDrift</span>
-          </a>
-        </div>
       </section>
 
-      <!-- Audience Segmentation -->
-      <section id="audiences" class="audience-section" style="margin-top: 2rem;">
-        <h2>How to Read AffineDrift</h2>
-        <div class="audience-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
-          <div class="audience-card" style="padding: 1.5rem; background: var(--bg-secondary, #f8f9fa); border-radius: 8px; border-top: 4px solid var(--primary-color, #2563eb);">
-            <h3><i class="bi bi-person-badge" aria-hidden="true"></i> For Practitioners</h3>
-            <p><strong>Focus:</strong> model assumptions, parameter definitions, and reproducible methods.</p>
-            <p>Coaches and analysts should treat golf-specific metrics as model outputs or hypotheses unless a page identifies a cited source or validation artifact.</p>
-          </div>
-          <div class="audience-card" style="padding: 1.5rem; background: var(--bg-secondary, #f8f9fa); border-radius: 8px; border-top: 4px solid #10b981;">
-            <h3><i class="bi bi-person" aria-hidden="true"></i> For Laypersons</h3>
-            <p><strong>Focus:</strong> Intuitive explanations, motivated examples, plain English.</p>
-            <p>Plain-language sections translate technical arguments without removing the page-level caveats about model scope and evidence status.</p>
-          </div>
-          <div class="audience-card" style="padding: 1.5rem; background: var(--bg-secondary, #f8f9fa); border-radius: 8px; border-top: 4px solid #8b5cf6;">
-            <h3><i class="bi bi-calculator" aria-hidden="true"></i> For Mathematicians</h3>
-            <p><strong>Focus:</strong> Precise definitions, complete derivations, consistent notation.</p>
-            <p>Use the textbooks and theory articles to inspect the control-affine framing, derivation choices, notation, and boundaries between standard results and AffineDrift synthesis.</p>
-          </div>
-        </div>
-      </section>
-
-      <!-- Math Showcase -->
-      <section id="framework" class="math-section" style="margin-top: 3rem;">
+      <!-- Core framework -->
+      <section id="framework" class="home-framework">
         <h2>The Core Framework</h2>
         <p>Several pages model the golf swing as a control-affine system:</p>
         <div class="math-showcase">
@@ -177,51 +87,66 @@ page-layout: full
         <p>
           Where <em>f(x)</em> represents the drift dynamics (passive forces including gravity and velocity-dependent inertial coupling terms) and <em>g(x)u</em> represents the controlled torque inputs from the golfer.
         </p>
-        <div style="margin-top: 1rem; padding: 0.75rem 1rem; background: var(--bg-secondary, #f8f9fa); border-left: 3px solid var(--primary-color, #2563eb); border-radius: 4px; font-size: 0.9rem; color: var(--text-light, #6b7280);">
-          <strong>Provenance:</strong> The control-affine form ẋ = f(x) + g(x)u is standard in nonlinear control theory (Isidori, 1995; Nijmeijer &amp; van der Schaft, 1990). Its application to golf biomechanics — the drift/input decomposition, ZTCF, and DCR — is AffineDrift synthesis. See the <a href="articles/theory-part1.html">Theory Part 1</a> derivation and the <a href="critiques/index.html">Critiques &amp; Responses</a> for scope limitations.
-        </div>
+        <aside class="provenance-note">
+          <strong>Provenance.</strong> The control-affine form ẋ = f(x) + g(x)u is standard in nonlinear control theory (Isidori, 1995; Nijmeijer &amp; van der Schaft, 1990). Its application to golf biomechanics — the drift/input decomposition, ZTCF, and DCR — is AffineDrift synthesis. See <a href="articles/theory-part1.html">Theory Part 1</a> for the derivation and <a href="critiques/index.html">Critiques &amp; Responses</a> for scope limitations.
+        </aside>
       </section>
 
-      <!-- Verification and Review Section -->
-      <section id="verification" class="approach-section" style="margin-top: 3rem;">
-        <h2>Verification and Review Workflow</h2>
-        <div class="approach-content">
-          <p>
-            AffineDrift prioritizes artifacts that can be inspected: equations, citations, executable model links, validation reports, issue-linked review notes, and CI results. Syntax checks, tests, and repository inventories help catch mechanical errors, but they do not convert exploratory biomechanical interpretations into established results.
-          </p>
-          <p>
-            Computational tools support drafting, refactoring, and repeatable checks. Scientific claims still have to be tied to stated assumptions, cited sources, model code, or explicit numerical experiments.
-          </p>
-          <p>
-            Not every page is at the same editorial stage. Some pages are polished expositions, while others remain exploratory notes or literature-review scaffolds and should be read with the status notes on each page in mind.
-          </p>
-          <p>
-            Critical review is part of the publication model. Limitations, objections, and unresolved evidence gaps are surfaced alongside the main articles in dedicated "Critics' Comments" sections, rather than hidden behind them.
-          </p>
-        </div>
+      <!-- Latest writing -->
+      <section id="latest" class="home-latest">
+        <h2>Latest Writing</h2>
+        <ul class="entry-list">
+          <li class="entry-list__item">
+            <a class="entry-list__title" href="articles/The_Physics_of_Golf/quarto/index.html">The Physics of Golf</a>
+            <p class="entry-list__dek">Core textbook: kinematics, dynamics, and control of the golf swing built from first principles.</p>
+          </li>
+          <li class="entry-list__item">
+            <a class="entry-list__title" href="articles/The_Geometry_of_Motion/quarto/index.html">The Geometry of Motion</a>
+            <p class="entry-list__dek">Differential geometry, Lie groups, and rigid-body motion applied to swing analysis.</p>
+          </li>
+          <li class="entry-list__item">
+            <a class="entry-list__title" href="articles/theory-part1.html">Theory, Part 1 — Control-Affine Derivation</a>
+            <p class="entry-list__dek">Derivation of the control-affine swing model and its assumptions.</p>
+          </li>
+          <li class="entry-list__item">
+            <a class="entry-list__title" href="pages/tangent-hyperplanes.html">Tangent-Space Series</a>
+            <p class="entry-list__dek">Tangent-space and hyperplane methods applied to swing trajectory analysis.</p>
+          </li>
+          <li class="entry-list__item">
+            <a class="entry-list__title" href="pages/drifter-manifesto.html">The Drifter Manifesto</a>
+            <p class="entry-list__dek">Positioning and methodology behind the AffineDrift program.</p>
+          </li>
+          <li class="entry-list__item">
+            <a class="entry-list__title" href="critiques/index.html">Critiques &amp; Responses</a>
+            <p class="entry-list__dek">Open critique log with surfaced limitations, objections, and evidence gaps.</p>
+          </li>
+        </ul>
       </section>
 
-      <!-- Quick Links Section -->
-      <section id="quickstart" class="quick-links-section">
-        <h2>Quick Start</h2>
-        <div class="quick-links-grid">
-          <a href="pages/overview.html" class="quick-link-card" title="Read Technical Overview">
-            <span class="quick-link-icon"><i class="bi bi-file-text" aria-hidden="true"></i></span>
-            <span class="quick-link-text">Technical Overview</span>
-          </a>
-          <a href="models/models.html" class="quick-link-card" title="Explore Model Entry Point">
-            <span class="quick-link-icon"><i class="bi bi-laptop" aria-hidden="true"></i></span>
-            <span class="quick-link-text">Golf Modeling Suite</span>
-          </a>
-          <a href="resources/bibliography.html" class="quick-link-card" title="View Bibliography">
-            <span class="quick-link-icon"><i class="bi bi-journals" aria-hidden="true"></i></span>
-            <span class="quick-link-text">Bibliography</span>
-          </a>
-          <a href="pages/contact.html" class="quick-link-card" title="Contact Us">
-            <span class="quick-link-icon"><i class="bi bi-envelope" aria-hidden="true"></i></span>
-            <span class="quick-link-text">Contact</span>
-          </a>
-        </div>
+      <!-- Books -->
+      <section id="books" class="home-books">
+        <h2>Books</h2>
+        <ul class="entry-list entry-list--compact">
+          <li class="entry-list__item">
+            <a class="entry-list__title" href="articles/The_Physics_of_Golf/quarto/index.html">The Physics of Golf</a>
+          </li>
+          <li class="entry-list__item">
+            <a class="entry-list__title" href="articles/The_Geometry_of_Motion/quarto/index.html">The Geometry of Motion</a>
+          </li>
+          <li class="entry-list__item">
+            <a class="entry-list__title" href="books/index.html">Book series — all volumes</a>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Connect -->
+      <section id="connect" class="home-connect">
+        <h2>Connect</h2>
+        <ul class="entry-list entry-list--compact">
+          <li class="entry-list__item"><a class="entry-list__title" href="pages/about.html">About</a></li>
+          <li class="entry-list__item"><a class="entry-list__title" href="pages/contact.html">Contact</a></li>
+          <li class="entry-list__item"><a class="entry-list__title" href="pages/collaborate.html">Collaborate</a></li>
+        </ul>
       </section>
     </main>
 
@@ -231,10 +156,10 @@ page-layout: full
         <h3 class="sidebar-heading">On This Page</h3>
         <ul class="toc-links">
           <li><a href="#welcome">Welcome</a></li>
-          <li><a href="#reviewers">For Reviewers</a></li>
           <li><a href="#framework">Core Framework</a></li>
-          <li><a href="#verification">Verification</a></li>
-          <li><a href="#quickstart">Quick Start</a></li>
+          <li><a href="#latest">Latest Writing</a></li>
+          <li><a href="#books">Books</a></li>
+          <li><a href="#connect">Connect</a></li>
         </ul>
       </div>
     </aside>
@@ -242,4 +167,3 @@ page-layout: full
 </div>
 
 <script src="js/home.js"></script>
-```

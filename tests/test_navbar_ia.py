@@ -1,0 +1,97 @@
+"""Navbar information-architecture contract (EPIC #3140 D1).
+
+The site's top-level navigation must collapse from four dropdowns
+(Learn / Explore / Build / Connect) to three (Read / Build / Connect)
+plus the Home link. Each dropdown is capped at 10 items (including
+separators) to prevent the menu from regrowing.
+"""
+
+from __future__ import annotations
+
+from pathlib import Path
+
+import pytest
+import yaml
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+QUARTO_YML = REPO_ROOT / "_quarto.yml"
+
+# Hard limits — the IA contract.
+EXPECTED_DROPDOWNS: frozenset[str] = frozenset({"Read", "Build", "Connect"})
+MAX_ITEMS_PER_DROPDOWN: int = 10
+FORBIDDEN_TOP_LEVEL_LABELS: frozenset[str] = frozenset({"Learn", "Explore"})
+
+
+@pytest.fixture(scope="module")
+def navbar() -> dict:
+    data = yaml.safe_load(QUARTO_YML.read_text(encoding="utf-8"))
+    return data["website"]["navbar"]
+
+
+def _left_entries(navbar: dict) -> list[dict]:
+    """Return the navbar 'left' array as a list of dicts (LOD helper)."""
+    return list(navbar.get("left", []))
+
+
+def _dropdown_labels(navbar: dict) -> list[str]:
+    return [e["text"] for e in _left_entries(navbar) if "menu" in e]
+
+
+def _entry_with_label(navbar: dict, label: str) -> dict:
+    for entry in _left_entries(navbar):
+        if entry.get("text") == label:
+            return entry
+    raise AssertionError(f"navbar entry with text={label!r} not found")
+
+
+class TestTopLevelStructure:
+    def test_home_link_present(self, navbar: dict) -> None:
+        labels = [e["text"] for e in _left_entries(navbar)]
+        assert "Home" in labels
+
+    def test_exactly_three_dropdowns(self, navbar: dict) -> None:
+        labels = _dropdown_labels(navbar)
+        assert len(labels) == 3, f"Expected 3 dropdowns, got {len(labels)}: {labels}"
+
+    def test_dropdowns_are_read_build_connect(self, navbar: dict) -> None:
+        assert set(_dropdown_labels(navbar)) == EXPECTED_DROPDOWNS
+
+    @pytest.mark.parametrize("label", sorted(FORBIDDEN_TOP_LEVEL_LABELS))
+    def test_forbidden_label_absent(self, navbar: dict, label: str) -> None:
+        assert label not in _dropdown_labels(
+            navbar
+        ), f"Forbidden top-level label still present: {label}"
+
+
+class TestDropdownContent:
+    @pytest.mark.parametrize("label", sorted(EXPECTED_DROPDOWNS))
+    def test_dropdown_has_menu(self, navbar: dict, label: str) -> None:
+        entry = _entry_with_label(navbar, label)
+        assert "menu" in entry, f"{label} is not a dropdown"
+
+    @pytest.mark.parametrize("label", sorted(EXPECTED_DROPDOWNS))
+    def test_dropdown_within_item_budget(self, navbar: dict, label: str) -> None:
+        entry = _entry_with_label(navbar, label)
+        count = len(entry["menu"])
+        assert (
+            count <= MAX_ITEMS_PER_DROPDOWN
+        ), f"{label} dropdown has {count} items; budget is {MAX_ITEMS_PER_DROPDOWN}"
+
+
+class TestReadDropdownContent:
+    """The 'Read' dropdown is the primary content path — keep it focused."""
+
+    def test_includes_physics_of_golf(self, navbar: dict) -> None:
+        menu = _entry_with_label(navbar, "Read")["menu"]
+        hrefs = [item.get("href", "") for item in menu]
+        assert any("The_Physics_of_Golf" in h for h in hrefs)
+
+    def test_includes_geometry_of_motion(self, navbar: dict) -> None:
+        menu = _entry_with_label(navbar, "Read")["menu"]
+        hrefs = [item.get("href", "") for item in menu]
+        assert any("The_Geometry_of_Motion" in h for h in hrefs)
+
+    def test_includes_bibliography(self, navbar: dict) -> None:
+        menu = _entry_with_label(navbar, "Read")["menu"]
+        hrefs = [item.get("href", "") for item in menu]
+        assert any("bibliography" in h for h in hrefs)

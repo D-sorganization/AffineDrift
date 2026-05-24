@@ -163,12 +163,14 @@ def precondition(
 
     def decorator(func: F) -> F:
         """Wrap *func* with precondition enforcement."""
-        if DBC_LEVEL == ContractLevel.OFF:
+        if not CONTRACTS_ENABLED:
             return func
 
         @functools.wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> Any:
             """Check precondition before forwarding the call."""
+            if get_contract_level() == ContractLevel.OFF:
+                return func(*args, **kwargs)
             try:
                 result = condition(*args, **kwargs)
             except (TypeError, ValueError) as exc:
@@ -196,13 +198,15 @@ def postcondition(
 
     def decorator(func: F) -> F:
         """Wrap *func* with postcondition enforcement."""
-        if DBC_LEVEL == ContractLevel.OFF:
+        if not CONTRACTS_ENABLED:
             return func
 
         @functools.wraps(func)
         def wrapper(*args: Any, **kwargs: Any) -> Any:
             """Execute the function and verify postcondition on result."""
             result = func(*args, **kwargs)
+            if get_contract_level() == ContractLevel.OFF:
+                return result
 
             try:
                 check = condition(result)
@@ -265,13 +269,15 @@ class ContractChecker:
 
 def invariant_checked(func: F) -> F:  # noqa: UP047  # reason: type variable requirement
     """Decorator to check class invariants after method execution."""
-    if DBC_LEVEL == ContractLevel.OFF:
+    if not CONTRACTS_ENABLED:
         return func
 
     @functools.wraps(func)
     def wrapper(self: ContractChecker, *args: Any, **kwargs: Any) -> Any:
         """Call the method and then verify class invariants."""
         result = func(self, *args, **kwargs)
+        if get_contract_level() == ContractLevel.OFF:
+            return result
         self.verify_invariants()
         return result
 

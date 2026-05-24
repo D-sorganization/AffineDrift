@@ -88,7 +88,7 @@ SECURITY_PATTERNS: list[tuple[re.Pattern[str], str, str, str | None]] = [
         re.compile(r"\bET\.fromstring\s*\(|ElementTree\.fromstring\s*\("),
         "LOW",
         "xml.etree.ElementTree.fromstring() — use defusedxml for untrusted XML input",
-        "# noqa: S314",
+        "# noqa: S314 -- reason: false positive pattern definition in audit script",
     ),
 ]
 

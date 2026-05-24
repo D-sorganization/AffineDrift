@@ -304,13 +304,17 @@ export function initFocusManagement() {
     let isKeyboardUsing = false;
 
     document.addEventListener('keydown', () => {
-        isKeyboardUsing = true;
-        document.body.setAttribute('data-keyboard-active', 'true');
+        if (!isKeyboardUsing) {
+            isKeyboardUsing = true;
+            document.body.setAttribute('data-keyboard-active', 'true');
+        }
     });
 
     document.addEventListener('mousedown', () => {
-        isKeyboardUsing = false;
-        document.body.removeAttribute('data-keyboard-active');
+        if (isKeyboardUsing) {
+            isKeyboardUsing = false;
+            document.body.removeAttribute('data-keyboard-active');
+        }
     });
 
     // Trap focus in modals if any exist

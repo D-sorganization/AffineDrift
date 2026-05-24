@@ -115,3 +115,6 @@
 ## 2025-02-19 - Consolidate Scroll Listeners to Prevent Layout Thrashing
 **Learning:** Found two separate `window.addEventListener("scroll", ...)` attachments on the main page (one for back-to-top progress, one for export-to-PDF button visibility). Multiple independent scroll handlers can cause duplicate DOM reads and writes on every frame, leading to layout thrashing.
 **Action:** Consolidated scroll-dependent logic into a single centralized `requestAnimationFrame` scroll listener (`handleGlobalScroll` in `ui-components.js`). It batches all scroll-dependent UI updates, reads `window.scrollY` once, and dispatches it to registered callbacks, thereby preventing layout thrashing and improving scrolling performance.
+## 2026-05-24 - Prevent Redundant DOM Writes on Input Events
+**Learning:** Updating the `data-keyboard-active` attribute unconditionally on every `keydown` or `mousedown` event causes redundant layout invalidation on the main thread.
+**Action:** Cache the state in a local variable and only update the DOM attribute when the keyboard/mouse state actually changes to eliminate unnecessary DOM mutations.

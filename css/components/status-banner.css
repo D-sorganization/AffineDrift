@@ -1,0 +1,60 @@
+/* Status banner — semantic page-status callout.
+   Replaces the per-page gradient "Status: …" boxes on
+   book-reviews.qmd, daydreams-doodles.qmd, research-reviews.qmd. */
+
+.status-banner {
+  margin: 0 0 1.5rem;
+  padding: 1rem 1.25rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--color-neutral-200);
+  border-left: 4px solid var(--color-primary-light);
+  border-radius: 4px;
+}
+
+.status-banner__title {
+  margin: 0 0 0.25rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: 0.02em;
+}
+
+.status-banner__body {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+.status-banner__body + .status-banner__body {
+  margin-top: 0.4rem;
+}
+
+/* Semantic variants drive the left-border color only — every banner
+   shares the same neutral fill. Avoid using these for purely decorative
+   differentiation. */
+.status-banner--info { border-left-color: var(--color-info); }
+.status-banner--success { border-left-color: var(--color-success); }
+.status-banner--warning { border-left-color: var(--color-warning); }
+.status-banner--exploratory { border-left-color: var(--color-primary-light); }
+
+/* Inline status pill — a small chip-like label next to a heading.
+   Replaces inline ``style="display: inline-block; padding…"`` blobs. */
+.status-pill {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.15rem 0.5rem;
+  background: var(--color-neutral-100);
+  color: var(--text-secondary);
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  vertical-align: middle;
+}
+
+.status-pill--exploratory { background: var(--color-neutral-100); }
+.status-pill--info {
+  background: var(--color-primary-lightest);
+  color: var(--color-primary-main);
+}
+.status-pill--warning     { background: var(--color-warning-lightest, var(--color-neutral-100)); }

@@ -377,6 +377,13 @@ class PuttingSimulator:
         Returns:
             True if the ball is captured by the hole.
         """
+        require(math.isfinite(x), "x must be finite", x)
+        require(math.isfinite(y), "y must be finite", y)
+        require(math.isfinite(vx), "vx must be finite", vx)
+        require(math.isfinite(vy), "vy must be finite", vy)
+        require(math.isfinite(pin_x), "pin_x must be finite", pin_x)
+        require(math.isfinite(pin_y), "pin_y must be finite", pin_y)
+
         dist = math.sqrt((x - pin_x) ** 2 + (y - pin_y) ** 2)
         speed = math.sqrt(vx * vx + vy * vy)
 

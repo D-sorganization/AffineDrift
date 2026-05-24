@@ -108,7 +108,7 @@ def test_assess_error_handling_mock():
     mock_file.read_text.return_value = """
 try:
     pass
-except Exception as e:  # noqa: BLE001
+except Exception as e:  # noqa: BLE001 -- reason: blind exception check is required for mock test fixture
     pass
 """
     result = assess_repo.assess_error_handling([mock_file])

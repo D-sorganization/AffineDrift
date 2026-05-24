@@ -1,0 +1,214 @@
+/* Spacing utilities — single-purpose, token-driven margins and padding.
+   Used to retire trivial inline ``style="margin-*"`` attributes across the
+   QMD pages. Keep this list tight: a utility class is only justified when
+   the same value appears ≥3 times across the codebase. */
+
+.u-mt-0 { margin-top: 0 !important; }
+.u-mt-1 { margin-top: 0.5rem; }
+.u-mt-2 { margin-top: 1rem; }
+.u-mt-3 { margin-top: 1.5rem; }
+.u-mt-4 { margin-top: 2rem; }
+
+.u-mb-0 { margin-bottom: 0 !important; }
+.u-mb-1 { margin-bottom: 0.5rem; }
+.u-mb-2 { margin-bottom: 1rem; }
+.u-mb-3 { margin-bottom: 1.5rem; }
+.u-mb-4 { margin-bottom: 2rem; }
+
+.u-ml-1 { margin-left: 0.5rem; }
+.u-ml-2 { margin-left: 1rem; }
+.u-ml-3 { margin-left: 1.5rem; }
+
+.u-inline-block { display: inline-block; }
+
+/* Inline-action link — used by "Buy on Amazon" / "Preview" rows under
+   book covers. Replaces 33 copies of
+   ``style="margin-top: 0.5rem; display: inline-block;"``. */
+.u-inline-action {
+  display: inline-block;
+  margin-top: 0.5rem;
+}
+
+/* Thumbnail offset — replaces ``style="margin-left: 1rem;"`` next to
+   book-cover images. */
+.media-thumb {
+  margin-left: 1rem;
+}
+
+/* Resource caption — italic, muted, slightly smaller. Replaces inline
+   styling on the descriptive text under resource entries. */
+.resource-caption {
+  margin-top: 1rem;
+  font-style: italic;
+  color: var(--text-light);
+  font-size: 0.9rem;
+}
+
+/* Page-level small italic note. Replaces ``style="font-style: italic;
+   color: var(--text-light);"`` and similar. */
+.page-note {
+  font-style: italic;
+  color: var(--text-light);
+}
+
+.page-note--small {
+  font-size: 0.9rem;
+}
+
+/* Section heading + paragraph helpers used widely. */
+.section-lead {
+  color: var(--text-light);
+  margin-bottom: 1.5rem;
+}
+
+/* Queued / placeholder card state — replaces inline opacity+border on
+   review cards waiting to be written. */
+.is-queued {
+  opacity: 0.65;
+  border-left: 3px solid var(--accent-secondary);
+}
+
+/* Footnote-sized prose under a resource card body. */
+.resource-footnote {
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  color: var(--text-light);
+}
+
+.resource-footnote--italic {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+/* Full-width child in a resource-grid (replaces inline grid-column). */
+.resource-card--full {
+  grid-column: 1 / -1;
+}
+
+/* Contact-card body text used on /pages/contact.qmd. */
+.contact-card__body {
+  margin-bottom: 0.75rem;
+  color: var(--text-light);
+}
+
+/* Page lede — slightly larger introduction paragraph. */
+.page-lede {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--text-primary);
+}
+
+/* Models / build pages — common layout helpers. */
+.button-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.u-p-3 { padding: 1.5rem; }
+
+.model-section-h4 {
+  margin: 1rem 0 0.5rem;
+}
+
+.model-bullet-list {
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.model-bullet-list--leading {
+  margin: 1rem 0;
+  line-height: 1.8;
+}
+
+.code-block {
+  background: var(--color-primary-dark);
+  color: var(--text-light);
+  padding: 1rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin: 1rem 0;
+  font-family: var(--font-mono, ui-monospace, monospace);
+}
+
+.code-block--compact {
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.resource-meta {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+}
+
+.resource-meta-inline {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  padding: 0 0.5rem;
+}
+
+.resource-card--padded { padding: 1.5rem; }
+
+.resource-grid--wide {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.resource-grid--narrow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+/* Capped software logo — limits width of vendor logos on /models/*.qmd. */
+.software-logo--capped {
+  max-width: 250px;
+  margin-bottom: 1rem;
+}
+
+/* Bibliography search input (resources/bibliography.qmd). */
+.bib-search-input {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid var(--border-color, var(--color-neutral-200));
+  border-radius: 4px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: 1rem;
+}
+
+/* Manifesto claim-to-source matrix. Replaces the inline table styling on
+   /pages/drifter-manifesto.qmd. */
+.manifesto-table {
+  width: 100%;
+  margin-top: 0.75rem;
+  border-collapse: collapse;
+}
+
+.manifesto-table__th,
+.manifesto-table__td {
+  padding: 0.35rem;
+  vertical-align: top;
+}
+
+.manifesto-table__th {
+  text-align: left;
+  border-bottom: 1px solid var(--color-neutral-200);
+}
+
+/* Figure block — centered image with subtle elevation. */
+.figure-block {
+  margin: 2rem 0;
+  text-align: center;
+}
+
+.figure-block__media {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  box-shadow: var(--shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.1));
+}
