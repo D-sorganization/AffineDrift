@@ -71,14 +71,15 @@ export function initNavbarCollapse() {
     const navbarCollapse = document.getElementById("navbarCollapse");
     const navbarToggler = document.querySelector(".navbar-toggler");
 
-    // Get all nav links within the navbar
+    // ⚡ Bolt Optimization: Use scoped getElementsByTagName instead of iterating document.links and calling .closest() to prevent excessive JS-to-C++ boundary crossings
     const navLinks = [];
-    for (const link of document.links) {
-        if (
-            link.classList.contains("nav-link") &&
-            link.closest(".navbar-nav")
-        ) {
-            navLinks.push(link);
+    const navbarNavs = document.getElementsByClassName("navbar-nav");
+    if (navbarNavs.length > 0) {
+        const links = navbarNavs[0].getElementsByTagName("a");
+        for (const link of links) {
+            if (link.classList.contains("nav-link")) {
+                navLinks.push(link);
+            }
         }
     }
 
