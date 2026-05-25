@@ -246,7 +246,7 @@
       for (const entry of data) {
         const authorsList = Array.isArray(entry.authors) ? entry.authors : (entry.authors ? [entry.authors] : []);
         const conceptsList = Array.isArray(entry.concepts) ? entry.concepts : (entry.concepts ? [entry.concepts] : []);
-        
+
         entry._searchTitle = (entry.title || "").toLowerCase();
         entry._searchAuthors = authorsList.join(" ").toLowerCase();
         entry._searchConcepts = conceptsList.join(" ").toLowerCase();
@@ -259,7 +259,7 @@
         ]
           .join(" ")
           .toLowerCase();
-          
+
         // Ensure the fields are arrays for rendering
         entry.authors = authorsList;
         entry.concepts = conceptsList;
