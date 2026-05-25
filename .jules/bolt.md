@@ -118,3 +118,11 @@
 ## 2026-05-24 - Prevent Redundant DOM Writes on Input Events
 **Learning:** Updating the `data-keyboard-active` attribute unconditionally on every `keydown` or `mousedown` event causes redundant layout invalidation on the main thread.
 **Action:** Cache the state in a local variable and only update the DOM attribute when the keyboard/mouse state actually changes to eliminate unnecessary DOM mutations.
+
+## 2026-05-25 - Prevent Layout Thrashing in Fade Animations
+**Learning:** Interleaving DOM reads like `getBoundingClientRect()` with style mutations within a loop causes Forced Synchronous Layout, significantly degrading setup performance on pages with many sections.
+**Action:** Always batch DOM reads into a separate phase before performing DOM writes when iterating over collections of elements.
+
+## 2026-05-25 - Optimize DOM Traversal in Navigation
+**Learning:** Iterating over large live collections (like `document.links`) and calling DOM traversal methods (like `.closest()`) on each element repeatedly crosses the JS-to-C++ boundary and is highly inefficient.
+**Action:** When filtering descendant elements, perform a scoped query (e.g., `container.getElementsByTagName('a')`) on the specific parent instead of iterating globally and checking parents.
