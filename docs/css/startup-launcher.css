@@ -1,0 +1,561 @@
+/**
+ * AffineDrift Startup Launcher Styles
+ * Professional splash screen, skeleton loading, and page reveal animations
+ *
+ * Design Philosophy:
+ * - Brand-consistent visual identity
+ * - Smooth, professional animations
+ * - Accessible (respects reduced motion)
+ * - Performance-optimized (GPU-accelerated transforms)
+ */
+
+/* ==========================================================================
+   CSS Custom Properties for Startup
+   ========================================================================== */
+:root {
+  /* Splash screen colors */
+  --ad-splash-bg-start: #0a0a1a;
+  --ad-splash-bg-mid: #1a1a2e;
+  --ad-splash-bg-end: #0f4c75;
+  --ad-splash-bg: linear-gradient(
+    135deg,
+    var(--ad-splash-bg-start) 0%,
+    var(--ad-splash-bg-mid) 50%,
+    var(--ad-splash-bg-end) 100%
+  );
+  --ad-splash-text: #fff;
+  --ad-splash-text-muted: rgb(255 255 255 / 0.7);
+  --ad-splash-accent: #3282b8;
+  --ad-splash-accent-glow: rgb(50 130 184 / 0.4);
+
+  /* Progress bar */
+  --ad-progress-track: rgb(255 255 255 / 0.1);
+  --ad-progress-fill: linear-gradient(90deg, #3282b8, #0f4c75, #3282b8);
+  --ad-progress-glow: 0 0 20px rgb(50 130 184 / 0.5);
+
+  /* Animation durations */
+  --ad-splash-fade: 400ms;
+  --ad-reveal-duration: 600ms;
+  --ad-skeleton-duration: 1.5s;
+
+  /* Skeleton loading */
+  --ad-skeleton-base: #e9ecef;
+  --ad-skeleton-shine: #f8f9fa;
+}
+
+/* ==========================================================================
+   Splash Screen Active State
+   ========================================================================== */
+html.ad-splash-active {
+  overflow: hidden;
+}
+
+html.ad-splash-active body {
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   Splash Screen Container
+   ========================================================================== */
+.ad-splash-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10000;
+  background: var(--ad-splash-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity var(--ad-splash-fade) ease-out,
+              visibility var(--ad-splash-fade) ease-out;
+}
+
+.ad-splash-screen.ad-splash-exit {
+  opacity: 0;
+}
+
+.ad-splash-screen.ad-splash-hidden {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   Splash Content
+   ========================================================================== */
+.ad-splash-content {
+  text-align: center;
+  max-width: 400px;
+  padding: 2rem;
+  animation: ad-splash-content-enter 0.6s ease-out;
+}
+
+@keyframes ad-splash-content-enter {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ==========================================================================
+   Logo Animation
+   ========================================================================== */
+.ad-splash-logo-container {
+  margin-bottom: 2rem;
+}
+
+.ad-splash-logo {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 1.5rem;
+  position: relative;
+}
+
+.ad-splash-logo-svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 30px var(--ad-splash-accent-glow));
+}
+
+/* Outer ring - rotates clockwise */
+.ad-splash-ring-outer {
+  stroke: var(--ad-splash-accent);
+  stroke-dasharray: 339;
+  stroke-dashoffset: 339;
+  animation:
+    ad-ring-draw 1.5s ease-out forwards,
+    ad-ring-rotate 8s linear infinite;
+  animation-delay: 0.2s, 1.7s;
+  transform-origin: center;
+}
+
+/* Inner ring - counter-rotates */
+.ad-splash-ring-inner {
+  stroke: rgb(255 255 255 / 0.3);
+  stroke-dasharray: 264;
+  stroke-dashoffset: 264;
+  animation:
+    ad-ring-draw 1.5s ease-out forwards,
+    ad-ring-rotate-reverse 6s linear infinite;
+  animation-delay: 0.4s, 1.9s;
+  transform-origin: center;
+}
+
+/* Center dot - pulses */
+.ad-splash-center-dot {
+  fill: var(--ad-splash-accent);
+  animation: ad-dot-pulse 2s ease-in-out infinite;
+  animation-delay: 0.6s;
+  opacity: 0;
+}
+
+/* Dynamic path - draws in (represents the "drift" concept) */
+.ad-splash-path {
+  stroke: var(--ad-splash-text);
+  stroke-dasharray: 120;
+  stroke-dashoffset: 120;
+  animation: ad-path-draw 1s ease-out forwards;
+  animation-delay: 0.8s;
+}
+
+@keyframes ad-ring-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes ad-ring-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes ad-ring-rotate-reverse {
+  from {
+    transform: rotate(360deg);
+  }
+
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes ad-dot-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.7;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes ad-path-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ==========================================================================
+   Title and Tagline
+   ========================================================================== */
+.ad-splash-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--ad-splash-text);
+  margin: 0 0 0.5rem;
+  letter-spacing: 0.02em;
+  text-shadow: 0 2px 20px rgb(0 0 0 / 0.3);
+  animation: ad-text-fade-in 0.6s ease-out forwards;
+  animation-delay: 0.3s;
+  opacity: 0;
+}
+
+.ad-splash-tagline {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--ad-splash-text-muted);
+  margin: 0;
+  animation: ad-text-fade-in 0.6s ease-out forwards;
+  animation-delay: 0.5s;
+  opacity: 0;
+}
+
+@keyframes ad-text-fade-in {
+  to {
+    opacity: 1;
+  }
+}
+
+/* ==========================================================================
+   Progress Bar
+   ========================================================================== */
+.ad-splash-progress-container {
+  margin-top: 2.5rem;
+  animation: ad-text-fade-in 0.6s ease-out forwards;
+  animation-delay: 0.7s;
+  opacity: 0;
+}
+
+.ad-splash-progress-track {
+  width: 100%;
+  height: 4px;
+  background: var(--ad-progress-track);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+
+.ad-splash-progress-bar {
+  height: 100%;
+  width: 0%;
+  background: var(--ad-progress-fill);
+  background-size: 200% 100%;
+  border-radius: 2px;
+  transition: width 0.3s ease-out;
+  box-shadow: var(--ad-progress-glow);
+  animation: ad-progress-shimmer 2s linear infinite;
+}
+
+@keyframes ad-progress-shimmer {
+  from {
+    background-position: 200% 0;
+  }
+
+  to {
+    background-position: -200% 0;
+  }
+}
+
+.ad-splash-status {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: var(--ad-splash-text-muted);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+}
+
+/* ==========================================================================
+   Loading Hints
+   ========================================================================== */
+.ad-splash-hints {
+  margin-top: 2rem;
+  animation: ad-text-fade-in 0.6s ease-out forwards;
+  animation-delay: 1s;
+  opacity: 0;
+}
+
+.ad-splash-hint {
+  display: inline-block;
+  font-size: 0.75rem;
+  color: var(--ad-splash-text-muted);
+  padding: 0.25rem 0.75rem;
+  background: rgb(255 255 255 / 0.05);
+  border-radius: 100px;
+  border: 1px solid rgb(255 255 255 / 0.1);
+}
+
+/* ==========================================================================
+   Page Reveal Animation
+   ========================================================================== */
+html.ad-page-revealed body {
+  animation: ad-page-reveal var(--ad-reveal-duration) ease-out forwards;
+}
+
+@keyframes ad-page-reveal {
+  from {
+    opacity: 0.9;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Content stagger animation */
+html.ad-page-revealed .main-content-area > *,
+html.ad-page-revealed #quarto-document-content > *,
+html.ad-page-revealed .home-content > * {
+  animation: ad-content-stagger 0.5s ease-out forwards;
+  opacity: 0;
+}
+
+html.ad-page-revealed .main-content-area > *:nth-child(1),
+html.ad-page-revealed #quarto-document-content > *:nth-child(1),
+html.ad-page-revealed .home-content > *:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+html.ad-page-revealed .main-content-area > *:nth-child(2),
+html.ad-page-revealed #quarto-document-content > *:nth-child(2),
+html.ad-page-revealed .home-content > *:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+html.ad-page-revealed .main-content-area > *:nth-child(3),
+html.ad-page-revealed #quarto-document-content > *:nth-child(3),
+html.ad-page-revealed .home-content > *:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+html.ad-page-revealed .main-content-area > *:nth-child(n+4),
+html.ad-page-revealed #quarto-document-content > *:nth-child(n+4),
+html.ad-page-revealed .home-content > *:nth-child(n+4) {
+  animation-delay: 0.25s;
+}
+
+@keyframes ad-content-stagger {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   Skeleton Loading
+   ========================================================================== */
+.ad-skeleton-container {
+  position: relative;
+}
+
+/* Skeleton placeholder styles */
+.ad-skeleton {
+  background: var(--ad-skeleton-base);
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.ad-skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--ad-skeleton-shine) 50%,
+    transparent 100%
+  );
+  animation: ad-skeleton-shimmer var(--ad-skeleton-duration) infinite;
+}
+
+@keyframes ad-skeleton-shimmer {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(100%);
+  }
+}
+
+/* Skeleton text lines */
+.ad-skeleton-text {
+  height: 1em;
+  margin-bottom: 0.5em;
+}
+
+.ad-skeleton-text:last-child {
+  width: 70%;
+}
+
+/* Skeleton heading */
+.ad-skeleton-heading {
+  height: 2em;
+  width: 60%;
+  margin-bottom: 1em;
+}
+
+/* Skeleton paragraph */
+.ad-skeleton-paragraph {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+/* Skeleton image */
+.ad-skeleton-image {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+}
+
+/* Skeleton card */
+.ad-skeleton-card {
+  padding: 1rem;
+  border: 1px solid var(--ad-skeleton-base);
+  border-radius: 8px;
+}
+
+/* ==========================================================================
+   Reduced Motion Support
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  .ad-splash-screen,
+  .ad-splash-content,
+  .ad-splash-title,
+  .ad-splash-tagline,
+  .ad-splash-progress-container,
+  .ad-splash-hints {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .ad-splash-ring-outer,
+  .ad-splash-ring-inner {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+
+  .ad-splash-center-dot {
+    animation: none;
+    opacity: 1;
+  }
+
+  .ad-splash-path {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+
+  .ad-splash-progress-bar {
+    animation: none;
+  }
+
+  html.ad-page-revealed body,
+  html.ad-page-revealed .main-content-area > *,
+  html.ad-page-revealed #quarto-document-content > *,
+  html.ad-page-revealed .home-content > * {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .ad-skeleton::after {
+    animation: none;
+  }
+
+  .ad-splash-screen {
+    transition-duration: 0.01ms;
+  }
+}
+
+/* ==========================================================================
+   Dark Mode Support (if applicable)
+   ========================================================================== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ad-skeleton-base: #2d2d3a;
+    --ad-skeleton-shine: #3d3d4a;
+  }
+}
+
+/* ==========================================================================
+   Mobile Optimizations
+   ========================================================================== */
+@media (width <= 480px) {
+  .ad-splash-content {
+    padding: 1.5rem;
+  }
+
+  .ad-splash-logo {
+    width: 100px;
+    height: 100px;
+  }
+
+  .ad-splash-title {
+    font-size: 2rem;
+  }
+
+  .ad-splash-tagline {
+    font-size: 0.9rem;
+  }
+}
+
+/* ==========================================================================
+   High Contrast Mode Support
+   ========================================================================== */
+@media (prefers-contrast: more) {
+  .ad-splash-screen {
+    background: #000;
+  }
+
+  .ad-splash-progress-track {
+    background: #fff;
+  }
+
+  .ad-splash-progress-bar {
+    background: var(--ad-splash-accent);
+  }
+}
+
+/* ==========================================================================
+   Print - Hide Splash
+   ========================================================================== */
+@media print {
+  .ad-splash-screen {
+    display: none !important;
+  }
+}
