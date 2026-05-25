@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-05-23T11:10:00Z
+Last-Updated: 2026-05-25T14:58:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,8 +29,8 @@ Last-Updated: 2026-05-23T11:10:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.8                                            |
-| **Spec Version**        | 1.0.111                                          |
-| **Last Spec Update**    | 2026-05-23                                       |
+| **Spec Version**        | 1.0.112                                          |
+| **Last Spec Update**    | 2026-05-25                                       |
 
 ## 2. Purpose & Mission
 
@@ -210,6 +210,7 @@ AffineDrift/
 | F46 | Python 3.10 contract compatibility      | ✅     | `src/contracts.py` uses explicit `TypeVar`/`ParamSpec` declarations instead of Python 3.12+ PEP 695 type parameter syntax, restoring import compatibility for environments running Python 3.10 or 3.11. Ruff UP047 is suppressed with `# noqa: UP047` on the affected generic function definitions.                                                                                                                                                            |
 | F47 | Website design primitives               | ✅     | The homepage and content architecture use canonical CSS primitives for site cards, buttons, section stacks, and sticky page sidebars so reusable layout semantics live in `css/components/` and `css/layout/` instead of one-off inline styles.                                                                                                                                                                                                                |
 | F48 | QMD style-discipline linting            | ✅     | `src/tools/check_style_discipline.py` scans rendered-source `.qmd` files outside excluded generated/content directories and fails on inline `style=` attributes, gradient functions, or hardcoded hex colors, with unit tests covering clean files and each violation category.                                                                                                                                                                                |
+| F49 | Consolidated frontend dependency refresh | ✅     | The site frontend keeps Dependabot JavaScript and Python dependency refreshes together with navigation traversal and UI component optimizations, then regenerates committed `docs/` mirrors from the canonical frontend assets so production pages match source behavior.                                                                                                                                                                                       |
 
 ### API / Interface Contract
 

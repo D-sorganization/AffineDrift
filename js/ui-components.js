@@ -65,18 +65,19 @@ export function initFadeAnimations() {
         const allSections = document.getElementsByTagName("section");
         const animationStates = [];
 
+        // ⚡ Bolt Optimization: Batch DOM reads (getBoundingClientRect) and writes (style changes) to prevent Layout Thrashing
         for (const section of allSections) {
             if (!section.classList.contains("page-header") && !section.classList.contains("article-section")) {
-                const rect = section.getBoundingClientRect();
                 animationStates.push({
                     section,
-                    shouldAnimate: rect.top > window.innerHeight,
+                    top: section.getBoundingClientRect().top
                 });
             }
         }
 
-        for (const { section, shouldAnimate } of animationStates) {
-            if (shouldAnimate) {
+        const windowHeight = window.innerHeight;
+        for (const { section, top } of animationStates) {
+            if (top > windowHeight) {
                 section.style.opacity = "0";
                 section.style.transform = "translateY(20px)";
                 section.style.transition = "opacity 0.4s ease, transform 0.4s ease";
