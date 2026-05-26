@@ -696,14 +696,15 @@ runOnDomReady(function () {
   });
 
   // Repository links
-  // ⚡ Bolt Optimization: Use document.links (O(1)) instead of querySelectorAll (O(N))
-  for (const link of document.links) {
-    if (
-      link.href.startsWith("https://github.com") &&
-      link.closest(".navbar-nav")
-    ) {
-      link.setAttribute("target", "_blank");
-      // rel handled by secure external links below
+  // ⚡ Bolt Optimization: Scope tag lookup to specific container instead of iterating document.links and calling .closest() to prevent excessive JS-to-C++ boundary crossings
+  const repoNavbarNavs = document.getElementsByClassName("navbar-nav");
+  for (const nav of repoNavbarNavs) {
+    const repoLinks = nav.getElementsByTagName("a");
+    for (const link of repoLinks) {
+      if (link.href.startsWith("https://github.com")) {
+        link.setAttribute("target", "_blank");
+        // rel handled by secure external links below
+      }
     }
   }
 
