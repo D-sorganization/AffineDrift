@@ -52,13 +52,14 @@ export function initSecureExternalLinks() {
  * Set external links on GitHub repos
  */
 export function initRepoLinks() {
-    // ⚡ Bolt Optimization: Use document.links (O(1)) instead of querySelectorAll (O(N))
-    for (const link of document.links) {
-        if (
-            link.href.startsWith("https://github.com") &&
-            link.closest(".navbar-nav")
-        ) {
-            link.setAttribute("target", "_blank");
+    // ⚡ Bolt Optimization: Scope tag lookup to specific container instead of iterating document.links and calling .closest() to prevent excessive JS-to-C++ boundary crossings
+    const navbarNavs = document.getElementsByClassName("navbar-nav");
+    for (const nav of navbarNavs) {
+        const links = nav.getElementsByTagName("a");
+        for (const link of links) {
+            if (link.href.startsWith("https://github.com")) {
+                link.setAttribute("target", "_blank");
+            }
         }
     }
 }
