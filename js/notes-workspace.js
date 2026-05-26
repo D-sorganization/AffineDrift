@@ -146,6 +146,8 @@
     toggleBtn.type = "button";
     toggleBtn.setAttribute("aria-expanded", "false");
     toggleBtn.setAttribute("aria-controls", "ad-notes-workspace-panel");
+    toggleBtn.setAttribute("aria-label", "Expand Project Notes");
+    toggleBtn.setAttribute("title", "Expand Project Notes");
     toggleBtn.textContent = "Project Notes";
 
     const panel = document.createElement("section");
@@ -158,7 +160,7 @@
     panel.innerHTML = `
       <div class="ad-notes-header">
         <h3>Project Notes</h3>
-        <button type="button" data-action="close" aria-label="Close notes workspace">x</button>
+        <button type="button" data-action="close" aria-label="Close notes workspace" title="Close notes workspace">x</button>
       </div>
       <textarea id="ad-notes-workspace-area" class="ad-notes-area" placeholder="Capture research notes, ideas, and follow-ups..."></textarea>
       <div class="ad-notes-actions">
@@ -194,6 +196,8 @@
     function openPanel() {
       panel.classList.add("open");
       toggleBtn.setAttribute("aria-expanded", "true");
+      toggleBtn.setAttribute("aria-label", "Collapse Project Notes");
+      toggleBtn.setAttribute("title", "Collapse Project Notes");
       panel.setAttribute("aria-hidden", "false");
       textArea.focus();
     }
@@ -201,6 +205,8 @@
     function closePanel() {
       panel.classList.remove("open");
       toggleBtn.setAttribute("aria-expanded", "false");
+      toggleBtn.setAttribute("aria-label", "Expand Project Notes");
+      toggleBtn.setAttribute("title", "Expand Project Notes");
       panel.setAttribute("aria-hidden", "true");
       toggleBtn.focus();
     }
