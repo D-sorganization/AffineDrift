@@ -71,3 +71,6 @@
 ## 2024-05-24 - Native Tooltips for Mobile Navbar Toggle
 **Learning:** Mobile menu toggle buttons (hamburger icons) often rely solely on `aria-label` for screen readers but lack a native tooltip (`title`) for sighted users using hover (e.g., zoomed desktop or pen users).
 **Action:** Always pair `aria-label` with a corresponding `title` attribute on `.navbar-toggler` to ensure all users receive context about the menu's state and action.
+## 2025-05-26 - Add title attributes to icon-only buttons
+**Learning:** Icon-only buttons with `aria-label` are accessible to screen readers, but sighted mouse users lack context. Adding `title` attributes provides native tooltips, clarifying the action before clicking.
+**Action:** Always pair `aria-label` with a `title` attribute on custom icon-only buttons to ensure both accessibility and visual UX.

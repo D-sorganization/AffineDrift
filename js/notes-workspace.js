@@ -158,7 +158,7 @@
     panel.innerHTML = `
       <div class="ad-notes-header">
         <h3>Project Notes</h3>
-        <button type="button" data-action="close" aria-label="Close notes workspace">x</button>
+        <button type="button" data-action="close" aria-label="Close notes workspace" title="Close notes workspace">x</button>
       </div>
       <textarea id="ad-notes-workspace-area" class="ad-notes-area" placeholder="Capture research notes, ideas, and follow-ups..."></textarea>
       <div class="ad-notes-actions">

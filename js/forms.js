@@ -141,6 +141,7 @@ export function initCodeCopy() {
         button.className = "copy-btn";
         button.textContent = "Copy";
         button.setAttribute("aria-label", "Copy code to clipboard");
+                button.setAttribute("title", "Copy code to clipboard");
         button.type = "button";
         button.dataset.action = "copy-code";
 
@@ -164,10 +165,12 @@ export function initCodeCopy() {
             await navigator.clipboard.writeText(pre.innerText || pre.textContent);
             button.textContent = "Copied!";
             button.setAttribute("aria-label", "Code copied to clipboard");
+            button.setAttribute("title", "Code copied to clipboard");
             button.classList.add("copied");
             setTimeout(() => {
                 button.textContent = "Copy";
                 button.setAttribute("aria-label", "Copy code to clipboard");
+                button.setAttribute("title", "Copy code to clipboard");
                 button.classList.remove("copied");
             }, 2000);
         } catch (err) {
