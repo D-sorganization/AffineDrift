@@ -146,6 +146,8 @@
     toggleBtn.type = "button";
     toggleBtn.setAttribute("aria-expanded", "false");
     toggleBtn.setAttribute("aria-controls", "ad-notes-workspace-panel");
+    toggleBtn.setAttribute("aria-label", "Expand Project Notes");
+    toggleBtn.setAttribute("title", "Expand Project Notes");
     toggleBtn.textContent = "Project Notes";
 
     const panel = document.createElement("section");
@@ -194,6 +196,8 @@
     function openPanel() {
       panel.classList.add("open");
       toggleBtn.setAttribute("aria-expanded", "true");
+      toggleBtn.setAttribute("aria-label", "Collapse Project Notes");
+      toggleBtn.setAttribute("title", "Collapse Project Notes");
       panel.setAttribute("aria-hidden", "false");
       textArea.focus();
     }
@@ -201,6 +205,8 @@
     function closePanel() {
       panel.classList.remove("open");
       toggleBtn.setAttribute("aria-expanded", "false");
+      toggleBtn.setAttribute("aria-label", "Expand Project Notes");
+      toggleBtn.setAttribute("title", "Expand Project Notes");
       panel.setAttribute("aria-hidden", "true");
       toggleBtn.focus();
     }
