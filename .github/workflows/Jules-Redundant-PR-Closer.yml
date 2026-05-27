@@ -65,7 +65,7 @@ jobs:
         id: app-token
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v1.1.1
         with:
-          app-id: ${{ secrets.JULES_APP_ID }}
+          client-id: ${{ secrets.JULES_APP_ID }}
           private-key: ${{ secrets.JULES_APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
 
@@ -107,7 +107,7 @@ jobs:
             BACKSTOP_FLAG="--backstop-pr $EVENT_PR_NUMBER"
           fi
           # Fail-open: never let a coordination glitch fail the job.
-          PYTHONPATH=".jules-tools" python -m scripts.close_redundant_agent_prs \
+          PYTHONPATH=".jules-tools" python3 -m scripts.close_redundant_agent_prs \
             --repo "$REPO_NAME" \
             $DRY_FLAG \
             $FILTER_FLAG \
