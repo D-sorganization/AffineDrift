@@ -208,21 +208,22 @@
   };
 
   const renderSortControls = () => {
-    const buttons = Object.entries(SORTS)
-      .map(
-        ([key, label]) =>
-          `<button type="button" class="resource-link" data-sort="${key}" aria-pressed="${
-            state.sort === key ? "true" : "false"
-          }">${label}</button>`,
-      )
-      .join("");
-
     const existing = sortControlsEl.querySelector(".bib-sort-actions");
     if (existing) existing.remove();
 
     const controls = document.createElement("div");
     controls.className = "bib-sort-actions";
-    controls.innerHTML = buttons;
+
+    for (const [key, label] of Object.entries(SORTS)) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "resource-link";
+      button.dataset.sort = key;
+      button.setAttribute("aria-pressed", state.sort === key ? "true" : "false");
+      button.textContent = label;
+      controls.appendChild(button);
+    }
+
     sortControlsEl.prepend(controls);
   };
 
