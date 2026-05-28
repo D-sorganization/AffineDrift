@@ -57,3 +57,7 @@
 **Vulnerability:** DOM-based XSS risk via `innerHTML` used with template literals in `addCheckbox` of the grip angle simulator.
 **Learning:** Using `innerHTML` to construct DOM elements by interpolating variables is brittle and introduces XSS risks, even if the current inputs appear safe.
 **Prevention:** To prevent DOM-based XSS when constructing DOM elements, always use native DOM methods like `document.createElement()` and securely set properties using `textContent`, `id`, `htmlFor`, etc.
+## 2025-05-25 - Prevent DOM-based XSS in bibliography sort controls
+**Vulnerability:** DOM-based XSS risk via `innerHTML` used with string concatenation to render sort buttons in `js/bibliography.js`.
+**Learning:** Using `innerHTML` to construct DOM elements dynamically, even with static keys/labels, violates strict security policies and creates a brittle pattern that could be exploited if the data source becomes untrusted.
+**Prevention:** Always use native DOM methods like `document.createElement()` and securely assign properties via `textContent`, `dataset`, and `setAttribute` instead of `innerHTML`.
