@@ -126,7 +126,8 @@ function applyDefaultAriaLabel(element, label) {
 function labelCardsFromHeading(cards, prefix) {
   for (const card of cards) {
     if (card.hasAttribute("aria-label")) continue;
-    const heading = card.querySelector("h3");
+    // ⚡ Bolt Optimization: Use getElementsByTagName[0] for faster scoped DOM query
+    const heading = card.getElementsByTagName("h3")[0];
     if (heading) {
       card.setAttribute("aria-label", `${prefix}: ${heading.textContent.trim()}`);
     }
@@ -447,7 +448,8 @@ runOnDomReady(function () {
     // ⚡ Bolt Optimization: Use getElementsByClassName (O(1) live collection) instead of querySelectorAll (O(N))
     const categories = document.getElementsByClassName("article-category");
     for (const category of categories) {
-      const heading = category.querySelector("h3");
+      // ⚡ Bolt Optimization: Use getElementsByTagName[0] for faster scoped DOM query
+      const heading = category.getElementsByTagName("h3")[0];
       if (heading) {
         let id = category.id;
         if (!id) {
@@ -1087,7 +1089,8 @@ runOnDomReady(function () {
         wrapper.setAttribute("tabindex", "0");
         wrapper.setAttribute("role", "region");
 
-        const caption = table.querySelector("caption");
+        // ⚡ Bolt Optimization: Use getElementsByTagName[0] for faster scoped DOM query
+        const caption = table.getElementsByTagName("caption")[0];
         if (caption) {
           if (!caption.id) {
             caption.id = generateUniqueId(
@@ -1302,7 +1305,8 @@ runOnDomReady(function () {
 
     if (isHeaderVisible) {
       // Check if meta block exists inside header
-      const meta = header.querySelector(".quarto-title-meta");
+      // ⚡ Bolt Optimization: Use getElementsByClassName[0] for faster scoped DOM query
+      const meta = header.getElementsByClassName("quarto-title-meta")[0];
       if (meta) {
         meta.appendChild(timeDiv);
       } else {
@@ -1436,7 +1440,8 @@ runOnDomReady(function () {
       // 🎨 Palette UX: Handle Caption
       const figure = img.closest("figure");
       if (figure) {
-        const figcaption = figure.querySelector("figcaption");
+        // ⚡ Bolt Optimization: Use getElementsByTagName[0] for faster scoped DOM query
+        const figcaption = figure.getElementsByTagName("figcaption")[0];
         if (figcaption) {
           const captionClone = figcaption.cloneNode(true);
           captionClone.className = "lightbox-caption";
@@ -1658,8 +1663,10 @@ function initLaymansTermsToggle() {
 
   for (let index = 0; index < laymansSections.length; index++) {
     const section = laymansSections[index];
-    const header = section.querySelector(".laymans-terms-header");
-    const content = section.querySelector(".laymans-terms-content");
+    // ⚡ Bolt Optimization: Use getElementsByClassName[0] for faster scoped DOM query
+    const header = section.getElementsByClassName("laymans-terms-header")[0];
+    // ⚡ Bolt Optimization: Use getElementsByClassName[0] for faster scoped DOM query
+    const content = section.getElementsByClassName("laymans-terms-content")[0];
 
     if (!header || !content) continue;
 
@@ -1687,8 +1694,10 @@ function initCriticsCorner() {
 
   for (let index = 0; index < criticsCorners.length; index++) {
     const corner = criticsCorners[index];
-    const header = corner.querySelector('.critics-corner-header');
-    const content = corner.querySelector('.critics-corner-content');
+    // ⚡ Bolt Optimization: Use getElementsByClassName[0] for faster scoped DOM query
+    const header = corner.getElementsByClassName('critics-corner-header')[0];
+    // ⚡ Bolt Optimization: Use getElementsByClassName[0] for faster scoped DOM query
+    const content = corner.getElementsByClassName('critics-corner-content')[0];
 
     if (header && content) {
       if (!content.id) {
@@ -1735,8 +1744,10 @@ function initCriticsCommentsToggle() {
 
   for (let index = 0; index < criticsSections.length; index++) {
     const section = criticsSections[index];
-    const header = section.querySelector(".critics-comments-header");
-    const content = section.querySelector(".critics-comments-content");
+    // ⚡ Bolt Optimization: Use getElementsByClassName[0] for faster scoped DOM query
+    const header = section.getElementsByClassName("critics-comments-header")[0];
+    // ⚡ Bolt Optimization: Use getElementsByClassName[0] for faster scoped DOM query
+    const content = section.getElementsByClassName("critics-comments-content")[0];
 
     if (!header || !content) continue;
 

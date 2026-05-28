@@ -32,11 +32,10 @@ jobs:
         uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
         with:
           python-version: "3.11"
-          cache: "pip"
 
       - name: Check internal references
         run: |
-          python scripts/link-checker.py --root . --internal-only --verbose
+          python3 scripts/link-checker.py --root . --internal-only --verbose
         continue-on-error: true
         id: internal-refs
 
@@ -44,7 +43,7 @@ jobs:
         if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
         timeout-minutes: 5
         run: |
-          python scripts/link-checker.py --root . --external-only --verbose
+          python3 scripts/link-checker.py --root . --external-only --verbose
         continue-on-error: true
         id: external-urls
 

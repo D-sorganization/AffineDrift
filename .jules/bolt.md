@@ -126,3 +126,7 @@
 ## 2026-05-25 - Optimize DOM Traversal in Navigation
 **Learning:** Iterating over large live collections (like `document.links`) and calling DOM traversal methods (like `.closest()`) on each element repeatedly crosses the JS-to-C++ boundary and is highly inefficient.
 **Action:** When filtering descendant elements, perform a scoped query (e.g., `container.getElementsByTagName('a')`) on the specific parent instead of iterating globally and checking parents.
+
+## 2024-05-18 - [Optimize Descendant DOM Queries]
+**Learning:** The native DOM selectors like `getElementsByTagName` and `getElementsByClassName` are significantly faster than `querySelector` when accessed by an index `[0]`. This works safely as evaluating `undefined` when the HTMLCollection is empty acts as a falsy identical to `querySelector` returning `null`. This technique optimizes hot loops avoiding parsing overhead.
+**Action:** When querying for descendant single elements inside a specific container in performance-critical code paths, use native methods like `getElementsByClassName()[0]` instead of `querySelector` to skip parsing and directly lookup the DOM nodes.
