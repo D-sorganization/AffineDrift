@@ -1356,9 +1356,19 @@ runOnDomReady(function () {
     lightbox.addEventListener("keydown", (e) => {
       if (e.key !== "Tab") return;
 
-      const focusableSelector =
-        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
-      const focusableContent = lightbox.querySelectorAll(focusableSelector);
+      // ⚡ Bolt Optimization: Use getElementsByTagName('*') and filter manually instead of querySelectorAll
+      const allElements = lightbox.getElementsByTagName('*');
+      const focusableContent = [];
+      for (const el of allElements) {
+        const tag = el.tagName;
+        if (tag === 'BUTTON' || tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA') {
+            if (!el.disabled && el.tabIndex >= 0) focusableContent.push(el);
+        } else if (tag === 'A' && el.hasAttribute('href')) {
+            if (el.tabIndex >= 0) focusableContent.push(el);
+        } else if (el.hasAttribute('tabindex') && el.getAttribute('tabindex') !== '-1') {
+            focusableContent.push(el);
+        }
+      }
 
       if (focusableContent.length === 0) return;
 
