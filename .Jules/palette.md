@@ -78,3 +78,6 @@
 ## 2026-05-26 - Dynamic ARIA Labels on Workspace Toggle
 **Learning:** Similar to other collapsible components like sidebars and accordions, floating toggle buttons like the Project Notes workspace toggle need dynamic `aria-label` and `title` attributes based on their expanded state so screen readers and mouse users understand the upcoming action.
 **Action:** Dynamically update both `aria-label` and `title` on the Project Notes toggle button explicitly declaring "Expand Project Notes" or "Collapse Project Notes" based on its state.
+## 2024-06-03 - Native Tooltips for Icon-Only and Missing Native Tooltips
+**Learning:** While icon-only buttons rely on aria-label for screen readers, they lack native on-hover tooltips for sighted users without a title attribute, creating a gap between accessibility and standard usability. Many standard buttons across the app also lack them, hiding explicit functionality from hovering users.
+**Action:** Always pair aria-label with a matching title attribute on interactive icon-only elements, and generic buttons, to ensure sighted mouse users receive visual hints.
