@@ -7,9 +7,8 @@ test.describe("Homepage", () => {
     // Check page title
     await expect(page).toHaveTitle(/AffineDrift/);
 
-    // Check main heading exists
-    const heading = page.locator("h1, h2").first();
-    await expect(heading).toBeVisible();
+    // Check rendered home heading exists; Quarto's generated title block is hidden.
+    await expect(page.locator(".home-hero h1")).toBeVisible();
   });
 
   test("should have working navigation", async ({ page }) => {
@@ -37,6 +36,56 @@ test.describe("Homepage", () => {
     }
   });
 
+  test("should render desktop home layout as a three-column grid", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1280, height: 720 });
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+
+    const layout = page.locator(".home-layout-3col");
+    await expect(layout).toBeVisible();
+    await expect(page.locator(".home-hero")).toBeVisible();
+    await expect(page.locator(".home-toc")).toBeVisible();
+
+    const layoutState = await page.evaluate(() => {
+      const homeLayout = document.querySelector(".home-layout-3col");
+      const sidebar = document.querySelector(".home-sidebar");
+      const hero = document.querySelector(".home-hero");
+      const toc = document.querySelector(".home-toc");
+      const codeBlocks = Array.from(document.querySelectorAll("pre code"));
+
+      const rectFor = (element) => {
+        const rect = element.getBoundingClientRect();
+        return {
+          left: Math.round(rect.left),
+          right: Math.round(rect.right),
+          top: Math.round(rect.top),
+          width: Math.round(rect.width),
+        };
+      };
+
+      return {
+        display: getComputedStyle(homeLayout).display,
+        sidebar: rectFor(sidebar),
+        hero: rectFor(hero),
+        toc: rectFor(toc),
+        escapedLayout: codeBlocks.some((block) =>
+          block.textContent.includes('<aside class="home-sidebar"'),
+        ),
+        scrollWidth: document.documentElement.scrollWidth,
+        viewportWidth: window.innerWidth,
+      };
+    });
+
+    expect(layoutState.display).toBe("grid");
+    expect(layoutState.escapedLayout).toBe(false);
+    expect(layoutState.sidebar.right).toBeLessThan(layoutState.hero.left);
+    expect(layoutState.hero.right).toBeLessThan(layoutState.toc.left);
+    expect(layoutState.scrollWidth).toBeLessThanOrEqual(
+      layoutState.viewportWidth,
+    );
+  });
+
   test("should be mobile responsive", async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 667 });
     await page.goto("/");
@@ -49,25 +98,26 @@ test.describe("Homepage", () => {
     expect(body.width).toBeLessThanOrEqual(375);
   });
 
-  test("should toggle mobile sidebar menu state", async ({ page }) => {
+  test("should toggle mobile sidebar sections", async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 667 });
     await page.goto("/");
 
-    const toggle = page.locator(".mobile-menu-toggle");
-    const sidebar = page.locator("#home-sidebar");
-    const overlay = page.locator(".sidebar-overlay");
+    const readToggle = page
+      .locator(".sidebar-section-toggle")
+      .filter({ hasText: "Read" });
+    const readSection = page.locator("#read-section");
 
-    await expect(toggle).toBeVisible();
-    await expect(toggle).toHaveAttribute("aria-expanded", "false");
+    await expect(readToggle).toBeVisible();
+    await expect(readToggle).toHaveAttribute("aria-expanded", "true");
+    await expect(readSection).toHaveClass(/show/);
 
-    await toggle.click();
-    await expect(toggle).toHaveAttribute("aria-expanded", "true");
-    await expect(sidebar).toHaveClass(/open/);
-    await expect(overlay).toHaveClass(/active/);
+    await readToggle.click();
+    await expect(readToggle).toHaveAttribute("aria-expanded", "false");
+    await expect(readSection).not.toHaveClass(/show/);
 
-    await overlay.click();
-    await expect(toggle).toHaveAttribute("aria-expanded", "false");
-    await expect(sidebar).not.toHaveClass(/open/);
+    await readToggle.click();
+    await expect(readToggle).toHaveAttribute("aria-expanded", "true");
+    await expect(readSection).toHaveClass(/show/);
   });
 
   test("should have no console errors", async ({ page }) => {

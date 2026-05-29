@@ -15,6 +15,7 @@ WORKFLOW_PATH = ROOT_DIR / ".github" / "workflows" / "deploy-website.yml"
 CI_WORKFLOW_PATH = ROOT_DIR / ".github" / "workflows" / "ci-standard.yml"
 REQUIREMENTS_PATH = ROOT_DIR / "requirements.txt"
 LATEX_RELEASE_WORKFLOW_PATH = ROOT_DIR / ".github" / "workflows" / "latex-release-volumes.yml"
+ANTI_PHANTOM_WORKFLOW_PATH = ROOT_DIR / ".github" / "workflows" / "anti-phantom-merge.yml"
 
 
 def test_deploy_workflow_integrity() -> None:
@@ -91,6 +92,15 @@ def test_ci_workflow_runs_content_lint_tests() -> None:
     assert "Run Content Lint Tests" in content
     assert "pytest --override-ini addopts=" in content
     assert "-m content_lint" in content
+
+
+def test_anti_phantom_guard_uses_gh_jq_not_runner_jq() -> None:
+    """The anti-phantom guard must not depend on jq being installed on local runners."""
+    assert ANTI_PHANTOM_WORKFLOW_PATH.exists(), "Anti-phantom workflow file missing"
+    content = ANTI_PHANTOM_WORKFLOW_PATH.read_text(encoding="utf-8")
+
+    assert " | jq " not in content
+    assert "--jq .changedFiles" in content
 
 
 @pytest.mark.skipif(

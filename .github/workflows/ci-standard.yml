@@ -261,7 +261,6 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
-          cache: "npm"
           node-version: "22"
       - name: Install Dependencies
         run: npm ci
@@ -312,7 +311,6 @@ jobs:
       - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         if: steps.e2e_changes.outputs.run == 'true'
         with:
-          cache: "npm"
           node-version: "22"
       - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
         if: steps.e2e_changes.outputs.run == 'true'
@@ -389,10 +387,13 @@ jobs:
         # doesn't need the example file during the E2E render.
       - name: Build site for E2E
         if: steps.e2e_changes.outputs.run == 'true'
-        uses: quarto-dev/quarto-actions/render@8a96df13519ee81fd526f2dfca5962811136661b # v2.2.0
-        with:
-          to: html
-          path: .
+        run: |
+          quarto render index.qmd --to html
+          quarto render resources/articles.qmd --to html
+          quarto render resources/bibliography.qmd --to html
+          quarto render pages/overview.qmd --to html
+          quarto render resources/resources-books.qmd --to html
+          quarto render models/models.qmd --to html
       - name: Sync Frontend Assets
         if: steps.e2e_changes.outputs.run == 'true'
         run: python3 scripts/sync_frontend_assets.py
@@ -419,7 +420,6 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
-          cache: "npm"
           node-version: "22"
       - name: Install & Lint
         run: |

@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-05-25T14:58:00Z
+Last-Updated: 2026-05-29T16:58:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,8 +29,8 @@ Last-Updated: 2026-05-25T14:58:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.8                                            |
-| **Spec Version**        | 1.0.112                                          |
-| **Last Spec Update**    | 2026-05-25                                       |
+| **Spec Version**        | 1.0.113                                          |
+| **Last Spec Update**    | 2026-05-29                                       |
 
 ## 2. Purpose & Mission
 
@@ -172,7 +172,7 @@ AffineDrift/
 | F10 | Progressive Web App Support             | ✅     | Service worker and manifest for PWA capabilities with bounded offline caching and update notices (offline access, installability)                                                                                                                                                                                                                                                                                                                              |
 | F11 | Textbook Compilation Pipeline           | ✅     | Quarto pipeline to compile educational materials into publishable textbook format                                                                                                                                                                                                                                                                                                                                                                              |
 | F12 | Textbook claim guardrail                | ✅     | PR CI blocks newly added unsupported quantitative or study claims in textbook content unless they include a citation or an explicit illustrative caveat                                                                                                                                                                                                                                                                                                        |
-| F13 | PR site-build and dependency-audit gate | ✅     | `ci-standard.yml` caches Python dependencies, audits Python dependencies with blocking `pip-audit`, measures coverage across the full `src/` tree, renders the Quarto site in PR CI, validates sitemap URLs against committed Quarto source pages, syncs frontend assets, and runs Playwright smoke tests against the generated docs, including workflow-file changes in CI triggers                                                                           |
+| F13 | PR site-build and dependency-audit gate | ✅     | `ci-standard.yml` installs dependencies from lockfiles, audits Python dependencies with blocking `pip-audit`, measures coverage across the full `src/` tree, renders the Quarto pages exercised by PR smoke tests, validates sitemap URLs against committed Quarto source pages, syncs frontend assets, and runs Playwright smoke tests against the generated docs, including workflow-file changes in CI triggers                                             |
 | F14 | Bibliography duplicate-alias guardrail  | ✅     | Reference-integrity tests require duplicate bibliography records to carry an explicit legacy-compatibility note instead of silently diverging                                                                                                                                                                                                                                                                                                                  |
 | F15 | Textbook bibliography synchronization   | ✅     | The Geometry of Motion and The Physics of Golf keep chapter-level citations synchronized with shared bibliography sources in `references/affine-drift.bib` and the book-specific `.bib` files                                                                                                                                                                                                                                                                  |
 | F16 | Website citation-resolution guardrail   | ✅     | PR CI scans website `.qmd` sources, resolves their configured bibliography files, and fails when citation keys do not map to a known bibliography entry                                                                                                                                                                                                                                                                                                        |
@@ -292,6 +292,7 @@ AffineDrift/
 - Palette is anchored to the design tokens in `css/tokens/colors.css` (`--color-primary-dark: #1a1a2e`, `--color-primary-main: #0f4c75`, `--color-primary-light: #3282b8`) — the UpstreamDrift launcher palette.
 - Forbidden patterns in any top-level QMD page (anything outside `articles/**`): inline `style="..."` attributes, `linear-gradient(...)`, and hardcoded hex colors. Enforced by `scripts/check_style_discipline.py` and the `style-discipline-qmd` pre-commit hook.
 - Canonical primitives live under `css/components/`: `site-card`, `site-button`, `section-stack`, `page-sidebar`, `entry-list`, `provenance-note`, `home-hero`, `status-banner`. Pages must consume these instead of bespoke per-page styles.
+- The homepage source uses one closed raw-HTML fence for the full custom layout; desktop rendering must keep the left navigation, main content, and right table of contents in a three-column grid without escaped layout markup or horizontal overflow.
 
 **GitHub Actions Secrets:**
 
@@ -352,6 +353,7 @@ AffineDrift follows a **test pyramid** strategy: unit tests form the base (fast,
 - [x] MathJax and KaTeX equations render correctly in browser
 - [x] Interactive visualizations (rotation converter) load and function without JS errors
 - [x] Smoke tests on Chromium pass for critical pages
+- [x] Homepage Playwright checks verify the desktop three-column grid, closed raw HTML rendering, mobile sidebar-section toggles, and no horizontal overflow
 - [x] Property-based tests with Hypothesis verify DDP convergence across parameter ranges
 - [x] Design-by-contract assertions enforce preconditions and postconditions
 - [x] Website `.qmd` citations resolve against project or page bibliography files, excluding Quarto cross-references such as `@eq-` and `@sec-`
@@ -617,3 +619,4 @@ python src/tools/code_quality_ast.py
 | 2026-05-19 | 1.0.109 | chore(deps): consolidated compatible npm, Python, benchmark, and GitHub Actions dependency bumps into one repo-level PR; workflow action pins remain immutable and the benchmark workflow preserves a single top-level concurrency policy. |
 | 2026-05-22 | 1.0.110 | fix(ci): normalized pre-commit hook execution by formatting the wrist universal-joint Streamlit app, removing duplicate golf constants, and documenting Streamlit cache decorator type ignores so mypy and noqa-justification hooks pass without bypasses. |
 | 2026-05-24 | 1.0.112 | perf(frontend): Optimized global `keydown` and `mousedown` event listeners in `js/accessibility.js` by caching the keyboard active state and only mutating the DOM attribute when the state actually changes, preventing redundant layout invalidations on every keystroke. |
+| 2026-05-29 | 1.0.113 | fix(layout): Restored the homepage raw-HTML fence and Quarto page-grid overrides so the desktop homepage renders as a clean three-column layout, added Playwright and source-level regressions for escaped layout markup, mobile section toggles, and horizontal overflow, removed the anti-phantom workflow's dependency on runner-installed `jq`, scoped PR e2e rendering to the pages covered by the smoke suite, and removed fragile setup-action cache restores from PR-facing workflows. |
