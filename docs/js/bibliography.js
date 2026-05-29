@@ -161,7 +161,7 @@
       listEl.innerHTML = `
         <div class="bib-empty-state" role="status" aria-live="polite">
           <p>No matches found for "<strong>${escapeHtml(state.query)}</strong>". Try a broader query.</p>
-          <button type="button" class="sort-btn" id="bib-clear-search" style="margin-top: 1rem;" aria-label="Clear search and show all references">Clear Search</button>
+          <button type="button" class="sort-btn" id="bib-clear-search" style="margin-top: 1rem;" aria-label="Clear search and show all references" title="Clear search and show all references">Clear Search</button>
         </div>
       `;
       return;

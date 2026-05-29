@@ -146,6 +146,8 @@
     toggleBtn.type = "button";
     toggleBtn.setAttribute("aria-expanded", "false");
     toggleBtn.setAttribute("aria-controls", "ad-notes-workspace-panel");
+    toggleBtn.setAttribute("aria-label", "Expand Project Notes");
+    toggleBtn.setAttribute("title", "Expand Project Notes");
     toggleBtn.textContent = "Project Notes";
 
     const panel = document.createElement("section");
@@ -158,15 +160,15 @@
     panel.innerHTML = `
       <div class="ad-notes-header">
         <h3>Project Notes</h3>
-        <button type="button" data-action="close" aria-label="Close notes workspace">x</button>
+        <button type="button" data-action="close" aria-label="Close notes workspace" title="Close notes workspace">x</button>
       </div>
       <textarea id="ad-notes-workspace-area" class="ad-notes-area" placeholder="Capture research notes, ideas, and follow-ups..."></textarea>
       <div class="ad-notes-actions">
-        <button type="button" data-action="save">Save</button>
-        <button type="button" data-action="clear">Clear</button>
-        <button type="button" data-action="delete" class="danger">Delete to Bin</button>
-        <button type="button" data-action="restore">Restore Bin</button>
-        <button type="button" data-action="popout">Pop-out</button>
+        <button type="button" data-action="save" title="Save notes">Save</button>
+        <button type="button" data-action="clear" title="Clear notes">Clear</button>
+        <button type="button" data-action="delete" class="danger" title="Delete notes to bin">Delete to Bin</button>
+        <button type="button" data-action="restore" title="Restore notes from bin">Restore Bin</button>
+        <button type="button" data-action="popout" title="Open notes in new window">Pop-out</button>
       </div>
       <div class="ad-notes-status" id="ad-notes-status" aria-live="polite" aria-atomic="true"></div>
     `;
@@ -194,6 +196,8 @@
     function openPanel() {
       panel.classList.add("open");
       toggleBtn.setAttribute("aria-expanded", "true");
+      toggleBtn.setAttribute("aria-label", "Collapse Project Notes");
+      toggleBtn.setAttribute("title", "Collapse Project Notes");
       panel.setAttribute("aria-hidden", "false");
       textArea.focus();
     }
@@ -201,6 +205,8 @@
     function closePanel() {
       panel.classList.remove("open");
       toggleBtn.setAttribute("aria-expanded", "false");
+      toggleBtn.setAttribute("aria-label", "Expand Project Notes");
+      toggleBtn.setAttribute("title", "Expand Project Notes");
       panel.setAttribute("aria-hidden", "true");
       toggleBtn.focus();
     }

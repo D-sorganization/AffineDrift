@@ -63,6 +63,7 @@
     reloadButton.type = 'button';
     reloadButton.textContent = 'Reload';
     reloadButton.setAttribute('aria-label', 'Reload to load the latest content');
+    reloadButton.title = 'Reload to load the latest content';
     Object.assign(reloadButton.style, {
       border: '1px solid rgba(255, 255, 255, 0.2)',
       borderRadius: '8px',
@@ -80,6 +81,7 @@
     dismissButton.type = 'button';
     dismissButton.textContent = 'Dismiss';
     dismissButton.setAttribute('aria-label', 'Dismiss the update notice');
+    dismissButton.title = 'Dismiss the update notice';
     Object.assign(dismissButton.style, {
       border: '1px solid rgba(255, 255, 255, 0.2)',
       borderRadius: '8px',

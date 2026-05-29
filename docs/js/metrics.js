@@ -313,6 +313,7 @@
     clearButton.type = "button";
     clearButton.className = "clear-btn";
     clearButton.setAttribute("data-action", "clear-metrics");
+    clearButton.title = "Clear metrics data";
     clearButton.textContent = "Clear data";
     clearButton.addEventListener("click", clearData);
 

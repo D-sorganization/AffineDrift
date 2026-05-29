@@ -9,7 +9,7 @@ const {
   broadcastUpdate,
   trimCacheEntries,
 } = self.AffineDriftServiceWorkerUtils;
-const CACHE_NAME = 'affinedrift-v4-aa0909a9';
+const CACHE_NAME = 'affinedrift-v4-c24a93b6';
 const OFFLINE_URL = '/offline.html';
 
 // Critical startup assets - loaded first for fast splash screen

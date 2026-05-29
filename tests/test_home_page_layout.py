@@ -83,6 +83,11 @@ class TestContentFirstStructure:
         for href in ("pages/about.html", "pages/contact.html", "pages/collaborate.html"):
             assert href in home_text
 
+    def test_raw_html_fence_is_closed(self, home_text: str) -> None:
+        """The home page layout must render as HTML, not an escaped code block."""
+        assert home_text.count("```{=html}") == 1
+        assert home_text.rstrip().endswith("```")
+
 
 class TestStyleDiscipline:
     """B4: zero style-discipline violations on the home page."""
