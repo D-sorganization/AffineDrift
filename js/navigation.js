@@ -349,6 +349,7 @@ export function initAnchorLinks() {
         anchor.className = "anchor-link";
         anchor.href = `#${heading.id}`;
         anchor.setAttribute("aria-label", "Link to this section");
+        anchor.setAttribute("title", "Link to this section");
         anchor.appendChild(anchorIcon.cloneNode(true));
 
         heading.appendChild(anchor);
