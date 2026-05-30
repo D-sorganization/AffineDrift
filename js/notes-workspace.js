@@ -164,11 +164,11 @@
       </div>
       <textarea id="ad-notes-workspace-area" class="ad-notes-area" placeholder="Capture research notes, ideas, and follow-ups..."></textarea>
       <div class="ad-notes-actions">
-        <button type="button" data-action="save" title="Save notes" aria-label="Save notes">Save</button>
-        <button type="button" data-action="clear" title="Clear notes" aria-label="Clear notes">Clear</button>
-        <button type="button" data-action="delete" class="danger" title="Delete notes to bin" aria-label="Delete notes to bin">Delete to Bin</button>
-        <button type="button" data-action="restore" title="Restore notes from bin" aria-label="Restore notes from bin">Restore Bin</button>
-        <button type="button" data-action="popout" title="Open notes in new window" aria-label="Open notes in new window">Pop-out</button>
+        <button type="button" data-action="save" title="Save notes">Save</button>
+        <button type="button" data-action="clear" title="Clear notes">Clear</button>
+        <button type="button" data-action="delete" class="danger" title="Delete notes to bin">Delete to Bin</button>
+        <button type="button" data-action="restore" title="Restore notes from bin">Restore Bin</button>
+        <button type="button" data-action="popout" title="Open notes in new window">Pop-out</button>
       </div>
       <div class="ad-notes-status" id="ad-notes-status" aria-live="polite" aria-atomic="true"></div>
     `;
@@ -224,8 +224,8 @@
           '<h2 style="margin-top:0;">AffineDrift Project Notes</h2>' +
           '<textarea id="notes" style="width:100%; min-height:360px;"></textarea>' +
           '<div style="margin-top:0.75rem;">' +
-            '<button type="button" id="save" aria-label="Save notes">Save</button>' +
-            '<button type="button" id="close" aria-label="Close notes window">Close</button>' +
+            '<button type="button" id="save">Save</button>' +
+            '<button type="button" id="close">Close</button>' +
           '</div>' +
           '<scr' + 'ipt>' +
             'const area = document.getElementById("notes");' +
