@@ -5,9 +5,9 @@ from __future__ import annotations
 
 import logging
 import sys
-import defusedxml.ElementTree as ET
 from pathlib import Path
 
+import defusedxml.ElementTree as ET
 import yaml
 
 logger = logging.getLogger(__name__)
