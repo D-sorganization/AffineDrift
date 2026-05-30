@@ -81,3 +81,6 @@
 ## 2024-06-03 - Native Tooltips for Icon-Only and Missing Native Tooltips
 **Learning:** While icon-only buttons rely on aria-label for screen readers, they lack native on-hover tooltips for sighted users without a title attribute, creating a gap between accessibility and standard usability. Many standard buttons across the app also lack them, hiding explicit functionality from hovering users.
 **Action:** Always pair aria-label with a matching title attribute on interactive icon-only elements, and generic buttons, to ensure sighted mouse users receive visual hints.
+## 2026-05-30 - Adding explicit ARIA labels to buttons
+**Learning:** The notes workspace component lacked explicit `aria-label` attributes on its control buttons. While text contents and `title` attributes provide some accessibility, specifying `aria-label` ensures robust screen reader support. It's a critical pattern to follow when creating custom floating UI components in this app.
+**Action:** Always add explicit `aria-label` attributes matching or expanding on the visible text/title to interactive buttons, especially in dynamically injected HTML elements like custom dialogs and pop-outs.
