@@ -1409,7 +1409,8 @@ runOnDomReady(function () {
     // Initial pass for existing images
     for (const img of contentImages) {
       // Skip if already inside a link or interactive element
-      if (img.closest("a") || img.closest("button")) continue;
+      // ⚡ Bolt Optimization: Consolidate closest() calls into a single query to reduce DOM traversal overhead
+      if (img.closest("a, button")) continue;
 
       img.classList.add("zoomable");
       img.setAttribute("tabindex", "0"); // Keyboard focusable
