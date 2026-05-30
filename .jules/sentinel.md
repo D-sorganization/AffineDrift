@@ -61,3 +61,8 @@
 **Vulnerability:** DOM-based XSS risk via `innerHTML` used with string concatenation to render sort buttons in `js/bibliography.js`.
 **Learning:** Using `innerHTML` to construct DOM elements dynamically, even with static keys/labels, violates strict security policies and creates a brittle pattern that could be exploited if the data source becomes untrusted.
 **Prevention:** Always use native DOM methods like `document.createElement()` and securely assign properties via `textContent`, `dataset`, and `setAttribute` instead of `innerHTML`.
+
+## 2026-05-30 - Fix XML parsing vulnerability
+**Vulnerability:** Unsafe XML parsing using `xml.etree.ElementTree` without `defusedxml` protection.
+**Learning:** Using standard `xml.etree` for untrusted or external XML files can expose the system to XML vulnerabilities like entity expansion or external entity injection.
+**Prevention:** Always use `defusedxml` when parsing XML to prevent XML-based attacks.

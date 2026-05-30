@@ -5,9 +5,9 @@ from __future__ import annotations
 
 import logging
 import sys
-import xml.etree.ElementTree as ET
 from pathlib import Path
 
+import defusedxml.ElementTree as ET
 import yaml
 
 logger = logging.getLogger(__name__)
@@ -44,7 +44,9 @@ def sitemap_loc_to_source_path(loc: str, repo_root: Path) -> Path:
 
 def load_sitemap_paths(sitemap_path: Path) -> list[str]:
     """Return all sitemap <loc> URLs."""
-    root = ET.fromstring(sitemap_path.read_text(encoding="utf-8"))  # nosec B314
+    # fmt: off
+    root = ET.fromstring(sitemap_path.read_text(encoding="utf-8"))  # noqa: S314 -- reason: false positive pattern definition in audit script
+    # fmt: on
     return [
         loc.text.strip()
         for loc in root.findall("sm:url/sm:loc", SITEMAP_NAMESPACE)
