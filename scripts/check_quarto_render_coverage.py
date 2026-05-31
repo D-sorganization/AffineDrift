@@ -7,8 +7,8 @@ import logging
 import sys
 from pathlib import Path
 
-import defusedxml.ElementTree as ET
 import yaml
+from defusedxml import ElementTree as ET
 
 logger = logging.getLogger(__name__)
 SITEMAP_NAMESPACE = {"sm": "http://www.sitemaps.org/schemas/sitemap/0.9"}
@@ -43,13 +43,7 @@ def sitemap_loc_to_source_path(loc: str, repo_root: Path) -> Path:
 
 
 def load_sitemap_paths(sitemap_path: Path) -> list[str]:
-    """Return all sitemap <loc> URLs.
-
-    Uses ``defusedxml`` to harden against XXE and entity-expansion attacks even
-    if the sitemap ever becomes generated or externally sourced.
-    """
-    if not sitemap_path.is_file():
-        raise FileNotFoundError(f"Sitemap not found: {sitemap_path}")
+    """Return all sitemap <loc> URLs."""
     root = ET.fromstring(sitemap_path.read_text(encoding="utf-8"))
     return [
         loc.text.strip()
