@@ -408,7 +408,7 @@ export function initLightbox() {
     document.body.appendChild(lightbox);
 
     for (const img of contentImages) {
-        if (img.closest("a") || img.closest("button")) continue;
+        if (img.closest("a, button")) continue;
         img.classList.add("zoomable");
         img.setAttribute("tabindex", "0");
         img.setAttribute("role", "button");
