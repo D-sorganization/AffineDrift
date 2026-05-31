@@ -85,13 +85,10 @@ SECURITY_PATTERNS: list[tuple[re.Pattern[str], str, str, str | None]] = [
         "# nosec",
     ),
     (
-        # Flag stdlib xml.etree parsing only. Code that parses via the
-        # hardened ``defusedxml`` package (which exposes the same
-        # ``ElementTree.fromstring`` surface) is XXE-safe and not a finding.
-        re.compile(r"(?<!defused)xml\.etree.*\.fromstring\s*\(|import\s+xml\.etree"),
+        re.compile(r"\bET\.fromstring\s*\(|ElementTree\.fromstring\s*\("),
         "LOW",
         "xml.etree.ElementTree.fromstring() — use defusedxml for untrusted XML input",
-        "# nosec",
+        "# noqa: S314 -- reason: documented XML parser exception marker",
     ),
 ]
 
@@ -141,11 +138,43 @@ def is_exempt(file_path: Path, description: str) -> bool:
     return False
 
 
-def _check_security_patterns(file_path: Path, line_num: int, line: str) -> list[dict[str, str]]:
+def _defusedxml_aliases(content: str) -> set[str]:
+    """Return aliases imported from defusedxml.ElementTree."""
+    aliases: set[str] = set()
+    for line in content.splitlines():
+        match = re.match(r"\s*from\s+defusedxml\s+import\s+ElementTree\s+as\s+(\w+)\s*$", line)
+        if match:
+            aliases.add(match.group(1))
+        if re.match(r"\s*from\s+defusedxml\s+import\s+ElementTree\s*$", line):
+            aliases.add("ElementTree")
+        match = re.match(r"\s*import\s+defusedxml\.ElementTree\s+as\s+(\w+)\s*$", line)
+        if match:
+            aliases.add(match.group(1))
+    return aliases
+
+
+def _is_safe_xml_fromstring(line: str, defusedxml_aliases: set[str]) -> bool:
+    """Return True when fromstring is called through a known defusedxml alias."""
+    return any(
+        re.search(rf"\b{re.escape(alias)}\.fromstring\s*\(", line) for alias in defusedxml_aliases
+    )
+
+
+def _check_security_patterns(
+    file_path: Path,
+    line_num: int,
+    line: str,
+    defusedxml_aliases: set[str] | None = None,
+) -> list[dict[str, str]]:
     """Check a single line for security anti-patterns."""
     findings: list[dict[str, str]] = []
+    safe_xml_aliases = defusedxml_aliases or set()
     for pattern, severity, description, exception_marker in SECURITY_PATTERNS:
         if not pattern.search(line):
+            continue
+        if "ElementTree.fromstring" in description and _is_safe_xml_fromstring(
+            line, safe_xml_aliases
+        ):
             continue
         if exception_marker and exception_marker in line:
             continue
@@ -208,11 +237,12 @@ def audit_file(file_path: Path) -> list[dict[str, str]]:
         )
         return findings
 
+    safe_xml_aliases = _defusedxml_aliases(content)
     for line_num, line in enumerate(content.splitlines(), 1):
         stripped = line.strip()
         if stripped.startswith("#"):
             continue
-        findings.extend(_check_security_patterns(file_path, line_num, line))
+        findings.extend(_check_security_patterns(file_path, line_num, line, safe_xml_aliases))
         findings.extend(_check_credential_patterns(file_path, line_num, line, stripped))
 
     return findings

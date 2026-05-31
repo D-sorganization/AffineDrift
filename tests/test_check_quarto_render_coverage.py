@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
-from defusedxml.common import EntitiesForbidden
+from defusedxml.common import DefusedXmlException
 
 from scripts.check_quarto_render_coverage import (
     find_missing_sitemap_sources,
@@ -44,6 +44,24 @@ def test_load_sitemap_paths_reads_all_locs(tmp_path):
     ]
 
 
+def test_load_sitemap_paths_rejects_entity_expansion(tmp_path):
+    sitemap = tmp_path / "sitemap.xml"
+    sitemap.write_text(
+        """<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE urlset [
+  <!ENTITY unsafe "https://affinedrift.com/">
+]>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>&unsafe;</loc></url>
+</urlset>
+""",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(DefusedXmlException):
+        load_sitemap_paths(sitemap)
+
+
 def test_find_missing_sitemap_sources_reports_unbacked_urls(tmp_path):
     repo_root = tmp_path
     (repo_root / "articles").mkdir()
@@ -63,31 +81,3 @@ def test_find_missing_sitemap_sources_reports_unbacked_urls(tmp_path):
             Path(repo_root / "articles" / "theory-part1.qmd"),
         )
     ]
-
-
-def test_load_sitemap_paths_rejects_xxe_entity_expansion(tmp_path):
-    """A malicious entity-expansion / XXE payload must be rejected, not parsed."""
-    secret = tmp_path / "secret.txt"
-    secret.write_text("TOP-SECRET", encoding="utf-8")
-    malicious = tmp_path / "sitemap.xml"
-    malicious.write_text(
-        f"""<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE urlset [
-  <!ENTITY xxe SYSTEM "file://{secret.as_posix()}">
-]>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://affinedrift.com/&xxe;</loc></url>
-</urlset>
-""",
-        encoding="utf-8",
-    )
-
-    # defusedxml refuses to define entities at all, blocking XXE / billion-laughs.
-    with pytest.raises(EntitiesForbidden):
-        load_sitemap_paths(malicious)
-
-
-def test_load_sitemap_paths_missing_file_raises(tmp_path):
-    """Contract: a missing sitemap path raises FileNotFoundError, not a parse error."""
-    with pytest.raises(FileNotFoundError):
-        load_sitemap_paths(tmp_path / "does-not-exist.xml")

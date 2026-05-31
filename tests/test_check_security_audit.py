@@ -77,6 +77,20 @@ class TestSecurityPatternDetection:
         assert len(findings) == 1
         assert findings[0]["severity"] == "MEDIUM"
 
+    def test_unsafe_elementtree_fromstring_detected(self) -> None:
+        findings = self._check_line("root = ET.fromstring(xml_text)", "test_module.py")
+        assert len(findings) == 1
+        assert findings[0]["severity"] == "LOW"
+
+    def test_defusedxml_alias_fromstring_not_detected(self, tmp_path: Path) -> None:
+        f = tmp_path / "safe_xml.py"
+        f.write_text(
+            "from defusedxml import ElementTree as ET\n" "root = ET.fromstring(xml_text)\n",
+            encoding="utf-8",
+        )
+
+        assert audit_file(f) == []
+
     def test_comment_line_skipped(self) -> None:
         """Lines starting with # should not be checked."""
         # We test this through audit_file which skips comment lines
