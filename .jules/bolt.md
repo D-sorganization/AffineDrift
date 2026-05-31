@@ -130,3 +130,7 @@
 ## 2024-05-18 - [Optimize Descendant DOM Queries]
 **Learning:** The native DOM selectors like `getElementsByTagName` and `getElementsByClassName` are significantly faster than `querySelector` when accessed by an index `[0]`. This works safely as evaluating `undefined` when the HTMLCollection is empty acts as a falsy identical to `querySelector` returning `null`. This technique optimizes hot loops avoiding parsing overhead.
 **Action:** When querying for descendant single elements inside a specific container in performance-critical code paths, use native methods like `getElementsByClassName()[0]` instead of `querySelector` to skip parsing and directly lookup the DOM nodes.
+
+## 2026-05-31 - Consolidate ancestor checks with closest()
+**Learning:** When checking multiple ancestor conditions in a hot loop (e.g., `element.closest('a') || element.closest('button')`), consolidating them into a single query like `element.closest('a, button')` halves the selector parsing overhead while leveraging native C++ speeds, avoiding the micro-optimization anti-pattern of manual while loops that repeatedly cross the JS-to-C++ boundary.
+**Action:** Always combine multiple selector queries passed to `.closest()` into a single, comma-separated CSS selector string.
