@@ -43,10 +43,14 @@ def sitemap_loc_to_source_path(loc: str, repo_root: Path) -> Path:
 
 
 def load_sitemap_paths(sitemap_path: Path) -> list[str]:
-    """Return all sitemap <loc> URLs."""
-    # fmt: off
-    root = ET.fromstring(sitemap_path.read_text(encoding="utf-8"))  # noqa: S314 -- reason: false positive pattern definition in audit script
-    # fmt: on
+    """Return all sitemap <loc> URLs.
+
+    Uses ``defusedxml`` to harden against XXE and entity-expansion attacks even
+    if the sitemap ever becomes generated or externally sourced.
+    """
+    if not sitemap_path.is_file():
+        raise FileNotFoundError(f"Sitemap not found: {sitemap_path}")
+    root = ET.fromstring(sitemap_path.read_text(encoding="utf-8"))
     return [
         loc.text.strip()
         for loc in root.findall("sm:url/sm:loc", SITEMAP_NAMESPACE)

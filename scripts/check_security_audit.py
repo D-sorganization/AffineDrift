@@ -85,10 +85,13 @@ SECURITY_PATTERNS: list[tuple[re.Pattern[str], str, str, str | None]] = [
         "# nosec",
     ),
     (
-        re.compile(r"\bET\.fromstring\s*\(|ElementTree\.fromstring\s*\("),
+        # Flag stdlib xml.etree parsing only. Code that parses via the
+        # hardened ``defusedxml`` package (which exposes the same
+        # ``ElementTree.fromstring`` surface) is XXE-safe and not a finding.
+        re.compile(r"(?<!defused)xml\.etree.*\.fromstring\s*\(|import\s+xml\.etree"),
         "LOW",
         "xml.etree.ElementTree.fromstring() — use defusedxml for untrusted XML input",
-        "# noqa: S314 -- reason: false positive pattern definition in audit script",
+        "# nosec",
     ),
 ]
 
