@@ -134,3 +134,6 @@
 ## 2026-06-03 - Consolidate ancestor queries in hot loops
 **Learning:** When checking multiple ancestor conditions in a hot loop (e.g., `element.closest('a') || element.closest('button')`), consolidating them into a single query like `element.closest('a, button')` halves the selector parsing overhead while leveraging native C++ speeds, avoiding the micro-optimization anti-pattern of manual while loops that repeatedly cross the JS-to-C++ boundary.
 **Action:** Always combine multiple `.closest()` checks on the same element into a single comma-separated selector string to reduce CSS parsing overhead and JS-to-C++ boundary crossings.
+## 2026-06-02 - Consolidating .closest() queries
+**Learning:** Checking multiple ancestor conditions in a hot loop using separate `.closest()` calls (e.g., `element.closest('a') || element.closest('button')`) is inefficient due to repeatedly crossing the JS-to-C++ boundary.
+**Action:** Consolidate multiple ancestor checks into a single `.closest('a, button')` query to halve the CSS selector parsing overhead while leveraging native C++ speeds.
