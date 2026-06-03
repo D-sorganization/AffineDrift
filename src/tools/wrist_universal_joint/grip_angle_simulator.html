@@ -1222,38 +1222,57 @@
 
             const wrist_label = wrist_angle > 0 ? 'radial' : (wrist_angle < 0 ? 'ulnar' : 'neutral');
 
-            const infoHTML = `
-                <div class="info-item">
-                    <h4>Current Parameters</h4>
-                    <p><strong>Grip Angle (θ_grip):</strong> ${grip_angle}°</p>
-                    <p><strong>Wrist Deviation Angle (φ):</strong> ${wrist_angle}° (${wrist_label} deviation)</p>
-                </div>
-                <div class="info-item">
-                    <h4>Transmission Ratios</h4>
-                    <p><strong>Angular Velocity Ratio (ω_out/ω_in):</strong> ${omega_ratio.toFixed(4)}</p>
-                    <p><strong>Torque Transmission Ratio (τ_out/τ_in):</strong> ${tau_ratio.toFixed(4)}</p>
-                </div>
-                <div class="info-item">
-                    <h4>Torque Distribution (at mean input torque)</h4>
-                    <p><strong>Torque to α-axis (higher MOI):</strong> ${torque_alpha.toFixed(4)} N·m (${(Math.abs(Math.sin(theta_grip_rad))*100).toFixed(1)}% of transmitted)</p>
-                    <p><strong>Torque to γ-axis (lowest MOI):</strong> ${torque_gamma.toFixed(4)} N·m (${(Math.abs(Math.cos(theta_grip_rad))*100).toFixed(1)}% of transmitted)</p>
-                </div>
-                <div class="info-item">
-                    <h4>Angular Acceleration (at mean torque)</h4>
-                    <p><strong>α-axis acceleration:</strong> ${accel_alpha.toFixed(4)} rad/s²</p>
-                    <p><strong>γ-axis acceleration:</strong> ${accel_gamma.toFixed(4)} rad/s²</p>
-                </div>
-                <div class="info-item">
-                    <h4>Model Assumptions</h4>
-                    <p>• Universal joint (Hooke/Cardan) kinematics</p>
-                    <p>• Rigid body model</p>
-                    <p>• Power conservation (P = τω)</p>
-                    <p>• Constant grip angle during motion</p>
-                    <p>• Wrist angle represents radial/ulnar deviation</p>
-                </div>
-            `;
+            const container = document.getElementById('model-info');
+            container.innerHTML = '';
 
-            document.getElementById('model-info').innerHTML = infoHTML;
+            const createInfoItem = (title, lines) => {
+                const div = document.createElement('div');
+                div.className = 'info-item';
+                const h4 = document.createElement('h4');
+                h4.textContent = title;
+                div.appendChild(h4);
+                lines.forEach(line => {
+                    const p = document.createElement('p');
+                    if (line.strong) {
+                        const strong = document.createElement('strong');
+                        strong.textContent = line.strong;
+                        p.appendChild(strong);
+                        p.appendChild(document.createTextNode(' ' + line.text));
+                    } else {
+                        p.textContent = line.text;
+                    }
+                    div.appendChild(p);
+                });
+                return div;
+            };
+
+            container.appendChild(createInfoItem('Current Parameters', [
+                { strong: 'Grip Angle (θ_grip):', text: `${grip_angle}°` },
+                { strong: 'Wrist Deviation Angle (φ):', text: `${wrist_angle}° (${wrist_label} deviation)` }
+            ]));
+
+            container.appendChild(createInfoItem('Transmission Ratios', [
+                { strong: 'Angular Velocity Ratio (ω_out/ω_in):', text: omega_ratio.toFixed(4) },
+                { strong: 'Torque Transmission Ratio (τ_out/τ_in):', text: tau_ratio.toFixed(4) }
+            ]));
+
+            container.appendChild(createInfoItem('Torque Distribution (at mean input torque)', [
+                { strong: 'Torque to α-axis (higher MOI):', text: `${torque_alpha.toFixed(4)} N·m (${(Math.abs(Math.sin(theta_grip_rad))*100).toFixed(1)}% of transmitted)` },
+                { strong: 'Torque to γ-axis (lowest MOI):', text: `${torque_gamma.toFixed(4)} N·m (${(Math.abs(Math.cos(theta_grip_rad))*100).toFixed(1)}% of transmitted)` }
+            ]));
+
+            container.appendChild(createInfoItem('Angular Acceleration (at mean torque)', [
+                { strong: 'α-axis acceleration:', text: `${accel_alpha.toFixed(4)} rad/s²` },
+                { strong: 'γ-axis acceleration:', text: `${accel_gamma.toFixed(4)} rad/s²` }
+            ]));
+
+            container.appendChild(createInfoItem('Model Assumptions', [
+                { text: '• Universal joint (Hooke/Cardan) kinematics' },
+                { text: '• Rigid body model' },
+                { text: '• Power conservation (P = τω)' },
+                { text: '• Constant grip angle during motion' },
+                { text: '• Wrist angle represents radial/ulnar deviation' }
+            ]));
         }
     </script>
 </body>

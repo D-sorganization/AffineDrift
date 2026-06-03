@@ -66,3 +66,8 @@
 **Vulnerability:** Unsafe XML parsing using `xml.etree.ElementTree` without `defusedxml` protection.
 **Learning:** Using standard `xml.etree` for untrusted or external XML files can expose the system to XML vulnerabilities like entity expansion or external entity injection.
 **Prevention:** Always use `defusedxml` when parsing XML to prevent XML-based attacks.
+
+## 2026-06-03 - Prevent DOM-based XSS in info panel
+**Vulnerability:** DOM-based XSS via `innerHTML` used with template literals in the model info panel of the grip angle simulator.
+**Learning:** Using `innerHTML` to construct DOM elements by interpolating variables is brittle and introduces XSS risks, even if the current inputs appear safe.
+**Prevention:** To prevent DOM-based XSS when constructing DOM elements dynamically, always use native DOM methods like `document.createElement()` and securely assign properties via `textContent` instead of `innerHTML`.
