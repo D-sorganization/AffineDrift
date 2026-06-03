@@ -146,7 +146,6 @@ export function initAccordions() {
         const titleSpan = header.querySelector("span:not(.accordion-icon)");
         const titleText = titleSpan ? titleSpan.textContent.trim() : "content";
         const actionText = isExpanded ? "Collapse" : "Expand";
-        header.setAttribute("aria-label", `${actionText} ${titleText}`);
         header.setAttribute("title", `${actionText} ${titleText}`);
     };
 
@@ -484,7 +483,6 @@ export function initCriticsCorner() {
         const titleSpan = header.querySelector(".critics-corner-title, span:not(.critics-corner-icon)");
         const titleText = titleSpan ? titleSpan.textContent.trim() : "Critics' Corner";
         const actionText = isExpanded ? "Collapse" : "Expand";
-        header.setAttribute("aria-label", `${actionText} ${titleText}`);
         header.setAttribute("title", `${actionText} ${titleText}`);
     };
 
@@ -544,7 +542,6 @@ export function initLaymansTermsToggle() {
         const titleSpan = header.querySelector(".laymans-terms-header-title");
         const titleText = titleSpan ? titleSpan.textContent.trim() : "In Layman's Terms";
         const actionText = isExpanded ? "Collapse" : "Expand";
-        header.setAttribute("aria-label", `${actionText} ${titleText}`);
         header.setAttribute("title", `${actionText} ${titleText}`);
     };
 
@@ -587,7 +584,6 @@ export function initCriticsCommentsToggle() {
         const titleSpan = header.querySelector(".critics-comments-header-title");
         const titleText = titleSpan ? titleSpan.textContent.trim() : "Critics' Comments";
         const actionText = isExpanded ? "Collapse" : "Expand";
-        header.setAttribute("aria-label", `${actionText} ${titleText}`);
         header.setAttribute("title", `${actionText} ${titleText}`);
     };
 
