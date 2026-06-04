@@ -1,0 +1,164 @@
+﻿name: Deploy Website
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
+jobs:
+  # â”€â”€ Dispatcher: require a local self-hosted runner and fail closed â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  pick-runner:
+    runs-on: d-sorg-fleet
+    timeout-minutes: 2
+    outputs:
+      runner: ${{ steps.check.outputs.runner }}
+    steps:
+      - name: Check for self-hosted runner
+        id: check
+        env:
+          GH_TOKEN: ${{ secrets.RUNNER_CHECK_TOKEN }}
+        run: |
+          ONLINE=$(gh api /orgs/${{ github.repository_owner }}/actions/runners --paginate \
+              --jq 'if .runners then [.runners[] | select(.status == "online") | select(.labels[].name == "d-sorg-fleet")] | length else 0 end' \
+              2>/dev/null || echo "0")
+          if [[ "$ONLINE" -gt 0 ]]; then
+            mkdir -p "$(dirname "$GITHUB_OUTPUT")"
+            echo "runner=d-sorg-fleet" >> "$GITHUB_OUTPUT"
+            echo "Self-hosted runner online - routing locally"
+          else
+            echo "::error::No local self-hosted runner available; failing closed"
+            exit 1
+          fi
+
+  build:
+    timeout-minutes: 60
+    if: github.repository == 'D-sorganization/AffineDrift'
+    runs-on: d-sorg-fleet
+    needs: pick-runner
+    env:
+      PYTHONPATH: .
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Set up Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install Python dependencies
+        run: |
+          python -m venv "$RUNNER_TEMP/deploy-venv"
+          source "$RUNNER_TEMP/deploy-venv/bin/activate"
+          python -m pip install --upgrade pip setuptools
+          python -m pip install -r requirements.txt
+          echo "$RUNNER_TEMP/deploy-venv/bin" >> "$GITHUB_PATH"
+
+      - name: Verify Quarto Render Coverage
+        run: python3 scripts/check_quarto_render_coverage.py
+
+      - name: Verify CSS Budget
+        run: python3 scripts/check_styles_budget.py
+
+      - name: Verify UI/UX Anti-Pattern Budget
+        run: python3 scripts/check_ui_ux_budget.py
+
+      - name: Verify Python Dependency Boundaries
+        run: python3 scripts/check_dependency_boundaries.py
+
+      - name: Verify JavaScript Dependency Boundaries
+        run: python3 scripts/check_js_dependency_boundaries.py
+
+      - name: Verify CSS Architecture Boundaries
+        run: python3 scripts/check_css_architecture.py
+
+      - name: Verify Contract Coverage
+        run: python3 scripts/check_contract_coverage.py
+
+      - name: Verify Module Size Budget
+        run: python3 scripts/check_module_size_budget.py
+
+      - name: Verify Technical Debt Budget
+        run: python3 scripts/check_tech_debt_budget.py
+
+      - name: Pre-build Link Check
+        run: python3 -m src.tools.check_links
+
+      - name: Update Service Worker Cache Version
+        run: python3 scripts/update_sw_cache_version.py
+
+      - name: Set up Quarto
+        uses: quarto-dev/quarto-actions/setup@8a96df13519ee81fd526f2dfca5962811136661b # v2.2.0
+        with:
+          version: "1.6.39"
+
+      - name: Remove .env.example
+        run: rm -f .env.example
+        # Quarto's dotenv validation requires all variables in .env.example to be
+        # non-empty. Since we don't need this file during build, just remove it.
+
+      - name: Render Website
+        uses: quarto-dev/quarto-actions/render@8a96df13519ee81fd526f2dfca5962811136661b # v2.2.0
+        with:
+          to: html
+
+      - name: Verify frontend asset sync
+        # docs/css/ and docs/js/ are populated by Quarto render above.
+        # Running --check here validates that canonical sources match their
+        # generated mirrors â€” any genuine drift will correctly fail the build.
+        run: python3 scripts/sync_frontend_assets.py --check
+
+      - name: Post-build Health Check
+        run: python3 -m src.tools.check_site_health --fail-on broken
+
+      - name: Setup Pages
+        uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
+        with:
+          path: docs
+
+  deploy:
+    timeout-minutes: 30
+    if: github.repository == 'D-sorganization/AffineDrift'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: d-sorg-fleet
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5
+
+      - name: Verify Deployment
+        run: |
+          echo "Waiting for deployment to propagate..."
+          sleep 15
+          URL="${{ steps.deployment.outputs.page_url }}"
+          echo "Checking $URL"
+          for i in {1..5}; do
+            if curl -f -I -s "$URL"; then
+              echo "Deployment verified!"
+              exit 0
+            fi
+            echo "Attempt $i failed. Retrying in 10s..."
+            sleep 10
+          done
+          echo "Deployment verification failed."
+          exit 1
