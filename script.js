@@ -672,6 +672,14 @@ runOnDomReady(function () {
   // Separate initialization from event handling to reduce memory usage (1 listener vs N)
   // ⚡ Bolt Optimization: Use getElementsByClassName (O(1) live collection) instead of querySelectorAll (O(N))
   const accordionHeaders = document.getElementsByClassName("accordion-header");
+
+  const updateAccordionHeaderAria = (header, isExpanded) => {
+    const titleSpan = header.querySelector("span:not(.accordion-icon)");
+    const titleText = titleSpan ? titleSpan.textContent.trim() : "content";
+    const actionText = isExpanded ? "Collapse" : "Expand";
+    header.setAttribute("title", `${actionText} ${titleText}`);
+  };
+
   for (let index = 0; index < accordionHeaders.length; index++) {
     const header = accordionHeaders[index];
     const content = header.nextElementSibling;
@@ -682,6 +690,7 @@ runOnDomReady(function () {
       header.setAttribute("aria-controls", content.id);
       const isExpanded = header.getAttribute("aria-expanded") === "true";
       content.setAttribute("aria-hidden", !isExpanded);
+      updateAccordionHeaderAria(header, isExpanded);
     }
   }
 
@@ -694,6 +703,7 @@ runOnDomReady(function () {
       const isExpanded = header.getAttribute("aria-expanded") === "true";
       header.setAttribute("aria-expanded", !isExpanded);
       content.setAttribute("aria-hidden", isExpanded);
+      updateAccordionHeaderAria(header, !isExpanded);
     }
   });
 
@@ -1671,6 +1681,13 @@ function initLaymansTermsToggle() {
   // ⚡ Bolt Optimization: Use getElementsByClassName (O(1) live collection) instead of querySelectorAll (O(N))
   const laymansSections = document.getElementsByClassName("laymans-terms");
 
+  const updateHeaderAria = (header, isExpanded) => {
+    const titleSpan = header.querySelector(".laymans-terms-header-title");
+    const titleText = titleSpan ? titleSpan.textContent.trim() : "In Layman's Terms";
+    const actionText = isExpanded ? "Collapse" : "Expand";
+    header.setAttribute("title", `${actionText} ${titleText}`);
+  };
+
   for (let index = 0; index < laymansSections.length; index++) {
     const section = laymansSections[index];
     // ⚡ Bolt Optimization: Use getElementsByClassName[0] for faster scoped DOM query
@@ -1688,11 +1705,13 @@ function initLaymansTermsToggle() {
 
     const isExpanded = header.getAttribute("aria-expanded") === "true";
     content.setAttribute("aria-hidden", String(!isExpanded));
+    updateHeaderAria(header, isExpanded);
 
     header.addEventListener("click", () => {
       const expanded = header.getAttribute("aria-expanded") === "true";
       header.setAttribute("aria-expanded", String(!expanded));
       content.setAttribute("aria-hidden", String(expanded));
+      updateHeaderAria(header, !expanded);
     });
   }
 }
@@ -1701,6 +1720,13 @@ function initLaymansTermsToggle() {
 function initCriticsCorner() {
   // ⚡ Bolt Optimization: Use getElementsByClassName (O(1) live collection) instead of querySelectorAll (O(N))
   const criticsCorners = document.getElementsByClassName("critics-corner");
+
+  const updateHeaderAria = (header, isExpanded) => {
+    const titleSpan = header.querySelector(".critics-corner-title, span:not(.critics-corner-icon)");
+    const titleText = titleSpan ? titleSpan.textContent.trim() : "Critics' Corner";
+    const actionText = isExpanded ? "Collapse" : "Expand";
+    header.setAttribute("title", `${actionText} ${titleText}`);
+  };
 
   for (let index = 0; index < criticsCorners.length; index++) {
     const corner = criticsCorners[index];
@@ -1718,6 +1744,7 @@ function initCriticsCorner() {
 
       const isExpandedInitial = header.getAttribute('aria-expanded') === 'true';
       content.setAttribute('aria-hidden', String(!isExpandedInitial));
+      updateHeaderAria(header, isExpandedInitial);
 
       // Set initial state
       content.style.maxHeight = '0';
@@ -1734,6 +1761,7 @@ function initCriticsCorner() {
           content.style.paddingBottom = '0';
           header.setAttribute('aria-expanded', 'false');
           content.setAttribute('aria-hidden', 'true');
+          updateHeaderAria(header, false);
         } else {
           // Expand
           content.style.maxHeight = content.scrollHeight + CRITICS_CORNER_PADDING_OFFSET + 'px';
@@ -1741,6 +1769,7 @@ function initCriticsCorner() {
           content.style.paddingBottom = '1rem';
           header.setAttribute('aria-expanded', 'true');
           content.setAttribute('aria-hidden', 'false');
+          updateHeaderAria(header, true);
         }
       });
     }
@@ -1751,6 +1780,13 @@ function initCriticsCorner() {
 function initCriticsCommentsToggle() {
   // ⚡ Bolt Optimization: Use getElementsByClassName (O(1) live collection) instead of querySelectorAll (O(N))
   const criticsSections = document.getElementsByClassName("critics-comments");
+
+  const updateHeaderAria = (header, isExpanded) => {
+    const titleSpan = header.querySelector(".critics-comments-header-title");
+    const titleText = titleSpan ? titleSpan.textContent.trim() : "Critics' Comments";
+    const actionText = isExpanded ? "Collapse" : "Expand";
+    header.setAttribute("title", `${actionText} ${titleText}`);
+  };
 
   for (let index = 0; index < criticsSections.length; index++) {
     const section = criticsSections[index];
@@ -1769,11 +1805,13 @@ function initCriticsCommentsToggle() {
 
     const isExpanded = header.getAttribute("aria-expanded") === "true";
     content.setAttribute("aria-hidden", String(!isExpanded));
+    updateHeaderAria(header, isExpanded);
 
     header.addEventListener("click", () => {
       const expanded = header.getAttribute("aria-expanded") === "true";
       header.setAttribute("aria-expanded", String(!expanded));
       content.setAttribute("aria-hidden", String(expanded));
+      updateHeaderAria(header, !expanded);
     });
   }
 }

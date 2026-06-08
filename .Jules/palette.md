@@ -81,3 +81,6 @@
 ## 2024-06-03 - Native Tooltips for Icon-Only and Missing Native Tooltips
 **Learning:** While icon-only buttons rely on aria-label for screen readers, they lack native on-hover tooltips for sighted users without a title attribute, creating a gap between accessibility and standard usability. Many standard buttons across the app also lack them, hiding explicit functionality from hovering users.
 **Action:** Always pair aria-label with a matching title attribute on interactive icon-only elements, and generic buttons, to ensure sighted mouse users receive visual hints.
+## 2026-06-03 - Dynamic Aria Labels and Titles for Collapsible Elements
+**Learning:** Collapsible elements that lack dynamic `aria-label` or `title` values provide inadequate feedback to screen reader users, confusing their context.
+**Action:** Always update both the `aria-label` and `title` dynamically alongside `aria-expanded` state changes to ensure full accessibility support and clearer visual tooltips.
