@@ -28,6 +28,50 @@ class ILQRDiagnostics:
     reason: str
 
 
+@dataclass(frozen=True)
+class ILQROptimizationRequest:
+    """Validated inputs and solver knobs for an iLQR optimization run."""
+
+    dynamics_fn: Callable[[NDArray, NDArray], NDArray]
+    x0: NDArray
+    xf: NDArray
+    u_init: NDArray
+    dt: float = 0.01
+    max_iters: int = 50
+    tol: float = 1e-3
+
+    @classmethod
+    def from_inputs(
+        cls,
+        dynamics_fn: Callable[[NDArray, NDArray], NDArray],
+        x0: NDArray,
+        xf: NDArray,
+        u_init: NDArray,
+        dt: float = 0.01,
+        max_iters: int = 50,
+        tol: float = 1e-3,
+    ) -> ILQROptimizationRequest:
+        """Build a request after enforcing public optimizer preconditions."""
+        require(callable(dynamics_fn), "dynamics_fn must be callable")
+        check_finite_array(x0, "x0")
+        check_finite_array(xf, "xf")
+        require(x0.shape == xf.shape, "x0 and xf must have same shape")
+        require(len(u_init) > 0, "u_init must not be empty")
+        check_finite_array(u_init, "u_init")
+        check_positive(dt, "dt")
+        require(max_iters >= 1, "max_iters must be >= 1", max_iters)
+        check_positive(tol, "tol")
+        return cls(
+            dynamics_fn=dynamics_fn,
+            x0=x0,
+            xf=xf,
+            u_init=u_init,
+            dt=dt,
+            max_iters=max_iters,
+            tol=tol,
+        )
+
+
 class TrajectoryOptimizer(Protocol):
     def optimize(
         self,
@@ -73,15 +117,7 @@ class ILQRSolver:
         tol: float,
     ) -> None:
         """Validate inputs before starting optimization."""
-        require(callable(dynamics_fn), "dynamics_fn must be callable")
-        check_finite_array(x0, "x0")
-        check_finite_array(xf, "xf")
-        require(x0.shape == xf.shape, "x0 and xf must have same shape")
-        require(len(u_init) > 0, "u_init must not be empty")
-        check_finite_array(u_init, "u_init")
-        check_positive(dt, "dt")
-        require(max_iters >= 1, "max_iters must be >= 1", max_iters)
-        check_positive(tol, "tol")
+        ILQROptimizationRequest.from_inputs(dynamics_fn, x0, xf, u_init, dt, max_iters, tol)
 
     @staticmethod
     def _validated_dynamics_output(
@@ -299,8 +335,31 @@ class ILQRSolver:
         max_iters: int = 50,
         tol: float = 1e-3,
     ) -> tuple[NDArray, NDArray, NDArray]:
-        """Runs the iLQR algorithm."""
-        self._validate_inputs(dynamics_fn, x0, xf, u_init, dt, max_iters, tol)
+        """Run iLQR with backward-compatible scalar arguments.
+
+        Preconditions are the same as :meth:`ILQROptimizationRequest.from_inputs`:
+        finite matching initial/target states, a non-empty finite initial control
+        trajectory, positive ``dt``/``tol``, and at least one iteration.
+
+        Returns:
+            ``(x_traj, u_traj, t_traj)`` with state, control, and time samples.
+        """
+        request = ILQROptimizationRequest.from_inputs(
+            dynamics_fn, x0, xf, u_init, dt, max_iters, tol
+        )
+        return self.optimize_request(request)
+
+    def optimize_request(
+        self, request: ILQROptimizationRequest
+    ) -> tuple[NDArray, NDArray, NDArray]:
+        """Run iLQR from a validated request object."""
+        dynamics_fn = request.dynamics_fn
+        x0 = request.x0
+        xf = request.xf
+        u_init = request.u_init
+        dt = request.dt
+        max_iters = request.max_iters
+        tol = request.tol
         x_traj, u_traj, N, n_x, n_u, Q, R, Q_f = self._prepare_optimization_state(
             dynamics_fn, x0, u_init, dt
         )
