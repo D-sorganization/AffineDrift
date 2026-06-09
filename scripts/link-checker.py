@@ -164,6 +164,11 @@ def check_file(
 
 
 def main() -> None:
+    """Parse CLI arguments and run the link checker over the chosen root.
+
+    Exits with a non-zero status when broken internal references or external
+    URLs are detected so the check can gate CI.
+    """
     parser = argparse.ArgumentParser(description="Validate Quarto references and URLs")
     parser.add_argument("--root", default=".", help="Root directory to check")
     parser.add_argument("--external-only", action="store_true", help="Only check external URLs")

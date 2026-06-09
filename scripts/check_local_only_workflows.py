@@ -27,6 +27,11 @@ LEGACY_HOSTED_RUNNER_ALLOWLIST = {
 
 
 def main() -> int:
+    """Scan workflow files and fail if any can route to hosted runners.
+
+    Returns ``0`` when every workflow is local-only (or the workflow directory
+    is absent) and ``1`` when at least one offending workflow is found.
+    """
     failures: list[str] = []
     if not WORKFLOW_DIR.exists():
         return 0

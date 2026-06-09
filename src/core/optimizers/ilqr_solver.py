@@ -38,7 +38,15 @@ class TrajectoryOptimizer(Protocol):
         dt: float = 0.01,
         max_iters: int = 20,
         tol: float = 1e-4,
-    ) -> tuple[NDArray, NDArray, NDArray]: ...
+    ) -> tuple[NDArray, NDArray, NDArray]:
+        """Optimize a control trajectory from ``x0`` toward ``xf``.
+
+        Implementations return the optimized state trajectory, control
+        trajectory, and feedback gains. Concrete solvers are expected to
+        validate inputs (finite arrays, positive ``dt``/``tol``,
+        ``max_iters >= 1``) before iterating.
+        """
+        ...
 
 
 class ILQRSolver:
@@ -299,7 +307,17 @@ class ILQRSolver:
         max_iters: int = 50,
         tol: float = 1e-3,
     ) -> tuple[NDArray, NDArray, NDArray]:
-        """Runs the iLQR algorithm."""
+        """Run the iLQR algorithm to optimize a control trajectory.
+
+        Preconditions (enforced by :meth:`_validate_inputs`): ``dynamics_fn`` is
+        callable, ``x0``/``xf``/``u_init`` are finite arrays with matching
+        ``x0``/``xf`` shapes, ``u_init`` is non-empty, ``dt`` and ``tol`` are
+        positive, and ``max_iters >= 1``.
+
+        Returns the optimized ``(state_trajectory, control_trajectory,
+        feedback_gains)``. Convergence details are recorded on
+        :attr:`last_diagnostics`.
+        """
         self._validate_inputs(dynamics_fn, x0, xf, u_init, dt, max_iters, tol)
         x_traj, u_traj, N, n_x, n_u, Q, R, Q_f = self._prepare_optimization_state(
             dynamics_fn, x0, u_init, dt
