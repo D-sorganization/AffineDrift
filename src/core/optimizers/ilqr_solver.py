@@ -84,9 +84,17 @@ class ILQRSolver:
         require(callable(dynamics_fn), "dynamics_fn must be callable")
         check_finite_array(x0, "x0")
         check_finite_array(xf, "xf")
+        require(x0.ndim == 1, "x0 must be one-dimensional", x0)
+        require(xf.ndim == 1, "xf must be one-dimensional", xf)
+        require(x0.size > 0, "x0 must not be empty", x0)
         require(x0.shape == xf.shape, "x0 and xf must have same shape")
-        require(len(u_init) > 0, "u_init must not be empty")
         check_finite_array(u_init, "u_init")
+        has_supported_control_rank = u_init.ndim in (1, 2)
+        require(has_supported_control_rank, "u_init must be one- or two-dimensional", u_init)
+        if has_supported_control_rank:
+            require(u_init.shape[0] > 0, "u_init must not be empty")
+        if u_init.ndim == 2:
+            require(u_init.shape[1] > 0, "u_init must include at least one control")
         check_positive(dt, "dt")
         require(max_iters >= 1, "max_iters must be >= 1", max_iters)
         check_positive(tol, "tol")
