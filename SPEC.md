@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-06-03T00:00:00Z
+Last-Updated: 2026-06-09T00:00:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,8 +29,8 @@ Last-Updated: 2026-06-03T00:00:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.8                                            |
-| **Spec Version**        | 1.0.114                                          |
-| **Last Spec Update**    | 2026-05-31                                       |
+| **Spec Version**        | 1.0.117                                          |
+| **Last Spec Update**    | 2026-06-09                                       |
 
 ## 2. Purpose & Mission
 
@@ -625,3 +625,4 @@ python src/tools/code_quality_ast.py
 | 2026-06-03 | 1.0.114 | perf(frontend): Consolidated multiple `.closest()` checks into a single comma-separated selector string in `script.js` to reduce CSS parsing overhead and JS-to-C++ boundary crossings. |
 | 2026-06-03 | 1.0.115 | fix(security): Prevent DOM-based XSS in grip angle simulator by refactoring info panel generation to use native DOM methods instead of `innerHTML`. |
 | 2026-06-03 | 1.0.116 | 🎨 Palette: Add dynamic `title` attributes to collapsible headers based on their `aria-expanded` state to improve accessibility. |
+| 2026-06-09 | 1.0.117 | refactor(rl-funnel): Made `src/tools/rl_funnel_benchmark.py` a thin compatibility facade over the focused dynamics, controller, simulation, and support modules while preserving its public benchmark API. |

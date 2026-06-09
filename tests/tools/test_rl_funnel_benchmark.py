@@ -6,6 +6,7 @@ import numpy as np
 import pytest
 
 from src.core.contracts.definitions import ContractViolationError
+from src.tools import rl_funnel_controllers, rl_funnel_dynamics, rl_funnel_simulation
 from src.tools.rl_funnel_benchmark import (
     CONTROL_SATURATION_DEFAULT,
     GRAVITY_M_S2,
@@ -19,6 +20,48 @@ from src.tools.rl_funnel_benchmark import (
     generate_reference_trajectory,
     setpoint_lqr_controller,
 )
+
+
+class TestBenchmarkFacadeDelegation:
+    """Tests that rl_funnel_benchmark remains a thin compatibility facade."""
+
+    def test_dynamics_exports_delegate_to_dynamics_module(self) -> None:
+        """Benchmark dynamics exports should share implementation with the dynamics module."""
+        from src.tools import rl_funnel_benchmark
+
+        assert rl_funnel_benchmark.double_pendulum_drift is rl_funnel_dynamics.double_pendulum_drift
+        assert rl_funnel_benchmark.double_pendulum_B is rl_funnel_dynamics.double_pendulum_B
+        assert (
+            rl_funnel_benchmark.generate_reference_trajectory
+            is rl_funnel_dynamics.generate_reference_trajectory
+        )
+
+    def test_controller_exports_delegate_to_controller_module(self) -> None:
+        """Benchmark controller exports should share implementation with the controller module."""
+        from src.tools import rl_funnel_benchmark
+
+        assert (
+            rl_funnel_benchmark.setpoint_lqr_controller
+            is rl_funnel_controllers.setpoint_lqr_controller
+        )
+        assert (
+            rl_funnel_benchmark.trajectory_tracking_lqr
+            is rl_funnel_controllers.trajectory_tracking_lqr
+        )
+
+    def test_simulation_exports_delegate_to_simulation_module(self) -> None:
+        """Benchmark simulation exports should share implementation with the simulation module."""
+        from src.tools import rl_funnel_benchmark
+
+        assert rl_funnel_benchmark.run_benchmark is rl_funnel_simulation.run_benchmark
+        assert (
+            rl_funnel_benchmark._compute_tracking_metrics
+            is rl_funnel_simulation._compute_tracking_metrics
+        )
+        assert (
+            rl_funnel_benchmark._validate_benchmark_inputs
+            is rl_funnel_simulation._validate_benchmark_inputs
+        )
 
 
 class TestPendulumConstants:
