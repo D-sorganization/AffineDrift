@@ -3,6 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
+from src.core.contracts.definitions import ContractViolationError
 from src.core.optimizers.ilqr_solver import ILQRSolver
 
 
@@ -124,3 +125,53 @@ def test_ilqr_rejects_non_finite_dynamics_output() -> None:
             np.array([1.0], dtype=np.float64),
             np.array([[0.0]], dtype=np.float64),
         )
+
+
+@pytest.mark.parametrize(
+    ("x0", "xf", "u_init", "message"),
+    [
+        (
+            np.array([[0.0]], dtype=np.float64),
+            np.array([[1.0]], dtype=np.float64),
+            np.zeros((2, 1), dtype=np.float64),
+            "x0 must be one-dimensional",
+        ),
+        (
+            np.array([0.0], dtype=np.float64),
+            np.array([[1.0]], dtype=np.float64),
+            np.zeros((2, 1), dtype=np.float64),
+            "xf must be one-dimensional",
+        ),
+        (
+            np.array([], dtype=np.float64),
+            np.array([], dtype=np.float64),
+            np.zeros((2, 1), dtype=np.float64),
+            "x0 must not be empty",
+        ),
+        (
+            np.array([0.0], dtype=np.float64),
+            np.array([1.0], dtype=np.float64),
+            np.zeros((2, 1, 1), dtype=np.float64),
+            "u_init must be one- or two-dimensional",
+        ),
+        (
+            np.array([0.0], dtype=np.float64),
+            np.array([1.0], dtype=np.float64),
+            np.zeros((2, 0), dtype=np.float64),
+            "u_init must include at least one control",
+        ),
+    ],
+)
+def test_ilqr_rejects_unsupported_input_ranks(
+    x0: np.ndarray,
+    xf: np.ndarray,
+    u_init: np.ndarray,
+    message: str,
+) -> None:
+    solver = ILQRSolver()
+
+    def dynamics(_x: np.ndarray, u: np.ndarray) -> np.ndarray:
+        return np.array([u[0]], dtype=np.float64)
+
+    with pytest.raises(ContractViolationError, match=message):
+        solver.optimize(dynamics, x0, xf, u_init)
