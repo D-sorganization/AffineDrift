@@ -440,8 +440,25 @@ export function initScrollSpy() {
 export function initSkipToContent() {
     if (document.querySelector(".skip-to-content")) return;
 
+    // Resolve the best available main-content target. Standard article pages
+    // expose #quarto-document-content, but full-layout pages (e.g. the home
+    // page) may not, so fall back to the <main> element or #quarto-content.
+    const candidates = ["#quarto-document-content", "main", "#quarto-content"];
+    let target = null;
+    for (const selector of candidates) {
+        const el = document.querySelector(selector);
+        if (el) {
+            target = el;
+            break;
+        }
+    }
+    if (target && !target.id) {
+        target.id = "main-content";
+    }
+    const targetId = target ? target.id : "quarto-document-content";
+
     const skipLink = document.createElement("a");
-    skipLink.href = "#quarto-document-content";
+    skipLink.href = `#${targetId}`;
     skipLink.className = "skip-to-content";
     skipLink.textContent = "Skip to main content";
     skipLink.setAttribute("aria-label", "Skip to main content");

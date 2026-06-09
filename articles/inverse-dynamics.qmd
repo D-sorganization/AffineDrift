@@ -520,30 +520,36 @@ $$
 
 **Step 3: Revised Moment Balance Including Drag**
 
-The total generalized moment required to produce the observed angular acceleration is fixed by the kinematics. Drag contributes $-2.0$ Nm, so the net moment available from the hands is reduced. Given a measured hand force of $F_{\text{hands}} = 24.5$ N (5.5 lbs) with drag included:
+The total generalized moment required to produce the observed angular acceleration is fixed by the kinematics --- it does not change when we account for drag. In the naive (no-drag) solution that requirement is supplied *entirely* by the hands: the hand-force moment plus the hand couple.
 
 $$
-F_{\text{hands}} = 24.5 \text{ N}, \quad M_{\text{hands}} = 24.5 \text{ N} \times 0.597 \text{ m} = 14.6 \text{ Nm}
+M_{\text{req}} = M_{mh} + C_\alpha = 19.9 + (-18.4) = 1.5 \text{ Nm}
 $$
 
-Total moment (hands + drag):
+When drag is included, $M_{\text{req}}$ is unchanged, but part of it is now supplied aerodynamically rather than by the golfer. Drag also reduces the linear force the hands must supply: a $\approx 2$ lb drag force lowers the inverse-dynamics hand force from 7.5 lb to $F_{\text{hands}} = 24.5$ N (5.5 lbs), so the hand-force moment shrinks to
 
 $$
-M_{\text{total}} = 14.6 + (-2.0) = 12.6 \text{ Nm}
+M_{\text{hands}} = 24.5 \text{ N} \times 0.597 \text{ m} = 14.6 \text{ Nm}
 $$
 
-The residual couple required to balance the equations of motion:
+The moment supplied by the two force terms (hands + drag) is
 
 $$
-C_{\alpha,\text{drag}} = M_{\text{total}} - M_{mh} = 12.6 - 19.9 = -7.3 \text{ Nm}
+M_{\text{total}} = M_{\text{hands}} + M_{\text{drag}} = 14.6 + (-2.0) = 12.6 \text{ Nm}
+$$
+
+The residual hand couple needed to close the same moment balance is the difference between the fixed requirement and what the force terms already supply:
+
+$$
+C_{\alpha,\text{drag}} = M_{\text{req}} - M_{\text{total}} = 1.5 - 12.6 = -11.1 \text{ Nm}
 $$
 
 **Comparison:**
 - Without drag consideration: $C_\alpha = -18.4$ Nm
-    
+
 - With drag consideration: $C_\alpha = -11.1$ Nm
 
-Accounting for drag reduces the required hand couple in our inverse-dynamics solution by $\approx 7.3$ Nm (about 40%) --- **not because drag removes effort**, but because the naive calculation mis-attributes an aerodynamic moment arm to the golfer's hands. The drag moment itself ($\approx 2.0$ Nm at the grip) is smaller than the re-attribution ($\approx 7.3$ Nm); the larger number reflects the $F_{\text{drag}} \times r_{\text{hand}}$ lever arm that disappears from the hand-couple side of the ledger once it is correctly assigned to aerodynamics.
+Accounting for drag reduces the required hand couple in our inverse-dynamics solution by $\approx 7.3$ Nm (about 40%) --- **not because drag removes effort**, but because the naive calculation mis-attributes an aerodynamic moment to the golfer's hands. That $7.3$ Nm splits into two pieces, both traceable to drag: the drag force's own moment about the reference ($\approx 2.0$ Nm) plus the $\approx 5.3$ Nm of hand-force moment that vanishes once drag ($\approx 8.9$ N over the $0.597$ m lever) lowers the hand force the golfer must apply. Together they account for the full re-attribution: $2.0 + 5.3 = 7.3$ Nm.
 
 ::: {.callout-note}
 ## Figure Pending
@@ -746,7 +752,7 @@ The alpha torque debate involves all three ambiguities:
     
 2. **Drift-input conflation:** Some measured torque arises from passive dynamics
     
-3. **Air resistance:** Neglecting drag can cause 40\
+3. **Air resistance:** Neglecting drag can shift couple estimates by roughly 40% in this worked example
 
 A productive path forward requires instrumented grips, validated models including drag, analysis at multiple reference points, and recognition that different golfers may use genuinely different strategies.
 

@@ -21,7 +21,7 @@ Screw theory provides a compact and geometrically natural language for represent
 
 ::: {.callout-note}
 ## Frame Convention
-All 6-vectors (twists $\mathcal{V}$, wrenches $\mathcal{F}$) and matrices ($J$, $B$) in this article are expressed in the **space frame** (fixed world frame $s$) unless explicitly subscripted $_b$ for the body frame. Body-frame quantities transform via the adjoint: $\mathcal{V}_s = \mathrm{Ad}_{T_{sb}} \mathcal{V}_b$ and $\mathcal{F}_s = \mathrm{Ad}_{T_{sb}}^\top \mathcal{F}_b$.
+All 6-vectors (twists $\mathcal{V}$, wrenches $\mathcal{F}$) and matrices ($J$, $B$) in this article are expressed in the **space frame** (fixed world frame $s$) unless explicitly subscripted $_b$ for the body frame. Body-frame quantities transform via the adjoint: $\mathcal{V}_s = \mathrm{Ad}_{T_{sb}} \mathcal{V}_b$ for twists. Wrenches transform with the transpose acting in the *opposite* direction, so that the power $\mathcal{F}^\top\mathcal{V}$ stays frame-invariant: $\mathcal{F}_b = \mathrm{Ad}_{T_{sb}}^\top \mathcal{F}_s$, equivalently $\mathcal{F}_s = \mathrm{Ad}_{T_{sb}}^{-\top} \mathcal{F}_b$.
 :::
 
 ## The Lie Group $SE(3)$ and Its Algebra
@@ -129,7 +129,7 @@ $$
 \mathcal{F}_a = \mathrm{Ad}_g^\top \,\mathcal{F}_b,
 $$
 
-where subscripts denote different frames.
+where subscripts denote different frames. Note the wrench transpose runs in the opposite direction to the twist map: this is exactly what keeps the power $\mathcal{F}^\top\mathcal{V}$ invariant, since $\mathcal{F}_a^\top \mathcal{V}_a = (\mathrm{Ad}_g^\top \mathcal{F}_b)^\top \mathcal{V}_a = \mathcal{F}_b^\top \mathrm{Ad}_g \mathcal{V}_a = \mathcal{F}_b^\top \mathcal{V}_b$.
 
 ## Joint Screws and the Screw Jacobian
 
@@ -191,17 +191,23 @@ where $\mathcal{F}_g$ is a gravity wrench and $\mathcal{F}_{\mathrm{shaft}}$ is 
 
 ## Control-Affine Structure in Screw Coordinates
 
-Joint torques $\tau \in \mathbb{R}^n$ relate to input wrenches via
+Joint torques $\tau \in \mathbb{R}^n$ relate to input wrenches via the well-posed (forward) map
+
+$$
+\tau = J_s(q)^\top \mathcal{F}_{\mathrm{input}},
+$$
+
+which is the screw-coordinate statement of the force--torque duality. Inverting this for the wrench is only possible up to the null space of $J_s^\top$: for a general $n$-DOF chain $J_s$ is $6\times n$ and not square, so we use the Moore--Penrose pseudoinverse to recover the minimum-norm input wrench,
 
 $$
 \mathcal{F}_{\mathrm{input}}
 =
-J_s(q)^{-T}\tau
+\bigl(J_s(q)^\top\bigr)^{+}\tau
 =
-J_s(q)^{-T} B u,
+\bigl(J_s(q)^\top\bigr)^{+} B u,
 $$
 
-where $B$ is the input distribution matrix (expressed in the **space frame**, following the convention fixed in the introduction) and $u$ is the vector of joint inputs. A body-frame input distribution $B_b$ --- natural for grip-force measurements taken in the hand frame --- relates to the spatial form as $B_s = \mathrm{Ad}_{T_{sb}}\, B_b$. The total wrench at a given point is then
+which reduces to $J_s(q)^{-\top}\tau$ in the special case of a square, invertible $J_s$. Here $B$ is the input distribution matrix (expressed in the **space frame**, following the convention fixed in the introduction) and $u$ is the vector of joint inputs. A body-frame input distribution $B_b$ --- natural for grip-force measurements taken in the hand frame --- relates to the spatial form as $B_s = \mathrm{Ad}_{T_{sb}}\, B_b$. The total wrench at a given point is then
 
 $$
 \mathcal{F}_{\mathrm{total}}

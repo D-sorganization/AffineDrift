@@ -432,33 +432,31 @@ The fundamental trade-off is between an axis where constraint torques are *usefu
 
 ### Quantitative Example
 
-Consider a constraint torque with standard deviation $\sigma_{\tau_c} = 5$ N·m transmitted through the wrist during the downswing. For a finger grip directing this into the alpha axis:
+These are illustrative order-of-magnitude figures, not measured values; the point is the *ratio* between the two axes, which follows directly from their moments of inertia. Consider a constraint-torque fluctuation with standard deviation $\sigma_{\tau_c} = 0.15$ N·m transmitted through the wrist during the final $\Delta t \approx 10$ ms before impact. We track how that torque noise propagates to an angular deviation by integrating twice (torque → angular acceleration → angular velocity → angle), using the rough estimates $\sigma_\omega \approx \sigma_{\ddot\theta}\,\Delta t$ and $\sigma_\theta \approx \sigma_\omega\,\Delta t$.
+
+For a finger grip directing this torque into the **alpha axis** (swing-plane rotation), where the club's moment of inertia is large ($I_\alpha = 0.005$ kg·m²):
 
 $$
 \begin{align}
-\sigma_{\alpha} &= \frac{\sigma_{\tau_c}}{I_{\alpha}} = \frac{5 \text{ N·m}}{0.005 \text{ kg·m}^2} = 1000 \text{ rad/s}^2 \\
-\sigma_{\theta} &\approx \sigma_{\alpha} \cdot \Delta t \approx 1000 \times 0.05 = 50 \text{ rad/s}
+\sigma_{\ddot\alpha} &= \frac{\sigma_{\tau_c}}{I_{\alpha}} = \frac{0.15 \text{ N·m}}{0.005 \text{ kg·m}^2} = 30 \text{ rad/s}^2 \\
+\sigma_{\dot\alpha} &\approx \sigma_{\ddot\alpha}\,\Delta t = 30 \times 0.01 = 0.30 \text{ rad/s} \\
+\sigma_{\alpha} &\approx \sigma_{\dot\alpha}\,\Delta t = 0.30 \times 0.01 = 0.003 \text{ rad} \approx 0.17°
 \end{align}
 $$
 
-This angular velocity variation in the swing plane contributes to clubhead speed variation but has minimal effect on face angle near impact.
+This sub-tenth-of-a-degree variation lies in the swing plane: it perturbs clubhead speed slightly but has minimal effect on face angle near impact.
 
-For a palm grip directing the same torque into the beta axis:
+For a palm grip directing the *same* torque into the **beta axis** (face rotation about the shaft), where the club's moment of inertia is roughly 33× smaller ($I_\beta = 0.00015$ kg·m²):
 
 $$
 \begin{align}
-\sigma_{\beta} &= \frac{\sigma_{\tau_c}}{I_{\beta}} = \frac{5 \text{ N·m}}{0.00015 \text{ kg·m}^2} = 33,333 \text{ rad/s}^2 \\
-\sigma_{\omega_{\text{face}}} &\approx \sigma_{\beta} \cdot \Delta t \approx 33,333 \times 0.05 = 1667 \text{ rad/s}
+\sigma_{\ddot\beta} &= \frac{\sigma_{\tau_c}}{I_{\beta}} = \frac{0.15 \text{ N·m}}{0.00015 \text{ kg·m}^2} = 1000 \text{ rad/s}^2 \\
+\sigma_{\dot\beta} &\approx \sigma_{\ddot\beta}\,\Delta t = 1000 \times 0.01 = 10 \text{ rad/s} \\
+\sigma_{\text{face angle}} &\approx \sigma_{\dot\beta}\,\Delta t = 10 \times 0.01 = 0.10 \text{ rad} \approx 5.7°
 \end{align}
 $$
 
-This face rotation rate variation translates directly to face angle variation at impact. Over a 50 ms window near impact:
-
-$$
-\sigma_{\text{face angle}} \approx 1667 \text{ rad/s} \times 0.05 \text{ s} \approx 83 \text{ rad} \approx 4.8°
-$$
-
-This example illustrates how identical constraint-torque variability can produce different model outcomes depending on grip orientation.
+The face-angle deviation is larger than the alpha-axis deviation by exactly the inertia ratio $I_\alpha/I_\beta \approx 33$, turning a negligible $0.17°$ wobble into a swing-ruining $5.7°$ of face variation. A $5.7°$ open or closed face at impact moves a drive tens of yards offline. This example illustrates how *identical* constraint-torque variability produces drastically different model outcomes depending on grip orientation: the beta axis amplifies torque noise because there is so little rotational inertia to resist it.
 
 ## Connection to Arm-Club Plane Separation
 

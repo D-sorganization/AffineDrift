@@ -3,7 +3,11 @@
   const root = document.documentElement;
 
   function applyTheme(theme) {
+    // data-theme drives the site's custom CSS variables; data-bs-theme drives
+    // Bootstrap 5.3's native dark mode so the navbar, sidebar/TOC, code blocks,
+    // and tables recolor too (otherwise the page renders half-dark).
     root.setAttribute('data-theme', theme);
+    root.setAttribute('data-bs-theme', theme);
     localStorage.setItem(STORAGE_KEY, theme);
   }
 
