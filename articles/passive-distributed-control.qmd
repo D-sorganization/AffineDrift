@@ -109,9 +109,13 @@ sensors. Powered only by gravity on a gentle slope, it walks stably for hundreds
 steps. This demonstrates that **walking is a passive attractor of bipedal mechanical systems**
 — the controller's job is only to maintain conditions for this attractor.
 
-Modern bipedal robots (Boston Dynamics Atlas, MIT Cheetah) exploit this insight: the
-passive dynamics handle stride-to-stride stability; control only handles disturbance
-rejection and foot placement.
+This insight shaped a lineage of efficient walking robots. The most direct descendants are
+the actuated passive-dynamic walkers (Collins, Ruina, Tedrake & Wisse, 2005; Cornell Ranger),
+which add only small amounts of power to a fundamentally passive gait. More heavily actuated
+platforms (Boston Dynamics Atlas, MIT Cheetah) do not "walk passively" — Atlas in particular
+is hydraulically actuated and relies on model-predictive control — but they still benefit
+from designing the mechanics so that natural dynamics and series-elastic compliance do much
+of the work, leaving control to handle disturbance rejection and foot placement.
 
 **Key result:** The passive walking gait is a **limit cycle** in state space. Its
 existence and stability are properties of the mechanical system, not the controller.
@@ -132,9 +136,13 @@ In powerful ballistic movements (throwing, jumping, swinging), the optimal strat
 3. **Release:** Tendon recoil propels the distal segment at speeds exceeding what muscular
    contraction alone could produce
 
-The ankle tendons in running store ~35% of the mechanical energy of each step, returning
-it during push-off. Expert golfers store elastic energy in the Achilles, patellar, and
-wrist extensor tendons during the backswing.
+The Achilles tendon can return on the order of 35% of the mechanical energy required for
+each running step (Ker et al., 1987), recoiling during push-off rather than that energy
+being supplied freshly by muscle. (The exact fraction depends on speed and on how the
+energy budget is defined, so treat 35% as a representative figure, not a universal
+constant.) By analogy, expert golfers are thought to store and return elastic energy in
+the Achilles, patellar, and wrist-extensor tendons across the backswing-to-downswing
+transition.
 
 **Mathematical model:** The muscle-tendon unit as a series spring-mass-damper:
 
@@ -152,9 +160,15 @@ The **fascia** — the connective tissue network enveloping all muscles — tran
 across multiple joints and segments simultaneously. Bosch emphasizes that force transmission
 is not purely through muscles but through the fascial net:
 
-- A hip extension movement transmits tension through the plantar fascia up to the
-  thoracolumbar fascia, creating what Myers (2001) calls "Anatomy Trains"
-- This distributed tension network enables force summing across the entire body
+- A hip extension movement is proposed to transmit tension through the plantar fascia up to
+  the thoracolumbar fascia, along what Myers (2001) calls "Anatomy Trains"
+- On this view, the distributed tension network enables force summing across multiple segments
+
+It is worth flagging that the "Anatomy Trains" myofascial-meridian model is a popular and
+clinically influential framework rather than a rigorously validated one; the degree to which
+appreciable force is transmitted along these fascial lines (versus through bones and joints)
+remains debated in the biomechanics literature. We use it here as a motivating analogy for
+multi-segment coupling, not as established fact.
 
 **Control implication:** The effective "control input" to a distal segment is not just
 the locally acting muscles but the integral of forces transmitted through the fascial chain.

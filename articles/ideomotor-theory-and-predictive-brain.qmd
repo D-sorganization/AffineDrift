@@ -7,13 +7,17 @@ date: today
 
 ## Overview
 
-The brain does not react to the world — it predicts it. This insight, formalized over the
-past 30 years in predictive coding theory (Helmholtz, 1867; Rao & Ballard, 1999; Friston,
-2010), has profound implications for understanding motor control. A golfer does not compute
-a muscle-by-muscle control sequence during the swing. Instead, the brain generates a
-*prediction* of the desired sensory outcome (the sound, feel, and trajectory of impact),
-and the motor system executes whatever movements minimize the discrepancy between predicted
-and actual sensation.
+A leading view in modern neuroscience holds that the brain does not merely react to the
+world — it actively predicts it. This idea, developed over the past few decades in
+predictive coding theory (Helmholtz, 1867; Rao & Ballard, 1999; Friston, 2010), is an
+influential and well-supported framework — though not an uncontested one — and it has
+profound implications for how we understand motor control. On this account, a golfer does
+not compute a muscle-by-muscle control sequence during the swing. Instead, the brain
+generates a *prediction* of the desired sensory outcome (the sound, feel, and trajectory of
+impact), and the motor system executes whatever movements minimize the discrepancy between
+predicted and actual sensation. The truth is almost certainly a blend of prediction and
+feedback; we foreground prediction here because its mathematics maps so cleanly onto the
+control-affine framework.
 
 This document develops the ideomotor framework as a cross-cutting theme throughout the
 *Geometry of Motion* series.
@@ -21,10 +25,13 @@ This document develops the ideomotor framework as a cross-cutting theme througho
 ::: {.callout-note}
 ## Core Thesis
 
-**Skilled motor control is forward-model prediction, not feedback error correction.**
-The mathematical structure of forward models maps directly onto the control-affine
-framework developed in Volume I: the drift term is the forward model's prediction of
-passive dynamics, and the control term corrects prediction errors.
+**Skilled motor control leans heavily on forward-model prediction rather than moment-to-moment feedback error correction.**
+This is a matter of emphasis, not a strict dichotomy — fast movements like a golf swing
+outrun sensory feedback loops, so feedforward prediction must dominate, while feedback
+still tunes and calibrates the model over many repetitions. The mathematical structure of
+forward models maps directly onto the control-affine framework developed in Volume I: the
+drift term plays the role of the forward model's prediction of passive dynamics, and the
+control term corrects prediction errors.
 :::
 
 
@@ -75,9 +82,12 @@ Friston's **active inference** framework (2010) extends ideomotor theory to a fu
 probabilistic model. The brain maintains a generative model $p(\mathbf{y} | \mathbf{x}, \mathbf{u})$
 and seeks actions that minimize **free energy** $F$:
 
-$$F = \underbrace{\mathbb{E}_q[\log q(\mathbf{x}) - \log p(\mathbf{x} | \mathbf{y})]}_{\text{perception: update beliefs}} + \underbrace{\mathbb{E}_q[-\log p(\mathbf{y})]}_{\text{action: change world}}.$$
+$$F = \underbrace{\mathbb{E}_q[\log q(\mathbf{x}) - \log p(\mathbf{x} | \mathbf{y})]}_{\text{perception: } D_{\mathrm{KL}}[q \,\|\, p(\mathbf{x}|\mathbf{y})]} + \underbrace{\mathbb{E}_q[-\log p(\mathbf{y})]}_{\text{surprise: } -\log p(\mathbf{y})}.$$
 
-Minimizing $F$ simultaneously:
+This is the standard variational free energy, written here as the KL divergence between the
+approximate and true posterior plus the negative log-evidence (surprise). The split is
+schematic: perception lowers the KL term by refining beliefs, while action lowers surprise
+by steering observations toward what the model predicts. Minimizing $F$ simultaneously:
 1. Updates the brain's model of the current state (perception)
 2. Selects actions to make observations conform to predictions (action)
 
@@ -98,8 +108,11 @@ allow bottom-up signals to correct the model.
 $$\boldsymbol{\varepsilon}_l = \mathbf{y}_l - \hat{f}_l(\mathbf{x}_{l+1}).$$
 The control signal at level $l$ is the precision-weighted error:
 $$\mathbf{u}_l = \Pi_l \boldsymbol{\varepsilon}_l,$$
-where $\Pi_l$ is the precision (inverse covariance) matrix — which is exactly the
-cost matrix $R^{-1}$ in LQR control.
+where $\Pi_l$ is the precision (inverse covariance) matrix. This precision weighting is
+closely analogous to the inverse cost weighting in LQR control: in both, an inverse-variance
+(or inverse-cost) matrix sets how strongly each error channel is trusted and corrected. The
+correspondence is conceptual rather than a strict identity — the two arise from different
+objectives — but it gives a useful bridge between Bayesian precision and optimal-control gain.
 
 
 ## Forward Models in Motor Control
