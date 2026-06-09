@@ -9,6 +9,7 @@ import statistics
 from pathlib import Path
 from typing import Any
 
+from scripts.assessment_quality_files import filter_quality_metric_python_files
 from scripts.assessment_report_builder import build_comprehensive_report
 from src.tools.utils import (
     get_python_files,
@@ -713,7 +714,7 @@ def _calculate_final_grade(scores: dict[str, dict[str, Any]]) -> float:
 def main() -> None:
     """Execute the full repository assessment and generate reports."""
     root = Path.cwd()
-    py_files = get_python_files(root)
+    py_files = filter_quality_metric_python_files(root, get_python_files(root))
 
     scores = _run_all_assessments(root, py_files)
 
