@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-from src.core.optimizers.ilqr_solver import ILQRSolver
+from src.core.optimizers.ilqr_solver import ILQROptimizationRequest, ILQRSolver
 
 
 def test_ilqr_line_search_reduces_alpha_until_cost_decreases(
@@ -124,3 +124,52 @@ def test_ilqr_rejects_non_finite_dynamics_output() -> None:
             np.array([1.0], dtype=np.float64),
             np.array([[0.0]], dtype=np.float64),
         )
+
+
+def test_ilqr_request_validates_solver_knobs() -> None:
+    def dynamics(x: np.ndarray, u: np.ndarray) -> np.ndarray:
+        return np.array([u[0]], dtype=np.float64)
+
+    with pytest.raises(Exception, match="dt"):
+        ILQROptimizationRequest.from_inputs(
+            dynamics,
+            np.array([0.0], dtype=np.float64),
+            np.array([1.0], dtype=np.float64),
+            np.array([[0.0]], dtype=np.float64),
+            dt=0.0,
+            max_iters=5,
+            tol=1e-3,
+        )
+
+
+def test_ilqr_can_optimize_from_request_object(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    solver = ILQRSolver()
+
+    def dynamics(x: np.ndarray, u: np.ndarray) -> np.ndarray:
+        return np.array([u[0]], dtype=np.float64)
+
+    def backward_pass(*_args: object) -> tuple[np.ndarray, np.ndarray, float]:
+        return (
+            np.array([[0.0]], dtype=np.float64),
+            np.zeros((1, 1, 1), dtype=np.float64),
+            0.0,
+        )
+
+    monkeypatch.setattr(solver, "_backward_pass", backward_pass)
+    request = ILQROptimizationRequest.from_inputs(
+        dynamics,
+        np.array([0.0], dtype=np.float64),
+        np.array([1.0], dtype=np.float64),
+        np.array([[0.0]], dtype=np.float64),
+        dt=1.0,
+        max_iters=5,
+        tol=1e-3,
+    )
+
+    x_traj, u_traj, t_traj = solver.optimize_request(request)
+
+    assert x_traj.shape == (2, 1)
+    assert u_traj.shape == (1, 1)
+    assert t_traj.tolist() == [0.0, 1.0]

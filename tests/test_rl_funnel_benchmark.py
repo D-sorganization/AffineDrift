@@ -6,6 +6,7 @@ import numpy as np
 import pytest
 
 from src.core.contracts import ContractViolationError
+from src.tools import rl_funnel_benchmark, rl_funnel_controllers, rl_funnel_dynamics
 from src.tools.rl_funnel_benchmark import (
     DEFAULT_CONTROL_SATURATION,
     BenchmarkResult,
@@ -66,6 +67,11 @@ def test_run_comparison_rejects_negative_perturbation() -> None:
         run_comparison(perturbation_scale=-0.1)
 
 
+def test_run_comparison_rejects_negative_control_limit() -> None:
+    with pytest.raises(ContractViolationError, match="control_limit"):
+        run_comparison(control_limit=-1.0)
+
+
 def test_run_benchmark_respects_configurable_control_limit() -> None:
     t_ref = np.linspace(0.0, 0.1, 5)
     x_ref = np.zeros((4, 5))
@@ -87,6 +93,25 @@ def test_run_benchmark_respects_configurable_control_limit() -> None:
     assert result.name == "limited"
 
 
+def test_run_benchmark_rejects_inverted_control_limits() -> None:
+    t_ref = np.linspace(0.0, 0.1, 5)
+    x_ref = np.zeros((4, 5))
+
+    def controller(t: float, x: np.ndarray) -> np.ndarray:
+        return np.zeros(2)
+
+    with pytest.raises(ContractViolationError, match="control_limits"):
+        run_benchmark(
+            controller,
+            np.zeros(4),
+            (0.0, 0.1),
+            t_ref,
+            x_ref,
+            "bad-limits",
+            control_limits=(5.0, -5.0),
+        )
+
+
 def test_format_results_returns_summary_text(caplog: pytest.LogCaptureFixture) -> None:
     results = [
         BenchmarkResult("Setpoint LQR", 4.0, 2.0, 0.1, np.zeros((4, 2)), np.array([0.0, 0.1])),
@@ -106,3 +131,18 @@ def test_format_results_returns_summary_text(caplog: pytest.LogCaptureFixture) -
 
 def test_default_control_saturation_positive() -> None:
     assert DEFAULT_CONTROL_SATURATION > 0
+
+
+def test_benchmark_reexports_shared_dynamics_and_controllers() -> None:
+    assert rl_funnel_benchmark.double_pendulum_drift is rl_funnel_dynamics.double_pendulum_drift
+    assert rl_funnel_benchmark.double_pendulum_B is rl_funnel_dynamics.double_pendulum_B
+    assert (
+        rl_funnel_benchmark.generate_reference_trajectory
+        is rl_funnel_dynamics.generate_reference_trajectory
+    )
+    assert (
+        rl_funnel_benchmark.setpoint_lqr_controller is rl_funnel_controllers.setpoint_lqr_controller
+    )
+    assert (
+        rl_funnel_benchmark.trajectory_tracking_lqr is rl_funnel_controllers.trajectory_tracking_lqr
+    )
