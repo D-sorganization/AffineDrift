@@ -156,9 +156,13 @@ export function initAriaLabels() {
     // Social links
     const socialLinks = document.getElementsByClassName("social-link");
     for (const link of socialLinks) {
+        const text = link.textContent.trim();
+        const labelText = `Visit ${text}`;
         if (!link.hasAttribute("aria-label")) {
-            const text = link.textContent.trim();
-            link.setAttribute("aria-label", `Visit ${text}`);
+            link.setAttribute("aria-label", labelText);
+        }
+        if (!link.hasAttribute("title")) {
+            link.setAttribute("title", labelText);
         }
     }
 
