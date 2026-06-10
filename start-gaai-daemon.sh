@@ -39,13 +39,37 @@ check_dependency "tmux"   "sudo apt install tmux -y"
 check_dependency "claude" "npm install -g @anthropic-ai/claude-code"
 check_dependency "git"    "sudo apt install git -y"
 
-# ── Suppress dangerous-mode permission prompt ─────────────────────────────────
+# ── Suppress dangerous-mode permission prompt (opt-in, non-destructive) ───────
+# SECURITY: This script must never silently overwrite the user's global Claude
+# Code config (~/.claude/settings.json) — doing so would destroy their
+# permissions/hooks/env and disable the dangerous-mode safety prompt machine-wide
+# for every session, not just this daemon. Writing global config therefore
+# requires explicit opt-in (GAAI_ALLOW_SETTINGS_WRITE=1), is a merge (not an
+# overwrite), and always takes a timestamped backup first.
 CLAUDE_SETTINGS="$HOME/.claude/settings.json"
-if [[ ! -f "$CLAUDE_SETTINGS" ]] || ! grep -q "skipDangerousModePermissionPrompt" "$CLAUDE_SETTINGS" 2>/dev/null; then
-  echo "Configuring claude to skip dangerous-mode permission prompt..."
-  mkdir -p "$HOME/.claude"
-  echo '{ "skipDangerousModePermissionPrompt": true }' > "$CLAUDE_SETTINGS"
-  echo "  -> Written to $CLAUDE_SETTINGS"
+if ! grep -q '"skipDangerousModePermissionPrompt"[[:space:]]*:[[:space:]]*true' "$CLAUDE_SETTINGS" 2>/dev/null; then
+  if [[ "${GAAI_ALLOW_SETTINGS_WRITE:-0}" != "1" ]]; then
+    echo "NOTE: the daemon expects skipDangerousModePermissionPrompt=true in $CLAUDE_SETTINGS."
+    echo "      This script will NOT modify your global Claude Code config without consent."
+    echo "      Either set it yourself, or re-run with GAAI_ALLOW_SETTINGS_WRITE=1 to let this"
+    echo "      script merge the key in (a timestamped backup is taken first)."
+  else
+    check_dependency "jq" "sudo apt install jq -y"
+    echo "Configuring claude to skip dangerous-mode permission prompt (merge, with backup)..."
+    mkdir -p "$HOME/.claude"
+    if [[ -f "$CLAUDE_SETTINGS" ]]; then
+      cp "$CLAUDE_SETTINGS" "$CLAUDE_SETTINGS.bak.$(date +%s)"
+    fi
+    tmp="$(mktemp)"
+    if jq -S '. + { "skipDangerousModePermissionPrompt": true }' \
+        "${CLAUDE_SETTINGS:-/dev/null}" 2>/dev/null > "$tmp" && [[ -s "$tmp" ]]; then
+      mv "$tmp" "$CLAUDE_SETTINGS"
+    else
+      rm -f "$tmp"
+      echo '{ "skipDangerousModePermissionPrompt": true }' > "$CLAUDE_SETTINGS"
+    fi
+    echo "  -> Merged into $CLAUDE_SETTINGS (existing keys preserved)"
+  fi
 fi
 
 # ── Ensure we're on staging branch ───────────────────────────────────────────
