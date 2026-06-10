@@ -95,3 +95,9 @@ class TestReadDropdownContent:
         menu = _entry_with_label(navbar, "Read")["menu"]
         hrefs = [item.get("href", "") for item in menu]
         assert any("bibliography" in h for h in hrefs)
+
+    def test_includes_learning_paths(self, navbar: dict) -> None:
+        """IA cleanup (#3222): surface the buried learning-paths feature."""
+        menu = _entry_with_label(navbar, "Read")["menu"]
+        hrefs = [item.get("href", "") for item in menu]
+        assert any("learning-paths" in h for h in hrefs)
