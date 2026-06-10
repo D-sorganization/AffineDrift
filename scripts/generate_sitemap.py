@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Generate comprehensive sitemap.xml with proper priorities and change frequencies."""
 
+import argparse
 import shutil
 import subprocess
 from datetime import datetime
@@ -86,9 +87,37 @@ def qmd_path_to_url_path(filepath: Path) -> str:
     return url_path
 
 
-def main() -> None:
-    """Generate sitemap.xml."""
-    base_url = "https://affinedrift.com"
+def build_sitemap_xml(pages: list[dict[str, str]]) -> str:
+    """Render a list of page dicts into a sitemap XML document.
+
+    Pure function (no I/O) so it is unit-testable. Pages are emitted in the
+    order given; callers sort beforehand.
+    """
+    xml_lines = [
+        '<?xml version="1.0" encoding="UTF-8"?>',
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"',
+        '        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"',
+        '        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9',
+        '        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">',
+        f"  <!-- Generated: {datetime.now().isoformat()} -->",
+        f"  <!-- Total URLs: {len(pages)} -->",
+        "",
+    ]
+
+    for page in pages:
+        xml_lines.append("  <url>")
+        xml_lines.append(f"    <loc>{page['loc']}</loc>")
+        xml_lines.append(f"    <lastmod>{page['lastmod']}</lastmod>")
+        xml_lines.append(f"    <changefreq>{page['changefreq']}</changefreq>")
+        xml_lines.append(f"    <priority>{page['priority']}</priority>")
+        xml_lines.append("  </url>")
+
+    xml_lines.append("</urlset>")
+    return "\n".join(xml_lines)
+
+
+def collect_sitemap_pages(base_url: str = "https://affinedrift.com") -> list[dict[str, str]]:
+    """Walk the content dirs and build the (priority-sorted) page list."""
     pages: list[dict[str, str]] = []
 
     for filepath in collect_qmd_files(SITEMAP_CONTENT_DIRS):
@@ -111,38 +140,35 @@ def main() -> None:
             },
         )
 
-    # Sort by priority
     pages.sort(key=lambda x: float(x["priority"]), reverse=True)
+    return pages
 
-    # Generate XML
-    xml_lines = [
-        '<?xml version="1.0" encoding="UTF-8"?>',
-        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"',
-        '        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"',
-        '        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9',
-        '        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">',
-        f"  <!-- Generated: {datetime.now().isoformat()} -->",
-        f"  <!-- Total URLs: {len(pages)} -->",
-        "",
-    ]
 
-    for page in pages:
-        xml_lines.append("  <url>")
-        xml_lines.append(f"    <loc>{page['loc']}</loc>")
-        xml_lines.append(f"    <lastmod>{page['lastmod']}</lastmod>")
-        xml_lines.append(f"    <changefreq>{page['changefreq']}</changefreq>")
-        xml_lines.append(f"    <priority>{page['priority']}</priority>")
-        xml_lines.append("  </url>")
+def main(argv: list[str] | None = None) -> None:
+    """Generate sitemap.xml.
 
-    xml_lines.append("</urlset>")
+    By default writes both ``docs/sitemap.xml`` and the root ``sitemap.xml``
+    (Quarto copies the root resource). ``--output PATH`` writes a single file.
+    """
+    parser = argparse.ArgumentParser(description="Generate the site sitemap.xml")
+    parser.add_argument(
+        "--output",
+        default=None,
+        help="Write the sitemap to this single path instead of docs/ + root.",
+    )
+    args = parser.parse_args(argv)
 
-    # Write sitemap
-    sitemap_path = Path("docs/sitemap.xml")
-    sitemap_path.write_text("\n".join(xml_lines), encoding="utf-8")
+    pages = collect_sitemap_pages()
+    xml = build_sitemap_xml(pages)
 
-    # Also copy to root for Quarto
-    root_sitemap = Path("sitemap.xml")
-    root_sitemap.write_text("\n".join(xml_lines), encoding="utf-8")
+    if args.output:
+        out = Path(args.output)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(xml, encoding="utf-8")
+    else:
+        Path("docs/sitemap.xml").write_text(xml, encoding="utf-8")
+        # Also copy to root for Quarto.
+        Path("sitemap.xml").write_text(xml, encoding="utf-8")
 
 
 if __name__ == "__main__":

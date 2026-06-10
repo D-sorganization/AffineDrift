@@ -26,6 +26,12 @@ logger = logging.getLogger(__name__)
 class SyncMap:
     source: str
     mirrors: tuple[str, ...]
+    # When True, the mirror is the *flattened CSS bundle* of the source rather
+    # than a byte-identical copy. The canonical source stays modular (with
+    # @import statements) for authoring; the served mirror is produced by
+    # scripts/bundle_css.py so the browser fetches one stylesheet, not 26
+    # (issue #3219).
+    bundled: bool = False
 
 
 SYNC_MAPS: tuple[SyncMap, ...] = (
@@ -84,6 +90,7 @@ SYNC_MAPS: tuple[SyncMap, ...] = (
     SyncMap(
         source="styles.css",
         mirrors=("docs/styles.css",),
+        bundled=True,
     ),
 )
 
@@ -131,7 +138,17 @@ def sync_one(repo_root: Path, mapping: SyncMap, check_only: bool) -> list[str]:
         return [f"MISSING SOURCE: {mapping.source}"]
 
     issues: list[str] = []
-    src_hash = sha256(source)
+
+    # For a bundled mapping the expected mirror content is the flattened CSS
+    # bundle of the source, not a byte copy. Compute it once.
+    expected_bytes: bytes | None = None
+    if mapping.bundled:
+        from scripts.bundle_css import build_bundle
+
+        expected_bytes = build_bundle(repo_root, mapping.source).encode("utf-8")
+        src_hash = hashlib.sha256(expected_bytes).hexdigest()
+    else:
+        src_hash = sha256(source)
 
     for mirror_rel in mapping.mirrors:
         mirror = repo_root / mirror_rel
@@ -140,6 +157,9 @@ def sync_one(repo_root: Path, mapping: SyncMap, check_only: bool) -> list[str]:
         if not mirror.exists():
             if check_only:
                 issues.append(f"MISSING MIRROR: {mirror_rel}")
+            elif expected_bytes is not None:
+                mirror.write_bytes(expected_bytes)
+                issues.append(f"BUNDLED: {mapping.source} -> {mirror_rel}")
             else:
                 shutil.copy2(source, mirror)
                 issues.append(f"SYNCED: {mapping.source} -> {mirror_rel}")
@@ -149,6 +169,9 @@ def sync_one(repo_root: Path, mapping: SyncMap, check_only: bool) -> list[str]:
         if mirror_hash != src_hash:
             if check_only:
                 issues.append(f"DRIFT: {mapping.source} != {mirror_rel}")
+            elif expected_bytes is not None:
+                mirror.write_bytes(expected_bytes)
+                issues.append(f"BUNDLED: {mapping.source} -> {mirror_rel}")
             else:
                 shutil.copy2(source, mirror)
                 issues.append(f"SYNCED: {mapping.source} -> {mirror_rel}")

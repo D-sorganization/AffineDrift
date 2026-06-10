@@ -116,6 +116,18 @@ jobs:
         with:
           to: html
 
+      - name: Flatten CSS @import chain into served bundle
+        # styles.css stays modular for authoring; the served docs/styles.css is
+        # the single flattened bundle so browsers fetch 1 stylesheet, not 26
+        # (issue #3219). Must run before the asset-sync check below validates it.
+        run: python3 scripts/bundle_css.py --output docs/styles.css
+
+      - name: Generate sitemap.xml
+        run: python3 scripts/generate_sitemap.py --output docs/sitemap.xml
+
+      - name: Generate feed.xml
+        run: python3 scripts/generate_feed.py --output docs/feed.xml
+
       - name: Verify frontend asset sync
         # docs/css/ and docs/js/ are populated by Quarto render above.
         # Running --check here validates that canonical sources match their
