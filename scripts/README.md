@@ -109,12 +109,27 @@ python scripts/check_citation_resolution.py
 
 **Target:** `articles/`, `books/`, `pages/`, `resources/`, and `index.qmd`
 
+### Wrist article HTML content lint (replaces `fix_html.py`)
+
 > **Removed (issue #3234):** the root-level `fix_html.py` post-render patcher.
 > Its pure normalization rules now live in
 > `src.tools.utils.html_utils.normalize_html_content` (call them from the
-> generation path so artifacts are born clean), and `tests/test_html_content_lint.py`
-> guards the committed wrist article's HTML invariants as a regression gate
-> instead of silently re-patching it.
+> generation path so artifacts are born clean).
+
+Rather than silently rewriting malformed HTML after generation, the committed
+article is guarded by fail-loud content-lint gates instead of being silently
+re-patched: `tests/test_html_content_lint.py` and
+`tests/test_content_lint_wrist_article.py` (marker `content_lint`). They reject the
+exact malformations the patcher used to repair (`</li></li>`, `<p>\begin{align}`,
+`<p>\n<ul>`, etc.), so the artifact must be born clean from its generator.
+
+**Usage:**
+
+```bash
+python -m pytest --override-ini addopts= tests/ -m content_lint
+```
+
+**Target:** `content/wrist-as-universal-joint/Wrist_Universal_Claude.html`
 
 ## Quality & Assessment Scripts
 
