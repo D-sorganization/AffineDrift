@@ -37,6 +37,7 @@ IGNORED_CITATION_PREFIXES = (
     "subsec:",
     "tab:",
     "tbl:",
+    "tbl-",
     "thm:",
 )
 IGNORED_CITATION_PATTERNS = (re.compile(r"^ch\d+[_-]"),)
