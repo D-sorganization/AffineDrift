@@ -50,6 +50,7 @@ HASH_GLOBS = [
 ]
 
 CACHE_NAME_PATTERN = re.compile(r"(const CACHE_NAME\s*=\s*'affinedrift-)([^']+)(')")
+CACHE_SCHEMA_VERSION = "v5"
 
 
 def iter_hash_files(root: Path = ROOT) -> list[Path]:
@@ -92,7 +93,7 @@ def update_cache_version(dry_run: bool = False, root: Path = ROOT) -> int:
     except ValueError:
         logger.exception("Cannot compute asset hash")
         return 1
-    new_version = f"v4-{asset_hash}"  # v4+ indicates hash-based versioning
+    new_version = f"{CACHE_SCHEMA_VERSION}-{asset_hash}"
 
     match = CACHE_NAME_PATTERN.search(content)
     if not match:

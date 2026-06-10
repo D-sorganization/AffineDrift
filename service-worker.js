@@ -1,5 +1,5 @@
 // AffineDrift Service Worker for offline support
-// Version 6: Updated 2026-06-09 (network-first for HTML navigations — issue #3221)
+// Version 7: Updated 2026-06-10 (bundled stylesheet precache cleanup — issue #3254)
 // TODO #1459: Replace hardcoded version with content-hash cache busting via build pipeline
 importScripts('/js/service-worker-utils.js');
 
@@ -16,7 +16,7 @@ const {
 // Network-first navigation timeout: returning visitors get the latest deploy,
 // but a slow/offline network falls back to cache within this budget.
 const NAV_TIMEOUT_MS = DEFAULT_NAVIGATION_TIMEOUT_MS || 3000;
-const CACHE_NAME = 'affinedrift-v4-27f68dec';
+const CACHE_NAME = 'affinedrift-v5-391abcc1';
 const OFFLINE_URL = '/offline.html';
 
 // Critical startup assets - loaded first for fast splash screen
@@ -28,45 +28,15 @@ const STARTUP_ASSETS = [
   '/logo/logo-navbar.png'
 ];
 
-// Stylesheets pulled in via @import from styles.css (directly, and
-// transitively via css/tokens/design-tokens.css). styles.css is useless
-// offline without these — @import sub-resources are NOT cached by caching
-// the parent stylesheet, so precache them explicitly.
-// Contract test: tests/service-worker-precache.test.js keeps this list in
-// sync with the @import graph.
-const IMPORTED_STYLESHEETS = [
-  '/css/tokens/design-tokens.css',
-  '/css/tokens/colors.css',
-  '/css/tokens/typography.css',
-  '/css/tokens/spacing.css',
-  '/css/tokens/breakpoints.css',
-  '/css/tokens/shadows.css',
-  '/css/tokens/animations.css',
-  '/css/tokens/borders.css',
-  '/css/tokens/z-index.css',
-  '/css/tokens/interactive-states.css',
-  '/css/breakpoints.css',
-  '/css/bibliography.css',
-  '/css/critics-corner.css',
-  '/css/resources.css',
-  '/css/components/site-card.css',
-  '/css/components/site-button.css',
-  '/css/components/section-stack.css',
-  '/css/components/page-sidebar.css',
-  '/css/components/entry-list.css',
-  '/css/components/provenance-note.css',
-  '/css/components/home-hero.css',
-  '/css/components/status-banner.css',
-  '/css/utilities/spacing.css'
-];
-
 // Assets to cache immediately on install (includes STARTUP_ASSETS via spread)
+// The deployed /styles.css is a flattened bundle generated into docs/styles.css
+// by scripts/bundle_css.py. Do not precache the source @import graph here; those
+// files are no longer separate runtime requests once the site is rendered.
 const PRECACHE_ASSETS = [
   '/',
   '/index.html',
   ...STARTUP_ASSETS,
   '/styles.css',
-  ...IMPORTED_STYLESHEETS,
   '/css/search-metrics.css',
   '/js/main.js',
   '/favicon.ico',
