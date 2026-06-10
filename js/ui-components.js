@@ -38,6 +38,12 @@ export function unregisterScrollCallback(callback) {
     }
 }
 
+function prefersReducedMotion() {
+    return (
+        typeof window.matchMedia === "function" &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    );
+}
 
 /**
  * Initialize fade-in animations for sections
@@ -255,7 +261,7 @@ export function initBackToTop() {
     backToTopBtn.addEventListener("click", () => {
         window.scrollTo({
             top: 0,
-            behavior: "smooth",
+            behavior: prefersReducedMotion() ? "auto" : "smooth",
         });
         document.body.setAttribute("tabindex", "-1");
         document.body.focus({ preventScroll: true });
