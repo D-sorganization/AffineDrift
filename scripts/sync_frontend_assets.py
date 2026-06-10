@@ -88,7 +88,9 @@ SYNC_MAPS: tuple[SyncMap, ...] = (
 )
 
 # These are intentionally different architectures and are not synchronized.
-INTENTIONAL_DIVERGENCE: tuple[str, ...] = ("script.js vs docs/script.js",)
+# (The "script.js vs docs/script.js" entry was removed when the dead legacy
+# monolith script.js was deleted in the 2026-06-09 quality audit.)
+INTENTIONAL_DIVERGENCE: tuple[str, ...] = ()
 
 
 def sha256(path: Path) -> str:
