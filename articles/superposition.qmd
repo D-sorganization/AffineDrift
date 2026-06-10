@@ -849,7 +849,7 @@ A **twist** is a 6D vector
 $$
 V =
 \begin{bmatrix}
-\omega \ v
+\omega \\ v
 \end{bmatrix},
 \tag{5.1}
 $$
@@ -861,7 +861,7 @@ A **wrench** is a 6D vector
 $$
 F =
 \begin{bmatrix}
-n \ f
+n \\ f
 \end{bmatrix},
 \tag{5.2}
 $$
@@ -1038,8 +1038,7 @@ Then
 $$
 \dot V
 = \mathcal{I}^{-1} \left( - \mathrm{ad}^\ast_V \mathcal{I} V + F^\text{grav} \right)
-
-* \mathcal{I}^{-1} \sum_{i=1}^m u_i \bar F^{(i)}.
++ \mathcal{I}^{-1} \sum_{i=1}^m u_i \bar F^{(i)}.
   \tag{5.19}
 $$
 
@@ -1278,9 +1277,8 @@ The Coriolis/centrifugal term is
 $$
 C(q,\dot q)\dot q =
 \begin{bmatrix}
-
-* b \sin q_2, (2\dot q_1 \dot q_2 + \dot q_2^2) \\
-  b \sin q_2, \dot q_1^2
+- b \sin q_2 \, (2\dot q_1 \dot q_2 + \dot q_2^2) \\
+  b \sin q_2 \, \dot q_1^2
   \end{bmatrix},
   \tag{8.3}
 $$
@@ -1296,7 +1294,7 @@ m_2 c_2 g \cos(q_1 + q_2)
 \tag{8.4}
 $$
 
-Rewrite (7.1) as
+Rewrite (8.1) as
 
 $$
 \ddot q = - M(q)^{-1}\big(C(q,\dot q)\dot q + g(q)\big) + M(q)^{-1}\tau.
@@ -1339,7 +1337,7 @@ $$
 
 Each term $L(q,\dot q) \tau^{(i)}$ is the **instantaneous acceleration contribution** of the corresponding torque component.
 
-#### 7.1.1 Lagrangian viewpoint
+#### 8.1.1 Lagrangian viewpoint
 
 From the Lagrangian viewpoint, the same equations arise from
 
@@ -1354,11 +1352,11 @@ For the same 2R planar manipulator, consider the end-effector exerting a planar 
 
 $$
 \begin{bmatrix}
-\dot x \ \dot y
+\dot x \\ \dot y
 \end{bmatrix}
 = J(q)
 \begin{bmatrix}
-\dot q_1 \ \dot q_2
+\dot q_1 \\ \dot q_2
 \end{bmatrix},
 \tag{8.9}
 $$
@@ -1391,7 +1389,7 @@ $$
 \tag{8.12}
 $$
 
-Substituting into (7.5),
+Substituting into (8.6),
 
 $$
 \ddot q
@@ -1404,9 +1402,9 @@ $$
 If we are interested in the acceleration "due to environment forces" versus "due to commanded forces," we can compute each term separately at a given $(q,\dot q)$:
 
 $$
-\Delta \ddot q^{(1)} = L(q,\dot q),J(q)^\top f_e^{(1)},
+\Delta \ddot q^{(1)} = L(q,\dot q)\,J(q)^\top f_e^{(1)},
 \quad
-\Delta \ddot q^{(2)} = L(q,\dot q),J(q)^\top f_e^{(2)}.
+\Delta \ddot q^{(2)} = L(q,\dot q)\,J(q)^\top f_e^{(2)}.
 \tag{8.14}
 $$
 
