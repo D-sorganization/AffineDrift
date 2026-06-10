@@ -35,8 +35,8 @@ def main() -> int:
     repo_root = Path(__file__).resolve().parent.parent
 
     checks: list[tuple[str, str]] = [
-        ("scripts/generate_search_index.py", "collect_qmd_files"),
-        ("scripts/generate_search_index.py", "read_qmd_with_frontmatter"),
+        ("scripts/generate_feed.py", "collect_qmd_files"),
+        ("scripts/generate_feed.py", "read_qmd_with_frontmatter"),
         ("scripts/add_meta_descriptions.py", "read_qmd_with_frontmatter"),
     ]
 

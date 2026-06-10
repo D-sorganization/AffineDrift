@@ -49,16 +49,38 @@ describe('dark mode CSS cascade', () => {
     }
   );
 
+  // Extract the brace-balanced body of each `@media (prefers-color-scheme: dark)`
+  // block in a stylesheet (returns the text between the media block's braces).
+  function prefersDarkBlocks(css) {
+    const blocks = [];
+    const re = /@media\s*\(prefers-color-scheme:\s*dark\)[^{]*\{/g;
+    let m;
+    while ((m = re.exec(css)) !== null) {
+      let depth = 1;
+      let i = m.index + m[0].length;
+      const start = i;
+      for (; i < css.length && depth > 0; i++) {
+        if (css[i] === '{') depth++;
+        else if (css[i] === '}') depth--;
+      }
+      blocks.push(css.slice(start, i - 1));
+    }
+    return blocks;
+  }
+
   test('prefers-color-scheme dark block yields to explicit light theme', () => {
-    const cssText = fs.readFileSync(path.join(ROOT, 'styles.css'), 'utf8');
-    const mediaBlocks = cssText.match(
-      /@media\s*\(prefers-color-scheme:\s*dark\)[^{]*\{[\s\S]*?\n\}/g
-    ) || [];
-    expect(mediaBlocks.length).toBeGreaterThan(0);
-    for (const block of mediaBlocks) {
-      // Any :root rule inside the OS-dark media block must carry the
-      // :not([data-theme="light"]) guard.
+    // The OS-dark color-palette remap was centralized into css/tokens/colors.css
+    // (#3224). That block must guard its :root with :not([data-theme="light"])
+    // so an explicit light toggle wins over an OS dark preference (the canonical
+    // pattern from #3217, which originally asserted this on styles.css).
+    const cssText = fs
+      .readFileSync(path.join(ROOT, 'css', 'tokens', 'colors.css'), 'utf8')
+      .replace(/\/\*[\s\S]*?\*\//g, ''); // ignore comments
+    const blocks = prefersDarkBlocks(cssText);
+    expect(blocks.length).toBeGreaterThan(0);
+    for (const block of blocks) {
       const rootSelectors = block.match(/:root[^,{]*/g) || [];
+      expect(rootSelectors.length).toBeGreaterThan(0);
       for (const selector of rootSelectors) {
         expect(selector).toContain(':not([data-theme="light"])');
       }

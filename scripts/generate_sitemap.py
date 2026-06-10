@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Generate comprehensive sitemap.xml with proper priorities and change frequencies."""
 
+import argparse
 import shutil
 import subprocess
 from datetime import datetime
@@ -88,6 +89,14 @@ def qmd_path_to_url_path(filepath: Path) -> str:
 
 def main() -> None:
     """Generate sitemap.xml."""
+    parser = argparse.ArgumentParser(description="Generate sitemap.xml")
+    parser.add_argument(
+        "--output",
+        default="docs/sitemap.xml",
+        help="Output path for the generated sitemap (default: docs/sitemap.xml)",
+    )
+    args = parser.parse_args()
+
     base_url = "https://affinedrift.com"
     pages: list[dict[str, str]] = []
 
@@ -137,7 +146,8 @@ def main() -> None:
     xml_lines.append("</urlset>")
 
     # Write sitemap
-    sitemap_path = Path("docs/sitemap.xml")
+    sitemap_path = Path(args.output)
+    sitemap_path.parent.mkdir(parents=True, exist_ok=True)
     sitemap_path.write_text("\n".join(xml_lines), encoding="utf-8")
 
     # Also copy to root for Quarto

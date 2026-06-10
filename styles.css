@@ -34,31 +34,17 @@
 }
 
 :root {
-  /* Modern Scientific Palette */
-  --primary-dark: #1a1a2e;
-  --primary-blue: #0f4c75;
-  --accent-blue: #205d86;
-  --light-blue: #e3f2fd;
-  --pure-white: #fff;
-  --white-transparent: rgb(255, 255, 255, 0.9);
-  --legal-pad-yellow: #fef9e7;
+  /* Color palette: see css/tokens/colors.css (single source of truth, #3224).
+     The brand/functional color tokens (--primary-*, --accent-blue, --bg-*,
+     --text-*, --border-color, --shadow-color, --gradient-*, --legal-pad-*) and
+     ALL dark-mode remaps are defined and themed there. No color values or dark
+     blocks live in this file anymore. */
 
-  /* Neutral scale */
-  --bg-body: #fff;
-  --bg-alt: #f8f9fa;
-  --bg-sidebar: #fcfcfc;
-  --text-main: #212529;
-  --text-muted: #6c757d;
-  --border-color: #e9ecef;
+  /* Shadow geometry (non-color elevation tokens). */
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -1px rgb(0 0 0 / 0.06);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1),
     0 4px 6px -2px rgb(0 0 0 / 0.05);
-  --shadow-color: rgb(0, 0, 0, 0.1);
-
-  /* Gradients */
-  --gradient-start: #0f4c75;
-  --gradient-end: #3282b8;
 
   /* Layout dimensions */
   --sidebar-width: 280px;
@@ -2713,46 +2699,14 @@ h1.title,
 }
 
 /* =============================================================
-   Dark Mode – automatic via prefers-color-scheme (OS preference)
-
-   A selector inside a media-query list ("@media (...), [data-theme]")
-   is invalid CSS and is dropped by browsers, and an unguarded :root
-   here would override an explicit light choice made via the toggle.
-   Guard with :not([data-theme="light"]) so a user-selected light theme
-   wins over the OS dark preference.
+   Dark Mode color remaps now live in css/tokens/colors.css (#3224).
+   Both gates (manual [data-theme="dark"] and the OS prefers-color-scheme path,
+   guarded by :root:not([data-theme="light"]) so an explicit light choice wins —
+   the canonical pattern from #3217) are centralized there. The legacy palette
+   names (--bg-body, --text-main, --light-blue, --legal-pad-yellow, ...) are
+   aliases of canonical --color-* tokens, so they inherit the remap with no
+   per-file dark block here.
    ============================================================= */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    color-scheme: dark;
-
-    --bg-body: #0d0d1a;
-    --bg-alt: #1a1a2e;
-    --bg-sidebar: #112;
-    --text-main: #dde1e7;
-    --text-muted: #8b90a0;
-    --border-color: #2a2a40;
-    --light-blue: #0a2a40;
-    --legal-pad-yellow: #1a1810;
-    --shadow-color: rgb(0, 0, 0, 0.4);
-  }
-}
-
-/* =============================================================
-   Dark Mode – manual toggle via [data-theme="dark"]
-   ============================================================= */
-[data-theme="dark"] {
-  color-scheme: dark;
-
-  --bg-body: #0d0d1a;
-  --bg-alt: #1a1a2e;
-  --bg-sidebar: #112;
-  --text-main: #dde1e7;
-  --text-muted: #8b90a0;
-  --border-color: #2a2a40;
-  --light-blue: #0a2a40;
-  --legal-pad-yellow: #1a1810;
-  --shadow-color: rgb(0, 0, 0, 0.4);
-}
 
 /* =============================================================
    Dark Mode Toggle Button
