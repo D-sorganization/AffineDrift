@@ -30,7 +30,7 @@ modern methods like DDP fit into the broader landscape.
 
 
 Richard Bellman introduced **dynamic programming** as a principle for solving sequential decision
-problems~\cite{bellman1957}. The cornerstone is the *Bellman principle of optimality*:
+problems [@bellman1957]. The cornerstone is the *Bellman principle of optimality*:
 an optimal policy has the property that whatever the initial state and decision are, the remaining
 decisions must constitute an optimal policy with regard to the state resulting from the first decision.
 
@@ -50,7 +50,7 @@ quadratic, this recursion becomes the Riccati equation, which we derive below.
 
 
 Independently and nearly simultaneously, Lev Pontryagin and colleagues developed the *maximum principle*
-as an extension of the calculus of variations~\cite{pontryagin1962}. Rather than characterizing optimality
+as an extension of the calculus of variations [@pontryagin1962]. Rather than characterizing optimality
 via dynamic programming, Pontryagin's method uses Lagrange multipliers (costates) $\vec{\lambda}_k$ to encode
 constraints. The optimality conditions state that the Hamiltonian
 \begin{equation}
@@ -72,7 +72,7 @@ where active-set methods and generalized Pontryagin conditions apply.
 ### Jacobson and Mayne's Differential Dynamic Programming (1970)
 
 
-In 1970, David Jacobson and David Mayne introduced **Differential Dynamic Programming**~\cite{jacobson1970dpp},
+In 1970, David Jacobson and David Mayne introduced **Differential Dynamic Programming** [@jacobson1970dpp],
 a method that marries Bellman's backward recursion with Newton's method in function space. Rather than solving
 the nonlinear Bellman equation exactly (impossible in general), DDP performs:
 1. A backward pass that quadratizes the value function $V_k$ locally around the nominal trajectory.
@@ -347,17 +347,17 @@ successive linearization:
 \Ensure Optimized trajectory $\bar{\x}_0, \ldots, \bar{\x}_T$ and feedback gains $\mat{K}_k$.
 
 \For{iteration $i = 0, 1, 2, \ldots$ until convergence}
-  \State \textbf{Forward Pass (Rollout):}
+  \State **Forward Pass (Rollout):**
   \State \quad Roll out the nominal trajectory by integrating the nonlinear dynamics:
   \State \quad \quad $\bar{\x}_{k+1}^{(i)} = f(\bar{\x}_k^{(i)}, \bar{\uvec}_k^{(i)})$ for $k = 0, \ldots, T-1$.
   \State \quad Compute the total cost $J^{(i)} = \sum_{k=0}^{T-1} \ell_k(\bar{\x}_k^{(i)}, \bar{\uvec}_k^{(i)}) + \ell_T(\bar{\x}_T^{(i)})$.
 
-  \State \textbf{Linearize Dynamics:}
+  \State **Linearize Dynamics:**
   \State \quad For each time step $k = 0, \ldots, T-1$:
   \State \quad \quad $\mat{A}_k = \frac{\partial f}{\partial \x}|_{(\bar{\x}_k^{(i)}, \bar{\uvec}_k^{(i)})}$
   \State \quad \quad $\mat{B}_k = \frac{\partial f}{\partial \uvec}|_{(\bar{\x}_k^{(i)}, \bar{\uvec}_k^{(i)})}$
 
-  \State \textbf{Quadraticize Cost:}
+  \State **Quadraticize Cost:**
   \State \quad For each time step $k = 0, \ldots, T-1$:
   \State \quad \quad Compute second-order Taylor expansion of $\ell_k$ around $(\bar{\x}_k^{(i)}, \bar{\uvec}_k^{(i)})$:
   \State \quad \quad \quad $\mat{Q}_{k,\xx} = \frac{\partial^2 \ell_k}{\partial \x^2}|_{(\bar{\x}_k^{(i)}, \bar{\uvec}_k^{(i)})}$
@@ -365,7 +365,7 @@ successive linearization:
   \State \quad \quad \quad $\mat{N}_k = \frac{\partial^2 \ell_k}{\partial \uvec \partial \x}|_{(\bar{\x}_k^{(i)}, \bar{\uvec}_k^{(i)})}$
   \State \quad Compute terminal cost Hessian: $\mat{Q}_{T,\xx} = \frac{\partial^2 \ell_T}{\partial \x^2}|_{\bar{\x}_T^{(i)}}$
 
-  \State \textbf{Backward Pass (Riccati Recursion):}
+  \State **Backward Pass (Riccati Recursion):**
   \State \quad Initialize: $\mat{S}_T = \mat{Q}_{T,\xx}$
   \State \quad For $k = T-1, T-2, \ldots, 0$:
   \State \quad \quad Compute Q-function Hessians (full DDP):
@@ -379,7 +379,7 @@ successive linearization:
   \State \quad \quad \quad $\mat{S}_k = Q_{k,\xx} - Q_{k,\xu}Q_{k,\uu}^{-1}Q_{k,\xu}^\T$
   \EndFor
 
-  \State \textbf{Forward Rollout with Line Search:}
+  \State **Forward Rollout with Line Search:**
   \State \quad For step size $\alpha \in \{1.0, 0.5, 0.25, \ldots\}$:
   \State \quad \quad For $k = 0, \ldots, T-1$:
   \State \quad \quad \quad $\du_k^{(\text{ff})} = -\vec{k}_k$ (feedforward from last iteration)
@@ -389,11 +389,11 @@ successive linearization:
   \State \quad \quad If $J_{\text{trial}} < J^{(i)} - c_1\alpha\Delta J_{\text{expected}}$: accept step with this $\alpha$ and break.
   \State \quad If no acceptable $\alpha$ found: decrease $\mu$ and retry backward pass, or exit with warning.
 
-  \State \textbf{Update:}
+  \State **Update:**
   \State \quad $\bar{\x}_k^{(i+1)}, \bar{\uvec}_k^{(i+1)} \gets \text{accepted trial trajectory}$
   \State \quad Adjust $\mu$ adaptively (decrease if step was good, increase if poor).
 
-  \State \textbf{Check Convergence:}
+  \State **Check Convergence:**
   \State \quad If $\|\Delta \uvec\|$ and cost change are below threshold: break.
 \EndFor
 
@@ -558,7 +558,7 @@ The state is $\x = [\theta, \dot\theta]^\T$ (angle and angular velocity), and th
 ::: {.callout-note title="Remark"}
 **Sign Convention**
 
-We use $\theta = 0$ at the \textbf{upright (inverted) equilibrium}. With this convention,
+We use $\theta = 0$ at the **upright (inverted) equilibrium**. With this convention,
 gravity acts to increase $|\theta|$ (destabilizing), giving $+g\sin\theta$. If $\theta = 0$
 were the downward (stable) equilibrium, the sign would be $-g\sin\theta$ (restoring force).
 The goal is to stabilize $\theta = 0$ (the inverted position) using the control torque $\tau$.
@@ -626,12 +626,12 @@ Iteration & Total Cost $J$ & Cost Change $\Delta J$ & $\|\Delta\uvec\|_2$ \\
 \end{table}
 
 \begin{description}
-\item[Iteration 0:] Initial trajectory (open-loop control). Cost is high due to suboptimal control.
-\item[Iterations 1-2:] Rapid cost reduction. The DDP updates discover that applying larger initial torque
+- **Iteration 0:** Initial trajectory (open-loop control). Cost is high due to suboptimal control.
+- **Iterations 1-2:** Rapid cost reduction. The DDP updates discover that applying larger initial torque
       accelerates the swing-up, reducing the total cost significantly.
-\item[Iteration 3:] Transition to fine-tuning. The trajectory shape becomes near-optimal; further improvements
+- **Iteration 3:** Transition to fine-tuning. The trajectory shape becomes near-optimal; further improvements
       are smaller.
-\item[Iterations 4-6:] Convergence. Cost change drops below $10^{-3}$, control update norm becomes tiny,
+- **Iterations 4-6:** Convergence. Cost change drops below $10^{-3}$, control update norm becomes tiny,
       indicating convergence to a local optimum.
 \end{description}
 
@@ -1034,8 +1034,8 @@ number of DDP iterations from many (cold start) to one or two (warm start).
 
 
 The terminal cost $V_f(\x_{k+N})$ in~\eqref{eq:ch5:mpc-problem} plays a critical role
-in guaranteeing stability. The standard approach is to choose $V_f$ as the \emph{infinite-horizon
-LQR cost} at the target:
+in guaranteeing stability. The standard approach is to choose $V_f$ as the *infinite-horizon
+LQR cost* at the target:
 \begin{equation}
 V_f(\x) = \x^T \mat{S}_\infty \x,
 \label{eq:ch5:terminal-cost}
