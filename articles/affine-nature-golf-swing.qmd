@@ -2525,15 +2525,15 @@ The Simulink implementation has been extended to compute the Zero Velocity Count
   
 3. inverse dynamics was used to compute $\tau_{\mathrm{ZVCF}}(t)$.
 
-A key numerical result was verified:
-> 
-*When the model is configured correctly, the difference between the total force and the ZTCF force at any instant equals the ZVCF force at that same instant.*
-
-That is,
+A key numerical result was verified. At the kill instant $t_0$, where the ZTCF state equals the actual state, the ZTCF run records the **full** drift force $F_{\mathrm{ZTCF}}(t_0) = \tau_{\mathrm{drift}}(x(t_0))$, so removing it from the total leaves exactly the input force:
 $$
-  F_{\text{total}}(t) - F_{\mathrm{ZTCF}}(t) = F_{\mathrm{ZVCF}}(t),
+  F_{\text{total}}(t_0) - F_{\mathrm{ZTCF}}(t_0) = F_{\mathrm{input}}(t_0).
 $$
-matching the analytical identity predicted by the force taxonomy in @sec-taxonomy. This serves as a **Numerical Consistency Check** rather than empirical validation. It verifies that the discrete-time integration algorithms and "kill-switch" logic preserve the algebraic structure of the theory without introducing numerical artifacts.
+Separately, the configuration-only slice of the drift satisfies
+$$
+  F_{\mathrm{drift}}(t_0) - F_{\mathrm{vel.drift}}(t_0) = F_{\mathrm{ZVCF}}(t_0),
+$$
+both following directly from the force taxonomy $\tau_{\mathrm{total}} = \tau_{\mathrm{ZVCF}} + \tau_{\mathrm{vel.drift}} + \tau_{\mathrm{input}}$ in @sec-taxonomy. The equality is exact only at $t_0$; for $t > t_0$ it is approximate, as the ZTCF trajectory diverges from the actual one. This serves as a **numerical consistency check on the implementation** (not a validation of the model against reality): it verifies that the discrete-time integration algorithms and "kill-switch" logic preserve the algebraic structure of the theory without introducing numerical artifacts.
 
 ### Implications for future work
 
@@ -2682,22 +2682,15 @@ $$
   - \mathrm{ID}\big(q_k,0,\eta_k,0\big).
 $$
 
-In the Simulink implementation, it was observed that:
+In the Simulink implementation, at the kill instant $t_k = t_0$ it was observed that:
 $$
-  \tau_{\mathrm{total}}(t_k) - \tau_{\mathrm{ZTCF}}(t_k)
+  \tau_{\mathrm{total}}(t_0) - \tau_{\mathrm{ZTCF}}(t_0)
   =
-  \tau_{\mathrm{ZVCF}}(t_k),
+  \tau_{\mathrm{input}}(t_0),
 $$
-matching the analytical identity predicted by the affine decomposition.
+since the post-kill (ZTCF) run records the full drift torque $\tau_{\mathrm{drift}}(x(t_0))$ and $\tau_{\mathrm{total}} - \tau_{\mathrm{drift}} = \tau_{\mathrm{input}}$ by the affine decomposition.
 
-This numerical equality is a strong validation of the framework, showing that:
-$$
-  F_{\mathrm{input}}(t_k)
-  = 
-  F_{\mathrm{config}}(t_k)
-  \quad\text{when evaluated as}\quad
-  F_{\mathrm{total}} - F_{\mathrm{ZTCF}}.
-$$
+This numerical equality is an **implementation consistency check**: the difference $F_{\mathrm{total}} - F_{\mathrm{ZTCF}}$ isolates the input force, not the configuration (ZVCF) force. The configuration slice is recovered separately as $F_{\mathrm{drift}} - F_{\mathrm{vel.drift}} = F_{\mathrm{ZVCF}}$. Equating the input force with the configuration force would be a category error (input $\neq$ configuration drift in the taxonomy of @sec-taxonomy).
 
 ### D.5 \quad Pseudocode summary
 

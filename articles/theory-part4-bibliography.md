@@ -41,13 +41,13 @@
   related_ids: ["simo1986dynamics", "book1984recursive"]
   references_out_ids: []
 
-- id: meirovitch2001fundamentals
-  title: "Fundamentals of Vibrations"
+- id: meirovitch2010methods
+  title: "Methods of Analytical Dynamics"
   authors:
     - "Leonard Meirovitch"
-  year: 2001
-  venue: "McGraw-Hill"
-  scholar_link: "https://scholar.google.com/scholar?q=Fundamentals+of+Vibrations+Meirovitch"
+  year: 2010
+  venue: "Dover Publications"
+  scholar_link: "https://scholar.google.com/scholar?q=Methods+of+Analytical+Dynamics+Meirovitch"
   clusters: ["vibrations", "structural dynamics"]
   concepts: ["modal analysis", "euler-bernoulli beam", "lagrangian dynamics"]
   related_ids: ["clough1993dynamics"]
