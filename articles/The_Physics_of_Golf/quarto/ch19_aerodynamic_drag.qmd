@@ -435,24 +435,19 @@ Consider a simplified single-joint model of the swing (shoulder rotation), start
 
 Without drag, the EOM is:
 $$
-2 \ddot{\omega} - 5\sin(\theta) = 0 \quad \Rightarrow \quad \ddot{\omega} = 2.5 \sin(\theta)
+2 \dot{\omega} - 5\sin(\theta) = 0 \quad \Rightarrow \quad \dot{\omega} = 2.5 \sin(\theta)
 $$
 
-At $\theta = 90°$ (downswing midpoint), $\ddot{\omega} = 2.5 \times 1 = 2.5$ rad/s$^2$. Integrating numerically from $\theta = 0$ (top) to $\theta = 90°$ (impact), the final angular velocity is $\omega_{\text{impact, no drag}} \approx 85$ rad/s.
+The energy available from gravity over the quarter-turn is $W = \int_0^{\pi/2} 5\sin\theta\,d\theta = 5\,[1 - \cos 90°] = 5$ J. Setting $W = \tfrac{1}{2} I \omega^2$ (with $I = 2$ kg·m$^2$) gives $\omega_{\text{impact, no drag}} = \sqrt{2W/I} = \sqrt{2\cdot 5/2} \approx 2.2$ rad/s. Equivalently, $\tfrac{1}{2}\omega^2 = 2.5(1 - \cos\theta)$ integrates the EOM to the same value. This is a *pure ZTCF* (zero muscular input): gravity alone, acting on this inertia, can only produce a few rad/s — far below a real clubhead speed, which is supplied almost entirely by muscular torque.
 
 With drag included:
 $$
-2 \ddot{\omega} - 5\sin(\theta) - 0.5\omega^2 = 0 \quad \Rightarrow \quad \ddot{\omega} = 2.5 \sin(\theta) + 0.25\omega^2
+2 \dot{\omega} - 5\sin(\theta) + 0.5\omega^2 = 0 \quad \Rightarrow \quad \dot{\omega} = 2.5 \sin(\theta) - 0.25\omega^2 \quad \text{(gravity accelerates, drag decelerates)}
 $$
 
-Wait, this formulation is not quite right. Drag opposes motion, so:
-$$
-\ddot{\omega} = 2.5 \sin(\theta) - 0.25\omega^2 \quad \text{(gravity accelerates, drag decelerates)}
-$$
+At these low ZTCF speeds drag is small: at $\omega \approx 2$ rad/s the drag deceleration is $0.25 \times 2^2 = 1$ rad/s$^2$, comparable to (not dominating) the gravity term. Integrating $\dot{\omega} = 2.5\sin\theta - 0.25\omega^2$ from $\theta = 0$ to $90°$ gives $\omega_{\text{impact, with drag}} \approx 2.0$ rad/s — modestly below the no-drag value, as expected.
 
-At mid-downswing with $\omega \sim 50$ rad/s, the drag deceleration is $0.25 \times 50^2 = 625$ rad/s$^2$, which dominates the gravity acceleration (2.5 rad/s$^2$). So the system decelerates, not accelerates, after mid-downswing. Integrating with drag, the final angular velocity is $\omega_{\text{impact, with drag}} \approx 78$ rad/s—about 8% lower than without drag.
-
-If an experimenter measures $\omega_{\text{impact}} = 78$ rad/s and computes inverse dynamics assuming no drag (ZTCF $\omega = 85$ rad/s), they will infer that muscles must have applied a decelerating torque to slow from 85 to 78 rad/s. In reality, drag provided that deceleration passively. This is an illusion created by omitting drag from the model.
+If an experimenter measures the (much higher, muscle-driven) impact speed and computes inverse dynamics assuming no drag, they will infer that muscles applied a decelerating torque where in reality drag provided that deceleration passively. Even in this toy ZTCF the drag-omitted estimate ($\approx 2.2$ rad/s) exceeds the with-drag value ($\approx 2.0$ rad/s), so the no-drag model fabricates a small phantom decelerating torque. This is an illusion created by omitting drag from the model.
 
 :::
 
