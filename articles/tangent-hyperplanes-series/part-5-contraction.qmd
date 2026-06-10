@@ -1,0 +1,154 @@
+---
+title: "Tangent Hyperplanes V: Contraction"
+description: "Contraction certificates as tangent-space stability statements."
+---
+
+## Why Contraction Belongs in the Series
+
+Parts 1-4 established the local geometry: tangent spaces carry exact first-order
+information, variational dynamics propagate perturbations along a reference
+trajectory, and finite perturbations create residuals whose size depends on
+curvature. Contraction theory asks a complementary question:
+
+> Can we prove that nearby trajectories forget their initial separation?
+
+If the answer is yes, local tangent-space perturbations are not merely useful
+for computing a feedback law. They also become stability certificates.
+
+This compact part distills the corrected core of the longer reference article
+[Contraction Theory Meets Tangent Spaces](../tangent-hyperplane-articles/Advanced/Contraction_Tangent_Unification.qmd).
+The source article remains available for derivations, examples, code sketches,
+and its companion critique. This page is the canonical reading-path version.
+
+## The Differential Object
+
+For a smooth autonomous system
+
+$$
+\dot{x} = f(x),
+$$
+
+the first variation satisfies
+
+$$
+\delta \dot{x} = A(x)\delta x,
+\qquad
+A(x) = \frac{\partial f}{\partial x}(x).
+$$
+
+The perturbation vector $\delta x$ lives in the tangent space. Contraction
+theory studies whether the norm of that perturbation decreases for every nearby
+trajectory in a region.
+
+With a positive-definite metric $M(x)$, define the differential length
+
+$$
+V(x, \delta x) = \delta x^\top M(x)\delta x.
+$$
+
+The system is contracting with rate $\lambda > 0$ in that metric if
+
+$$
+\dot{M} + A^\top M + M A \preceq -2\lambda M.
+$$
+
+This is the tangent-space version of exponential forgetting: every infinitesimal
+separation shrinks at a certified rate.
+
+:::{.callout-important}
+## Local Certificate, Not Global Magic
+
+A contraction inequality is only as broad as the region, metric, smoothness, and
+mode assumptions used to verify it. It does not make a nonlinear plant globally
+linear, and it does not remove the finite-scale residuals from [Part 4](./part-4-residuals-curvature.qmd).
+It certifies that the differential dynamics in a stated region are shrinking.
+:::
+
+## Stability-Optimality Duality
+
+The useful bridge to control is that the same tangent objects appear in optimal
+control. LQR and local DDP/iLQR solve Riccati equations over the variational
+system
+
+$$
+\delta\dot{x} = A(t)\delta x + B(t)\delta u.
+$$
+
+The value-function Hessian $S(t)$ acts like a local metric on perturbations.
+When feedback makes
+
+$$
+A_{\text{cl}}(t) = A(t) - B(t)K(t)
+$$
+
+contracting in that metric, optimality and stability are no longer separate
+stories. The controller is optimizing a local quadratic model while also shaping
+how perturbations decay.
+
+:::{.callout-note}
+## What the Duality Claims
+
+The compact claim is conservative: Riccati and contraction analyses both live on
+the tangent bundle, and in favorable cases the Riccati matrix supplies a
+contraction-like metric for the closed-loop variational dynamics. The stronger
+claim that any optimal controller is automatically a useful contraction
+certificate needs hypotheses about controllability, costs, regularity, and the
+region of validity.
+:::
+
+## Contraction-DDP as a Design Pattern
+
+A contraction-aware DDP loop can be read as a disciplined version of the
+standard residual-reduction loop:
+
+1. Linearize along the current trajectory.
+2. Solve the local quadratic control problem.
+3. Check whether the closed-loop tangent dynamics shrink perturbations in the
+   chosen metric.
+4. Penalize or reject updates that improve cost while damaging the stability
+   certificate.
+5. Re-integrate the nonlinear system and repeat.
+
+The key engineering benefit is explicitness. Instead of hoping that the local
+controller is stable because the rollout improved, the method asks for a
+differential certificate at each step.
+
+## Coordinate-Free View
+
+The metric $M(x)$ should not be confused with a fixed Euclidean norm. In
+mechanical systems, natural coordinates, task-space coordinates, and
+configuration-space coordinates can imply different metrics. Pullback metrics
+make this explicit: a task-space stability objective can be transported back to
+joint space through the relevant Jacobian.
+
+This is why contraction is a good fit for tangent-space language. The object
+being certified is not "distance" in a casual plotting sense; it is the length
+of a tangent vector under a chosen metric.
+
+## Biomechanics and Golf
+
+The advanced manuscript uses golf-swing stability margins as a motivating
+example. The compact reading-path version keeps the claim modest:
+
+- a swing model can define a nominal trajectory and local variational dynamics;
+- feedback, muscle synergies, or impedance-like effects can be interpreted as
+  shaping a local metric;
+- stability margins are meaningful only when the model, measured states, and
+  perturbation region are stated explicitly.
+
+:::{.callout-warning}
+## Critique to Preserve
+
+The contraction interpretation is a hypothesis generator for biomechanics, not
+a substitute for measurement. Human movement includes soft tissue, delays,
+contact changes, neural variability, and unmodeled actuation. A contraction
+margin computed from a simplified model should be reported as a model-local
+certificate, not as proof that the athlete's nervous system optimizes that
+metric.
+:::
+
+## Reading Forward
+
+Contraction theory is the smooth shrinking-perturbation story. [Part 6](./part-6-hybrid.qmd)
+handles the case where the smoothness assumptions break at impacts, contacts,
+or controller mode switches.

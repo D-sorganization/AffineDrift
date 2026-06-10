@@ -1,0 +1,137 @@
+---
+title: "Tangent Hyperplanes VII: Residual-Aware Control"
+description: "Using residuals as control and validation signals instead of ignoring them."
+---
+
+## Residuals as Signals
+
+[Part 4](./part-4-residuals-curvature.qmd) treated residuals as the finite-scale
+gap between nonlinear evolution and tangent-space prediction. This final compact
+part changes the role of that gap: residuals are not just errors to regret after
+the fact. They can become operational signals.
+
+This page distills [Residual-Aware Control](../tangent-hyperplane-articles/Advanced/Residual-Aware_Control.qmd)
+into the canonical reading path while preserving the original critique: residual
+analysis is useful only when state estimation, model scope, and validation are
+honest.
+
+## Quantitative Bound
+
+For a smooth system, the second-order Taylor remainder gives a local bound of
+the form
+
+$$
+\|r(t)\| \leq C\left(\|\delta x(t_0)\|^2 + \|\delta u\|_\infty^2\right)
+$$
+
+over a stated horizon, where $C$ depends on Hessian bounds and propagation
+through the variational dynamics.
+
+A residual-aware controller does not merely know that this bound exists. It
+uses an estimate of the residual to decide when to:
+
+- accept a local linear rollout;
+- shrink the step size;
+- re-linearize;
+- switch from LQR-style feedback to MPC or another robust method;
+- flag the model as outside its stated region.
+
+## Residual-Triggered Control Logic
+
+A conservative decision rule can be written as
+
+$$
+\rho(t) = \frac{\|r(t)\|}{\epsilon_r},
+$$
+
+where $\epsilon_r$ is the residual tolerance for the current task. Then:
+
+- if $\rho(t) \ll 1$, the tangent model is operating inside its trust region;
+- if $\rho(t) \approx 1$, the controller should shorten the horizon, reduce
+  step size, or re-linearize;
+- if $\rho(t) > 1$, the local model should not be treated as reliable.
+
+The numerical threshold is a design contract. It must be tied to task error,
+sensor noise, and safety margins.
+
+:::{.callout-note}
+## Residuals Are Not Always Bad
+
+Residuals encode curvature. A residual-aware method can use them to discover
+where the system is nonlinear in a useful way, not only where the approximation
+failed. The control question is whether that curvature is modeled, bounded, and
+usable.
+:::
+
+## Adaptive DDP Pattern
+
+A residual-aware DDP loop is a small extension of the usual local optimal
+control loop:
+
+1. Linearize and solve the local quadratic problem.
+2. Roll out the nonlinear dynamics.
+3. Measure the difference between predicted and realized state updates.
+4. Compare the residual with a Hessian-derived or empirical tolerance.
+5. Accept, shrink, re-linearize, or switch methods.
+
+This makes the trust-region logic explicit. The residual is the contract between
+the local tangent calculation and the nonlinear rollout.
+
+## Tube MPC Interpretation
+
+In tube MPC, uncertainty is wrapped in a bounded tube around the nominal
+trajectory. Residual-aware control can use curvature-derived residual estimates
+to size that tube:
+
+$$
+\mathcal{T}(t) =
+\{x : \|x - x_{\text{nom}}(t)\| \leq \eta(t)\},
+$$
+
+where $\eta(t)$ includes the residual bound. The method is only valid if the
+bound is conservative enough for the disturbance and model mismatch actually
+present.
+
+## Golf Swing Optimization
+
+For golf-swing optimization, residual-aware language is attractive because the
+motion is high-speed, curved, and sensitive to timing. The safe claim is narrow:
+
+- residuals can indicate where a local tangent model is losing predictive
+  authority;
+- residual thresholds can guide when to re-linearize a simulated swing;
+- differences between simulated and measured motion should not be attributed to
+  "failed residual management" without accounting for soft tissue, muscle
+  activation, measurement noise, and model error.
+
+:::{.callout-warning}
+## Critique to Preserve
+
+Human movement residuals are not automatically geometric curvature. They may
+come from unmodeled compliance, neural delays, marker noise, inverse-dynamics
+ambiguity, or bad parameter identification. Residual-aware control is a useful
+engineering pattern, not a diagnosis of biological strategy unless the
+measurement pipeline supports that claim.
+:::
+
+## Relationship to the Advanced Sources
+
+The longer residual-aware article contains implementation sketches, examples,
+and proofs. The canonical reading-path version keeps the operational rule:
+residuals define when a tangent-space computation remains inside its contract.
+
+## Series Summary
+
+The seven-part compact path now reads as:
+
+1. geometry: tangent spaces and exact infinitesimal structure;
+2. dynamics: variational equations along a reference trajectory;
+3. control: LQR, DDP, and iLQR on the moving tangent system;
+4. residuals: finite-scale curvature and quadratic error growth;
+5. contraction: differential stability certificates;
+6. hybrid systems: saltation maps and mode-change scope;
+7. residual-aware control: runtime trust-region and validation signals.
+
+Together, these pages provide the single rendered reading path. The older
+advanced articles are retained as reference sources for derivations, examples,
+and critique notes.
