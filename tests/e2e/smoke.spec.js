@@ -9,6 +9,19 @@ const PUBLIC_ROUTES = [
   "/models/models.html",
 ];
 
+async function waitForPageReveal(page) {
+  await expect
+    .poll(
+      () =>
+        page.evaluate(() =>
+          document.documentElement.classList.contains("ad-page-revealed"),
+        ),
+      { timeout: 10000 },
+    )
+    .toBe(true);
+  await expect(page.locator("#ad-splash-screen")).toBeHidden();
+}
+
 test.describe("PR Smoke", () => {
   test.describe.configure({ timeout: 90000 });
 
@@ -106,28 +119,22 @@ test.describe("PR Smoke - behavioral invariants", () => {
     await page.goto("/", { waitUntil: "load" });
     // The launcher reveals the page (and clears the splash) once ready; allow
     // for its minimum-splash + fade timing.
-    await expect
-      .poll(
-        () =>
-          page.evaluate(() =>
-            document.documentElement.classList.contains("ad-page-revealed"),
-          ),
-        { timeout: 10000 },
-      )
-      .toBe(true);
-    await expect(page.locator("#ad-splash-screen")).toBeHidden();
+    await waitForPageReveal(page);
   });
 
   test("back-to-top control becomes actionable after scrolling down", async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/", { waitUntil: "load" });
+    await waitForPageReveal(page);
+
     const backToTop = page.locator("button.back-to-top");
     // The control is injected by ui-components.js on init.
     await expect(backToTop).toHaveCount(1);
     await expect(backToTop).toHaveAttribute("aria-label", "Scroll to top");
 
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-    await page.waitForTimeout(400);
-    await backToTop.click({ force: true });
+    await expect(backToTop).toHaveClass(/visible/);
+    await backToTop.click();
     await expect
       .poll(() => page.evaluate(() => window.scrollY), { timeout: 5000 })
       .toBeLessThan(200);

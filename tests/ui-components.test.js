@@ -83,6 +83,29 @@ describe('ui-components.js', () => {
       expect(btn).not.toBeNull();
       expect(btn.getAttribute('aria-label')).toBe('Scroll to top');
     });
+
+    test('uses instant scroll when reduced motion is requested', () => {
+      window.matchMedia = jest.fn().mockImplementation((query) => ({
+        matches: query === '(prefers-reduced-motion: reduce)',
+        media: query,
+        onchange: null,
+        addListener: jest.fn(),
+        removeListener: jest.fn(),
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
+        dispatchEvent: jest.fn(),
+      }));
+      const scrollTo = jest.fn();
+      window.scrollTo = scrollTo;
+
+      initBackToTop();
+      document.querySelector('.back-to-top').click();
+
+      expect(scrollTo).toHaveBeenCalledWith({
+        top: 0,
+        behavior: 'auto',
+      });
+    });
   });
 
   describe('initFadeAnimations', () => {
