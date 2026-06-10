@@ -3,13 +3,69 @@
 # Add project root to path
 
 from pathlib import Path
+from types import SimpleNamespace
 
 # Import after path setup
+import scripts.generate_sitemap as generate_sitemap
 from scripts.generate_sitemap import (
     get_changefreq,
+    get_git_last_modified,
     get_priority,
+    qmd_path_to_url_path,
 )
 from src.tools.utils import parse_frontmatter_dict
+
+
+class TestGitLastModified:
+    """Tests for git-backed sitemap last-modified dates."""
+
+    def test_uses_current_date_when_git_is_missing(self, monkeypatch):
+        """Missing git executable should fall back to today's date."""
+        monkeypatch.setattr(generate_sitemap.shutil, "which", lambda _name: None)
+
+        assert get_git_last_modified("index.qmd") == generate_sitemap.datetime.now().strftime(
+            "%Y-%m-%d"
+        )
+
+    def test_uses_git_commit_date_when_available(self, monkeypatch):
+        """Successful git log output should be normalized to YYYY-MM-DD."""
+        monkeypatch.setattr(generate_sitemap.shutil, "which", lambda _name: "git")
+        monkeypatch.setattr(
+            generate_sitemap.subprocess,
+            "run",
+            lambda *args, **kwargs: SimpleNamespace(
+                returncode=0,
+                stdout="2026-06-10T12:34:56+00:00\n",
+            ),
+        )
+
+        assert get_git_last_modified("articles/example.qmd") == "2026-06-10"
+
+    def test_falls_back_when_git_command_has_no_date(self, monkeypatch):
+        """Empty git output should fall back instead of emitting invalid XML dates."""
+        monkeypatch.setattr(generate_sitemap.shutil, "which", lambda _name: "git")
+        monkeypatch.setattr(
+            generate_sitemap.subprocess,
+            "run",
+            lambda *args, **kwargs: SimpleNamespace(returncode=1, stdout=""),
+        )
+
+        assert get_git_last_modified("missing.qmd") == generate_sitemap.datetime.now().strftime(
+            "%Y-%m-%d"
+        )
+
+    def test_falls_back_when_git_raises(self, monkeypatch):
+        """Subprocess errors should not prevent sitemap generation."""
+        monkeypatch.setattr(generate_sitemap.shutil, "which", lambda _name: "git")
+
+        def raise_os_error(*args, **kwargs):
+            raise OSError("git unavailable")
+
+        monkeypatch.setattr(generate_sitemap.subprocess, "run", raise_os_error)
+
+        assert get_git_last_modified("index.qmd") == generate_sitemap.datetime.now().strftime(
+            "%Y-%m-%d"
+        )
 
 
 class TestDeployWorkflowWiring:
@@ -200,7 +256,56 @@ class TestSitemapXmlFormat:
 
     def test_index_url_path_is_empty(self):
         """Index.html should map to root URL."""
-        url_path = "index.html"
-        if url_path == "index.html":
-            url_path = ""
-        assert url_path == ""
+        assert qmd_path_to_url_path(Path("index.qmd")) == ""
+
+    def test_qmd_path_conversion_preserves_nested_paths(self):
+        """Nested QMD files should be converted to HTML URL paths."""
+        assert qmd_path_to_url_path(Path("articles/test-article.qmd")) == (
+            "articles/test-article.html"
+        )
+
+
+class TestGenerateSitemapMain:
+    """End-to-end tests for sitemap generation."""
+
+    def test_main_writes_sorted_sitemap_and_root_copy(self, tmp_path, monkeypatch):
+        """main writes the requested sitemap plus root sitemap.xml."""
+        pages = [
+            Path("articles/keep.qmd"),
+            Path("pages/no-title.qmd"),
+            Path("index.qmd"),
+        ]
+
+        def fake_frontmatter(path):
+            if path == Path("pages/no-title.qmd"):
+                return "body", {}
+            return "body", {"title": path.stem}
+
+        monkeypatch.chdir(tmp_path)
+        monkeypatch.setattr(generate_sitemap, "collect_qmd_files", lambda _dirs: pages)
+        monkeypatch.setattr(generate_sitemap, "read_qmd_with_frontmatter", fake_frontmatter)
+        monkeypatch.setattr(generate_sitemap, "get_git_last_modified", lambda _path: "2026-06-10")
+        monkeypatch.setattr(
+            generate_sitemap,
+            "datetime",
+            SimpleNamespace(now=lambda: SimpleNamespace(isoformat=lambda: "2026-06-10T00:00:00")),
+        )
+        monkeypatch.setattr(
+            generate_sitemap.argparse.ArgumentParser,
+            "parse_args",
+            lambda self: SimpleNamespace(output="public/sitemap.xml"),
+        )
+
+        generate_sitemap.main()
+
+        generated = (tmp_path / "public" / "sitemap.xml").read_text(encoding="utf-8")
+        root_copy = (tmp_path / "sitemap.xml").read_text(encoding="utf-8")
+
+        assert generated == root_copy
+        assert "<!-- Total URLs: 2 -->" in generated
+        assert "<loc>https://affinedrift.com/</loc>" in generated
+        assert "<loc>https://affinedrift.com/articles/keep.html</loc>" in generated
+        assert "pages/no-title.html" not in generated
+        assert generated.index("<loc>https://affinedrift.com/</loc>") < generated.index(
+            "<loc>https://affinedrift.com/articles/keep.html</loc>"
+        )
