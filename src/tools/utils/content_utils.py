@@ -1,6 +1,6 @@
 """Shared utilities for QMD content file scanning.
 
-Used by seo_audit.py, generate_sitemap.py, generate_search_index.py,
+Used by seo_audit.py, generate_sitemap.py, generate_feed.py,
 add_meta_descriptions.py, and validate_accessibility.py to avoid
 duplicating content directory iteration logic.
 """

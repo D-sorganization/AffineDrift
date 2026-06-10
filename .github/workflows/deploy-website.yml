@@ -74,6 +74,14 @@ jobs:
       - name: Verify CSS Budget
         run: python3 scripts/check_styles_budget.py
 
+      - name: Verify Optimized Image Derivatives
+        run: |
+          python3 scripts/optimize_images.py
+          git diff --exit-code -- logo static/images
+
+      - name: Verify Image Budget
+        run: python3 scripts/check_image_budget.py
+
       - name: Verify UI/UX Anti-Pattern Budget
         run: python3 scripts/check_ui_ux_budget.py
 
@@ -115,6 +123,17 @@ jobs:
         uses: quarto-dev/quarto-actions/render@8a96df13519ee81fd526f2dfca5962811136661b # v2.2.0
         with:
           to: html
+
+      - name: Generate sitemap.xml
+        run: python3 scripts/generate_sitemap.py --output docs/sitemap.xml
+
+      - name: Generate RSS feed.xml
+        run: python3 scripts/generate_feed.py --output docs/feed.xml
+
+      - name: Bundle CSS (flatten @import waterfall)
+        # Flattens the canonical css/ @import graph into a single render-blocking
+        # docs/styles.css bundle, then validates docs/css/ mirrors match css/.
+        run: python3 scripts/bundle_css.py
 
       - name: Verify frontend asset sync
         # docs/css/ and docs/js/ are populated by Quarto render above.
