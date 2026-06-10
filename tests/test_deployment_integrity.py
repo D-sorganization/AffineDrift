@@ -43,6 +43,16 @@ def test_deploy_workflow_integrity() -> None:
     ), "Deploy workflow must render the site before post-build checks"
 
 
+def test_deploy_runner_picker_does_not_depend_on_org_api_token() -> None:
+    """Deploy routing should not fail when an org runner-listing token is stale."""
+    assert WORKFLOW_PATH.exists(), "Deployment workflow file missing"
+    content = WORKFLOW_PATH.read_text(encoding="utf-8")
+
+    assert "RUNNER_CHECK_TOKEN" not in content
+    assert "/actions/runners" not in content
+    assert "runner=d-sorg-fleet" in content
+
+
 def test_ci_workflow_builds_site_for_e2e_and_audits_dependencies() -> None:
     """Ensure PR CI builds generated docs and audits Python dependencies."""
     assert CI_WORKFLOW_PATH.exists(), "CI workflow file missing"
