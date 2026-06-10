@@ -52,11 +52,16 @@ The system is **contracting** if the distance between neighboring trajectories d
 
 ::: {.callout-note icon=false}
 ## Definition 1.1 (Contraction)
-System (@eq-ctu-dynamics) is contracting in a region $\mathcal{D} \subset \mathbb{R}^n$ with rate $\lambda > 0$ if there exists a uniformly positive definite metric $\mathbf{M}(\mathbf{x}, t) = \mathbf{\Theta}^\top(\mathbf{x}, t) \mathbf{\Theta}(\mathbf{x}, t)$ such that:
+Let $\mathbf{J} = \partial \mathbf{f} / \partial \mathbf{x}$ be the Jacobian of the dynamics and let $\mathbf{M}(\mathbf{x}, t) = \mathbf{\Theta}^\top(\mathbf{x}, t) \mathbf{\Theta}(\mathbf{x}, t)$ be a uniformly positive definite metric. System (@eq-ctu-dynamics) is contracting in a region $\mathcal{D} \subset \mathbb{R}^n$ with rate $\lambda > 0$ if
 $$
-\frac{\partial \mathbf{F}}{\partial \mathbf{x}} + \frac{\partial \mathbf{F}^\top}{\partial \mathbf{x}} \prec -2\lambda \mathbf{I}
+\mathbf{J}^\top \mathbf{M} + \mathbf{M} \mathbf{J} + \dot{\mathbf{M}} \preceq -2\lambda \mathbf{M}
+\qquad \forall\, \mathbf{x} \in \mathcal{D},\ t \geq 0.
 $$ {#eq-contraction-condition}
-where $\mathbf{F} = \mathbf{\Theta}^{-1} \mathbf{f}$ is the dynamics in transformed coordinates $\delta \mathbf{z} = \mathbf{\Theta} \, \delta \mathbf{x}$.
+Equivalently, in the differential coordinates $\delta \mathbf{z} = \mathbf{\Theta} \, \delta \mathbf{x}$ the **generalized Jacobian** is
+$$
+\mathbf{F} = \left( \dot{\mathbf{\Theta}} + \mathbf{\Theta} \mathbf{J} \right) \mathbf{\Theta}^{-1},
+$$ {#eq-ctu-generalized-jacobian-def}
+and contraction holds iff its symmetric part is uniformly negative definite, $\tfrac{1}{2}\left(\mathbf{F} + \mathbf{F}^\top\right) \preceq -\lambda \mathbf{I}$ [@lohmiller1998contraction].
 :::
 
 **Physical Interpretation**: Virtual displacements $\delta \mathbf{x}$ evolve according to:
@@ -83,9 +88,9 @@ $$
 \mathbf{J}_{\mathbf{M}} = \mathbf{M}^{-1/2} \left( \frac{\partial \mathbf{f}}{\partial \mathbf{x}} \mathbf{M} + \mathbf{M} \frac{\partial \mathbf{f}^\top}{\partial \mathbf{x}} + \dot{\mathbf{M}} \right) \mathbf{M}^{-1/2}
 $$ {#eq-generalized-jacobian}
 
-Contraction requires:
+Contraction requires (consistent with the $-2\lambda\mathbf{M}$ convention of @eq-contraction-condition, since $\mathbf{J}_{\mathbf{M}}$ in @eq-generalized-jacobian collects $\mathbf{J}^\top\mathbf{M} + \mathbf{M}\mathbf{J} + \dot{\mathbf{M}}$ in metric-normalized coordinates):
 $$
-\lambda_{\max}(\mathbf{J}_{\mathbf{M}}) < -\lambda
+\lambda_{\max}(\mathbf{J}_{\mathbf{M}}) \leq -2\lambda
 $$ {#eq-eigenvalue-condition}
 
 ## Fundamental Theorems
