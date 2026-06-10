@@ -346,7 +346,7 @@ The structural coupling between the golfer (actuator) and the club (payload) is 
 Let the hand reference frame $\mathcal{F}_h$ be attached to the distal segment of the kinematic chain. Its spatial configuration $T_{wh}(q) \in SE(3)$ relative to the world frame is determined by the forward kinematics of the rigid body chain. The spatial velocity of the hands, $\mathcal{V}_h \in \mathbb{R}^6$ (twist), is related to the joint velocities by the geometric Jacobian $J_h(q) \in \mathbb{R}^{6 \times n}$:
 $$\mathcal{V}_h = J_h(q) \dot{q}.$$
 
-The clubshaft is modeled as a flexible beam clamped at the hands. The position of a material point $s \in [0, L]$ along the shaft in the world frame, denoted $p(s, q, \eta)$, is the superposition of the rigid hand motion and the local elastic deformation. Using the assumed modes method, the deformation relative to the hand frame is $u(s, t) = \sum_{i=1}^m \phi_i(s) \eta_i(t)$, where $\phi_i(s)$ are the spatial mode shapes.
+The clubshaft is modeled as a flexible beam clamped at the hands. The position of a material point $s \in [0, L]$ along the shaft in the world frame, denoted $p(s, q, \eta)$, is the superposition of the rigid hand motion and the local elastic deformation. Using the assumed modes method, the deformation relative to the hand frame is $w(s, t) = \sum_{i=1}^m \phi_i(s) \eta_i(t)$, where $\phi_i(s)$ are the spatial mode shapes.
 
 The velocity of any differential mass element $dm = \rho(s)ds$ on the shaft is obtained by differentiating the position vector with respect to time. Applying the chain rule to $p(s, q, \eta)$:
 $$
@@ -407,7 +407,7 @@ Before proceeding to the dynamical derivation, we summarize the mathematical sym
 ### Notation table
 {#subsec:notation}
 
-For reference, Table~@tab:notation summarizes the main symbols used in the manuscript.
+For reference, @tbl-notation summarizes the main symbols used in the manuscript.
 
 | Symbol | Meaning |
 |--------|---------|
@@ -434,7 +434,7 @@ For reference, Table~@tab:notation summarizes the main symbols used in the manus
 | $\phi_{i}$ | Coefficients associated with shaft mode shapes |
 | $t$ | Time |
 
-: Summary of main symbols {#tab:notation}
+: Summary of main symbols {#tbl-notation}
 
 ## Unified Control-Affine Derivation (Rigid + Flexible System) {#sec-affine}
 
@@ -1382,7 +1382,7 @@ understanding that this term does not represent a new physical force, but a nonl
 
 ### Taxonomy summary
 
-Table~@tab:taxonomy summarizes the categories.
+@tbl-taxonomy summarizes the categories.
 
 | Category | Definition (Eq.) | Physical Origin |
 |---|---|---|
@@ -1390,6 +1390,8 @@ Table~@tab:taxonomy summarizes the categories.
 | **Config. Drift** | $\tau_{\text{config}} = G(q) + J_s^T K_s \eta$ | Passive forces due to shape (gravity, elasticity). |
 | **Velocity Drift** | $\tau_{\text{vel}} = \tau_{\text{drift}} - \tau_{\text{config}}$ | Passive forces due to motion (Coriolis, damping). |
 | **Input Force** | $\tau_{\text{input}} = \tau_{\text{total}} - \tau_{\text{drift}}$ | Forces directly caused by active joint torque $u$. |
+
+: Force and torque taxonomy {#tbl-taxonomy}
 
 ### Interpretation and practical use
 
