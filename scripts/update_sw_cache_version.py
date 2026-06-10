@@ -21,48 +21,71 @@ from pathlib import Path
 logger = logging.getLogger(__name__)
 
 ROOT = Path(__file__).parent.parent
-SW_FILE = ROOT / "service-worker.js"
+SW_FILENAME = "service-worker.js"
 
-# Files whose changes should invalidate the cache
+# Files whose changes should invalidate the cache.
+#
+# Contract: every path listed here MUST exist in the repository
+# (relative to the repo root). compute_asset_hash() raises ValueError on
+# missing entries; tests/test_update_sw_cache_version.py enforces existence
+# against the real repo. Keep this list aligned with the assets the service
+# worker precaches/serves (see PRECACHE_ASSETS in service-worker.js).
 HASH_SOURCES = [
-    "js/script.js",
-    "js/bibliography.js",
+    "styles.css",
+    "custom.scss",
+    "css/startup-launcher.css",
     "js/main.js",
+    "js/bibliography.js",
     "js/service-worker-utils.js",
     "js/service-worker-updates.js",
-    "css/styles.css",
-    "css/base.css",
-    "custom.scss",
+    "js/startup-launcher.js",
 ]
 
 CACHE_NAME_PATTERN = re.compile(r"(const CACHE_NAME\s*=\s*'affinedrift-)([^']+)(')")
 
 
-def compute_asset_hash() -> str:
-    """Compute a short hash of the key static assets."""
+def compute_asset_hash(root: Path = ROOT) -> str:
+    """Compute a short hash of the key static assets under ``root``.
+
+    Raises
+    ------
+    ValueError
+        If any configured hash source is missing. A silently skipped asset
+        would mean its changes no longer invalidate the cache, shipping
+        stale assets to users — fail loudly instead (DbC).
+    """
+    missing = [rel_path for rel_path in HASH_SOURCES if not (root / rel_path).exists()]
+    if missing:
+        raise ValueError(
+            f"Missing cache-hash source assets under {root}: {', '.join(missing)}. "
+            "Update HASH_SOURCES in scripts/update_sw_cache_version.py to match "
+            "the repository layout."
+        )
+
     hasher = hashlib.sha256()
     for rel_path in HASH_SOURCES:
-        path = ROOT / rel_path
-        if path.exists():
-            hasher.update(path.read_bytes())
-        else:
-            logger.debug("Asset not found (skipping): %s", rel_path)
+        hasher.update((root / rel_path).read_bytes())
     return hasher.hexdigest()[:8]
 
 
-def update_cache_version(dry_run: bool = False) -> int:
+def update_cache_version(dry_run: bool = False, root: Path = ROOT) -> int:
     """Update CACHE_NAME in service-worker.js. Returns exit code."""
-    if not SW_FILE.exists():
-        logger.error("service-worker.js not found at %s", SW_FILE)
+    sw_file = root / SW_FILENAME
+    if not sw_file.exists():
+        logger.error("%s not found at %s", SW_FILENAME, sw_file)
         return 1
 
-    content = SW_FILE.read_text(encoding="utf-8")
-    asset_hash = compute_asset_hash()
+    content = sw_file.read_text(encoding="utf-8")
+    try:
+        asset_hash = compute_asset_hash(root=root)
+    except ValueError:
+        logger.exception("Cannot compute asset hash")
+        return 1
     new_version = f"v4-{asset_hash}"  # v4+ indicates hash-based versioning
 
     match = CACHE_NAME_PATTERN.search(content)
     if not match:
-        logger.error("Could not find CACHE_NAME pattern in service-worker.js")
+        logger.error("Could not find CACHE_NAME pattern in %s", sw_file)
         return 1
 
     current_version = match.group(2)
@@ -84,7 +107,7 @@ def update_cache_version(dry_run: bool = False) -> int:
         )
         return 0
 
-    SW_FILE.write_text(new_content, encoding="utf-8")
+    sw_file.write_text(new_content, encoding="utf-8")
     logger.info("Updated CACHE_NAME: %r → %r", current_version, new_version)
     return 0
 
