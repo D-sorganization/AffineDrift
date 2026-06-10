@@ -114,7 +114,9 @@ $$
 
 *Proof.* Recall the definition of $f(x)$ derived in Part I:
 $$
-f(x) = \begin{bmatrix} \dot{q} \\ \dot{\eta} \\ -M^{-1}(q,\eta) \left( C(x) \dot{q}_{\text{sys}} + G(q,\eta) + F_s(\eta,\dot{\eta}) \right) \end{bmatrix}.
+f(x) = \begin{bmatrix} \dot{q} \\ [a_{\text{drift}}(x)]_{1:n} \\ \dot{\eta} \\ [a_{\text{drift}}(x)]_{n+1:n+m} \end{bmatrix},
+\qquad
+a_{\text{drift}}(x) = -M^{-1}(q,\eta) \left( C(x) \dot{q}_{\text{sys}} + G(q,\eta) + F_s(\eta,\dot{\eta}) \right),
 $$
 The terms constituting $f(x)$ are:
 1.  **Kinematic rates:** The state variables $\dot{q}, \dot{\eta}$ are independent of the input $u$ by definition in the first-order form ($\dot{x} = \dots$), so $\frac{\partial \dot{q}}{\partial u} = 0$.
@@ -167,7 +169,7 @@ Thus,
 
 $$f(x) =
   \begin{bmatrix}
-    \dot{q} \\ a_{\text{drift}}(x) \\ \dot{\eta} \\ [a_{\text{drift}}(x)]_{\text{flex}}
+    \dot{q} \\ [a_{\text{drift}}(x)]_{1:n} \\ \dot{\eta} \\ [a_{\text{drift}}(x)]_{n+1:n+m}
   \end{bmatrix}$$
 
 is an intrinsic property of the system's geometry, inertia, shaft deformation, and velocities, but **not** of the applied torques.
@@ -357,7 +359,12 @@ Here, $\tau_{\text{drift}}$ is the passive drift torque evaluated along the actu
 
 $$\tau_{\text{drift}}(t)
   =
-  M_q(q,\eta)\,[a_{\text{drift}}(x(t))]_{1:n}.$$
+  \begin{bmatrix}
+    M_{qq}(q,\eta) & M_{q\eta}(q,\eta)
+  \end{bmatrix}
+  a_{\text{drift}}\big(x(t)\big),$$
+
+acting on the **full** drift acceleration (rigid and flexible), matching the Part 2 definition so the recoil coupling $M_{q\eta}\ddot{\eta}_{\text{drift}}$ is retained rather than dropped.
 
 By construction, $\tau_{\mathrm{input}}$ contains the mechanical effect of applied torques and nothing else. It is the only category that changes when the golfer changes their motor command.
 

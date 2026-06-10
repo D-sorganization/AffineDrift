@@ -582,7 +582,7 @@ $$
 \;\approx\; 0.726 - \frac{(0.220)^2}{0.300}
 \;\approx\; 0.565\ \mathrm{kg\,m^2},
 $$
-so the flexible mode reduces the effective hand-swing inertia by roughly $0.161/0.726 \approx 22\%$ --- the "inertial relief" of the free flexible mode, exactly as claimed in Part I §4.2. Verifying the **sign** of $\Gamma$: apply unit torque $u = 1$ N·m; hand acceleration is $\ddot\theta = H_{qq} u = \Delta^{-1} \approx 1.77\ \mathrm{rad/s^2}$, and the modal acceleration is $\ddot\eta_{\text{input}} = \Gamma H_{qq} u \approx -1.30\ \mathrm{m/s^2}$ --- the shaft deflects *backward* (opposite the hand's motion) as expected for inertial lag. A positive-$\Gamma$ convention would predict forward-running deflection, which is physically wrong.
+so the flexible mode reduces the effective hand-swing inertia by roughly $0.161/0.726 \approx 22\%$ --- the "inertial relief" of the free flexible mode, exactly as claimed in Part 1 (*Control-affine state space form*). Verifying the **sign** of $\Gamma$: apply unit torque $u = 1$ N·m; hand acceleration is $\ddot\theta = H_{qq} u = \Delta^{-1} \approx 1.77\ \mathrm{rad/s^2}$, and the modal acceleration is $\ddot\eta_{\text{input}} = \Gamma H_{qq} u \approx -1.30\ \mathrm{m/s^2}$ --- the shaft deflects *backward* (opposite the hand's motion) as expected for inertial lag. A positive-$\Gamma$ convention would predict forward-running deflection, which is physically wrong.
 
 These numbers are reproducible with a 20-line Python script that builds $M$, inverts it block-wise, and prints $\Gamma, \Delta, H_{qq}$ --- we leave the script as an exercise; the numerical values above were computed from the parameters listed at the top of this box.
 :::
