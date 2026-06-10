@@ -1,0 +1,129 @@
+---
+title: "Tangent Hyperplanes VI: Hybrid Systems"
+description: "How tangent-space reasoning changes across impacts, guards, and mode switches."
+---
+
+## Why Smooth Tangent Spaces Are Not Enough
+
+The first five parts assume that the dynamics are smooth over the interval being
+analyzed. That excludes many systems that matter in mechanics:
+
+- foot strikes and ball impacts;
+- contact making and breaking;
+- friction-cone transitions;
+- controllers that switch modes;
+- guards that reset velocity or state.
+
+Hybrid systems keep the tangent-space idea, but they no longer let one smooth
+Jacobian carry perturbations through the entire trajectory.
+
+This compact part distills the rigorous version of
+[Hybrid Tangent Spaces](../tangent-hyperplane-articles/Advanced/Hybrid_Tangent_Spaces.qmd)
+and preserves the critique that hybrid claims need explicit guard, reset, and
+Zeno assumptions.
+
+## Hybrid Automaton Model
+
+A hybrid system can be represented by modes $q \in Q$, continuous states
+$x \in X_q$, vector fields $f_q$, guard surfaces $G_{ij}$, and reset maps
+$R_{ij}$:
+
+$$
+\dot{x} = f_q(x,u), \qquad x^- \in G_{ij} \Rightarrow x^+ = R_{ij}(x^-).
+$$
+
+Inside a fixed mode, the usual variational equation applies:
+
+$$
+\delta\dot{x} = A_q(t)\delta x + B_q(t)\delta u.
+$$
+
+At a transition, the perturbation must be mapped through the event timing and
+reset. That map is the saltation matrix.
+
+## Saltation Matrix
+
+For a guard with normal $n = \nabla g(x^-)$, pre-impact vector field $f^-$,
+post-impact vector field $f^+$, and reset derivative $D R$, a common saltation
+form is
+
+$$
+\Xi =
+D R +
+\frac{\left(f^+ - D R f^-\right)n^\top}{n^\top f^-}.
+$$
+
+The denominator encodes transversality: the trajectory must cross the guard
+rather than slide tangent to it. If $n^\top f^- \approx 0$, the saltation map is
+ill-conditioned and the tangent prediction is not trustworthy.
+
+:::{.callout-important}
+## The Hybrid Exactness Claim
+
+Within each smooth mode, the tangent dynamics are exact infinitesimally. Across
+a transverse event with a differentiable reset, the saltation matrix is the
+first-order map for perturbations through the event. The claim is local to that
+mode sequence and those regularity assumptions.
+:::
+
+## Mode-Aware Optimization
+
+DDP and iLQR can be adapted to hybrid systems when the mode sequence is known or
+handled explicitly:
+
+1. propagate variational dynamics within each mode;
+2. apply the saltation matrix at each transition;
+3. run the backward pass through the composed linear maps;
+4. update the trajectory while checking whether event times or mode order
+   changed.
+
+If the mode order changes, the old linearization no longer describes the same
+piecewise-smooth object. The optimizer must either re-linearize under the new
+sequence or use a contact-implicit formulation that treats modes as decision
+variables.
+
+## Contact-Implicit Caution
+
+Contact-implicit optimization can avoid preselecting a mode sequence, but it
+replaces the problem with complementarity constraints and numerical
+regularization choices. That is not a free lunch. It moves the difficulty from
+"which mode am I in?" to "how accurately did the complementarity relaxation
+represent contact?"
+
+:::{.callout-warning}
+## Critique to Preserve
+
+Hybrid tangent-space language should not overstate novelty. Saltation matrices,
+impact mechanics, and contact-implicit optimization are established tools. The
+useful contribution here is editorial: connecting those tools back to the
+tangent-space reading path and making the scope assumptions visible.
+:::
+
+## Zeno and Grazing Events
+
+Two edge cases deserve special treatment:
+
+- **Zeno behavior:** infinitely many switches in finite time can make the
+  composed tangent map undefined or physically irrelevant.
+- **Grazing contact:** when the trajectory barely touches a guard, event timing
+  is extremely sensitive and saltation terms can blow up.
+
+A rendered page should not present a hybrid tangent calculation as reliable
+unless these cases are excluded or handled by the model.
+
+## Golf and Impact
+
+Golf is a natural hybrid example because the club-ball collision is not a smooth
+continuation of the downswing dynamics. Tangent-space reasoning can still help,
+but the impact must be modeled as a mode transition with a reset or impulse map.
+
+For pre-impact swing control, smooth variational dynamics may be adequate. For
+impact and launch, the model needs either an impact map or a separate collision
+model. Treating the whole motion as one smooth trajectory hides the most
+important discontinuity.
+
+## Reading Forward
+
+Hybrid analysis explains when tangent maps jump. [Part 7](./part-7-residual-aware.qmd)
+uses residuals as runtime signals for when the current tangent model should be
+trusted, shrunk, updated, or abandoned.

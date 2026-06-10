@@ -9,9 +9,22 @@ TANGENT_LINK_SOURCES = (
     Path("resources/articles.qmd"),
     Path("pages/tangent-hyperplanes.qmd"),
     Path("articles/tangent-hyperplanes-series/part-4-residuals-curvature.qmd"),
+    Path("articles/tangent-hyperplanes-series/part-5-contraction.qmd"),
+    Path("articles/tangent-hyperplanes-series/part-6-hybrid.qmd"),
+    Path("articles/tangent-hyperplanes-series/part-7-residual-aware.qmd"),
     Path("articles/tangent-hyperplane-articles/LAYMANS_TERMS_SUMMARY.qmd"),
     Path("articles/tangent-hyperplane-articles/Advanced/Contraction_Tangent_LAYMAN.qmd"),
     Path("articles/tangent-hyperplane-articles/Advanced/Hybrid_Tangent_LAYMAN.qmd"),
+)
+
+CANONICAL_SERIES_PARTS = (
+    Path("articles/tangent-hyperplanes-series/part-1-geometry.qmd"),
+    Path("articles/tangent-hyperplanes-series/part-2-dynamics.qmd"),
+    Path("articles/tangent-hyperplanes-series/part-3-control.qmd"),
+    Path("articles/tangent-hyperplanes-series/part-4-residuals-curvature.qmd"),
+    Path("articles/tangent-hyperplanes-series/part-5-contraction.qmd"),
+    Path("articles/tangent-hyperplanes-series/part-6-hybrid.qmd"),
+    Path("articles/tangent-hyperplanes-series/part-7-residual-aware.qmd"),
 )
 
 
@@ -26,3 +39,27 @@ def test_tangent_series_internal_links_resolve() -> None:
                 broken_links.append(f"{relative_path}:{line_number} -> {link}")
 
     assert broken_links == []
+
+
+def test_canonical_tangent_series_has_seven_part_reading_path() -> None:
+    """The compact series should carry the heavy-merge advanced topics."""
+    missing_parts = [
+        str(path) for path in CANONICAL_SERIES_PARTS if not (REPO_ROOT / path).is_file()
+    ]
+    assert missing_parts == []
+
+    hub_text = (REPO_ROOT / "pages/tangent-hyperplanes.qmd").read_text(encoding="utf-8")
+    for part in CANONICAL_SERIES_PARTS:
+        rendered_href = f"../{part.with_suffix('.html').as_posix()}"
+        assert rendered_href in hub_text
+
+
+def test_reference_manuscript_is_demoted_from_canonical_path() -> None:
+    """The single-file manuscript remains rendered but is clearly secondary."""
+    manuscript = (
+        REPO_ROOT / "articles/tangent-hyperplane-articles/Tangent_Hyperplanes_Unified_Thesis.qmd"
+    )
+    text = manuscript.read_text(encoding="utf-8")
+
+    assert 'title: "Full Reference Manuscript:' in text
+    assert "canonical rendered reading path" in text

@@ -102,7 +102,7 @@ Understanding residuals opens the door to **adaptive control algorithms** that e
 - Use them to adjust the feedback gain or the LQR weight matrices.
 - Re-linearize or use higher-order corrections when residuals grow too large.
 
-For advanced treatments of these ideas, see the site's article on [Residual-Aware Control](../tangent-hyperplane-articles/Advanced/Residual-Aware_Control.qmd).
+For the canonical next step, continue to [Part 5: Contraction](./part-5-contraction.qmd), [Part 6: Hybrid Systems](./part-6-hybrid.qmd), and [Part 7: Residual-Aware Control](./part-7-residual-aware.qmd). The older advanced source article remains available as a reference manuscript: [Residual-Aware Control](../tangent-hyperplane-articles/Advanced/Residual-Aware_Control.qmd).
 
 ## Limitations and Edge Cases
 
@@ -116,13 +116,13 @@ For advanced treatments of these ideas, see the site's article on [Residual-Awar
 **Control Nonlinearity:** If the control input enters nonlinearly (e.g., $\dot{x} = f(x, u^2)$), the perturbation equation has a different form, and residuals may scale differently.
 :::
 
-## Summary: The Four Parts
+## Summary: The First Four Parts
 
-We have now completed the journey:
+We have now completed the foundation:
 
 1. **Geometry:** Tangent spaces are exact infinitesimal linear approximations to curved manifolds.
 2. **Dynamics:** Nonlinear systems linearize exactly on the tangent space; the linearized system is exact infinitesimally.
 3. **Control:** Linear optimal control tools (LQR, Riccati equations) can be applied at each instant along a trajectory via iteration.
 4. **Residuals:** Nonlinearity introduces curvature, which produces quadratic residuals. These residuals bound the range of validity of linear approximations.
 
-Together, these ideas form the foundation of modern nonlinear control: linearize, solve optimally on the linearized system, integrate forward, measure the gap, and iterate. The gap shrinks quadratically with perturbation size. This is not a hack or an approximation — it is the rigorous mathematics of derivatives and curvature, turned into an algorithm.
+Together, these ideas form the foundation of modern nonlinear control: linearize, solve optimally on the linearized system, integrate forward, measure the gap, and iterate. The gap shrinks quadratically with perturbation size. This is not a hack or an approximation — it is the rigorous mathematics of derivatives and curvature, turned into an algorithm. The remaining compact parts extend that foundation to contraction certificates, hybrid mode changes, and residual-aware controller decisions.
