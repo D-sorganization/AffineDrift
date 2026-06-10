@@ -13,7 +13,6 @@ on:
 
 permissions:
   contents: read
-  pull-requests: write
 
 concurrency:
   group: performance-benchmarks-${{ github.ref }}
@@ -79,34 +78,55 @@ jobs:
             grep "^SLOWER" benchmark_output.txt || true
           fi
 
-      - name: Parse benchmark results for PR comment
-        if: github.event_name == 'pull_request'
-        id: parse_results
-        run: |
-          if [ ! -f benchmark_output.txt ]; then
-            echo "status=failure" >> $GITHUB_OUTPUT
-            echo "summary=Benchmark output missing; inspect install and benchmark steps" >> $GITHUB_OUTPUT
-            exit 0
-          fi
+      - name: Upload benchmark results
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: benchmark-results
+          path: |
+            benchmark_output.txt
+            .benchmarks/
+          if-no-files-found: warn
 
-          # Extract key metrics from benchmark output
-          if grep -q "passed" benchmark_output.txt; then
-            echo "status=success" >> $GITHUB_OUTPUT
-            echo "summary=All benchmarks passed" >> $GITHUB_OUTPUT
-          else
-            echo "status=failure" >> $GITHUB_OUTPUT
-            echo "summary=Benchmark run failed" >> $GITHUB_OUTPUT
-          fi
+      - name: Fail if regressions exceed 15%
+        if: steps.benchmark.outcome == 'failure'
+        run: |
+          echo "Performance benchmark command failed or exceeded the configured threshold."
+          exit 1
+
+  comment:
+    name: Comment on PR with results
+    needs: benchmark
+    # Only this job — which never checks out or executes PR-controlled code —
+    # is granted pull-requests:write, so the token that runs the benchmark
+    # suite cannot post forged CI comments or mutate PR labels/state.
+    if: ${{ github.event_name == 'pull_request' && always() }}
+    runs-on: d-sorg-fleet
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Download benchmark results
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
+        with:
+          name: benchmark-results
+          path: benchmark-results
+        continue-on-error: true
 
       - name: Comment on PR with results
-        if: github.event_name == 'pull_request' && always()
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         with:
           script: |
             const fs = require('fs');
-            const output = fs.existsSync('benchmark_output.txt')
-              ? fs.readFileSync('benchmark_output.txt', 'utf8')
+            const path = 'benchmark-results/benchmark_output.txt';
+            const output = fs.existsSync(path)
+              ? fs.readFileSync(path, 'utf8')
               : 'benchmark_output.txt was not created; inspect install and benchmark steps.';
+
+            const status = output.includes('passed')
+              ? 'All benchmarks passed'
+              : 'Benchmark run failed or did not complete';
 
             // Extract summary lines
             const lines = output.split('\n');
@@ -115,7 +135,7 @@ jobs:
 
             const comment = `## Performance Benchmarks
 
-            **Status:** ${{ steps.parse_results.outputs.summary }}
+            **Status:** ${status}
 
             ### Results Summary
             \`\`\`
@@ -138,22 +158,6 @@ jobs:
               repo: context.repo.repo,
               body: comment
             });
-
-      - name: Upload benchmark results
-        if: always()
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: benchmark-results
-          path: |
-            benchmark_output.txt
-            .benchmarks/
-          if-no-files-found: warn
-
-      - name: Fail if regressions exceed 15%
-        if: steps.benchmark.outcome == 'failure'
-        run: |
-          echo "Performance benchmark command failed or exceeded the configured threshold."
-          exit 1
 
   summary:
     timeout-minutes: 90
