@@ -226,3 +226,55 @@ def create_html_page(
     output_file.parent.mkdir(parents=True, exist_ok=True)
     output_file.write_text(template)
     return True
+
+
+# ---------------------------------------------------------------------------
+# Generated-HTML normalization (relocated from the former root-level
+# fix_html.py post-render patcher — issue #3234). These pure str->str helpers
+# belong with the generation path so artifacts are born clean, rather than
+# re-patched after the fact. The committed wrist article is currently static;
+# tests/test_html_content_lint.py guards its invariants as a regression GATE.
+# ---------------------------------------------------------------------------
+
+
+def remove_paragraph_wrappers_before_lists(content: str) -> str:
+    """Remove stray paragraph tags before list blocks."""
+    while "<p>\n\n" in content:
+        content = content.replace("<p>\n\n", "<p>\n")
+    content = content.replace("<p>\n<ul>", "<ul>")
+    return content.replace("<p>\n<ol>", "<ol>")
+
+
+def normalize_list_item_spacing(content: str) -> str:
+    """Normalize list-item separators to one item per line."""
+    while "</li></li>" in content:
+        content = content.replace("</li></li>", "</li>")
+    return content.replace("</li><li>", "</li>\n<li>")
+
+
+def normalize_list_block_openers(content: str) -> str:
+    """Fix malformed list openers that contain stray list-item markup."""
+    content = content.replace("<ul></li>\n<li>", "<ul>\n<li>")
+    content = content.replace("<ul>\n</li>\n<li>", "<ul>\n<li>")
+    content = content.replace("<ol></li>\n<li>", "<ol>\n<li>")
+    return content.replace("<ol>\n</li>\n<li>", "<ol>\n<li>")
+
+
+def unwrap_math_block_paragraphs(content: str) -> str:
+    """Remove paragraph wrappers around math and quote blocks."""
+    content = content.replace("<p>\\begin{align}", "\\begin{align}")
+    content = content.replace("\\end{align}</p>", "\\end{align}")
+    return content.replace("<p>\\begin{quote}", "\\begin{quote}")
+
+
+def normalize_html_content(content: str) -> str:
+    """Apply the generated-HTML normalization rules in order.
+
+    Idempotent: running it on already-normalized content is a no-op. Intended
+    to be called from the article generation path so the artifact is emitted
+    clean, not repaired post-hoc.
+    """
+    content = remove_paragraph_wrappers_before_lists(content)
+    content = normalize_list_item_spacing(content)
+    content = normalize_list_block_openers(content)
+    return unwrap_math_block_paragraphs(content)
