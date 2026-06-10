@@ -66,5 +66,8 @@ Print media (separate concern):
 
 Dark mode (separate concern):
   @media (prefers-color-scheme: dark) { dark mode }
-  @media (prefers-color-scheme: dark), [data-theme="dark"] { dark mode + fallback }
+  NOTE: never combine a selector with a media query in one prelude —
+  a media query list may only contain media queries, so the selector
+  member is invalid and browsers drop it as "not all". Use a separate
+  [data-theme="dark"] rule for the manual toggle instead.
 */
