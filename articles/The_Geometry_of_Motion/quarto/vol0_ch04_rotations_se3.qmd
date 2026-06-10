@@ -83,10 +83,10 @@ Because $\hat{x}_b, \hat{y}_b,$ and $\hat{z}_b$ are all length $1$ (unit magnitu
 
 
 
-## Unit Quaternions $\so$
+## Unit Quaternions $\mathcal{H}$
 
 
-While $\SO$ completely prevents Gimbal Lock and provides pure, continuous rotation matrices, tracking 9 independent variables inside a $3 \times 3$ grid is wildly computationally inefficient for an engine updating a 15-DOF human model at 1,000 Hertz. 
+While $\SO$ completely prevents Gimbal Lock and provides pure, continuous rotation matrices, tracking 9 entries inside a $3 \times 3$ grid (only 3 of which are independent) is wildly computationally inefficient for an engine updating a 15-DOF human model at 1,000 Hertz. 
 
 To solve this, William Rowan Hamilton invented **Quaternions** ($\mathcal{H}$) in 1843. Rather than tracking a full Cartesian body frame $R \in \SO$, any 3D rotation can be flawlessly described as a combination of precisely two things:
 1. A single unit vector $\hat{\bm{\omega}}$ defining the solitary physical axis of rotation.
