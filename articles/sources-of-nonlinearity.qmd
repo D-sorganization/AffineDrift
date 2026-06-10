@@ -579,15 +579,15 @@ where $\sigma$ is a width parameter. More commonly, a **piecewise linear** model
 
 ### 9.2 Force-Velocity Relationship
 
-**Hill's force-velocity relationship** describes how muscle force depends on contraction velocity. As the muscle contracts faster, the force decreases. This is captured by
+**Hill's force-velocity relationship** describes how muscle force depends on contraction velocity. As the muscle contracts faster, the force decreases. The canonical Hill hyperbola $(F + a)(v + b) = (F_0 + a)\,b$, solved for $F$, is
 $$
-F(v) = \frac{F_0(b + v_{\max})}{v + b},
+F(v) = \frac{F_0\,b - a\,v}{v + b},
 $$
-where $v$ is shortening velocity (positive for contraction), $F_0$ is isometric force, $b$ is a shape parameter, and $v_{\max}$ is maximum shortening velocity.
+where $v$ is shortening velocity (positive for contraction), $F_0$ is isometric force, and $a, b$ are shape parameters. The curvature constant is tied to the maximum shortening velocity by $a = F_0\,b / v_{\max}$, which fixes the two physical limits: $F(0) = F_0$ (isometric) and $F(v_{\max}) = 0$ (force vanishes at maximum shortening speed). Equivalently, in normalized form, $F(v) = F_0\,(v_{\max} - v)/(v_{\max} + k\,v)$ with $k = a/F_0 \approx 4$.
 
 The force-velocity relationship has several regimes:
-- **Isometric** ($v = 0$): Force is maximum.
-- **Shortening** ($v > 0$): Force decreases hyperbolically with velocity.
+- **Isometric** ($v = 0$): Force is maximum ($= F_0$).
+- **Shortening** ($v > 0$): Force decreases hyperbolically with velocity, reaching zero at $v = v_{\max}$.
 - **Lengthening** ($v < 0$): Force can exceed isometric force (eccentric contraction).
 
 **Where it enters:** The force-velocity relationship couples muscle force to contraction velocity. If we model neural input as specifying desired muscle force, then the velocity state modifies the achievable force.
