@@ -34,7 +34,7 @@
       timeoutMs = DEFAULT_NAVIGATION_TIMEOUT_MS,
       fetchImpl = fetch,
       cachesImpl = (typeof caches !== 'undefined' ? caches : undefined),
-      onStore,
+      persistFn,
     } = options;
 
     const fromCache = async () => {
@@ -58,8 +58,8 @@
       if (response && response.status === 200) {
         if (cachesImpl && cacheName) {
           const cache = await cachesImpl.open(cacheName);
-          if (typeof onStore === 'function') {
-            await onStore(cache, request, response);
+          if (typeof persistFn === 'function') {
+            await persistFn(cache, request, response);
           } else {
             await cache.put(request, response.clone());
           }
@@ -82,7 +82,7 @@
       cacheName,
       fetchImpl = fetch,
       cachesImpl = (typeof caches !== 'undefined' ? caches : undefined),
-      onStore,
+      persistFn,
     } = options;
 
     if (cachesImpl) {
@@ -99,8 +99,8 @@
       cacheName
     ) {
       const cache = await cachesImpl.open(cacheName);
-      if (typeof onStore === 'function') {
-        await onStore(cache, request, response);
+      if (typeof persistFn === 'function') {
+        await persistFn(cache, request, response);
       } else {
         await cache.put(request, response.clone());
       }

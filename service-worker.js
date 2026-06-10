@@ -134,7 +134,7 @@ self.addEventListener('fetch', (event) => {
         cacheName: CACHE_NAME,
         offlineUrl: OFFLINE_URL,
         timeoutMs: NAV_TIMEOUT_MS,
-        onStore: (cache, request, response) =>
+        persistFn: (cache, request, response) =>
           storeResponse(cache, request, response, true),
       })
     );
@@ -163,7 +163,7 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     cacheFirst(event.request, {
       cacheName: CACHE_NAME,
-      onStore: (cache, request, response) => storeResponse(cache, request, response),
+      persistFn: (cache, request, response) => storeResponse(cache, request, response),
     })
   );
 });
