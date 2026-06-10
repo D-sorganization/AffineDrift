@@ -1,23 +1,2780 @@
+/* ===== begin styles.css ===== */
 /* ---
    AffineDrift - Modern Scientific Layout
    --- */
 
-@import "css/tokens/design-tokens.css";
-@import url("css/breakpoints.css");
-@import url("css/bibliography.css");
-@import url("css/critics-corner.css");
-@import url("css/resources.css");
+/* ===== begin css/tokens/design-tokens.css ===== */
+/**
+ * Design Tokens Central Import File
+ * AffineDrift CSS Design System
+ *
+ * This file imports all design token definitions in the correct order.
+ * Must be imported BEFORE main styles.css to ensure variables are available.
+ *
+ * Import Order:
+ * 1. Colors (referenced by other tokens)
+ * 2. Typography (font definitions)
+ * 3. Spacing (sizing scale)
+ * 4. Breakpoints (responsive utilities)
+ * 5. Shadows (elevation system)
+ * 6. Animations (timing functions)
+ * 7. Borders (radius and width)
+ * 8. Z-Index (stacking context)
+ *
+ * Total Variables Defined: 200+
+ * Coverage: 88% of CSS properties
+ */
+
+/* Color tokens - Foundation for all visual design */
+/* ===== begin css/tokens/colors.css ===== */
+/**
+ * Design Tokens: Colors — SINGLE SOURCE OF TRUTH
+ * Semantic color palette for the AffineDrift design system.
+ *
+ * This file is canonical for EVERY color in both light and dark themes
+ * (issue #3224). The legacy palette names that historically lived in
+ * styles.css (`--primary-dark`, `--bg-body`, `--text-main`, ...) are now thin
+ * aliases declared in styles.css `:root` that point back at the `--color-*`
+ * tokens defined here, so there is exactly one place to change a color.
+ *
+ * Dark mode is centralized here too, gated CONSISTENTLY under both:
+ *   - `[data-theme="dark"]`                         (manual toggle), and
+ *   - `@media (prefers-color-scheme: dark)
+ *        :root:not([data-theme="light"])`           (OS preference)
+ * The `:not([data-theme="light"])` guard lets an explicit light choice win over
+ * an OS dark preference (canonical pattern from PR #3217), and the
+ * prefers-color-scheme path means no-JS visitors with OS dark get a fully dark
+ * page (legacy AND token consumers), not a half-dark one.
+ *
+ * Organization:
+ * - Primary colors (brand)
+ * - Semantic colors (success, error, warning, info)
+ * - Neutral scale (grays)
+ * - Functional colors (backgrounds, text, borders)
+ * - Accent / highlight (genuinely unique brand values)
+ * - Dark-mode remaps (one block per gate, identical bodies)
+ */
+
+:root {
+  /* ========== Primary Brand Colors ========== */
+  --color-primary-dark: #1a1a2e;
+  --color-primary-main: #0f4c75;
+  --color-primary-light: #3282b8;
+  --color-primary-lightest: #e3f2fd;
+
+  /* ========== Semantic Colors ========== */
+  --color-success: #28a745;
+  --color-error: #dc3545;
+  --color-warning: #ffc107;
+  --color-info: #17a2b8;
+
+  /* ========== Neutral Scale ========== */
+
+  /* Pure black and white */
+  --color-neutral-0: #fff;
+  --color-neutral-900: #000;
+
+  /* Grays for backgrounds and text */
+  --color-neutral-50: #f9fafb;
+  --color-neutral-100: #f3f4f6;
+  --color-neutral-200: #e5e7eb;
+  --color-neutral-300: #d1d5db;
+  --color-neutral-400: #9ca3af;
+  --color-neutral-500: #6b7280;
+  --color-neutral-600: #4b5563;
+  --color-neutral-700: #374151;
+  --color-neutral-800: #1f2937;
+
+  /* ========== Accent / Highlight (unique brand values) ========== */
+
+  /* Distinct from --color-primary-light (#3282b8): the legal-pad chrome blue. */
+  --color-accent: #205d86;
+
+  /* Legal-pad yellow family (page paper / highlight). */
+  --color-highlight-yellow: #fef9e7;
+  --color-highlight-yellow-accent: #fdf5cc;
+  --color-highlight-yellow-border: #f5e6a0;
+
+  /* ========== Functional Colors (backgrounds, text, borders) ========== */
+  --bg-primary: #fff;
+  --bg-secondary: #f8f9fa;
+  --bg-tertiary: #fcfcfc;
+  --bg-dark: #1a1a2e;
+  --bg-body: #fff;
+  --bg-alt: #f8f9fa;
+  --bg-sidebar: #fcfcfc;
+  --text-primary: #212529;
+  --text-secondary: #6c757d;
+  --text-main: #212529;
+  --text-muted: #6c757d;
+  --text-dark: #1a1a2e;
+  --text-light: #f8f9fa;
+  --text-inverse: #fff;
+  --border-color: #e9ecef;
+  --border-light: #f0f0f0;
+  --shadow-color: rgb(0, 0, 0, 0.1);
+
+  /* Brand gradient endpoints. */
+  --gradient-start: #0f4c75;
+  --gradient-end: #3282b8;
+
+  /* ========== Special Colors ========== */
+  --color-white-transparent: rgb(255, 255, 255, 0.9);
+
+  /* Legacy aliases for the highlight family (kept for existing consumers). */
+  --legal-pad-yellow: var(--color-highlight-yellow);
+  --legal-pad-yellow-accent: var(--color-highlight-yellow-accent);
+  --legal-pad-yellow-border: var(--color-highlight-yellow-border);
+
+  /* ========== Deprecated/Legacy aliases (single source of truth) ========== */
+
+  /* These resolve to the canonical --color-* tokens above. */
+  --primary-dark: var(--color-primary-dark);
+  --primary-blue: var(--color-primary-main);
+  --accent-blue: var(--color-accent);
+  --light-blue: var(--color-primary-lightest);
+  --pure-white: var(--color-neutral-0);
+  --white-transparent: var(--color-white-transparent);
+}
+
+/**
+ * ========== Dark Mode Remaps — CENTRALIZED ==========
+ *
+ * Both gates below carry the SAME variable assignments. Values preserve the
+ * historically-effective dark theme (where the late styles.css dark blocks won
+ * for shared tokens), so this consolidation is a zero-visual-change refactor.
+ */
+
+/* Manual toggle. */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Functional surfaces and text. */
+  --bg-primary: #1a1a2e;
+  --bg-secondary: #0f4c75;
+  --bg-tertiary: #162b47;
+  --bg-dark: #0d0d1a;
+  --bg-body: #0d0d1a;
+  --bg-alt: #1a1a2e;
+  --bg-sidebar: #112;
+  --text-primary: #e3f2fd;
+  --text-secondary: #b0bec5;
+  --text-main: #dde1e7;
+  --text-muted: #8b90a0;
+  --text-dark: #e3f2fd;
+  --text-light: #1a1a2e;
+  --border-color: #2a2a40;
+  --border-light: #0f4c75;
+  --shadow-color: rgb(0, 0, 0, 0.4);
+
+  /* Semantic colors tuned for dark surfaces. */
+  --color-success: #66bb6a;
+  --color-error: #ef5350;
+  --color-warning: #ffb74d;
+  --color-info: #29b6f6;
+
+  /* Brand lightest / highlight tuned for dark. */
+  --color-primary-lightest: #0a2a40;
+  --color-highlight-yellow: #1a1810;
+  --color-highlight-yellow-accent: #6b6b2a;
+  --color-highlight-yellow-border: #8b8b3a;
+}
+
+/* OS preference (no-JS path). Guarded so an explicit light choice wins. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    /* Functional surfaces and text. */
+    --bg-primary: #1a1a2e;
+    --bg-secondary: #0f4c75;
+    --bg-tertiary: #162b47;
+    --bg-dark: #0d0d1a;
+    --bg-body: #0d0d1a;
+    --bg-alt: #1a1a2e;
+    --bg-sidebar: #112;
+    --text-primary: #e3f2fd;
+    --text-secondary: #b0bec5;
+    --text-main: #dde1e7;
+    --text-muted: #8b90a0;
+    --text-dark: #e3f2fd;
+    --text-light: #1a1a2e;
+    --border-color: #2a2a40;
+    --border-light: #0f4c75;
+    --shadow-color: rgb(0, 0, 0, 0.4);
+
+    /* Semantic colors tuned for dark surfaces. */
+    --color-success: #66bb6a;
+    --color-error: #ef5350;
+    --color-warning: #ffb74d;
+    --color-info: #29b6f6;
+
+    /* Brand lightest / highlight tuned for dark. */
+    --color-primary-lightest: #0a2a40;
+    --color-highlight-yellow: #1a1810;
+    --color-highlight-yellow-accent: #6b6b2a;
+    --color-highlight-yellow-border: #8b8b3a;
+  }
+}
+/* ===== end css/tokens/colors.css ===== */
+
+/* Typography tokens - Font families, sizes, weights */
+/* ===== begin css/tokens/typography.css ===== */
+/**
+ * Design Tokens: Typography
+ * Font families, sizes, weights, and line heights for the AffineDrift design system
+ *
+ * Organization:
+ * - Font families
+ * - Font sizes (with responsive scaling using clamp())
+ * - Font weights
+ * - Line heights
+ * - Letter spacing
+ */
+
+:root {
+  /* ========== Font Families ========== */
+  --font-family-base: -apple-system, blinkmacsystemfont, "Segoe UI", "Roboto", "Helvetica Neue", "Arial", sans-serif;
+  --font-family-heading: "Georgia", "Times New Roman", serif;
+  --font-family-mono: "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", monospace;
+
+  /* ========== Font Sizes ========== */
+
+  /* Using clamp() for responsive sizing: min, preferred, max */
+
+  /* Preferred size = 1vw + base value (scales with viewport) */
+
+  /* Body text - 16px on mobile, responsive up to 18px on large screens */
+  --font-size-body: clamp(0.875rem, 1vw + 0.5rem, 1.125rem);
+
+  /* Small text - 14px responsive */
+  --font-size-sm: clamp(0.75rem, 0.9vw + 0.4rem, 1rem);
+
+  /* Extra small text - 12px responsive */
+  --font-size-xs: clamp(0.625rem, 0.8vw + 0.3rem, 0.875rem);
+
+  /* Large text - 20px responsive */
+  --font-size-lg: clamp(1rem, 1.2vw + 0.6rem, 1.25rem);
+
+  /* Extra large text - 24px responsive */
+  --font-size-xl: clamp(1.25rem, 1.5vw + 0.7rem, 1.75rem);
+
+  /* 2XL - 32px responsive */
+  --font-size-2xl: clamp(1.5rem, 2vw + 0.8rem, 2rem);
+
+  /* 3XL - 40px responsive */
+  --font-size-3xl: clamp(1.875rem, 2.5vw + 0.9rem, 2.5rem);
+
+  /* Heading sizes - semantic scale for h1-h6 */
+  --font-size-h1: clamp(2rem, 3vw + 1rem, 2.5rem);
+  --font-size-h2: clamp(1.75rem, 2.5vw + 0.9rem, 2.25rem);
+  --font-size-h3: clamp(1.5rem, 2vw + 0.8rem, 1.875rem);
+  --font-size-h4: clamp(1.25rem, 1.5vw + 0.7rem, 1.5rem);
+  --font-size-h5: clamp(1rem, 1.2vw + 0.6rem, 1.25rem);
+  --font-size-h6: clamp(0.875rem, 1vw + 0.5rem, 1.125rem);
+
+  /* Prose text for articles and long-form content */
+  --font-size-prose: clamp(0.875rem, 1.1vw + 0.4rem, 1.125rem);
+
+  /* Code and monospace */
+  --font-size-code: clamp(0.8rem, 0.9vw + 0.4rem, 0.95rem);
+
+  /* ========== Font Weights ========== */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+
+  /* Semantic weights for specific use cases */
+  --font-weight-body: var(--font-weight-normal);
+  --font-weight-heading: var(--font-weight-bold);
+  --font-weight-strong: var(--font-weight-semibold);
+
+  /* ========== Line Heights ========== */
+
+  /* For body text readability (1.5-1.6) */
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+  --line-height-loose: 2;
+
+  /* Semantic line heights */
+  --line-height-body: var(--line-height-normal);
+  --line-height-heading: var(--line-height-tight);
+  --line-height-code: var(--line-height-normal);
+
+  /* ========== Letter Spacing ========== */
+  --letter-spacing-tight: -0.01em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.025em;
+  --letter-spacing-wider: 0.05em;
+
+  /* Semantic letter spacing */
+  --letter-spacing-body: var(--letter-spacing-normal);
+  --letter-spacing-heading: var(--letter-spacing-tight);
+
+  /* ========== Prose Width ========== */
+
+  /* Optimal line length for readability (about 75 characters) */
+  --prose-width: 75ch;
+
+  /* ========== Text Transform ========== */
+  --text-transform-uppercase: uppercase;
+  --text-transform-lowercase: lowercase;
+  --text-transform-capitalize: capitalize;
+  --text-transform-none: none;
+}
+/* ===== end css/tokens/typography.css ===== */
+
+/* Spacing tokens - Margins, padding, gaps */
+/* ===== begin css/tokens/spacing.css ===== */
+/**
+ * Design Tokens: Spacing
+ * Margin and padding scale for the AffineDrift design system
+ *
+ * Based on 0.25rem (4px) base unit
+ * Follows 8px grid system: xs(2px), sm(4px), md(8px), lg(12px), xl(16px), 2xl(32px)
+ *
+ * Organization:
+ * - Spacing scale (xs through 2xl)
+ * - Component-specific spacing (margins, padding)
+ * - Gap values (for flex and grid)
+ */
+
+:root {
+  /* ========== Spacing Scale ========== */
+
+  /* Base unit: 0.25rem = 4px */
+
+  /* Each step = 1.5x multiplier (following popular design systems) */
+
+  --spacing-0: 0;
+  --spacing-xs: 0.25rem;    /* 4px */
+  --spacing-sm: 0.5rem;     /* 8px */
+  --spacing-md: 1rem;       /* 16px */
+  --spacing-lg: 1.5rem;     /* 24px */
+  --spacing-xl: 2rem;       /* 32px */
+  --spacing-2xl: 4rem;      /* 64px */
+  --spacing-3xl: 6rem;      /* 96px */
+
+  /* ========== Padding Tokens ========== */
+
+  /* Standard padding values for components */
+  --padding-xs: var(--spacing-xs);
+  --padding-sm: var(--spacing-sm);
+  --padding-md: var(--spacing-md);
+  --padding-lg: var(--spacing-lg);
+  --padding-xl: var(--spacing-xl);
+
+  /* Container padding (responsive) */
+  --padding-container-mobile: var(--spacing-md);
+  --padding-container-tablet: var(--spacing-lg);
+  --padding-container-desktop: var(--spacing-xl);
+
+  /* Inline padding (for horizontal spacing) */
+  --padding-inline-sm: var(--spacing-sm);
+  --padding-inline-md: var(--spacing-md);
+  --padding-inline-lg: var(--spacing-lg);
+
+  /* Block padding (for vertical spacing) */
+  --padding-block-sm: var(--spacing-sm);
+  --padding-block-md: var(--spacing-md);
+  --padding-block-lg: var(--spacing-lg);
+
+  /* ========== Margin Tokens ========== */
+
+  /* Standard margin values for components */
+  --margin-xs: var(--spacing-xs);
+  --margin-sm: var(--spacing-sm);
+  --margin-md: var(--spacing-md);
+  --margin-lg: var(--spacing-lg);
+  --margin-xl: var(--spacing-xl);
+
+  /* Margin directions */
+  --margin-top-sm: var(--spacing-sm);
+  --margin-top-md: var(--spacing-md);
+  --margin-top-lg: var(--spacing-lg);
+  --margin-bottom-sm: var(--spacing-sm);
+  --margin-bottom-md: var(--spacing-md);
+  --margin-bottom-lg: var(--spacing-lg);
+  --margin-inline-sm: var(--spacing-sm);
+  --margin-inline-md: var(--spacing-md);
+  --margin-inline-lg: var(--spacing-lg);
+
+  /* ========== Gap Tokens (for flexbox and grid) ========== */
+
+  /* Space between items in layouts */
+  --gap-xs: var(--spacing-xs);
+  --gap-sm: var(--spacing-sm);
+  --gap-md: var(--spacing-md);
+  --gap-lg: var(--spacing-lg);
+  --gap-xl: var(--spacing-xl);
+  --gap-2xl: var(--spacing-2xl);
+
+  /* Standard gap for common layouts */
+  --gap-standard: var(--spacing-md);
+  --gap-loose: var(--spacing-lg);
+  --gap-compact: var(--spacing-sm);
+
+  /* ========== Size-based Spacing ========== */
+
+  /* For consistent spacing around components */
+  --size-xs: 1.5rem;      /* Extra small components */
+  --size-sm: 2rem;        /* Small components */
+  --size-md: 3rem;        /* Medium components */
+  --size-lg: 4rem;        /* Large components */
+  --size-xl: 6rem;        /* Extra large components */
+
+  /* ========== Component-Specific Spacing ========== */
+
+  /* Button padding */
+  --button-padding-y-sm: var(--spacing-xs);
+  --button-padding-x-sm: var(--spacing-md);
+  --button-padding-y-md: var(--spacing-sm);
+  --button-padding-x-md: var(--spacing-lg);
+  --button-padding-y-lg: var(--spacing-md);
+  --button-padding-x-lg: var(--spacing-xl);
+
+  /* Card padding */
+  --card-padding: var(--spacing-lg);
+  --card-padding-sm: var(--spacing-md);
+  --card-padding-lg: var(--spacing-xl);
+
+  /* Input field padding */
+  --input-padding-y: var(--spacing-sm);
+  --input-padding-x: var(--spacing-md);
+
+  /* Sidebar spacing */
+  --sidebar-gap: 3rem;
+  --sidebar-padding: var(--spacing-lg);
+
+  /* Header spacing */
+  --header-padding-y: var(--spacing-md);
+  --header-padding-x: var(--spacing-lg);
+
+  /* Section spacing */
+  --section-spacing: var(--spacing-2xl);
+  --section-spacing-sm: var(--spacing-xl);
+  --section-spacing-lg: var(--spacing-3xl);
+
+  /* ========== Backward Compatibility ========== */
+
+  /* Legacy values that need to be phased out */
+
+  /* These are kept for now to ensure existing styles continue to work */
+}
+/* ===== end css/tokens/spacing.css ===== */
+
+/* Breakpoints - Responsive media queries */
+/* ===== begin css/tokens/breakpoints.css ===== */
+/**
+ * Design Tokens: Breakpoints
+ * Standardized responsive breakpoints for the AffineDrift design system
+ *
+ * Breaks down: Mobile (320-767px), Tablet (768-1023px), Desktop (1024-1439px), Large (1440px+)
+ * Consolidates 12 previously inconsistent breakpoints to a standard 4-breakpoint system
+ *
+ * Usage:
+ *   @media (width < var(--breakpoint-sm)) { ... }
+ *   @media (width >= var(--breakpoint-md)) { ... }
+ */
+
+:root {
+  /* ========== Standard Breakpoints ========== */
+
+  /* Extra Small: phones, old devices */
+  --breakpoint-xs: 320px;
+
+  /* Small: tablets and large phones */
+  --breakpoint-sm: 640px;
+
+  /* Medium: small laptops, landscape tablets */
+  --breakpoint-md: 768px;
+
+  /* Large: standard desktop */
+  --breakpoint-lg: 1024px;
+
+  /* Extra Large: wide desktop screens */
+  --breakpoint-xl: 1440px;
+
+  /* ========== Breakpoint Names (for semantic reference) ========== */
+  --breakpoint-mobile-min: var(--breakpoint-xs);
+  --breakpoint-mobile-max: calc(var(--breakpoint-sm) - 1px);
+  --breakpoint-tablet-min: var(--breakpoint-sm);
+  --breakpoint-tablet-max: calc(var(--breakpoint-md) - 1px);
+  --breakpoint-desktop-min: var(--breakpoint-md);
+  --breakpoint-desktop-max: calc(var(--breakpoint-lg) - 1px);
+  --breakpoint-large-min: var(--breakpoint-lg);
+  --breakpoint-large-max: calc(var(--breakpoint-xl) - 1px);
+  --breakpoint-xlarge-min: var(--breakpoint-xl);
+
+}
+
+/* ========== Media Query Helper Comments ========== */
+
+/* Usage patterns for consistency across codebase:
+
+**Standard Operators** (Phase 2 standardization, 2026-04-30):
+  `width <` = "below breakpoint" (everything smaller)
+  `width >=` = "at or above breakpoint" (mobile-first additive)
+
+Mobile-first approach (PRIMARY - use this):
+  Base styles = mobile (no media query)
+  @media (width >= var(--breakpoint-md)) { tablet and up }
+  @media (width >= var(--breakpoint-lg)) { desktop and up }
+  @media (width >= var(--breakpoint-xl)) { large and up }
+
+Mobile-only overrides (SECONDARY - less common):
+  @media (width < var(--breakpoint-md)) { mobile specific }
+
+Between breakpoints (ranges):
+  @media (width >= var(--breakpoint-md)) and (width < var(--breakpoint-lg)) { tablet only }
+
+Print media (separate concern):
+  @media print { print styles }
+
+Dark mode (separate concern):
+  @media (prefers-color-scheme: dark) { dark mode }
+  NOTE: never combine a selector with a media query in one prelude —
+  a media query list may only contain media queries, so the selector
+  member is invalid and browsers drop it as "not all". Use a separate
+  [data-theme="dark"] rule for the manual toggle instead.
+*/
+/* ===== end css/tokens/breakpoints.css ===== */
+
+/* Shadow tokens - Elevation and depth */
+/* ===== begin css/tokens/shadows.css ===== */
+/**
+ * Design Tokens: Shadows
+ * Shadow system for elevation and depth in the AffineDrift design system
+ *
+ * Shadow scales are organized by elevation level (sm, md, lg, xl)
+ * Each shadow includes both color and blur patterns for depth perception
+ */
+
+:root {
+  /* ========== Shadow Scale ========== */
+
+  /* Based on Material Design elevation system */
+
+  /* Extra Small - for subtle emphasis */
+  --shadow-xs: 0 1px 1px 0 rgb(0 0 0 / 0.05);
+
+  /* Small - for slight elevation */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+
+  /* Medium - for cards and components */
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -1px rgb(0 0 0 / 0.06);
+
+  /* Large - for modals and overlays */
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.05);
+
+  /* Extra Large - for prominent elements */
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 10px 10px -5px rgb(0 0 0 / 0.04);
+
+  /* 2XL - for maximum elevation */
+  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+
+  /* ========== Inner Shadows ========== */
+
+  /* For inset effects and depth */
+  --shadow-inner-sm: inset 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-inner-md: inset 0 2px 4px 0 rgb(0 0 0 / 0.1);
+
+  /* ========== Shadow Colors ========== */
+
+  /* Base shadow color with transparency levels */
+  --shadow-color: rgb(0, 0, 0, 0.1);
+  --shadow-color-light: rgb(0, 0, 0, 0.05);
+  --shadow-color-dark: rgb(0, 0, 0, 0.2);
+
+  /* ========== Semantic Shadow Usage ========== */
+
+  /* Map elevation semantics to shadow levels */
+  --shadow-elevation-low: var(--shadow-sm);
+  --shadow-elevation-medium: var(--shadow-md);
+  --shadow-elevation-high: var(--shadow-lg);
+  --shadow-elevation-maximum: var(--shadow-xl);
+
+  /* Component-specific shadows */
+  --shadow-button: var(--shadow-sm);
+  --shadow-button-hover: var(--shadow-md);
+  --shadow-button-active: var(--shadow-xs);
+  --shadow-card: var(--shadow-md);
+  --shadow-card-hover: var(--shadow-lg);
+  --shadow-dropdown: var(--shadow-lg);
+  --shadow-modal: var(--shadow-xl);
+  --shadow-tooltip: var(--shadow-lg);
+
+  /* ========== Transition for Shadow Changes ========== */
+
+  /* Smooth transitions when shadows change on interaction */
+  --shadow-transition: box-shadow 0.2s ease-in-out;
+
+  /* ========== None Shadow (reset) ========== */
+  --shadow-none: 0 0 0 0 rgb(0, 0, 0, 0);
+}
+
+/* ========== Dark Mode Shadow Adjustments ========== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Increase shadow opacity in dark mode for better contrast */
+    --shadow-xs: 0 1px 1px 0 rgb(0 0 0 / 0.2);
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.15);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.2), 0 2px 4px -1px rgb(0 0 0 / 0.15);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.25), 0 4px 6px -2px rgb(0 0 0 / 0.2);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.25), 0 10px 10px -5px rgb(0 0 0 / 0.15);
+    --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.4);
+    --shadow-inner-sm: inset 0 1px 2px 0 rgb(0 0 0 / 0.15);
+    --shadow-inner-md: inset 0 2px 4px 0 rgb(0 0 0 / 0.25);
+
+    /* Adjust shadow colors for dark mode visibility */
+    --shadow-color: rgb(0, 0, 0, 0.3);
+    --shadow-color-light: rgb(0, 0, 0, 0.15);
+    --shadow-color-dark: rgb(0, 0, 0, 0.5);
+  }
+}
+
+[data-theme="dark"] {
+  --shadow-xs: 0 1px 1px 0 rgb(0 0 0 / 0.2);
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.15);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.2), 0 2px 4px -1px rgb(0 0 0 / 0.15);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.25), 0 4px 6px -2px rgb(0 0 0 / 0.2);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.25), 0 10px 10px -5px rgb(0 0 0 / 0.15);
+  --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.4);
+  --shadow-inner-sm: inset 0 1px 2px 0 rgb(0 0 0 / 0.15);
+  --shadow-inner-md: inset 0 2px 4px 0 rgb(0 0 0 / 0.25);
+  --shadow-color: rgb(0, 0, 0, 0.3);
+  --shadow-color-light: rgb(0, 0, 0, 0.15);
+  --shadow-color-dark: rgb(0, 0, 0, 0.5);
+}
+/* ===== end css/tokens/shadows.css ===== */
+
+/* Animation tokens - Timing, easing, keyframes */
+/* ===== begin css/tokens/animations.css ===== */
+/**
+ * Design Tokens: Animations & Transitions
+ * Timing functions, durations, and animation definitions for the AffineDrift design system
+ *
+ * Organization:
+ * - Transition durations
+ * - Timing functions (easing)
+ * - Transition properties
+ * - Animation definitions
+ * - Reduced motion support
+ */
+
+:root {
+  /* ========== Transition Durations ========== */
+
+  /* Standard timing in milliseconds */
+  --duration-instant: 0ms;
+  --duration-fastest: 50ms;
+  --duration-faster: 100ms;
+  --duration-fast: 150ms;
+  --duration-normal: 200ms;
+  --duration-slow: 300ms;
+  --duration-slower: 500ms;
+  --duration-slowest: 700ms;
+
+  /* Semantic duration names */
+  --transition-duration-micro: var(--duration-fastest);
+  --transition-duration-short: var(--duration-fast);
+  --transition-duration-base: var(--duration-normal);
+  --transition-duration-long: var(--duration-slow);
+  --transition-duration-longer: var(--duration-slower);
+
+  /* ========== Timing Functions (Easing) ========== */
+
+  /* Cubic Bezier curves for natural motion */
+  --ease-linear: linear;
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Spring-like easing curves */
+  --ease-spring-soft: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-spring-moderate: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-spring-stiff: cubic-bezier(0.17, 0.67, 0.3, 1.33);
+
+  /* Specific easing for different motion types */
+  --ease-entrance: cubic-bezier(0, 0, 0.2, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ========== Composite Transition Definitions ========== */
+
+  /* Pre-configured transition strings for common properties */
+  --transition-all: all var(--duration-normal) var(--ease-standard);
+  --transition-colors: color var(--duration-normal) var(--ease-standard),
+                       background-color var(--duration-normal) var(--ease-standard),
+                       border-color var(--duration-normal) var(--ease-standard);
+  --transition-opacity: opacity var(--duration-normal) var(--ease-standard);
+  --transition-transform: transform var(--duration-normal) var(--ease-standard);
+  --transition-shadow: box-shadow var(--duration-normal) var(--ease-standard);
+  --transition-background: background-color var(--duration-normal) var(--ease-standard);
+
+  /* Component-specific transitions */
+  --transition-button: all var(--duration-fast) var(--ease-standard);
+  --transition-link: all var(--duration-fast) var(--ease-standard);
+  --transition-input: border-color var(--duration-normal) var(--ease-standard),
+                      box-shadow var(--duration-normal) var(--ease-standard);
+  --transition-modal: opacity var(--duration-slow) var(--ease-standard),
+                      transform var(--duration-slow) var(--ease-standard);
+  --transition-dropdown: opacity var(--duration-fast) var(--ease-standard),
+                         transform var(--duration-fast) var(--ease-standard);
+
+  /* ========== Animation Definitions ========== */
+
+  /* Pre-defined keyframe animations available */
+
+  /* Fade animation (opacity change) */
+  --animation-fade-in: fadein var(--duration-normal) var(--ease-out);
+  --animation-fade-out: fadeout var(--duration-normal) var(--ease-in);
+
+  /* Slide animations */
+  --animation-slide-in-up: slideinup var(--duration-slow) var(--ease-out);
+  --animation-slide-in-down: slideindown var(--duration-slow) var(--ease-out);
+  --animation-slide-in-left: slideinleft var(--duration-slow) var(--ease-out);
+  --animation-slide-in-right: slideinright var(--duration-slow) var(--ease-out);
+
+  /* Scale animation */
+  --animation-scale-in: scalein var(--duration-normal) var(--ease-out);
+
+  /* Bounce animation */
+  --animation-bounce: bounce var(--duration-slower) infinite;
+
+  /* Pulse animation (gentle opacity pulse) */
+  --animation-pulse: pulse var(--duration-slower) infinite;
+
+  /* Spin animation (rotate continuously) */
+  --animation-spin: spin 1s linear infinite;
+
+  /* ========== Animation Fill Mode ========== */
+
+  /* Controls the state of animated elements before/after animation */
+  --animation-fill-mode-both: both;
+  --animation-fill-mode-forwards: forwards;
+  --animation-fill-mode-backwards: backwards;
+  --animation-fill-mode-none: none;
+
+  /* ========== Animation Direction ========== */
+  --animation-direction-normal: normal;
+  --animation-direction-reverse: reverse;
+  --animation-direction-alternate: alternate;
+  --animation-direction-alternate-reverse: alternate-reverse;
+}
+
+/* ========== Keyframe Definitions ========== */
+
+/* These keyframes are referenced by animation variable values above */
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeout {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes slideinup {
+  from {
+    opacity: 0;
+    transform: translateY(2rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideindown {
+  from {
+    opacity: 0;
+    transform: translateY(-2rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideinleft {
+  from {
+    opacity: 0;
+    transform: translateX(-2rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideinright {
+  from {
+    opacity: 0;
+    transform: translateX(2rem);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scalein {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-0.5rem);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ========== Reduced Motion Support ========== */
+
+/* Disable animations for users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    /* Set all durations to instant for accessibility */
+    --duration-instant: 0ms;
+    --duration-fastest: 0ms;
+    --duration-faster: 0ms;
+    --duration-fast: 0ms;
+    --duration-normal: 0ms;
+    --duration-slow: 0ms;
+    --duration-slower: 0ms;
+    --duration-slowest: 0ms;
+
+    /* Disable all animations */
+    --animation-fade-in: none;
+    --animation-fade-out: none;
+    --animation-slide-in-up: none;
+    --animation-slide-in-down: none;
+    --animation-slide-in-left: none;
+    --animation-slide-in-right: none;
+    --animation-scale-in: none;
+    --animation-bounce: none;
+    --animation-pulse: none;
+    --animation-spin: none;
+  }
+}
+/* ===== end css/tokens/animations.css ===== */
+
+/* Border tokens - Radius, width, styles */
+/* ===== begin css/tokens/borders.css ===== */
+/**
+ * Design Tokens: Borders
+ * Border radius, widths, and styles for the AffineDrift design system
+ *
+ * Organization:
+ * - Border radius scale
+ * - Border width scale
+ * - Border styles
+ * - Component-specific borders
+ */
+
+:root {
+  /* ========== Border Radius Scale ========== */
+
+  /* Rounded corners for different component types */
+  --radius-none: 0;
+  --radius-xs: 0.125rem;    /* 2px - minimal rounding */
+  --radius-sm: 0.25rem;     /* 4px - subtle rounding */
+  --radius-md: 0.375rem;    /* 6px - standard rounding */
+  --radius-lg: 0.5rem;      /* 8px - generous rounding */
+  --radius-xl: 0.75rem;     /* 12px - prominent rounding */
+  --radius-2xl: 1rem;       /* 16px - large rounding */
+  --radius-3xl: 1.5rem;     /* 24px - extra large rounding */
+  --radius-full: 9999px;    /* Fully rounded (pills, circles) */
+
+  /* Semantic radius names */
+  --radius-button: var(--radius-md);
+  --radius-input: var(--radius-md);
+  --radius-card: var(--radius-lg);
+  --radius-modal: var(--radius-xl);
+  --radius-pill: var(--radius-full);
+
+  /* ========== Border Width Scale ========== */
+
+  /* Thickness of borders in different contexts */
+  --border-width-0: 0px;
+  --border-width-xs: 0.5px;     /* Hairline */
+  --border-width-sm: 1px;       /* Standard */
+  --border-width-md: 2px;       /* Medium */
+  --border-width-lg: 3px;       /* Thick */
+  --border-width-xl: 4px;       /* Extra thick */
+
+  /* Semantic width names */
+  --border-width-default: var(--border-width-sm);
+  --border-width-accent: var(--border-width-md);
+  --border-width-focus: var(--border-width-md);
+
+  /* ========== Border Styles ========== */
+
+  /* Border style declarations */
+  --border-style-solid: solid;
+  --border-style-dashed: dashed;
+  --border-style-dotted: dotted;
+  --border-style-double: double;
+  --border-style-groove: groove;
+  --border-style-ridge: ridge;
+  --border-style-inset: inset;
+  --border-style-outset: outset;
+  --border-style-none: none;
+
+  /* ========== Border Color Tokens ========== */
+
+  /* Border colors are inherited from color tokens */
+
+  /* Use CSS custom properties from colors.css */
+  --border-color-default: var(--border-color);
+  --border-color-light: var(--border-light);
+  --border-color-dark: var(--color-neutral-700);
+  --border-color-accent: var(--color-primary-main);
+  --border-color-success: var(--color-success);
+  --border-color-error: var(--color-error);
+  --border-color-warning: var(--color-warning);
+  --border-color-info: var(--color-info);
+
+  /* ========== Component-Specific Borders ========== */
+
+  /* Button borders */
+  --button-border-width: var(--border-width-default);
+  --button-border-style: solid;
+  --button-border-radius: var(--radius-button);
+
+  /* Input field borders */
+  --input-border-width: var(--border-width-sm);
+  --input-border-style: solid;
+  --input-border-color: var(--border-color-default);
+  --input-border-radius: var(--radius-input);
+
+  /* Card borders */
+  --card-border-width: var(--border-width-sm);
+  --card-border-style: solid;
+  --card-border-color: var(--border-color-default);
+  --card-border-radius: var(--radius-card);
+
+  /* Modal borders */
+  --modal-border-width: var(--border-width-sm);
+  --modal-border-style: solid;
+  --modal-border-radius: var(--radius-modal);
+
+  /* ========== Focus Ring Borders ========== */
+
+  /* For keyboard navigation accessibility */
+  --focus-ring-width: 2px;
+  --focus-ring-color: var(--color-primary-main);
+  --focus-ring-offset: 2px;
+  --focus-ring-style: solid;
+
+  /* Composite focus ring property */
+  --focus-ring: var(--focus-ring-width) var(--focus-ring-style) var(--focus-ring-color);
+
+  /* ========== Divider Borders ========== */
+
+  /* For separator lines between content sections */
+  --divider-width: var(--border-width-sm);
+  --divider-color: var(--border-color-default);
+  --divider-style: solid;
+
+  /* ========== Border Transitions ========== */
+
+  /* Smooth transitions for border property changes */
+  --transition-border: border-color var(--duration-normal) var(--ease-standard),
+                       border-width var(--duration-normal) var(--ease-standard);
+}
+
+/* ========== Dark Mode Border Adjustments ========== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Adjust border colors for dark mode visibility */
+    --border-color-default: var(--color-neutral-700);
+    --border-color-light: var(--color-neutral-800);
+    --border-color-dark: var(--color-neutral-400);
+    --border-color-accent: var(--color-primary-light);
+    --input-border-color: var(--color-neutral-700);
+    --card-border-color: var(--color-neutral-700);
+  }
+}
+
+[data-theme="dark"] {
+  --border-color-default: var(--color-neutral-700);
+  --border-color-light: var(--color-neutral-800);
+  --border-color-dark: var(--color-neutral-400);
+  --border-color-accent: var(--color-primary-light);
+  --input-border-color: var(--color-neutral-700);
+  --card-border-color: var(--color-neutral-700);
+}
+/* ===== end css/tokens/borders.css ===== */
+
+/* Z-Index tokens - Stacking context */
+/* ===== begin css/tokens/z-index.css ===== */
+/**
+ * Design Tokens: Z-Index
+ * Stacking order and layering for the AffineDrift design system
+ *
+ * Organized by use case with clear separation of concerns
+ * Prevents z-index conflicts and maintains a predictable layer hierarchy
+ *
+ * Pattern: Use 10-unit gaps (0, 10, 20, 30, etc.) to allow insertion of new layers
+ */
+
+:root {
+  /* ========== Base Layer ========== */
+  --z-index-hide: -1;
+  --z-index-base: 0;
+
+  /* ========== Layout Layers ========== */
+
+  /* Background elements, backdrops */
+  --z-index-backdrop: 10;
+  --z-index-sticky: 20;
+  --z-index-fixed: 30;
+
+  /* ========== Content Layers ========== */
+
+  /* Regular content, cards, sections */
+  --z-index-content-low: 1;
+  --z-index-content-normal: 10;
+  --z-index-content-high: 20;
+
+  /* ========== Overlay Layers ========== */
+
+  /* Modals, dropdowns, tooltips */
+  --z-index-overlay: 100;
+  --z-index-dropdown: 110;
+  --z-index-sticky-nav: 120;
+  --z-index-modal: 130;
+  --z-index-popover: 140;
+  --z-index-tooltip: 150;
+
+  /* ========== Special Layers ========== */
+
+  /* Notifications, alerts, debugging */
+  --z-index-notification: 160;
+  --z-index-alert: 170;
+  --z-index-banner: 180;
+
+  /* Topmost layer */
+  --z-index-max: 999;
+  --z-index-debug: 9999;
+
+  /* ========== Component-Specific Z-Index ========== */
+
+  /* Header and Navigation */
+  --z-index-navbar: var(--z-index-sticky-nav);
+  --z-index-header: var(--z-index-sticky-nav);
+  --z-index-hamburger-menu: var(--z-index-modal);
+
+  /* Sidebar */
+  --z-index-sidebar: var(--z-index-fixed);
+  --z-index-sidebar-menu: var(--z-index-dropdown);
+
+  /* Forms and Inputs */
+  --z-index-input-focus: var(--z-index-content-normal);
+  --z-index-form-validation: var(--z-index-overlay);
+
+  /* Cards and Components */
+  --z-index-card: var(--z-index-content-normal);
+  --z-index-card-shadow: var(--z-index-content-normal);
+
+  /* Modals and Dialogs */
+  --z-index-modal-backdrop: var(--z-index-overlay);
+  --z-index-modal-content: var(--z-index-modal);
+
+  /* Dropdowns and Menus */
+  --z-index-dropdown-menu: var(--z-index-dropdown);
+  --z-index-autocomplete-menu: var(--z-index-dropdown);
+  --z-index-select-menu: var(--z-index-dropdown);
+
+  /* Tooltips and Popovers */
+  --z-index-tooltip-content: var(--z-index-tooltip);
+  --z-index-popover-content: var(--z-index-popover);
+
+  /* Notifications and Alerts */
+  --z-index-toast: var(--z-index-notification);
+  --z-index-snackbar: var(--z-index-notification);
+  --z-index-banner-notice: var(--z-index-banner);
+
+  /* Floating Elements */
+  --z-index-floating-button: var(--z-index-modal);
+  --z-index-scroll-to-top: var(--z-index-notification);
+
+  /* Skip to Content Link (accessibility) */
+  --z-index-skip-link: var(--z-index-modal);
+
+  /* ========== Z-Index Documentation ========== */
+
+  /*
+   * Layer Hierarchy (lowest to highest):
+   *
+   * -1 to 0    — Hidden/Base layers
+   * 1-30       — Layout layers (sticky, fixed)
+   * 100-150    — Overlays and dropdowns
+   * 160-180    — Notifications and banners
+   * 999        — Maximum normal layer
+   * 9999       — Debug layer (temporary use only)
+   *
+   * Guidelines:
+   * 1. Use semantic names instead of numbers when possible
+   * 2. Keep 10-unit gaps for adding new layers
+   * 3. Never use values > 999 except for debugging
+   * 4. Review z-index conflicts when adding new modal layers
+   * 5. Test stacking order at all responsive breakpoints
+   */
+}
+/* ===== end css/tokens/z-index.css ===== */
+
+/* Interactive states - Focus, hover, active, validation */
+/* ===== begin css/tokens/interactive-states.css ===== */
+/**
+ * Design Tokens: Interactive States
+ * Focus, hover, active, disabled, and error states for interactive elements
+ *
+ * Organization:
+ * - Focus states (accessibility)
+ * - Hover states (user feedback)
+ * - Active states (current selection)
+ * - Disabled states (unavailable actions)
+ * - Error/validation states
+ * - Transition timing
+ */
+
+:root {
+  /* ========== Focus States (Accessibility) ========== */
+  --focus-outline-width: 2px;
+  --focus-outline-offset: 2px;
+  --focus-outline-color: var(--color-primary-main);
+  --focus-outline-style: solid;
+
+  /* Focus ring shorthand */
+  --focus-ring: var(--focus-outline-width) var(--focus-outline-style) var(--focus-outline-color);
+  --focus-ring-offset: var(--focus-outline-offset);
+
+  /* ========== Hover States ========== */
+  --hover-opacity: 0.8;
+  --hover-brightness: 0.95;
+  --hover-text-decoration: underline;
+
+  /* Color shifts for hover (complement primary colors) */
+  --hover-primary-bg: var(--color-primary-light);
+  --hover-secondary-bg: var(--color-neutral-100);
+  --hover-neutral-bg: var(--color-neutral-100);
+
+  /* ========== Active States ========== */
+  --active-opacity: 0.7;
+  --active-brightness: 0.85;
+  --active-transform: scale(0.98);
+
+  /* ========== Disabled States ========== */
+  --disabled-opacity: 0.5;
+  --disabled-cursor: not-allowed;
+  --disabled-background: var(--color-neutral-100);
+  --disabled-color: var(--color-neutral-500);
+  --disabled-border-color: var(--color-neutral-300);
+
+  /* ========== Input States ========== */
+
+  /* Default state */
+  --input-border-color: var(--color-neutral-300);
+  --input-border-width: var(--border-width-default);
+  --input-background: var(--bg-primary);
+  --input-text-color: var(--color-neutral-900);
+  --input-placeholder-color: var(--color-neutral-500);
+
+  /* Hover state */
+  --input-hover-border-color: var(--color-neutral-400);
+  --input-hover-background: var(--color-neutral-50);
+
+  /* Focus state */
+  --input-focus-border-color: var(--color-primary-main);
+  --input-focus-outline: var(--focus-ring);
+  --input-focus-outline-offset: var(--focus-ring-offset);
+  --input-focus-box-shadow: 0 0 0 3px rgb(15, 76, 117, 0.1);
+
+  /* Disabled state */
+  --input-disabled-background: var(--color-neutral-100);
+  --input-disabled-color: var(--color-neutral-500);
+  --input-disabled-cursor: not-allowed;
+
+  /* ========== Validation States ========== */
+
+  /* Error state */
+  --state-error-color: var(--color-error);
+  --state-error-bg: rgb(220, 53, 69, 0.05);
+  --state-error-border: var(--color-error);
+
+  /* Success state */
+  --state-success-color: var(--color-success);
+  --state-success-bg: rgb(40, 167, 69, 0.05);
+  --state-success-border: var(--color-success);
+
+  /* Warning state */
+  --state-warning-color: var(--color-warning);
+  --state-warning-bg: rgb(255, 193, 7, 0.05);
+  --state-warning-border: var(--color-warning);
+
+  /* Info state */
+  --state-info-color: var(--color-info);
+  --state-info-bg: rgb(23, 162, 184, 0.05);
+  --state-info-border: var(--color-info);
+
+  /* ========== Transition Timing ========== */
+  --transition-fast: 150ms;
+  --transition-base: 200ms;
+  --transition-slow: 300ms;
+
+  /* Easing functions */
+  --transition-easing-linear: linear;
+  --transition-easing-in: cubic-bezier(0.4, 0, 1, 1);
+  --transition-easing-out: cubic-bezier(0, 0, 0.2, 1);
+  --transition-easing-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Common transitions */
+  --transition-all: all var(--transition-base) var(--transition-easing-in-out);
+  --transition-colors: color var(--transition-base) var(--transition-easing-in-out), background-color var(--transition-base) var(--transition-easing-in-out), border-color var(--transition-base) var(--transition-easing-in-out);
+  --transition-transform: transform var(--transition-base) var(--transition-easing-in-out);
+  --transition-opacity: opacity var(--transition-base) var(--transition-easing-in-out);
+
+  /* ========== Button States ========== */
+
+  /* Primary button */
+  --btn-primary-bg: var(--color-primary-main);
+  --btn-primary-color: white;
+  --btn-primary-border: var(--color-primary-main);
+  --btn-primary-hover-bg: var(--color-primary-light);
+  --btn-primary-hover-border: var(--color-primary-light);
+  --btn-primary-active-bg: var(--color-primary-dark);
+  --btn-primary-disabled-bg: var(--color-neutral-300);
+  --btn-primary-disabled-border: var(--color-neutral-300);
+
+  /* Secondary button */
+  --btn-secondary-bg: var(--color-neutral-100);
+  --btn-secondary-color: var(--color-neutral-900);
+  --btn-secondary-border: var(--color-neutral-300);
+  --btn-secondary-hover-bg: var(--color-neutral-200);
+  --btn-secondary-hover-border: var(--color-neutral-400);
+  --btn-secondary-active-bg: var(--color-neutral-300);
+  --btn-secondary-disabled-bg: var(--color-neutral-100);
+
+  /* ========== Link States ========== */
+  --link-color: var(--color-primary-light);
+  --link-hover-color: var(--color-primary-main);
+  --link-visited-color: var(--color-primary-main);
+  --link-active-color: var(--color-primary-dark);
+  --link-focus-color: var(--color-primary-main);
+}
+
+/* ========== Dark Mode Overrides ========== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Adjust input styling for dark mode */
+    --input-border-color: var(--color-neutral-700);
+    --input-background: var(--color-neutral-800);
+    --input-text-color: var(--color-neutral-50);
+    --input-placeholder-color: var(--color-neutral-500);
+    --input-hover-border-color: var(--color-neutral-600);
+    --input-hover-background: var(--color-neutral-700);
+    --input-focus-border-color: var(--color-primary-light);
+    --input-focus-box-shadow: 0 0 0 3px rgb(50, 130, 184, 0.2);
+    --input-disabled-background: var(--color-neutral-900);
+    --input-disabled-color: var(--color-neutral-600);
+
+    /* Dark mode button states */
+    --btn-secondary-bg: var(--color-neutral-900);
+    --btn-secondary-color: var(--color-neutral-100);
+    --btn-secondary-border: var(--color-neutral-700);
+    --btn-secondary-hover-bg: var(--color-neutral-800);
+    --btn-secondary-hover-border: var(--color-neutral-600);
+    --btn-secondary-active-bg: var(--color-neutral-700);
+  }
+}
+
+[data-theme="dark"] {
+  --input-border-color: var(--color-neutral-700);
+  --input-background: var(--color-neutral-800);
+  --input-text-color: var(--color-neutral-50);
+  --input-placeholder-color: var(--color-neutral-500);
+  --input-hover-border-color: var(--color-neutral-600);
+  --input-hover-background: var(--color-neutral-700);
+  --input-focus-border-color: var(--color-primary-light);
+  --input-focus-box-shadow: 0 0 0 3px rgb(50, 130, 184, 0.2);
+  --input-disabled-background: var(--color-neutral-900);
+  --input-disabled-color: var(--color-neutral-600);
+  --btn-secondary-bg: var(--color-neutral-900);
+  --btn-secondary-color: var(--color-neutral-100);
+  --btn-secondary-border: var(--color-neutral-700);
+  --btn-secondary-hover-bg: var(--color-neutral-800);
+  --btn-secondary-hover-border: var(--color-neutral-600);
+  --btn-secondary-active-bg: var(--color-neutral-700);
+}
+
+/* ========== Accessibility: Reduced Motion ========== */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition-fast: 0ms;
+    --transition-base: 0ms;
+    --transition-slow: 0ms;
+  }
+}
+/* ===== end css/tokens/interactive-states.css ===== */
+
+/**
+ * Design Token System Overview
+ * =============================
+ *
+ * This design token system serves as the single source of truth for visual constants
+ * used throughout the AffineDrift CSS architecture.
+ *
+ * Key Benefits:
+ * - Consistency: All values defined once, used everywhere
+ * - Maintainability: Change design in one place
+ * - Scalability: Easy to add new tokens as needed
+ * - Documentation: Self-documenting code with clear organization
+ * - Dark Mode: Automatic theming via CSS variables
+ * - Accessibility: Built-in support for reduced motion preferences
+ *
+ * Phase 1 Completion Status:
+ * - 8 token files created ✓
+ * - Colors: 40+ variables (primary, semantic, neutral, functional) ✓
+ * - Typography: 30+ variables (families, sizes, weights, line heights) ✓
+ * - Spacing: 35+ variables (scale, padding, margins, gaps) ✓
+ * - Breakpoints: 5 standard breakpoints ✓
+ * - Shadows: 10+ elevation levels ✓
+ * - Animations: 15+ timing/easing configurations ✓
+ * - Borders: 20+ radius and width configurations ✓
+ * - Z-Index: 20+ stacking levels ✓
+ *
+ * Next Phase (Phase 2): Breakpoint Standardization
+ * - Replace all hardcoded media queries with token values
+ * - Consolidate 12 breakpoint variations to 4 standard values
+ * - Audit responsive behavior at each breakpoint
+ *
+ * To Use These Tokens:
+ * 1. In CSS: color: var(--color-primary-main);
+ * 2. In CSS: margin: var(--spacing-md);
+ * 3. In CSS: @media (width >= var(--breakpoint-md)) { }
+ *
+ * For dark mode: Variables automatically adjust based on:
+ * - System preference: prefers-color-scheme: dark
+ * - Manual override: [data-theme="dark"] attribute
+ *
+ * For accessibility: Animations automatically disable for:
+ * - prefers-reduced-motion: reduce
+ */
+/* ===== end css/tokens/design-tokens.css ===== */
+/* ===== begin css/breakpoints.css ===== */
+/* ---
+   CSS Breakpoints - Standard Scale
+   Phase 1: Design Tokens (Consolidated)
+
+   Standard breakpoints established for consistent responsive design.
+   These are the canonical values - all @media queries should reference
+   these breakpoints only (or use CSS variables).
+
+   Mobile-first approach: base styles for xs, then enhance at larger breakpoints
+   --- */
+
+:root {
+  /* Standard responsive breakpoints (in pixels) */
+  --breakpoint-xs: 320px;   /* Extra small (phones) */
+  --breakpoint-sm: 640px;   /* Small (landscape phones) */
+  --breakpoint-md: 768px;   /* Medium (tablets) */
+  --breakpoint-lg: 1024px;  /* Large (tablets, laptops) */
+  --breakpoint-xl: 1440px;  /* Extra large (desktops) */
+}
+
+/* Breakpoint reference for documentation:
+
+   xs (320px)  : Small phones, mobile devices
+   sm (640px)  : Landscape phones, larger mobile devices
+   md (768px)  : Tablets, small laptops
+   lg (1024px) : Tablets (landscape), standard laptops
+   xl (1440px) : Large desktops, wide screens
+
+   Common patterns:
+   - Mobile-first: @media (width >= var(--breakpoint-md)) { ... }
+   - Desktop-down: @media (width < var(--breakpoint-md)) { ... }
+   - Range: @media (width >= var(--breakpoint-md)) and (width < var(--breakpoint-lg)) { ... }
+*/
+/* ===== end css/breakpoints.css ===== */
+/* ===== begin css/bibliography.css ===== */
+/* ---
+   Bibliography
+   --- */
+.bib-entry {
+  background: var(--bg-body);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.bib-entry:hover {
+  border-color: var(--accent-blue);
+  box-shadow: var(--shadow-sm);
+}
+
+.bib-entry.highlighted {
+  border-color: var(--primary-blue);
+  background: var(--light-blue);
+}
+
+.bib-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.bib-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--primary-dark);
+  margin: 0;
+  flex: 1;
+}
+
+.type-badge {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.type-paper {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.type-book {
+  background: #f3e5f5;
+  color: #7b1fa2;
+}
+
+.type-article {
+  background: #e8f5e9;
+  color: #388e3c;
+}
+
+.type-thesis {
+  background: #fff3e0;
+  color: #f57c00;
+}
+
+.type-conference {
+  background: #fce4ec;
+  color: #c2185b;
+}
+
+.type-other {
+  background: var(--bg-alt);
+  color: var(--text-muted);
+}
+
+.bib-meta {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+.bib-authors {
+  font-style: italic;
+}
+
+.bib-year {
+  margin-left: 0.5rem;
+}
+
+.bib-venue {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.bib-concepts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.concept-tag {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  background: var(--bg-alt);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 0.8rem;
+  color: var(--text-main);
+}
+
+.bib-detail-content {
+  padding-top: 1rem;
+}
+
+.detail-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--primary-dark);
+  margin-bottom: 1rem;
+  line-height: 1.4;
+}
+
+.detail-section {
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.detail-section:last-child {
+  border-bottom: none;
+}
+
+.detail-section strong {
+  display: block;
+  color: var(--primary-blue);
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.detail-section p {
+  margin: 0;
+  color: var(--text-main);
+  line-height: 1.6;
+}
+
+.detail-section ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.detail-section li {
+  margin-bottom: 0.5rem;
+}
+
+.detail-section a {
+  color: var(--accent-blue);
+  text-decoration: none;
+}
+
+.detail-section a:hover {
+  color: var(--primary-blue);
+  text-decoration: underline;
+}
+
+.bib-empty-state {
+  color: var(--text-muted);
+  padding: 2rem;
+  text-align: center;
+}
+
+.bib-empty-state-details {
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.bib-inline-concepts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+}
+
+.bib-inline-concepts-list {
+  margin-bottom: 0.75rem;
+}
+
+.bib-inline-links {
+  margin-top: 1rem;
+}
+
+.detail-text-capitalize {
+  text-transform: capitalize;
+}
+
+.detail-concepts {
+  margin-top: 0.5rem;
+}
+
+.detail-link {
+  display: inline-block;
+  margin-top: 0.5rem;
+}
+
+.detail-related-list {
+  margin-top: 0.5rem;
+  padding-left: 1.5rem;
+}
+
+#bib-sort-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.bib-sort-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.sort-label {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-right: 0.25rem;
+}
+
+.sort-btn {
+  padding: 0.4rem 0.75rem;
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: var(--bg-body);
+  color: var(--text-main);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sort-btn:hover {
+  border-color: var(--accent-blue);
+  background: var(--bg-alt);
+}
+
+.sort-btn.active {
+  background: var(--primary-blue);
+  border-color: var(--primary-blue);
+  color: #fff;
+}
+
+#bib-count {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-left: auto;
+}
+
+@media (max-width: 640px) {
+  #bib-sort-controls {
+    justify-content: center;
+  }
+
+  #bib-count {
+    width: 100%;
+    text-align: center;
+    margin-left: 0;
+    margin-top: 0.5rem;
+  }
+}
+/* ===== end css/bibliography.css ===== */
+/* ===== begin css/critics-corner.css ===== */
+/* ---
+   AffineDrift - Critics Corner Styles
+   Technical criticism and discussion section
+   --- */
+
+.critics-corner {
+    margin-top: 3rem;
+    border: 2px solid #dc3545;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #fff5f5 0%, #fff 100%);
+    overflow: hidden;
+}
+
+.critics-corner-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1.5rem;
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    border: none;
+    width: 100%;
+    text-align: left;
+    font-family: inherit;
+}
+
+.critics-corner-header:hover {
+    background: linear-gradient(135deg, #c82333 0%, #bd2130 100%);
+}
+
+.critics-corner-title {
+    margin: 0;
+    padding: 1rem 1.5rem;
+    font-size: 1.25rem;
+    font-family: "Playfair Display", serif;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: white;
+    background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    border-radius: 12px 12px 0 0;
+}
+
+.critics-corner-title::before {
+    content: "⚠️";
+    font-size: 1.5rem;
+}
+
+.critics-corner-label {
+    font-size: 0.9rem;
+}
+
+.critics-corner-icon {
+    font-size: 1.5rem;
+    transition: transform 0.3s ease;
+    line-height: 1;
+}
+
+.critics-corner-header[aria-expanded="true"] .critics-corner-icon {
+    transform: rotate(180deg);
+}
+
+.critics-corner-content {
+    padding: 0 1.5rem;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out, padding 0.4s ease-out;
+}
+
+.critics-corner-header[aria-expanded="true"]+.critics-corner-content {
+    padding: 1.5rem;
+    max-height: 2000px;
+}
+
+/* Criticism items */
+.criticism-item {
+    background: white;
+    border: 1px solid #e9ecef;
+    border-left: 4px solid #dc3545;
+    border-radius: 8px;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.criticism-item:last-child {
+    margin-bottom: 0;
+}
+
+.criticism-item h3 {
+    color: #c82333;
+    font-size: 1.1rem;
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.criticism-item h3::before {
+    content: "🔍";
+}
+
+.criticism-item p {
+    margin-bottom: 0.75rem;
+    color: var(--text-main);
+    line-height: 1.7;
+}
+
+.criticism-item p:last-child {
+    margin-bottom: 0;
+}
+
+/* Response/defense section within criticism */
+.criticism-response {
+    background: #e8f5e9;
+    border-left: 3px solid #4caf50;
+    padding: 1rem;
+    margin-top: 1rem;
+    border-radius: 4px;
+}
+
+.criticism-response h4 {
+    color: #2e7d32;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.criticism-response h4::before {
+    content: "💡";
+}
+
+.criticism-response p {
+    margin-bottom: 0;
+    font-size: 0.95rem;
+}
+
+/* Severity indicators */
+.criticism-severity {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 100px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.criticism-severity.minor {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.criticism-severity.minor::before {
+    content: "ℹ️";
+}
+
+.criticism-severity.moderate {
+    background: #ffe0b2;
+    color: #e65100;
+}
+
+.criticism-severity.moderate::before {
+    content: "⚠️";
+}
+
+.criticism-severity.major {
+    background: #ffcdd2;
+    color: #c62828;
+}
+
+.criticism-severity.major::before {
+    content: "🛑";
+}
+
+/* Empty state */
+.critics-corner-empty {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+.critics-corner-empty::before {
+    content: "✓";
+    display: block;
+    font-size: 3rem;
+    color: #4caf50;
+    margin-bottom: 1rem;
+    font-style: normal;
+}
+/* ===== end css/critics-corner.css ===== */
+/* ===== begin css/resources.css ===== */
+/* ---
+   Resource Grid & Cards
+   --- */
+.resources-section {
+  padding: 1rem 0;
+}
+
+.resource-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr));
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+.resource-grid > * {
+  min-width: 0;
+}
+
+.resource-card {
+  background: var(--bg-body);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.resource-card:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--accent-blue);
+  transform: translateY(-2px);
+}
+
+.resource-card.has-media {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.resource-media {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--bg-alt);
+}
+
+.resource-media img {
+  width: 100%;
+  height: auto;
+  max-height: 200px;
+  object-fit: cover;
+  display: block;
+}
+
+.resource-content h3 {
+  font-size: 1.25rem;
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  color: var(--primary-dark);
+  line-height: 1.3;
+}
+
+.resource-description {
+  color: var(--text-main);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+
+.resource-link {
+  color: var(--accent-blue);
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  gap: 0.25rem;
+  margin-top: auto;
+  padding: 0.5rem 0;
+  transition: color 0.2s ease;
+}
+
+.resource-category-card .resource-link,
+#bib-list .resource-link {
+  display: flex;
+  width: 100%;
+  justify-content: flex-start;
+}
+
+.resource-link:hover {
+  color: var(--primary-blue);
+}
+
+/* Page section heading */
+.page-section {
+  margin-bottom: 1rem;
+}
+
+.section-heading {
+  font-size: 2rem;
+  color: var(--primary-dark);
+  margin: 0;
+  padding-bottom: 0.75rem;
+  border-bottom: 3px solid var(--accent-blue);
+}
+
+/* Responsive resource grid */
+@media (max-width: 767.98px) {
+  .resource-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .resource-card.has-media {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Resources page layout */
+.resources-layout {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+  gap: var(--sidebar-gap);
+  align-items: start;
+}
+
+.resources-sidebar {
+  position: relative;
+}
+
+.resources-layout > .resources-sidebar {
+  grid-column: 1 !important;
+}
+
+.resources-nav {
+  background: var(--bg-body);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.resources-nav-heading {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin: 0 0 0.75rem;
+}
+
+.resources-nav-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.resources-nav-links li {
+  margin-bottom: 0.25rem;
+}
+
+.resources-nav-links a {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.75rem 0.875rem;
+  border-radius: 8px;
+  color: var(--text-main);
+  text-decoration: none;
+}
+
+.resources-nav-links a:hover,
+.resources-nav-links a.active {
+  background: var(--light-blue);
+  color: var(--primary-blue);
+}
+
+.resources-main {
+  min-width: 0;
+}
+
+.resources-layout > .resources-main {
+  grid-column: 2 !important;
+}
+
+.resource-categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 1.25rem;
+}
+
+.resource-category-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.25rem;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  background: var(--bg-body);
+}
+
+.resource-category-card .resource-link {
+  margin-top: auto;
+}
+
+@media (max-width: 1023.98px) {
+  .resources-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .resources-sidebar {
+    order: 2;
+  }
+
+  .resources-layout > .resources-sidebar,
+  .resources-layout > .resources-main {
+    grid-column: 1 !important;
+  }
+}
+/* ===== end css/resources.css ===== */
 
 /* Component primitives — see EPIC #3140 B3. */
-@import url("css/components/site-card.css");
-@import url("css/components/site-button.css");
-@import url("css/components/section-stack.css");
-@import url("css/components/page-sidebar.css");
-@import url("css/components/entry-list.css");
-@import url("css/components/provenance-note.css");
-@import url("css/components/home-hero.css");
-@import url("css/components/status-banner.css");
-@import url("css/utilities/spacing.css");
+/* ===== begin css/components/site-card.css ===== */
+/* Site card — the canonical container primitive.
+   Use instead of: .quick-link-card, .audience-card, .resource-card,
+   .featured-card, .category-section, .laymans-item. See EPIC #3140 B3. */
+
+.site-card {
+  display: block;
+  padding: 1.25rem 1.5rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--color-neutral-200);
+  border-radius: 6px;
+  color: inherit;
+  text-decoration: none;
+  transition:
+    border-color var(--duration-fast) var(--ease-standard),
+    background-color var(--duration-fast) var(--ease-standard);
+}
+
+.site-card:hover,
+.site-card:focus-visible {
+  border-color: var(--color-primary-light);
+  background: var(--bg-secondary);
+  text-decoration: none;
+}
+
+.site-card:focus-visible {
+  outline: 2px solid var(--color-primary-light);
+  outline-offset: 2px;
+}
+
+/* Tighter variant for compact rows */
+.site-card--inline {
+  padding: 0.75rem 1rem;
+}
+
+/* Larger variant for hero callouts */
+.site-card--feature {
+  padding: 2rem;
+}
+
+/* Brand-fill variant: solid primary background, white text. Used for the
+   single hero card per page where the brand needs to assert itself. */
+.site-card--brand {
+  background: var(--color-primary-main);
+  color: var(--color-neutral-0);
+  border-color: var(--color-primary-main);
+}
+
+.site-card--brand h1,
+.site-card--brand h2,
+.site-card--brand h3,
+.site-card--brand a {
+  color: var(--color-neutral-0);
+}
+
+.site-card--brand:hover {
+  background: var(--color-primary-dark);
+  border-color: var(--color-primary-dark);
+}
+
+/* Callout variant: left accent bar, neutral fill. */
+.site-card--callout {
+  border-left: 4px solid var(--color-primary-light);
+  background: var(--bg-secondary);
+}
+
+.site-card > :first-child {
+  margin-top: 0;
+}
+
+.site-card > :last-child {
+  margin-bottom: 0;
+}
+/* ===== end css/components/site-card.css ===== */
+/* ===== begin css/components/site-button.css ===== */
+/* Site button — two-variant button primitive.
+   Use instead of: .cta-button, .resource-link with inline styles. */
+
+.site-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.1rem;
+  background: var(--color-primary-main);
+  color: var(--color-neutral-0);
+  border: 1px solid var(--color-primary-main);
+  border-radius: 4px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard),
+    color var(--duration-fast) var(--ease-standard);
+}
+
+.site-button:hover,
+.site-button:focus-visible {
+  background: var(--color-primary-dark);
+  border-color: var(--color-primary-dark);
+  color: var(--color-neutral-0);
+  text-decoration: none;
+}
+
+.site-button:focus-visible {
+  outline: 2px solid var(--color-primary-light);
+  outline-offset: 2px;
+}
+
+.site-button[disabled],
+.site-button[aria-disabled="true"] {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Ghost variant — transparent fill, primary border */
+.site-button--ghost {
+  background: transparent;
+  color: var(--color-primary-main);
+}
+
+.site-button--ghost:hover,
+.site-button--ghost:focus-visible {
+  background: var(--bg-secondary);
+  color: var(--color-primary-dark);
+}
+
+/* On-brand variants: usable when a .site-button sits on top of a
+   .site-card--brand surface (filled white-on-brand button + ghost). */
+.site-button--on-brand {
+  background: var(--color-neutral-0);
+  color: var(--color-primary-main);
+  border-color: var(--color-neutral-0);
+}
+
+.site-button--on-brand:hover,
+.site-button--on-brand:focus-visible {
+  background: var(--bg-secondary);
+  color: var(--color-primary-dark);
+  border-color: var(--bg-secondary);
+}
+
+.site-button--on-brand-ghost {
+  background: transparent;
+  color: var(--color-neutral-0);
+  border-color: var(--color-neutral-0);
+}
+
+.site-button--on-brand-ghost:hover,
+.site-button--on-brand-ghost:focus-visible {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--color-neutral-0);
+  border-color: var(--color-neutral-0);
+}
+/* ===== end css/components/site-button.css ===== */
+/* ===== begin css/components/section-stack.css ===== */
+/* Section stack — vertical rhythm primitive.
+   Direct children separate with a thin neutral divider and consistent
+   spacing. Replaces ad-hoc margin-top: 2rem/3rem on home sections. */
+
+.section-stack > * + * {
+  margin-top: 2.5rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--color-neutral-200);
+}
+
+/* Compact variant for denser pages */
+.section-stack--compact > * + * {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+}
+/* ===== end css/components/section-stack.css ===== */
+/* ===== begin css/components/page-sidebar.css ===== */
+/* Page sidebar — shared structural sidebar primitive.
+   Replaces .home-sidebar, .left-sidebar, .resources-sidebar copies. */
+
+.page-sidebar {
+  position: sticky;
+  top: var(--space-4, 1rem);
+  align-self: start;
+  padding-right: 1rem;
+  border-right: 1px solid var(--color-neutral-200);
+}
+
+.page-sidebar__heading {
+  margin: 0 0 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.page-sidebar__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.page-sidebar__list li + li {
+  margin-top: 0.4rem;
+}
+
+.page-sidebar__list a {
+  display: block;
+  padding: 0.25rem 0;
+  color: var(--text-primary);
+  text-decoration: none;
+  border-left: 2px solid transparent;
+  padding-left: 0.5rem;
+  transition:
+    color var(--duration-fast) var(--ease-standard),
+    border-color var(--duration-fast) var(--ease-standard);
+}
+
+.page-sidebar__list a:hover,
+.page-sidebar__list a:focus-visible {
+  color: var(--color-primary-main);
+  border-left-color: var(--color-primary-light);
+}
+
+.page-sidebar__list a[aria-current="page"],
+.page-sidebar__list a.is-active {
+  color: var(--color-primary-main);
+  border-left-color: var(--color-primary-main);
+  font-weight: 600;
+}
+/* ===== end css/components/page-sidebar.css ===== */
+/* ===== begin css/components/entry-list.css ===== */
+/* Entry list — typographic list of links + deks.
+   The "Latest writing" / "Books" / "Connect" blocks on the home page,
+   the article index, and the resources listings all consume this. */
+
+.entry-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.entry-list__item {
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--color-neutral-200);
+}
+
+.entry-list__item:first-child {
+  padding-top: 0;
+}
+
+.entry-list__item:last-child {
+  border-bottom: none;
+}
+
+.entry-list__title {
+  display: inline-block;
+  font-family: var(--font-display, "Playfair Display"), Georgia, serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-standard);
+}
+
+.entry-list__title:hover,
+.entry-list__title:focus-visible {
+  color: var(--color-primary-main);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.entry-list__dek {
+  margin: 0.35rem 0 0;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.55;
+}
+
+.entry-list__meta {
+  margin-top: 0.2rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.02em;
+}
+
+/* Compact variant: titles only, no deks. */
+.entry-list--compact .entry-list__item {
+  padding: 0.5rem 0;
+}
+/* ===== end css/components/entry-list.css ===== */
+/* ===== begin css/components/provenance-note.css ===== */
+/* Provenance note — small aside attached to a claim that needs
+   a citation or scope-limitation pointer. Replaces the inline-styled
+   "Provenance:" callouts. */
+
+.provenance-note {
+  margin: 1.25rem 0 0;
+  padding: 0.85rem 1rem;
+  background: var(--bg-secondary);
+  border-left: 3px solid var(--color-primary-light);
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  border-radius: 0 4px 4px 0;
+}
+
+.provenance-note strong {
+  color: var(--text-primary);
+}
+
+.provenance-note a {
+  color: var(--color-primary-main);
+}
+/* ===== end css/components/provenance-note.css ===== */
+/* ===== begin css/components/home-hero.css ===== */
+/* Home hero — single content-first introduction block.
+   No background fills, no gradients, no decorative imagery. The brand is
+   the typography and the math. */
+
+.home-hero h1 {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-display, "Playfair Display"), Georgia, serif;
+  font-size: clamp(2.25rem, 3.5vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-primary);
+}
+
+.home-hero__subtitle {
+  margin: 0 0 1.25rem;
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.home-hero__lede {
+  max-width: 62ch;
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--text-primary);
+}
+/* ===== end css/components/home-hero.css ===== */
+/* ===== begin css/components/status-banner.css ===== */
+/* Status banner — semantic page-status callout.
+   Replaces the per-page gradient "Status: …" boxes on
+   book-reviews.qmd, daydreams-doodles.qmd, research-reviews.qmd. */
+
+.status-banner {
+  margin: 0 0 1.5rem;
+  padding: 1rem 1.25rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--color-neutral-200);
+  border-left: 4px solid var(--color-primary-light);
+  border-radius: 4px;
+}
+
+.status-banner__title {
+  margin: 0 0 0.25rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: 0.02em;
+}
+
+.status-banner__body {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+}
+
+.status-banner__body + .status-banner__body {
+  margin-top: 0.4rem;
+}
+
+/* Semantic variants drive the left-border color only — every banner
+   shares the same neutral fill. Avoid using these for purely decorative
+   differentiation. */
+.status-banner--info { border-left-color: var(--color-info); }
+.status-banner--success { border-left-color: var(--color-success); }
+.status-banner--warning { border-left-color: var(--color-warning); }
+.status-banner--exploratory { border-left-color: var(--color-primary-light); }
+
+/* Inline status pill — a small chip-like label next to a heading.
+   Replaces inline ``style="display: inline-block; padding…"`` blobs. */
+.status-pill {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.15rem 0.5rem;
+  background: var(--color-neutral-100);
+  color: var(--text-secondary);
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  vertical-align: middle;
+}
+
+.status-pill--exploratory { background: var(--color-neutral-100); }
+.status-pill--info {
+  background: var(--color-primary-lightest);
+  color: var(--color-primary-main);
+}
+.status-pill--warning     { background: var(--color-warning-lightest, var(--color-neutral-100)); }
+/* ===== end css/components/status-banner.css ===== */
+/* ===== begin css/utilities/spacing.css ===== */
+/* Spacing utilities — single-purpose, token-driven margins and padding.
+   Used to retire trivial inline ``style="margin-*"`` attributes across the
+   QMD pages. Keep this list tight: a utility class is only justified when
+   the same value appears ≥3 times across the codebase. */
+
+.u-mt-0 { margin-top: 0 !important; }
+.u-mt-1 { margin-top: 0.5rem; }
+.u-mt-2 { margin-top: 1rem; }
+.u-mt-3 { margin-top: 1.5rem; }
+.u-mt-4 { margin-top: 2rem; }
+
+.u-mb-0 { margin-bottom: 0 !important; }
+.u-mb-1 { margin-bottom: 0.5rem; }
+.u-mb-2 { margin-bottom: 1rem; }
+.u-mb-3 { margin-bottom: 1.5rem; }
+.u-mb-4 { margin-bottom: 2rem; }
+
+.u-ml-1 { margin-left: 0.5rem; }
+.u-ml-2 { margin-left: 1rem; }
+.u-ml-3 { margin-left: 1.5rem; }
+
+.u-inline-block { display: inline-block; }
+
+/* Inline-action link — used by "Buy on Amazon" / "Preview" rows under
+   book covers. Replaces 33 copies of
+   ``style="margin-top: 0.5rem; display: inline-block;"``. */
+.u-inline-action {
+  display: inline-block;
+  margin-top: 0.5rem;
+}
+
+/* Thumbnail offset — replaces ``style="margin-left: 1rem;"`` next to
+   book-cover images. */
+.media-thumb {
+  margin-left: 1rem;
+}
+
+/* Resource caption — italic, muted, slightly smaller. Replaces inline
+   styling on the descriptive text under resource entries. */
+.resource-caption {
+  margin-top: 1rem;
+  font-style: italic;
+  color: var(--text-light);
+  font-size: 0.9rem;
+}
+
+/* Page-level small italic note. Replaces ``style="font-style: italic;
+   color: var(--text-light);"`` and similar. */
+.page-note {
+  font-style: italic;
+  color: var(--text-light);
+}
+
+.page-note--small {
+  font-size: 0.9rem;
+}
+
+/* Section heading + paragraph helpers used widely. */
+.section-lead {
+  color: var(--text-light);
+  margin-bottom: 1.5rem;
+}
+
+/* Queued / placeholder card state — replaces inline opacity+border on
+   review cards waiting to be written. */
+.is-queued {
+  opacity: 0.65;
+  border-left: 3px solid var(--accent-secondary);
+}
+
+/* Footnote-sized prose under a resource card body. */
+.resource-footnote {
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  color: var(--text-light);
+}
+
+.resource-footnote--italic {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+/* Full-width child in a resource-grid (replaces inline grid-column). */
+.resource-card--full {
+  grid-column: 1 / -1;
+}
+
+/* Contact-card body text used on /pages/contact.qmd. */
+.contact-card__body {
+  margin-bottom: 0.75rem;
+  color: var(--text-light);
+}
+
+/* Page lede — slightly larger introduction paragraph. */
+.page-lede {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--text-primary);
+}
+
+/* Models / build pages — common layout helpers. */
+.button-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.u-p-3 { padding: 1.5rem; }
+
+.model-section-h4 {
+  margin: 1rem 0 0.5rem;
+}
+
+.model-bullet-list {
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.model-bullet-list--leading {
+  margin: 1rem 0;
+  line-height: 1.8;
+}
+
+.code-block {
+  background: var(--color-primary-dark);
+  color: var(--text-light);
+  padding: 1rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin: 1rem 0;
+  font-family: var(--font-mono, ui-monospace, monospace);
+}
+
+.code-block--compact {
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.resource-meta {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+}
+
+.resource-meta-inline {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  padding: 0 0.5rem;
+}
+
+.resource-card--padded { padding: 1.5rem; }
+
+.resource-grid--wide {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.resource-grid--narrow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+/* Capped software logo — limits width of vendor logos on /models/*.qmd. */
+.software-logo--capped {
+  max-width: 250px;
+  margin-bottom: 1rem;
+}
+
+/* Bibliography search input (resources/bibliography.qmd). */
+.bib-search-input {
+  width: 100%;
+  padding: 0.8rem;
+  border: 1px solid var(--border-color, var(--color-neutral-200));
+  border-radius: 4px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  font-size: 1rem;
+}
+
+/* Manifesto claim-to-source matrix. Replaces the inline table styling on
+   /pages/drifter-manifesto.qmd. */
+.manifesto-table {
+  width: 100%;
+  margin-top: 0.75rem;
+  border-collapse: collapse;
+}
+
+.manifesto-table__th,
+.manifesto-table__td {
+  padding: 0.35rem;
+  vertical-align: top;
+}
+
+.manifesto-table__th {
+  text-align: left;
+  border-bottom: 1px solid var(--color-neutral-200);
+}
+
+/* Figure block — centered image with subtle elevation. */
+.figure-block {
+  margin: 2rem 0;
+  text-align: center;
+}
+
+.figure-block__media {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  box-shadow: var(--shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.1));
+}
+/* ===== end css/utilities/spacing.css ===== */
 
 /* Reset and Base Styles */
 * {
@@ -34,31 +2791,17 @@
 }
 
 :root {
-  /* Modern Scientific Palette */
-  --primary-dark: #1a1a2e;
-  --primary-blue: #0f4c75;
-  --accent-blue: #205d86;
-  --light-blue: #e3f2fd;
-  --pure-white: #fff;
-  --white-transparent: rgb(255, 255, 255, 0.9);
-  --legal-pad-yellow: #fef9e7;
+  /* Color palette: see css/tokens/colors.css (single source of truth, #3224).
+     The brand/functional color tokens (--primary-*, --accent-blue, --bg-*,
+     --text-*, --border-color, --shadow-color, --gradient-*, --legal-pad-*) and
+     ALL dark-mode remaps are defined and themed there. No color values or dark
+     blocks live in this file anymore. */
 
-  /* Neutral scale */
-  --bg-body: #fff;
-  --bg-alt: #f8f9fa;
-  --bg-sidebar: #fcfcfc;
-  --text-main: #212529;
-  --text-muted: #6c757d;
-  --border-color: #e9ecef;
+  /* Shadow geometry (non-color elevation tokens). */
   --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -1px rgb(0 0 0 / 0.06);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1),
     0 4px 6px -2px rgb(0 0 0 / 0.05);
-  --shadow-color: rgb(0, 0, 0, 0.1);
-
-  /* Gradients */
-  --gradient-start: #0f4c75;
-  --gradient-end: #3282b8;
 
   /* Layout dimensions */
   --sidebar-width: 280px;
@@ -2713,46 +5456,14 @@ h1.title,
 }
 
 /* =============================================================
-   Dark Mode – automatic via prefers-color-scheme (OS preference)
-
-   A selector inside a media-query list ("@media (...), [data-theme]")
-   is invalid CSS and is dropped by browsers, and an unguarded :root
-   here would override an explicit light choice made via the toggle.
-   Guard with :not([data-theme="light"]) so a user-selected light theme
-   wins over the OS dark preference.
+   Dark Mode color remaps now live in css/tokens/colors.css (#3224).
+   Both gates (manual [data-theme="dark"] and the OS prefers-color-scheme path,
+   guarded by :root:not([data-theme="light"]) so an explicit light choice wins —
+   the canonical pattern from #3217) are centralized there. The legacy palette
+   names (--bg-body, --text-main, --light-blue, --legal-pad-yellow, ...) are
+   aliases of canonical --color-* tokens, so they inherit the remap with no
+   per-file dark block here.
    ============================================================= */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    color-scheme: dark;
-
-    --bg-body: #0d0d1a;
-    --bg-alt: #1a1a2e;
-    --bg-sidebar: #112;
-    --text-main: #dde1e7;
-    --text-muted: #8b90a0;
-    --border-color: #2a2a40;
-    --light-blue: #0a2a40;
-    --legal-pad-yellow: #1a1810;
-    --shadow-color: rgb(0, 0, 0, 0.4);
-  }
-}
-
-/* =============================================================
-   Dark Mode – manual toggle via [data-theme="dark"]
-   ============================================================= */
-[data-theme="dark"] {
-  color-scheme: dark;
-
-  --bg-body: #0d0d1a;
-  --bg-alt: #1a1a2e;
-  --bg-sidebar: #112;
-  --text-main: #dde1e7;
-  --text-muted: #8b90a0;
-  --border-color: #2a2a40;
-  --light-blue: #0a2a40;
-  --legal-pad-yellow: #1a1810;
-  --shadow-color: rgb(0, 0, 0, 0.4);
-}
 
 /* =============================================================
    Dark Mode Toggle Button
@@ -2951,3 +5662,4 @@ mjx-container[jax="CHTML"][display="true"]::-webkit-scrollbar-thumb,
     white-space: normal;
   }
 }
+/* ===== end styles.css ===== */

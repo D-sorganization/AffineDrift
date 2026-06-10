@@ -1,13 +1,29 @@
 /**
- * Design Tokens: Colors
- * Semantic color palette for the AffineDrift design system
+ * Design Tokens: Colors — SINGLE SOURCE OF TRUTH
+ * Semantic color palette for the AffineDrift design system.
+ *
+ * This file is canonical for EVERY color in both light and dark themes
+ * (issue #3224). The legacy palette names that historically lived in
+ * styles.css (`--primary-dark`, `--bg-body`, `--text-main`, ...) are now thin
+ * aliases declared in styles.css `:root` that point back at the `--color-*`
+ * tokens defined here, so there is exactly one place to change a color.
+ *
+ * Dark mode is centralized here too, gated CONSISTENTLY under both:
+ *   - `[data-theme="dark"]`                         (manual toggle), and
+ *   - `@media (prefers-color-scheme: dark)
+ *        :root:not([data-theme="light"])`           (OS preference)
+ * The `:not([data-theme="light"])` guard lets an explicit light choice win over
+ * an OS dark preference (canonical pattern from PR #3217), and the
+ * prefers-color-scheme path means no-JS visitors with OS dark get a fully dark
+ * page (legacy AND token consumers), not a half-dark one.
  *
  * Organization:
  * - Primary colors (brand)
  * - Semantic colors (success, error, warning, info)
  * - Neutral scale (grays)
  * - Functional colors (backgrounds, text, borders)
- * - Deprecated/Legacy (for backward compatibility)
+ * - Accent / highlight (genuinely unique brand values)
+ * - Dark-mode remaps (one block per gate, identical bodies)
  */
 
 :root {
@@ -40,81 +56,134 @@
   --color-neutral-700: #374151;
   --color-neutral-800: #1f2937;
 
+  /* ========== Accent / Highlight (unique brand values) ========== */
+
+  /* Distinct from --color-primary-light (#3282b8): the legal-pad chrome blue. */
+  --color-accent: #205d86;
+
+  /* Legal-pad yellow family (page paper / highlight). */
+  --color-highlight-yellow: #fef9e7;
+  --color-highlight-yellow-accent: #fdf5cc;
+  --color-highlight-yellow-border: #f5e6a0;
+
   /* ========== Functional Colors (backgrounds, text, borders) ========== */
   --bg-primary: #fff;
   --bg-secondary: #f8f9fa;
   --bg-tertiary: #fcfcfc;
   --bg-dark: #1a1a2e;
+  --bg-body: #fff;
   --bg-alt: #f8f9fa;
   --bg-sidebar: #fcfcfc;
   --text-primary: #212529;
   --text-secondary: #6c757d;
+  --text-main: #212529;
   --text-muted: #6c757d;
   --text-dark: #1a1a2e;
   --text-light: #f8f9fa;
   --text-inverse: #fff;
   --border-color: #e9ecef;
   --border-light: #f0f0f0;
+  --shadow-color: rgb(0, 0, 0, 0.1);
+
+  /* Brand gradient endpoints. */
+  --gradient-start: #0f4c75;
+  --gradient-end: #3282b8;
 
   /* ========== Special Colors ========== */
   --color-white-transparent: rgb(255, 255, 255, 0.9);
-  --legal-pad-yellow: #fef9e7;
-  --legal-pad-yellow-accent: #fdf5cc;
-  --legal-pad-yellow-border: #f5e6a0;
 
-  /* ========== Deprecated/Legacy (for backward compatibility) ========== */
+  /* Legacy aliases for the highlight family (kept for existing consumers). */
+  --legal-pad-yellow: var(--color-highlight-yellow);
+  --legal-pad-yellow-accent: var(--color-highlight-yellow-accent);
+  --legal-pad-yellow-border: var(--color-highlight-yellow-border);
 
-  /* These are aliases for existing usage. Plan to deprecate. */
+  /* ========== Deprecated/Legacy aliases (single source of truth) ========== */
+
+  /* These resolve to the canonical --color-* tokens above. */
   --primary-dark: var(--color-primary-dark);
   --primary-blue: var(--color-primary-main);
-  --accent-blue: var(--color-primary-light);
+  --accent-blue: var(--color-accent);
   --light-blue: var(--color-primary-lightest);
   --pure-white: var(--color-neutral-0);
   --white-transparent: var(--color-white-transparent);
 }
 
-/* ========== Dark Mode Color Overrides ========== */
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* Invert backgrounds and text */
-    --bg-primary: #1a1a2e;
-    --bg-secondary: #0f4c75;
-    --bg-tertiary: #162b47;
-    --text-primary: #e3f2fd;
-    --text-secondary: #b0bec5;
-    --text-dark: #e3f2fd;
-    --text-light: #1a1a2e;
-    --border-color: #3282b8;
-    --border-light: #0f4c75;
+/**
+ * ========== Dark Mode Remaps — CENTRALIZED ==========
+ *
+ * Both gates below carry the SAME variable assignments. Values preserve the
+ * historically-effective dark theme (where the late styles.css dark blocks won
+ * for shared tokens), so this consolidation is a zero-visual-change refactor.
+ */
 
-    /* Adjust semantic colors for dark mode */
-    --color-success: #66bb6a;
-    --color-error: #ef5350;
-    --color-warning: #ffb74d;
-    --color-info: #29b6f6;
-    --bg-sidebar: #0f4c75;
-    --legal-pad-yellow: #4a4a1a;
-    --legal-pad-yellow-accent: #6b6b2a;
-    --legal-pad-yellow-border: #8b8b3a;
-  }
-}
-
+/* Manual toggle. */
 [data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Functional surfaces and text. */
   --bg-primary: #1a1a2e;
   --bg-secondary: #0f4c75;
   --bg-tertiary: #162b47;
+  --bg-dark: #0d0d1a;
+  --bg-body: #0d0d1a;
+  --bg-alt: #1a1a2e;
+  --bg-sidebar: #112;
   --text-primary: #e3f2fd;
   --text-secondary: #b0bec5;
+  --text-main: #dde1e7;
+  --text-muted: #8b90a0;
   --text-dark: #e3f2fd;
   --text-light: #1a1a2e;
-  --border-color: #3282b8;
+  --border-color: #2a2a40;
   --border-light: #0f4c75;
+  --shadow-color: rgb(0, 0, 0, 0.4);
+
+  /* Semantic colors tuned for dark surfaces. */
   --color-success: #66bb6a;
   --color-error: #ef5350;
   --color-warning: #ffb74d;
   --color-info: #29b6f6;
-  --bg-sidebar: #0f4c75;
-  --legal-pad-yellow: #4a4a1a;
-  --legal-pad-yellow-accent: #6b6b2a;
-  --legal-pad-yellow-border: #8b8b3a;
+
+  /* Brand lightest / highlight tuned for dark. */
+  --color-primary-lightest: #0a2a40;
+  --color-highlight-yellow: #1a1810;
+  --color-highlight-yellow-accent: #6b6b2a;
+  --color-highlight-yellow-border: #8b8b3a;
+}
+
+/* OS preference (no-JS path). Guarded so an explicit light choice wins. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    /* Functional surfaces and text. */
+    --bg-primary: #1a1a2e;
+    --bg-secondary: #0f4c75;
+    --bg-tertiary: #162b47;
+    --bg-dark: #0d0d1a;
+    --bg-body: #0d0d1a;
+    --bg-alt: #1a1a2e;
+    --bg-sidebar: #112;
+    --text-primary: #e3f2fd;
+    --text-secondary: #b0bec5;
+    --text-main: #dde1e7;
+    --text-muted: #8b90a0;
+    --text-dark: #e3f2fd;
+    --text-light: #1a1a2e;
+    --border-color: #2a2a40;
+    --border-light: #0f4c75;
+    --shadow-color: rgb(0, 0, 0, 0.4);
+
+    /* Semantic colors tuned for dark surfaces. */
+    --color-success: #66bb6a;
+    --color-error: #ef5350;
+    --color-warning: #ffb74d;
+    --color-info: #29b6f6;
+
+    /* Brand lightest / highlight tuned for dark. */
+    --color-primary-lightest: #0a2a40;
+    --color-highlight-yellow: #1a1810;
+    --color-highlight-yellow-accent: #6b6b2a;
+    --color-highlight-yellow-border: #8b8b3a;
+  }
 }

@@ -124,6 +124,17 @@ jobs:
         with:
           to: html
 
+      - name: Generate sitemap.xml
+        run: python3 scripts/generate_sitemap.py --output docs/sitemap.xml
+
+      - name: Generate RSS feed.xml
+        run: python3 scripts/generate_feed.py --output docs/feed.xml
+
+      - name: Bundle CSS (flatten @import waterfall)
+        # Flattens the canonical css/ @import graph into a single render-blocking
+        # docs/styles.css bundle, then validates docs/css/ mirrors match css/.
+        run: python3 scripts/bundle_css.py
+
       - name: Verify frontend asset sync
         # docs/css/ and docs/js/ are populated by Quarto render above.
         # Running --check here validates that canonical sources match their
