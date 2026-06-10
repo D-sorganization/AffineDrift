@@ -16,7 +16,7 @@ Induced acceleration analysis was pioneered by @ZajacGordon1989 for studying mus
 
 :::
 
-## The Mathematical Foundation {#sec:iaa_math}
+## The Mathematical Foundation {#sec-iaa_math}
 
 ### Starting from the Manipulator Equation
 
@@ -24,7 +24,7 @@ Recall from Chapter @sec-04_forces_and_torques that the equations of motion for 
 
 $$
 \boldsymbol{M}(\boldsymbol{q}) \ddot{\boldsymbol{q}} = \boldsymbol{\tau}_{\text{muscle}} + \boldsymbol{V}(\boldsymbol{q}, \dot{\boldsymbol{q}}) + \boldsymbol{g}(\boldsymbol{q})
-$$ {#eq:iaa_eom}
+$$ {#eq-iaa_eom}
 
 where $\boldsymbol{M}(\boldsymbol{q})$ is the mass (inertia) matrix, $\boldsymbol{q}$ is the vector of generalized coordinates (joint angles), $\boldsymbol{\tau}_{\text{muscle}}$ is the vector of muscle-generated joint torques, $\boldsymbol{V}(\boldsymbol{q}, \dot{\boldsymbol{q}})$ collects the velocity-dependent torques (Coriolis and centrifugal effects), and $\boldsymbol{g}(\boldsymbol{q})$ is the gravity torque vector.
 
@@ -32,7 +32,7 @@ The critical step is to solve for accelerations by premultiplying both sides by 
 
 $$
 \boxed{\ddot{\boldsymbol{q}} = \boldsymbol{M}^{-1}(\boldsymbol{q}) \left[ \boldsymbol{\tau}_{\text{muscle}} + \boldsymbol{V}(\boldsymbol{q}, \dot{\boldsymbol{q}}) + \boldsymbol{g}(\boldsymbol{q}) \right]}
-$$ {#eq:iaa_forward}
+$$ {#eq-iaa_forward}
 
 Because the mass matrix $\boldsymbol{M}(\boldsymbol{q})$ is symmetric and positive definite (a consequence of the fact that kinetic energy is always positive for any nonzero velocity), its inverse always exists. Moreover, the multiplication $\boldsymbol{M}^{-1} \boldsymbol{\tau}$ is a *linear* operation in $\boldsymbol{\tau}$. This linearity is the mathematical basis for superposition in induced acceleration analysis.
 
@@ -43,7 +43,7 @@ At any frozen instant in time (fixed $\boldsymbol{q}$ and $\dot{\boldsymbol{q}}$
 
 $$
 \ddot{\boldsymbol{q}} = \underbrace{\boldsymbol{M}^{-1}(\boldsymbol{q}) \boldsymbol{\tau}_{\text{muscle}}}_{\text{muscle-induced}} + \underbrace{\boldsymbol{M}^{-1}(\boldsymbol{q}) \boldsymbol{V}(\boldsymbol{q}, \dot{\boldsymbol{q}})}_{\text{velocity-induced}} + \underbrace{\boldsymbol{M}^{-1}(\boldsymbol{q}) \boldsymbol{g}(\boldsymbol{q})}_{\text{gravity-induced}}
-$$ {#eq:iaa_superposition}
+$$ {#eq-iaa_superposition}
 
 Each term can be computed independently. Furthermore, the muscle torque vector can itself be decomposed into contributions from individual muscles or individual joints:
 
@@ -72,9 +72,9 @@ This is not a thought experiment about what *would* happen over time if we only 
 
 :::
 
-### Connection to the Control-Affine Framework {#sec:iaa_affine_connection}
+### Connection to the Control-Affine Framework {#sec-iaa_affine_connection}
 
-Readers who have followed the development in Chapter @sec-05_affine_structure will recognize that Equation @eq:iaa_superposition is closely related to the control-affine decomposition:
+Readers who have followed the development in Chapter @sec-05_affine_structure will recognize that Equation @eq-iaa_superposition is closely related to the control-affine decomposition:
 
 $$
 \dot{\boldsymbol{x}} = \underbrace{\boldsymbol{f}(\boldsymbol{x})}_{\text{drift}} + \underbrace{\boldsymbol{G}(\boldsymbol{x}) \boldsymbol{u}}_{\text{control}}
@@ -102,7 +102,7 @@ These are the same quantities, partitioned slightly differently. The drift field
 
 :::
 
-## Dynamic Coupling: A Muscle at One Joint Accelerates Every Joint {#sec:dynamic_coupling}
+## Dynamic Coupling: A Muscle at One Joint Accelerates Every Joint {#sec-dynamic_coupling}
 
 One of the most important and initially counterintuitive consequences of the equations of motion is **dynamic coupling**: a torque applied at one joint produces accelerations at *every* joint in the kinematic chain, not just the joint where the torque is applied.
 
@@ -112,7 +112,7 @@ Consider a two-joint system (shoulder and elbow) in a horizontal plane. If we ap
 
 $$
 \begin{bmatrix} \ddot{\theta}_1 \\ \ddot{\theta}_2 \end{bmatrix} = \boldsymbol{M}^{-1}(\boldsymbol{q}) \begin{bmatrix} \tau_1 \\ 0 \end{bmatrix} = \begin{bmatrix} A_{11} \tau_1 \\ A_{21} \tau_1 \end{bmatrix}
-$$ {#eq:iaa_coupling}
+$$ {#eq-iaa_coupling}
 
 where $A_{ij}$ denotes the $(i,j)$ element of $\boldsymbol{M}^{-1}(\boldsymbol{q})$. The shoulder experiences an acceleration $A_{11} \tau_1$ (the *direct* effect), but the elbow also experiences an acceleration $A_{21} \tau_1$ (the *remote* or *induced* effect). The off-diagonal element $A_{21}$ is generally nonzero because the segments are physically linked: applying a torque at the shoulder creates a reaction force at the elbow joint, which accelerates the forearm.
 
@@ -144,7 +144,7 @@ Changing the posture---even at joints far from the muscle---changes the accelera
 
 $$
 \text{IAI}_{j \to k} = \left| M_{kk}^{-1} M_{kj} \right|
-$$ {#eq:iai}
+$$ {#eq-iai}
 
 This dimensionless index depends only on the system's configuration and inertial properties, not on the magnitudes of the torques. It reveals the *structural* coupling between joints.
 
@@ -152,7 +152,7 @@ For a model of quiet standing, @Challis2011 found that the ankle has over 12 tim
 
 In the golf swing, similar asymmetries exist. During the early downswing, the large muscles of the hips and trunk have a strong ability to accelerate the distal segments (arms, wrists, club) through the off-diagonal elements of $\boldsymbol{M}^{-1}$. As the limbs extend during the late downswing, the coupling changes: the extended configuration alters the inertia matrix, potentially amplifying or diminishing the effectiveness of proximal torques on distal motion.
 
-## Instantaneous Effects versus Cumulative Effects {#sec:instantaneous_cumulative}
+## Instantaneous Effects versus Cumulative Effects {#sec-instantaneous_cumulative}
 
 One of the most important distinctions to emerge from the induced acceleration literature---and one with direct relevance to understanding the golf swing---is the difference between **instantaneous effects** and **cumulative effects**. This distinction was developed most clearly in the work of @Hirashima2008kinetic and @Hirashima2011application in the context of baseball pitching, and it maps directly onto the drift-control decomposition introduced in Chapter @sec-05_affine_structure.
 
@@ -195,7 +195,7 @@ This is the physical basis for the observation made in Chapter @sec-05_affine_st
 
 @Hirashima2008kinetic demonstrated this phenomenon clearly in baseball pitching, where the elbow extension and wrist flexion accelerations are produced predominantly by velocity-dependent torques rather than by local joint torques. The proximal trunk and shoulder joint motions, in contrast, are produced primarily by local muscle torques (instantaneous effects). The kinetic chain, in this framework, is a mechanism by which *instantaneous* muscle efforts at proximal joints are converted into *cumulative* velocity-dependent torques that accelerate distal joints without requiring large distal muscle forces.
 
-## Lessons from Throwing: Implications for the Golf Swing {#sec:throwing_lessons}
+## Lessons from Throwing: Implications for the Golf Swing {#sec-throwing_lessons}
 
 The golf swing and the overarm throw share fundamental dynamical features: both are fast, multi-joint movements performed by serial kinematic chains, and both rely on proximal-to-distal energy transfer to achieve high distal segment speeds. The induced acceleration analyses of baseball pitching performed by @Hirashima2007control, @Hirashima2008kinetic, @HirashimaOhtsuki2008 provide some of the clearest demonstrations of how the kinetic chain operates at the level of individual forces and accelerations.
 
@@ -229,7 +229,7 @@ A separate mechanism, distinct from the cumulative effect, also operates in fast
 
 In the golf swing, an analogous mechanism may operate at the wrist: as the lead arm decelerates approaching impact, the braking torque at the wrist can accelerate the club through the instantaneous remote effect, adding to the dominant cumulative contribution from the drift field.
 
-## Lessons from Walking and Clinical Biomechanics {#sec:walking_lessons}
+## Lessons from Walking and Clinical Biomechanics {#sec-walking_lessons}
 
 While the golf swing is a fast ballistic movement, the foundational work on induced acceleration analysis was performed in the study of human walking. These studies provide important methodological lessons and validate the technique against experimental data.
 
@@ -267,7 +267,7 @@ This patient-specific diagnostic capability is a direct consequence of superposi
 
 @Caruthers2016 used a three-dimensional musculoskeletal model with 46 degrees of freedom and 194 muscle-tendon actuators to study sit-to-stand transfers. Their induced acceleration analysis revealed that the gluteus maximus and soleus were the primary contributors to lifting and advancing the center of mass, while the quadriceps---despite generating large forces---actually *opposed* forward center-of-mass acceleration. This finding was counterintuitive to the quadriceps' anatomical function and to naive kinematic reasoning, but was entirely consistent with the dynamic coupling embedded in $\boldsymbol{M}^{-1}(\boldsymbol{q})$ given the body's configuration during the task.
 
-## Implications for the Golf Swing {#sec:golf_implications}
+## Implications for the Golf Swing {#sec-golf_implications}
 
 ### The Swing as a Superposition Problem
 
@@ -295,7 +295,7 @@ The induced acceleration framework unifies the observations made throughout this
 
 This correspondence is not a coincidence: both frameworks start from the same equations of motion and exploit the same linearity of the inverse mass matrix. The biomechanics community and the control theory community arrived at equivalent decompositions through different paths, motivated by different questions ("what does each muscle do?" versus "what can the controller influence?"). Recognizing this equivalence strengthens both approaches and allows practitioners in either field to draw on the insights of the other.
 
-## Superposition and Its Limits {#sec:superposition_limits}
+## Superposition and Its Limits {#sec-superposition_limits}
 
 A critical caveat, emphasized in Chapter 3 of *The Geometry of Motion, Volume I*, is that superposition holds *instantaneously* but *not* over time. The accelerations induced by individual forces add up exactly at each frozen instant. But if we were to simulate the system forward in time under only one force, the resulting trajectory would diverge from the component of the actual trajectory "due to" that force, because the system's state evolves nonlinearly.
 
@@ -303,7 +303,7 @@ A critical caveat, emphasized in Chapter 3 of *The Geometry of Motion, Volume I*
 
 The lesson for golf biomechanics is clear: to understand what each muscle does at any instant, one must account for the full kinematic chain. Analyzing the wrist in isolation, or the shoulder in isolation, produces misleading conclusions because it ignores the off-diagonal coupling that is the physical basis of the kinetic chain itself.
 
-## Summary {#sec:iaa_summary}
+## Summary {#sec-iaa_summary}
 
 ::: {.callout-important}
 ## Key Takeaways from Induced Acceleration Analysis

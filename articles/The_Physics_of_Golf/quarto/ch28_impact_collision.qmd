@@ -43,7 +43,7 @@ The coefficient of restitution relates these:
 $$
 \begin{aligned}
 e = \frac{v_b' - v_c'}{v_c - 0} = \frac{v_b' - v_c'}{v_c}
-{#eq:cor_definition}
+{#eq-cor_definition}
 \end{aligned}
 $$
 
@@ -69,20 +69,20 @@ Now we apply conservation of momentum. During the collision, momentum is conserv
 $$
 \begin{aligned}
 m_c v_c + m_b \cdot 0 = m_c v_c' + m_b v_b'
-{#eq:momentum_conservation}
+{#eq-momentum_conservation}
 \end{aligned}
 $$
 
 We have two equations (the momentum equation and the COR equation) and two unknowns ($v_c'$ and $v_b'$). Solving these simultaneously:
 
-From equation \eqref{eq:cor_definition}:
+From equation @eq-cor_definition:
 $$
 \begin{aligned}
 v_b' - v_c' = e \cdot v_c
 \end{aligned}
 $$
 
-From equation \eqref{eq:momentum_conservation}:
+From equation @eq-momentum_conservation:
 $$
 \begin{aligned}
 m_c v_c = m_c v_c' + m_b v_b'
@@ -93,7 +93,7 @@ Solving (standard result):
 $$
 \begin{aligned}
 v_b' = \frac{(1+e) m_c}{m_c + m_b} v_c
-{#eq:ball_velocity_after}
+{#eq-ball_velocity_after}
 \end{aligned}
 $$
 
@@ -118,7 +118,7 @@ $$
 $$
 For drivers with $e=0.83$, $m_c=200\,\text{g}$, $m_b=46\,\text{g}$, we get $\approx 1.48$.
 
-Note: this formula uses clubhead mass $m_c$. In practice, the *effective mass* at impact is larger (Section @sec:ch28_effective_mass), typically $m_{\mathrm{eff}} \approx 1.1$--$1.2 \times m_c$, because the shaft and proximal arm contribute inertia. Using $m_{\mathrm{eff}}$ instead of $m_c$ increases the predicted smash factor slightly and matches measured values more closely.
+Note: this formula uses clubhead mass $m_c$. In practice, the *effective mass* at impact is larger (Section @sec-ch28_effective_mass), typically $m_{\mathrm{eff}} \approx 1.1$--$1.2 \times m_c$, because the shaft and proximal arm contribute inertia. Using $m_{\mathrm{eff}}$ instead of $m_c$ increases the predicted smash factor slightly and matches measured values more closely.
 
 The smash factor is nearly independent of clubhead speed. A slower swing at the same quality of strike produces the same smash factor. This is why feel matters more than raw speed.
 
@@ -126,7 +126,7 @@ The smash factor is nearly independent of clubhead speed. A slower swing at the 
 
 ### The Effective Mass Concept
 
-Here is where things get subtle. Equation \eqref{eq:ball_velocity_after} uses $m_c$ as the clubhead mass. But what mass actually participates in the collision?
+Here is where things get subtle. @eq-ball_velocity_after uses $m_c$ as the clubhead mass. But what mass actually participates in the collision?
 
 If you hold a baseball bat loosely and someone hits it with a baseball, most of the bat's mass is not involved in the immediate collision---only the part near the impact point. The rest of the bat is "hidden" by the finite speed of sound in the material.
 
@@ -145,7 +145,7 @@ In this illustrative estimate, this 10--20% increase comes primarily from the sh
 The practical implication: the effective mass is closer to what you feel intuitively (the whole club, not just the head) than what naive geometry suggests.
 
 ::: {.callout-note}
-## Effective Mass
+## Effective Mass {#sec-ch28_effective_mass}
 
 The effective mass is the inertial resistance to acceleration that the ball experiences during collision. It accounts for the clubhead mass, shaft mass, and coupling through the tensioned shaft:
 $$
@@ -248,7 +248,7 @@ If impact were truly isolated, grip force would be irrelevant. But it is not.
 
 Experimental evidence from force plate studies and launch monitor correlations shows that grip force at impact (measured 5--10ms before contact) correlates with final ball speed even when clubhead speed is held constant. The effect is small but measurable: a 10% increase in grip force can increase ball speed by 0.3--0.5 mph.
 
-How is this possible if the collision is isolated? The mechanism is that grip force (axial tension) changes the effective mass $m_{\text{eff}}$ participating in the collision. A tighter grip increases shaft pre-tension, which couples more of the arm mass into the collision. The effective mass rises slightly, and by equation \eqref{eq:ball_velocity_after}, if $m_{\text{eff}}$ increases, $v_b'$ increases (slightly).
+How is this possible if the collision is isolated? The mechanism is that grip force (axial tension) changes the effective mass $m_{\text{eff}}$ participating in the collision. A tighter grip increases shaft pre-tension, which couples more of the arm mass into the collision. The effective mass rises slightly, and by equation @eq-ball_velocity_after, if $m_{\text{eff}}$ increases, $v_b'$ increases (slightly).
 
 ### Argument 4: Quantitative Impulse Analysis
 
@@ -420,7 +420,7 @@ Recall from the earlier chapters that a golf swing is described by a control-aff
 $$
 \begin{aligned}
 \dot{state} = drift(state) + control(t) \cdot \inputmap(state)
-{#eq:ztcf_general}
+{#eq-ztcf_general}
 \end{aligned}
 $$
 
@@ -601,7 +601,7 @@ The backspin rate in revolutions per minute is approximately:
 $$
 \begin{aligned}
 RPM_{\text{backspin}} \approx 96 \times \text{(Spin loft in degrees)} + \text{(adjustments for speed, friction)}
-{#eq:spin_rate_approx}
+{#eq-spin_rate_approx}
 \end{aligned}
 $$
 

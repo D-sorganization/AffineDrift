@@ -21,7 +21,7 @@ At high Reynolds numbers (which is the regime of golf—$\mathrm{Re} = \rho v L 
 
 $$
 F_D = \frac{1}{2} \rho v^2 C_D A
-{#eq:drag-scalar}
+{#eq-drag-scalar}
 $$
 
 where:
@@ -35,7 +35,7 @@ The drag force acts *opposite* to the velocity direction. In vector form:
 
 $$
 \bm{F}_D = -\frac{1}{2} \rho C_D A \|\bm{v}\| \bm{v}
-{#eq:drag-vector}
+{#eq-drag-vector}
 $$
 
 This is a nonlinear function of velocity—quadratic in magnitude. This is critical: at twice the speed, drag is *four times* larger.
@@ -78,7 +78,7 @@ Let's put numbers on drag during a golf swing. For a clubhead with:
 The drag force is:
 $$
 F_D = \frac{1}{2} \times 1.225 \times 50^2 \times 0.4 \times 0.005 = 3.06 \text{ N}
-{#eq:drag-example}
+{#eq-drag-example}
 $$
 
 This seems small (3 N for a 50 m/s clubhead), but over the course of a downswing lasting approximately 0.25 seconds [@Nesbit2005; @McTeigue1994] (illustrative; depends on golfer; typical measured downswing durations range from roughly 0.2--0.3 seconds) with the club accelerating and decelerating, the impulse (integrated force) can be significant. Moreover, drag acts throughout the downswing, not just at impact.
@@ -95,33 +95,33 @@ The shaft is approximately a cylinder: length $L \approx 1.1$ m, diameter $d \ap
 However, the shaft is not moving at a single velocity. Different points along the shaft rotate at different speeds. For a rigid shaft rotating about the shoulder joint, the velocity at position $s$ along the shaft (measured from the shoulder) is:
 $$
 v(s) = \dot{\theta} \times s
-{#eq:shaft-velocity}
+{#eq-shaft-velocity}
 $$
 where $\dot{\theta}$ is the angular velocity and $s$ is the distance from the rotation center.
 
 The drag force on an infinitesimal segment $ds$ is:
 $$
 dF = \frac{1}{2} \rho C_D d_{\text{seg}} v(s)^2 \, ds
-{#eq:shaft-drag-element}
+{#eq-shaft-drag-element}
 $$
 where $d_{\text{seg}}$ is the local diameter (approximately constant for a standard shaft).
 
 Substituting $v(s) = \dot{\theta} s$:
 $$
 dF = \frac{1}{2} \rho C_D d_{\text{seg}} (\dot{\theta} s)^2 \, ds = \frac{1}{2} \rho C_D d_{\text{seg}} \dot{\theta}^2 s^2 \, ds
-{#eq:shaft-drag-integrated}
+{#eq-shaft-drag-integrated}
 $$
 
 The total drag force on the shaft is:
 $$
 F_{\text{shaft}} = \int_0^L \frac{1}{2} \rho C_D d_{\text{seg}} \dot{\theta}^2 s^2 \, ds = \frac{1}{2} \rho C_D d_{\text{seg}} \dot{\theta}^2 \frac{L^3}{3}
-{#eq:total-shaft-drag}
+{#eq-total-shaft-drag}
 $$
 
 This drag force acts at different points along the shaft, so it produces a distributed torque about the shoulder. The effective drag torque is:
 $$
 \tau_{\text{shaft}} = \int_0^L s \, dF = \int_0^L s \times \frac{1}{2} \rho C_D d_{\text{seg}} \dot{\theta}^2 s^2 \, ds = \frac{1}{2} \rho C_D d_{\text{seg}} \dot{\theta}^2 \frac{L^4}{4}
-{#eq:shaft-drag-torque}
+{#eq-shaft-drag-torque}
 $$
 
 ::: {.callout-tip}
@@ -135,7 +135,7 @@ Consider a golf shaft with parameters:
 - $\dot{\theta}_{\text{shoulder}} = 25$ rad/s (impact angular velocity, approximately 1430 deg/s, consistent with published golf-swing kinematic data [@Nesbit2005])
 - $\rho = 1.225$ kg/m$^3$
 
-Using Eq. \eqref{eq:shaft-drag-torque}:
+Using @eq-shaft-drag-torque:
 $$
 \tau_{\text{shaft}} = \frac{1}{2} \times 1.225 \times 0.5 \times 0.01 \times 25^2 \times \frac{1.1^4}{4}
 $$
@@ -165,7 +165,7 @@ The clubhead is bluff—roughly hemispherical or teardrop-shaped. It experiences
 At impact, with clubhead speed $v_{\text{club}} \approx 50$ m/s, the drag force on the clubhead is:
 $$
 F_{\text{head}} = \frac{1}{2} \times 1.225 \times 0.005 \times 50^2 \times 0.4 = 3.06 \text{ N}
-{#eq:clubhead-drag-impact}
+{#eq-clubhead-drag-impact}
 $$
 
 Importantly, modern driver design has aerodynamically optimized crowns (top surface) to reduce $C_D$ compared to older designs. A 2010s-era driver might have $C_D \approx 0.35$; a smooth sphere at the same speed would have $C_D \approx 0.47$. This 25% reduction in drag coefficient is one reason modern drivers are more forgiving—less drag means more energy reaches the ball.
@@ -175,7 +175,7 @@ Importantly, modern driver design has aerodynamically optimized crowns (top surf
 The moving mass of the golfer's arms and torso also experiences drag. The arms move at speeds up to 10--15 m/s (much slower than the club; illustrative range, depends on individual and swing speed [@Nesbit2005; @Hume2005]), and the frontal area is roughly 0.05 m$^2$ (shoulders and torso width, an illustrative estimate). The drag force on the arms is:
 $$
 F_{\text{arms}} = \frac{1}{2} \times 1.225 \times 0.05 \times 12^2 \times 1.0 \approx 4.4 \text{ N}
-{#eq:arm-drag}
+{#eq-arm-drag}
 $$
 
 where we used a more bluff $C_D \approx 1.0$ for the complex shape of the human body. While this is comparable to the clubhead drag, the arms move more slowly and for a longer duration (the arms accelerate throughout the downswing, not just at impact). The integrated effect is smaller.
@@ -199,7 +199,7 @@ For optimization and biomechanical analysis, the clubhead is the priority. Reduc
 Drag enters the equations of motion as an additional generalized force. Recall the Lagrangian equations with external forces:
 $$
 \bm{M}(\bm{q})\ddot{\bm{q}} + \bm{C}(\bm{q},\dot{\bm{q}})\dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{B}\bm{u} + \bm{J}_c^T \boldsymbol{\lambda} + \bm{Q}_{\text{drag}}(\bm{q}, \dot{\bm{q}})
-{#eq:eom-with-drag}
+{#eq-eom-with-drag}
 $$
 
 where $\bm{Q}_{\text{drag}}(\bm{q}, \dot{\bm{q}})$ is the vector of generalized drag forces.
@@ -207,7 +207,7 @@ where $\bm{Q}_{\text{drag}}(\bm{q}, \dot{\bm{q}})$ is the vector of generalized 
 For a single joint (say, shoulder rotation), the cartesian drag force $F_D$ is converted to a joint torque via the moment arm:
 $$
 Q_{\text{drag}} = -r \times F_D
-{#eq:cartesian-to-joint}
+{#eq-cartesian-to-joint}
 $$
 
 where the negative sign indicates that drag opposes motion. For the multi-segment case (shaft), the moment arm $r$ varies along the length, and we integrate as done in the previous section.
@@ -215,13 +215,13 @@ where the negative sign indicates that drag opposes motion. For the multi-segmen
 Drag is a *dissipative* force: it always opposes motion and always removes mechanical energy. The power dissipated by drag is:
 $$
 P_{\text{drag}} = \bm{Q}_{\text{drag}}^T \dot{\bm{q}} < 0 \quad \text{always}
-{#eq:drag-power}
+{#eq-drag-power}
 $$
 
 This means:
 $$
 \frac{dE}{dt} = P_{\text{muscle}} + P_{\text{gravity}} + P_{\text{inertial}} + P_{\text{drag}} + ...
-{#eq:energy-balance}
+{#eq-energy-balance}
 $$
 
 where $P_{\text{drag}} < 0$ represents energy leaving the system into the air.
@@ -241,19 +241,19 @@ One of the most important applications of the equations of motion is *inverse dy
 The inverse dynamics formula is derived from rearranging the EOM:
 $$
 \bm{u} = \bm{M}(\bm{q})^{-1} \left[ \bm{M}(\bm{q})\ddot{\bm{q}} + \bm{C}(\bm{q},\dot{\bm{q}})\dot{\bm{q}} + \bm{g}(\bm{q}) + \bm{Q}_{\text{drag}} - \bm{J}_c^T \boldsymbol{\lambda} \right]
-{#eq:inverse-dyn-full}
+{#eq-inverse-dyn-full}
 $$
 
 If we neglect drag, we compute:
 $$
 \bm{u}_{\text{wrong}} = \bm{M}(\bm{q})^{-1} \left[ \bm{M}(\bm{q})\ddot{\bm{q}} + \bm{C}(\bm{q},\dot{\bm{q}})\dot{\bm{q}} + \bm{g}(\bm{q}) - \bm{J}_c^T \boldsymbol{\lambda} \right]
-{#eq:inverse-dyn-no-drag}
+{#eq-inverse-dyn-no-drag}
 $$
 
 The error is:
 $$
 \Delta\bm{u} = \bm{u} - \bm{u}_{\text{wrong}} = \bm{M}(\bm{q})^{-1} \bm{Q}_{\text{drag}}(\bm{q}, \dot{\bm{q}})
-{#eq:inverse-dyn-error}
+{#eq-inverse-dyn-error}
 $$
 
 ::: {.callout-note}
@@ -316,13 +316,13 @@ Why do dimples reduce drag? The answer lies in boundary layer transition. For a 
 The lift force on a ball with backspin is:
 $$
 F_L = \frac{1}{2} \rho v^2 C_L A
-{#eq:lift-force}
+{#eq-lift-force}
 $$
 
 where $C_L$ depends on the spin rate (spin parameter):
 $$
 S = \frac{r \omega}{v}
-{#eq:spin-parameter}
+{#eq-spin-parameter}
 $$
 
 Here $r$ is the ball radius, $\omega$ is the angular velocity (backspin), and $v$ is the translational velocity. For typical golf shots, $S \sim 0.1$--$0.3$, and $C_L$ ranges from 0.1 to 0.5.
@@ -330,7 +330,7 @@ Here $r$ is the ball radius, $\omega$ is the angular velocity (backspin), and $v
 The trajectory of a ball in flight must be computed numerically by solving:
 $$
 m \ddot{\bm{r}} = m\bm{g} - \frac{1}{2}\rho v^2 C_D A \frac{\bm{v}}{\|\bm{v}\|} + \bm{F}_L(\omega)
-{#eq:ball-trajectory}
+{#eq-ball-trajectory}
 $$
 
 where $\bm{F}_L$ is the Magnus lift force. This is a nonlinear ODE with velocity-dependent coefficients.
@@ -360,7 +360,7 @@ Treat the club as a few discrete elements (shaft, clubhead, grip), each with a f
 
 $$
 \bm{Q}_{\text{drag}} = -\sum_{i} r_i(\bm{q}) \times \frac{1}{2} \rho C_{D,i} A_i \|\bm{v}_i(\bm{q}, \dot{\bm{q}})\| \bm{v}_i(\bm{q}, \dot{\bm{q}})
-{#eq:lumped-drag}
+{#eq-lumped-drag}
 $$
 
 where the sum is over clubhead, shaft, and arm segments, and $\bm{v}_i$ is the velocity of segment $i$.
@@ -403,7 +403,7 @@ For precision inverse dynamics analysis (research or high-level coaching), these
 Recall that the Zero-Torque Counterfactual (ZTCF) describes the natural motion of the golf swing when all control inputs are zero: $\bm{u} = 0$. The equation of motion becomes:
 $$
 \bm{M}(\bm{q})\ddot{\bm{q}} + \bm{C}(\bm{q},\dot{\bm{q}})\dot{\bm{q}} + \bm{g}(\bm{q}) + \bm{Q}_{\text{drag}}(\bm{q}, \dot{\bm{q}}) = \bm{J}_c^T \boldsymbol{\lambda}
-{#eq:ztcf-with-drag}
+{#eq-ztcf-with-drag}
 $$
 
 The ZTCF describes the *passive trajectory*—the path the swing would follow if muscles applied zero torque (after release). In this framework, drag is part of the *drift field* $f(\bm{x})$.
@@ -552,9 +552,9 @@ With all external forces now catalogued---gravity, ground reaction, muscle torqu
 
 ## Chapter Exercises
 
-- **Drag Force Magnitude.** A golf clubhead with area $A = 0.006$ m$^2$, drag coefficient $C_D = 0.4$, moves at $v = 40$ m/s. Calculate the drag force using Eq. \eqref{eq:drag-scalar}. At what velocity would the drag force double? (Hint: use the $v^2$ dependence.)
+- **Drag Force Magnitude.** A golf clubhead with area $A = 0.006$ m$^2$, drag coefficient $C_D = 0.4$, moves at $v = 40$ m/s. Calculate the drag force using @eq-drag-scalar. At what velocity would the drag force double? (Hint: use the $v^2$ dependence.)
 
-- **Shaft Drag Torque.** A golf shaft with $L = 1.1$ m, diameter $d = 0.01$ m, $C_D = 0.5$, rotates at angular velocity $\dot{\theta} = 60$ rad/s about the shoulder. Using Eq. \eqref{eq:shaft-drag-torque}, compute the drag torque. Compare this to a typical shoulder torque of 80 N·m. What fraction of the total torque does drag represent?
+- **Shaft Drag Torque.** A golf shaft with $L = 1.1$ m, diameter $d = 0.01$ m, $C_D = 0.5$, rotates at angular velocity $\dot{\theta} = 60$ rad/s about the shoulder. Using @eq-shaft-drag-torque, compute the drag torque. Compare this to a typical shoulder torque of 80 N·m. What fraction of the total torque does drag represent?
 
 - **Inverse Dynamics Error.** In a swing study, a researcher computes wrist torque using inverse dynamics without including drag. The measured acceleration is $\ddot{\theta}_{\text{wrist}} = 1500$ rad/s$^2$, wrist inertia is $I = 0.06$ kg·m$^2$, and other terms sum to 2 N·m. The computed torque (no drag) is $\tau = I \ddot{\theta} + 2 = 0.06 \times 1500 + 2 = 92$ N·m.
 
@@ -568,4 +568,4 @@ Now estimate the drag torque: arm + club dragging through air at high speed prod
 
 - **Lumped Parameter Drag.** Model a golf swing as two segments: (1) arm + forearm, velocity $v_{\text{arm}} = 10$ m/s, area $A_{\text{arm}} = 0.02$ m$^2$, $C_D = 0.8$; (2) club, velocity $v_{\text{club}} = 50$ m/s, area $A_{\text{club}} = 0.005$ m$^2$, $C_D = 0.4$. Compute the drag force on each. Which dominates? Why?
 
-- **Spin Parameter and Lift.** A golf ball after impact has velocity $v = 50$ m/s and backspin $\omega = 200$ rad/s. The ball radius is $r = 0.02$ m. Compute the spin parameter $S$ using Eq. \eqref{eq:spin-parameter}. Is this in the typical range for golf (0.1--0.3)? If $C_L = 0.3$ at this spin, compute the lift force on the ball (mass 0.045 kg). How does lift compare to weight?
+- **Spin Parameter and Lift.** A golf ball after impact has velocity $v = 50$ m/s and backspin $\omega = 200$ rad/s. The ball radius is $r = 0.02$ m. Compute the spin parameter $S$ using @eq-spin-parameter. Is this in the typical range for golf (0.1--0.3)? If $C_L = 0.3$ at this spin, compute the lift force on the ball (mass 0.045 kg). How does lift compare to weight?
