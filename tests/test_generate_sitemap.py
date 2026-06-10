@@ -2,12 +2,26 @@
 
 # Add project root to path
 
+from pathlib import Path
+
 # Import after path setup
 from scripts.generate_sitemap import (
     get_changefreq,
     get_priority,
 )
 from src.tools.utils import parse_frontmatter_dict
+
+
+class TestDeployWorkflowWiring:
+    """The deploy workflow must invoke the sitemap generator (issue #3220)."""
+
+    def test_workflow_runs_sitemap_generator(self):
+        """deploy-website.yml invokes generate_sitemap.py."""
+        repo_root = Path(__file__).resolve().parent.parent
+        workflow = (repo_root / ".github" / "workflows" / "deploy-website.yml").read_text(
+            encoding="utf-8"
+        )
+        assert "scripts/generate_sitemap.py" in workflow
 
 
 class TestGetPriority:

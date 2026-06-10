@@ -81,10 +81,12 @@ SYNC_MAPS: tuple[SyncMap, ...] = (
         source="js/service-worker-updates.js",
         mirrors=("docs/js/service-worker-updates.js",),
     ),
-    SyncMap(
-        source="styles.css",
-        mirrors=("docs/styles.css",),
-    ),
+    # NOTE: styles.css is NOT a byte-identical mirror. docs/styles.css is the
+    # flattened CSS bundle produced by scripts/bundle_css.py (issue #3219): the
+    # canonical styles.css keeps its modular @import graph, while the bundle
+    # inlines that graph into a single render-blocking stylesheet. Bundle
+    # freshness is validated by `python3 scripts/bundle_css.py --check`, not by
+    # byte-equality here.
 )
 
 # These are intentionally different architectures and are not synchronized.

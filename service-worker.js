@@ -18,7 +18,7 @@ const OFFLINE_URL = '/offline.html';
 const STARTUP_ASSETS = [
   '/css/startup-launcher.css',
   '/js/startup-launcher.js',
-  '/logo/logo_transparent_1.png'
+  '/logo/logo-navbar.png'
 ];
 
 // Stylesheets pulled in via @import from styles.css (directly, and

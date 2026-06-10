@@ -16,17 +16,18 @@ python scripts/generate_sitemap.py
 
 **Output:** `sitemap.xml` in the project root
 
-### generate_search_index.py
+### generate_feed.py
 
-Creates the search index for the site's search functionality.
+Generates the RSS 2.0 feed (`feed.xml`) from article frontmatter. Runs in the
+deploy pipeline so the feed never goes stale.
 
 **Usage:**
 
 ```bash
-python scripts/generate_search_index.py
+python scripts/generate_feed.py
 ```
 
-**Output:** `docs/search.json`
+**Output:** `docs/feed.xml` (and a root `feed.xml` copy for Quarto resources)
 
 ### generate_bibliography_data.py
 
@@ -209,11 +210,11 @@ python scripts/create_issues_from_assessment.py
 3. **Post-Build:**
 
    ```bash
-   # Generate search index
-   python scripts/generate_search_index.py
-
    # Generate sitemap
    python scripts/generate_sitemap.py
+
+   # Generate RSS feed
+   python scripts/generate_feed.py
 
    # Add meta descriptions
    python scripts/add_meta_descriptions.py
