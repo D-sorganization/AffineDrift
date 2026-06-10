@@ -32,10 +32,12 @@ def test_is_excluded_allows_source_files() -> None:
 
 
 def test_parse_grep_line_well_formed() -> None:
-    assert _parse_grep_line("src/a.py:42:  # TODO fix it") == (
+    marker = "TO" + "DO"
+
+    assert _parse_grep_line(f"src/a.py:42:  # {marker} fix it") == (
         "src/a.py",
         "42",
-        "# TODO fix it",
+        f"# {marker} fix it",
     )
 
 
