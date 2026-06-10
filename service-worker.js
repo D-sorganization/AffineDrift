@@ -9,7 +9,7 @@ const {
   broadcastUpdate,
   trimCacheEntries,
 } = self.AffineDriftServiceWorkerUtils;
-const CACHE_NAME = 'affinedrift-v4-c24a93b6';
+const CACHE_NAME = 'affinedrift-v4-27f68dec';
 const OFFLINE_URL = '/offline.html';
 
 // Critical startup assets - loaded first for fast splash screen
@@ -21,12 +21,46 @@ const STARTUP_ASSETS = [
   '/logo/logo_transparent_1.png'
 ];
 
+// Stylesheets pulled in via @import from styles.css (directly, and
+// transitively via css/tokens/design-tokens.css). styles.css is useless
+// offline without these — @import sub-resources are NOT cached by caching
+// the parent stylesheet, so precache them explicitly.
+// Contract test: tests/service-worker-precache.test.js keeps this list in
+// sync with the @import graph.
+const IMPORTED_STYLESHEETS = [
+  '/css/tokens/design-tokens.css',
+  '/css/tokens/colors.css',
+  '/css/tokens/typography.css',
+  '/css/tokens/spacing.css',
+  '/css/tokens/breakpoints.css',
+  '/css/tokens/shadows.css',
+  '/css/tokens/animations.css',
+  '/css/tokens/borders.css',
+  '/css/tokens/z-index.css',
+  '/css/tokens/interactive-states.css',
+  '/css/breakpoints.css',
+  '/css/bibliography.css',
+  '/css/critics-corner.css',
+  '/css/resources.css',
+  '/css/components/site-card.css',
+  '/css/components/site-button.css',
+  '/css/components/section-stack.css',
+  '/css/components/page-sidebar.css',
+  '/css/components/entry-list.css',
+  '/css/components/provenance-note.css',
+  '/css/components/home-hero.css',
+  '/css/components/status-banner.css',
+  '/css/utilities/spacing.css'
+];
+
 // Assets to cache immediately on install (includes STARTUP_ASSETS via spread)
 const PRECACHE_ASSETS = [
   '/',
   '/index.html',
   ...STARTUP_ASSETS,
   '/styles.css',
+  ...IMPORTED_STYLESHEETS,
+  '/css/search-metrics.css',
   '/js/main.js',
   '/favicon.ico',
   '/manifest.json',

@@ -56,7 +56,7 @@ For net joint loads, the answer can be yes under a declared rigid-body model and
 Recall the equation of motion for a mechanical system with $n$ degrees of freedom:
 $$
 \bm{M}(\bm{q})\,\ddot{\bm{q}} + \bm{C}(\bm{q},\dot{\bm{q}})\,\dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{u}
-{#eq:eom_unconstrained}
+{#eq-eom_unconstrained}
 $$
 
 Here:
@@ -71,7 +71,7 @@ Here:
 For an *unconstrained* system (open chain), this equation has a unique inverse:
 $$
 \bm{u} = \bm{M}(\bm{q})\,\ddot{\bm{q}} + \bm{C}(\bm{q},\dot{\bm{q}})\,\dot{\bm{q}} + \bm{g}(\bm{q})
-{#eq:inverse_open}
+{#eq-inverse_open}
 $$
 
 Given $\bm{q}(t)$ (from motion capture), differentiate twice to get $\ddot{\bm{q}}(t)$, compute the mass matrix and its derivatives, plug in numbers, and obtain the net generalized load $\bm{u}(t)$ for the chosen model. This model-conditioned calculation is the foundation of biomechanical inverse dynamics [@Winter2009; @Robertson2004].
@@ -104,7 +104,7 @@ For an open kinematic chain with $n$ generalized coordinates:
 For a regular open-chain model with independent generalized coordinates, the mass matrix $\bm{M}(\bm{q}) \in \mathbb{R}^{n \times n}$ is symmetric and positive definite. Therefore:
 $$
 \mathrm{det}(\bm{M}(\bm{q})) > 0 \quad \forall \bm{q}
-{#eq:det_positive}
+{#eq-det_positive}
 $$
 
 This can be proven by direct construction of kinetic energy. The kinetic energy of a rigid-body system is:
@@ -174,7 +174,7 @@ These constraints reduce the number of degrees of freedom but increase the numbe
 For a system with $n$ generalized coordinates and $k$ holonomic constraints, the constrained equations of motion take the form:
 $$
 \bm{M}(\bm{q})\,\ddot{\bm{q}} + \bm{C}(\bm{q},\dot{\bm{q}})\,\dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{B}(\bm{q})\,\bm{u} + \bm{J}_c^T(\bm{q})\,\boldsymbol{\lambda}
-{#eq:eom_constrained}
+{#eq-eom_constrained}
 $$
 
 where:
@@ -188,13 +188,13 @@ where:
 The constraint equations are:
 $$
 \bm{\Phi}(\bm{q}) = \bm{0}
-{#eq:constraints}
+{#eq-constraints}
 $$
 
 Differentiating twice:
 $$
 \bm{J}_c(\bm{q})\,\ddot{\bm{q}} + \dot{\bm{J}}_c(\bm{q},\dot{\bm{q}})\,\dot{\bm{q}} = \bm{0}
-{#eq:constraint_acceleration}
+{#eq-constraint_acceleration}
 $$
 
 ### Counting Equations and Unknowns
@@ -206,7 +206,7 @@ Here is the fundamental problem:
 
 We have:
 
-- **Equations:** $n$ equations of motion (Equation @eq:eom_constrained)
+- **Equations:** $n$ equations of motion (Equation @eq-eom_constrained)
 - **Unknowns:** $p$ applied torques $\bm{u}$ plus $k$ constraint multipliers $\boldsymbol{\lambda}$, for a total of $p + k$ unknowns
 
 If $p + k > n$, the system is **underdetermined**. There are more unknowns than equations.
@@ -227,7 +227,7 @@ The constraint forces $\boldsymbol{\lambda}$ are *real forces*. Your left hand g
 To set up the inverse dynamics problem formally, consider the augmented system combining dynamics and constraints:
 $$
 \begin{bmatrix} \bm{M}(\bm{q}) & -\bm{J}_c^T(\bm{q}) \\ \bm{J}_c(\bm{q}) & \bm{0} \end{bmatrix} \begin{bmatrix} \ddot{\bm{q}} \\ \boldsymbol{\lambda} \end{bmatrix} = \begin{bmatrix} \bm{B}(\bm{q})\,\bm{u} - \bm{h}(\bm{q},\dot{\bm{q}}) \\ -\dot{\bm{J}}_c(\bm{q},\dot{\bm{q}})\,\dot{\bm{q}} \end{bmatrix}
-{#eq:augmented_forward}
+{#eq-augmented_forward}
 $$
 
 where $\bm{h}(\bm{q},\dot{\bm{q}}) = \bm{C}(\bm{q},\dot{\bm{q}})\,\dot{\bm{q}} + \bm{g}(\bm{q})$ collects velocity-dependent and gravity terms.
@@ -240,7 +240,7 @@ This is called the KKT (Karush-Kuhn-Tucker) or augmented system. For $n$ general
 For a well-posed mechanical system with constraints, the augmented matrix
 $$
 \bm{K} = \begin{bmatrix} \bm{M} & -\bm{J}_c^T \\ \bm{J}_c & \bm{0} \end{bmatrix}
-{#eq:KKT_matrix}
+{#eq-KKT_matrix}
 $$
 
 is nonsingular whenever $\bm{M}$ is positive definite, $\bm{J}_c$ has full row rank, and the contact mode is fixed. Therefore, given $\bm{u}$, we can solve uniquely for $\ddot{\bm{q}}$ and $\boldsymbol{\lambda}$ under those regularity assumptions.
@@ -254,10 +254,10 @@ This theorem guarantees that if you specify the model, contact mode, initial sta
 
 But inverse dynamics is different. Now, we know $\ddot{\bm{q}}$ (from motion capture) and want to find $\bm{u}$ and $\boldsymbol{\lambda}$.
 
-Rearrange Equation @eq:eom_constrained:
+Rearrange Equation @eq-eom_constrained:
 $$
 \bm{B}(\bm{q})\,\bm{u} + \bm{J}_c^T(\bm{q})\,\boldsymbol{\lambda} = \bm{M}(\bm{q})\,\ddot{\bm{q}} + \bm{h}(\bm{q},\dot{\bm{q}})
-{#eq:inverse_rearranged}
+{#eq-inverse_rearranged}
 $$
 
 Let $\bm{r} = \bm{M}(\bm{q})\,\ddot{\bm{q}} + \bm{h}(\bm{q},\dot{\bm{q}})$ be the known right-hand side (the net force required to produce the measured acceleration).
@@ -265,7 +265,7 @@ Let $\bm{r} = \bm{M}(\bm{q})\,\ddot{\bm{q}} + \bm{h}(\bm{q},\dot{\bm{q}})$ be th
 We must solve:
 $$
 \bm{B}(\bm{q})\,\bm{u} + \bm{J}_c^T(\bm{q})\,\boldsymbol{\lambda} = \bm{r}
-{#eq:inverse_underdetermined}
+{#eq-inverse_underdetermined}
 $$
 
 This is an underdetermined linear system: $n$ equations, $p + k$ unknowns, with $p + k > n$.
@@ -273,16 +273,16 @@ This is an underdetermined linear system: $n$ equations, $p + k$ unknowns, with 
 ::: {.callout-note}
 ## Solution Space and Null Space
 
-The solution to Equation @eq:inverse_underdetermined is not unique. Instead, the general solution is:
+The solution to Equation @eq-inverse_underdetermined is not unique. Instead, the general solution is:
 $$
 \begin{bmatrix} \bm{u} \\ \boldsymbol{\lambda} \end{bmatrix} = \begin{bmatrix} \bm{u}^* \\ \boldsymbol{\lambda}^* \end{bmatrix} + \mathcal{N}
-{#eq:general_solution}
+{#eq-general_solution}
 $$
 
 where $\begin{bmatrix} \bm{u}^* \\ \boldsymbol{\lambda}^* \end{bmatrix}$ is any particular solution and $\mathcal{N}$ is the null space:
 $$
 \mathcal{N} = \left\{ \begin{bmatrix} \delta\bm{u} \\ \delta\boldsymbol{\lambda} \end{bmatrix} : \bm{B}(\bm{q})\,\delta\bm{u} + \bm{J}_c^T(\bm{q})\,\delta\boldsymbol{\lambda} = \bm{0} \right\}
-{#eq:nullspace_def}
+{#eq-nullspace_def}
 $$
 
 Any combination of applied torques and constraint forces in the null space produces *zero net force*. These combinations are invisible to the equations of motion: they change $\bm{u}$ and $\boldsymbol{\lambda}$ without changing the predicted kinematics.
@@ -309,7 +309,7 @@ Model the system as follows:
 The constraint is simple: both hands must grip the same club. The constraint equation is:
 $$
 \bm{\Phi}_{\text{grip}} = \text{(position of right hand)} - \text{(position of left hand)} - \text{(club geometry)} = \bm{0}
-{#eq:grip_constraint}
+{#eq-grip_constraint}
 $$
 
 This constraint is $k = 3$ dimensional (three spatial coordinates). So the constrained system has $6 - 3 = 3$ independent DOF.
@@ -323,7 +323,7 @@ But we still have 6 actuators (muscles acting on 6 joint angles). The system is 
 The equation of motion for the combined two-arm system (without constraints):
 $$
 \bm{M}(q_L, q_R)\begin{bmatrix}\ddot{\bm{q}}_L \\ \ddot{\bm{q}}_R\end{bmatrix} + \bm{h} = \begin{bmatrix}\bm{\tau}_L \\ \bm{\tau}_R\end{bmatrix} + \bm{J}_c^T(\bm{q})\,\boldsymbol{\lambda}_{\text{grip}}
-{#eq:two_arm_eom}
+{#eq-two_arm_eom}
 $$
 
 where $\bm{\tau}_L$ and $\bm{\tau}_R$ are the torques applied by the left and right arm muscles.
@@ -339,7 +339,7 @@ Suppose a motion-capture system measures the trajectory $\bm{q}_L(t)$ and $\bm{q
 From the equations of motion:
 $$
 \begin{bmatrix}\bm{\tau}_L \\ \bm{\tau}_R\end{bmatrix} = \bm{M}\begin{bmatrix}\ddot{\bm{q}}_L \\ \ddot{\bm{q}}_R\end{bmatrix} + \bm{h} - \bm{J}_c^T\,\boldsymbol{\lambda}_{\text{grip}}
-{#eq:two_hand_inverse}
+{#eq-two_hand_inverse}
 $$
 
 This gives us 6 equations (three for the left arm, three for the right arm).
@@ -358,13 +358,13 @@ Total: $3 + 3 + 3 = 9$ unknowns, but only 6 equations.
 Suppose the constraint forces have been determined from a dynamic model plus auxiliary measurements or assumptions. The kinematic compatibility condition is:
 $$
 \bm{J}_c\,\ddot{\bm{q}} + \dot{\bm{J}}_c\,\dot{\bm{q}} = \bm{0}
-{#eq:lambda_determined}
+{#eq-lambda_determined}
 $$
 
 Now, from the equation of motion:
 $$
 \begin{bmatrix}\bm{\tau}_L \\ \bm{\tau}_R\end{bmatrix} = \bm{M}\begin{bmatrix}\ddot{\bm{q}}_L \\ \ddot{\bm{q}}_R\end{bmatrix} + \bm{h} - \bm{J}_c^T\,\boldsymbol{\lambda}_{\text{grip}}
-{#eq:tau_to_solve}
+{#eq-tau_to_solve}
 $$
 
 The right-hand side is known. Call it $\bm{r} = \bm{M}\begin{bmatrix}\ddot{\bm{q}}_L \\ \ddot{\bm{q}}_R\end{bmatrix} + \bm{h} - \bm{J}_c^T\,\boldsymbol{\lambda}_{\text{grip}}$.
@@ -400,12 +400,12 @@ The direction matters because causality flows forward (from forces to motion) bu
 Given applied torques $\bm{u}(t)$ and an initial state $\bm{q}(0), \dot{\bm{q}}(0)$, the constrained differential equations
 $$
 \begin{bmatrix} \bm{M}(\bm{q}) & -\bm{J}_c^T \\ \bm{J}_c & \bm{0} \end{bmatrix} \begin{bmatrix} \ddot{\bm{q}} \\ \boldsymbol{\lambda} \end{bmatrix} = \begin{bmatrix} \bm{B}\bm{u} - \bm{h} \\ -\dot{\bm{J}}_c\dot{\bm{q}} \end{bmatrix}
-{#eq:forward_wellposed}
+{#eq-forward_wellposed}
 $$
 
 has a unique solution at each regular time instant when $\bm{M}$ is positive definite, $\bm{J}_c$ has full row rank, and the contact mode is fixed. The motion $\bm{q}(t)$ evolves deterministically forward in time until those assumptions change.
 
-**Why?** The coefficient matrix on the left is the KKT matrix (Equation @eq:KKT_matrix). Under the regularity assumptions above, it is nonsingular, so the system can be solved uniquely for $\ddot{\bm{q}}$ and $\boldsymbol{\lambda}$ at each instant.
+**Why?** The coefficient matrix on the left is the KKT matrix (Equation @eq-KKT_matrix). Under the regularity assumptions above, it is nonsingular, so the system can be solved uniquely for $\ddot{\bm{q}}$ and $\boldsymbol{\lambda}$ at each instant.
 :::
 
 Physically: if you know the model, contact mode, and applied loads, physics determines the skeleton's acceleration. Ambiguity enters when those inputs are inferred from the motion rather than specified.
@@ -417,7 +417,7 @@ Physically: if you know the model, contact mode, and applied loads, physics dete
 Given a measured trajectory $\bm{q}(t), \dot{\bm{q}}(t), \ddot{\bm{q}}(t)$ in a system with loop constraints, the equation
 $$
 \bm{B}(\bm{q})\,\bm{u} + \bm{J}_c^T(\bm{q})\,\boldsymbol{\lambda} = \bm{M}(\bm{q})\,\ddot{\bm{q}} + \bm{h}(\bm{q},\dot{\bm{q}})
-{#eq:inverse_underdetermined_formal}
+{#eq-inverse_underdetermined_formal}
 $$
 
 does not have a unique solution when $\mathrm{rank}(\bm{B}) < p$ or when internal constraint forces couple with applied torques.
@@ -490,7 +490,7 @@ To characterize exactly which combinations of applied torques are invisible, com
 
 $$
 \mathcal{N} = \mathrm{null}\left(\bm{B}(\bm{q})\right) \cap \mathrm{null}\left(\bm{J}_c^T(\bm{q})\right)^\perp
-{#eq:nullspace_compound}
+{#eq-nullspace_compound}
 $$
 
 
@@ -532,13 +532,13 @@ $$
 solve:
 $$
 \min_{\bm{u}, \boldsymbol{\lambda}} \left\|\bm{u}\right\|^2 + \alpha\left\|\boldsymbol{\lambda}\right\|^2
-{#eq:min_norm_objective}
+{#eq-min_norm_objective}
 $$
 
 subject to the equations of motion. The solution is given by the Moore-Penrose pseudoinverse:
 $$
 \bm{u}^* = \bm{B}^+(\bm{r} - \bm{J}_c^T\,\boldsymbol{\lambda})
-{#eq:pseudoinverse_solution}
+{#eq-pseudoinverse_solution}
 $$
 
 where $\bm{B}^+ = (\bm{B}^T\bm{B})^{-1}\bm{B}^T$ is the left pseudoinverse of $\bm{B}$.
@@ -632,7 +632,7 @@ This is a **forward** problem, not an inverse problem. And for forward problems,
 Recall the ZTCF governing equation:
 $$
 \bm{M}(\bm{q})\,\ddot{\bm{q}} + \bm{C}(\bm{q},\dot{\bm{q}})\,\dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{J}_c^T(\bm{q})\,\boldsymbol{\lambda}
-{#eq:ztcf_eom}
+{#eq-ztcf_eom}
 $$
 
 This is forward dynamics with $\bm{u} = \bm{0}$ (the applied torques are set to zero). The only forces acting are constraint forces and gravity.
@@ -642,7 +642,7 @@ This is forward dynamics with $\bm{u} = \bm{0}$ (the applied torques are set to 
 
 The ZTCF trajectory is a **forward integration problem**. Given initial conditions $\bm{q}(0), \dot{\bm{q}}(0)$, a fixed contact mode, and the constraint equations $\bm{\Phi}(\bm{q}) = \bm{0}$, the motion $\bm{q}(t)$ is determined by integrating the constrained EOM forward while the regularity assumptions hold.
 
-Even though the system has parallel loops and redundant actuators, the forward integration is *well-posed* under the stated assumptions. The KKT matrix (Equation @eq:KKT_matrix) is nonsingular at each regular time step, so the constraint forces $\boldsymbol{\lambda}$ and accelerations $\ddot{\bm{q}}$ are determined by the model.
+Even though the system has parallel loops and redundant actuators, the forward integration is *well-posed* under the stated assumptions. The KKT matrix (Equation @eq-KKT_matrix) is nonsingular at each regular time step, so the constraint forces $\boldsymbol{\lambda}$ and accelerations $\ddot{\bm{q}}$ are determined by the model.
 
 The ZTCF trajectory is the model-conditioned solution to the zero-control problem. There is no muscle load-sharing ambiguity, but there is still model, contact, and parameter dependence.
 
@@ -688,7 +688,7 @@ Even for open chains, inverse dynamics becomes numerically unreliable in certain
 For an open-chain system with $n$ joints and $n$ actuators, the inverse dynamics problem is:
 $$
 \bm{u} = \bm{M}(\bm{q})\,\ddot{\bm{q}} + \bm{h}(\bm{q},\dot{\bm{q}})
-{#eq:open_inverse_simple}
+{#eq-open_inverse_simple}
 $$
 
 Even though the mass matrix $\bm{M}$ is always invertible, it may be *nearly* singular in some configurations. The condition number measures this:
@@ -699,7 +699,7 @@ Even though the mass matrix $\bm{M}$ is always invertible, it may be *nearly* si
 The condition number of a matrix $\bm{M}$ is defined as:
 $$
 \kappa(\bm{M}) = \|\bm{M}\| \cdot \|\bm{M}^{-1}\|
-{#eq:condition_number}
+{#eq-condition_number}
 $$
 
 A condition number of 1 means the matrix is perfectly conditioned. A large condition number means the matrix is nearly singular and difficult to invert numerically.

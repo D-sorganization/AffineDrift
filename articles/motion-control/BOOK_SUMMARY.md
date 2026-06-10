@@ -1,5 +1,15 @@
 # Control Is Motion - Complete Textbook
 
+> **Status: archival LaTeX source (not rendered to the website).**
+> This directory holds the standalone LaTeX/PDF manuscript of _Control Is Motion_.
+> On the AffineDrift HTML site this material is superseded by **Volume II ("Control
+> Is Motion") of _The Geometry of Motion_** (see
+> `../The_Geometry_of_Motion/quarto/volume2_content.qmd`), which is the maintained,
+> rendered edition. There are no `.qmd` files here, so nothing in this directory is
+> picked up by the site render glob (`articles/**/*.qmd`) or linked from navigation.
+> Keep edits in the Geometry of Motion Volume II source; this manuscript is retained
+> for provenance and the compiled `Control_Is_Motion_Complete.pdf` only.
+
 ## Book Overview
 
 This textbook presents a revolutionary framework for nonlinear control theory,

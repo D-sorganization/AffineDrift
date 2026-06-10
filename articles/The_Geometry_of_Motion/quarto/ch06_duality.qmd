@@ -83,8 +83,8 @@ is simultaneously:
 1. The **cost curvature** matrix: the optimal cost-to-go for a state $\x$ is exactly $V^\star(\x) = \x^\T\mat{S}\x$.
 2. A **Lyapunov function** for the closed-loop system $\dot{\x} = (\mat{A}-\mat{B}\mat{K})\x$ with $\mat{K} = \mat{R}^{-1}\mat{B}^\T\mat{S}$.
 
-This insight unified two previously separate fields: \textit{the stability guarantee comes free from optimizing
-the cost}. This was conceptually revolutionary. Before Kalman, engineers solved LQR problems for one reason (minimize
+This insight unified two previously separate fields: *the stability guarantee comes free from optimizing
+the cost*. This was conceptually revolutionary. Before Kalman, engineers solved LQR problems for one reason (minimize
 energy) and separately checked stability (find a Lyapunov function). Afterward, they solved it once and received both
 certifications.
 
@@ -219,7 +219,7 @@ for some $\alpha > 0$ (the smallest eigenvalue of $\mat{Q}_k + \mat{K}_k^\T\mat{
 ::: {.proof}
 **Complete Step-by-Step Derivation**
 
-\textbf{Step 1: Compute $V_{k+1}$ using the closed-loop dynamics.} From~\eqref{eq:ch6:closed-loop}:
+**Step 1: Compute $V_{k+1}$ using the closed-loop dynamics.** From~\eqref{eq:ch6:closed-loop}:
 \begin{align}
 \dx_{k+1} &= (\mat{A}_k - \mat{B}_k\mat{K}_k)\,\dx_k, \\
 V_{k+1} &= \dx_{k+1}^\T\mat{S}_{k+1}\dx_{k+1} \notag\\
@@ -227,7 +227,7 @@ V_{k+1} &= \dx_{k+1}^\T\mat{S}_{k+1}\dx_{k+1} \notag\\
 \label{eq:ch6:Vk1-full}
 \end{align}
 
-\textbf{Step 2: Write $V_{k+1} - V_k$.} We have $V_k = \dx_k^\T\mat{S}_k\dx_k$, so:
+**Step 2: Write $V_{k+1} - V_k$.** We have $V_k = \dx_k^\T\mat{S}_k\dx_k$, so:
 \begin{align}
 V_{k+1}-V_k &= \dx_k^\T\!\left[
 (\mat{A}_k-\mat{B}_k\mat{K}_k)^\T\mat{S}_{k+1}(\mat{A}_k-\mat{B}_k\mat{K}_k)
@@ -235,7 +235,7 @@ V_{k+1}-V_k &= \dx_k^\T\!\left[
 \label{eq:ch6:diff-raw}
 \end{align}
 
-\textbf{Step 3: Invoke the Riccati alternative form.} Equation~\eqref{eq:ch6:riccati-alt-form} states:
+**Step 3: Invoke the Riccati alternative form.** Equation~\eqref{eq:ch6:riccati-alt-form} states:
 \begin{equation}
 \mat{S}_k = \mat{Q}_k + (\mat{A}_k - \mat{B}_k\mat{K}_k)^\T \mat{S}_{k+1} (\mat{A}_k - \mat{B}_k\mat{K}_k).
 \end{equation}
@@ -246,7 +246,7 @@ Therefore:
 \label{eq:ch6:riccati-substitution}
 \end{equation}
 
-\textbf{Step 4: Substitute back.}
+**Step 4: Substitute back.**
 \begin{align}
 V_{k+1}-V_k &= \dx_k^\T\!\left[
 (\mat{S}_k - \mat{Q}_k) - \mat{S}_k\right]\!\dx_k \notag\\
@@ -255,7 +255,7 @@ V_{k+1}-V_k &= \dx_k^\T\!\left[
 \label{eq:ch6:first-drop}
 \end{align}
 
-\textbf{Step 5: Add the control cost.} The optimal value function satisfies a fundamental recursion:
+**Step 5: Add the control cost.** The optimal value function satisfies a fundamental recursion:
 \begin{equation}
 V_k = x_k^\T\mat{Q}_k x_k + u_k^\T\mat{R}_k u_k + V_{k+1}.
 \label{eq:ch6:cost-recursion}
@@ -784,7 +784,7 @@ The continuous-time LQR controller guarantees a phase margin of at least $60^\ci
 open-loop transfer function.
 :::
 
-The complete derivation connecting the return-difference inequality to the specific $60^\circ$ bound can be found in Anderson \& Moore, \emph{Optimal Control: Linear Quadratic Methods} (1990), Chapter 5, or Safonov \& Athans (1977). The key insight: the Riccati solution makes the closed-loop system ``strictly positive real,'' and by the Passivity Theorem, the allowable phase perturbation is bounded to $60^\circ$. This is a well-known classical result; we state it here as a reference, citing the established sources rather than reproducing the full derivation.
+The complete derivation connecting the return-difference inequality to the specific $60^\circ$ bound can be found in Anderson \& Moore, *Optimal Control: Linear Quadratic Methods* (1990), Chapter 5, or Safonov \& Athans (1977). The key insight: the Riccati solution makes the closed-loop system ``strictly positive real,'' and by the Passivity Theorem, the allowable phase perturbation is bounded to $60^\circ$. This is a well-known classical result; we state it here as a reference, citing the established sources rather than reproducing the full derivation.
 
 
 ### Disk Margin
@@ -968,8 +968,8 @@ with $\rho = 1 - \alpha/\overline{s}$ independent of $k$.
 
 
 1. **Time-varying case (DRE)**: The Riccati matrix $\mat{S}_k$ changes at each step, reflecting the changing
-   ``cost-to-go'' as we move backward in time from the final state. The tangent space metric is \textit{adapted to the
-   current time}: at times near the terminal condition, the metric emphasizes directions that are expensive to steer;
+   ``cost-to-go'' as we move backward in time from the final state. The tangent space metric is *adapted to the
+   current time*: at times near the terminal condition, the metric emphasizes directions that are expensive to steer;
    far from the terminal, the metric is influenced by asymptotic stability.
 2. **Steady-state case (ARE)**: The Riccati matrix reaches a time-invariant steady state. The metric no longer
    changes, and the contraction property is uniform in time. This is appropriate for infinite-horizon problems or
@@ -1044,8 +1044,8 @@ separation. In our setting, the contraction property guarantees stronger converg
 \end{equation}
 where $\Delta\gamma$ is the difference between two nearby optimal trajectories, and $\tau$ is the natural time scale.
 
-This is a remarkable property: not only are the optimal trajectories geodesics (shortest paths), but \textit{they also attract
-nearby geodesics exponentially fast}. This is what makes the LQR solution so robust and widely applicable.
+This is a remarkable property: not only are the optimal trajectories geodesics (shortest paths), but *they also attract
+nearby geodesics exponentially fast*. This is what makes the LQR solution so robust and widely applicable.
 
 
 ### Visualization in 2D

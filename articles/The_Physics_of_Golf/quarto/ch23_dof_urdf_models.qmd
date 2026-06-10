@@ -141,7 +141,7 @@ A 4-bar linkage has 1 DOF. $\checkmark$
 **Lesson:** The Grübler formula is powerful but requires careful counting. For a tree structure (no loops), use the simple formula $\sum f_i$. For a mechanism with loops, you must account for loop closure constraints, and the planar formula differs from the 3D formula.
 
 ## Worked Example --- The Golf Swing Model
-{#sec:golf_swing_dof}
+{#sec-golf_swing_dof}
 
 
 Consider a golf swing model and count its degrees of freedom.
@@ -251,7 +251,7 @@ For the golf swing, we have roughly 25--30 DOF. The task (hit a golf ball to a t
 :::
 
 ## The Human Arm --- A 7-DOF Redundant Manipulator
-{#sec:arm_redundancy}
+{#sec-arm_redundancy}
 
 
 The human arm is a fascinating example of a redundant manipulator. Let's analyze it in detail.
@@ -337,7 +337,7 @@ The first term, $\bm{J}^{\dagger} \dot{\bm{x}}$, solves the task. The second ter
 By choosing different $\bm{v}_{\text{null}}$, we can optimize for secondary objectives (minimize energy, avoid joint limits, maximize manipulability) while maintaining the task.
 
 ## Kinematic Redundancy and the Manifold of Solutions
-{#sec:manifold_solutions}
+{#sec-manifold_solutions}
 
 
 ::: {.callout-note}
@@ -512,7 +512,7 @@ A beautiful consequence of the solution manifold is **compensation**. When one D
 This is why skilled golfers can adapt to injuries. And it's why rehabilitation after injury works: the brain learns new paths through the solution manifold that respect the new constraints.
 
 ## The 7-DOF Arm --- Redundancy in Miniature
-{#sec:arm_redundancy_detailed}
+{#sec-arm_redundancy_detailed}
 
 Let's focus on a single limb to make the solution manifold concrete.
 
@@ -546,7 +546,7 @@ In the golf swing, both hands grip the club, but each arm has its own 1 DOF of r
 An instructor might optimize for one criterion (minimal shoulder strain), while an elite golfer naturally chooses another (maximum energy transfer). Both are navigating the solution manifold, but along different paths.
 
 ## Redundancy and Null-Space Control
-{#sec:null_space_control}
+{#sec-null_space_control}
 
 ::: {.callout-note}
 ## Null-Space Optimization in the ZTCF
@@ -633,7 +633,7 @@ The structure of the golf swing emerges from redundancy:
 
 
 ## URDF --- The Unified Robot Description Format
-{#sec:urdf}
+{#sec-urdf}
 
 
 URDF is an XML-based format that describes the kinematic and dynamic structure of a robot. It was originally developed for ROS (Robot Operating System) at Willow Garage. Today, URDF is the standard format for describing humanoid robots, industrial arms, and increasingly, human body models.
@@ -795,7 +795,7 @@ For example, the golf swing has a loop: both hands grip the club. If we model th
 For our golf swing model, we'll use approach 2: load the URDF into a dynamics engine and add a constraint that the trail hand must stay attached to the club grip.
 
 ## Building a Full-Body Golf URDF
-{#sec:golf_urdf}
+{#sec-golf_urdf}
 
 ### Kinematic Structure
 
@@ -993,7 +993,7 @@ A complete URDF would include all segment masses and inertias computed from de L
 **Note:** This is a *simplified* excerpt. A complete URDF would include all 20 joints (3 per arm shoulder, 2 per elbow, 2 per wrist, 3 for lumbar, 3 for thorax) and would require careful definition of each axis.
 
 ## From URDF to Simulation --- Drake, MuJoCo, and Pinocchio
-{#sec:simulation_engines}
+{#sec-simulation_engines}
 
 
 Once you have a URDF, you can load it into a dynamics engine. These engines compute the equations of motion automatically.
@@ -1075,7 +1075,7 @@ The library handles all the complexity. You specify the structure (URDF), and th
 :::
 
 ## Sensitivity Analysis --- What Happens When Parameters Are Wrong?
-{#sec:sensitivity}
+{#sec-sensitivity}
 
 
 Real biomechanics has uncertainties. Segment masses, lengths, and inertia are measured with  5-10% error. How sensitive is our golf swing model to these errors?
@@ -1133,7 +1133,7 @@ When building a golf biomechanics model:
 :::
 
 ## Building Intuition: From URDF to Golf Physics
-{#sec:intuition}
+{#sec-intuition}
 
 Let's return to the big picture. Why does all this matter for golf?
 
@@ -1186,7 +1186,7 @@ We now have a complete musculoskeletal model: joints with defined degrees of fre
 
 ## Chapter Exercises
 
-- **DOF Counting:** For the golf swing model described in Section @sec:golf_swing_dof, compute the DOF using the Grübler formula:
+- **DOF Counting:** For the golf swing model described in Section @sec-golf_swing_dof, compute the DOF using the Grübler formula:
    - Count the bodies $N$ (include ground)
    - Count the joints $J$ and their DOFs $f_i$
    - Compute $\mathrm{DOF} = 6(N-1) - \sum(6-f_i)$

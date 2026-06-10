@@ -82,13 +82,13 @@ The swing plane geometry varies substantially across the set because of equipmen
 | 7-Iron | 62--64$^{\circ}$ from vert. | 58--63$^{\circ}$ | $-5$--$-4^{\circ}$ |
 | 9-Iron | 64--65$^{\circ}$ from vert. | 60--65$^{\circ}$ | $-6$--$-5^{\circ}$ |
 *Typical swing plane and attack angle parameters by club. (Note: Lie angle is measured from vertical; plane angle is measured from horizontal.)*
-{#tab:plane_by_club}
+{#tab-plane_by_club}
 The steeper planes for short irons are a consequence of the shorter shafts and the biomechanical requirement to deliver a steeper blow to generate the requisite spin and carry distance.
 
 ## Clubface Control in Three Dimensions
 
 
-The orientation of the clubface at impact is the single most critical variable for shot outcome. Unlike the club path, which changes continuously throughout the swing and whose effect on ball flight is mitigated by dynamic factors (see Section @sec:d_plane), the clubface orientation at impact directly determines the initial direction and spin axis of the ball.
+The orientation of the clubface at impact is the single most critical variable for shot outcome. Unlike the club path, which changes continuously throughout the swing and whose effect on ball flight is mitigated by dynamic factors (see Section @sec-d_plane), the clubface orientation at impact directly determines the initial direction and spin axis of the ball.
 
 ::: {.callout-important}
 ## Three Clubface Orientation Parameters
@@ -154,7 +154,7 @@ $$
 \text{Gate width} \approx 3\text{--}5\text{ degrees}
 $$
 
-This narrow window is why face angle control is so critical. In the illustrative sensitivity model used below, a 5$^{\circ}$ face-angle error can produce a shot tens of yards offline, while a 5$^{\circ}$ club-path error produces a smaller offline error because path has a smaller effect on launch direction than face angle does (Section @sec:d_plane).
+This narrow window is why face angle control is so critical. In the illustrative sensitivity model used below, a 5$^{\circ}$ face-angle error can produce a shot tens of yards offline, while a 5$^{\circ}$ club-path error produces a smaller offline error because path has a smaller effect on launch direction than face angle does (Section @sec-d_plane).
 
 ### Drift vs. Control: The Final 50 Milliseconds
 
@@ -183,8 +183,7 @@ Practically, this means that a golfer seeking to improve face angle consistency 
 
 This concept has practical implications for swing instruction and training. In the model, late correction has limited leverage over face angle; instead, the golfer must train the setup and early downswing so that drift carries the club toward the desired face angle at impact.
 
-## The D-Plane and Modern Ball Flight Laws
-{#sec:d_plane}
+## The D-Plane and Modern Ball Flight Laws {#sec-d_plane}
 
 
 For decades, golf instruction was based on a simple model: the ball starts in the direction of the club path and curves toward the direction the clubface is pointing. This model is *qualitatively* correct but *quantitatively* wrong by a large margin.
@@ -276,7 +275,7 @@ This quantity directly determines the *curvature* of the shot (draw vs. fade), i
 The magnitude of the curvature depends on the magnitude of$\Delta_{\text{FP}}$and the ball speed. For a given face-to-path difference, a slower swing (lower ball speed) produces more curvature because the ball is in the air longer.
 
 ## Launch Condition Optimization
-{#sec:launch_optimization}
+{#sec-launch_optimization}
 
 
 The launch conditions are the initial conditions of the ball immediately after impact. There are three principal launch conditions:
@@ -327,7 +326,7 @@ For typical conditions:
 | 100 mph | 2400 RPM | 12--14$^{\circ}$ | 250 yards |
 | 110 mph | 2600 RPM | 10--12$^{\circ}$ | 290 yards |
 *Typical optimal launch angles and resulting carry distances for drivers [@Broadie2014; @trackman_launch]. Values are approximate and illustrative; they vary with atmospheric conditions, ball type, and individual swing characteristics. These figures depend on model assumptions and should be treated as rough estimates.*
-{#tab:launch_angle_opt}
+{#tab-launch_angle_opt}
 ### Spin Rate Trade-Off: Lift and Air Resistance
 
 
@@ -391,21 +390,21 @@ By taking partial derivatives of the carry distance with respect to each launch 
 
 $$
 \frac{\partial d_{\text{carry}}}{\partial v_{\text{ball}}} \approx 2.5 \text{ yards/mph}
-{#eq:sensitivity_speed}
+{#eq-sensitivity_speed}
 $$
 
 This means that, in the local illustrative model, a 1 mph increase in ball speed produces approximately 2.5 additional yards of carry distance.
 
 $$
 \frac{\partial d_{\text{carry}}}{\partial \theta_{\text{launch}}} \approx 4--6 \text{ yards/degree (near optimum)}
-{#eq:sensitivity_angle}
+{#eq-sensitivity_angle}
 $$
 
 The sensitivity to launch angle is strongly non-linear: near the optimal launch angle, it is maximal (4--6 yards per degree); far from optimal, the sensitivity drops significantly.
 
 $$
 \frac{\partial d_{\text{carry}}}{\partial \Omega_{\text{spin}}} \approx 0.02--0.03 \text{ yards/RPM}
-{#eq:sensitivity_spin}
+{#eq-sensitivity_spin}
 $$
 
 This means a 100 RPM change in spin rate produces only 2--3 yards of distance change (when already near the optimal spin rate).
@@ -417,14 +416,14 @@ Unlike distance, directional accuracy is far more sensitive to face angle than t
 
 $$
 \frac{\partial \text{(offline distance)}}{\partial \alpha_{\text{face}}} \approx 13--20 \text{ yards per degree (at 250 yards carry)}
-{#eq:sensitivity_face}
+{#eq-sensitivity_face}
 $$
 
 This means a 1$^{\circ}$ error in face angle at impact produces approximately 13--20 yards of offline error at the landing zone. In contrast:
 
 $$
 \frac{\partial \text{(offline distance)}}{\partial \alpha_{\text{path}}} \approx 3--7 \text{ yards per degree (at 250 yards carry)}
-{#eq:sensitivity_path}
+{#eq-sensitivity_path}
 $$
 
 A 1$^{\circ}$ path error produces only 3--7 yards of offline error because the face angle weighting in the D-plane model mitigates the effect of path.
