@@ -58,7 +58,7 @@ For the golf swing, the natural choice is **joint angles**.
 
 For a two-link model (the double pendulum), we need exactly two numbers to describe the configuration.
 
-$$\bm{q} =  \theta_s \\ \theta_e $$
+$$\bm{q} = \begin{bmatrix} \theta_s \\ \theta_e \end{bmatrix}$$
 
 :::
 
@@ -112,11 +112,11 @@ Now we can define the full state:
 
 The **state** $\bm{x}$ is the complete information needed to predict the future motion. It includes both position and velocity:
 
-$$\bm{x} =  \bm{q} \\ \dot{\bm{q}}  =  q_1 \\ q_2 \\ \vdots \\ q_n \\ \dot{q}_1 \\ \dot{q}_2 \\ \vdots \\ \dot{q}_n $$
+$$\bm{x} = \begin{bmatrix} \bm{q} \\ \dot{\bm{q}} \end{bmatrix} = \begin{bmatrix} q_1 \\ q_2 \\ \vdots \\ q_n \\ \dot{q}_1 \\ \dot{q}_2 \\ \vdots \\ \dot{q}_n \end{bmatrix}$$
 
 For a double pendulum, the state has 4 components:
 
-$$\bm{x} =  \theta_s \\ \theta_e \\ \dot{\theta}_s \\ \dot{\theta}_e $$
+$$\bm{x} = \begin{bmatrix} \theta_s \\ \theta_e \\ \dot{\theta}_s \\ \dot{\theta}_e \end{bmatrix}$$
 
 :::
 
@@ -336,7 +336,7 @@ Let's put this together and visualize what a swing looks like in phase space.
 
 Consider a golf swing with the double pendulum. At each instant $t$, the state is:
 
-$$\bm{x}(t) =  \theta_s(t) \\ \theta_e(t) \\ \dot{\theta}_s(t) \\ \dot{\theta}_e(t) $$
+$$\bm{x}(t) = \begin{bmatrix} \theta_s(t) \\ \theta_e(t) \\ \dot{\theta}_s(t) \\ \dot{\theta}_e(t) \end{bmatrix}$$
 
 The swing evolves in time:
 
