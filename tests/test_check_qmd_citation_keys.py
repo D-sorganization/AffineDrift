@@ -12,7 +12,10 @@ from scripts.check_qmd_citation_keys import (
 
 
 def test_extract_citation_keys_ignores_cross_references() -> None:
-    text = "See [@smith2020; @jones2019] and @fig:overview plus @ch:intro and @tbl:data."
+    text = (
+        "See [@smith2020; @jones2019] and @fig:overview plus @ch:intro, "
+        "@tbl:data, and @tbl-notation."
+    )
     assert extract_citation_keys(text) == {"smith2020", "jones2019"}
 
 
