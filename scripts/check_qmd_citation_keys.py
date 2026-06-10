@@ -36,6 +36,7 @@ IGNORED_CITATION_PREFIXES = (
     "sec-",
     "subsec:",
     "tab:",
+    "tbl-",
     "tbl:",
     "thm:",
 )
