@@ -58,7 +58,12 @@
 
   /* ========== Special Colors ========== */
   --color-white-transparent: rgb(255, 255, 255, 0.9);
-  --legal-pad-yellow: #fef9e7;
+  /* Genuinely-unique brand values that have no primary/neutral equivalent.
+     Canonical home for the two legacy colors that differ from the token
+     scale (issue #3224): the page-chrome accent and the legal-pad highlight. */
+  --color-accent: #205d86;
+  --color-highlight-yellow: #fef9e7;
+  --legal-pad-yellow: var(--color-highlight-yellow);
   --legal-pad-yellow-accent: #fdf5cc;
   --legal-pad-yellow-border: #f5e6a0;
 
@@ -67,7 +72,10 @@
   /* These are aliases for existing usage. Plan to deprecate. */
   --primary-dark: var(--color-primary-dark);
   --primary-blue: var(--color-primary-main);
-  --accent-blue: var(--color-primary-light);
+  /* --accent-blue is #205d86 (page chrome), NOT --color-primary-light
+     (#3282b8). Alias the dedicated --color-accent token so the historic
+     value is preserved with a single source of truth. */
+  --accent-blue: var(--color-accent);
   --light-blue: var(--color-primary-lightest);
   --pure-white: var(--color-neutral-0);
   --white-transparent: var(--color-white-transparent);

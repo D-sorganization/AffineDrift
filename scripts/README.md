@@ -109,19 +109,12 @@ python scripts/check_citation_resolution.py
 
 **Target:** `articles/`, `books/`, `pages/`, `resources/`, and `index.qmd`
 
-### fix_html.py
-
-Normalizes the generated wrist article HTML with repo-root-relative input and output paths.
-
-**Usage:**
-
-```bash
-python fix_html.py --dry-run
-python fix_html.py --input content/wrist-as-universal-joint/Wrist_Universal_Claude.html
-python fix_html.py --input content/wrist-as-universal-joint/Wrist_Universal_Claude.html --output build/Wrist_Universal_Claude.html
-```
-
-**Default input:** `content/wrist-as-universal-joint/Wrist_Universal_Claude.html`
+> **Removed (issue #3234):** the root-level `fix_html.py` post-render patcher.
+> Its pure normalization rules now live in
+> `src.tools.utils.html_utils.normalize_html_content` (call them from the
+> generation path so artifacts are born clean), and `tests/test_html_content_lint.py`
+> guards the committed wrist article's HTML invariants as a regression gate
+> instead of silently re-patching it.
 
 ## Quality & Assessment Scripts
 

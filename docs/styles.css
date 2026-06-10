@@ -34,14 +34,18 @@
 }
 
 :root {
-  /* Modern Scientific Palette */
-  --primary-dark: #1a1a2e;
-  --primary-blue: #0f4c75;
-  --accent-blue: #205d86;
-  --light-blue: #e3f2fd;
-  --pure-white: #fff;
-  --white-transparent: rgb(255, 255, 255, 0.9);
-  --legal-pad-yellow: #fef9e7;
+  /* Modern Scientific Palette — these legacy names are now thin aliases of the
+     canonical css/tokens/colors.css token set (issue #3224), so the brand
+     colors have a single source of truth and cannot silently drift between the
+     page chrome and the component tokens. Values are identical to the previous
+     literals; this is a zero-visual-change refactor. */
+  --primary-dark: var(--color-primary-dark);
+  --primary-blue: var(--color-primary-main);
+  --accent-blue: var(--color-accent);
+  --light-blue: var(--color-primary-lightest);
+  --pure-white: var(--color-neutral-0);
+  --white-transparent: var(--color-white-transparent);
+  --legal-pad-yellow: var(--color-highlight-yellow);
 
   /* Neutral scale */
   --bg-body: #fff;
