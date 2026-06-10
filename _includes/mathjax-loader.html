@@ -3,7 +3,7 @@
   window.MathJax = {
     loader: {
       paths: {
-        a11y: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/a11y'
+        a11y: 'https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/a11y'
       },
       // ⚡ Bolt Optimization: Lazy typesetting defers MathJax rendering until
       // equations enter the viewport, significantly improving initial page load time.
@@ -69,8 +69,15 @@
 
     // Load MathJax (MathJax v3 handles its own polyfills internally)
     // Load MathJax (v3 handles its own polyfills internally)
+    // SECURITY: pin MathJax to an exact, immutable version and verify it with a
+    // Subresource Integrity hash so a compromise of the jsDelivr edge or the
+    // `mathjax` npm package cannot inject arbitrary script into the page. The
+    // version and hash must be updated together (regenerate with:
+    //   curl -sL <url> | openssl dgst -sha384 -binary | openssl base64 -A ).
     const mathjax = document.createElement("script");
-    mathjax.src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js";
+    mathjax.src = "https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js";
+    mathjax.integrity = "sha384-Wuix6BuhrWbjDBs24bXrjf4ZQ5aFeFWBuKkFekO2t8xFU0iNaLQfp2K6/1Nxveei";
+    mathjax.crossOrigin = "anonymous";
     mathjax.async = true;
     mathjax.id = "MathJax-script";
     mathjax.dataset.adMathjax = "mathjax";

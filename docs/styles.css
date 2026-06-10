@@ -2713,10 +2713,16 @@ h1.title,
 }
 
 /* =============================================================
-   Dark Mode – automatic via prefers-color-scheme or manual toggle
+   Dark Mode – automatic via prefers-color-scheme (OS preference)
+
+   A selector inside a media-query list ("@media (...), [data-theme]")
+   is invalid CSS and is dropped by browsers, and an unguarded :root
+   here would override an explicit light choice made via the toggle.
+   Guard with :not([data-theme="light"]) so a user-selected light theme
+   wins over the OS dark preference.
    ============================================================= */
-@media (prefers-color-scheme: dark), [data-theme="dark"] {
-  :root {
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
     color-scheme: dark;
 
     --bg-body: #0d0d1a;
