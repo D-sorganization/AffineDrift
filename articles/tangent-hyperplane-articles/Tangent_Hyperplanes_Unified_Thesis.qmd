@@ -2504,7 +2504,7 @@ where:
 - $M(q)$: Inertia matrix (configuration-dependent)
 - $C(q, \dot{q})$: Coriolis/centrifugal terms
 - $G(q)$: Gravity terms
-- $\tau = [tau_1, \tau_2]^T$: Joint torques
+- $\tau = [\tau_1, \tau_2]^T$: Joint torques
 
 **Specific form** (for $L_1 = L_2 = 1$ m, $m_1 = m_2 = 1$ kg):
 
@@ -2529,7 +2529,7 @@ m_2 g L_2 \sin(\theta_1 + \theta_2)
 \end{bmatrix}
 $$ {#eq-gravity-vector}
 
-**State space form**: $x = [q, \dot{q}]^T$, $\dot{x} = [\\dot{q}, M(q)^{-1}(\tau - C(q,\dot{q})\dot{q} - G(q))]^T$
+**State space form**: $x = [q, \dot{q}]^T$, $\dot{x} = [\dot{q}, M(q)^{-1}(\tau - C(q,\dot{q})\dot{q} - G(q))]^T$
 
 **Task**: Move end-effector from $[0.5, 0.5]$ to $[0.3, 0.8]$ (meters, workspace coords) while minimizing effort.
 
