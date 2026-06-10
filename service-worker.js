@@ -1,14 +1,21 @@
 // AffineDrift Service Worker for offline support
-// Version 5: Updated 2026-04-11 (drop legacy script.js runtime path)
+// Version 6: Updated 2026-06-09 (network-first for HTML navigations — issue #3221)
 // TODO #1459: Replace hardcoded version with content-hash cache busting via build pipeline
 importScripts('/js/service-worker-utils.js');
 
 const {
   MAX_CACHE_ENTRIES,
   UPDATE_MESSAGE_TYPE,
+  DEFAULT_NAVIGATION_TIMEOUT_MS,
   broadcastUpdate,
   trimCacheEntries,
+  networkFirstWithTimeout,
+  cacheFirst,
 } = self.AffineDriftServiceWorkerUtils;
+
+// Network-first navigation timeout: returning visitors get the latest deploy,
+// but a slow/offline network falls back to cache within this budget.
+const NAV_TIMEOUT_MS = DEFAULT_NAVIGATION_TIMEOUT_MS || 3000;
 const CACHE_NAME = 'affinedrift-v4-27f68dec';
 const OFFLINE_URL = '/offline.html';
 
@@ -117,7 +124,26 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Background cache update promise - runs outside respondWith to avoid race conditions
+  // HTML navigations: network-first so returning visitors always get the latest
+  // deploy (content-only article edits do not bust CACHE_NAME, so cache-first
+  // would serve stale article HTML — see issue #3221). Falls back to the cached
+  // copy, then offline.html, on a slow/failed network.
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      networkFirstWithTimeout(event.request, {
+        cacheName: CACHE_NAME,
+        offlineUrl: OFFLINE_URL,
+        timeoutMs: NAV_TIMEOUT_MS,
+        persistFn: (cache, request, response) =>
+          storeResponse(cache, request, response, true),
+      })
+    );
+    return;
+  }
+
+  // Static subresources (CSS/JS/images/fonts) are content-hashed by CACHE_NAME,
+  // so cache-first is correct and fastest. Keep a background revalidation so a
+  // changed-but-same-URL asset still refreshes for the next load.
   const backgroundUpdate = caches.match(event.request).then((cachedResponse) => {
     if (!cachedResponse) return;
 
@@ -135,33 +161,9 @@ self.addEventListener('fetch', (event) => {
   event.waitUntil(backgroundUpdate);
 
   event.respondWith(
-    caches.match(event.request)
-      .then((cachedResponse) => {
-        if (cachedResponse) {
-          return cachedResponse;
-        }
-
-        // No cache - fetch from network
-        return fetch(event.request)
-          .then((response) => {
-            // Don't cache non-successful responses
-            if (!response || response.status !== 200 || response.type !== 'basic') {
-              return response;
-            }
-
-            // Cache successful responses
-            caches.open(CACHE_NAME).then((cache) => {
-              storeResponse(cache, event.request, response);
-            });
-
-            return response;
-          })
-          .catch(() => {
-            // Network failed and no cache - return offline page for navigation
-            if (event.request.mode === 'navigate') {
-              return caches.match(OFFLINE_URL);
-            }
-          });
-      })
+    cacheFirst(event.request, {
+      cacheName: CACHE_NAME,
+      persistFn: (cache, request, response) => storeResponse(cache, request, response),
+    })
   );
 });
