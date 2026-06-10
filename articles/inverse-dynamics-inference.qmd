@@ -26,22 +26,26 @@ This section formalizes the limitations of classical inverse dynamics and explai
 The classical rigid-body dynamics of the system can be written as
 
 $$
-M(q)\ddot{q} + C(q,\dot{q})\dot{q} + g(q) + \tau_{\mathrm{passive}} = \tau_{\mathrm{input}},
+\underbrace{M(q)\ddot{q} + C(q,\dot{q})\dot{q} + g(q) + \tau_{\mathrm{passive}}}_{\tau_{\mathrm{ID}}} = \tau_{\mathrm{input}},
 $$
 
-where $M(q)$ is the inertia matrix, $C(q,\dot{q})\dot{q}$ contains Coriolis and centrifugal forces, $g(q)$ contains gravitational forces, and $\tau_{\mathrm{passive}}$ includes passive elastic and damping forces. Classical inverse dynamics rearranges this equation to compute
+where $M(q)$ is the inertia matrix, $C(q,\dot{q})\dot{q}$ contains Coriolis and centrifugal forces, $g(q)$ contains gravitational forces, and $\tau_{\mathrm{passive}}$ includes passive elastic and damping forces. The left-hand side is exactly the **total inverse-dynamics torque** $\tau_{\mathrm{ID}}$ — the generalized torque required to reproduce the measured motion. For the actual motion the applied (input) torque equals this total, $\tau_{\mathrm{input}} = \tau_{\mathrm{ID}}$; that identity is what classical inverse dynamics computes.
+
+The difficulty is not in computing $\tau_{\mathrm{ID}}$ but in *attributing* it. We re-group the same total — not adding a second equation — into an inertial part and a drift part. Define the **drift torque** as the configuration- and velocity-dependent passive generalized force evaluated along the actual trajectory, and the **inertial torque** as the part carried by the mass matrix:
 
 $$
-\tau_{\mathrm{ID}} = M(q)\ddot{q} + C(q,\dot{q})\dot{q} + g(q) + \tau_{\mathrm{passive}}.
+\tau_{\mathrm{drift}}(x) := C(q,\dot{q})\dot{q} + g(q) + \tau_{\mathrm{passive}},
+\qquad
+\tau_{\mathrm{inertial}} := M(q)\ddot{q},
 $$
 
-This total torque $\tau_{\mathrm{ID}}$ is the torque that would need to be applied to the model to reproduce the measured motion. However, it does not distinguish between the drift torque $\tau_{\mathrm{drift}}$ and the active input torque $\tau_{\mathrm{input}} = Bu$. In control-affine systems,
+so that $\tau_{\mathrm{ID}} = \tau_{\mathrm{inertial}} + \tau_{\mathrm{drift}}$ (matching the decomposition in [inverse-dynamics](inverse-dynamics.html) and [drift-components-wrench-double-pendulum](drift-components-wrench-double-pendulum.html)). The *active* contribution is the residual after removing the drift the zero-input (ZTCF) trajectory would require:
 
 $$
-\tau_{\mathrm{ID}} = \tau_{\mathrm{drift}} + \tau_{\mathrm{input}},
+\tau_{\mathrm{input}}^{\mathrm{active}} = \tau_{\mathrm{ID}} - \tau_{\mathrm{drift}}^{\mathrm{ZTCF}}.
 $$
 
-which implies that classical inverse dynamics inherently conflates passive and active contributions.
+Because the drift and inertial parts are not separately observable from kinematics alone, classical inverse dynamics — which yields only the total $\tau_{\mathrm{ID}}$ — inherently conflates passive and active contributions.
 
 ## Why Classical Inverse Dynamics Cannot Identify Input Torques
 
