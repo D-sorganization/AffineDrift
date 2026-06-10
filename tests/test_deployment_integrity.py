@@ -16,6 +16,7 @@ CI_WORKFLOW_PATH = ROOT_DIR / ".github" / "workflows" / "ci-standard.yml"
 REQUIREMENTS_PATH = ROOT_DIR / "requirements.txt"
 LATEX_RELEASE_WORKFLOW_PATH = ROOT_DIR / ".github" / "workflows" / "latex-release-volumes.yml"
 ANTI_PHANTOM_WORKFLOW_PATH = ROOT_DIR / ".github" / "workflows" / "anti-phantom-merge.yml"
+LOCAL_ONLY_GUARD_WORKFLOW_PATH = ROOT_DIR / ".github" / "workflows" / "local-only-runner-guard.yml"
 
 
 def test_deploy_workflow_integrity() -> None:
@@ -51,6 +52,16 @@ def test_deploy_runner_picker_does_not_depend_on_org_api_token() -> None:
     assert "RUNNER_CHECK_TOKEN" not in content
     assert "/actions/runners" not in content
     assert "runner=d-sorg-fleet" in content
+
+
+def test_local_only_guard_does_not_run_on_main_pushes() -> None:
+    """Standalone hosted-runner canary should not mark normal main pushes red."""
+    assert LOCAL_ONLY_GUARD_WORKFLOW_PATH.exists(), "Local-only guard workflow file missing"
+    content = LOCAL_ONLY_GUARD_WORKFLOW_PATH.read_text(encoding="utf-8")
+
+    assert "\n  push:" not in content
+    assert "\n  workflow_dispatch:" in content
+    assert "\n  pull_request:" in content
 
 
 def test_ci_workflow_builds_site_for_e2e_and_audits_dependencies() -> None:
