@@ -1,3 +1,13 @@
+"""Scan article sources for uncited quantitative/empirical claims.
+
+Pure helpers (``line_is_skippable``, ``line_has_uncited_claim``, ``scan_lines``)
+are extracted so the detection logic is unit-testable without filesystem walks
+(issue #3230). The ``main`` entry point preserves the original behavior: walk the
+article directories and write ``magic_numbers_report.txt``.
+"""
+
+from __future__ import annotations
+
 import os
 import re
 
@@ -12,50 +22,61 @@ patterns = [
 ]
 cite_pattern = r"\\cite(?:p|t)?\{[^}]+\}|@\w+"  # \cite{...} or @Smith2020
 
-findings = {}
 
-for d in directories:
-    for root, _, files in os.walk(d):
-        for f in files:
-            if f.endswith((".tex", ".qmd")):
-                path = os.path.join(root, f)
-                try:
-                    with open(path, encoding="utf-8") as file_obj:
-                        lines = file_obj.readlines()
-                except UnicodeDecodeError:
-                    continue
+def line_is_skippable(line: str) -> bool:
+    """Return True for comment/math lines that should not be scanned."""
+    clean_line = line.strip()
+    if clean_line.startswith("%") or clean_line.startswith("<!-"):
+        return True
+    return clean_line.startswith("\\") or clean_line.startswith("$$")
 
-                for i, line in enumerate(lines):
-                    # check if line is a comment in latex/html
-                    clean_line = line.strip()
-                    if clean_line.startswith("%") or clean_line.startswith("<!-"):
+
+def line_has_uncited_claim(line: str) -> bool:
+    """Return True if *line* matches a claim pattern but carries no citation."""
+    if line_is_skippable(line):
+        return False
+    if not any(re.search(p, line, re.IGNORECASE) for p in patterns):
+        return False
+    return not re.search(cite_pattern, line)
+
+
+def scan_lines(lines: list[str]) -> list[tuple[int, str]]:
+    """Return ``(line_number, text)`` tuples for each uncited claim line.
+
+    Line numbers are 1-based to match editor conventions.
+    """
+    findings: list[tuple[int, str]] = []
+    for i, line in enumerate(lines):
+        if line_has_uncited_claim(line):
+            findings.append((i + 1, line.strip()))
+    return findings
+
+
+def main() -> None:
+    """Walk the article directories and write the magic-numbers report."""
+    findings: dict[str, list[tuple[int, str]]] = {}
+    for d in directories:
+        for root, _, files in os.walk(d):
+            for f in files:
+                if f.endswith((".tex", ".qmd")):
+                    path = os.path.join(root, f)
+                    try:
+                        with open(path, encoding="utf-8") as file_obj:
+                            lines = file_obj.readlines()
+                    except UnicodeDecodeError:
                         continue
+                    matches = scan_lines(lines)
+                    if matches:
+                        findings[path] = matches
 
-                    # exclude math environment lines partially or if it's an equation
-                    if clean_line.startswith("\\") or clean_line.startswith("$$"):
-                        continue
+    with open("magic_numbers_report.txt", "w", encoding="utf-8") as out:
+        for path, matches in findings.items():
+            if matches:
+                out.write(f"\n--- {os.path.basename(path)} ---\n")
+                out.write(f"Total instances found: {len(matches)}\n")
+                for line_num, text in matches[:10]:
+                    out.write(f"L{line_num}: {text[:150]}...\n")
 
-                    found_pattern = False
-                    for p in patterns:
-                        if re.search(p, line, re.IGNORECASE):
-                            found_pattern = True
-                            break
 
-                    if found_pattern:
-                        # Check if no citation exists
-                        if not re.search(cite_pattern, line):
-                            # Ensure there actually is a number or study word, maybe rule out single digits
-                            # Actually, let's just log it
-                            if path not in findings:
-                                findings[path] = []
-                            findings[path].append((i + 1, line.strip()))
-
-# Output summary to a file to read it easily
-with open("magic_numbers_report.txt", "w", encoding="utf-8") as out:
-    for path, matches in findings.items():
-        if matches:
-            out.write(f"\n--- {os.path.basename(path)} ---\n")
-            # Only output first 3 per file to avoid massive output, but count total
-            out.write(f"Total instances found: {len(matches)}\n")
-            for line_num, text in matches[:10]:
-                out.write(f"L{line_num}: {text[:150]}...\n")
+if __name__ == "__main__":
+    main()
