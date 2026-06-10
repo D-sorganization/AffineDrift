@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 
 from scripts.update_sw_cache_version import (
+    CACHE_SCHEMA_VERSION,
     HASH_GLOBS,
     HASH_SOURCES,
     ROOT,
@@ -88,7 +89,7 @@ def test_update_cache_version_rewrites_cache_name(tmp_path: Path) -> None:
     repo = _make_repo(tmp_path, _full_assets(), sw_version="v4-deadbeef")
     assert update_cache_version(root=repo) == 0
     content = (repo / "service-worker.js").read_text(encoding="utf-8")
-    expected = f"v4-{compute_asset_hash(root=repo)}"
+    expected = f"{CACHE_SCHEMA_VERSION}-{compute_asset_hash(root=repo)}"
     assert f"const CACHE_NAME = 'affinedrift-{expected}';" in content
 
 

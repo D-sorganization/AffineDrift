@@ -1,9 +1,8 @@
 /**
- * Contract test: the service worker must precache every stylesheet that
- * styles.css pulls in via @import (directly, and transitively through
- * css/tokens/design-tokens.css). Caching only /styles.css leaves offline
- * pages unstyled, because @import sub-resources are separate requests that
- * are NOT cached when the parent stylesheet is cached.
+ * Contract test: the service worker must precache the deployed stylesheet
+ * bundle, not the modular source @import graph. `styles.css` remains modular
+ * for authoring, while scripts/bundle_css.py renders a flattened
+ * `docs/styles.css` for deployment.
  *
  * Regression test for the 2026-06-09 web audit.
  */
@@ -40,8 +39,8 @@ function resolveImport(importerDir, target) {
   return path.posix.normalize(path.posix.join(importerDir, target));
 }
 
-/** Collect the full transitive @import graph starting from styles.css. */
-function collectImportedStylesheets() {
+/** Collect the full transitive @import graph starting from source styles.css. */
+function collectSourceImportedStylesheets() {
   const resolved = new Set();
   const queue = [{ urlPath: '/styles.css', dir: '/' }];
   const seen = new Set();
@@ -65,18 +64,21 @@ function collectImportedStylesheets() {
 
 describe('service worker stylesheet precache contract', () => {
   const swSource = readText('service-worker.js');
-  const importedStylesheets = collectImportedStylesheets();
+  const sourceImportedStylesheets = collectSourceImportedStylesheets();
 
-  test('styles.css has at least one @import (sanity check)', () => {
-    expect(importedStylesheets.length).toBeGreaterThan(0);
+  test('deployed docs/styles.css is a flattened bundle', () => {
+    expect(readText('docs/styles.css')).not.toMatch(/@import\s+/);
   });
 
-  test.each(importedStylesheets)(
-    'precaches @imported stylesheet %s',
-    (stylesheet) => {
-      expect(swSource).toContain(`'${stylesheet}'`);
-    }
-  );
+  test('precaches bundled and independently linked stylesheets', () => {
+    expect(swSource).toContain("'/styles.css'");
+    expect(swSource).toContain("'/css/startup-launcher.css'");
+    expect(swSource).toContain("'/css/search-metrics.css'");
+  });
+
+  test.each(sourceImportedStylesheets)('does not precache bundled source import %s', (stylesheet) => {
+    expect(swSource).not.toContain(`'${stylesheet}'`);
+  });
 
   test('every precached css file exists on disk', () => {
     const cssEntries = [...swSource.matchAll(/'(\/css\/[^']+\.css)'/g)].map(
