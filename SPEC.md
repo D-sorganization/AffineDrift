@@ -29,7 +29,7 @@ Last-Updated: 2026-06-10T00:00:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.8                                            |
-| **Spec Version**        | 1.0.129                                          |
+| **Spec Version**        | 1.0.130                                          |
 | **Last Spec Update**    | 2026-06-10                                       |
 
 ## 2. Purpose & Mission
@@ -501,6 +501,7 @@ python src/tools/code_quality_ast.py
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | ---------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-06-10 | 1.0.130 | test(tdd): Added the next #3230 coverage slice for assessment and RL funnel helpers, including deterministic RL tracking/benchmark contracts, the RL reporting re-export surface, comprehensive assessment report issue generation, Additional Audits preservation, duplicate-aware GitHub issue preparation, dry-run behavior, and issue command invocation. |
 | 2026-06-10 | 1.0.129 | fix(web/pwa): Removed stale source-graph stylesheet entries from the service-worker precache after the rendered `docs/styles.css` bundle became self-contained, kept independently linked CSS assets cached, and bumped the service-worker cache schema to invalidate old install manifests. |
 | 2026-06-10 | 1.0.128 | test(tdd): Added focused coverage for the next #3230 untested-module slice, including batch conversion success/error/dry-run paths, Quarto transform helpers, hook setup command orchestration, bibliography YAML/JSON helpers, and geometry notebook bridge invocation. |
 | 2026-06-10 | 1.0.127 | test(tdd): Filled the remaining #3230 CI-gate coverage gaps left by #3246 — extracted pure `count_markers`/`evaluate_tech_debt_budget` and `compile_checks`/`evaluate_ui_ux_budget` helpers from `check_tech_debt_budget.py` and `check_ui_ux_budget.py`, and added pass/fail/boundary/missing-config tests for those two gates plus `check_critical_module_coverage` (mocked subprocess), `cli_output`, `check-equations` (importlib-loaded hyphenated script), and `rl_funnel_support` validators. |
