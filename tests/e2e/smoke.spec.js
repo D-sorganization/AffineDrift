@@ -128,8 +128,8 @@ test.describe("PR Smoke - behavioral invariants", () => {
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
     await page.waitForTimeout(400);
     await backToTop.click({ force: true });
-    await page.waitForTimeout(400);
-    const scrollY = await page.evaluate(() => window.scrollY);
-    expect(scrollY).toBeLessThan(200);
+    await expect
+      .poll(() => page.evaluate(() => window.scrollY), { timeout: 5000 })
+      .toBeLessThan(200);
   });
 });
