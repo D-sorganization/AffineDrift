@@ -29,7 +29,7 @@ Last-Updated: 2026-06-10T00:00:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.8                                            |
-| **Spec Version**        | 1.0.120                                          |
+| **Spec Version**        | 1.0.123                                          |
 | **Last Spec Update**    | 2026-06-10                                       |
 
 ## 2. Purpose & Mission
@@ -212,6 +212,7 @@ AffineDrift/
 | F48 | QMD style-discipline linting             | ✅     | `src/tools/check_style_discipline.py` scans rendered-source `.qmd` files outside excluded generated/content directories and fails on inline `style=` attributes, gradient functions, or hardcoded hex colors, with unit tests covering clean files and each violation category.                                                                                                                                                                                |
 | F49 | Consolidated frontend dependency refresh | ✅     | The site frontend keeps Dependabot JavaScript and Python dependency refreshes together with navigation traversal and UI component optimizations, then regenerates committed `docs/` mirrors from the canonical frontend assets so production pages match source behavior.                                                                                                                                                                                      |
 | F50 | Web theme and PWA cache correctness      | ✅     | The dark-mode CSS cascade keeps media-query preludes valid and lets an explicit `data-theme="light"` user choice override OS dark preference, while the service worker precaches imported stylesheet dependencies and `scripts/update_sw_cache_version.py` hashes real runtime CSS/JS assets so offline pages stay styled and frontend edits invalidate stale caches.                                                                                          |
+| F51 | Website delivery asset pipeline          | ✅     | Deployment builds an import-free `docs/styles.css` bundle from the canonical modular `css/` graph, generates deterministic `feed.xml` and `sitemap.xml` artifacts from Quarto/frontmatter sources, and keeps light/dark theme color values centralized in `css/tokens/colors.css` with legacy aliases mapped to canonical `--color-*` tokens.                                                                                                                  |
 
 ### API / Interface Contract
 
@@ -242,8 +243,11 @@ AffineDrift/
 - `link-checker.py` — Validate all documentation links
 - `site-health.py` — Generate health report on website assets
 - `code-quality-ast.py` — Analyze Python code structure and metrics
+- `scripts/bundle_css.py` — Recursively inline the canonical CSS import graph into the deployed `docs/styles.css` bundle, with `--check` freshness validation for CI
 - `check_style_discipline.py` — Enforce QMD style-discipline rules that keep page styling in canonical CSS primitives
 - `scripts/cli_output.py` — Shared helper for scripts that intentionally emit user-facing stdout/stderr lines as part of their CLI contract
+- `scripts/generate_feed.py` — Generate deterministic RSS feed output from article frontmatter
+- `scripts/generate_sitemap.py` — Generate sitemap XML for deployed Quarto pages, including explicit output-path support for deployment pipelines
 
 **Website (HTTP):**
 
@@ -501,6 +505,7 @@ python src/tools/code_quality_ast.py
 
 | Date       | Version | Changes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | ---------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-06-10 | 1.0.123 | feat(web): Documented the deployed CSS bundle pipeline, deterministic RSS feed and sitemap generation, and centralized color-token system. `scripts/bundle_css.py` owns the import-free `docs/styles.css` artifact while canonical authoring CSS remains modular; `scripts/generate_feed.py` and `scripts/generate_sitemap.py` are wired into deployment; `css/tokens/colors.css` is the single source for canonical and legacy light/dark theme color tokens.                                                                                                                              |
 | 2026-06-09 | 1.0.120 | fix(quality): Repaired the service-worker cache-busting hash sources in `scripts/update_sw_cache_version.py`, made missing explicit hash sources fail loudly per DbC, expanded runtime CSS/JS hash coverage, and kept regression coverage for cache invalidation, deterministic hashing, idempotent updates, and stale-cache prevention.                                                                                                                                                                                                                                                    |
 | 2026-06-10 | 1.0.120 | fix(content): Documented mechanics notation and parameter-reference cleanup across `NOTATION.md`, `PARAMETERS.md`, degrees-of-freedom, and nonlinear-source articles, including citation-key guard coverage that distinguishes Quarto cross-references from bibliography citations.                                                                                                                                                                                                                                                                                                         |
 | 2026-06-09 | 1.0.119 | fix(security): 2026-06-09 security-audit hardening — removed the committed CI runner log (`log.txt`, already git-ignored), added least-privilege `permissions: contents: read` blocks to `block-self-merge.yml` and `link-checker.yml`, and pinned the remaining floor-constrained (`>=`) entries in `requirements.txt` (`responses`, `pytest-httpx`, `bandit`, `pip-audit`, `defusedxml`) to exact versions matching `requirements-docker.lock` for reproducible, supply-chain-auditable installs.                                                                                         |
