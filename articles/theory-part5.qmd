@@ -134,16 +134,16 @@ A key numerical result was verified:
 ## Implementation Verification: Not Theoretical Validation
 When the model is configured correctly, the difference between the total force and the ZTCF force satisfies, at the freeze instant,
 
-$$F_{\text{total}}(t) - F_{\mathrm{ZTCF}}(t) = F_{\mathrm{ZVCF}}(t).$$
+$$F_{\text{total}}(t_0) - F_{\mathrm{ZTCF}}(t_0) = F_{\mathrm{input}}(t_0).$$
 
-This identity holds **exactly at $t = t_0$** (the freeze instant); for $t > t_0$ the equality is approximate, with error growing with the perturbation magnitude as the ZTCF trajectory diverges from the actual trajectory. This is a **Numerical Consistency Check**—a verification that discrete-time integration algorithms and "kill-switch" logic correctly preserve the algebraic structure of the theory at the branch point without introducing numerical artifacts. It does NOT validate the control-affine model itself against reality. The identity holds as a mathematical consequence of the Lagrangian formulation at the instant of the ZTCF branch; its numerical truth in simulation proves only that the implementation is correct, not that the model accurately predicts actual golf swings. Model validation requires comparison with experimental data from real athletes.
+At $t_0$ the ZTCF run records the **full** drift force $\tau_{\mathrm{drift}}(x(t_0))$, so the subtraction returns the input force, $\tau_{\mathrm{total}} - \tau_{\mathrm{drift}} = \tau_{\mathrm{input}}$. The configuration-only (ZVCF) force is the separate slice $F_{\mathrm{drift}}(t_0) - F_{\mathrm{vel.drift}}(t_0) = F_{\mathrm{ZVCF}}(t_0)$, not $F_{\text{total}} - F_{\mathrm{ZTCF}}$. This identity holds **exactly at $t = t_0$** (the freeze instant); for $t > t_0$ the equality is approximate, with error growing with the perturbation magnitude as the ZTCF trajectory diverges from the actual trajectory. This is a **Numerical Consistency Check**—a verification that discrete-time integration algorithms and "kill-switch" logic correctly preserve the algebraic structure of the theory at the branch point without introducing numerical artifacts. It does NOT validate the control-affine model itself against reality. The identity holds as a mathematical consequence of the Lagrangian formulation at the instant of the ZTCF branch; its numerical truth in simulation proves only that the implementation is correct, not that the model accurately predicts actual golf swings. Model validation requires comparison with experimental data from real athletes.
 :::
 
 ### Implications for future work
 
 ::: {.callout-note}
 ## Numerical Identity ≠ Model Validation
-The fact that $F_{\text{total}} - F_{\mathrm{ZTCF}} = F_{\mathrm{ZVCF}}$ holds numerically in simulation confirms correct implementation of the counterfactual algorithms, not the validity of the control-affine model itself. Model validation requires comparison with experimental data from real golfers—comparing measured torques and forces to the predictions of the theory. This simulation documents that the mathematical framework is internally consistent; future experimental work must test whether the model accurately describes the physical golf swing.
+The fact that $F_{\text{total}} - F_{\mathrm{ZTCF}} = F_{\mathrm{input}}$ holds numerically at the freeze instant confirms correct implementation of the counterfactual algorithms, not the validity of the control-affine model itself. Model validation requires comparison with experimental data from real golfers—comparing measured torques and forces to the predictions of the theory. This simulation documents that the mathematical framework is internally consistent; future experimental work must test whether the model accurately describes the physical golf swing.
 :::
 
 The current Simulink model provides:
