@@ -215,8 +215,20 @@ data = trials.reshape(-1, n_dof)
 k, cumvar = estimate_intrinsic_dimension(data)
 print(f"Intrinsic dimension (95% variance): {k} out of {n_dof}")
 print(f"Cumulative variance: {cumvar}")
-# Expected: ~1-2 dimensions explain 95% (the limit cycle is 1D)
+# Linear PCA needs all 4 PCs here: the four columns are uncorrelated harmonics
+# with variances ~[0.5, 0.5, 0.5, 2.0], so cumulative variance reaches only
+# ~57%/71%/86%/100% across PC1..PC4. The manifold is intrinsically 1-D (a single
+# parameter t), but because it is *nonlinearly* embedded, linear variance is
+# spread across every coordinate. This is exactly why nonlinear intrinsic-
+# dimension estimators (correlation dimension, Isomap, etc.) are needed.
 ```
+
+The curve above is parameterized by the single variable `t`, so its *intrinsic*
+dimension is 1. Yet linear PCA reports 4, because PCA can only capture variance
+along straight axes and the trajectory curves through all four coordinates. The
+gap between the intrinsic dimension (1) and the linear-PCA estimate (4) is the
+signature of a curved low-dimensional manifold — a motivating case for nonlinear
+dimensionality estimation.
 
 
 ## Summary

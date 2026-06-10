@@ -545,43 +545,43 @@ The remainder of this book develops the trajectory-first theory in a sequence of
 increasingly sophisticated layers:
 
 \begin{description}[leftmargin=1.5cm, labelwidth=1.2cm, font=\bfseries\color{chapblue}]
-  \item[Ch.~2] **Curves in State Space.**
+  - **Ch.~2** **Curves in State Space.**
     The geometry of trajectories: parameterization, arc length, curvature, and torsion
     in high-dimensional state spaces. Frenet--Serret frames for nonlinear systems.
 
-  \item[Ch.~3] **Configuration Manifolds.**
+  - **Ch.~3** **Configuration Manifolds.**
     Why state space is often not $\Reals^n$: Lie groups, joint spaces, and the
     geometry of articulated bodies. The golf swing lives on $SO(3)^k$, not $\Reals^k$.
 
-  \item[Ch.~4] **Orbital Stability and Transverse Linearization.**
+  - **Ch.~4** **Orbital Stability and Transverse Linearization.**
     Rigorous definitions of trajectory stability. Linearization transverse to the
     orbit. Floquet theory for periodic motions. Moving Poincar\'e sections.
 
-  \item[Ch.~5] **Underactuation and Passive Dynamics.**
+  - **Ch.~5** **Underactuation and Passive Dynamics.**
     Constraint Jacobians, null-space control, and the exploitation of passive
     mechanical coupling. The double pendulum and the physics of the wrist release.
 
-  \item[Ch.~6] **Trajectory Optimization.**
+  - **Ch.~6** **Trajectory Optimization.**
     Direct collocation, shooting methods, and pseudospectral methods for finding
     optimal reference trajectories. The interplay between optimality and
     repeatability.
 
-  \item[Ch.~7] **Funnel Synthesis.**
+  - **Ch.~7** **Funnel Synthesis.**
     Designing time-varying tubes with guaranteed invariance. Sums-of-squares
     programming for funnel computation. Robust funnels under model uncertainty.
 
-  \item[Ch.~8] **Phase-Variable Control**~\cite{WesterveltGrizzle2007}.
+  - **Ch.~8** **Phase-Variable Control** [@WesterveltGrizzle2007].
     Decoupling path shape from timing. Virtual constraints and hybrid zero dynamics
     for walking and running. Central pattern generators as phase oscillators.
 
-  \item[Ch.~9] **Stochastic Trajectories and Motor Variability.**
-    Signal-dependent noise in biological actuators. The minimum-variance theory of human movement~\cite{TodorovJordan2002}. Why optimal trajectories are smooth~\cite{FlashHogan1985}.
+  - **Ch.~9** **Stochastic Trajectories and Motor Variability.**
+    Signal-dependent noise in biological actuators. The minimum-variance theory of human movement [@TodorovJordan2002]. Why optimal trajectories are smooth [@FlashHogan1985].
 
-  \item[Ch.~10] **Learning to Move.**
+  - **Ch.~10** **Learning to Move.**
     Iterative learning control, policy search, and trajectory libraries. How to
     improve a motion over repeated trials without losing stability.
 
-  \item[Ch.~11] **Case Study: The Complete Golf Swing.**
+  - **Ch.~11** **Case Study: The Complete Golf Swing.**
     Full application of the entire theory to a 15-DOF musculoskeletal model of the
     golf swing, from trajectory optimization through funnel synthesis to
     stochastic robustness analysis.
@@ -797,7 +797,7 @@ direction of the derivative; none is hidden in its magnitude.
 
   In $\Reals^n$ with the Euclidean metric, arc length is defined exactly as
   above. On a manifold, arc length requires an explicitly chosen Riemannian
-  metric \cite{doCarmo1992}. When the configuration manifold carries such a
+  metric  [@doCarmo1992]. When the configuration manifold carries such a
   metric (as it will in Chapter 3), the formula \eqref{eq:arc_length}
   generalizes to
   \begin{equation}
@@ -807,7 +807,7 @@ direction of the derivative; none is hidden in its magnitude.
   where $\bm{G}$ is the selected metric tensor. For mechanical systems, the
   kinetic-energy metric on configuration space is represented in local
   coordinates by the mass-inertia matrix $\bm{M}(\bm{q})$
-  \cite{BulloLewis2004}. That statement is about configuration velocities
+   [@BulloLewis2004]. That statement is about configuration velocities
   $\dot{\bm{q}}$, not automatically about arbitrary state-space coordinates
   $(\bm{q},\dot{\bm{q}})$. Thus a mass-weighted arc length can make high-inertia
   motions count as longer than low-inertia motions, but only after the modeling
@@ -889,8 +889,8 @@ be computed directly:
     = \frac{ab}{(a^2\sin^2 t + b^2\cos^2 t)^{3/2}}.
   \end{equation}
   The curvature is *highest at the ends of the minor axis*
-  ($t = 0, \pi$, where $\kappa = a/b^2$) and \emph{lowest at the ends of the
-  major axis} ($t = \pi/2, 3\pi/2$, where $\kappa = b/a^2$). The tighter the
+  ($t = 0, \pi$, where $\kappa = a/b^2$) and *lowest at the ends of the
+  major axis* ($t = \pi/2, 3\pi/2$, where $\kappa = b/a^2$). The tighter the
   bend, the higher the curvature---and, as we will see, the more control
   authority is needed to track it.
 :::
@@ -1335,8 +1335,8 @@ local approximations that are useful for controller design.
 
 
 For trajectory control, the osculating circle is the most immediately useful.
-It tells us: \emph{if the system were constrained to follow a circle at this
-point, what circle would it be?} The radius of that circle is the radius of
+It tells us: *if the system were constrained to follow a circle at this
+point, what circle would it be?* The radius of that circle is the radius of
 curvature $R = 1/\kappa$, and the center indicates the direction toward which
 the trajectory bends.
 
@@ -1404,8 +1404,8 @@ dynamics. The dominant effect is a **curvature-induced coupling**:
   the geometric coupling between the curve's shape and the transverse stability.
 :::
 
-This result has a profound implication: \emph{the stability of trajectory
-tracking depends on the geometry of the trajectory.} A trajectory with low
+This result has a profound implication: *the stability of trajectory
+tracking depends on the geometry of the trajectory.* A trajectory with low
 curvature is inherently easier to stabilize than one with high curvature,
 even if the underlying system dynamics are identical. The curvature modifies
 the effective dynamics transverse to the path.
@@ -1541,8 +1541,8 @@ most practically important results of this book.
   experienced gimbal lock operationally. Every modern spacecraft avoids
   Euler angles for precisely this reason.
 
-  The lesson for control: \textbf{if you use the wrong coordinates, your
-  controller will have singularities that the physical system does not.}
+  The lesson for control: **if you use the wrong coordinates, your
+  controller will have singularities that the physical system does not.**
 \end{warning}
 
 
@@ -2101,8 +2101,8 @@ by $\nabla_{\dot{\gamma}}$.
 
 
 Geodesic curvature is the manifold generalization of the curvature from
-Chapter 2, and it has the same control interpretation: \emph{geodesic
-curvature measures the force per unit mass needed to follow the curve},
+Chapter 2, and it has the same control interpretation: *geodesic
+curvature measures the force per unit mass needed to follow the curve*,
 beyond what the natural dynamics would provide for free.
 
 ::: {.proposition}
@@ -2386,11 +2386,11 @@ encoded in the manifold's Riemannian geometry.
 ## The Problem with Lyapunov
 
 
-The classical Lyapunov framework asks a simple question: \emph{does the state
-converge to an equilibrium?} We demonstrated in Chapter 1 that this is the
+The classical Lyapunov framework asks a simple question: *does the state
+converge to an equilibrium?* We demonstrated in Chapter 1 that this is the
 wrong question for systems whose purpose is to move. But the problem goes
-deeper than philosophical framing---Lyapunov stability is \emph{structurally
-incapable} of analyzing trajectory-tracking systems.
+deeper than philosophical framing---Lyapunov stability is *structurally
+incapable* of analyzing trajectory-tracking systems.
 
 Consider a system perfectly tracking a reference trajectory $\traj^*(t)$.
 The state $\state(t)$ matches $\traj^*(t)$ at every instant. Now apply a
@@ -2506,8 +2506,8 @@ timing information.
   $\traj^*(0) = \traj^*(T)$ and $\orbit$ is a closed curve (a loop).
 
 
-  A trajectory $\traj^*(t)$ (or its orbit $\orbit$) is \textbf{orbitally
-  stable} if for every $\varepsilon > 0$ there exists $\delta > 0$ such that
+  A trajectory $\traj^*(t)$ (or its orbit $\orbit$) is **orbitally
+  stable** if for every $\varepsilon > 0$ there exists $\delta > 0$ such that
   \begin{equation}\label{eq:orbital_stability}
     d(\state(0), \orbit) < \delta \implies
     d(\state(t), \orbit) < \varepsilon \quad \forall\, t \geq 0,
@@ -2558,8 +2558,8 @@ the orbit matter.
 
 
 To analyze orbital stability, we must decompose the dynamics into components
-along and across the orbit. This is the \emph{transverse--tangential
-decomposition}, the central technical tool of this chapter.
+along and across the orbit. This is the *transverse--tangential
+decomposition*, the central technical tool of this chapter.
 
 
 ### Projection onto the Orbit
@@ -2596,8 +2596,8 @@ $(n{-}1)$-dimensional transverse hyperplane:
     \state = \traj^*(s^*) + \bm{\xi}, \qquad
     \bm{\xi} \in \Sigma(s^*),
   \end{equation}
-  where $s^*$ is the projected phase and $\bm{\xi}$ is the \textbf{transverse
-  deviation}---the component of the error perpendicular to the orbit. Orbital
+  where $s^*$ is the projected phase and $\bm{\xi}$ is the **transverse
+  deviation**---the component of the error perpendicular to the orbit. Orbital
   stability is equivalent to the stability of the origin $\bm{\xi} = \bm{0}$
   in the transverse dynamics.
 
@@ -2671,7 +2671,7 @@ $\dot{\traj}^* = \bm{f}(\traj^*, \control^*(t))$. Using the decomposition
 $\state = \traj^*(s^*) + \bm{\xi}$ and linearizing about $\bm{\xi} = \bm{0}$:
 
 ::: {#thm-transverse_lin}
-**Transverse Linearization~\cite{HauserHindman1995,Shiriaev2010,ManchesterSlotine2017}**
+**Transverse Linearization [@HauserHindman1995; @Shiriaev2010; @ManchesterSlotine2017]**
 
   The linearized transverse dynamics about the orbit $\orbit$ are
   \begin{equation}\label{eq:transverse_linear}
@@ -2798,8 +2798,8 @@ system. Floquet theory provides the definitive stability analysis tool.
     \monodromy = \PhiMat(T, 0).
   \end{equation}
   The eigenvalues $\mu_1, \ldots, \mu_{n-1}$ of $\monodromy$ are the
-  **Floquet multipliers** (also called \textbf{characteristic
-  multipliers}).
+  **Floquet multipliers** (also called **characteristic
+  multipliers**).
 
 
 ::: {#thm-floquet}
@@ -2903,8 +2903,8 @@ equivalent to stability of this fixed point under the return map.
 
 The golf swing is not periodic---it is a *finite-time* trajectory.
 The classical Poincar\'e section (which relies on periodicity) does not
-directly apply. However, we can generalize to \textbf{moving Poincar\'e
-sections}: a continuous family of transverse hyperplanes, one at each point
+directly apply. However, we can generalize to **moving Poincar\'e
+sections**: a continuous family of transverse hyperplanes, one at each point
 of the orbit.
 
 
@@ -2991,8 +2991,8 @@ the result back to the nonlinear system.
 ### Time-Varying LQR for Transverse Stabilization
 
 
-  The trajectory tracking problem reduces to solving the \emph{differential
-  Riccati equation} for the transverse dynamics:
+  The trajectory tracking problem reduces to solving the *differential
+  Riccati equation* for the transverse dynamics:
   \begin{equation}\label{eq:riccati}
     -\dot{\bm{S}}(t) = \Amat_\transverse^\top \bm{S}
     + \bm{S}\, \Amat_\transverse
@@ -3053,8 +3053,8 @@ funnel behavior we designed geometrically in Chapter 1:
 :::
 
 This is the formal connection between the geometric funnel of Chapter 1 and
-the algebraic Riccati equation: \textbf{the funnel is the level set of the
-Riccati cost-to-go.}
+the algebraic Riccati equation: **the funnel is the level set of the
+Riccati cost-to-go.**
 
 
 ### The Complete Tracking Controller Architecture
@@ -3648,7 +3648,7 @@ If the derivative of the boundary function points inward everywhere on the bound
 ## Sums-of-Squares (SOS) Programming
 
 
-Proving that $\dot{V} < 0$ on the boundary $V=1$ for a general nonlinear function $\bm{f}$ is famously difficult. We have an infinite number of states on the boundary to check! We circumvent this by restricting our dynamics $\bm{f}$ algorithms to polynomials (via Taylor expansion or substitution) and leveraging **Sums-of-Squares (SOS) Programming**~\cite{Boyd1994, MajumdarTedrake2017}.
+Proving that $\dot{V} < 0$ on the boundary $V=1$ for a general nonlinear function $\bm{f}$ is famously difficult. We have an infinite number of states on the boundary to check! We circumvent this by restricting our dynamics $\bm{f}$ algorithms to polynomials (via Taylor expansion or substitution) and leveraging **Sums-of-Squares (SOS) Programming** [@Boyd1994; @MajumdarTedrake2017].
 
 A polynomial $p(x)$ is a Sum of Squares if it can be written as $p(x) = \sum_{i} q_i(x)^2$ for some polynomials $q_i(x)$. If a polynomial is SOS, it is globally non-negative. Testing if a polynomial is SOS turns out to be equivalent to solving a Semidefinite Program (SDP)—a convex optimization problem that can be solved very efficiently.
 
@@ -3842,7 +3842,7 @@ A singular optimal trajectory $\traj^*$ and its corresponding funnel $\mathcal{F
 
 Instead of re-running a large NLP optimization for every scenario, engineered controllers can maintain **Trajectory Libraries**. A library consists of several distinct, pre-computed trajectories and their corresponding local funnels. The analogy to biological movement planning is suggestive rather than established by this chapter.
 
-When faced with a new task (e.g., striking the ball on an uneven lie), the system searches its library for the closest matching funnel. By interpolating between established funnels using techniques like LQR-Trees~\cite{Tedrake2009} or simple spatial blending, the system can instantly generate a stable, feasible motion without any online optimization.
+When faced with a new task (e.g., striking the ball on an uneven lie), the system searches its library for the closest matching funnel. By interpolating between established funnels using techniques like LQR-Trees [@Tedrake2009] or simple spatial blending, the system can instantly generate a stable, feasible motion without any online optimization.
 
 
 # Case Study: The Complete Golf Swing

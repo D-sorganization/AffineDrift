@@ -23,30 +23,47 @@ logger = logging.getLogger(__name__)
 ROOT = Path(__file__).parent.parent
 SW_FILE = ROOT / "service-worker.js"
 
-# Files whose changes should invalidate the cache
+# Files whose changes should invalidate the cache.
+# NOTE: these must be real repo-root-relative paths — missing entries are
+# silently skipped, which previously meant CSS changes never bumped the
+# cache version (the old list pointed at css/styles.css and css/base.css,
+# neither of which exists). tests/test_update_sw_cache_version.py guards
+# against this regressing.
+# (service-worker.js itself is deliberately excluded: this script rewrites
+# CACHE_NAME inside it, so hashing it would make the hash non-idempotent.)
 HASH_SOURCES = [
-    "js/script.js",
-    "js/bibliography.js",
-    "js/main.js",
-    "js/service-worker-utils.js",
-    "js/service-worker-updates.js",
-    "css/styles.css",
-    "css/base.css",
+    "styles.css",
     "custom.scss",
+]
+
+# Glob patterns (repo-root-relative) whose matches are hashed as well, so
+# every runtime stylesheet and script participates in cache invalidation.
+HASH_GLOBS = [
+    "js/*.js",
+    "css/**/*.css",
 ]
 
 CACHE_NAME_PATTERN = re.compile(r"(const CACHE_NAME\s*=\s*'affinedrift-)([^']+)(')")
 
 
-def compute_asset_hash() -> str:
+def iter_hash_files(root: Path = ROOT) -> list[Path]:
+    """Return the deterministic, sorted list of files included in the hash."""
+    files = [root / rel_path for rel_path in HASH_SOURCES]
+    for pattern in HASH_GLOBS:
+        files.extend(p for p in root.glob(pattern) if p.is_file())
+    # Deterministic order regardless of filesystem enumeration order.
+    return sorted(set(files))
+
+
+def compute_asset_hash(root: Path = ROOT) -> str:
     """Compute a short hash of the key static assets."""
     hasher = hashlib.sha256()
-    for rel_path in HASH_SOURCES:
-        path = ROOT / rel_path
+    for path in iter_hash_files(root):
         if path.exists():
+            hasher.update(path.relative_to(root).as_posix().encode("utf-8"))
             hasher.update(path.read_bytes())
         else:
-            logger.debug("Asset not found (skipping): %s", rel_path)
+            logger.warning("Hash source missing (skipping): %s", path)
     return hasher.hexdigest()[:8]
 
 

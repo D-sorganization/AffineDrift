@@ -26,15 +26,15 @@ This section formalizes the limitations of classical inverse dynamics and explai
 The classical rigid-body dynamics of the system can be written as
 
 $$
-\underbrace{M(q)\ddot{q} + C(q,\dot{q})\dot{q} + G(q) + \tau_{\mathrm{passive}}}_{\tau_{\mathrm{ID}}} = \tau_{\mathrm{input}},
+\underbrace{M(q)\ddot{q} + C(q,\dot{q})\dot{q} + g(q) + \tau_{\mathrm{passive}}}_{\tau_{\mathrm{ID}}} = \tau_{\mathrm{input}},
 $$
 
-where $M(q)$ is the inertia matrix, $C(q,\dot{q})\dot{q}$ contains Coriolis and centrifugal forces, $G(q)$ contains gravitational forces, and $\tau_{\mathrm{passive}}$ includes passive elastic and damping forces. The left-hand side is exactly the **total inverse-dynamics torque** $\tau_{\mathrm{ID}}$ — the generalized torque required to reproduce the measured motion. For the actual motion the applied (input) torque equals this total, $\tau_{\mathrm{input}} = \tau_{\mathrm{ID}}$; that identity is what classical inverse dynamics computes.
+where $M(q)$ is the inertia matrix, $C(q,\dot{q})\dot{q}$ contains Coriolis and centrifugal forces, $g(q)$ contains gravitational forces, and $\tau_{\mathrm{passive}}$ includes passive elastic and damping forces. The left-hand side is exactly the **total inverse-dynamics torque** $\tau_{\mathrm{ID}}$ — the generalized torque required to reproduce the measured motion. For the actual motion the applied (input) torque equals this total, $\tau_{\mathrm{input}} = \tau_{\mathrm{ID}}$; that identity is what classical inverse dynamics computes.
 
 The difficulty is not in computing $\tau_{\mathrm{ID}}$ but in *attributing* it. We re-group the same total — not adding a second equation — into an inertial part and a drift part. Define the **drift torque** as the configuration- and velocity-dependent passive generalized force evaluated along the actual trajectory, and the **inertial torque** as the part carried by the mass matrix:
 
 $$
-\tau_{\mathrm{drift}}(x) := C(q,\dot{q})\dot{q} + G(q) + \tau_{\mathrm{passive}},
+\tau_{\mathrm{drift}}(x) := C(q,\dot{q})\dot{q} + g(q) + \tau_{\mathrm{passive}},
 \qquad
 \tau_{\mathrm{inertial}} := M(q)\ddot{q},
 $$
