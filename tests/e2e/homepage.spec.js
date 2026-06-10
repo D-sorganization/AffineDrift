@@ -1,5 +1,8 @@
 const { test, expect } = require("@playwright/test");
 
+const NAVBAR_LOGO_PATH = "/logo/logo-navbar.png";
+const NAVBAR_LOGO_RESPONSE_BUDGET_BYTES = 50 * 1024;
+
 test.describe("Homepage", () => {
   test("should load successfully", async ({ page }) => {
     await page.goto("/");
@@ -25,6 +28,10 @@ test.describe("Homepage", () => {
   });
 
   test("should have accessible logo", async ({ page }) => {
+    const logoResponsePromise = page.waitForResponse((response) => {
+      return new URL(response.url()).pathname === NAVBAR_LOGO_PATH;
+    });
+
     await page.goto("/");
 
     // Check logo has alt text
@@ -33,7 +40,15 @@ test.describe("Homepage", () => {
       .first();
     if ((await logo.count()) > 0) {
       await expect(logo).toHaveAttribute("alt");
+      await expect(logo).toHaveAttribute("src", /logo-navbar\.png/);
     }
+
+    const logoResponse = await logoResponsePromise;
+    const contentLength = logoResponse.headers()["content-length"];
+    const responseSize = contentLength
+      ? Number(contentLength)
+      : (await logoResponse.body()).length;
+    expect(responseSize).toBeLessThan(NAVBAR_LOGO_RESPONSE_BUDGET_BYTES);
   });
 
   test("should render desktop home layout as a three-column grid", async ({

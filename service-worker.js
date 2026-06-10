@@ -18,7 +18,7 @@ const OFFLINE_URL = '/offline.html';
 const STARTUP_ASSETS = [
   '/css/startup-launcher.css',
   '/js/startup-launcher.js',
-  '/logo/logo_transparent_1.png'
+  '/logo/logo-navbar.png'
 ];
 
 // Assets to cache immediately on install (includes STARTUP_ASSETS via spread)
