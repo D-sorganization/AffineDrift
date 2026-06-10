@@ -74,6 +74,14 @@ jobs:
       - name: Verify CSS Budget
         run: python3 scripts/check_styles_budget.py
 
+      - name: Verify Optimized Image Derivatives
+        run: |
+          python3 scripts/optimize_images.py
+          git diff --exit-code -- logo static/images
+
+      - name: Verify Image Budget
+        run: python3 scripts/check_image_budget.py
+
       - name: Verify UI/UX Anti-Pattern Budget
         run: python3 scripts/check_ui_ux_budget.py
 
