@@ -59,6 +59,7 @@ from .frontmatter import (
 from .html_utils import (
     create_html_page,
     escape_html,
+    normalize_html_content,
     replace_content_section,
     update_metadata,
     update_title_block,
@@ -95,6 +96,7 @@ __all__ = [
     # HTML utilities
     "create_html_page",
     "escape_html",
+    "normalize_html_content",
     "replace_content_section",
     "update_metadata",
     "update_title_block",
