@@ -1,16 +1,4 @@
-"""Tests for the service-worker cache-version updater.
-
-Written first (TDD) for the 2026-06-09 quality audit. They pin down two
-contracts that were previously violated silently:
-
-1. Every entry in ``HASH_SOURCES`` must exist in the repository. Before this
-   audit, three of eight entries pointed at non-existent paths
-   (``js/script.js``, ``css/styles.css``, ``css/base.css``) and were skipped
-   with a debug-level log, so editing ``styles.css`` did NOT change the cache
-   version and users kept stale assets.
-2. ``compute_asset_hash`` must fail loudly (DbC) when a configured hash
-   source is missing instead of silently producing a hash over a subset.
-"""
+"""Tests for scripts/update_sw_cache_version.py hash-source integrity."""
 
 from __future__ import annotations
 
@@ -19,9 +7,11 @@ from pathlib import Path
 import pytest
 
 from scripts.update_sw_cache_version import (
+    HASH_GLOBS,
     HASH_SOURCES,
     ROOT,
     compute_asset_hash,
+    iter_hash_files,
     update_cache_version,
 )
 
@@ -45,19 +35,30 @@ def _full_assets(marker: str = "a") -> dict[str, str]:
 
 
 def test_all_hash_sources_exist_in_repo() -> None:
-    """Contract: every configured hash source must exist in the repository.
+    """Every explicit hash source must be a real repository file."""
+    missing = [rel for rel in HASH_SOURCES if not (ROOT / rel).is_file()]
+    assert not missing, f"HASH_SOURCES entries do not exist: {missing}"
 
-    This is the regression test for the silent stale-cache bug where
-    HASH_SOURCES listed paths that do not exist.
-    """
-    missing = [rel for rel in HASH_SOURCES if not (ROOT / rel).exists()]
-    assert not missing, (
-        "HASH_SOURCES entries do not exist; cache busting would silently " f"ignore them: {missing}"
-    )
+
+def test_hash_globs_match_runtime_assets() -> None:
+    """Globs must cover the canonical stylesheet tree and JS modules."""
+    files = {p.relative_to(ROOT).as_posix() for p in iter_hash_files(ROOT)}
+    assert "styles.css" in files
+    assert "js/main.js" in files
+    assert (
+        "css/tokens/design-tokens.css" in files
+    ), "css/**/*.css glob must include token stylesheets so CSS edits bump the cache version"
+
+
+def test_service_worker_not_hashed() -> None:
+    """Hashing the file this script rewrites would be non-idempotent."""
+    files = {p.relative_to(ROOT).as_posix() for p in iter_hash_files(ROOT)}
+    assert "service-worker.js" not in files
+    assert all(not pattern.startswith("service-worker") for pattern in HASH_GLOBS)
 
 
 def test_compute_asset_hash_raises_on_missing_source(tmp_path: Path) -> None:
-    """DbC: a missing hash source must raise with context, not be skipped."""
+    """DbC: a missing explicit hash source must raise with context."""
     assets = _full_assets()
     assets.pop(HASH_SOURCES[0])
     repo = _make_repo(tmp_path, assets)
@@ -65,12 +66,16 @@ def test_compute_asset_hash_raises_on_missing_source(tmp_path: Path) -> None:
         compute_asset_hash(root=repo)
 
 
-def test_compute_asset_hash_changes_when_asset_changes(tmp_path: Path) -> None:
-    """Editing any hashed asset must change the computed hash."""
-    repo = _make_repo(tmp_path, _full_assets("a"))
-    before = compute_asset_hash(root=repo)
-    (repo / HASH_SOURCES[-1]).write_text("/* changed */", encoding="utf-8")
-    after = compute_asset_hash(root=repo)
+def test_hash_changes_when_css_changes(tmp_path: Path) -> None:
+    """Editing any hashed stylesheet must change the computed version hash."""
+    assets = _full_assets()
+    assets["css/tokens.css"] = ":root { --x: 1; }"
+    repo = _make_repo(tmp_path, assets)
+
+    before = compute_asset_hash(repo)
+    (repo / "css" / "tokens.css").write_text(":root { --x: 2; }", encoding="utf-8")
+    after = compute_asset_hash(repo)
+
     assert before != after
 
 

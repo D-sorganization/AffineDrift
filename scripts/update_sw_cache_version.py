@@ -23,13 +23,14 @@ logger = logging.getLogger(__name__)
 ROOT = Path(__file__).parent.parent
 SW_FILENAME = "service-worker.js"
 
-# Files whose changes should invalidate the cache.
+# Explicit files whose changes should invalidate the cache.
 #
-# Contract: every path listed here MUST exist in the repository
-# (relative to the repo root). compute_asset_hash() raises ValueError on
-# missing entries; tests/test_update_sw_cache_version.py enforces existence
-# against the real repo. Keep this list aligned with the assets the service
-# worker precaches/serves (see PRECACHE_ASSETS in service-worker.js).
+# Contract: every path listed here MUST exist in the repository (relative to
+# the repo root). compute_asset_hash() raises ValueError on missing entries;
+# tests/test_update_sw_cache_version.py enforces existence against the real
+# repo. Keep this list aligned with assets the service worker precaches/serves.
+# service-worker.js itself is deliberately excluded: this script rewrites
+# CACHE_NAME inside it, so hashing it would make the hash non-idempotent.
 HASH_SOURCES = [
     "styles.css",
     "custom.scss",
@@ -41,20 +42,20 @@ HASH_SOURCES = [
     "js/startup-launcher.js",
 ]
 
+# Glob patterns (repo-root-relative) whose matches are hashed as well, so
+# every runtime stylesheet and script participates in cache invalidation.
+HASH_GLOBS = [
+    "js/*.js",
+    "css/**/*.css",
+]
+
 CACHE_NAME_PATTERN = re.compile(r"(const CACHE_NAME\s*=\s*'affinedrift-)([^']+)(')")
 
 
-def compute_asset_hash(root: Path = ROOT) -> str:
-    """Compute a short hash of the key static assets under ``root``.
-
-    Raises
-    ------
-    ValueError
-        If any configured hash source is missing. A silently skipped asset
-        would mean its changes no longer invalidate the cache, shipping
-        stale assets to users — fail loudly instead (DbC).
-    """
-    missing = [rel_path for rel_path in HASH_SOURCES if not (root / rel_path).exists()]
+def iter_hash_files(root: Path = ROOT) -> list[Path]:
+    """Return the deterministic, sorted list of files included in the hash."""
+    explicit_files = [root / rel_path for rel_path in HASH_SOURCES]
+    missing = [rel_path for rel_path in HASH_SOURCES if not (root / rel_path).is_file()]
     if missing:
         raise ValueError(
             f"Missing cache-hash source assets under {root}: {', '.join(missing)}. "
@@ -62,9 +63,19 @@ def compute_asset_hash(root: Path = ROOT) -> str:
             "the repository layout."
         )
 
+    files = list(explicit_files)
+    for pattern in HASH_GLOBS:
+        files.extend(p for p in root.glob(pattern) if p.is_file())
+    # Deterministic order regardless of filesystem enumeration order.
+    return sorted(set(files))
+
+
+def compute_asset_hash(root: Path = ROOT) -> str:
+    """Compute a short hash of the key static assets under ``root``."""
     hasher = hashlib.sha256()
-    for rel_path in HASH_SOURCES:
-        hasher.update((root / rel_path).read_bytes())
+    for path in iter_hash_files(root):
+        hasher.update(path.relative_to(root).as_posix().encode("utf-8"))
+        hasher.update(path.read_bytes())
     return hasher.hexdigest()[:8]
 
 
