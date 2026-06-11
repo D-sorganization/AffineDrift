@@ -13,9 +13,8 @@ Part of the content validation pipeline (issue #1421).
 import sys
 from pathlib import Path
 
-import yaml
-
 from scripts.cli_output import write_stdout
+from src.tools.utils.frontmatter import split_frontmatter
 
 ROOT = Path(__file__).parent.parent
 ARTICLES_DIR = ROOT / "articles"
@@ -31,21 +30,13 @@ EXCLUDE_DIRS = {
 
 
 def parse_frontmatter(content: str) -> dict[str, object]:
-    """Extract and parse YAML frontmatter from a QMD file."""
-    if not content.startswith("---"):
-        return {}
-    end = content.find("\n---", 3)
-    if end == -1:
-        return {}
-    try:
-        parsed = yaml.safe_load(content[3:end]) or {}
-    except yaml.YAMLError:
-        return {}
+    """Extract and parse YAML frontmatter from a QMD file.
 
-    if not isinstance(parsed, dict):
-        return {}
-
-    return parsed
+    Thin wrapper around :func:`src.tools.utils.frontmatter.split_frontmatter`
+    kept for backward compatibility with callers in this module.
+    """
+    fm, _ = split_frontmatter(content)
+    return fm
 
 
 def should_skip(path: Path) -> bool:

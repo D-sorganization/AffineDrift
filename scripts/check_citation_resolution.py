@@ -14,11 +14,11 @@ from typing import Any
 import yaml
 
 from src.tools.reference_audit import parse_bibtex_entry_keys
+from src.tools.utils.frontmatter import split_frontmatter
 
 logger = logging.getLogger(__name__)
 
 QMD_PATHS = ("articles", "books", "pages", "resources")
-FRONTMATTER_DELIMITER = "---"
 ENTRY_KEY_PATTERN = re.compile(r"@\w+\s*\{\s*([^,\s]+)")
 CITATION_PATTERN = re.compile(r"(?<![\w/])@([A-Za-z0-9][A-Za-z0-9:._/-]*)")
 CROSS_REFERENCE_PREFIXES = (
@@ -86,20 +86,23 @@ def find_nearest_quarto_config(document: Path, repo_root: Path) -> Path | None:
 
 
 def strip_frontmatter(text: str) -> tuple[dict[str, Any], str]:
-    """Return parsed frontmatter and body text for a qmd document."""
-    if not text.startswith(f"{FRONTMATTER_DELIMITER}\n"):
-        return {}, text
+    """Return parsed frontmatter and body text for a qmd document.
 
-    parts = text.split(f"\n{FRONTMATTER_DELIMITER}\n", 1)
-    if len(parts) != 2:
-        return {}, text
-
-    _, remainder = parts
-    frontmatter_text = text[len(FRONTMATTER_DELIMITER) + 1 : len(text) - len(remainder) - 5]
-    data = yaml.safe_load(frontmatter_text) or {}
-    if not isinstance(data, dict):
-        raise CitationResolutionError("Document frontmatter must be a YAML mapping.")
-    return data, remainder
+    Wraps :func:`src.tools.utils.frontmatter.split_frontmatter` and re-raises
+    a :class:`CitationResolutionError` when the frontmatter block is present
+    but not a YAML mapping (preserving the original contract for this script).
+    """
+    fm, body = split_frontmatter(text)
+    # If split_frontmatter returned empty dict but there's a frontmatter block,
+    # it may have been discarded because the YAML was not a mapping.
+    if not fm and text.startswith("---\n"):
+        _FM_RE = re.compile(r"\A---\s*\n(.*?)\n---\s*(\n|\Z)", re.DOTALL)
+        m = _FM_RE.match(text)
+        if m:
+            raw = yaml.safe_load(m.group(1))
+            if raw is not None and not isinstance(raw, dict):
+                raise CitationResolutionError("Document frontmatter must be a YAML mapping.")
+    return fm, body
 
 
 def normalize_bibliography_values(value: Any) -> list[str]:
