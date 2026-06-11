@@ -14,11 +14,11 @@ from typing import Any
 import yaml
 
 from src.tools.reference_audit import parse_bibtex_entry_keys
+from src.tools.utils.frontmatter import split_frontmatter
 
 logger = logging.getLogger(__name__)
 
 QMD_CITATION_PATTERN = re.compile(r"(?<![\w/])@([A-Za-z0-9][A-Za-z0-9:_-]*)")
-FRONTMATTER_PATTERN = re.compile(r"\A---\s*\n(.*?)\n---\s*\n", re.DOTALL)
 FENCED_CODE_BLOCK_PATTERN = re.compile(r"```.*?```", re.DOTALL)
 INLINE_CODE_PATTERN = re.compile(r"`[^`]*`")
 IGNORED_CITATION_PREFIXES = (
@@ -44,14 +44,12 @@ IGNORED_CITATION_PATTERNS = (re.compile(r"^ch\d+[_-]"),)
 
 
 def extract_frontmatter(text: str) -> dict[str, Any]:
-    """Return parsed YAML frontmatter when present."""
-    match = FRONTMATTER_PATTERN.match(text)
-    if not match:
-        return {}
-    payload = yaml.safe_load(match.group(1)) or {}
-    if not isinstance(payload, dict):
-        return {}
-    return payload
+    """Return parsed YAML frontmatter when present.
+
+    Delegates to :func:`src.tools.utils.frontmatter.split_frontmatter`.
+    """
+    fm, _ = split_frontmatter(text)
+    return fm
 
 
 def extract_citation_keys(text: str) -> set[str]:
