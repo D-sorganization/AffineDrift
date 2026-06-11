@@ -113,6 +113,13 @@ class InvariantError(ContractViolationError):
 # ─── Core Contract Primitives ─────────────────────────────────
 
 
+_VIOLATION_EXC_MAP: dict[str, type[ContractViolationError]] = {
+    "pre-condition": PreconditionError,
+    "post-condition": PostconditionError,
+    "invariant": InvariantError,
+}
+
+
 def _handle_violation(
     condition_type: str,
     message: str,
@@ -120,6 +127,9 @@ def _handle_violation(
 ) -> None:
     """Handle a contract violation according to the current DBC_LEVEL."""
     if DBC_LEVEL == ContractLevel.ENFORCE:
+        exc_class = _VIOLATION_EXC_MAP.get(condition_type)
+        if exc_class is not None:
+            raise exc_class(message, value)
         raise ContractViolationError(condition_type, message, value)
     elif DBC_LEVEL == ContractLevel.WARN:
         detail = f"[DbC {condition_type}] {message}"

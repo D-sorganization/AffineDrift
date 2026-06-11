@@ -64,6 +64,7 @@ class GolfClub:
     typical_speed_ms: float
     typical_spin_rpm: float
     typical_launch_deg: float
+    typical_carry_yards: float = 0.0
 
     def __post_init__(self) -> None:
         """Validate club specifications."""
@@ -73,6 +74,7 @@ class GolfClub:
         check_positive(self.typical_speed_ms, "typical_speed_ms")
         check_non_negative(self.typical_spin_rpm, "typical_spin_rpm")
         check_non_negative(self.typical_launch_deg, "typical_launch_deg")
+        check_non_negative(self.typical_carry_yards, "typical_carry_yards")
 
     @property
     def typical_spin_rad_s(self) -> float:
@@ -86,16 +88,22 @@ class GolfClub:
 
     @property
     def typical_distance_yards(self) -> float:
-        """Estimated carry distance in yards based on a ballistic approximation.
+        """Typical carry distance in yards.
 
-        Uses a simplified range formula with a correction factor for drag.
+        Returns the calibrated carry table value when set, otherwise falls back
+        to the vacuum-ballistics estimate (kept only for putter where carry is
+        not meaningful). The calibrated values are set on STANDARD_CLUBS and are
+        monotonically decreasing from driver to lob wedge, matching real-world
+        gapping.
         """
+        if self.typical_carry_yards > 0.0:
+            return self.typical_carry_yards
+        # Fallback (putter / custom clubs without a carry table entry)
         v = self.typical_speed_ms
         angle = self.typical_launch_rad
-        # Simplified range estimate: R = v^2 * sin(2*theta) / g * drag_factor
-        drag_factor = 0.55  # Empirical correction for drag
+        drag_factor = 0.55
         range_m = v**2 * np.sin(2.0 * angle) / GRAVITY_M_S2 * drag_factor
-        return float(range_m * 1.09361)  # meters to yards
+        return float(range_m * 1.09361)
 
 
 @dataclass(frozen=True)
@@ -135,12 +143,19 @@ class LaunchConditions:
         vy = horizontal_speed * np.sin(self.launch_direction)
         vz = vertical_speed
 
-        # Spin: backspin is rotation about the horizontal axis perpendicular
-        # to the launch direction; sidespin is rotation about the vertical axis.
-        # In the body frame: backspin -> wy (pitch-back), sidespin -> wz (yaw)
-        wx = 0.0
-        wy = self.backspin  # Positive for backspin (creates upward Magnus lift)
-        wz = self.sidespin
+        # Spin in the world frame, rotated by launch_direction.
+        # BallFlightDynamics Magnus force = cross(spin, v_rel).
+        # For upward lift (backspin) the spin axis must be the horizontal axis
+        # *perpendicular* to the launch direction: (sin θ, -cos θ, 0).
+        # At θ=0 this gives (0, -backspin, 0), matching the test convention in
+        # test_ball_flight.py (spin=(0, -280, 0) for a driver shot).
+        # For sidespin: positive = right curve; cross((0,0,-w),(vx,0,0)) gives
+        # +y deflection (left) so wz = -sidespin maps positive sidespin → right.
+        st = np.sin(self.launch_direction)
+        ct = np.cos(self.launch_direction)
+        wx = self.backspin * st
+        wy = -self.backspin * ct
+        wz = -self.sidespin
 
         return BallFlightState(
             position=np.array([0.0, 0.0, 0.0]),
@@ -152,20 +167,22 @@ class LaunchConditions:
 # ── Standard Club Set ─────────────────────────────────────────────────────────
 
 STANDARD_CLUBS: list[GolfClub] = [
-    GolfClub(ClubType.DRIVER, "Driver", 10.5, 1.143, 0.200, 73.0, 2700.0, 10.5),
-    GolfClub(ClubType.THREE_WOOD, "3 Wood", 15.0, 1.092, 0.210, 67.0, 3500.0, 11.0),
-    GolfClub(ClubType.FIVE_WOOD, "5 Wood", 18.0, 1.067, 0.215, 64.0, 4000.0, 12.0),
-    GolfClub(ClubType.THREE_IRON, "3 Iron", 21.0, 1.003, 0.235, 60.0, 4300.0, 12.5),
-    GolfClub(ClubType.FOUR_IRON, "4 Iron", 24.0, 0.991, 0.240, 58.0, 4800.0, 13.0),
-    GolfClub(ClubType.FIVE_IRON, "5 Iron", 27.0, 0.978, 0.245, 56.0, 5300.0, 14.0),
-    GolfClub(ClubType.SIX_IRON, "6 Iron", 30.0, 0.965, 0.250, 53.0, 6100.0, 15.0),
-    GolfClub(ClubType.SEVEN_IRON, "7 Iron", 34.0, 0.940, 0.260, 51.0, 7000.0, 16.0),
-    GolfClub(ClubType.EIGHT_IRON, "8 Iron", 38.0, 0.927, 0.265, 48.0, 7500.0, 18.0),
-    GolfClub(ClubType.NINE_IRON, "9 Iron", 42.0, 0.914, 0.270, 45.0, 8000.0, 21.0),
-    GolfClub(ClubType.PW, "Pitching Wedge", 46.0, 0.902, 0.280, 42.0, 8500.0, 24.0),
-    GolfClub(ClubType.GW, "Gap Wedge", 50.0, 0.895, 0.285, 38.0, 9000.0, 27.0),
-    GolfClub(ClubType.SW, "Sand Wedge", 56.0, 0.889, 0.290, 33.0, 9500.0, 30.0),
-    GolfClub(ClubType.LW, "Lob Wedge", 60.0, 0.883, 0.295, 28.0, 10000.0, 33.0),
+    # typical_carry_yards is a calibrated real-world carry table, strictly
+    # decreasing from driver to lob wedge for correct club gapping (#3272).
+    GolfClub(ClubType.DRIVER, "Driver", 10.5, 1.143, 0.200, 73.0, 2700.0, 10.5, 230),
+    GolfClub(ClubType.THREE_WOOD, "3 Wood", 15.0, 1.092, 0.210, 67.0, 3500.0, 11.0, 215),
+    GolfClub(ClubType.FIVE_WOOD, "5 Wood", 18.0, 1.067, 0.215, 64.0, 4000.0, 12.0, 200),
+    GolfClub(ClubType.THREE_IRON, "3 Iron", 21.0, 1.003, 0.235, 60.0, 4300.0, 12.5, 195),
+    GolfClub(ClubType.FOUR_IRON, "4 Iron", 24.0, 0.991, 0.240, 58.0, 4800.0, 13.0, 185),
+    GolfClub(ClubType.FIVE_IRON, "5 Iron", 27.0, 0.978, 0.245, 56.0, 5300.0, 14.0, 175),
+    GolfClub(ClubType.SIX_IRON, "6 Iron", 30.0, 0.965, 0.250, 53.0, 6100.0, 15.0, 165),
+    GolfClub(ClubType.SEVEN_IRON, "7 Iron", 34.0, 0.940, 0.260, 51.0, 7000.0, 16.0, 155),
+    GolfClub(ClubType.EIGHT_IRON, "8 Iron", 38.0, 0.927, 0.265, 48.0, 7500.0, 18.0, 145),
+    GolfClub(ClubType.NINE_IRON, "9 Iron", 42.0, 0.914, 0.270, 45.0, 8000.0, 21.0, 135),
+    GolfClub(ClubType.PW, "Pitching Wedge", 46.0, 0.902, 0.280, 42.0, 8500.0, 24.0, 120),
+    GolfClub(ClubType.GW, "Gap Wedge", 50.0, 0.895, 0.285, 38.0, 9000.0, 27.0, 105),
+    GolfClub(ClubType.SW, "Sand Wedge", 56.0, 0.889, 0.290, 33.0, 9500.0, 30.0, 90),
+    GolfClub(ClubType.LW, "Lob Wedge", 60.0, 0.883, 0.295, 28.0, 10000.0, 33.0, 70),
     GolfClub(ClubType.PUTTER, "Putter", 3.0, 0.864, 0.340, 5.0, 200.0, 1.5),
 ]
 

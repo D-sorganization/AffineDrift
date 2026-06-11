@@ -113,7 +113,6 @@ describe('startup-launcher', () => {
     // it must NOT be the AffineDriftMetrics name.
     expect(window.AffineDriftMetrics).toBeUndefined();
   });
-
   test('init() is a no-op when ad_splash_shown is set', () => {
     sessionStorage.setItem('ad_splash_shown', '1');
     loadLauncher();

@@ -38,6 +38,17 @@
     return Date.now() - parsed > retentionMs;
   }
 
+  function debounce(fn, delayMs) {
+    let timer = null;
+    return function (...args) {
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        timer = null;
+        fn.apply(this, args);
+      }, delayMs);
+    };
+  }
+
   class NotesWorkspaceStore {
     constructor(storage) {
       if (!storage || typeof storage.getItem !== "function" || typeof storage.setItem !== "function") {
@@ -69,30 +80,57 @@
 
     loadRecycleBin() {
       const parsed = readJsonFromStorage(this.storage, STORAGE_KEYS.recycleBin, null);
-      if (!parsed || typeof parsed.content !== "string") {
-        return { content: "", deletedAt: null };
+      if (!parsed) {
+        return { snapshots: [], content: "", deletedAt: null };
       }
-      if (isExpiredIsoTimestamp(parsed.deletedAt, RECYCLE_BIN_RETENTION_MS)) {
-        this.storage.removeItem(STORAGE_KEYS.recycleBin);
-        return { content: "", deletedAt: null };
+      // Handle legacy single-object format
+      const snapshots = Array.isArray(parsed) ? parsed : [parsed];
+      // Prune expired entries
+      const fresh = snapshots.filter(
+        (s) => !isExpiredIsoTimestamp(s.deletedAt, RECYCLE_BIN_RETENTION_MS),
+      );
+      if (fresh.length !== snapshots.length) {
+        if (fresh.length === 0) {
+          this.storage.removeItem(STORAGE_KEYS.recycleBin);
+          return { snapshots: [], content: "", deletedAt: null };
+        }
+        this.storage.setItem(STORAGE_KEYS.recycleBin, JSON.stringify(fresh));
       }
-      return { content: parsed.content, deletedAt: parsed.deletedAt || null };
+      const latest = fresh[fresh.length - 1];
+      return { snapshots: fresh, content: latest.content, deletedAt: latest.deletedAt || null };
     }
 
     moveActiveToRecycleBin() {
       const active = this.loadActive();
       if (!active.content.trim()) return false;
-      const payload = { content: active.content, deletedAt: nowIso() };
-      this.storage.setItem(STORAGE_KEYS.recycleBin, JSON.stringify(payload));
+      const newSnapshot = { content: active.content, deletedAt: nowIso() };
+      // Read existing bin, normalise to array
+      const existing = readJsonFromStorage(this.storage, STORAGE_KEYS.recycleBin, null);
+      let snapshots = [];
+      if (existing) {
+        snapshots = Array.isArray(existing) ? existing : [existing];
+      }
+      snapshots.push(newSnapshot);
+      // Prune old entries
+      snapshots = snapshots.filter(
+        (s) => !isExpiredIsoTimestamp(s.deletedAt, RECYCLE_BIN_RETENTION_MS),
+      );
+      this.storage.setItem(STORAGE_KEYS.recycleBin, JSON.stringify(snapshots));
       this.clearActive();
       return true;
     }
 
     restoreFromRecycleBin() {
-      const recycled = this.loadRecycleBin();
-      if (!recycled.content.trim()) return false;
-      this.saveActive(recycled.content);
-      this.storage.removeItem(STORAGE_KEYS.recycleBin);
+      const bin = this.loadRecycleBin();
+      if (!bin.content.trim()) return false;
+      this.saveActive(bin.content);
+      // Remove the last snapshot we just restored
+      const remaining = bin.snapshots.slice(0, -1);
+      if (remaining.length === 0) {
+        this.storage.removeItem(STORAGE_KEYS.recycleBin);
+      } else {
+        this.storage.setItem(STORAGE_KEYS.recycleBin, JSON.stringify(remaining));
+      }
       return true;
     }
   }
@@ -109,23 +147,24 @@
       }
       .ad-notes-panel {
         position: fixed; left: 1.25rem; bottom: 4.5rem; width: min(92vw, 420px);
-        background: #fff; border: 1px solid #d9e1e8; border-radius: 12px; box-shadow: 0 14px 30px rgba(15, 76, 117, 0.18);
+        background: var(--bg-primary, #fff); border: 1px solid var(--border-color, #d9e1e8); border-radius: 12px; box-shadow: 0 14px 30px rgba(15, 76, 117, 0.18);
         z-index: 1200; padding: 0.8rem; display: none;
       }
       .ad-notes-panel.open { display: block; }
       .ad-notes-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
       .ad-notes-header h3 { margin: 0; font-size: 1rem; color: #0f4c75; }
       .ad-notes-area {
-        width: 100%; min-height: 210px; border: 1px solid #cad4de; border-radius: 8px;
+        width: 100%; min-height: 210px; border: 1px solid var(--border-color, #d9e1e8); border-radius: 8px;
         padding: 0.65rem; font-size: 0.92rem; resize: vertical; line-height: 1.45;
+        background: var(--bg-primary, #fff); color: var(--text-dark, #243746);
       }
       .ad-notes-actions { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 0.6rem; }
       .ad-notes-actions button {
-        border: 1px solid #d1dbe4; background: #f7fafc; color: #243746; border-radius: 6px;
+        border: 1px solid var(--border-color, #d1dbe4); background: var(--bg-secondary, #f7fafc); color: var(--text-dark, #243746); border-radius: 6px;
         padding: 0.38rem 0.6rem; font-size: 0.82rem; cursor: pointer;
       }
       .ad-notes-actions .danger { border-color: #f0b9b9; background: #fff3f3; color: #8c2323; }
-      .ad-notes-status { font-size: 0.78rem; color: #5e6d7a; margin-top: 0.45rem; min-height: 1.1rem; }
+      .ad-notes-status { font-size: 0.78rem; color: var(--text-muted, #5e6d7a); margin-top: 0.45rem; min-height: 1.1rem; }
     `;
     document.head.appendChild(style);
   }
@@ -242,6 +281,19 @@
       setStatus("Opened pop-out workspace.");
     }
 
+    // Debounced autosave on input
+    textArea.addEventListener("input", debounce(function () {
+      store.saveActive(textArea.value);
+      setStatus("Autosaved.");
+    }, 500));
+
+    // Flush pending save when tab is hidden (e.g. user closes/switches tab)
+    document.addEventListener("visibilitychange", function () {
+      if (document.visibilityState === "hidden") {
+        store.saveActive(textArea.value);
+      }
+    });
+
     window.addEventListener("message", function (event) {
       // Security: only accept messages from our own origin (pop-out window)
       if (event.origin !== window.location.origin) return;
@@ -269,7 +321,6 @@
     panel.addEventListener("keydown", function (event) {
       if (event.key !== "Tab") return;
 
-      // ⚡ Bolt Optimization: Use getElementsByTagName (O(1) live collection) and manual filtering instead of querySelectorAll (O(N))
       const elements = panel.getElementsByTagName('*');
       const focusableContent = [];
       for (const el of elements) {
@@ -312,9 +363,11 @@
         store.saveActive(textArea.value);
         setStatus("Notes saved.");
       } else if (action === "clear") {
-        textArea.value = "";
-        store.clearActive();
-        setStatus("Workspace cleared.");
+        if (!textArea.value.trim() || window.confirm("Clear notes? Saved copy will be moved to bin.")) {
+          store.moveActiveToRecycleBin();
+          textArea.value = "";
+          setStatus("Cleared — recoverable from bin.");
+        }
       } else if (action === "delete") {
         store.saveActive(textArea.value);
         const moved = store.moveActiveToRecycleBin();
