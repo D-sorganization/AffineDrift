@@ -647,3 +647,4 @@ python src/tools/code_quality_ast.py
 | 2026-06-03 | 1.0.114 | perf(frontend): Consolidated multiple `.closest()` checks into a single comma-separated selector string in `script.js` to reduce CSS parsing overhead and JS-to-C++ boundary crossings. |
 | 2026-06-03 | 1.0.115 | fix(security): Prevent DOM-based XSS in grip angle simulator by refactoring info panel generation to use native DOM methods instead of `innerHTML`. |
 | 2026-06-03 | 1.0.116 | 🎨 Palette: Add dynamic `title` attributes to collapsible headers based on their `aria-expanded` state to improve accessibility. |
+| 2026-06-11 | 1.0.117 | fix(security): Prevent DOM-based XSS in grip angle simulator by refactoring inertia-display, updateSignalCheckboxes, and updateModelInfo to use native DOM methods instead of `innerHTML`. |
