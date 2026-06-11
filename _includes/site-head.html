@@ -45,7 +45,8 @@
 <link rel="modulepreload" href="/js/main.js">
 <link rel="preload" href="/js/startup-launcher.js" as="script">
 <link rel="modulepreload" href="/js/utils.js">
-<link rel="modulepreload" href="/js/metrics.js">
+<!-- metrics.js is an IIFE, not an ES module; preload as script, not modulepreload -->
+<link rel="preload" href="/js/metrics.js" as="script">
 
 <!-- Dark Mode: Apply theme before first paint to avoid flash -->
 <script src="/js/dark-mode-toggle.js"></script>

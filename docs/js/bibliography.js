@@ -296,8 +296,13 @@
       "input",
       debounce((event) => {
         state.query = event.target.value.trim();
-        if (state.query.length > 1 && window.AffineDriftMetrics) {
-          window.AffineDriftMetrics.trackSearch(state.query);
+        if (state.query.length > 1 && typeof window.AffineDriftMetrics?.trackSearch === "function") {
+          try {
+            window.AffineDriftMetrics.trackSearch(state.query);
+          } catch (trackErr) {
+            // Tracking failure must never prevent search results from rendering
+            console.warn("[bibliography] AffineDriftMetrics.trackSearch failed:", trackErr);
+          }
         }
         renderList();
       }, 180),
@@ -341,8 +346,12 @@
         detailsEl.removeAttribute("tabindex");
       }, { once: true });
 
-      if (window.AffineDriftMetrics) {
-        window.AffineDriftMetrics.trackEntryClick(entry.id, entry.title);
+      if (typeof window.AffineDriftMetrics?.trackEntryClick === "function") {
+        try {
+          window.AffineDriftMetrics.trackEntryClick(entry.id, entry.title);
+        } catch (trackErr) {
+          console.warn("[bibliography] AffineDriftMetrics.trackEntryClick failed:", trackErr);
+        }
       }
     });
   };

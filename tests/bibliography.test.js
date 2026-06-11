@@ -264,3 +264,150 @@ describe.skip('Bibliography Module (pending rewrite for js/ IIFE architecture)',
     });
   });
 });
+
+// ---------------------------------------------------------------------------
+// Regression tests for issue #3273: AffineDriftMetrics API clobber
+//
+// These tests verify that bibliography.js search/tracking guards correctly
+// require trackSearch to be a callable function rather than any truthy value,
+// so that the clobbered state (startup-launcher overwriting the API object)
+// cannot break search filtering.
+// ---------------------------------------------------------------------------
+
+describe('bibliography.js metrics-guard regression (#3273)', () => {
+  // Wait for all pending microtasks (Promise resolution chains) to drain.
+  // bibliography.js init() is async (fetch → json() → state assignment),
+  // so we must flush before the search listener is registered.
+  function flushPromises() {
+    return new Promise((resolve) => queueMicrotask(resolve));
+  }
+
+  // Wait long enough for the bibliography.js debounce (180 ms) to fire.
+  function waitForDebounce() {
+    return new Promise((resolve) => setTimeout(resolve, 220));
+  }
+
+  function buildBibDOM() {
+    // Build required DOM elements using createElement (no innerHTML).
+    // bibliography.js IIFE bails out early if #bibliography-app is absent,
+    // so it must be present as the root container.
+    const app = document.createElement('div');
+    app.id = 'bibliography-app';
+
+    const searchInput = document.createElement('input');
+    searchInput.id = 'bib-search';
+    searchInput.type = 'text';
+
+    const bibList = document.createElement('div');
+    bibList.id = 'bib-list';
+
+    const bibDetails = document.createElement('div');
+    bibDetails.id = 'bib-details';
+
+    const sortControls = document.createElement('div');
+    sortControls.id = 'bib-sort-controls';
+
+    const bibCount = document.createElement('span');
+    bibCount.id = 'bib-count';
+
+    const metricsWidget = document.createElement('div');
+    metricsWidget.id = 'metrics-widget';
+
+    document.body.replaceChildren(
+      app, searchInput, bibList, bibDetails, sortControls, bibCount, metricsWidget
+    );
+  }
+
+  async function loadBibAndFlush(entries) {
+    global.fetch = jest.fn(() =>
+      Promise.resolve({ ok: true, json: () => Promise.resolve(entries) })
+    );
+    jest.resetModules();
+    jest.isolateModules(() => {
+      require('../js/bibliography.js');
+    });
+    // Flush the async init chain: fetch → json() → state.entries assignment →
+    // addEventListener registration.  Multiple rounds cover nested awaits.
+    await flushPromises();
+    await flushPromises();
+    await flushPromises();
+  }
+
+  const SAMPLE_ENTRIES = [
+    { id: 'smith2020', title: 'Biomechanics of the Golf Swing', type: 'paper',
+      authors: ['Smith, J.'], year: 2020, tags: ['biomechanics', 'golf'] },
+    { id: 'jones2019', title: 'Control Theory Fundamentals', type: 'book',
+      authors: ['Jones, A.'], year: 2019, tags: ['control'] },
+  ];
+
+  beforeEach(() => {
+    // Do NOT use fake timers here: bibliography.js loadEntries() uses a real
+    // AbortController timeout internally, and fake timers would block it.
+    buildBibDOM();
+    delete window.AffineDriftMetrics;
+    window.BIBLIOGRAPHY_DATA_URL = '/data/bibliography.json';
+  });
+
+  afterEach(() => {
+    delete window.AffineDriftMetrics;
+    delete window.BIBLIOGRAPHY_DATA_URL;
+    jest.clearAllMocks();
+  });
+
+  test('search input does not throw when AffineDriftMetrics is a plain object (clobbered state)', async () => {
+    // Simulate startup-launcher clobbering the metrics API.
+    window.AffineDriftMetrics = { firstPaint: 42, summary: {} };
+
+    await loadBibAndFlush(SAMPLE_ENTRIES);
+
+    const searchInput = document.getElementById('bib-search');
+    expect(searchInput).not.toBeNull();
+
+    searchInput.value = 'bio';
+    await expect(async () => {
+      searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+      await waitForDebounce();
+    }).not.toThrow();
+  });
+
+  test('search input does not throw when AffineDriftMetrics is undefined', async () => {
+    expect(window.AffineDriftMetrics).toBeUndefined();
+
+    await loadBibAndFlush(SAMPLE_ENTRIES);
+
+    const searchInput = document.getElementById('bib-search');
+    searchInput.value = 'golf';
+    await expect(async () => {
+      searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+      await waitForDebounce();
+    }).not.toThrow();
+  });
+
+  test('trackSearch is NOT called when AffineDriftMetrics.trackSearch is not a function', async () => {
+    // trackSearch is present but is a string — the guard must skip the call.
+    window.AffineDriftMetrics = { firstPaint: 42, summary: {}, trackSearch: 'not-a-function' };
+
+    await loadBibAndFlush(SAMPLE_ENTRIES);
+
+    const searchInput = document.getElementById('bib-search');
+    searchInput.value = 'bio';
+    await expect(async () => {
+      searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+      await waitForDebounce();
+    }).not.toThrow();
+  });
+
+  test('trackSearch IS called when AffineDriftMetrics has a real trackSearch function', async () => {
+    const trackSearchMock = jest.fn();
+    window.AffineDriftMetrics = { trackSearch: trackSearchMock };
+
+    await loadBibAndFlush(SAMPLE_ENTRIES);
+
+    const searchInput = document.getElementById('bib-search');
+    searchInput.value = 'bio';
+    searchInput.dispatchEvent(new Event('input', { bubbles: true }));
+    await waitForDebounce();
+
+    expect(trackSearchMock).toHaveBeenCalledWith('bio');
+  });
+});

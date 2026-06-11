@@ -440,8 +440,11 @@
     }
     console.groupEnd();
 
-    // Store metrics in window for debugging
-    window.AffineDriftMetrics = { ...metrics, summary };
+    // Store startup performance data in window for debugging.
+    // Use AffineDriftStartupMetrics to avoid clobbering the metrics API
+    // object set by metrics.js (window.AffineDriftStartup.getMetrics() is
+    // the canonical programmatic accessor — this is debug-only).
+    window.AffineDriftStartupMetrics = { ...metrics, summary };
   }
 
   /**
