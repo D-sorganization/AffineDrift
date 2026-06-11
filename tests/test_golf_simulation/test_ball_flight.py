@@ -4,6 +4,7 @@ import numpy as np
 import pytest
 
 from src.core.constants import GRAVITY_M_S2
+from src.core.contracts import ContractViolationError
 from src.golf_simulation.ball_flight import BallFlightDynamics, BallFlightState
 
 
@@ -107,6 +108,24 @@ class TestBallFlightDynamics:
         final_z = trajectory[-1].position[2]
         assert final_z <= 0.1  # Should be near ground
 
+    def test_nan_initial_velocity_raises(self):
+        """BallFlightState must reject NaN velocity components (#3285)."""
+        with pytest.raises(ContractViolationError):
+            BallFlightState(
+                position=np.zeros(3),
+                velocity=np.array([float("nan"), 0.0, 10.0]),
+                spin=np.zeros(3),
+            )
+
+    def test_nan_initial_position_raises(self):
+        """BallFlightState must reject NaN position components (#3285)."""
+        with pytest.raises(ContractViolationError):
+            BallFlightState(
+                position=np.array([float("nan"), 0.0, 0.0]),
+                velocity=np.array([50.0, 0.0, 15.0]),
+                spin=np.zeros(3),
+            )
+
     def test_linearize_returns_correct_shapes(self):
         bfd = BallFlightDynamics()
         x = np.array([0, 0, 10, 50, 0, 10, 0, -300, 0], dtype=float)
@@ -114,6 +133,26 @@ class TestBallFlightDynamics:
         A, B = bfd.linearize(x, u)
         assert A.shape == (9, 9)
         assert B.shape == (9, 3)
+
+    def test_simulate_raises_on_nan_in_initial_position(self):
+        from src.core.contracts import ContractViolationError
+
+        with pytest.raises(ContractViolationError):
+            BallFlightState(
+                position=np.array([float("nan"), 0.0, 0.0]),
+                velocity=np.array([65.0, 0.0, 22.0]),
+                spin=np.array([0.0, -280.0, 0.0]),
+            )
+
+    def test_simulate_raises_on_nan_in_initial_velocity(self):
+        from src.core.contracts import ContractViolationError
+
+        with pytest.raises(ContractViolationError):
+            BallFlightState(
+                position=np.array([0.0, 0.0, 0.0]),
+                velocity=np.array([float("nan"), 0.0, 22.0]),
+                spin=np.array([0.0, -280.0, 0.0]),
+            )
 
     def test_wind_affects_trajectory(self):
         """Headwind should reduce carry distance."""

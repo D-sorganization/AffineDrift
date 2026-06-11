@@ -11,7 +11,7 @@ import logging
 import math
 
 from src.core.constants import GRAVITY_M_S2
-from src.core.contracts import check_positive, check_range, require
+from src.core.contracts import ContractViolationError, check_positive, check_range, require
 
 logger = logging.getLogger(__name__)
 
@@ -78,10 +78,16 @@ class GreenSurface:
                 (width, height, 0.0),
             ]
 
+        # Set by create_flat_green / create_sloped_green for exact planar evaluation.
+        # IDW cannot reproduce a plane from corner samples; this shortcut bypasses it.
+        self._plane_slope: tuple[float, float] | None = None
+
     def evaluate_elevation(self, x: float, y: float) -> float:
         """Compute the green surface elevation at (x, y).
 
-        Uses inverse-distance-weighted interpolation from control points.
+        For planar greens created by create_flat_green / create_sloped_green,
+        returns slope_x * x + slope_y * y exactly. For greens with arbitrary
+        control points, uses inverse-distance-weighted interpolation.
 
         Args:
             x: X position in meters.
@@ -90,6 +96,9 @@ class GreenSurface:
         Returns:
             Elevation in meters.
         """
+        if self._plane_slope is not None:
+            return self._plane_slope[0] * x + self._plane_slope[1] * y
+
         if len(self._control_points) == 0:
             return 0.0
 
@@ -112,7 +121,8 @@ class GreenSurface:
     def evaluate_slope(self, x: float, y: float) -> tuple[float, float]:
         """Compute the surface gradient (dz/dx, dz/dy) at (x, y).
 
-        Uses central finite differences on the elevation function.
+        For planar greens returns the exact constant slope. For arbitrary
+        control-point greens uses central finite differences.
 
         Args:
             x: X position in meters.
@@ -121,6 +131,9 @@ class GreenSurface:
         Returns:
             Tuple of (dz/dx, dz/dy) slope components.
         """
+        if self._plane_slope is not None:
+            return self._plane_slope
+
         h = 0.001  # finite difference step in meters
 
         dzdx = (self.evaluate_elevation(x + h, y) - self.evaluate_elevation(x - h, y)) / (2.0 * h)
@@ -156,7 +169,9 @@ class GreenSurface:
         Returns:
             A flat GreenSurface.
         """
-        return GreenSurface(width=width, height=height, stimp=stimp, control_points=None)
+        green = GreenSurface(width=width, height=height, stimp=stimp, control_points=None)
+        green._plane_slope = (0.0, 0.0)
+        return green
 
     @staticmethod
     def create_sloped_green(
@@ -187,12 +202,14 @@ class GreenSurface:
             (0.0, height, slope_y * height),
             (width, height, slope_x * width + slope_y * height),
         ]
-        return GreenSurface(
+        green = GreenSurface(
             width=width,
             height=height,
             stimp=stimp,
             control_points=control_points,
         )
+        green._plane_slope = (slope_x, slope_y)
+        return green
 
 
 class PuttingSimulator:
@@ -246,6 +263,13 @@ class PuttingSimulator:
             List of (x, y) position tuples along the ball's path.
         """
         check_positive(max_time, "max_time")
+        for name, v in (
+            ("start_x", start_x),
+            ("start_y", start_y),
+            ("velocity_x", velocity_x),
+            ("velocity_y", velocity_y),
+        ):
+            require(math.isfinite(v), f"{name} must be finite", v)
 
         x = start_x
         y = start_y
@@ -269,6 +293,13 @@ class PuttingSimulator:
 
             # RK4 integration for improved accuracy over Euler
             x, y, vx, vy = self._rk4_putt_step(x, y, vx, vy, deceleration)
+
+            if not math.isfinite(x) or not math.isfinite(y):
+                raise ContractViolationError(
+                    "invariant",
+                    "putting state became non-finite",
+                    (x, y),
+                )
 
             t += self.dt
             trajectory.append((x, y))

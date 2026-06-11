@@ -48,7 +48,7 @@ All conversion functions implement the same algorithms as the Python reference i
   <label style="display:flex;align-items:center;gap:0.4rem;cursor:pointer;">
     <input type="radio" name="rc-units" value="rad" id="rc-rad"> Radians
   </label>
-  <span style="margin-left:auto;font-size:0.85rem;color:var(--text-light,#6b7280);">
+  <span style="margin-left:auto;font-size:0.85rem;color:var(--text-muted,#6b7280);">
     Edit any field to update all representations
   </span>
 </div>
@@ -68,20 +68,20 @@ All conversion functions implement the same algorithms as the Python reference i
   <!-- Rotation Matrix -->
   <fieldset id="rc-panel-R" class="rc-panel" style="border:2px solid #e5e7eb;border-radius:10px;padding:1rem;">
     <legend style="font-weight:700;padding:0 0.5rem;">
-      Rotation Matrix <span style="font-weight:400;font-size:0.85rem;color:#6b7280;">$R \in SO(3)$</span>
+      Rotation Matrix <span style="font-weight:400;font-size:0.85rem;color:var(--text-muted,#6b7280);">$R \in SO(3)$</span>
     </legend>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.35rem;margin-bottom:0.6rem;">
-      <input class="rc-matrix-cell" data-row="0" data-col="0" type="text" value="1">
-      <input class="rc-matrix-cell" data-row="0" data-col="1" type="text" value="0">
-      <input class="rc-matrix-cell" data-row="0" data-col="2" type="text" value="0">
-      <input class="rc-matrix-cell" data-row="1" data-col="0" type="text" value="0">
-      <input class="rc-matrix-cell" data-row="1" data-col="1" type="text" value="1">
-      <input class="rc-matrix-cell" data-row="1" data-col="2" type="text" value="0">
-      <input class="rc-matrix-cell" data-row="2" data-col="0" type="text" value="0">
-      <input class="rc-matrix-cell" data-row="2" data-col="1" type="text" value="0">
-      <input class="rc-matrix-cell" data-row="2" data-col="2" type="text" value="1">
+      <input class="rc-matrix-cell" data-row="0" data-col="0" type="text" value="1" aria-label="R row 1 col 1">
+      <input class="rc-matrix-cell" data-row="0" data-col="1" type="text" value="0" aria-label="R row 1 col 2">
+      <input class="rc-matrix-cell" data-row="0" data-col="2" type="text" value="0" aria-label="R row 1 col 3">
+      <input class="rc-matrix-cell" data-row="1" data-col="0" type="text" value="0" aria-label="R row 2 col 1">
+      <input class="rc-matrix-cell" data-row="1" data-col="1" type="text" value="1" aria-label="R row 2 col 2">
+      <input class="rc-matrix-cell" data-row="1" data-col="2" type="text" value="0" aria-label="R row 2 col 3">
+      <input class="rc-matrix-cell" data-row="2" data-col="0" type="text" value="0" aria-label="R row 3 col 1">
+      <input class="rc-matrix-cell" data-row="2" data-col="1" type="text" value="0" aria-label="R row 3 col 2">
+      <input class="rc-matrix-cell" data-row="2" data-col="2" type="text" value="1" aria-label="R row 3 col 3">
     </div>
-    <div id="rc-R-validity" style="font-size:0.82rem;color:#6b7280;margin-bottom:0.5rem;"></div>
+    <div id="rc-R-validity" style="font-size:0.82rem;color:var(--text-muted,#6b7280);margin-bottom:0.5rem;"></div>
     <button type="button" class="rc-load-btn" data-rep="R" style="font-size:0.85rem;">↑ Use this R</button>
     <div class="rc-formula-box" id="rc-formula-R" style="display:none;"></div>
   </fieldset>
@@ -89,19 +89,19 @@ All conversion functions implement the same algorithms as the Python reference i
   <!-- Quaternion -->
   <fieldset id="rc-panel-q" class="rc-panel" style="border:2px solid #e5e7eb;border-radius:10px;padding:1rem;">
     <legend style="font-weight:700;padding:0 0.5rem;">
-      Quaternion <span style="font-weight:400;font-size:0.85rem;color:#6b7280;">$(w, x, y, z)$</span>
+      Quaternion <span style="font-weight:400;font-size:0.85rem;color:var(--text-muted,#6b7280);">$(w, x, y, z)$</span>
     </legend>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0.35rem;margin-bottom:0.6rem;">
-      <div><label style="font-size:0.78rem;color:#6b7280;display:block;">w (scalar)</label>
-           <input class="rc-q-cell" data-comp="0" type="text" value="1" style="width:100%;"></div>
-      <div><label style="font-size:0.78rem;color:#6b7280;display:block;">x</label>
-           <input class="rc-q-cell" data-comp="1" type="text" value="0" style="width:100%;"></div>
-      <div><label style="font-size:0.78rem;color:#6b7280;display:block;">y</label>
-           <input class="rc-q-cell" data-comp="2" type="text" value="0" style="width:100%;"></div>
-      <div><label style="font-size:0.78rem;color:#6b7280;display:block;">z</label>
-           <input class="rc-q-cell" data-comp="3" type="text" value="0" style="width:100%;"></div>
+      <div><label style="font-size:0.78rem;color:var(--text-muted,#6b7280);display:block;" for="rc-q-w">w (scalar)</label>
+           <input class="rc-q-cell" data-comp="0" id="rc-q-w" type="text" value="1" style="width:100%;"></div>
+      <div><label style="font-size:0.78rem;color:var(--text-muted,#6b7280);display:block;" for="rc-q-x">x</label>
+           <input class="rc-q-cell" data-comp="1" id="rc-q-x" type="text" value="0" style="width:100%;"></div>
+      <div><label style="font-size:0.78rem;color:var(--text-muted,#6b7280);display:block;" for="rc-q-y">y</label>
+           <input class="rc-q-cell" data-comp="2" id="rc-q-y" type="text" value="0" style="width:100%;"></div>
+      <div><label style="font-size:0.78rem;color:var(--text-muted,#6b7280);display:block;" for="rc-q-z">z</label>
+           <input class="rc-q-cell" data-comp="3" id="rc-q-z" type="text" value="0" style="width:100%;"></div>
     </div>
-    <div id="rc-q-validity" style="font-size:0.82rem;color:#6b7280;margin-bottom:0.5rem;"></div>
+    <div id="rc-q-validity" style="font-size:0.82rem;color:var(--text-muted,#6b7280);margin-bottom:0.5rem;"></div>
     <button type="button" class="rc-load-btn" data-rep="quaternion">↑ Use this q</button>
     <div class="rc-formula-box" id="rc-formula-q" style="display:none;"></div>
   </fieldset>
@@ -109,17 +109,17 @@ All conversion functions implement the same algorithms as the Python reference i
   <!-- ZYX Euler -->
   <fieldset id="rc-panel-euler" class="rc-panel" style="border:2px solid #e5e7eb;border-radius:10px;padding:1rem;">
     <legend style="font-weight:700;padding:0 0.5rem;">
-      ZYX Euler Angles <span style="font-weight:400;font-size:0.85rem;color:#6b7280;">$R = R_z(\psi)R_y(\theta)R_x(\phi)$</span>
+      ZYX Euler Angles <span style="font-weight:400;font-size:0.85rem;color:var(--text-muted,#6b7280);">$R = R_z(\psi)R_y(\theta)R_x(\phi)$</span>
     </legend>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.5rem;margin-bottom:0.6rem;">
-      <div><label style="font-size:0.78rem;color:#6b7280;display:block;" id="rc-lbl-psi">ψ (yaw, about Z)</label>
-           <input class="rc-euler-cell" data-comp="psi" type="text" value="0" style="width:100%;"></div>
-      <div><label style="font-size:0.78rem;color:#6b7280;display:block;" id="rc-lbl-theta">θ (pitch, about Y)</label>
-           <input class="rc-euler-cell" data-comp="theta" type="text" value="0" style="width:100%;"></div>
-      <div><label style="font-size:0.78rem;color:#6b7280;display:block;" id="rc-lbl-phi">φ (roll, about X)</label>
-           <input class="rc-euler-cell" data-comp="phi" type="text" value="0" style="width:100%;"></div>
+      <div><label style="font-size:0.78rem;color:var(--text-muted,#6b7280);display:block;" id="rc-lbl-psi" for="rc-euler-psi">ψ (yaw, about Z)</label>
+           <input class="rc-euler-cell" data-comp="psi" id="rc-euler-psi" type="text" value="0" style="width:100%;"></div>
+      <div><label style="font-size:0.78rem;color:var(--text-muted,#6b7280);display:block;" id="rc-lbl-theta" for="rc-euler-theta">θ (pitch, about Y)</label>
+           <input class="rc-euler-cell" data-comp="theta" id="rc-euler-theta" type="text" value="0" style="width:100%;"></div>
+      <div><label style="font-size:0.78rem;color:var(--text-muted,#6b7280);display:block;" id="rc-lbl-phi" for="rc-euler-phi">φ (roll, about X)</label>
+           <input class="rc-euler-cell" data-comp="phi" id="rc-euler-phi" type="text" value="0" style="width:100%;"></div>
     </div>
-    <div id="rc-euler-validity" style="font-size:0.82rem;color:#6b7280;margin-bottom:0.5rem;"></div>
+    <div id="rc-euler-validity" style="font-size:0.82rem;color:var(--text-muted,#6b7280);margin-bottom:0.5rem;"></div>
     <button type="button" class="rc-load-btn" data-rep="eulerZYX">↑ Use these angles</button>
     <div class="rc-formula-box" id="rc-formula-euler" style="display:none;"></div>
   </fieldset>
@@ -132,19 +132,19 @@ All conversion functions implement the same algorithms as the Python reference i
   <!-- Axis-Angle -->
   <fieldset id="rc-panel-aa" class="rc-panel" style="border:2px solid #e5e7eb;border-radius:10px;padding:1rem;">
     <legend style="font-weight:700;padding:0 0.5rem;">
-      Axis-Angle <span style="font-weight:400;font-size:0.85rem;color:#6b7280;">$(\hat{\mathbf{n}}, \theta)$</span>
+      Axis-Angle <span style="font-weight:400;font-size:0.85rem;color:var(--text-muted,#6b7280);">$(\hat{\mathbf{n}}, \theta)$</span>
     </legend>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1.5fr;gap:0.35rem;margin-bottom:0.6rem;">
-      <div><label style="font-size:0.78rem;color:#6b7280;display:block;">nₓ</label>
-           <input class="rc-aa-cell" data-comp="nx" type="text" value="0" style="width:100%;"></div>
-      <div><label style="font-size:0.78rem;color:#6b7280;display:block;">n_y</label>
-           <input class="rc-aa-cell" data-comp="ny" type="text" value="0" style="width:100%;"></div>
-      <div><label style="font-size:0.78rem;color:#6b7280;display:block;">n_z</label>
-           <input class="rc-aa-cell" data-comp="nz" type="text" value="1" style="width:100%;"></div>
-      <div><label class="rc-aa-angle-lbl" style="font-size:0.78rem;color:#6b7280;display:block;">θ</label>
-           <input class="rc-aa-cell" data-comp="angle" type="text" value="0" style="width:100%;"></div>
+      <div><label style="font-size:0.78rem;color:var(--text-muted,#6b7280);display:block;" for="rc-aa-nx">nₓ</label>
+           <input class="rc-aa-cell" data-comp="nx" id="rc-aa-nx" type="text" value="0" style="width:100%;"></div>
+      <div><label style="font-size:0.78rem;color:var(--text-muted,#6b7280);display:block;" for="rc-aa-ny">n_y</label>
+           <input class="rc-aa-cell" data-comp="ny" id="rc-aa-ny" type="text" value="0" style="width:100%;"></div>
+      <div><label style="font-size:0.78rem;color:var(--text-muted,#6b7280);display:block;" for="rc-aa-nz">n_z</label>
+           <input class="rc-aa-cell" data-comp="nz" id="rc-aa-nz" type="text" value="1" style="width:100%;"></div>
+      <div><label class="rc-aa-angle-lbl" style="font-size:0.78rem;color:var(--text-muted,#6b7280);display:block;" for="rc-aa-angle">θ</label>
+           <input class="rc-aa-cell" data-comp="angle" id="rc-aa-angle" type="text" value="0" style="width:100%;"></div>
     </div>
-    <div id="rc-aa-validity" style="font-size:0.82rem;color:#6b7280;margin-bottom:0.5rem;"></div>
+    <div id="rc-aa-validity" style="font-size:0.82rem;color:var(--text-muted,#6b7280);margin-bottom:0.5rem;"></div>
     <button type="button" class="rc-load-btn" data-rep="axisAngle">↑ Use this axis-angle</button>
     <div class="rc-formula-box" id="rc-formula-aa" style="display:none;"></div>
   </fieldset>
@@ -152,34 +152,34 @@ All conversion functions implement the same algorithms as the Python reference i
   <!-- Exponential Coordinates -->
   <fieldset id="rc-panel-exp" class="rc-panel" style="border:2px solid #e5e7eb;border-radius:10px;padding:1rem;">
     <legend style="font-weight:700;padding:0 0.5rem;">
-      Exponential Coordinates <span style="font-weight:400;font-size:0.85rem;color:#6b7280;">$\boldsymbol{\omega} = \theta\hat{\mathbf{n}}$</span>
+      Exponential Coordinates <span style="font-weight:400;font-size:0.85rem;color:var(--text-muted,#6b7280);">$\boldsymbol{\omega} = \theta\hat{\mathbf{n}}$</span>
     </legend>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0.35rem;margin-bottom:0.6rem;">
-      <div><label style="font-size:0.78rem;color:#6b7280;display:block;">ωₓ</label>
-           <input class="rc-exp-cell" data-comp="0" type="text" value="0" style="width:100%;"></div>
-      <div><label style="font-size:0.78rem;color:#6b7280;display:block;">ω_y</label>
-           <input class="rc-exp-cell" data-comp="1" type="text" value="0" style="width:100%;"></div>
-      <div><label style="font-size:0.78rem;color:#6b7280;display:block;">ω_z</label>
-           <input class="rc-exp-cell" data-comp="2" type="text" value="0" style="width:100%;"></div>
+      <div><label style="font-size:0.78rem;color:var(--text-muted,#6b7280);display:block;" for="rc-exp-0">ωₓ</label>
+           <input class="rc-exp-cell" data-comp="0" id="rc-exp-0" type="text" value="0" style="width:100%;"></div>
+      <div><label style="font-size:0.78rem;color:var(--text-muted,#6b7280);display:block;" for="rc-exp-1">ω_y</label>
+           <input class="rc-exp-cell" data-comp="1" id="rc-exp-1" type="text" value="0" style="width:100%;"></div>
+      <div><label style="font-size:0.78rem;color:var(--text-muted,#6b7280);display:block;" for="rc-exp-2">ω_z</label>
+           <input class="rc-exp-cell" data-comp="2" id="rc-exp-2" type="text" value="0" style="width:100%;"></div>
     </div>
-    <div id="rc-exp-validity" style="font-size:0.82rem;color:#6b7280;margin-bottom:0.5rem;"></div>
+    <div id="rc-exp-validity" style="font-size:0.82rem;color:var(--text-muted,#6b7280);margin-bottom:0.5rem;"></div>
     <button type="button" class="rc-load-btn" data-rep="expCoord">↑ Use these coords</button>
     <div class="rc-formula-box" id="rc-formula-exp" style="display:none;"></div>
   </fieldset>
 
   <!-- Rotation Properties summary -->
-  <fieldset style="border:2px solid #d1fae5;border-radius:10px;padding:1rem;background:#f0fdf4;">
+  <fieldset style="border:2px solid #d1fae5;border-radius:10px;padding:1rem;background:var(--bg-secondary,#f0fdf4);">
     <legend style="font-weight:700;padding:0 0.5rem;color:#065f46;">Properties</legend>
     <table style="width:100%;font-size:0.88rem;border-collapse:collapse;">
-      <tr><td style="color:#374151;padding:0.2rem 0.5rem 0.2rem 0;">Rotation angle θ:</td>
+      <tr><td style="color:var(--text-secondary,#374151);padding:0.2rem 0.5rem 0.2rem 0;">Rotation angle θ:</td>
           <td id="rc-prop-angle" style="font-weight:600;font-family:monospace;">—</td></tr>
-      <tr><td style="color:#374151;padding:0.2rem 0.5rem 0.2rem 0;">Screw axis n̂:</td>
+      <tr><td style="color:var(--text-secondary,#374151);padding:0.2rem 0.5rem 0.2rem 0;">Screw axis n̂:</td>
           <td id="rc-prop-axis" style="font-weight:600;font-family:monospace;">—</td></tr>
-      <tr><td style="color:#374151;padding:0.2rem 0.5rem 0.2rem 0;">det(R):</td>
+      <tr><td style="color:var(--text-secondary,#374151);padding:0.2rem 0.5rem 0.2rem 0;">det(R):</td>
           <td id="rc-prop-det" style="font-weight:600;font-family:monospace;">—</td></tr>
-      <tr><td style="color:#374151;padding:0.2rem 0.5rem 0.2rem 0;">‖RᵀR − I‖∞:</td>
+      <tr><td style="color:var(--text-secondary,#374151);padding:0.2rem 0.5rem 0.2rem 0;">‖RᵀR − I‖∞:</td>
           <td id="rc-prop-orth" style="font-weight:600;font-family:monospace;">—</td></tr>
-      <tr><td style="color:#374151;padding:0.2rem 0.5rem 0.2rem 0;">‖q‖:</td>
+      <tr><td style="color:var(--text-secondary,#374151);padding:0.2rem 0.5rem 0.2rem 0;">‖q‖:</td>
           <td id="rc-prop-qnorm" style="font-weight:600;font-family:monospace;">—</td></tr>
       <tr id="rc-row-gimbal" style="display:none;">
           <td colspan="2" id="rc-prop-gimbal" style="
@@ -274,6 +274,7 @@ All conversion functions implement the same algorithms as the Python reference i
   border-color: #3b82f6;
   background: #eff6ff;
 }
+.rc-input-invalid { border-color: #dc2626 !important; }
 .rc-load-btn, .rc-preset-btn {
   padding: 0.3rem 0.65rem;
   border: 1px solid #d1d5db;
@@ -295,12 +296,12 @@ All conversion functions implement the same algorithms as the Python reference i
 .rc-formula-box {
   margin-top: 0.75rem;
   padding: 0.6rem 0.8rem;
-  background: #f8fafc;
+  background: var(--bg-secondary, #f8fafc);
   border: 1px solid #e2e8f0;
   border-radius: 6px;
   font-size: 0.82rem;
   font-family: monospace;
-  color: #334155;
+  color: var(--text-secondary, #334155);
   white-space: pre-wrap;
   word-break: break-all;
 }
@@ -345,11 +346,23 @@ All conversion functions implement the same algorithms as the Python reference i
     return angleDeg ? RC.deg2rad(v) : v;
   };
 
+  /* ── NaN guard: parse a single input, mark invalid if non-numeric ────────── */
+  function parseCell(inp) {
+    if (inp.value === "" || inp.value === "-" || inp.value === ".") return null; // incomplete, skip silently
+    const v = parseFloat(inp.value);
+    if (Number.isNaN(v)) {
+      inp.classList.add("rc-input-invalid");
+      return null; // signal error
+    }
+    inp.classList.remove("rc-input-invalid");
+    return v;
+  }
+
   /* ── Status bar ─────────────────────────────────────────────────────────── */
   function showStatus(msg, type = "info") {
     const el = $("rc-status");
     el.style.display = "block";
-    el.style.background = type === "error" ? "#fef2f2" : "#f0fdf4";
+    el.style.background = type === "error" ? "var(--color-error-bg, #fef2f2)" : "var(--color-success-bg, #f0fdf4)";
     el.style.color      = type === "error" ? "#991b1b" : "#166534";
     el.style.border     = `1px solid ${type === "error" ? "#fca5a5" : "#86efac"}`;
     el.textContent = msg;
@@ -379,45 +392,83 @@ All conversion functions implement the same algorithms as the Python reference i
   /* ── Read helpers ───────────────────────────────────────────────────────── */
   function readMatrix() {
     const R = [];
+    let hasError = false;
     document.querySelectorAll(".rc-matrix-cell").forEach(inp => {
-      R.push(parseFloat(inp.value) || 0);
+      const v = parseCell(inp);
+      if (v === null) {
+        if (inp.value !== "" && inp.value !== "-" && inp.value !== ".") hasError = true;
+        R.push(0);
+      } else {
+        R.push(v);
+      }
     });
+    if (hasError) throw new Error("Not a number");
     return R;    // length-9 row-major
   }
 
   function readQuaternion() {
     const q = [0,0,0,0];
+    let hasError = false;
     document.querySelectorAll(".rc-q-cell").forEach(inp => {
-      q[parseInt(inp.dataset.comp)] = parseFloat(inp.value) || 0;
+      const v = parseCell(inp);
+      if (v === null) {
+        if (inp.value !== "" && inp.value !== "-" && inp.value !== ".") hasError = true;
+      } else {
+        q[parseInt(inp.dataset.comp)] = v;
+      }
     });
+    if (hasError) throw new Error("Not a number");
     return q;
   }
 
   function readEuler() {
     const vals = {};
+    let hasError = false;
     document.querySelectorAll(".rc-euler-cell").forEach(inp => {
-      vals[inp.dataset.comp] = parseAngle(inp.value);
+      const v = parseCell(inp);
+      if (v === null) {
+        if (inp.value !== "" && inp.value !== "-" && inp.value !== ".") hasError = true;
+        vals[inp.dataset.comp] = 0;
+      } else {
+        vals[inp.dataset.comp] = angleDeg ? RC.deg2rad(v) : v;
+      }
     });
+    if (hasError) throw new Error("Not a number");
     return { psi: vals.psi || 0, theta: vals.theta || 0, phi: vals.phi || 0 };
   }
 
   function readAxisAngle() {
     const vals = {};
+    let hasError = false;
     document.querySelectorAll(".rc-aa-cell").forEach(inp => {
-      vals[inp.dataset.comp] = parseFloat(inp.value) || 0;
+      const v = parseCell(inp);
+      if (v === null) {
+        if (inp.value !== "" && inp.value !== "-" && inp.value !== ".") hasError = true;
+        vals[inp.dataset.comp] = 0;
+      } else {
+        vals[inp.dataset.comp] = v;
+      }
     });
+    if (hasError) throw new Error("Not a number");
     const rawAxis = [vals.nx, vals.ny, vals.nz];
     const axisNorm = RC.norm3(rawAxis);
     const axis = axisNorm > 1e-12 ? rawAxis.map(v => v / axisNorm) : [0, 0, 1];
-    const angle = parseAngle(String(vals.angle));
+    const angle = angleDeg ? RC.deg2rad(vals.angle) : vals.angle;
     return { axis, angle };
   }
 
   function readExpCoord() {
     const w = [0,0,0];
+    let hasError = false;
     document.querySelectorAll(".rc-exp-cell").forEach(inp => {
-      w[parseInt(inp.dataset.comp)] = parseFloat(inp.value) || 0;
+      const v = parseCell(inp);
+      if (v === null) {
+        if (inp.value !== "" && inp.value !== "-" && inp.value !== ".") hasError = true;
+      } else {
+        w[parseInt(inp.dataset.comp)] = v;
+      }
     });
+    if (hasError) throw new Error("Not a number");
     return w;
   }
 
@@ -436,7 +487,7 @@ All conversion functions implement the same algorithms as the Python reference i
     });
     const norm = Math.sqrt(q.reduce((s,v)=>s+v*v,0));
     $("rc-q-validity").textContent = `‖q‖ = ${fmt(norm,8)}`;
-    $("rc-q-validity").style.color = Math.abs(norm-1) < 1e-5 ? "#059669" : "#dc2626";
+    $("rc-q-validity").style.color = Math.abs(norm-1) < 1e-5 ? "var(--color-success)" : "var(--color-error)";
   }
 
   function writeEuler(euler) {
@@ -465,11 +516,11 @@ All conversion functions implement the same algorithms as the Python reference i
     const el = $("rc-aa-validity");
     if (Math.abs(angle) < 1e-8) {
       el.textContent = "θ ≈ 0: identity rotation. Axis direction is arbitrary.";
-      el.style.color = "#6b7280";
+      el.style.color = "var(--text-muted, #6b7280)";
     } else {
       const n = RC.norm3(axis);
       el.textContent = `‖n̂‖ = ${fmt(n,8)}`;
-      el.style.color = Math.abs(n-1) < 1e-5 ? "#059669" : "#dc2626";
+      el.style.color = Math.abs(n-1) < 1e-5 ? "var(--color-success)" : "var(--color-error)";
     }
   }
 
@@ -479,7 +530,7 @@ All conversion functions implement the same algorithms as the Python reference i
     });
     const mag = RC.norm3(omega);
     $("rc-exp-validity").textContent = `|ω| = ${fmtAngle(mag)} ${angleDeg?"°":"rad"} (= rotation angle θ)`;
-    $("rc-exp-validity").style.color = "#059669";
+    $("rc-exp-validity").style.color = "var(--color-success)";
   }
 
   function updateRValidity(R) {
@@ -488,7 +539,7 @@ All conversion functions implement the same algorithms as the Python reference i
     el.textContent = valid
       ? `✓ Valid SO(3): det error=${detError.toExponential(1)}, ‖RᵀR−I‖∞=${orthogError.toExponential(1)}`
       : `✗ Not valid SO(3): det error=${detError.toExponential(2)}, ‖RᵀR−I‖∞=${orthogError.toExponential(2)}`;
-    el.style.color = valid ? "#059669" : "#dc2626";
+    el.style.color = valid ? "var(--color-success)" : "var(--color-error)";
   }
 
   /* ── Properties panel ───────────────────────────────────────────────────── */
@@ -567,6 +618,9 @@ All conversion functions implement the same algorithms as the Python reference i
   function update() {
     let input, fromRep;
     try {
+      // Hide stale error banners at the top of each successful update attempt
+      $("rc-status").style.display = "none";
+
       switch (activeRep) {
         case "R":         input = readMatrix();    fromRep = "R";         break;
         case "quaternion": input = readQuaternion(); fromRep = "quaternion"; break;

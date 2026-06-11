@@ -39,6 +39,7 @@ Usage
 
 from __future__ import annotations
 
+import inspect
 import logging
 import warnings
 from collections.abc import Callable
@@ -72,7 +73,7 @@ from src.core.contracts import (
 
 logger = logging.getLogger(__name__)
 
-# ── Optimizer ───────────────────────────────────────────────────────────────
+# -- Optimizer ---------------------------------------------------------------
 
 
 class SwingOptimizer:
@@ -277,12 +278,19 @@ class SwingOptimizer:
         self,
         trajectory: list[np.ndarray[Any, Any]],
         controls: list[np.ndarray[Any, Any]],
+        step_dts: np.ndarray[Any, Any] | None = None,
     ) -> float:
         """Compute the total cost across an entire trajectory.
 
         Args:
             trajectory: List of state vectors (length N+1).
             controls: List of control vectors (length N).
+            step_dts: Optional array of per-step integration timesteps (length N).
+                When provided (e.g. as ``np.diff(t_traj)`` from the solver), each
+                running-cost term is scaled by the *actual* integration step rather
+                than ``config.dt``, keeping cost accounting consistent with the
+                trajectory that was actually integrated.  When ``None``, falls back
+                to ``config.dt`` for every step (original behaviour).
 
         Returns:
             Total cost (running + terminal).
@@ -294,9 +302,17 @@ class SwingOptimizer:
         )
         require(len(controls) > 0, "controls must not be empty")
 
+        if step_dts is not None:
+            require(
+                len(step_dts) == len(controls),
+                "step_dts must have the same length as controls",
+                (len(step_dts), len(controls)),
+            )
+
         running_cost = 0.0
         for t in range(len(controls)):
-            running_cost += self.compute_cost(trajectory[t], controls[t]) * self._config.dt
+            dt_t = float(step_dts[t]) if step_dts is not None else self._config.dt
+            running_cost += self.compute_cost(trajectory[t], controls[t]) * dt_t
 
         terminal = self.compute_terminal_cost(trajectory[-1])
         total = running_cost + terminal
@@ -322,6 +338,23 @@ class SwingOptimizer:
         u_init = np.zeros((cfg.horizon_steps, cfg.control_dim))
         return x_target, u_init
 
+    @staticmethod
+    def _solver_accepts_dt(solver: Callable[..., Any]) -> bool:
+        """Return True if *solver* accepts a ``dt`` keyword argument.
+
+        Returns True for solvers that either declare an explicit ``dt``
+        parameter or accept arbitrary keyword arguments via ``**kwargs``
+        (since any keyword, including ``dt``, will be accepted).
+        """
+        try:
+            sig = inspect.signature(solver)
+            if "dt" in sig.parameters:
+                return True
+            # A **kwargs parameter absorbs any keyword argument, including dt.
+            return any(p.kind == inspect.Parameter.VAR_KEYWORD for p in sig.parameters.values())
+        except (ValueError, TypeError):
+            return False
+
     def _execute_ddp_step(
         self,
         initial_state: np.ndarray[Any, Any],
@@ -335,20 +368,52 @@ class SwingOptimizer:
     ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any], float]:
         """Run one DDP solver step and compute trajectory cost.
 
+        ``cfg.dt`` is forwarded to the underlying solver when the solver's
+        signature includes a ``dt`` parameter.  Solvers that do not accept
+        ``dt`` continue to work unchanged; a one-time warning is emitted.
+
         Returns:
             Tuple of (x_traj, u_traj, current_cost).
         """
-        x_traj, u_traj, _t_traj = self._ddp_solver(
-            f=dynamics_fn,
-            x0=initial_state,
-            xf=x_target,
-            u_init=u_init,
-            eps_residual=cfg.convergence_tol,
-            max_iters=min(5, cfg.max_iterations),
-        )
+        solver_kwargs: dict[str, Any] = {
+            "f": dynamics_fn,
+            "x0": initial_state,
+            "xf": x_target,
+            "u_init": u_init,
+            "eps_residual": cfg.convergence_tol,
+            "max_iters": min(5, cfg.max_iterations),
+        }
+
+        if self._solver_accepts_dt(self._ddp_solver):
+            solver_kwargs["dt"] = cfg.dt
+        else:
+            logger.warning(
+                "DDP solver %r does not accept a 'dt' keyword argument; "
+                "config.dt=%.4f will not be forwarded to the integrator. "
+                "Costs are scaled by config.dt but trajectories will be integrated "
+                "at the solver's internal default timestep.",
+                getattr(self._ddp_solver, "__name__", repr(self._ddp_solver)),
+                cfg.dt,
+            )
+
+        try:
+            x_traj, u_traj, t_traj = self._ddp_solver(**solver_kwargs)
+        except TypeError:
+            # Fallback: solver rejected 'dt' at call time (e.g. wrapped callable
+            # without an inspectable signature).  Retry without dt and warn once.
+            solver_kwargs.pop("dt", None)
+            logger.warning(
+                "DDP solver %r raised TypeError when called with dt=%.4f; "
+                "retrying without dt.  Cost scaling may be inconsistent.",
+                getattr(self._ddp_solver, "__name__", repr(self._ddp_solver)),
+                cfg.dt,
+            )
+            x_traj, u_traj, t_traj = self._ddp_solver(**solver_kwargs)
+
+        step_dts = np.diff(t_traj) if t_traj is not None and len(t_traj) > 1 else None
         traj_list = list(x_traj)
         ctrl_list = list(u_traj)
-        current_cost = self.compute_trajectory_cost(traj_list, ctrl_list)
+        current_cost = self.compute_trajectory_cost(traj_list, ctrl_list, step_dts=step_dts)
         return x_traj, u_traj, current_cost
 
     def _select_best_trajectory(

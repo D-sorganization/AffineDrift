@@ -16,7 +16,7 @@ const {
 // Network-first navigation timeout: returning visitors get the latest deploy,
 // but a slow/offline network falls back to cache within this budget.
 const NAV_TIMEOUT_MS = DEFAULT_NAVIGATION_TIMEOUT_MS || 3000;
-const CACHE_NAME = 'affinedrift-v5-391abcc1';
+const CACHE_NAME = 'affinedrift-v5-1f25d558';
 const OFFLINE_URL = '/offline.html';
 
 // Critical startup assets - loaded first for fast splash screen
