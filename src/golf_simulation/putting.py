@@ -11,7 +11,7 @@ import logging
 import math
 
 from src.core.constants import GRAVITY_M_S2
-from src.core.contracts import check_positive, check_range, require
+from src.core.contracts import ContractViolationError, check_positive, check_range, require
 
 logger = logging.getLogger(__name__)
 
@@ -263,13 +263,13 @@ class PuttingSimulator:
             List of (x, y) position tuples along the ball's path.
         """
         check_positive(max_time, "max_time")
-        for _name, _v in (
+        for name, v in (
             ("start_x", start_x),
             ("start_y", start_y),
             ("velocity_x", velocity_x),
             ("velocity_y", velocity_y),
         ):
-            require(math.isfinite(_v), f"{_name} must be finite", _v)
+            require(math.isfinite(v), f"{name} must be finite", v)
 
         x = start_x
         y = start_y
@@ -293,6 +293,13 @@ class PuttingSimulator:
 
             # RK4 integration for improved accuracy over Euler
             x, y, vx, vy = self._rk4_putt_step(x, y, vx, vy, deceleration)
+
+            if not math.isfinite(x) or not math.isfinite(y):
+                raise ContractViolationError(
+                    "invariant",
+                    "putting state became non-finite",
+                    (x, y),
+                )
 
             t += self.dt
             trajectory.append((x, y))

@@ -134,6 +134,26 @@ class TestBallFlightDynamics:
         assert A.shape == (9, 9)
         assert B.shape == (9, 3)
 
+    def test_simulate_raises_on_nan_in_initial_position(self):
+        from src.core.contracts import ContractViolationError
+
+        with pytest.raises(ContractViolationError):
+            BallFlightState(
+                position=np.array([float("nan"), 0.0, 0.0]),
+                velocity=np.array([65.0, 0.0, 22.0]),
+                spin=np.array([0.0, -280.0, 0.0]),
+            )
+
+    def test_simulate_raises_on_nan_in_initial_velocity(self):
+        from src.core.contracts import ContractViolationError
+
+        with pytest.raises(ContractViolationError):
+            BallFlightState(
+                position=np.array([0.0, 0.0, 0.0]),
+                velocity=np.array([float("nan"), 0.0, 22.0]),
+                spin=np.array([0.0, -280.0, 0.0]),
+            )
+
     def test_wind_affects_trajectory(self):
         """Headwind should reduce carry distance."""
         bfd_no_wind = BallFlightDynamics(wind=np.array([0.0, 0.0, 0.0]))
