@@ -54,7 +54,9 @@ class TestGreenSurface:
         sim = PuttingSimulator(green)
         positions = sim.simulate(15.0, 5.0, 0.0, 2.0)
         final_x = positions[-1][0]
-        assert abs(final_x - 15.0) < 0.05, f"x-deflection {abs(final_x-15.0):.4f}m on slope_y-only green"
+        assert (
+            abs(final_x - 15.0) < 0.05
+        ), f"x-deflection {abs(final_x-15.0):.4f}m on slope_y-only green"
 
     def test_is_on_green(self):
         green = GreenSurface.create_flat_green(30.0, 30.0, 10.0)

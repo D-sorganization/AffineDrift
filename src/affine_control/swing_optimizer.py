@@ -351,10 +351,7 @@ class SwingOptimizer:
             if "dt" in sig.parameters:
                 return True
             # A **kwargs parameter absorbs any keyword argument, including dt.
-            return any(
-                p.kind == inspect.Parameter.VAR_KEYWORD
-                for p in sig.parameters.values()
-            )
+            return any(p.kind == inspect.Parameter.VAR_KEYWORD for p in sig.parameters.values())
         except (ValueError, TypeError):
             return False
 

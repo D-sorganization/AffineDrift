@@ -123,9 +123,7 @@ class TestHandleShotPenalty:
         sim, hole = self._make_sim_and_hole()
         start = (0.0, 0.0, 0.0)
         end = (200.0, 200.0, 0.0)
-        _pos, _terrain, is_penalty = sim._handle_shot_penalty(
-            start, end, TerrainType.WATER, hole
-        )
+        _pos, _terrain, is_penalty = sim._handle_shot_penalty(start, end, TerrainType.WATER, hole)
         assert is_penalty
 
     def test_penalty_drop_at_80_percent_of_shot_vector(self):
