@@ -71,3 +71,8 @@
 **Vulnerability:** DOM-based XSS via `innerHTML` used with template literals in the model info panel of the grip angle simulator.
 **Learning:** Using `innerHTML` to construct DOM elements by interpolating variables is brittle and introduces XSS risks, even if the current inputs appear safe.
 **Prevention:** To prevent DOM-based XSS when constructing DOM elements dynamically, always use native DOM methods like `document.createElement()` and securely assign properties via `textContent` instead of `innerHTML`.
+
+## 2026-06-11 - Prevent DOM-based XSS in grip angle simulator
+**Vulnerability:** DOM-based XSS risk via `.innerHTML` used to update inertia display and clear containers in `src/tools/wrist_universal_joint/grip_angle_simulator.html`.
+**Learning:** Using `.innerHTML` to update or clear DOM containers is a brittle anti-pattern that introduces XSS risks and violates strict security policies, even when the inputs appear safe (e.g., numbers from `toFixed()`).
+**Prevention:** Always use native DOM APIs such as `.textContent` or `.appendChild(document.createTextNode(...))` to safely update text content or clear elements, avoiding `.innerHTML` entirely.

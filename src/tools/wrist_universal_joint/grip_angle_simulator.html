@@ -547,8 +547,11 @@
             document.getElementById('cg-value').textContent = cg.toFixed(2);
 
             const [I_alpha, I_gamma] = calculateInertia(clubhead, shaft, length, cg);
-            document.getElementById('inertia-display').innerHTML = 
-                `Iα = ${I_alpha.toFixed(4)} kg·m²<br>Iγ = ${I_gamma.toFixed(4)} kg·m²`;
+            const inertiaDisplay = document.getElementById('inertia-display');
+            inertiaDisplay.textContent = '';
+            inertiaDisplay.appendChild(document.createTextNode(`Iα = ${I_alpha.toFixed(4)} kg·m²`));
+            inertiaDisplay.appendChild(document.createElement('br'));
+            inertiaDisplay.appendChild(document.createTextNode(`Iγ = ${I_gamma.toFixed(4)} kg·m²`));
 
             updateAll();
         }
@@ -689,7 +692,7 @@
         function updateSignalCheckboxes() {
             const plotType = document.getElementById('plot-type').value;
             const container = document.getElementById('signal-checkboxes');
-            container.innerHTML = '';
+            container.textContent = '';
 
             if (plotType === 'torque') {
                 addCheckbox(container, 'show-input', 'Input Torque', true);
@@ -1223,7 +1226,7 @@
             const wrist_label = wrist_angle > 0 ? 'radial' : (wrist_angle < 0 ? 'ulnar' : 'neutral');
 
             const container = document.getElementById('model-info');
-            container.innerHTML = '';
+            container.textContent = '';
 
             const createInfoItem = (title, lines) => {
                 const div = document.createElement('div');
