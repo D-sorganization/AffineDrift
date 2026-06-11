@@ -34,10 +34,20 @@ class TestGolfClub:
     def test_typical_distance_yards_monotone_decreasing(self):
         """Carry distances must be strictly decreasing from driver to lob wedge (#3272)."""
         ordered = [
-            ClubType.DRIVER, ClubType.THREE_WOOD, ClubType.FIVE_WOOD,
-            ClubType.THREE_IRON, ClubType.FOUR_IRON, ClubType.FIVE_IRON,
-            ClubType.SIX_IRON, ClubType.SEVEN_IRON, ClubType.EIGHT_IRON,
-            ClubType.NINE_IRON, ClubType.PW, ClubType.GW, ClubType.SW, ClubType.LW,
+            ClubType.DRIVER,
+            ClubType.THREE_WOOD,
+            ClubType.FIVE_WOOD,
+            ClubType.THREE_IRON,
+            ClubType.FOUR_IRON,
+            ClubType.FIVE_IRON,
+            ClubType.SIX_IRON,
+            ClubType.SEVEN_IRON,
+            ClubType.EIGHT_IRON,
+            ClubType.NINE_IRON,
+            ClubType.PW,
+            ClubType.GW,
+            ClubType.SW,
+            ClubType.LW,
         ]
         club_map = {c.club_type: c for c in STANDARD_CLUBS}
         distances = [club_map[ct].typical_distance_yards for ct in ordered]
@@ -83,9 +93,9 @@ class TestLaunchConditions:
             sidespin=0.0,
         )
         state = lc.to_ball_flight_state()
-        assert pytest.approx(state.spin[1], abs=1e-9) == -280.0, (
-            "backspin at launch_direction=0 must be -280 (negative wy) for upward Magnus"
-        )
+        assert (
+            pytest.approx(state.spin[1], abs=1e-9) == -280.0
+        ), "backspin at launch_direction=0 must be -280 (negative wy) for upward Magnus"
         assert pytest.approx(state.spin[0], abs=1e-9) == 0.0
         assert pytest.approx(state.spin[2], abs=1e-9) == 0.0
 
@@ -107,9 +117,9 @@ class TestLaunchConditions:
             carry = float(np.sqrt(pos[0] ** 2 + pos[1] ** 2))
             carries.append(carry)
         # All carry distances should agree within 1 m
-        assert max(carries) - min(carries) < 1.0, (
-            f"Carry varies by direction: {carries} — spin rotation is direction-dependent"
-        )
+        assert (
+            max(carries) - min(carries) < 1.0
+        ), f"Carry varies by direction: {carries} — spin rotation is direction-dependent"
 
     def test_driver_carry_regression(self):
         """Driver via LaunchConditions must carry 150-280 m after spin fix (#3266 #3274).
@@ -129,8 +139,12 @@ class TestLaunchConditions:
         traj = BallFlightDynamics().simulate(state)
         carry_m = float(traj[-1].position[0])
         apex_m = max(s.position[2] for s in traj)
-        assert 150 < carry_m < 280, f"Driver carry {carry_m:.1f} m outside expected range [150, 280]"
-        assert apex_m > 15, f"Driver apex {apex_m:.1f} m too low — Magnus force likely still inverted"
+        assert (
+            150 < carry_m < 280
+        ), f"Driver carry {carry_m:.1f} m outside expected range [150, 280]"
+        assert (
+            apex_m > 15
+        ), f"Driver apex {apex_m:.1f} m too low — Magnus force likely still inverted"
 
 
 class TestClubBag:
