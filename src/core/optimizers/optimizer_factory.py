@@ -26,9 +26,20 @@ def ilqr_solver_wrapper(
     eps_residual: float = 1e-3,
     max_iters: int = 50,
     compute_hessian_bound_func: Any = None,
+    dt: float = 0.01,
 ) -> tuple[NDArray, NDArray, NDArray]:
     """
     Wrapper around ILQRSolver to match the DDP mock signature.
+
+    Args:
+        f: Dynamics function f(x, u) -> dx/dt.
+        x0: Initial state vector.
+        xf: Target state vector.
+        u_init: Initial control trajectory.
+        eps_residual: Convergence tolerance (maps to iLQR tol).
+        max_iters: Maximum solver iterations.
+        compute_hessian_bound_func: Unused; present for API compatibility.
+        dt: Integration timestep in seconds (forwarded to the iLQR solver).
     """
     require(callable(f), "dynamics function f must be callable")
     check_finite_array(x0, "x0")
@@ -37,8 +48,8 @@ def ilqr_solver_wrapper(
     require(len(u_init) > 0, "u_init must not be empty")
     check_positive(eps_residual, "eps_residual")
     require(max_iters >= 1, "max_iters must be >= 1", max_iters)
+    check_positive(dt, "dt")
     solver = ILQRSolver()
-    dt = 0.01  # default dt, adaptive timestep might be needed but simple fixed is fine
     x_traj, u_traj, t_traj = solver.optimize(
         dynamics_fn=f, x0=x0, xf=xf, u_init=u_init, dt=dt, max_iters=max_iters, tol=eps_residual
     )
