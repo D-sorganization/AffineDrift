@@ -4,6 +4,7 @@ import numpy as np
 import pytest
 
 from src.core.constants import GRAVITY_M_S2
+from src.core.contracts import ContractViolationError
 from src.golf_simulation.ball_flight import BallFlightDynamics, BallFlightState
 
 
@@ -106,6 +107,24 @@ class TestBallFlightDynamics:
         trajectory = bfd.simulate(initial, dt=0.005)
         final_z = trajectory[-1].position[2]
         assert final_z <= 0.1  # Should be near ground
+
+    def test_nan_initial_velocity_raises(self):
+        """BallFlightState must reject NaN velocity components (#3285)."""
+        with pytest.raises(ContractViolationError):
+            BallFlightState(
+                position=np.zeros(3),
+                velocity=np.array([float("nan"), 0.0, 10.0]),
+                spin=np.zeros(3),
+            )
+
+    def test_nan_initial_position_raises(self):
+        """BallFlightState must reject NaN position components (#3285)."""
+        with pytest.raises(ContractViolationError):
+            BallFlightState(
+                position=np.array([float("nan"), 0.0, 0.0]),
+                velocity=np.array([50.0, 0.0, 15.0]),
+                spin=np.zeros(3),
+            )
 
     def test_linearize_returns_correct_shapes(self):
         bfd = BallFlightDynamics()
