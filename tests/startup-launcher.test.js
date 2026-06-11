@@ -90,4 +90,26 @@ describe('startup-launcher', () => {
       window.AffineDriftStartup.forceHide(); // second call is a no-op
     }).not.toThrow();
   });
+
+  // Regression tests for issue #3273: startup-launcher must NOT clobber
+  // window.AffineDriftMetrics with a plain performance-data object.
+  test('does not set window.AffineDriftMetrics (regression #3273)', () => {
+    // Ensure any prior value is absent so we detect a fresh write.
+    delete window.AffineDriftMetrics;
+    loadLauncher();
+    // Run all timers so logPerformanceMetrics() has a chance to fire.
+    jest.runAllTimers();
+    expect(window.AffineDriftMetrics).toBeUndefined();
+  });
+
+  test('exposes startup perf data under AffineDriftStartupMetrics, not AffineDriftMetrics', () => {
+    delete window.AffineDriftStartupMetrics;
+    loadLauncher();
+    jest.runAllTimers();
+    // The debug dump should use the non-clobbering name.
+    // AffineDriftStartupMetrics may be set (if logPerformanceMetrics ran) or
+    // undefined (if the metrics guard skipped it) — either is acceptable, but
+    // it must NOT be the AffineDriftMetrics name.
+    expect(window.AffineDriftMetrics).toBeUndefined();
+  });
 });

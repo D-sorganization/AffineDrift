@@ -67,11 +67,14 @@ page-layout: full
   // Set data URL relative to this page's location so it works from /resources/
   window.BIBLIOGRAPHY_DATA_URL = "../data/bibliography.json";
 </script>
+<!-- metrics.js must load before bibliography.js so AffineDriftMetrics API is
+     available. It uses an IIFE+CommonJS shim, so plain script (not type="module"). -->
+<script src="../js/metrics.js"></script>
 <script src="../js/bibliography.js"></script>
 <script>
   // Render metrics widget when page loads
   document.addEventListener('DOMContentLoaded', function() {
-    if (window.AffineDriftMetrics) {
+    if (typeof window.AffineDriftMetrics?.renderStatsWidget === 'function') {
       setTimeout(function() {
         window.AffineDriftMetrics.renderStatsWidget('metrics-widget');
       }, 500);
