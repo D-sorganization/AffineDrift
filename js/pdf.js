@@ -3,7 +3,7 @@
  * Handles PDF download and print functionality
  */
 
-import { MATHJAX_RENDER_DELAY_MS } from "./utils.js";
+import { MATHJAX_RENDER_DELAY_MS, escapeHtml } from "./utils.js";
 
 /**
  * Initialize PDF download button
@@ -48,17 +48,6 @@ export function preparePDFPrint() {
         printTitleBlock = document.createElement("div");
         printTitleBlock.className = "print-title-block";
         printTitleBlock.style.display = "none";
-
-        // Escape HTML to prevent XSS from document.title
-        const escapeHtml = (text) => {
-            if (text == null) return "";
-            return String(text)
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#39;");
-        };
 
         printTitleBlock.innerHTML = `
       <h1>${escapeHtml(pageTitle)}</h1>

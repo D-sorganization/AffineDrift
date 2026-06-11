@@ -32,24 +32,29 @@
     sort: "relevance",
   };
 
-  const debounce = (fn, waitMs) => {
-    let timeout;
-    return (...args) => {
-      window.clearTimeout(timeout);
-      timeout = window.setTimeout(() => fn(...args), waitMs);
-    };
-  };
-
-  // ⚡ Bolt Optimization: Use Regex string replacement instead of DOM creation for escapeHtml to avoid layout thrashing and reduce memory allocations (~8-10x faster)
-  const escapeHtml = (value) => {
-    if (value == null) return "";
-    return String(value)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#39;");
-  };
+  // Use canonical implementations from utils.js (exposed via window.AffineDriftUtils by
+  // main.js before this script runs). Inline fallbacks keep Jest / Node test environments
+  // working where the ES-module globals are not loaded.
+  const debounce = (window.AffineDriftUtils && window.AffineDriftUtils.debounce)
+    ? window.AffineDriftUtils.debounce
+    : (fn, waitMs) => {
+        let timeout;
+        return (...args) => {
+          window.clearTimeout(timeout);
+          window.setTimeout(() => fn(...args), waitMs);
+        };
+      };
+  const escapeHtml = (window.AffineDriftUtils && window.AffineDriftUtils.escapeHtml)
+    ? window.AffineDriftUtils.escapeHtml
+    : (value) => {
+        if (value == null) return "";
+        return String(value)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      };
 
   const entrySearchText = (entry) => entry._searchText;
 

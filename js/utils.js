@@ -120,3 +120,23 @@ export function updateOffsets() {
     HEADER_OFFSET = getScrollOffset();
     TOC_SCROLL_OFFSET = HEADER_OFFSET;
 }
+
+/**
+ * Escape HTML special characters to prevent XSS
+ * @param {*} value - Value to escape
+ * @returns {string} Escaped string
+ */
+export function escapeHtml(value) {
+    if (value == null) return "";
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
+// Expose helpers to classic (non-module) scripts via a global namespace
+if (typeof window !== "undefined") {
+    window.AffineDriftUtils = { escapeHtml, debounce };
+}
