@@ -18,7 +18,7 @@
 
   // Configuration
   const CONFIG = {
-    MINIMUM_SPLASH_DURATION: 800,    // Minimum time to show splash (ms)
+    MINIMUM_SPLASH_DURATION: 0,      // Minimum time to show splash (ms)
     MAXIMUM_SPLASH_DURATION: 5000,   // Maximum time before force-hiding splash (ms)
     PROGRESS_ANIMATION_SPEED: 50,    // Progress bar animation interval (ms)
     ENABLE_METRICS: true,            // Log performance metrics to console
@@ -61,6 +61,11 @@
    * This runs immediately when the script loads
    */
   function init() {
+    try {
+      if (sessionStorage.getItem('ad_splash_shown')) { return; }
+      sessionStorage.setItem('ad_splash_shown', '1');
+    } catch (_) { /* storage disabled */ }
+
     metrics.splashShown = performance.now();
 
     // Create and inject splash screen immediately
@@ -133,7 +138,7 @@
         </div>
 
         <div class="ad-splash-hints" id="ad-splash-hints">
-          <span class="ad-splash-hint">Loading resources (Click to skip)</span>
+          <span class="ad-splash-hint">Loading resources (Click or press Esc to skip)</span>
         </div>
       </div>
     `;
@@ -158,6 +163,14 @@
     // Add dismissibility
     splash.addEventListener('click', forceHideSplash);
     splash.style.cursor = 'pointer';
+
+    const _kbDismiss = (e) => {
+      if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+        forceHideSplash();
+        document.removeEventListener('keydown', _kbDismiss);
+      }
+    };
+    document.addEventListener('keydown', _kbDismiss);
 
     log('Splash screen created');
   }
