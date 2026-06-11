@@ -21,7 +21,13 @@ from typing import Any
 import numpy as np
 
 from src.core.constants import GRAVITY_M_S2
-from src.core.contracts import ContractViolationError, check_finite_array, check_non_negative, check_positive, require
+from src.core.contracts import (
+    ContractViolationError,
+    check_finite_array,
+    check_non_negative,
+    check_positive,
+    require,
+)
 from src.tangent_models.examples import DynamicalSystem
 
 logger = logging.getLogger(__name__)
@@ -342,7 +348,8 @@ class BallFlightDynamics(DynamicalSystem):
             if not np.all(np.isfinite(state_vec)):
                 raise ContractViolationError(
                     "invariant",
-                    "ball flight state became non-finite (unstable integration; reduce dt or check initial conditions)",
+                    "ball flight state became non-finite"
+                    " (unstable integration; reduce dt or check initial conditions)",
                     state_vec,
                 )
             trajectory.append(self._state_from_vector(state_vec))
