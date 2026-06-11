@@ -107,6 +107,7 @@ def _initialize_ddp_trajectory(
     f: Callable[[np.ndarray[Any, Any], np.ndarray[Any, Any]], np.ndarray[Any, Any]],
     x0: np.ndarray[Any, Any],
     u_init: np.ndarray[Any, Any],
+    dt: float = DEFAULT_DT_INIT,
 ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any], np.ndarray[Any, Any]]:
     """Initialize DDP trajectory with a uniform timestep grid.
 
@@ -114,13 +115,14 @@ def _initialize_ddp_trajectory(
         f: Dynamics function f(x, u).
         x0: Initial state vector.
         u_init: Initial control trajectory.
+        dt: Integration timestep in seconds.
 
     Returns:
         Tuple of (u_traj, x_traj, t) on a uniform initial grid.
     """
     u_traj = np.array(u_init)
     N = len(u_traj)
-    t = np.linspace(0, N * DEFAULT_DT_INIT, N + 1)
+    t = np.linspace(0, N * dt, N + 1)
     x_traj = _simulate_trajectory(f, x0, u_traj, t)
     return u_traj, x_traj, t
 
@@ -167,6 +169,7 @@ def adaptive_timestep_ddp_mock(
     compute_hessian_bound_func: Callable[
         [Callable[..., np.ndarray[Any, Any]], np.ndarray[Any, Any], np.ndarray[Any, Any]], float
     ] = compute_hessian_bound,
+    dt: float = DEFAULT_DT_INIT,
 ) -> tuple[np.ndarray[Any, Any], np.ndarray[Any, Any], np.ndarray[Any, Any]]:
     """DDP with curvature-adaptive timestep selection.
 
@@ -183,6 +186,7 @@ def adaptive_timestep_ddp_mock(
         eps_residual: Maximum acceptable residual
         max_iters: Maximum DDP iterations
         compute_hessian_bound_func: Function M(x, u) returning local Hessian bound
+        dt: Integration timestep in seconds (used for the initial uniform grid).
 
     Returns:
         Tuple of (x_traj, u_traj, t_traj).
@@ -196,8 +200,9 @@ def adaptive_timestep_ddp_mock(
     check_positive(eps_residual, "eps_residual")
     require(max_iters >= 1, "max_iters must be >= 1", max_iters)
     require(len(u_init) > 0, "u_init must not be empty")
+    check_positive(dt, "dt")
 
-    u_traj, x_traj, t = _initialize_ddp_trajectory(f, x0, u_init)
+    u_traj, x_traj, t = _initialize_ddp_trajectory(f, x0, u_init, dt=dt)
 
     for _iteration in range(max_iters):
         u_traj, x_traj, t = _run_ddp_iteration(

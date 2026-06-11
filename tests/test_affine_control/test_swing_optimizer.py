@@ -6,6 +6,7 @@ This module provides 25+ tests covering:
 - Cost computation (zero control, known values, symmetry)
 - Optimization with simple dynamics (double integrator)
 - Convergence behavior and edge cases
+- dt forwarding through the solver pipeline (issue #3288)
 """
 
 from __future__ import annotations
@@ -32,7 +33,7 @@ from src.affine_control.swing_optimizer import (
 )
 from src.core.contracts import ContractViolationError
 
-# ── Helper dynamics functions ───────────────────────────────────────────────
+# -- Helper dynamics functions -----------------------------------------------
 
 
 def double_integrator_1dof(
@@ -62,7 +63,7 @@ def double_integrator_3dof(
     return np.concatenate([dq, ddq])
 
 
-# ── Config validation tests ─────────────────────────────────────────────────
+# -- Config validation tests -------------------------------------------------
 
 
 class TestSwingOptimizationConfig(unittest.TestCase):
@@ -158,7 +159,7 @@ class TestSwingOptimizationConfig(unittest.TestCase):
             config.n_joints = 5  # type: ignore[misc]
 
 
-# ── Result validation tests ─────────────────────────────────────────────────
+# -- Result validation tests -------------------------------------------------
 
 
 class TestSwingOptimizationResult(unittest.TestCase):
@@ -251,7 +252,7 @@ class TestSwingOptimizationResult(unittest.TestCase):
             )
 
 
-# ── Cost computation tests ──────────────────────────────────────────────────
+# -- Cost computation tests --------------------------------------------------
 
 
 class TestSwingOptimizerCost(unittest.TestCase):
@@ -377,7 +378,7 @@ class TestSwingOptimizerCost(unittest.TestCase):
         self.assertAlmostEqual(total, expected, places=10)
 
 
-# ── Optimizer integration tests ─────────────────────────────────────────────
+# -- Optimizer integration tests ---------------------------------------------
 
 
 class TestSwingOptimizerOptimize(unittest.TestCase):
@@ -521,7 +522,7 @@ class TestSwingOptimizerOptimize(unittest.TestCase):
         self.assertIsInstance(optimizer, SwingOptimizer)
 
 
-# ── Property and accessor tests ─────────────────────────────────────────────
+# -- Property and accessor tests ---------------------------------------------
 
 
 class TestSwingOptimizerProperties(unittest.TestCase):
@@ -580,6 +581,116 @@ class TestSwingOptimizerProperties(unittest.TestCase):
         optimizer = SwingOptimizer(config)
         R = optimizer.R
         np.testing.assert_array_almost_equal(R, np.zeros((2, 2)))
+
+
+# -- dt forwarding tests (issue #3288) ----------------------------------------
+
+
+class TestSwingOptimizerDtForwarding(unittest.TestCase):
+    """Verify that config.dt is threaded through to the solver integrators."""
+
+    def _make_spy_solver(self, captured: list[dict[str, Any]]):
+        """Return a spy solver that records kwargs and delegates to the real mock."""
+
+        def spy_solver(**kwargs: Any):
+            captured.append(dict(kwargs))
+            from src.affine_control.ddp import adaptive_timestep_ddp_mock
+
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore", UserWarning)
+                return adaptive_timestep_ddp_mock(
+                    f=kwargs["f"],
+                    x0=kwargs["x0"],
+                    xf=kwargs["xf"],
+                    u_init=kwargs["u_init"],
+                    eps_residual=kwargs.get("eps_residual", 1e-3),
+                    max_iters=kwargs.get("max_iters", 1),
+                    dt=kwargs.get("dt", 0.01),
+                )
+
+        return spy_solver
+
+    def test_solver_receives_config_dt(self) -> None:
+        """_execute_ddp_step must forward config.dt to the solver as 'dt'."""
+        target_dt = 0.05
+        captured: list[dict[str, Any]] = []
+        config = SwingOptimizationConfig(
+            n_joints=1,
+            horizon_steps=5,
+            max_iterations=1,
+            dt=target_dt,
+            allow_mock_solver=True,
+        )
+        optimizer = SwingOptimizer(config, ddp_solver=self._make_spy_solver(captured))
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", UserWarning)
+            optimizer.optimize(np.zeros(2), double_integrator_1dof)
+
+        self.assertTrue(len(captured) > 0, "spy solver was never called")
+        for call_kwargs in captured:
+            self.assertIn("dt", call_kwargs, "solver was not passed 'dt'")
+            self.assertAlmostEqual(
+                call_kwargs["dt"],
+                target_dt,
+                places=10,
+                msg=f"dt forwarded as {call_kwargs['dt']!r}, expected {target_dt}",
+            )
+
+    def test_cost_scaling_uses_actual_step_dts(self) -> None:
+        """compute_trajectory_cost with step_dts must differ from uniform-dt cost."""
+        config = SwingOptimizationConfig(
+            n_joints=2,
+            control_weight=1.0,
+            target_velocity=10.0,
+            terminal_weight=0.0,  # suppress terminal cost
+            allow_mock_solver=True,
+        )
+        optimizer = SwingOptimizer(config)
+
+        traj = [np.zeros(4) for _ in range(6)]  # 5 steps, 6 states
+        ctrls = [np.array([1.0, 1.0]) for _ in range(5)]
+
+        # config.dt = 0.01, so uniform cost uses 5 * 0.01 = 0.05 total dt weight
+        uniform_cost = optimizer.compute_trajectory_cost(traj, ctrls)
+
+        # Non-uniform step_dts with a different sum (0.10) -> different cost
+        non_uniform_dts = np.array([0.02, 0.02, 0.02, 0.02, 0.02])
+        non_uniform_cost = optimizer.compute_trajectory_cost(traj, ctrls, step_dts=non_uniform_dts)
+
+        self.assertNotAlmostEqual(
+            uniform_cost,
+            non_uniform_cost,
+            places=5,
+            msg="Non-uniform step_dts should produce a different cost than uniform config.dt",
+        )
+
+    def test_compute_trajectory_cost_step_dts_wrong_length_rejected(self) -> None:
+        """step_dts with wrong length must raise ContractViolationError."""
+        config = SwingOptimizationConfig(n_joints=1, allow_mock_solver=True)
+        optimizer = SwingOptimizer(config)
+
+        traj = [np.zeros(2) for _ in range(4)]
+        ctrls = [np.zeros(1) for _ in range(3)]
+        bad_dts = np.array([0.01, 0.01])  # length 2, need 3
+
+        with self.assertRaises(ContractViolationError):
+            optimizer.compute_trajectory_cost(traj, ctrls, step_dts=bad_dts)
+
+    def test_optimize_with_custom_dt_completes(self) -> None:
+        """Full optimize() with config.dt=0.05 should complete without error."""
+        config = SwingOptimizationConfig(
+            n_joints=1,
+            horizon_steps=5,
+            max_iterations=2,
+            dt=0.05,
+            allow_mock_solver=True,
+        )
+        optimizer = SwingOptimizer(config)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore", UserWarning)
+            result = optimizer.optimize(np.zeros(2), double_integrator_1dof)
+        self.assertIsInstance(result, SwingOptimizationResult)
+        self.assertGreaterEqual(result.cost, 0.0)
 
 
 if __name__ == "__main__":
