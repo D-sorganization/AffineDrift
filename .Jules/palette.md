@@ -87,6 +87,6 @@
 ## 2026-06-10 - Native Tooltips for Social Links
 **Learning:** Sighted mouse users lack context for icon-only social links that rely solely on `aria-label`. Adding `title` attributes provides native tooltips, clarifying the destination.
 **Action:** Always pair `aria-label` with a `title` attribute on icon-only social links to ensure both accessibility and visual UX.
-## 2026-06-11 - Dynamic Aria Labels and Titles for Collapsible Elements
-**Learning:** Collapsible elements that lack dynamic `aria-label` or `title` values provide inadequate feedback to screen reader users, confusing their context.
-**Action:** Always update both the `aria-label` and `title` dynamically alongside `aria-expanded` state changes to ensure full accessibility support and clearer visual tooltips.
+## 2026-06-11 - Dynamic ARIA Labels on Collapsible Components
+**Learning:** Collapsible accordion and custom toggle headers in `ui-components.js` were missing dynamic `aria-label` updates alongside their `title` attributes, causing screen readers to lack context about the explicit action (Expand/Collapse) when interacting with these components.
+**Action:** Always pair dynamic `title` updates with dynamic `aria-label` updates on interactive headers (like accordions and custom corners) based on their `aria-expanded` state.
