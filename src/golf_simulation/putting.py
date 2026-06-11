@@ -246,6 +246,13 @@ class PuttingSimulator:
             List of (x, y) position tuples along the ball's path.
         """
         check_positive(max_time, "max_time")
+        for _name, _v in (
+            ("start_x", start_x),
+            ("start_y", start_y),
+            ("velocity_x", velocity_x),
+            ("velocity_y", velocity_y),
+        ):
+            require(math.isfinite(_v), f"{_name} must be finite", _v)
 
         x = start_x
         y = start_y
