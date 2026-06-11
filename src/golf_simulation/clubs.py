@@ -121,12 +121,24 @@ class LaunchConditions:
         """Validate launch conditions."""
         check_positive(self.ball_speed, "ball_speed")
         # Plausibility cap: fastest real ball ~95 m/s; >120 suggests mph or km/h confusion
-        require(self.ball_speed < 120.0, "ball_speed must be m/s (< 120 m/s); check for mph/km/h", self.ball_speed)
+        require(
+            self.ball_speed < 120.0,
+            "ball_speed must be m/s (< 120 m/s); check for mph/km/h",
+            self.ball_speed,
+        )
         check_range(self.launch_angle, -math.pi / 2, math.pi / 2, "launch_angle (radians)")
         check_range(self.launch_direction, -2 * math.pi, 2 * math.pi, "launch_direction (radians)")
         # Plausibility cap: max real golf backspin ~13000 RPM = ~1360 rad/s; >2000 suggests RPM
-        require(abs(self.backspin) < 2000.0, "backspin must be rad/s (|w| < 2000); check for RPM", self.backspin)
-        require(abs(self.sidespin) < 2000.0, "sidespin must be rad/s (|w| < 2000); check for RPM", self.sidespin)
+        require(
+            abs(self.backspin) < 2000.0,
+            "backspin must be rad/s (|w| < 2000); check for RPM",
+            self.backspin,
+        )
+        require(
+            abs(self.sidespin) < 2000.0,
+            "sidespin must be rad/s (|w| < 2000); check for RPM",
+            self.sidespin,
+        )
 
     def to_ball_flight_state(self) -> BallFlightState:
         """Convert launch conditions to a BallFlightState at the origin.
