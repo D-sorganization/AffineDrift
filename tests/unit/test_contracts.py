@@ -75,6 +75,10 @@ class TestRequire:
         with pytest.raises(ContractViolationError, match="pre-condition"):
             require(False, "value must be positive", -1)
 
+    def test_raises_precondition_error_subclass(self) -> None:
+        with pytest.raises(PreconditionError):
+            require(False, "must be positive", -1)
+
     def test_skipped_when_off(self) -> None:
         set_contract_level(ContractLevel.OFF)
         require(False, "should not raise")
@@ -94,6 +98,10 @@ class TestEnsure:
         with pytest.raises(ContractViolationError, match="post-condition"):
             ensure(False, "result must be finite", float("nan"))
 
+    def test_raises_postcondition_error_subclass(self) -> None:
+        with pytest.raises(PostconditionError):
+            ensure(False, "result must be finite", float("nan"))
+
 
 class TestInvariant:
     """Tests for the invariant() function."""
@@ -103,6 +111,10 @@ class TestInvariant:
 
     def test_raises_on_false(self) -> None:
         with pytest.raises(ContractViolationError, match="invariant"):
+            invariant(False, "state must be consistent", -10)
+
+    def test_raises_invariant_error_subclass(self) -> None:
+        with pytest.raises(InvariantError):
             invariant(False, "state must be consistent", -10)
 
 
@@ -125,6 +137,14 @@ class TestPreconditionDecorator:
             return x**0.5
 
         with pytest.raises(ContractViolationError, match="pre-condition"):
+            sqrt(-1.0)
+
+    def test_raises_precondition_error_subclass(self) -> None:
+        @precondition(lambda x: x > 0, "x must be positive")
+        def sqrt(x: float) -> float:
+            return x**0.5
+
+        with pytest.raises(PreconditionError):
             sqrt(-1.0)
 
 
