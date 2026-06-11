@@ -301,6 +301,8 @@ describe("Metrics Module", () => {
   });
 
   describe("escapeHtml", () => {
+    // escapeHtml is now sourced from the canonical utils.js implementation
+    // via window.AffineDriftUtils.escapeHtml (deduplication: issue #3291)
     test("should escape HTML special characters", () => {
       expect(escapeHtml('<script>alert("xss")</script>')).toBe(
         '&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt;',
@@ -313,6 +315,34 @@ describe("Metrics Module", () => {
 
     test("should escape ampersands", () => {
       expect(escapeHtml("foo & bar")).toBe("foo &amp; bar");
+    });
+
+    test("should escape single quotes", () => {
+      expect(escapeHtml("it's a test")).toBe("it&#39;s a test");
+    });
+
+    test("should handle null and undefined", () => {
+      expect(escapeHtml(null)).toBe("");
+      expect(escapeHtml(undefined)).toBe("");
+    });
+
+    test("should handle numeric values", () => {
+      expect(escapeHtml(42)).toBe("42");
+    });
+
+    test("should use window.AffineDriftUtils.escapeHtml when available", () => {
+      const spy = jest.fn(() => "UTILS_ESCAPE");
+      const savedUtils = window.AffineDriftUtils;
+      window.AffineDriftUtils = { escapeHtml: spy, debounce: jest.fn() };
+
+      jest.resetModules();
+      const { escapeHtml: freshEscape } = require("../js/metrics.js");
+      freshEscape("<test>");
+
+      expect(spy).toHaveBeenCalledWith("<test>");
+
+      window.AffineDriftUtils = savedUtils;
+      jest.resetModules();
     });
   });
 
