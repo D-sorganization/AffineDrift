@@ -42,7 +42,7 @@ AffineDrift is a research platform that explores golf swing biomechanics through
 
 - Model golf swings as affine controllable systems with mathematical rigor, enabling optimization through advanced control algorithms
 - Publish and maintain research-quality educational content via Quarto website (AffineDrift.com) on GitHub Pages
-- Implement swing trajectory optimization using differential dynamic programming (DDP) and iLQR solvers
+- Swing trajectory optimization using iLQR (implemented); DDP backward pass pending implementation (gated mock)
 - Model golf-ball flight with velocity-dependent drag and spin-dependent Magnus lift using the standard projected-area aerodynamic formulation
 - Achieve and maintain >50% test coverage with property-based testing (Hypothesis) across all critical modules
 - Maintain opt-in performance benchmarks for stable computational paths without slowing routine CI
@@ -69,22 +69,28 @@ AffineDrift/
 ├── PARAMETERS.md       # Canonical parameters reference table
 ├── src/
 │   ├── affine_control/          # Swing optimization and control algorithms
-│   │   ├── swing_optimizer.py   # DDP and iLQR solvers for swing trajectories
-│   │   ├── ddp_solver.py        # Differential dynamic programming implementation
+│   │   ├── swing_optimizer.py   # iLQR-based trajectory optimization for golf swings
+│   │   ├── ddp.py               # DDP mock (non-functional placeholder; iLQR is the active optimizer)
 │   │   ├── residuals.py         # Optimization residual calculations
 │   │   └── swing_types.py       # Swing model definitions and types
 │   ├── core/                    # Foundational abstractions and utilities
 │   │   ├── constants.py         # Physical and mathematical constants
-│   │   ├── contracts.py         # Design-by-contract specifications
-│   │   ├── optimizers.py        # iLQR optimizer implementations
+│   │   ├── contracts/           # Design-by-contract specifications (definitions.py, validators.py)
+│   │   ├── optimizers/          # iLQR optimizer implementations (ilqr_solver.py, optimizer_factory.py)
 │   │   └── protocols.py         # Type protocols and interfaces
-│   └── tangent_models/          # Tangent space and hyperplane methods
-│       ├── tangent_space.py     # Tangent space mathematics
-│       └── examples.py          # Example implementations and tutorials
+│   ├── tangent_models/          # Tangent space and hyperplane methods
+│   │   └── examples.py          # Example implementations and tutorials
+│   └── golf_simulation/         # Golf ball flight and round simulation
+│       ├── ball_flight.py       # Aerodynamic ball flight integrator
+│       ├── clubs.py             # Club definitions and properties
+│       ├── course.py            # Course and hole geometry
+│       ├── putting.py           # Putting physics and Stimpmeter model
+│       ├── round_simulator.py   # Full round simulation
+│       └── terrain.py           # Terrain surface and bounce physics
 ├── src/tools/                   # CI/CD utilities and build tools
-│   ├── link_checker.py          # Validate links in documentation
-│   ├── site_health.py           # Monitor website health metrics
-│   └── code_quality_ast.py      # AST-based code quality analysis
+│   ├── check_links.py           # Validate links in documentation
+│   ├── check_site_health.py     # Monitor website health metrics
+│   └── code_quality_check.py    # AST-based code quality analysis
 ├── tests/                       # Test suite (80+ test files)
 │   ├── test_affine_control/     # Physics and optimization tests
 │   ├── test_core/               # Core module tests
@@ -94,9 +100,7 @@ AffineDrift/
 │   └── test_integration/        # Cross-module integration tests
 ├── benchmarks/                  # Opt-in pytest-benchmark performance suite
 ├── js/                          # JavaScript interactive features
-│   ├── rotation-converter/      # 3D rotation visualization
-│   ├── search.js                # Site search functionality
-│   └── interactive-viz.js       # Mathematical visualizations
+│   └── rotation-converter.js    # 3D rotation visualization and converter
 ├── css/                         # Canonical stylesheets (CSS budget enforced)
 │   ├── main.css                 # Primary stylesheet
 │   ├── typography.css           # Typography and layout
@@ -139,16 +143,17 @@ AffineDrift/
 
 | Component             | Location                                 | Purpose                                                     |
 | --------------------- | ---------------------------------------- | ----------------------------------------------------------- |
-| Swing Optimizer       | `src/affine_control/swing_optimizer.py`  | DDP and iLQR-based trajectory optimization for golf swings  |
-| DDP Solver            | `src/affine_control/ddp_solver.py`       | Core differential dynamic programming algorithm             |
+| Swing Optimizer       | `src/affine_control/swing_optimizer.py`  | iLQR-based trajectory optimization for golf swings          |
+| DDP Mock              | `src/affine_control/ddp.py`              | DDP mock (non-functional placeholder; iLQR is the active optimizer) |
 | Core Constants        | `src/core/constants.py`                  | Physical and mathematical constants used throughout         |
-| iLQR Optimizer        | `src/core/optimizers.py`                 | Iterative linear-quadratic regulation solver                |
+| iLQR Optimizer        | `src/core/optimizers/`                   | Iterative linear-quadratic regulation solver (ilqr_solver.py, optimizer_factory.py) |
+| Contracts             | `src/core/contracts/`                    | Design-by-contract specifications (definitions.py, validators.py) |
 | Tangent Space Models  | `src/tangent_models/`                    | Tangent space and hyperplane mathematical abstractions      |
-| Link Checker          | `src/tools/link_checker.py`              | CI/CD tool for validating documentation links               |
-| Site Health Monitor   | `src/tools/site_health.py`               | Automated website health and performance checks             |
-| Code Quality Analyzer | `src/tools/code_quality_ast.py`          | AST-based Python code quality analysis                      |
-| Rotation Converter    | `js/rotation-converter/`                 | Interactive 3D rotation visualization and converter         |
-| Search Functionality  | `js/search.js`                           | Full-text search across website content                     |
+| Golf Simulation       | `src/golf_simulation/`                   | Ball flight, club, course, terrain, putting, and round simulation |
+| Link Checker          | `src/tools/check_links.py`               | CI/CD tool for validating documentation links               |
+| Site Health Monitor   | `src/tools/check_site_health.py`         | Automated website health and performance checks             |
+| Code Quality Analyzer | `src/tools/code_quality_check.py`        | AST-based Python code quality analysis                      |
+| Rotation Converter    | `js/rotation-converter.js`               | Interactive 3D rotation visualization and converter         |
 | Quarto Configuration  | `_quarto.yml`                            | Website build and rendering configuration                   |
 | Container Build       | `Dockerfile`, `requirements-docker.lock` | Verified preview/runtime image build with provenance output |
 | Test Suite            | `tests/`                                 | 80+ pytest and Jest test files                              |
@@ -161,7 +166,7 @@ AffineDrift/
 | #   | Feature                                  | Status | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | --- | ---------------------------------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | F1  | Quarto Website Rendering and Deployment  | ✅     | Renders Quarto markdown (.qmd) source files into static HTML and deploys to GitHub Pages                                                                                                                                                                                                                                                                                                                                                                       |
-| F2  | Affine Control Theory Swing Optimizer    | ✅     | Implements DDP and iLQR algorithms to optimize golf swing trajectories as affine controllable systems                                                                                                                                                                                                                                                                                                                                                          |
+| F2  | Affine Control Theory Swing Optimizer    | ✅     | Implements iLQR solver with backward pass, regularization, line search; DDP is a gated mock (non-functional placeholder — backward pass and Riccati equation not implemented)                                                                                                                                                                                                                                                                                                                                                          |
 | F3  | Tangent Space and Hyperplane Models      | ✅     | Provides mathematical models for tangent space methods with educational examples                                                                                                                                                                                                                                                                                                                                                                               |
 | F4  | Interactive JavaScript Visualizations    | ✅     | Rotation converter, search interface, and mathematical visualization components                                                                                                                                                                                                                                                                                                                                                                                |
 | F5  | Mathematical Notation Rendering          | ✅     | Supports MathJax and KaTeX for rendering LaTeX equations in web content, with `ui/lazy` enabled for performance and LaTeX cleanup that preserves escaped percent signs while removing real comments                                                                                                                                                                                                                                                            |
@@ -207,7 +212,7 @@ AffineDrift/
 | F43 | Isolated benchmark CI environment        | ✅     | The performance benchmark workflow installs dependencies into a workflow-local virtual environment and guards PR comment/artifact steps when benchmark output is unavailable, keeping benchmark failures attributable to the benchmark command instead of shared runner state                                                                                                                                                                                  |
 | F44 | Production-readiness CI hardening        | ✅     | `ci-standard.yml` now treats mypy over `src/tools/` plus the production-readiness policy scripts, generated-agent-artifact checks, and GitHub Actions pinning checks as blocking quality gates, while the website-lint job fails on HTML validation errors instead of downgrading them to warnings.                                                                                                                                                            |
 | F45 | Optimizer and browser-state hardening    | ✅     | The core iLQR solver records `last_diagnostics` for convergence, iteration count, final cost, failure reason, and rollout/callback errors while preserving the existing return contract; dynamics outputs are validated for shape and finite values during rollout, linearization, and line search. Browser persistence helpers for history, metrics, and notes now delete corrupted `localStorage` payloads and bound notes recycle-bin retention to 30 days. |
-| F46 | Python 3.10 contract compatibility       | ✅     | `src/contracts.py` uses explicit `TypeVar`/`ParamSpec` declarations instead of Python 3.12+ PEP 695 type parameter syntax, restoring import compatibility for environments running Python 3.10 or 3.11. Ruff UP047 is suppressed with `# noqa: UP047` on the affected generic function definitions.                                                                                                                                                            |
+| F46 | Python 3.10 contract compatibility       | ✅     | `src/core/contracts/` uses explicit `TypeVar`/`ParamSpec` declarations instead of Python 3.12+ PEP 695 type parameter syntax, restoring import compatibility for environments running Python 3.10 or 3.11. Ruff UP047 is suppressed with `# noqa: UP047` on the affected generic function definitions.                                                                                                                                                         |
 | F47 | Website design primitives                | ✅     | The homepage and content architecture use canonical CSS primitives for site cards, buttons, section stacks, and sticky page sidebars so reusable layout semantics live in `css/components/` and `css/layout/` instead of one-off inline styles.                                                                                                                                                                                                                |
 | F48 | QMD style-discipline linting             | ✅     | `scripts/check_style_discipline.py` scans rendered-source `.qmd` files outside excluded generated/content directories and fails on inline `style=` attributes, gradient functions, or hardcoded hex colors, with unit tests covering clean files and each violation category.                                                                                                                                                                                |
 | F49 | Consolidated frontend dependency refresh | ✅     | The site frontend keeps Dependabot JavaScript and Python dependency refreshes together with navigation traversal and UI component optimizations, then regenerates committed `docs/` mirrors from the canonical frontend assets so production pages match source behavior.                                                                                                                                                                                      |
@@ -232,16 +237,15 @@ AffineDrift/
 
 **JavaScript API:**
 
-- `RotationConverter` — Interactive 3D rotation tool
+- `RotationConverter` — Interactive 3D rotation tool (`js/rotation-converter.js`)
   - `convert(matrix, target_format) -> string` — Convert rotation representations
-- `SearchIndex.query(term) -> SearchResults` — Full-text search across content
 - Browser persistence utilities must fail closed on corrupted `localStorage` JSON by removing invalid keys and returning empty/default state; notes recycle-bin entries are retained for 30 days before cleanup
 
 **CLI Tools:**
 
-- `link-checker.py` — Validate all documentation links
-- `site-health.py` — Generate health report on website assets
-- `code-quality-ast.py` — Analyze Python code structure and metrics
+- `src/tools/check_links.py` — Validate all documentation links
+- `src/tools/check_site_health.py` — Generate health report on website assets
+- `src/tools/code_quality_check.py` — Analyze Python code structure and metrics
 - `check_style_discipline.py` — Enforce QMD style-discipline rules that keep page styling in canonical CSS primitives
 - `scripts/cli_output.py` — Shared helper for scripts that intentionally emit user-facing stdout/stderr lines as part of their CLI contract
 
@@ -345,8 +349,8 @@ AffineDrift follows a **test pyramid** strategy: unit tests form the base (fast,
 ### Required Test Scenarios
 
 - [x] Unit creation with valid physics parameters returns expected optimization trajectory
-- [x] DDP solver converges on benchmark swing problems within tolerance
-- [x] iLQR solver produces lower-cost trajectories than initial guess
+- [ ] DDP backward pass convergence (not tested — DDP backward pass is a non-functional mock; only the environment gate and allow_mock_solver flag are tested)
+- [x] iLQR solver produces lower-cost trajectories than zero-control rollout
 - [x] Tangent space projections maintain mathematical properties (linearity, completeness)
 - [x] Quarto website renders without build errors
 - [x] CSS file size stays within enforced budget limits
@@ -355,7 +359,7 @@ AffineDrift follows a **test pyramid** strategy: unit tests form the base (fast,
 - [x] Interactive visualizations (rotation converter) load and function without JS errors
 - [x] Smoke tests on Chromium pass for critical pages
 - [x] Homepage Playwright checks verify the desktop three-column grid, closed raw HTML rendering, mobile sidebar-section toggles, and no horizontal overflow
-- [x] Property-based tests with Hypothesis verify DDP convergence across parameter ranges
+- [x] Property-based tests with Hypothesis verify iLQR optimizer behavior across parameter ranges
 - [x] Design-by-contract assertions enforce preconditions and postconditions
 - [x] Website `.qmd` citations resolve against project or page bibliography files, excluding Quarto cross-references such as `@eq-` and `@sec-`
 
@@ -457,9 +461,9 @@ python -m affine_control.swing_optimizer --config=example_swing.yaml
 quarto render
 
 # Running CI tools
-python src/tools/link_checker.py
-python src/tools/site_health.py
-python src/tools/code_quality_ast.py
+python src/tools/check_links.py
+python src/tools/check_site_health.py
+python src/tools/code_quality_check.py
 ```
 
 ### Build Artifacts
@@ -495,7 +499,7 @@ python src/tools/code_quality_ast.py
 - **Physical Accuracy**: Models assume rigid-body dynamics; soft-tissue deformation not modeled
 - **Browser Support**: Progressive Web App features require modern browsers (ES6+, Service Worker API)
 - **Content Rendering**: Complex 3D visualizations limited to JavaScript WebGL (no headless rendering)
-- **Optimization Convergence**: DDP solver may not converge for highly nonlinear swing models; iLQR is more robust but slower
+- **DDP Implementation**: DDP backward pass is not implemented (gated mock); iLQR is the active optimizer for swing trajectory optimization
 
 ## 12. Change Log
 
@@ -647,4 +651,5 @@ python src/tools/code_quality_ast.py
 | 2026-06-03 | 1.0.114 | perf(frontend): Consolidated multiple `.closest()` checks into a single comma-separated selector string in `script.js` to reduce CSS parsing overhead and JS-to-C++ boundary crossings. |
 | 2026-06-03 | 1.0.115 | fix(security): Prevent DOM-based XSS in grip angle simulator by refactoring info panel generation to use native DOM methods instead of `innerHTML`. |
 | 2026-06-03 | 1.0.116 | 🎨 Palette: Add dynamic `title` attributes to collapsible headers based on their `aria-expanded` state to improve accessibility. |
+| 2026-06-11 | 1.0.134 | fix(spec): Reconciled SPEC.md file paths and DDP/iLQR solver status (issues #3276, #3277). Corrected wrong paths: ddp_solver.py->ddp.py, contracts.py->contracts/, optimizers.py->optimizers/, link_checker.py->check_links.py, site_health.py->check_site_health.py, code_quality_ast.py->code_quality_check.py, rotation-converter/->rotation-converter.js; removed non-existent js/search.js and js/interactive-viz.js; added golf_simulation/ module map; updated Goals, F2, and test scenarios to reflect iLQR as active optimizer and DDP as non-functional gated mock. |
 | 2026-06-11 | 1.0.117 | fix(security): Prevent DOM-based XSS in grip angle simulator by refactoring inertia-display, updateSignalCheckboxes, and updateModelInfo to use native DOM methods instead of `innerHTML`. |
