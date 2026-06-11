@@ -8,13 +8,14 @@ based on distance and terrain.
 from __future__ import annotations
 
 import logging
+import math
 from dataclasses import dataclass
 from enum import Enum
 
 import numpy as np
 
 from src.core.constants import GRAVITY_M_S2
-from src.core.contracts import check_non_negative, check_positive, require
+from src.core.contracts import check_non_negative, check_positive, check_range, require
 from src.golf_simulation.ball_flight import BallFlightState
 from src.golf_simulation.terrain import TerrainType
 
@@ -127,6 +128,13 @@ class LaunchConditions:
     def __post_init__(self) -> None:
         """Validate launch conditions."""
         check_positive(self.ball_speed, "ball_speed")
+        # Plausibility cap: fastest real ball ~95 m/s; >120 suggests mph or km/h confusion
+        require(self.ball_speed < 120.0, "ball_speed must be m/s (< 120 m/s); check for mph/km/h", self.ball_speed)
+        check_range(self.launch_angle, -math.pi / 2, math.pi / 2, "launch_angle (radians)")
+        check_range(self.launch_direction, -2 * math.pi, 2 * math.pi, "launch_direction (radians)")
+        # Plausibility cap: max real golf backspin ~13000 RPM = ~1360 rad/s; >2000 suggests RPM
+        require(abs(self.backspin) < 2000.0, "backspin must be rad/s (|w| < 2000); check for RPM", self.backspin)
+        require(abs(self.sidespin) < 2000.0, "sidespin must be rad/s (|w| < 2000); check for RPM", self.sidespin)
 
     def to_ball_flight_state(self) -> BallFlightState:
         """Convert launch conditions to a BallFlightState at the origin.
