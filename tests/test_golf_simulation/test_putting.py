@@ -22,6 +22,40 @@ class TestGreenSurface:
         dx, dy = green.evaluate_slope(15.0, 15.0)
         assert abs(dx) > 0.001
 
+    def test_sloped_green_elevation_exact(self):
+        """Elevation at (x, y) must equal slope_x*x + slope_y*y exactly."""
+        slope_x, slope_y = 0.02, 0.01
+        green = GreenSurface.create_sloped_green(30.0, 30.0, 11.0, slope_x, slope_y)
+        test_points = [(1.0, 1.0), (5.0, 15.0), (10.0, 5.0), (25.0, 15.0), (3.7, 22.1)]
+        for x, y in test_points:
+            expected = slope_x * x + slope_y * y
+            got = green.evaluate_elevation(x, y)
+            assert abs(got - expected) < 1e-9, f"({x},{y}): got {got} expected {expected}"
+
+    def test_sloped_green_slope_exact(self):
+        """evaluate_slope must return the exact constant gradient."""
+        slope_x, slope_y = 0.02, 0.01
+        green = GreenSurface.create_sloped_green(30.0, 30.0, 11.0, slope_x, slope_y)
+        test_points = [(1.0, 1.0), (5.0, 15.0), (10.0, 5.0), (25.0, 15.0)]
+        for x, y in test_points:
+            dx, dy = green.evaluate_slope(x, y)
+            assert abs(dx - slope_x) < 1e-6, f"slope_x at ({x},{y}): got {dx}"
+            assert abs(dy - slope_y) < 1e-6, f"slope_y at ({x},{y}): got {dy}"
+
+    def test_flat_green_elevation_exact(self):
+        """Flat green elevation must be exactly zero everywhere."""
+        green = GreenSurface.create_flat_green(30.0, 30.0, 11.0)
+        for x, y in [(0.0, 0.0), (15.0, 15.0), (29.9, 29.9)]:
+            assert green.evaluate_elevation(x, y) == 0.0
+
+    def test_uphill_putt_no_sidespin(self):
+        """Straight uphill putt on slope_y=0 must have negligible x-deflection."""
+        green = GreenSurface.create_sloped_green(30.0, 30.0, 10.0, 0.0, 0.02)
+        sim = PuttingSimulator(green)
+        positions = sim.simulate(15.0, 5.0, 0.0, 2.0)
+        final_x = positions[-1][0]
+        assert abs(final_x - 15.0) < 0.05, f"x-deflection {abs(final_x-15.0):.4f}m on slope_y-only green"
+
     def test_is_on_green(self):
         green = GreenSurface.create_flat_green(30.0, 30.0, 10.0)
         assert green.is_on_green(15.0, 15.0)
