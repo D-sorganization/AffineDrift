@@ -26,29 +26,37 @@ test.describe('Bibliography Page', () => {
     expect(count).toBeGreaterThan(0);
   });
 
-  test('should have working search functionality', async ({ page }) => {
+  test('should have working search functionality without TypeError', async ({ page }) => {
+    const pageErrors = [];
+    page.on('pageerror', err => pageErrors.push(err.message));
+
     await page.goto('/resources/bibliography.html');
-
-    // Wait for page to load
     await page.waitForLoadState('networkidle');
+    // Wait past the startup-launcher splash-hide timeout so AffineDriftMetrics
+    // would be clobbered if the bug was present
+    await page.waitForTimeout(1500);
 
-    // Find search input
     const searchInput = page.locator('#bib-search, input[type="search"], input[placeholder*="search" i]');
 
     if (await searchInput.count() > 0) {
       await expect(searchInput.first()).toBeVisible();
 
-      // Type a search term
+      const unfilteredEntries = page.locator('.bib-entry, .bibliography-entry');
+      const unfilteredCount = await unfilteredEntries.count();
+
       await searchInput.first().fill('biomechanics');
+      await page.waitForTimeout(600);
 
-      // Wait for filtering
-      await page.waitForTimeout(500);
+      const filteredCount = await unfilteredEntries.count();
+      // Search must actually filter: count must change and stay > 0
+      if (unfilteredCount > 5) {
+        expect(filteredCount).toBeGreaterThan(0);
+        expect(filteredCount).toBeLessThan(unfilteredCount);
+      }
 
-      // Results should be filtered
-      const entries = page.locator('.bib-entry, .bibliography-entry');
-      // Just verify search doesn't error
-      const count = await entries.count();
-      expect(count).toBeGreaterThanOrEqual(0);
+      // No TypeError from trackSearch being called on the startup-launcher object
+      const trackErrors = pageErrors.filter(e => e.includes('trackSearch') || e.includes('AffineDriftMetrics'));
+      expect(trackErrors).toHaveLength(0);
     }
   });
 
