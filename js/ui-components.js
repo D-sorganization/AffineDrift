@@ -153,6 +153,7 @@ export function initAccordions() {
         const titleText = titleSpan ? titleSpan.textContent.trim() : "content";
         const actionText = isExpanded ? "Collapse" : "Expand";
         header.setAttribute("title", `${actionText} ${titleText}`);
+        header.setAttribute("aria-label", `${actionText} ${titleText}`);
     };
 
     let index = 0;
@@ -490,6 +491,7 @@ export function initCriticsCorner() {
         const titleText = titleSpan ? titleSpan.textContent.trim() : "Critics' Corner";
         const actionText = isExpanded ? "Collapse" : "Expand";
         header.setAttribute("title", `${actionText} ${titleText}`);
+        header.setAttribute("aria-label", `${actionText} ${titleText}`);
     };
 
     let index = 0;
@@ -549,6 +551,7 @@ export function initLaymansTermsToggle() {
         const titleText = titleSpan ? titleSpan.textContent.trim() : "In Layman's Terms";
         const actionText = isExpanded ? "Collapse" : "Expand";
         header.setAttribute("title", `${actionText} ${titleText}`);
+        header.setAttribute("aria-label", `${actionText} ${titleText}`);
     };
 
     let index = 0;
@@ -591,6 +594,7 @@ export function initCriticsCommentsToggle() {
         const titleText = titleSpan ? titleSpan.textContent.trim() : "Critics' Comments";
         const actionText = isExpanded ? "Collapse" : "Expand";
         header.setAttribute("title", `${actionText} ${titleText}`);
+        header.setAttribute("aria-label", `${actionText} ${titleText}`);
     };
 
     let index = 0;
