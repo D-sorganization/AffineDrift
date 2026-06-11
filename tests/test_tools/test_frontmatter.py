@@ -113,6 +113,13 @@ def test_parse_frontmatter_dict_basic() -> None:
     assert result["description"] == "A great article"
 
 
+def test_parse_frontmatter_dict_keeps_legacy_colons_in_values() -> None:
+    """parse_frontmatter_dict preserves the historical flat parser contract."""
+    content = "---\ntitle: Test: A Subtitle\n---\nBody.\n"
+    result = parse_frontmatter_dict(content)
+    assert result["title"] == "Test: A Subtitle"
+
+
 def test_parse_frontmatter_dict_no_frontmatter_returns_empty() -> None:
     """parse_frontmatter_dict returns {} when no frontmatter."""
     result = parse_frontmatter_dict("Plain text only.\n")

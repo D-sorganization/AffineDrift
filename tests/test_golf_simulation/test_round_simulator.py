@@ -1,4 +1,4 @@
-﻿"""Tests for the full round simulator."""
+"""Tests for the full round simulator."""
 
 import math
 

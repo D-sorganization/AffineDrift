@@ -129,6 +129,24 @@ def extract_title_description(
     return title, description
 
 
+def _parse_legacy_flat_frontmatter(yaml_content: str | None) -> dict[str, str]:
+    """Parse historical flat frontmatter where values may contain raw colons."""
+    if yaml_content is None:
+        return {}
+
+    result: dict[str, str] = {}
+    for line in yaml_content.splitlines():
+        if not line or line[:1].isspace() or ":" not in line:
+            continue
+        key, value = line.split(":", 1)
+        key = key.strip()
+        value = value.strip()
+        if not key or not value:
+            continue
+        result[key] = value.strip("\"'")
+    return result
+
+
 def parse_frontmatter_dict(content: str) -> dict[str, str]:
     """Parse YAML frontmatter into a string-valued dictionary (legacy API).
 
@@ -150,4 +168,7 @@ def parse_frontmatter_dict(content: str) -> dict[str, str]:
     """
     require(content is not None, "content must not be None")
     fm, _ = split_frontmatter(content)
-    return {k: str(v) for k, v in fm.items()}
+    if fm:
+        return {k: str(v) for k, v in fm.items()}
+    yaml_content, _body = extract_frontmatter(content)
+    return _parse_legacy_flat_frontmatter(yaml_content)
