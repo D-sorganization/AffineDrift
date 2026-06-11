@@ -21,7 +21,13 @@ from typing import Any
 import numpy as np
 
 from src.core.constants import GRAVITY_M_S2
-from src.core.contracts import check_non_negative, check_positive, require
+from src.core.contracts import (
+    ContractViolationError,
+    check_finite_array,
+    check_non_negative,
+    check_positive,
+    require,
+)
 from src.tangent_models.examples import DynamicalSystem
 
 logger = logging.getLogger(__name__)
@@ -48,10 +54,13 @@ class BallFlightState:
     spin: np.ndarray
 
     def __post_init__(self) -> None:
-        """Validate state dimensions."""
+        """Validate state dimensions and finiteness."""
         require(len(self.position) == 3, "position must be a 3D vector")
         require(len(self.velocity) == 3, "velocity must be a 3D vector")
         require(len(self.spin) == 3, "spin must be a 3D vector")
+        check_finite_array(self.position, "position")
+        check_finite_array(self.velocity, "velocity")
+        check_finite_array(self.spin, "spin")
 
     @property
     def speed(self) -> float:
@@ -336,6 +345,12 @@ class BallFlightDynamics(DynamicalSystem):
         while t < max_time:
             state_vec = self._rk4_step(state_vec, u, dt)
             t += dt
+            if not np.all(np.isfinite(state_vec)):
+                raise ContractViolationError(
+                    "invariant",
+                    "ball flight state became non-finite (unstable integration; reduce dt)",
+                    state_vec,
+                )
             trajectory.append(self._state_from_vector(state_vec))
 
             # Stop if ball has hit the ground (z <= 0) after initial launch

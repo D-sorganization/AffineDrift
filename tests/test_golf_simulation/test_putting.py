@@ -72,6 +72,24 @@ class TestPuttingSimulator:
             assert abs(dx) < 0.01 and abs(dy) < 0.01
 
 
+class TestSimulateFiniteGuards:
+    def test_simulate_raises_on_nan_velocity_x(self):
+        from src.core.contracts import ContractViolationError
+
+        green = GreenSurface.create_flat_green(30.0, 30.0, 10.0)
+        sim = PuttingSimulator(green)
+        with pytest.raises(ContractViolationError):
+            sim.simulate(15.0, 15.0, float("nan"), 1.0)
+
+    def test_simulate_raises_on_inf_start_x(self):
+        from src.core.contracts import ContractViolationError
+
+        green = GreenSurface.create_flat_green(30.0, 30.0, 10.0)
+        sim = PuttingSimulator(green)
+        with pytest.raises(ContractViolationError):
+            sim.simulate(float("inf"), 15.0, 1.0, 1.0)
+
+
 class TestHoleDetection:
     def test_ball_in_hole(self):
         green = GreenSurface.create_flat_green(30.0, 30.0, 10.0)
