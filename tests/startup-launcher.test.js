@@ -23,6 +23,7 @@ describe('startup-launcher', () => {
     jest.useFakeTimers();
     document.documentElement.className = '';
     document.body.innerHTML = '';
+    sessionStorage.clear();
     // matchMedia is provided by tests/setup.js (matches:false by default).
     if (!window.performance.now) {
       window.performance.now = () => 0;
@@ -111,5 +112,13 @@ describe('startup-launcher', () => {
     // undefined (if the metrics guard skipped it) — either is acceptable, but
     // it must NOT be the AffineDriftMetrics name.
     expect(window.AffineDriftMetrics).toBeUndefined();
+  });
+
+  test('init() is a no-op when ad_splash_shown is set', () => {
+    sessionStorage.setItem('ad_splash_shown', '1');
+    loadLauncher();
+    const splash = document.getElementById('ad-splash-screen');
+    expect(splash).toBeNull();
+    expect(document.documentElement.classList.contains('ad-splash-active')).toBe(false);
   });
 });
