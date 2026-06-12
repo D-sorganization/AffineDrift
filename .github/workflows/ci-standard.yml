@@ -405,6 +405,19 @@ jobs:
             --project=chromium \
             --retries=0 \
             tests/e2e/smoke.spec.js
+      - name: Run Visual Layout Invariants (no-overflow / column collapse)
+        # Runs the deterministic layout assertions from visual.spec.js (issue
+        # #3328) — these need no committed image baselines and fail the build on
+        # horizontal overflow or a broken responsive layout. The pixel-snapshot
+        # tests in the same file are excluded here (they require platform
+        # baselines generated via `playwright test --update-snapshots`).
+        if: steps.e2e_changes.outputs.run == 'true'
+        run: |
+          npx playwright test \
+            --project=chromium \
+            --retries=0 \
+            --grep "no horizontal overflow|single column" \
+            tests/e2e/visual.spec.js
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: failure() && steps.e2e_changes.outputs.run == 'true'
         with:

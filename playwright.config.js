@@ -17,6 +17,17 @@ module.exports = defineConfig({
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
   },
+  // Visual-regression stability (issue #3328): freeze CSS animations/transitions
+  // and caret blink so screenshots are deterministic, and tolerate a small ratio
+  // of antialiasing-level pixel differences so cross-machine font hinting does not
+  // produce false diffs.
+  expect: {
+    toHaveScreenshot: {
+      animations: 'disabled',
+      caret: 'hide',
+      maxDiffPixelRatio: 0.02,
+    },
+  },
 
   projects: [
     {
