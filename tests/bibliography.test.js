@@ -35,7 +35,7 @@ describe.skip('Bibliography Module (pending rewrite for js/ IIFE architecture)',
   beforeEach(() => {
     // Reset DOM before each test
     document.body.innerHTML = `
-      <input id="bib-search" type="text" />
+      <input id="bib-search" type="search" />
       <div id="bib-list"></div>
       <div id="bib-details"></div>
       <div id="bib-sort-controls"></div>
@@ -296,7 +296,7 @@ describe('bibliography.js metrics-guard regression (#3273)', () => {
 
     const searchInput = document.createElement('input');
     searchInput.id = 'bib-search';
-    searchInput.type = 'text';
+    searchInput.type = 'search';
 
     const bibList = document.createElement('div');
     bibList.id = 'bib-list';
