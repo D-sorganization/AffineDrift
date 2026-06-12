@@ -238,7 +238,7 @@ M_{\mathrm{ext}}\ddot{q}_{\mathrm{ext}} = \tau_{\mathrm{drift,ext}},
 $$
 and the motion is governed solely by the drift.
 
-- **ZVCF** is the *instantaneous-acceleration* computation performed at $\dot{q}_{\mathrm{ext}} = 0$, in which all velocity-dependent drift terms vanish and (by convention) gravity is also held off, so the only remaining generalized forces come from $\tau_{\mathrm{input,ext}} = [B u;\, 0]$ (the stacked column defined above). It is a pointwise diagnostic, not a trajectory.
+- **ZVCF** evaluates the *drift* at zero velocity ($\dot{q}_{\mathrm{ext}} = 0$): the velocity-dependent terms (Coriolis, centrifugal, damping) vanish and the remaining generalized forces are the configuration-dependent passive loads $\mathbf{g}_{\mathrm{ext}}(q_{\mathrm{ext}}) = \nabla_{q_{\mathrm{ext}}} V$ (gravity $G(q)$ plus elastic restoring forces). It is the configuration-only slice of the drift, $\tau_{\mathrm{ZVCF}} = \tau_{\mathrm{drift}} - \tau_{\mathrm{vel.drift}}$, and contains **no input contribution** — in particular it is *not* $\tau_{\mathrm{input,ext}} = [B u;\, 0]$. It is a pointwise diagnostic, not a trajectory.
 Thus the Lagrangian formulation supports the same drift--input decomposition and counterfactual constructions as the Newton--Euler and screw-theoretic formulations.
 
 ## Summary

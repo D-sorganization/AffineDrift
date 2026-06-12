@@ -245,9 +245,9 @@ In practice, higher-order integration should be used. The drift ODE is nonlinear
 
 Once the ZTCF is computed, numerical implementation correctness can be verified using the identity:
 
-$$\tau_{\mathrm{total}}(t_k) - \tau_{\mathrm{ZTCF}}(t_k) \approx \tau_{\mathrm{ZVCF}}(t_k),$$
+$$\tau_{\mathrm{total}}(t_0) - \tau_{\mathrm{ZTCF}}(t_0) = \tau_{\mathrm{input}}(t_0),$$
 
-where $\tau_{\mathrm{ZTCF}}$ are the forces along the ZTCF trajectory and $\tau_{\mathrm{ZVCF}}$ are the configuration-dependent (zero-velocity) forces.
+where $\tau_{\mathrm{ZTCF}}$ records the **full** drift (configuration- *and* velocity-dependent) at the branch instant, so subtracting it from the total leaves the input. This is *not* the ZVCF: the configuration-only (zero-velocity) slice is $\tau_{\mathrm{ZVCF}} = \tau_{\mathrm{drift}} - \tau_{\mathrm{vel.drift}}$ and contains no input term. Equating $\tau_{\mathrm{total}} - \tau_{\mathrm{ZTCF}}$ with $\tau_{\mathrm{ZVCF}}$ is a category error (input $\neq$ configuration drift); their difference is the velocity-dependent drift $\tau_{\mathrm{vel.drift}}$, which dominates in the late downswing.
 
 ::: {.callout-warning}
 ## Approximation Note
@@ -257,7 +257,7 @@ This identity is **exact only at $t = t_0$**. After $t_0$, the ZTCF trajectory d
 
 ### Practical Considerations
 
-**Consistent parameter sets.** All inverse-dynamics evaluations and drift field computations must use the exact same inertia, stiffness, and damping parameters to ensure numerical consistency between $\tau_{\mathrm{total}} - \tau_{\mathrm{ZTCF}}$ and $\tau_{\mathrm{ZVCF}}$.
+**Consistent parameter sets.** All inverse-dynamics evaluations and drift field computations must use the exact same inertia, stiffness, and damping parameters to ensure numerical consistency. The recovered input $\tau_{\mathrm{total}} - \tau_{\mathrm{ZTCF}}$ should match the directly applied $\tau_{\mathrm{input}}$, and the configuration slice $\tau_{\mathrm{ZVCF}}$ should match $\tau_{\mathrm{drift}} - \tau_{\mathrm{vel.drift}}$.
 
 **Solver matching.** ZTCF trajectories must use the same ODE solver, tolerances, and step sizes as the forward simulation. Mismatched solvers introduce artificial numerical drift between the two trajectories.
 

@@ -123,7 +123,9 @@ This is the key insight: constraint forces do zero net power to the system, yet 
 
 How? The trick is to decompose power by segment:
 
+$$
 P_{\text{constraint}} = P_{\text{constraint, segment 1}} + P_{\text{constraint, segment 2}} + \cdots = 0
+$$
 
 Each term individually can be nonzero (e.g., the constraint force acts on segment 1, doing work). But they sum to zero: the work done on one segment by the constraint is exactly balanced by negative work on another segment.
 
@@ -325,9 +327,9 @@ Assume all segments receive the same amount of energy ($100$ J each) at their mo
 
 $$
 \begin{aligned}
-\text{Hips:} \quad &I_h = 5 \text{ kg} \cdot \text{m}^2 \implies \omega_h = \sqrt{2 \times 100 / 5} = \sqrt{40} = 6.3 \text{ rad/s}
-\text{Torso:} \quad &I_s = 2 \text{ kg} \cdot \text{m}^2 \implies \omega_s = \sqrt{2 \times 100 / 2} = \sqrt{100} = 10 \text{ rad/s}
-\text{Arm:} \quad &I_a = 0.5 \text{ kg} \cdot \text{m}^2 \implies \omega_a = \sqrt{2 \times 100 / 0.5} = \sqrt{400} = 20 \text{ rad/s}
+\text{Hips:} \quad &I_h = 5 \text{ kg} \cdot \text{m}^2 \implies \omega_h = \sqrt{2 \times 100 / 5} = \sqrt{40} = 6.3 \text{ rad/s} \\
+\text{Torso:} \quad &I_s = 2 \text{ kg} \cdot \text{m}^2 \implies \omega_s = \sqrt{2 \times 100 / 2} = \sqrt{100} = 10 \text{ rad/s} \\
+\text{Arm:} \quad &I_a = 0.5 \text{ kg} \cdot \text{m}^2 \implies \omega_a = \sqrt{2 \times 100 / 0.5} = \sqrt{400} = 20 \text{ rad/s} \\
 \text{Club:} \quad &I_c = 0.1 \text{ kg} \cdot \text{m}^2 \implies \omega_c = \sqrt{2 \times 100 / 0.1} = \sqrt{2000} = 44.7 \text{ rad/s}
 \end{aligned}
 $$
@@ -363,8 +365,8 @@ Energy is stored in the golf swing at multiple points:
 1. **Energy input:** Muscles do work during the backswing (lifting arms, creating tension) and early downswing (accelerating hips). Total muscular input is roughly $25$--$30$ J (from potential and elastic energy) plus $70$--$80$ J from muscular acceleration (early downswing). Total input: $\approx 100$ J.
 2. **Energy peak:** At late downswing, kinetic energy reaches $200$ J. This is the sum of muscular work plus energy from gravity (falling arms during downswing adds $\sim 100$ J).
 3. **Constraint force redistribution:** The $200$ J is redistributed from hips/torso ($\sim 150$ J) to arms and club ($\sim 50$ J) via constraint forces. No external energy added; pure redistribution.
-4. **Energy to the ball:** At impact, the club has $\sim 200$ J. A 150-gram ball initially at rest gains roughly $50$ J of kinetic energy (the rest is lost to shock, deformation, heat). The ball leaves at $\sim 150$ mph, which checks out.
-5. **Efficiency:** Muscular input is $\approx 100$ J, energy to the ball is $\approx 50$ J. Efficiency is roughly 50\%, with losses to:
+4. **Energy to the ball:** At impact the clubhead carries on the order of $200$ J. A regulation **45.93-gram** ball ($0.04593$ kg) initially at rest leaves at $\sim 150$ mph ($\approx 67$ m/s), so it gains $\tfrac{1}{2}(0.04593)(67)^2 \approx 100$ J of kinetic energy (consistent with the $122.7$ J computed for a 110-mph driver swing in the Impact chapter). The clubhead does **not** stop — it retains roughly half its speed — so the remaining energy stays as residual clubhead KE, with only a small fraction lost to deformation and heat.
+5. **Efficiency:** Of the clubhead's pre-impact kinetic energy, the ball carries away roughly **50\%** (ball KE divided by clubhead KE); the rest remains as residual clubhead KE plus small losses to:
 
 
 ## Why Lag is an Energy Storage Mechanism

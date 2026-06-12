@@ -102,10 +102,10 @@ Previously, we wrote the state as $\mathbf{x} = [\mathbf{q}, \dot{\mathbf{q}}]^T
 
 With shaft flexibility, we extend the state to include the modal coordinates and their velocities:
 $$
-\mathbf{x} =  \mathbf{q} \\ \dot{\mathbf{q}} \\ \eta \\ \dot{\eta}
+\mathbf{x} = \begin{bmatrix} \mathbf{q} \\ \dot{\mathbf{q}} \\ \eta \\ \dot{\eta} \end{bmatrix}
 $$
 
-where $\eta = \eta$ and $\dot{\eta} = \dot{\eta}$. If we keep multiple modes, $\eta$ and $\dot{\eta}$ are vectors.
+where $\eta$ is the shaft bending modal coordinate and $\dot{\eta}$ its rate. If we keep multiple modes, $\eta$ and $\dot{\eta}$ are vectors.
 
 **Example: State Dimension Growth**
 
@@ -125,7 +125,7 @@ where:
 - $\zeta$ is the damping ratio (how much the vibration is damped by material friction).
 - $f_{\text{modal}}$ is the generalized force on the modal coordinate, arising from inertial and Coriolis forces in the joint motion.
 
-For a typical golf shaft, the first bending mode natural frequency is in the range of about 12--15 rad/s (approximately 1.9--2.4 Hz) [@Nesbit2005; @MacKenzie2009]. The swing duration is about 0.2 seconds, so the shaft goes through roughly half a bending cycle during the entire downswing.
+For a typical driver shaft, the first bending mode natural frequency is about 3--5 Hz ($\omega_n \approx 20$--$30$ rad/s), corresponding to a shaft "frequency" rating of roughly 240--280 CPM (cycles per minute) [@Nesbit2005; @MacKenzie2009]. The downswing lasts about 0.2--0.25 seconds, so at $\sim 4$ Hz the shaft passes through roughly **one** bending cycle (load, then recover) during the downswing — the basis of the familiar "kick" at impact.
 
 ## How Shaft Flexibility Enters the Drift Field
 
@@ -140,7 +140,9 @@ The drift field $f$ now includes terms from the modal dynamics. Specifically:
 2. The fifth component is $\dot{\eta}$ (the rate of shaft deformation), which is always equal to the fifth component of $\mathbf{x}$ by definition.
 3. The sixth component is $\ddot{\eta}$, which is driven by:
 
-   \ddot{\eta} = -2\zeta\omega_n\dot{\eta} - \omega_n^2\eta + f_{\text{modal}}(q, q-dot)
+$$
+\ddot{\eta} = -2\zeta\omega_n\dot{\eta} - \omega_n^2\eta + f_{\text{modal}}(q, \dot{q})
+$$
 
 
 The term $f_{\text{modal}}$ deserves attention. When the hands are accelerating upward and the shaft is relatively straight, $f_{\text{modal}} > 0$, which causes $\eta$ to increase (the shaft bends in response to the acceleration mismatch). As the swing slows and the shaft geometry changes, the effective load on the shaft changes, and $f_{\text{modal}}$ may change sign, causing the shaft to snap back.
@@ -205,10 +207,10 @@ Consider a small element of the shaft at distance $r$ from the pivot, rotating w
 
 Mathematically, the effective bending stiffness becomes:
 $$
-k_{\text{shaft}}_{\text{eff}} = k_{\text{shaft}}_0 + \Deltak_{\text{shaft}}_{\text{centrifugal}}(\omega)
+k_{\text{shaft,eff}} = k_{\text{shaft,0}} + \Delta k_{\text{shaft,centrifugal}}(\omega)
 $$
 
-where $k_{\text{shaft}}_0$ is the passive bending stiffness and $\Deltak_{\text{shaft}}_{\text{centrifugal}}$ is the additional stiffness due to centrifugal effects.
+where $k_{\text{shaft,0}}$ is the passive bending stiffness and $\Delta k_{\text{shaft,centrifugal}}$ is the additional stiffness due to centrifugal effects.
 
 Early in the downswing, $\omega$ is small, so the effective stiffness is close to $k_{\text{shaft}}_0$. The shaft bends easily. Later in the downswing, $\omega$ grows, the centrifugal stiffening kicks in, and the shaft becomes harder to bend. This is another reason the shaft might snap back: it is not just that the driving force $f_{\text{modal}}$ changes sign, but also that the shaft becomes stiffer.
 
@@ -233,7 +235,9 @@ Then, near impact, the hands slow sharply (they are being decelerated by the gro
 
 The result: the shaft unbends very rapidly. As it does, it does work on the clubhead, accelerating it further. This is the catapult effect.
 
+$$
 \text{Energy released by shaft} = \frac{1}{2}k\eta^2 \quad \text{(at the moment before snapback)}
+$$
 
 The magnitude of this energy depends on both how much the shaft is bent ($\eta$) and how stiff it is ($k_{\text{shaft}}$). A very flexible shaft bends a lot (high $\eta$) but stores less energy per unit deflection (low $k_{\text{shaft}}$). A very stiff shaft bends less, but the same bend stores more energy.
 
@@ -306,7 +310,9 @@ At the top of the backswing, the golfer has stored potential energy in the muscl
 
 The shaft acts as a temporary storage device, holding energy as elastic deformation and returning it later.
 
+$$
 \text{Muscle work} = \Delta KE_{\text{clubhead}} + E_{\text{stored in shaft}} + E_{\text{dissipated by damping}}
+$$
 
 For a flexible shaft, the term $E_{\text{stored in shaft}}$ is significant. In a fast swing, the shaft absorbs and releases energy very quickly (within milliseconds of mid-downswing). In a slow swing, the shaft might remain bent for most of the downswing, absorbing a larger fraction of the muscle work temporarily.
 
@@ -377,8 +383,9 @@ Let us use realistic numbers:
 
 Suppose the hand (grip) starts at $y = 0$ and is prescribed to move with:
 
-y_{\text{grip}}(t) = 0.5 \sin\left(\pi t / 0.2\right) \quad \text{for } t \in [0, 0.2]
-\text{ s}
+$$
+y_{\text{grip}}(t) = 0.5 \sin\left(\pi t / 0.2\right) \quad \text{for } t \in [0, 0.2] \text{ s}
+$$
 
 This describes a hand moving upward from $t=0$ to $t=0.1$ s, then downward from $t=0.1$ to $t=0.2$ s, reaching a maximum height of 0.5 m at mid-swing.
 

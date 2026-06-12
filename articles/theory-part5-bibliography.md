@@ -21,7 +21,7 @@
   - **Passive Momentum**: The contribution of the club's inertia and velocity to the felt force.
 
 - **Validation**
-  - **Numerical Identity**: $F_{\mathrm{total}} - F_{\mathrm{ZTCF}} = F_{\mathrm{ZVCF}}$.
+  - **Numerical Identity**: $F_{\mathrm{total}} - F_{\mathrm{ZTCF}} = F_{\mathrm{input}}$ (at the freeze instant); the configuration-only slice is $F_{\mathrm{ZVCF}} = F_{\mathrm{drift}} - F_{\mathrm{vel.drift}}$.
   - **Trajectory Comparison**: Verifying that the model produces realistic clubhead speeds and kinematics.
 
 ## B) Bibliography (YAML)
