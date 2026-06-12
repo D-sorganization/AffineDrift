@@ -262,6 +262,46 @@ export function initReadingTime() {
 }
 
 /**
+ * Reading-progress indicator: a thin fixed bar at the top of the viewport that
+ * fills as the reader scrolls an article (issue #3334). Article pages only;
+ * skipped when the user prefers reduced motion.
+ */
+export function initReadingProgress() {
+    if (!window.location.pathname.includes("/articles/")) return;
+
+    const article =
+        document.getElementById("quarto-document-content") ||
+        document.querySelector("main");
+    if (!article) return;
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const bar = document.createElement("div");
+    bar.className = "reading-progress";
+    bar.setAttribute("role", "presentation");
+    bar.setAttribute("aria-hidden", "true");
+    document.body.appendChild(bar);
+
+    let ticking = false;
+    function update() {
+        const docHeight =
+            document.documentElement.scrollHeight - window.innerHeight;
+        const ratio = docHeight > 0 ? window.scrollY / docHeight : 0;
+        bar.style.transform = `scaleX(${Math.min(Math.max(ratio, 0), 1)})`;
+        ticking = false;
+    }
+    function onScroll() {
+        if (!ticking) {
+            window.requestAnimationFrame(update);
+            ticking = true;
+        }
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+    update();
+}
+
+/**
  * Accessibility Phase 2: Motion preferences (prefers-reduced-motion)
  */
 export function initMotionPreferences() {

@@ -17,7 +17,30 @@
 @import url("css/components/provenance-note.css");
 @import url("css/components/home-hero.css");
 @import url("css/components/status-banner.css");
+@import url("css/components/not-found.css");
 @import url("css/utilities/spacing.css");
+
+/* Native cross-document view transitions (issue #3334): a free same-origin
+   cross-fade in supporting browsers (Chromium/Safari); progressive enhancement,
+   ignored elsewhere. */
+@view-transition {
+  navigation: auto;
+}
+
+/* Reading-progress indicator (issue #3334): fixed top bar, GPU-friendly
+   transform-based fill. Injected on article pages only by accessibility.js. */
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan, var(--accent-blue)));
+  z-index: 1100;
+  pointer-events: none;
+}
 
 /* Reset and Base Styles */
 * {
@@ -1488,7 +1511,7 @@ h3:hover .anchor-link,
 }
 
 .laymans-item h3 {
-  font-size: var(--fs-base);;
+  font-size: var(--fs-base);
   color: var(--primary-dark);
   margin: 0 0 0.75rem;
   display: flex;
@@ -1546,7 +1569,7 @@ h3:hover .anchor-link,
 
   .laymans-terms-header h2,
   .laymans-terms-header .laymans-terms-header-title {
-    font-size: var(--fs-base);;
+    font-size: var(--fs-base);
   }
 
   .laymans-terms-inner {
@@ -1662,7 +1685,7 @@ form.contact-form .form-group textarea {
   border: 1px solid var(--border-color);
   border-radius: 4px;
   font-family: "Noto Sans", sans-serif;
-  font-size: var(--fs-base);;
+  font-size: var(--fs-base);
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease;
@@ -1690,7 +1713,7 @@ form.contact-form .form-group textarea {
   color: var(--pure-white);
   border: none;
   padding: 0.8rem 2rem;
-  font-size: var(--fs-base);;
+  font-size: var(--fs-base);
   font-weight: 600;
   border-radius: 4px;
   cursor: pointer;
@@ -2660,7 +2683,7 @@ h1.title,
   }
 
   .welcome-header .subtitle {
-    font-size: var(--fs-base);;
+    font-size: var(--fs-base);
   }
 }
 

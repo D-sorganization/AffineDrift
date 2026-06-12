@@ -2505,6 +2505,14 @@ Dark mode (separate concern):
   line-height: 1.7;
   color: var(--text-primary);
 }
+
+/* Hero call-to-action buttons (issue #3334). */
+.home-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
 /* ===== end css/components/home-hero.css ===== */
 /* ===== begin css/components/status-banner.css ===== */
 /* Status banner — semantic page-status callout.
@@ -2568,6 +2576,39 @@ Dark mode (separate concern):
 }
 .status-pill--warning     { background: var(--color-warning-lightest, var(--color-neutral-100)); }
 /* ===== end css/components/status-banner.css ===== */
+/* ===== begin css/components/not-found.css ===== */
+/* Branded 404 page (issue #3330).
+   Uses design tokens so it themes correctly in dark mode. */
+
+.not-found {
+  text-align: center;
+  padding: 4rem 1rem;
+  max-width: var(--prose-width, 75ch);
+  margin-inline: auto;
+}
+
+.not-found__code {
+  font-size: clamp(3rem, 12vw, 6rem);
+  font-weight: 700;
+  line-height: 1;
+  margin: 0;
+  color: var(--primary-dark, var(--text-color));
+}
+
+.not-found__links {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  justify-content: center;
+}
+
+.not-found__report {
+  margin-top: 1.5rem;
+}
+/* ===== end css/components/not-found.css ===== */
 /* ===== begin css/utilities/spacing.css ===== */
 /* Spacing utilities — single-purpose, token-driven margins and padding.
    Used to retire trivial inline ``style="margin-*"`` attributes across the
@@ -2784,6 +2825,28 @@ Dark mode (separate concern):
   box-shadow: var(--shadow-sm, 0 2px 8px rgba(0, 0, 0, 0.1));
 }
 /* ===== end css/utilities/spacing.css ===== */
+
+/* Native cross-document view transitions (issue #3334): a free same-origin
+   cross-fade in supporting browsers (Chromium/Safari); progressive enhancement,
+   ignored elsewhere. */
+@view-transition {
+  navigation: auto;
+}
+
+/* Reading-progress indicator (issue #3334): fixed top bar, GPU-friendly
+   transform-based fill. Injected on article pages only by accessibility.js. */
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  transform: scaleX(0);
+  transform-origin: 0 50%;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan, var(--accent-blue)));
+  z-index: 1100;
+  pointer-events: none;
+}
 
 /* Reset and Base Styles */
 * {
@@ -4254,7 +4317,7 @@ h3:hover .anchor-link,
 }
 
 .laymans-item h3 {
-  font-size: var(--fs-base);;
+  font-size: var(--fs-base);
   color: var(--primary-dark);
   margin: 0 0 0.75rem;
   display: flex;
@@ -4312,7 +4375,7 @@ h3:hover .anchor-link,
 
   .laymans-terms-header h2,
   .laymans-terms-header .laymans-terms-header-title {
-    font-size: var(--fs-base);;
+    font-size: var(--fs-base);
   }
 
   .laymans-terms-inner {
@@ -4428,7 +4491,7 @@ form.contact-form .form-group textarea {
   border: 1px solid var(--border-color);
   border-radius: 4px;
   font-family: "Noto Sans", sans-serif;
-  font-size: var(--fs-base);;
+  font-size: var(--fs-base);
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease;
@@ -4456,7 +4519,7 @@ form.contact-form .form-group textarea {
   color: var(--pure-white);
   border: none;
   padding: 0.8rem 2rem;
-  font-size: var(--fs-base);;
+  font-size: var(--fs-base);
   font-weight: 600;
   border-radius: 4px;
   cursor: pointer;
@@ -5426,7 +5489,7 @@ h1.title,
   }
 
   .welcome-header .subtitle {
-    font-size: var(--fs-base);;
+    font-size: var(--fs-base);
   }
 }
 

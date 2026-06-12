@@ -56,6 +56,7 @@ import {
     initRepoLinks,
     initAriaLabels,
     initReadingTime,
+    initReadingProgress,
 } from "./accessibility.js";
 
 import { initPDFDownload } from "./pdf.js";
@@ -97,6 +98,7 @@ runOnDomReady(function () {
 
     // --- Reading Time (articles only) ---
     initReadingTime();
+    initReadingProgress();
 
     // --- PDF Download ---
     initPDFDownload();
