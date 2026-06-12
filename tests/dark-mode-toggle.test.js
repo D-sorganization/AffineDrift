@@ -68,6 +68,22 @@ describe('dark-mode-toggle', () => {
     expect(localStorage.getItem('affinedrift-theme')).toBe('light');
   });
 
+  test('applying the system theme on load does NOT persist it (issue #3333)', () => {
+    // A fresh visitor whose OS prefers dark should get dark applied, but with an
+    // empty localStorage so the prefers-color-scheme listener keeps working.
+    loadModule({ prefersDark: true });
+    expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
+    expect(localStorage.getItem('affinedrift-theme')).toBeNull();
+  });
+
+  test('system preference change is respected after a no-persist load (issue #3333)', () => {
+    const { changeHandlers } = loadModule({ prefersDark: false }); // light, unpersisted
+    expect(localStorage.getItem('affinedrift-theme')).toBeNull();
+    // OS flips to dark at sunset -> theme should follow, no manual clear needed.
+    changeHandlers[0]({ matches: true });
+    expect(document.documentElement.getAttribute('data-theme')).toBe('dark');
+  });
+
   test('system preference change updates theme only when storage is unset', () => {
     const { changeHandlers } = loadModule({ prefersDark: false });
     expect(changeHandlers.length).toBeGreaterThan(0);

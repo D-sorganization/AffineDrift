@@ -1,5 +1,8 @@
 // AffineDrift Service Worker for offline support
-// Version 7: Updated 2026-06-10 (bundled stylesheet precache cleanup — issue #3254)
+// The cache version is the single source of truth (issue #3333): CACHE_NAME is
+// bumped by scripts/update_sw_cache_version.py (run in deploy-website.yml during
+// the CSS bundle step), and the human-readable comment is derived from it below
+// rather than tracked separately, so the two can no longer drift.
 // TODO #1459: Replace hardcoded version with content-hash cache busting via build pipeline
 importScripts('/js/service-worker-utils.js');
 
@@ -16,7 +19,10 @@ const {
 // Network-first navigation timeout: returning visitors get the latest deploy,
 // but a slow/offline network falls back to cache within this budget.
 const NAV_TIMEOUT_MS = DEFAULT_NAVIGATION_TIMEOUT_MS || 3000;
+// Single source of truth for the cache version. update_sw_cache_version.py
+// rewrites this line; the version label is derived from it (no separate comment).
 const CACHE_NAME = 'affinedrift-v5-1f25d558';
+const SW_VERSION = CACHE_NAME; // human-readable version === cache name (no drift)
 const OFFLINE_URL = '/offline.html';
 
 // Critical startup assets - loaded first for fast splash screen
@@ -56,15 +62,31 @@ async function storeResponse(cache, request, response, shouldNotify = false) {
   }
 }
 
-// Install event - precache essential assets
+// Install event - precache essential assets.
+// Use individual cache.add() calls wrapped in Promise.allSettled so that ONE
+// renamed/404'd asset cannot reject the whole install and silently disable
+// offline support for everyone (issue #3333). Failures are logged, not fatal.
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
-        console.log('[ServiceWorker] Precaching app shell');
-        return cache.addAll(PRECACHE_ASSETS);
+        console.log(`[ServiceWorker] Precaching app shell (${SW_VERSION})`);
+        return Promise.allSettled(
+          PRECACHE_ASSETS.map((asset) =>
+            cache.add(asset).catch((err) => {
+              console.warn(`[ServiceWorker] Precache skipped for ${asset}:`, err);
+              throw err; // surfaced as a rejected result; allSettled ignores it
+            })
+          )
+        );
       })
-      .then(() => self.skipWaiting())
+      .then((results) => {
+        const failed = results.filter((r) => r.status === 'rejected').length;
+        if (failed > 0) {
+          console.warn(`[ServiceWorker] ${failed}/${PRECACHE_ASSETS.length} precache assets failed; offline support is degraded but installed.`);
+        }
+        return self.skipWaiting();
+      })
   );
 });
 
