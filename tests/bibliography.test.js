@@ -270,8 +270,8 @@ describe.skip('Bibliography Module (pending rewrite for js/ IIFE architecture)',
 //
 // These tests verify that bibliography.js search/tracking guards correctly
 // require trackSearch to be a callable function rather than any truthy value,
-// so that the clobbered state (startup-launcher overwriting the API object)
-// cannot break search filtering.
+// so that a clobbered state (another script overwriting the API object with a
+// non-callable placeholder) cannot break search filtering.
 // ---------------------------------------------------------------------------
 
 describe('bibliography.js metrics-guard regression (#3273)', () => {
@@ -355,7 +355,7 @@ describe('bibliography.js metrics-guard regression (#3273)', () => {
   });
 
   test('search input does not throw when AffineDriftMetrics is a plain object (clobbered state)', async () => {
-    // Simulate startup-launcher clobbering the metrics API.
+    // Simulate another script clobbering the metrics API with a plain object.
     window.AffineDriftMetrics = { firstPaint: 42, summary: {} };
 
     await loadBibAndFlush(SAMPLE_ENTRIES);

@@ -32,8 +32,8 @@ test.describe('Bibliography Page', () => {
 
     await page.goto('/resources/bibliography.html');
     await page.waitForLoadState('networkidle');
-    // Wait past the startup-launcher splash-hide timeout so AffineDriftMetrics
-    // would be clobbered if the bug was present
+    // Allow late-running scripts to settle so AffineDriftMetrics would be
+    // clobbered here if the metrics-API regression were present.
     await page.waitForTimeout(1500);
 
     const searchInput = page.locator('#bib-search, input[type="search"], input[placeholder*="search" i]');

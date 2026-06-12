@@ -21,16 +21,14 @@ const {
 const NAV_TIMEOUT_MS = DEFAULT_NAVIGATION_TIMEOUT_MS || 3000;
 // Single source of truth for the cache version. update_sw_cache_version.py
 // rewrites this line; the version label is derived from it (no separate comment).
-const CACHE_NAME = 'affinedrift-v5-1f25d558';
+const CACHE_NAME = 'affinedrift-v5-0f1fa59f';
 const SW_VERSION = CACHE_NAME; // human-readable version === cache name (no drift)
 const OFFLINE_URL = '/offline.html';
 
-// Critical startup assets - loaded first for fast splash screen
-// NOTE: These are spread into PRECACHE_ASSETS below for unified caching,
-// but kept as a separate array for clarity and potential future prioritization
+// Critical above-the-fold assets - precached first for fast first paint.
+// The splash-screen startup launcher was removed (issue #3329); the navbar
+// logo remains a critical first-paint asset.
 const STARTUP_ASSETS = [
-  '/css/startup-launcher.css',
-  '/js/startup-launcher.js',
   '/logo/logo-navbar.png'
 ];
 

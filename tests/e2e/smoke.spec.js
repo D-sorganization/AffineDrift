@@ -9,17 +9,12 @@ const PUBLIC_ROUTES = [
   "/models/models.html",
 ];
 
+// The splash-screen startup launcher was removed (issue #3329): content is now
+// visible on first paint with no reveal gate. This helper just confirms the
+// body is rendered and that no splash overlay leaks back in.
 async function waitForPageReveal(page) {
-  await expect
-    .poll(
-      () =>
-        page.evaluate(() =>
-          document.documentElement.classList.contains("ad-page-revealed"),
-        ),
-      { timeout: 10000 },
-    )
-    .toBe(true);
-  await expect(page.locator("#ad-splash-screen")).toBeHidden();
+  await expect(page.locator("body")).toBeVisible();
+  await expect(page.locator("#ad-splash-screen")).toHaveCount(0);
 }
 
 test.describe("PR Smoke", () => {
@@ -115,10 +110,10 @@ test.describe("PR Smoke - behavioral invariants", () => {
     expect(stored).toBe(after);
   });
 
-  test("startup splash is removed and the page is revealed after load", async ({ page }) => {
+  test("page is visible on first paint with no splash overlay (#3329)", async ({ page }) => {
     await page.goto("/", { waitUntil: "load" });
-    // The launcher reveals the page (and clears the splash) once ready; allow
-    // for its minimum-splash + fade timing.
+    // No splash overlay is ever injected, and content paints immediately.
+    await expect(page.locator("#ad-splash-screen")).toHaveCount(0);
     await waitForPageReveal(page);
   });
 
