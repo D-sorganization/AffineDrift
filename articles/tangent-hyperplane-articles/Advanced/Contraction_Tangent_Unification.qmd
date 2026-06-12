@@ -347,7 +347,9 @@ The LQR controller $\mathbf{u} = -\mathbf{K} \mathbf{x}$ where $\mathbf{K} = \ma
 $$
 \dot{\mathbf{x}} = (\mathbf{A} - \mathbf{B} \mathbf{K}) \mathbf{x}
 $$ {#eq-lqr-closed-loop}
-contracting with metric $\mathbf{M} = \mathbf{S}$ and rate $\lambda = \frac{1}{2} \lambda_{\min}(\mathbf{S} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S})$.
+contracting with metric $\mathbf{M} = \mathbf{S}$ and rate
+$\lambda = \frac{1}{2} \lambda_{\min}\!\left(\mathbf{S}^{-1/2}(\mathbf{Q} + \mathbf{K}^\top \mathbf{R} \mathbf{K})\,\mathbf{S}^{-1/2}\right)$.
+This follows from the closed-loop ARE identity $(\mathbf{A}-\mathbf{B}\mathbf{K})^\top \mathbf{S} + \mathbf{S}(\mathbf{A}-\mathbf{B}\mathbf{K}) = -(\mathbf{Q} + \mathbf{K}^\top \mathbf{R} \mathbf{K})$: writing the right-hand side as $-2\lambda \mathbf{S}$ in the $\mathbf{S}$-metric gives the $\mathbf{S}^{-1/2}$-normalized eigenvalue above.
 :::
 
 **Interpretation**: In this restricted setting, the optimal feedback law also provides a local exponential-stability certificate through the induced metric.
@@ -1138,88 +1140,62 @@ $$ {#eq-sdp-standard-form}
 
 where $\langle \mathbf{C}, \mathbf{M} \rangle = \text{tr}(\mathbf{C}^\top \mathbf{M})$.
 
-### Solving with CVXPY
+### The metric belongs to the *closed loop*
+
+A subtle but essential point: an LQR controller's contraction metric pertains to the
+**closed-loop** dynamics $A - BK$, **not** the open-loop $A$. Trying to solve the
+Lyapunov inequality $A^\top M + M A \preceq -2\lambda M - Q$ on the *open-loop* $A$
+of, say, a double integrator $A = \begin{bmatrix}0&1\\0&0\end{bmatrix}$ is **infeasible**:
+both eigenvalues of $A$ are $0$ (not Hurwitz), so no $M \succ 0$ makes
+$A^\top M + M A \prec 0$. The correct object is the ARE solution $S$, which is a
+contraction metric for the *stabilized* system.
+
+### Example: Double Integrator (closed-loop ARE)
+
+Solve the continuous-time ARE for the double integrator with $Q = \operatorname{diag}(10, 1)$,
+$R = 1$, form the LQR gain $K = R^{-1} B^\top S$, and verify that $M = S$ satisfies the
+**closed-loop** contraction LMI $(A-BK)^\top M + M(A-BK) = -(Q + K^\top R K) \preceq 0$:
 
 ```python
-import cvxpy as cp
 import numpy as np
+from scipy.linalg import solve_continuous_are
 
-def compute_contraction_metric(A, Q, lam=1.0):
-    """
-    Compute contraction metric M such that:
-        A.T @ M + M @ A <= -2*lam*M - Q
-
-    Args:
-        A: State transition matrix (n, n)
-        Q: State cost matrix (n, n)
-        lam: Desired contraction rate
-
-    Returns:
-        M: Contraction metric (n, n)
-    """
-    n = A.shape[0]
-    M = cp.Variable((n, n), symmetric=True)
-
-    # Objective: minimize trace (smallest metric)
-    objective = cp.Minimize(cp.trace(M))
-
-    # Constraints
-    constraints = [
-        M >> 1e-6 * np.eye(n),  # Positive definite
-        A.T @ M + M @ A << -2*lam*M - Q  # Contraction condition
-    ]
-
-    # Solve
-    prob = cp.Problem(objective, constraints)
-    prob.solve(solver=cp.SCS, eps=1e-6)
-
-    if prob.status != cp.OPTIMAL:
-        raise ValueError(f"SDP failed: {prob.status}")
-
-    return M.value
-```
-
-### Example: Double Integrator
-
-```python
-# System: dx/dt = [0 1; 0 0] x + [0; 1] u
-A = np.array([[0, 1], [0, 0]])
-B = np.array([[0], [1]])
+# System: dx/dt = [0 1; 0 0] x + [0; 1] u  (double integrator)
+A = np.array([[0.0, 1.0], [0.0, 0.0]])
+B = np.array([[0.0], [1.0]])
 Q = np.diag([10.0, 1.0])
 R = np.array([[1.0]])
 
-# Solve LQR for comparison
-from scipy.linalg import solve_continuous_are
-S_lqr = solve_continuous_are(A, B, Q, R)
-print("LQR Riccati solution:")
-print(S_lqr)
+S = solve_continuous_are(A, B, Q, R)   # ARE solution = contraction metric
+K = np.linalg.solve(R, B.T @ S)        # LQR gain
+A_cl = A - B @ K                       # closed-loop dynamics
 
-# Compute contraction metric directly
-lam = 2.0
-M_contraction = compute_contraction_metric(A, Q, lam)
-print("\nContraction metric (lambda=2.0):")
-print(M_contraction)
-
-# They should match!
-print("\nDifference:")
-print(np.linalg.norm(S_lqr - M_contraction))
+print("ARE solution S (contraction metric M):")
+print(np.round(S, 4))
+print("LQR gain K:", np.round(K, 4))
+print("Closed-loop eigenvalues:", np.round(np.linalg.eigvals(A_cl), 4))
+print("Closed-loop Lyapunov residual  A_cl^T S + S A_cl + (Q + K^T R K):")
+print(np.round(A_cl.T @ S + S @ A_cl + (Q + K.T @ R @ K), 9))
 ```
 
-**Output**:
+**Output** (computed with SciPy `solve_continuous_are`):
+
 ```
-LQR Riccati solution:
-[[4.162  2.000]
- [2.000  2.828]]
-
-Contraction metric (lambda=2.0):
-[[4.159  1.998]
- [1.998  2.825]]
-
-Difference:
-0.0037
+ARE solution S (contraction metric M):
+[[8.5584 3.1623]
+ [3.1623 2.7064]]
+LQR gain K: [[3.1623 2.7064]]
+Closed-loop eigenvalues: [-1.3532+1.1537j -1.3532-1.1537j]
+Closed-loop Lyapunov residual  A_cl^T S + S A_cl + (Q + K^T R K):
+[[ 0. -0.]
+ [-0.  0.]]
 ```
 
-**Close match!** Small difference due to numerical precision.
+The residual is zero to machine precision: $S$ exactly satisfies the closed-loop
+Lyapunov equation $(A-BK)^\top S + S(A-BK) = -(Q + K^\top R K)$, so $S$ **is** a valid
+contraction metric for the LQR-stabilized double integrator (closed-loop eigenvalues
+$-1.353 \pm 1.154\,j$, both in the left half-plane). Note $K = B^\top S = [\,3.162,\ 2.706\,]$,
+i.e. $s_{12} = \sqrt{10}$ and $s_{22} = \sqrt{2\sqrt{10}+1}$ — the analytic ARE solution.
 
 ## JAX Autodiff for Metric Tensors
 
@@ -1276,8 +1252,9 @@ print(A)
 ```
 Jacobian A:
 [[ 0.          1.        ]
- [-9.79500484 -0.1       ]]
+ [-9.76099086 -0.1       ]]
 ```
+(The lower-left entry is $\partial\dot\omega/\partial\theta = -g\cos\theta_0 = -9.81\cos(0.1) \approx -9.761$.)
 
 ### Computing Metric Time Derivative
 
@@ -1670,10 +1647,9 @@ This article established a rigorous connection between contraction theory and ta
 
 ## Implementation Resources
 
-All code examples are available at:
-```
-https://github.com/AffineDrift/contraction-tangent-unification
-```
+The code snippets above are self-contained and illustrative; each can be run directly
+with `numpy`, `scipy`, and (for the autodiff examples) `jax`. There is no separate
+companion repository.
 
 Includes:
 - JAX implementation of Contraction-DDP

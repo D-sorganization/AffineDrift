@@ -278,18 +278,18 @@ $$\tau_{\mathrm{vel.\,drift}}(t_k)
   \mathrm{ID}\big(q_k,\dot{q}_k,\eta_k,\dot{\eta}_k\big)
   - \mathrm{ID}\big(q_k,0,\eta_k,0\big).$$
 
-In the Simulink implementation, it was observed that:
+In the Simulink implementation, it was observed that, at the freeze instant $t_0$:
 
-$$\tau_{\mathrm{total}}(t_k) - \tau_{\mathrm{ZTCF}}(t_k)
+$$\tau_{\mathrm{total}}(t_0) - \tau_{\mathrm{ZTCF}}(t_0)
   =
-  \tau_{\mathrm{ZVCF}}(t_k),$$
+  \tau_{\mathrm{input}}(t_0),$$
 
-matching the analytical identity predicted by the affine decomposition.
+matching the analytical identity predicted by the affine decomposition: the ZTCF run records the **full** drift at $t_0$, so subtracting it from the total returns the input. The configuration-only ZVCF force is the separate slice $\tau_{\mathrm{ZVCF}} = \tau_{\mathrm{drift}} - \tau_{\mathrm{vel.drift}}$ (defined above) and is **not** equal to $\tau_{\mathrm{total}} - \tau_{\mathrm{ZTCF}}$; the two differ by the velocity-dependent drift.
 
 ::: {.callout-warning}
 ## Approximation Note on the Subtraction Identity
 
-Consistent with the earlier callout, the identity $\tau_{\mathrm{total}}(t_k) - \tau_{\mathrm{ZTCF}}(t_k) = \tau_{\mathrm{ZVCF}}(t_k)$ holds **exactly at $t = t_0$** (the freeze instant); for $t > t_0$ the equality is approximate, with error growing with the perturbation magnitude. After $t_0$, the ZTCF trajectory diverges from the actual trajectory — $F_{\mathrm{ZTCF}}(t)$ is evaluated along a *different* state path than $F_{\mathrm{total}}(t)$. The subtraction mixes forces from two trajectories at different states, which is not generally equal to $F_{\mathrm{ZVCF}}(t)$ at the *actual* trajectory state. The numerical near-equality observed in simulation is explained by the fact that the ZTCF trajectory remains close to the actual trajectory over short time windows, making the approximation tight. This is not a flaw in the method — it is inherent to counterfactual reasoning — but it means the result should be interpreted as "the instantaneous counterfactual attribution at each step," not as a globally exact algebraic identity.
+Consistent with the earlier callout, the identity $\tau_{\mathrm{total}}(t_0) - \tau_{\mathrm{ZTCF}}(t_0) = \tau_{\mathrm{input}}(t_0)$ holds **exactly at $t = t_0$** (the freeze instant); for $t > t_0$ the equality is approximate, with error growing with the perturbation magnitude. After $t_0$, the ZTCF trajectory diverges from the actual trajectory — $F_{\mathrm{ZTCF}}(t)$ is evaluated along a *different* state path than $F_{\mathrm{total}}(t)$. The subtraction mixes forces from two trajectories at different states, which is not generally equal to $F_{\mathrm{input}}(t)$ at the *actual* trajectory state. The numerical near-equality observed in simulation is explained by the fact that the ZTCF trajectory remains close to the actual trajectory over short time windows, making the approximation tight. This is not a flaw in the method — it is inherent to counterfactual reasoning — but it means the result should be interpreted as "the instantaneous counterfactual attribution at each step," not as a globally exact algebraic identity.
 :::
 
 This numerical result confirms correct implementation of the counterfactual algorithms — the discrete-time "kill switch" logic correctly preserves the near-equality that the affine theory predicts over short time steps.
