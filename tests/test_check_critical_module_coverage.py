@@ -60,3 +60,27 @@ def test_targets_are_well_formed():
         assert isinstance(module, str) and module
         assert isinstance(tests, list) and tests
         assert 0 < threshold <= 100
+
+
+def test_gate_covers_physics_and_control_modules():
+    """The gate must include the numerically critical physics/control modules."""
+    modules = {module for module, _tests, _threshold in gate.CRITICAL_COVERAGE_TARGETS}
+    required = {
+        "src.golf_simulation.ball_flight",
+        "src.golf_simulation.round_simulator",
+        "src.golf_simulation.putting",
+        "src.golf_simulation.clubs",
+        "src.core.optimizers.ilqr_solver",
+        "src.affine_control.swing_optimizer",
+    }
+    assert required <= modules
+
+
+def test_physics_targets_reference_existing_test_files():
+    """Each critical-module target must list real test files on disk."""
+    from pathlib import Path
+
+    repo_root = Path(gate.__file__).resolve().parents[1]
+    for _module, tests, _threshold in gate.CRITICAL_COVERAGE_TARGETS:
+        for test_path in tests:
+            assert (repo_root / test_path).exists(), f"missing test file: {test_path}"
