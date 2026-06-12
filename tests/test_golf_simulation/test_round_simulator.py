@@ -2,11 +2,12 @@
 
 import math
 
+import numpy as np
 import pytest
 
-from src.golf_simulation.ball_flight import BallFlightDynamics
+from src.golf_simulation.ball_flight import BallFlightDynamics, BallFlightState
 from src.golf_simulation.clubs import ClubBag
-from src.golf_simulation.course import create_championship_course, create_par3_course
+from src.golf_simulation.course import GolfHole, create_championship_course, create_par3_course
 from src.golf_simulation.putting import GreenSurface, PuttingSimulator
 from src.golf_simulation.round_simulator import MAX_STROKES_PER_HOLE, RoundSimulator
 from src.golf_simulation.terrain import TerrainType
@@ -210,3 +211,81 @@ class TestFindPuttStoppingPoint:
         fx, fy = RoundSimulator._find_putt_stopping_point(traj, putt_sim, hole)
         dist_to_pin = math.sqrt((fx - pin_x) ** 2 + (fy - pin_y) ** 2)
         assert dist_to_pin < 1e-6
+
+
+def _uniform_terrain_hole(terrain: TerrainType) -> GolfHole:
+    """Build a hole whose terrain_fn returns a single terrain everywhere."""
+    return GolfHole(
+        number=1,
+        par=4,
+        yardage=400.0,
+        handicap=1,
+        tee_position=(0.0, 0.0, 0.0),
+        pin_position=(300.0, 0.0, 0.0),
+        green_center=(300.0, 0.0, 0.0),
+        green_radius=9.0,
+        terrain_fn=lambda x, y: terrain,
+    )
+
+
+class TestBounceAndRoll:
+    """Tests for _apply_bounce_and_roll terrain physics integration."""
+
+    def _make_sim(self) -> RoundSimulator:
+        return RoundSimulator(create_par3_course(), rng_seed=7)
+
+    def _landing_state(self) -> BallFlightState:
+        # Ball arriving at the ground moving forward and downward, with backspin.
+        return BallFlightState(
+            position=np.array([100.0, 0.0, 0.0]),
+            velocity=np.array([20.0, 0.0, -10.0]),
+            spin=np.array([0.0, -200.0, 0.0]),
+        )
+
+    def test_bounce_and_roll_shifts_landing_vs_no_bounce(self):
+        """Bounce/roll must move the resting point past the first touchdown."""
+        sim = self._make_sim()
+        hole = _uniform_terrain_hole(TerrainType.FAIRWAY)
+        landing = self._landing_state()
+        resting, extra, _terrain = sim._apply_bounce_and_roll(landing, hole)
+        # No-bounce resting position would be the touchdown x (100.0).
+        assert resting[0] > float(landing.position[0]) + 1.0
+        assert len(extra) > 0
+        assert resting[2] == pytest.approx(0.0)
+
+    def test_fairway_rolls_farther_than_bunker(self):
+        """Identical landing rolls out farther on fairway than in a bunker."""
+        sim = self._make_sim()
+        fairway_rest, _f_extra, _ft = sim._apply_bounce_and_roll(
+            self._landing_state(), _uniform_terrain_hole(TerrainType.FAIRWAY)
+        )
+        bunker_rest, _b_extra, _bt = sim._apply_bounce_and_roll(
+            self._landing_state(), _uniform_terrain_hole(TerrainType.BUNKER)
+        )
+        touchdown_x = float(self._landing_state().position[0])
+        fairway_rollout = fairway_rest[0] - touchdown_x
+        bunker_rollout = bunker_rest[0] - touchdown_x
+        assert fairway_rollout > bunker_rollout
+
+    def test_deep_rough_carries_shorter_than_fairway(self):
+        """A shot from deep rough must carry shorter than from fairway."""
+        course = create_par3_course()
+        club = ClubBag().select_club(150.0, TerrainType.FAIRWAY)
+
+        fairway_hole = _uniform_terrain_hole(TerrainType.FAIRWAY)
+        rough_hole = _uniform_terrain_hole(TerrainType.DEEP_ROUGH)
+        start = (0.0, 0.0, 0.0)
+
+        sim_fw = RoundSimulator(course, rng_seed=123)
+        sim_dr = RoundSimulator(course, rng_seed=123)
+        fairway_shot = sim_fw._simulate_shot(start, fairway_hole, club)
+        rough_shot = sim_dr._simulate_shot(start, rough_hole, club)
+        assert rough_shot.distance_yards < fairway_shot.distance_yards
+
+    def test_terrain_at_rest_is_resolved_from_resting_point(self):
+        """Resting terrain reflects the post-rollout position."""
+        sim = self._make_sim()
+        hole = _uniform_terrain_hole(TerrainType.GREEN)
+        resting, _extra, terrain = sim._apply_bounce_and_roll(self._landing_state(), hole)
+        assert terrain == TerrainType.GREEN
+        assert resting[2] == pytest.approx(0.0)

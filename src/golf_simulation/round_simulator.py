@@ -22,12 +22,26 @@ from src.golf_simulation.putting import (
     PuttingSimulator,
     stimpmeter_deceleration,
 )
-from src.golf_simulation.terrain import TerrainType
+from src.golf_simulation.terrain import (
+    TERRAIN_PROPERTIES,
+    TerrainType,
+    compute_bounce,
+)
 
 logger = logging.getLogger(__name__)
 
 # Maximum strokes before conceding a hole
 MAX_STROKES_PER_HOLE = 10
+
+# Gravity used for the post-landing friction rollout (m/s^2).
+_ROLLOUT_GRAVITY_M_S2 = 9.81
+
+# Bounce/rollout integration parameters.
+_BOUNCE_DT_S = 0.01
+_MAX_BOUNCES = 10
+_MIN_BOUNCE_NORMAL_SPEED_MS = 0.5
+_MIN_ROLL_SPEED_MS = 0.05
+_MAX_ROLLOUT_TIME_S = 30.0
 
 
 @dataclass
@@ -254,10 +268,24 @@ class RoundSimulator:
         hole: GolfHole,
         club: GolfClub,
     ) -> LaunchConditions:
-        """Create initial launch conditions with realistic dispersion."""
+        """Create initial launch conditions with realistic dispersion.
+
+        The quality of the lie at the starting position scales both carry
+        (via ball speed) and accuracy (via the direction-error spread), so
+        shots played from rough or bunkers cost distance and precision.
+        """
+        terrain = hole.get_terrain(position[0], position[1])
+        lie_quality = TERRAIN_PROPERTIES[terrain].lie_quality
+
         speed_variation = 1.0 + self.rng.normal(0.0, 0.02)
-        ball_speed = club.typical_speed_ms * max(speed_variation, 0.5)
-        direction_error = self.rng.normal(0.0, np.radians(2.0))
+        # Worse lies (lower lie_quality) reduce ball speed: 1.0 -> full speed,
+        # 0.0 -> 70% speed.
+        lie_speed_factor = 0.7 + 0.3 * lie_quality
+        ball_speed = club.typical_speed_ms * max(speed_variation, 0.5) * lie_speed_factor
+        # Worse lies widen the direction-error spread (2 - lie_quality scales
+        # the base 2-degree standard deviation).
+        direction_std = np.radians(2.0) * (2.0 - lie_quality)
+        direction_error = self.rng.normal(0.0, direction_std)
 
         dx = hole.pin_position[0] - position[0]
         dy = hole.pin_position[1] - position[1]
@@ -318,6 +346,83 @@ class RoundSimulator:
         """Backward-compatible alias for shot penalty handling."""
         return self._handle_shot_penalty(start_pos, end_pos, terrain, hole)
 
+    def _apply_bounce_and_roll(
+        self,
+        landing_state: BallFlightState,
+        hole: GolfHole,
+    ) -> tuple[tuple[float, float, float], list[tuple[float, float, float]], TerrainType]:
+        """Bounce and roll the ball from its first touchdown to rest.
+
+        Iterates short ballistic hops (re-looking up the terrain at every
+        touchdown, since the ball can cross fairway -> rough -> green) and
+        then applies a friction-driven tangential rollout. Returns the
+        resting position, the extra trajectory points generated, and the
+        terrain the ball comes to rest on.
+
+        Args:
+            landing_state: Ball state at first ground contact (z clamped to 0).
+            hole: The hole being played (provides terrain lookup).
+
+        Returns:
+            Tuple of (resting_position, extra_trajectory_points, terrain_at_rest).
+        """
+        position = np.array(landing_state.position, dtype=float)
+        position[2] = 0.0
+        velocity = np.array(landing_state.velocity, dtype=float)
+        spin = np.array(landing_state.spin, dtype=float)
+
+        extra_points: list[tuple[float, float, float]] = []
+        terrain = hole.get_terrain(float(position[0]), float(position[1]))
+
+        # Bounce phase: each impact loses energy via restitution/friction.
+        for _ in range(_MAX_BOUNCES):
+            props = TERRAIN_PROPERTIES[terrain]
+            velocity, spin = compute_bounce(velocity, spin, props)
+
+            vertical_speed = float(velocity[2])
+            if vertical_speed < _MIN_BOUNCE_NORMAL_SPEED_MS:
+                # Not enough energy for a meaningful hop; transition to roll.
+                velocity[2] = 0.0
+                break
+
+            # Ballistic hop until the ball returns to the ground (z <= 0).
+            t = 0.0
+            while t < _MAX_ROLLOUT_TIME_S:
+                t += _BOUNCE_DT_S
+                position[0] += float(velocity[0]) * _BOUNCE_DT_S
+                position[1] += float(velocity[1]) * _BOUNCE_DT_S
+                position[2] += float(velocity[2]) * _BOUNCE_DT_S
+                velocity[2] -= _ROLLOUT_GRAVITY_M_S2 * _BOUNCE_DT_S
+                if position[2] <= 0.0:
+                    position[2] = 0.0
+                    break
+                extra_points.append((float(position[0]), float(position[1]), float(position[2])))
+
+            extra_points.append((float(position[0]), float(position[1]), 0.0))
+            terrain = hole.get_terrain(float(position[0]), float(position[1]))
+
+        # Roll phase: decelerate tangential velocity at mu * g until it stops.
+        velocity[2] = 0.0
+        t = 0.0
+        while t < _MAX_ROLLOUT_TIME_S:
+            speed = float(np.linalg.norm(velocity[:2]))
+            if speed < _MIN_ROLL_SPEED_MS:
+                break
+            props = TERRAIN_PROPERTIES[terrain]
+            decel = props.friction_coefficient * _ROLLOUT_GRAVITY_M_S2
+            new_speed = max(0.0, speed - decel * _BOUNCE_DT_S)
+            scale = new_speed / speed
+            velocity[0] *= scale
+            velocity[1] *= scale
+            position[0] += float(velocity[0]) * _BOUNCE_DT_S
+            position[1] += float(velocity[1]) * _BOUNCE_DT_S
+            t += _BOUNCE_DT_S
+            extra_points.append((float(position[0]), float(position[1]), 0.0))
+            terrain = hole.get_terrain(float(position[0]), float(position[1]))
+
+        resting = (float(position[0]), float(position[1]), 0.0)
+        return resting, extra_points, terrain
+
     def _simulate_shot(
         self,
         position: tuple[float, float, float],
@@ -342,13 +447,12 @@ class RoundSimulator:
         ]
 
         final_state = trajectory_states[-1]
-        end_pos = (
-            float(final_state.position[0]),
-            float(final_state.position[1]),
-            float(final_state.position[2]),
-        )
 
-        terrain_at_rest = hole.get_terrain(end_pos[0], end_pos[1])
+        # Bounce and roll the ball from its first touchdown to its resting
+        # position. Terrain friction/restitution/spin-retention now affect
+        # where the ball ends up.
+        end_pos, rollout_points, terrain_at_rest = self._apply_bounce_and_roll(final_state, hole)
+        traj_points.extend(rollout_points)
 
         dx_shot = end_pos[0] - position[0]
         dy_shot = end_pos[1] - position[1]
