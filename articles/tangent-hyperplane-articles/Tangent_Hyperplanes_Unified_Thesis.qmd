@@ -2324,6 +2324,11 @@ All methods succeed by exploiting the **exact infinitesimal linearity** establis
 
 This chapter presents three detailed case studies demonstrating the tangent space framework in practice: spacecraft rendezvous (orbital mechanics), planar robot arm (manipulation), and quadrotor stabilization (underactuated flight). Each example includes complete problem formulation, DDP/iLQR implementation, and results analysis.
 
+::: {.callout-important}
+## Illustrative, not validated
+The code blocks in this chapter are abbreviated **sketches** (some solver bodies are stubbed), and the numeric "Results" below are **representative, hand-chosen values** illustrating the expected qualitative behavior — they are **not** the output of a validated simulation and have not been benchmarked against empirical data. Treat them as worked-example targets, not measured results.
+:::
+
 ## Case Study 1: Spacecraft Rendezvous
 
 ### Problem Formulation
@@ -2718,13 +2723,11 @@ This coupling is **exact in tangent space** (Jacobian $B$ has rank 4), and DDP/i
 
 **Common thread**: All exploit **exact local linearization** + **integral superposition**. Success depends on how much tangent spaces vary, not on "degree of nonlinearity."
 
-## Code Repository
+## Reference Implementation Notes
 
-Full implementations available at:
+The case studies above are illustrative sketches rather than a released codebase;
+there is no separate companion repository. A complete implementation would include:
 
-**GitHub**: `github.com/[user]/tangent-hyperplane-examples`
-
-Includes:
 - Python/JAX implementations of all three case studies
 - Visualization tools (trajectory plots, phase portraits)
 - Jupyter notebooks with step-by-step walkthroughs

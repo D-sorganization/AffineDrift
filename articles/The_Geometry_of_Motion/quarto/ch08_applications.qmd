@@ -1318,25 +1318,30 @@ opti.minimize(sum([...]))  # Riccati-based cost
 
 Drake (from MIT) provides high-level interfaces for multibody systems and control design:
 \begin{verbatim}
-from pydrake.all import *
+import numpy as np
+from pydrake.all import (
+    DiagramBuilder, AddMultibodyPlantSceneGraph,
+    Parser, LinearQuadraticRegulator,
+)
 
-# Load robot from URDF
-plant = MultibodyPlant()
-parser = Parser(plant)
-parser.AddModelFromFile("robot.urdf")
+# Build the diagram and add a plant + scene graph (time_step > 0 = discrete)
+builder = DiagramBuilder()
+plant, scene_graph = AddMultibodyPlantSceneGraph(builder, time_step=1e-3)
+
+# Load robot from URDF, then finalize the plant
+Parser(plant).AddModels("robot.urdf")
 plant.Finalize()
 
-# Design LQR controller
+# Design an LQR controller about a default operating point
 context = plant.CreateDefaultContext()
-Q_cost = np.eye(nq)  # state cost
-R_cost = np.eye(nu)  # control cost
+Q_cost = np.eye(plant.num_multibody_states())  # state cost
+R_cost = np.eye(plant.num_actuators())         # control cost
 controller = LinearQuadraticRegulator(plant, context, Q_cost, R_cost)
 
-# Build diagram and simulate
-diagram = DiagramBuilder()
-diagram.AddSystem(plant)
-diagram.AddSystem(controller)
-# ... connect and simulate
+# Wire the controller into the diagram and build it, then simulate
+builder.AddSystem(controller)
+# ... connect plant <-> controller ports ...
+diagram = builder.Build()
 \end{verbatim}
 
 %% ==========================================================================

@@ -80,23 +80,23 @@ $$(\kern-0.2em T_q Q_c)^{\perp_M} = \text{span}\{\nabla_{q} \phi_1(q), \ldots, \
 
 ### Worked Example: Planar Two-Link Closed Chain
 
-Consider a simple planar closed-chain mechanism: two rigid links of lengths $\ell_1$ and $\ell_2$, with joints at angles $\theta_1$ and $\theta_2$ (measured from the horizontal), constrained to meet at a common endpoint.
+Consider a planar four-bar–style closed chain: a two-link serial arm (link lengths $\ell_1, \ell_2$, joint angles $\theta_1, \theta_2$) whose tip must coincide with the tip of a single grounded link (length $\ell_3$, angle $\theta_3$) pinned at a base point offset $(\Delta x, \Delta y)$ away. To leave the mechanism *movable* we must keep enough free coordinates: with $c = 2$ scalar loop-closure equations, a movable chain needs $n \geq 3$ free angles.
 
-The configuration space is $Q_{\text{free}} = [0, 2\pi) \times [0, 2\pi)$ (the pair $(\theta_1, \theta_2)$). The constraint is that the endpoint of link 1 equals the endpoint of link 2:
+The configuration space is therefore $Q_{\text{free}} = [0, 2\pi)^3$ (the triple $(\theta_1, \theta_2, \theta_3)$), $n = 3$. The constraint is that the serial-arm tip equals the grounded-link tip:
 
 \begin{align}
-  \ell_1 \cos\theta_1 &= \ell_2 \cos\theta_2 + \Delta x, \\
-  \ell_1 \sin\theta_1 &= \ell_2 \sin\theta_2 + \Delta y,
+  \ell_1 \cos\theta_1 + \ell_2 \cos\theta_2 &= \ell_3 \cos\theta_3 + \Delta x, \\
+  \ell_1 \sin\theta_1 + \ell_2 \sin\theta_2 &= \ell_3 \sin\theta_3 + \Delta y.
 \end{align}
 
-where $(\Delta x, \Delta y)$ is the fixed distance between the base points. The constraint Jacobian is:
+Here $c = 2$, so by $\dim Q_c = n - c$ the constraint manifold has dimension $3 - 2 = 1$: the mechanism is a **one-DOF** closed chain (a single input fully determines the configuration, as expected of a planar four-bar linkage). Had we used only the two angles $(\theta_1, \theta_2)$ with these two constraints, $\dim Q_c = 2 - 2 = 0$ would give isolated assembly configurations — a rigid structure, not a mechanism. The constraint Jacobian (w.r.t. the three angles) is:
 
 $$J_c = \begin{bmatrix}
-  -\ell_1 \sin\theta_1 & \ell_2 \sin\theta_2 \\
-  \ell_1 \cos\theta_1 & -\ell_2 \cos\theta_2
-\end{bmatrix}.$$
+  -\ell_1 \sin\theta_1 & -\ell_2 \sin\theta_2 & \ell_3 \sin\theta_3 \\
+  \ell_1 \cos\theta_1 & \ell_2 \cos\theta_2 & -\ell_3 \cos\theta_3
+\end{bmatrix},$$
 
-The constraint manifold becomes singular when $\theta_1 = \theta_2$ (both links parallel) or $\theta_1 = \theta_2 + \pi$ (links anti-parallel). At these configurations, the mechanism has a locked or freely-moving singularity.
+which is full rank (rank 2) away from singular assemblies, confirming the 1-D constraint manifold. The mechanism reaches a singularity when the two moving links align ($\theta_1 = \theta_2$ or $\theta_1 = \theta_2 + \pi$), where the arm loses the ability to instantaneously change its tip position.
 
 ## Lagrangian Mechanics on Constrained Manifolds
 
@@ -145,7 +145,7 @@ where $M^{kl}$ is the $(k,l)$-entry of $M^{-1}$.
 
 The Coriolis-centrifugal acceleration can be expressed in terms of Christoffel symbols:
 
-$$(C(q,\dot{q})\dot{q})_i = -\sum_{j,k} \Gamma^j_{ik}\dot{q}_j\dot{q}_k.$$
+$$(C(q,\dot{q})\dot{q})_k = \sum_{i,j} \Gamma^k_{ij}\dot{q}_i\dot{q}_j.$$
 
 ::: {.callout-note}
 

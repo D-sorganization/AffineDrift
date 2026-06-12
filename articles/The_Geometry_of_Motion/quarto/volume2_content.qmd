@@ -1537,8 +1537,10 @@ most practically important results of this book.
 
   This is not a hardware problem---it is a *coordinate singularity*,
   an artifact of forcing a non-Euclidean space ($\SOthree$) into Euclidean
-  coordinates ($\Reals^3$). Apollo 13's inertial measurement unit
-  experienced gimbal lock operationally. Every modern spacecraft avoids
+  coordinates ($\Reals^3$). The Apollo guidance system's three-gimbal
+  inertial platform had a built-in gimbal-lock caution region that crews
+  were trained to avoid; this was a known design constraint of the IMU,
+  not a specific Apollo~13 operational event. Every modern spacecraft avoids
   Euler angles for precisely this reason.
 
   The lesson for control: **if you use the wrong coordinates, your
@@ -2326,7 +2328,7 @@ encoded in the manifold's Riemannian geometry.
 1. **(Topology.)** Determine the configuration manifold and its
   dimension for each system:
   1. **(Euler angle singularity.)** For the ZYX Euler angle representation
-   $\bm{R} = R_z(\phi)\, R_y(\theta)\, R_x(\psi)$:
+   $\bm{R} = R_z(\psi)\, R_y(\theta)\, R_x(\phi)$ (yaw $\psi$ about Z, pitch $\theta$ about Y, roll $\phi$ about X, per `NOTATION.md`):
    1. Compute the Jacobian $\bm{J}$ relating angular velocity
    $\bm{\omega}$ to Euler angle rates $(\dot{\phi}, \dot{\theta}, \dot{\psi})$.
    2. Show that $\bm{J}$ is singular at $\theta = \pm\pi/2$.

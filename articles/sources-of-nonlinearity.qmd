@@ -92,7 +92,12 @@ still affine in $u$, but with state-dependent effective input matrix.
 $$
 \tau_{\text{total}} = \tau_u + \tau_C + \tau_g,
 $$
-where $\tau_u = G(q)u$, $\tau_C = -C(q,\dot{q})\dot{q}$, and $\tau_g = -g(q)$ are gravitational and Coriolis torques. But the **accelerations do not superpose** because the mass matrix couples the joint accelerations. For instance, if we compute the acceleration induced by $u$ alone (setting Coriolis and gravity to zero), we get $\ddot{q}_u = \tilde{G}(q)u$. If we compute the gravitational acceleration (setting $u = 0$), we get $\ddot{q}_g = -M(q)^{-1}g(q)$. The total is $\ddot{q} = \ddot{q}_u + \ddot{q}_g$ only in the special case where $M(q)$ is constant. In general, the mass matrix creates **acceleration coupling**.
+where $\tau_u = G(q)u$, $\tau_C = -C(q,\dot{q})\dot{q}$, and $\tau_g = -g(q)$ are the input, Coriolis, and gravitational torques. At a **fixed state**, $M(q)^{-1}$ is a fixed linear operator, so the force-induced accelerations superpose **exactly for any $M(q)$** — constant or not:
+$$
+\ddot{q} = \ddot{q}_u + \ddot{q}_g + \ddot{q}_C, \qquad
+\ddot{q}_u = \tilde{G}(q)u,\;\; \ddot{q}_g = -M(q)^{-1}g(q),\;\; \ddot{q}_C = -M(q)^{-1}C(q,\dot{q})\dot{q}.
+$$
+The reason the two-term sum $\ddot{q}_u + \ddot{q}_g$ misses the total is that it **omits the Coriolis acceleration** $\ddot{q}_C$, *not* that $M(q)$ varies. (Where $M(q)$ does matter is across *different* states: the gain $\tilde{G}(q) = M(q)^{-1}G(q)$ is state-dependent, so superposition is local to a fixed state, not global.)
 
 **Implication for ZTCF:** The ZTCF is based on comparing $u = 0$ (passive drift) versus $u \neq 0$ (active input) at fixed state. The mass matrix does not invalidate this decomposition; it simply means that the effective input gain $\tilde{G}(q) = M(q)^{-1}G(q)$ is state-dependent. The passive drift $f(x) = f(q, \dot{q})$ still represents "what happens with $u = 0$," and the input $G(x)u$ still represents "the linear response to control" at that instant.
 

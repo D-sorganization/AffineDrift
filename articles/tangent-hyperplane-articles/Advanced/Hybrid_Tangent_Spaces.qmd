@@ -521,7 +521,7 @@ and:
 - $P_j = \frac{\partial R}{\partial x}\big|_{x^-}$ is the reset Jacobian
 - $f^- = f(x^-, u^-)$, $f^+ = f(x^+, u^+)$ are the vector fields before/after
 - $\nabla h$ is the gradient of the guard function
-- $\delta t_j = \frac{\nabla h^T \delta x^-}{\nabla h^T f^-}$ is the variation in crossing time
+- $\delta t_j = -\dfrac{\nabla h^T \delta x^-}{\nabla h^T f^-}$ is the variation in crossing time
 :::
 
 **Derivation (sketch):**
@@ -961,19 +961,19 @@ $$
 v_{rel}^+ = -e v_{rel}^- = -0.78 v_c
 $$
 
-**Ball velocity after impact:**
+**Ball velocity after impact.** In the CM frame the ball reverses its approach speed scaled by $e$; transforming back to the lab frame,
 
 $$
-v_b^+ = v_{cm} + \frac{m_c}{m_c + m_b} v_{rel}^+ \approx 0.81 v_c - 0.63 v_c = 1.48 v_c
+v_b^+ = v_{cm} + \frac{m_c}{m_c + m_b}\,e\,v_c = \frac{(1 + e) m_c}{m_c + m_b}\,v_c \approx 1.45\,v_c
 $$
 
-Using the standard collision formula instead:
+which is the standard inelastic-collision result:
 
 $$
-v_b^+ = \frac{(1 + e) m_c v_c}{m_c + m_b} = \frac{1.78 \times 200 \times 50}{246} \approx 72.4 \text{ m/s}
+v_b^+ = \frac{(1 + e) m_c v_c}{m_c + m_b} = \frac{1.78 \times 200 \times 50}{246} \approx 72.4 \text{ m/s} \approx 1.45\,v_c
 $$
 
-The ball leaves at approximately **1.45 times the club speed**, which matches empirical data for golf.
+The ball leaves at approximately **1.45 times the club speed**, which matches empirical data for golf (smash factor).
 
 **Energy loss:**
 

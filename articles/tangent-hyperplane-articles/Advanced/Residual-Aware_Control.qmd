@@ -290,7 +290,7 @@ where $K_{\text{dyn}}$ is an effective "dynamical curvature."
 
 - **Flat manifold** (linear system): $H_f = 0$ → $r \equiv 0$ → tangent space is exact globally
 - **Curved manifold** (nonlinear system): $H_f \neq 0$ → $r > 0$ → tangent space drifts from true flow
-- **Highly curved** (e.g., pendulum near $\theta = \pi$): Large $\|H_f\|$ → residuals grow rapidly
+- **Highly curved** (e.g., pendulum near $\theta = \pi/2$, where the Hessian $H_{f} = -(g/L)\sin\theta$ is maximal): Large $\|H_f\|$ → residuals grow rapidly. (Distinct from the *linearization-instability* region near $\theta = \pi$, the inverted equilibrium, where the curvature magnitude is actually zero.)
 :::
 
 ### Visual Example: Double Integrator vs. Pendulum
@@ -815,10 +815,10 @@ plt.tight_layout()
 During walking, **heel strike** causes:
 
 $$
-\Delta \dot{x} = (I - \frac{J^T (J M^{-1} J^T)^{-1} J M^{-1}) M \dot{x}^-
+\Delta \dot{x} = -M^{-1} J^T (J M^{-1} J^T)^{-1} J \dot{x}^-
 $$ {#eq-impact-map}
 
-where $J$ is the contact Jacobian and $M$ is the mass matrix.
+where $J$ is the contact Jacobian and $M$ is the mass matrix. (Equivalently $\dot{x}^+ = (I - M^{-1} J^T (J M^{-1} J^T)^{-1} J)\,\dot{x}^-$, the projection that zeroes the contact-normal velocity.)
 
 This is a **discrete jump**, not smooth dynamics → linearization completely fails during impact.
 

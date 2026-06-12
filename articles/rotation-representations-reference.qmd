@@ -125,9 +125,12 @@ w_1 z_2 + x_1 y_2 - y_1 x_2 + z_1 w_2
 
 ### Quaternion Derivative
 
-For angular velocity $\boldsymbol{\omega}$ in the body frame:
+In the Hamilton convention, **left** multiplication corresponds to angular velocity in the **space (world) frame** $\boldsymbol{\omega}_s$, while **right** multiplication corresponds to the **body frame** $\boldsymbol{\omega}_b$ (consistent with $\dot{R} = R[\boldsymbol{\omega}_b]_\times$ above):
 
-$$\dot{\mathbf{q}} = \frac{1}{2} \begin{bmatrix}0 \\ \boldsymbol{\omega}\end{bmatrix} \otimes \mathbf{q}.$$
+$$\dot{\mathbf{q}} = \frac{1}{2} \begin{bmatrix}0 \\ \boldsymbol{\omega}_s\end{bmatrix} \otimes \mathbf{q}
+\qquad\text{(space frame)}, \qquad
+\dot{\mathbf{q}} = \frac{1}{2}\, \mathbf{q} \otimes \begin{bmatrix}0 \\ \boldsymbol{\omega}_b\end{bmatrix}
+\qquad\text{(body frame)}.$$
 
 ::: {.callout-note}
 ## Double Cover
@@ -146,7 +149,7 @@ interpolating to take the short path.
 | $R$ → axis-angle | $\theta = \arccos\frac{\text{tr}(R)-1}{2}$, $\hat{\mathbf{n}} = \frac{1}{2\sin\theta}\begin{bmatrix}R_{32}-R_{23}\\R_{13}-R_{31}\\R_{21}-R_{12}\end{bmatrix}$ |
 | $R$ → quaternion | $w=\frac{1}{2}\sqrt{1+\text{tr}(R)}$, $(x,y,z)=\frac{1}{4w}(R_{32}-R_{23}, R_{13}-R_{31}, R_{21}-R_{12})$ |
 | $R$ → ZYX Euler | $\psi=\text{atan2}(R_{21},R_{11})$, $\theta=-\arcsin(R_{31})$, $\phi=\text{atan2}(R_{32},R_{33})$ |
-| quaternion → $R$ | Rodrigues formula above |
+| quaternion → $R$ | Quaternion-to-rotation-matrix formula (see *Quaternion to Rotation Matrix* above) |
 | quaternion → axis-angle | $\theta=2\arccos(w)$, $\hat{\mathbf{n}}=(x,y,z)/\sin(\theta/2)$ |
 | axis-angle → $R$ | Rodrigues: $R=I+\sin\theta[\hat{\mathbf{n}}]_\times+(1-\cos\theta)[\hat{\mathbf{n}}]_\times^2$ |
 | ZYX Euler → $R$ | $R=R_z(\psi)R_y(\theta)R_x(\phi)$ |
