@@ -197,12 +197,12 @@ def process_file(file_path: Path) -> dict[str, str]:
 
 **Style discipline (EPIC #3140).** The CI hook `style-discipline-qmd` (see `.pre-commit-config.yaml`) rejects any of the following in a top-level QMD page:
 
-| Forbidden | Replace with |
-| --- | --- |
-| `style="..."` inline attribute | A class in `css/components/` or `css/utilities/` |
-| `linear-gradient(...)` on a card or section | A solid token-driven background |
-| `#abc` / `#abcdef` hardcoded hex | `var(--color-*)` from `css/tokens/colors.css` |
-| Emoji in `content:` rules | An inline `<span>` if absolutely required |
+| Forbidden                                   | Replace with                                     |
+| ------------------------------------------- | ------------------------------------------------ |
+| `style="..."` inline attribute              | A class in `css/components/` or `css/utilities/` |
+| `linear-gradient(...)` on a card or section | A solid token-driven background                  |
+| `#abc` / `#abcdef` hardcoded hex            | `var(--color-*)` from `css/tokens/colors.css`    |
+| Emoji in `content:` rules                   | An inline `<span>` if absolutely required        |
 
 **Canonical primitives.** Use these instead of rolling new card / button / sidebar styling per page:
 
@@ -268,6 +268,36 @@ const scrollToElement = (elementId, offset = 140) => {
 };
 ```
 
+### Visual-Regression Snapshots (Playwright)
+
+Layout regressions (e.g. mobile horizontal overflow) are guarded by
+`tests/e2e/visual.spec.js` (issue #3328), which has two kinds of checks:
+
+- **Layout invariants** — no horizontal overflow at 375 / 768 / 1440px and
+  single-column collapse of the responsive layouts. These need no image
+  baselines and run in CI.
+- **Pixel snapshots** — `expect(page).toHaveScreenshot()` for the homepage,
+  article index, overview, and bibliography at the three viewports.
+
+Pixel baselines are **platform-specific** (font hinting and antialiasing differ
+across OSes), so they are committed per CI platform and regenerated whenever an
+intentional visual change lands:
+
+```bash
+# Render the test pages and sync assets first:
+quarto render index.qmd resources/articles.qmd pages/overview.qmd resources/bibliography.qmd --to html
+python3 scripts/sync_frontend_assets.py
+
+# Generate / update committed baselines (run on the same OS as CI, e.g. Linux):
+npx playwright test tests/e2e/visual.spec.js --update-snapshots
+
+# Verify against the committed baselines:
+npx playwright test tests/e2e/visual.spec.js
+```
+
+Commit the resulting `tests/e2e/visual.spec.js-snapshots/` directory. Volatile
+regions (search inputs, dates) are masked so they cannot cause false diffs.
+
 ### Content Writing
 
 - Use clear, accessible language
@@ -293,18 +323,21 @@ To maintain code quality and distribute knowledge across the team, we enforce a 
 Code reviews should assess these dimensions:
 
 - **Code Quality**
+
   - Does the code follow project style guidelines (`ruff`, `mypy`)?
   - Are there any obvious bugs or logic errors?
   - Is error handling appropriate?
   - Are all functions type-hinted and documented?
 
 - **Test Coverage**
+
   - Are new functions/features covered by tests?
   - Do tests follow AAA pattern (Arrange-Act-Assert)?
   - Is coverage adequate for the change scope?
   - Are edge cases tested?
 
 - **Design & Architecture**
+
   - Does the change align with the project structure?
   - Are there any potential performance issues?
   - Does the change introduce technical debt?

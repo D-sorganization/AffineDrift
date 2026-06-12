@@ -2573,6 +2573,109 @@ Dark mode (separate concern):
   margin-top: 1.5rem;
 }
 /* ===== end css/components/not-found.css ===== */
+/* ===== begin css/components/callouts.css ===== */
+/* Callout / content boxes — single source of truth (issue #3331).
+ *
+ * These rules previously lived in custom.scss's `scss:rules` block with
+ * hard-coded light backgrounds (#f8f9fa, #e7f3ff, #e3f2fd, #ffebee) and NO
+ * dark-mode remaps, so every box rendered light-on-light (unreadable) under
+ * [data-theme="dark"]. They now use the canonical --bg-* / --text-* /
+ * border tokens (defined and dark-remapped in css/tokens/colors.css), so the
+ * boxes theme automatically in both light and dark mode.
+ *
+ * The accent border colors reference the brand/semantic color tokens, which
+ * stay legible against both the light and dark surface tokens.
+ */
+
+.equation {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin: 1.5rem 0;
+  border-left: 4px solid var(--color-primary-light);
+  overflow-x: auto;
+}
+
+.abstract-section {
+  background: var(--color-primary-lightest);
+  color: var(--text-primary);
+  padding: 2rem;
+  border-radius: 8px;
+  margin: 2rem 0;
+  border-left: 4px solid var(--color-primary-light);
+}
+
+.abstract-section h2 {
+  margin-top: 0;
+  color: var(--text-primary);
+}
+
+.keypoint-box {
+  background: var(--color-primary-lightest);
+  color: var(--text-primary);
+  border-left: 4px solid var(--color-primary-light);
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  border-radius: 8px;
+}
+
+.limitation-box {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border-left: 4px solid var(--color-error);
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  border-radius: 8px;
+}
+
+/* In dark mode the very light brand tint (--color-primary-lightest is a fixed
+ * light blue) would be light-on-light, so remap the tinted boxes to the dark
+ * surface tokens. The semantic accent borders remain legible. */
+[data-theme="dark"] .abstract-section,
+[data-theme="dark"] .keypoint-box {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .abstract-section,
+  :root:not([data-theme="light"]) .keypoint-box {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+  }
+}
+
+/* Mobile spacing — kept in sync with the former custom.scss media block. */
+@media (width < 768px) {
+  .equation {
+    padding: 1rem;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+  }
+
+  .abstract-section {
+    padding: 1.25rem;
+    margin: 1.25rem 0;
+  }
+
+  .keypoint-box,
+  .limitation-box {
+    padding: 1rem;
+    margin: 1rem 0;
+  }
+}
+
+@media (width >= 768px) and (width < 1024px) {
+  .equation {
+    padding: 1.25rem;
+  }
+
+  .abstract-section {
+    padding: 1.5rem;
+  }
+}
+/* ===== end css/components/callouts.css ===== */
 /* ===== begin css/utilities/spacing.css ===== */
 /* Spacing utilities — single-purpose, token-driven margins and padding.
    Used to retire trivial inline ``style="margin-*"`` attributes across the

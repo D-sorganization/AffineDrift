@@ -44,63 +44,13 @@ $font-family-serif: "Playfair Display", Georgia, "Times New Roman", serif;
   --color-gray: #999;
 }
 
-.equation {
-  background: #f8f9fa;
-  padding: 1.5rem;
-  border-radius: 8px;
-  margin: 1.5rem 0;
-  border-left: 4px solid var(--color-blue);
-  overflow-x: auto;
-}
-
-.abstract-section {
-  background: #e7f3ff;
-  padding: 2rem;
-  border-radius: 8px;
-  margin: 2rem 0;
-  border-left: 4px solid var(--color-blue);
-}
-
-.abstract-section h2 {
-  margin-top: 0;
-  color: var(--color-blue);
-}
-
-.keypoint-box {
-  background: #e3f2fd;
-  border-left: 4px solid var(--color-sky-blue);
-  padding: 1.5rem;
-  margin: 1.5rem 0;
-  border-radius: 8px;
-}
-
-.limitation-box {
-  background: #ffebee;
-  border-left: 4px solid var(--color-vermillion);
-  padding: 1.5rem;
-  margin: 1.5rem 0;
-  border-radius: 8px;
-}
-
-h2 {
-  color: var(--color-blue);
-  margin-top: 2.5rem;
-  margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 2px solid #e7f3ff;
-}
-
-h3 {
-  color: var(--color-blue);
-  margin-top: 2rem;
-  margin-bottom: 0.75rem;
-}
-
-h4 {
-  color: var(--color-blue);
-  margin-top: 1.5rem;
-  margin-bottom: 0.5rem;
-}
+/* NOTE (issue #3331): the callout/content boxes (.equation, .abstract-section,
+   .keypoint-box, .limitation-box) moved to css/components/callouts.css, where
+   they use the canonical bg/text/border design tokens so they theme correctly
+   in dark mode — they were previously hard-coded light backgrounds with no dark
+   remap. The duplicate h2/h3/h4 color and size rules were removed so heading
+   styling is owned solely by the canonical token system (styles.css plus
+   css/tokens/), ending the two-competing-systems cascade fight. */
 
 /* MathJax Layout & Overflow Control */
 /* stylelint-disable selector-class-pattern */
@@ -115,66 +65,18 @@ mjx-container[display="true"] {
 }
 /* stylelint-enable selector-class-pattern */
 
-/* Mobile Responsiveness Enhancements */
+/* Mobile MathJax scaling. Heading sizes and callout-box spacing are owned by
+   the token system (styles.css fluid clamp() scale) and css/components/
+   callouts.css respectively (issue #3331), so only the MathJax display rule
+   remains viewport-specific here. */
 @media (max-width: 767.98px) {
-  .equation {
-    padding: 1rem;
-    margin: 1rem 0;
-    font-size: 0.9rem;
-  }
-  
   /* stylelint-disable selector-class-pattern */
-  .math.display, 
+  .math.display,
   .MathJax_Display,
   mjx-container[display="true"] {
     font-size: 0.9em;
   }
   /* stylelint-enable selector-class-pattern */
-  
-  .abstract-section {
-    padding: 1.25rem;
-    margin: 1.25rem 0;
-  }
-  
-  .keypoint-box,
-  .limitation-box {
-    padding: 1rem;
-    margin: 1rem 0;
-  }
-  
-  h2 {
-    font-size: 1.5rem;
-    margin-top: 1.75rem;
-  }
-  
-  h3 {
-    font-size: 1.25rem;
-    margin-top: 1.5rem;
-  }
-  
-  h4 {
-    font-size: 1.1rem;
-    margin-top: 1.25rem;
-  }
-}
-
-/* Tablet Responsiveness */
-@media (min-width: 768px) and (max-width: 1023.98px) {
-  .equation {
-    padding: 1.25rem;
-  }
-  
-  .abstract-section {
-    padding: 1.5rem;
-  }
-  
-  h2 {
-    font-size: 1.75rem;
-  }
-  
-  h3 {
-    font-size: 1.4rem;
-  }
 }
 
 /* YouTube Embed Placeholder Styles */
