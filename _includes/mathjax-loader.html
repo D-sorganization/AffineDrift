@@ -60,15 +60,39 @@
     }
   };
 
-  // Load MathJax immediately - don't wait for DOMContentLoaded
-  (function() {
-    // Check if MathJax is already loaded
-    if (document.querySelector('script[src*="mathjax"]')) {
+  // ⚡ Performance (#3332-A): MathJax is ~1MB+ (the largest build). Most pages
+  // (contact, about, repositories, resource lists) contain zero math, yet the
+  // previous loader force-injected MathJax on every page. Gate the injection on
+  // the *actual presence of math* in the rendered document so math-free pages
+  // never pay for it. Quarto renders TeX into `.math` spans (and display math
+  // into `mjx-container` once typeset); the raw delimiters survive in the
+  // initial HTML, so a cheap source scan is a reliable pre-typeset signal.
+  function adPageHasMath() {
+    if (document.querySelector('.math, mjx-container, [data-qmd-math]')) {
+      return true;
+    }
+    // Fall back to a raw-delimiter scan for inline/display TeX that has not yet
+    // been wrapped in a `.math` span.
+    const content =
+      document.querySelector('main, #quarto-document-content, .content, body');
+    const text = content ? content.textContent : '';
+    return (
+      text.indexOf('\\(') !== -1 ||
+      text.indexOf('\\[') !== -1 ||
+      text.indexOf('$$') !== -1
+    );
+  }
+
+  function adLoadMathJax() {
+    // Idempotent: never inject twice.
+    if (document.getElementById('MathJax-script') ||
+        document.querySelector('script[src*="mathjax"]')) {
+      return;
+    }
+    if (!adPageHasMath()) {
       return;
     }
 
-    // Load MathJax (MathJax v3 handles its own polyfills internally)
-    // Load MathJax (v3 handles its own polyfills internally)
     // SECURITY: pin MathJax to an exact, immutable version and verify it with a
     // Subresource Integrity hash so a compromise of the jsDelivr edge or the
     // `mathjax` npm package cannot inject arbitrary script into the page. The
@@ -82,7 +106,16 @@
     mathjax.id = "MathJax-script";
     mathjax.dataset.adMathjax = "mathjax";
     document.head.appendChild(mathjax);
-  })();
-  // Note: MathJax.startup.defaultReady() in the startup.ready callback above
-  // handles the initial typeset. No additional DOMContentLoaded listener needed.
+  }
+
+  // The DOM must exist before we can detect math, so defer the gated load to
+  // DOMContentLoaded (or run immediately if the document is already parsed).
+  // MathJax.startup.defaultReady() in the startup.ready callback above handles
+  // the initial typeset once the script loads.
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', adLoadMathJax, { once: true });
+  } else {
+    adLoadMathJax();
+  }
+  window.AffineDriftMathJax = { hasMath: adPageHasMath, load: adLoadMathJax };
 </script>

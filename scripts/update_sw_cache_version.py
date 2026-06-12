@@ -34,12 +34,10 @@ SW_FILENAME = "service-worker.js"
 HASH_SOURCES = [
     "styles.css",
     "custom.scss",
-    "css/startup-launcher.css",
     "js/main.js",
     "js/bibliography.js",
     "js/service-worker-utils.js",
     "js/service-worker-updates.js",
-    "js/startup-launcher.js",
 ]
 
 # Glob patterns (repo-root-relative) whose matches are hashed as well, so

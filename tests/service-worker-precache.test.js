@@ -72,8 +72,11 @@ describe('service worker stylesheet precache contract', () => {
 
   test('precaches bundled and independently linked stylesheets', () => {
     expect(swSource).toContain("'/styles.css'");
-    expect(swSource).toContain("'/css/startup-launcher.css'");
     expect(swSource).toContain("'/css/search-metrics.css'");
+  });
+
+  test('no longer precaches the removed splash-screen assets (#3329)', () => {
+    expect(swSource).not.toContain('startup-launcher');
   });
 
   test.each(sourceImportedStylesheets)('does not precache bundled source import %s', (stylesheet) => {
