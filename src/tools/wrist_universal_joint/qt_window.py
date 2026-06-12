@@ -9,9 +9,6 @@ from PyQt6.QtCore import QEvent, QObject, Qt
 from PyQt6.QtGui import QWheelEvent
 from PyQt6.QtWidgets import (
     QApplication,
-    QCheckBox,
-    QComboBox,
-    QLabel,
     QLineEdit,
     QMainWindow,
     QScrollArea,
@@ -25,45 +22,23 @@ from .constants import (
     DEFAULT_SHAFT_WEIGHT,
 )
 from .qt_canvases import (
-    DiagramCanvas,
-    PlotCanvas,
     current_inertia_values,
     current_info_html,
 )
 from .qt_dialogs import DocumentationDialog
-from .qt_ui_sections import build_main_widget
+from .qt_ui_sections import UiWidgets, build_main_widget
 
 
 class MainWindow(QMainWindow):
-    """Main application window for the enhanced universal-joint model."""
+    """Main application window for the enhanced universal-joint model.
 
-    # UI components set by build_main_widget
-    grip_slider: QSlider
-    grip_textbox: QLineEdit
-    wrist_slider: QSlider
-    wrist_textbox: QLineEdit
-    clubhead_weight: QLineEdit
-    shaft_weight: QLineEdit
-    club_length: QLineEdit
-    cg_distance: QLineEdit
-    inertia_label: QLabel
-    noise_type_combo: QComboBox
-    polynomial_label: QLabel
-    polynomial_input: QLineEdit
-    plot_type_combo: QComboBox
-    show_input_check: QCheckBox
-    show_transmitted_check: QCheckBox
-    show_alpha_torque_check: QCheckBox
-    show_gamma_torque_check: QCheckBox
-    show_alpha_accel_check: QCheckBox
-    show_gamma_accel_check: QCheckBox
-    show_transmission_check: QCheckBox
-    show_velocity_check: QCheckBox
-    show_accel_alpha_ratio_check: QCheckBox
-    show_accel_gamma_ratio_check: QCheckBox
-    plot_canvas: PlotCanvas
-    diagram_canvas: DiagramCanvas
-    info_label: QLabel
+    The builder owns widget construction and hands the window its widgets via
+    :class:`UiWidgets` (assigned atomically to ``self.ui``). The window only
+    consumes them through ``self.ui.<widget>`` and implements the
+    ``UiCallbacks`` handler surface the builders wire signals to.
+    """
+
+    ui: UiWidgets
     main_scroll: QScrollArea
 
     def __init__(self) -> None:
@@ -82,17 +57,19 @@ class MainWindow(QMainWindow):
         self.main_scroll.installEventFilter(self)
         self.installEventFilter(self)
 
-        self.main_scroll.setWidget(build_main_widget(self))
+        widget, self.ui = build_main_widget(self)
+        self.main_scroll.setWidget(widget)
         self.setCentralWidget(self.main_scroll)
+        # self.ui is now assigned, so dependent views can refresh safely.
         self.update_inertia()
 
     def get_inertia_values(self) -> tuple[float, float]:
         """Get current inertia values from club-property inputs."""
         return current_inertia_values(
-            self._read_float(self.clubhead_weight.text(), DEFAULT_CLUBHEAD_WEIGHT),
-            self._read_float(self.shaft_weight.text(), DEFAULT_SHAFT_WEIGHT),
-            self._read_float(self.club_length.text(), DEFAULT_CLUB_LENGTH),
-            self._read_float(self.cg_distance.text(), DEFAULT_CLUBHEAD_CG_DISTANCE),
+            self._read_float(self.ui.clubhead_weight.text(), DEFAULT_CLUBHEAD_WEIGHT),
+            self._read_float(self.ui.shaft_weight.text(), DEFAULT_SHAFT_WEIGHT),
+            self._read_float(self.ui.club_length.text(), DEFAULT_CLUB_LENGTH),
+            self._read_float(self.ui.cg_distance.text(), DEFAULT_CLUBHEAD_CG_DISTANCE),
         )
 
     @staticmethod
@@ -132,7 +109,7 @@ class MainWindow(QMainWindow):
     def update_clubhead_from_textbox(self) -> None:
         """Update clubhead weight from its text box."""
         self._apply_numeric_textbox_update(
-            self.clubhead_weight,
+            self.ui.clubhead_weight,
             minimum=50,
             maximum=500,
             default=DEFAULT_CLUBHEAD_WEIGHT,
@@ -142,7 +119,7 @@ class MainWindow(QMainWindow):
     def update_shaft_from_textbox(self) -> None:
         """Update shaft weight from its text box."""
         self._apply_numeric_textbox_update(
-            self.shaft_weight,
+            self.ui.shaft_weight,
             minimum=30,
             maximum=200,
             default=DEFAULT_SHAFT_WEIGHT,
@@ -152,7 +129,7 @@ class MainWindow(QMainWindow):
     def update_length_from_textbox(self) -> None:
         """Update club length from its text box."""
         self._apply_numeric_textbox_update(
-            self.club_length,
+            self.ui.club_length,
             minimum=0.5,
             maximum=1.5,
             default=DEFAULT_CLUB_LENGTH,
@@ -162,7 +139,7 @@ class MainWindow(QMainWindow):
     def update_cg_from_textbox(self) -> None:
         """Update CG distance from its text box."""
         self._apply_numeric_textbox_update(
-            self.cg_distance,
+            self.ui.cg_distance,
             minimum=0.3,
             maximum=1.2,
             default=DEFAULT_CLUBHEAD_CG_DISTANCE,
@@ -172,9 +149,8 @@ class MainWindow(QMainWindow):
     def update_inertia(self) -> None:
         """Update inertia display and dependent views."""
         i_alpha, i_gamma = self.get_inertia_values()
-        self.inertia_label.setText(f"I_α={i_alpha:.4f} kg·m², I_γ={i_gamma:.4f} kg·m²")
-        if hasattr(self, "plot_canvas"):
-            self.update_all()
+        self.ui.inertia_label.setText(f"I_α={i_alpha:.4f} kg·m², I_γ={i_gamma:.4f} kg·m²")
+        self.update_all()
 
     def _sync_slider_textbox(self, textbox: QLineEdit, value: int) -> None:
         """Mirror the given slider value into its paired textbox."""
@@ -184,17 +160,13 @@ class MainWindow(QMainWindow):
 
     def update_grip_label(self, value: int) -> None:
         """Update grip-angle textbox from the slider."""
-        if hasattr(self, "grip_textbox"):
-            self._sync_slider_textbox(self.grip_textbox, value)
-        if hasattr(self, "plot_canvas"):
-            self.update_all()
+        self._sync_slider_textbox(self.ui.grip_textbox, value)
+        self.update_all()
 
     def update_wrist_label(self, value: int) -> None:
         """Update wrist-angle textbox from the slider."""
-        if hasattr(self, "wrist_textbox"):
-            self._sync_slider_textbox(self.wrist_textbox, value)
-        if hasattr(self, "plot_canvas"):
-            self.update_all()
+        self._sync_slider_textbox(self.ui.wrist_textbox, value)
+        self.update_all()
 
     def _update_angle_from_textbox(
         self,
@@ -214,14 +186,13 @@ class MainWindow(QMainWindow):
         slider.setValue(int(value))
         slider.blockSignals(False)
         self._sync_slider_textbox(textbox, int(value))
-        if hasattr(self, "plot_canvas"):
-            self.update_all()
+        self.update_all()
 
     def update_grip_from_textbox(self) -> None:
         """Update grip angle from its text box."""
         self._update_angle_from_textbox(
-            textbox=self.grip_textbox,
-            slider=self.grip_slider,
+            textbox=self.ui.grip_textbox,
+            slider=self.ui.grip_slider,
             minimum=0,
             maximum=90,
         )
@@ -229,64 +200,63 @@ class MainWindow(QMainWindow):
     def update_wrist_from_textbox(self) -> None:
         """Update wrist angle from its text box."""
         self._update_angle_from_textbox(
-            textbox=self.wrist_textbox,
-            slider=self.wrist_slider,
+            textbox=self.ui.wrist_textbox,
+            slider=self.ui.wrist_slider,
             minimum=-60,
             maximum=60,
         )
 
     def update_all(self) -> None:
         """Refresh the diagram, plot, and info panel."""
-        grip_angle = self.grip_slider.value()
-        wrist_angle = self.wrist_slider.value()
+        grip_angle = self.ui.grip_slider.value()
+        wrist_angle = self.ui.wrist_slider.value()
         i_alpha, i_gamma = self.get_inertia_values()
-        self.diagram_canvas.update_angles(grip_angle, wrist_angle)
-        self.plot_canvas.update_parameters(grip_angle, wrist_angle, i_alpha, i_gamma)
+        self.ui.diagram_canvas.update_angles(grip_angle, wrist_angle)
+        self.ui.plot_canvas.update_parameters(grip_angle, wrist_angle, i_alpha, i_gamma)
         self.update_info()
 
     def update_plot_type(self, plot_type: str) -> None:
         """Update plot type and enable or disable the relevant checkboxes."""
-        self.plot_canvas.set_plot_type(plot_type)
+        self.ui.plot_canvas.set_plot_type(plot_type)
         is_torque = plot_type == "Torque"
         is_accel = plot_type == "Angular Acceleration"
         is_transmission = plot_type == "Transmission Ratio vs Wrist Angle"
 
-        self.show_input_check.setEnabled(is_torque)
-        self.show_transmitted_check.setEnabled(is_torque)
-        self.show_alpha_torque_check.setEnabled(is_torque)
-        self.show_gamma_torque_check.setEnabled(is_torque)
-        self.show_alpha_accel_check.setEnabled(is_accel)
-        self.show_gamma_accel_check.setEnabled(is_accel)
-        self.show_transmission_check.setEnabled(is_transmission)
-        self.show_velocity_check.setEnabled(is_transmission)
-        self.show_accel_alpha_ratio_check.setEnabled(is_transmission)
-        self.show_accel_gamma_ratio_check.setEnabled(is_transmission)
+        self.ui.show_input_check.setEnabled(is_torque)
+        self.ui.show_transmitted_check.setEnabled(is_torque)
+        self.ui.show_alpha_torque_check.setEnabled(is_torque)
+        self.ui.show_gamma_torque_check.setEnabled(is_torque)
+        self.ui.show_alpha_accel_check.setEnabled(is_accel)
+        self.ui.show_gamma_accel_check.setEnabled(is_accel)
+        self.ui.show_transmission_check.setEnabled(is_transmission)
+        self.ui.show_velocity_check.setEnabled(is_transmission)
+        self.ui.show_accel_alpha_ratio_check.setEnabled(is_transmission)
+        self.ui.show_accel_gamma_ratio_check.setEnabled(is_transmission)
 
     def update_signal_visibility(self, signal_name: str, visible: bool) -> None:
         """Update signal visibility on the plot canvas."""
-        self.plot_canvas.set_signal_visible(signal_name, visible)
+        self.ui.plot_canvas.set_signal_visible(signal_name, visible)
 
     def update_info(self) -> None:
         """Refresh the informational summary panel."""
-        self.info_label.setText(
-            current_info_html(self.grip_slider.value(), self.wrist_slider.value())
+        self.ui.info_label.setText(
+            current_info_html(self.ui.grip_slider.value(), self.ui.wrist_slider.value())
         )
 
     def regenerate_noise(self) -> None:
         """Regenerate the noise signal on the plot canvas."""
-        self.plot_canvas.regenerate_noise()
+        self.ui.plot_canvas.regenerate_noise()
 
     def update_noise_type(self, noise_type: str) -> None:
         """Update noise type and show or hide the polynomial controls."""
-        self.plot_canvas.set_noise_type(noise_type)
+        self.ui.plot_canvas.set_noise_type(noise_type)
         is_polynomial = noise_type == "Polynomial"
-        self.polynomial_input.setVisible(is_polynomial)
-        self.polynomial_label.setVisible(is_polynomial)
+        self.ui.polynomial_input.setVisible(is_polynomial)
+        self.ui.polynomial_label.setVisible(is_polynomial)
 
     def update_polynomial_signal(self, expression: str) -> None:
         """Update the polynomial expression used by the signal generator."""
-        if hasattr(self, "plot_canvas"):
-            self.plot_canvas.set_polynomial_expression(expression)
+        self.ui.plot_canvas.set_polynomial_expression(expression)
 
     def eventFilter(self, obj: QObject | None, event: QEvent | None) -> bool:
         """Redirect wheel events to the scroll area instead of nested controls."""
