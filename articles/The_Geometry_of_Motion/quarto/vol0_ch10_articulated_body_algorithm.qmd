@@ -1,13 +1,13 @@
 ---
 title: "The Articulated Body Algorithm"
-description: "In Chapter 6, we introduced the Recursive Newton-Euler Algorithm. That algorithm solved the Inverse Dynamics problem: Given a desired trajectory ( ), what..."
+description: "In Chapter 7 (Recursive Algorithms), we introduced the Recursive Newton-Euler Algorithm. That algorithm solved the Inverse Dynamics problem: Given a desired trajectory ( ), what..."
 ---
 
 # The Articulated Body Algorithm
 ## Forward Dynamics
 
 
-In Chapter 6, we introduced the Recursive Newton-Euler Algorithm. That algorithm solved the **Inverse Dynamics** problem: Given a desired trajectory ($\bm{q}, \dot{\bm{q}}, \ddot{\bm{q}}$), what forces $\bm{\tau}$ must the motors output to achieve it?
+In Chapter 7 (Recursive Algorithms), we introduced the Recursive Newton-Euler Algorithm. That algorithm solved the **Inverse Dynamics** problem: Given a desired trajectory ($\bm{q}, \dot{\bm{q}}, \ddot{\bm{q}}$), what forces $\bm{\tau}$ must the motors output to achieve it?
 
 However, when programming a simulator like MuJoCo or a physics engine for Reinforcement Learning training environments, we face the exact opposite problem: **Forward Dynamics**. 
 
@@ -94,24 +94,29 @@ def compute_articulated_inertias(spatial_inertias, screw_axes, n_links):
         
         # S is the 6D spatial screw expressing the current joint geometry
         S = screw_axes[i]
-        
-        # Propagate child's accumulated articulated inertia across its hinge S
+
+        # Ad: the 6x6 Adjoint transforming spatial quantities from child frame i
+        # to parent frame p (provided by the kinematics; identity only if the
+        # frames coincide). Featherstone calls this {}^{p}X_i.
+        Ad = adjoint_parent_from_child(i)  # 6x6
+
+        # Project the child's articulated inertia across its hinge S: the parent
+        # feels the child's inertia MINUS the part the joint can move freely.
         U = I_A[i] @ S
-        D = np.transpose(S) @ U  # Scalar effective inertia of the joint
-        
-        # Accumulate the remaining structural inertia back onto the parent link
-        # Outer product U @ U^T divides by scalar D
-        inertia_shift = (U @ np.transpose(U)) / D
-        
-        # Add to parent's Articulated Inertia block
-        I_A[p] = I_A[p] + I_A[i] - inertia_shift
-        
+        D = np.transpose(S) @ U          # scalar effective inertia of the joint
+        I_a = I_A[i] - (U @ np.transpose(U)) / D   # projected REMAINDER, not I_A[i]
+
+        # Transform the projected remainder into the parent frame and accumulate.
+        I_A[p] = I_A[p] + np.transpose(Ad) @ I_a @ Ad
+
     return I_A
 
 # I_A[0] now contains the complete effective Spatial Inertia dragging on the base.
 
 ```
 
+
+Two details are essential for a correct implementation (and are easy to drop in a sketch): (1) the parent accumulates the **projected remainder** $I_a = I_A[i] - U U^\top / D$, *not* the child's full $I_A[i]$ — the $U U^\top / D$ term removes the inertia the joint can move freely; and (2) that remainder must be carried into the parent frame by the **Adjoint** ${}^{p}X_i$ (here `adjoint_parent_from_child(i)`, supplied by the kinematics), since spatial inertias are frame-dependent. Omitting either step gives a wrong articulated inertia.
 
 This algorithm completely solves the physics of massive skeletal systems interacting with the universe without ever touching an algebraic trigonometric matrix or attempting an $N \times N$ inversion. It fundamentally drives all real-time simulation logic throughout *Tangent-Space Methods*.
 

@@ -308,6 +308,8 @@ $$
     \underbrace{\ddot{\mathbf{q}}}_{\text{acceleration}} = \underbrace{-M^{-1}(\mathbf{c} + \mathbf{g})}_{\text{drift } \mathbf{a}_0(\mathbf{q}, \dot{\mathbf{q}})} + \underbrace{M^{-1} P}_{\text{control effectiveness } B(\mathbf{q})} \boldsymbol{\tau}_{\text{muscle}}
 $$
 
+Here $P$ should be the **dynamically consistent (M-weighted)** null-space projector $P = I - \mathbf{J}_c^\top(\mathbf{J}_c M^{-1}\mathbf{J}_c^\top)^{-1}\mathbf{J}_c M^{-1}$ — the kinematic projector $I - \mathbf{J}_c^\top(\mathbf{J}_c\mathbf{J}_c^\top)^{-1}\mathbf{J}_c$ does **not** correctly decouple constrained dynamics. (The drift term must likewise be projected; this article's earlier reduction does this consistently via the $M$-weighted null-space basis $\bar N = N^\top M N$.)
+
 Key observations:
 1. The null space projector $P$ determines which muscle forces are *controllable*
     

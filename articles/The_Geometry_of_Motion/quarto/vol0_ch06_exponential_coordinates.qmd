@@ -138,7 +138,15 @@ def matrix_log_SO3(R, eps=1e-8):
         # pick the largest diagonal entry to avoid sqrt of a small number
         k = int(np.argmax(np.diag(M)))
         axis = M[:, k] / np.sqrt(M[k, k])
-        # sign disambiguation from the skew part of R
+        # Resolve the global sign from the skew part of R: for theta = pi the
+        # off-diagonal differences R[i,j]-R[j,i] vanish in exact arithmetic, so
+        # use the largest available skew component to orient the axis. At exactly
+        # theta = pi the rotation is its own inverse and +axis/-axis are the SAME
+        # rotation (antipodal ambiguity), so either sign is correct.
+        skew = np.array([R[2, 1] - R[1, 2], R[0, 2] - R[2, 0], R[1, 0] - R[0, 1]])
+        j = int(np.argmax(np.abs(skew)))
+        if abs(skew[j]) > eps and np.sign(skew[j]) != np.sign(axis[j]):
+            axis = -axis
         return np.pi * axis
 
     # Branch 3: generic.
@@ -151,7 +159,7 @@ def matrix_log_SO3(R, eps=1e-8):
     return omega_hat * theta
 ```
 
-This routine round-trips with Rodrigues' formula to machine precision on a test suite of angles including $0$, $\pi/6$, $\pi/2$, and $\pi - \varepsilon$. References: Shoemake 1985 for numerical stability at $\theta \approx \pi$; Park & Lynch [@Lynch2017] §3.3 for the generic branch.
+This routine round-trips with Rodrigues' formula to high accuracy on a test suite of angles including $0$, $\pi/6$, $\pi/2$, and $\pi - \varepsilon$. At exactly $\theta = \pi$ the axis sign is **inherently ambiguous** ($\exp([\pi\,\hat\omega]) = \exp([-\pi\,\hat\omega])$), so the recovered $\pm\hat\omega$ are both valid logarithms — the round-trip is exact even though the sign is not unique. References: Shoemake 1985 / Shepperd 1978 for numerical stability at $\theta \approx \pi$; Park & Lynch [@Lynch2017] §3.3 for the generic branch.
 
 
 ## Non-Commutativity and the BCH Formula
