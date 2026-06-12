@@ -90,3 +90,6 @@
 ## 2026-06-11 - Dynamic ARIA Labels on Collapsible Components
 **Learning:** Collapsible accordion and custom toggle headers in `ui-components.js` were missing dynamic `aria-label` updates alongside their `title` attributes, causing screen readers to lack context about the explicit action (Expand/Collapse) when interacting with these components.
 **Action:** Always pair dynamic `title` updates with dynamic `aria-label` updates on interactive headers (like accordions and custom corners) based on their `aria-expanded` state.
+## 2026-06-12 - Search Inputs
+**Learning:** For search or filter input fields, using `<input type="search">` instead of `<input type="text">` automatically provides a native 'clear' (x) button on modern browsers and triggers a search-optimized virtual keyboard on mobile devices, improving micro-UX.
+**Action:** Always use `<input type="search">` for search inputs to leverage native browser features for improved accessibility and usability.
