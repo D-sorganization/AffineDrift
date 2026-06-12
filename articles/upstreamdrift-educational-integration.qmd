@@ -23,8 +23,19 @@ capabilities and provides a guide for using it as an educational companion.
 ## Repository
 
 UpstreamDrift is maintained at
-[D-sorganization/Golf_Modeling_Suite](https://github.com/D-sorganization/Golf_Modeling_Suite).
+[D-sorganization/UpstreamDrift](https://github.com/D-sorganization/UpstreamDrift).
 Access requires D-sorganization membership.
+:::
+
+::: {.callout-note}
+## Status of the DCR / contraction / Floquet tooling
+
+Some code blocks below (Drift-Control Ratio analyzer, contraction-rate verifier,
+Floquet multipliers, ABA-timing benchmark) describe a **proposed** reference API
+that is not yet shipped in UpstreamDrift. Implementation is tracked in
+[UpstreamDrift#7431](https://github.com/D-sorganization/UpstreamDrift/issues/7431).
+
+- [ ] When UpstreamDrift#7431 lands, replace the "proposed API" banners here with runnable examples and drop the *(proposed)* / *(planned)* labels.
 :::
 
 
@@ -159,8 +170,8 @@ The "Vol I", "Vol II", etc. references in this table point to chapters in *Geome
 | Vol I, Ch 1 (Foundations) | Any engine | Compute Fréchet derivative numerically |
 | Vol I, Ch 4 (Contraction) | MuJoCo | Measure contraction rate from multiple initial conditions |
 | Vol I, Ch 5 (Optimal Control) | Drake DDP | Solve swing trajectory optimization |
-| Vol I, Ch 8 (Applications) | MuJoCo + Pinocchio | Compute drift-control ratio $\rho(t)$ |
-| Vol II, Ch 4 (Orbital Stability) | MuJoCo | Compute Floquet multipliers for passive swing |
+| Vol I, Ch 8 (Applications) | MuJoCo + Pinocchio | Compute drift-control ratio $\rho(t)$ *(proposed tooling — see note below)* |
+| Vol II, Ch 4 (Orbital Stability) | MuJoCo | Compute Floquet multipliers for passive swing *(planned)* |
 | Vol II, Ch 6 (Trajectory Opt.) | Drake | Direct collocation golf swing |
 | Vol III (RL & Policy) | MyoSuite | Train SAC agent on muscle-driven swing |
 
@@ -214,45 +225,64 @@ Note: the **package name for Pinocchio on PyPI is `pinocchio`** (not `pin` --- t
 
 ## Running Existing Benchmarks
 
-UpstreamDrift includes several benchmark scripts:
+::: {.callout-warning}
+## Proposed reference API — not yet shipped
+The drift-control-ratio and contraction-rate commands below (`src.tools.compute_drift_control_ratio`, `src.tools.measure_contraction`) are a **proposed** reference API illustrating how DCR and contraction rate *could* be computed with UpstreamDrift. They are **not yet implemented** — see UpstreamDrift issue [D-sorganization/UpstreamDrift#7431](https://github.com/D-sorganization/UpstreamDrift/issues/7431) for implementation status. The ABA-timing benchmark is also tracked there. Treat these as illustrative pseudocode until that issue lands.
+:::
+
+The intended (proposed) benchmark entry points are:
 
 ```bash
-# Run the drift-control ratio computation
+# PROPOSED (not yet shipped) — drift-control ratio computation
 python3 -m src.tools.compute_drift_control_ratio --model golf_3dof --horizon 0.5
 
-# Run contraction rate measurement
+# PROPOSED (not yet shipped) — contraction rate measurement
 python3 -m src.tools.measure_contraction --model pendulum_2dof --n_trials 50
 
-# Run forward dynamics timing benchmark
+# PROPOSED (not yet shipped) — forward dynamics timing benchmark
 python3 -m src.engines.pinocchio.benchmarks.aba_timing --n_dof 7 --n_steps 1000
 ```
 
 
 ## Installation
 
-```bash
-# Clone UpstreamDrift
-git clone https://github.com/D-sorganization/Golf_Modeling_Suite.git
-cd Golf_Modeling_Suite
+UpstreamDrift's canonical install is an editable pip install (see the UD README):
 
-# Install Python dependencies
-pip install -r requirements.txt
+```bash
+# Clone UpstreamDrift and pull large model files via Git LFS
+git clone https://github.com/D-sorganization/UpstreamDrift.git
+cd UpstreamDrift
+git lfs install && git lfs pull
+
+# Editable install with dev extras (canonical)
+pip install -e ".[dev]"
 
 # Optional: Drake (requires separate installer)
 # See https://drake.mit.edu/installation.html
 
-# Run tests to verify installation
-python3 -m pytest tests/ -x -q
+# Verify the installation
+python scripts/verify_installation.py
 ```
+
+Choose the engine profile that matches your needs — UpstreamDrift groups engines
+into **Supported**, **Extended**, and **Experimental** tiers (Pinocchio/MuJoCo are
+core; MyoSuite/OpenSim are Experimental). For a UI-only exploration without the
+heavy engine dependencies, set `GOLF_USE_MOCK_ENGINE=1`.
 
 
 ## Connection to Book Theorems
 
+::: {.callout-warning}
+## Proposed reference API — not yet shipped
+The `DriftControlAnalyzer` and `ContractionVerifier` classes below are a **proposed** reference API showing how the Drift-Control Ratio and contraction rate *could* be exposed by UpstreamDrift. They are **not implemented today** — `src.tools.compute_drift_control_ratio` and `src.tools.contraction_verifier` do not yet exist in the repository. Track implementation at [D-sorganization/UpstreamDrift#7431](https://github.com/D-sorganization/UpstreamDrift/issues/7431); until it lands, treat the snippets as illustrative pseudocode, not runnable code.
+:::
+
 ### Drift-Control Ratio (Vol I, Ch 8)
 
-The drift-control ratio $\rho(t)$ can be computed directly from UpstreamDrift:
+The drift-control ratio $\rho(t)$ would be computed from UpstreamDrift via the proposed analyzer (illustrative):
 
 ```python
+# PROPOSED API (see UpstreamDrift#7431) — not runnable today
 from src.tools.compute_drift_control_ratio import DriftControlAnalyzer
 
 analyzer = DriftControlAnalyzer(model_path="models/golf_3dof.xml")
@@ -265,6 +295,7 @@ print(f"Peak rho (impact phase): {max(rho):.2f}")
 ### Contraction Rate Verification (Vol I, Ch 4)
 
 ```python
+# PROPOSED API (see UpstreamDrift#7431) — not runnable today
 from src.tools.contraction_verifier import ContractionVerifier
 
 verifier = ContractionVerifier(model_path="models/pendulum_2dof.xml")

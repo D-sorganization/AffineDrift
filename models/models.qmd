@@ -1,6 +1,6 @@
 ---
-title: "Golf Modeling Suite"
-description: "Companion guide to the Golf Modeling Suite - a unified platform for golf swing analysis across multiple physics engines"
+title: "UpstreamDrift (Golf Modeling Suite)"
+description: "Companion guide to UpstreamDrift (formerly Golf Modeling Suite) - a unified platform for golf swing analysis across multiple physics engines"
 page-layout: full
 ---
 
@@ -32,12 +32,12 @@ page-layout: full
 
           <!-- Overview Section -->
           <div id="overview" class="site-card site-card--feature site-card--brand u-mb-4">
-            <h2 class="u-mb-2">Golf Modeling Suite</h2>
+            <h2 class="u-mb-2">UpstreamDrift <span class="u-text-muted">(formerly Golf Modeling Suite)</span></h2>
             <p class="page-lede">
               A unified biomechanical analysis platform consolidating golf swing modeling across multiple physics simulation frameworks. The suite enables comprehensive analysis from simple educational pendulums to complex 290-muscle musculoskeletal models.
             </p>
             <div class="button-row">
-              <a href="https://github.com/D-sorganization/Golf_Modeling_Suite" target="_blank" rel="noopener" class="site-button site-button--on-brand">
+              <a href="https://github.com/D-sorganization/UpstreamDrift" target="_blank" rel="noopener" class="site-button site-button--on-brand">
                 View Repository on GitHub
               </a>
               <a href="#getting-started" class="site-button site-button--on-brand-ghost">
@@ -59,7 +59,7 @@ page-layout: full
               <li><strong>Interactive Tools</strong> - Web-based visualizations and calculators</li>
             </ul>
             <p class="resource-description">
-              For implementation details, installation instructions, and source code, please visit the <a href="https://github.com/D-sorganization/Golf_Modeling_Suite" target="_blank" rel="noopener">GitHub repository</a>.
+              For implementation details, installation instructions, and source code, please visit the <a href="https://github.com/D-sorganization/UpstreamDrift" target="_blank" rel="noopener">GitHub repository</a>.
             </p>
           </div>
 
@@ -74,17 +74,66 @@ page-layout: full
               <li><strong>Python 3.11+</strong> (3.13 recommended)</li>
               <li><strong>Git with LFS support</strong> for large model files</li>
               <li><strong>MATLAB R2023a+</strong> (optional, for Simscape models)</li>
-              <li><strong>Conda</strong> recommended for managing binary dependencies</li>
+              <li><strong>Conda</strong> optional convenience wrapper for binary dependencies</li>
             </ul>
 
             <h4 class="u-mt-3">Quick Installation</h4>
-            <pre class="code-block"><code>git clone https://github.com/D-sorganization/Golf_Modeling_Suite.git
-cd Golf_Modeling_Suite
-conda env create -f environment.yml
-conda activate golf-modeling</code></pre>
+            <pre class="code-block"><code>git clone https://github.com/D-sorganization/UpstreamDrift.git
+cd UpstreamDrift
+git lfs install &amp;&amp; git lfs pull
+pip install -e ".[dev]"
+python scripts/verify_installation.py</code></pre>
             <p class="resource-description">
-              For detailed installation instructions and troubleshooting, see the <a href="https://github.com/D-sorganization/Golf_Modeling_Suite#installation" target="_blank" rel="noopener">repository documentation</a>.
+              The editable <code>pip install -e ".[dev]"</code> is the canonical install. A conda
+              environment (<code>conda env create -f environment.yml &amp;&amp; conda activate upstream-drift</code>)
+              is available as a convenience wrapper. For detailed instructions and troubleshooting, see the
+              <a href="https://github.com/D-sorganization/UpstreamDrift#installation" target="_blank" rel="noopener">repository documentation</a>.
             </p>
+          </div>
+
+          <!-- Application: launcher, web UI, entry points (issues #3337, #3338) -->
+          <div class="resource-card u-mb-3">
+            <h4>Running the Application</h4>
+            <p class="resource-description">
+              The recommended entry point launches a FastAPI server (on port 8000) with a
+              React/Vite web UI:
+            </p>
+            <pre class="code-block"><code>python launch_upstream_drift.py            # web UI + API (recommended)
+python launch_upstream_drift.py --classic  # classic PyQt6 desktop UI
+python launch_upstream_drift.py --api-only # REST API only, no UI
+python launch_upstream_drift.py --engine pinocchio  # select an engine</code></pre>
+            <p class="resource-description">
+              Console scripts <code>upstream-drift</code> and <code>sidekick</code> are also
+              installed. For a UI-only exploration without heavy engine dependencies, set
+              <code>GOLF_USE_MOCK_ENGINE=1</code>.
+            </p>
+            <h4 class="u-mt-3">Web UI Pages</h4>
+            <p class="resource-description">
+              Dashboard, Simulation, Model Explorer, Motion Capture, Analysis Tools,
+              Character Builder, Data Explorer, Putting Green, Terrain, and Video Analyzer.
+            </p>
+            <h4 class="u-mt-3">REST API &amp; Tools</h4>
+            <p class="resource-description">
+              A REST API (24 routes under <code>src/api/routes/</code>: ball flight, force
+              overlays, motion capture, character builder, and more) backs end-user tools in
+              <code>src/tools/</code> — ball-flight GUI, swing-flight pipeline, putting-green
+              and bunker-shot GUIs, terrain engine, video analyzer, strokes-gained optimizer,
+              model explorer, and pose studio — plus motion-capture import (CSV/JSON/C3D with
+              OpenPose/MediaPipe retargeting) and an RL/imitation/sim2real learning stack.
+            </p>
+          </div>
+
+          <!-- Documentation link-map (issue #3338 C2) -->
+          <div class="resource-card u-mb-3">
+            <h4>Documentation</h4>
+            <ul class="model-bullet-list">
+              <li><a href="https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/user_guide/getting_started.md" target="_blank" rel="noopener">User Guide — Getting Started</a></li>
+              <li><a href="https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/motion_pipeline/README.md" target="_blank" rel="noopener">Motion Pipeline Guide</a></li>
+              <li><a href="https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/engines/support_tiers.md" target="_blank" rel="noopener">Engine Support Tiers (Supported / Extended / Experimental)</a></li>
+              <li><a href="https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/user_guide/character_builder_quickstart.md" target="_blank" rel="noopener">Character / URDF Builder Quickstart</a></li>
+              <li><a href="https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/troubleshooting/installation.md" target="_blank" rel="noopener">Troubleshooting — Installation</a></li>
+              <li><a href="https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/portfolio/golf_modeling_demo.md" target="_blank" rel="noopener">Portfolio Demo</a></li>
+            </ul>
           </div>
 
           <!-- Physics Engines Section -->
@@ -169,12 +218,15 @@ conda activate golf-modeling</code></pre>
 
           <div class="accordion-item">
             <button class="accordion-header" type="button" aria-expanded="false">
-              <span>OpenSim</span>
+              <span>OpenSim <strong>[Experimental]</strong></span>
               <span class="accordion-icon">+</span>
             </button>
             <div class="accordion-content">
               <p class="resource-description">
                 <strong>Stanford Biomechanics Platform</strong> - The gold standard for biomechanical validation and analysis. OpenSim provides detailed musculoskeletal models with muscle-tendon units, inverse kinematics/dynamics, and motion capture integration.
+              </p>
+              <p class="resource-description">
+                <strong>Support tier: Experimental.</strong> In UpstreamDrift, OpenSim integration is experimental and is <em>not</em> part of the required PR CI contract today. Treat the musculoskeletal workflow below as exploratory rather than turnkey.
               </p>
               <h4 class="model-section-h4">Key Capabilities:</h4>
               <ul class="model-bullet-list">
@@ -194,12 +246,15 @@ conda activate golf-modeling</code></pre>
 
           <div class="accordion-item">
             <button class="accordion-header" type="button" aria-expanded="false">
-              <span>MyoSuite</span>
+              <span>MyoSuite <strong>[Experimental]</strong></span>
               <span class="accordion-icon">+</span>
             </button>
             <div class="accordion-content">
               <p class="resource-description">
                 <strong>Realistic Muscle Dynamics</strong> - MyoSuite provides 290-muscle musculoskeletal models for detailed muscle-driven movement simulation. Ideal for studying muscle activation patterns and force generation in complex movements.
+              </p>
+              <p class="resource-description">
+                <strong>Support tier: Experimental.</strong> In UpstreamDrift, MyoSuite integration is experimental and is <em>not</em> part of the required PR CI contract today. The 290-muscle workflow is not yet a turnkey, fully-supported pipeline — expect to do setup work.
               </p>
               <h4 class="model-section-h4">Key Capabilities:</h4>
               <ul class="model-bullet-list">
@@ -246,7 +301,7 @@ conda activate golf-modeling</code></pre>
           </div>
 
           <div class="resource-card u-mb-3">
-            <pre class="code-block code-block--compact"><code>Golf_Modeling_Suite/
+            <pre class="code-block code-block--compact"><code>UpstreamDrift/
 ├── docs/                    # Comprehensive guides and API documentation
 ├── launchers/               # Unified launch applications
 ├── engines/
@@ -350,9 +405,9 @@ conda activate golf-modeling</code></pre>
           <nav class="history-nav">
             <h3 class="sidebar-heading">Quick Links</h3>
             <ul class="sidebar-links">
-              <li><a href="https://github.com/D-sorganization/Golf_Modeling_Suite" target="_blank" rel="noopener">GitHub Repository</a></li>
-              <li><a href="https://github.com/D-sorganization/Golf_Modeling_Suite/issues" target="_blank" rel="noopener">Report Issues</a></li>
-              <li><a href="https://github.com/D-sorganization/Golf_Modeling_Suite/discussions" target="_blank" rel="noopener">Discussions</a></li>
+              <li><a href="https://github.com/D-sorganization/UpstreamDrift" target="_blank" rel="noopener">GitHub Repository</a></li>
+              <li><a href="https://github.com/D-sorganization/UpstreamDrift/issues" target="_blank" rel="noopener">Report Issues</a></li>
+              <li><a href="https://github.com/D-sorganization/UpstreamDrift/discussions" target="_blank" rel="noopener">Discussions</a></li>
             </ul>
           </nav>
           <nav class="history-nav u-mt-3">

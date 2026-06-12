@@ -48,6 +48,63 @@ The control-affine formulation itself is standard nonlinear-systems material. Th
 - [Tangent Hyperplanes](../pages/tangent-hyperplanes.html): exploratory tangent-space series with explicit provenance and scope notes.
 - [Research Reviews](../resources/research-reviews.html): literature-review hub; the current review pages are still incomplete.
 - [Models](../models/models.html): modeling and simulation resources across several software stacks.
+- [UpstreamDrift](#upstreamdrift-the-software): the site's primary modeling software — web UI, REST API, and analysis tools (see the section below).
+
+## UpstreamDrift: The Software
+
+The site's primary software is [UpstreamDrift](https://github.com/D-sorganization/UpstreamDrift) (formerly Golf Modeling Suite) — a unified golf-swing modeling platform with a web UI, a REST API, and a suite of analysis tools across several physics engines. See the [Models page](../models/models.html) for the full capability tour and documentation link-map.
+
+### Quick Start
+
+```bash
+# Clone and pull large model files via Git LFS
+git clone https://github.com/D-sorganization/UpstreamDrift.git
+cd UpstreamDrift
+git lfs install && git lfs pull
+
+# Canonical editable install with dev extras
+pip install -e ".[dev]"
+
+# Verify the install, then launch the web UI + API
+python scripts/verify_installation.py
+python launch_upstream_drift.py
+```
+
+For a UI-only exploration without heavy engine dependencies, set `GOLF_USE_MOCK_ENGINE=1` before launching. Full instructions: [UpstreamDrift Getting Started](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/user_guide/getting_started.md).
+
+### A real API example
+
+Once `python launch_upstream_drift.py` is running (FastAPI on port 8000), a minimal simulation request looks like:
+
+```python
+import requests
+
+# Submit a simulation to the running UpstreamDrift API
+resp = requests.post(
+    "http://localhost:8000/simulation",
+    json={"engine": "pinocchio", "model": "golf_3dof", "duration": 0.5},
+    timeout=30,
+)
+resp.raise_for_status()
+result = resp.json()
+print(result["status"])
+```
+
+(See UpstreamDrift's `examples/01_basic_simulation.py` for the equivalent engine-manager Python API.)
+
+### Documentation & troubleshooting
+
+- [User Guide — Getting Started](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/user_guide/getting_started.md)
+- [Engine Support Tiers](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/engines/support_tiers.md) (Supported / Extended / Experimental)
+- [Motion Pipeline Guide](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/motion_pipeline/README.md)
+
+::: {.callout-tip}
+## Troubleshooting
+If installation fails, see [UpstreamDrift's installation troubleshooting guide](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/troubleshooting/installation.md). For UI-only work that avoids engine builds, launch with `GOLF_USE_MOCK_ENGINE=1`.
+:::
+
+<!-- A screenshot of the UpstreamDrift web UI will be embedded here once captured
+     under pics/ (follow-up tracked in GitHub issue #3338). -->
 
 ## Scope and Limits
 
