@@ -6,8 +6,13 @@
  * Consolidates 12 previously inconsistent breakpoints to a standard 4-breakpoint system
  *
  * Usage:
- *   @media (width < var(--breakpoint-sm)) { ... }
- *   @media (width >= var(--breakpoint-md)) { ... }
+ *   IMPORTANT: CSS custom properties are NOT valid inside @media preludes —
+ *   `@media (width < var(--breakpoint-sm))` parses as `not all` and is dropped
+ *   by every browser (issue #3326). ALWAYS use the literal px value in a media
+ *   query, and reference the token only inside declaration blocks.
+ *     @media (width < 640px) { ... }   // --breakpoint-sm
+ *     @media (width >= 768px) { ... }  // --breakpoint-md
+ *   Literal-px map: xs=320, sm=640, md=768, lg=1024, xl=1440.
  */
 
 :root {
@@ -49,17 +54,20 @@
   `width <` = "below breakpoint" (everything smaller)
   `width >=` = "at or above breakpoint" (mobile-first additive)
 
+NOTE: use LITERAL px in @media preludes (var() is invalid there, #3326).
+  Literal-px map: xs=320, sm=640, md=768, lg=1024, xl=1440.
+
 Mobile-first approach (PRIMARY - use this):
   Base styles = mobile (no media query)
-  @media (width >= var(--breakpoint-md)) { tablet and up }
-  @media (width >= var(--breakpoint-lg)) { desktop and up }
-  @media (width >= var(--breakpoint-xl)) { large and up }
+  @media (width >= 768px) { tablet and up }     /* md */
+  @media (width >= 1024px) { desktop and up }    /* lg */
+  @media (width >= 1440px) { large and up }      /* xl */
 
 Mobile-only overrides (SECONDARY - less common):
-  @media (width < var(--breakpoint-md)) { mobile specific }
+  @media (width < 768px) { mobile specific }     /* md */
 
 Between breakpoints (ranges):
-  @media (width >= var(--breakpoint-md)) and (width < var(--breakpoint-lg)) { tablet only }
+  @media (width >= 768px) and (width < 1024px) { tablet only }  /* md..lg */
 
 Print media (separate concern):
   @media print { print styles }

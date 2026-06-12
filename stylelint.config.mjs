@@ -12,7 +12,9 @@ export default {
     "declaration-property-value-no-unknown": null,
     "import-notation": null,
     "media-feature-range-notation": null,
-    "media-query-no-invalid": null,
+    // #3326: forbid invalid media queries — notably var() in a @media prelude,
+    // which parses as `not all` and silently drops the whole mobile layout.
+    "media-query-no-invalid": true,
     "no-duplicate-selectors": null,
     "rule-empty-line-before": null,
     "value-keyword-case": null,

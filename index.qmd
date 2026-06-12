@@ -6,13 +6,10 @@ page-layout: full
 ---
 
 ```{=html}
-<!-- Mobile menu toggle for home-sidebar (Desktop-first layout) -->
-<button type="button" class="mobile-menu-toggle" aria-label="Toggle navigation menu" title="Toggle navigation menu" aria-expanded="false">
-  <svg class="icon-menu" aria-hidden="true" viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
-  <svg class="icon-close" aria-hidden="true" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-</button>
-<div class="sidebar-overlay"></div>
-
+<!-- Mobile navigation is handled by Quarto's built-in .navbar-toggler
+     (see js/navigation.js::initNavbarCollapse); the former custom
+     .mobile-menu-toggle / .sidebar-overlay controls were dead no-ops and
+     were removed (issue #3327, closes #2955). -->
 <div class="container">
   <div class="home-layout home-layout-3col">
     <!-- Left Sidebar: three sections matching the new IA (Read / Build / Connect) -->

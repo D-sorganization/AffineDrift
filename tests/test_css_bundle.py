@@ -8,6 +8,7 @@ instead of a 26-request, 3-level-deep waterfall.
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 import pytest
@@ -125,6 +126,19 @@ class TestRealRepoBundle:
         out = bundle(REPO_ROOT / "styles.css", REPO_ROOT)
         assert "--color-neutral-0" in out  # from css/tokens/colors.css
         assert "box-sizing: border-box" in out  # from styles.css base reset
+
+    def test_real_bundle_has_no_var_in_media_preludes(self):
+        """Regression for #3326: var() in a @media prelude is invalid CSS.
+
+        Such a query parses as ``not all`` and is silently dropped by every
+        browser, so the entire mobile layout never applies. The shipped bundle
+        must contain zero real ``@media ... var(...)`` rules. Comment bodies
+        (which document the px-literal convention) are stripped first.
+        """
+        out = bundle(REPO_ROOT / "styles.css", REPO_ROOT)
+        decommented = re.sub(r"/\*.*?\*/", " ", out, flags=re.DOTALL)
+        offenders = re.findall(r"@media[^{]*\bvar\(", decommented)
+        assert offenders == [], f"invalid var() in @media prelude: {offenders}"
 
 
 def _significant_line(css: str) -> str | None:

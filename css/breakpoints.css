@@ -3,8 +3,9 @@
    Phase 1: Design Tokens (Consolidated)
 
    Standard breakpoints established for consistent responsive design.
-   These are the canonical values - all @media queries should reference
-   these breakpoints only (or use CSS variables).
+   These are the canonical values. CSS custom properties are NOT valid
+   inside @media preludes (issue #3326) — use the LITERAL px value in a
+   media query and reference these tokens only inside declaration blocks.
 
    Mobile-first approach: base styles for xs, then enhance at larger breakpoints
    --- */
@@ -26,8 +27,8 @@
    lg (1024px) : Tablets (landscape), standard laptops
    xl (1440px) : Large desktops, wide screens
 
-   Common patterns:
-   - Mobile-first: @media (width >= var(--breakpoint-md)) { ... }
-   - Desktop-down: @media (width < var(--breakpoint-md)) { ... }
-   - Range: @media (width >= var(--breakpoint-md)) and (width < var(--breakpoint-lg)) { ... }
+   Common patterns (LITERAL px in preludes — var() is invalid there, #3326):
+   - Mobile-first: @media (width >= 768px) { ... }                      /* md */
+   - Desktop-down: @media (width < 768px) { ... }                       /* md */
+   - Range: @media (width >= 768px) and (width < 1024px) { ... }        /* md..lg */
 */

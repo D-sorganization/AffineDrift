@@ -39,24 +39,13 @@
     }
   }
 
-  // setMobileMenuState removed - functionality consolidated to navbar handler
-
-  function initMobileMenu() {
-    // CONSOLIDATED: Mobile menu handling moved to unified navbar implementation
-    // The navbar-toggler (.navbar-toggler) and navbarCollapse (#navbarCollapse)
-    // are now the single source of truth for mobile navigation across all pages.
-    //
-    // See js/navigation.js::initNavbarCollapse() for the unified implementation
-    // that handles Escape key, arrow key navigation, and ARIA attributes.
-    //
-    // This function is retained for compatibility but does nothing.
-    // TODO (Issue #2955): Remove this empty function after confirming no other
-    // dependencies exist on it.
-  }
+  // Mobile menu handling is owned solely by the unified navbar implementation
+  // in js/navigation.js::initNavbarCollapse() (Quarto's .navbar-toggler /
+  // #navbarCollapse). The old no-op initMobileMenu() and its markup were
+  // removed (issue #3327, closes #2955).
 
   function init() {
     initCollapsibleSections();
-    initMobileMenu();
   }
 
   if (document.readyState === "loading") {

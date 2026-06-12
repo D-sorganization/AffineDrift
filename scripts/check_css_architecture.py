@@ -11,11 +11,40 @@ from src.tools.utils.budget_check_utils import load_config, report_results
 
 IMPORT_RE = re.compile(r"""@import\s+(?:url\()?["']([^"']+)["']\)?\s*;""")
 
+# A media-query prelude runs from `@media` up to the opening `{`. CSS custom
+# properties (var(...)) are NOT valid there — such a query parses as `not all`
+# and is silently dropped by every browser (issue #3326). Match `@media ... var(`
+# before the first `{` on a logical line, ignoring CSS comment bodies.
+MEDIA_VAR_RE = re.compile(r"@media[^{]*\bvar\(")
+# Strip `/* ... */` block comments so doc-comment examples don't trip the check.
+COMMENT_RE = re.compile(r"/\*.*?\*/", re.DOTALL)
+
 
 def extract_imports(path: Path) -> list[str]:
     """Extract CSS @import specifiers from a stylesheet."""
     text = path.read_text(encoding="utf-8")
     return [match.group(1) for match in IMPORT_RE.finditer(text)]
+
+
+def find_media_var_violations(path: Path, repo_root: Path) -> list[str]:
+    """Return violations for ``var()`` used inside a ``@media`` prelude.
+
+    CSS variables are invalid in media-query preludes; the rule is dropped, so
+    responsive layout silently breaks (issue #3326). Comment bodies are ignored
+    so the canonical token files may document the px-literal convention.
+    """
+    text = path.read_text(encoding="utf-8")
+    rel = path.relative_to(repo_root).as_posix()
+    violations: list[str] = []
+    # Blank out comments while preserving newlines so line numbers stay accurate.
+    decommented = COMMENT_RE.sub(lambda m: re.sub(r"[^\n]", " ", m.group(0)), text)
+    for lineno, line in enumerate(decommented.splitlines(), start=1):
+        if MEDIA_VAR_RE.search(line):
+            violations.append(
+                f"{rel}:{lineno} uses var() inside a @media prelude "
+                f"(invalid CSS, dropped by browsers; use literal px — #3326)"
+            )
+    return violations
 
 
 def check_rules(repo_root: Path) -> list[str]:
@@ -57,6 +86,13 @@ def check_rules(repo_root: Path) -> list[str]:
             violations.append(
                 f"{feature_rel} must not contain @import (found: {', '.join(feature_imports)})"
             )
+
+    # Forbid var() inside @media preludes across every authored stylesheet
+    # (root entry + the modular css/ tree). The rendered docs/ bundle inherits
+    # correctness from these sources via scripts/bundle_css.py.
+    media_var_targets = [root_stylesheet, *sorted(repo_root.glob("css/**/*.css"))]
+    for css_file in media_var_targets:
+        violations.extend(find_media_var_violations(css_file, repo_root))
 
     return violations
 

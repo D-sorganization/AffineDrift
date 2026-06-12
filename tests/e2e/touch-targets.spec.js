@@ -212,10 +212,11 @@ test.describe('Touch Target Compliance (WCAG 2.5.5)', () => {
   test('should validate mobile menu button', async ({ page }) => {
     await page.goto('/');
 
-    // Mobile menu toggle is often a navbar-toggler
+    // Mobile menu toggle is Quarto's navbar-toggler (the custom
+    // .mobile-menu-toggle was removed in #3327).
     const { results, count } = await checkTouchTarget(
       page,
-      '.navbar-toggler, .mobile-menu-toggle',
+      '.navbar-toggler',
       'Mobile menu buttons'
     );
 
