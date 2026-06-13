@@ -13,10 +13,46 @@ from src.golf_simulation.round_simulator import MAX_STROKES_PER_HOLE, RoundSimul
 from src.golf_simulation.terrain import TerrainType
 
 
+class FastBallFlightDynamics(BallFlightDynamics):
+    """Deterministic low-cost flight model for round-level simulator tests."""
+
+    def simulate(
+        self,
+        initial_state: BallFlightState,
+        dt: float = 0.001,
+        max_time: float = 15.0,
+    ) -> list[BallFlightState]:
+        del dt, max_time
+        velocity_xy = np.asarray(initial_state.velocity[:2], dtype=float)
+        horizontal_speed = float(np.linalg.norm(velocity_xy))
+        if horizontal_speed <= 1e-9:
+            direction = np.array([1.0, 0.0])
+        else:
+            direction = velocity_xy / horizontal_speed
+
+        carry_m = max(8.0, horizontal_speed * 1.8)
+        landing = np.array(initial_state.position, dtype=float)
+        landing[:2] += direction * carry_m
+        landing[2] = 0.0
+        return [
+            initial_state,
+            BallFlightState(
+                position=landing,
+                velocity=np.array([0.0, 0.0, -0.1]),
+                spin=np.zeros(3),
+            ),
+        ]
+
+
+def _make_round_simulator(course, rng_seed: int = 42) -> RoundSimulator:
+    """Build a round simulator with fast flight dynamics for round-level tests."""
+    return RoundSimulator(course, ball_flight=FastBallFlightDynamics(), rng_seed=rng_seed)
+
+
 class TestRoundSimulator:
     def test_simulate_par3_round(self):
         course = create_par3_course()
-        sim = RoundSimulator(course, rng_seed=42)
+        sim = _make_round_simulator(course)
         result = sim.simulate_round()
         assert len(result.hole_results) == 9
         assert result.total_score > 0
@@ -24,7 +60,7 @@ class TestRoundSimulator:
 
     def test_simulate_championship_round(self):
         course = create_championship_course()
-        sim = RoundSimulator(course, rng_seed=42)
+        sim = _make_round_simulator(course)
         result = sim.simulate_round()
         assert len(result.hole_results) == 18
         assert result.total_par == 72
@@ -33,7 +69,7 @@ class TestRoundSimulator:
 
     def test_hole_results_have_shots(self):
         course = create_par3_course()
-        sim = RoundSimulator(course, rng_seed=42)
+        sim = _make_round_simulator(course)
         result = sim.simulate_round()
         for hr in result.hole_results:
             assert len(hr.shots) >= 1
@@ -42,14 +78,14 @@ class TestRoundSimulator:
     def test_custom_clubs_and_flight(self):
         course = create_par3_course()
         bag = ClubBag()
-        flight = BallFlightDynamics()
+        flight = FastBallFlightDynamics()
         sim = RoundSimulator(course, club_bag=bag, ball_flight=flight, rng_seed=42)
         result = sim.simulate_round()
         assert result.total_score > 0
 
     def test_shot_trajectories_populated(self):
         course = create_par3_course()
-        sim = RoundSimulator(course, rng_seed=42)
+        sim = _make_round_simulator(course)
         result = sim.simulate_round()
         for hr in result.hole_results:
             for shot in hr.shots:
@@ -58,14 +94,14 @@ class TestRoundSimulator:
     def test_penalty_handling(self):
         """Simulator should handle water/OB without crashing."""
         course = create_championship_course()
-        sim = RoundSimulator(course, rng_seed=42)
+        sim = _make_round_simulator(course)
         result = sim.simulate_round()
         assert result.total_score > 0
 
     def test_par3_score_bounds(self):
         """Par-3 course score stays within simulator stroke caps."""
         course = create_par3_course()
-        sim = RoundSimulator(course, rng_seed=42)
+        sim = _make_round_simulator(course)
         result = sim.simulate_round()
         hole_count = len(result.hole_results)
         assert hole_count <= result.total_score <= MAX_STROKES_PER_HOLE * hole_count
@@ -73,7 +109,7 @@ class TestRoundSimulator:
     def test_per_hole_scores_within_cap(self):
         """Every hole score must not exceed MAX_STROKES_PER_HOLE."""
         course = create_championship_course()
-        sim = RoundSimulator(course, rng_seed=42)
+        sim = _make_round_simulator(course)
         result = sim.simulate_round()
         for hr in result.hole_results:
             assert hr.score <= MAX_STROKES_PER_HOLE
@@ -83,22 +119,21 @@ class TestRoundSimulatorDeterminism:
     def test_same_seed_produces_identical_hole_scores(self):
         """Two simulators with the same seed must produce identical hole_scores."""
         course = create_par3_course()
-        sim_a = RoundSimulator(course, rng_seed=42)
-        sim_b = RoundSimulator(course, rng_seed=42)
+        sim_a = _make_round_simulator(course)
+        sim_b = _make_round_simulator(course)
         result_a = sim_a.simulate_round()
         result_b = sim_b.simulate_round()
         scores_a = [hr.score for hr in result_a.hole_results]
         scores_b = [hr.score for hr in result_b.hole_results]
         assert scores_a == scores_b
 
-    def test_different_seeds_may_differ(self):
-        """Two simulators with different seeds should (almost certainly) differ."""
+    def test_different_seeds_change_first_shot_endpoint(self):
+        """Two simulators with different seeds should vary the first shot endpoint."""
         course = create_championship_course()
-        result_42 = RoundSimulator(course, rng_seed=42).simulate_round()
-        result_99 = RoundSimulator(course, rng_seed=99).simulate_round()
-        scores_42 = [hr.score for hr in result_42.hole_results]
-        scores_99 = [hr.score for hr in result_99.hole_results]
-        assert scores_42 != scores_99
+        hole = course.holes[0]
+        result_42 = _make_round_simulator(course, rng_seed=42).simulate_hole(hole)
+        result_99 = _make_round_simulator(course, rng_seed=99).simulate_hole(hole)
+        assert result_42.shots[0].end_position != result_99.shots[0].end_position
 
 
 class TestHandleShotPenalty:
@@ -106,7 +141,7 @@ class TestHandleShotPenalty:
 
     def _make_sim_and_hole(self):
         course = create_par3_course()
-        sim = RoundSimulator(course, rng_seed=42)
+        sim = _make_round_simulator(course)
         hole = course.holes[0]
         return sim, hole
 
@@ -163,7 +198,7 @@ class TestFindPuttStoppingPoint:
 
     def _make_sim_and_hole(self):
         course = create_par3_course()
-        sim = RoundSimulator(course, rng_seed=42)
+        sim = _make_round_simulator(course)
         hole = course.holes[0]
         return sim, hole
 
@@ -232,7 +267,7 @@ class TestBounceAndRoll:
     """Tests for _apply_bounce_and_roll terrain physics integration."""
 
     def _make_sim(self) -> RoundSimulator:
-        return RoundSimulator(create_par3_course(), rng_seed=7)
+        return _make_round_simulator(create_par3_course(), rng_seed=7)
 
     def _landing_state(self) -> BallFlightState:
         # Ball arriving at the ground moving forward and downward, with backspin.
@@ -276,8 +311,8 @@ class TestBounceAndRoll:
         rough_hole = _uniform_terrain_hole(TerrainType.DEEP_ROUGH)
         start = (0.0, 0.0, 0.0)
 
-        sim_fw = RoundSimulator(course, rng_seed=123)
-        sim_dr = RoundSimulator(course, rng_seed=123)
+        sim_fw = _make_round_simulator(course, rng_seed=123)
+        sim_dr = _make_round_simulator(course, rng_seed=123)
         fairway_shot = sim_fw._simulate_shot(start, fairway_hole, club)
         rough_shot = sim_dr._simulate_shot(start, rough_hole, club)
         assert rough_shot.distance_yards < fairway_shot.distance_yards
