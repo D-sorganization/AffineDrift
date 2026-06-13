@@ -94,3 +94,7 @@
 ## 2026-06-12 - Native Search Input Controls
 **Learning:** Search and filter inputs declared as `type="text"` miss browser-native clear controls and search-optimized mobile keyboards.
 **Action:** Use `type="search"` for search/filter fields while preserving explicit labels, IDs, and tested interaction contracts.
+
+## 2026-06-13 - Mobile Keyboard Optimization for Numeric Inputs
+**Learning:** Using `type="text"` for numeric inputs triggers the default alphabetical keyboard on mobile devices, adding friction to data entry. Additionally, mobile keyboards may attempt to autocorrect mathematical values.
+**Action:** Always add `inputmode="decimal"`, `autocorrect="off"`, and `spellcheck="false"` to text inputs intended for numeric data to invoke the native numeric keypad and prevent frustrating auto-corrections, improving mobile UX significantly.
