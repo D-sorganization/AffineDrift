@@ -33,6 +33,12 @@ logger = logging.getLogger(__name__)
 # Maximum strokes before conceding a hole
 MAX_STROKES_PER_HOLE = 10
 
+# Round simulation needs a stable but coarser flight integration step than
+# lower-level ball-flight tests, because championship simulations compound this
+# cost over many shots.
+_ROUND_SHOT_FLIGHT_DT_S = 0.02
+_ROUND_SHOT_MAX_FLIGHT_TIME_S = 15.0
+
 # Gravity used for the post-landing friction rollout (m/s^2).
 _ROLLOUT_GRAVITY_M_S2 = 9.81
 
@@ -439,7 +445,11 @@ class RoundSimulator:
             spin=initial.spin,
         )
 
-        trajectory_states = self.ball_flight.simulate(offset_initial, dt=0.01, max_time=15.0)
+        trajectory_states = self.ball_flight.simulate(
+            offset_initial,
+            dt=_ROUND_SHOT_FLIGHT_DT_S,
+            max_time=_ROUND_SHOT_MAX_FLIGHT_TIME_S,
+        )
 
         traj_points = [
             (float(s.position[0]), float(s.position[1]), float(s.position[2]))

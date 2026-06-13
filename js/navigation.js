@@ -223,7 +223,7 @@ export function generateTableOfContents() {
 
     const tocList = document.getElementById("toc-list");
     if (!tocList) return;
-    tocList.innerHTML = "";
+    tocList.textContent = "";
 
     const sections = [];
     const usedIds = new Set();

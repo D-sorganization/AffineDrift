@@ -76,3 +76,7 @@
 **Vulnerability:** DOM-based XSS risk via `.innerHTML` used to update inertia display and clear containers in `src/tools/wrist_universal_joint/grip_angle_simulator.html`.
 **Learning:** Using `.innerHTML` to update or clear DOM containers is a brittle anti-pattern that introduces XSS risks and violates strict security policies, even when the inputs appear safe (e.g., numbers from `toFixed()`).
 **Prevention:** Always use native DOM APIs such as `.textContent` or `.appendChild(document.createTextNode(...))` to safely update text content or clear elements, avoiding `.innerHTML` entirely.
+## 2026-06-13 - Enforcing .textContent over .innerHTML
+**Vulnerability:** Clearing DOM elements using .innerHTML = "" violates strict security policies and risks DOM-based XSS if later modified.
+**Learning:** Even safe-looking assignments like empty strings build a habit of using an unsafe API. Native DOM properties like .textContent are inherently immune to XSS.
+**Prevention:** Strictly use .textContent = "" or document.createTextNode() for DOM insertion and clearing.
