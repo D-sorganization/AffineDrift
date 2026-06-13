@@ -359,7 +359,7 @@ export function initLightbox() {
     function closeLightbox() {
         lightbox.classList.remove("active");
         lightbox.setAttribute("aria-hidden", "true");
-        lightbox.innerHTML = "";
+        lightbox.textContent = "";
         if (lastFocusedElement) {
             lastFocusedElement.focus();
             lastFocusedElement = null;
@@ -440,7 +440,7 @@ export function initLightbox() {
         clone.removeAttribute("aria-label");
         clone.classList.remove("zoomable");
 
-        lightbox.innerHTML = "";
+        lightbox.textContent = "";
         lightbox.appendChild(clone);
         lightbox.appendChild(closeBtn);
 
