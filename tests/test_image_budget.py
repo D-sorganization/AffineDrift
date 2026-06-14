@@ -5,6 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from scripts import check_image_budget
+from scripts.optimize_images import build_manifest
 
 
 def test_image_budget_flags_referenced_oversized_asset(tmp_path: Path) -> None:
@@ -41,3 +42,20 @@ def test_navbar_logo_asset_stays_small() -> None:
     logo_path = repo_root / "logo" / "logo-navbar.png"
 
     assert logo_path.stat().st_size <= check_image_budget.NAVBAR_LOGO_BUDGET_BYTES
+
+
+def test_app_icon_512_asset_stays_small() -> None:
+    """The PWA 512px icon should stay palette-compressed for deploy."""
+    repo_root = Path(__file__).resolve().parents[1]
+    icon_path = repo_root / "logo" / "logo-icon-512.png"
+
+    assert icon_path.stat().st_size <= check_image_budget.APP_ICON_512_BUDGET_BYTES
+
+
+def test_image_optimizer_uses_existing_logo_source() -> None:
+    """The optimizer manifest must not point at deleted high-resolution logos."""
+    repo_root = Path(__file__).resolve().parents[1]
+    manifest = build_manifest(repo_root)
+
+    assert manifest.logo_source.is_file()
+    assert manifest.logo_source.name == "logo-icon-512.png"
