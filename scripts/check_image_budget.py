@@ -10,6 +10,7 @@ from pathlib import Path
 
 DEFAULT_BUDGET_BYTES = 500 * 1024
 NAVBAR_LOGO_BUDGET_BYTES = 20 * 1024
+APP_ICON_512_BUDGET_BYTES = 64 * 1024
 IMAGE_ROOTS = ("logo", "pics", "static/images")
 IMAGE_SUFFIXES = (".gif", ".jpeg", ".jpg", ".png", ".svg", ".webp")
 PAGE_ROOTS = (

@@ -19,6 +19,7 @@ GIF_DURATION_MS = 40
 PNG_COMPRESS_LEVEL = 9
 WEBP_QUALITY = 82
 OG_BACKGROUND = (248, 250, 252)
+APP_ICON_COLOR_COUNT = 128
 
 
 @dataclass(frozen=True)
@@ -26,6 +27,7 @@ class OptimizationManifest:
     """Explicit source and output paths for site image derivatives."""
 
     logo_source: Path
+    app_icon_png: Path
     navbar_png: Path
     navbar_webp: Path
     og_card_png: Path
@@ -46,7 +48,8 @@ def _resolve(repo_root: Path, relative_path: str) -> Path:
 def build_manifest(repo_root: Path) -> OptimizationManifest:
     """Build the explicit image optimization manifest."""
     return OptimizationManifest(
-        logo_source=_resolve(repo_root, "logo/logo_transparent_1.png"),
+        logo_source=_resolve(repo_root, "logo/logo-icon-512.png"),
+        app_icon_png=_resolve(repo_root, "logo/logo-icon-512.png"),
         navbar_png=_resolve(repo_root, "logo/logo-navbar.png"),
         navbar_webp=_resolve(repo_root, "logo/logo-navbar.webp"),
         og_card_png=_resolve(repo_root, "logo/og-card.png"),
@@ -78,10 +81,31 @@ def _save_png(image: Image.Image, path: Path) -> None:
     image.save(path, format="PNG", optimize=True, compress_level=PNG_COMPRESS_LEVEL)
 
 
+def _save_palette_png(image: Image.Image, path: Path, colors: int) -> None:
+    """Save an RGBA PNG as a compact palette PNG with transparency preserved."""
+    if colors <= 0:
+        raise ValueError("colors must be positive")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    image.convert("RGBA").quantize(colors=colors, method=Image.Quantize.FASTOCTREE).save(
+        path,
+        format="PNG",
+        optimize=True,
+        compress_level=PNG_COMPRESS_LEVEL,
+    )
+
+
 def _save_webp(image: Image.Image, path: Path) -> None:
     """Save a WebP derivative for browsers that support it."""
     path.parent.mkdir(parents=True, exist_ok=True)
     image.save(path, format="WEBP", quality=WEBP_QUALITY, method=6)
+
+
+def optimize_app_icon(manifest: OptimizationManifest) -> None:
+    """Recompress the 512px PWA icon without changing its dimensions."""
+    icon = _load_image(manifest.app_icon_png)
+    if icon.size != (512, 512):
+        raise ValueError(f"expected 512x512 app icon, got {icon.size}")
+    _save_palette_png(icon, manifest.app_icon_png, APP_ICON_COLOR_COUNT)
 
 
 def optimize_navbar_logo(manifest: OptimizationManifest) -> None:
@@ -147,6 +171,7 @@ def main() -> int:
     """Generate optimized image derivatives for the repository."""
     repo_root = Path(__file__).resolve().parent.parent
     manifest = build_manifest(repo_root)
+    optimize_app_icon(manifest)
     optimize_navbar_logo(manifest)
     optimize_og_card(manifest)
     optimize_fish_animation(manifest)
