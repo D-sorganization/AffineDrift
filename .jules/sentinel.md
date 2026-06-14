@@ -80,3 +80,7 @@
 **Vulnerability:** Clearing DOM elements using .innerHTML = "" violates strict security policies and risks DOM-based XSS if later modified.
 **Learning:** Even safe-looking assignments like empty strings build a habit of using an unsafe API. Native DOM properties like .textContent are inherently immune to XSS.
 **Prevention:** Strictly use .textContent = "" or document.createTextNode() for DOM insertion and clearing.
+## 2026-06-14 - Prevent DOM-based XSS by replacing innerHTML
+**Vulnerability:** DOM-based XSS risk via `innerHTML` used to render error and empty states dynamically in `js/bibliography.js`.
+**Learning:** Using `innerHTML` to construct DOM elements dynamically, even with static keys/labels or escaped variables, violates strict security policies and creates a brittle pattern that could be exploited.
+**Prevention:** Always use native DOM methods like `document.createElement()` and securely assign properties via `textContent` instead of `innerHTML`.
