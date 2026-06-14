@@ -158,12 +158,31 @@
     }`;
 
     if (state.filtered.length === 0) {
-      listEl.innerHTML = `
-        <div class="bib-empty-state" role="status" aria-live="polite">
-          <p>No matches found for "<strong>${escapeHtml(state.query)}</strong>". Try a broader query.</p>
-          <button type="button" class="sort-btn" id="bib-clear-search" style="margin-top: 1rem;" aria-label="Clear search and show all references" title="Clear search and show all references">Clear Search</button>
-        </div>
-      `;
+      listEl.textContent = "";
+      const emptyDiv = document.createElement("div");
+      emptyDiv.className = "bib-empty-state";
+      emptyDiv.setAttribute("role", "status");
+      emptyDiv.setAttribute("aria-live", "polite");
+
+      const p = document.createElement("p");
+      p.textContent = 'No matches found for "';
+      const strong = document.createElement("strong");
+      strong.textContent = state.query;
+      p.appendChild(strong);
+      p.appendChild(document.createTextNode('". Try a broader query.'));
+      emptyDiv.appendChild(p);
+
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "sort-btn";
+      btn.id = "bib-clear-search";
+      btn.style.marginTop = "1rem";
+      btn.setAttribute("aria-label", "Clear search and show all references");
+      btn.setAttribute("title", "Clear search and show all references");
+      btn.textContent = "Clear Search";
+      emptyDiv.appendChild(btn);
+
+      listEl.appendChild(emptyDiv);
       return;
     }
 
@@ -284,11 +303,20 @@
       renderSortControls();
       renderList();
     } catch (error) {
-      listEl.innerHTML = `<p>Unable to load bibliography data.</p>`;
+      listEl.textContent = "";
+      const pList = document.createElement("p");
+      pList.textContent = "Unable to load bibliography data.";
+      listEl.appendChild(pList);
       countEl.textContent = "0 references";
-      detailsEl.innerHTML = `<h3 class="sidebar-heading">Details</h3><p>${escapeHtml(
-        error.message,
-      )}</p>`;
+
+      detailsEl.textContent = "";
+      const h3 = document.createElement("h3");
+      h3.className = "sidebar-heading";
+      h3.textContent = "Details";
+      const pDetails = document.createElement("p");
+      pDetails.textContent = error.message;
+      detailsEl.appendChild(h3);
+      detailsEl.appendChild(pDetails);
       return;
     }
 
