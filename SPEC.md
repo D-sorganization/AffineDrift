@@ -668,3 +668,4 @@ python src/tools/code_quality_check.py
 | 2026-06-11 | 1.0.117 | fix(security): Prevent DOM-based XSS in grip angle simulator by refactoring inertia-display, updateSignalCheckboxes, and updateModelInfo to use native DOM methods instead of `innerHTML`. |
 | 2026-06-13 | 1.0.136 | fix(security): Prevent DOM-based XSS by replacing `.innerHTML = ""` with `.textContent = ""` in navigation and ui-components. |
 | 2026-06-14 | 1.0.137 | fix(security): Prevent DOM-based XSS by refactoring dynamic innerHTML usage in bibliography error and empty states to use native DOM methods. |
+| 2026-06-15 | 1.0.138 | perf(frontend): Consolidated standalone scroll listener in `js/accessibility.js` into the batched `registerScrollCallback` central loop in `js/ui-components.js` to prevent layout thrashing and main-thread jank. |

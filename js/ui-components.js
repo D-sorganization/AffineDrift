@@ -13,15 +13,17 @@ let isScrollTicking = false;
 
 function handleGlobalScroll() {
     if (!isScrollTicking) {
-        window.requestAnimationFrame(() => {
-            const scrollTop = window.scrollY;
-            for (const cb of scrollCallbacks) {
-                cb(scrollTop);
-            }
-            isScrollTicking = false;
-        });
+        window.requestAnimationFrame(processCallbacks);
         isScrollTicking = true;
     }
+}
+
+function processCallbacks() {
+    const scrollTop = window.scrollY;
+    for (const cb of scrollCallbacks) {
+        cb(scrollTop);
+    }
+    isScrollTicking = false;
 }
 
 export function registerScrollCallback(callback) {
