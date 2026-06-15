@@ -137,3 +137,6 @@
 ## 2026-06-02 - Consolidating .closest() queries
 **Learning:** Checking multiple ancestor conditions in a hot loop using separate `.closest()` calls (e.g., `element.closest('a') || element.closest('button')`) is inefficient due to repeatedly crossing the JS-to-C++ boundary.
 **Action:** Consolidate multiple ancestor checks into a single `.closest('a, button')` query to halve the CSS selector parsing overhead while leveraging native C++ speeds.
+## 2026-06-15 - Consolidate scroll event listener to prevent layout thrashing
+**Learning:** Found an unbatched `window.addEventListener('scroll', ...)` in `accessibility.js` that fires independently from the batched central listener in `ui-components.js`. Having multiple scroll event handlers reading and writing the DOM on the same frame can easily cause layout thrashing and stuttering during scroll.
+**Action:** When adding scroll logic to any new component, always register it with the centralized `registerScrollCallback` utility in `ui-components.js` rather than attaching a standalone `window.addEventListener('scroll')` to ensure batched, requestAnimationFrame execution.

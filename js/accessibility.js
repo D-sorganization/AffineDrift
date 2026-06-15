@@ -4,6 +4,7 @@
  */
 
 import { runOnDomReady } from "./utils.js";
+import { registerScrollCallback } from "./ui-components.js";
 
 /**
  * Secure external links with proper attributes
@@ -282,22 +283,15 @@ export function initReadingProgress() {
     bar.setAttribute("aria-hidden", "true");
     document.body.appendChild(bar);
 
-    let ticking = false;
-    function update() {
+    function update(scrollTop = window.scrollY) {
         const docHeight =
             document.documentElement.scrollHeight - window.innerHeight;
-        const ratio = docHeight > 0 ? window.scrollY / docHeight : 0;
+        const ratio = docHeight > 0 ? scrollTop / docHeight : 0;
         bar.style.transform = `scaleX(${Math.min(Math.max(ratio, 0), 1)})`;
-        ticking = false;
     }
-    function onScroll() {
-        if (!ticking) {
-            window.requestAnimationFrame(update);
-            ticking = true;
-        }
-    }
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll, { passive: true });
+
+    registerScrollCallback(update);
+    window.addEventListener("resize", () => window.requestAnimationFrame(() => update()), { passive: true });
     update();
 }
 
