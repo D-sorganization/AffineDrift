@@ -34,6 +34,7 @@ def test_repositories_accordion_icons_are_hidden_from_screen_readers() -> None:
     assert parser.icons
     assert all(icon.get("aria-hidden") == "true" for icon in parser.icons)
 
+
 def test_models_accordion_icons_are_hidden_from_screen_readers() -> None:
     """Decorative accordion icons must not be announced as button text."""
     parser = AccordionIconParser()
