@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from scripts import check_image_budget
-from scripts.optimize_images import build_manifest
+from scripts.optimize_images import build_manifest, check_manifest
 
 
 def test_image_budget_flags_referenced_oversized_asset(tmp_path: Path) -> None:
@@ -59,3 +59,11 @@ def test_image_optimizer_uses_existing_logo_source() -> None:
 
     assert manifest.logo_source.is_file()
     assert manifest.logo_source.name == "logo-icon-512.png"
+
+
+def test_image_optimizer_check_mode_is_non_mutating() -> None:
+    """Deploy should validate optimized images without rewriting platform-specific binaries."""
+    repo_root = Path(__file__).resolve().parents[1]
+    manifest = build_manifest(repo_root)
+
+    assert check_manifest(manifest, repo_root) == []

@@ -66,8 +66,7 @@ jobs:
 
       - name: Verify Optimized Image Derivatives
         run: |
-          python3 scripts/optimize_images.py
-          git diff --exit-code -- logo static/images
+          python3 scripts/optimize_images.py --check
 
       - name: Verify Image Budget
         run: python3 scripts/check_image_budget.py
