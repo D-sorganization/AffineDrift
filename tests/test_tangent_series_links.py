@@ -55,6 +55,25 @@ def test_canonical_tangent_series_has_seven_part_reading_path() -> None:
         assert rendered_href in hub_text
 
 
+def test_tangent_series_links_only_to_rendered_critique_pages() -> None:
+    """Visible tangent pages must not target excluded internal revision-plan pages."""
+    project_config = (REPO_ROOT / "_quarto.yml").read_text(encoding="utf-8")
+    hub_text = (REPO_ROOT / "pages/tangent-hyperplanes.qmd").read_text(encoding="utf-8")
+    excluded_targets = ("CRITICS_CORNER.qmd", "CRITICS_CORNER.html")
+    stale_links: list[str] = []
+
+    assert "!articles/tangent-hyperplane-articles/CRITICS_CORNER.qmd" in project_config
+    assert "../critiques/index.html" in hub_text
+
+    for source in TANGENT_LINK_SOURCES:
+        text = (REPO_ROOT / source).read_text(encoding="utf-8")
+        for excluded_target in excluded_targets:
+            if excluded_target in text:
+                stale_links.append(f"{source} -> {excluded_target}")
+
+    assert stale_links == []
+
+
 def test_reference_manuscript_is_demoted_from_canonical_path() -> None:
     """The single-file manuscript remains rendered but is clearly secondary."""
     manuscript = (
