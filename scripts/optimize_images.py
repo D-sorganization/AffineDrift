@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import argparse
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -20,6 +21,15 @@ PNG_COMPRESS_LEVEL = 9
 WEBP_QUALITY = 82
 OG_BACKGROUND = (248, 250, 252)
 APP_ICON_COLOR_COUNT = 128
+EXPECTED_OUTPUTS: tuple[str, ...] = (
+    "app_icon_png",
+    "navbar_png",
+    "navbar_webp",
+    "og_card_png",
+    "fish_gif",
+    "fish_poster_png",
+    "fish_poster_webp",
+)
 
 
 @dataclass(frozen=True)
@@ -167,10 +177,48 @@ def optimize_fish_animation(manifest: OptimizationManifest) -> None:
     _save_webp(poster, manifest.fish_poster_webp)
 
 
+def check_manifest(manifest: OptimizationManifest, repo_root: Path) -> list[str]:
+    """Return validation errors for checked-in optimized image assets."""
+    errors: list[str] = []
+    if not manifest.logo_source.is_file():
+        errors.append(f"missing logo source: {manifest.logo_source.relative_to(repo_root)}")
+
+    for field_name in EXPECTED_OUTPUTS:
+        path = getattr(manifest, field_name)
+        if not path.is_file():
+            errors.append(f"missing optimized image: {path.relative_to(repo_root)}")
+
+    if manifest.app_icon_png.is_file():
+        icon = _load_image(manifest.app_icon_png)
+        if icon.size != (512, 512):
+            errors.append(f"logo/logo-icon-512.png must be 512x512, got {icon.size}")
+        if manifest.app_icon_png.stat().st_size > 64 * 1024:
+            errors.append("logo/logo-icon-512.png exceeds 64KB optimized budget")
+
+    return errors
+
+
 def main() -> int:
-    """Generate optimized image derivatives for the repository."""
+    """Generate or check optimized image derivatives for the repository."""
+    parser = argparse.ArgumentParser(description="Generate optimized image derivatives")
+    parser.add_argument(
+        "--check",
+        action="store_true",
+        help="Validate checked-in optimized assets without rewriting binary files",
+    )
+    args = parser.parse_args()
+
     repo_root = Path(__file__).resolve().parent.parent
     manifest = build_manifest(repo_root)
+    if args.check:
+        errors = check_manifest(manifest, repo_root)
+        for error in errors:
+            print(f"ERROR: {error}", file=sys.stderr)
+        if errors:
+            return 1
+        print("Optimized image derivatives are present and within budget.")
+        return 0
+
     optimize_app_icon(manifest)
     optimize_navbar_logo(manifest)
     optimize_og_card(manifest)
