@@ -98,3 +98,7 @@
 ## 2026-06-13 - Mobile Keyboard Optimization for Numeric Inputs
 **Learning:** Using `type="text"` for numeric inputs triggers the default alphabetical keyboard on mobile devices, adding friction to data entry. Additionally, mobile keyboards may attempt to autocorrect mathematical values.
 **Action:** Always add `inputmode="decimal"`, `autocorrect="off"`, and `spellcheck="false"` to text inputs intended for numeric data to invoke the native numeric keypad and prevent frustrating auto-corrections, improving mobile UX significantly.
+
+## 2026-06-15 - Hide decorative accordion icons from screen readers
+**Learning:** When accordion toggles have a separate textual label and a purely decorative icon (e.g. `+`), failing to add `aria-hidden="true"` to the icon causes screen readers to redundantly announce the symbol alongside the label and the `aria-expanded` state.
+**Action:** Always add `aria-hidden="true"` to decorative icons inside interactive elements to keep screen reader announcements clean and focused on the action.
