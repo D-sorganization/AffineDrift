@@ -3,7 +3,7 @@
  * Handles PDF download and print functionality
  */
 
-import { MATHJAX_RENDER_DELAY_MS, escapeHtml } from "./utils.js";
+import { MATHJAX_RENDER_DELAY_MS } from "./utils.js";
 
 /**
  * Initialize PDF download button
@@ -49,15 +49,24 @@ export function preparePDFPrint() {
         printTitleBlock.className = "print-title-block";
         printTitleBlock.style.display = "none";
 
-        printTitleBlock.innerHTML = `
-      <h1>${escapeHtml(pageTitle)}</h1>
-      <div class="print-author">AffineDrift</div>
-      <div class="print-date">${new Date().toLocaleDateString("en-US", {
+        const h1 = document.createElement("h1");
+        h1.textContent = pageTitle;
+
+        const authorDiv = document.createElement("div");
+        authorDiv.className = "print-author";
+        authorDiv.textContent = "AffineDrift";
+
+        const dateDiv = document.createElement("div");
+        dateDiv.className = "print-date";
+        dateDiv.textContent = new Date().toLocaleDateString("en-US", {
             year: "numeric",
             month: "long",
             day: "numeric",
-        })}</div>
-    `;
+        });
+
+        printTitleBlock.appendChild(h1);
+        printTitleBlock.appendChild(authorDiv);
+        printTitleBlock.appendChild(dateDiv);
 
         const mainContent =
             document.querySelector(".main-content-area") ||
