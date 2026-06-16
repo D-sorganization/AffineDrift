@@ -84,3 +84,7 @@
 **Vulnerability:** DOM-based XSS risk via `innerHTML` used to render error and empty states dynamically in `js/bibliography.js`.
 **Learning:** Using `innerHTML` to construct DOM elements dynamically, even with static keys/labels or escaped variables, violates strict security policies and creates a brittle pattern that could be exploited.
 **Prevention:** Always use native DOM methods like `document.createElement()` and securely assign properties via `textContent` instead of `innerHTML`.
+## 2026-06-16 - Prevent DOM-based XSS in PDF export
+**Vulnerability:** DOM-based XSS risk via `innerHTML` used with template literals to construct the print title block in `js/pdf.js`.
+**Learning:** Using `innerHTML` to construct DOM elements by interpolating variables is brittle and introduces XSS risks, even if the current inputs appear safe or use escaping functions.
+**Prevention:** To prevent DOM-based XSS when constructing DOM elements dynamically, always use native DOM methods like `document.createElement()` and securely assign properties via `textContent` instead of `innerHTML`.
