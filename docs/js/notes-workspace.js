@@ -196,21 +196,56 @@
     panel.setAttribute("aria-hidden", "true");
     panel.setAttribute("role", "dialog");
     panel.setAttribute("aria-modal", "true");
-    panel.innerHTML = `
-      <div class="ad-notes-header">
-        <h3>Project Notes</h3>
-        <button type="button" data-action="close" aria-label="Close notes workspace" title="Close notes workspace">x</button>
-      </div>
-      <textarea id="ad-notes-workspace-area" class="ad-notes-area" placeholder="Capture research notes, ideas, and follow-ups..."></textarea>
-      <div class="ad-notes-actions">
-        <button type="button" data-action="save" title="Save notes">Save</button>
-        <button type="button" data-action="clear" title="Clear notes">Clear</button>
-        <button type="button" data-action="delete" class="danger" title="Delete notes to bin">Delete to Bin</button>
-        <button type="button" data-action="restore" title="Restore notes from bin">Restore Bin</button>
-        <button type="button" data-action="popout" title="Open notes in new window">Pop-out</button>
-      </div>
-      <div class="ad-notes-status" id="ad-notes-status" aria-live="polite" aria-atomic="true"></div>
-    `;
+    const header = document.createElement("div");
+    header.className = "ad-notes-header";
+
+    const title = document.createElement("h3");
+    title.textContent = "Project Notes";
+
+    const closeBtn = document.createElement("button");
+    closeBtn.type = "button";
+    closeBtn.setAttribute("data-action", "close");
+    closeBtn.setAttribute("aria-label", "Close notes workspace");
+    closeBtn.setAttribute("title", "Close notes workspace");
+    closeBtn.textContent = "x";
+
+    header.appendChild(title);
+    header.appendChild(closeBtn);
+
+    const textarea = document.createElement("textarea");
+    textarea.id = "ad-notes-workspace-area";
+    textarea.className = "ad-notes-area";
+    textarea.placeholder = "Capture research notes, ideas, and follow-ups...";
+
+    const actions = document.createElement("div");
+    actions.className = "ad-notes-actions";
+
+    const createBtn = (action, label, titleAttr, className = "") => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.setAttribute("data-action", action);
+      btn.setAttribute("title", titleAttr);
+      if (className) btn.className = className;
+      btn.textContent = label;
+      return btn;
+    };
+
+    actions.appendChild(createBtn("save", "Save", "Save notes"));
+    actions.appendChild(createBtn("clear", "Clear", "Clear notes"));
+    actions.appendChild(createBtn("delete", "Delete to Bin", "Delete notes to bin", "danger"));
+    actions.appendChild(createBtn("restore", "Restore Bin", "Restore notes from bin"));
+    actions.appendChild(createBtn("popout", "Pop-out", "Open notes in new window"));
+
+    const statusDiv = document.createElement("div");
+    statusDiv.className = "ad-notes-status";
+    statusDiv.id = "ad-notes-status";
+    statusDiv.setAttribute("aria-live", "polite");
+    statusDiv.setAttribute("aria-atomic", "true");
+
+    panel.appendChild(header);
+    panel.appendChild(textarea);
+    panel.appendChild(actions);
+    panel.appendChild(statusDiv);
 
     document.body.appendChild(toggleBtn);
     document.body.appendChild(panel);
