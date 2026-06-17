@@ -671,3 +671,4 @@ python src/tools/code_quality_check.py
 | 2026-06-14 | 1.0.137 | fix(security): Prevent DOM-based XSS by refactoring dynamic innerHTML usage in bibliography error and empty states to use native DOM methods. |
 | 2026-06-15 | 1.0.138 | 🎨 Palette: Add `aria-hidden="true"` to purely decorative `+` icons inside accordion headers on the Models page and added regression tests to ensure this remains enforced. |
 | 2026-06-15 | 1.0.145 | perf(frontend): Consolidated standalone scroll listener in `js/accessibility.js` into the batched `registerScrollCallback` central loop in `js/ui-components.js` to prevent layout thrashing and main-thread jank. |
+| 2026-06-17 | 1.0.146 | fix(security): Prevent DOM-based XSS by replacing `.innerHTML` with native DOM APIs in `docs/js/notes-workspace.js`. |
