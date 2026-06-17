@@ -88,3 +88,7 @@
 **Vulnerability:** DOM-based XSS risk via `innerHTML` used with template literals to construct the print title block in `js/pdf.js`.
 **Learning:** Using `innerHTML` to construct DOM elements by interpolating variables is brittle and introduces XSS risks, even if the current inputs appear safe or use escaping functions.
 **Prevention:** To prevent DOM-based XSS when constructing DOM elements dynamically, always use native DOM methods like `document.createElement()` and securely assign properties via `textContent` instead of `innerHTML`.
+## 2026-06-17 - Prevent DOM-based XSS in Notes Workspace
+**Vulnerability:** DOM-based XSS vulnerability in `docs/js/notes-workspace.js` where the Project Notes panel was constructed using `innerHTML` and a large template string.
+**Learning:** Using `innerHTML` to construct complex DOM elements with many interactive children is a brittle pattern that violates strict security policies and introduces potential XSS risks.
+**Prevention:** To prevent DOM-based XSS when constructing elements, always use native DOM APIs such as `document.createElement()`, `textContent`, `setAttribute()`, and `appendChild()` to securely build and assemble components.
