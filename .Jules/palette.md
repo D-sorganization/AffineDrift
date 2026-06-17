@@ -102,3 +102,7 @@
 ## 2026-06-15 - Hide decorative accordion icons from screen readers
 **Learning:** When accordion toggles have a separate textual label and a purely decorative icon (e.g. `+`), failing to add `aria-hidden="true"` to the icon causes screen readers to redundantly announce the symbol alongside the label and the `aria-expanded` state.
 **Action:** Always add `aria-hidden="true"` to decorative icons inside interactive elements to keep screen reader announcements clean and focused on the action.
+
+## 2026-06-17 - Disable Autocorrect on Math Expression Inputs
+**Learning:** When text inputs are used for mathematical expressions (like polynomials), mobile keyboards often attempt to auto-correct variables (e.g., changing 't' to 'To') or spellcheck them, causing frustrating data entry friction.
+**Action:** Always add `autocorrect="off"`, `autocapitalize="none"`, and `spellcheck="false"` to text inputs intended for code or math expressions to prevent keyboard interference.
