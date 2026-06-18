@@ -290,8 +290,16 @@ export function initReadingProgress() {
         bar.style.transform = `scaleX(${Math.min(Math.max(ratio, 0), 1)})`;
     }
 
+    function performUpdate() {
+        update();
+    }
+
+    function handleResize() {
+        window.requestAnimationFrame(performUpdate);
+    }
+
     registerScrollCallback(update);
-    window.addEventListener("resize", () => window.requestAnimationFrame(() => update()), { passive: true });
+    window.addEventListener("resize", handleResize, { passive: true });
     update();
 }
 

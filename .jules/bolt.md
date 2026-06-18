@@ -140,3 +140,7 @@
 ## 2026-06-15 - Consolidate scroll event listener to prevent layout thrashing
 **Learning:** Found an unbatched `window.addEventListener('scroll', ...)` in `accessibility.js` that fires independently from the batched central listener in `ui-components.js`. Having multiple scroll event handlers reading and writing the DOM on the same frame can easily cause layout thrashing and stuttering during scroll.
 **Action:** When adding scroll logic to any new component, always register it with the centralized `registerScrollCallback` utility in `ui-components.js` rather than attaching a standalone `window.addEventListener('scroll')` to ensure batched, requestAnimationFrame execution.
+
+## 2026-06-18 - Extracting Callbacks from High-Frequency APIs
+**Learning:** Passing anonymous arrow functions directly into high-frequency event listeners or `requestAnimationFrame` instantiates a new closure on every tick, causing unnecessary garbage collection pressure.
+**Action:** Extract anonymous arrow functions into named functions when passing them as callbacks to high-frequency APIs.
