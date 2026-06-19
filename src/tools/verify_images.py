@@ -6,6 +6,8 @@ import re
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
+import ipaddress
+from urllib.parse import urlparse
 import requests
 
 from src.core.contracts import require
@@ -36,6 +38,30 @@ def extract_image_urls(content: str) -> list[str]:
     return html_matches + md_matches
 
 
+def is_safe_url(url: str) -> bool:
+    """Check if a URL is safe from SSRF by validating the hostname."""
+    try:
+        parsed = urlparse(url)
+        hostname = parsed.hostname
+        if not hostname:
+            return False
+
+        if hostname.lower() in ("localhost", "0.0.0.0", "::1"):
+            return False
+
+        # Check if the hostname is a private/local IP address
+        try:
+            ip = ipaddress.ip_address(hostname)
+            if ip.is_private or ip.is_loopback or ip.is_link_local:
+                return False
+        except ValueError:
+            pass
+
+        return True
+    except Exception:
+        return False
+
+
 def check_url(url: str, file_path: Path) -> str | None:
     """Check if a URL is accessible.
 
@@ -48,14 +74,18 @@ def check_url(url: str, file_path: Path) -> str | None:
 
     """
     require(len(url) > 0, "url must not be empty")
+
     if url.startswith("http"):
+        if not is_safe_url(url):
+            return f"BROKEN (External): {url} in {file_path} (Error: SSRF blocked)"
+
         try:
             headers = {
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
                 "AppleWebKit/537.36 (KHTML, like Gecko) "
                 "Chrome/91.0.4472.124 Safari/537.36",
             }
-            response = requests.head(url, headers=headers, timeout=5, allow_redirects=True)
+            response = requests.head(url, headers=headers, timeout=5, allow_redirects=False)
 
             if response.status_code == 405:  # Method Not Allowed
                 response = requests.get(url, headers=headers, timeout=5, stream=True)

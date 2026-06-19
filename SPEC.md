@@ -674,3 +674,4 @@ python src/tools/code_quality_check.py
 | 2026-06-17 | 1.0.146 | fix(security): Prevent DOM-based XSS by replacing `.innerHTML` with native DOM APIs in `docs/js/notes-workspace.js`. |
 | 2026-06-17 | 1.0.147 | 🎨 Palette: Add `autocorrect="off"`, `autocapitalize="none"`, and `spellcheck="false"` to polynomial expression input in `grip_angle_simulator.html` to improve mobile data entry UX. |
 | 2026-06-18 | 1.0.148 | ⚡ Bolt: Extract anonymous arrow functions from `requestAnimationFrame` in `js/accessibility.js` to reduce garbage collection overhead. |
+| 2026-06-19 | 1.0.149 | 🛡️ Sentinel: Fix Server-Side Request Forgery in `src/tools/verify_images.py` |
