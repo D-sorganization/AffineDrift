@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """Verify image URLs in markdown and HTML files."""
 
+import ipaddress
 import logging
 import re
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
-
-import ipaddress
 from urllib.parse import urlparse
+
 import requests
 
 from src.core.contracts import require
@@ -46,7 +46,7 @@ def is_safe_url(url: str) -> bool:
         if not hostname:
             return False
 
-        if hostname.lower() in ("localhost", "0.0.0.0", "::1"):
+        if hostname.lower() in ("localhost", "0.0.0.0", "::1"):  # noqa: S104
             return False
 
         # Check if the hostname is a private/local IP address
