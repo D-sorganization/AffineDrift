@@ -106,3 +106,7 @@
 ## 2026-06-17 - Disable Autocorrect on Math Expression Inputs
 **Learning:** When text inputs are used for mathematical expressions (like polynomials), mobile keyboards often attempt to auto-correct variables (e.g., changing 't' to 'To') or spellcheck them, causing frustrating data entry friction.
 **Action:** Always add `autocorrect="off"`, `autocapitalize="none"`, and `spellcheck="false"` to text inputs intended for code or math expressions to prevent keyboard interference.
+
+## 2026-06-19 - Disable Autocapitalize on Numeric Text Inputs
+**Learning:** Using `type="text"` for numeric input fields on mobile triggers the standard keyboard. Even with `autocorrect="off"`, the keyboard might still apply automatic capitalization on the first keypress (e.g., attempting to shift-capitalize mathematical symbols or hexadecimal characters), adding unnecessary user friction.
+**Action:** Always add `autocapitalize="none"` alongside `inputmode="decimal"`, `autocorrect="off"`, and `spellcheck="false"` on text inputs used for math/numeric entry to fully bypass predictive text layout switching.
