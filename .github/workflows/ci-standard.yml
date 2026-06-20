@@ -180,8 +180,8 @@ jobs:
       - name: MATLAB Quality Check
         continue-on-error: true
         run: |
-          if [ -f "tools/matlab_utilities/scripts/matlab_quality_check.py" ]; then
-            python3 tools/matlab_utilities/scripts/matlab_quality_check.py --output-format text > matlab_quality_report.txt
+          if [ -f "src/tools/matlab_utilities/scripts/matlab_quality_check.py" ]; then
+            python3 src/tools/matlab_utilities/scripts/matlab_quality_check.py --output-format text > matlab_quality_report.txt
             cat matlab_quality_report.txt
           else
             echo "MATLAB quality check script not found, skipping..."

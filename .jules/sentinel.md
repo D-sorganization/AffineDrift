@@ -92,3 +92,7 @@
 **Vulnerability:** DOM-based XSS vulnerability in `docs/js/notes-workspace.js` where the Project Notes panel was constructed using `innerHTML` and a large template string.
 **Learning:** Using `innerHTML` to construct complex DOM elements with many interactive children is a brittle pattern that violates strict security policies and introduces potential XSS risks.
 **Prevention:** To prevent DOM-based XSS when constructing elements, always use native DOM APIs such as `document.createElement()`, `textContent`, `setAttribute()`, and `appendChild()` to securely build and assemble components.
+## 2026-06-19 - Prevent SSRF in Verify Images Tool
+**Vulnerability:** Server-Side Request Forgery (SSRF) risk in image verification where untrusted URLs were passed to `requests.get()` and `requests.head()`.
+**Learning:** Even internal build tools that parse user-generated markdown need SSRF protection, as malicious authors can include loopback or private IPs (e.g., AWS metadata service) in image URLs.
+**Prevention:** Always parse and validate hostnames to reject loopback, link-local, and private IP addresses before initiating outbound HTTP requests.
