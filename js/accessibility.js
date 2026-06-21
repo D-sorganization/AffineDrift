@@ -42,7 +42,23 @@ export function initSecureExternalLinks() {
                 const icon = document.createElement("span");
                 icon.className = "external-link-icon";
                 icon.setAttribute("aria-hidden", "true");
-                icon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>`;
+                const svgIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                svgIcon.setAttribute("width", "12"); svgIcon.setAttribute("height", "12");
+                svgIcon.setAttribute("viewBox", "0 0 24 24"); svgIcon.setAttribute("fill", "none");
+                svgIcon.setAttribute("stroke", "currentColor"); svgIcon.setAttribute("stroke-width", "2");
+                svgIcon.setAttribute("stroke-linecap", "round"); svgIcon.setAttribute("stroke-linejoin", "round");
+
+                const pathIcon = document.createElementNS("http://www.w3.org/2000/svg", "path");
+                pathIcon.setAttribute("d", "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6");
+
+                const polylineIcon = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+                polylineIcon.setAttribute("points", "15 3 21 3 21 9");
+
+                const lineIcon = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                lineIcon.setAttribute("x1", "10"); lineIcon.setAttribute("y1", "14"); lineIcon.setAttribute("x2", "21"); lineIcon.setAttribute("y2", "3");
+
+                svgIcon.append(pathIcon, polylineIcon, lineIcon);
+                icon.appendChild(svgIcon);
                 link.appendChild(icon);
             }
         }
@@ -224,13 +240,24 @@ export function initReadingTime() {
 
     const timeDiv = document.createElement("div");
     timeDiv.className = "reading-time-estimate";
-    timeDiv.innerHTML = `
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clock" viewBox="0 0 16 16" style="vertical-align: text-bottom; margin-right: 5px; opacity: 0.8;" aria-hidden="true">
-      <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
-      <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
-    </svg>
-    <span>${minutes} min read</span>
-  `;
+    const svgClock = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svgClock.setAttribute("width", "16"); svgClock.setAttribute("height", "16");
+    svgClock.setAttribute("fill", "currentColor"); svgClock.setAttribute("class", "bi bi-clock");
+    svgClock.setAttribute("viewBox", "0 0 16 16"); svgClock.setAttribute("aria-hidden", "true");
+    svgClock.style.verticalAlign = "text-bottom"; svgClock.style.marginRight = "5px"; svgClock.style.opacity = "0.8";
+
+    const path1Clock = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path1Clock.setAttribute("d", "M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z");
+
+    const path2Clock = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path2Clock.setAttribute("d", "M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z");
+
+    svgClock.append(path1Clock, path2Clock);
+
+    const spanText = document.createElement("span");
+    spanText.textContent = `${minutes} min read`;
+
+    timeDiv.append(svgClock, spanText);
 
     Object.assign(timeDiv.style, {
         marginBottom: "1.5rem",

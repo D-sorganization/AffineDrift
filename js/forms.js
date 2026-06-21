@@ -34,8 +34,37 @@ export function initEmailCopy() {
         button.className = "copy-email-btn";
         button.setAttribute("aria-label", "Copy email address");
         button.setAttribute("type", "button");
-        button.innerHTML = copyIcon;
         button.title = "Copy email address";
+
+        function setCopyIcon() {
+            button.textContent = "";
+            const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            svg.setAttribute("viewBox", "0 0 24 24"); svg.setAttribute("fill", "none");
+            svg.setAttribute("stroke", "currentColor"); svg.setAttribute("stroke-width", "2");
+            svg.setAttribute("stroke-linecap", "round"); svg.setAttribute("stroke-linejoin", "round");
+            svg.setAttribute("aria-hidden", "true");
+            const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+            rect.setAttribute("x", "9"); rect.setAttribute("y", "9"); rect.setAttribute("width", "13"); rect.setAttribute("height", "13"); rect.setAttribute("rx", "2"); rect.setAttribute("ry", "2");
+            const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            path.setAttribute("d", "M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1");
+            svg.append(rect, path);
+            button.appendChild(svg);
+        }
+
+        function setCheckIcon() {
+            button.textContent = "";
+            const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            svg.setAttribute("viewBox", "0 0 24 24"); svg.setAttribute("fill", "none");
+            svg.setAttribute("stroke", "currentColor"); svg.setAttribute("stroke-width", "2");
+            svg.setAttribute("stroke-linecap", "round"); svg.setAttribute("stroke-linejoin", "round");
+            svg.setAttribute("aria-hidden", "true");
+            const polyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+            polyline.setAttribute("points", "20 6 9 17 4 12");
+            svg.appendChild(polyline);
+            button.appendChild(svg);
+        }
+
+        setCopyIcon();
 
         button.addEventListener("click", (e) => {
             e.preventDefault();
@@ -44,12 +73,12 @@ export function initEmailCopy() {
             navigator.clipboard
                 .writeText(email)
                 .then(() => {
-                    button.innerHTML = checkIcon;
+                    setCheckIcon();
                     button.classList.add("success");
                     button.setAttribute("aria-label", "Email copied");
 
                     setTimeout(() => {
-                        button.innerHTML = copyIcon;
+                        setCopyIcon();
                         button.classList.remove("success");
                         button.setAttribute("aria-label", "Copy email address");
                     }, 2000);
@@ -276,16 +305,17 @@ export function initContactFormFeedback() {
             const button = form.querySelector('button[type="submit"]');
             if (!button) return;
 
-            if (!button.dataset.originalHtml) {
-                button.dataset.originalHtml = button.innerHTML;
+            if (!button.dataset.originalText) {
+                // To avoid XSS, we store original textContent and assume this is a simple text button
+                button.dataset.originalText = button.textContent;
             }
 
-            button.innerHTML = "Opening Email Client...";
+            button.textContent = "Opening Email Client...";
             button.classList.add("success");
             button.disabled = true;
 
             setTimeout(() => {
-                button.innerHTML = button.dataset.originalHtml;
+                button.textContent = button.dataset.originalText;
                 button.classList.remove("success");
                 button.disabled = false;
             }, 3000);
