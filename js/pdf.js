@@ -21,12 +21,19 @@ export function initPDFDownload() {
     pdfBtn.className = "pdf-download-btn";
     pdfBtn.setAttribute("aria-label", "Download page as PDF");
     pdfBtn.setAttribute("title", "Download as PDF");
-    pdfBtn.innerHTML = `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M12,19L8,15H10.5V12H13.5V15H16L12,19Z"/>
-    </svg>
-    <span>PDF</span>
-  `;
+    const svgPdf = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svgPdf.setAttribute("viewBox", "0 0 24 24");
+    svgPdf.setAttribute("aria-hidden", "true");
+
+    const pathPdf = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    pathPdf.setAttribute("d", "M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20M12,19L8,15H10.5V12H13.5V15H16L12,19Z");
+
+    svgPdf.appendChild(pathPdf);
+
+    const spanPdf = document.createElement("span");
+    spanPdf.textContent = "PDF";
+
+    pdfBtn.append(svgPdf, spanPdf);
 
     pdfBtn.addEventListener("click", function () {
         preparePDFPrint();

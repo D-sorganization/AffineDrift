@@ -200,24 +200,39 @@ export function initBackToTop() {
     const radius = 21;
     const circumference = 2 * Math.PI * radius;
 
-    backToTopBtn.innerHTML = `
-    <svg class="progress-ring" width="48" height="48" viewBox="0 0 48 48" aria-hidden="true">
-      <circle
-        class="progress-ring-circle"
-        stroke="white"
-        stroke-width="3"
-        fill="transparent"
-        r="${radius}"
-        cx="24"
-        cy="24"
-        style="stroke-dasharray: ${circumference}; stroke-dashoffset: ${circumference};"
-      />
-    </svg>
-    <svg class="back-to-top-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M12 4l-8 8h6v8h4v-8h6z"/>
-    </svg>
-    <span class="tooltip">Back to top</span>
-  `;
+    const svgProgress = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svgProgress.setAttribute("class", "progress-ring");
+    svgProgress.setAttribute("width", "48");
+    svgProgress.setAttribute("height", "48");
+    svgProgress.setAttribute("viewBox", "0 0 48 48");
+    svgProgress.setAttribute("aria-hidden", "true");
+
+    const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    circle.setAttribute("class", "progress-ring-circle");
+    circle.setAttribute("stroke", "white");
+    circle.setAttribute("stroke-width", "3");
+    circle.setAttribute("fill", "transparent");
+    circle.setAttribute("r", String(radius));
+    circle.setAttribute("cx", "24");
+    circle.setAttribute("cy", "24");
+    circle.style.strokeDasharray = `${circumference}`;
+    circle.style.strokeDashoffset = `${circumference}`;
+    svgProgress.appendChild(circle);
+
+    const svgArrow = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svgArrow.setAttribute("class", "back-to-top-icon");
+    svgArrow.setAttribute("viewBox", "0 0 24 24");
+    svgArrow.setAttribute("aria-hidden", "true");
+
+    const pathArrow = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    pathArrow.setAttribute("d", "M12 4l-8 8h6v8h4v-8h6z");
+    svgArrow.appendChild(pathArrow);
+
+    const spanTooltip = document.createElement("span");
+    spanTooltip.className = "tooltip";
+    spanTooltip.textContent = "Back to top";
+
+    backToTopBtn.append(svgProgress, svgArrow, spanTooltip);
     document.body.appendChild(backToTopBtn);
 
     const progressCircle = backToTopBtn.querySelector(".progress-ring-circle");
@@ -287,15 +302,34 @@ export function initExportToPdf() {
     exportToPdfBtn.className = "export-to-pdf";
     exportToPdfBtn.setAttribute("aria-label", "Export page to PDF");
     exportToPdfBtn.setAttribute("title", "Export page to PDF");
-    exportToPdfBtn.innerHTML = `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-      <polyline points="14 2 14 8 20 8"></polyline>
-      <line x1="12" y1="18" x2="12" y2="12"></line>
-      <line x1="9" y1="15" x2="15" y2="15"></line>
-    </svg>
-    <span class="tooltip">Export to PDF</span>
-  `;
+    const svgExport = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svgExport.setAttribute("viewBox", "0 0 24 24");
+    svgExport.setAttribute("fill", "none");
+    svgExport.setAttribute("stroke", "currentColor");
+    svgExport.setAttribute("stroke-width", "2");
+    svgExport.setAttribute("stroke-linecap", "round");
+    svgExport.setAttribute("stroke-linejoin", "round");
+    svgExport.setAttribute("aria-hidden", "true");
+
+    const pathExport = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    pathExport.setAttribute("d", "M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z");
+
+    const polylineExport = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+    polylineExport.setAttribute("points", "14 2 14 8 20 8");
+
+    const line1Export = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    line1Export.setAttribute("x1", "12"); line1Export.setAttribute("y1", "18"); line1Export.setAttribute("x2", "12"); line1Export.setAttribute("y2", "12");
+
+    const line2Export = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    line2Export.setAttribute("x1", "9"); line2Export.setAttribute("y1", "15"); line2Export.setAttribute("x2", "15"); line2Export.setAttribute("y2", "15");
+
+    svgExport.append(pathExport, polylineExport, line1Export, line2Export);
+
+    const spanExportTooltip = document.createElement("span");
+    spanExportTooltip.className = "tooltip";
+    spanExportTooltip.textContent = "Export to PDF";
+
+    exportToPdfBtn.append(svgExport, spanExportTooltip);
     document.body.appendChild(exportToPdfBtn);
 
     let isExportToPdfVisible = false;
@@ -361,7 +395,18 @@ export function initLightbox() {
     closeBtn.className = "lightbox-close";
     closeBtn.setAttribute("aria-label", "Close zoom");
     closeBtn.setAttribute("title", "Close zoom");
-    closeBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
+    const svgClose = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svgClose.setAttribute("width", "24"); svgClose.setAttribute("height", "24");
+    svgClose.setAttribute("viewBox", "0 0 24 24"); svgClose.setAttribute("fill", "none");
+    svgClose.setAttribute("stroke", "currentColor"); svgClose.setAttribute("stroke-width", "2");
+    svgClose.setAttribute("stroke-linecap", "round"); svgClose.setAttribute("stroke-linejoin", "round");
+    svgClose.setAttribute("aria-hidden", "true");
+    const cl1 = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    cl1.setAttribute("x1", "18"); cl1.setAttribute("y1", "6"); cl1.setAttribute("x2", "6"); cl1.setAttribute("y2", "18");
+    const cl2 = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    cl2.setAttribute("x1", "6"); cl2.setAttribute("y1", "6"); cl2.setAttribute("x2", "18"); cl2.setAttribute("y2", "18");
+    svgClose.append(cl1, cl2);
+    closeBtn.appendChild(svgClose);
 
     function closeLightbox() {
         lightbox.classList.remove("active");

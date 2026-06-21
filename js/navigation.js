@@ -199,8 +199,13 @@ export function generateTableOfContents() {
         if (!tocSection) {
             tocSection = document.createElement("div");
             tocSection.className = "sidebar-toc";
-            tocSection.innerHTML =
-                '<h3 class="sidebar-heading">On This Page</h3><ul class="sidebar-links" id="toc-list"></ul>';
+            const h3 = document.createElement("h3");
+            h3.className = "sidebar-heading";
+            h3.textContent = "On This Page";
+            const ul = document.createElement("ul");
+            ul.className = "sidebar-links";
+            ul.id = "toc-list";
+            tocSection.append(h3, ul);
             const existingTocNav = leftSidebar.querySelector(".toc-nav");
             if (existingTocNav) {
                 existingTocNav.insertAdjacentElement("afterend", tocSection);
@@ -215,8 +220,13 @@ export function generateTableOfContents() {
         if (!tocSection) {
             tocSection = document.createElement("div");
             tocSection.className = "sidebar-section sidebar-toc";
-            tocSection.innerHTML =
-                '<h3 class="sidebar-heading">On This Page</h3><ul class="sidebar-links" id="toc-list"></ul>';
+            const h3 = document.createElement("h3");
+            h3.className = "sidebar-heading";
+            h3.textContent = "On This Page";
+            const ul = document.createElement("ul");
+            ul.className = "sidebar-links";
+            ul.id = "toc-list";
+            tocSection.append(h3, ul);
             sidebarNav.insertBefore(tocSection, sidebarNav.firstChild);
         }
     }
@@ -333,8 +343,11 @@ export function initAnchorLinks() {
     anchorIcon.setAttribute("stroke-width", "2");
     anchorIcon.setAttribute("stroke-linecap", "round");
     anchorIcon.setAttribute("stroke-linejoin", "round");
-    anchorIcon.innerHTML =
-        '<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>';
+    const path1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path1.setAttribute("d", "M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71");
+    const path2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path2.setAttribute("d", "M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71");
+    anchorIcon.append(path1, path2);
 
     for (const heading of headings) {
         // ⚡ Bolt Optimization: Replace descendant querySelector with native getElementsByClassName lookup for O(1) evaluation without CSS parsing overhead

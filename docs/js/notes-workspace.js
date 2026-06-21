@@ -198,18 +198,15 @@
     panel.setAttribute("aria-modal", "true");
     const header = document.createElement("div");
     header.className = "ad-notes-header";
-
-    const title = document.createElement("h3");
-    title.textContent = "Project Notes";
-
+    const h3 = document.createElement("h3");
+    h3.textContent = "Project Notes";
     const closeBtn = document.createElement("button");
     closeBtn.type = "button";
-    closeBtn.setAttribute("data-action", "close");
+    closeBtn.dataset.action = "close";
     closeBtn.setAttribute("aria-label", "Close notes workspace");
-    closeBtn.setAttribute("title", "Close notes workspace");
+    closeBtn.title = "Close notes workspace";
     closeBtn.textContent = "x";
-
-    header.appendChild(title);
+    header.appendChild(h3);
     header.appendChild(closeBtn);
 
     const textarea = document.createElement("textarea");
@@ -220,21 +217,22 @@
     const actions = document.createElement("div");
     actions.className = "ad-notes-actions";
 
-    const createBtn = (action, label, titleAttr, className = "") => {
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.setAttribute("data-action", action);
-      btn.setAttribute("title", titleAttr);
-      if (className) btn.className = className;
-      btn.textContent = label;
-      return btn;
-    };
+    const btnSave = document.createElement("button");
+    btnSave.type = "button"; btnSave.dataset.action = "save"; btnSave.title = "Save notes"; btnSave.textContent = "Save";
 
-    actions.appendChild(createBtn("save", "Save", "Save notes"));
-    actions.appendChild(createBtn("clear", "Clear", "Clear notes"));
-    actions.appendChild(createBtn("delete", "Delete to Bin", "Delete notes to bin", "danger"));
-    actions.appendChild(createBtn("restore", "Restore Bin", "Restore notes from bin"));
-    actions.appendChild(createBtn("popout", "Pop-out", "Open notes in new window"));
+    const btnClear = document.createElement("button");
+    btnClear.type = "button"; btnClear.dataset.action = "clear"; btnClear.title = "Clear notes"; btnClear.textContent = "Clear";
+
+    const btnDelete = document.createElement("button");
+    btnDelete.type = "button"; btnDelete.dataset.action = "delete"; btnDelete.className = "danger"; btnDelete.title = "Delete notes to bin"; btnDelete.textContent = "Delete to Bin";
+
+    const btnRestore = document.createElement("button");
+    btnRestore.type = "button"; btnRestore.dataset.action = "restore"; btnRestore.title = "Restore notes from bin"; btnRestore.textContent = "Restore Bin";
+
+    const btnPopout = document.createElement("button");
+    btnPopout.type = "button"; btnPopout.dataset.action = "popout"; btnPopout.title = "Open notes in new window"; btnPopout.textContent = "Pop-out";
+
+    actions.append(btnSave, btnClear, btnDelete, btnRestore, btnPopout);
 
     const statusDiv = document.createElement("div");
     statusDiv.className = "ad-notes-status";
@@ -242,10 +240,7 @@
     statusDiv.setAttribute("aria-live", "polite");
     statusDiv.setAttribute("aria-atomic", "true");
 
-    panel.appendChild(header);
-    panel.appendChild(textarea);
-    panel.appendChild(actions);
-    panel.appendChild(statusDiv);
+    panel.append(header, textarea, actions, statusDiv);
 
     document.body.appendChild(toggleBtn);
     document.body.appendChild(panel);

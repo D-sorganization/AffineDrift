@@ -196,21 +196,51 @@
     panel.setAttribute("aria-hidden", "true");
     panel.setAttribute("role", "dialog");
     panel.setAttribute("aria-modal", "true");
-    panel.innerHTML = `
-      <div class="ad-notes-header">
-        <h3>Project Notes</h3>
-        <button type="button" data-action="close" aria-label="Close notes workspace" title="Close notes workspace">x</button>
-      </div>
-      <textarea id="ad-notes-workspace-area" class="ad-notes-area" placeholder="Capture research notes, ideas, and follow-ups..."></textarea>
-      <div class="ad-notes-actions">
-        <button type="button" data-action="save" title="Save notes">Save</button>
-        <button type="button" data-action="clear" title="Clear notes">Clear</button>
-        <button type="button" data-action="delete" class="danger" title="Delete notes to bin">Delete to Bin</button>
-        <button type="button" data-action="restore" title="Restore notes from bin">Restore Bin</button>
-        <button type="button" data-action="popout" title="Open notes in new window">Pop-out</button>
-      </div>
-      <div class="ad-notes-status" id="ad-notes-status" aria-live="polite" aria-atomic="true"></div>
-    `;
+    const header = document.createElement("div");
+    header.className = "ad-notes-header";
+    const h3 = document.createElement("h3");
+    h3.textContent = "Project Notes";
+    const closeBtn = document.createElement("button");
+    closeBtn.type = "button";
+    closeBtn.dataset.action = "close";
+    closeBtn.setAttribute("aria-label", "Close notes workspace");
+    closeBtn.title = "Close notes workspace";
+    closeBtn.textContent = "x";
+    header.appendChild(h3);
+    header.appendChild(closeBtn);
+
+    const textarea = document.createElement("textarea");
+    textarea.id = "ad-notes-workspace-area";
+    textarea.className = "ad-notes-area";
+    textarea.placeholder = "Capture research notes, ideas, and follow-ups...";
+
+    const actions = document.createElement("div");
+    actions.className = "ad-notes-actions";
+
+    const btnSave = document.createElement("button");
+    btnSave.type = "button"; btnSave.dataset.action = "save"; btnSave.title = "Save notes"; btnSave.textContent = "Save";
+
+    const btnClear = document.createElement("button");
+    btnClear.type = "button"; btnClear.dataset.action = "clear"; btnClear.title = "Clear notes"; btnClear.textContent = "Clear";
+
+    const btnDelete = document.createElement("button");
+    btnDelete.type = "button"; btnDelete.dataset.action = "delete"; btnDelete.className = "danger"; btnDelete.title = "Delete notes to bin"; btnDelete.textContent = "Delete to Bin";
+
+    const btnRestore = document.createElement("button");
+    btnRestore.type = "button"; btnRestore.dataset.action = "restore"; btnRestore.title = "Restore notes from bin"; btnRestore.textContent = "Restore Bin";
+
+    const btnPopout = document.createElement("button");
+    btnPopout.type = "button"; btnPopout.dataset.action = "popout"; btnPopout.title = "Open notes in new window"; btnPopout.textContent = "Pop-out";
+
+    actions.append(btnSave, btnClear, btnDelete, btnRestore, btnPopout);
+
+    const statusDiv = document.createElement("div");
+    statusDiv.className = "ad-notes-status";
+    statusDiv.id = "ad-notes-status";
+    statusDiv.setAttribute("aria-live", "polite");
+    statusDiv.setAttribute("aria-atomic", "true");
+
+    panel.append(header, textarea, actions, statusDiv);
 
     document.body.appendChild(toggleBtn);
     document.body.appendChild(panel);

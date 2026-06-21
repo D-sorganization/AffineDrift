@@ -96,3 +96,7 @@
 **Vulnerability:** Server-Side Request Forgery (SSRF) risk in image verification where untrusted URLs were passed to `requests.get()` and `requests.head()`.
 **Learning:** Even internal build tools that parse user-generated markdown need SSRF protection, as malicious authors can include loopback or private IPs (e.g., AWS metadata service) in image URLs.
 **Prevention:** Always parse and validate hostnames to reject loopback, link-local, and private IP addresses before initiating outbound HTTP requests.
+## 2026-06-21 - Prevent DOM-based XSS by replacing innerHTML
+**Vulnerability:** DOM-based XSS risk via `innerHTML` used extensively across multiple JS modules.
+**Learning:** Using `innerHTML` to construct DOM elements dynamically, even with static keys/labels or escaped variables, violates strict security policies and creates a brittle pattern that could be exploited.
+**Prevention:** Always use native DOM methods like `document.createElementNS()`, `document.createElement()`, and securely assign properties via `textContent`, `dataset`, and `setAttribute` instead of `innerHTML`.

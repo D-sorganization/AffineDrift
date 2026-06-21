@@ -101,13 +101,70 @@
 
   const renderDetails = (entry) => {
     const authors = (entry.authors || []).join(", ");
-    const concepts = (entry.concepts || [])
-      .map((c) => `<span class="concept-tag">${escapeHtml(c)}</span>`)
-      .join("");
+    const concepts = (entry.concepts || []);
+    const links = [entry.url, entry.scholar_url].filter(Boolean);
 
-    const links = [entry.url, entry.scholar_url]
-      .filter(Boolean)
-      .map((url) => {
+    detailsEl.textContent = "";
+
+    const h3 = document.createElement("h3");
+    h3.className = "sidebar-heading";
+    h3.textContent = "Details";
+
+    const h4 = document.createElement("h4");
+    h4.textContent = entry.title;
+
+    const pAuthors = document.createElement("p");
+    const strongAuthors = document.createElement("strong");
+    strongAuthors.textContent = "Authors: ";
+    pAuthors.appendChild(strongAuthors);
+    pAuthors.appendChild(document.createTextNode(authors || "Unknown"));
+
+    const pYear = document.createElement("p");
+    const strongYear = document.createElement("strong");
+    strongYear.textContent = "Year: ";
+    pYear.appendChild(strongYear);
+    pYear.appendChild(document.createTextNode(String(entry.year || "Unknown")));
+
+    const pType = document.createElement("p");
+    const strongType = document.createElement("strong");
+    strongType.textContent = "Type: ";
+    pType.appendChild(strongType);
+    pType.appendChild(document.createTextNode(entry.type || "reference"));
+
+    const pVenue = document.createElement("p");
+    const strongVenue = document.createElement("strong");
+    strongVenue.textContent = "Venue: ";
+    pVenue.appendChild(strongVenue);
+    pVenue.appendChild(document.createTextNode(entry.venue || "N/A"));
+
+    const pDesc = document.createElement("p");
+    pDesc.textContent = entry.description || "No description available.";
+
+    detailsEl.append(h3, h4, pAuthors, pYear, pType, pVenue, pDesc);
+
+    if (entry.concepts && entry.concepts.length > 0) {
+      const divC = document.createElement("div");
+      const strongC = document.createElement("strong");
+      strongC.textContent = "Concepts:";
+      const divCInner = document.createElement("div");
+      divCInner.className = "bib-inline-concepts";
+      entry.concepts.forEach(c => {
+        const span = document.createElement("span");
+        span.className = "concept-tag";
+        span.textContent = c;
+        divCInner.appendChild(span);
+      });
+      divC.append(strongC, divCInner);
+      detailsEl.appendChild(divC);
+    }
+
+    if (links.length > 0) {
+      const divL = document.createElement("div");
+      divL.className = "bib-inline-links";
+      const strongL = document.createElement("strong");
+      strongL.textContent = "Links:";
+      const ulL = document.createElement("ul");
+      links.forEach(url => {
         let safeUrl = "#";
         try {
           const parsed = new URL(url, window.location.origin);
@@ -115,33 +172,18 @@
             safeUrl = parsed.href;
           }
         } catch (e) {}
-        return `<li><a href="${escapeHtml(
-          safeUrl,
-        )}" target="_blank" rel="noopener noreferrer">${escapeHtml(url)}</a></li>`;
-      })
-      .join("");
-
-    detailsEl.innerHTML = `
-      <h3 class="sidebar-heading">Details</h3>
-      <h4>${escapeHtml(entry.title)}</h4>
-      <p><strong>Authors:</strong> ${escapeHtml(authors || "Unknown")}</p>
-      <p><strong>Year:</strong> ${escapeHtml(
-        String(entry.year || "Unknown"),
-      )}</p>
-      <p><strong>Type:</strong> ${escapeHtml(entry.type || "reference")}</p>
-      <p><strong>Venue:</strong> ${escapeHtml(entry.venue || "N/A")}</p>
-      <p>${escapeHtml(entry.description || "No description available.")}</p>
-      ${
-        concepts
-          ? `<div><strong>Concepts:</strong><div class="bib-inline-concepts">${concepts}</div></div>`
-          : ""
-      }
-      ${
-        links
-          ? `<div class="bib-inline-links"><strong>Links:</strong><ul>${links}</ul></div>`
-          : ""
-      }
-    `;
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.href = safeUrl;
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        a.textContent = url;
+        li.appendChild(a);
+        ulL.appendChild(li);
+      });
+      divL.append(strongL, ulL);
+      detailsEl.appendChild(divL);
+    }
   };
 
   const renderList = () => {
@@ -191,44 +233,61 @@
       return;
     }
 
-    listEl.innerHTML = state.filtered
-      .map((entry) => {
+    listEl.textContent = "";
+
+    state.filtered.forEach((entry) => {
         const authors = (entry.authors || []).join(", ");
-        const concepts = (entry.concepts || [])
-          .slice(0, 4)
-          .map((c) => `<span class="concept-tag">${escapeHtml(c)}</span>`)
-          .join(" ");
         const type = entry.type || "reference";
         const typeClass = `type-${type.toLowerCase()}`;
 
-        return `
-          <article class="resource-card bib-entry bibliography-entry reference-item" data-entry-id="${escapeHtml(
-            entry.id,
-          )}">
-            <div class="bib-header">
-              <h3 class="bib-title">${escapeHtml(entry.title)}</h3>
-              <span class="type-badge entry-type ${escapeHtml(typeClass)}">${escapeHtml(type)}</span>
-            </div>
-            <p class="resource-description"><strong>${escapeHtml(
-              String(entry.year || ""),
-            )}</strong> · ${escapeHtml(authors || "Unknown authors")}</p>
-            <p class="resource-description">${escapeHtml(
-              entry.description || "",
-            )}</p>
-            ${
-              concepts
-                ? `<div class="bib-inline-concepts bib-inline-concepts-list">${concepts}</div>`
-                : ""
-            }
-            <button class="resource-link" type="button" data-details-id="${escapeHtml(
-              entry.id,
-            )}" aria-label="View details for ${escapeHtml(
-              entry.title,
-            )}">View details</button>
-          </article>
-        `;
-      })
-      .join("");
+        const article = document.createElement("article");
+        article.className = "resource-card bib-entry bibliography-entry reference-item";
+        article.dataset.entryId = entry.id;
+
+        const header = document.createElement("div");
+        header.className = "bib-header";
+        const h3 = document.createElement("h3");
+        h3.className = "bib-title";
+        h3.textContent = entry.title;
+        const badge = document.createElement("span");
+        badge.className = `type-badge entry-type ${typeClass}`;
+        badge.textContent = type;
+        header.append(h3, badge);
+
+        const p1 = document.createElement("p");
+        p1.className = "resource-description";
+        const strong1 = document.createElement("strong");
+        strong1.textContent = String(entry.year || "");
+        p1.append(strong1, document.createTextNode(` · ${authors || "Unknown authors"}`));
+
+        const p2 = document.createElement("p");
+        p2.className = "resource-description";
+        p2.textContent = entry.description || "";
+
+        article.append(header, p1, p2);
+
+        if (entry.concepts && entry.concepts.length > 0) {
+            const conceptsDiv = document.createElement("div");
+            conceptsDiv.className = "bib-inline-concepts bib-inline-concepts-list";
+            entry.concepts.slice(0, 4).forEach(c => {
+                const span = document.createElement("span");
+                span.className = "concept-tag";
+                span.textContent = c;
+                conceptsDiv.appendChild(span);
+            });
+            article.appendChild(conceptsDiv);
+        }
+
+        const btn = document.createElement("button");
+        btn.className = "resource-link";
+        btn.type = "button";
+        btn.dataset.detailsId = entry.id;
+        btn.setAttribute("aria-label", `View details for ${entry.title}`);
+        btn.textContent = "View details";
+        article.appendChild(btn);
+
+        listEl.appendChild(article);
+    });
   };
 
   const renderSortControls = () => {
