@@ -676,4 +676,5 @@ python src/tools/code_quality_check.py
 | 2026-06-18 | 1.0.148 | ⚡ Bolt: Extract anonymous arrow functions from `requestAnimationFrame` in `js/accessibility.js` to reduce garbage collection overhead. |
 | 2026-06-19 | 1.0.149 | 🎨 Palette: Add `autocapitalize="none"` to the 23 numeric text inputs in `articles/rotation-converter.qmd` to improve mobile UX. |
 | 2026-06-19 | 1.0.150 | 🛡️ Sentinel: Fix Server-Side Request Forgery in `src/tools/verify_images.py` |
-| 2026-06-21 | 1.0.151 | fix(security): Prevent DOM-based XSS by replacing `innerHTML` with native DOM APIs in JS files. |
+| 2026-06-21 | 1.0.151 | ⚡ Bolt: Prevent redundant DOM mutations in scroll listener in `js/ui-components.js` by caching visibility state. |
+| 2026-06-21 | 1.0.152 | 🛡️ Sentinel: Prevent DOM-based XSS by replacing `innerHTML` with native DOM APIs in JS files. |

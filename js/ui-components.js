@@ -332,12 +332,17 @@ export function initExportToPdf() {
     exportToPdfBtn.append(svgExport, spanExportTooltip);
     document.body.appendChild(exportToPdfBtn);
 
+    let isExportToPdfVisible = false;
+
     function updateExportButtonVisibility(scrollTop = window.scrollY) {
         const shouldBeVisible = scrollTop > SCROLL_THRESHOLD;
-        if (shouldBeVisible) {
-            exportToPdfBtn.classList.add("visible");
-        } else {
-            exportToPdfBtn.classList.remove("visible");
+        if (shouldBeVisible !== isExportToPdfVisible) {
+            isExportToPdfVisible = shouldBeVisible;
+            if (shouldBeVisible) {
+                exportToPdfBtn.classList.add("visible");
+            } else {
+                exportToPdfBtn.classList.remove("visible");
+            }
         }
     }
 
