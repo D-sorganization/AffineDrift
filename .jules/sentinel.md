@@ -100,3 +100,7 @@
 **Vulnerability:** DOM-based XSS risk via `innerHTML` used extensively across multiple JS modules.
 **Learning:** Using `innerHTML` to construct DOM elements dynamically, even with static keys/labels or escaped variables, violates strict security policies and creates a brittle pattern that could be exploited.
 **Prevention:** Always use native DOM methods like `document.createElementNS()`, `document.createElement()`, and securely assign properties via `textContent`, `dataset`, and `setAttribute` instead of `innerHTML`.
+## 2026-06-23 - Fix missing rel="noopener" for external links
+**Vulnerability:** HTML anchors with `target="_blank"` generated without `rel="noopener"` expose the site to reverse tabnabbing attacks. The newly opened tab can exploit the `window.opener` API to navigate the origin tab to a malicious site.
+**Learning:** Automatically generated content (like from LaTeX conversion scripts) often misses secondary security attributes like `rel="noopener"` when adding `target="_blank"`.
+**Prevention:** Whenever generating HTML links with `target="_blank"`, always add `rel="noopener"` (and ideally `noreferrer`) to prevent access to the origin's `window.opener` object.
