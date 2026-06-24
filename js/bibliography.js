@@ -235,7 +235,9 @@
 
     listEl.textContent = "";
 
-    state.filtered.forEach((entry) => {
+    const fragment = document.createDocumentFragment();
+
+    for (const entry of state.filtered) {
         const authors = (entry.authors || []).join(", ");
         const type = entry.type || "reference";
         const typeClass = `type-${type.toLowerCase()}`;
@@ -269,12 +271,12 @@
         if (entry.concepts && entry.concepts.length > 0) {
             const conceptsDiv = document.createElement("div");
             conceptsDiv.className = "bib-inline-concepts bib-inline-concepts-list";
-            entry.concepts.slice(0, 4).forEach(c => {
+            for (const c of entry.concepts.slice(0, 4)) {
                 const span = document.createElement("span");
                 span.className = "concept-tag";
                 span.textContent = c;
                 conceptsDiv.appendChild(span);
-            });
+            }
             article.appendChild(conceptsDiv);
         }
 
@@ -286,8 +288,10 @@
         btn.textContent = "View details";
         article.appendChild(btn);
 
-        listEl.appendChild(article);
-    });
+        fragment.appendChild(article);
+    }
+
+    listEl.appendChild(fragment);
   };
 
   const renderSortControls = () => {
