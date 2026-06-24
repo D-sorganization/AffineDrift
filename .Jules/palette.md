@@ -110,3 +110,7 @@
 ## 2026-06-19 - Disable Autocapitalize on Numeric Text Inputs
 **Learning:** Using `type="text"` for numeric input fields on mobile triggers the standard keyboard. Even with `autocorrect="off"`, the keyboard might still apply automatic capitalization on the first keypress (e.g., attempting to shift-capitalize mathematical symbols or hexadecimal characters), adding unnecessary user friction.
 **Action:** Always add `autocapitalize="none"` alongside `inputmode="decimal"`, `autocorrect="off"`, and `spellcheck="false"` on text inputs used for math/numeric entry to fully bypass predictive text layout switching.
+
+## 2026-06-24 - Native Tooltips for Action Buttons
+**Learning:** While `aria-label` is crucial for screen readers, missing `title` attributes on dynamically created action buttons (like the bibliography 'View Details' button or workspace buttons) deprives sighted mouse users of native tooltips, leaving their explicit function ambiguous. Additionally, existing buttons with only `title` attributes lack screen reader context.
+**Action:** Always ensure dynamically created buttons have matching `title` and `aria-label` attributes to provide full accessibility for both screen readers and visual users.

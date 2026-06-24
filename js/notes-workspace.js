@@ -218,19 +218,19 @@
     actions.className = "ad-notes-actions";
 
     const btnSave = document.createElement("button");
-    btnSave.type = "button"; btnSave.dataset.action = "save"; btnSave.title = "Save notes"; btnSave.textContent = "Save";
+    btnSave.type = "button"; btnSave.dataset.action = "save"; btnSave.title = "Save notes"; btnSave.setAttribute("aria-label", "Save notes"); btnSave.textContent = "Save";
 
     const btnClear = document.createElement("button");
-    btnClear.type = "button"; btnClear.dataset.action = "clear"; btnClear.title = "Clear notes"; btnClear.textContent = "Clear";
+    btnClear.type = "button"; btnClear.dataset.action = "clear"; btnClear.title = "Clear notes"; btnClear.setAttribute("aria-label", "Clear notes"); btnClear.textContent = "Clear";
 
     const btnDelete = document.createElement("button");
-    btnDelete.type = "button"; btnDelete.dataset.action = "delete"; btnDelete.className = "danger"; btnDelete.title = "Delete notes to bin"; btnDelete.textContent = "Delete to Bin";
+    btnDelete.type = "button"; btnDelete.dataset.action = "delete"; btnDelete.className = "danger"; btnDelete.title = "Delete notes to bin"; btnDelete.setAttribute("aria-label", "Delete notes to bin"); btnDelete.textContent = "Delete to Bin";
 
     const btnRestore = document.createElement("button");
-    btnRestore.type = "button"; btnRestore.dataset.action = "restore"; btnRestore.title = "Restore notes from bin"; btnRestore.textContent = "Restore Bin";
+    btnRestore.type = "button"; btnRestore.dataset.action = "restore"; btnRestore.title = "Restore notes from bin"; btnRestore.setAttribute("aria-label", "Restore notes from bin"); btnRestore.textContent = "Restore Bin";
 
     const btnPopout = document.createElement("button");
-    btnPopout.type = "button"; btnPopout.dataset.action = "popout"; btnPopout.title = "Open notes in new window"; btnPopout.textContent = "Pop-out";
+    btnPopout.type = "button"; btnPopout.dataset.action = "popout"; btnPopout.title = "Open notes in new window"; btnPopout.setAttribute("aria-label", "Open notes in new window"); btnPopout.textContent = "Pop-out";
 
     actions.append(btnSave, btnClear, btnDelete, btnRestore, btnPopout);
 
