@@ -21,7 +21,7 @@ const {
 const NAV_TIMEOUT_MS = DEFAULT_NAVIGATION_TIMEOUT_MS || 3000;
 // Single source of truth for the cache version. update_sw_cache_version.py
 // rewrites this line; the version label is derived from it (no separate comment).
-const CACHE_NAME = 'affinedrift-v5-0f1fa59f';
+const CACHE_NAME = 'affinedrift-v5-40c01539';
 const SW_VERSION = CACHE_NAME; // human-readable version === cache name (no drift)
 const OFFLINE_URL = '/offline.html';
 
