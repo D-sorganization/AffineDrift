@@ -322,12 +322,14 @@ class TestConvertUrlsToHtml:
         r"""Should convert \url{} to <a> element."""
         result = convert_urls_to_html(r"\url{https://example.com}")
         assert "<a href=" in result
+        assert 'rel="noopener noreferrer"' in result
         assert "https://example.com" in result
 
     def test_converts_href_to_anchor(self) -> None:
         r"""Should convert \href{}{} to <a> element."""
         result = convert_urls_to_html(r"\href{https://example.com}{Click here}")
         assert "Click here" in result
+        assert 'rel="noopener noreferrer"' in result
         assert "https://example.com" in result
 
 

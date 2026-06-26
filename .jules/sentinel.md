@@ -100,3 +100,7 @@
 **Vulnerability:** DOM-based XSS risk via `innerHTML` used extensively across multiple JS modules.
 **Learning:** Using `innerHTML` to construct DOM elements dynamically, even with static keys/labels or escaped variables, violates strict security policies and creates a brittle pattern that could be exploited.
 **Prevention:** Always use native DOM methods like `document.createElementNS()`, `document.createElement()`, and securely assign properties via `textContent`, `dataset`, and `setAttribute` instead of `innerHTML`.
+## 2026-06-26 - Prevent reverse tabnabbing in generated HTML links
+**Vulnerability:** Reverse tabnabbing vulnerability via `target="_blank"` without `rel="noopener"` (and ideally `noreferrer`) in HTML links generated from LaTeX `\url` and `\href` commands in `src/tools/utils/latex_utils.py`.
+**Learning:** Automatically generated HTML anchors with `target="_blank"` must include `rel="noopener noreferrer"` to prevent the newly opened tab from accessing the origin's `window.opener` object, which is a known reverse tabnabbing vector.
+**Prevention:** Always include `rel="noopener"` (and ideally `noreferrer`) when generating or adding HTML anchors (`<a>`) with `target="_blank"`.

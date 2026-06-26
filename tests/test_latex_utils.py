@@ -252,11 +252,13 @@ class TestURLConversion:
     def test_url_to_html(self) -> None:
         result = convert_urls_to_html(r"\url{https://example.com}")
         assert 'href="https://example.com"' in result
+        assert 'rel="noopener noreferrer"' in result
 
     def test_href_to_html(self) -> None:
         result = convert_urls_to_html(r"\href{https://example.com}{Example}")
         assert "Example" in result
         assert 'href="https://example.com"' in result
+        assert 'rel="noopener noreferrer"' in result
 
 
 class TestReferences:
