@@ -275,6 +275,13 @@ describe("Metrics Module", () => {
   });
 
   describe("clearData", () => {
+    beforeEach(() => {
+      window.confirm = jest.fn(() => true);
+    });
+
+    afterEach(() => {
+      delete window.confirm;
+    });
     test("should clear all metrics data", () => {
       trackPageView();
       trackSearch("test");
