@@ -418,10 +418,10 @@
         return;
       }
 
-      const button = event.target.closest("button[data-details-id]");
-      const card = event.target.closest("article[data-entry-id]");
-      if (!button && !card) return;
-      const entryId = button ? button.dataset.detailsId : card.dataset.entryId;
+      // ⚡ Bolt Optimization: Consolidate multiple ancestor checks into a single .closest() query to halve CSS selector parsing overhead
+      const trigger = event.target.closest("button[data-details-id], article[data-entry-id]");
+      if (!trigger) return;
+      const entryId = trigger.dataset.detailsId || trigger.dataset.entryId;
       const entry = state.entries.find(
         (item) => item.id === entryId,
       );
