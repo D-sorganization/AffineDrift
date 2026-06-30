@@ -26,7 +26,7 @@ Simply link to the file from any page:
 <a
   href="content/Wrist as Universal Joint/grip_angle_simulator.html"
   class="button"
-  target="_blank"
+  target="_blank" rel="noopener"
 >
   🏌️ Launch Grip Angle Simulator
 </a>
