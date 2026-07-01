@@ -76,6 +76,7 @@ export function initRepoLinks() {
         for (const link of links) {
             if (link.href.startsWith("https://github.com")) {
                 link.setAttribute("target", "_blank");
+                link.setAttribute("rel", "noopener noreferrer");
             }
         }
     }

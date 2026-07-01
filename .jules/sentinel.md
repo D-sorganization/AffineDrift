@@ -100,3 +100,7 @@
 **Vulnerability:** DOM-based XSS risk via `innerHTML` used extensively across multiple JS modules.
 **Learning:** Using `innerHTML` to construct DOM elements dynamically, even with static keys/labels or escaped variables, violates strict security policies and creates a brittle pattern that could be exploited.
 **Prevention:** Always use native DOM methods like `document.createElementNS()`, `document.createElement()`, and securely assign properties via `textContent`, `dataset`, and `setAttribute` instead of `innerHTML`.
+## 2026-07-01 - Prevent reverse tabnabbing on dynamic target="_blank" links
+**Vulnerability:** Reverse tabnabbing vulnerability where dynamically generated links with `target="_blank"` did not have `rel="noopener noreferrer"` attributes.
+**Learning:** Automatically generated content or links enhanced via JS with `target="_blank"` need `rel="noopener"` explicitly set, otherwise the newly opened window gets reference to `window.opener`.
+**Prevention:** To prevent reverse tabnabbing attacks, always include the `rel="noopener"` attribute whenever generating or manually adding HTML anchors (`<a>`) with `target="_blank"`.
