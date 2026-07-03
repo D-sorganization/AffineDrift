@@ -147,3 +147,6 @@
 ## 2026-06-21 - Prevent Redundant DOM Writes in Scroll Callbacks
 **Learning:** Even when batched inside `requestAnimationFrame`, unconditionally calling `.classList.add()` or `.classList.remove()` on every tick forces the browser to evaluate style changes, which can lead to layout thrashing.
 **Action:** When updating class lists or DOM attributes based on scroll position, always cache the previous state in a local closure variable and only modify the DOM if the state has actually changed.
+## 2026-07-03 - [Optimize Bibliography Rendering with DocumentFragment]
+**Learning:** Appending child elements directly to a live DOM container within a loop (like iterating through search results) triggers repeated layout recalculations and repaints, severely degrading rendering performance for large lists.
+**Action:** Always batch DOM insertions by appending dynamically generated elements to a `DocumentFragment` inside the loop, and then append the complete fragment to the DOM once outside the loop to eliminate layout thrashing.
