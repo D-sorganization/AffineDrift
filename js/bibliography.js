@@ -418,10 +418,10 @@
         return;
       }
 
-      const button = event.target.closest("button[data-details-id]");
-      const card = event.target.closest("article[data-entry-id]");
-      if (!button && !card) return;
-      const entryId = button ? button.dataset.detailsId : card.dataset.entryId;
+      const target = event.target.closest("button[data-details-id], article[data-entry-id]");
+      if (!target) return;
+      const isButton = target.tagName === "BUTTON";
+      const entryId = isButton ? target.dataset.detailsId : target.dataset.entryId;
       const entry = state.entries.find(
         (item) => item.id === entryId,
       );

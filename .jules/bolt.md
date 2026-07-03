@@ -147,3 +147,6 @@
 ## 2026-06-21 - Prevent Redundant DOM Writes in Scroll Callbacks
 **Learning:** Even when batched inside `requestAnimationFrame`, unconditionally calling `.classList.add()` or `.classList.remove()` on every tick forces the browser to evaluate style changes, which can lead to layout thrashing.
 **Action:** When updating class lists or DOM attributes based on scroll position, always cache the previous state in a local closure variable and only modify the DOM if the state has actually changed.
+## 2026-07-03 - Consolidating .closest() queries in bibliography.js
+**Learning:** Checking multiple ancestor conditions in a hot loop using separate `.closest()` calls (e.g., `event.target.closest("button[data-details-id]")` and `event.target.closest("article[data-entry-id]")`) is inefficient due to repeatedly crossing the JS-to-C++ boundary.
+**Action:** Consolidate multiple ancestor checks into a single comma-separated `.closest()` query to halve the CSS selector parsing overhead while leveraging native C++ speeds.
