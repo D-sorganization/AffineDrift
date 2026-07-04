@@ -283,6 +283,7 @@
         btn.type = "button";
         btn.dataset.detailsId = entry.id;
         btn.setAttribute("aria-label", `View details for ${entry.title}`);
+        btn.title = `View details for ${entry.title}`;
         btn.textContent = "View details";
         article.appendChild(btn);
 

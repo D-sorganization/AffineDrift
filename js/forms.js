@@ -76,11 +76,13 @@ export function initEmailCopy() {
                     setCheckIcon();
                     button.classList.add("success");
                     button.setAttribute("aria-label", "Email copied");
+                    button.title = "Email copied";
 
                     setTimeout(() => {
                         setCopyIcon();
                         button.classList.remove("success");
                         button.setAttribute("aria-label", "Copy email address");
+                        button.title = "Copy email address";
                     }, 2000);
                 })
                 .catch((err) => {
