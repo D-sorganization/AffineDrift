@@ -409,8 +409,10 @@
     });
 
     listEl.addEventListener("click", (event) => {
-      const clearBtn = event.target.closest("#bib-clear-search");
-      if (clearBtn) {
+      const target = event.target.closest("#bib-clear-search, button[data-details-id], article[data-entry-id]");
+      if (!target) return;
+
+      if (target.id === "bib-clear-search") {
         searchInput.value = "";
         state.query = "";
         searchInput.focus();
@@ -418,9 +420,8 @@
         return;
       }
 
-      const button = event.target.closest("button[data-details-id]");
-      const card = event.target.closest("article[data-entry-id]");
-      if (!button && !card) return;
+      const button = target.tagName === "BUTTON" ? target : null;
+      const card = target.tagName === "ARTICLE" ? target : null;
       const entryId = button ? button.dataset.detailsId : card.dataset.entryId;
       const entry = state.entries.find(
         (item) => item.id === entryId,
