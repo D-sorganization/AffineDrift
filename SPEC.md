@@ -678,3 +678,4 @@ python src/tools/code_quality_check.py
 | 2026-06-19 | 1.0.150 | 🛡️ Sentinel: Fix Server-Side Request Forgery in `src/tools/verify_images.py` |
 | 2026-06-21 | 1.0.151 | ⚡ Bolt: Prevent redundant DOM mutations in scroll listener in `js/ui-components.js` by caching visibility state. |
 | 2026-06-21 | 1.0.152 | 🛡️ Sentinel: Prevent DOM-based XSS by replacing `innerHTML` with native DOM APIs in JS files. |
+| 2026-07-05 | 1.0.153 | 🛡️ Sentinel: Fix SSRF bypass vulnerability by explicitly disabling HTTP redirects in `requests.get()` fallback inside `src/tools/verify_images.py`. |

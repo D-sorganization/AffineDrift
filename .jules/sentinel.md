@@ -100,3 +100,7 @@
 **Vulnerability:** DOM-based XSS risk via `innerHTML` used extensively across multiple JS modules.
 **Learning:** Using `innerHTML` to construct DOM elements dynamically, even with static keys/labels or escaped variables, violates strict security policies and creates a brittle pattern that could be exploited.
 **Prevention:** Always use native DOM methods like `document.createElementNS()`, `document.createElement()`, and securely assign properties via `textContent`, `dataset`, and `setAttribute` instead of `innerHTML`.
+## 2026-07-05 - Prevent SSRF bypass via HTTP redirects
+**Vulnerability:** Server-Side Request Forgery (SSRF) bypass risk in `src/tools/verify_images.py` where the fallback `requests.get()` did not explicitly disable HTTP redirects, allowing external servers to redirect to internal IPs.
+**Learning:** Validating a URL before making a request is insufficient if the HTTP client automatically follows redirects to restricted internal services (like AWS metadata).
+**Prevention:** When validating URLs for SSRF protection, always explicitly disable HTTP redirects (`allow_redirects=False`) in the client making the request.
