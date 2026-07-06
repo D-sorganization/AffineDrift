@@ -147,3 +147,7 @@
 ## 2026-06-21 - Prevent Redundant DOM Writes in Scroll Callbacks
 **Learning:** Even when batched inside `requestAnimationFrame`, unconditionally calling `.classList.add()` or `.classList.remove()` on every tick forces the browser to evaluate style changes, which can lead to layout thrashing.
 **Action:** When updating class lists or DOM attributes based on scroll position, always cache the previous state in a local closure variable and only modify the DOM if the state has actually changed.
+
+## 2026-07-06 - [Batching DOM updates with DocumentFragment]
+**Learning:** Appending DOM nodes one by one in a loop causes forced layout recalculations.
+**Action:** Always batch element creation in loops using a DocumentFragment and append the fragment to the DOM when finished.
