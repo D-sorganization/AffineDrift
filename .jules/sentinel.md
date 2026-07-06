@@ -100,3 +100,7 @@
 **Vulnerability:** DOM-based XSS risk via `innerHTML` used extensively across multiple JS modules.
 **Learning:** Using `innerHTML` to construct DOM elements dynamically, even with static keys/labels or escaped variables, violates strict security policies and creates a brittle pattern that could be exploited.
 **Prevention:** Always use native DOM methods like `document.createElementNS()`, `document.createElement()`, and securely assign properties via `textContent`, `dataset`, and `setAttribute` instead of `innerHTML`.
+## 2026-07-06 - Prevent SSRF bypass via DNS resolution
+**Vulnerability:** Server-Side Request Forgery (SSRF) bypass in `src/tools/verify_images.py` where attackers could use custom domain names (like `localtest.me`) that resolve to private or loopback IP addresses, bypassing the string-based hostname validation.
+**Learning:** Checking only the hostname string against private IP formats is insufficient, as domain names can resolve to restricted IPs at the DNS level.
+**Prevention:** Always perform a DNS resolution (e.g., using `socket.gethostbyname()`) on the hostname and check the resulting IP address against private/loopback/link-local ranges before initiating outbound HTTP requests.

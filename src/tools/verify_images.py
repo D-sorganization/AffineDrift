@@ -4,6 +4,7 @@
 import ipaddress
 import logging
 import re
+import socket
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from urllib.parse import urlparse
@@ -55,6 +56,15 @@ def is_safe_url(url: str) -> bool:
             if ip.is_private or ip.is_loopback or ip.is_link_local:
                 return False
         except ValueError:
+            pass
+
+        # Resolve hostname to IP to prevent DNS-based SSRF bypass
+        try:
+            ip_str = socket.gethostbyname(hostname)
+            ip = ipaddress.ip_address(ip_str)
+            if ip.is_private or ip.is_loopback or ip.is_link_local:
+                return False
+        except (socket.gaierror, ValueError):
             pass
 
         return True

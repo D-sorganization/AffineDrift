@@ -122,3 +122,17 @@ class TestCheckUrl:
         """Should raise on empty URL (contract enforcement)."""
         with pytest.raises(AssertionError):
             check_url("", Path("page.html"))
+
+    @patch("src.tools.verify_images.socket.gethostbyname")
+    def test_dns_ssrf_bypass(self, mock_gethostbyname: MagicMock) -> None:
+        """Should block hostnames that resolve to private IPs (SSRF bypass prevention)."""
+        mock_gethostbyname.return_value = "127.0.0.1"
+        from src.tools.verify_images import is_safe_url
+        assert is_safe_url("http://localtest.me") is False
+
+    @patch("src.tools.verify_images.socket.gethostbyname")
+    def test_dns_ssrf_safe(self, mock_gethostbyname: MagicMock) -> None:
+        """Should allow hostnames that resolve to public IPs."""
+        mock_gethostbyname.return_value = "8.8.8.8"
+        from src.tools.verify_images import is_safe_url
+        assert is_safe_url("http://google.com") is True
