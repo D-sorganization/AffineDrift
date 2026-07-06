@@ -235,6 +235,8 @@
 
     listEl.textContent = "";
 
+    const fragment = document.createDocumentFragment();
+
     state.filtered.forEach((entry) => {
         const authors = (entry.authors || []).join(", ");
         const type = entry.type || "reference";
@@ -286,8 +288,10 @@
         btn.textContent = "View details";
         article.appendChild(btn);
 
-        listEl.appendChild(article);
+        fragment.appendChild(article);
     });
+
+    listEl.appendChild(fragment);
   };
 
   const renderSortControls = () => {
