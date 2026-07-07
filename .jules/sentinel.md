@@ -100,3 +100,11 @@
 **Vulnerability:** DOM-based XSS risk via `innerHTML` used extensively across multiple JS modules.
 **Learning:** Using `innerHTML` to construct DOM elements dynamically, even with static keys/labels or escaped variables, violates strict security policies and creates a brittle pattern that could be exploited.
 **Prevention:** Always use native DOM methods like `document.createElementNS()`, `document.createElement()`, and securely assign properties via `textContent`, `dataset`, and `setAttribute` instead of `innerHTML`.
+## 2026-07-07 - Prevent SSRF via DNS Rebinding in URL Validation
+**Vulnerability:** Server-Side Request Forgery (SSRF) risk where hostname validation checked the raw hostname string against blacklisted IP addresses without performing DNS resolution, allowing attackers to bypass validation using custom domains that resolve to loopback/private IPs (e.g., 127.0.0.1.nip.io).
+**Learning:** Checking a hostname string directly against private IP ranges is insufficient. If the input is a domain name, the underlying HTTP client will perform DNS resolution, which could point to an internal network address not caught by the string-based check.
+**Prevention:** To prevent DNS-based SSRF bypasses, always perform DNS resolution on the hostname (e.g., using `socket.gethostbyname()`) and validate the resulting IP address against private/loopback ranges.
+## 2026-07-07 - Prevent IPv6 SSRF bypass and DNS rebinding
+**Vulnerability:** Server-Side Request Forgery (SSRF) risk where hostname validation lacked DNS resolution, and a subsequent attempt to fix it with `socket.gethostbyname()` broke protection against IPv6 literals (e.g., `[::1]`) because `gethostbyname` is IPv4-only.
+**Learning:** `socket.gethostbyname()` is insufficient for SSRF protection because it fails on IPv6 addresses, potentially opening bypasses if the exception is caught and ignored. Furthermore, DNS resolution alone without using the resolved IP for the HTTP request leaves a Time-of-Check to Time-of-Use (TOCTOU) vulnerability.
+**Prevention:** To prevent DNS-based SSRF and handle IPv6 correctly, use `socket.getaddrinfo()` to resolve the hostname. First, attempt to parse the input as an IP address literal, then fall back to resolution, checking all returned addresses against private/loopback ranges.

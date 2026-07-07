@@ -3,6 +3,7 @@
 
 import ipaddress
 import logging
+import socket
 import re
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -49,13 +50,29 @@ def is_safe_url(url: str) -> bool:
         if hostname.lower() in ("localhost", "0.0.0.0", "::1"):  # noqa: S104
             return False
 
-        # Check if the hostname is a private/local IP address
+        # Strip brackets if it's an IPv6 literal
+        hostname_to_resolve = hostname.strip("[]")
+
+        # Resolve the hostname to prevent DNS-based SSRF (supports IPv4 and IPv6)
         try:
-            ip = ipaddress.ip_address(hostname)
-            if ip.is_private or ip.is_loopback or ip.is_link_local:
-                return False
-        except ValueError:
-            pass
+            # First try parsing it directly as an IP address literal
+            try:
+                ip = ipaddress.ip_address(hostname_to_resolve)
+                if ip.is_private or ip.is_loopback or ip.is_link_local:
+                    return False
+            except ValueError:
+                # If it's not a literal, resolve it using getaddrinfo
+                addr_info = socket.getaddrinfo(hostname_to_resolve, None)
+                for res in addr_info:
+                    ip_str = res[4][0]
+                    ip = ipaddress.ip_address(ip_str)
+                    if ip.is_private or ip.is_loopback or ip.is_link_local:
+                        return False
+
+        except (ValueError, socket.gaierror):
+            # If resolution fails, assume it's unsafe or let the request fail
+            # For SSRF protection, it's safer to fail if we can't resolve it.
+            return False
 
         return True
     except Exception:
