@@ -110,3 +110,7 @@
 ## 2026-06-19 - Disable Autocapitalize on Numeric Text Inputs
 **Learning:** Using `type="text"` for numeric input fields on mobile triggers the standard keyboard. Even with `autocorrect="off"`, the keyboard might still apply automatic capitalization on the first keypress (e.g., attempting to shift-capitalize mathematical symbols or hexadecimal characters), adding unnecessary user friction.
 **Action:** Always add `autocapitalize="none"` alongside `inputmode="decimal"`, `autocorrect="off"`, and `spellcheck="false"` on text inputs used for math/numeric entry to fully bypass predictive text layout switching.
+
+## 2026-07-07 - Dynamic Tooltips for Feedback States
+**Learning:** When interactive elements (like copy buttons) temporarily change their `aria-label` to provide success feedback to screen readers, leaving the native `title` unchanged creates conflicting information for sighted mouse users hovering the element.
+**Action:** Always sync dynamic `title` updates alongside temporary `aria-label` feedback states (e.g., changing from "Copy" to "Copied!") so all users receive consistent state changes.
