@@ -110,3 +110,6 @@
 ## 2026-06-19 - Disable Autocapitalize on Numeric Text Inputs
 **Learning:** Using `type="text"` for numeric input fields on mobile triggers the standard keyboard. Even with `autocorrect="off"`, the keyboard might still apply automatic capitalization on the first keypress (e.g., attempting to shift-capitalize mathematical symbols or hexadecimal characters), adding unnecessary user friction.
 **Action:** Always add `autocapitalize="none"` alongside `inputmode="decimal"`, `autocorrect="off"`, and `spellcheck="false"` on text inputs used for math/numeric entry to fully bypass predictive text layout switching.
+## 2026-07-07 - Pair aria-label with title on dynamic buttons
+**Learning:** Found that some dynamically created generic action buttons in the metrics and notes workspace modules lacked paired `aria-label` attributes, relying solely on `title` for tooltips or textContent. Screen readers often depend on explicit `aria-label`s for clarity.
+**Action:** Always ensure that dynamically generated icon-only or generic action buttons receive a distinct `aria-label` paired with their `title` attribute to guarantee accessibility consistency across all UI components.
