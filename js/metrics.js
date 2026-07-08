@@ -187,6 +187,9 @@
       { value: stats.summary.totalSessions, label: "Sessions" }
     ];
 
+    // ⚡ Bolt Optimization: Batch DOM insertions using a DocumentFragment to minimize layout thrashing
+    const fragmentSummary = document.createDocumentFragment();
+
     for (const item of metricsMap) {
       const card = document.createElement("div");
       card.className = "metric-card";
@@ -204,8 +207,9 @@
       labelSpan.textContent = item.label;
       card.appendChild(labelSpan);
 
-      summaryDiv.appendChild(card);
+      fragmentSummary.appendChild(card);
     }
+    summaryDiv.appendChild(fragmentSummary);
 
     widget.appendChild(summaryDiv);
 
@@ -219,6 +223,9 @@
 
       const listDiv = document.createElement("div");
       listDiv.className = "metrics-list";
+
+      // ⚡ Bolt Optimization: Batch DOM insertions using a DocumentFragment to minimize layout thrashing
+      const fragmentSearches = document.createDocumentFragment();
 
       for (const [term, count] of stats.topSearches) {
         const itemDiv = document.createElement("div");
@@ -237,8 +244,9 @@
         countSpan.textContent = count;
         itemDiv.appendChild(countSpan);
 
-        listDiv.appendChild(itemDiv);
+        fragmentSearches.appendChild(itemDiv);
       }
+      listDiv.appendChild(fragmentSearches);
 
       section.appendChild(listDiv);
       widget.appendChild(section);
@@ -254,6 +262,9 @@
 
       const listDiv = document.createElement("div");
       listDiv.className = "metrics-list";
+
+      // ⚡ Bolt Optimization: Batch DOM insertions using a DocumentFragment to minimize layout thrashing
+      const fragmentEntries = document.createDocumentFragment();
 
       for (const entry of stats.topEntries) {
         const itemDiv = document.createElement("div");
@@ -273,8 +284,9 @@
         countSpan.textContent = entry.count;
         itemDiv.appendChild(countSpan);
 
-        listDiv.appendChild(itemDiv);
+        fragmentEntries.appendChild(itemDiv);
       }
+      listDiv.appendChild(fragmentEntries);
 
       section.appendChild(listDiv);
       widget.appendChild(section);
@@ -291,13 +303,17 @@
       const cloudDiv = document.createElement("div");
       cloudDiv.className = "concept-cloud";
 
+      // ⚡ Bolt Optimization: Batch DOM insertions using a DocumentFragment to minimize layout thrashing
+      const fragmentConcepts = document.createDocumentFragment();
+
       for (const [concept, count] of stats.topConcepts) {
         const tagSpan = document.createElement("span");
         tagSpan.className = "concept-tag";
         tagSpan.style.fontSize = Math.min(1 + count * 0.1, 1.5) + "rem";
         tagSpan.textContent = concept;
-        cloudDiv.appendChild(tagSpan);
+        fragmentConcepts.appendChild(tagSpan);
       }
+      cloudDiv.appendChild(fragmentConcepts);
 
       section.appendChild(cloudDiv);
       widget.appendChild(section);
