@@ -680,3 +680,4 @@ python src/tools/code_quality_check.py
 | 2026-06-21 | 1.0.152 | 🛡️ Sentinel: Prevent DOM-based XSS by replacing `innerHTML` with native DOM APIs in JS files. |
 | 2026-06-23 | 1.0.118 | perf(frontend): Refactored js/bibliography.js to use for...of and a DocumentFragment to improve list rendering performance. |
 | 2026-07-14 | 1.0.153 | 🎨 Palette: Added `title` and `aria-label` attributes to dynamically generated action buttons in `js/notes-workspace.js` to provide native tooltips and explicit context. |
+| 2026-07-14 | 1.0.154 | 🛡️ Sentinel: Updated `Pillow` dependency from 12.2.0 to 12.3.0 in `requirements.txt` to address multiple High severity vulnerabilities flagged by `pip-audit`. |
