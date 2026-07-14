@@ -110,3 +110,7 @@
 ## 2026-06-19 - Disable Autocapitalize on Numeric Text Inputs
 **Learning:** Using `type="text"` for numeric input fields on mobile triggers the standard keyboard. Even with `autocorrect="off"`, the keyboard might still apply automatic capitalization on the first keypress (e.g., attempting to shift-capitalize mathematical symbols or hexadecimal characters), adding unnecessary user friction.
 **Action:** Always add `autocapitalize="none"` alongside `inputmode="decimal"`, `autocorrect="off"`, and `spellcheck="false"` on text inputs used for math/numeric entry to fully bypass predictive text layout switching.
+
+## 2026-07-14 - Native Tooltips for Standalone Window Controls
+**Learning:** Even when buttons have explicit text labels like "Save" or "Close", rendering them in an isolated, standalone popup window (like the Project Notes workspace) strips away the broader page context. Users benefit from explicit `title` and `aria-label` attributes to reinforce the scope of the action.
+**Action:** Always provide explicit `title` tooltips and matching `aria-label`s for generic action buttons rendered in detached scopes (like new browser windows or generic iframes) to guarantee unambiguous context.

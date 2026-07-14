@@ -293,8 +293,8 @@
           '<h2 style="margin-top:0;">AffineDrift Project Notes</h2>' +
           '<textarea id="notes" style="width:100%; min-height:360px;"></textarea>' +
           '<div style="margin-top:0.75rem;">' +
-            '<button type="button" id="save">Save</button>' +
-            '<button type="button" id="close">Close</button>' +
+            '<button type="button" id="save" title="Save Project Notes" aria-label="Save Project Notes">Save</button>' +
+            '<button type="button" id="close" title="Close Workspace" aria-label="Close Workspace">Close</button>' +
           '</div>' +
           '<scr' + 'ipt>' +
             'const area = document.getElementById("notes");' +
