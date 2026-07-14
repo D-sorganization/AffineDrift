@@ -62,6 +62,7 @@ def is_safe_url(url: str) -> bool:
     except Exception:
         return False
 
+
 def check_url(url: str, file_path: Path) -> str | None:
     """Check if a URL is accessible.
 
@@ -88,7 +89,9 @@ def check_url(url: str, file_path: Path) -> str | None:
             response = requests.head(url, headers=headers, timeout=5, allow_redirects=False)
 
             if response.status_code == 405:  # Method Not Allowed
-                response = requests.get(url, headers=headers, timeout=5, stream=True, allow_redirects=False)
+                response = requests.get(
+                    url, headers=headers, timeout=5, stream=True, allow_redirects=False
+                )
                 response.close()
 
             if response.status_code >= 400:
