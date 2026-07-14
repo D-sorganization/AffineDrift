@@ -148,12 +148,12 @@
       strongC.textContent = "Concepts:";
       const divCInner = document.createElement("div");
       divCInner.className = "bib-inline-concepts";
-      entry.concepts.forEach(c => {
+      for (const c of entry.concepts) {
         const span = document.createElement("span");
         span.className = "concept-tag";
         span.textContent = c;
         divCInner.appendChild(span);
-      });
+      }
       divC.append(strongC, divCInner);
       detailsEl.appendChild(divC);
     }
@@ -164,7 +164,7 @@
       const strongL = document.createElement("strong");
       strongL.textContent = "Links:";
       const ulL = document.createElement("ul");
-      links.forEach(url => {
+      for (const url of links) {
         let safeUrl = "#";
         try {
           const parsed = new URL(url, window.location.origin);
@@ -180,7 +180,7 @@
         a.textContent = url;
         li.appendChild(a);
         ulL.appendChild(li);
-      });
+      }
       divL.append(strongL, ulL);
       detailsEl.appendChild(divL);
     }
@@ -234,8 +234,9 @@
     }
 
     listEl.textContent = "";
+    const fragment = document.createDocumentFragment();
 
-    state.filtered.forEach((entry) => {
+    for (const entry of state.filtered) {
         const authors = (entry.authors || []).join(", ");
         const type = entry.type || "reference";
         const typeClass = `type-${type.toLowerCase()}`;
@@ -269,12 +270,12 @@
         if (entry.concepts && entry.concepts.length > 0) {
             const conceptsDiv = document.createElement("div");
             conceptsDiv.className = "bib-inline-concepts bib-inline-concepts-list";
-            entry.concepts.slice(0, 4).forEach(c => {
+            for (const c of entry.concepts.slice(0, 4)) {
                 const span = document.createElement("span");
                 span.className = "concept-tag";
                 span.textContent = c;
                 conceptsDiv.appendChild(span);
-            });
+            }
             article.appendChild(conceptsDiv);
         }
 
@@ -286,8 +287,9 @@
         btn.textContent = "View details";
         article.appendChild(btn);
 
-        listEl.appendChild(article);
-    });
+        fragment.appendChild(article);
+    }
+    listEl.appendChild(fragment);
   };
 
   const renderSortControls = () => {
