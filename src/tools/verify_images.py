@@ -2,6 +2,7 @@
 """Verify image URLs in markdown and HTML files."""
 
 import ipaddress
+import socket
 import logging
 import re
 from concurrent.futures import ThreadPoolExecutor
@@ -46,21 +47,20 @@ def is_safe_url(url: str) -> bool:
         if not hostname:
             return False
 
-        if hostname.lower() in ("localhost", "0.0.0.0", "::1"):  # noqa: S104
+        try:
+            addr_info = socket.getaddrinfo(hostname, None)
+        except socket.gaierror:
             return False
 
-        # Check if the hostname is a private/local IP address
-        try:
-            ip = ipaddress.ip_address(hostname)
+        for info in addr_info:
+            ip_str = info[4][0]
+            ip = ipaddress.ip_address(ip_str)
             if ip.is_private or ip.is_loopback or ip.is_link_local:
                 return False
-        except ValueError:
-            pass
 
         return True
     except Exception:
         return False
-
 
 def check_url(url: str, file_path: Path) -> str | None:
     """Check if a URL is accessible.
@@ -88,7 +88,7 @@ def check_url(url: str, file_path: Path) -> str | None:
             response = requests.head(url, headers=headers, timeout=5, allow_redirects=False)
 
             if response.status_code == 405:  # Method Not Allowed
-                response = requests.get(url, headers=headers, timeout=5, stream=True)
+                response = requests.get(url, headers=headers, timeout=5, stream=True, allow_redirects=False)
                 response.close()
 
             if response.status_code >= 400:
