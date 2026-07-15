@@ -110,3 +110,7 @@
 ## 2026-06-19 - Disable Autocapitalize on Numeric Text Inputs
 **Learning:** Using `type="text"` for numeric input fields on mobile triggers the standard keyboard. Even with `autocorrect="off"`, the keyboard might still apply automatic capitalization on the first keypress (e.g., attempting to shift-capitalize mathematical symbols or hexadecimal characters), adding unnecessary user friction.
 **Action:** Always add `autocapitalize="none"` alongside `inputmode="decimal"`, `autocorrect="off"`, and `spellcheck="false"` on text inputs used for math/numeric entry to fully bypass predictive text layout switching.
+
+## 2026-07-15 - Contextual Labels for Action Buttons in Standalone Views
+**Learning:** Generic action buttons (like "Save" or "Close") rendered in detached or standalone scopes (such as pop-out windows or iframes) often lack the broader page context that makes their exact purpose clear.
+**Action:** Always provide explicit `title` tooltips and matching `aria-label` attributes for generic action buttons rendered in detached scopes to provide unambiguous context.
