@@ -50,7 +50,7 @@ def is_safe_url(url: str) -> bool:
         if hostname.lower() in ("localhost", "0.0.0.0", "::1"):  # noqa: S104
             return False
 
-        if hostname.startswith('[') and hostname.endswith(']'):
+        if hostname.startswith("[") and hostname.endswith("]"):
             hostname = hostname[1:-1]
 
         try:
@@ -98,7 +98,9 @@ def check_url(url: str, file_path: Path) -> str | None:
             response = requests.head(url, headers=headers, timeout=5, allow_redirects=False)
 
             if response.status_code == 405:  # Method Not Allowed
-                response = requests.get(url, headers=headers, timeout=5, stream=True, allow_redirects=False)
+                response = requests.get(
+                    url, headers=headers, timeout=5, stream=True, allow_redirects=False
+                )
                 response.close()
 
             if response.status_code >= 400:
