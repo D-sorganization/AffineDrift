@@ -13,8 +13,9 @@
 """
 
 import logging
-import sys
 import os
+import sys
+
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
 from src.tools.code_quality import (  # noqa: F401 -- reason: backward-compatibility shim imports are unused

@@ -680,3 +680,5 @@ python src/tools/code_quality_check.py
 | 2026-06-21 | 1.0.152 | 🛡️ Sentinel: Prevent DOM-based XSS by replacing `innerHTML` with native DOM APIs in JS files. |
 | 2026-06-23 | 1.0.118 | perf(frontend): Refactored js/bibliography.js to use for...of and a DocumentFragment to improve list rendering performance. |
 | 2026-07-15 | 1.0.118 | 🎨 Palette: Add explicit aria-label and title tooltips to the dynamically generated "Save" and "Close" buttons in the standalone Notes Workspace pop-out to ensure clear context in detached views. |
+| 2026-07-15 | 1.0.118 | 🛡️ Sentinel: Fix dependency vulnerabilities in Pillow flagged by `pip-audit` to unblock CI. |
+| 2026-07-15 | 1.0.118 | fix(ci): Sort imports in `code_quality_check.py` to pass `ruff` check. |
