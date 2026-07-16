@@ -100,3 +100,7 @@
 **Vulnerability:** DOM-based XSS risk via `innerHTML` used extensively across multiple JS modules.
 **Learning:** Using `innerHTML` to construct DOM elements dynamically, even with static keys/labels or escaped variables, violates strict security policies and creates a brittle pattern that could be exploited.
 **Prevention:** Always use native DOM methods like `document.createElementNS()`, `document.createElement()`, and securely assign properties via `textContent`, `dataset`, and `setAttribute` instead of `innerHTML`.
+## 2026-07-16 - Prevent SSRF in image verification tool
+**Vulnerability:** The `verify_images.py` tool was vulnerable to SSRF because it only validated the string hostname and not the resolved IP address, and it allowed HTTP redirects.
+**Learning:** Attackers can bypass string-based hostname checks by using custom domains that resolve to local/private IP addresses, or by using HTTP redirects that point to internal resources.
+**Prevention:** Always perform DNS resolution on the hostname using `socket.getaddrinfo()` and check the resulting IPs against private/loopback ranges. Also disable HTTP redirects (e.g. `allow_redirects=False`) when validating URLs.
