@@ -241,7 +241,7 @@ jobs:
           PYTHONPATH: src
         run: python -m pytest --override-ini addopts= tests/ -m content_lint --timeout=120
       - name: Audit Python Dependencies
-        timeout-minutes: 5
+        timeout-minutes: 10
         run: pip install pip-audit && pip-audit -r requirements.txt --progress-spinner=off
       - name: Critical Module Coverage Gate
         run: python3 scripts/check_critical_module_coverage.py
