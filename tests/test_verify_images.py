@@ -46,6 +46,19 @@ def test_check_url_reports_missing_local_files(tmp_path: Path) -> None:
     assert "assets/missing.png" in result
 
 
+def test_is_safe_url_blocks_dns_rebinding_and_ipv6_ssrf() -> None:
+    from src.tools.verify_images import is_safe_url
+
+    # Test valid external URLs
+    assert is_safe_url("https://example.com/image.png") is True
+
+    # Test blocked IPs and localhost variants
+    assert is_safe_url("http://localhost/image.png") is False
+    assert is_safe_url("http://127.0.0.1/image.png") is False
+    assert is_safe_url("http://[::1]/image.png") is False
+    assert is_safe_url("http://169.254.169.254/latest/meta-data/") is False  # AWS Metadata
+
+
 def test_process_file_collects_only_broken_results(tmp_path: Path) -> None:
     """File processing should preserve only failing image checks."""
     file_path = tmp_path / "page.qmd"
