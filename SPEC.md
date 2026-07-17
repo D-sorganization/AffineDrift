@@ -681,3 +681,4 @@ python src/tools/code_quality_check.py
 | 2026-06-23 | 1.0.118 | perf(frontend): Refactored js/bibliography.js to use for...of and a DocumentFragment to improve list rendering performance. |
 | 2026-07-16 | 1.0.153 | 🛡️ Sentinel: Fix SSRF vulnerability in `src/tools/verify_images.py` via DNS rebinding and IPv6 literals mitigation. |
 | 2026-07-16 | 1.0.154 | 🛡️ Sentinel: Fix dependency vulnerabilities in Pillow by bumping to 12.3.0. |
+| 2026-07-17 | 1.0.155 | 🛡️ Sentinel: Fix CI timeout issues by allowing pip cache and running pip-audit with explicit python module syntax. |

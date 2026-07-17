@@ -218,7 +218,7 @@ jobs:
           source "$RUNNER_TEMP/ci-venv/bin/activate"
           python --version
           pip install --upgrade pip setuptools wheel
-          pip install --no-cache-dir -r requirements.txt pytest-timeout pytest-cov PyQt6
+          pip install -r requirements.txt pytest-timeout pytest-cov PyQt6
           echo "$RUNNER_TEMP/ci-venv/bin" >> $GITHUB_PATH
       - name: Install Tool Requirements
         run: |
@@ -242,7 +242,7 @@ jobs:
         run: python -m pytest --override-ini addopts= tests/ -m content_lint --timeout=120
       - name: Audit Python Dependencies
         timeout-minutes: 5
-        run: pip install pip-audit && pip-audit -r requirements.txt --progress-spinner=off
+        run: python -m pip install pip-audit && python -m pip_audit -r requirements.txt --progress-spinner=off
       - name: Critical Module Coverage Gate
         run: python3 scripts/check_critical_module_coverage.py
       - uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
@@ -325,7 +325,7 @@ jobs:
           python -m venv "$RUNNER_TEMP/ci-venv"
           source "$RUNNER_TEMP/ci-venv/bin/activate"
           pip install --upgrade pip setuptools wheel
-          pip install --no-cache-dir -r requirements.txt
+          pip install -r requirements.txt
           echo "$RUNNER_TEMP/ci-venv/bin" >> $GITHUB_PATH
 
       - name: Reject Raw Merge Conflict Markers
