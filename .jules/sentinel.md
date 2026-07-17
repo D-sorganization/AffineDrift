@@ -100,7 +100,7 @@
 **Vulnerability:** DOM-based XSS risk via `innerHTML` used extensively across multiple JS modules.
 **Learning:** Using `innerHTML` to construct DOM elements dynamically, even with static keys/labels or escaped variables, violates strict security policies and creates a brittle pattern that could be exploited.
 **Prevention:** Always use native DOM methods like `document.createElementNS()`, `document.createElement()`, and securely assign properties via `textContent`, `dataset`, and `setAttribute` instead of `innerHTML`.
-## 2026-07-17 - Downgrade matplotlib to fix build issues
-**Vulnerability:** matplotlib 3.11.0 causes the build to fail due to dependency mismatches.
-**Learning:** Updating matplotlib can break dependencies, leading to CI failures.
-**Prevention:** In the future, verify pip installations do not break dependencies.
+## 2026-07-17 - Downgrade matplotlib to fix build issues and upgrade pillow
+**Vulnerability:** matplotlib 3.11.0 causes the build to fail due to dependency mismatches. pillow 12.2.0 had multiple known vulnerabilities flagged by pip-audit (e.g. PYSEC-2026-2253).
+**Learning:** Updating matplotlib can break dependencies, leading to CI failures. Checking for Python dependency vulnerabilities during execution ensures failing CI pipeline jobs related to audit checks are resolved.
+**Prevention:** In the future, explicitly checking and resolving `pip-audit` issues locally prevents PR check failures later on. Verify pip installations do not break dependencies.
