@@ -100,3 +100,7 @@
 **Vulnerability:** DOM-based XSS risk via `innerHTML` used extensively across multiple JS modules.
 **Learning:** Using `innerHTML` to construct DOM elements dynamically, even with static keys/labels or escaped variables, violates strict security policies and creates a brittle pattern that could be exploited.
 **Prevention:** Always use native DOM methods like `document.createElementNS()`, `document.createElement()`, and securely assign properties via `textContent`, `dataset`, and `setAttribute` instead of `innerHTML`.
+## 2026-07-17 - Bump pillow to 12.3.0
+**Vulnerability:** pillow 12.2.0 had multiple known vulnerabilities flagged by pip-audit (e.g. PYSEC-2026-2253).
+**Learning:** Checking for Python dependency vulnerabilities during execution ensures failing CI pipeline jobs related to audit checks are resolved.
+**Prevention:** In the future, explicitly checking and resolving `pip-audit` issues locally prevents PR check failures later on.

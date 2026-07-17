@@ -420,11 +420,9 @@
         return;
       }
 
-      // ⚡ Bolt Optimization: Consolidate multiple closest queries in hot path
-      const target = event.target.closest("button[data-details-id], article[data-entry-id]");
-      if (!target) return;
-      const button = target.matches("button[data-details-id]") ? target : null;
-      const card = target.matches("article[data-entry-id]") ? target : null;
+      const button = event.target.closest("button[data-details-id]");
+      const card = event.target.closest("article[data-entry-id]");
+      if (!button && !card) return;
       const entryId = button ? button.dataset.detailsId : card.dataset.entryId;
       const entry = state.entries.find(
         (item) => item.id === entryId,
