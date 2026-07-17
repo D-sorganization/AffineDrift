@@ -151,3 +151,7 @@
 ## 2026-06-23 - DocumentFragment Batching for DOM Insertions
 **Learning:** Appending elements individually to a live DOM container inside a loop forces the browser to evaluate potential layout/style recalculations repeatedly, resulting in micro-stutters when updating lists with many items.
 **Action:** When generating multiple child elements dynamically (like rendering bibliography list results), always construct them inside a `DocumentFragment` and append the fragment to the live DOM container once outside the loop.
+
+## 2026-07-17 - Consolidating .closest() queries with .matches()
+**Learning:** Checking multiple ancestor conditions in a hot loop using separate `.closest()` calls (e.g., `element.closest('a'); element.closest('button');`) is inefficient due to repeatedly crossing the JS-to-C++ boundary. Replacing `querySelector` with `Array.from(DOMCollection).find(...)` or `getElementsByClassName(...)[0] || ...` is a performance and logic anti-pattern that slows execution and breaks document order precedence.
+**Action:** Consolidate multiple ancestor checks into a single `.closest('a, button')` query to halve the CSS selector parsing overhead, and use `.matches()` on the returned target to determine which specific element type was matched, rather than attempting to manually re-implement selector logic in JavaScript.
