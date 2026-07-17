@@ -311,6 +311,29 @@ export function initContactFormFeedback() {
             }
 
             button.textContent = "Opening Email Client...";
+
+            // 🎨 Palette: Add standard visual momentum for async operation
+            const spinner = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            spinner.setAttribute("viewBox", "0 0 24 24");
+            spinner.setAttribute("width", "1em");
+            spinner.setAttribute("height", "1em");
+            spinner.setAttribute("style", "animation: var(--animation-spin); margin-left: 0.5rem; display: inline-block; vertical-align: middle;");
+            spinner.setAttribute("aria-hidden", "true");
+
+            const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            circle.setAttribute("cx", "12");
+            circle.setAttribute("cy", "12");
+            circle.setAttribute("r", "10");
+            circle.setAttribute("fill", "none");
+            circle.setAttribute("stroke", "currentColor");
+            circle.setAttribute("stroke-width", "3");
+            circle.setAttribute("stroke-dasharray", "31.4 31.4"); /* ~1/2 of circumference */
+            circle.setAttribute("stroke-linecap", "round");
+            circle.setAttribute("opacity", "0.7");
+
+            spinner.appendChild(circle);
+            button.appendChild(spinner);
+
             button.classList.add("success");
             button.disabled = true;
 
