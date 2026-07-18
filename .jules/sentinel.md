@@ -105,3 +105,8 @@
 **Vulnerability:** The image verification tool relied on string-based hostname checks to prevent SSRF, making it vulnerable to DNS rebinding or custom domains resolving to private IPs (e.g., `127.0.0.1`). Additionally, HTTP redirects were allowed on the fallback `GET` request.
 **Learning:** Checking the URL string is insufficient for SSRF protection because attackers can control the DNS records of domains they own to point to internal infrastructure.
 **Prevention:** Always perform DNS resolution (`socket.getaddrinfo`) and validate the resolved IPs against private/loopback blocks. Ensure `allow_redirects=False` on all requests.
+
+## 2026-07-18 - [Bump Pillow dependency]
+**Vulnerability:** A vulnerability was discovered in Pillow < 12.3.0.
+**Learning:** CI pip-audit checks fail when known vulnerabilities exist in dependencies.
+**Prevention:** Keep dependencies updated to patched versions.
