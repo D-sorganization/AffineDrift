@@ -100,3 +100,7 @@
 **Vulnerability:** DOM-based XSS risk via `innerHTML` used extensively across multiple JS modules.
 **Learning:** Using `innerHTML` to construct DOM elements dynamically, even with static keys/labels or escaped variables, violates strict security policies and creates a brittle pattern that could be exploited.
 **Prevention:** Always use native DOM methods like `document.createElementNS()`, `document.createElement()`, and securely assign properties via `textContent`, `dataset`, and `setAttribute` instead of `innerHTML`.
+## 2026-06-21 - Prevent DOM-based XSS in Notes Workspace Popout
+**Vulnerability:** DOM-based XSS vulnerability in `js/notes-workspace.js` where the Project Notes popout window was constructed using `pop.document.write()` with an unstructured template string.
+**Learning:** Using `document.write()` to construct DOM elements natively introduces an extremely brittle structure that is highly susceptible to DOM-based XSS.
+**Prevention:** To prevent DOM-based XSS, always use native DOM APIs such as `document.createElement()`, `textContent`, and `appendChild()` instead of `document.write()`.

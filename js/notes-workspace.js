@@ -286,28 +286,60 @@
         setStatus("Pop-out blocked by browser.");
         return;
       }
-      pop.document.write(
-        '<!doctype html>' +
-        '<html><head><title>AffineDrift Project Notes</title></head>' +
-        '<body style="font-family: sans-serif; margin: 1rem;">' +
-          '<h2 style="margin-top:0;">AffineDrift Project Notes</h2>' +
-          '<textarea id="notes" style="width:100%; min-height:360px;"></textarea>' +
-          '<div style="margin-top:0.75rem;">' +
-            '<button type="button" id="save">Save</button>' +
-            '<button type="button" id="close">Close</button>' +
-          '</div>' +
-          '<scr' + 'ipt>' +
-            'const area = document.getElementById("notes");' +
-            'document.getElementById("save").addEventListener("click", function () {' +
-              'window.opener.postMessage({ type: "AD_NOTES_SAVE", content: area.value }, window.opener.location.origin);' +
-            '});' +
-            'document.getElementById("close").addEventListener("click", function () { window.close(); });' +
-          '</scr' + 'ipt>' +
-        '</body></html>'
-      );
-      pop.document.close();
-      // Securely set the value without XSS risk from document.write
-      pop.document.getElementById("notes").value = textArea.value;
+
+      const doc = pop.document;
+
+      // Clear existing content and set up base document
+      doc.open();
+      doc.close(); // Need to open/close to clear properly if reused
+
+      const head = doc.head;
+      const body = doc.body;
+
+      const title = doc.createElement('title');
+      title.textContent = 'AffineDrift Project Notes';
+      head.appendChild(title);
+
+      body.style.fontFamily = 'sans-serif';
+      body.style.margin = '1rem';
+
+      const h2 = doc.createElement('h2');
+      h2.style.marginTop = '0';
+      h2.textContent = 'AffineDrift Project Notes';
+      body.appendChild(h2);
+
+      const noteArea = doc.createElement('textarea');
+      noteArea.id = 'notes';
+      noteArea.style.width = '100%';
+      noteArea.style.minHeight = '360px';
+      // Securely set the initial value
+      noteArea.value = textArea.value;
+      body.appendChild(noteArea);
+
+      const btnContainer = doc.createElement('div');
+      btnContainer.style.marginTop = '0.75rem';
+
+      const saveBtn = doc.createElement('button');
+      saveBtn.type = 'button';
+      saveBtn.id = 'save';
+      saveBtn.textContent = 'Save';
+      saveBtn.addEventListener('click', function () {
+        window.opener.postMessage({ type: 'AD_NOTES_SAVE', content: noteArea.value }, window.opener.location.origin);
+      });
+      btnContainer.appendChild(saveBtn);
+
+      // Add a small space between buttons
+      btnContainer.appendChild(doc.createTextNode(' '));
+
+      const closeBtn = doc.createElement('button');
+      closeBtn.type = 'button';
+      closeBtn.id = 'close';
+      closeBtn.textContent = 'Close';
+      closeBtn.addEventListener('click', function () { pop.close(); });
+      btnContainer.appendChild(closeBtn);
+
+      body.appendChild(btnContainer);
+
       setStatus("Opened pop-out workspace.");
     }
 
