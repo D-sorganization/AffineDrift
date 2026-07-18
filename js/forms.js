@@ -310,7 +310,47 @@ export function initContactFormFeedback() {
                 button.dataset.originalText = button.textContent;
             }
 
-            button.textContent = "Opening Email Client...";
+            button.textContent = "";
+
+            const spinner = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            spinner.setAttribute("width", "16");
+            spinner.setAttribute("height", "16");
+            spinner.setAttribute("viewBox", "0 0 24 24");
+            spinner.setAttribute("fill", "none");
+            spinner.setAttribute("stroke", "currentColor");
+            spinner.setAttribute("stroke-width", "2");
+            spinner.setAttribute("stroke-linecap", "round");
+            spinner.setAttribute("stroke-linejoin", "round");
+            spinner.setAttribute("aria-hidden", "true");
+            spinner.style.animation = "spin 1s linear infinite";
+            spinner.style.marginRight = "8px";
+            spinner.style.verticalAlign = "text-bottom";
+
+            const path1 = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            path1.setAttribute("x1", "12"); path1.setAttribute("y1", "2"); path1.setAttribute("x2", "12"); path1.setAttribute("y2", "6");
+            const path2 = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            path2.setAttribute("x1", "12"); path2.setAttribute("y1", "18"); path2.setAttribute("x2", "12"); path2.setAttribute("y2", "22");
+            const path3 = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            path3.setAttribute("x1", "4.93"); path3.setAttribute("y1", "4.93"); path3.setAttribute("x2", "7.76"); path3.setAttribute("y2", "7.76");
+            const path4 = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            path4.setAttribute("x1", "16.24"); path4.setAttribute("y1", "16.24"); path4.setAttribute("x2", "19.07"); path4.setAttribute("y2", "19.07");
+            const path5 = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            path5.setAttribute("x1", "2"); path5.setAttribute("y1", "12"); path5.setAttribute("x2", "6"); path5.setAttribute("y2", "12");
+            const path6 = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            path6.setAttribute("x1", "18"); path6.setAttribute("y1", "12"); path6.setAttribute("x2", "22"); path6.setAttribute("y2", "12");
+            const path7 = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            path7.setAttribute("x1", "4.93"); path7.setAttribute("y1", "19.07"); path7.setAttribute("x2", "7.76"); path7.setAttribute("y2", "16.24");
+            const path8 = document.createElementNS("http://www.w3.org/2000/svg", "line");
+            path8.setAttribute("x1", "16.24"); path8.setAttribute("y1", "7.76"); path8.setAttribute("x2", "19.07"); path8.setAttribute("y2", "4.93");
+
+            spinner.append(path1, path2, path3, path4, path5, path6, path7, path8);
+
+            const textSpan = document.createElement("span");
+            textSpan.textContent = "Opening Email Client...";
+
+            button.appendChild(spinner);
+            button.appendChild(textSpan);
+
             button.classList.add("success");
             button.disabled = true;
 
