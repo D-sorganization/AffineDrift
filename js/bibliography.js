@@ -420,10 +420,10 @@
         return;
       }
 
-      const button = event.target.closest("button[data-details-id]");
-      const card = event.target.closest("article[data-entry-id]");
-      if (!button && !card) return;
-      const entryId = button ? button.dataset.detailsId : card.dataset.entryId;
+      // ⚡ Bolt Optimization: Consolidate ancestor queries in hot loops
+      const targetElement = event.target.closest("button[data-details-id], article[data-entry-id]");
+      if (!targetElement) return;
+      const entryId = targetElement.dataset.detailsId || targetElement.dataset.entryId;
       const entry = state.entries.find(
         (item) => item.id === entryId,
       );
