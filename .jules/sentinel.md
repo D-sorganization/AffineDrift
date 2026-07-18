@@ -100,3 +100,8 @@
 **Vulnerability:** DOM-based XSS risk via `innerHTML` used extensively across multiple JS modules.
 **Learning:** Using `innerHTML` to construct DOM elements dynamically, even with static keys/labels or escaped variables, violates strict security policies and creates a brittle pattern that could be exploited.
 **Prevention:** Always use native DOM methods like `document.createElementNS()`, `document.createElement()`, and securely assign properties via `textContent`, `dataset`, and `setAttribute` instead of `innerHTML`.
+
+## 2026-07-18 - [SSRF Protection via DNS Resolution]
+**Vulnerability:** The image verification tool relied on string-based hostname checks to prevent SSRF, making it vulnerable to DNS rebinding or custom domains resolving to private IPs (e.g., `127.0.0.1`). Additionally, HTTP redirects were allowed on the fallback `GET` request.
+**Learning:** Checking the URL string is insufficient for SSRF protection because attackers can control the DNS records of domains they own to point to internal infrastructure.
+**Prevention:** Always perform DNS resolution (`socket.getaddrinfo`) and validate the resolved IPs against private/loopback blocks. Ensure `allow_redirects=False` on all requests.
