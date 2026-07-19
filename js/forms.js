@@ -310,7 +310,28 @@ export function initContactFormFeedback() {
                 button.dataset.originalText = button.textContent;
             }
 
-            button.textContent = "Opening Email Client...";
+            // Create SVG spinner
+            const svgSpinner = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            svgSpinner.setAttribute("width", "16");
+            svgSpinner.setAttribute("height", "16");
+            svgSpinner.setAttribute("viewBox", "0 0 24 24");
+            svgSpinner.setAttribute("fill", "none");
+            svgSpinner.setAttribute("stroke", "currentColor");
+            svgSpinner.setAttribute("stroke-width", "2");
+            svgSpinner.setAttribute("stroke-linecap", "round");
+            svgSpinner.setAttribute("stroke-linejoin", "round");
+            svgSpinner.setAttribute("aria-hidden", "true");
+            svgSpinner.style.animation = "spin 1s linear infinite";
+            svgSpinner.style.marginRight = "8px";
+
+            const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            path.setAttribute("d", "M21 12a9 9 0 1 1-6.219-8.56");
+            svgSpinner.appendChild(path);
+
+            button.textContent = "";
+            button.appendChild(svgSpinner);
+            button.appendChild(document.createTextNode("Opening Email Client..."));
+
             button.classList.add("success");
             button.disabled = true;
 
