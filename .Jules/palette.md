@@ -110,3 +110,7 @@
 ## 2026-06-19 - Disable Autocapitalize on Numeric Text Inputs
 **Learning:** Using `type="text"` for numeric input fields on mobile triggers the standard keyboard. Even with `autocorrect="off"`, the keyboard might still apply automatic capitalization on the first keypress (e.g., attempting to shift-capitalize mathematical symbols or hexadecimal characters), adding unnecessary user friction.
 **Action:** Always add `autocapitalize="none"` alongside `inputmode="decimal"`, `autocorrect="off"`, and `spellcheck="false"` on text inputs used for math/numeric entry to fully bypass predictive text layout switching.
+
+## 2026-06-25 - Visual Momentum for Asynchronous Actions
+**Learning:** Text-only loading states on submit buttons lack visual momentum, leading users to miss the feedback during latency, especially for operations like mailto form submission.
+**Action:** Explicitly inject a spinning SVG loading spinner into submit buttons alongside text changes to ensure standard motion feedback is provided during asynchronous operations.
