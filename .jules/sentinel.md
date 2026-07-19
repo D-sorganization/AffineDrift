@@ -104,3 +104,7 @@
 **Vulnerability:** Server-Side Request Forgery (SSRF) risk in image verification where custom domain names (e.g. `localtest.me`) or HTTP redirects could bypass naive string-based hostname checks (`localhost`, `127.0.0.1`) and access internal/private IPs.
 **Learning:** Checking a parsed hostname against a string blocklist is insufficient for SSRF protection because attackers can register domains that resolve to internal IPs, or use external servers that respond with HTTP redirects to internal IPs.
 **Prevention:** Always perform DNS resolution on hostnames using `socket.getaddrinfo(hostname, None, socket.AF_UNSPEC)` to check all resolved IPv4 and IPv6 addresses against private and loopback ranges (`ipaddress.ip_address(ip).is_private`). Additionally, explicitly disable HTTP redirects (e.g., `allow_redirects=False`) on external requests to prevent redirect-based bypasses.
+## 2026-07-19 - Update Pillow to resolve vulnerabilities
+**Vulnerability:** Pillow version 12.2.0 has known vulnerabilities (PYSEC-2026-2253, PYSEC-2026-2255, PYSEC-2026-2257, PYSEC-2026-2256, PYSEC-2026-2254, PYSEC-2026-3453, PYSEC-2026-3451, PYSEC-2026-3452) flagged by pip-audit.
+**Learning:** Dependency vulnerabilities can break CI pipelines and expose the application to various risks depending on the library's usage.
+**Prevention:** Regularly audit and update dependencies to their secure, patched versions.

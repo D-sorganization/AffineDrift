@@ -2,9 +2,9 @@
 """Verify image URLs in markdown and HTML files."""
 
 import ipaddress
-import socket
 import logging
 import re
+import socket
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from urllib.parse import urlparse
