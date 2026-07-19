@@ -181,7 +181,7 @@ jobs:
         continue-on-error: true
         run: |
           if [ -f "src/tools/matlab_utilities/scripts/matlab_quality_check.py" ]; then
-            python3 src/tools/matlab_utilities/scripts/matlab_quality_check.py --output-format text > matlab_quality_report.txt
+            PYTHONPATH=. python3 src/tools/matlab_utilities/scripts/matlab_quality_check.py --output-format text > matlab_quality_report.txt
             cat matlab_quality_report.txt
           else
             echo "MATLAB quality check script not found, skipping..."
@@ -192,6 +192,7 @@ jobs:
         if: always()
         with:
           name: matlab-quality-report
+          if-no-files-found: ignore
           path: matlab_quality_report.txt
 
   tests:

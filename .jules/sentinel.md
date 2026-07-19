@@ -110,3 +110,8 @@
 **Vulnerability:** A vulnerability was discovered in Pillow < 12.3.0.
 **Learning:** CI pip-audit checks fail when known vulnerabilities exist in dependencies.
 **Prevention:** Keep dependencies updated to patched versions.
+
+## 2026-07-19 - [CI Dependency Resolution Fix]
+**Vulnerability:** The MATLAB quality check script in GitHub Actions was failing because it could not resolve module imports, and a `continue-on-error` block failed correctly but a subsequent upload artifact block failed the build.
+**Learning:** Python scripts executed without `PYTHONPATH=.` can fail to locate local project modules. Furthermore, using `if: always()` on steps following a `continue-on-error` step does not mask a failure if the upload target is missing.
+**Prevention:** Always prepend `PYTHONPATH=.` for python commands running local module scripts, and use `if-no-files-found: ignore` or `warn` in upload artifacts to prevent pipeline failures.
