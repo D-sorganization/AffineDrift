@@ -321,7 +321,7 @@ export function initContactFormFeedback() {
             spinner.setAttribute("stroke-linecap", "round");
             spinner.setAttribute("stroke-linejoin", "round");
             spinner.setAttribute("aria-hidden", "true");
-            spinner.style.animation = "spin 1s linear infinite";
+            spinner.style.animation = "var(--animation-spin, spin 1s linear infinite)";
             spinner.classList.add("u-mr-1"); // Use utility class for margin-right if available, else fallback
             if (!document.querySelector('.u-mr-1')) {
                 spinner.style.marginRight = "0.5rem";
