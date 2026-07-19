@@ -100,3 +100,7 @@
 **Vulnerability:** DOM-based XSS risk via `innerHTML` used extensively across multiple JS modules.
 **Learning:** Using `innerHTML` to construct DOM elements dynamically, even with static keys/labels or escaped variables, violates strict security policies and creates a brittle pattern that could be exploited.
 **Prevention:** Always use native DOM methods like `document.createElementNS()`, `document.createElement()`, and securely assign properties via `textContent`, `dataset`, and `setAttribute` instead of `innerHTML`.
+## 2026-07-19 - Fix DNS-based SSRF and Redirect SSRF bypasses
+**Vulnerability:** The `is_safe_url` function relied on string-based hostname checks (`localhost`, `0.0.0.0`) and only validated explicit IP addresses, which allows a malicious attacker to bypass it using custom DNS records pointing to `127.0.0.1` or IPv6 loopbacks. Also, `requests.get` was following redirects.
+**Learning:** Checking hostnames directly is insufficient since attackers control DNS records. `requests.get` follows redirects by default which defeats initial URL checks if an attacker redirects to a private IP.
+**Prevention:** Always perform DNS resolution on the hostname using `socket.getaddrinfo(..., socket.AF_UNSPEC)` and validate the resolved IPs instead of the original hostname string. Always explicitly use `allow_redirects=False` when making HTTP requests where SSRF is a concern.
