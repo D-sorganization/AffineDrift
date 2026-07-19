@@ -411,8 +411,11 @@
     });
 
     listEl.addEventListener("click", (event) => {
-      const clearBtn = event.target.closest("#bib-clear-search");
-      if (clearBtn) {
+      // ⚡ Bolt Optimization: Consolidate multiple .closest() calls into a single query to reduce JS-to-C++ boundary crossings
+      const target = event.target.closest("#bib-clear-search, button[data-details-id], article[data-entry-id]");
+      if (!target) return;
+
+      if (target.matches("#bib-clear-search")) {
         searchInput.value = "";
         state.query = "";
         searchInput.focus();
@@ -420,10 +423,7 @@
         return;
       }
 
-      const button = event.target.closest("button[data-details-id]");
-      const card = event.target.closest("article[data-entry-id]");
-      if (!button && !card) return;
-      const entryId = button ? button.dataset.detailsId : card.dataset.entryId;
+      const entryId = target.matches("button[data-details-id]") ? target.dataset.detailsId : target.dataset.entryId;
       const entry = state.entries.find(
         (item) => item.id === entryId,
       );
