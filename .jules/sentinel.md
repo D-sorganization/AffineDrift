@@ -108,3 +108,6 @@
 **Vulnerability:** Pillow version 12.2.0 has known vulnerabilities (PYSEC-2026-2253, PYSEC-2026-2255, PYSEC-2026-2257, PYSEC-2026-2256, PYSEC-2026-2254, PYSEC-2026-3453, PYSEC-2026-3451, PYSEC-2026-3452) flagged by pip-audit.
 **Learning:** Dependency vulnerabilities can break CI pipelines and expose the application to various risks depending on the library's usage.
 **Prevention:** Regularly audit and update dependencies to their secure, patched versions.
+## 2026-07-20 - CI Timeouts
+**Learning:** Transient network timeouts in GitHub Actions, such as `pip-audit` or Git fetch failures, are infrastructural issues. They do not indicate a failure in the code.
+**Action:** Ignore transient CI timeouts; do not attempt to modify CI configurations or workflows to bypass them.
