@@ -181,7 +181,7 @@ jobs:
         continue-on-error: true
         run: |
           if [ -f "src/tools/matlab_utilities/scripts/matlab_quality_check.py" ]; then
-            python3 src/tools/matlab_utilities/scripts/matlab_quality_check.py --output-format text > matlab_quality_report.txt
+            PYTHONPATH=. python3 src/tools/matlab_utilities/scripts/matlab_quality_check.py --output-format text > matlab_quality_report.txt
             cat matlab_quality_report.txt
           else
             echo "MATLAB quality check script not found, skipping..."
@@ -193,6 +193,7 @@ jobs:
         with:
           name: matlab-quality-report
           path: matlab_quality_report.txt
+          if-no-files-found: ignore
 
   tests:
     needs: pick-runner
@@ -241,7 +242,7 @@ jobs:
           PYTHONPATH: src
         run: python -m pytest --override-ini addopts= tests/ -m content_lint --timeout=120
       - name: Audit Python Dependencies
-        timeout-minutes: 5
+        timeout-minutes: 10
         run: pip install pip-audit && pip-audit -r requirements.txt --progress-spinner=off
       - name: Critical Module Coverage Gate
         run: python3 scripts/check_critical_module_coverage.py

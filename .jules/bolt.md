@@ -152,6 +152,6 @@
 **Learning:** Appending elements individually to a live DOM container inside a loop forces the browser to evaluate potential layout/style recalculations repeatedly, resulting in micro-stutters when updating lists with many items.
 **Action:** When generating multiple child elements dynamically (like rendering bibliography list results), always construct them inside a `DocumentFragment` and append the fragment to the live DOM container once outside the loop.
 
-## 2026-07-19 - Consolidate Multiple .closest() Queries
+## 2026-07-20 - Consolidate Multiple .closest() Queries
 **Learning:** In interactive DOM hot paths (like global click handlers), calling `.closest()` multiple times sequentially on `event.target` incurs significant overhead due to multiple JS-to-C++ boundary crossings to invoke the browser's CSS selector engine.
 **Action:** When searching for multiple possible ancestor targets from a single event, consolidate them into a single comma-separated selector string (e.g., `target.closest('selectorA, selectorB')`) and differentiate the result using `.matches()`. This performs one C++ crossing and one C++ evaluation, substantially improving evaluation speed.

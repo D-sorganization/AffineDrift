@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.0.153] - 2026-07-19
+## [1.0.153] - 2026-07-20
 ### Changed
 - ⚡ Bolt: Consolidate multiple `.closest()` queries into a single call in `js/bibliography.js` to reduce JS-to-C++ boundary crossings.
 

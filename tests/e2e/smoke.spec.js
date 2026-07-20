@@ -18,7 +18,7 @@ async function waitForPageReveal(page) {
 }
 
 test.describe("PR Smoke", () => {
-  test.describe.configure({ timeout: 180000 });
+  test.describe.configure({ timeout: 90000 });
 
   test("homepage renders and has core structure", async ({ page }) => {
     const response = await page.goto("/", { waitUntil: "domcontentloaded" });
@@ -33,7 +33,7 @@ test.describe("PR Smoke", () => {
     test(`public page ${route} returns success`, async ({ page }) => {
       const response = await page.goto(route, {
         waitUntil: "domcontentloaded",
-        timeout: 120000,
+        timeout: 60000,
       });
       expect(response).toBeTruthy();
       expect(response.ok()).toBeTruthy();
@@ -82,7 +82,7 @@ test.describe("PR Smoke", () => {
 // just that the page loaded. These cover the JS modules under test
 // (dark-mode-toggle, ui-components back-to-top, startup-launcher).
 test.describe("PR Smoke - behavioral invariants", () => {
-  test.describe.configure({ timeout: 180000 });
+  test.describe.configure({ timeout: 90000 });
 
   test("dark-mode toggle flips the documentElement theme", async ({ page }) => {
     await page.goto("/", { waitUntil: "load" });
