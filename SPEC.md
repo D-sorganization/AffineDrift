@@ -680,3 +680,4 @@ python src/tools/code_quality_check.py
 | 2026-06-21 | 1.0.152 | 🛡️ Sentinel: Prevent DOM-based XSS by replacing `innerHTML` with native DOM APIs in JS files. |
 | 2026-06-23 | 1.0.118 | perf(frontend): Refactored js/bibliography.js to use for...of and a DocumentFragment to improve list rendering performance. |
 | 2026-07-19 | 1.0.153 | 🛡️ Sentinel: Fix Server-Side Request Forgery in `src/tools/verify_images.py` |
+| 2026-07-20 | 1.0.154 | 🛡️ Sentinel: Update Pillow to 12.3.0 to fix security vulnerabilities flagged by pip-audit |

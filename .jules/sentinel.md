@@ -104,3 +104,7 @@
 **Vulnerability:** The `is_safe_url` function relied on string-based hostname checks (`localhost`, `0.0.0.0`) and only validated explicit IP addresses, which allows a malicious attacker to bypass it using custom DNS records pointing to `127.0.0.1` or IPv6 loopbacks. Also, `requests.get` was following redirects.
 **Learning:** Checking hostnames directly is insufficient since attackers control DNS records. `requests.get` follows redirects by default which defeats initial URL checks if an attacker redirects to a private IP.
 **Prevention:** Always perform DNS resolution on the hostname using `socket.getaddrinfo(..., socket.AF_UNSPEC)` and validate the resolved IPs instead of the original hostname string. Always explicitly use `allow_redirects=False` when making HTTP requests where SSRF is a concern.
+## 2026-07-20 - Upgrade Pillow to fix security vulnerabilities
+**Vulnerability:** `pip-audit` flagged `Pillow==12.2.0` for known vulnerabilities (e.g., PYSEC-2026-2253, PYSEC-2026-2255, etc.).
+**Learning:** Outdated dependencies can introduce critical vulnerabilities to the codebase, even if our own code is secure.
+**Prevention:** Regularly audit dependencies with tools like `pip-audit` and keep packages up to date with security patches.
