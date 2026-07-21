@@ -310,7 +310,44 @@ export function initContactFormFeedback() {
                 button.dataset.originalText = button.textContent;
             }
 
-            button.textContent = "Opening Email Client...";
+            button.textContent = "";
+
+            const spinner = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            spinner.setAttribute("width", "16");
+            spinner.setAttribute("height", "16");
+            spinner.setAttribute("viewBox", "0 0 24 24");
+            spinner.setAttribute("fill", "none");
+            spinner.setAttribute("stroke", "currentColor");
+            spinner.setAttribute("stroke-width", "2");
+            spinner.setAttribute("stroke-linecap", "round");
+            spinner.setAttribute("stroke-linejoin", "round");
+            spinner.setAttribute("aria-hidden", "true");
+            spinner.style.marginRight = "8px";
+            spinner.style.verticalAlign = "text-bottom";
+
+            const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            circle.setAttribute("cx", "12");
+            circle.setAttribute("cy", "12");
+            circle.setAttribute("r", "10");
+            circle.setAttribute("stroke-opacity", "0.25");
+            spinner.appendChild(circle);
+
+            const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            path.setAttribute("d", "M12 2a10 10 0 0 1 10 10");
+
+            const animate = document.createElementNS("http://www.w3.org/2000/svg", "animateTransform");
+            animate.setAttribute("attributeName", "transform");
+            animate.setAttribute("type", "rotate");
+            animate.setAttribute("from", "0 12 12");
+            animate.setAttribute("to", "360 12 12");
+            animate.setAttribute("dur", "1s");
+            animate.setAttribute("repeatCount", "indefinite");
+            path.appendChild(animate);
+
+            spinner.appendChild(path);
+
+            button.appendChild(spinner);
+            button.appendChild(document.createTextNode("Opening Email Client..."));
             button.classList.add("success");
             button.disabled = true;
 
