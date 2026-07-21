@@ -100,3 +100,7 @@
 **Vulnerability:** DOM-based XSS risk via `innerHTML` used extensively across multiple JS modules.
 **Learning:** Using `innerHTML` to construct DOM elements dynamically, even with static keys/labels or escaped variables, violates strict security policies and creates a brittle pattern that could be exploited.
 **Prevention:** Always use native DOM methods like `document.createElementNS()`, `document.createElement()`, and securely assign properties via `textContent`, `dataset`, and `setAttribute` instead of `innerHTML`.
+## 2026-07-21 - Fix SSRF in Verify Images Tool and Pillow Vulnerability
+**Vulnerability:** Server-Side Request Forgery (SSRF) risk in `verify_images.py` where untrusted URLs were passed to `requests.get()` without proper DNS resolution, and multiple CVEs in `Pillow` 12.2.0.
+**Learning:** Checking hostnames directly using `ipaddress` without DNS resolution allows DNS rebinding and custom domains that point to internal IPs (e.g., `127.0.0.1`).
+**Prevention:** Always use `socket.getaddrinfo` to resolve hostnames and validate against private, loopback, link-local, and unspecified IPs before initiating outbound HTTP requests. Ensure security dependencies are up-to-date.
