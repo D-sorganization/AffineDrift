@@ -100,3 +100,11 @@
 **Vulnerability:** DOM-based XSS risk via `innerHTML` used extensively across multiple JS modules.
 **Learning:** Using `innerHTML` to construct DOM elements dynamically, even with static keys/labels or escaped variables, violates strict security policies and creates a brittle pattern that could be exploited.
 **Prevention:** Always use native DOM methods like `document.createElementNS()`, `document.createElement()`, and securely assign properties via `textContent`, `dataset`, and `setAttribute` instead of `innerHTML`.
+## 2026-07-15 - Prevent SSRF in Verify Images Tool (IPv6 and DNS Resolution)
+**Vulnerability:** Server-Side Request Forgery (SSRF) risk in image verification where untrusted URLs were validated solely by string-based hostname checks before being passed to `requests.get()` and `requests.head()`. This could be bypassed using custom domains resolving to local IPs, or by using IPv6 literals (e.g., `[::1]`). Furthermore, `allow_redirects` was not explicitly disabled on the `requests.get()` fallback, allowing redirects to internal IPs.
+**Learning:** String-matching against localhost or loopback strings is insufficient for SSRF protection because DNS can map arbitrary domains to internal addresses, and attackers can use various IP encoding formats.
+**Prevention:** Always perform DNS resolution on the hostname using `socket.getaddrinfo()` (specifying `socket.AF_UNSPEC` to handle both IPv4 and IPv6) and validate the resulting IP addresses against private/loopback ranges. Explicitly disable HTTP redirects (`allow_redirects=False`) when fetching URLs to prevent bypasses.
+## 2026-07-15 - Fix Dependency Vulnerabilities
+**Vulnerability:** Vulnerable version of Pillow (12.2.0) flagged by `pip-audit` caused CI failures.
+**Learning:** CI builds can block deployments when vulnerable dependencies are found. It is critical to address these immediately by updating to secure versions.
+**Prevention:** Regularly audit and update project dependencies to their latest secure versions.
