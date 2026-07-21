@@ -100,3 +100,7 @@
 **Vulnerability:** DOM-based XSS risk via `innerHTML` used extensively across multiple JS modules.
 **Learning:** Using `innerHTML` to construct DOM elements dynamically, even with static keys/labels or escaped variables, violates strict security policies and creates a brittle pattern that could be exploited.
 **Prevention:** Always use native DOM methods like `document.createElementNS()`, `document.createElement()`, and securely assign properties via `textContent`, `dataset`, and `setAttribute` instead of `innerHTML`.
+## 2026-07-21 - Prevent SSRF in verify_images via Socket Lookup
+**Vulnerability:** The `is_safe_url` function allowed Server-Side Request Forgery (SSRF) bypasses because it relied on string matching against specific hostnames (like localhost) which could be bypassed with custom domains or alternative IPv6 literals. Additionally, `requests.get` was permitted to follow redirects.
+**Learning:** Merely checking for specific string patterns in hostnames is insufficient for SSRF protection because DNS can map arbitrary domains to internal IPs, and IPv6 literals can be represented in multiple ways. Furthermore, disabling redirects is required for GET requests to prevent external servers from redirecting to internal resources.
+**Prevention:** Always perform DNS resolution on the hostname using `socket.getaddrinfo` and validate the resulting IPs against private/loopback/link-local ranges. Additionally, ensure HTTP clients disable redirects (`allow_redirects=False`) during SSRF checks.
