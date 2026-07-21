@@ -311,6 +311,29 @@ export function initContactFormFeedback() {
             }
 
             button.textContent = "Opening Email Client...";
+            const spinner = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            spinner.setAttribute("viewBox", "0 0 24 24");
+            spinner.setAttribute("width", "16");
+            spinner.setAttribute("height", "16");
+            spinner.setAttribute("fill", "none");
+            spinner.setAttribute("stroke", "currentColor");
+            spinner.setAttribute("stroke-width", "2");
+            spinner.setAttribute("stroke-linecap", "round");
+            spinner.setAttribute("stroke-linejoin", "round");
+            spinner.setAttribute("aria-hidden", "true");
+            spinner.classList.add("u-ml-1");
+            spinner.style.animation = "var(--animation-spin)";
+            spinner.style.verticalAlign = "text-bottom";
+            const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            circle.setAttribute("cx", "12");
+            circle.setAttribute("cy", "12");
+            circle.setAttribute("r", "10");
+            circle.setAttribute("stroke-opacity", "0.25");
+            const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            path.setAttribute("d", "M12 2a10 10 0 0 1 10 10");
+            spinner.appendChild(circle);
+            spinner.appendChild(path);
+            button.appendChild(spinner);
             button.classList.add("success");
             button.disabled = true;
 
