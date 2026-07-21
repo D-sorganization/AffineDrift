@@ -9,11 +9,9 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from urllib.parse import urlparse
 
-import re
-import socketquests
+import requests
 
-from src.core.contracts import re
-import socketquire
+from src.core.contracts import require
 from src.tools.utils import setup_logging
 
 logger = logging.getLogger(__name__)
