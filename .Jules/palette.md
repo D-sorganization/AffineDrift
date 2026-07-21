@@ -110,3 +110,6 @@
 ## 2026-06-19 - Disable Autocapitalize on Numeric Text Inputs
 **Learning:** Using `type="text"` for numeric input fields on mobile triggers the standard keyboard. Even with `autocorrect="off"`, the keyboard might still apply automatic capitalization on the first keypress (e.g., attempting to shift-capitalize mathematical symbols or hexadecimal characters), adding unnecessary user friction.
 **Action:** Always add `autocapitalize="none"` alongside `inputmode="decimal"`, `autocorrect="off"`, and `spellcheck="false"` on text inputs used for math/numeric entry to fully bypass predictive text layout switching.
+## 2026-07-21 - Add Spinner to Mailto Form Buttons
+**Learning:** Text-only feedback for asynchronous operations (like opening an external email client via a mailto link) lacks standard visual momentum. However, replacing descriptive text like "Opening Email Client..." with vague text like "Opening..." causes an accessibility regression for screen readers, and injecting raw HTML/SVG strings reduces maintainability.
+**Action:** Programmatically generate SVG loading spinners (with `aria-hidden="true"`) using `document.createElementNS` and prepend them alongside highly descriptive text. Restore the original content via `element.textContent = originalText` to safely remove appended children and prevent memory leaks without manual DOM traversal.
