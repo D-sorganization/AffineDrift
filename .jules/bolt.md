@@ -151,3 +151,7 @@
 ## 2026-06-23 - DocumentFragment Batching for DOM Insertions
 **Learning:** Appending elements individually to a live DOM container inside a loop forces the browser to evaluate potential layout/style recalculations repeatedly, resulting in micro-stutters when updating lists with many items.
 **Action:** When generating multiple child elements dynamically (like rendering bibliography list results), always construct them inside a `DocumentFragment` and append the fragment to the live DOM container once outside the loop.
+
+## 2026-07-21 - Consolidating .closest() queries in bibliography
+**Learning:** Checking multiple ancestor conditions in a hot event listener (like list items in bibliography) using separate `.closest()` calls (e.g., `element.closest('#bib-clear-search')` and `element.closest('button[data-details-id]')`) is inefficient due to repeatedly crossing the JS-to-C++ boundary.
+**Action:** Consolidate multiple ancestor checks into a single `.closest('#bib-clear-search, button[data-details-id], article[data-entry-id]')` query to halve the CSS selector parsing overhead while leveraging native C++ speeds.
