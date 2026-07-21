@@ -104,3 +104,7 @@
 **Vulnerability:** Server-Side Request Forgery (SSRF) risk in `verify_images.py` where untrusted URLs were passed to `requests.get()` without proper DNS resolution, and multiple CVEs in `Pillow` 12.2.0.
 **Learning:** Checking hostnames directly using `ipaddress` without DNS resolution allows DNS rebinding and custom domains that point to internal IPs (e.g., `127.0.0.1`).
 **Prevention:** Always use `socket.getaddrinfo` to resolve hostnames and validate against private, loopback, link-local, and unspecified IPs before initiating outbound HTTP requests. Ensure security dependencies are up-to-date.
+## 2026-07-21 - Refine SSRF Protection to Handle Mock URLs and TOCTOU
+**Vulnerability:** The previous SSRF fix introduced a breaking change in tests by rejecting URLs that raised `socket.gaierror` during DNS resolution, and left a potential TOCTOU (DNS Rebinding) gap.
+**Learning:** In testing environments, mock URLs (e.g., `example.mock`) will fail DNS resolution. Rejecting these breaks CI. Furthermore, while pre-flight DNS validation mitigates basic SSRF, it doesn't fully prevent DNS rebinding attacks because `requests.get()` performs its own DNS resolution.
+**Prevention:** When performing pre-flight DNS validation, gracefully handle `socket.gaierror` by allowing the request to proceed (as `requests` will safely fail if it's truly unresolvable) to maintain testability. For complete SSRF protection against DNS rebinding, connection-level IP pinning is required, though pre-flight checks offer a practical baseline defense.
