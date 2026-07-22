@@ -50,8 +50,7 @@ def is_safe_url(url: str) -> bool:
         if hostname.lower() in ("localhost", "0.0.0.0", "::1"):  # noqa: S104
             return False
 
-        if hostname.startswith("[") and hostname.endswith("]"):
-            hostname = hostname[1:-1]
+        hostname = hostname.strip("[]")
 
         try:
             addr_info = socket.getaddrinfo(hostname, None, socket.AF_UNSPEC)
@@ -62,7 +61,7 @@ def is_safe_url(url: str) -> bool:
             ip_str = addr[4][0]
             try:
                 ip = ipaddress.ip_address(ip_str)
-                if ip.is_private or ip.is_loopback or ip.is_link_local:
+                if ip.is_private or ip.is_loopback or ip.is_link_local or ip.is_unspecified:
                     return False
             except ValueError:
                 pass
