@@ -679,3 +679,5 @@ python src/tools/code_quality_check.py
 | 2026-06-21 | 1.0.151 | ⚡ Bolt: Prevent redundant DOM mutations in scroll listener in `js/ui-components.js` by caching visibility state. |
 | 2026-06-21 | 1.0.152 | 🛡️ Sentinel: Prevent DOM-based XSS by replacing `innerHTML` with native DOM APIs in JS files. |
 | 2026-06-23 | 1.0.118 | perf(frontend): Refactored js/bibliography.js to use for...of and a DocumentFragment to improve list rendering performance. |
+| 2026-07-15 | 1.0.118 | 🛡️ Sentinel: Fix Server-Side Request Forgery DNS bypass and IPv6 literals in `src/tools/verify_images.py` |
+| 2026-07-15 | 1.0.118 | 🛡️ Sentinel: Update Pillow to 12.3.0 to resolve pip-audit vulnerabilities and unblock CI pipeline |
