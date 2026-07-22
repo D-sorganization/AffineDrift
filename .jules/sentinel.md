@@ -108,3 +108,7 @@
 **Vulnerability:** Vulnerable version of Pillow (12.2.0) flagged by `pip-audit` caused CI failures.
 **Learning:** CI builds can block deployments when vulnerable dependencies are found. It is critical to address these immediately by updating to secure versions.
 **Prevention:** Regularly audit and update project dependencies to their latest secure versions.
+## 2026-07-22 - Prevent SSRF bypass using unspecified IPs and IPv6 literals
+**Vulnerability:** Server-Side Request Forgery (SSRF) risk in image verification where untrusted URLs were allowed to resolve to unspecified IPs (e.g., `0.0.0.0` or `::`) which can be used to bypass SSRF filters and reach internal services on some operating systems.
+**Learning:** Checking for private, loopback, and link-local ranges is insufficient if unspecified addresses (which often resolve to localhost or fail open) are allowed. Additionally, when hardening DNS pre-flight checks, it is a critical anti-pattern to weaken the control (e.g., failing open on `socket.gaierror`) just to make tests pass. Tests should be fixed via dependency injection or mocking instead of compromising production security.
+**Prevention:** Always validate resolved IP addresses against `ip.is_unspecified` in addition to private and loopback ranges, and never allow fail-open behavior in DNS resolution checks.
