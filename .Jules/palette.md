@@ -114,3 +114,7 @@
 ## 2026-07-19 - Async loading feedback
 **Learning:** While disabling a button and changing text to "Loading..." handles state, standard visual momentum for asynchronous operations (like submitting a mailto form that opens an external email client) requires an explicitly animated loading spinner to match user expectations. Text alone lacks expected motion feedback.
 **Action:** Explicitly inject an SVG loading spinner into submit buttons alongside text changes during async/wait operations rather than merely changing the text.
+
+## 2026-07-23 - Native Tooltips for Generic Action Buttons in Detached Scopes
+**Learning:** Generic action buttons (e.g., 'Save', 'Close') rendered in detached scopes like standalone popup windows lack context compared to when they are embedded within a main application. Sighted mouse users and screen reader users can lose clarity on what is being saved or closed.
+**Action:** Always provide explicit `title` tooltips and matching `aria-label` attributes for generic action buttons in detached scopes (like popouts or iframes) to provide unambiguous context when the broader page context is absent.
