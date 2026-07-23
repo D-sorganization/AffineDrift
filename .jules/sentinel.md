@@ -108,3 +108,8 @@
 **Vulnerability:** Vulnerable version of Pillow (12.2.0) flagged by `pip-audit` caused CI failures.
 **Learning:** CI builds can block deployments when vulnerable dependencies are found. It is critical to address these immediately by updating to secure versions.
 **Prevention:** Regularly audit and update project dependencies to their latest secure versions.
+
+## 2026-07-23 - Prevent SSRF in Link Checker Tool
+**Vulnerability:** Server-Side Request Forgery (SSRF) risk in the link checking tool where external URLs were requested without pre-flight validation or restricting redirects.
+**Learning:** Tools validating markdown links require robust SSRF protection via pre-flight DNS validation because malicious links can be embedded in content.
+**Prevention:** Always perform DNS resolution on the hostname using `socket.getaddrinfo()` (specifying `socket.AF_UNSPEC`) and validate the resulting IP addresses against private/loopback/link-local/unspecified ranges. Explicitly disable HTTP redirects.

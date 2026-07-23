@@ -15,12 +15,20 @@ Exit codes:
 
 import argparse
 import re
+import ipaddress
+import socket
 import sys
 import time
 from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlparse
-from urllib.request import Request, urlopen
+from urllib.request import HTTPRedirectHandler, Request, build_opener, urlopen
+
+
+class NoRedirectHandler(HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+
 
 # Configuration
 INTERNAL_REF_PATTERN = r"@(sec|fig|eq|tbl|lst|exr)-[\w-]+"
@@ -90,17 +98,54 @@ def find_ref_definitions(root_dir: str) -> set[str]:
     return defined_refs
 
 
+def is_safe_url(url: str) -> bool:
+    """Check if a URL is safe from SSRF by validating the hostname."""
+    try:
+        parsed = urlparse(url)
+        hostname = parsed.hostname
+        if not hostname:
+            return False
+
+        if hostname.lower() in ("localhost", "0.0.0.0", "::1"):  # noqa: S104
+            return False
+
+        if hostname.startswith("[") and hostname.endswith("]"):
+            hostname = hostname[1:-1]
+
+        try:
+            addr_info = socket.getaddrinfo(hostname, None, socket.AF_UNSPEC)
+        except socket.gaierror:
+            return False
+
+        for addr in addr_info:
+            ip_str = addr[4][0]
+            try:
+                ip = ipaddress.ip_address(ip_str)
+                if ip.is_private or ip.is_loopback or ip.is_link_local or ip.is_unspecified:
+                    return False
+            except ValueError:
+                pass
+
+        return True
+    except Exception:
+        return False
+
+
 def validate_url(url: str, retries: int = MAX_RETRIES) -> tuple[bool, str]:
     """Validate URL with retry logic."""
+    if not is_safe_url(url):
+        return False, "SSRF blocked"
+
     domain = urlparse(url).netloc
 
     # Fragile URLs get more lenient handling
     is_fragile = any(d in domain for d in KNOWN_FRAGILE_URLS)
 
+    opener = build_opener(NoRedirectHandler())
     for attempt in range(retries):
         try:
             req = Request(url, headers={"User-Agent": "Link-Checker/1.0"})  # nosec B310
-            with urlopen(req, timeout=TIMEOUT) as response:  # nosec B310
+            with opener.open(req, timeout=TIMEOUT) as response:  # nosec B310
                 if response.status < 400:
                     return True, f"OK ({response.status})"
                 elif response.status < 500:
