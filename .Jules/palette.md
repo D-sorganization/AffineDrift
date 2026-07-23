@@ -114,3 +114,6 @@
 ## 2026-07-19 - Async loading feedback
 **Learning:** While disabling a button and changing text to "Loading..." handles state, standard visual momentum for asynchronous operations (like submitting a mailto form that opens an external email client) requires an explicitly animated loading spinner to match user expectations. Text alone lacks expected motion feedback.
 **Action:** Explicitly inject an SVG loading spinner into submit buttons alongside text changes during async/wait operations rather than merely changing the text.
+## 2026-07-07 - Pair aria-label with title on dynamic buttons
+**Learning:** Found that some dynamically created generic action buttons in the metrics and notes workspace modules lacked paired `aria-label` attributes, relying solely on `title` for tooltips or textContent. Screen readers often depend on explicit `aria-label`s for clarity.
+**Action:** Always ensure that dynamically generated icon-only or generic action buttons receive a distinct `aria-label` paired with their `title` attribute to guarantee accessibility consistency across all UI components.
