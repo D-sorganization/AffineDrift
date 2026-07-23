@@ -60,14 +60,13 @@
 
   const scoreEntry = (entry, queryTerms) => {
     if (queryTerms.length === 0) return 0;
-    const haystack = entrySearchText(entry);
     let score = 0;
 
     for (const term of queryTerms) {
       if (entry._searchTitle.includes(term)) score += 5;
       if (entry._searchAuthors.includes(term)) score += 3;
       if (entry._searchConcepts.includes(term)) score += 2;
-      if (haystack.includes(term)) score += 1;
+      score += 1;
     }
 
     return score;

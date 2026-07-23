@@ -158,3 +158,6 @@
 ## 2026-07-22 - Vectorize _trajectory_cost in ILQRSolver
 **Learning:** Python loops over trajectories (like N=1000) for matrix multiplications in optimization cost functions are severe bottlenecks. Replacing iterative `(x_k - xf).T @ Q @ (x_k - xf)` with vectorized NumPy `np.sum((state_errors @ Q) * state_errors)` yields ~150x speedup in hot paths.
 **Action:** Always favor vectorized NumPy operations over Python loops when calculating costs or residuals over long trajectories or large arrays.
+## 2026-07-23 - Eliminate Redundant String Search in Scoring
+**Learning:** During bibliography filtering, the search array is pre-filtered so every term is guaranteed to be in the entry's search text (`haystack`). In the subsequent sorting phase, re-evaluating `haystack.includes(term)` inside the hot scoring loop performs an expensive, redundant O(N) string search.
+**Action:** Remove redundant `.includes()` checks inside scoring or sorting loops when the array has already been filtered by the exact same condition.
