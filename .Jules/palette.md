@@ -111,9 +111,10 @@
 **Learning:** Using `type="text"` for numeric input fields on mobile triggers the standard keyboard. Even with `autocorrect="off"`, the keyboard might still apply automatic capitalization on the first keypress (e.g., attempting to shift-capitalize mathematical symbols or hexadecimal characters), adding unnecessary user friction.
 **Action:** Always add `autocapitalize="none"` alongside `inputmode="decimal"`, `autocorrect="off"`, and `spellcheck="false"` on text inputs used for math/numeric entry to fully bypass predictive text layout switching.
 
-## 2026-07-19 - Async loading feedback
-**Learning:** While disabling a button and changing text to "Loading..." handles state, standard visual momentum for asynchronous operations (like submitting a mailto form that opens an external email client) requires an explicitly animated loading spinner to match user expectations. Text alone lacks expected motion feedback.
-**Action:** Explicitly inject an SVG loading spinner into submit buttons alongside text changes during async/wait operations rather than merely changing the text.
 ## 2026-07-02 - ARIA Labels for Unassociated Inputs
+**Learning:** When form controls like `<input type="range">` are preceded by a textual description but lack programmatic association (neither wrapped by a `<label>` nor linked via `id` and `htmlFor`), they are inaccessible to screen reader users who cannot determine what the input controls.
+**Action:** Always add an explicit `aria-label` to interactive inputs that cannot be easily wrapped in or linked to a `<label>` element to ensure full accessibility for screen reader users.
+
+## 2026-07-23 - ARIA Labels for Unassociated Inputs
 **Learning:** When form controls like `<input type="range">` are preceded by a textual description but lack programmatic association (neither wrapped by a `<label>` nor linked via `id` and `htmlFor`), they are inaccessible to screen reader users who cannot determine what the input controls.
 **Action:** Always add an explicit `aria-label` to interactive inputs that cannot be easily wrapped in or linked to a `<label>` element to ensure full accessibility for screen reader users.
