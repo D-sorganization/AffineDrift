@@ -118,3 +118,7 @@
 ## 2026-07-23 - Native Tooltips for Popout Workspace Buttons
 **Learning:** Dynamically created buttons in detached scopes (like the popout notes workspace) often lack `aria-label` and `title` attributes, leaving screen reader users without context and sighted users without tooltips.
 **Action:** Always provide explicit `title` tooltips and matching `aria-label` attributes for generic action buttons (e.g., 'Save', 'Close') rendered in detached scopes like standalone popup windows or generic iframes to provide unambiguous context when the broader page context is absent.
+
+## 2026-07-23 - Verifying Native Tooltips in Headless Browsers
+**Learning:** Native OS tooltips triggered by the HTML `title` attribute do not render in headless browser screenshots (like Playwright), making direct visual verification of the tooltip impossible.
+**Action:** When using Playwright or other headless browsers for frontend verification, native OS tooltips triggered by the HTML `title` attribute will not render in screenshots. While visual verification of the tooltip itself is not possible, the attribute's presence can still be verified via DOM evaluation or by confirming the surrounding UI renders correctly.
