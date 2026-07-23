@@ -387,17 +387,14 @@ class ILQRSolver:
         Q_f: NDArray,
     ) -> float:
         """Return the finite-horizon quadratic tracking cost."""
-        # ⚡ Bolt Optimization: Replace Python loops with vectorized NumPy operations.
-        # Vectorized batch calculation of 0.5 * sum((x_k - xf).T @ Q @ (x_k - xf))
-        state_errors = x_traj[:-1] - xf
-        state_cost = 0.5 * np.sum((state_errors @ Q) * state_errors)
-
-        # Vectorized batch calculation of 0.5 * sum(u_k.T @ R @ u_k)
-        control_cost = 0.5 * np.sum((u_traj @ R) * u_traj)
-
+        total = 0.0
+        for x_k, u_k in zip(x_traj[:-1], u_traj, strict=True):
+            state_error = x_k - xf
+            total += 0.5 * float(state_error.T @ Q @ state_error)
+            total += 0.5 * float(u_k.T @ R @ u_k)
         terminal_error = x_traj[-1] - xf
-        terminal_cost = 0.5 * float(terminal_error.T @ Q_f @ terminal_error)
-        return float(state_cost + control_cost + terminal_cost)
+        total += 0.5 * float(terminal_error.T @ Q_f @ terminal_error)
+        return total
 
     def _rollout(
         self,
