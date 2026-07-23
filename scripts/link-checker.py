@@ -14,8 +14,8 @@ Exit codes:
 """
 
 import argparse
-import re
 import ipaddress
+import re
 import socket
 import sys
 import time
