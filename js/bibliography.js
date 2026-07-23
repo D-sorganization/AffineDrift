@@ -148,12 +148,12 @@
       strongC.textContent = "Concepts:";
       const divCInner = document.createElement("div");
       divCInner.className = "bib-inline-concepts";
-      for (const c of entry.concepts) {
+      entry.concepts.forEach(c => {
         const span = document.createElement("span");
         span.className = "concept-tag";
         span.textContent = c;
         divCInner.appendChild(span);
-      }
+      });
       divC.append(strongC, divCInner);
       detailsEl.appendChild(divC);
     }
@@ -164,7 +164,7 @@
       const strongL = document.createElement("strong");
       strongL.textContent = "Links:";
       const ulL = document.createElement("ul");
-      for (const url of links) {
+      links.forEach(url => {
         let safeUrl = "#";
         try {
           const parsed = new URL(url, window.location.origin);
@@ -180,7 +180,7 @@
         a.textContent = url;
         li.appendChild(a);
         ulL.appendChild(li);
-      }
+      });
       divL.append(strongL, ulL);
       detailsEl.appendChild(divL);
     }
@@ -234,9 +234,8 @@
     }
 
     listEl.textContent = "";
-    const fragment = document.createDocumentFragment();
 
-    for (const entry of state.filtered) {
+    state.filtered.forEach((entry) => {
         const authors = (entry.authors || []).join(", ");
         const type = entry.type || "reference";
         const typeClass = `type-${type.toLowerCase()}`;
@@ -270,12 +269,12 @@
         if (entry.concepts && entry.concepts.length > 0) {
             const conceptsDiv = document.createElement("div");
             conceptsDiv.className = "bib-inline-concepts bib-inline-concepts-list";
-            for (const c of entry.concepts.slice(0, 4)) {
+            entry.concepts.slice(0, 4).forEach(c => {
                 const span = document.createElement("span");
                 span.className = "concept-tag";
                 span.textContent = c;
                 conceptsDiv.appendChild(span);
-            }
+            });
             article.appendChild(conceptsDiv);
         }
 
@@ -287,9 +286,8 @@
         btn.textContent = "View details";
         article.appendChild(btn);
 
-        fragment.appendChild(article);
-    }
-    listEl.appendChild(fragment);
+        listEl.appendChild(article);
+    });
   };
 
   const renderSortControls = () => {
@@ -411,11 +409,8 @@
     });
 
     listEl.addEventListener("click", (event) => {
-      // ⚡ Bolt Optimization: Consolidate multiple .closest() queries into a single call to minimize JS-to-C++ boundary crossings
-      const target = event.target.closest("#bib-clear-search, button[data-details-id], article[data-entry-id]");
-      if (!target) return;
-
-      if (target.matches("#bib-clear-search")) {
+      const clearBtn = event.target.closest("#bib-clear-search");
+      if (clearBtn) {
         searchInput.value = "";
         state.query = "";
         searchInput.focus();
@@ -423,7 +418,10 @@
         return;
       }
 
-      const entryId = target.matches("button[data-details-id]") ? target.dataset.detailsId : target.dataset.entryId;
+      const button = event.target.closest("button[data-details-id]");
+      const card = event.target.closest("article[data-entry-id]");
+      if (!button && !card) return;
+      const entryId = button ? button.dataset.detailsId : card.dataset.entryId;
       const entry = state.entries.find(
         (item) => item.id === entryId,
       );

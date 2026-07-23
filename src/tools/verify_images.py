@@ -4,7 +4,6 @@
 import ipaddress
 import logging
 import re
-import socket
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from urllib.parse import urlparse
@@ -50,22 +49,13 @@ def is_safe_url(url: str) -> bool:
         if hostname.lower() in ("localhost", "0.0.0.0", "::1"):  # noqa: S104
             return False
 
-        if hostname.startswith("[") and hostname.endswith("]"):
-            hostname = hostname[1:-1]
-
+        # Check if the hostname is a private/local IP address
         try:
-            addr_info = socket.getaddrinfo(hostname, None, socket.AF_UNSPEC)
-        except socket.gaierror:
-            return False
-
-        for addr in addr_info:
-            ip_str = addr[4][0]
-            try:
-                ip = ipaddress.ip_address(ip_str)
-                if ip.is_private or ip.is_loopback or ip.is_link_local:
-                    return False
-            except ValueError:
-                pass
+            ip = ipaddress.ip_address(hostname)
+            if ip.is_private or ip.is_loopback or ip.is_link_local:
+                return False
+        except ValueError:
+            pass
 
         return True
     except Exception:
@@ -98,9 +88,7 @@ def check_url(url: str, file_path: Path) -> str | None:
             response = requests.head(url, headers=headers, timeout=5, allow_redirects=False)
 
             if response.status_code == 405:  # Method Not Allowed
-                response = requests.get(
-                    url, headers=headers, timeout=5, stream=True, allow_redirects=False
-                )
+                response = requests.get(url, headers=headers, timeout=5, stream=True)
                 response.close()
 
             if response.status_code >= 400:
