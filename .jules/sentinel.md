@@ -108,3 +108,7 @@
 **Vulnerability:** Vulnerable version of Pillow (12.2.0) flagged by `pip-audit` caused CI failures.
 **Learning:** CI builds can block deployments when vulnerable dependencies are found. It is critical to address these immediately by updating to secure versions.
 **Prevention:** Regularly audit and update project dependencies to their latest secure versions.
+## 2026-07-23 - Fix SSRF bypass in URL verification
+**Vulnerability:** The `is_safe_url` function allowed SSRF by failing to block URLs resolving to unspecified IP ranges (0.0.0.0, ::).
+**Learning:** Even if explicit string checks for 0.0.0.0 exist, DNS resolution can resolve a domain to an unspecified address, which circumvents string-based blocks.
+**Prevention:** Always validate the resolved IP address using `ip.is_unspecified` in addition to private, loopback, and link-local checks.
