@@ -114,3 +114,6 @@
 ## 2026-07-19 - Async loading feedback
 **Learning:** While disabling a button and changing text to "Loading..." handles state, standard visual momentum for asynchronous operations (like submitting a mailto form that opens an external email client) requires an explicitly animated loading spinner to match user expectations. Text alone lacks expected motion feedback.
 **Action:** Explicitly inject an SVG loading spinner into submit buttons alongside text changes during async/wait operations rather than merely changing the text.
+## 2026-07-07 - Dynamic Tooltips for Feedback States
+**Learning:** When interactive elements (like copy buttons) temporarily change their `aria-label` to provide success feedback to screen readers, leaving the native `title` unchanged creates conflicting information for sighted mouse users hovering the element.
+**Action:** Always sync dynamic `title` updates alongside temporary `aria-label` feedback states (e.g., changing from "Copy" to "Copied!") so all users receive consistent state changes.
