@@ -682,3 +682,4 @@ python src/tools/code_quality_check.py
 | 2026-07-15 | 1.0.118 | 🛡️ Sentinel: Fix Server-Side Request Forgery DNS bypass and IPv6 literals in `src/tools/verify_images.py` |
 | 2026-07-15 | 1.0.118 | 🛡️ Sentinel: Update Pillow to 12.3.0 to resolve pip-audit vulnerabilities and unblock CI pipeline |
 | 2026-07-22 | 1.0.118 | ⚡ Bolt: Vectorize trajectory cost calculation in iLQR solver |
+| 2026-07-02 | 1.0.153 | 🎨 Palette: Add `aria-label` to range inputs in chapter 2 artifact to improve screen reader accessibility. |
