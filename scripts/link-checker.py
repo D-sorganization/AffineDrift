@@ -22,11 +22,11 @@ import time
 from pathlib import Path
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlparse
-from urllib.request import HTTPRedirectHandler, Request, build_opener, urlopen
+from urllib.request import HTTPRedirectHandler, Request, build_opener
 
 
 class NoRedirectHandler(HTTPRedirectHandler):
-    def redirect_request(self, req, fp, code, msg, headers, newurl):
+    def redirect_request(self, req, fp, code, msg, headers, newurl) -> None:
         return None
 
 
