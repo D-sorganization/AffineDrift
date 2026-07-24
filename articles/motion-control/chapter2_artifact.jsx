@@ -83,6 +83,7 @@ function CurvatureDemo() {
             type="range" min="1" max="60" value={speed}
             onChange={(e) => setSpeed(Number(e.target.value))}
             className="w-full accent-blue-700"
+            aria-label="Speed in meters per second"
           />
           <div className="flex justify-between text-xs text-gray-400">
             <span>1 m/s (practice)</span>
@@ -97,6 +98,7 @@ function CurvatureDemo() {
             type="range" min="1" max="50" value={curvature * 10}
             onChange={(e) => setCurvature(Number(e.target.value) / 10)}
             className="w-full accent-red-700"
+            aria-label="Curvature in radians per meter"
           />
           <div className="flex justify-between text-xs text-gray-400">
             <span>0.1 (gentle)</span>

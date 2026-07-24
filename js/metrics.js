@@ -313,6 +313,7 @@
     clearButton.type = "button";
     clearButton.className = "clear-btn";
     clearButton.setAttribute("data-action", "clear-metrics");
+    clearButton.setAttribute("aria-label", "Clear metrics data");
     clearButton.title = "Clear metrics data";
     clearButton.textContent = "Clear data";
     clearButton.addEventListener("click", clearData);
@@ -345,11 +346,13 @@
 
   // Clear all metrics data
   function clearData() {
-    localStorage.removeItem(STORAGE_KEY);
-    sessionStorage.removeItem(SESSION_KEY);
-    // Refresh any displayed widgets
-    const widget = document.getElementById("metrics-widget");
-    if (widget) renderStatsWidget("metrics-widget");
+    if (window.confirm("Are you sure you want to clear your usage statistics? This action cannot be undone.")) {
+      localStorage.removeItem(STORAGE_KEY);
+      sessionStorage.removeItem(SESSION_KEY);
+      // Refresh any displayed widgets
+      const widget = document.getElementById("metrics-widget");
+      if (widget) renderStatsWidget("metrics-widget");
+    }
   }
 
   // Initialize on page load
