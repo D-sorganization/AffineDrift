@@ -5,6 +5,7 @@ The updater prefers existing manual overrides, then falls back to a concise
 first meaningful paragraph from the file body.
 """
 
+import argparse
 import re
 import sys
 from pathlib import Path
@@ -43,6 +44,7 @@ DESCRIPTION_OVERRIDES = {
 }
 
 TARGET_ROOTS = (ROOT / "articles", ROOT / "content")
+EDITORIAL_ONLY_FILENAMES = {"INLINE_SUGGESTIONS.md"}
 
 
 def extract_first_paragraph(content: str) -> str:
@@ -77,11 +79,44 @@ def extract_first_paragraph(content: str) -> str:
     return ""
 
 
+def extract_title(content: str) -> str:
+    """Extract the first Markdown H1 title from body content."""
+    if content.startswith("---"):
+        parts = content.split("---", 2)
+        if len(parts) >= 3:
+            content = parts[2]
+
+    title_match = re.search(r"^#\s+(.+?)\s*$", content, flags=re.MULTILINE)
+    if not title_match:
+        return ""
+    return re.sub(r"\s+", " ", title_match.group(1)).strip()
+
+
+def build_critique_description(content: str) -> str:
+    """Build a concise, unique description for public critique pages."""
+    title = extract_title(content)
+    if not title:
+        return ""
+
+    topic = re.sub(r"^(Critique|Bibliographic Analysis):\s*", "", title).strip()
+    if title.startswith("Bibliographic Analysis:"):
+        return f"Bibliographic analysis supporting the AffineDrift critique of {topic}."
+    return (
+        f"Critique and response context for {topic} in AffineDrift's "
+        "control-affine golf-swing framework."
+    )
+
+
 def build_description(filepath: Path, content: str, frontmatter: dict[str, str]) -> str:
     """Build a conservative description for a file."""
     relpath = filepath.relative_to(ROOT).as_posix()
     if relpath in DESCRIPTION_OVERRIDES:
         return DESCRIPTION_OVERRIDES[relpath]
+
+    if relpath.startswith("critiques/"):
+        description = build_critique_description(content)
+        if description:
+            return description
 
     description = extract_first_paragraph(content)
     if description:
@@ -94,12 +129,26 @@ def build_description(filepath: Path, content: str, frontmatter: dict[str, str])
     return ""
 
 
+def _escape_yaml_string(value: str) -> str:
+    """Escape a value for a compact double-quoted YAML scalar."""
+    return value.replace("\\", "\\\\").replace('"', '\\"')
+
+
 def add_description_to_file(filepath: Path, description: str) -> bool:
     """Add description to frontmatter of a file."""
     content = filepath.read_text(encoding="utf-8")
 
     if not content.startswith("---"):
-        return False
+        title = extract_title(content)
+        if not title:
+            return False
+        escaped_title = _escape_yaml_string(title)
+        escaped_desc = _escape_yaml_string(description)
+        filepath.write_text(
+            f'---\ntitle: "{escaped_title}"\ndescription: "{escaped_desc}"\n---\n\n{content}',
+            encoding="utf-8",
+        )
+        return True
 
     parts = content.split("---", 2)
     if len(parts) < 3:
@@ -119,14 +168,13 @@ def add_description_to_file(filepath: Path, description: str) -> bool:
     for line in lines:
         new_lines.append(line)
         if line.startswith("title:") and not inserted:
-            # Escape quotes in description
-            escaped_desc = description.replace('"', '\\"')
+            escaped_desc = _escape_yaml_string(description)
             new_lines.append(f'description: "{escaped_desc}"')
             inserted = True
 
     if not inserted:
         # Add at end if no title found
-        escaped_desc = description.replace('"', '\\"')
+        escaped_desc = _escape_yaml_string(description)
         new_lines.append(f'description: "{escaped_desc}"')
 
     new_frontmatter = "\n".join(new_lines)
@@ -136,25 +184,42 @@ def add_description_to_file(filepath: Path, description: str) -> bool:
     return True
 
 
+def parse_args() -> argparse.Namespace:
+    """Parse CLI arguments."""
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "roots",
+        nargs="*",
+        type=Path,
+        help="Optional content roots to update. Defaults to articles/ and content/.",
+    )
+    return parser.parse_args()
+
+
 def main() -> None:
     """Add descriptions to all files missing them."""
+    args = parse_args()
+    target_roots = tuple((ROOT / root).resolve() for root in args.roots) or TARGET_ROOTS
     files_updated = 0
     files_skipped = 0
 
-    for target_root in TARGET_ROOTS:
+    for target_root in target_roots:
         if not target_root.exists():
             continue
 
         for filepath in sorted(target_root.rglob("*")):
             if filepath.suffix.lower() not in {".qmd", ".md"}:
                 continue
-
-            content, frontmatter = read_qmd_with_frontmatter(filepath)
-            if not content.startswith("---") or "description" in frontmatter:
+            if filepath.name in EDITORIAL_ONLY_FILENAMES:
                 files_skipped += 1
                 continue
 
-            if not frontmatter.get("title"):
+            content, frontmatter = read_qmd_with_frontmatter(filepath)
+            if "description" in frontmatter:
+                files_skipped += 1
+                continue
+
+            if not frontmatter.get("title") and not extract_title(content):
                 files_skipped += 1
                 continue
 

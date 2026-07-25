@@ -1,3 +1,8 @@
+---
+title: "Critique: The Illusion of Open-Loop Control"
+description: "Critique and response context for The Illusion of Open-Loop Control in AffineDrift's control-affine golf-swing framework."
+---
+
 # Critique: The Illusion of Open-Loop Control
 
 ## The Argument

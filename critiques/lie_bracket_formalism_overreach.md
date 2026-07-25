@@ -1,3 +1,8 @@
+---
+title: "Critique: Controllability-Drift Ratio (Formalism Overreach)"
+description: "Critique and response context for Controllability-Drift Ratio (Formalism Overreach) in AffineDrift's control-affine golf-swing framework."
+---
+
 # Critique: Controllability-Drift Ratio (Formalism Overreach)
 
 ## Summary of Concern

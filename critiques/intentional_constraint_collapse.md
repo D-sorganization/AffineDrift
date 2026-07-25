@@ -1,3 +1,8 @@
+---
+title: "Critique: Intentional Constraint Collapse"
+description: "Critique and response context for Intentional Constraint Collapse in AffineDrift's control-affine golf-swing framework."
+---
+
 # Critique: Intentional Constraint Collapse
 
 ## Summary of Concern

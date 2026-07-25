@@ -1,13 +1,20 @@
+---
+title: 'Bibliographic Analysis: Precision vs. Gross Control (The "Locked-In" Fallacy)'
+description: 'Bibliographic analysis supporting the AffineDrift critique of Precision vs. Gross Control (The "Locked-In" Fallacy).'
+---
+
 # Bibliographic Analysis: Precision vs. Gross Control (The "Locked-In" Fallacy)
 
 ## A) Concept Map
 
 - **Control Hierarchy**
+
   - **Gross Trajectory Control**: The ability to fundamentally reshape the path (e.g., stop, reverse, change plane). Requires large forces ($F \approx ma$) relative to momentum.
   - **Fine Outcome Control (Micro-Correction)**: The ability to adjust terminal parameters (face angle, impact location) by small margins. Requires precision, not large force.
   - **Drift-Control Ratio (DCR)**: A metric quantifying the dominance of passive dynamics over active control authority.
 
 - **Motor Control Theory**
+
   - **Uncontrolled Manifold (UCM)**: The hypothesis that the nervous system allows variability in dimensions that don't affect the task (Todorov/Latash).
   - **Minimum Intervention Principle**: Control is applied only to task-relevant deviations to minimize effort and noise.
   - **Signal-Dependent Noise**: The observation that motor noise scales with control signal magnitude ($u$), creating a trade-off where "trying harder" reduces precision.
@@ -28,7 +35,12 @@
   venue: "Nature Neuroscience"
   scholar_link: "https://scholar.google.com/scholar?q=Optimality+principles+in+sensorimotor+control+Todorov"
   clusters: ["motor control", "neuroscience"]
-  concepts: ["minimum intervention", "uncontrolled manifold", "optimal feedback control"]
+  concepts:
+    [
+      "minimum intervention",
+      "uncontrolled manifold",
+      "optimal feedback control",
+    ]
   related_ids: ["harris1998signal", "latash2008synergy"]
   references_out_ids: ["scott2004optimal", "loeb2012optimal"]
 
@@ -120,7 +132,12 @@
   venue: "Pergamon Press"
   scholar_link: "https://scholar.google.com/scholar?q=The+Co-ordination+and+Regulation+of+Movements+Bernstein"
   clusters: ["motor control", "foundational"]
-  concepts: ["degrees of freedom problem", "repetition without repetition", "coordination"]
+  concepts:
+    [
+      "degrees of freedom problem",
+      "repetition without repetition",
+      "coordination",
+    ]
   related_ids: ["latash2008synergy"]
   references_out_ids: ["latash2008synergy"]
 

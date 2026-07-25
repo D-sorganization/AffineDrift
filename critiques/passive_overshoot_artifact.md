@@ -1,3 +1,8 @@
+---
+title: 'Critique: Passive Overshoot Artifact (Simulink "Proof")'
+description: 'Critique and response context for Passive Overshoot Artifact (Simulink "Proof") in AffineDrift''s control-affine golf-swing framework.'
+---
+
 # Critique: Passive Overshoot Artifact (Simulink "Proof")
 
 ## Summary of Concern

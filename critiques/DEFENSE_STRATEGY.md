@@ -1,4 +1,11 @@
+---
+title: "AffineDrift Defense Strategy"
+description: "Working response map for AffineDrift critiques, tracking current defense strategies, validity judgments, and implementation status."
+---
+
 # Defense Strategy: AffineDrift
+
+This is a public working response map for critique transparency. It is not a peer-reviewed assessment, and status labels describe the current editorial response plan rather than settled consensus.
 
 ## Critique-Response Table
 
@@ -20,7 +27,7 @@
 | **14. Teleological Blindness**<br>(Mechanics vs. Intent)              | Conceptual / Methodological    | **Valid** (Interpretational)   | **Efficiency Fallacy Defense:** The model measures mechanical cost (torque), not tactical utility. "Braking" torque may be stability-seeking, not error. We must explicitly distinguish "fighting drift" from "modulating drift for robustness."                                                                                                                                                                                           | **Applied** to Limitations          |
 | **15. Intentional Constraint Collapse**<br>(Singularity vs Impedance) | Conceptual / Mathematical      | **Valid** (Terminological)     | **Virtual Constraint Defense:** Clarify that "collapse" is a metaphor for high impedance approaching a kinematic constraint. Reframe as "Quasi-Static Resolution" where $u$ shapes the _effective_ manifold for short intervals, justifying the local affine approximation.                                                                                                                                                                | **Applied** to Constraint Article   |
 | **16. The Effective Plant Fallacy**<br>(Task-Dependent Baseline)      | Methodological / Philosophical | **Valid** (Epistemological)    | **Impedance-Conditioned Drift Defense:** We explicitly rename the baseline as "Impedance-Conditioned Drift." A truly passive (flaccid) baseline is biologically irrelevant for high-speed motion; the "Effective Plant" (frozen strategy) is the only meaningful counterfactual for analyzing control _around_ the trajectory.                                                                                                             | **Applied** to Limitations          |
-| **17. Planar DCR Blindness**<br>(Axial Rotation)                      | Methodological / Scope         | **Valid** (Dimensionality)     | **Orthogonal Control Subspace:** Admit that Planar DCR measures "Path Controllability" while "Face Controllability" (axial) has lower inertia. Defend by assuming that Planar DCR dictates the _timing window_ of release; if path is uncontrollable, the temporal precision required to square the face becomes impossible, linking path drift to face error.                                                                              | **Applied** to DCR Article          |
+| **17. Planar DCR Blindness**<br>(Axial Rotation)                      | Methodological / Scope         | **Valid** (Dimensionality)     | **Orthogonal Control Subspace:** Admit that Planar DCR measures "Path Controllability" while "Face Controllability" (axial) has lower inertia. Defend by assuming that Planar DCR dictates the _timing window_ of release; if path is uncontrollable, the temporal precision required to square the face becomes impossible, linking path drift to face error.                                                                             | **Applied** to DCR Article          |
 | **18. Dimensional Inconsistency**<br>(Unit Mixing)                    | Mathematical / Dimensional     | **Valid** (Formulation)        | **Dynamic Fiber Definition:** Acknowledge that $\|f(x)\|$ mixes velocity and acceleration units. Redefine DCR explicitly on the **acceleration subspace** (comparing drift torque/acceleration to control torque/acceleration) to ensure dimensional homogeneity and physical meaningfulness.                                                                                                                                              | **Applied** to DCR Article          |
 | **19. Strokes Gained Non-Ergodicity**<br>(Time vs Ensemble)           | Statistical / Philosophical    | **Valid** (Methodological)     | **Ergodicity & Risk Defense:** Explicitly distinguish between _ensemble_ averages (Strokes Gained) and _time_ averages (individual career). Acknowledge that the benchmark assumes risk neutrality, whereas real players optimize non-linear utility functions (risk aversion/seeking). Defend by framing SG as a descriptive comparative tool, not a causal predictive model for individuals.                                             | **Applied** to Limitations          |
 | **20. Intermediate Axis Fallacy**<br>(Putting Scale)                  | Empirical / Scaling            | **Valid** (Magnitude)          | **Inertial Alignment Defense:** Admit that gyroscopic torque ($\omega \times I \omega$) is small at putting speeds. Pivot the defense to **Tensor Diagonalization**. The "Central Spine" design aligns principal axes with the stroke frame, eliminating linear cross-coupling ($I_{xy}$) terms. The Intermediate Axis instability acts as the "topological worst-case," but the practical benefit in putting is **Kinematic Decoupling**. | **Applied** to Article              |
@@ -30,9 +37,9 @@
 | **24. Simulation Tautology**<br>(Circular Validation)                 | Methodological                 | **Valid** (Logic)              | **Verification vs Validation:** Reframe the result. Admit the simulation relies on the same equations, so it cannot physically validate them. Defend it as a **"Numerical Consistency Check"** that proves the subtraction logic is robust against integration error and discrete sampling.                                                                                                                                                | **Applied** to Part 5 & Monolithic  |
 | **25. Precision vs. Gross Control**<br>(The "Locked-In" Fallacy)      | Conceptual / Empirical         | **Valid** (Nuance)             | **Macro- vs. Micro-Control:** Admit that "uncontrollable" is an overstatement for fine-tuning. DCR prohibits **trajectory reshaping** (Macro) but allows **outcome biasing** (Micro). However, high DCR means micro-correction fights a massive signal-to-noise ratio, making it precarious.                                                                                                                                               | **Applied** to DCR Article          |
 | **26. The Flaccid Drift Contradiction**<br>(Theory vs Sim Mismatch)   | Mathematical / Consistency     | **Valid** (Fixed)              | **Unified Passive Drift:** We explicitly include $\tau_{pas}$ in the theoretical derivation to match the "Effective Plant" simulation. This ensures the "Drift" is not a ragdoll collapse but the "Zero-Input" evolution of the structural impedance.                                                                                                                                                                                      | **Applied** to Part 1               |
-| **27. The Stiffness Pulse Paradox**<br>(Time-Varying Impedance)       | Conceptual / Control           | **Valid** (Nuance)             | **Parametric Counterfactual:** Acknowledge that ZTCF during impact represents the trajectory given the *impedance schedule*. We treat high stiffness as a "Virtual Constraint" (Parametric Control) rather than a passive property, admitting a slight deviation from strict Drift Invariance in the final milliseconds.                                                                                                                   | **Applied** to Constraint Article   |
+| **27. The Stiffness Pulse Paradox**<br>(Time-Varying Impedance)       | Conceptual / Control           | **Valid** (Nuance)             | **Parametric Counterfactual:** Acknowledge that ZTCF during impact represents the trajectory given the _impedance schedule_. We treat high stiffness as a "Virtual Constraint" (Parametric Control) rather than a passive property, admitting a slight deviation from strict Drift Invariance in the final milliseconds.                                                                                                                   | **Applied** to Constraint Article   |
 | **28. Tip Mass Omission**<br>(The Headless Club)                      | Mathematical / Modeling        | **Valid** (Critical)           | **Discrete Tip Inertia:** Explicitly add the clubhead mass $m_{head}$ and inertia $I_{head}$ to the kinetic energy integral. This ensures the "Inertial Coupling" term $M_{q\eta}$ captures the dominant "kick" of the clubhead, preventing the model from degenerating into a massless fishing rod.                                                                                                                                       | **Applied** to Part 1               |
-| **29. Double Pendulum Energy Blindness**<br>(Elastic Omission)        | Conceptual / Modeling          | **Valid** (Scope Limit)        | **Explicit Limitation Note:** Acknowledge that the rigid-body power analysis ignores elastic potential energy storage ($V_{elastic}$). Add a callout clarifying that the rigid model illustrates the *mechanism* of transfer (force) but underestimates the *capacity* for delayed release (energy).                                                                                                                                       | **Applied** to Article              |
+| **29. Double Pendulum Energy Blindness**<br>(Elastic Omission)        | Conceptual / Modeling          | **Valid** (Scope Limit)        | **Explicit Limitation Note:** Acknowledge that the rigid-body power analysis ignores elastic potential energy storage ($V_{elastic}$). Add a callout clarifying that the rigid model illustrates the _mechanism_ of transfer (force) but underestimates the _capacity_ for delayed release (energy).                                                                                                                                       | **Applied** to Article              |
 
 ## Detailed Defense & Implementation
 
@@ -258,7 +265,7 @@ We refined the "Cone Collapse" section in `articles/controllability-drift-ratio.
 **Implementation:**
 We updated `articles/theory-part1.qmd` to explicitly include $\tau_{pas}(q, \dot{q})$ in the drift vector definition.
 
-> *Refinement:* "We explicitly include the term $\tau_{pas}(q, \dot{q})$ to model the **passive joint impedance**... This distinguishes the **Effective Plant**... from a 'flaccid' ragdoll."
+> _Refinement:_ "We explicitly include the term $\tau_{pas}(q, \dot{q})$ to model the **passive joint impedance**... This distinguishes the **Effective Plant**... from a 'flaccid' ragdoll."
 
 ### 27. Addressing The Stiffness Pulse Paradox
 
@@ -267,7 +274,7 @@ We updated `articles/theory-part1.qmd` to explicitly include $\tau_{pas}(q, \dot
 **Implementation:**
 We added a limitation note to `articles/intentional-constraint-collapse.qmd`.
 
-> *Addition:* "We must strictly qualify this 'Effective Plant' argument... The 'Stiffness Pulse'... violates the strict Drift Invariance condition... Consequently, the ZTCF in this regime should be interpreted as a **Parametric Counterfactual**..."
+> _Addition:_ "We must strictly qualify this 'Effective Plant' argument... The 'Stiffness Pulse'... violates the strict Drift Invariance condition... Consequently, the ZTCF in this regime should be interpreted as a **Parametric Counterfactual**..."
 
 ### 28. Addressing Tip Mass Omission
 
@@ -276,7 +283,7 @@ We added a limitation note to `articles/intentional-constraint-collapse.qmd`.
 **Implementation:**
 We modified the kinetic energy derivation in `articles/theory-part1.qmd` to include discrete tip inertia terms ($m_{head}, I_{head}$).
 
-> *Refinement:* "The total kinetic energy of the club... is the sum of the distributed shaft kinetic energy and the discrete kinetic energy of the clubhead..."
+> _Refinement:_ "The total kinetic energy of the club... is the sum of the distributed shaft kinetic energy and the discrete kinetic energy of the clubhead..."
 
 ### 29. Addressing Double Pendulum Energy Blindness
 
@@ -285,4 +292,4 @@ We modified the kinetic energy derivation in `articles/theory-part1.qmd` to incl
 **Implementation:**
 Added a **"Limitation: Rigid vs Flexible Energy Transfer"** callout to `articles/drift-components-wrench-double-pendulum.qmd`.
 
-> *Addition:* "This rigid-body power analysis captures kinetic energy transfer but ignores **elastic potential energy**... The rigid model here illustrates the _mechanism_ of transfer but underestimates the _capacity_ for delayed release."
+> _Addition:_ "This rigid-body power analysis captures kinetic energy transfer but ignores **elastic potential energy**... The rigid model here illustrates the _mechanism_ of transfer but underestimates the _capacity_ for delayed release."

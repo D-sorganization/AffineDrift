@@ -1,3 +1,8 @@
+---
+title: "Critique: Neglecting Aerodynamics in High-Speed Swing Analysis"
+description: "Critique and response context for Neglecting Aerodynamics in High-Speed Swing Analysis in AffineDrift's control-affine golf-swing framework."
+---
+
 # Critique: Neglecting Aerodynamics in High-Speed Swing Analysis
 
 ## The Argument
