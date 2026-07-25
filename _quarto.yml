@@ -143,7 +143,10 @@ format:
       - css/search-metrics.css
     toc: true
     toc-depth: 3
-    title-block-style: none
+    # Use Quarto's title-block renderer so Pandoc does not emit a second
+    # verbatim <header id="title-block-header">. Custom full-layout pages hide
+    # the generated block in CSS and keep their authored hero/page H1.
+    title-block-style: default
     number-sections: false
     code-fold: true
     code-tools: false

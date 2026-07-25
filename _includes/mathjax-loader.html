@@ -2,13 +2,11 @@
   // MathJax Configuration - MUST be defined before loading MathJax
   window.MathJax = {
     loader: {
-      paths: {
-        a11y: 'https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/a11y'
-      },
       // ⚡ Bolt Optimization: Lazy typesetting defers MathJax rendering until
       // equations enter the viewport, significantly improving initial page load time.
-      // 🎯 Accessibility: Load assistive-mml for screen reader support of mathematics
-      load: ['ui/lazy', '[a11y]/assistive-mml']
+      // 🎯 Accessibility: enableAssistiveMml below lets MathJax register the
+      // assistive MathML layer once without explicitly loading it twice.
+      load: ['ui/lazy']
     },
     tex: {
       inlineMath: [['$', '$'], ['\\(', '\\)']],
@@ -108,14 +106,21 @@
     document.head.appendChild(mathjax);
   }
 
+  function adQueueMathJaxLoad() {
+    // Quarto emits its own MathJax script after include-in-header content on
+    // math-enabled pages. Queue one task so that script is in the DOM before
+    // the idempotency check above decides whether a fallback injection is needed.
+    window.setTimeout(adLoadMathJax, 0);
+  }
+
   // The DOM must exist before we can detect math, so defer the gated load to
   // DOMContentLoaded (or run immediately if the document is already parsed).
   // MathJax.startup.defaultReady() in the startup.ready callback above handles
   // the initial typeset once the script loads.
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', adLoadMathJax, { once: true });
+    document.addEventListener('DOMContentLoaded', adQueueMathJaxLoad, { once: true });
   } else {
-    adLoadMathJax();
+    adQueueMathJaxLoad();
   }
   window.AffineDriftMathJax = { hasMath: adPageHasMath, load: adLoadMathJax };
 </script>
