@@ -1,3 +1,8 @@
+---
+title: "Critique: Planar Blindness in DCR and Control Cone Analysis"
+description: "Critique and response context for Planar Blindness in DCR and Control Cone Analysis in AffineDrift's control-affine golf-swing framework."
+---
+
 # Critique: Planar Blindness in DCR and Control Cone Analysis
 
 ## Summary of Concern

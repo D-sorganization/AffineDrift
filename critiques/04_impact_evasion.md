@@ -1,3 +1,8 @@
+---
+title: "Critique: The Impact Evasion"
+description: "Critique and response context for The Impact Evasion in AffineDrift's control-affine golf-swing framework."
+---
+
 # Critique: The Impact Evasion
 
 ## The Argument

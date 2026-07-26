@@ -1,3 +1,8 @@
+---
+title: "Critique: The Validation Dimensionality Gap"
+description: "Critique and response context for The Validation Dimensionality Gap in AffineDrift's control-affine golf-swing framework."
+---
+
 # Critique: The Validation Dimensionality Gap
 
 ## Summary of Concern

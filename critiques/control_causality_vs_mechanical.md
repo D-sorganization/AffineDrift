@@ -1,3 +1,8 @@
+---
+title: "Critique: Control Causality vs. Mechanical Causality"
+description: "Critique and response context for Control Causality vs. Mechanical Causality in AffineDrift's control-affine golf-swing framework."
+---
+
 # Critique: Control Causality vs. Mechanical Causality
 
 ## Summary of Concern

@@ -1,3 +1,8 @@
+---
+title: "Critique: Null Space Forces and Closed-Chain Indeterminacy"
+description: "Critique and response context for Null Space Forces and Closed-Chain Indeterminacy in AffineDrift's control-affine golf-swing framework."
+---
+
 # Critique: Null Space Forces and Closed-Chain Indeterminacy
 
 ## Summary of Concern

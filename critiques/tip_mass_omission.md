@@ -1,3 +1,8 @@
+---
+title: "Critique: Tip Mass Omission (The Headless Club)"
+description: "Critique and response context for Tip Mass Omission (The Headless Club) in AffineDrift's control-affine golf-swing framework."
+---
+
 # Critique: Tip Mass Omission (The Headless Club)
 
 ## Summary of Concern
@@ -25,8 +30,8 @@ The mathematical derivation of the flexible shaft dynamics (Part 1 & Appendix B)
 
 ## Evidence / References
 
-- **Jorgensen, T.** *The Physics of Golf*. (Treats club as a double pendulum with massive bob).
-- **Inman, D. J.** *Engineering Vibration*. (Beam with Tip Mass boundary conditions: $EI w_{sss} = m \ddot{w}$).
+- **Jorgensen, T.** _The Physics of Golf_. (Treats club as a double pendulum with massive bob).
+- **Inman, D. J.** _Engineering Vibration_. (Beam with Tip Mass boundary conditions: $EI w_{sss} = m \ddot{w}$).
 - **Appendix B Text**: Explicitly states "free-tip conditions".
 
 ## Severity
@@ -36,7 +41,7 @@ The mathematical derivation of the flexible shaft dynamics (Part 1 & Appendix B)
 ## Suggested Remedies
 
 1.  **Add Tip Mass Term**: Explicitly add the discrete mass terms to the Kinetic Energy in Part 1:
-    $$ T = \frac{1}{2} \int_0^L \rho \| v(s) \|^2 ds + \frac{1}{2} m_{head} \| v(L) \|^2 + \frac{1}{2} \omega(L)^T I_{head} \omega(L) $$
+    $$ T = \frac{1}{2} \int*0^L \rho \| v(s) \|^2 ds + \frac{1}{2} m*{head} \| v(L) \|^2 + \frac{1}{2} \omega(L)^T I\_{head} \omega(L) $$
 2.  **Update Mass Matrix Integrals**:
     - $M_{qq} = \int \rho J^T J ds + m_{head} J(L)^T J(L)$
     - $M_{q\eta} = \int \rho J^T \Phi ds + m_{head} J(L)^T \Phi(L)$
