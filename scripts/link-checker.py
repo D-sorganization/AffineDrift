@@ -106,7 +106,11 @@ def is_safe_url(url: str) -> bool:
         if not hostname:
             return False
 
-        if hostname.lower() in ("localhost", "0.0.0.0", "::1"):  # noqa: S104
+        if hostname.lower() in (
+            "localhost",
+            "0.0.0.0",  # noqa: S104 -- reason: unsafe-host denylist literal  # nosec B104
+            "::1",
+        ):
             return False
 
         if hostname.startswith("[") and hostname.endswith("]"):
