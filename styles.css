@@ -126,17 +126,15 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Style the title block in the main content area
-   Note: Using high specificity to override Quarto defaults without !important */
-main#quarto-document-content #title-block-header,
-body main #title-block-header,
-#title-block-header {
+/* Full-layout pages own their visible H1 in custom page markup. Standard
+   content pages keep Quarto's generated title block visible and accessible. */
+#quarto-content.page-layout-full #title-block-header {
   display: none;
   margin-top: 0;
   padding-top: 0;
 }
 
-#title-block-header .title {
+#quarto-content.page-layout-full #title-block-header .title {
   margin-top: 0;
   padding-top: 0;
 }
@@ -211,8 +209,8 @@ a:hover {
   width: 100%;
 }
 
-/* Hide Quarto's default title block to prevent vertical space issues */
-#title-block-header {
+/* Hide Quarto's default title block only on designed full-layout pages. */
+#quarto-content.page-layout-full #title-block-header {
   display: none;
 }
 
