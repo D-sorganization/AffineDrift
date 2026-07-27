@@ -47,6 +47,18 @@ test.describe("PR Smoke", () => {
     await expect(navbar.first()).toBeVisible();
   });
 
+  test("about page renders explicit em dash in raw HTML copy", async ({ page }) => {
+    const response = await page.goto("/pages/about.html", {
+      waitUntil: "domcontentloaded",
+    });
+    expect(response).toBeTruthy();
+    expect(response.ok()).toBeTruthy();
+
+    const bodyText = await page.locator("body").innerText();
+    expect(bodyText).toContain("active control—the namesake");
+    expect(bodyText).not.toContain("active control---the namesake");
+  });
+
   test("static assets load without errors", async ({ page }) => {
     const failedRequests = [];
     page.on("requestfailed", (request) => {

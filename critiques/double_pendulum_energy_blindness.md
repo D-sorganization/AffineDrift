@@ -1,3 +1,8 @@
+---
+title: "Critique: Double Pendulum Energy Blindness"
+description: "Critique and response context for Double Pendulum Energy Blindness in AffineDrift's control-affine golf-swing framework."
+---
+
 # Critique: Double Pendulum Energy Blindness
 
 ## Summary of Concern

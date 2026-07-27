@@ -1,3 +1,8 @@
+---
+title: "Critique: Input-Dependent Boundary Conditions (The Grip Paradox)"
+description: "Critique and response context for Input-Dependent Boundary Conditions (The Grip Paradox) in AffineDrift's control-affine golf-swing framework."
+---
+
 # Critique: Input-Dependent Boundary Conditions (The Grip Paradox)
 
 ## Summary of Concern

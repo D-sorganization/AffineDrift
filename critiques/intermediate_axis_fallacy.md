@@ -1,3 +1,8 @@
+---
+title: "Critique: Secondary Axis Stability in Golf Clubs"
+description: "Critique and response context for Secondary Axis Stability in Golf Clubs in AffineDrift's control-affine golf-swing framework."
+---
+
 # Critique: Secondary Axis Stability in Golf Clubs
 
 ## Summary of Concern

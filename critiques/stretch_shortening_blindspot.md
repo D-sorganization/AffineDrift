@@ -1,8 +1,13 @@
+---
+title: "Critique: Conflation of Active and Passive Muscle-Tendon Dynamics"
+description: "Critique and response context for Conflation of Active and Passive Muscle-Tendon Dynamics in AffineDrift's control-affine golf-swing framework."
+---
+
 # Critique: Conflation of Active and Passive Muscle-Tendon Dynamics
 
 ## Summary of Concern
 
-The AffineDrift framework defines "Drift" ($f(x)$) as the *skeletal* baseline, including rigid-body inertia, gravity, and shaft elasticity. By exclusion, the "Input" term ($\tau_{input}$) absorbs all other forces, including the passive elastic energy stored and released by muscle-tendon units (the Series Elastic Component or SEC). This misclassifies the **Stretch-Shortening Cycle (SSC)**—a dominant power source in the golf swing—as "Active Input", confounding *metabolic effort* with *elastic recoil*.
+The AffineDrift framework defines "Drift" ($f(x)$) as the _skeletal_ baseline, including rigid-body inertia, gravity, and shaft elasticity. By exclusion, the "Input" term ($\tau_{input}$) absorbs all other forces, including the passive elastic energy stored and released by muscle-tendon units (the Series Elastic Component or SEC). This misclassifies the **Stretch-Shortening Cycle (SSC)**—a dominant power source in the golf swing—as "Active Input", confounding _metabolic effort_ with _elastic recoil_.
 
 ## Location
 
@@ -14,7 +19,7 @@ The AffineDrift framework defines "Drift" ($f(x)$) as the *skeletal* baseline, i
 ## Nature of the Issue
 
 - **Biomechanical Validity:** Biological actuation is not purely force-generative (Contractile Element); it is viscoelastic (SEC/PEC).
-- **Causal Misattribution:** The "Active" term $\tau_{input}$ captures the *release* of elastic energy in tendons, which is a passive dynamical event driven by state history, not instantaneous neural command.
+- **Causal Misattribution:** The "Active" term $\tau_{input}$ captures the _release_ of elastic energy in tendons, which is a passive dynamical event driven by state history, not instantaneous neural command.
 - **Terminological Ambiguity:** "Active" implies volitional drive, but SSC recoil is physically closer to "Drift" (energy storage and release).
 
 ## Why This Is a Problem
@@ -27,8 +32,8 @@ It invalidates the "Drift Invariance" defense in a subtle way: if $u$ includes p
 ## Evidence / References
 
 - **Hill-Type Muscle Models:** Separately model CE (Contractile Element), SEC (Series Elastic), and PEC (Parallel Elastic).
-- **Komi (2000):** *Stretch-shortening cycle of bone-muscle-tendon-complex.*
-- **Roberts & Azizi (2011):** *Flexible mechanisms: the diverse roles of biological springs in vertebrate movement.* (Tendons act as power amplifiers, decoupling muscle shortening velocity from joint velocity).
+- **Komi (2000):** _Stretch-shortening cycle of bone-muscle-tendon-complex._
+- **Roberts & Azizi (2011):** _Flexible mechanisms: the diverse roles of biological springs in vertebrate movement._ (Tendons act as power amplifiers, decoupling muscle shortening velocity from joint velocity).
 
 ## Severity
 
@@ -37,6 +42,6 @@ It invalidates the "Drift Invariance" defense in a subtle way: if $u$ includes p
 
 ## Suggested Remedies
 
-1.  **Refine Assumption 5:** Explicitly state that "Input" $\tau_{input}$ represents the *net neuromuscular moment*, comprising both contractile and series-elastic contributions.
+1.  **Refine Assumption 5:** Explicitly state that "Input" $\tau_{input}$ represents the _net neuromuscular moment_, comprising both contractile and series-elastic contributions.
 2.  **Add a "Biological Drift" Category:** Ideally, $f(x)$ should include a "Passive Muscle Stiffness" term $K_{mus}(q)q$. If this is impossible due to the "Effective Plant" problem, add a **"Viscoelastic Caution"** to the Taxonomy.
 3.  **Reframe "Active" as "Net Internal":** Change the label from "Active Input" to "Net Internal Torque" to avoid implying pure metabolic cost.

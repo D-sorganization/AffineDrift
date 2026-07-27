@@ -1,14 +1,21 @@
+---
+title: 'Bibliographic Analysis: Normative Ambiguity of Drift (The "Good Drift" Hypothesis)'
+description: 'Bibliographic analysis supporting the AffineDrift critique of Normative Ambiguity of Drift (The "Good Drift" Hypothesis).'
+---
+
 # Bibliographic Analysis: Normative Ambiguity of Drift (The "Good Drift" Hypothesis)
 
 ## A) Concept Map
 
 - **Drift Interpretation**
+
   - **Drift Dominance (DCR)**: The ratio of passive drift acceleration to control authority.
   - **Normative Bias**: The critique that high drift is framed negatively ("loss of control") rather than neutrally or positively.
   - **"Good Drift" (Flow)**: The hypothesis that elite performance involves maximizing drift to reduce metabolic cost and increase consistency.
   - **Railroading**: The phenomenon where system dynamics force the state along a specific path regardless of input.
 
 - **Motor Control Theory**
+
   - **Uncontrolled Manifold (UCM)**: The subspace of state variables that do not affect the task variable; variance here is "good variability".
   - **Minimum Intervention Principle**: The control strategy of correcting only deviations that interfere with the task goal.
   - **Synergies**: Neural organizations that stabilize task variables by covariation of elemental variables.
@@ -30,7 +37,12 @@
   venue: "Pergamon Press"
   scholar_link: "https://scholar.google.com/scholar?q=The+Co-ordination+and+Regulation+of+Movements+Bernstein"
   clusters: ["motor control", "foundational"]
-  concepts: ["degrees of freedom problem", "repetition without repetition", "passive dynamics"]
+  concepts:
+    [
+      "degrees of freedom problem",
+      "repetition without repetition",
+      "passive dynamics",
+    ]
   related_ids: ["latash2008synergy", "turvey1990coordination"]
   references_out_ids: ["latash2008synergy"]
 
@@ -43,7 +55,8 @@
   venue: "Nature Neuroscience"
   scholar_link: "https://scholar.google.com/scholar?q=Optimal+feedback+control+as+a+theory+of+motor+coordination+Todorov"
   clusters: ["motor control", "optimization"]
-  concepts: ["minimum intervention principle", "uncontrolled manifold", "feedback"]
+  concepts:
+    ["minimum intervention principle", "uncontrolled manifold", "feedback"]
   related_ids: ["scholz1999uncontrolled", "harris1998signal"]
   references_out_ids: ["scholz1999uncontrolled"]
 
@@ -67,7 +80,8 @@
   venue: "Oxford University Press"
   scholar_link: "https://scholar.google.com/scholar?q=Synergy+Latash"
   clusters: ["motor control", "biomechanics"]
-  concepts: ["uncontrolled manifold", "motor abundance", "principle of abundance"]
+  concepts:
+    ["uncontrolled manifold", "motor abundance", "principle of abundance"]
   related_ids: ["scholz1999uncontrolled", "bernstein1967coordination"]
   references_out_ids: ["scholz1999uncontrolled"]
 
@@ -117,7 +131,8 @@
   venue: "Nature"
   scholar_link: "https://scholar.google.com/scholar?q=Signal-dependent+noise+determines+motor+planning+Harris"
   clusters: ["motor control", "neuroscience"]
-  concepts: ["signal-dependent noise", "minimum variance", "trajectory planning"]
+  concepts:
+    ["signal-dependent noise", "minimum variance", "trajectory planning"]
   related_ids: ["todorov2002optimal"]
   references_out_ids: ["todorov2002optimal"]
 
@@ -269,9 +284,9 @@ _Target: The mathematical tools to prove drift is "good"._
 
 1.  **Bernstein (1967)** - _Coordination and Regulation..._. The foundational text defining the "Degrees of Freedom Problem" that drift helps solve.
 2.  **Scholz & Schöner (1999)** - _The uncontrolled manifold concept_. The methodology for calculating $V_{UCM}$ (good variability) vs $V_{ORT}$ (bad variability).
-3.  **Hogan (1985)** - _Impedance control_. The mechanics of controlling interaction by modulating stiffness, often by *lowering* it to allow compliance.
+3.  **Hogan (1985)** - _Impedance control_. The mechanics of controlling interaction by modulating stiffness, often by _lowering_ it to allow compliance.
 4.  **Kelso (1995)** - _Dynamic Patterns_. Understanding coordination as self-organization rather than prescriptive control.
-5.  **Harris & Wolpert (1998)** - _Signal-dependent noise_. The theoretical reason *why* we should minimize active input (and thus maximize drift utilization): because input creates noise.
+5.  **Harris & Wolpert (1998)** - _Signal-dependent noise_. The theoretical reason _why_ we should minimize active input (and thus maximize drift utilization): because input creates noise.
 6.  **Lynch & Park (2017)** - _Modern Robotics_. Provides the rigorous geometric formulation of multibody dynamics used to calculate drift.
 7.  **Spong et al. (2005)** - _Robot Modeling and Control_. Introduction to underactuated systems where drift is essential for motion.
 8.  **Tedrake (2023)** - _Underactuated Robotics_. Advanced methods for trajectory optimization that exploit passive dynamics.

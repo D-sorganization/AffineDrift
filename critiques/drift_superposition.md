@@ -1,3 +1,8 @@
+---
+title: "Critique: Causal Masking in Drift Superposition"
+description: "Critique and response context for Causal Masking in Drift Superposition in AffineDrift's control-affine golf-swing framework."
+---
+
 # Critique: Causal Masking in Drift Superposition
 
 ## Summary of Concern
