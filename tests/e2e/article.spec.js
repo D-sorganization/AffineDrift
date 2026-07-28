@@ -29,6 +29,36 @@ test.describe('Article Pages', () => {
     expect(count).toBeGreaterThan(0);
   });
 
+  test('should load MathJax assistive MathML without duplicate state errors', async ({ page }) => {
+    const consoleErrors = [];
+    const pageErrors = [];
+    page.on('console', (msg) => {
+      if (msg.type() === 'error') {
+        consoleErrors.push(msg.text());
+      }
+    });
+    page.on('pageerror', (error) => {
+      pageErrors.push(error.message);
+    });
+
+    await page.goto('/articles/theory-part1.html', { waitUntil: 'networkidle' });
+    await page.evaluate(() => window.scrollBy(0, 1000));
+    await page.waitForSelector('mjx-container', { timeout: 15000 });
+    await page.waitForSelector('mjx-assistive-mml', { state: 'attached', timeout: 15000 });
+
+    const mainMathJaxBundleCount = await page
+      .locator('script[src*="mathjax"][src*="/es5/tex-"]')
+      .count();
+    const explicitAssistiveMmlScriptCount = await page
+      .locator('script[src*="assistive-mml"]')
+      .count();
+    expect(mainMathJaxBundleCount).toBe(1);
+    expect(explicitAssistiveMmlScriptCount).toBe(0);
+
+    const allErrors = [...consoleErrors, ...pageErrors];
+    expect(allErrors.join('\n')).not.toContain('State ASSISTIVEMML already exists');
+  });
+
   test('should have working internal links', async ({ page }) => {
     await page.goto('/articles/inverse-dynamics.html');
 

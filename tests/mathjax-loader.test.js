@@ -30,11 +30,13 @@ function readLoaderSource() {
 /**
  * Evaluate the loader source against the current jsdom document. The loader
  * registers a DOMContentLoaded listener when document.readyState === 'loading';
- * jsdom reports 'complete' after setup, so adLoadMathJax runs synchronously.
+ * jsdom reports 'complete' after setup, so the queued loader runs after one
+ * timer tick.
  */
-function runLoader() {
+async function runLoader() {
   // eslint-disable-next-line no-new-func
   new Function(readLoaderSource())();
+  await new Promise((resolve) => setTimeout(resolve, 0));
 }
 
 function mathjaxScriptCount() {
@@ -48,52 +50,59 @@ describe('gated MathJax loader (#3332-A)', () => {
     delete window.AffineDriftMathJax;
   });
 
-  test('does NOT inject MathJax on a math-free page', () => {
+  test('does NOT inject MathJax on a math-free page', async () => {
     document.body.innerHTML =
       '<main><h1>Contact</h1><p>Email us. Price is 5 dollars.</p></main>';
-    runLoader();
+    await runLoader();
     expect(mathjaxScriptCount()).toBe(0);
     expect(window.AffineDriftMathJax.hasMath()).toBe(false);
   });
 
-  test('injects MathJax when a .math span is present', () => {
+  test('injects MathJax when a .math span is present', async () => {
     document.body.innerHTML =
       '<main><p>Energy <span class="math inline">E=mc^2</span>.</p></main>';
-    runLoader();
+    await runLoader();
     expect(mathjaxScriptCount()).toBe(1);
   });
 
-  test('injects MathJax when raw display-math delimiters are present', () => {
+  test('injects MathJax when raw display-math delimiters are present', async () => {
     document.body.innerHTML = '<main><p>$$\\int_0^1 x\\,dx$$</p></main>';
-    runLoader();
+    await runLoader();
     expect(mathjaxScriptCount()).toBe(1);
   });
 
-  test('injects MathJax when raw inline \\( delimiters are present', () => {
+  test('injects MathJax when raw inline \\( delimiters are present', async () => {
     document.body.innerHTML = '<main><p>The value \\(x\\) is bounded.</p></main>';
-    runLoader();
+    await runLoader();
     expect(mathjaxScriptCount()).toBe(1);
   });
 
-  test('pins the exact MathJax version with an SRI integrity hash', () => {
+  test('pins the exact MathJax version with an SRI integrity hash', async () => {
     document.body.innerHTML = '<main><span class="math">x</span></main>';
-    runLoader();
+    await runLoader();
     const script = document.querySelector('script[src*="mathjax"]');
     expect(script.src).toContain('mathjax@3.2.2');
     expect(script.integrity).toMatch(/^sha384-/);
     expect(script.crossOrigin).toBe('anonymous');
   });
 
-  test('is idempotent: a second run does not inject a duplicate script', () => {
+  test('enables assistive MathML without explicitly loading it twice', () => {
+    const source = readLoaderSource();
+    expect(source).toContain('enableAssistiveMml: true');
+    expect(source).not.toContain('[a11y]/assistive-mml');
+    expect(source).not.toMatch(/paths:\s*{\s*a11y:/);
+  });
+
+  test('is idempotent: a second run does not inject a duplicate script', async () => {
     document.body.innerHTML = '<main><span class="math">x</span></main>';
-    runLoader();
-    runLoader();
+    await runLoader();
+    await runLoader();
     expect(mathjaxScriptCount()).toBe(1);
   });
 
-  test('exposes the gating API on window for downstream callers', () => {
+  test('exposes the gating API on window for downstream callers', async () => {
     document.body.innerHTML = '<main><p>no math here</p></main>';
-    runLoader();
+    await runLoader();
     expect(typeof window.AffineDriftMathJax.hasMath).toBe('function');
     expect(typeof window.AffineDriftMathJax.load).toBe('function');
   });

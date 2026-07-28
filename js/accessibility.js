@@ -274,7 +274,11 @@ export function initReadingTime() {
         `Estimated reading time: ${minutes} minutes`
     );
 
-    const header = document.getElementById("title-block-header");
+    const header =
+        articleContent.querySelector(
+            ":scope > header.quarto-title-block#title-block-header"
+        ) ||
+        articleContent.querySelector("header.quarto-title-block#title-block-header");
     const isHeaderVisible = header && header.offsetParent !== null;
 
     if (isHeaderVisible) {
