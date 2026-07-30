@@ -60,13 +60,12 @@
 
   const scoreEntry = (entry, queryTerms) => {
     if (queryTerms.length === 0) return 0;
-    let score = 0;
+    let score = queryTerms.length;
 
     for (const term of queryTerms) {
       if (entry._searchTitle.includes(term)) score += 5;
       if (entry._searchAuthors.includes(term)) score += 3;
       if (entry._searchConcepts.includes(term)) score += 2;
-      score += 1;
     }
 
     return score;

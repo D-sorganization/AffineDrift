@@ -690,3 +690,4 @@ python src/tools/code_quality_check.py
 | 2026-07-15 | 1.0.118 | 🛡️ Sentinel: Update Pillow to 12.3.0 to resolve pip-audit vulnerabilities and unblock CI pipeline |
 | 2026-07-22 | 1.0.118 | ⚡ Bolt: Vectorize trajectory cost calculation in iLQR solver |
 | 2026-07-23 | 1.0.118 | Fix SSRF bypass via unspecified IP address resolution in verify_images.py |
+| 2026-07-30 | 1.0.118 | Optimized bibliography scoring logic in js/bibliography.js by eliminating redundant string inclusion checks for pre-filtered arrays. |
