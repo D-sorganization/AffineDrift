@@ -350,12 +350,30 @@ Elite golfers are skilled at tuning $\alpha(t)$ throughout the swing to keep the
 
 \subsection{DCR Analysis: How Pre-Tensioning Improves Control Efficacy}
 
-Recall from Chapter~\ref{ch:control_affine_decomposition} the drift-control ratio (DCR):
+Recall from Chapter~\ref{ch:zero_torque_counterfactual}, Definition~\ref{def:dcr}, the
+Drift--Control Ratio (DCR):
 \begin{equation}
-  \text{DCR} = \frac{\|\drift(\configvec)\|^2}{\|\drift(\configvec)\|^2 + \sum_i \|u_i \inputfield_i(\configvec)\|^2}.
+  \text{DCR} = \frac{\|\drift(\configvec)\|}{\left\|\sum_i u_{\max,i}\,\inputfield_i(\configvec)\right\|}.
+  \label{eq:ch9b:dcr}
 \end{equation}
 
-The DCR measures the fraction of the dynamics that is accounted for by the drift field. A high DCR means the drift field is doing most of the work; a low DCR means the control inputs are dominant.
+The DCR compares modeled drift against bounded modeled control. It is a ratio, not a
+fraction: it is unbounded above, and $\text{DCR} > 1$ means the drift term exceeds what the
+bounded control can produce. That is what makes statements such as ``DCR of order 10''
+meaningful.
+
+\begin{warningbox}
+An earlier revision of this section defined DCR as
+$\|\drift\|^2 / (\|\drift\|^2 + \sum_i \|u_i \inputfield_i\|^2)$, which is bounded in
+$[0,1]$ by construction. That form is a perfectly reasonable quantity --- it is the fraction
+of squared dynamics attributable to drift --- but it is \emph{not} the DCR, and mixing the
+two makes the book's own ratio claims arithmetically impossible: no quantity in $[0,1]$ can
+be ``$20{:}1$''. If you want the bounded fraction, compute it and call it something else.
+See \texttt{NOTATION.md}, which reserves the bare acronym DCR site-wide for the ratio.
+\end{warningbox}
+
+A high DCR means the drift field is doing most of the work; a low DCR means the control
+inputs have comparatively more authority.
 
 For a well-pre-tensioned system (high $\alpha$), the DCR is higher, because the drift field is richer and closer to the desired trajectory. For a loosely-tensioned system (low $\alpha$), the DCR is lower, because the control inputs must do more work.
 

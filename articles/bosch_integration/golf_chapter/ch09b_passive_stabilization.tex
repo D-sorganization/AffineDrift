@@ -350,12 +350,18 @@ Elite golfers are skilled at tuning $\alpha(t)$ throughout the swing to keep the
 
 \subsection{DCR Analysis: How Pre-Tensioning Improves Control Efficacy}
 
-Recall from Chapter~\ref{ch:control_affine_decomposition} the drift-control ratio (DCR):
+Recall from Chapter~\ref{ch:zero_torque_counterfactual} the Drift--Control Ratio (DCR):
 \begin{equation}
-  \text{DCR} = \frac{\|\drift(\configvec)\|^2}{\|\drift(\configvec)\|^2 + \sum_i \|u_i \inputfield_i(\configvec)\|^2}.
+  \text{DCR} = \frac{\|\drift(\configvec)\|}{\left\|\sum_i u_{\max,i}\,\inputfield_i(\configvec)\right\|}.
 \end{equation}
 
-The DCR measures the fraction of the dynamics that is accounted for by the drift field. A high DCR means the drift field is doing most of the work; a low DCR means the control inputs are dominant.
+The DCR compares modeled drift against bounded modeled control. It is a ratio, not a
+fraction bounded in $[0,1]$: $\text{DCR} > 1$ means the drift term exceeds what the bounded
+control can produce. See \texttt{NOTATION.md}, which reserves the bare acronym site-wide for
+this quantity.
+
+A high DCR means the drift field is doing most of the work; a low DCR means the control
+inputs have comparatively more authority.
 
 For a well-pre-tensioned system (high $\alpha$), the DCR is higher, because the drift field is richer and closer to the desired trajectory. For a loosely-tensioned system (low $\alpha$), the DCR is lower, because the control inputs must do more work.
 
