@@ -693,3 +693,4 @@ python src/tools/code_quality_check.py
 | 2026-07-22 | 1.0.118 | ⚡ Bolt: Vectorize trajectory cost calculation in iLQR solver |
 | 2026-07-23 | 1.0.118 | Fix SSRF bypass via unspecified IP address resolution in verify_images.py |
 | 2026-07-30 | 1.0.118 | Optimized bibliography scoring logic in js/bibliography.js by eliminating redundant string inclusion checks for pre-filtered arrays. |
+| 2026-07-31 | 1.0.118 | docs/js/bibliography.js | Removed redundant string inclusion checks from `scoreEntry` |
