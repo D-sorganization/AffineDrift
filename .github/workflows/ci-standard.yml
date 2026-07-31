@@ -142,6 +142,14 @@ jobs:
         run: |
           python3 scripts/check_tree_parity.py \
             --baseline config/tree-parity-baseline.json
+      - name: Verify LaTeX Structural Integrity
+        # Fails only on findings absent from the baseline, so the textbook corpus
+        # cannot get worse while the known defects under epic #3491 are worked off.
+        # Shrink config/latex-structure-baseline.json as those issues close.
+        run: |
+          python3 scripts/check_latex_structure.py \
+            --root articles \
+            --baseline config/latex-structure-baseline.json
       - name: Validate Article Frontmatter
         run: python3 scripts/validate_frontmatter.py
       - name: Verify CSS Budget
