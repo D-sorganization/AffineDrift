@@ -356,7 +356,7 @@ For each internal link $i$ (processed from $N$ down to $1$), we compute the spat
 \begin{theorem}{Spatial Newton-Euler Equation}{spatial_newton_euler}
 The spatial wrench (force and torque) required to accelerate a rigid body with spatial inertia $\mathcal{I}$ at acceleration $\dot{\mathcal{V}}$ is:
 \begin{equation}
-    \mathcal{F} = \mathcal{I} \dot{\mathcal{V}} - [\mathcal{V} \times]^* (\mathcal{I} \mathcal{V})
+    \mathcal{F} = \mathcal{I} \dot{\mathcal{V}} + [\mathcal{V} \times]^* (\mathcal{I} \mathcal{V})
     \label{eq:spatial_newton_euler}
 \end{equation}
 where $[\mathcal{V} \times]^*$ is the force cross product (transpose-negative of the motion cross product).
@@ -368,13 +368,13 @@ where $[\mathcal{V} \times]^*$ is the force cross product (transpose-negative of
 
 For a link $i$ with one child $j = \text{children}(i)$, the wrench recursion is:
 \begin{equation}
-    \mathcal{F}_i = \mathcal{I}_i \dot{\mathcal{V}}_i - [\mathcal{V}_i \times]^* (\mathcal{I}_i \mathcal{V}_i) + [\text{Ad}_{\mathbf{T}_{j,i}}]^{-T} \mathcal{F}_j
+    \mathcal{F}_i = \mathcal{I}_i \dot{\mathcal{V}}_i + [\mathcal{V}_i \times]^* (\mathcal{I}_i \mathcal{V}_i) + [\text{Ad}_{\mathbf{T}_{j,i}}]^{-T} \mathcal{F}_j
     \label{eq:wrench_recursion}
 \end{equation}
 
 For a branching tree, we sum over all children:
 \begin{equation}
-    \mathcal{F}_i = \mathcal{I}_i \dot{\mathcal{V}}_i - [\mathcal{V}_i \times]^* (\mathcal{I}_i \mathcal{V}_i) + \sum_{j \in \text{children}(i)} [\text{Ad}_{\mathbf{T}_{j,i}}]^{-T} \mathcal{F}_j
+    \mathcal{F}_i = \mathcal{I}_i \dot{\mathcal{V}}_i + [\mathcal{V}_i \times]^* (\mathcal{I}_i \mathcal{V}_i) + \sum_{j \in \text{children}(i)} [\text{Ad}_{\mathbf{T}_{j,i}}]^{-T} \mathcal{F}_j
     \label{eq:wrench_recursion_tree}
 \end{equation}
 
@@ -415,7 +415,7 @@ function RNEA(q, dq, ddq, T_rel, S, I, lambda, gravity, F_ext):
         inertial <-I[i] * dV[i]
 
         // Total wrench at link i
-        F[i] <-inertial - bias
+        F[i] <-inertial + bias
 
         // Add forces from children
         for j in children[i]:
@@ -473,7 +473,7 @@ While we've presented the RNEA for serial chains, the algorithm extends seamless
 The modification is minimal: in the inward pass (force recursion), if link $i$ has $k$ children, we sum the wrenches from all children:
 
 \begin{equation}
-    \mathcal{F}_i = \mathcal{I}_i \dot{\mathcal{V}}_i - [\mathcal{V}_i \times]^* (\mathcal{I}_i \mathcal{V}_i) + \sum_{j=1}^{k} [\text{Ad}_{\mathbf{T}_{j,i}}]^{-T} \mathcal{F}_j
+    \mathcal{F}_i = \mathcal{I}_i \dot{\mathcal{V}}_i + [\mathcal{V}_i \times]^* (\mathcal{I}_i \mathcal{V}_i) + \sum_{j=1}^{k} [\text{Ad}_{\mathbf{T}_{j,i}}]^{-T} \mathcal{F}_j
 \end{equation}
 
 The rest of the algorithm remains identical. Because the tree is acyclic, there is a unique topological ordering, and all parents are processed before their children in the inward pass.
@@ -502,12 +502,12 @@ In practice, robots interact with the world. A foot experiences ground reaction 
 
 For a leaf node (a link with no children) experiencing an external wrench $\mathcal{F}_{\text{ext}}$:
 \[
-  \mathcal{F}_{\text{leaf}} = \mathcal{I}_{\text{leaf}} \dot{\mathcal{V}}_{\text{leaf}} - [\mathcal{V}_{\text{leaf}} \times]^* (\mathcal{I}_{\text{leaf}} \mathcal{V}_{\text{leaf}}) + \mathcal{F}_{\text{ext}}
+  \mathcal{F}_{\text{leaf}} = \mathcal{I}_{\text{leaf}} \dot{\mathcal{V}}_{\text{leaf}} + [\mathcal{V}_{\text{leaf}} \times]^* (\mathcal{I}_{\text{leaf}} \mathcal{V}_{\text{leaf}}) + \mathcal{F}_{\text{ext}}
 \]
 
 For an intermediate link $i$ with one child $j$:
 \[
-  \mathcal{F}_i = \mathcal{I}_i \dot{\mathcal{V}}_i - [\mathcal{V}_i \times]^* (\mathcal{I}_i \mathcal{V}_i) + [\text{Ad}_{\mathbf{T}_{j,i}}]^{-T} \mathcal{F}_j + \mathcal{F}_{\text{ext},i}
+  \mathcal{F}_i = \mathcal{I}_i \dot{\mathcal{V}}_i + [\mathcal{V}_i \times]^* (\mathcal{I}_i \mathcal{V}_i) + [\text{Ad}_{\mathbf{T}_{j,i}}]^{-T} \mathcal{F}_j + \mathcal{F}_{\text{ext},i}
 \]
 
 This allows the algorithm to compute the joint torques needed not just to move the robot, but to support external loads.
@@ -723,7 +723,7 @@ Joint accelerations: $\ddot{\mathbf{q}} = [1.0, 0.5, 0.1]$ rad/s$^2$.
 Assuming no external forces at the tip ($\mathcal{F}_{\text{ext}} = 0$):
 
 \begin{itemize}
-  \item Link 3 (tip): $\mathcal{F}_3 = \mathcal{I}_3 \dot{\mathcal{V}}_3 - [\mathcal{V}_3 \times]^* (\mathcal{I}_3 \mathcal{V}_3)$.
+  \item Link 3 (tip): $\mathcal{F}_3 = \mathcal{I}_3 \dot{\mathcal{V}}_3 + [\mathcal{V}_3 \times]^* (\mathcal{I}_3 \mathcal{V}_3)$.
 
   \item Link 2: $\mathcal{F}_2 = (\text{inertia and bias of link 2}) + [\text{Ad}_{3,2}]^{-T} \mathcal{F}_3$.
 
@@ -918,7 +918,7 @@ def rnea(q, dq, ddq, links, joints, gravity=np.array([0, 0, -9.81])):
         )
 
         # Inertial wrench
-        F[i] = I @ dV[i] - force_cross(V[i]) @ (I @ V[i])
+        F[i] = I @ dV[i] + force_cross(V[i]) @ (I @ V[i])
 
         # Add wrenches from children
         for k in range(i + 1, N):
