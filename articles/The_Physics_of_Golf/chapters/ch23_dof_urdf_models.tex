@@ -885,9 +885,9 @@ where $m$ is forearm mass and $L$ is forearm length.
 A complete URDF would include all segment masses and inertias computed from de Leva's data scaled to the athlete's body weight.
 \end{example}
 
-\subsection{A Simplified Golf Swing URDF (Upper Body)
+\subsection{A Simplified Golf Swing URDF (Upper Body)}
 
-```xml
+\begin{lstlisting}[language=XML,caption={Simplified upper-body golfer URDF},basicstyle=\ttfamily\footnotesize,breaklines=true]
 <?xml version="1.0"?>
 <robot name="golfer">
 
@@ -1015,7 +1015,7 @@ A complete URDF would include all segment masses and inertias computed from de L
   <!-- ... (additional joints for thorax, shoulders, elbows, wrists) ...-->
 
 </robot>
-```
+\end{lstlisting}
 
 \textbf{Note:} This is a \emph{simplified} excerpt. A complete URDF would include all 20 joints (3 per arm shoulder, 2 per elbow, 2 per wrist, 3 for lumbar, 3 for thorax) and would require careful definition of each axis.
 
@@ -1083,7 +1083,7 @@ Deriving these by hand for a 20-DOF golf swing model is tedious and error-prone.
 \begin{example}{Automatic Dynamics Computation}{ex:auto_dynamics}
 In Drake (Python):
 
-```python
+\begin{lstlisting}[language=Python,caption={Building the URDF programmatically},basicstyle=\ttfamily\footnotesize,breaklines=true]
 import pydrake
 from pydrake.multibody.parsing import Parser
 from pydrake.systems.framework import DiagramBuilder
@@ -1102,7 +1102,7 @@ simulator = Simulator(plant)
 context = simulator.get_mutable_context()
 simulator.Initialize()
 simulator.AdvanceTo(final_time=1.0)
-```
+\end{lstlisting}
 
 The library handles all the complexity. You specify the structure (URDF), and the engine does the computation.
 \end{example}
@@ -1114,14 +1114,14 @@ The library handles all the complexity. You specify the structure (URDF), and th
 \index{anthropometry}
 \index{parameter uncertainty}
 
-Real biomechanics has uncertainties. Segment masses, lengths, and inertia are measured with ~5-10% error. How sensitive is our golf swing model to these errors?
+Real biomechanics has uncertainties. Segment masses, lengths, and inertia are measured with ~5-10\% error. How sensitive is our golf swing model to these errors?
 
 \subsection{Sources of Uncertainty}
 
 \begin{itemize}
 \item \textbf{Mass and anthropometry:} De Leva data is averaged over a population. Individual athletes differ.
 \item \textbf{Segment length:} Estimated from marker positions in motion capture. Error: ~1-2 cm.
-\item \textbf{Inertia tensor:} Computed from regression equations. Error: ~10-20%.
+\item \textbf{Inertia tensor:} Computed from regression equations. Error: ~10-20\%.
 \item \textbf{Joint axis location:} Joint centers are inferred, not directly measured. Error: ~5 mm.
 \item \textbf{Initial conditions:} Motion capture data has noise. Error: ~5-10 mm in position, ~5{}^\circ in angle.
 \end{itemize}
