@@ -24,7 +24,7 @@ env:
 jobs:
   benchmark:
     name: Run Performance Benchmarks
-    runs-on: ${{ vars.USE_HOSTED_RUNNERS == 'true' && 'ubuntu-latest' || 'd-sorg-fleet' }}
+    runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -101,7 +101,7 @@ jobs:
     # is granted pull-requests:write, so the token that runs the benchmark
     # suite cannot post forged CI comments or mutate PR labels/state.
     if: ${{ github.event_name == 'pull_request' && always() }}
-    runs-on: ${{ vars.USE_HOSTED_RUNNERS == 'true' && 'ubuntu-latest' || 'd-sorg-fleet' }}
+    runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
       contents: read
@@ -164,7 +164,7 @@ jobs:
     name: Benchmark Summary
     needs: benchmark
     if: always()
-    runs-on: ${{ vars.USE_HOSTED_RUNNERS == 'true' && 'ubuntu-latest' || 'd-sorg-fleet' }}
+    runs-on: ubuntu-latest
     steps:
       - name: Report status
         run: |
