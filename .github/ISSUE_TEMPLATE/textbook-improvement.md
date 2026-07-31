@@ -1,17 +1,23 @@
 ---
 name: Textbook Improvement
 about: Suggest improvements to the textbook volumes
-title: '[TEXTBOOK] '
+title: "[TEXTBOOK] "
 labels: textbook, improvement
-assignees: ''
+assignees: ""
 ---
 
+## Note
+
+If you are reporting a mathematical error or a sign error, please use the **Content Correction** template instead.
+
 ## Volume and Chapter
+
 <!-- e.g., Volume I, Chapter 4: Contraction Theory -->
+<!-- Please also specify if the improvement applies to the LaTeX (.tex) tree, Quarto (.qmd) tree, or both. -->
 
 ## Type of Improvement
+
 - [ ] Missing content
-- [ ] Mathematical error or imprecision
 - [ ] Pedagogical improvement
 - [ ] Missing worked example
 - [ ] Missing exercise
@@ -21,15 +27,19 @@ assignees: ''
 - [ ] Missing cross-reference
 
 ## Current State
+
 <!-- What does the chapter currently say/do? -->
 
 ## Proposed Improvement
+
 <!-- What should be changed or added? -->
 
 ## Mathematical Details
+
 <!-- If applicable, include the relevant equations -->
 
 ## Priority
+
 - [ ] Critical - mathematical error
 - [ ] High - missing essential content
 - [ ] Medium - pedagogical improvement

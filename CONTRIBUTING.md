@@ -298,6 +298,12 @@ npx playwright test tests/e2e/visual.spec.js
 Commit the resulting `tests/e2e/visual.spec.js-snapshots/` directory. Volatile
 regions (search inputs, dates) are masked so they cannot cause false diffs.
 
+### Reporting a technical error
+
+If you find a mathematical error, sign error, or a missing assumption in the text, we want to know. The project requires high rigor, as described in [`content-development/RIGOR_GUIDE.md`](content-development/RIGOR_GUIDE.md).
+Please report these issues using the [Content Correction](.github/ISSUE_TEMPLATE/content-correction.md) template.
+You must verify the error (e.g. by derivation, script, or observation in both `.tex` and `.qmd` trees). The project has a commitment to acknowledge technical reports and provide written reasons if a report is rejected.
+
 ### Content Writing
 
 - Use clear, accessible language
