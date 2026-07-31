@@ -635,16 +635,20 @@ A golfer with poor timing might activate the arm muscles too early, or fail to d
 
 Interestingly, this is often *not* taught as explicit timing rules (e.g., "activate hip muscles at 200 ms"), but rather as *feel* or *tempo*. A golfer might say, "I feel the sequence" or "I establish a rhythm." This language suggests that the motor control system is learning to exploit the natural dynamics through practice, without necessarily building an explicit internal model.
 
-### The DCR During the Kinetic Chain Sequence
+### Correction Latency During the Kinetic Chain Sequence
 
 
-The Drift-Correction-Response (DCR, introduced in Chapter @sec-zero_torque_counterfactual) describes how the golfer corrects deviations from the desired trajectory. During the kinetic chain sequence, the DCR is especially important because small timing errors can propagate down the chain.
+The _correction latency_ --- how long it takes the golfer to respond to a deviation from the intended trajectory --- matters throughout the kinetic-chain sequence, because small timing errors propagate down the chain.
+
+::: {.callout-warning}
+This quantity is **not** the DCR. An earlier revision of this section called it the "Drift-Correction-Response (DCR)" and attributed it to Chapter @sec-zero_torque_counterfactual, which defines something else entirely: the Drift–Control Ratio, a dimensionless comparison of drift magnitude against bounded control. A latency has units of time. Two quantities with different dimensions cannot share an acronym, and `NOTATION.md` reserves DCR for the ratio.
+:::
 
 For instance, if the hip rotation is slightly delayed, the constraint force that drives the torso will arrive slightly late. The torso will then accelerate slightly later, which cascades to the arms, and finally to the club. The result might be a slightly slower club speed, or a timing error that affects the strike quality.
 
-A skilled golfer (with a low modeled DCR latency) might correct such timing errors with small adjustments: slightly increasing the muscle activation magnitude or duration to compensate. Over many trials, the motor system may learn to anticipate and reduce timing errors, lowering the correction demand.
+A skilled golfer (with a low modeled correction latency) might correct such timing errors with small adjustments: slightly increasing the muscle activation magnitude or duration to compensate. Over many trials, the motor system may learn to anticipate and reduce timing errors, lowering the correction demand.
 
-Conversely, a golfer with a high modeled DCR latency may not adjust quickly enough to keep the kinetic-chain sequence synchronized. The predicted result is higher variability in club speed and strike quality; that claim should be supported by the model definition, timing data, and repeated-swing measurements.
+Conversely, a golfer with a high modeled correction latency may not adjust quickly enough to keep the kinetic-chain sequence synchronized. The predicted result is higher variability in club speed and strike quality; that claim should be supported by the model definition, timing data, and repeated-swing measurements.
 
 ## Practical Implications and Instruction
 

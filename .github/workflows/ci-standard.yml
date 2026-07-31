@@ -135,6 +135,13 @@ jobs:
           fi
       - name: Verify Quarto Render Coverage
         run: python3 scripts/check_quarto_render_coverage.py
+      - name: Verify Acronym Terminology Is Consistent
+        # NOTATION.md is the single source of truth for DCR and ZTCF. Fails on any
+        # reintroduced variant expansion or the dangling cross-reference that made
+        # the acronyms mean five different things each (#3526).
+        run: |
+          python3 scripts/check_terminology.py \
+            --baseline config/terminology-baseline.json
       - name: Verify Generated Worked Examples Are Fresh
         # Textbook worked examples that carry numbers are solved by code and
         # written as LaTeX fragments the chapters \input. Fails if a committed
