@@ -27,19 +27,32 @@ concurrency:
 jobs:
   # ── Dispatcher: enforce local-only routing (NO GitHub-hosted runners) ──────
   pick-runner:
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
     timeout-minutes: 2
     outputs:
       runner: ${{ steps.check.outputs.runner }}
     steps:
       - name: Select runner
         id: check
+        env:
+          REPO_VISIBILITY: ${{ github.event.repository.visibility }}
+          RUNNER_TARGET: ${{ vars.RUNNER_TARGET }}
         run: |
           mkdir -p "$(dirname "$GITHUB_OUTPUT")"
-          echo "runner=ubuntu-latest" >> "$GITHUB_OUTPUT"
-          echo "Routing to GitHub-hosted runners: this repository is public, so"
-          echo "standard hosted runners are free and unmetered, and keeping fork"
-          echo "pull requests off the self-hosted fleet is the safer default."
+          if [ "$REPO_VISIBILITY" != "public" ]; then
+            # Hosted runners are billed on a non-public repo, so routing is not a
+            # preference here and RUNNER_TARGET deliberately does not apply.
+            RUNNER=d-sorg-fleet
+            WHY="repository is '${REPO_VISIBILITY:-unknown}'; hosted runners are metered"
+          elif [ "$RUNNER_TARGET" = "local" ]; then
+            RUNNER=d-sorg-fleet
+            WHY="repository is public but RUNNER_TARGET=local"
+          else
+            RUNNER=ubuntu-latest
+            WHY="repository is public; hosted runners are free and keep fork PRs off the fleet"
+          fi
+          echo "runner=$RUNNER" >> "$GITHUB_OUTPUT"
+          echo "Routing to $RUNNER ($WHY)."
   quality-gate:
     needs: pick-runner
     runs-on: ${{ needs.pick-runner.outputs.runner }}
@@ -491,7 +504,7 @@ jobs:
   local-only-workflows:
     timeout-minutes: 30
     name: Reject hosted runner routing
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
     steps:
       - name: Run local-only workflow guard
         shell: bash
