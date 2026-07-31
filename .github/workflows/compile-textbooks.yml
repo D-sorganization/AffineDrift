@@ -1,0 +1,196 @@
+# Compiles all seven LaTeX books and FAILS on LaTeX errors.
+#
+# This replaces compile_textbooks.yml and compile_golf_textbook.yml, deleted by
+# PR #2928 on 2026-04-28. Restoring those verbatim would restore a gate that does
+# not gate: they passed `-f` to latexmk, which forces through errors and still
+# emits a PDF, and then verified only that the PDF *file existed*. A Volume 0
+# truncated after chapter 3 by a stray \end{document} still produces a main.pdf,
+# so that check passed for months while the book was two-thirds missing.
+#
+# This workflow therefore differs in three ways:
+#   1. No `-f`. latexmk stops on error and the step fails.
+#   2. Undefined citations and references fail the build. A `[?]` in a textbook
+#      is a defect, not a warning.
+#   3. A page-count floor per book. Existence of a PDF is not evidence the book
+#      is complete; a floor catches silent truncation, which is the specific
+#      failure mode that went unnoticed.
+#
+# Tracked by #3497 under epic #3491.
+
+name: Compile Textbooks
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "articles/**/*.tex"
+      - "articles/**/*.sty"
+      - "articles/**/*.bib"
+      - ".github/workflows/compile-textbooks.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "articles/**/*.tex"
+      - "articles/**/*.sty"
+      - "articles/**/*.bib"
+      - ".github/workflows/compile-textbooks.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  pick-runner:
+    runs-on: d-sorg-fleet
+    timeout-minutes: 2
+    outputs:
+      runner: ${{ steps.check.outputs.runner }}
+    steps:
+      - name: Enforce local-only runner routing
+        id: check
+        run: |
+          mkdir -p "$(dirname "$GITHUB_OUTPUT")"
+          echo "runner=d-sorg-fleet" >> "$GITHUB_OUTPUT"
+          echo "Enforcing local-only runner routing (d-sorg-fleet)"
+
+  compile:
+    needs: pick-runner
+    if: github.repository == 'D-sorganization/AffineDrift'
+    runs-on: ${{ needs.pick-runner.outputs.runner }}
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # min_pages is a floor, not a target: comfortably below the book's real
+          # length, high enough that a truncated build cannot pass. Raise these as
+          # the books grow; never lower one to make a red build green.
+          - name: "GOM Volume 0"
+            dir: articles/The_Geometry_of_Motion/Volume_0
+            min_pages: 20
+          - name: "GOM Volume I"
+            dir: articles/The_Geometry_of_Motion/Volume_I
+            min_pages: 20
+          - name: "GOM Volume II"
+            dir: articles/The_Geometry_of_Motion/Volume_II
+            min_pages: 15
+          - name: "GOM Volume III"
+            dir: articles/The_Geometry_of_Motion/Volume_III
+            min_pages: 10
+          - name: "GOM Volume IV"
+            dir: articles/The_Geometry_of_Motion/Volume_IV
+            min_pages: 12
+          - name: "GOM Volume V"
+            dir: articles/The_Geometry_of_Motion/Volume_V
+            min_pages: 20
+          - name: "The Physics of Golf"
+            dir: articles/The_Physics_of_Golf
+            min_pages: 40
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Compile ${{ matrix.name }}
+        uses: xu-cheng/latex-action@6549dc21effb2730855a1281407ecfcececc6c1b # v4
+        with:
+          root_file: main.tex
+          working_directory: ${{ matrix.dir }}
+          # Clear stale aux files so undefined-reference detection reflects this
+          # source tree rather than a previous run.
+          pre_compile: "rm -f ./*.aux ./chapters/*.aux ./*.bbl ./*.blg"
+          # Deliberately no -f: latexmk must stop on error so the step fails.
+          args: "-pdf -file-line-error -interaction=nonstopmode"
+
+      - name: Fail on undefined citations or references
+        working-directory: ${{ matrix.dir }}
+        run: |
+          set -euo pipefail
+          status=0
+
+          if [ -f main.blg ]; then
+            if grep -q "I didn't find a database entry" main.blg; then
+              echo "::error::${{ matrix.name }} has citations with no bibliography entry:"
+              grep "I didn't find a database entry" main.blg | sed 's/^/  /'
+              status=1
+            fi
+          fi
+
+          if [ -f main.log ]; then
+            if grep -qE "LaTeX Warning: Citation .* undefined" main.log; then
+              echo "::error::${{ matrix.name }} has undefined citations (these render as [?]):"
+              grep -E "LaTeX Warning: Citation .* undefined" main.log | sort -u | sed 's/^/  /'
+              status=1
+            fi
+            if grep -qE "LaTeX Warning: Reference .* undefined" main.log; then
+              echo "::error::${{ matrix.name }} has undefined references (these render as ??):"
+              grep -E "LaTeX Warning: Reference .* undefined" main.log | sort -u | sed 's/^/  /'
+              status=1
+            fi
+          fi
+
+          exit "$status"
+
+      - name: Verify every included chapter reached the PDF
+        working-directory: ${{ matrix.dir }}
+        run: |
+          set -euo pipefail
+          if [ ! -f main.pdf ]; then
+            echo "::error::${{ matrix.name }} produced no PDF"
+            exit 1
+          fi
+          if [ ! -f main.log ]; then
+            echo "::error::${{ matrix.name }} produced no build log to verify against"
+            exit 1
+          fi
+
+          # This is the check that would have caught the Volume 0 truncation.
+          # A stray \end{document} in an included chapter makes LaTeX stop early
+          # and still emit a valid PDF, so neither "the PDF exists" nor "the
+          # build succeeded" detects it. But LaTeX logs every file it opens, so
+          # a chapter that main.tex includes and the log never mentions did not
+          # make it into the book.
+          missing=0
+          while read -r chapter; do
+            [ -n "${chapter}" ] || continue
+            base="$(basename "${chapter}")"
+            if ! grep -qF "${base}" main.log; then
+              echo "::error::${{ matrix.name }}: main.tex includes '${chapter}' but the build never opened it -- the document ended early."
+              missing=$((missing + 1))
+            fi
+          done < <(grep -oP '\\(?:include|input)\{\K[^}]+' main.tex | sed 's/\.tex$//')
+
+          if [ "${missing}" -gt 0 ]; then
+            echo "::error::${{ matrix.name }}: ${missing} included file(s) never reached the PDF."
+            exit 1
+          fi
+
+          # Page count comes from LaTeX's own log line, which is authoritative and
+          # always present. Reading it out of the PDF is not reliable: these books
+          # compile to PDF 1.5+ with compressed object streams, so /Type /Page does
+          # not appear as plain text.
+          pages="$(grep -oP 'Output written on .*\(\K[0-9]+(?= pages)' main.log | tail -1 || echo 0)"
+          echo "${{ matrix.name }}: ${pages} pages, all included chapters present."
+
+          # A deliberately loose sanity floor. The chapter check above is the real
+          # truncation guard; this only catches a catastrophically empty build.
+          # Raise these to something near the true length once the books compile
+          # green and the real page counts are known -- but never lower one to turn
+          # a red build green.
+          if [ "${pages}" -lt "${{ matrix.min_pages }}" ]; then
+            echo "::error::${{ matrix.name }} compiled to only ${pages} pages, below the floor of ${{ matrix.min_pages }}."
+            exit 1
+          fi
+
+      - name: Upload ${{ matrix.name }} PDF
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ${{ matrix.name }}
+          path: |
+            ${{ matrix.dir }}/main.pdf
+            ${{ matrix.dir }}/main.log
+          if-no-files-found: warn
+          retention-days: 14
