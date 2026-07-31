@@ -404,9 +404,11 @@ A 300 millisecond downswing at 10 Hz bandwidth means the brain can process rough
 
 This is barely enough for one feedback correction cycle. Moreover, sensory feedback for the first window doesn't arrive until after the second window has ended.
 
-In contrast, the golf club itself oscillates at roughly 50--200 Hz during the swing (the fundamental resonance frequencies of the club). The brain's 10 Hz bandwidth is much slower than the club's 100 Hz dynamics.
+It is tempting to blame a bandwidth mismatch --- a controller too slow for a fast plant --- but the numbers do not support that reading. A driver shaft's first bending mode is about 3--5 Hz, and the gross swing dynamics are slower still: the whole downswing is a single acceleration--deceleration cycle lasting roughly a quarter of a second. The plant is therefore \emph{slower} than the 10--40 Hz at which the nervous system can modulate its output, not faster.
 
-This is a \textit{mismatch between the controller bandwidth and the plant dynamics}---a classic problem in control engineering, which we encountered as the Disturbance Rejection vs. Control (DCR) problem in Chapter \ref{ch:zero_torque_counterfactual}.
+The binding constraint is \textit{transport delay}, not bandwidth. A monosynaptic stretch reflex returns force in roughly 25--40 ms, a long-latency response in 50--100 ms, and a voluntary correction to a visually detected error in 150--200 ms. Set against a downswing of 250--300 ms, only the fastest spinal loops can close at all within the movement, and those can modulate limb impedance --- they cannot restructure a movement plan. By the time a visually detected error could produce a corrective torque, the ball has gone.
+
+This is the classic problem of a control loop whose delay is comparable to the duration of the task itself.
 \end{constraintbox}
 
 The solution, as we learned in the physics chapters, is to exploit drift. When the plant (the golf swing) is drift-dominated, a slow controller can still achieve good performance by specifying initial conditions and letting physics do the rest. The brain doesn't need to correct the swing trajectory moment-by-moment. It only needs to get the initial conditions right.
@@ -456,7 +458,7 @@ This distinction is fundamental to understanding biological motor control. The b
 
 \item The nervous system is a hierarchy: the motor cortex (high-level planning), the spinal cord (local control), and the basal ganglia (action selection) all contribute.
 
-\item Bandwidth limitations are severe. The brain operates at 10--40 Hz, while the club oscillates at 50--200 Hz. The brain solves this by exploiting the drift-dominated physics of the swing.
+\item Feedback delay, not bandwidth, is the binding constraint. The plant is slow (shaft first mode 3--5 Hz; the downswing is one acceleration--deceleration cycle), but loop delays of 25--200 ms against a 250--300 ms downswing leave no room for a visually driven correction. The brain solves this by exploiting the drift-dominated physics of the swing.
 
 \item The brain learns solutions offline (during practice) and executes them online (during performance). This is more efficient than online optimization, but less flexible.
 \end{enumerate}
@@ -464,7 +466,7 @@ This distinction is fundamental to understanding biological motor control. The b
 
 \begin{exercises}{Chapter Exercises}{ex:ch24_exercises}
 \begin{enumerate}
-\item In Chapter \ref{ch:zero_torque_counterfactual}, we introduced the Disturbance Rejection vs. Control (DCR) problem: high control of small disturbances, or low control of large changes. How does the bandwidth limitation of the brain (10--40 Hz) relate to the plant bandwidth (50--200 Hz) in the context of DCR?
+\item The nervous system modulates output at 10--40 Hz, while the shaft's first bending mode is only 3--5 Hz --- so the controller is \emph{faster} than the plant. Why, then, can the golfer not correct the swing in flight? Frame your answer in terms of loop delay against movement duration rather than bandwidth, and state which reflex loops could close within a 250 ms downswing and what they could actually accomplish.
 
 \item A professional golfer produces clubhead speeds with a coefficient of variation of 1--3\%. Given the neural noise (5--10\% muscle force variability) and sensory noise (~1--5 degree proprioceptive acuity), explain how this high consistency is possible. Hint: what does the drift field contribute?
 
