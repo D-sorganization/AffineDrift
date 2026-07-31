@@ -135,6 +135,12 @@ jobs:
           fi
       - name: Verify Quarto Render Coverage
         run: python3 scripts/check_quarto_render_coverage.py
+      - name: Verify Generated Worked Examples Are Fresh
+        # Textbook worked examples that carry numbers are solved by code and
+        # written as LaTeX fragments the chapters \input. Fails if a committed
+        # fragment no longer matches the generator, so a number cannot be edited
+        # into the book by hand without the code agreeing (#3518).
+        run: python3 scripts/generate_worked_examples.py --check
       - name: Verify LaTeX/Quarto Tree Parity
         # Both textbooks exist twice and are maintained by hand. Fails only on
         # divergences absent from the baseline, so the trees cannot drift further
