@@ -4,6 +4,7 @@ Verifies that critical checks and dependencies are properly configured
 in the GitHub Actions deployment workflow.
 """
 
+import re
 from pathlib import Path
 
 import pytest
@@ -51,7 +52,14 @@ def test_deploy_runner_picker_does_not_depend_on_org_api_token() -> None:
 
     assert "RUNNER_CHECK_TOKEN" not in content
     assert "/actions/runners" not in content
-    assert "runner=d-sorg-fleet" in content
+    # The picker must emit a static label rather than interrogating the org
+    # runners API, so that a stale token cannot break deployment. Which label it
+    # picks is a policy question that depends on repository visibility -- this
+    # repo is public, so it routes to free hosted runners -- and is checked by
+    # the local-only runner guard, not here.
+    assert re.search(
+        r"^\s*echo \"runner=[A-Za-z0-9_.-]+\"", content, re.MULTILINE
+    ), "Deploy workflow must assign a static runner label"
 
 
 def test_local_only_guard_does_not_run_on_main_pushes() -> None:

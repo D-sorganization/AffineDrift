@@ -4,7 +4,11 @@ Guards scripts/check_local_only_workflows.py — itself a CI enforcement layer
 that was previously unverified.
 """
 
-from scripts.check_local_only_workflows import BANNED, scan_workflow_text
+from scripts.check_local_only_workflows import (
+    BANNED,
+    hosted_runners_are_metered,
+    scan_workflow_text,
+)
 
 
 class TestScanWorkflowText:
@@ -32,3 +36,30 @@ class TestScanWorkflowText:
 
     def test_empty_text_is_no_op(self):
         assert scan_workflow_text("wf.yml", "") == []
+
+
+class TestHostedRunnersAreMetered:
+    """Hosted runners are free on public repos, so the ban must not apply there."""
+
+    def test_public_is_not_metered(self):
+        assert hosted_runners_are_metered("public") is False
+
+    def test_private_and_internal_are_metered(self):
+        assert hosted_runners_are_metered("private") is True
+        assert hosted_runners_are_metered("internal") is True
+
+    def test_visibility_is_case_and_whitespace_insensitive(self):
+        assert hosted_runners_are_metered("  PUBLIC \n") is False
+
+    def test_unknown_visibility_fails_closed(self):
+        # A false failure costs a re-run; a false pass costs a billed month.
+        assert hosted_runners_are_metered("") is True
+        assert hosted_runners_are_metered("something-else") is True
+
+    def test_reads_environment_by_default(self, monkeypatch):
+        monkeypatch.setenv("REPO_VISIBILITY", "public")
+        assert hosted_runners_are_metered() is False
+        monkeypatch.setenv("REPO_VISIBILITY", "private")
+        assert hosted_runners_are_metered() is True
+        monkeypatch.delenv("REPO_VISIBILITY")
+        assert hosted_runners_are_metered() is True
