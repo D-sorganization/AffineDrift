@@ -154,6 +154,12 @@ repos:
       - id: bandit
         name: "bandit (security scan)"
         stages: [pre-push]
+        # bandit's --exclude takes ONE comma-separated list. Repeating -x does
+        # not accumulate -- argparse keeps only the last occurrence -- so the
+        # previous repeated-flag form silently excluded .github/ alone. Combined
+        # with bandit walking the filesystem rather than the git index, that put
+        # a local .venv in scope and blocked every push with hundreds of
+        # third-party findings. Keep this as a single argument.
         args:
           [
             "-r",
@@ -161,13 +167,7 @@ repos:
             "-ll",
             "-ii",
             "-x",
-            "tests/",
-            "-x",
-            "archive/",
-            "-x",
-            "legacy/",
-            "-x",
-            ".github/",
+            "./tests,./archive,./legacy,./.github,./.venv,./venv,./node_modules",
           ]
         pass_filenames: false
         # Only run if Python files changed
