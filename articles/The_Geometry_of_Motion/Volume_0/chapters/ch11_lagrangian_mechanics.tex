@@ -239,7 +239,9 @@ summed over $k$, weighted by velocity pairs.
     \item \textbf{Coriolis Terms:} Proportional to $\dot{q}_i\dot{q}_j$ with $i \neq j$. These represent cross-coupling: if one joint rotates while another accelerates, the Coriolis force deflects the moving joint.
 \end{itemize}
 
-\textbf{Theorem:} The matrix $\mathbf{M} - 2\mathbf{C}$ is \textbf{skew-symmetric}, i.e., $(\mathbf{M} - 2\mathbf{C})^T = -(\mathbf{M} - 2\mathbf{C})$.
+\textbf{Theorem:} \emph{If $\mathbf{C}$ is constructed from the Christoffel symbols of the second kind} (Section~\ref{sec:christoffel}), then the matrix $\dot{\mathbf{M}} - 2\mathbf{C}$ is \textbf{skew-symmetric}, i.e., $(\dot{\mathbf{M}} - 2\mathbf{C})^T = -(\dot{\mathbf{M}} - 2\mathbf{C})$.
+
+\textbf{The hypothesis is not decorative.} The factorisation of the Coriolis and centrifugal terms into a matrix $\mathbf{C}$ is not unique: any $\mathbf{C}'$ satisfying $\mathbf{C}'\dot{\mathbf{q}} = \mathbf{C}\dot{\mathbf{q}}$ gives the same equations of motion. Only the Christoffel construction makes $\dot{\mathbf{M}} - 2\mathbf{C}$ skew-symmetric as a \emph{matrix identity}; for other valid choices the property generally fails. Passivity- and adaptive-control designs that invoke skew-symmetry therefore require the Christoffel form specifically.
 
 \textbf{Proof:} The kinetic energy is $T = \frac{1}{2}\dot{\mathbf{q}}^T \mathbf{M}\dot{\mathbf{q}}$. Differentiating with respect to time:
 \[\frac{d}{dt}(2T) = \dot{\mathbf{q}}^T \dot{\mathbf{M}} \dot{\mathbf{q}} + 2\dot{\mathbf{q}}^T \mathbf{M} \ddot{\mathbf{q}}.\]
@@ -249,7 +251,7 @@ From the equations of motion $\mathbf{M}\ddot{\mathbf{q}} + \mathbf{C}\dot{\math
 
 Substituting the first expression for $\dot{\mathbf{q}}^T \mathbf{M} \ddot{\mathbf{q}}$ and simplifying yields:
 \[\dot{\mathbf{q}}^T (\dot{\mathbf{M}} - 2\mathbf{C}) \dot{\mathbf{q}} = 0\]
-for all trajectories $\dot{\mathbf{q}}$. Since this quadratic form vanishes for arbitrary $\dot{\mathbf{q}}$, the matrix $\dot{\mathbf{M}} - 2\mathbf{C}$ must be skew-symmetric:
+for all trajectories $\dot{\mathbf{q}}$. This step alone is not enough: $\mathbf{C}$ is itself a function of $\dot{\mathbf{q}}$, so the vanishing of the quadratic form along trajectories does not by itself let us vary $\dot{\mathbf{q}}$ freely and conclude skew-symmetry. It is the Christoffel construction that supplies the missing ingredient, giving $\dot{M}_{kj} - 2C_{kj} = \sum_i \left(\partial M_{ij}/\partial q_k - \partial M_{kj}/\partial q_i\right)\dot{q}_i$, which is manifestly antisymmetric in $k \leftrightarrow j$. With that in hand, the matrix $\dot{\mathbf{M}} - 2\mathbf{C}$ must be skew-symmetric:
 \[(\dot{\mathbf{M}} - 2\mathbf{C}) + (\dot{\mathbf{M}} - 2\mathbf{C})^T = \mathbf{0}.\]
 This is the celebrated \textbf{skew-symmetry property} of Lagrangian dynamics, which plays a central role in passivity-based and adaptive control design.
 
@@ -466,6 +468,7 @@ Since the $\delta q_i$ are arbitrary (independent), each coefficient must vanish
 
 % ==========================================================================
 \section{Christoffel Symbols and the Geometry of $\mathbf{M}$}
+\label{sec:christoffel}
 % ==========================================================================
 
 The mass matrix $\mathbf{M}(\mathbf{q})$ defines a Riemannian metric on configuration space \cite{Murray1994}. The Christoffel symbols $\Gamma^i_{jk}$ of this metric are:
@@ -526,7 +529,9 @@ The total kinetic energy is:
 
 In matrix form: $T = \frac{1}{2}\begin{pmatrix} \dot{q}_1 & \dot{q}_2 \end{pmatrix} \mathbf{M} \begin{pmatrix} \dot{q}_1 \\ \dot{q}_2 \end{pmatrix}$
 
-\[\mathbf{M}(\mathbf{q}) = \begin{pmatrix} \left(\frac{m_1}{2} + m_2\right)\ell_1^2 & m_2\ell_1\ell_2\cos(q_1-q_2) \\ m_2\ell_1\ell_2\cos(q_1-q_2) & \frac{m_2\ell_2^2}{2} \end{pmatrix}\]
+\[\mathbf{M}(\mathbf{q}) = \begin{pmatrix} \left(\frac{m_1}{4} + m_2\right)\ell_1^2 & \frac{1}{2}m_2\ell_1\ell_2\cos(q_1-q_2) \\ \frac{1}{2}m_2\ell_1\ell_2\cos(q_1-q_2) & \frac{m_2\ell_2^2}{4} \end{pmatrix}\]
+
+Read the entries directly off the quadratic form: the diagonal entries are the coefficients of $\dot{q}_i^2$ inside the bracket, while the off-diagonal entry is \emph{half} the coefficient of the cross term $\dot{q}_1\dot{q}_2$, because that term appears twice in $\dot{\mathbf{q}}^T\mathbf{M}\dot{\mathbf{q}}$.
 
 \subsection{Potential Energy}
 
@@ -548,7 +553,11 @@ Computing $\frac{d\mathbf{M}}{dt}$:
 
 Using the formula for the Coriolis matrix (after careful computation):
 
-\[\mathbf{C}(\mathbf{q}, \dot{\mathbf{q}}) = \begin{pmatrix} -m_2\ell_1\ell_2\sin(q_1-q_2)\dot{q}_2 & -m_2\ell_1\ell_2\sin(q_1-q_2)(\dot{q}_1 + \dot{q}_2) \\ m_2\ell_1\ell_2\sin(q_1-q_2)\dot{q}_1 & 0 \end{pmatrix}\]
+\[\mathbf{C}(\mathbf{q}, \dot{\mathbf{q}}) = \frac{1}{2}m_2\ell_1\ell_2\sin(q_1-q_2)\begin{pmatrix} 0 & \dot{q}_2 \\ -\dot{q}_1 & 0 \end{pmatrix}\]
+
+\textbf{Consistency check.} With this $\mathbf{M}$ and this Christoffel $\mathbf{C}$,
+\[\dot{\mathbf{M}} - 2\mathbf{C} = \frac{1}{2}m_2\ell_1\ell_2\sin(q_1-q_2)(\dot{q}_1+\dot{q}_2)\begin{pmatrix} 0 & -1 \\ 1 & 0 \end{pmatrix},\]
+which is skew-symmetric, as the theorem above requires. Any worked example that fails this check has an algebraic error in $\mathbf{M}$ or $\mathbf{C}$ --- it is the cheapest available test of a hand-derived model.
 
 The complete equations of motion are:
 \[\mathbf{M}(\mathbf{q})\ddot{\mathbf{q}} + \mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})\dot{\mathbf{q}} + \mathbf{G}(\mathbf{q}) = \boldsymbol{\tau}\]
