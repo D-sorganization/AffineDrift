@@ -135,6 +135,13 @@ jobs:
           fi
       - name: Verify Quarto Render Coverage
         run: python3 scripts/check_quarto_render_coverage.py
+      - name: Verify LaTeX/Quarto Tree Parity
+        # Both textbooks exist twice and are maintained by hand. Fails only on
+        # divergences absent from the baseline, so the trees cannot drift further
+        # apart while the known ones are reconciled under #3499.
+        run: |
+          python3 scripts/check_tree_parity.py \
+            --baseline config/tree-parity-baseline.json
       - name: Validate Article Frontmatter
         run: python3 scripts/validate_frontmatter.py
       - name: Verify CSS Budget
