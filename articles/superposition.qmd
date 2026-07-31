@@ -17,9 +17,9 @@ $$
 \dot x = f(x) + \sum_{i=1}^m g_i(x) u_i,
 $$
 
-for finite-dimensional mechanical systems actuated by generalized forces, and prove that the mapping from inputs to generalized accelerations, generalized forces, and wrenches is linear at fixed state. This yields a precise superposition principle: although *trajectories in state space do not superpose* in general (due to nonlinearity), the *effects of distinct input channels on generalized forces and accelerations do*. We provide worked examples in each formulation (a single pendulum, a planar 2R manipulator, and a spatial single-link model) and show how to decompose motion into contributions from gravity, Coriolis/centrifugal effects, and individual actuators.
+for finite-dimensional mechanical systems actuated by generalized forces, and prove that the mapping from inputs to generalized accelerations, generalized forces, and wrenches is exactly **affine**, and its incremental part (relative to $u=0$) is exactly **affine**, and its incremental part (relative to $u=0$) is exactly linear: This yields a precise superposition principle: although *trajectories in state space do not superpose* in general (due to nonlinearity), the *effects of distinct input channels on generalized forces and accelerations do*. We provide worked examples in each formulation (a single pendulum, a planar 2R manipulator, and a spatial single-link model) and show how to decompose motion into contributions from gravity, Coriolis/centrifugal effects, and individual actuators.
 
-In the broader context of the AffineDrift framework, this linearity explains why the **Zero Torque Counterfactual (ZTCF)** is well-defined inside a control-affine model. Because the input enters linearly, we can mathematically set the modeled torque input to zero ($u=0$) without changing the passive drift vector field $f(x)$. This supports a model-level separation between the history-dependent passive layer (Drift) and the instantaneous active layer (Input).
+In the broader context of the AffineDrift framework, this linearity explains why the **Zero Torque Counterfactual (ZTCF)** is well-defined inside a control-affine model. The counterfactual $u=0$ is well defined for any model with an identified exogenous input. What the affine structure adds is that the resulting difference is exactly linear in $u$: $\dot x(u) - \dot x(0) = G(x)u$, with no cross terms and no $u$-dependence hidden in $f$. This supports a model-level separation between the history-dependent passive layer (Drift) and the instantaneous active layer (Input).
 :::
 
 ```{=html}
@@ -179,7 +179,7 @@ $$
 
 **This is the basic superposition statement:** at a fixed state $x$, the *incremental effect of each input component* on $\dot x$ is linear and additively separable.
 
-This additive separability is the engine behind the **Drift–Input Decomposition**. It implies that the "Input Acceleration" is *additively separable* from the "Drift Acceleration"—the two combine by simple vector addition at a fixed state, with no cross-coupling term (this is separability, not geometric orthogonality in any inner-product sense). Consequently, the operation of subtracting the total observed acceleration from the passive drift acceleration to recover the input is not just an approximation—it is an exact algebraic inversion permitted by the fiber-linear structure of the tangent bundle.
+This additive separability is the engine behind the **Drift–Input Decomposition**. It implies that the "Input Acceleration" is *additively separable* from the "Drift Acceleration"—the two combine by simple vector addition at a fixed state, with no cross-coupling term (this is separability, not geometric orthogonality in any inner-product sense). Consequently, the operation of subtracting the passive drift acceleration from the total observed acceleration to recover the input term $G(x)u$ is an exact algebraic identity, not an approximation. Recovering the input *vector* $u$ additionally requires $G(x)$ to have full column rank; where it does not, only the projection of $u$ onto $\text{range}(G^\top)$ is identifiable.
 
 What is *not* true in general is that full solutions $x(t)$ of the nonlinear ODE (2.1) can be written as linear sums of solutions for different inputs. That would require $f$ and $g_i$ to be linear in $x$ as well; we do **not** assume that.
 
@@ -205,12 +205,12 @@ Define:
 * linear velocity $v = \dot p \in \mathbb{R}^3$,
 * angular velocity $\omega \in \mathbb{R}^3$ (in body or spatial coordinates; we choose body for definiteness).
 
-Let $f^\text{ext} \in \mathbb{R}^3$ be the net **external force** on the body, expressed in the chosen frame, and $n^\text{ext} \in \mathbb{R}^3$ the net **external moment** about the body frame origin.
+Let $f^\text{ext,B} \in \mathbb{R}^3$ be the net **external force** on the body, expressed in the body frame, and $n^\text{ext,B} \in \mathbb{R}^3$ the net **external moment** about the body frame origin.
 
 The Newton–Euler equations in body coordinates can be written as
 
 \begin{align}
-m \dot v &= m g^B + f^\text{ext}, \tag{3.1a} \\
+m (\dot v^B + \omega^B \times v^B) &= m g^B + f^\text{ext,B}, \tag{3.1a} \\
 I_B \dot \omega + \omega \times (I_B \omega) &= n^\text{ext}, \tag{3.1b}
 \end{align}
 
@@ -240,7 +240,7 @@ Then the state is $x = (p, R, v, \omega)$ and the dynamics can be written in fir
 
 * Dynamics:
   \begin{align}
-  \dot v &= g^B + \frac{1}{m} f^\text{ext}, \tag{3.4a} \\
+  \dot v &= g^B - \omega^B \times v^B + \frac{1}{m} f^\text{ext,B}, \tag{3.4a} \\
   \dot \omega &= I_B^{-1}\left(n^\text{ext} - \omega \times (I_B \omega)\right). \tag{3.4b}
   \end{align}
 
@@ -256,7 +256,7 @@ f(x) =
 \begin{bmatrix}
 R v^B \\
 R \widehat{\omega}^B \\
-g^B \\
+g^B - \omega^B \times v^B \\
 -I_B^{-1}\big(\omega \times (I_B \omega)\big)
   \end{bmatrix},
   \quad
@@ -781,13 +781,13 @@ For fixed $(q,\dot q)$, define
 $$
 A(q,\dot q) := - M(q)^{-1} \left( C(q,\dot q)\dot q + g(q) \right),
 \quad
-L(q,\dot q) := M(q)^{-1} B(q,\dot q).
+H(q,\dot q) := M(q)^{-1} B(q,\dot q).
 $$
 
 Then
 
 $$
-\ddot q = A(q,\dot q) + L(q,\dot q) u.
+\ddot q = A(q,\dot q) + H(q,\dot q) u.
 $$
 
 Thus the map $u \mapsto \ddot q$ is affine, and the incremental map
@@ -874,7 +874,7 @@ $$
 \mathcal{I} =
 \begin{bmatrix}
 I & m c^\times \\
-m c^\times & m I_3
+-m c^\times & m I_3
   \end{bmatrix},
   \tag{5.3}
 $$
@@ -882,6 +882,7 @@ $$
 where
 
 * $I$ is the $3\times 3$ rotational inertia about the body frame origin,
+* note $(c^\times)^\top = -c^\times$, so the matrix is symmetric,
 * $m$ is the mass,
 * $c$ is the vector from body frame origin to center of mass,
 * $c^\times$ is the skew-symmetric matrix s.t. $c^\times x = c \times x$.
@@ -1240,7 +1241,7 @@ To make the parallels concrete, we now present two more worked examples: a plana
 
 ### 8.1 Example: 2R planar robot arm (Newton–Euler / Lagrangian)
 
-Consider a 2-link planar robot arm with joint angles $q_1,q_2$, link lengths $l_1,l_2$, link masses $m_1,m_2$, and moments of inertia $I_1,I_2$ about their centers of mass. Gravity acts in $-y$.
+Consider a 2-link planar robot arm with joint angles $q_1,q_2$, link lengths $l_1,l_2$, link masses $m_1,m_2$, and moments of inertia $I_1,I_2$ about their proximal joint axes. The angles are measured from the horizontal. Gravity acts in $-y$.
 
 The equations of motion can be written as
 
