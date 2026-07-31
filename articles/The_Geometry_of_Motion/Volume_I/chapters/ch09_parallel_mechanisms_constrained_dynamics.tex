@@ -474,16 +474,49 @@ A system is \textbf{control-affine} if the dynamics can be written as
 where $f: TQ \to TQ$ is the \textbf{drift} vector field (dynamics with zero control) and $g_i: Q \to \mathbb{R}^n$
 are the \textbf{input fields}.
 
-From the constrained Euler-Lagrange equation \eqref{eq:ch9:euler-lagrange-constrained}, we identify:
-\begin{align}
-  f(q,\dot{q}) &= -M(q)^{-1} \left( C(q,\dot{q})\dot{q} + \nabla V(q) - J_c(q)^\top \lambda \right), \label{eq:ch9:drift}\\
-  g_i(q) &= M(q)^{-1} B(q)e_i, \label{eq:ch9:input-field}
-\end{align}
-where $e_i$ is the $i$-th standard basis vector.
+Reading the drift and input fields off the constrained Euler-Lagrange equation
+\eqref{eq:ch9:euler-lagrange-constrained} requires care. It is tempting to write
+\[
+  f(q,\dot{q}) \stackrel{?}{=} -M^{-1}\left( C\dot{q} + \nabla V - J_c^\top \lambda \right),
+  \qquad
+  g_i(q) \stackrel{?}{=} M^{-1} B e_i,
+\]
+treating the constraint force $J_c^\top\lambda$ as ``part of the drift'' on the grounds that it is a
+reaction rather than a commanded input. \textbf{This is wrong, and the reason matters.} The multiplier
+$\lambda$ is not independent: it is fixed by the constraint, and it depends on $u$. Eliminating it
+makes that dependence explicit.
 
-Note that the constraint forces $J_c(q)^\top \lambda$ are part of the drift: they are not ``controlled''
-in the usual sense but rather reaction forces that enforce the constraint. These must be computed from
-the constraint equation \eqref{eq:ch9:accel-constraint}.
+Writing $h(q,\dot q) = C(q,\dot q)\dot q + \nabla V(q)$ and solving
+\eqref{eq:ch9:euler-lagrange-constrained} together with the acceleration constraint
+\eqref{eq:ch9:accel-constraint} gives
+\begin{equation}
+  \lambda = -\Lambda\left[ J_c M^{-1}\left(Bu - h\right) + \dot{J}_c \dot{q} \right],
+  \qquad
+  \Lambda := \left(J_c M^{-1} J_c^\top\right)^{-1},
+  \label{eq:ch9:multiplier}
+\end{equation}
+which is \emph{affine in $u$}. Substituting back and collecting terms yields the constrained
+control-affine form:
+\begin{align}
+  f(q,\dot{q}) &= -P M^{-1} h(q,\dot q) \;-\; M^{-1} J_c^\top \Lambda \dot{J}_c \dot{q}, \label{eq:ch9:drift}\\
+  g_i(q) &= P M^{-1} B e_i, \qquad P := I - M^{-1} J_c^\top \Lambda J_c, \label{eq:ch9:input-field}
+\end{align}
+where $e_i$ is the $i$-th standard basis vector and $P$ is the dynamically consistent projector onto
+the constraint-admissible directions.
+
+\textbf{Why this is not a technicality.} Lumping $J_c^\top\lambda$ into the drift breaks
+$\partial f/\partial u = 0$ --- the drift invariance on which the entire Zero-Torque Counterfactual
+construction rests. If the drift itself depends on the input, then setting $u = 0$ and integrating does
+not isolate the passive dynamics, and the ZTCF stops being a decomposition at all.
+
+It also changes the input field. The unconstrained $M^{-1}B$ is \emph{not} the input field of the
+constrained system: it points partly along directions the constraint forbids, so accelerations computed
+from it violate $J_c\ddot q + \dot J_c \dot q = 0$. The projector $P$ removes exactly that component;
+since $J_c P M^{-1} = 0$, every admissible acceleration satisfies the constraint by construction.
+
+The practical consequence: any ZTCF or drift/input attribution computed on a system with closed loops or
+ground contact --- which includes the golf applications this series is built around --- must use
+\eqref{eq:ch9:drift} and \eqref{eq:ch9:input-field}, not their unconstrained counterparts.
 
 \subsection{Lie Bracket and Controllability}
 
