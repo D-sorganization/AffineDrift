@@ -228,13 +228,13 @@ The constraint forces are whatever is needed to project the "free" dynamics onto
 \label{sec:energy_transfer_constraints}
 
 \begin{theorem}{Zero Power Constraint Condition}{theorem:zero_power_constraint}
-The power delivered by a constraint force is:
+For ideal, scleronomic (time-independent) constraints $\bm{\Phi}(\bm{q}) = \mathbf{0}$, the power delivered by a constraint force is:
 \begin{equation}
 P_{\text{constraint}} = \bm{\lambda}^T \bm{J}_c(\bm{q}) \dot{\bm{q}}
 \label{eq:constraint_power}
 \end{equation}
 
-Since $\bm{J}_c(\bm{q}) \dot{\bm{q}} = \frac{d\bm{\Phi}}{dt}$ and $\bm{\Phi}(\bm{q}(t)) = \mathbf{0}$ for all $t$, we have:
+Since $\bm{J}_c(\bm{q}) \dot{\bm{q}} = \frac{d\bm{\Phi}}{dt}$ and $\bm{\Phi}(\bm{q}(t)) = \mathbf{0}$ for all $t$ (with no explicit time dependence $\frac{\partial \bm{\Phi}}{\partial t} = \mathbf{0}$), we have:
 \begin{equation}
 \frac{d\bm{\Phi}}{dt} = \mathbf{0}
 \end{equation}
@@ -245,7 +245,7 @@ P_{\text{constraint}} = \mathbf{0}
 \label{eq:constraint_zero_power}
 \end{equation}
 
-Constraint forces do \emph{zero} net power to the system.
+Under ideal scleronomic conditions, constraint forces do \emph{zero} net power to the system.
 \end{theorem}
 
 \begin{laymansbox}{The Power Paradox}{inplain:power_paradox}
@@ -261,11 +261,12 @@ This is the fundamental mechanism of the kinetic chain. The arm slows down (losi
 \end{laymansbox}
 
 \begin{definition}{Energy Partition}{def:energy_partition}
-At any instant, the total kinetic energy is:
+At any instant, for a partitioned system $\bm{q} = \begin{bmatrix} \bm{q}_1 \\ \bm{q}_2 \end{bmatrix}$ with mass matrix $\bm{M}(\bm{q}) = \begin{bmatrix} \bm{M}_{11} & \bm{M}_{12} \\ \bm{M}_{21} & \bm{M}_{22} \end{bmatrix}$, the total kinetic energy is:
 \begin{equation}
-T = T_{\text{arm}} + T_{\text{club}} = \frac{1}{2}\dot{\bm{q}}_1^T \bm{M}_1(\bm{q}_1) \dot{\bm{q}}_1 + \frac{1}{2}\dot{\bm{q}}_2^T \bm{M}_2(\bm{q}_2) \dot{\bm{q}}_2
+T = T_{\text{arm}} + T_{\text{club}} + T_{\text{cross}} = \frac{1}{2}\dot{\bm{q}}_1^T \bm{M}_{11}(\bm{q}) \dot{\bm{q}}_1 + \frac{1}{2}\dot{\bm{q}}_2^T \bm{M}_{22}(\bm{q}) \dot{\bm{q}}_2 + \dot{\bm{q}}_1^T \bm{M}_{12}(\bm{q}) \dot{\bm{q}}_2
 \label{eq:energy_partition_definition}
 \end{equation}
+where $T_{\text{cross}} = \dot{\bm{q}}_1^T \bm{M}_{12}(\bm{q}) \dot{\bm{q}}_2$ accounts for cross-coupling kinetic energy between the segments due to the off-diagonal mass matrix block $\bm{M}_{12}$.
 
 The power going to each segment is:
 \begin{align}
