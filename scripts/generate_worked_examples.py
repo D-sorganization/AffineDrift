@@ -26,6 +26,7 @@ import numpy as np
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+from src.affine_control.golf_model import SEGMENTS, GolfModel
 from src.affine_control.lqr import LQRSolution, discrete_lqr
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -46,13 +47,25 @@ CH06_X0 = np.array([1.0, 0.0])
 CH06_STEPS = 10
 
 
+def _clean(values: np.ndarray, tolerance: float = 5e-5) -> np.ndarray:
+    """Snap values below the printing tolerance to exactly zero.
+
+    Orthogonal mode shapes give an off-diagonal modal mass of order 1e-17, which
+    would otherwise typeset as ``-0.0000`` and read as a rounding artefact rather
+    than the exact zero it is.
+    """
+    cleaned = np.array(values, dtype=float, copy=True)
+    cleaned[np.abs(cleaned) < tolerance] = 0.0
+    return cleaned
+
+
 def _matrix(values: np.ndarray, fmt: str = "{:.4f}") -> str:
-    rows = [" & ".join(fmt.format(v) for v in row) for row in np.atleast_2d(values)]
+    rows = [" & ".join(fmt.format(v) for v in row) for row in np.atleast_2d(_clean(values))]
     return " \\\\ ".join(rows)
 
 
 def _row_vector(values: np.ndarray, fmt: str = "{:.4f}") -> str:
-    return " & ".join(fmt.format(v) for v in np.asarray(values).reshape(-1))
+    return " & ".join(fmt.format(v) for v in _clean(values).reshape(-1))
 
 
 def render_ch06(solution: LQRSolution) -> str:
@@ -116,10 +129,94 @@ def render_ch06(solution: LQRSolution) -> str:
     return "\n".join(lines)
 
 
+CH08_CONFIGURATION_DEGREES = (60.0, -30.0, -20.0)
+# Mid-downswing segment rates. Measured peak values are of order 10-30 rad/s,
+# with the wrist fastest; anything near 100 rad/s is roughly 1000 rpm and does
+# not occur in a golf swing.
+CH08_VELOCITY = (12.0, -18.0, -25.0)
+
+
+def render_ch08(model: GolfModel) -> str:
+    """Emit the chapter 8 golf mass matrix, coupling, Schur complement and mobility."""
+    q = np.deg2rad(np.array(CH08_CONFIGURATION_DEGREES))
+    m_qq = model.rigid_mass_matrix(q)
+    m_qeta, m_etaeta = model.shaft_blocks(q)
+    schur = model.schur_complement(q)
+    mobility = model.effective_mobility(q)
+
+    lines = [BANNER, ""]
+
+    def macro(name: str, body: str) -> None:
+        lines.append(f"\\newcommand{{\\{name}}}{{{body}}}")
+
+    macro("cheightMqq", _matrix(m_qq))
+    macro("cheightMqqDet", f"{np.linalg.det(m_qq):.4f}")
+    macro("cheightMqqEigMin", f"{np.linalg.eigvalsh(m_qq).min():.4f}")
+    macro("cheightMqqEigMax", f"{np.linalg.eigvalsh(m_qq).max():.4f}")
+    macro("cheightMqeta", _matrix(m_qeta))
+    macro("cheightMetaeta", _matrix(m_etaeta))
+    macro("cheightMetaetaInv", _matrix(np.linalg.inv(m_etaeta), fmt="{:.2f}"))
+    macro("cheightCoupling", _matrix(m_qeta @ np.linalg.solve(m_etaeta, m_qeta.T)))
+    macro("cheightSchur", _matrix(schur))
+    macro("cheightSchurEigMin", f"{np.linalg.eigvalsh(schur).min():.4f}")
+    macro("cheightSchurEigMax", f"{np.linalg.eigvalsh(schur).max():.4f}")
+    macro("cheightMobility", _matrix(mobility))
+    macro("cheightMobilityEigMin", f"{np.linalg.eigvalsh(mobility).min():.4f}")
+    macro("cheightFullEigMin", f"{np.linalg.eigvalsh(model.full_mass_matrix(q)).min():.4f}")
+
+    # Drift acceleration at a physically plausible mid-downswing velocity.
+    # Peak segment rates in a real downswing are of order 10-30 rad/s; the
+    # earlier revision used 50 to 100 rad/s, which is several times faster than
+    # any measured swing and inflated the Coriolis term accordingly.
+    qd = np.array(CH08_VELOCITY)
+    bias = model.coriolis(q, qd) @ qd + model.gravity_torque(q)
+    macro("cheightVelocity", _row_vector(qd, fmt="{:.0f}"))
+    macro("cheightBias", _row_vector(bias, fmt="{:.2f}"))
+    macro("cheightDriftAccel", _row_vector(model.drift_acceleration(q, qd), fmt="{:.2f}"))
+    gravity = model.gravity_torque(q)
+    coriolis = model.coriolis(q, qd) @ qd
+    macro("cheightGravity", _row_vector(gravity, fmt="{:.2f}"))
+    macro("cheightCoriolisTerm", _row_vector(coriolis, fmt="{:.2f}"))
+    # Individual components, so the surrounding prose does not have to retype
+    # numbers it is discussing.
+    macro("cheightCoriolisShoulder", f"{coriolis[0]:.2f}")
+    macro("cheightGravityShoulder", f"{gravity[0]:.2f}")
+
+    # ZTCF trajectory: integrate with zero applied torque from the state above.
+    trajectory = model.ztcf_trajectory(q, qd, duration=0.10, steps=2000)
+    sampled = [trajectory[0], trajectory[len(trajectory) // 2], trajectory[-1]]
+    lines.append("")
+    lines.append("\\newcommand{\\cheightZtcfTable}{%")
+    lines.append("\\begin{tabular}{@{}ccccc@{}}")
+    lines.append("\\toprule")
+    lines.append(
+        "$t$ (s) & $q_3$ (rad) & $\\dot q_3$ (rad/s) & "
+        "Clubhead speed (m/s) & $\\rho_{\\text{DCR}}$ \\\\"
+    )
+    lines.append("\\midrule")
+    for time, pos, vel, speed in sampled:
+        drift = np.linalg.norm(model.drift_acceleration(pos, vel))
+        lines.append(f"{time:.3f} & {pos[2]:.4f} & {vel[2]:.2f} & {speed:.2f} & {drift:.1f} \\\\")
+    lines.append("\\bottomrule")
+    lines.append("\\end{tabular}%")
+    lines.append("}")
+    macro("cheightZtcfSpeedStart", f"{sampled[0][3]:.2f}")
+    macro("cheightZtcfSpeedEnd", f"{sampled[-1][3]:.2f}")
+    macro(
+        "cheightZtcfSpeedGain",
+        f"{100.0 * (sampled[-1][3] / sampled[0][3] - 1.0):.1f}",
+    )
+    lines.append("")
+    return "\n".join(lines)
+
+
 def build() -> dict[Path, str]:
     """Return the full set of generated fragments, keyed by destination path."""
     solution = discrete_lqr(CH06_A, CH06_B, CH06_Q, CH06_R)
-    return {GENERATED_DIR / "ch06_lqr_example.tex": render_ch06(solution)}
+    return {
+        GENERATED_DIR / "ch06_lqr_example.tex": render_ch06(solution),
+        GENERATED_DIR / "ch08_golf_model.tex": render_ch08(SEGMENTS),
+    }
 
 
 def main() -> int:

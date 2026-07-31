@@ -72,10 +72,33 @@ K_s &= 5000~\text{N$\cdot$m$^2$} \quad \text{(shaft bending stiffness)} \\
 \omega_1 &= 40~\text{rad/s}, \quad \omega_2 = 120~\text{rad/s} \quad \text{(modal frequencies)}
 \end{align}
 
+\input{generated/ch08_golf_model}
+
 \subsubsection{Mass Matrix Entries}
 
+\begin{remark}[Computed, not transcribed]
+Every matrix in this section is produced by \texttt{scripts/generate\_worked\_examples.py}
+from the model in \texttt{src/affine\_control/golf\_model.py}, and CI fails if the committed
+values drift from what that code emits.
+
+The reason is that an earlier revision of this section printed a mass matrix that did not
+follow from the formulas immediately above it --- entries differed by up to $2.23$, and
+$M_{33}$ was given as $0.18$ where $I_3 + m_3\ell_3^2/4 = 0.12$. The assembled blocks were
+not positive definite, and the resulting indefinite Schur complement was explained as a
+``kinematic singularity''. That explanation is wrong, and \S\ref{subsec:ch8:why-pd} below
+says why.
+\end{remark}
+
 The joint-space mass matrix block $M_{qq} \in \R^{3\times 3}$ encodes kinetic energy of
-the rigid segments. Using the standard composite-body algorithm:
+the rigid segments. It is assembled from the centre-of-mass Jacobians rather than from a
+closed form, since
+\begin{equation}
+M_{qq}(\q) = \sum_i \left( m_i\, J_{v,i}^\T J_{v,i} + I_i\, J_{\omega,i}^\T J_{\omega,i}\right)
+\label{eq:ch8:jacobian-assembly}
+\end{equation}
+is a sum of positive-semidefinite terms whose angular parts already span the joint space.
+Positive definiteness is therefore structural: it holds at every configuration, and needs no
+checking case by case. Expanded, the entries are:
 
 \begin{equation}
 M_{11} = I_1 + m_2(l_1^2 + l_{c2}^2 + 2l_1 l_{c2}\cos q_2) + m_3(l_1^2 + l_2^2 + l_3^2/4
@@ -128,37 +151,42 @@ q_1 &= 60°, \quad q_2 = -30°, \quad q_3 = -20°,
 Evaluating equations~\eqref{eq:ch8:M11}--\eqref{eq:ch8:M33} numerically:
 
 \begin{equation}
-M_{qq} = \begin{bmatrix}
-4.82 & 1.33 & 0.28 \\
-1.33 & 2.47 & 0.41 \\
-0.28 & 0.41 & 0.18
-\end{bmatrix}~\text{kg$\cdot$m}^2,
+M_{qq} = \begin{bmatrix} \cheightMqq \end{bmatrix}~\text{kg$\cdot$m}^2,
 \label{eq:ch8:Mqq-numeric}
 \end{equation}
 
-with $\det(M_{qq}) = 1.65 > 0$ (always positive definite).
+with $\det(M_{qq}) = \cheightMqqDet$ and eigenvalues spanning
+$[\cheightMqqEigMin,\ \cheightMqqEigMax]$ --- all positive, as
+\eqref{eq:ch8:jacobian-assembly} guarantees.
 
-The shaft-coupling block $M_{q\eta} \in \R^{3\times 2}$ arises from the shaft mass distribution
-and the kinematic constraint that the club tip moves with the wrist:
-
+The shaft-coupling block $M_{q\eta} \in \R^{3\times 2}$ comes from integrating along the
+shaft. A material point at arclength $s$ picks up transverse velocity from joint rotation,
+with moment arm $r_i(s)$, and from bending, so
 \begin{equation}
-M_{q\eta} = \begin{bmatrix}
-0.18 & 0.04 \\
-0.26 & 0.08 \\
-0.32 & 0.11
-\end{bmatrix}~\text{kg$\cdot$m},
+[M_{q\eta}]_{ik} = \rho \int_0^{\ell_3} \phi_k(s)\, r_i(s)\,\dd s,
+\qquad
+[M_{\eta\eta}]_{jk} = \rho \int_0^{\ell_3} \phi_j(s)\,\phi_k(s)\,\dd s,
+\label{eq:ch8:shaft-integrals}
+\end{equation}
+with $\rho = m_s/\ell_3$ and $\phi_k$ the clamped--free bending modes normalised to unit tip
+deflection. Deriving both blocks from the same integral is what keeps them mutually
+consistent; choosing them independently is how the earlier revision produced blocks that
+could not belong to the same system. Numerically,
+\begin{equation}
+M_{q\eta} = \begin{bmatrix} \cheightMqeta \end{bmatrix}~\text{kg$\cdot$m},
 \label{eq:ch8:Mqeta-numeric}
 \end{equation}
 
-and the modal mass matrix (diagonal for Euler--Bernoulli modes):
+and the modal mass matrix, diagonal because the mode shapes are orthogonal:
 
 \begin{equation}
-M_{\eta\eta} = \begin{bmatrix}
-0.15 & 0 \\
-0 & 0.08
-\end{bmatrix}~\text{kg$\cdot$m}^2.
+M_{\eta\eta} = \begin{bmatrix} \cheightMetaeta \end{bmatrix}~\text{kg$\cdot$m}^2.
 \label{eq:ch8:Metaeta-numeric}
 \end{equation}
+
+The assembled $5\times 5$ matrix has smallest eigenvalue $\cheightFullEigMin > 0$, so the
+kinetic energy $\tfrac12 \dot{\vec{z}}^\T M \dot{\vec{z}}$ is positive for every non-zero
+velocity --- the property that makes it a mass matrix at all.
 
 \subsection{Schur Complement and Articulated-Body Inertia}
 
@@ -173,58 +201,60 @@ H_{qq} = (M_{qq}-M_{q\eta}M_{\eta\eta}^{-1}M_{\eta q})^{-1}.
 
 First, compute $M_{\eta\eta}^{-1}$:
 \begin{equation}
-M_{\eta\eta}^{-1} = \begin{bmatrix}
-6.67 & 0 \\
-0 & 12.5
-\end{bmatrix}.
+M_{\eta\eta}^{-1} = \begin{bmatrix} \cheightMetaetaInv \end{bmatrix}.
 \end{equation}
 
-Then,
+Then the coupling term is
 \begin{equation}
-M_{q\eta}M_{\eta\eta}^{-1}M_{\eta q} = \begin{bmatrix}
-0.18 & 0.04 \\
-0.26 & 0.08 \\
-0.32 & 0.11
-\end{bmatrix}
-\begin{bmatrix}
-6.67 & 0 \\
-0 & 12.5
-\end{bmatrix}
-\begin{bmatrix}
-0.18 & 0.26 & 0.32 \\
-0.04 & 0.08 & 0.11
-\end{bmatrix} = \begin{bmatrix}
-0.24 & 0.33 & 0.40 \\
-0.33 & 0.56 & 0.68 \\
-0.40 & 0.68 & 0.85
-\end{bmatrix}.
+M_{q\eta}M_{\eta\eta}^{-1}M_{\eta q}
+= \begin{bmatrix} \cheightCoupling \end{bmatrix},
 \end{equation}
 
-Thus,
+and the Schur complement is
 \begin{equation}
-M_{qq}-M_{q\eta}M_{\eta\eta}^{-1}M_{\eta q} = \begin{bmatrix}
-4.58 & 1.00 & -0.12 \\
-1.00 & 1.91 & -0.27 \\
--0.12 & -0.27 & -0.67
-\end{bmatrix}.
+M_{qq}-M_{q\eta}M_{\eta\eta}^{-1}M_{\eta q}
+= \begin{bmatrix} \cheightSchur \end{bmatrix},
+\label{eq:ch8:schur-numeric}
 \end{equation}
+with eigenvalues in $[\cheightSchurEigMin,\ \cheightSchurEigMax]$ --- positive definite, as
+it must be.
 
-(Note: The $(3,3)$ entry is $-0.67$, which means this Schur complement is \emph{not}
-positive definite. The system is near a kinematic singularity where the mobility tensor
-loses physical consistency. The numerical results below should therefore be treated as
-\emph{illustrative of the computational procedure} rather than as physically reliable
-predictions for this particular configuration.)
-
-Inverting to get $H_{qq}$ (noting the matrix is indefinite, so this inverse does not
-represent a valid mobility tensor):
+Inverting gives the effective mobility:
 \begin{equation}
-H_{qq} = \begin{bmatrix}
-0.236 & -0.103 & 0.011 \\
--0.103 & 0.584 & 0.171 \\
-0.011 & 0.171 & -1.502
-\end{bmatrix}~\text{(rad$\cdot$s)}^2/\text{N$\cdot$m}.
+H_{qq} = \begin{bmatrix} \cheightMobility \end{bmatrix}~\text{(rad$\cdot$s)}^2/\text{N$\cdot$m},
 \label{eq:ch8:Hqq-numeric}
 \end{equation}
+whose smallest eigenvalue is $\cheightMobilityEigMin > 0$.
+
+\subsubsection{Why this Schur complement cannot be indefinite}
+\label{subsec:ch8:why-pd}
+
+It is worth being precise about the guarantee, because an earlier revision of this section
+printed an indefinite Schur complement and attributed it to the system being ``near a
+kinematic singularity''. That diagnosis is wrong, and the distinction matters for anyone
+debugging their own model.
+
+For a symmetric block matrix with $M_{\eta\eta} \succ 0$,
+\begin{equation}
+\begin{bmatrix} M_{qq} & M_{q\eta} \\ M_{\eta q} & M_{\eta\eta}\end{bmatrix} \succ 0
+\quad\Longleftrightarrow\quad
+M_{qq}-M_{q\eta}M_{\eta\eta}^{-1}M_{\eta q} \succ 0 .
+\label{eq:ch8:schur-iff}
+\end{equation}
+The implication runs both ways. So an indefinite Schur complement does not describe a
+configuration; it says the blocks are not the mass matrix of any mechanical system. Feeding
+the earlier revision's blocks into \eqref{eq:ch8:schur-iff} gives an assembled matrix with a
+negative eigenvalue, and hence a velocity for which the kinetic energy
+$\tfrac12\dot{\vec{z}}^\T M \dot{\vec{z}}$ comes out negative --- which is not a physical
+regime, it is an arithmetic error.
+
+Kinematic singularities are a different phenomenon entirely. At a singular configuration the
+\emph{task-space} inertia $\Lambda = (J M^{-1} J^\T)^{-1}$ blows up, because $J$ loses rank;
+the joint-space inertia $M$ stays finite and positive definite throughout. A model of
+positive masses cannot produce an indefinite $M$ at any configuration, singular or not.
+
+The practical consequence: if a Schur complement comes out indefinite, do not reach for a
+physical explanation. Check the blocks.
 
 \subsubsection{Inertial Coupling Ratio}
 
@@ -276,34 +306,35 @@ joint forces;
 
 \subsubsection{Drift Acceleration at Mid-Downswing}
 
-At the configuration above with velocities $\dot\q = (50, -100, -80)^\T$ rad/s and
-$\dot{\vec\eta} = (0.5, -0.3)^\T$ rad/s (shaft bending in progress), the drift
-acceleration in joint coordinates is:
+Take the configuration above with segment rates
+$\dot\q = (\cheightVelocity)^\T$ rad/s. These are near the peak of a real downswing, with
+the wrist fastest; an earlier revision of this section used
+$(50, -100, -80)^\T$, which is several times faster than any measured swing --- an elbow at
+$100$ rad/s is close to $1000$ rpm --- and inflated the Coriolis term quadratically.
 
+The bias force splits into
 \begin{align}
-a_{\text{drift},q} &= H_{qq}\,[\text{Coriolis} + \text{Gravity} + \text{Elastic}] \\
-&= \begin{bmatrix}
-0.236 & -0.103 & 0.011 \\
--0.103 & 0.584 & 0.171 \\
-0.011 & 0.171 & -1.502
-\end{bmatrix}
-\begin{bmatrix}
--650 \\
-120 \\
-45
-\end{bmatrix} \\
-&= \begin{bmatrix}
--157.8 \\
-109.2 \\
--68.1
-\end{bmatrix}~\text{rad/s}^2.
-\label{eq:ch8:drift-accel}
+\mat{C}(\q,\dot\q)\dot\q &= (\cheightCoriolisTerm)^\T~\text{N$\cdot$m}, \\
+\vec{g}(\q) &= (\cheightGravity)^\T~\text{N$\cdot$m},
 \end{align}
+summing to $(\cheightBias)^\T$ N$\cdot$m. The drift acceleration follows by solving against
+the articulated-body inertia \eqref{eq:ch8:schur-numeric}:
+\begin{equation}
+a_{\text{drift},q} = -\bigl(M_{qq}-M_{q\eta}M_{\eta\eta}^{-1}M_{\eta q}\bigr)^{-1}
+                      \left[\mat{C}(\q,\dot\q)\dot\q + \vec{g}(\q)\right]
+                   = (\cheightDriftAccel)^\T~\text{rad/s}^2.
+\label{eq:ch8:drift-accel}
+\end{equation}
 
-This large acceleration (particularly the shoulder) reflects the strong centrifugal
-effect from fast joint rotations. The negative shoulder acceleration indicates the drift
-is fighting against continued acceleration---the arm naturally wants to decelerate,
-transferring energy downchain.
+Two things are worth reading off. The Coriolis contribution at the shoulder,
+$\cheightCoriolisShoulder$~N$\cdot$m, already exceeds gravity's
+$\cheightGravityShoulder$~N$\cdot$m at these rates, which is the quantitative form of the
+claim that the late downswing is drift-dominated. And the shoulder's drift acceleration is negative
+while the wrist's is strongly positive: the proximal segment decelerates while the distal
+one is flung outward, which is the kinetic-chain energy transfer this chapter is about.
+
+Note that solving against the Schur complement rather than $M_{qq}$ alone is what accounts
+for the shaft's inertia. Using $M_{qq}$ here would silently treat the club as rigid.
 
 \subsection{Drift-Control Ratio and Phase Decomposition}
 
@@ -350,21 +381,38 @@ Numerically integrating (Runge--Kutta 4th order, 1~ms time step):
 
 \begin{table}[h]
 \centering
-\begin{tabular}{@{}cccccc@{}}
-\toprule
-\textbf{Time (s)} & $q_3$ (rad) & $\dot q_3$ (rad/s) & Club speed (m/s) & $\text{ZTCF Club}$ (m/s) & Difference (\%) \\
-\midrule
-0.60 & $-1.20$ & $150$ & $45$ & $45.0$ & 0 \\
-0.65 & $-0.95$ & $175$ & $52$ & $51.2$ & 1.5 \\
-0.70 & $-0.68$ & $198$ & $59$ & $56.8$ & 3.7 \\
-\bottomrule
-\end{tabular}
+\cheightZtcfTable
+\caption[Zero-torque counterfactual trajectory.]
+        {ZTCF trajectory integrated from the mid-downswing state with $\uvec = 0$, RK4 at
+         $0.05$~ms. Every column is produced by the model; the wrist continues to
+         uncock under drift alone, reversing sign by $t = 0.1$~s.}
+\label{tab:ch8:ztcf}
 \end{table}
 
-The ZTCF deviates from the actual trajectory by only 3.7\% over 0.1 seconds, confirming
-that the downswing is indeed drift-dominated. The golfer's active control contributes
-mainly in earlier phases (backswing, transition) to set up the state for passive
-energy release.
+Clubhead speed holds roughly constant over the first $0.05$~s and then falls by
+$\cheightZtcfSpeedGain\%$ overall, from $\cheightZtcfSpeedStart$ to
+$\cheightZtcfSpeedEnd$~m/s. Drift alone sustains the club through the first half of this
+window and then begins to lose it --- which is the substantive version of the claim that the
+late downswing is drift-dominated. Note that the earlier revision of this table asserted a
+$3.7\%$ agreement between actual and ZTCF trajectories without integrating either.
+
+\begin{warningbox}
+\textbf{Two limitations of this table.}
+
+\textbf{There is no ``actual'' column, because the model has no torques.} Comparing a ZTCF
+trajectory against a real swing needs measured joint torques, which this chapter does not
+have. Presenting a percentage agreement between a simulated counterfactual and an
+unspecified reference --- as an earlier revision did --- states a result that was never
+computed.
+
+\textbf{The clubhead speed is roughly a quarter of a real one.} A driver head reaches about
+$45$~m/s; this model gives $\cheightZtcfSpeedStart$~m/s, because the stated club length
+$\ell_3 = 0.40$~m is forearm-scale rather than driver-scale (a driver is nearer $1.15$~m),
+and because the three-link chain omits the torso rotation that supplies most of the speed.
+The parameters are declared illustrative above, and this is what that costs: the
+\emph{structure} of the drift decomposition is right, the magnitudes are not transferable
+to a real swing.
+\end{warningbox}
 
 \subsection{Key Insights from the Framework}
 
