@@ -26,10 +26,13 @@ angular-first, ``V = (omega, v)``; spatial **force** vectors are moment-first,
 
 from __future__ import annotations
 
+from collections.abc import Callable
+
 import numpy as np
 from numpy.typing import NDArray
 
 __all__ = [
+    "christoffel_coriolis",
     "constrained_affine_fields",
     "double_pendulum_coriolis",
     "double_pendulum_mass_matrix",
@@ -150,6 +153,43 @@ def double_pendulum_mass_matrix(q: Array, m1: float, m2: float, l1: float, l2: f
             [off, m2 * l2**2 / 4.0],
         ]
     )
+
+
+def christoffel_coriolis(
+    mass_matrix: Callable[[Array], Array],
+    q: Array,
+    qd: Array,
+    step: float = 1e-6,
+) -> Array:
+    """Coriolis matrix from the Christoffel symbols of an arbitrary ``M(q)``.
+
+    ``C_kj = sum_i 1/2 (dM_kj/dq_i + dM_ki/dq_j - dM_ij/dq_k) qd_i``, with the
+    partial derivatives taken by central differences so that only ``M`` itself
+    has to be supplied.
+
+    This exists to check a *published* Coriolis matrix against the mass matrix
+    printed beside it, without re-deriving either by hand. A sign slip in one
+    off-diagonal entry leaves the matrix looking plausible while destroying the
+    skew-symmetry of ``Mdot - 2C``, and therefore energy conservation -- which is
+    exactly the defect the 2026-07-31 review found in Volume I chapter 7.
+    """
+    q = np.asarray(q, dtype=float)
+    qd = np.asarray(qd, dtype=float)
+    n = q.size
+    grad = np.zeros((n, n, n))
+    for k in range(n):
+        forward, backward = q.copy(), q.copy()
+        forward[k] += step
+        backward[k] -= step
+        grad[k] = (mass_matrix(forward) - mass_matrix(backward)) / (2.0 * step)
+
+    coriolis = np.zeros((n, n))
+    for k in range(n):
+        for j in range(n):
+            coriolis[k, j] = 0.5 * sum(
+                (grad[i, k, j] + grad[j, k, i] - grad[k, i, j]) * qd[i] for i in range(n)
+            )
+    return coriolis
 
 
 def double_pendulum_coriolis(q: Array, qd: Array, m2: float, l1: float, l2: float) -> Array:

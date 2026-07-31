@@ -756,7 +756,7 @@ M(\q)^{-1} = \frac{1}{1+\sin^2(q_1-q_2)}\begin{bmatrix}
 The Coriolis matrix can be computed from the kinetic energy. For this system:
 \begin{equation}
 \mat{C}(\q,\dot\q) = \begin{bmatrix}
-0 & -m_2 l_1 l_2 \sin(q_1-q_2)\dot{q}_2\\
+0 & m_2 l_1 l_2 \sin(q_1-q_2)\dot{q}_2\\
 -m_2 l_1 l_2 \sin(q_1-q_2)\dot{q}_1 & 0
 \end{bmatrix}.
 \label{eq:ch7:coriolis-matrix}
@@ -765,11 +765,17 @@ The Coriolis matrix can be computed from the kinetic energy. For this system:
 With parameters:
 \begin{equation}
 \mat{C}(\q,\dot\q) = \begin{bmatrix}
-0 & -\sin(q_1-q_2)\dot{q}_2\\
+0 & \sin(q_1-q_2)\dot{q}_2\\
 -\sin(q_1-q_2)\dot{q}_1 & 0
 \end{bmatrix}.
 \label{eq:ch7:coriolis-matrix-numeric}
 \end{equation}
+
+The off-diagonal signs are opposite, and that asymmetry is the point: it is what makes
+$\dot M - 2\mat{C}$ skew-symmetric, and hence what makes the unforced system conserve
+energy. Writing both entries with the same sign --- an easy slip, since the two terms look
+symmetric --- injects energy at a rate comparable to the total energy of the swing over a
+single second, so it is worth checking numerically rather than by inspection.
 
 \subsection{Gravitational Vector}
 

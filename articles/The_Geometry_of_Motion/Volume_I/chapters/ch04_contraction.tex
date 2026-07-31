@@ -458,41 +458,79 @@ may drift. We can still harness the contraction in $\x_2$ to establish synchroni
 
 \begin{theorem}[Partial Contraction via Hierarchical Decomposition]
 \label{thm:ch4:partial}
-Partition $\x = [\x_1; \x_2]$ with dimensions $n_1$ and $n_2$. Suppose:
+Partition $\x = [\x_1; \x_2]$ with dimensions $n_1$ and $n_2$, and write the generalized
+Jacobian in the block form
+\begin{equation}
+\mat{F} = \begin{bmatrix} \mat{F}_{11} & \mat{F}_{12} \\ 0 & \mat{F}_{22}\end{bmatrix},
+\label{eq:ch4:cascade-jacobian}
+\end{equation}
+so that the $\x_2$-dynamics do not depend on $\x_1$ (a \emph{cascade}). Suppose:
 \begin{enumerate}
 \item The reduced system for $\x_2$ is globally contracting with rate $\lambda_2 > 0$
       in a metric $\mat{M}_2(\x_2,t)$.
 \item For any fixed trajectory $\x_2(t)$, the $\x_1$-subsystem driven by $\x_2(t)$ is
       globally contracting with rate $\lambda_1 > 0$ in a metric $\mat{M}_1(\x_1,\x_2,t)$.
+\item \textbf{The coupling is bounded}: there is a constant $k$ with
+      $\norm{\mat{M}_1^{1/2}\mat{F}_{12}\mat{M}_2^{-1/2}} \leq k$ uniformly.
 \end{enumerate}
-Then the full system is contracting with rate $\lambda = \min(\lambda_1, \lambda_2)$
-in the block-diagonal metric
+Then for every $\lambda < \min(\lambda_1,\lambda_2)$ there exists a weight $\theta > 0$,
+depending on $k$, such that the full system is contracting with rate $\lambda$ in the
+\emph{weighted} block-diagonal metric
 \begin{equation}
-\mat{M}_{\text{block}} = \begin{bmatrix} \mat{M}_1 & 0 \\ 0 & \mat{M}_2 \end{bmatrix}.
+\mat{M}_\theta = \begin{bmatrix} \mat{M}_1 & 0 \\ 0 & \theta\,\mat{M}_2 \end{bmatrix}.
 \label{eq:ch4:block-metric}
 \end{equation}
 \end{theorem}
 
 \begin{proof}[Proof Sketch]
-If $\x_2$ is contracting, then by Theorem~\ref{thm:ch4:convergence}, perturbations
-$\dx_2$ decay exponentially. Once $\dx_2$ is small, the variation $\dx_1$ sees the
-driven trajectory $\x_2(t)$ as ``nearly fixed'' and contracts around it. The block-diagonal
-structure ensures that the coupled system inherits contraction from both subsystems.
+In the metric $\mat{M}_\theta$ the symmetric part of the transformed Jacobian is block
+$\begin{psmallmatrix}-\lambda_1 & \tfrac{1}{2}\theta^{-1/2}k \\ \tfrac{1}{2}\theta^{-1/2}k & -\lambda_2\end{psmallmatrix}$
+in the two-block norm. Its largest eigenvalue is negative once
+$\theta^{-1}k^2 < 4\lambda_1\lambda_2$, which any sufficiently large $\theta$ achieves.
+Weighting the second block down is what absorbs the coupling; this is the standard
+small-gain argument, and it is the step that fails if $\theta$ is fixed at $1$.
 \end{proof}
 
-\begin{example}[Mechanical System: Position Synchronization via Velocity Contraction]
-Consider a kinematic system
+\begin{warningbox}
+The weight $\theta$ is not cosmetic, and hypothesis~3 is not free. In the
+\emph{unweighted} metric ($\theta = 1$) the theorem is false. Take
 \begin{equation}
-\dot{q} = v, \quad \dot{v} = -\gamma(v - u(t)),
+\dot x_1 = -x_1 + K x_2, \qquad \dot x_2 = -x_2 .
+\label{eq:ch4:cascade-counterexample}
+\end{equation}
+Each subsystem contracts at rate $1$ in the identity metric, so hypotheses 1 and 2 hold.
+But the symmetric part of the full Jacobian is
+$\begin{psmallmatrix}-1 & K/2\\ K/2 & -1\end{psmallmatrix}$, whose eigenvalues are
+$-1 \pm K/2$. For $K \geq 2$ the larger one is non-negative and the full system is
+\emph{not} contracting in the identity metric --- for any $K$, however large, even though
+both subsystems contract at rate $1$.
+
+The system is of course still exponentially stable; a cascade of stable systems always is.
+What fails is contraction \emph{in that particular metric}. Contraction is a statement
+about a metric, not about a trajectory, and a property that holds blockwise need not
+survive assembly unless the blocks are weighted against the coupling.
+\end{warningbox}
+
+\begin{example}[Cascade: Velocity Tracking Driving Position Regulation]
+Consider
+\begin{equation}
+\dot{q} = -\alpha q + v, \qquad \dot{v} = -\gamma(v - u(t)),
 \label{eq:ch4:mech-example}
 \end{equation}
-where $q$ is position, $v$ is velocity, and $u(t)$ is a time-varying reference.
+with $\alpha,\gamma > 0$, where $u(t)$ is a time-varying reference.
 
-The Jacobian is $\mat{A} = \begin{bmatrix} 0 & 1 \\ 0 & -\gamma \end{bmatrix}$.
-The $v$-subsystem $\dot{v} = -\gamma(v-u)$ is contracting in $v$ with rate $\gamma$.
-The $q$-subsystem, driven by $v(t)$, is $\dot{q} = v(t)$, which inherits the contraction
-of $v$. Thus the full system is contracting with rate $\gamma$ (the slower of the two rates),
-and all solutions synchronize to the reference motion.
+The Jacobian is $\mat{A} = \begin{psmallmatrix} -\alpha & 1 \\ 0 & -\gamma \end{psmallmatrix}$.
+The $v$-subsystem contracts at rate $\gamma$; the $q$-subsystem, driven by $v(t)$, contracts
+at rate $\alpha$; the coupling constant is $k = 1$. By the theorem the cascade contracts at
+any rate $\lambda < \min(\alpha,\gamma)$ in $\mat{M}_\theta$ with
+$\theta > 1/(4\alpha\gamma)$, and all solutions synchronize to the reference motion.
+
+Note what happens if the position feedback is removed ($\alpha = 0$), giving the pure
+integrator $\dot q = v$: the Jacobian has an eigenvalue at $0$, the $q$-subsystem is only
+marginally stable rather than contracting, and hypothesis~2 fails. A displacement in $q$ is
+then never forgotten --- two trajectories with the same velocity history but different
+initial positions stay a constant distance apart forever. No metric can certify contraction
+for that system, which is why $\alpha > 0$ is required rather than convenient.
 \end{example}
 
 
@@ -742,19 +780,44 @@ the contraction conditions become (roughly):
 2\epsilon(1-x_1^2)\beta(1+\gamma x_1^2) + 2\beta\gamma x_1 x_2 \leq -2\lambda\beta(1+\gamma x_1^2).
 \end{equation}
 
-Choosing $\lambda = 0.3$, $\epsilon = 0.5$, and solving for $\gamma$ via convex optimization
-yields $\gamma \approx 1.5$. The metric
+It is tempting to now pick numbers --- say $\lambda = 0.3$, $\epsilon = 0.5$, $\gamma
+\approx 1.5$ --- and present
 \begin{equation}
 \mat{M}(x_1) = \begin{bmatrix} 1 & 0 \\ 0 & 1.2(1+1.5x_1^2) \end{bmatrix}
 \label{eq:ch4:vdp-metric-solution}
 \end{equation}
-guarantees contraction of the Van der Pol system at rate $\lambda \approx 0.3$.
+as a metric certifying global contraction. \emph{No such metric exists}, and this one is
+not close. Evaluating the condition it is supposed to satisfy,
+\begin{equation}
+\mat{A}^\T\mat{M} + \mat{M}\mat{A} + \dot{\mat{M}} + 2\lambda\mat{M} \preceq 0,
+\label{eq:ch4:vdp-check}
+\end{equation}
+on a grid over $[-3,3]^2$ gives a largest eigenvalue that is \emph{positive at every single
+sampled point}, reaching $+1.95$ at the origin and growing past $+130$ near the corners. The
+condition is violated everywhere, not marginally or in a small region.
+
+That is exactly what the remark above predicts. The Van der Pol oscillator has an attracting
+limit cycle, so two trajectories starting at different phases along that cycle stay
+separated forever; no metric can make them converge. Searching for a global metric was never
+going to succeed, and a numerical solver that appears to return one has either been given a
+relaxed constraint set or has converged to an infeasible point.
+
+The honest conclusion is the one the structure of the problem forces: the search must be
+restricted to \emph{transverse} contraction --- convergence to the limit cycle rather than
+to a single trajectory --- which requires a metric defined on directions transverse to the
+flow, and a correspondingly weaker claim.
 
 \begin{intuitionbox}
-The solution shows how contraction metrics can \emph{adapt} to the nonlinear structure
-of a system. By increasing the metric in the velocity direction near the origin
-(where nonlinearity is concentrated), we compensate for the expansion caused by the
-nonlinear coupling term.
+The ansatz was not a bad idea --- weighting the velocity direction more heavily where the
+nonlinearity is strongest is exactly how a state-dependent metric buys contraction that a
+constant one cannot. It fails here because the obstruction is topological rather than
+quantitative: an attracting limit cycle means neighbouring trajectories converge \emph{to
+the cycle} but not \emph{to each other}, and no amount of reweighting changes that.
+
+The lesson generalises. When a metric search will not close, the first question is whether
+the system can possibly be contracting --- a limit cycle, multiple equilibria, or any
+invariant set of positive dimension rules it out immediately. Only then is it worth blaming
+the ansatz or the solver.
 \end{intuitionbox}
 
 
@@ -1140,9 +1203,11 @@ and loose in insensitive ones.
       $\mat{J}_k^\T \mat{M}_{k+1} \mat{J}_k \preceq \rho^2 \mat{M}_k$ certifies exponential
       decay with rate $\rho < 1$ for iterative algorithms and digital controllers.
 
-\item \textbf{Numerical metric synthesis}: The Van der Pol oscillator (Sec.~\ref{sec:ch4:vdp})
-      demonstrates how parameterized metrics can be found computationally to achieve
-      contraction despite nonlinearity.
+\item \textbf{Limits of numerical metric synthesis}: The Van der Pol oscillator
+      (Sec.~\ref{sec:ch4:vdp}) shows how a parameterized metric search is set up --- and
+      why it cannot succeed here. An attracting limit cycle rules out global contraction
+      outright, so a returned ``solution'' must be checked against the condition it claims
+      to satisfy rather than trusted.
 
 \item \textbf{Robustness margins}: The contraction rate $\lambda$ directly bounds
       disturbance rejection. For $\norm{d(t)} \leq D$, the ultimate error bound

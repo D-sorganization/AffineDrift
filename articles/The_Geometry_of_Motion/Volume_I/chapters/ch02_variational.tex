@@ -843,17 +843,26 @@ The adjoint equation is
 \begin{equation}
 \boxed{
 \dot\lambda = -\frac{\partial f}{\partial \x}^T\lambda - \frac{\partial \ell_t}{\partial \x},
-\quad \lambda(T) = -\frac{\partial \ell}{\partial \x}\bigg|_{x(T)}.
+\quad \lambda(T) = +\frac{\partial \ell}{\partial \x}\bigg|_{x(T)}.
 }
 \label{eq:ch2:adjoint}
 \end{equation}
 
 \begin{remark}
-The sign convention $\lambda(T) = -\partial\ell/\partial\x|_{x(T)}$ follows from defining
-$\lambda$ as $\partial J/\partial \x$. An alternative convention used in Pontryagin's
-Maximum Principle defines $\lambda(T) = +\partial\ell/\partial\x|_{x(T)}$, which reverses
-the sign of the Hamiltonian. Both conventions are self-consistent; the reader should verify
-signs when consulting different references.
+The terminal sign is forced by the definition~\eqref{eq:ch2:costate}. At $t=T$ the only
+part of the cost~\eqref{eq:ch2:cost} that still depends on the state is the terminal term
+$\ell(\x(T),p)$, so $\lambda(T) = \partial J/\partial\x|_{\x(T)} = +\partial\ell/\partial\x$.
+The plus sign is also what makes the gradient
+formula~\eqref{eq:ch2:grad-adjoint} correct: flipping it negates the first term of
+$\partial J/\partial p$ while leaving the second alone, so the resulting gradient is
+neither the true gradient nor its negative, and a descent step computed from it does not
+reliably decrease $J$.
+
+Conventions do differ across references --- some formulations of Pontryagin's Maximum
+Principle carry the opposite sign, absorbed into the definition of the Hamiltonian --- so
+verify signs when consulting other sources. The check that settles it in any convention is
+a finite-difference gradient: perturb one parameter, recompute $J$, and confirm the adjoint
+gradient matches to the accuracy of the integrator.
 \end{remark}
 
 This equation is integrated backward from $T$ to $t_0$. Once $\lambda(t)$ is known, the gradient is
