@@ -27,17 +27,19 @@ concurrency:
 jobs:
   # ── Dispatcher: enforce local-only routing (NO GitHub-hosted runners) ──────
   pick-runner:
-    runs-on: ${{ vars.USE_HOSTED_RUNNERS == 'true' && 'ubuntu-latest' || 'd-sorg-fleet' }}
+    runs-on: ubuntu-latest
     timeout-minutes: 2
     outputs:
       runner: ${{ steps.check.outputs.runner }}
     steps:
-      - name: Enforce local-only runner routing
+      - name: Select runner
         id: check
         run: |
           mkdir -p "$(dirname "$GITHUB_OUTPUT")"
-          echo "runner=${{ vars.USE_HOSTED_RUNNERS == 'true' && 'ubuntu-latest' || 'd-sorg-fleet' }}" >> "$GITHUB_OUTPUT"
-          echo "Enforcing local-only runner routing (d-sorg-fleet)"
+          echo "runner=ubuntu-latest" >> "$GITHUB_OUTPUT"
+          echo "Routing to GitHub-hosted runners: this repository is public, so"
+          echo "standard hosted runners are free and unmetered, and keeping fork"
+          echo "pull requests off the self-hosted fleet is the safer default."
   quality-gate:
     needs: pick-runner
     runs-on: ${{ needs.pick-runner.outputs.runner }}
@@ -451,7 +453,7 @@ jobs:
   # =============================================================================
   # matlab-tests:
   #   needs: [pick-runner, quality-gate]
-  #   runs-on: ${{ vars.USE_HOSTED_RUNNERS == 'true' && 'ubuntu-latest' || 'd-sorg-fleet' }}
+  #   runs-on: ubuntu-latest
   #   steps:
   #     - uses: actions/checkout@v4
   #     - uses: matlab-actions/setup-matlab@v2
