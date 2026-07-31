@@ -1,0 +1,32 @@
+### How to Cite
+
+If you use this work in your research, please cite it as:
+
+```{python}
+#| echo: false
+#| output: asis
+import subprocess
+import os
+
+try:
+    sha = subprocess.check_output(['git', 'rev-parse', 'HEAD']).decode('utf-8').strip()
+except Exception:
+    sha = os.environ.get('GITHUB_SHA', 'unknown')
+
+try:
+    with open("VERSION") as f:
+        version = f.read().strip()
+except Exception:
+    version = "1.0.0"
+
+title = "{{< meta title >}}"
+print("```bibtex")
+print("@book{affine2026,")
+print(f"  title  = {{{title} (AffineDrift)}},")
+print("  author = {Dieter Olson},")
+print("  year   = {2026},")
+print("  url    = {https://github.com/D-sorganization/AffineDrift},")
+print(f"  note   = {{Version {version} / Commit {sha}}}")
+print("}")
+print("```")
+```

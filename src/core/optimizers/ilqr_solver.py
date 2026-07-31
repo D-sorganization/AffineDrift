@@ -2,14 +2,14 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from dataclasses import dataclass
-from typing import Protocol
+from typing import Protocol, TypeAlias
 
 import numpy as np
 import numpy.typing as npt
 
 from src.core.contracts import check_finite_array, check_positive, require
 
-type NDArray = npt.NDArray[np.float64]
+NDArray: TypeAlias = npt.NDArray[np.float64]  # noqa: UP040
 
 ILQR_STATUS_NOT_STARTED = "not_started"
 ILQR_STATUS_CONVERGED = "converged"
