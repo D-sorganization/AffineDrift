@@ -2733,8 +2733,9 @@ All inverse-dynamics evaluations must use the exact same inertia, stiffness, and
 $$
   F_{\mathrm{total}} - F_{\mathrm{ZTCF}}
   \quad\text{and}\quad
-  F_{\mathrm{ZVCF}}.
+  F_{\mathrm{input}}.
 $$
+The difference recovered here is the **input** term, not the ZVCF. The ZTCF run records the *full* drift, so subtracting it from the total returns the input. The configuration-only ZVCF force is a separate slice, $F_{\mathrm{ZVCF}} = F_{\mathrm{drift}} - F_{\mathrm{vel.drift}}$, and differs from $F_{\mathrm{total}} - F_{\mathrm{ZTCF}}$ by the velocity-dependent drift.
 
 ##### Solver matching.
 ZTCF trajectories require the same ODE solver, tolerances, and step sizes as the original forward simulation to avoid numerical drift between trajectories.
