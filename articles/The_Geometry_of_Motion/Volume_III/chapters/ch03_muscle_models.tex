@@ -12,7 +12,7 @@ The Hill-type muscle model, originating from A.V.\ Hill's Nobel Prize-winning wo
 muscle thermodynamics and muscle energetics \cite{Hill1938, Hill1950}, is the standard
 lumped-parameter model used in biomechanical simulation. It represents the musculotendon
 unit as a combination of contractile, elastic, and damping elements. Modern implementations
-include refinements by \cite{Thelen2003} and \cite{MillardEvans2013}.
+include refinements by \cite{Thelen2003} and \cite{millard2013flexing}.
 
 \subsection{Model Architecture}
 
@@ -80,7 +80,7 @@ normalized fiber length $\tilde{\ell} = \ell^M / \ell_0^M$:
     f_L(\tilde{\ell}) = \exp\!\left(-\frac{(\tilde{\ell} - 1)^2}{\gamma}\right),
     \label{eq:ch3:force-length}
   \end{equation}
-  where $\gamma \approx 0.45$ \cite{thelen2003adjustment} controls the width of the
+  where $\gamma \approx 0.45$ \cite{Thelen2003} controls the width of the
   curve. Maximum force ($f_L = 1$) occurs at optimal fiber length ($\tilde{\ell} = 1$).
   Force decreases for both shorter and longer fiber lengths, reaching near-zero at
   approximately $\tilde{\ell} = 0.5$ and $\tilde{\ell} = 1.5$.
@@ -90,7 +90,7 @@ normalized fiber length $\tilde{\ell} = \ell^M / \ell_0^M$:
   \textit{A note on the numerical parameters.} The values $\gamma = 0.45$,
   $A_f = 0.25$, $k^{PE} = 4.0$, and $\varepsilon_0 = 0.6$ used throughout this
   chapter are the default parameters recommended by Thelen
-  \cite{thelen2003adjustment} for the ``generic'' adult Hill-type muscle, and
+  \cite{Thelen2003} for the ``generic'' adult Hill-type muscle, and
   also serve as the baseline for the Millard--Uchida formulation
   \cite{millard2013flexing}. They are calibrated against mid-thigh muscles of
   young adults and should be interpreted as a starting point, not as universal
@@ -120,7 +120,7 @@ class MuscleParameters:
     # Defaults below are the Thelen (2003) generic-adult values.
     # See: Thelen, D.G. (2003) "Adjustment of muscle mechanics
     # model parameters to simulate dynamic contractions in older
-    # adults," J. Biomech. Eng. 125(1), 70-77 [thelen2003adjustment].
+    # adults," J. Biomech. Eng. 125(1), 70-77 [Thelen2003].
     gamma: float = 0.45  # Force-length curve width (Thelen 2003)
     Af: float = 0.25     # Force-velocity shape factor (Thelen 2003)
     kPE: float = 4.0     # Passive elastic stiffness (Thelen 2003)
