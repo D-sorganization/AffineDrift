@@ -21,7 +21,7 @@ env:
 jobs:
   # ── Dispatcher: enforce local-only routing (NO GitHub-hosted runners) ──────
   pick-runner:
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
     timeout-minutes: 2
     outputs:
       runner: ${{ steps.check.outputs.runner }}
@@ -36,7 +36,7 @@ jobs:
   build:
     timeout-minutes: 60
     if: github.repository == 'D-sorganization/AffineDrift'
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
     needs: pick-runner
     env:
       PYTHONPATH: .
@@ -152,7 +152,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
     needs: build
     steps:
       - name: Deploy to GitHub Pages

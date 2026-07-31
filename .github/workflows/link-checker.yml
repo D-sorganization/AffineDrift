@@ -23,7 +23,7 @@ env:
 
 jobs:
   check-links:
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
     name: Validate Quarto references and URLs
     timeout-minutes: 30
 

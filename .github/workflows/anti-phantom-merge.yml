@@ -21,7 +21,7 @@ env:
 jobs:
   guard:
     timeout-minutes: 60
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
     if: >-
       github.event.pull_request.base.ref == 'main' &&
       (github.event_name == 'pull_request' ||
