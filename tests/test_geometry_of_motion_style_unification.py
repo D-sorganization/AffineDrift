@@ -24,7 +24,15 @@ def test_shared_style_file_exists_with_core_primitives() -> None:
     assert r"\gomapplylistingstyle" in text
     assert r"\gomdeclaretheorems" in text
     assert r"\RequirePackage{tcolorbox}" not in text
-    assert r"\providecommand{\dd}" not in text
+    # Every volume's main.tex does \renewcommand{\dd} after loading this style,
+    # and \renewcommand requires a prior definition. None of the packages this
+    # style requires (xcolor, listings, bm, float, enumitem) defines \dd, so the
+    # \providecommand here is what makes those six \renewcommand calls legal --
+    # removing it breaks the build of all six books. It must stay
+    # \providecommand rather than \newcommand so it cannot clash with a package
+    # that supplies \dd itself.
+    assert r"\providecommand{\dd}" in text
+    assert r"\newcommand{\dd}" not in text
 
 
 def test_all_volumes_import_shared_style_package() -> None:
