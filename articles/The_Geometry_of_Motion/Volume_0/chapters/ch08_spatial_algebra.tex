@@ -209,7 +209,7 @@ the Spatial Inertia Matrix expressed at the frame origin is:
 
 Using the identity $[\mathbf{c}][\mathbf{c}] = -\mathbf{c}\mathbf{c}^T + (\mathbf{c}^T\mathbf{c})\mathbf{I}_{3 \times 3}$, this can be rewritten as:
 \begin{equation}
-    \mathcal{I} = \begin{bmatrix} \mathbf{I}_c + m(\mathbf{c}\mathbf{c}^T - |\mathbf{c}|^2\mathbf{I}_{3 \times 3}) & m[\mathbf{c}] \\ -m[\mathbf{c}] & m\mathbf{I}_{3 \times 3} \end{bmatrix}
+    \mathcal{I} = \begin{bmatrix} \mathbf{I}_c + m(|\mathbf{c}|^2\mathbf{I}_{3 \times 3} - \mathbf{c}\mathbf{c}^T) & m[\mathbf{c}] \\ -m[\mathbf{c}] & m\mathbf{I}_{3 \times 3} \end{bmatrix}
     \label{eq:spatial_inertia_alt}
 \end{equation}
 
@@ -228,19 +228,19 @@ The Spatial Inertia Matrix $\mathcal{I}$ is symmetric and positive definite.
 \textbf{Proof (Symmetry)}:
 Write the spatial inertia in standard form:
 \[
-  \mathcal{I} = \begin{bmatrix} \mathbf{I}_c - m[\mathbf{c}][\mathbf{c}]^T & m[\mathbf{c}]^T \\ m[\mathbf{c}] & m\mathbf{I}_{3 \times 3} \end{bmatrix}.
+  \mathcal{I} = \begin{bmatrix} \mathbf{I}_c + m[\mathbf{c}][\mathbf{c}]^T & m[\mathbf{c}] \\ m[\mathbf{c}]^T & m\mathbf{I}_{3 \times 3} \end{bmatrix}.
 \]
 Since $[\mathbf{c}]$ is skew-symmetric ($[\mathbf{c}]^T = -[\mathbf{c}]$), each block is symmetric or correctly transposed:
 \begin{itemize}
-  \item Top-left block: $\mathbf{I}_c - m[\mathbf{c}][\mathbf{c}]^T$ is symmetric (both $\mathbf{I}_c$ and the product $[\mathbf{c}][\mathbf{c}]^T$ are symmetric).
-  \item Off-diagonal blocks: The top-right block is $m[\mathbf{c}]^T = -m[\mathbf{c}]$, and the bottom-left block is $m[\mathbf{c}]$. Their transposes satisfy $(m[\mathbf{c}]^T)^T = m[\mathbf{c}]$, confirming $\mathcal{I}^T = \mathcal{I}$.
+  \item Top-left block: $\mathbf{I}_c + m[\mathbf{c}][\mathbf{c}]^T$ is symmetric (both $\mathbf{I}_c$ and the product $[\mathbf{c}][\mathbf{c}]^T$ are symmetric).
+  \item Off-diagonal blocks: The top-right block is $m[\mathbf{c}]$, and the bottom-left block is $m[\mathbf{c}]^T = -m[\mathbf{c}]$. Their transposes satisfy $(m[\mathbf{c}])^T = m[\mathbf{c}]^T$, confirming $\mathcal{I}^T = \mathcal{I}$.
   \item Bottom-right block: $m\mathbf{I}_{3 \times 3}$ is trivially symmetric.
 \end{itemize}
 
 \textbf{Proof (Positive Definite)}:
 For any non-zero spatial vector $\mathcal{V} = (\boldsymbol{\omega}, \mathbf{v})$, we compute:
 \[
-  \mathcal{V}^T \mathcal{I} \mathcal{V} = \boldsymbol{\omega}^T (\mathbf{I}_c - m[\mathbf{c}][\mathbf{c}]^T) \boldsymbol{\omega} + 2m\boldsymbol{\omega}^T[\mathbf{c}]^T\mathbf{v} + m\mathbf{v}^T\mathbf{v}
+  \mathcal{V}^T \mathcal{I} \mathcal{V} = \boldsymbol{\omega}^T (\mathbf{I}_c + m[\mathbf{c}][\mathbf{c}]^T) \boldsymbol{\omega} + 2m\boldsymbol{\omega}^T[\mathbf{c}]\mathbf{v} + m\mathbf{v}^T\mathbf{v}
 \]
 
 This can be rewritten as the rotational kinetic energy plus the translational kinetic energy:
@@ -279,7 +279,7 @@ then the relationship is:
 
 When $\mathbf{R} = \mathbf{I}$ (same orientation):
 \begin{equation}
-    \mathcal{I}_0 = \begin{bmatrix} \mathbf{I}_c - m[\mathbf{c}][\mathbf{c}]^T & m[\mathbf{c}]^T \\ m[\mathbf{c}] & m\mathbf{I}_{3 \times 3} \end{bmatrix}
+    \mathcal{I}_0 = \begin{bmatrix} \mathbf{I}_c + m[\mathbf{c}][\mathbf{c}]^T & m[\mathbf{c}] \\ m[\mathbf{c}]^T & m\mathbf{I}_{3 \times 3} \end{bmatrix}
 \end{equation}
 
 \textbf{Interpretation}: The top-left block contains the parallel axis correction to rotational inertia; the off-diagonals encode the coupling between angular and linear motion due to the offset CoM.
@@ -389,12 +389,12 @@ However, because $\mathcal{I}$ itself may be time-varying (when expressed in a r
     \label{eq:spatial_momentum_full}
 \end{equation}
 
-In a \emph{body-fixed frame} (rotating with the body), $\mathcal{I}$ is constant, but velocities are measured in the rotating frame, introducing the bias term $-[\mathcal{V} \times]^* (\mathcal{I} \mathcal{V})$:
+In a \emph{body-fixed frame} (rotating with the body), $\mathcal{I}$ is constant, but velocities are measured in the rotating frame, introducing the bias term $[\mathcal{V} \times]^* (\mathcal{I} \mathcal{V})$:
 
 \begin{theorem}{Spatial Newton-Euler Equation}{spatial_ne_theorem}
 For a rigid body in a body-fixed frame, the equation of motion is:
 \begin{equation}
-    \mathcal{F} = \mathcal{I} \dot{\mathcal{V}} - [\mathcal{V} \times]^* (\mathcal{I} \mathcal{V})
+    \mathcal{F} = \mathcal{I} \dot{\mathcal{V}} + [\mathcal{V} \times]^* (\mathcal{I} \mathcal{V})
     \label{eq:spatial_newton_euler_final}
 \end{equation}
 
@@ -450,18 +450,18 @@ For link 1, with CoM offset $\mathbf{c}_1 = (0.3, 0, 0)^T$:
 \]
 
 \[
-  \mathcal{I}^{(1)} = \begin{bmatrix} \mathbf{I}_c^{(1)} - m_1[\mathbf{c}_1][\mathbf{c}_1]^T & m_1[\mathbf{c}_1]^T \\ m_1[\mathbf{c}_1] & m_1\mathbf{I}_{3 \times 3} \end{bmatrix}
+  \mathcal{I}^{(1)} = \begin{bmatrix} \mathbf{I}_c^{(1)} + m_1[\mathbf{c}_1][\mathbf{c}_1]^T & m_1[\mathbf{c}_1] \\ m_1[\mathbf{c}_1]^T & m_1\mathbf{I}_{3 \times 3} \end{bmatrix}
 \]
 
 \[
-  \mathcal{I}^{(1)} = \begin{bmatrix} 0.05-2(0.09) & 0 & 0 & 0 & 0 & 0 \\ 0 & 0.05-2(0) & 0 & 0 & 0 & -0.6 \\ 0 & 0 & 0.01-2(0) & 0 & 0.6 & 0 \\ 0 & 0 & 0 & 2 & 0 & 0 \\ 0 & 0 & 0.6 & 0 & 2 & 0 \\ 0 & -0.6 & 0 & 0 & 0 & 2 \end{bmatrix}
+  \mathcal{I}^{(1)} = \begin{bmatrix} 0.05+2(0) & 0 & 0 & 0 & 0 & 0 \\ 0 & 0.05+2(0.09) & 0 & 0 & 0 & -0.6 \\ 0 & 0 & 0.01+2(0.09) & 0 & 0.6 & 0 \\ 0 & 0 & 0 & 2 & 0 & 0 \\ 0 & 0 & 0.6 & 0 & 2 & 0 \\ 0 & -0.6 & 0 & 0 & 0 & 2 \end{bmatrix}
 \]
 
 \[
-  \mathcal{I}^{(1)} = \begin{bmatrix} -0.13 & 0 & 0 & 0 & 0 & 0 \\ 0 & 0.05 & 0 & 0 & 0 & -0.6 \\ 0 & 0 & 0.01 & 0 & 0.6 & 0 \\ 0 & 0 & 0 & 2 & 0 & 0 \\ 0 & 0 & 0.6 & 0 & 2 & 0 \\ 0 & -0.6 & 0 & 0 & 0 & 2 \end{bmatrix}
+  \mathcal{I}^{(1)} = \begin{bmatrix} 0.05 & 0 & 0 & 0 & 0 & 0 \\ 0 & 0.23 & 0 & 0 & 0 & -0.6 \\ 0 & 0 & 0.19 & 0 & 0.6 & 0 \\ 0 & 0 & 0 & 2 & 0 & 0 \\ 0 & 0 & 0.6 & 0 & 2 & 0 \\ 0 & -0.6 & 0 & 0 & 0 & 2 \end{bmatrix}
 \]
 
-(The negative value in the top-left reflects that the CoM is offset by more than the gyradius; this is still valid.)
+Note the structure of the correction. Since $[\mathbf{c}][\mathbf{c}]^T = \lvert\mathbf{c}\rvert^2\mathbf{I} - \mathbf{c}\mathbf{c}^T$ is positive semi-definite, the parallel axis term always \emph{adds} to the rotational inertia. With $\mathbf{c}_1 = (0.3, 0, 0)$ the correction vanishes about the offset direction itself ($x$) and contributes $m_1 d^2 = 2(0.3)^2 = 0.18$ about $y$ and $z$ --- exactly the classical parallel axis theorem. A spatial inertia is symmetric positive definite by Theorem~\ref{spatial_inertia_spd}, so a negative diagonal entry would signal an algebraic error, not a physical configuration.
 
 Similarly, $\mathcal{I}^{(2)}$ is computed with $\mathbf{c}_2 = (0.25, 0, 0)$ and $m_2 = 1$ kg.
 
@@ -614,14 +614,16 @@ def spatial_inertia(m, c, I_c):
     I_spatial = np.zeros((6, 6))
     c_skew = skew(c)
 
-    # Top-left: I_c - m[c][c]^T (parallel axis theorem)
-    I_spatial[:3, :3] = I_c - m * (c_skew @ c_skew.T)
+    # Top-left: I_c + m[c][c]^T (parallel axis theorem).
+    # [c][c]^T = |c|^2 I - c c^T is positive semi-definite, so this ADDS to
+    # the rotational inertia. Equivalently I_c - m[c][c], since [c]^T = -[c].
+    I_spatial[:3, :3] = I_c + m * (c_skew @ c_skew.T)
 
-    # Top-right: m[c]^T
-    I_spatial[:3, 3:] = m * c_skew.T
+    # Top-right: m[c]
+    I_spatial[:3, 3:] = m * c_skew
 
-    # Bottom-left: m[c]
-    I_spatial[3:, :3] = m * c_skew
+    # Bottom-left: m[c]^T
+    I_spatial[3:, :3] = m * c_skew.T
 
     # Bottom-right: m * I_3
     I_spatial[3:, 3:] = m * np.eye(3)
@@ -730,7 +732,7 @@ In this chapter, we developed Spatial Vector Algebra—the mathematical language
 
   \item \textbf{Planar Reduction}: 2D systems use 3D spatial algebra, reducing computation by a factor of 4.
 
-  \item \textbf{Newton-Euler in Spatial Form}: A single matrix equation $\mathcal{F} = \mathcal{I}\dot{\mathcal{V}} - [\mathcal{V} \times]^*(\mathcal{I}\mathcal{V})$ unifies linear and angular dynamics.
+  \item \textbf{Newton-Euler in Spatial Form}: A single matrix equation $\mathcal{F} = \mathcal{I}\dot{\mathcal{V}} + [\mathcal{V} \times]^*(\mathcal{I}\mathcal{V})$ unifies linear and angular dynamics.
 
   \item \textbf{Dual Quaternions}: Brief connection to an alternative 8D representation with elegant geometric properties.
 
