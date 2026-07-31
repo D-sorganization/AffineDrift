@@ -404,8 +404,8 @@ m_2 g\frac{\ell_2}{2}\cos(q_1+q_2)
 The Coriolis/centrifugal terms come from $\frac{\dd}{\dt}\frac{\partial T}{\partial\dot q_k} - \frac{\partial T}{\partial q_k}$:
 \begin{equation}
 \mat{C}(\q,\dot\q)\dot\q = \begin{bmatrix}
--m_2\ell_1\ell_2(-2\dot q_1\dot q_2 - \dot q_2^2)\sin q_2 \\
-m_2\ell_1\ell_2\dot q_1^2\sin q_2
+-\tfrac{1}{2}m_2\ell_1\ell_2(2\dot q_1\dot q_2 + \dot q_2^2)\sin q_2 \\
+\tfrac{1}{2}m_2\ell_1\ell_2\dot q_1^2\sin q_2
 \end{bmatrix}.
 \end{equation}
 
@@ -414,8 +414,8 @@ The dynamics are thus
 \begin{bmatrix} M_{11} & M_{12} \\ M_{12} & M_{22}\end{bmatrix}
 \begin{bmatrix}\ddot q_1 \\ \ddot q_2\end{bmatrix}
 + \begin{bmatrix}
--m_2\ell_1\ell_2(-2\dot q_1\dot q_2 - \dot q_2^2)\sin q_2 \\
-m_2\ell_1\ell_2\dot q_1^2\sin q_2
+-\tfrac{1}{2}m_2\ell_1\ell_2(2\dot q_1\dot q_2 + \dot q_2^2)\sin q_2 \\
+\tfrac{1}{2}m_2\ell_1\ell_2\dot q_1^2\sin q_2
 \end{bmatrix}
 + \begin{bmatrix}
 g(m_1\frac{\ell_1}{2} + m_2\ell_1)\cos q_1 + m_2 g\frac{\ell_2}{2}\cos(q_1+q_2) \\
@@ -1062,12 +1062,15 @@ The gravity terms cancel, leaving:
 \label{eq:ch3:energy-simplified}
 \end{equation}
 
-For many systems (especially those where $\mat{C}$ and $\dot M$ have special structure), we have
+When $\mat{C}$ is built from the Christoffel symbols of the metric $M$ --- the canonical
+choice made in~\eqref{eq:ch3:christoffel-formula}, and the one under which
+$\dot M - 2\mat{C}$ is skew-symmetric --- we have
 \begin{equation}
-\dot\q^\T \mat{C}(\q,\dot\q)\dot\q = -\frac{1}{2}\dot\q^\T \dot M(\q)\,\dot\q,
+\dot\q^\T \mat{C}(\q,\dot\q)\dot\q = \frac{1}{2}\dot\q^\T \dot M(\q)\,\dot\q,
 \label{eq:ch3:skew-symmetry}
 \end{equation}
-which is a consequence of the Coriolis forces being orthogonal to velocity. Then:
+which is exactly the statement $\dot\q^\T(\dot M - 2\mat{C})\dot\q = 0$. Substituting
+into~\eqref{eq:ch3:energy-simplified} cancels the two inertial terms. Then:
 \begin{equation}
 \dot E = \dot\q^\T B(\q)\uvec = \y^\T\uvec,
 \label{eq:ch3:energy-passivity}
