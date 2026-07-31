@@ -1,8 +1,24 @@
 #!/usr/bin/env python3
-"""Fail when GitHub Actions workflows can route to hosted runners."""
+"""Fail when GitHub Actions workflows can route to hosted runners.
+
+Hosted runners are only worth banning where they are billed. On a public
+repository, standard GitHub-hosted runners are free and unmetered, and routing
+to a self-hosted fleet is actively worse: GitHub advises against pairing
+self-hosted runners with public repositories, because a fork pull request can
+run attacker-controlled code on a persistent machine you own.
+
+So the ban applies to private and internal repositories only. Visibility comes
+from ``REPO_VISIBILITY``; when it is unset the scan enforces, because a false
+failure costs a re-run while a false pass costs a billed month.
+
+This duplicates ``.github/workflows/local-only-runner-guard.yml``, which is the
+enforcement that actually runs in CI. Nothing in this repository invokes this
+script today.
+"""
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 WORKFLOW_DIR = Path(".github") / "workflows"
@@ -40,14 +56,31 @@ def scan_workflow_text(path_label: str, text: str) -> list[str]:
     return findings
 
 
+def hosted_runners_are_metered(visibility: str | None = None) -> bool:
+    """Return whether hosted runners bill against the quota for this repo.
+
+    ``visibility`` defaults to the ``REPO_VISIBILITY`` environment variable.
+    Anything other than ``public`` -- including an unreadable value -- is
+    treated as metered, so the scan fails closed.
+    """
+    if visibility is None:
+        visibility = os.environ.get("REPO_VISIBILITY", "")
+    return visibility.strip().lower() != "public"
+
+
 def main() -> int:
     """Scan workflow files and fail if any can route to hosted runners.
 
-    Returns ``0`` when every workflow is local-only (or the workflow directory
-    is absent) and ``1`` when at least one offending workflow is found.
+    Returns ``0`` when every workflow is local-only, when the repository is
+    public (where hosted runners are free), or when the workflow directory is
+    absent; ``1`` when at least one offending workflow is found.
     """
     failures: list[str] = []
     if not WORKFLOW_DIR.exists():
+        return 0
+
+    if not hosted_runners_are_metered():
+        print("Repository is public; hosted runners are free and permitted.")
         return 0
 
     for path in sorted(WORKFLOW_DIR.rglob("*")):
