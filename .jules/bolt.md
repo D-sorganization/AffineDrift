@@ -161,3 +161,6 @@
 ## 2026-07-30 - Eliminate redundant string inclusion checks in scoring function
 **Learning:** When optimizing hot paths like scoring or sorting functions, eliminate redundant string inclusion checks (like `haystack.includes(term)`) if the input array is already pre-filtered by that exact condition.
 **Action:** Remove redundant inclusion checks to avoid expensive O(N) operations in hot paths.
+## 2026-07-31 - Eliminate redundant string inclusion checks in scoring function
+**Learning:** When optimizing hot paths like scoring or sorting functions, eliminate redundant string inclusion checks (like `haystack.includes(term)`) if the input array is already pre-filtered by that exact condition.
+**Action:** Remove redundant inclusion checks to avoid expensive O(N) operations in hot paths.
