@@ -167,8 +167,18 @@
 \newenvironment{argument}{\begin{proof}[Argument]}{\end{proof}}
 \newenvironment{listing}{\begin{center}\begin{minipage}{0.9\textwidth}}{\end{minipage}\end{center}}
 \newenvironment{pseudocode}{\begin{ttfamily}\small}{\end{ttfamily}}
-% Backward-compat alias so existing \begin{algorithmic} still compiles:
-\newenvironment{algorithmic}{\begin{pseudocode}}{\end{pseudocode}}
+% Backward-compat alias so existing \begin{algorithmic} still compiles.
+% The alias supplied the environment but not the commands algpseudocode would
+% define, so every \State, \For and \EndFor inside one was an undefined control
+% sequence -- fatal, and the reason ch12 produced no PDF. These three are the
+% only algorithmic commands the volume uses. Defined inside the environment so
+% they are scoped to it and cannot collide with anything outside.
+\newenvironment{algorithmic}{%
+  \begin{pseudocode}%
+  \newcommand{\State}{\par\hspace*{1.5em}}%
+  \newcommand{\For}[1]{\par\textbf{for} ##1 \textbf{do}}%
+  \newcommand{\EndFor}{\par\textbf{end for}}%
+}{\end{pseudocode}}
 
 % ──────────────────────────────────────────────
 % Chapter formatting
