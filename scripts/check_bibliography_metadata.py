@@ -49,6 +49,8 @@ from difflib import SequenceMatcher
 from pathlib import Path
 
 UA = "AffineDrift-bib-audit/2.0 (mailto:dieterolson@gmail.com)"
+CROSSREF_HOST = "api.crossref.org"
+CROSSREF_ENDPOINT = f"https://{CROSSREF_HOST}/works"
 TITLE_FLOOR = 0.93
 REPO = Path(__file__).resolve().parent.parent
 BIBS = {
@@ -132,9 +134,17 @@ def crossref(title: str, author: str) -> list[dict]:
     }
     if author:
         query["query.author"] = author
-    url = "https://api.crossref.org/works?" + urllib.parse.urlencode(query)
+    url = CROSSREF_ENDPOINT + "?" + urllib.parse.urlencode(query)
+    # urlopen will happily follow file:// and other schemes, so pin it to https
+    # against the one host this tool talks to rather than trusting the string we
+    # just built.
+    parsed = urllib.parse.urlparse(url)
+    if parsed.scheme != "https" or parsed.netloc != CROSSREF_HOST:
+        msg = f"refusing to fetch {parsed.scheme}://{parsed.netloc}"
+        raise ValueError(msg)
     request = urllib.request.Request(url, headers={"User-Agent": UA})
-    with urllib.request.urlopen(request, timeout=30) as response:
+    # Scheme and host are pinned to https://api.crossref.org immediately above.
+    with urllib.request.urlopen(request, timeout=30) as response:  # nosec B310
         return json.load(response)["message"]["items"]
 
 
