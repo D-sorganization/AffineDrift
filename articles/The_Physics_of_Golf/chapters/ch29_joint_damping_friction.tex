@@ -17,7 +17,7 @@ The answer is: it depends on how much damping you have and at which joints. Too 
 
 When you flex your arm, you don't just move bone. You move synovial fluid, squeeze cartilage, deform tendons, compress muscle fibers, and shift skin and subcutaneous fat. Each of these structures resists motion. None of this resistance is dramatic — the shoulder joint doesn't *feel* stuck — but it's omnipresent, and at high speeds (like the downswing), it matters enormously.
 
-\begin{definition}{Viscous Damping}{def:viscous_damping}
+\begin{definition}{Viscous Damping}{viscous_damping}
 A damping force proportional to velocity: $F_d = -c v$, where $c$ is the damping coefficient. At the joint level, we write this as a torque opposing angular velocity: $\tau_d = -c_i \dot{q}_i$. Viscous damping dissipates energy at a rate proportional to velocity squared.
 \end{definition}
 
@@ -144,7 +144,7 @@ Recall from Chapter~\ref{ch:parallel_mechanisms} that the unforced kinematic cha
 
 This is the drift vector field — the natural motion of the body under gravity, Coriolis effects, and muscle forces. To include damping, we simply add a damping term:
 
-\begin{principle}{Damped Kinematic Chain Equations}{princ:damped_eom}
+\begin{principle}{Damped Kinematic Chain Equations}{damped_eom}
 \[
 \boxed{\massmat(\bm{q})\ddot{\bm{q}} + \cormat(\bm{q},\dot{\bm{q}})\dot{\bm{q}} + \bm{D}(\bm{q})\dot{\bm{q}} + \gravvec(\bm{q}) = \bm{B}(\bm{q})\control + \bm{J}_c^T(\bm{q})\constraintforce}
 \]
@@ -169,7 +169,7 @@ The simplest model is \emph{linear (viscous) damping}:
 
 In reality, damping is often \emph{nonlinear}. Common models include:
 
-\begin{definition}{Nonlinear Damping Models}{def:nonlinear_damping}
+\begin{definition}{Nonlinear Damping Models}{nonlinear_damping}
 \begin{enumerate}
 \item \textbf{Coulomb (kinetic) friction}: $f_d = -\mu_k |f_n| \,\text{sign}(\dot{q}_i)$. Force is constant, direction-dependent. Unphysical for continuous motion but useful for large-scale analysis.
 
@@ -232,7 +232,7 @@ Here is where it gets interesting. Rearranging the damped equation of motion:
 
 Because $\massmat$ is \emph{not diagonal}, the terms inside the brackets get "mixed" when inverted. Let's illustrate with a simple two-joint chain: shoulder (joint 1) and elbow (joint 2).
 
-\begin{example}{Shoulder-Elbow Damping Coupling}{ex:shoulder_elbow_coupling}
+\begin{example}{Shoulder-Elbow Damping Coupling}{shoulder_elbow_coupling}
 The mass matrix for a two-link arm is approximately:
 \[
 \massmat = \begin{pmatrix} m_1 L_1^2 + m_2(L_1^2 + L_2^2 + 2L_1 L_2 \cos q_2) & m_2(L_2^2 + L_1 L_2 \cos q_2) \\ m_2(L_2^2 + L_1 L_2 \cos q_2) & m_2 L_2^2 \end{pmatrix}
@@ -271,7 +271,7 @@ When $\bm{D}$ reduces $\dot{\bm{q}}$, the Coriolis term decreases, which indirec
 
 Consider a serial chain: shoulder $\to$ elbow $\to$ wrist $\to$ club shaft. The kinetic energy flows from proximal (shoulder) to distal (club). At each joint, damping dissipates energy. Where does this dissipation hurt the most?
 
-\begin{principle}{Proximal Damping Has System-Wide Cost}{princ:proximal_damping_cost}
+\begin{principle}{Proximal Damping Has System-Wide Cost}{proximal_damping_cost}
 In a serial kinematic chain, damping at proximal (root-side) joints dissipates energy from the entire downstream chain. Damping at distal (tip-side) joints only affects that joint and its descendants. Quantitatively, the fractional energy loss is much larger for proximal damping than distal damping of equal coefficient magnitude.
 \end{principle}
 
@@ -304,7 +304,7 @@ Concretely, if left arm damping causes the left hand to lag behind, the constrai
 
 Here is the apparent paradox: damping dissipates energy, which is bad for distance. But damping also stabilizes motion, which is good for control. How can we reconcile this?
 
-\begin{theorem}{Damping and Stability}{thm:damping_stability}
+\begin{theorem}{Damping and Stability}{damping_stability}
 Consider the linearized dynamics around an equilibrium: $\dot{\bm{x}} = A\bm{x}$. The eigenvalues of $A$ determine stability. If $A$ has a term $-\bm{D}$ (damping), then damping moves the eigenvalues into the left half-plane (negative real parts), making the equilibrium stable. Without damping, eigenvalues can lie on the imaginary axis (marginal stability) or right half-plane (instability).
 
 Damping trades energy loss for stability.
@@ -318,7 +318,7 @@ A joint can be classified by its \emph{damping ratio}:
 \]
 where $c$ is the damping coefficient, $k$ the stiffness, and $m$ the effective mass.
 
-\begin{definition}{Damping Ratio Regimes}{def:damping_ratio}
+\begin{definition}{Damping Ratio Regimes}{damping_ratio}
 \begin{itemize}
 \item $\zeta < 1$ (\textbf{underdamped}): The joint oscillates as it returns to rest. Energy is dissipated over multiple cycles. Motion is fast but wiggly.
 
@@ -550,7 +550,7 @@ Recall from Chapter~\ref{ch:flexible_shaft} that the shaft is a distributed elas
 
 When you flex a golf shaft and release it, the oscillations decay over time. This decay is due to material damping: hysteresis in the material's stress-strain curve. The damping is frequency-dependent and material-dependent.
 
-\begin{definition}{Quality Factor (Q-factor)}{def:q_factor}
+\begin{definition}{Quality Factor (Q-factor)}{q_factor}
 For an oscillating beam, the quality factor is:
 \[
 Q = 2\pi \frac{\text{Peak energy stored}}{\text{Energy dissipated per cycle}} = \frac{\omega_0}{2\zeta \omega_0} = \frac{1}{2\zeta}

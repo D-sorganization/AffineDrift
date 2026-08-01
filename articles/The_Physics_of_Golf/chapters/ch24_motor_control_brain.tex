@@ -45,7 +45,7 @@ This is not a simple problem. It is a \textit{nonlinear optimal control problem 
 \end{enumerate}
 \end{constraintbox}
 
-\begin{example}{Delays in the Golf Swing}{ex:ch24_delay_golf}
+\begin{example}{Delays in the Golf Swing}{ch24_delay_golf}
 The downswing takes approximately 250--300~ms. Consider the delay budget:
 \begin{itemize}
 \item Visual processing: $\sim$100~ms from retina to visual cortex
@@ -67,7 +67,7 @@ Total round-trip delay: approximately 250--330~ms. This exceeds the entire downs
 
 A traditional control system can work in one of two ways:
 
-\begin{definition}{Feedback (Closed-Loop) Control}{def:ch24_feedback}
+\begin{definition}{Feedback (Closed-Loop) Control}{ch24_feedback}
 The controller measures the current state $\bm{x}(t)$, compares it to the desired state $\bm{x}_d(t)$, computes an error $\bm{e}(t) = \bm{x}_d(t) - \bm{x}(t)$, and adjusts the control input based on this error:
 \begin{equation}
 \bm{u}(t) = \bm{K}\bm{e}(t) = \bm{K}[\bm{x}_d(t) - \bm{x}(t)]
@@ -77,7 +77,7 @@ where $\bm{K}$ is a gain matrix.
 This is reactive: if things are going wrong, the controller corrects.
 \end{definition}
 
-\begin{definition}{Feedforward (Open-Loop) Control}{def:ch24_feedforward}
+\begin{definition}{Feedforward (Open-Loop) Control}{ch24_feedforward}
 The controller uses a \textit{model} of the system to compute the required control input in advance:
 \begin{equation}
 \bm{u}(t) = \bm{u}_{\mathrm{planned}}(t)
@@ -110,7 +110,7 @@ This realization has far-reaching implications. It means the brain does its real
 
 If the golf swing is feedforward, how does the brain know what command to send? It has a model. The brain maintains an \textit{internal model}---a neural simulation of the body's dynamics.
 
-\begin{definition}{Forward Model}{def:ch24_forward_model}
+\begin{definition}{Forward Model}{ch24_forward_model}
 A forward model predicts the sensory consequences of a motor command. Given the current state $\bm{x}(t)$ and a motor command $\bm{u}(t)$, the forward model predicts the next state:
 \begin{equation}
 \hat{\bm{x}}(t+\Delta t) = \hat{f}(\bm{x}(t)) + \hat{G}(\bm{x}(t))\bm{u}(t)
@@ -119,7 +119,7 @@ A forward model predicts the sensory consequences of a motor command. Given the 
 Mathematically, this is analogous to solving the nonlinear dynamics equation. The neural implementation is of course very different from symbolic computation, but the functional result is similar: the brain generates predictions consistent with physical dynamics.
 \end{definition}
 
-\begin{definition}{Inverse Model}{def:ch24_inverse_model}
+\begin{definition}{Inverse Model}{ch24_inverse_model}
 An inverse model computes the motor command needed to achieve a desired sensory outcome. Given a desired state change $\bm{x}_d(t)$, the inverse model computes:
 \begin{equation}
 \bm{u}(t) = \hat{G}(\bm{x}(t))^{-1}[\dot{\bm{x}}_d(t) - \hat{f}(\bm{x}(t))]
@@ -174,7 +174,7 @@ This is a simplified form of the Marr-Albus-Ito hypothesis. More precisely, the 
 
 Without an internal model, the brain cannot solve the golf swing. Here's why:
 
-\begin{example}{Controlling Without a Model}{ex:ch24_no_model}
+\begin{example}{Controlling Without a Model}{ch24_no_model}
 Suppose you didn't have an internal model. You swing the club and see (after 150 ms) that the clubface was open. You generate a correction. But this correction is based on what your muscles did 150 milliseconds ago, when the club was in a different position. The dynamics are nonlinear---the effect of a torque at position $\bm{x}_1$ is different from the effect of the same torque at position $\bm{x}_2$. Applying a correction based on delayed feedback at the wrong state is futile.
 
 With an internal model, you \textit{predict} what will happen before it happens. You mentally simulate the swing. If the simulation predicts an open clubface, you adjust the plan \textit{before} you swing.
@@ -192,7 +192,7 @@ The forward model enables \textit{predictive control}. The inverse model enables
 
 Modern neuroscience has converged on a powerful unifying idea: the brain is fundamentally a \textit{prediction machine}. This framework, developed by Karl Friston and others, is called the \textit{free energy principle} and the \textit{predictive processing} framework \cite{friston2010action, clark2013whatever}.
 
-\begin{definition}{Predictive Processing}{def:ch24_predictive_processing}
+\begin{definition}{Predictive Processing}{ch24_predictive_processing}
 The brain doesn't passively receive sensory information. Instead, it constantly generates predictions about what it expects to sense. Perception works by comparing predictions with actual sensations. When they match, the brain's model of the world is good. When they don't match, a \textit{prediction error} occurs, and the brain updates its model.
 \end{definition}
 
@@ -221,7 +221,7 @@ William James, in his 1890 \textit{Principles of Psychology}, proposed a radical
 
 Modern ideomotor theory \cite{prinz2002perception, hommel2009theory} has formalized this insight:
 
-\begin{theorem}{Ideomotor Principle (Theoretical Framework)}{thm:ch24_ideomotor}
+\begin{theorem}{Ideomotor Principle (Theoretical Framework)}{ch24_ideomotor}
 According to modern ideomotor theory---a framework with substantial experimental support but ongoing debate regarding its scope and mechanisms---an action is coded as a set of desired sensory consequences (the effect). When the action goal is activated, the motor system retrieves the motor commands that, in the past, produced those consequences. The action is executed by commands designed to minimize discrepancy between the predicted sensory consequences and the desired consequences.
 \end{theorem}
 
@@ -286,7 +286,7 @@ To understand how the brain controls movement, we need to understand its hardwar
 
 The primary motor cortex (M1) is located in the frontal lobe, just in front of the central sulcus. The corticospinal tract contains approximately one million fibers per hemisphere (estimates vary by source and methodology), with axons projecting down through the spinal cord to synapse onto motor neurons and interneurons.
 
-\begin{definition}{Corticospinal Tract}{def:ch24_corticospinal}
+\begin{definition}{Corticospinal Tract}{ch24_corticospinal}
 The major pathway for voluntary motor control. Fibers originate in the motor cortex, travel through the brain and brainstem, cross the midline (decussate) in the medulla, and descend the spinal cord. Each M1 neuron controls the muscles on the \textit{opposite} side of the body.
 \end{definition}
 
@@ -303,11 +303,11 @@ The motor cortex doesn't work one neuron per muscle. Instead, it uses \textit{po
 
 The spinal cord is not just a cable carrying commands down and feedback up. It contains \textit{local circuits} that can coordinate movement independently of the brain.
 
-\begin{definition}{Central Pattern Generator}{def:ch24_cpg}
+\begin{definition}{Central Pattern Generator}{ch24_cpg}
 A neural circuit that produces rhythmic output without rhythmic input. CPGs in the spinal cord generate patterns like walking, swimming, or scratching. They can operate autonomously, though they're normally modulated by brain signals.
 \end{definition}
 
-\begin{definition}{Stretch Reflex (Monosynaptic Reflex)}{def:ch24_stretch_reflex}
+\begin{definition}{Stretch Reflex (Monosynaptic Reflex)}{ch24_stretch_reflex}
 A rapid response to muscle stretch. When a muscle is stretched, spindle receptors send a signal directly to motor neurons in the spinal cord, which fire and contract the muscle. This entire loop happens in about 30 milliseconds, \textit{without brain involvement}. The brain doesn't know about it until after it happens.
 \end{definition}
 
@@ -322,13 +322,13 @@ For the golf swing, the spinal cord implements local stabilizing reflexes. If a 
 
 The basal ganglia are a set of nuclei deep in the brain. Their primary function is \textit{action selection}---deciding which motor program to execute.
 
-\begin{definition}{Motor Program}{def:ch24_motor_program}
+\begin{definition}{Motor Program}{ch24_motor_program}
 A learned sequence of muscle activations that produces a stereotyped action (like a golf swing). Once selected and initiated, the program unfolds with minimal brain intervention.
 \end{definition}
 
 The basal ganglia use a neurochemical signal called \textit{dopamine} to encode reward prediction errors. When you execute a motor program and it produces a better-than-expected outcome (a good shot), dopamine neurons fire. This signal reinforces the basal ganglia circuits that led to that action. Over time, actions that produce rewards become more likely.
 
-\begin{example}{Basal Ganglia in Golf}{ex:ch24_bg_golf}
+\begin{example}{Basal Ganglia in Golf}{ch24_bg_golf}
 The pre-shot routine involves several motor programs:
 \begin{enumerate}
 \item The waggle (small oscillations of the club)
@@ -382,13 +382,13 @@ This principle has important consequences:
 
 A fundamental constraint on any controller is its bandwidth---the rate at which it can process information and generate corrections.
 
-\begin{definition}{Control Bandwidth}{def:ch24_bandwidth}
+\begin{definition}{Control Bandwidth}{ch24_bandwidth}
 The maximum frequency at which a controller can detect errors and generate corrective responses. For the brain, the limiting factor is not neural transmission speed (which is fast---30--120 m/s) but the time taken to process information and compute responses.
 \end{definition}
 
 The conscious brain updates motor plans at roughly 4--10~Hz (one update every 100--250~ms). These values are illustrative estimates from reaction-time studies; the exact rate depends on task complexity and attentional demands. Visual flicker fusion occurs at $\sim$60~Hz, but conscious decision-making and motor replanning are far slower. This mismatch is critical: sensory data arrives faster than the conscious brain can act on it.
 
-\begin{example}{Flicker Fusion Frequency}{ex:ch24_flicker}
+\begin{example}{Flicker Fusion Frequency}{ch24_flicker}
 A light flickering at 60 Hz appears steady to your eye, even though it's actually off half the time. This is because 60 Hz exceeds your conscious bandwidth. Each on--off cycle is too fast to perceive as distinct.
 \end{example}
 
@@ -436,7 +436,7 @@ How much ``horsepower'' does the brain have for controlling movement?
 
 However, the brain doesn't use its power to solve optimization problems online. Instead, it learns solutions offline and recalls them online.
 
-\begin{example}{Online Optimization vs. Offline Learning}{ex:ch24_online_vs_offline}
+\begin{example}{Online Optimization vs. Offline Learning}{ch24_online_vs_offline}
 A robotic arm might use real-time trajectory optimization: at each time step (every millisecond), solve a local optimal control problem to compute the next motor command. This requires substantial computation per time step.
 
 The brain does something different: it \textit{learns}, over thousands of trials, a motor program that reliably produces the desired outcome. Then, at execution time, it simply \textit{recalls} and \textit{executes} the learned program. This is much cheaper computationally.

@@ -45,7 +45,7 @@ This is where biomechanics meets robotics. The human body is a robot. The laws a
 
 The \textbf{Grübler-Kutzbach formula} (also called the Chebychev-Grübler-Kutzbach formula) counts the total degrees of freedom of a kinematic system.
 
-\begin{theorem}{Grübler-Kutzbach Formula}{thm:grubler}
+\begin{theorem}{Grübler-Kutzbach Formula}{grubler}
 For a kinematic chain of $N$ rigid bodies (links) connected by $J$ joints, where joint $i$ has $f_i$ degrees of freedom, the total degrees of freedom of the system is:
 
 $$\mathrm{DOF} = 6(N-1) - \sum_{i=1}^{J} (6 - f_i)$$
@@ -67,7 +67,7 @@ The formula subtracts the total constraints from the free DOF.
 
 \subsection{Worked Example 1: A Simple Robot Arm}
 
-\begin{example}{3-Link Robot Arm}{ex:robot_arm_dof}
+\begin{example}{3-Link Robot Arm}{robot_arm_dof}
 Consider a robot arm with a fixed base and three revolute joints in series:
 
 \textbf{Bodies:} Ground (base, fixed) + Link 1 + Link 2 + Link 3 = 4 total. Count the ground as one of the $N$ bodies, so $N = 4$.
@@ -89,7 +89,7 @@ Both methods agree for a tree structure.
 
 \subsection{Worked Example 2: A Closed Kinematic Loop}
 
-\begin{example}{4-Bar Mechanism (Linkage)}{ex:four_bar_loop}
+\begin{example}{4-Bar Mechanism (Linkage)}{four_bar_loop}
 Consider a classic 4-bar linkage: 4 bars (links) connected by 4 revolute joints forming a closed loop. One link is the ground frame (fixed), so $N = 4$ (ground + 3 moving links).
 
 \textbf{Key insight:} Because this is a planar mechanism, we must use the \textbf{planar Gr\"ubler formula}, not the spatial one. In 2D, each free body has 3~DOF (two translations + one rotation), and each revolute joint imposes 2 constraints (prevents the two translations at the joint, while permitting rotation):
@@ -315,7 +315,7 @@ Elite golfers exploit this redundancy to:
 
 This is why motion capture shows that no two golfers swing identically \citep{Glazier2011,Myers2008}. \citet{Glazier2011} reviews movement variability in the golf swing and argues it is partly functional rather than simply error, and \citet{Myers2008} report the spread across 100 golfers. The task (club trajectory) is constrained, but the arm configuration is not. Different golfers choose different null-space motions.
 
-\begin{example}{Elbow Swivel in the Golf Swing}{ex:elbow_swivel}
+\begin{example}{Elbow Swivel in the Golf Swing}{elbow_swivel}
 Consider a golfer at the top of the backswing. The club is at a specific position and orientation. Now, without moving the club, the golfer could:
 
 \begin{enumerate}
@@ -403,7 +403,7 @@ where $\bm{J}(\bm{q}) \in \mathbb{R}^{6 \times n}$ is the \textbf{task Jacobian}
 
 Since $\bm{J}$ has more columns than rows ($n > 6$), it has a non-trivial \textbf{null space}:
 
-\begin{definition}{Null Space of the Jacobian}{def:ch23_null_space}
+\begin{definition}{Null Space of the Jacobian}{ch23_null_space}
 The null space of the Jacobian is the set of all joint velocities that produce zero club head velocity:
 
 \begin{equation}
@@ -431,7 +431,7 @@ The set of all solutions is:
 
 This set is called the \textbf{solution manifold}. It is a submanifold of the joint configuration space $\mathbb{R}^n$.
 
-\begin{theorem}{Dimension of the Solution Manifold}{thm:ch23_manifold_dimension}
+\begin{theorem}{Dimension of the Solution Manifold}{ch23_manifold_dimension}
 If the task Jacobian $\bm{J}(\bm{q})$ has full rank (rank 6) at a configuration $\bm{q}^*$, then the solution manifold $\mathcal{M}(\bm{x}^*)$ passing through $\bm{q}^*$ is a smooth submanifold of dimension $n - 6 = 19$.
 \end{theorem}
 
@@ -470,7 +470,7 @@ This explains why two elite golfers can look completely different in slow motion
 
 In 1967, the Soviet biomechanist Nikolai Bernstein posed the fundamental question: \emph{How does the brain choose among infinitely many solutions?}
 
-\begin{definition}{Bernstein's Degrees of Freedom Problem}{def:ch23_bernstein_problem}
+\begin{definition}{Bernstein's Degrees of Freedom Problem}{ch23_bernstein_problem}
 Given a motor task (e.g., hit a golf ball), the organism has many more DOF than required by the task. This creates a problem:
 
 \begin{itemize}
@@ -621,7 +621,7 @@ where:
 
 The first term solves the task: it finds the joint velocities needed to produce the desired club head velocity. The second term adds null-space motion: it optimizes the solution without affecting the task.
 
-\begin{example}{Null-Space Optimization: Elbow Swivel}{ex:ch23_elbow_swivel_null_space}
+\begin{example}{Null-Space Optimization: Elbow Swivel}{ch23_elbow_swivel_null_space}
 Consider a golfer at the top of the backswing. The task is to swing the club down along a specific trajectory. The club head position and velocity are prescribed.
 
 However, the elbow position is not prescribed. It's part of the null space.
@@ -671,7 +671,7 @@ A URDF file defines:
 
 \subsection{A Simple Example: 2-Link Arm}
 
-\begin{example}{URDF for a 2-Link Planar Arm}{ex:urdf_simple}
+\begin{example}{URDF for a 2-Link Planar Arm}{urdf_simple}
 \begin{verbatim}
 <?xml version="1.0"?>
 <robot name="simple_arm">
@@ -766,7 +766,7 @@ This URDF describes a 2-link planar arm. The shoulder joint connects the base to
 
 \subsection{Key URDF Tags}
 
-\begin{definition}{URDF Link}{def:urdf_link}
+\begin{definition}{URDF Link}{urdf_link}
 A \texttt{<link>} element represents a rigid body. It contains:
 \begin{itemize}
 \item \texttt{<inertial>}: Mass and moment of inertia
@@ -777,7 +777,7 @@ A \texttt{<link>} element represents a rigid body. It contains:
 Inertia values are stored in a 3×3 symmetric matrix $\bm{I}$, represented as six values: $I_{xx}, I_{xy}, I_{xz}, I_{yy}, I_{yz}, I_{zz}$.
 \end{definition}
 
-\begin{definition}{URDF Joint}{def:urdf_joint}
+\begin{definition}{URDF Joint}{urdf_joint}
 A \texttt{<joint>} element represents a kinematic constraint. It contains:
 \begin{itemize}
 \item \texttt{<parent link>}: The parent rigid body
@@ -858,7 +858,7 @@ $$\text{DOF} = 3 + 3 + 3 + 2 + 2 + 3 + 2 + 2 = 20 \text{ DOF}$$
 
 To populate the URDF with realistic inertia values, we use anthropometric data. The most widely used data comes from de Leva (1996), who measured body segment masses and moments of inertia on cadavers and living subjects.
 
-\begin{example}{Anthropometric Data (de Leva 1996)}{ex:anthropometry}
+\begin{example}{Anthropometric Data (de Leva 1996)}{anthropometry}
 For a 70 kg male, typical segment masses are:
 
 \begin{center}
@@ -1080,7 +1080,7 @@ $$\bm{M}(\bm{q})\ddot{\bm{q}} = \bm{u} - \bm{C}(\bm{q},\dot{\bm{q}})\dot{\bm{q}}
 
 Deriving these by hand for a 20-DOF golf swing model is tedious and error-prone. But Drake or Pinocchio computes them \emph{automatically} from the URDF.
 
-\begin{example}{Automatic Dynamics Computation}{ex:auto_dynamics}
+\begin{example}{Automatic Dynamics Computation}{auto_dynamics}
 In Drake (Python):
 
 \begin{lstlisting}[language=Python,caption={Building the URDF programmatically},basicstyle=\ttfamily\footnotesize,breaklines=true]
@@ -1134,7 +1134,7 @@ This is a \emph{sensitivity analysis}. We compute:
 
 $$\text{Sensitivity} = \frac{\partial v_{\text{club}}}{\partial m_{\text{forearm}}}$$
 
-\begin{example}{Sensitivity of Club Speed to Forearm Mass}{ex:sensitivity}
+\begin{example}{Sensitivity of Club Speed to Forearm Mass}{sensitivity}
 Using a simplified arm model (2-segment arm, no wrist motion), the club speed depends on:
 \begin{itemize}
 \item Shoulder torque $\tau_s$ (larger shoulder can swing faster)

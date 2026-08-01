@@ -39,7 +39,7 @@ Such a model would have thousands of degrees of freedom and would require months
 
 An engineer takes a different approach. We ask: \emph{what is the primary motion of the knee?} The answer is almost entirely flexion and extension---bending and straightening in the sagittal plane. This suggests a \emph{revolute joint}: a single hinge axis about which the tibia rotates relative to the femur.
 
-\begin{definition}{Revolute Joint (Hinge)}{def:revolute}
+\begin{definition}{Revolute Joint (Hinge)}{revolute}
 A revolute joint connects two bodies by a single rotation axis. It has one degree of freedom: $\theta$, the angle of rotation about the axis. Mathematically, if body A is in frame $\mathcal{F}_A$ and body B is in frame $\mathcal{F}_B$, the relative orientation is:
 $$\bm{R}_{AB}(\theta) = \exp(\theta \, [\bm{u}]_\times)$$
 where $\bm{u}$ is the unit vector along the rotation axis (in body A's frame) and $[\bm{u}]_\times$ is the skew-symmetric matrix representation of $\bm{u}$.
@@ -203,7 +203,7 @@ No constraint. The two bodies move independently relative to each other.
 
 \textbf{Example in golf:} A club in flight between shots has a 6-DOF joint to the ground (it's not touching).
 
-\begin{example}{Constraint Counting}{ex:constraint_count}
+\begin{example}{Constraint Counting}{constraint_count}
 A robot arm with:
 \begin{itemize}
 \item Base (1 link) fixed to ground
@@ -400,7 +400,7 @@ For simple swing analysis where we're computing forces and moments at the joint,
 \item The available range of motion for the humerus
 \end{itemize}
 
-\begin{example}{Scapulohumeral Rhythm in the Golf Swing}{ex:scapular_rhythm}
+\begin{example}{Scapulohumeral Rhythm in the Golf Swing}{scapular_rhythm}
 During the backswing, a right-handed golfer raises the trail arm (right arm).
 
 \textbf{Without scapular contribution:} The GH joint alone can abduct the humerus $\approx 90-100{}^\circ$. The hand would reach a certain height and angle.
@@ -683,7 +683,7 @@ The lead wrist experiences the highest angular velocities of any joint in the sw
 
 Despite its name, golfer's elbow is caused by the trail arm, not the lead arm. The trail wrist flexors and forearm pronators originate at the medial epicondyle of the humerus. During the downswing, these muscles contract eccentrically (lengthening under load) as the trail forearm supinates. The repeated eccentric loading causes micro-tears at the tendon-bone interface.
 
-\begin{principle}{Injury as a Constraint Violation}{princ:ch22_injury_constraint}
+\begin{principle}{Injury as a Constraint Violation}{ch22_injury_constraint}
 From the ZTCF perspective, injuries occur when the drift field drives the system into configurations that exceed the structural capacity of biological tissues. The golfer's muscular control authority is insufficient to prevent these configurations at high speeds (because DCR $\gg 1$ at impact). This is why injuries are more common at high swing speeds and during the downswing-to-impact phase: the system is on autopilot, and the autopilot sometimes drives through dangerous territory.
 \end{principle}
 

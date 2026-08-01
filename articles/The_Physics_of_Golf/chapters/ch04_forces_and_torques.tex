@@ -79,7 +79,7 @@ where $I$ is the moment of inertia and $\alpha = \ddot{\theta}$ is the angular a
 
 In the manipulator equation, the terms $\bm{M}(\bm{q}) \ddot{\bm{q}}$ are exactly these inertial terms.
 
-\begin{example}{Inertia at the Shoulder}{ex:ch04_inertia_shoulder}
+\begin{example}{Inertia at the Shoulder}{ch04_inertia_shoulder}
 Recall from Chapter~\ref{ch:03_double_pendulum} that the effective moment of inertia at the shoulder is about $M_{11} \approx 1.54 \text{ kg m}^2$.
 
 If you want to accelerate the shoulder at $\ddot{\theta}_1 = 1000 \text{ deg/s}^2 = 17.45 \text{ rad/s}^2$, the inertial torque you must overcome is:
@@ -110,7 +110,7 @@ The most intuitive is centrifugal force. If you spin a weight on a string, the w
 
 In the golf swing, when your shoulder rotates fast ($\dot{\theta}_1$ large), the forearm experiences an outward centrifugal acceleration. This tries to straighten your elbow.
 
-\begin{definition}{Centrifugal Acceleration}{def:ch04_centrifugal}
+\begin{definition}{Centrifugal Acceleration}{ch04_centrifugal}
 For a point rotating at angular velocity $\omega$ at distance $r$ from the axis, the centrifugal acceleration is:
 \begin{equation}
 a_c = \omega^2 r
@@ -120,7 +120,7 @@ a_c = \omega^2 r
 This is always positive (outward). It's not a ``real'' force in the sense that no object is pushing outward; instead, it's a consequence of circular motion.
 \end{definition}
 
-\begin{example}{Centrifugal Force in a Driver Swing}{ex:ch04_centrifugal_numbers}
+\begin{example}{Centrifugal Force in a Driver Swing}{ch04_centrifugal_numbers}
 Consider a driver swing where the clubhead (mass $m = 0.2$~kg) is at effective distance $r = L_1 + L_2 = 1.35$~m from the shoulder (canonical parameters, Chapter~\ref{ch:03_double_pendulum}). At $\omega = 30$~rad/s---the angular velocity of the clubhead \emph{about the shoulder}, corresponding to roughly 110~mph clubhead speed---just before impact:
 
 The centrifugal force pulling the club outward is:
@@ -131,7 +131,7 @@ This large outward force arises purely from the geometry and velocity of rotatio
 As documented in biomechanical studies \citep{Jorgensen1994, Penner2001}, these velocity-dependent forces are a significant part of the swing dynamics and must be accounted for in forward models of the motion.
 \end{example}
 
-\begin{example}{Centrifugal Force in the Golf Swing}{ex:ch04_centrifugal_golf}
+\begin{example}{Centrifugal Force in the Golf Swing}{ch04_centrifugal_golf}
 At impact, the shoulder rotates at $\dot{\theta}_1 = 10.47 \text{ rad/s}$. The forearm is at distance roughly $L_1 = 0.35$ m from the shoulder.
 
 The centrifugal acceleration is:
@@ -156,7 +156,7 @@ Imagine you're on a rotating platform. You walk toward the center. From an outsi
 
 In the golf swing, the Coriolis terms in $\bm{C}$ represent the coupling between shoulder and elbow rotation.
 
-\begin{definition}{Coriolis Force (in Rotating Frames)}{def:ch04_coriolis}
+\begin{definition}{Coriolis Force (in Rotating Frames)}{ch04_coriolis}
 In a rotating reference frame, the Coriolis acceleration is:
 \begin{equation}
 \bm{a}_{\text{Coriolis}} = -2 \bm{\omega} \times \bm{v}
@@ -168,7 +168,7 @@ where $\bm{\omega}$ is the rotation rate and $\bm{v}$ is the velocity in the rot
 
 In the manipulator equation, the Coriolis term $C_{12} \dot{\theta}_2$ represents how the elbow's angular velocity ($\dot{\theta}_2$) creates a reaction torque at the shoulder when the shoulder is rotating. This coupling is what makes the kinetic chain possible—each joint's motion affects the forces at other joints.
 
-\begin{example}{Coriolis Torque in the Downswing}{ex:ch04_coriolis_golf}
+\begin{example}{Coriolis Torque in the Downswing}{ch04_coriolis_golf}
 The Coriolis term in the shoulder equation is:
 \begin{equation}
 \text{(from $\bm{C}$)} = -M_2 L_1 L_{2,\text{cm}} (2 \dot{\theta}_1 + \dot{\theta}_2) \dot{\theta}_2 \sin \theta_2
@@ -309,7 +309,7 @@ The fundamental control problem is: given the system dynamics and constraints on
 
 Finally, there are forces that appear automatically to enforce mechanical constraints. These don't show up explicitly in the manipulator equation (as written in terms of generalized coordinates), but they're present as reaction forces at hinges and joints.
 
-\begin{definition}{Constraint Forces}{def:ch04_constraint_forces}
+\begin{definition}{Constraint Forces}{ch04_constraint_forces}
 Reaction forces that enforce mechanical constraints (like rigidity, inextensibility, or friction). They're \emph{reactive}: they appear only as much as needed to enforce the constraint.
 
 In the golf swing:
@@ -412,7 +412,7 @@ The control design problem thus includes implicit constraints: choose $\bm{\tau}
 
 Until now, we've talked about torques at joints. But forces at the grip are different. To unify the description, engineers use the concept of a \textbf{wrench}\index{wrench}.
 
-\begin{definition}{Wrench}{def:ch04_wrench}
+\begin{definition}{Wrench}{ch04_wrench}
 A wrench is the combination of a force $\bm{f}$ (3D vector) and a torque $\bm{\tau}$ (3D vector). It completely describes the mechanical interaction at a point.
 
 $$\text{Wrench} = \begin{bmatrix} \bm{f} \\ \bm{\tau} \end{bmatrix}$$

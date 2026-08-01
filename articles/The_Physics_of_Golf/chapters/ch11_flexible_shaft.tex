@@ -8,7 +8,7 @@
 \epigraph{A rigid shaft is an abstraction; a flexible shaft is a machine.}{---AffineDrift}
 
 % ─────────────────────────────────────────────────────────────────
-\begin{laymansbox}{Why the Shaft Matters}{laymans:ch11:why_shaft}
+\begin{laymansbox}{Why the Shaft Matters}{ch11:why_shaft}
 For most of this book, we have treated the golf club as if it were a rigid stick. This simplification has been valuable---it let us understand the fundamental forces and constraints that shape the swing. But a real golf shaft is not rigid. It bends, twists, and vibrates. These are not small corrections. The shaft's flexibility is responsible for a significant fraction of the energy transfer to the ball, especially in slower swings. Worse, ignoring shaft flexibility leads to wildly inaccurate predictions of the trajectory, spin, and accuracy.
 
 The shaft is not a passive passenger in the swing; it is an energy storage and release mechanism---a catapult that supplements the muscles and gravity.
@@ -51,7 +51,7 @@ A typical golf shaft is made of composite fibers (carbon fiber or graphite) wrap
 
 All three effects matter. The bending deformation is largest and most relevant to the swing trajectory, so we focus primarily on that.
 
-\begin{example}{Shaft Deflection Magnitudes}{ex:ch11:deflection}
+\begin{example}{Shaft Deflection Magnitudes}{ch11:deflection}
 During the late downswing, the clubhead experiences centripetal accelerations on the order of $2000$--$2500 \, \mathrm{m/s^2}$ ($\sim$200--250$g$), while the grip end accelerates at only $\sim$300~m/s$^2$ ($\sim$30$g$). (Note: these are substantially larger than the $\sim$18$g$ swing-phase acceleration computed in Chapter~\ref{ch:04_forces_and_torques} because they include the full centripetal acceleration of the clubhead about the instantaneous center of rotation, not just the shoulder-referenced centripetal term.) This huge difference in acceleration means the shaft experiences an enormous differential force that bends it.
 
 For a modern driver shaft (typically around 44--46 inches long, with shaft mass on the order of 50--80\,g depending on flex and material), this can produce a deflection of several inches at the clubhead. Published estimates range from roughly 1--5 inches depending on shaft flex, clubhead mass, and swing speed \citep{Penner2001,MacKenzie2009}.
@@ -92,7 +92,7 @@ EI \frac{\partial^4 w}{\partial z^4}(z) = q(z)
 
 Modal decomposition assumes each mode shape $\phi_j(z)$ satisfies the eigenproblem implied by the dynamic beam equation, and projection onto these modes produces the coupled ODEs in terms of $\eta_j(t)$.
 
-\begin{laymansbox}{Why $EI$ Matters}{laymans:ch11:ei_product}
+\begin{laymansbox}{Why $EI$ Matters}{ch11:ei_product}
 Imagine two shafts of the same length. One is thin and hollow; one is thick and solid. Both are made of the same material. The thin shaft bends a lot for the same force. The thick shaft is much stiffer. The product $EI$ captures this: a thicker shaft has a larger $I$, so a larger $EI$, and thus is stiffer.
 
 In practical terms: a stiffer shaft ($higher$ $EI$) requires a larger force to achieve the same deflection. A flexible shaft ($lower$ $EI$) stores less elastic energy during the swing and releases it later (closer to impact).
@@ -119,7 +119,7 @@ w(z, t) \approx \eta(t) \, \phi_1(z)
 
 The modal coordinate $\eta(t)$ is treated as a generalized coordinate, just like a joint angle. It evolves according to its own differential equation, coupled to the rest of the swing dynamics.
 
-\begin{definition}{Modal Coordinates}{def:ch11:modal}
+\begin{definition}{Modal Coordinates}{ch11:modal}
 A modal coordinate $\eta$ is a single number that describes how much the shaft is deforming. When $\eta = 0$, the shaft is straight. When $\eta$ increases, the shaft bends more in the shape of the first mode. The rate of change $\dot{\eta}$ describes how quickly the deformation is changing.
 \end{definition}
 
@@ -138,7 +138,7 @@ With shaft flexibility, we extend the state to include the modal coordinates and
 
 where $\shaftflex = \eta$ and $\shaftflexdot = \dot{\eta}$. If we keep multiple modes, $\shaftflex$ and $\shaftflexdot$ are vectors.
 
-\begin{example}{State Dimension Growth}{ex:ch11:state_dim}
+\begin{example}{State Dimension Growth}{ch11:state_dim}
 A double pendulum has $\configvec \in \mathbb{R}^2$ (two joint angles). So $\state_{\text{rigid}} \in \mathbb{R}^4$.
 
 The same double pendulum with a flexible shaft has $\configvec \in \mathbb{R}^2$ and $\shaftflex \in \mathbb{R}^1$ (just the first mode). So $\state_{\text{flexible}} \in \mathbb{R}^6$.
@@ -186,7 +186,7 @@ The drift field $f$ now includes terms from the modal dynamics. Specifically:
 
 The term $f_{\text{modal}}$ deserves attention. When the hands are accelerating upward and the shaft is relatively straight, $f_{\text{modal}} > 0$, which causes $\eta$ to increase (the shaft bends in response to the acceleration mismatch). As the swing slows and the shaft geometry changes, the effective load on the shaft changes, and $f_{\text{modal}}$ may change sign, causing the shaft to snap back.
 
-\begin{laymansbox}{The Catapult Mechanism}{laymans:ch11:catapult}
+\begin{laymansbox}{The Catapult Mechanism}{ch11:catapult}
 Think of the shaft as a spring that has been compressed and is waiting to release. During the backswing and early downswing, the shaft is bent by the acceleration mismatch between the hands and the clubhead. This bending costs energy---the shaft is doing work against its bending stiffness, storing elastic energy like a stretched rubber band.
 
 Later in the swing, as the hands slow slightly and the clubhead catches up, the shaft begins to snap back. This snapback releases the stored elastic energy back into the clubhead, giving it an extra boost at a critical moment. This is the ``catapult effect.''
@@ -194,7 +194,7 @@ Later in the swing, as the hands slow slightly and the clubhead catches up, the 
 The timing of the snapback depends on the shaft's stiffness and damping. A very stiff shaft snaps back early and weakly; a very flexible shaft snaps back late and more powerfully, but it might still be bending as the ball is struck (which is bad for accuracy).
 \end{laymansbox}
 
-\begin{driftcontrol}{Shaft Flexibility in Drift vs.\ Control}{dc:ch11:shaft_drift_control}
+\begin{driftcontrol}{Shaft Flexibility in Drift vs.\ Control}{ch11:shaft_drift_control}
 \textbf{Drift:} The shaft bends and unbends in response to acceleration mismatches and gravity. This is fully passive---no muscle is controlling the deformation. The shaft dynamics are part of the drift field $f(\state)$. Once you set the initial conditions in the backswing, the shaft bending evolves on autopilot.
 
 \textbf{Control:} The muscles can change the joint angles, and this changes the rate of change of $f_{\text{modal}}$, which indirectly influences the shaft dynamics. But there is no direct muscle control of the shaft deformation. You cannot command the shaft to bend more or less at a given moment.
@@ -226,7 +226,7 @@ where $\shaftdamp = 2\zeta\omega_n m_{\text{eff}}$ is an effective damping coeff
 
 These are the terms that slow down the shaft's oscillation and dissipate its energy. In the absence of any driving force ($f_{\text{modal}} = 0$), the shaft would oscillate and gradually come to rest. The damping ratio $\zeta$ controls how quickly the oscillation decays.
 
-\begin{principle}{Elastic and Damping Forces}{princ:ch11:elastic_damp}
+\begin{principle}{Elastic and Damping Forces}{ch11:elastic_damp}
 The shaft experiences two passive forces:
 \begin{itemize}
 \item An elastic restoring force $-\shaftstiff\eta$ that tries to straighten the shaft.
@@ -254,7 +254,7 @@ where $\shaftstiff_0$ is the passive bending stiffness and $\Delta\shaftstiff_{\
 
 Early in the downswing, $\omega$ is small, so the effective stiffness is close to $\shaftstiff_0$. The shaft bends easily. Later in the downswing, $\omega$ grows, the centrifugal stiffening kicks in, and the shaft becomes harder to bend. This is another reason the shaft might snap back: it is not just that the driving force $f_{\text{modal}}$ changes sign, but also that the shaft becomes stiffer.
 
-\begin{example}{Centrifugal Stiffening in a Driver Swing}{ex:ch11:centrifugal_numbers}
+\begin{example}{Centrifugal Stiffening in a Driver Swing}{ch11:centrifugal_numbers}
 Consider a driver with a 45-inch shaft. At address, the clubhead is stationary. Early in the downswing, at the transition, the hands might be rotating at $\omega = 2$ rad/s. Later, at mid-downswing, $\omega = 8$ rad/s. At impact, $\omega \approx 30$ rad/s.
 
 The centrifugal acceleration at the clubhead (distance $r \approx 1.1$ m from the shoulder joint) ranges from:
@@ -287,7 +287,7 @@ The result: the shaft unbends very rapidly. As it does, it does work on the club
 
 The magnitude of this energy depends on how much the shaft is bent ($\eta$) and how stiff it is ($\shaftstiff$). A very flexible shaft bends a lot ($high$ $\eta$) but stores less energy per unit deflection (low $\shaftstiff$). A very stiff shaft bends less but packs more energy into that small deformation.
 
-\begin{laymansbox}{Why Shaft Flex Profiles Matter}{laymans:ch11:flex_profile}
+\begin{laymansbox}{Why Shaft Flex Profiles Matter}{ch11:flex_profile}
 Real golf shafts are not uniformly flexible. They are often stiffer at the grip end (where they need to handle the hand loads) and more flexible toward the tip (the free end). This creates a nonuniform bending profile.
 
 The consequences are far-reaching: a more flexible tip means more bend and more stored energy, but the bend is concentrated near the clubhead, which affects the timing of energy release and the orientation of the clubhead at impact. A stiffer tip means less stored energy but potentially better control of the clubhead orientation.
@@ -305,7 +305,7 @@ Recall that the $\ztcf$ is the counterfactual trajectory the clubhead would foll
 
 Different shaft flex profiles lead to different drift fields, and thus different $\ztcf$ trajectories.
 
-\begin{example}{Comparing Shaft Profiles}{ex:ch11:shaft_comparison}
+\begin{example}{Comparing Shaft Profiles}{ch11:shaft_comparison}
 Consider two golfers with identical biomechanics (same joint angles, angular velocities, and torque patterns) but different shafts.
 
 \textbf{Golfer A:} Very stiff shaft ($\shaftstiff = 10,000$ N/m, $\zeta = 0.1$).
@@ -350,7 +350,7 @@ A shaft with the wrong stiffness changes the drift field in a way that moves the
 
 The task of shaft fitting is to adjust $\shaftstiff$, $\zeta$, the flex profile, and the total shaft mass to produce a drift field whose $\ztcf$ closely matches the golfer's target trajectory for their measured swing speed and swing geometry.
 
-\begin{principle}{Shaft Fitting as Drift Design}{princ:ch11:shaft_fitting}
+\begin{principle}{Shaft Fitting as Drift Design}{ch11:shaft_fitting}
 The shaft design should accomplish the following:
 \begin{enumerate}
 \item It aligns the drift field $f(\state)$ with your swing characteristics, so that the zero-torque counterfactual (the autopilot trajectory) naturally points toward the target.
@@ -379,7 +379,7 @@ For a flexible shaft, the term $E_{\text{stored in shaft}}$ is significant. In a
 
 The benefit of this storage mechanism is that it allows the muscles to do work earlier in the downswing (when the torque levers are shorter and the muscles are fresh) and have that energy released later, when the clubhead can best use it (near impact, when the lever arm is longest).
 
-\begin{laymansbox}{Why Flexible Shafts Help Slower Golfers More}{laymans:ch11:slow_golfer}
+\begin{laymansbox}{Why Flexible Shafts Help Slower Golfers More}{ch11:slow_golfer}
 A slower golfer (for illustration, consider a driver swing speed around 70 mph, which is below tour-professional levels \citep{Jorgensen1994}) has less centrifugal stiffening throughout the swing. The shaft remains more flexible. This means:
 \begin{enumerate}
 \item The shaft can absorb and hold more energy per unit bend (because $\shaftstiff$ is lower).
@@ -515,7 +515,7 @@ Therefore, shaft flexibility belongs entirely in the drift field. It is passive 
 
 The control authority $G(\state)$ (the range of accelerations the muscles can produce at the clubhead) is not enhanced by shaft flexibility. Instead, shaft flexibility changes $f(\state)$, the drift field itself. A more flexible shaft produces a different $f$, which means a different $\ztcf$.
 
-\begin{driftcontrol}{Shaft Flexibility: Drift Only}{dc:ch11:drift_only}
+\begin{driftcontrol}{Shaft Flexibility: Drift Only}{ch11:drift_only}
 \textbf{Why shaft is drift:}
 \begin{enumerate}
 \item No muscle controls the shaft deformation directly.
@@ -529,7 +529,7 @@ A golfer's control authority (the set of clubhead accelerations reachable by mus
 \end{driftcontrol}
 
 % ─────────────────────────────────────────────────────────────────
-\begin{principle}{Key Takeaways}{princ:ch11:takeaways}
+\begin{principle}{Key Takeaways}{ch11:takeaways}
 \begin{enumerate}
 \item \textbf{Real shafts bend.} A rigid model ignores a significant source of energy and trajectory variation.
 
@@ -550,7 +550,7 @@ A golfer's control authority (the set of clubhead accelerations reachable by mus
 \end{principle}
 
 % ─────────────────────────────────────────────────────────────────
-\begin{exercises}{Chapter Exercises}{exercises:ch11}
+\begin{exercises}{Chapter Exercises}{ch11}
 
 \begin{exercise}
 A golf shaft has a first bending mode with natural frequency $\omega_n = 12$ rad/s and damping ratio $\zeta = 0.05$. If the shaft is initially bent to $\eta_0 = 0.03$ m (3 cm) and released from rest, how long does it take for the deflection to decay to $e^{-1} \approx 37\%$ of its initial value?
