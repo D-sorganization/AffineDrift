@@ -860,57 +860,85 @@ We integrate both:
 
 over $T = 2$ seconds.
 
+\input{generated/ch07_double_pendulum}
+
 \subsection{Results: ZTCF vs. Actual Trajectory}
 
-We compute the state at several time points. Table~\ref{tab:ch7:double-pendulum-sim} shows
-the results:
+Both trajectories are integrated with RK4 at \chsevenSteps{} steps, using the Coriolis
+matrix derived from $M(\q)$ by its Christoffel symbols rather than a separately maintained
+expression. Table~\ref{tab:ch7:double-pendulum-sim} gives the actual trajectory under
+$\tau_1 = \chsevenTorque$~N$\cdot$m.
 
 \begin{table}[h!]
 \centering
 \small
-\begin{tabular}{|c|c|c|c|c|c|c|c|}
-\hline
-$t$ (s) & $q_1$ (rad) & $q_2$ (rad) & $\dot{q}_1$ (rad/s) & $\dot{q}_2$ (rad/s) &
-$a_{\text{drift},1}$ & $\tau_1 \times [M^{-1}]_{11}$ & $\rho(t)$ \\
-\hline
-0.0 & 0.785 & 0.524 & 2.000 & -1.000 & (eval) & (eval) & (eval) \\
-0.5 & 0.987 & 0.401 & 2.341 & -0.512 & (eval) & (eval) & (eval) \\
-1.0 & 1.208 & 0.256 & 2.687 & 0.031 & (eval) & (eval) & (eval) \\
-1.5 & 1.445 & 0.102 & 3.032 & 0.612 & (eval) & (eval) & (eval) \\
-2.0 & 1.692 & -0.048 & 3.371 & 1.197 & (eval) & (eval) & (eval) \\
-\hline
-\end{tabular}
-\caption[Double pendulum simulation: state evolution.]
-{State values at discrete time points along the trajectory. Numerical values would be
-computed via ODE integration. The drift acceleration and input contribution are evaluated
-at each state and used to compute the drift--control ratio $\rho(t)$.}
+\chsevenTrajectoryTable
+\caption[Double pendulum: actual trajectory under constant torque.]
+{Actual trajectory, integrated. $a_{\text{drift},1}$ and $\tau_1[M^{-1}]_{11}$ are evaluated
+at each sampled state, and $\rho(t)$ is their ratio --- the drift--control ratio at joint 1.}
 \label{tab:ch7:double-pendulum-sim}
 \end{table}
 
+\begin{table}[h!]
+\centering
+\small
+\chsevenZtcfTable
+\caption[Double pendulum: zero-torque counterfactual.]
+{The ZTCF, integrated from the same initial state with $\tau_1 = 0$. The final column is the
+configuration-space separation $\lVert\q_{\text{actual}} - \q_{\text{ZTCF}}\rVert$ between
+the two trajectories at that instant.}
+\label{tab:ch7:double-pendulum-ztcf}
+\end{table}
+
+The two trajectories part quickly and then stay apart: the separation reaches
+$\chsevenSeparationHalf$~rad within the first half-second and is
+$\chsevenSeparationFinal$~rad at $t = 2$~s, having oscillated around that value in between
+rather than growing steadily. That is worth noting, because the intuitive picture --- a
+counterfactual that drifts further and further from the actual motion --- is not what a
+bounded oscillatory system does. Both trajectories are confined to the same energy shell, so
+their separation is bounded too. What the ZTCF isolates is not a widening gap but the
+\emph{portion of the motion attributable to the torque}, which here is substantial from the
+outset and does not accumulate.
+
+\begin{warningbox}
+An earlier revision of this table filled the state columns by hand and left
+$a_{\text{drift},1}$, $\tau_1[M^{-1}]_{11}$ and $\rho(t)$ as the literal placeholder
+``(eval)'', with a caption saying the values ``would be computed via ODE integration''.
+
+The hand-filled states were not a solution of the system stated above: integrating it gives
+values differing by up to $1.74$~rad. They also disagreed internally --- $q_1$ moved
+$0.202$~rad over the first half-second, implying an average rate near $0.40$~rad/s, while
+the $\dot q_1$ column read $2.0$ to $2.34$, about five times larger. And the velocity
+increments were constant to three decimals ($0.341$, $0.346$, $0.345$, $0.339$), which is
+the signature of a straight-line extrapolation rather than an integration of a pendulum that
+actually swings.
+\end{warningbox}
+
 \subsection{Decomposition: Gravity vs. Coriolis}
 
-At $t = 1.0$ s, with $q_1 = 1.208$ rad, $q_2 = 0.256$ rad, $\dot{q}_1 = 2.687$ rad/s,
-$\dot{q}_2 = 0.031$ rad/s:
+At $t = 1.0$~s the actual trajectory is at $q_1 = \chsevenMidQOne$~rad,
+$q_2 = \chsevenMidQTwo$~rad, $\dot q_1 = \chsevenMidRateOne$~rad/s,
+$\dot q_2 = \chsevenMidRateTwo$~rad/s. Evaluating the two drift components there:
 
 \begin{enumerate}
-\item Gravitational acceleration:
+\item Gravitational acceleration, from~\eqref{eq:ch7:drift-grav}:
 \begin{equation}
-a_{\text{grav}} = -M^{-1}\vec{g} = \text{(compute from equation~\eqref{eq:ch7:drift-grav})}.
+a_{\text{grav}} = -M^{-1}\vec{g} = (\chsevenMidGravity)^\T~\text{rad/s}^2.
 \end{equation}
 
-\item Coriolis acceleration:
+\item Coriolis acceleration, from~\eqref{eq:ch7:drift-cor}:
 \begin{equation}
-a_{\text{cor}} = -M^{-1}C\dot\q = \text{(compute from equation~\eqref{eq:ch7:drift-cor})}.
+a_{\text{cor}} = -M^{-1}\mat{C}\dot\q = (\chsevenMidCoriolis)^\T~\text{rad/s}^2.
 \end{equation}
 
 \item Total drift:
 \begin{equation}
-a_{\text{drift}} = a_{\text{grav}} + a_{\text{cor}}.
+a_{\text{drift}} = a_{\text{grav}} + a_{\text{cor}} = (\chsevenMidDrift)^\T~\text{rad/s}^2.
 \end{equation}
 \end{enumerate}
 
-The numerical computation of these values requires evaluating the matrices at the specific state;
-the symbolic forms are provided above.
+Both components matter here, and neither dominates the other by an order of magnitude ---
+which is the point of decomposing them rather than quoting a single drift figure.
 
 \subsection{Drift--Control Ratio Evolution}
 
