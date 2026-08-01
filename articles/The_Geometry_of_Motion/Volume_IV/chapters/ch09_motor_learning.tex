@@ -19,17 +19,20 @@ Motor learning involves three distinct neural systems with different timescales 
 
 \begin{enumerate}
   \item \textbf{Error-based learning} (cerebellum): uses sensory prediction errors (climbing
-        fiber signals) to update cerebellar forward models via LTD (Marr, 1969; Kawato et al.,
-        1987). Trial-by-trial timescale (minutes to hours). Dominant mechanism for visuomotor
-        adaptation (Shadmehr and Mussa-Ivaldi, 1994).
+        fiber signals) to update cerebellar forward models via LTD~\cite{Marr1969,Kawato1987}.
+        Trial-by-trial timescale (minutes to hours). It drives adaptation both to altered limb
+        \emph{dynamics}~\cite{Shadmehr1994} and to an altered visuomotor
+        \emph{mapping}~\cite{Krakauer1999} --- and those two are acquired independently of one
+        another, so they are worth keeping distinct rather than filing together as
+        ``adaptation''.
 
   \item \textbf{Reinforcement learning} (basal ganglia): uses dopamine reward signals to
-        strengthen successful motor patterns (Schultz et al., 1997). Slower than error-based
+        strengthen successful motor patterns~\cite{Schultz1997}. Slower than error-based
         learning (hours to days). Enables discovery of novel solutions not implicit in the
         task structure.
 
   \item \textbf{Consolidation and structural learning} (cortical): repetition of a movement
-        biases future movements toward repeated patterns (Cohen et al., 2005). Timescale of
+        biases future movements toward repeated patterns~\cite{Cohen2005}. Timescale of
         hours to days; explains habit formation. Involves gradual changes in M1 tuning and
         synaptic weights.
 \end{enumerate}
@@ -62,7 +65,7 @@ Motor learning involves three distinct neural systems with different timescales 
   \draw (4, 4.2) node[align=center, anchor=center, font=\small\bf] {Visuomotor Adaptation Curve};
   \draw (4, 3.8) node[align=center, anchor=center, font=\tiny] {(Reaching with visual rotation)};
 \end{tikzpicture}
-\caption{Characteristic visuomotor adaptation profile (Shadmehr and Mussa-Ivaldi, 1994):
+\caption{Characteristic visuomotor adaptation profile~\cite{Krakauer1999}:
 rapid error reduction (first 20 trials), gradual asymptote, persistent aftereffect
 demonstrating learning consolidation.}
 \label{fig:ch9:visuomotor-adaptation}
@@ -70,8 +73,7 @@ demonstrating learning consolidation.}
 
 \section{Visuomotor Adaptation}
 
-The classic paradigm for studying error-based learning (Kamin, 1969; Shadmehr and Mussa-Ivaldi,
-1994):
+The classic paradigm for studying error-based learning~\cite{Krakauer1999}:
 
 \begin{lstlisting}[language=Python, caption={Visuomotor adaptation simulation.}]
 import numpy as np
@@ -158,7 +160,8 @@ print(f"  Aftereffect: {result['reaching_error'][250]:.1f} deg")
 
 \subsection{Savings}
 Re-learning a previously learned adaptation is faster than initial learning,
-even after complete washout (Ebbinghaus, 1885; Huang et al., 2011). This savings
+even after complete washout~\cite{Huang2011} --- an observation that predates motor
+control, going back to Ebbinghaus's 1885 work on memory. This savings
 effect suggests that motor memories are not erased but suppressed, with additional
 learning circuits retaining implicit information about the learning dynamics.
 
