@@ -323,16 +323,32 @@ function rToQuaternion(R) {
   const w = 0.5 * Math.sqrt(Math.max(0, 1 + traceR));
 
   if (w < 1e-10) {
-    // 180° rotation: Shepperd's method
-    const x = Math.sqrt(Math.max(0, (1 + R[0]) / 2));
-    let   y = Math.sqrt(Math.max(0, (1 + R[4]) / 2));
-    let   z = Math.sqrt(Math.max(0, (1 + R[8]) / 2));
-    // Sign from off-diagonal entries
-    if (R[7] - R[5] < 0) {}            // x stays positive (convention)
-    if (R[2] - R[6] < 0) y = -y;
-    if (R[3] - R[1] < 0) z = -z;
-    const len = Math.sqrt(x*x + y*y + z*z);
-    return len > 0 ? [0, x/len, y/len, z/len] : [1, 0, 0, 0];
+    // 180° rotation: Shepperd's method using largest diagonal term
+    const x2 = Math.max(0, (1 + R[0]) / 2);
+    const y2 = Math.max(0, (1 + R[4]) / 2);
+    const z2 = Math.max(0, (1 + R[8]) / 2);
+    let x = Math.sqrt(x2);
+    let y = Math.sqrt(y2);
+    let z = Math.sqrt(z2);
+
+    if (x >= y && x >= z) {
+      if (x > 1e-10) {
+        if (R[1] + R[3] < 0) y = -y;
+        if (R[2] + R[6] < 0) z = -z;
+      }
+    } else if (y >= z) {
+      if (y > 1e-10) {
+        if (R[1] + R[3] < 0) x = -x;
+        if (R[5] + R[7] < 0) z = -z;
+      }
+    } else {
+      if (z > 1e-10) {
+        if (R[2] + R[6] < 0) x = -x;
+        if (R[5] + R[7] < 0) y = -y;
+      }
+    }
+    const len = Math.sqrt(x * x + y * y + z * z);
+    return len > 0 ? [0, x / len, y / len, z / len] : [1, 0, 0, 0];
   }
 
   const inv4w = 1 / (4 * w);
@@ -402,7 +418,7 @@ function rToEulerZYX(R) {
   if (gimbalLock) {
     // φ and ψ cannot be independently resolved; set φ=0 by convention
     phi = 0;
-    psi = Math.atan2(-R[5], R[4]);         // atan2(-R[1,2], R[1,1])
+    psi = Math.atan2(-R[1], R[4]);        // atan2(-R[0,1], R[1,1])
   } else {
     psi = Math.atan2(R[3], R[0]);           // atan2(R[1,0], R[0,0])
     phi = Math.atan2(R[7], R[8]);           // atan2(R[2,1], R[2,2])
