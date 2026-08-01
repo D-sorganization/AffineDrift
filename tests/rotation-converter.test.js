@@ -268,16 +268,20 @@ describe("rToEulerZYX", () => {
     expectNear(R2, R_arb);
   });
 
-  test("detects gimbal lock at θ=+90°", () => {
-    const Rgl = RC.eulerZYXToR(0, Math.PI/2, 0);
+  test("detects gimbal lock at θ=+90° and recovers R", () => {
+    const Rgl = RC.eulerZYXToR(Math.PI/4, Math.PI/2, 0);
     const result = RC.rToEulerZYX(Rgl);
     expect(result.gimbalLock).toBe(true);
+    const R2 = RC.eulerZYXToR(result.psi, result.theta, result.phi);
+    expectNear(R2, Rgl);
   });
 
-  test("detects gimbal lock at θ=−90°", () => {
-    const Rgl = RC.eulerZYXToR(0, -Math.PI/2, 0);
+  test("detects gimbal lock at θ=−90° and recovers R", () => {
+    const Rgl = RC.eulerZYXToR(Math.PI/4, -Math.PI/2, 0);
     const result = RC.rToEulerZYX(Rgl);
     expect(result.gimbalLock).toBe(true);
+    const R2 = RC.eulerZYXToR(result.psi, result.theta, result.phi);
+    expectNear(R2, Rgl);
   });
 });
 
