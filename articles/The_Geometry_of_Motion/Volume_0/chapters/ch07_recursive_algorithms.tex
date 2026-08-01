@@ -685,7 +685,15 @@ simulation timestep.
 \section{Worked Example: 3-Link Planar Arm}
 \label{sec:example_3link}
 
+\input{generated/ch07_rnea_example}
+
 Let us trace through a complete RNEA computation for a 3-link planar arm in 2D (which we embed in 3D with $z$-axis rotation).
+
+\begin{remark}[The torques below are computed]
+The result is produced by \texttt{src/affine\_control/rnea.py} via
+\texttt{scripts/generate\_worked\_examples.py}, and cross-checked against an independent
+Lagrangian computation; CI fails if the committed values drift from what the code emits.
+\end{remark}
 
 \subsection{Setup}
 
@@ -705,18 +713,28 @@ Joint accelerations: $\ddot{\mathbf{q}} = [1.0, 0.5, 0.1]$ rad/s$^2$.
 \begin{itemize}
   \item Base link: $\mathcal{V}_0 = (0, 0, 0, 0, 0, 0)^T$, $\dot{\mathcal{V}}_0 = (0, 0, 0, 0, 0, -9.81)^T$ (gravity down the $z$ axis).
 
-  \item Link 1:
+  \item Link 1: the joint axis is $\mathcal{S}_1 = (0,0,1,0,0,0)^T$, so
     \begin{align}
-      \mathcal{V}_1 &= (0, 0, 0.5, 0, 0, 0)^T + (0, 0, 0)^T = (0, 0, 0.5, 0, 0, 0)^T \\
-      \mathcal{V}_1 \times \mathcal{S}_1 \dot{q}_1 &= (0, 0, 0.5) \times (0, 0, 0.2) = (0.1, 0, 0) \text{ (approx)} \\
-      \dot{\mathcal{V}}_1 &= (0, 0, 0, 0, 0, -9.81) + (0.1, 0, 0) + (0, 0, 1.0) = (0.1, 0, 1.0, 0, 0, -9.81)
+      \mathcal{V}_1 &= \mathcal{V}_0 + \mathcal{S}_1 \dot q_1 = (0, 0, 0.5, 0, 0, 0)^T \\
+      \mathcal{V}_1 \times \mathcal{S}_1 \dot{q}_1 &= 0 .
     \end{align}
+    That product vanishes here, and it vanishes for \emph{every} link of a planar chain:
+    $\mathcal{V}_i$ and $\mathcal{S}_i \dot q_i$ both lie along the same out-of-plane axis,
+    and the cross product of parallel vectors is zero. The bias acceleration in a planar arm
+    comes entirely from the centripetal $\omega^2 r$ terms that appear when the recursion
+    moves the origin from one link to the next.
 
-  \item Link 2: Similar recursion from Link 1.
-  \item Link 3: Final link.
+  \item Links 2 and 3: the same recursion, with a nonzero translation between link frames,
+    which is where those centripetal terms enter.
 \end{itemize}
 
-(Detailed numerical computation omitted for brevity; the key point is the recursive structure.)
+\begin{warningbox}
+An earlier revision gave
+$\mathcal{V}_1 \times \mathcal{S}_1 \dot q_1 = (0,0,0.5)\times(0,0,0.2) = (0.1, 0, 0)$,
+marked ``(approx)''. The product is exactly zero, since the vectors are parallel; no
+approximation is involved. The spurious $(0.1,0,0)$ was then carried into
+$\dot{\mathcal{V}}_1$, and three-vectors were added to six-vectors in the same line.
+\end{warningbox}
 
 \subsection{Inward Pass: Forces and Torques}
 
@@ -737,12 +755,28 @@ The required joint torques are:
   \tau_3 &= \mathcal{F}_3^T \mathcal{S}_3
 \end{align}
 
-For this system at the given configuration and accelerations, the output might be:
+Running the recursion at the stated configuration, velocity and acceleration gives
 \[
-  \boldsymbol{\tau} = [2.3, 1.1, 0.08]^T \text{ N$\cdot$m}
+  \boldsymbol{\tau} = (\volzeroRneaTorque)^T \text{ N$\cdot$m},
 \]
+the torques the three joint motors must produce to execute this trajectory.
 
-These are the torques the three joint motors must produce to execute the given trajectory.
+The shoulder torque dominates, at $\volzeroRneaTorqueOne$~N$\cdot$m against
+$\volzeroRneaTorqueThree$~N$\cdot$m at the wrist. That is mostly gravity: the shoulder
+carries the weight of the whole arm at a moment arm of roughly a metre, while the wrist
+carries only the $0.2$~kg hand.
+
+\begin{warningbox}
+An earlier revision of this section omitted the arithmetic --- ``detailed numerical
+computation omitted for brevity'' --- and then stated
+$\boldsymbol{\tau} = [2.3, 1.1, 0.08]^T$ prefaced by ``the output \emph{might} be'',
+immediately followed by ``These are the torques the three joint motors must produce''.
+
+The stipulated values are not close. The shoulder torque is off by roughly a factor of six.
+A worked example that hedges with ``might be'' and then asserts the result as fact is worse
+than one that shows no numbers at all, because a reader checking their own implementation
+against it will conclude their code is broken.
+\end{warningbox}
 
 \section{Validation: RNEA vs. Lagrangian}
 \label{sec:validation}
@@ -775,7 +809,19 @@ The Coriolis matrix contains terms like $-m_2 L \sin(\theta_2) \dot{\theta}_1$, 
 
 \textbf{RNEA}: Run the algorithm with the same inputs.
 
-\textbf{Result}: The torques match to numerical precision (within $10^{-10}$), confirming the algorithm.
+\textbf{Result}: The torques match to numerical precision, confirming the algorithm.
+
+This check is executed rather than asserted. For the 3-link arm of
+Section~\ref{sec:example_3link}, the recursion gives
+$(\volzeroRneaTorque)^T$ N$\cdot$m and the Lagrangian route gives
+$(\volzeroLagrangianTorque)^T$ N$\cdot$m, agreeing to $\volzeroRneaAgreement$~N$\cdot$m.
+
+The agreement is evidence because the two routes share no machinery. The recursion never
+forms a mass matrix; it propagates accelerations outward and forces inward, link by link.
+The Lagrangian route never recurses; it assembles $M(\q)$ from centre-of-mass Jacobians and
+obtains the Coriolis term by differentiating it. A transcription error in either would show
+up here, which is exactly what a validation section is for --- and is why stating the
+agreement without running it defeats the purpose.
 
 \section{Adjoint Matrix Derivation from Geometry}
 \label{sec:adjoint_derivation}

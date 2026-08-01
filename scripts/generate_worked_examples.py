@@ -29,6 +29,7 @@ if __package__ in {None, ""}:
 from src.affine_control.dynamics import christoffel_coriolis, planar_double_pendulum_trajectory
 from src.affine_control.golf_model import SEGMENTS, GolfModel
 from src.affine_control.lqr import LQRSolution, discrete_lqr
+from src.affine_control.rnea import PlanarChain, PlanarLink
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 GENERATED_DIR = REPO_ROOT / "articles/The_Geometry_of_Motion/Volume_I/generated"
@@ -324,6 +325,41 @@ def render_ch07() -> str:
     return "\n".join(lines)
 
 
+VOL0_GENERATED_DIR = REPO_ROOT / "articles/The_Geometry_of_Motion/Volume_0/generated"
+
+# Volume 0 chapter 7's worked RNEA example, exactly as the chapter specifies it.
+VOL0_CH07_CHAIN = PlanarChain(
+    (
+        PlanarLink(mass=1.0, length=1.0, com_offset=0.5, inertia=0.083),
+        PlanarLink(mass=0.5, length=0.8, com_offset=0.4, inertia=0.027),
+        PlanarLink(mass=0.2, length=0.6, com_offset=0.6, inertia=0.0),
+    )
+)
+VOL0_CH07_Q = np.array([0.524, 0.785, 0.0])
+VOL0_CH07_QD = np.array([0.5, 0.3, 0.2])
+VOL0_CH07_QDD = np.array([1.0, 0.5, 0.1])
+
+
+def render_vol0_ch07() -> str:
+    """Emit the Volume 0 chapter 7 RNEA torques, computed both ways."""
+    chain = VOL0_CH07_CHAIN
+    recursive = chain.inverse_dynamics(VOL0_CH07_Q, VOL0_CH07_QD, VOL0_CH07_QDD)
+    lagrangian = chain.inverse_dynamics_lagrangian(VOL0_CH07_Q, VOL0_CH07_QD, VOL0_CH07_QDD)
+
+    lines = [BANNER, ""]
+
+    def macro(name: str, body: str) -> None:
+        lines.append(f"\\newcommand{{\\{name}}}{{{body}}}")
+
+    macro("volzeroRneaTorque", _row_vector(recursive, fmt="{:.3f}"))
+    macro("volzeroLagrangianTorque", _row_vector(lagrangian, fmt="{:.3f}"))
+    macro("volzeroRneaAgreement", f"{np.abs(recursive - lagrangian).max():.1e}")
+    macro("volzeroRneaTorqueOne", f"{recursive[0]:.3f}")
+    macro("volzeroRneaTorqueThree", f"{recursive[2]:.3f}")
+    lines.append("")
+    return "\n".join(lines)
+
+
 CH10_SOURCE = REPO_ROOT / "src/affine_control/swing_analysis.py"
 CH10_GENERATED_DIR = REPO_ROOT / "articles/The_Geometry_of_Motion/Volume_V/generated"
 
@@ -363,6 +399,7 @@ def build() -> dict[Path, str]:
         GENERATED_DIR / "ch07_double_pendulum.tex": render_ch07(),
         GENERATED_DIR / "ch08_golf_model.tex": render_ch08(SEGMENTS),
         CH10_GENERATED_DIR / "ch10_swing_analysis.tex": render_ch10(),
+        VOL0_GENERATED_DIR / "ch07_rnea_example.tex": render_vol0_ch07(),
     }
 
 
