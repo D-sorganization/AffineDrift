@@ -422,7 +422,7 @@ def load_baseline(path: Path) -> set[str]:
 def write_baseline(path: Path, findings: list[Finding]) -> None:
     payload = {
         "_comment": (
-            "Known structural defects, each tracked by a GitHub issue under epic #3491. "
+            "Known structural defects. "
             "The check fails only on findings NOT listed here, so the corpus cannot get "
             "worse while these are worked off. Shrink this file as issues close; never "
             "grow it to silence a new defect."
@@ -529,7 +529,7 @@ def main(argv: list[str] | None = None) -> int:
     if accepted:
         print(
             f"No new structural problems. {resolved} known finding(s) still "
-            f"present from the baseline (tracked under epic #3491)."
+            f"present from the baseline; see its _comment for why each is still there."
         )
     else:
         print("No structural problems found.")
