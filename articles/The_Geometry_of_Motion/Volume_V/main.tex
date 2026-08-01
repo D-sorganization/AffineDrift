@@ -75,6 +75,17 @@
   breakable
 }{laymans}
 
+% Matches the declaration in Volume I, which chapters here already assume.
+% Unlike the theorem boxes above this is a plain tcolorbox, so it takes no
+% title/label arguments: \begin{warningbox} ... \end{warningbox}.
+\newtcolorbox{warningbox}[1][]{%
+  colback=red!5!white,
+  colframe=red!60!black,
+  fonttitle=\bfseries,
+  title={Common Misconception},
+  #1
+}
+
 \makeatletter
 \theoremstyle{plain}
 \@ifundefined{theorem}{\newtheorem{theorem}{Theorem}[chapter]}{}

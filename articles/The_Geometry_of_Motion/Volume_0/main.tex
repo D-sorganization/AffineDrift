@@ -110,6 +110,17 @@
   breakable
 }{laymans}
 
+% Matches the declaration in Volume I, which chapters here already assume.
+% Unlike the theorem boxes above this is a plain tcolorbox, so it takes no
+% title/label arguments: \begin{warningbox} ... \end{warningbox}.
+\newtcolorbox{warningbox}[1][]{%
+  colback=red!5!white,
+  colframe=red!60!black,
+  fonttitle=\bfseries,
+  title={Common Misconception},
+  #1
+}
+
 \newtcbtheorem[number within=chapter]{theorem}{Theorem}{
   colback=accentred!5, colframe=accentred!70,
   fonttitle=\bfseries, separator sign={.~},
@@ -131,6 +142,15 @@
 \theoremstyle{plain}
 \makeatletter
 \@ifundefined{theorem}{\newtheorem{theorem}{Theorem}[chapter]}{}
+% \newtcbtheorem{theorem} above defines the *macro* \theorem, so the guard on
+% the line above sees "already defined" and skips \newtheorem -- which is what
+% would otherwise have created a LaTeX counter named `theorem`. The next two
+% lines number themselves [theorem], so without this they fail the whole
+% preamble with "No counter 'theorem' defined", `proposition` never gets
+% defined, and ch01 then dies on \begin{proposition}. Volume II carries the
+% identical block and compiles only because it declares no tcbtheorem named
+% `theorem`. Guard on the counter, not the macro.
+\@ifundefined{c@theorem}{\newcounter{theorem}[chapter]}{}
 \@ifundefined{proposition}{\newtheorem{proposition}[theorem]{Proposition}}{}
 \@ifundefined{lemma}{\newtheorem{lemma}[theorem]{Lemma}}{}
 \makeatother
