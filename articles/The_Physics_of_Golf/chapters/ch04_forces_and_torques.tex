@@ -32,7 +32,11 @@ In the manipulator equation, every torque comes from one of five sources:
 
 \begin{figure}[H]
 \centering
-\begin{tikzpicture}[scale=1.2]
+% every node/.style={align=center}: several nodes below break their text with
+% \\, and a node's text is set in LR mode unless it is told how to align
+% multiple lines -- without this each one is "LaTeX Error: Not allowed in LR
+% mode". Matches the convention in Volume V, whose diagrams compile.
+\begin{tikzpicture}[scale=1.2, every node/.style={align=center}]
 % Title and force decomposition
 \node at (0, 4) [anchor=center, font=\large\bfseries] {Decomposition of Torques in the Manipulator Equation};
 

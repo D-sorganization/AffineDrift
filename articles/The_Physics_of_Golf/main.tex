@@ -134,6 +134,52 @@
   breakable
 }{constr}
 
+% ── Boxes the chapters use but nothing declared ───────────────────────────
+% Each of these was an undefined environment, which is a hard compile failure;
+% together they are part of why this book produced no PDF at all.
+
+% Declared with an EMPTY prefix on purpose. \newtcbtheorem builds the label as
+% <prefix>:<key>, and all eight call sites already write the prefix into the
+% key -- \begin{reference}{...}{ref:vaughan}. A `ref` prefix here would relabel
+% them ref:ref:vaughan, which is exactly the defect #3643 removed from 282
+% other boxes. Empty prefix keeps the label the call sites already intend.
+\newtcbtheorem[number within=chapter]{reference}{Reference}{
+  colback=chapblue!3, colframe=chapblue!50,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{}
+
+% Same reasoning: its single call site writes {box:ch25_contextual_interference}.
+\newtcbtheorem[number within=chapter]{explanation}{Explanation}{
+  colback=softgray, colframe=black!45,
+  fonttitle=\bfseries, separator sign={.~},
+  breakable
+}{}
+
+% Takes a title and nothing else -- \begin{infobox}{In Plain Language} -- so it
+% is a plain tcolorbox with one mandatory argument, not a tcbtheorem, which
+% would demand a second {key} the call sites do not supply.
+\newtcolorbox{infobox}[1]{%
+  colback=trajgreen!5!white,
+  colframe=trajgreen!55!black,
+  fonttitle=\bfseries,
+  title={#1},
+  breakable
+}
+
+% Takes no arguments at all. Matches the Volume I declaration.
+\newtcolorbox{warningbox}[1][]{%
+  colback=red!5!white,
+  colframe=red!60!black,
+  fonttitle=\bfseries,
+  title={Common Misconception},
+  breakable,
+  #1
+}
+
+% Opening remarks at the head of a chapter; no title, no numbering.
+\newenvironment{introduction}{\begin{quote}\itshape}{\end{quote}}
+
 \theoremstyle{plain}
 \newtheorem{proposition}{Proposition}[chapter]
 \newtheorem{lemma}{Lemma}[chapter]

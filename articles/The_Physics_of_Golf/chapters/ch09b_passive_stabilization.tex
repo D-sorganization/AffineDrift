@@ -156,13 +156,13 @@ where $K_0$ is the baseline intrinsic stiffness (from elasticity) and $\Delta K_
 \end{equation}
 where $K_{\text{max}}$ is the maximum achievable stiffness (when agonist and antagonist are fully co-contracted).
 
-\begin{principle}{Co-Contraction Modulates Impedance}
+\begin{principle}{Co-Contraction Modulates Impedance}{ch9b_cocontraction_impedance}
   Co-contraction is a motor strategy to adjust the stiffness of a joint without changing the target position or velocity. By simultaneously contracting opposing muscles, the nervous system can increase the mechanical stiffness of the joint, reducing sensitivity to external perturbations. However, this comes at a metabolic cost: co-contraction produces no external work.
 \end{principle}
 
 \subsection{The Viscoelastic Muscle Model: Preflex Control}
 
-The mechanical response of muscle to a sudden length change occurs on a timescale of \SIrange{10}{50}{\milli\second}, which is faster than neural feedback can react (typical reflex latency is \SIrange{50}{100}{\milli\second}). This \emph{preflex} or zero-delay response arises from the passive elastic properties of muscle and tendon.
+The mechanical response of muscle to a sudden length change occurs on a timescale of 10--50\,ms, which is faster than neural feedback can react (typical reflex latency is 50--100\,ms). This \emph{preflex} or zero-delay response arises from the passive elastic properties of muscle and tendon.
 
 A simple viscoelastic model of muscle is:
 \begin{equation}
@@ -199,7 +199,7 @@ Together, these properties create a \emph{natural attractiveness} to a certain o
 
 Beyond individual muscles, the fascia (connective tissue surrounding muscles, organs, and entire body regions) can store and distribute elastic potential energy. The biotensegrity model, proposed by Levin and popularized by practitioners of movement, suggests that the body is not a machine of rigid links connected by hinges, but rather a tensioned network where compression elements (bones) are suspended in a web of tension (muscles, fascia, ligaments).
 
-\begin{constraintbox}{Fascial Networks as Passive Stabilization}
+\begin{constraintbox}{Fascial Networks as Passive Stabilization}{ch9b_fascial_networks}
   The fascia is not merely a passive wrapper; it is a load-bearing component of the kinetic chain. When pre-tensioned, the fascial network creates a three-dimensional restraint system that distributes loads efficiently and provides passive stabilization without relying on muscular contraction. This is discussed in detail in Chapter~\ref{ch:fascia}.
 \end{constraintbox}
 
@@ -220,7 +220,7 @@ When we pre-tension the system (increase baseline muscle activation or adjust th
 \end{equation}
 where $\Delta \drift_{\text{pretension}}$ represents the change in the natural trajectory caused by the pre-tension. If the pre-tension is well chosen, the new drift field is already oriented toward the desired motion, reducing the need for control inputs.
 
-\begin{driftcontrol}{Pre-Tensioning Optimizes the Drift Field}
+\begin{driftcontrol}{Pre-Tensioning Optimizes the Drift Field}{ch9b_pretensioning}
   A well-tensioned body has a favorable drift field. The ZTCF (zero-torque counterfactual) trajectory---the motion that would occur if all voluntary control were removed and only passive properties remained---is already close to the intended swing. This is why elite golfers appear to swing effortlessly: their pre-tension creates an attractor that naturally guides the motion.
 \end{driftcontrol}
 
@@ -245,7 +245,7 @@ The second condition (positive-definite Hessian) ensures local stability: any sm
 
 By contrast, a fluctuation is a region where $\nabla^2 V$ is nearly singular or has negative eigenvalues. In such regions, the system is marginally stable or unstable, and active control (muscle contraction with feedback) is necessary to maintain the desired trajectory.
 
-\begin{theorem}{Attractor-Driven Stabilization}
+\begin{theorem}{Attractor-Driven Stabilization}{ch9b_attractor_stabilization}
   A motor task that involves stable attractors requires less active control and metabolic energy than a task with extensive fluctuation regions. The nervous system designs movement by:
   \begin{enumerate}
     \item Creating attractors at critical task landmarks (e.g., the address position, the top of the swing, the impact point).
@@ -304,7 +304,7 @@ In the subspace perpendicular to the UCM, variance is minimized. This suggests t
 
 \subsection{What's Right and What's Overclaimed: The Attractor-Fluctuation Reality}
 
-\begin{mythreality}{``The Body Doesn't Compute Trajectories---It Creates Energy Landscapes''}
+\begin{mythreality}{``The Body Doesn't Compute Trajectories---It Creates Energy Landscapes''}{ch9b_body_computes}
   \textbf{What's right:} The body does create energy landscapes (through potential energy, muscle pre-tension, and fascia) that shape motion. Attractors exist and do reduce the need for active control. Variance analysis shows that the nervous system tolerates fluctuations in irrelevant directions.
 
   \textbf{What's overclaimed:} The claim that ``the body doesn't compute trajectories'' is too strong. The nervous system does maintain internal models and predictions. It does adjust commands based on feedback. The attractor-fluctuation framework is a useful organizing principle, but it is not the complete story. The brain actively shapes both the landscape (via pre-tension) and the control inputs (via feedback). The two work together.
@@ -377,7 +377,7 @@ inputs have comparatively more authority.
 
 For a well-pre-tensioned system (high $\alpha$), the DCR is higher, because the drift field is richer and closer to the desired trajectory. For a loosely-tensioned system (low $\alpha$), the DCR is lower, because the control inputs must do more work.
 
-\begin{driftcontrol}{Passive Stabilization Through Favorable Drift}
+\begin{driftcontrol}{Passive Stabilization Through Favorable Drift}{ch9b_favorable_drift}
   A well-tensioned body has a favorable drift field---the ZTCF (zero-torque counterfactual) trajectory is already close to the intended swing. This means:
   \begin{enumerate}
     \item The body can reduce the muscle effort required (lower $\|u_i\|^2$).
@@ -448,7 +448,7 @@ where $P$ is the solution to the algebraic Riccati equation.
 
 The key insight is that the optimal control gain depends on the ratio $Q / R$. If $Q$ is large (task error is very costly), the control effort is high. If $R$ is large (metabolic cost is high), the control effort is low. An over-stiffened system effectively increases $R$ (metabolic cost of the co-contraction) without necessarily reducing $Q$ (task error).
 
-\begin{constraintbox}{The Optimal Stiffness is Task and Context Dependent}
+\begin{constraintbox}{The Optimal Stiffness is Task and Context Dependent}{ch9b_optimal_stiffness}
   The optimal stiffness is not ``maximum.'' It is tuned to balance:
   \begin{enumerate}
     \item \textbf{Stability requirement}: enough stiffness to maintain the attractor.
@@ -526,7 +526,7 @@ This is the critical phase transition. The nervous system switches from actively
 
 \textbf{Strategy}:
 \begin{itemize}
-  \item Rapid decrease in co-contraction ($\alpha$ drops from 1.0 to 0.2 - 0.4$) as the muscles relax and allow elastic recoil.
+  \item Rapid decrease in co-contraction ($\alpha$ drops from 1.0 to 0.2--0.4) as the muscles relax and allow elastic recoil.
   \item The primary motion is driven by drift: elastic recoil of muscles and tendons, gravity, and Coriolis forces. The DCR is very high.
   \item The attractor at the top of the swing destabilizes and repels the system toward impact position.
   \item The sequence is driven by the proximodistal progression: hip rotation initiates the motion (highest inertia, lowest stiffness), which pulls on the torso, which accelerates the shoulder, which drives the arm, which accelerates the club. Each link is momentarily locked (high stiffness) before passing the motion to the next link.
@@ -748,13 +748,13 @@ The practical implication: Improving the golf swing is not about practicing hard
 % EXERCISES
 % ============================================================================
 
-\begin{exercises}{Passive Stabilization in Parallel Loops}
+\begin{exercises}{Passive Stabilization in Parallel Loops}{ch9b_passive_stabilization}
 
 \medskip
 \noindent\textbf{Exercise 1: Conceptual: Attractor Stability}\par
 Consider a golfer at address. The posture creates an attractor with potential energy $V(\theta) = \frac{1}{2} K \theta^2$, where $\theta$ is a small deviation from ideal posture and $K$ is the ``postural stiffness.''
 
-(a) If $K = 100 \, \text{N\cdot m/rad}$, compute the restoring torque for a deviation of $\theta = 0.05 \, \text{rad}$ (about 3 degrees).
+(a) If $K = 100 \, \mathrm{N \cdot m/rad}$, compute the restoring torque for a deviation of $\theta = 0.05 \, \text{rad}$ (about 3 degrees).
 
 (b) If the torso mass is $m = 30 \, \text{kg}$ and the center of mass is $d = 0.1 \, \text{m}$ from the axis of rotation, what is the gravitational torque due to a forward lean of 0.05 rad?
 
@@ -774,7 +774,7 @@ Suppose the muscle uses impedance control: $\tau = K_c (\theta_d - \theta)$, whe
 
 (a) Write the closed-loop equation of motion and identify the effective stiffness.
 
-(b) For stability, what is the minimum value of $K_c$ (in units of N\cdot m/rad)?
+(b) For stability, what is the minimum value of $K_c$ (in units of $\mathrm{N \cdot m/rad}$)?
 
 (c) If $K_c = 100 \, \mathrm{N}\cdot\mathrm{m/rad}$, compute the natural frequency $\omega_n$ and damping ratio $\zeta$ of the wrist.
 
@@ -805,7 +805,7 @@ The dynamics are decoupled:
 \begin{equation}
   M_i \ddot{\theta}_i + D_i \dot{\theta}_i + K_i(\alpha) \theta_i = \tau_i,
 \end{equation}
-where $M_1 = 0.5, M_2 = 0.1 \, \mathrm{kg}\cdot\mathrm{m}^2$, $D_i = 0.5$ (Ns/rad), and $K_i(\alpha) = K_{0,i} + \alpha \Delta K_i$ with $K_{0,1} = 50, K_{0,2} = 20, \Delta K_1 = 50, \Delta K_2 = 30$ (N\cdot m/rad).
+where $M_1 = 0.5, M_2 = 0.1 \, \mathrm{kg}\cdot\mathrm{m}^2$, $D_i = 0.5$ (Ns/rad), and $K_i(\alpha) = K_{0,i} + \alpha \Delta K_i$ with $K_{0,1} = 50, K_{0,2} = 20, \Delta K_1 = 50, \Delta K_2 = 30$ ($\mathrm{N \cdot m/rad}$).
 
 The task cost is $Q = I$ (penalize error equally), and the control cost is $R = I$. The co-contraction cost is $w(\alpha) = 10 \alpha^2$ (quadratic in co-contraction level).
 
@@ -825,7 +825,7 @@ Design an experiment to estimate the joint stiffness of the wrist during differe
 
 (b) How would you apply a perturbation without disrupting the natural swing?
 
-(c) What are the expected stiffness values (in N\cdot m/rad) at each phase?
+(c) What are the expected stiffness values (in $\mathrm{N \cdot m/rad}$) at each phase?
 
 (d) How would you compare elite golfers to amateurs based on stiffness measurements?
 
