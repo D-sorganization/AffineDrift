@@ -45,6 +45,7 @@ import sys
 import time
 import urllib.parse
 import urllib.request
+from collections.abc import Iterator
 from difflib import SequenceMatcher
 from pathlib import Path
 
@@ -106,7 +107,8 @@ def first_page(value: str) -> str:
     return re.sub(r"\D", "", parts[0]) if parts else ""
 
 
-def entries(text: str):
+def entries(text: str) -> Iterator[tuple[str, str, str]]:
+    """Yield ``(key, entry type, raw body)`` for every entry in a .bib file."""
     marks = [(m.group(2), m.group(1).lower(), m.start()) for m in ENTRY.finditer(text)]
     for i, (key, kind, start) in enumerate(marks):
         end = marks[i + 1][2] if i + 1 < len(marks) else len(text)
