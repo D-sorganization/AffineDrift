@@ -19,7 +19,7 @@ from __future__ import annotations
 from typing import Any
 
 import numpy as np
-from hypothesis import given, settings
+from hypothesis import HealthCheck, given, settings
 from hypothesis import strategies as st
 from hypothesis.extra.numpy import arrays
 
@@ -109,7 +109,7 @@ def test_hessian_norm_of_linear_is_near_zero(n: int) -> None:
 
 
 @given(x=_state_vector)
-@settings(max_examples=50)
+@settings(max_examples=50, suppress_health_check=[HealthCheck.too_slow])
 def test_perturbation_is_non_negative(x: np.ndarray[Any, Any]) -> None:
     """Perturbation estimate must always be >= 0."""
     u = np.zeros_like(x)
