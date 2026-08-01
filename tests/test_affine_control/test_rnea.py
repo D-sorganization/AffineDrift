@@ -16,6 +16,7 @@ from scripts.generate_worked_examples import (
     VOL0_CH07_Q,
     VOL0_CH07_QD,
     VOL0_CH07_QDD,
+    VOL0_RNEA_TOLERANCE,
 )
 from src.affine_control.rnea import GRAVITY_M_S2, PlanarChain, PlanarLink
 
@@ -128,6 +129,21 @@ def test_velocity_product_term_vanishes_for_a_planar_chain() -> None:
     velocity = np.array([0.0, 0.0, 0.5])
     axis_rate = np.array([0.0, 0.0, 0.2])
     np.testing.assert_allclose(np.cross(velocity, axis_rate), np.zeros(3), atol=0.0)
+
+
+def test_published_agreement_bound_actually_holds() -> None:
+    """The chapter publishes a bound rather than the measured residual.
+
+    The residual is a difference of nearly-equal floats, so its exact value is
+    machine-dependent -- pinning it made the generated fragment fail the
+    freshness gate on CI after passing locally. The bound must therefore be
+    enforced rather than observed.
+    """
+    recursive = VOL0_CH07_CHAIN.inverse_dynamics(VOL0_CH07_Q, VOL0_CH07_QD, VOL0_CH07_QDD)
+    lagrangian = VOL0_CH07_CHAIN.inverse_dynamics_lagrangian(
+        VOL0_CH07_Q, VOL0_CH07_QD, VOL0_CH07_QDD
+    )
+    assert np.abs(recursive - lagrangian).max() < VOL0_RNEA_TOLERANCE
 
 
 def test_published_torques_are_far_from_the_stipulated_ones() -> None:

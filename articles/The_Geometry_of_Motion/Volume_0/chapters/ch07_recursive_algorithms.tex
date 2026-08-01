@@ -814,7 +814,10 @@ The Coriolis matrix contains terms like $-m_2 L \sin(\theta_2) \dot{\theta}_1$, 
 This check is executed rather than asserted. For the 3-link arm of
 Section~\ref{sec:example_3link}, the recursion gives
 $(\volzeroRneaTorque)^T$ N$\cdot$m and the Lagrangian route gives
-$(\volzeroLagrangianTorque)^T$ N$\cdot$m, agreeing to $\volzeroRneaAgreement$~N$\cdot$m.
+$(\volzeroLagrangianTorque)^T$ N$\cdot$m, agreeing to better than
+$\volzeroRneaAgreement$~N$\cdot$m --- a bound the generator enforces, since the residual
+itself is a difference of nearly-equal floating-point numbers and its exact value depends on
+the machine.
 
 The agreement is evidence because the two routes share no machinery. The recursion never
 forms a mass matrix; it propagates accelerations outward and forces inward, link by link.

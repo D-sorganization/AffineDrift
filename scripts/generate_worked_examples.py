@@ -338,6 +338,11 @@ VOL0_CH07_CHAIN = PlanarChain(
 VOL0_CH07_Q = np.array([0.524, 0.785, 0.0])
 VOL0_CH07_QD = np.array([0.5, 0.3, 0.2])
 VOL0_CH07_QDD = np.array([1.0, 0.5, 0.1])
+# The bound the chapter publishes for the RNEA-versus-Lagrangian cross-check.
+# Comfortably above the observed residual (~1e-9, dominated by the central
+# differences in the Coriolis and gravity terms) and far below anything that
+# would indicate a real disagreement.
+VOL0_RNEA_TOLERANCE = 1e-8
 
 
 def render_vol0_ch07() -> str:
@@ -351,9 +356,20 @@ def render_vol0_ch07() -> str:
     def macro(name: str, body: str) -> None:
         lines.append(f"\\newcommand{{\\{name}}}{{{body}}}")
 
+    agreement = float(np.abs(recursive - lagrangian).max())
+    if agreement > VOL0_RNEA_TOLERANCE:
+        raise ValueError(
+            f"RNEA and Lagrangian routes disagree by {agreement:.2e}, "
+            f"above the published tolerance of {VOL0_RNEA_TOLERANCE:.0e}"
+        )
+
     macro("volzeroRneaTorque", _row_vector(recursive, fmt="{:.3f}"))
     macro("volzeroLagrangianTorque", _row_vector(lagrangian, fmt="{:.3f}"))
-    macro("volzeroRneaAgreement", f"{np.abs(recursive - lagrangian).max():.1e}")
+    # A fixed bound, not the measured residual. The residual is the difference
+    # of two nearly-equal floats -- around 1e-9 -- so its exact value depends on
+    # the BLAS and the platform, and pinning it made the committed fragment fail
+    # the freshness gate on a different machine than the one that wrote it.
+    macro("volzeroRneaAgreement", f"{VOL0_RNEA_TOLERANCE:.0e}")
     macro("volzeroRneaTorqueOne", f"{recursive[0]:.3f}")
     macro("volzeroRneaTorqueThree", f"{recursive[2]:.3f}")
     lines.append("")
