@@ -9,8 +9,21 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 BIB_PATH = ROOT / "articles" / "The_Geometry_of_Motion" / "geometry_of_motion.bib"
+# Entries with no DOI or URL. Most are simply older than DOI registration.
+#
+# Three are here for a different and worse reason. Crisco2000, Dickerson2005 and
+# Karduna2000 each carried a DOI that resolved to an unrelated paper or to
+# nothing at all, and their titles appear in neither CrossRef nor PubMed. The
+# bad DOIs are removed rather than left pointing somewhere wrong, but that is a
+# stopgap: an entry whose title cannot be found in either index may not describe
+# a real paper. Each is cited exactly once, alongside another source, so the
+# claims are not left bare. They need a human who knows the shoulder and knee
+# kinematics literature to confirm or replace them.
 KNOWN_LEGACY_IDENTIFIER_GAPS = {
     "Albus1971",
+    "Crisco2000",
+    "Dickerson2005",
+    "Karduna2000",
     "Alexander1991",
     "Caruthers2016",
     "Challis2011",

@@ -43,6 +43,7 @@ import json
 import re
 import sys
 import time
+import urllib.error
 import urllib.parse
 import urllib.request
 from collections.abc import Iterator
@@ -128,6 +129,83 @@ def cited_keys(root: Path) -> set[str]:
     return keys
 
 
+def crossref_doi(doi: str) -> dict | None:
+    """Resolve one DOI to its CrossRef record, or None if it does not exist."""
+    url = f"{CROSSREF_ENDPOINT}/{urllib.parse.quote(doi, safe='/:')}"
+    parsed = urllib.parse.urlparse(url)
+    if parsed.scheme != "https" or parsed.netloc != CROSSREF_HOST:
+        msg = f"refusing to fetch {parsed.scheme}://{parsed.netloc}"
+        raise ValueError(msg)
+    request = urllib.request.Request(url, headers={"User-Agent": UA})
+    try:
+        # Scheme and host are pinned above.
+        with urllib.request.urlopen(request, timeout=30) as response:  # nosec B310
+            return json.load(response)["message"]
+    except urllib.error.HTTPError as exc:
+        if exc.code == 404:
+            return None
+        raise
+
+
+def check_dois(fh) -> tuple[int, int, int]:
+    """Compare every stated DOI against the record it actually resolves to.
+
+    This is the sharpest check in the file and the one with no false-positive
+    story: an entry either names the DOI of the paper it describes or it does
+    not. ``Arnold2010`` claimed a muscle-architecture paper while its DOI
+    resolved to "Contact mechanics and elastohydrodynamic lubrication in a novel
+    metal-on-metal hip implant" -- a real paper, in a different field, by
+    different authors.
+
+    That failure mode is worse than a broken reference. A dead DOI announces
+    itself; this one takes the reader somewhere real and irrelevant, so nothing
+    about the experience suggests a mistake.
+    """
+    checked = mismatched = dead = 0
+    for name, (bib, _root) in BIBS.items():
+        for key, _kind, body in entries(bib.read_text(encoding="utf-8")):
+            doi = field(body, "doi")
+            title = field(body, "title")
+            if not doi or not title:
+                continue
+            checked += 1
+            try:
+                record = crossref_doi(doi)
+            except Exception as exc:
+                fh.write(f"DOI-LOOKUP-FAILED {name} {key}: {exc}\n")
+                fh.flush()
+                time.sleep(1.5)
+                continue
+            time.sleep(0.7)
+
+            if record is None:
+                dead += 1
+                fh.write(f"DOI-NOT-FOUND {name} {key}: {doi}\n")
+                fh.flush()
+                continue
+
+            actual = (record.get("title") or [""])[0]
+            ours, theirs = norm(title), norm(actual)
+            # CrossRef frequently stores a work under its main title alone while
+            # the entry carries the full one -- "Golf Injuries" against "Golf
+            # Injuries: A Review of the Literature", or a "Part 2: ..." subtitle
+            # dropped entirely. Those are the same paper, and treating them as
+            # mismatches buried the real findings among six false ones.
+            if ours.startswith(theirs) or theirs.startswith(ours):
+                continue
+            score = SequenceMatcher(None, ours, theirs).ratio()
+            if score < 0.80:
+                mismatched += 1
+                fh.write(
+                    f"DOI-MISMATCH {name} {key} (title similarity {score:.2f})\n"
+                    f"     entry: {title[:96]}\n"
+                    f"     doi  : {doi}\n"
+                    f"     is   : {actual[:96]}\n"
+                )
+                fh.flush()
+    return checked, mismatched, dead
+
+
 def crossref(title: str, author: str) -> list[dict]:
     query = {
         "query.bibliographic": title,
@@ -172,10 +250,25 @@ def differences(entry: dict, record: dict) -> list[str]:
 
 
 def main() -> int:
-    out = Path(sys.argv[1]) if len(sys.argv) > 1 else REPO / "bibliography-audit.txt"
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    doi_only = "--doi-only" in sys.argv
+    out = Path(args[0]) if args else REPO / "bibliography-audit.txt"
     checked = confident = flagged = unmatched = failed = 0
 
     with out.open("w", encoding="utf-8") as fh:
+        doi_checked, doi_bad, doi_dead = check_dois(fh)
+        fh.write(
+            f"\nDOI CHECK: {doi_checked} entries carry a DOI\n"
+            f"  resolving to a different paper: {doi_bad}\n"
+            f"  not registered at all: {doi_dead}\n\n"
+        )
+        if doi_only:
+            print(
+                f"DOI CHECK: {doi_checked} checked, {doi_bad} mismatched, {doi_dead} unregistered"
+            )
+            print(f"full report: {out}")
+            return 0
+
         for name, (bib, root) in BIBS.items():
             text = bib.read_text(encoding="utf-8")
             used = cited_keys(root)
