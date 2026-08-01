@@ -66,6 +66,22 @@ BANNED: tuple[tuple[str, str, str], ...] = (
         "dangling cross-reference",
         "ch:zero_torque_counterfactual",
     ),
+    # Unsourced-claim markers. The macro is a legitimate way to be honest about a
+    # claim you have not sourced yet, but eight of them accumulated for a year
+    # and survived a PR titled "resolve 35+ citation TODOs" (#3501), each
+    # rendering as a bold [?] in the PDF. Banning them by default means a new one
+    # has to be added to the baseline deliberately, which makes it visible rather
+    # than letting it sink into the corpus.
+    (
+        r"\\citeneeded",
+        "unresolved citation marker",
+        "a real citation, a derivation, or an explicit 'this is a modelling assumption'",
+    ),
+    (
+        r"\[citation needed",
+        "unresolved citation marker",
+        "a real citation, a derivation, or an explicit 'this is a modelling assumption'",
+    ),
 )
 
 COMPILED = tuple((re.compile(pattern), rule, fix) for pattern, rule, fix in BANNED)

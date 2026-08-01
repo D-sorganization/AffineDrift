@@ -313,7 +313,7 @@ Elite golfers exploit this redundancy to:
 \item Adjust grip tension (allowing more pronation or wrist bow through the swing)
 \end{itemize}
 
-This is why motion capture data shows that no two golfers swing identically.\citeneeded{biomechanics study documenting inter-individual variability in golf-swing kinematics (e.g., Glazier 2011, Myers et al. 2008)} The task (club trajectory) is constrained, but the arm configuration is not. Different golfers choose different null-space motions.
+This is why motion capture shows that no two golfers swing identically \citep{Glazier2011,Myers2008}. \citet{Glazier2011} reviews movement variability in the golf swing and argues it is partly functional rather than simply error, and \citet{Myers2008} report the spread across 100 golfers. The task (club trajectory) is constrained, but the arm configuration is not. Different golfers choose different null-space motions.
 
 \begin{example}{Elbow Swivel in the Golf Swing}{ex:elbow_swivel}
 Consider a golfer at the top of the backswing. The club is at a specific position and orientation. Now, without moving the club, the golfer could:
@@ -361,7 +361,7 @@ Your shoulder can rotate, your elbow can flex or extend, your wrist can bend and
 
 This is redundancy. Your body has more degrees of freedom than the task requires.
 
-The golf swing is the same. A golfer has approximately 25--30 degrees of freedom (the exact count depends on the biomechanical model used---see the URDF specification later in this chapter).\citeneeded{reference biomechanical model enumerating upper-limb DOF count (e.g., Holzbaur et al. 2005)} But the task --- place the club face square to the target with maximum speed at impact --- requires control of only 6 variables: the position (3) and orientation (3) of the club head.
+The golf swing is the same. A golfer has roughly 25--30 degrees of freedom, though the exact count is a modelling choice rather than a fact about anatomy --- see the URDF specification later in this chapter. For scale, the widely used upper-extremity model of \citet{Holzbaur2005} assigns 15 degrees of freedom to a \emph{single} arm, covering shoulder, elbow, forearm, wrist, thumb and index finger. Two arms plus torso and pelvis rotation reach the range quoted here only once the hand and finger joints are collapsed, which is what the model in this chapter does. But the task --- place the club face square to the target with maximum speed at impact --- requires control of only 6 variables: the position (3) and orientation (3) of the club head.
 
 That leaves 20--25 DOF unspecified. There are \emph{infinitely many} joint configurations that produce the same club position. This is not a problem. It's a feature. It's how the brain exploits redundancy to adapt, optimize, and recover from perturbations.
 
