@@ -77,14 +77,36 @@ def test_kinetic_energy_is_positive_for_every_velocity(q: np.ndarray) -> None:
         assert velocity @ matrix @ velocity > 0.0
 
 
-def test_m33_matches_its_closed_form() -> None:
-    """The entry the published matrix got wrong: I3 + m3 l3^2 / 4, i.e. 0.12 not 0.18."""
-    q = np.deg2rad(np.array(CH08_CONFIGURATION_DEGREES))
+@pytest.mark.parametrize("q", CONFIGURATIONS)
+def test_m33_matches_its_closed_form(q: np.ndarray) -> None:
+    """The published matrix got this entry wrong; it must equal I3 + m3 c3^2.
+
+    Stated against the parameters rather than a literal, so that changing the
+    segment geometry -- as correcting the club length did -- cannot make a
+    correct implementation look broken. The distal entry is configuration-
+    independent: nothing proximal to joint 3 contributes to it.
+    """
     inertia = SEGMENTS.inertias[2]
-    mass = SEGMENTS.lengths[2]
-    expected = inertia + SEGMENTS.masses[2] * mass**2 / 4
+    com = SEGMENTS.com_offsets()[2]
+    expected = inertia + SEGMENTS.masses[2] * com**2
     assert SEGMENTS.rigid_mass_matrix(q)[2, 2] == pytest.approx(expected, abs=1e-12)
-    assert expected == pytest.approx(0.12, abs=1e-9)
+
+
+def test_club_length_is_driver_scale() -> None:
+    """Guards the regression: l3 was 0.40 m, forearm scale, where a driver is ~1.15 m.
+
+    With the short club, reaching a real clubhead speed would have needed a
+    wrist rate near 92 rad/s -- about 880 rpm.
+    """
+    assert SEGMENTS.lengths[2] > 0.9
+    assert SEGMENTS.lengths[2] < 1.3
+
+
+def test_clubhead_speed_is_in_the_right_regime() -> None:
+    """Below a good amateur, because the model has no torso -- but not by 4x."""
+    q = np.deg2rad(np.array(CH08_CONFIGURATION_DEGREES))
+    speed = SEGMENTS.clubhead_speed(q, np.array(CH08_VELOCITY))
+    assert 25.0 < speed < 45.0
 
 
 def test_modal_mass_matrix_is_diagonal() -> None:

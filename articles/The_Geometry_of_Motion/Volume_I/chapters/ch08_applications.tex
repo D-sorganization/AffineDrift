@@ -51,6 +51,8 @@ For a 3-DOF simplified model (shoulder, elbow, wrist), we parameterize:
 \x &= (\q^\T, \vec\eta^\T, \dot\q^\T, \dot{\vec\eta}^\T)^\T \in \R^{10}.
 \end{align}
 
+\input{generated/ch08_golf_model}
+
 \subsection{Explicit Mass Matrix Construction}
 
 \subsubsection{Segment Parameters}
@@ -58,21 +60,20 @@ For a 3-DOF simplified model (shoulder, elbow, wrist), we parameterize:
 We use the following representative parameters for a typical adult male golfer with a
 standard club:
 \begin{align}
-m_1 &= 10~\text{kg} \quad \text{(upper arm + torso contribution)} \\
-m_2 &= 5~\text{kg} \quad \text{(forearm)} \\
-m_3 &= 2~\text{kg} \quad \text{(club+hand)} \\
-l_1 &= 0.30~\text{m} \quad \text{(upper arm length)} \\
-l_2 &= 0.35~\text{m} \quad \text{(forearm length)} \\
-l_3 &= 0.40~\text{m} \quad \text{(club length)} \\
-I_1 &= 0.25~\text{kg$\cdot$m$^2$} \quad \text{(shoulder moment of inertia)} \\
-I_2 &= 0.08~\text{kg$\cdot$m$^2$} \quad \text{(elbow moment of inertia)} \\
-I_3 &= 0.04~\text{kg$\cdot$m$^2$} \quad \text{(wrist moment of inertia)} \\
-m_s &= 0.3~\text{kg} \quad \text{(shaft mass)} \\
+m_1 &= \cheightMassOne~\text{kg} \quad \text{(upper arm + torso contribution)} \\
+m_2 &= \cheightMassTwo~\text{kg} \quad \text{(forearm)} \\
+m_3 &= \cheightMassThree~\text{kg} \quad \text{(club + hand)} \\
+l_1 &= \cheightLengthOne~\text{m} \quad \text{(upper arm length)} \\
+l_2 &= \cheightLengthTwo~\text{m} \quad \text{(forearm length)} \\
+l_3 &= \cheightLengthThree~\text{m} \quad \text{(driver length)} \\
+I_1 &= \cheightInertiaOne~\text{kg$\cdot$m$^2$} \quad \text{(segment 1, about its own CoM)} \\
+I_2 &= \cheightInertiaTwo~\text{kg$\cdot$m$^2$} \quad \text{(segment 2, about its own CoM)} \\
+I_3 &= \cheightInertiaThree~\text{kg$\cdot$m$^2$} \quad \text{(club, uniform-rod value)} \\
+m_s &= \cheightShaftMass~\text{kg} \quad \text{(shaft mass)} \\
 K_s &= 5000~\text{N$\cdot$m$^2$} \quad \text{(shaft bending stiffness)} \\
 \omega_1 &= 40~\text{rad/s}, \quad \omega_2 = 120~\text{rad/s} \quad \text{(modal frequencies)}
 \end{align}
 
-\input{generated/ch08_golf_model}
 
 \subsubsection{Mass Matrix Entries}
 
@@ -405,13 +406,19 @@ have. Presenting a percentage agreement between a simulated counterfactual and a
 unspecified reference --- as an earlier revision did --- states a result that was never
 computed.
 
-\textbf{The clubhead speed is roughly a quarter of a real one.} A driver head reaches about
-$45$~m/s; this model gives $\cheightZtcfSpeedStart$~m/s, because the stated club length
-$\ell_3 = 0.40$~m is forearm-scale rather than driver-scale (a driver is nearer $1.15$~m),
-and because the three-link chain omits the torso rotation that supplies most of the speed.
-The parameters are declared illustrative above, and this is what that costs: the
-\emph{structure} of the drift decomposition is right, the magnitudes are not transferable
-to a real swing.
+\textbf{The clubhead speed is below a good amateur's.} At the mid-downswing state this model
+gives $\cheightClubheadSpeed$~m/s, against roughly $45$~m/s for a driver at impact. The gap
+is the torso: this three-link chain starts at the shoulder, so the pelvis and thorax rotation
+that supplies much of the clubhead speed in a real swing is absent, and the joint rates here
+are a mid-downswing snapshot rather than the peak. The magnitudes are therefore in the right
+regime but on the low side; the \emph{structure} of the drift decomposition is what
+transfers.
+
+An earlier revision was much further out, at $12.2$~m/s, because it gave the club length as
+$\ell_3 = 0.40$~m --- forearm scale, where a driver is nearer $1.15$~m. That is worth
+recording as a diagnostic: reaching a real clubhead speed with the short club would have
+required a wrist rate near $92$~rad/s, about $880$~rpm. When a model needs a physically
+absurd input to reproduce a known output, the geometry is usually wrong, not the input.
 \end{warningbox}
 
 \subsection{Key Insights from the Framework}

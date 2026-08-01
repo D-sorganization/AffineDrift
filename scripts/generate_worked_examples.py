@@ -163,6 +163,16 @@ def render_ch08(model: GolfModel) -> str:
     def macro(name: str, body: str) -> None:
         lines.append(f"\\newcommand{{\\{name}}}{{{body}}}")
 
+    # The segment parameters themselves, so the chapter's stated inputs cannot
+    # drift from the model that consumes them.
+    names = ("One", "Two", "Three")
+    for index, label in enumerate(names):
+        macro(f"cheightMass{label}", f"{model.masses[index]:g}")
+        macro(f"cheightLength{label}", f"{model.lengths[index]:.2f}")
+        macro(f"cheightInertia{label}", f"{model.inertias[index]:g}")
+    macro("cheightShaftMass", f"{model.shaft_mass:g}")
+    macro("cheightClubheadSpeed", f"{model.clubhead_speed(q, np.array(CH08_VELOCITY)):.2f}")
+
     macro("cheightMqq", _matrix(m_qq))
     macro("cheightMqqDet", f"{np.linalg.det(m_qq):.4f}")
     macro("cheightMqqEigMin", f"{np.linalg.eigvalsh(m_qq).min():.4f}")
