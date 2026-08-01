@@ -224,6 +224,27 @@ a_{\text{cor}} &:= -M(\q)^{-1}\mat{C}(\q,\dot\q)\dot\q, \label{eq:ch7:a-cor}
 
 so that $a_{\text{drift}} = a_{\text{grav}} + a_{\text{cor}}$.
 
+\begin{warningbox}
+\textbf{This form assumes the system is unconstrained.} Equation~\eqref{eq:ch7:drift-decomposition}
+and the input field $G(\x) = M(\q)^{-1}B$ both change the moment a kinematic constraint is
+present --- ground contact, a closed chain, a fixed clubhead path.
+
+The reason is worth stating, because it is easy to get wrong in a way that leaves the
+formulas looking fine. Under a constraint $J_c\ddot\q + \dot J_c\dot\q = 0$, the multiplier
+$\vec\lambda$ is itself \emph{affine in $\uvec$}. Carrying $J_c^\T\vec\lambda$ into the drift
+therefore makes the drift depend on the input, and $\partial f/\partial\uvec = 0$ --- the
+property this entire construction rests on --- silently fails. The ZTCF is defined by setting
+the input to zero and integrating the drift; that is only meaningful if the drift does not
+contain the input.
+
+Chapter~\ref{ch:parallel-mechanisms} eliminates the multiplier properly and gives the
+constrained drift and input fields, which satisfy $\partial f/\partial\uvec = 0$ by
+construction. \textbf{Use those whenever the system has a constraint}; the decomposition
+above applies only when it does not. The golf models in this book are unconstrained during
+the downswing, so the form here is the right one for them --- but a golfer analysed with
+ground reaction forces is not.
+\end{warningbox}
+
 \subsection{Superposition of Drift Components}
 
 This decomposition is valid because $M(\q)^{-1}$ is a linear operator (in the sense that
