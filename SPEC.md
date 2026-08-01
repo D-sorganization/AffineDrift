@@ -100,7 +100,8 @@ AffineDrift/
 │   ├── generate_worked_examples.py  # Solves each textbook worked example; --check gates freshness
 │   ├── check_latex_structure.py     # Structural LaTeX pre-check (no TeX distribution needed)
 │   ├── check_terminology.py         # Acronym and expansion consistency
-│   └── check_tree_parity.py         # Cross-tree divergence between duplicated chapters
+│   ├── check_tree_parity.py         # Cross-tree divergence between duplicated chapters
+│   └── check_bibliography_metadata.py  # Audits entries against CrossRef; manual, needs network
 ├── tests/                       # Test suite (80+ test files)
 │   ├── test_affine_control/     # Physics and optimization tests
 │   ├── test_core/               # Core module tests
