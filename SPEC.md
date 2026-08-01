@@ -72,7 +72,12 @@ AffineDrift/
 │   │   ├── swing_optimizer.py   # iLQR-based trajectory optimization for golf swings
 │   │   ├── ddp.py               # DDP mock (non-functional placeholder; iLQR is the active optimizer)
 │   │   ├── residuals.py         # Optimization residual calculations
-│   │   └── swing_types.py       # Swing model definitions and types
+│   │   ├── swing_types.py       # Swing model definitions and types
+│   │   ├── dynamics.py          # Christoffel Coriolis matrix; planar double-pendulum trajectories
+│   │   ├── lqr.py               # Discrete LQR / DARE, with residual and contraction-rate diagnostics
+│   │   ├── golf_model.py        # Jacobian-assembled rigid + shaft mass matrix, Schur complement
+│   │   ├── rnea.py              # Planar recursive Newton-Euler, plus an independent Lagrangian route
+│   │   └── swing_analysis.py    # Clubhead speed and ZTCF from forward dynamics
 │   ├── core/                    # Foundational abstractions and utilities
 │   │   ├── constants.py         # Physical and mathematical constants
 │   │   ├── contracts/           # Design-by-contract specifications (definitions.py, validators.py)
@@ -91,6 +96,11 @@ AffineDrift/
 │   ├── check_links.py           # Validate links in documentation
 │   ├── check_site_health.py     # Monitor website health metrics
 │   └── code_quality_check.py    # AST-based code quality analysis
+├── scripts/                     # Content gates and generators
+│   ├── generate_worked_examples.py  # Solves each textbook worked example; --check gates freshness
+│   ├── check_latex_structure.py     # Structural LaTeX pre-check (no TeX distribution needed)
+│   ├── check_terminology.py         # Acronym and expansion consistency
+│   └── check_tree_parity.py         # Cross-tree divergence between duplicated chapters
 ├── tests/                       # Test suite (80+ test files)
 │   ├── test_affine_control/     # Physics and optimization tests
 │   ├── test_core/               # Core module tests
