@@ -63,7 +63,7 @@ tract---the most direct neural pathway from cortex to spinal motor neurons.
 Key properties of M1 (experimentally confirmed):
 \begin{itemize}
   \item \textbf{Somatotopic organization}: body parts are mapped to cortical regions
-        (the motor homunculus), with overlapping representations (Penfield and Boldrey, 1937)
+        (the motor homunculus), with overlapping representations~\cite{PenfieldBoldrey1937}
   \item \textbf{Population coding}: individual neurons have broad cosine-shaped directional
         tuning about a preferred direction~\cite{Georgopoulos1982}, and movement direction is
         recovered from the vector sum of the population's contributions rather than from any
@@ -84,12 +84,13 @@ Key properties of M1 (experimentally confirmed):
 
 \subsection{Cerebellum: The Forward Model}
 
-The cerebellum contains approximately 69 billion granule cells (Herculano-Houzel, 2010),
-more than the rest of the brain combined. Electrophysiological and lesion studies establish
-its primary role in motor control as a \textbf{forward model}:
+The human cerebellum contains roughly 69 billion neurons---about 80\% of all the neurons in
+the brain, and overwhelmingly granule cells---against some 16 billion in the cerebral
+cortex~\cite{Azevedo2009}. Electrophysiological and lesion studies establish its primary role
+in motor control as a \textbf{forward model}:
 
 \begin{neurobox}{The Cerebellum as a Forward Model}{cerebellum-forward}
-  The cerebellar circuit (Marr, 1969; Albus, 1971; Kawato et al., 1987):
+  The cerebellar circuit~\cite{Marr1969,Albus1971,Kawato1987}:
   \begin{enumerate}
     \item Receives a copy of the motor command (efference copy) via the pontine nuclei
     \item Receives sensory feedback via the inferior olive and mossy fibers
@@ -97,7 +98,10 @@ its primary role in motor control as a \textbf{forward model}:
           fiber--Purkinje cell synapses (basis function expansion)
     \item The climbing fiber signal carries sensory prediction error from the inferior olive
     \item Error-driven learning updates Purkinje cell responses through long-term depression
-          (LTD) at parallel fiber--Purkinje cell synapses, with time constants of 100-1000 ms
+          (LTD) at parallel fiber--Purkinje cell synapses. LTD is induced only when parallel
+          fiber activity and the climbing fiber spike fall within a window of a few hundred
+          milliseconds of each other; the optimum is region-specific and appears tuned to
+          each region's own sensorimotor feedback delay~\cite{Suvrathan2016}
   \end{enumerate}
   In the language of control theory (Volume~I):
   \begin{itemize}
@@ -120,6 +124,15 @@ learning of those same altered dynamics is profoundly impaired---a dissociation 
 appear in Huntington's disease, where the deficit falls on the feedback side
 instead~\cite{SmithShadmehr2005}. The first result establishes that an internal model is
 learned; the second locates the learning in the cerebellum.
+
+Two timescales are easy to conflate here, and they are not the same quantity. The window in
+which parallel fiber and climbing fiber activity must coincide for LTD to be induced is a few
+hundred milliseconds---that is a coincidence-detection requirement, set by how long the error
+signal takes to arrive. The depression it produces, and the behavioural adaptation that
+follows, accumulate over minutes and tens of trials. Motor learning being slow is therefore
+not in tension with the plasticity rule being fast: the millisecond figure governs
+\emph{whether} a synapse is eligible to change, the minutes figure governs \emph{how much} it
+has changed.
 
 \subsection{Basal Ganglia: Action Selection}
 
