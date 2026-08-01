@@ -91,6 +91,7 @@ AffineDrift/
 ## Documentation
 
 **Development Guides:**
+
 - [API Reference](docs/api-reference.md): public API for all `src/` modules.
 - [Testing Guide](docs/development/testing-guide.md): test patterns, fixtures, and conventions.
 - [Code Style Guide](docs/development/code-style-guide.md): Python, JavaScript, CSS, and Quarto standards.
@@ -101,18 +102,19 @@ AffineDrift/
 - [Benchmarking Policy](docs/development/benchmarking.md): benchmark infrastructure and CI policy.
 
 **Reference:**
+
 - [Canonical Parameters Table](PARAMETERS.md): symbols, units, and parameter ranges.
 - [Textbook Series Architecture](docs/development/geometry_of_motion_architecture.md): series architecture and issue-to-deliverable tracking.
 - [Repository Inventory](docs/development/repository_inventory.md): component inventory, implementation status, and known gaps.
 - [src/README.md](src/README.md): Python source-tree overview and status notes.
 
 **Operations:**
+
 - [SLO & Performance Targets](docs/operations/slo-targets.md): CI/CD SLOs and error budgets.
 - [Incident Response Playbooks](docs/operations/incident-response-playbooks.md): step-by-step incident resolution.
 - [Troubleshooting Guide](docs/operations/troubleshooting-guide.md): error lookup and debug procedures.
 - [On-Call Procedures](docs/operations/on-call-procedures.md): routine checks and response runbooks.
 - [Monitoring Setup](docs/operations/monitoring-setup.md): current and planned observability.
-
 
 ## Runtime and CI
 

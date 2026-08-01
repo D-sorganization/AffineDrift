@@ -7,24 +7,24 @@
 
 ## Scores
 
-| Criterion | Name | Score | Weight | Weighted |
-|-----------|------|-------|--------|----------|
-| A | Project Organization | 100 | 5% | 5.00 |
-| B | Documentation | 100 | 8% | 8.00 |
-| C | Testing | 90 | 12% | 10.80 |
-| D | Error Handling | 73.2 | 10% | 7.32 |
-| E | Performance | 45 | 7% | 3.15 |
-| F | Code Quality | 76 | 10% | 7.60 |
-| G | Dependency Hygiene | 90 | 8% | 7.20 |
-| H | Security | 59 | 10% | 5.90 |
-| I | Configuration Management | 70 | 6% | 4.20 |
-| J | Observability | 51 | 7% | 3.57 |
-| K | Maintenance Debt | 66.4 | 7% | 4.65 |
-| L | CI/CD | 100 | 8% | 8.00 |
-| M | Deployment | 40 | 5% | 2.00 |
-| N | Legal & Compliance | 95 | 4% | 3.80 |
-| O | Agentic Usability | 90 | 3% | 2.70 |
-| **Total** | | | | **83.89** |
+| Criterion | Name                     | Score | Weight | Weighted  |
+| --------- | ------------------------ | ----- | ------ | --------- |
+| A         | Project Organization     | 100   | 5%     | 5.00      |
+| B         | Documentation            | 100   | 8%     | 8.00      |
+| C         | Testing                  | 90    | 12%    | 10.80     |
+| D         | Error Handling           | 73.2  | 10%    | 7.32      |
+| E         | Performance              | 45    | 7%     | 3.15      |
+| F         | Code Quality             | 76    | 10%    | 7.60      |
+| G         | Dependency Hygiene       | 90    | 8%     | 7.20      |
+| H         | Security                 | 59    | 10%    | 5.90      |
+| I         | Configuration Management | 70    | 6%     | 4.20      |
+| J         | Observability            | 51    | 7%     | 3.57      |
+| K         | Maintenance Debt         | 66.4  | 7%     | 4.65      |
+| L         | CI/CD                    | 100   | 8%     | 8.00      |
+| M         | Deployment               | 40    | 5%     | 2.00      |
+| N         | Legal & Compliance       | 95    | 4%     | 3.80      |
+| O         | Agentic Usability        | 90    | 3%     | 2.70      |
+| **Total** |                          |       |        | **83.89** |
 
 ## Findings Summary
 
@@ -47,7 +47,6 @@
 - **[E]** [AffineDrift] No performance benchmarks
 - **[F]** [AffineDrift] 7 TODO/FIXME items
 - **[M]** [AffineDrift] No deployment artifacts
-
 
 ## Evidence
 

@@ -48,6 +48,7 @@ npx playwright test --project=webkit
 ## Test Structure
 
 ### Homepage Tests (`homepage.spec.js`)
+
 - Page loads successfully
 - Navigation works
 - Logo has alt text
@@ -55,12 +56,14 @@ npx playwright test --project=webkit
 - No console errors
 
 ### Navigation Tests (`navigation.spec.js`)
+
 - Navigate between pages
 - Table of contents works
 - Smooth scrolling to anchors
 - Active section highlighting
 
 ### Accessibility Tests (`accessibility.spec.js`)
+
 - Proper heading hierarchy
 - Alt text on all images
 - ARIA labels on navigation
@@ -70,6 +73,7 @@ npx playwright test --project=webkit
 - Skip to main content
 
 ### Search Tests (`search.spec.js`)
+
 - Search button/input exists
 - Search modal opens
 - Keyboard shortcut works
@@ -88,6 +92,7 @@ Tests are configured in `playwright.config.js`:
 ## CI/CD Integration
 
 Tests run automatically in CI with:
+
 - 2 retries on failure
 - Single worker for stability
 - HTML report generation
@@ -97,14 +102,14 @@ Tests run automatically in CI with:
 Follow this pattern:
 
 ```javascript
-const { test, expect } = require('@playwright/test');
+const { test, expect } = require("@playwright/test");
 
-test.describe('Feature Name', () => {
-  test('should do something', async ({ page }) => {
-    await page.goto('/');
-    
+test.describe("Feature Name", () => {
+  test("should do something", async ({ page }) => {
+    await page.goto("/");
+
     // Your test code
-    const element = page.locator('selector');
+    const element = page.locator("selector");
     await expect(element).toBeVisible();
   });
 });
@@ -141,6 +146,7 @@ npx playwright test --trace on
 ## Coverage
 
 Current test coverage:
+
 - Homepage: 5 tests
 - Navigation: 5 tests
 - Accessibility: 7 tests

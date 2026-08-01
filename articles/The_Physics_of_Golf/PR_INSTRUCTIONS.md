@@ -55,6 +55,7 @@ All diagrams are implemented in TikZ for clean, publication-quality rendering an
 - Improved content flow and chapter structure
 
 **Textbox types in use**:
+
 - `\begin{laymansbox}...\end{laymansbox}` – Intuitive explanations for non-experts
 - `\begin{definition}...\end{definition}` – Formal definitions
 - `\begin{driftcontrol}...\end{driftcontrol}` – Drift vs. control illustrations
@@ -67,6 +68,7 @@ All diagrams are implemented in TikZ for clean, publication-quality rendering an
 - Updated all references to meet academic publishing standards
 
 **Key research areas cited**:
+
 - Biomechanics (Winter, Neumann, Leach & Zeppa)
 - Golf swing mechanics (Cheetham, McHardy, Lephart, Hume)
 - Robotics and control theory (Murray, Sastry, Zubov)
@@ -172,11 +174,13 @@ improves overall pedagogical flow through better textbox usage and expanded pros
 ## Changes by Category
 
 ### Removed Speculation and Coaching Hearsay
+
 - Eliminated unsupported claims about golf technique and biomechanics
 - Replaced vague coaching clichés with precise physical descriptions
 - **Affected chapters**: [list specific chapters]
 
 ### Replaced Fabricated Numerical Claims
+
 - Replaced made-up statistics with variables (notation: $\lambda$, $\alpha$, etc.)
 - Added peer-reviewed citations where validated data exists
 - Provided ranges and qualitative descriptions for context-dependent values
@@ -185,6 +189,7 @@ improves overall pedagogical flow through better textbox usage and expanded pros
   - "100 mph clubhead speed correlates to..." → Parameterized as $v_{\text{club}}$ with validated references
 
 ### Added ~25 TikZ Diagrams
+
 - Vector and force diagram illustrations (forces, torques, constraint forces)
 - Mechanical linkage visualizations (double pendulum, triple pendulum, parallel mechanisms)
 - State space and phase plane diagrams
@@ -193,6 +198,7 @@ improves overall pedagogical flow through better textbox usage and expanded pros
 - **Files affected**: All chapter `.tex` files
 
 ### Fixed Textbox Overuse
+
 - Integrated expository prose between consecutive textbox elements
 - Improved content flow while maintaining pedagogical intent
 - Standardized textbox types:
@@ -201,18 +207,21 @@ improves overall pedagogical flow through better textbox usage and expanded pros
   - `\begin{driftcontrol}...\end{driftcontrol}` – Drift vs. control illustrations
 
 ### Added Research Citations
+
 - Integrated citations to foundational biomechanics literature
 - Added references to golf swing mechanics studies
 - Cited robotics, dynamics, and control theory texts
 - **Research areas**: Biomechanics (Winter, Neumann, Leach & Zeppa); Golf mechanics (Cheetham, McHardy, Lephart, Hume); Robotics/control (Murray, Sastry, Zubov); Dynamics (Goldstein, Craig, Siciliano)
 
 ### Updated Bibliography
+
 - Added 20+ new peer-reviewed references
 - Verified all citation formats (ISBN, DOI, page numbers)
 - Organized bibliography by topic
 - **File**: `golf_physics.bib`
 
 ### Maintained Mathematical Integrity
+
 - All equations, derivations, and proofs preserved
 - Mathematical notation and rigor unchanged
 - Validated LaTeX compilation for all mathematical content
@@ -222,6 +231,7 @@ improves overall pedagogical flow through better textbox usage and expanded pros
 [For multi-PR approach, list specific chapters; for single PR, note: "All 32 chapter files"]
 
 ### Part 1 (Foundations)
+
 - ch01_why_physics.tex
 - ch02_language_of_motion.tex
 - ch03_double_pendulum.tex
@@ -233,23 +243,27 @@ improves overall pedagogical flow through better textbox usage and expanded pros
 ## Test Plan
 
 ### LaTeX Compilation
+
 - [ ] Compile `golf_textbook.tex` with `pdflatex` to verify no errors or warnings
 - [ ] Check that all TikZ diagrams render correctly (no "Picture is too big" warnings)
 - [ ] Verify that all bibliography references are correctly linked
 
 ### Content Verification
+
 - [ ] Review chapter text for removed speculation (spot-check 2-3 chapters)
 - [ ] Verify citations are integrated naturally into prose
 - [ ] Confirm mathematical derivations are unaltered
 - [ ] Check that glossary and nomenclature are up-to-date
 
 ### Visual Quality
+
 - [ ] Inspect TikZ diagrams for clarity and consistency
 - [ ] Verify textbox spacing and prose flow
 - [ ] Check cross-references and equation numbering
 - [ ] Ensure index entries and labels are maintained
 
 ### Workflow Integration
+
 - [ ] Verify GitHub Actions workflow (`compile_golf_textbook.yml`) succeeds
 - [ ] Confirm PDF output is generated correctly
 - [ ] Check that any CI/CD checks pass
@@ -407,6 +421,7 @@ pdflatex -interaction=nonstopmode golf_textbook.tex
 ```
 
 **Success Criteria**:
+
 - No "Undefined control sequence" errors
 - No "Undefined references" in bibliography
 - All TikZ diagrams render without "Picture too big" warnings
@@ -470,6 +485,7 @@ gh workflow view compile_golf_textbook.yml
 **Problem**: "Dimension too large" or "Picture too big" error
 
 **Solution**:
+
 ```bash
 # Use `tikz` with `externalize` library to pre-compile large diagrams
 % In preamble:
@@ -482,6 +498,7 @@ gh workflow view compile_golf_textbook.yml
 **Problem**: "undefined control sequence" or citation warnings
 
 **Solution**:
+
 ```bash
 # Verify BibTeX entry format
 grep "@article\|@book\|@inproceedings" golf_physics.bib | head
@@ -498,6 +515,7 @@ pdflatex golf_textbook.tex
 **Problem**: Compilation hangs or "TeX capacity exceeded"
 
 **Solution**:
+
 ```bash
 # Increase TeX memory (varies by system):
 # On TexLive: edit texmf.cnf or use:

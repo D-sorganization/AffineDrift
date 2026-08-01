@@ -1,12 +1,13 @@
 ---
 name: Bot Writing Task
 about: Define a writing task for the automated bot agents
-title: '[BOT] '
+title: "[BOT] "
 labels: bot-task, automated
-assignees: ''
+assignees: ""
 ---
 
 ## Task Type
+
 - [ ] Write new article from outline
 - [ ] Expand existing section
 - [ ] Add worked examples
@@ -17,9 +18,11 @@ assignees: ''
 - [ ] Cross-reference audit
 
 ## Target File(s)
+
 <!-- Path(s) to the file(s) to create or modify -->
 
 ## Detailed Instructions
+
 <!-- Specific instructions for the bot. Be precise about:
 - What content to produce
 - What mathematical formalism to use
@@ -29,7 +32,9 @@ assignees: ''
 -->
 
 ## Quality Criteria
+
 <!-- How will we know the output is acceptable? -->
+
 - [ ] Mathematical correctness verified
 - [ ] Notation matches existing conventions
 - [ ] Cross-references are valid
@@ -37,9 +42,11 @@ assignees: ''
 - [ ] Quarto renders without errors
 
 ## Context Files
+
 <!-- List files the bot should read for context -->
 
 ## Verification Method
+
 - [ ] Human review required
 - [ ] Automated tests sufficient
 - [ ] Critic agent review

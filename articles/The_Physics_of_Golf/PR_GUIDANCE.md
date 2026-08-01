@@ -34,6 +34,7 @@ git checkout -b feature/physics-of-golf-textbook
 ## Files to Stage
 
 ### New Files (articles/The_Physics_of_Golf/)
+
 ```
 articles/The_Physics_of_Golf/
 ├── .gitignore
@@ -84,12 +85,14 @@ articles/The_Physics_of_Golf/
 ```
 
 ### Modified Files (website integration)
+
 ```
 _quarto.yml                           # Added "Textbooks" subsection to Learn navbar
 resources/articles.qmd                # Added Physics of Golf section with accordion nav
 ```
 
 ### Existing Files (already in repo, verify present)
+
 ```
 .github/workflows/compile_golf_textbook.yml   # CI/CD for LaTeX compilation
 ```
@@ -190,11 +193,13 @@ EOF
 After the PR is created, verify:
 
 1. **CI Pipeline**: The `compile_golf_textbook.yml` workflow should trigger automatically. Check that it:
+
    - Compiles the PDF successfully
    - Reports the correct page count (~559 pages)
    - Uploads the PDF as a build artifact
 
 2. **Website Deploy**: After merge to main, the `deploy-website.yml` workflow will:
+
    - Render the Quarto site including the new Physics of Golf pages
    - Deploy to GitHub Pages
    - Run link checks (verify no broken links)
@@ -210,14 +215,14 @@ After the PR is created, verify:
 
 ## File Inventory Summary
 
-| Category | Count | Location |
-|----------|-------|----------|
-| LaTeX chapters | 31 | `chapters/*.tex` |
-| Glossary | 1 | `chapters/glossary.tex` |
-| Quarto chapters | 31 | `quarto/*.qmd` |
-| Quarto support | 2 | `quarto/index.qmd`, `quarto/_quarto.yml` |
-| Style/config | 4 | `main.tex`, `golf_physics.sty`, `golf_physics.bib`, `nomenclature.tex` |
-| Compiled output | 1 | `main.pdf` |
-| Git config | 1 | `.gitignore` |
-| **Total new files** | **71** | |
-| Modified files | 2 | `_quarto.yml`, `resources/articles.qmd` |
+| Category            | Count  | Location                                                               |
+| ------------------- | ------ | ---------------------------------------------------------------------- |
+| LaTeX chapters      | 31     | `chapters/*.tex`                                                       |
+| Glossary            | 1      | `chapters/glossary.tex`                                                |
+| Quarto chapters     | 31     | `quarto/*.qmd`                                                         |
+| Quarto support      | 2      | `quarto/index.qmd`, `quarto/_quarto.yml`                               |
+| Style/config        | 4      | `main.tex`, `golf_physics.sty`, `golf_physics.bib`, `nomenclature.tex` |
+| Compiled output     | 1      | `main.pdf`                                                             |
+| Git config          | 1      | `.gitignore`                                                           |
+| **Total new files** | **71** |                                                                        |
+| Modified files      | 2      | `_quarto.yml`, `resources/articles.qmd`                                |
