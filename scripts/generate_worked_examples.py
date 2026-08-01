@@ -70,7 +70,22 @@ def _matrix(values: np.ndarray, fmt: str = "{:.4f}") -> str:
 
 
 def _row_vector(values: np.ndarray, fmt: str = "{:.4f}") -> str:
+    """Ampersand-separated, for a macro consumed inside bmatrix/pmatrix/array."""
     return " & ".join(fmt.format(v) for v in _clean(values).reshape(-1))
+
+
+def _inline_row(values: np.ndarray, fmt: str = "{:.4f}") -> str:
+    """Comma-separated, for a macro consumed as ``(\\macro)^\\T`` in running math.
+
+    An ampersand is an alignment tab and is only legal inside an alignment
+    environment. Emitting one into ``\\[ ... \\]`` or ``$...$`` is "Misplaced
+    alignment tab character &", which is fatal -- it is what stopped Volume 0
+    compiling, and the same latent error sat in Volume I's ch07 and ch08 behind
+    an earlier failure. Which separator a macro needs is a property of where the
+    chapter puts it, so the two cases get two functions rather than one function
+    and a convention to remember.
+    """
+    return ",\\; ".join(fmt.format(v) for v in _clean(values).reshape(-1))
 
 
 def render_ch06(solution: LQRSolution) -> str:
@@ -194,13 +209,13 @@ def render_ch08(model: GolfModel) -> str:
     # any measured swing and inflated the Coriolis term accordingly.
     qd = np.array(CH08_VELOCITY)
     bias = model.coriolis(q, qd) @ qd + model.gravity_torque(q)
-    macro("cheightVelocity", _row_vector(qd, fmt="{:.0f}"))
-    macro("cheightBias", _row_vector(bias, fmt="{:.2f}"))
-    macro("cheightDriftAccel", _row_vector(model.drift_acceleration(q, qd), fmt="{:.2f}"))
+    macro("cheightVelocity", _inline_row(qd, fmt="{:.0f}"))
+    macro("cheightBias", _inline_row(bias, fmt="{:.2f}"))
+    macro("cheightDriftAccel", _inline_row(model.drift_acceleration(q, qd), fmt="{:.2f}"))
     gravity = model.gravity_torque(q)
     coriolis = model.coriolis(q, qd) @ qd
-    macro("cheightGravity", _row_vector(gravity, fmt="{:.2f}"))
-    macro("cheightCoriolisTerm", _row_vector(coriolis, fmt="{:.2f}"))
+    macro("cheightGravity", _inline_row(gravity, fmt="{:.2f}"))
+    macro("cheightCoriolisTerm", _inline_row(coriolis, fmt="{:.2f}"))
     # Individual components, so the surrounding prose does not have to retype
     # numbers it is discussing.
     macro("cheightCoriolisShoulder", f"{coriolis[0]:.2f}")
@@ -340,9 +355,9 @@ def render_ch07() -> str:
     macro("chsevenMidQTwo", f"{q_mid[1]:.4f}")
     macro("chsevenMidRateOne", f"{qd_mid[0]:.4f}")
     macro("chsevenMidRateTwo", f"{qd_mid[1]:.4f}")
-    macro("chsevenMidGravity", _row_vector(grav, fmt="{:.3f}"))
-    macro("chsevenMidCoriolis", _row_vector(cor, fmt="{:.3f}"))
-    macro("chsevenMidDrift", _row_vector(grav + cor, fmt="{:.3f}"))
+    macro("chsevenMidGravity", _inline_row(grav, fmt="{:.3f}"))
+    macro("chsevenMidCoriolis", _inline_row(cor, fmt="{:.3f}"))
+    macro("chsevenMidDrift", _inline_row(grav + cor, fmt="{:.3f}"))
     lines.append("")
     return "\n".join(lines)
 
@@ -385,8 +400,8 @@ def render_vol0_ch07() -> str:
             f"above the published tolerance of {VOL0_RNEA_TOLERANCE:.0e}"
         )
 
-    macro("volzeroRneaTorque", _row_vector(recursive, fmt="{:.3f}"))
-    macro("volzeroLagrangianTorque", _row_vector(lagrangian, fmt="{:.3f}"))
+    macro("volzeroRneaTorque", _inline_row(recursive, fmt="{:.3f}"))
+    macro("volzeroLagrangianTorque", _inline_row(lagrangian, fmt="{:.3f}"))
     # A fixed bound, not the measured residual. The residual is the difference
     # of two nearly-equal floats -- around 1e-9 -- so its exact value depends on
     # the BLAS and the platform, and pinning it made the committed fragment fail

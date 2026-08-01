@@ -110,6 +110,17 @@
   breakable
 }{laymans}
 
+% Matches the declaration in Volume I, which chapters here already assume.
+% Unlike the theorem boxes above this is a plain tcolorbox, so it takes no
+% title/label arguments: \begin{warningbox} ... \end{warningbox}.
+\newtcolorbox{warningbox}[1][]{%
+  colback=red!5!white,
+  colframe=red!60!black,
+  fonttitle=\bfseries,
+  title={Common Misconception},
+  #1
+}
+
 \newtcbtheorem[number within=chapter]{theorem}{Theorem}{
   colback=accentred!5, colframe=accentred!70,
   fonttitle=\bfseries, separator sign={.~},
@@ -131,8 +142,23 @@
 \theoremstyle{plain}
 \makeatletter
 \@ifundefined{theorem}{\newtheorem{theorem}{Theorem}[chapter]}{}
+% \newtcbtheorem{theorem} above defines the *macro* \theorem, so the guard on
+% the line above sees "already defined" and skips \newtheorem -- which is what
+% would otherwise have created a LaTeX counter named `theorem`. The next two
+% lines number themselves [theorem], so without this they fail the whole
+% preamble with "No counter 'theorem' defined", `proposition` never gets
+% defined, and ch01 then dies on \begin{proposition}. Volume II carries the
+% identical block and compiles only because it declares no tcbtheorem named
+% `theorem`. Guard on the counter, not the macro.
+\@ifundefined{c@theorem}{\newcounter{theorem}[chapter]}{}
 \@ifundefined{proposition}{\newtheorem{proposition}[theorem]{Proposition}}{}
 \@ifundefined{lemma}{\newtheorem{lemma}[theorem]{Lemma}}{}
+% amsthm-style, so it takes an optional title: \begin{remark}[Short title].
+% Deliberately not a \newtcbtheorem like the boxes above -- those require two
+% mandatory {title}{label} arguments and would not accept that call.
+\theoremstyle{remark}
+\@ifundefined{remark}{\newtheorem{remark}{Remark}[chapter]}{}
+\theoremstyle{plain}
 \makeatother
 
 % Simple environments (no arguments)
@@ -141,8 +167,18 @@
 \newenvironment{argument}{\begin{proof}[Argument]}{\end{proof}}
 \newenvironment{listing}{\begin{center}\begin{minipage}{0.9\textwidth}}{\end{minipage}\end{center}}
 \newenvironment{pseudocode}{\begin{ttfamily}\small}{\end{ttfamily}}
-% Backward-compat alias so existing \begin{algorithmic} still compiles:
-\newenvironment{algorithmic}{\begin{pseudocode}}{\end{pseudocode}}
+% Backward-compat alias so existing \begin{algorithmic} still compiles.
+% The alias supplied the environment but not the commands algpseudocode would
+% define, so every \State, \For and \EndFor inside one was an undefined control
+% sequence -- fatal, and the reason ch12 produced no PDF. These three are the
+% only algorithmic commands the volume uses. Defined inside the environment so
+% they are scoped to it and cannot collide with anything outside.
+\newenvironment{algorithmic}{%
+  \begin{pseudocode}%
+  \newcommand{\State}{\par\hspace*{1.5em}}%
+  \newcommand{\For}[1]{\par\textbf{for} ##1 \textbf{do}}%
+  \newcommand{\EndFor}{\par\textbf{end for}}%
+}{\end{pseudocode}}
 
 % ──────────────────────────────────────────────
 % Chapter formatting

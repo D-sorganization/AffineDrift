@@ -295,7 +295,7 @@ In Chapter 7, we computed inverse dynamics using the RNEA. An alternative and eq
 Instead of computing torques directly, the CRB first assembles the inertia of composite structures: e.g., the forearm link is rigidly attached to the hand, so the hand's inertia is added to the forearm's. By recursively building composite inertias from tips to base, we can pre-compute the total mass matrix $\mathbf{M}(q)$ in $O(N)$ time.
 
 \begin{algorithm}{Composite Rigid Body Algorithm}{alg_crb}
-\begin{lstlisting}[language=pseudocode]
+\begin{lstlisting}
 function CompositeRigidBody(links, joints, lambda):
     // Input: link inertias, joint structure
     // Output: composite inertias I_c for each link

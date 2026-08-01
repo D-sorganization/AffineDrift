@@ -471,7 +471,7 @@ At $\boldsymbol{\theta} = \mathbf{0}$, the robot is fully extended in the positi
 \subsection{Numerical Evaluation at a Test Configuration}
 \label{subsec:spatial_3r_eval}
 
-At $\boldsymbol{\theta} = [\pi/4, \pi/6, -\pi/3]^T$ (45^\circ, 30^\circ, -60^\circ):
+At $\boldsymbol{\theta} = [\pi/4, \pi/6, -\pi/3]^T$ ($45^\circ$, $30^\circ$, $-60^\circ$):
 
 Compute the matrix exponentials:
 \begin{equation}
@@ -571,8 +571,7 @@ where $\mathbf{J}_s^{\dagger}$ is the Moore-Penrose pseudo-inverse.
 
 The Jacobian reveals not only instantaneous velocities but also the \emph{quality} of motion at a given configuration. Two fundamental questions arise: \emph{where} can the robot reach, and \emph{how well} can it move once there?
 
-\begin{definition}[Reachable Workspace]
-\label{def:reachable_workspace}
+\begin{definition}{Reachable Workspace}{reachable_workspace}
 The \textbf{reachable workspace}\index{reachable workspace} of a manipulator with forward kinematics $f_{kin}$ and joint space $\mathcal{Q}$ is the set of all end-effector poses attainable:
 \begin{equation}
   \label{eq:reachable_workspace}
@@ -583,8 +582,7 @@ The \textbf{dexterous workspace} is the subset of $\mathcal{W}$ reachable with \
 
 While the workspace tells us \emph{if} a pose is reachable, the \textbf{manipulability measure}\index{manipulability measure} quantifies \emph{how easily} the robot can move at a given configuration.
 
-\begin{definition}[Manipulability Measure (Yoshikawa)]
-\label{def:manipulability}
+\begin{definition}{Manipulability Measure (Yoshikawa)}{manipulability}
 The \textbf{manipulability measure}\index{Yoshikawa manipulability} at configuration $\mathbf{q}$ is \cite{siciliano2009}:
 \begin{equation}
   \label{eq:manipulability}
@@ -595,14 +593,12 @@ When $w(\mathbf{q}) = 0$, the Jacobian is rank-deficient and the robot is at a \
 
 The geometric interpretation comes from the \textbf{singular value decomposition}\index{SVD!of Jacobian} of the Jacobian. Let $\mathbf{J} = \mathbf{U}\boldsymbol{\Sigma}\mathbf{V}^T$, where $\boldsymbol{\Sigma} = \operatorname{diag}(\sigma_1, \ldots, \sigma_m)$ with $\sigma_1 \geq \sigma_2 \geq \cdots \geq \sigma_m \geq 0$.
 
-\begin{definition}[Velocity Manipulability Ellipsoid]
-\label{def:velocity_ellipsoid}
+\begin{definition}{Velocity Manipulability Ellipsoid}{velocity_ellipsoid}
 \index{manipulability ellipsoid!velocity}
 The set of end-effector velocities achievable with unit joint velocity ($\norm{\dot{\mathbf{q}}} \leq 1$) forms an ellipsoid in task space. Its principal axes are the columns of $\mathbf{U}$, with semi-axis lengths equal to the singular values $\sigma_i$. The manipulability measure equals the ellipsoid volume: $w = \sigma_1 \sigma_2 \cdots \sigma_m$.
 \end{definition}
 
-\begin{definition}[Force Manipulability Ellipsoid]
-\label{def:force_ellipsoid}
+\begin{definition}{Force Manipulability Ellipsoid}{force_ellipsoid}
 \index{manipulability ellipsoid!force}
 The \textbf{force manipulability ellipsoid} is the dual of the velocity ellipsoid. Unit joint torques ($\norm{\boldsymbol{\tau}} \leq 1$) map to end-effector forces within an ellipsoid whose semi-axes have lengths $1/\sigma_i$. The axes of easy motion become axes of weak force, and vice versa.
 \end{definition}
@@ -611,8 +607,7 @@ The \textbf{force manipulability ellipsoid} is the dual of the velocity ellipsoi
 \textbf{Key insight:} Where the robot is fast, it is weak; where it is slow, it is strong. A configuration that allows rapid end-effector motion along a direction (large $\sigma_i$) can exert only small forces along that same direction ($1/\sigma_i$), and conversely. This is a direct consequence of the principle of virtual work \cite{Lynch2017}.
 \end{laymansbox}
 
-\begin{example}[Manipulability of a Planar 2R Arm]
-\label{ex:manipulability_2r}
+\begin{example}{Manipulability of a Planar 2R Arm}{manipulability_2r}
 \index{2R arm!manipulability}
 Consider a planar 2R arm with link lengths $L_1 = L_2 = 1$ m. The Jacobian is:
 \begin{equation}
@@ -635,8 +630,7 @@ where $s_1 = \sin q_1$, $c_1 = \cos q_1$, $s_{12} = \sin(q_1 + q_2)$, $c_{12} = 
 
 When a manipulator has more joints than task-space dimensions ($n > m$), the Jacobian $\mathbf{J} \in \Reals^{m \times n}$ has a nontrivial \textbf{null space}\index{null space!of Jacobian}: joint velocities $\dot{\mathbf{q}}_0$ satisfying $\mathbf{J}\dot{\mathbf{q}}_0 = \mathbf{0}$ produce \emph{zero} end-effector motion. This internal motion---reconfiguration without moving the tool---is the hallmark of \textbf{kinematic redundancy}\index{kinematic redundancy}.
 
-\begin{definition}[Null-Space Projector]
-\label{def:null_space_projector}
+\begin{definition}{Null-Space Projector}{null_space_projector}
 \index{null-space projector}
 Given the Moore--Penrose pseudoinverse $\mathbf{J}^\dagger = \mathbf{J}^T(\mathbf{J}\mathbf{J}^T)^{-1}$, the \textbf{null-space projector} is:
 \begin{equation}
@@ -653,8 +647,7 @@ The general solution for a desired end-effector velocity $\mathbf{v}_{des}$ is t
 \end{equation}
 where the first term achieves the primary task (end-effector motion) and the second term exploits the redundancy for a \textbf{secondary objective} without disturbing the primary task.
 
-\begin{example}[7-DOF Arm with Manipulability Optimization]
-\label{ex:7dof_null_space}
+\begin{example}{7-DOF Arm with Manipulability Optimization}{7dof_null_space}
 \index{7-DOF arm!null-space optimization}
 A 7-DOF robot arm reaching a 6-DOF target (position + orientation) has a one-dimensional null space at non-singular configurations. A common strategy sets $\dot{\mathbf{q}}_0 = \alpha \nabla_{\mathbf{q}} w(\mathbf{q})$, the gradient of the manipulability measure, so that the ``elbow'' reconfigures to maximize dexterity while tracking the desired trajectory:
 \begin{equation}

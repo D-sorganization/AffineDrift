@@ -105,7 +105,7 @@ link 5 the torso, etc.
 
 Once the kinematic tree structure is defined via $\lambda$, the recursive algorithms simply iterate: for each link $i = 1, 2, \ldots, N$, they access data from the parent link $\lambda(i)$ and compute updated values for link $i$.
 
-\section{The Adjoint Map ($[\text{Ad}_{\mathbf{T}}]$)}
+\section{The Adjoint Map \texorpdfstring{($[\text{Ad}_{\mathbf{T}}]$)}{([Ad_T])}}
 \label{sec:adjoint}
 
 Before we can compute recursive mechanics, we need to know how to shift a 6D spatial Twist ($\mathcal{V}$) or 6D Wrench ($\mathcal{F}$) from one reference frame to another. This is done using the \textbf{Adjoint Representation} of $SE(3)$.
@@ -222,7 +222,7 @@ For a prismatic joint along axis $\mathbf{z}$:
 \subsection{Algorithm: Forward Kinematics in O(N) Time}
 
 \begin{algorithm}{Forward Kinematics Recursion}{alg_fk}
-\begin{lstlisting}[language=pseudocode]
+\begin{lstlisting}
 function ForwardKinematics(q, dq, T_rel, S, lambda):
     // Input: joint positions q, velocities dq, relative transforms T_rel,
     //        screw axes S, parent array lambda
@@ -269,7 +269,7 @@ More explicitly, if $\mathcal{V}_i = (\boldsymbol{\omega}_i, \mathbf{v}_i)$ is t
 When this acts on the screw axis $\mathcal{S}_i$, it produces the non-inertial acceleration term.
 
 \begin{algorithm}{Forward Acceleration (Outward Pass)}{alg_acceleration}
-\begin{lstlisting}[language=pseudocode]
+\begin{lstlisting}
 function ForwardAcceleration(V, ddq, S, lambda, Gravity):
     // Input: spatial velocities V (from forward kinematics),
     //        joint accelerations ddq, screw axes S, gravity vector
@@ -385,7 +385,7 @@ Once we have the total wrench $\mathcal{F}_i$ acting on link $i$, the scalar tor
 \end{equation}
 
 \begin{algorithm}{RNEA: Recursive Newton-Euler Algorithm}{alg_rnea}
-\begin{lstlisting}[language=pseudocode]
+\begin{lstlisting}
 function RNEA(q, dq, ddq, T_rel, S, I, lambda, gravity, F_ext):
     // Outward pass: compute velocities and accelerations
     V[0] <-gravity               // Base link has gravitational acceleration
@@ -435,7 +435,7 @@ function RNEA(q, dq, ddq, T_rel, S, I, lambda, gravity, F_ext):
 The Recursive Newton-Euler algorithm allows the inverse dynamics for a system with $N$ joints to be solved in absolutely perfect $O(N)$ operations. The time to compute scales linearly, regardless of complexity. This algorithmic breakthrough is the fundamental mathematical reason robotics and physics engines work in the real world.
 \end{principle}
 
-\subsection{Why O(N) and not O(N^2)?}
+\subsection{Why \texorpdfstring{$O(N)$}{O(N)} and not \texorpdfstring{$O(N^2)$}{O(N\^{}2)}?}
 
 In the naive Lagrangian approach, we would:
 1. Compute the mass matrix $\mathbf{M}(q)$: Each entry $M_{ij}$ requires traversing the kinematic chain from joint $i$ to joint $j$. This is $O(N^2)$.
@@ -821,7 +821,7 @@ the machine.
 
 The agreement is evidence because the two routes share no machinery. The recursion never
 forms a mass matrix; it propagates accelerations outward and forces inward, link by link.
-The Lagrangian route never recurses; it assembles $M(\q)$ from centre-of-mass Jacobians and
+The Lagrangian route never recurses; it assembles $M(\mathbf{q})$ from centre-of-mass Jacobians and
 obtains the Coriolis term by differentiating it. A transcription error in either would show
 up here, which is exactly what a validation section is for --- and is why stating the
 agreement without running it defeats the purpose.
