@@ -39,9 +39,20 @@ _BETA_L = (1.8751040687, 4.6940911330)
 class GolfModel:
     """Segment and shaft parameters for the chapter 8 worked example."""
 
-    masses: tuple[float, float, float] = (10.0, 5.0, 2.0)
-    lengths: tuple[float, float, float] = (0.30, 0.35, 0.40)
-    inertias: tuple[float, float, float] = (0.25, 0.08, 0.04)
+    # Segment 3 is the club. An earlier revision of chapter 8 gave its length as
+    # 0.40 m, labelled "club length" -- forearm scale. A driver is about 1.15 m,
+    # and the difference is not cosmetic: at the chapter's own joint rates the
+    # short club yields a clubhead speed of 12.2 m/s (27 mph), and reaching a
+    # real 45 m/s with that geometry would require a wrist rate near 92 rad/s,
+    # roughly 880 rpm. The mass follows: a driver is about 0.31 kg and a hand
+    # about 0.5 kg, so 0.81 kg for the lumped club-plus-hand segment rather than
+    # the 2 kg previously stated.
+    masses: tuple[float, float, float] = (10.0, 5.0, 0.81)
+    lengths: tuple[float, float, float] = (0.30, 0.35, 1.15)
+    # Segments 1 and 2 lump torso and forearm contributions, so their inertias
+    # exceed the bare uniform-rod value. Segment 3 uses the rod value for its
+    # stated mass and length.
+    inertias: tuple[float, float, float] = (0.25, 0.08, 0.089)
     shaft_mass: float = 0.3
     modal_frequencies: tuple[float, float] = (40.0, 120.0)
     com_fractions: tuple[float, float, float] = field(default=(0.5, 0.5, 0.5))
