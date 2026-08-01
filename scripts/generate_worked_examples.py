@@ -47,6 +47,9 @@ CH06_Q = np.diag([10.0, 1.0])
 CH06_R = np.array([[0.1]])
 CH06_X0 = np.array([1.0, 0.0])
 CH06_STEPS = 10
+# Bound published for the Riccati residual. The observed value is order 1e-14 --
+# machine precision -- so the number itself is not portable; the guarantee is.
+CH06_RESIDUAL_TOLERANCE = 1e-10
 
 
 def _clean(values: np.ndarray, tolerance: float = 5e-5) -> np.ndarray:
@@ -107,7 +110,16 @@ def render_ch06(solution: LQRSolution) -> str:
     macro("chsixStageEigMin", f"{stage_eig.min():.4f}")
     macro("chsixRho", f"{rho:.4f}")
     macro("chsixSqrtCondition", f"{np.sqrt(solution.condition_number()):.4f}")
-    macro("chsixRiccatiResidual", f"{residual:.2e}")
+    # A bound, not the measured residual. The residual is at machine precision
+    # (order 1e-14) and its exact value depends on the BLAS, so pinning it makes
+    # the committed fragment fail the freshness gate on a different machine than
+    # the one that wrote it -- which is exactly what happened on CI.
+    if residual > CH06_RESIDUAL_TOLERANCE:
+        raise ValueError(
+            f"Riccati residual {residual:.2e} exceeds the published tolerance "
+            f"of {CH06_RESIDUAL_TOLERANCE:.0e}"
+        )
+    macro("chsixRiccatiResidual", f"{CH06_RESIDUAL_TOLERANCE:.0e}")
     macro("chsixValueRatioTen", f"{rows[-1][1] / rows[0][1]:.4f}")
     macro("chsixBoundTen", f"{rho ** CH06_STEPS:.4f}")
 
