@@ -90,6 +90,12 @@
 \theoremstyle{plain}
 \@ifundefined{theorem}{\newtheorem{theorem}{Theorem}[chapter]}{}
 \@ifundefined{proposition}{\newtheorem{proposition}[theorem]{Proposition}}{}
+% amsthm-style, so it takes an optional title: \begin{remark}[Short title].
+% Deliberately not a \newtcbtheorem like the boxes above -- those require two
+% mandatory {title}{label} arguments and would not accept that call.
+\theoremstyle{remark}
+\@ifundefined{remark}{\newtheorem{remark}{Remark}[chapter]}{}
+\theoremstyle{plain}
 \makeatother
 
 % ──────────────────────────────────────────────
