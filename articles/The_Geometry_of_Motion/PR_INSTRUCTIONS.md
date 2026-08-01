@@ -1,14 +1,17 @@
 # Pull Request Instructions: The Geometry of Motion - Scientific Rigor Audit
 
 ## Repository
+
 - **Repository**: `/sessions/stoic-practical-newton/mnt/diete/Repositories/AffineDrift/`
 - **Base Branch**: `main`
 - **New Branch**: `textbook/gom-scientific-rigor-audit`
 
 ## Overview
+
 This PR series implements a comprehensive scientific rigor audit of "The Geometry of Motion" textbook series, improving academic integrity, adding visual explanations, and enhancing pedagogical clarity across all 5 volumes.
 
 ### Scope of Changes
+
 - **Files Modified**: 136 files across The_Geometry_of_Motion article directory
 - **Chapter Files**: 77 chapter files (15 chapters x 5 volumes + 2 foundational volumes)
 - **Bibliography**: 1 shared bibliography file with 114 entries (60+ new additions)
@@ -18,28 +21,33 @@ This PR series implements a comprehensive scientific rigor audit of "The Geometr
 ### Categories of Changes
 
 #### 1. Removed Speculation and Unsourced Claims
+
 - Eliminated hand-wavy explanations lacking empirical support
 - Replaced narrative descriptions with evidence-based statements
 - Added clarifying citations throughout
 
 #### 2. Added Comprehensive Bibliography
+
 - **New Entries**: 60+ peer-reviewed references with proper BibTeX formatting
 - **Coverage**: Foundational mathematics, control theory, robotics, biomechanics, neuroscience, machine learning
 - **Format**: Complete BibTeX entries with DOIs and publication information
 - **Verification**: All cited works verified against chapter content
 
 #### 3. Enhanced Mathematical Rigor
+
 - All mathematical content preserved and validated
 - Added formal definitions with proper citations
 - Improved proof sketches with bibliographic references
 
 #### 4. Pedagogical Improvements
+
 - Added ~55 TikZ diagrams for visual clarity
 - Implemented comparison tables for related concepts
 - Fixed textbox overuse and formatting inconsistencies
 - Enhanced further_reading.tex and glossary.tex sections
 
 #### 5. Bibliography Consistency
+
 - Resolved 6 [CITE: description] placeholder markers:
   - Peano-Baker history in Magnus expansion
   - Empirical golf swing biomechanics and wrist release mechanism
@@ -56,30 +64,35 @@ This PR series implements a comprehensive scientific rigor audit of "The Geometr
 To ensure manageable review and effective CI/CD, split into **5 separate PRs**:
 
 ### PR 1: Volume 0 (Foundations)
+
 - Covers: Linear Algebra, State Space, Configuration, Rotations, Screw Axes, Exponential Coordinates, Recursive Algorithms, Spatial Algebra, Product of Exponentials, Articulated Body Algorithm, Lagrangian Mechanics, Machine Learning
 - Files: 14 chapter files + main.tex, further_reading.tex, glossary.tex
 - Diagrams: ~12 new TikZ diagrams
 - Bibliography: ~20 new entries for foundational topics
 
 ### PR 2: Volume I (Control Theory & Optimization)
+
 - Covers: Foundations, Variational Principles, Superposition, Contraction Analysis, Optimal Control, Duality, Counterfactuals, Applications
 - Files: 8 chapter files + main.tex, further_reading.tex, glossary.tex
 - Diagrams: ~10 new TikZ diagrams
 - Bibliography: ~15 new entries for control theory
 
 ### PR 3: Volume II (Trajectory & Motor Control)
+
 - Covers: State Space Trajectories, Curves, Configuration Manifolds, Orbital Stability, Underactuation, Trajectory Optimization, Funnel Synthesis, Phase Variable Control, Stochastic Trajectories, Learning to Move, Golf Swing Case Study
 - Files: 11 chapter files + main.tex, further_reading.tex, glossary.tex
 - Diagrams: ~12 new TikZ diagrams
 - Bibliography: ~15 new entries for motor control and stochastic systems
 
 ### PR 4: Volume III (Biomechanics & Neuroscience)
+
 - Covers: Biology vs Engineering, Musculoskeletal Conventions, Muscle Models, Joint Kinematics, Multibody Biology, Inverse Problems, Experimental Methods, Inference, Deformable Bodies, Control Theory Applications
 - Files: 10 chapter files + main.tex
 - Diagrams: ~11 new TikZ diagrams
 - Bibliography: ~10 new entries for biomechanics and neuroscience
 
 ### PR 5: Volume IV-V (Neural Control & Simulation)
+
 - Covers: Volume IV (DOF Problem, Curse of Dimensionality, Neural Architecture, Shallow/Wide Networks, Ideomotor, Internal Models, Passive Control, CPG, Motor Learning, Computational Models, Neural to Robot)
 - Covers: Volume V (Platform Overview, Engine Comparison, Building Models, Simulation, Trajectory Optimization, Controller Design, Parameter Estimation, RL, Visualization, Golf Swing Project)
 - Files: 21 chapter files + main.tex files
@@ -395,6 +408,7 @@ Citation keys verified against BibTeX entries.
 ## Additional Notes
 
 ### For Reviewers
+
 - **LaTeX Build Required**: Reviewers should compile each volume to verify no new warnings
 - **Bibliography Review**: Check that citations are appropriate and complete
 - **Visual Quality**: Review TikZ diagrams for clarity and correctness
@@ -402,6 +416,7 @@ Citation keys verified against BibTeX entries.
 - **Formatting**: Ensure consistent styling across volumes
 
 ### For Authors
+
 - Maintain alphabetical ordering in BibTeX entries
 - Include DOIs and URLs for all entries when available
 - Add descriptive titles and proper publication details
@@ -409,13 +424,16 @@ Citation keys verified against BibTeX entries.
 - Keep commit messages descriptive for audit trail
 
 ### CI/CD Expectations
+
 - LaTeX compilation tests should pass
 - Bibliography validation tools should pass
 - No new warnings in build output
 - Documentation generation should succeed
 
 ### Rollback Plan
+
 If critical issues are discovered:
+
 ```bash
 # Revert specific PR
 git revert <commit-hash>

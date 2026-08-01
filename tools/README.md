@@ -18,17 +18,21 @@ tools/
 ## Python Tools
 
 ### latex_to_qmd.py
+
 Converts LaTeX documents to Quarto markdown format (.qmd).
 
 **Usage:**
+
 ```bash
 python -m tools.latex_to_qmd input.tex output.qmd
 ```
 
 ### update_navigation.py
+
 Updates the navigation menu structure in `_quarto.yml` based on content changes.
 
 **Usage:**
+
 ```bash
 python -m tools.update_navigation
 ```
@@ -36,11 +40,13 @@ python -m tools.update_navigation
 ## MATLAB Tools
 
 ### matlab_code_analyzer_gui
+
 Interactive GUI for analyzing MATLAB code quality and generating reports.
 
 See `matlab_code_analyzer_gui/README.md` for detailed documentation.
 
 ### matlab_utilities
+
 Collection of MATLAB utility functions for quality checking, testing, and code analysis.
 
 See `matlab_utilities/README.md` for detailed documentation.
@@ -52,6 +58,7 @@ Additional build and maintenance scripts are located in the `scripts/` directory
 ## Contributing
 
 When adding new tools:
+
 1. Create a dedicated subdirectory or module
 2. Add a README.md with usage instructions
 3. Include docstrings in all functions

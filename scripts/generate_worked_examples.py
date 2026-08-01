@@ -324,6 +324,37 @@ def render_ch07() -> str:
     return "\n".join(lines)
 
 
+CH10_SOURCE = REPO_ROOT / "src/affine_control/swing_analysis.py"
+CH10_GENERATED_DIR = REPO_ROOT / "articles/The_Geometry_of_Motion/Volume_V/generated"
+
+
+def render_ch10() -> str:
+    """Wrap the real swing-analysis module as a LaTeX listing.
+
+    Volume V chapter 10 printed this pipeline as a hand-maintained listing that
+    was never executed, and three parts of it did not work. Emitting the listing
+    from the module means the chapter shows exactly the code CI runs, and the
+    ``--check`` gate fails if the two drift apart.
+
+    ``lstinputlisting`` would be the more direct mechanism, but nothing else in
+    the corpus uses it and it would put a build-time dependency on a path outside
+    the article tree, which the PDF workflow has never exercised. Generating the
+    listing keeps the LaTeX side identical to the other chapters.
+    """
+    source = CH10_SOURCE.read_text(encoding="utf-8").rstrip("\n")
+    return "\n".join(
+        [
+            BANNER,
+            "",
+            "\\begin{lstlisting}[language=Python, caption={Golf swing analysis pipeline, "
+            "generated from \\texttt{src/affine\\_control/swing\\_analysis.py}.}]",
+            source,
+            "\\end{lstlisting}",
+            "",
+        ]
+    )
+
+
 def build() -> dict[Path, str]:
     """Return the full set of generated fragments, keyed by destination path."""
     solution = discrete_lqr(CH06_A, CH06_B, CH06_Q, CH06_R)
@@ -331,6 +362,7 @@ def build() -> dict[Path, str]:
         GENERATED_DIR / "ch06_lqr_example.tex": render_ch06(solution),
         GENERATED_DIR / "ch07_double_pendulum.tex": render_ch07(),
         GENERATED_DIR / "ch08_golf_model.tex": render_ch08(SEGMENTS),
+        CH10_GENERATED_DIR / "ch10_swing_analysis.tex": render_ch10(),
     }
 
 

@@ -1,0 +1,178 @@
+"""Golf swing analysis pipeline for the Volume V capstone project.
+
+Volume V chapter 10 printed this pipeline as a 160-line code listing captioned
+"Complete golf swing analysis pipeline". It was never executed, and three parts
+of it did not work:
+
+* ``compute_clubhead_speed`` summed ``qdot_i * r_i`` as scalars, with no
+  trigonometry at all. Tip velocity is a *vector* sum whose directions depend on
+  the accumulated joint angles, so the printed version was configuration-blind:
+  it returned the same speed for a straight arm and a fully folded one. It even
+  computed ``cumulative_angle`` and then never used it, and carried a dead
+  Jacobian loop whose body was ``pass``.
+
+* ``ztcf_decomposition`` returned a hardcoded 60/40 split of clubhead speed. Its
+  own comments said the result "should not be trusted" and that a real
+  implementation must solve the forward dynamics twice -- which is what this one
+  does.
+
+* The driver assigned ``np.random.randn(N, 3) * 10`` as joint torques, which the
+  placeholder decomposition then ignored, so the pipeline was disconnected at
+  both ends.
+
+The chapter's listing is now generated from this file, so what the book shows is
+what CI runs, and the freshness gate fails if the two drift apart. See #3518.
+"""
+
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+
+import numpy as np
+from numpy.typing import NDArray
+
+from src.affine_control.golf_model import GolfModel
+
+__all__ = ["SwingAnalysis", "synthetic_swing"]
+
+type Array = NDArray[np.float64]
+
+METRES_PER_SECOND_TO_MPH = 2.236936
+
+
+def _rod_inertia(mass: float, length: float) -> float:
+    """Moment of inertia of a uniform rod about its own centre of mass."""
+    return mass * length**2 / 12.0
+
+
+@dataclass
+class SwingAnalysis:
+    """Kinematic and dynamic analysis of a three-link planar swing.
+
+    The chain is shoulder, elbow, wrist, carrying the club as the distal link.
+    Angles are relative joint angles; the model treats each segment as a uniform
+    rod, so its inertia follows from mass and length rather than being a free
+    parameter.
+    """
+
+    segment_lengths: Array = field(default_factory=lambda: np.array([0.28, 0.46, 1.10]))
+    segment_masses: Array = field(default_factory=lambda: np.array([2.16, 1.79, 0.30]))
+
+    time: Array | None = None
+    joint_angles: Array | None = None
+    joint_velocities: Array | None = None
+    joint_torques: Array | None = None
+
+    def model(self) -> GolfModel:
+        """The rigid-body model implied by the segment parameters."""
+        lengths = tuple(float(v) for v in self.segment_lengths)
+        masses = tuple(float(v) for v in self.segment_masses)
+        inertias = tuple(_rod_inertia(m, ell) for m, ell in zip(masses, lengths, strict=True))
+        return GolfModel(masses=masses, lengths=lengths, inertias=inertias)  # type: ignore[arg-type]
+
+    def _require_kinematics(self) -> tuple[Array, Array, Array]:
+        """Return ``(time, angles, rates)``, or fail with a usable message."""
+        if self.time is None or self.joint_angles is None or self.joint_velocities is None:
+            raise ValueError("set time, joint_angles and joint_velocities before analysing")
+        return self.time, self.joint_angles, self.joint_velocities
+
+    def clubhead_speed(self) -> Array:
+        """Clubhead speed at each sample, from the tip Jacobian.
+
+        The tip velocity is ``sum_i qdot_i * (z_hat x r_i)``, where ``r_i`` runs
+        from joint ``i`` to the tip. Its magnitude depends on the configuration
+        through the angles between those contributions -- which is precisely what
+        a scalar sum of ``qdot_i * |r_i|`` throws away.
+        """
+        _, angles, rates = self._require_kinematics()
+        model = self.model()
+        return np.array([model.clubhead_speed(q, qd) for q, qd in zip(angles, rates, strict=True)])
+
+    def ztcf_decomposition(self) -> tuple[Array, Array]:
+        """Split clubhead acceleration into drift and control contributions.
+
+        Solves the forward dynamics twice at each sample -- once with the applied
+        torques and once with zero torque -- and attributes the difference to
+        control. Because the dynamics are control-affine, that difference is
+        exactly ``M^-1 tau`` and the split is exact rather than approximate.
+
+        Returns the joint-space acceleration magnitudes ``(drift, control)``.
+        """
+        _, angles, rates = self._require_kinematics()
+        if self.joint_torques is None:
+            raise ValueError("set joint_torques before decomposing")
+        model = self.model()
+
+        drift = np.zeros(len(angles))
+        control = np.zeros(len(angles))
+        for index, (q, qd, tau) in enumerate(zip(angles, rates, self.joint_torques, strict=True)):
+            bias = model.coriolis(q, qd) @ qd + model.gravity_torque(q)
+            mass = model.rigid_mass_matrix(q)
+            drift_accel = np.linalg.solve(mass, -bias)
+            control_accel = np.linalg.solve(mass, tau)
+            drift[index] = float(np.linalg.norm(drift_accel))
+            control[index] = float(np.linalg.norm(control_accel))
+        return drift, control
+
+    def summary(self) -> str:
+        """Human-readable summary of the analysis."""
+        time, _, _ = self._require_kinematics()
+        speeds = self.clubhead_speed()
+        peak = float(np.max(speeds))
+        peak_index = int(np.argmax(speeds))
+
+        lines = [
+            "=== Golf Swing Analysis Summary ===",
+            f"Duration: {time[-1]:.3f} s",
+            f"Peak clubhead speed: {peak:.1f} m/s " f"({peak * METRES_PER_SECOND_TO_MPH:.1f} mph)",
+            f"Peak speed time: {time[peak_index]:.3f} s",
+        ]
+
+        if self.joint_torques is not None:
+            drift, control = self.ztcf_decomposition()
+            # Report the median over interior samples rather than a value at one
+            # instant. Two reasons: the endpoints carry one-sided np.gradient
+            # estimates of the joint rates, and the drift term legitimately
+            # passes through zero whenever the chain straightens -- at a fully
+            # extended vertical configuration both the gravity and Coriolis
+            # torques vanish, so a ratio quoted there reads as "0% drift" and
+            # says nothing about the swing.
+            interior = slice(1, -1)
+            total = drift[interior] + control[interior]
+            share = float(np.median(100.0 * drift[interior] / total))
+            lines.append(f"Median over the swing: drift {share:.0f}%, control {100 - share:.0f}%")
+        return "\n".join(lines)
+
+
+def synthetic_swing(duration: float = 0.30, dt: float = 0.001) -> SwingAnalysis:
+    """A smooth synthetic swing, for demonstrating the pipeline.
+
+    These are not measured data. Real joint torques must come from inverse
+    dynamics on motion capture, or from a Hill-type muscle model driven by EMG;
+    the torques here are a smooth profile chosen only so the decomposition has
+    something non-trivial to separate. The printed listing used
+    ``np.random.randn``, which made the output different on every run and, since
+    the placeholder decomposition ignored the torques entirely, changed nothing.
+    """
+    samples = int(duration / dt)
+    time = np.linspace(0.0, duration, samples)
+    fraction = time / duration
+
+    angles = np.column_stack(
+        [
+            -np.pi / 2 + np.pi * fraction**2,
+            np.pi / 3 * np.sin(np.pi * fraction),
+            -np.pi / 2 * np.cos(np.pi * fraction / 2),
+        ]
+    )
+    rates = np.gradient(angles, dt, axis=0)
+    torques = np.column_stack(
+        [
+            120.0 * (1.0 - fraction),
+            60.0 * np.sin(np.pi * fraction),
+            25.0 * fraction**2,
+        ]
+    )
+    return SwingAnalysis(
+        time=time, joint_angles=angles, joint_velocities=rates, joint_torques=torques
+    )

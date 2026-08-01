@@ -7,7 +7,7 @@ for integrating Frans Bosch's work into both AffineDrift textbooks. All files ar
 self-contained and safe to merge independently.
 
 **Date created:** 2026-03-27
-**Source material:** Bosch (2020) *Anatomy of Agility* and Bosch (2015) *Strength Training and Coordination*
+**Source material:** Bosch (2020) _Anatomy of Agility_ and Bosch (2015) _Strength Training and Coordination_
 
 ---
 
@@ -43,6 +43,7 @@ cp bosch_integration/golf_chapter/ch09b_passive_stabilization.tex \
 ```
 
 **Add to `main.tex`** after the line `\include{chapters/ch09_parallel_mechanisms}`:
+
 ```latex
 \include{chapters/ch09b_passive_stabilization}
 ```
@@ -63,6 +64,7 @@ cp bosch_integration/gom_chapter/ch_biology_nonlinear_dynamics.tex \
 ```
 
 **Add to Volume IV's main document** after `ch07_passive_control.tex` and before `ch08_cpg.tex`:
+
 ```latex
 \include{chapters/ch07b_biology_nonlinear}
 ```
@@ -74,12 +76,14 @@ self-organization, and the assembly line hierarchy.
 ### 3. Bibliography Entries
 
 **Golf book:**
+
 ```bash
 cat bosch_integration/bib_entries/golf_physics_additions.bib >> \
     The_Physics_of_Golf/golf_physics.bib
 ```
 
 **GoM:**
+
 ```bash
 cat bosch_integration/bib_entries/geometry_of_motion_additions.bib >> \
     The_Geometry_of_Motion/geometry_of_motion.bib
@@ -95,20 +99,21 @@ remove them from the additions file before appending.
 
 This file contains suggested text insertions for 6 existing chapters. Each addition is
 clearly marked with:
+
 - The target chapter file path
 - The section/location where the text should be inserted
 - The exact LaTeX code to add
 
 **Chapters affected:**
 
-| Chapter | Book | Addition Topic |
-|---------|------|----------------|
-| `ch12_fascia.tex` | Golf | Biotensegrity perspective, fascial overclaims |
-| `ch24_motor_control_brain.tex` | Golf | Constraints-led approach, attractors |
-| `ch25_motor_learning.tex` | Golf | Specificity matrix, whole vs part practice |
-| `ch27_passive_distributed_control.tex` | Golf | Preflex concept, co-contraction role |
-| `ch30_kinetic_chain.tex` | Golf | Assembly line, proximodistal sequence |
-| `ch07_passive_control.tex` | GoM Vol IV | Enhanced Bosch depth |
+| Chapter                                | Book       | Addition Topic                                |
+| -------------------------------------- | ---------- | --------------------------------------------- |
+| `ch12_fascia.tex`                      | Golf       | Biotensegrity perspective, fascial overclaims |
+| `ch24_motor_control_brain.tex`         | Golf       | Constraints-led approach, attractors          |
+| `ch25_motor_learning.tex`              | Golf       | Specificity matrix, whole vs part practice    |
+| `ch27_passive_distributed_control.tex` | Golf       | Preflex concept, co-contraction role          |
+| `ch30_kinetic_chain.tex`               | Golf       | Assembly line, proximodistal sequence         |
+| `ch07_passive_control.tex`             | GoM Vol IV | Enhanced Bosch depth                          |
 
 These are **suggestions** — review each addition for fit with the existing content before inserting.
 
@@ -143,11 +148,11 @@ These are **suggestions** — review each addition for fit with the existing con
 
 Both Bosch books should also be added to the AffineDrift website's recommended resources:
 
-- **Bosch, F. (2020).** *Anatomy of Agility: Movement Analysis in Sport.* 2010 Publishers.
+- **Bosch, F. (2020).** _Anatomy of Agility: Movement Analysis in Sport._ 2010 Publishers.
   Key topics: attractor-fluctuation landscapes, self-stabilization, constraints-led approach,
   direct perception, specificity matrix.
 
-- **Bosch, F. (2015).** *Strength Training and Coordination: An Integrative Approach.* 2010 Publishers.
+- **Bosch, F. (2015).** _Strength Training and Coordination: An Integrative Approach._ 2010 Publishers.
   Key topics: preflex control, co-contractions, muscle slack, size principle, central pattern
   generators, alpha/gamma coactivation, central governor theory.
 

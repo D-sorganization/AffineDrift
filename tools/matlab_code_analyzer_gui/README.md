@@ -18,6 +18,7 @@ Interactive graphical user interface for analyzing MATLAB code quality, detectin
 ## Installation
 
 1. Add the tool directory to your MATLAB path:
+
    ```matlab
    addpath('tools/matlab_code_analyzer_gui');
    ```
@@ -62,6 +63,7 @@ exportResults(results, 'report.md', 'Format', 'markdown');
 ### Exclusion Patterns
 
 Common exclusion patterns:
+
 - `*_test.m` - Test files
 - `temp_*.m` - Temporary files
 - `old_*.m` - Archived files
@@ -70,6 +72,7 @@ Common exclusion patterns:
 ### Analysis Rules
 
 The analyzer checks for:
+
 - Code complexity (cyclomatic complexity)
 - Unused variables
 - Missing documentation
@@ -80,6 +83,7 @@ The analyzer checks for:
 ## Output Formats
 
 Supported export formats:
+
 - **Markdown** (`.md`) - Human-readable reports
 - **JSON** (`.json`) - Machine-readable data
 - **CSV** (`.csv`) - Spreadsheet-compatible
@@ -88,16 +92,19 @@ Supported export formats:
 ## Troubleshooting
 
 ### "No files found" error
+
 - Check that the directory path is correct
 - Verify exclusion patterns aren't too broad
 - Ensure `.m` files exist in the target directory
 
 ### Analysis hangs or is slow
+
 - Reduce the scope (analyze fewer files)
 - Disable recursive scanning for large directories
 - Check for very large or complex files
 
 ### Permission errors
+
 - Ensure MATLAB has read access to the target directory
 - Check file permissions on Windows/Unix systems
 

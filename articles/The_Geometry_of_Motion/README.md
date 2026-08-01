@@ -1,17 +1,17 @@
 # The Geometry of Motion
 
-Canonical LaTeX manuscript source for the six-volume textbook series *The Geometry of Motion*.
+Canonical LaTeX manuscript source for the six-volume textbook series _The Geometry of Motion_.
 
 ## Volumes
 
-| Volume | Title | Chapters |
-|--------|-------|----------|
-| **0** | Mathematical Foundations | Linear algebra through Lagrangian mechanics and machine learning |
-| **I** | Control Theory | Variational analysis, superposition, contraction, optimal control, duality |
-| **II** | Trajectory and Motor Control | Orbital stability, underactuation, trajectory optimization, stochastic control |
-| **III** | Biomechanics | Musculoskeletal modeling, muscle models, inverse problems, experimental methods |
-| **IV** | Neural Control | Degrees-of-freedom problem, neural architecture, internal models, motor learning |
-| **V** | Simulation | Engine comparison, model building, trajectory optimization, reinforcement learning |
+| Volume  | Title                        | Chapters                                                                           |
+| ------- | ---------------------------- | ---------------------------------------------------------------------------------- |
+| **0**   | Mathematical Foundations     | Linear algebra through Lagrangian mechanics and machine learning                   |
+| **I**   | Control Theory               | Variational analysis, superposition, contraction, optimal control, duality         |
+| **II**  | Trajectory and Motor Control | Orbital stability, underactuation, trajectory optimization, stochastic control     |
+| **III** | Biomechanics                 | Musculoskeletal modeling, muscle models, inverse problems, experimental methods    |
+| **IV**  | Neural Control               | Degrees-of-freedom problem, neural architecture, internal models, motor learning   |
+| **V**   | Simulation                   | Engine comparison, model building, trajectory optimization, reinforcement learning |
 
 ## Directory Structure
 

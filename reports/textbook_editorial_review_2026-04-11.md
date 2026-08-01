@@ -1,7 +1,7 @@
 # Editorial Review of Three AffineDrift Textbooks
 
 **Date:** 2026-04-11
-**Scope:** *The Drifter Manifesto*, *The Geometry of Motion* (Vols 0–I), *The Physics of Golf*
+**Scope:** _The Drifter Manifesto_, _The Geometry of Motion_ (Vols 0–I), _The Physics of Golf_
 **Stance:** Adversarial editorial review from a scientific publishing house. The goal of this
 document is not to celebrate the manuscripts but to identify every way in which they currently
 fall short of publishable standards, prioritized by severity, and to recommend concrete fixes.
@@ -18,17 +18,17 @@ Taken as a whole, the three volumes show a genuine and unusually ambitious effor
 geometric mechanics, optimal control, neuromotor science, and the practical biomechanics of the
 golf swing. The structural skeleton is defensible: each book has a clear scope, internally
 consistent notation, and a top-down narrative that the others reinforce. The material in the
-*Geometry of Motion* Volume 0 chapters on linear algebra, configuration spaces, exponential
+_Geometry of Motion_ Volume 0 chapters on linear algebra, configuration spaces, exponential
 coordinates, and the articulated-body algorithm is solid undergraduate-to-graduate teaching
 copy.
 
 But as it stands, the manuscripts are **not yet ready for publication** by any serious academic
 press. In my judgment the dominant weaknesses, in order of severity, are:
 
-1. **Inconsistent and in places absent citation practice.** The *Drifter Manifesto* contains
+1. **Inconsistent and in places absent citation practice.** The _Drifter Manifesto_ contains
    zero `\cite{}` / `[@key]` calls across its ~2 600 lines, despite invoking foundational
    results from geometric control theory, Lagrangian mechanics, and multibody dynamics.
-   *Physics of Golf* is equally uneven: core chapters on affine structure, the zero-torque
+   _Physics of Golf_ is equally uneven: core chapters on affine structure, the zero-torque
    counterfactual, the triple pendulum, and parallel mechanisms carry zero citations, while
    motor-control and motor-learning chapters cite twenty each. The bibliography files exist and
    are reasonably populated; they are simply not being used where it matters most.
@@ -40,23 +40,23 @@ press. In my judgment the dominant weaknesses, in order of severity, are:
    numbers are defensible from the literature, but they are stated without attribution and
    without explicit computation from cited primary sources.
 
-3. **Tone drifts toward the promotional.** The words *profound*, *remarkable*, *revolutionary*,
-   and *astonish* appear dozens of times across the corpus. Individually each instance is
+3. **Tone drifts toward the promotional.** The words _profound_, _remarkable_, _revolutionary_,
+   and _astonish_ appear dozens of times across the corpus. Individually each instance is
    minor; collectively they corrode credibility. A reader looking for mathematical rigour is
    distracted by a voice that keeps telling them they are witnessing something great. The book
    should describe the physics and let the reader decide.
 
-4. **Editorial inconsistency across and within books.** The *Physics of Golf* uses imperial
+4. **Editorial inconsistency across and within books.** The _Physics of Golf_ uses imperial
    units in chapter 1 (`32 ft/s²`, `1 lb`) and SI units elsewhere; some chapters are ~250 lines
-   and others ~1 300; some chapters use `driftcontrol` boxes and others do not; *Geometry of
-   Motion* Vol I has chapters ranging from 1 000 to 1 700 lines with highly variable depth of
-   citation; the *Drifter Manifesto* mixes appendices labelled A–D with Parts I–V without a
+   and others ~1 300; some chapters use `driftcontrol` boxes and others do not; _Geometry of
+   Motion_ Vol I has chapters ranging from 1 000 to 1 700 lines with highly variable depth of
+   citation; the _Drifter Manifesto_ mixes appendices labelled A–D with Parts I–V without a
    clean cross-reference.
 
 5. **Several technical claims need tightening.** A handful of passages make statements that an
-   adversarial reviewer would challenge: e.g. the LQR gain-margin proof sketch in *Geometry of
-   Motion* Vol I Ch. 6 manipulates the algebraic Riccati equation in a way that is not an
-   identity as written, and the *Drifter Manifesto*'s claim that "the approximation is tight
+   adversarial reviewer would challenge: e.g. the LQR gain-margin proof sketch in _Geometry of
+   Motion_ Vol I Ch. 6 manipulates the algebraic Riccati equation in a way that is not an
+   identity as written, and the _Drifter Manifesto_'s claim that "the approximation is tight
    because the ZTCF remains close to the actual trajectory" deserves a bound rather than an
    assertion. Section 6 below enumerates the most visible instances.
 
@@ -79,64 +79,64 @@ recommending acceptance.
 
 Measured by `\cite{}` occurrences (LaTeX) or `[@key]` occurrences (Quarto):
 
-| File | `\cite` count |
-|---|---:|
-| `articles/drifter-manifesto.qmd` | **0** |
-| **Geometry of Motion – Volume 0** | |
-| ch01 linear algebra | 9 |
-| ch02 state space | 8 |
-| ch03 configuration | 7 |
-| ch04 rotations SE(3) | 9 |
-| ch05 screw axes | 6 |
-| ch06 exponential coordinates | 9 |
-| ch07 recursive algorithms | 11 |
-| ch08 spatial algebra | 9 |
-| ch09 product of exponentials | 10 |
-| ch10 ABA | 12 |
-| ch11 Lagrangian mechanics | 12 |
-| ch12 machine learning | 12 |
-| **Geometry of Motion – Volume I** | |
-| ch01 foundations | **3** |
-| ch02 variational | 5 |
-| ch03 superposition | 4 |
-| ch04 contraction | 5 |
-| ch05 optimal control | 4 |
-| ch06 duality | **2** |
-| ch07 counterfactuals | **3** |
-| ch08 applications | 5 |
-| **Physics of Golf** | |
-| ch01 why physics | **0** |
-| ch02 language of motion | 5 |
-| ch03 double pendulum | 1 |
-| ch04 forces and torques | 1 |
-| ch05 affine structure | **0** |
-| ch06 zero-torque counterfactual | **0** |
-| ch07 constraint forces | 6 |
-| ch08 triple pendulum | **0** |
-| ch09 parallel mechanisms | **0** |
-| ch10 energy transfer | **0** |
-| ch11 flexible shaft | **0** |
-| ch12 fascia | 7 |
-| ch13 interdisciplinary | 4 |
-| ch14 complete swing | 6 |
-| ch15 GRF | 8 |
-| ch16 muscle→joint torques | 1 |
-| ch17 muscle force generation | 1 |
-| ch18 inverse dynamics parallel | **0** |
-| ch19 aerodynamic drag | 5 |
-| ch20 soft tissue | 1 |
-| ch21 spine modeling | 6 |
-| ch22 anatomy/joint modeling | **0** |
-| ch23 DOF/URDF models | 14 |
-| ch24 motor control brain | 10 |
-| ch25 motor learning | 20 |
-| ch26 remarkable brain | 20 |
-| ch27 passive distributed control | 3 |
-| ch28 impact/collision | 7 |
-| ch29 joint damping/friction | 3 |
-| ch30 kinetic chain | 6 |
-| ch31 swing plane/launch | 9 |
-| ch32 putting | 4 |
+| File                              | `\cite` count |
+| --------------------------------- | ------------: |
+| `articles/drifter-manifesto.qmd`  |         **0** |
+| **Geometry of Motion – Volume 0** |               |
+| ch01 linear algebra               |             9 |
+| ch02 state space                  |             8 |
+| ch03 configuration                |             7 |
+| ch04 rotations SE(3)              |             9 |
+| ch05 screw axes                   |             6 |
+| ch06 exponential coordinates      |             9 |
+| ch07 recursive algorithms         |            11 |
+| ch08 spatial algebra              |             9 |
+| ch09 product of exponentials      |            10 |
+| ch10 ABA                          |            12 |
+| ch11 Lagrangian mechanics         |            12 |
+| ch12 machine learning             |            12 |
+| **Geometry of Motion – Volume I** |               |
+| ch01 foundations                  |         **3** |
+| ch02 variational                  |             5 |
+| ch03 superposition                |             4 |
+| ch04 contraction                  |             5 |
+| ch05 optimal control              |             4 |
+| ch06 duality                      |         **2** |
+| ch07 counterfactuals              |         **3** |
+| ch08 applications                 |             5 |
+| **Physics of Golf**               |               |
+| ch01 why physics                  |         **0** |
+| ch02 language of motion           |             5 |
+| ch03 double pendulum              |             1 |
+| ch04 forces and torques           |             1 |
+| ch05 affine structure             |         **0** |
+| ch06 zero-torque counterfactual   |         **0** |
+| ch07 constraint forces            |             6 |
+| ch08 triple pendulum              |         **0** |
+| ch09 parallel mechanisms          |         **0** |
+| ch10 energy transfer              |         **0** |
+| ch11 flexible shaft               |         **0** |
+| ch12 fascia                       |             7 |
+| ch13 interdisciplinary            |             4 |
+| ch14 complete swing               |             6 |
+| ch15 GRF                          |             8 |
+| ch16 muscle→joint torques         |             1 |
+| ch17 muscle force generation      |             1 |
+| ch18 inverse dynamics parallel    |         **0** |
+| ch19 aerodynamic drag             |             5 |
+| ch20 soft tissue                  |             1 |
+| ch21 spine modeling               |             6 |
+| ch22 anatomy/joint modeling       |         **0** |
+| ch23 DOF/URDF models              |            14 |
+| ch24 motor control brain          |            10 |
+| ch25 motor learning               |            20 |
+| ch26 remarkable brain             |            20 |
+| ch27 passive distributed control  |             3 |
+| ch28 impact/collision             |             7 |
+| ch29 joint damping/friction       |             3 |
+| ch30 kinetic chain                |             6 |
+| ch31 swing plane/launch           |             9 |
+| ch32 putting                      |             4 |
 
 ### 2.2 Interpretation
 
@@ -146,12 +146,12 @@ Measured by `\cite{}` occurrences (LaTeX) or `[@key]` occurrences (Quarto):
   the classical control-affine form
   $\dot{x} = f(x) + g(x)u$
   this is not a small problem. At minimum the following should be cited on first use and
-  briefly discussed in text: Isidori (1995) *Nonlinear Control Systems*; Nijmeijer and van der
-  Schaft (1990) *Nonlinear Dynamical Control Systems*; Sastry (1999) *Nonlinear Systems*;
-  Khalil (2002) *Nonlinear Systems*; Bullo and Lewis (2005) *Geometric Control of Mechanical
-  Systems*; Murray, Li, and Sastry (1994) *A Mathematical Introduction to Robotic Manipulation*.
-  Featherstone (2008) *Rigid Body Dynamics Algorithms* is necessary for the modal-shaft /
-  recursive-dynamics passages. Lynch and Park (2017) *Modern Robotics* for the Jacobian and
+  briefly discussed in text: Isidori (1995) _Nonlinear Control Systems_; Nijmeijer and van der
+  Schaft (1990) _Nonlinear Dynamical Control Systems_; Sastry (1999) _Nonlinear Systems_;
+  Khalil (2002) _Nonlinear Systems_; Bullo and Lewis (2005) _Geometric Control of Mechanical
+  Systems_; Murray, Li, and Sastry (1994) _A Mathematical Introduction to Robotic Manipulation_.
+  Featherstone (2008) _Rigid Body Dynamics Algorithms_ is necessary for the modal-shaft /
+  recursive-dynamics passages. Lynch and Park (2017) _Modern Robotics_ for the Jacobian and
   kinematic-interface material.
 
 - **Physics of Golf chapters 5 and 6 are the single most important chapters of the book and
@@ -164,7 +164,7 @@ Measured by `\cite{}` occurrences (LaTeX) or `[@key]` occurrences (Quarto):
   about torques, clubhead speeds, shaft deflection, and hip joint range of motion — all topics
   where peer-reviewed sources (Nesbit 2005, MacKenzie & Sprigings 2006, Penner 2001/2003,
   Betzler et al. 2012, Sprigings & Mackenzie 2002, Miao et al. 2023, McTeigue 1994) are
-  available *in the existing bib file* `golf_physics.bib`. The authors have done the
+  available _in the existing bib file_ `golf_physics.bib`. The authors have done the
   bibliography work and then left it on the floor.
 
 - **Geometry of Motion Volume I is thinly cited relative to Volume 0.** Vol 0 is introductory
@@ -177,18 +177,18 @@ Measured by `\cite{}` occurrences (LaTeX) or `[@key]` occurrences (Quarto):
 ### 2.3 Inline "author-year" mentions that are not citations
 
 Several passages use inline prose of the form "Willems (1972)", "Anderson and Moore (1971)",
-"Tobin et al. (2017)", "OpenAI's Dactyl project", "Ball's *Treatise on the Theory of Screws*".
+"Tobin et al. (2017)", "OpenAI's Dactyl project", "Ball's _Treatise on the Theory of Screws_".
 Some of these are backed by a later `\cite`, but many are not. A scientific text should never
 rely on a reader's goodwill to supply the reference; every author-year phrase should either
 be a formal `\cite` or be removed.
 
 ### 2.4 Bibliography files themselves
 
-| File | Entries | Types |
-|---|---:|---|
-| `references/affine-drift.bib` | 135 | 74 article, 51 book, 10 misc |
-| `articles/The_Geometry_of_Motion/geometry_of_motion.bib` | 81 | — |
-| `articles/The_Physics_of_Golf/golf_physics.bib` | 161 | 114 article, 42 book, 3 misc |
+| File                                                     | Entries | Types                        |
+| -------------------------------------------------------- | ------: | ---------------------------- |
+| `references/affine-drift.bib`                            |     135 | 74 article, 51 book, 10 misc |
+| `articles/The_Geometry_of_Motion/geometry_of_motion.bib` |      81 | —                            |
+| `articles/The_Physics_of_Golf/golf_physics.bib`          |     161 | 114 article, 42 book, 3 misc |
 
 The raw counts are healthy. The golf bibliography is very well populated with Penner, Nesbit,
 MacKenzie, Sprigings, Slocum and company. The problem is distribution, not availability.
@@ -202,16 +202,16 @@ external literature when cited.
 
 ### 2.5 Recommendation
 
-- Set a floor of 4–6 citations per chapter in the *Physics of Golf*, with chapters 5, 6, 8, 9,
+- Set a floor of 4–6 citations per chapter in the _Physics of Golf_, with chapters 5, 6, 8, 9,
   10, 11, 18 and 22 brought up first. Every quantitative claim that survives editing should be
   anchored to either a primary source or an explicit computation from stated parameters.
-- Add ~15 first-call citations to *The Drifter Manifesto* and insert a BibTeX header so that
+- Add ~15 first-call citations to _The Drifter Manifesto_ and insert a BibTeX header so that
   the Quarto build renders a reference list. The manifesto should cite Isidori, Nijmeijer &
   van der Schaft, Sastry, Khalil, Bullo & Lewis, Murray/Li/Sastry, Featherstone, Lynch & Park
   on first use of the relevant material; it should cite Siciliano et al. (2009) for the
   manipulator equation; and it should cite Book (1984) or Dwivedy & Eberhard (2006) for
   the flexible-shaft modal reduction.
-- For the *Geometry of Motion* Volume I, bring Ch. 6 (Duality) and Ch. 7 (Counterfactuals) up
+- For the _Geometry of Motion_ Volume I, bring Ch. 6 (Duality) and Ch. 7 (Counterfactuals) up
   to 6–8 citations each. Willems (1972), Anderson & Moore (1971), Doyle & Stein (1981),
   Safonov (1980), Zames (1981), Agrachev & Sachkov (2004), Sontag (1998), Bressan & Piccoli
   (2007), Bloch (2003).
@@ -251,7 +251,7 @@ external literature when cited.
    its keep (e.g. the Schur-complement block inversion).
 
 4. **The "rowboat on a river" analogy in §1 is fine**, but it repeats a similar passage in
-   *Physics of Golf* Ch. 5 ("standing in a river, the current is the drift field") almost
+   _Physics of Golf_ Ch. 5 ("standing in a river, the current is the drift field") almost
    verbatim. Pick one and cross-reference.
 
 5. **The claim that the framework is "falsifiable"** (closing remarks of Appendix D) needs a
@@ -270,7 +270,7 @@ external literature when cited.
    A graduate reader will want these.
 
 8. **The "Final Remarks" section promises "a rigorous, falsifiable mechanical theory of the
-   golf swing".** This overclaims. The manuscript presents a *decomposition* of a mechanical
+   golf swing".** This overclaims. The manuscript presents a _decomposition_ of a mechanical
    model, not a theory of the golf swing itself. "Mechanical decomposition framework" is
    accurate; "theory of the golf swing" invites counter-examples the framework does not
    address (impact, aerodynamics, GRF).
@@ -281,7 +281,7 @@ A PhD-level reader would appreciate (in order of value):
 
 - A short section proving that drift invariance
   $\partial f(x) / \partial u = 0$
-  is a *definition* of control-affine systems, not a consequence of one. State clearly that
+  is a _definition_ of control-affine systems, not a consequence of one. State clearly that
   the control-affine class is closed under the decomposition but other nonlinear systems
   (notably bilinear and polynomial-in-control systems) are not.
 - An explicit discussion of when the ZVCF is independent of the parameterization of time.
@@ -313,6 +313,7 @@ A PhD-level reader would appreciate (in order of value):
 
 1. **"Profound"-class adjectives.** Thirteen instances across Volume 0, distributed across
    nine chapters. Examples:
+
    - Ch. 1: "This has profound physical consequences." → "This has direct physical
      consequences." (The physics is the same; the adjective adds nothing.)
    - Ch. 4: "Rotation is profoundly mathematically problematic" → "Rotation is mathematically
@@ -367,8 +368,8 @@ A PhD-level reader would appreciate (in order of value):
 - Ch. 7 (Counterfactuals) opens with a clean invocation of Agrachev and Sachkov and uses the
   Picard–Lindelöf theorem to ground the ZTCF's well-posedness. This is exactly the right
   move.
-- The link to the *Physics of Golf* via the ZTCF / ZVCF language is consistent: Vol I gives
-  the geometry, *Physics of Golf* Ch. 5–6 gives the application.
+- The link to the _Physics of Golf_ via the ZTCF / ZVCF language is consistent: Vol I gives
+  the geometry, _Physics of Golf_ Ch. 5–6 gives the application.
 
 ### 5.2 What needs fixing
 
@@ -387,8 +388,8 @@ A PhD-level reader would appreciate (in order of value):
    and then perturb the closed-loop $A - \eta B K$ using the fact that $S$ satisfies the ARE.
    The cleaner reference is Anderson & Moore (1990) §5.1 or Zhou, Doyle, Glover (1996) §14.
 
-3. **Ch. 6 claims that the Riccati solution delivers "remarkable robustness properties *for
-   free*".** The "for free" is misleading: these margins are *guaranteed* only for the
+3. **Ch. 6 claims that the Riccati solution delivers "remarkable robustness properties _for
+   free_".** The "for free" is misleading: these margins are _guaranteed_ only for the
    state-feedback LQR at the input, and they can be destroyed by output feedback — this is
    the famous Doyle counterexample (Doyle 1978 "Guaranteed margins for LQG regulators"). That
    counterexample should be acknowledged in the same section, otherwise a reader will walk
@@ -398,7 +399,7 @@ A PhD-level reader would appreciate (in order of value):
    studied in modern control theory `\cite{Khalil2002, Sastry1999, Murray1994}`. It provides
    a natural framework for understanding the interplay between passive and active dynamics."
    This is a drop-in sentence — it does not pay for itself. Either delete or expand to a
-   one-sentence account of *what* each of the three cited books contributes.
+   one-sentence account of _what_ each of the three cited books contributes.
 
 5. **Ch. 8 Applications (1 721 lines)** is by far the longest chapter in either volume and
    risks becoming a "catch-all" that should be several chapters. A clean split would be
@@ -415,7 +416,7 @@ A PhD-level reader would appreciate (in order of value):
 - **Ch. 7 Counterfactuals.** The ZTCF deserves a section on sensitivity — how does the
   counterfactual trajectory depend on perturbations to the initial state? This is the
   Gronwall-type bound that would let the reader quantify the approximation error of the
-  subtraction identity flagged in the *Drifter Manifesto*.
+  subtraction identity flagged in the _Drifter Manifesto_.
 
 ---
 
@@ -442,8 +443,8 @@ flexible shafts and joint modeling. These are not minor background chapters — 
 theoretical spine of the book. Every one of them should be rewritten to:
 
 - Open with an explicit statement of where the result being taught originates (e.g.
-  control-affine form: Isidori 1995 §3; zero-torque counterfactual: AffineDrift *Drifter
-  Manifesto* §2 + Bloch 2003 §2; flexible shaft: Book 1984 + Rao 2019 Ch. 8).
+  control-affine form: Isidori 1995 §3; zero-torque counterfactual: AffineDrift _Drifter
+  Manifesto_ §2 + Bloch 2003 §2; flexible shaft: Book 1984 + Rao 2019 Ch. 8).
 - Cite every quantitative claim (see §6.3 below).
 - Close with a "Further Reading" paragraph pointing at 2–3 primary sources the reader can go
   to for depth.
@@ -488,8 +489,7 @@ citation or an explicit computation from a cited parameter set, or they need to 
   numerical ranges.
 - **Ch. 24 §laymansbox:** "An elite golfer produces clubhead speeds within 2 % of their
   average, swing after swing". This is the one I would retract hardest: the figure varies
-  from 1 % to 4 % across the literature (MacKenzie 2012; Hume et al. 2005; Lamb & Glazier
-  2018) and the right framing is "coefficient of variation in the 1–4 % range" with a
+  from 1 % to 4 % across the literature (MacKenzie 2012; Hume et al. 2005; Lamb & Glazier 2018) and the right framing is "coefficient of variation in the 1–4 % range" with a
   citation, not "2 %".
 - **Ch. 9:** "For a 200-pound golfer (mass 90 kg)". 200 lb is 90.7 kg; no need to mix units.
 
@@ -520,7 +520,7 @@ The book sometimes reaches for rhetorical temperature it cannot sustain:
   decision) or demote it to a final section of Ch. 31.
 - Chapters 1–11 are pitched at an undergraduate reader; chapters 18–31 are pitched at a
   researcher. This is jarring to read in a single sitting. Consider splitting the book into
-  Part I: *Foundations* (Chs 1–14) and Part II: *Advanced Biomechanics and Control* (Chs
+  Part I: _Foundations_ (Chs 1–14) and Part II: _Advanced Biomechanics and Control_ (Chs
   15–32) with an explicit difficulty break.
 - The existing `laymansbox`, `driftcontrol`, `mythreality`, `constraintbox`, `exercises`,
   `principle`, `definition`, `example`, `intuitionbox` environments are too many. A reader
@@ -536,14 +536,14 @@ The book sometimes reaches for rhetorical temperature it cannot sustain:
 
 - **Ch. 11 flexible shaft.** Add the full derivation of the Euler–Bernoulli / Timoshenko
   beam with clamped boundary conditions at the hand and free boundary at the tip, plus the
-  first three mode shapes with explicit eigenvalues. Cite Rao (2019) *Mechanical Vibrations*
-  or Meirovitch (2001) *Fundamentals of Vibrations*.
+  first three mode shapes with explicit eigenvalues. Cite Rao (2019) _Mechanical Vibrations_
+  or Meirovitch (2001) _Fundamentals of Vibrations_.
 - **Ch. 18 inverse dynamics parallel.** This is a 903-line chapter with no citations. At
   minimum cite Featherstone (2008), Khatib (1987) operational space, and the parallel
   mechanism literature (Tsai 1999; Merlet 2006).
 - **Ch. 28 impact/collision.** The hybrid-dynamics treatment is necessary for a complete
-  model of the swing. Cite Brogliato (2016) *Nonsmooth Mechanics* and Stronge (2004) *Impact
-  Mechanics*; add a sub-section on the coefficient of restitution and the USGA "spring
+  model of the swing. Cite Brogliato (2016) _Nonsmooth Mechanics_ and Stronge (2004) _Impact
+  Mechanics_; add a sub-section on the coefficient of restitution and the USGA "spring
   effect" limit on driver COR.
 - **Ch. 31 swing plane & launch.** Add the D-plane construction (Jorgensen 1999) explicitly,
   since the book already cites Trackman.
@@ -570,40 +570,40 @@ result. Examples:
 
 - Ch. 1 Physics of Golf: "Everything in this book flows from …"
 - Ch. 1: "Elite golfers, we'll find, have high DCR in the critical phases." This is
-  presented as an empirical discovery of the book. In fact, *Physics of Golf* never presents
+  presented as an empirical discovery of the book. In fact, _Physics of Golf_ never presents
   the data that would establish this — the AffineDrift project is still in Phase I
-  (theoretical), per the *Drifter Manifesto*. Either present the claim as a prediction of the
+  (theoretical), per the _Drifter Manifesto_. Either present the claim as a prediction of the
   framework ("the framework predicts …") or cite the simulation that supports it.
-- Ch. 5 *Physics of Golf*: "This decomposition is the key to understanding the golf swing."
+- Ch. 5 _Physics of Golf_: "This decomposition is the key to understanding the golf swing."
   Hyperbolic; soften.
 - Ch. 26: "This is the chapter that asks: how?" The reader already knows they are in the
   chapter.
 
 ### 7.3 Units
 
-The *Physics of Golf* should be converted to SI throughout. The only exception is where the
+The _Physics of Golf_ should be converted to SI throughout. The only exception is where the
 literature being cited (e.g. Trackman) uses mph and yards — in those cases present both, as
 is done in Ch. 6.
 
 ### 7.4 Cross-references between books
 
-The three books reference each other implicitly (the *Drifter Manifesto* assumes the
-multibody background of *Geometry of Motion*; *Physics of Golf* reuses the ZTCF/ZVCF
-definitions from the *Drifter Manifesto*) but the cross-references are not explicit. A
-reader who picks up *Physics of Golf* Ch. 5 is not told that the same material is
-rigorously derived in the *Drifter Manifesto* Part 2, or that the geometric setting is in
-*Geometry of Motion* Vol I Ch. 7. Add a "See also" footnote at the top of each chapter that
+The three books reference each other implicitly (the _Drifter Manifesto_ assumes the
+multibody background of _Geometry of Motion_; _Physics of Golf_ reuses the ZTCF/ZVCF
+definitions from the _Drifter Manifesto_) but the cross-references are not explicit. A
+reader who picks up _Physics of Golf_ Ch. 5 is not told that the same material is
+rigorously derived in the _Drifter Manifesto_ Part 2, or that the geometric setting is in
+_Geometry of Motion_ Vol I Ch. 7. Add a "See also" footnote at the top of each chapter that
 relies on the other two books.
 
 ### 7.5 Terminology consistency
 
-- *Drift* in the *Drifter Manifesto* is $f(x)$, a vector field; in the *Physics of Golf* it
-  sometimes means the *scalar* drift force; in the *Geometry of Motion* Vol I Ch. 7 it means
+- _Drift_ in the _Drifter Manifesto_ is $f(x)$, a vector field; in the _Physics of Golf_ it
+  sometimes means the _scalar_ drift force; in the _Geometry of Motion_ Vol I Ch. 7 it means
   the integral curve of $f$. All three usages are standard in the literature, but a reader
   moving between books will be briefly confused. Pick one primary usage and footnote the
   others.
-- *DCR* is sometimes "Drift-Control Ratio" and sometimes "Drift-to-Control Ratio". Pick one.
-- *Counterfactual* is sometimes used in the causal-inference sense (what would have
+- _DCR_ is sometimes "Drift-Control Ratio" and sometimes "Drift-to-Control Ratio". Pick one.
+- _Counterfactual_ is sometimes used in the causal-inference sense (what would have
   happened under a different input) and sometimes as a synonym for "thought experiment".
   Restrict the word to the first meaning; use "hypothetical" for the second.
 
@@ -611,8 +611,8 @@ relies on the other two books.
 
 - New citations to add across the three books: **~150–200**.
 - Chapters currently with zero or near-zero citations that need to be brought to the target
-  floor: **~15** (manifesto counts as one; Physics of Golf 5, 6, 8, 9, 10, 11, 18, 22; *
-  Geometry of Motion Vol I* 6 and 7).
+  floor: **~15** (manifesto counts as one; Physics of Golf 5, 6, 8, 9, 10, 11, 18, 22; _
+  Geometry of Motion Vol I_ 6 and 7).
 - Instances of `profound` / `remarkable` / `revolutionary` to remove or replace: **~28**.
 - Magic numbers to either cite or retract: **~30**.
 - Editorial standardization (units, box types, epigraphs, glossary merge): **~2 days' work**.
@@ -626,22 +626,22 @@ places; the fixes are mostly surgical.
 
 In order of highest expected value per unit of author time:
 
-1. **Add `bibliography: ../references/affine-drift.bib` to the *Drifter Manifesto*
+1. **Add `bibliography: ../references/affine-drift.bib` to the _Drifter Manifesto_
    frontmatter and insert 15–20 `[@key]` calls at the obvious anchor points.** Highest ROI
    single action in the entire review. Without this the manifesto fails a basic sniff test.
-2. **Bring *Physics of Golf* Chs. 5 and 6 up to 4–6 citations each.** Chapter 5 is the
+2. **Bring _Physics of Golf_ Chs. 5 and 6 up to 4–6 citations each.** Chapter 5 is the
    chapter that introduces the affine decomposition, and it currently cites nothing.
-3. **Audit the Ch. 6 duality proof sketch in *Geometry of Motion* Vol I and replace with a
+3. **Audit the Ch. 6 duality proof sketch in _Geometry of Motion_ Vol I and replace with a
    clean Lyapunov-based robustness argument.** Technical correctness.
 4. **Remove or replace the 28 `profound / remarkable / revolutionary / astonish` instances.**
-5. **Normalize *Physics of Golf* to SI units throughout.**
+5. **Normalize _Physics of Golf_ to SI units throughout.**
 6. **Retract or cite every magic number identified in §6.3.**
 7. **Expand Ch. 32 putting from 58 lines to a full chapter.**
-8. **Split long chapters (*Geometry of Motion* Vol I Ch. 8 applications;
-   *Physics of Golf* Ch. 23 URDF).**
+8. **Split long chapters (_Geometry of Motion_ Vol I Ch. 8 applications;
+   _Physics of Golf_ Ch. 23 URDF).**
 9. **Reduce the number of callout-box environments from nine to three.**
 10. **Add explicit cross-references between the three books.**
 
 ---
 
-*End of review.*
+_End of review._

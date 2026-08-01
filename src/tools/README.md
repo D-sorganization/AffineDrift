@@ -4,22 +4,22 @@ This directory contains utility tools and interactive simulators for the AffineD
 
 ## Quick Reference
 
-| Tool                       | Purpose                                      | Usage                                           |
-| -------------------------- | -------------------------------------------- | ----------------------------------------------- |
-| `check_links.py`           | Extract and validate links from HTML files   | `python check_links.py file.html`               |
-| `check_site_health.py`     | Verify internal links and generate sitemap   | `python check_site_health.py`                   |
-| `clean_latex_comments.py`  | Remove LaTeX comments from QMD files         | `python clean_latex_comments.py file.qmd`       |
-| `code_quality_check.py`    | Run code quality checks                      | `python code_quality_check.py`                  |
-| `convert_all_latex.py`     | Batch convert LaTeX to HTML                  | `python convert_all_latex.py input_dir/`        |
-| `convert_all_to_quarto.py` | Batch convert LaTeX to Quarto                | `python convert_all_to_quarto.py`               |
-| `fix_quarto_syntax.py`     | Fix common Quarto syntax issues              | `python fix_quarto_syntax.py file.qmd`          |
-| `latex_to_html.py`         | Convert LaTeX document to HTML               | `python latex_to_html.py input.tex output.html` |
-| `latex_to_qmd.py`          | Convert LaTeX to Quarto markdown             | `python latex_to_qmd.py input.tex`              |
-| `latex_to_quarto.py`       | Alternative LaTeX converter                  | `python latex_to_quarto.py input.tex`           |
-| `publish_manual_article.py`| Convert Markdown to HTML with templates      | `python publish_manual_article.py`              |
-| `update_navigation.py`     | Update navigation across HTML files          | `python update_navigation.py`                   |
-| `verify_images.py`         | Validate image URLs in HTML                  | `python verify_images.py file.html`             |
-| `wrap_sidebars.py`         | Wrap sidebar content in sticky divs          | `python wrap_sidebars.py`                       |
+| Tool                        | Purpose                                    | Usage                                           |
+| --------------------------- | ------------------------------------------ | ----------------------------------------------- |
+| `check_links.py`            | Extract and validate links from HTML files | `python check_links.py file.html`               |
+| `check_site_health.py`      | Verify internal links and generate sitemap | `python check_site_health.py`                   |
+| `clean_latex_comments.py`   | Remove LaTeX comments from QMD files       | `python clean_latex_comments.py file.qmd`       |
+| `code_quality_check.py`     | Run code quality checks                    | `python code_quality_check.py`                  |
+| `convert_all_latex.py`      | Batch convert LaTeX to HTML                | `python convert_all_latex.py input_dir/`        |
+| `convert_all_to_quarto.py`  | Batch convert LaTeX to Quarto              | `python convert_all_to_quarto.py`               |
+| `fix_quarto_syntax.py`      | Fix common Quarto syntax issues            | `python fix_quarto_syntax.py file.qmd`          |
+| `latex_to_html.py`          | Convert LaTeX document to HTML             | `python latex_to_html.py input.tex output.html` |
+| `latex_to_qmd.py`           | Convert LaTeX to Quarto markdown           | `python latex_to_qmd.py input.tex`              |
+| `latex_to_quarto.py`        | Alternative LaTeX converter                | `python latex_to_quarto.py input.tex`           |
+| `publish_manual_article.py` | Convert Markdown to HTML with templates    | `python publish_manual_article.py`              |
+| `update_navigation.py`      | Update navigation across HTML files        | `python update_navigation.py`                   |
+| `verify_images.py`          | Validate image URLs in HTML                | `python verify_images.py file.html`             |
+| `wrap_sidebars.py`          | Wrap sidebar content in sticky divs        | `python wrap_sidebars.py`                       |
 
 ## Tool Categories
 
@@ -230,6 +230,7 @@ When adding a new tool:
    ```
 
 3. **Update this README** with:
+
    - Entry in Quick Reference table
    - Usage examples
    - Category placement

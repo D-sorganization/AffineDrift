@@ -1,4 +1,5 @@
 # Bibliography Consistency Audit Report
+
 ## The Geometry of Motion - Scientific Rigor Review
 
 **Date**: 2026-03-27 (remediated 2026-03-27)
@@ -12,6 +13,7 @@
 A comprehensive audit of the bibliography system across all 5 volumes of "The Geometry of Motion" has been completed. The audit verifies consistency between citation keys found in chapter files and entries in the shared bibliography file.
 
 ### Key Metrics
+
 - **Total Bibliography Entries**: 114 (BibTeX entries in geometry_of_motion.bib)
 - **Chapter Files Scanned**: 77 .tex files across all volumes
 - **Unique Citation Keys Found**: 84
@@ -31,6 +33,7 @@ A comprehensive audit of the bibliography system across all 5 volumes of "The Ge
 **Total Entries**: 114 BibTeX entries
 
 #### Entry Types Distribution:
+
 ```
 @article: 31 entries
 @book:    78 entries
@@ -39,6 +42,7 @@ Total: 114 entries
 ```
 
 #### Sample Entries (verified entries):
+
 - LohmillerSlotine1998: "On contraction analysis for non-linear systems"
 - ManchesterSlotine2017: "Control contraction metrics"
 - Khalil2002: "Nonlinear Systems" (3rd edition)
@@ -49,7 +53,9 @@ Total: 114 entries
 ### 2. Citation Key Verification
 
 #### Keys in Bibliography (Sample):
+
 All of the following keys are properly defined in geometry_of_motion.bib:
+
 - Alexander1991, Alexander2002
 - AbrahamMarsden1978
 - Arnold2010
@@ -65,7 +71,9 @@ All of the following keys are properly defined in geometry_of_motion.bib:
 - And 90+ more entries...
 
 #### Citation Commands Found:
+
 95 unique citation command instances across all chapters using:
+
 - `\cite{key}` (primary usage)
 - `\citep{key}` (parenthetical citations)
 - `\citet{key}` (textual citations)
@@ -74,15 +82,15 @@ All of the following keys are properly defined in geometry_of_motion.bib:
 
 **Status**: All 7 previously missing entries have been resolved.
 
-| Citation Key | Resolution |
-| --- | --- |
-| Arnold1989 | Added to geometry_of_motion.bib |
-| Bellman1961 | Added to geometry_of_motion.bib |
-| Featherstone1983 | Added to geometry_of_motion.bib |
-| Flash1985 | Removed (duplicate of FlashHogan1985) |
-| Goldstein2002 | Added to geometry_of_motion.bib |
-| Lynch2017 | Added to geometry_of_motion.bib |
-| Westervelt2007 | Removed (duplicate of WesterveltGrizzle2007) |
+| Citation Key     | Resolution                                   |
+| ---------------- | -------------------------------------------- |
+| Arnold1989       | Added to geometry_of_motion.bib              |
+| Bellman1961      | Added to geometry_of_motion.bib              |
+| Featherstone1983 | Added to geometry_of_motion.bib              |
+| Flash1985        | Removed (duplicate of FlashHogan1985)        |
+| Goldstein2002    | Added to geometry_of_motion.bib              |
+| Lynch2017        | Added to geometry_of_motion.bib              |
+| Westervelt2007   | Removed (duplicate of WesterveltGrizzle2007) |
 
 ### 4. [CITE:] Placeholder Markers (CRITICAL)
 
@@ -91,6 +99,7 @@ All of the following keys are properly defined in geometry_of_motion.bib:
 ### 5. Citation Consistency Analysis
 
 #### Volumes with Highest Citation Density:
+
 - Volume II (Trajectory & Motor Control): 32 citation instances
 - Volume I (Control Theory): 24 citation instances
 - Volume III (Biomechanics): 18 citation instances
@@ -99,6 +108,7 @@ All of the following keys are properly defined in geometry_of_motion.bib:
 - Volume V (Simulation): 4 citation instances
 
 #### Citation Patterns:
+
 - **Single citations**: 62% of instances (e.g., `\cite{Khalil2002}`)
 - **Multi-author citations**: 38% of instances (e.g., `\cite{Murray1994, BulloLewis2004, Sastry1999}`)
 - **Maximum keys per command**: 4 keys (e.g., LohmillerSlotine1998, ManchesterSlotine2017, Khatib1987, Shiriaev2010)
@@ -106,7 +116,9 @@ All of the following keys are properly defined in geometry_of_motion.bib:
 ### 6. Bibliography Entry Quality Review
 
 #### Entries with Complete Information:
+
 Example of properly formatted entry:
+
 ```bibtex
 @article{LohmillerSlotine1998,
   title={On contraction analysis for non-linear systems},
@@ -122,6 +134,7 @@ Example of properly formatted entry:
 ```
 
 #### Coverage by Domain:
+
 - **Control Theory**: 28 entries (Slotine, Khalil, Sastry, Bullo, etc.)
 - **Robotics**: 22 entries (Spong, Featherstone, Murray, Khatib, etc.)
 - **Mathematics**: 18 entries (Arnold, Goldstein, do Carmo, etc.)
@@ -138,6 +151,7 @@ Example of properly formatted entry:
 ### CRITICAL (Must fix before PR merge):
 
 #### 1. Add Missing Bibliography Entries
+
 Add complete BibTeX entries for these 7 keys:
 
 ```bibtex
@@ -210,9 +224,11 @@ Add complete BibTeX entries for these 7 keys:
 ```
 
 #### 2. Convert [CITE:] Placeholders to Proper Citations
+
 Replace all 6 placeholder markers with proper `\cite{}` commands:
 
 **Example Conversions**:
+
 ```tex
 % BEFORE (Volume_I/chapters/ch02_variational.tex:334)
 series solution called the Peano-Baker series \cite[CITE: Peano-Baker history in Magnus expansion]}
@@ -228,6 +244,7 @@ not by muscular torque applied at the wrist \cite{Zheng2008,Cochran1999}
 ```
 
 #### 3. Validate Bibliography After Fixes
+
 ```bash
 # After adding entries and converting placeholders, run:
 cd /articles/The_Geometry_of_Motion
@@ -257,27 +274,32 @@ grep -rn '\[CITE:' --include="*.tex"
 Based on content analysis, the following categories of references should be added:
 
 ### 1. Motor Control & Neuroscience (Priority: HIGH)
+
 - Henneman, E. (1957). "Relation between size of neurons and their susceptibility to discharge"
 - Harris, C. M., & Wolpert, D. M. (1998). "Signal-dependent noise determines motor planning"
 - Fitts, P. M. (1954). "The information capacity of the human motor system"
 - Bernstein, N. A. (1967). "The Coordination and Regulation of Movements"
 
 ### 2. Biomechanical Models (Priority: HIGH)
+
 - Zheng, N., et al. (2008). "Biomechanics of the golf swing"
 - Cochran, A. J., & Stobbs, J. (1999). "The search for the perfect swing"
 - Raibert, M. H. (1986). "Legged Robots that Balance" (verify entry exists)
 
 ### 3. Advanced Control Theory (Priority: MEDIUM)
+
 - Slotine, J.-J. E., & Li, W. (1991). "Applied Nonlinear Control" (verify entry)
 - Tedrake, R. (2009). "Underactuated Robotics: Learning, Planning, and Control"
 - MajumdarTedrake2017 (verify complete entry)
 
 ### 4. Mathematical Foundations (Priority: MEDIUM)
+
 - Magnus expansion and related differential equations
 - Differential geometry foundations (beyond current do Carmo1992)
 - Lie groups and algebra applications
 
 ### 5. Experimental Methods (Priority: MEDIUM)
+
 - Kinematics data collection and validation
 - Inverse dynamics computation
 - EMG and sensor fusion techniques
@@ -287,6 +309,7 @@ Based on content analysis, the following categories of references should be adde
 ## Recommendations
 
 ### 1. Short-term (Before PR Submission)
+
 - [ ] Add 7 missing bibliography entries
 - [ ] Convert 6 [CITE:] placeholders to proper \cite{} commands
 - [ ] Run validation script to confirm 100% consistency
@@ -294,12 +317,14 @@ Based on content analysis, the following categories of references should be adde
 - [ ] Verify no new warnings or errors
 
 ### 2. Medium-term (Post-PR Review)
+
 - [ ] Expand bibliography with 60+ additional entries for comprehensive coverage
 - [ ] Add annotation fields to BibTeX for quick reference
 - [ ] Create cross-reference index by topic/volume
 - [ ] Implement automated citation validation in CI/CD pipeline
 
 ### 3. Long-term (Ongoing Maintenance)
+
 - [ ] Establish bibliography review process for new chapters
 - [ ] Create style guide for consistent BibTeX formatting
 - [ ] Implement DOI validation and URL verification
@@ -325,21 +350,25 @@ Based on content analysis, the following categories of references should be adde
 ## File Locations Reference
 
 **Bibliography File**:
+
 ```
 /articles/The_Geometry_of_Motion/geometry_of_motion.bib
 ```
 
 **Audit Report**:
+
 ```
 /articles/The_Geometry_of_Motion/BIBLIOGRAPHY_AUDIT_REPORT.md
 ```
 
 **PR Instructions**:
+
 ```
 /articles/The_Geometry_of_Motion/PR_INSTRUCTIONS.md
 ```
 
 **Chapter Files** (77 total):
+
 ```
 /articles/The_Geometry_of_Motion/Volume_0/chapters/*.tex
 /articles/The_Geometry_of_Motion/Volume_I/chapters/*.tex

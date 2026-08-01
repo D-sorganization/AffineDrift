@@ -1,5 +1,7 @@
 # A-O Comprehensive Health Assessment: AffineDrift
+
 ## Repository Assessment Report
+
 **Date:** 2026-04-29  
 **Repository:** D-sorganization/AffineDrift  
 **Branch:** main  
@@ -16,6 +18,7 @@ AffineDrift is a mathematically rigorous research platform for modeling golf swi
 However, the repository faces **critical CI/CD fragility** (0% pass rate on last 20 runs) that blocks all contributions, lacks Python lockfile discipline (no uv.lock or poetry.lock), and has no containerization strategy for reproducibility. These issues represent immediate blockers to maintainability and team velocity.
 
 **Key Strengths:**
+
 - Exceptional test coverage (92.4% vs 50% minimum requirement)
 - Comprehensive multi-dimensional documentation (5 major docs)
 - Strict static analysis (MyPy strict mode, Ruff with security checks)
@@ -23,6 +26,7 @@ However, the repository faces **critical CI/CD fragility** (0% pass rate on last
 - Clear GAAI framework adoption with governance specs
 
 **Critical Gaps:**
+
 - **CI/CD completely broken** (0/20 runs passed) — blocks all PR merges
 - No Python lockfile (supply chain reproducibility gap)
 - No Docker containerization (environment drift risk)
@@ -36,6 +40,7 @@ However, the repository faces **critical CI/CD fragility** (0% pass rate on last
 **Rationale:** Well-structured with clear separation of concerns, but lacks some reproducibility scaffolding.
 
 **Evidence:**
+
 - ✅ `pyproject.toml` present and well-organized (setuptools backend, comprehensive tool configs)
 - ✅ `package.json` present for JavaScript tooling
 - ❌ No Python lockfile (requirements.lock, uv.lock, poetry.lock absent) — **supply chain risk**
@@ -53,6 +58,7 @@ However, the repository faces **critical CI/CD fragility** (0% pass rate on last
 **Rationale:** Excellent technical writing with clear domain language and architecture documentation. Minor gaps in visual aids.
 
 **Evidence:**
+
 - ✅ README.md (165 lines) — clear mission, features, quick-start
 - ✅ **SPEC.md (587 lines)** — exceptional specification document with Identity, Purpose, Architecture, API spec, CI requirements
 - ✅ CLAUDE.md (90 lines) — development environment, CI requirements, coding standards
@@ -72,6 +78,7 @@ However, the repository faces **critical CI/CD fragility** (0% pass rate on last
 **Rationale:** Exceptional test coverage and structure; comprehensive quality gates in CI.
 
 **Evidence:**
+
 - ✅ **Coverage: 92.4%** (2945/3186 lines) — far exceeds 50% minimum requirement
 - ✅ **65 test files** organized by domain (affine_control, core, tangent_models, tools, content, integration)
 - ✅ Test markers defined (integration, content_lint) for selective runs
@@ -83,6 +90,7 @@ However, the repository faces **critical CI/CD fragility** (0% pass rate on last
 - ⚠️ Coverage aged (.coverage from ~2 weeks ago; consider regenerating during CI)
 
 **Coverage Policy Check:**
+
 ```
 pyproject.toml [tool.coverage.report]:
   fail_under = 50
@@ -100,6 +108,7 @@ pyproject.toml [tool.coverage.report]:
 **Rationale:** Good error-handling discipline; no bare excepts found. Opportunity for more defensive validation.
 
 **Evidence:**
+
 - ✅ **0 bare excepts found** in Python source (git grep confirmed)
 - ✅ Design-by-contract patterns documented in CLAUDE.md section 5
 - ✅ Contracts module present (src/core/contracts/) for input validation
@@ -119,6 +128,7 @@ pyproject.toml [tool.coverage.report]:
 **Rationale:** Well-chosen tech stack aligned with project mission; good justification for language selections.
 
 **Evidence:**
+
 - ✅ **Primary:** Python 3.12 (modern, widely-supported LTS version)
 - ✅ **Secondary:** JavaScript ES6+ (interactive content, visualization)
 - ✅ **Content:** Quarto markdown (research publishing, reproducible docs)
@@ -138,6 +148,7 @@ pyproject.toml [tool.coverage.report]:
 **Rationale:** Good tooling and standards; some modules are large and could benefit from refactoring.
 
 **Evidence:**
+
 - ✅ Black enforced (100-char line limit, not Ruff format)
 - ✅ Ruff lint rules selected: E, F, W, I, B, UP, S (security checks included)
 - ✅ Largest module: src/affine_control/swing_optimizer.py (508 lines) — acceptable but at upper limit
@@ -148,6 +159,7 @@ pyproject.toml [tool.coverage.report]:
 - ✅ No print() statements in src/ (logging enforced; 12 TODO/FIXME tied to issues)
 
 **God-File Scan:**
+
 ```
 src/affine_control/swing_optimizer.py   508 lines
 src/tools/wrist_universal_joint/qt_ui_sections.py  496 lines
@@ -167,6 +179,7 @@ src/golf_simulation/round_simulator.py  428 lines
 **Rationale:** Missing critical lockfile discipline; potential for supply chain drift and CI fragility.
 
 **Evidence:**
+
 - ❌ **NO Python lockfile** (requirements.lock, uv.lock, poetry.lock, Pipfile.lock all absent)
 - ✅ package-lock.json present (JavaScript dependencies locked)
 - ✅ requirements.txt exists (pip-installable, but not locked)
@@ -175,12 +188,14 @@ src/golf_simulation/round_simulator.py  428 lines
 - ⚠️ Large vendor list excluded in tool configs (scipy, matplotlib, pandas, torch, PyQt, etc.) — indicates broad scientific stack
 
 **Finding (P0 — CRITICAL):** This is the PRIMARY BLOCKER for CI stability. Without a locked dependency set:
+
 1. CI may pass with one pip release and fail with the next
 2. Developers cannot reproduce exact CI environment locally
 3. Security patches cannot be staged and tested before deployment
 4. The 0% CI pass rate likely stems from transitive dependency version conflicts
 
 **Remediation:**
+
 ```bash
 # Option 1: Use uv (recommended for new projects)
 pip install uv
@@ -202,6 +217,7 @@ pip-compile requirements.txt
 **Rationale:** Strong code practices; no hardcoded secrets found. Missing active vulnerability scanning.
 
 **Evidence:**
+
 - ✅ **0 hardcoded secrets detected** (no patterns like `password="..."` or `api_key="..."`in source)
 - ✅ Ruff security rules enabled (select includes "S" for security)
 - ✅ Subprocess calls use safe patterns (no `shell=True` found in spot checks)
@@ -223,7 +239,8 @@ pip-compile requirements.txt
 **Rationale:** Environment documentation present but containerization is absent.
 
 **Evidence:**
-- ❌ **No Dockerfile** (Dockerfile, Dockerfile.*, .devcontainer/Dockerfile all absent)
+
+- ❌ **No Dockerfile** (Dockerfile, Dockerfile.\*, .devcontainer/Dockerfile all absent)
 - ✅ .env.example present (19 entries documenting configuration options)
 - ✅ .python-version file (3.12 specified)
 - ✅ pyproject.toml well-configured (build system, tool configs)
@@ -234,6 +251,7 @@ pip-compile requirements.txt
 **Finding (P1):** The absence of Docker creates environment drift risk. Developers may have different Python versions, system libraries, or missing optional dependencies. When a new contributor tries to set up, they may fail silently if they lack a library (e.g., QuartoÓ which requires system binary installation).
 
 **Remediation:**
+
 ```dockerfile
 FROM python:3.12-slim
 RUN apt-get update && apt-get install -y quarto
@@ -253,6 +271,7 @@ CMD ["python", "-m", "pytest"]
 **Rationale:** Basic logging present; no structured logging or metrics collection.
 
 **Evidence:**
+
 - ✅ Standard library logging configured (seen in tool code patterns)
 - ❌ **No structlog or loguru** (verified via grep in pyproject.toml)
 - ❌ **No JSON logging** (makes aggregation/analysis difficult)
@@ -262,6 +281,7 @@ CMD ["python", "-m", "pytest"]
 - ⚠️ CI logs are extensive but not correlated (no trace IDs)
 
 **Finding (P2):** For a research platform, the lack of structured logging is a significant operational blind spot. When CI fails (as it currently is), it's difficult to correlate logs across jobs or extract patterns. Structured logging would enable:
+
 1. Quick diagnosis of recurring CI failures
 2. Performance bottleneck identification (rendering, optimization)
 3. User error tracking (if hosted site is used for education)
@@ -275,6 +295,7 @@ CMD ["python", "-m", "pytest"]
 **Rationale:** Benchmarking infrastructure in place; some optimization opportunities identified.
 
 **Evidence:**
+
 - ✅ benchmarks/ directory present (opt-in pytest-benchmark suite)
 - ✅ .hypothesis/ directory present (property-based testing for validation)
 - ⚠️ **Largest modules approaching 500 LOC** (swing_optimizer.py 508 lines) — algorithmic complexity may be hidden
@@ -294,6 +315,7 @@ CMD ["python", "-m", "pytest"]
 **Rationale:** Extensive CI pipeline configured, but **0% pass rate** makes this the critical blocker.
 
 **Evidence:**
+
 - ✅ ci-standard.yml present (21.5 KB, comprehensive workflow)
 - ✅ 19 GitHub Actions workflows defined (rich automation)
 - ✅ Concurrency control to cancel in-progress runs
@@ -304,23 +326,27 @@ CMD ["python", "-m", "pytest"]
 - ⚠️ Workflow interdependencies complex; hard to debug
 
 **CI Status:**
+
 ```
 Last 20 runs on main: 0/20 passed (0% pass rate)
 Latest failure: main branch, status=completed, conclusion=failure
 ```
 
 **Critical Findings (P0 — BLOCKER):**
+
 1. **CI is completely broken and blocks all PRs**
 2. The ci-standard.yml workflow has 45-minute timeout; something is timing out or crashing
 3. Without functioning CI, it's impossible to safely merge any changes
 4. This explains why recent PRs are stuck and why the assessment is needed
 
 **Root Cause Analysis (Hypothetical):**
+
 - Most likely: Dependency version conflict (given no lockfile)
 - Alternative: Quarto rendering failure (large textbook)
 - Alternative: Self-hosted runner issue (fleet mode="local" check)
 
 **Remediation Priority:**
+
 1. Add Python lockfile (uv.lock or poetry.lock) — 80% likely to fix
 2. Run ci-standard.yml locally with `--debug` flag to capture full logs
 3. Check self-hosted runner availability (pick-runner job)
@@ -335,6 +361,7 @@ Latest failure: main branch, status=completed, conclusion=failure
 **Rationale:** Website deployment configured, but no infrastructure-as-code or containerization.
 
 **Evidence:**
+
 - ✅ deploy-website.yml workflow (deploys to GitHub Pages)
 - ✅ publish-textbooks-on-merge.yml (automated release of PDF volumes)
 - ❌ **No deploy/, infra/, terraform/, ansible/, helm/, kubernetes/ directories** (no IaC)
@@ -344,6 +371,7 @@ Latest failure: main branch, status=completed, conclusion=failure
 - ❌ No rollback strategy documented
 
 **Finding (P2):** Deployment is functional but lacks modern operationality practices. No IaC means:
+
 1. If GitHub Pages ever needs to be migrated, the configuration is only in GitHub UI
 2. No version control of deployment settings
 3. No staging environment to test before production
@@ -359,6 +387,7 @@ For a research/education platform, this is acceptable (GitHub Pages is reliable)
 **Rationale:** Strong governance with GAAI framework adoption; clear PR workflow.
 
 **Evidence:**
+
 - ✅ GAAI framework installed (.gaai/ directory with governance specs)
 - ✅ CONTRIBUTING.md (931 lines) documents PR workflow clearly
 - ✅ Branch protection likely configured (feature/enable-branch-protection branch exists)
@@ -379,6 +408,7 @@ For a research/education platform, this is acceptable (GitHub Pages is reliable)
 **Rationale:** Excellent AI-centric documentation; clear agent onboarding.
 
 **Evidence:**
+
 - ✅ **CLAUDE.md (90 lines)** — clear, concise AI developer guidance
   - Development environment setup
   - CI requirements (all 12 must-pass gates listed)
@@ -394,6 +424,7 @@ For a research/education platform, this is acceptable (GitHub Pages is reliable)
 - ✅ Slash commands documented and actionable
 
 **Finding:** AI integration is exceptionally well-designed. AGENTS.md is a model for how to onboard AI agents into complex codebases. The documentation clearly explains:
+
 1. What agents can do (delivery, testing, documentation)
 2. When agents should pause and ask for help
 3. How agents should handle failures
@@ -406,38 +437,43 @@ For a research/education platform, this is acceptable (GitHub Pages is reliable)
 
 ### Pragmatic Principle Coverage
 
-| Principle | Evidence | Score |
-|-----------|----------|-------|
-| **PP1: DRY** | Code reuse enforced via modules, duplication tracked, no copy-paste | Strong |
-| **PP2: Orthogonality** | Clear separation by domain (affine_control, golf_simulation, tools) | Strong |
-| **PP3: Reversibility** | Missing: lockfile, Docker, IaC | Weak |
-| **PP4: Tracer Bullets** | Benchmarks present, but not enforced | Medium |
-| **PP5: DbC** | Contracts module, type hints, validation functions | Strong |
-| **PP6: Crash Early** | No automated security scanning; CI failing silently | Weak |
-| **PP7: Test Often** | 92.4% coverage, 65 test files, property-based testing | Strong |
-| **PP8: Broken Windows** | TODOs tied to issues; codebase is clean | Strong |
+| Principle               | Evidence                                                            | Score  |
+| ----------------------- | ------------------------------------------------------------------- | ------ |
+| **PP1: DRY**            | Code reuse enforced via modules, duplication tracked, no copy-paste | Strong |
+| **PP2: Orthogonality**  | Clear separation by domain (affine_control, golf_simulation, tools) | Strong |
+| **PP3: Reversibility**  | Missing: lockfile, Docker, IaC                                      | Weak   |
+| **PP4: Tracer Bullets** | Benchmarks present, but not enforced                                | Medium |
+| **PP5: DbC**            | Contracts module, type hints, validation functions                  | Strong |
+| **PP6: Crash Early**    | No automated security scanning; CI failing silently                 | Weak   |
+| **PP7: Test Often**     | 92.4% coverage, 65 test files, property-based testing               | Strong |
+| **PP8: Broken Windows** | TODOs tied to issues; codebase is clean                             | Strong |
 
 ### Vulnerability Assessment
 
 **Severity Ranking:**
 
 1. **P0 (BLOCKER):** CI completely non-functional (0% pass rate)
+
    - Impact: No PRs can merge; team is paralyzed
    - Estimated effort: 4–8 hours (add lockfile, debug workflow)
 
 2. **P0 (BLOCKER):** No Python lockfile (supply chain risk)
+
    - Impact: Reproducibility lost; future builds may fail mysteriously
    - Estimated effort: 2–4 hours (generate lockfile, update CI)
 
 3. **P1 (HIGH):** No Docker containerization (environment drift)
+
    - Impact: New contributors fail to set up; CI environment differs from local
    - Estimated effort: 4–6 hours (write Dockerfile, test locally)
 
 4. **P1 (HIGH):** No structured logging (operability blind spot)
+
    - Impact: CI failures hard to diagnose; no observability into long-running jobs
    - Estimated effort: 8–12 hours (add structlog, integrate JSON logging)
 
 5. **P2 (MEDIUM):** No automated security scanning (pip-audit, bandit)
+
    - Impact: Vulnerabilities in dependencies may go undetected
    - Estimated effort: 2–3 hours (add audit steps to CI)
 
@@ -450,7 +486,9 @@ For a research/education platform, this is acceptable (GitHub Pages is reliable)
 ## Improvement Roadmap
 
 ### Immediate (Week 1)
+
 - [ ] **Fix CI by adding lockfile** (uv.lock recommended)
+
   - Command: `pip install uv && uv pip compile requirements.txt -o requirements.lock`
   - Update .github/workflows/ci-standard.yml to use `requirements.lock`
   - Issue: #[TBD] — P0 blocker
@@ -461,11 +499,14 @@ For a research/education platform, this is acceptable (GitHub Pages is reliable)
   - Issue: #[TBD] — CI diagnosis
 
 ### Short-term (Week 2–3)
+
 - [ ] **Add Python Dockerfile**
+
   - Issue: #[TBD] — Reproducible build environment
   - Estimated effort: 4–6 hours
 
 - [ ] **Enable pip-audit in CI**
+
   - Add step to ci-standard.yml: `pip-audit --desc`
   - Fail on vulnerabilities with severity >= MEDIUM
   - Issue: #[TBD] — Supply chain security
@@ -477,11 +518,14 @@ For a research/education platform, this is acceptable (GitHub Pages is reliable)
   - Issue: #[TBD] — Observability
 
 ### Medium-term (Month 1)
+
 - [ ] **Refactor test_critical_physics_fixes.py**
+
   - Split into focused modules by domain (physics, biomechanics, aerodynamics)
   - Issue: #[TBD] — Test maintainability
 
 - [ ] **Add GitHub Actions version validation**
+
   - Script: scripts/check_action_versions.sh (from v2 methodology)
   - Validate all @vX tags resolve correctly
   - Issue: #[TBD] — CI robustness
@@ -491,7 +535,9 @@ For a research/education platform, this is acceptable (GitHub Pages is reliable)
   - Issue: #[TBD] — Knowledge capture
 
 ### Long-term (Quarter)
+
 - [ ] **Add performance SLAs and regression testing**
+
   - Enforce pytest to run in < 5 min
   - Track benchmark results over time
   - Issue: #[TBD] — Performance observability
@@ -507,23 +553,23 @@ For a research/education platform, this is acceptable (GitHub Pages is reliable)
 
 ### By Criterion
 
-| Criterion | Score | Status | Notes |
-|-----------|-------|--------|-------|
-| A. Organization | 8/10 | Good | Missing Python lockfile |
-| B. Documentation | 8/10 | Strong | Excellent SPEC.md, AGENTS.md |
-| C. Testing | 9/10 | Excellent | 92.4% coverage, comprehensive |
-| D. Robustness | 7/10 | Good | No bare excepts; extend error logging |
-| E. Language | 8/10 | Strong | Python 3.12, Quarto, JS well-chosen |
-| F. Craftsmanship | 6/10 | Good | Some modules at size limit |
-| G. Dependencies | 4/10 | **CRITICAL** | No lockfile; P0 blocker |
-| H. Security | 7/10 | Good | No secrets; missing pip-audit |
-| I. Configuration | 5/10 | **WEAK** | No Docker; environment drift risk |
-| J. Logging | 4/10 | **WEAK** | Stdlib only; no structured logging |
-| K. Performance | 6/10 | Medium | Benchmarks present; not enforced |
-| L. CI/CD | 2/10 | **CRITICAL** | 0% pass rate; all PRs blocked |
-| M. Deployment | 3/10 | **WEAK** | No IaC; GitHub Pages only |
-| N. Governance | 8/10 | Strong | GAAI framework, clear workflow |
-| O. Agentic | 8/10 | Excellent | AGENTS.md is exemplary |
+| Criterion        | Score | Status       | Notes                                 |
+| ---------------- | ----- | ------------ | ------------------------------------- |
+| A. Organization  | 8/10  | Good         | Missing Python lockfile               |
+| B. Documentation | 8/10  | Strong       | Excellent SPEC.md, AGENTS.md          |
+| C. Testing       | 9/10  | Excellent    | 92.4% coverage, comprehensive         |
+| D. Robustness    | 7/10  | Good         | No bare excepts; extend error logging |
+| E. Language      | 8/10  | Strong       | Python 3.12, Quarto, JS well-chosen   |
+| F. Craftsmanship | 6/10  | Good         | Some modules at size limit            |
+| G. Dependencies  | 4/10  | **CRITICAL** | No lockfile; P0 blocker               |
+| H. Security      | 7/10  | Good         | No secrets; missing pip-audit         |
+| I. Configuration | 5/10  | **WEAK**     | No Docker; environment drift risk     |
+| J. Logging       | 4/10  | **WEAK**     | Stdlib only; no structured logging    |
+| K. Performance   | 6/10  | Medium       | Benchmarks present; not enforced      |
+| L. CI/CD         | 2/10  | **CRITICAL** | 0% pass rate; all PRs blocked         |
+| M. Deployment    | 3/10  | **WEAK**     | No IaC; GitHub Pages only             |
+| N. Governance    | 8/10  | Strong       | GAAI framework, clear workflow        |
+| O. Agentic       | 8/10  | Excellent    | AGENTS.md is exemplary                |
 
 ---
 
@@ -534,6 +580,7 @@ For a research/education platform, this is acceptable (GitHub Pages is reliable)
 AffineDrift is a well-intentioned, mathematically rigorous research platform with **strong documentation and testing discipline**. However, it is currently **blocked by CI/CD fragility** that prevents any PRs from merging. The immediate priority is fixing the CI pipeline and adding a Python lockfile.
 
 ### Strengths
+
 1. Exceptional documentation (SPEC.md, AGENTS.md)
 2. Outstanding test coverage (92.4%)
 3. Strict code quality enforcement (MyPy strict, Ruff, Black)
@@ -541,6 +588,7 @@ AffineDrift is a well-intentioned, mathematically rigorous research platform wit
 5. Excellent AI-centric onboarding (AGENTS.md)
 
 ### Weaknesses
+
 1. **CI completely broken (0% pass rate)** — BLOCKER
 2. **No Python lockfile** — reproducibility risk
 3. **No Docker containerization** — environment drift
@@ -548,16 +596,20 @@ AffineDrift is a well-intentioned, mathematically rigorous research platform wit
 5. **No security scanning** — vulnerability risk
 
 ### Recommendations for Impact
+
 **Tier 1 (Critical — do immediately):**
+
 - Add uv.lock or requirements.lock (2–4 hours)
 - Debug and fix ci-standard.yml (4–8 hours)
 
 **Tier 2 (High — next sprint):**
+
 - Add Dockerfile (4–6 hours)
 - Add pip-audit to CI (2–3 hours)
 - Add structlog for logging (8–12 hours)
 
 **Tier 3 (Medium — quarter):**
+
 - Refactor large test files (6–8 hours)
 - Document custom workflows (3–4 hours)
 
@@ -566,6 +618,7 @@ AffineDrift is a well-intentioned, mathematically rigorous research platform wit
 ## Evidence Files
 
 Generated evidence in `assessments/2026-04-29-evidence/`:
+
 - `git_files.txt` — Complete file listing (1425 files)
 - `basic_structure.txt` — Manifest, docs, tests verification
 - `coverage_testing.txt` — Coverage calculation, benchmark detection

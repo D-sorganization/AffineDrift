@@ -51,168 +51,55 @@ analysis pipeline for the golf swing. The pipeline implements:
 
 \section{Stage 1: Model}
 
-\begin{lstlisting}[language=Python, caption={Complete golf swing analysis pipeline.}]
-import numpy as np
-from dataclasses import dataclass
+\input{generated/ch10_swing_analysis}
 
-@dataclass
-class GolfSwingAnalysis:
-    """Complete analysis of a golf swing."""
-    # Model parameters
-    n_dof: int = 3  # shoulder, elbow, wrist
-    segment_lengths: np.ndarray = None
-    segment_masses: np.ndarray = None
+\begin{warningbox}
+The listing above is generated from \texttt{src/affine\_control/swing\_analysis.py}, so what
+appears here is the code CI executes; the freshness gate fails if the two diverge.
 
-    # Kinematics
-    time: np.ndarray = None
-    joint_angles: np.ndarray = None
-    joint_velocities: np.ndarray = None
-    joint_accelerations: np.ndarray = None
+An earlier revision printed a hand-maintained version of this pipeline, captioned
+``complete'', which was never run and did not work in three places.
 
-    # Dynamics
-    joint_torques: np.ndarray = None
-    clubhead_speed: np.ndarray = None
+\texttt{compute\_clubhead\_speed} summed $\dot q_i r_i$ as scalars, with no trigonometry.
+Tip velocity is a \emph{vector} sum whose contributions point in different directions
+depending on the joint angles, so the printed version was configuration-blind: it returned
+the same speed for a straight arm and a folded one. Substituting a folded configuration into
+both gives $13.3$~m/s from the correct Jacobian against $22.5$~m/s from the scalar sum ---
+a $69\%$ overestimate. The old code even accumulated \texttt{cumulative\_angle} and then
+never used it, and carried a Jacobian loop whose body was \texttt{pass}.
 
-    # ZTCF Decomposition
-    drift_contribution: np.ndarray = None
-    control_contribution: np.ndarray = None
+\texttt{ztcf\_decomposition} returned a hardcoded $60/40$ split of clubhead speed. Its own
+comments conceded the result ``should not be trusted'' and stated that a real implementation
+must solve the forward dynamics twice --- which is what the current one does. Because the
+dynamics are control-affine, the difference between the torqued and zero-torque solutions is
+exactly $M^{-1}\tau$, so the split is exact rather than approximate.
 
-    def __post_init__(self):
-        if self.segment_lengths is None:
-            # Upper arm, forearm+hand, club
-            self.segment_lengths = np.array([0.28, 0.46, 1.10])
-        if self.segment_masses is None:
-            self.segment_masses = np.array([2.16, 1.79, 0.30])
+The driver assigned \texttt{np.random.randn(N, 3) * 10} as joint torques, which the
+placeholder decomposition then ignored. The pipeline was disconnected at both ends.
+\end{warningbox}
 
-    def compute_clubhead_speed(self) -> np.ndarray:
-        """Compute clubhead speed from joint kinematics.
+The module above is a library --- it prints nothing, so that it can be imported and tested.
+To exercise it:
 
-        Uses the Jacobian at the tip to compute the linear
-        velocity of the clubhead.
-        """
-        N = len(self.time)
-        speeds = np.zeros(N)
-        L = self.segment_lengths
+\begin{lstlisting}[language=Python, caption={Running the pipeline.}]
+from src.affine_control.swing_analysis import synthetic_swing
 
-        for k in range(N):
-            q = self.joint_angles[k]
-            qd = self.joint_velocities[k]
-
-            # Jacobian columns
-            J = np.zeros((2, self.n_dof))
-            for i in range(self.n_dof):
-                angle_sum = np.sum(q[:i+1])
-                for j in range(i+1):
-                    # Contribution of joint j to endpoint
-                    pass
-
-            # Simplified: sum of angular contributions
-            v_tip = 0.0
-            cumulative_angle = 0.0
-            for i in range(self.n_dof):
-                cumulative_angle += q[i]
-                r = sum(L[j] for j in range(i, self.n_dof))
-                v_tip += qd[i] * r
-
-            speeds[k] = abs(v_tip)
-
-        self.clubhead_speed = speeds
-        return speeds
-
-    def ztcf_decomposition(self) -> tuple[np.ndarray, np.ndarray]:
-        """Zero Torque Counterfactual (ZTCF) decomposition.
-
-        Separates clubhead acceleration into drift (gravity,
-        Coriolis) and control (muscle torque) contributions.
-
-        From Volume I, Chapter 7. This is a PLACEHOLDER implementation
-        demonstrating the structure. A full implementation requires
-        solving the forward dynamics twice: once with actual torques
-        and once with zero applied torques.
-        """
-        N = len(self.time)
-        drift = np.zeros(N)
-        control = np.zeros(N)
-
-        # PLACEHOLDER: This simplified decomposition does not accurately
-        # compute the true drift versus control contributions. To compute
-        # accurately, one must:
-        # 1. Solve forward dynamics with zero torques: a_drift = f(q, qd, 0)
-        # 2. Solve forward dynamics with actual torques: a_actual = f(q, qd, tau)
-        # 3. Decompose: control contribution = a_actual - a_drift
-        #
-        # For now, we use a representative placeholder.
-
-        for k in range(N):
-            q = self.joint_angles[k]
-            qd = self.joint_velocities[k]
-            tau = self.joint_torques[k]
-
-            # PLACEHOLDER: Assumes approximately 60% drift, 40% control
-            # This is NOT derived from the model and should not be trusted.
-            drift[k] = 0.6 * self.clubhead_speed[k]
-            control[k] = 0.4 * self.clubhead_speed[k]
-
-        self.drift_contribution = drift
-        self.control_contribution = control
-        return drift, control
-
-    def summary(self) -> str:
-        """Generate analysis summary."""
-        if self.clubhead_speed is None:
-            return "No analysis run yet."
-
-        peak_speed = np.max(self.clubhead_speed)
-        peak_idx = np.argmax(self.clubhead_speed)
-
-        lines = [
-            "=== Golf Swing Analysis Summary ===",
-            f"Duration: {self.time[-1]:.3f} s",
-            f"Peak clubhead speed: {peak_speed:.1f} m/s "
-            f"({peak_speed * 2.237:.1f} mph)",
-            f"Peak speed time: {self.time[peak_idx]:.3f} s",
-        ]
-
-        if self.drift_contribution is not None:
-            drift_pct = (np.max(self.drift_contribution) /
-                        peak_speed * 100)
-            lines.append(
-                f"Drift contribution: ~{drift_pct:.0f}% of peak speed"
-            )
-            lines.append(
-                f"Control contribution: ~{100-drift_pct:.0f}% of peak speed"
-            )
-
-        return '\n'.join(lines)
-
-
-# Example: synthesize and analyze a golf swing
-analysis = GolfSwingAnalysis()
-dt = 0.001
-T = 0.30  # Illustrative placeholder duration for a synthetic demo swing.
-N = int(T / dt)
-t = np.linspace(0, T, N)
-
-# Synthetic swing kinematics (smooth profiles for demonstration)
-# These are NOT real measured data; they are synthetic trajectories used
-# to demonstrate the analysis pipeline structure.
-analysis.time = t
-analysis.joint_angles = np.column_stack([
-    -np.pi/2 + np.pi * (t/T)**2,          # shoulder: smooth acceleration
-    np.pi/3 * np.sin(np.pi * t / T),       # elbow: smooth sinusoid
-    -np.pi/2 * np.cos(np.pi * t / (2*T)),  # wrist: smooth release
-])
-analysis.joint_velocities = np.gradient(analysis.joint_angles, dt, axis=0)
-analysis.joint_accelerations = np.gradient(analysis.joint_velocities, dt, axis=0)
-# Placeholder torques: DO NOT interpret these as realistic muscle torques.
-# Real torques must be estimated from motion capture data via inverse dynamics
-# or estimated from electromyography data via Hill-type muscle models.
-analysis.joint_torques = np.random.randn(N, 3) * 10
-
-analysis.compute_clubhead_speed()
-analysis.ztcf_decomposition()
-print(analysis.summary())
+print(synthetic_swing().summary())
 \end{lstlisting}
+
+\begin{remark}[Reading the summary output]
+This reports a peak clubhead speed near $30$~m/s for the synthetic kinematics.
+That is well below a real driver swing, and it should be: the joint trajectories are smooth
+analytic profiles chosen to exercise the pipeline, not measured data. Real torques must come
+from inverse dynamics on motion capture, or from a Hill-type muscle model driven by EMG.
+
+The drift/control split is reported as a median over the interior samples rather than at the
+instant of peak speed. The endpoints carry one-sided \texttt{np.gradient} estimates of the
+joint rates, and the drift term legitimately passes through zero whenever the chain
+straightens --- at a fully extended vertical configuration both the gravity and Coriolis
+torques vanish exactly, so a ratio quoted there reads as ``$0\%$ drift'' and says nothing
+about the swing.
+\end{remark}
 
 \section{Golf Swing Simulation Architecture}
 
@@ -272,9 +159,12 @@ stage, referencing the relevant theory from Volumes 0--IV.
 \section*{Final Exercises}
 
 \begin{enumerate}
-  \item \textbf{Complete Pipeline.} Run the full analysis pipeline on the provided synthetic
-        swing data. Extract the peak clubhead speed, the time of peak speed, and the
-        peak joint torques. Compare to placeholder values.
+  \item \textbf{Complete Pipeline.} Run the analysis pipeline on the synthetic swing.
+        Extract the peak clubhead speed, the time of peak speed, and the peak joint torques.
+        Then check the clubhead-speed function against the failure it used to have: evaluate
+        it at a straight configuration and at a folded one with the same joint rates. A
+        correct implementation gives different answers; a scalar sum of $\dot q_i r_i$ gives
+        the straight-arm value in both cases.
 
   \item \textbf{Parameter Study.} Programmatically vary club length ($\pm 10\%$) and mass
         ($\pm 20\%$). Simulate the swing and measure peak clubhead speed. Plot clubhead

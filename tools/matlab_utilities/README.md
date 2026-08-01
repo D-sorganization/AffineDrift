@@ -20,6 +20,7 @@ Located in `quality/` directory.
 Analyzes MATLAB code for quality issues, style violations, and potential bugs.
 
 **Usage:**
+
 ```matlab
 % Check a single file
 results = checkCodeQuality('myScript.m');
@@ -51,6 +52,7 @@ Located in `testing/` directory.
 Automated test execution and reporting.
 
 **Usage:**
+
 ```matlab
 % Run all tests
 results = runAllTests();
@@ -65,6 +67,7 @@ generateTestReport(results, 'test_report.html');
 ### Test Helpers
 
 Common testing utilities:
+
 - `assertAlmostEqual()` - Floating-point comparison with tolerance
 - `assertMatrixEqual()` - Matrix equality with element-wise comparison
 - `mockFunction()` - Function mocking for unit tests
@@ -102,6 +105,7 @@ checkRequiredToolboxes();
 ## Installation
 
 1. Add utilities to MATLAB path:
+
    ```matlab
    addpath(genpath('tools/matlab_utilities'));
    ```
@@ -124,6 +128,7 @@ checkRequiredToolboxes();
 ### matlab_quality_config.m
 
 Configures code quality checking rules:
+
 - Complexity thresholds
 - Naming conventions
 - Documentation requirements
@@ -132,6 +137,7 @@ Configures code quality checking rules:
 ### run_matlab_tests.m
 
 Configures test execution:
+
 - Test discovery patterns
 - Output formats
 - Coverage reporting
@@ -142,6 +148,7 @@ Configures test execution:
 ### Code Quality
 
 1. **Run quality checks before committing:**
+
    ```matlab
    results = checkCodeQuality('src/');
    if ~isempty(results.errors)
@@ -157,11 +164,13 @@ Configures test execution:
 ### Testing
 
 1. **Organize tests by type:**
+
    - `tests/unit/` - Unit tests
    - `tests/integration/` - Integration tests
    - `tests/performance/` - Performance tests
 
 2. **Use descriptive test names:**
+
    ```matlab
    function test_calculateMean_withValidInput_returnsCorrectValue()
        % Test implementation
@@ -169,10 +178,11 @@ Configures test execution:
    ```
 
 3. **Run tests frequently:**
+
    ```matlab
    % Quick smoke test
    runTestSuite('tests/unit/critical/');
-   
+
    % Full test suite
    runAllTests();
    ```
@@ -182,6 +192,7 @@ Configures test execution:
 ### Path Issues
 
 If functions are not found:
+
 ```matlab
 % Verify paths
 which checkCodeQuality
@@ -194,6 +205,7 @@ savepath
 ### Toolbox Dependencies
 
 Check for missing toolboxes:
+
 ```matlab
 checkRequiredToolboxes();
 ```
@@ -201,6 +213,7 @@ checkRequiredToolboxes();
 ### Performance
 
 For large codebases:
+
 - Use parallel processing: `parfor` in batch operations
 - Exclude generated files: Configure exclusion patterns
 - Cache results: Enable result caching in config
@@ -210,16 +223,19 @@ For large codebases:
 When adding new utilities:
 
 1. **Follow naming conventions:**
+
    - Functions: `camelCase`
    - Classes: `PascalCase`
    - Constants: `UPPER_CASE`
 
 2. **Add documentation:**
+
    - Function headers with description
    - Input/output specifications
    - Usage examples
 
 3. **Include tests:**
+
    - Unit tests for all functions
    - Integration tests for workflows
    - Performance tests for critical paths

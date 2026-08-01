@@ -3,12 +3,14 @@
 ## A) Concept Map
 
 - **System Modeling**
+
   - **Multibody Dynamics**: Modeling the golfer as a kinematic chain of rigid bodies.
   - **Control-Affine Form**: $\dot{x} = f(x) + g(x)u$. Separating dynamics into drift (passive) and input (active) vector fields.
   - **Drift Invariance**: The property that passive dynamics $f(x)$ are independent of instantaneous torque inputs $u$.
   - **Flexible Multibody Dynamics**: Modeling the shaft using Assumed Modes Method (AMM) within the rigid-body framework.
 
 - **Force Decomposition**
+
   - **Drift Dynamics**: Passive forces from inertia, Coriolis/centrifugal effects, gravity, and shaft elasticity.
   - **Input Dynamics**: Active forces arising purely from generalized joint torques.
   - **Counterfactuals**:
@@ -16,10 +18,12 @@
     - **Zero Velocity Counterfactual (ZVCF)**: Instantaneous evaluation at $\dot{x}=0$ to isolate configuration-dependent loads (gravity, stiffness).
 
 - **Causal Analysis**
+
   - **Mechanical Causality**: Attributing motion to physical mechanisms (inertia vs. torque) rather than neural intent.
   - **Force Taxonomy**: Classification of total force into Configuration Drift, Velocity Drift, Input, and Mixed components.
 
 - **Advanced Critiques & Limitations**
+
   - **Stiffness Pulse Paradox**: The conflict between drift invariance and rapid impedance modulation.
   - **Effective Plant**: The task-dependent impedance landscape serving as the background for drift.
   - **Intentional Constraint Collapse**: Using variable stiffness to alter the system's topology during the swing.
@@ -96,7 +100,8 @@
   venue: "Journal of Dynamic Systems, Measurement, and Control"
   scholar_link: "https://scholar.google.com/scholar?q=Impedance+Control+An+Approach+to+Manipulation+Hogan"
   clusters: ["robotics", "impedance control"]
-  concepts: ["mechanical impedance", "programmable compliance", "interaction control"]
+  concepts:
+    ["mechanical impedance", "programmable compliance", "interaction control"]
   related_ids: ["todorov2004optimality"]
   references_out_ids: []
 

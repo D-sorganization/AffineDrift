@@ -1,4 +1,5 @@
 # Scientific Rigor Audit - Documentation Index
+
 ## The Geometry of Motion Textbook Series
 
 **Audit Date**: 2026-03-27
@@ -10,20 +11,26 @@
 ## Quick Navigation
 
 ### For Quick Actions
+
 Start here: **QUICK_REFERENCE.md**
+
 - BibTeX templates for 7 missing entries
 - Validation commands ready to copy/paste
 - Critical fixes checklist
 
 ### For Detailed Findings
+
 Start here: **BIBLIOGRAPHY_AUDIT_REPORT.md**
+
 - Complete audit results and statistics
 - All 7 missing entries documented
 - All 6 [CITE:] placeholders located
 - 60+ recommended bibliography additions
 
 ### For PR Submission
+
 Start here: **PR_INSTRUCTIONS.md**
+
 - Complete git workflow with all commands
 - 5-volume PR structure (recommended)
 - LaTeX compilation verification steps
@@ -35,6 +42,7 @@ Start here: **PR_INSTRUCTIONS.md**
 ## What Was Audited
 
 ### Scope
+
 - **Repository**: AffineDrift
 - **Target**: The Geometry of Motion textbook series
 - **Volumes**: 5 (plus foundational Volume 0)
@@ -42,6 +50,7 @@ Start here: **PR_INSTRUCTIONS.md**
 - **Bibliography File**: geometry_of_motion.bib
 
 ### Audit Results Summary
+
 ```
 Citation Keys Found: 84
 Bibliography Entries: 114
@@ -75,12 +84,15 @@ These citations exist in chapter files but NOT in geometry_of_motion.bib:
 These chapters contain placeholder markers instead of proper citations:
 
 1. Volume_I/chapters/ch02_variational.tex (line 334)
+
    - Peano-Baker history in Magnus expansion
 
 2. Volume_II/chapters/ch05_underactuation_and_passive_dyn.tex (line 22)
+
    - Golf swing biomechanics and wrist release mechanism
 
-3. Volume_II/chapters/ch09_stochastic_trajectories_motor_.tex (lines 18, 18, 36, 92)
+3. Volume*II/chapters/ch09_stochastic_trajectories_motor*.tex (lines 18, 18, 36, 92)
+
    - Henneman motor unit recruitment (line 18)
    - Signal-dependent noise in motor control (line 18)
    - Harris and Wolpert minimum variance theory (line 36)
@@ -127,6 +139,7 @@ These chapters contain placeholder markers instead of proper citations:
 ## Document Details
 
 ### QUICK_REFERENCE.md
+
 - **Lines**: 227
 - **Size**: 6.2 KB
 - **Purpose**: Quick action checklist
@@ -138,6 +151,7 @@ These chapters contain placeholder markers instead of proper citations:
   - File locations
 
 ### BIBLIOGRAPHY_AUDIT_REPORT.md
+
 - **Lines**: 440
 - **Size**: 15 KB
 - **Purpose**: Detailed audit findings
@@ -152,6 +166,7 @@ These chapters contain placeholder markers instead of proper citations:
   - Validation checklist
 
 ### PR_INSTRUCTIONS.md
+
 - **Lines**: 432
 - **Size**: 15 KB
 - **Purpose**: Complete PR workflow
@@ -175,6 +190,7 @@ These chapters contain placeholder markers instead of proper citations:
 Edit: `geometry_of_motion.bib`
 
 Add these 7 entries (BibTeX templates in QUICK_REFERENCE.md):
+
 ```
 Arnold1989, Bellman1961, Featherstone1983, Flash1985,
 Goldstein2002, Lynch2017, Westervelt2007
@@ -183,6 +199,7 @@ Goldstein2002, Lynch2017, Westervelt2007
 ### Priority 2: Fix Placeholders (20 minutes)
 
 Edit these chapter files and replace [CITE:...] with \cite{key}:
+
 ```
 Volume_I/chapters/ch02_variational.tex:334
 Volume_II/chapters/ch05_underactuation_and_passive_dyn.tex:22
@@ -195,6 +212,7 @@ Volume_IV/chapters/ch01_dof_problem.tex:15
 ### Priority 3: Validate (10 minutes)
 
 Run validation script (from QUICK_REFERENCE.md):
+
 ```bash
 # Check for missing entries (should return nothing)
 # Check for [CITE:] markers (should return nothing)
@@ -203,6 +221,7 @@ Run validation script (from QUICK_REFERENCE.md):
 ### Priority 4: Compile (30 minutes)
 
 For each volume, run:
+
 ```bash
 cd VolumeX && pdflatex main.tex && bibtex main.aux && pdflatex main.tex
 ```
@@ -210,6 +229,7 @@ cd VolumeX && pdflatex main.tex && bibtex main.aux && pdflatex main.tex
 ### Priority 5: Submit PR (30 minutes)
 
 Follow PR_INSTRUCTIONS.md:
+
 - Create branch
 - Stage changes
 - Commit
@@ -220,6 +240,7 @@ Follow PR_INSTRUCTIONS.md:
 ## File Locations
 
 ### Documentation Files
+
 ```
 /articles/The_Geometry_of_Motion/
 
@@ -247,6 +268,7 @@ Follow PR_INSTRUCTIONS.md:
 ```
 
 ### Parent Repository
+
 ```
 /sessions/stoic-practical-newton/mnt/diete/Repositories/AffineDrift/
 ```
@@ -255,27 +277,28 @@ Follow PR_INSTRUCTIONS.md:
 
 ## Key Statistics
 
-| Item | Count |
-|------|-------|
-| Total Chapters | 77 |
-| Total Volumes | 6 |
-| Bibliography Entries | 114 |
-| Unique Citation Keys | 84 |
-| Citation Instances | 95 |
-| **Missing Entries** | **7** |
-| **Placeholders** | **6** |
-| Files Modified | 136 |
-| TikZ Diagrams Added | ~55 |
-| Bibliography Entries (new) | 60+ |
-| Documentation Lines | 1,099 |
+| Item                          | Count |
+| ----------------------------- | ----- |
+| Total Chapters                | 77    |
+| Total Volumes                 | 6     |
+| Bibliography Entries          | 114   |
+| Unique Citation Keys          | 84    |
+| Citation Instances            | 95    |
+| **Missing Entries**           | **7** |
+| **Placeholders**              | **6** |
+| Files Modified                | 136   |
+| TikZ Diagrams Added           | ~55   |
+| Bibliography Entries (new)    | 60+   |
+| Documentation Lines           | 1,099 |
 | Citation Consistency (before) | 88.1% |
-| Citation Consistency (after) | 100% |
+| Citation Consistency (after)  | 100%  |
 
 ---
 
 ## Recommendations by Priority
 
 ### Short-term (CRITICAL - Do First)
+
 - [ ] Add 7 missing bibliography entries
 - [ ] Convert 6 [CITE:] placeholders
 - [ ] Run validation script
@@ -283,11 +306,13 @@ Follow PR_INSTRUCTIONS.md:
 - [ ] Create PR with changes
 
 ### Medium-term (IMPORTANT - Do Soon)
+
 - [ ] Add 60+ recommended bibliography entries
 - [ ] Enhance further_reading.tex sections
 - [ ] Create topic-based bibliography index
 
 ### Long-term (NICE-TO-HAVE - Consider Later)
+
 - [ ] Implement CI/CD bibliography validation
 - [ ] Move to cloud-based bibliography system
 - [ ] Create formal bibliography style guide
@@ -298,26 +323,34 @@ Follow PR_INSTRUCTIONS.md:
 ## Support & References
 
 ### For Missing Entries
+
 See: **BIBLIOGRAPHY_AUDIT_REPORT.md** (Section 4)
+
 - Detailed specifications for all 7 entries
 - Complete BibTeX templates
 - DOI and publication information
 
 ### For [CITE:] Placeholders
+
 See: **BIBLIOGRAPHY_AUDIT_REPORT.md** (Section 4)
+
 - Exact line numbers and file locations
 - Context and surrounding text
 - Required replacement text
 
 ### For Git Workflow
+
 See: **PR_INSTRUCTIONS.md**
+
 - Branch creation commands
 - Staging and commit guidelines
 - Complete gh CLI examples
 - Both 5-PR and single-PR approaches
 
 ### For Quick Actions
+
 See: **QUICK_REFERENCE.md**
+
 - Ready-to-use BibTeX templates
 - Copy/paste validation commands
 - Verification checklist
@@ -327,12 +360,14 @@ See: **QUICK_REFERENCE.md**
 ## Validation Commands (Copy/Paste Ready)
 
 ### Check for [CITE:] Markers
+
 ```bash
 cd /sessions/stoic-practical-newton/mnt/diete/Repositories/AffineDrift/articles/The_Geometry_of_Motion
 grep -rn '\[CITE:' --include="*.tex"
 ```
 
 ### Validate Bibliography Consistency
+
 ```bash
 grep -rho '\(cite\|citep\|citet\){[^}]*}' --include="*.tex" \
   | grep -o '{[^}]*}' | tr -d '{}' | tr ',' '\n' \
@@ -345,6 +380,7 @@ comm -23 /tmp/citation_keys.txt /tmp/bib_keys.txt
 ```
 
 ### Compile a Volume
+
 ```bash
 cd /sessions/stoic-practical-newton/mnt/diete/Repositories/AffineDrift/articles/The_Geometry_of_Motion/Volume_0
 pdflatex main.tex && bibtex main.aux && pdflatex main.tex && pdflatex main.tex
@@ -368,14 +404,14 @@ pdflatex main.tex && bibtex main.aux && pdflatex main.tex && pdflatex main.tex
 
 ## Status Summary
 
-| Component | Status |
-|-----------|--------|
-| Audit Complete | COMPLETE |
-| Missing Entries Identified | 7 FOUND |
-| Placeholders Identified | 6 FOUND |
-| Documentation Created | COMPLETE |
-| Ready for Fixes | YES |
-| Ready for PR | PENDING FIXES |
+| Component                  | Status        |
+| -------------------------- | ------------- |
+| Audit Complete             | COMPLETE      |
+| Missing Entries Identified | 7 FOUND       |
+| Placeholders Identified    | 6 FOUND       |
+| Documentation Created      | COMPLETE      |
+| Ready for Fixes            | YES           |
+| Ready for PR               | PENDING FIXES |
 
 ---
 

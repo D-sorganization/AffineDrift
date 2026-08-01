@@ -1,4 +1,5 @@
 # Bibliography & PR Quick Reference
+
 ## The Geometry of Motion - Scientific Rigor Audit
 
 **Last Updated**: 2026-03-27
@@ -6,6 +7,7 @@
 ---
 
 ## Files Created
+
 1. **PR_INSTRUCTIONS.md** - Complete PR workflow and git commands
 2. **BIBLIOGRAPHY_AUDIT_REPORT.md** - Detailed findings and analysis
 3. **QUICK_REFERENCE.md** - This file
@@ -15,6 +17,7 @@
 ## Critical Fixes Needed (Do These First)
 
 ### 1. Add Missing Bibliography Entries (7 keys)
+
 Add these to `geometry_of_motion.bib`:
 
 ```bibtex
@@ -80,15 +83,15 @@ Add these to `geometry_of_motion.bib`:
 
 Replace these in chapter files:
 
-| File | Line | Replace | With |
-|------|------|---------|------|
-| Volume_I/chapters/ch02_variational.tex | 334 | `[CITE: Peano-Baker history...]` | `\cite{Magnus1954}` |
-| Volume_II/chapters/ch05_underactuation...tex | 22 | `[CITE: empirical golf swing...]` | `\cite{Zheng2008}` |
-| Volume_II/chapters/ch09_stochastic...tex | 18 | `[CITE: Henneman motor unit...]` | `\cite{Henneman1957}` |
-| Volume_II/chapters/ch09_stochastic...tex | 18 | `[CITE: signal-dependent noise...]` | `\cite{Harris1998}` |
-| Volume_II/chapters/ch09_stochastic...tex | 36 | `[CITE: Harris and Wolpert...]` | `\cite{Harris1998}` |
-| Volume_II/chapters/ch09_stochastic...tex | 92 | `[CITE: Fitts 1954...]` | `\cite{Fitts1954}` |
-| Volume_IV/chapters/ch01_dof_problem.tex | 15 | `[CITE: Bernstein1967]` | `\cite{Bernstein1967}` |
+| File                                         | Line | Replace                             | With                   |
+| -------------------------------------------- | ---- | ----------------------------------- | ---------------------- |
+| Volume_I/chapters/ch02_variational.tex       | 334  | `[CITE: Peano-Baker history...]`    | `\cite{Magnus1954}`    |
+| Volume_II/chapters/ch05_underactuation...tex | 22   | `[CITE: empirical golf swing...]`   | `\cite{Zheng2008}`     |
+| Volume_II/chapters/ch09_stochastic...tex     | 18   | `[CITE: Henneman motor unit...]`    | `\cite{Henneman1957}`  |
+| Volume_II/chapters/ch09_stochastic...tex     | 18   | `[CITE: signal-dependent noise...]` | `\cite{Harris1998}`    |
+| Volume_II/chapters/ch09_stochastic...tex     | 36   | `[CITE: Harris and Wolpert...]`     | `\cite{Harris1998}`    |
+| Volume_II/chapters/ch09_stochastic...tex     | 92   | `[CITE: Fitts 1954...]`             | `\cite{Fitts1954}`     |
+| Volume_IV/chapters/ch01_dof_problem.tex      | 15   | `[CITE: Bernstein1967]`             | `\cite{Bernstein1967}` |
 
 ---
 
@@ -106,12 +109,14 @@ Replace these in chapter files:
 ## Quick Commands
 
 ### 1. Check for [CITE:] Markers (should be empty)
+
 ```bash
 cd /sessions/stoic-practical-newton/mnt/diete/Repositories/AffineDrift/articles/The_Geometry_of_Motion
 grep -rn '\[CITE:' --include="*.tex"
 ```
 
 ### 2. Validate Bibliography Consistency
+
 ```bash
 cd /sessions/stoic-practical-newton/mnt/diete/Repositories/AffineDrift/articles/The_Geometry_of_Motion
 
@@ -133,6 +138,7 @@ comm -13 /tmp/citation_keys.txt /tmp/bib_keys.txt | head -20
 ```
 
 ### 3. Compile Volume (example: Volume_0)
+
 ```bash
 cd /sessions/stoic-practical-newton/mnt/diete/Repositories/AffineDrift/articles/The_Geometry_of_Motion/Volume_0
 pdflatex main.tex
@@ -142,6 +148,7 @@ pdflatex main.tex
 ```
 
 ### 4. Start PR Process (Read PR_INSTRUCTIONS.md for full details)
+
 ```bash
 cd /sessions/stoic-practical-newton/mnt/diete/Repositories/AffineDrift
 
@@ -171,18 +178,18 @@ gh pr create --title "refactor: The Geometry of Motion scientific rigor audit" \
 
 ## Key Statistics
 
-| Metric | Value |
-|--------|-------|
-| Total Chapters | 77 |
-| Total Volumes | 6 |
-| Bibliography Entries | 114 |
-| Unique Citation Keys | 84 |
-| Missing Entries | 7 (CRITICAL) |
-| [CITE:] Placeholders | 6 (CRITICAL) |
-| Files Modified | 136 |
-| TikZ Diagrams Added | ~55 |
-| New Bibliography Entries | 60+ |
-| Citation Consistency | 88.1% |
+| Metric                   | Value        |
+| ------------------------ | ------------ |
+| Total Chapters           | 77           |
+| Total Volumes            | 6            |
+| Bibliography Entries     | 114          |
+| Unique Citation Keys     | 84           |
+| Missing Entries          | 7 (CRITICAL) |
+| [CITE:] Placeholders     | 6 (CRITICAL) |
+| Files Modified           | 136          |
+| TikZ Diagrams Added      | ~55          |
+| New Bibliography Entries | 60+          |
+| Citation Consistency     | 88.1%        |
 
 ---
 
@@ -220,6 +227,7 @@ Volume_V/chapters/
 ## Support
 
 For detailed instructions, see:
+
 - Git workflow: PR_INSTRUCTIONS.md
 - Audit findings: BIBLIOGRAPHY_AUDIT_REPORT.md
 - Compilation help: PR_INSTRUCTIONS.md (Verification Steps section)

@@ -54,10 +54,12 @@ pytest tests/test_latex_to_qmd.py::test_convert_equation
 Test individual functions and modules in isolation.
 
 **Files:**
+
 - `test_latex_to_qmd.py` - LaTeX to QMD conversion
 - `test_update_navigation.py` - Navigation menu generation
 
 **Example:**
+
 ```python
 def test_convert_simple_equation():
     """Test conversion of simple LaTeX equation."""
@@ -71,9 +73,11 @@ def test_convert_simple_equation():
 Test interactions between multiple components.
 
 **Files:**
+
 - `test_deployment_integrity.py` - Full deployment pipeline
 
 **Example:**
+
 ```python
 def test_full_build_pipeline():
     """Test complete build from source to deployment."""
@@ -124,10 +128,10 @@ def test_function_name():
     """Test description."""
     # Arrange: Set up test data
     input_data = create_test_data()
-    
+
     # Act: Execute the function
     result = function_under_test(input_data)
-    
+
     # Assert: Verify the result
     assert result == expected_value
     assert result.property == expected_property
@@ -141,7 +145,7 @@ All tests should have descriptive docstrings:
 def test_convert_complex_equation():
     """
     Test conversion of complex LaTeX equations with nested structures.
-    
+
     Verifies that:
     - Nested fractions are handled correctly
     - Subscripts and superscripts are preserved
@@ -164,6 +168,7 @@ assert result.status == "success", f"Expected success, got {result.status}"
 ### Current Coverage
 
 Run coverage report:
+
 ```bash
 pytest --cov=. --cov-report=term-missing
 ```
@@ -182,6 +187,7 @@ pytest --cov=. --cov-report=term-missing
 ### Viewing Coverage Reports
 
 HTML coverage report:
+
 ```bash
 pytest --cov=. --cov-report=html
 open htmlcov/index.html
@@ -190,6 +196,7 @@ open htmlcov/index.html
 ## Continuous Integration
 
 Tests run automatically on:
+
 - Pull requests
 - Pushes to main branch
 - Nightly builds
@@ -201,6 +208,7 @@ See `.github/workflows/` for CI pipeline configuration.
 ### Pre-commit Checks
 
 Run tests before committing:
+
 ```bash
 # Add to .git/hooks/pre-commit
 pytest --exitfirst
@@ -230,7 +238,7 @@ def test_file_processing(tmp_path):
     """Test file processing with temporary files."""
     test_file = tmp_path / "test.txt"
     test_file.write_text("content")
-    
+
     result = process_file(test_file)
     assert result.success
 ```
@@ -272,7 +280,7 @@ def test_performance():
     start = time.time()
     result = expensive_function()
     duration = time.time() - start
-    
+
     assert duration < 1.0, f"Function took {duration}s, expected < 1s"
 ```
 
@@ -287,6 +295,7 @@ pytest --profile
 ### Import Errors
 
 Ensure project root is in PYTHONPATH:
+
 ```bash
 export PYTHONPATH="${PYTHONPATH}:$(pwd)"
 pytest
@@ -299,6 +308,7 @@ Check that `conftest.py` is in the correct location and fixtures are properly de
 ### Flaky Tests
 
 For tests that occasionally fail:
+
 ```python
 import pytest
 

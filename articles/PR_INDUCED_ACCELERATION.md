@@ -2,7 +2,7 @@
 
 ## Summary
 
-This PR integrates 12 induced acceleration research papers into both textbooks — *The Physics of Golf* and *The Geometry of Motion* — adding a new chapter to each book, updating both bibliographies, adding cross-references from existing chapters, and creating Quarto (.qmd) renderings for the website.
+This PR integrates 12 induced acceleration research papers into both textbooks — _The Physics of Golf_ and _The Geometry of Motion_ — adding a new chapter to each book, updating both bibliographies, adding cross-references from existing chapters, and creating Quarto (.qmd) renderings for the website.
 
 ## Branch and PR Creation
 
@@ -108,26 +108,26 @@ Caruthers, Kepple, Bullo & Lewis
 
 ### New files (4)
 
-| File | Description |
-|------|-------------|
-| `articles/The_Physics_of_Golf/chapters/ch30b_induced_acceleration.tex` | New LaTeX chapter (~400 lines) |
-| `articles/The_Physics_of_Golf/quarto/ch30b_induced_acceleration.qmd` | Quarto rendering of ch30b |
+| File                                                                                            | Description                    |
+| ----------------------------------------------------------------------------------------------- | ------------------------------ |
+| `articles/The_Physics_of_Golf/chapters/ch30b_induced_acceleration.tex`                          | New LaTeX chapter (~400 lines) |
+| `articles/The_Physics_of_Golf/quarto/ch30b_induced_acceleration.qmd`                            | Quarto rendering of ch30b      |
 | `articles/The_Geometry_of_Motion/Volume_I/chapters/ch03b_induced_acceleration_biomechanics.tex` | New LaTeX chapter (~300 lines) |
-| `articles/The_Geometry_of_Motion/quarto/ch03b_induced_acceleration_biomechanics.qmd` | Quarto rendering of ch03b |
+| `articles/The_Geometry_of_Motion/quarto/ch03b_induced_acceleration_biomechanics.qmd`            | Quarto rendering of ch03b      |
 
 ### Modified files (9)
 
-| File | Change |
-|------|--------|
-| `articles/The_Physics_of_Golf/main.tex` | Added `\include{chapters/ch30b_induced_acceleration}` after ch30 |
-| `articles/The_Physics_of_Golf/golf_physics.bib` | Added 15 BibTeX entries (14 IAA papers + Bullo & Lewis) |
-| `articles/The_Physics_of_Golf/quarto/_quarto.yml` | Added `ch30b_induced_acceleration.qmd` to Part VIII |
-| `articles/The_Physics_of_Golf/chapters/ch30_kinetic_chain.tex` | Forward reference to ch30b at line ~698 |
-| `articles/The_Physics_of_Golf/chapters/ch05_affine_structure.tex` | Forward reference to ch30b in closing section |
-| `articles/The_Geometry_of_Motion/Volume_I/main.tex` | Added `\include{chapters/ch03b_induced_acceleration_biomechanics}` after ch03 |
-| `articles/The_Geometry_of_Motion/geometry_of_motion.bib` | Added 14 BibTeX entries |
-| `articles/The_Geometry_of_Motion/quarto/volume1.qmd` | Added `{{< include ch03b_... >}}` after ch03 |
-| `articles/The_Geometry_of_Motion/Volume_I/chapters/ch03_superposition.tex` | Forward reference to ch03b after chapter summary |
+| File                                                                       | Change                                                                        |
+| -------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| `articles/The_Physics_of_Golf/main.tex`                                    | Added `\include{chapters/ch30b_induced_acceleration}` after ch30              |
+| `articles/The_Physics_of_Golf/golf_physics.bib`                            | Added 15 BibTeX entries (14 IAA papers + Bullo & Lewis)                       |
+| `articles/The_Physics_of_Golf/quarto/_quarto.yml`                          | Added `ch30b_induced_acceleration.qmd` to Part VIII                           |
+| `articles/The_Physics_of_Golf/chapters/ch30_kinetic_chain.tex`             | Forward reference to ch30b at line ~698                                       |
+| `articles/The_Physics_of_Golf/chapters/ch05_affine_structure.tex`          | Forward reference to ch30b in closing section                                 |
+| `articles/The_Geometry_of_Motion/Volume_I/main.tex`                        | Added `\include{chapters/ch03b_induced_acceleration_biomechanics}` after ch03 |
+| `articles/The_Geometry_of_Motion/geometry_of_motion.bib`                   | Added 14 BibTeX entries                                                       |
+| `articles/The_Geometry_of_Motion/quarto/volume1.qmd`                       | Added `{{< include ch03b_... >}}` after ch03                                  |
+| `articles/The_Geometry_of_Motion/Volume_I/chapters/ch03_superposition.tex` | Forward reference to ch03b after chapter summary                              |
 
 ## Compilation Verification
 
@@ -164,6 +164,7 @@ quarto render
 ```
 
 Verify that:
+
 1. ch30b appears in the Table of Contents under Part VIII, after "The Kinetic Chain"
 2. ch03b appears in the Volume I Table of Contents, between "Superposition" and "Contraction"
 3. All citations render as clickable links to the bibliography
