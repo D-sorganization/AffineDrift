@@ -383,9 +383,12 @@ The recursion converges to
 \mat{S} = \begin{bmatrix} \chsixRiccati \end{bmatrix},
 \label{eq:ch6:riccati-solution}
 \end{equation}
-which satisfies the discrete algebraic Riccati equation to a residual norm of
-$\chsixRiccatiResidual$ --- machine precision, and the first property worth checking about
-any matrix presented as a Riccati solution.
+which satisfies the discrete algebraic Riccati equation to a residual norm below
+$\chsixRiccatiResidual$ --- in practice it lands at machine precision, but the published
+figure is a bound the generator enforces, because the residual itself is a difference of
+nearly-equal floating-point numbers and its exact value varies with the machine. Whether the
+residual is small at all is the first property worth checking about any matrix presented as
+a Riccati solution.
 
 The eigenvalues of $\mat{S}$ are $\lambda_{\max}(\mat{S}) = \chsixRiccatiEigMax$ and
 $\lambda_{\min}(\mat{S}) = \chsixRiccatiEigMin$, both positive as they must be, giving a
