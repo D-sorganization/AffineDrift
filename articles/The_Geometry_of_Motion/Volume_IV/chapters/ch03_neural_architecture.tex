@@ -64,10 +64,10 @@ Key properties of M1 (experimentally confirmed):
 \begin{itemize}
   \item \textbf{Somatotopic organization}: body parts are mapped to cortical regions
         (the motor homunculus), with overlapping representations (Penfield and Boldrey, 1937)
-  \item \textbf{Population coding}: individual neurons have broad directional tuning; movement
-        direction is encoded by the population vector (Georgopoulos et al. 1986 demonstrated
-        that M1 neurons fire maximally at preferred directions, and the population vector
-        accurately predicts reach direction)
+  \item \textbf{Population coding}: individual neurons have broad cosine-shaped directional
+        tuning about a preferred direction~\cite{Georgopoulos1982}, and movement direction is
+        recovered from the vector sum of the population's contributions rather than from any
+        single cell~\cite{Georgopoulos1986}
   \item \textbf{Preparatory activity}: M1 neurons show activity 100--200~ms before
         movement onset during motor preparation, reflecting planning processes
 \end{itemize}
@@ -108,13 +108,18 @@ its primary role in motor control as a \textbf{forward model}:
   \end{itemize}
 \end{neurobox}
 
-This cerebellar architecture has been verified through multiple lines of evidence. Patients
-with cerebellar lesions show impaired adaptation to visuomotor rotations (Shadmehr and
-Mussa-Ivaldi, 1994) and cannot learn reaching trajectories with altered dynamics. Single-unit
-recordings from Purkinje cells show learning-related changes in their responses during
-motor adaptation tasks (Kawato, 1999). The timescale of cerebellar learning ($\sim$minutes)
-matches the time constant of LTD induction and consolidation, providing a mechanistic
-account of trial-by-trial motor learning.
+Two lines of evidence support this architecture, and it is worth keeping them apart because
+they come from different populations.
+
+In healthy subjects, reaching against a novel force field is initially distorted and then
+straightens with practice; removing the field produces aftereffects that mirror the original
+distortion, which is what implicates a learned internal model of the limb's dynamics rather
+than a stiffer or better-tuned feedback loop~\cite{ShadmehrMussaIvaldi1994}. In patients with
+cerebellar degeneration, on-line correction within a movement is intact while trial-to-trial
+learning of those same altered dynamics is profoundly impaired---a dissociation that does not
+appear in Huntington's disease, where the deficit falls on the feedback side
+instead~\cite{SmithShadmehr2005}. The first result establishes that an internal model is
+learned; the second locates the learning in the cerebellum.
 
 \subsection{Basal Ganglia: Action Selection}
 
