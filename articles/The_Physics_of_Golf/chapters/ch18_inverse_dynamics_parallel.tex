@@ -18,11 +18,11 @@ This is the most technically demanding chapter in this book. The reward is a cle
 \begin{figure}[h]
 \centering
 \begin{tikzpicture}[node distance=1.2cm, auto, font=\small]
-  \node[draw, rounded rectangle] (motion) {Measured Trajectory};
+  \node[draw, rounded corners] (motion) {Measured Trajectory};
   \node[draw, below of=motion] (kinematics) {Compute velocities/accelerations};
   \node[draw, below of=kinematics] (forces) {Compute external forces};
   \node[draw, below of=forces] (inverse) {Apply RNEA algorithm};
-  \node[draw, rounded rectangle, below of=inverse] (torques) {Inferred joint torques};
+  \node[draw, rounded corners, below of=inverse] (torques) {Inferred joint torques};
   \draw[->] (motion) -- (kinematics);
   \draw[->] (kinematics) -- (forces);
   \draw[->] (forces) -- (inverse);
