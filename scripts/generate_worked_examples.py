@@ -26,6 +26,7 @@ import numpy as np
 if __package__ in {None, ""}:
     sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+from src.affine_control.dynamics import christoffel_coriolis, planar_double_pendulum_trajectory
 from src.affine_control.golf_model import SEGMENTS, GolfModel
 from src.affine_control.lqr import LQRSolution, discrete_lqr
 
@@ -183,7 +184,7 @@ def render_ch08(model: GolfModel) -> str:
     macro("cheightGravityShoulder", f"{gravity[0]:.2f}")
 
     # ZTCF trajectory: integrate with zero applied torque from the state above.
-    trajectory = model.ztcf_trajectory(q, qd, duration=0.10, steps=2000)
+    trajectory = model.ztcf_trajectory(q, qd, duration=0.10, steps=400)
     sampled = [trajectory[0], trajectory[len(trajectory) // 2], trajectory[-1]]
     lines.append("")
     lines.append("\\newcommand{\\cheightZtcfTable}{%")
@@ -210,11 +211,125 @@ def render_ch08(model: GolfModel) -> str:
     return "\n".join(lines)
 
 
+# Volume I chapter 7: planar double pendulum, m1 = m2 = 1, l1 = l2 = 1, g = 9.81.
+CH07_TORQUE = 5.0
+CH07_HORIZON = 2.0
+CH07_STEPS = 5_000
+CH07_SAMPLE_TIMES = (0.0, 0.5, 1.0, 1.5, 2.0)
+GRAVITY_M_S2 = 9.81
+
+
+def ch07_mass_matrix(q: np.ndarray) -> np.ndarray:
+    """M(q) as printed at eq:ch7:mass-matrix-numeric."""
+    c = np.cos(q[0] - q[1])
+    return np.array([[2.0, c], [c, 1.0]])
+
+
+def ch07_grad_potential(q: np.ndarray) -> np.ndarray:
+    """dV/dq for V = -g cos q1 - g (cos q1 + cos q2)."""
+    return np.array([2.0 * GRAVITY_M_S2 * np.sin(q[0]), GRAVITY_M_S2 * np.sin(q[1])])
+
+
+def render_ch07() -> str:
+    """Emit the chapter 7 ZTCF-versus-actual comparison, actually integrated."""
+    q0 = np.array([np.pi / 4, np.pi / 6])
+    qd0 = np.array([2.0, -1.0])
+
+    def trajectory(torque: float) -> dict[float, tuple[np.ndarray, np.ndarray]]:
+        rows = planar_double_pendulum_trajectory(
+            ch07_mass_matrix,
+            ch07_grad_potential,
+            q0,
+            qd0,
+            np.array([torque, 0.0]),
+            CH07_HORIZON,
+            CH07_STEPS,
+        )
+        step = CH07_STEPS // int(CH07_HORIZON / (CH07_SAMPLE_TIMES[1] - CH07_SAMPLE_TIMES[0]))
+        return {
+            round(rows[i * step][0], 3): rows[i * step][1:] for i in range(len(CH07_SAMPLE_TIMES))
+        }
+
+    actual = trajectory(CH07_TORQUE)
+    ztcf = trajectory(0.0)
+
+    lines = [BANNER, ""]
+
+    def macro(name: str, body: str) -> None:
+        lines.append(f"\\newcommand{{\\{name}}}{{{body}}}")
+
+    lines.append("\\newcommand{\\chsevenTrajectoryTable}{%")
+    lines.append("\\begin{tabular}{|c|c|c|c|c|c|c|c|}")
+    lines.append("\\hline")
+    lines.append(
+        "$t$ (s) & $q_1$ & $q_2$ & $\\dot q_1$ & $\\dot q_2$ & "
+        "$a_{\\text{drift},1}$ & $\\tau_1[M^{-1}]_{11}$ & $\\rho(t)$ \\\\"
+    )
+    lines.append("\\hline")
+    separations = []
+    for time in CH07_SAMPLE_TIMES:
+        q, qd = actual[time]
+        bias = christoffel_coriolis(ch07_mass_matrix, q, qd) @ qd + ch07_grad_potential(q)
+        drift = -np.linalg.solve(ch07_mass_matrix(q), bias)
+        control = CH07_TORQUE * np.linalg.inv(ch07_mass_matrix(q))[0, 0]
+        ratio = abs(drift[0]) / abs(control)
+        lines.append(
+            f"{time:.1f} & {q[0]:.4f} & {q[1]:.4f} & {qd[0]:.4f} & {qd[1]:.4f} & "
+            f"{drift[0]:.3f} & {control:.3f} & {ratio:.3f} \\\\"
+        )
+        separations.append(float(np.linalg.norm(q - ztcf[time][0])))
+    lines.append("\\hline")
+    lines.append("\\end{tabular}%")
+    lines.append("}")
+    lines.append("")
+
+    lines.append("\\newcommand{\\chsevenZtcfTable}{%")
+    lines.append("\\begin{tabular}{|c|c|c|c|c|c|}")
+    lines.append("\\hline")
+    lines.append(
+        "$t$ (s) & $q_1$ & $q_2$ & $\\dot q_1$ & $\\dot q_2$ & "
+        "$\\lVert \\Delta \\bm{q}\\rVert$ \\\\"
+    )
+    lines.append("\\hline")
+    for time, separation in zip(CH07_SAMPLE_TIMES, separations, strict=True):
+        q, qd = ztcf[time]
+        lines.append(
+            f"{time:.1f} & {q[0]:.4f} & {q[1]:.4f} & {qd[0]:.4f} & {qd[1]:.4f} & "
+            f"{separation:.4f} \\\\"
+        )
+    lines.append("\\hline")
+    lines.append("\\end{tabular}%")
+    lines.append("}")
+    lines.append("")
+
+    macro("chsevenSeparationHalf", f"{separations[1]:.4f}")
+    macro("chsevenSeparationFinal", f"{separations[-1]:.4f}")
+    macro("chsevenTorque", f"{CH07_TORQUE:.0f}")
+    macro("chsevenSteps", f"{CH07_STEPS:,}")
+
+    # Gravity-versus-Coriolis decomposition at the mid-trajectory sample, which
+    # the prose below the table discusses.
+    q_mid, qd_mid = actual[1.0]
+    inverse = np.linalg.inv(ch07_mass_matrix(q_mid))
+    grav = -inverse @ ch07_grad_potential(q_mid)
+    cor = -inverse @ (christoffel_coriolis(ch07_mass_matrix, q_mid, qd_mid) @ qd_mid)
+    macro("chsevenMidQOne", f"{q_mid[0]:.4f}")
+    macro("chsevenMidQTwo", f"{q_mid[1]:.4f}")
+    macro("chsevenMidRateOne", f"{qd_mid[0]:.4f}")
+    macro("chsevenMidRateTwo", f"{qd_mid[1]:.4f}")
+    macro("chsevenMidGravity", _row_vector(grav, fmt="{:.3f}"))
+    macro("chsevenMidCoriolis", _row_vector(cor, fmt="{:.3f}"))
+    macro("chsevenMidDrift", _row_vector(grav + cor, fmt="{:.3f}"))
+    lines.append("")
+    return "\n".join(lines)
+
+
 def build() -> dict[Path, str]:
     """Return the full set of generated fragments, keyed by destination path."""
     solution = discrete_lqr(CH06_A, CH06_B, CH06_Q, CH06_R)
     return {
         GENERATED_DIR / "ch06_lqr_example.tex": render_ch06(solution),
+        GENERATED_DIR / "ch07_double_pendulum.tex": render_ch07(),
         GENERATED_DIR / "ch08_golf_model.tex": render_ch08(SEGMENTS),
     }
 
