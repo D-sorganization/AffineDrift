@@ -74,10 +74,12 @@ which is exactly the state propagation used in Volume~I.
 
 \subsection{The MOSAIC Architecture}
 
-The MOSAIC model (Modular Selection and Identification for Control) (Wolpert and Kawato,
-1998) proposes that the brain maintains multiple paired forward-inverse models, each
-tuned to different dynamics or contexts. Experimental evidence shows that humans learn
-separate models for reaching with different tools (Shadmehr and Mussa-Ivaldi, 1994):
+The MOSAIC model (Modular Selection and Identification for Control)~\cite{WolpertKawato1998}
+proposes that the brain maintains multiple paired forward-inverse models, each tuned to
+different dynamics or contexts. The claim that a model is acquired \emph{per tool} rather
+than adjusted in place has direct imaging support: cerebellar activity acquired while
+learning a novel visuomotor tool persists as a tool-specific representation, separable from
+the activity driven by the movement itself~\cite{Imamizu2000}.
 
 \begin{lstlisting}[language=Python, caption={MOSAIC-style multiple model architecture.}]
 import numpy as np
@@ -150,7 +152,13 @@ An inverse model computes the motor command required to achieve a desired state:
   \control_k = f^{-1}(\state_k, \state_{k+1}^{\text{des}}),
   \label{eq:ch6:inverse-model}
 \end{equation}
-which corresponds to the feedforward control of Volume~II.
+which corresponds to the feedforward control of Volume~II. How such a model could be
+\emph{acquired} rather than assumed is the contribution of feedback-error learning: the
+output of a crude feedback controller is used as the training signal for the inverse model,
+so the feedback loop teaches the feedforward path and then falls
+silent~\cite{Kawato1987}. Note that this is the inverse-model result; the forward-model
+evidence is separate, and conflating the two is easy because both trace to the same
+group.
 
 \section{Smith Predictor for Neural Delays}
 
