@@ -8,7 +8,7 @@
 \epigraph{Golf is a microcosm where physics, engineering, neuroscience, and biomechanics all collide. Understanding the collision is understanding the game.}{---AffineDrift}
 
 % ─────────────────────────────────────────────────────────────────
-\begin{laymansbox}{Multiple Disciplines, One Framework}{laymans:ch13:disciplines}
+\begin{laymansbox}{Multiple Disciplines, One Framework}{ch13:disciplines}
 Throughout this book, we have developed a mathematical framework (control-affine dynamics) that describes the golf swing. This framework connects multiple scientific disciplines, each contributing essential insights.
 
 Control theory provides the decomposition of forces into drift and control components. Biomechanics describes the mechanical properties of muscles, bones, and connective tissue. Robotics demonstrates analogous mathematical structures in human and engineered systems. Neuroscience describes how the nervous system encodes and executes motor commands. Material science characterizes the mechanical behavior of shafts and impact dynamics. Data science provides methods to estimate parameters of the drift field from measurements.
@@ -73,7 +73,7 @@ Biomechanics had historically treated the swing as a list of muscle activations:
 
 Control theory reframes these questions. The muscle activations are the control inputs. The question is not ``what fires when?'' but ``what is the control objective, and how do the muscle activations achieve it?'' The answer is: by exploiting drift.
 
-\begin{example}{The Supraspinatus Activation}{ex:ch13:supraspinatus}
+\begin{example}{The Supraspinatus Activation}{ch13:supraspinatus}
 The supraspinatus (one of the rotator cuff muscles) initiates external rotation of the shoulder during the transition and early downswing. Traditionally, biomechanists say ``the supraspinatus activates to control external rotation.''
 
 From a control theory perspective: the early downswing is a phase of high control authority and low drift (many muscle groups are active, and gravity has not yet accelerated the clubhead much). The supraspinatus activation is part of the overall control strategy to set up a drift field that will naturally lead to the desired clubhead trajectory by mid-downswing. Once the swing is moving fast (mid to late downswing), the supraspinatus activation ceases or decreases; the drift dominates, and control authority is low.
@@ -157,7 +157,7 @@ The human nervous system seems to plan in task space (where the hand should be) 
 
 The affine framework adds a third layer: control affine planning. Instead of specifying a complete trajectory, the golfer specifies an initial configuration (the backswing position) and a control strategy (which muscles to activate when). The drift field does much of the work automatically. The control inputs make corrections to keep on track.
 
-\begin{laymansbox}{Robots as Mathematical Models}{laymans:ch13:robot_lesson}
+\begin{laymansbox}{Robots as Mathematical Models}{ch13:robot_lesson}
 A robot designer must explicitly specify every system component: kinematics (joint configuration), dynamics (torque-to-motion mapping), and control law (torque-time sequences). Malfunction requires systematic debugging of each component.
 
 The human locomotor system exhibits analogous structure: skeleton defines kinematics; muscles, tendons, and connective tissue implement dynamics; the nervous system encodes control law (learned through practice and neural adaptation). The evolutionary refinement differs from engineering design, but the underlying mathematical structures are similar.
@@ -271,7 +271,7 @@ The COR depends on both the ball and the clubface:
 
 This is where ball fitting meets swing physics. A slower golfer (for illustration, consider a driver swing speed around 80 mph) benefits from a softer ball with higher COR, because the softer ball deforms more, allowing the golfer to transfer more energy. A faster golfer (for illustration, around 100 mph or above) can use a harder ball with lower COR, gaining better control and tighter dispersion. The specific thresholds vary by manufacturer and golfer; the general principle---that ball compression should be matched to swing speed---is widely discussed in equipment fitting literature \citep{Penner2001}.
 
-\begin{example}{Coefficient of Restitution and Ball Compression}{ex:ch13:ball_fitting}
+\begin{example}{Coefficient of Restitution and Ball Compression}{ch13:ball_fitting}
 The relationship between ball compression and coefficient of restitution can be expressed through the impact equations. For a rigid clubface striking a compressible ball, the COR depends on the elastic and damping properties of the ball material \cite{Penner2001}.
 
 Empirically, lower-compression balls exhibit higher COR (approximately 0.82) compared to higher-compression balls (approximately 0.78) when struck at comparable speeds \cite{Jorgensen1994}. This relationship arises from the nonlinear viscoelastic response of the rubber core: softer materials deform more readily and recover more completely from small deformations.
@@ -368,7 +368,7 @@ The difference between these two scenarios can be quantified using the affine fr
 
 Sports medicine can use this framework to design injury prevention programs. The goal is to train the golfer to use technique (good sequencing, high drift) rather than pure force (high control inputs). This reduces the load on vulnerable structures and allows the golfer to swing harder and longer without injury.
 
-\begin{example}{Rotator Cuff Training for Golfers}{ex:ch13:rotator_cuff_training}
+\begin{example}{Rotator Cuff Training for Golfers}{ch13:rotator_cuff_training}
 A golfer with a history of shoulder pain needs rotator cuff strengthening. The standard prescription is to do external rotation exercises with a resistance band: stand sideways, bend the elbow to 90 degrees, and rotate the forearm outward against resistance.
 
 This exercise is valuable, but incomplete. It strengthens the rotator cuff muscles in isolation, improving the control authority $G$ at the shoulder. But the injury often arises not from weakness, but from poor force distribution.
@@ -432,7 +432,7 @@ A good coaching cue is one that:
 
 The affine framework helps a coach design better cues by making the physics explicit. Instead of guessing at what might help, a coach can analyze the golfer's swing, identify where the drift is off target, and design a cue that adjusts the drift.
 
-\begin{example}{Coaching Cue Design}{ex:ch13:cue_design}
+\begin{example}{Coaching Cue Design}{ch13:cue_design}
 A golfer is producing a clubhead path that is too far inside (too much hook potential). The coach needs to adjust the drift field so that the natural motion (without excessive control input) points the clubhead path more down the line.
 
 The coach could give a cue like ``keep your arms extended through the downswing'' or ``rotate your torso more.'' But these are somewhat generic. A more effective cue is ``think about swinging down on a line that is parallel to your target line.'' This mental cue helps the golfer set up a drift field that is naturally aligned with the target.
@@ -564,7 +564,7 @@ The diagnosis: the golfer's ZTCF is producing the correct launch angle and spin 
 The launch monitor and the personalized physics model together provide diagnostic feedback that goes beyond ``hit it harder.'' The feedback is specific, actionable, and grounded in physics.
 
 % ─────────────────────────────────────────────────────────────────
-\begin{principle}{Key Takeaways}{princ:ch13:takeaways}
+\begin{principle}{Key Takeaways}{ch13:takeaways}
 \begin{enumerate}
 \item \textbf{Control theory and biomechanics speak the same language:} the affine decomposition of dynamics into drift and control.
 
@@ -589,7 +589,7 @@ The launch monitor and the personalized physics model together provide diagnosti
 \end{principle}
 
 % ─────────────────────────────────────────────────────────────────
-\begin{exercises}{Chapter Exercises}{exercises:ch13}
+\begin{exercises}{Chapter Exercises}{ch13}
 
 \begin{exercise}
 Explain in plain language why a golfer with good technique (high drift, low control effort) is less prone to injury than a golfer with poor technique (low drift, high control effort), even if both golfers hit the same clubhead speed.

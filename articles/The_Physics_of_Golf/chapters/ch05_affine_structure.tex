@@ -101,7 +101,7 @@ Imagine standing in a river. The current is the drift field---it carries you reg
 
 The distinction between drift and control is not merely mathematical—it is fundamental to understanding the mechanics of the swing. The drift field $\bm{f}(\bm{x})$ represents the "shape" of the system's natural dynamics. Control input $\bm{G}(\bm{x}) \bm{u}$ adds perturbations to this natural trajectory.
 
-\begin{definition}{Control-Affine Systems}{def:ch05_control_affine}
+\begin{definition}{Control-Affine Systems}{ch05_control_affine}
 A system of the form:
 \begin{equation}
 \dot{\bm{x}} = \bm{f}(\bm{x}) + \bm{G}(\bm{x}) \bm{u}
@@ -190,7 +190,7 @@ So the full system is:
 
 The drift $\bm{f}(\bm{x})$ is a vector field on state space. At each point $\bm{x}$, it specifies a direction and magnitude of motion.
 
-\begin{definition}{Vector Field}{def:ch05_vector_field}
+\begin{definition}{Vector Field}{ch05_vector_field}
 A function that assigns a vector to each point in space. In our case, at each state $\bm{x}$ in phase space, $\bm{f}(\bm{x})$ tells you which direction the state is moving if there's no control.
 \end{definition}
 
@@ -237,7 +237,7 @@ A function that assigns a vector to each point in space. In our case, at each st
 \label{fig:ch05_drift_vector_field}
 \end{figure}
 
-\begin{example}{Drift in the Double Pendulum at Rest}{ex:ch05_drift_at_rest}
+\begin{example}{Drift in the Double Pendulum at Rest}{ch05_drift_at_rest}
 Suppose you're at address ($\theta_1 = 0°, \theta_2 = 0°, \dot{\theta}_1 = 0, \dot{\theta}_2 = 0$) and you suddenly remove all muscular control ($\bm{\tau} = 0$).
 
 The drift says what happens next. Let's compute:
@@ -299,7 +299,7 @@ In the golf swing, the drift is the natural motion of your arm under gravity and
 
 The control matrix $\bm{G}(\bm{x})$ depends on the state (specifically, on the configuration $\bm{q}$). This is the leverage: how much does a given muscle torque affect the state acceleration?
 
-\begin{example}{Control Leverage at Different Configurations}{ex:ch05_leverage}
+\begin{example}{Control Leverage at Different Configurations}{ch05_leverage}
 The inverse mass matrix $\bm{M}^{-1}(\bm{q})$ tells you the leverage.
 
 \textbf{At address} ($\theta_1 = 0°, \theta_2 = 0°$): the arm is extended. The moment of inertia is high ($M_{11} \approx 1.54$ kg m$^2$). So $M^{-1}_{11} \approx 0.64$ rad/s$^2$ per N m. A 50 N m torque produces $50 \times 0.64 = 32$ rad/s$^2$ of acceleration.
@@ -315,7 +315,7 @@ No. The \textbf{moment of inertia} is lower (because the mass is closer to the a
 
 The \textbf{Drift-to-Control Ratio (DCR)} is a diagnostic, not a coordinate-free physical constant.
 
-\begin{definition}{Drift-to-Control Ratio}{def:ch05_dcr}
+\begin{definition}{Drift-to-Control Ratio}{ch05_dcr}
 Because $\bm{f}$ and $\bm{G}\bm{u}$ are state-derivative vectors, the ratio must be computed with an explicit norm or weighting. In this chapter we use either the acceleration block alone or a stated state-space weighting matrix $\bm{W}$:
 
 \begin{equation}
@@ -430,7 +430,7 @@ A key insight from optimal control is that \textbf{the most efficient solution m
 
 This framework provides a scientific foundation for understanding the role of control strategy in achieving efficient, repeatable motion.
 
-\begin{example}{Hypothetical Control Profile in the Downswing}{ex:ch05_tour_pro}
+\begin{example}{Hypothetical Control Profile in the Downswing}{ch05_tour_pro}
 Consider a hypothetical control trajectory during the downswing. Let the control input $\bm{u}(t)$ vary as a function of state and time.
 
 \textbf{Scenario: State Space Control}

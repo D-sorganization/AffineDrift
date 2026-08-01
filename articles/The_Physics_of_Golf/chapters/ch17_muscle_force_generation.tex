@@ -15,7 +15,7 @@ Muscle tissue has speed-dependent force limits. During concentric shortening, fa
 
 To understand how muscles generate the forces that drive the golf swing, we must zoom from the whole muscle down to its molecular machinery. Every muscle is a hierarchical structure, and force generation happens at every level.
 
-\begin{definition}{The Muscle Hierarchy}{def:muscle-hierarchy}
+\begin{definition}{The Muscle Hierarchy}{muscle-hierarchy}
 A muscle is organized in nested layers:
 \begin{center}
 \begin{tabular}{ll}
@@ -60,7 +60,7 @@ Elite golfers often exhibit higher proportions of Type II fibers, especially IIa
 
 Most muscles do not run straight from origin to insertion. Instead, muscle fibers attach to a tendon at an \emph{angle}—the \emph{pennation angle} $\alpha$. This angled architecture allows many more fibers to pack into a given space, increasing the muscle's force capacity. However, it introduces a geometric coupling: only the component of fiber force along the tendon direction contributes to the joint torque.
 
-\begin{definition}{Muscle Architectural Parameters}{def:muscle-architecture}
+\begin{definition}{Muscle Architectural Parameters}{muscle-architecture}
 \begin{itemize}
 \item $\ell^M$ = physiological fiber length (along the fiber direction), typically 5--15 cm
 \item $\ell^M_{\mathrm{opt}}$ = optimal fiber length, where force is maximal
@@ -119,7 +119,7 @@ F = a \cdot F_0 \cdot f_L(\tilde{\ell}) + F_{\mathrm{passive}}(\tilde{\ell})
 \end{equation}
 where $a \in [0,1]$ is the neural \emph{activation level}.
 
-\begin{example}{Latissimus Dorsi Through the Swing}{ex:lat-force-length}
+\begin{example}{Latissimus Dorsi Through the Swing}{lat-force-length}
 The latissimus dorsi, a major pulling muscle in the downswing, is longest (most stretched) near the top of the backswing and shortest during the finish. Research on golf swings shows that the lat reaches near-optimal length ($\tilde{\ell} \approx 1.0$) during the transition and early downswing—precisely when it is recruited most heavily (activation $a \approx 0.7$--$0.8$). This is not accident; the swing is structured to place powerful muscles at their optimal lengths when peak torque is needed. By contrast, the triceps (elbow extensor) is positioned at a mechanically disadvantaged length (short, ascending limb) at mid-downswing, producing less peak force despite high neural activation. This architectural constraint is one reason why arm geometry and swing plane are so important.
 \end{example}
 
@@ -185,7 +185,7 @@ The force-velocity relationship for eccentric contractions shows that muscle can
 \noindent\textbf{Result:} The drift-to-control ratio at impact is $\approx 5$--$10$:$1$, meaning inertial and gravitational forces dominate. No amount of muscular effort can overcome this—it is written into the physics of muscle tissue itself.
 \end{driftcontrol}
 
-\begin{example}{Numerical Estimate: Wrist Muscle Force at Impact}{ex:wrist-fv}
+\begin{example}{Numerical Estimate: Wrist Muscle Force at Impact}{wrist-fv}
 \textbf{Illustrative example:} Consider the extensor carpi radialis brevis (ECRB), a wrist extensor involved in club control. The following parameters are representative values typical of forearm muscles, but individual variation is substantial and depends on anatomical variation, training, and measurement technique. \cite{Delp1990, Rajagopal2016}
 \begin{itemize}
 \item Maximum isometric force: estimated from PCSA and specific tension (individual values vary)
@@ -237,7 +237,7 @@ where:
 
 The asymmetry—faster rise than fall—reflects the biology: calcium is rapidly released but must be slowly pumped back into the sarcoplasmic reticulum.
 
-\begin{definition}{Electromechanical Delay}{def:emd}
+\begin{definition}{Electromechanical Delay}{emd}
 The total time from neural command $u_{\mathrm{neural}}$ to force production includes:
 \begin{enumerate}
 \item Synaptic delay: $\sim 1$ ms (neurotransmitter diffusion)
@@ -249,7 +249,7 @@ The total time from neural command $u_{\mathrm{neural}}$ to force production inc
 For the \emph{full} activation curve to reach steady-state, add the time constant $\tau_{\mathrm{act}}$, giving $\sim 50$--$100$ ms for full recruitment.
 \end{definition}
 
-\begin{example}{Reaction Time in the Golf Downswing}{ex:reaction-time}
+\begin{example}{Reaction Time in the Golf Downswing}{reaction-time}
 Suppose an elite golfer detects a swing error at $t = 100$ ms into the downswing (midpoint, halfway to impact). The brain processes this signal and sends a corrective neural command at $t = 100 + 100 = 200$ ms (100 ms is a reasonable central processing delay). The muscle begins to activate:
 \begin{itemize}
 \item $t = 200$ ms: Neural command $u_{\mathrm{neural}} = 1$ is issued
@@ -270,7 +270,7 @@ In this scenario, the corrective force only reaches 50\% of maximum \emph{at imp
 
 To predict how a muscle produces torque at a joint, we must integrate architecture, force-length, force-velocity, and activation dynamics into a single unified model. The standard tool is the \emph{Hill-type muscle model}, which consists of three mechanical elements in a specific configuration.
 
-\begin{definition}{Hill-Type Muscle Model Components}{def:hill-model}
+\begin{definition}{Hill-Type Muscle Model Components}{hill-model}
 \begin{itemize}
 \item \textbf{Contractile Element (CE):} The sarcomere machinery (actin-myosin cross-bridges). Produces active force $F_{\mathrm{CE}}$ determined by neural activation $a(t)$, muscle length $\ell_{\mathrm{CE}}$, and velocity $\dot{\ell}_{\mathrm{CE}}$.
 
@@ -412,7 +412,7 @@ G(\bm{x})\bm{u} = \sum_{i} r_{j,i}(\bm{q}) a_i(\bm{q}, \dot{\bm{q}}, u_{\mathrm{
 The effective control gain is not constant. It depends on state $\bm{x}$ through muscle length, contraction velocity, activation, pennation, and moment arms. In concentric shortening, the force-velocity factor $f_V(\dot{\ell})$ usually decreases as shortening speed increases, so the available torque in a chosen direction can be smaller when the system is moving fast. Combined with inertial terms that grow with speed, this can increase a model's drift-to-control ratio near impact. The conclusion depends on the selected muscle-tendon model and should not be inferred from clubhead speed alone.
 \end{laymansbox}
 
-\begin{example}{Numerical Estimate: Effective Control Gain at Wrist}{ex:control-gain}
+\begin{example}{Numerical Estimate: Effective Control Gain at Wrist}{control-gain}
 Consider the wrist joint with activation $a = 1$ (fully recruited):
 \begin{itemize}
 \item At rest ($\dot{\theta}_{\mathrm{wrist}} = 0$): $f_V = 1$, so torque scales as $\sum r_i F_0 f_L = \tau_{\max}^{\mathrm{iso}} \approx 20$ N·m
@@ -501,7 +501,7 @@ This pattern explains the fundamental structure of the efficient golf swing:
 
 Understanding muscle force generation reveals why certain coaching cues are effective and others are counterintuitive.
 
-\begin{mythreality}{Myth: ``Accelerate the club all the way to impact''}{myth:accelerate-to-impact}
+\begin{mythreality}{Myth: ``Accelerate the club all the way to impact''}{accelerate-to-impact}
 \begin{description}
 \item[\textbf{The Myth:}] A golfer should produce maximum muscle torque all the way to impact. Bigger muscles = bigger torque = longer drive.
 

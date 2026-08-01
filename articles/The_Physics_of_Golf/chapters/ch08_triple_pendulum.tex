@@ -32,7 +32,7 @@ The triple pendulum model extends the two-link system by adding an explicit wris
 \section{The Triple Pendulum Model}
 \label{sec:triple_pendulum_setup}
 
-\begin{definition}{Triple Pendulum System}{def:triple_pendulum}
+\begin{definition}{Triple Pendulum System}{triple_pendulum}
 The triple pendulum consists of three rigid segments:
 \begin{enumerate}
 \item \textbf{Segment 1 (torso/arm):} Length $L_1$, mass $m_1$, moment of inertia $I_1$ (about the shoulder joint). Rotates by angle $q_1$ relative to vertical.
@@ -114,7 +114,7 @@ where $\bm{M}(\bm{q})$ is the $3 \times 3$ mass matrix, $\bm{C}(\bm{q}, \dot{\bm
 \section{The Mass Matrix: Understanding Coupling}
 \label{sec:triple_pendulum_mass_matrix}
 
-\begin{definition}{The $3 \times 3$ Mass Matrix for a Triple Pendulum}{def:triple_pendulum_mass_matrix}
+\begin{definition}{The $3 \times 3$ Mass Matrix for a Triple Pendulum}{triple_pendulum_mass_matrix}
 The mass matrix is:
 \begin{equation}
 \bm{M}(\bm{q}) = \begin{bmatrix}
@@ -165,7 +165,7 @@ This coupling means: \textbf{accelerating one joint automatically affects the ot
 
 The structure of the mass matrix reveals how mechanical coupling propagates through the kinetic chain. When the shoulder joint applies a torque, that torque must overcome not only the shoulder's own inertia but also the inertial resistance of all distal segments. The off-diagonal entries encode the magnitude of this propagated inertial effect. In typical human limb geometries, the mass matrix exhibits a diagonal-dominant structure: the diagonal entries substantially exceed the off-diagonal entries in magnitude. This structure has important consequences for understanding passive dynamics. Even small perturbations in joint configuration can produce measurable changes in the effective inertias, which feed back through the Coriolis terms to produce non-trivial accelerations. The physical interpretation is that each proximal segment "feels" the inertia of all distal segments, creating a cascade effect where changes in distal joint angles propagate upstream through the inertial coupling.
 
-\begin{example}{Numerical Triple Pendulum Mass Matrix}{ex:triple_pendulum_mass_numerical}
+\begin{example}{Numerical Triple Pendulum Mass Matrix}{triple_pendulum_mass_numerical}
 Assume the following parameters for the three-link model. (These extend the simplified parameters from Chapter~\ref{ch:zero_torque_counterfactual} by adding a third segment; the two-link canonical parameters from Chapter~\ref{ch:03_double_pendulum} use different values appropriate for that simpler model.)
 \begin{itemize}
 \item Segment 1 (arm): $L_1 = 0.4$ m, $m_1 = 2$ kg, $I_1 = 0.05$ kg$\cdot$m$^2$.
@@ -217,7 +217,7 @@ The Coriolis terms arise from the kinematic structure of the system. When multip
 The physical interpretation is that Coriolis effects represent the automatic redirection of inertial forces in a coupled, multi-link system. When the arm rotates while the club is partially constrained (but the constraint is weakening), the Coriolis term acts to accelerate the club in the direction of arm rotation. This acceleration is not actively produced by muscle; it is a kinematic consequence of the rotating reference frames coupled through the inertial mass matrix.
 \end{laymansbox}
 
-\begin{example}{Coriolis Whip at the Club}{ex:triple_coriolis_whip}
+\begin{example}{Coriolis Whip at the Club}{triple_coriolis_whip}
 Suppose at a moment in the downswing:
 \begin{itemize}
 \item Shoulder: $\dot{q}_1 = 15$ rad/s (shoulder rotating fast).
@@ -281,7 +281,7 @@ The key point: this transfer happens \emph{automatically}, due to constraints an
 \section{Wrist Cock and Release as a Constraint Mechanism}
 \label{sec:wrist_cock_release}
 
-\begin{definition}{Wrist Cock and Release}{def:wrist_cock_release}
+\begin{definition}{Wrist Cock and Release}{wrist_cock_release}
 \textbf{Wrist cock:} During the backswing and early downswing, the wrist is held in a bent position (typically $80°--120°$ of extension relative to neutral). This position is maintained by muscular torque, which acts against the spring force of the wrist tendons.
 
 \textbf{Wrist release:} Late in the downswing, the wrist muscles relax, and the elastic spring force dominates, causing the wrist to extend rapidly.
@@ -309,7 +309,7 @@ By cocking the wrist and holding it through mid-downswing, the golfer creates a 
 This is why wrist cock matters: it's about timing the release to maximize the arm-to-club momentum transfer, not about storing energy.
 \end{laymansbox}
 
-\begin{example}{Wrist Constraint Release Timing and Club Acceleration}{ex:wrist_cock_timing}
+\begin{example}{Wrist Constraint Release Timing and Club Acceleration}{wrist_cock_timing}
 Consider two scenarios where the wrist constraint is released at different phases of the downswing.
 
 Scenario A: Constraint release at $t_A$ (early downswing)
@@ -335,7 +335,7 @@ Scenario B: Constraint release at $t_B$ (late downswing), with $t_B > t_A$
 \section{Triple Pendulum ZTCF: Passive Dynamics Become Even More Dominant}
 \label{sec:triple_pendulum_ztcf}
 
-\begin{example}{ZTCF for the Triple Pendulum}{ex:triple_pendulum_ztcf_example}
+\begin{example}{ZTCF for the Triple Pendulum}{triple_pendulum_ztcf_example}
 Starting from a downswing configuration:
 \begin{align}
 q_1 &= 50° \quad \dot{q}_1 = 12 \text{ rad/s} \quad \tau_1 = 0\\
@@ -387,7 +387,7 @@ The club becomes essentially ballistically committed late in the downswing. Musc
 \section{Comparison: Double vs. Triple Pendulum}
 \label{sec:double_vs_triple_pendulum}
 
-\begin{example}{Comparing Double and Triple Pendulum Dynamics}{ex:dcr_double_vs_triple}
+\begin{example}{Comparing Double and Triple Pendulum Dynamics}{dcr_double_vs_triple}
 Consider arm motion under the same initial conditions in both models. For a double pendulum (shoulder and elbow), the elbow joint's acceleration at mid-downswing is governed by the mass matrix and Coriolis terms. At an instant with $\dot{q}_1 = 12$ rad/s and $\dot{q}_2 = 20$ rad/s, gravity and Coriolis produce accelerations that depend on the specific inertial parameters.
 
 For a triple pendulum with the wrist initially locked (constraint $q_2 + q_3 = \text{const}$), the wrist constraint couples the club to the arm. Upon release, the freed wrist joint allows the club to develop accelerations driven by the coupling terms $\frac{\partial M_{23}}{\partial q_2}$ and higher-order Coriolis effects.

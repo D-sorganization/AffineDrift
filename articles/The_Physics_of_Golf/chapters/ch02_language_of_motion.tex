@@ -25,7 +25,7 @@ This works. But it's clumsy for describing a golf swing. Why? Because the club h
 
 Instead, physicists use \textbf{generalized coordinates}\index{generalized coordinates}: a minimal set of numbers that fully describe the configuration of a system.
 
-\begin{definition}{Generalized Coordinates}{def:ch02_generalized}
+\begin{definition}{Generalized Coordinates}{ch02_generalized}
 A set of independent variables $\bm{q} = [q_1, q_2, \ldots, q_n]$ such that:
 \begin{enumerate}
 \item Every possible position of the system can be described by choosing a value for each $q_i$.
@@ -65,7 +65,7 @@ For the double pendulum model of the arm, the natural choice of generalized coor
 \label{fig:ch02_arm_diagram}
 \end{figure}
 
-\begin{example}{A Simple Pendulum}{ex:ch02_pendulum_coord}
+\begin{example}{A Simple Pendulum}{ch02_pendulum_coord}
 A mass hanging from a string can only move on a circle (the string doesn't stretch). Its position is completely described by one number: the angle $\theta$ from vertical.
 
 $\bm{q} = [\theta]$. There is 1 DOF.
@@ -75,7 +75,7 @@ If you use Cartesian coordinates, you need two numbers: the $x$ and $y$ position
 
 For the golf swing, the natural choice is \textbf{joint angles}\index{joint angles}.
 
-\begin{definition}{Joint Angles in the Golf Swing}{def:ch02_golf_angles}
+\begin{definition}{Joint Angles in the Golf Swing}{ch02_golf_angles}
 \begin{itemize}
 \item $q_1 = \theta_s$: the angle of the upper arm at the shoulder, measured from some reference (e.g., vertical).
 \item $q_2 = \theta_e$: the angle of the forearm + club at the elbow, measured from the upper arm.
@@ -106,7 +106,7 @@ So from two numbers $[\theta_s, \theta_e]$ you can compute the full 3D position 
 
 Knowing where your arm is right now doesn't tell you what will happen next. You also need to know how fast it's moving.
 
-\begin{definition}{Velocity in Generalized Coordinates}{def:ch02_velocity}
+\begin{definition}{Velocity in Generalized Coordinates}{ch02_velocity}
 The velocity of a joint angle is its time derivative:
 
 $$\dot{q}_i = \frac{dq_i}{dt}$$
@@ -114,7 +114,7 @@ $$\dot{q}_i = \frac{dq_i}{dt}$$
 For example, $\dot{\theta}_s$ is the rate of rotation of the shoulder (in radians per second).
 \end{definition}
 
-\begin{example}{Shoulder Rotation Speed}{ex:ch02_shoulder_speed}
+\begin{example}{Shoulder Rotation Speed}{ch02_shoulder_speed}
 During the downswing, a golfer's shoulder may be rotating at $\dot{\theta}_s \approx 10 \text{ rad/s}$ (representative values from biomechanical studies are on the order of 10-12 rad/s, depending on swing speed \citep{Nesbit2005}).
 
 What does this mean physically? If the shoulder could hold this rotation rate steady, the golfer would rotate a full $2\pi$ radians in $(2\pi \text{ rad}) / (10 \text{ rad/s}) \approx 0.63 \text{ seconds}$.
@@ -124,7 +124,7 @@ In reality, $\dot{\theta}_s$ varies throughout the swing. The velocity is lower 
 
 Now we can define the full state:
 
-\begin{definition}{State of a System}{def:ch02_state}
+\begin{definition}{State of a System}{ch02_state}
 The \textbf{state} $\bm{x}$ is the complete information needed to predict the future motion. It includes both position and velocity:
 
 $$\bm{x} = \begin{bmatrix} \bm{q} \\ \dot{\bm{q}} \end{bmatrix} = \begin{bmatrix} q_1 \\ q_2 \\ \vdots \\ q_n \\ \dot{q}_1 \\ \dot{q}_2 \\ \vdots \\ \dot{q}_n \end{bmatrix}$$
@@ -149,7 +149,7 @@ Phase space provides a geometric framework for visualizing how a system evolves.
 
 Once we have the concept of state, we can visualize it geometrically.
 
-\begin{definition}{Phase Space}{def:ch02_phase_space}
+\begin{definition}{Phase Space}{ch02_phase_space}
 The space of all possible states. If there are $n$ degrees of freedom, phase space has $2n$ dimensions: $n$ for position and $n$ for velocity.
 
 For a double pendulum: 4 dimensions (2 angles, 2 angular velocities).
@@ -175,7 +175,7 @@ Given any state $\bm{x}$, the forces determine $\ddot{\bm{q}}$ (the acceleration
 
 Sometimes it's useful to focus just on position, ignoring velocity. This is called configuration space\index{configuration space}.
 
-\begin{definition}{Configuration Space}{def:ch02_configuration_space}
+\begin{definition}{Configuration Space}{ch02_configuration_space}
 The space of all possible positions (configurations) of the system. For $n$ degrees of freedom, configuration space has $n$ dimensions.
 
 For a double pendulum: 2 dimensions ($\theta_s, \theta_e$).
@@ -183,7 +183,7 @@ For a double pendulum: 2 dimensions ($\theta_s, \theta_e$).
 
 During a golf swing, your configuration traces a path in configuration space. Your backswing, transition, downswing, and follow-through are all portions of this path.
 
-\begin{example}{Configuration Space of a Double Pendulum}{ex:ch02_config_golf}
+\begin{example}{Configuration Space of a Double Pendulum}{ch02_config_golf}
 Imagine a plot with $\theta_s$ on the $x$-axis (from $-90°$ to $+150°$, representing the full range of shoulder motion) and $\theta_e$ on the $y$-axis (from $-80°$ to $+80°$, representing the full range of elbow angle). Configuration space for the double pendulum is then a 2D region within this rectangle.
 
 A representative golf swing path in this space exhibits the following qualitative behavior:
@@ -203,7 +203,7 @@ Different individuals will have different trajectories through configuration spa
 
 Here's an important limitation: not every point in configuration space is reachable.
 
-\begin{definition}{Constraints}{def:ch02_constraints}
+\begin{definition}{Constraints}{ch02_constraints}
 Physical limitations that restrict which configurations are possible. Common constraints in golf:
 \begin{itemize}
 \item \textbf{Range of motion}: your shoulder can only rotate so far, your elbow can only bend so much.
@@ -228,7 +228,7 @@ A natural question: how many degrees of freedom does a golfer actually have?
 
 The answer depends on the model:
 
-\begin{example}{Counting Degrees of Freedom}{ex:ch02_count_dof}
+\begin{example}{Counting Degrees of Freedom}{ch02_count_dof}
 \textbf{Minimal model (double pendulum)}: 2 DOF.
 \begin{itemize}
 \item Shoulder rotation angle.
@@ -351,7 +351,7 @@ When a constraint is active (e.g., you hit the range limit of shoulder rotation)
 
 Let's put this together and visualize what a swing looks like in phase space.
 
-\begin{example}{A Swing Trajectory in Phase Space}{ex:ch02_swing_trajectory}
+\begin{example}{A Swing Trajectory in Phase Space}{ch02_swing_trajectory}
 Consider a golf swing modeled as a double pendulum. At each instant $t$, the state is:
 
 $$\bm{x}(t) = \begin{bmatrix} \theta_s(t) \\ \theta_e(t) \\ \dot{\theta}_s(t) \\ \dot{\theta}_e(t) \end{bmatrix}$$

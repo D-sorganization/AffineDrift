@@ -32,7 +32,7 @@ The answer is geometry. The muscle does not attach directly to the joint axis; i
 
 \subsection{The Basic Definition}
 
-\begin{definition}{Moment Arm}{def:moment-arm}
+\begin{definition}{Moment Arm}{moment-arm}
 The moment arm $r$ is the perpendicular distance from the line of action of a force to the axis of rotation. The torque generated is
 $$\tau = F \cdot r,$$
 where $F$ is the magnitude of the force and $r$ is the moment arm.
@@ -139,7 +139,7 @@ This is directly analogous to the Jacobian in robotics and dynamics. For a robot
 
 \subsection{Numerical Example: A Two-Joint Arm}
 
-\begin{example}{Moment Arms and Joint Torques in a Two-Joint Arm}{ex:moment-arm-arm}
+\begin{example}{Moment Arms and Joint Torques in a Two-Joint Arm}{moment-arm-arm}
 Consider a simplified arm with two joints (shoulder and elbow) and two muscles (an extensors muscle acting at both joints and a flexor muscle acting at the elbow).
 
 Suppose the moment arm matrix is:
@@ -201,7 +201,7 @@ $$\bm{R}^T \mathbf{v} = \mathbf{0}.$$
 
 Vectors in the null space of $\bm{R}^T$ correspond to muscle force combinations that produce zero net torque. These are \textbf{co-contraction patterns}: muscles that pull against each other, increasing joint stiffness without producing net rotation.
 
-\begin{definition}{Co-contraction}{def:cocontraction}
+\begin{definition}{Co-contraction}{cocontraction}
 Co-contraction is the simultaneous activation of antagonist muscles (muscles that would produce opposite torques if activated alone). Co-contraction increases joint stiffness and stability at the expense of muscular energy.
 \end{definition}
 
@@ -323,7 +323,7 @@ $$R_{k,2}(\bm{q}) \neq 0 \quad \text{and} \quad R_{k,3}(\bm{q}) \neq 0.$$
 This means that muscle $k$ contributes to both $\tau_2$ and $\tau_3$:
 $$\tau_2 = R_{k,2} F_k^M + \ldots, \quad \tau_3 = R_{k,3} F_k^M + \ldots$$
 
-\begin{definition}{Biarticular Coupling}{def:biarticular}
+\begin{definition}{Biarticular Coupling}{biarticular}
 Biarticular muscles produce coupled torques at two or more joints. A single muscle activation produces correlated torques at those joints, without requiring independent control at each joint.
 \end{definition}
 
@@ -389,7 +389,7 @@ where $C_i$ is a nonlinear cost function that accounts for the metabolic energy 
 \]
 where $f_i$ accounts for fatigue accumulation in muscle $i$ over time.
 
-\begin{definition}{Static Optimization}{def:static-opt}
+\begin{definition}{Static Optimization}{static-opt}
 Static optimization is the process of computing muscle forces that minimize some criterion (typically energy or fatigue) while producing a desired set of joint torques. It is ``static'' in the sense that it solves the optimization problem at each time step independently, without considering the dynamics of muscle contraction.
 \end{definition}
 

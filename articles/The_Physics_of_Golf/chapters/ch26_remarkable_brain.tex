@@ -127,7 +127,7 @@ Given these constraints, how does the brain manage to swing a golf club?
 
 This is the central insight of the entire textbook, viewed from the motor control perspective.
 
-\begin{theorem}{Drift Exploitation in Neural Control}{thm:ch26_drift_exploitation}
+\begin{theorem}{Drift Exploitation in Neural Control}{ch26_drift_exploitation}
 The golf swing is drift-dominated. The drift forces (gravity, centrifugal effects, elastic restoring forces) are much larger than the control forces (muscle torques).
 
 This is an enormous advantage for the brain. The brain doesn't need to generate the whole trajectory. It only needs to:
@@ -154,7 +154,7 @@ Compare this to trying to control a tennis racket where control forces are compa
 
 A second strategy the brain uses is \textit{impedance control}. Instead of commanding exact joint angles or forces, the brain commands \textit{stiffness}.
 
-\begin{definition}{Mechanical Impedance}{def:ch26_impedance}
+\begin{definition}{Mechanical Impedance}{ch26_impedance}
 The resistance of a joint to perturbation. A very stiff joint (high co-contraction of agonist and antagonist muscles) is hard to move and resists external forces. A compliant joint (low co-contraction) is easy to move and absorbs forces.
 \end{definition}
 
@@ -175,7 +175,7 @@ This is much simpler than controlling exact position because the stiffness is se
 
 For the golf swing, impedance control explains several phenomena:
 
-\begin{example}{Impedance Control in Golf}{ex:ch26_impedance_golf}
+\begin{example}{Impedance Control in Golf}{ch26_impedance_golf}
 \begin{itemize}
 \item \textbf{Grip pressure:} A light grip (low impedance) allows wrist hinge freedom but makes the club unstable. A firm grip (high impedance) locks the wrist but limits power. Great golfers learn the optimal grip stiffness---high enough to stabilize the club, low enough to allow hinge.
 
@@ -200,11 +200,11 @@ Setting impedance is more efficient than precise position control because it doe
 
 We mentioned synergies earlier. Let's examine them in detail.
 
-\begin{definition}{Motor Synergy}{def:ch26_synergy}
+\begin{definition}{Motor Synergy}{ch26_synergy}
 A fixed pattern of muscle activations that produces a coordinated action. Instead of independently controlling each muscle, the brain activates predefined synergy vectors.
 \end{definition}
 
-\begin{example}{Synergies in the Golf Swing}{ex:ch26_synergies_example}
+\begin{example}{Synergies in the Golf Swing}{ch26_synergies_example}
 Synergy 1 (pulling): ``Activate latissimus dorsi + pectoralis + internal shoulder rotators.'' This produces a pulling motion---useful in the downswing.
 
 Synergy 2 (pushing): ``Activate deltoid (posterior) + triceps + wrist extensors.'' This produces a pushing/extending motion.
@@ -258,7 +258,7 @@ This is why the pre-swing motion and address posture are so critical. Elite golf
 
 Chapters \ref{ch:motor_control_brain} and \ref{ch:motor_learning} established that the brain learns internal models. Let's now think carefully about what, exactly, the brain learns.
 
-\begin{theorem}{Three Things the Brain Learns}{thm:ch26_what_learned}
+\begin{theorem}{Three Things the Brain Learns}{ch26_what_learned}
 Through practice, the brain learns three things about the golf swing:
 
 \begin{enumerate}
@@ -287,7 +287,7 @@ Learning the drift field IS learning physics. The brain becomes a physicist, eve
 
 Several lines of evidence show that the brain learns a model of physics:
 
-\begin{example}{Evidence That the Brain Learns Physics}{ex:ch26_physics_evidence}
+\begin{example}{Evidence That the Brain Learns Physics}{ch26_physics_evidence}
 
 \textbf{Experiment 1: Novel tool learning.} A golfer learns to swing a driver for years. Then they pick up a putter. The putter is dramatically different: much shorter, much lighter, different mass distribution. The golfer's first few putts are terrible---they overshoot, undershoot, or miss entirely.
 
@@ -445,7 +445,7 @@ The brain builds an explicit forward model of the world. Modern AI has been domi
 
 But there's growing recognition that model-based RL is more sample-efficient. If an agent has a forward model, it can imagine many trajectories without actually executing them.
 
-\begin{example}{Model-Based vs. Model-Free RL}{ex:ch26_model_based_rl}
+\begin{example}{Model-Based vs. Model-Free RL}{ch26_model_based_rl}
 \textbf{Model-free approach:} The robot tries a motor command. It gets a reward. It updates its value function. It tries another command. After a million trials, it learns which commands are good.
 
 \textbf{Model-based approach:} The robot learns a forward model: ``If I move in this direction with this force, I'll end up here.'' Now it can \textit{imagine} many trajectories using the model, without physically executing them. It can plan offline and execute online.
@@ -493,7 +493,7 @@ This is \textit{self-supervised learning}: the agent generates its own learning 
 
 Modern AI has begun exploring self-supervised learning. Instead of learning from hand-labeled data (expensive) or reward signals (sparse), agents learn by predicting future observations.
 
-\begin{example}{Self-Supervised Learning in AI}{ex:ch26_self_supervised}
+\begin{example}{Self-Supervised Learning in AI}{ch26_self_supervised}
 \textbf{Traditional approach:} Train a robot arm on 1000 manually labeled examples of ``reaching to target.''
 
 \textbf{Self-supervised approach:} Let the robot arm move randomly for an hour. For each action, predict the resulting arm configuration. Learn a forward model by predicting its own sensory consequences. Now the robot can use this forward model for planning without any labeled data.
@@ -537,7 +537,7 @@ The golf swing is a perfect test case for understanding intelligence. Let's see 
 
 Several research groups have used golf to study motor control. Examples:
 
-\begin{example}{Golf in Motor Control Research}{ex:ch26_golf_research}
+\begin{example}{Golf in Motor Control Research}{ch26_golf_research}
 \begin{itemize}
 \item \textbf{Vickers (quiet eye):} Studied gaze fixation in expert golfers, showing that the quiet eye (prolonged fixation on the ball) predicts performance.
 
@@ -594,7 +594,7 @@ The yips are a condition where a golfer loses the ability to perform a previousl
 
 A golfer with the yips will address a 3-footer that they've made hundreds of times before. They address the ball. They begin the stroke. Their hands suddenly jerk involuntarily. The ball skids left or right or backward.
 
-\begin{definition}{The Yips}{def:ch26_yips}
+\begin{definition}{The Yips}{ch26_yips}
 A sudden, involuntary disruption of motor control in a previously learned, automatic movement. The disruption is specific to the task (golfers with putting yips can hit drives fine). It worsens under pressure. It often persists for years.
 \end{definition}
 
@@ -627,7 +627,7 @@ This has a notable implication: overanalyzing your swing is dangerous. The more 
 
 Another interesting failure mode is choking---a sudden, temporary decrement in performance under high pressure.
 
-\begin{example}{Choking in Golf}{ex:ch26_choking_golf}
+\begin{example}{Choking in Golf}{ch26_choking_golf}
 You're 1-down in a match. You have an 8-footer to win. You address the ball. Your heart is pounding. Your hands are shaking. You swing and miss the putt. You lose the match.
 
 Later, on the range, you hit that same putt 9 times out of 10.

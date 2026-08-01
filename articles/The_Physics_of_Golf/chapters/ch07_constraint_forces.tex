@@ -34,7 +34,7 @@ This chapter reveals the mathematics and physics of constraint forces, then show
 \section{Holonomic Constraints and Their Jacobians}
 \label{sec:holonomic_constraints}
 
-\begin{definition}{Holonomic Constraint}{def:holonomic_constraint}
+\begin{definition}{Holonomic Constraint}{holonomic_constraint}
 A \textbf{holonomic constraint} is an algebraic equation that restricts the configuration of the system. It has the form:
 \begin{equation}
 \bm{\Phi}(\bm{q}) = \mathbf{0}
@@ -59,7 +59,7 @@ And here's the paradox: this push does zero net work. Why? Because the push acts
 Yet this zero-net-work force \emph{does} redirect energy between segments.
 \end{laymansbox}
 
-\begin{definition}{The Constraint Jacobian}{def:constraint_jacobian}
+\begin{definition}{The Constraint Jacobian}{constraint_jacobian}
 The \textbf{constraint Jacobian} is the matrix of partial derivatives of the constraint with respect to configuration:
 \begin{equation}
 \bm{J}_c(\bm{q}) = \frac{\partial \bm{\Phi}}{\partial \bm{q}}
@@ -69,7 +69,7 @@ The \textbf{constraint Jacobian} is the matrix of partial derivatives of the con
 If there are $n_c$ constraint equations and $n$ configuration variables, then $\bm{J}_c$ is $n_c \times n$.
 \end{definition}
 
-\begin{example}{Wrist Constraint Jacobian}{ex:wrist_constraint_jacobian}
+\begin{example}{Wrist Constraint Jacobian}{wrist_constraint_jacobian}
 For a double pendulum (shoulder and elbow), suppose the wrist constraint enforces that the endpoint of the arm is at a fixed angle relative to the global frame (simplified—imagine the wrist is locked at a specific orientation).
 
 The constraint might be:
@@ -172,7 +172,7 @@ The matrix $\bm{J}_c \bm{M}^{-1} \bm{J}_c^T$ is symmetric and positive definite 
 \section{The Null Space and Range of the Constraint Jacobian}
 \label{sec:jacobian_null_range}
 
-\begin{definition}{Null Space and Range of $\bm{J}_c$}{def:jacobian_spaces}
+\begin{definition}{Null Space and Range of $\bm{J}_c$}{jacobian_spaces}
 The constraint Jacobian $\bm{J}_c$ defines two fundamental subspaces:
 
 \begin{itemize}
@@ -184,7 +184,7 @@ The constraint Jacobian $\bm{J}_c$ defines two fundamental subspaces:
 A fundamental property: $\text{null}(\bm{J}_c) \perp \text{range}(\bm{J}_c^T)$. Allowed motions are perpendicular to constraint forces—which is exactly why constraint forces do zero work.
 \end{definition}
 
-\begin{example}{Null Space for the Wrist Hinge}{ex:wrist_null_space}
+\begin{example}{Null Space for the Wrist Hinge}{wrist_null_space}
 For a double pendulum with the constraint $q_1 + q_2 = \theta_{\text{fixed}}$, the constraint Jacobian is:
 \begin{equation}
 \bm{J}_c = \begin{bmatrix} 1 & 1 \end{bmatrix}
@@ -260,7 +260,7 @@ Think of it this way: The constraint force on the arm at the wrist might do posi
 This is the fundamental mechanism of the kinetic chain. The arm slows down (losing energy) while the club speeds up (gaining energy). The total is constant, but the distribution shifts dramatically.
 \end{laymansbox}
 
-\begin{definition}{Energy Partition}{def:energy_partition}
+\begin{definition}{Energy Partition}{energy_partition}
 At any instant, for a partitioned system $\bm{q} = \begin{bmatrix} \bm{q}_1 \\ \bm{q}_2 \end{bmatrix}$ with mass matrix $\bm{M}(\bm{q}) = \begin{bmatrix} \bm{M}_{11} & \bm{M}_{12} \\ \bm{M}_{21} & \bm{M}_{22} \end{bmatrix}$, the total kinetic energy is:
 \begin{equation}
 T = T_{\text{arm}} + T_{\text{club}} + T_{\text{cross}} = \frac{1}{2}\dot{\bm{q}}_1^T \bm{M}_{11}(\bm{q}) \dot{\bm{q}}_1 + \frac{1}{2}\dot{\bm{q}}_2^T \bm{M}_{22}(\bm{q}) \dot{\bm{q}}_2 + \dot{\bm{q}}_1^T \bm{M}_{12}(\bm{q}) \dot{\bm{q}}_2
@@ -287,7 +287,7 @@ But individually, each term can be nonzero, allowing energy to transfer from arm
 \section{Constraint Force in a Double Pendulum Wrist Hinge}
 \label{sec:double_pendulum_constraint_force}
 
-\begin{example}{Wrist Constraint Force in the Double Pendulum}{ex:double_pend_constraint_force}
+\begin{example}{Wrist Constraint Force in the Double Pendulum}{double_pend_constraint_force}
 Return to the double pendulum from Chapter~\ref{ch:zero_torque_counterfactual}, but now add a constraint: the wrist is locked so that $q_1 + q_2 = \text{const} = 115°$. This forces the club to move relative to the arm in a coordinated way.
 
 The constraint Jacobian is:
@@ -481,7 +481,7 @@ This transfer is most efficient when the proximal segment is large and slow, and
 \section{Constraint Forces in Real Swings: Grip Forces and Ground Reaction Forces}
 \label{sec:constraint_forces_real_swing}
 
-\begin{example}{Grip Force During a Golf Swing}{ex:grip_force}
+\begin{example}{Grip Force During a Golf Swing}{grip_force}
 Instrumented measurements of grip force during the downswing show forces ranging from tens to hundreds of Newtons depending on swing phase and player characteristics. This force is \emph{not} a muscular torque directly. Instead, it's the reaction force that the grip constraint exerts on the club. The magnitude of this force is determined by the inertial dynamics of the coupled system rather than by the instantaneous level of muscle activation.
 
 During the downswing:
@@ -499,7 +499,7 @@ However—and this is important—the golfer \emph{can} modulate the grip force 
 \textbf{Insight:} The large grip forces in a golf swing are not primarily evidence of active muscular contraction driving the motion. Rather, they reflect the inertial forces that must be channeled through the grip constraint to maintain the coupling between hand and club. The magnitude of these forces is determined by the system's kinematics and inertias, not by muscle activation level.
 \end{example}
 
-\begin{example}{Ground Reaction Forces and the Closed Kinematic Chain}{ex:ground_reaction_forces}
+\begin{example}{Ground Reaction Forces and the Closed Kinematic Chain}{ground_reaction_forces}
 The golfer's feet are in contact with the ground, which is a constraint: the feet cannot move downward (the ground prevents it).
 
 During the downswing, the ground constraint produces reaction forces that substantially exceed the player's static weight, scaling with the inertial acceleration of the player's body segments during the swing. These forces are constraint forces—they arise from the geometry of contact with the ground and the dynamics of the motion, not from muscle activation directly.

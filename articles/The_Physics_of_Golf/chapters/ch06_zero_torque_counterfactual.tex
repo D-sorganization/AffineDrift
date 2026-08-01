@@ -29,7 +29,7 @@ The answer is counterintuitive. The ZTCF trajectory---what would happen if your 
 
 The concept of analyzing passive motion is foundational in biomechanics. By studying what a system does without active control, researchers can isolate and understand the contribution of passive forces \citep{Nesbit2005, MacKenzie2009}.
 
-\begin{definition}{The Zero-Torque Counterfactual}{def:ztcf}
+\begin{definition}{The Zero-Torque Counterfactual}{ztcf}
 The \textbf{Zero-Torque Counterfactual} is the trajectory $\bm{q}_{\text{ZTCF}}(t)$ obtained by solving the equations of motion from the current state $(\bm{q}(t_0), \dot{\bm{q}}(t_0))$ with all muscle torques set to zero:
 \begin{equation}
 \bm{M}(\bm{q})\ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} + \bm{g}(\bm{q}) = \mathbf{0} \quad \text{with} \quad \bm{u} = \mathbf{0}
@@ -173,7 +173,7 @@ This equation gives the acceleration purely from passive forces (gravity, Coriol
 \end{enumerate}
 \end{algorithm}
 
-\begin{example}{Simulink Implementation: The ``Kill-Switch'' Model}{ex:ztcf_simulink}
+\begin{example}{Simulink Implementation: The ``Kill-Switch'' Model}{ztcf_simulink}
 In practice, the ZTCF is computed in simulation by:
 
 \begin{enumerate}
@@ -201,7 +201,7 @@ In Simulink, this is literally a switch block in the control signal path, allowi
 \section{The Zero-Velocity Counterfactual (ZVCF)}
 \label{sec:zvcf}
 
-\begin{definition}{The Zero-Velocity Counterfactual}{def:zvcf}
+\begin{definition}{The Zero-Velocity Counterfactual}{zvcf}
 The \textbf{Zero-Velocity Counterfactual (ZVCF)} is a further decomposition that isolates \emph{configuration-dependent forces}. It is the acceleration that would result from gravity and Coriolis torques if all velocities were set to zero:
 \begin{equation}
 \bm{M}(\bm{q})\ddot{\bm{q}}_{\text{ZVCF}} + \bm{g}(\bm{q}) = \mathbf{0}
@@ -237,7 +237,7 @@ For a golfer, this distinction matters because gravity is always present (and pr
 \section{The Drift-Control Ratio (DCR) and Late-Downswing Authority}
 \label{sec:dcr_blowup}
 
-\begin{definition}{Drift-Control Ratio (DCR)}{def:dcr}
+\begin{definition}{Drift-Control Ratio (DCR)}{dcr}
 At any time during the swing, the \textbf{Drift-Control Ratio (DCR)} compares modeled drift against bounded modeled control under an explicit norm or weighting. Consistent with Chapter~\ref{ch:05_affine_structure}, use
 \begin{equation}
 \mathrm{DCR}_{\bm{W}}(\bm{x};u_{\max})
@@ -275,7 +275,7 @@ The Drift-Control Ratio is a \emph{model-dependent control-authority diagnostic}
 The increase in DCR during the downswing is a hypothesis to evaluate in a specified model, not a universal numerical law.
 \end{constraintbox}
 
-\begin{example}{The DCR Growth in a Typical Swing}{ex:dcr_blowup_numbers}
+\begin{example}{The DCR Growth in a Typical Swing}{dcr_blowup_numbers}
 Consider a two-segment arm (shoulder and elbow) during the downswing. Assume:
 \begin{itemize}
 \item Shoulder angle: $q_1 = 90°$ (arm horizontal).
@@ -340,7 +340,7 @@ can grow rapidly with velocity. This explains why late-downswing correction can 
 \section{Double Pendulum ZTCF: A Worked Example}
 \label{sec:double_pendulum_ztcf}
 
-\begin{example}{ZTCF for a Two-Link Arm in Downswing Configuration}{ex:double_pend_ztcf}
+\begin{example}{ZTCF for a Two-Link Arm in Downswing Configuration}{double_pend_ztcf}
 Consider a double pendulum (shoulder and elbow) with parameters:
 \begin{itemize}
 \item Shoulder: length $L_1 = 0.4$ m, mass $m_1 = 2$ kg (upper arm), $I_1 = 0.05$ kg$\cdot$m$^2$ (about the shoulder).
@@ -528,7 +528,7 @@ It also explains why trying to "add speed" at the last instant is a poor model o
 \textbf{Implication:} The skill is concentrated in \emph{setup, transition, and early downswing}—building the momentum and configuration that make late bounded control sufficient.
 \end{driftcontrol}
 
-\begin{example}{Impact Time and the Margin for Control}{ex:impact_control_margin}
+\begin{example}{Impact Time and the Margin for Control}{impact_control_margin}
 For illustration, suppose the club head reaches a representative speed of $100$ mph (44.7 m/s) at impact---a value typical of mid-to-high swing speeds \citep{Jorgensen1994}---with an angular velocity of approximately $50$ rad/s about the shoulder. Under the chosen weighting and torque bound, the DCR at this moment may be high, for example on the order of 10--20:1.
 
 If late corrective muscular torques are on the order of $10$ Nm, while passive Coriolis and centrifugal terms are on the order of 20--50 Nm \citep{Nesbit2005}, the correction margin is narrow rather than zero.

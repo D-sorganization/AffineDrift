@@ -57,7 +57,7 @@ The drag force acts \emph{opposite} to the velocity direction. In vector form:
 
 This is a nonlinear function of velocity—quadratic in magnitude. This is critical: at twice the speed, drag is \emph{four times} larger.
 
-\begin{definition}{Drag Coefficient and Reference Area}{def:cd-area}
+\begin{definition}{Drag Coefficient and Reference Area}{cd-area}
 The drag coefficient $C_D$ is determined by the shape of the object and must be measured experimentally or computed via computational fluid dynamics (CFD).
 
 \begin{center}
@@ -144,7 +144,7 @@ This drag force acts at different points along the shaft, so it produces a distr
 \label{eq:shaft-drag-torque}
 \end{equation}
 
-\begin{example}{Shaft Drag Torque at Impact}{ex:shaft-drag}
+\begin{example}{Shaft Drag Torque at Impact}{shaft-drag}
 Consider a golf shaft with parameters:
 \begin{itemize}
 \item $L = 1.1$ m
@@ -276,7 +276,7 @@ The error is:
 \label{eq:inverse-dyn-error}
 \end{equation}
 
-\begin{definition}{Bias in Inverse Dynamics}{def:inverse-dyn-bias}
+\begin{definition}{Bias in Inverse Dynamics}{inverse-dyn-bias}
 When drag is omitted:
 \begin{itemize}
 \item Computed torques are \emph{systematically biased} (always too high)
@@ -289,7 +289,7 @@ When drag is omitted:
 For example, computed wrist torques may be 5--10\% too high if drag is omitted, while shoulder torques may be only 1--2\% too high. This is because the wrist has a smaller moment arm, so drag forces have a larger percentage effect.
 \end{definition}
 
-\begin{example}{Numerical Error in Wrist Torque Calculation}{ex:inverse-dyn-error}
+\begin{example}{Numerical Error in Wrist Torque Calculation}{inverse-dyn-error}
 Suppose we measure wrist angular kinematics during the late downswing:
 \begin{itemize}
 \item $\theta_{\text{wrist}} = 45°$ (extension)
@@ -404,7 +404,7 @@ Modern club manufacturers routinely use CFD to optimize aerodynamic efficiency. 
 
 Drag depends on environmental conditions:
 
-\begin{definition}{Environmental Factors Affecting Drag}{def:env-drag}
+\begin{definition}{Environmental Factors Affecting Drag}{env-drag}
 \begin{description}
 \item[Air density $\rho$:] Varies with temperature and altitude. At 5000 ft elevation, $\rho \approx 1.05$ kg/m$^3$, about 14\% lower than sea level. This reduces drag (and also reduces ball range due to less lift).
 
@@ -449,7 +449,7 @@ Without drag, the ZTCF is driven by gravity (pulling downward), inertial forces 
 \end{enumerate}
 \end{principle}
 
-\begin{example}{ZTCF with and without Drag: Numerical Comparison}{ex:ztcf-drag}
+\begin{example}{ZTCF with and without Drag: Numerical Comparison}{ztcf-drag}
 Consider a simplified single-joint model of the swing (shoulder rotation), starting at the top of the backswing with angular velocity $\omega_0 = 0$ and ending near impact. The joint inertia is $I = 2$ kg·m$^2$ (arm + club), and gravity torque is $\tau_g(\theta) = -5 \sin(\theta)$ N·m (approximate, small torque at high speeds). Drag torque is $\tau_d = -0.5 \omega^2$ N·m (from air resistance, estimated).
 
 Without drag, the EOM is:
@@ -509,7 +509,7 @@ The question of whether to include drag depends on the application:
 \end{itemize}
 \end{constraintbox}
 
-\begin{mythreality}{Myth: ``Air drag is negligible in golf''}{myth:drag-negligible}
+\begin{mythreality}{Myth: ``Air drag is negligible in golf''}{drag-negligible}
 \begin{description}
 \item[\textbf{The Myth:}] Golf is played in air at relatively modest speeds, so air resistance is a second-order effect. The swing is controlled by gravity, inertia, and muscles. Drag is a detail for researchers, not a real constraint.
 

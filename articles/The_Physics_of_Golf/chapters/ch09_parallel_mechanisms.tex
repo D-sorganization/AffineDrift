@@ -38,7 +38,7 @@ This chapter develops the math and physics of parallel mechanisms, then applies 
 \section{Serial vs. Parallel Mechanisms}
 \label{sec:serial_vs_parallel}
 
-\begin{definition}{Serial Mechanism}{def:serial_mechanism}
+\begin{definition}{Serial Mechanism}{serial_mechanism}
 A \textbf{serial mechanism} is a kinematic chain where each segment is attached to the next in a single sequence. Examples:
 \begin{itemize}
 \item A robotic arm: base → joint 1 → link 1 → joint 2 → link 2 → ... → end effector.
@@ -48,7 +48,7 @@ A \textbf{serial mechanism} is a kinematic chain where each segment is attached 
 Key property: Each joint is traversed at most once. There are no closed loops.
 \end{definition}
 
-\begin{definition}{Parallel Mechanism}{def:parallel_mechanism}
+\begin{definition}{Parallel Mechanism}{parallel_mechanism}
 A \textbf{parallel mechanism} is a kinematic structure with closed loops. Multiple paths connect the same two bodies. Examples:
 \begin{itemize}
 \item A Stewart platform (used in flight simulators): a hexapod with 6 legs, each of which connects the base to the moving platform. The 6 legs form 6 parallel paths.
@@ -118,13 +118,13 @@ The distinction between serial and parallel mechanisms has direct implications f
 \section{The Body as a Closed Kinematic Chain}
 \label{sec:body_as_closed_chain}
 
-\begin{definition}{Closed Kinematic Loop}{def:closed_loop}
+\begin{definition}{Closed Kinematic Loop}{closed_loop}
 A \textbf{closed kinematic loop} is a sequence of segments and joints that form a cycle: segment 1 → joint 1 → segment 2 → joint 2 → ... → segment N → joint N → segment 1.
 
 The closure constraint is an algebraic equation relating the positions of all segments in the loop.
 \end{definition}
 
-\begin{example}{The Shoulder-Spine-Hip Loop}{ex:spine_loop}
+\begin{example}{The Shoulder-Spine-Hip Loop}{spine_loop}
 Consider the loop formed by:
 \begin{enumerate}
 \item Pelvis (base segment).
@@ -164,7 +164,7 @@ These loop constraints are not merely passive geometric restrictions. They are d
 \section{Loop Closure Constraints and the Loop Jacobian}
 \label{sec:loop_jacobian}
 
-\begin{definition}{Loop Closure Constraint}{def:loop_closure}
+\begin{definition}{Loop Closure Constraint}{loop_closure}
 For a closed loop, the endpoint must return to the starting point. If the loop consists of segments with relative positions $\bm{x}_1, \bm{x}_2, \ldots, \bm{x}_N$, then:
 \begin{equation}
 \bm{\Phi}_{\text{loop}} = \sum_{i=1}^{N} \bm{x}_i = \mathbf{0}
@@ -174,7 +174,7 @@ For a closed loop, the endpoint must return to the starting point. If the loop c
 Each $\bm{x}_i$ is a function of the configuration $\bm{q}$, so $\bm{\Phi}_{\text{loop}}(\bm{q}) = \mathbf{0}$ is a constraint equation.
 \end{definition}
 
-\begin{definition}{Loop Jacobian}{def:loop_jacobian}
+\begin{definition}{Loop Jacobian}{loop_jacobian}
 The \textbf{loop Jacobian} is the Jacobian of the loop closure constraint:
 \begin{equation}
 \bm{J}_{\text{loop}}(\bm{q}) = \frac{\partial \bm{\Phi}_{\text{loop}}}{\partial \bm{q}}
@@ -184,7 +184,7 @@ The \textbf{loop Jacobian} is the Jacobian of the loop closure constraint:
 It has the same interpretation as the constraint Jacobian from Chapter~\ref{ch:constraint_forces}: its null space defines allowed motions, and its range defines constraint force directions.
 \end{definition}
 
-\begin{example}{Loop Jacobian for a Planar Two-Arm System}{ex:loop_jacobian_two_arms}
+\begin{example}{Loop Jacobian for a Planar Two-Arm System}{loop_jacobian_two_arms}
 Consider a simplified body: a fixed torso with two arms attached at the shoulders. Each arm is a 2-DOF serial chain (shoulder and elbow). Total DOF: 4 (2 per arm).
 
 The loop closure constraint states: the left hand and right hand positions must satisfy the grip constraint (hands are fixed relative to the club). In a simplified model:
@@ -260,7 +260,7 @@ In the Stewart platform, the redundancy is intentional: the 6 legs over-constrai
 
 %============================================================================
 
-\begin{example}{Gruebler Applied to the Golfer}{ex:gruebler_golfer}
+\begin{example}{Gruebler Applied to the Golfer}{gruebler_golfer}
 Simplify the golfer as:
 \begin{itemize}
 \item Bodies: pelvis, torso, shoulders (3).
@@ -326,7 +326,7 @@ These forces are often internal—they don't directly produce motion, but they c
 A professional golfer's X-factor rotation creates large internal compressive and shear forces in the spine, borne by the constraint forces maintaining loop closure.
 \end{principle}
 
-\begin{example}{Constraint Forces in the Spine Loop}{ex:spine_constraint_forces}
+\begin{example}{Constraint Forces in the Spine Loop}{spine_constraint_forces}
 Consider the spine loop: pelvis → spine → shoulders. If the pelvis rotates $\theta_p = 60°$ and the shoulders rotate $\theta_{sh} = 20°$ (X-factor), the spine must absorb the difference: $\theta_s = 40°$.
 
 Defining the rotations in a common reference frame, the loop closure constraint is:
@@ -369,7 +369,7 @@ However, there's a limit: beyond a certain threshold of X-factor, the spine cons
 
 The most obvious parallel constraint in the golf swing is the grip: both hands hold the same club. This seemingly simple constraint has profound kinematic and dynamic consequences.
 
-\begin{definition}{The Grip Constraint}{def:grip_constraint}
+\begin{definition}{The Grip Constraint}{grip_constraint}
 The \textbf{grip constraint} is a spatial coupling between the left and right hands. Both hands must maintain a fixed relative position and orientation on the club. Formally:
 \begin{equation}
 \bm{p}_L(\bm{q}_L) = \bm{p}_R(\bm{q}_R) \quad \text{(at the grip point)}
@@ -436,7 +436,7 @@ In practice, the golfer controls this load sharing through grip pressure, hand p
 
 The constraint forces at the grip are the reaction forces between the hands and the club. These are not muscular forces—they are geometric consequences of the grip constraint itself.
 
-\begin{example}{Grip Constraint Forces During Downswing}{ex:grip_forces_downswing}
+\begin{example}{Grip Constraint Forces During Downswing}{grip_forces_downswing}
 Consider a simplified model where both hands grip the club at a single point. During the downswing, the club accelerates angularly at $\ddot{\theta} = 500$ rad/s$^2$.
 
 The moment of inertia of the club about the grip is $I = 0.25$ kg$\cdot$m$^2$ (approximately for a 5-iron).
@@ -468,7 +468,7 @@ The ground reaction force is not something the muscles produce; it's a constrain
 Without the ground, the golfer would slide backward as they rotate forward (by Newton's third law). The ground prevents this by providing a normal force and friction. These forces close the kinematic loop: feet → legs → torso → ground.
 \end{principle}
 
-\begin{definition}{Ground Reaction Force}{def:grf}
+\begin{definition}{Ground Reaction Force}{grf}
 The \textbf{ground reaction force} (GRF) is the force exerted by the ground on the golfer's feet to maintain the contact constraint. It has three components:
 \begin{itemize}
 \item \textbf{Vertical:} Perpendicular to the ground, typically 0.8--1.5 times body weight during the swing.
@@ -479,7 +479,7 @@ The \textbf{ground reaction force} (GRF) is the force exerted by the ground on t
 Additionally, the ground exerts a torque about the vertical axis, called the \textbf{ground reaction torque} or free moment, which initiates pelvis rotation.
 \end{definition}
 
-\begin{example}{Ground Reaction Forces During Downswing}{ex:ground_reaction_forces_example}
+\begin{example}{Ground Reaction Forces During Downswing}{ground_reaction_forces_example}
 For an illustrative calculation, suppose a golfer has mass $m$. The static vertical
 load is then $mg$, and the dynamic ground-reaction force can exceed that value during
 rapid weight transfer and rotation. In practice, replace this illustrative placeholder
@@ -508,7 +508,7 @@ All of these forces are constraints, not muscle-produced forces. The muscles con
 
 The contact between a foot and the ground is typically distributed over the footprint. The \textbf{center of pressure} (COP) is the weighted average position of this contact.
 
-\begin{definition}{Center of Pressure}{def:cop}
+\begin{definition}{Center of Pressure}{cop}
 The \textbf{center of pressure} is the point where the vertical ground reaction force can be considered to act. Its trajectory during the swing reveals the golfer's weight transfer and balance.
 \end{definition}
 
@@ -547,7 +547,7 @@ In a parallel mechanism with closed loops, forward kinematics becomes a system o
 
 where $\bm{\Phi}$ is the set of closure constraints. These equations must all be satisfied simultaneously. There is no simple forward recursion as in the serial case.
 
-\begin{example}{Forward Kinematics for the Two-Handed Grip}{ex:fk_two_hands}
+\begin{example}{Forward Kinematics for the Two-Handed Grip}{fk_two_hands}
 Given the angles $\bm{q}_L$ and $\bm{q}_R$ of both arms, the position of the left hand is $\bm{p}_L(\bm{q}_L)$ and the right hand is $\bm{p}_R(\bm{q}_R)$.
 
 The grip constraint equation is:
@@ -585,7 +585,7 @@ In a serial mechanism, a singularity occurs when the Jacobian loses rank, typica
 
 In a parallel mechanism, singularities are more nuanced because the "end effector" is constrained by multiple paths. There are different types:
 
-\begin{definition}{Types of Singularities in Parallel Mechanisms}{def:parallel_singularities}
+\begin{definition}{Types of Singularities in Parallel Mechanisms}{parallel_singularities}
 \begin{enumerate}
 
 \item \textbf{Workspace singularity (Type I):} The end effector reaches the boundary of its feasible region. At these configurations, small motions of the platform require infinite joint velocities. In the golf swing, this occurs when the club reaches maximum distance from the golfer's center.
@@ -778,7 +778,7 @@ Gravity is the most "predictable" drift force because it's constant (always down
 
 Beyond inertial drift forces, the spine, ligaments, and tendons store elastic potential energy and release it as restoring forces. These are also "drift" in the sense that they act without active muscle control (at least during the release phase when muscles are shortening eccentrically).
 
-\begin{definition}{Elastic Drift}{def:elastic_drift}
+\begin{definition}{Elastic Drift}{elastic_drift}
 \textbf{Elastic drift} is the restoring force exerted by stretched or compressed elastic tissues (spine ligaments, tendons, fascia, connective tissue) to return toward their resting length or configuration.
 \end{definition}
 
@@ -965,7 +965,7 @@ The \emph{dimension} of the null space is:
 \label{eq:nullspace_dimension}
 \end{equation}
 
-\begin{example}{Null Space Dimension for Two-Armed System}{ex:nullspace_two_arms}
+\begin{example}{Null Space Dimension for Two-Armed System}{nullspace_two_arms}
 For the two-handed grip:
 \begin{itemize}
 \item Total DOF: $n = 14$ (7 per arm).
@@ -1133,7 +1133,7 @@ Mechanically, this means: a force in the range of $\mathbf{J}_c^T$ does no work 
 
 Screw theory is an elegant mathematical framework for kinematic and force analysis of mechanisms. It's particularly powerful for parallel mechanisms.
 
-\begin{definition}{Twists and Wrenches}{def:twists_wrenches}
+\begin{definition}{Twists and Wrenches}{twists_wrenches}
 A \textbf{twist} (or screw) is a unit vector in $\mathbb{R}^6$ representing a motion: rotation about an axis combined with translation along that axis.
 
 A \textbf{wrench} is a unit vector in $\mathbb{R}^6$ representing a force: a force in some direction combined with a torque (moment) about an axis.
