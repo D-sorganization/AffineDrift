@@ -39,7 +39,7 @@ Synergy Control & Reduced-dim learning & Synergy-space variability & Movement fl
 \section{Optimal Feedback Control}
 
 The dominant computational theory of motor control is optimal feedback control (OFC),
-formulated by Todorov and Jordan (2002). OFC explains motor variability patterns
+formulated by Todorov and Jordan~\cite{TodorovJordan2002}. OFC explains motor variability patterns
 (minimum intervention principle), predicts smooth velocity profiles, and unifies
 cerebellar learning with optimal control:
 
@@ -60,10 +60,18 @@ cerebellar learning with optimal control:
 \end{definition}
 
 \noindent
-This is precisely the optimal control problem studied in Agrachev \& Sachkov \cite{AgrachevSachkov2004},
-Chapters~5--6 (stochastic optimal control). Their framework establishes existence and uniqueness
-of optimal feedback laws, characterizes them via the Hamilton-Jacobi-Bellman equation, and shows
-that feedback synthesis via optimal control naturally leads to closed-loop stability.
+Equation~\eqref{eq:ch10:ofc} is a \emph{stochastic} optimal control problem, and the distinction
+matters. Because the dynamics carry a Brownian term, the solution is characterised by a
+Hamilton--Jacobi--Bellman equation for the value function, not by the Pontryagin maximum
+principle applied along a single trajectory. The deterministic geometric control theory this
+series draws on elsewhere---Agrachev \& Sachkov \cite{AgrachevSachkov2004}---treats smooth
+ordinary differential equations with no noise term and develops optimality through Pontryagin's
+principle; it does not cover the problem above.
+
+The reason a stochastic formulation is needed at all is that motor noise scales with the
+magnitude of the control signal, so it cannot be treated as a small additive disturbance
+around a nominal plan~\cite{HarrisWolpert1998}. That single fact is what makes the minimum
+intervention principle below a prediction rather than a preference.
 
 \subsection{The Minimum Intervention Principle}
 

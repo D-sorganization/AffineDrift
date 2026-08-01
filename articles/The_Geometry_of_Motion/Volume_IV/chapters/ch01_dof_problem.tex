@@ -128,11 +128,18 @@ mathematical framework for understanding how the nervous system manages redundan
 \end{definition}
 
 \noindent
-In the language of Agrachev \& Sachkov's geometric control theory \cite{AgrachevSachkov2004},
-the null space of $J_h$ IS the uncontrollable subspace of the system when the task variable
-is taken as the output. Chapter~3.1 of \cite{AgrachevSachkov2004} develops exactly this theory:
-given a control system with an output map, which state perturbations affect the output? The answer
-is the orthogonal complement of the null space---precisely the mechanism underlying the UCM hypothesis.
+Geometrically, $\text{UCM}(\bm{q}_0)$ is the kernel of the task map's differential. Where $J_h$
+has full rank $k$, the implicit function theorem makes $h$ a submersion near $\bm{q}_0$, so the
+level set $h^{-1}(\bm{y}_0)$ is a smooth $(n-k)$-dimensional manifold whose tangent space at
+$\bm{q}_0$ is exactly the UCM. Motion along that manifold changes the configuration without
+changing the task variable.
+
+It is worth being explicit that this is a statement about the \emph{task map}, not about the
+dynamics. The UCM is a redundancy of $h$, not an uncontrollable subspace of the control system:
+a configuration can be fully controllable and still have a large uncontrolled manifold, because
+controllability asks what states are reachable while the UCM asks which state changes the task
+cannot see. Conflating the two makes the hypothesis sound like a claim about what the nervous
+system \emph{cannot} do, when it is a claim about what it need not bother to correct.
 
 \begin{laymansbox}{Mathematical Reminder: The Geometry of the UCM}{ucm_geometry_reminder}
 Recall our differential geometry from Volume 0: a manifold is a curved surface representing valid states. The \textbf{Uncontrolled Manifold} (UCM) is quite literally a geometric submanifold embedded inside the larger configuration space $\mathcal{Q}$. 
@@ -259,10 +266,11 @@ In the language of control theory:
   \item Stage 1: reduce the system dimension from $n$ to $k$ (the task dimension)
   \item Stage 2: increase the controlled dimension while maintaining task performance
   \item Stage 3: exploit the drift dynamics $f(\state)$ by designing trajectories that
-        use passive mechanics (Volume~II, Chapter~5). This is formalized in Agrachev \& Sachkov
-        \cite{AgrachevSachkov2004}, Chapter~4, which develops the geometric theory of accessible
-        sets and optimal trajectories for systems where drift (passive dynamics) dominates.
-        use passive mechanics (Volume~II, Chapter~5)
+        use passive mechanics (Volume~II, Chapter~5). Agrachev \& Sachkov
+        \cite{AgrachevSachkov2004} develop the geometric theory of reachable sets in
+        Chapter~8; what a system can reach depends on its drift as much as on its inputs,
+        which is why releasing a degree of freedom can enlarge the reachable set without
+        adding an actuator.
 \end{itemize}
 
 \section*{Exercises}
