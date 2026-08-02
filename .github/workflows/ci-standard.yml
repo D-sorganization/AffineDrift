@@ -135,6 +135,13 @@ jobs:
           fi
       - name: Verify Quarto Render Coverage
         run: python3 scripts/check_quarto_render_coverage.py
+      - name: Verify Quarto Math Syntax
+        # scan_quarto_syntax.py existed but was wired into nothing, so none of its
+        # checks had ever run in CI. The corpus was brought to zero findings before
+        # this step was added, which is what makes running it viable. It catches the
+        # class of defect that renders wrong rather than failing: math that Pandoc
+        # silently declines to parse, which the site then prints as literal dollars.
+        run: python3 scripts/scan_quarto_syntax.py
       - name: Verify Acronym Terminology Is Consistent
         # NOTATION.md is the single source of truth for DCR and ZTCF. Fails on any
         # reintroduced variant expansion or the dangling cross-reference that made
