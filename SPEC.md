@@ -139,6 +139,7 @@ AffineDrift/
 │   ├── check_qmd_citation_keys.py    # Quarto citation-key integrity scan for site content
 │   ├── check_quarto_render_coverage.py # Sitemap-to-source coverage guard for Quarto pages
 │   ├── check_quarto_xrefs.py         # Cross-reference resolution guard for the book
+│   ├── check_single_title.py         # One rendered title per page; frontmatter parses
 │   ├── cli_output.py                 # Explicit stdout/stderr helpers for intentional CLI contracts
 │   └── README.md                # Script usage and CI-facing documentation
 ├── tests/                       # Additional test organization
