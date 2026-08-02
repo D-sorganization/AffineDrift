@@ -42,6 +42,6 @@ Consequently, the mathematical proofs in Part I (e.g., Drift Invariance) apply t
 ## Suggested Remedies
 
 1.  **Update the Part I Derivation**: Explicitly include a passive joint torque term $\tau_{passive}(q, \dot{q})$ in the drift vector definition.
-    $$ \tau*{passive} = -K*{eff} (q - q*{neutral}) - D*{eff} \dot{q} $$
+    $$ \tau_{passive} = -K_{eff} (q - q_{neutral}) - D_{eff} \dot{q} $$
 2.  **Formalize the Effective Plant**: State clearly in Part I that $f(x)$ includes "Effective Impedance" which is treated as constant for the purpose of the affine decomposition, even if it biologically arises from co-contraction.
 3.  **Harmonize Notation**: Ensure the matrix equation in Part I matches the Simulink block diagram in Part V.

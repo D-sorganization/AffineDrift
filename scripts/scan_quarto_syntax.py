@@ -210,6 +210,21 @@ class QuartoSyntaxScanner:
 
         if char == "$":
             self._validate_inline_math_content(c[self.math_content_start : i])
+            # Pandoc refuses to close inline math on a `$` that is followed by a
+            # digit, so `$\sim$10 Hz` is not math at all -- both delimiters are
+            # emitted as literal text and the page shows "$$10 Hz". The form is
+            # correct in LaTeX, which has no such rule, so it survives every
+            # compile gate and only the rendered HTML shows the damage.
+            if i + 1 < self.length and c[i + 1].isdigit():
+                span = c[self.math_content_start : i]
+                self.errors.append(
+                    (
+                        self.start_line,
+                        f"Inline math closed before a digit: '${span[:12]}${c[i + 1]}'",
+                        "Pandoc will not parse this as math; move the number inside, "
+                        "e.g. $\\sim$10 becomes $\\sim10$",
+                    )
+                )
             self.state = _State.TEXT
             self.i += 1
         elif char == "\n":

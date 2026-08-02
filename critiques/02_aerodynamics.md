@@ -23,7 +23,7 @@ Consequently, the theory **underestimates the Input requirement**. The golfer is
 ## Affine Compatibility
 
 Interestingly, aerodynamic forces _do_ fit the affine structure. Drag depends on state $(q, \dot{q})$ (orientation and velocity).
-$$ F*{aero} = F*{aero}(q, \dot{q}) $$
+$$ F_{aero} = F_{aero}(q, \dot{q}) $$
 It does not depend explicitly on joint torque $u$. Therefore, adding aerodynamics would not break the $\dot{x} = f(x) + g(x)u$ form. It would simply add a dissipative term to $f(x)$.
 
 The omission is therefore a **modeling choice**, not a theoretical necessity, but it weakens the claim of "high-fidelity" causal attribution.

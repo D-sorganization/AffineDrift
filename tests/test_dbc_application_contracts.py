@@ -377,6 +377,29 @@ class TestQuartoSyntaxScanner:
         assert len(errors) == 1
         assert "Leading space" in errors[0][1]
 
+    def test_detects_inline_math_closed_before_a_digit(self, tmp_path: Any) -> None:
+        """Pandoc will not close inline math on a `$` followed by a digit.
+
+        `$\\sim$10 Hz` is correct in LaTeX and is not math at all in Pandoc --
+        both delimiters print literally, so the page shows "$$10 Hz". It passes
+        every compile gate, which is why it needs catching here.
+        """
+        from scripts.scan_quarto_syntax import check_file
+
+        p = tmp_path / "bad.qmd"
+        p.write_text("The first mode is $\\sim$10 Hz.\n")
+        errors = check_file(p)
+        assert len(errors) == 1
+        assert "closed before a digit" in errors[0][1]
+
+    def test_allows_inline_math_closed_before_a_non_digit(self, tmp_path: Any) -> None:
+        """The same span parses fine when the number sits inside it."""
+        from scripts.scan_quarto_syntax import check_file
+
+        p = tmp_path / "good.qmd"
+        p.write_text("The first mode is $\\sim10$ Hz, and $x^2$ follows.\n")
+        assert check_file(p) == []
+
     def test_detects_deprecated_delimiters(self, tmp_path: Any) -> None:
         from scripts.scan_quarto_syntax import check_file
 

@@ -9,3 +9,15 @@ dist/
 .git/
 content/
 index.qmd
+
+# Prettier does not know that `$$...$$` is math -- that is a Quarto/Pandoc
+# extension, not CommonMark. Inside a display-math block it therefore reads
+# `_{aero}` as emphasis and rewrites it to `*{aero}`, and escapes a lone `_`
+# to `\_`. Both destroy the LaTeX: MathJax renders `F*{aero}` literally, and
+# `\_` is an underscore character rather than a subscript. These pages are
+# rendered to the site by the root _quarto.yml, so the damage is user-visible.
+# This is not hypothetical -- it is how the equations in 02_aerodynamics,
+# 03_neuromuscular_control, dimensional_inconsistency_dcr,
+# flaccid_drift_contradiction and tip_mass_omission were broken, and it
+# reverted the fix on every commit attempt until this entry was added.
+critiques/

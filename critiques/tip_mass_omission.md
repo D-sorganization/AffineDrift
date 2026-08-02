@@ -41,7 +41,7 @@ The mathematical derivation of the flexible shaft dynamics (Part 1 & Appendix B)
 ## Suggested Remedies
 
 1.  **Add Tip Mass Term**: Explicitly add the discrete mass terms to the Kinetic Energy in Part 1:
-    $$ T = \frac{1}{2} \int*0^L \rho \| v(s) \|^2 ds + \frac{1}{2} m*{head} \| v(L) \|^2 + \frac{1}{2} \omega(L)^T I\_{head} \omega(L) $$
+    $$ T = \frac{1}{2} \int_0^L \rho \| v(s) \|^2 ds + \frac{1}{2} m_{head} \| v(L) \|^2 + \frac{1}{2} \omega(L)^T I_{head} \omega(L) $$
 2.  **Update Mass Matrix Integrals**:
     - $M_{qq} = \int \rho J^T J ds + m_{head} J(L)^T J(L)$
     - $M_{q\eta} = \int \rho J^T \Phi ds + m_{head} J(L)^T \Phi(L)$
