@@ -193,6 +193,7 @@ class QuartoSyntaxScanner:
                 self.errors.append(
                     (self.start_line, "Escaped underscore in display math", "Use _ instead of \\_")
                 )
+            self._check_emphasis_corruption(math_text, "display math")
             self.state = _State.TEXT
             self.i += 2
         else:
@@ -267,6 +268,32 @@ class QuartoSyntaxScanner:
                     self.start_line,
                     f"Escaped underscore in inline math: '${math_text[:10]}...'",
                     "Use _ instead of \\_",
+                )
+            )
+
+        self._check_emphasis_corruption(math_text, "inline math")
+
+    def _check_emphasis_corruption(self, math_text: str, where: str) -> None:
+        """Flag subscripts that a markdown formatter rewrote into emphasis markers.
+
+        `$$...$$` is a Quarto extension, not CommonMark, so a formatter that does
+        not know about it reads `_{aero}` inside the block as emphasis and
+        normalises it to `*{aero}`. MathJax then prints that literally. This is
+        not hypothetical: prettier did it to four critique pages, and reverted the
+        repair on every commit until `critiques/` was added to `.prettierignore`.
+
+        `*` is legitimate in math as multiplication, so only the shapes a
+        subscript leaves behind are flagged -- `*` immediately before `{`, or
+        immediately after a control word and before a digit (`\\int*0`).
+        """
+        match = re.search(r"(?:[A-Za-z}\]]\*\{|\\[a-zA-Z]+\*\d)", math_text)
+        if match:
+            self.errors.append(
+                (
+                    self.start_line,
+                    f"Subscript rewritten as emphasis in {where}: '{match.group(0)}'",
+                    "A markdown formatter replaced _ with *; restore the subscript "
+                    "and add the file to .prettierignore",
                 )
             )
 

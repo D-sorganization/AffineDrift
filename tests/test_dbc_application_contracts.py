@@ -400,6 +400,30 @@ class TestQuartoSyntaxScanner:
         p.write_text("The first mode is $\\sim10$ Hz, and $x^2$ follows.\n")
         assert check_file(p) == []
 
+    def test_detects_subscript_rewritten_as_emphasis(self, tmp_path: Any) -> None:
+        """A markdown formatter that does not know `$$` is math breaks subscripts.
+
+        Prettier reads `_{aero}` inside a display-math block as emphasis and
+        normalises it to `*{aero}`, which MathJax prints literally. It did this
+        to four critique pages and reverted the repair on every commit until
+        `critiques/` was added to `.prettierignore`.
+        """
+        from scripts.scan_quarto_syntax import check_file
+
+        p = tmp_path / "bad.qmd"
+        p.write_text("$$ F*{aero} = F*{aero}(q) $$\n\nAlso $u*{FF}(t)$ inline.\n")
+        errors = check_file(p)
+        assert len(errors) == 2
+        assert all("rewritten as emphasis" in e[1] for e in errors)
+
+    def test_allows_asterisk_as_multiplication(self, tmp_path: Any) -> None:
+        """`*` is legitimate in math; only the shapes a subscript leaves are flagged."""
+        from scripts.scan_quarto_syntax import check_file
+
+        p = tmp_path / "good.qmd"
+        p.write_text("$$ a * b = 2*3 $$\n\nAnd $x \\times y$ inline.\n")
+        assert check_file(p) == []
+
     def test_detects_deprecated_delimiters(self, tmp_path: Any) -> None:
         from scripts.scan_quarto_syntax import check_file
 
