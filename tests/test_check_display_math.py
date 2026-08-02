@@ -87,6 +87,24 @@ class TestScan:
         assert odd == 1
         assert bare == []
 
+    def test_a_raw_latex_equation_environment_is_maths(self, tmp_path: Path) -> None:
+        """Pandoc renders `\\begin{equation}` in a .qmd as display maths.
+
+        Verified against a probe file: one such block becomes one `\\[ … \\]`.
+        The Geometry of Motion mirror uses this form throughout, so flagging it
+        would report an entire textbook as broken when it renders correctly.
+        """
+        text = "Text.\n\n\\begin{equation}\n\\bm{M} \\ddot{\\bm{q}} = \\bm{u}\n\\end{equation}\n\nMore.\n"
+        odd, bare = scan(write(tmp_path, text))
+        assert odd is None
+        assert bare == []
+
+    def test_a_raw_align_environment_is_maths(self, tmp_path: Path) -> None:
+        text = "\\begin{align}\na &= b \\\\\nc &= d\n\\end{align}\n"
+        odd, bare = scan(write(tmp_path, text))
+        assert odd is None
+        assert bare == []
+
     def test_maths_inside_a_code_fence_is_ignored(self, tmp_path: Path) -> None:
         text = "```\n\\bm{M} \\ddot{\\bm{q}} = \\bm{u}\n```\n"
         odd, bare = scan(write(tmp_path, text))
