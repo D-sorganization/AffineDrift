@@ -87,6 +87,23 @@ class TestScan:
         assert odd == 1
         assert bare == []
 
+    def test_content_on_the_delimiter_line_is_still_maths(self, tmp_path: Path) -> None:
+        """`$$J_c = \\begin{bmatrix}` ... `\\end{bmatrix},$$` is valid display maths.
+
+        Matching only lines that are *nothing but* `$$` never sees the opener,
+        and then reports the matrix rows between them as undelimited. That was
+        a false positive on the Geometry of Motion mirror.
+        """
+        text = (
+            "Text.\n\n$$J_c = \\begin{bmatrix}\n"
+            "-\\ell_1 \\sin\\theta_1 & -\\ell_2 \\sin\\theta_2\n"
+            "\\ell_1 \\cos\\theta_1 & \\ell_2 \\cos\\theta_2\n"
+            "\\end{bmatrix},$$\n\nMore.\n"
+        )
+        odd, bare = scan(write(tmp_path, text))
+        assert odd is None
+        assert bare == []
+
     def test_a_raw_latex_equation_environment_is_maths(self, tmp_path: Path) -> None:
         """Pandoc renders `\\begin{equation}` in a .qmd as display maths.
 
