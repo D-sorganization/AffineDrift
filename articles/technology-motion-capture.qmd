@@ -119,9 +119,47 @@ Its practical cost is noise sensitivity: the axis position is computed by dividi
 The helical axis of a segment and the central axis of a ground reaction wrench are the same geometric construction applied to the two dual halves of mechanics — motion and load. This is why screw theory unifies the kinematic and kinetic sides of biomechanics, and why the same conditioning caveat (division by a magnitude that can approach zero) appears on both. See also the application of these ideas to clubhead tracking in [Launch Monitor Technology](technology-launch-monitors.html).
 :::
 
-## Part IV: Systems and methods
+## Part IV: The system families and what each trades away
 
-*[Section to be completed: optical marker-based systems and specifications, markerless pose estimation and its validation record, inertial systems and drift, and biplanar videoradiography as the accuracy benchmark.]*
+### Optical marker-based
+
+The laboratory standard: an array of cameras with infrared strobes, retroreflective markers on the skin, sub-pixel centroiding, and triangulation as described in Part I. Frame rates from around 100 Hz for gait to well over 1000 Hz for impact work; reconstruction residuals typically well under a millimetre after wand calibration.
+
+Its strengths are geometric precision, mature software for labelling and gap-filling, and two decades of accumulated methodological convention. Its weaknesses are the ones already named — soft tissue artefact dominates the error budget regardless of camera quality — plus the practical costs: a dedicated volume, subject preparation time measured in tens of minutes, marker occlusion whenever limbs cross the body, and the possibility that instrumenting the subject changes what the subject does.
+
+Active-marker variants replace retroreflective spheres with modulated LEDs, which supplies unique per-marker identity and eliminates the labelling problem at the cost of wiring the subject.
+
+### Markerless
+
+Multi-camera markerless systems replace physical markers with learned pose estimation: a neural network locates anatomical keypoints in each image, and the same triangulation machinery reconstructs them in three dimensions. Single-camera systems go further, lifting 2D pose to 3D using learned priors about human body shape and motion.
+
+The validation literature has a consistent shape. Agreement with marker-based systems is generally good for large sagittal-plane joint angles, meaningfully worse for frontal-plane angles, and worst for **transverse-plane rotations** — internal and external rotation of the femur, and axial rotation of the trunk. That ordering is not surprising: rotation about a limb's long axis produces the smallest change in silhouette, so it is exactly what a vision system has least information about.
+
+Two observations matter for interpreting this. First, the comparison is against marker-based systems, which are themselves corrupted by soft tissue artefact — so "agreement with marker-based" is not the same as "accuracy," and disagreement is not automatically the markerless system's error. Second, markerless systems remove the marker-placement variability that is a large source of between-lab inconsistency, which means they can be *more* repeatable while being less accurate in a given trial.
+
+### Inertial
+
+Body-worn inertial measurement units fuse accelerometer, gyroscope and magnetometer signals to estimate segment orientation, typically with a complementary or Kalman-type filter. They are portable, work outdoors, and have no volume limit or occlusion problem.
+
+Three costs follow from the physics. **Orientation drift** accumulates because angular velocity must be integrated; magnetometer readings bound the drift about the vertical axis but are corrupted by ferrous structures and electrical equipment — an indoor golf facility with a steel frame being an unhelpful environment. **Position is not measured**, only orientation, so joint centres and segment positions must be inferred from a linked-segment model rather than observed. And **sensor-to-segment alignment** must be established by a calibration procedure, since the sensor's own axes bear no fixed relation to anatomy.
+
+The validation picture is correspondingly split: orientation and rotational summary measures can agree closely with optical systems, while absolute positions and small joint angles agree less well. For golf specifically, a three-sensor system reproduced trunk and pelvic rotation measures at correlations of 0.91 to 1.00 against optical capture (Part V), which is a strong result for the quantities it targets — and says nothing about quantities it does not measure.
+
+### Videoradiography — the benchmark
+
+Biplanar videoradiography, also called dynamic stereo X-ray, images the bones themselves through two X-ray sources and image intensifiers, then registers CT- or MRI-derived bone models to the radiographic silhouettes frame by frame. Because it tracks bone rather than skin, it is not subject to soft tissue artefact at all, and its accuracy is roughly an order of magnitude better than skin-marker methods.
+
+It is the reference against which every other technique's error is ultimately calibrated, and it is unusable for most purposes: the capture volume is small, the equipment is scarce and expensive, and ionising radiation limits both trial count and participant population. Its role is to characterise the errors of the practical methods, not to replace them.
+
+### Emerging modalities
+
+Depth cameras, LiDAR, millimetre-wave radar and event cameras all offer markerless capture with different trade-offs — event cameras in particular have microsecond temporal resolution and no motion blur, which is attractive for exactly the fast-movement problem golf presents. These are research instruments in this domain today rather than established measurement tools, and claims about them should be read with that status in mind.
+
+::: {.callout-note}
+## Choosing by error structure, not by specification sheet
+
+The useful question is not which system is most accurate but which system's errors are orthogonal to the quantity you care about. Marker-based capture is precise about marker positions and systematically wrong about bone. Markerless capture is weakest exactly where axial rotation matters. Inertial capture is good at orientation and blind to position. Videoradiography is right about everything and available for almost nothing. A study design that matches the instrument's blind spot to a quantity it does not need is a well-designed study, however modest the hardware.
+:::
 
 ## Part V: Golf-specific practice
 
@@ -176,6 +214,38 @@ More recently, [Kim (2025)](https://doi.org/10.3390/jfmk10030315) computed the *
 Two caveats are essential and the paper's own data supply them. The study analysed **two golfers**, which makes it a proof of concept rather than evidence of a general effect. And the participant table is internally inconsistent with its own labels: the golfer designated "proficient" carries a handicap of 32 with one year of experience, while the "novice" carries a handicap of 8 with fifteen years and 110 rounds a year. On standard skill metrics the labels are inverted. The methodological idea — that a coordinate-frame-independent invariant of the motion screw might characterise coordination quality better than sequence timing does — remains worth pursuing, but this particular result should not be cited as showing that pitch discriminates skill.
 
 That is a fair summary of the state of the art: the geometry is sound, the application to golf is early, and the field's larger problem is not sensor accuracy but definitional consistency.
+
+## References and further reading
+
+**Textbooks and standards**
+
+- Winter, D. A. (2009). *Biomechanics and Motor Control of Human Movement*, 4th ed. Wiley.
+- Robertson, D. G. E. et al. (2014). *Research Methods in Biomechanics*, 2nd ed. Human Kinetics — Chapters 1–2 on planar and three-dimensional kinematics, Chapter 12 on signal processing.
+- Wu, G. and Cavanagh, P. R. (1995). ISB recommendations for standardization in the reporting of kinematic data. *Journal of Biomechanics* 28(10), 1257–1261. [PubMed](https://pubmed.ncbi.nlm.nih.gov/8550644/).
+- Wu, G. et al. (2002, 2005). ISB recommendation on definitions of joint coordinate systems: [Part I — ankle, hip, spine](https://pubmed.ncbi.nlm.nih.gov/11934426/); [Part II — shoulder, elbow, wrist, hand](https://pubmed.ncbi.nlm.nih.gov/15844264/).
+- de Leva, P. (1996). Adjustments to Zatsiorsky-Seluyanov's segment inertia parameters. *Journal of Biomechanics* 29(9), 1223–1230. [PubMed](https://pubmed.ncbi.nlm.nih.gov/8872282/).
+
+**Golf-specific kinematics**
+
+- Bourgain, M., Rouch, P., Rouillon, O., Thoreux, P. and Sauret, C. (2022). Golf swing biomechanics: a systematic review and methodological recommendations for kinematics. *Sports* 10(6), 91. [DOI](https://doi.org/10.3390/sports10060091) — 92 articles reviewed; the anchor citation for methodological inconsistency in this field.
+- Marsan, T. et al. (2019). Methodological effect of angular velocity component on the identification of the kinematic sequence. *Acta of Bioengineering and Biomechanics* 21(2), 115–120. [PubMed](https://pubmed.ncbi.nlm.nih.gov/31741482/).
+- Zhou, J. Y. et al. (2022). The swing performance index. *Frontiers in Sports and Active Living*. [DOI](https://doi.org/10.3389/fspor.2022.986281) — verified peak pelvis and torso rotational velocities.
+- Kim, S. E. et al. (2023). Validation of inertial measurement units for analyzing golf swing rotational biomechanics. *Sensors* 23(20), 8433. [DOI](https://doi.org/10.3390/s23208433).
+- Horan, S. A. et al. (2010). Thorax and pelvis kinematics during the downswing of male and female skilled golfers. *Journal of Biomechanics*. [DOI](https://doi.org/10.1016/j.jbiomech.2010.02.005).
+- Tinmark, F., Hellström, J., Halvorsen, K. and Thorstensson, A. (2010). Elite golfers' kinematic sequence in full-swing and partial-swing shots. *Sports Biomechanics* 9(4), 236–244. [DOI](https://doi.org/10.1080/14763141.2010.535842).
+- Lynn, S. K. et al. (2013). Rotational kinematics of the pelvis during the golf swing. *International Journal of Golf Science* 2(2), 116–125. [DOI](https://doi.org/10.1123/ijgs.2013-0011).
+
+**Screw and helical axis methods**
+
+- Vena, A., Budney, D., Forest, T. and Carey, J. P. (2011). Three-dimensional kinematic analysis of the golf swing using instantaneous screw axis theory: [Part 1 — methodology and verification](https://doi.org/10.1007/s12283-010-0058-8); [Part 2 — kinematic sequence](https://doi.org/10.1007/s12283-010-0059-7). *Sports Engineering* 13.
+- Kim, W. (2025). Pitch invariance reveals skill-specific coordination in human movement: a screw-theoretic reanalysis of golf swing dynamics. *Journal of Functional Morphology and Kinesiology* 10(3), 315. [DOI](https://doi.org/10.3390/jfmk10030315).
+- Murray, R. M., Li, Z. and Sastry, S. S. (1994). *A Mathematical Introduction to Robotic Manipulation*. CRC Press. [Freely available](https://www.cds.caltech.edu/~murray/mlswiki/) — the standard treatment of twists, screws and $SE(3)$.
+
+::: {.callout-note}
+## A note on sourcing
+
+Several figures that circulate widely in golf biomechanics could not be traced to primary sources during the research for this article, and are therefore not asserted here: segment angular velocities "exceeding 2000 °/s", and a club-ball impact duration of 0.45 ms. Vendor accuracy claims are identified as such throughout. The supporting research dossiers, including their verification flags, are maintained alongside this article in the repository.
+:::
 
 ::: {.callout-note}
 ## Related Concepts
