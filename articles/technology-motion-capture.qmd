@@ -85,7 +85,13 @@ Markers are attached to skin, and skin translates and rotates relative to the un
 2. **It is indistinguishable from signal.** The artefact's frequency content overlaps the movement's, and its spatial pattern mimics rigid-body motion of the cluster.
 3. **It is largest where the soft tissue is thickest**, which unfortunately includes the thigh and pelvis, the segments that anchor most lower-body analyses.
 
-The methodological responses — rigid marker clusters instead of individual markers, optimisation-based inverse kinematics that enforces joint constraints across the whole chain, and calibration procedures that relate cluster to anatomy — mitigate but do not eliminate it. The only techniques that avoid it entirely image the bone directly.
+The magnitudes are not marginal. Measured against bone tracked by fluoroscopy, skin-marker artefact runs from **3 mm to 54 mm** depending on segment and task, producing hip angle errors of about 5.8° in internal rotation and shrinking the measured internal-external rotation range of motion by **up to 21.8°** ([Fiorentino et al. 2017](https://doi.org/10.1016/j.gaitpost.2017.03.033)). The hip joint centre itself is displaced by **16.6 ± 8.4 mm** ([Fiorentino et al. 2016](https://doi.org/10.1016/j.gaitpost.2016.09.011)). On the scapula — the segment golf analysis most wants — median marker movement reaches **30 mm at the acromial angle, 53 mm at the root of the scapular spine, and 70 mm at the inferior angle** ([Yoshida et al. 2022](https://doi.org/10.3390/s22176502)).
+
+Set those numbers beside a camera system quoting 0.07 mm 3D resolution and the situation is clear: **this is precision without accuracy.** The instrument specification describes the location of a plastic sphere; the biomechanical question concerns a bone that may be several centimetres away.
+
+The consequences propagate. A 30 mm anterior mislocation of the hip joint centre produces roughly a **22% error in the flexion-extension moment** ([Stagni et al. 2000](https://doi.org/10.1016/s0021-9290(00)00093-2)) — and skin markers already misplace it by half that distance on average. Comprehensive uncertainty propagation through a musculoskeletal model gives combined bounds of **2.7–6.4° in joint kinematics, 2.7–8.1 N·m in joint moments, and 35.8–130.8 N in muscle forces** ([Myers et al. 2015](https://doi.org/10.1007/s10439-014-1181-7)).
+
+The methodological responses — rigid marker clusters instead of individual markers, optimisation-based inverse kinematics that enforces joint constraints across the whole chain ([Lu and O'Connor 1999](https://doi.org/10.1016/s0021-9290(98)00158-4)), and calibration procedures relating cluster to anatomy — mitigate but do not eliminate it. One caution worth carrying: adding joint constraints is not universally an improvement, and in some model configurations it *increases* intersegmental moment error ([Pomarat et al. 2023](https://doi.org/10.1016/j.jbiomech.2023.111514)). The only techniques that avoid soft tissue artefact entirely image the bone directly.
 
 ## Part III: The rotation problem
 
@@ -111,7 +117,33 @@ $$
 
 The description comprises an axis direction, a point on that axis, a rotation angle, and a translation along it. Crucially, **none of these depends on a chosen sequence** — the axis is a property of the motion, not of the analyst's convention. For joints whose motion is genuinely three-dimensional, and for segments undergoing large rotations, this is the representation that says what happened without editorial choices baked in.
 
-Its practical cost is noise sensitivity: the axis position is computed by dividing by $\lVert\boldsymbol{\omega}\rVert^2$, so when angular velocity is small the axis location becomes ill-conditioned — structurally the same pathology as centre of pressure at low vertical load. The standard mitigations are to gate on a minimum angular velocity and to estimate the axis over a finite interval rather than instantaneously.
+Its practical cost is noise sensitivity: the axis position is computed by dividing by $\lVert\boldsymbol{\omega}\rVert^2$, so when angular velocity is small the axis location becomes ill-conditioned — structurally the same pathology as centre of pressure at low vertical load. The standard mitigations are to gate on a minimum angular velocity and to estimate the axis over a finite interval rather than instantaneously. For golf this caveat bites precisely at transition, where the club reverses direction and angular velocity passes through small values.
+
+### How large is the convention effect?
+
+Large enough to dominate. At the shoulder, the choice of Euler sequence alone can change a reported rotation by **up to 50°** ([Karduna et al. 2000](https://pubmed.ncbi.nlm.nih.gov/10854878/)). In golf specifically, changing how the thorax and pelvis segments are defined changes the reported X-factor from roughly **28° to 57°** — a factor of two for the same physical swing ([Bourgain et al. 2022](https://doi.org/10.3390/sports10060091)). And as Part V describes, which segment "peaks first" in the kinematic sequence changes with the method used to compute angular velocity.
+
+## Part IIIb: The error budget, ordered
+
+Assembling the published figures into a single stack clarifies what actually limits a golf motion-capture measurement.
+
+| Error source | Magnitude |
+|---|---|
+| Camera system, static, centre of volume | 0.06–0.15 mm |
+| Camera system, dynamic | < 2 mm |
+| Landmark palpation, intra-examiner | 6–21 mm |
+| Landmark palpation, inter-examiner | 13–25 mm |
+| Hip joint centre, best method in vivo | 11–17 mm |
+| Soft tissue artefact, thigh | 25–31 mm |
+| Soft tissue artefact, scapula | up to 87 mm |
+| *Propagated:* hip rotation range compression | 21.8° |
+| *Propagated:* glenohumeral axial rotation range underestimate | 48.7° |
+| **Convention:** Euler sequence choice, shoulder | **up to 50°** |
+| **Convention:** X-factor segment definition | **28° vs 57°** |
+
+The ordering is the point, and it is the thesis of this article. **Instrumentation error is sub-millimetre and essentially solved.** Palpation error is an order of magnitude larger. Soft tissue artefact is another order larger again. And **convention error — which rotation sequence, which segment definitions, which reference frames — is larger still.**
+
+The difference between the last row and the others is that convention error costs nothing to eliminate. Buying better cameras addresses the smallest term in the budget. Standardising and reporting conventions addresses the largest, and requires only discipline. That is an unusually favourable ratio of effort to benefit, and it is the strongest practical argument for sequence-independent descriptions like the helical axis: they remove a term that no amount of hardware can touch.
 
 ::: {.callout-note}
 ## The connection to the rest of this section
@@ -135,7 +167,15 @@ Multi-camera markerless systems replace physical markers with learned pose estim
 
 The validation literature has a consistent shape. Agreement with marker-based systems is generally good for large sagittal-plane joint angles, meaningfully worse for frontal-plane angles, and worst for **transverse-plane rotations** — internal and external rotation of the femur, and axial rotation of the trunk. That ordering is not surprising: rotation about a limb's long axis produces the smallest change in silhouette, so it is exactly what a vision system has least information about.
 
-Two observations matter for interpreting this. First, the comparison is against marker-based systems, which are themselves corrupted by soft tissue artefact — so "agreement with marker-based" is not the same as "accuracy," and disagreement is not automatically the markerless system's error. Second, markerless systems remove the marker-placement variability that is a large source of between-lab inconsistency, which means they can be *more* repeatable while being less accurate in a given trial.
+The numbers bear this out. Multi-camera pipelines report typical joint-angle errors of **3–5°** in sagittal-plane, large-range measurements — OpenCap reports 4.5° mean absolute error across joints, Pose2Sim 3.0° walking and 4.1° running. The spread *within* a single study is the clearest illustration: validating a monocular baseball pipeline against marker-based capture gave RMSE of **4.37° for trunk lateral tilt and 20.78° for shoulder external rotation** ([Dobos et al. 2025](https://doi.org/10.1080/14763141.2022.2137425)). Large planar rotations are measured well; axial rotations are not.
+
+Two observations matter for interpreting this. First, the comparison is against marker-based systems, which are themselves corrupted by soft tissue artefact — so "agreement with marker-based" is not the same as "accuracy," and disagreement is not automatically the markerless system's error. Note the typical markerless error (3–5°) is *comparable to marker-based capture's own artefact-driven error*, which reframes the comparison: both are dominated by the same noise floor, from different directions.
+
+Second, markerless systems remove marker-placement variability entirely — and Part IIIb showed that palpation contributes 13–25 mm of inter-examiner error. A markerless pipeline simply does not have that term, which is why it can be **more repeatable** between sessions while being less accurate in any single trial. For tracking change over time, that trade is often the right one.
+
+There is also a tantalising possibility that some of the reported disagreement is not error at all. Work aligning local reference frames between systems has reduced transverse-plane knee discrepancy from about 10° to 2.5° — suggesting a substantial fraction of "markerless error" may be the convention effect of Part IIIb wearing a different hat, and therefore removable by standardisation rather than by better models.
+
+The practical caution for golf is blunt: the published golf markerless literature is nearly empty. There is a single-camera proficiency study measuring sagittal spine angle and its variability — markerless played precisely to its strengths — and no full 3D concurrent-validity study against marker-based capture. The most widely used markerless product in golf publishes no accuracy figures and has no located independent validation, while its headline metrics are exactly the transverse- and frontal-plane rotations that markerless measures worst. Baseball, which has invested more in validation, has settled on **300 Hz** multi-camera capture as the standard for a throwing skill.
 
 ### Inertial
 
