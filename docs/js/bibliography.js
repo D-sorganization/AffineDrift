@@ -146,12 +146,12 @@
       strongC.textContent = "Concepts:";
       const divCInner = document.createElement("div");
       divCInner.className = "bib-inline-concepts";
-      entry.concepts.forEach(c => {
+      for (const c of entry.concepts) {
         const span = document.createElement("span");
         span.className = "concept-tag";
         span.textContent = c;
         divCInner.appendChild(span);
-      });
+      }
       divC.append(strongC, divCInner);
       detailsEl.appendChild(divC);
     }
@@ -162,7 +162,7 @@
       const strongL = document.createElement("strong");
       strongL.textContent = "Links:";
       const ulL = document.createElement("ul");
-      links.forEach(url => {
+      for (const url of links) {
         let safeUrl = "#";
         try {
           const parsed = new URL(url, window.location.origin);
@@ -178,7 +178,7 @@
         a.textContent = url;
         li.appendChild(a);
         ulL.appendChild(li);
-      });
+      }
       divL.append(strongL, ulL);
       detailsEl.appendChild(divL);
     }
@@ -191,11 +191,21 @@
       .map((s) => s.trim())
       .filter(Boolean);
 
-    const filtered = state.entries.filter((entry) => {
-      if (queryTerms.length === 0) return true;
-      const haystack = entrySearchText(entry);
-      return queryTerms.every((term) => haystack.includes(term));
-    });
+    let filtered;
+    if (state._lastQuery === state.query && state._lastEntries === state.entries && state._lastFiltered) {
+        // ⚡ Bolt Optimization: Eliminate redundant string inclusion checks when only sorting
+        // Shallow copy the cached array to prevent in-place sorting mutations from altering the cache
+        filtered = [...state._lastFiltered];
+    } else {
+        filtered = state.entries.filter((entry) => {
+            if (queryTerms.length === 0) return true;
+            const haystack = entrySearchText(entry);
+            return queryTerms.every((term) => haystack.includes(term));
+        });
+        state._lastQuery = state.query;
+        state._lastEntries = state.entries;
+        state._lastFiltered = filtered;
+    }
 
     state.filtered = sortEntries(filtered);
     countEl.textContent = `${state.filtered.length} reference${
@@ -232,8 +242,9 @@
     }
 
     listEl.textContent = "";
+    const fragment = document.createDocumentFragment();
 
-    state.filtered.forEach((entry) => {
+    for (const entry of state.filtered) {
         const authors = (entry.authors || []).join(", ");
         const type = entry.type || "reference";
         const typeClass = `type-${type.toLowerCase()}`;
@@ -267,12 +278,12 @@
         if (entry.concepts && entry.concepts.length > 0) {
             const conceptsDiv = document.createElement("div");
             conceptsDiv.className = "bib-inline-concepts bib-inline-concepts-list";
-            entry.concepts.slice(0, 4).forEach(c => {
+            for (const c of entry.concepts.slice(0, 4)) {
                 const span = document.createElement("span");
                 span.className = "concept-tag";
                 span.textContent = c;
                 conceptsDiv.appendChild(span);
-            });
+            }
             article.appendChild(conceptsDiv);
         }
 
@@ -284,8 +295,9 @@
         btn.textContent = "View details";
         article.appendChild(btn);
 
-        listEl.appendChild(article);
-    });
+        fragment.appendChild(article);
+    }
+    listEl.appendChild(fragment);
   };
 
   const renderSortControls = () => {
@@ -407,8 +419,11 @@
     });
 
     listEl.addEventListener("click", (event) => {
-      const clearBtn = event.target.closest("#bib-clear-search");
-      if (clearBtn) {
+      // ⚡ Bolt Optimization: Consolidate multiple .closest() queries into a single call to minimize JS-to-C++ boundary crossings
+      const target = event.target.closest("#bib-clear-search, button[data-details-id], article[data-entry-id]");
+      if (!target) return;
+
+      if (target.matches("#bib-clear-search")) {
         searchInput.value = "";
         state.query = "";
         searchInput.focus();
@@ -416,10 +431,7 @@
         return;
       }
 
-      const button = event.target.closest("button[data-details-id]");
-      const card = event.target.closest("article[data-entry-id]");
-      if (!button && !card) return;
-      const entryId = button ? button.dataset.detailsId : card.dataset.entryId;
+      const entryId = target.matches("button[data-details-id]") ? target.dataset.detailsId : target.dataset.entryId;
       const entry = state.entries.find(
         (item) => item.id === entryId,
       );
