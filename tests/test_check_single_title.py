@@ -18,7 +18,13 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from scripts.check_single_title import blank_first_line, body_h1, fragments, frontmatter_title
+from scripts.check_single_title import (
+    blank_first_line,
+    body_h1,
+    fragments,
+    frontmatter_title,
+    same_heading,
+)
 
 
 def lines(text: str) -> list[str]:
@@ -70,6 +76,35 @@ class TestBlankFirstLine:
 
     def test_ignores_a_single_line_file(self) -> None:
         assert not blank_first_line(lines("---\n"))
+
+
+class TestSameHeading:
+    """The defect is one heading rendered twice, not merely having a title.
+
+    Every standalone article on this site has a document `title:` and a first
+    H1 that is a section -- "Abstract", "Introduction", "Part 1: ...". Those are
+    two different headings and are correct. Comparing only "does a title exist"
+    flagged all eleven of them.
+    """
+
+    def test_identical_text_is_the_defect(self) -> None:
+        assert same_heading("Critique: Hybrid Tangent Spaces", "# Critique: Hybrid Tangent Spaces")
+
+    def test_a_document_title_and_an_abstract_are_not(self) -> None:
+        assert not same_heading("A Control-Theoretic Analysis of Drift", "# Abstract")
+
+    def test_a_document_title_and_an_introduction_are_not(self) -> None:
+        assert not same_heading("Secondary Axis Stability in Golf Clubs", "# Introduction")
+
+    def test_a_book_title_and_a_preface_are_not(self) -> None:
+        assert not same_heading("The Physics of Golf", "# Preface")
+
+    def test_an_anchor_on_the_heading_is_ignored(self) -> None:
+        assert same_heading("The Language of Motion", "# The Language of Motion {#sec-02_lang}")
+
+    def test_a_chapter_number_prefix_is_ignored(self) -> None:
+        """#3705's restored titles carried one; Quarto numbers chapters itself."""
+        assert same_heading("Chapter 1: A Primer on Linear Algebra", "# A Primer on Linear Algebra")
 
 
 class TestFragments:
