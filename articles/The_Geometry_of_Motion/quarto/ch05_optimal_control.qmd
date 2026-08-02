@@ -618,24 +618,19 @@ We define a two-phase cost:
 We initialize the algorithm with a nominal open-loop trajectory (e.g., apply torque $\tau = 1$ for $T_1 / 2$ steps,
 then $\tau = 0$). Here we show a summary of iterations:
 
-\begin{table}[H]
-\centering
-\caption{DDP Convergence for Inverted Pendulum Swing-Up ($T = 100$ steps, $T_1 = 50$)}
-\label{tab:ch5:ddp-convergence}
-\begin{tabular}{c c c c}
-\hline
-Iteration & Total Cost $J$ & Cost Change $\Delta J$ & $\|\Delta\uvec\|_2$ \\
-\hline
-0 & 52.34 & --- & --- \\
-1 & 41.18 & -11.16 & 3.52 \\
-2 & 28.75 & -12.43 & 2.18 \\
-3 & 22.41 & -6.34 & 1.05 \\
-4 & 21.04 & -1.37 & 0.35 \\
-5 & 20.98 & -0.06 & 0.08 \\
-6 & 20.98 & -0.001 & 0.012 \\
-\hline
-\end{tabular}
-\end{table}
+
+| Iteration | Total Cost $J$ | Cost Change $\Delta J$ | $\|\Delta\uvec\|_2$ |
+| --- | --- | --- | --- |
+| 0 | 52.34 | --- | --- |
+| 1 | 41.18 | -11.16 | 3.52 |
+| 2 | 28.75 | -12.43 | 2.18 |
+| 3 | 22.41 | -6.34 | 1.05 |
+| 4 | 21.04 | -1.37 | 0.35 |
+| 5 | 20.98 | -0.06 | 0.08 |
+| 6 | 20.98 | -0.001 | 0.012 |
+
+: DDP Convergence for Inverted Pendulum Swing-Up ($T = 100$ steps, $T_1 = 50$) {#tbl-ch5_ddp-convergence}
+
 
 \begin{description}
 - **Iteration 0:** Initial trajectory (open-loop control). Cost is high due to suboptimal control.
@@ -653,20 +648,15 @@ Iteration & Total Cost $J$ & Cost Change $\Delta J$ & $\|\Delta\uvec\|_2$ \\
 
 After convergence, the DDP algorithm has produced feedback gains $\mat{K}_k$ and feedforward controls $\vec{k}_k$.
 A sample of gains during the balancing phase ($k = 60, \ldots, 65$):
-\begin{table}[H]
-\centering
-\caption{Sample DDP Feedback Gains During Balancing Phase}
-\label{tab:ch5:ddp-gains}
-\begin{tabular}{c c c c}
-\hline
-Step $k$ & $K_{k,1}$ (position) & $K_{k,2}$ (velocity) & $\vec{k}_k$ (feedforward) \\
-\hline
-60 & -95.3 & -12.4 & 0.15 \\
-61 & -96.1 & -12.7 & 0.12 \\
-62 & -97.2 & -13.1 & 0.08 \\
-\hline
-\end{tabular}
-\end{table}
+
+| Step $k$ | $K_{k,1}$ (position) | $K_{k,2}$ (velocity) | $\vec{k}_k$ (feedforward) |
+| --- | --- | --- | --- |
+| 60 | -95.3 | -12.4 | 0.15 |
+| 61 | -96.1 | -12.7 | 0.12 |
+| 62 | -97.2 | -13.1 | 0.08 |
+
+: Sample DDP Feedback Gains During Balancing Phase {#tbl-ch5_ddp-gains}
+
 
 These gains are large (especially $K_{k,1}$), reflecting the instability of the upright equilibrium: a small
 angle error must be corrected with significant torque. The velocity gain provides damping.

@@ -722,21 +722,17 @@ Apply $\tau_2 = -5$ N\textperiodcentered{}m for $t \in [0, 2]$ s starting from r
 
 Using a standard numerical integrator (e.g., RK45), we compute the trajectories:
 
-\begin{table}[h]
-\centering
-\begin{tabular}{c|ccc|ccc}
-Time (s) & $q^{(1)}$ (rad) & $\dot q^{(1)}$ (rad/s) & $\ddot q^{(1)}$ (rad/s$^2$) &
-$q^{(2)}$ (rad) & $\dot q^{(2)}$ (rad/s) & $\ddot q^{(2)}$ (rad/s$^2$) \\
-\hline
-0.0 & 0.000 & 0.000 & 5.000 & 0.000 & 0.000 & -5.000 \\
-0.5 & 0.612 & 2.443 & 4.020 & -0.612 & -2.443 & -5.980 \\
-1.0 & 1.474 & 3.852 & 3.046 & -1.474 & -3.852 & -6.954 \\
-1.5 & 2.510 & 4.436 & 1.999 & -2.510 & -4.436 & -7.981 \\
-2.0 & 3.670 & 4.456 & 0.861 & -3.670 & -4.456 & -8.861 \\
-\end{tabular}
-\caption{Numerical trajectories of the pendulum under $\tau_1 = +5$ and $\tau_2 = -5$ N\textperiodcentered{}m.}
-\label{tab:ch3:pendulum-trajectories}
-\end{table}
+
+| Time (s) | $q^{(1)}$ (rad) | $\dot q^{(1)}$ (rad/s) | $\ddot q^{(1)}$ (rad/s$^2$) | $q^{(2)}$ (rad) | $\dot q^{(2)}$ (rad/s) | $\ddot q^{(2)}$ (rad/s$^2$) |
+| --- | --- | --- | --- | --- | --- | --- |
+| 0.0 | 0.000 | 0.000 | 5.000 | 0.000 | 0.000 | -5.000 |
+| 0.5 | 0.612 | 2.443 | 4.020 | -0.612 | -2.443 | -5.980 |
+| 1.0 | 1.474 | 3.852 | 3.046 | -1.474 | -3.852 | -6.954 |
+| 1.5 | 2.510 | 4.436 | 1.999 | -2.510 | -4.436 | -7.981 |
+| 2.0 | 3.670 | 4.456 | 0.861 | -3.670 | -4.456 | -8.861 |
+
+: Numerical trajectories of the pendulum under $\tau_1 = +5$ and $\tau_2 = -5$ N\textperiodcentered{}m. {#tbl-ch3_pendulum-trajectories}
+
 
 
 ### Testing Trajectory Superposition
@@ -751,39 +747,32 @@ q(t) + q(t) - q_0 = q_{\text{combined}}(t)
 
 Computing the trajectory under $\tau_{\text{combined}} = 0$ (free pendulum):
 
-\begin{table}[h]
-\centering
-\begin{tabular}{c|cc|cc}
-Time (s) & $q^{(1)}+q^{(2)}$ (rad) & $q^{\text{combined}}$ (rad) & Error (rad) & Rel. Error (\%) \\
-\hline
-0.0 & 0.000 & 0.000 & 0.000 & 0.0 \\
-0.5 & 0.000 & 0.000 & 0.000 & 0.0 \\
-1.0 & 0.000 & 0.000 & 0.000 & 0.0 \\
-1.5 & 0.000 & 0.000 & 0.000 & 0.0 \\
-2.0 & 0.000 & 0.000 & 0.000 & 0.0 \\
-\end{tabular}
-\caption{Superposition test: $q^{(1)}+q^{(2)} \neq q^{\text{combined}}$ in general (shown here
-at $\tau=0$, the trajectories happen to be symmetric, but under different inputs they would differ).}
-\label{tab:ch3:superposition-test}
-\end{table}
+
+| Time (s) | $q^{(1)}+q^{(2)}$ (rad) | $q^{\text{combined}}$ (rad) | Error (rad) | Rel. Error (\%) |
+| --- | --- | --- | --- | --- |
+| 0.0 | 0.000 | 0.000 | 0.000 | 0.0 |
+| 0.5 | 0.000 | 0.000 | 0.000 | 0.0 |
+| 1.0 | 0.000 | 0.000 | 0.000 | 0.0 |
+| 1.5 | 0.000 | 0.000 | 0.000 | 0.0 |
+| 2.0 | 0.000 | 0.000 | 0.000 | 0.0 |
+
+: Superposition test: $q^{(1)}+q^{(2)} \neq q^{\text{combined}}$ in general (shown here at $\tau=0$, the trajectories happen to be symmetric, but under different inputs they would differ). {#tbl-ch3_superposition-test}
+
 
 Instead, consider the more interesting case: apply $\tau_1 = 5$ N\textperiodcentered{}m and $\tau_2 = 2.5$ N\textperiodcentered{}m.
 Then the sum is $\tau_1 + \tau_2 = 7.5$ N\textperiodcentered{}m. Numerically:
 
-\begin{table}[h]
-\centering
-\begin{tabular}{c|c|c|c|c}
-Time (s) & $q^{(1)}$ & $q^{(2)}$ & $q^{(1)}+q^{(2)}-q_0$ & $q^{(\tau_1+\tau_2)}$ \\
-\hline
-0.0 & 0.000 & 0.000 & 0.000 & 0.000 \\
-0.5 & 0.612 & 0.306 & 0.918 & 0.918 \\
-1.0 & 1.474 & 0.735 & 2.209 & 2.210 \\
-1.5 & 2.510 & 1.252 & 3.762 & 3.765 \\
-2.0 & 3.670 & 1.834 & 5.504 & 5.512 \\
-\end{tabular}
-\caption{Apparent superposition at discrete times (error accumulates due to nonlinear drift).}
-\label{tab:ch3:superposition-continuous}
-\end{table}
+
+| Time (s) | $q^{(1)}$ | $q^{(2)}$ | $q^{(1)}+q^{(2)}-q_0$ | $q^{(\tau_1+\tau_2)}$ |
+| --- | --- | --- | --- | --- |
+| 0.0 | 0.000 | 0.000 | 0.000 | 0.000 |
+| 0.5 | 0.612 | 0.306 | 0.918 | 0.918 |
+| 1.0 | 1.474 | 0.735 | 2.209 | 2.210 |
+| 1.5 | 2.510 | 1.252 | 3.762 | 3.765 |
+| 2.0 | 3.670 | 1.834 | 5.504 | 5.512 |
+
+: Apparent superposition at discrete times (error accumulates due to nonlinear drift). {#tbl-ch3_superposition-continuous}
+
 
 At first glance, the superposition appears to hold at discrete times. However, the error
 grows over longer integration horizons due to the nonlinear drift $f(\x) = (\dot q, -9.81\sin q)^\T$.
@@ -946,22 +935,19 @@ I\ddot q = -mg\ell\sin q + \tau
 The drift acceleration (zero input) is $a_{\text{drift}} = -9.81\sin q$. Evaluating at
 several angles:
 
-\begin{table}[h]
-\centering
-\begin{tabular}{c|cc}
-Angle $q$ (rad) & Angle $q$ (deg) & Drift acceleration $a_{\text{drift}}$ (rad/s$^2$) \\
-\hline
-0.0 & 0$^\circ$ & 0.000 \\
-$\pi/6$ & 30$^\circ$ & -4.905 \\
-$\pi/4$ & 45$^\circ$ & -6.937 \\
-$\pi/3$ & 60$^\circ$ & -8.491 \\
-$\pi/2$ & 90$^\circ$ & -9.810 \\
-$2\pi/3$ & 120$^\circ$ & -8.491 \\
-$3\pi/4$ & 135$^\circ$ & -6.937 \\
-\end{tabular}
-\caption{Drift accelerations at various configurations. Maximum magnitude occurs at $q=\pm\pi/2$.}
-\label{tab:ch3:drift-accel}
-\end{table}
+
+| Angle $q$ (rad) | Angle $q$ (deg) | Drift acceleration $a_{\text{drift}}$ (rad/s$^2$) |
+| --- | --- | --- |
+| 0.0 | 0$^\circ$ | 0.000 |
+| $\pi/6$ | 30$^\circ$ | -4.905 |
+| $\pi/4$ | 45$^\circ$ | -6.937 |
+| $\pi/3$ | 60$^\circ$ | -8.491 |
+| $\pi/2$ | 90$^\circ$ | -9.810 |
+| $2\pi/3$ | 120$^\circ$ | -8.491 |
+| $3\pi/4$ | 135$^\circ$ | -6.937 |
+
+: Drift accelerations at various configurations. Maximum magnitude occurs at $q=\pm\pi/2$. {#tbl-ch3_drift-accel}
+
 
 
 ### Input Acceleration and Decomposition
@@ -1071,22 +1057,18 @@ The decomposition of the *total acceleration* includes the drift:
 
 Starting from $(q_0, \dot q_0) = (0, 0)$ with applied torque $\tau = 5$ N\textperiodcentered{}m:
 
-\begin{table}[h]
-\centering
-\begin{tabular}{c|cccc}
-Time (s) & $q$ (rad) & $\dot q$ (rad/s) & $a_{\text{drift}}$ & $a_{\text{input}}$ \\
-\hline
-0.0 & 0.000 & 0.000 & 0.000 & 5.000 \\
-0.2 & 0.099 & 0.980 & -0.973 & 5.000 \\
-0.4 & 0.395 & 1.911 & -3.870 & 5.000 \\
-0.6 & 0.883 & 2.720 & -8.614 & 5.000 \\
-0.8 & 1.540 & 3.236 & -13.85 & 5.000 \\
-1.0 & 2.315 & 3.380 & -17.34 & 5.000 \\
-\end{tabular}
-\caption{Pendulum trajectory under $\tau = 5$ N\textperiodcentered{}m. Drift acceleration increases in magnitude as
-$q$ grows, reflecting the stronger gravitational resistance at larger angles.}
-\label{tab:ch3:pendulum-traj}
-\end{table}
+
+| Time (s) | $q$ (rad) | $\dot q$ (rad/s) | $a_{\text{drift}}$ | $a_{\text{input}}$ |
+| --- | --- | --- | --- | --- |
+| 0.0 | 0.000 | 0.000 | 0.000 | 5.000 |
+| 0.2 | 0.099 | 0.980 | -0.973 | 5.000 |
+| 0.4 | 0.395 | 1.911 | -3.870 | 5.000 |
+| 0.6 | 0.883 | 2.720 | -8.614 | 5.000 |
+| 0.8 | 1.540 | 3.236 | -13.85 | 5.000 |
+| 1.0 | 2.315 | 3.380 | -17.34 | 5.000 |
+
+: Pendulum trajectory under $\tau = 5$ N\textperiodcentered{}m. Drift acceleration increases in magnitude as $q$ grows, reflecting the stronger gravitational resistance at larger angles. {#tbl-ch3_pendulum-traj}
+
 
 The table shows clearly how the drift (gravity) grows as the pendulum angle increases, while
 the input acceleration remains constant. This illustrates the exact decomposition enabled by
@@ -1427,23 +1409,18 @@ perfectly.
 ### Contrast with Contraction-Based Control
 
 
-\begin{table}[h]
-\centering
-\caption{Two approaches to nonlinear control using tangent-space structure.}
-\label{tab:ch3:fl-vs-contraction}
-\begin{tabular}{@{}p{5cm}p{5cm}@{}}
-\toprule
-**Feedback Linearization** & **Contraction-Based Control** \\
-\midrule
-Cancels nonlinearity via feedback & Exploits nonlinearity via metric \\
-Makes closed loop exactly linear & Certifies convergence despite nonlinearity \\
-Requires exact model & Robust to model uncertainty \\
-Fails for non-minimum-phase systems & No minimum-phase requirement \\
-Uses coordinate transformation & Uses metric transformation \\
-Global linearization (when possible) & Local certificates, globally composed \\
-\bottomrule
-\end{tabular}
-\end{table}
+
+| **Feedback Linearization** | **Contraction-Based Control** |
+| --- | --- |
+| Cancels nonlinearity via feedback | Exploits nonlinearity via metric |
+| Makes closed loop exactly linear | Certifies convergence despite nonlinearity |
+| Requires exact model | Robust to model uncertainty |
+| Fails for non-minimum-phase systems | No minimum-phase requirement |
+| Uses coordinate transformation | Uses metric transformation |
+| Global linearization (when possible) | Local certificates, globally composed |
+
+: Two approaches to nonlinear control using tangent-space structure. {#tbl-ch3_fl-vs-contraction}
+
 
 
 ::: {.callout-tip}
