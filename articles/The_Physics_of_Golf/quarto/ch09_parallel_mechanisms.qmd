@@ -89,7 +89,9 @@ The closure constraint states: if the pelvis rotates by angle $\theta_p$, the sp
 
 Or more generally:
 
+$$
 \bm{\Phi}_{\text{spine}}(\theta_p, \theta_s, \theta_{sh}) = \mathbf{0}
+$$ {#eq-spine_loop_constraint_general}
 
 This is a holonomic constraint, just like the joint constraints from @sec-constraint_forces.
 
@@ -107,7 +109,9 @@ The loop constraint is what creates the X-factor: the separation between hip and
 
 For a closed loop, the endpoint must return to the starting point. If the loop consists of segments with relative positions $\bm{x}_1, \bm{x}_2, \ldots, \bm{x}_N$, then:
 
+$$
 \bm{\Phi}_{\text{loop}} = \sum_{i=1}^{N} \bm{x}_i = \mathbf{0}
+$$ {#eq-loop_closure_general}
 
 Each $\bm{x}_i$ is a function of the configuration $\bm{q}$, so $\bm{\Phi}_{\text{loop}}(\bm{q}) = \mathbf{0}$ is a constraint equation.
 
@@ -118,7 +122,9 @@ Each $\bm{x}_i$ is a function of the configuration $\bm{q}$, so $\bm{\Phi}_{\tex
 
 The **loop Jacobian** is the Jacobian of the loop closure constraint:
 
+$$
 \bm{J}_{\text{loop}}(\bm{q}) = \frac{\partial \bm{\Phi}_{\text{loop}}}{\partial \bm{q}}
+$$ {#eq-loop_jacobian_definition}
 
 It has the same interpretation as the constraint Jacobian from @sec-constraint_forces: its null space defines allowed motions, and its range defines constraint force directions.
 
@@ -130,14 +136,19 @@ Consider a simplified body: a fixed torso with two arms attached at the shoulder
 
 The loop closure constraint states: the left hand and right hand positions must satisfy the grip constraint (hands are fixed relative to the club). In a simplified model:
 
+$$
 \bm{x}_L(\bm{q}_L) + \bm{x}_R(\bm{q}_R) = 2 \bm{x}_{\text{grip}} + \epsilon
+$$ {#eq-two_arm_grip_constraint}
 
 where $\bm{\epsilon}$ is a small allowable deviation (grips are not perfectly rigid).
 
 The loop Jacobian relating shoulder angles to hand positions is:
 
-\bm{J}_{\text{loop}} =
+$$
+\bm{J}_{\text{loop}} = \begin{bmatrix}
 \frac{\partial x_L}{\partial q_1^L} & \frac{\partial x_L}{\partial q_2^L} & \frac{\partial x_R}{\partial q_1^R} & \frac{\partial x_R}{\partial q_2^R}
+\end{bmatrix}
+$$ {#eq-two_arm_loop_jacobian}
 
 This matrix encodes how each shoulder angle affects the hand positions.
 
@@ -239,11 +250,15 @@ Consider the spine loop: pelvis → spine → shoulders. If the pelvis rotates $
 
 The loop constraint is:
 
+$$
 \bm{\Phi}_{\text{spine}} = \theta_p + \theta_s + \theta_{sh} = 60° + 40° + 20° = 120° \neq 0
+$$
 
 If all rotations are measured from a common reference frame (not relative), and the constraint is that the total rotations must sum to zero in the loop:
 
+$$
 \bm{\Phi}_{\text{spine}} = \theta_p - \theta_{sh} - \Delta\theta_{\text{spine}} = 0
+$$ {#eq-spine_constraint_correct}
 
 where $\Delta\theta_{\text{spine}}$ is the rotation of the spine relative to the pelvis.
 
@@ -257,7 +272,9 @@ During a golf swing at full speed, these forces can reach $1000$ N or higher, ca
 ### The X-Factor is a Constraint Mechanism {#constraint:xfactor_constraint}
 The **X-factor** is the difference between hip and shoulder rotation:
 
-\text{X-factor} = \theta_{\text{hips}} - \theta_{\text{shoulders}}
+$$
+\text{X-factor} = \theta_{\text{shoulders}} - \theta_{\text{hips}}
+$$ {#eq-xfactor_definition}
 
 From a constraint perspective, X-factor is the result of a loop constraint: the spine constrains the relationship between hip and shoulder motion. A large X-factor means the spine is being stretched or compressed significantly.
 
@@ -320,7 +337,9 @@ Consider the major closed loop in the golfer's body:
 
 The loop closure constraint is:
 
+$$
 \text{Position of shoulder} = f(\theta_p, \theta_s, \theta_a, \text{arm parameters}) = \text{ground frame position}
+$$
 
 This is an algebraic equation relating the three rotations. The constraint force arises when this equation is enforced dynamically.
 
@@ -337,11 +356,15 @@ The loop constraint equation is (in a simplified 2D form):
 
 Differentiating:
 
-\dot{\theta}_p + \dot{\theta}_s + \dot{\theta}_a = 0
+$$
+\mathbf{J}_c(\bm{q}) \dot{\bm{q}} = \mathbf{0}
+$$ {#eq-velocity_constraint}
 
 But we have $\dot{\theta}_p = 20$ and $\dot{\theta}_a = 5$. For the constraint to be satisfied:
 
+$$
 \dot{\theta}_s = -\dot{\theta}_p - \dot{\theta}_a = -20 - 5 = -25 \text{ rad/s}
+$$
 
 The spine must rotate backward at $25$ rad/s to maintain the loop constraint. But the spine can't rotate that fast—it has inertia and elasticity. The constraint force (acting on the spine) must provide the necessary torque.
 

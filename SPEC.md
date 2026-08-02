@@ -140,6 +140,7 @@ AffineDrift/
 │   ├── check_quarto_render_coverage.py # Sitemap-to-source coverage guard for Quarto pages
 │   ├── check_quarto_xrefs.py         # Cross-reference resolution guard for the book
 │   ├── check_single_title.py         # One rendered title per page; frontmatter parses
+│   ├── check_display_math.py         # Display maths still has its `$$` delimiters
 │   ├── cli_output.py                 # Explicit stdout/stderr helpers for intentional CLI contracts
 │   └── README.md                # Script usage and CI-facing documentation
 ├── tests/                       # Additional test organization
