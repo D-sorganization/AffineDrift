@@ -131,7 +131,17 @@ website:
           - text: "NotebookLM"
             href: resources/resources-notebooklm.html
 
-bibliography: references/affine-drift.bib
+# The site renders the textbook chapters (see `articles/**/*.qmd` above), but the
+# `_quarto.yml` files under `articles/*/quarto/` are separate Quarto *projects*,
+# not config layers for this one -- so their bibliographies were never in scope
+# here. The result was 209 citations across 38 pages resolving to nothing and
+# printing as `Isidori1995?` on the live site. Each book's .bib is listed here so
+# the pages this project renders can resolve what they cite.
+bibliography:
+  - references/affine-drift.bib
+  - articles/The_Physics_of_Golf/golf_physics.bib
+  - articles/The_Geometry_of_Motion/geometry_of_motion.bib
+  - articles/tangent-hyperplane-articles/references.bib
 csl: references/chicago-author-date.csl
 link-citations: true
 
