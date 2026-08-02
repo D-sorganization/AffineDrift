@@ -17,7 +17,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 QUARTO_YML = REPO_ROOT / "_quarto.yml"
 
 # Hard limits — the IA contract.
-EXPECTED_DROPDOWNS: frozenset[str] = frozenset({"Read", "Build", "Connect"})
+EXPECTED_DROPDOWNS: frozenset[str] = frozenset({"Read", "Technology", "Build", "Connect"})
 MAX_ITEMS_PER_DROPDOWN: int = 10
 FORBIDDEN_TOP_LEVEL_LABELS: frozenset[str] = frozenset({"Learn", "Explore"})
 
@@ -49,11 +49,14 @@ class TestTopLevelStructure:
         labels = [e["text"] for e in _left_entries(navbar)]
         assert "Home" in labels
 
-    def test_exactly_three_dropdowns(self, navbar: dict) -> None:
+    def test_expected_number_of_dropdowns(self, navbar: dict) -> None:
+        expected = len(EXPECTED_DROPDOWNS)
         labels = _dropdown_labels(navbar)
-        assert len(labels) == 3, f"Expected 3 dropdowns, got {len(labels)}: {labels}"
+        assert (
+            len(labels) == expected
+        ), f"Expected {expected} dropdowns, got {len(labels)}: {labels}"
 
-    def test_dropdowns_are_read_build_connect(self, navbar: dict) -> None:
+    def test_dropdowns_match_the_ia_contract(self, navbar: dict) -> None:
         assert set(_dropdown_labels(navbar)) == EXPECTED_DROPDOWNS
 
     @pytest.mark.parametrize("label", sorted(FORBIDDEN_TOP_LEVEL_LABELS))

@@ -175,6 +175,28 @@ Second, markerless systems remove marker-placement variability entirely — and 
 
 There is also a tantalising possibility that some of the reported disagreement is not error at all. Work aligning local reference frames between systems has reduced transverse-plane knee discrepancy from about 10° to 2.5° — suggesting a substantial fraction of "markerless error" may be the convention effect of Part IIIb wearing a different hat, and therefore removable by standardisation rather than by better models.
 
+#### Why axial rotation fails: three independent causes
+
+The transverse-plane weakness is not a temporary engineering shortfall. Three distinct mechanisms stack:
+
+**It is geometrically underdetermined.** Pose networks emit keypoints at joint locations, giving **two points per segment** — but a rigid body needs **three non-collinear points to determine six degrees of freedom**. A segment defined only by its endpoints has an undetermined roll about the line joining them. No amount of training fixes an underdetermined system; it requires a third keypoint per segment, which the standard label sets do not provide.
+
+**The physical signal is weakest exactly there.** Skin near a long-axis rotation axis barely moves. A femur can internally rotate 20° with almost no change in the thigh's silhouette, so the surface carries little information about the rotation that occurred beneath it.
+
+**The body models often cannot represent it.** Pipelines built on SMPL-family body models inherit joint locations that were regressed from mesh vertices to make the *surface* deform plausibly — not to match anatomy. The SKEL work is explicit that these are "simplified kinematic structures that do not correspond to the true joint locations," and that the resulting rig cannot properly represent forearm supination. A pipeline reporting forearm rotation from such a model is reporting a quantity its own skeleton cannot express.
+
+#### The error is in the labels, not the network
+
+The most consequential finding in this literature is that markerless error is dominated by **systematic bias in the training annotations**, not by network noise. Public keypoint datasets were labelled by crowdworkers without anatomical training; hip joint centres in particular are systematically mislabelled, and occluded joints are frequently annotated onto biomechanically impossible points.
+
+This explains an otherwise puzzling benchmark result. Comparing fifteen markerless systems against marker-based capture, moving from a monocular system to a two-camera one bought about **1.7°**, and from two cameras to a ten-camera research rig another **1.3°** — small next to a baseline error of four to six degrees. If camera count were the bottleneck, that gap would be far larger. It is small because every system inherits the same label prior. More data, larger models and higher benchmark scores converge more confidently onto the same anatomically wrong point.
+
+#### Two framings worth keeping straight
+
+**Offset versus shape.** In a paediatric clinical validation, *all* joint-angle discrepancies fell below 8° once a constant offset was removed. Much of markerless "error" is bias, not waveform distortion — which makes these systems considerably better at detecting *change within a golfer* than at reporting absolute values comparable to published norms.
+
+**Markerless replaces soft tissue artefact; it does not remove it.** This is worth stating plainly because the marketing implies otherwise. Removing the marker does not remove the fact that bone pose is being inferred from a deforming soft-tissue surface. What changes is that a characterised, discrete-landmark error model is exchanged for a learned, whole-surface inference whose error structure is subject-specific, pose-dependent, undocumented, and not correctable by any calibration the user can perform. Different error, not less error.
+
 The practical caution for golf is blunt: the published golf markerless literature is nearly empty. There is a single-camera proficiency study measuring sagittal spine angle and its variability — markerless played precisely to its strengths — and no full 3D concurrent-validity study against marker-based capture. The most widely used markerless product in golf publishes no accuracy figures and has no located independent validation, while its headline metrics are exactly the transverse- and frontal-plane rotations that markerless measures worst. Baseball, which has invested more in validation, has settled on **300 Hz** multi-camera capture as the standard for a throwing skill.
 
 ### Inertial
