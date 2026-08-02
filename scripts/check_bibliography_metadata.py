@@ -64,6 +64,21 @@ BIBS = {
         REPO / "articles/The_Physics_of_Golf/golf_physics.bib",
         REPO / "articles/The_Physics_of_Golf",
     ),
+    # Added after `worobets2012effects` was found in affine-drift.bib describing a
+    # paper that does not exist -- right journal and year, invented title, both
+    # author first names wrong. It went unaudited because only the two textbook
+    # bibliographies were listed here. That file also became the *first* entry in
+    # the site's bibliography list, so where two files define the same key its
+    # version now wins, which makes its accuracy matter more than either book's.
+    "site": (REPO / "references/affine-drift.bib", REPO),
+    "tangent": (
+        REPO / "articles/tangent-hyperplane-articles/references.bib",
+        REPO / "articles/tangent-hyperplane-articles",
+    ),
+    "contraction": (
+        REPO / "articles/tangent-hyperplane-contraction/references.bib",
+        REPO / "articles/tangent-hyperplane-contraction",
+    ),
 }
 ENTRY = re.compile(r"^@(\w+)\s*\{\s*([^,\s]+)\s*,", re.M)
 NON_CITE = {"citeneeded", "citationneeded", "nocite"}
@@ -117,6 +132,13 @@ def entries(text: str) -> Iterator[tuple[str, str, str]]:
 
 
 def cited_keys(root: Path) -> set[str]:
+    """Collect every citation key used under `root`, in both source dialects.
+
+    Scanning only `.tex` made the whole Quarto side invisible, which mattered
+    once `references/affine-drift.bib` was audited: its citers are almost all
+    `.qmd` and `.md`, so every one of its entries looked uncited and the title
+    audit skipped the file entirely.
+    """
     keys: set[str] = set()
     for path in root.rglob("*.tex"):
         text = path.read_text(encoding="utf-8", errors="replace")
@@ -126,6 +148,13 @@ def cited_keys(root: Path) -> set[str]:
             for k in m.group(2).split(","):
                 if k.strip():
                     keys.add(k.strip())
+    for suffix in ("*.qmd", "*.md"):
+        for path in root.rglob(suffix):
+            text = path.read_text(encoding="utf-8", errors="replace")
+            # Pandoc form: [@key], [-@key], [@a; @b] -- and `@key` inside those
+            for bracket in re.findall(r"\[[^\]]*@[^\]]*\]", text):
+                for k in re.findall(r"@([A-Za-z][A-Za-z0-9_:.-]*)", bracket):
+                    keys.add(k.rstrip(".,;:"))
     return keys
 
 
