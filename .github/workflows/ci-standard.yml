@@ -170,6 +170,13 @@ jobs:
         # cannot carry an {#eq-} label, so the cross-reference gate sees nothing
         # unresolved either.
         run: python3 scripts/check_display_math.py
+      - name: Verify No LaTeX Quotation Marks In Prose
+        # LaTeX quotes as ``opening'' and TeX curls it; markdown does not, so
+        # the .tex -> .qmd conversions shipped the raw marks: the Geometry of
+        # Motion mirror rendered ``best linear approximation'' as two literal
+        # backticks and two right-quotes. Only pairs are reported -- a lone ''
+        # is a double prime, and \phi_i'''' is a fourth derivative.
+        run: python3 scripts/check_latex_quotes.py
       - name: Verify Acronym Terminology Is Consistent
         # NOTATION.md is the single source of truth for DCR and ZTCF. Fails on any
         # reintroduced variant expansion or the dangling cross-reference that made

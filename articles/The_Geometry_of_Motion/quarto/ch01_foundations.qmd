@@ -13,7 +13,7 @@ Every curved surface, no matter how complex, has a flat patch touching it at eac
 On that flat patch, the familiar rules of addition and scaling work perfectly.
 This chapter establishes that these flat patches---tangent spaces---are not approximations
 of the surface. They *are* the exact infinitesimal structure of the surface, by the
-very definition of what ``smooth'' means.
+very definition of what "smooth" means.
 
 :::
 
@@ -30,7 +30,7 @@ that nonlinearity and superposition are fundamentally incompatible.
 That impression is incomplete. It is true that *trajectories* in a nonlinear system
 do not generally superpose. But at each point in state space, there exists a tangent space
 that is a genuine vector space, and within that vector space, superposition holds exactly.
-Not approximately. Not ``for small enough perturbations.'' *Exactly*, by the axioms
+Not approximately. Not "for small enough perturbations." *Exactly*, by the axioms
 of linear algebra.
 
 The purpose of this book is to take that geometric fact seriously and trace its consequences
@@ -41,8 +41,8 @@ motions into interpretable components.
 A trajectory is a curve on a state-space manifold. At each point on that curve, there is
 a tangent plane capturing first-order motion of nearby trajectories. All local stability
 and local optimality calculations happen in these moving tangent planes. A metric is a
-local ruler; changing the metric changes which perturbation directions count as ``large''
-or ``small.''
+local ruler; changing the metric changes which perturbation directions count as "large"
+or "small."
 \end{intuitionbox}
 
 
@@ -57,9 +57,9 @@ from the practical concerns of mechanics and the rigorous formalization of analy
 
 
 The modern concept of tangent space originates in the Newton--Leibniz calculus of the late
-17th century. Newton's method of ``fluxions'' (rates of change) and Leibniz's differential
+17th century. Newton's method of "fluxions" (rates of change) and Leibniz's differential
 notation $\dd x$ both captured an intuitive idea: at each point on a smooth curve, there is
-a direction of motion, a ``tangent line.'' For a curve $y = f(x)$ in the plane, the tangent
+a direction of motion, a "tangent line." For a curve $y = f(x)$ in the plane, the tangent
 line at $(x_0, f(x_0))$ has slope $f'(x_0)$ and can be written as
 \begin{equation}
 y - f(x_0) = f'(x_0)(x - x_0).
@@ -67,7 +67,7 @@ y - f(x_0) = f'(x_0)(x - x_0).
 \end{equation}
 
 This is purely one-dimensional geometry. But the insight---that the tangent line is the
-``best linear approximation'' to the curve at that point---proved far more general than
+"best linear approximation" to the curve at that point---proved far more general than
 the original calculus allowed.
 
 
@@ -117,10 +117,10 @@ dynamics remained framed as an *approximation*. Textbooks would write:
 \begin{quote}
 To study the qualitative behavior of a nonlinear system $\dot{\x} = f(\x)$ near an
 equilibrium $\bar{\x}$, we linearize: $\dot{\dx} = \mat{A}\,\dx$ where $\mat{A} = \frac{\partial f}{\partial \x}|_{\bar{\x}}$.
-This linear system is ``close'' to the original system for small perturbations.
+This linear system is "close" to the original system for small perturbations.
 \end{quote}
 
-The language---``linearize,'' ``approximate,'' ``close to''---suggests that the tangent
+The language---"linearize," "approximate," "close to"---suggests that the tangent
 space is a crutch, a convenience for analysis. But this framing obscures the true
 mathematical situation.
 
@@ -236,16 +236,16 @@ Therefore, $(\mat{A} - \mat{A}')\vec{v} = 0$ for all $\vec{v}$, implying $\mat{A
 :::
 
 This uniqueness is the cornerstone of the book's philosophy. There is exactly one candidate
-for ``the infinitesimal structure'' of $f$ at $\bar{\x}$, and it is $\mat{A}$.
+for "the infinitesimal structure" of $f$ at $\bar{\x}$, and it is $\mat{A}$.
 
 \begin{axiombox}{Axiom 1: The Derivative is Exact}
 The linear map $\mat{A}$ is not an approximation to $f$. It *is* the exact
-infinitesimal structure of $f$ at $\bar{\x}$. There is no ``better'' first-order
+infinitesimal structure of $f$ at $\bar{\x}$. There is no "better" first-order
 description---$\mat{A}$ is unique by the definition of the Fréchet derivative.
 \end{axiombox}
 
 This distinction is the conceptual foundation of the entire book. The standard
-narrative---``we linearize for convenience and accept some error''---conflates two
+narrative---"we linearize for convenience and accept some error"---conflates two
 distinct operations:
 1. **Computing the derivative** (exact, by definition);
 2. **Using the linear model for finite perturbations** (introduces residuals
@@ -428,11 +428,11 @@ equations in Chapter~\ref{ch:variational}.
 \begin{axiombox}{Axiom 2: Superposition Lives in Tangent Spaces}
 Vector addition $\dx_1 + \dx_2$ is only defined in vector spaces. Tangent spaces are
 vector spaces *by construction*. Therefore, superposition of infinitesimal
-perturbations is exact---not because the nonlinear system is ``approximately linear,''
+perturbations is exact---not because the nonlinear system is "approximately linear,"
 but because tangent spaces are *inherently* linear.
 \end{axiombox}
 
-When one says ``superposition fails in nonlinear systems,'' the precise meaning is:
+When one says "superposition fails in nonlinear systems," the precise meaning is:
 *you cannot add trajectories in state space*. But you *can* add infinitesimal
 variations in the tangent space. This is not an approximation---it is the definition of
 the tangent space as a vector space.
@@ -490,7 +490,7 @@ sharper bound holds via the mean-value form of Taylor's theorem:
 \begin{axiombox}{Axiom 3: Residuals Are Geometry, Not Error}
 The residual $r(\dx)$ measures how far the true dynamics deviate from the tangent-space
 prediction. This deviation comes from *manifold curvature* (second-order geometry),
-not from ``our approximation being bad.'' A large residual at a point means the manifold
+not from "our approximation being bad." A large residual at a point means the manifold
 is sharply curved there---it is a geometric signal, not a failure of the method.
 \end{axiombox}
 
@@ -549,7 +549,7 @@ and the ratio $r/(\delta x)^2 \to -1/2$ exactly. The general bound
 \eqref{eq:ch1:residual-bound} is tight whenever $f''(\bar{x}) \neq 0$.
 
 The practical lesson: the residual quantifies curvature. Zero residual at second order means
-the manifold is locally ``flatter than expected''---which happens precisely at inflection
+the manifold is locally "flatter than expected"---which happens precisely at inflection
 points and other geometrically special configurations.
 
 
@@ -566,14 +566,14 @@ points and other geometrically special configurations.
 \midrule
 Residual is\ldots & Approximation error & Manifold curvature \\
 Strategy & Minimize error & Measure and exploit curvature \\
-Linearization is\ldots & ``Good enough'' & Exact at the infinitesimal limit \\
+Linearization is\ldots & "Good enough" & Exact at the infinitesimal limit \\
 Goal & Better approximation & Navigate the tangent bundle \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-In the standard view, we apologize for the residual: ``Yes, the linear model is wrong for
-finite perturbations, but for small perturbations it is good enough.'' In the tangent-space
+In the standard view, we apologize for the residual: "Yes, the linear model is wrong for
+finite perturbations, but for small perturbations it is good enough." In the tangent-space
 view, the residual is information: it tells us about the curvature of the state-space manifold,
 and this information is essential for understanding transport and nonlinear phenomena.
 
@@ -733,8 +733,8 @@ Moving along a trajectory from $\bar{\x}(t_0)$ to $\bar{\x}(t_1)$ means moving b
 tangent spaces $T_{\bar{\x}(t_0)}\mathcal{M}$ and $T_{\bar{\x}(t_1)}\mathcal{M}$. The
 connection between these spaces---parallel transport, Christoffel symbols in Riemannian
 geometry---encodes the nonlinearity. Optimal control (DDP, iLQR) is therefore
-*exact local optimization + careful transport*, not ``global optimization with
-approximations.''
+*exact local optimization + careful transport*, not "global optimization with
+approximations."
 \end{axiombox}
 
 The relationship between successive tangent spaces is governed by the *state
@@ -768,14 +768,14 @@ where $\Phi(t, t_0)$ is the state transition matrix (also called fundamental mat
 ### Christoffel Symbols and Parallel Transport (Intuitive Picture)
 
 
-In Riemannian geometry on a curved manifold, ``parallel transport'' means moving a tangent
-vector along a curve while keeping it ``as parallel as possible'' (minimizing rotation relative
+In Riemannian geometry on a curved manifold, "parallel transport" means moving a tangent
+vector along a curve while keeping it "as parallel as possible" (minimizing rotation relative
 to the manifold curvature). This is formalized by the Christoffel symbols $\Gamma^k_{ij}$, which
 measure how basis vectors change as you move along the manifold.
 
 For our nonlinear dynamics, an analogous concept applies: as the reference trajectory $\bar{\x}(t)$
 evolves, the linearized dynamics at successive points are not simply comparable; they must be
-``transported'' via the state transition matrix $\Phi(t, t_1)$. The transport is exact (no
+"transported" via the state transition matrix $\Phi(t, t_1)$. The transport is exact (no
 approximation), but it encodes the manifold's curvature.
 
 
@@ -915,7 +915,7 @@ standard differential geometry but rarely stated explicitly in control texts.
 These axioms inform every derivation in the chapters that follow. When we write a
 Jacobian, we are not approximating. When we solve a Riccati equation in tangent
 coordinates, we are solving an exact local problem. When we iterate (as in DDP), we
-are re-centering the exact local analysis at a new base point. The ``error'' is always
+are re-centering the exact local analysis at a new base point. The "error" is always
 transport cost---the price of moving through curved space.
 
 
@@ -947,8 +947,8 @@ This textbook is most applicable when:
 
 
 ::: {.callout-note title="Remark"}
-Throughout this book, we use ``linearization'' to mean ``computing the Jacobian
-(Fréchet derivative)''---an exact operation. We reserve ``linear approximation'' for
+Throughout this book, we use "linearization" to mean "computing the Jacobian
+(Fréchet derivative)"---an exact operation. We reserve "linear approximation" for
 the distinct act of using the Jacobian to predict finite perturbations, which introduces
 the residual of Eq.~\eqref{eq:ch1:residual-def}. Conflating these two operations is
 the source of most conceptual confusion about linearization in nonlinear systems.
@@ -967,7 +967,7 @@ variations propagate along a trajectory, quantifying the sensitivity of orbits t
 conditions. The state transition matrix and Lyapunov exponents emerge as central objects.
 
 Chapter~\ref{ch:contraction} introduces contractivity and metric tensors, translating the
-intuition that ``some directions are more stable than others'' into a precise geometric
+intuition that "some directions are more stable than others" into a precise geometric
 framework.
 
 Chapter~\ref{ch:optimal} applies these ideas to optimal control, showing how DDP and iLQR
@@ -1019,7 +1019,7 @@ Coriolis forces.
 
 
 The residual---the gap between tangent-space prediction and actual evolution---measures
-the ``curvature'' of the swing manifold. During the early backswing, velocities are low
+the "curvature" of the swing manifold. During the early backswing, velocities are low
 and the dynamics are nearly linear (small residual). During the late downswing, when
 the clubhead is moving at high speed, centrifugal forces dominate and the residual becomes
 large. This is not a failure of the theory; it is a geometric signal that the system
@@ -1030,7 +1030,7 @@ Practically, this means:
   constant work well in the backswing but deteriorate in the downswing.
 - Iterative methods (DDP, iLQR) that re-linearize at each time step
   naturally adapt to the changing curvature.
-- The transition from ``control-dominated'' to ``drift-dominated'' dynamics
+- The transition from "control-dominated" to "drift-dominated" dynamics
   (Chapter~\ref{ch:counterfactuals}) is precisely the transition from small
   to large residuals.
 
@@ -1042,7 +1042,7 @@ Axiom 4 (transport) is especially vivid in the golf swing. As the club sweeps th
 a large arc, the tangent space rotates and stretches. The state transition
 matrix $\Phi(t_1, t_0)$ maps perturbations at one phase of the swing to perturbations at
 another. A small error in wrist lag at the top of the backswing may amplify into a large
-clubface angle error at impact---or it may be ``washed out'' by the dynamics. The
+clubface angle error at impact---or it may be "washed out" by the dynamics. The
 eigenvalues of $\Phi$ tell us which scenario applies.
 
 This is the deep connection between the abstract mathematics of this chapter and the
@@ -1067,10 +1067,10 @@ quantitative answer.
 4. **Tangent space of a torus.**
    The torus $\mathbb{T}^2$ is parameterized by two angles $(\theta_1, \theta_2) \in [0, 2\pi)^2$.
    Describe the tangent space at an arbitrary point. Is it isomorphic to $\R^2$? Explain why
-   the tangent space is ``flat'' even though the torus is curved.
+   the tangent space is "flat" even though the torus is curved.
 5. **When linearization is not an approximation.**
    Consider the system $\dot{x} = ax + bx^3$ for constants $a, b$. Compute the linearization
-   at $\bar{x} = 0$. In what sense is this linearization ``exact''? In what sense is it ``approximate''?
+   at $\bar{x} = 0$. In what sense is this linearization "exact"? In what sense is it "approximate"?
    Use the language of Axiom 1 (tangent-space exactness) to articulate the distinction.
 6. **Curvature and residual.**
    For $f(x) = \tan(x)$ at $\bar{x} = 0$, compute $f''(0)$ and predict the leading-order

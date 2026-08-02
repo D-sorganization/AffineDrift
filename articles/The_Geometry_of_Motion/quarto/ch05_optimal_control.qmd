@@ -11,7 +11,7 @@
 
 Take your current best guess for a motion. Zoom in so the system looks linear and the
 cost looks quadratic. Solve that simpler problem *exactly*. Update your guess and
-repeat. This ``linearize--solve--update'' loop is the engine of modern trajectory
+repeat. This "linearize--solve--update" loop is the engine of modern trajectory
 optimization, and each step is an exact computation in tangent space---not an
 approximation of the global problem.
 
@@ -80,8 +80,8 @@ the nonlinear Bellman equation exactly (impossible in general), DDP performs:
 3. Iteration until convergence.
 
 This approach recognizes that the Riccati recursion is precisely what emerges when we solve a *local*
-quadratic approximation to the Bellman recursion. Thus DDP can be viewed as ``Newton's method applied to
-the KKT conditions of trajectory optimization'' (see Section~\ref{sec:ch5:ddp-as-newton} below).
+quadratic approximation to the Bellman recursion. Thus DDP can be viewed as "Newton's method applied to
+the KKT conditions of trajectory optimization" (see Section~\ref{sec:ch5:ddp-as-newton} below).
 
 
 ### Connection to Newton's Method in Function Space
@@ -218,7 +218,7 @@ compute.
 The matrix $Q_{k,\uu}$ is the *Hessian of the Q-function with respect to control*. A large eigenvalue indicates
 that a small perturbation in control at step $k$ has a large effect on the future cost. Conversely, a small
 eigenvalue indicates that control perturbations in a given direction are cheap. The optimal feedback gain $\mat{K}_k$
-naturally ``amplifies'' control corrections in expensive directions and dampens them in cheap directions.
+naturally "amplifies" control corrections in expensive directions and dampens them in cheap directions.
 
 Similarly, $Q_{k,\xx}$ encodes the sensitivity of the Q-function to state perturbations, and $Q_{k,\xu}$ captures
 the coupling: a state error may couple with control via the cost or dynamics, and the full DDP accounts for both.
@@ -428,7 +428,7 @@ structure of the immediate cost function.
    Rather, it re-centers the tangent-space analysis at each iteration, always working with the exact local model.
 
 \begin{warningbox}
-DDP does not ``approximate'' the nonlinear problem. Each backward pass solves an *exact* LQR problem in the
+DDP does not "approximate" the nonlinear problem. Each backward pass solves an *exact* LQR problem in the
 current tangent space. Each forward pass updates the base point for the next tangent-space analysis. Iteration
 refines the *trajectory*, not the *quality of the local model*. Near a local optimum, DDP converges
 quadratically---precisely because each re-linearization eliminates the $O(\norm{\dx}^2)$ residual from the
