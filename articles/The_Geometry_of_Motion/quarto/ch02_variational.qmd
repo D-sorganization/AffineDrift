@@ -12,8 +12,8 @@
 Even though a nonlinear system curves and twists through state space, tiny errors around
 a reference trajectory evolve by a linear rule that we can compute and exploit. This
 chapter derives that rule---the variational equation---from first principles, constructs its
-exact solution via the Peano-Baker series, and shows how it provides a ``moving local
-coordinate system'' that travels along with the nominal motion. We examine rigorous proofs
+exact solution via the Peano-Baker series, and shows how it provides a "moving local
+coordinate system" that travels along with the nominal motion. We examine rigorous proofs
 of its fundamental properties, connect it to sensitivity analysis and optimal control, and
 confront the numerical challenges in computing it accurately.
 
@@ -571,7 +571,7 @@ The Duhamel formula decomposes the state perturbation into two contributions:
 \begin{designbox}
 The Duhamel formula is the engine behind sensitivity analysis, adjoint methods, and trajectory optimization.
 It tells us how each input perturbation at time $s$ contributes to the final state perturbation at time $t$,
-weighted by the transition matrix $\Phi(t,s)$. This is the precise sense in which input effects ``add up''---they
+weighted by the transition matrix $\Phi(t,s)$. This is the precise sense in which input effects "add up"---they
 superpose linearly in the tangent space. For control design, this formula shows which times and which channels
 have the most leverage: early times (with large $\Phi(t,s)$) and actuator-rich directions (large column spaces
 of $\mat{B}(s)$) are most influential.
@@ -1075,7 +1075,7 @@ The matrix $\mat{B}(t)$ determines which perturbation directions can be correcte
   translational control.
 - **Condition number:** The condition number $\kappa(\mat{B}^T\mat{B}) = \sigma_{\max}/\sigma_{\min}$
   indicates how efficiently different directions can be influenced. A large condition number means some
-  directions require much larger inputs than others, making them ``hard to control.''
+  directions require much larger inputs than others, making them "hard to control."
 - **Controllability:** Over a finite time horizon, a system is controllable if the Gramian
   \begin{equation}
   W_c(t_0, t_f) = \int_{t_0}^{t_f}\Phi(t_f, s)\mat{B}(s)\mat{B}(s)^T\Phi(t_f,s)^T\,\dd s

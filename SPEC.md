@@ -141,6 +141,7 @@ AffineDrift/
 │   ├── check_quarto_xrefs.py         # Cross-reference resolution guard for the book
 │   ├── check_single_title.py         # One rendered title per page; frontmatter parses
 │   ├── check_display_math.py         # Display maths still has its `$$` delimiters
+│   ├── check_latex_quotes.py         # No LaTeX ``quote'' marks left in rendered prose
 │   ├── cli_output.py                 # Explicit stdout/stderr helpers for intentional CLI contracts
 │   └── README.md                # Script usage and CI-facing documentation
 ├── tests/                       # Additional test organization

@@ -10,7 +10,7 @@
 ::: {.callout-note}
 
 Imagine running the same robot motion twice with slightly different starting conditions.
-If the system is ``contracting,'' those two runs quickly converge to the same
+If the system is "contracting," those two runs quickly converge to the same
 trajectory---small mistakes do not snowball. This chapter develops the mathematical
 machinery for certifying that property: a metric (local ruler) that provably shrinks
 along the flow.
@@ -81,7 +81,7 @@ Think of contraction this way: if you release a handful of rubber ducks into a r
 they initially spread out. But as the river narrows through a gorge, they are squeezed
 together. By the time they exit the gorge, they are traveling in a tight group regardless
 of where you released them. The gorge is a contracting region. Contraction theory
-formalizes this ``gorge property'' for any dynamical system, using a metric that plays
+formalizes this "gorge property" for any dynamical system, using a metric that plays
 the role of the river's width.
 \end{intuitionbox}
 
@@ -99,7 +99,7 @@ Although Demidovich did not use the language of Riemannian metrics or contractio
 condition is in fact a special case of modern contraction theory: it corresponds to
 contraction in the *Euclidean metric* (identity matrix). The modern framework
 generalizes Demidovich's insight by relaxing the constant-metric requirement, allowing
-the ``ruler'' to change with position and time.
+the "ruler" to change with position and time.
 
 
 ### Connection to Modern Research
@@ -345,12 +345,12 @@ $\dot{\mat{M}}=0$. The contraction condition reduces to
 This means all eigenvalues of the symmetric part of the Jacobian must be uniformly
 negative. While restrictive (most interesting systems do not satisfy this globally),
 it provides useful intuition: contraction in the identity metric requires that the
-vector field be ``uniformly squeezing'' in every direction.
+vector field be "uniformly squeezing" in every direction.
 
 ::: {.callout-note title="Remark"}
 The power of contraction theory lies in the freedom to choose $\mat{M}$. A system that
 is not contracting in the identity metric may be contracting in a different metric that
-``stretches'' certain directions to compensate for local expansion. Finding such a metric
+"stretches" certain directions to compensate for local expansion. Finding such a metric
 is the central computational challenge.
 :::
 
@@ -498,7 +498,7 @@ in the block-diagonal metric
 
 If $\x_2$ is contracting, then by Theorem~\ref{thm:ch4:convergence}, perturbations
 $\dx_2$ decay exponentially. Once $\dx_2$ is small, the variation $\dx_1$ sees the
-driven trajectory $\x_2(t)$ as ``nearly fixed'' and contracts around it. The block-diagonal
+driven trajectory $\x_2(t)$ as "nearly fixed" and contracts around it. The block-diagonal
 structure ensures that the coupled system inherits contraction from both subsystems.
 :::
 
@@ -849,8 +849,8 @@ The ultimate bound \eqref{eq:ch4:ultimate-bound-steady} shows that:
 
 \begin{designbox}
 In robust control applications (aircraft flight control, surgical robotics), the contraction
-rate $\lambda$ is often specified as a design requirement (e.g., ``system must reject
-disturbances at 5 rad/s''). The metric-based approach automatically translates this into
+rate $\lambda$ is often specified as a design requirement (e.g., "system must reject
+disturbances at 5 rad/s"). The metric-based approach automatically translates this into
 a convex optimization problem.
 \end{designbox}
 
@@ -1020,12 +1020,12 @@ to centrifugal and Coriolis forces. In this regime, the contraction properties o
 *drift field* determine whether the motion is stable:
 
 1. If the drift Jacobian has eigenvalues with negative real parts (natural damping),
-   the uncontrolled trajectory is contracting. This is the ``natural stability''
+   the uncontrolled trajectory is contracting. This is the "natural stability"
    of the late downswing.
 2. If the drift Jacobian has eigenvalues with positive real parts (instability),
    perturbations grow exponentially. At impact, even small deviations from the
    intended trajectory can produce large clubface errors.
-3. The contraction rate of the drift determines the ``forgiveness'' of the swing:
+3. The contraction rate of the drift determines the "forgiveness" of the swing:
    a highly contracting drift absorbs perturbations, while a weakly contracting or
    expanding drift amplifies them.
 
@@ -1033,12 +1033,12 @@ to centrifugal and Coriolis forces. In this regime, the contraction properties o
 The practical design principle for swing optimization is: use the controllable early
 phases (backswing, transition) to steer the system into a region of state space where
 the drift field is naturally contracting. This is the control-theoretic formalization
-of the coaching advice ``set up the swing so the physics does the work.''
+of the coaching advice "set up the swing so the physics does the work."
 
 The contraction metric provides a quantitative tool: at each configuration, one can
 compute whether the drift is contracting (and at what rate) via the symmetric part
 of the drift Jacobian. Configurations where $\sym(\frac{\partial f}{\partial \x})$
-has uniformly negative eigenvalues are ``safe zones'' where the swing is inherently
+has uniformly negative eigenvalues are "safe zones" where the swing is inherently
 stable. The optimal trajectory passes through these zones during the critical
 impact phase.
 \end{designbox}
@@ -1137,7 +1137,7 @@ $\|w(t)\|_{\mat{M}} \leq d$.
 
 
 Funnel control prescribes a time-varying performance boundary $\varphi(t) > 0$
-(the ``funnel'') and designs a gain that guarantees the tracking error satisfies
+(the "funnel") and designs a gain that guarantees the tracking error satisfies
 $\|e(t)\| < \varphi(t)$ for all $t > 0$. The connection to contraction is:
 
 - The funnel boundary $\varphi(t)$ defines the desired tube radius.
@@ -1147,7 +1147,7 @@ $\|e(t)\| < \varphi(t)$ for all $t > 0$. The connection to contraction is:
   control achieves this by increasing gain as the error approaches the boundary.
 
 \begin{intuitionbox}
-Contraction tubes formalize the intuition that ``nearby trajectories stay nearby.''
+Contraction tubes formalize the intuition that "nearby trajectories stay nearby."
 For trajectory tracking in robotics or biomechanics, the tube radius at impact time
 tells you the worst-case deviation from the planned motion. The condition number
 $\kappa(\mat{M})$ determines the shape of the tube: isotropic metrics give circular

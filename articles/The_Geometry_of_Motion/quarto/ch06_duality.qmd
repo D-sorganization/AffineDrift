@@ -54,8 +54,8 @@ independent threads:
 The duality theorem shows these are the same computation under the right interpretation.
 
 \begin{intuitionbox}
-Optimal control builds a local quadratic ``cost bowl'' around the trajectory; contraction
-checks whether perturbations shrink under a metric ``bowl.'' Duality appears when those
+Optimal control builds a local quadratic "cost bowl" around the trajectory; contraction
+checks whether perturbations shrink under a metric "bowl." Duality appears when those
 bowls coincide---the Riccati matrix $\mat{S}$ serves double duty as both value curvature
 and contraction metric for the closed-loop tangent dynamics.
 \end{intuitionbox}
@@ -94,7 +94,7 @@ certifications.
 
 Jan Willems formalized and generalized Kalman's observation into the language of *dissipation inequalities*.
 His work (Willems, 1972) showed that a system is stable if and only if there exists a positive-definite matrix $\mat{S}$
-and a cost function $\ell(x, u)$ such that the system ``dissipates'' energy at a rate determined by $\mat{S}$:
+and a cost function $\ell(x, u)$ such that the system "dissipates" energy at a rate determined by $\mat{S}$:
 \begin{equation}
 V_{k+1} - V_k \leq -\ell(x_k, u_k),
 \label{eq:ch6:dissipation}
@@ -784,7 +784,7 @@ The continuous-time LQR controller guarantees a phase margin of at least $60^\ci
 open-loop transfer function.
 :::
 
-The complete derivation connecting the return-difference inequality to the specific $60^\circ$ bound can be found in Anderson \& Moore, *Optimal Control: Linear Quadratic Methods* (1990), Chapter 5, or Safonov \& Athans (1977). The key insight: the Riccati solution makes the closed-loop system ``strictly positive real,'' and by the Passivity Theorem, the allowable phase perturbation is bounded to $60^\circ$. This is a well-known classical result; we state it here as a reference, citing the established sources rather than reproducing the full derivation.
+The complete derivation connecting the return-difference inequality to the specific $60^\circ$ bound can be found in Anderson \& Moore, *Optimal Control: Linear Quadratic Methods* (1990), Chapter 5, or Safonov \& Athans (1977). The key insight: the Riccati solution makes the closed-loop system "strictly positive real," and by the Passivity Theorem, the allowable phase perturbation is bounded to $60^\circ$. This is a well-known classical result; we state it here as a reference, citing the established sources rather than reproducing the full derivation.
 
 
 ### Disk Margin
@@ -968,7 +968,7 @@ with $\rho = 1 - \alpha/\overline{s}$ independent of $k$.
 
 
 1. **Time-varying case (DRE)**: The Riccati matrix $\mat{S}_k$ changes at each step, reflecting the changing
-   ``cost-to-go'' as we move backward in time from the final state. The tangent space metric is *adapted to the
+   "cost-to-go" as we move backward in time from the final state. The tangent space metric is *adapted to the
    current time*: at times near the terminal condition, the metric emphasizes directions that are expensive to steer;
    far from the terminal, the metric is influenced by asymptotic stability.
 2. **Steady-state case (ARE)**: The Riccati matrix reaches a time-invariant steady state. The metric no longer
@@ -1051,12 +1051,12 @@ nearby geodesics exponentially fast*. This is what makes the LQR solution so rob
 ### Visualization in 2D
 
 
-For a 2D system (e.g., the pendulum with angle and angular velocity), the Riccati metric defines an elliptical ``distance
-metric.'' The level sets of the Lyapunov function $V = \dx^\T\mat{S}\,\dx = 1$ form ellipses. The principal axes of the
+For a 2D system (e.g., the pendulum with angle and angular velocity), the Riccati metric defines an elliptical "distance
+metric." The level sets of the Lyapunov function $V = \dx^\T\mat{S}\,\dx = 1$ form ellipses. The principal axes of the
 ellipse are the eigenvectors of $\mat{S}$, with radii proportional to $1/\sqrt{\lambda_i(\mat{S})}$.
 
 A smaller (more negative) eigenvalue means a longer radius in that direction: perturbations along that eigenvector are
-``cheaper'' in the metric sense. Conversely, a larger eigenvalue means a shorter radius: perturbations are expensive.
+"cheaper" in the metric sense. Conversely, a larger eigenvalue means a shorter radius: perturbations are expensive.
 
 Under the optimal feedback, all perturbation ellipses shrink at the rate $\rho$ per time step, and the ellipses align with
 the eigenvectors of $\mat{A}_{\text{cl}}$.
