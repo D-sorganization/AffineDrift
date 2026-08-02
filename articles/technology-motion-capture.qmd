@@ -1,6 +1,6 @@
 ---
 title: "Motion Capture Technology: Reconstruction, Artefact, and the Rotation Problem"
-description: "How optical, markerless, and inertial motion capture actually work: triangulation mathematics, soft tissue artefact as the dominant error, joint modelling, and why helical axes avoid the sequence dependence of Euler angles."
+description: "How optical, markerless, and inertial motion capture actually work: triangulation mathematics, soft tissue artefact as the dominant error, the rotation-representation problem, and what helical axes do and do not fix."
 author: "Dieter Olson"
 date: "2026-08-02"
 categories: [technology, measurement, biomechanics, kinematics]
@@ -117,7 +117,17 @@ $$
 
 The description comprises an axis direction, a point on that axis, a rotation angle, and a translation along it. Crucially, **none of these depends on a chosen sequence** — the axis is a property of the motion, not of the analyst's convention. For joints whose motion is genuinely three-dimensional, and for segments undergoing large rotations, this is the representation that says what happened without editorial choices baked in.
 
-Its practical cost is noise sensitivity: the axis position is computed by dividing by $\lVert\boldsymbol{\omega}\rVert^2$, so when angular velocity is small the axis location becomes ill-conditioned — structurally the same pathology as centre of pressure at low vertical load. The standard mitigations are to gate on a minimum angular velocity and to estimate the axis over a finite interval rather than instantaneously. For golf this caveat bites precisely at transition, where the club reverses direction and angular velocity passes through small values.
+#### The caveat that matters more than the advocacy
+
+It would be easy to stop there and recommend helical axes, and that would be a mistake. **The representation is correct; the estimate is not protected by it.**
+
+Two results make this concrete. Woltring's error-propagation analysis shows that helical-axis direction error scales as $1/\varphi$ and inversely with marker-cluster radius — the axis becomes ill-conditioned exactly as the rotation angle goes to zero, which is structurally the same pathology as centre of pressure at low vertical load. And in practice the degradation is severe: a skin-marker instantaneous helical axis at the knee has been measured **33 ± 8° off in direction and 38 ± 11 mm off in position** against a reference. That is not a refinement problem. It means the sequence-independence you gain can be swamped by an estimation error larger than the convention error you were trying to avoid.
+
+For golf the conditioning caveat bites precisely at transition, where the club reverses and angular velocity passes through small values — the very moment coaches most want described.
+
+The honest position is therefore narrower than the enthusiasm usually allows: **use the screw representation for interpretation and for defining quantities unambiguously; do not assume it rescues the measurement.** Mitigations are gating on a minimum angular velocity, estimating over a finite interval rather than instantaneously, and maximising cluster radius. Notably, one place the estimate *is* well-conditioned is a rigidly instrumented club, which carries no soft-tissue artefact and rotates fast — which is why screw-based description of the club has better prospects than screw-based description of the body, and why it remains largely unexplored.
+
+Woltring made the standardisation case in 1994 and it lost to the joint-coordinate-system convention on clinical familiarity rather than on correctness — a piece of history worth knowing when weighing how settled current practice actually is.
 
 ### How large is the convention effect?
 
@@ -264,6 +274,10 @@ The proximal-to-distal "kinematic sequence" — pelvis, then thorax, then arm, t
 What is far less widely appreciated is that *which segment peaks first is partly a consequence of how you compute angular velocity.* [Marsan et al. (2019)](https://pubmed.ncbi.nlm.nih.gov/31741482/) tested seven methods of identifying the kinematic sequence and found that **the choice of angular velocity component significantly affected the result, with no single method emerging as a reference standard.** The sequence is therefore not a raw observation; it is an observation filtered through a definitional choice that the literature has not standardised.
 
 That finding sits inside a broader problem. A systematic review of 92 golf kinematics articles concluded that **"the lack of methodological consensus prevented generalization of the results"**, with ISB reporting guidelines inconsistently applied across studies ([Bourgain et al. 2022](https://doi.org/10.3390/sports10060091)). The X-factor literature illustrates the pattern: the construct originated in golf instruction rather than in a peer-reviewed publication, and the "X-factor stretch" refinement is a conference proceedings chapter with no indexed DOI.
+
+The measurement position is worse still. X-factor magnitude roughly **doubles** depending on which landmarks define the segments, and differs significantly across three published computation methods. Since it is a difference of two axial rotations, it also inherits the transverse-plane weakness of every modality: inertial systems reproduce single-segment orientation to within 1–7% of range but the *relative* thorax-pelvis angle only to 4–57%, because differencing two noisy orientations amplifies error rather than cancelling it.
+
+And there is a finding that ought to be better known than it is: in skilled golfers, **X-factor parameters have been reported not to correlate with maximum clubhead velocity at all.** A construct that varies twofold with definition, is measured worst by every instrument, and may not predict the outcome it is invoked to explain is a construct in some difficulty — not because the underlying separation is unreal, but because the number reported for it is doing less work than its prominence implies.
 
 This is precisely where the rotation-representation problem of Part III becomes practical rather than theoretical. If segment angular velocity can be computed several defensible ways that disagree about the sequence, then a description that does not depend on the choice — the instantaneous screw axis — is not merely elegant. It is a candidate fix.
 
