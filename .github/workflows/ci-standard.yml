@@ -200,6 +200,15 @@ jobs:
         run: python3 scripts/check_dry_adoption.py
       - name: Verify Bibliography Quality
         run: python3 scripts/check_bibliography_quality.py
+      - name: Verify A Citation Key Means One Paper
+        # The site renders against several .bib files at once, so a key defined
+        # differently in two of them resolves to whichever is listed first --
+        # the citation silently depends on render order rather than on anything
+        # an author wrote. Four keys were in that state (#3686, #3690, #3691),
+        # two of them multi-part series flattened into a single entry and two
+        # entries for papers that do not exist as recorded. Offline and instant;
+        # correctness against CrossRef is check_bibliography_metadata.py's job.
+        run: python3 scripts/check_bibliography_cross_file.py
       - name: Verify Citation Resolution
         run: python3 scripts/check_citation_resolution.py
       - name: Verify Quarto Citation Integrity
