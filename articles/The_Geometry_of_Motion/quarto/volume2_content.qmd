@@ -1528,24 +1528,24 @@ most practically important results of this book.
    demanding phase of the motion.
 
 
-> ---{gimbal_lock}
-  If we represent orientation using three Euler angles
-  $(\phi, \theta, \psi) \in \Reals^3$, we encounter **gimbal lock**:
-  configurations where the representation degenerates and loses a degree of
-  freedom. At $\theta = \pm\pi/2$, the axes for $\phi$ and $\psi$ align,
-  making the system appear to have only 2~DOF when it actually has 3.
+::: {.callout-warning title="The Gimbal Lock Catastrophe"}
+If we represent orientation using three Euler angles
+$(\phi, \theta, \psi) \in \Reals^3$, we encounter **gimbal lock**:
+configurations where the representation degenerates and loses a degree of
+freedom. At $\theta = \pm\pi/2$, the axes for $\phi$ and $\psi$ align,
+making the system appear to have only 2~DOF when it actually has 3.
 
-  This is not a hardware problem---it is a *coordinate singularity*,
-  an artifact of forcing a non-Euclidean space ($\SOthree$) into Euclidean
-  coordinates ($\Reals^3$). The Apollo guidance system's three-gimbal
-  inertial platform had a built-in gimbal-lock caution region that crews
-  were trained to avoid; this was a known design constraint of the IMU,
-  not a specific Apollo~13 operational event. Every modern spacecraft avoids
-  Euler angles for precisely this reason.
+This is not a hardware problem---it is a *coordinate singularity*,
+an artifact of forcing a non-Euclidean space ($\SOthree$) into Euclidean
+coordinates ($\Reals^3$). The Apollo guidance system's three-gimbal
+inertial platform had a built-in gimbal-lock caution region that crews
+were trained to avoid; this was a known design constraint of the IMU,
+not a specific Apollo~13 operational event. Every modern spacecraft avoids
+Euler angles for precisely this reason.
 
-  The lesson for control: **if you use the wrong coordinates, your
-  controller will have singularities that the physical system does not.**
-\end{warning}
+The lesson for control: **if you use the wrong coordinates, your
+controller will have singularities that the physical system does not.**
+:::
 
 
   The configuration space of a mechanical system is a *smooth manifold*
@@ -1940,22 +1940,22 @@ for control are immediate:
     meaningless.
 
 
-\begin{warning}[Euler Angle Catastrophe in Golf Modeling]\label{warning:euler_golf}
-  Many biomechanics studies parameterize the golf swing using Euler angles for
-  each joint. For the shoulder joint ($\SOthree$), this means three angles
-  $(\phi_s, \theta_s, \psi_s)$. But during the backswing, the shoulder
-  passes through configurations near gimbal lock ($\theta_s \approx \pm\pi/2$).
+::: {.callout-warning title="Euler Angle Catastrophe in Golf Modeling"}
+Many biomechanics studies parameterize the golf swing using Euler angles for
+each joint. For the shoulder joint ($\SOthree$), this means three angles
+$(\phi_s, \theta_s, \psi_s)$. But during the backswing, the shoulder
+passes through configurations near gimbal lock ($\theta_s \approx \pm\pi/2$).
 
-  In these regions:
-  - The Jacobian mapping angular velocities to Euler angle rates becomes
-  singular.
+In these regions:
+- The Jacobian mapping angular velocities to Euler angle rates becomes
+singular.
 - Small physical rotations produce large jumps in angle coordinates.
 - Any controller computing torques from angle errors will produce
-  *infinite* commanded torques at the singularity.
-  The fix is not to "choose a better Euler angle convention" (all conventions
-  have singularities somewhere). The fix is to work on $\SOthree$ directly,
-  using rotation matrices or quaternions.
-\end{warning}
+*infinite* commanded torques at the singularity.
+The fix is not to "choose a better Euler angle convention" (all conventions
+have singularities somewhere). The fix is to work on $\SOthree$ directly,
+using rotation matrices or quaternions.
+:::
 
 
 ## Riemannian Metrics and the Mass Matrix
