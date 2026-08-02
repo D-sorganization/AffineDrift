@@ -10,6 +10,7 @@ Exits with code 1 if required fields are missing.
 Part of the content validation pipeline (issue #1421).
 """
 
+import re
 import sys
 from pathlib import Path
 
@@ -39,6 +40,30 @@ def parse_frontmatter(content: str) -> dict[str, object]:
     return fm
 
 
+H1 = re.compile(r"#\s+\S")
+FENCE = re.compile(r"\s*(?:```+|~~~+)")
+
+
+def has_body_h1(body: str) -> bool:
+    """Return True if the body carries a level-1 heading outside fenced code.
+
+    Quarto uses the first H1 as the document title when the frontmatter has
+    none, so such a file is titled -- just not in YAML. Book chapters depend on
+    this: a `{#sec-...}` anchor can only attach to a heading, never to a YAML
+    key, so a chapter that is cross-referenced cannot keep its title in the
+    frontmatter. Requiring both instead renders the title twice, which is what
+    the book shipped until #3702.
+    """
+    in_fence = False
+    for line in body.splitlines():
+        if FENCE.match(line):
+            in_fence = not in_fence
+            continue
+        if not in_fence and H1.match(line):
+            return True
+    return False
+
+
 def should_skip(path: Path) -> bool:
     """Return True if this file should be excluded from validation."""
     for part in path.parts:
@@ -55,14 +80,17 @@ def validate_file(path: Path) -> list[str]:
     except OSError as e:
         return [f"{path}: cannot read — {e}"]
 
-    fm = parse_frontmatter(content)
+    fm, body = split_frontmatter(content)
     if not fm:
         # No frontmatter at all — skip (some files are pure HTML/markdown without YAML)
         return []
 
     for field in REQUIRED_FIELDS:
-        if not fm.get(field):
-            errors.append(f"{path}: missing required frontmatter field '{field}'")
+        if fm.get(field):
+            continue
+        if field == "title" and has_body_h1(body):
+            continue
+        errors.append(f"{path}: missing required frontmatter field '{field}'")
 
     return errors
 

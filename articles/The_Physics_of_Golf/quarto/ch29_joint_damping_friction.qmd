@@ -1,5 +1,4 @@
 ---
-title: "Damping, Friction, and Energy Dissipation in the Kinematic Chain"
 description: "When you flex your arm, you don't just move bone. You move synovial fluid, squeeze cartilage, deform tendons, compress muscle fibers, and shift skin and..."
 ---
 
@@ -78,7 +77,7 @@ These sources contribute smaller damping torques individually, but collectively 
 
 From @sec-soft_tissue_pliable, we discussed the wobble of forearm soft tissue as the arm accelerates. This wobble involves the acceleration of skin, fat, and fascia relative to the skeleton, and internal friction within these tissues dissipates the kinetic energy of wobble. This damping is configuration-dependent and is often neglected in simple models, but becomes significant in high-acceleration maneuvers.
 
-### Damping by Joint
+### Damping by Joint {#sec-sources_damping}
 
 The table below provides typical damping coefficients for major joints involved in the golf swing:
 
@@ -476,7 +475,7 @@ However, in this simplified sensitivity picture, damping effects can amplify, es
 ::: {.callout-warning}
 ## Practical Guidelines for Modeling Damping
 
-- **If modeling the full swing (address to follow-through)**: In this illustrative modeling recommendation, include a constant damping matrix with values from the table in Section @sec-sources_damping. Use linear viscous damping; the added complexity of nonlinear friction is not justified by the accuracy gain for most purposes.
+- **If modeling the full swing (address to follow-through)**: In this illustrative modeling recommendation, include a constant damping matrix with values from the table in @sec-sources_damping. Use linear viscous damping; the added complexity of nonlinear friction is not justified by the accuracy gain for most purposes.
 
 - **If modeling only the downswing or impact**: Damping becomes more important. Use configuration-dependent damping $\bm{D}(\bm{q})$ with higher coefficients when joints are flexed deeply.
 

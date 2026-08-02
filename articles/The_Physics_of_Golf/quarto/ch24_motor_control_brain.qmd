@@ -1,5 +1,4 @@
 ---
-title: "Motor Control I: The Brain as Controller"
 description: "A model-bounded account of feedforward planning, feedback delay, internal models, and motor learning in the golf downswing."
 ---
 
@@ -20,8 +19,7 @@ The discussion treats the nervous system as a controller with feedforward planni
 Recall from @sec-zero_torque_counterfactual and @sec-zero_torque_counterfactual that the golf swing is a control-affine system:
 $$
 \dot{\bm{x}} = f(\bm{x}) + G(\bm{x})\bm{u}(t)
-{#eq-ch24_control_affine}
-$$
+$$ {#eq-ch24_control_affine}
 
 The state vector $\bm{x}$ contains all joint angles and angular velocities. The drift term $f(\bm{x})$ represents gravity and centrifugal effects---the physics does for free. The control term $G(\bm{x})\bm{u}(t)$ represents what the muscles can accomplish. The control input $\bm{u}(t)$ is the vector of muscle torques, subject to physical bounds: $|\bm{u}| \leq \bm{u}_{\mathrm{max}}$.
 
@@ -163,9 +161,8 @@ Cerebellar damage can produce severe loss of motor coordination---a condition ca
 
 The cerebellar learning rule is thought to implement the following algorithm:
 $$
-{#eq-ch24_cerebellar_learning}
 \Delta w_{ij} = -\eta \cdot e(t) \cdot x_i(t) \cdot y_j(t)
-$$
+$$ {#eq-ch24_cerebellar_learning}
 
 where $w_{ij}$ is the synaptic weight between parallel fiber $i$ and Purkinje cell $j$, $e(t)$ is the climbing fiber error signal, $x_i(t)$ is the firing rate of parallel fiber $i$, and $y_j(t)$ is the firing rate of the Purkinje cell. The negative sign indicates that errors drive depression of relevant synapses. Over time, this makes the forward model more accurate.
 
@@ -453,7 +450,7 @@ This distinction is fundamental to understanding biological motor control. The b
 
 - Suppose you wanted to teach a robot to swing a golf club using online optimal control (computing the motor command at each millisecond). What would be the minimum computation time required? Assume the downswing lasts 300 ms and the robot must solve a 20-dimensional optimal control problem at each millisecond.
 
-- In Section @sec-ch24_recruitment, we discussed Henneman's size principle: motor units are recruited in order of size. Why is this principle important for control? What would happen if large motor units were recruited first?
+- In @sec-ch24_recruitment, we discussed Henneman's size principle: motor units are recruited in order of size. Why is this principle important for control? What would happen if large motor units were recruited first?
 
 - Feedback delays are 30--150 milliseconds, while the downswing is 300 milliseconds. Can the brain use visual feedback to correct a timing error early in the downswing? Explain.
 
