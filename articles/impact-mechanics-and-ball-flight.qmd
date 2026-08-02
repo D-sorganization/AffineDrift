@@ -402,7 +402,53 @@ Note what the table shows: **$C_D$ rises with spin too.** Backspin buys lift and
 
 **Smits & Smith (1994)** produced $C_D(Re,S)$ and $C_L(S)$ from Princeton wind-tunnel work, with $C_L$ approximately Reynolds-independent. **Their published coefficients could not be obtained from any open source.** Every purported verbatim statement of them that we checked traced back to a different paper or to uncited code comments — one widely circulated coefficient list turns out to belong to a 2013 paper fitting Bearman and Harvey. We therefore state the model's form and decline to give numbers.
 
-**Quintavalla (2002)** fitted a six-term expansion in $Re$ and $S$ by inversion of full trajectories measured on the USGA's Indoor Test Range. Its coefficients are likewise not public — and, importantly, they are **per-ball fitted parameters rather than universal constants**, so "the Quintavalla model" is a method, not a coefficient set.
+**Quintavalla (2002)** fitted a six-term expansion in $Re$ and $S$ by inversion of full trajectories measured on the USGA's Indoor Test Range. Its fitted coefficients are likewise not public — and, importantly, they are **per-ball fitted parameters rather than universal constants**, so "the Quintavalla model" is a method, not a coefficient set. The *model form* is published in the USGA's patent, and so are population **ranges** from a 2006 USGA technical report: across the conforming market, $C_L$ spans 0.125–0.30 and $C_D$ spans 0.22–0.32 over $\Omega = 0.05$–0.2, with both peaking near $Re \approx 1 \times 10^5$ and declining above it.
+
+**Naruo & Mizota (2004)** is the one canonical model whose coefficients are fully published, which makes it the practical choice for anyone who needs a working model today rather than a literature search:
+
+$$
+\begin{aligned}
+C_D(S) &= 0.7510\,S^4 - 1.760\,S^3 + 1.098\,S^2 + 0.2148\,S + 0.2049\\
+C_L(S) &= -0.2158\,S^4 + 1.006\,S^3 - 1.644\,S^2 + 1.250\,S + 0.0616
+\end{aligned}
+$$
+
+valid over $S = 0.03$–1.13 and $Re = 0.71$–$1.25 \times 10^5$. At $S = 0.1$ these give $C_D = 0.236$, $C_L = 0.171$; at $S = 0.2$, $C_D = 0.279$, $C_L = 0.253$.
+
+Note the structural claim embedded in that form: **these are functions of spin ratio alone.** Naruo and Mizota found $C_D$ and $C_L$ collapse onto single curves in $S$ and are *independent of Reynolds number* across the flight range. That is precisely the assumption the modern free-flight measurements contradict (V.3b), so the model is convenient and internally consistent but rests on a premise now in dispute.
+
+Independent ITR-class values for named balls have also appeared in ball-maker patent filings, which is a useful cross-check on all of the above:
+
+| Ball | $C_L$ @ $Re$ 70k, $S$ 0.188 | $C_L$ @ $Re$ 180k, $S$ 0.110 | $C_D$ @ 70k | $C_D$ @ 180k |
+|---|---|---|---|---|
+| Pinnacle Gold (USGA standard) | 0.216 | 0.158 | 0.276 | 0.225 |
+| Titleist Pro V1 | 0.209 | 0.168 | 0.274 | 0.227 |
+| Callaway HX Red | 0.215 | 0.179 | 0.282 | 0.228 |
+
+These sit comfortably inside the still-air ranges below, which is worth saying plainly: **the wind-tunnel, indoor-range and free-flight methods are not in gross conflict on modern balls.** The disagreements are real but they are at the level of a few hundredths in coefficient, not a wholesale disagreement about how a golf ball flies.
+
+### V.3b The Reynolds-independence question, and the best modern dataset
+
+The sharpest modern golf-ball measurements come from a still-air projectile method that sidesteps the wind tunnel's two structural problems — support interference and scaled models — by firing production balls through stationary laboratory air between light gates and inferring drag from speed decay and lift from vertical deflection.
+
+The apparatus detail matters for judging the numbers. Three sensor stations, each a pair of vertical light gates 0.41 m apart plus a 45° gate for vertical position; a 3.81 m baseline chosen short enough that the coefficients are effectively constant across it; total vertical drop held under 0.1 m; spin verified by high-speed camera to ±15 rpm. The rig is recalibrated daily by firing a ball with a **vertical** spin axis — so that no vertical Magnus force exists — and adjusting sensor positions until the measured $C_L$ reads $0.00 \pm 0.01$. Propagated uncertainty is $U(C_D) = 0.005$, $U(C_L) = 0.0005$.
+
+Findings that bear on everything above:
+
+- **The drag crisis onset is at $Re \approx 7 \times 10^4$**, and $C_D$ falls from about 0.5 to 0.2 between $Re = 5$ and $7.5 \times 10^4$. Of eight sports balls tested, the golf ball has the most severe drag crisis of any.
+- **Minimum $C_D = 0.17$**, against Bearman and Harvey's 0.23 — but the authors attribute this to fifty years of ball development, not to method error.
+- **$C_L$ is non-linear in spin ratio**, fitted per ball with a second-order polynomial. Rotating drag needed *two* polynomial branches. Neither collapses onto a single Reynolds-independent curve.
+- **Between-model spread in $C_D$ exceeds 0.1 below $Re = 10^5$** and falls under 0.05 above it — so ball-to-ball variation is largest exactly where the model disagreements are.
+
+::: {.callout-note}
+## Dimple pattern changes lift by 50% at identical flow conditions
+
+In the reverse-Magnus regime ($5 \times 10^4 < Re < 7 \times 10^4$, 750–2,250 rpm), three production balls measured at identical Reynolds number and spin gave minimum lift coefficients of **−0.10** (circular dimples) and **−0.15** (hexagonal) — a 50% difference from dimple geometry alone.
+
+The mechanism is legible in the data: the steepness of a ball's drag crisis correlates with the severity of its reverse Magnus at $r^2 = 0.87$. A ball spinning near the critical Reynolds number has its advancing and retreating surfaces on *opposite branches* of the drag crisis — at $Re = 6\times10^4$ and 1,500 rpm the bottom of the ball is at $Re = 6.9\times10^4$ and the top at $5.1\times10^4$ — and the sharper the transition between those branches, the more violently the lift reverses.
+
+This is the strongest available argument that **no single-parameter $C_L(S)$ model can be right**, and it is a direct measurement rather than an inference.
+:::
 
 ::: {.callout-warning}
 ## Why trajectory-fitted and wind-tunnel coefficients disagree — and why it matters
@@ -689,7 +735,8 @@ It is worth separating these explicitly, because golf's technical literature ten
 - **An inter-laboratory round robin for golf-ball aerodynamics.** No ISEA, ASTM or governing-body comparison exists publicly. Every dataset is a single lab's.
 - **A golf-specific quantification of sting interference or of turbulence intensity shifting the critical Reynolds number.** Both mechanisms are well established generically and neither has a published golf magnitude.
 - **Measured COR as a function of loft.** Widely assumed, apparently never published.
-- **The Smits & Smith and Quintavalla coefficients.** The first is print-only; the second may be genuinely unpublished, and is in any case a per-ball fit rather than a constant.
+- **The Smits & Smith and Quintavalla coefficients.** The first is print-only; the second may be genuinely unpublished, and is in any case a per-ball fit rather than a constant. Naruo & Mizota's coefficients *are* public (V.3), so a fully-specified model does exist — it simply rests on a Reynolds-independence assumption that later measurements contradict.
+- **Any measurement of golf-ball coefficients as a function of dimple-pattern orientation relative to the spin axis.** Despite the symmetry rule being written specifically to police this, no peer-reviewed study measures it; the data is presumably proprietary. Treat any specific poles-horizontal-versus-poles-vertical figure as unsourced.
 - **Whether any vendor reports face angle at first contact rather than maximum compression.** This determines whether a systematic open-face bias exists for high-closure players (VI.4).
 - **Roberts, Jones & Rothberg's measured contact times** across five clubheads and two ball constructions — the peer-reviewed contact-time reference, currently inaccessible.
 
@@ -738,6 +785,10 @@ Several widely circulated figures are **deliberately absent** because we could n
 - Beratlis, N., Balaras, E. & Squires, K. (2019). On the origin of the drag force on dimpled spheres. *JFM* **879**, 147–167. [doi:10.1017/jfm.2019.647](https://doi.org/10.1017/jfm.2019.647)
 - Mehta, R.D. (1985). Aerodynamics of sports balls. *Annual Review of Fluid Mechanics* **17**, 151–189.
 - Lyu, B., Kensrud, J. & Smith, L. (2020). The reverse Magnus effect in golf balls. *Sports Engineering* **23**(1). [doi:10.1007/s12283-020-0318-1](https://doi.org/10.1007/s12283-020-0318-1)
+- Lyu, B., Kensrud, J., Smith, L. & Tosaya, T. (2018). Aerodynamics of golf balls in still air. *Proceedings* **2**(6), 238. [doi:10.3390/proceedings2060238](https://doi.org/10.3390/proceedings2060238)
+- Naruo, T., Mizota, T. & Shimozono, H. (2004). Experimental study of golf ball aerodynamics. *Transactions of the JSME Series B* **70**(697), 2371–2377. [doi:10.1299/kikaib.70.2371](https://doi.org/10.1299/kikaib.70.2371)
+- Li, J., Tsubokura, M. & Tsunoda, M. (2017). Numerical investigation of the flow around a golf ball at around the critical Reynolds number. *Flow, Turbulence and Combustion* **99**, 837–864. [doi:10.1007/s10494-017-9859-1](https://doi.org/10.1007/s10494-017-9859-1)
+- Smith, C.E., Beratlis, N., Balaras, E., Squires, K. & Tsunoda, M. (2010). Numerical investigation of the flow over a golf ball in the subcritical and supercritical regimes. *International Journal of Heat and Fluid Flow* **31**(3), 262–273. [doi:10.1016/j.ijheatfluidflow.2010.01.002](https://doi.org/10.1016/j.ijheatfluidflow.2010.01.002)
 - Tavares, G., Shannon, K. & Melvin, T. (1999). Golf ball spin decay model based on radar measurements. In *Science and Golf III*, 464–472. Human Kinetics.
 - Lieberman, B. et al. (2001). Method for determining coefficients of lift and drag of a golf ball. US Patent 6,186,002 B1 (USGA). [Google Patents](https://patents.google.com/patent/US6186002B1/en)
 
