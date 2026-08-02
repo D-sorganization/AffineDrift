@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-07-31T00:00:00Z
+Last-Updated: 2026-08-02T12:40:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,8 +29,8 @@ Last-Updated: 2026-07-31T00:00:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.8                                            |
-| **Spec Version**        | 1.0.148                                          |
-| **Last Spec Update**    | 2026-07-25                                       |
+| **Spec Version**        | 1.0.153                                          |
+| **Last Spec Update**    | 2026-08-02                                       |
 
 ## 2. Purpose & Mission
 
@@ -49,6 +49,7 @@ AffineDrift is a research platform that explores golf swing biomechanics through
 - Provide comprehensive educational resources that bridge control theory and applied biomechanics
 - Maintain textbook bibliographies and chapter citations with explicit scientific sourcing for biomechanics, multibody dynamics, geometry, and control-theory claims
 - Present the textbook volumes with shared algorithm and pseudocode conventions so implementation guidance is consistent across the series
+- Publish a Technology section covering launch-monitor, force-measurement, and motion-capture instrumentation, with explicit separation of measured, derived, and estimated quantities
 
 ### Non-Goals
 
@@ -236,6 +237,7 @@ AffineDrift/
 | F57 | LaTeX structural integrity pre-check     | ✅     | `scripts/check_latex_structure.py` statically validates the LaTeX textbook sources with no TeX distribution installed: stray `egin{document}`/`\end{document}` in included chapters, unbalanced environments counted per environment name with comments stripped, files ending mid-sentence, master files missing `\end{document}`, unclosed section-command braces, Markdown code fences, unescaped percent signs following a digit, `\cite{}` arguments containing prose rather than a key, and citation keys with no bibliography entry. Wired into the `quality-gate` job. A baseline in `config/latex-structure-baseline.json` records known findings so the check fails only on new ones; it holds three entries, all in `articles/bosch_integration/`, a directory nothing compiles and whose status is an owner decision. The baseline is shrunk as defects are fixed and is never grown to silence a new one. |
 | F58 | Generated textbook worked examples       | ✅     | Textbook worked examples that carry numbers are solved by `src/affine_control/lqr.py` and emitted as LaTeX fragments by `scripts/generate_worked_examples.py`, which the chapters `\input`. The `quality-gate` job runs the generator with `--check` and fails when a committed fragment drifts from what the code produces, so a number cannot be hand-edited into a book without the code agreeing. Volume I chapter 6 is the first example converted (#3518).                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | F59 | Acronym terminology gate                 | ✅     | `scripts/check_terminology.py` enforces one expansion per project acronym across `articles/`, `pages/` and `resources/`, with `NOTATION.md` as the source of truth. Bans the four non-canonical ZTCF expansions, the two non-canonical DCR expansions and a dangling cross-reference. Deliberate historical mentions are permitted through `config/terminology-baseline.json`, keyed on file and term rather than line number. Wired into `quality-gate` (#3526).                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| F60 | Technology instrumentation section       | ✅     | The Quarto site publishes a top-level Technology section (`pages/technology.qmd`) with research articles on launch-monitor, force-measurement, and motion-capture systems. The articles distinguish measured, derived, and estimated quantities and keep research dossiers under `content-development/technology-research/`; `tests/test_navbar_ia.py` guards the section's navigation entry and item-budget contract.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 
 ### API / Interface Contract
 
@@ -721,3 +723,4 @@ python src/tools/code_quality_check.py
 | 2026-07-23 | 1.0.118 | Fix SSRF bypass via unspecified IP address resolution in verify_images.py |
 | 2026-07-30 | 1.0.118 | Optimized bibliography scoring logic in js/bibliography.js by eliminating redundant string inclusion checks for pre-filtered arrays. |
 | 2026-07-31 | 1.0.118 | docs/js/bibliography.js | Removed redundant string inclusion checks from `scoreEntry` |
+| 2026-08-02 | 1.0.153 | docs(content): Added the Technology section and three research-grade instrumentation articles, with source dossiers and navbar IA regression coverage. |

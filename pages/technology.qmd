@@ -1,0 +1,39 @@
+---
+title: "Technology"
+description: "How the measurement instruments of biomechanics actually work: force plates, motion capture, and launch monitors, with their operating principles, error budgets, and design frontiers."
+page-layout: full
+toc: true
+toc-depth: 2
+---
+
+Every claim in biomechanics rests on an instrument. Ground reaction forces come from a force plate, joint angles from a motion-capture system, clubhead delivery from a launch monitor — and each of those devices reports a mixture of things it genuinely observed and things it computed from what it observed, using models with assumptions.
+
+This section documents that machinery. Each article covers the underlying physics of the transducer, the mathematics of turning raw signals into reported quantities, the error sources that dominate in practice, the patent and research literature, and the advanced methods that define the current frontier.
+
+::: {.callout-note}
+## Editorial standard for this section
+
+These articles distinguish explicitly between **measured**, **derived**, and **estimated** quantities. Manufacturer documentation routinely blurs that boundary; the validation literature consistently shows that the boundary is exactly where inter-device disagreement lives. Where a number is a model output rather than an observation, these articles say so.
+:::
+
+## Articles
+
+### [Force Measurement Technology](../articles/technology-force-measurement.html)
+
+Force plates, pressure mats, and instrumented apparatus. Strain-gauge versus piezoelectric transduction and why the choice determines what you can measure; the six-component ground reaction wrench and the geometry of centre of pressure; why pressure mats cannot measure shear or free moment, and what that means for the golf systems built on them; specifications, calibration, and the error sources that matter; ground reaction force estimation without plates; and the patent and research literature.
+
+### [Motion Capture Technology](../articles/technology-motion-capture.html)
+
+Optical marker-based, markerless, and inertial systems in methodological detail. Camera calibration and triangulation mathematics; soft tissue artefact as the dominant error source; joint-centre estimation and marker-set design; the rotation-representation problem and why helical-axis descriptions avoid the sequence dependence of Euler angles; markerless pose estimation and its validation record; inertial sensor fusion and drift; biplanar videoradiography as the accuracy benchmark; and the golf-specific challenges of capturing a 100 mph clubhead.
+
+### [Launch Monitor Technology](../articles/technology-launch-monitors.html)
+
+Doppler radar and photometric measurement of ball and club. The physics of radar spin measurement via harmonic sidebands; photogrammetric spin from dimple registration; the directness hierarchy that explains why ball data agrees across devices and club data does not; why clubface orientation is inferred rather than measured on radar systems; and a screw-theoretic reformulation that offers several routes to measuring face orientation without inverting an impact model.
+
+## The unifying geometry
+
+These three instruments measure dual halves of the same six-dimensional structure. A motion-capture system observes the **twist** of a body — its angular and linear velocity, equivalently a rotation about and translation along an instantaneous screw axis. A force plate observes the **wrench** applied to a body — its force and moment, equivalently a force along and torque about a central axis. Twists and wrenches pair through the reciprocal product to give power, which is why the same algebra underlies kinematics, kinetics, and their combination in inverse dynamics.
+
+A launch monitor sits in this same framework: its Doppler observables are reciprocal products of sight lines with the clubhead's twist, which is both why the estimation problem is linear in twist coordinates and why the instrument struggles with quantities — like clubface orientation at impact — that are not projections of what it can see.
+
+Reading the instruments this way makes their complementarity concrete rather than metaphorical, and it makes the limitations of each one predictable from geometry rather than discovered by surprise.
