@@ -312,7 +312,7 @@ f(\bar\theta + \delta\theta, 0 + \delta\omega, \bar{u}) \approx f(\bar\theta, 0,
 \end{equation}
 for small $\dx$. Let us verify this numerically.
 
-\subsubsection{Numerical Verification}
+#### Numerical Verification
 
 Take $g = 10 \, \text{m/s}^2$, $b = 0.1 \, \text{s}^{-1}$, and $\bar\theta = \pi/6$ (30 degrees).
 Then $\cos(\pi/6) = \sqrt{3}/2 \approx 0.866$, so
@@ -615,7 +615,7 @@ T_{\mat{R}}\SO(3) = \{\mat{R}\mat{S} : \mat{S} \in \mathfrak{so}(3)\}
 This space is 3-dimensional, but its elements are generally not themselves
 skew-symmetric unless $\mat{R}=\mat{I}$.
 
-\subsubsection{Jacobian on SO(3)}
+#### Jacobian on SO(3)
 
 Consider a rigid body with rotation matrix $\mat{R} \in \SO(3)$ and angular velocity
 $\boldsymbol{\omega} = (\omega_x, \omega_y, \omega_z)$. The kinematic equation is
@@ -639,7 +639,7 @@ This reveals a key point: perturbations to the angular velocity propagate throug
 as skew-symmetric matrices, which is precisely the tangent space structure. The linear
 perturbation dynamics lives naturally in $\mathfrak{so}(3)$, the Lie algebra.
 
-\subsubsection{Why SO(3) Matters}
+#### Why SO(3) Matters
 
 For quadcopters, satellites, and any system with rotational degrees of freedom, using Euler
 angles or quaternions often introduces artificial singularities or redundancy. By working
@@ -668,7 +668,7 @@ twist vectors, represented as $4 \times 4$ matrices of the form
 where $[\boldsymbol{\omega}]_{\times} \in \mathfrak{so}(3)$ and $\vec{v} \in \R^3$ is a linear velocity.
 This is the Lie algebra $\mathfrak{se}(3)$, a 6-dimensional space.
 
-\subsubsection{Kinematics and Dynamics}
+#### Kinematics and Dynamics
 
 For a rigid body in space with configuration $\mat{T}(t) \in \SE(3)$ and twist (spatial
 velocity) $\boldsymbol{\xi} = (\vec{v}, \boldsymbol{\omega})$, the kinematic equation is
@@ -693,7 +693,7 @@ and $\theta_2$. The configuration space is naturally a torus:
 \end{equation}
 where each $S^1$ is a circle (angle wraparound).
 
-\subsubsection{Coordinates and Tangent Space}
+#### Coordinates and Tangent Space
 
 Coordinates on $T^2$ are $(\theta_1, \theta_2) \in [0, 2\pi) \times [0, 2\pi)$ with wraparound
 identification. The tangent space $T_{(\theta_1, \theta_2)}(T^2)$ is a 2-dimensional space
@@ -708,7 +708,7 @@ For example:
 \end{equation}
 and similarly for $\theta_2$.
 
-\subsubsection{Nonlinear Effects and Coupling}
+#### Nonlinear Effects and Coupling
 
 The double pendulum exhibits rich nonlinear phenomena:
 - **Tangent-space superposition.** Small perturbations around a nominal trajectory add linearly in the tangent space.
@@ -1050,7 +1050,7 @@ practical question every golfer cares about: *which aspects of technique are
 forgiving, and which are critical*? Tangent-space analysis provides a principled,
 quantitative answer.
 
-\section*{Exercises}
+## Exercises
 
 1. **Fréchet derivative computation.**
    Compute the Fréchet derivative of $f(x, y) = (x^2 y,\; \sin(xy))$ at the point $(1, \pi)$.
