@@ -53,12 +53,16 @@ independent threads:
 
 The duality theorem shows these are the same computation under the right interpretation.
 
-\begin{intuitionbox}
+
+::: {.callout-note}
+## Intuition
+
 Optimal control builds a local quadratic "cost bowl" around the trajectory; contraction
 checks whether perturbations shrink under a metric "bowl." Duality appears when those
 bowls coincide---the Riccati matrix $\mat{S}$ serves double duty as both value curvature
 and contraction metric for the closed-loop tangent dynamics.
-\end{intuitionbox}
+:::
+
 
 
 ## Historical Context: Discovering the Duality
@@ -1070,7 +1074,10 @@ the eigenvectors of $\mat{A}_{\text{cl}}$.
 
 The duality theorem suggests a unified design methodology:
 
-\begin{designbox}
+
+::: {.callout-tip}
+## Design Note
+
 **Integrated Stability-Optimality Design:**
 1. **Model the system**: discretize or linearize to get $(\mat{A}, \mat{B})$.
 2. **Choose weights**: select $\mat{Q}$ and $\mat{R}$ based on performance objectives (state tracking, control
@@ -1089,7 +1096,8 @@ The duality theorem suggests a unified design methodology:
    robust. Proceed to implementation.
    - Otherwise, the design is balanced. Implement and tune on hardware if needed.
 7. **Robustness certification**: the gain margins [1/2, $\infty$) and phase margin $\geq$ $60^\circ$ apply automatically.
-\end{designbox}
+:::
+
 
 
 ### When Duality Breaks Down
@@ -1097,7 +1105,10 @@ The duality theorem suggests a unified design methodology:
 
 The duality requires several conditions:
 
-\begin{warningbox}
+
+::: {.callout-warning}
+## Caution
+
 **Limitations of the Duality:**
 1. **Bounded Riccati**: If the system loses controllability near a trajectory, the Riccati matrix can become
    unbounded or ill-conditioned. This is detected by monitoring $\kappa(\mat{S})$. If $\kappa(\mat{S}) > 10^6$ or
@@ -1113,7 +1124,8 @@ The duality requires several conditions:
    duality extends in a more subtle way (separation principle).
 5. **Sampling and discretization**: When continuous-time controllers are implemented on digital hardware,
    discretization errors can break the duality. Careful Tustin or zero-order-hold discretization is required.
-\end{warningbox}
+:::
+
 
 
 ## The Estimation--Control Duality
@@ -1169,13 +1181,17 @@ propagates the state estimate and covariance using the tangent-space (linearized
 where $\mat{A}(t) = \frac{\partial f}{\partial \x}\big|_{\hat{\x}(t)}$ and
 $\mat{C}(t) = \frac{\partial h}{\partial \x}\big|_{\hat{\x}(t)}$.
 
-\begin{intuitionbox}
+
+::: {.callout-note}
+## Intuition
+
 The EKF is the estimation analogue of DDP: both linearize the system along a trajectory
 (the estimated trajectory for EKF, the nominal trajectory for DDP) and solve a Riccati
 equation in the tangent space. The key difference is the direction of information flow:
 DDP propagates *cost* backward (from the terminal condition); the EKF propagates
 *uncertainty* forward (from the initial condition).
-\end{intuitionbox}
+:::
+
 
 
 ### Contraction-Based Observer Design
@@ -1225,14 +1241,18 @@ The system is *observable* on $[t_0, t_1]$ if $\mathcal{W}_o \succ 0$. The
 eigenvectors of $\mathcal{W}_o$ reveal the most and least observable state directions;
 the condition number $\kappa(\mathcal{W}_o)$ measures the anisotropy of observability.
 
-\begin{warningbox}
+
+::: {.callout-warning}
+## Caution
+
 For the golf swing application (Chapter~\ref{ch:applications}), the observability
 Gramian reveals which state variables can be reliably estimated from sensor measurements.
 Joint angles near the shoulder are typically well-observed (multiple muscle attachments
 create redundant signals); wrist angular velocity and shaft bending are poorly observed
 (few sensors, high velocity). The condition number of $\mathcal{W}_o$ quantifies this
 anisotropy.
-\end{warningbox}
+:::
+
 
 
 ### The Separation Principle

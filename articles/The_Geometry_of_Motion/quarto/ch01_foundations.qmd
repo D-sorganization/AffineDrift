@@ -37,13 +37,17 @@ The purpose of this book is to take that geometric fact seriously and trace its 
 through contraction theory, optimal control, and the practical decomposition of complex
 motions into interpretable components.
 
-\begin{intuitionbox}
+
+::: {.callout-note}
+## Intuition
+
 A trajectory is a curve on a state-space manifold. At each point on that curve, there is
 a tangent plane capturing first-order motion of nearby trajectories. All local stability
 and local optimality calculations happen in these moving tangent planes. A metric is a
 local ruler; changing the metric changes which perturbation directions count as "large"
 or "small."
-\end{intuitionbox}
+:::
+
 
 
 ## Historical Context: From Newton to Modern Differential Geometry
@@ -114,11 +118,11 @@ the nonlinearity of how tangent spaces connect as you move through the manifold.
 For most of the 20th century, even when differential geometry was fully developed, the
 relationship between a nonlinear dynamical system and its tangent-space (linearized)
 dynamics remained framed as an *approximation*. Textbooks would write:
-\begin{quote}
-To study the qualitative behavior of a nonlinear system $\dot{\x} = f(\x)$ near an
-equilibrium $\bar{\x}$, we linearize: $\dot{\dx} = \mat{A}\,\dx$ where $\mat{A} = \frac{\partial f}{\partial \x}|_{\bar{\x}}$.
-This linear system is "close" to the original system for small perturbations.
-\end{quote}
+
+> To study the qualitative behavior of a nonlinear system $\dot{\x} = f(\x)$ near an
+> equilibrium $\bar{\x}$, we linearize: $\dot{\dx} = \mat{A}\,\dx$ where $\mat{A} = \frac{\partial f}{\partial \x}|_{\bar{\x}}$.
+> This linear system is "close" to the original system for small perturbations.
+
 
 The language---"linearize," "approximate," "close to"---suggests that the tangent
 space is a crutch, a convenience for analysis. But this framing obscures the true
@@ -157,21 +161,29 @@ Consider a dynamical system
 where $\x$ is the state vector and $\uvec$ is the control input. We impose the following
 standing assumption throughout this book.
 
-\begin{assumption}[Smoothness]\label{ass:smoothness}
+
+::: {.callout-note}
+## Smoothness
+
 The vector field $f:\R^n\times\R^m \to \R^n$ is continuously differentiable ($C^1$) in
 both arguments. Where higher-order residual bounds are needed, we assume $C^2$ smoothness.
-\end{assumption}
+:::
+
 
 This assumption is minimal yet physically reasonable. Virtually all systems derived from
 classical mechanics---Newtonian, Lagrangian, or Hamiltonian---produce smooth vector fields.
 The $C^1$ requirement is the bare mathematical condition for derivatives to exist.
 
-\begin{warningbox}
+
+::: {.callout-warning}
+## Caution
+
 Systems with impacts, Coulomb friction, switching controllers, or hard state constraints
 violate $C^1$ smoothness. Extensions to such hybrid systems exist (saltation matrices,
 Filippov solutions, complementarity formulations) but lie outside the scope of this
 treatment. We address smooth systems exclusively and note hybrid extensions where relevant.
-\end{warningbox}
+:::
+
 
 
 ## The Fréchet Derivative: Linearization as Exact Structure
@@ -238,11 +250,15 @@ Therefore, $(\mat{A} - \mat{A}')\vec{v} = 0$ for all $\vec{v}$, implying $\mat{A
 This uniqueness is the cornerstone of the book's philosophy. There is exactly one candidate
 for "the infinitesimal structure" of $f$ at $\bar{\x}$, and it is $\mat{A}$.
 
-\begin{axiombox}{Axiom 1: The Derivative is Exact}
+
+::: {.callout-important}
+## Axiom 1: The Derivative is Exact
+
 The linear map $\mat{A}$ is not an approximation to $f$. It *is* the exact
 infinitesimal structure of $f$ at $\bar{\x}$. There is no "better" first-order
 description---$\mat{A}$ is unique by the definition of the Fréchet derivative.
-\end{axiombox}
+:::
+
 
 This distinction is the conceptual foundation of the entire book. The standard
 narrative---"we linearize for convenience and accept some error"---conflates two
@@ -425,12 +441,16 @@ equations in Chapter~\ref{ch:variational}.
 ### Why Tangent Spaces Are the Natural Home of Superposition
 
 
-\begin{axiombox}{Axiom 2: Superposition Lives in Tangent Spaces}
+
+::: {.callout-important}
+## Axiom 2: Superposition Lives in Tangent Spaces
+
 Vector addition $\dx_1 + \dx_2$ is only defined in vector spaces. Tangent spaces are
 vector spaces *by construction*. Therefore, superposition of infinitesimal
 perturbations is exact---not because the nonlinear system is "approximately linear,"
 but because tangent spaces are *inherently* linear.
-\end{axiombox}
+:::
+
 
 When one says "superposition fails in nonlinear systems," the precise meaning is:
 *you cannot add trajectories in state space*. But you *can* add infinitesimal
@@ -487,12 +507,16 @@ sharper bound holds via the mean-value form of Taylor's theorem:
 \label{eq:ch1:residual-bound}
 \end{equation}
 
-\begin{axiombox}{Axiom 3: Residuals Are Geometry, Not Error}
+
+::: {.callout-important}
+## Axiom 3: Residuals Are Geometry, Not Error
+
 The residual $r(\dx)$ measures how far the true dynamics deviate from the tangent-space
 prediction. This deviation comes from *manifold curvature* (second-order geometry),
 not from "our approximation being bad." A large residual at a point means the manifold
 is sharply curved there---it is a geometric signal, not a failure of the method.
-\end{axiombox}
+:::
+
 
 
 ### Residual Scaling: A Concrete Example
@@ -529,7 +553,10 @@ $0.0001$& $0.000100$  & $0.0001$& $-1.667 \times 10^{-13}$ & $-0.0000167$& $-0.1
 \end{tabular}
 \end{table}
 
-\begin{warningbox}
+
+::: {.callout-warning}
+## Caution
+
 This example is deliberately instructive. The function $\sin(x)$ has $f''(0) = -\sin(0) = 0$,
 so the second-order residual bound $\norm{r(\dx)} \leq \tfrac{1}{2}C_H\norm{\dx}^2$
 (Eq.~\eqref{eq:ch1:residual-bound}) still holds---it is simply a loose bound in this case.
@@ -541,7 +568,8 @@ $r/(\delta x)^2 \to 0$ shows that the $O(\delta x^2)$ bound is satisfied but not
 This illustrates a general principle: *the Fréchet property guarantees
 $o(\norm{\dx})$ residuals; the actual rate depends on the local curvature tensor*.
 When curvature vanishes (flat directions), the residual shrinks even faster than the bound suggests.
-\end{warningbox}
+:::
+
 
 For a function with nonzero second derivative---such as $f(x) = \cos(x)$ at $\bar{x} = 0$, where
 $f''(0) = -1$---the residual *is* quadratic: $r(\delta x) = -(\delta x)^2/2 + O(\delta x^4)$,
@@ -728,14 +756,18 @@ real variables miss this structure.
 ### Transport as Curved Geometry
 
 
-\begin{axiombox}{Axiom 4: Transport Between Tangent Spaces}
+
+::: {.callout-important}
+## Axiom 4: Transport Between Tangent Spaces
+
 Moving along a trajectory from $\bar{\x}(t_0)$ to $\bar{\x}(t_1)$ means moving between
 tangent spaces $T_{\bar{\x}(t_0)}\mathcal{M}$ and $T_{\bar{\x}(t_1)}\mathcal{M}$. The
 connection between these spaces---parallel transport, Christoffel symbols in Riemannian
 geometry---encodes the nonlinearity. Optimal control (DDP, iLQR) is therefore
 *exact local optimization + careful transport*, not "global optimization with
 approximations."
-\end{axiombox}
+:::
+
 
 The relationship between successive tangent spaces is governed by the *state
 transition matrix* $\Phi(t_1, t_0)$, which we develop fully in

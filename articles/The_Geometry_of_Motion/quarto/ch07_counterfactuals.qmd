@@ -97,12 +97,16 @@ For a mechanical system with state $\x=(\q,\dot{\q})$, the ZTCF represents the "
 shadow"---the motion that emerges purely from current velocities, gravity, elastic
 forces, and inertial coupling, with zero active muscular or motor effort.
 
-\begin{intuitionbox}
+
+::: {.callout-note}
+## Intuition
+
 The ZTCF is like releasing the steering wheel of a car on a hilly road. The car continues
 to move---driven by its momentum and the terrain---but without any active guidance.
 Comparing the actual trajectory to the ZTCF reveals exactly how much the "driver"
 (controller) contributed at each instant.
-\end{intuitionbox}
+:::
+
 
 
 ### Mathematical Foundations: Existence, Uniqueness, and Smoothness
@@ -133,11 +137,15 @@ mapping principle. Define the sequence of successive approximations
 starting with $\x^{(0)}(t)=\x_0$. If $f$ is Lipschitz continuous (which holds under $C^1$),
 this sequence converges uniformly to the unique solution on a sufficiently small interval.
 
-\begin{corollary}[Smoothness of ZTCF]
+
+::: {.callout-important}
+## Smoothness of ZTCF
+
 \label{cor:ch7:ztcf-smooth}
 If $f\in C^k$ (i.e., $f$ is $k$ times continuously differentiable), then the ZTCF trajectory
 $\x^{(0)}(t)$ is also $C^k$ in both $t$ and the initial condition $\x_0$.
-\end{corollary}
+:::
+
 
 This means that if the drift is smooth (which it is for mechanical systems with smooth
 mass matrices and smooth potential energy functions), then the ZTCF is smooth. This
@@ -259,7 +267,10 @@ M(\q)^{-1}\left[C(\q,\dot{\q})\dot{\q} + \vec{g}(\q)\right]
 and the two contributions add exactly, with no interaction terms. This is a mechanical
 manifestation of superposition at the drift level.
 
-\begin{intuitionbox}
+
+::: {.callout-note}
+## Intuition
+
 **Gravitational acceleration** $a_{\text{grav}}$ represents the component of drift that
 pulls the system toward lower potential energy (e.g., a pendulum hanging downward). It
 depends only on the configuration $\q$, not on velocities.
@@ -268,7 +279,8 @@ depends only on the configuration $\q$, not on velocities.
 arise from the system's motion. For example, in a rotating coordinate frame, a moving object
 experiences fictitious forces. Here, these emerge from the kinetic energy structure encoded
 in $C(\q,\dot{\q})$.
-\end{intuitionbox}
+:::
+
 
 
 ### Magnitude Scaling
@@ -340,13 +352,17 @@ active dynamics:
   available control authority. The controller can steer but cannot fundamentally
   alter the motion. This is the regime of high-speed underactuated systems.
 
-\begin{warningbox}
+
+::: {.callout-warning}
+## Caution
+
 In drift-dominated regimes ($\rho\gg 1$), the mathematical fact that inputs enter
 linearly can be misleading. The *mechanism* is linear, but the *magnitude*
 of influence is tiny relative to the drift. Knowing that superposition holds exactly
 does not mean the controller has significant authority---it means we can precisely
 *quantify* how little authority remains.
-\end{warningbox}
+:::
+
 
 
 ### Velocity Scaling
@@ -539,12 +555,14 @@ Specifically, if we write the regression in matrix form:
 where $\Theta(\x)$ is a regressor matrix and $\theta$ is a parameter vector, then $\Theta$ must
 have full column rank. For the drift--input problem, this requires:
 
-\begin{axiombox}
+
+::: {.callout-important}
 **Persistent Excitation Condition:** To identify both drift and input, the input signal
 $\uvec(t)$ must explore a region of the input space that is "large enough" relative to the
 state space. Formally, the data should include states with multiple different input values so
 that the regression can disentangle their effects.
-\end{axiombox}
+:::
+
 
 Without this condition, the regression confounds drift and input: large drift values might be
 "explained" by small imaginary input contributions, or vice versa.
@@ -757,13 +775,17 @@ This difference quantifies how much the control has altered the energy budget. F
 - If $\Delta E_{\text{actual}} \approx 0$, the controller is purely steering without
   changing energy (a skillful balance).
 
-\begin{designbox}
+
+::: {.callout-tip}
+## Design Note
+
 Energy-optimal control often seeks to minimize the total energy input $\Delta E_{\text{control}}$
 while achieving a goal. The ZTCF provides a baseline for comparison: in the best case, the
 controller can guide the motion without adding energy, exploiting gravity and momentum. This
 is the principle behind energy-efficient movement in biomechanics and efficient trajectory
 planning in robotics.
-\end{designbox}
+:::
+
 
 
 ## Worked Example: Underactuated Double Pendulum
@@ -1223,21 +1245,29 @@ threshold $\dot{q}^*$ beyond which $\|a_{\text{cor}}\| \gg \|a_{\text{control}}\
 i.e., $\rho(\x) \gg 1$. For fast athletic motions such as throwing, striking, or
 swinging, this threshold is typically reached well before the moment of peak velocity.
 
-\begin{intuitionbox}
+
+::: {.callout-note}
+## Intuition
+
 The ZTCF analysis captures a principle recognized in biomechanics: in fast
 ballistic movements, active muscular contribution is concentrated early, while the
 late phase is governed by passive inertial dynamics. The counterfactual framework
 gives this observation a precise mathematical formulation via the drift--control ratio
 $\rho(\x)$ and the ZTCF divergence $\|\x(t) - \x^{(0)}(t)\|$.
-\end{intuitionbox}
+:::
 
-\begin{warningbox}
+
+
+::: {.callout-warning}
+## Caution
+
 Any numerical predictions of ZTCF divergence, phase timings, or drift--control
 ratios depend on the specific segment masses, lengths, inertias, and torque
 capacities of the system under study. These must be obtained from experimental
 measurements (e.g., motion capture combined with inverse dynamics). The structural
 argument above holds generically, but the quantitative details are model-dependent.
-\end{warningbox}
+:::
+
 
 
 ## Chapter Summary

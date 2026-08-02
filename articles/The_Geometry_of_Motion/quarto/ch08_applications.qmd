@@ -111,12 +111,16 @@ M_{33} = I_3 + m_3 l_3^2/4.
 
 #### Numerical Example: Mid-Downswing Configuration
 
-\begin{warningbox}
+
+::: {.callout-warning}
+## Caution
+
 The following numerical values are chosen for a representative 3-DOF swing model to
 illustrate the framework. They are order-of-magnitude consistent with published
 anthropometric data but are *not* drawn from a specific experimental study.
 Any quantitative predictions for a real system must use measured segment parameters.
-\end{warningbox}
+:::
+
 
 At a representative mid-downswing state, let:
 \begin{align}
@@ -431,7 +435,10 @@ $M_{13} = 0.28$ creates a torque:
 which accelerates the wrist and club, a pure geometric effect requiring no extra muscular
 work.
 
-\begin{designbox}
+
+::: {.callout-tip}
+## Design Note
+
 Elite athletes do not generate clubhead speed through muscular force at impact. They
 create it through *sequential proximal-to-distal deceleration*: each body segment
 actively brakes, transferring its inertia to the next segment down the chain. By impact,
@@ -443,7 +450,8 @@ The sequencing principle is not unique to golf: it appears in baseball pitching,
 serves, and martial arts strikes. The framework predicts that the optimal swing has a
 specific temporal profile where deceleration peaks propagate from proximal to distal,
 and any violation of this order degrades performance.
-\end{designbox}
+:::
+
 
 %% ==========================================================================
 
@@ -1242,7 +1250,8 @@ leading to numerical errors and fragile gains.
 #### MATLAB
 
 Standard approach using the Control System Toolbox:
-\begin{verbatim}
+
+```
 % Define continuous-time system
 sys = ss(A, B, C, D);
 
@@ -1258,11 +1267,13 @@ N = 100;  % horizon steps
 
 % Verify contraction
 eigs(sys_d.A - sys_d.B*K)
-\end{verbatim}
+```
+
 
 #### Python with SciPy
 
-\begin{verbatim}
+
+```
 import numpy as np
 from scipy.linalg import solve_continuous_are
 
@@ -1282,12 +1293,14 @@ K = np.linalg.inv(R) @ B.T @ S
 eigs = np.linalg.eigvals(A - B @ K)
 print("Eigenvalues:", eigs)
 print("Margin:", 1 - np.max(np.abs(eigs)))
-\end{verbatim}
+```
+
 
 #### CasADi (Optimization-Focused)
 
 CasADi is excellent for nonlinear MPC and trajectory optimization:
-\begin{verbatim}
+
+```
 import casadi as ca
 
 # Define ODE
@@ -1312,12 +1325,14 @@ for k in range(N):
     opti.subject_to(X[:, k+1] == X_next)
     opti.subject_to(ca.norm_2(U[:, k]) <= u_max)
 opti.minimize(sum([...]))  # Riccati-based cost
-\end{verbatim}
+```
+
 
 #### Drake (Robotics-Specific)
 
 Drake (from MIT) provides high-level interfaces for multibody systems and control design:
-\begin{verbatim}
+
+```
 import numpy as np
 from pydrake.all import (
     DiagramBuilder, AddMultibodyPlantSceneGraph,
@@ -1342,7 +1357,8 @@ controller = LinearQuadraticRegulator(plant, context, Q_cost, R_cost)
 builder.AddSystem(controller)
 # ... connect plant <-> controller ports ...
 diagram = builder.Build()
-\end{verbatim}
+```
+
 
 %% ==========================================================================
 
@@ -1499,13 +1515,17 @@ in the drift--input framework:
 - In this framework, shaft fitting is an exercise in tuning the *passive dynamics*
   (drift field $f(\x)$) to align with the golfer's characteristic control profile.
 
-\begin{warningbox}
+
+::: {.callout-warning}
+## Caution
+
 Quantitative predictions of shaft energy exchange (e.g., the fraction of clubhead
 speed attributable to shaft kick) require a calibrated model with measured segment
 parameters. Published values in the biomechanics literature vary depending on model
 fidelity and measurement technique. The equations above provide the framework for
 such predictions; the numbers must come from experiment.
-\end{warningbox}
+:::
+
 
 
 ### Sensitivity Analysis at Impact
@@ -1547,12 +1567,16 @@ are "absorbed" by the dynamics and produce negligible effects. This is the
 tangent-space formalization of the notion that some aspects of technique are
 critical while others are forgiving.
 
-\begin{warningbox}
+
+::: {.callout-warning}
+## Caution
+
 The specific entries of $J_{\text{impact}}$ and $\Phi$ are model-dependent and
 must be computed from a calibrated forward dynamics model with experimentally
 validated parameters. Claims about which swing variables are "most sensitive"
 should be supported by such computations, not assumed a priori.
-\end{warningbox}
+:::
+
 
 
 ### Conceptual Translation: Mathematics to Coaching
@@ -1584,7 +1608,10 @@ Singular values of $\Phi$ & Amplification of initial errors & "Repeatability" \\
 \end{tabular}
 \end{table}
 
-\begin{intuitionbox}
+
+::: {.callout-note}
+## Intuition
+
 The central structural insight is this: in a fast multisegment ballistic motion, the
 controllable phases (setup, early acceleration) determine the state from which the
 *uncontrolled drift* produces the terminal conditions. Since $\rho$ grows with
@@ -1592,15 +1619,20 @@ velocity squared while torque capacity is bounded, there is always a transition
 beyond which the drift dominates. Skill in such motions lies not in terminal-phase
 force production but in *precision during the controllable early phases*, where
 small adjustments have large downstream effects through the state transition matrix $\Phi$.
-\end{intuitionbox}
+:::
 
-\begin{designbox}
+
+
+::: {.callout-tip}
+## Design Note
+
 The experimental validation protocol above is general: for *any* mechanical system with
 instrumented state measurements, the same five steps (record, differentiate, compute mass matrix,
 decompose accelerations, form ratio) yield $\rho(t)$ without requiring a full analytical model.
 This makes counterfactual analysis accessible even for complex systems where closed-form dynamics
 are impractical.
-\end{designbox}
+:::
+
 
 
 ### Cross-Domain Validation Methodology
@@ -1621,13 +1653,17 @@ subsection. The expected qualitative signatures are:
 - **Automotive (lane-keeping):** $\rho$ increases with vehicle speed, reflecting
   the growing role of tire-road dynamics relative to steering authority.
 
-\begin{warningbox}
+
+::: {.callout-warning}
+## Caution
+
 Quantitative validation requires domain-specific instrumentation and calibrated system
 models. The contraction rates $\lambda$ and drift--control ratios $\rho$ are predictions
 of the theory that should be tested against experimental data---not assumed to match.
 Reported numerical values should always cite the specific model parameters and measurement
 conditions used.
-\end{warningbox}
+:::
+
 
 
 ## Chapter Summary
