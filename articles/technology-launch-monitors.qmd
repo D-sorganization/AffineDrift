@@ -138,6 +138,77 @@ Two entries deserve emphasis.
 
 **Club speed is reference-point dependent.** A clubhead is an extended body whose parts move at different speeds — the toe of a driver travels up to about 7 mph faster than the heel. TrackMan defines club speed at the *geometric centre* of the head and reconstructs that point from the radar return; a naive processor locks onto the strongest or fastest scatterer, typically toe glint, and reports several mph high. This is a *definitional* variance, not sensor noise, and it accounts for a great deal of the chronic club-speed disagreement between brands.
 
+**So is club path — and by more than most people realise.** This deserves its own treatment, below.
+
+## Part IIb: Which point on the clubhead is "the path"?
+
+### The velocity field across a clubhead is not uniform
+
+A clubhead at impact is a rigid body rotating rapidly in space. For any two points on it, the velocities are related by
+
+$$
+\mathbf{v}_P = \mathbf{v}_{O} + \boldsymbol{\omega}\times\mathbf{r}, \qquad \mathbf{r} = \mathbf{p}_P - \mathbf{p}_O
+$$
+
+The consequence is that *there is no such thing as "the" club path*. There is a velocity field over the head, and a path number is that field evaluated at some chosen point. Change the point, change the number.
+
+This is not a small correction for a driver, because the two candidate reference points are far apart. **The centre of gravity sits roughly 25–50 mm behind the clubface**, and the geometric centre — which is what radar systems actually track — is typically within about 6 mm of the CG.
+
+### The two conventions, and the gap between them
+
+The industry has split, and the split runs along the sensing modality:
+
+| System type | Path reference | Why |
+|---|---|---|
+| Radar (TrackMan) | **Geometric centre / CG** | The radar reconstructs the head's silhouette from behind; the geometric centre is what it can locate |
+| Optical with face fiducials (Foresight-class) | **Centre of the clubface** | The reflective markers are on the face, so that is what is tracked |
+
+TrackMan states the resulting discrepancy explicitly, and the number is large: **"For a driver, the difference between the path of the club head's center of gravity (CoG) and the path of the center of the club face is approximately 3 degrees (center of club face path being more outside-in)"** ([TrackMan club data definitions](https://www.trackman.com/blog/golf/club-data-definitions)).
+
+Three degrees. For a driver, on the same swing, a radar and a camera system can legitimately report club paths three degrees apart — and neither is malfunctioning. They are answering different questions.
+
+TrackMan also notes the club dependence: "For non-drivers, the physical distance between CoG and the center of the club face is much smaller, which makes the parameters less sensitive to the point on the club face that is being used." So the discrepancy is largest for the driver and shrinks toward the short irons.
+
+### Why the face centre is further "left", and shallower
+
+The vendor attributes the effect to the CG sitting behind the face, which is the necessary condition but not the whole mechanism: **separation alone does nothing without rotation.** The velocity difference is $\boldsymbol{\omega}\times\mathbf{r}$, so it exists only because the head is turning, and it scales with how fast it is turning. Two rotations contribute, and both push the same way horizontally:
+
+**The swing arc.** Viewed from above, the clubhead traverses an arc that curves leftward through impact. A point displaced *forward along that arc* — which is what the face centre is, relative to the CG — has its velocity vector rotated further around the arc, and therefore points further left.
+
+**Face closure.** The head is also rotating about the shaft axis as the face closes. Viewed from above, that is a counter-clockwise rotation for a right-handed golfer, and a point in front of the centre of rotation swings leftward under it.
+
+The same geometry acts in the vertical plane, and this is where the effect is less discussed. Because the face centre sits *ahead* of the CG along the arc, and the arc is turning upward through the bottom, the face centre's velocity is tilted slightly more upward than the CG's. **The face-centre path is therefore not only further left but also shallower** — a higher, less negative attack angle. Taking a swing radius of about 1.6 m and a 40 mm offset, the arc contribution alone is of order a degree, partially offset by the closure term, which tilts slightly downward for a shaft leaning toward the golfer.
+
+So the intuition that the contact point traces a path both *further left and shallower* than the geometric centre is correct, and the horizontal component of it is vendor-quantified at about 3° for a driver.
+
+::: {.callout-important}
+## The mechanism matters for interpretation
+
+Because the offset is $\boldsymbol{\omega}\times\mathbf{r}$, it is **not a fixed constant**. It scales with the rate of closure and with the tightness of the arc. Two golfers whose radar-reported path is identical, but who release at different rates, do not have the same face-centre path. A number that is a biased proxy would be tolerable; a number whose bias varies with technique is a harder thing to coach against.
+:::
+
+### Does this "build in a slice"?
+
+The tempting conclusion is that since the ball is struck by the face, and the face centre's path is 3° more out-to-in, then a golfer delivering a "zero path" on radar is really delivering 3° out-to-in and has a fade built into the number they are chasing. The argument is worth taking seriously, and it is half right.
+
+**What is right:** the collision genuinely responds to the motion of the material point on the face at the contact location. The friction that drags launch direction away from the face normal and generates the spin-axis tilt acts on the tangential relative velocity *at the contact patch* — which is the face-point velocity, not the CG velocity. And because face-to-path is the difference between an orientation and a velocity direction, an offset in the path term propagates one-for-one into face-to-path. Under the face-centre convention, a delivery reported as zero-zero on radar has a face-to-path of roughly +3° — face open to path — which is a fade signature.
+
+**What complicates it:** three things.
+
+First, **TrackMan's own face-to-path is already a hybrid quantity.** Face angle and dynamic loft are evaluated at the impact location, while path and attack angle are evaluated at the geometric centre. So the reported face-to-path is an orientation at one point minus a velocity direction at another. That is not a physically clean angle under either convention, and it is a strange thing to have become the industry's central diagnostic number.
+
+Second, **the D-plane weightings are empirical fits to whichever convention the vendor uses.** The 85/15 face-to-path split for launch direction was calibrated against radar's CG path. A systematic offset between conventions is therefore partly absorbed into the fitted coefficients and intercepts rather than showing up as prediction error. This is why a golfer delivering zero-zero on a TrackMan does not, in practice, watch the ball slice.
+
+Third, **golfers calibrate to ball flight, not to numbers.** A player's feel is trained by outcomes over years. Whatever the reference convention, the delivery that produces the desired flight is the delivery they learn. The convention only becomes a hazard when a *number* is made the training target.
+
+The defensible version of the concern is therefore narrower but more practical: **a club path of zero is not the same physical delivery on a radar unit as on a camera unit, and for a driver the difference is about three degrees.** A coach who moves a student between systems, or who compares a driver number against an iron number, or who reads a published "tour average" path without knowing which convention produced it, is comparing quantities that are not the same quantity.
+
+::: {.callout-note}
+## What the screw formulation does about this
+
+This is precisely the ambiguity that the twist description in Part III removes — not by declaring one reference point correct, but by making the choice explicit and cheap. If the instrument estimates the clubhead's twist $\xi = (\boldsymbol{\omega}, \mathbf{v}_O)$, then path at *any* point is a projection of one estimated object, and both conventions are available simultaneously from the same fit, along with the rotation rate that governs the difference between them. The reference point stops being a hidden convention baked into the hardware and becomes a reporting choice the user can see and change.
+:::
+
 **Face angle on radar-only devices is a D-plane inversion.** Horizontal launch direction is, empirically, a weighted blend of face angle and club path:
 
 $$
