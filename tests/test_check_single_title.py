@@ -16,7 +16,9 @@ reproduces them.
 
 from __future__ import annotations
 
-from scripts.check_single_title import blank_first_line, body_h1, frontmatter_title
+from pathlib import Path
+
+from scripts.check_single_title import blank_first_line, body_h1, fragments, frontmatter_title
 
 
 def lines(text: str) -> list[str]:
@@ -68,6 +70,32 @@ class TestBlankFirstLine:
 
     def test_ignores_a_single_line_file(self) -> None:
         assert not blank_first_line(lines("---\n"))
+
+
+class TestFragments:
+    """A `{{< include >}}`d file is not a page and must not be checked as one.
+
+    Quarto discards the frontmatter of an included file, so a `title:` there is
+    dead metadata. 23 of the 27 files in the Geometry of Motion mirror are
+    fragments; checking them as pages reports a dozen duplicate titles that do
+    not exist, and an earlier pass "fixed" all twelve before the `<title>` tag
+    gave it away.
+    """
+
+    def test_finds_an_included_file(self, tmp_path: Path) -> None:
+        (tmp_path / "volume0.qmd").write_text(
+            "# Volume 0\n\n{{< include vol0_ch01.qmd >}}\n", encoding="utf-8"
+        )
+        (tmp_path / "vol0_ch01.qmd").write_text("# Chapter\n", encoding="utf-8")
+        assert fragments(tmp_path) == {"vol0_ch01.qmd"}
+
+    def test_ignores_a_file_nothing_includes(self, tmp_path: Path) -> None:
+        (tmp_path / "page.qmd").write_text("# A Page\n", encoding="utf-8")
+        assert fragments(tmp_path) == set()
+
+    def test_handles_a_path_prefixed_include(self, tmp_path: Path) -> None:
+        (tmp_path / "book.qmd").write_text("{{< include parts/intro.qmd >}}\n", encoding="utf-8")
+        assert fragments(tmp_path) == {"intro.qmd"}
 
 
 class TestTheBrokenStates:

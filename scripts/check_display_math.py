@@ -30,9 +30,14 @@ import re
 import sys
 from pathlib import Path
 
-# Scoped to the Physics of Golf book, which is clean. The wider `articles/`
-# tree has not been swept for this and is not gated yet.
-ROOT = Path("articles/The_Physics_of_Golf/quarto")
+# Both textbooks. The Geometry of Motion mirror was added once the delimiter
+# handling below could see content-bearing delimiters -- until then it reported
+# two false positives there, which is why the scope had stayed on one book.
+# The wider `articles/` tree has not been swept for this and is not gated yet.
+ROOTS = (
+    Path("articles/The_Physics_of_Golf/quarto"),
+    Path("articles/The_Geometry_of_Motion/quarto"),
+)
 
 # Pandoc renders a raw LaTeX maths environment in a .qmd as display maths --
 # `\begin{equation} ... \end{equation}` becomes `\[ ... \]`, verified against a
@@ -73,34 +78,58 @@ def suspicious(line: str) -> bool:
     return bool(ALIGNED.search(line) and "\\" in line)
 
 
+def math_lines(lines: list[str]) -> tuple[int, set[int]]:
+    """Count `$$` tokens outside code, and the line numbers they enclose.
+
+    Matching on lines that are *only* `$$` misses the form where content sits
+    on the delimiter line:
+
+        $$J_c = \\begin{bmatrix}
+        -\\ell_1 \\sin\\theta_1 & -\\ell_2 \\sin\\theta_2
+        \\end{bmatrix},$$
+
+    That is valid display maths, but a lone-`$$` matcher never sees the opener
+    and then reports the matrix rows as undelimited. Counting the tokens
+    themselves handles every form -- lone delimiters, one-line `$$ x $$`, and
+    content-bearing delimiters alike.
+    """
+    inside: set[int] = set()
+    in_fence = False
+    depth = 0
+    total = 0
+    for number, line in enumerate(lines, 1):
+        if FENCE.match(line):
+            in_fence = not in_fence
+            continue
+        if in_fence:
+            continue
+        occurrences = line.count("$$")
+        if depth:
+            inside.add(number)
+        for _ in range(occurrences):
+            total += 1
+            depth ^= 1
+            if depth:
+                inside.add(number)
+    return total, inside
+
+
 def scan(path: Path) -> tuple[int | None, list[tuple[int, str]]]:
     """Return (odd delimiter count or None, bare maths lines)."""
     lines = path.read_text(encoding="utf-8", errors="replace").splitlines()
 
-    in_fence = False
-    delims = 0
-    for line in lines:
-        if FENCE.match(line):
-            in_fence = not in_fence
-            continue
-        if in_fence or ONELINE.match(line):
-            continue
-        if DELIM.match(line):
-            delims += 1
+    delims, inside = math_lines(lines)
     if delims % 2:
         return delims, []
 
-    in_fence = in_math = False
+    in_fence = False
     in_raw_math = False
     bare: list[tuple[int, str]] = []
     for number, line in enumerate(lines, 1):
         if FENCE.match(line):
             in_fence = not in_fence
             continue
-        if in_fence or ONELINE.match(line):
-            continue
-        if DELIM.match(line):
-            in_math = not in_math
+        if in_fence or number in inside or "$$" in line:
             continue
         if RAW_MATH_OPEN.match(line):
             in_raw_math = True
@@ -110,7 +139,7 @@ def scan(path: Path) -> tuple[int | None, list[tuple[int, str]]]:
             continue
         if in_raw_math:
             continue
-        if not in_math and suspicious(line):
+        if suspicious(line):
             bare.append((number, line.strip()))
     return None, bare
 
@@ -119,7 +148,7 @@ def main() -> int:
     problems = 0
     checked = 0
 
-    for path in sorted(ROOT.rglob("*.qmd")):
+    for path in sorted(p for root in ROOTS for p in root.rglob("*.qmd")):
         checked += 1
         odd, bare = scan(path)
         if odd is not None:

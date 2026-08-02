@@ -36,8 +36,13 @@ import re
 import sys
 from pathlib import Path
 
-ROOT = Path("articles/The_Physics_of_Golf/quarto")
+ROOTS = (
+    Path("articles/The_Physics_of_Golf/quarto"),
+    Path("articles/The_Geometry_of_Motion/quarto"),
+)
 EXEMPT = {"index.qmd"}
+
+INCLUDE = re.compile(r"\{\{<\s*include\s+([^\s>]+)")
 
 FENCE = re.compile(r"^\s*(?:```+|~~~+)")
 H1 = re.compile(r"^#\s+\S")
@@ -67,6 +72,23 @@ def blank_first_line(lines: list[str]) -> bool:
     return len(lines) > 1 and lines[0].strip() == "---" and not lines[1].strip()
 
 
+def fragments(root: Path) -> set[str]:
+    """Files that another file pulls in with `{{< include >}}`.
+
+    Quarto discards the frontmatter of an included file, so a `title:` there is
+    dead metadata and the page-level rule below does not apply. 23 of the 27
+    files in the Geometry of Motion mirror are fragments; checking them as pages
+    reports a dozen duplicate titles that do not exist, and an earlier pass
+    "fixed" all twelve before the `<title>` tag gave it away.
+    """
+    included: set[str] = set()
+    for path in root.rglob("*.qmd"):
+        text = path.read_text(encoding="utf-8", errors="replace")
+        for target in INCLUDE.findall(text):
+            included.add(Path(target).name)
+    return included
+
+
 def body_h1(lines: list[str]) -> str | None:
     """First real H1 outside fenced code, or None."""
     in_fence = False
@@ -83,8 +105,10 @@ def main() -> int:
     problems = 0
     checked = 0
 
-    for path in sorted(ROOT.rglob("*.qmd")):
-        if path.name in EXEMPT:
+    included = {name for root in ROOTS for name in fragments(root)}
+
+    for path in sorted(p for root in ROOTS for p in root.rglob("*.qmd")):
+        if path.name in EXEMPT or path.name in included:
             continue
         lines = path.read_text(encoding="utf-8", errors="replace").splitlines()
         if not lines:

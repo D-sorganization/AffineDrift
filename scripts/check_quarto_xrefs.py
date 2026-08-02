@@ -30,7 +30,10 @@ import sys
 from pathlib import Path
 
 # One Quarto project: references resolve across the files inside it.
-BOOK = Path("articles/The_Physics_of_Golf/quarto")
+BOOKS = (
+    Path("articles/The_Physics_of_Golf/quarto"),
+    Path("articles/The_Geometry_of_Motion/quarto"),
+)
 
 PREFIXES = ("sec", "eq", "fig", "tbl", "thm", "lst")
 _ALT = "|".join(PREFIXES)
@@ -94,21 +97,36 @@ def scan(
 
 
 def main() -> int:
-    if not BOOK.is_dir():
-        print(f"  {BOOK} not found; nothing to check")
+    books = [book for book in BOOKS if book.is_dir()]
+    if not books:
+        print("  no book directory found; nothing to check")
         return 0
 
-    files = sorted(BOOK.glob("*.qmd"))
-    defined: dict[str, tuple[Path, int]] = {}
-    references: list[tuple[Path, str, int]] = []
+    files: list[Path] = []
+    total_defined = 0
+    total_references = 0
+    unresolved: list[tuple[Path, str, int]] = []
     stranded: list[tuple[Path, str, int]] = []
 
-    for path in files:
-        found, used, orphaned = scan(path)
-        for key, where in found.items():
-            defined.setdefault(key, where)
-        references.extend((path, key, number) for key, number in used)
-        stranded.extend((path, key, number) for key, number in orphaned)
+    # Each book is its own Quarto project, so a reference resolves against the
+    # book that contains it. Pooling the two would let a missing target in one
+    # be masked by a same-named target in the other.
+    for book in books:
+        book_files = sorted(book.glob("*.qmd"))
+        files.extend(book_files)
+        defined: dict[str, tuple[Path, int]] = {}
+        references: list[tuple[Path, str, int]] = []
+        for path in book_files:
+            found, used, orphaned = scan(path)
+            for key, where in found.items():
+                defined.setdefault(key, where)
+            references.extend((path, key, number) for key, number in used)
+            stranded.extend((path, key, number) for key, number in orphaned)
+        total_defined += len(defined)
+        total_references += len(references)
+        unresolved.extend(
+            (path, key, number) for path, key, number in references if key not in defined
+        )
 
     problems = 0
 
@@ -120,9 +138,7 @@ def main() -> int:
         )
 
     seen: set[tuple[str, str]] = set()
-    for path, key, number in references:
-        if key in defined:
-            continue
+    for path, key, number in unresolved:
         if (path.name, key) in seen:
             continue
         seen.add((path.name, key))
@@ -136,7 +152,8 @@ def main() -> int:
         return 1
 
     print(
-        f"  {len(defined)} cross-reference target(s), {len(references)} reference(s), all resolved"
+        f"  {total_defined} cross-reference target(s), {total_references} reference(s), "
+        f"all resolved across {len(books)} book(s)"
     )
     return 0
 
