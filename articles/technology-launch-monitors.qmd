@@ -197,7 +197,7 @@ The tempting conclusion is that since the ball is struck by the face, and the fa
 
 First, **TrackMan's own face-to-path is already a hybrid quantity.** Face angle and dynamic loft are evaluated at the impact location, while path and attack angle are evaluated at the geometric centre. So the reported face-to-path is an orientation at one point minus a velocity direction at another. That is not a physically clean angle under either convention, and it is a strange thing to have become the industry's central diagnostic number.
 
-Second, **the D-plane weightings are empirical fits to whichever convention the vendor uses.** The 85/15 face-to-path split for launch direction was calibrated against radar's CG path. A systematic offset between conventions is therefore partly absorbed into the fitted coefficients and intercepts rather than showing up as prediction error. This is why a golfer delivering zero-zero on a TrackMan does not, in practice, watch the ball slice.
+Second, **the D-plane weightings are empirical fits to whichever convention the vendor uses.** The face-to-path split for launch direction was calibrated against radar's CG path. A systematic offset between conventions is therefore partly absorbed into the fitted coefficients and intercepts rather than showing up as prediction error. This is why a golfer delivering zero-zero on a TrackMan does not, in practice, watch the ball slice.
 
 Third, **golfers calibrate to ball flight, not to numbers.** A player's feel is trained by outcomes over years. Whatever the reference convention, the delivery that produces the desired flight is the delivery they learn. The convention only becomes a hazard when a *number* is made the training target.
 
@@ -212,12 +212,12 @@ This is precisely the ambiguity that the twist description in Part III removes �
 **Face angle on radar-only devices is a D-plane inversion.** Horizontal launch direction is, empirically, a weighted blend of face angle and club path:
 
 $$
-\varphi_{\text{launch}} \approx w_f\,\varphi_f + (1-w_f)\,\varphi_p,
-\qquad
-w_f \approx \begin{cases} 0.85 & \text{driver} \\ 0.75 & \text{wedge} \end{cases}
+\varphi_{\text{launch}} \approx w_f\,\varphi_f + (1-w_f)\,\varphi_p
 $$
 
-Inverting this to recover $\varphi_f$ from measured launch direction and path is exactly what radar units do — and it has two structural consequences. First, because $1/w_f \approx 1.15$, any systematic bias in measured launch direction is *amplified* by about 15% in the reported face angle. Second, the model is blind to **gear effect**: an off-centre strike torques the head about its centre of gravity, and the resulting spin-axis tilt is misattributed to face-to-path. A strike one dimple width off-centre tilts the spin axis about 6° on a driver.
+The weight $w_f$ is usually quoted as 0.85 for a driver and 0.75 for a wedge. **Both figures are too high**, because they are *vertical*-plane numbers applied to a horizontal-plane equation. The only peer-reviewed measurement — [Wood, Henrikson & Broadie (2018)](https://doi.org/10.3390/proceedings2060249), 157 golfers, 1,575 shots, Vicon at 720 fps, filtered to centred strikes — gives horizontal weights of **0.76 ± 0.08 for a driver, 0.69 for a 7-iron, and 0.61 for a wedge**, with a robot test returning 0.63 for the 7-iron. Nor are these separate per-club constants: the weight declines monotonically with spin loft along a single curve, and the club enters only through its obliqueness.
+
+Inverting this relation to recover $\varphi_f$ from measured launch direction and path is exactly what radar units do, and it has three structural consequences. First, because $1/w_f \approx 1.3$ rather than 1.15, any systematic bias in measured launch direction is amplified by about **30%** in the reported face angle — roughly twice the sensitivity the conventional weighting implies. Second, the model is blind to **gear effect**: an off-centre strike torques the head about its centre of gravity, and the resulting spin-axis tilt is misattributed to face-to-path. Third, the mechanism setting $w_f$ is itself contested — TrackMan attributes the driver's higher weight to a smoother, lower-friction titanium face, while PING's tangential-compliance model reproduces the loft dependence at constant friction and finds the friction hypothesis has the wrong sign below about 20° of incidence. A coefficient whose mechanism is unsettled is a coefficient worth reporting alongside its provenance.
 
 This is the physical claim behind the sceptical position: at impact the face normal points away from any rear-mounted sensor, and a metal clubhead is opaque at microwave frequencies. Nobody measures face orientation from behind the golfer. They either mark the face, view it from above, or infer it from the ball.
 
