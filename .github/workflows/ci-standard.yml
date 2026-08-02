@@ -177,6 +177,16 @@ jobs:
         # backticks and two right-quotes. Only pairs are reported -- a lone ''
         # is a double prime, and \phi_i'''' is a fourth derivative.
         run: python3 scripts/check_latex_quotes.py
+      - name: Verify No Unrenderable LaTeX Environments
+        # Pandoc renders maths environments in a .qmd and drops everything else,
+        # silently and exit 0, so the content inside never reaches the page. This
+        # was found twice, both times as real content: 79 boxes carrying the
+        # Geometry of Motion book's axioms and scope warnings (#3720), and 24
+        # tables carrying its numerical evidence (#3722). The allow-list is
+        # maths-only on purpose -- an earlier probe assumed `table` and `itemize`
+        # were safe because they are ordinary LaTeX, and 24 tables stayed missing
+        # for another round.
+        run: python3 scripts/check_latex_environments.py
       - name: Verify Acronym Terminology Is Consistent
         # NOTATION.md is the single source of truth for DCR and ZTCF. Fails on any
         # reintroduced variant expansion or the dangling cross-reference that made

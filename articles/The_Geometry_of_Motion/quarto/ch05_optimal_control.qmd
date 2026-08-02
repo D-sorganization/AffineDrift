@@ -346,68 +346,58 @@ cost-to-go via the closed-loop dynamics $\mat{A}_k - \mat{B}_k\mat{K}_k$.
 DDP embeds the LQR subproblem (Riccati recursion) within an iterative loop that handles nonlinearity by
 successive linearization:
 
-\begin{algorithm}[H]
-\caption{Differential Dynamic Programming (Full)}
-\label{alg:ch5:ddp}
-\begin{algorithmic}[1]
-\Require Initial nominal trajectory $\bar{\x}_0^{(0)}, \bar{\uvec}_0^{(0)}, \ldots, \bar{\x}_T^{(0)}$,
-         regularization parameter $\mu_0 > 0$, line-search parameters $\alpha_{\min}$, $c_1$.
-\Ensure Optimized trajectory $\bar{\x}_0, \ldots, \bar{\x}_T$ and feedback gains $\mat{K}_k$.
 
-\For{iteration $i = 0, 1, 2, \ldots$ until convergence}
-  \State **Forward Pass (Rollout):**
-  \State \quad Roll out the nominal trajectory by integrating the nonlinear dynamics:
-  \State \quad \quad $\bar{\x}_{k+1}^{(i)} = f(\bar{\x}_k^{(i)}, \bar{\uvec}_k^{(i)})$ for $k = 0, \ldots, T-1$.
-  \State \quad Compute the total cost $J^{(i)} = \sum_{k=0}^{T-1} \ell_k(\bar{\x}_k^{(i)}, \bar{\uvec}_k^{(i)}) + \ell_T(\bar{\x}_T^{(i)})$.
+::: {.callout-note}
+## Differential Dynamic Programming (Full)
 
-  \State **Linearize Dynamics:**
-  \State \quad For each time step $k = 0, \ldots, T-1$:
-  \State \quad \quad $\mat{A}_k = \frac{\partial f}{\partial \x}|_{(\bar{\x}_k^{(i)}, \bar{\uvec}_k^{(i)})}$
-  \State \quad \quad $\mat{B}_k = \frac{\partial f}{\partial \uvec}|_{(\bar{\x}_k^{(i)}, \bar{\uvec}_k^{(i)})}$
+- **Require:** Initial nominal trajectory $\bar{\x}_0^{(0)}, \bar{\uvec}_0^{(0)}, \ldots, \bar{\x}_T^{(0)}$,
+- regularization parameter $\mu_0 > 0$, line-search parameters $\alpha_{\min}$, $c_1$.
+- **Ensure:** Optimized trajectory $\bar{\x}_0, \ldots, \bar{\x}_T$ and feedback gains $\mat{K}_k$.
+- **for** iteration $i = 0, 1, 2, \ldots$ until convergence
+- **Forward Pass (Rollout):**
+  - Roll out the nominal trajectory by integrating the nonlinear dynamics:
+    - $\bar{\x}_{k+1}^{(i)} = f(\bar{\x}_k^{(i)}, \bar{\uvec}_k^{(i)})$ for $k = 0, \ldots, T-1$.
+  - Compute the total cost $J^{(i)} = \sum_{k=0}^{T-1} \ell_k(\bar{\x}_k^{(i)}, \bar{\uvec}_k^{(i)}) + \ell_T(\bar{\x}_T^{(i)})$.
+- **Linearize Dynamics:**
+  - For each time step $k = 0, \ldots, T-1$:
+    - $\mat{A}_k = \frac{\partial f}{\partial \x}|_{(\bar{\x}_k^{(i)}, \bar{\uvec}_k^{(i)})}$
+    - $\mat{B}_k = \frac{\partial f}{\partial \uvec}|_{(\bar{\x}_k^{(i)}, \bar{\uvec}_k^{(i)})}$
+- **Quadraticize Cost:**
+  - For each time step $k = 0, \ldots, T-1$:
+    - Compute second-order Taylor expansion of $\ell_k$ around $(\bar{\x}_k^{(i)}, \bar{\uvec}_k^{(i)})$:
+      - $\mat{Q}_{k,\xx} = \frac{\partial^2 \ell_k}{\partial \x^2}|_{(\bar{\x}_k^{(i)}, \bar{\uvec}_k^{(i)})}$
+      - $\mat{R}_k = \frac{\partial^2 \ell_k}{\partial \uvec^2}|_{(\bar{\x}_k^{(i)}, \bar{\uvec}_k^{(i)})}$
+      - $\mat{N}_k = \frac{\partial^2 \ell_k}{\partial \uvec \partial \x}|_{(\bar{\x}_k^{(i)}, \bar{\uvec}_k^{(i)})}$
+  - Compute terminal cost Hessian: $\mat{Q}_{T,\xx} = \frac{\partial^2 \ell_T}{\partial \x^2}|_{\bar{\x}_T^{(i)}}$
+- **Backward Pass (Riccati Recursion):**
+  - Initialize: $\mat{S}_T = \mat{Q}_{T,\xx}$
+  - For $k = T-1, T-2, \ldots, 0$:
+    - Compute Q-function Hessians (full DDP):
+      - $Q_{k,\uu} = \mat{R}_k + \mu\mat{I} + \mat{B}_k^\T\mat{S}_{k+1}\mat{B}_k$
+      - $Q_{k,\xu} = \mat{N}_k + \mat{B}_k^\T\mat{S}_{k+1}\mat{A}_k$
+      - $Q_{k,\xx} = \mat{Q}_{k,\xx} + \mat{A}_k^\T\mat{S}_{k+1}\mat{A}_k$
+    - Invert:
+      - $Q_{k,\uu}^{-1}$ (with check for positive-definiteness)
+    - Compute gain and value function update:
+      - $\mat{K}_k = Q_{k,\uu}^{-1}Q_{k,\xu}^\T$
+      - $\mat{S}_k = Q_{k,\xx} - Q_{k,\xu}Q_{k,\uu}^{-1}Q_{k,\xu}^\T$
+- **Forward Rollout with Line Search:**
+  - For step size $\alpha \in \{1.0, 0.5, 0.25, \ldots\}$:
+    - For $k = 0, \ldots, T-1$:
+      - $\du_k^{(\text{ff})} = -\vec{k}_k$ (feedforward from last iteration)
+      - $\x_k = \bar{\x}_k^{(i)} + \alpha (\x_k - \bar{\x}_k^{(i)}) + \text{dynamics integration}$
+      - $\uvec_k = \bar{\uvec}_k^{(i)} + \alpha \,\du_k^{(\text{ff})} + \mat{K}_k(\x_k - \bar{\x}_k^{(i)})$
+    - Roll out full trajectory and compute cost $J_{\text{trial}}$.
+    - If $J_{\text{trial}} < J^{(i)} - c_1\alpha\Delta J_{\text{expected}}$: accept step with this $\alpha$ and break.
+  - If no acceptable $\alpha$ found: decrease $\mu$ and retry backward pass, or exit with warning.
+- **Update:**
+  - $\bar{\x}_k^{(i+1)}, \bar{\uvec}_k^{(i+1)} \gets \text{accepted trial trajectory}$
+  - Adjust $\mu$ adaptively (decrease if step was good, increase if poor).
+- **Check Convergence:**
+  - If $\|\Delta \uvec\|$ and cost change are below threshold: break.
+- **return** $\bar{\x}_0, \ldots, \bar{\x}_T$ and $\mat{K}_k$ for $k = 0, \ldots, T-1$.
+:::
 
-  \State **Quadraticize Cost:**
-  \State \quad For each time step $k = 0, \ldots, T-1$:
-  \State \quad \quad Compute second-order Taylor expansion of $\ell_k$ around $(\bar{\x}_k^{(i)}, \bar{\uvec}_k^{(i)})$:
-  \State \quad \quad \quad $\mat{Q}_{k,\xx} = \frac{\partial^2 \ell_k}{\partial \x^2}|_{(\bar{\x}_k^{(i)}, \bar{\uvec}_k^{(i)})}$
-  \State \quad \quad \quad $\mat{R}_k = \frac{\partial^2 \ell_k}{\partial \uvec^2}|_{(\bar{\x}_k^{(i)}, \bar{\uvec}_k^{(i)})}$
-  \State \quad \quad \quad $\mat{N}_k = \frac{\partial^2 \ell_k}{\partial \uvec \partial \x}|_{(\bar{\x}_k^{(i)}, \bar{\uvec}_k^{(i)})}$
-  \State \quad Compute terminal cost Hessian: $\mat{Q}_{T,\xx} = \frac{\partial^2 \ell_T}{\partial \x^2}|_{\bar{\x}_T^{(i)}}$
-
-  \State **Backward Pass (Riccati Recursion):**
-  \State \quad Initialize: $\mat{S}_T = \mat{Q}_{T,\xx}$
-  \State \quad For $k = T-1, T-2, \ldots, 0$:
-  \State \quad \quad Compute Q-function Hessians (full DDP):
-  \State \quad \quad \quad $Q_{k,\uu} = \mat{R}_k + \mu\mat{I} + \mat{B}_k^\T\mat{S}_{k+1}\mat{B}_k$
-  \State \quad \quad \quad $Q_{k,\xu} = \mat{N}_k + \mat{B}_k^\T\mat{S}_{k+1}\mat{A}_k$
-  \State \quad \quad \quad $Q_{k,\xx} = \mat{Q}_{k,\xx} + \mat{A}_k^\T\mat{S}_{k+1}\mat{A}_k$
-  \State \quad \quad Invert:
-  \State \quad \quad \quad $Q_{k,\uu}^{-1}$ (with check for positive-definiteness)
-  \State \quad \quad Compute gain and value function update:
-  \State \quad \quad \quad $\mat{K}_k = Q_{k,\uu}^{-1}Q_{k,\xu}^\T$
-  \State \quad \quad \quad $\mat{S}_k = Q_{k,\xx} - Q_{k,\xu}Q_{k,\uu}^{-1}Q_{k,\xu}^\T$
-  \EndFor
-
-  \State **Forward Rollout with Line Search:**
-  \State \quad For step size $\alpha \in \{1.0, 0.5, 0.25, \ldots\}$:
-  \State \quad \quad For $k = 0, \ldots, T-1$:
-  \State \quad \quad \quad $\du_k^{(\text{ff})} = -\vec{k}_k$ (feedforward from last iteration)
-  \State \quad \quad \quad $\x_k = \bar{\x}_k^{(i)} + \alpha (\x_k - \bar{\x}_k^{(i)}) + \text{dynamics integration}$
-  \State \quad \quad \quad $\uvec_k = \bar{\uvec}_k^{(i)} + \alpha \,\du_k^{(\text{ff})} + \mat{K}_k(\x_k - \bar{\x}_k^{(i)})$
-  \State \quad \quad Roll out full trajectory and compute cost $J_{\text{trial}}$.
-  \State \quad \quad If $J_{\text{trial}} < J^{(i)} - c_1\alpha\Delta J_{\text{expected}}$: accept step with this $\alpha$ and break.
-  \State \quad If no acceptable $\alpha$ found: decrease $\mu$ and retry backward pass, or exit with warning.
-
-  \State **Update:**
-  \State \quad $\bar{\x}_k^{(i+1)}, \bar{\uvec}_k^{(i+1)} \gets \text{accepted trial trajectory}$
-  \State \quad Adjust $\mu$ adaptively (decrease if step was good, increase if poor).
-
-  \State **Check Convergence:**
-  \State \quad If $\|\Delta \uvec\|$ and cost change are below threshold: break.
-\EndFor
-
-\Return $\bar{\x}_0, \ldots, \bar{\x}_T$ and $\mat{K}_k$ for $k = 0, \ldots, T-1$.
-\end{algorithmic}
-\end{algorithm}
 
 
 ### iLQR Variant
@@ -632,7 +622,6 @@ then $\tau = 0$). Here we show a summary of iterations:
 : DDP Convergence for Inverted Pendulum Swing-Up ($T = 100$ steps, $T_1 = 50$) {#tbl-ch5_ddp-convergence}
 
 
-\begin{description}
 - **Iteration 0:** Initial trajectory (open-loop control). Cost is high due to suboptimal control.
 - **Iterations 1-2:** Rapid cost reduction. The DDP updates discover that applying larger initial torque
       accelerates the swing-up, reducing the total cost significantly.
@@ -640,7 +629,6 @@ then $\tau = 0$). Here we show a summary of iterations:
       are smaller.
 - **Iterations 4-6:** Convergence. Cost change drops below $10^{-3}$, control update norm becomes tiny,
       indicating convergence to a local optimum.
-\end{description}
 
 
 ### Feedback Gains and Closed-Loop Performance

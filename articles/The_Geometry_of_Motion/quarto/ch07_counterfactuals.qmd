@@ -244,13 +244,11 @@ a_{\text{drift}} = -M(\q)^{-1}\left[C(\q,\dot{\q})\dot{\q} + \vec{g}(\q)\right].
 \end{equation}
 
 We can write this as a sum of two components:
-\begin{subequations}
 \label{eq:ch7:drift-components}
 \begin{align}
 a_{\text{grav}} &:= -M(\q)^{-1}\vec{g}(\q), \label{eq:ch7:a-grav}\\
 a_{\text{cor}} &:= -M(\q)^{-1}C(\q,\dot{\q})\dot{\q}, \label{eq:ch7:a-cor}
 \end{align}
-\end{subequations}
 
 so that $a_{\text{drift}} = a_{\text{grav}} + a_{\text{cor}}$.
 
@@ -406,29 +404,27 @@ Given an observed trajectory $\x(t)$ with known input $\uvec(t)$:
 To systematically attribute motion to drift versus control, we propose a five-step
 procedure that can be implemented as an algorithm or protocol.
 
-\begin{algorithm}[h!]
-\caption{Drift--Control Attribution Protocol}
-\label{alg:ch7:attribution}
 
-**Input:** Observed state trajectory $\x(t)$ for $t\in[0,T]$, input signal $\uvec(t)$,
-system matrices $f(\x)$ and $G(\x)$, maximum input magnitude $\norm{\uvec_{\max}}$.
+::: {.callout-note}
+## Drift--Control Attribution Protocol
 
-**Output:** Drift--control ratio history $\rho(t)$, input contribution $G(\x)\uvec(t)$,
-drift contribution $f(\x(t))$, ZTCF trajectories at key time points.
+- **Input:** Observed state trajectory $\x(t)$ for $t\in[0,T]$, input signal $\uvec(t)$,
+- system matrices $f(\x)$ and $G(\x)$, maximum input magnitude $\norm{\uvec_{\max}}$.
+- **Output:** Drift--control ratio history $\rho(t)$, input contribution $G(\x)\uvec(t)$,
+- drift contribution $f(\x(t))$, ZTCF trajectories at key time points.
+- **for** each time step $t_i$ in the trajectory **do**:
+- 1. **Record** state $\x(t_i)$ and input $\uvec(t_i)$.
+- 2. **Evaluate** drift $f(\x(t_i))$ and input contribution $G(\x(t_i))\uvec(t_i)$.
+- 3. **Compute ZTCF**: integrate $\dot{\x}^{(0)} = f(\x^{(0)})$ from $\x(t_i)$ for a short horizon (e.g., $0.2$ sec).
+- 4. **Compute drift--control ratio**:
+- \begin{equation*}
+- \rho(t_i) = \frac{\norm{f(\x(t_i))}}{\norm{G(\x(t_i))\uvec_{\max}}}.
+- \end{equation*}
+- 5. **Classify phase**: If $\rho(t_i) < 0.5$, mark as *control-dominated*;
+- if $0.5 \le \rho(t_i) \le 2$, mark as *transition*; if $\rho(t_i) > 2$, mark as *drift-dominated*.
+- **end for**
+:::
 
-
-**for** each time step $t_i$ in the trajectory **do**:
-1. **Record** state $\x(t_i)$ and input $\uvec(t_i)$.
-2. **Evaluate** drift $f(\x(t_i))$ and input contribution $G(\x(t_i))\uvec(t_i)$.
-3. **Compute ZTCF**: integrate $\dot{\x}^{(0)} = f(\x^{(0)})$ from $\x(t_i)$ for a short horizon (e.g., $0.2$ sec).
-4. **Compute drift--control ratio**:
-   \begin{equation*}
-   \rho(t_i) = \frac{\norm{f(\x(t_i))}}{\norm{G(\x(t_i))\uvec_{\max}}}.
-   \end{equation*}
-5. **Classify phase**: If $\rho(t_i) < 0.5$, mark as *control-dominated*;
-   if $0.5 \le \rho(t_i) \le 2$, mark as *transition*; if $\rho(t_i) > 2$, mark as *drift-dominated*.
-**end for**
-\end{algorithm}
 
 \noindent This protocol produces a complete picture of when the controller is actively
 steering versus when it is passively managing drift. In practice, the protocol is
