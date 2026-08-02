@@ -924,26 +924,18 @@ contraction guarantees not only ISS but also trajectory synchronization.
 Table~\ref{tbl:ch4:lyapunov-contraction} provides a comprehensive comparison of Lyapunov
 stability, Lyapunov asymptotic stability, incremental stability, and contraction.
 
-\begin{table}[h!]
-\centering
-\small
-\begin{tabular}{@{}lcccc@{}}
-\toprule
-**Property** & **Lyapunov Stable** & **Asymptotically Stable** & **Incremental** & **Contracting** \\
-\midrule
-Object & Point $\x^*$ & Point $\x^*$ & Trajectory pair & All trajectories \\
-Certificate & $V(\x)$ & $V(\x)$, $\dot{V} < 0$ & Pairwise distance & Metric $\mat{M}(\x,t)$ \\
-Decay & None (stable) & Exponential to $\x^*$ & Coupled & Exponential \\
-Scope & Local or global & Point attractor & Incremental & Global or local \\
-Requires equilibrium & Yes & Yes & No & No \\
-Implies ISS & No & Yes (under $\infty$-gain) & Differential ISS & Yes (incremental ISS) \\
-\bottomrule
-\end{tabular}
-\caption{Comparison of stability concepts: Lyapunov stability certifies return to an
-equilibrium, while contraction certifies convergence of all nearby trajectories to
-each other, independent of a particular equilibrium.}
-\label{tbl:ch4:lyapunov-contraction}
-\end{table}
+
+| **Property** | **Lyapunov Stable** | **Asymptotically Stable** | **Incremental** | **Contracting** |
+| --- | --- | --- | --- | --- |
+| Object | Point $\x^*$ | Point $\x^*$ | Trajectory pair | All trajectories |
+| Certificate | $V(\x)$ | $V(\x)$, $\dot{V} < 0$ | Pairwise distance | Metric $\mat{M}(\x,t)$ |
+| Decay | None (stable) | Exponential to $\x^*$ | Coupled | Exponential |
+| Scope | Local or global | Point attractor | Incremental | Global or local |
+| Requires equilibrium | Yes | Yes | No | No |
+| Implies ISS | No | Yes (under $\infty$-gain) | Differential ISS | Yes (incremental ISS) |
+
+: Comparison of stability concepts: Lyapunov stability certifies return to an equilibrium, while contraction certifies convergence of all nearby trajectories to each other, independent of a particular equilibrium. {#tbl-tbl_ch4_lyapunov-contraction}
+
 
 
 ### Formal Relationships

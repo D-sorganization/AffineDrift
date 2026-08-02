@@ -536,22 +536,16 @@ r(\delta x) = \sin(\delta x) - \delta x.
 \label{eq:ch1:sin-residual}
 \end{equation}
 
-\begin{table}[h]
-\centering
-\caption{Residual scaling for $f(x) = \sin(x)$ at $\bar{x} = 0$ with linear approximation $\hat{f} = x$.
-Because $f''(0) = -\sin(0) = 0$, the residual is $O(\delta x^3)$, not $O(\delta x^2)$.}
-\label{tab:ch1:sin-residual}
-\begin{tabular}{@{}rccccc@{}}
-\toprule
-$\delta x$ & $\sin(\delta x)$ & Linear: $\delta x$ & Residual $r$ & $r / (\delta x)^2$ & $r / (\delta x)^3$ \\
-\midrule
-$0.1$   & $0.0998334$ & $0.1$   & $-1.666 \times 10^{-4}$ & $-0.01666$  & $-0.1666$ \\
-$0.01$  & $0.0099998$ & $0.01$  & $-1.667 \times 10^{-7}$ & $-0.001667$ & $-0.1667$ \\
-$0.001$ & $0.001000$  & $0.001$ & $-1.667 \times 10^{-10}$ & $-0.000167$ & $-0.1667$ \\
-$0.0001$& $0.000100$  & $0.0001$& $-1.667 \times 10^{-13}$ & $-0.0000167$& $-0.1667$ \\
-\bottomrule
-\end{tabular}
-\end{table}
+
+| $\delta x$ | $\sin(\delta x)$ | Linear: $\delta x$ | Residual $r$ | $r / (\delta x)^2$ | $r / (\delta x)^3$ |
+| --- | --- | --- | --- | --- | --- |
+| $0.1$ | $0.0998334$ | $0.1$ | $-1.666 \times 10^{-4}$ | $-0.01666$ | $-0.1666$ |
+| $0.01$ | $0.0099998$ | $0.01$ | $-1.667 \times 10^{-7}$ | $-0.001667$ | $-0.1667$ |
+| $0.001$ | $0.001000$ | $0.001$ | $-1.667 \times 10^{-10}$ | $-0.000167$ | $-0.1667$ |
+| $0.0001$ | $0.000100$ | $0.0001$ | $-1.667 \times 10^{-13}$ | $-0.0000167$ | $-0.1667$ |
+
+: Residual scaling for $f(x) = \sin(x)$ at $\bar{x} = 0$ with linear approximation $\hat{f} = x$. Because $f''(0) = -\sin(0) = 0$, the residual is $O(\delta x^3)$, not $O(\delta x^2)$. {#tbl-ch1_sin-residual}
+
 
 
 ::: {.callout-warning}
@@ -584,21 +578,16 @@ points and other geometrically special configurations.
 ### Two Perspectives on Linearization
 
 
-\begin{table}[h]
-\centering
-\caption{Two perspectives on the linearization residual.}
-\label{tab:ch1:perspectives}
-\begin{tabular}{@{}lll@{}}
-\toprule
-& **Standard View** & **Tangent-Space View** \\
-\midrule
-Residual is\ldots & Approximation error & Manifold curvature \\
-Strategy & Minimize error & Measure and exploit curvature \\
-Linearization is\ldots & "Good enough" & Exact at the infinitesimal limit \\
-Goal & Better approximation & Navigate the tangent bundle \\
-\bottomrule
-\end{tabular}
-\end{table}
+
+|  | **Standard View** | **Tangent-Space View** |
+| --- | --- | --- |
+| Residual is\ldots | Approximation error | Manifold curvature |
+| Strategy | Minimize error | Measure and exploit curvature |
+| Linearization is\ldots | "Good enough" | Exact at the infinitesimal limit |
+| Goal | Better approximation | Navigate the tangent bundle |
+
+: Two perspectives on the linearization residual. {#tbl-ch1_perspectives}
+
 
 In the standard view, we apologize for the residual: "Yes, the linear model is wrong for
 finite perturbations, but for small perturbations it is good enough." In the tangent-space
@@ -903,23 +892,18 @@ consequence of the Hairy Ball Theorem for $S^2$ and its generalizations).
 ### Summary: Boundaries of the Theory
 
 
-\begin{table}[h]
-\centering
-\caption{Scope of tangent-space exactness and when extensions are needed.}
-\label{tab:ch1:scope}
-\begin{tabular}{@{}lll@{}}
-\toprule
-**Feature** & **Smooth Dynamics** & **Extension Needed** \\
-\midrule
-Discontinuous $f$ or $\partial f/\partial\x$ & Not applicable & Filippov, differential inclusions \\
-Switching controllers & OK between switches & Saltation matrices at switch \\
-Bang-bang control & Averaged dynamics okay & Singular control on sliding surface \\
-Impacts/collisions & Not applicable & Saltation matrix, impact law \\
-Zeno behavior & Not applicable & Hybrid system theory \\
-Singular configurations & Handled locally & Global charts may be singular \\
-\bottomrule
-\end{tabular}
-\end{table}
+
+| **Feature** | **Smooth Dynamics** | **Extension Needed** |
+| --- | --- | --- |
+| Discontinuous $f$ or $\partial f/\partial\x$ | Not applicable | Filippov, differential inclusions |
+| Switching controllers | OK between switches | Saltation matrices at switch |
+| Bang-bang control | Averaged dynamics okay | Singular control on sliding surface |
+| Impacts/collisions | Not applicable | Saltation matrix, impact law |
+| Zeno behavior | Not applicable | Hybrid system theory |
+| Singular configurations | Handled locally | Global charts may be singular |
+
+: Scope of tangent-space exactness and when extensions are needed. {#tbl-ch1_scope}
+
 
 Throughout this book, we work exclusively with smooth systems and note extensions where relevant.
 The exactness of the tangent-space picture is one of its greatest strengths, and understanding
