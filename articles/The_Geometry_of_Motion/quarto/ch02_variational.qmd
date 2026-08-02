@@ -176,21 +176,29 @@ Then~\eqref{eq:ch2:variational-unsimplified} becomes:
 This is the **variational equation**: a linear, time-varying ODE that governs the
 evolution of infinitesimal perturbations.
 
-\begin{designbox}
+
+::: {.callout-tip}
+## Design Note
+
 The error incurred by dropping the $O(\|\dx\|^2)$ terms in the derivation is the residual.
 For initial conditions with $\|\dx(t_0)\| \ll 1$, this residual remains small (growing only
 quadratically with $\|\dx\|$) over a finite time interval. This is the precise justification
 for using linearization to study local stability and design feedback control.
-\end{designbox}
+:::
 
-\begin{intuitionbox}
+
+
+::: {.callout-note}
+## Intuition
+
 The variational equation~\eqref{eq:ch2:variational} is a *linear, time-varying*
 system that lives in the tangent space along $\bar{\x}(t)$. It describes how infinitesimal
 perturbations propagate. The matrices $\mat{A}(t)$ and $\mat{B}(t)$ change as the
 nominal trajectory evolves, reflecting the fact that the tangent space itself moves with
 the base point. Notice that $\mat{A}$ depends on the nominal input $\bar{\uvec}(t)$: different
 reference inputs generate different tangent-space dynamics!
-\end{intuitionbox}
+:::
+
 
 
 ## The State Transition Matrix
@@ -312,7 +320,10 @@ Integrating from $t_0$ to $t$, with initial condition $\det(\Phi(t_0,t_0)) = \de
 \end{equation}
 :::
 
-\begin{axiombox}{Axiom 5: Integration Preserves Exactness}
+
+::: {.callout-important}
+## Axiom 5: Integration Preserves Exactness
+
 The state transition matrix $\Phi(t,t_0)$ accumulates *exact* infinitesimal linear
 contributions along the trajectory. Each infinitesimal step $\dd(\dx)=\mat{A}(t)\dx\,\dd t$
 is exact in its tangent space. The integral
@@ -323,7 +334,8 @@ $$
 is the exact accumulation of these exact local effects. Residuals arise from curvature
 (when we compare the true finite-displacement trajectory to the linear prediction), not
 from integration itself.
-\end{axiombox}
+:::
+
 
 
 ## The Peano-Baker Series and Exact Solution
@@ -430,12 +442,16 @@ The most straightforward approach is to view $\Phi(t,t_0)$ as an $n\times n$ mat
 \end{equation}
 using a standard ODE solver. This requires integrating $n^2$ coupled scalar ODEs (the entries of $\Phi$).
 
-\begin{designbox}
+
+::: {.callout-tip}
+## Design Note
+
 At each time step, we compute the Jacobian $\mat{A}(t)$ by evaluating the partial derivatives of the
 nominal dynamics at $(\bar{\x}(t),\bar{\uvec}(t))$. This requires either automatic differentiation, manual
 Jacobian formulas, or finite-difference approximations of the derivatives. In production code, automatic
 differentiation is often most reliable and accurate.
-\end{designbox}
+:::
+
 
 
 ### The Matrix Exponential and Padé Approximation
@@ -491,10 +507,14 @@ For large $n$ (e.g., $n=100$), the $O(n^3)$ factor is significant. Specialized s
 low-rank, block-diagonal) can be exploited to reduce cost. For general dense problems, direct integration
 with adaptive step-size control is often most efficient in practice.
 
-\begin{warningbox}
+
+::: {.callout-warning}
+## Caution
+
 Computing $\Phi$ for stiff systems (those with widely separated time scales) is notoriously ill-conditioned.
 We discuss remedies in Section~\ref{sec:ch2:stability}.
-\end{warningbox}
+:::
+
 
 
 ## Variation of Constants Formula
@@ -568,14 +588,18 @@ The Duhamel formula decomposes the state perturbation into two contributions:
    is then propagated forward from time $s$ to time $t$ by the STM $\Phi(t,s)$. The integral sums the
    contributions of all past control inputs, weighted by their propagation matrices.
 
-\begin{designbox}
+
+::: {.callout-tip}
+## Design Note
+
 The Duhamel formula is the engine behind sensitivity analysis, adjoint methods, and trajectory optimization.
 It tells us how each input perturbation at time $s$ contributes to the final state perturbation at time $t$,
 weighted by the transition matrix $\Phi(t,s)$. This is the precise sense in which input effects "add up"---they
 superpose linearly in the tangent space. For control design, this formula shows which times and which channels
 have the most leverage: early times (with large $\Phi(t,s)$) and actuator-rich directions (large column spaces
 of $\mat{B}(s)$) are most influential.
-\end{designbox}
+:::
+
 
 
 ## Discrete-Time Variational Dynamics
@@ -891,14 +915,18 @@ This equation is integrated backward from $T$ to $t_0$. Once $\lambda(t)$ is kno
 \label{eq:ch2:grad-adjoint}
 \end{equation}
 
-\begin{designbox}
+
+::: {.callout-tip}
+## Design Note
+
 The adjoint method is far more efficient than forward sensitivity propagation when the cost depends on
 many parameters but only a few states. Forward sensitivity would require $n_p$ parallel integrations
 (one per parameter), each of dimension $n$. The adjoint requires only one backward integration of dimension $n$,
 plus quadrature along the trajectory. This is the foundation of gradient-based optimization in optimal control,
 and it connects directly to the state transition matrix: the propagation of $\lambda$ is governed by
 $-\mat{A}(t)^T$, the transpose of the linearization.
-\end{designbox}
+:::
+
 
 
 ### Connection to Backpropagation
@@ -962,10 +990,14 @@ For the pendulum with damping coefficient $c$:
 In first-order form, $\mat{A} = \begin{pmatrix}0 & 1\\-(g/\ell) & -c\end{pmatrix}$.
 Thus $\trace(\mat{A}) = -c < 0$, so volumes shrink at rate $e^{-ct}$.
 
-\begin{warningbox}
+
+::: {.callout-warning}
+## Caution
+
 For numerical integration, tracking $\det(\Phi)$ via Liouville's formula provides a diagnostic:
 if $\det(\Phi)$ grows unexpectedly, it may indicate numerical instability or an error in the Jacobian computation.
-\end{warningbox}
+:::
+
 
 
 ## Numerical Stability and Ill-Conditioning
@@ -1028,14 +1060,18 @@ in stable directions. If $\sigma_n$ becomes smaller than machine epsilon ($\sim 
 further numerical integration loses information, and the computed STM becomes unreliable. At that point, it is best
 to restart the integration from a recent checkpoint or use higher precision arithmetic.
 
-\begin{designbox}
+
+::: {.callout-tip}
+## Design Note
+
 Best practices for stable STM computation:
 1. Use automatic differentiation to compute $\mat{A}(t)$ accurately.
 2. For stiff systems, use implicit integrators (BDF or Rosenbrock) rather than explicit ones.
 3. For very long integration times, use QR-based propagation to maintain stability.
 4. Monitor singular values of $\Phi$ and switch to higher precision if needed.
 5. When $\det(\Phi)$ becomes very small or very large, verify against Liouville's formula.
-\end{designbox}
+:::
+
 
 
 ## Qualitative Interpretation of the Jacobians
@@ -1084,7 +1120,10 @@ The matrix $\mat{B}(t)$ determines which perturbation directions can be correcte
   is invertible. This integrates the influence of $\mat{B}(s)$ over all times, accounting for how control
   inputs at early times are propagated forward.
 
-\begin{warningbox}
+
+::: {.callout-warning}
+## Caution
+
 Many practical failures in optimization-based control stem from poor conditioning of $\mat{A}(t)$ or
 $\mat{B}(t)$---not from failure of the nominal planner. Monitoring these matrices along a trajectory is
 essential for robust implementation. Common issues include:
@@ -1093,7 +1132,8 @@ essential for robust implementation. Common issues include:
    appropriately to handle underactuation.
 3. Large condition number of $\mat{B}^T\mat{B}$ $\Rightarrow$ input saturation is likely; include
    saturation constraints in the optimizer.
-\end{warningbox}
+:::
+
 
 
 ## Residuals Under Finite Perturbations
@@ -1261,14 +1301,18 @@ D_2 L_d(\q_{k-1}, \q_k) + D_1 L_d(\q_k, \q_{k+1}) = 0,
 \end{equation}
 which implicitly defines $\q_{k+1}$ given $\q_{k-1}$ and $\q_k$.
 
-\begin{designbox}
+
+::: {.callout-tip}
+## Design Note
+
 For trajectory optimization and DDP (Chapter~\ref{ch:optimal-control}), variational
 integrators have a specific advantage: the STM $\Phi$ computed from the variational
 integrator inherits the symplectic structure. This means the sensitivities used in the
 Riccati recursion are geometrically consistent, improving convergence of the optimization.
 For systems on Lie groups (robotics, spacecraft), the combination of Lie group integration
 with variational principles provides a fully structure-preserving computational framework.
-\end{designbox}
+:::
+
 
 
 ## Chapter Summary
@@ -1315,14 +1359,18 @@ with variational principles provides a fully structure-preserving computational 
    $\mat{B}(t)$ encodes local control authority (column space reveals reachable directions).
    Together they are the raw material for all subsequent stability and optimality analyses.
 
-\begin{designbox}
+
+::: {.callout-tip}
+## Design Note
+
 The variational equation is not merely a linear approximation: it is an exact first-order differential-geometric
 object describing the behavior of tangent vectors along a trajectory in a curved (nonlinear) vector field.
 The state transition matrix is the parallel transport operator in this geometry, evolving vectors along the
 trajectory while respecting the local geometry. This perspective connects classical control theory to modern
 differential geometry and is essential for understanding advanced topics like Riemannian optimization,
 geometric tracking control, and neural network training dynamics.
-\end{designbox}
+:::
+
 
 ## Exercises
 

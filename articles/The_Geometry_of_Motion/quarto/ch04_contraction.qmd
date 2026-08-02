@@ -76,14 +76,18 @@ geodesic flows) with modern control and stability analysis. By allowing the metr
 vary in space and time, Lohmiller--Slotine generalized earlier work and made contraction
 a practical tool for nonlinear system analysis and design.
 
-\begin{intuitionbox}
+
+::: {.callout-note}
+## Intuition
+
 Think of contraction this way: if you release a handful of rubber ducks into a river,
 they initially spread out. But as the river narrows through a gorge, they are squeezed
 together. By the time they exit the gorge, they are traveling in a tight group regardless
 of where you released them. The gorge is a contracting region. Contraction theory
 formalizes this "gorge property" for any dynamical system, using a metric that plays
 the role of the river's width.
-\end{intuitionbox}
+:::
+
 
 
 ### Demidovich's Condition (1961): An Historical Precursor
@@ -127,12 +131,16 @@ This generalization is essential for systems where the behavior of interest is a
 *moving trajectory*---a robot executing a task, a vehicle following a path, a
 biological organism performing a skilled movement---rather than a static rest point.
 
-\begin{intuitionbox}
+
+::: {.callout-note}
+## Intuition
+
 Contraction checks whether tangent vectors between nearby trajectories shrink under the
 flow. If all tangent vectors shrink in a chosen metric, the geodesic distance between
 trajectories also shrinks. Contraction is local shrinking that integrates into global
 convergence.
-\end{intuitionbox}
+:::
+
 
 
 ## The Contraction Condition
@@ -444,12 +452,16 @@ be $\lambda = |\lambda_{\max}(\sym(\mat{A}))| = 1.79$ rad/s directly—**no addi
 factor of $1/2$** is needed, since $\sym(\mat{A}) = \tfrac{1}{2}(\mat{A}+\mat{A}^\T)$
 already incorporates the scaling.
 
-\begin{designbox}
+
+::: {.callout-tip}
+## Design Note
+
 In practice, for linear systems, one solves the LMI \eqref{eq:ch4:example-LMI} using
 semidefinite programming (e.g., \texttt{cvxpy}, \texttt{YALMIP}, \texttt{Mosek}). The
 solution yields both the metric $\mat{M}$ and the maximum feasible rate $\lambda$. For
 this simple system, the identity metric already achieves excellent contraction.
-\end{designbox}
+:::
+
 
 
 ## Partial Contraction: Hierarchical Structure
@@ -594,12 +606,16 @@ where $\gamma > 0$ is a regularization parameter (often set to satisfy $\mat{W}\
 control effort). This condition is *linear* in $\mat{W}$ and can be enforced at a collection
 of sample points in the state space, yielding a semidefinite program (SDP).
 
-\begin{designbox}
+
+::: {.callout-tip}
+## Design Note
+
 Modern computational tools can solve the SDP over a parameter space or via sum-of-squares
 (SOS) decomposition for polynomial systems. The result is a metric-based controller that
 achieves guaranteed contraction and hence guaranteed trajectory tracking or synchronization
 performance.
-\end{designbox}
+:::
+
 
 
 ### Computational Approaches
@@ -776,12 +792,16 @@ yields $\gamma \approx 1.5$. The metric
 \end{equation}
 guarantees contraction of the Van der Pol system at rate $\lambda \approx 0.3$.
 
-\begin{intuitionbox}
+
+::: {.callout-note}
+## Intuition
+
 The solution shows how contraction metrics can *adapt* to the nonlinear structure
 of a system. By increasing the metric in the velocity direction near the origin
 (where nonlinearity is concentrated), we compensate for the expansion caused by the
 nonlinear coupling term.
-\end{intuitionbox}
+:::
+
 
 
 ## Robustness Margins from Contraction
@@ -847,12 +867,16 @@ The ultimate bound \eqref{eq:ch4:ultimate-bound-steady} shows that:
   or more aggressive feedback. Practical design balances contraction rate and
   control limitations.
 
-\begin{designbox}
+
+::: {.callout-tip}
+## Design Note
+
 In robust control applications (aircraft flight control, surgical robotics), the contraction
 rate $\lambda$ is often specified as a design requirement (e.g., "system must reject
 disturbances at 5 rad/s"). The metric-based approach automatically translates this into
 a convex optimization problem.
-\end{designbox}
+:::
+
 
 
 ## Incremental Input-to-State Stability (ISS)
@@ -979,13 +1003,17 @@ operate at different time scales:
    This is the biological equivalent of choosing a non-identity metric $\mat{M}(\x)$:
    co-contraction shapes the metric to provide stronger contraction where needed.
 
-\begin{intuitionbox}
+
+::: {.callout-note}
+## Intuition
+
 A novice golfer co-contracts many muscles simultaneously, creating a stiff (high $\lambda$)
 but energetically expensive controller. An expert golfer selectively stiffens only the
 joints that need contraction at each phase, creating a time-varying metric
 $\mat{M}(\x(t))$ that is optimally adapted to the swing dynamics. The transition from
 novice to expert is, in part, the learning of the optimal contraction metric.
-\end{intuitionbox}
+:::
+
 
 
 ### Partial Contraction in Sequential Motion
@@ -1029,7 +1057,10 @@ to centrifugal and Coriolis forces. In this regime, the contraction properties o
    a highly contracting drift absorbs perturbations, while a weakly contracting or
    expanding drift amplifies them.
 
-\begin{designbox}
+
+::: {.callout-tip}
+## Design Note
+
 The practical design principle for swing optimization is: use the controllable early
 phases (backswing, transition) to steer the system into a region of state space where
 the drift field is naturally contracting. This is the control-theoretic formalization
@@ -1041,7 +1072,8 @@ of the drift Jacobian. Configurations where $\sym(\frac{\partial f}{\partial \x}
 has uniformly negative eigenvalues are "safe zones" where the swing is inherently
 stable. The optimal trajectory passes through these zones during the critical
 impact phase.
-\end{designbox}
+:::
+
 
 
 ## Stochastic Contraction
@@ -1101,12 +1133,16 @@ process noise has intensity $C_\sigma$, then the estimation error is bounded in
 expectation by $\sqrt{C_\sigma / \lambda}$. This provides a performance guarantee for
 nonlinear observers that the EKF cannot offer.
 
-\begin{designbox}
+
+::: {.callout-tip}
+## Design Note
+
 For practical controller design, the stochastic contraction bound suggests a design
 trade-off: increasing the contraction rate $\lambda$ (e.g., by increasing feedback gains)
 reduces the noise floor $\sqrt{C_\sigma / \lambda}$ but requires more control effort.
 The optimal trade-off depends on the noise intensity and the available actuator authority.
-\end{designbox}
+:::
+
 
 
 ## Contraction Tubes and Funnel Control
@@ -1146,14 +1182,18 @@ $\|e(t)\| < \varphi(t)$ for all $t > 0$. The connection to contraction is:
 - The adaptive gain $k(t) = 1/(\varphi(t) - \|e(t)\|)$ from classical funnel
   control achieves this by increasing gain as the error approaches the boundary.
 
-\begin{intuitionbox}
+
+::: {.callout-note}
+## Intuition
+
 Contraction tubes formalize the intuition that "nearby trajectories stay nearby."
 For trajectory tracking in robotics or biomechanics, the tube radius at impact time
 tells you the worst-case deviation from the planned motion. The condition number
 $\kappa(\mat{M})$ determines the shape of the tube: isotropic metrics give circular
 tubes; anisotropic metrics give ellipsoidal tubes that are tight in sensitive directions
 and loose in insensitive ones.
-\end{intuitionbox}
+:::
+
 
 
 ## Chapter Summary

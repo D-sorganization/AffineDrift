@@ -201,7 +201,10 @@ Q_{k,\mathbf{u}} &= \ell_{k,\mathbf{u}} + \mat{B}_k^\T\vec{\lambda}_{k+1}, \labe
 \end{align}
 where $\vec{\lambda}_{k+1} = \mat{S}_{k+1}\dx_{k+1}$ is the costate from the next step.
 
-\begin{intuitionbox}
+
+::: {.callout-note}
+## Intuition
+
 The structure of the Q-function reveals the interplay between immediate cost ($\ell_{k,\xx}$, $\ell_{k,\uu}$, etc.)
 and future cost ($\mat{S}_{k+1}$ terms). The cross-term $Q_{k,\xu}$ combines the immediate cross-coupling
 $\mat{N}_k$ with the future coupling via $\mat{B}_k^\T\mat{S}_{k+1}\mat{A}_k$. When the immediate cost has no
@@ -209,7 +212,8 @@ cross-coupling ($\ell_{k,\xu} = 0$) and the system is not in a regime where velo
 $Q_{k,\xu}$ may be small or negligible. In such cases, dropping second-order dynamics terms (i.e., setting
 $Q_{k,\xu} = 0$) recovers the *iLQR* algorithm, which often works well in practice while being cheaper to
 compute.
-\end{intuitionbox}
+:::
+
 
 
 ### Intuition: Hessian Curvature as Control Sensitivity
@@ -302,7 +306,10 @@ Under these assumptions, $Q_{k,\xu} \approx 0$, and the Riccati recursion simpli
 This form is computationally cheaper (no second-order cross terms) and often numerically more stable. The gain
 no longer depends on $\mat{N}_k$, so the feedback is insensitive to immediate cross-coupling in the cost.
 
-\begin{designbox}
+
+::: {.callout-tip}
+## Design Note
+
 **When to use iLQR vs full DDP:**
 - **iLQR** is preferred when computational speed matters and the cost function is purely diagonal
   (no cross-coupling between states and inputs in the cost).
@@ -310,7 +317,8 @@ no longer depends on $\mat{N}_k$, so the feedback is insensitive to immediate cr
   or when the system exhibits strong velocity-dependent effects that must be accounted for in the gain.
 - In practice, many problems can be reformulated to avoid cross-coupling, so iLQR is often the default.
   Start with iLQR; if results are suboptimal, try full DDP.
-\end{designbox}
+:::
+
 
 
 ### The Quadratic Form Identity
@@ -427,13 +435,17 @@ structure of the immediate cost function.
 5. **No approximation of the global problem:** DDP does not approximate the nonlinear trajectory problem globally.
    Rather, it re-centers the tangent-space analysis at each iteration, always working with the exact local model.
 
-\begin{warningbox}
+
+::: {.callout-warning}
+## Caution
+
 DDP does not "approximate" the nonlinear problem. Each backward pass solves an *exact* LQR problem in the
 current tangent space. Each forward pass updates the base point for the next tangent-space analysis. Iteration
 refines the *trajectory*, not the *quality of the local model*. Near a local optimum, DDP converges
 quadratically---precisely because each re-linearization eliminates the $O(\norm{\dx}^2)$ residual from the
 previous tangent space.
-\end{warningbox}
+:::
+
 
 
 ## Convergence Analysis: DDP as Newton's Method
@@ -937,14 +949,18 @@ and the costates evolve backward via:
 For the quadratic case, $\vec{\lambda}(t) = \mat{S}(t)\x(t)$ is proportional to the Riccati solution, and
 Pontryagin's conditions recover the standard LQR results.
 
-\begin{intuitionbox}
+
+::: {.callout-note}
+## Intuition
+
 The HJB equation, DRE, ARE, Pontryagin's principle, and Newton's method applied to the KKT conditions
 are all equivalent formulations of the same optimization problem---each offering a different perspective.
 The DRE is the most convenient for numerical integration. The ARE is the gateway to classical control
 design (pole placement, robust control). Pontryagin's conditions are essential for handling constraints.
 Newton's method viewpoint explains why DDP converges so rapidly. Together, they form a unified framework
 for understanding optimal control.
-\end{intuitionbox}
+:::
+
 
 
 ## Practical Considerations
@@ -1074,14 +1090,18 @@ This is computationally equivalent to applying a single-iteration DDP at each ti
 The convergence analysis shows that if the system changes slowly relative to the control
 rate, the RTI scheme tracks the optimal solution with bounded error.
 
-\begin{designbox}
+
+::: {.callout-tip}
+## Design Note
+
 MPC unifies the offline trajectory optimization of this chapter with the online feedback
 requirements of real systems. The computational loop---linearize, solve Riccati, apply
 control, re-linearize---is exactly the tangent-space methodology of this book, executed
 in real time. Modern implementations on embedded hardware achieve cycle times of 1--10~ms
 for systems with $n \leq 50$ states and $N \leq 100$ horizon steps, making MPC practical
 for robotics, automotive, and aerospace applications.
-\end{designbox}
+:::
+
 
 
 ## Chapter Summary
@@ -1113,13 +1133,15 @@ for robotics, automotive, and aerospace applications.
 11. **Duality:** The cost-to-go matrix $\mat{S}_k$ has dual interpretations as cost curvature and as a candidate
    contraction metric---a connection formalized in the next chapter on contraction analysis.
 
-\begin{axiombox}
+
+::: {.callout-important}
 **Principle of Local Optimality:** The trajectory optimization problem, though globally nonlinear and nonconvex,
 can be solved iteratively by working in local tangent spaces. At each step, we solve an exact, finite-dimensional,
 convex subproblem (the LQR problem). By re-centering the tangent space at each iteration, we avoid committing to a
 global approximation. This principle underlies not only DDP but also many modern algorithms in robotics and machine
 learning (e.g., SAC, MPPI, trajectory optimization in MPC).
-\end{axiombox}
+:::
+
 
 ## Exercises
 
