@@ -33,7 +33,7 @@ The article "Hybrid Tangent Spaces: Beyond Smooth Dynamics" extends the Tangent 
 ## Weakness 1: Incomplete Saltation Matrix Derivation
 
 ### Location
-Chapter 3, equations @eq-saltation-matrix through @eq-saltation-general
+Chapter 3, equations [saltation matrix](Hybrid_Tangent_Spaces.html#eq-saltation-matrix) through [saltation general](Hybrid_Tangent_Spaces.html#eq-saltation-general)
 
 ### The Problem
 
@@ -88,7 +88,7 @@ The saltation matrix is the **central mathematical object** enabling hybrid DDP.
 
 ### Suggested Remedies
 
-1. **Add explicit assumptions section** before equation @eq-saltation-matrix:
+1. **Add explicit assumptions section** before equation [saltation matrix](Hybrid_Tangent_Spaces.html#eq-saltation-matrix):
 
    > **Assumptions for Saltation Matrix Formula:**
    > 1. Guard function $h: \mathbb{R}^n \to \mathbb{R}$ is $C^2$ in a neighborhood of $x^-$
@@ -197,7 +197,7 @@ Measure theory is not a cosmetic detail—it's the **foundation** for claiming v
 
 1. **Replace vague appeals to measure theory with precise statements:**
 
-   Before equation @eq-hs-hybrid-cost-jump, add:
+   Before equation [hs hybrid cost jump](Hybrid_Tangent_Spaces.html#eq-hs-hybrid-cost-jump), add:
 
    > **Assumption (Regularity):**
    > Within each mode $q_i$, the vector field $f_i(x, u)$ is **locally Lipschitz** in $x$ and piecewise continuous in $t$. This ensures existence and uniqueness of solutions by the Carathéodory Extension Theorem.
@@ -495,7 +495,7 @@ The article provides JAX pseudocode for custom VJP (vector-Jacobian product) thr
 1. **Custom VJP definition** (lines 2862-2904):
    - The forward pass integrates to `t_jump`, applies reset `x_plus = jnp.dot(S, x_minus)`, then continues integration
    - **Problem:** The reset Jacobian $P_j = \partial R/\partial x$ is **not the same** as the saltation matrix $S_j$! The code conflates them.
-   - From equation @eq-saltation-matrix: $S_j = P_j + (\text{correction term})$. The code uses `S` directly without computing the correction.
+   - From equation [saltation matrix](Hybrid_Tangent_Spaces.html#eq-saltation-matrix): $S_j = P_j + (\text{correction term})$. The code uses `S` directly without computing the correction.
 
 2. **Backward pass** (lines 2876-2889):
    - `g_minus = jnp.dot(S.T, g_plus)`
@@ -610,12 +610,12 @@ hybrid_rollout.defvjp(hybrid_rollout_fwd, hybrid_rollout_bwd)
 > $$\frac{\partial x_{\text{final}}}{\partial x_0} = \Phi_2 S_j \Phi_1 + \Phi_2 S_j \frac{\partial x^-}{\partial t_j} \frac{\partial t_j}{\partial x_0}$$
 > where $\frac{\partial t_j}{\partial x_0}$ comes from the guard crossing condition $h(x(t_j)) = 0$ via implicit differentiation:
 > $$\frac{\partial t_j}{\partial x_0} = -\frac{\nabla h^T \Phi_1}{\nabla h^T f^-}$$
-> This term is **included** in the saltation matrix $S_j$ (the correction term in equation @eq-saltation-matrix), so the VJP `g_minus = S.T @ g_plus` is correct **if S is the saltation matrix, not just the reset Jacobian**.
+> This term is **included** in the saltation matrix $S_j$ (the correction term in equation [saltation matrix](Hybrid_Tangent_Spaces.html#eq-saltation-matrix)), so the VJP `g_minus = S.T @ g_plus` is correct **if S is the saltation matrix, not just the reset Jacobian**.
 
 4. **Validate with a test case:**
 
 > **Validation:** We implemented the bouncing ball system and compared gradients:
-> - **Analytical:** Using equation @eq-ball-saltation, $\frac{\partial v_{\text{final}}}{\partial v_0} = (-e)^N$ (for $N$ bounces)
+> - **Analytical:** Using equation [ball saltation](Hybrid_Tangent_Spaces.html#eq-ball-saltation), $\frac{\partial v_{\text{final}}}{\partial v_0} = (-e)^N$ (for $N$ bounces)
 > - **Autodiff (JAX):** Using the custom VJP above
 > - **Finite differences:** Central differences with $\epsilon = 10^{-6}$
 >
@@ -852,7 +852,7 @@ The theory presented is mostly correct (modulo Weaknesses 1-6), but the **schola
    > - Tassa et al. (2014): Control-limited DDP
    > - Manchester & Kuindersma (2017): Variational contact-implicit
    >
-   > Our treatment (Chapter 7) emphasizes the **backward pass through jumps** (adjoint jump condition, equation @eq-value-gradient-jump) as a geometric consequence of the tangent space perspective.
+   > Our treatment (Chapter 7) emphasizes the **backward pass through jumps** (adjoint jump condition, equation [value gradient jump](Hybrid_Tangent_Spaces.html#eq-value-gradient-jump)) as a geometric consequence of the tangent space perspective.
    >
    > **Contact-implicit optimization** (Chapter 8) is due to Posa, Kuindersma, Tedrake (2014). We **summarize** their method but do not claim novelty; our focus is **when to use** contact-implicit vs. hybrid DDP (mode discovery vs. refinement).
 

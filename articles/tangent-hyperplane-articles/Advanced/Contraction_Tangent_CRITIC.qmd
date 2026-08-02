@@ -162,7 +162,7 @@ Add:
 # Weakness 2: Time-Varying Metrics and the Riccati Equation
 
 ## Location
-- **Equation (@eq-differential-riccati)**: Differential Riccati Equation
+- **Equation ([differential riccati](Contraction_Tangent_Unification.html#eq-differential-riccati))**: Differential Riccati Equation
 - **Section 3.2**: "Continuous-Time Riccati Connection"
 - **Section 5**: "LQR as Contraction Design"
 
@@ -173,7 +173,7 @@ Add:
 
 ### The Problem with $\dot{\mathbf{M}} \neq 0$
 
-The contraction condition (@eq-generalized-jacobian) for a time-varying metric $\mathbf{M}(t)$ is:
+The contraction condition ([generalized jacobian](Contraction_Tangent_Unification.html#eq-generalized-jacobian)) for a time-varying metric $\mathbf{M}(t)$ is:
 $$
 \mathbf{A}^\top \mathbf{M} + \mathbf{M} \mathbf{A} + \dot{\mathbf{M}} \prec -2\lambda \mathbf{M}
 $$
@@ -183,7 +183,7 @@ $$
 -\dot{\mathbf{S}} = \mathbf{A}^\top \mathbf{S} + \mathbf{S} \mathbf{A} - \mathbf{S} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{S} + \mathbf{Q}
 $$
 
-The article claims (page 10, after @eq-differential-riccati):
+The article claims (page 10, after [differential riccati](Contraction_Tangent_Unification.html#eq-differential-riccati)):
 > "**Compare** with the contraction condition... These are **identical** when $\mathbf{M}$ is constant ($\dot{\mathbf{M}} = 0$)..."
 
 **Issue 1**: They are NOT identical even when $\dot{\mathbf{M}} = 0$. The contraction condition has $-2\lambda \mathbf{M}$ on the RHS, while the Riccati equation has $-\mathbf{Q} - \mathbf{M} \mathbf{B} \mathbf{R}^{-1} \mathbf{B}^\top \mathbf{M}$ on the RHS. These match only if:
@@ -346,20 +346,20 @@ In differential geometry, a formulation is **coordinate-free** (or **intrinsic**
 
 The article's "coordinate-free" section:
 
-1. **(@eq-tangent-bundle-dynamics)**: Writes dynamics as $\frac{D}{dt} \delta \mathbf{x} = \frac{\partial \mathbf{f}}{\partial \mathbf{x}} \delta \mathbf{x}$.
+1. **([tangent bundle dynamics](Contraction_Tangent_Unification.html#eq-tangent-bundle-dynamics))**: Writes dynamics as $\frac{D}{dt} \delta \mathbf{x} = \frac{\partial \mathbf{f}}{\partial \mathbf{x}} \delta \mathbf{x}$.
    - **Problem**: $\frac{\partial \mathbf{f}}{\partial \mathbf{x}}$ is the Jacobian **in a specific coordinate system**. Under coordinate change $\mathbf{x} \to \mathbf{z} = \boldsymbol{\phi}(\mathbf{x})$, this transforms as:
      $$
      \frac{\partial \mathbf{f}_{\mathbf{z}}}{\partial \mathbf{z}} = \frac{\partial \boldsymbol{\phi}}{\partial \mathbf{x}} \frac{\partial \mathbf{f}_{\mathbf{x}}}{\partial \mathbf{x}} \left(\frac{\partial \boldsymbol{\phi}}{\partial \mathbf{x}}\right)^{-1}
      $$
    - This is a **coordinate transformation**, not a coordinate-free statement.
 
-2. **(@eq-metric-tensor)**: Defines metric as $g_{\mathbf{x}}(\delta \mathbf{x}_1, \delta \mathbf{x}_2) = \delta \mathbf{x}_1^\top \mathbf{M}(\mathbf{x}) \delta \mathbf{x}_2$.
+2. **([metric tensor](Contraction_Tangent_Unification.html#eq-metric-tensor))**: Defines metric as $g_{\mathbf{x}}(\delta \mathbf{x}_1, \delta \mathbf{x}_2) = \delta \mathbf{x}_1^\top \mathbf{M}(\mathbf{x}) \delta \mathbf{x}_2$.
    - **Problem**: This assumes $\mathbf{M}(\mathbf{x})$ is given in **Euclidean coordinates**. On a general manifold, you can't write $\delta \mathbf{x}^\top \mathbf{M} \delta \mathbf{x}$ without first choosing a coordinate chart.
 
-3. **Contraction condition (@eq-contraction-lmi)**: $\mathbf{A}^\top \mathbf{M} + \mathbf{M} \mathbf{A} \preceq -2\lambda \mathbf{M}$.
+3. **Contraction condition ([contraction lmi](Contraction_Tangent_Unification.html#eq-contraction-lmi))**: $\mathbf{A}^\top \mathbf{M} + \mathbf{M} \mathbf{A} \preceq -2\lambda \mathbf{M}$.
    - **Problem**: $\mathbf{A}$ is the Jacobian matrix, which is **coordinate-dependent**. The inequality $\preceq$ depends on eigenvalues, which **are** invariant, but the matrix $\mathbf{M}$ itself is not—it transforms as a metric tensor.
 
-4. **(@eq-christoffel)**: Writes Christoffel symbols $\Gamma^i_{jk}$.
+4. **([christoffel](Contraction_Tangent_Unification.html#eq-christoffel))**: Writes Christoffel symbols $\Gamma^i_{jk}$.
    - **Correct**: This is the coordinate expression of the Levi-Civita connection. The connection itself is coordinate-free, but the formula is not.
 
 ### The Actual Coordinate Dependence
@@ -403,7 +403,7 @@ The key: **differential geometry provides the language**, but **numerical comput
 
 ### Section 6.2: Pullback Metrics
 
-This section correctly describes pullback metrics (@eq-pullback-metric):
+This section correctly describes pullback metrics ([pullback metric](Contraction_Tangent_Unification.html#eq-pullback-metric)):
 $$
 \mathbf{M}_{\mathbf{q}} = \mathbf{J}^\top \mathbf{M}_{\mathbf{x}} \mathbf{J}
 $$
@@ -866,7 +866,7 @@ Add:
 > 3. Convergence is exponential: $\|\mathbf{x}_t - \mathbf{x}^*_t\|_{\mathbf{M}_t} \leq e^{-\lambda t} \|\mathbf{x}_0 - \mathbf{x}^*_0\|_{\mathbf{M}_0}$.
 
 The "proof sketch":
-> "The penalty forces $\mathcal{C}(\mathbf{x}^*_t, \mathbf{u}^*_t) \to 0$ as $\mu \to \infty$. By continuity, there exists a neighborhood where (@eq-contraction-condition) holds."
+> "The penalty forces $\mathcal{C}(\mathbf{x}^*_t, \mathbf{u}^*_t) \to 0$ as $\mu \to \infty$. By continuity, there exists a neighborhood where ([contraction condition](Contraction_Tangent_Unification.html#eq-contraction-condition)) holds."
 
 ### What's Missing
 
@@ -1072,7 +1072,7 @@ Since the RHS involves **both** $\dot{\mathbf{e}}$ and $\mathbf{e}$, this cannot
 ### Theorem 8.2: Hybrid Contraction
 
 Claims:
-> "If there exists a common metric $\mathbf{M}$ satisfying (@eq-common-lyapunov), then the hybrid system is exponentially stable across mode switches."
+> "If there exists a common metric $\mathbf{M}$ satisfying ([common lyapunov](Contraction_Tangent_Unification.html#eq-common-lyapunov)), then the hybrid system is exponentially stable across mode switches."
 
 **Issue**: Finding a common Lyapunov function for switched systems is **NP-hard** in general (Blondel & Tsitsiklis, 2000).
 
@@ -1140,10 +1140,10 @@ In the robotics application (free space vs. contact), the article doesn't:
 
 **Option A** (fix for constant $\mathbf{\Lambda}$):
 > **Theorem 8.1 (Task-Space Contraction for Regulation)**
-> For **regulation** to a fixed setpoint $\mathbf{x}_d$ (constant), the controller (@eq-task-force) renders the error dynamics contracting with metric $\mathbf{M} = \mathbf{\Lambda}(\mathbf{x}_d)$ (evaluated at setpoint) and rate $\lambda = \sqrt{\lambda_{\min}(\mathbf{K}_p) / \lambda_{\max}(\mathbf{\Lambda})}$.
+> For **regulation** to a fixed setpoint $\mathbf{x}_d$ (constant), the controller ([task force](Contraction_Tangent_Unification.html#eq-task-force)) renders the error dynamics contracting with metric $\mathbf{M} = \mathbf{\Lambda}(\mathbf{x}_d)$ (evaluated at setpoint) and rate $\lambda = \sqrt{\lambda_{\min}(\mathbf{K}_p) / \lambda_{\max}(\mathbf{\Lambda})}$.
 
 **Option B** (remove for trajectory tracking):
-> **Remark**: For **trajectory tracking** with time-varying $\mathbf{x}_d(t)$, the inertia matrix $\mathbf{\Lambda}(\mathbf{x}(t))$ varies along the trajectory. Rigorous contraction analysis requires computing a time-varying metric $\mathbf{M}(t) = \mathbf{\Lambda}(\mathbf{x}(t))$ and verifying the generalized contraction condition (@eq-generalized-jacobian). This is left to future work.
+> **Remark**: For **trajectory tracking** with time-varying $\mathbf{x}_d(t)$, the inertia matrix $\mathbf{\Lambda}(\mathbf{x}(t))$ varies along the trajectory. Rigorous contraction analysis requires computing a time-varying metric $\mathbf{M}(t) = \mathbf{\Lambda}(\mathbf{x}(t))$ and verifying the generalized contraction condition ([generalized jacobian](Contraction_Tangent_Unification.html#eq-generalized-jacobian)). This is left to future work.
 
 ### 4. Qualify Theorem 8.2
 
@@ -1179,7 +1179,7 @@ In the robotics application (free space vs. contact), the article doesn't:
 ### "Contraction Metric" Ambiguity
 
 The article uses "contraction metric" to mean:
-1. Any metric $\mathbf{M}$ satisfying the contraction condition (@eq-linear-contraction).
+1. Any metric $\mathbf{M}$ satisfying the contraction condition ([linear contraction](Contraction_Tangent_Unification.html#eq-linear-contraction)).
 2. The Riccati solution $\mathbf{S}$ from LQR.
 3. A Riemannian metric $g$ on the state manifold.
 
