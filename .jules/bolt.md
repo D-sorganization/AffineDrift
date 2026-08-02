@@ -164,3 +164,12 @@
 ## 2026-07-31 - Eliminate redundant string inclusion checks in scoring function
 **Learning:** When optimizing hot paths like scoring or sorting functions, eliminate redundant string inclusion checks (like `haystack.includes(term)`) if the input array is already pre-filtered by that exact condition.
 **Action:** Remove redundant inclusion checks to avoid expensive O(N) operations in hot paths.
+## 2026-08-02 - Eliminate redundant string inclusion checks in scoring function
+**Learning:** When optimizing hot paths like scoring or sorting functions, eliminate redundant string inclusion checks (like `haystack.includes(term)`) if the input array is already pre-filtered by that exact condition.
+**Action:** Remove redundant inclusion checks to avoid expensive O(N) operations in hot paths.
+## 2026-08-02 - Eliminate redundant dataset filtering on sort updates
+**Learning:** When users trigger UI updates that do not mutate the query state (like changing sort orders), recalculating complex O(N) array filtering logic over the entire dataset is highly inefficient and blocks the main thread unnecessarily.
+**Action:** Always cache the input query and the resulting filtered dataset. If a non-mutating action is triggered (e.g., sort change), bypass the filtering logic and directly reuse the cached pre-filtered dataset.
+## 2026-08-02 - Eliminate redundant dataset filtering on sort updates
+**Learning:** When users trigger UI updates that do not mutate the query state (like changing sort orders), recalculating complex O(N) array filtering logic over the entire dataset is highly inefficient and blocks the main thread unnecessarily.
+**Action:** Always cache the input query, the source dataset, and the resulting filtered dataset. If a non-mutating action is triggered (e.g., sort change), bypass the filtering logic and directly reuse a shallow copy of the cached pre-filtered dataset to prevent in-place sorting mutations.

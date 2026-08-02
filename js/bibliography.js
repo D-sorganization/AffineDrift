@@ -191,11 +191,21 @@
       .map((s) => s.trim())
       .filter(Boolean);
 
-    const filtered = state.entries.filter((entry) => {
-      if (queryTerms.length === 0) return true;
-      const haystack = entrySearchText(entry);
-      return queryTerms.every((term) => haystack.includes(term));
-    });
+    let filtered;
+    if (state._lastQuery === state.query && state._lastEntries === state.entries && state._lastFiltered) {
+        // ⚡ Bolt Optimization: Eliminate redundant string inclusion checks when only sorting
+        // Shallow copy the cached array to prevent in-place sorting mutations from altering the cache
+        filtered = [...state._lastFiltered];
+    } else {
+        filtered = state.entries.filter((entry) => {
+            if (queryTerms.length === 0) return true;
+            const haystack = entrySearchText(entry);
+            return queryTerms.every((term) => haystack.includes(term));
+        });
+        state._lastQuery = state.query;
+        state._lastEntries = state.entries;
+        state._lastFiltered = filtered;
+    }
 
     state.filtered = sortEntries(filtered);
     countEl.textContent = `${state.filtered.length} reference${
