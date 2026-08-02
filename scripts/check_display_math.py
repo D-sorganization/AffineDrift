@@ -31,11 +31,19 @@ import sys
 from pathlib import Path
 
 # Scoped to the Physics of Golf book, which is clean. The wider `articles/`
-# tree has the same defect at much larger scale -- `drifter-manifesto.qmd` and
-# `The_Geometry_of_Motion/quarto/` carry undelimited matrices and raw
-# `\begin{equation}` blocks -- and is tracked separately. Widen this once those
-# are reconciled.
+# tree has not been swept for this and is not gated yet.
 ROOT = Path("articles/The_Physics_of_Golf/quarto")
+
+# Pandoc renders a raw LaTeX maths environment in a .qmd as display maths --
+# `\begin{equation} ... \end{equation}` becomes `\[ ... \]`, verified against a
+# probe file. The Geometry of Motion mirror uses that form throughout, so it is
+# maths, not undelimited maths, and must never be flagged.
+RAW_MATH_OPEN = re.compile(
+    r"^\s*\\begin\{(equation|align|gather|multline|displaymath|eqnarray)\*?\}"
+)
+RAW_MATH_CLOSE = re.compile(
+    r"^\s*\\end\{(equation|align|gather|multline|displaymath|eqnarray)\*?\}"
+)
 
 FENCE = re.compile(r"^\s*(?:```+|~~~+)")
 DELIM = re.compile(r"^\s*\$\$\s*(?:\{#[^}]*\})?\s*$")
@@ -83,6 +91,7 @@ def scan(path: Path) -> tuple[int | None, list[tuple[int, str]]]:
         return delims, []
 
     in_fence = in_math = False
+    in_raw_math = False
     bare: list[tuple[int, str]] = []
     for number, line in enumerate(lines, 1):
         if FENCE.match(line):
@@ -92,6 +101,14 @@ def scan(path: Path) -> tuple[int | None, list[tuple[int, str]]]:
             continue
         if DELIM.match(line):
             in_math = not in_math
+            continue
+        if RAW_MATH_OPEN.match(line):
+            in_raw_math = True
+            continue
+        if RAW_MATH_CLOSE.match(line):
+            in_raw_math = False
+            continue
+        if in_raw_math:
             continue
         if not in_math and suspicious(line):
             bare.append((number, line.strip()))
