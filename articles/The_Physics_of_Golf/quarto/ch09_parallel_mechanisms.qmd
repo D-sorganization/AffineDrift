@@ -1,10 +1,9 @@
 ---
-title: "Parallel Mechanisms"
 description: "A parallel mechanism is like multiple paths. If you try to move one joint, you might be blocked by another path. The constraint must be satisfied by all..."
 ---
 
 
-# Parallel Mechanisms and Loop Constraints
+# Parallel Mechanisms and Loop Constraints {#sec-parallel_mechanisms}
 
 ::: {.callout-tip}
 ## Why the Body is Not a Serial Chain
@@ -92,7 +91,7 @@ Or more generally:
 
 \bm{\Phi}_{\text{spine}}(\theta_p, \theta_s, \theta_{sh}) = \mathbf{0}
 
-This is a holonomic constraint, just like the joint constraints from Chapter @sec-constraint_forces.
+This is a holonomic constraint, just like the joint constraints from @sec-constraint_forces.
 
 ### Why Loops Matter for the Swing {#inplain:loops_swing_importance}
 In a serial chain, you can rotate your hips, shoulders, and arms independently (within limits). In a body with loops, these rotations are coupled.
@@ -121,7 +120,7 @@ The **loop Jacobian** is the Jacobian of the loop closure constraint:
 
 \bm{J}_{\text{loop}}(\bm{q}) = \frac{\partial \bm{\Phi}_{\text{loop}}}{\partial \bm{q}}
 
-It has the same interpretation as the constraint Jacobian from Chapter @sec-constraint_forces: its null space defines allowed motions, and its range defines constraint force directions.
+It has the same interpretation as the constraint Jacobian from @sec-constraint_forces: its null space defines allowed motions, and its range defines constraint force directions.
 
 :::
 
@@ -226,7 +225,7 @@ More flexibility allows more efficient constraint-based energy transfer. This is
 ::: {.callout-important}
 ## Loop Constraints Produce Enormous Forces
 
-Every loop closure constraint produces constraint forces, just like the joint constraints from Chapter @sec-constraint_forces. But because a body has multiple loops, there can be multiple constraint forces acting simultaneously.
+Every loop closure constraint produces constraint forces, just like the joint constraints from @sec-constraint_forces. But because a body has multiple loops, there can be multiple constraint forces acting simultaneously.
 
 These forces are often internal—they don't directly produce motion, but they create internal stresses and torques within the spine, at the grip, and throughout the kinetic chain.
 
@@ -398,7 +397,7 @@ For the golf swing, the over-constraint ensures that as the hips drive, the shou
 
 :::
 
-**What comes next:** Now that we understand how forces are produced (ZTCF), transmitted (constraint forces), and routed through a parallel mechanism (loop constraints), the final step is to understand how energy flows through the system. How does the kinetic energy partition between the segments? Where is energy stored and released? When is energy lost? These questions are answered in Chapter @sec-energy_transfer.
+**What comes next:** Now that we understand how forces are produced (ZTCF), transmitted (constraint forces), and routed through a parallel mechanism (loop constraints), the final step is to understand how energy flows through the system. How does the kinetic energy partition between the segments? Where is energy stored and released? When is energy lost? These questions are answered in @sec-energy_transfer.
 
 ## Vaughan's Closed-Loop Analysis: Historical Context
 
