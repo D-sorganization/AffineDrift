@@ -36,28 +36,48 @@ import re
 import sys
 from pathlib import Path
 
-ROOTS = (
-    Path("articles/The_Physics_of_Golf/quarto"),
-    Path("articles/The_Geometry_of_Motion/quarto"),
-)
-EXEMPT = {"index.qmd"}
+ROOTS = (Path("articles"),)
+EXEMPT: set[str] = set()
 
 INCLUDE = re.compile(r"\{\{<\s*include\s+([^\s>]+)")
 
 FENCE = re.compile(r"^\s*(?:```+|~~~+)")
 H1 = re.compile(r"^#\s+\S")
-TITLE = re.compile(r"^title:\s*\S")
+TITLE = re.compile(r"^title:\s*(\S.*?)\s*$")
+ATTRS = re.compile(r"\s*\{[^}]*\}\s*$")
+CHAPTER_PREFIX = re.compile(r"^Chapter\s+\d+[:.]?\s*", re.IGNORECASE)
 
 
-def frontmatter_title(lines: list[str]) -> bool:
+def frontmatter_title(lines: list[str]) -> str | None:
+    """The YAML `title:` value, or None."""
     if not lines or lines[0].strip() != "---":
-        return False
+        return None
     for index in range(1, len(lines)):
         if lines[index].strip() == "---":
-            return False
-        if TITLE.match(lines[index]):
-            return True
-    return False
+            return None
+        match = TITLE.match(lines[index])
+        if match:
+            return match.group(1).strip().strip("\"'")
+    return None
+
+
+def same_heading(title: str, heading: str) -> bool:
+    """Is the YAML title the same heading as the body H1, not a different one?
+
+    The defect is one heading rendered twice. A document whose `title:` names
+    the document and whose first H1 is a section -- "Abstract", "Introduction",
+    "Preface", "Part 1: ..." -- has two different headings and is correct. That
+    is the shape of every standalone article on this site, and comparing only
+    "does a title exist" flags all eleven of them.
+
+    A "Chapter N:" prefix is ignored, because Quarto numbers chapters itself and
+    #3705's restored titles carried it.
+    """
+    return _normalise(title) == _normalise(ATTRS.sub("", heading.lstrip("# ").strip()))
+
+
+def _normalise(text: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "", CHAPTER_PREFIX.sub("", text).lower())
 
 
 def blank_first_line(lines: list[str]) -> bool:
@@ -124,12 +144,21 @@ def main() -> int:
             )
             continue
 
-        if frontmatter_title(lines) and heading is not None:
+        title = frontmatter_title(lines)
+        if title is not None and heading is not None and same_heading(title, heading):
             problems += 1
+            in_book = any(part.endswith(("_of_Golf", "_of_Motion")) for part in path.parts)
+            remedy = (
+                "Drop the YAML title -- in a book the heading carries the "
+                "'{#sec-...}' anchor that cross-references resolve to."
+                if in_book
+                else "Drop the duplicate body heading -- on a standalone page the "
+                "YAML title is what produces the <title> tag, and removing it "
+                "leaves the page titled after its filename."
+            )
             print(
-                f"  {path.as_posix()}: has a YAML 'title:' and the body heading "
-                f"'{heading[:56]}' -- Quarto renders both as separate, separately "
-                f"numbered <h1>. Drop the YAML title; the heading carries the anchor."
+                f"  {path.as_posix()}: the YAML 'title:' and the body heading "
+                f"'{heading[:48]}' are the same heading, so Quarto renders it twice. {remedy}"
             )
 
     if problems:
