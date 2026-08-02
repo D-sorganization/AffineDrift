@@ -150,6 +150,16 @@ jobs:
         # silently wrong output, exit 0 -- so reading the source is the only way
         # to catch it before the site does.
         run: python3 scripts/check_quarto_xrefs.py
+      - name: Verify Each Page Renders One Title
+        # Two failures that look like nothing in the source. A YAML 'title:'
+        # beside a body H1 renders the title twice, separately numbered, which
+        # inflates every chapter number after it -- shipped in #3700 and again
+        # in #3705. A blank line after the opening '---' stops Pandoc reading
+        # the block as frontmatter at all, so the keys print as page content;
+        # ch01 shipped its 'description:' line as a chapter heading that way.
+        # Neither is caught by the frontmatter validator, the cross-reference
+        # checker, the maths scanner, or 'quarto render', which exits 0.
+        run: python3 scripts/check_single_title.py
       - name: Verify Acronym Terminology Is Consistent
         # NOTATION.md is the single source of truth for DCR and ZTCF. Fails on any
         # reintroduced variant expansion or the dangling cross-reference that made
