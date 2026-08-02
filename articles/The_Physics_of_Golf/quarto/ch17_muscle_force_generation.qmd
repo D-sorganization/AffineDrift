@@ -87,8 +87,7 @@ Muscle force varies with fiber length because cross-bridge overlap changes acros
 The active force-length relationship can be modeled as:
 $$
 f_L(\tilde{\ell}) = \exp\left(-\left(\frac{\tilde{\ell} - 1}{\gamma}\right)^2\right)
-{#eq-active-force-length}
-$$
+$$ {#eq-active-force-length}
 where $\tilde{\ell} = \ell^M / \ell^M_{\mathrm{opt}}$ is the normalized fiber length, and $\gamma \approx 0.5$ is a width parameter. This bell-curve function captures the plateau region near optimal length and the declining force at shorter or longer lengths.
 
 The Gaussian is an approximation. In reality, the force-length curve is *asymmetric*: force drops off more steeply when the muscle is shorter than optimal, while passive elastic elements such as titin and connective tissue can contribute additional force at longer lengths. A symmetric Gaussian can be useful for a first model, but the adequacy of that simplification depends on the muscle, posture, and analysis question.
@@ -111,15 +110,13 @@ The force-length curve has three distinct regions:
 Parallel to the active force-length curve, muscles exhibit *passive* force from connective tissue (collagen), which resists excessive stretch:
 $$
 F_{\mathrm{passive}}(\tilde{\ell}) = F_0 \left[ \exp(k(\tilde{\ell} - 1)) - 1 \right]
-{#eq-passive-force-length}
-$$
+$$ {#eq-passive-force-length}
 where $k \approx 4$ sets the exponential growth rate. Passive force becomes significant at $\tilde{\ell} > 1.2$.
 
 The total force from a muscle is:
 $$
 F = a \cdot F_0 \cdot f_L(\tilde{\ell}) + F_{\mathrm{passive}}(\tilde{\ell})
-{#eq-total-muscle-force}
-$$
+$$ {#eq-total-muscle-force}
 where $a \in [0,1]$ is the neural *activation level*.
 
 ::: {.callout-tip}
@@ -144,8 +141,7 @@ When a muscle fiber contracts, each myosin head must attach, rotate, and detach.
 Hill's hyperbolic relationship, in its normalized form for *concentric contraction* (shortening under load), is:
 $$
 f_V(\tilde{v}) = \frac{1 - \tilde{v}/V_{\max}}{1 + \tilde{v}/(V_{\max} \cdot k)}
-{#eq-hill-concentric}
-$$
+$$ {#eq-hill-concentric}
 where:
 
 - $\tilde{v} = \dot{\ell}^M$ is the fiber shortening velocity (positive for shortening)
@@ -156,8 +152,7 @@ where:
 For *eccentric contraction* (lengthening under load, e.g., a muscle applying brakes), force *increases* beyond $F_0$. Following the formulation of Thelen (2003), the eccentric force-velocity relationship asymptotes to a finite maximum rather than diverging:
 $$
 f_V^{\mathrm{ecc}}(\tilde{v}) = F_{\mathrm{asym}} - (F_{\mathrm{asym}} - 1) \cdot \frac{1 + \tilde{v}/V_{\max}}{1 - k_{\mathrm{ecc}} \tilde{v}/V_{\max}}
-{#eq-hill-eccentric}
-$$
+$$ {#eq-hill-eccentric}
 where $F_{\mathrm{asym}} \approx 1.4$ is the asymptotic eccentric force (as a fraction of $F_0$), $k_{\mathrm{ecc}} \approx 0.25$, and $\tilde{v}$ is negative for lengthening. This formulation is physiologically realistic: eccentric contractions can produce approximately 1.2--1.5 times the isometric force but plateau at a finite value [@thelen2003adjustment].
 
 ::: {.callout-important}
@@ -227,12 +222,10 @@ In an illustrative timing estimate, when a nerve fires, it releases neurotransmi
 The standard model for muscle activation dynamics is a first-order linear system:
 $$
 \dot{a} = \frac{u_{\mathrm{neural}} - a}{\tau_{\mathrm{act}}} \quad \text{if } u_{\mathrm{neural}} > a
-{#eq-activation-rise}
-$$
+$$ {#eq-activation-rise}
 $$
 \dot{a} = \frac{u_{\mathrm{neural}} - a}{\tau_{\mathrm{deact}}} \quad \text{if } u_{\mathrm{neural}} \leq a
-{#eq-activation-fall}
-$$
+$$ {#eq-activation-fall}
 where:
 
 - $u_{\mathrm{neural}} \in [0, 1]$ is the normalized neural input (command to the muscle)
@@ -287,30 +280,26 @@ To predict how a muscle produces torque at a joint, we must integrate architectu
 The CE and SEE are in *series*; their forces are equal. The PEE is in *parallel* to the CE. The total muscle force is:
 $$
 F^M = F_{\mathrm{CE}} + F_{\mathrm{PEE}}
-{#eq-total-hill}
-$$
+$$ {#eq-total-hill}
 
 :::
 
 The contractile element generates active force:
 $$
 F_{\mathrm{CE}} = a(t) \cdot F_0 \cdot f_L(\ell_{\mathrm{CE}}) \cdot f_V(\dot{\ell}_{\mathrm{CE}})
-{#eq-ce-force}
-$$
+$$ {#eq-ce-force}
 where $a(t)$ evolves according to @eq-activation-rise and @eq-activation-fall.
 
 The series elastic element stores elastic energy and returns it during rebound. Its force-extension relationship is:
 $$
 F^{\mathrm{SEE}} = F^{\mathrm{SEE}}_0 \left[ \exp(k_{\mathrm{SEE}} \varepsilon_{\mathrm{SEE}}) - 1 \right]
-{#eq-see-force}
-$$
+$$ {#eq-see-force}
 where $\varepsilon_{\mathrm{SEE}}$ is the tendon strain (fractional elongation). The tendon is *stiff*, with $k_{\mathrm{SEE}} \approx 20$--$50$, so it stretches only a few percent under full load but stores significant energy.
 
 The parallel elastic element resists lengthening:
 $$
 F_{\mathrm{PEE}} = F_0 \left[ \exp(k_{\mathrm{PEE}}(\tilde{\ell}_{\mathrm{CE}} - 1)) - 1 \right] \quad \text{for } \tilde{\ell}_{\mathrm{CE}} > 1
-{#eq-pee-force}
-$$
+$$ {#eq-pee-force}
 with $k_{\mathrm{PEE}} \approx 3$--$5$. This force is zero (or negligible) when the muscle is at or shorter than its optimal length.
 
 ::: {.callout-important}
@@ -326,8 +315,7 @@ The series elastic element is important in many athletic movements. When muscle 
 Now we connect muscle biology to the control-affine mathematical framework. Recall from earlier chapters that the system dynamics are:
 $$
 \dot{\bm{x}} = f(\bm{x}) + G(\bm{x})\bm{u}
-{#eq-control-affine-remit}
-$$
+$$ {#eq-control-affine-remit}
 
 In our golf model, $\bm{x} = (\bm{q}, \dot{\bm{q}})$ is the state (joint angles and angular velocities), $\bm{u}$ is nominally the joint torque vector, and:
 $$
@@ -352,20 +340,16 @@ But muscles do not directly produce joint torques—they produce *neural activat
 More precisely:
 $$
 u_{\mathrm{neural}} \in \mathbb{R}^n \quad \text{(typically } n = 10\text{--}20 \text{ muscles per joint)}
-{#eq-neural-command}
-$$
+$$ {#eq-neural-command}
 $$
 \dot{a}_i = \frac{u_{\mathrm{neural},i} - a_i}{\tau_i} \quad \text{(activation dynamics for each muscle)}
-{#eq-activation-vector}
-$$
+$$ {#eq-activation-vector}
 $$
 F_i = a_i F_{0,i} f_{L,i} f_{V,i} \quad \text{(force for muscle } i \text{)}
-{#eq-force-vector}
-$$
+$$ {#eq-force-vector}
 $$
 \tau_j = \sum_{i} r_{j,i}(\bm{q}) F_i \cos(\alpha_i) \quad \text{(net torque at joint } j \text{)}
-{#eq-torque-from-muscles}
-$$
+$$ {#eq-torque-from-muscles}
 
 where $r_{j,i}(\bm{q})$ is the moment arm of muscle $i$ about joint $j$ (which depends on configuration), and $\alpha_i$ is the pennation angle.
 
@@ -373,8 +357,7 @@ The key insight: when we write the control-affine system as $\dot{\bm{x}} = f(\b
 
 $$
 G(\bm{x})\bm{u} = \sum_{i} r_{j,i}(\bm{q}) a_i(\bm{q}, \dot{\bm{q}}, u_{\mathrm{neural}}, t) F_{0,i} f_{L,i}(\tilde{\ell}_i(\bm{q})) f_{V,i}(\dot{\ell}_i(\bm{q}, \dot{\bm{q}})) \cos(\alpha_i)
-{#eq-control-affine-full}
-$$
+$$ {#eq-control-affine-full}
 
 ::: {.callout-note}
 ## Why the Control Gain Decreases at High Speed
@@ -396,8 +379,7 @@ Consider the wrist joint with activation $a = 1$ (fully recruited):
 These numbers are illustrative parameter choices, not subject-independent measurements. A defensible estimate would use fiber velocity, tendon compliance, moment arms, and activation timing from a declared musculoskeletal model. Under the illustrative assumptions above, the available concentric torque drops sharply as shortening speed rises. Meanwhile, the drift force (inertial torque from swinging the club) is:
 $$
 \tau_{\mathrm{drift}} = I_{\mathrm{club}} \ddot{\theta} + \text{(centrifugal, Coriolis)}
-{#eq-drift-torque}
-$$
+$$ {#eq-drift-torque}
 At impact, $I_{\mathrm{club}} \ddot{\theta}$ can reach 50--100 N·m for deceleration of the club. So the ratio is:
 $$
 \frac{\tau_{\mathrm{drift}}}{\tau_{\mathrm{control}}} \approx \frac{100}{6} \approx 17:1
