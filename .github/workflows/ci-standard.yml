@@ -160,6 +160,16 @@ jobs:
         # Neither is caught by the frontmatter validator, the cross-reference
         # checker, the maths scanner, or 'quarto render', which exits 0.
         run: python3 scripts/check_single_title.py
+      - name: Verify Display Maths Is Delimited
+        # An equation with no '$$' is read as a paragraph: Pandoc consumes each
+        # \command as unknown markup and keeps the punctuation, so ch08 shipped
+        # "The equations of motion ... are: () + (, ) + () =" with the equation
+        # replaced by punctuation, and zero MathJax blocks on the page. The
+        # maths scanner cannot see it -- it checks that $...$ spans parse, and
+        # there is nothing here to parse -- and an equation with no delimiters
+        # cannot carry an {#eq-} label, so the cross-reference gate sees nothing
+        # unresolved either.
+        run: python3 scripts/check_display_math.py
       - name: Verify Acronym Terminology Is Consistent
         # NOTATION.md is the single source of truth for DCR and ZTCF. Fails on any
         # reintroduced variant expansion or the dangling cross-reference that made
