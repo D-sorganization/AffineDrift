@@ -111,6 +111,18 @@ jobs:
           - name: "The Physics of Golf"
             dir: articles/The_Physics_of_Golf
             min_pages: 40
+          # Migrated from openflight_development, which built it in its own
+          # workflow. Folded in here so every LaTeX document in the repository
+          # shares one runner routing, one undefined-reference check, and one
+          # page floor. Built locally at 62 pages when it moved.
+          - name: "Launch Monitor Technology Review"
+            dir: articles/Launch_Monitor_Technology_Review
+            min_pages: 55
+            # Its old workflow also required every bibliography entry to be
+            # cited. That guard is worth keeping and is specific to this
+            # document -- the textbooks are not held to it -- so it runs only
+            # where this flag is set.
+            check_bib_complete: true
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -153,6 +165,20 @@ jobs:
           fi
 
           exit "$status"
+
+      - name: Verify every bibliography entry is printed
+        if: matrix.check_bib_complete
+        working-directory: ${{ matrix.dir }}
+        run: |
+          set -euo pipefail
+          bib=$(grep -c '^@' references.bib)
+          bbl=$(grep -c '\\entry{' main.bbl)
+          echo "references.bib entries: $bib"
+          echo "printed entries:        $bbl"
+          if [ "$bib" -ne "$bbl" ]; then
+            echo "::error::$((bib - bbl)) bibliography entries in ${{ matrix.name }} are never cited. Cite them or remove them."
+            exit 1
+          fi
 
       - name: Verify every included chapter reached the PDF
         working-directory: ${{ matrix.dir }}
