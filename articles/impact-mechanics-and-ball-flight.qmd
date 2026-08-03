@@ -646,6 +646,43 @@ The nearest thing to a validation benchmark is a 2023 study fitting 90,000 radar
 
 **One extrapolation hazard worth naming.** Models whose lift coefficient is fitted as monotonically increasing in spin ratio get the **sign of lift wrong** below about $Re = 7 \times 10^4$, where measurements show $C_L$ going negative — the reverse Magnus effect, reaching $C_L = -0.10$ to $-0.15$ depending on dimple geometry. This is not exotic: it is the regime a wedge shot or a headwind-shortened flight ends in. The USGA's own fitting procedure flags it, noting that when the regression quality drops "the ball probably exhibits negative lift." Any simulator integrating a monotonic $C_L(S)$ to the end of flight is out of range at the point where it matters for short-game accuracy.
 
+### V.7 Orientation: the asymmetry the rules exist to police {#sec-orientation}
+
+A golf ball is not aerodynamically axisymmetric. It has a moulding parting line and a dimple pattern with discrete symmetry, so its coefficients depend on **how the pattern is oriented relative to the spin axis**. Two conventions matter: **poles-horizontal (PH)**, with the axis of rotation normal to the parting line, and **pole-over-pole (PP)**, orthogonal to it.
+
+::: {.callout-important}
+## A correction: we said this data didn't exist
+
+An earlier version of this article stated that no measurement of orientation-dependent lift and drag existed anywhere, and advised treating any PH-versus-PP figure as unsourced.
+
+**That was wrong.** It holds for the *peer-reviewed* literature, where we still find nothing — but ball-maker patent filings contain exactly these tables, measured across the full Reynolds range. The error came from searching the academic literature and treating its silence as global. Patent filings are a primary source for this industry precisely because the measurements are commercially sensitive, and they should have been the first place checked.
+:::
+
+Acushnet's [US7156757B2](https://patents.google.com/patent/US7156757B2/en) tabulates $C_L$ and $C_D$ in both orientations across eight Reynolds numbers, for a claimed design and a prior-art comparator. The prior-art ball, at spin ratio 0.170:
+
+| Orientation | $C_L$ | $C_D$ |
+|---|---|---|
+| Pole-over-pole | 0.242 | 0.269 |
+| Poles-horizontal | 0.213 | 0.249 |
+
+That is a **14% difference in lift coefficient from orientation alone**, at identical Reynolds number and spin. The patent's own asymmetry metric reaches **10.9%** for the prior-art ball, against **≤2.5%** for the improved design — which is the entire point of the filing.
+
+The consequences in flight are tabulated too. At 168.4 mph and 3,500 rpm the prior-art ball carries **271.0 yards poles-horizontal against 267.2 pole-over-pole**, with landing angles of 36.2° and 41.4°. Same ball, same launch conditions, **3.8 yards and 5 degrees of descent angle** separating them.
+
+::: {.callout-note}
+## Why the tolerance is 4.0 yards
+
+Recall from §V.3c that a ball is non-conforming if the mean carry difference between the two orientations exceeds **4.0 yards**.
+
+Set that against the patent's measured **3.8-yard** difference for a prior-art ball, and the regulation stops looking arbitrary. The tolerance sits just above what an ordinary, non-optimised, conforming ball actually exhibits — tight enough to catch a ball engineered for asymmetry, loose enough not to fail the incumbent field on manufacturing reality.
+
+The direction is consistent for icosahedral patterns, which the patents describe as tending to "fly slightly lower and longer in the poles-horizontal position." Note the 168.4 mph rows follow that; the lower-speed rows invert the distance ordering, so the effect is launch-condition dependent and not a fixed offset.
+:::
+
+**On dimple depth**, the picture from Japanese wind-tunnel work is more interesting than "shallower is better." Shallow dimples give higher lift at speed — but below about 30 m/s a shallow-dimpled ball's lift **collapses**, because the boundary layer relaminarises as relative velocity falls. A real drive drops below 30 m/s just after apex, so the shallow ball loses exactly where it needs lift most. The published fix is to intersperse *tiny* dimples between the large shallow ones, which removes the low-speed collapse.
+
+⚠️ Both of those studies publish their coefficients **as figures only**, with no tables, so we give the direction and mechanism rather than numbers.
+
 ## Part VI: Closure rate
 
 Closure rate — the speed at which the clubface rotates from open to closed through impact — is measured by several launch monitors and discussed constantly in coaching, but its mechanical consequences are rarely worked out. They turn out to be more interesting than the usual "fast closing face causes hooks" summary, and they divide into three distinct mechanisms that do not all point the same way.
@@ -857,7 +894,7 @@ It is worth separating these explicitly, because golf's technical literature ten
 - **Measured COR as a function of loft.** Widely assumed, apparently never published.
 - **Cross & Dewhurst's three-ball tangential-COR values** — the single most on-point measurement for golf impact. We established this one is *genuinely* unobtainable rather than merely elusive: the repository record indexed as open access is a metadata-only stub tagged non-open-access, the Wayback Machine shows a PDF was never deposited there, Google Scholar has never located a free copy, and the author stopped posting PDFs to his own directory around 2011. The "green open access" flag on this DOI is a false positive. It needs interlibrary loan or an author request.
 - **The Smits & Smith and Quintavalla coefficients.** The first is print-only; the second may be genuinely unpublished, and is in any case a per-ball fit rather than a constant. Naruo & Mizota's coefficients *are* public (V.3), so a fully-specified model does exist — it simply rests on a Reynolds-independence assumption that later measurements contradict.
-- **Any measurement of golf-ball coefficients as a function of dimple-pattern orientation relative to the spin axis.** Despite the symmetry rule being written specifically to police this, no peer-reviewed study measures it; the data is presumably proprietary. Treat any specific poles-horizontal-versus-poles-vertical figure as unsourced.
+- **Peer-reviewed** measurement of coefficients versus dimple-pattern orientation. None exists — but see §V.7, because the data does exist in ball-maker patent filings and an earlier version of this article wrongly reported it as absent altogether.
 - **Whether any vendor reports face angle at first contact rather than maximum compression.** This determines whether a systematic open-face bias exists for high-closure players (VI.4).
 - **Roberts, Jones & Rothberg's measured contact times** across five clubheads and two ball constructions — the peer-reviewed contact-time reference, currently inaccessible.
 
