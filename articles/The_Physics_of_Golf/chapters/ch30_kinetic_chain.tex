@@ -686,10 +686,10 @@ When a muscular input is applied at the hip in such a coupled model, the respons
 In the ZTCF formalism, the dynamics of the coupled system are described by the drift field:
 
 \[
-\dot{\configvec} = \drift(\configvec, \configdot, \control)
+\dot{\configvec} = \driftfield(\configvec, \configdot, \control)
 \]
 
-where $\configvec$ is the configuration vector (all joint angles), $\configdot$ is the configuration velocity, and $\control$ is the control input (muscle activations). The drift field incorporates the mass matrix $\massmat(\configvec)$, which encodes the coupling between segments.
+where $\configvec$ is the configuration vector (all joint angles), $\configdot$ is the configuration velocity, and $\control$ is the control input (muscle activations). The drift field incorporates the mass matrix $\massmat$, which encodes the coupling between segments.
 
 The mass matrix is block-diagonal-like in the joint space, but the inversion $\massmat^{-1}$ couples the segments: an acceleration demand at one joint back-couples to other joints via the mass matrix inversion. This coupling is what produces the constraint forces and the energy transfer.
 

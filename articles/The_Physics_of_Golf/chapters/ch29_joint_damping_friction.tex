@@ -139,14 +139,14 @@ These values are \textbf{illustrative estimates} compiled from passive joint imp
 
 Recall from Chapter~\ref{ch:parallel_mechanisms} that the unforced kinematic chain is governed by:
 \[
-\massmat(\bm{q})\ddot{\bm{q}} + \cormat(\bm{q},\dot{\bm{q}})\dot{\bm{q}} + \gravvec(\bm{q}) = \bm{B}(\bm{q})\control + \bm{J}_c^T(\bm{q})\constraintforce
+\massmat\ddot{\bm{q}} + \cormat\dot{\bm{q}} + \gravvec = \bm{B}(\bm{q})\control + \bm{J}_c^T(\bm{q})\constraintforce
 \]
 
 This is the drift vector field — the natural motion of the body under gravity, Coriolis effects, and muscle forces. To include damping, we simply add a damping term:
 
 \begin{principle}{Damped Kinematic Chain Equations}{damped_eom}
 \[
-\boxed{\massmat(\bm{q})\ddot{\bm{q}} + \cormat(\bm{q},\dot{\bm{q}})\dot{\bm{q}} + \bm{D}(\bm{q})\dot{\bm{q}} + \gravvec(\bm{q}) = \bm{B}(\bm{q})\control + \bm{J}_c^T(\bm{q})\constraintforce}
+\boxed{\massmat\ddot{\bm{q}} + \cormat\dot{\bm{q}} + \bm{D}(\bm{q})\dot{\bm{q}} + \gravvec = \bm{B}(\bm{q})\control + \bm{J}_c^T(\bm{q})\constraintforce}
 \]
 where $\bm{D}(\bm{q})$ is the \emph{damping matrix}, typically diagonal or nearly diagonal, with entries $D_{ii} \geq 0$.
 \end{principle}
@@ -262,7 +262,7 @@ This is crucial: in a multi-joint chain, you cannot treat each joint's dynamics 
 
 The Coriolis matrix $\cormat$ also couples joints. Damping reduces velocity, which reduces Coriolis forces:
 \[
-\cormat(\bm{q}, \dot{\bm{q}}) \dot{\bm{q}}
+\cormat \dot{\bm{q}}
 \]
 
 When $\bm{D}$ reduces $\dot{\bm{q}}$, the Coriolis term decreases, which indirectly affects accelerations everywhere. This is a second-order effect (damping $\to$ velocity $\to$ Coriolis $\to$ acceleration) but it's real.

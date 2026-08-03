@@ -19,7 +19,7 @@
 
   We will see that passive stabilization is not about making the system rigid. Rather, it is about \emph{shaping the potential energy landscape} so that the drift field naturally guides motion toward the desired task. This is Bosch's attractor-fluctuation framework: attractors are low-energy regions where the body can relax into stability; fluctuations are high-energy regions where active control is necessary. A well-tensioned golfer creates favorable attractors throughout the swing; a poorly coordinated golfer must fight against an unfavorable landscape.
 
-  The key insight from affine control theory is that \emph{pre-tensioning modifies the drift field $\drift(x)$, not the control input $\inputmap(x)$}. Thus, passive stabilization is about building a drift field that is already close to the desired trajectory. This is the foundation of Bosch's principle: \emph{Coordinate the assembly lines, not the muscles.}
+  The key insight from affine control theory is that \emph{pre-tensioning modifies the drift field $\drift$, not the control input $\inputmap$}. Thus, passive stabilization is about building a drift field that is already close to the desired trajectory. This is the foundation of Bosch's principle: \emph{Coordinate the assembly lines, not the muscles.}
 \end{introduction}
 
 % ============================================================================
@@ -38,18 +38,18 @@ Recall from Chapter~\ref{ch:parallel_mechanisms} that a parallel kinematic chain
 
 Each constraint generates a constraint force $\lambda_i$ (a Lagrange multiplier), and the total constraint force is:
 \begin{equation}
-  \constraintforce = \loopjac^T(\configvec) \boldsymbol{\lambda},
+  \bm{F}_c = \loopjac^T(\configvec) \boldsymbol{\lambda},
 \end{equation}
-where $\loopjac(\configvec) \in \Reals^{m \times n}$ is the loop Jacobian and $\boldsymbol{\lambda} \in \Reals^m$ is the vector of constraint multipliers.
+where $\loopjac(\configvec) \in \Reals^{m \times n}$ is the loop Jacobian, $\boldsymbol{\lambda} \in \Reals^m$ is the vector of constraint multipliers, and $\bm{F}_c$ is the resulting generalized constraint force.
 
 The equations of motion become:
 \begin{equation}
-  \massmat(\configvec) \configddot + \cormat(\configvec, \configdot) \configdot + \gravvec(\configvec) = \boldsymbol{\tau} + \constraintforce.
+  \massmat \configddot + \cormat \configdot + \gravvec = \boldsymbol{\tau} + \bm{F}_c.
   \label{eq:constrained_eom}
 \end{equation}
 
 \begin{infobox}{In Plain Language}
-  This equation says: the net torque on each joint equals (1) the muscle torque $\boldsymbol{\tau}$, (2) constraint forces that keep the kinematic chain closed, plus gravity and Coriolis/centrifugal effects. The constraint forces $\constraintforce$ are not under direct voluntary control; they are \emph{internal} to the mechanism and are determined by the requirement that the chain remain closed.
+  This equation says: the net torque on each joint equals (1) the muscle torque $\boldsymbol{\tau}$, (2) constraint forces that keep the kinematic chain closed, plus gravity and Coriolis/centrifugal effects. The constraint forces $\bm{F}_c$ are not under direct voluntary control; they are \emph{internal} to the mechanism and are determined by the requirement that the chain remain closed.
 \end{infobox}
 
 Now comes the stabilization problem: \emph{How should the nervous system manage the constraint forces to maintain task performance in the presence of perturbations?}
@@ -209,16 +209,16 @@ Pre-tensioning the fascia (through postural alignment and initial muscle activat
 
 From the affine control perspective, pre-tensioning modifies the \emph{drift field}, not the control input. Recall the general form of a control-affine system:
 \begin{equation}
-  \configdot = \drift(\configvec) + \sum_{i=1}^{m} u_i \inputfield_i(\configvec),
+  \configdot = \driftfield(\configvec) + \sum_{i=1}^{m} u_i \inputfield_i(\configvec),
   \label{eq:affine_system}
 \end{equation}
 where $\drift$ is the drift field (motion under zero input) and $\inputfield_i$ are the control vector fields.
 
-When we pre-tension the system (increase baseline muscle activation or adjust the reference length of antagonist muscles), we change $\drift(\configvec)$. Specifically:
+When we pre-tension the system (increase baseline muscle activation or adjust the reference length of antagonist muscles), we change $\driftfield(\configvec)$. Specifically:
 \begin{equation}
-  \drift(\configvec) = \drift_0(\configvec) + \Delta \drift_{\text{pretension}}(\configvec),
+  \driftfield(\configvec) = \driftfield_0(\configvec) + \Delta \driftfield_{\text{pretension}}(\configvec),
 \end{equation}
-where $\Delta \drift_{\text{pretension}}$ represents the change in the natural trajectory caused by the pre-tension. If the pre-tension is well chosen, the new drift field is already oriented toward the desired motion, reducing the need for control inputs.
+where $\Delta \driftfield_{\text{pretension}}$ represents the change in the natural trajectory caused by the pre-tension. If the pre-tension is well chosen, the new drift field is already oriented toward the desired motion, reducing the need for control inputs.
 
 \begin{driftcontrol}{Pre-Tensioning Optimizes the Drift Field}{ch9b_pretensioning}
   A well-tensioned body has a favorable drift field. The ZTCF (zero-torque counterfactual) trajectory---the motion that would occur if all voluntary control were removed and only passive properties remained---is already close to the intended swing. This is why elite golfers appear to swing effortlessly: their pre-tension creates an attractor that naturally guides the motion.
@@ -268,8 +268,12 @@ This phase transition can be understood mathematically as a bifurcation. The sti
     \draw[->, thick] (-0.5, 0) -- (10, 0) node[right] {Time (Swing Phase)};
     \draw[->, thick] (0, -0.5) -- (0, 5) node[above] {Stiffness $K(\alpha)$};
 
-    % Stiffness curve
-    \draw[thick, blue] (0, 1) -- (2.5, 2) -- (5, 4.5) -- (7.5, 2.5) -- (10, 1);
+    % Stiffness curve: high at address, decreasing through the swing as
+    % pre-tension transfers to elastic elements, rising again at impact --
+    % matching the caption below. (Previously drawn as the opposite shape,
+    % a mid-swing peak; the caption is the one consistent with the
+    % chapter's own account of alpha*(t), see #3707.)
+    \draw[thick, blue] (0, 4) -- (2.5, 3.5) -- (5, 2) -- (7.5, 1) -- (10, 4);
 
     % Phase regions
     \fill[blue, opacity=0.15] (0, 0) -- (2.5, 0) -- (2.5, 5) -- (0, 5) -- cycle;
@@ -323,14 +327,14 @@ In the subspace perpendicular to the UCM, variance is minimized. This suggests t
 
 Let's formalize the affine control perspective. The golf swing is a control-affine system:
 \begin{equation}
-  \configdot = \drift(\configvec, \alpha) + \sum_{i=1}^{m} u_i(t) \inputfield_i(\configvec),
+  \configdot = \driftfield(\configvec, \alpha) + \sum_{i=1}^{m} u_i(t) \inputfield_i(\configvec),
   \label{eq:golf_affine}
 \end{equation}
 where $\alpha$ is the co-contraction level (a parameter that changes slowly), $\configvec$ is the configuration (joint angles, positions), and $u_i(t)$ are the voluntary control inputs (muscle activations above the baseline co-contraction).
 
-The drift field $\drift(\configvec, \alpha)$ includes the effects of gravity, Coriolis forces, centrifugal forces, and the passive properties of muscles and tendons:
+The drift field $\driftfield(\configvec, \alpha)$ includes the effects of gravity, Coriolis forces, centrifugal forces, and the passive properties of muscles and tendons:
 \begin{equation}
-  \drift(\configvec, \alpha) = -\massmat^{-1}(\configvec) \left[ \cormat(\configvec, \configdot) \configdot + \gravvec(\configvec) - \boldsymbol{\tau}_{\text{passive}}(\configvec, \alpha) \right].
+  \driftfield(\configvec, \alpha) = -\massmat^{-1} \left[ \cormat \configdot + \gravvec - \boldsymbol{\tau}_{\text{passive}}(\configvec, \alpha) \right].
 \end{equation}
 
 The key insight is that $\boldsymbol{\tau}_{\text{passive}}(\configvec, \alpha)$ depends on the co-contraction level $\alpha$. Increasing $\alpha$ increases the passive torque, which modifies the drift field. A favorable drift field is one where the ZTCF (zero-torque counterfactual)---the trajectory with $u_i = 0$---is already close to the desired task trajectory.
@@ -339,7 +343,7 @@ The key insight is that $\boldsymbol{\tau}_{\text{passive}}(\configvec, \alpha)$
 
 The ZTCF is defined as:
 \begin{equation}
-  \text{ZTCF: } \quad \configdot = \drift(\configvec, \alpha) \quad (\text{with } u_i = 0).
+  \text{ZTCF: } \quad \configdot = \driftfield(\configvec, \alpha) \quad (\text{with } u_i = 0).
 \end{equation}
 
 If the ZTCF is close to the desired trajectory $\configvec_d(t)$, then the control inputs $u_i(t)$ need only make small corrections. This is a key design principle: \emph{let the body's natural dynamics do most of the work}.
@@ -353,7 +357,7 @@ Elite golfers are skilled at tuning $\alpha(t)$ throughout the swing to keep the
 Recall from Chapter~\ref{ch:zero_torque_counterfactual}, Definition~\ref{def:dcr}, the
 Drift--Control Ratio (DCR):
 \begin{equation}
-  \text{DCR} = \frac{\|\drift(\configvec)\|}{\left\|\sum_i u_{\max,i}\,\inputfield_i(\configvec)\right\|}.
+  \text{DCR} = \frac{\|\driftfield(\configvec)\|}{\left\|\sum_i u_{\max,i}\,\inputfield_i(\configvec)\right\|}.
   \label{eq:ch9b:dcr}
 \end{equation}
 
@@ -427,7 +431,7 @@ If we increase $K$ too much (high co-contraction), the bandwidth increases, but 
 
 \subsection{The Phase Transition Under Loading}
 
-Consider what happens when the system experiences a large external load (e.g., the impact forces at ball strike). The constraint force $\constraintforce$ becomes very large, and the loop closure constraint $\phi(\configvec) = 0$ becomes critical. If the system is over-stiffened, the constraint forces are distributed rigidly across the joints, and the load is borne entirely by the muscles (metabolically expensive) or by structural damage (injury).
+Consider what happens when the system experiences a large external load (e.g., the impact forces at ball strike). The constraint force $\bm{F}_c$ becomes very large, and the loop closure constraint $\phi(\configvec) = 0$ becomes critical. If the system is over-stiffened, the constraint forces are distributed rigidly across the joints, and the load is borne entirely by the muscles (metabolically expensive) or by structural damage (injury).
 
 If the system is moderately stiffened with good compliance, the load is distributed through multiple DOF, and elastic elements absorb energy (less metabolic cost, less injury risk).
 
@@ -650,7 +654,7 @@ In the context of the golf swing, such measurements are difficult because the sw
   \textbf{Input:}
   \begin{itemize}
     \item Desired trajectory $\configvec_d(t)$ for a golf swing phase.
-    \item Model of joint dynamics, including mass matrix $\massmat(\configvec)$, Coriolis matrix $\cormat(\configvec, \configdot)$, and gravity $\gravvec(\configvec)$.
+    \item Model of joint dynamics, including mass matrix $\massmat$, Coriolis matrix $\cormat$, and gravity $\gravvec$.
     \item Muscle model with maximum force $F_{\max,i}$ and moment arms $r_i(\configvec)$ for each joint $i$.
     \item Task cost matrix $Q$ (penalties for trajectory error).
     \item Control cost matrix $R$ (metabolic cost of muscle activation).
@@ -669,7 +673,7 @@ In the context of the golf swing, such measurements are difficult because the sw
     \end{equation}
     Subject to the dynamics:
     \begin{equation}
-      \configdot = \drift(\configvec, \alpha(t)) + \inputmap(\configvec) u(t).
+      \configdot = \driftfield(\configvec, \alpha(t)) + \inputfield(\configvec) u(t).
     \end{equation}
 
     \item \textbf{Evaluate cost:} Compute the total metabolic cost:
@@ -691,7 +695,7 @@ In the context of the golf swing, such measurements are difficult because the sw
 
   \textbf{Notes:}
   \begin{itemize}
-    \item The key is that increasing $\alpha$ changes the drift field $\drift(\configvec, \alpha)$. A favorable drift field reduces the need for control inputs, thus reducing $C_{\text{control}}$. However, the co-contraction itself has a cost $w(\alpha)$. The algorithm finds the balance.
+    \item The key is that increasing $\alpha$ changes the drift field $\driftfield(\configvec, \alpha)$. A favorable drift field reduces the need for control inputs, thus reducing $C_{\text{control}}$. However, the co-contraction itself has a cost $w(\alpha)$. The algorithm finds the balance.
     \item In practice, this optimization can be solved using dynamic programming (Bellman recursion) or by direct transcription (converting the continuous optimal control problem into a finite-dimensional nonlinear programming problem).
     \item The constraint $\phi_j(\configvec) = 0$ must be satisfied at all times. This can be enforced using penalty methods or Lagrange multipliers.
     \item The output $\alpha^*(t)$ should increase during the backswing (building pre-tension), peak at the top of the swing, and decrease during the downswing (releasing pre-tension). This matches the empirical observations from EMG studies.
@@ -709,7 +713,7 @@ In practice, Algorithm~\ref{alg:stiffness_optimization} is implemented by discre
 subject to:
 
 \begin{equation}
-  \configvec_{k+1} = \configvec_k + \Delta t \left[ \drift(\configvec_k, \alpha_k) + \inputmap(\configvec_k) u_k \right]
+  \configvec_{k+1} = \configvec_k + \Delta t \left[ \driftfield(\configvec_k, \alpha_k) + \inputfield(\configvec_k) u_k \right]
 \end{equation}
 
 \begin{equation}
