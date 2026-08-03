@@ -750,6 +750,32 @@ In some configurations during the swing, the mechanism might allow "self-motion"
 
 These self-motions are solutions to the null space of the constraint Jacobian and represent redundancy in the mechanism. They're important because they allow the golfer to adjust internal joint angles without changing the overall swing trajectory — useful for fine-tuning club face angle or release timing.
 
+## Null Space Exploitation in Practice {#sec-null_space_practice}
+
+The null space of a parallel mechanism is the set of joint motions that don't change the end effector motion. In the golf swing, golfers exploit the null space for several purposes:
+
+### Face Angle Adjustment {#sec-face_angle_adjustment}
+
+Even if the club's center of mass follows the same trajectory, the club can rotate about its long axis (roll) or twist. This roll rotation is controlled through:
+
+- Adjusting the relative pronation/supination of the forearms.
+- Changing grip pressure distribution (left hand vs. right).
+- Modulating wrist cock angle.
+
+All of these are motions in the null space of the grip constraint (they don't change the club's position but change its orientation).
+
+### Grip Pressure Redistribution {#sec-grip_pressure_redistribution}
+
+The magnitude of grip pressure can increase or decrease without affecting the club's motion (as long as grip doesn't slip). This is a null space motion in the force space: the grip forces change, but their resultant remains constant.
+
+A golfer might increase right-hand grip pressure while decreasing left-hand pressure (or vice versa) as a strategy to control face angle or release timing.
+
+### Arm Plane Adjustment {#sec-arm_plane_adjustment}
+
+The plane in which the arms move (more or less in front of the body vs. behind the shoulders) can vary while keeping the club on the same trajectory. This is a null space motion — the arms' configuration changes, but the club's motion is preserved.
+
+Different arm planes result in different loads on the shoulder joints and spine, so golfers adjust arm plane based on comfort, injury history, or a conscious coaching decision.
+
 ## Jacobian Analysis: Velocity and Force
 
 The constraint Jacobian encodes relationships at two levels: velocity and force.
@@ -777,6 +803,70 @@ The null space of $\mathbf{J}_c$ (allowed velocities) is orthogonal to the range
 $$\mathcal{N}(\mathbf{J}_c) \perp \text{Range}(\mathbf{J}_c^T)$$
 
 Mechanically, this means: a force in the range of $\mathbf{J}_c^T$ does no work on a velocity in the null space of $\mathbf{J}_c$. Forces perpendicular to allowed motions don't produce motion—they create internal stress.
+
+### The Constraint Jacobian Null Space {#sec-constraint_jacobian_nullspace}
+
+Formally, the null space of the constraint Jacobian is defined as:
+
+$$
+\mathcal{N}(\mathbf{J}_c) = \{ \mathbf{v} \in \mathbb{R}^n : \mathbf{J}_c \mathbf{v} = \mathbf{0} \}
+$$ {#eq-nullspace_definition_formal}
+
+Any velocity vector $\mathbf{v}$ in this null space produces zero velocity of the constraint (the end effector or grip point), meaning the joint motion is "invisible" to the constraint.
+
+The *dimension* of the null space is:
+
+$$
+\dim(\mathcal{N}(\mathbf{J}_c)) = n - \text{rank}(\mathbf{J}_c)
+$$ {#eq-nullspace_dimension}
+
+**Example: Null Space Dimension for a Two-Armed System**
+
+For the two-handed grip:
+
+- Total DOF: $n = 14$ (7 per arm).
+- Constraint rank: $\text{rank}(\mathbf{J}_c) = 6$ (3 position + 3 orientation constraints).
+- Null space dimension: $14 - 6 = 8$.
+
+But wait — we have only 2 arms, so the effective DOF should be smaller. The additional reduction comes from the torso and pelvis constraints:
+
+- Torso constraint (spine loop): reduces by 1 DOF.
+- Pelvis constraint (ground contact): reduces by 3 DOF.
+- Upper body serial structure constraints: reduces by additional DOF.
+
+After accounting for all constraints, the golfer's effective controllable DOF is approximately 5–7, consistent with empirical observations of human motor control.
+
+### Minimum-Norm Solutions via Pseudoinverse {#sec-minimum_norm_pseudoinverse}
+
+When the system is underdetermined, one approach is to find the *minimum-norm* solution: the joint configuration that achieves the desired end effector motion while minimizing the sum of squared joint torques (or some other metric).
+
+The pseudoinverse of the constraint Jacobian provides the minimum-norm solution:
+
+$$
+\mathbf{v}_{\text{min-norm}} = \mathbf{J}_c^+ \mathbf{v}_{\text{desired}}
+$$ {#eq-pseudoinverse_solution}
+
+where $\mathbf{J}_c^+ = \mathbf{J}_c^T (\mathbf{J}_c \mathbf{J}_c^T)^{-1}$.
+
+This solution minimizes $\|\mathbf{v}\|^2$ subject to the constraint $\mathbf{J}_c \mathbf{v} = \mathbf{v}_{\text{desired}}$.
+
+## Internal Forces and the Dual Null Space {#sec-dual_nullspace}
+
+The null space applies to velocities and motions. A related concept, the dual null space, applies to forces.
+
+The range of the constraint Jacobian transpose, $\text{Range}(\mathbf{J}_c^T)$, is the set of constraint forces that can constrain motion. Forces perpendicular to this range (in the null space of $\mathbf{J}_c^T$) are "internal" forces — they don't constrain motion but they do create stresses within the system.
+
+::: {.callout-important}
+## Internal Forces and Injury Risk {#principle:internal_forces_injury}
+
+A key insight for injury prevention: internal forces that lie in the null space of $\mathbf{J}_c^T$ are *not* observable from motion alone. They don't affect the kinematics but they create internal stresses in muscles, ligaments, and joints.
+
+For example, a golfer might maintain the same club trajectory but increase grip pressure dramatically. The motion is unchanged, but the internal stress in the hands and forearms increases. This increased stress is a null space force — it's mechanical work that doesn't produce useful output.
+
+Injury often occurs from accumulated internal forces, especially in repetitive motions. A golfer who generates large internal forces (high muscle co-contraction, high grip pressure) may fatigue or injure tissues without producing more club velocity.
+:::
+
+Understanding internal forces is crucial for analyzing injury risk and predicting when a swing technique might be "efficient" kinematically but "inefficient" mechanically (producing internal stresses with little mechanical benefit).
 
 ## Screw Theory Treatment
 
