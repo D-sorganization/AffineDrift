@@ -732,3 +732,4 @@ python src/tools/code_quality_check.py
 | 2026-07-31 | 1.0.118 | docs/js/bibliography.js | Removed redundant string inclusion checks from `scoreEntry` |
 | 2026-08-02 | 1.0.153 | docs(content): Added the Technology section and three research-grade instrumentation articles, with source dossiers and navbar IA regression coverage. |
 | 2026-08-02 | 1.0.153 | ⚡ Bolt: Optimize bibliography search filtering by caching the previous query and reusing the pre-filtered state to eliminate redundant string inclusion checks. |
+| 2026-08-03 | 1.0.153 | Fixed SSRF bypass vulnerability in URL validation by failing-closed on ValueError |

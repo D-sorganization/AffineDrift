@@ -112,3 +112,7 @@
 **Vulnerability:** The `is_safe_url` function allowed SSRF by failing to block URLs resolving to unspecified IP ranges (0.0.0.0, ::).
 **Learning:** Even if explicit string checks for 0.0.0.0 exist, DNS resolution can resolve a domain to an unspecified address, which circumvents string-based blocks.
 **Prevention:** Always validate the resolved IP address using `ip.is_unspecified` in addition to private, loopback, and link-local checks.
+## 2026-08-03 - Fix SSRF Vulnerability in URL Validation
+**Vulnerability:** The `is_safe_url` functions in `src/tools/verify_images.py` and `scripts/link-checker.py` failed-open on `ValueError` when parsing IP addresses. This allowed SSRF bypasses via crafted hostnames that resolve to IP formats unsupported by `ipaddress.ip_address`.
+**Learning:** Failing-open on exception when validating security policies introduces vulnerabilities. Always fail-closed (return `False`) when an unexpected exception occurs during validation.
+**Prevention:** When validating IP addresses for SSRF protection, if parsing fails, explicitly return `False` rather than passing.
