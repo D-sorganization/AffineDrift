@@ -248,13 +248,23 @@ The classical model states:
 In reality, the launch direction is heavily weighted toward the clubface direction:
 
 \begin{equation}
-\text{Launch direction} \approx 0.85 \cdot \text{Face angle} + 0.15 \cdot \text{Club path} \quad (\text{driver; approximate})
+\text{Launch direction} \approx 0.76 \cdot \text{Face angle} + 0.24 \cdot \text{Club path} \quad (\text{driver; approximate})
 \end{equation}
 
-This 85--15 split (the exact ratio depends on loft and dynamic conditions) is known as the \textbf{D-plane model}. \cite{trackman_ball_flight}
+\begin{warningbox}
+\textbf{The familiar ``85/15'' figure does not survive measurement.}
+
+Almost every golf source states this split as 85\% face and 15\% path, on the authority of TrackMan's \emph{Ten Fundamentals}, which claims roughly 85\% for a driver and 75\% for irons.
+
+The only peer-reviewed measurement of the horizontal ratio \cite{wood2018launch} used 157 golfers and 1{,}575 shots, tracked at 720\,fps and filtered to centred strikes, and found \textbf{76\% $\pm$ 8\% for a driver}, 69\% for a 7-iron and 61\% for a wedge, with a robot test returning 63\% for the 7-iron.
+
+Two things are worth separating here. TrackMan makes the same 85\% claim for the \emph{vertical} plane---dynamic loft to launch angle---and there the measurement agrees closely (83\% $\pm$ 8\%). So the vertical claim holds and the horizontal one does not: this is a live disagreement between a vendor figure and a peer-reviewed measurement, not a units error. The plane confusion compounds it, because Jorgensen's original derivation was vertical and the published TrackMan-versus-PING comparison is also tabulated in the vertical plane, where the two agree---so a reader checking the 85\% figure against that comparison would wrongly conclude it was confirmed.
+
+Nor are these separate per-club constants. The weighting declines monotonically along a single curve as obliqueness increases; the club enters only through its spin loft.
+\end{warningbox}
 
 \begin{definition}{The D-Plane}{d_plane}
-The D-plane is the plane perpendicular to the launch direction (the initial direction of the ball after impact). On this plane, the face angle and club path are measured relative to the target line. The ball's initial side-spin axis is perpendicular to the D-plane.
+The D-plane is the plane containing the \textbf{clubface normal} and the \textbf{clubhead velocity vector} at impact. The ball's initial direction lies in that plane, and its spin axis is perpendicular to it. (It is not, as sometimes stated, the plane perpendicular to the launch direction.) The D-plane is defined only for centred strikes---off-centre impacts add gear effect, which tilts the spin axis independently of this geometry.
 \end{definition}
 
 \subsection{Mathematical Formulation of Launch Direction}
@@ -276,22 +286,19 @@ where:
 \item $w_{\text{face}}$ and $w_{\text{path}}$ are weighting coefficients with $w_{\text{face}} + w_{\text{path}} = 1$
 \end{itemize}
 
-For a driver (low loft, high ball speed), typical values are:
+For a driver (low loft), the measured values are:
 \begin{equation}
-w_{\text{face}} \approx 0.85, \quad w_{\text{path}} \approx 0.15
+w_{\text{face}} \approx 0.76, \quad w_{\text{path}} \approx 0.24
 \end{equation}
 
-For a short iron (high loft, lower ball speed), the weighting shifts further toward the face:
+For a wedge (high loft), the weighting shifts \emph{away} from the face and toward the path:
 \begin{equation}
-w_{\text{face}} \approx 0.75, \quad w_{\text{path}} \approx 0.25
+w_{\text{face}} \approx 0.61, \quad w_{\text{path}} \approx 0.39
 \end{equation}
 
-The weighting coefficients depend on multiple factors:
-\begin{enumerate}
-\item \textbf{Loft angle:} Higher loft → greater face angle weighting
-\item \textbf{Smash factor:} Higher smash factor (ball speed / club speed) → greater face angle weighting
-\item \textbf{Angle of attack:} Negative attack angles (downward strikes) → slightly greater path weighting
-\end{enumerate}
+The single governing variable is \textbf{obliqueness}---the spin loft $\Phi$. Higher spin loft means a lower face weighting, and club identity matters only through the spin loft it delivers. A published fit reproduces the whole family with one expression, $w_{\text{face}} \approx 0.96 - 0.0071\,\Phi$ (with $\Phi$ in degrees), which gives 85\% at $\Phi = 15^{\circ}$ and 75\% at $\Phi = 30^{\circ}$---and this is precisely why the folklore contains two apparently separate ``85/15 driver'' and ``75/25 wedge'' rules. They are one curve evaluated at two points.
+
+The mechanism behind the loft dependence is \textbf{contested in the peer-reviewed literature}. TrackMan attributes the driver's higher weighting to a smoother, lower-friction titanium face. PING rejects this \cite{henrikson2020friction}, showing that a tangential-compliance contact model reproduces the loft dependence at \emph{constant} friction, and that below about 20$^{\circ}$ of incidence lower friction moves launch \emph{closer} to the path---the opposite of the friction hypothesis.
 
 \subsection{Spin Axis and the Vector Perpendicular to the D-Plane}
 

@@ -280,7 +280,11 @@ To be clear: the \emph{dominant} determinant of ball speed is still clubhead spe
 
 \subsection{USGA Regulations and Practical Values}
 
-The USGA introduced the COR limit in 1998 (initially set at 0.822, later raised to 0.830), and the R\&A adopted the same limit in 2008. Without this limit, modern materials would allow COR values of 0.85--0.88.
+The USGA introduced a COR limit in 1998. Two numbers circulate for it and they are not the same quantity: the USGA states its limit as \textbf{0.822}, unchanged since 1998, while \textbf{0.830} is widely quoted as ``the USGA limit.'' The most likely reconciliation is that 0.830 is the \emph{conformance threshold}---the limit plus a 0.008 measurement tolerance---by exact analogy with the Characteristic Time structure below, but we have not been able to confirm that from a primary document, so both are reported here rather than one asserted.
+
+A further definitional trap: the USGA's own published definition of COR---ball speed after impact minus club speed after impact, divided by club speed before impact---is the \emph{apparent} COR ($e_A$), not the classical relative-velocity COR. The two differ by the mass ratio, so a quoted COR figure is only meaningful alongside its definition.
+
+Since 2004, spring-like effect in \emph{drivers} has in any case been policed by \textbf{Characteristic Time} rather than COR, with COR retained for fairway woods, hybrids and irons. A steel pendulum ball carrying internal sensors strikes the face and the sensors time the contact; the limit is 239\,\textmu s with an 18\,\textmu s tolerance, so 257\,\textmu s conforms. Note carefully that this is \emph{not} the golf ball's own contact time, which is roughly twice as long; the two are the same order of magnitude and are constantly conflated.
 
 \index{USGA!COR limit}
 
@@ -379,13 +383,17 @@ For a driver swing with 9.5$^{\circ}$ static loft and +3$^{\circ}$ attack angle,
 
 \index{dynamic loft}
 
-The spin rate depends on the spin loft, which is the angle between the club's velocity vector and the spin axis:
+The spin rate depends on the \emph{spin loft}, the three-dimensional angle $\Phi$ between the direction the clubhead is travelling and the direction the face is pointing:
 
 \begin{align}
-\text{Spin loft} = \theta_{\text{dynamic loft}} - \theta_{\text{club path}}
+\cos\Phi = \cos A \cos L
 \end{align}
 
-A driver with 12.5$^{\circ}$ dynamic loft and 0$^{\circ}$ path (down the target line) has 12.5$^{\circ}$ spin loft. A driver with the same dynamic loft but 3$^{\circ}$ inside-out path has 9.5$^{\circ}$ spin loft and will have less backspin.
+where $A$ is the horizontal obliqueness (face angle relative to club path) and $L$ the vertical obliqueness (dynamic loft relative to attack angle). To first order the two components add in quadrature, $\Phi^2 \approx A^2 + L^2$.
+
+The familiar shorthand ``spin loft = dynamic loft $-$ attack angle'' is the \emph{vertical} component $L$ alone. It is exact only when the face is square to the path, and it is what most launch monitors report; TrackMan's own documentation calls it ``a close approximation'' rather than a definition. Note that both terms must be vertical angles---subtracting the \emph{club path}, which is a horizontal angle, is a category error that appears surprisingly often.
+
+A driver with 12.5$^{\circ}$ dynamic loft delivered with a 0$^{\circ}$ attack angle has 12.5$^{\circ}$ of vertical obliqueness. The same dynamic loft with a $+3^{\circ}$ (upward) attack angle gives 9.5$^{\circ}$, and correspondingly less backspin---which is why hitting up on a driver reduces spin. If the face is also 4$^{\circ}$ open to the path, the true spin loft is $\sqrt{9.5^2 + 4^2} \approx 10.3^{\circ}$, not 9.5$^{\circ}$.
 
 \begin{example}{Launch Condition Calculation}{launch_conditions}
 A golfer hits a driver with:
@@ -563,13 +571,15 @@ The amount of backspin depends on:
 
 \subsection{The Spin Loft Concept}
 
-The spin loft is the difference between the dynamic loft (the vertical angle of the clubface) and the club path (the horizontal direction the club is moving).
+Spin loft is the angle between where the clubhead is \emph{going} and where the face is \emph{pointing}. It has a vertical component---dynamic loft measured relative to the attack angle---and a horizontal component, the face angle relative to the club path. The two combine as
 
 \begin{align}
-\text{Spin loft} = \text{Dynamic loft} - \text{(Club path relative to spin axis)}
+\cos\Phi = \cos A \cos L, \qquad \Phi^2 \approx A^2 + L^2 \ \text{(small angles)}
 \end{align}
 
-For a driver with 12.5$^{\circ}$ dynamic loft and a path down the target line (0$^{\circ}$ horizontally), the spin loft is simply 12.5$^{\circ}$.
+Spin loft governs how obliquely the ball is struck, and therefore how the impulse divides between compressing the ball (which produces speed) and shearing it (which produces spin). Because both effects draw on the same impulse, more spin loft means more spin and less ball speed---the trade-off that sets the optimum loft for any given clubhead speed.
+
+For a driver with 12.5$^{\circ}$ dynamic loft delivered with a level attack angle and a square face, the spin loft is simply 12.5$^{\circ}$.
 
 The backspin rate depends on spin loft, clubhead speed, friction coefficient, and ball construction. Simple linear formulas (e.g., $RPM \approx k \times \text{spin loft}$) are insufficient because the relationship is nonlinear and strongly dependent on the sliding-to-rolling transition during the 0.5~ms contact.
 

@@ -275,11 +275,27 @@ Wood, Henrikson and Broadie measured 157 golfers over 731 driver, 745 7-iron and
 | Robot, horizontal | — | 63% ± 4% | — |
 
 ::: {.callout-important}
-## The 85/15 rule conflates two different planes
+## What the 85/15 rule actually claims, and where it fails
 
-The 83–87% figures that circulate are **vertical**-plane numbers — launch angle relative to dynamic loft. The **horizontal** ratio, which is what "85% face, 15% path" is always used to describe, measures **76% ± 8% for a driver and 69% for a 7-iron**.
+It is tempting to say the 85% figure is simply a vertical-plane number misapplied to the horizontal plane. That is part of the story but not all of it, and the fuller version is more interesting.
 
-Jorgensen's "just over 80%" was likewise a *vertical* derivation. The number migrated planes somewhere in transmission, exactly as the old laws did.
+TrackMan's *Ten Fundamentals* ([Newsletter #7](https://www.gregsmithgolfcoach.com/wp-content/uploads/2014/04/newsletter7.pdf), October 2010) asserts **85% in both planes**, in consecutive sections:
+
+> TrackMan data has shown for drivers, that dynamic loft normally accounts for about 85% of the launch angle, while attack angle accounts for the remaining 15%. For irons, the ratio is around 75% dynamic loft and 25% attack angle.
+
+> For drivers, TrackMan has discovered that face angle accounts for roughly 85% of the initial direction, and for irons face angle accounts for around 75%.
+
+Set against PING's measurements, the two claims fare very differently:
+
+| | TrackMan claim | PING measurement |
+|---|---|---|
+| **Vertical** (dynamic loft → launch angle), driver | 85% | **83% ± 8%** ✓ |
+| **Horizontal** (face angle → start direction), driver | 85% | **76% ± 8%** ✗ |
+| Horizontal, 7-iron | ~75% | **69% ± 3%** |
+
+**The vertical claim holds. The horizontal one does not.** So this is a live disagreement between a vendor's published figure and the only peer-reviewed measurement of it — not merely a bookkeeping error about planes.
+
+The plane confusion is real too, and compounds it: Jorgensen's "just over 80%" was a *vertical* derivation, and the peer-reviewed comparison of TrackMan against PING is likewise tabulated in the vertical plane, where the two agree well. A reader checking the 85% figure against that comparison would conclude it was confirmed.
 
 The practical consequence is not small. At 76% rather than 85%, a 4° in-to-out path with a square face starts the ball about 1° right rather than 0.6° right, and the face-to-path needed to zero out a given start direction changes accordingly.
 :::
@@ -621,6 +637,8 @@ so closure rate *is* the gain from timing error to face-angle error:
 
 Since face angle carries roughly three quarters of horizontal launch direction on a driver (see @sec-weighting — *not* the 85% usually quoted), and each degree of face-to-path tilts the spin axis by about four degrees on a driver, this is by a wide margin the largest consequence of closure rate. A high-closure release is a **high-gain system**: it will square the face, and it converts small timing errors into large directional ones.
 
+An independent check on the magnitude comes from the launch-monitor validation literature, where the same rate appears as a *measurement* problem rather than a coaching one. [Leach et al. (2017)](https://doi.org/10.1016/j.measurement.2017.08.009) note that **"the face angle of a driver closes at a rate of 2.9°/ms immediately prior to impact"** — 2,900 °/s, the same order as the clubhead closing velocities in VI.8, arrived at from a completely different direction. Their concern is that *"the point in time at which the measurement is taken will significantly affect the output"*, and only one vendor specifies that instant (see the [Vendor Reference](launch-monitor-vendor-reference.qmd)). The player's timing problem and the instrument's timing problem are the same derivative.
+
 The arithmetic is sound, and it is the reason the "fast closure is hard to time" argument has been the coaching consensus since Cochran and Stobbs put it in print in 1968. But the arithmetic is not the end of the story, and the next section is the most important in this article.
 
 ### VI.5b The prediction fails: closure rate does not predict accuracy
@@ -683,8 +701,11 @@ Everything above is geometry and holds whatever the measured values are. But app
 |---|---|---|
 | **Handle twist velocity (HTV)** | Angular velocity of the *grip* about its own long axis | 650–2,430 °/s (tour) |
 | **Clubhead closing velocity (CCV)** | Angular velocity of the *head* about the face normal's vertical | ~1,800–3,600 °/s |
+| **Shaft-relative** (Foresight) | *"The rotation of the club head heel to toe measured about the shaft"* | — |
 | **Path-relative** (GEARS) | Face rotation measured relative to the club path | 360–620 °/s |
 | **Per unit distance** (°/ft) | Face rotation per foot of clubhead travel | 13–25 °/ft |
+
+The middle two are worth dwelling on, because they are both *vendor* definitions, both published, and they are not the same quantity. [Foresight](https://www.foresightsports.com/pages/what-we-measure) measures rotation about the **shaft**; [GEARS](https://www.gearssports.com/articles/gears-golf-club-ball-metrics/) measures rotation relative to the **club path**. Neither flags the discrepancy, and a player moving between the two systems will see numbers that differ by a factor of several with no indication that the definition changed underneath them.
 
 The first two are reconciled by the lie angle:
 
