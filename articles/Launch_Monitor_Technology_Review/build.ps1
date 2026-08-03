@@ -7,7 +7,7 @@
 #   pass 3  settles the table of contents and all cross-references
 #
 # Fails loudly on LaTeX errors, undefined citations, and undefined
-# references so local builds match the CI gate (.github/workflows/tech-review.yml).
+# references so local builds match the CI gate (.github/workflows/compile-textbooks.yml).
 $ErrorActionPreference = 'Stop'
 Set-Location $PSScriptRoot
 
