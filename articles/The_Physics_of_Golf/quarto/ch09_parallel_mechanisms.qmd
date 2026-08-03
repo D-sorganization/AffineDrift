@@ -932,6 +932,99 @@ In the context of the golf swing:
 
 Screw theory provides a coordinate-free, elegant way to analyze these relationships. Interested readers are referred to `r cite_key("Murray1994,BulloLewis2004")`.
 
+## GRF and Lower Body: Full Treatment {#sec-grf_lower_body}
+
+So far, we've discussed GRF conceptually. Here's a complete treatment of how to measure and analyze lower body mechanics using force plate data.
+
+### Force Plate Basics {#sec-force_plate_basics}
+
+A force plate is a sensor that measures three orthogonal force components and three torque components (six DOF). Modern force plates (e.g., AMTI, Bertec, Kistler) are accurate to within 1% of the measured force.
+
+During a golf swing, a golfer typically stands on one or two force plates (one under each foot). The data streams include:
+
+- $F_x$ (anterior-posterior force)
+- $F_y$ (medial-lateral force)
+- $F_z$ (vertical force)
+- $M_x$ (roll moment)
+- $M_y$ (pitch moment)
+- $M_z$ (yaw moment, or "ground reaction torque" or "free moment")
+
+Each component changes throughout the swing, revealing the golfer's weight transfer, rotational strategy, and force application pattern.
+
+### Center of Pressure Trajectory {#sec-cop_trajectory}
+
+The center of pressure (COP) is computed from the force and moment data:
+
+$$
+\text{COP}_x = \frac{M_y}{F_z}, \quad \text{COP}_y = -\frac{M_x}{F_z}
+$$ {#eq-cop_computation}
+
+The COP trajectory during the swing reveals the golfer's balance. A professional golfer's COP typically:
+
+1. Starts near the center of the stance at address.
+2. Moves toward the trailing foot during the backswing.
+3. Moves toward the lead foot during the downswing and through-swing.
+4. Stabilizes near the lead foot in the follow-through.
+
+An erratic or jerky COP trajectory indicates poor balance or weight transfer and is often associated with inconsistent swing mechanics.
+
+### Vertical GRF Profile {#sec-vertical_grf}
+
+The vertical GRF is typically expressed as a multiple of body weight (%BW). During the golf swing:
+
+1. **Address:** $F_z \approx 1.0 \times BW$ (static support).
+2. **Early backswing:** $F_z$ may decrease slightly to $0.95 \times BW$ as the golfer unweights the lead foot.
+3. **Top of backswing:** $F_z$ increases to $1.1$–$1.2 \times BW$ as the golfer coils and prepares to accelerate.
+4. **Downswing:** $F_z$ continues to increase, reaching peak values of $1.3$–$1.6 \times BW$ at the moment of impact. (Professional golfers often reach higher values.)
+5. **Post-impact / follow-through:** $F_z$ decreases back toward $1.0 \times BW$ as the golfer finishes the swing.
+
+The shape and magnitude of the vertical GRF profile reveal the golfer's sequencing and force application strategy. A golfer with poor sequencing might have premature peak GRF (early in the downswing), while a golfer with good sequencing has peak GRF near impact.
+
+### Horizontal GRF Components {#sec-horizontal_grf}
+
+The horizontal forces ($F_x$ and $F_y$) are typically much smaller than the vertical force (usually $< 0.3 \times BW$) but are critical for revealing the golfer's rotational dynamics.
+
+- **Anterior-posterior force ($F_x$):** this component is associated with forward/backward weight shift. A positive $F_x$ (forward) during the downswing indicates the golfer is pushing into the ground to drive the lower body forward and up.
+- **Medial-lateral force ($F_y$):** this component is associated with lateral stability and rotational acceleration. It's typically small but becomes significant during weight transfer.
+
+### Ground Reaction Torque (Free Moment) {#sec-ground_reaction_torque}
+
+The ground reaction torque (or "free moment") is the torque $M_z$ about the vertical axis. This torque is crucial for initiating pelvis rotation.
+
+::: {.callout-important}
+## Ground Torque Drives Pelvis Rotation {#principle:ground_torque_pelvis}
+
+The free moment $M_z$ from the ground is one of the primary drivers of pelvis rotational acceleration. In the absence of external torques, the only torque acting on the pelvis comes from the ground (the ground reaction torque) and from muscle actions.
+
+During the downswing, the ground exerts a torque $M_z \sim 50$–$150$ N·m, depending on the golfer's size and swing speed. This torque is measured directly by force plates and represents the ground's mechanical contribution to initiating and sustaining pelvis rotation.
+:::
+
+The ground reaction torque is computed from the moment data directly (it's $M_z$ from the force plate) or can be inferred from the offset of the resultant GRF vector relative to the body's center of rotation.
+
+### Sequential Computation from Distal to Proximal {#sec-sequential_inverse_dynamics}
+
+With force plate data, lower body inverse dynamics can be computed in a sequential manner:
+
+1. **Ankle:** apply RNEA starting from the force plate data (known forces and moments at the foot). Compute ankle joint torque.
+2. **Knee:** using the ankle torque and lower leg kinematics, compute the forces and moments at the knee joint. From these, compute knee joint torque.
+3. **Hip:** using the knee torque and upper leg kinematics, compute the forces and moments at the hip joint. From these, compute hip joint torque.
+
+This sequential computation is unique and well-determined (unlike upper body inverse dynamics) because the force plate provides a known boundary condition.
+
+### The "Ground-Up" Power Transfer Chain {#sec-ground_up_power}
+
+A key insight from force plate analysis is that the golf swing's power flow is initiated from the ground up:
+
+1. The ground exerts a vertical force (support) and a torque (drive). These are the initiating forces.
+2. The ground torque accelerates the pelvis. The pelvis acceleration then couples to the upper body via the spine and hips.
+3. The hips transfer some of the power to the shoulders via the spine.
+4. The shoulders transfer power to the arms via shoulder joints.
+5. The arms accelerate the club.
+
+This "ground-up" perspective contrasts with the (incorrect) "upper-body-down" perspective where golfers imagine "driving from the shoulders." In fact, the shoulders are largely passive followers of the pelvis rotation initiated by ground forces.
+
+Force plate data quantifies this ground-up flow and shows that the contribution of the ground reaction torque to pelvis acceleration is often larger than the contribution of the hip muscles themselves — another example of drift dominance.
+
 ## Chapter Exercises: Parallel Mechanisms
 
 **Conceptual**
