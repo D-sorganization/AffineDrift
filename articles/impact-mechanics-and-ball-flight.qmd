@@ -519,7 +519,19 @@ The cleanest tabulated set is [Li, Tsubokura & Tsunoda (2017)](https://doi.org/1
 
 Those three columns are the subcritical, critical and supercritical regimes. **Note the middle one.** At the critical Reynolds number the lift coefficient goes *negative* — the reverse Magnus effect — and it is positive on either side of it. Their smooth-sphere control does the same thing at its own critical Reynolds number ($C_L = -0.2067$ at $Re = 2\times10^5$).
 
-This is an independent confirmation of the free-flight measurements in §V.3b, arrived at computationally: reverse Magnus is not an artefact of a particular rig, and it is confined to a narrow window around the drag crisis rather than being a general low-Reynolds phenomenon. The mechanism both accounts point to is the same — at critical $Re$ the advancing and retreating sides sit on *opposite branches* of the drag crisis, one separating turbulently and late, the other laminarly and early, which reverses the sense of the separation-point asymmetry.
+This is an independent confirmation of the free-flight measurements in §V.3b, arrived at computationally: reverse Magnus is not an artefact of a particular rig, and for a golf ball it is confined to a narrow window around the drag crisis rather than being a general low-Reynolds phenomenon. The mechanism both accounts point to is the same — at critical $Re$ the advancing and retreating sides sit on *opposite branches* of the drag crisis, one separating turbulently and late, the other laminarly and early, which reverses the sense of the separation-point asymmetry.
+
+Wind-tunnel measurement on a rotating sphere reaches the same conclusion by yet another route, and adds a mechanism the flow-state argument alone does not give. Once the advancing side transitions and its separation is delayed, the streamline **radius of curvature is smaller on that side**; through $\partial p/\partial n = -\rho V^2/R$ the pressure there is lower, and the lift points advancing-ward — negative. Push the spin higher and transition moves further upstream on the advancing side, separation moves back upstream with it, and positive lift returns. That is why the effect occupies a *window* in spin ratio rather than switching on and staying on.
+
+::: {.callout-warning}
+## Two traps in the reverse-Magnus literature
+
+**The spin ratio is not consistently normalised.** Some authors define $\Gamma = D\omega/U$, others $\alpha = \omega R/U$ — differing by a **factor of two**. Taken at face value, one prominent LES reports its negative-lift condition at $\Gamma = 0.2$ and a wind-tunnel study reports one at $\alpha \approx 0.53$, an apparent five-fold discrepancy that only partly closes once the definitions are reconciled. Always check which normalisation a source uses before comparing spin ratios across papers. The same trap applies to the spin-decay coefficients in §V.4.
+
+**The datasets genuinely disagree.** A 2024 review notes that three of the major rotating-sphere studies show **large mutual disagreement at matched Reynolds number** — this is not a normalisation artefact. Reverse Magnus is well established as a phenomenon and poorly established as a number.
+
+The golf-ball-specific free-flight measurements in §V.3b are the ones to trust for golf, because they use production balls rather than scaled smooth spheres, and because their run-to-run scatter is published.
+:::
 
 Non-rotating DNS gives consistent numbers: [Smith et al. (2010)](https://doi.org/10.1016/j.ijheatfluidflow.2010.01.002) report $C_D = 0.47$ subcritically (337 million grid points) and **0.26** supercritically (1.2 billion points), the latter within about 2% of Choi's experimental value.
 
@@ -843,6 +855,7 @@ It is worth separating these explicitly, because golf's technical literature ten
 - **An inter-laboratory round robin for golf-ball aerodynamics.** No ISEA, ASTM or governing-body comparison exists publicly. Every dataset is a single lab's.
 - **A golf-specific quantification of sting interference or of turbulence intensity shifting the critical Reynolds number.** Both mechanisms are well established generically and neither has a published golf magnitude.
 - **Measured COR as a function of loft.** Widely assumed, apparently never published.
+- **Cross & Dewhurst's three-ball tangential-COR values** — the single most on-point measurement for golf impact. We established this one is *genuinely* unobtainable rather than merely elusive: the repository record indexed as open access is a metadata-only stub tagged non-open-access, the Wayback Machine shows a PDF was never deposited there, Google Scholar has never located a free copy, and the author stopped posting PDFs to his own directory around 2011. The "green open access" flag on this DOI is a false positive. It needs interlibrary loan or an author request.
 - **The Smits & Smith and Quintavalla coefficients.** The first is print-only; the second may be genuinely unpublished, and is in any case a per-ball fit rather than a constant. Naruo & Mizota's coefficients *are* public (V.3), so a fully-specified model does exist — it simply rests on a Reynolds-independence assumption that later measurements contradict.
 - **Any measurement of golf-ball coefficients as a function of dimple-pattern orientation relative to the spin axis.** Despite the symmetry rule being written specifically to police this, no peer-reviewed study measures it; the data is presumably proprietary. Treat any specific poles-horizontal-versus-poles-vertical figure as unsourced.
 - **Whether any vendor reports face angle at first contact rather than maximum compression.** This determines whether a systematic open-face bias exists for high-closure players (VI.4).
