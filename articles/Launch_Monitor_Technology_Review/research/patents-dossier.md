@@ -170,7 +170,7 @@ Uneekor's own list (https://uneekor.com/legal/patents) mixes: **Creatz Inc.** pa
 - **Full Swing:** markets "patented Dual-Tracking" — overhead ION camera at impact + IR line-scan light-curtain arrays in flight (Pro 2.0 "Tri-Tracking": ION3 + 4 IR/blue-LED cameras). The KIT's CW+FMCW radar is US 2020/0147470. The IR light-curtain approach dates to the 1990s (older Sports Vision/Full Swing-era patents now expired).
 - **aboutGolf 3Trak (ex-Deltec):** proprietary high-speed machine-vision photography ("3D vector at impact"); no specific numbers confirmed this pass.
 - **Ernest Sports:** hybrid — 2 IR cameras + 4 Doppler radar sensors (ES Tour Plus); patents not individually surfaced.
-- **Garmin (Approach R10):** three-receiver Doppler radar measuring club speed, ball speed, launch angle/direction directly; spin and apex largely model-derived. No golf-specific blocking patent surfaced in this pass — notable that a major player ships a $600 radar unit measuring only the "safe," long-public-domain primitives (velocity + angles) and modeling the rest.
+- **Garmin (Approach R10):** three-receiver Doppler radar measuring club speed, ball speed, launch angle/direction directly; spin and apex largely model-derived. No golf-specific blocking patent surfaced in this pass — notable that a major player ships a \$600 radar unit measuring only the "safe," long-public-domain primitives (velocity + angles) and modeling the rest.
 - **Sports Sensors Swing Speed Radar:** founder Albert Dilz (ex-defense), company started 1998 on his Glove Radar patent; simple CW Doppler peak-speed measurement. Foundational-era, expired.
 
 ---

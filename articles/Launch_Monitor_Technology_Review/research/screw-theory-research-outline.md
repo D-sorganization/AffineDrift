@@ -119,7 +119,7 @@ flash from crown/sole flashes (range gating + timing logic).
 
 3.4. **Multistatic geometry as an observability instrument.** The per-frame
 twist system's weak directions are set by sight-line diversity. Cheap 24/60 GHz
-nodes are ~$20–50; placing a second node down-target or overhead is the highest
+nodes are ~\$20–50; placing a second node down-target or overhead is the highest
 leverage accuracy purchase available. Method: optimal experiment design on the
 measurement matrix — place node k to maximize the smallest singular value of the
 stacked A over the swing window. This converts "where do I put the sensor?" from
@@ -289,20 +289,20 @@ ends at first contact; priors must be pendulum-validated.
 
 ## 8. Ranked experimental program
 
-| Rank | Experiment                                                                                                       | Hardware delta             | Answers                                                                       |
-| ---- | ---------------------------------------------------------------------------------------------------------------- | -------------------------- | ----------------------------------------------------------------------------- |
-| E1   | Synthetic twist-estimation study (simulated scatterers on CAD head + recorded swing trajectories)                | none                       | validates App. E pipeline; quantifies observability claims; tunes priors      |
-| E2   | OPS243-A velocity-distribution club analytics                                                                    | none                       | D1 mitigation on current hardware; spread↔ω correlation                      |
-| E3   | Pendulum rig with club                                                                                           | rig only                   | end-to-end bias test (analytic twist truth)                                   |
-| E4   | IWR6843 custom chirp bring-up + per-bin monopulse                                                                | firmware effort            | the enabling dataset for everything radar-side                                |
-| E5   | Specular-flash detection (3.3) on E4 data                                                                        | none beyond E4             | is the face flash detectable/timeable at consumer SNR?                        |
-| E6   | Groove-anchor feasibility: strobed GS camera, overhead, irons (4.2)                                              | Pi GS cam + strobe (~$100) | minimum resolution/lighting for a groove-resolved frame                       |
-| E7   | Twist-propagated face angle: fuse E5/E6 anchor with E4 twist; compare vs D-plane-inverted face on the same shots | none beyond above          | the headline result: measured-vs-inferred face angle discrepancy distribution |
-| E8   | Deflectometry bench test on club faces at 850 nm (4.3)                                                           | LED array + camera         | which faces/finishes support direct normal measurement                        |
-| E9   | ISAR focusing of E4 coherent data (3.2)                                                                          | none                       | scatterer persistence; achievable cross-range resolution                      |
-| E10  | Grip IMU fusion (6.1)                                                                                            | ~$30 IMU                   | ω truth for validating radar ω; shaft-flex magnitude data                     |
-| E11  | Acoustic impact-location classifier (4.6)                                                                        | none                       | auxiliary impact evidence from existing microphone                            |
-| E12  | Putting ISA / roll-state measurement (6.2)                                                                       | camera pointing down-line  | novel measurand demo                                                          |
+| Rank | Experiment                                                                                                       | Hardware delta              | Answers                                                                       |
+| ---- | ---------------------------------------------------------------------------------------------------------------- | --------------------------- | ----------------------------------------------------------------------------- |
+| E1   | Synthetic twist-estimation study (simulated scatterers on CAD head + recorded swing trajectories)                | none                        | validates App. E pipeline; quantifies observability claims; tunes priors      |
+| E2   | OPS243-A velocity-distribution club analytics                                                                    | none                        | D1 mitigation on current hardware; spread↔ω correlation                      |
+| E3   | Pendulum rig with club                                                                                           | rig only                    | end-to-end bias test (analytic twist truth)                                   |
+| E4   | IWR6843 custom chirp bring-up + per-bin monopulse                                                                | firmware effort             | the enabling dataset for everything radar-side                                |
+| E5   | Specular-flash detection (3.3) on E4 data                                                                        | none beyond E4              | is the face flash detectable/timeable at consumer SNR?                        |
+| E6   | Groove-anchor feasibility: strobed GS camera, overhead, irons (4.2)                                              | Pi GS cam + strobe (~\$100) | minimum resolution/lighting for a groove-resolved frame                       |
+| E7   | Twist-propagated face angle: fuse E5/E6 anchor with E4 twist; compare vs D-plane-inverted face on the same shots | none beyond above           | the headline result: measured-vs-inferred face angle discrepancy distribution |
+| E8   | Deflectometry bench test on club faces at 850 nm (4.3)                                                           | LED array + camera          | which faces/finishes support direct normal measurement                        |
+| E9   | ISAR focusing of E4 coherent data (3.2)                                                                          | none                        | scatterer persistence; achievable cross-range resolution                      |
+| E10  | Grip IMU fusion (6.1)                                                                                            | ~\$30 IMU                   | ω truth for validating radar ω; shaft-flex magnitude data                     |
+| E11  | Acoustic impact-location classifier (4.6)                                                                        | none                        | auxiliary impact evidence from existing microphone                            |
+| E12  | Putting ISA / roll-state measurement (6.2)                                                                       | camera pointing down-line   | novel measurand demo                                                          |
 
 E1–E3 need no new hardware and de-risk everything else. E7 is the
 proof-of-concept that would demonstrate, on one dataset, face angle measured two
