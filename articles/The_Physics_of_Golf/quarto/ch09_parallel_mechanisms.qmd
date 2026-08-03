@@ -711,6 +711,50 @@ To clarify the parallel between robotics terminology and the golf swing, here is
 
 This mapping makes clear that the golf swing is mechanically a parallel mechanism in the robotics sense. The problems and insights from parallel robotics transfer directly to biomechanics.
 
+## Forward Kinematics: From Joint Angles to End Effector Position {#sec-fk_parallel}
+
+In a serial chain, forward kinematics is straightforward: given all joint angles, compute the position of the end effector by composing transformations.
+
+In a parallel mechanism with closed loops, forward kinematics becomes a system of *nonlinear simultaneous equations*:
+
+$$
+\bm{\Phi}(\bm{q}) = \mathbf{0}
+$$ {#eq-fk_parallel_implicit}
+
+where $\bm{\Phi}$ is the set of closure constraints. These equations must all be satisfied simultaneously. There is no simple forward recursion as in the serial case.
+
+**Example: Forward Kinematics for the Two-Handed Grip**
+
+Given the angles $\bm{q}_L$ and $\bm{q}_R$ of both arms, the position of the left hand is $\bm{p}_L(\bm{q}_L)$ and the right hand is $\bm{p}_R(\bm{q}_R)$.
+
+The grip constraint equation is:
+
+$$
+\bm{\Phi}_{\text{grip}} = \bm{p}_L(\bm{q}_L) - \bm{p}_R(\bm{q}_R) = \mathbf{0}
+$$ {#eq-fk_grip_implicit}
+
+This is an implicit equation for the club position in terms of arm angles. It cannot be solved by forward recursion — instead, it must be solved iteratively (e.g., using Newton-Raphson) or via constraint-satisfaction methods.
+
+The existence and uniqueness of a solution depend on the *configuration* (specific arm angles). Some configurations may have no solution (the arms can't both reach the same point), one solution, or multiple solutions. A configuration with multiple solutions is called **kinematically redundant** or **singularities** in some robotics contexts.
+
+## Inverse Kinematics: Overdetermined and Ill-Posed {#sec-ik_parallel}
+
+In a serial chain, inverse kinematics asks: given the desired position of the end effector, what joint angles achieve it? This problem can have 0, 1, or many solutions depending on the arm's geometry and the desired position.
+
+In a parallel mechanism, the problem is harder: the end effector position is constrained by the closure equations, so you cannot specify it arbitrarily. Instead, you specify the joint angles on one "branch" of the mechanism, and the closure constraints determine the position of the end effector.
+
+::: {.callout-note}
+## Why Parallel Inverse Kinematics Is Overdetermined {#inplain:parallel_ik_overdetermined}
+
+In a serial chain with $n$ DOF, you specify $n$ variables (the joint angles) to control $n$ variables (the end effector position). Square system, typically solvable.
+
+In a parallel mechanism with $n$ DOF and $m$ closure constraints ($m > 0$), you have $n + m$ variables (joint angles plus constraint forces) but only $n$ equations (dynamics or kinematics). The system is underdetermined.
+
+Conversely, if you try to solve for joint angles given only kinematic or constraint information, you're asking: "Which joint angles satisfy the closure constraint?" The closure constraint is typically a single equation or a small set of equations, while you're solving for many joint angles. The problem is overdetermined and has no exact solution in general.
+
+The resolution: the closure constraint must be satisfied, and the system finds the joint angles that satisfy it while minimizing some objective (e.g., energy, joint torques, deviation from a preferred posture).
+:::
+
 ## Singularities in Parallel Mechanisms {#sec-singularities_parallel}
 
 In a serial mechanism, a singularity occurs when the Jacobian loses rank, typically at the boundary of the workspace. At a singularity, the end effector cannot move in certain directions no matter how fast the joints rotate.
