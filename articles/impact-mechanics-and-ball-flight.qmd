@@ -430,9 +430,15 @@ Their explanation is that dimples **impose a local drag penalty** — a direct i
 Dimples are not free. They buy separation delay by paying surface drag, and the trade is favourable only because a golf ball would otherwise spend its entire flight stuck subcritical at $C_D \approx 0.5$ — as §V.1 established, the smooth-sphere drag crisis sits above anything a golf ball ever reaches.
 
 ::: {.callout-note}
-## A figure we removed
+## A figure we removed, and what tracing it turned up
 
-An earlier version of this section stated that the local penalty accounts for "up to 60% of total drag." That number circulates in secondary summaries of this paper and **we could not trace it to the paper itself**, which is paywalled with no preprint. The factor-of-two-to-three comparison quoted above is verbatim from the abstract and is what the claim should rest on until someone reads the full text.
+An earlier version of this section stated that the local penalty accounts for "up to 60% of total drag." We removed it, and the trace is instructive.
+
+That number appears in **exactly one document** — a 2024 preprint, which renders it as "accounting for up to 60% of the total drag." The *same research group's* peer-reviewed paper describes the result differently: that dimples "incur a local pressure penalty which increased the total drag force by **approximately 50%**."
+
+Those are not two phrasings of one number. **"60% *of* the total drag" is a share; "increased total drag *by* 50%" is an increment.** They cannot both be restatements of the same quantity, and neither is checkable, because the primary is closed-access with no preprint and no repository copy — confirmed against three independent open-access indexes.
+
+We therefore cite neither. The factor-of-two-to-three comparison quoted above is verbatim from the abstract and is what the claim rests on. This is a small example of a general hazard: a number that has been through one paraphrase can arrive looking precise while having changed meaning.
 :::
 
 ### V.3 The models, and what they actually contain
@@ -679,9 +685,28 @@ Set that against the patent's measured **3.8-yard** difference for a prior-art b
 The direction is consistent for icosahedral patterns, which the patents describe as tending to "fly slightly lower and longer in the poles-horizontal position." Note the 168.4 mph rows follow that; the lower-speed rows invert the distance ordering, so the effect is launch-condition dependent and not a fixed offset.
 :::
 
+A second Acushnet filing, [US8550941B2](https://patents.google.com/patent/US8550941B2/en), gives the ball-to-ball scatter measured on an indoor range at 110 mph and 1,740 rpm. Across nominally identical two-piece balls, drag varied about 5% in the pole orientation and 4% in the seam orientation — but **lift varied 3% in the pole orientation against 13% in the seam orientation.** Orientation does not merely shift the mean; it changes how *repeatable* the ball is, and it does so asymmetrically between the two coefficients.
+
+Two things are worth noting about the state of this evidence. The original Polara patent — the ball that provoked the symmetry rule in the first place — contains **no measured data at all**, only qualitative claims. And the contrast with baseball is instructive: the seam-shifted wake has a published, peer-reviewed particle-image-velocimetry study. **The golf equivalent does not exist in the open literature.** For a sport whose governing bodies test every ball in two orientations as a matter of routine, that is a conspicuous asymmetry between what is measured and what is published.
+
 **On dimple depth**, the picture from Japanese wind-tunnel work is more interesting than "shallower is better." Shallow dimples give higher lift at speed — but below about 30 m/s a shallow-dimpled ball's lift **collapses**, because the boundary layer relaminarises as relative velocity falls. A real drive drops below 30 m/s just after apex, so the shallow ball loses exactly where it needs lift most. The published fix is to intersperse *tiny* dimples between the large shallow ones, which removes the low-speed collapse.
 
-⚠️ Both of those studies publish their coefficients **as figures only**, with no tables, so we give the direction and mechanism rather than numbers.
+⚠️ Those two studies publish their coefficients **as figures only**, so the low-speed collapse is reported as direction and mechanism rather than numbers.
+
+Depth *does* have published numbers, from non-rotating work on 328-dimple spheres at $Re = 1.27\times10^5$:
+
+| Dimple depth ratio $k/d$ | $C_D$ |
+|---|---|
+| Smooth sphere | 0.45 |
+| 0.0079 | **0.25** |
+| 0.0151 | 0.30 |
+| 0.0188 | 0.35 |
+
+Two results follow. **Deeper is not better** past a point — drag rises monotonically with depth across this range, and the same work locates a **minimum near $k/d \approx 0.003$** in the supercritical regime. And deeper dimples pull the drag crisis to lower Reynolds number while raising the post-critical drag, which is the trade in one sentence: an early crisis bought at the cost of everything after it.
+
+Set that against §V.1, where Bearman and Harvey's 1976 balls had $k/d = 9\times10^{-3}$ and a modern ball roughly $4\times10^{-3}$. Fifty years of dimple development has moved depth **down**, toward the drag minimum — which is part of why the 1976 dataset's minimum $C_D$ of 0.23 sits above a modern ball's 0.17, and why that difference should not be read as a measurement disagreement.
+
+A 2023 study adds the complementary variable, fitting drag against dimple *volume* ratio across 25 model balls. Every fit is strongly positive — more dimple volume, more drag — with the lift-to-drag ratio falling correspondingly ($r = -0.83$ at spin ratio 0.31). Volume, not count, appears to be the governing geometric quantity.
 
 ## Part VI: Closure rate
 
