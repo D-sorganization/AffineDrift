@@ -393,7 +393,10 @@ This over-constraint serves a purpose: **stiffness and energy transfer efficienc
 An over-constrained system, if well-designed, is stiff and predictable. The energy input (from leg drive and hip acceleration) is efficiently channeled through the constrained structure to the output (club speed).
 
 By contrast, a loosely jointed system (fewer constraints) is floppy and unpredictable. Energy dissipates in uncontrolled motion.
-{inplain:redundancy_feature}
+
+:::
+
+### Why Over-Constraint Is a Feature {#inplain:redundancy_feature}
 In engineering, over-constraint is usually a bad thing—it can cause jamming or failure if tolerances are tight. But in biomechanics, over-constraint can be beneficial.
 
 The human body is over-constrained but has elasticity. This elasticity allows the over-constraints to be satisfied while maintaining mobility. The benefits:
@@ -404,8 +407,219 @@ The human body is over-constrained but has elasticity. This elasticity allows th
 
 For the golf swing, the over-constraint ensures that as the hips drive, the shoulders and arms follow predictably. There's no slack or slop. Energy flows efficiently from the ground (through the feet) up through the kinetic chain to the club.
 
+## Drift and Control in a Parallel System {#sec-drift_control_parallel}
+
+@sec-zero_torque_counterfactual introduced drift forces (gravity, Coriolis, centrifugal) and control forces (muscle-applied torques). In a serial chain, these forces and the applied torques solve the dynamics uniquely. In a parallel mechanism, the story is more subtle.
+
+### The Drift/Control Decomposition {#sec-drift_control_decomposition}
+
+Recall the equation of motion:
+
+$$
+\bm{M}(\bm{q})\,\ddot{\bm{q}} + \bm{C}(\bm{q},\dot{\bm{q}})\,\dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{\tau}_{\text{drift}} + \bm{\tau}_{\text{control}}
+$$ {#eq-drift_control_general}
+
+where:
+
+- $\bm{\tau}_{\text{drift}} = -[\bm{C}(\bm{q},\dot{\bm{q}})\,\dot{\bm{q}} + \bm{g}(\bm{q})]$ are the passive forces (drift).
+- $\bm{\tau}_{\text{control}}$ are the active muscle-applied torques.
+
+In a parallel system, the closed-loop constraints introduce additional complexity. The constraint forces (Lagrange multipliers) become part of the dynamics and must be accounted for:
+
+$$
+\bm{M}(\bm{q})\,\ddot{\bm{q}} + \bm{C}(\bm{q},\dot{\bm{q}})\,\dot{\bm{q}} + \bm{g}(\bm{q}) = \bm{\tau}_{\text{control}} + \bm{J}_c^T(\bm{q})\,\bm{\lambda}
+$$ {#eq-drift_control_constrained}
+
+where $\bm{\lambda}$ are the constraint multipliers (internal constraint forces).
+
+::: {.callout-note}
+## What the Golfer Actually Controls {#inplain:golfer_control_inputs}
+
+A golfer doesn't directly control 14 joint angles independently. Instead, they control a smaller set of "control inputs":
+
+1. **Hip drive:** the initial rotational acceleration of the pelvis, driven by hip and lower back muscles. This typically reaches 300–500 rad/s² at the top of the downswing.
+2. **Shoulder plane:** the golfer can adjust whether the shoulders rotate in a plane parallel to the ground or at an angle. This is controlled by the lats and upper back muscles.
+3. **Wrist release:** the timing and magnitude of wrist ulnar deviation (in plane) and pronation/supination (out of plane). This controls when the club accelerates.
+4. **Grip pressure:** dynamic grip pressure changes during the swing affect the effective stiffness of the two-handed system and modify load distribution between hands.
+5. **Foot pressure:** weight shift and foot pressure distribution affect the center of pressure and the ground reaction forces, which indirectly affect the lower body's rotational dynamics.
+
+These are relatively low-dimensional control inputs (maybe 5–8 parameters) that a golfer's nervous system can feasibly modulate. They are distinct from the 14 joint angles, which are consequences of the closed-loop constraints acting on these inputs.
+:::
+
+### The Control is Small {#sec-control_is_small}
+
+A key insight from @sec-zero_torque_counterfactual was that *drift forces dominate active muscle forces* during the downswing. This is especially true in a parallel system with significant inertia and angular velocities.
+
+::: {.callout-important}
+## Drift Forces Dominate During Release {#theorem:drift_dominates}
+
+During the downswing and release, the magnitudes of drift forces exceed active muscle torques by a factor of 5–40, depending on swing speed and body size.
+
+**Proof sketch:**
+
+- Centrifugal force: $\bm{F}_{\text{cent}} = m\omega^2 r$. With $\omega \sim 20$ rad/s (arm rotation) and $r \sim 0.5$ m, $F_{\text{cent}} \sim 200$ N. Torque: $\tau_{\text{cent}} = F_{\text{cent}} \times r \sim 100$ N·m.
+- Coriolis force: $\bm{F}_{\text{Cor}} = -2m\bm{\omega} \times \bm{v}_{\text{rel}}$. With $\omega \sim 10$ rad/s (body rotation), $v_{\text{rel}} \sim 10$ m/s (arm motion), $F_{\text{Cor}} \sim 200$ N. Torque: $\tau_{\text{Cor}} \sim 50$ N·m.
+- Gravity: $F_g = mg = 900 \times 0.3 = 270$ N (for 3 kg arm). Torque: $\tau_g \sim 30$ N·m.
+- Muscle torque: typical maximal isometric torque at the shoulder is 100–150 N·m. But during the release, muscles are shortening at high velocity, so dynamic torque is 30–60 N·m.
+
+The total drift torque can exceed 150 N·m, while active control torque is $\sim 40$ N·m. Drift dominates.
+:::
+
+This domination of drift is crucial because it means:
+
+- The golfer's swing is largely "passive" in the sense that drift forces do the mechanical work.
+- Active control is more about "releasing" the drift (removing brakes) than about actively accelerating the club.
+- Variations in golf swing efficiency correlate with how well the golfer harnesses drift rather than muscle force.
+
+## Drift Forces in Detail: Computational Treatment {#sec-drift_forces_detailed}
+
+This section provides detailed computational expressions for each drift force component in the golf swing context.
+
+### Centrifugal Effects {#sec-centrifugal_detailed}
+
+When a body rotates about an axis, every point in the body experiences an outward centrifugal acceleration (in the rotating frame). In a rotating body (like the golfer's torso), segments moving radially experience a centrifugal acceleration proportional to the square of angular velocity.
+
+$$
+\bm{a}_{\text{centrifugal}} = -\bm{\omega} \times (\bm{\omega} \times \bm{r})
+$$ {#eq-centrifugal_acceleration}
+
+For a simple case: arm of mass $m_a = 3$ kg rotating at angular velocity $\omega = 15$ rad/s at distance $r = 0.6$ m from the axis:
+
+$$
+a_{\text{centrifugal}} = \omega^2 r = 15^2 \times 0.6 = 135 \text{ m/s}^2
+$$ {#eq-centrifugal_numerical}
+
+Force:
+
+$$
+F_{\text{centrifugal}} = m_a \times a_{\text{centrifugal}} = 3 \times 135 = 405 \text{ N}
+$$ {#eq-centrifugal_force}
+
+This force acts radially outward (away from the rotation axis). If it acts at distance $d = 0.4$ m from a joint, the torque is:
+
+$$
+\tau_{\text{centrifugal}} = 405 \times 0.4 = 162 \text{ N·m}
+$$ {#eq-centrifugal_torque}
+
+This is a large torque, approaching the maximal muscle torque at the shoulder. And it comes "for free" from rotation — no muscle activation needed.
+
+### Coriolis Effects {#sec-coriolis_detailed}
+
+The Coriolis force arises when motion occurs in a rotating frame. It's given by:
+
+$$
+\bm{F}_{\text{Coriolis}} = -2m\,\bm{\omega} \times \bm{v}_{\text{rel}}
+$$ {#eq-coriolis_force}
+
+where $\bm{\omega}$ is the angular velocity of the rotating frame and $\bm{v}_{\text{rel}}$ is the velocity of the mass in the rotating frame.
+
+In the golf swing:
+
+- $\bm{\omega} \sim 10$ rad/s (body rotation about vertical axis).
+- $\bm{v}_{\text{rel}} \sim 8$ m/s (arm extension during downswing).
+- $m_a \sim 3$ kg (arm mass).
+
+Magnitude:
+
+$$
+|\bm{F}_{\text{Coriolis}}| = 2 \times 3 \times 10 \times 8 = 480 \text{ N}
+$$ {#eq-coriolis_numerical}
+
+This Coriolis force is perpendicular to both $\bm{\omega}$ and $\bm{v}_{\text{rel}}$. If the body rotates about the vertical and the arm extends horizontally, the Coriolis force points approximately horizontal (perpendicular to arm motion).
+
+Depending on its moment arm, this creates a torque of:
+
+$$
+\tau_{\text{Coriolis}} \sim 480 \times 0.2 = 96 \text{ N·m}
+$$ {#eq-coriolis_torque}
+
+Coriolis couples body rotation to arm motion. It's one reason why trying to keep your arms stiff during a fast body rotation creates stresses — the Coriolis force resists the relative motion.
+
+### Gravity {#sec-gravity_detailed}
+
+Gravity acts downward on every segment. For the golf swing, the major gravity effects are:
+
+1. **Support of the arm:** the shoulder muscles must support the weight of the arm and club against gravity. If the arm is horizontal and extended, the torque at the shoulder is:
+
+   $$
+   \tau_{\text{grav,arm}} = (m_a + m_c) \times g \times r_{\text{com}} = (3 + 0.2) \times 9.81 \times 0.35 \sim 11 \text{ N·m}
+   $$ {#eq-gravity_arm}
+
+   This is small compared to drift forces but non-negligible.
+
+2. **Torso weight:** the erector spinae muscles along the spine must support the weight of the upper body during flexion and rotation. This can create torques of 50–100 N·m depending on posture.
+3. **Weight shift:** as the golfer shifts weight from back foot to front foot, gravity assists with this shift (the center of mass moves forward and downward). This is a potential energy loss but also a source of passive acceleration.
+
+Gravity is the most "predictable" drift force because it's constant (always downward). In contrast, centrifugal and Coriolis forces depend on angular velocities and change throughout the swing.
+
+### Elastic Drift: Passive Tissue Forces {#sec-elastic_drift}
+
+Beyond inertial drift forces, the spine, ligaments, and tendons store elastic potential energy and release it as restoring forces. These are also "drift" in the sense that they act without active muscle control (at least during the release phase when muscles are shortening eccentrically).
+
+::: {.callout-note}
+## Elastic Drift {#definition:elastic_drift}
+
+**Elastic drift** is the restoring force exerted by stretched or compressed elastic tissues (spine ligaments, tendons, fascia, connective tissue) to return toward their resting length or configuration.
+:::
+
+The elastic restoring torque in the spine during the downswing can be modeled as:
+
+$$
+\tau_{\text{elastic}} = -k \times (\theta_{\text{current}} - \theta_{\text{rest}})
+$$ {#eq-elastic_restoring_torque}
+
+where $k$ is the effective stiffness (100–300 N·m/rad for the lumbar spine) and $\theta_{\text{rest}}$ is the neutral spine angle.
+
+During the backswing, the golfer stretches the spine and elastic tissues, storing energy. During the downswing, this energy is released. The elastic drift torque can reach 80–150 N·m at peak storage.
+
+## Why Drift Forces Are Not Constrained by the Loop {#sec-drift_not_constrained}
+
+Here is a critical insight: *drift forces are computed from position, velocity, and acceleration alone and are not constrained by the loop closure equations*. This is profound because it means:
+
+1. Gravity acts on the center of mass, which is determined by the skeleton's configuration. The configuration must satisfy the closure constraints, but gravity's direction and magnitude are independent of whether the system is serial or parallel.
+2. Coriolis forces depend on rotation rates and relative velocities. These are also determined by kinematics, not by constraint forces.
+3. Centrifugal forces depend on rotation rates and radii. Again, purely kinematic.
+
+In contrast, the distribution of constraint forces between the two hands (in a two-handed grip) is ambiguous. But the total drift force acting on the system is *not* ambiguous — it's determined by kinematics.
+
+::: {.callout-important}
+## Drift Forces Are Observable {#principle:drift_observable}
+
+From motion capture data alone, a biomechanist can compute:
+
+- The center of mass trajectory (from skeletal kinematics).
+- The gravitational force on each segment (mass and center of mass position).
+- The velocity and acceleration of each segment (from joint angles and time derivatives).
+- The Coriolis and centrifugal forces (from angular velocities and accelerations).
+
+These drift forces are *uniquely determined* by kinematics. There is no ambiguity, no null space, no underdetermined system. This is why the ZTCF framework (which computes total forces and moments without worrying about muscle-by-muscle details) is robust to loop constraints.
+:::
+
+## The Closed Loop Ambiguity Affects Only Active Force Distribution {#sec-loop_ambiguity_active}
+
+To clarify the distinction, let's state precisely what is ambiguous and what is not:
+
+::: {.callout-important}
+## The Ambiguity is Localized to Active Torques {#theorem:ambiguity_localized}
+
+In a system with loop constraints and redundant actuation:
+
+- **Uniquely determined:** total generalized force (drift + control combined), computed from kinematics and mass distribution. This is the right-hand side of Newton's second law: $\bm{M}(\bm{q})\,\ddot{\bm{q}} + \bm{C}(\bm{q},\dot{\bm{q}})\,\dot{\bm{q}} + \bm{g}(\bm{q})$.
+- **Uniquely determined:** constraint forces (Lagrange multipliers), determined by the constraint kinematics equations.
+- **Underdetermined:** distribution of active muscle torques among the redundant muscles/actuators. Given the total required force, there are infinitely many ways to distribute it among the muscle groups.
+:::
+
+In the golf swing context:
+
+- The *total* torque needed to accelerate the club is determined by the club's inertia and angular acceleration. No ambiguity.
+- The *constraint forces* at the grip (the internal reaction between left and right hands) are determined by the closure constraint and kinematics. No ambiguity.
+- The *individual torques* from left hand vs. right hand, or from shoulder muscles vs. elbow muscles, are underdetermined. Ambiguity.
+
+This is why inverse dynamics can compute *joint-level* torques (sum of all muscles at a joint) without ambiguity, but it cannot compute individual muscle forces in a parallel system without additional information (EMG, force plates, etc.).
+
 ## Summary: Parallel Mechanisms and the Golf Body
 
+::: {.callout-important}
 ### Key Takeaways: Parallel Mechanisms and Loop Constraints {#principle:parallel_key_takeaways}
 
 1. **Serial vs. parallel:** The golf body is not a serial chain (hips → shoulders → arms). It's a parallel mechanism with closed loops. The spine and arms form multiple paths from the hips to the shoulders.
