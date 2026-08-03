@@ -49,4 +49,8 @@
 - **Fascia sourcing.** The chapter's rhetorical stance — separating real myofascial force
   transmission from Anatomy Trains speculation — is exactly right for this audience and is worth
   doing properly. It needs the literature already sitting unused in the bibliography.
-- **Figures.** 62 figure environments in the LaTeX; zero reach the web mirror.
+- **Figures.** **31** `tikzpicture` figures in the LaTeX (all `\label`'d, only 3 `\ref`'d from
+  prose), zero reach the web mirror, zero raster images anywhere in the book. The `62` previously
+  recorded here double-counted: `\begin{figure}` and `\begin{tikzpicture}` were tallied separately
+  for the same 31 figures. Full inventory and a rough plot-vs-schematic split (owner decision
+  input) posted to [#3708](https://github.com/D-sorganization/AffineDrift/issues/3708).
