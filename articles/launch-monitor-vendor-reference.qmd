@@ -42,7 +42,7 @@ A clubhead is a rigid body of finite size rotating as it moves. Different points
 |---|---|---|
 | **TrackMan** | Geometric centre of the clubhead (within ~6 mm of CG) | [Club data definitions](https://www.trackman.com/blog/golf/club-data-definitions) |
 | **FlightScope** | "The geometric center of the club" | [Data parameters](https://flightscope.com/pages/flightscope-data-parameters) |
-| **Uneekor** | "The club head's geometric center at the time of impact" | EYE XO / QED sticker guides |
+| **Uneekor** | "The club head's geometric center at the time of impact" in older sticker guides; current Club AI material does not restate the reference point | EYE XO / QED sticker guides; [Club AI announcement](https://uneekor.com/blogs/blog/introducing-the-uneekor-studio-package%3A-one-system.-no-limits.) |
 | **Full Swing** | "The club head's center **prior to** impact" | Data-points blog |
 | **Foresight** | **"The club head face center"** — stated only in a putting glossary PDF, not on any product page | [Putting guide & glossary](https://support.foresightsports.com/sites/default/files/downloads/2021/EPA%20Putting%20Guide%20&%20Glossary.pdf) |
 | **Garmin R50** | A **sticker on the club face** (R10 measures at the head) | [R50 vs R10](https://www.garmin.com/en-US/blog/outdoor/3-key-differences-between-garmin-approach-r50-and-r10/) |
@@ -56,9 +56,9 @@ Two things in that table deserve comment.
 
 And it explains why optical systems land elsewhere: *"Optical-based launch monitors almost always measure Club Speed, Attack Angle and Club Path relative to the center of the club face, since this is where the reflective markers are positioned."*
 
-So a radar unit and a camera unit measuring the *same driver swing* should be expected to disagree on club path by around 3°, systematically, with the optical figure reading more out-to-in. That is not an accuracy difference. It is a definitional one, and no amount of calibration removes it.
+For a driver, two systems using those different reference points can therefore disagree by roughly the 3° example TrackMan gives, with the face-centre path reading more out-to-in. That component of disagreement is definitional rather than an accuracy error, although the realised difference depends on club geometry and motion.
 
-**Uneekor and Full Swing agree on the point but differ on the instant.** Uneekor says "at the time of impact"; Full Swing says "prior to impact." That is exactly the difference you would expect between a camera imaging a single instant and a radar integrating an approach vector --- and it means their path numbers should be expected to differ systematically too.
+**The published Uneekor and Full Swing definitions differ on the instant.** Older Uneekor guides say "at the time of impact"; Full Swing says "prior to impact." Those phrases are not metrologically interchangeable, but the documents do not define the sampling window closely enough to predict a fixed inter-device offset.
 
 ::: {.callout-warning}
 ## TrackMan's face-to-path is a hybrid quantity
@@ -80,7 +80,7 @@ This is the distinction most obscured by marketing, and it separates the market 
 
 | System | Club data source | Requires markers? |
 |---|---|---|
-| **Uneekor** EYE series | Optically imaged from **clubface stickers** | **Yes --- club stickers mandatory for any club data** |
+| **Uneekor** EYE series | Optical club imaging; marker requirement depends on model and software | Older EYE/QED guides require stickers; 2026 Club AI is advertised as sticker-free |
 | **Foresight** GCQuad | Imaged from clubface markers | Yes for club data (1 or 4 markers) |
 | **GEARS** | Full marker-based optical motion capture | Yes |
 | **TrackMan** | Radar-tracked 3D silhouette of the head | No |
@@ -88,7 +88,7 @@ This is the distinction most obscured by marketing, and it separates the market 
 | **Rapsodo** | Stereo cameras + radar, **reconstructed** from a scanned 3D club model | No |
 | **Sportsbox AI** | Monocular video; shaft line only --- **no face orientation at all** | No |
 
-Uneekor is refreshingly blunt about the dependency: *"CLUB DATA CANNOT BE READ IF THE BALL IS COVERING ONE OF THE TWO STICKERS. CLUB DATA WILL BE ONLY SHOWN IF BOTH STICKERS ARE VISIBLE."* Unstickered means *no* club data, not degraded club data. Note also that Uneekor's marked-*ball* requirement (QED only, for spin) is a separate matter from its marked-*club* requirement (all models, for club data) --- retailers routinely conflate the two.
+Uneekor's older sticker guide is blunt about its dependency: *"CLUB DATA CANNOT BE READ IF THE BALL IS COVERING ONE OF THE TWO STICKERS. CLUB DATA WILL BE ONLY SHOWN IF BOTH STICKERS ARE VISIBLE."* That statement should not be generalised to the current range. Uneekor's January 2026 Club AI announcement advertises sticker-free club data, while the current EYE XO2 product page still says reflective club stickers are required. The public documentation therefore conflicts as of 2026-08-03; marker requirements must be checked for the exact hardware, software package and data set. Marked-*ball* requirements for spin are a separate issue.
 
 At the other end, Full Swing's patent describes a radar-only device whose processor estimates trajectory *"using deep-learning algorithms rather than predefined mathematical relationships."* Doppler radar returns range and radial velocity; it does not resolve the angular attitude of a clubface. A learned mapping from radar returns to a face angle may be empirically excellent, but it is inference. Notably, Full Swing's own marketing claims measurement for the **ball** and makes no equivalent claim for the club.
 
@@ -206,7 +206,7 @@ The same document is unusually careful elsewhere, and worth reading for its cave
 | GCQuad user manual | [PDF](https://support.foresightsports.com/sites/default/files/files/GCQuad_User_Manual.pdf) | Marker placement geometry; **no glossary, no path definition** |
 | Ball & club data (EU) | [foresightsports.eu](https://foresightsports.eu/ball-club-data/) | Slightly different wording of the same definitions |
 
-Marker dependency: four markers yield clubhead speed, smash factor, attack angle, swing path, face angle, loft and lie; a single marker drops it to speed, smash, attack angle and path.
+Marker dependency: four markers yield clubhead speed, smash factor, attack angle, swing path, face angle, loft, lie, closure rate and impact location; a single marker drops the output to speed, smash, attack angle and path. The expanded four-marker list is documented in Foresight's [club-marker guide](https://help.foresightsports.com/hc/en-us/articles/4408197030035-How-to-Apply-and-Maintain-Club-Markers-for-Foresight-Sports-Devices).
 
 ### GEARS Golf
 
@@ -218,7 +218,7 @@ GEARS therefore demonstrably understands that reference point matters --- but sh
 
 ### Uneekor
 
-Stereo high-speed infrared cameras; no radar in the line. Its genuine parameter glossary is, oddly, buried in sticker-guide PDFs rather than any manual or support page.
+Uneekor's overhead systems use high-speed infrared cameras. Older parameter definitions are buried in sticker-guide PDFs, while current product and software pages describe newer markerless capabilities without publishing a replacement metrological glossary.
 
 | Document | Link |
 |---|---|
@@ -226,7 +226,11 @@ Stereo high-speed infrared cameras; no radar in the line. Its genuine parameter 
 | EYE XO2 manual | [PDF](https://download.uneekor.com/docs/EYEXO2_Manual.pdf) |
 | **EYE XO club sticker guide** | [PDF](https://cdn.shopify.com/s/files/1/0388/4423/5907/files/EYEXO_Sticker_Guide.pdf) |
 | **QED club sticker guide** | [PDF](https://cdn.shopify.com/s/files/1/0388/4423/5907/files/QED_Club_Stickers.pdf) |
+| Club AI announcement (January 2026) | [uneekor.com](https://uneekor.com/blogs/blog/introducing-the-uneekor-studio-package%3A-one-system.-no-limits.) |
+| Current EYE XO2 product page | [uneekor.com](https://uneekor.com/golf-launch-monitors/eye-xo2) |
 | Patent marking page | [uneekor.com](https://uneekor.com/legal/patents) |
+
+The two current Uneekor pages are inconsistent: Club AI says its camera-based club data is sticker-free, while the EYE XO2 page says reflective club stickers are required for club data. This reference preserves both claims rather than selecting one without model-and-software-specific confirmation.
 
 Worth knowing: **Uneekor does not own its core measurement patents.** Every patent on its own virtual-marking page resolves to **Creatz Inc** (Korea) --- including US12008770 (the markerless "Dimple Optix" spin method, 2021 priority) and the earlier marked-ball patents US10776929 and US10587797 (2017). The progression from marked-ball to markerless dimple tracking is exactly the QED-to-EYE transition.
 
@@ -256,7 +260,7 @@ Its accuracy page reports mean absolute differences of ~2° against an electroma
 
 ### Garmin (Approach R10, R50)
 
-Modest hardware, but **the best disclosure practice of any vendor in golf** — Garmin is the only one that publishes an explicit measured-versus-calculated split, with tolerances on each side ([accuracy page](https://support.garmin.com/en-US/?faq=kj37CgzvwM98hC9WPrIQm5)):
+Garmin provides one of the clearest public disclosure pages in this market: an explicit measured-versus-calculated split with manufacturer-stated tolerances ([accuracy page](https://support.garmin.com/en-US/?faq=kj37CgzvwM98hC9WPrIQm5)):
 
 | Measured by radar | Calculated by algorithm |
 |---|---|
@@ -265,7 +269,7 @@ Modest hardware, but **the best disclosure practice of any vendor in golf** — 
 | Launch angle ± 1° | Carry distance ± 5 yd |
 | Launch direction ± 1° | |
 
-Two things follow. Club **face angle is explicitly algorithmic** — Garmin says so, where every competitor implies measurement. And **club path and attack angle appear in neither column**, though Garmin sells both: no accuracy figure, no measurement claim. That is the single largest disclosure gap in the consumer tier, and it is visible only because Garmin published enough for the omission to be noticeable.
+Two things follow. Club **face angle is explicitly algorithmic**. And **club path and attack angle appear in neither column**, though Garmin reports both: the cited page gives them no tolerance and does not classify them as measured or calculated. The omission is visible because Garmin publishes the surrounding detail.
 
 Garmin also ships the only in-product measured/estimated indicator we found: *"Spin rate is measured directly when possible. If it is displayed in italics, that means it was estimated based on other available data points."* Spin is not measured below 90 mph ball speed or under 20 m of observed flight.
 
@@ -292,13 +296,13 @@ Documentation has been **deleted**. The site was rebuilt and the entire manuals 
 Marketing asserts "zero estimation," but two archived statements undercut it — an explanation that outdoor failures lose "the rotation of the ball and club data" because "the background is the same color as the golf ball" (tying spin and club data to the cameras, not the radar), and a 2014 FAQ conceding that a radar-only model "does not measure launch and spin however... reacts to various launch and spin conditions," which is a calibration table, not a measurement.
 
 ::: {.callout-note}
-## Two vendors, same radar band, opposite advice on marked balls
+## Similar portable radars, opposite advice on marked balls
 
 FlightScope **requires** aluminium stickers on the ball for indoor spin: *"Aluminum stickers are needed in an indoor environment in order for the X3C, Mevo+, Mevo Gen2, and Mevo to accurately measure ball spin."*
 
 Garmin **warns against them**: *"Intentionally marked balls (e.g. metallic stickers) may degrade system performance."*
 
-Both are 24 GHz Doppler devices. They cannot both be right about the same physics, which implies materially different spin-extraction methods behind similar-sounding radar specifications — and neither vendor explains theirs.
+Garmin R10 and FlightScope Mevo/Mevo+ use 24 GHz radar, but that does not make their signal chains interchangeable; the FlightScope statement also covers X3C, whose architecture should not be inferred from the portable models. The opposite advice is evidence of model-specific antenna, signal-processing and estimation choices, not contradictory physics.
 
 Garmin discloses a related trade-off for radar-reflective balls that nobody else does: with a Titleist RCT ball, *"it is possible that the signal from the RCT ball is interfering with the signal from the club. You may need to use a standard golf ball if club metrics are what you are most interested in."* Good spin or good club angles, not both.
 :::
@@ -349,13 +353,13 @@ Of the four, only °/ft is **speed-invariant by construction**. It is $\omega/v$
 - **Foresight:** never states an instant for angular parameters. Its *impact point* is defined as first contact; closure rate as *"just before the ball is impacted."*
 
 ::: {.callout-important}
-## Only TrackMan specifies the instant, and it matters enormously
+## Only TrackMan specifies maximum compression precisely
 
 Leach et al. put a number on it: **"The face angle of a driver closes at a rate of 2.9°/ms immediately prior to impact... Therefore, the point in time at which the measurement is taken will significantly affect the output."**
 
-Contact lasts roughly 0.45 ms. So the difference between reporting face angle at first contact and at maximum compression is on the order of **a degree**, systematically, and larger for faster-closing players. A degree of face angle is roughly ten yards offline on a drive.
+Contact lasts roughly 0.45 ms. At the cited pre-impact closure rate, the difference between reporting face angle at first contact and at maximum compression can therefore be on the order of **a degree**. The precise effect on ball flight depends on speed, spin, launch conditions and aerodynamic modelling.
 
-TrackMan is the only vendor that pins this down. Foresight and FlightScope say "at impact," which is not a time.
+Of the documents reviewed, TrackMan is the only vendor that ties the reported club orientation to maximum compression while also limiting the measurement to pre-impact data. The other phrases identify the impact interval but do not locate a reproducible phase within the collision.
 :::
 
 ### III.3 Nobody actually measures the centre of gravity
@@ -376,11 +380,11 @@ There is a lesson in that for anyone building measurement systems, and it is not
 
 ## Part IV: The independent validation literature
 
-Vendors publish no accuracy figures. Independent researchers have, and the results are worth knowing before trusting any club number.
+Accuracy disclosure is sparse and uneven. Garmin publishes manufacturer tolerances, and historical tolerance tables exist for some products; independent validation is much rarer and is the stronger evidence for deciding how much confidence to place in club data.
 
-### IV.1 The one gold-standard study
+### IV.1 The traceable benchmark study located
 
-**[Leach, Forrester, Mears & Roberts (2017)](https://doi.org/10.1016/j.measurement.2017.08.009)**, *Measurement* **112**, 125–136, is the only study we found that validates consumer launch monitors against a **traceable metrological reference** rather than against another launch monitor. TrackMan Pro IIIe and Foresight GC2+HMT were tested simultaneously against four Photron cameras at 5,400 Hz with calibration traceable to PTB Germany, over 240 shots from 8 golfers with driver, 7-iron and wedge.
+Among the studies located in searches through 2026-08-03, **[Leach, Forrester, Mears & Roberts (2017)](https://doi.org/10.1016/j.measurement.2017.08.009)**, *Measurement* **112**, 125–136, is the traceable validation study of consumer launch monitors rather than a comparison against another launch monitor. TrackMan Pro IIIe and Foresight GC2+HMT were tested simultaneously against a GOM Inspect reference reconstructed from four Photron cameras at 5,400 Hz, with calibration traceable to PTB Germany, over 240 shots from 8 golfers using driver, 7-iron and wedge.
 
 The reference itself was characterised first: 0.06 mph in ball velocity, 0.01° in launch angle, 14 rpm in spin. So the disagreements below are real.
 
@@ -404,7 +408,7 @@ Leach also reports **tracking success rates**, and they are more alarming than t
 
 TrackMan tracked the ball on 98% of shots and clubhead *velocity* on 98% — but returned the **remaining clubhead parameters on only 62% of shots, and on just 19% of utility-wedge shots**, forcing the authors to exclude wedge club data entirely. Foresight tracked the ball on 90% and the clubhead on 75%.
 
-A device that silently declines to report on a third of shots is doing something quite different from a device that reports on all of them, and no vendor specification mentions this.
+A device that declines to report on a third of shots is doing something quite different from a device that reports on all of them. The authors also cautioned that the simultaneous multi-system setup, including tripods, lighting and possible interference, was not necessarily optimal for either commercial device, so these non-return rates should not be treated as universal field rates.
 :::
 
 The authors' own conclusion is measured and worth quoting in full, because it is neither a dismissal nor an endorsement:
@@ -413,9 +417,9 @@ The authors' own conclusion is measured and worth quoting in full, because it is
 
 ### IV.2 Spin rate is the consistent weak point
 
-Every reliability study reaches the same verdict, across devices:
+The reliability studies reviewed here identify spin or other reconstructed angular quantities as recurring weak points:
 
-- **TrackMan 4** ([Bishop et al. 2023](https://doi.org/10.1080/02640414.2024.2314864)): clubhead speed ICC 0.99, ball speed 0.97–0.99, carry 0.91–0.97 — but **spin rate ICC 0.02–0.60**, with significant between-session drift.
+- **TrackMan 4** ([Bishop et al.](https://doi.org/10.1080/02640414.2024.2314864), journal volume dated 2023; published online 2024): clubhead speed ICC 0.99, ball speed 0.97–0.99, carry 0.91–0.97 — but **spin rate ICC 0.02–0.60**, with significant between-session drift.
 - **TrackMan** ([Shaw et al. 2023](https://doi.org/10.1519/JSC.0000000000004554), 21 golfers): clubhead speed, ball speed and distances reliable; **club path, attack angle and spin axis failed the reliability thresholds entirely.**
 - **Mevo+** ([Brennan et al. 2024](https://doi.org/10.1519/JSC.0000000000004685), 29 golfers): clubhead and ball speed r ≥ 0.92, but spin-rate 95% limits of agreement span roughly **7,700 rpm** — wider than the entire physiological range.
 
@@ -425,17 +429,17 @@ Note that Leach's *bias* for spin was modest (−47 rpm on TrackMan). So the spi
 
 Both modern Mevo+ studies use **TrackMan 4 as the criterion**. That is device-versus-device agreement, not validation — and **TrackMan 4 has no published gold-standard accuracy validation of its own**, only reliability studies. Leach's work was on the Pro IIIe, two generations earlier.
 
-[Bliss & Langdown (2025)](https://doi.org/10.1016/j.jsampl.2025.100128) illustrates what device-versus-device disagreement looks like between two premium units: attack angle ICC of **0.02–0.06** on irons, and dynamic loft differing by **7.8° to 9.7°**. Their sample is a single golfer, which limits generalisation but not the basic point — two respected devices disagree about iron attack angle essentially completely.
+[Bliss & Langdown (2026; available online 2025)](https://doi.org/10.1016/j.jsampl.2025.100128) illustrates what device-versus-device disagreement looks like between two premium units: attack angle ICC of **0.02–0.06** on irons, and dynamic loft differing by **7.8° to 9.7°**. Their sample is a single golfer, which limits generalisation but not the basic point — two respected devices disagree about iron attack angle essentially completely.
 
-### IV.4 Devices with no independent validation at all
+### IV.4 Devices without traceable metrological validation located
 
-Systematic searches of OpenAlex, Crossref and Europe PMC returned **zero peer-reviewed validation studies** for:
+Searches of OpenAlex, Crossref and Europe PMC through 2026-08-03 located no peer-reviewed study validating the following systems against a traceable metrological reference:
 
 **Foresight GCQuad, GCHawk, GC3** (only the older GC2+HMT, in Leach 2017) · **Uneekor** (all models) · **Garmin Approach R10/R50** · **Rapsodo MLM/MLM2PRO** · **SkyTrak/SkyTrak+** · **Bushnell Launch Pro** · **Full Swing KIT** · **GEARS Golf** · **Sportsbox AI**
 
-Two consequences. Garmin's widely quoted ±1 mph ball speed and ±3 mph club speed figures are **Garmin's own self-comparison against TrackMan**, not independent. And GEARS' "<0.2 mm research-grade accuracy" claim has no peer-reviewed source we could locate — which is notable given that GEARS is the system most often treated as ground truth in coaching contexts.
+This does not mean the devices are inaccurate, and it does not exclude studies of usability, repeatability or agreement against another launch monitor. Garmin's ±1 mph ball-speed and ±3 mph club-speed figures, for example, are manufacturer-stated tolerances whose underlying reference, sample and protocol are not disclosed on the cited support page. GEARS' "<0.2 mm research-grade accuracy" is likewise a manufacturer claim for which no peer-reviewed traceability study was located.
 
-For contrast, the R&A's own bespoke club-tracking system ([Corke et al. 2018](https://doi.org/10.1177/1754337118792798)) achieves robot repeatability of ≤0.2° in face angle and club path and ≤0.1° in attack angle. That is the standard consumer club data is being measured against, and falling well short of.
+For contrast, the R&A's bespoke club-tracking system ([Corke et al. 2018](https://doi.org/10.1177/1754337118792798)) reports robot repeatability of ≤0.2° in face angle and club path and ≤0.1° in attack angle. Repeatability is not accuracy or traceability, but those figures illustrate the precision attainable in a purpose-built, controlled system.
 
 ---
 
@@ -464,15 +468,15 @@ For reference, the 2023 PGA Tour driver line is: 115 mph club speed, −0.9° at
 
 ---
 
-## Part VI: What no vendor publishes
+## Part VI: What remains under-published
 
 Stated plainly, because these absences shape what can honestly be claimed:
 
-- **No vendor publishes a validation study or an accuracy tolerance table.** Every numeric accuracy claim we traced --- "±1 mph", "within 1--2% of TrackMan", spin-deviation comparisons --- originates from retailers or reviewers, not manufacturers.
-- **No vendor states which of its reported parameters are measured and which are calculated.** Full Swing lists 16 data points without distinguishing them.
-- **No vendor acknowledges its own tracking failure rate.** Independent testing found club orientation data returned on only 62% of shots for one premium device (19% for a wedge) — a fact absent from every specification sheet.
+- **No current premium vendor reviewed here combines independent traceable validation with a comprehensive current tolerance table.** Garmin publishes manufacturer tolerances, and historical TrackMan and SkyTrak figures remain available, but their evidence and scope differ.
+- **Most vendors do not provide a complete measured-versus-calculated map.** Garmin and Rapsodo are partial exceptions; Full Swing lists 16 data points without distinguishing them.
+- **The vendor documents reviewed do not disclose per-parameter non-return rates comparable to independent studies.** Leach et al. found club orientation data returned on 62% of shots for one premium device (19% for a utility wedge), subject to the study-setup caveat above.
 - **No vendor quantifies the bias introduced by its own reference-point choice**, TrackMan's 3° figure excepted --- and TrackMan frames that as a comparison, not as a bias in its own numbers.
-- **No vendor publishes amateur-population averages** for club path or face angle that we could verify.
+- **No primary vendor source was located for amateur-population averages** of club path or face angle.
 
 ---
 
