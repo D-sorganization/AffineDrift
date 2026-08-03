@@ -159,7 +159,7 @@ cd tech-review && latexmk -pdf main.tex
 pdflatex → biber → pdflatex → pdflatex; a single pass will show `[?]` citation
 marks and a stale table of contents.
 
-**In CI:** `.github/workflows/tech-review.yml` compiles the document on every
+**In CI:** `.github/workflows/compile-textbooks.yml` compiles the document on every
 push and pull request that touches `articles/Launch_Monitor_Technology_Review/`, fails on LaTeX errors and on
 undefined citations or references, and uploads the built PDF as a workflow
 artifact. If you cannot build locally, open a pull request and read the CI log —

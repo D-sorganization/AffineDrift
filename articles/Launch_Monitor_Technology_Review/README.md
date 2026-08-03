@@ -8,8 +8,8 @@ club/ball parameter calculations — written to guide OpenFlight development.
 > `openflight_development/tech-review/`. All the golf articles are kept in
 > AffineDrift so they share one CI and release path; `openflight_development`
 > reaches it through a submodule, the same way the fleet's other repositories
-> vendor shared content. Its build workflow moved with it and runs as
-> `launch-monitor-review`.
+> vendor shared content. It is built by the shared `compile-textbooks`
+> workflow alongside the other LaTeX documents here.
 >
 > Its companion, **[Screw Theory Applied to Launch
 > Monitors](research/screw-theory-research-outline.md)**, moved at the same
@@ -23,7 +23,7 @@ club/ball parameter calculations — written to guide OpenFlight development.
 - **[main.pdf](main.pdf)** — the compiled report (~65 pages)
 - `main.tex` + `sections/` — LaTeX source (10 chapters + 5 appendices), one file per chapter
 - `references.bib` — the bibliography database (80 entries, grouped by source category)
-- `build.ps1` — local build; CI builds every PR via `.github/workflows/tech-review.yml`
+- `build.ps1` — local build; CI builds every PR via `.github/workflows/compile-textbooks.yml`
 - `research/` — the four raw research dossiers the report was synthesized from
   (radar systems, camera systems, patents, physics/algorithms), with source
   URLs for every claim
