@@ -711,6 +711,45 @@ To clarify the parallel between robotics terminology and the golf swing, here is
 
 This mapping makes clear that the golf swing is mechanically a parallel mechanism in the robotics sense. The problems and insights from parallel robotics transfer directly to biomechanics.
 
+## Singularities in Parallel Mechanisms {#sec-singularities_parallel}
+
+In a serial mechanism, a singularity occurs when the Jacobian loses rank, typically at the boundary of the workspace. At a singularity, the end effector cannot move in certain directions no matter how fast the joints rotate.
+
+In a parallel mechanism, singularities are more nuanced because the "end effector" is constrained by multiple paths. There are different types:
+
+::: {.callout-note}
+## Types of Singularities in Parallel Mechanisms {#definition:parallel_singularities}
+
+1. **Workspace singularity (Type I):** the end effector reaches the boundary of its feasible region. At these configurations, small motions of the platform require infinite joint velocities. In the golf swing, this occurs when the club reaches maximum distance from the golfer's center.
+2. **Leg singularity (Type II):** a leg becomes fully extended or fully flexed, losing ability to apply force in a particular direction. This can occur at impact when the arms are nearly straight.
+3. **Architecture singularity:** the loop closure equations become redundant, and the mechanism gains unexpected degrees of freedom. These can occur transiently during a swing and are often associated with sudden changes in swing dynamics.
+:::
+
+## Singularities of the Golf Swing Parallel Mechanism {#sec-singularities_golf}
+
+A singularity in robotics is a configuration where the mechanism loses a degree of freedom or gains unexpected degrees of freedom. In the golf swing, there are several types:
+
+### Address Position Singularity {#sec-address_singularity}
+
+At address, the golfer is relatively still. The club is in a fixed position relative to the hands. The arms are extended but not yet rotating rapidly. This is a configuration where the mechanism has minimal flexibility — it's close to a singularity.
+
+In this configuration, small changes in hip angle produce small changes in club orientation (the system is "stiff"). This is advantageous because it allows the golfer to set up with precision.
+
+### Straight-Arm Impact Singularity {#sec-impact_singularity}
+
+At impact, the leading arm is nearly fully extended. In this configuration, the elbow joint approaches its mechanical limit and becomes a "hard" constraint (the arm is locked straight). The mechanism momentarily loses rotational DOF at the elbow.
+
+This singularity is actually mechanically useful: it "stiffens" the arm at the moment of force application, allowing maximum acceleration to be transmitted to the ball.
+
+### Type II Singularities: Self-Motion {#sec-type_ii_singularities}
+
+In some configurations during the swing, the mechanism might allow "self-motion" — motion of the joints that doesn't change the position or velocity of the club. This can occur when:
+
+- The left arm rotates while the right arm counter-rotates in just the right way to maintain club position.
+- The wrists cock while the shoulders and hips adjust to keep the club moving along the same trajectory.
+
+These self-motions are solutions to the null space of the constraint Jacobian and represent redundancy in the mechanism. They're important because they allow the golfer to adjust internal joint angles without changing the overall swing trajectory — useful for fine-tuning club face angle or release timing.
+
 ## Jacobian Analysis: Velocity and Force
 
 The constraint Jacobian encodes relationships at two levels: velocity and force.
