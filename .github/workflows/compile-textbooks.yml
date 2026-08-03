@@ -199,11 +199,19 @@ jobs:
           # build succeeded" detects it. But LaTeX logs every file it opens, so
           # a chapter that main.tex includes and the log never mentions did not
           # make it into the book.
+          #
+          # pdfTeX wraps main.log at ~79 columns mid-token, and the wrap point
+          # shifts run to run (citation resolution changes what precedes it on
+          # the line), so a filename can land split across two physical lines
+          # in the one run that happens to become the final log. grep matches
+          # per line, so search the log with newlines removed instead of
+          # trusting any single line to hold the whole filename.
+          log_joined="$(tr -d '\n' < main.log)"
           missing=0
           while read -r chapter; do
             [ -n "${chapter}" ] || continue
             base="$(basename "${chapter}")"
-            if ! grep -qF "${base}" main.log; then
+            if ! grep -qF "${base}" <<< "${log_joined}"; then
               echo "::error::${{ matrix.name }}: main.tex includes '${chapter}' but the build never opened it -- the document ended early."
               missing=$((missing + 1))
             fi
