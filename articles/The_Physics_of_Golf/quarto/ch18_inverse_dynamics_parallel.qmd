@@ -281,6 +281,178 @@ Any combination of applied torques and constraint forces in the null space produ
 
 The constraint compatibility equations determine which accelerations are admissible. The multipliers $\boldsymbol{\lambda}$ then require the dynamic model plus applied-load assumptions; they are not measured directly by motion capture. Applied torques $\bm{u}$ cannot be uniquely determined without additional information or modeling assumptions.
 
+## Loop Closure Equations and Velocity Constraints {#sec-loop_closure_formal}
+
+For the golf swing with a two-handed grip, the fundamental constraint is that both hands must grip the same club. In the 3D spatial case, this imposes 6 constraints (3 positional, 3 rotational) relating the left and right arm configurations.
+
+::: {.callout-note}
+## Loop Closure Equations (Formal) {#definition:loop_closure_formal}
+
+If the left arm has forward kinematics $\mathbf{T}_L(\bm{q}_L)$ and the right arm has forward kinematics $\mathbf{T}_R(\bm{q}_R)$, where $\mathbf{T}$ are homogeneous transformation matrices, then the loop closure constraint is:
+
+$$
+\mathbf{T}_L(\bm{q}_L) = \mathbf{T}_R(\bm{q}_R)
+$$ {#eq-loop_closure_spatial}
+
+This is a matrix equation in $SE(3)$ (the special Euclidean group). Written as explicit constraints on positions and orientations:
+
+$$
+\mathbf{p}_L(\bm{q}_L) = \mathbf{p}_R(\bm{q}_R) \quad \text{(3 position constraints)}
+$$
+$$
+\mathbf{R}_L(\bm{q}_L) = \mathbf{R}_R(\bm{q}_R) \quad \text{(3 orientation constraints)}
+$$ {#eq-loop_closure_explicit}
+
+This is a nonlinear system of 6 equations in $n$ unknowns (the joint angles $\bm{q}_L$ and $\bm{q}_R$).
+:::
+
+### Velocity-Level Constraint {#sec-velocity_constraint}
+
+Differentiating the loop closure equation with respect to time:
+
+$$
+\mathbf{J}_L(\bm{q}_L)\,\dot{\bm{q}}_L = \mathbf{J}_R(\bm{q}_R)\,\dot{\bm{q}}_R
+$$ {#eq-velocity_constraint_loop}
+
+This is the velocity-level loop constraint: the velocities of the left and right end effectors must match (they're gripping the same object).
+
+Rearranging into standard form:
+
+$$
+\begin{bmatrix} \mathbf{J}_L & -\mathbf{J}_R \end{bmatrix} \begin{bmatrix} \dot{\bm{q}}_L \\ \dot{\bm{q}}_R \end{bmatrix} = \mathbf{0}
+$$ {#eq-constraint_jacobian_two_arm}
+
+The constraint Jacobian is:
+
+$$
+\bm{J}_c = \begin{bmatrix} \mathbf{J}_L & -\mathbf{J}_R \end{bmatrix}
+$$ {#eq-constraint_jacobian_definition_two_arm}
+
+The rank of this Jacobian is typically 6 (for non-singular arm configurations). This means the velocity constraint reduces the effective DOF from $n$ (unconstrained) to $n - 6$ (constrained).
+
+## The Constraint Jacobian Geometry and DOF {#sec-constraint_jacobian_geometry}
+
+The constraint Jacobian $\bm{J}_c(\bm{q})$ is a $k \times n$ matrix, where $k$ is the number of constraints and $n$ is the number of generalized coordinates.
+
+::: {.callout-important}
+## DOF Reduction via Constraints {#principle:dof_reduction}
+
+The effective degrees of freedom of a constrained system is:
+
+$$
+\text{DOF}_{\text{effective}} = n - \text{rank}(\bm{J}_c(\bm{q}))
+$$ {#eq-dof_effective}
+
+At non-singular configurations, the rank of $\bm{J}_c$ is typically equal to $k$ (the number of constraints). At singular configurations, the rank drops below $k$, meaning some constraints become redundant or the system gains unexpected DOF.
+:::
+
+### Rank Loss and Singularities {#sec-rank_loss_singularities}
+
+A **singularity** occurs when $\text{rank}(\bm{J}_c(\bm{q})) < k$. Near such a configuration:
+
+1. The constraint Jacobian has a nontrivial null space.
+2. Some constraints become dependent on others.
+3. The mechanism may gain an unexpected degree of freedom.
+4. The computed multipliers may become ill-conditioned if the model is forced through the singularity.
+
+In golf-swing models, rank loss or poor conditioning may be relevant near:
+
+- Address position (near-singularity with low effective stiffness).
+- Impact (arm fully extended, approach to leg singularity).
+- Transition points between backswing and downswing.
+
+## Null Space of the Constraint Jacobian: Allowed Motions {#sec-nullspace_constraint_jacobian}
+
+This is a different null space from the "Solution Space and Null Space" discussed earlier, which describes ambiguity in *force* distribution ($\bm{u}$, $\boldsymbol{\lambda}$). This section is about *velocity*: which joint motions the loop closure constraint permits at all.
+
+The null space of $\bm{J}_c$ is the set of velocities that don't violate the constraint:
+
+$$
+\mathcal{N}(\bm{J}_c) = \{ \dot{\bm{q}} : \bm{J}_c(\bm{q})\,\dot{\bm{q}} = \mathbf{0} \}
+$$ {#eq-nullspace_constraint}
+
+::: {.callout-note}
+## Null Space Dimension and Redundancy {#definition:nullspace_dimension}
+
+The dimension of the null space is:
+
+$$
+d = n - \text{rank}(\bm{J}_c)
+$$ {#eq-nullspace_dim_formula}
+
+This dimension is the number of "redundant" or "hidden" DOF in the system — joint motions that don't change the constraint (the club's motion remains unchanged).
+:::
+
+**Example: Null Space for Two-Handed Grip**
+
+Consider the two arms (14 DOF total) gripping a club with 6 constraints (3 position + 3 orientation).
+
+At a non-singular configuration:
+
+$$
+d = 14 - 6 = 8
+$$ {#eq-nullspace_dim_two_arms}
+
+This means there are an 8-dimensional family of joint configurations that all result in the same club position and orientation. Some examples of these null space motions:
+
+- Adjust right-hand grip pressure while maintaining club position.
+- Adjust left-hand grip angle without changing the club's position.
+- Change the plane of the arm motion (more vertical vs. more horizontal) while keeping club trajectory fixed.
+- Adjust wrist cock angle without changing the overall club motion.
+
+These are all "free" motions in the sense that they don't require external work — they're constrained by the loop closure but allowed by it.
+
+### Null Space Projector {#sec-nullspace_projector}
+
+A useful computational tool is the **null space projector**:
+
+$$
+\bm{P} = \bm{I} - \bm{J}_c^+ \bm{J}_c
+$$ {#eq-nullspace_projector}
+
+where $\bm{J}_c^+$ is the pseudoinverse of $\bm{J}_c$.
+
+This matrix projects any velocity onto the null space:
+
+$$
+\dot{\bm{q}}_{\text{null}} = \bm{P}\,\dot{\bm{q}}_{\text{any}}
+$$ {#eq-nullspace_projection}
+
+Any velocity of the form $\dot{\bm{q}}_{\text{null}}$ satisfies the constraint exactly.
+
+## Internal Forces and the Dual Null Space {#sec-internal_forces_dual}
+
+Just as the null space describes allowed velocities, the dual null space describes internal forces.
+
+::: {.callout-note}
+## Useful and Internal Forces {#definition:useful_internal_forces}
+
+- **Useful forces:** those in the range of $\bm{J}_c^T$. These forces constrain the motion (they do work on the constraint).
+- **Internal forces:** those in the null space of $\bm{J}_c^T$. These forces don't constrain motion — they create internal stress without affecting the kinematics.
+:::
+
+::: {.callout-important}
+## Orthogonality of Null Spaces {#principle:orthogonality_null_duals}
+
+A fundamental property of linear algebra:
+
+$$
+\mathcal{N}(\bm{J}_c) \perp \text{Range}(\bm{J}_c^T)
+$$ {#eq-orthogonality_null_range}
+
+Mechanically: a force in the range of $\bm{J}_c^T$ does zero work on any velocity in the null space of $\bm{J}_c$.
+:::
+
+::: {.callout-note}
+## Why Internal Forces Matter for Injury {#inplain:internal_forces_injury}
+
+Internal forces (those in the null space of $\bm{J}_c^T$) are mechanically "invisible" — they don't change the kinematics. But they create real stresses in tissues.
+
+For example, a golfer might grip the club very tightly (large internal grip force) while maintaining identical club trajectory compared to a golfer with light grip. The kinematics are the same, but the internal stresses are very different. The tight-grip golfer may fatigue forearm muscles and risk injury from the excess internal force.
+
+This is why the dual null space matters for injury-risk and coaching discussions: it identifies quantities that require force measurements, tissue models, or explicit load-sharing assumptions before the text can make applied claims.
+:::
+
 ## A Concrete Example: The Two-Handed Golf Grip
 
 ::: {.callout-note}
