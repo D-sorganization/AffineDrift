@@ -1,0 +1,70 @@
+name: launch-monitor-review
+
+# Builds the Launch Monitor Technology Review so that broken sources, missing
+# bibliography keys, and dangling cross-references fail a pull request instead
+# of merging silently. Contributors who cannot run LaTeX locally can treat this
+# job as the authoritative build check.
+#
+# Migrated from openflight_development, where this document was previously
+# maintained. AffineDrift is now the single home for the golf articles, so the
+# CI that guarded it moved with it.
+
+on:
+  push:
+    paths:
+      - "articles/Launch_Monitor_Technology_Review/**"
+      - ".github/workflows/launch-monitor-review.yml"
+  pull_request:
+    paths:
+      - "articles/Launch_Monitor_Technology_Review/**"
+      - ".github/workflows/launch-monitor-review.yml"
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: build-pdf
+    runs-on: ${{ vars.RUNNER_TARGET == 'local' && 'd-sorg-fleet' || 'ubuntu-latest' }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compile with latexmk (runs biber automatically)
+        uses: xu-cheng/latex-action@v3
+        with:
+          working_directory: articles/Launch_Monitor_Technology_Review
+          root_file: main.tex
+          latexmk_shell_escape: false
+          args: -pdf -file-line-error -halt-on-error -interaction=nonstopmode
+
+      - name: Fail on undefined citations or cross-references
+        run: |
+          set -euo pipefail
+          log=articles/Launch_Monitor_Technology_Review/main.log
+          if grep -nE "Citation .* undefined|Reference .* undefined" "$log"; then
+            echo "::error::Undefined citation or cross-reference. A \\cite key is missing from references.bib, or a \\ref points at a label that does not exist."
+            exit 1
+          fi
+          echo "No undefined citations or references."
+
+      - name: Verify every bibliography entry is printed
+        run: |
+          set -euo pipefail
+          cd articles/Launch_Monitor_Technology_Review
+          bib=$(grep -c '^@' references.bib)
+          bbl=$(grep -c '\\entry{' main.bbl)
+          echo "references.bib entries: $bib"
+          echo "printed entries:        $bbl"
+          if [ "$bib" -ne "$bbl" ]; then
+            echo "::error::$((bib - bbl)) bibliography entries are not printed. Every entry must be cited or removed."
+            exit 1
+          fi
+
+      - name: Report page count
+        run: grep -o 'Output written on main.pdf ([0-9]* pages' articles/Launch_Monitor_Technology_Review/main.log || true
+
+      - name: Upload built PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: launch-monitor-technology-review-pdf
+          path: articles/Launch_Monitor_Technology_Review/main.pdf
+          if-no-files-found: error
