@@ -32,14 +32,20 @@ import pytest
             "content/inverse-dynamics-analysis/Drafts/inverse-dynamics-claude-current/inverse_dynamics_article.html",
             "script.js",
         ),
-        (
-            "articles/tangent-hyperplane-articles/Advanced/Contraction_Tangent_Unification.html",
-            "script.js",
-        ),
+        # `articles/tangent-hyperplane-articles/Advanced/Contraction_Tangent_Unification.html`
+        # was listed here until #3741 removed it. It was a stale Quarto build
+        # artifact committed into the source tree, superseded by the `.qmd`
+        # beside it, and the site never served it.
     ],
 )
 def test_runtime_files_do_not_reference_legacy_script(relative_path, legacy_snippet):
     """Runtime-facing files should load the module entry point only."""
-    content = Path(relative_path).read_text(encoding="utf-8")
+    path = Path(relative_path)
+    assert path.exists(), (
+        f"{relative_path} is listed here but does not exist. If it was deleted "
+        f"deliberately, remove its entry; this test fails with a bare "
+        f"FileNotFoundError otherwise, which does not say what to do."
+    )
+    content = path.read_text(encoding="utf-8")
     assert legacy_snippet not in content
     assert "js/main.js" in content
