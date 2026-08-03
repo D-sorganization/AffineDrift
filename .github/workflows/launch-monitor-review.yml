@@ -20,6 +20,10 @@ on:
       - ".github/workflows/launch-monitor-review.yml"
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     name: build-pdf
