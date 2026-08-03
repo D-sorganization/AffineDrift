@@ -110,7 +110,7 @@ $$
 \dot{\bm{x}} = \bm{f}(\bm{x}) + \bm{G}(\bm{x}) \bm{u}
 $$
 
-This is the **control-affine form**. It's called "affine" (not "linear") because the dependence on control is linear, but the dependence on state is not linear.
+This is the **control-affine form**, standard in nonlinear control theory [@Isidori1995; @BulloLewis2004]. It's called "affine" (not "linear") because the dependence on control is linear, but the dependence on state is not linear.
 
 ::: {.callout-note}
 ## Control-Affine Systems
@@ -346,7 +346,7 @@ At impact, the clubhead is accelerating at 180 $g$. This is primarily from:
 - Centrifugal force (from the high rotation speed): $\approx 50$ N m equivalent.
 - Gravity: $\approx 10$ N m equivalent.
 
-In this illustrative estimate, your muscular contribution is maybe 20 N m. DCR is extremely high under this simplified comparison, but the conclusion should be checked against the stated model and torque bounds.
+In this illustrative estimate, your muscular contribution is maybe 20 N m (estimates vary widely; exact values depend on golfer strength and technique — see [@Nesbit2005] for inverse-dynamics measurements). DCR is extremely high under this simplified comparison, but the conclusion should be checked against the stated model and torque bounds.
 
 ::: {.callout-tip}
 ## The Three Regimes
@@ -442,7 +442,7 @@ This is why technique matters more than strength.
 
 ## Optimal Control and the Swing
 
-In principle, you could pose the golf swing as an optimal control problem:
+In principle, you could pose the golf swing as an optimal control problem [@Penner2001]:
 
 **Problem**: Given the dynamics $\dot{\bm{x}} = \bm{f}(\bm{x}) + \bm{G}(\bm{x}) \bm{u}$ and constraints on $\bm{u}$ (muscle strength), find the control $\bm{u}^*(t)$ that maximizes distance (or minimizes dispersion, or achieves a target).
 
@@ -526,7 +526,7 @@ All of this is encoded in understanding and exploiting the drift.
 8. **Skilled golfers exploit high-DCR phases** by preparing initial conditions and transition timing that let drift assist rather than fight the intended trajectory.
 9. **The golf swing is an optimal control problem**. The nervous system implicitly solves it through learning and practice.
 10. **Technique is about riding the drift**. Strength helps, but technique (understanding $\bm{f}$ and choosing $\bm{u}$ wisely) matters more.
-11. **The model structure is shared**. While individual golfers vary in geometry and strength, smooth multibody models commonly share the manipulator-equation structure $\bm{M}, \bm{C}, \bm{g}$; the numerical predictions remain individual and model-dependent.
+11. **The model structure is shared** [@Featherstone2008; @Murray1994]. While individual golfers vary in geometry and strength, smooth multibody models commonly share the manipulator-equation structure $\bm{M}, \bm{C}, \bm{g}$; the numerical predictions remain individual and model-dependent.
 
 :::
 
