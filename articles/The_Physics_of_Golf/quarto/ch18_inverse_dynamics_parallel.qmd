@@ -814,6 +814,99 @@ However, this assumption—that the left arm is passive—is a modeling choice. 
 
 :::
 
+## Lower Body Inverse Dynamics: GRF and Feet {#sec-lower_body_inverse_dynamics}
+
+The lower body biomechanics can be analyzed using the same inverse dynamics framework, but with the advantage that force plate data provides a known boundary condition.
+
+### Force Plate Boundary Condition {#sec-force_plate_bc}
+
+A force plate measures the total force and moment exerted by the ground on the golfer's feet. This known external wrench supplies an important boundary condition; it improves identifiability of lower-limb net joint loads but does not by itself determine individual muscle forces or all internal contact loads.
+
+::: {.callout-important}
+## Force Plate Provides a Boundary Condition {#principle:force_plate_unique}
+
+With force plate data:
+
+- The distal boundary condition (force/moment at the foot) is known (measured by force plate).
+- The proximal boundary condition (forces at the hip, if we're analyzing the leg only) is unknown but can be computed.
+- The leg kinematics is measured.
+- RNEA can be applied to estimate model-conditioned net joint torques.
+
+This is in contrast to the upper body, where the distal boundary condition at the club and hands is often only partially measured. The club's acceleration may be known, but grip forces, aerodynamic drag, and impact loads still need instrumentation or modeling assumptions.
+:::
+
+### Sequential Ankle-Knee-Hip Computation {#sec-sequential_ankle_knee_hip}
+
+Lower body inverse dynamics is computed sequentially, distal to proximal:
+
+1. **Ankle:** apply RNEA using the foot's acceleration (from kinematics) and the foot's force/moment (from force plate). Solve for ankle joint torque.
+2. **Knee:** using the ankle torque and lower leg's acceleration, compute the forces and moments at the knee. Solve for knee joint torque.
+3. **Hip:** using the knee torque and thigh's acceleration, compute the forces and moments at the hip. Solve for hip joint torque.
+
+**Example: Lower Body Inverse Dynamics**
+
+A 100 kg golfer during the downswing:
+
+- Force plate measures vertical GRF: $F_z = 1400$ N (1.4 BW).
+- Force plate measures free moment: $M_z = 80$ N·m.
+- Motion capture shows hip acceleration: $\ddot{\theta}_{\text{hip}} = 200$ rad/s².
+- Hip inertia: $I_{\text{hip}} = 2$ kg·m².
+
+From kinematics and the force plate data, we can compute the hip torque that produced the observed acceleration.
+
+If the ground torque is $M_z = 80$ N·m (an illustrative value chosen from the scale of reported force-plate and inverse-dynamics golf-swing measurements, not a universal benchmark) [@Nesbit2005], and this is applied at the feet (roughly 0.2 m from the pelvis), the resulting pelvis torque is approximately $\tau_{\text{pelvis}} = M_z / I_{\text{hip}} \times$ (accounting for moment arms and mass distribution).
+
+This is a better-conditioned inverse-dynamics problem because the force plate provides the boundary condition, but the numerical value is still model-dependent.
+
+## Ground Reaction Torque: Initiating Pelvis Rotation {#sec-ground_torque_detailed}
+
+The ground reaction torque (free moment) $M_z$ is the torque applied by the ground about the vertical axis. It can be an important contributor to pelvis rotation in models that include force-plate boundary conditions, but its interpretation depends on stance, foot contact, segment inertias, and the chosen pelvis coordinate convention.
+
+### Computation of Ground Reaction Torque {#sec-ground_torque_computation}
+
+If force plate data is available, $M_z$ is directly measured. If not, it can be approximated from the offset of the vertical ground reaction force from the body's center of rotation.
+
+::: {.callout-note}
+## Ground Torque from Force Offset {#definition:ground_torque_offset}
+
+If the vertical GRF $F_z$ is applied at a horizontal offset $\bm{r}$ from the pelvis center, the resulting torque is:
+
+$$
+M_z = \bm{r} \times F_z
+$$ {#eq-ground_torque_offset}
+
+More precisely, if the center of pressure is at horizontal position $(x_{\text{COP}}, y_{\text{COP}})$ and the pelvis center is at $(x_p, y_p)$, then:
+
+$$
+M_z = (x_{\text{COP}} - x_p) \times F_z^y - (y_{\text{COP}} - y_p) \times F_z^x
+$$ {#eq-ground_torque_cop}
+
+where $F_z^x$ and $F_z^y$ are the horizontal components of the GRF vector.
+:::
+
+### Role in Downswing Initiation {#sec-ground_torque_downswing}
+
+::: {.callout-important}
+## Ground Torque Initiates Downswing {#principle:ground_torque_downswing_role}
+
+During the transition from backswing to downswing, the pelvis begins to accelerate. This acceleration is driven by:
+
+1. The ground reaction torque $M_z$ (from the force plate).
+2. The hip muscle torques (computed from inverse dynamics).
+
+The relative contributions vary by golfer, stance, coordinate convention, and model decomposition. In force-plate-supported inverse-dynamics models, ground-reaction and free-moment terms can represent a substantial share of the pelvis acceleration budget, but the exact percentage should be reported from the fitted model rather than treated as a fixed value [@Nesbit2005].
+:::
+
+### Forward and Backward Torque Asymmetry {#sec-forward_backward_asymmetry}
+
+An interesting feature of ground reaction torque is the asymmetry between forward (toward the target) and backward (away from target) torques.
+
+During the downswing, the ground typically exerts a torque that *accelerates* the pelvis (positive torque in the direction of swing). This is mechanically assisting the swing.
+
+During the follow-through, the ground may exert a *braking* torque (negative torque opposing pelvis rotation) as the golfer's feet push off the ground to stabilize balance.
+
+This asymmetry reveals the "ground-up" power transfer story: the ground actively powers the downswing but passively decelerates the follow-through.
+
 ## Implications for the Zero-Torque Counterfactual Framework
 
 ::: {.callout-note}
