@@ -57,7 +57,7 @@ Yet the brain produces workable solutions in milliseconds. How?
 
 The brain doesn't solve this high-dimensional problem directly. Instead, it exploits structure in the problem. Several constraints dramatically reduce the effective dimensionality:
 
-- **Synergies:** Instead of controlling 200 muscles independently, the brain activates muscle *synergies*---fixed patterns of muscle co-activation. Within a given movement class (e.g., reaching tasks), synergies account for roughly 80--90% of the variance in muscle activations [@bizzi2008motor, cheung2009simultaneous]. Across diverse movement types, the explained variance drops to 60--75%, suggesting that synergies are context-dependent building blocks rather than universal motor primitives.
+- **Synergies:** Instead of controlling 200 muscles independently, the brain activates muscle *synergies*---fixed patterns of muscle co-activation. Within a given movement class (e.g., reaching tasks), synergies account for roughly 80--90% of the variance in muscle activations [@bizzi2008motor; @cheung2009simultaneous]. Across diverse movement types, the explained variance drops to 60--75%, suggesting that synergies are context-dependent building blocks rather than universal motor primitives.
 
   A synergy might be: "activate shoulder internal rotator + elbow extensor + wrist extensor," which produces a synergistic motion. By reducing from 200 independent muscles to 8 synergies, the dimensionality drops from $7^{200}$ to $7^8 \approx 5.7$ million.
 
@@ -169,7 +169,7 @@ For the golf swing, impedance control explains several phenomena:
 
 :::
 
-Setting impedance is more efficient than precise position control because it doesn't require fast computation. The brain can set impedance once and let mechanics handle the rest [@hogan1985impedance, mussa1998modular].
+Setting impedance is more efficient than precise position control because it doesn't require fast computation. The brain can set impedance once and let mechanics handle the rest [@hogan1985impedance; @mussa1998modular].
 
 
 ### Strategy 3: Synergies---Reduce Dimensionality Through Coordination
@@ -199,9 +199,9 @@ The advantage: instead of commanding 200 muscles independently, the brain comman
 
 :::
 
-Evidence for synergies comes from electromyography (EMG) recordings of muscle activation during movement. Researchers have found that most of the variance in muscle activations across many different movements can be explained by 4--8 synergy vectors [@bizzi2008motor, cheung2009simultaneous].
+Evidence for synergies comes from electromyography (EMG) recordings of muscle activation during movement. Researchers have found that most of the variance in muscle activations across many different movements can be explained by 4--8 synergy vectors [@bizzi2008motor; @cheung2009simultaneous].
 
-Why would synergies evolve? One hypothesis: they simplify learning. Instead of learning a 200-dimensional control space, the brain learns a 5-dimensional space. This is much easier and happens faster [@bizzi2008motor, cheung2009simultaneous, torres2013beyond].
+Why would synergies evolve? One hypothesis: they simplify learning. Instead of learning a 200-dimensional control space, the brain learns a 5-dimensional space. This is much easier and happens faster [@bizzi2008motor; @cheung2009simultaneous; @torres2013beyond].
 
 
 ### Strategy 4: Predictive Control and Anticipatory Activation
@@ -285,7 +285,7 @@ This adaptation is too fast and too precise to be explained by conscious trial-a
 
 **Experiment 3: Generalization to novel contexts.** After adapting to a rotated feedback perturbation in one movement direction, the brain partially adapts to other movement directions, without explicit practice in those directions.
 
-Why? The internal model has learned something about the general transformation---not just memorized the specific case. This is learning the underlying physics, not memorizing a response [@wolpert2011motor, shadmehr2010computational].
+Why? The internal model has learned something about the general transformation---not just memorized the specific case. This is learning the underlying physics, not memorizing a response [@wolpert2011motor; @shadmehr2010computational].
 
 :::
 
@@ -359,7 +359,7 @@ Several factors:
 
 :::
 
-[@lake2017building, hassibi2017intelligence]
+[@lake2017building; @hassibi2017intelligence]
 
 ## What Artificial Intelligence Could Learn from the Brain
 
@@ -382,7 +382,7 @@ The brain doesn't try to solve one massive optimization problem. Instead, it dec
 
 This hierarchy reduces the problem at each level. The strategic level doesn't think about muscles; the execution level doesn't think about goals.
 
-Modern AI research has begun exploring similar hierarchies. The *options framework* in reinforcement learning formalizes this: high-level actions (options) are themselves learned policies for lower-level control [@barto2003recent, sutton2011temporal].
+Modern AI research has begun exploring similar hierarchies. The *options framework* in reinforcement learning formalizes this: high-level actions (options) are themselves learned policies for lower-level control [@barto2003recent; @sutton2011temporal].
 
 :::
 
@@ -401,7 +401,7 @@ But there's growing recognition that model-based RL is more sample-efficient. If
 
 **Model-based approach:** The robot learns a forward model: "If I move in this direction with this force, I'll end up here." Now it can *imagine* many trajectories using the model, without physically executing them. It can plan offline and execute online.
 
-The brain uses model-based approach. Modern AI is moving toward it [@deisenroth2013tutorial, dreamer2020scalable].
+The brain uses model-based approach. Modern AI is moving toward it [@deisenroth2013tutorial; @dreamer2020scalable].
 
 :::
 
@@ -426,7 +426,7 @@ More generally, the brain exploits:
 
 :::
 
-Most roboticists try to control everything actively. A better approach: design the robot to exploit passive dynamics, and use active control only for the fine adjustments [@ijspeert2013biorobotics, ghazi2009central].
+Most roboticists try to control everything actively. A better approach: design the robot to exploit passive dynamics, and use active control only for the fine adjustments [@ijspeert2013biorobotics; @ghazi2009central].
 
 
 ### Prediction-Driven Learning
@@ -445,7 +445,7 @@ Modern AI has begun exploring self-supervised learning. Instead of learning from
 
 **Self-supervised approach:** Let the robot arm move randomly for an hour. For each action, predict the resulting arm configuration. Learn a forward model by predicting its own sensory consequences. Now the robot can use this forward model for planning without any labeled data.
 
-This is closer to how the brain learns. A baby doesn't have labeled data. Instead, it acts, observes consequences, and builds a forward model of its body [@pathak2016curiosity, dreamer2020scalable].
+This is closer to how the brain learns. A baby doesn't have labeled data. Instead, it acts, observes consequences, and builds a forward model of its body [@pathak2016curiosity; @dreamer2020scalable].
 
 :::
 
@@ -493,7 +493,7 @@ Several research groups have used golf to study motor control. Examples:
 
 :::
 
-[@vickers2007perception, schoellhorn2015learning]
+[@vickers2007perception; @schoellhorn2015learning]
 
 ### Open Questions in Motor Control That Golf Helps Address
 
@@ -554,7 +554,7 @@ What causes the yips?
 
 The yips teach us that motor control is fragile. Once you've learned a movement, you can't easily unlearn it or consciously control it. The more automatic the movement, the harder it is to consciously correct.
 
-This has a profound implication: overanalyzing your swing is dangerous. The more you think about mechanics, the more you disrupt the automatic system. Paradoxically, the best way to improve is often to stop thinking and just feel [@beilock2010choke, adler2011focus].
+This has a profound implication: overanalyzing your swing is dangerous. The more you think about mechanics, the more you disrupt the automatic system. Paradoxically, the best way to improve is often to stop thinking and just feel [@beilock2010choke; @adler2011focus].
 
 
 ### Choking Under Pressure
@@ -607,7 +607,7 @@ How do experts resist choking? Several strategies:
 
 :::
 
-These observations have led to coaching approaches that emphasize routine, external focus, and stress management [@beilock2010choke, baumeister1984choking].
+These observations have led to coaching approaches that emphasize routine, external focus, and stress management [@beilock2010choke; @baumeister1984choking].
 
 
 ## The Humbling Conclusion
