@@ -13,7 +13,50 @@
       displayMath: [['$$', '$$'], ['\\[', '\\]']],
       processEscapes: true,
       processEnvironments: true,
-      tags: 'ams'
+      tags: 'ams',
+      // The Geometry of Motion is rendered by the root website project, so
+      // its nested book configuration is not inherited. Keep the book's
+      // notation available here to prevent undefined-command error text.
+      macros: {
+        bm: ['\\boldsymbol{#1}', 1],
+        mat: ['\\mathbf{#1}', 1],
+        norm: ['\\left\\lVert #1 \\right\\rVert', 1],
+        Reals: '\\mathbb{R}',
+        R: '\\mathbb{R}',
+        state: '\\mathbf{x}',
+        dx: '\\delta\\mathbf{x}',
+        x: '\\mathbf{x}',
+        q: '\\mathbf{q}',
+        y: '\\mathbf{y}',
+        control: '\\mathbf{u}',
+        uvec: '\\mathbf{u}',
+        du: '\\delta\\mathbf{u}',
+        dq: '\\delta\\mathbf{q}',
+        xx: '\\mathbf{x}\\mathbf{x}',
+        uu: '\\mathbf{u}\\mathbf{u}',
+        xu: '\\mathbf{x}\\mathbf{u}',
+        dd: '\\mathrm{d}',
+        T: '\\mathsf{T}',
+        trace: '\\operatorname{tr}',
+        diag: '\\operatorname{diag}',
+        rank: '\\operatorname{rank}',
+        Span: '\\operatorname{span}',
+        sym: '\\operatorname{sym}',
+        skewpart: '\\operatorname{skew}',
+        statespace: '\\mathcal{X}',
+        configspace: '\\mathcal{Q}',
+        controlspace: '\\mathcal{U}',
+        manifold: '\\mathcal{M}',
+        tube: '\\mathcal{T}',
+        traj: '\\xi',
+        SO: '\\mathrm{SO}(3)',
+        SE: '\\mathrm{SE}(3)',
+        so: '\\mathfrak{so}(3)',
+        se: '\\mathfrak{se}(3)',
+        screw: '\\mathcal{S}',
+        twist: '\\mathcal{V}',
+        wrench: '\\mathcal{F}'
+      }
     },
     svg: {
       fontCache: 'global'

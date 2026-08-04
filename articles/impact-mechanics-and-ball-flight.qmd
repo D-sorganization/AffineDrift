@@ -46,7 +46,7 @@ categories: [physics, impact, ball-flight, golf, reference]
 </section>
 ```
 
-## Scope and intent
+## Scope and Intent
 
 This article is a reference treatment of what happens between the club and the ball, and what the resulting launch conditions do in flight. It is written to be read out of order and returned to, and it tries to do four things that shorter treatments usually skip:
 
@@ -63,9 +63,9 @@ Throughout, the distinction between what is *measured*, what is *derived from a 
 Right-handed coordinate frame for a right-handed golfer: $x$ along the target line, $y$ vertical, $z$ to the right of the target line looking down it. Angles positive right and up. Club-delivery quantities are referenced to the moment of **maximum compression**; ball quantities to **separation from the face**. Where a quantity depends on which point of the clubhead is used as reference — and several do — the reference point is stated.
 :::
 
-## Part I: The delivery, as a twist
+## Part I: The Delivery, as a Twist
 
-### Why a single "path" is not enough
+### Why a Single "Path" Is Not Enough
 
 A clubhead approaching the ball is a rigid body with six degrees of freedom, and its instantaneous motion is completely described by a **twist**
 
@@ -95,7 +95,7 @@ The delivery parameters in common use are all projections of this one object:
 
 Note the last two rows: face angle and dynamic loft are **orientations**, not velocities. They are properties of the body's attitude and do not depend on which point you evaluate them at — except through face curvature (bulge and roll), which makes the local normal at a toe strike differ from the normal at centre. That is why the convention is to evaluate the face at the **contact point**.
 
-### Spin loft: the master variable for spin
+### Spin Loft: The Master Variable for Spin
 
 The single most important derived quantity is **spin loft**, the three-dimensional angle $\Phi$ between the direction the head is moving and the direction the face is pointing:
 
@@ -107,9 +107,9 @@ where $A$ is the horizontal obliqueness (face-to-path) and $L$ the vertical obli
 
 Note that $\Phi$ is a **3D vector angle, not a subtraction**. "Spin loft = dynamic loft − attack angle" is the near-universal shorthand, and TrackMan's own documentation describes it as "a close approximation" rather than a definition — it is exact only when face-to-path is zero, and the error grows with $A$. To first order the components add in quadrature, $\Phi^2 \approx A^2 + L^2$, which is a better mental model than the subtraction and costs nothing to remember.
 
-## Part II: The collision
+## Part II: The Collision
 
-### What actually has to be solved
+### What Actually Has to Be Solved
 
 The popular treatment of impact is a one-dimensional restitution formula, and it is a reasonable approximation for ball speed on a centred strike. But the real problem is a **rigid-body impulsive collision** in which an impulse $\mathbf{J}$ is applied at the contact point, and:
 
@@ -133,7 +133,7 @@ $$
 
 which falls as the strike moves away from the centre of gravity. Off-centre strikes lose ball speed not because the face is "less springy" there but because the club yields rotationally — the same rotation that produces gear effect.
 
-### II.1 The normal impulse {#sec-normal}
+### II.1 The Normal Impulse {#sec-normal}
 
 Along the face normal, momentum conservation plus a coefficient of restitution $e$ gives
 
@@ -152,7 +152,7 @@ $$
 This is where the familiar **smash-factor ceiling of about 1.50** comes from. It is worth deriving rather than quoting, because the popular sources that assert 1.50 do not show where it comes from, and the derivation makes the assumptions visible — in particular that it is a *centred*-strike number, since $M_{\text{eff}}$ falls off-centre.
 
 ::: {.callout-warning}
-## Two regulatory numbers that are constantly confused
+## Two Regulatory Numbers That Are Constantly Confused
 
 **Coefficient of restitution.** The USGA states its limit as **0.822**, unchanged since 1998, while **0.830** circulates widely as "the USGA limit." These are almost certainly the limit and the limit-plus-tolerance conformance threshold respectively, by exact analogy with the CT structure below — but we could not confirm that reconciliation from a primary document, so we state both rather than assert one.
 
@@ -173,7 +173,7 @@ Arakawa's group also found that **Hertz contact theory predicts the maximum norm
 
 **Does COR depend on loft?** Not as a material property — but loft changes *which velocity component* restitution acts on. Only $v\cos\Phi$ drives normal compression, so a normal-only model predicts smash factor falling as $\cos^2\Phi$. That prediction is known to be incomplete: measured driver smash factors of 1.48–1.50 at about 11° dynamic loft *exceed* $1.488 \times \cos^2(11°) = 1.44$, because the tangential impulse also contributes forward ball speed. We found no measured COR-versus-loft dataset in the open literature; this is a genuine gap, not a settled number.
 
-### II.2 The tangential impulse, and why the ball does not roll {#sec-tangential}
+### II.2 The Tangential Impulse, and Why the Ball Does Not Roll {#sec-tangential}
 
 This is the part of impact mechanics where the standard golf treatment is **wrong**, and where the correction changes predictions in a consistent direction.
 
@@ -196,7 +196,7 @@ The consequence is that the rolling limit is not a ceiling. Defining a **tangent
 So Maw–Barber–Fawcett is qualitatively right and Brody is numerically closer *for golf specifically*. But the residual error is signed: [Cross & Dewhurst (2018)](https://doi.org/10.1088/1361-6404/aadda8) applied the measurement directly to golf and found that because "the ball grips the club face, rather than rolling," the "outgoing ball spin is generally larger than previously estimated," and varies between ball models according to their tangential COR.
 
 ::: {.callout-note}
-## Measured golf-ball impact constants (Cross 2002, on polished granite)
+## Measured Golf-Ball Impact Constants (Cross 2002, on Polished Granite)
 
 | Quantity | Value |
 |---|---|
@@ -216,13 +216,13 @@ Two things follow that are more useful than the usual "spin peaks around 45–50
 
 This also reframes what grooves do. They are not primarily gripping features — on a clean dry ball, groove geometry barely matters. They are **drainage channels** that evacuate water and grass from the contact patch so that dry friction can be established at all. The 2010 groove rule, which limits groove volume on all clubs but drivers and putters and groove edge sharpness on clubs of 25° loft and above, was adopted after joint USGA/R&A research in 2007–08 found the rough had become too little of a penalty for expert players. Its purpose was to restore the fairway-versus-rough spin differential — that is, to restore the $\mu$ gap.
 
-### II.3 A third spin mechanism nobody mentions
+### II.3 A Third Spin Mechanism Nobody Mentions
 
 Cross found something in his force data that does not appear in golf writing at all. The friction impulse $R\!\int\!F\,dt$ was consistently **30–40% less than the measured change in angular momentum**. The missing torque comes from the normal reaction acting a distance $D$ *behind* the centre of mass — the ball leans forward during the bounce, mechanically analogous to weight transferring onto the front wheels under braking — contributing a torque $ND \approx 0.3FR$.
 
 For golf balls $D < 0.5$ mm, so the effect is **minor in golf** (it is 2–3 mm for tennis balls and baseballs, where it is large). We include it because it is a genuine third spin source alongside friction and tangential compliance, and because its smallness in golf is itself the reason golf spin models get away with ignoring it.
 
-## Part III: Gear effect and off-centre impact
+## Part III: Gear Effect and Off-Centre Impact
 
 Gear effect is the direct consequence of the third equation in Part II: because the impulse acts at a moment arm from the CG, it torques the head, and the head's rotation drags the ball's surface.
 
@@ -238,7 +238,7 @@ Two consequences matter for the rest of this article:
 
 Bulge and roll — the convex curvature of a driver face — exist to partially compensate, by starting off-centre strikes further offline so that the gear-effect curvature brings them back. The compensation is approximate by construction, since it is a fixed geometric correction to an effect that scales with ball speed. TrackMan quantifies the face-side consequence: *"if the ball is impacted ½ inch (12.7 mm) towards the heel, the face angle will at this point on the club face be 2 deg. closed relative to the center of the club face,"* a rule they state holds "for all drivers on the market."
 
-### III.1 The one clean laboratory measurement
+### III.1 The One Clean Laboratory Measurement
 
 Almost everything written about gear effect in golf traces to closed-form expressions of uncertain provenance. There is, however, a direct peer-reviewed measurement — [Cross & Nathan (2007)](https://doi.org/10.1119/1.2713788) — and it is worth knowing because it isolates the mechanism from every golf-specific complication.
 
@@ -266,9 +266,9 @@ Two things in that table deserve attention.
 
 Across the full sweep of incidence angles, the off-centre spin curve is simply the centred curve **shifted rigidly by about 9 rad/s** — so the ball rotates counter-clockwise at all small incidence angles and does not reverse until incidence exceeds about 18°.
 
-## Part IV: Ball flight laws {#sec-ballflight}
+## Part IV: Ball Flight Laws {#sec-ballflight}
 
-### IV.1 What changed, and what actually went wrong
+### IV.1 What Changed, and What Actually Went Wrong
 
 The "old" ball flight laws held that the ball starts along the club path and curves away from the face. The "new" laws hold the reverse: the ball starts close to where the face points and curves away from the path. The modern statement was put in circulation by Fredrik Tuxen of TrackMan in [*TrackMan News* #4, January 2009](https://www.yumpu.com/en/document/view/4429184/secret-of-the-straight-shot-trackman):
 
@@ -282,13 +282,13 @@ What went wrong was **transmission**, and there is a peer-reviewed account of it
 
 The manual was right and the exam was wrong. That is a considerably more precise claim than the usual "golf taught it wrong for a hundred years," which has no source and is not defensible — the institutional window is roughly 1972 to 2009, and it was never universal, since Homer Kelley's *The Golfing Machine* and Wiren's own manual both stated face dominance.
 
-### IV.2 The D-plane
+### IV.2 The D-Plane
 
 Jorgensen's **D-plane** ("D" for *descriptive*) is the plane containing the club-face normal and the clubhead velocity vector immediately before impact. Initial ball flight lies in that plane, and the spin axis is normal to it. It is the geometric object that makes the new laws inevitable rather than empirical: once you accept that the ball is launched somewhere between the face normal and the velocity vector, and that spin is generated by shear perpendicular to the launch direction, the curvature direction follows.
 
 Three limitations are worth stating, because the D-plane is often presented as more complete than it is. It is defined only for **centred strikes** (Part III). It does not specify *when* "just before impact" is, though both vectors rotate measurably through the ~0.5 ms of contact (Part VI). And practitioners routinely assume a straight-line path tangent that Jorgensen never asserted.
 
-### IV.3 The face/path weighting — where the numbers actually come from {#sec-weighting}
+### IV.3 The Face/Path Weighting — Where the Numbers Actually Come From {#sec-weighting}
 
 Here is the claim that appears in nearly every modern golf source: launch direction is 85% face angle and 15% club path for a driver, shifting toward path for lofted clubs.
 
@@ -303,7 +303,7 @@ Wood, Henrikson and Broadie measured 157 golfers over 731 driver, 745 7-iron and
 | Robot, horizontal | — | 63% ± 4% | — |
 
 ::: {.callout-important}
-## What the 85/15 rule actually claims, and where it fails
+## What the 85/15 Rule Actually Claims, and Where It Fails
 
 It is tempting to say the 85% figure is simply a vertical-plane number misapplied to the horizontal plane. That is part of the story but not all of it, and the fuller version is more interesting.
 
@@ -332,7 +332,7 @@ There is a second correction that matters more conceptually. **The "85/15 driver
 
 **A genuine live dispute.** TrackMan attributes the driver's higher ratio to a smoother titanium face producing less friction. PING explicitly rejects this: their tangential-compliance model reproduces the loft dependence **at constant $\mu$**, and finds that below about 20° incidence *lower* friction gives a launch direction *closer to the path* — the opposite of the friction hypothesis. This is unresolved in the peer-reviewed literature, and anyone building a launch monitor inversion should know that the mechanism behind a coefficient they are fitting is contested.
 
-### IV.4 Spin axis geometry
+### IV.4 Spin Axis Geometry
 
 The spin axis tilt follows from decomposing the shear at the face into components along and across the loft direction. With $A$ the **horizontal** obliqueness (face-to-path) and $L$ the **vertical** obliqueness:
 
@@ -342,7 +342,7 @@ $$
 $$
 
 ::: {.callout-warning}
-## Two definitional traps in this equation
+## Two Definitional Traps in This Equation
 
 **The denominator is not spin loft.** This formula is almost always written as $\arctan[\tan(\text{face-to-path})/\tan(\text{spin loft})]$, and as written that is **wrong**. Spin loft is the 3D resultant $\Phi$, related to the components by $\cos\Phi = \cos A\cos L$; the derivation requires the *vertical* component $L$. The two agree only for small $A$ — at $A = 5°$, $L = 12°$, the substitution introduces about 2% error in the tilt. Good approximation, not an identity.
 
@@ -361,20 +361,20 @@ Both land exactly. Whatever its published provenance, this is evidently the mode
 **Converting tilt to yards.** TrackMan's own figures give roughly **1.1 yards per degree of axis tilt at 150 yards and 1.5 at 200 yards** — about 0.7% of carry distance per degree.
 
 ::: {.callout-note}
-## An unresolved factor-of-three
+## An Unresolved Factor-of-Three
 
 TrackMan's *face-to-path* yardages imply roughly 9.5 yards of curve per degree at 275 yards. An independent trajectory-model fit gives 2.7 yards per degree at the same distance — **a factor of 3.5 apart.**
 
 We could not adjudicate this. It is worth knowing that the two figures both circulate, because a coach and a simulator can disagree by that margin while both citing "the" curvature relation. Note also that curvature is non-linear in distance in both accounts, since the ball spends its late flight slower, more spin-dominated and descending.
 :::
 
-### IV.5 Why "sidespin" is not a quantity
+### IV.5 Why "Sidespin" Is Not a Quantity
 
 A struck ball leaves the face with **one angular velocity vector**. "Backspin" and "sidespin" are a coordinate decomposition of that single vector, not two independent spins — a ball has no mechanism for spinning about two axes at once. Spin rate plus spin axis is the complete, non-redundant description, and sidespin is merely the projection $\text{spin rate} \times \sin(\text{spin axis})$.
 
 This is not pedantry. Because the Magnus force depends on the *component* of spin perpendicular to velocity, **the same axis tilt with a higher total spin rate curves more.** Axis tilt alone underdetermines curvature, which is exactly why vendor yardage tables are stated per club and per carry distance rather than as a universal constant. Neither TrackMan nor FlightScope reports a sidespin parameter at all.
 
-### IV.6 The weighting and the collision are the same result
+### IV.6 The Weighting and the Collision Are the Same Result
 
 Parts II.2 and IV.3 look like separate topics. They are not, and the connection is the most satisfying thing in this article.
 
@@ -398,9 +398,9 @@ So the two corrections in this article are one correction. The ball-flight-law w
 
 (The algebra above is ours, applying Cross's published equations; he does not phrase results as face/path percentages. A further consistency check: applying his grip criterion to a driver at $\mu \approx 0.4$ gives sliding-throughout only above about 70° of obliqueness, meaning **a driver impact essentially always grips** — which is why friction largely drops out of the launch-direction answer, and independently supports PING's finding against the smooth-face hypothesis.)
 
-## Part V: Aerodynamics and trajectory
+## Part V: Aerodynamics and Trajectory
 
-### V.1 The regime
+### V.1 The Regime
 
 A golf ball spends its entire flight at Reynolds numbers of roughly $0.9$–$2.6 \times 10^5$ (42.67 mm diameter; the exact figure moves about 20% between 0 °C and 30 °C through viscosity alone, which is a real temperature effect independent of air density). Driver launch is near $2.3 \times 10^5$, decaying to about $1 \times 10^5$ at landing.
 
@@ -408,7 +408,7 @@ That window is chosen. A **smooth** sphere has its drag crisis at $Re \approx 3.
 
 The spin ratio $S = \omega R / V$ runs from about 0.10 for a driver at launch to 0.7 or more for a wedge, and **rises through flight** as speed decays faster than spin.
 
-### V.2 What dimples actually do
+### V.2 What Dimples Actually Do
 
 The standard explanation — "dimples trip the boundary layer turbulent" — is incomplete. [Choi, Jeon & Choi (2006)](https://doi.org/10.1063/1.2191848) measured the real mechanism on a 150 mm, 392-dimple sphere dynamically similar to a real ball:
 
@@ -430,7 +430,7 @@ Their explanation is that dimples **impose a local drag penalty** — a direct i
 Dimples are not free. They buy separation delay by paying surface drag, and the trade is favourable only because a golf ball would otherwise spend its entire flight stuck subcritical at $C_D \approx 0.5$ — as §V.1 established, the smooth-sphere drag crisis sits above anything a golf ball ever reaches.
 
 ::: {.callout-note}
-## A figure we removed, and what tracing it turned up
+## A Figure We Removed, and What Tracing It Turned Up
 
 An earlier version of this section stated that the local penalty accounts for "up to 60% of total drag." We removed it, and the trace is instructive.
 
@@ -441,7 +441,7 @@ Those are not two phrasings of one number. **"60% *of* the total drag" is a shar
 We therefore cite neither. The factor-of-two-to-three comparison quoted above is verbatim from the abstract and is what the claim rests on. This is a small example of a general hazard: a number that has been through one paraphrase can arrive looking precise while having changed meaning.
 :::
 
-### V.3 The models, and what they actually contain
+### V.3 The Models, and What They Actually Contain
 
 Three wind-tunnel and trajectory models underpin essentially all golf-ball trajectory computation.
 
@@ -489,7 +489,7 @@ Independent ITR-class values for named balls have also appeared in ball-maker pa
 
 These sit comfortably inside the still-air ranges below, which is worth saying plainly: **the wind-tunnel, indoor-range and free-flight methods are not in gross conflict on modern balls.** The disagreements are real but they are at the level of a few hundredths in coefficient, not a wholesale disagreement about how a golf ball flies.
 
-### V.3b The Reynolds-independence question, and the best modern dataset
+### V.3b the Reynolds-Independence Question, and the Best Modern Dataset
 
 The sharpest modern golf-ball measurements come from a still-air projectile method that sidesteps the wind tunnel's two structural problems — support interference and scaled models — by firing production balls through stationary laboratory air between light gates and inferring drag from speed decay and lift from vertical deflection.
 
@@ -503,7 +503,7 @@ Findings that bear on everything above:
 - **Between-model spread in $C_D$ exceeds 0.1 below $Re = 10^5$** and falls under 0.05 above it — so ball-to-ball variation is largest exactly where the model disagreements are.
 
 ::: {.callout-note}
-## Dimple pattern changes lift by 50% at identical flow conditions
+## Dimple Pattern Changes Lift by 50% at Identical Flow Conditions
 
 In the reverse-Magnus regime ($5 \times 10^4 < Re < 7 \times 10^4$, 750–2,250 rpm), three production balls measured at identical Reynolds number and spin gave minimum lift coefficients of **−0.10** (circular dimples) and **−0.15** (hexagonal) — a 50% difference from dimple geometry alone.
 
@@ -512,7 +512,7 @@ The mechanism is legible in the data: the steepness of a ball's drag crisis corr
 This is the strongest available argument that **no single-parameter $C_L(S)$ model can be right**, and it is a direct measurement rather than an inference.
 :::
 
-### V.2b What simulation adds
+### V.2b What Simulation Adds
 
 Direct numerical simulation and large-eddy simulation now resolve real dimpled geometry, and they are worth citing because they supply *tabulated* coefficients rather than curves to be digitised — with the caveat that they are computations, not measurements.
 
@@ -530,7 +530,7 @@ This is an independent confirmation of the free-flight measurements in §V.3b, a
 Wind-tunnel measurement on a rotating sphere reaches the same conclusion by yet another route, and adds a mechanism the flow-state argument alone does not give. Once the advancing side transitions and its separation is delayed, the streamline **radius of curvature is smaller on that side**; through $\partial p/\partial n = -\rho V^2/R$ the pressure there is lower, and the lift points advancing-ward — negative. Push the spin higher and transition moves further upstream on the advancing side, separation moves back upstream with it, and positive lift returns. That is why the effect occupies a *window* in spin ratio rather than switching on and staying on.
 
 ::: {.callout-warning}
-## Two traps in the reverse-Magnus literature
+## Two Traps in the Reverse-Magnus Literature
 
 **The spin ratio is not consistently normalised.** Some authors define $\Gamma = D\omega/U$, others $\alpha = \omega R/U$ — differing by a **factor of two**. Taken at face value, one prominent LES reports its negative-lift condition at $\Gamma = 0.2$ and a wind-tunnel study reports one at $\alpha \approx 0.53$, an apparent five-fold discrepancy that only partly closes once the definitions are reconciled. Always check which normalisation a source uses before comparing spin ratios across papers. The same trap applies to the spin-decay coefficients in §V.4.
 
@@ -542,14 +542,14 @@ The golf-ball-specific free-flight measurements in §V.3b are the ones to trust 
 Non-rotating DNS gives consistent numbers: [Smith et al. (2010)](https://doi.org/10.1016/j.ijheatfluidflow.2010.01.002) report $C_D = 0.47$ subcritically (337 million grid points) and **0.26** supercritically (1.2 billion points), the latter within about 2% of Choi's experimental value.
 
 ::: {.callout-note}
-## Separation angles, and a discrepancy worth flagging
+## Separation Angles, and a Discrepancy Worth Flagging
 
 The supercritical separation angle is consistently ~110° across studies, against ~84° subcritically. Smith et al. trace it dimple by dimple: the flow detaches just downstream of a dimple's leading edge, reattaches before the dimple's exit, does this repeatedly, and only fully detaches near 110°.
 
 ⚠️ The journal and conference versions of that same study give the subcritical figure as **84°** and **"approximately 90°"** respectively. We report 84° as the journal value, but the two are inconsistent in the source material.
 :::
 
-### V.3c How the governing bodies actually measure this
+### V.3c How the Governing Bodies Actually Measure This
 
 The USGA and R&A do not use a wind tunnel, and their reasons are on the record in the patent that defines the method ([US 6,186,002 B1](https://patents.google.com/patent/US6186002B1/en), inventors including Smits and Quintavalla):
 
@@ -562,7 +562,7 @@ Frank Thomas, the USGA's Technical Director when the range was built, puts it mo
 This is the cleanest example of the inverse-fitting philosophy in V.3: rather than measuring forces directly and integrating, it measures a trajectory and asks what coefficients would have produced it.
 
 ::: {.callout-note}
-## What the conformance numbers actually are
+## What the Conformance Numbers Actually Are
 
 **Overall Distance Standard.** The limit is **317.0 yards plus a 3.0-yard tolerance**, so a ball conforms at ≤ 320.0 yards, tested at 75 °F, 30.0 inHg and 50% humidity. Current launch conditions are 175 mph ball speed, 10°, 2,520 rpm. From 2028 these become **183 mph, 11°, ~2,200 rpm** — the distance limit is unchanged; the *test* got harder. The governing bodies project reductions of under 5 yards for recreational players, 9–11 yards for elite men, and 13–15 for the longest hitters.
 
@@ -572,7 +572,7 @@ This is the cleanest example of the inverse-fitting philosophy in V.3: rather th
 :::
 
 ::: {.callout-warning}
-## Why trajectory-fitted and wind-tunnel coefficients disagree — and why it matters
+## Why Trajectory-Fitted and Wind-Tunnel Coefficients Disagree — And Why It Matters
 
 Inverse-fitted coefficients absorb **every** modelling error in the integrator that produced them: the spin-decay law, the air properties, the launch measurement. Ported into a different integrator with a different spin-decay law, **they are no longer guaranteed correct.**
 
@@ -581,7 +581,7 @@ The tunnel side has its own problems: support hardware sits in the near wake tha
 The practical consequence: any model-versus-model comparison that does not control for integrator and spin-decay mismatch will largely be measuring integrator mismatch. **We could not find a published head-to-head comparison that does control for it — and that absence is itself a finding.**
 :::
 
-### V.4 Spin decay
+### V.4 Spin Decay
 
 Two models exist, and they disagree with the radar data in the same direction.
 
@@ -592,7 +592,7 @@ $$
 with $\beta = 2.0 \times 10^{-5}$ (Smits & Smith, adopted verbatim by the USGA's ITR patent as its spin-decay constant) or $2.5 \times 10^{-5}$ (Tavares et al., from radar). Because $\tau \propto 1/v$, there is **no constant time constant** — it runs from about 12–16 s at driver launch to 30–37 s late in flight.
 
 ::: {.callout-note}
-## An unresolved conflict worth knowing about
+## An Unresolved Conflict Worth Knowing About
 
 Radar-measured spin decay for a Pro V1x off a driver is about **3%/s** (implying $\tau \approx 32$–37 s), while both models predict **6–8%/s** at launch speed. **The models overpredict measured driver spin decay by roughly 2–3×.**
 
@@ -603,7 +603,7 @@ Two practical cautions follow. Do not treat the commonly quoted "4% per second" 
 
 Does it matter? For carry, **second-order**: roughly doubling spin decay changes driver carry by 1 to 3 yards. That is under 1% of a drive — far smaller than the 18 m spread measured *across ball models* from lift and drag differences alone — but large enough that ball manufacturers have patented tuning it.
 
-### V.5 Atmosphere, and one folk belief that is backwards
+### V.5 Atmosphere, and One Folk Belief That Is Backwards
 
 The equations of motion are standard:
 
@@ -622,7 +622,7 @@ On atmospherics:
 
 **A headwind costs more than an equal tailwind gains.** Wind enters through relative velocity in *both* force terms, so the effect is quadratic — and a headwind additionally raises the spin ratio, lifting both $C_L$ and $C_D$.
 
-### V.6 How much does the model choice actually cost you?
+### V.6 How Much Does the Model Choice Actually Cost You?
 
 The question that makes all of the above concrete: if two models disagree about $C_D$ by some amount, how many yards is that?
 
@@ -641,7 +641,7 @@ Now apply that. The measured $C_D$ minimum in Bearman and Harvey's 1976 data is 
 The honest scale of genuine ball-to-ball variation is better measured directly: 13 production balls fired at identical release conditions produced a **carry spread of 18 metres**, from an average coefficient difference of only 0.02. Cost was not correlated with distance — the two longest were a low-cost and a mid-cost ball.
 
 ::: {.callout-important}
-## The head-to-head comparison does not exist
+## The Head-to-Head Comparison Does Not Exist
 
 We searched for a published paper implementing two or more of the canonical models and reporting carry disagreement in yards for matched launch conditions. **There is none.**
 
@@ -652,12 +652,12 @@ The nearest thing to a validation benchmark is a 2023 study fitting 90,000 radar
 
 **One extrapolation hazard worth naming.** Models whose lift coefficient is fitted as monotonically increasing in spin ratio get the **sign of lift wrong** below about $Re = 7 \times 10^4$, where measurements show $C_L$ going negative — the reverse Magnus effect, reaching $C_L = -0.10$ to $-0.15$ depending on dimple geometry. This is not exotic: it is the regime a wedge shot or a headwind-shortened flight ends in. The USGA's own fitting procedure flags it, noting that when the regression quality drops "the ball probably exhibits negative lift." Any simulator integrating a monotonic $C_L(S)$ to the end of flight is out of range at the point where it matters for short-game accuracy.
 
-### V.7 Orientation: the asymmetry the rules exist to police {#sec-orientation}
+### V.7 Orientation: The Asymmetry the Rules Exist to Police {#sec-orientation}
 
 A golf ball is not aerodynamically axisymmetric. It has a moulding parting line and a dimple pattern with discrete symmetry, so its coefficients depend on **how the pattern is oriented relative to the spin axis**. Two conventions matter: **poles-horizontal (PH)**, with the axis of rotation normal to the parting line, and **pole-over-pole (PP)**, orthogonal to it.
 
 ::: {.callout-important}
-## A correction: we said this data didn't exist
+## A Correction: We Said This Data Didn't Exist
 
 An earlier version of this article stated that no measurement of orientation-dependent lift and drag existed anywhere, and advised treating any PH-versus-PP figure as unsourced.
 
@@ -676,7 +676,7 @@ That is a **14% difference in lift coefficient from orientation alone**, at iden
 The consequences in flight are tabulated too. At 168.4 mph and 3,500 rpm the prior-art ball carries **271.0 yards poles-horizontal against 267.2 pole-over-pole**, with landing angles of 36.2° and 41.4°. Same ball, same launch conditions, **3.8 yards and 5 degrees of descent angle** separating them.
 
 ::: {.callout-note}
-## Why the tolerance is 4.0 yards
+## Why the Tolerance Is 4.0 Yards
 
 Recall from §V.3c that a ball is non-conforming if the mean carry difference between the two orientations exceeds **4.0 yards**.
 
@@ -708,7 +708,7 @@ Set that against §V.1, where Bearman and Harvey's 1976 balls had $k/d = 9\times
 
 A 2023 study adds the complementary variable, fitting drag against dimple *volume* ratio across 25 model balls. Every fit is strongly positive — more dimple volume, more drag — with the lift-to-drag ratio falling correspondingly ($r = -0.83$ at spin ratio 0.31). Volume, not count, appears to be the governing geometric quantity.
 
-## Part VI: Closure rate
+## Part VI: Closure Rate
 
 Closure rate — the speed at which the clubface rotates from open to closed through impact — is measured by several launch monitors and discussed constantly in coaching, but its mechanical consequences are rarely worked out. They turn out to be more interesting than the usual "fast closing face causes hooks" summary, and they divide into three distinct mechanisms that do not all point the same way.
 
@@ -718,7 +718,7 @@ Closure rate — the speed at which the clubface rotates from open to closed thr
 The measurement side of this section — how far the impact point's path differs from the reported reference-point path for a given delivery — is treated separately in [The Reference-Point Problem in Club Delivery Data](reference-point-problem.qmd), with an interactive tool that computes it for any combination of speed, rotation rate, lie angle and strike location.
 :::
 
-### VI.1 The elegant form: a ratio of two lengths
+### VI.1 The Elegant Form: A Ratio of Two Lengths
 
 Everything follows from $\mathbf{v}_P = \mathbf{v}_O + \boldsymbol{\omega}\times\mathbf{r}$. For a reference-point separation $d$ and an angular rate $\omega$ perpendicular to it, the velocity difference is $\omega d$, so the difference in **direction** between the two points is
 
@@ -735,12 +735,12 @@ $$
 **The path difference between two points on the clubhead is the ratio of their separation to the distance from the instantaneous screw axis.** This is the cleanest statement available of the whole reference-point problem, and it says something useful: the offset is governed by *where the club is instantaneously rotating about*, which is a property of release technique, not of speed as such.
 
 ::: {.callout-note}
-## A consistency check
+## A Consistency Check
 
 TrackMan reports roughly 3° between the CG path and the face-centre path for a driver. With $d \approx 40$ mm that implies $R_{\text{ISA}} \approx 0.77$ m. Pure rotation about the hands would put $R \approx 1.6$ m and give only $\approx 1.4°$. So the instantaneous axis sits at about half the hub distance — the closure rotation pulls it in, and contributes roughly as much as the swing arc does.
 :::
 
-### VI.2 Does swing speed amplify the effect?
+### VI.2 Does Swing Speed Amplify the Effect?
 
 This is a natural question and the answer is counter-intuitive. Since $\Delta\theta = \omega d / v$, if closure rate scales proportionally with clubhead speed — a faster swing closing proportionally faster — then $\omega = kv$ and
 
@@ -770,7 +770,7 @@ For irons the centre of gravity sits much closer to the face, so $d$ and therefo
 
 The same $\boldsymbol{\omega}\times\mathbf{r}$ acts vertically. The arc contribution tilts the face-centre velocity **upward** relative to the CG (the face centre sits ahead of the CG on an arc that is turning up through its low point), while closure about a shaft leaning toward the golfer contributes a smaller downward term. The net for a driver is of order **0.7–0.8° shallower** attack angle at the face centre than at the geometric centre.
 
-### VI.4 The face keeps closing during contact
+### VI.4 The Face Keeps Closing During Contact
 
 Contact lasts on the order of half a millisecond, and the face does not stop rotating during it:
 
@@ -785,7 +785,7 @@ So a fast-closing player's face rotates a degree or two *while the ball is on it
 
 This is largely handled by convention rather than by physics. TrackMan defines face angle at **maximum compression** — mid-contact rather than first contact — which approximates the time-average over the collision. A system reporting face angle at first contact would carry a systematic open bias that grew with closure rate.
 
-### VI.5 The dominant effect: timing sensitivity
+### VI.5 The Dominant Effect: Timing Sensitivity
 
 By definition,
 
@@ -808,7 +808,7 @@ An independent check on the magnitude comes from the launch-monitor validation l
 
 The arithmetic is sound, and it is the reason the "fast closure is hard to time" argument has been the coaching consensus since Cochran and Stobbs put it in print in 1968. But the arithmetic is not the end of the story, and the next section is the most important in this article.
 
-### VI.5b The prediction fails: closure rate does not predict accuracy
+### VI.5b the Prediction Fails: Closure Rate Does Not Predict Accuracy
 
 The timing-sensitivity argument makes a clean, testable prediction: players with faster-closing faces should be less accurate. **Both datasets that exist say it is not true.**
 
@@ -825,7 +825,7 @@ The two groups differed enormously in technique — mean twist velocity 1,631 ve
 Sasho MacKenzie reaches the same conclusion independently: *"there is currently no evidence to suggest that players with lower RoC hit more fairways or hit their approaches closer to the hole."*
 
 ::: {.callout-important}
-## The resolution, and what it costs the theory
+## The Resolution, and What It Costs the Theory
 
 The timing arithmetic is not wrong — 1° of face angle really is about half a millisecond at 2,100 °/s, and face angle really does dominate launch direction. What is wrong is the assumption that timing precision is a fixed quantity a player brings to whatever technique they use.
 
@@ -836,7 +836,7 @@ This is a genuine and instructive failure of a physically correct argument. The 
 
 What *is* established is narrower: better players show significantly lower shot-to-shot variability in face angle, club path, attack angle and impact location ([Betzler et al. 2012](https://pubmed.ncbi.nlm.nih.gov/22272690/), 285 participants). That is a statement about outcome consistency, not about closure rate — and it is consistent with either release style being executed well.
 
-### VI.6 So is a high-closure player more likely to hit a cut?
+### VI.6 So Is a High-Closure Player More Likely to Hit a Cut?
 
 Three mechanisms, and they do not agree:
 
@@ -854,11 +854,11 @@ The honest answer has two halves.
 
 That is a real and correctable problem, and the correction is not complicated: state the reference point, and report the angular rate alongside the path so the size of the discrepancy is visible on that swing.
 
-### VI.7 Interaction with gear effect
+### VI.7 Interaction With Gear Effect
 
 Closure rate and gear effect are mechanically separate — gear effect depends on strike offset and head moment of inertia, not on $\omega$ — but they compound through a common cause. A mistimed release both mis-orients the face *and* tends to move the strike location, late releases toward the heel and early ones toward the toe. The player therefore receives face-angle error and gear-effect spin-axis error from the same underlying timing fault, which is part of why high-closure patterns feel unforgiving out of proportion to any single measured parameter.
 
-### VI.8 How closure rate is measured, and typical values
+### VI.8 How Closure Rate Is Measured, and Typical Values
 
 Everything above is geometry and holds whatever the measured values are. But applying it requires knowing what "closure rate" a given number refers to — and here the literature is in worse shape than the physics.
 
@@ -887,7 +887,7 @@ where SPV is swing-plane velocity. The measured ratio HTV : CCV is about **0.62*
 Two findings from that dataset deserve wider circulation. Of 94 tour players, **92 had the lead wrist *extending* through impact**, not flexing. And shaft torsional wind-up is negligible — 0.2–1.0° — so measured shaft-axis rotation is real body-driven rotation, not the shaft unwinding.
 
 ::: {.callout-note}
-## A convergence worth noting
+## A Convergence Worth Noting
 
 MacKenzie reports closure rate in **degrees per foot**. That is exactly $\omega/v$ — the reciprocal of $R_{\text{ISA}}$, the quantity VI.2 derived as the dimensionally correct predictor.
 
@@ -898,7 +898,7 @@ Two independent routes, one from screw-theoretic kinematics and one from coachin
 
 **A caution on measurement windows.** One high-speed study reports 25° of shaft-axis rotation in the ±2 ms around impact, which is about 6,250 °/s. That figure is sometimes quoted as a closure rate, but the window is roughly eight times the ball-contact duration and the sample is three golfers. It is not comparable to the values in the table above.
 
-## Part VII: What is settled, what is contested, and what is missing
+## Part VII: What Is Settled, What Is Contested, and What Is Missing
 
 It is worth separating these explicitly, because golf's technical literature tends to present all three in the same voice.
 
@@ -911,13 +911,13 @@ It is worth separating these explicitly, because golf's technical literature ten
 - **Gear effect scaling** with CG depth over moment of inertia, and the 1.5–2× vertical-versus-horizontal asymmetry.
 - **Closure rate does not predict accuracy** at tour level. Two independent sources, one with 70 tour players.
 
-### Contested in the peer-reviewed literature
+### Contested in the Peer-Reviewed Literature
 
 - **The mechanism behind the face/path weighting.** Friction (TrackMan/Dewhurst) versus tangential compliance (PING). The two make opposite predictions about the low-incidence regime.
 - **The magnitude of the weighting itself.** 85% is folklore; 76% ± 8% is the measurement; the two have coexisted for fifteen years without the discrepancy being widely noticed, largely because of the vertical/horizontal plane conflation.
 - **Spin decay.** Models overpredict radar measurements by 2–3×, and predict a speed dependence the data do not show. No reconciliation exists.
 
-### Missing, and worth someone's time
+### Missing, and Worth Someone's Time
 
 - **A published head-to-head trajectory-model comparison** implementing two or more canonical models at matched launch conditions and reporting the disagreement in yards. We searched specifically for this and it does not exist — a conspicuous gap given that the coefficient spreads involved are worth tens of yards (V.6).
 - **An inter-laboratory round robin for golf-ball aerodynamics.** No ISEA, ASTM or governing-body comparison exists publicly. Every dataset is a single lab's.
@@ -929,7 +929,7 @@ It is worth separating these explicitly, because golf's technical literature ten
 - **Whether any vendor reports face angle at first contact rather than maximum compression.** This determines whether a systematic open-face bias exists for high-closure players (VI.4).
 - **Roberts, Jones & Rothberg's measured contact times** across five clubheads and two ball constructions — the peer-reviewed contact-time reference, currently inaccessible.
 
-### A note on how this article treats numbers
+### A Note on How This Article Treats Numbers
 
 Several widely circulated figures are **deliberately absent** because we could not trace them to a primary source: a 4,000 lbf peak impact force, a universal 45–50° spin-loft optimum, "the ball flight laws were wrong for a hundred years," and specific Smits & Smith lift and drag coefficients. In each case the claim may well be true. But a reference document that fills gaps with plausible-looking numbers propagates them indefinitely, and the gaps above are more useful to a reader than confident guesses would be.
 

@@ -18,6 +18,7 @@
 @import url("css/components/status-banner.css");
 @import url("css/components/not-found.css");
 @import url("css/components/callouts.css");
+@import url("css/components/code-theme.css");
 @import url("css/utilities/spacing.css");
 
 /* Native cross-document view transitions (issue #3334): a free same-origin
@@ -149,7 +150,7 @@ h6 {
   font-family: "Playfair Display", Georgia, "Times New Roman", serif;
   font-weight: 700;
   line-height: 1.25;
-  color: var(--primary-dark);
+  color: var(--text-primary);
   margin-bottom: 1rem;
 }
 
@@ -167,7 +168,7 @@ h2 {
 h3 {
   font-size: clamp(1.35rem, 2vw + 0.5rem, 1.75rem);
   margin-top: 1.5rem;
-  color: var(--primary-blue);
+  color: var(--color-link);
 }
 
 h4 {
@@ -175,14 +176,28 @@ h4 {
 }
 
 a {
-  color: var(--accent-blue);
+  color: var(--color-link);
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 a:hover {
-  color: var(--primary-blue);
+  color: var(--color-link-hover);
   text-decoration: underline;
+}
+
+.quarto-title-block .reading-time-estimate,
+.quarto-title-block .reading-time-estimate span,
+#title-block-header .reading-time-estimate,
+#title-block-header .reading-time-estimate span {
+  color: var(--text-inverse) !important;
+}
+
+.sidebar nav[role="doc-toc"] ul > li > a.active,
+.sidebar nav[role="doc-toc"] ul > li > ul > li > a.active,
+.sidebar nav[role="doc-toc"] a:hover,
+.sidebar nav[role="doc-toc"] a:focus-visible {
+  color: var(--color-link) !important;
 }
 
 /* ---
@@ -586,7 +601,7 @@ nav .container {
 
 #quarto-header .dropdown-item:hover {
   background: var(--light-blue);
-  color: var(--primary-blue);
+  color: var(--color-link-hover);
 }
 
 /* Search box styling */
@@ -727,13 +742,13 @@ nav .container {
 
 .sidebar-links a:hover {
   background-color: var(--bg-alt);
-  color: var(--primary-blue);
+  color: var(--color-link-hover);
   text-decoration: none;
 }
 
 .sidebar-links a.active {
   background-color: var(--light-blue);
-  color: var(--primary-blue);
+  color: var(--color-link);
   border-left-color: var(--primary-blue);
   font-weight: 500;
 }
@@ -746,7 +761,7 @@ nav .container {
 
 .toc-nav .sidebar-links a:hover,
 .toc-nav .sidebar-links a.active {
-  color: var(--primary-blue);
+  color: var(--color-link);
 }
 
 /* ---
@@ -760,7 +775,7 @@ nav .container {
   border-bottom: 2px solid var(--border-color);
   padding-bottom: 0.5rem;
   margin-bottom: 1.5rem;
-  color: var(--primary-dark);
+  color: var(--text-primary);
 }
 
 .accordion-item {
@@ -791,7 +806,7 @@ nav .container {
   text-align: left;
   font-size: var(--fs-base);
   font-weight: 600;
-  color: var(--primary-dark);
+  color: var(--text-primary);
   font-family: "Playfair Display", serif;
 }
 
@@ -918,8 +933,8 @@ nav .container {
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
-  background: rgb(255, 255, 255, 0.1);
-  border: 1px solid rgb(255, 255, 255, 0.2);
+  background: #1a1a2e;
+  border: 1px solid #1a1a2e;
   color: #fff;
   padding: 0.5rem 0.75rem;
   min-height: 44px;
@@ -934,6 +949,11 @@ nav .container {
   cursor: pointer;
   opacity: 0;
   transition: opacity 0.2s;
+}
+
+blockquote,
+.blockquote {
+  color: var(--text-secondary);
 }
 
 .code-wrapper:hover .copy-btn,
@@ -1192,7 +1212,7 @@ h3:hover .anchor-link,
 }
 
 .anchor-link:hover {
-  color: var(--accent-blue);
+  color: var(--color-link-hover);
 }
 
 /* Back to Top */
@@ -1356,7 +1376,7 @@ h3:hover .anchor-link,
 }
 
 .copy-email-btn:hover {
-  color: var(--accent-blue);
+  color: var(--color-link-hover);
   background-color: var(--light-blue);
 }
 
@@ -1366,7 +1386,7 @@ h3:hover .anchor-link,
 }
 
 .copy-email-btn.success {
-  color: var(--primary-blue);
+  color: var(--color-link);
   background-color: var(--light-blue);
   border-color: var(--accent-blue);
 }
@@ -1510,7 +1530,7 @@ h3:hover .anchor-link,
 
 .laymans-item h3 {
   font-size: var(--fs-base);
-  color: var(--primary-dark);
+  color: var(--text-primary);
   margin: 0 0 0.75rem;
   display: flex;
   align-items: center;
@@ -1667,7 +1687,7 @@ form.contact-form .form-group label {
   width: 100%;
   font-weight: 600;
   margin-bottom: 0.5rem;
-  color: var(--primary-dark);
+  color: var(--text-primary);
   font-family: "Playfair Display", serif;
 }
 
@@ -1758,7 +1778,7 @@ form.contact-form .form-group textarea {
 
 .contact-info .social-link:hover {
   border-color: var(--accent-blue);
-  color: var(--primary-blue);
+  color: var(--color-link-hover);
   background: var(--light-blue);
 }
 
@@ -1790,7 +1810,7 @@ form.contact-form .form-group textarea {
    --- */
 
 .home-sidebar h3 {
-  color: var(--primary-blue);
+  color: var(--color-link);
   font-size: var(--fs-small);
   font-weight: 600;
   text-transform: uppercase;
@@ -1829,7 +1849,7 @@ form.contact-form .form-group textarea {
 
 .home-sidebar .resource-links a:hover {
   background-color: var(--light-blue);
-  color: var(--primary-blue);
+  color: var(--color-link-hover);
   padding-left: 0.9rem;
 }
 
@@ -1850,7 +1870,7 @@ form.contact-form .form-group textarea {
 }
 
 .welcome-header h1 {
-  color: var(--primary-blue);
+  color: var(--color-link);
   font-size: 3rem;
   margin-bottom: 0.5rem;
   margin-top: 0;
@@ -2271,7 +2291,7 @@ h1.title,
 .critic-perspective h3 {
   margin: 0;
   font-size: var(--fs-base);
-  color: var(--primary-dark);
+  color: var(--text-primary);
 }
 
 .critic-argument {
@@ -2398,7 +2418,7 @@ h1.title,
 
 .home-toc .toc-links a:hover,
 .home-toc .toc-links a.active {
-  color: var(--primary-blue);
+  color: var(--color-link);
   border-left-color: var(--primary-blue);
   background-color: var(--light-blue);
 }
@@ -2469,7 +2489,7 @@ h1.title,
 
 .featured-section h2 {
   margin-bottom: 1.5rem;
-  color: var(--primary-dark);
+  color: var(--text-primary);
 }
 
 .featured-grid {
@@ -2496,7 +2516,7 @@ h1.title,
 }
 
 .featured-card-content h3 {
-  color: var(--primary-dark);
+  color: var(--text-primary);
   font-size: var(--fs-base);
   margin: 0 0 0.75rem;
 }
@@ -2698,7 +2718,7 @@ h1.title,
 }
 
 .coming-soon-notice h2 {
-  color: var(--primary-dark);
+  color: var(--text-primary);
   margin-bottom: 1rem;
 }
 

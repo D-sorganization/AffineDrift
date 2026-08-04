@@ -62,10 +62,37 @@
   color: var(--text-primary);
 }
 
+/* Quarto's built-in callout headers use fixed light fills. Without this
+ * override, dark mode renders near-white text on pale blue, pink, or orange
+ * headers. Keep the semantic border/icon color and use a themed surface. */
+[data-theme="dark"] .callout.callout-style-default .callout-header {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  opacity: 1;
+}
+
+[data-theme="dark"] .callout.callout-style-default .callout-body {
+  color: var(--text-primary);
+}
+
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .abstract-section,
   :root:not([data-theme="light"]) .keypoint-box {
     background: var(--bg-secondary);
+    color: var(--text-primary);
+  }
+
+  :root:not([data-theme="light"])
+    .callout.callout-style-default
+    .callout-header {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    opacity: 1;
+  }
+
+  :root:not([data-theme="light"])
+    .callout.callout-style-default
+    .callout-body {
     color: var(--text-primary);
   }
 }

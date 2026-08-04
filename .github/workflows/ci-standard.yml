@@ -160,6 +160,11 @@ jobs:
         # Neither is caught by the frontmatter validator, the cross-reference
         # checker, the maths scanner, or 'quarto render', which exits 0.
         run: python3 scripts/check_single_title.py
+      - name: Verify Website Title Capitalization
+        # Titles are presentation-critical content: navigation labels, page and
+        # section headings, figure captions, and chart titles must use the same
+        # APA-style capitalization before a change can merge.
+        run: python3 scripts/check_title_case.py
       - name: Verify Display Maths Is Delimited
         # An equation with no '$$' is read as a paragraph: Pandoc consumes each
         # \command as unknown markup and keeps the punctuation, so ch08 shipped

@@ -355,7 +355,7 @@ plt.subplot(1, 2, 2)
 plt.plot(t, residual, color='red')
 plt.xlabel('Time (s)')
 plt.ylabel('Residual (rad)')
-plt.title(f'Residual grows as O(t²)')
+plt.title(f'Residual Grows as O(t²)')
 plt.grid(True)
 plt.tight_layout()
 ```
@@ -586,7 +586,7 @@ For a moderate 12-state example with a short horizon, the LQR update is typicall
 
 ---
 
-## Tube MPC with Geometric Residuals {#sec-tube-mpc}
+## Tube MPC With Geometric Residuals {#sec-tube-mpc}
 
 ### Residual-Based Tube Sizing
 
@@ -667,7 +667,7 @@ def residual_tube_mpc(
 ### Tube-MPC Implication Under a Valid Bound
 
 ::: {.callout-note}
-## Standard Tube-MPC Logic with a Residual-Derived Radius
+## Standard Tube-MPC Logic With a Residual-Derived Radius
 
 If the nominal trajectory satisfies tightened constraints and $\|x(t) - \bar{x}(t)\| \leq \delta_{\max}(t)$ is in fact maintained by the feedback controller, then the usual tube-MPC containment argument implies that the true trajectory remains inside the original constraint set $x(t) \in \mathcal{X}$.
 :::
@@ -782,7 +782,7 @@ M_traj = [compute_hessian_bound_quadrotor(x_traj[i], u_traj[i])
 plt.plot(t_traj, M_traj, color='red')
 plt.xlabel('Time (s)')
 plt.ylabel('Hessian bound M')
-plt.title('Curvature along trajectory')
+plt.title('Curvature Along Trajectory')
 plt.grid(True)
 
 plt.subplot(2, 2, 4)
@@ -790,7 +790,7 @@ dt_traj = jnp.diff(t_traj)
 plt.plot(t_traj[:-1], dt_traj, color='green')
 plt.xlabel('Time (s)')
 plt.ylabel('Timestep Δt (s)')
-plt.title('Adaptive timestep sizing')
+plt.title('Adaptive Timestep Sizing')
 plt.grid(True)
 
 plt.tight_layout()
@@ -800,7 +800,7 @@ plt.tight_layout()
 
 ---
 
-## Humanoid Walking with Impacts {#sec-humanoid}
+## Humanoid Walking With Impacts {#sec-humanoid}
 
 ### Problem Setup
 

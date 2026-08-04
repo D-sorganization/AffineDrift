@@ -28,7 +28,7 @@ This article explains that local relationship and why its assumptions matter.
 
 ---
 
-## What is Contraction Theory?
+## What Is Contraction Theory?
 
 Before we can talk about the unification, we need to understand what "contraction" means.
 
@@ -116,7 +116,7 @@ Here's the heart of the unification:
 
 That relationship is useful, but it depends on the model, boundary conditions, and the region where the local approximation remains valid.
 
-### The Rubber Band is Optimal
+### The Rubber Band Is Optimal
 
 Going back to the rubber band:
 
@@ -144,7 +144,7 @@ Going back to the rubber band:
 
 **Why it could work:** The controller does not just steer toward the goal; it is also checked for local error-shrinking behavior.
 
-### 2. Golf Swings with Safety Margins
+### 2. Golf Swings With Safety Margins
 
 **The problem:** Professional golfers swing faster than amateurs but **maintain control** better. Why?
 
@@ -157,7 +157,7 @@ Going back to the rubber band:
 
 **Training implication:** Any coaching claim would need direct data showing that a drill improves measured robustness, not only path accuracy.
 
-### 3. Spacecraft Docking with Guarantees
+### 3. Spacecraft Docking With Guarantees
 
 **Challenge:** Docking with the ISS requires centimeter-level precision. Orbital mechanics are nonlinear. Fuel is limited.
 
@@ -240,7 +240,7 @@ The connection is useful, but it still has to be checked outside the linear-quad
 
 Once the local link between optimality and stability is explicit, we can design algorithms that optimize a trajectory and check its stability region.
 
-### The Idea: Optimize with Stability Guarantees
+### The Idea: Optimize With Stability Guarantees
 
 **Standard trajectory optimization:**
 - Minimize cost (fuel, time, error)
@@ -377,7 +377,7 @@ Final contraction rate: 1.94 Hz (target: 2.0 Hz)
 
 ## Common Questions
 
-### **"Isn't this just LQR?"**
+### **"Isn't This Just LQR?"**
 
 **Almost, but with a twist.**
 
@@ -387,7 +387,7 @@ LQR (Linear Quadratic Regulator) gives optimal feedback for linear systems. For 
 
 **What's useful:** In linear-quadratic settings, the Riccati matrix can serve both as a value-function Hessian and as a local Lyapunov or contraction candidate. That connection can support a stability certificate, but only after the closed-loop conditions and bounds are checked.
 
-### **"Does this work for discontinuous systems?"**
+### **"Does This Work for Discontinuous Systems?"**
 
 **Not directly.** Standard contraction arguments require smooth dynamics (at least C^1--continuously differentiable) within the region being analyzed.
 
@@ -398,7 +398,7 @@ For systems with:
 
 You need hybrid system techniques. **But:** You can use contraction within each mode, then analyze switching separately.
 
-### **"What's the computational bottleneck?"**
+### **"What's the Computational Bottleneck?"**
 
 **Metric optimization.** Finding a contraction metric M may require solving a semidefinite program (SDP) or another constrained optimization problem at each time step.
 
