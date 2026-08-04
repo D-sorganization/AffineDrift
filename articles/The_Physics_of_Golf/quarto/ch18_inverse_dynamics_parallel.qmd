@@ -453,6 +453,54 @@ For example, a golfer might grip the club very tightly (large internal grip forc
 This is why the dual null space matters for injury-risk and coaching discussions: it identifies quantities that require force measurements, tissue models, or explicit load-sharing assumptions before the text can make applied claims.
 :::
 
+## Why Drift Forces Are Not Constrained by the Loop {#sec-drift_not_constrained_inverse}
+
+A critical insight from @sec-parallel_mechanisms: drift terms can be computed from kinematics once the model, segment inertias, and coordinate convention are specified. They are not affected by muscle load-sharing ambiguity, but they are still model-conditioned.
+
+### Gravity {#sec-gravity_inverse}
+
+Gravity acts on the center of mass:
+
+$$
+\bm{F}_{\text{grav}} = m\bm{g}
+$$ {#eq-gravity_force}
+
+The center of mass position is determined by the skeleton's configuration $\bm{q}$ and the segment mass model. Once those are known, gravity is determined by the model.
+
+### Coriolis Force {#sec-coriolis_inverse}
+
+The Coriolis force is:
+
+$$
+\bm{F}_{\text{Cor}} = -2m\,\bm{\omega} \times \bm{v}_{\text{rel}}
+$$ {#eq-coriolis_general}
+
+Both $\bm{\omega}$ (body rotation rate) and $\bm{v}_{\text{rel}}$ (relative velocity) are estimated from joint angles and velocities after filtering and differentiation.
+
+Moreover, Coriolis is *perpendicular* to the velocity that creates it. This perpendicularity is a kinematic fact, not dependent on forces.
+
+### Centrifugal Force {#sec-centrifugal_inverse}
+
+The centrifugal acceleration (in the rotating frame) is:
+
+$$
+\bm{a}_{\text{cent}} = -\bm{\omega} \times (\bm{\omega} \times \bm{r})
+$$ {#eq-centrifugal_accel}
+
+This depends on $\bm{\omega}$ (rotation rate, from kinematics) and $\bm{r}$ (position, from the model geometry).
+
+::: {.callout-important}
+## Drift Terms Are Model-Conditioned {#principle:drift_observable_inverse}
+
+From motion capture plus a declared model, a biomechanist can compute the total drift term:
+
+$$
+\bm{F}_{\text{drift}} = \bm{F}_{\text{grav}} + \bm{F}_{\text{Cor}} + \bm{F}_{\text{cent}} + \text{(elastic drift)}
+$$ {#eq-total_drift_force}
+
+This total drift term has no muscle load-sharing ambiguity, but it depends on the selected model, parameters, and filtering. The ZTCF framework (@sec-zero_torque_counterfactual) leverages this distinction without claiming that drift estimates are independent of modeling choices.
+:::
+
 ## A Concrete Example: The Two-Handed Golf Grip
 
 ::: {.callout-note}
