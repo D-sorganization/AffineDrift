@@ -92,7 +92,7 @@ This simplicity persists for regular open-chain inverse dynamics at the generali
 
 :::
 
-### Why the Mass Matrix is Always Invertible
+### Why the Mass Matrix Is Always Invertible
 
 
 For an open kinematic chain with $n$ generalized coordinates:
@@ -230,7 +230,7 @@ where $\bm{h}(\bm{q},\dot{\bm{q}}) = \bm{C}(\bm{q},\dot{\bm{q}})\,\dot{\bm{q}} +
 This is called the KKT (Karush-Kuhn-Tucker) or augmented system. For $n$ generalized coordinates and $k$ constraints, the matrix is $(n+k) \times (n+k)$.
 
 ::: {.callout-important}
-## The Augmented System is Invertible in Forward Dynamics
+## The Augmented System Is Invertible in Forward Dynamics
 For a well-posed mechanical system with constraints, the augmented matrix
 $$
 \bm{K} = \begin{bmatrix} \bm{M} & -\bm{J}_c^T \\ \bm{J}_c & \bm{0} \end{bmatrix}
@@ -613,7 +613,7 @@ The direction matters because causality flows forward (from forces to motion) bu
 ### Forward Dynamics: Always Uniquely Solvable
 
 ::: {.callout-important}
-## Forward Dynamics is Well-Posed
+## Forward Dynamics Is Well-Posed
 Given applied torques $\bm{u}(t)$ and an initial state $\bm{q}(0), \dot{\bm{q}}(0)$, the constrained differential equations
 $$
 \begin{bmatrix} \bm{M}(\bm{q}) & -\bm{J}_c^T \\ \bm{J}_c & \bm{0} \end{bmatrix} \begin{bmatrix} \ddot{\bm{q}} \\ \boldsymbol{\lambda} \end{bmatrix} = \begin{bmatrix} \bm{B}\bm{u} - \bm{h} \\ -\dot{\bm{J}}_c\dot{\bm{q}} \end{bmatrix}
@@ -629,7 +629,7 @@ Physically: if you know the model, contact mode, and applied loads, physics dete
 ### Inverse Dynamics: Not Uniquely Solvable
 
 ::: {.callout-important}
-## Inverse Dynamics is Under-Determined in Parallel Systems
+## Inverse Dynamics Is Under-Determined in Parallel Systems
 Given a measured trajectory $\bm{q}(t), \dot{\bm{q}}(t), \ddot{\bm{q}}(t)$ in a system with loop constraints, the equation
 $$
 \bm{B}(\bm{q})\,\bm{u} + \bm{J}_c^T(\bm{q})\,\boldsymbol{\lambda} = \bm{M}(\bm{q})\,\ddot{\bm{q}} + \bm{h}(\bm{q},\dot{\bm{q}})
@@ -728,7 +728,7 @@ The dimension of the null space is 3. The number of degrees of freedom is 3. So 
 
 :::
 
-## Strategies for Coping with Underdetermined Inverse Dynamics
+## Strategies for Coping With Underdetermined Inverse Dynamics
 
 ### Optimization-Based Approaches
 
@@ -936,7 +936,7 @@ The ground reaction torque (free moment) $M_z$ is the torque applied by the grou
 If force plate data is available, $M_z$ is directly measured. If not, it can be approximated from the offset of the vertical ground reaction force from the body's center of rotation.
 
 ::: {.callout-note}
-## Ground Torque from Force Offset {#definition:ground_torque_offset}
+## Ground Torque From Force Offset {#definition:ground_torque_offset}
 
 If the vertical GRF $F_z$ is applied at a horizontal offset $\bm{r}$ from the pelvis center, the resulting torque is:
 
@@ -979,7 +979,7 @@ This asymmetry reveals the "ground-up" power transfer story: the ground actively
 ## Implications for the Zero-Torque Counterfactual Framework
 
 ::: {.callout-note}
-## Why Forward Simulation is More Robust
+## Why Forward Simulation Is More Robust
 
 The ZTCF (Zero-Torque Counterfactual) framework asks a different question than traditional inverse dynamics. Rather than asking *What muscle torques caused this motion?*, it asks *What motion occurs if the muscles apply zero torque to the club?*
 
@@ -1036,7 +1036,7 @@ This is the practical advantage of the ZTCF approach. It avoids muscle load-shar
 ## The Condition Number and Near-Singular Configurations
 
 ::: {.callout-note}
-## When is Inverse Dynamics Merely Difficult vs. Fundamentally Ambiguous?
+## When Is Inverse Dynamics Merely Difficult vs. Fundamentally Ambiguous?
 
 Even for open chains, inverse dynamics becomes numerically unreliable in certain configurations. This is a separate but related issue.
 
@@ -1166,7 +1166,7 @@ When reading biomechanics papers that claim to have computed individual joint to
 :::
 
 
-## Summary: Why the ZTCF is More Robust
+## Summary: Why the ZTCF Is More Robust
 
 ::: {.callout-important}
 ## Key Takeaways: Forward vs. Inverse in Parallel Systems

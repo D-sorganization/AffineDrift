@@ -42,7 +42,7 @@ For control theorists, this language makes the biology explicit: the drift inclu
 
 For biomechanists, this language provides a principled way to organize the observations. Instead of cataloging muscle activations, they can ask: what is the control objective at each phase of the swing? And how do the observed muscle activations implement that objective?
 
-## Robotics: What Golf Can Learn from Machines
+## Robotics: What Golf Can Learn From Machines
 
 A robot arm is, in many ways, a simplified human arm. It has joints (usually revolute, or rotating joints). It has actuators (motors) that apply torque at the joints. It has a rigid endpoint (the end effector) that must reach a target position.
 
@@ -218,7 +218,7 @@ The model that predicts ball trajectory from swing parameters is essentially a s
 
 But there is an inverse problem: given the observed ball trajectory, what can we infer about the club and ball at impact? This is where data science and machine learning come in.
 
-### Learning the Drift Field from Data
+### Learning the Drift Field From Data
 
 Suppose a golfer takes 100 swings with launch monitor data collected. Each swing has:
 - Pre-swing state: hand position, hand velocity, shoulder angle, etc. (the state $\mathbf{x}_0$).
@@ -233,7 +233,7 @@ More precisely, we can estimate the parameters of the drift field. The drift fie
 
 This is machine learning in the service of physics: not a black-box neural network, but a physics-informed model that learns the unknown parameters.
 
-### Predicting Ball Outcome from Swing Data
+### Predicting Ball Outcome From Swing Data
 
 Once the drift field is estimated, we can use it to predict the outcome of future swings. Given a measurement of the early downswing state (hand position, hand velocity, shoulder angle, etc.), we can integrate the dynamics forward to predict:
 1. The state at impact (club face angle, club path, etc.).
@@ -281,7 +281,7 @@ A better program combines strength training with technique training:
 
 This integrated approach addresses both the control authority and the drift field, reducing the overall force on the shoulder joint.
 
-## Coaching Science: Translating Physics into Cues
+## Coaching Science: Translating Physics Into Cues
 
 A golf coach's job is to help a golfer improve. But improvement requires understanding what to improve and how. The affine framework provides a language for this.
 

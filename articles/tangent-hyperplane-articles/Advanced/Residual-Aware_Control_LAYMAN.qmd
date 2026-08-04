@@ -36,7 +36,7 @@ This is **residual-aware control**: treating "drift from the plan" not as failur
 
 Here's the central idea that makes everything work:
 
-### The amount you drift tells you how curvy the road is.
+### The Amount You Drift Tells You How Curvy the Road Is.
 
 **Straight road (low curvature):**
 - Your simplified map says "go straight"
@@ -285,9 +285,9 @@ The system smoothly transitions between modes with **hysteresis** (different thr
 
 ---
 
-## Common Objections (and Answers)
+## Common Objections (And Answers)
 
-### **"This sounds complicated. Why not just use a good controller all the time?"**
+### **"This Sounds Complicated. Why Not Just Use a Good Controller All the Time?"**
 
 **Answer:** Good controllers are expensive.
 
@@ -301,7 +301,7 @@ If you update at 100 Hz (every 10ms), the complex controller barely fits in real
 
 **Analogy:** It is like using a simpler driving strategy on predictable roads and a more cautious strategy in dense traffic. The switch is useful only if the condition detector is reliable.
 
-### **"Can't we just predict the hard parts in advance?"**
+### **"Can't We Just Predict the Hard Parts in Advance?"**
 
 **Sometimes yes, sometimes no:**
 
@@ -317,7 +317,7 @@ If you update at 100 Hz (every 10ms), the complex controller barely fits in real
 
 **Practical split:** Use predicted drift for planning and observed drift as a runtime diagnostic, while recognizing that neither one is a substitute for a validated safety case.
 
-### **"What if residuals are always large? Doesn't this just mean 'always use the expensive controller'?"**
+### **"What If Residuals Are Always Large? Doesn't This Just Mean 'Always Use the Expensive Controller'?"**
 
 **Answer:** If residuals are always large, it means:
 1. Your system is highly nonlinear everywhere, OR
@@ -333,7 +333,7 @@ If you update at 100 Hz (every 10ms), the complex controller barely fits in real
 - You can check whether the stated drift bounds remain credible
 - You can diagnose problems ("Why are residuals so high? Is my model wrong?")
 
-### **"This seems like it only works for smooth systems. What about impacts, switches, constraints?"**
+### **"This Seems Like It Only Works for Smooth Systems. What About Impacts, Switches, Constraints?"**
 
 **Answer:** You're right—the math assumes smooth (differentiable) dynamics.
 
@@ -359,7 +359,7 @@ If you update at 100 Hz (every 10ms), the complex controller barely fits in real
 
 ## What's New Here?
 
-### Old Idea: "Linearization error is quadratic in perturbation size"
+### Old Idea: "Linearization Error Is Quadratic in Perturbation Size"
 
 This has been known for centuries (Taylor series, calculus 101).
 

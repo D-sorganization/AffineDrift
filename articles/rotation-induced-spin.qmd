@@ -46,7 +46,7 @@ categories: [physics, impact, spin, closure-rate, golf, derivation]
 </section>
 ```
 
-## Scope and intent
+## Scope and Intent
 
 The [reference treatment of impact mechanics](impact-mechanics-and-ball-flight.qmd) works out three consequences of clubface closure rate: a reference-point offset in the reported club path, a degree or two of face rotation during contact, and the timing sensitivity that dominates all of it in practice. It does not work out a fourth one, which is the subject of this supplement.
 
@@ -62,7 +62,7 @@ Right-handed frame for a right-handed golfer: $x$ along the target line, $y$ ver
 Ball constants are the governing-body specification limits, which are openly published equipment rules rather than measurements: mass $m = 45.93$ g (the 1.620 oz maximum) and radius $R = 21.335$ mm (half the 1.680 in minimum diameter). Inertia is taken as a uniform solid sphere, $I = \tfrac25 mR^2 = 8.363\times10^{-6}$ kg m². A real ball is not uniform, and this is flagged in the assumption ledger at the end.
 :::
 
-## 1. The kinematic term
+## 1. The Kinematic Term
 
 Everything starts from the same relation the rest of the closure-rate treatment starts from. For two points on a rigid clubhead,
 
@@ -100,7 +100,7 @@ $$
 This is the tangential surface velocity of the face at the contact patch, relative to the ball's centre. It is the golf equivalent of a rack sliding under a gear, and the lever arm is the ball's own radius rather than anything about the club.
 
 ::: {.callout-important}
-## A double-counting caution, stated up front
+## A Double-Counting Caution, Stated Up Front
 
 The decomposition above is exact but it is a *choice of reference point*, and the answer to the question "is this effect already in my model?" depends entirely on which point a model uses for clubhead velocity.
 
@@ -109,7 +109,7 @@ A model that drives the collision with clubhead velocity **evaluated at the geom
 Since the launch-monitor convention documented in the [parameter reference](technology-launch-monitors.qmd) is the **geometric centre**, and since the CG-to-face separation on a driver (25–50 mm) is comparable to the ball radius, this is not a small bookkeeping point. It is the same reference-point problem the main article works out for club path, applied to spin instead of direction.
 :::
 
-### 1.1 Working the sweep for the tour-median delivery
+### 1.1 Working the Sweep for the Tour-Median Delivery
 
 The project's closure-rate model takes its delivery numbers from Cheetham's 94-player tour dataset and the Henrikson relation that converts a shaft-axis rate into a target-line rate:
 
@@ -136,7 +136,7 @@ Converting and applying the kinematics, with $\Delta t = 450$ µs for the contac
 
 A third of a millimetre. That is the entire physical event this article is about, and its smallness is worth holding onto — it is the reason the no-slip limit turns out to be the relevant one, and the reason the resulting spin is a correction rather than a dominant term.
 
-## 2. The impulse partition, and the five-sevenths result
+## 2. The Impulse Partition, and the Five-Sevenths Result
 
 Now let friction act on that sweep. Treat the contact as a rigid impact: the ball is free, initially at rest and unspun, and the tangential impulse $J_t$ acts at the contact point, whose perpendicular distance from the ball's centre is $R$.
 
@@ -190,7 +190,7 @@ $$
 
 Against a driver ball speed of order 70 m/s that is $\arctan(0.223/70) = 0.18°$ of launch direction — small, and in the opposite lateral sense to the curvature it accompanies.
 
-## 3. The numbers
+## 3. The Numbers
 
 Applying $\omega_{\text{ball}} = \tfrac57\omega$ across the measured range. The extremes are Cheetham's highest and lowest individual handle twist velocities, converted to the target-line frame using the measured HTV:CCV ratio of 0.62, exactly as in the closure-rate dossier:
 
@@ -209,7 +209,7 @@ Two labels belong on those numbers and must travel with them:
 
 The true value lies between, and §4 argues it lies very close to the top of that bracket.
 
-## 4. Is the friction actually available?
+## 4. Is the Friction Actually Available?
 
 The no-slip result is only meaningful if the contact can supply the required tangential impulse within the contact time. Two checks, both of which the collision passes comfortably.
 
@@ -243,7 +243,7 @@ that is, 54 µs, which is **12% of the contact duration**. Even under the pessim
 
 That is the substantive reason to treat the no-slip figure as the working estimate rather than as a remote theoretical ceiling: the sideways sweep is small enough, and the normal force large enough, that the sideways degree of freedom sticks almost immediately.
 
-## 5. Where the bracket is honestly wider than it looks
+## 5. Where the Bracket Is Honestly Wider Than It Looks
 
 Three effects push the real answer away from a clean $5/7$, and two of them push **upward**, which means "no-slip upper bound" is a statement about the rigid-friction model rather than about physics.
 
@@ -269,7 +269,7 @@ which returns $5/7$ at $\alpha = 0.4$. Cross's measured $\alpha$ for a golf ball
 
 For readers who want the geometry anyway, the tilt of the spin axis is $\arctan(\omega_{\text{side}}/\omega_{\text{back}})$, which for 250 rpm of side-axis spin against an **assumed** 2,500 rpm of backspin is 5.7°. The 2,500 is a stated assumption, not a measurement, and the number should not be quoted without it.
 
-## 6. Which way does it curve?
+## 6. Which Way Does It Curve?
 
 The sign is worth deriving rather than asserting, because it turns out to reinforce one of the main article's three closure-rate mechanisms and oppose another.
 
@@ -298,7 +298,7 @@ Set against the three mechanisms tabulated in the main article, this is a fourth
 
 Note also the small launch-direction term from §2: the ball's centre is pushed 0.18° toward $+z$, to the right, while the spin curves it left. A push-draw in miniature, from a single mechanism, on a centred strike.
 
-## 7. Relation to classical gear effect
+## 7. Relation to Classical Gear Effect
 
 The two effects share a mechanism and differ in every input.
 
@@ -316,7 +316,7 @@ The last three rows are the interesting ones. Gear effect is a club-design varia
 
 It also fails to respond to the one correction golf has built for gear effect. Bulge and roll compensate an effect that scales with how far off centre the strike was; this effect is the same at every strike location, so a fixed face curvature cannot correct it — it would simply be absorbed into the club's overall bias.
 
-## 8. An extension, flagged rather than claimed
+## 8. An Extension, Flagged Rather Than Claimed
 
 The boxed result applies to **every** component of head angular velocity perpendicular to the face normal, not only the closing component. A clubhead approaching impact is also rotating in the swing plane — pitching about a roughly horizontal axis as it passes through the bottom of the arc — and that component is perpendicular to the face normal too. By the same algebra it should contribute **backspin**.
 
@@ -330,7 +330,7 @@ with the closing component accounting for 250 rpm of it and the remainder appear
 
 ⚠️ **This is an extension, not a result.** $R_{\text{ISA}} \approx 0.77$ m is itself back-solved from a vendor path-offset figure in the main article and carries a warning there; the decomposition of the residual into pitch and other components has not been measured; and a few hundred rpm of backspin is large enough that if it were real and unaccounted for, impact models referenced to the geometric centre would be under-predicting driver backspin systematically. Either that under-prediction exists and has been absorbed into fitted constants, or one of the assumptions above is wrong. **Resolving which is the single most useful thing that could be done with this article.**
 
-## 9. Assumption ledger
+## 9. Assumption Ledger
 
 Every number above traces to this list. Nothing else was used.
 
@@ -355,7 +355,7 @@ Every number above traces to this list. Nothing else was used.
 
 Everything else in this article is algebra.
 
-## 10. What would falsify this
+## 10. What Would Falsify This
 
 - **A centred-strike robot test at two closure rates, matched in every other delivery parameter.** The prediction is a difference in side-axis spin of $\tfrac57\Delta\omega$ — for a 1,000 °/s difference in CCV, 119 rpm, in the draw direction for the faster-closing delivery. That is within the resolution of current spin measurement and nothing about it requires a new instrument.
 - **Any measurement of ball spin referenced against clubhead velocity taken at the contact point rather than the geometric centre.** If the two references give the same spin prediction, the decomposition in §1 is wrong.

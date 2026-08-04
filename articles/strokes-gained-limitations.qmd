@@ -44,9 +44,9 @@ We then extend the reasoning beyond putting to driving, approach play, and aroun
 
 ---
 
-## 2. The strokes-gained framework in mathematical form
+## 2. The Strokes-Gained Framework in Mathematical Form
 
-### 2.1 The benchmark value function
+### 2.1 The Benchmark Value Function
 
 Let a *state* on the golf course be described by variables such as:
 
@@ -64,7 +64,7 @@ where $H$ is the random number of strokes required to hole out from state $(d,c)
 
 Intuitively, $J_{\text{ref}}(d,c)$ is “how many strokes an average player of this population needs to finish from here.”
 
-### 2.2 Per-shot strokes gained
+### 2.2 Per-Shot Strokes Gained
 
 Consider a single shot that starts from state $(d_i, c_i)$ and finishes at state $(d_{i+1}, c_{i+1})$, not yet holed. The **strokes gained** for that shot is defined as
 
@@ -91,7 +91,7 @@ where $n$ is the actual number of strokes taken on the hole and $(d_1, c_1)$ is 
 
 Thus, total strokes gained on a hole equals “benchmark strokes from the tee” minus “actual strokes,” exactly matching the intuitive description.
 
-### 2.3 A dynamic programming perspective (briefly)
+### 2.3 A Dynamic Programming Perspective (Briefly)
 
 More formally, the benchmark function satisfies a Bellman equation:
 
@@ -106,7 +106,7 @@ Under this view, the strokes-gained value of a realized shot outcome is the diff
 
 ---
 
-## 3. Strokes gained as a *population* conditional expectation
+## 3. Strokes Gained as a *Population* Conditional Expectation
 
 The critical statistical fact is that $J_{\text{ref}}(d,c)$ is a **population conditional expectation**:
 
@@ -148,9 +148,9 @@ What follows is a more precise description of how that mismatch creates problems
 
 ---
 
-## 4. Gradients of expected strokes and heterogeneous skill profiles
+## 4. Gradients of Expected Strokes and Heterogeneous Skill Profiles
 
-### 4.1 Local value of a small improvement
+### 4.1 Local Value of a Small Improvement
 
 Let $x$ be a continuous state variable, for example, *distance to the hole* along the green surface. For simplicity, suppose the lie is fixed (putts on the green), so we write
 
@@ -185,7 +185,7 @@ There is no reason for this to hold in general.
 
 This immediately implies that the same improvement in *leave distance* ($\Delta x$) will produce different changes in expected score for different players, even though strokes-gained calculations give them the same credit.
 
-### 4.2 The key conceptual error
+### 4.2 The Key Conceptual Error
 
 When we say:
 
@@ -207,11 +207,11 @@ That step is what is *not* justified without additional modeling of the individu
 
 ---
 
-## 5. A concrete putting example
+## 5. A Concrete Putting Example
 
 Let’s make this more explicit with a toy model that still captures the real issue.
 
-### 5.1 Simple two-putt model
+### 5.1 Simple Two-Putt Model
 
 Suppose from some short-putt distance $x$ (say 1–3 metres), the reference population has one-putt probability $p_{\text{ref}}(x)$, so that:
 
@@ -281,7 +281,7 @@ which is common to both players. So:
 
 Strokes-gained putting numbers will still tell you who putted better *relative to the benchmark*, but they are not a direct estimator of how many strokes you will actually save by improving either your approach proximity or your short-putt skill.
 
-### 5.2 When “gaining 0.3 strokes putting” is misinterpreted
+### 5.2 When “Gaining 0.3 Strokes Putting” Is Misinterpreted
 
 When analysts say “Player X improved their strokes-gained putting by 0.3 per round this season,” they are reporting:
 
@@ -301,11 +301,11 @@ Without a model for how $J_i$ changed, inferring “0.3 strokes gained putting �
 
 ---
 
-## 6. Extension to other parts of the game
+## 6. Extension to Other Parts of the Game
 
 Exactly the same logic applies off the green.
 
-### 6.1 Driving distance and the “how much is 10 yards worth?” question
+### 6.1 Driving Distance and the “How Much Is 10 Yards Worth?” Question
 
 Analyses that estimate the value of +10 yards of driving typically work by evaluating how much the benchmark function $J_{\text{ref}}$ decreases when moving the starting point of the second shot 10 yards closer, conditional on lie type.
 
@@ -324,7 +324,7 @@ To interpret this as “Golfer A gains X strokes per round from being 10 yards l
 
 If Golfer A is substantially better from long irons than the reference player, and Golfer B is worse, the actual marginal value of moving both of them 10 yards closer is not the same as the benchmark calculation. The reference curve is computing something like an **average treatment effect** (ATE) of distance across the population; the coach really cares about a **conditional individual treatment effect** (CITE) for the specific golfer.
 
-### 6.2 Approach play and wedge distance optimization
+### 6.2 Approach Play and Wedge Distance Optimization
 
 “Optimal wedge distance” discussions often use baseline curves of $J_{\text{ref}}(d,\text{fairway})$ versus $d$ to argue about whether a player should lay up to, say, 90 yards versus 50 yards.
 
@@ -344,7 +344,7 @@ $$
 
 Using the reference surface to prescribe “optimal” lay-up distances can therefore systematically misguide a player whose skill profile is atypical.
 
-### 6.3 Around-the-green play
+### 6.3 Around-the-Green Play
 
 Around the green, the same phenomenon appears in:
 
@@ -356,7 +356,7 @@ The strokes-gained decomposition will correctly attribute relative performance t
 
 ---
 
-## 7. Statistical perspective: ecological fallacy and heterogeneity
+## 7. Statistical Perspective: Ecological Fallacy and Heterogeneity
 
 The core statistical issue is that strokes gained relies on a **single regression surface** $J_{\text{ref}}(d,c)$ estimated from a pooled population. In causal-inference language:
 
@@ -382,7 +382,7 @@ But the coaching question “If this player improves factor X, what happens to t
 
 This is precisely where ecological fallacy comes in: inferring individual-level behavior or treatment effects from group-level averages.
 
-### 7.1 What a more rigorous model would look like
+### 7.1 What a More Rigorous Model Would Look Like
 
 A statistically coherent approach to individualized strokes-gained analysis would model:
 
@@ -440,11 +440,11 @@ Strokes gained penalizes both behaviors as "suboptimal," failing to capture the 
 
 ---
 
-## 9. Practical implications for coaching and analysis
+## 9. Practical Implications for Coaching and Analysis
 
 Given these limitations, how should science-based coaches and analysts use strokes gained responsibly?
 
-### 9.1 Use strokes gained for what it is excellent at
+### 9.1 Use Strokes Gained for What It Is Excellent At
 
 Strokes gained is outstanding for:
 
@@ -454,7 +454,7 @@ Strokes gained is outstanding for:
 
 For these uses, the fact that $J_{\text{ref}}$ is population-based is a feature, not a bug.
 
-### 9.2 Be explicit when making *causal* statements
+### 9.2 Be Explicit When Making *Causal* Statements
 
 Any time a statement starts to sound like:
 
@@ -467,7 +467,7 @@ you are no longer in purely descriptive territory. At that point:
 2. Ask how plausible it is that the player’s skill profile matches the benchmark assumptions underlying that table.
 3. Where feasible, estimate **player-specific** baselines from the player’s own shot-level data (even if noisy), possibly with hierarchical shrinkage.
 
-### 9.3 Pay attention to interaction effects
+### 9.3 Pay Attention to Interaction Effects
 
 Because all parts of the game interact through the state transitions, the value of improving any aspect (e.g., proximity on approaches) is conditional on others (e.g., putting performance from the resulting distances).
 
@@ -614,7 +614,7 @@ Understanding these statistical limitations motivates the physics-based approach
 
 ---
 
-## References (informal)
+## References (Informal)
 
 - Broadie, M. (2011). *Assessing Golfer Performance on the PGA TOUR.* Working paper, Columbia University.
 - Broadie, M. (2014). *Every Shot Counts.* Gotham Books. [@broadie2014every]

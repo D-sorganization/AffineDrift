@@ -97,7 +97,7 @@ Many control techniques, including gain scheduling, model predictive control, an
 
 **Result:** The arm smoothly reaches the cup, even though we never "solved the full nonlinear problem"—we just solved 100 tiny linear problems in a row.
 
-### Example 2: Spacecraft Docking with the ISS
+### Example 2: Spacecraft Docking With the ISS
 
 **The Problem:** Orbital mechanics are complex. Thrust in one direction causes rotation. Rotation affects trajectory. Everything couples.
 
@@ -125,7 +125,7 @@ This isn't just intuition—it's **mathematically justified** by the tangent spa
 
 ## The Three Parts of the Thesis
 
-### Part I: **Geometry** (Why it works)
+### Part I: **Geometry** (Why It Works)
 
 Explains what is exact about the tangent construction and what remains approximate when it is used over a finite step. Uses pictures and analogies to show:
 - A tangent plane is the "best flat approximation" to a curvy surface
@@ -134,7 +134,7 @@ Explains what is exact about the tangent construction and what remains approxima
 
 **Takeaway:** Linearization is not merely a hack; it is the local first-order structure of smooth systems, and its finite-step use must be checked against residuals.
 
-### Part II: **Integration** (Accumulating over time)
+### Part II: **Integration** (Accumulating Over Time)
 
 Shows what happens when you **add up** lots of tiny linear steps to get a full trajectory.
 
@@ -142,7 +142,7 @@ Shows what happens when you **add up** lots of tiny linear steps to get a full t
 
 **Takeaway:** You can use superposition locally, then account for the residual terms introduced by moving along a nonlinear trajectory.
 
-### Part III: **Algorithms** (How to actually do it)
+### Part III: **Algorithms** (How to Actually Do It)
 
 Provides concrete algorithms for:
 - **DDP/iLQR:** Trajectory optimization by solving a sequence of local LQR problems
@@ -155,19 +155,19 @@ Provides concrete algorithms for:
 
 ## Common Objections (And Answers)
 
-### **"But linearization is an approximation!"**
+### **"But Linearization Is an Approximation!"**
 
 **Answer:** The derivative is the exact first-order object at the point. What is approximate is using that tangent description to predict behavior away from the point. Small steps and frequent re-linearization can reduce the error, but "negligible" must be justified by residual estimates for the system being studied.
 
 Think of it like a map: A flat map of the Earth is "wrong" globally, but a street map of your neighborhood is "exact enough" for walking around the block.
 
-### **"This sounds like it only works for small perturbations."**
+### **"This Sounds Like It Only Works for Small Perturbations."**
 
 **Answer:** True for a single linearization. **Iterative methods** such as DDP keep re-linearizing as the system moves, so each solve uses a local model near the current reference trajectory. The quality of the result still depends on step size, conditioning, constraints, and how well the reference trajectory represents the motion.
 
 It's like climbing stairs: Each step is small and linear, but you can climb a tall building by taking many steps.
 
-### **"What about discontinuous systems? Impacts? Switches?"**
+### **"What About Discontinuous Systems? Impacts? Switches?"**
 
 **Answer:** The framework requires smooth dynamics ($C^1$—continuously differentiable). For impacts or switches, you'd need to:
 - Treat each mode separately

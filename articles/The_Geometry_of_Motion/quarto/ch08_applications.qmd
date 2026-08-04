@@ -1,8 +1,6 @@
-%% ==========================================================================
-%%  Chapter 8: Applications — Biomechanics, Robotics, and Beyond
-%% ==========================================================================
-
-# Applications: Biomechanics, Robotics, and Beyond
+---
+title: "Applications: Biomechanics, Robotics, and Beyond"
+---
 
 \label{ch:applications}
 
@@ -20,11 +18,7 @@ pathways. The goal is to move from theory to implementation.
 :::
 
 
-%% ==========================================================================
-
 ## Biomechanics: The Golf Swing as a Control-Affine System
-
-%% ==========================================================================
 
 
 ### System Definition and Parameterization
@@ -371,7 +365,7 @@ mainly in earlier phases (backswing, transition) to set up the state for passive
 energy release.
 
 
-### Key Insights from the Framework
+### Key Insights From the Framework
 
 
 \paragraph{Drift composition.}
@@ -443,14 +437,10 @@ and any violation of this order degrades performance.
 :::
 
 
-%% ==========================================================================
-
 ## Robotics: Contraction-Certified Manipulation
 
-%% ==========================================================================
 
-
-### Operational Space Control with Contraction Guarantees
+### Operational Space Control With Contraction Guarantees
 
 
 For a robot manipulator tracking a task-space trajectory $\vec{y}_d(t)$ with task
@@ -707,11 +697,7 @@ smooth penalty function:
 with tuning parameters $\varepsilon_0 = 0.01$, $c = 0.1$. This provides smooth escalation
 of the regularization as singularities are approached.
 
-%% ==========================================================================
-
 ## Aerospace: Spacecraft Proximity Operations
-
-%% ==========================================================================
 
 
 ### Clohessy-Wiltshire Equations and State-Space Form
@@ -938,7 +924,7 @@ The optimal controller achieves **53\% reduction** in fuel relative to naive, an
 **34\% reduction** relative to PI, while meeting the hard constraint of 0.1 m/s
 contact velocity.
 
-#### Trade-off Analysis
+#### Trade-Off Analysis
 
 The LQR weights $\mat{Q}$ and $\mat{R}$ encode a fuel-vs.-precision trade-off. Increasing
 $\mat{R}$ (penalizing control effort) saves fuel but allows larger errors. Figure data:
@@ -958,11 +944,7 @@ $\mat{R}$ (penalizing control effort) saves fuel but allows larger errors. Figur
 The choice $\mat{R} = 0.1$ is a reasonable sweet spot, balancing fuel saving (2150 N$\cdot$s)
 against trajectory accuracy.
 
-%% ==========================================================================
-
 ## Autonomous Driving: Vehicle Dynamics and Lane-Keeping
-
-%% ==========================================================================
 
 
 ### Bicycle Model Kinematics
@@ -1092,11 +1074,7 @@ and $\alpha \approx 0.5$ is a tuning parameter. This ensures the controller comp
 for the increasing drift-control ratio at higher speeds, maintaining consistent lane-keeping
 performance.
 
-%% ==========================================================================
-
 ## Practical Implementation Checklist
-
-%% ==========================================================================
 
 This section summarizes the steps for applying the framework to a new application.
 
@@ -1235,7 +1213,7 @@ eigs(sys_d.A - sys_d.B*K)
 ```
 
 
-#### Python with SciPy
+#### Python With SciPy
 
 
 ```
@@ -1325,11 +1303,7 @@ diagram = builder.Build()
 ```
 
 
-%% ==========================================================================
-
 ## Experimental Validation
-
-%% ==========================================================================
 
 Theory predicts behavior; experiments verify. This section outlines how to validate
 the framework on real systems.
@@ -1373,7 +1347,7 @@ where $\sigma_{\rho}$ is the standard error of the observed rate. If the predict
 falls within the 95\% confidence interval, the prediction is validated.
 
 
-### Estimating the Drift-Control Ratio from Sensor Data
+### Estimating the Drift-Control Ratio From Sensor Data
 
 
 #### Method: Zero-Torque Experiment
@@ -1511,7 +1485,7 @@ deviation, spin axis) and $\vec{z}_{\text{impact}}$ is the vector of impact cond
 The Jacobian $J_{\text{impact}}$ can be computed from physics-based ball flight models
 or estimated empirically from launch monitor data.
 
-#### Composing with the State Transition Matrix
+#### Composing With the State Transition Matrix
 
 The state transition matrix $\Phi(t_{\text{impact}}, t_0)$ from
 Chapter~\ref{ch:variational} maps an initial perturbation $\delta\x_0$ to the

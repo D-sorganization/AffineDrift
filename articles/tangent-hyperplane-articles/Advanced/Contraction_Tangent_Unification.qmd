@@ -153,7 +153,7 @@ is contracting w.r.t. $\mathbf{u}$.
 
 # Tangent Spaces and Variational Dynamics
 
-## Review from Unified Thesis
+## Review From Unified Thesis
 
 In the tangent space framework, we consider a **nominal trajectory** $\mathbf{x}^*_t$ and analyze **perturbed trajectories** $\mathbf{x}_t = \mathbf{x}^*_t + \delta \mathbf{x}_t$ in the tangent bundle $T\mathcal{M}$.
 
@@ -384,7 +384,7 @@ with $g_{ij} = (\mathbf{M})_{ij}$ the metric components.
 
 # Contraction-Constrained DDP
 
-## Motivation: Stability Guarantees from Optimization
+## Motivation: Stability Guarantees From Optimization
 
 Standard DDP provides **local stability** around the nominal trajectory but no guarantees about:
 - Basin of attraction size
@@ -446,7 +446,7 @@ This is zero when contracting, positive otherwise.
 ## Stability Guarantees
 
 ::: {.callout-important icon=false}
-## Theorem 4.1 (Certified Stability from Contraction-DDP)
+## Theorem 4.1 (Certified Stability From Contraction-DDP)
 Let $\{\mathbf{x}^*_t, \mathbf{u}^*_t, \mathbf{M}_t\}$ be the output of Contraction-DDP with penalty weight $\mu$ sufficiently large. Then:
 
 1. The closed-loop system $\dot{\mathbf{x}} = \mathbf{f}(\mathbf{x}, \mathbf{u}^*_t - \mathbf{K}_t(\mathbf{x} - \mathbf{x}^*_t))$ is contracting with rate $\lambda$.
@@ -456,7 +456,7 @@ Let $\{\mathbf{x}^*_t, \mathbf{u}^*_t, \mathbf{M}_t\}$ be the output of Contract
 
 **Proof Sketch**: The penalty forces $\mathcal{C}(\mathbf{x}^*_t, \mathbf{u}^*_t) \to 0$ as $\mu \to \infty$. By continuity, there exists a neighborhood where (@eq-contraction-condition) holds. $\square$
 
-## Comparison with Classical DDP
+## Comparison With Classical DDP
 
 | Feature | Classical DDP | Contraction-DDP |
 |---------|--------------|-----------------|
@@ -775,7 +775,7 @@ d\mathbf{x} = \mathbf{f}(\mathbf{x}, \mathbf{W} \mathbf{c}) dt + \mathbf{G} d\ma
 $$ {#eq-stochastic-dynamics}
 
 ::: {.callout-warning}
-## Conjectural extension --- not standard stochastic LQR
+## Conjectural Extension --- Not Standard Stochastic LQR
 The equation presented immediately below is **not** the standard stochastic-LQR Riccati equation. It is a heuristic fusion of two different control problems (stochastic LQR and risk-sensitive / Whittle--Speyer LEQG control), offered here as a motivating conjecture for combining contraction-theoretic robustness with stochastic feedback control. **Do not** quote it as a derived result in downstream work.
 
 The **standard stochastic-LQR** formulation separates the Riccati equation from the covariance evolution:
@@ -846,7 +846,7 @@ This quantifies the **robustness** to perturbations at time $t$.
 
 ---
 
-# Robotics: Manipulation with Local Certificates
+# Robotics: Manipulation With Local Certificates
 
 ## Contraction-Based Task Space Control
 
@@ -1088,7 +1088,7 @@ $$ {#eq-basin-definition}
 
 ## Computational Overhead
 
-### Timing Breakdown (per iteration)
+### Timing Breakdown (Per Iteration)
 
 | Operation | Classical DDP | Contraction-DDP | Overhead |
 |-----------|--------------|----------------|----------|
@@ -1140,7 +1140,7 @@ $$ {#eq-sdp-standard-form}
 
 where $\langle \mathbf{C}, \mathbf{M} \rangle = \text{tr}(\mathbf{C}^\top \mathbf{M})$.
 
-### The metric belongs to the *closed loop*
+### The Metric Belongs to the *Closed Loop*
 
 A subtle but essential point: an LQR controller's contraction metric pertains to the
 **closed-loop** dynamics $A - BK$, **not** the open-loop $A$. Trying to solve the
@@ -1150,7 +1150,7 @@ both eigenvalues of $A$ are $0$ (not Hurwitz), so no $M \succ 0$ makes
 $A^\top M + M A \prec 0$. The correct object is the ARE solution $S$, which is a
 contraction metric for the *stabilized* system.
 
-### Example: Double Integrator (closed-loop ARE)
+### Example: Double Integrator (Closed-Loop ARE)
 
 Solve the continuous-time ARE for the double integrator with $Q = \operatorname{diag}(10, 1)$,
 $R = 1$, form the LQR gain $K = R^{-1} B^\top S$, and verify that $M = S$ satisfies the

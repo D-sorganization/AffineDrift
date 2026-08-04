@@ -66,7 +66,7 @@ Recall the control-affine form $\dot{x} = f(x) + g(x)u$ established in Part 1, w
 
 This Part IV collects the detailed mathematical proofs that substantiate those assertions [@goldstein2002classical; @spong2005robot; @featherstone2008rigid]. We explicitly derive the equations of motion for the coupled rigid--flexible system, demonstrate the preservation of the affine structure under modal truncation, and provide illustrative low-dimensional examples to build intuition.
 
-## Appendix A: Mathematical Derivations
+## Appendix a: Mathematical Derivations
 
 ::: {.callout-important}
 ## Critical Assumption: Fixed Grip Impedance
@@ -79,7 +79,7 @@ $$\dot{x} = f(x) + g(x)u$$
 
 and to document all assumptions required for the formulation.
 
-### Coupled rigid--flexible equations of motion
+### Coupled Rigid--Flexible Equations of Motion
 
 We partition the generalized coordinates into
 
@@ -118,7 +118,7 @@ where:
 
 The flexible DOFs have no direct torque inputs.
 
-### Block structure of the inertia and Coriolis matrices
+### Block Structure of the Inertia and Coriolis Matrices
 
 The inertia matrix has the block form
 
@@ -155,7 +155,7 @@ $$\dot{M} - 2C \quad \text{is skew-symmetric}.$$
 
 These blocks arise from standard manipulator equations extended to include flexible-body contributions.
 
-### Solving for accelerations
+### Solving for Accelerations
 
 Writing $\dot{v} = [\ddot{q}^{T}, \ddot{\eta}^{T}]^{T}$, the equations of motion become:
 
@@ -194,7 +194,7 @@ $$\begin{bmatrix}
     B(q)\,u \\ 0
   \end{bmatrix}.$$
 
-### Drift acceleration
+### Drift Acceleration
 
 We define the drift acceleration as
 
@@ -220,7 +220,7 @@ $$a_{\mathrm{drift}}(x) \quad \text{is independent of } u.$$
 
 This constitutes the *drift invariance* property formalized in the main text.
 
-### Input acceleration mapping
+### Input Acceleration Mapping
 
 The input-driven acceleration is the part proportional to $u$. We can expand the inverse inertia matrix $M^{-1}$ in block form. Let $H = M^{-1}$. Its structure reflects the full coupling:
 $$H(q,\eta) = \begin{bmatrix} H_{qq} & H_{q\eta} \\ H_{\eta q} & H_{\eta\eta} \end{bmatrix}.$$
@@ -250,7 +250,7 @@ Linearity of the torque input is preserved even in the presence of:
 - configuration-dependent $B(q)$,
 - velocity-dependent $C$ terms.
 
-### First-order state-space (affine) form
+### First-Order State-Space (Affine) Form
 
 Define the full state
 
@@ -294,7 +294,7 @@ This establishes the nonlinear control-affine structure used throughout the manu
 
 This appendix details the finite-dimensional modal approximation used to model shaft deformation in the unified rigid--flexible dynamics of the golfer--club system. The goal is to show how a continuous beam model reduces to the generalized modal coordinates $\eta \in \mathbb{R}^{m}$ used in the main text, and why this representation preserves the linearity of the torque input in the final control-affine form.
 
-### Continuous beam model
+### Continuous Beam Model
 
 The golf shaft is modeled as a uniform Euler--Bernoulli beam [@meirovitch2010methods; @shabana2020dynamics] of length $L$, with transverse displacement field
 
@@ -329,7 +329,7 @@ These constraints define the mode shapes used in the modal expansion.
 Theoretically, the "clamped" boundary condition ($w(0,t)=0, w_s(0,t)=0$) implies an infinitely stiff grip. In reality, grip impedance varies with muscle activation, which is part of the input $u$. If the boundary conditions depended on $u$, the mode shapes $\phi_i$ and consequently the mass matrix $M$ would become input-dependent ($M(u)$), breaking the affine structure. To preserve the validity of the decomposition $\dot{x} = f(x) + g(x)u$, we formally adopt the **Constant Impedance Assumption**: the grip is treated as a fixed mechanical constraint defining the "Effective Plant" for the swing. The input $u$ is the torque applied *to* this plant, not a parameter that reshapes it.
 :::
 
-### Modal expansion
+### Modal Expansion
 
 The transverse displacement is approximated using a finite set of vibration modes [@meirovitch2010methods]:
 
@@ -358,7 +358,7 @@ Substituting the modal expansion into the beam equation and projecting onto each
 In practice, how many modes $m$ are required to capture shaft dynamics in the golf swing? For typical golf club shafts (length 0.9 m, hollow steel or composite), empirical studies show that the first 2–3 bending modes capture more than 95% of the shaft's kinetic and strain energy during the swing. Higher modes have natural frequencies (20+ Hz) that are damped by grip compliance and rarely excited by the joint-driven excitation of the swing (which typically has energy content up to 10–15 Hz). For theoretical completeness, we retain the full modal series; in practice, truncating at $m = 2$ or $m = 3$ yields excellent fidelity while reducing computational cost.
 :::
 
-### Modal equations of motion
+### Modal Equations of Motion
 
 The projected dynamics have the form:
 
@@ -385,7 +385,7 @@ C_s = \mathrm{diag}(2\zeta_1\omega_1,\dots,2\zeta_m\omega_m).$$
 
 These matrices match those used in the main text, where the shaft forces enter the drift term.
 
-### Preservation of linear torque input
+### Preservation of Linear Torque Input
 
 From the full equations of motion:
 
@@ -425,7 +425,7 @@ $$\dot{x} = f(x) + g(x)u,$$
 
 with all flexible-shaft contributions confined to the drift term, preserving linearity in the torque input $u$.
 
-### Planar rigid pendulum with torque input
+### Planar Rigid Pendulum With Torque Input
 
 Consider a simple planar pendulum of length $L$ and mass $m$, pivoted at the origin and moving in the vertical plane. Let $\theta$ be the angle from the downward vertical, positive counterclockwise. A torque input $u$ is applied at the pivot.
 
@@ -470,7 +470,7 @@ $$f(x) =
 
 and the system is clearly control-affine.
 
-### Planar pendulum with flexible shaft
+### Planar Pendulum With Flexible Shaft
 
 We now attach a single bending mode to the pendulum to emulate a flexible shaft aligned with the pendulum rod. Let $\eta$ be the modal coordinate representing transverse deflection of the shaft relative to the rigid rod.
 
@@ -558,7 +558,7 @@ $$\begin{bmatrix}
 **Superposition still holds.** Even though the dynamics are now richer and nonlinear in $(\theta,\eta)$, the torque input still appears linearly as $A_{\mathrm{input}}(x)\,u$. The drift term contains all flexible-shaft effects; any two solutions corresponding to inputs $u_1,u_2$ differ by the same linear map $A_{\mathrm{input}}(x)$ applied to the difference in inputs.
 
 ::: {.callout-tip}
-## Worked 2-DOF example: concrete numbers for rigid + flexible-mode coupling
+## Worked 2-DOF Example: Concrete Numbers for Rigid + Flexible-Mode Coupling
 To make the block structure reproducible, fix representative parameters: rod length $L = 1.1$ m, rod/hand mass $m_h = 0.40$ kg concentrated at the wrist, clubhead mass $m_c = 0.200$ kg at the tip, and a single first-bending mode with modal mass $m_\eta = 0.10$ kg, modal stiffness $k_\eta = 2500$ N/m (first-mode frequency $f_1 = \tfrac{1}{2\pi}\sqrt{k_\eta/m_\eta} \approx 25.2$ Hz --- typical for a steel iron shaft), modal damping $c_\eta = 0.8$ N·s/m, and shape function $\Phi(L) = 1.0$ at the clubhead.
 
 At the midsection configuration ($\theta = -\tfrac{\pi}{4}$, $\eta = 0$) the inertia blocks evaluate to
@@ -587,7 +587,7 @@ so the flexible mode reduces the effective hand-swing inertia by roughly $0.161/
 These numbers are reproducible with a 20-line Python script that builds $M$, inverts it block-wise, and prints $\Gamma, \Delta, H_{qq}$ --- we leave the script as an exercise; the numerical values above were computed from the parameters listed at the top of this box.
 :::
 
-### Summary: Superposition and affine structure
+### Summary: Superposition and Affine Structure
 
 Across both cases—planar rigid pendulum and planar flexible pendulum—the same pattern holds (and extends by the same reasoning to the spatial cases):
 

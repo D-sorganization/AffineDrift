@@ -25,14 +25,14 @@ This collection presents an exploratory geometric framework for understanding no
 
 We provide three learning paths depending on your goals:
 
-### Track 1: **Conceptual Understanding** (No equations)
+### Track 1: **Conceptual Understanding** (No Equations)
 *Goal: Understand "why" without "how"*
 - Start with Layman's Terms summaries
 - Read motivational sections only
 - Skip mathematical derivations
 - **Time:** 2-3 hours
 
-### Track 2: **Applied Practitioner** (Implement algorithms)
+### Track 2: **Applied Practitioner** (Implement Algorithms)
 *Goal: Use methods in your work*
 - Read main articles, skip proofs
 - Focus on algorithm pseudocode
@@ -40,7 +40,7 @@ We provide three learning paths depending on your goals:
 - Implement examples in Python/MATLAB
 - **Time:** 2-3 weeks
 
-### Track 3: **Technical Review** (Full derivations and caveats)
+### Track 3: **Technical Review** (Full Derivations and Caveats)
 *Goal: Understand the claims well enough to evaluate or extend them*
 - Read the main pages, appendices, and critique pages together
 - Work through all derivations
@@ -296,7 +296,7 @@ For when you need to remember "what was that formula?"
 
 ## Common Pitfalls and How to Avoid Them
 
-### Pitfall 1: "Linearization is approximate, so results are approximate"
+### Pitfall 1: "Linearization Is Approximate, so Results Are Approximate"
 
 **Why it's wrong:** The tangent space (derivative) is **exact**. What's approximate is using it far from the linearization point. DDP/iLQR re-linearize constantly, maintaining exactness.
 
@@ -304,7 +304,7 @@ For when you need to remember "what was that formula?"
 
 ---
 
-### Pitfall 2: "This only works for small perturbations"
+### Pitfall 2: "This Only Works for Small Perturbations"
 
 **Why it's misleading:** A single linearization only works locally. But **iterative methods** (DDP, MPC) keep taking small steps with fresh linearizations. You can reach anywhere via many small steps.
 
@@ -312,7 +312,7 @@ For when you need to remember "what was that formula?"
 
 ---
 
-### Pitfall 3: "Residuals are errors I need to minimize"
+### Pitfall 3: "Residuals Are Errors I Need to Minimize"
 
 **Why it's misleading:** Residuals are **geometric features** (curvature), not modeling errors. They're inevitable for nonlinear systems. Goal is to **understand and account for** them, not eliminate them.
 
@@ -320,7 +320,7 @@ For when you need to remember "what was that formula?"
 
 ---
 
-### Pitfall 4: "Contraction is for stability, optimization is separate"
+### Pitfall 4: "Contraction Is for Stability, Optimization Is Separate"
 
 **Why it's wrong:** Contraction and optimization are **dual perspectives**. Contraction = "trajectories converge," Optimization = "cost decreases." Both use Jacobians, both exploit tangent geometry.
 
@@ -328,7 +328,7 @@ For when you need to remember "what was that formula?"
 
 ---
 
-### Pitfall 5: "Framework fails for impacts/friction (non-smooth)"
+### Pitfall 5: "Framework Fails for Impacts/Friction (Non-Smooth)"
 
 **Why it's misleading:** Framework applies **within each smooth segment**. Impacts/switches handled separately (impact maps, guard conditions). Hybrid Systems article shows how.
 

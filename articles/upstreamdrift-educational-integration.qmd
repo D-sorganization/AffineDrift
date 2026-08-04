@@ -28,7 +28,7 @@ Access requires D-sorganization membership.
 :::
 
 ::: {.callout-note}
-## Status of the DCR / contraction / Floquet tooling
+## Status of the DCR / Contraction / Floquet Tooling
 
 Some code blocks below (Drift-Control Ratio analyzer, contraction-rate verifier,
 Floquet multipliers, ABA-timing benchmark) describe a **proposed** reference API
@@ -194,28 +194,28 @@ The install commands below are tested against the following minimum versions (Py
 Note: the **package name for Pinocchio on PyPI is `pinocchio`** (not `pin` --- that is a separate unrelated package). The previous `pip install pin` instruction was incorrect for recent versions and is corrected throughout this page.
 :::
 
-### Beginner (Vol 0 readers)
+### Beginner (Vol 0 Readers)
 
 1. Install Pinocchio: `pip install "pinocchio>=3.0.0"`
 2. Load the double pendulum URDF from `models/pendulum_2dof.urdf`
 3. Verify that the rotation matrices along the chain are orthogonal
 4. Compute the end-effector Jacobian and check its rank
 
-### Intermediate (Vol I readers)
+### Intermediate (Vol I Readers)
 
 1. Install MuJoCo: `pip install "mujoco>=3.0.0"`
 2. Load the 3-DOF golf swing model
 3. Run passive simulation (zero control) and plot the drift trajectory
 4. Add LQR stabilization and measure the contraction rate
 
-### Advanced (Vol II-III readers)
+### Advanced (Vol II-III Readers)
 
 1. Install Drake `>= 1.20.0` (see [Drake installation guide](https://drake.mit.edu/installation.html))
 2. Set up the direct collocation problem for swing trajectory optimization
 3. Compare the optimal trajectory against the passive trajectory
 4. Implement a DDP iteration and visualize convergence
 
-### Research (Vol IV readers)
+### Research (Vol IV Readers)
 
 1. Install MyoSuite: `pip install "myosuite>=2.0.0"`
 2. Train a SAC agent on the golf swing task
@@ -226,7 +226,7 @@ Note: the **package name for Pinocchio on PyPI is `pinocchio`** (not `pin` --- t
 ## Running Existing Benchmarks
 
 ::: {.callout-warning}
-## Proposed reference API — not yet shipped
+## Proposed Reference API — Not yet Shipped
 The drift-control-ratio and contraction-rate commands below (`src.tools.compute_drift_control_ratio`, `src.tools.measure_contraction`) are a **proposed** reference API illustrating how DCR and contraction rate *could* be computed with UpstreamDrift. They are **not yet implemented** — see UpstreamDrift issue [D-sorganization/UpstreamDrift#7431](https://github.com/D-sorganization/UpstreamDrift/issues/7431) for implementation status. The ABA-timing benchmark is also tracked there. Treat these as illustrative pseudocode until that issue lands.
 :::
 
@@ -273,7 +273,7 @@ heavy engine dependencies, set `GOLF_USE_MOCK_ENGINE=1`.
 ## Connection to Book Theorems
 
 ::: {.callout-warning}
-## Proposed reference API — not yet shipped
+## Proposed Reference API — Not yet Shipped
 The `DriftControlAnalyzer` and `ContractionVerifier` classes below are a **proposed** reference API showing how the Drift-Control Ratio and contraction rate *could* be exposed by UpstreamDrift. They are **not implemented today** — `src.tools.compute_drift_control_ratio` and `src.tools.contraction_verifier` do not yet exist in the repository. Track implementation at [D-sorganization/UpstreamDrift#7431](https://github.com/D-sorganization/UpstreamDrift/issues/7431); until it lands, treat the snippets as illustrative pseudocode, not runnable code.
 :::
 

@@ -74,7 +74,7 @@ This shift is enabled by the additive separability derived in Part I, where the 
 
 Given the control-affine form $\dot{x} = f(x) + g(x)u$, we now formalize this physical separation of passive (drift) and active (input) contributions to the dynamics.
 
-### Passive drift dynamics
+### Passive Drift Dynamics
 
 The *drift dynamics* are defined as the evolution of the system in the absence of all muscular torques:
 
@@ -90,7 +90,7 @@ Physically, this includes:
 
 Drift represents what the system would do "on its own" given its current configuration, velocities, and shaft deformation, under the modeling assumptions stated earlier.
 
-### Torque-driven input dynamics
+### Torque-Driven Input Dynamics
 
 The *input dynamics* are defined as the torque-driven component:
 
@@ -104,7 +104,7 @@ Key properties:
 
 This term represents the portion of the dynamics directly caused by the golfer's applied torques at the mechanical level of description.
 
-### Total evolution and causal interpretation within the model
+### Total Evolution and Causal Interpretation Within the Model
 
 Combining the two contributions yields
 
@@ -121,7 +121,7 @@ This analytical separation does more than simplify the equations; it provides th
 
 To operationalize this decomposition, we cannot simply look at the equations; we must observe the behavior they dictate. The drift field $f(x)$ is not static; it describes a flow. To understand the burden of "passive dynamics," we must follow this flow over time. It is not enough to know the instantaneous passive force vector; we must integrate that vector to see where it takes the club. We need a counterfactual history—a timeline of what *would have happened* if the golfer had ceased to intervene. This logic compels us to move from the tangent space (velocities/forces) to the integral curves (trajectories).
 
-### Role in counterfactual analysis
+### Role in Counterfactual Analysis
 
 The drift--input decomposition underlies the counterfactual tools introduced later:
 
@@ -133,7 +133,7 @@ By comparing total forces to these counterfactual constructions via inverse dyna
 ## Zero Torque Counterfactual (ZTCF)
 
 ::: {.callout-note}
-## Canonical ZTCF convention (this part)
+## Canonical ZTCF Convention (This Part)
 This part uses the **Branched ZTCF**: the solution of $\dot x = f(x)$ initialized from the *observed* swing state at a branch time $t_0$, and compared against the observed swing for $t > t_0$. The full glossary (Trajectory ZTCF, drift vector $f(x)$ which is **not** ZTCF, and Branched ZTCF) is in the standalone [Zero-Torque Counterfactual](zero-torque-counterfactual.html#sec-ztcf-canonical) article.
 :::
 
@@ -141,7 +141,7 @@ The drift--input decomposition separates the dynamics into a passive component $
 
 The vector fields $f(x)$ and $g(x)$ derived in the previous section define the *instantaneous* tendencies of the system: $f(x)$ dictates how the state evolves passively, while $g(x)$ dictates how it responds to input. However, the golf swing is not an instant; it is a ballistic process where past inputs shape current passive dynamics. The 'drift' forces experienced at impact are not merely functions of the current configuration; they are the legacy of momentum generated earlier in the downswing. To capture this history-dependent nature of drift, we must move from the tangent bundle (velocities) to the integral curves (trajectories). The ZTCF performs this integration, extending the instantaneous decomposition into a full counterfactual history.
 
-### Definition as a drift-only trajectory
+### Definition as a Drift-Only Trajectory
 
 Consider the control-affine system
 
@@ -165,7 +165,7 @@ By construction:
 
 Thus $x^{\mathrm{ZTCF}}(t)$ is the unique trajectory predicted by the model when the system is released from the same initial state but allowed to evolve purely under passive dynamics.
 
-### Relationship to drift and input terms
+### Relationship to Drift and Input Terms
 
 Along the actual trajectory $x(t)$, the state derivative is
 
@@ -181,7 +181,7 @@ Conceptually, ZTCF isolates the drift dynamics by providing a full trajectory th
 
 The drift--input decomposition and the ZTCF provide the theoretical basis for separating passive and active forces. However, simply defining the trajectory is abstract. To make this operational, we must connect these differential equations to the practical tools of biomechanics—specifically, inverse dynamics—to quantify the specific *torque cost* of deviating from this passive path.
 
-### Using ZTCF with inverse dynamics
+### Using ZTCF With Inverse Dynamics
 
 In practice, we are often given a measured or simulated swing trajectory in terms of kinematics,
 
@@ -263,7 +263,7 @@ and the associated ZTCF construction are analytically exact. Outside that scope,
 ### Practical Considerations: ZTCF Identifiability
 
 ::: {.callout-warning}
-## ZTCF Cannot Be Directly Measured from Real Swing Data
+## ZTCF Cannot Be Directly Measured From Real Swing Data
 
 A critical practical limitation is that the ZTCF trajectory is **not directly observable** from real golf swing data. Three identifiability challenges arise:
 
@@ -290,7 +290,7 @@ where $\lambda_{\max}^{\mathrm{sym}}(A) := \lambda_{\max}\!\left(\tfrac{1}{2}(A 
 **Practical conclusion.** ZTCF is quantitatively trustworthy for horizons on the order of **20--50 ms** from the branch point under typical release-phase Jacobians; at 100 ms, initial-state uncertainty is already amplified by roughly $5\times$--$20\times$ and the trajectory should be used only for qualitative insight; across the full 250 ms downswing the exponential envelope is large enough that quantitative ZTCF claims are not defensible without error bars propagated from the state uncertainty. The exact $\bar\lambda$ for a given model should be recomputed by integrating the variational equation along the specific trajectory of interest; the numbers above are order-of-magnitude, not universal.
 :::
 
-### Decomposing the drift
+### Decomposing the Drift
 
 The ZTCF successfully removes the golfer from the equation, but it leaves behind a complex web of passive forces. A swinging club is burdened by both its position (gravity, elasticity) and its speed (centrifugal force, inertia). The ZTCF tells us the *total* passive tendency, but it lumps these distinct physical phenomena together.
 
@@ -348,7 +348,7 @@ Intuitively, $\tau_{\mathrm{ZVCF}}(t)$ represents the generalized torques the mo
 - the shaft retained its instantaneous deformation $\eta(t)$,
 - but no velocity-dependent forces were present.
 
-### What ZVCF isolates
+### What ZVCF Isolates
 
 Evaluating the drift terms at zero velocity eliminates:
 
@@ -366,7 +366,7 @@ What remains in $\tau_{\mathrm{ZVCF}}(t)$ are:
 
 Thus the ZVCF isolates forces arising purely from the system's instantaneous *shape*.
 
-### Relation to ZTCF and drift--input decomposition
+### Relation to ZTCF and Drift--Input Decomposition
 
 ZVCF and ZTCF play complementary roles:
 
@@ -393,7 +393,7 @@ $$\tau_{\text{drift}}(x(t))
 
 where $\tau_{\mathrm{vel.\,drift}}(t)$ contains all velocity-dependent passive forces (Coriolis, centrifugal, shaft damping, etc.).
 
-### Interpretational cautions
+### Interpretational Cautions
 
 The ZVCF is not intended to represent a physically realizable motion:
 

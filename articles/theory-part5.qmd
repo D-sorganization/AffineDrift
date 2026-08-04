@@ -73,7 +73,7 @@ Specifically, while the equation $\tau_{\text{input}} = \tau_{\text{total}} - \t
 
 To bridge the gap between the theoretical derivations (Part IV) and the future experimental applications (Phase III), we require a numerical proof-of-concept. The following section documents the forward-dynamics implementation used to validate the **algebraic consistency** of the affine decomposition in the planar environment described above. This ensures that the abstract ZTCF and ZVCF counterfactual definitions remain robust under integration error and discrete-time sampling.
 
-### Model construction
+### Model Construction
 
 The model consists of:
 
@@ -85,11 +85,11 @@ The model consists of:
 Shaft flexibility was represented using modal bending dynamics [@meirovitch2010methods; @shabana2020dynamics], similar to Appendix B, and interacted with the rigid segments through base excitation. All shaft forces entered the drift term, while all applied joint torques entered linearly into the input term, consistent with the control-affine decomposition [@isidori1995nonlinear].
 
 ::: {.callout-note}
-## Note on parameter validity (Validation Scope)
+## Note on Parameter Validity (Validation Scope)
 The stiffness and damping parameters used in this simulation represent the "effective" passive dynamics of the system. While treated as constant for the counterfactual analysis, we acknowledge that in a biological system, these would vary with activation. The model thus represents the "Effective Plant" for the swing. **Crucially, this simulation uses constant coefficients and therefore does not validate the "Stiffness Pulse" or "Intentional Constraint Collapse" mechanisms discussed in the theoretical articles.** It validates only the algebraic consistency of the ZTCF subtraction under constant impedance.
 :::
 
-### Zero-Torque Counterfactual evaluation via "kill switches"
+### Zero-Torque Counterfactual Evaluation via "Kill Switches"
 
 To compute the Zero Torque Counterfactual (ZTCF) within a forward dynamics environment, the Simulink model incorporated "kill switches" at every joint, following the counterfactual simulation approach of Nesbit and Koike [@nesbit2005three; @koike2019dynamic]. These switches instantaneously set applied joint torques to zero at a prescribed time while leaving the system state untouched.
 
@@ -102,7 +102,7 @@ A total of 56 kill-switch times were distributed uniformly across the downswing.
 
 This procedure produced a sampled version of the drift forces across the downswing. The resulting "counterfactual" points represent the passive momentum contribution to the hand--club interaction forces within the planar simulation.
 
-### Comparison with total forces
+### Comparison With Total Forces
 
 For each kill-switch instant, the interaction forces produced under drift-only dynamics were compared to the forces produced during the corresponding instant of the full torque-driven swing. The difference between these two represents the torque-driven contribution.
 
@@ -120,7 +120,7 @@ This "overshoot" of passive momentum—where drift forces exceed the total force
 
 These findings are consistent with the theoretical prediction that drift forces do not vanish when torque inputs are removed and can dominate the interaction forces during high-velocity phases of the swing within this planar, constant-impedance model.
 
-### Zero Velocity Counterfactual computation and validation
+### Zero Velocity Counterfactual Computation and Validation
 
 The Simulink implementation has been extended to compute the Zero Velocity Counterfactual (ZVCF) as well [@featherstone2008rigid; @spong2005robot]. For each state $x(t)$ on the simulated trajectory:
 
@@ -139,7 +139,7 @@ $$F_{\text{total}}(t_0) - F_{\mathrm{ZTCF}}(t_0) = F_{\mathrm{input}}(t_0).$$
 At $t_0$ the ZTCF run records the **full** drift force $\tau_{\mathrm{drift}}(x(t_0))$, so the subtraction returns the input force, $\tau_{\mathrm{total}} - \tau_{\mathrm{drift}} = \tau_{\mathrm{input}}$. The configuration-only (ZVCF) force is the separate slice $F_{\mathrm{drift}}(t_0) - F_{\mathrm{vel.drift}}(t_0) = F_{\mathrm{ZVCF}}(t_0)$, not $F_{\text{total}} - F_{\mathrm{ZTCF}}$. This identity holds **exactly at $t = t_0$** (the freeze instant); for $t > t_0$ the equality is approximate, with error growing with the perturbation magnitude as the ZTCF trajectory diverges from the actual trajectory. This is a **Numerical Consistency Check**—a verification that discrete-time integration algorithms and "kill-switch" logic correctly preserve the algebraic structure of the theory at the branch point without introducing numerical artifacts. It does NOT validate the control-affine model itself against reality. The identity holds as a mathematical consequence of the Lagrangian formulation at the instant of the ZTCF branch; its numerical truth in simulation proves only that the implementation is correct, not that the model accurately predicts actual golf swings. Model validation requires comparison with experimental data from real athletes.
 :::
 
-### Implications for future work
+### Implications for Future Work
 
 ::: {.callout-note}
 ## Numerical Identity ≠ Model Validation
@@ -167,7 +167,7 @@ with inverse dynamics available for evaluating generalized forces from kinematic
 
 The methods presented are general and will serve as the computational backbone in future simulation (Phase II) and experimental (Phase III) work.
 
-### Notation and discretization
+### Notation and Discretization
 
 Let the continuous-time state be
 
@@ -191,7 +191,7 @@ The goal is to compute:
 - drift torque: $\tau_{\mathrm{drift}}(t_k)$,
 - input torque: $\tau_{\mathrm{input}}(t_k)$.
 
-### Algorithm for ZTCF computation
+### Algorithm for ZTCF Computation
 
 The ZTCF requires simulating the drift-only evolution of the system from an initial state $x(t_0)$. For each time sample in the original simulation, we compute the counterfactual trajectory starting from the same state but with all torques removed.
 
@@ -221,7 +221,7 @@ In the full-scale implementation, the kill-switch approach replaces step 4 with 
 
 ZTCF computation is especially sensitive during periods of large curvatures (late downswing). Stiff ODE solvers (e.g., `ode15s`, `ode23t`) or low step-size solvers are recommended to maintain trajectory fidelity [@hairer1996solving].
 
-### Algorithm for ZVCF computation
+### Algorithm for ZVCF Computation
 
 ZVCF is computed instantaneously, not via simulation. It examines the forces that would occur if the system were held at the same configuration but with all velocities zero.
 
@@ -247,7 +247,7 @@ $$\tau_{\mathrm{ZVCF}}(t_k)
 
 This gives the configuration-dependent drift torque.
 
-### Drift, input, and ZVCF consistency
+### Drift, Input, and ZVCF Consistency
 
 From the equations of motion:
 
@@ -294,7 +294,7 @@ Consistent with the earlier callout, the identity $\tau_{\mathrm{total}}(t_0) - 
 
 This numerical result confirms correct implementation of the counterfactual algorithms — the discrete-time "kill switch" logic correctly preserves the near-equality that the affine theory predicts over short time steps.
 
-### Practical considerations
+### Practical Considerations
 
 **Filtering and numerical derivatives.**
 
@@ -314,7 +314,7 @@ As established above, this difference is the **input** term, not the ZVCF; the t
 
 ZTCF trajectories require the same ODE solver, tolerances, and step sizes as the original forward simulation to avoid numerical drift between trajectories.
 
-### Worked numerical example: residual magnitude along a simulated swing
+### Worked Numerical Example: Residual Magnitude Along a Simulated Swing
 
 To make the "near-equality" claim of the subtraction identity concrete, we integrate the residual bound from Theorem 1.1 of [Residual-Aware Control](tangent-hyperplane-articles/Advanced/Residual-Aware_Control.html) along a representative swing trajectory. For the planar 2-DOF double-pendulum + single-bending-mode model of Part IV Appendix C (parameters: $L = 1.1$ m, $m_h = 0.40$ kg, $m_c = 0.200$ kg, $m_\eta = 0.10$ kg, $k_\eta = 2500$ N/m, $c_\eta = 0.8$ N·s/m), driven by an inverse-dynamics-fitted torque profile reproducing a 110-mph clubhead release over 0.25 s, a Hessian bound $M = \sup_{t \in [t_0, t_1]} \lVert H_f(\bar x(t))\rVert_2$ evaluated by finite differencing along $\bar x$ yields $M \approx 35\ \mathrm{s}^{-2}$ during the bulk of the downswing and peaks at $M \approx 90\ \mathrm{s}^{-2}$ in the 30 ms before impact (the release corner).
 
