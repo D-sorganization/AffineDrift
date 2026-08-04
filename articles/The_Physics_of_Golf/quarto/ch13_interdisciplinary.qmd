@@ -191,7 +191,7 @@ The COR depends on both the ball and the clubface:
 - Harder balls (higher compression) tend to have lower COR at lower swing speeds but may perform better at higher speeds.
 - The relationship between clubhead speed and effective COR is complex and depends on ball construction.
 
-This is where ball fitting meets swing physics. In this illustrative example, a slower golfer (say, 80 mph swing speed) benefits from a softer ball with higher COR, because the softer ball deforms more, allowing the golfer to transfer more energy. A faster golfer (say, 100 mph) can use a harder ball with lower COR, gaining better control and tighter dispersion.
+This is where ball fitting meets swing physics. In this illustrative example, a slower golfer (say, 80 mph swing speed) benefits from a softer ball with higher COR, because the softer ball deforms more, allowing the golfer to transfer more energy. A faster golfer (say, 100 mph) can use a harder ball with lower COR, gaining better control and tighter dispersion. The specific thresholds vary by manufacturer and golfer; the general principle---that ball compression should be matched to swing speed---is widely discussed in equipment fitting literature [@Penner2001].
 
 **Example: Ball Fitting for Swing Speed**
 
@@ -199,7 +199,7 @@ Consider two golfers: Alice (80 mph swing speed) and Bob (100 mph swing speed). 
 
 Alice uses a soft ball (low compression, COR $\approx 0.82$). In this illustrative estimate, the impact dynamics transfer the energy efficiently, and the ball launches at a relatively high angle with low spin (due to the soft compression).
 
-Bob uses a harder ball (high compression, COR $\approx 0.78$). In this illustrative estimate, the impact dynamics are harsher, but Bob's higher clubhead speed means the ball still leaves the face at high speed. The harder ball produces a lower launch angle and higher spin, which Bob can use for control.
+Bob uses a harder ball (high compression, COR $\approx 0.78$). In this illustrative estimate, the impact dynamics are harsher, but Bob's higher clubhead speed means the ball still leaves the face at high speed. The harder ball produces a lower launch angle and higher spin, which Bob can use for control. This pattern---lower-compression balls exhibiting higher COR than higher-compression balls when struck at comparable speeds---is consistent with empirical measurements [@Jorgensen1994].
 
 If Alice tried Bob's ball, she would lose distance (lower COR means less energy transfer). If Bob tried Alice's ball, he would gain too much carry distance and lose the control he gets from the higher compression ball.
 
@@ -229,7 +229,7 @@ From the 100 data points, can we learn the drift field $f(\mathbf{x})$?
 
 The answer is: partially, yes. We can use the pre-impact states and post-impact measurements to estimate how the state evolves over the swing. We can fit a model to the data and extract estimates of the drift field.
 
-More precisely, we can estimate the parameters of the drift field. The drift field has a known structure (it includes gravity, Coriolis forces, elastic forces from the shaft, etc.). We can measure or estimate most of these from the golfer's biomechanics and equipment. For the unknown parameters (like the shaft stiffness $k_{\text{shaft}}$ or the effective muscle damping), we can use the launch monitor data to infer the best values.
+More precisely, we can estimate the parameters of the drift field. The drift field has a known structure (it includes gravity, Coriolis forces, elastic forces from the shaft, etc.). We can measure or estimate most of these from the golfer's biomechanics and equipment. For the unknown parameters (like the shaft stiffness $k_{\text{shaft}}$ or the effective muscle damping), we can use the launch monitor data to constrain parameter estimates through inverse problems [@Nesbit2005].
 
 This is machine learning in the service of physics: not a black-box neural network, but a physics-informed model that learns the unknown parameters.
 
