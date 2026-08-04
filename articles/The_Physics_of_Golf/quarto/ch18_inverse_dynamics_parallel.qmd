@@ -581,6 +581,19 @@ The left arm "load" and the right arm "load" are unobservable from kinematics al
 
 :::
 
+### Vaughan's Resolution Strategy {#sec-vaughan_resolution}
+
+[@Vaughan1981; @Vaughan1983] proposed several strategies to resolve this ambiguity, historical precedents for the approaches above:
+
+::: {.callout-note}
+## Vaughan's Approaches {#reference:vaughan_resolution_strategies}
+
+1. **Proportional load sharing:** assume the load is distributed proportionally to the sum of kinetic and potential energies in each limb. This is a heuristic without strong physical justification.
+2. **Optimization criterion:** minimize a scalar objective such as $J = \sum_i (\tau_i / \tau_{i,\text{max}})^2$ or $J = \sum_i (\dot{E}_i)^2$ (metabolic cost), subject to the constraint $\bm{F}_L + \bm{F}_R = \bm{F}_{\text{total}}$.
+3. **Instrumented measurement:** use force plates under each hand (or each foot for lower body) to directly measure the constraint forces, breaking the ambiguity.
+
+The optimization approach has become standard in biomechanics, with the understanding that different objective functions (minimize muscle activation, minimize metabolic cost, minimize joint torques, etc.) will yield different load distributions — all of which are mechanically consistent with the measured motion.
+:::
 
 ## Why Forward Works but Inverse Doesn't: The Asymmetry
 
@@ -796,6 +809,62 @@ where $\boldsymbol{\lambda}_{\text{measured}}$ is known from the force sensor. N
 This is why instrumented clubs are a valuable research tool: they turn an otherwise hidden boundary wrench into measured data and reduce the assumptions needed for inverse dynamics.
 
 :::
+
+### Strain Gauge Instrumentation {#sec-strain_gauges}
+
+A **strain gauge** is a thin resistive element that changes resistance when strained. By gluing strain gauges to the club shaft (or grip), researchers can measure the forces and moments acting on the club.
+
+::: {.callout-note}
+## Wheatstone Bridge Configuration {#definition:wheatstone_bridge}
+
+Strain gauges are typically arranged in a **Wheatstone bridge** configuration to maximize sensitivity and cancel out temperature-related drift:
+
+$$
+V_{\text{output}} = V_{\text{input}} \times \frac{R_1 R_3 - R_2 R_4}{(R_1 + R_2)(R_3 + R_4)}
+$$ {#eq-wheatstone_output}
+
+When one strain gauge experiences tension (strain) and the opposite experiences compression, the output voltage is proportional to the strain.
+:::
+
+### Piezoelectric Force Sensors {#sec-piezoelectric_sensors}
+
+**Piezoelectric sensors** generate an electrical signal when mechanically deformed. They are faster and more sensitive than strain gauges but typically require amplification.
+
+::: {.callout-note}
+## Piezoelectric Effect {#definition:piezoelectric}
+
+Certain crystals (quartz, PZT ceramics) generate a voltage when stressed:
+
+$$
+\bm{V} = \bm{d} \cdot \bm{\sigma}
+$$ {#eq-piezoelectric_relation}
+
+where $\bm{d}$ is the piezoelectric coefficient and $\bm{\sigma}$ is the applied stress.
+:::
+
+Piezoelectric sensors are often arranged in a hexapod configuration (6 sensors, one for each DOF: 3 forces, 3 moments).
+
+### Two-Point Wrench Measurement {#sec-two_point_wrench}
+
+With force/moment data from multiple points, a biomechanist can compute the resultant wrench (total force and moment) acting on the club.
+
+::: {.callout-note}
+## Wrench {#definition:wrench}
+
+A **wrench** is a 6D vector combining force and moment:
+
+$$
+\mathcal{W} = \begin{bmatrix} \bm{F} \\ \bm{M} \end{bmatrix} \in \mathbb{R}^6
+$$ {#eq-wrench_definition}
+:::
+
+If two independent grip points on the club have known wrenches $\mathcal{W}_L$ and $\mathcal{W}_R$, the total wrench is:
+
+$$
+\mathcal{W}_{\text{total}} = \mathcal{W}_L + \mathcal{W}_R
+$$ {#eq-total_wrench_two_points}
+
+This directly measures the resultant constraint forces and resolves the ambiguity (at least in the grip forces).
 
 ### Reducing the System: Cutting the Loop
 
