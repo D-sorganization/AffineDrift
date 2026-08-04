@@ -32,25 +32,29 @@ def _install_streamlit_mock() -> None:
     if "streamlit" in sys.modules:
         return
     st = types.ModuleType("streamlit")
-    st.cache_resource = lambda **kw: (lambda f: f)  # type: ignore[attr-defined]
-    st.cache_data = lambda **kw: (lambda f: f)  # type: ignore[attr-defined]
+    st.cache_resource = lambda **kw: lambda f: f  # type: ignore[attr-defined]
+    st.cache_data = lambda **kw: lambda f: f  # type: ignore[attr-defined]
     sys.modules["streamlit"] = st
 
 
 _install_streamlit_mock()
 
-import matplotlib  # noqa: E402
+import matplotlib  # noqa: E402  # reason: module level imports after setup hook
 
 matplotlib.use("Agg")
 
-from PyQt6.QtWidgets import QApplication  # noqa: E402
+from PyQt6.QtWidgets import (  # noqa: E402  # reason: module level imports after setup hook
+    QApplication,
+)
 
-from src.tools.wrist_universal_joint.qt_ui_sections import (  # noqa: E402
+from src.tools.wrist_universal_joint.qt_ui_sections import (  # noqa: E402  # reason: module level imports after setup hook
     UiCallbacks,
     UiWidgets,
     build_main_widget,
 )
-from src.tools.wrist_universal_joint.qt_window import MainWindow  # noqa: E402
+from src.tools.wrist_universal_joint.qt_window import (  # noqa: E402  # reason: module level imports after setup hook
+    MainWindow,
+)
 
 
 @pytest.fixture(scope="module")

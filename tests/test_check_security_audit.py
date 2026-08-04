@@ -85,7 +85,7 @@ class TestSecurityPatternDetection:
     def test_defusedxml_alias_fromstring_not_detected(self, tmp_path: Path) -> None:
         f = tmp_path / "safe_xml.py"
         f.write_text(
-            "from defusedxml import ElementTree as ET\n" "root = ET.fromstring(xml_text)\n",
+            "from defusedxml import ElementTree as ET\nroot = ET.fromstring(xml_text)\n",
             encoding="utf-8",
         )
 

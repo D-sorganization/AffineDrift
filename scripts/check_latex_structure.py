@@ -302,9 +302,7 @@ def check_section_braces(source: SourceFile) -> list[Finding]:
                     path=str(source.path),
                     line=index + 1,
                     rule="unclosed-section-brace",
-                    message=(
-                        "section command's argument is never closed: " f"{line.strip()[:70]!r}"
-                    ),
+                    message=(f"section command's argument is never closed: {line.strip()[:70]!r}"),
                 )
             )
     return findings

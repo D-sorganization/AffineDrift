@@ -34,7 +34,7 @@ logger = setup_logging(__name__)
 BASE_URL = "https://affinedrift.com"
 CHANNEL_TITLE = "AffineDrift"
 CHANNEL_DESCRIPTION = (
-    "Affine control theory for golf swing dynamics - " "Research articles, models, and resources"
+    "Affine control theory for golf swing dynamics - Research articles, models, and resources"
 )
 MANAGING_EDITOR = "contact@affinedrift.com"
 DEFAULT_CAP = 30
@@ -174,7 +174,7 @@ def build_feed_xml(
         f"    <managingEditor>{MANAGING_EDITOR}</managingEditor>",
         f"    <webMaster>{MANAGING_EDITOR}</webMaster>",
         f"    <lastBuildDate>{to_rfc822(build_date)}</lastBuildDate>",
-        f'    <atom:link href="{BASE_URL}/feed.xml" rel="self" ' 'type="application/rss+xml"/>',
+        f'    <atom:link href="{BASE_URL}/feed.xml" rel="self" type="application/rss+xml"/>',
     ]
     for item in capped:
         lines.extend(

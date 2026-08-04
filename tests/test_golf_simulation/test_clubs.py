@@ -55,7 +55,7 @@ class TestGolfClub:
         for i in range(len(distances) - 1):
             assert distances[i] > distances[i + 1], (
                 f"{ordered[i].value} ({distances[i]:.0f} yd) should carry farther than "
-                f"{ordered[i+1].value} ({distances[i+1]:.0f} yd)"
+                f"{ordered[i + 1].value} ({distances[i + 1]:.0f} yd)"
             )
 
     def test_typical_distance_yards_sanity(self):

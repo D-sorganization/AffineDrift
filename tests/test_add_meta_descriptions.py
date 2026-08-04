@@ -114,6 +114,5 @@ def test_build_critique_description_handles_bibliographic_analysis() -> None:
     description = build_critique_description(content)
 
     assert description == (
-        "Bibliographic analysis supporting the AffineDrift critique of "
-        "The Effective Plant Fallacy."
+        "Bibliographic analysis supporting the AffineDrift critique of The Effective Plant Fallacy."
     )

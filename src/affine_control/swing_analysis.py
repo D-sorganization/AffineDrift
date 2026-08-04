@@ -124,7 +124,7 @@ class SwingAnalysis:
         lines = [
             "=== Golf Swing Analysis Summary ===",
             f"Duration: {time[-1]:.3f} s",
-            f"Peak clubhead speed: {peak:.1f} m/s " f"({peak * METRES_PER_SECOND_TO_MPH:.1f} mph)",
+            f"Peak clubhead speed: {peak:.1f} m/s ({peak * METRES_PER_SECOND_TO_MPH:.1f} mph)",
             f"Peak speed time: {time[peak_index]:.3f} s",
         ]
 

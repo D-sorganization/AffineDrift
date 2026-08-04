@@ -35,7 +35,7 @@ def test_extract_full_page(build_html, tmp_path) -> None:
     qmd = _qmd(
         tmp_path,
         "page.qmd",
-        '---\ntitle: "My Title"\ndescription: "My Desc"\n---\n\n' "```{=html}\n<p>Hello</p>\n```\n",
+        '---\ntitle: "My Title"\ndescription: "My Desc"\n---\n\n```{=html}\n<p>Hello</p>\n```\n',
     )
     title, description, html = build_html.extract_html_from_qmd(qmd)
     assert title == "My Title"

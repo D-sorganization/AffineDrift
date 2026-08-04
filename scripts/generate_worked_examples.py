@@ -136,14 +136,14 @@ def render_ch06(solution: LQRSolution) -> str:
         )
     macro("chsixRiccatiResidual", f"{CH06_RESIDUAL_TOLERANCE:.0e}")
     macro("chsixValueRatioTen", f"{rows[-1][1] / rows[0][1]:.4f}")
-    macro("chsixBoundTen", f"{rho ** CH06_STEPS:.4f}")
+    macro("chsixBoundTen", f"{rho**CH06_STEPS:.4f}")
 
     lines.append("")
     lines.append("\\newcommand{\\chsixValueTable}{%")
     lines.append("\\begin{tabular}{|c|c|c|c|c|}")
     lines.append("\\hline")
     lines.append(
-        "Step $k$ & $V_k$ & $\\norm{\\dx_k}$ & $V_k/V_{k-1}$ (actual) " "& $\\rho^k$ (bound) \\\\"
+        "Step $k$ & $V_k$ & $\\norm{\\dx_k}$ & $V_k/V_{k-1}$ (actual) & $\\rho^k$ (bound) \\\\"
     )
     lines.append("\\hline")
     previous: float | None = None

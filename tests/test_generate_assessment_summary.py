@@ -38,7 +38,7 @@ def test_extract_score_missing_file_returns_default(tmp_path) -> None:
 def test_extract_issues_captures_severities(tmp_path) -> None:
     report = tmp_path / "report.md"
     report.write_text(
-        "BLOCKER: build is broken\n" "MINOR: typo in docs\n" "Some prose with no marker.\n",
+        "BLOCKER: build is broken\nMINOR: typo in docs\nSome prose with no marker.\n",
         encoding="utf-8",
     )
     issues = extract_issues_from_report(report)
