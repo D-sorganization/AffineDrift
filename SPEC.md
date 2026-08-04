@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-08-02T12:40:00Z
+Last-Updated: 2026-08-04T05:00:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,8 +29,8 @@ Last-Updated: 2026-08-02T12:40:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.8                                            |
-| **Spec Version**        | 1.0.153                                          |
-| **Last Spec Update**    | 2026-08-02                                       |
+| **Spec Version**        | 1.0.154                                          |
+| **Last Spec Update**    | 2026-08-04                                       |
 
 ## 2. Purpose & Mission
 
@@ -243,6 +243,7 @@ AffineDrift/
 | F58 | Generated textbook worked examples       | ✅     | Textbook worked examples that carry numbers are solved by `src/affine_control/lqr.py` and emitted as LaTeX fragments by `scripts/generate_worked_examples.py`, which the chapters `\input`. The `quality-gate` job runs the generator with `--check` and fails when a committed fragment drifts from what the code produces, so a number cannot be hand-edited into a book without the code agreeing. Volume I chapter 6 is the first example converted (#3518).                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | F59 | Acronym terminology gate                 | ✅     | `scripts/check_terminology.py` enforces one expansion per project acronym across `articles/`, `pages/` and `resources/`, with `NOTATION.md` as the source of truth. Bans the four non-canonical ZTCF expansions, the two non-canonical DCR expansions and a dangling cross-reference. Deliberate historical mentions are permitted through `config/terminology-baseline.json`, keyed on file and term rather than line number. Wired into `quality-gate` (#3526).                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | F60 | Technology instrumentation section       | ✅     | The Quarto site publishes a top-level Technology section (`pages/technology.qmd`) with research articles on launch-monitor, force-measurement, motion-capture, impact-mechanics, and vendor-documentation topics. The articles distinguish measured, derived, and estimated quantities and keep research dossiers under `content-development/technology-research/`; `tests/test_navbar_ia.py` guards the section's navigation entry and item-budget contract.                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| F61 | Editorial title and contrast gates       | ✅     | `scripts/check_title_case.py` enforces significant-word title capitalization across navigation labels, page metadata, headings, figure captions, and literal chart titles in publishable Quarto and Python sources. It runs in pre-commit, pull-request CI, and deployment validation. The rendered-site accessibility suite evaluates computed text contrast on sitemap routes in light and dark themes, while semantic CSS tokens keep links, muted text, callouts, controls, and code readable.                                                                                                                                                                                                                                                                                                                                                                                                                     |
 
 ### API / Interface Contract
 
