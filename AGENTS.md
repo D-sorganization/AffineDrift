@@ -842,3 +842,24 @@ These rules govern _how_ you engage with a task before and during implementation
 **The diff test:** every line in your final diff should answer "this is here because the user asked for X." If you cannot answer that for a given line, remove it.
 
 <!-- END FLEET-MANAGED: reasoning-engagement -->
+
+---
+
+## Agent Handoff & PR Policy
+
+Part of the fleet-wide rollout tracked at
+[D-sorganization/Repository_Management#1390](https://github.com/D-sorganization/Repository_Management/issues/1390).
+
+1. **Full PRs, never drafts.** Every PR opens ready-for-review, not as a draft.
+2. **Commit frequently.** Save progress in small, conventional commits
+   (`type: summary`, e.g. `docs: add AGENT_HANDOFF.md`). Never batch a full
+   day's work into a single commit.
+3. **Agent handoff document.** `AGENT_HANDOFF.md` at the repo root is the
+   current-state map of where this repo is heading — active epics/PRs,
+   architecture pointers, in-flight branches, gate commands, a do-not list,
+   and the short-term roadmap. It is **not** a changelog; history lives in
+   git. Update it as part of every PR you open and every push that lands on
+   `main`.
+
+See `AGENT_HANDOFF.md` for the current gate commands, in-flight branches, and
+do-not list.
