@@ -114,3 +114,7 @@
 ## 2026-07-19 - Async loading feedback
 **Learning:** While disabling a button and changing text to "Loading..." handles state, standard visual momentum for asynchronous operations (like submitting a mailto form that opens an external email client) requires an explicitly animated loading spinner to match user expectations. Text alone lacks expected motion feedback.
 **Action:** Explicitly inject an SVG loading spinner into submit buttons alongside text changes during async/wait operations rather than merely changing the text.
+
+## 2026-08-04 - Missing Screen Reader Utility Classes
+**Learning:** Found that accessibility utility classes like `.sr-only` were being added dynamically via JavaScript (e.g., in `js/accessibility.js`) but were entirely missing from the core CSS bundles, causing the content to remain visible.
+**Action:** Ensure all dynamically applied utility classes, especially for accessibility, have explicit definitions in the design system CSS.
