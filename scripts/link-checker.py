@@ -113,8 +113,7 @@ def is_safe_url(url: str) -> bool:
         ):
             return False
 
-        if hostname.startswith("[") and hostname.endswith("]"):
-            hostname = hostname[1:-1]
+        hostname = hostname.strip("[]")
 
         try:
             addr_info = socket.getaddrinfo(hostname, None, socket.AF_UNSPEC)
