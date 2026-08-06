@@ -116,6 +116,10 @@
 **Vulnerability:** The `is_safe_url` functions in `src/tools/verify_images.py` and `scripts/link-checker.py` failed-open on `ValueError` when parsing IP addresses. This allowed SSRF bypasses via crafted hostnames that resolve to IP formats unsupported by `ipaddress.ip_address`.
 **Learning:** Failing-open on exception when validating security policies introduces vulnerabilities. Always fail-closed (return `False`) when an unexpected exception occurs during validation.
 **Prevention:** When validating IP addresses for SSRF protection, if parsing fails, explicitly return `False` rather than passing.
+## 2026-08-06 - Fix IPv6 SSRF Bypass in DNS Validation
+**Vulnerability:** URL parsing of IPv6 literals can sometimes leave trailing characters or brackets depending on input source, which circumvents string-based bracket stripping (e.g. `hostname = hostname[1:-1]`) and passes malformed inputs to `getaddrinfo`, bypassing security checks.
+**Learning:** Using explicit `strip('[]')` correctly sanitizes wrapping brackets from IPv6 hostnames regardless of edge cases, ensuring `socket.getaddrinfo` processes them correctly rather than failing open or failing to parse.
+**Prevention:** Always use `hostname.strip('[]')` when preparing hostnames for DNS resolution in SSRF filters to robustly handle IPv6 literals.
 ## 2026-08-10 - Fix unhandled JSON parsing exceptions in localStorage
 **Vulnerability:** Unsafe JSON parsing of localStorage items in `.qmd` files could lead to unhandled exceptions and broken pages if the storage is corrupted or tampered with.
 **Learning:** `JSON.parse` throws exceptions on invalid input. Failing to wrap it in a try-catch block when reading from `localStorage` creates a brittle design susceptible to client-side denial of service.
