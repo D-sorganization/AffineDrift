@@ -173,3 +173,7 @@
 ## 2026-08-02 - Eliminate redundant dataset filtering on sort updates
 **Learning:** When users trigger UI updates that do not mutate the query state (like changing sort orders), recalculating complex O(N) array filtering logic over the entire dataset is highly inefficient and blocks the main thread unnecessarily.
 **Action:** Always cache the input query, the source dataset, and the resulting filtered dataset. If a non-mutating action is triggered (e.g., sort change), bypass the filtering logic and directly reuse a shallow copy of the cached pre-filtered dataset to prevent in-place sorting mutations.
+
+## 2026-08-08 - Optimize Substring Search
+**Learning:** The native `String.prototype.includes()` incurs more V8 overhead compared to `String.prototype.indexOf() !== -1` for simple substring checks, especially in hot loops iterating over large datasets.
+**Action:** When performing thousands of substring checks per keystroke (like live search filtering), replace `.includes()` with `.indexOf() !== -1` to halve execution time and reduce main thread blocking.
