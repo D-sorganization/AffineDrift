@@ -734,3 +734,4 @@ python src/tools/code_quality_check.py
 | 2026-08-02 | 1.0.153 | ⚡ Bolt: Optimize bibliography search filtering by caching the previous query and reusing the pre-filtered state to eliminate redundant string inclusion checks. |
 | 2026-08-03 | 1.0.153 | Fixed SSRF bypass vulnerability in URL validation by failing-closed on ValueError |
 | 2026-08-04 | 1.0.153 | 🎨 Palette: Added `.sr-only` and `.visually-hidden` screen reader utility classes to `css/utilities/spacing.css` |
+| 2026-08-08 | 1.0.153 | Optimized bibliography search string inclusion checks using `.indexOf() !== -1` instead of `.includes()` |
