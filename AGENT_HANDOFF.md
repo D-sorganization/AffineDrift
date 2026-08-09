@@ -2,7 +2,7 @@
 
 > Update this file with every PR and every push to main.
 
-Last updated: 2026-08-04
+Last updated: 2026-08-09
 
 ## Where This Repo Is Heading
 
@@ -12,8 +12,10 @@ articles that support a fleet-wide "Shared Web Tools" program.
 
 Active epics/PRs:
 
-- **D-sorganization/Repository_Management#1390** — Fleet-wide Agent Handoff & PR
-  Policy rollout. This PR/file is part of that rollout for AffineDrift.
+- **#3791 — proximal-to-distal open research refinement** (full PR). Removes
+  meta and software-promotion framing, clarifies evidence boundaries, and adds
+  the 13-case parameter-sensitivity result from UpstreamDrift PR #8428. The
+  remaining validation roadmap stays open in UpstreamDrift epic #8426.
 - **#3777 — EPIC: Sharable Web Tools Program** (open). Converts AffineDrift-relevant
   analysis tools (Tools repo) into GitHub-Pages-hosted web models with a parity
   process against the canonical PyQt6 implementations. Workstreams: simulation
