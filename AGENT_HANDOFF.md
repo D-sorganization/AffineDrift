@@ -14,7 +14,9 @@ Active epics/PRs:
 
 - **#3792 — repair the local-only runner guard** (in progress). Removes raw
   Actions-expression delimiters from the workflow's embedded Python so GitHub
-  can parse push events, with a deployment-integrity regression test.
+  can parse push events, with a deployment-integrity regression test. The same
+  recovery PR corrects eight proximal-to-distal figure paths identified by the
+  post-merge Pages pre-build link gate.
 - **#3791 — proximal-to-distal open research refinement** — MERGED
   (`7b1a06c7`). Removes meta and software-promotion framing, clarifies evidence
   boundaries, and adds the 13-case parameter-sensitivity result from merged
