@@ -12,7 +12,7 @@ articles that support a fleet-wide "Shared Web Tools" program.
 
 Active epics/PRs:
 
-- **#3792 — repair the local-only runner guard** (in progress). Removes raw
+- **#3792 / PR #3793 — repair the local-only runner guard** (in progress). Removes raw
   Actions-expression delimiters from the workflow's embedded Python so GitHub
   can parse push events, with a deployment-integrity regression test. The same
   recovery PR corrects eight proximal-to-distal figure paths identified by the
