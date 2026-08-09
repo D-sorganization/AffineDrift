@@ -72,6 +72,14 @@ def test_local_only_guard_does_not_run_on_main_pushes() -> None:
     assert "\n  pull_request:" in content
 
 
+def test_local_only_guard_embedded_python_has_no_actions_expression_tokens() -> None:
+    """Embedded Python must not be interpolated as an Actions expression."""
+    content = LOCAL_ONLY_GUARD_WORKFLOW_PATH.read_text(encoding="utf-8")
+    _, embedded_python = content.split("        run: |", maxsplit=1)
+
+    assert "${{" not in embedded_python
+
+
 def test_ci_workflow_builds_site_for_e2e_and_audits_dependencies() -> None:
     """Ensure PR CI builds generated docs and audits Python dependencies."""
     assert CI_WORKFLOW_PATH.exists(), "CI workflow file missing"

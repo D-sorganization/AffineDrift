@@ -12,10 +12,16 @@ articles that support a fleet-wide "Shared Web Tools" program.
 
 Active epics/PRs:
 
-- **#3791 — proximal-to-distal open research refinement** (full PR). Removes
-  meta and software-promotion framing, clarifies evidence boundaries, and adds
-  the 13-case parameter-sensitivity result from UpstreamDrift PR #8428. The
-  remaining validation roadmap stays open in UpstreamDrift epic #8426.
+- **#3792 / PR #3793 — repair the local-only runner guard** (in progress). Removes raw
+  Actions-expression delimiters from the workflow's embedded Python so GitHub
+  can parse push events, with a deployment-integrity regression test. The same
+  recovery PR corrects eight proximal-to-distal figure paths identified by the
+  post-merge Pages pre-build link gate.
+- **#3791 — proximal-to-distal open research refinement** — MERGED
+  (`7b1a06c7`). Removes meta and software-promotion framing, clarifies evidence
+  boundaries, and adds the 13-case parameter-sensitivity result from merged
+  UpstreamDrift PR #8428. The remaining validation roadmap stays open in
+  UpstreamDrift epic #8426.
 - **#3777 — EPIC: Sharable Web Tools Program** (open). Converts AffineDrift-relevant
   analysis tools (Tools repo) into GitHub-Pages-hosted web models with a parity
   process against the canonical PyQt6 implementations. Workstreams: simulation
@@ -49,7 +55,9 @@ Active epics/PRs:
 
 ## In-Flight Branches
 
-- `docs/agent-handoff-1390` (this branch) — stacks on `origin/main`
+- `fix/affine-runner-guard-expression-8426` (this branch) — based on merged
+  PR #3791 at `7b1a06c7`; fixes AffineDrift issue #3792.
+- `docs/agent-handoff-1390` (legacy handoff-policy branch) — stacks on `origin/main`
   (b2e98ae3). Adds this file and the AGENTS.md policy section. No other
   branch currently stacks on it.
 - Other open remote branches exist (see `git branch -r`) but none were found
