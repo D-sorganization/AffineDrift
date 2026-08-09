@@ -1,0 +1,251 @@
+---
+title: "Proximal-to-Distal Energy Transfer in the Golf Swing"
+description: "A counterfactual dynamics analysis of distal handoff timing, segment work budgets, and parametric energy transfer in the golf swing."
+author:
+  - name: "Dieter Olson"
+    affiliations: "Affine Golf Swing Analysis Project"
+format:
+  html:
+    toc: true
+    toc-depth: 4
+    number-sections: true
+---
+
+::: {.callout-note}
+## Revision History
+- **v1.0 (current)**: Published thesis port from UpstreamDrift main (`842ac2c`, PR #8380). Reconciled ZTCF/ZVCF definitions with [ch07_counterfactuals.qmd](/articles/The_Geometry_of_Motion/quarto/ch07_counterfactuals.qmd), completed Frontiers 2026 citation (Rachnavy et al., 2026), added E1c impact-criterion robustness check, and converted figures to vector SVG format with dark mode support.
+:::
+
+```{=html}
+<section class="laymans-terms">
+  <h2>
+  <button type="button" class="laymans-terms-header" aria-expanded="false">
+    <span class="laymans-terms-header-title">In Layman's Terms</span>
+    <span class="laymans-terms-icon" aria-hidden="true">▼</span>
+  </button>
+</h2>
+  <div class="laymans-terms-content">
+    <div class="laymans-terms-inner">
+      <p class="laymans-terms-intro">
+        Should a golfer actively push with their wrists early in the downswing, or hold the wrist angle ("lag") and release late?
+      </p>
+
+      <div class="laymans-item">
+        <h3>The Early Wrist Drive Fallacy ("Hitting from the Top")</h3>
+        <p>
+          Trying to accelerate the clubhead from the top of the swing by actively driving the wrist joint actually <strong>destroys 15% of your clubhead speed</strong> compared to swinging with a completely passive, relaxed wrist hinge. Early wrist drive increases the club's moment of inertia while the body is still accelerating, stealing runway from your torso and shoulders.
+        </p>
+      </div>
+
+      <div class="laymans-item">
+        <h3>Retain Early, Release Late</h3>
+        <p>
+          The fastest swings hold the wrist cocked during the first half of the downswing—exerting a tiny active restraint—and then release into the centrifugal force field. Late release boosts speed by <strong>+12% to +14%</strong> because momentum and physics (joint-force transfer) do 80% of the late energy delivery for free.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+```
+
+# Introduction {#sec-intro}
+
+## Motivation
+
+Clubhead speed at impact is the dominant controllable determinant of drive distance, and it correlates strongly with playing standard [@fradkin2004; @hellstrom2009; @hume2005]. The golf downswing is among the most-studied examples of a *sequenced* multi-segment rotation in sport biomechanics [@mcphee2022; @dillman1994]. Across measurement systems and populations, the downswing of a skilled golfer shows a characteristic order: the pelvis reaches its peak angular speed first, then the thorax, then the lead arm, and finally the club, with each successive segment peaking faster than the one before [@cheetham2008; @tinmark2010]. This pattern — the *kinematic sequence*, an instance of the general proximal-to-distal (P→D) sequencing observed in throwing and striking skills [@putnam1993] — is routinely interpreted as the visible signature of mechanical energy generated in the large proximal segments and transferred outward to the small, fast distal ones, and it has been translated into coaching doctrine accordingly [@smith2015].
+
+That interpretation leaves a first-order question unanswered:
+
+> **Should a golfer attempt to transfer energy from proximal to distal segments *early* in the downswing, or should energy be *retained* in the proximal segments early and the transfer deliberately *accelerated* late?**
+
+The two strategies imply opposite coaching cues ("fire the club from the top" versus "hold the lag and let it release"), opposite torque programs at the wrists and torso, and different predictions for what counterfactual decompositions of a measured swing should show. The question also connects to a long-standing thread in the modeling literature: double-pendulum analyses have argued since the 1960s that the highest clubhead speeds arise when the distal joint is *not* driven early — when release is passively or actively delayed [@cochran1968; @jorgensen1970; @milburn1982; @pickering1999] — while the coaching translation of the kinematic sequence often emphasizes initiating distal motion promptly after transition.
+
+UpstreamDrift approaches this question with *counterfactual dynamics*. Two decompositions are implemented across its physics engines: the **zero-torque counterfactual (ZTCF)** — the acceleration the system would exhibit at the current instant if all applied joint torques were removed, isolating what accumulated motion, gravity, and inter-segment coupling produce on their own — and the **zero-velocity counterfactual (ZVCF)** — the acceleration the applied torques, together with gravity, would produce at the current pose from rest, removing all motion-dependent effects.
+
+::: {.callout-important}
+## Definition Alignment & Cross-Reference
+
+This article applies the canonical implementation definitions established in [ch07_counterfactuals.qmd](/articles/The_Geometry_of_Motion/quarto/ch07_counterfactuals.qmd): ZTCF evaluates the instantaneous drift vector field $f(\mathbf{x}) = M(\mathbf{q})^{-1}(-C(\mathbf{q},\dot{\mathbf{q}})\dot{\mathbf{q}} - \mathbf{g}(\mathbf{q}))$ pointwise along measured trajectories (with trajectory rollouts generated separately), while ZVCF evaluates the full zero-velocity acceleration including applied torques $\ddot{\mathbf{q}}_{\text{ZVCF}} = M(\mathbf{q})^{-1}(\boldsymbol{\tau} - \mathbf{g}(\mathbf{q}))$.
+:::
+
+## Research Questions
+
+The document is organized around four questions:
+
+- **RQ1 — Mechanism.** By what mechanical pathways does energy generated proximally reach the club, and what does each pathway imply about the *timing* of the handoff? (@sec-mechanics)
+- **RQ2 — Evidence.** Where does the P→D transfer occur in measured swings, and how do skilled and less-skilled players differ — in sequence order, in magnitudes, or in transfer efficiency? (@sec-evidence)
+- **RQ3 — Formalization.** How can "transfer early" versus "retain-early/release-late" be stated as falsifiable claims about measurable quantities, and what do the ZTCF/ZVCF counterfactuals predict under each? (@sec-timing-framework)
+- **RQ4 — Demonstration.** What do the platform's own models show when the timing of the distal handoff is manipulated directly, with the energy accounting and counterfactual decompositions computed along every trajectory? (@sec-methods, @sec-results, @sec-discussion)
+
+# Mechanics of Sequenced Swings {#sec-mechanics}
+
+## The Summation-of-Speed Principle
+
+Sequential segment motion in human movement dates to Bunn's principle of summation of speed [@bunn1972]. When segments connected in series accelerate in sequence, the distal tip speed is not merely the sum of independent segment rotation rates; it is the compound result of base rotation carrying distal axes plus distal rotation relative to those axes [@putnam1991; @putnam1993].
+
+In a planar 2-DOF chain with arm length $L_1$ and club length $L_2$, the clubhead velocity vector is:
+$$
+\mathbf{v}_{\text{head}} = L_1 \dot{\theta}_1 \mathbf{u}_1^\perp + L_2 (\dot{\theta}_1 + \dot{\theta}_2) \mathbf{u}_2^\perp,
+$$
+where $\mathbf{u}_1^\perp, \mathbf{u}_2^\perp$ are unit tangent vectors in the swing plane. The speed magnitude squared is:
+$$
+v_{\text{head}}^2 = L_1^2 \dot{\theta}_1^2 + L_2^2 (\dot{\theta}_1 + \dot{\theta}_2)^2 + 2 L_1 L_2 \dot{\theta}_1 (\dot{\theta}_1 + \dot{\theta}_2) \cos\theta_2.
+$$
+The cross-term $2 L_1 L_2 \dot{\theta}_1 (\dot{\theta}_1 + \dot{\theta}_2) \cos\theta_2$ reveals the geometric leverage of wrist cock $\theta_2$: when $\theta_2$ is near $-\pi/2$ (wrist cocked), the cross-term is small; as $\theta_2 \to 0$ (wrist uncocked), $\cos\theta_2 \to 1$, maximizing distal speed for given segment rates.
+
+## Interaction Dynamics and Torque Handoffs
+
+The equations of motion for the planar double pendulum express the causal coupling between joint torques and segment accelerations:
+$$
+M(\mathbf{q}) \ddot{\mathbf{q}} + C(\mathbf{q},\dot{\mathbf{q}})\dot{\mathbf{q}} + \mathbf{g}(\mathbf{q}) = \boldsymbol{\tau}.
+$$
+Explicitly expanding for the wrist acceleration $\ddot{\theta}_2$:
+$$
+\ddot{\theta}_2 = \frac{\tau_2 - C_{21}\dot{\theta}_1^2 - g_2(\mathbf{q})}{M_{22}} - \frac{M_{21}}{M_{22}}\ddot{\theta}_1.
+$$
+The term $-\frac{M_{21}}{M_{22}}\ddot{\theta}_1$ is the **inertial interaction acceleration**. Because $M_{21} = m_2 L_1 L_{c2} \cos\theta_2 + I_2 > 0$ for typical geometries, accelerating the arm ($\ddot{\theta}_1 > 0$) exerts an inertial torque on the wrist that acts to *increase* wrist cock (maintain lag). Conversely, decelerating the arm ($\ddot{\theta}_1 < 0$) violently uncocks the wrist, transferring energy to the club without requiring active distal muscle torque [@putnam1993; @herring1992].
+
+## Parametric Energy Transfer
+
+As White [@white2006] and Miura [@miura2001] demonstrated, the dominant distal energy gain late in the downswing is *parametric*: the inward centripetal force exerted by the arm on the wrist joint performs mechanical work on the club segment as the hub path tightens and the club rotates toward alignment. The power delivered by this joint force is:
+$$
+P_{\text{joint}} = \mathbf{F}_{\text{wrist}} \cdot \mathbf{v}_{\text{wrist}}.
+$$
+This mechanism requires a high proximal speed $\dot{\theta}_1$ to establish a strong centripetal acceleration field ($L_1 \dot{\theta}_1^2$). Driving the wrist early truncates $\dot{\theta}_1$, destroying the centrifugal field needed for parametric amplification.
+
+# Empirical Evidence in Golfers {#sec-evidence}
+
+Empirical kinetic and kinematic studies confirm the P→D energy flow structure. Nesbit and Serrano [@nesbit2005work] showed that the torso and hips contribute 68.7–72.2% of total swing work, while shoulder and wrist joints contribute 24.3–28%. Power generation is concentrated early (torso), while clubhead speed conversion occurs late.
+
+Recent findings by Rachnavy et al. [@frontiers2026footground] (Frontiers in Sports and Active Living, 2026, DOI: 10.3389/fspor.2026.1790645) demonstrate that foot-ground interaction variables alone account for 35.5% of clubhead speed variance, rising to 75.4% when trunk sequencing and *impulse-based energy transfer efficiency* are included. Mediation analysis confirms that transfer *efficiency*, rather than sequence *order* alone, distinguishes high-performing swings.
+
+Segmental kinetic energy sequencing studies by Kenny et al. [@kenny2008] and Anderson et al. [@anderson2006] further document outward energy migration, showing that energy arrives late in the club after proximal peaks have passed.
+
+# The Timing Question and Counterfactual Framework {#sec-timing-framework}
+
+## Formalizing the Strategies
+
+We contrast two explicit strategies for distal energy handoff:
+- **S1 (Early Drive):** Apply positive wrist torque $\tau_2 > 0$ immediately after transition ($t_{\text{on}} = 0$).
+- **S2 (Retain Early, Release Late):** Apply zero or negative wrist torque $\tau_2 \le 0$ early (retaining wrist cock against centrifugal opening), releasing positive torque $\tau_2 > 0$ late in the downswing.
+
+## What Falsifies S2?
+
+Strategy S2 would be falsified if early distal drive produced higher clubhead speed than late drive under matched proximal torque effort $\tau_1(t)$.
+
+## Pointwise vs. Re-Simulation Counterfactuals
+
+The counterfactual decomposition splits instantaneous acceleration into passive drift and active control:
+$$
+\ddot{\mathbf{q}}(t) = \underbrace{M(\mathbf{q})^{-1}(-C(\mathbf{q},\dot{\mathbf{q}})\dot{\mathbf{q}} - \mathbf{g}(\mathbf{q}))}_{\text{ZTCF (Drift)}} + \underbrace{M(\mathbf{q})^{-1}\boldsymbol{\tau}}_{\text{Control}}.
+$$
+The Python implementation in [`simulation_backends/ztcf_zvcf.py`](https://github.com/D-sorganization/UpstreamDrift/blob/main/src/shared/python/simulation_backends/ztcf_zvcf.py) evaluates this split pointwise along sampled trajectories, while the MATLAB pipeline ([`run_ztcf_simulation.m`](https://github.com/D-sorganization/UpstreamDrift/blob/main/src/engines/Simscape_Multibody_Models/2D_Golf_Model/matlab_optimized/core/simulation/run_ztcf_simulation.m)) performs killswitch re-simulation rollouts.
+
+# Executed Experiment Methods {#sec-methods}
+
+Experiments were conducted using UpstreamDrift's backend-neutral double-pendulum model ([`scripts/research/proximal_distal_energy/`](https://github.com/D-sorganization/UpstreamDrift/tree/main/scripts/research/proximal_distal_energy)):
+
+- **E1 Timing Sweep:** 92 torque programs sweeping wrist onset times $t_{\text{on}} \in [0.0, 0.35]$ s, wrist drive levels $\tau_2 \in \{0, 15\}$ N·m, and early restraint levels $R \in \{0, 5, 10\}$ N·m across shoulder torques $\tau_1 \in \{60, 100\}$ N·m.
+- **E1b Bounded Actuator Sweep:** Linear torque-velocity motor bounds ($\tau(\omega) = \tau_{\text{iso}}(1 - \omega/\omega_{\text{max}})$).
+- **E1c Robustness Evaluation:** Sensitivity analysis across 5 alternative impact criteria.
+- **E2 Drift/Control Split & E4 Robertson–Winter Accounting:** Pointwise ZTCF decomposition and interface power balance $\mathbf{F} \cdot \mathbf{v} + \tau \omega$.
+
+# Results {#sec-results}
+
+All experimental outputs trace to committed JSON/NPZ data in UpstreamDrift's repository ([`docs/research/proximal_distal_energy_transfer/data/`](https://github.com/D-sorganization/UpstreamDrift/tree/main/docs/research/proximal_distal_energy_transfer/data)).
+
+## E1 — Timing Sweep Results
+
+![E1 Sweep: Clubhead Speed at Impact vs. Wrist-Drive Onset Time. Dashed Line: Passive Baseline.](figures/fig_e1_onset_sweep.svg){#fig-sweep alt="Clubhead speed rises with later wrist-drive onset, peaking near 0.2 s before falling; early drive degrades speed by 15%."}
+
+| Program ($\tau_s = 60$ N·m) | $t_{\mathrm{on}}$ [s] | $t_{\mathrm{imp}}$ [s] | Clubhead speed [m/s] | vs. Passive |
+|---|---|---|---|---|
+| Passive wrist | — | 0.370 | 34.2 | — |
+| Early drive (S1 pole) | 0.000 | 0.327 | 28.9 | **−15.3%** |
+| Best drive-only | 0.200 | 0.352 | 38.4 | **+12.4%** |
+| Best restrain-then-drive ($R=10$) | 0.100 | 0.349 | 38.9 | **+13.8%** |
+
+: Representative programs at $\tau_s = 60$ N·m. {#tbl-representatives}
+
+Key findings:
+1. **Early wrist drive destroys speed (−15.3%).** Driving from the top drops speed from 34.2 m/s to 28.9 m/s.
+2. **Identical torque applied late adds +12.4%.** Peak speed reaches 38.4 m/s at $t_{\text{on}} = 0.200$ s.
+3. **Restrain-then-drive is optimal (+13.8%).** Timed active restraint ($R = 10$ N·m) reaches 38.9 m/s (and 46.9 m/s at $\tau_s = 100$ N·m).
+
+## E1b — Torque-Velocity Actuator Bounds
+
+![E1b: Timing Sweep With Linear Torque-Velocity Bounds on Drives.](figures/fig_e1b_bounded_sweep.svg){#fig-e1b alt="Under torque-velocity bounds, late drive maintains its superiority over early drive (+12.2% over passive)."}
+
+The S2 ordering survives actuator bounds intact: early drive (28.8 m/s) < passive (30.8 m/s) < best late drive (34.6 m/s) < best restrain-then-drive (34.8 m/s).
+
+## Kinematic Sequence & Segment Energies
+
+![Kinematic Sequence for Representative Programs.](figures/fig_kinematic_sequence.svg){#fig-kinseq alt="Arm speed peaks before club speed; early drive suppresses arm peak speed, while late release maximizes both."}
+
+![Downswing Montage in the Swing Plane.](figures/fig_swing_montage.svg){#fig-montage alt="Stick-figure progression showing wrist lag preservation during early downswing."}
+
+![Segmental Kinetic Energy Time Courses.](figures/fig_segment_energies.svg){#fig-energies alt="Kinetic energy builds in the arm first before transferring rapidly to the clubhead late in the swing."}
+
+![Early-Half vs. Late-Half Energy Budget.](figures/fig_energy_budget.svg){#fig-budget alt="Bar chart confirming early negative wrist work during active restraint and dominant late joint-force transfer."}
+
+The energy budget demonstrates that the winning programs put the *least* energy into the club early (5.0 J vs. 22.9 J early drive) and bank energy in the arm (54.7 J shoulder work early). Active retention produces measurably *negative* early wrist work (−1.9 J).
+
+## E4 Interface Powers & E2 Counterfactual Split
+
+![Robertson–Winter Interface Power Accounting.](figures/fig_wrist_interface_power.svg){#fig-wristpower alt="Joint-force power surges late to 131.7 J, dwarfing late wrist actuator work of 25.7 J."}
+
+![Pointwise Drift/Control Split of Club Angular Acceleration.](figures/fig_ztcf_drift_control.svg){#fig-ztcf alt="Control opposes drift early (restraint) while drift delivers acceleration late."}
+
+Robertson–Winter accounting confirms that late energy transfer is dominated by joint-force power (131.7 J) rather than active wrist work (25.7 J). The E2 counterfactual split confirms the S2 signature: **control retains early; drift delivers late.**
+
+## E1c — Impact-Criterion Robustness
+
+Evaluating all 92 trajectories under 5 alternative criteria (fixed hand position, ball-position sweep $v_x$, peak speed anywhere in first pass, matched arm angle $\theta_1=0.5$ rad, and validity-rule max arm angle sweep $1.5–2.5$ rad) confirmed that the retain-early/release-late ordering is 100% robust and does not depend on the impact boundary definition.
+
+# Discussion {#sec-discussion}
+
+The quantitative modeling results confirm that delayed distal release is a structural mechanical necessity in planar multi-link swings. Early wrist drive increases the system's moment of inertia about the shoulder hub before proximal speed has developed, robbing the shoulder of effective work.
+
+Qualifications and scope limits:
+- Model scope is planar 2-DOF with rigid shaft and fixed hub. Full 3D flexible shaft dynamics and hub movement are modeled in staged platform extensions ([Issue #8377](https://github.com/D-sorganization/UpstreamDrift/issues/8377)).
+- Actuators use simplified linear bounds; physiological muscle activation dynamics remain an open refinement.
+
+# Conclusions {#sec-conclusions}
+
+1. Early distal drive is strictly counterproductive (−15% speed loss).
+2. Late wrist torque delivery yields +12% to +14% speed gains.
+3. Active retention (−1.9 J early work) optimizes early arm kinetic energy banking.
+4. Late club energy supply is 80%+ passive joint-force transfer.
+5. The ZTCF/ZVCF signature isolates early control restraint and late drift delivery across all tested impact criteria.
+
+# Appendices {#sec-appendices}
+
+## Platform Inventory
+
+Models and engines referenced in this study trace to UpstreamDrift's core architecture ([`src/engines/`](https://github.com/D-sorganization/UpstreamDrift/tree/main/src/engines)).
+
+## Reproducibility
+
+To re-run experiments and regenerate figures from source code:
+```bash
+python3 -m scripts.research.proximal_distal_energy.run_experiments
+python3 -m scripts.research.proximal_distal_energy.make_figures
+python3 -m scripts.research.proximal_distal_energy.e1b_bounded_torque
+python3 -m scripts.research.proximal_distal_energy.e1c_impact_sensitivity
+```
+
+## Model Parameters
+
+| Parameter | Symbol | Value | Unit |
+|---|---|---|---|
+| Upper segment length | $L_1$ | 0.75 | m |
+| Upper segment mass | $m_1$ | 7.5 | kg |
+| Upper COM distance | $L_{c1}$ | 0.3375 | m |
+| Lower segment length | $L_2$ | 1.0 | m |
+| Lower segment mass | $m_2$ | 0.35 | kg |
+| Lower COM distance | $L_{c2}$ | 0.7557 | m |
+| Projected gravity | $g_{\text{proj}}$ | 8.033 | m/s$^2$ |
+
+---
+
+*Companion bibliography available in [proximal-distal-energy-transfer-bibliography.md](proximal-distal-energy-transfer-bibliography.md).*
