@@ -1,7 +1,8 @@
-"""Enforce title case in rendered AffineDrift website sources.
+"""Enforce title case in rendered AffineDrift document sources.
 
 The check covers page metadata, Markdown headings, Quarto navigation labels,
 figure captions, and literal chart titles. Prose is intentionally out of scope.
+LaTeX structural titles are included so PDF-producing sources use the same rule.
 Run with ``--fix`` to apply deterministic capitalization corrections.
 """
 
@@ -37,13 +38,13 @@ MINOR_WORDS = {
     "yet",
 }
 
-LOWERCASE_TERMS = {"cm", "kg", "km", "m", "mm", "ms", "nm", "rad", "s"}
+LOWERCASE_TERMS = {"cm", "kg", "km", "m", "mm", "mph", "ms", "nm", "rad", "s"}
 LOWERCASE_PARTICLES = {"da", "de", "der", "di", "la", "le", "van", "von"}
 
 WORD = re.compile(r"[^\W\d_][^\W_]*(?:['’][^\W_]+)?", re.UNICODE)
 PROTECTED = re.compile(
     r"`[^`]+`|\$[^$]+\$|<[^>]+>|https?://\S+|\b[A-Z]\([^)]*\)|"
-    r"\([^\s()]*(?:/|\.html)[^\s()]*\)|@[\w:.-]+|\\[A-Za-z]+|"
+    r"\([^\s()]*(?:/|\.html)[^\s()]*\)|@[\w:.-]+|\\[A-Za-z]+|\bA/S\b|\bet al\.|"
     r"\\['\"`^~=.uvHtcdbkr]\{?[A-Za-z]\}?|"
     r"\b[\w.-]+\.(?i:qmd|md|py|js|html|css|yml|yaml|bib|pdf|docx|xlsx|pptx)\b"
 )
@@ -68,6 +69,10 @@ FIGURE_ATTRIBUTE = re.compile(
 )
 MARKDOWN_FIGURE = re.compile(r"!\[(?P<value>[^]]+)]\([^)]*\)\s*\{[^}]*#fig-[^}]*}")
 TRAILING_ATTRIBUTES = re.compile(r"\s*\{[^{}]*}\s*$")
+LATEX_TITLE = re.compile(
+    r"\\(?P<kind>title|subtitle|part|chapter|section|subsection|subsubsection|paragraph|subparagraph|caption)\*?"
+    r"(?:\[[^]]*\])?\{(?P<value>[^{}]*)\}"
+)
 
 EXCLUDED_PARTS = {
     ".git",
@@ -136,7 +141,7 @@ def _capitalize_word(word: str) -> str:
 def _replacement_for_word(word: str, *, boundary: bool, compound_edge: bool) -> str:
     """Apply title rules to one word with enough context for edge cases."""
     lowered = word.lower()
-    if len(word) > 1 and word.isupper():
+    if word.isupper():
         return word
     if not word[0].isascii() and word[1:].isascii():
         return word
@@ -220,6 +225,17 @@ def findings_for_text(path: Path, text: str) -> list[Finding]:
     """Find title-case violations in one Quarto source or configuration file."""
     if path.suffix == ".py":
         return _python_chart_findings(path, text)
+    if path.suffix == ".tex":
+        findings: list[Finding] = []
+        for line_number, line in enumerate(text.splitlines(), start=1):
+            content = line.split("%", 1)[0]
+            for match in LATEX_TITLE.finditer(content):
+                finding = _finding(
+                    path, line_number, f"LaTeX {match.group('kind')}", match.group("value")
+                )
+                if finding is not None:
+                    findings.append(finding)
+        return findings
 
     findings: list[Finding] = []
     in_fence = False
@@ -327,6 +343,7 @@ def source_files(root: Path) -> list[Path]:
         if source_root.exists():
             paths.extend(source_root.rglob("*.py"))
     paths.extend(root.rglob("_quarto.yml"))
+    paths.extend(root.rglob("*.tex"))
     return sorted(
         {
             path

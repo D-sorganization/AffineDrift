@@ -6,10 +6,10 @@ signal-processing parameters, algorithms, and procedures, citing the
 governing sources throughout. Coordinate conventions follow
 \cref{ch:params}.
 
-\section{Radar signal chain (OPS243-A)}
+\section{Radar Signal Chain (OPS243-A)}
 \label{app:radardsp}
 
-\subsection{Doppler scaling and resolution budget}
+\subsection{Doppler Scaling and Resolution Budget}
 
 At $f_c = 24.125$\,GHz, \cref{eq:doppler} gives 71.7\,Hz per mph. With
 a 30\,kHz I/Q sample rate, the unambiguous span is
@@ -26,7 +26,7 @@ estimator de-chirps first (track the central line per
 US8845442's spectral-trace step~\cite{us8845442}, resample the phase to
 remove it), then measures the residual modulation.
 
-\subsection{Spin-rate comb estimation}
+\subsection{Spin-Rate Comb Estimation}
 
 The patent-documented chain (\cref{sec:radarspin}) maps to this concrete
 pipeline~\cite{us8845442,trackmanspinpatentblog}:
@@ -59,7 +59,7 @@ US8845442 to $\sim$2029 (US10393870 to Dec.\ 2026)~\cite{us8845442};
 the FlightScope phase-demodulation alternative (US9868044, dielectric
 lens~\cite{us9868044}) is claimed to $\sim$2034. See \cref{sec:fto}.
 
-\subsection{Club-speed extraction}
+\subsection{Club-Speed Extraction}
 
 The pre-impact spectrum contains a velocity \emph{smear} from heel
 (slow) to toe (fast), plus shaft returns below. TrackMan resolves this
@@ -74,10 +74,10 @@ the loft-dependent smash ceiling of \cref{sec:smash}
 independent testing shows is the signature of toe-lock
 errors~\cite{leach2017}.
 
-\section{Angle measurement (K-LD7) and the EKF}
+\section{Angle Measurement (K-LD7) and the EKF}
 \label{app:ekf}
 
-\subsection{Interferometric angles}
+\subsection{Interferometric Angles}
 
 The K-LD7's two receive patches implement \cref{eq:interferometry} with
 a $\lambda/2$-class baseline; per-bin phase comparison of the two ADC
@@ -91,7 +91,7 @@ error budget --- a $1\degs$ mount error is a $1\degs$ bias on every
 launch direction, amplified $\sim$1.15$\times$ into face angle
 (\cref{eq:faceinversion}).
 
-\subsection{Recommended filter}
+\subsection{Recommended Filter}
 
 Implement the \cref{sec:ekf} smoother concretely as:
 state $\vect{x} = (\vect{p}, \vect{v})$ (add spin states later);
@@ -110,7 +110,7 @@ to rigid-body tracking (the club) via the screw-theoretic formulation
 of \cref{app:screw}, which is the recommended estimation layer for the
 IWR6843 integration.
 
-\subsection{Alignment calibration procedure}
+\subsection{Alignment Calibration Procedure}
 
 Adopt the commercial patterns: (i) Uneekor-style floor chart --- a
 printed target-line chart at known positions establishes the
@@ -121,7 +121,7 @@ a surveyed line and verify reported directions
 purpose~\cite{us10338209}); (iii) record the mount pose in the session
 log so data from different setups is never silently mixed.
 
-\section{Derived club data, with priors}
+\section{Derived Club Data, With Priors}
 \label{app:priors}
 
 Implement the D-plane module once, use it both ways
@@ -147,7 +147,7 @@ any derived face-to-path interpretation --- and surface it in the UI
 rather than hiding it.
 \end{itemize}
 
-\section{Optical module (Phase 2) design parameters}
+\section{Optical Module (Phase 2) Design Parameters}
 \label{app:optical}
 
 The expired Wintriss patents~\cite{us7292711} plus PiTrac's published
@@ -186,7 +186,7 @@ or an overhead second camera per the Uneekor
 geometry~\cite{uneekoreyexo}.
 \end{itemize}
 
-\section{Flight model and validation protocol}
+\section{Flight Model and Validation Protocol}
 
 Ship Smits--Smith (\cref{eq:smits}) with spin
 decay~\cite{smitssmith}, version the coefficients, and calibrate

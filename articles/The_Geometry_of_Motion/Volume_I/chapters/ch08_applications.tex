@@ -227,7 +227,7 @@ H_{qq} = \begin{bmatrix} \cheightMobility \end{bmatrix}~\text{(rad$\cdot$s)}^2/\
 \end{equation}
 whose smallest eigenvalue is $\cheightMobilityEigMin > 0$.
 
-\subsubsection{Why this Schur complement cannot be indefinite}
+\subsubsection{Why This Schur Complement Cannot Be Indefinite}
 \label{subsec:ch8:why-pd}
 
 It is worth being precise about the guarantee, because an earlier revision of this section
@@ -421,9 +421,9 @@ required a wrist rate near $92$~rad/s, about $880$~rpm. When a model needs a phy
 absurd input to reproduce a known output, the geometry is usually wrong, not the input.
 \end{warningbox}
 
-\subsection{Key Insights from the Framework}
+\subsection{Key Insights From the Framework}
 
-\paragraph{Drift composition.}
+\paragraph{Drift Composition.}
 The drift acceleration includes inertial forces (centrifugal/Coriolis from accumulated
 velocities), gravity, and elastic restoring forces from shaft deformation:
 \begin{equation}
@@ -437,14 +437,14 @@ The golfer has $n$ joint actuators but $n+m$ degrees of freedom. The shaft modes
 $\vec\eta$ are not directly controlled---they respond only through the inertial
 coupling $\Gamma$. This makes the golf swing an underactuated control problem.
 
-\paragraph{Drift dominance at impact.}
+\paragraph{Drift Dominance at Impact.}
 At impact, the clubhead is moving at high speed. The drift--control ratio $\rho \gg 1$:
 passive dynamics dominate. The practical implication is that the golfer's skill lies
 not in applying large forces at impact, but in \emph{setting up} the state during the
 backswing and early downswing so that the drift field naturally produces the desired
 impact conditions.
 
-\paragraph{ZTCF interpretation.}
+\paragraph{ZTCF Interpretation.}
 The Zero Torque Counterfactual for the golf swing is the ``passive shadow swing'':
 what the club would do if the golfer went limp at each instant. Comparing the actual
 swing to the ZTCF reveals when the golfer is actively driving versus passively riding
@@ -686,7 +686,7 @@ Continuing the backward recursion:
 
 \begin{table}[h]
 \centering
-\caption{Riccati solution trace and condition number over 4 steps.}
+\caption{Riccati Solution Trace and Condition Number Over 4 Steps.}
 \label{tab:riccati-trace}
 \begin{tabular}{@{}cccc@{}}
 \toprule
@@ -722,7 +722,7 @@ Numerically, starting with an initial joint-space error $\delta\q_0 = (0.1, 0.05
 
 \begin{table}[h]
 \centering
-\caption{Tracking error decay under Riccati control.}
+\caption{Tracking Error Decay Under Riccati Control.}
 \label{tab:tracking-convergence}
 \begin{tabular}{@{}ccccc@{}}
 \toprule
@@ -857,7 +857,7 @@ a soft rendezvous. The maneuver has three phases:
 
 \begin{table}[h]
 \centering
-\caption{Docking approach phases and constraints.}
+\caption{Docking Approach Phases and Constraints.}
 \label{tab:docking-phases}
 \begin{tabular}{@{}lccccl@{}}
 \toprule
@@ -896,7 +896,7 @@ J = \sum_{k=0}^{N-1}\left(\|\delta\x_k\|_{\mat{Q}_k}^2 + \|\uvec_k\|_{\mat{R}_k}
 
 with adaptive weights across the three phases.
 
-\paragraph{Phase 1 (Initial approach):}
+\paragraph{Phase 1 (Initial Approach):}
 \begin{equation}
 \mat{Q}_1 = \diag(10, 1, 1, 1, 1, 1)~[\text{s}^{-2}], \quad \mat{R}_1 = 0.1\,\mat{I}_3~[\text{s}^{-2}].
 \label{eq:ch8:Q1-R1}
@@ -905,7 +905,7 @@ with adaptive weights across the three phases.
 High weight on radial position error ($Q_{11} = 10$) to enforce smooth descent; lower weight
 on $y$ and $z$ errors.
 
-\paragraph{Phase 2 (Fine approach):}
+\paragraph{Phase 2 (Fine Approach):}
 \begin{equation}
 \mat{Q}_2 = \diag(50, 5, 5, 2, 2, 2)~[\text{s}^{-2}], \quad \mat{R}_2 = 0.05\,\mat{I}_3~[\text{s}^{-2}].
 \label{eq:ch8:Q2-R2}
@@ -913,7 +913,7 @@ on $y$ and $z$ errors.
 
 Increased position penalties and velocity damping to slow approach.
 
-\paragraph{Phase 3 (Soft docking):}
+\paragraph{Phase 3 (Soft Docking):}
 \begin{equation}
 \mat{Q}_3 = \diag(100, 100, 100, 10, 10, 10)~[\text{s}^{-2}], \quad \mat{R}_3 = 0.01\,\mat{I}_3~[\text{s}^{-2}].
 \label{eq:ch8:Q3-R3}
@@ -961,7 +961,7 @@ and the contraction margin is:
 This margin is relatively small, indicating the system is on the edge of criticality.
 Adding a small damping term via regularization is recommended.
 
-\paragraph{Contraction in the Riccati metric:}
+\paragraph{Contraction in the Riccati Metric:}
 
 Define the Riccati solution value function:
 \begin{equation}
@@ -994,7 +994,7 @@ Table~\ref{tab:fuel-comparison} shows the results over the full 900-second docki
 
 \begin{table}[h]
 \centering
-\caption{Fuel consumption for three control strategies.}
+\caption{Fuel Consumption for Three Control Strategies.}
 \label{tab:fuel-comparison}
 \begin{tabular}{@{}lcccc@{}}
 \toprule
@@ -1011,14 +1011,14 @@ The optimal controller achieves \textbf{53\% reduction} in fuel relative to naiv
 \textbf{34\% reduction} relative to PI, while meeting the hard constraint of 0.1 m/s
 contact velocity.
 
-\subsubsection{Trade-off Analysis}
+\subsubsection{Trade-Off Analysis}
 
 The LQR weights $\mat{Q}$ and $\mat{R}$ encode a fuel-vs.-precision trade-off. Increasing
 $\mat{R}$ (penalizing control effort) saves fuel but allows larger errors. Figure data:
 
 \begin{table}[h]
 \centering
-\caption{Fuel consumption vs. position tracking accuracy (Phase 1 only).}
+\caption{Fuel Consumption vs. Position Tracking Accuracy (Phase 1 Only).}
 \label{tab:fuel-tradeoff}
 \begin{tabular}{@{}ccccc@{}}
 \toprule
@@ -1120,7 +1120,7 @@ we design the LQR controller to minimize weighted lane-tracking error.
 
 \subsubsection{Drift-Control Ratio at Highway Speeds}
 
-\paragraph{Parking (low speed):}
+\paragraph{Parking (Low Speed):}
 At $v = 0.5$~m/s (walking pace), the drift is weak:
 \begin{equation}
 \|f(\x)\| = v \approx 0.5~\text{m/s}.
@@ -1138,7 +1138,7 @@ Thus:
 
 At low speeds, control dominates, and steering is highly responsive.
 
-\paragraph{Highway driving (high speed):}
+\paragraph{Highway Driving (High Speed):}
 At $v = 25$~m/s (90 km/h), drift is strong:
 \begin{equation}
 \|f(\x)\| = v \approx 25~\text{m/s}.
@@ -1327,7 +1327,7 @@ N = 100;  % horizon steps
 eigs(sys_d.A - sys_d.B*K)
 \end{verbatim}
 
-\subsubsection{Python with SciPy}
+\subsubsection{Python With SciPy}
 
 \begin{verbatim}
 import numpy as np
@@ -1439,7 +1439,7 @@ at regular time intervals.
 \item \textbf{Compare:} Plot $\rho^{\text{obs}}_k$ vs. $k$. It should cluster around $\rho^{\text{pred}}$.
 \end{enumerate}
 
-\paragraph{Example (spacecraft docking):}
+\paragraph{Example (Spacecraft Docking):}
 Using a high-fidelity nonlinear simulator of the 6DOF relative dynamics (including
 $J_2$ perturbations), we apply a 1 cm radial perturbation at $t = 300$~s (mid-approach).
 Predicted: $\rho^{\text{pred}} = 0.98$. Observed over 50 steps (50 s): $\rho^{\text{obs}}_k$ averages 0.975,
@@ -1456,7 +1456,7 @@ To account for measurement noise and model mismatch, compute confidence interval
 where $\sigma_{\rho}$ is the standard error of the observed rate. If the predicted rate
 falls within the 95\% confidence interval, the prediction is validated.
 
-\subsection{Estimating the Drift-Control Ratio from Sensor Data}
+\subsection{Estimating the Drift-Control Ratio From Sensor Data}
 
 \subsubsection{Method: Zero-Torque Experiment}
 
@@ -1491,7 +1491,7 @@ a_{\text{control}}(t) \approx \|G(\x^{\text{opt}}(t))\,\uvec^{\text{opt}}(t)\|.
 \end{equation}
 \end{enumerate}
 
-\paragraph{Example protocol (golf swing):}
+\paragraph{Example Protocol (Golf Swing):}
 Given motion-capture data with joint markers, one can estimate $\dot\q(t)$ and $\ddot\q(t)$
 via filtered numerical differentiation (e.g., Savitzky--Golay). Combined with a segmental
 mass matrix from published anthropometric data, inverse dynamics yields the required
@@ -1596,7 +1596,7 @@ deviation, spin axis) and $\vec{z}_{\text{impact}}$ is the vector of impact cond
 The Jacobian $J_{\text{impact}}$ can be computed from physics-based ball flight models
 or estimated empirically from launch monitor data.
 
-\subsubsection{Composing with the State Transition Matrix}
+\subsubsection{Composing With the State Transition Matrix}
 
 The state transition matrix $\Phi(t_{\text{impact}}, t_0)$ from
 Chapter~\ref{ch:variational} maps an initial perturbation $\delta\x_0$ to the
@@ -1632,7 +1632,7 @@ conceptual dictionary---not numerical predictions, but structural correspondence
 
 \begin{table}[h]
 \centering
-\caption{Conceptual mapping between mathematical framework and coaching language.}
+\caption{Conceptual Mapping Between Mathematical Framework and Coaching Language.}
 \label{tab:ch8:math-coaching}
 \begin{tabular}{@{}p{4.5cm}p{5.5cm}p{4.5cm}@{}}
 \toprule

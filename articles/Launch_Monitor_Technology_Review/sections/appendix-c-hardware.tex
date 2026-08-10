@@ -25,7 +25,7 @@ detection 1--100\,m; speed to 348\,mph at 50\,ksps; accuracy spec
 0.5\%; USB CDC + 3.3\,V UART (default 19{,}200\,8N1); 5--24\,V supply,
 1.7\,W active.
 
-\subsection{API essentials}
+\subsection{API Essentials}
 From AN-010~\cite{an010}: sample rate \texttt{S=n} (1--1000\,ksps;
 10\,ksps default); buffer 1024/512/256/128 via
 \texttt{S>}/\texttt{S<}/\texttt{S[}/\texttt{S(}; zero-padding
@@ -40,7 +40,7 @@ Filters: \texttt{R>}/\texttt{R<} speed, \texttt{R$\pm$} direction,
 cosine-error correction \texttt{\^{}/$\pm$n.n} (0--89$\degs$).
 \texttt{A!}\ persists settings to flash.
 
-\subsection{Rolling buffer and triggering}
+\subsection{Rolling Buffer and Triggering}
 From AN-027~\cite{an027}: \texttt{G1} enters rolling-buffer mode with a
 fixed \textbf{4096-sample I/Q buffer organized as 32 segments of 128
 samples}; trigger by software (\texttt{S!}) or a 3.3\,V rising edge on
@@ -53,7 +53,7 @@ flags the acoustic-latency budget: sound from 2\,m arrives
 $\sim$6.6\,ms late, so the pre-trigger split must cover the
 impact-to-trigger gap (their example \texttt{S\#18}).
 
-\subsection{The vendor golf recipe (AN-029)}
+\subsection{The Vendor Golf Recipe (AN-029)}
 AN-029~\cite{an029} specifies: \texttt{S=30} (209\,mph ceiling),
 \texttt{S(} 128-sample segments, \texttt{X=32} (4096-point FFT,
 0.1\,mph resolution, $\sim$200\,Hz report rate), \texttt{US},
@@ -62,7 +62,7 @@ ball + club for smash factor (gated 1.0--1.50, matching
 \cref{sec:smash}), \texttt{K+} averaging, sensor 2--3\,m behind the
 ball. Golf balls are rated ``high'' reflectivity, detectable 5--10\,m.
 
-\section{RFbeam K-LD7 (24\,GHz FSK, dual-RX angle)}
+\section{RFbeam K-LD7 (24\,GHz FSK, Dual-RX Angle)}
 
 Per the datasheet~\cite{kld7}: 24.050--24.250\,GHz FSK (two
 frequencies, enabling range via phase difference); EIRP 6\,dBm; 1\,TX +
@@ -111,7 +111,7 @@ role: a single sensor that measures range, angle, and radial speed
 simultaneously --- replacing a pair of single-baseline angle modules ---
 once the custom chirp work is done.
 
-\section{Raspberry Pi Global Shutter camera (optical module)}
+\section{Raspberry Pi Global Shutter Camera (Optical Module)}
 
 Sony IMX296 sensor: 1456$\times$1088, 3.45\,\si{\micro\meter} pixels,
 true global shutter, exposures to $\sim$30\,\si{\micro\second}, max
@@ -125,7 +125,7 @@ is fitted)~\cite{pigscam}. Continuous 60\,fps cannot capture flight ---
 the strobed multi-exposure design of \cref{app:optical} is the correct
 use of this sensor.
 
-\section{Simulator integration: GSPro Open Connect}
+\section{Simulator Integration: GSPro Open Connect}
 \label{app:gspro}
 
 GSPro's Open Connect v1~\cite{gspro} is the only fully documented open
@@ -164,7 +164,7 @@ unchanged. Status flags (\texttt{LaunchMonitorIsReady},
 201 player-info response (handedness, selected club --- useful for
 per-club priors, \cref{app:priors}) complete the loop.
 
-\section{Regulatory constants for the physics engine}
+\section{Regulatory Constants for the Physics Engine}
 
 USGA/R\&A equipment rules anchor the models of
 \cref{ch:impact,ch:flight}~\cite{usgarules}: ball mass
@@ -180,7 +180,7 @@ useful end-to-end sanity envelope for the flight model: a conforming
 ball simulated at ALC conditions must not materially exceed
 320\,yd~\cite{usgarules}.
 
-\section{Detection theory: CFAR selection}
+\section{Detection Theory: CFAR Selection}
 
 A typical CFAR setting (SNR $>15$ over a 150-bin DC mask) is a
 cell-averaging scheme. The radar literature~\cite{cfartutorial}

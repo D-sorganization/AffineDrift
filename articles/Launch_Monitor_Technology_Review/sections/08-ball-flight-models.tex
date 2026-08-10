@@ -5,7 +5,7 @@ Both sensing families depend on an aerodynamic model: cameras integrate
 it forward from measured launch to get carry; radars fit it to partial
 trajectories to extract spin axis and to extrapolate indoor flights.
 
-\section{Equations of motion}
+\section{Equations of Motion}
 
 With air density $\rho$, ball radius $R = 21.34$\,mm, mass
 $m = 45.93$\,g, cross-section $A = \pi R^2$, and airspeed
@@ -27,7 +27,7 @@ force off vertical, giving lateral acceleration
 $(F_M/m)\sin\theta$ --- the mechanism behind the 0.7\%-per-degree
 side-curve rule and \cref{eq:spincomponents}.
 
-\section{Aerodynamic coefficient data}
+\section{Aerodynamic Coefficient Data}
 
 \begin{description}
 \item[Bearman \& Harvey (1976)~\cite{bearmanharvey}.] The canonical
@@ -67,7 +67,7 @@ Carry disagreements between simulators are dominated by model choice, not
 launch measurement --- version the model and record it with every shot log.
 \end{implication}
 
-\section{Trajectory estimation and filtering}
+\section{Trajectory Estimation and Filtering}
 \label{sec:ekf}
 
 The estimation core of a radar launch monitor is a nonlinear filtering
@@ -94,7 +94,7 @@ bins, and yield launch angles with quantified covariance. The same filter
 skeleton later absorbs camera measurements unchanged.
 \end{implication}
 
-\section{Indoor extrapolation and its errors}
+\section{Indoor Extrapolation and Its Errors}
 
 Indoors, every system integrates \cref{eq:eom} from launch conditions.
 Error propagation is dominated by spin uncertainty: at driver speeds,
