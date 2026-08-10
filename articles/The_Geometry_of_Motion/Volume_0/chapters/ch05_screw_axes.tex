@@ -59,7 +59,7 @@ Today, screw theory forms the mathematical backbone of robotics, mechanism desig
   % Demonstrate screw
   \node at (2,2.5) {Screw = Rotation + Parallel Translation};
 \end{tikzpicture}
-\caption{Visualization of Chasles' theorem: Any rigid body motion can be decomposed as rotation about a screw axis combined with translation parallel to that axis. This unified motion is more efficient to represent and compute with than separate rotation and translation.}
+\caption{Visualization of Chasles' Theorem: Any Rigid Body Motion Can Be Decomposed as Rotation About a Screw Axis Combined With Translation Parallel to That Axis. This Unified Motion Is More Efficient to Represent and Compute With Than Separate Rotation and Translation.}
 \label{fig:screw_axis}
 \end{figure}
 
@@ -294,7 +294,7 @@ In numerical algorithms, twists are often represented as $4 \times 4$ skew-symme
   where $[\boldsymbol{\omega}]$ is the skew-symmetric matrix of $\boldsymbol{\omega}$ (as defined in Chapter 4).
 \end{definition}
 
-\subsection{The Lie Bracket on se(3)}
+\subsection{The Lie Bracket on Se(3)}
 
 The Lie algebra $\se(3)$ inherits a Lie bracket structure from the matrix commutator. For two twists $\twist_1, \twist_2 \in \se(3)$ represented as matrices, their bracket is:
 
@@ -396,7 +396,7 @@ Just as velocity is unified into Twists ($\twist \in \Reals^6$), Newton's physic
 
 Note the convention: unlike twists where $\boldsymbol{\omega}$ is on top, wrenches have torque on top. This convention ensures that the power calculation (the inner product of wrench and twist) has the correct sign.
 
-\subsection{Wrenches from Forces and Moments}
+\subsection{Wrenches From Forces and Moments}
 
 A wrench can arise from a force $\mathbf{f}$ applied at a point $\mathbf{r}$, which also generates a moment (torque) about the origin:
 
@@ -662,20 +662,20 @@ In everyday life, we think of forces (pushes) and torques (twists) as separate t
 
 \subsection{Three Fundamental Wrench Types}
 
-\paragraph{Pure force at the origin.}\index{pure force}
+\paragraph{Pure Force at the Origin.}\index{pure force}
 A force $\mathbf{f}$ applied directly at the origin of the reference frame produces no torque about that origin. The wrench is:
 \begin{equation}
   \wrench_{\text{pure force}} = \begin{bmatrix} \mathbf{0} \\ \mathbf{f} \end{bmatrix}
 \end{equation}
 
-\paragraph{Pure couple (torque with no net force).}\index{pure couple}
+\paragraph{Pure Couple (Torque With No Net Force).}\index{pure couple}
 A couple is a pair of equal and opposite forces separated by a distance, producing a net torque $\boldsymbol{\tau}$ but zero net force. The wrench is:
 \begin{equation}
   \wrench_{\text{couple}} = \begin{bmatrix} \boldsymbol{\tau} \\ \mathbf{0} \end{bmatrix}
 \end{equation}
 Examples include the twisting torque applied by a screwdriver or the reaction torque from a motor.
 
-\paragraph{Force at an offset point.}\index{force at offset}
+\paragraph{Force at an Offset Point.}\index{force at offset}
 The most common case in robotics: a force $\mathbf{f}$ applied at a point $\mathbf{r}$ away from the reference frame origin. By the moment-arm principle, this creates a torque $\boldsymbol{\tau} = \mathbf{r} \times \mathbf{f}$:
 \begin{equation}
   \wrench_{\text{offset}} = \begin{bmatrix} \mathbf{r} \times \mathbf{f} \\ \mathbf{f} \end{bmatrix}

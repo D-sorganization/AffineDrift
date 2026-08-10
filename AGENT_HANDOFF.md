@@ -12,6 +12,11 @@ articles that support a fleet-wide "Shared Web Tools" program.
 
 Active epics/PRs:
 
+- **Document title capitalization** — this branch extends the established
+  Quarto gate to LaTeX structural titles, normalizes the tracked canonical
+  LaTeX corpus, preserves technical literals such as `A/S`, `et al.`, and
+  `mph`, and records the fleet convention in `AGENTS.md` and `SPEC.md`.
+
 - **#3792 / PR #3793 — repair the local-only runner guard** (in progress). Removes raw
   Actions-expression delimiters from the workflow's embedded Python so GitHub
   can parse push events, with a deployment-integrity regression test. The same

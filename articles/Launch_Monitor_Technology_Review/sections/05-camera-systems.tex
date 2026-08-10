@@ -1,7 +1,7 @@
 \chapter{Photometric (Camera) Systems}
 \label{ch:camera}
 
-\section{Imaging architectures}
+\section{Imaging Architectures}
 \label{sec:camarch}
 
 Photometric launch monitors capture a short burst of high-speed, IR-strobed
@@ -39,9 +39,9 @@ ball-only; the SkyTrak+ added a dual Doppler radar module specifically for
 club data while the cameras handle ball launch and spin~\cite{skytrakplus}.
 \end{itemize}
 
-\section{Ball measurement}
+\section{Ball Measurement}
 
-\subsection{Photogrammetric position and velocity}
+\subsection{Photogrammetric Position and Velocity}
 
 With factory-known intrinsics $K_i$ and extrinsics $[R_i|\vect{t}_i]$,
 each synchronized image set yields a 3D ball-center fix by triangulation:
@@ -61,7 +61,7 @@ keep the capture volume small and also exploit the known ball diameter
 fitting the projected \emph{conic} outline rather than taking the blob
 centroid avoids a systematic offset of up to $RZ/f$ pixels.
 
-\subsection{Spin: dimple-pattern registration}
+\subsection{Spin: Dimple-Pattern Registration}
 \label{sec:dimplespin}
 
 The flagship photometric capability is markerless 3D spin. Successive
@@ -87,10 +87,10 @@ registration, systems fall back to \emph{marked balls}: Uneekor QED and
 Rapsodo (RPT balls) track printed high-contrast features, giving closed-form
 rotation from $\ge3$ correspondences via the Kabsch/Horn algorithm.
 
-\section{Club measurement}
+\section{Club Measurement}
 \label{sec:camclub}
 
-\subsection{Fiducial markers: the Foresight approach}
+\subsection{Fiducial Markers: The Foresight Approach}
 
 Foresight floor units require retroreflective \textbf{fiducial dots} on
 the clubface. The dot count maps directly to the data
@@ -110,7 +110,7 @@ speed, path, attack, face angle, and impact via the same stickers but
 omits dynamic loft, lie, and closure rate --- these remain
 GCQuad/QuadMAX exclusives~\cite{playbetterblp}.
 
-\subsection{Sticker-free overhead tracking}
+\subsection{Sticker-Free Overhead Tracking}
 
 Uneekor's overhead cameras segment the clubhead silhouette directly ---
 no markers --- because the top-down view presents the head against the mat
@@ -132,7 +132,7 @@ live camera feeds --- establishing the ground plane, hitting zone, and
 target-line extrinsics~\cite{uneekorcalib}. This is the pattern a DIY
 overhead build should copy.
 
-\section{The indoor argument, and what cameras cannot do}
+\section{The Indoor Argument, and What Cameras Cannot Do}
 
 Photometric systems measure actual launch conditions --- including 3D spin
 --- in the first foot of flight; nothing is lost when the ball hits a
@@ -144,7 +144,7 @@ downrange (all flight is simulated from launch) and, for floor units, the
 club face itself without stickers --- the same face-visibility problem
 radar has, solved with markers instead of models.
 
-\section{DIY and open-source photometric systems}
+\section{DIY and Open-Source Photometric Systems}
 \label{sec:diy}
 
 \textbf{PiTrac}~\cite{pitrac} is the flagship open-source photometric

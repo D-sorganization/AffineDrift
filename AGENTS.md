@@ -10,6 +10,17 @@
 - Adhere strictly to the project's architectural and stylistic standards.
 - Act as a responsible pair programmer, always verifying assumptions and testing changes.
 
+## Document Title Capitalization
+
+Use title case for every document title, subtitle, section heading, navigation
+label, figure caption, and chart title: capitalize the first letter of every
+significant word. Keep articles, coordinating conjunctions, and short
+prepositions lowercase unless they begin or end a title or follow a colon.
+Preserve acronyms, mathematical notation, units, filenames, and product names.
+This convention applies to Markdown, Quarto, LaTeX, Word, and PDF outputs; edit
+the canonical source and regenerate rendered artifacts. Run
+`python scripts/check_title_case.py` for the complete publishable-source audit.
+
 ---
 
 ## 🛡️ Safety & Security (CRITICAL)

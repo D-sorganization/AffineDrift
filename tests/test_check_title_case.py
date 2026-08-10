@@ -39,6 +39,9 @@ from scripts.check_title_case import expected_title, findings_for_text
             "Read Tangent_Hyperplanes_Unified_Thesis.qmd",
         ),
         ("state‐of‐the‐art control", "State‐of‐the‐Art Control"),
+        ("TrackMan A/S launch data", "TrackMan A/S Launch Data"),
+        ("Results from Smith et al.", "Results From Smith et al."),
+        ("Launch window at 100 mph", "Launch Window at 100 mph"),
     ],
 )
 def test_expected_title_uses_title_case(source: str, expected: str) -> None:
@@ -128,4 +131,19 @@ def test_quarto_navigation_labels_are_checked() -> None:
     assert [(finding.kind, finding.expected) for finding in findings] == [
         ("navigation label", "Book Series Volumes"),
         ("navigation label", "Learning Paths"),
+    ]
+
+
+def test_latex_structural_titles_are_checked() -> None:
+    text = r"""\title{a guide to drift}
+\subtitle{mechanics in practice}
+\section{why timing matters}
+"""
+
+    findings = findings_for_text(Path("paper.tex"), text)
+
+    assert [finding.expected for finding in findings] == [
+        "A Guide to Drift",
+        "Mechanics in Practice",
+        "Why Timing Matters",
     ]
