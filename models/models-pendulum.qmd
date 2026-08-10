@@ -115,11 +115,18 @@ document.addEventListener('DOMContentLoaded', function() {
   ];
 
   function updateModelsHistory() {
-    let history = JSON.parse(localStorage.getItem('affinedrift_models_history') || '[]');
+    let history = [];
+    try {
+      const raw = localStorage.getItem('affinedrift_models_history');
+      if (raw) history = JSON.parse(raw);
+      if (!Array.isArray(history)) history = [];
+    } catch (e) {
+      localStorage.removeItem('affinedrift_models_history');
+    }
     
     const currentPage = {
       title: document.title.replace(' - AffineDrift', '').replace('AffineDrift - ', ''),
-      url: window.location.pathname.split('/').pop() || 'models-pendulum.html'
+      url: window.location.pathname.substring(window.location.pathname.lastIndexOf("/") + 1) || 'models-pendulum.html'
     };
 
     if (MODEL_PAGES.includes(currentPage.url)) {

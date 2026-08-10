@@ -463,11 +463,18 @@ document.addEventListener('DOMContentLoaded', function() {
   ];
 
   function updateVideosHistory() {
-    let history = JSON.parse(localStorage.getItem('affinedrift_videos_history') || '[]');
+    let history = [];
+    try {
+      const raw = localStorage.getItem('affinedrift_videos_history');
+      if (raw) history = JSON.parse(raw);
+      if (!Array.isArray(history)) history = [];
+    } catch (e) {
+      localStorage.removeItem('affinedrift_videos_history');
+    }
     
     const currentPage = {
       title: document.title.replace(' - AffineDrift', '').replace('AffineDrift - ', ''),
-      url: window.location.pathname.split('/').pop() || 'resources-videos.html'
+      url: window.location.pathname.substring(window.location.pathname.lastIndexOf("/") + 1) || 'resources-videos.html'
     };
 
     if (VIDEO_PAGES.includes(currentPage.url)) {
