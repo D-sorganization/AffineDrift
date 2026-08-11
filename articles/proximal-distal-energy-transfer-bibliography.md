@@ -10,6 +10,7 @@
 - **Robertson–Winter Interface Power**: Decomposition of segment energy change rate into joint-force power $\mathbf{F} \cdot \mathbf{v}$, joint-moment power $\mathbf{\tau} \cdot \boldsymbol{\omega}$, and gravity power.
 - **Parametric Acceleration**: The amplification of distal angular speed resulting from inward centripetal joint forces and hub-path radius reduction rather than active distal muscle torque.
 - **Casting Failure Mode**: The premature release of distal joint lag, leading to early energy transfer, reduced peak clubhead speed, and negative wrist work.
+- **Force Along the Hand Path**: The signed projection of the equivalent net golfer-applied grip force onto the instantaneous hand-path tangent. This net mechanical quantity is not a measure of muscle activation or biological effort.
 
 ## References
 
@@ -122,6 +123,15 @@ bibliography:
   scholar_link: "https://doi.org/10.1007/s12283-009-0020-9"
   clusters: ["3d simulation", "forward dynamics"]
   concepts: ["3d biomechanics", "muscle coordination"]
+
+- id: mackenzie2020energy
+  title: "How Amateur Golfers Deliver Energy to the Driver"
+  authors: "MacKenzie, Sasho J., McCourt, Mike, & Champoux, Luke"
+  year: 2020
+  venue: "International Journal of Golf Science"
+  scholar_link: "https://www.golfsciencejournal.org/article/12640-how-amateur-golfers-deliver-energy-to-the-driver"
+  clusters: ["golf biomechanics", "inverse dynamics", "hand path"]
+  concepts: ["force along hand path", "linear work", "clubhead speed"]
 
 - id: balzerson2016
   title: "A three-dimensional forward dynamic model of the golf swing optimized for ball carry distance"

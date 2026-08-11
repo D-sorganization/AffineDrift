@@ -2,7 +2,7 @@
 
 > Update this file with every PR and every push to main.
 
-Last updated: 2026-08-09
+Last updated: 2026-08-10
 
 ## Where This Repo Is Heading
 
@@ -12,6 +12,13 @@ articles that support a fleet-wide "Shared Web Tools" program.
 
 Active epics/PRs:
 
+- **#8458 / UpstreamDrift #8470 — hand-path force attribution** (consumer
+  scaffold in progress). AffineDrift now defines an offline, fail-closed
+  evidence manifest and validator, corrects pointwise-drift/ZTCF/ZVCF
+  terminology, and adds neutral force-path and biological-effort boundaries.
+  The placeholder deliberately contains no source SHA, artifact, or numerical
+  result. It must not be marked publication-ready until #8470 merges and the
+  exact merged SHA and artifact hashes are pinned.
 - **Document title capitalization** — this branch extends the established
   Quarto gate to LaTeX structural titles, normalizes the tracked canonical
   LaTeX corpus, preserves technical literals such as `A/S`, `et al.`, and
@@ -60,6 +67,9 @@ Active epics/PRs:
 
 ## In-Flight Branches
 
+- `research/hand-path-force-attribution-8470` (this branch) — consumer-side
+  schema, validator, tests, and article/theory integration for epic #8458.
+  Pending the exact merged UpstreamDrift #8470 evidence commit and artifacts.
 - `fix/affine-runner-guard-expression-8426` (this branch) — based on merged
   PR #3791 at `7b1a06c7`; fixes AffineDrift issue #3792.
 - `docs/agent-handoff-1390` (legacy handoff-policy branch) — stacks on `origin/main`
@@ -113,12 +123,18 @@ Full authoritative list: `.github/workflows/ci-standard.yml` (`quality-gate` and
 
 ## Short-Term Roadmap (ordered)
 
-1. Land this handoff-policy PR (Repository_Management#1390) for AffineDrift.
-2. Progress #3777 workstreams: candidate-tool selection and the first formal
+1. After UpstreamDrift #8470 merges, copy only its compact publication
+   artifacts, pin the full merged SHA and SHA-256 values in
+   `data/proximal_distal_energy_transfer/hand_path_attribution_snapshot.json`,
+   populate the declared tiers/quantities, run
+   `python3 scripts/check_proximal_distal_evidence.py --require-pinned`, render,
+   and visually inspect the article before publishing numerical claims.
+2. Land this handoff-policy PR (Repository_Management#1390) for AffineDrift.
+3. Progress #3777 workstreams: candidate-tool selection and the first formal
    parity review (Rate of Closure tool, PyQt6 vs web).
-3. Track Tools PR #4119 (consolidated Swing–Impact–Ball-Flight platform) and
+4. Track Tools PR #4119 (consolidated Swing–Impact–Ball-Flight platform) and
    update the mirror/Pages deployment + article links once it merges.
-4. Begin the WASM parity upgrade to retire interim TS ports (P7 of Tools
+5. Begin the WASM parity upgrade to retire interim TS ports (P7 of Tools
    epic #4103).
-5. Write and apply the per-tool parity review checklist as a repeatable
+6. Write and apply the per-tool parity review checklist as a repeatable
    process for future tool releases.

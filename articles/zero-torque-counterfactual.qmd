@@ -28,10 +28,10 @@ format:
       <div class="laymans-item">
         <h3>The "Shadow Swing"</h3>
         <p>
-          Imagine freezing a golfer at the top of the downswing and asking: "If this golfer suddenly stopped applying any muscular effort — completely relaxed every muscle — where would the club go?"
+          Imagine freezing the modeled swing at the top of the downswing and asking: "If the model's applied generalized control were set to zero here, where would the club go?"
         </p>
         <p>
-          The answer is the <strong>Zero-Torque Counterfactual (ZTCF)</strong>: the path the club would travel if carried only by gravity, momentum, and the elastic whip of the shaft. No muscles. Pure physics.
+          The answer is a <strong>forward Zero-Torque Counterfactual (ZTCF)</strong>: the path predicted with the declared applied generalized-control channels set to zero. Gravity, momentum, and every passive or structural force retained by the model remain active. This is not a no-muscle simulation.
         </p>
         <div class="analogy">
           <strong>Analogy:</strong> Think of a car on the highway. If you let go of the steering wheel and take your foot off the gas, the car does not stop — it drifts forward under its own momentum. The ZTCF is the golfer's equivalent of "letting go of the wheel." It traces where the club drifts when no one is steering.
@@ -41,10 +41,10 @@ format:
       <div class="laymans-item">
         <h3>Why Does This Matter?</h3>
         <p>
-          By comparing the actual swing to this "shadow swing," you can see exactly how much the golfer's muscles are contributing at every moment. Early in the downswing the golfer is doing most of the work; late in the downswing the swing is largely running on momentum, and muscles are just steering.
+          Comparing the achieved swing with this "shadow swing" estimates the consequence of removing the model's applied generalized controls. It does not identify individual muscle forces, co-contraction, metabolic effort, or conscious intent.
         </p>
         <div class="key-takeaway">
-          The ZTCF separates "what physics would do anyway" from "what the golfer chose to do." That separation is the engine of the entire AffineDrift analysis.
+          The ZTCF separates the declared model drift from the consequences of its declared applied-control channels. Interpretation is conditional on the model, passive-force inventory, reference point, and counterfactual horizon.
         </div>
       </div>
 
@@ -74,17 +74,21 @@ format:
 ::: {.callout-important}
 ## Canonical ZTCF Definitions (Glossary) {#sec-ztcf-canonical}
 
-This article is the **canonical reference** for "ZTCF" across the AffineDrift site. All other articles should link here on first use. Three distinct objects are in circulation; the site uses the following names and conventions:
+This article is the **canonical reference** for "ZTCF" across the AffineDrift site. All other articles should link here on first use. Four related objects are in circulation; the qualifier is required on first use:
 
-1. **Trajectory ZTCF** — $x^{\mathrm{ZTCF}}(t; x_0, t_0)$, the solution of
+1. **Pointwise ZTCF sample** — $f(x(t))$, the zero-applied-control evaluation at one achieved state. It is an instantaneous vector, not a forecast. "Pointwise drift vector" is the preferred generic name; "pointwise ZTCF sample" is retained for compatibility with the WSCG archive and must carry the qualifier.
+
+2. **Stitched pointwise ZTCF trace** — the time-indexed collection $\{f(x(t_k))\}$ evaluated along achieved states. Its samples do not form a dynamically integrated trajectory because each sample is reset to a different achieved state. It supports same-state attribution but cannot establish persistence after control removal.
+
+3. **Forward ZTCF trajectory** — $x^{\mathrm{ZTCF}}(t; x_0, t_0)$, the solution of
     $$\dot{x}^{\mathrm{ZTCF}}(t) = f\!\left(x^{\mathrm{ZTCF}}(t)\right), \qquad x^{\mathrm{ZTCF}}(t_0) = x_0, \qquad t \in [t_0, t_1].$$
-    A **trajectory**, not a vector. This is the default meaning of "ZTCF" in this series.
+    This is a dynamically integrated trajectory, not a pointwise sample.
 
-2. **Drift vector** $f(x)$ — the **instantaneous** drift, an acceleration-valued vector evaluated at a single state. This object is **not called ZTCF** on this site. Calling the value $f(x(t))$ the "ZTCF at time $t$" is a terminology error; use "drift vector at $x(t)$" or simply $f(x(t))$.
+4. **Branched ZTCF trajectory** — the forward ZTCF trajectory (3) initialized from the **achieved** swing state $x_0 = x^{\mathrm{actual}}(t_0)$ at a torque-killswitch time $t_0$, then compared with $x^{\mathrm{actual}}(t)$ for $t > t_0$. This is the construct used throughout numerical validation (e.g., @sec-kill-switch and Parts 2 and 5 of the theory series).
 
-3. **Branched ZTCF** — the Trajectory ZTCF (1) with initial condition set to the **observed** swing state $x_0 = x^{\mathrm{actual}}(t_0)$ at a branch time $t_0$, compared against $x^{\mathrm{actual}}(t)$ for $t > t_0$. This is the construct used throughout numerical validation (e.g., the kill-switch algorithm of @sec-kill-switch, and Parts 2 and 5 of the theory series). When we say "ZTCF" in downswing-analysis contexts without further qualification, we mean Branched ZTCF with $t_0$ chosen inside the downswing.
+The **drift vector field** $f:\mathcal{X}\rightarrow T\mathcal{X}$ is the state-dependent map underlying all four constructions. It is not a trajectory or a dataset. Pointwise and stitched results may support same-state attribution; only a forward or branched rollout can test whether an effect persists after the applied control is removed.
 
-Articles that use a variant other than (1) — in particular anywhere the context is "the ZTCF from the top of backswing" vs "the ZTCF from mid-downswing" — should either link to this definition or state the variant explicitly in a local convention box.
+Articles must qualify the construction on first use and either link to this definition or state the local convention explicitly.
 :::
 
 ## Motivation
@@ -153,24 +157,24 @@ Physically, this integral curve traces the "natural" path of the system under:
 - **Elastic shaft recoil** — the restoring force of the bent shaft as it tries to return to its neutral shape,
 - **Passive joint damping** — any modeled energy dissipation in the joints.
 
-What is absent from the ZTCF is any contribution from the golfer's muscles. The difference between the actual trajectory $x(t)$ and the counterfactual $x^{\mathrm{ZTCF}}(t)$ — visualized as the gap between two swing paths evolving from the same starting point — captures the cumulative effect of muscular torques. Broadly:
+What is absent from the forward ZTCF is the declared applied generalized-control input. Passive tissue, joint, shaft, contact, damping, and structural forces remain if they are included in $f$. The difference between $x(t)$ and $x^{\mathrm{ZTCF}}(t)$ captures the cumulative modeled consequence of removing that input; it does not uniquely recover muscle forces. Broadly:
 
-- Where the actual path matches the ZTCF closely, the swing is dominated by passive momentum; muscles are steering rather than powering.
-- Where the actual path deviates substantially from the ZTCF, active muscular torques are contributing significantly to the motion.
+- Close paths indicate that the removed applied-control channels have a small modeled trajectory effect over that horizon.
+- Divergent paths indicate a larger modeled effect, conditional on the retained passive-force inventory and state estimate.
 
 ## Relationship to the Drift–Input Decomposition
 
 The drift--input decomposition used throughout this series is the algebraic identity:
 
-$$\dot{x} = \underbrace{f(x)}_{\text{passive drift}} + \underbrace{G(x)\,u}_{\text{active input}}.$$
+$$\dot{x} = \underbrace{f(x)}_{\text{declared drift}} + \underbrace{G(x)\,u}_{\text{applied input}}.$$
 
-This identity is *instantaneous*: it classifies the current velocity vector at a single point in time. The ZTCF extends this instantaneous decomposition into the temporal domain by integrating the passive component forward through time.
+This identity is *instantaneous*: it classifies the current velocity vector at a single point in time. A forward ZTCF extends the instantaneous evaluation into the temporal domain by integrating the declared drift field.
 
 At the torque-force level, the decomposition reads:
 
 $$\tau_{\mathrm{total}}(t) = \tau_{\mathrm{drift}}\!\left(x(t)\right) + \tau_{\mathrm{input}}(t),$$
 
-where the drift torque $\tau_{\mathrm{drift}}$ is the generalized force required to sustain the passive acceleration $a_{\mathrm{drift}}(x)$ along the actual trajectory, and $\tau_{\mathrm{input}}$ is the remainder attributable to muscular effort. The ZTCF provides a visual and computational realization of the drift term: it is the trajectory that $\tau_{\mathrm{drift}}$ alone would produce, starting from the same initial state.
+where the drift torque $\tau_{\mathrm{drift}}$ is the generalized force associated with the declared drift acceleration $a_{\mathrm{drift}}(x)$ along the achieved trajectory, and $\tau_{\mathrm{input}}$ is the modeled applied-input remainder. Neither term uniquely identifies muscular effort. A forward ZTCF provides a trajectory-level realization of the declared drift field from the same initial state.
 
 ::: {.callout-note}
 ## Worked Illustrative Example
@@ -181,7 +185,7 @@ Consider a snapshot during mid-downswing. Inverse dynamics applied to the actual
 
 $$\tau_{\mathrm{input}} = 100 - 85 = 15\,\mathrm{Nm}.$$
 
-Passive momentum, gravity, and shaft elasticity account for 85% of the mechanical load at this instant. The golfer is steering a momentum-driven system, not powering it. In the takeaway the ratio would be reversed: perhaps 60 Nm active against 10 Nm drift. This evolution from "active powering" to "passive steering" is invisible in raw inverse dynamics but explicit in the drift--input decomposition centered on the ZTCF.
+Under the illustrative model inventory, drift terms account for 85% of the generalized load at this instant. This does not establish a fraction of muscle force or biological effort. In the takeaway the modeled ratio could be reversed: for example, 60 Nm applied input against 10 Nm drift. The evolution of this declared mechanical decomposition is invisible in raw inverse dynamics but explicit in the drift--input analysis centered on the ZTCF.
 :::
 
 ## High-DCR Regime: ZTCF as a Dominant Attractor

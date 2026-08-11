@@ -267,7 +267,7 @@ Drift invariance enables strong causal statements, but only *within the mechanic
 
 These appear in the present framework only through the feasible input set $\mathcal{U}(x)$. The affine decomposition is agnostic to the internal physiology; it models only the net mechanical torque transmitted to the joints. Interpretations must therefore remain explicitly mechanical.
 
-Having established that the drift field is a stable, invariant reference frame, we can now map every term in the equation of motion to a specific mechanical category. The abstract algebraic components $f(x)$ and $g(x)$ are not merely vector fields; they are distinct physical containers: $f(x)$ encodes the passive dynamics (gravity, inertia, stiffness, velocity-dependent terms) while $g(x)u$ represents the active muscular contribution [@isidori1995nonlinear; @bullo2004geometric].
+Having established that the drift field is a stable, invariant reference frame, we can now map every term in the equation of motion to a specific mechanical category. The abstract algebraic components $f(x)$ and $g(x)$ are not merely vector fields; they are distinct model terms: $f(x)$ encodes the state-dependent dynamics (gravity, inertia, stiffness, velocity-dependent terms) while $g(x)u$ represents the modeled applied-input contribution [@isidori1995nonlinear; @bullo2004geometric]. Neither term alone identifies muscle activation or biological effort.
 
 ## Force and Torque Taxonomy via the Affine Mapping
 
@@ -285,6 +285,15 @@ This taxonomy applies to:
 - internal forces transmitted through the kinetic chain,
 - shaft reaction forces,
 - hand forces, whether measured or derived.
+
+::: {.callout-note}
+## Applied Hand-Path Evidence
+
+The [proximal-to-distal hand-path article](proximal-distal-energy-transfer.html#force-along-the-hand-path)
+defines the matching force, impulse, power, and work estimands. Its new numerical
+results remain withheld until a compact evidence snapshot is pinned to an exact
+merged source commit.
+:::
 
 The categories are defined algebraically and can be computed from simulation or from motion-capture data via inverse dynamics.
 
@@ -349,7 +358,7 @@ These forces can be large---often dominant---in fast regions of the swing (e.g.,
 
 ### Category 3: Input (Torque-Driven) Forces
 
-These forces arise solely from the golfer's active torque input and are defined by:
+These forces arise from the applied torque channels represented in the model and are defined by:
 
 $$\tau_{\mathrm{input}}(t)
   =
@@ -366,34 +375,24 @@ $$\tau_{\text{drift}}(t)
 
 acting on the **full** drift acceleration (rigid and flexible), matching the Part 2 definition so the recoil coupling $M_{q\eta}\ddot{\eta}_{\text{drift}}$ is retained rather than dropped.
 
-By construction, $\tau_{\mathrm{input}}$ contains the mechanical effect of applied torques and nothing else. It is the only category that changes when the golfer changes their motor command.
+By construction, $\tau_{\mathrm{input}}$ contains the modeled mechanical effect of applied torques. It is a net mechanical quantity, not a unique muscle-force, activation, or effort estimate.
 
 This subtraction is valid precisely because of the affine structure derived in Part I. Recall that the input acceleration is given by $A_{\text{input}}(x)u$. The 'Input Force' defined here is the dynamic realization of that acceleration term, scaled by the system mass matrix [@featherstone2008rigid]. Crucially, it captures not just the direct drive on the joints, but also the forces induced by the coupling ratio ($\Gamma$) acting on the flexible shaft. Thus, $\tau_{\text{input}}$ represents the complete mechanical footprint of the active control.
 
 ### Category 4: Mixed Forces (Interaction Effects)
 
-Although drift and input contributions add linearly in the equations of motion,
+Although drift and input contributions add at the same state in the equations of motion,
 
 $$\tau_{\text{total}} = \tau_{\text{drift}} + \tau_{\text{input}},$$
 
-the external hand forces and internal forces observed along the chain may reflect nonlinear interactions between torque-driven accelerations and drift-induced accelerations. These are best understood by examining:
+later states also reflect the trajectory changes produced by earlier inputs. External hand forces and internal forces are therefore best understood by examining:
 
 - the ZTCF trajectory (removing input entirely),
 - the ZVCF state (removing velocity-dependent drift),
-- the difference between ZTCF and ZVCF forces,
+- the configuration-dependent and velocity-dependent parts of drift,
 - how hand forces change relative to these baselines.
 
-We define:
-
-$$\tau_{\mathrm{mixed}}(t)
-  =
-  \tau_{\text{total}}(t)
-  -
-  \tau_{\mathrm{ZTCF}}(t)
-  -
-  \tau_{\mathrm{ZVCF}}(t),$$
-
-understanding that this term does not represent a new physical force, but a nonlinear structural interaction within the model.
+No additional same-state "mixed force" is introduced: total remains drift plus input. Differences between independently evolving full and counterfactual trajectories are labeled **trajectory-mediated outcome differences**, because their forces are evaluated at different states after the branch.
 
 ### Taxonomy Summary
 
@@ -405,7 +404,7 @@ The following table summarizes the categories.
 | Velocity drift | $\tau_{\mathrm{vel.\,drift}}$ | Forces from velocities (Coriolis, centrifugal, damping). |
 | Total drift | $\tau_{\text{drift}}$ | Passive forces along the actual trajectory: $\tau_{\mathrm{ZVCF}} + \tau_{\mathrm{vel.\,drift}}$. |
 | Input forces | $\tau_{\mathrm{input}}$ | Torque-driven forces from the golfer: $\tau_{\text{total}} - \tau_{\text{drift}}$. |
-| Mixed interaction | $\tau_{\mathrm{mixed}}$ | Structural interactions not attributable purely to torque or passive loading. |
+| Trajectory-mediated difference | $\Delta\tau_{\mathrm{trajectory}}$ | Difference between forces evaluated on diverged trajectories; not a third same-state force component. |
 
 ### Interpretation and Practical Use
 
@@ -414,7 +413,7 @@ The taxonomy provides a framework for interpreting joint torques, hand forces, o
 - Comparing $\tau_{\text{total}}$ to $\tau_{\mathrm{drift}}$ reveals how much of the motion is mechanically self-propelled.
 - Comparing $\tau_{\mathrm{drift}}$ to $\tau_{\mathrm{ZVCF}}$ quantifies inertial loading.
 - Comparing $\tau_{\mathrm{input}}$ to $\tau_{\mathrm{ZTCF}}$ reveals torque effectiveness.
-- The interaction term $\tau_{\mathrm{mixed}}$ helps diagnose when torque amplifies or attenuates passive dynamics.
+- Trajectory-mediated differences help diagnose how earlier input changes the later drift landscape without being relabeled as a third force.
 
 In simulation (as developed in [Theory Part 4](theory-part4.html) and [Theory Part 5](theory-part5.html)), these categories enable:
 

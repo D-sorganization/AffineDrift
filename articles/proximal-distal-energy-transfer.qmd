@@ -43,6 +43,20 @@ format:
 </section>
 ```
 
+::: {.callout-warning}
+## Evidence Pin Pending
+
+The hand-path drift/control extension is not yet published as evidence. Its
+[local evidence snapshot](../data/proximal_distal_energy_transfer/hand_path_attribution_snapshot.json)
+is deliberately marked `awaiting_upstream_merge`: it contains no source commit,
+figures, or numerical findings. Those fields will remain withheld until the
+canonical analysis tracked by
+[D-sorganization/UpstreamDrift#8470](https://github.com/D-sorganization/UpstreamDrift/issues/8470)
+merges to remote `main`, after which selected artifacts will be copied here and
+verified by SHA-256. The conceptual definitions below are available for review;
+they are not a substitute for the pending results.
+:::
+
 # Introduction {#sec-intro}
 
 ## Motivation
@@ -55,12 +69,12 @@ That interpretation leaves a first-order question unanswered:
 
 The two strategies imply opposite coaching cues ("fire the club from the top" versus "hold the lag and let it release"), opposite torque programs at the wrists and torso, and different predictions for what counterfactual decompositions of a measured swing should show. The question also connects to a long-standing thread in the modeling literature: double-pendulum analyses have argued since the 1960s that the highest clubhead speeds arise when the distal joint is *not* driven early — when release is passively or actively delayed [@cochran1968; @jorgensen1970; @milburn1982; @pickering1999] — while the coaching translation of the kinematic sequence often emphasizes initiating distal motion promptly after transition.
 
-This study approaches the question with *counterfactual dynamics*. The **zero-torque counterfactual (ZTCF)** is the acceleration the system would exhibit at the current instant if applied joint torques were removed, isolating what accumulated motion, gravity, and inter-segment coupling produce. The **zero-velocity counterfactual (ZVCF)** is the acceleration applied torques and gravity would produce at the current pose from rest, removing motion-dependent effects.
+This study approaches the question with *counterfactual dynamics*. A **pointwise ZTCF sample**, or pointwise drift vector, is the acceleration the model evaluates at one achieved state with applied control removed. A **stitched pointwise ZTCF trace** collects those same-state samples without integrating them. A **forward or branched ZTCF trajectory** integrates the drift after a torque killswitch and is required to test persistence. The **control contribution** is the same-state difference between total and drift acceleration. A **ZVCF is not the control contribution**: it is a separate zero-velocity construction used to isolate configuration-dependent terms under a declared convention.
 
 ::: {.callout-important}
 ## Definition Alignment & Cross-Reference
 
-This article applies the canonical implementation definitions established in [ch07_counterfactuals.qmd](/articles/The_Geometry_of_Motion/quarto/ch07_counterfactuals.qmd): ZTCF evaluates the instantaneous drift vector field $f(\mathbf{x}) = M(\mathbf{q})^{-1}(-C(\mathbf{q},\dot{\mathbf{q}})\dot{\mathbf{q}} - \mathbf{g}(\mathbf{q}))$ pointwise along measured trajectories (with trajectory rollouts generated separately), while ZVCF evaluates the full zero-velocity acceleration including applied torques $\ddot{\mathbf{q}}_{\text{ZVCF}} = M(\mathbf{q})^{-1}(\boldsymbol{\tau} - \mathbf{g}(\mathbf{q}))$.
+This article applies the canonical definitions in the [Zero-Torque Counterfactual glossary](zero-torque-counterfactual.html#sec-ztcf-canonical). The pointwise ZTCF sample is $f(\mathbf{x}) = M(\mathbf{q})^{-1}(-C(\mathbf{q},\dot{\mathbf{q}})\dot{\mathbf{q}} - \mathbf{g}(\mathbf{q}))$, while the same-state control contribution is $G(\mathbf{x})u$. A stitched trace evaluates $f$ at successive achieved states; it must not be used to infer persistence. A forward or branched ZTCF integrates $f$ after setting the declared applied torque channels to zero. ZVCF evaluates the declared model at zero velocity and must not be relabeled as pure control.
 :::
 
 ## Research Questions
@@ -98,7 +112,7 @@ Explicitly expanding for the wrist acceleration $\ddot{\theta}_2$:
 $$
 \ddot{\theta}_2 = \frac{\tau_2 - C_{21}\dot{\theta}_1^2 - g_2(\mathbf{q})}{M_{22}} - \frac{M_{21}}{M_{22}}\ddot{\theta}_1.
 $$
-The term $-\frac{M_{21}}{M_{22}}\ddot{\theta}_1$ is the **inertial interaction acceleration**. Because $M_{21} = m_2 L_1 L_{c2} \cos\theta_2 + I_2 > 0$ for typical geometries, accelerating the arm ($\ddot{\theta}_1 > 0$) exerts an inertial torque on the wrist that acts to *increase* wrist cock (maintain lag). Conversely, decelerating the arm ($\ddot{\theta}_1 < 0$) violently uncocks the wrist, transferring energy to the club without requiring active distal muscle torque [@putnam1993; @herring1992].
+The term $-\frac{M_{21}}{M_{22}}\ddot{\theta}_1$ is the **inertial interaction acceleration**. Because $M_{21} = m_2 L_1 L_{c2} \cos\theta_2 + I_2 > 0$ for typical geometries, accelerating the arm ($\ddot{\theta}_1 > 0$) exerts an inertial torque on the wrist that acts to *increase* wrist cock (maintain lag). Conversely, decelerating the arm ($\ddot{\theta}_1 < 0$) uncocks the wrist and transfers energy to the club without requiring applied distal generalized torque in this model [@putnam1993; @herring1992]. This does not imply zero distal muscle force because co-contraction and passive structural loads are not identified by the generalized-torque counterfactual.
 
 ## Parametric Energy Transfer
 
@@ -116,6 +130,50 @@ Recent findings by Rachnavy et al. [@frontiers2026footground] (Frontiers in Spor
 
 Segmental kinetic energy sequencing studies by Kenny et al. [@kenny2008] and Anderson et al. [@anderson2006] further document outward energy migration, showing that energy arrives late in the club after proximal peaks have passed.
 
+## Force Along the Hand Path
+
+MacKenzie, McCourt, and Champoux [@mackenzie2020energy] analyzed 76 amateur
+golfers using three-dimensional club inverse dynamics. They reported that
+**average force along the hand path** was strongly associated with clubhead
+speed ($r=.96$ in their sample) and defined it through linear work divided by
+hand-path length. This is an important net mechanical result. It does not identify biological effort:
+the reconstructed grip force is an equivalent net
+force on the club, and a coupled model can attribute part of that load to
+configuration- and velocity-dependent interaction dynamics.
+
+For hand velocity $\mathbf{v}_H$ above a declared threshold $\epsilon$, define
+
+$$
+\mathbf{e}_t = \frac{\mathbf{v}_H}{\lVert\mathbf{v}_H\rVert},
+\qquad
+F_{\parallel} = \mathbf{F}\mathbin{\cdot}\mathbf{e}_t.
+$$
+
+The MacKenzie-compatible path average is
+
+$$
+\overline{F}_{\parallel}
+= \frac{\int F_{\parallel}\lVert\mathbf{v}_H\rVert\,dt}
+       {\int \lVert\mathbf{v}_H\rVert\,dt}
+= \frac{W_{\mathrm{linear}}}{L_H}.
+$$
+
+It is distinct from time-average force and from impulse. The planned
+attribution therefore reports path length, signed path-average force, vector
+impulse, signed/positive/negative/absolute tangent impulse, force and couple
+power, and cumulative work as separate estimands.
+
+::: {.callout-important}
+## Mechanical Input Is Not Biological Effort
+
+Neither total force nor the modeled control residual identifies muscle
+activation, metabolic cost, or perceived effort. Muscle redundancy,
+co-contraction, passive tissue impedance, activation history, and internal
+two-hand loading can produce the same net wrench. Physiological interpretation
+requires independent measurements or an explicitly declared actuator-cost
+model.
+:::
+
 # The Timing Question and Counterfactual Framework {#sec-timing-framework}
 
 ## Formalizing the Strategies
@@ -130,11 +188,23 @@ Strategy S2 would be falsified if early distal drive produced higher clubhead sp
 
 ## Pointwise vs. Re-Simulation Counterfactuals
 
-The counterfactual decomposition splits instantaneous acceleration into passive drift and active control:
+The same-state affine decomposition splits instantaneous acceleration into drift and control:
 $$
-\ddot{\mathbf{q}}(t) = \underbrace{M(\mathbf{q})^{-1}(-C(\mathbf{q},\dot{\mathbf{q}})\dot{\mathbf{q}} - \mathbf{g}(\mathbf{q}))}_{\text{ZTCF (Drift)}} + \underbrace{M(\mathbf{q})^{-1}\boldsymbol{\tau}}_{\text{Control}}.
+\ddot{\mathbf{q}}(t) = \underbrace{M(\mathbf{q})^{-1}(-C(\mathbf{q},\dot{\mathbf{q}})\dot{\mathbf{q}} - \mathbf{g}(\mathbf{q}))}_{\text{Pointwise Drift}} + \underbrace{M(\mathbf{q})^{-1}\boldsymbol{\tau}}_{\text{Same-State Control}}.
 $$
-The Python implementation in [`simulation_backends/ztcf_zvcf.py`](https://github.com/D-sorganization/UpstreamDrift/blob/main/src/shared/python/simulation_backends/ztcf_zvcf.py) evaluates this split pointwise along sampled trajectories, while the MATLAB pipeline ([`run_ztcf_simulation.m`](https://github.com/D-sorganization/UpstreamDrift/blob/main/src/engines/Simscape_Multibody_Models/2D_Golf_Model/matlab_optimized/core/simulation/run_ztcf_simulation.m)) performs killswitch re-simulation rollouts.
+Pointwise attribution evaluates both terms at an identical state and reference point. A killswitch rollout instead compares futures that begin from one state and then diverge. The latter is a counterfactual outcome difference, not an algebraic decomposition at later times.
+
+## Planned Model Ladder and Reporting Contract
+
+The pending extension uses three declared model tiers: an exact planar double
+pendulum, a one-arm mobile-hub/three-link model, and a mechanically closed
+two-arm model. At every reported interface it must verify total = drift +
+control for force, couple, path projection, power, impulse, and work. Joint
+tables will retain signs and phase windows rather than reducing vectors to one
+norm. Shares will be undefined near a zero denominator or strong cancellation.
+For the two-hand tier, resultant club wrench and differential/internal loading
+will be reported separately because net club motion does not identify a unique
+allocation between the hands.
 
 # Computational Methods {#sec-methods}
 
@@ -227,7 +297,13 @@ These findings demonstrate a mechanism in a simplified model. They do not establ
 
 ## Code and Data Availability {#sec-open-materials}
 
-Analysis code, tests, figures, parameter records, and machine-readable outputs are available in the [open-source research directory](https://github.com/D-sorganization/UpstreamDrift/tree/main/docs/research/proximal_distal_energy_transfer). The repository name identifies provenance; the scientific claims do not depend on adopting the broader software project. Ongoing validation is tracked in the [open research roadmap](https://github.com/D-sorganization/UpstreamDrift/issues/8426).
+The currently published timing-study code, tests, figures, parameter records,
+and machine-readable outputs remain available in the [open-source research
+directory](https://github.com/D-sorganization/UpstreamDrift/tree/main/docs/research/proximal_distal_energy_transfer).
+The new hand-path evidence remains withheld under the fail-closed snapshot at
+the top of this page. Its later publication requires an exact merged source
+commit, artifact hashes, regeneration commands, and the offline check
+`python3 scripts/check_proximal_distal_evidence.py --require-pinned`.
 
 ## Reproducibility
 
