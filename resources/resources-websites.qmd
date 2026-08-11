@@ -375,11 +375,18 @@ document.addEventListener('DOMContentLoaded', function() {
   if (!websitesHistoryList) return;
 
   function updateWebsitesHistory() {
-    let history = JSON.parse(localStorage.getItem('affinedrift_websites_history') || '[]');
+    let history = [];
+    try {
+      const raw = localStorage.getItem('affinedrift_websites_history');
+      if (raw) history = JSON.parse(raw);
+      if (!Array.isArray(history)) history = [];
+    } catch (e) {
+      localStorage.removeItem('affinedrift_websites_history');
+    }
     
     const currentPage = {
       title: document.title.replace(' - AffineDrift', '').replace('AffineDrift - ', ''),
-      url: window.location.pathname.split('/').pop() || 'resources-websites.html'
+      url: window.location.pathname.substring(window.location.pathname.lastIndexOf("/") + 1) || 'resources-websites.html'
     };
 
     if (currentPage.url === 'resources-websites.html') {

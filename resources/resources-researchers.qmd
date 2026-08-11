@@ -359,11 +359,18 @@ document.addEventListener('DOMContentLoaded', function() {
   if (!researchersHistoryList) return;
 
   function updateResearchersHistory() {
-    let history = JSON.parse(localStorage.getItem('affinedrift_researchers_history') || '[]');
+    let history = [];
+    try {
+      const raw = localStorage.getItem('affinedrift_researchers_history');
+      if (raw) history = JSON.parse(raw);
+      if (!Array.isArray(history)) history = [];
+    } catch (e) {
+      localStorage.removeItem('affinedrift_researchers_history');
+    }
     
     const currentPage = {
       title: document.title.replace(' - AffineDrift', '').replace('AffineDrift - ', ''),
-      url: window.location.pathname.split('/').pop() || 'resources-researchers.html'
+      url: window.location.pathname.substring(window.location.pathname.lastIndexOf("/") + 1) || 'resources-researchers.html'
     };
 
     if (currentPage.url === 'resources-researchers.html') {

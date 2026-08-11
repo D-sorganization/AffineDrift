@@ -197,11 +197,18 @@ document.addEventListener('DOMContentLoaded', function() {
   if (!historyList) return;
 
   function updateHistory() {
-    let history = JSON.parse(localStorage.getItem('affinedrift_notebooklm_history') || '[]');
+    let history = [];
+    try {
+      const raw = localStorage.getItem('affinedrift_notebooklm_history');
+      if (raw) history = JSON.parse(raw);
+      if (!Array.isArray(history)) history = [];
+    } catch (e) {
+      localStorage.removeItem('affinedrift_notebooklm_history');
+    }
     
     const currentPage = {
       title: document.title.replace(' - AffineDrift', '').replace('AffineDrift - ', ''),
-      url: window.location.pathname.split('/').pop() || 'resources-notebooklm.html'
+      url: window.location.pathname.substring(window.location.pathname.lastIndexOf("/") + 1) || 'resources-notebooklm.html'
     };
 
     if (currentPage.url === 'resources-notebooklm.html') {
