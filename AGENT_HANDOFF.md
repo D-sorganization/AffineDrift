@@ -16,7 +16,7 @@ Active epics/PRs:
   #8494 merged to remote `main` at
   `06a0ca6317f6351e5b6da3789d2cd8e1e3dc53b5`, with the raced SPEC freshness
   follow-up #8495 merged at `33ec92f04ee80b5ac2200488e10a4531eecf1892`.
-  This branch pins the scientific merge and replaces the textbook GRF chapter's sign error,
+  AffineDrift PR #3802 pins the scientific merge and replaces the textbook GRF chapter's sign error,
   universal zero-work claim, unique muscle-torque inference, and single optimal
   waveform framing with a constrained-wrench treatment. The public
   proximal-to-distal article now reports the fixed-support benchmark,
