@@ -44,17 +44,19 @@ format:
 ```
 
 ::: {.callout-warning}
-## Evidence Pin Pending
+## Pinned Open Evidence
 
-The hand-path drift/control extension is not yet published as evidence. Its
-[local evidence snapshot](../data/proximal_distal_energy_transfer/hand_path_attribution_snapshot.json)
-is deliberately marked `awaiting_upstream_merge`: it contains no source commit,
-figures, or numerical findings. Those fields will remain withheld until the
-canonical analysis tracked by
-[D-sorganization/UpstreamDrift#8470](https://github.com/D-sorganization/UpstreamDrift/issues/8470)
-merges to remote `main`, after which selected artifacts will be copied here and
-verified by SHA-256. The conceptual definitions below are available for review;
-they are not a substitute for the pending results.
+The hand-path drift/control extension is published from the exact
+[UpstreamDrift merge commit `69eb7e9d`](https://github.com/D-sorganization/UpstreamDrift/commit/69eb7e9db32ccd17e45824619315b1d04b400c27).
+The [local evidence snapshot](../data/proximal_distal_energy_transfer/hand_path_attribution_snapshot.json)
+records the full 40-character commit, compact results for all three model tiers,
+regeneration commands, and SHA-256 digests for every figure reproduced here.
+The offline command
+`python scripts/check_proximal_distal_evidence.py --require-pinned` verifies the
+pin, artifact integrity, finite estimands, and force/couple/power/work closure.
+The open evidence supports model-mechanics statements; it does not identify
+muscle activation, metabolic effort, perceived effort, or a universal coaching
+strategy.
 :::
 
 # Introduction {#sec-intro}
@@ -85,6 +87,7 @@ The document is organized around four questions:
 - **RQ2 — Evidence.** Where does the P→D transfer occur in measured swings, and how do skilled and less-skilled players differ — in sequence order, in magnitudes, or in transfer efficiency? (@sec-evidence)
 - **RQ3 — Formalization.** How can "transfer early" versus "retain-early/release-late" be stated as falsifiable claims about measurable quantities, and what do the ZTCF/ZVCF counterfactuals predict under each? (@sec-timing-framework)
 - **RQ4 — Model test.** What does a two-link model show when distal-handoff timing is manipulated directly and energy accounting and counterfactual decompositions are computed along each trajectory? (@sec-methods, @sec-results, @sec-discussion)
+- **RQ5 — Attribution.** How much hand-path and joint force, impulse, power, and work is associated with pointwise drift versus same-state control, and how does that balance change with model topology, joint, and time window? (@sec-attribution-results)
 
 # Mechanics of Sequenced Swings {#sec-mechanics}
 
@@ -194,17 +197,23 @@ $$
 $$
 Pointwise attribution evaluates both terms at an identical state and reference point. A killswitch rollout instead compares futures that begin from one state and then diverge. The latter is a counterfactual outcome difference, not an algebraic decomposition at later times.
 
-## Planned Model Ladder and Reporting Contract
+## Completed Model Ladder and Reporting Contract
 
-The pending extension uses three declared model tiers: an exact planar double
-pendulum, a one-arm mobile-hub/three-link model, and a mechanically closed
-two-arm model. At every reported interface it must verify total = drift +
-control for force, couple, path projection, power, impulse, and work. Joint
-tables will retain signs and phase windows rather than reducing vectors to one
-norm. Shares will be undefined near a zero denominator or strong cancellation.
-For the two-hand tier, resultant club wrench and differential/internal loading
-will be reported separately because net club motion does not identify a unique
-allocation between the hands.
+The completed extension uses three declared tiers: an exact planar double
+pendulum, a one-arm mobile-hub/three-link point-mass model, and a mechanically
+closed two-arm/floating-club model. The first two are forward trajectories. The
+two-arm case is a prescribed, constraint-consistent local kinematic sweep and
+must not be interpreted as realized swing work or a clubhead-speed prediction.
+
+At every reported interface, total equals drift plus control for force, couple,
+path projection, power, impulse, and work to numerical tolerance. Joint tables
+retain signs and normalized-time quartiles rather than reducing vectors to one
+norm or relabeling quartiles as anatomical swing phases. Signed shares are not
+used near zero denominators; magnitude shares and cancellation indices are
+reported separately. In the two-hand tier, the common mode is
+$\mathbf{F}_R+\mathbf{F}_L$ and the differential mode is
+$(\mathbf{F}_R-\mathbf{F}_L)/2$, preserving internal loading that a net club
+wrench cannot identify.
 
 # Computational Methods {#sec-methods}
 
@@ -264,6 +273,115 @@ The energy budget demonstrates that the winning programs put the *least* energy 
 
 Robertson–Winter accounting confirms that late energy transfer is dominated by joint-force power (131.7 J) rather than active wrist work (25.7 J). The E2 counterfactual split confirms the S2 signature: **control retains early; drift delivers late.**
 
+## Hand-Path Attribution Across the Model Ladder {#sec-attribution-results}
+
+The MacKenzie-compatible primary estimand is the linear force-work delivered by
+the golfer to the club divided by achieved hand-path length, $W_{\mathrm{linear}}/L_H$.
+It is evaluated at the wrist in the open chains and at the net mid-grip point in
+the closed loop. Table @tbl-hand-path-attribution reports the signed reference-case
+values. ZVCF is projected onto the achieved path only as a configuration-dependent
+diagnostic; because the ZVCF state has zero velocity, it does not traverse that
+path itself.
+
+| Model Tier | Trajectory Status | Path [m] | Total Work [J] | Drift Work [J] | Control Work [J] | Total $\overline{F}_{\parallel}$ [N] | Drift [N] | Control [N] |
+|---|---|---:|---:|---:|---:|---:|---:|---:|
+| Exact double pendulum | Forward simulation to first valid impact | 2.224 | 130.794 | 132.375 | −1.580 | 58.807 | 59.517 | −0.711 |
+| One-arm, three-link point-mass | Forward simulation over the declared window | 2.734 | 27.802 | 28.781 | −0.979 | 10.170 | 10.528 | −0.358 |
+| Two-arm floating-club closed loop | Prescribed local kinematic sweep | 0.0425 | −0.0038 | −0.0524 | +0.0485 | −0.0898 | −1.233 | +1.143 |
+
+: Primary Hand-Path Force-Work Attribution in the Declared Reference Cases {#tbl-hand-path-attribution}
+
+The first two cases demonstrate the central interpretive point. Drift supplies
+101.2% and 103.5% of signed hand-path force-work, respectively, while the
+same-state control residual is slightly negative. Those percentages exceed
+100% because control opposes drift; they are not mixture probabilities. On a
+magnitude basis, drift accounts for 98.8% of the double-pendulum split and
+96.7% of the one-arm split. A large measured force along the hand path can
+therefore coexist with little or negative same-state control contribution in a
+declared mechanical model. This does not make the motion effortless: the
+counterfactual does not observe muscle force, co-contraction, passive tissue
+loading, stabilization, or metabolic cost.
+
+![Total, Drift, Control, and ZVCF Hand-Path Components Across the Three Model Tiers.](figures/proximal_distal_energy_transfer/fig_hand_path_components.svg){#fig-hand-path-components alt="Time histories compare total hand-path force with same-state drift, control, and separately defined zero-velocity diagnostic components for the double-pendulum, one-arm, and two-arm cases."}
+
+### Geometry and Force-Vector Mechanisms
+
+The vector plate in @fig-hand-path-vectors makes the geometry explicit. Each
+arrow uses one declared force direction and one reference point; the tangent is
+the achieved hand-path direction. A component can be large while projecting
+weakly onto the tangent, and a control vector can point opposite the total or
+drift vector while still satisfying the same-state closure identity. The
+two-hand row retains both contact forces because equal-and-opposite differential
+loading can create a couple without changing the common resultant.
+
+![Same-State Force Vectors and Achieved Hand-Path Tangents.](figures/proximal_distal_energy_transfer/fig_hand_path_force_vectors.svg){#fig-hand-path-vectors alt="Model poses show achieved hand-path tangents and separately scaled total, drift, control, and ZVCF force vectors, including both hand contacts in the closed-loop model."}
+
+### Impulse, Work, Power, Joint, and Time-Window Structure
+
+Impulse and work answer different questions. Vector impulse retains the
+Cartesian direction of accumulated force, tangent impulse accumulates the
+signed path-directed force in time, and force-work weights the tangent
+projection by hand speed. The publication therefore exports signed, positive,
+negative, and absolute tangent impulse alongside cumulative work instead of
+substituting one quantity for another.
+
+![Signed Tangent Impulse and Cumulative Force-Work Attribution.](figures/proximal_distal_energy_transfer/fig_hand_path_impulse_work.svg){#fig-hand-path-impulse-work alt="Panels show cumulative signed tangent impulse and cumulative force work for drift and control across the three model tiers."}
+
+The joint/time atlas evaluates every modeled interface: shoulder and wrist in
+the double pendulum; shoulder, elbow, and wrist in the one-arm model; and both
+shoulders, elbows, and hand contacts in the two-arm closed loop. Its four
+windows are equal-duration normalized-time quartiles. They are bookkeeping
+windows, not inferred transition, delivery, or impact phases.
+
+![Every-Joint Drift Shares Across Normalized-Time Quartiles.](figures/proximal_distal_energy_transfer/fig_hand_path_phase_joint_shares.svg){#fig-hand-path-joint-shares alt="A heat-map atlas reports drift magnitude shares for every joint and normalized-time quartile in all three models."}
+
+Instantaneous power shares use
+$|P_d|/(|P_d|+|P_c|)$, mask near-zero denominators, and mark strong
+cancellation. This avoids presenting an unstable signed ratio as a physical
+fraction when drift and control nearly cancel.
+
+![Instantaneous Drift Power Shares With Cancellation Masking.](figures/proximal_distal_energy_transfer/fig_hand_path_power_shares.svg){#fig-hand-path-power-shares alt="Time histories report cancellation-safe drift shares of total wrench power and identify intervals where opposing drift and control make signed fractions unstable."}
+
+### Two-Hand Redundancy and the Late Negative-Couple Hypothesis
+
+The two-hand reference case separates the common contact-force mode from the
+differential mode. The common mode governs net translation; the differential
+mode, acting through grip separation, contributes a couple. Consequently,
+multiple hand-force and wrist-torque allocations can reproduce the same net
+club wrench. A net inverse-dynamics solution cannot determine the unique
+biological allocation between the hands.
+
+![Two-Hand Common and Differential Contact-Force Modes.](figures/proximal_distal_energy_transfer/fig_two_hand_common_differential.svg){#fig-two-hand-common-differential alt="Plots separate the right-plus-left common force from half the right-minus-left differential force and show their different contributions to the club wrench."}
+
+In the declared local sweep, drift and control almost cancel at the mid-grip:
+their force-work magnitudes split 51.9% versus 48.1%, with a cancellation index
+of 0.962. The late sign reversal appears in this local prescribed case, but its
+tiny 0.0425 m path and near-zero net work preclude a swing-performance claim.
+The result instead demonstrates why a two-hand model must retain contact-level
+forces and couples: a negative net torque can arise from a differential push–pull
+couple, wrist-joint torques, or combinations of both.
+
+The bounded preview calculation tests one narrower signal-control hypothesis
+using the archived WSCG planar traces. At the pointwise ZTCF minimum
+($t=0.2148$ s), drift contributes −19.63 N·m of a −22.78 N·m target couple;
+the required control residual is only −3.15 N·m. For a first-order actuator
+with a 30 ms time constant, a 24 ms preview reduces late-window residual-couple
+tracking RMSE from 1.252 to 0.531 N·m (57.6%). Across 10–50 ms time constants,
+the best preview is 9–35 ms and the modeled RMSE reduction is 46.1–79.4%.
+This is a delayed-actuator signal result, not evidence that golfers use muscle
+preactivation and not a clubhead-speed optimization.
+
+![Bounded Residual-Couple Preview Hypothesis.](figures/proximal_distal_energy_transfer/fig_two_hand_preactivation_hypothesis.svg){#fig-two-hand-preview alt="A bounded first-order actuator analysis compares reactive and previewed tracking of the small control residual after subtracting the large pointwise drift couple."}
+
+### Closure and Sensitivity
+
+All reference cases close total = drift + control for force, couple, power, and
+work below $2.3\times10^{-13}$ in the exported records. The sensitivity panel
+shows how the declared estimands respond to local parameter perturbations; it
+does not represent population uncertainty or confidence intervals.
+
+![Numerical Closure and Local Sensitivity Evidence.](figures/proximal_distal_energy_transfer/fig_hand_path_sensitivity_closure.svg){#fig-hand-path-sensitivity-closure alt="Panels summarize force, couple, power, and work closure residuals and local parameter sensitivity for the three model tiers."}
+
 ## E1c — Impact-Criterion Robustness
 
 Evaluating all 92 trajectories under 5 alternative criteria (fixed hand position, ball-position sweep $v_x$, peak speed anywhere in first pass, matched arm angle $\theta_1=0.5$ rad, and validity-rule max arm angle sweep $1.5–2.5$ rad) preserved the retain-early/release-late ordering. This reduces sensitivity to the selected impact definition; it does not validate unmodeled impact physics.
@@ -300,10 +418,12 @@ These findings demonstrate a mechanism in a simplified model. They do not establ
 The currently published timing-study code, tests, figures, parameter records,
 and machine-readable outputs remain available in the [open-source research
 directory](https://github.com/D-sorganization/UpstreamDrift/tree/main/docs/research/proximal_distal_energy_transfer).
-The new hand-path evidence remains withheld under the fail-closed snapshot at
-the top of this page. Its later publication requires an exact merged source
-commit, artifact hashes, regeneration commands, and the offline check
-`python3 scripts/check_proximal_distal_evidence.py --require-pinned`.
+The hand-path analysis is pinned to
+[UpstreamDrift commit `69eb7e9d`](https://github.com/D-sorganization/UpstreamDrift/tree/69eb7e9db32ccd17e45824619315b1d04b400c27/docs/research/proximal_distal_energy_transfer),
+while this repository carries a compact, hash-verified evidence snapshot and
+the publication SVGs rather than a second simulation runtime. Run
+`python scripts/check_proximal_distal_evidence.py --require-pinned` to verify
+the local evidence boundary offline.
 
 ## Reproducibility
 
@@ -314,6 +434,7 @@ python3 -m scripts.research.proximal_distal_energy.make_figures
 python3 -m scripts.research.proximal_distal_energy.e1b_bounded_torque
 python3 -m scripts.research.proximal_distal_energy.e1c_impact_sensitivity
 python3 -m scripts.research.proximal_distal_energy.e1d_parameter_sensitivity
+python3 -m scripts.research.proximal_distal_energy.run_hand_path_attribution_study
 ```
 
 ## Model Parameters

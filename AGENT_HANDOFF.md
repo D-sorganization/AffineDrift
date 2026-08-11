@@ -12,13 +12,17 @@ articles that support a fleet-wide "Shared Web Tools" program.
 
 Active epics/PRs:
 
-- **#8458 / UpstreamDrift #8470 — hand-path force attribution** (consumer
-  scaffold in progress). AffineDrift now defines an offline, fail-closed
-  evidence manifest and validator, corrects pointwise-drift/ZTCF/ZVCF
-  terminology, and adds neutral force-path and biological-effort boundaries.
-  The placeholder deliberately contains no source SHA, artifact, or numerical
-  result. It must not be marked publication-ready until #8470 merges and the
-  exact merged SHA and artifact hashes are pinned.
+- **#8458 / UpstreamDrift #8470 — hand-path force attribution** (publication
+  integration complete on this branch). UpstreamDrift PR #8473 merged to remote
+  `main` at `69eb7e9db32ccd17e45824619315b1d04b400c27`. AffineDrift pins that
+  exact commit, compact three-tier results, and eight SHA-256-verified SVGs;
+  reports force, impulse, power, work, every-joint/time-window, two-hand-mode,
+  and bounded-preview findings; and preserves the model-only/biological-effort
+  boundary. The affected Quarto article renders successfully; all image paths
+  resolve, the evidence figures were visually inspected, 3,015 full-suite tests
+  and 44 content-lint tests pass, and measured coverage is 93.35%. Remaining
+  handoff: merge the protected AffineDrift PR and verify its commit on remote
+  `main`.
 - **Document title capitalization** — this branch extends the established
   Quarto gate to LaTeX structural titles, normalizes the tracked canonical
   LaTeX corpus, preserves technical literals such as `A/S`, `et al.`, and
@@ -68,8 +72,8 @@ Active epics/PRs:
 ## In-Flight Branches
 
 - `research/hand-path-force-attribution-8470` (this branch) — consumer-side
-  schema, validator, tests, and article/theory integration for epic #8458.
-  Pending the exact merged UpstreamDrift #8470 evidence commit and artifacts.
+  schema, validator, tests, pinned evidence, and article/theory integration for
+  epic #8458. Exact upstream pin: `69eb7e9db32ccd17e45824619315b1d04b400c27`.
 - `fix/affine-runner-guard-expression-8426` (this branch) — based on merged
   PR #3791 at `7b1a06c7`; fixes AffineDrift issue #3792.
 - `docs/agent-handoff-1390` (legacy handoff-policy branch) — stacks on `origin/main`

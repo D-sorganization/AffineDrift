@@ -1,30 +1,183 @@
 {
   "schema_version": "1.0.0",
-  "publication_state": "awaiting_upstream_merge",
+  "publication_state": "pinned",
   "source": {
     "repository": "D-sorganization/UpstreamDrift",
-    "commit": null,
-    "issue_url": "https://github.com/D-sorganization/UpstreamDrift/issues/8470"
+    "commit": "69eb7e9db32ccd17e45824619315b1d04b400c27",
+    "issue_url": "https://github.com/D-sorganization/UpstreamDrift/issues/8470",
+    "pull_request_url": "https://github.com/D-sorganization/UpstreamDrift/pull/8473",
+    "evidence_url": "https://github.com/D-sorganization/UpstreamDrift/blob/69eb7e9db32ccd17e45824619315b1d04b400c27/docs/research/proximal_distal_energy_transfer/data/hand_path_attribution/hand_path_attribution_study.json"
   },
-  "regeneration_commands": [],
-  "artifacts": [],
-  "evidence": {
-    "status": "withheld_pending_pin",
-    "model_tiers": [],
-    "quantities": []
-  },
-  "release_blockers": [
-    "The canonical UpstreamDrift analysis has not merged to remote main.",
-    "No exact source commit or hash-verified publication artifacts are available yet.",
-    "Evidence-dependent figures, numerical findings, and attribution claims remain withheld."
+  "regeneration_commands": [
+    "python -m scripts.research.proximal_distal_energy.run_hand_path_attribution_study",
+    "python -m pytest tests/research/test_double_pendulum_attribution.py tests/research/test_one_arm_attribution.py tests/research/test_two_arm_closed_loop.py tests/research/test_two_hand_preactivation_hypothesis.py tests/research/test_hand_path_attribution_study.py -q"
   ],
+  "artifacts": [
+    {
+      "path": "articles/figures/proximal_distal_energy_transfer/fig_hand_path_components.svg",
+      "sha256": "b493255ee0b40edbeaea3c0b56f358bc7866a99a6d5b489b5750adb6140da810",
+      "role": "total, drift, control, and ZVCF hand-path components"
+    },
+    {
+      "path": "articles/figures/proximal_distal_energy_transfer/fig_hand_path_force_vectors.svg",
+      "sha256": "068cbb252b2c68603a4be56d6d8de9da180ecfc745a0a2d0adcc08405a75276e",
+      "role": "same-state force-vector geometry"
+    },
+    {
+      "path": "articles/figures/proximal_distal_energy_transfer/fig_hand_path_impulse_work.svg",
+      "sha256": "714a15b2cbf2dc6a7fd2bfc8049cb75d5dea28fec0da38939e9bff1b2ae28acd",
+      "role": "signed impulse and cumulative force-work attribution"
+    },
+    {
+      "path": "articles/figures/proximal_distal_energy_transfer/fig_hand_path_phase_joint_shares.svg",
+      "sha256": "c2e419fe0642eabe03423399c0173d90eb4691c05ab55254c93237521ca32afa",
+      "role": "every-joint normalized-time-quartile attribution"
+    },
+    {
+      "path": "articles/figures/proximal_distal_energy_transfer/fig_hand_path_power_shares.svg",
+      "sha256": "5d6e17ac6caacf75fdb94b310a29b153d7d20d90893e7b475e65bca73ff7a27e",
+      "role": "instantaneous power shares with cancellation masking"
+    },
+    {
+      "path": "articles/figures/proximal_distal_energy_transfer/fig_hand_path_sensitivity_closure.svg",
+      "sha256": "4d91f674b7d5ed003fa7a74168c6ce63201326f813348d79f3ccb387a9e10dc1",
+      "role": "closure and local sensitivity evidence"
+    },
+    {
+      "path": "articles/figures/proximal_distal_energy_transfer/fig_two_hand_common_differential.svg",
+      "sha256": "7928c02b7a5ce53437cacf2ce9529c79f01ca4f432382d359ff7d3add69d0b2c",
+      "role": "two-hand common and differential contact-force modes"
+    },
+    {
+      "path": "articles/figures/proximal_distal_energy_transfer/fig_two_hand_preactivation_hypothesis.svg",
+      "sha256": "b9e1bff6da5fe18932e8dcb243c9738f454e8974b9ec738cef154ba825da81bf",
+      "role": "bounded residual-couple preview hypothesis"
+    }
+  ],
+  "evidence": {
+    "status": "published",
+    "model_tiers": [
+      "exact_planar_double_pendulum",
+      "one_arm_three_link_point_mass",
+      "two_arm_floating_club_closed_loop"
+    ],
+    "quantities": [
+      "force",
+      "force_along_hand_path",
+      "impulse",
+      "power",
+      "work",
+      "joint_attribution"
+    ],
+    "results": {
+      "double_pendulum": {
+        "model_tier": "exact_planar_double_pendulum",
+        "trajectory_kind": "forward_simulation_truncated_at_first_valid_impact",
+        "integration_interpretation": "Integrated along a forward-simulated trajectory.",
+        "primary_estimand": {
+          "reference_point": "wrist",
+          "force_direction": "golfer_on_club",
+          "path_length_m": 2.224145923850691,
+          "force_work_j": {
+            "total": 130.7943115090917,
+            "drift": 132.3747779102122,
+            "control": -1.5804664011204865,
+            "zvcf": -1.5877535321686622
+          },
+          "mean_force_n": {
+            "total": 58.80653337828028,
+            "drift": 59.51712812126559,
+            "control": -0.7105947429853009,
+            "zvcf": -0.7138711157133814
+          }
+        },
+        "closure": {
+          "force_max_abs": 0.0,
+          "couple_max_abs": 1.7763568394002505e-15,
+          "power_max_abs": 2.2737367544323206e-13,
+          "work_max_abs": 5.684341886080802e-14
+        }
+      },
+      "one_arm": {
+        "model_tier": "one_arm_three_link_point_mass",
+        "trajectory_kind": "forward_simulation_on_declared_fixed_time_window",
+        "integration_interpretation": "Integrated along a forward-simulated trajectory.",
+        "primary_estimand": {
+          "reference_point": "wrist",
+          "force_direction": "golfer_on_club",
+          "path_length_m": 2.733619975314636,
+          "force_work_j": {
+            "total": 27.801698744381124,
+            "drift": 28.78064500407536,
+            "control": -0.9789462596942398,
+            "zvcf": -1.8268330330941054
+          },
+          "mean_force_n": {
+            "total": 10.170286651194514,
+            "drift": 10.528400166801804,
+            "control": -0.35811351560729077,
+            "zvcf": -0.6682834664623927
+          }
+        },
+        "closure": {
+          "force_max_abs": 0.0,
+          "couple_max_abs": 1.7763568394002505e-15,
+          "power_max_abs": 1.1368683772161603e-13,
+          "work_max_abs": 5.684341886080802e-14
+        }
+      },
+      "two_arm": {
+        "model_tier": "two_arm_floating_club_closed_loop",
+        "trajectory_kind": "prescribed_constraint_consistent_kinematics",
+        "integration_interpretation": "Kinematic-sweep diagnostic on a prescribed constraint-consistent path; not realized forward-simulation work.",
+        "common_differential_convention": "common=right+left; differential=(right-left)/2",
+        "primary_estimand": {
+          "reference_point": "mid_grip_equal_to_club_center_for_symmetric_grip_offsets",
+          "force_direction": "golfer_on_club",
+          "path_length_m": 0.042464712443592983,
+          "force_work_j": {
+            "total": -0.0038145186742128308,
+            "drift": -0.05236006526234929,
+            "control": 0.04854554658813643,
+            "zvcf": 0.0018807828173526796
+          },
+          "mean_force_n": {
+            "total": -0.08982796431931002,
+            "drift": -1.2330253108837266,
+            "control": 1.1431973465644159,
+            "zvcf": 0.04429048753953
+          }
+        },
+        "closure": {
+          "force_max_abs": 0.0,
+          "couple_max_abs": 0.0,
+          "power_max_abs": 3.552713678800501e-15,
+          "work_max_abs": 4.440892098500626e-16
+        }
+      }
+    },
+    "bounded_preview_hypothesis": {
+      "study_type": "model_only_delayed_actuator_preview_hypothesis",
+      "time_constant_s": 0.03,
+      "best_preview_s": 0.024,
+      "reactive_rmse_nm": 1.252334003233535,
+      "preview_rmse_nm": 0.5311727683147726,
+      "improvement_percent": 57.58537523190453,
+      "pointwise_ztcf_minimum_nm": -19.6304815091102,
+      "base_at_ztcf_minimum_nm": -22.7842186913133,
+      "control_residual_at_ztcf_minimum_nm": -3.15373718220311,
+      "human_preactivation": "not_established",
+      "clubhead_speed_outcome": "not_evaluated",
+      "muscle_activation": "not_modeled"
+    }
+  },
+  "release_blockers": [],
   "pin_procedure": [
-    "Merge and verify the canonical UpstreamDrift analysis through protected review.",
-    "Record the 40-character merge commit from UpstreamDrift remote main.",
-    "Copy only the compact JSON evidence export and selected publication SVG files.",
-    "Record each vendored artifact path, role, and SHA-256 digest.",
-    "Populate model tiers and the required force, impulse, power, work, and joint quantities.",
-    "Run python3 scripts/check_proximal_distal_evidence.py --require-pinned.",
-    "Render and visually inspect the affected Quarto pages before publication."
+    "The canonical UpstreamDrift analysis merged through protected PR 8473.",
+    "The exact 40-character merge commit is recorded and verified on UpstreamDrift remote main.",
+    "Only compact result records and selected publication SVGs are vendored here.",
+    "Every vendored artifact path and SHA-256 digest is checked offline.",
+    "The validator requires all three model tiers and finite, closing force-work estimands.",
+    "Run python scripts/check_proximal_distal_evidence.py --require-pinned before publication."
   ]
 }

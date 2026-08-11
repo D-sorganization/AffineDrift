@@ -41,12 +41,28 @@ def test_glossary_requires_qualified_ztcf_and_rejects_muscle_inference() -> None
     assert "This is not a no-muscle simulation" in text
 
 
-def test_article_exposes_fail_closed_evidence_status() -> None:
+def test_article_exposes_exact_pinned_evidence_status() -> None:
     text = ARTICLE.read_text(encoding="utf-8")
 
-    assert "Evidence Pin Pending" in text
+    assert "Pinned Open Evidence" in text
     assert "hand_path_attribution_snapshot.json" in text
-    assert "D-sorganization/UpstreamDrift#8470" in text
+    assert "69eb7e9db32ccd17e45824619315b1d04b400c27" in text
+    assert "--require-pinned" in text
+
+
+def test_article_reports_three_model_results_and_bounded_preview() -> None:
+    text = ARTICLE.read_text(encoding="utf-8")
+
+    for term in (
+        "Exact double pendulum",
+        "One-arm, three-link point-mass",
+        "Two-arm floating-club closed loop",
+        "Every-Joint Drift Shares Across Normalized-Time Quartiles",
+        "Two-Hand Common and Differential Contact-Force Modes",
+        "57.6%",
+    ):
+        assert term in text
+    assert "not evidence that golfers use muscle" in text
 
 
 def test_article_cites_primary_hand_path_study() -> None:
