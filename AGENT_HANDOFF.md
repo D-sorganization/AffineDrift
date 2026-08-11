@@ -2,7 +2,7 @@
 
 > Update this file with every PR and every push to main.
 
-Last updated: 2026-08-10
+Last updated: 2026-08-11
 
 ## Where This Repo Is Heading
 
@@ -21,8 +21,11 @@ Active epics/PRs:
   boundary. The affected Quarto article renders successfully; all image paths
   resolve, the evidence figures were visually inspected, 3,015 full-suite tests
   and 44 content-lint tests pass, and measured coverage is 93.35%. Remaining
-  handoff: merge the protected AffineDrift PR and verify its commit on remote
-  `main`.
+  PR #3799 merged to remote `main` at
+  `f9a5dee8a21838c87202bd3be405c4b977e9ed8c`. Post-merge Linux CI exposed one
+  CRLF-derived preactivation-SVG manifest digest; the current hotfix pins the
+  canonical LF Git-blob digest without changing figure content or scientific
+  results.
 - **Document title capitalization** — this branch extends the established
   Quarto gate to LaTeX structural titles, normalizes the tracked canonical
   LaTeX corpus, preserves technical literals such as `A/S`, `et al.`, and
