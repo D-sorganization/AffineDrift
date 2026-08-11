@@ -17,7 +17,7 @@ You're a detective. A golfer swings the club and hits a ball. You have perfect v
 
 But here's the detective's dilemma: imagine you see a car accelerating downhill at constant speed. Did the driver press the gas (active force) or is the hill doing it (passive drift)? Without knowing the slope of the hill, you can't tell. You see the acceleration, but you can't separate the driver's input from gravity's free push.
 
-The same problem haunts inverse dynamics in biomechanics. You see the club accelerating. But that acceleration comes from two sources: drift (passive physics—momentum, gravity, inertia), and input (the golfer actively pulling). Classical inverse dynamics gives you the total, but not the split. And the split matters, because what golfers "feel" and what they consciously control is the input component, not the total.
+The same problem haunts inverse dynamics in biomechanics. You see the club accelerating. But that acceleration comes from two modeled sources: drift (state-dependent mechanics) and applied input. Classical inverse dynamics gives you a model-consistent net load, not muscle activation, metabolic cost, or conscious intent. A drift/control split can clarify mechanical attribution while leaving those physiological quantities unidentified.
 
 This section formalizes the limitations of classical inverse dynamics and explains how the control-affine framework together with the Zero Torque Counterfactual (ZTCF) and Zero Velocity Counterfactual (ZVCF) solve the detective's dilemma by separating passive from active contributions.
 
@@ -63,7 +63,7 @@ $$
 
 However, $\tau_{\mathrm{drift}}$ is not observable directly from kinematic measurements. Drift dynamics include inertial effects, Coriolis forces, gravitational loading, shaft deformation forces, joint passive forces, and geometric coupling terms. Many of these require full dynamic simulation or model-based estimation and cannot be separated from $\tau_{\mathrm{input}}$ using classical inverse dynamics alone.
 
-Thus, classical inverse dynamics cannot provide an unambiguous estimate of muscular effort in a drift-dominated system such as the golf swing.
+Thus, classical inverse dynamics cannot provide an unambiguous estimate of muscular effort in a drift-dominated system such as the golf swing. Even a model-perfect net input torque remains compatible with different muscle recruitment, co-contraction, and passive-impedance states.
 
 ## Drift--Input Decomposition and Affine Structure
 
@@ -81,7 +81,7 @@ $$
 
 Classical inverse dynamics attempts to recover $F_{\mathrm{total}}$ but has no mechanism for computing $F_{\mathrm{drift}}$. This is where counterfactual simulation becomes essential.
 
-## ZTCF for Drift Estimation
+## Pointwise Drift and ZTCF Trajectories
 
 The Zero Torque Counterfactual (ZTCF) simulates the dynamics under $u(t) \equiv 0$:
 
@@ -89,15 +89,15 @@ $$
 \dot{x} = f(x).
 $$
 
-This simulation produces the drift-only forces:
+At the branch state, the zero-input solve provides a pointwise drift-force evaluation:
 
 $$
-F_{\mathrm{drift}}(t) = \text{forces generated in the ZTCF simulation},
+F_{\mathrm{drift}}(t_0) = \text{forces from the zero-input solve at }x(t_0),
 $$
 
-including all inertial, gravitational, Coriolis, centrifugal, and elastic shaft contributions. Drift forces therefore become computable based on the system model and the measured kinematics.
+including all inertial, gravitational, Coriolis, centrifugal, and elastic shaft contributions declared by the model. Integrating from that state produces a branched ZTCF trajectory. Once the trajectories diverge, their force difference is a counterfactual outcome difference rather than a same-state algebraic attribution.
 
-## ZVCF for Input Estimation
+## ZVCF for Configuration-Dependent Drift
 
 The Zero Velocity Counterfactual (ZVCF) sets all velocities to zero while keeping the configuration fixed, then evaluates the drift at this zero-velocity state. This yields configuration-dependent forces (gravity and elastic restoring forces) without velocity-dependent terms (Coriolis, centrifugal). The forces obtained from the ZVCF correspond to
 
@@ -116,6 +116,8 @@ F_{\mathrm{measured}} = F_{\mathrm{drift}} + F_{\mathrm{input}}.
 $$
 
 Without drift--input decomposition, classical inverse dynamics cannot distinguish passive contributions (such as inertial loading or shaft bending) from active contributions transmitted through joint torques. Counterfactual simulation enables this separation by computing drift and input terms independently.
+
+The [proximal-to-distal hand-path study](proximal-distal-energy-transfer.html#force-along-the-hand-path) applies this distinction to the equivalent grip force reported in golf inverse dynamics. Its new numerical attribution remains fail-closed until an exact source commit and artifact hashes are pinned.
 
 ## Causal Interpretation of Inverse Dynamics in Affine Systems
 
