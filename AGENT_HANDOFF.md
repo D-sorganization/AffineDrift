@@ -12,15 +12,17 @@ articles that support a fleet-wide "Shared Web Tools" program.
 
 Active epics/PRs:
 
-- **UpstreamDrift #8493 ground-reaction drift attribution** — branch
-  `feat/grf-drift-paper` replaces the textbook GRF chapter's sign error,
+- **UpstreamDrift #8493 ground-reaction drift attribution** — UpstreamDrift PR
+  #8494 merged to remote `main` at
+  `06a0ca6317f6351e5b6da3789d2cd8e1e3dc53b5`, with the raced SPEC freshness
+  follow-up #8495 merged at `33ec92f04ee80b5ac2200488e10a4531eecf1892`.
+  This branch pins the scientific merge and replaces the textbook GRF chapter's sign error,
   universal zero-work claim, unique muscle-torque inference, and single optimal
   waveform framing with a constrained-wrench treatment. The public
   proximal-to-distal article now reports the fixed-support benchmark,
   pointwise ZTCF/ZVCF overlap, cancellation-safe impulse interpretation, and
   participant-held-out falsification protocol. Primary references were added
   to both bibliographies and scientific boundary tests fail on regression.
-  Final source-commit pinning must use the merged UpstreamDrift #8493 commit.
 
 - **#8458 / UpstreamDrift #8470 — hand-path force attribution** (publication
   integration complete on this branch). UpstreamDrift PR #8473 merged to remote
