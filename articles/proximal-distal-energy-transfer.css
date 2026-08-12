@@ -1,7 +1,9 @@
 /* Article-local responsive containment for wide scientific equations and figures. */
 
 #sec-advanced-bridge,
+#sec-transmission-robustness,
 #sec-advanced-bridge > section,
+#sec-transmission-robustness > section,
 #sec-advanced-bridge .quarto-figure,
 #sec-advanced-bridge .cell,
 #sec-advanced-bridge .cell-output-display {
@@ -9,8 +11,22 @@
   max-width: 100%;
 }
 
+#sec-transmission-robustness .quarto-figure,
+#sec-transmission-robustness .cell,
+#sec-transmission-robustness .cell-output-display {
+  min-width: 0;
+  max-width: 100%;
+}
+
 #sec-advanced-bridge .quarto-figure img,
 #sec-advanced-bridge figure img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+}
+
+#sec-transmission-robustness .quarto-figure img,
+#sec-transmission-robustness figure img {
   width: 100%;
   max-width: 100%;
   height: auto;
@@ -24,9 +40,22 @@
   overflow-y: hidden;
 }
 
+#sec-transmission-robustness .math.display,
+#sec-transmission-robustness mjx-container[display="true"] {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
 @media (max-width: 480px) {
   #sec-advanced-bridge .math.display,
   #sec-advanced-bridge mjx-container[display="true"] {
+    font-size: 0.78em;
+  }
+
+  #sec-transmission-robustness .math.display,
+  #sec-transmission-robustness mjx-container[display="true"] {
     font-size: 0.78em;
   }
 }
