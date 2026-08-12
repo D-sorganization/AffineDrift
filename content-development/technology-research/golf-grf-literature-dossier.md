@@ -351,3 +351,38 @@ BodiTrak/BodiTrak2 (Vista Medical) specs and TPI relationship; TPI force-plate u
 **Claims to avoid:** the "~200% bodyweight vGRF" figure (no primary source; conflicts with verified peaks) and framing Leary et al. (2012) as establishing an RFD→CHS link (r ≈ 0.46, p = 0.06–0.07, n = 12).
 
 **Highest-value papers to acquire in full:** Han et al. 2019; Watson et al. 2026; Barrentine et al. 1994; Bourgain et al. 2017.
+
+## Drift Attribution and Falsification Framework
+
+The proximal-to-distal project now treats the measured ground-reaction wrench
+as a constrained-dynamics observable. For
+
+`M qdd + h0 + hv = B u + Qext + J^T lambda` and
+`J qdd + gamma = 0`, the uniquely determined reaction is separated into
+configuration, velocity, control, and other-external-load terms. The strict
+solver fails when the contact Jacobian lacks full row rank rather than silently
+using a pseudoinverse to invent a bilateral allocation.
+
+The pointwise ground-reaction ZTCF retains configuration, velocity, and
+declared non-control loads while setting controllable generalized torques to
+zero. The pointwise ground-reaction ZVCF retains configuration and applied
+loads while zeroing velocity. They overlap in configuration and external-load
+reaction and are not additive. Measured-minus-ZTCF is therefore not a unique
+muscle-torque estimate; it also contains model, measurement, filtering,
+contact, inertial-parameter, and omitted-load error.
+
+The first executable benchmark is deliberately limited to the planar fixed
+support of a double pendulum. It closes its total and ZVCF identities below
+`2e-13 N`. ZTCF yields componentwise waveform R-squared values of 0.871 and
+0.814 but RMSE values of 64.6 N and 89.8 N. Its vertical impulse exceeds the
+total because the control contribution opposes it. These are model-internal
+falsification results, not a human GRF drift fraction.
+
+Human validation requires synchronized bilateral six-axis force plates,
+whole-body and club kinematics, uncertainty-bounded inertial parameters,
+declared frames/filtering/events, dynamic-consistency diagnostics, and
+participant-held-out evaluation. Primary endpoints are componentwise bias,
+RMSE, normalized RMSE, waveform fit, vector impulse error, peak timing, loaded-
+sample COP error, free-moment error, residual pelvis wrench, and parameter
+sensitivity. A COM-acceleration baseline is required so the higher-order model
+must improve held-out prediction to justify its added claims.

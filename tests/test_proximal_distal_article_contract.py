@@ -86,3 +86,17 @@ def test_article_exposes_matched_allocation_and_preload_falsifiers() -> None:
     ):
         assert term in text
     assert "does not establish a universal" in text
+
+
+def test_article_exposes_ground_reaction_drift_boundaries() -> None:
+    text = ARTICLE.read_text(encoding="utf-8")
+
+    for term in (
+        "Ground-Reaction Drift Attribution",
+        "configuration + velocity + control + other external load",
+        "cannot identify bilateral foot forces",
+        "not a human force-plate validation",
+        "held-out participant",
+        "ZTCF and ZVCF overlap",
+    ):
+        assert term in text

@@ -486,6 +486,56 @@ The ordering early drive < passive < best late drive < best restrain-then-drive 
 
 These are local model perturbations, not confidence intervals or a population distribution. The stable ordering supports the modeled mechanism; the shifting optimum argues against a universal onset-time prescription.
 
+# Ground-Reaction Drift Attribution {#sec-grf-drift}
+
+Ground-reaction force is an external contact wrench and a constrained-dynamics
+observable, not a directly commanded input. At one measured state, a
+frame-explicit constrained model can write its reaction as
+
+$$
+\lambda=\lambda_0+\lambda_v+\lambda_u+\lambda_e,
+$$
+
+where the terms are the configuration-dependent, velocity-dependent,
+control-induced, and other-external-load contributions. This is the additive
+identity: **configuration + velocity + control + other external load**. A
+pointwise ground-reaction ZTCF retains configuration, velocity, and declared
+non-control external loads while setting controllable generalized torques to
+zero. A pointwise ground-reaction ZVCF retains configuration and applied loads
+while setting velocity to zero. ZTCF and ZVCF overlap in the
+configuration/external terms and must not be added as complementary causes.
+
+The first executable benchmark uses the fixed shoulder of the same planar
+double pendulum as an ideal support. Across 161 achieved states, total, ZTCF,
+ZVCF, and zero-velocity/zero-control support reactions close their independent
+identities below $2\times10^{-13}$ N. Using pointwise ZTCF alone to predict the
+modeled total support-reaction waveform gives componentwise $R^2$ values of
+0.871 and 0.814, but its RMSE is 64.6 N and 89.8 N. The waveform association
+therefore does not imply small amplitude error.
+
+The vector impulses make the interpretation sharper. Total support impulse is
+$(22.92,35.20)$ N s, ZTCF impulse is $(17.91,60.12)$ N s, and the control
+contribution is $(5.01,-24.93)$ N s in the declared planar frame. The vertical
+ZTCF impulse exceeds the total because control opposes it. A “percent passive”
+ratio would exceed 100% and would not be a fraction of biological effort.
+
+This is not a human force-plate validation. The fixed support has no feet,
+center of pressure, free moment, pelvis, or three-dimensional contact geometry.
+A combined resultant also cannot identify bilateral foot forces. A human test
+requires synchronized bilateral six-axis force plates, whole-body and club
+kinematics, inertial uncertainty, declared filtering and frames, and evaluation
+on each held-out participant. Componentwise RMSE and bias, impulse error, peak
+timing, loaded-sample COP error, free-moment error, residual pelvis wrench, and
+parameter sensitivity should all be reported. A center-of-mass acceleration
+baseline should be included so added model complexity must earn its claims.
+
+The interpretation is consistent with evidence that golfers exhibit more than
+one viable COP strategy [@ballbest2007] and that selected ground-force and
+moment features are associated with clubhead speed without uniquely determining
+it [@han2019; @watson2026grf]. It also corrects a common inference: measured GRF
+minus modeled ZTCF contains control-induced reaction, model error, measurement
+error, and omitted loads; it does not uniquely recover muscle torque.
+
 # Discussion {#sec-discussion}
 
 The numerical results support delayed distal release as a robust mechanism within the tested planar two-link model. Early wrist drive increases the system's moment of inertia about the shoulder hub before proximal speed has developed, reducing the modeled shoulder work converted into arm speed.
@@ -502,6 +552,7 @@ Qualifications and scope limits:
 3. The best tested retention program performs −1.9 J of early wrist work while preserving more arm energy.
 4. Late club-energy gain is dominated by joint-force transfer in the representative model trajectory.
 5. The qualitative ordering survives actuator bounds, alternative impact criteria, and the declared one-at-a-time parameter cases, while optimal timing shifts.
+6. In the fixed-support benchmark, pointwise drift explains much of the modeled reaction waveform but not its amplitude; opposing control makes a component impulse exceed the total, so drift attribution is not a biological-effort percentage.
 
 These findings demonstrate a mechanism in a simplified model. They do not establish a universal golfer-level effect or coaching prescription.
 
@@ -517,6 +568,8 @@ falsification plan are tracked in
 [UpstreamDrift epic #8497](https://github.com/D-sorganization/UpstreamDrift/issues/8497).
 The hand-path analysis is pinned to
 [UpstreamDrift commit `69eb7e9d`](https://github.com/D-sorganization/UpstreamDrift/tree/69eb7e9db32ccd17e45824619315b1d04b400c27/docs/research/proximal_distal_energy_transfer),
+and the ground-reaction extension is pinned to
+[UpstreamDrift commit `06a0ca63`](https://github.com/D-sorganization/UpstreamDrift/tree/06a0ca6317f6351e5b6da3789d2cd8e1e3dc53b5/docs/research/proximal_distal_energy_transfer),
 while this repository carries a compact, hash-verified evidence snapshot and
 the publication SVGs rather than a second simulation runtime. Run
 `python scripts/check_proximal_distal_evidence.py --require-pinned` to verify
@@ -533,6 +586,7 @@ python3 -m scripts.research.proximal_distal_energy.e1c_impact_sensitivity
 python3 -m scripts.research.proximal_distal_energy.e1d_parameter_sensitivity
 python3 -m scripts.research.proximal_distal_energy.run_hand_path_attribution_study
 python3 -m scripts.research.proximal_distal_energy.run_torque_allocation_preload_study
+python3 -m scripts.research.proximal_distal_energy.run_grf_drift_study
 ```
 
 ## Model Parameters

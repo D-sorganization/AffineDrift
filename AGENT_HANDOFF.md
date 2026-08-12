@@ -12,6 +12,14 @@ articles that support a fleet-wide "Shared Web Tools" program.
 
 Active epics/PRs:
 
+- **UpstreamDrift #8493 ground-reaction drift attribution** — UpstreamDrift PR
+  #8494 merged to remote `main` at
+  `06a0ca6317f6351e5b6da3789d2cd8e1e3dc53b5`, with the SPEC follow-up #8495
+  merged at `33ec92f04ee80b5ac2200488e10a4531eecf1892`. AffineDrift PR #3802 pins the
+  scientific merge and replaces universal or uniquely biological
+  interpretations with a constrained-wrench treatment, cancellation-safe
+  impulses, and participant-held-out falsifiers.
+
 - **UpstreamDrift #8497 — arm--wrist torque allocation and preload** — the
   reviewer article now distinguishes direct wrist moment, two-hand force
   couple, proximal generalized control, activation, and scapular motion. It
