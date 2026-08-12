@@ -176,3 +176,39 @@ def test_advanced_bridge_has_article_local_mobile_containment() -> None:
     assert "#sec-advanced-bridge" in css
     assert "overflow-x: auto" in css
     assert "max-width: 100%" in css
+
+
+def test_article_exposes_transmission_robustness_without_human_overclaim() -> None:
+    text = ARTICLE.read_text(encoding="utf-8")
+    for term in (
+        "Transmission Pathways, Robust Speed, and Task Stability",
+        "fig_transmission_pathway_framework.svg",
+        "fig_robust_speed_variability_pareto.svg",
+        "fig_clock_vs_state_perturbation_response.svg",
+        "fig_task_null_variability_map.svg",
+        "Every\nregistered program remains Pareto-nondominated",
+        "not evidence of a neural synergy",
+        "participant-held-out",
+        "UpstreamDrift/issues/8507",
+    ):
+        assert term in text
+    assert "not evidence of human self-stabilization" in text
+
+
+def test_transmission_robustness_figures_are_local_and_nonempty() -> None:
+    figure_dir = Path("articles/figures/proximal_distal_energy_transfer")
+    for stem in (
+        "fig_transmission_pathway_framework",
+        "fig_robust_speed_variability_pareto",
+        "fig_clock_vs_state_perturbation_response",
+        "fig_task_null_variability_map",
+    ):
+        path = figure_dir / f"{stem}.svg"
+        assert path.is_file()
+        assert path.stat().st_size > 1000
+
+
+def test_transmission_section_has_mobile_containment() -> None:
+    css = Path("articles/proximal-distal-energy-transfer.css").read_text(encoding="utf-8")
+    assert "#sec-transmission-robustness" in css
+    assert "overflow-x: auto" in css

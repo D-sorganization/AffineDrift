@@ -12,6 +12,14 @@ articles that support a fleet-wide "Shared Web Tools" program.
 
 Active epics/PRs:
 
+- **UpstreamDrift #8507 adversarial transmission and task robustness** — branch
+  `research/proximal-distal-transmission-robustness` adds a public synthesis of
+  paired clock/state-trigger perturbation experiments, robust speed versus
+  variability/load tradeoffs, local task-null variability, four responsive
+  figures, and explicit human-validation boundaries. All local content,
+  title-case, render, and phone/desktop layout gates pass; protected PR #3810
+  carries the publication.
+
 - **Proximal--distal citation reconciliation** — branch
   `agent/proximal-distal-citation-reconciliation` synchronizes every article
   citation with the reader-facing Markdown bibliography, adds primary
