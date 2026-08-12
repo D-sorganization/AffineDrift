@@ -1,6 +1,6 @@
 ---
 title: "Proximal-to-Distal Energy Transfer in the Golf Swing"
-description: "A counterfactual dynamics analysis of distal handoff timing, segment work budgets, and parametric energy transfer in the golf swing."
+description: "An open, model-tiered analysis of distal handoff timing, interaction forces, segment work budgets, and falsifiable counterfactual tests."
 author:
   - name: "Dieter Olson"
     affiliations: "Affine Golf Swing Analysis Project"
@@ -22,7 +22,7 @@ format:
   <div class="laymans-terms-content">
     <div class="laymans-terms-inner">
       <p class="laymans-terms-intro">
-        Should a golfer actively push with their wrists early in the downswing, or hold the wrist angle ("lag") and release late?
+        In a declared swing model, how does the timing of distal actuation change club delivery, and which parts of that result survive explicit counterfactual and robustness tests?
       </p>
 
       <div class="laymans-item">
@@ -35,7 +35,7 @@ format:
       <div class="laymans-item">
         <h3>Retain Early, Release Late</h3>
         <p>
-          Within the tested programs, the highest modeled speeds occurred when the wrist remained folded early and received positive drive later. Relative to the passive baseline, optimized late-drive programs were <strong>12% to 14% faster</strong>. Most late club-energy gain in the model came through joint-force transfer rather than direct wrist work.
+          Within the finite tested command family, the highest modeled speeds occurred when the wrist remained folded early and received positive drive later. Relative to the passive baseline, the grid-selected late-drive programs were <strong>12% to 14% faster</strong>. Most late club-energy gain in the model came through joint-force transfer rather than direct wrist work. This is not a continuous optimum or a coaching instruction.
         </p>
       </div>
     </div>
@@ -63,13 +63,13 @@ strategy.
 
 ## Motivation
 
-Clubhead speed at impact is the dominant controllable determinant of drive distance, and it correlates strongly with playing standard [@fradkin2004; @hellstrom2009; @hume2005]. The golf downswing is among the most-studied examples of a *sequenced* multi-segment rotation in sport biomechanics [@mcphee2022; @dillman1994]. Across measurement systems and populations, the downswing of a skilled golfer shows a characteristic order: the pelvis reaches its peak angular speed first, then the thorax, then the lead arm, and finally the club, with each successive segment peaking faster than the one before [@cheetham2008; @tinmark2010]. This pattern — the *kinematic sequence*, an instance of the general proximal-to-distal (P→D) sequencing observed in throwing and striking skills [@putnam1993] — is routinely interpreted as the visible signature of mechanical energy generated in the large proximal segments and transferred outward to the small, fast distal ones, and it has been translated into coaching doctrine accordingly [@smith2015].
+Clubhead speed at impact is the dominant controllable determinant of drive distance, and it correlates strongly with playing standard [@fradkin2004; @hellstrom2009; @hume2005]. The golf downswing is among the most-studied examples of a *sequenced* multi-segment rotation in sport biomechanics [@mcphee2022; @dillman1994]. Across measurement systems and populations, the downswing of a skilled golfer shows a characteristic order: the pelvis reaches its peak angular speed first, then the thorax, then the lead arm, and finally the club, with each successive segment peaking faster than the one before [@cheetham2008; @tinmark2010]. This *kinematic sequence*, an instance of the general proximal-to-distal sequencing observed in throwing and striking skills [@putnam1993], is routinely interpreted as a visible signature of outward mechanical-energy transfer. That interpretation has also influenced applied swing descriptions [@smith2015].
 
 That interpretation leaves a first-order question unanswered:
 
-> **Should a golfer attempt to transfer energy from proximal to distal segments *early* in the downswing, or should energy be *retained* in the proximal segments early and the transfer deliberately *accelerated* late?**
+> **Within a declared model or measured swing, does earlier distal actuation improve delivery, or can delayed distal actuation permit a more effective late handoff?**
 
-The two strategies imply opposite coaching cues ("fire the club from the top" versus "hold the lag and let it release"), opposite torque programs at the wrists and torso, and different predictions for what counterfactual decompositions of a measured swing should show. The question also connects to a long-standing thread in the modeling literature: double-pendulum analyses have argued since the 1960s that the highest clubhead speeds arise when the distal joint is *not* driven early — when release is passively or actively delayed [@cochran1968; @jorgensen1970; @milburn1982; @pickering1999] — while the coaching translation of the kinematic sequence often emphasizes initiating distal motion promptly after transition.
+For experimental contrast, the finite model inputs are labeled "early drive" and "retain early/release late." They are not a survey of coaching doctrine or coaching cues. The comparison tests a behavior established in double-pendulum studies since the 1960s: higher modeled clubhead speeds can occur when distal drive is delayed [@cochran1968; @jorgensen1970; @milburn1982; @pickering1999]. The contribution here is a reproducible force, power, work, and counterfactual audit rather than a claim of novelty for delayed release.
 
 This study approaches the question with *counterfactual dynamics*. A **pointwise ZTCF sample**, or pointwise drift vector, is the acceleration the model evaluates at one achieved state with applied control removed. A **stitched pointwise ZTCF trace** collects those same-state samples without integrating them. A **forward or branched ZTCF trajectory** integrates the drift after a torque killswitch and is required to test persistence. The **control contribution** is the same-state difference between total and drift acceleration. A **ZVCF is not the control contribution**: it is a separate zero-velocity construction used to isolate configuration-dependent terms under a declared convention.
 
@@ -196,7 +196,7 @@ The same-state affine decomposition splits instantaneous acceleration into drift
 $$
 \ddot{\mathbf{q}}(t) = \underbrace{M(\mathbf{q})^{-1}(-C(\mathbf{q},\dot{\mathbf{q}})\dot{\mathbf{q}} - \mathbf{g}(\mathbf{q}))}_{\text{Pointwise Drift}} + \underbrace{M(\mathbf{q})^{-1}\boldsymbol{\tau}}_{\text{Same-State Control}}.
 $$
-Pointwise attribution evaluates both terms at an identical state and reference point. A killswitch rollout instead compares futures that begin from one state and then diverge. The latter is a counterfactual outcome difference, not an algebraic decomposition at later times.
+The Python implementation in [`simulation_backends/ztcf_zvcf.py`](https://github.com/D-sorganization/UpstreamDrift/blob/main/src/shared/python/simulation_backends/ztcf_zvcf.py) evaluates this split pointwise along sampled trajectories. It is an instantaneous tangent-field statement, not a future zero-torque trajectory. Separate matched-state forward killswitch ensembles quantify nonlinear trajectory divergence after the command is removed.
 
 ## Completed Model Ladder and Reporting Contract
 
@@ -328,8 +328,11 @@ The numerical analyses use an open-source, backend-neutral double-pendulum model
 - **E1 Timing Sweep:** 92 torque programs sweeping wrist onset times $t_{\text{on}} \in [0.0, 0.35]$ s, wrist drive levels $\tau_2 \in \{0, 15\}$ N·m, and early restraint levels $R \in \{0, 5, 10\}$ N·m across shoulder torques $\tau_1 \in \{60, 100\}$ N·m.
 - **E1b Bounded Actuator Sweep:** Linear torque-velocity motor bounds ($\tau(\omega) = \tau_{\text{iso}}(1 - \omega/\omega_{\text{max}})$).
 - **E1c Robustness Evaluation:** Sensitivity analysis across 5 alternative impact criteria.
-- **E1d Parameter Sensitivity:** One-at-a-time variation of arm length and mass, club length and head mass, swing-plane inclination, and joint damping across 13 declared cases; late-drive onset is re-optimized within each case.
-- **E2 Drift/Control Split & E4 Robertson–Winter Accounting:** Pointwise ZTCF decomposition and interface power balance $\mathbf{F} \cdot \mathbf{v} + \tau \omega$.
+- **E1d Parameter Sensitivity:** One-at-a-time variation of arm length and mass, club length and head mass, swing-plane inclination, and joint damping across 13 declared cases; a program is reselected from the same finite grid within each case.
+- **E1e Command Rise-Time Sensitivity:** Every program is repeated with 20, 35, and 50 ms first-order transitions after the initial preload. These are command filters, not muscle activation or continuous optimal control.
+- **E2 Drift/Control Split & E4 Robertson–Winter Accounting:** Pointwise ZTCF decomposition and interface power balance $\mathbf{F} \cdot \mathbf{v} + \tau \omega$, using analytic COM acceleration and an exact interpolated early/late integration boundary.
+
+The registered arm-angle rule defines the primary delivery-zone estimand; it is not an anatomical validity threshold. Every row retains its unfiltered first club-vertical crossing and a reason-coded status.
 
 # Results {#sec-results}
 
@@ -343,21 +346,21 @@ All reported values trace to versioned JSON/NPZ data and analysis code linked in
 |---|---|---|---|---|
 | Passive wrist | — | 0.370 | 34.2 | — |
 | Early drive (S1 pole) | 0.000 | 0.327 | 28.9 | **−15.3%** |
-| Best drive-only | 0.200 | 0.352 | 38.4 | **+12.4%** |
-| Best restrain-then-drive ($R=10$) | 0.100 | 0.349 | 38.9 | **+13.8%** |
+| Grid-selected drive-only | 0.200 | 0.352 | 38.4 | **+12.4%** |
+| Grid-selected restrain-then-drive ($R=10$) | 0.100 | 0.349 | 38.9 | **+13.8%** |
 
 : Representative programs at $\tau_s = 60$ N·m. {#tbl-representatives}
 
 Key model-derived findings:
 1. **Early wrist drive is lower than passive (−15.3%).** Driving from the top drops modeled speed from 34.2 m/s to 28.9 m/s.
 2. **Identical torque applied late adds +12.4%.** Peak speed reaches 38.4 m/s at $t_{\text{on}} = 0.200$ s.
-3. **Restrain-then-drive is optimal (+13.8%).** Timed active restraint ($R = 10$ N·m) reaches 38.9 m/s (and 46.9 m/s at $\tau_s = 100$ N·m).
+3. **Restrain-then-drive is highest among the tested programs (+13.8%).** The grid-selected command ($R = 10$ N·m) reaches 38.9 m/s (and 46.9 m/s at $\tau_s = 100$ N·m).
 
 ## E1b — Torque-Velocity Actuator Bounds
 
 ![E1b: Timing Sweep With Linear Torque-Velocity Bounds on Drives.](figures/proximal_distal_energy_transfer/fig_e1b_bounded_sweep.svg){#fig-e1b alt="Under torque-velocity bounds, late drive maintains its superiority over early drive (+12.2% over passive)."}
 
-The S2 ordering survives actuator bounds intact: early drive (28.8 m/s) < passive (30.8 m/s) < best late drive (34.6 m/s) < best restrain-then-drive (34.8 m/s).
+The S2 ordering survives actuator bounds intact: early drive (28.8 m/s) < passive (30.8 m/s) < selected late drive (34.6 m/s) < selected restrain-then-drive (34.8 m/s).
 
 ## Kinematic Sequence & Segment Energies
 
@@ -367,9 +370,9 @@ The S2 ordering survives actuator bounds intact: early drive (28.8 m/s) < passiv
 
 ![Segmental Kinetic Energy Time Courses.](figures/proximal_distal_energy_transfer/fig_segment_energies.svg){#fig-energies alt="Kinetic energy builds in the arm first before transferring rapidly to the clubhead late in the swing."}
 
-![Early-Half vs. Late-Half Energy Budget.](figures/proximal_distal_energy_transfer/fig_energy_budget.svg){#fig-budget alt="Bar chart confirming early negative wrist work during active restraint and dominant late joint-force transfer."}
+![Early-Half vs. Late-Half Energy Budget.](figures/proximal_distal_energy_transfer/fig_energy_budget.svg){#fig-budget alt="Bar chart showing modeled negative early wrist-actuator work under the selected restraint command and dominant late joint-force transfer."}
 
-The energy budget demonstrates that the winning programs put the *least* energy into the club early (5.0 J vs. 22.9 J early drive) and bank energy in the arm (54.7 J shoulder work early). Active retention produces measurably *negative* early wrist work (−1.9 J).
+The energy budget shows that the grid-selected programs put the *least* energy into the club early (5.0 J vs. 23.0 J early drive) and bank energy in the arm (55.1 J shoulder work early). The selected restraint command produces −1.9 J of modeled early wrist-actuator work because its imposed torque opposes opening velocity. That sign does not identify muscle action, neural intent, eccentric physiology, or a human technique.
 
 ## E4 Interface Powers & E2 Counterfactual Split
 
@@ -377,7 +380,7 @@ The energy budget demonstrates that the winning programs put the *least* energy 
 
 ![Pointwise Drift/Control Split of Club Angular Acceleration.](figures/proximal_distal_energy_transfer/fig_ztcf_drift_control.svg){#fig-ztcf alt="Control opposes drift early (restraint) while drift delivers acceleration late."}
 
-Robertson–Winter accounting confirms that late energy transfer is dominated by joint-force power (131.7 J) rather than active wrist work (25.7 J). The E2 counterfactual split confirms the S2 signature: **control retains early; drift delivers late.**
+Robertson–Winter accounting closes pointwise with analytic COM acceleration and shows that late energy transfer is dominated by joint-force power (131.7 J) rather than wrist-actuator work (25.7 J). The E2 split shows an instantaneous S2 signature: **control opposes drift early; drift dominates late.** Forward killswitch claims come from separately integrated matched-state branches.
 
 ## Hand-Path Attribution Across the Model Ladder {#sec-attribution-results}
 
@@ -490,13 +493,19 @@ does not represent population uncertainty or confidence intervals.
 
 ## E1c — Impact-Criterion Robustness
 
-Evaluating all 92 trajectories under 5 alternative criteria (fixed hand position, ball-position sweep $v_x$, peak speed anywhere in first pass, matched arm angle $\theta_1=0.5$ rad, and validity-rule max arm angle sweep $1.5–2.5$ rad) preserved the retain-early/release-late ordering. This reduces sensitivity to the selected impact definition; it does not validate unmodeled impact physics.
+Evaluating all 92 trajectories under 5 alternative criteria (fixed hand position, ball-position sweep $v_x$, peak speed anywhere in first pass, matched arm angle $\theta_1=0.5$ rad, and registered max-arm-angle sweep $1.5–2.5$ rad) preserved the retain-early/release-late ordering. The 2.0 rad rule accepts 63 programs and places 29 first crossings outside the registered delivery zone. Across the threshold sweep, 58–69 programs are accepted and the selected winner at both shoulder torques is unchanged. This reduces sensitivity to the selected definition; it does not validate unmodeled impact physics.
 
 ## E1d — Model-Parameter Sensitivity
 
-The ordering early drive < passive < best late drive < best restrain-then-drive persisted in all 13 one-at-a-time parameter cases. Across those cases, the best late-drive onset shifted from 0.175 to 0.225 s and the best restrained onset from 0.100 to 0.150 s. Speed ranges were 26.4–31.3 m/s for early drive, 32.9–35.6 m/s for passive, 36.5–40.6 m/s for optimized late drive, and 36.8–41.3 m/s for optimized restrain-then-drive.
+The ordering early drive < passive < selected late drive < selected restrain-then-drive persisted in all 13 one-at-a-time parameter cases. Across those cases, the selected late-drive onset shifted from 0.175 to 0.225 s and the selected restrained onset from 0.100 to 0.150 s. Speed ranges were 26.4–31.3 m/s for early drive, 32.9–35.6 m/s for passive, 36.5–40.6 m/s for selected late drive, and 36.8–41.3 m/s for selected restrain-then-drive.
 
-These are local model perturbations, not confidence intervals or a population distribution. The stable ordering supports the modeled mechanism; the shifting optimum argues against a universal onset-time prescription.
+These are local model perturbations, not confidence intervals or a population distribution. The stable ordering supports the modeled mechanism; the shifting selection argues against a universal onset-time prescription.
+
+## E1e — Command Rise-Time Sensitivity
+
+![Finite Command Rise-Time Sensitivity of the Tested E1 Programs.](figures/proximal_distal_energy_transfer/fig_e1e_smooth_command_sensitivity.svg){#fig-e1e-smooth-command alt="Across 0, 20, 35, and 50 millisecond first-order command transitions, early drive remains below passive, selected late drive, and selected restrain-then-drive at both shoulder torque levels."}
+
+The registered ordering persists at both shoulder torques for 20, 35, and 50 ms post-preload command transitions. At 60 N·m, selected late drive changes from 38.40 to 38.07 m/s and selected restrain-then-drive from 38.85 to 38.66 m/s between 0 and 50 ms; the selected onset and restraint can change. This rejects a single-sample switching artifact within the declared filter family, not a muscle model or global optimum.
 
 # Ground-Reaction Drift Attribution {#sec-grf-drift}
 
@@ -553,17 +562,18 @@ error, and omitted loads; it does not uniquely recover muscle torque.
 The numerical results support delayed distal release as a robust mechanism within the tested planar two-link model. Early wrist drive increases the system's moment of inertia about the shoulder hub before proximal speed has developed, reducing the modeled shoulder work converted into arm speed.
 
 Qualifications and scope limits:
-- Model scope is planar 2-DOF with a rigid shaft and fixed hub. The analysis does not include 3D motion, flexible-shaft energy, a moving hub, coupled arms, or human variability.
-- Actuators use simplified linear bounds; physiological muscle activation dynamics remain an open refinement.
-- Parameter variation is one-at-a-time and does not estimate coupled uncertainty or population effects.
+- The primary timing estimand is planar 2-DOF with a rigid shaft and fixed hub. The full resource separately executes moving-base/flexible and coupled-modal-club models, a distributed-shaft reference, a 20-DOF spatial common-state comparison, and native MuJoCo/Pinocchio reduced spatial forward contact. These extensions remain model-tier evidence, not subject-calibrated human validation.
+- Actuators use declared command-level surrogates. Physiological muscle activation, tissue history, and continuous constrained optimal control remain open.
+- The local one-at-a-time screen does not estimate population effects. A separate 12-input Latin-hypercube/PRCC study exposes coupled effects, non-identifiability, and held-out strategy tradeoffs, but its engineering envelopes are not population distributions or Sobol variance decomposition.
+- No coaching recommendation follows from these finite model inputs.
 
 # Conclusions {#sec-conclusions}
 
 1. In the baseline model, early distal drive produces 15% less speed than the passive condition.
-2. Optimized late wrist torque produces 12% to 14% more speed than the passive baseline.
-3. The best tested retention program performs −1.9 J of early wrist work while preserving more arm energy.
+2. Grid-selected late wrist torque produces 12% to 14% more speed than the passive baseline.
+3. The selected retention program performs −1.9 J of modeled early wrist-actuator work while preserving more arm energy; this is not a physiological inference.
 4. Late club-energy gain is dominated by joint-force transfer in the representative model trajectory.
-5. The qualitative ordering survives actuator bounds, alternative impact criteria, and the declared one-at-a-time parameter cases, while optimal timing shifts.
+5. The qualitative ordering survives actuator bounds, alternative impact criteria, declared one-at-a-time parameter cases, and 20–50 ms command transitions, while selected timing shifts.
 6. In the fixed-support benchmark, pointwise drift explains much of the modeled reaction waveform but not its amplitude; opposing control makes a component impulse exceed the total, so drift attribution is not a biological-effort percentage.
 
 These findings demonstrate a mechanism in a simplified model. They do not establish a universal golfer-level effect or coaching prescription.
@@ -587,6 +597,12 @@ the publication SVGs rather than a second simulation runtime. Run
 `python scripts/check_proximal_distal_evidence.py --require-pinned` to verify
 the local evidence boundary offline.
 
+The repository name identifies provenance; the scientific claims do not
+depend on adopting the broader software project. The
+[review adjudication](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/ADVERSARIAL_REVIEW_ADJUDICATION.md)
+records each criticism, its verification status, and the implemented response.
+Work is tracked in [epic #8499](https://github.com/D-sorganization/UpstreamDrift/issues/8499).
+
 ## Reproducibility
 
 To re-run experiments and regenerate figures from source code:
@@ -596,6 +612,7 @@ python3 -m scripts.research.proximal_distal_energy.make_figures
 python3 -m scripts.research.proximal_distal_energy.e1b_bounded_torque
 python3 -m scripts.research.proximal_distal_energy.e1c_impact_sensitivity
 python3 -m scripts.research.proximal_distal_energy.e1d_parameter_sensitivity
+python3 -m scripts.research.proximal_distal_energy.e1e_smooth_command_sensitivity
 python3 -m scripts.research.proximal_distal_energy.run_hand_path_attribution_study
 python3 -m scripts.research.proximal_distal_energy.run_torque_allocation_preload_study
 python3 -m scripts.research.proximal_distal_energy.run_grf_drift_study
