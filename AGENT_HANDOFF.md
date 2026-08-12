@@ -12,6 +12,15 @@ articles that support a fleet-wide "Shared Web Tools" program.
 
 Active epics/PRs:
 
+- **UpstreamDrift #8497 — arm--wrist torque allocation and preload** — the
+  reviewer article now distinguishes direct wrist moment, two-hand force
+  couple, proximal generalized control, activation, and scapular motion. It
+  reports the exact same-state 8 N m allocation surface and the separately
+  declared dead-zone transmission sensitivity. The modeled persistent-direction
+  advantage is conditional; no human technique or biological slack claim is
+  made. Bilateral wrench, grip-pressure, stiffness/force-rise, EMG, shaft, and
+  participant-holdout falsifiers are explicit.
+
 - **#8458 / UpstreamDrift #8470 — hand-path force attribution** (publication
   integration complete on this branch). UpstreamDrift PR #8473 merged to remote
   `main` at `69eb7e9db32ccd17e45824619315b1d04b400c27`. AffineDrift pins that

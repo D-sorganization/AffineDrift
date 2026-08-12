@@ -88,6 +88,7 @@ The document is organized around four questions:
 - **RQ3 — Formalization.** How can "transfer early" versus "retain-early/release-late" be stated as falsifiable claims about measurable quantities, and what do the ZTCF/ZVCF counterfactuals predict under each? (@sec-timing-framework)
 - **RQ4 — Model test.** What does a two-link model show when distal-handoff timing is manipulated directly and energy accounting and counterfactual decompositions are computed along each trajectory? (@sec-methods, @sec-results, @sec-discussion)
 - **RQ5 — Attribution.** How much hand-path and joint force, impulse, power, and work is associated with pointwise drift versus same-state control, and how does that balance change with model topology, joint, and time window? (@sec-attribution-results)
+- **RQ6 — Allocation and Preload.** For an identical club-moment task, how do arm-dominant and wrist-dominant actuator allocations change internal loading, and under what declared transmission model does preload preserve torque continuity? (@sec-allocation-preload)
 
 # Mechanics of Sequenced Swings {#sec-mechanics}
 
@@ -214,6 +215,99 @@ reported separately. In the two-hand tier, the common mode is
 $\mathbf{F}_R+\mathbf{F}_L$ and the differential mode is
 $(\mathbf{F}_R-\mathbf{F}_L)/2$, preserving internal loading that a net club
 wrench cannot identify.
+
+# Arm--Wrist Allocation and Transmission Preload {#sec-allocation-preload}
+
+## Same Club Task, Different Internal Loads
+
+A net club moment can be produced by direct wrist moments, by the moment of two
+separated hand forces about the club reference point, or by both. Club
+kinematics and net wrench do not identify that allocation. The executable
+[open evidence study](https://github.com/D-sorganization/UpstreamDrift/issues/8497)
+therefore evaluates every allocation at the same state and constrains every
+case to the same 8 N m control moment.
+
+The two poles are mathematically defined actuator subspaces, not anatomical
+labels. The proximal pole permits four shoulder and elbow generalized torques
+and sets direct wrist moments to zero. The wrist pole permits two direct wrist
+moments and sets proximal generalized torques to zero. Within each subspace,
+the minimum-norm control is scaled to the common club task; convex mixtures
+span the interval between them.
+
+Across 19 club angles and 21 allocation fractions, the maximum task error is
+$5.33\times10^{-15}$ N m, and direct wrist moment plus the force-generated
+two-hand couple closes to the net moment within $4.44\times10^{-15}$ N m. The
+internal demands are not equivalent: modeled RMS hand force spans 7.58--91.51
+N and generalized-torque norm spans 5.74--25.45 N m. The allocation minimizing
+one metric varies with geometry and need not minimize another. Consequently,
+the model supplies a tradeoff surface; it does not establish a universal
+arm-led or wrist-led technique.
+
+## What “Slack” Means in This Test
+
+“Slack” can mean a grip gap, series-elastic extension, low tangent stiffness,
+activation delay, or low activation. These are not interchangeable. The
+executed sensitivity study adopts one falsifiable definition only: a 0.012 rad
+rotational dead zone followed by 600 N m rad$^{-1}$ series stiffness and an 18
+ms first-order torque-development time. Those values are synthetic and are not
+identified tissue, grip, or wrist properties.
+
+Two programs share the same pre-transition net torque (6 N m) and
+post-transition net torque (10 N m). In the persistent-direction program, the
+arm channel stays positive while the wrist channel stays negative. In the
+role-reversal program, both channels reverse sign. From loaded equilibrium,
+the persistent-direction program has no zero-transmission interval and a
+0.0717 N m s torque-error impulse. The role-reversal program crosses zero
+transmission for 11.5 ms in the arm channel and 22.0 ms in the wrist channel,
+with a 0.1954 N m s error impulse. A relaxed start increases the error to
+0.2011 N m s for either program. The persistent-direction advantage appears in
+11 of 12 dead-zone/time-constant sensitivity cases; the two programs are equal
+to numerical precision in all three zero-dead-zone cases.
+
+The conditional implication is narrow: if the relevant transmission behaves
+like the declared gap-and-stiffness element, maintaining load direction can
+preserve immediate torque transmission. Biological series elasticity can also
+store energy, filter impact, and alter force-rise dynamics. Muscle preflexes
+and short-range stiffness provide plausible but testable alternatives to a
+literal gap element
+([Araz et al., 2023](https://pmc.ncbi.nlm.nih.gov/articles/PMC10194126/)).
+Co-contraction can increase task-relevant stiffness but has energetic and
+control costs. Neither
+zero compliance nor maximum preactivation is presumed optimal.
+
+## Relation to Scapular and Wrist Activity
+
+Scapular electromyography reports phase-dependent shoulder-girdle activity
+([Jobe et al., 1995](https://pubmed.ncbi.nlm.nih.gov/7726345/)), and wrist
+electromyography reports lead/trail asymmetries without establishing a
+downswing EMG--clubhead-speed relationship in the cited subelite sample
+([Robinson et al., 2023](https://pubmed.ncbi.nlm.nih.gov/37983261/)). Neither measurement
+alone identifies hand-force direction, bilateral force couple, joint torque,
+or mechanical work. A measured internal grip wrench is required to resolve
+closed-chain upper-limb kinetics
+([Choi and Park, 2020](https://pmc.ncbi.nlm.nih.gov/articles/PMC7374515/)).
+The proximal control subspace must therefore
+not be relabeled as scapular retraction, and passive resistance must not be
+equated with muscular inactivity.
+
+The decisive experiment combines bilateral six-axis grip wrenches, grip
+pressure, full-body and club kinematics, shaft strain, ground reaction,
+closed-chain inverse dynamics, forearm/shoulder/scapular EMG, and an estimate
+of transition-aligned tangent stiffness or force-development delay. The model
+is contradicted if matched club tasks lack the predicted allocation-dependent
+internal forces, inferred reversal produces no transmission gap under a
+documented gap or low stiffness, or any apparent advantage disappears on
+participant-level holdout.
+
+::: {.callout-important}
+## Conditional Finding, Not Technique Advice
+
+The persistent-direction case performs better only inside the declared
+phenomenological transmission family. No human allocation, biological slack,
+scapular muscle strategy, injury effect, or clubhead-speed benefit has been
+measured. The complete equations, sensitivity grid, traces, and falsifiers are
+maintained in the [open research epic](https://github.com/D-sorganization/UpstreamDrift/issues/8497).
+:::
 
 # Computational Methods {#sec-methods}
 
@@ -418,6 +512,9 @@ These findings demonstrate a mechanism in a simplified model. They do not establ
 The currently published timing-study code, tests, figures, parameter records,
 and machine-readable outputs remain available in the [open-source research
 directory](https://github.com/D-sorganization/UpstreamDrift/tree/main/docs/research/proximal_distal_energy_transfer).
+The arm--wrist allocation implementation, complete sensitivity archive, and
+falsification plan are tracked in
+[UpstreamDrift epic #8497](https://github.com/D-sorganization/UpstreamDrift/issues/8497).
 The hand-path analysis is pinned to
 [UpstreamDrift commit `69eb7e9d`](https://github.com/D-sorganization/UpstreamDrift/tree/69eb7e9db32ccd17e45824619315b1d04b400c27/docs/research/proximal_distal_energy_transfer),
 while this repository carries a compact, hash-verified evidence snapshot and
@@ -435,6 +532,7 @@ python3 -m scripts.research.proximal_distal_energy.e1b_bounded_torque
 python3 -m scripts.research.proximal_distal_energy.e1c_impact_sensitivity
 python3 -m scripts.research.proximal_distal_energy.e1d_parameter_sensitivity
 python3 -m scripts.research.proximal_distal_energy.run_hand_path_attribution_study
+python3 -m scripts.research.proximal_distal_energy.run_torque_allocation_preload_study
 ```
 
 ## Model Parameters
