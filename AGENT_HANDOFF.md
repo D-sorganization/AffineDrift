@@ -12,6 +12,13 @@ articles that support a fleet-wide "Shared Web Tools" program.
 
 Active epics/PRs:
 
+- **UpstreamDrift #8509 accessible proximal--distal companion** — branch
+  `docs/proximal-distal-companion-book` adds _How a Golf Swing Carries Energy_,
+  a visual, book-like companion with fourteen reproducible figures, a pinned
+  model-evidence snapshot, live source paths, explicit inferential boundaries,
+  and HTML/PDF publication. Validate the focused companion contract, regenerate
+  figures, render both formats, and visually inspect the PDF before publication.
+
 - **UpstreamDrift #8507 adversarial transmission and task robustness** — branch
   `research/proximal-distal-transmission-robustness` adds a public synthesis of
   paired clock/state-trigger perturbation experiments, robust speed versus
