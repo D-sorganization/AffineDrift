@@ -10,6 +10,7 @@ ARTICLE = ROOT / "articles/proximal-distal-a-journey-through-the-swing.qmd"
 FIGURES = ROOT / "articles/figures/proximal_distal_companion"
 PDF_SOURCE = ROOT / "articles/proximal-distal-a-journey-through-the-swing.pdf"
 PDF_OUTPUT = ROOT / "docs/articles/proximal-distal-a-journey-through-the-swing.pdf"
+WORKBENCH = ROOT / "articles/proximal-distal-model-workbench.qmd"
 
 
 def _source() -> str:
@@ -99,3 +100,25 @@ def test_article_never_mentions_prompt_or_style_exemplar() -> None:
     source = _source().casefold()
     forbidden = ("thesis length", "user requested", "prompt", "feynman")
     assert not any(term in source for term in forbidden)
+
+
+def test_model_workbench_page_is_discoverable_and_uses_canonical_tools() -> None:
+    """The reader page must link to one shared simulator, not copy its glossary."""
+    config = (ROOT / "_quarto.yml").read_text(encoding="utf-8")
+    article = _source()
+    workbench = WORKBENCH.read_text(encoding="utf-8")
+
+    assert "articles/proximal-distal-model-workbench.html" in config
+    assert "proximal-distal-model-workbench.html" in article
+    assert "D-sorganization/Tools/tree/main/src/pendulum_simulator" in workbench
+    assert "companion_catalog.json" in workbench
+    assert "PyQt6" in workbench and "React/Tauri" in workbench
+    assert "exploratory_model_output" in workbench
+    for heading in (
+        "# Explore the Models",
+        "## Choose a Guided Experiment",
+        "## What Would Count Against the Mechanism?",
+        "## Run It Locally",
+        "## Interpretation Boundary",
+    ):
+        assert heading in workbench

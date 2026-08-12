@@ -12,6 +12,14 @@ articles that support a fleet-wide "Shared Web Tools" program.
 
 Active epics/PRs:
 
+- **UpstreamDrift #8511 interactive proximal--distal dynamics workbench** —
+  branch `docs/proximal-distal-workbench` adds a mobile-readable reader page,
+  navigation, and book cross-link for the canonical Tools PyQt6 and
+  React/Tauri workbench. AffineDrift does not copy physics or glossary data;
+  it links the shared catalog and keeps interactive output explicitly
+  exploratory. Focused content-contract and title-case gates must pass before
+  the protected PR is opened.
+
 - **UpstreamDrift #8509 accessible proximal--distal companion** — branch
   `docs/proximal-distal-companion-book` adds _How a Golf Swing Carries Energy_,
   a visual, book-like companion with fourteen reproducible figures, a pinned
