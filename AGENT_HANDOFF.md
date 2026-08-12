@@ -21,6 +21,8 @@ Active epics/PRs:
   impulses, and participant-held-out falsifiers.
 
 - **UpstreamDrift #8497 — arm--wrist torque allocation and preload** — the
+  finite-history completion PR #8501 merged at
+  `e96a585a41f2d7659864e478db3de829e710e622`. The
   reviewer article now distinguishes direct wrist moment, two-hand force
   couple, proximal generalized control, activation, and scapular motion. It
   reports the exact same-state 8 N m allocation surface and the separately
@@ -28,6 +30,11 @@ Active epics/PRs:
   advantage is conditional; no human technique or biological slack claim is
   made. Bilateral wrench, grip-pressure, stiffness/force-rise, EMG, shaft, and
   participant-holdout falsifiers are explicit.
+  The final finite-history extension starts from zero internal deflection,
+  integrates 180 ms of preparation, and carries transmission state through the
+  command transition without reset. AffineDrift now states this executable
+  continuity check explicitly while withholding anatomical-backswing and
+  muscle-action interpretations.
 
 - **#8458 / UpstreamDrift #8470 — hand-path force attribution** (publication
   integration complete on this branch). UpstreamDrift PR #8473 merged to remote

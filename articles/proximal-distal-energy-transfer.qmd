@@ -227,6 +227,9 @@ kinematics and net wrench do not identify that allocation. The executable
 therefore evaluates every allocation at the same state and constrains every
 case to the same 8 N m control moment.
 
+The finite-history implementation is pinned to
+[UpstreamDrift merge `e96a585a`](https://github.com/D-sorganization/UpstreamDrift/commit/e96a585a41f2d7659864e478db3de829e710e622).
+
 The two poles are mathematically defined actuator subspaces, not anatomical
 labels. The proximal pole permits four shoulder and elbow generalized torques
 and sets direct wrist moments to zero. The wrist pole permits two direct wrist
@@ -263,6 +266,15 @@ with a 0.1954 N m s error impulse. A relaxed start increases the error to
 0.2011 N m s for either program. The persistent-direction advantage appears in
 11 of 12 dead-zone/time-constant sensitivity cases; the two programs are equal
 to numerical precision in all three zero-dead-zone cases.
+
+A finite-history check begins both transmission channels at zero deflection,
+applies the preparation commands for 180 ms, and then changes only the desired
+commands at the transition. The internal deflections and transmitted torques
+cross that boundary continuously, without resetting state. After ten declared
+18 ms time constants, its post-transition gap durations, delays, and error
+impulses reproduce the loaded-equilibrium comparison above. This operational
+preparation interval tests state carryover; it is not a model of an anatomical
+backswing or evidence of a specific preparatory muscle action.
 
 The conditional implication is narrow: if the relevant transmission behaves
 like the declared gap-and-stiffness element, maintaining load direction can
