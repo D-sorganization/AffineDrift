@@ -12,6 +12,16 @@ articles that support a fleet-wide "Shared Web Tools" program.
 
 Active epics/PRs:
 
+- **UpstreamDrift #8507 adversarial transmission and task robustness** — branch
+  `research/proximal-distal-transmission-robustness` adds a concise public
+  synthesis of the paired clock/state-trigger experiment, robust speed versus
+  variability/load tradeoffs, local task-null variability, four local SVGs,
+  and explicit human-validation boundaries. State triggering improves selected
+  held-out speed and planar face/path metrics but increases peak hand force;
+  every program remains Pareto-nondominated. Remaining gates: focused tests,
+  Quarto render, responsive visual review, protected PR, CI, and remote-main
+  verification.
+
 - **UpstreamDrift #8505 advanced proximal--distal expansion** — isolated branch
   `research/proximal-distal-advanced-expansion` adds a public-facing reference-
   frame and biological bridge to the article: power-preserving wrench/twist

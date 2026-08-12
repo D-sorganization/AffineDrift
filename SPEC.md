@@ -29,7 +29,7 @@ Last-Updated: 2026-08-12T12:00:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.8                                            |
-| **Spec Version**        | 1.0.178                                          |
+| **Spec Version**        | 1.0.179                                          |
 | **Last Spec Update**    | 2026-08-12                                       |
 
 ## 2. Purpose & Mission
@@ -53,6 +53,10 @@ AffineDrift is a research platform that explores golf swing biomechanics through
   across proximal--distal explanations and backend comparisons; distinguish
   representation checks, reduced biological models, engine dynamics, and human
   validation in both prose and figures
+- Separate nominal speed, lower-tail performance, task-relevant variability,
+  contact loading, effort proxies, and model-conditional perturbation rejection
+  in proximal--distal strategy comparisons; do not infer human stability from
+  a simulated controller
 - Publish a Technology section covering launch-monitor, force-measurement, and motion-capture instrumentation, with explicit separation of measured, derived, and estimated quantities
 
 ### Non-Goals

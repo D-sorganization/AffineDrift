@@ -448,6 +448,63 @@ falsification program are maintained in the [advanced expansion epic
 
 # Computational Methods {#sec-methods}
 
+# Transmission Pathways, Robust Speed, and Task Stability {#sec-transmission-robustness}
+
+The extended analysis separates five propositions that should not be merged:
+energy reaches the club; a particular pathway carries it; an intervention
+changes that pathway; the controller rejects declared perturbations; and a
+human can realize the controller repeatably and safely. A kinematic sequence
+does not identify a unique pathway, negative torque does not determine power
+sign, a pointwise drift sample is not a forward future, and nominal speed is
+not evidence of human self-stabilization.
+
+![A Closed Transmission Ledger With Explicit Inferential Boundaries.](figures/proximal_distal_energy_transfer/fig_transmission_pathway_framework.svg){#fig-transmission-framework alt="A pathway diagram separates ground and base work, proximal actuation, constraint-force transport, direct distal moment, shaft storage, and impact outcomes, with explicit non-equivalence warnings."}
+
+The new executable study compares clock-triggered restrain-then-drive,
+arm-angle-triggered handoff, a higher-impedance state trigger, and early drive
+under common training and held-out perturbations. The perturbations vary
+initial arm and wrist states, command scale, activation delay, shaft stiffness,
+and grip separation. The objectives are lower-tail delivery speed, speed and
+face/path dispersion, peak hand force, and a squared-torque effort proxy—not a
+single nominal-speed score.
+
+![Held-Out Robust Speed and Variability Tradeoffs.](figures/proximal_distal_energy_transfer/fig_robust_speed_variability_pareto.svg){#fig-robust-speed-pareto alt="Scatter plots show lower-tail delivery speed against speed variability and face-path proxy error against peak hand force for four nondominated strategies."}
+
+Relative to clock timing, the state trigger raises held-out 10th-percentile
+delivery speed from 4.94 to 5.28 m/s and reduces mean planar face/path proxy
+error from 9.44 to 2.29 degrees. It also raises 90th-percentile peak hand force
+from 166.9 to 208.1 N. Higher impedance changes the balance again. Every
+registered program remains Pareto-nondominated, so the evidence rejects a
+universal optimum.
+
+![Paired Clock- and State-Triggered Perturbation Response.](figures/proximal_distal_energy_transfer/fig_clock_vs_state_perturbation_response.svg){#fig-clock-state-response alt="Bar charts compare state-to-clock amplification ratios and percent changes, showing lower speed and face-path sensitivity but greater force amplification."}
+
+The local three-outcome Jacobian of eight perturbation variables has rank three
+and nullity five. Most of the declared perturbation covariance lies in the
+local task-null subspace. This illustrates motor abundance: variability can be
+large in elemental coordinates while task outcomes remain comparatively
+stable. It is a local model property, not evidence of a neural synergy, and
+nonlinear curvature can make an infinitesimally null direction harmful at
+larger amplitude. Golf UCM evidence likewise suggests that skilled control is
+about structuring variability around club outcomes rather than minimizing all
+joint variability [Morrison et al.](https://pubmed.ncbi.nlm.nih.gov/26784706/).
+
+![Local Task-Null Variability Map.](figures/proximal_distal_energy_transfer/fig_task_null_variability_map.svg){#fig-task-null-map alt="A normalized input-outcome Jacobian and variance bars distinguish task-null from task-relevant model variability."}
+
+The practical research implication is therefore conditional: test
+state-relative handoff as one way to reduce clock-time sensitivity, but
+constrain hand force, effort, face, path, strike, and injury-relevant loads.
+Biological stability requires phase-registered perturbations, bilateral grip
+wrenches, force plates, full-body and club motion, shaft response, EMG, and
+participant-held-out impact/launch outcomes. Coactivation can increase
+impedance and reject disturbances, but it can also increase force and effort;
+it is not automatically beneficial [de Rugy et al.](https://pmc.ncbi.nlm.nih.gov/articles/PMC6195298/).
+
+The complete gap register and path forward are available in the
+[adversarial transmission review](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/ADVERSARIAL_TRANSMISSION_REVIEW.md),
+with implementation tracked in
+[epic #8507](https://github.com/D-sorganization/UpstreamDrift/issues/8507).
+
 The numerical analyses use an open-source, backend-neutral double-pendulum model. The baseline is a planar, fixed-hub arm–club chain with a rigid shaft and deterministic fixed-step integration:
 
 - **E1 Timing Sweep:** 92 torque programs sweeping wrist onset times $t_{\text{on}} \in [0.0, 0.35]$ s, wrist drive levels $\tau_2 \in \{0, 15\}$ N·m, and early restraint levels $R \in \{0, 5, 10\}$ N·m across shoulder torques $\tau_1 \in \{60, 100\}$ N·m.
@@ -743,6 +800,8 @@ python3 -m scripts.research.proximal_distal_energy.run_hand_path_attribution_stu
 python3 -m scripts.research.proximal_distal_energy.run_torque_allocation_preload_study
 python3 -m scripts.research.proximal_distal_energy.run_grf_drift_study
 python3 -m scripts.research.proximal_distal_energy.run_advanced_biological_bridge
+python3 -m scripts.research.proximal_distal_energy.run_transmission_robustness_study
+python3 -m scripts.research.proximal_distal_energy.make_transmission_robustness_figures
 ```
 
 ## Model Parameters

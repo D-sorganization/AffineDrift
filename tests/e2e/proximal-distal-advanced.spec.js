@@ -1,6 +1,8 @@
 const { test, expect } = require("@playwright/test");
 
 const route = "/articles/proximal-distal-energy-transfer.html#sec-advanced-bridge";
+const robustnessRoute =
+  "/articles/proximal-distal-energy-transfer.html#sec-transmission-robustness";
 
 test.describe("advanced proximal-distal bridge", () => {
   for (const viewport of [
@@ -34,6 +36,42 @@ test.describe("advanced proximal-distal bridge", () => {
         (element) => element.scrollWidth - element.clientWidth,
       );
       expect(bridgeOverflow).toBeLessThanOrEqual(1);
+    });
+  }
+});
+
+test.describe("proximal-distal transmission robustness", () => {
+  for (const viewport of [
+    { label: "mobile", width: 375, height: 812 },
+    { label: "desktop", width: 1440, height: 900 },
+  ]) {
+    test(`${viewport.label} layout exposes the robustness evidence without overflow`, async ({
+      page,
+    }) => {
+      await page.setViewportSize(viewport);
+      await page.goto(robustnessRoute, { waitUntil: "load" });
+
+      await expect(
+        page.getByRole("heading", {
+          name: "Transmission Pathways, Robust Speed, and Task Stability",
+        }),
+      ).toBeVisible();
+      const section = page.locator("#sec-transmission-robustness");
+      const figures = section.locator("img");
+      await expect(figures).toHaveCount(4);
+      for (const figure of await figures.all()) {
+        await expect(figure).toBeVisible();
+        const size = await figure.evaluate((image) => ({
+          naturalWidth: image.naturalWidth,
+          naturalHeight: image.naturalHeight,
+        }));
+        expect(size.naturalWidth).toBeGreaterThan(0);
+        expect(size.naturalHeight).toBeGreaterThan(0);
+      }
+      const overflow = await section.evaluate(
+        (element) => element.scrollWidth - element.clientWidth,
+      );
+      expect(overflow).toBeLessThanOrEqual(1);
     });
   }
 });
