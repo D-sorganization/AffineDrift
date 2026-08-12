@@ -9,6 +9,7 @@ format:
     toc: true
     toc-depth: 4
     number-sections: true
+    css: proximal-distal-energy-transfer.css
 ---
 
 ```{=html}
@@ -89,6 +90,7 @@ The document is organized around four questions:
 - **RQ4 — Model test.** What does a two-link model show when distal-handoff timing is manipulated directly and energy accounting and counterfactual decompositions are computed along each trajectory? (@sec-methods, @sec-results, @sec-discussion)
 - **RQ5 — Attribution.** How much hand-path and joint force, impulse, power, and work is associated with pointwise drift versus same-state control, and how does that balance change with model topology, joint, and time window? (@sec-attribution-results)
 - **RQ6 — Allocation and Preload.** For an identical club-moment task, how do arm-dominant and wrist-dominant actuator allocations change internal loading, and under what declared transmission model does preload preserve torque continuity? (@sec-allocation-preload)
+- **RQ7 — Representation and Biology.** Which conclusions survive frame and reference-point changes, how does one net joint moment map to many muscle activations, and which questions belong to MuJoCo, Pinocchio, Drake, OpenSim, or MyoSuite? (@sec-advanced-bridge)
 
 # Mechanics of Sequenced Swings {#sec-mechanics}
 
@@ -320,6 +322,129 @@ scapular muscle strategy, injury effect, or clubhead-speed benefit has been
 measured. The complete equations, sensitivity grid, traces, and falsifiers are
 maintained in the [open research epic](https://github.com/D-sorganization/UpstreamDrift/issues/8497).
 :::
+
+# Reference Frames, Biological Redundancy, and Engine Roles {#sec-advanced-bridge}
+
+## One Physical Interaction, Several Coordinate Descriptions
+
+A model result should not change because a reviewer expresses it in a
+laboratory frame, a club-attached frame, or about another point on the same
+rigid body. With force-first wrench
+$\mathsf W_A=[\mathbf F^T\;\mathbf M_A^T]^T$ and linear-first twist
+$\mathsf V_A=[\mathbf v_A^T\;\boldsymbol\omega^T]^T$, transport from point
+$A$ to point $B$ requires
+
+$$
+\mathbf M_B=\mathbf M_A-(\mathbf r_B-\mathbf r_A)\times\mathbf F,
+\qquad
+\mathbf v_B=\mathbf v_A+
+\boldsymbol\omega\times(\mathbf r_B-\mathbf r_A).
+$$
+
+Those paired changes preserve instantaneous power:
+
+$$
+P=\mathbf F\cdot\mathbf v+
+\mathbf M\cdot\boldsymbol\omega.
+$$
+
+The new executable audit rotates and transports arbitrary three-dimensional
+samples and checks Jacobian virtual work
+$\boldsymbol\tau^T\dot{\mathbf q}=\mathsf W^T\mathbf J\dot{\mathbf q}$.
+Its largest power residual is $1.14\times10^{-13}$ W, and the virtual-work
+residual is $3.55\times10^{-15}$ W. These values establish numerical convention
+closure, not experimental accuracy.
+
+![Power Invariance Under Consistent Frame and Reference-Point Changes.](figures/proximal_distal_energy_transfer/fig_frame_power_invariance.svg){#fig-site-frame-power-invariance alt="A wrench and twist are transported between reference points beside a logarithmic chart showing power residuals below the numerical gate."}
+
+This distinction is central to the AffineDrift viewpoint. A drift/control split
+depends on the selected state, inputs, and coordinates. The correctly
+transported physical power does not. The [Reference-Point
+Problem](reference-point-problem.html), [Rotation Representation
+Guide](rotation-representations-reference.html), [Screw Theory
+Reference](screw-theory-reference.html), and [cross-formalism dynamics
+treatment](calculation-framework-comparison/multibody-drift-control-v3.html#sec-cross-formalism)
+develop the underlying representation issues in greater depth.
+
+## The Same Net Moment Does Not Identify One Muscle Strategy
+
+For a moment-arm matrix $\mathbf R_m(\mathbf q)$ and nonnegative muscle forces
+$\mathbf f_m$, the net modeled joint moment is
+
+$$
+\boldsymbol\tau_m=\mathbf R_m(\mathbf q)\mathbf f_m.
+$$
+
+When more muscle channels exist than independent joint moments, null-space
+changes in muscle force alter internal loading without altering
+$\boldsymbol\tau_m$. The reduced Hill-type example holds a 10 N m task fixed
+across 41 agonist--antagonist allocations. Maximum moment error is
+$1.78\times10^{-15}$ N m, while the declared stiffness proxy rises from 3.33 to
+23.33 N m rad$^{-1}$ and series-elastic energy rises from 0.208 to 5.208 J.
+
+![A Matched Joint Moment Across Different Agonist--Antagonist Activations.](figures/proximal_distal_energy_transfer/fig_biological_redundancy.svg){#fig-site-biological-redundancy alt="Agonist and antagonist activation increase together while the net ten newton metre task remains constant and internal stiffness and elastic energy rise."}
+
+Therefore inverse dynamics cannot determine whether a golfer used one unique
+scapular, arm, or wrist strategy. Co-contraction may change stability, energy
+cost, or tissue loading, but selecting among those consequences requires an
+explicit objective and measurements. The [inverse-dynamics limitation
+article](inverse-dynamics.html), [Constraint Forces](The_Physics_of_Golf/quarto/ch07_constraint_forces.html),
+and [Induced Acceleration Analysis](The_Physics_of_Golf/quarto/ch30b_induced_acceleration.html)
+provide complementary treatments.
+
+## Preparation History With Activation and Series-Force Dynamics
+
+The earlier dead-zone study tested one operational definition of slack. A new
+reduced biological bridge instead carries neural excitation, activation,
+Hill-type force, and series-force state continuously through the transition.
+Persistent-direction and complete-role-reversal cases again share 6 N m before
+and 10 N m after the transition. No state is reset.
+
+![Persistent-Direction and Role-Reversal Histories in a Reduced Muscle Model.](figures/proximal_distal_energy_transfer/fig_biological_role_reversal.svg){#fig-site-biological-role-reversal alt="Desired and transmitted joint moment plus arm and wrist activation histories compare persistent directions with complete role reversal."}
+
+The persistent case produces a 0.08998 N m s post-transition error impulse; the
+role reversal produces 0.09084 N m s. This small conditional difference shows
+only that activation and series-force histories make the route into an
+identical net task observable. It does not prove scapular retraction, wrist
+passivity, or a preferred human technique. The [Passive and Distributed
+Control chapter](The_Physics_of_Golf/quarto/ch27_passive_distributed_control.html)
+develops the related biological-control ideas.
+
+## Use Each Engine for a Declared Question
+
+![Scientific Questions and the Common Cross-Engine Comparison Surface.](figures/proximal_distal_energy_transfer/fig_cross_engine_question_ladder.svg){#fig-site-engine-ladder alt="MuJoCo, Pinocchio, Drake, OpenSim, and MyoSuite roles connect to common frames, events, wrenches, moments, power, and residuals."}
+
+- **MuJoCo** tests contact-rich forward dynamics and achieved contact wrenches.
+- **Pinocchio** supplies fast rigid-body Jacobians, inverse dynamics, and forward
+  dynamics for cross-checks and sensitivity work.
+- **Drake** is suited to constrained trajectory optimization and alternative
+  contact formulations under a preregistered objective.
+- **OpenSim** is the appropriate bridge to subject-scaled muscle paths, moment
+  arms, inverse dynamics, and induced acceleration.
+- **MyoSuite** supports activation-driven muscle/contact simulation and control.
+
+The currently executed cross-engine evidence is the reduced MuJoCo/Pinocchio
+forward-contact tier. Drake, OpenSim, and MyoSuite are actionable repository
+capabilities and registered next validation tiers; they are not completed human
+experiments. Engine agreement tests assumptions shared by the implementations.
+It cannot replace bilateral grip wrenches, motion, shaft strain, EMG, or
+participant-held-out evaluation.
+
+One additional representation-level test is now executed across all five
+adapters. A nonzero canonical pelvis pose and four nonzero joint rotations are
+encoded into each engine's coordinate vector and decoded again. The largest
+translation residual is zero, the largest rotation residual is
+$3.56\times10^{-15}$ degrees, and the largest joint residual is
+$8.89\times10^{-16}$ degrees. This verifies pose-coordinate mapping only. It
+does not execute five dynamics engines or establish contact, wrench,
+trajectory, anatomical, or physiological parity.
+
+![A Consistent Visual Language Across Four Modeled Swing Phases.](figures/proximal_distal_energy_transfer/fig_advanced_model_motion_plate.svg){#fig-site-advanced-motion-plate alt="Four stylized preparation, retention, rapid distal acceleration, and delivery phases show the mechanical chain and tangent force vector."}
+
+The complete equations, evidence archives, backend boundaries, and
+falsification program are maintained in the [advanced expansion epic
+#8505](https://github.com/D-sorganization/UpstreamDrift/issues/8505) and the
+[canonical research monograph](https://github.com/D-sorganization/UpstreamDrift/blob/main/docs/research/proximal_distal_energy_transfer/proximal_distal_energy_transfer.pdf).
 
 # Computational Methods {#sec-methods}
 
@@ -564,6 +689,7 @@ The numerical results support delayed distal release as a robust mechanism withi
 Qualifications and scope limits:
 - The primary timing estimand is planar 2-DOF with a rigid shaft and fixed hub. The full resource separately executes moving-base/flexible and coupled-modal-club models, a distributed-shaft reference, a 20-DOF spatial common-state comparison, and native MuJoCo/Pinocchio reduced spatial forward contact. These extensions remain model-tier evidence, not subject-calibrated human validation.
 - Actuators use declared command-level surrogates. Physiological muscle activation, tissue history, and continuous constrained optimal control remain open.
+- The advanced biological bridge adds reduced Hill-type activation and series-force states, but it remains a synthetic mechanism study rather than a subject-scaled OpenSim or MyoSuite validation.
 - The local one-at-a-time screen does not estimate population effects. A separate 12-input Latin-hypercube/PRCC study exposes coupled effects, non-identifiability, and held-out strategy tradeoffs, but its engineering envelopes are not population distributions or Sobol variance decomposition.
 - No coaching recommendation follows from these finite model inputs.
 
@@ -616,6 +742,7 @@ python3 -m scripts.research.proximal_distal_energy.e1e_smooth_command_sensitivit
 python3 -m scripts.research.proximal_distal_energy.run_hand_path_attribution_study
 python3 -m scripts.research.proximal_distal_energy.run_torque_allocation_preload_study
 python3 -m scripts.research.proximal_distal_energy.run_grf_drift_study
+python3 -m scripts.research.proximal_distal_energy.run_advanced_biological_bridge
 ```
 
 ## Model Parameters
