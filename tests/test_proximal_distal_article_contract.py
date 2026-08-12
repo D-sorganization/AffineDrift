@@ -80,9 +80,13 @@ def test_article_exposes_matched_allocation_and_preload_falsifiers() -> None:
         "same 8 N m control moment",
         "modeled RMS hand force spans 7.58--91.51",
         "11 of 12 dead-zone/time-constant sensitivity cases",
+        "applies the preparation commands for 180 ms",
+        "without resetting state",
+        "not a model of an anatomical",
         "not be relabeled as scapular retraction",
         "participant-level holdout",
         "UpstreamDrift/issues/8497",
+        "e96a585a41f2d7659864e478db3de829e710e622",
     ):
         assert term in text
     assert "does not establish a universal" in text
