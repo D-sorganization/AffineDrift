@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-08-12T17:54:00Z
+Last-Updated: 2026-08-12T19:33:25Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-08-12T17:54:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.8                                            |
-| **Spec Version**        | 1.0.179                                          |
+| **Spec Version**        | 1.0.180                                          |
 | **Last Spec Update**    | 2026-08-12                                       |
 
 ## 2. Purpose & Mission
@@ -255,6 +255,7 @@ Quarto resolution remain governed by the configured BibTeX files.
 | F60 | Technology instrumentation section                  | ✅     | The Quarto site publishes a top-level Technology section (`pages/technology.qmd`) with research articles on launch-monitor, force-measurement, motion-capture, impact-mechanics, and vendor-documentation topics. The articles distinguish measured, derived, and estimated quantities and keep research dossiers under `content-development/technology-research/`; `tests/test_navbar_ia.py` guards the section's navigation entry and item-budget contract.                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 | F61 | Editorial title and contrast gates                  | ✅     | `scripts/check_title_case.py` enforces significant-word title capitalization across navigation labels, page metadata, headings, figure captions, literal chart titles, and LaTeX structural titles in publishable sources. It runs in pre-commit, pull-request CI, and deployment validation. The fleet policy additionally covers Word title styles plus PDF metadata and outline labels. The rendered-site accessibility suite evaluates computed text contrast on sitemap routes in light and dark themes, while semantic CSS tokens keep links, muted text, callouts, controls, and code readable.                                                                                                                                                                                                                                                                                                                 |
 | F62 | Ground-reaction drift publication                   | ✅     | The proximal-to-distal article and Physics of Golf GRF chapter define a frame-explicit constrained-reaction split, overlapping pointwise reaction ZTCF/ZVCF diagnostics, rank/identifiability boundaries, model-internal fixed-support results, and a participant-held-out force-plate falsification protocol. Regression tests prohibit universal contact-work claims, unique torque or bilateral inference, and one-template GRF prescriptions.                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
+| F63 | Physics of Golf LuaLaTeX contract                   | ✅     | The Physics of Golf PDF build uses `unicode-math`-compatible bold symbols, provides its shared source-level math macros in the PDF preamble, and keeps display equations valid for LuaLaTeX arrays and subscripts. Focused source-contract tests guard the failure modes exposed by a complete book render.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
 
 ### API / Interface Contract
 

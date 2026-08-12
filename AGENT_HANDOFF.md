@@ -20,9 +20,11 @@ Active epics/PRs:
   reported seven missing summary entries; current `main` actually had nine,
   including later ground-reaction sources. Existing Quarto bibliography
   declarations were already correct and were not broadened. The article and
-  both textbook HTML projects render; The Physics of Golf's default PDF render
-  retains a pre-existing LuaLaTeX `Improper alphabetic constant` failure at
-  `\bm{\tau}` that is separate from citation resolution.
+  both textbook HTML projects render. The Physics of Golf now also renders its
+  complete PDF with LuaLaTeX: the project maps source-level `\bm` calls to
+  `unicode-math`, defines the PDF-side shared math macros, and repairs latent
+  chapter equations that the former `\bm{\tau}` failure had masked. Focused
+  regression tests protect the repaired PDF contract.
 
 - **UpstreamDrift #8505 advanced proximal--distal expansion** — isolated branch
   `research/proximal-distal-advanced-expansion` adds a public-facing reference-
