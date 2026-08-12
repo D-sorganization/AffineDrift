@@ -20,7 +20,9 @@ Active epics/PRs:
   figures, render both formats, and visually inspect the PDF before publication.
   PR #3812 merged as `adb06e0d`; the follow-up publication branch
   `fix/proximal-distal-companion-pdf` declares the tracked PDF as a Quarto
-  resource so clean deploys preserve its stable URL.
+  resource. PR #3813 exposed that a resource rooted inside the clean output
+  directory was nested under `docs/docs/`; the final path correction keeps the
+  canonical PDF under `articles/` and copies it to `docs/articles/`.
 
 - **UpstreamDrift #8507 adversarial transmission and task robustness** — branch
   `research/proximal-distal-transmission-robustness` adds a public synthesis of
