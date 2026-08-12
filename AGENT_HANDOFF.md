@@ -12,6 +12,16 @@ articles that support a fleet-wide "Shared Web Tools" program.
 
 Active epics/PRs:
 
+- **UpstreamDrift #8505 advanced proximal--distal expansion** — isolated branch
+  `research/proximal-distal-advanced-expansion` adds a public-facing reference-
+  frame and biological bridge to the article: power-preserving wrench/twist
+  transport, Jacobian virtual work, matched-moment agonist--antagonist
+  redundancy, continuous activation/series-force history, five engine-role
+  boundaries, executed pose-coordinate round trips, and five new SVG figures.
+  The adapter result is representation-only; five-engine dynamics and human
+  validation remain explicit falsification tiers. Focused content tests and a
+  Quarto article render pass; full site and protected publication gates remain.
+
 - **UpstreamDrift #8493 ground-reaction drift attribution** — UpstreamDrift PR
   #8494 merged to remote `main` at
   `06a0ca6317f6351e5b6da3789d2cd8e1e3dc53b5`, with the SPEC follow-up #8495

@@ -104,3 +104,46 @@ def test_article_exposes_ground_reaction_drift_boundaries() -> None:
         "ZTCF and ZVCF overlap",
     ):
         assert term in text
+
+
+def test_article_connects_frames_biology_and_engines_without_overclaiming() -> None:
+    text = ARTICLE.read_text(encoding="utf-8")
+
+    for term in (
+        "Reference Frames, Biological Redundancy, and Engine Roles",
+        "fig_frame_power_invariance.svg",
+        "fig_biological_redundancy.svg",
+        "fig_biological_role_reversal.svg",
+        "fig_cross_engine_question_ladder.svg",
+        "MuJoCo",
+        "Pinocchio",
+        "Drake",
+        "OpenSim",
+        "MyoSuite",
+        "1.14\\times10^{-13}",
+        "cannot determine whether a golfer used one unique",
+        "they are not completed human",
+        "UpstreamDrift/issues/8505",
+    ):
+        assert term in text
+
+
+def test_advanced_site_figures_are_local_and_nonempty() -> None:
+    figure_dir = Path("articles/figures/proximal_distal_energy_transfer")
+    for stem in (
+        "fig_frame_power_invariance",
+        "fig_biological_redundancy",
+        "fig_biological_role_reversal",
+        "fig_cross_engine_question_ladder",
+        "fig_advanced_model_motion_plate",
+    ):
+        path = figure_dir / f"{stem}.svg"
+        assert path.is_file()
+        assert path.stat().st_size > 1000
+
+
+def test_advanced_bridge_has_article_local_mobile_containment() -> None:
+    css = Path("articles/proximal-distal-energy-transfer.css").read_text(encoding="utf-8")
+    assert "#sec-advanced-bridge" in css
+    assert "overflow-x: auto" in css
+    assert "max-width: 100%" in css
