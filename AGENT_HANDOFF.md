@@ -50,6 +50,17 @@ Active epics/PRs:
   CRLF-derived preactivation-SVG manifest digest; the current hotfix pins the
   canonical LF Git-blob digest without changing figure content or scientific
   results.
+- **UpstreamDrift #8499 adversarial review adjudication** — isolated branch
+  `research/proximal-distal-adversarial-review` synchronizes the public article
+  with the verified numerical corrections and present model ladder. It removes
+  global-optimum, physiological negative-work, and coaching-cue implications;
+  separates pointwise ZTCF from forward killswitches; reports all 92 impact
+  candidates and threshold counts; adds 20--50 ms command-rise sensitivity;
+  corrects phase-work values and the analytic interface-power label; and no
+  longer describes already-executed moving-base, shaft, spatial, and coupled
+  uncertainty work as absent. Local article gates and the site render pass;
+  protected publication remains pending.
+
 - **Document title capitalization** — this branch extends the established
   Quarto gate to LaTeX structural titles, normalizes the tracked canonical
   LaTeX corpus, preserves technical literals such as `A/S`, `et al.`, and
