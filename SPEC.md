@@ -1,6 +1,6 @@
 # SPEC.md — Repository Specification Document
 
-Last-Updated: 2026-08-12T12:00:00Z
+Last-Updated: 2026-08-12T17:54:00Z
 
 <!--
   TEMPLATE VERSION: 1.0.0
@@ -29,7 +29,7 @@ Last-Updated: 2026-08-12T12:00:00Z
 | **Primary Language(s)** | Python 3.12, JavaScript ES6+, Quarto             |
 | **License**             | MIT                                              |
 | **Current Version**     | 1.0.8                                            |
-| **Spec Version**        | 1.0.178                                          |
+| **Spec Version**        | 1.0.179                                          |
 | **Last Spec Update**    | 2026-08-12                                       |
 
 ## 2. Purpose & Mission
@@ -184,6 +184,11 @@ AffineDrift/
 
 ### Core Features
 
+For the proximal-to-distal publication, every inline bibliography citation must
+also appear in the reader-facing Markdown bibliography. Canonical metadata and
+Quarto resolution remain governed by the configured BibTeX files.
+
+<!-- prettier-ignore -->
 | #   | Feature                                             | Status | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | --- | --------------------------------------------------- | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | F1  | Quarto Website Rendering and Deployment             | ✅     | Renders Quarto markdown (.qmd) source files into static HTML and deploys to GitHub Pages                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
