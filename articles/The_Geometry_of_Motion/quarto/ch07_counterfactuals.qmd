@@ -94,7 +94,7 @@ removed at this instant?*
 ::: {.callout-important}
 ## Implementation Note: Pointwise vs. Trajectory Semantics
 
-In shipped computational implementations (e.g., `UpstreamDrift` and the applied thesis [Proximal-to-Distal Energy Transfer](/articles/proximal-distal-energy-transfer.qmd)), **ZTCF** is evaluated *pointwise* at each sample $(\mathbf{q}, \dot{\mathbf{q}})$ along a trajectory as the instantaneous drift acceleration $\ddot{\mathbf{q}}_{\text{ZTCF}} = f(\mathbf{x}) = M(\mathbf{q})^{-1}(-C(\mathbf{q},\dot{\mathbf{q}})\dot{\mathbf{q}} - \mathbf{g}(\mathbf{q}))$, alongside forward-integrated counterfactual rollouts.
+In shipped computational implementations (e.g., `UpstreamDrift` and the applied study [Proximal-to-Distal Energy Transfer](/articles/proximal-distal-energy-transfer.html)), **ZTCF** is evaluated *pointwise* at each sample $(\mathbf{q}, \dot{\mathbf{q}})$ along a trajectory as the instantaneous drift acceleration $\ddot{\mathbf{q}}_{\text{ZTCF}} = f(\mathbf{x}) = M(\mathbf{q})^{-1}(-C(\mathbf{q},\dot{\mathbf{q}})\dot{\mathbf{q}} - \mathbf{g}(\mathbf{q}))$, alongside forward-integrated counterfactual rollouts.
 :::
 
 For a mechanical system with state $\x=(\q,\dot{\q})$, the ZTCF represents the "passive
@@ -229,7 +229,7 @@ preloads) without any velocity-dependent effects.
 ::: {.callout-important}
 ## Implementation Note: Static Gravity Baseline vs. Applied Torque Formulation
 
-Equation \eqref{eq:ch7:ZVCF} defines the ZVCF as the *static gravity baseline* acceleration $a_{\text{grav}}(\mathbf{q}) = -M(\mathbf{q})^{-1}\mathbf{g}(\mathbf{q})$ when all velocities and control inputs are zero. Shipped simulation packages (such as `UpstreamDrift`'s `ztcf_zvcf` module and the [Proximal-to-Distal Energy Transfer](/articles/proximal-distal-energy-transfer.qmd) thesis) define the full pointwise zero-velocity acceleration including applied joint torque $\boldsymbol{\tau}$ as $\ddot{\mathbf{q}}_{\text{ZVCF}} = M(\mathbf{q})^{-1}(\boldsymbol{\tau} - \mathbf{g}(\mathbf{q}))$. The static gravity baseline corresponds to the zero-input case $\boldsymbol{\tau}=0$.
+Equation \eqref{eq:ch7:ZVCF} defines the ZVCF as the *static gravity baseline* acceleration $a_{\text{grav}}(\mathbf{q}) = -M(\mathbf{q})^{-1}\mathbf{g}(\mathbf{q})$ when all velocities and control inputs are zero. Shipped simulation packages (such as `UpstreamDrift`'s `ztcf_zvcf` module and the [Proximal-to-Distal Energy Transfer](/articles/proximal-distal-energy-transfer.html) study) define the full pointwise zero-velocity acceleration including applied joint torque $\boldsymbol{\tau}$ as $\ddot{\mathbf{q}}_{\text{ZVCF}} = M(\mathbf{q})^{-1}(\boldsymbol{\tau} - \mathbf{g}(\mathbf{q}))$. The static gravity baseline corresponds to the zero-input case $\boldsymbol{\tau}=0$.
 :::
 
 :::
