@@ -18,6 +18,9 @@ Active epics/PRs:
   model-evidence snapshot, live source paths, explicit inferential boundaries,
   and HTML/PDF publication. Validate the focused companion contract, regenerate
   figures, render both formats, and visually inspect the PDF before publication.
+  PR #3812 merged as `adb06e0d`; the follow-up publication branch
+  `fix/proximal-distal-companion-pdf` declares the tracked PDF as a Quarto
+  resource so clean deploys preserve its stable URL.
 
 - **UpstreamDrift #8507 adversarial transmission and task robustness** — branch
   `research/proximal-distal-transmission-robustness` adds a public synthesis of
