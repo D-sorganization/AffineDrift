@@ -43,6 +43,15 @@ bibliography:
   clusters: ["biomechanics", "striking skills"]
   concepts: ["segmental acceleration", "kinetic chain"]
 
+- id: herring1992
+  title: "Effects of changes in segmental values and timing of both torque and torque reversal in simulated throws"
+  authors: "Herring, R. M., & Chapman, A. E."
+  year: 1992
+  venue: "Journal of Biomechanics"
+  scholar_link: "https://doi.org/10.1016/0021-9290(92)90073-A"
+  clusters: ["biomechanics", "segment interaction"]
+  concepts: ["torque reversal", "proximal-to-distal sequencing"]
+
 - id: cochran1968
   title: "The Search for the Perfect Swing"
   authors: "Cochran, Alastair, & Stobbs, John"
@@ -60,6 +69,15 @@ bibliography:
   scholar_link: "https://scholar.google.com/scholar?q=Jorgensen+The+Physics+of+Golf"
   clusters: ["golf physics", "multibody dynamics"]
   concepts: ["torque timing", "double pendulum"]
+
+- id: jorgensen1970
+  title: "On the dynamics of the swing of a golf club"
+  authors: "Jorgensen, Theodore"
+  year: 1970
+  venue: "American Journal of Physics"
+  scholar_link: "https://doi.org/10.1119/1.1976419"
+  clusters: ["golf physics", "double pendulum"]
+  concepts: ["swing dynamics", "torque timing"]
 
 - id: pickering1999
   title: "On the double pendulum model of the golf swing"
@@ -250,6 +268,51 @@ bibliography:
   clusters: ["performance optimization", "distance & accuracy"]
   concepts: ["distance optimization", "swing mechanics"]
 
+- id: dillman1994
+  title: "How has biomechanics contributed to the understanding of the golf swing?"
+  authors: "Dillman, Charles J., & Lange, Gregory W."
+  year: 1994
+  venue: "Science and Golf II: Proceedings of the World Scientific Congress of Golf"
+  scholar_link: "https://doi.org/10.4324/9780203474709-2"
+  clusters: ["golf biomechanics", "review"]
+  concepts: ["swing mechanics", "biomechanical evidence"]
+
+- id: fradkin2004
+  title: "How well does club head speed correlate with golf handicaps?"
+  authors: "Fradkin, Andrea J., Sherman, Caroline A., & Finch, Caroline F."
+  year: 2004
+  venue: "Journal of Science and Medicine in Sport"
+  scholar_link: "https://doi.org/10.1016/S1440-2440(04)80265-2"
+  clusters: ["golf performance", "skill differences"]
+  concepts: ["clubhead speed", "handicap"]
+
+- id: hellstrom2009
+  title: "Competitive elite golf: a review of the relationships between playing results, technique and physique"
+  authors: "Hellström, John"
+  year: 2009
+  venue: "Sports Medicine"
+  scholar_link: "https://doi.org/10.2165/11315200-000000000-00000"
+  clusters: ["elite golf", "review"]
+  concepts: ["playing performance", "technique and physique"]
+
+- id: mcphee2022
+  title: "A review of dynamic models and measurements in golf"
+  authors: "McPhee, John"
+  year: 2022
+  venue: "Sports Engineering"
+  scholar_link: "https://doi.org/10.1007/s12283-022-00387-0"
+  clusters: ["golf dynamics", "review"]
+  concepts: ["dynamic models", "measurement"]
+
+- id: smith2015
+  title: "Golf coaches' perceptions of key technical swing parameters compared to biomechanical literature"
+  authors: "Smith, Aimée, Roberts, Jonathan, Wallace, Eric S., Kong, Pui Wah, & Forrester, Steph"
+  year: 2015
+  venue: "International Journal of Sports Science & Coaching"
+  scholar_link: "https://doi.org/10.1260/1747-9541.10.4.739"
+  clusters: ["coaching", "golf biomechanics"]
+  concepts: ["swing parameters", "evidence translation"]
+
 - id: marsan2019
   title: "Biomechanical analysis of the golf swing: methodological effect of angular velocity component on the identification of the kinematic sequence"
   authors: "Marsan, Thibault, Bourgain, Maxime, Thoreux, Patricia, Sauret, Christophe, & Rouch, Philippe"
@@ -366,3 +429,21 @@ bibliography:
   scholar_link: "https://doi.org/10.1080/02640414.2013.792949"
   clusters: ["3d trunk kinematics", "clubhead speed"]
   concepts: ["trunk rotation", "3d motion"]
+
+- id: ballbest2007
+  title: "Different Centre of Pressure Patterns Within the Golf Stroke I: Cluster Analysis"
+  authors: "Ball, Kevin A., & Best, Russell J."
+  year: 2007
+  venue: "Journal of Sports Sciences"
+  scholar_link: "https://doi.org/10.1080/02640410600874971"
+  clusters: ["ground interaction", "centre of pressure"]
+  concepts: ["COP strategies", "cluster analysis"]
+
+- id: watson2026grf
+  title: "Ground Reaction Force and Centre of Pressure During the Golf Swing and Associations with Clubhead Speed and Skill Level: A Systematic Review"
+  authors: "Watson, Andrew, Murray, Andrew, Ehlert, Alex, Xu, Jiaqing, Williams, Steve, Spiegelhalter, Abbie, Coughlan, Daniel, Turner, Anthony, & Bishop, Chris"
+  year: 2026
+  venue: "Sports Medicine"
+  scholar_link: "https://doi.org/10.1007/s40279-025-02391-3"
+  clusters: ["ground interaction", "systematic review"]
+  concepts: ["ground reaction force", "centre of pressure"]

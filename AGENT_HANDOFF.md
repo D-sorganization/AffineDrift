@@ -2,7 +2,7 @@
 
 > Update this file with every PR and every push to main.
 
-Last updated: 2026-08-11
+Last updated: 2026-08-12
 
 ## Where This Repo Is Heading
 
@@ -11,6 +11,20 @@ for engineering mathematics, plus a growing set of AffineDrift-relevant research
 articles that support a fleet-wide "Shared Web Tools" program.
 
 Active epics/PRs:
+
+- **Proximal--distal citation reconciliation** — branch
+  `agent/proximal-distal-citation-reconciliation` synchronizes every article
+  citation with the reader-facing Markdown bibliography, adds primary
+  delayed-release, hub-path, and Robertson--Winter references at the claims
+  they support, and adds a generic parity regression test. The external audit
+  reported seven missing summary entries; current `main` actually had nine,
+  including later ground-reaction sources. Existing Quarto bibliography
+  declarations were already correct and were not broadened. The article and
+  both textbook HTML projects render. The Physics of Golf now also renders its
+  complete PDF with LuaLaTeX: the project maps source-level `\bm` calls to
+  `unicode-math`, defines the PDF-side shared math macros, and repairs latent
+  chapter equations that the former `\bm{\tau}` failure had masked. Focused
+  regression tests protect the repaired PDF contract.
 
 - **UpstreamDrift #8505 advanced proximal--distal expansion** — isolated branch
   `research/proximal-distal-advanced-expansion` adds a public-facing reference-

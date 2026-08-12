@@ -133,6 +133,23 @@ format:
     number-sections: true
     include-in-header:
       text: |
-        \usepackage{bm}
+        % LuaLaTeX's unicode-math exposes Greek letters as Unicode math tokens.
+        % Route the source-level \bm macro through its native bold command;
+        % legacy bm cannot process tokens such as \mittau.
+        \newcommand{\bm}[1]{\symbf{#1}}
+        % Keep the PDF shorthand aligned with the MathJax macros above.
+        \providecommand{\control}{\mathbf{u}}
+        \providecommand{\massmat}{\mathbf{M}(\mathbf{q})}
+        \providecommand{\cormat}{\mathbf{C}(\mathbf{q}, \dot{\mathbf{q}})}
+        \providecommand{\gravvec}{\mathbf{g}(\mathbf{q})}
+        \providecommand{\drift}{f(\mathbf{x})}
+        \providecommand{\inputmap}{G(\mathbf{x})}
+        \providecommand{\constraintforce}{\boldsymbol{\lambda}}
+        \providecommand{\shaftdamp}{D_s}
+        % Long chapter titles collide with the folio in the default book header.
+        % Keep the full title at each chapter opening and a compact running mark.
+        \AtBeginDocument{%
+          \renewcommand{\chaptermark}[1]{\markboth{\chaptername\ \thechapter}{}}%
+        }
         \usepackage{tcolorbox}
         \tcbuselibrary{theorems, breakable, skins}

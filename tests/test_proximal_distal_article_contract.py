@@ -1,9 +1,17 @@
 """Publication-boundary checks for the hand-path attribution article."""
 
+import re
 from pathlib import Path
 
 ARTICLE = Path("articles/proximal-distal-energy-transfer.qmd")
+ARTICLE_BIBLIOGRAPHY = Path("articles/proximal-distal-energy-transfer-bibliography.md")
 GLOSSARY = Path("articles/zero-torque-counterfactual.qmd")
+
+
+def _article_citation_keys(text: str) -> set[str]:
+    """Return bibliography keys while excluding Quarto cross-reference labels."""
+    keys = set(re.findall(r"@([A-Za-z0-9_-]+)", text))
+    return {key for key in keys if not key.startswith(("sec-", "fig-", "eq-", "tbl-"))}
 
 
 def test_article_distinguishes_force_from_biological_effort() -> None:
@@ -70,6 +78,27 @@ def test_article_cites_primary_hand_path_study() -> None:
 
     assert "@mackenzie2020energy" in text
     assert "average force along the hand path" in text
+
+
+def test_article_citations_are_represented_in_reader_bibliography() -> None:
+    article_text = ARTICLE.read_text(encoding="utf-8")
+    bibliography_text = ARTICLE_BIBLIOGRAPHY.read_text(encoding="utf-8")
+    bibliography_ids = set(re.findall(r"^- id: ([A-Za-z0-9_-]+)$", bibliography_text, re.MULTILINE))
+
+    assert _article_citation_keys(article_text) <= bibliography_ids
+
+
+def test_article_links_delayed_release_hub_path_and_interface_power_sources() -> None:
+    text = ARTICLE.read_text(encoding="utf-8")
+
+    for key in (
+        "@sprigings2000",
+        "@sprigings2002",
+        "@nesbit2009hub",
+        "@nesbit2014hub",
+        "@robertson1980",
+    ):
+        assert key in text
 
 
 def test_article_exposes_matched_allocation_and_preload_falsifiers() -> None:

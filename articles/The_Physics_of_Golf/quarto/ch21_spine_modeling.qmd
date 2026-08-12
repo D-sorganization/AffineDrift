@@ -578,7 +578,7 @@ $$
 
 (varying with disc health and spinal level). For a segment experiencing a 5$^{\circ}$ rotation:
 $$
-\tau_{\mathrm{disc}} = k_{\mathrm{disc}} \cdot \theta = (10 \text{ N} \cdot \mathrm{m/deg}) \times 5$^{\circ}$ = 50 \text{ N} \cdot \mathrm{m}
+\tau_{\mathrm{disc}} = k_{\mathrm{disc}} \cdot \theta = (10 \text{ N} \cdot \mathrm{m/deg}) \times 5^{\circ} = 50 \text{ N} \cdot \mathrm{m}
 $$
 
 Note: when multiple motion segments are arranged in *series* (as they are in the spine), the total torsional *compliance* (inverse of stiffness) increases: $1/k_{\mathrm{total}} = \sum_i 1/k_i$. This means the total spine is *less stiff* than any individual segment. However, the total *restoring torque* at a given total rotation angle increases with more segments, because each segment contributes its own restoring torque. The cumulative restoring torque from all segments resisting axial rotation is substantial, even though the total stiffness (torque per unit of *total* angle) is reduced by the series arrangement.
@@ -591,8 +591,8 @@ Spinal ligaments are nonlinear springs. At small angles, they are slack and exer
 The force-extension relationship is approximately:
 $$
 F_{\mathrm{ligament}} = \begin{cases}
-0 & \text{if } \Delta L < L_{\mathrm{slack}} 
-k_{\mathrm{ligament}} (L - L_0)^2 & \text{if } L > L_{\mathrm{slack}}
+0, & \text{if } \Delta L < L_{\mathrm{slack}}, \\
+k_{\mathrm{ligament}} (L - L_0)^2, & \text{if } L > L_{\mathrm{slack}}.
 \end{cases}
 $$
 
@@ -766,4 +766,3 @@ If your biomechanical model predicts any of the following, it is wrong:
 I_i \ddot{\theta}_i + d_i \dot{\theta}_i + k_i \theta_i = \tau_{\mathrm{muscle}, i} + \tau_{\mathrm{coupling}, i}
 $$
    where the coupling term represents the torque from the adjacent segment above or below. Use realistic values for moment of inertia, damping, and stiffness.
-
