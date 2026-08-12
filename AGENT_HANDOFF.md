@@ -14,15 +14,20 @@ Active epics/PRs:
 
 - **UpstreamDrift #8493 ground-reaction drift attribution** — UpstreamDrift PR
   #8494 merged to remote `main` at
-  `06a0ca6317f6351e5b6da3789d2cd8e1e3dc53b5`, with the raced SPEC freshness
-  follow-up #8495 merged at `33ec92f04ee80b5ac2200488e10a4531eecf1892`.
-  AffineDrift PR #3802 pins the scientific merge and replaces the textbook GRF chapter's sign error,
-  universal zero-work claim, unique muscle-torque inference, and single optimal
-  waveform framing with a constrained-wrench treatment. The public
-  proximal-to-distal article now reports the fixed-support benchmark,
-  pointwise ZTCF/ZVCF overlap, cancellation-safe impulse interpretation, and
-  participant-held-out falsification protocol. Primary references were added
-  to both bibliographies and scientific boundary tests fail on regression.
+  `06a0ca6317f6351e5b6da3789d2cd8e1e3dc53b5`, with the SPEC follow-up #8495
+  merged at `33ec92f04ee80b5ac2200488e10a4531eecf1892`. AffineDrift PR #3802 pins the
+  scientific merge and replaces universal or uniquely biological
+  interpretations with a constrained-wrench treatment, cancellation-safe
+  impulses, and participant-held-out falsifiers.
+
+- **UpstreamDrift #8497 — arm--wrist torque allocation and preload** — the
+  reviewer article now distinguishes direct wrist moment, two-hand force
+  couple, proximal generalized control, activation, and scapular motion. It
+  reports the exact same-state 8 N m allocation surface and the separately
+  declared dead-zone transmission sensitivity. The modeled persistent-direction
+  advantage is conditional; no human technique or biological slack claim is
+  made. Bilateral wrench, grip-pressure, stiffness/force-rise, EMG, shaft, and
+  participant-holdout falsifiers are explicit.
 
 - **#8458 / UpstreamDrift #8470 — hand-path force attribution** (publication
   integration complete on this branch). UpstreamDrift PR #8473 merged to remote

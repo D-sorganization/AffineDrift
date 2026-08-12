@@ -72,6 +72,22 @@ def test_article_cites_primary_hand_path_study() -> None:
     assert "average force along the hand path" in text
 
 
+def test_article_exposes_matched_allocation_and_preload_falsifiers() -> None:
+    text = ARTICLE.read_text(encoding="utf-8")
+
+    for term in (
+        "Arm--Wrist Allocation and Transmission Preload",
+        "same 8 N m control moment",
+        "modeled RMS hand force spans 7.58--91.51",
+        "11 of 12 dead-zone/time-constant sensitivity cases",
+        "not be relabeled as scapular retraction",
+        "participant-level holdout",
+        "UpstreamDrift/issues/8497",
+    ):
+        assert term in text
+    assert "does not establish a universal" in text
+
+
 def test_article_exposes_ground_reaction_drift_boundaries() -> None:
     text = ARTICLE.read_text(encoding="utf-8")
 
