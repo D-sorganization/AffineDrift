@@ -431,7 +431,7 @@ Recall that the Zero-Torque Counterfactual (ZTCF) describes the natural motion o
 \label{eq:ZTCF-with-drag}
 \end{equation}
 
-The ZTCF describes the \emph{passive trajectory}—the path the swing would follow if muscles applied zero torque (after release). In this framework, drag is part of the \emph{drift field} $f(\bm{x})$.
+The forward ZTCF trajectory integrates the declared effective plant with the applied generalized-control channel set to zero. In this framework, drag is part of the drift field $f(\bm{x})$; the counterfactual does not specify muscle activation.
 
 \begin{laymansbox}{What Drag Does in the ZTCF}{context:drag-ZTCF}
 Without drag, the ZTCF is driven by gravity (pulling downward), inertial forces (centrifugal and Coriolis effects), and constraint forces (keeping the arms and club as rigid bodies). With drag, there's an additional dissipative term that continuously removes energy from the system. The result: the ZTCF trajectory with drag decelerates more than without drag. Clubhead speed at a given point late in the downswing will be lower when drag is included. This is physically correct—air resistance genuinely slows the club. But if you compute inverse dynamics using a ZTCF model that ignores drag, you will overestimate the controlled torques needed to produce the observed motion. You'll conclude that muscles are doing more work than they actually are.
@@ -599,4 +599,3 @@ Now estimate the drag torque: arm + club dragging through air at high speed prod
 \end{enumerate}
 
 \end{exercises}
-

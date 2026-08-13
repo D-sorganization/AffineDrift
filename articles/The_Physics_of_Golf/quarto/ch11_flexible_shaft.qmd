@@ -253,9 +253,9 @@ Shaft fitting is fundamentally the art of choosing the right combination of leng
 
 :::
 
-## Shaft Flex Profiles and ZTCF Trajectories
+## Shaft Flex Profiles and Forward ZTCF Trajectories
 
-Recall that the ZTCF is the counterfactual trajectory the clubhead would follow if all control inputs were set to zero. With a flexible shaft, the ZTCF depends not just on the initial conditions and the gravitational/Coriolis forces, but also on how the shaft deformation evolves.
+Here, ZTCF denotes the forward trajectory obtained after setting the model's declared applied generalized-control channel to zero. Gravity, velocity-dependent inertial terms, shaft elasticity and damping, and constraint reactions remain in the drift. The trajectory therefore depends on the initial state, including shaft deformation and deformation rate.
 
 Different shaft flex profiles lead to different drift fields, and thus different ZTCF trajectories.
 
@@ -285,11 +285,11 @@ This is why amateur golfers benefit from shafts matched to their swing speed: th
 
 Traditional shaft fitting focuses on swing speed, carry distance, and feel. These are important, but they are symptoms. The underlying physics asks: *which drift field $f(\mathbf{x})$ best matches your swing?*
 
-A shaft with the wrong stiffness changes the drift field in a way that moves the ZTCF away from the target. Consider:
+Changing shaft stiffness changes the declared effective plant and therefore its drift field and forward ZTCF trajectory. Whether that change improves a delivery objective is an empirical, golfer-specific question. Within a calibrated model, the following outcomes can be tested:
 
-- **Too stiff:** The shaft bends less, so less elastic energy is stored and released. The ZTCF predicts a clubhead velocity that is lower than expected. The ZTCF trajectory is also closer to the rigid-shaft case. Control inputs must compensate to hit the target distance.
-- **Too flexible:** The shaft bends more, storing more energy, but at a cost: the snapback might occur too late, after the clubhead has already left the impact zone, or the oscillations might not be damped by impact. The clubhead orientation is less predictable. The ZTCF trajectory has more variance, leading to dispersion.
-- **Just right:** The shaft reaches its maximum bend just before impact. The catapult effect releases its full energy at the moment when it most benefits the clubhead. The ZTCF trajectory is consistent and predictable.
+- **Higher stiffness:** The shaft generally bends less and the ZTCF approaches the corresponding rigid-shaft trajectory. The sign and magnitude of the delivery-speed change depend on excitation timing, damping, mass distribution, and initial state.
+- **Lower stiffness:** Larger deformation may store more elastic energy, but its release can occur before or after the delivery window. A deterministic ZTCF has no statistical variance by itself; dispersion requires a declared distribution of initial states, parameters, or controls.
+- **Task-matched stiffness:** A candidate shaft is supported only when calibrated simulations and held-out measurements show improved task metrics while respecting orientation, load, and robustness constraints.
 
 The task of shaft fitting is to adjust $k_{\text{shaft}}$, $\zeta$, the flex profile, and the total shaft mass to produce a drift field whose ZTCF closely matches the golfer's target trajectory for their measured swing speed and swing geometry.
 
@@ -355,7 +355,7 @@ $$
 
 where $\bm{F}_{\text{constraint}}$ is the force keeping the clubhead at distance $L$ from the grip.
 
-The ZTCF is the trajectory that results when the constraint forces alone (no muscle torques) steer the swing.
+The forward ZTCF is the trajectory obtained with the declared applied generalized-control channel set to zero. Constraint reactions are retained together with gravity, inertia, and any passive shaft or joint terms included in the effective plant. This is a model intervention, not a claim of absent muscle activity.
 
 ### Flexible Shaft Case
 
@@ -442,7 +442,7 @@ There is no muscle in the human arm that directly controls the shaft's deformati
 
 Therefore, shaft flexibility belongs entirely in the drift field. It is passive and automatic.
 
-The control authority $G(\mathbf{x})$ (the range of accelerations the muscles can produce at the clubhead) is not enhanced by shaft flexibility. Instead, shaft flexibility changes $f(\mathbf{x})$, the drift field itself. A more flexible shaft produces a different $f$, which means a different ZTCF.
+Shaft flexibility changes $f(\mathbf{x})$ because elastic and damping effects belong to the declared effective plant. The generalized-coordinate input map $G(\mathbf{x})$ may remain unchanged in a particular actuation model, but task-space authority can still change through configuration, Jacobians, constraints, and admissible-input bounds. A different shaft therefore implies a different drift field and forward ZTCF; it does not justify a universal claim about control capacity.
 
 ::: {.callout-important}
 ## Shaft Flexibility: Drift Only
@@ -454,7 +454,7 @@ The control authority $G(\mathbf{x})$ (the range of accelerations the muscles ca
 4. The shaft dynamics add to the drift field $f(\mathbf{x})$, not the control field $G(\mathbf{x})$.
 
 **Consequence:**
-A golfer's control authority (the set of clubhead accelerations reachable by muscle torques) is independent of shaft flex. What changes with shaft flex is the starting point of the autopilot trajectory (the ZTCF), which the muscles then steer from.
+For a declared actuation model, compare drift and bounded admissible control capacity in the same generalized-acceleration or task-projected metric. Shaft parameters always alter the retained passive dynamics; they may also alter task-space control capacity through the state and constraint geometry. These effects must be reported separately rather than inferred from the ZTCF alone.
 
 :::
 

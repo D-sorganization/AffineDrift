@@ -6,14 +6,22 @@ Last updated: 2026-08-13
 
 ## Current Work
 
+Follow-up branch `fix/physics-golf-ztcf-macro` repairs the one post-merge
+publication failure from the definitional-integrity migration: The Physics of
+Golf used an undefined uppercase `\ZTCF` command instead of its declared
+`\ztcf` macro. The same pass removes residual no-muscle interpretations,
+recasts ground-reaction residuals as non-identifying model diagnostics, and
+qualifies shaft/control-authority statements in the paired LaTeX and Quarto
+sources. The terminology gate now rejects direct physiological
+reinterpretations. The focused contracts, terminology scan, title-case audit,
+and a 617-page local `pdflatex` build pass.
+
 Epic [#3834](https://github.com/D-sorganization/AffineDrift/issues/3834)
-tracks the repository-wide definitional-integrity migration. Work is isolated in
-`AffineDrift-worktrees/terminology-3834` on
-`docs/3834-definitional-integrity`, based on remote main `8c706a77`.
-Ready PR [#3845](https://github.com/D-sorganization/AffineDrift/pull/3845)
-publishes commits `fcbe8806` and `ea2e11d2`. Preserve protected checks and
-reviews; do not close #3834 until the conforming UpstreamDrift migration also
-merges and both remote-main states are verified.
+tracks the repository-wide definitional-integrity migration. Protected PR
+[#3845](https://github.com/D-sorganization/AffineDrift/pull/3845) merged as
+`ee3766be`. Preserve protected checks; do not close #3834 until the conforming
+UpstreamDrift migration also merges, this publication follow-up is merged, and
+both remote-main states are verified.
 
 ### Ratified Contract
 

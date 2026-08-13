@@ -119,7 +119,7 @@ The initial configuration at address is crucial. It determines:
 \item \textbf{The initial muscle state:} The baseline muscle activation level (how tensioned the muscles are) affects the rate at which muscle torques can increase.
 \end{enumerate}
 
-Small changes in address can significantly change the swing that follows. This is because the drift field is sensitive to the initial conditions. A slightly different hand position at address means a slightly different trajectory for the $\ZTCF family$, which requires different control inputs to correct.
+Small changes in address can significantly change the swing that follows. This is because the drift field is sensitive to the initial conditions. A slightly different hand position at address means a slightly different trajectory for the $\ztcf$ family, which requires different control inputs to correct.
 
 This is why swing consistency begins with consistent setup. A golfer who is careful about address (foot position, ball position, hand position, alignment) is setting the initial conditions for a consistent drift field.
 
@@ -505,26 +505,26 @@ Let us now synthesize what we have learned, showing how drift, control, and cons
 This analysis reveals the structure of the golf swing. The DCR parameter characterizes the relative magnitudes of drift and control only after the weighting, torque bound, and model parameters are stated. In the worked examples, the backswing is characterized by low DCR (control-dominated); the transition initiates high acceleration through ground reaction forces; the downswing often exhibits rising DCR as body speeds increase; and the late downswing can become drift-dominated under the selected weighting. This progression reflects the changing balance between inertial resistance and achievable muscle-generated torques, but the numerical trend must be verified in the specified model rather than assumed.
 
 % ─────────────────────────────────────────────────────────────────
-\section{What the ZTCF Reveals About Each Phase}
+\section{What the Forward ZTCF Reveals About Each Phase}
 
 \index{ZTCF!throughout swing}
 
-Throughout this chapter, we have referred to the zero-torque counterfactual (ZTCF). Let us be more explicit about what the ZTCF reveals at each phase.
+Throughout this chapter, we have referred to the forward zero-torque counterfactual (ZTCF) trajectory. Let us be more explicit about what this model intervention reveals at each phase.
 
 \subsection*{The ZTCF as a Guide}
 
-The ZTCF is the trajectory the clubhead would follow if all muscle torques were set to zero from the current moment onward. At each moment in the swing, the ZTCF is different, depending on the current state and the drift field.
+The forward ZTCF trajectory is obtained by setting the declared applied generalized-control channel to zero from the current state onward. It depends on that initial state and the declared effective plant; it does not identify muscle activation.
 
 \begin{enumerate}
-\item \textbf{At address:} The ZTCF would cause the clubhead to fall straight down (gravity). The control inputs are needed to start the swing.
+\item \textbf{At address:} In a fixed-contact model initialized near rest, gravity and support reactions dominate the forward ZTCF. The exact direction depends on the coordinates, constraints, and retained passive terms.
 
-\item \textbf{Early in the backswing:} The ZTCF would cause the arms to fall. The control inputs must override gravity to lift the arms.
+\item \textbf{Early in the backswing:} A same-state ZTCF branch tests which motion persists after declared control is removed; it does not prescribe the control needed to produce the observed backswing.
 
-\item \textbf{At the top of the backswing:} The ZTCF would cause the upper body to fall backward (gravity and lack of forward motion). The control inputs must reverse this and initiate the downswing.
+\item \textbf{At the top of the backswing:} Low generalized velocity suppresses velocity-dependent drift terms, but gravity, elasticity, damping, contact, and internal-state effects remain model dependent.
 
-\item \textbf{In the early downswing:} The ZTCF would cause a motion toward the ball, but perhaps with the wrong sequencing (arms falling independently of the body). The control inputs fine-tune the sequence.
+\item \textbf{In the early downswing:} The forward ZTCF can test whether the declared plant alone produces, delays, or opposes a modeled sequencing feature from the achieved state.
 
-\item \textbf{In mid-downswing:} The ZTCF is already producing a motion quite close to the desired motion. The control inputs are small corrections.
+\item \textbf{In mid-downswing:} Proximity between ZTCF and achieved motion is an estimand, not an assumption. Report it in a declared state, task metric, time window, and uncertainty model.
 
 \item \textbf{In late downswing:} The ZTCF may be close to the measured trajectory in a high-DCR model. The control inputs are bounded corrections, not literally absent.
 

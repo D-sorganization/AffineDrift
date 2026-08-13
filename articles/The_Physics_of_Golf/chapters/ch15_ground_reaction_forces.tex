@@ -294,31 +294,18 @@ Mathematically, if we solve for $\bm{q}(t)$ given $\boldsymbol{\tau}_{\mathrm{mu
 \]
 where $\bm{r}_{\mathrm{COM}}$ is computed from the joint angles $\bm{q}(t)$ via forward kinematics.
 
-\subsection{Zero Torque Counterfactual (ZTCF)}
+\subsection{Pointwise Ground-Reaction ZTCF}
 
-Consider a thought experiment: suppose all muscle torques are set to zero ($\boldsymbol{\tau}_{\mathrm{muscle}} = 0$), but the golfer remains in contact with the ground. What GRF exists?
+The pointwise ground-reaction zero-torque counterfactual (ZTCF) sets the declared controllable input to zero at the achieved $(\bm{q},\dot{\bm{q}})$ while retaining declared non-control external loads. It answers what reaction the model requires at this state with zero declared control. It is not a no-muscle experiment and does not describe what the body would do after controls were removed.
 
-With zero muscle torques, the equations become:
-\[
-\bm{M}(\bm{q})\ddot{\bm{q}} + \bm{C}(\bm{q},\dot{\bm{q}})\dot{\bm{q}} + \bm{g}(\bm{q}) = \boldsymbol{\tau}_{\mathrm{GRF}}.
-\]
-
-The right-hand side is entirely the GRF contribution. If the body is accelerating (because Coriolis and gravity terms are non-zero), a GRF must exist to maintain the constraint.
-
-But even in the static case (zero motion), GRF exists: it is the static weight ($m\bm{g}$).
-
-\begin{definition}{Zero-Muscle-Torque GRF}{ztcf-grf}
-The zero-muscle-torque GRF is the GRF that exists even when all muscles are inactivated. It includes the static weight and any dynamic effects from ongoing motion. The actual GRF minus the ZTCF GRF is the additional GRF induced by muscular effort.
+\begin{definition}{Pointwise Zero-Control Ground Reaction}{ztcf-grf}
+The pointwise zero-control ground reaction is the constraint reaction obtained at a declared state after setting the model's applied generalized-control channel to zero. Static weight and retained drift terms remain. It is not a no-muscle condition, and subtracting it from a measured reaction does not uniquely identify muscle torque or effort.
 \end{definition}
 
-This distinction is powerful. By comparing actual measured GRF (from a force plate) to ZTCF GRF (computed from kinematics with zero muscle torques), we can infer the muscle torques that the golfer actually applied.
+Comparing a measured ground reaction with a model-conditioned pointwise ZTCF reaction can test the declared reaction decomposition. Any residual remains sensitive to model structure, contact allocation, parameter error, filtering, and unmodeled loads; it is not a unique inverse estimate of muscle torque.
 
-\begin{driftcontrol}{Drift GRF vs. Control-Induced GRF}{box:grf-drift-control}
-\textbf{Drift GRF:} The GRF that arises purely from gravity and Coriolis effects, without any muscular effort. This includes static weight and inertial terms.
-
-\textbf{Control-Induced GRF:} The additional GRF resulting from muscular torques. This is what the golfer ``creates'' through effort.
-
-\textbf{Why it matters:} Force plate data measures total GRF. To extract muscle torques from force plates, we must separate these two components. The drift component is kinematic (determined by configuration and velocity). The control component is dynamic (determined by muscle activation).
+\begin{driftcontrol}{What a Ground-Reaction Residual Cannot Establish}{box:grf-drift-control}
+Measured GRF minus modeled pointwise ZTCF is a residual containing input-induced reaction, model error, measurement error, and omitted external loads. It cannot uniquely identify muscle torques. Even with a perfect resultant wrench, a redundant contact system does not uniquely determine bilateral allocation; a pseudoinverse supplies a numerical allocation, not new physical information.
 \end{driftcontrol}
 
 %==============================================================================
@@ -498,4 +485,3 @@ Ground reaction forces provide the impulse that changes the body's momentum, but
 \end{enumerate}
 
 \end{exercises}
-

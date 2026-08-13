@@ -73,6 +73,21 @@ BANNED: tuple[tuple[str, str, str], ...] = (
         "dangling cross-reference",
         "ch:zero_torque_counterfactual",
     ),
+    (
+        r"(?i)ZTCF[^\n]{0,120}(?:no|zero)\s+muscle\s+(?:input|torques?|activation)",
+        "ZTCF physiological overclaim",
+        "zero value in the declared applied generalized-control channel",
+    ),
+    (
+        r"(?i)ZTCF[^\n]{0,120}muscles?\s+(?:vanished|applied\s+zero|were\s+(?:set\s+to\s+)?zero|deactivated)",
+        "ZTCF physiological overclaim",
+        "zero value in the declared applied generalized-control channel",
+    ),
+    (
+        r"(?i)(?:no|zero|all)\s+muscle\s+(?:input|torques?|activation)[^\n]{0,120}ZTCF",
+        "ZTCF physiological overclaim",
+        "zero value in the declared applied generalized-control channel",
+    ),
     # Unsourced-claim markers. The macro is a legitimate way to be honest about a
     # claim you have not sourced yet, but eight of them accumulated for a year
     # and survived a PR titled "resolve 35+ citation TODOs" (#3501), each

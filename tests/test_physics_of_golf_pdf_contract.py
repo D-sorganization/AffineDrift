@@ -11,6 +11,7 @@ PARALLEL_MECHANISMS_CHAPTER = Path(
 FLEXIBLE_SHAFT_CHAPTER = Path("articles/The_Physics_of_Golf/quarto/ch11_flexible_shaft.qmd")
 FASCIA_CHAPTER = Path("articles/The_Physics_of_Golf/quarto/ch12_fascia.qmd")
 SPINE_CHAPTER = Path("articles/The_Physics_of_Golf/quarto/ch21_spine_modeling.qmd")
+LATEX_BOOK = Path("articles/The_Physics_of_Golf")
 
 
 def test_lualatex_bold_math_uses_unicode_math_command() -> None:
@@ -104,3 +105,16 @@ def test_spinal_ligament_cases_have_a_row_separator() -> None:
         r"0, & \text{if } \Delta L < L_{\mathrm{slack}}, \\" + "\n"
         r"k_{\mathrm{ligament}} (L - L_0)^2, & \text{if } L > L_{\mathrm{slack}}."
     ) in text
+
+
+def test_latex_book_uses_its_declared_counterfactual_macros() -> None:
+    """Prevent undefined uppercase counterfactual commands in the PDF build."""
+    style = (LATEX_BOOK / "golf_physics.sty").read_text(encoding="utf-8")
+    chapters = "\n".join(
+        path.read_text(encoding="utf-8") for path in sorted((LATEX_BOOK / "chapters").glob("*.tex"))
+    )
+
+    assert r"\newcommand{\ztcf}" in style
+    assert r"\newcommand{\zvcf}" in style
+    assert r"\ZTCF" not in chapters
+    assert r"\ZVCF" not in chapters
