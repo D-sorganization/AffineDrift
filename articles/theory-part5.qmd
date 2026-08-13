@@ -24,7 +24,7 @@ format:
   <div class="laymans-terms-content">
     <div class="laymans-terms-inner">
       <p class="laymans-terms-intro">
-        Theory is great, but can we implement it without breaking the math? Part 5 checks the theory in a computer simulation and asks whether the numerical machinery behaves the way the equations say it should.
+        Theory is great, but can we implement it without breaking the math? Part V checks the theory in a computer simulation and asks whether the numerical machinery behaves the way the equations say it should.
       </p>
 
       <div class="laymans-item">
@@ -62,16 +62,16 @@ format:
 
 ::: {.callout-warning}
 ## Dimensionality Gap
-This numerical validation is restricted to planar motion and cannot verify 3D gyroscopic drift invariance. The planar model ($q \in \mathbb{R}^3$) lacks the three-dimensional rotational degrees of freedom required to test gyroscopic effects that rely on the cross-product terms $\omega \times I \omega$ (discussed in Part 3). The simulation serves strictly to validate the **algebraic consistency** of the affine decomposition in a simplified environment; verification of 3D drift invariance remains a theoretical prediction until extended to full spatial simulations or experimental testing.
+This numerical validation is restricted to planar motion and cannot verify 3D gyroscopic drift invariance. The planar model ($q \in \mathbb{R}^3$) lacks the three-dimensional rotational degrees of freedom required to test gyroscopic effects that rely on the cross-product terms $\omega \times I \omega$ (discussed in Part III). The simulation serves strictly to validate the **algebraic consistency** of the affine decomposition in a simplified environment; verification of 3D drift invariance remains a theoretical prediction until extended to full spatial simulations or experimental testing.
 :::
 
 ## Simulink Forward Dynamics Modeling and Counterfactual Evaluation
 
-Recall the control-affine form $\dot{x} = f(x) + g(x)u$ established in Part 1, where $f$ encodes drift and $g$ encodes control directions [@isidori1995nonlinear]. The mathematical derivations in Part 4 confirmed that the affine control structure holds exactly for idealized mechanical systems. However, real-world application requires more than algebraic correctness; it requires numerical robustness [@hairer1996solving]. The golf swing involves stiff differential equations, high-speed gyroscopic coupling, and rapid transient loading of the flexible shaft. It is not immediately obvious that the delicate subtraction operations required for the ZTCF and ZVCF counterfactuals will remain stable and accurate in a discrete-time simulation environment.
+Recall the control-affine form $\dot{x} = f(x) + g(x)u$ established in Part 1, where $f$ encodes drift and $g$ encodes control directions [@isidori1995nonlinear]. The mathematical derivations in Part IV confirmed that the affine control structure holds exactly for idealized mechanical systems. However, real-world application requires more than algebraic correctness; it requires numerical robustness [@hairer1996solving]. The golf swing involves stiff differential equations, high-speed gyroscopic coupling, and rapid transient loading of the flexible shaft. It is not immediately obvious that the delicate subtraction operations required for the ZTCF and ZVCF counterfactuals will remain stable and accurate in a discrete-time simulation environment.
 
 Specifically, while the equation $\tau_{\text{input}} = \tau_{\text{total}} - \tau_{\text{drift}}$ is algebraically exact, its numerical implementation involves subtracting two large, noisy vectors to recover a smaller residual. If the integration of the ZTCF trajectory diverges due to solver tolerances or discrete sampling artifacts, the model-internal attribution becomes numerically unreliable.
 
-To bridge the gap between the theoretical derivations (Part 4) and the future experimental applications (Phase III), we require a numerical proof-of-concept. The following section documents the forward-dynamics implementation used to validate the **algebraic consistency** of the affine decomposition in the planar environment described above. This ensures that the abstract ZTCF and ZVCF counterfactual definitions remain robust under integration error and discrete-time sampling.
+To bridge the gap between the theoretical derivations (Part IV) and the future experimental applications (Phase III), we require a numerical proof-of-concept. The following section documents the forward-dynamics implementation used to validate the **algebraic consistency** of the affine decomposition in the planar environment described above. This ensures that the abstract ZTCF and ZVCF counterfactual definitions remain robust under integration error and discrete-time sampling.
 
 ### Model Construction
 
@@ -86,10 +86,10 @@ Shaft flexibility was represented using modal bending dynamics [@meirovitch2010m
 
 ::: {.callout-note}
 ## Note on Parameter Validity (Validation Scope)
-The stiffness and damping parameters used in this simulation represent the "effective" passive dynamics of the system. While treated as constant for the counterfactual analysis, we acknowledge that in a biological system, these would vary with activation. The model thus represents the "Effective Plant" for the swing. **This simulation uses constant coefficients and therefore does not validate the "Stiffness Pulse" or "Intentional Constraint Collapse" mechanisms discussed in the theoretical articles.** It validates only the algebraic consistency of the ZTCF subtraction under constant impedance.
+The stiffness and damping parameters used in this simulation represent the "effective" passive dynamics of the system. While treated as constant for the counterfactual analysis, we acknowledge that in a biological system, these would vary with activation. The model thus represents the "Effective Plant" for the swing. **Crucially, this simulation uses constant coefficients and therefore does not validate the "Stiffness Pulse" or "Intentional Constraint Collapse" mechanisms discussed in the theoretical articles.** It validates only the algebraic consistency of the ZTCF subtraction under constant impedance.
 :::
 
-### Zero Torque Counterfactual Evaluation via "Kill Switches"
+### Zero-Torque Counterfactual Evaluation via "Kill Switches"
 
 To compute the Zero Torque Counterfactual (ZTCF) within a forward dynamics environment, the Simulink model incorporated "kill switches" at every joint, following the counterfactual simulation approach of Nesbit and Koike [@nesbit2005three; @koike2019dynamic]. These switches instantaneously set applied joint torques to zero at a prescribed time while leaving the system state untouched.
 
@@ -158,7 +158,7 @@ The current Simulink model provides:
 - a method for quantifying the effect of momentum on hand--club interaction forces,
 - a pathway toward full Phase II (simulation) and Phase III (experimental) papers.
 
-Future research will incorporate these counterfactual calculations into high-fidelity 3D multibody simulations. The most critical next step is the extension to 3D. The current planar validation proves that the ZTCF subtraction logic works for $M(q)\ddot{q}$, but it does not stress-test the drift invariance assumption against the complex $\omega \times I \omega$ gyroscopic terms present in the full spatial swing.
+Future research will incorporate these counterfactual calculations into high-fidelity 3D multibody simulations. The most critical next step is the extension to 3D, as the current planar validation proves that the ZTCF subtraction logic works for $M(q)\ddot{q}$ but does not stress-test the drift invariance assumption against the complex $\omega \times I \omega$ gyroscopic terms present in the full spatial swing.
 
 The specific numerical algorithms employed to enforce the "kill switches" and compute the ZVCF within the discrete-time solver environment are detailed in the final appendix below.
 
@@ -294,7 +294,7 @@ matching the analytical identity predicted by the affine decomposition: the ZTCF
 ::: {.callout-warning}
 ## Approximation Note on the Subtraction Identity
 
-Consistent with the earlier callout, the identity $\tau_{\mathrm{total}}(t_0) - \tau_{\mathrm{ZTCF}}(t_0) = \tau_{\mathrm{input}}(t_0)$ holds **exactly at $t = t_0$** (the freeze instant); for $t > t_0$ the equality is approximate, with error growing with the perturbation magnitude. After $t_0$, the ZTCF trajectory diverges from the actual trajectory — $F_{\mathrm{ZTCF}}(t)$ is evaluated along a *different* state path than $F_{\mathrm{total}}(t)$. The subtraction mixes forces from two trajectories at different states, which is not generally equal to $F_{\mathrm{input}}(t)$ at the *actual* trajectory state. The near-equality observed in simulation follows because the ZTCF trajectory remains close to the actual trajectory over short time windows, making the approximation tight. This is not a flaw in the method — it is inherent to counterfactual reasoning — but it means the result should be interpreted as "the instantaneous counterfactual attribution at each step," not as a globally exact algebraic identity.
+Consistent with the earlier callout, the identity $\tau_{\mathrm{total}}(t_0) - \tau_{\mathrm{ZTCF}}(t_0) = \tau_{\mathrm{input}}(t_0)$ holds **exactly at $t = t_0$** (the freeze instant); for $t > t_0$ the equality is approximate, with error growing with the perturbation magnitude. After $t_0$, the ZTCF trajectory diverges from the actual trajectory — $F_{\mathrm{ZTCF}}(t)$ is evaluated along a *different* state path than $F_{\mathrm{total}}(t)$. The subtraction mixes forces from two trajectories at different states, which is not generally equal to $F_{\mathrm{input}}(t)$ at the *actual* trajectory state. The numerical near-equality observed in simulation is explained by the fact that the ZTCF trajectory remains close to the actual trajectory over short time windows, making the approximation tight. This is not a flaw in the method — it is inherent to counterfactual reasoning — but it means the result should be interpreted as "the instantaneous counterfactual attribution at each step," not as a globally exact algebraic identity.
 :::
 
 This numerical result confirms correct implementation of the counterfactual algorithms — the discrete-time "kill switch" logic correctly preserves the near-equality that the affine theory predicts over short time steps.
@@ -321,7 +321,7 @@ ZTCF trajectories require the same ODE solver, tolerances, and step sizes as the
 
 ### Worked Numerical Example: Residual Magnitude Along a Simulated Swing
 
-To make the "near-equality" claim of the subtraction identity concrete, we integrate the residual bound from Theorem 1.1 of [Residual-Aware Control](tangent-hyperplane-articles/Advanced/Residual-Aware_Control.html) along a representative swing trajectory. The test case is the planar 2-DOF double-pendulum + single-bending-mode model of Part 4 Appendix C, with parameters $L = 1.1$ m, $m_h = 0.40$ kg, $m_c = 0.200$ kg, $m_\eta = 0.10$ kg, $k_\eta = 2500$ N/m, and $c_\eta = 0.8$ N·s/m. A torque profile fitted by inverse dynamics drives it, reproducing a 110-mph clubhead release over 0.25 s. A Hessian bound $M = \sup_{t \in [t_0, t_1]} \lVert H_f(\bar x(t))\rVert_2$ evaluated by finite differencing along $\bar x$ yields $M \approx 35\ \mathrm{s}^{-2}$ during the bulk of the downswing and peaks at $M \approx 90\ \mathrm{s}^{-2}$ in the 30 ms before impact (the release corner).
+To make the "near-equality" claim of the subtraction identity concrete, we integrate the residual bound from Theorem 1.1 of [Residual-Aware Control](tangent-hyperplane-articles/Advanced/Residual-Aware_Control.html) along a representative swing trajectory. For the planar 2-DOF double-pendulum + single-bending-mode model of Part IV Appendix C (parameters: $L = 1.1$ m, $m_h = 0.40$ kg, $m_c = 0.200$ kg, $m_\eta = 0.10$ kg, $k_\eta = 2500$ N/m, $c_\eta = 0.8$ N·s/m), driven by an inverse-dynamics-fitted torque profile reproducing a 110-mph clubhead release over 0.25 s, a Hessian bound $M = \sup_{t \in [t_0, t_1]} \lVert H_f(\bar x(t))\rVert_2$ evaluated by finite differencing along $\bar x$ yields $M \approx 35\ \mathrm{s}^{-2}$ during the bulk of the downswing and peaks at $M \approx 90\ \mathrm{s}^{-2}$ in the 30 ms before impact (the release corner).
 
 Applying Theorem 1.1 with a state perturbation $\lVert \delta x(t_0) \rVert \leq 0.05$ (a conservative bound on typical inverse-dynamics state uncertainty in dimensionless form) propagated under the variational equation gives a residual envelope
 
@@ -331,7 +331,7 @@ Applying Theorem 1.1 with a state perturbation $\lVert \delta x(t_0) \rVert \leq
 | 50 ms | $\lVert r \rVert \leq 2\times 10^{-2}$ | $\lVert r \rVert \leq 5.6\times 10^{-2}$ |
 | 100 ms | $\lVert r \rVert \leq 8\times 10^{-2}$ | $\lVert r \rVert \leq 2.2\times 10^{-1}$ |
 
-For the $\sim 20$ ms counterfactual windows used in ZTCF-based inverse dynamics, the residual stays below $\sim 10^{-3}$ in the state norm --- consistent with the "numerical near-equality" reported empirically from the Simulink runs above. For the full 250 ms downswing, the bound exceeds 1 and Theorem 1.1 no longer certifies the subtraction identity, which matches the Part 2 Lyapunov-exponent analysis showing that ZTCF should not be trusted quantitatively over the full swing. These numbers close the loop between the theoretical residual bound and the empirical subtraction identity: the two agree in regime and order of magnitude.
+So: for the $\sim 20$ ms counterfactual windows actually used in ZTCF-based inverse dynamics, the residual stays below $\sim 10^{-3}$ in the state norm --- consistent with the "numerical near-equality" reported empirically from the Simulink runs above. For the full 250 ms downswing, the bound exceeds 1 and Theorem 1.1 no longer certifies the subtraction identity, which matches the Part II Lyapunov-exponent analysis showing that ZTCF should not be trusted quantitatively over the full swing. These numbers close the loop between the theoretical residual bound and the empirical subtraction identity: the two agree in regime and order of magnitude.
 
 The empirical program of computing $\lVert r(t) \rVert$ on real marker-data-fitted swings (rather than simulated ground-truth swings) remains an open item; it requires state-noise propagation through inverse dynamics and is deferred to a dedicated empirical paper.
 
@@ -341,7 +341,7 @@ The algorithms in this appendix show how ZTCF and ZVCF are computed numerically 
 
 ## Final Remarks on the AffineDrift Framework
 
-This concludes the five-part theoretical exposition of the AffineDrift project. We began in Part 1 by constructing the control-affine state space $\dot{x} = f(x) + g(x)u$, proving that the mechanical structure of the golfer--club system inherently separates passive drift from active input. In Part 2, we exploited this separation to define the Zero Torque and Zero Velocity counterfactuals, shifting the analytical focus from instantaneous forces to causal histories. Part 3 validated the robustness of these tools by proving Drift Invariance, ensuring our baseline does not shift under the weight of the input it measures. Finally, Parts 4 and 5 provided the mathematical proofs and numerical validations necessary to trust these abstractions in practice.
+This concludes the five-part theoretical exposition of the AffineDrift project. We began in Part I by constructing the control-affine state space $\dot{x} = f(x) + g(x)u$, proving that the mechanical structure of the golfer--club system inherently separates passive drift from active input. In Part II, we exploited this separation to define the Zero Torque and Zero Velocity counterfactuals, shifting the analytical focus from instantaneous forces to causal histories. Part III validated the robustness of these tools by proving Drift Invariance, ensuring our baseline does not shift under the weight of the input it measures. Finally, Parts IV and V provided the mathematical proofs and numerical validations necessary to trust these abstractions in practice.
 
 The framework is now complete. It stands as a quantitative mechanical model of the golf swing that admits empirical testing—one that replaces the monolithic "net moment" of inverse dynamics with a causally articulated decomposition of the observed interaction forces. The next phase of this project leaves the page and the simulator to confront the noisy, variable reality of human motion capture.
 
@@ -352,8 +352,8 @@ The framework is now complete. It stands as a quantitative mechanical model of t
 ## See Also
 
 - **[Part 1: Affine Control Interpretation of the Golf Swing](theory-part1.html)** — Foundational framework
-- **[Part 2: Drift/Input Decomposition and Counterfactual Diagnostics](theory-part2.html)** — Theoretical definition of the counterfactuals validated here numerically
-- **[Part 3: Drift Invariance and Force Taxonomy](theory-part3.html)** — Proof that the ZTCF/ZVCF decomposition is causally valid
+- **[Part 2: ZTCF and ZVCF Tools](theory-part2.html)** — Theoretical definition of the counterfactuals validated here numerically
+- **[Part 3: Drift Invariance](theory-part3.html)** — Proof that ZTCF/ZVCF decomposition is causally valid
 - **[Part 4: Mathematical Derivations](theory-part4.html)** — Block matrix proofs underlying the numerical algorithms
 - **[Sources of Nonlinearity](sources-of-nonlinearity.html)** — Catalog of nonlinearities and their impact on ZTCF validity
 :::

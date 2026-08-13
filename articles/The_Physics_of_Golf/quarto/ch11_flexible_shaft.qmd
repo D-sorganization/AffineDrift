@@ -58,7 +58,7 @@ $$
 EI \frac{\partial^4 w}{\partial z^4}(z) = q(z)
 $$
 
-Modal decomposition assumes each mode shape $\phi_j(z)$ satisfies the eigenproblem implied by the dynamic beam equation. Projecting onto these modes produces the coupled ODEs for the modal amplitudes $\eta_j(t)$.
+Modal decomposition assumes each mode shape $\phi_j(z)$ satisfies the eigenproblem implied by the dynamic beam equation, and the projection onto these modes produces the coupled ODEs in terms of $\eta_j(t)$.
 
 ::: {.callout-tip}
 ## Why $EI$ Matters
@@ -155,7 +155,7 @@ Think of the shaft as a spring that has been compressed and is waiting to releas
 
 Later in the swing, as the hands slow slightly and the clubhead catches up, the shaft begins to snap back. This snapback releases the stored elastic energy back into the clubhead, giving it an extra boost at a critical moment. This is the "catapult effect."
 
-The timing of the snapback depends on the shaft's stiffness and damping. A stiff shaft snaps back early and weakly. A flexible shaft snaps back late and more powerfully, but it might still be bending as the ball is struck, which is bad for accuracy.
+The timing of the snapback depends on the shaft's stiffness and damping. A very stiff shaft snaps back early and weakly; a very flexible shaft snaps back late and more powerfully, but it might still be bending as the ball is struck (which is bad for accuracy).
 
 :::
 
@@ -202,7 +202,7 @@ These forces are proportional to the deformation and its rate, respectively. Nei
 
 ## Shaft Loading During the Downswing: Centrifugal Stiffening
 
-As the shaft rotates faster and faster during the downswing, the centrifugal force on the shaft itself increases. This centrifugal force acts like an additional stiffness, making the shaft harder to bend.
+Here is a subtle but important effect: as the shaft rotates faster and faster during the downswing, the centrifugal force on the shaft itself increases. This centrifugal force acts like an additional stiffness, making the shaft harder to bend.
 
 Consider a small element of the shaft at distance $r$ from the pivot, rotating with angular velocity $\omega$. The centrifugal acceleration on that element is $\omega^2 r$. When the shaft bends, this centrifugal force has a component that tries to straighten the shaft, increasing its effective stiffness.
 
@@ -228,19 +228,19 @@ This centrifugal acceleration stiffens the shaft. Combine this with the increasi
 
 ## The Catapult Effect: Energy Release Near Impact
 
-We can now explain the catapult effect precisely.
+We are now in a position to explain the catapult effect precisely.
 
 In the mid-downswing phase (high drift, low control), the golfer's hands are still accelerating forward and downward, but at a decreasing rate. The centrifugal acceleration of the clubhead, however, is still increasing (because the rotation rate $\omega$ is increasing faster than the hand deceleration). This mismatch---hands slowing, clubhead accelerating---causes the shaft to bend more and more, storing elastic energy.
 
-Then, near impact, the hands slow sharply (they are being decelerated by the ground reaction forces through the legs and torso). Suddenly, the driving force $f_{\text{modal}}$ becomes large and positive. At the same time, the centrifugal stiffening reaches its maximum. The shaft, which has been bent for 100+ milliseconds of the downswing, suddenly has every incentive to snap back: the inertial driving force is trying to straighten it, and the increased stiffness makes the elastic restoring force huge.
+Then, near impact, the hands slow sharply (they are being decelerated by the ground reaction forces through the legs and torso). Suddenly, the driving force $f_{\text{modal}}$ becomes very large and positive. At the same time, the centrifugal stiffening reaches its maximum. The shaft, which has been bent for 100+ milliseconds of the downswing, suddenly has every incentive to snap back: the inertial driving force is trying to straighten it, and the increased stiffness makes the elastic restoring force huge.
 
-The result: the shaft unbends rapidly. As it does, it does work on the clubhead, accelerating it further. This is the catapult effect.
+The result: the shaft unbends very rapidly. As it does, it does work on the clubhead, accelerating it further. This is the catapult effect.
 
 $$
 \text{Energy released by shaft} = \frac{1}{2}k\eta^2 \quad \text{(at the moment before snapback)}
 $$
 
-The magnitude of this energy depends on both how much the shaft is bent ($\eta$) and how stiff it is ($k_{\text{shaft}}$). A flexible shaft bends a lot (high $\eta$) but stores less energy per unit deflection (low $k_{\text{shaft}}$). A stiff shaft bends less, but the same bend stores more energy.
+The magnitude of this energy depends on both how much the shaft is bent ($\eta$) and how stiff it is ($k_{\text{shaft}}$). A very flexible shaft bends a lot (high $\eta$) but stores less energy per unit deflection (low $k_{\text{shaft}}$). A very stiff shaft bends less, but the same bend stores more energy.
 
 ::: {.callout-tip}
 ## Why Shaft Flex Profiles Matter
@@ -291,7 +291,7 @@ A shaft with the wrong stiffness changes the drift field in a way that moves the
 - **Too flexible:** The shaft bends more, storing more energy, but at a cost: the snapback might occur too late, after the clubhead has already left the impact zone, or the oscillations might not be damped by impact. The clubhead orientation is less predictable. The ZTCF trajectory has more variance, leading to dispersion.
 - **Just right:** The shaft reaches its maximum bend just before impact. The catapult effect releases its full energy at the moment when it most benefits the clubhead. The ZTCF trajectory is consistent and predictable.
 
-Shaft fitting adjusts $k_{\text{shaft}}$, $\zeta$, the flex profile, and the total shaft mass to produce a drift field whose ZTCF closely matches the golfer's target trajectory for their measured swing speed and swing geometry.
+The task of shaft fitting is to adjust $k_{\text{shaft}}$, $\zeta$, the flex profile, and the total shaft mass to produce a drift field whose ZTCF closely matches the golfer's target trajectory for their measured swing speed and swing geometry.
 
 ::: {.callout-important}
 ## Shaft Fitting as Drift Design
@@ -305,6 +305,8 @@ Shaft fitting is not an art; it is physics. The wrong shaft changes your drift f
 
 ## The Shaft as an Energy Buffer
 
+Let us step back and think about energy flow in the golf swing.
+
 At the top of the backswing, the golfer has stored potential energy in the muscles (through their isometric contraction) and positional energy (the body is wound up, arms are high). During the downswing, the muscles apply torques, doing work. But not all the muscle work goes directly into the clubhead's kinetic energy. Some of it goes into deforming the shaft.
 
 The shaft acts as a temporary storage device, holding energy as elastic deformation and returning it later.
@@ -313,9 +315,9 @@ $$
 \text{Muscle work} = \Delta KE_{\text{clubhead}} + E_{\text{stored in shaft}} + E_{\text{dissipated by damping}}
 $$
 
-For a flexible shaft, the term $E_{\text{stored in shaft}}$ is significant. In a fast swing, the shaft absorbs and releases energy within milliseconds of mid-downswing. In a slow swing, the shaft might remain bent for most of the downswing, absorbing a larger fraction of the muscle work temporarily.
+For a flexible shaft, the term $E_{\text{stored in shaft}}$ is significant. In a fast swing, the shaft absorbs and releases energy very quickly (within milliseconds of mid-downswing). In a slow swing, the shaft might remain bent for most of the downswing, absorbing a larger fraction of the muscle work temporarily.
 
-This storage mechanism lets the muscles do work earlier in the downswing, when the torque levers are shorter and the muscles are fresh. The energy is released later, near impact, when the lever arm is longest and the clubhead can best use it.
+The benefit of this storage mechanism is that it allows the muscles to do work earlier in the downswing (when the torque levers are shorter and the muscles are fresh) and have that energy released later, when the clubhead can best use it (near impact, when the lever arm is longest).
 
 ::: {.callout-tip}
 ## Why Flexible Shafts Help Slower Golfers More
@@ -324,7 +326,7 @@ A slower golfer (say, 70 mph swing speed, below tour-professional levels [@Jorge
 1. The shaft can absorb and hold more total energy, even though the energy per unit bend is lower when $k_{\text{shaft}}$ is lower.
 2. The catapult effect, when it occurs, releases this energy directly to the clubhead at a critical moment.
 3. Without the flexible shaft, the golfer would have to do all the work of accelerating the clubhead with muscle torque alone, and they would have less momentum to work with (lower joint velocities).
-A flexible shaft lets a slower golfer borrow energy from the shaft dynamics, partially compensating for lower muscle power.
+A flexible shaft essentially lets a slower golfer borrow energy from the shaft dynamics, partially compensating for lower muscle power.
 
 Conversely, a faster golfer has high centrifugal stiffening and high momentum already. A flexible shaft still helps, but the relative benefit is smaller.
 
@@ -476,11 +478,11 @@ A golf shaft has a first bending mode with natural frequency $\omega_n = 12$ rad
 
 *Hint:* In a damped oscillator, the envelope decays as $e^{-\zeta\omega_n t}$.
 
-Explain in plain language why a stiffer shaft stores less elastic energy for a given deflection than a more flexible shaft. What is the resulting trade-off between timing and control?
+Explain in plain language why a stiffer shaft stores less elastic energy for a given deflection than a more flexible shaft. What is the trade-off in terms of timing and control?
 
 Two golfers have identical swing speeds (85 mph, an illustrative value) and identical biomechanics, but one uses a 65-gram shaft and the other uses a 75-gram shaft. How might the different shaft mass affect the modal dynamics? (Consider how mass affects $\omega_n$ and the effective driving force $f_{\text{modal}}$.)
 
-A golfer notices that with a stiffer shaft, they hit the ball farther, but with less dispersion. With a more flexible shaft, the ball goes slightly farther on a perfect swing but much farther when they swing a bit faster. Explain these observations using the drift field and the catapult effect.
+A golfer notices that with a stiffer shaft, they hit the ball farther, but with less dispersion. With a more flexible shaft, the ball goes slightly farther on a perfect swing but much farther when they swing a bit faster. Explain these observations in terms of the drift field and the catapult effect.
 
 In the worked example (@sec-ch11_worked), suppose the hand acceleration profile is changed so that the hand decelerates earlier (starting at $t=0.08$ s instead of $t=0.1$ s). How would you expect the shaft deformation to change? Would the catapult effect occur earlier or later?
 

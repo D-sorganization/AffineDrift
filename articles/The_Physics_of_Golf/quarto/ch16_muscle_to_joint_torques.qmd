@@ -103,7 +103,7 @@ This is directly analogous to the Jacobian in robotics and dynamics. For a robot
 
 ::: {.callout-tip}
 ## Moment Arms and Joint Torques in a Two-Joint Arm
-Consider a simplified arm with two joints (shoulder and elbow) and two muscles (an extensor muscle acting at both joints and a flexor muscle acting at the elbow).
+Consider a simplified arm with two joints (shoulder and elbow) and two muscles (an extensors muscle acting at both joints and a flexor muscle acting at the elbow).
 
 Suppose the moment arm matrix is:
 $$\bm{R}(\bm{q}) = \begin{pmatrix} 0.05 & 0.02 \\ 0 & 0.04 \end{pmatrix} \, \mathrm{m}.$$
@@ -228,7 +228,7 @@ We can measure joint angles (with motion capture) and joint torques (via inverse
 
 So joint torques are experimentally accessible; individual muscle forces often are not.
 
-### Connection to Control
+### Connection to Control**
 
 In the control-affine framework $\dot{\bm{x}} = f(\bm{x}) + G(\bm{x})\bm{u}$, the control input $\bm{u}$ is interpreted as the net equivalent joint torques. This is the natural choice because:
 - Joint angles $\bm{q}$ are part of the state $\bm{x}$.
@@ -286,7 +286,7 @@ Biarticular muscles produce coupled torques at two or more joints. A single musc
 
 Biarticular muscles are elegant mechanisms for energy transfer. Suppose a proximal joint (e.g., shoulder) accelerates, storing kinetic energy in a moving segment. A biarticular muscle can then transfer some of this energy to the distal joint (e.g., elbow) without explicit distal control.
 
-This is a key mechanism in the kinetic chain: the legs accelerate, the hips follow, and energy transfers from the hip to the torso via biarticular muscles. It then passes from the torso to the shoulders via other biarticular muscles, and so on.
+This is a key mechanism in the kinetic chain: the legs accelerate, the hips follow, but energy transfers from the hip to the torso via biarticular muscles; then from the torso to the shoulders via other biarticular muscles, and so on.
 
 ::: {.callout-note}
 ## In Plain Language

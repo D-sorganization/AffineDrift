@@ -3,13 +3,13 @@
 ## A Concrete Picture
 
 A shadow puppet can reveal a hinge mechanism while hiding motion toward the
-wall. A planar golf model is a carefully chosen shadow. It can expose
-swing-normal force and torque mechanisms, but it cannot see out-of-plane
-clubface moments, changing swing plane, or spatial joint axes.
+wall. A planar golf model is a carefully chosen shadow. It can expose swing-
+normal force and torque mechanisms, but it cannot see out-of-plane clubface
+moments, changing swing plane, or spatial joint axes.
 
 Moving to three dimensions is not merely drawing the same links with perspective.
-Rotations no longer commute, moments require declared frames, contacts have
-six-axis wrenches, and constraints can contain new internal modes.
+Rotations no longer commute, moments require declared frames, contacts have six-
+axis wrenches, and constraints can contain new internal modes.
 
 ![A Planar Shadow Captures Swing-Normal Mechanics While a Spatial View Adds Out-of-Plane Force, Twist, and Changing Axes.](figures/proximal_distal_companion/fig_companion_planar_to_spatial.svg){#fig-lay-plane-space width=98% fig-alt="A planar stick model is shown as the shadow of a three-dimensional golfer-club system, with additional arrows for out-of-plane force, shaft twist, and changing joint axes."}
 
@@ -51,8 +51,8 @@ wrenches, powers, constraint residuals, and negative controls is stronger.
 
 MuJoCo and Pinocchio differ in their numerical and contact machinery. The
 project's finite-mass hand-carriage experiment uses paired compliant interfaces
-and no direct club actuation in both. Its same-state driver killswitch and
-moment-arm controls make the comparison mechanistic.
+and no direct club actuation in both. Its same-state driver killswitch and moment-
+arm controls make the comparison mechanistic.
 
 ### Agreement Has a Boundary
 
@@ -72,9 +72,9 @@ to the club frame. These uncertainties should enter the model-data comparison.
 couple across two independent engine realizations for the declared interval and
 passes sign-changing controls.
 
-**Human Evidence:** Three-dimensional golf motion is not planar, but existing
-heterogeneous datasets do not validate the specific spatial contact
-mechanism [@meister2011; @joyce2013; @mcphee2022].
+**Human Evidence:** Three-dimensional golf motion is clearly not planar, but
+  existing heterogeneous datasets do not validate the specific spatial contact
+  mechanism [@meister2011; @joyce2013; @mcphee2022].
 
 **Hypothesis:** The planar swing-normal couple is one projection of a spatial
 wrench pattern that should be measurable without requiring a unique muscle
@@ -186,10 +186,10 @@ while hiding the causal tests, it has moved away from science.
 ### Human Validation Path
 
 Use synchronized full-body and club motion, bilateral grip wrenches, separate
-force plates, and shaft deformation. Calibrate every frame and report
-soft-tissue and sensor uncertainty. Evaluate participants held out from
-parameter tuning. Compare predicted three-dimensional wrench trajectories, not
-only clubhead speed.
+force plates, and shaft deformation. Calibrate every frame and report soft-
+tissue and sensor uncertainty. Evaluate participants held out from parameter
+tuning. Compare predicted three-dimensional wrench trajectories, not only
+clubhead speed.
 
 Residuals should be inspected by phase and direction. A systematic out-of-plane
 residual may identify missing wrist, shaft, or shoulder-girdle physics. Updating
@@ -209,10 +209,10 @@ Report sign confidence and angular sensitivity. If all definitions agree over
 the late interval, the negative-couple claim is robust to plane construction. If
 they disagree, publish the dependence and prefer the complete vector result.
 
-Finally compare two independent spatial engines on geometry-reversal and
-hand-separation controls. Match initial state and input at high precision.
-Differences in constraint stabilization or quaternion handling should remain
-below declared observable tolerances.
+Finally compare two independent spatial engines on geometry-reversal and hand-
+separation controls. Match initial state and input at high precision. Differences
+in constraint stabilization or quaternion handling should remain below declared
+observable tolerances.
 
 ### Spatial Visualization Without Illusion
 

@@ -15,7 +15,7 @@ The body does not need to control the swing by micromanaging every degree of fre
 
 ## The Computational Problem: Why the Brain Can't Micromanage
 
-In the motor-control and motor-learning chapters, we encountered the bandwidth problem: the brain has limited computational resources, slow feedback loops (100--300 ms latency), and a maximum processing rate around 10--40 bits per second. The golf swing involves roughly 20 degrees of freedom, each of which must be controlled. If the brain tried to compute independent torques for each joint at the rate of swing execution (1000 Hz or faster near impact), it would have to process about 20,000 decisions per second.
+In the motor-control and motor-learning chapters, we encountered the bandwidth problem: the brain has limited computational resources, slow feedback loops (100--300 ms latency), and a maximum processing rate around 10--40 bits per second. The golf swing involves roughly 20 degrees of freedom, each of which must be controlled. If the brain tried to compute independent torques for each joint at the rate of swing execution (1000 Hz or faster near impact), it would require simultaneous processing of about 20,000 decisions per second.
 
 
 This exceeds the brain's capacity by orders of magnitude. Yet skilled golfers execute repeatable swings that hit the ball in the same location, with the same contact pattern, swing after swing. How?
@@ -61,7 +61,7 @@ This is why expert golfers can swing with apparent ease. They are not working ha
 
 ## Impedance Control: The Brain's Real Job
 
-In the 1980s, the control theorist Neville Hogan proposed a different account: the brain does not control *position* and does not control *force*. Instead, it controls *impedance*.[@Hogan:1984; @Hogan:1985]
+In the 1980s, the control theorist Neville Hogan proposed a radical insight: the brain does not control *position* and does not control *force*. Instead, it controls *impedance*.[@Hogan:1984; @Hogan:1985]
 
 
 ::: {.callout-important}
@@ -239,7 +239,7 @@ f_{\mathrm{impedance}}(\bm{x}) = \begin{bmatrix} \dot{\bm{q}} \\ -\bm{M}^{-1}(\b
 $$
 
 
-In this illustrative simulation summary, the ZTCF---the fraction of the motion explained by gravity, inertia, and Coriolis forces *alone*---increases dramatically when impedance is included. The original drift accounts for maybe 40--50\% of the swing. The impedance-augmented drift accounts for 70--80\% (estimated from simulation studies comparing ZTCF trajectories with and without pre-set impedance; experimental validation with EMG-derived stiffness profiles remains an active area of research).
+In this illustrative simulation summary, this means the ZTCF---the fraction of the motion explained by gravity, inertia, and Coriolis forces *alone*---increases dramatically when impedance is included. The original drift accounts for maybe 40--50\% of the swing. The impedance-augmented drift accounts for 70--80\% (estimated from simulation studies comparing ZTCF trajectories with and without pre-set impedance; experimental validation with EMG-derived stiffness profiles remains an active area of research).
 
 ::: {.callout-note}
 ## Bare Drift vs. Impedance-Augmented Drift
@@ -260,7 +260,7 @@ In this illustrative simulation summary, the ZTCF---the fraction of the motion e
 - Allows small feedforward corrections to fine-tune the motion
 
 
-The impedance-augmented drift is a much better predictor of the golfer's actual swing because it accounts for the muscle tension that is present.
+The impedance-augmented drift is a much better predictor of the golfer's actual swing because it accounts for the muscle tension that is actually present.
 
 :::
 
@@ -548,7 +548,7 @@ We have now surveyed the motor control system across four chapters:
 - **@sec-passive_distributed_control:** The motor system avoids micromanagement by pre-tuning mechanical properties and distributing control to spinal and local circuits.
 
 
-Passive control is the *final piece*. It shows how the brain solves the fundamental control problem: not by computing fast, but by computing smart---by setting mechanical conditions that allow the physics and the body's own passive dynamics to do most of the work.
+Passive control is the *final piece*. It shows how the brain solves the fundamental control problem: not by computing fast, but by computing smart. By setting mechanical conditions that allow the physics and the body's own passive dynamics to do most of the work.
 
 The golf swing emerges from the interaction of three elements:
 

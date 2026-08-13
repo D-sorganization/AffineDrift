@@ -125,7 +125,7 @@ The derivative does not exist because the velocity is a function of the left-lim
 
 **Attempt 2: Treat impact as a stiff force**
 
-We might approximate the impact as a stiff spring:
+We might approximate the impact as a very stiff spring:
 
 $$
 F_{contact}(x) = \begin{cases}
@@ -204,7 +204,7 @@ where:
 - $\Sigma = \{e_{ij} \mid i, j \in Q\}$ is the set of discrete **events** (mode transitions)
 :::
 
-**Intuition:** A hybrid system is like a finite state machine where each state has its own continuous dynamics. While in mode $q$, the state evolves according to $\dot{x} = f_q(x,u)$. When $x$ enters a guard set $G_{ij}$, the system triggers event $e_{ij}$, the state jumps via the reset map $x^+ = R_{ij}(x^-)$, and the mode switches from $q_i$ to $q_j$.
+**Intuition:** A hybrid system is like a finite state machine where each state has its own continuous dynamics. While in mode $q$, the state evolves according to $\dot{x} = f_q(x,u)$. When $x$ enters a guard set $G_{ij}$, an event $e_{ij}$ is triggered, the state jumps via the reset map $x^+ = R_{ij}(x^-)$, and the mode switches from $q_i$ to $q_j$.
 
 ## Example: Bouncing Ball
 
@@ -493,7 +493,7 @@ This is the **impact map Jacobian**, a projection matrix that removes and revers
 
 ## Saltation Matrices (Anitescu & Potra)
 
-The jump map Jacobian $P_j$ is part of a more general structure called the **saltation matrix**. That matrix accounts for both the jump in state and the **variation in jump time**.
+The jump map Jacobian $P_j$ is part of a more general structure called the **saltation matrix**, which accounts for not just the jump in state but also the **variation in jump time**.
 
 ::: {.callout-important}
 ## Saltation Matrix
@@ -550,7 +550,7 @@ $$
 \delta x^+ = P_j \delta x^- + \text{(correction for time variation)}
 $$
 
-The correction term arises because we reinitialize at $x^+$ at time $t_j + \delta t_j$, not $t_j$. Combining these:
+The correction term comes from the fact that we reinitialize at $x^+$ at time $t_j + \delta t_j$, not $t_j$. Combining these:
 
 $$
 \delta x^+ = P_j \delta x^- + (f^+ - P_j f^-) \delta t_j
@@ -563,7 +563,7 @@ Substituting $\delta t_j$ and simplifying yields @eq-saltation-matrix.
 The saltation matrix has two contributions:
 
 1. **$P_j$**: The direct effect of the reset map on the state
-2. **Correction term**: Accounts for perturbed trajectories crossing the guard at different times, experiencing different amounts of pre- and post-impact flow
+2. **Correction term**: Accounts for the fact that perturbed trajectories cross the guard at different times, experiencing different amounts of pre- and post-impact flow
 
 ### Example: Bouncing Ball Saltation Matrix
 
@@ -861,7 +861,7 @@ $$
 e = -\frac{v_{\perp}^+}{v_{\perp}^-}
 $$ {#eq-restitution-geometric}
 
-Using the angle $\theta$ between the velocity and the guard surface:
+In terms of the angle $\theta$ between the velocity and the guard surface:
 
 $$
 v_\perp = \|v\| \cos\theta
@@ -1788,7 +1788,7 @@ Generates smooth pick-place trajectories with minimal impact transients. The hyb
 Applications demonstrate hybrid tangent space framework in:
 
 1. **Locomotion:** Heel strikes stabilized by saltation matrix feedback
-2. **Golf swing:** Impact modeled explicitly, pre-impact torque reduction reported as an illustrative result
+2. **Golf swing:** Impact modeled rigorously, counter-intuitive optimal strategy discovered
 3. **Manipulation:** Contact modes handled explicitly, smooth force profiles achieved
 
 The recurring theme: **Explicit treatment of discontinuities** via guards, resets, and saltation matrices produces better results than smoothing or ignoring.

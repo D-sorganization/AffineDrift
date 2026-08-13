@@ -16,10 +16,9 @@ model turns the prescribed support into a dynamical participant.
 
 ## How the Mechanism Works
 
-In the simplest double pendulum, the shoulder may be fixed. In a
-prescribed-motion model, shoulder or hub kinematics are supplied as known
-functions of time. The solver computes joint reactions needed to realize them.
-In a coupled model,
+In the simplest double pendulum, the shoulder may be fixed. In a prescribed-
+motion model, shoulder or hub kinematics are supplied as known functions of time.
+The solver computes joint reactions needed to realize them. In a coupled model,
 base coordinates join $\mathbf q$ and their accelerations emerge from force and
 inertia.
 
@@ -161,8 +160,8 @@ comparison identifies the assumption carrying the conclusion.
 A clock-based wrist command can meet different geometry when base motion changes.
 A state trigger based on arm--club angle, handle radial velocity, or a coupling
 term may be more portable. But a trigger chosen after inspecting results can
-overfit. Candidate triggers and outcome windows should be declared before
-held-out evaluation.
+overfit. Candidate triggers and outcome windows should be declared before held-
+out evaluation.
 
 Base motion also changes the location and orientation of the late impact zone.
 Alignment by impact alone can hide meaningful differences earlier. Reports
@@ -176,10 +175,10 @@ hands, and club. Separate force plates and instrumented grips constrain external
 and interface wrenches. Segment inertias and joint centers carry uncertainty.
 High-speed club tracking and shaft strain add the distal state.
 
-Soft-tissue artifact is especially important at the shoulder girdle. A
-moving-base model should not claim anatomical precision beyond its measurement.
-It can use a generalized handle driver for mechanism testing while explicitly
-reserving muscle and scapular interpretation.
+Soft-tissue artifact is especially important at the shoulder girdle. A moving-
+base model should not claim anatomical precision beyond its measurement. It can
+use a generalized handle driver for mechanism testing while explicitly reserving
+muscle and scapular interpretation.
 
 ### Practical Meaning
 
@@ -209,9 +208,9 @@ the trigger has a measurable proxy.
 
 ### Common Modeling Trap
 
-Prescribing a measured body path while also assigning body torques can
-double-count control: the path is already enforced by whatever unreported force
-is needed. Decide whether motion is input or outcome. If prescribed, report its
+Prescribing a measured body path while also assigning body torques can double-
+count control: the path is already enforced by whatever unreported force is
+needed. Decide whether motion is input or outcome. If prescribed, report its
 constraint wrench and work. If dynamic, show how controls and ground contact
 produce it.
 

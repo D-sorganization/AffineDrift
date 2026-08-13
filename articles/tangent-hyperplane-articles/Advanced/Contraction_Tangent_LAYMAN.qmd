@@ -18,7 +18,7 @@ Imagine you're designing a robot arm to paint intricate patterns on pottery. You
 1. **Optimality:** Plan an efficient motion for the brushstroke
 2. **Stability:** Ensure tiny vibrations or bumps don't ruin the painting
 
-Traditionally, control engineers treated these as separate problems requiring separate solutions. They would:
+Traditionally, these were treated as separate problems requiring separate solutions. Control engineers would:
 - First optimize the trajectory
 - Then add stabilizing feedback (make it "robust")
 
@@ -30,7 +30,7 @@ This article explains that local relationship and why its assumptions matter.
 
 ## What Is Contraction Theory?
 
-"Contraction" has a narrow technical meaning: errors shrink on their own.
+Before we can talk about the unification, we need to understand what "contraction" means.
 
 ### The Rubber Band Analogy
 
@@ -75,7 +75,7 @@ Now the second piece of the puzzle.
 
 ### The Curved Road Analogy (Revisited)
 
-From the main thesis, you learned that nonlinear systems admit an exact linear *approximation* at any instant. To first order, the dynamics follow simple, linear rules on a **tangent plane**, and the error grows as the square of the step size.
+From the main thesis, you learned that nonlinear systems admit an exact linear *approximation* at any instant — the dynamics follow simple, linear rules on a **tangent plane** to first order (with error growing as the square of the step size).
 
 **This article's new insight:** That tangent plane isn't just a crude approximation. It's the **natural geometry** where both optimality and stability live — and in that geometry, contraction and optimality coincide. (The approximation caveat from the main thesis still applies: finite-step predictions on the tangent plane incur curvature error; contraction theory handles this by ensuring errors shrink rather than accumulate.)
 
@@ -112,7 +112,7 @@ Here's the heart of the unification:
 - "If I deviate from the plan, I'll converge back this fast (measured by the contraction metric)"
 - Focus: Guaranteeing convergence
 
-**The key point:** In LQR-like cases, the Riccati matrix from optimal control can serve as a contraction metric for the local closed-loop system.
+**The key point:** In LQR-like cases, the Riccati matrix from optimal control can be used as a contraction metric for the local closed-loop system.
 
 That relationship is useful, but it depends on the model, boundary conditions, and the region where the local approximation remains valid.
 
@@ -262,7 +262,7 @@ Subject to:
 **Output:**
 - Optimal trajectory
 - Feedback gains
-- **Estimated or certified basin of attraction**—the region where convergence has been verified under the stated assumptions
+- **Estimated or certified basin of attraction**--the region where convergence has been verified under the stated assumptions
 
 ### The Cartpole Example
 
@@ -325,7 +325,7 @@ The cautious interpretation is that the nervous system may shape stiffness and d
 
 ---
 
-## The Algorithms: How to Use This
+## The Algorithms: How to Actually Use This
 
 ### Contraction-DDP Algorithm
 
@@ -389,7 +389,7 @@ LQR (Linear Quadratic Regulator) gives optimal feedback for linear systems. For 
 
 ### **"Does This Work for Discontinuous Systems?"**
 
-**Not directly.** Standard contraction arguments require smooth dynamics (at least C^1—continuously differentiable) within the region being analyzed.
+**Not directly.** Standard contraction arguments require smooth dynamics (at least C^1--continuously differentiable) within the region being analyzed.
 
 For systems with:
 - Impacts (e.g., walking, bouncing)

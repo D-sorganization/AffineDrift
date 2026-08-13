@@ -34,7 +34,7 @@ page-layout: full
           <div id="overview" class="site-card site-card--feature site-card--brand u-mb-4">
             <h2 class="u-mb-2">UpstreamDrift <span class="u-text-muted">(formerly Golf Modeling Suite)</span></h2>
             <p class="page-lede">
-              A unified biomechanical analysis platform consolidating golf swing modeling across multiple physics simulation frameworks. The suite covers models ranging from simple educational pendulums to 290-muscle musculoskeletal systems.
+              A unified biomechanical analysis platform consolidating golf swing modeling across multiple physics simulation frameworks. The suite enables comprehensive analysis from simple educational pendulums to complex 290-muscle musculoskeletal models.
             </p>
             <div class="button-row">
               <a href="https://github.com/D-sorganization/UpstreamDrift" target="_blank" rel="noopener" class="site-button site-button--on-brand">
@@ -50,7 +50,7 @@ page-layout: full
           <aside class="site-card site-card--callout u-mb-4">
             <h3 class="u-mb-1">About This Companion Website</h3>
             <p class="resource-description">
-              This website is a <strong>companion resource</strong> to the Golf Modeling Suite repository. While the repository contains the implementation code, simulation models, and technical documentation, this website provides:
+              This website serves as a <strong>companion resource</strong> to the Golf Modeling Suite repository. While the repository contains the actual implementation code, simulation models, and technical documentation, this website provides:
             </p>
             <ul class="model-bullet-list">
               <li><strong>Advanced Theory</strong> - Mathematical foundations and control-affine system theory</li>
@@ -74,7 +74,7 @@ page-layout: full
               <li><strong>Python 3.11+</strong> (3.13 recommended)</li>
               <li><strong>Git with LFS support</strong> for large model files</li>
               <li><strong>MATLAB R2023a+</strong> (optional, for Simscape models)</li>
-              <li><strong>Conda</strong> (optional, convenience wrapper for binary dependencies)</li>
+              <li><strong>Conda</strong> optional convenience wrapper for binary dependencies</li>
             </ul>
 
             <h4 class="u-mt-3">Quick Installation</h4>
@@ -104,7 +104,7 @@ python launch_upstream_drift.py --api-only # REST API only, no UI
 python launch_upstream_drift.py --engine pinocchio  # select an engine</code></pre>
             <p class="resource-description">
               Console scripts <code>upstream-drift</code> and <code>sidekick</code> are also
-              installed. To explore the UI without heavy engine dependencies, set
+              installed. For a UI-only exploration without heavy engine dependencies, set
               <code>GOLF_USE_MOCK_ENGINE=1</code>.
             </p>
             <h4 class="u-mt-3">Web UI Pages</h4>
@@ -116,11 +116,10 @@ python launch_upstream_drift.py --engine pinocchio  # select an engine</code></p
             <p class="resource-description">
               A REST API (24 routes under <code>src/api/routes/</code>: ball flight, force
               overlays, motion capture, character builder, and more) backs end-user tools in
-              <code>src/tools/</code>. Those tools include the ball-flight GUI, swing-flight pipeline, putting-green
+              <code>src/tools/</code> — ball-flight GUI, swing-flight pipeline, putting-green
               and bunker-shot GUIs, terrain engine, video analyzer, strokes-gained optimizer,
-              model explorer, and pose studio. The same API also backs motion-capture import
-              (CSV/JSON/C3D with OpenPose/MediaPipe retargeting) and an RL/imitation/sim2real
-              learning stack.
+              model explorer, and pose studio — plus motion-capture import (CSV/JSON/C3D with
+              OpenPose/MediaPipe retargeting) and an RL/imitation/sim2real learning stack.
             </p>
           </div>
 
@@ -149,7 +148,7 @@ python launch_upstream_drift.py --engine pinocchio  # select an engine</code></p
             </button>
             <div class="accordion-content">
               <p class="resource-description">
-                <strong>Multi-Joint dynamics with Contact</strong> - The recommended engine for most use cases. MuJoCo runs fast, accurate simulations suited to biomechanical analysis with full musculoskeletal models and contact dynamics.
+                <strong>Multi-Joint dynamics with Contact</strong> - The recommended engine for most use cases. MuJoCo provides fast, accurate physics simulation ideal for biomechanical analysis with full musculoskeletal models and contact dynamics.
               </p>
               <h4 class="model-section-h4">Key Capabilities:</h4>
               <ul class="model-bullet-list">
@@ -199,7 +198,7 @@ python launch_upstream_drift.py --engine pinocchio  # select an engine</code></p
             </button>
             <div class="accordion-content">
               <p class="resource-description">
-                <strong>High-Performance Rigid Body Dynamics</strong> - Based on Roy Featherstone's algorithms, Pinocchio efficiently computes forward/inverse dynamics and Jacobians, and handles constraints in multibody systems.
+                <strong>High-Performance Rigid Body Dynamics</strong> - Based on Roy Featherstone's algorithms, Pinocchio provides efficient computation of forward/inverse dynamics, Jacobians, and constraint handling for multibody systems.
               </p>
               <h4 class="model-section-h4">Key Capabilities:</h4>
               <ul class="model-bullet-list">
@@ -227,7 +226,7 @@ python launch_upstream_drift.py --engine pinocchio  # select an engine</code></p
                 <strong>Stanford Biomechanics Platform</strong> - The gold standard for biomechanical validation and analysis. OpenSim provides detailed musculoskeletal models with muscle-tendon units, inverse kinematics/dynamics, and motion capture integration.
               </p>
               <p class="resource-description">
-                <strong>Support tier: Experimental.</strong> In UpstreamDrift, OpenSim integration is <em>not</em> part of the required PR CI contract today. Treat the musculoskeletal workflow below as exploratory rather than turnkey.
+                <strong>Support tier: Experimental.</strong> In UpstreamDrift, OpenSim integration is experimental and is <em>not</em> part of the required PR CI contract today. Treat the musculoskeletal workflow below as exploratory rather than turnkey.
               </p>
               <h4 class="model-section-h4">Key Capabilities:</h4>
               <ul class="model-bullet-list">
@@ -252,10 +251,10 @@ python launch_upstream_drift.py --engine pinocchio  # select an engine</code></p
             </button>
             <div class="accordion-content">
               <p class="resource-description">
-                <strong>Realistic Muscle Dynamics</strong> - Detailed simulation of muscle-driven movement. MyoSuite provides 290-muscle musculoskeletal models for studying muscle activation patterns and force generation in complex movements.
+                <strong>Realistic Muscle Dynamics</strong> - MyoSuite provides 290-muscle musculoskeletal models for detailed muscle-driven movement simulation. Ideal for studying muscle activation patterns and force generation in complex movements.
               </p>
               <p class="resource-description">
-                <strong>Support tier: Experimental.</strong> In UpstreamDrift, MyoSuite integration is <em>not</em> part of the required PR CI contract today. The 290-muscle workflow is not yet a turnkey, fully supported pipeline — expect to do setup work.
+                <strong>Support tier: Experimental.</strong> In UpstreamDrift, MyoSuite integration is experimental and is <em>not</em> part of the required PR CI contract today. The 290-muscle workflow is not yet a turnkey, fully-supported pipeline — expect to do setup work.
               </p>
               <h4 class="model-section-h4">Key Capabilities:</h4>
               <ul class="model-bullet-list">
@@ -329,7 +328,7 @@ python launch_upstream_drift.py --engine pinocchio  # select an engine</code></p
             </div>
             <div class="resource-card resource-card--padded">
               <h4>Cross-Engine Validation</h4>
-              <p class="resource-description">Side-by-side results from different simulators to validate models and build confidence.</p>
+              <p class="resource-description">Compare results across different simulators to validate models and build confidence.</p>
             </div>
             <div class="resource-card resource-card--padded">
               <h4>Data Export</h4>

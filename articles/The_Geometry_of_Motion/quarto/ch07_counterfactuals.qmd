@@ -165,8 +165,8 @@ the **flow map** (or **solution map**):
 \phi_t^f(\x_0) := \x^{(0)}(t;\x_0),
 \label{eq:ch7:flow-map}
 \end{equation}
-Here $\x^{(0)}(t;\x_0)$ is the solution of the IVP~\eqref{eq:ch7:ivp} at time $t$,
-starting from $\x_0$ at $t=t_0$. We take $t_0=0$ for notational simplicity.
+where $\x^{(0)}(t;\x_0)$ is the solution of the IVP~\eqref{eq:ch7:ivp} at time $t$,
+starting from $\x_0$ at $t=t_0$ (assuming $t_0=0$ for notational simplicity).
 
 The flow map has the following properties:
 
@@ -437,9 +437,9 @@ procedure that can be implemented as an algorithm or protocol.
 
 
 \noindent This protocol produces a complete picture of when the controller is actively
-steering versus when it is passively managing drift. In practice you run it offline, after
-the fact: you take a recorded trajectory and its input, and you recover the causal roles
-of drift and control.
+steering versus when it is passively managing drift. In practice, the protocol is
+implemented as a post-hoc analysis tool: you have a recorded trajectory and input, and
+you run the protocol offline to understand the causal roles of drift and control.
 
 
 ## Sensitivity Counterfactuals: Detailed Mathematics
@@ -455,7 +455,7 @@ state derivative is:
 \label{eq:ch7:actuator-failure}
 \end{equation}
 where $g_j(\x)$ is the $j$-th column of $G(\x)$. This is exact because of the linearity
-of $G(\x)\uvec$ in $\uvec$. You need not re-solve the dynamics; the effect is
+of $G(\x)\uvec$ in $\uvec$. No re-solving of the dynamics is needed; the effect is
 instantaneous and quantifiable.
 
 
@@ -471,8 +471,8 @@ effect propagates via the sensitivity equation. From Chapter~\ref{ch:sensitivity
 
 This equation shows that the sensitivity is a linear combination of the drift sensitivity
 and the input matrix sensitivity. Over time, these sensitivities compound, so a small
-parameter error leads to a growing state error. Integrating the modified drift gives the
-ZTCF at perturbed parameters, and with it a sensitivity counterfactual.
+parameter error leads to a growing state error. The ZTCF at perturbed parameters can be
+computed by integrating the modified drift, providing a sensitivity counterfactual.
 
 
 ### Gravity Modification
@@ -509,7 +509,7 @@ G(\x)' = \begin{bmatrix} 0_n \\ M'(\q)^{-1} \end{bmatrix}.
 \end{equation}
 
 Now the superposition structure itself changes: the input matrix $G$ is no longer the same,
-and the drift cannot be subtracted off. The effect is multiplicative, not additive. This
+and the drift cannot be simply subtracted. The effect is multiplicative, not additive. This
 breaks the simple linear decomposition and shows why mechanical changes (like adding inertia)
 are more subtle than external force changes (like changing gravity).
 
@@ -580,7 +580,7 @@ Without this condition, the regression confounds drift and input: large drift va
 ### Connection to System Identification
 
 
-Estimating $f$ and $G$ from data is a standard problem in **system
+The problem of estimating $f$ and $G$ from data is a standard problem in **system
 identification**. The literature provides well-developed techniques such as:
 - Subspace identification methods (Ho--Kalman, Balanced Model Reduction)
 - Autoregressive models (ARX, ARMAX)
@@ -594,9 +594,9 @@ rich enough to separately identify the drift and the input gain.
 ## Contraction Analysis of the Drift
 
 
-Does the drift itself have stability or contraction properties? If the ZTCF is a contracting
-system, the controller's job gets easier---the passive dynamics already provide a restoring
-force.
+A natural question is: does the drift itself have any stability or contraction properties?
+If the ZTCF is a contracting system, then the controller's job is simplified---the passive
+dynamics already provide a restoring force.
 
 
 ### Drift Jacobian and Eigenvalue Analysis
@@ -672,7 +672,7 @@ The optimal input minimizes over $\uvec$:
 \label{eq:ch7:optimal-input}
 \end{equation}
 
-If the drift is contracting, the value function $V(\x)$ has a small gradient (the
+If the drift is contracting, the value function $V(\x)$ has a very small gradient (the
 state is close to equilibrium), so $\uvec^*$ is small. This is the mechanism of minimal
 intervention.
 
@@ -993,8 +993,8 @@ $\dot{q}_2 = 0.031$ rad/s:
    a_{\text{drift}} = a_{\text{grav}} + a_{\text{cor}}.
    \end{equation}
 
-Computing these values numerically requires evaluating the matrices at the specific state;
-the symbolic forms appear above.
+The numerical computation of these values requires evaluating the matrices at the specific state;
+the symbolic forms are provided above.
 
 
 ### Drift--Control Ratio Evolution
@@ -1005,7 +1005,7 @@ As the system evolves:
 - Mid-trajectory ($t=1$): As $\dot{\q}$ increases, Coriolis terms grow, and $\rho$ increases.
 - Late trajectory ($t=2$): High velocities make $\rho \gg 1$ (drift-dominated regime).
 
-This illustrates the principle: at high speeds, the motor at joint 1 has less and less
+This demonstrates the principle: at high speeds, the motor at joint 1 has less and less
 ability to steer the passively driven joint 2.
 
 
@@ -1081,7 +1081,7 @@ J = \int_0^\infty \left[\norm{\x(t) - \x^*}^2_Q + \norm{\uvec(t)}^2_R\right] \ma
 \end{equation}
 where $\x^*$ is a desired attractor, $Q$ and $R$ are positive definite weights, and $\dot{\x} = f(\x) + G(\x)\uvec$.
 
-If $\norm{f(\x)}/\norm{G(\x)u_{\max}}$ is large (drift-dominated regime), then the
+If $\norm{f(\x)}/\norm{G(\x)u_{\max}}$ is very large (drift-dominated regime), then the
 optimal control is approximately
 \begin{equation}
 \uvec^* \approx -K(\x)[\x - \x^*],
@@ -1150,8 +1150,9 @@ fine-tunes the convergence.
 The golf swing provides a compelling example of the counterfactual framework because it
 exhibits all three drift--control regimes within a single motion lasting roughly one
 second. We sketch how the ZTCF, ZVCF, and drift--control ratio apply to a simplified
-kinematic chain (e.g., shoulder, elbow, wrist). Concrete numerical predictions require a
-calibrated biomechanical model with experimentally validated segment parameters.
+kinematic chain (e.g., shoulder, elbow, wrist), noting that concrete numerical
+predictions require a calibrated biomechanical model with experimentally validated
+segment parameters.
 
 
 ### Qualitative ZTCF Structure
@@ -1275,7 +1276,7 @@ argument above holds generically, but the quantitative details are model-depende
 This chapter has established that the drift--input decomposition is not merely algebraic bookkeeping but a
 causal framework for understanding, predicting, and attributing motion. The counterfactual machinery---ZTCF,
 ZVCF, and their energy interpretations---transforms abstract dynamics into actionable engineering insight:
-what would happen without control, and therefore what the controller must accomplish.
+what would happen without control, and therefore what the controller must actually accomplish.
 
 ## Exercises
 

@@ -48,12 +48,12 @@ This is known as an **Euler Angle** representation: $\bm{\theta} = [\theta_1, \t
 
   If an airplane pitches perfectly $90^\circ$ straight up into the sky, its Roll axis (pointing out its nose) now perfectly aligns with its original Yaw axis (pointing perfectly down towards the Earth). 
   
-  Mathematically, two independent degrees of freedom have become linearly dependent—they merged into the identical physical rotation axis. A degree of freedom is lost during the calculation. If you attempt to control the plane as it passes through this "Singularity," your matrices become non-invertible and the computation breaks down on a physical impossibility.
+  Mathematically, two independent degrees of freedom have become linearly dependent—they merged into the identical physical rotation axis. A degree of freedom is literally lost during the calculation. If you attempt to control the plane passing through this "Singularity", your matrices become non-invertible and your computer instantly crashes mapping a physical impossibility.
 
 :::
 
 
-Because our control theory and geometric motion algorithms rely on continuous trajectories twisting through all possible spatial angles (like chaotic golf club arcs or throwing motions), we must abandon Euler angles. We cannot afford mathematical singularities.
+Since our control theory and geometric motion algorithms fundamentally rely on continuous trajectories twisting through all possible spatial angles (like chaotic golf club arcs or throwing motions), we must completely abandon Euler angles. We cannot afford mathematical singularities.
 
 
 ## The Special Orthogonal Group: SO(3)
@@ -68,7 +68,7 @@ If we write these three body axes explicitly in the coordinates of the Space Fra
 
 This is a **Rotation Matrix**. 
 
-Because $\hat{x}_b, \hat{y}_b,$ and $\hat{z}_b$ are all length $1$ (unit magnitude) and mutually orthogonal (all $90^\circ$ apart), the columns are an orthonormal basis. The strict mathematical definitions that guarantee this orthonormality are:
+Because $\hat{x}_b, \hat{y}_b,$ and $\hat{z}_b$ are all length $1$ (unit magnitude) and perfectly orthogonal (all $90^\circ$ apart), the columns are an orthonormal basis. The strict mathematical definitions that guarantee this orthonormality are:
 1. $R^T R = I$ (The transpose equals the inverse)
 2. $\det(R) = 1$ (The determinant is 1 to preserve right-handed orientation—no reflecting through a mirror)
 
@@ -77,7 +77,7 @@ Because $\hat{x}_b, \hat{y}_b,$ and $\hat{z}_b$ are all length $1$ (unit magnitu
 
   The continuous, infinite geometric space of all possible valid $3 \times 3$ rotation matrices satisfying $R^T R = I$ and $\det(R) = 1$ is a mathematical **manifold** called the **Special Orthogonal Group in 3 Dimensions**, denoted as $\SO$. 
 
-  If a Configuration Space $\configspace$ describes only a rigid body rotating around a point, we say $\configspace = \SO$.
+  If a Configuration Space $\configspace$ is simply a rigid body rotating around a point, we say $\configspace = \SO$.
 
 :::
 
@@ -86,9 +86,9 @@ Because $\hat{x}_b, \hat{y}_b,$ and $\hat{z}_b$ are all length $1$ (unit magnitu
 ## Unit Quaternions $\mathcal{H}$
 
 
-$\SO$ prevents Gimbal Lock and provides pure, continuous rotation matrices. But tracking 9 entries inside a $3 \times 3$ grid (only 3 of which are independent) is computationally inefficient for an engine updating a 15-DOF human model at 1,000 Hertz.
+While $\SO$ completely prevents Gimbal Lock and provides pure, continuous rotation matrices, tracking 9 entries inside a $3 \times 3$ grid (only 3 of which are independent) is wildly computationally inefficient for an engine updating a 15-DOF human model at 1,000 Hertz.
 
-To solve this, William Rowan Hamilton invented **Quaternions** ($\mathcal{H}$) in 1843. Rather than tracking a full Cartesian body frame $R \in \SO$, any 3D rotation can be described as a combination of precisely two things:
+To solve this, William Rowan Hamilton invented **Quaternions** ($\mathcal{H}$) in 1843. Rather than tracking a full Cartesian body frame $R \in \SO$, any 3D rotation can be flawlessly described as a combination of precisely two things:
 1. A single unit vector $\hat{\bm{\omega}}$ defining the solitary physical axis of rotation.
 2. An angle $\theta$ denoting how far to spin around that axis.
 
@@ -97,7 +97,7 @@ A Unit Quaternion $q$ mathematically encodes these into 4 variables representing
   q = \begin{bmatrix} q_0 \\ q_1 \\ q_2 \\ q_3 \end{bmatrix} = \begin{bmatrix} \cos(\theta/2) \\ \hat{\bm{\omega}}_x \sin(\theta/2) \\ \hat{\bm{\omega}}_y \sin(\theta/2) \\ \hat{\bm{\omega}}_z \sin(\theta/2) \end{bmatrix} \in \Reals^4
 \end{equation}
 
-By enforcing that the sum of the squares of these 4 variables equals 1 ($q_0^2 + q_1^2 + q_2^2 + q_3^2 = 1$), a Unit Quaternion provides a singularity-free, fast algebraic mapping of $\SO$.
+By simply enforcing that the sum of the squares of these 4 variables equals 1 ($q_0^2 + q_1^2 + q_2^2 + q_3^2 = 1$), a Unit Quaternion provides a singularity-free, ultra-fast algebraic mapping of $\SO$.
 
 Throughout *The Geometry of Motion*, specifically when interacting with engines like `Pinocchio` or `MuJoCo` (as wrapped by the companion platform accompanying this textbook), all 3D rotational mechanics explicitly bypass Euler Angles and map directly into Quaternions and $\SO$ Rotation Matrices.
 
@@ -105,7 +105,7 @@ Throughout *The Geometry of Motion*, specifically when interacting with engines 
 ## Numerical Stability: A Practical Consideration
 
 
-The choice between different rotation parameterizations has profound implications not just for singularities (which Gimbal Lock handles for Euler Angles), but for **numerical stability** during computation. This is critically important for practitioners implementing control algorithms and physics simulators. Numerical stability belongs in the design of the rotation representation itself, not in a post-hoc "patch."
+The choice between different rotation parameterizations has profound implications not just for singularities (which Gimbal Lock handles for Euler Angles), but for **numerical stability** during computation. This is critically important for practitioners implementing control algorithms and physics simulators. Rather than treating numerical stability as a post-hoc "patch," it deserves integration into the design of the rotation representation itself.
 
 ### Rotation Matrices: Stability Through Constraints
 
@@ -113,7 +113,7 @@ The choice between different rotation parameterizations has profound implication
 
 ### Unit Quaternions: Efficiency Meets Stability
 
-**Unit Quaternions** are typically the most numerically stable choice for continuous rotations and interpolation. They require only 4 parameters, compute quaternion multiplication efficiently, and maintain the unit-norm constraint easily (via simple normalization). Critically, quaternion interpolation (SLERP) is geometrically smooth and well-behaved, making quaternions ideal for smoothly varying trajectories. However, the double-cover property (where $q$ and $-q$ represent the same rotation) must be handled carefully in algorithms to avoid jumping discontinuities. For real-time simulation at high frequency (e.g., 1000 Hz golf swing dynamics), quaternions are the preferred internal representation, with rotation matrices computed on-demand when the body axes are needed.
+**Unit Quaternions** are typically the most numerically stable choice for continuous rotations and interpolation. They require only 4 parameters, compute quaternion multiplication very efficiently, and maintain the unit-norm constraint easily (via simple normalization). Critically, quaternion interpolation (SLERP) is geometrically smooth and well-behaved, making quaternions ideal for smoothly varying trajectories. However, the double-cover property (where $q$ and $-q$ represent the same rotation) must be handled carefully in algorithms to avoid jumping discontinuities. For real-time simulation at high frequency (e.g., 1000 Hz golf swing dynamics), quaternions are the preferred internal representation, with rotation matrices computed on-demand when the body axes are needed.
 
 ### Euler Angles: Where Singularities Propagate
 
@@ -128,4 +128,4 @@ For real-time control and simulation, the recommendation depends on the applicat
 - **High-speed ballistic motion (e.g., golf swing):** Prefer quaternions to handle rapid changes in angular velocity without singularity concerns.
 
 
-To merge Translation and Rotation into a single unified control framework for physical bodies mapping the full world, we must upgrade from $3 \times 3$ Rotation Matrices to the $4 \times 4$ space of $\SE$.
+To merge Translation and Rotation into a single unified control framework for physical bodies mapping the full world, we must upgrade from $3 \times 3$ Rotation Matrices to the magnificent $4 \times 4$ space of $\SE$.

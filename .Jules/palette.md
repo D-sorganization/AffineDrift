@@ -118,7 +118,3 @@
 ## 2026-08-04 - Missing Screen Reader Utility Classes
 **Learning:** Found that accessibility utility classes like `.sr-only` were being added dynamically via JavaScript (e.g., in `js/accessibility.js`) but were entirely missing from the core CSS bundles, causing the content to remain visible.
 **Action:** Ensure all dynamically applied utility classes, especially for accessibility, have explicit definitions in the design system CSS.
-
-## 2026-08-10 - Explicit Label Associations for Form Inputs
-**Learning:** Custom interactive tools (like simulators) often group labels and inputs visually but fail to link them programmatically. Without explicit `for` attributes on `<label>` elements matching the input `id`, screen readers cannot reliably associate the label text with the input field, reducing accessibility.
-**Action:** Always include the `for` attribute on `<label>` elements pointing to the `id` of the corresponding input, even if they are adjacent in the DOM, to guarantee accessible form controls.

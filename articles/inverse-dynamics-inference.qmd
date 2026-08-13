@@ -19,7 +19,7 @@ But here's the detective's dilemma: imagine you see a car accelerating downhill 
 
 The same problem haunts inverse dynamics in biomechanics. You see the club accelerating. But that acceleration comes from two modeled sources: drift (state-dependent mechanics) and applied input. Classical inverse dynamics gives you a model-consistent net load, not muscle activation, metabolic cost, or conscious intent. A drift/control split can clarify mechanical attribution while leaving those physiological quantities unidentified.
 
-This section formalizes the limitations of classical inverse dynamics. It then explains how the control-affine framework, together with the Zero Torque Counterfactual (ZTCF) and Zero Velocity Counterfactual (ZVCF), solves the detective's dilemma by separating passive from active contributions.
+This section formalizes the limitations of classical inverse dynamics and explains how the control-affine framework together with the Zero Torque Counterfactual (ZTCF) and Zero Velocity Counterfactual (ZVCF) solve the detective's dilemma by separating passive from active contributions.
 
 ## Classical Inverse Dynamics and Its Limitations
 
@@ -63,7 +63,7 @@ $$
 
 However, $\tau_{\mathrm{drift}}$ is not observable directly from kinematic measurements. Drift dynamics include inertial effects, Coriolis forces, gravitational loading, shaft deformation forces, joint passive forces, and geometric coupling terms. Many of these require full dynamic simulation or model-based estimation and cannot be separated from $\tau_{\mathrm{input}}$ using classical inverse dynamics alone.
 
-Thus, classical inverse dynamics cannot unambiguously estimate muscular effort in a drift-dominated system such as the golf swing. Even a model-perfect net input torque remains compatible with different muscle recruitment, co-contraction, and passive-impedance states.
+Thus, classical inverse dynamics cannot provide an unambiguous estimate of muscular effort in a drift-dominated system such as the golf swing. Even a model-perfect net input torque remains compatible with different muscle recruitment, co-contraction, and passive-impedance states.
 
 ## Drift--Input Decomposition and Affine Structure
 
@@ -105,7 +105,7 @@ $$
 F_{\mathrm{ZVCF}} = f(q, 0) = F_{\mathrm{gravity}} + F_{\mathrm{elastic}}.
 $$
 
-The ZVCF therefore isolates the configuration-dependent passive component of generalized forces. Recovering the **pure** input means subtracting the *full* drift, $F_{\mathrm{input}} = F_{\mathrm{total}} - F_{\mathrm{drift}}$ (the drift the ZTCF provides at the branch instant), **not** the ZVCF. Subtracting the ZVCF leaves the velocity-dependent drift (Coriolis/centrifugal) in place, so $F_{\mathrm{total}} - F_{\mathrm{ZVCF}}$ equals $F_{\mathrm{input}} + F_{\mathrm{vel.drift}}$, not input alone. In the downswing the velocity-dependent drift is large, so this distinction matters.
+The ZVCF therefore isolates the configuration-dependent passive component of generalized forces. The **pure** input is obtained by subtracting the *full* drift, $F_{\mathrm{input}} = F_{\mathrm{total}} - F_{\mathrm{drift}}$ (the drift the ZTCF provides at the branch instant), **not** by subtracting the ZVCF: $F_{\mathrm{total}} - F_{\mathrm{ZVCF}}$ retains the velocity-dependent drift (Coriolis/centrifugal), so it equals $F_{\mathrm{input}} + F_{\mathrm{vel.drift}}$, not input alone. In the downswing the velocity-dependent drift is large, so this distinction matters.
 
 ## Hand--Club and Ground Reaction Forces as Mixed Forces
 
@@ -121,7 +121,7 @@ The [proximal-to-distal hand-path study](proximal-distal-energy-transfer.html#fo
 
 ## Causal Interpretation of Inverse Dynamics in Affine Systems
 
-Because drift is the causal residue of all prior states, the generalized forces required to reproduce a motion necessarily encode the system's history. Classical inverse dynamics at time $t$ therefore conflates contributions from past passive dynamics with present-time active inputs. The affine decomposition clarifies this causality by separating drift from input forces, allowing torque inference to be read against the system's geometry and dynamic history.
+Because drift is the causal residue of all prior states, the generalized forces required to reproduce a motion necessarily encode the system's history. Classical inverse dynamics at time $t$ therefore conflates contributions from past passive dynamics with present-time active inputs. The affine decomposition clarifies this causality by separating drift from input forces, allowing torque inference to be interpreted in terms of the system's geometry and dynamic history.
 
 ## Implications for Biomechanics Research
 

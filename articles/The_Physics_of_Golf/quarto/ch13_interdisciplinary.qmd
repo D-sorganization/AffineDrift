@@ -24,7 +24,7 @@ The golf swing is a control problem: the goal is to direct the ball toward the t
 
 The key insight of control theory is the separation of controllable and uncontrollable effects. The controllable effects (control inputs) are the torques the muscles can apply. The uncontrollable effects (drift) are everything else---gravity, inertia, centrifugal force, elastic restoring forces. The art of control is to set up the drift (through the initial backswing) such that drift alone (the zero-torque counterfactual) points toward the target. Then, in execution, small control inputs make small corrections to keep on track.
 
-Biomechanics has historically treated the swing as a list of muscle activations: "the infraspinatus fires, then the pectoralis major, then the forearm extensors," and so on. This is descriptive but not explanatory. Why does the infraspinatus fire at that moment? How does its activation contribute to the clubhead trajectory?
+Biomechanics had historically treated the swing as a list of muscle activations: "the infraspinatus fires, then the pectoralis major, then the forearm extensors," and so on. This is descriptive but not explanatory. Why does the infraspinatus fire at that moment? How does its activation contribute to the clubhead trajectory?
 
 Control theory reframes these questions. The muscle activations are the control inputs. The question is not "what fires when?" but "what is the control objective, and how do the muscle activations achieve it?" The answer is: by exploiting drift.
 
@@ -79,7 +79,7 @@ The choice of impedance depends on the task. For a precision surgery, you want h
 
 The human arm has adjustable impedance. When you contract your muscles maximally, your impedance is high (your arm is stiff and resists being pushed). When you relax, your impedance is low (your arm yields easily). The nervous system adjusts muscle co-contraction to tune the impedance.
 
-In the golf swing, the impedance changes throughout the motion. Early in the backswing, the arm is relatively compliant (low impedance), allowing gravity and inertia to stretch the muscles and store energy. As the downswing approaches, the impedance increases (muscle contraction stiffens the arm), preparing for the high forces of impact. At impact, the impedance is highest (the muscles contract strongly, the arm is rigid), protecting against the shock of the ball strike.
+In the golf swing, the impedance changes throughout the motion. Early in the backswing, the arm is relatively compliant (low impedance), allowing gravity and inertia to stretch the muscles and store energy. As the downswing approaches, the impedance increases (muscle contraction stiffens the arm), preparing for the high forces of impact. At impact, the impedance is very high (the muscles contract strongly, the arm is rigid), protecting against the shock of the ball strike.
 
 This impedance tuning is not conscious; it emerges from the control strategy. But it is crucial: if the arm is too stiff throughout (high impedance everywhere), the swing will be slow and weak, and the muscles will fatigue quickly. If the arm is too compliant (low impedance everywhere), the swing will be unpredictable and uncontrolled. The optimal impedance is matched to the phase of the swing.
 
@@ -91,7 +91,7 @@ Task-space planning is intuitive: specify where you want the end effector to go,
 
 Joint-space planning is computationally simpler: specify the joint trajectories, and the end effector follows. But it is less intuitive (what does a desired elbow angle mean to a golfer?).
 
-The human nervous system seems to plan in task space (where the hand should be) and then translate into joint space (what angles are needed). But for repetitive, well-practiced motions like the golf swing, the nervous system may learn a direct joint-space trajectory that it can execute quickly.
+The human nervous system seems to plan in task space (where the hand should be) and then translate into joint space (what angles are needed). But for repetitive, well-practiced motions like the golf swing, the nervous system may learn a direct joint-space trajectory that it can execute very quickly.
 
 The affine framework adds a third layer: control affine planning. Instead of specifying a complete trajectory, the golfer specifies an initial configuration (the backswing position) and a control strategy (which muscles to activate when). The drift field does much of the work automatically. The control inputs make corrections to keep on track.
 
@@ -120,7 +120,7 @@ The cerebellum is a small structure (about 10\% of brain volume) at the back of 
 
 The cerebellum is thought to learn **forward models**---internal models that predict the consequences of motor commands. When you issue a muscle command, the forward model predicts how the body will respond. If the actual response differs from the prediction (an error), the error is used to update the forward model.
 
-This is why practice matters. Each swing, the nervous system compares the actual trajectory to the predicted trajectory. If there is an error, the forward model is refined. After hundreds of repetitions, the forward model becomes more accurate, and the cerebellum can predict the swing outcome before it happens.
+This is why practice matters. Each swing, the nervous system compares the actual trajectory to the predicted trajectory. If there is an error, the forward model is refined. After hundreds of repetitions, the forward model becomes very accurate, and the cerebellum can predict the swing outcome before it happens.
 
 The affine framework provides a clear picture of what the cerebellar forward model must learn: the drift field $f(\mathbf{x})$. The control field $G(\mathbf{x})$ is relatively fixed (the muscles can always produce force in approximately the same directions). But the drift field is complex and depends on the current state in nonlinear ways. The cerebellum's job is to learn $f(\mathbf{x})$ well enough that it can predict future states and plan control inputs that will achieve the goal.
 
@@ -128,7 +128,7 @@ The affine framework provides a clear picture of what the cerebellar forward mod
 
 Motor cortex (the part of the brain that controls voluntary movement) encodes the desired motion, not the detailed muscle commands. Neurons in motor cortex fire at rates that correlate with hand position, hand velocity, hand acceleration, and the direction of motion.
 
-This is consistent with the affine framework. In that picture, the motor cortex specifies the desired hand trajectory (or perhaps the desired phase of the swing---early, mid, late downswing). The cerebellum then translates this high-level instruction into joint trajectories and muscle activation patterns.
+This is consistent with the affine framework. The motor cortex specifies the desired hand trajectory (or perhaps the desired phase of the swing---early, mid, late downswing). The cerebellum translates this high-level instruction into joint trajectories and muscle activation patterns.
 
 The motor cortex also uses feedback. If the hand trajectory deviates from the desired trajectory, proprioceptive feedback (from the arms) and visual feedback (from watching the ball or the swing) provide error signals. The motor cortex adjusts the muscle activation to correct the error.
 
@@ -158,7 +158,7 @@ These materials have mechanical properties that significantly affect the swing a
 
 Carbon fiber composites are strong, stiff, and light. This is why they are used in golf shafts. A carbon shaft can be engineered to have specific stiffness properties: the bending stiffness (described by $EI$ in @sec-flexible_shaft) can be tuned by varying the fiber orientation and the resin matrix.
 
-A shaft with fibers oriented primarily in the lengthwise direction (along the shaft) is stiff in bending and torsion. A shaft with fibers oriented at an angle (spirally wrapped) is more compliant and can absorb more deformation. A shaft with a variable fiber orientation (stiffer near the grip, more flexible near the tip) produces a specific bending profile.
+A shaft with fibers oriented primarily in the lengthwise direction (along the shaft) is very stiff in bending and torsion. A shaft with fibers oriented at an angle (spirally wrapped) is more compliant and can absorb more deformation. A shaft with a variable fiber orientation (stiffer near the grip, more flexible near the tip) produces a specific bending profile.
 
 These design choices are not arbitrary. They are chosen to produce the desired bending dynamics (the modal coordinates $\eta$ and their evolution) that work well with a particular golfer's swing speed and swing characteristics.
 
@@ -214,7 +214,7 @@ Modern launch monitors (like TrackMan, FlightScope, and GCQuad) measure the ball
 
 These measurements are direct windows into the physics of the swing and impact. But to interpret them, we need a predictive model.
 
-The model that predicts ball trajectory from swing parameters is a solution to the equations of motion for the ball under gravity, air drag, and spin-induced lift (Magnus effect). This is a well-understood physics problem.
+The model that predicts ball trajectory from swing parameters is essentially a solution to the equations of motion for the ball under gravity, air drag, and spin-induced lift (Magnus effect). This is a well-understood physics problem.
 
 But there is an inverse problem: given the observed ball trajectory, what can we infer about the club and ball at impact? This is where data science and machine learning come in.
 
@@ -296,7 +296,7 @@ The transition (from backswing to downswing) is critical. This is where the drif
 The downswing itself is divided into phases:
 1. **Early downswing (transition to mid-downswing):** Still moderate control authority. The golfer should be thinking about positioning (keeping the club on plane, maintaining lag, etc.). Muscle activation is sequenced (legs first, then torso, then arms).
 2. **Mid-downswing:** Control authority is decreasing, drift is increasing. The golfer should be committed to the swing path. Last-minute adjustments are possible but dangerous (they can throw the drift field off track).
-3. **Late downswing:** Drift dominates. The golfer is effectively on autopilot. Muscle activation is at a peak, but the nerves are executing a pre-planned sequence. Control inputs will have little effect on the clubhead trajectory.
+3. **Late downswing:** Drift dominates. The golfer is effectively on autopilot. Muscle activation is at a peak, but the nerves are essentially just executing a pre-planned sequence. Control inputs will have little effect on the clubhead trajectory.
 
 A coach who understands this structure can give phase-appropriate cues. In the early downswing, talk about positioning. In the late downswing, stop talking (the golfer cannot adjust anyway). This improves the golfer's confidence and reduces the cognitive load during the swing.
 
@@ -305,7 +305,7 @@ A coach who understands this structure can give phase-appropriate cues. In the e
 A good coaching cue is one that:
 1. **Addresses the right phase.** If the problem is in the downswing, give downswing cues, not backswing cues.
 2. **Changes the drift, not the control.** The most effective cues set up the drift field so that the golfer naturally produces the desired motion. Poor cues require high control inputs to overcome a bad drift field.
-3. **Is actionable.** A cue must describe something the golfer can do. "Swing faster" is not actionable (how do you swing faster?). "Rotate your hips more aggressively" is more actionable (the golfer knows to use their leg and hip muscles more).
+3. **Is actionable.** A cue must describe something the golfer can actually do. "Swing faster" is not actionable (how do you swing faster?). "Rotate your hips more aggressively" is more actionable (the golfer knows to use their leg and hip muscles more).
 4. **Is memorable.** A good cue is simple and easily recalled under pressure. "Drive your knees" is better than "increase the angular acceleration of your hips during the transition phase."
 
 The affine framework helps a coach design better cues by making the physics explicit. Instead of guessing at what might help, a coach can analyze the golfer's swing, identify where the drift is off target, and design a cue that adjusts the drift.
@@ -316,7 +316,7 @@ A golfer is producing a clubhead path that is too far inside (too much hook pote
 
 The coach could give a cue like "keep your arms extended through the downswing" or "rotate your torso more." But these are somewhat generic. A more effective cue is "think about swinging down on a line that is parallel to your target line." This mental cue helps the golfer set up a drift field that is naturally aligned with the target.
 
-The problem may instead lie in the grip, with the hands too far inside at the top of the backswing. The coach could then cue "move your hands more toward the ball at address" or "feel like your hands are in front of your torso at the top." This changes the initial condition, which in turn changes the entire drift field for that swing.
+Or, if the problem is in the grip (the hands are too far inside at the top of the backswing), the coach could cue "move your hands more toward the ball at address" or "feel like your hands are in front of your torso at the top." This changes the initial condition, which in turn changes the entire drift field for that swing.
 
 The most effective coach is one who understands the drift field structure and designs cues that change the drift, not the control.
 
@@ -420,5 +420,5 @@ Design a coaching cue that addresses a golfer's problem (e.g., "swinging too muc
 
 Explain why proprioceptive feedback is more useful than visual feedback in the golf swing. What role do mechanoreceptors in fascia play in this feedback?
 
-In the context of injury prevention, use the affine framework to argue why optimizing the ZTCF (through technique) might be more effective long-term than strengthening muscles alone. What evidence would be needed to validate this hypothesis?
+In the context of injury prevention, use the affine framework to argue why optimizing the ZTCF (through technique) might be more effective long-term than simply strengthening muscles. What evidence would be needed to validate this hypothesis?
 

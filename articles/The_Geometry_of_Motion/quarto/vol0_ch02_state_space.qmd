@@ -14,7 +14,7 @@ But control theorists and kinematic engineers almost never look at the $X, Y, Z$
 
 ::: {.callout-note}
 
-  Imagine taking a photograph of a physical system. A photograph captures position, but not motion (you cannot tell if a car in a photo is parked or moving 100 mph). State Space is the mathematical equivalent of the ultimate, complete "photograph." A single point in State Space contains everything you need to know about the system to predict its future (assuming you know the laws of physics dictating it).
+  Imagine taking a photograph of a physical system. A photograph captures position, but not motion (you cannot tell if a car in a photo is parked or moving 100 mph). State Space is the mathematical equivalent of the ultimate, complete "photograph." A single point in State Space contains absolutely everything you need to know about the system to perfectly predict its future (assuming you know the laws of physics dictating it).
 
 :::
 
@@ -31,7 +31,7 @@ No. If we only know that the train is at $x = 100$ meters, we cannot predict whe
 
 Therefore, to complete our "photograph," we must also know its velocity, $v$ (often denoted as the derivative of position, $\dot{x}$). If we know $(x, \dot{x})$, we know its exact location and its exact speed.
 
-Do we need to know acceleration ($\ddot{x}$) as part of the state? According to Newton's Second Law: $F = m\ddot{x}$. Acceleration is not an independent property of the train; the external forces applied at that instant drive it. Therefore, if we know the forces (the Control Inputs, $\control$), we can compute the acceleration. The state itself is fully defined by position and velocity.
+Do we need to know acceleration ($\ddot{x}$) as part of the state? According to Newton's Second Law: $F = m\ddot{x}$. Acceleration is not an independent property of the train; it is completely driven by the external forces applied at that instant. Therefore, if we know the forces (the Control Inputs, $\control$), we can compute the acceleration. The state itself is fully defined by just position and velocity.
 
 
 ::: {.callout-note}
@@ -89,13 +89,13 @@ The state captures everything the system "remembers" about its past. Position an
 
 Because the state vector $\state$ contains $n$ variables, it naturally lives in an $n$-dimensional geometry: the State Space, denoted as $\statespace \in \Reals^n$.
 
-When a dynamic system (like an airplane or a robotic arm) moves through physical space over time, its entire sprawling motion collapses to a single, unified **1-dimensional curve** snaking through $n$-dimensional state space. This curve is called the system's **Trajectory** $\traj$.
+An astonishing realization for beginners is that when a dynamic system (like an airplane or a robotic arm) moves through physical space over time, its entire sprawling motion is represented as a single, unified **1-dimensional curve** snaking through $n$-dimensional state space. This curve is called the system's **Trajectory** $\traj$.
 
 
 ### Standard Form Differential Equations
 
 
-State space converts complex, higher-order physical differential equations into simple, first-order vector math. That conversion is the source of its power.
+The immense power of state space is that it allows us to convert complex, higher-order physical differential equations into simple, first-order vector math.
 
 Consider a simple mass-spring-damper system governed by a second-order differential equation:
 \begin{equation}
@@ -124,12 +124,12 @@ This is called the **State Space Representation**. It is universally written in 
 :::
 
 
-Whether you are controlling a single gear or a 15-DOF musculoskeletal golf swing (as discussed in Volume II), you are trying to shape the trajectory $\state(t)$ by manipulating the vector field $\bm{f}$ with your control inputs $\control$.
+Whether you are controlling a single gear or a 15-DOF musculoskeletal golf swing (as discussed in Volume II), you are always, fundamentally, trying to shape the trajectory $\state(t)$ by manipulating the vector field $\bm{f}$ using your control inputs $\control$.
 
 
 ## Summary
 
 
-State space decouples physics from geometry. We no longer treat a system as physical objects bumping into each other in 3D space. We treat it as a single point—a cursor—moving through hyper-dimensional coordinates based on a vector field. 
+State space fundamentally decouples physics from geometry. We no longer treat a system as physical objects bumping into each other in 3D space. We treat it as a single point—a cursor—moving through hyper-dimensional coordinates based on a vector field. 
 
 But what defines those coordinates? How do we mathematically decide what the angles and positions of highly complex mechanisms are? For that, we turn to Configuration Space.

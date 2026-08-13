@@ -370,14 +370,14 @@ What the hybrid model adds is not a guaranteed coaching conclusion; it is the ab
 **Hybrid model:**
 - **Mode 1 (Approach):** Smooth orbital dynamics, thrusters provide control
 - **Guard:** Contact sensor detects docking port touch
-- **Reset:** Velocity jumps according to the soft-capture mechanism (like a squishy collision)
+- **Reset:** Velocity jumps according to the soft-capture mechanism (like a very squishy collision)
 - **Mode 2 (Latched):** Spacecraft is now rigidly connected to ISS
 
 **Why it matters:**
 - If you modeled the docking mechanism as a stiff spring (smooth approximation), the simulation timesteps would need to be incredibly small (microseconds) to capture the stiffness accurately. This is computationally expensive.
 - Hybrid model treats the capture as a discrete event with a known reset map. Simulation is fast and accurate.
 
-**Result:** NASA's trajectory planners use hybrid models for rendezvous and docking, where the approach must be gentle and the capture reliable.
+**Result:** NASA's trajectory planners use hybrid models for rendezvous and docking, ensuring the approach is gentle and the capture is reliable.
 
 ### Application 4: Manufacturing (Drilling or Cutting)
 
@@ -479,7 +479,7 @@ Each bounce multiplies perturbations by the saltation matrix $S$. After 5 bounce
 
 $$\text{Perturbation} = S^5 \times \text{Initial perturbation}$$
 
-If the eigenvalues of $S$ are less than 1 (dissipative impact), then $S^5$ is small—perturbations die out quickly. The ball's trajectory is stable.
+If the eigenvalues of $S$ are less than 1 (dissipative impact), then $S^5$ is very small—perturbations die out quickly. The ball's trajectory is stable.
 
 If the eigenvalues were greater than 1 (energy-adding impact, like a ball on a vibrating table), then $S^5$ would be large—perturbations grow, and the trajectory is unstable.
 
@@ -495,11 +495,11 @@ You might ask: "Why bother with all this hybrid machinery? Can't we just smooth 
 
 ### Approach 1: Smooth Approximation (Modeling Impact as a Stiff Spring)
 
-**Idea:** Instead of a discontinuous jump, replace the impact with a stiff spring:
+**Idea:** Instead of a discontinuous jump, replace the impact with a very stiff spring:
 
 $$F_{contact}(x) = \begin{cases} 0 & \text{if } x > 0 \\ -k \cdot x & \text{if } x \leq 0 \end{cases}, \quad k \to \infty$$
 
-With $k$ large, this approximates a hard collision.
+With $k$ very large, this approximates a hard collision.
 
 **Pros:**
 - Smooth everywhere (standard calculus applies)
@@ -669,4 +669,4 @@ This is a natural extension, not a contradiction. The core geometric insight (lo
 
 ---
 
-**Key takeaway:** Most real-world systems aren't perfectly smooth, but that's okay. By treating jumps explicitly rather than approximating them, we can reuse the same tangent space framework that works for smooth systems, extended with a few new tools (guards, resets, saltation matrices). The result is a unified approach that handles everything from bouncing balls to walking robots to golf swings—all with the same underlying geometric principle: systems are locally linear, even when they jump.
+**Key takeaway:** Most real-world systems aren't perfectly smooth, but that's okay. By treating jumps explicitly (not as approximations), we can leverage the same tangent space framework that works so well for smooth systems, extended with a few new tools (guards, resets, saltation matrices). The result is a unified approach that handles everything from bouncing balls to walking robots to golf swings—all with the same underlying geometric principle: systems are locally linear, even when they jump.

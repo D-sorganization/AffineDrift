@@ -16,7 +16,7 @@ Given the current position ($\bm{q}$), current speed ($\dot{\bm{q}}$), and the f
    \ddot{\bm{q}} = \text{ForwardDynamics}(\bm{q}, \dot{\bm{q}}, \bm{\tau})
 \end{equation}
 
-If we construct the monolithic inertia matrix $M(\bm{q})$ and solve $M(\bm{q})\ddot{\bm{q}} = \bm{\tau} - C(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} - G(\bm{q})$, we must invert an $N \times N$ matrix. Inversion is ruinously expensive for large robots, scaling as $O(N^3)$.
+If we construct the monolithic inertia matrix $M(\bm{q})$ and solve $M(\bm{q})\ddot{\bm{q}} = \bm{\tau} - C(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} - G(\bm{q})$, we must invert an $N \times N$ matrix. Inverting matrices is mathematically catastrophic for large robots, scaling continuously worse at $O(N^3)$.
 
 
 ## Featherstone's $O(N)$ Solution: Articulated Inertia
@@ -50,14 +50,14 @@ Starting at the root (the ground), propagate outward to the leaves (the end effe
 
 ### 2. Inward Pass: Articulated Inertias
 
-Start at the leaves and propagate inward toward the root base.
+Starting at the leaves and propagating inward towards the root base. 
 At the tip, the Articulated Inertia is identical to the standard rigid Spatial Inertia: $I_A^{tip} = I_s^{tip}$.
-But as you step inward to link $i$, the Articulated Inertia of its child $i+1$ drops its algebraic weight across the joint hinge $S_i$ via a recursive equation:
+But as you step inward to link $i$, the Articulated Inertia of its child $i+1$ drops its massive algebraic weight across the joint hinge $S_i$ via a recursive equation:
 \begin{equation}
    I_A^i = I_s^i + I_A^{i+1} - \frac{ (I_A^{i+1} \screw_{i+1}) (I_A^{i+1} \screw_{i+1})^T }{ \screw_{i+1}^T I_A^{i+1} \screw_{i+1} }
 \end{equation}
 
-The denominator $\screw^T I_A \screw$ acts as a scalar projection, extracting the single degree of freedom of the motor out of the $6 \times 6$ inertia block. The fraction projects the inertia tensor across the geometric pin joint.
+The denominator $\screw^T I_A \screw$ acts as a scalar projection, mathematically extracting the single degree of freedom of the motor out of the massive $6 \times 6$ inertia block. The fraction is simply projecting the inertia tensor across the geometric pin joint.
 
 
 ### 3. Outward Pass: Joint Accelerations
@@ -68,13 +68,13 @@ Because we know the true apparent "weight" of the entire chain resting on the ba
    \ddot{q}_i = \frac{\tau_i - \screw_i^T \bm{p}_i}{\screw_i^T I_A^i \screw_i}
 \end{equation}
 
-Once we know $\ddot{q}_1$, we use it to find the absolute spatial acceleration $\dot{\twist}_1$ of link 1. Since Link 2 is attached to Link 1, we propagate this acceleration outward to calculate $\ddot{q}_2, \ddot{q}_3, \dots, \ddot{q}_n$.
+Once we know $\ddot{q}_1$, we use it to find the absolute spatial acceleration $\dot{\twist}_1$ of link 1. Since Link 2 is attached to Link 1, we propagate this acceleration outward to instantly calculate $\ddot{q}_2, \ddot{q}_3, \dots, \ddot{q}_n$. 
 
 
 ## Worked Example: The Pseudocode of Articulated Inertia
 
 
-Here is Python pseudocode demonstrating how the recursive articulated inertia loop works.
+Here is python pseudocode demonstrating how the recursive articulated inertia loop works.
 
 
 ```python
@@ -116,15 +116,15 @@ def compute_articulated_inertias(spatial_inertias, screw_axes, n_links):
 ```
 
 
-Two details are essential for a correct implementation, and both are easy to drop in a sketch. First, the parent accumulates the **projected remainder** $I_a = I_A[i] - U U^\top / D$, *not* the child's full $I_A[i]$; the $U U^\top / D$ term removes the inertia the joint can move freely. Second, that remainder must be carried into the parent frame by the **Adjoint** ${}^{p}X_i$ (here `adjoint_parent_from_child(i)`, supplied by the kinematics), because spatial inertias are frame-dependent. Omitting either step gives a wrong articulated inertia.
+Two details are essential for a correct implementation (and are easy to drop in a sketch): (1) the parent accumulates the **projected remainder** $I_a = I_A[i] - U U^\top / D$, *not* the child's full $I_A[i]$ — the $U U^\top / D$ term removes the inertia the joint can move freely; and (2) that remainder must be carried into the parent frame by the **Adjoint** ${}^{p}X_i$ (here `adjoint_parent_from_child(i)`, supplied by the kinematics), since spatial inertias are frame-dependent. Omitting either step gives a wrong articulated inertia.
 
-This algorithm solves the physics of large skeletal systems without ever touching an algebraic trigonometric matrix or attempting an $N \times N$ inversion. It drives all real-time simulation logic throughout *Tangent-Space Methods*.
+This algorithm completely solves the physics of massive skeletal systems interacting with the universe without ever touching an algebraic trigonometric matrix or attempting an $N \times N$ inversion. It fundamentally drives all real-time simulation logic throughout *Tangent-Space Methods*.
 
 
 ## Connection to Automatic Differentiation
 
 
-Combining the Articulated Body Algorithm with modern machine learning exposes a subtle but useful fact: the recursive passes of ABA are amenable to **Automatic Differentiation (AD)**.
+A subtle but profound fact emerges when combining Articulated Body Algorithm with modern machine learning: the recursive passes of ABA are perfectly amenable to **Automatic Differentiation (AD)**.
 
 In chapters on machine learning and optimal control, we often need to compute the derivatives of the dynamics with respect to the state and control inputs. That is, if we have accelerations $\ddot{\bm{q}} = \text{ForwardDynamics}(\bm{q}, \dot{\bm{q}}, \bm{\tau})$, we need:
 

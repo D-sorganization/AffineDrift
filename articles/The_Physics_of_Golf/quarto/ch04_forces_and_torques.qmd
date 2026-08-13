@@ -15,7 +15,7 @@ $$
 
 contains *all* the forces that act on your arm. But they're not all the same type. Some come from your muscles. Some come from gravity. Some come from your arm's own motion. Some come from constraints.
 
-If you can attribute each force to its source, you gain enormous insight. You understand what you're controlling. You see which forces help you and which fight you. You can diagnose problems.
+If you can attribute each force to its source, you gain enormous insight. You understand what you're actually controlling. You see which forces help you and which fight you. You can diagnose problems.
 
 This chapter is about that decomposition.
 
@@ -61,7 +61,7 @@ $$
 \tau_{\text{inertia}} = M_{11} \cdot \ddot{\theta}_1 = 2.22 \times 17.45 = 38.7 \text{ N m}
 $$
 
-This is the baseline using the model parameters from @sec-03_double_pendulum. Just to accelerate the arm at this rate requires 38.7 N m. Gravity also pulls, with 10.6 N m acting backward. Adding the two, you need at least $38.7 + 10.6 = 49.3$ N m of muscular torque to achieve this acceleration in this model [@Nesbit2005] (illustrative; depends on individual body parameters).
+This is the baseline using the model parameters from @sec-03_double_pendulum. Just to accelerate the arm at this rate requires 38.7 N m. If there's also gravity pulling (10.6 N m backward), then you need to generate at least $38.7 + 10.6 = 49.3$ N m of muscular torque to achieve this acceleration in this model [@Nesbit2005] (illustrative; depends on individual body parameters).
 
 But wait—there's more. There are also Coriolis and centrifugal forces.
 
@@ -199,7 +199,7 @@ Here's a rough accounting of forces at different swing speeds:
 - Coriolis/Centrifugal: $\approx 10$ N m (strong, helping)
 - Muscular force needed: $\approx -5$ N m (gravity and velocity-dependent forces are doing most of the work!)
 
-At high speeds, the muscular forces flip sign. Instead of pulling the arm, they're *resisting* the arm's acceleration. The arm is accelerating so fast from gravity and velocity-dependent forces that muscles must apply a braking torque to slow it down to the right speed for impact.
+At high speeds, the muscular forces actually flip sign. Instead of pulling the arm, they're *resisting* the arm's acceleration. The arm is accelerating so fast from gravity and velocity-dependent forces that muscles must apply a braking torque to slow it down to the right speed for impact.
 
 This is why the downswing feels easier than the backswing, even though the accelerations are higher. The passive forces are helping.
 
@@ -241,7 +241,7 @@ If the arm is lower at the end (lower height), then $\Delta V < 0$, and gravity 
 
 Wait—this seems to contradict the observation that gravity helps. The resolution: gravity *does* do positive work during the downswing (arm goes from up at the top to down during transition), but *all that work is already done by the time you reach impact*. So the conversion of potential energy to kinetic energy happens early in the downswing.
 
-Later in the downswing, gravity fights you (pulling the arm down when you want to pull it forward). But by that point, the arm has so much kinetic energy that gravity's resistance is small.
+Later in the downswing, gravity is actually fighting you (pulling the arm down when you want to pull it forward). But by that point, the arm has so much kinetic energy that gravity's resistance is small.
 
 ## Muscular Forces: Your Control
 
@@ -271,7 +271,7 @@ So the question becomes: what $\bm{\tau}(t)$ do you need to apply at each instan
 
 ## Constraint Forces: The Reactive Forces
 
-Finally, there are forces that appear automatically to enforce mechanical constraints. These don't show up explicitly in the manipulator equation (as written in generalized coordinates), but they're present as reaction forces at hinges and joints.
+Finally, there are forces that appear automatically to enforce mechanical constraints. These don't show up explicitly in the manipulator equation (as written in terms of generalized coordinates), but they're present as reaction forces at hinges and joints.
 
 ::: {.callout-note}
 ## Constraint Forces
