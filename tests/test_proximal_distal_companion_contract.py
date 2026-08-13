@@ -153,6 +153,14 @@ def test_model_workbench_page_is_discoverable_and_uses_canonical_tools() -> None
         assert heading in workbench
 
 
+def test_included_chapter_workbench_links_are_valid_when_rendered_independently() -> None:
+    """Quarto also renders include fragments at their own nested public URLs."""
+    for chapter_name in ("ch03_state_snapshot.qmd", "ch28_practical_synthesis.qmd"):
+        chapter = (CHAPTERS / chapter_name).read_text(encoding="utf-8")
+        assert "](/articles/proximal-distal-model-workbench.html)" in chapter
+        assert "](proximal-distal-model-workbench.html)" not in chapter
+
+
 def test_expanded_companion_has_one_substantive_file_per_registered_chapter() -> None:
     """The lay book is a developed manuscript, not a collection of short cards."""
     chapter_paths = sorted(CHAPTERS.glob("ch??_*.qmd"))

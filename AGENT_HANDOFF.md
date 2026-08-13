@@ -12,6 +12,14 @@ articles that support a fleet-wide "Shared Web Tools" program.
 
 Active epics/PRs:
 
+- **AffineDrift deployment follow-up after #3818** — the first current-main
+  Pages build completed rendering but failed its post-build health gate because
+  two reusable chapter fragments linked to the workbench relative to the
+  assembled book. Branch `fix/proximal-distal-fragment-workbench-links` uses
+  site-root-relative links that resolve in both the book and independently
+  rendered chapter pages, with a regression contract. Merge and verify a green
+  Pages deployment before closing UpstreamDrift #8513.
+
 - **UpstreamDrift #8513 / AffineDrift reader length parity follow-up** — the
   completion audit after merged PR #3816 found that the 196-page lay PDF still
   trailed the current 181-page scientific artifact by 584 extracted words.
