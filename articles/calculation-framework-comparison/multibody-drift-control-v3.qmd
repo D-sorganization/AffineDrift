@@ -24,7 +24,7 @@ The point is worth stating carefully because the models themselves are highly co
 
 And yet, despite all this complexity, the stated model class still gives a clean bookkeeping separation between passive dynamics and applied inputs. The separation is not a statement about every physical effect in a real mechanism; it is a structural property of the equations once the coordinates, constraints, and actuator model have been specified.
 
-What is more, this clean separation survives across several standard derivation languages. One can write the equations using energy methods, force balance on individual bodies, spatial screws, task-space coordinates, or differential-geometric notation. The notation and assumptions differ, but the same bookkeeping split between passive dynamics and applied inputs can still be recovered within the stated model class.
+What is more, this clean separation survives across several standard derivation languages. One can write the equations using energy methods, force balance on individual bodies, spatial screws, task-space coordinates, or differential-geometric notation. The notation and assumptions differ, but you can still recover the same bookkeeping split between passive dynamics and applied inputs within the stated model class.
 
 This article is about that separation---what it is, why it works, how to compute it, and what it reveals about the structure of mechanical systems.
 
@@ -58,7 +58,7 @@ The current carries them. That is all. The kayaker moves exactly as the river di
 
 We call this the **Zero Torque Counterfactual**, or **ZTCF**: what the system would do, at this instant, with zero input. It is a snapshot---a photograph of the physics at one moment---not a prediction of the future. One moment later the kayaker has drifted to a new spot with a different current, and the answer changes.
 
-But right now, right here, the ZTCF tells you exactly what the physics is contributing. And the difference between what is actually happening and the ZTCF tells you exactly what the controller is contributing.
+But right now, right here, the ZTCF tells you exactly what the physics is contributing. And the difference between what is happening and the ZTCF tells you exactly what the controller is contributing.
 
 ## Three Principles
 
@@ -94,12 +94,12 @@ The equations in this article are classical. The Euler--Lagrange equations, Newt
 
 ## How This Article Is Organized
 
-We build the ideas *by concept*, not by formalism. First, we establish the vocabulary of motion in everyday language (@sec-core-concepts). Then we introduce our running example---a double pendulum---so we have something concrete to compute with (@sec-double-pendulum). Next, we develop the drift--control decomposition thoroughly in one framework (@sec-drift-control), and then show what happens when the system is constrained (@sec-constrained). With the core ideas in place, we show how they appear in four other standard frameworks (@sec-other-frameworks), compare the frameworks side by side (@sec-cross-formalism), uncover what the compact equations hide (@sec-hidden-loads), connect to symmetry and conservation (@sec-symmetry), and close with practical guidance (@sec-practical).
+We build the ideas *by concept*, not by formalism. First, we establish the vocabulary of motion in everyday language (@sec-core-concepts). Then we introduce our running example---a double pendulum---so we have something concrete to compute with (@sec-double-pendulum). Next, we develop the drift--control decomposition thoroughly in one framework (@sec-drift-control), and then show what happens when the system is constrained (@sec-constrained). With the core ideas in place, we show how they appear in four other standard frameworks (@sec-other-frameworks) and compare the frameworks side by side (@sec-cross-formalism). The closing sections uncover what the compact equations hide (@sec-hidden-loads), connect to symmetry and conservation (@sec-symmetry), and end with practical guidance (@sec-practical).
 
 
 # The Language of Motion {#sec-core-concepts}
 
-Before we write a single equation, let's make sure we share a common language. Every technical term in this article will be explained in plain words first. The math is a tool for making the ideas precise---but the ideas come first.
+Before we write a single equation, let's make sure we share a common language. This article explains every technical term in plain words first. The math is a tool for making the ideas precise---but the ideas come first.
 
 ## Configuration: Where Is Everything?
 
@@ -135,7 +135,7 @@ This is a deep fact. In Newtonian mechanics, the future is completely determined
 
 In the world of generalized coordinates, a **generalized force** (or **generalized effort**) is whatever causes a generalized coordinate to accelerate. For a rotational joint, the generalized force is a torque. For a translational joint, it is a linear force. We use $\tau$ for the vector of all generalized efforts.
 
-There are really three kinds of pushes acting on any mechanical system:
+Three kinds of pushes act on any mechanical system:
 
 **Control effort** ($\tau$ or $u$): the forces you apply on purpose, through motors, actuators, or muscles. These are the paddle strokes---the things you choose.
 

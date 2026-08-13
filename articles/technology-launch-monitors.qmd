@@ -167,9 +167,9 @@ The industry has split, and the split runs along the sensing modality:
 
 TrackMan states the resulting discrepancy explicitly, and the number is large: **"For a driver, the difference between the path of the club head's center of gravity (CoG) and the path of the center of the club face is approximately 3 degrees (center of club face path being more outside-in)"** ([TrackMan club data definitions](https://www.trackman.com/blog/golf/club-data-definitions)).
 
-The same page explains why optical systems land on the other convention --- *"Optical-based launch monitors almost always measure Club Speed, Attack Angle and Club Path relative to the center of the club face, since this is where the reflective markers are positioned"* --- and closes with a warning that deserves wider circulation: *"Often, the numbers measured (or calculated) aren't comparable."*
+The same page explains why optical systems land on the other convention — *"Optical-based launch monitors almost always measure Club Speed, Attack Angle and Club Path relative to the center of the club face, since this is where the reflective markers are positioned"*. It closes with a warning that deserves wider circulation: *"Often, the numbers measured (or calculated) aren't comparable."*
 
-A full catalogue of which vendor uses which convention, with sources, is in the [Launch Monitor Vendor Reference](launch-monitor-vendor-reference.qmd). The short version is that FlightScope publishes a geometric-centre definition; older Uneekor sticker guides do likewise, although Uneekor's 2026 Club AI material complicates that description; Foresight's putting glossary names the face centre; and GEARS ships both reference points for speed, but does not publish a corresponding path convention.
+A full catalogue of which vendor uses which convention, with sources, is in the [Launch Monitor Vendor Reference](launch-monitor-vendor-reference.qmd). The short version: FlightScope publishes a geometric-center definition, and older Uneekor sticker guides do likewise, although Uneekor's 2026 Club AI material complicates that description. Foresight's putting glossary names the face center, and GEARS ships both reference points for speed without publishing a corresponding path convention.
 
 Three degrees. For a driver, on the same swing, a radar and a camera system can legitimately report club paths three degrees apart — and neither is malfunctioning. They are answering different questions.
 
@@ -195,7 +195,7 @@ Because the offset is $\boldsymbol{\omega}\times\mathbf{r}$, it is **not a fixed
 
 ### Does This "Build in a Slice"?
 
-The tempting conclusion is that since the ball is struck by the face, and the face centre's path is 3° more out-to-in, then a golfer delivering a "zero path" on radar is really delivering 3° out-to-in and has a fade built into the number they are chasing. The argument is worth taking seriously, and it is half right.
+The tempting conclusion runs like this. The ball is struck by the face, and the face center's path is 3° more out-to-in. So a golfer delivering a "zero path" on radar is really delivering 3° out-to-in, with a fade built into the number they are chasing. The argument is worth taking seriously, and it is half right.
 
 **What is right:** the collision genuinely responds to the motion of the material point on the face at the contact location. The friction that drags launch direction away from the face normal and generates the spin-axis tilt acts on the tangential relative velocity *at the contact patch* — which is the face-point velocity, not the CG velocity. And because face-to-path is the difference between an orientation and a velocity direction, an offset in the path term propagates one-for-one into face-to-path. Under the face-centre convention, a delivery reported as zero-zero on radar has a face-to-path of roughly +3° — face open to path — which is a fade signature.
 
@@ -221,7 +221,7 @@ $$
 \varphi_{\text{launch}} \approx w_f\,\varphi_f + (1-w_f)\,\varphi_p
 $$
 
-The weight $w_f$ is usually quoted as 0.85 for a driver and 0.75 for a wedge, on TrackMan's authority — its *Ten Fundamentals* states that "face angle accounts for roughly 85% of the initial direction" for a driver and around 75% for irons. **The only peer-reviewed measurement disagrees.** [Wood, Henrikson & Broadie (2018)](https://doi.org/10.3390/proceedings2060249) — 157 golfers, 1,575 shots, Vicon at 720 fps, filtered to centred strikes — gives horizontal weights of **0.76 ± 0.08 for a driver, 0.69 for a 7-iron, and 0.61 for a wedge**, with a robot test returning 0.63 for the 7-iron.
+The weight $w_f$ is usually quoted as 0.85 for a driver and 0.75 for a wedge, on TrackMan's authority — its *Ten Fundamentals* states that "face angle accounts for roughly 85% of the initial direction" for a driver and around 75% for irons. **The only peer-reviewed measurement disagrees.** [Wood, Henrikson & Broadie (2018)](https://doi.org/10.3390/proceedings2060249) measured 1,575 shots from 157 golfers with Vicon at 720 fps, filtered to centered strikes. They report horizontal weights of **0.76 ± 0.08 for a driver, 0.69 for a 7-iron, and 0.61 for a wedge**, with a robot test returning 0.63 for the 7-iron.
 
 Note that TrackMan makes the *same* 85% claim for the vertical plane (dynamic loft to launch angle), and there the measurement agrees closely: 83% ± 8%. So the disagreement is specific to the horizontal plane, and it is a genuine vendor-versus-measurement conflict rather than a units mix-up. Nor are these separate per-club constants: the weight declines monotonically with spin loft along a single curve, and the club enters only through its obliqueness.
 
@@ -267,7 +267,7 @@ Estimating the twist rather than tracking a point yields, as pure projections of
 - **Swing plane, rigorously defined** — the orientation and trajectory of the ISA, rather than a fitted arc through a tracked point.
 - **Propagated uncertainty** on reported parameters, provided the estimator includes conditioning, temporal correlation and systematic-error terms rather than relying on the formal least-squares covariance alone.
 
-Applied to the *swing* rather than the club, the same machinery is not new: Vena and colleagues used instantaneous screw axis theory on optical motion capture to show that at least 71% of marker velocity during the downswing is attributable to rotation about the segment's ISA, and that ISA smoothness distinguishes skilled from novice golfers ([Part 1](https://link.springer.com/article/10.1007/s12283-010-0058-8), [Part 2](https://link.springer.com/article/10.1007/s12283-010-0059-7)). The narrower research opportunity proposed here is a validated, clubhead-specific six-degree-of-freedom twist estimator built from associated range-angle-Doppler scattering centres. A comprehensive prior-art search would be required before claiming novelty.
+Applied to the *swing* rather than the club, the same machinery is not new. Vena and colleagues used instantaneous screw axis theory on optical motion capture to show that at least 71% of marker velocity during the downswing is attributable to rotation about the segment's ISA. They also showed that ISA smoothness distinguishes skilled from novice golfers ([Part 1](https://link.springer.com/article/10.1007/s12283-010-0058-8), [Part 2](https://link.springer.com/article/10.1007/s12283-010-0059-7)). The narrower research opportunity proposed here is a validated, clubhead-specific six-degree-of-freedom twist estimator built from associated range-angle-Doppler scattering centres. A comprehensive prior-art search would be required before claiming novelty.
 
 ### The Anchor-and-Propagate Principle
 
