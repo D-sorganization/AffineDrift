@@ -39,7 +39,7 @@ In the broader context of the AffineDrift framework, this linearity explains why
       <div class="laymans-item">
         <h3>The Snapshot Principle</h3>
         <p>
-          Imagine freezing a golfer mid-swing — like pressing pause on a video. In that frozen instant, every force acting on the system (gravity, muscle torque, centrifugal effects) has a perfectly predictable effect on the club's acceleration. And here's the key: these effects <strong>add up exactly</strong>, just like they would for a simple pendulum. Gravity pulls down by X, your shoulder pushes by Y, and the club accelerates by X + Y. No surprises, no interactions, no "nonlinear weirdness."
+          Imagine freezing a golfer mid-swing — like pressing pause on a video. In that frozen instant, every force acting on the system (gravity, muscle torque, centrifugal effects) has a predictable effect on the club's acceleration. And here's the key: these effects <strong>add up exactly</strong>, just like they would for a simple pendulum. Gravity pulls down by X, your shoulder pushes by Y, and the club accelerates by X + Y. No surprises, no interactions, no "nonlinear weirdness."
         </p>
         <div class="analogy">
           <strong>Think of it like a bank account:</strong> Your salary deposits, your rent withdrawals, and your grocery spending all add up to your final balance. Each transaction is independent. The "nonlinearity" of your finances (spending habits change based on your balance) only matters when you look at how things evolve over <em>time</em> — not at a single frozen snapshot.
@@ -64,7 +64,7 @@ In the broader context of the AffineDrift framework, this linearity explains why
       </div>
 
       <div class="key-takeaway">
-        <strong>Key Takeaway:</strong> The forces in a golf swing add up perfectly at each instant, even though the swing itself is deeply nonlinear. This is the mathematical foundation that makes the entire AffineDrift framework possible.
+        <strong>Key Takeaway:</strong> The forces in a golf swing add up perfectly at each instant, even though the swing itself is deeply nonlinear. This is the mathematical foundation that makes the AffineDrift framework possible.
       </div>
     </div>
   </div>
@@ -1455,23 +1455,23 @@ This structural insight connects directly to the **Drift--Control Ratio**. While
   <div class="laymans-terms-content">
     <div class="laymans-terms-inner">
       <p class="laymans-terms-intro">
-        A simple guide to understanding how we can mathematically separate the golfer's effort from the club's natural momentum.
+        A plain-language guide to how we mathematically separate the golfer's effort from the club's natural momentum.
       </p>
 
       <div class="laymans-item">
         <h3>Adding Forces vs. Adding Paths</h3>
         <p>
-          Here's the beautiful bit: in a golf swing, the forces acting on the club at any given instant are simple and additive. Gravity pulls down, your muscles push, friction acts—all at the same time, all adding up. But here's what trips people up: if you try to add two *complete golf swings* together, you don't get a "double swing." The complex, nonlinear dance of the club through space breaks superposition. What *doesn't* break is the force budget at any frozen moment.
+          In a golf swing, the forces acting on the club at any instant are simple and additive. Gravity pulls down, your muscles push, friction acts—all at the same time, all adding up. But here's what trips people up: if you try to add two *complete golf swings* together, you don't get a "double swing." The complex, nonlinear dance of the club through space breaks superposition. What *doesn't* break is the force budget at any frozen moment.
         </p>
         <div class="analogy">
-<strong>Think of it like:</strong> A snapshot of a ballet dancer mid-leap. That frozen frame tells you exactly what forces are supporting the dancer—gravity, the push-off from the legs, air resistance. You can calculate the net force at that instant by simply adding them up. But the shape of the actual leap—the arc, the timing, the recovery—that's a complex, nonlinear dance that doesn't superpose with another leap. Still, the force accounting at each moment is clean.
+<strong>Think of it like:</strong> A snapshot of a ballet dancer mid-leap. That frozen frame tells you exactly what forces are supporting the dancer—gravity, the push-off from the legs, air resistance. You can calculate the net force at that instant by adding them up. But the shape of the leap—the arc, the timing, the recovery—that's a complex, nonlinear dance that doesn't superpose with another leap. Still, the force accounting at each moment is clean.
         </div>
       </div>
 
       <div class="laymans-item">
         <h3>Why "Superposition" Matters</h3>
         <p>
-          "Superposition" means being able to study forces separately and then add them back together. It sounds obvious, but it's not: in many complex systems, you *can't* do this because things interact in tangled ways. But in mechanical systems—golf clubs, robot arms, your body—the forces enter the equations in a special, linear way. That's the gift: we can point at the acceleration you're producing and say "that piece is gravity, that piece is your muscles, that piece is friction" and they truly add up.
+          "Superposition" means being able to study forces separately and then add them back together. It sounds obvious, but it's not: in many complex systems, you *can't* do this because things interact in tangled ways. But in mechanical systems—golf clubs, robot arms, your body—the forces enter the equations in a linear way. That's the gift: we can point at the acceleration you're producing and say "that piece is gravity, that piece is your muscles, that piece is friction" and they truly add up.
         </p>
         <div class="analogy">
 <strong>Think of it like:</strong> Recording a song where each instrument is on a separate track. The final mix is the sum of all tracks. You can turn off the drums and hear just the guitars and bass. The parts don't interact—they truly add. This is unlike, say, blending colors of paint, where you can't easily "subtract out" the blue from green. Forces in mechanics are like separate tracks, not like paint colors.
@@ -1481,15 +1481,15 @@ This structural insight connects directly to the **Drift--Control Ratio**. While
       <div class="laymans-item">
         <h3>The "Affine" Structure: Separating Passive and Active</h3>
         <p>
-          "Affine" is a fancy word for a very concrete thing: the system splits into two pieces. One part happens passively—gravity, momentum, friction—and it does what it does regardless of your control. The other part is what you actively control. The key is that your control enters the equations *additively and linearly*. It doesn't change the rules of gravity or friction; it just adds a new force on top.
+          "Affine" is a fancy word for a concrete thing: the system splits into two pieces. One part happens passively—gravity, momentum, friction—and it does what it does regardless of your control. The other part is what you actively control. The key is that your control enters the equations *additively and linearly*. It doesn't change the rules of gravity or friction; it just adds a new force on top.
         </p>
         <div class="analogy">
-<strong>Think of it like:</strong> A surfer riding a wave. The wave itself (drift) carries the surfer passively. The surfer can lean and shift balance (input), which adds forces on top of the wave. The surfer's lean doesn't change the wave itself; the surfer just adds acceleration in the forward or backward direction. The total motion is wave-motion-plus-surfer-control. Neither the surfer nor the wave, individually—both together, additively.
+<strong>Think of it like:</strong> A surfer riding a wave. The wave itself (drift) carries the surfer passively. The surfer can lean and shift balance (input), which adds forces on top of the wave. The surfer's lean doesn't change the wave itself; the surfer just adds acceleration in the forward or backward direction. At each instant the forces add: the wave's push plus the surfer's. Neither one alone—both together, additively. The ride itself, though, is not one ride added to another.
         </div>
       </div>
 
       <div class="key-takeaway">
-        <strong>Key Takeaway:</strong> The golf swing is complex and nonlinear—the trajectory is a tangle you can't simply add up. But at any frozen instant, the forces are clean, simple, and truly additive. You can point at a moment in time and say exactly how much acceleration gravity is producing, how much your muscles are adding, how much friction is subtracting. That's what this article proves, rigorously, in three different mathematical languages. And that's powerful.
+        <strong>Key Takeaway:</strong> The golf swing is complex and nonlinear—the trajectory is a tangle you can't add up. But at any frozen instant, the forces are clean, simple, and truly additive. You can point at a moment in time and say exactly how much acceleration gravity is producing, how much your muscles are adding, how much friction is subtracting. That's what this article proves, rigorously, in three mathematical languages.
       </div>
 
       <div class="laymans-item">
