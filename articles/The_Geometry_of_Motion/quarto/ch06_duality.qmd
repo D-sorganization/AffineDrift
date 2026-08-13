@@ -10,8 +10,8 @@ title: "The Stability–Optimality Duality"
 The same matrix that LQR uses to score future cost can also serve as a ruler proving
 that small errors shrink under the feedback law. This chapter reveals that optimality
 and stability are not separate concerns but two views of the same geometric object: the
-Riccati solution acting simultaneously as cost curvature and contraction metric. This
-connection, recognized in the 1960s by Kalman and formalized by Willems, remains one of
+Riccati solution acting simultaneously as cost curvature and contraction metric. Kalman
+recognized the connection in the 1960s and Willems formalized it. It remains one of
 the most powerful principles in modern control: the controller that minimizes energy
 consumption guarantees robustness, and the controller that maximizes robustness often
 minimizes energy. Duality is why we can design once and verify both objectives
@@ -27,8 +27,8 @@ it says: **every optimization problem has an alter ego**.
 Imagine trying to find the lowest point in a valley. You could walk downhill (the
 "primal" approach), or you could pour water and watch where it pools (the "dual"
 approach). Both methods find the same answer, but they offer different insights.
-The dual reveals *why* the solution is optimal---what constraints are binding, what
-trade-offs are being made.
+The dual reveals *why* the solution is optimal---which constraints bind, which
+trade-offs the solution makes.
 
 In control theory, the primal problem is "find the best trajectory." The dual
 reveals the *cost of deviating*---how expensive it is to be slightly off the optimal
@@ -67,9 +67,9 @@ and contraction metric for the closed-loop tangent dynamics.
 
 
 The connection between Lyapunov stability and optimal control emerged gradually in the mid-twentieth century.
-Lyapunov's foundational work (1892) established that a suitable energy-like function can certify stability;
-nearly 70 years later, Kalman's pivotal contributions recognized that the optimal control problem and the
-stability problem share a common certificate.
+Lyapunov's foundational work (1892) established that a suitable energy-like function can certify stability.
+Nearly 70 years later, Kalman recognized that the optimal control problem and the stability problem share
+a common certificate.
 
 
 ### Kalman's Insight (1960)
@@ -163,7 +163,7 @@ threshold. For $\eta \in (1/2, \infty)$, the dissipation inequality continues to
 :::
 
 This proposition is not academic: it explains why tuning an LQR controller by scaling the gain (increasing $\eta$ to be
-more aggressive) fails only when $\eta \leq 1/2$—and by then, the system is already far too aggressive for practical use.
+more aggressive) fails only when $\eta \leq 1/2$. By then the system is already far too aggressive for practical use.
 
 
 ## Discrete-Time Duality: The Value Decrease Identity
@@ -294,7 +294,7 @@ The value decrease identity reveals the fundamental bargain of LQR: the cost is 
 2. **Control penalty**: $\du_k^\T\mat{R}_k\du_k = \dx_k^\T\mat{K}_k^\T\mat{R}_k\mat{K}_k\dx_k$ penalizes the energy cost of the optimal control action.
 
 The sum of these two terms is the rate at which the Lyapunov function (Riccati-weighted squared norm) decreases.
-This is why LQR is so well-behaved: every unit of perturbation energy is forced to be paid down via the optimal control.
+This is why LQR is so well-behaved: the optimal control pays down every unit of perturbation energy.
 :::
 
 
@@ -343,8 +343,8 @@ and converting to Euclidean norm via the bounds on $\mat{S}_k$:
 \label{eq:ch6:norm-decay}
 \end{align}
 
-This is a **discrete contraction inequality** with the Riccati matrix as the metric. The contraction rate $\rho$ is
-determined by the smallest eigenvalue of the stage cost and the condition number of the value matrix.
+This is a **discrete contraction inequality** with the Riccati matrix as the metric. Two quantities set the
+contraction rate $\rho$: the smallest eigenvalue of the stage cost, and the condition number of the value matrix.
 
 ::: {.callout-note title="Remark"}
 **Decay Rate Interpretation**
@@ -487,7 +487,7 @@ After 10 time steps, the perturbation is bounded by:
 \label{eq:ch6:10step}
 \end{equation}
 
-Wait: this suggests the norm can actually grow! This is because the condition number $\kappa(\mat{S}) \approx 7$ introduces
+Wait: this suggests the norm can grow! This is because the condition number $\kappa(\mat{S}) \approx 7$ introduces
 a factor of $\sqrt{7} \approx 2.65$. The true contraction is in the Riccati-weighted norm $V_k$:
 \begin{equation}
 V_k \leq (0.9539)^k V_0.
@@ -621,7 +621,7 @@ Substituting into~\eqref{eq:ch6:expanded-lhs}:
 \label{eq:ch6:partial}
 \end{align}
 
-Now use the fact that $\mat{K} = \mat{R}^{-1}\mat{B}^\T\mat{S}$. Then:
+Now substitute $\mat{K} = \mat{R}^{-1}\mat{B}^\T\mat{S}$. Then:
 \begin{align}
 \mat{K}^\T\mat{B}^\T\mat{S} + \mat{S}\mat{B}\mat{K} &= \mat{S}\mat{B}(\mat{R}^{-1})^\T\mat{B}^\T\mat{S} + \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S} \notag\\
 &= 2\mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S} \quad \text{(using } \mat{R} = \mat{R}^\T \text{)} \\
@@ -629,7 +629,7 @@ Now use the fact that $\mat{K} = \mat{R}^{-1}\mat{B}^\T\mat{S}$. Then:
 \label{eq:ch6:trick}
 \end{align}
 
-A cleaner approach is to note that:
+A cleaner route uses the identity:
 \begin{equation}
 \mat{K}^\T\mat{R}\mat{K} = \mat{S}\mat{B}(\mat{R}^{-1})^\T\mat{R}\mat{R}^{-1}\mat{B}^\T\mat{S}
                         = \mat{S}\mat{B}\mat{R}^{-1}\mat{B}^\T\mat{S}.
@@ -779,7 +779,7 @@ The continuous-time LQR controller guarantees a phase margin of at least $60^\ci
 open-loop transfer function.
 :::
 
-The complete derivation connecting the return-difference inequality to the specific $60^\circ$ bound can be found in Anderson \& Moore, *Optimal Control: Linear Quadratic Methods* (1990), Chapter 5, or Safonov \& Athans (1977). The key insight: the Riccati solution makes the closed-loop system "strictly positive real," and by the Passivity Theorem, the allowable phase perturbation is bounded to $60^\circ$. This is a well-known classical result; we state it here as a reference, citing the established sources rather than reproducing the full derivation.
+Anderson \& Moore, *Optimal Control: Linear Quadratic Methods* (1990), Chapter 5, and Safonov \& Athans (1977) derive the connection between the return-difference inequality and the $60^\circ$ bound. The key insight: the Riccati solution makes the closed-loop system "strictly positive real," so the Passivity Theorem bounds the allowable phase perturbation to $60^\circ$. We state this classical result and cite its sources rather than reproduce the derivation.
 
 
 ### Disk Margin
@@ -787,14 +787,14 @@ The complete derivation connecting the return-difference inequality to the speci
 
 The disk margin, or $\mu$-margin, quantifies robustness in the complex plane. For LQR, the loop transfer matrix
 satisfies a disk margin condition: the poles of the closed-loop system remain in a half-plane with guaranteed clearance
-from the origin. This is a consequence of the Riccati solution being positive definite and the ARE's structure.
+from the origin. This follows from the positive definiteness of the Riccati solution and the structure of the ARE.
 
 
 ### Implication for Design
 
 
-These robustness margins explain why LQR is ubiquitously used in practice: not only does it minimize a well-defined cost,
-but it automatically provides guardrails against model uncertainty, sensor noise, and actuator saturation. The engineer
+These robustness margins explain why engineers reach for LQR so often. It minimizes a well-defined cost and, at the
+same time, sets up guardrails against model uncertainty, sensor noise, and actuator saturation. The engineer
 need not separately verify robustness---the LQR computation provides it.
 
 
@@ -818,7 +818,7 @@ A well-conditioned matrix has $\kappa(\mat{S}) \approx 1$; a poorly conditioned 
 
 When $\kappa(\mat{S})$ is large, it often indicates that:
 1. The system is nearly uncontrollable in some direction (e.g., the angular velocity of the pendulum is hard to control).
-2. The Riccati matrix has very different scales along its principal directions.
+2. The Riccati matrix has widely different scales along its principal directions.
 3. Perturbations in one direction (corresponding to $\lambda_{\max}(\mat{S})$) are much more costly than in another
    (corresponding to $\lambda_{\min}(\mat{S})$).
 
@@ -915,8 +915,8 @@ Consider the pendulum with a wind force disturbance $w$ entering as:
 \end{equation}
 
 The $H^\infty$ design seeks a controller that minimizes the gain from wind $w$ to angle tracking error $\theta$. The
-Riccati solution provides a controller that is simultaneously as energy-efficient as possible while rejecting the worst-case
-wind disturbance. The duality theorem guarantees that this single controller solves both the performance and robustness
+Riccati solution yields one controller that is as energy-efficient as possible while still rejecting the worst-case
+wind. The duality theorem guarantees that this single controller solves both the performance and robustness
 objectives.
 
 
@@ -965,7 +965,7 @@ with $\rho = 1 - \alpha/\overline{s}$ independent of $k$.
 1. **Time-varying case (DRE)**: The Riccati matrix $\mat{S}_k$ changes at each step, reflecting the changing
    "cost-to-go" as we move backward in time from the final state. The tangent space metric is *adapted to the
    current time*: at times near the terminal condition, the metric emphasizes directions that are expensive to steer;
-   far from the terminal, the metric is influenced by asymptotic stability.
+   far from the terminal, asymptotic stability shapes the metric.
 2. **Steady-state case (ARE)**: The Riccati matrix reaches a time-invariant steady state. The metric no longer
    changes, and the contraction property is uniform in time. This is appropriate for infinite-horizon problems or
    problems where the horizon is much longer than the natural time scale of the system.
@@ -1102,7 +1102,7 @@ The duality requires several conditions:
 
 **Limitations of the Duality:**
 1. **Bounded Riccati**: If the system loses controllability near a trajectory, the Riccati matrix can become
-   unbounded or ill-conditioned. This is detected by monitoring $\kappa(\mat{S})$. If $\kappa(\mat{S}) > 10^6$ or
+   unbounded or ill-conditioned. Monitoring $\kappa(\mat{S})$ detects this. If $\kappa(\mat{S}) > 10^6$ or
    $\lambda_{\min}(\mat{S}) < 10^{-6}$, the system is nearly uncontrollable.
 2. **Meaningful weights**: The weights $\mat{Q}$ and $\mat{R}$ must reflect true performance objectives. If
    weights are chosen arbitrarily (e.g., to make the Riccati well-conditioned), the resulting controller may be
@@ -1263,12 +1263,11 @@ dynamics. The controller gain $\mat{K}$ and observer gain $\mat{L}$ can be desig
 independently.
 :::
 
-For nonlinear systems, the separation principle does not hold in general. However,
-when both the controller and observer are designed via contraction metrics, the
-overall system (controller + observer) contracts at a rate determined by the
-*minimum* of the controller and observer contraction rates:
+For nonlinear systems, the separation principle does not hold in general. Contraction
+metrics supply a practical substitute. When they certify both the controller and the
+observer, the overall system (controller + observer) contracts at a rate set by the
+*slower* of the two:
 $\lambda_{\text{overall}} \geq \min(\lambda_{\text{control}}, \lambda_{\text{observer}})$.
-This is a practical nonlinear extension of the separation principle.
 
 
 ## Chapter Summary

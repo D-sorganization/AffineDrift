@@ -18,7 +18,7 @@ This chapter explores what happens when we acknowledge that the human body is *p
 ## The Rigid Body Assumption---Where It Works and Where It Fails
 
 
-Let us begin by reviewing what the rigid body assumption has given us. Every chapter of this textbook---from kinematics to energy to inverse dynamics---has rested on a foundation: that each body segment (torso, upper arm, forearm, hand) can be treated as an undeformable solid object. The bones are stiff. The joints are well-defined hinges. Mass is distributed within each segment according to anthropometric tables, and that mass is constant.
+Every chapter of this textbook---from kinematics to energy to inverse dynamics---has rested on a foundation: that each body segment (torso, upper arm, forearm, hand) can be treated as an undeformable solid object. The bones are stiff. The joints are well-defined hinges. Mass is distributed within each segment according to anthropometric tables, and that mass is constant.
 
 This is an *excellent* first approximation. Bone is stiff: a typical human long bone can sustain a tensile load of several thousand newtons before yielding. The major joints of the skeleton---the hip, shoulder, knee, elbow---are indeed reasonably well-modeled as constrained hinges when you are not probing for subtle details. And in most everyday motions, the soft tissue jiggles around the bones quietly, causing no trouble.
 
@@ -46,11 +46,11 @@ The rigid body approximation breaks down when we need to:
 - Calculate internal soft tissue stresses (tissue shearing, compression)
 - Process marker-based motion capture data (the markers are on skin, which moves relative to bone)
 - Assess injury risk and spine loading (soft tissue deformation is part of injury mechanism)
-- Model very high accelerations (inertial forces cause tissue to lag behind bone)
+- Model high accelerations (inertial forces cause tissue to lag behind bone)
 
 :::
 
-So when does the rigid body assumption actually break? The fundamental issue is *inertial mismatch*. The bones are stiff, but they are connected to large masses of soft tissue---muscle, fat, connective tissue, organs, blood. When a bone accelerates rapidly, the soft tissue does not instantly follow. Instead, it lags behind, creating internal stresses and relative motion.
+So when does the rigid body assumption break? The fundamental issue is *inertial mismatch*. The bones are stiff, but they are connected to large masses of soft tissue---muscle, fat, connective tissue, organs, blood. When a bone accelerates rapidly, the soft tissue does not instantly follow. Instead, it lags behind, creating internal stresses and relative motion.
 
 Consider the upper arm during the downswing. The humerus (upper arm bone) is accelerating forward and down at perhaps 500 m/s$^2$ during peak downswing acceleration [@Nesbit2005] (an illustrative estimate; exact values depend on golfer size and swing speed; approximately 300--700 m/s$^2$ is a typical order-of-magnitude range). The soft tissue hanging on the arm---the muscles, the fat, the skin---has inertial mass. This soft tissue experiences an inertial force that tries to keep it moving in its old direction. The tissue oscillates relative to the bone, creating a secondary motion superimposed on the primary swing motion.
 
@@ -216,7 +216,7 @@ For the drift field, a time-varying inertia means that the effective stiffness a
 
 The fluid torso effect is subtle but real. In detailed biomechanical simulations used for injury risk assessment, the time-varying inertia of the torso is sometimes included as a correction term. In most coaching and teaching contexts, it is safely ignored---the rigid body model remains an excellent approximation.
 
-However, there is one context where the fluid torso becomes very relevant: **the transition**, the moment between backswing and downswing. During the transition, the torso must suddenly reverse its direction and accelerate forward. The viscera are still sloshing from the backswing. They have momentum in the "wrong" direction (backward). The muscles must overcome this inertial lag. The vertebral discs, already loaded from the backswing stretch, are compressed further as the viscera shift. Understanding the fluid torso helps explain why the transition is both so powerful (energy is being loaded into the stretched spinal structures) and so dangerous (extreme forces on the spine).
+However, the fluid torso matters in one context: **the transition**, the moment between backswing and downswing. During the transition, the torso must suddenly reverse its direction and accelerate forward. The viscera are still sloshing from the backswing. They have momentum in the "wrong" direction (backward). The muscles must overcome this inertial lag. The vertebral discs, already loaded from the backswing stretch, are compressed further as the viscera shift. Understanding the fluid torso helps explain why the transition is both so powerful (energy is being loaded into the stretched spinal structures) and so dangerous (extreme forces on the spine).
 
 The energy absorbed by wobbling mass is one component of the total dissipation budget. @sec-joint_damping_friction provides a complete accounting of all damping and friction sources in the kinetic chain, showing how energy dissipation at each joint propagates through the coupled system.
 
@@ -234,7 +234,7 @@ The abdominal cavity is bounded by:
 - **Sides:** the abdominal wall muscles, especially the transversus abdominis (the deepest layer, running horizontally around the abdomen)
 - **Back:** the multifidus and erector spinae muscles along the spine
 
-When you contract the diaphragm (pulling it down), you increase the volume of the thoracic cavity and decrease the volume of the abdominal cavity---at least, that is what happens during normal breathing. But in a braced posture, you can contract the diaphragm WHILE ALSO contracting the transversus abdominis and pelvic floor. This creates a pressure vessel: the diaphragm pushes down, the pelvic floor pushes up, the transversus wraps around like a corset, and the spine is braced against the multifidus.
+When you contract the diaphragm (pulling it down), you increase the volume of the thoracic cavity and decrease the volume of the abdominal cavity---at least, that is what happens during normal breathing. But in a braced posture, you can contract the diaphragm *while also* contracting the transversus abdominis and pelvic floor. This creates a pressure vessel: the diaphragm pushes down, the pelvic floor pushes up, the transversus wraps around like a corset, and the spine is braced against the multifidus.
 
 The result: pressure builds inside the abdominal cavity. This is intra-abdominal pressure.
 
@@ -332,7 +332,7 @@ We have established the mechanisms. Now let us see how IAP contributes to swing 
 
 ### 1. Spine Stabilization and Load Distribution
 
-During the downswing, the lumbar spine is subjected to enormous compressive loads. A 80 kg golfer can experience compression forces exceeding 8 times body weight at the L4/L5 disc. That is roughly 6,400 newtons of compression. The disc can withstand this (discs are designed to handle heavy loads), but the vertebrae, facet joints, and ligaments are stressed.
+During the downswing, the lumbar spine is subjected to enormous compressive loads. An 80 kg golfer can experience compression forces exceeding 8 times body weight at the L4/L5 disc. That is roughly 6,400 newtons of compression. The disc can withstand this (discs are designed to handle heavy loads), but the vertebrae, facet joints, and ligaments are stressed.
 
 By raising IAP, the golfer creates a cushioning effect. The pressurized fluid distributes loads more evenly throughout the abdominal cavity rather than concentrating them on the spine. The result: reduced peak stress on the disc and vertebrae, and lower shear forces on the facet joints.
 
@@ -481,7 +481,7 @@ They matter minimally for:
 ## When to Use Which Model
 
 
-Let me conclude this chapter with a practical guide to model selection. Here is a table summarizing the choice of models for different applications:
+A practical guide to model selection closes the chapter. The table below summarizes which model suits which application:
 
 ::: {.callout-tip}
 ## Model Selection Guide
@@ -514,7 +514,7 @@ Let me conclude this chapter with a practical guide to model selection. Here is 
 
 - The rigid body model is an excellent approximation for gross swing mechanics, accurate to within 5--10%.
 - Soft tissue wobbles and oscillates relative to bone, introducing high-frequency artifacts in motion capture data; filter or model these effects separately.
-- The torso contains  50% fluid-like material (viscera, blood) that redistributes during rotation, creating time-varying inertial properties.
+- The torso contains roughly 50% fluid-like material (viscera, blood) that redistributes during rotation, creating time-varying inertial properties.
 - Intra-abdominal pressure acts as a hydraulic cylinder, providing spine stability and increasing torso stiffness, which enhances power transmission.
 - IAP can reach 80--120 mmHg during a golf downswing, generating forces of 400--500 newtons that help support the spine.
 - The exhale-during-downswing cue is physiologically sound: it maintains IAP while preventing blood pressure spikes.

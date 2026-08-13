@@ -47,17 +47,17 @@ We use an analogy to **relativistic time cones** to describe an evolving **contr
       <div class="laymans-item">
         <h3>The Drift-Control Ratio (Muscle vs. Momentum)</h3>
         <p>
-          We compare two forces: "Control" (your muscle power) and "Drift" (the club's momentum). At the start of the swing, your muscles are in charge. But as speed increases, momentum becomes 100 times stronger than your hands.
+          We compare two forces: "Control" (your muscle power) and "Drift" (the club's momentum). At the start of the swing, your muscles are in charge. But as speed increases, the model has momentum growing to 100 times the strength of your hands.
         </p>
         <div class="analogy">
-          <strong>Think of it like a canoe on a river:</strong> Imagine you're paddling a canoe on a river. When the current is gentle (low DCR), you can paddle wherever you want—you control the river. When the current becomes stronger (medium DCR), your ability to change direction shrinks; you can make small adjustments, but the water increasingly decides your path. When you approach the rapids (high DCR), no amount of paddling will steer you; the current overpowers your paddles, and you're committed to the path the water chooses. And when you go over a waterfall (very high DCR), paddling is irrelevant. The DCR is a number that tells you where you are on this spectrum—gentle current, fast water, rapids, or waterfall.
+          <strong>Think of it like a canoe on a river:</strong> When the current is gentle (low DCR), you can paddle wherever you want—you control the river. When the current becomes stronger (medium DCR), your ability to change direction shrinks; you can make small adjustments, but the water increasingly decides your path. When you approach the rapids (high DCR), no amount of paddling will steer you; the current overpowers your paddles, and you're committed to the path the water chooses. And when you go over a waterfall (very high DCR), paddling is irrelevant. The DCR is a number that tells you where you are on this spectrum—gentle current, fast water, rapids, or waterfall.
         </div>
       </div>
 
       <div class="laymans-item">
         <h3>The "Control Cone" (Tunnel Vision)</h3>
         <p>
-          Because momentum is so strong, your ability to change the club's path shrinks as you speed up. You can't steer the clubhead in the last split-second; you are locked into the path you created earlier.
+          Because momentum is so strong, your ability to change the club's path shrinks as you speed up. In the last split-second only small nudges are left; the path you created earlier is the path you get.
         </p>
         <div class="analogy">
           <strong>Think of it like:</strong> A waterslide. At the top, you can choose which slide to take. Once you're sliding down, you can't change lanes—gravity has taken over.
@@ -75,7 +75,7 @@ We use an analogy to **relativistic time cones** to describe an evolving **contr
       </div>
 
       <div class="key-takeaway">
-        <strong>Key Takeaway:</strong> You can't fight physics at 100 mph. Elite golfers don't try to steer the downswing; they focus on a perfect setup so the "drift" takes the club exactly where they want it to go.
+        <strong>Key Takeaway:</strong> You can't fight physics at 100 mph. Under this model the payoff is not in steering the downswing, but in a setup precise enough that the "drift" carries the club where you want it to go.
       </div>
     </div>
   </div>
@@ -258,7 +258,7 @@ This scaling disparity is the kinetic manifestation of the **Force Taxonomy** es
 
 ::: {.callout-note}
 ## Scope Limitation: Planar vs. Axial Dynamics
-It is critical to note that this planar model ($q \in \mathbb{R}^3$) captures the transport mechanics of the swing (path velocity) but excludes the axial rotation of the shaft (supination/pronation). As discussed in @sec-anisotropy, this implies our DCR analysis strictly governs **path controllability**, while **face controllability** operates in an orthogonal, lower-inertia subspace.
+This planar model ($q \in \mathbb{R}^3$) captures the transport mechanics of the swing (path velocity) but excludes the axial rotation of the shaft (supination/pronation). As discussed in @sec-anisotropy, this implies our DCR analysis strictly governs **path controllability**, while **face controllability** operates in an orthogonal, lower-inertia subspace.
 :::
 
 # 3. Drift–Control Ratio (DCR)
@@ -319,7 +319,7 @@ $$
 
 ### Dimensional Analysis and Norm Dependence {#sec-norms}
 
-Now, a careful reader will wonder: does this ratio depend on how we measure things? Of course it does—and that's worth thinking about carefully, because the answer reveals what's really going on.
+A careful reader will wonder whether this ratio depends on how we measure things. It does, and the dependence is worth working through, because the answer reveals what is going on.
 
 #### The Norm Problem (Stated Clearly)
 
@@ -337,7 +337,7 @@ A system with DCR$_2 = 47.3$ might have DCR$_\infty = 89.2$ or DCR$_M = 12.1$. T
 
 #### Monotonic Growth Is Norm-Independent (The Core Invariance)
 
-Here is the key insight: while the numerical value of DCR depends on the norm, the *direction and magnitude of change* does not.
+The numerical value of DCR depends on the norm, but the *direction and magnitude of change* does not.
 
 **Conjecture (Monotonic Growth Invariance):** Across the downswing, DCR *increases monotonically* under *any* norm.
 
@@ -356,7 +356,7 @@ $$
 \|f_{acc}\|_M = \sqrt{f_{acc}^\top M(q) f_{acc}}.
 $$
 
-Why? Because $M(q)$ is the mass (inertia) matrix. This norm measures accelerations in units of kinetic energy. It captures what actually matters for dynamics: how much energy you need to change the motion. It is the "physically natural" choice, not an arbitrary convention.
+Why? Because $M(q)$ is the mass (inertia) matrix. This norm measures accelerations in units of kinetic energy. It captures what matters for dynamics: how much energy you need to change the motion. It is the "physically natural" choice, not an arbitrary convention.
 
 #### Statement and Recommendation
 
@@ -367,7 +367,7 @@ The physically meaningful conclusion is therefore:
 For practice:
 1. **Always report the norm** used in DCR calculations.
 2. **Report growth ratio** (e.g., "100× increase from top to impact") rather than absolute threshold values.
-3. **Recommend inertia-weighted norm** as the default, because it measures kinetic energy—what physics actually cares about.
+3. **Recommend inertia-weighted norm** as the default, because it measures kinetic energy—what physics cares about.
 
 ::: {.callout-warning}
 ## Cross-Joint Comparison Caveat
@@ -549,7 +549,7 @@ Just like a narrowing time cone restricts your causal influence, a narrowing con
 - Only the ballistic trajectory remains reachable (Macro-Control is lost).
 - **Micro-Correction** remains theoretically possible but precarious. While the golfer cannot reshape the swing, they may still influence impact parameters by the small margins required for ball flight control, provided they can overcome the massive signal-to-noise ratio imposed by the drift.
 
-This explains why golfers feel “along for the ride,” even as they execute subtle hand actions to square the face.
+This explains why golfers feel "along for the ride," even as they execute subtle hand actions to square the face.
 
 Crucially, the narrowing of the Control Cone suggests that late "steering" is limited, while earlier setup of the reachable corridor remains important. This is consistent with the **Intentional Constraint Collapse** hypothesis, but it should be treated as a model interpretation until it is tested against swing data.
 
@@ -604,7 +604,7 @@ where $W_c$ is the controllability Gramian. **Note:** This formula is exact for 
 
 ### The Temporal Coupling
 
-However, this does not rescue the golfer from the DCR imperative. The face angle $\phi$ is coupled to the path via the **closure rate** ($\dot{\phi} \approx 1500^\circ/s$). Even if axial authority remains high, the **timing window** to square the face is dictated by the planar trajectory. If the Planar DCR is high, the golfer cannot adjust the *arrival time* of the clubhead. Therefore, Planar DCR creates a **Temporal Accuracy Constraint** that indirectly bounds the Face Angle variance. You can steer the face, but you cannot steer the *time* you arrive at impact.
+However, this does not rescue the golfer from the DCR imperative. The face angle $\phi$ is coupled to the path via the **closure rate** ($\dot{\phi} \approx 1500^\circ/s$). Even if axial authority remains high, the planar trajectory dictates the **timing window** for squaring the face. If the Planar DCR is high, the golfer cannot adjust the *arrival time* of the clubhead. Therefore, Planar DCR creates a **Temporal Accuracy Constraint** that indirectly bounds the Face Angle variance. You can steer the face, but you cannot steer the *time* you arrive at impact.
 
 # 7. Stability of Impact and Clubface Closure Variance
 
@@ -718,7 +718,7 @@ To place this analysis within the broader AffineDrift framework:
 
 ::: {.callout-note icon=false}
 ## Curator's Note
-The following resources are selected to provide authoritative grounding for the concepts of Drift-Control Ratio (DCR), Signal-Dependent Noise, and the Relativistic Analogy.
+These resources provide authoritative grounding for the concepts of Drift-Control Ratio (DCR), Signal-Dependent Noise, and the Relativistic Analogy.
 :::
 
 <div class="resource-list">

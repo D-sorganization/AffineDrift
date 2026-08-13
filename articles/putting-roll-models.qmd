@@ -18,24 +18,24 @@ categories: [physics, putting, friction, golf, derivation]
   <div class="laymans-terms-content">
     <div class="laymans-terms-inner">
       <p class="laymans-terms-intro">
-        A putt looks like the simplest event in golf: a ball rolls in a line and either goes in or it does not. Underneath, it is three different physical regimes stitched together — a half-millisecond collision, a short stretch where the ball is sliding rather than rolling, and a long rolling phase where the green slowly takes its speed away — followed by a genuinely strict geometry test at the hole.
+        A putt looks like the simplest event in golf: a ball rolls in a line and either goes in or it does not. Underneath, it is three different physical regimes stitched together: a half-millisecond collision, a short stretch where the ball is sliding rather than rolling, and a long rolling phase where the green slowly takes its speed away. Then comes a genuinely strict geometry test at the hole.
       </p>
 
       <div class="laymans-item">
         <h3>The ball skids before it rolls</h3>
         <p>
-          The putter face cannot put true roll on the ball. The ball leaves the face sliding across the grass like a shuffleboard puck, and friction from the green has to spin it up. That skid lasts about the first tenth to seventh of the putt — roughly the first 30 to 45 centimetres of a three-metre putt — and by the time it ends, friction has traded away exactly two-sevenths of the ball's launch speed. The two-sevenths is not a measurement; it falls straight out of how a uniform sphere shares momentum between moving and spinning.
+          The putter face cannot put true roll on the ball. The ball leaves the face sliding across the grass like a shuffleboard puck, and friction from the green has to spin it up. That skid lasts about the first tenth to seventh of the putt — roughly the first 30 to 45 centimeters of a three-meter putt. By the time it ends, friction has traded away exactly two-sevenths of the ball's launch speed. The two-sevenths is not a measurement; it falls straight out of how a uniform sphere shares momentum between moving and spinning.
         </p>
       </div>
 
       <div class="key-takeaway">
-        <strong>Key Takeaway:</strong> Green speed is really a deceleration. A stimpmeter releases the ball at a fixed, derivable speed (about 1.8 m/s), so "stimp 10" is just a folksy unit for a rolling deceleration of about 0.55 m/s² — and once you read it that way, break, roll-out, and the downhill putt that will not stop all become one-line calculations.
+        <strong>Key Takeaway:</strong> Green speed is a deceleration. A stimpmeter releases the ball at a fixed, derivable speed (about 1.8 m/s), so "stimp 10" is a folksy unit for a rolling deceleration of about 0.55 m/s². Once you read it that way, break, roll-out, and the downhill putt that will not stop all become one-line calculations.
       </div>
 
       <div class="laymans-item">
         <h3>The hole is smaller than it looks</h3>
         <p>
-          A ball can only fall into the hole as fast as gravity lets it fall, and it is across the hole in a tenth of a second. Requiring the ball to drop one ball-radius before it reaches the far edge gives a hard speed limit of about 1.6 m/s for a dead-centre hit — and the faster the ball arrives below that limit, the narrower the strip of the hole that can still catch it. At 1.5 m/s the 108 mm hole is effectively 43 mm wide.
+          A ball can only fall into the hole as fast as gravity lets it fall, and it is across the hole in a tenth of a second. Requiring the ball to drop one ball-radius before it reaches the far edge gives a hard speed limit of about 1.6 m/s for a dead-center hit. The faster the ball arrives below that limit, the narrower the strip of the hole that can still catch it. At 1.5 m/s the 108 mm hole is effectively 43 mm wide.
         </p>
         <div class="analogy">
           <strong>A coin swept across a storm drain:</strong> Slide a coin slowly toward a drain grate and it drops through the first slot. Flick it hard and it skips straight across — the slot has not changed, but at speed the coin does not have time to fall. The hole plays the same trick on a firm putt.
@@ -48,7 +48,7 @@ categories: [physics, putting, friction, golf, derivation]
 
 ## Scope and Intent
 
-This article derives a complete first-order model of a putt from launch to capture, in the same spirit as the site's treatments of [impact mechanics](impact-mechanics-and-ball-flight.qmd) and [rotation-induced spin](rotation-induced-spin.qmd): every number traces to stated assumptions, every named constant is either an openly published specification or labelled a modelling choice, and the closed forms are worked before they are trusted. It is the physics companion to [Simulating the Green](green-simulation.qmd), which surveys how models of this kind are implemented numerically, and it is the reference derivation behind the putting module of the [Tools golf suite](https://github.com/D-sorganization/Tools).
+This article derives a complete first-order model of a putt from launch to capture, in the same spirit as the site's treatments of [impact mechanics](impact-mechanics-and-ball-flight.qmd) and [rotation-induced spin](rotation-induced-spin.qmd). Every number traces to stated assumptions, every named constant is either an openly published specification or labeled a modeling choice, and the closed forms are worked before they are trusted. It is the physics companion to [Simulating the Green](green-simulation.qmd), which surveys how models of this kind are implemented numerically, and it is the reference derivation behind the putting module of the [Tools golf suite](https://github.com/D-sorganization/Tools).
 
 The model has four parts, and they are genuinely different physics:
 
@@ -62,13 +62,13 @@ The model has four parts, and they are genuinely different physics:
 
 Right-handed frame matching the rest of the site's launch-monitor and impact material: $x$ along the intended start line, $y$ vertically up, $z$ to the right of the start line looking down it. The green surface is locally a plane; slope appears as the angle $\beta$ between that plane and the horizontal.
 
-Ball constants are the governing-body specification limits, openly published equipment rules rather than measurements: mass $m = 45.93$ g (the 1.620 oz maximum) and radius $R = 21.335$ mm (half the 1.680 in minimum diameter). Ball inertia is the uniform solid sphere, $I = \tfrac25 mR^2$; the same measured inertia ratio $\alpha = I/mR^2 \approx 0.40$ that supports this idealisation in the [rotation-induced-spin supplement](rotation-induced-spin.qmd) supports it here. The hole diameter is $D_h = 4.25$ in $= 107.95$ mm, a Rules of Golf specification. $g = 9.81$ m/s².
+Ball constants are the governing-body specification limits, openly published equipment rules rather than measurements: mass $m = 45.93$ g (the 1.620 oz maximum) and radius $R = 21.335$ mm (half the 1.680 in minimum diameter). Ball inertia is the uniform solid sphere, $I = \tfrac25 mR^2$; the same measured inertia ratio $\alpha = I/mR^2 \approx 0.40$ that supports this idealization in the [rotation-induced-spin supplement](rotation-induced-spin.qmd) supports it here. The hole diameter is $D_h = 4.25$ in $= 107.95$ mm, a Rules of Golf specification. $g = 9.81$ m/s².
 :::
 
 ::: {.callout-warning}
 ## Pointers, Not Citations
 
-The physics below is standard rigid-body mechanics and every result is derived in full, so the article deliberately cites only openly published specifications (equipment rules, hole dimensions, stimpmeter geometry). Published academic treatments of stimpmeter and hole-capture physics exist and reach the same headline numbers, but consistent with the sourcing discipline recorded in `content-development/technology-research/closure-rate-literature-dossier.md`, nothing is cited here that has not been verified against the source document. Named rules of thumb are labelled as folklore and then either derived or bracketed.
+The physics below is standard rigid-body mechanics and every result is derived in full, so the article deliberately cites only openly published specifications (equipment rules, hole dimensions, stimpmeter geometry). Published academic treatments of stimpmeter and hole-capture physics exist and reach the same headline numbers, but consistent with the sourcing discipline recorded in `content-development/technology-research/closure-rate-literature-dossier.md`, nothing is cited here that has not been verified against the source document. Named rules of thumb are labeled as folklore and then either derived or bracketed.
 :::
 
 ## 1. Impact: What the Putter Actually Delivers
@@ -79,13 +79,13 @@ $$
 v_0 = v_{\text{head}}\,\frac{1+e}{1 + m/M_{\text{eff}}}
 $$
 
-where $e$ is the effective coefficient of restitution and $M_{\text{eff}}$ is the effective striking mass — the head plus whatever fraction of hand and arm mass the shaft couples through at putting tempo. With $e$ in the 0.7–0.8 range typical of low-speed ball–steel contact and $M_{\text{eff}}$ several times the ball mass, the ratio $v_0/v_{\text{head}}$ sits in the range 1.4–1.7. This article does not lean on a specific value: everything downstream is parameterised by the ball's launch speed $v_0$, which is the honest observable.
+where $e$ is the effective coefficient of restitution and $M_{\text{eff}}$ is the effective striking mass — the head plus whatever fraction of hand and arm mass the shaft couples through at putting tempo. With $e$ in the 0.7–0.8 range typical of low-speed ball–steel contact and $M_{\text{eff}}$ several times the ball mass, the ratio $v_0/v_{\text{head}}$ sits in the range 1.4–1.7. This article does not lean on a specific value: everything downstream is parameterized by the ball's launch speed $v_0$, which is the honest observable.
 
 Two features of the delivery matter for the roll model:
 
-**The launch spin is small.** For the face to impart true topspin it would need to sweep upward across the ball faster than it translates through it, which a 2 m/s putting stroke does not do. What loft and a slightly upward strike actually produce is a small backspin or near-zero spin and a brief low hop: with 3° of loft the ball leaves the face at about 3° above the surface, lands within a few centimetres, and begins its ground phase **sliding**, with spin ratio $\omega_0 R / v_0$ close to zero. That is the initial condition the skid phase inherits, and the general result in §2 covers the residual-spin corrections.
+**The launch spin is small.** For the face to impart true topspin it would need to sweep upward across the ball faster than it translates through it, which a 2 m/s putting stroke does not do. Loft and a slightly upward strike instead produce a small backspin or near-zero spin and a brief low hop. With 3° of loft the ball leaves the face at about 3° above the surface, lands within a few centimeters, and begins its ground phase **sliding**, with spin ratio $\omega_0 R / v_0$ close to zero. That is the initial condition the skid phase inherits, and the general result in §2 covers the residual-spin corrections.
 
-**The face controls the start line far more than the path does.** The same impulse partition that governs the full swing applies at putting speed, and at near-zero loft the ball leaves very close to the face normal. The site's treatment of the face-versus-path weighting is in the [impact-mechanics article](impact-mechanics-and-ball-flight.qmd); nothing about it changes at 2 m/s except that the spin consequences of face–path mismatch become negligible, leaving the direction consequence alone.
+**The face controls the start line far more than the path does.** The same impulse partition that governs the full swing applies at putting speed, and at near-zero loft the ball leaves close to the face normal. The site's treatment of the face-versus-path weighting is in the [impact-mechanics article](impact-mechanics-and-ball-flight.qmd); nothing about it changes at 2 m/s except that the spin consequences of face–path mismatch become negligible, leaving the direction consequence alone.
 
 ## 2. The Skid Phase and the Five-Sevenths Transition
 
@@ -146,7 +146,7 @@ $$
 = \frac{24}{25}\,\frac{a}{\mu_k g}
 $$
 
-The launch speed has cancelled. **The skidding share of a putt is (to this order) independent of how hard the putt is hit** — it is set by the ratio of rolling deceleration to sliding friction, which is a property of the green. With a sliding coefficient $\mu_k = 0.4$ (a modelling assumption in the range typical of ball–turf sliding; the sensitivity is shown below):
+The launch speed has cancelled. **The skidding share of a putt is (to this order) independent of how hard the putt is hit** — it is set by the ratio of rolling deceleration to sliding friction, which is a property of the green. With a sliding coefficient $\mu_k = 0.4$ (a modeling assumption in the range typical of ball–turf sliding; the sensitivity is shown below):
 
 | Green | Rolling $a$ (m/s²) | $d_{\text{skid}}/d_{\text{roll}}$ | Skid share of putt |
 |---|---|---|---|
@@ -154,17 +154,17 @@ The launch speed has cancelled. **The skidding share of a putt is (to this order
 | Stimp 10 | 0.549 | 0.134 | **11.9%** |
 | Stimp 12 | 0.458 | 0.112 | **10.1%** |
 
-Halving or raising $\mu_k$ moves the stimp-10 figure between 15.2% ($\mu_k=0.3$) and 9.7% ($\mu_k=0.5$). The folklore version of this result — *"a putt skids for the first 10 to 20 percent of its length"* — is therefore not folklore at all once derived: it is the statement $\tfrac{24}{25}\, a/\mu_k g \approx 0.1\text{–}0.2$, and the derivation additionally says **why** it is a fixed fraction (both distances scale as $v_0^2$) and **which way** it moves — faster greens and grabbier covers skid proportionally *less*.
+Halving or raising $\mu_k$ moves the stimp-10 figure between 15.2% ($\mu_k=0.3$) and 9.7% ($\mu_k=0.5$). The folklore version of this result — *"a putt skids for the first 10 to 20 percent of its length"* — is therefore not folklore at all once derived: it is the statement $\tfrac{24}{25}\, a/\mu_k g \approx 0.1\text{–}0.2$. The derivation also says **why** it is a fixed fraction (both distances scale as $v_0^2$) and **which way** it moves: faster greens and grabbier covers skid proportionally *less*.
 
 ## 3. Pure Roll and the Stimpmeter
 
 ### 3.1 Rolling Resistance as a Constant Deceleration
 
-A ball rolling on turf decelerates because the grass deforms: the normal pressure distribution shifts ahead of the centre, producing a retarding moment. To first order this yields a constant deceleration $a = \mu_r g$ with $\mu_r$ an effective rolling-resistance coefficient, so the roll-out from speed $v$ is $v^2/2a$ and the roll model is closed. Everything in this section is the calibration of that one constant — which is exactly what the stimpmeter is for.
+A ball rolling on turf decelerates because the grass deforms: the normal pressure distribution shifts ahead of the center, producing a retarding moment. To first order this yields a constant deceleration $a = \mu_r g$ with $\mu_r$ an effective rolling-resistance coefficient, so the roll-out from speed $v$ is $v^2/2a$ and the roll model is closed. Everything in this section is the calibration of that one constant — which is exactly what the stimpmeter is for.
 
 ### 3.2 The Stimpmeter, Derived
 
-The USGA stimpmeter is an aluminium bar 36 in long with a V-shaped groove and a ball notch 30 in from the tapered end. In use, the bar is raised slowly until, at about 20° of elevation, the ball releases from the notch and rolls down the groove onto the green; the reported "stimp" is the distance in feet the ball then rolls. All of these are openly published specification facts, and they determine the release speed with no free parameters.
+The USGA stimpmeter is an aluminum bar 36 in long with a V-shaped groove and a ball notch 30 in from the tapered end. In use, the operator raises the bar slowly until, at about 20° of elevation, the ball releases from the notch and rolls down the groove onto the green. The reported "stimp" is the distance in feet the ball then rolls. All of these are openly published specification facts, and they determine the release speed with no free parameters.
 
 Rolling from rest down the groove through a height drop $h = L\sin\theta$ with $L = 30\,\text{in} = 0.762$ m and $\theta = 20°$:
 
@@ -183,13 +183,13 @@ $$
 - **Flat-surface limit** ($r_c = R$): $v = \sqrt{2gh/1.4} = 1.91$ m/s.
 - **Grooved bar**: with the contact lines at $r_c \approx 0.87R$ — the geometry of a shallow V carrying a 42.7 mm ball — the factor becomes $1.53$ and $v = 1.83$ m/s.
 
-The widely quoted stimpmeter release speed of **about 1.83 m/s (6 ft/s)** is therefore not an empirical calibration but a two-line consequence of the published ramp geometry, and the groove is doing real work: it slows the release by 4% relative to a flat ramp, and it matters that any derivation say which case it is computing.
+The widely quoted stimpmeter release speed of **about 1.83 m/s (6 ft/s)** is therefore not an empirical calibration but a two-line consequence of the published ramp geometry. The groove is doing real work: it slows the release by 4% relative to a flat ramp, so any derivation should say which case it is computing.
 
 One refinement worth recording because simulators trip over it: because the ball rolls in the groove at $\omega = v/r_c$, it leaves the ramp **over-spinning** relative to flat-ground rolling by the factor $R/r_c \approx 1.15$. On touching the green its contact point momentarily slides backward, friction acts briefly *forward*, and the ball settles onto pure roll from above rather than below. The correction to the measured roll-out is small but its sign is fixed, and a simulation that launches the stimpmeter ball in flat-roll equilibrium is quietly measuring a slightly different instrument.
 
 ### 3.3 Stimp Feet to Deceleration
 
-With release speed $v_s = 1.83$ m/s and roll-out distance $d$ (stimp $S$ in feet, $d = 0.3048\,S$ metres), constant deceleration gives
+With release speed $v_s = 1.83$ m/s and roll-out distance $d$ (stimp $S$ in feet, $d = 0.3048\,S$ meters), constant deceleration gives
 
 $$
 a = \frac{v_s^2}{2 d} = \frac{(1.83)^2}{2 \times 0.3048\, S}
@@ -210,7 +210,7 @@ This is the single most useful conversion in putting physics: **a stimp number i
 Because the ramp delivers the ball already rolling, the stimp distance probes the **pure-roll** deceleration almost exclusively — the skid physics of §2 barely enters. That is a feature: it cleanly calibrates $a$ independent of $\mu_k$. But it also means a stimp reading says nothing about the skid phase of a real putt, which is governed by the different, larger constant $\mu_k$. Two greens with equal stimp can treat the first 30 cm of a putt differently, and the model needs both constants.
 :::
 
-## 4. Worked Numbers: A Three-Metre Putt on Three Greens
+## 4. Worked Numbers: A Three-Meter Putt on Three Greens
 
 Combining §2 and §3 for a level 3 m (about 10 ft) putt struck to finish at the hole, with $\mu_k = 0.4$ and the ball launched spinless. The launch speed solves $d_{\text{skid}} + d_{\text{roll}} = 3$ m; every column then follows from the closed forms above.
 
@@ -223,7 +223,7 @@ Combining §2 and §3 for a level 3 m (about 10 ft) putt struck to finish at the
 | Skid share of the putt | 14% | 12% | 10% |
 | Total travel time (s) | ≈ 2.9 | ≈ 3.3 | ≈ 3.6 |
 
-Three readings of that table. First, the faster green asks for a *slower* launch — 16% slower from stimp 8 to stimp 12 — which is the entire content of "pace adjustment" between courses. Second, the skid is over inside the first fifth of a second and the first half-metre; everything a player perceives as "roll quality" after that is pure-roll physics that the putter can no longer influence. Third, the total time grows on faster greens even though the ball starts slower, because the shallow deceleration stretches the tail — and time on the green is exposure to slope, which is why the same borrow breaks more on a fast green (§5).
+Three readings of that table. First, the faster green asks for a *slower* launch — 16% slower from stimp 8 to stimp 12 — which is the entire content of "pace adjustment" between courses. Second, the skid is over inside the first fifth of a second and the first half-meter; everything a player perceives as "roll quality" after that is pure-roll physics that the putter can no longer influence. Third, the total time grows on faster greens even though the ball starts slower, because the shallow deceleration stretches the tail — and time on the green is exposure to slope, which is why the same borrow breaks more on a fast green (§5).
 
 ## 5. Slope and Break as Gravity Components
 
@@ -233,7 +233,7 @@ $$
 \dot{\mathbf v} = -a\,\hat{\mathbf v} + g\sin\beta\,\hat{\mathbf d}
 $$
 
-with $\hat{\mathbf v}$ the direction of motion and $\hat{\mathbf d}$ the downhill unit vector — rolling resistance opposing the velocity, slope gravity fixed in direction. Greens are conventionally described in percent grade, $\tan\beta \times 100$; at the few-degree angles involved, $\sin\beta \approx \tan\beta$ and a "2% slope" contributes $0.02\,g = 0.196$ m/s² of in-plane acceleration. Two limits organise everything:
+with $\hat{\mathbf v}$ the direction of motion and $\hat{\mathbf d}$ the downhill unit vector — rolling resistance opposing the velocity, slope gravity fixed in direction. Greens are conventionally described in percent grade, $\tan\beta \times 100$; at the few-degree angles involved, $\sin\beta \approx \tan\beta$ and a "2% slope" contributes $0.02\,g = 0.196$ m/s² of in-plane acceleration. Two limits organize everything:
 
 **Straight uphill or downhill.** The deceleration becomes $a \pm g\sin\beta$. The uphill putt needs launch speed $\sqrt{2(a + g\sin\beta)D}$; the downhill putt exists only while $g\sin\beta < a$. At equality the ball never stops, giving the **runaway-slope condition**:
 
@@ -255,13 +255,13 @@ $$
 
 **The fractional break of a dying putt is the ratio of the slope acceleration to the rolling deceleration** — again, launch speed cancels. On a 2% cross-slope this ratio is $0.196/a$: 0.29 at stimp 8, 0.36 at stimp 10, 0.43 at stimp 12. The same 3 m putt on the same 2% tilt breaks roughly 0.9 m, 1.1 m and 1.3 m as the green quickens — a first-order statement of the universal experience that fast greens break more.
 
-Two honesty flags on that formula, both of which the [simulation article](green-simulation.qmd) handles numerically rather than analytically. It is an **upper bound for the dying putt**: a ball given enough pace to arrive at capture speed spends less time on the slope and breaks less, which is precisely the speed–line trade-off a player negotiates. And it is **first-order only**: friction opposes the *net* velocity, so as the ball curves, the lateral motion begins to feel rolling resistance too and the decomposition degrades — the exact trajectory needs the vector ODE, which is a four-line numerical integration and not worth linearising past this point.
+Two honesty flags on that formula, both of which the [simulation article](green-simulation.qmd) handles numerically rather than analytically. It is an **upper bound for the dying putt**: a ball given enough pace to arrive at capture speed spends less time on the slope and breaks less, which is precisely the speed–line trade-off a player negotiates. And it is **first-order only**: friction opposes the *net* velocity, so as the ball curves, the lateral motion begins to feel rolling resistance too and the decomposition degrades. The exact trajectory needs the vector ODE — a four-line numerical integration, and not worth linearizing past this point.
 
 ## 6. Capture: The Hole as a Speed Filter
 
 ### 6.1 The Lip-Drop Bound, Derived
 
-The hole does not accept every ball that crosses it. A ball at speed $v$ crossing the open circle is briefly unsupported and falls freely; if it reaches the far lip before falling far enough, it strikes the lip high and escapes. The cleanest capture criterion — and a genuine bound, not a fit — is to require the ball's **centre to fall one ball radius** (to lip level) before the centre has crossed the hole:
+The hole does not accept every ball that crosses it. A ball at speed $v$ crossing the open circle is briefly unsupported and falls freely; if it reaches the far lip before falling far enough, it strikes the lip high and escapes. The cleanest capture criterion — and a genuine bound, not a fit — is to require the ball's **center to fall one ball radius** (to lip level) before the center has crossed the hole:
 
 $$
 \tfrac12 g\, t_{\text{cross}}^2 \ge R,
@@ -277,13 +277,13 @@ $$
 v_{\text{cap}} = 0.10795 \sqrt{\frac{9.81}{0.04267}} = \textbf{1.64 m/s}
 $$
 
-for a dead-centre hit. Every quantity in that box is a published specification or $g$; there is nothing to calibrate. A ball arriving at the front lip faster than about 1.6 m/s does not lip out unluckily — it is *geometrically incapable* of being held, dead centre or not.
+for a dead-center hit. Every quantity in that box is a published specification or $g$; there is nothing to calibrate. A ball arriving at the front lip faster than about 1.6 m/s does not lip out unluckily — it is *geometrically incapable* of being held, dead center or not.
 
 For context against §3: 1.64 m/s is almost exactly a stimpmeter release. A ball that would roll 2.4–2.9 m past the hole (stimp 8–12) if it missed is at the capture ceiling — which measures how generous the bound is, and why the practical holing window is far tighter than the ceiling.
 
 ### 6.2 The Effective Hole Shrinks With Speed
 
-Off-centre, the ball crosses a chord of length $2\sqrt{r_h^2 - b^2}$ at offset $b$ from the centre line ($r_h = D_h/2$). Applying the same drop criterion to the chord and inverting gives the capturable half-width at speed $v$:
+Off-center, the ball crosses a chord of length $2\sqrt{r_h^2 - b^2}$ at offset $b$ from the center line ($r_h = D_h/2$). Applying the same drop criterion to the chord and inverting gives the capturable half-width at speed $v$:
 
 $$
 b_{\max}(v) = \sqrt{r_h^2 - \frac{v^2 R}{2g}}
@@ -296,12 +296,12 @@ $$
 | 1.5 | 22 | 40% |
 | 1.64 | 0 | 0% |
 
-This is the quantitative form of "dying speed uses the whole hole": the hole is a low-pass filter in arrival speed, and pace control is not a separate skill from line — it *sets the target width* that the line must hit. The folklore prescription that an ideal putt should be struck to finish some fixed distance past the hole is, in this model, an optimisation trade-off rather than a physical constant: extra pace buys immunity to surface imperfection at the cost of effective hole width (and of the comeback putt), and the balance point depends on exactly the imperfection statistics that the [simulation article](green-simulation.qmd) treats stochastically. It is labelled folklore here and left to the Monte Carlo treatment there.
+This is the quantitative form of "dying speed uses the whole hole": the hole is a low-pass filter in arrival speed, and pace control is not a separate skill from line — it *sets the target width* that the line must hit. The folklore prescription that an ideal putt should be struck to finish some fixed distance past the hole is, in this model, an optimization trade-off rather than a physical constant. Extra pace buys immunity to surface imperfection at the cost of effective hole width, and of the comeback putt. Where the balance falls depends on exactly the imperfection statistics that the [simulation article](green-simulation.qmd) treats stochastically. It is labeled folklore here and left to the Monte Carlo treatment there.
 
 ::: {.callout-warning}
 ## What the Bound Ignores
 
-The lip-drop criterion is deliberately conservative about mechanism: it models the far lip as a pass/fail height test and ignores the rebound dynamics of a ball striking the lip's edge, the ball's spin state at the hole, and any bridging of the front edge by the turf. Real capture involves an edge collision whose outcome depends on where on the ball the lip strikes — physics of exactly the impulse-partition kind used in §2, but with messy geometry. The bound above brackets the answer from the generous side for the clean roll-in and should be read as the outer envelope, not the make probability.
+The lip-drop criterion is deliberately conservative about mechanism. It models the far lip as a pass/fail height test, and it ignores the rebound dynamics of a ball striking the lip's edge, the ball's spin state at the hole, and any bridging of the front edge by the turf. Real capture involves an edge collision whose outcome depends on where on the ball the lip strikes — physics of exactly the impulse-partition kind used in §2, but with messy geometry. The bound above brackets the answer from the generous side for the clean roll-in and should be read as the outer envelope, not the make probability.
 :::
 
 ## 7. The Assembled Model
@@ -314,7 +314,15 @@ State: position $\mathbf{x}$, velocity $\mathbf{v}$, spin $\omega$. Parameters: 
 4. **Roll:** $\dot{\mathbf v} = -a\,\hat{\mathbf v} + g\sin\beta\,\hat{\mathbf d}$ with $a = 5.49/S$ m/s².
 5. **Capture test** at the hole: chord and arrival speed against $b_{\max}(v)$.
 
-Headline constants the derivations produced, none of them fitted: the **5/7** slide-to-roll speed ratio; skid share $\tfrac{24}{25}a/\mu_k g \approx$ **10–15%** of putt length; stimpmeter release **1.83 m/s** from the published ramp geometry; stimp-to-deceleration map $a = 5.49/S$ m/s²; runaway grade $= \mu_r \approx$ **5–7%**; dying-putt break ratio $g\sin\beta/a$; capture ceiling **1.64 m/s**.
+The derivations produced these headline constants, none of them fitted:
+
+- the **5/7** slide-to-roll speed ratio;
+- skid share $\tfrac{24}{25}a/\mu_k g \approx$ **10–15%** of putt length;
+- stimpmeter release **1.83 m/s** from the published ramp geometry;
+- stimp-to-deceleration map $a = 5.49/S$ m/s²;
+- runaway grade $= \mu_r \approx$ **5–7%**;
+- dying-putt break ratio $g\sin\beta/a$;
+- capture ceiling **1.64 m/s**.
 
 ## 8. Assumption Ledger
 
@@ -322,23 +330,23 @@ Headline constants the derivations produced, none of them fitted: the **5/7** sl
 |---|---|---|
 | Ball mass $m$ | 45.93 g | Equipment rule (1.620 oz maximum), openly published |
 | Ball radius $R$ | 21.335 mm | Equipment rule (1.680 in minimum diameter), openly published |
-| Ball inertia | $\tfrac25 mR^2$ | Uniform-sphere idealisation, consistent with measured $\alpha = 0.40$ |
+| Ball inertia | $\tfrac25 mR^2$ | Uniform-sphere idealization, consistent with measured $\alpha = 0.40$ |
 | Hole diameter $D_h$ | 4.25 in | Rules of Golf specification, openly published |
 | Stimpmeter notch-to-end length | 30 in | USGA instrument specification, openly published |
 | Stimpmeter release angle | ≈ 20° | USGA instrument specification, openly published |
 | Groove contact radius $r_c$ | ≈ 0.87 R | Geometric estimate for the V-groove; flat limit shown alongside |
-| Sliding friction $\mu_k$ | 0.4 | **Modelling assumption**; sensitivity 0.3–0.5 shown in §2.3 |
+| Sliding friction $\mu_k$ | 0.4 | **Modeling assumption**; sensitivity 0.3–0.5 shown in §2.3 |
 | Putter loft | 2–4° | Typical commercial range; used only qualitatively |
-| Restitution $e$, effective mass $M_{\text{eff}}$ | 0.7–0.8, several $\times m$ | **Modelling assumptions**; §1 results not used downstream |
+| Restitution $e$, effective mass $M_{\text{eff}}$ | 0.7–0.8, several $\times m$ | **Modeling assumptions**; §1 results not used downstream |
 | Rolling deceleration $a$ | $5.49/S$ m/s² | Derived from stimp geometry, §3 |
 
 Everything else in this article is algebra.
 
 ## 9. What Would Falsify This
 
-- **High-speed footage of the first half-metre of a putt.** The model predicts a skid of $\tfrac{12}{49}v_0^2/\mu_k g$ ending at exactly $\tfrac57$ of launch speed for a spinless launch — both directly measurable from ball markings, and the ratio is parameter-free.
+- **High-speed footage of the first half-meter of a putt.** The model predicts a skid of $\tfrac{12}{49}v_0^2/\mu_k g$ ending at exactly $\tfrac57$ of launch speed for a spinless launch — both directly measurable from ball markings, and the ratio is parameter-free.
 - **A stimpmeter release-speed measurement materially different from 1.8–1.9 m/s**, which would indict the groove-geometry term in §3.2.
-- **A held putt arriving above 1.64 m/s dead-centre** (equivalently, one that would have rolled ≳ 2.5 m past). The capture bound is an inequality with no fitted constants; a single clean counterexample breaks it.
+- **A held putt arriving above 1.64 m/s dead-center** (equivalently, one that would have rolled ≳ 2.5 m past). The capture bound is an inequality with no fitted constants; a single clean counterexample breaks it.
 - **Equal-stimp greens producing different roll-outs for machine-struck putts of equal launch speed**, which would falsify the constant-deceleration model that the stimp-to-$a$ map rests on.
 
 ## References

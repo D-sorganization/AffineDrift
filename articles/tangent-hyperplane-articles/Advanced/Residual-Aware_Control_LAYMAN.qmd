@@ -7,7 +7,7 @@
 
 ## The Big Idea in One Sentence
 
-**"Instead of treating residuals from simplified plans only as errors to minimize, we can use them as diagnostic signals that indicate when a local model may need smaller steps, a richer controller, or new validation."**
+**"Residuals from simplified plans are not just errors to minimize; they are diagnostic signals that flag when a local model may need smaller steps, a richer controller, or new validation."**
 
 ---
 
@@ -36,11 +36,11 @@ This is **residual-aware control**: treating "drift from the plan" not as failur
 
 Here's the central idea that makes everything work:
 
-### The Amount You Drift Tells You How Curvy the Road Is.
+### The Amount You Drift Tells You How Curvy the Road Is
 
 **Straight road (low curvature):**
 - Your simplified map says "go straight"
-- Reality is actually straight
+- Reality is straight
 - Drift = nearly zero
 - **Strategy:** Trust the simple map, drive fast and confidently
 
@@ -63,7 +63,7 @@ In control systems, the "simplified map" is called **linearization**—treating 
 - **Linear system** = straight road (double the gas → double the acceleration)
 - **Nonlinear system** = curvy road (double the gas might triple the acceleration, depending on conditions)
 
-The **residual** is the drift: the difference between where the simplified (linear) model says you should be and where the complex (nonlinear) reality actually puts you.
+The **residual** is the drift: the difference between where the simplified (linear) model says you should be and where the complex (nonlinear) reality puts you.
 
 **Key discovery:** The residual isn't random noise. It's directly related to the **curvature** of the system:
 - Low curvature → small residuals
@@ -181,11 +181,11 @@ This is a conditional upper bound, not a blanket guarantee. It is useful only wh
 - Switch to hybrid model that accounts for impacts
 - Robot adjusts and stays balanced
 
-**Experimental result:** ATRIAS robot (60kg, 1.2m tall)
+**Illustrative simulation summary:** ATRIAS robot (60kg, 1.2m tall)
 - Fixed controller: 15% fall rate (3 out of 20 trials)
 - Residual-aware controller: 5% fall rate (1 out of 20 trials)
 
-**Analogy:** It's like a driver who notices "the steering wheel is shaking way more than it should" and immediately pulls over, versus a driver who ignores warning signs until they're in a ditch.
+**Analogy:** It's like a driver who notices "the steering wheel is shaking way more than it should" and immediately pulls over. The other driver ignores the warning signs until they're in a ditch.
 
 ### Example 3: Golf Swing Optimization
 
@@ -297,7 +297,7 @@ For a quadrotor:
 
 If you update at 100 Hz (every 10ms), the complex controller barely fits in real-time!
 
-**Residual-aware approach:** If a validated threshold lets the simple controller run most of the time and the complex controller run only during high-residual phases, the average cost can be lower than using the complex controller everywhere. The actual speedup is task- and implementation-dependent.
+**Residual-aware approach:** A validated threshold can let the simple controller run most of the time, leaving the complex controller for high-residual phases only. The average cost can then be lower than running the complex controller everywhere. The actual speedup is task- and implementation-dependent.
 
 **Analogy:** It is like using a simpler driving strategy on predictable roads and a more cautious strategy in dense traffic. The switch is useful only if the condition detector is reliable.
 
@@ -367,7 +367,7 @@ This has been known for centuries (Taylor series, calculus 101).
 
 #### 1. **Quantitative Bounds**
 **Old:** "Error is O(δx²)" (order-of-magnitude)
-**New:** "Error ≤ (M/2) × δx² × Δt" as a conditional upper bound after a valid curvature constant M has been established
+**New:** "Error ≤ (M/2) × δx² × Δt" as a conditional upper bound, once you have established a valid curvature constant M
 
 **Impact:** You can compute a model-bound residual estimate instead of relying only on a qualitative "probably small" statement.
 
@@ -396,7 +396,7 @@ This has been known for centuries (Taylor series, calculus 101).
 ### **Robotics Engineers**
 - Build adaptive controllers that are fast on easy motions, careful on hard motions
 - Detect possible contact/impact events from residual spikes, subject to false-positive and false-negative checks
-- State tracking-accuracy bounds when the assumptions behind those bounds are verified
+- State tracking-accuracy bounds only after verifying the assumptions behind them
 
 ### **Aerospace Engineers**
 - Optimize spacecraft trajectories with adaptive discretization

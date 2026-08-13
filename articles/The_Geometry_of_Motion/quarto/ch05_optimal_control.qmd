@@ -19,9 +19,9 @@ approximation of the global problem.
 ## Historical Context: From Bellman to Modern DDP
 
 
-The theory of optimal control has evolved from fundamental principles in dynamic programming and
-the calculus of variations. Understanding this trajectory enriches our appreciation of how
-modern methods like DDP fit into the broader landscape.
+The theory of optimal control grew out of dynamic programming and the calculus of
+variations. Tracing that path shows how modern methods like DDP fit into the broader
+landscape.
 
 
 ### Bellman's Dynamic Programming (1957)
@@ -29,8 +29,8 @@ modern methods like DDP fit into the broader landscape.
 
 Richard Bellman introduced **dynamic programming** as a principle for solving sequential decision
 problems [@bellman1957]. The cornerstone is the *Bellman principle of optimality*:
-an optimal policy has the property that whatever the initial state and decision are, the remaining
-decisions must constitute an optimal policy with regard to the state resulting from the first decision.
+whatever the initial state and the first decision, the remaining decisions must themselves
+constitute an optimal policy with regard to the state that the first decision produces.
 
 For a discrete-time system $\x_{k+1} = f(\x_k,\uvec_k)$ with stage cost $\ell_k(\x_k,\uvec_k)$,
 Bellman's equation reads:
@@ -99,9 +99,10 @@ quadratic, Newton's method converges in one step and yields the Riccati solution
 problem is nonlinear, each DDP iteration solves a local quadratic subproblem (via Riccati), advances
 the trajectory, and re-linearizes for the next iteration.
 
-This interpretation is powerful: it guarantees that DDP inherits Newton's *local quadratic convergence*
-property, provided the second-order sufficient conditions hold at a local minimum and the re-linearization
-is exact (which it is, since we use the exact Jacobian at each iteration).
+This interpretation carries a guarantee: DDP inherits Newton's *local quadratic convergence*.
+The guarantee rests on two conditions---the second-order sufficient conditions at a local
+minimum, and an exact re-linearization. The second holds automatically, since we use the exact
+Jacobian at each iteration.
 
 
 ## The Local Quadratic Subproblem
@@ -122,9 +123,9 @@ $\du_k = \uvec_k - \bar{\uvec}_k$. The Taylor expansion is:
 \label{eq:ch5:cost-expansion}
 \end{align}
 where $\ell_{k,\x}$, $\ell_{k,\mathbf{u}}$ are first derivatives, and $\ell_{k,\xx}$, $\ell_{k,\uu}$, $\ell_{k,\xu}$
-are second derivatives, all evaluated at $(\bar{\x}_k, \bar{\uvec}_k)$. Since we are interested in the relative
-cost change (and optimality is insensitive to constant offsets), we drop the zero-order term and define
-the **quadratic cost matrices**:
+are second derivatives, all evaluated at $(\bar{\x}_k, \bar{\uvec}_k)$. Because only the relative
+cost change matters (optimality is insensitive to constant offsets), we drop the zero-order term
+and define the **quadratic cost matrices**:
 \begin{align}
 \mat{Q}_k &= \begin{bmatrix} 0 & 0 \\ 0 & 0 \end{bmatrix} + \begin{bmatrix} \ell_{k,\xx} & \ell_{k,\xu}^\T \\ \ell_{k,\xu} & \ell_{k,\uu} \end{bmatrix}, \label{eq:ch5:Q-def}\\
 \vec{q}_k &= \ell_{k,\x}, \quad \vec{r}_k = \ell_{k,\mathbf{u}}. \label{eq:ch5:q-r-def}
@@ -145,8 +146,8 @@ where we have adopted the notation:
 \end{align}
 
 The cross term $\mat{N}_k$ couples state and input perturbations and is non-zero for many practical costs
-(e.g., effort-penalizing costs that depend on both position and force). Understanding when to include
-$\mat{N}_k$ is crucial for the distinction between *full DDP* and *iLQR*, discussed in Section~\ref{sec:ch5:ilqr-vs-ddp}.
+(e.g., effort-penalizing costs that depend on both position and force). Whether to keep
+$\mat{N}_k$ is what separates *full DDP* from *iLQR*, discussed in Section~\ref{sec:ch5:ilqr-vs-ddp}.
 
 
 ### Variational Dynamics
@@ -322,17 +323,17 @@ no longer depends on $\mat{N}_k$, so the feedback is insensitive to immediate cr
 ### The Quadratic Form Identity
 
 
-Regardless of whether we use full DDP or iLQR, an equivalent and more numerically stable form of the Riccati
-update can be derived by substituting the optimal gain back into the value function. After algebraic manipulation:
+Substituting the optimal gain back into the value function yields an equivalent, more numerically
+stable form of the Riccati update, and it does so for both full DDP and iLQR. After algebraic manipulation:
 \begin{equation}
 \mat{S}_k = \mat{Q}_{k,\xx} + \mat{K}_k^\T\mat{R}_k\mat{K}_k
 + (\mat{A}_k - \mat{B}_k\mat{K}_k)^\T\mat{S}_{k+1}(\mat{A}_k - \mat{B}_k\mat{K}_k).
 \label{eq:ch5:riccati-alt}
 \end{equation}
 
-This form is useful for verification and for understanding the role of the gain: the term $\mat{K}_k^\T\mat{R}_k\mat{K}_k$
-reflects the input cost incurred by the feedback law, and the last term reflects the propagation of the
-cost-to-go via the closed-loop dynamics $\mat{A}_k - \mat{B}_k\mat{K}_k$.
+This form is useful for verification, and it shows what the gain does. The term $\mat{K}_k^\T\mat{R}_k\mat{K}_k$
+is the input cost the feedback law incurs; the last term propagates the cost-to-go through the
+closed-loop dynamics $\mat{A}_k - \mat{B}_k\mat{K}_k$.
 
 
 ## Differential Dynamic Programming (DDP)
@@ -471,9 +472,9 @@ These form a system of coupled nonlinear equations in $(\x_k, \uvec_k, \vec{\lam
 
 
 Newton's method for solving the KKT system would compute the Hessian of the Lagrangian and take a Newton step.
-However, this is impractical for large trajectory problems. DDP avoids the full Newton Hessian by recognizing that
-*the problem has a special structure*: the Hessian can be decomposed into local blocks along the trajectory,
-and solving the KKT conditions locally (at each step via Bellman's principle) recovers the global solution.
+However, this is impractical for large trajectory problems. DDP avoids the full Newton Hessian by exploiting
+*a special structure in the problem*. The Hessian splits into local blocks along the trajectory, so solving the
+KKT conditions locally, at each step via Bellman's principle, recovers the global solution.
 
 Specifically, at step $k$, define the *augmented Hamiltonian*:
 \begin{equation}
@@ -527,14 +528,14 @@ line search and regularization ensure descent; near the optimum (where the Taylo
 the Newton step is accepted and quadratic convergence is achieved.
 :::
 
-This theorem is powerful: it tells us that DDP is not a heuristic approximation scheme but a structured Newton
+The theorem says that DDP is not a heuristic approximation scheme but a structured Newton
 method with guaranteed local convergence properties. The quadratic convergence rate means that each iteration
-(near the optimum) roughly doubles the number of correct digits, leading to very fast final convergence.
+(near the optimum) roughly doubles the number of correct digits, so the final approach is fast.
 
 ::: {.callout-note title="Remark"}
 If we use iLQR (dropping second-order dynamics terms), the convergence is typically *superlinear* rather
-than quadratic. However, iLQR is often faster overall due to lower computational cost per iteration, so there
-is a trade-off between convergence rate and cost per iteration.
+than quadratic. However, iLQR is often faster overall because each iteration costs less, trading
+convergence rate against cost per iteration.
 :::
 
 
@@ -647,8 +648,8 @@ A sample of gains during the balancing phase ($k = 60, \ldots, 65$):
 These gains are large (especially $K_{k,1}$), reflecting the instability of the upright equilibrium: a small
 angle error must be corrected with significant torque. The velocity gain provides damping.
 
-With these gains, the closed-loop system tracks the nominal trajectory even in the presence of small disturbances,
-ensuring robust balancing.
+With these gains, the closed-loop system tracks the nominal trajectory despite small disturbances,
+keeping the balancing robust.
 
 
 ## Constraint Handling
@@ -797,7 +798,7 @@ Start with Bryson's rule. If the resulting control is too aggressive or too slug
 - **Oscillatory:** Increase $R$ to damp the response.
 - **Asymmetric performance:** Use diagonal $\mat{Q}$ with different weights for different states.
 
-Systematic tuning can be done by grid search or by tools like the Ziegler--Nichols method (adapted to LQR).
+You can systematize the tuning with a grid search or with tools like the Ziegler--Nichols method (adapted to LQR).
 Modern approaches use iterative adjustment based on simulation or hardware experiments.
 
 
@@ -882,7 +883,7 @@ and the cost-to-go matrix $\mat{S}(t)$ satisfies the **differential Riccati equa
 
 Boundary condition (at the terminal time $t = T$): $\mat{S}(T) = \mat{Q}_T$.
 
-The negative sign and backward time direction reflect the fact that $\mat{S}(t)$ evolves *backward* in time from
+The negative sign and backward time direction reflect how $\mat{S}(t)$ evolves: *backward* in time from
 the terminal cost.
 
 
@@ -1143,7 +1144,7 @@ learning (e.g., SAC, MPPI, trajectory optimization in MPC).
    under a disturbance at $t = 1$ s. How short can $N$ be before performance degrades?
 6. **Cost weight selection.**
    For the pendulum swing-up, experiment with different $\mat{Q}/\mat{R}$ ratios.
-   Plot the resulting trajectories and control efforts. Explain why very large $\mat{Q}$
+   Plot the resulting trajectories and control efforts. Explain why a large $\mat{Q}$
    can cause DDP to diverge (relate to the condition number of $Q_{k,\uu}$).
 7. **Warm-starting effectiveness.**
    Implement MPC with and without warm-starting. Count the number of DDP iterations

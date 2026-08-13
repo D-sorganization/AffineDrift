@@ -181,7 +181,7 @@ Its principal axes represent:
 - directions in which the system can generate large force or resist 
     external load (high constraint),
     
-- directions in which very little force can be produced or resisted 
+- directions in which little force can be produced or resisted
     (low constraint).
 
 **Synthesis: Intentional Constraint Collapse**
@@ -202,7 +202,7 @@ provides the principal-axis decomposition for both ellipsoids:
 | **Mobility** $\{\dot{x} = J\dot{q} : \lVert\dot{q}\rVert \leq 1\}$ | image of joint unit ball | columns of $U$ | $\sigma_i$ |
 | **Force** $\{F : \lVert J^\top F\rVert \leq 1\}$ | dual via $J^\top$ | columns of $U$ | $1/\sigma_i$ |
 
-The two ellipsoids share the *same* principal axes (columns of $U$) but their semi-axes are reciprocals --- this is the origin of the mobility-vs-force trade-off. (Strictly, the reciprocal-semi-axis picture describes a *bounded* force ellipsoid only when $J$ has full row rank. If $J$ is rank-deficient or has more task dimensions than independent joint contributions, $J^\top F$ has a nontrivial null space and the set $\{F : \lVert J^\top F\rVert \le 1\}$ is an unbounded cylinder along those uncontrollable force directions; the $1/\sigma_i$ description then applies only within the range of $U$.) A direction with a large $\sigma_i$ is a direction of easy motion and weak force resistance; a direction with a small $\sigma_i$ is the reverse. At a **singular configuration** ($\sigma_r \to 0$), the mobility ellipsoid flattens (motion in that direction becomes unachievable) and the force ellipsoid blows up (infinite reaction force required to maintain joint-torque bound).
+The two ellipsoids share the *same* principal axes (columns of $U$) but their semi-axes are reciprocals --- this is the origin of the mobility-vs-force trade-off. (Strictly, the reciprocal-semi-axis picture describes a *bounded* force ellipsoid only when $J$ has full row rank. If $J$ is rank-deficient or has more task dimensions than independent joint contributions, $J^\top F$ has a nontrivial null space and the set $\{F : \lVert J^\top F\rVert \le 1\}$ is an unbounded cylinder along those uncontrollable force directions. The $1/\sigma_i$ description then applies only within the range of $U$.) A direction with a large $\sigma_i$ is a direction of easy motion and weak force resistance; a direction with a small $\sigma_i$ is the reverse. At a **singular configuration** ($\sigma_r \to 0$), the mobility ellipsoid flattens (motion in that direction becomes unachievable) and the force ellipsoid blows up (infinite reaction force required to maintain joint-torque bound).
 
 ```python
 import numpy as np
@@ -261,7 +261,7 @@ $$
 ### Low Force Capability in the Same Perpendicular Direction
 
 However, the ability to resist external force *in that same perpendicular 
-direction* is very poor.  
+direction* is poor.  
 Because joint torques must react forces through long, nearly straight lever arms, 
 a modest force at the clubhead creates a large torque at the joint:
 $$
@@ -271,7 +271,7 @@ $$
 Thus, the system has:
 - **high mobility** transverse to the links, and
     
-- **low force capability** in that very same direction.
+- **low force capability** in that same direction.
 
 This is exactly what the mobility and force ellipsoids reveal.
 
@@ -311,7 +311,7 @@ As the ramp becomes shallow ($\theta \to 0$):
     
 - resistance perpendicular to the ramp becomes large.
 
-The ramp is simply a constraint surface, and its geometry dictates both the ease 
+The ramp is a constraint surface, and its geometry dictates both the ease
 of motion and the availability of resistive reaction forces.  
 Likewise, the kinematic configuration of the golf swing imposes geometric 
 constraints that shape the mobility and force ellipsoids.
@@ -384,7 +384,7 @@ These ellipsoids help explain why release, impact loading, and mechanically stro
 
 - **This analysis assumes rigid body dynamics.** The Jacobian $J(q)$ describes how rigid segments connected by ideal joints transform motion. But real bodies are not rigid: the shaft flexes, the wrist ligaments stretch, bone deforms under load. These compliances shift the effective "point of rotation" and couple dynamics between segments in ways the rigid-body Jacobian misses. For high-speed impacts, compliance becomes substantial, and the elegant geometry of ellipsoids becomes muddied by elastic effects we have ignored.
 
-- **Mobility ellipsoid conditioning degrades near singularities.** When the links approach a singular configuration (nearly straight line for a 2-link system), the Jacobian's numerical conditioning worsens and the ellipsoid becomes arbitrarily thin. Mathematically this is correct—mobility vanishes in singular directions. But numerically and biologically, systems near singularity are unstable and difficult to control, so the prediction that "you can move freely perpendicular to the singular direction" becomes practically irrelevant. The mathematics is honest; the practical implication is that singular-adjacent regions are simply fragile.
+- **Mobility ellipsoid conditioning degrades near singularities.** When the links approach a singular configuration (nearly straight line for a 2-link system), the Jacobian's numerical conditioning worsens and the ellipsoid becomes arbitrarily thin. Mathematically this is correct—mobility vanishes in singular directions. But numerically and biologically, systems near singularity are unstable and difficult to control, so the prediction that "you can move freely perpendicular to the singular direction" becomes practically irrelevant. The mathematics is honest; the practical implication is that singular-adjacent regions are fragile.
 
 - **Static analysis does not capture dynamic coupling effects.** The force and mobility ellipsoids are based on the Jacobian alone, which encodes instantaneous kinematics. But in a dynamic system, inertia ($M(q)$) and Coriolis forces ($C(q,\dot{q})$) create coupling that the kinematic ellipsoids do not show. A direction might have high kinematic mobility but extreme inertial resistance—you can move there kinematically but your inertia won't let you accelerate in that direction quickly. The ellipsoids tell you the skeleton's geometric possibilities, not the body's dynamic capabilities. We call this the "effective plant," but we measure only half of it.
 

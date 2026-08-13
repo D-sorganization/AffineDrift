@@ -103,7 +103,7 @@ $$\mathrm{DOF} = 6(4-1) - 20 = 18 - 20 = -2$$
 
 Negative DOF? This is wrong. The open-chain formula gives a negative answer when there is a loop, so loop closure constraints must be included.
 
-**Loop constraints:** The four bars form a closed loop. This loop closure imposes a constraint: the end of bar 1 and the start of bar 2 must meet (position match), AND the end of bar 3 and the start of bar 4 must meet. These are 6 constraints per loop (3 position + 3 orientation), but in a planar 4-bar mechanism only some of these constraints are active.
+**Loop constraints:** The four bars form a closed loop. This loop closure imposes constraints. The end of bar 1 must meet the start of bar 2, and the end of bar 3 must meet the start of bar 4. These are 6 constraints per loop (3 position + 3 orientation), but in a planar 4-bar mechanism only some of these constraints are active.
 
 The correct formula for a mechanism with loops is:
 $$\mathrm{DOF}_{\text{mechanism}} = 6(N-1) - \sum c_i - (\text{loop closure constraints})$$
@@ -130,8 +130,8 @@ For a 4-bar with 4 bodies (1 ground + 3 moving), $3(4-1) = 9$ unconstrained DOF.
 Each revolute in a plane allows 1 rotation and imposes 2 constraints, preventing the two in-plane translations.
 
 In 2D:
-- Revolute joint:$f = 1$(rotation),$c = 2$(prevents 2 translations)
-- Prismatic joint:$f = 1$(translation),$c = 2$(prevents perpendicular translation + rotation)
+- Revolute joint: $f = 1$ (rotation), $c = 2$ (prevents 2 translations)
+- Prismatic joint: $f = 1$ (translation), $c = 2$ (prevents perpendicular translation + rotation)
 
 For a 4-bar: $N = 4$, $J = 4$ revolutes, and $\sum c = 4 \times 2 = 8$.
 
@@ -216,7 +216,7 @@ So without any closure constraints, 20 DOF.
 
 The key constraint is that the two hands grip the *same club*. The lead hand holds one end of the grip, and the trail hand holds the other end. The club is a rigid body.
 
-This creates a **loop closure constraint**: the position and orientation of the club relative to the lead hand must be consistent with the position and orientation relative to the trail hand.
+This creates a **loop closure constraint**: the club's position and orientation relative to the lead hand must be consistent with its position and orientation relative to the trail hand.
 
 If we model the club as rigidly attached to the lead hand (0 additional DOF), then the trail hand must follow the lead hand exactly. But this is too restrictive---the hands can slip slightly relative to each other on the grip.
 
@@ -306,7 +306,7 @@ Elite golfers exploit this redundancy to:
 - Avoid awkward or painful arm positions
 - Adjust grip tension (allowing more pronation or wrist bow through the swing)
 
-This is why motion capture shows that no two golfers swing identically [@Glazier2011; @Myers2008]. Glazier (2011) reviews movement variability in the golf swing and argues it is partly functional rather than simply error, and Myers (2008) report the spread across 100 golfers. The task (club trajectory) is constrained, but the arm configuration is not. Different golfers choose different null-space motions.
+This is why motion capture shows that no two golfers swing identically [@Glazier2011; @Myers2008]. Glazier (2011) reviews movement variability in the golf swing and argues it is partly functional rather than simply error, and Myers (2008) reports the spread across 100 golfers.
 
 
 This is consistent with motion capture observations suggesting that golfers tend to show individual variation in arm configuration even when producing similar club trajectories [@Nesbit2005; @Horan2010]. The task (club trajectory) is constrained, but the arm configuration is not. Different golfers choose different null-space motions (illustrative; depends on individual motor strategies and training history).
@@ -321,7 +321,7 @@ Consider a golfer at the top of the backswing. The club is at a specific positio
 
 Both configurations move the elbow but leave the club unchanged. In the downswing, different null-space trajectories would result in different arm angles at the same club positions. Some trajectories are more efficient (less muscular effort), others place less strain on the joints.
 
-Biomechanical optimization of the golf swing must account for this redundancy: there is not a unique optimal arm configuration for each club position, but rather a manifold of near-optimal configurations.
+Biomechanical optimization of the golf swing must account for this redundancy: each club position admits not a unique optimal arm configuration but a manifold of near-optimal ones.
 :::
 
 ### The Pseudoinverse and Null-Space Projection
@@ -352,7 +352,7 @@ Your shoulder can rotate, your elbow can flex or extend, your wrist can bend and
 
 This is redundancy. Your body has more degrees of freedom than the task requires.
 
-The golf swing is the same. A golfer has approximately 25--30 degrees of freedom [@Delp2007; @Rajagopal2016] (a commonly cited illustrative estimate; exact counts vary across biomechanical models and depend on how joints are defined; typically ranges from 20 to 35 DOF depending on model granularity).
+The golf swing is the same. A golfer has approximately 25--30 degrees of freedom [@Delp2007; @Rajagopal2016]. That is a commonly cited illustrative estimate; exact counts vary across biomechanical models and depend on how joints are defined, typically ranging from 20 to 35 DOF depending on model granularity.
 
 
 ::: {.callout-warning}
@@ -441,7 +441,7 @@ For the golf swing with 25 DOF and 6-DOF task, the solution manifold is 19-dimen
 
 ### Different Golfers, Different Paths
 
-Two golfers with different body proportions, flexibility, and strength navigate *different* solution manifolds. Their manifolds are actually different subsets of joint space because their anthropometry is different.
+Two golfers with different body proportions, flexibility, and strength navigate *different* solution manifolds. Their manifolds are different subsets of joint space, because their anthropometry differs.
 
 Yet if both golfers hit the same shot (same club position at impact, same club head velocity), their task-space trajectories are identical. Their joint-space trajectories, however, are completely different. One golfer might use more shoulder rotation; the other uses more spinal twist. One might have a more extended arm at the top; the other more bent. Both are moving along different paths through their respective solution manifolds, yet both hit the same target.
 
@@ -496,7 +496,7 @@ As the golfer learns, the brain develops these patterns. It learns to exploit re
 
 ### Self-Organization Through Constraints
 
-So how does the brain actually choose? The answer is not that it picks one solution at random. Rather, the solution is dramatically constrained by physics and physiology:
+So how does the brain choose? The answer is not that it picks one solution at random. Rather, physics and physiology constrain the solution dramatically:
 
 - **Joint limits:** Each joint has a maximum range of motion. This reduces the feasible set to a smaller manifold (the intersection of the solution manifold with the joint-limit constraints).
 - **Muscle strength:** Not all accelerations are achievable with available torque. This further constrains the feasible solution space.
@@ -994,7 +994,7 @@ A complete URDF would include all segment masses and inertias computed from de L
 </robot>
 ```
 
-**Note:** This is a *simplified* excerpt. A complete URDF would include all 20 joints (3 per arm shoulder, 2 per elbow, 2 per wrist, 3 for lumbar, 3 for thorax) and would require careful definition of each axis.
+**Note:** This is a *simplified* excerpt. A complete URDF would include all 20 joints: 3 per arm shoulder, 2 per elbow, 2 per wrist, 3 for lumbar, and 3 for thorax. Each axis would require careful definition.
 
 ## From URDF to Simulation --- Drake, MuJoCo, and Pinocchio
 {#sec-simulation_engines}
@@ -1111,7 +1111,7 @@ Using a simplified arm model (2-segment arm, no wrist motion), the club speed de
 
 A rough estimate: increasing the forearm mass by 10\% decreases the club speed by  0.5-1\%. The effect is small because the club speed is more sensitive to the initial shoulder angular velocity than to forearm inertia.
 
-**More sensitive:** The early downswing (first 0.1 s) is *very sensitive* to initial angular velocity. If the pelvis rotation rate is 1{}^\circ off, the club path is significantly altered.
+**More sensitive:** The early downswing (first 0.1 s) is *very sensitive* to initial angular velocity. If the pelvis rotation rate is 1{}^\circ off, the club path changes significantly.
 :::
 
 ### Sensitivity to Initial Conditions

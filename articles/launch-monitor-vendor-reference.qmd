@@ -12,7 +12,7 @@ categories:
 
 ## What This Page Is
 
-Launch monitor data is the primary evidence base for almost everything written about the modern golf swing, and the documentation behind it is scattered across vendor blogs, help-centre articles, sticker-guide PDFs, user manuals and patent filings --- much of it undated, some of it contradictory, and a fair amount of it marketing wearing a technical vocabulary.
+Launch monitor data is the primary evidence base for almost everything written about the modern golf swing. The documentation behind it is scattered across vendor blogs, help-center articles, sticker-guide PDFs, user manuals and patent filings. Much of it is undated, some of it contradictory, and a fair amount of it marketing wearing a technical vocabulary.
 
 This page is an attempt at a single catalogue: what each vendor publishes, where it lives, what it actually says, and --- most importantly --- **where two vendors use the same word for different quantities.**
 
@@ -40,13 +40,13 @@ A clubhead is a rigid body of finite size rotating as it moves. Different points
 
 | Vendor | Club path referenced at | Source |
 |---|---|---|
-| **TrackMan** | Geometric centre of the clubhead (within ~6 mm of CG) | [Club data definitions](https://www.trackman.com/blog/golf/club-data-definitions) |
+| **TrackMan** | Geometric center of the clubhead (within ~6 mm of CG) | [Club data definitions](https://www.trackman.com/blog/golf/club-data-definitions) |
 | **FlightScope** | "The geometric center of the club" | [Data parameters](https://flightscope.com/pages/flightscope-data-parameters) |
 | **Uneekor** | "The club head's geometric center at the time of impact" in older sticker guides; current Club AI material does not restate the reference point | EYE XO / QED sticker guides; [Club AI announcement](https://uneekor.com/blogs/blog/introducing-the-uneekor-studio-package%3A-one-system.-no-limits.) |
 | **Full Swing** | "The club head's center **prior to** impact" | Data-points blog |
 | **Foresight** | **"The club head face center"** — stated only in a putting glossary PDF, not on any product page | [Putting guide & glossary](https://support.foresightsports.com/sites/default/files/downloads/2021/EPA%20Putting%20Guide%20&%20Glossary.pdf) |
 | **Garmin R50** | A **sticker on the club face** (R10 measures at the head) | [R50 vs R10](https://www.garmin.com/en-US/blog/outdoor/3-key-differences-between-garmin-approach-r50-and-r10/) |
-| **GEARS** | Not stated for path; *does* report speed at both face centre and impact point | [Club/ball metrics](https://www.gearssports.com/articles/gears-golf-club-ball-metrics/) |
+| **GEARS** | Not stated for path; *does* report speed at both face center and impact point | [Club/ball metrics](https://www.gearssports.com/articles/gears-golf-club-ball-metrics/) |
 
 Two things in that table deserve comment.
 
@@ -56,14 +56,14 @@ Two things in that table deserve comment.
 
 And it explains why optical systems land elsewhere: *"Optical-based launch monitors almost always measure Club Speed, Attack Angle and Club Path relative to the center of the club face, since this is where the reflective markers are positioned."*
 
-For a driver, two systems using those different reference points can therefore disagree by roughly the 3° example TrackMan gives, with the face-centre path reading more out-to-in. That component of disagreement is definitional rather than an accuracy error, although the realised difference depends on club geometry and motion.
+For a driver, two systems using those different reference points can therefore disagree by roughly the 3° example TrackMan gives, with the face-center path reading more out-to-in. That component of disagreement is definitional rather than an accuracy error, although the realized difference depends on club geometry and motion.
 
 **The published Uneekor and Full Swing definitions differ on the instant.** Older Uneekor guides say "at the time of impact"; Full Swing says "prior to impact." Those phrases are not metrologically interchangeable, but the documents do not define the sampling window closely enough to predict a fixed inter-device offset.
 
 ::: {.callout-warning}
 ## TrackMan's Face-to-Path Is a Hybrid Quantity
 
-TrackMan references **path and attack angle at the geometric centre**, but **face angle and dynamic loft at the contact point**:
+TrackMan references **path and attack angle at the geometric center**, but **face angle and dynamic loft at the contact point**:
 
 > For Face Angle and Dynamic Loft, Trackman uses the orientation of the club face at the center point of where the ball is in contact with the club face, meaning "at the impact location". [...] Trackman has chosen to use the Face Angle and Dynamic Loft at the impact location, since this is the only orientation of club face that influences the ball.
 
@@ -72,7 +72,7 @@ Each choice is individually well-motivated. But their difference, **face-to-path
 TrackMan also quantifies the face-side sensitivity: *"For standard drivers, a 10 mm impact towards the toe will cause the Face Angle to be 2 degrees more open at the impact location when compared to the center of the club face."*
 :::
 
-**Does this build a slice into the numbers?** The mechanism is real: if a player is coached to a zero reported path on a geometric-centre system, the contact point --- which is what actually strikes the ball --- is travelling roughly 3° more out-to-in than the number they are chasing. But **no vendor makes that claim**, and it should not be attributed to one. Treat it as an inference from TrackMan's own quantities, with the caveat that players calibrate to ball flight rather than to numbers, and that a competing draw-side mechanism (the face continuing to close through contact) partly offsets it. The full treatment is in [Impact Mechanics, Part VI](impact-mechanics-and-ball-flight.qmd).
+**Does this build a slice into the numbers?** The mechanism is real. If a player is coached to a zero reported path on a geometric-center system, the contact point --- which is what strikes the ball --- travels roughly 3° more out-to-in than the number they are chasing. But **no vendor makes that claim**, and it should not be attributed to one. Treat it as an inference from TrackMan's own quantities, with the caveat that players calibrate to ball flight rather than to numbers, and that a competing draw-side mechanism (the face continuing to close through contact) partly offsets it. The full treatment is in [Impact Mechanics, Part VI](impact-mechanics-and-ball-flight.qmd).
 
 ### I.2 Is Club Data Measured, or Inferred?
 
@@ -88,11 +88,11 @@ This is the distinction most obscured by marketing, and it separates the market 
 | **Rapsodo** | Stereo cameras + radar, **reconstructed** from a scanned 3D club model | No |
 | **Sportsbox AI** | Monocular video; shaft line only --- **no face orientation at all** | No |
 
-Uneekor's older sticker guide is blunt about its dependency: *"CLUB DATA CANNOT BE READ IF THE BALL IS COVERING ONE OF THE TWO STICKERS. CLUB DATA WILL BE ONLY SHOWN IF BOTH STICKERS ARE VISIBLE."* That statement should not be generalised to the current range. Uneekor's January 2026 Club AI announcement advertises sticker-free club data, while the current EYE XO2 product page still says reflective club stickers are required. The public documentation therefore conflicts as of 2026-08-03; marker requirements must be checked for the exact hardware, software package and data set. Marked-*ball* requirements for spin are a separate issue.
+Uneekor's older sticker guide is blunt about its dependency: *"CLUB DATA CANNOT BE READ IF THE BALL IS COVERING ONE OF THE TWO STICKERS. CLUB DATA WILL BE ONLY SHOWN IF BOTH STICKERS ARE VISIBLE."* That statement should not be generalized to the current range. Uneekor's January 2026 Club AI announcement advertises sticker-free club data, while the current EYE XO2 product page still says reflective club stickers are required. The public documentation therefore conflicts as of 2026-08-03; check marker requirements against the exact hardware, software package and data set you are using. Marked-*ball* requirements for spin are a separate issue.
 
 At the other end, Full Swing's patent describes a radar-only device whose processor estimates trajectory *"using deep-learning algorithms rather than predefined mathematical relationships."* Doppler radar returns range and radial velocity; it does not resolve the angular attitude of a clubface. A learned mapping from radar returns to a face angle may be empirically excellent, but it is inference. Notably, Full Swing's own marketing claims measurement for the **ball** and makes no equivalent claim for the club.
 
-A useful tell: on FlightScope, club path is unlocked by **model and software tier** rather than being a property of the sensor --- which is itself evidence of derivation.
+A useful tell: on FlightScope, **model and software tier** unlock club path, rather than the sensor supplying it --- which is itself evidence of derivation.
 
 ---
 
@@ -109,9 +109,9 @@ The most technically forthcoming vendor by a wide margin, though its material is
 | Spin axis | [trackman.com](https://www.trackman.com/blog/golf/spin-axis) | Definition, and yardage-per-degree tables |
 | Spin loft | [trackman.com](https://www.trackman.com/blog/golf/spin-loft) | Defines spin loft as a **3D vector angle**, calling the loft-minus-attack-angle subtraction "a close approximation" |
 | Face to path | [trackman.com](https://www.trackman.com/blog/golf/face-to-path) | Curvature-per-degree figures by club and player class |
-| Help Centre: Club Path | [support.trackmangolf.com](https://support.trackmangolf.com/hc/en-us/articles/39724275421211-Parameters-Club-Path-Tee-to-Green) | "...geometric center at the time of maximum compression" |
-| Help Centre: Face Angle | [support.trackmangolf.com](https://support.trackmangolf.com/hc/en-us/articles/39724466444059-Parameters-Face-Angle-Tee-to-Green) | "...at the center-point of contact... at the time of maximum compression" |
-| Help Centre: D Plane Tilt | [support.trackmangolf.com](https://support.trackmangolf.com/hc/en-us/articles/39726207070875-Parameters-D-Plane-Tilt-Tee-to-Green) | The geometry-only spin axis, explicitly excluding gear effect |
+| Help Center: Club Path | [support.trackmangolf.com](https://support.trackmangolf.com/hc/en-us/articles/39724275421211-Parameters-Club-Path-Tee-to-Green) | "...geometric center at the time of maximum compression" |
+| Help Center: Face Angle | [support.trackmangolf.com](https://support.trackmangolf.com/hc/en-us/articles/39724466444059-Parameters-Face-Angle-Tee-to-Green) | "...at the center-point of contact... at the time of maximum compression" |
+| Help Center: D Plane Tilt | [support.trackmangolf.com](https://support.trackmangolf.com/hc/en-us/articles/39726207070875-Parameters-D-Plane-Tilt-Tee-to-Green) | The geometry-only spin axis, explicitly excluding gear effect |
 ### The TrackMan Newsletter Archive
 
 Every official TrackMan newsletter URL now 404s, and the Wayback captures are redirect stubs. But a **complete live third-party mirror of issues #1–#10** exists, and it is the single richest source of TrackMan-published numbers anywhere:
@@ -131,7 +131,7 @@ Every official TrackMan newsletter URL now 404s, and the Wayback captures are re
 
 The series ends at #10; the filename convention changed for the last issue, which is why sequential guesses fail. Highlights:
 
-**#7 (Oct 2010), "Ten Fundamentals"** — the origin of most TrackMan rules of thumb. Contains the 85/15 claim in **both** planes (see [Impact Mechanics, §IV.3](impact-mechanics-and-ball-flight.qmd) for why only the vertical one survives measurement); "SPIN LOFT = DYNAMIC LOFT − ANGLE OF ATTACK" as a definition rather than the approximation TrackMan's current blog calls it; spin decay "typically 4% for each second"; and the attack-angle distance study — at 90 mph club speed, −5° attack angle optimises to 191 yards carry versus 214 yards at +5°.
+**#7 (Oct 2010), "Ten Fundamentals"** — the origin of most TrackMan rules of thumb. It carries the 85/15 claim in **both** planes; see [Impact Mechanics, §IV.3](impact-mechanics-and-ball-flight.qmd) for why only the vertical one survives measurement. It also gives "SPIN LOFT = DYNAMIC LOFT − ANGLE OF ATTACK" as a definition rather than the approximation TrackMan's current blog calls it, and spin decay as "typically 4% for each second". Its attack-angle distance study reports that at 90 mph club speed, −5° attack angle optimizes to 191 yards carry versus 214 yards at +5°.
 
 **#9 (Jan 2013)** — the canonical club-delivery definitions, all specifying **maximum compression**, and the only published TrackMan accuracy specification we located:
 
@@ -176,13 +176,13 @@ Publishes clear parameter definitions and is explicit about its reference point.
 
 > **Angle of Attack:** The angle at which the geometric center of the club approaches the ball, measured just before impact.
 
-Technology is marketed as "Fusion Tracking" --- radar combined with camera. Club path availability is gated by model and package tier, which is itself evidence of derivation rather than sensing.
+FlightScope markets the technology as "Fusion Tracking" --- radar combined with camera. Model and package tier gate the availability of club path, which is itself evidence of derivation rather than sensing.
 
 Three documented inconsistencies are worth recording, because FlightScope's documentation is otherwise among the better ones:
 
-- **It contradicts itself on the reference point.** Horizontal swing plane uses *"the club's geometric center"*; club speed uses *"the club's centre of mass."* Those are different points on a clubhead, used interchangeably without acknowledgement. **Face angle is given no clubhead reference point at all** --- only the external target line.
-- **"Measured, not calculated" is contradicted by its own parameter pages.** Marketing says *"actual club and ball measurements - no calculations."* The club path page says *"it **calculates** the club path"*; angle of attack, dynamic loft, face-to-path, swing planes and spin axis all say "calculates."
-- **"Lighting-agnostic"** in the blog, against a FAQ requiring *"a minimum of 300 lux to capture accurate Face Impact Location data."*
+- **It contradicts itself on the reference point.** Horizontal swing plane uses *"the club's geometric center"*; club speed uses *"the club's centre of mass."* Those are different points on a clubhead, used interchangeably without acknowledgement. **FlightScope gives face angle no clubhead reference point at all** --- only the external target line.
+- **Its own parameter pages contradict "measured, not calculated."** Marketing says *"actual club and ball measurements - no calculations."* The club path page says *"it **calculates** the club path"*; angle of attack, dynamic loft, face-to-path, swing planes and spin axis all say "calculates."
+- **It calls the system "lighting-agnostic"** in the blog, against a FAQ requiring *"a minimum of 300 lux to capture accurate Face Impact Location data."*
 
 Its cited patent, [US10338209B2](https://patents.google.com/patent/US10338209B2/en), discloses a continuous-wave signal around 10.5 GHz with multi-antenna phase interferometry --- and is a **ball**-tracking patent. It discloses nothing about clubhead measurement, so there is no public disclosure of how FlightScope determines face angle.
 
@@ -198,7 +198,7 @@ Foresight *does* name its reference point, but in an unlikely place --- a puttin
 
 > **Club path** is the measured angle (in degrees) to the left or right of the target line that the **club head face center** is traveling at the moment of impact.
 
-The same document is unusually careful elsewhere, and worth reading for its caveats. It notes that impact loft is *"the inclination of this flat plane, **not** the actual loft at the impact point for curved face clubs such as a driver"* --- i.e. it does not correct for bulge and roll --- and that the face plane itself *"is a 2D plane described by the placement of the fiducials on the club face."* The coordinate frame is defined by where the operator sticks the markers, and no positional tolerance is published for that placement.
+The same document is unusually careful elsewhere, and worth reading for its caveats. It notes that impact loft is *"the inclination of this flat plane, **not** the actual loft at the impact point for curved face clubs such as a driver"* --- i.e. it does not correct for bulge and roll. It adds that the face plane itself *"is a 2D plane described by the placement of the fiducials on the club face."* Where the operator sticks the markers therefore defines the coordinate frame, and Foresight publishes no positional tolerance for that placement.
 
 | Document | Link | Notes |
 |---|---|---|
@@ -206,7 +206,7 @@ The same document is unusually careful elsewhere, and worth reading for its cave
 | GCQuad user manual | [PDF](https://support.foresightsports.com/sites/default/files/files/GCQuad_User_Manual.pdf) | Marker placement geometry; **no glossary, no path definition** |
 | Ball & club data (EU) | [foresightsports.eu](https://foresightsports.eu/ball-club-data/) | Slightly different wording of the same definitions |
 
-Marker dependency: four markers yield clubhead speed, smash factor, attack angle, swing path, face angle, loft, lie, closure rate and impact location; a single marker drops the output to speed, smash, attack angle and path. The expanded four-marker list is documented in Foresight's [club-marker guide](https://help.foresightsports.com/hc/en-us/articles/4408197030035-How-to-Apply-and-Maintain-Club-Markers-for-Foresight-Sports-Devices).
+Marker dependency: four markers yield clubhead speed, smash factor, attack angle, swing path, face angle, loft, lie, closure rate and impact location; a single marker drops the output to speed, smash, attack angle and path. Foresight's [club-marker guide](https://help.foresightsports.com/hc/en-us/articles/4408197030035-How-to-Apply-and-Maintain-Club-Markers-for-Foresight-Sports-Devices) documents the expanded four-marker list.
 
 ### GEARS Golf
 
@@ -238,7 +238,7 @@ Worth knowing: **Uneekor does not own its core measurement patents.** Every pate
 
 Marketing-grade documentation; substantive patents. The 37-page KIT user guide contains no specifications, no parameter definitions and no accuracy figures.
 
-The patent, **[US11844990B2](https://patents.google.com/patent/US11844990B2/en)** (Full Swing Golf Inc), is the real technical document: four or more receive antennas in a deliberately **non-uniform array**, with one antenna placed at least 1.5× farther out to extend the angular-resolution baseline; sequential CW radar for Doppler velocity and FMCW for range; trajectory estimated by deep learning. Radar only --- no cameras in the claims.
+The patent, **[US11844990B2](https://patents.google.com/patent/US11844990B2/en)** (Full Swing Golf Inc), is the real technical document. It describes four or more receive antennas in a deliberately **non-uniform array**, with one antenna placed at least 1.5× farther out to extend the angular-resolution baseline. Sequential CW radar supplies Doppler velocity and FMCW supplies range, and a deep-learning stage estimates the trajectory. Radar only --- no cameras in the claims.
 
 ::: {.callout-warning}
 ## A Commonly Miscited Patent
@@ -248,11 +248,11 @@ The patent, **[US11844990B2](https://patents.google.com/patent/US11844990B2/en)*
 
 ### Rapsodo
 
-Holds a genuine technical patent, **[US11583746B2](https://patents.google.com/patent/US11583746B2/en)**, "Measurement and **reconstruction** of the golf launching scene in 3D." Stereo high-speed cameras plus radar; club parameters are reconstructed against a scanned 3D club model rather than measured directly. The word "reconstruction" in the title is the honest summary.
+Holds a genuine technical patent, **[US11583746B2](https://patents.google.com/patent/US11583746B2/en)**, "Measurement and **reconstruction** of the golf launching scene in 3D." Stereo high-speed cameras plus radar; the system reconstructs club parameters against a scanned 3D club model rather than measuring them directly. The word "reconstruction" in the title is the honest summary.
 
 ### Sportsbox AI
 
-Included because it is frequently discussed alongside launch monitors and should not be. It is a **body**-kinematics product from monocular video. Its published metric glossary contains no club path, face angle, closure rate, dynamic loft or attack angle. Its own help centre states plainly that shaft *"droop, torque (twist) and lag of the club head will affect the relationship. We do not measure those characteristics."*
+Included because it is frequently discussed alongside launch monitors and should not be. It is a **body**-kinematics product from monocular video. Its published metric glossary contains no club path, face angle, closure rate, dynamic loft or attack angle. Its own help center states plainly that shaft *"droop, torque (twist) and lag of the club head will affect the relationship. We do not measure those characteristics."*
 
 The geometric reason is decisive: Sportsbox produces a shaft *line* from two points (hands and clubhead). **A two-point line cannot yield face angle or closure rate** --- orientation about the shaft axis requires a third, off-axis point. That is consistent with what it publishes.
 
@@ -283,7 +283,7 @@ Its accuracy blog is the most creditable vendor-published validation in the cons
 
 ### SkyTrak / SkyTrak+
 
-Photometric and **ball-only** on the original unit. The admission is arithmetic rather than stated: the FAQ lists roughly fifteen parameters it "provides," then refers to testing of "all 5 **measured** data parameters" — and the only tolerance table SkyTrak has ever published covers exactly five, all ball metrics (ball speed ±1 mph, launch angle ±1°, back spin ±250 rpm, side spin ±250 rpm, side angle ±2°). **No club metric appears in it.** Club head speed and smash factor are derived, with no disclaimer anywhere.
+Photometric and **ball-only** on the original unit. The admission is arithmetic rather than stated: the FAQ lists roughly fifteen parameters it "provides," then refers to testing of "all 5 **measured** data parameters." The only tolerance table SkyTrak has ever published covers exactly five, all ball metrics (ball speed ±1 mph, launch angle ±1°, back spin ±250 rpm, side spin ±250 rpm, side angle ±2°). **No club metric appears in it.** Club head speed and smash factor are derived, with no disclaimer anywhere.
 
 SkyTrak+ adds radar and claims club path and face angle, but never drops the hedge: *"proprietary machine-learning algorithms."* That is a model fitted to radar returns, not direct geometric measurement.
 
@@ -291,14 +291,14 @@ Worth flagging as a transparency regression: the 2014 product shipped real ± to
 
 ### Ernest Sports
 
-Documentation has been **deleted**. The site was rebuilt and the entire manuals library, FAQ and Tour Plus manual now 404; the manual PDF was never captured by the Wayback Machine and is permanently lost. No measured-versus-calculated table has ever existed, and no Ernest Sports document anywhere defines club path or face angle, though the products advertise both.
+Documentation has been **deleted**. Ernest Sports rebuilt the site, and the entire manuals library, FAQ and Tour Plus manual now 404; the Wayback Machine never captured the manual PDF, which is therefore permanently lost. No measured-versus-calculated table has ever existed, and no Ernest Sports document anywhere defines club path or face angle, though the products advertise both.
 
-Marketing asserts "zero estimation," but two archived statements undercut it — an explanation that outdoor failures lose "the rotation of the ball and club data" because "the background is the same color as the golf ball" (tying spin and club data to the cameras, not the radar), and a 2014 FAQ conceding that a radar-only model "does not measure launch and spin however... reacts to various launch and spin conditions," which is a calibration table, not a measurement.
+Marketing asserts "zero estimation," but two archived statements undercut it. The first explains that outdoor failures lose "the rotation of the ball and club data" because "the background is the same color as the golf ball," which ties spin and club data to the cameras rather than the radar. The second, a 2014 FAQ, concedes that a radar-only model "does not measure launch and spin however... reacts to various launch and spin conditions" — a calibration table, not a measurement.
 
 ::: {.callout-note}
 ## Similar Portable Radars, Opposite Advice on Marked Balls
 
-FlightScope **requires** aluminium stickers on the ball for indoor spin: *"Aluminum stickers are needed in an indoor environment in order for the X3C, Mevo+, Mevo Gen2, and Mevo to accurately measure ball spin."*
+FlightScope **requires** aluminum stickers on the ball for indoor spin: *"Aluminum stickers are needed in an indoor environment in order for the X3C, Mevo+, Mevo Gen2, and Mevo to accurately measure ball spin."*
 
 Garmin **warns against them**: *"Intentionally marked balls (e.g. metallic stickers) may degrade system performance."*
 
@@ -311,7 +311,7 @@ Garmin discloses a related trade-off for radar-reflective balls that nobody else
 
 Included for the same reason as Sportsbox: it appears in club-delivery discussions and measures no club data at all. Its own hardware is ground-only --- pressure matrices and force plates --- and its vision system is **2D** markerless body pose built on off-the-shelf open-source models (RTMDet + RTMPose), detecting 26 **body** keypoints and no club keypoints.
 
-Every club number displayed in Swing Catalyst is **imported over a vendor SDK** from a third-party launch monitor. Its own support documentation makes this explicit: *"If you have a HMT unit, Swing Catalyst will pick up club data as well"* --- and when club data goes missing, *"it may be the club is missing markers or the markers are no longer working properly."* The markers are Foresight's. Notably, its [supported-launch-monitor list](https://support.swingcatalyst.com/hc/en-us/articles/13482869130524-Supported-launch-monitors) records TrackMan integration as *"limited to existing customers only."*
+Swing Catalyst **imports every club number it displays over a vendor SDK** from a third-party launch monitor. Its own support documentation makes this explicit: *"If you have a HMT unit, Swing Catalyst will pick up club data as well"* --- and when club data goes missing, *"it may be the club is missing markers or the markers are no longer working properly."* The markers are Foresight's. Notably, its [supported-launch-monitor list](https://support.swingcatalyst.com/hc/en-us/articles/13482869130524-Supported-launch-monitors) records TrackMan integration as *"limited to existing customers only."*
 
 Two things are worth taking from Swing Catalyst regardless. First, one of the clearest vendor statements anywhere about the limits of pressure data:
 
@@ -357,16 +357,16 @@ Of the four, only °/ft is **speed-invariant by construction**. It is $\omega/v$
 
 Leach et al. put a number on it: **"The face angle of a driver closes at a rate of 2.9°/ms immediately prior to impact... Therefore, the point in time at which the measurement is taken will significantly affect the output."**
 
-Contact lasts roughly 0.45 ms. At the cited pre-impact closure rate, the difference between reporting face angle at first contact and at maximum compression can therefore be on the order of **a degree**. The precise effect on ball flight depends on speed, spin, launch conditions and aerodynamic modelling.
+Contact lasts roughly 0.45 ms. At the cited pre-impact closure rate, the difference between reporting face angle at first contact and at maximum compression can therefore be on the order of **a degree**. The precise effect on ball flight depends on speed, spin, launch conditions and aerodynamic modeling.
 
 Of the documents reviewed, TrackMan is the only vendor that ties the reported club orientation to maximum compression while also limiting the measurement to pre-impact data. The other phrases identify the impact interval but do not locate a reproducible phase within the collision.
 :::
 
-### III.3 Nobody Actually Measures the Centre of Gravity
+### III.3 Nobody Actually Measures the Center of Gravity
 
 A limit that applies to every system, and which Leach et al. state plainly: CG location is specific to each clubhead model, and without it **"neither Foresight nor TrackMan can measure the velocity of the COG directly, regardless of their definitions. Instead, velocity of a point on the surface of the clubhead is measured."**
 
-So the reference-point taxonomy above describes what vendors *report*, not always what they *sense*. TrackMan reconstructs a geometric centre from the head's radar silhouette; optical systems track markers on the face. Both then map to a declared reference point through a model.
+So the reference-point taxonomy above describes what vendors *report*, not always what they *sense*. TrackMan reconstructs a geometric center from the head's radar silhouette; optical systems track markers on the face. Both then map to a declared reference point through a model.
 
 ### III.4 An Inversion Worth Sitting With
 
@@ -384,9 +384,9 @@ Accuracy disclosure is sparse and uneven. Garmin publishes manufacturer toleranc
 
 ### IV.1 The Traceable Benchmark Study Located
 
-Among the studies located in searches through 2026-08-03, **[Leach, Forrester, Mears & Roberts (2017)](https://doi.org/10.1016/j.measurement.2017.08.009)**, *Measurement* **112**, 125–136, is the traceable validation study of consumer launch monitors rather than a comparison against another launch monitor. TrackMan Pro IIIe and Foresight GC2+HMT were tested simultaneously against a GOM Inspect reference reconstructed from four Photron cameras at 5,400 Hz, with calibration traceable to PTB Germany, over 240 shots from 8 golfers using driver, 7-iron and wedge.
+Among the studies located in searches through 2026-08-03, **[Leach, Forrester, Mears & Roberts (2017)](https://doi.org/10.1016/j.measurement.2017.08.009)**, *Measurement* **112**, 125–136, is the traceable validation study of consumer launch monitors rather than a comparison against another launch monitor. The authors tested TrackMan Pro IIIe and Foresight GC2+HMT simultaneously against a GOM Inspect reference reconstructed from four Photron cameras at 5,400 Hz, with calibration traceable to PTB Germany, over 240 shots from 8 golfers using driver, 7-iron and wedge.
 
-The reference itself was characterised first: 0.06 mph in ball velocity, 0.01° in launch angle, 14 rpm in spin. So the disagreements below are real.
+They characterized the reference itself first: 0.06 mph in ball velocity, 0.01° in launch angle, 14 rpm in spin. So the disagreements below are real.
 
 | Parameter | TrackMan bias | Foresight bias |
 |---|---|---|
@@ -408,7 +408,7 @@ Leach also reports **tracking success rates**, and they are more alarming than t
 
 TrackMan tracked the ball on 98% of shots and clubhead *velocity* on 98% — but returned the **remaining clubhead parameters on only 62% of shots, and on just 19% of utility-wedge shots**, forcing the authors to exclude wedge club data entirely. Foresight tracked the ball on 90% and the clubhead on 75%.
 
-A device that declines to report on a third of shots is doing something quite different from a device that reports on all of them. The authors also cautioned that the simultaneous multi-system setup, including tripods, lighting and possible interference, was not necessarily optimal for either commercial device, so these non-return rates should not be treated as universal field rates.
+A device that declines to report on a third of shots is doing something different from a device that reports on all of them. The authors also cautioned that the simultaneous multi-system setup, including tripods, lighting and possible interference, was not necessarily optimal for either commercial device, so these non-return rates should not be treated as universal field rates.
 :::
 
 The authors' own conclusion is measured and worth quoting in full, because it is neither a dismissal nor an endorsement:
@@ -429,7 +429,7 @@ Note that Leach's *bias* for spin was modest (−47 rpm on TrackMan). So the spi
 
 Both modern Mevo+ studies use **TrackMan 4 as the criterion**. That is device-versus-device agreement, not validation — and **TrackMan 4 has no published gold-standard accuracy validation of its own**, only reliability studies. Leach's work was on the Pro IIIe, two generations earlier.
 
-[Bliss & Langdown (2026; available online 2025)](https://doi.org/10.1016/j.jsampl.2025.100128) illustrates what device-versus-device disagreement looks like between two premium units: attack angle ICC of **0.02–0.06** on irons, and dynamic loft differing by **7.8° to 9.7°**. Their sample is a single golfer, which limits generalisation but not the basic point — two respected devices disagree about iron attack angle essentially completely.
+[Bliss & Langdown (2026; available online 2025)](https://doi.org/10.1016/j.jsampl.2025.100128) illustrates what device-versus-device disagreement looks like between two premium units: attack angle ICC of **0.02–0.06** on irons, and dynamic loft differing by **7.8° to 9.7°**. Their sample is a single golfer, which limits generalization but not the basic point — two respected devices disagree about iron attack angle essentially completely.
 
 ### IV.4 Devices Without Traceable Metrological Validation Located
 
@@ -447,7 +447,7 @@ For contrast, the R&A's bespoke club-tracking system ([Corke et al. 2018](https:
 
 A specific question worth answering, because the answer is mostly a set of negatives.
 
-**There is no TrackMan article about slicing.** The sitemap contains 122 blog URLs and **none** contains "slic"; a Help Centre search returns nothing on the topic. The closest published material is:
+**There is no TrackMan article about slicing.** The sitemap contains 122 blog URLs and **none** contains "slic"; a Help Center search returns nothing on the topic. The closest published material is:
 
 - [What is Face to Path?](https://www.trackman.com/blog/golf/face-to-path) — the best vendor quantification of how much a given face-to-path curves the ball. For a PGA Tour driver at 275 yards carry, **−2° of face-to-path ≈ 19 yards of left curvature; +5° ≈ 44 yards right.** For a 6-iron at 183 yards, 2° ≈ 8 yards. A quoted TrackMan Master adds that *"one degree Face to Path difference at 300 yards will produce a shot with 12 yards of curve"* against a 30–32 yard fairway.
 - [What is Spin Axis?](https://www.trackman.com/blog/golf/spin-axis) — where TrackMan formally defines the shot shapes: *"Large positive Spin Axis can be described as a slice"*, with −2° to +2° counting as straight.

@@ -23,7 +23,7 @@ format:
   <div class="laymans-terms-content">
     <div class="laymans-terms-inner">
       <p class="laymans-terms-intro">
-        Here's a trick question: if I show you a video of a ball being thrown, can you tell me how hard the thrower pushed? Surprisingly, the answer is yes—and this is what inverse dynamics does. It watches the motion and works backward to figure out what forces must have caused it. But here's the catch: it's often misinterpreted, and this article explains why.
+        Here's a trick question: if I show you a video of someone throwing a ball, can you tell me how hard they pushed? Surprisingly, the answer is yes—and this is what inverse dynamics does. It watches the motion and works backward to figure out what forces must have caused it. But here's the catch: it's often misinterpreted, and this article explains why.
       </p>
 
       <div class="laymans-item">
@@ -60,9 +60,9 @@ This article uses mixed SI and imperial units in some sections, reflecting the s
 
 ### What Inverse Dynamics Calculates
 
-Inverse dynamics is a computational method that works backward from observed motion to calculate the forces and moments that must have produced that motion. In golf biomechanics, we observe the club's position, velocity, and acceleration through time (typically via motion capture), and inverse dynamics tells us the equivalent forces and moments acting at a chosen reference point—usually the midpoint between the hands on the grip.
+Inverse dynamics is a computational method that works backward from observed motion to calculate the forces and moments that must have produced that motion. In golf biomechanics, we observe the club's position, velocity, and acceleration through time, typically via motion capture. Inverse dynamics then returns the equivalent forces and moments acting at a chosen reference point—usually the midpoint between the hands on the grip.
 
-The method is powerful because it allows us to infer kinetic information (forces/moments) from kinematic data (motion) without requiring direct force measurement, which is technically challenging in naturalistic settings. However, understanding what these calculated forces and moments mean in terms of actual golfer effort requires careful interpretation.
+The method is powerful because it infers kinetic information (forces/moments) from kinematic data (motion) without requiring direct force measurement, which is technically challenging in naturalistic settings. What those calculated forces and moments say about golfer effort, however, requires careful interpretation.
 
 ### The Mathematical Foundation
 
@@ -205,7 +205,7 @@ This equivalence is *dynamic*: both systems produce identical translational and 
 
 The fundamental principle is that a couple is a *free vector*—it can act anywhere on the rigid body without changing the body's motion. In contrast, a force is *bound* to its line of action; relocating the point of application requires introducing or modifying a couple to maintain dynamic equivalence.
 
-The force-couple equivalence principle converts a grip force $\mathbf{F}$ applied at position $\mathbf{r}$ from the clubhead to a force $\mathbf{F}$ applied at the clubhead plus a couple $\mathbf{M} = \mathbf{r} \times \mathbf{F}$. This means that a single grip force produces both a translational acceleration of the clubhead and a rotational moment about the clubhead center of mass, regardless of where along the shaft the grip contacts.
+The force-couple equivalence principle converts a grip force $\mathbf{F}$ applied at position $\mathbf{r}$ from the clubhead to a force $\mathbf{F}$ applied at the clubhead plus a couple $\mathbf{M} = \mathbf{r} \times \mathbf{F}$. A single grip force therefore produces both a translational acceleration of the clubhead and a rotational moment about the clubhead center of mass, regardless of where along the shaft the grip contacts.
 
 ### Coordinate Transformation of Force-Couple Pairs
 
@@ -234,7 +234,7 @@ where:
 
 This transformation reveals a crucial insight: the equivalent couple is not an intrinsic property of the force distribution but depends on the choice of reference point.
 
-In a standard golf grip, contact forces are distributed across multiple finger segments, the palm, and the thumb pad. The resultant grip force and moment can be resolved into a single force vector and a moment couple at the grip reference point, which then enters the inverse dynamics equations as the hand-club interaction wrench.
+In a standard golf grip, contact forces are distributed across multiple finger segments, the palm, and the thumb pad. Resolving that distribution yields a single force vector and a moment couple at the grip reference point, which then enters the inverse dynamics equations as the hand-club interaction wrench.
 
 ### The Range of Equivalent Couples
 
@@ -428,7 +428,7 @@ With such a model, we can:
 
 ::: {.keypoint-box}
 **Key Point:** 
-The necessity of a model for interpreting inverse dynamics is often underappreciated. Without a model specifying how passive and active forces contribute to motion, we cannot determine "what the golfer is doing" from motion data alone—we only know "what is happening to the club."
+Interpreting inverse dynamics requires a model, and that requirement is often underappreciated. Without a model specifying how passive and active forces contribute to motion, we cannot determine "what the golfer is doing" from motion data alone—we only know "what is happening to the club."
 
 :::
 
@@ -463,16 +463,16 @@ When inverse dynamics reports, for example, a radial force at the grip, we canno
 
 ::: {.callout-note}
 ## Scope Note
-Aerodynamic drag is **outside the scope** of the core AffineDrift control-affine framework (see [Theory Part 1](theory-part1.html#modeling-assumptions)), which models the golf swing as a rigid multibody system driven by joint torques and gravity only. This section discusses air resistance as a practical confound in inverse dynamics data interpretation — a real-world source of systematic error that affects how measured forces should be read, even if aerodynamics are not included in the theoretical model.
+Aerodynamic drag is **outside the scope** of the core AffineDrift control-affine framework (see [Theory Part 1](theory-part1.html#modeling-assumptions)). That framework models the golf swing as a rigid multibody system driven by joint torques and gravity only. This section discusses air resistance as a practical confound in inverse dynamics data interpretation — a real-world source of systematic error that affects how measured forces should be read, even if aerodynamics are not included in the theoretical model.
 :::
 
 ### The Neglected External Force
 
-A factor that is often overlooked in golf swing inverse dynamics is air resistance. While air resistance cannot be significantly manipulated by the golfer, ignoring it can substantially influence our interpretation of the data. Unlike gravity, which is always included in inverse dynamics calculations, air resistance is typically neglected under the assumption that it is small. However, at the high speeds encountered in the golf swing, this assumption may not be justified.
+Golf swing inverse dynamics often overlooks air resistance. The golfer can do little to manipulate air resistance, but ignoring it can substantially influence our interpretation of the data. Unlike gravity, which is always included in inverse dynamics calculations, air resistance is typically neglected under the assumption that it is small. However, at the high speeds encountered in the golf swing, this assumption may not be justified.
 
 ### Magnitude of Air Resistance
 
-Research on driver aerodynamics provides insight into the magnitude of air drag forces. Henrikson and Wood measured drag forces on drivers at 100 mph ranging from 6.5 to 9 N (approximately 1.5 to 2 lbs) depending on clubhead design and orientation. A 7 iron at 95 mph likely experiences similar drag forces, as the iron's less aerodynamic profile may offset the slightly lower speed.
+Research on driver aerodynamics indicates how large air drag forces are. Henrikson and Wood measured drag forces on drivers at 100 mph ranging from 6.5 to 9 N (approximately 1.5 to 2 lbs) depending on clubhead design and orientation. A 7 iron at 95 mph likely experiences similar drag forces, as the iron's less aerodynamic profile may offset the slightly lower speed.
 
 For typical impact conditions:
 - Clubhead speed: $\approx$ 95 mph (7 iron)
@@ -549,7 +549,7 @@ $$
 
 - With drag consideration: $C_\alpha = -11.1$ Nm
 
-Accounting for drag reduces the required hand couple in our inverse-dynamics solution by $\approx 7.3$ Nm (about 40%) --- **not because drag removes effort**, but because the naive calculation mis-attributes an aerodynamic moment to the golfer's hands. That $7.3$ Nm splits into two pieces, both traceable to drag: the drag force's own moment about the reference ($\approx 2.0$ Nm) plus the $\approx 5.3$ Nm of hand-force moment that vanishes once drag ($\approx 8.9$ N over the $0.597$ m lever) lowers the hand force the golfer must apply. Together they account for the full re-attribution: $2.0 + 5.3 = 7.3$ Nm.
+Accounting for drag reduces the required hand couple in our inverse-dynamics solution by $\approx 7.3$ Nm (about 40%) --- **not because drag removes effort**, but because the naive calculation mis-attributes an aerodynamic moment to the golfer's hands. That $7.3$ Nm splits into two pieces, both traceable to drag. The first is the drag force's own moment about the reference ($\approx 2.0$ Nm). The second is the $\approx 5.3$ Nm of hand-force moment that vanishes once drag ($\approx 8.9$ N over the $0.597$ m lever) lowers the hand force the golfer must apply. Together they account for the full re-attribution: $2.0 + 5.3 = 7.3$ Nm.
 
 ::: {.callout-note}
 ## Figure Pending
@@ -571,7 +571,7 @@ Neglecting air resistance leads to systematic errors in calculated forces and co
 
 :::
 
-This has particular relevance for the alpha torque debate. If one researcher includes drag in their model while another neglects it, they will calculate systematically different couple values from identical motion data. The magnitude of this discrepancy depends on drag magnitude and moment arm; based on the estimates above ($\approx 2.0$ Nm drag moment at impact), omitting drag can shift couple estimates by a non-negligible fraction of the total couple value.
+This has particular relevance for the alpha torque debate. If one researcher includes drag in their model while another neglects it, they will calculate systematically different couple values from identical motion data. The size of that discrepancy depends on drag magnitude and moment arm. Based on the estimates above ($\approx 2.0$ Nm drag moment at impact), omitting drag can shift couple estimates by a non-negligible fraction of the total couple value.
 
 ### Why Air Resistance Matters for Interpretation
 
@@ -587,7 +587,7 @@ Unlike the spatial ambiguity (which requires knowing force distribution) or the 
 
 ::: {.keypoint-box}
 **Key Point:** 
-Air resistance should not be neglected in high-speed golf swing analysis, particularly when interpreting couples/torques. Including drag in the inverse dynamics calculation provides more accurate estimates of the forces actually applied by the golfer.
+Air resistance should not be neglected in high-speed golf swing analysis, particularly when interpreting couples/torques. Including drag in the inverse dynamics calculation gives more accurate estimates of the forces the golfer applies.
 
 :::
 
@@ -599,9 +599,9 @@ A critical insight emerges from control theory: inverse dynamics gives you the *
 
 **What You Actually Want:** The control component—what the golfer is actively doing versus what physics is doing passively.
 
-The ZTCF framework solves this by asking: "What would the club do if the golfer applied zero effort?" That simulation reveals the drift component—all the motion that would happen from gravity and momentum alone. Subtracting drift from the total gives you the true control contribution: what the golfer actually had to contribute.
+The ZTCF framework solves this by asking: "What would the club do if the golfer applied zero effort?" That simulation reveals the drift component—all the motion that would happen from gravity and momentum alone. Subtracting drift from the total leaves the control contribution: what the golfer had to supply.
 
-This is why examining inverse dynamics numbers in isolation can be misleading. Two golfers might show identical total forces at impact, but one might be relying heavily on passive dynamics (high drift) while the other is actively muscling through (high control). Only by decomposing drift and control can you understand what's truly happening.
+This is why examining inverse dynamics numbers in isolation can be misleading. Two golfers might show identical total forces at impact, but one might be relying heavily on passive dynamics (high drift) while the other is actively muscling through (high control). Only a drift-control decomposition separates the two cases.
 
 ## The Path From Inverse Dynamics to Golfer Effort
 
@@ -800,7 +800,7 @@ Understanding these limitations enables more informed use of inverse dynamics in
           <h3>Is Air Resistance Really Significant?</h3>
         </div>
         <p class="critic-argument">
-          While aerodynamic drag exists, its magnitude (approx. 2 lbs) is tiny compared to the centripetal forces (100+ lbs) at impact. Furthermore, for the vast majority of amateur golfers with lower clubhead speeds, this effect is negligible. By focusing so heavily on a second-order effect, we risk complicating the model without gaining meaningful insight for the average player.
+          While aerodynamic drag exists, its magnitude (approx. 2 lbs) is tiny compared to the centripetal forces (100+ lbs) at impact. For the vast majority of amateur golfers with lower clubhead speeds, this effect is negligible. By focusing so heavily on a second-order effect, we risk complicating the model without gaining meaningful insight for the average player.
         </p>
         <div class="author-response">
           <strong>Our Response:</strong>
@@ -814,7 +814,7 @@ Understanding these limitations enables more informed use of inverse dynamics in
           <h3>The "Instrumented Grip" Fallacy</h3>
         </div>
         <p class="critic-argument">
-          The article suggests instrumented grips as a solution to spatial ambiguity. However, adding sensors changes the club's weight, balance point, and grip texture—effectively altering the very swing we are trying to measure. " Heisenberg's uncertainty principle" applies here: measuring the system changes it. Inverse dynamics remains our best non-invasive tool.
+          The article suggests instrumented grips as a solution to spatial ambiguity. However, adding sensors changes the club's weight, balance point, and grip texture—effectively altering the very swing we are trying to measure. "Heisenberg's uncertainty principle" applies here: measuring the system changes it. Inverse dynamics remains our best non-invasive tool.
         </p>
         <div class="author-response">
           <strong>Our Response:</strong>

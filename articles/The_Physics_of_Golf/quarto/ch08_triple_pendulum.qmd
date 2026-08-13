@@ -8,7 +8,7 @@ description: "Each segment has an inertia. The shoulder is hard to move (large ,
 ::: {.callout-tip}
 ## Why Two DOF Isn't Enough
 
-In @sec-zero_torque_counterfactual and 7, we modeled the arm as a double pendulum: shoulder and elbow. This was useful for illustration, but it's incomplete.
+In @sec-zero_torque_counterfactual and @sec-constraint_forces, we modeled the arm as a double pendulum: shoulder and elbow. This was useful for illustration, but it's incomplete.
 
 In a real swing, there's a third crucial articulation: the wrist.
 
@@ -137,7 +137,7 @@ $$ {#eq-triple_mass_numerical}
 
 The diagonal entries decrease as we move down (from shoulder to club). The off-diagonal terms show decreasing coupling strength.
 
-To see this more clearly, let's invert:
+Inverting the mass matrix makes the asymmetry explicit:
 
 $$
 \bm{M}^{-1} \approx \begin{bmatrix}
@@ -207,11 +207,11 @@ If all three joints unlocked simultaneously, the momentum wouldn't be efficientl
 
 But by unlocking in sequence—hips first, then shoulders, then elbows, then wrists—each segment inherits the momentum from the previous segment. This is called the *summation of speed principle*.
 
-A crude analogy: imagine a train with three cars. If all three cars accelerate forward at the same time (equal torque on each), each one reaches a moderate speed. But if the engine accelerates, then pushes the second car (which then accelerates), then the second car pushes the third car (which accelerates), the third car ends up faster than any single car would if it had been accelerated alone.
+A crude analogy: imagine a train with three cars. If all three cars accelerate forward at the same time (equal torque on each), each one reaches a moderate speed. Now let the engine accelerate first and push the second car, which accelerates and pushes the third. The third car ends up faster than any single car accelerated alone.
 
 In the golf swing, the "engine" is the legs and hips (driven by muscle). The hips push the shoulders (via the spine, a constraint). The shoulders push the arms (via the shoulder joint, a constraint). The arms push the club (via the wrist, a constraint). By the end, the club is moving at $50$--$60$ mph, far faster than any single muscle could achieve.
 
-And the beautiful part: this transfer happens *automatically*, due to constraints and inertia, with minimal active muscular effort once the sequence is initiated.
+This transfer happens *automatically*, through constraints and inertia, with minimal active muscular effort once the sequence is initiated.
 
 ## Wrist Cock and Release as a Constraint Mechanism
 
@@ -231,13 +231,13 @@ From a constraint perspective:
 ### Wrist Cock as Energy Storage {#inplain:wrist_cock_energy}
 When the wrist is held in a cocked position, the wrist tendons are stretched. This is elastic potential energy. When the wrist is released, this energy is converted to kinetic energy, accelerating the club.
 
-However—and this is important—the elastic energy in the wrist is *tiny* compared to the kinetic energy of the club at impact. A rough calculation:
+However, the elastic energy in the wrist is *tiny* compared to the kinetic energy of the club at impact. A rough calculation:
 - Wrist elastic potential energy: $\sim 5$--$10$ J (depends on flexibility).
 - Club kinetic energy at impact: $\sim 200$ J.
 
 So the wrist cock is NOT the primary source of club speed. Instead, it's a *timing mechanism*.
 
-By cocking the wrist and holding it through mid-downswing, the golfer creates a "lag"—a delay in the club's rotation relative to the arm's rotation. This lag stores a relationship (not energy): when released at the right moment, the club's large moment of inertia means it's moving slower than the arm, so it accelerates rapidly when freed.
+By cocking the wrist and holding it through mid-downswing, the golfer creates a "lag"—a delay in the club's rotation relative to the arm's rotation. This lag stores a relationship, not energy: the club's large moment of inertia keeps it moving slower than the arm. Released at the right moment, it therefore accelerates rapidly.
 
 This is why wrist cock matters: it's about timing the release to maximize the arm-to-club momentum transfer, not about storing energy.
 
@@ -252,10 +252,10 @@ Scenario A: Early wrist release
 Scenario B: Late wrist release
 - At $t = 0.40$ s (late downswing), the wrist is released.
 - The arm is rotating at $\dot{q}_1 = 20$ rad/s, $\dot{q}_2 = 35$ rad/s (much faster).
-- The club is released when the arm is already moving very fast.
+- The club is released when the arm is already moving fast.
 - Coriolis torques at the club are now enormous, catapulting the club to $\dot{q}_3 = 60$ rad/s.
 
-In this illustrative scenario, the difference is that by releasing late, the club inherits the arm's higher velocity, and Coriolis amplifies it further. A release that's 200 ms later can result in 20--30% higher club speed.
+In this illustrative scenario, releasing late lets the club inherit the arm's higher velocity, which Coriolis then amplifies. A release 200 ms later can produce 20--30% higher club speed.
 
 **Insight:** This is why wrist release timing is so important in teaching. It's not about how hard you release (muscular effort), but about *when* you release relative to the arm's motion. A golfer who releases too early (before the arm has built up speed) will have a slower club at impact. A golfer who releases at the optimum moment will achieve maximum speed.
 
@@ -321,7 +321,7 @@ With a third segment, the Drift-Control Ratio at the club becomes even more extr
 - Muscular torque available at the club: $\sim 10$--$20$ Nm.
 - DCR: on the order of $50:1$ to $100:1$ (model-dependent).
 
-In this regime the club is effectively ballistically committed; attempting to "accelerate" it at impact through muscle torque alone would have negligible effect. The vast majority of speed comes from the passive dynamics of the prior segments.
+In this regime the club is effectively ballistically committed; attempting to "accelerate" it at impact through muscle torque alone would have negligible effect. Most of the speed comes from the passive dynamics of the prior segments.
 
 ## Comparison: Double vs. Triple Pendulum
 
@@ -379,7 +379,7 @@ $$
 
 So if the arm transfers energy to the club, the club's velocity will be higher (since its inertia is smaller).
 
-Over the course of the downswing, as the shoulder slows (losing kinetic energy) and the club speeds up (gaining kinetic energy), this is exactly what we see: proximal segments decelerate, distal segments accelerate. It's not magic—it's just energy conservation and inertia differences.
+That is exactly what the downswing shows: the shoulder slows and loses kinetic energy while the club speeds up and gains it. Proximal segments decelerate, distal segments accelerate. It's not magic—it's energy conservation and inertia differences.
 
 ## Summary: The Triple Pendulum and the Kinetic Chain
 
@@ -393,12 +393,12 @@ Over the course of the downswing, as the shoulder slows (losing kinetic energy) 
 5. **Wrist cock is a timing mechanism:** Wrist cock stores minimal elastic energy. Its real function is to delay the club's release until the arm is moving fast, maximizing the arm-to-club momentum transfer.
 6. **The whip effect is passive:** The dramatic club acceleration at the end of the downswing is not driven by muscular effort but by Coriolis forces in a three-segment system. The DCR explodes to 50:1 or higher—the motion is ballistic.
 7. **Energy redistributes, not increases:** The total mechanical energy of the system is (roughly) constant. But energy redistributes from shoulder to arm to club. Distal segments move fastest because they have smallest inertia.
-8. **Control is in the setup and timing:** Once the swing is in motion, there's almost no active control over club speed. Control happens through:
+8. **Control is in the setup and timing:** Once the swing is in motion, there's almost no active control over club speed. Control happens through the setup and through the timing of each release.
 
 
 :::
 
-**What comes next:** The triple pendulum assumes the body is a serial chain: hips → shoulders → arms → club. But the body is actually more complex—it forms closed kinematic loops. The pelvis and shoulders are connected through the spine, creating a parallel mechanism. Understanding these parallel structures is the key to explaining phenomena like the X-factor and why some golfers are more effective than others despite similar arm motion.
+**What comes next:** The triple pendulum assumes the body is a serial chain: hips → shoulders → arms → club. But the body is more complex—it forms closed kinematic loops. The pelvis and shoulders are connected through the spine, creating a parallel mechanism. Understanding these parallel structures is the key to explaining phenomena like the X-factor and why some golfers are more effective than others despite similar arm motion.
 
 ## Chapter Exercises: The Triple Pendulum
 
@@ -429,7 +429,7 @@ The Coriolis term at the club includes a cross term like $\frac{\partial M_{23}}
 Simulate the triple pendulum ZTCF (no muscle torques) from the configuration given in @sec-triple_pendulum_ztcf.
 
 1. Integrate forward 50 ms and plot all three angles and angular velocities.
-2. At what time does the club angular velocity reach its maximum? Does it occur near the very end?
+2. At what time does the club angular velocity reach its maximum? Does it occur near the end?
 3. Explain: Why does the club accelerate most in the final phase?
 
 {Energy Partition}

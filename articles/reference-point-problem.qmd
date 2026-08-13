@@ -14,17 +14,17 @@ categories:
 
 A clubhead is a rigid body of finite size, and at impact it is rotating hard. Every point on a rotating rigid body moves in a *different direction* at the same instant. So the sentence "the club path was 2° in-to-out" is incomplete until it says **which point** — and every commercial device answers that question differently, without the answer appearing on the screen.
 
-The point that matters to the ball is the impact point on the face. The point most radar devices report is the geometric centre of the head, which on a driver sits 25–50 mm behind the face. Those two points do not travel in the same direction, and the size of the disagreement is not a small correction: it is **one to three degrees at tour closure rates**, on a parameter whose entire practical range is about ten degrees.
+The point that matters to the ball is the impact point on the face. The point most radar devices report is the geometric center of the head, which on a driver sits 25–50 mm behind the face. Those two points do not travel in the same direction. The size of the disagreement is not a small correction: it is **one to three degrees at tour closure rates**, on a parameter whose entire practical range is about ten degrees.
 
 ::: {.callout-tip icon=false}
 ## Compute It for Any Delivery: The Rate of Closure Impact Explorer
 
 **[Open the interactive tool →](https://d-sorganization.github.io/rate-of-closure-explorer/)**
 
-Enter a clubhead speed, an in-plane rotation rate, an about-shaft rotation rate, a lie angle, a reference-point separation and a strike location; the tool applies $\mathbf{v}_P = \mathbf{v}_{\text{ref}} + \boldsymbol{\omega}\times\mathbf{r}$ and reports the path and attack-angle difference between the two points, alongside every closure metric the literature uses. Source and test suite: [D-sorganization/rate-of-closure-explorer](https://github.com/D-sorganization/rate-of-closure-explorer).
+Enter a clubhead speed, an in-plane rotation rate, an about-shaft rotation rate, a lie angle, a reference-point separation and a strike location. The tool applies $\mathbf{v}_P = \mathbf{v}_{\text{ref}} + \boldsymbol{\omega}\times\mathbf{r}$ and reports the path and attack-angle difference between the two points, alongside every closure metric the literature uses. Source and test suite: [D-sorganization/rate-of-closure-explorer](https://github.com/D-sorganization/rate-of-closure-explorer).
 :::
 
-Two further claims are developed below, and both matter more than the headline number. First, the effect is a **dispersion** term rather than a systematic bias for a player in free play — the measured evidence at tour level does not support the intuition that fast face rotation costs accuracy. Second, the popular framing that rotation "adds a few percent to clubhead speed" is a **category error**: the rotational contribution at the face is very nearly perpendicular to the direction of travel, so it changes the direction of the velocity, not its magnitude.
+Two further claims are developed below, and both matter more than the headline number. First, the effect is a **dispersion** term rather than a systematic bias for a player in free play — the measured evidence at tour level does not support the intuition that fast face rotation costs accuracy. Second, the popular framing that rotation "adds a few percent to clubhead speed" is a **category error**: the rotational contribution at the face is nearly perpendicular to the direction of travel. It therefore changes the direction of the velocity, not its magnitude.
 
 ## Conventions Used Here
 
@@ -33,7 +33,7 @@ The frame is the one used throughout this site's launch-monitor material, and st
 - Right-handed frame for a right-handed golfer: $x$ along the target line, $y$ vertically up, $z$ to the right of the target line looking down it.
 - Club path is **positive for in-to-out**; attack angle positive for hitting up; face angle positive for open.
 - Club-delivery quantities are evaluated at **maximum compression**, ball quantities at separation.
-- The reported reference point is the **geometric centre** of the head, abbreviated GC; the openly published figure is that GC sits within a few millimetres of the centre of gravity on a driver.
+- The reported reference point is the **geometric center** of the head, abbreviated GC; the openly published figure is that GC sits within a few millimeters of the center of gravity on a driver.
 
 Anywhere below that a quantity depends on the reference point — and the point of the article is that most of them do — the point is named.
 
@@ -46,7 +46,7 @@ $$
 \qquad \mathbf{r} = \mathbf{p}_P - \mathbf{p}_{\text{ref}}
 $$
 
-This is the whole phenomenon. The clubhead's angular velocity $\boldsymbol{\omega}$ near impact is large — a driver head is turning through hundreds of degrees in the last few hundredths of a second — and $\mathbf{r}$, the vector from the tracked reference point to the impact point, is a few centimetres. Their cross product is a velocity of order 1 m/s, added to a translation of order 50 m/s, and mostly at right angles to it. The result is a small rotation of the velocity direction: about a degree, sometimes three.
+This is the whole phenomenon. The clubhead's angular velocity $\boldsymbol{\omega}$ near impact is large: a driver head turns through hundreds of degrees in the last few hundredths of a second. The vector $\mathbf{r}$, running from the tracked reference point to the impact point, is a few centimeters. Their cross product is a velocity of order 1 m/s, added to a translation of order 50 m/s, and mostly at right angles to it. The result is a small rotation of the velocity direction: about a degree, sometimes three.
 
 Take $\mathbf{r}$ of magnitude $d$ and $\boldsymbol{\omega}$ of magnitude $\omega$ perpendicular to it. The velocity difference has magnitude $\omega d$, so the angular difference in travel direction is
 
@@ -66,9 +66,9 @@ Three consequences follow immediately.
 
 **The effect does not scale with swing speed.** If a player who swings faster also closes the face proportionally faster, then $\omega = kv$ and $\Delta\theta = kd$, independent of $v$ entirely. What enlarges the offset is a face rotating quickly *relative to* the head's travel — a tight, late release that pulls the screw axis in toward the head. The dimensionally correct predictor is $\omega/v$, in units of inverse length, which is $1/R_{\text{ISA}}$.
 
-**It is smaller for irons.** The centre of gravity sits much closer to the face, so $d$ shrinks and the offset shrinks with it, roughly in proportion. The published vendor position that non-driver clubs are far less sensitive to reference-point choice is exactly this term.
+**It is smaller for irons.** The center of gravity sits much closer to the face, so $d$ shrinks and the offset shrinks with it, roughly in proportion. The published vendor position that non-driver clubs are far less sensitive to reference-point choice is exactly this term.
 
-**Attack angle moves too.** The same cross product has a vertical component. On a driver the arc term tilts the face-centre velocity upward relative to the geometric centre while the closure term contributes a smaller downward component; the net is of order a degree shallower at the face.
+**Attack angle moves too.** The same cross product has a vertical component. On a driver the arc term tilts the face-center velocity upward relative to the geometric center while the closure term contributes a smaller downward component; the net is of order a degree shallower at the face.
 
 ## The Interactive Tool
 
@@ -80,11 +80,11 @@ The [Rate of Closure Impact Explorer](https://d-sorganization.github.io/rate-of-
 | In-plane rotation (SPV) | Swing-plane angular rate, the arc term (°/s, rad/s, rpm) |
 | About-shaft rotation (HTV) | Handle twist velocity about the shaft's long axis |
 | Shaft lie at impact | Sets how HTV and SPV project onto face closure |
-| GC to face centre | The separation $d$, 25–50 mm on a driver (mm, cm, in) |
-| Impact toward toe / above centre | Strike location, moving the impact point off the face centre |
+| GC to face center | The separation $d$, 25–50 mm on a driver (mm, cm, in) |
+| Impact toward toe / above center | Strike location, moving the impact point off the face center |
 | Contact duration | For the rotation that occurs *during* the collision |
 
-Outputs include the impact-point path deviation, the attack-angle change, the rotation-induced velocity and the delivered speed change, plus a full panel of the closure metrics that appear in the literature under different names — club closure velocity, degrees per foot, per inch and per millisecond, the screw-axis radius $R_{\text{ISA}}$, time to square from one degree open, and the toe-versus-heel speed difference. A second tab, **Derivation and Traceability**, typesets the entire calculation with the current numbers substituted in, so any output can be checked by hand rather than trusted.
+Outputs include the impact-point path deviation, the attack-angle change, the rotation-induced velocity and the delivered speed change. A full panel of closure metrics follows, under each of the names the literature uses: club closure velocity, degrees per foot, per inch and per millisecond, the screw-axis radius $R_{\text{ISA}}$, time to square from one degree open, and the toe-versus-heel speed difference. A second tab, **Derivation and Traceability**, typesets the entire calculation with the current numbers substituted in, so any output can be checked by hand rather than trusted.
 
 The default scenario is not invented. It is the tour-driver delivery assembled from the closure-rate literature dossier maintained for this site: handle twist velocity 1,307 °/s, the mean of 94 tour professionals measured at 240 Hz ([Cheetham 2014](https://www.philcheetham.com/media/Phillip-Cheetham-Doctoral-Dissertation-2014.pdf)), a lie angle of 58°, and a 40 mm reference-point separation. The in-plane term is set so that the resulting club closure velocity lands on the ~2,100 °/s tour figure that the reconciling relation
 
@@ -104,13 +104,13 @@ $$
 \Delta\theta = -1.56°
 $$
 
-Negative, under the convention above, means the impact point's path is **further out-to-in** than the reported geometric-centre path. A player delivering a measured zero path on a device with this convention is, at this closure rate, actually presenting the ball a path around one and a half degrees left of zero.
+Negative, under the convention above, means the impact point's path is **further out-to-in** than the reported geometric-center path. A player delivering a measured zero path on a device with this convention is, at this closure rate, presenting the ball a path around one and a half degrees left of zero.
 
-This is the practically important form of the result. It says that two players producing identical numbers on the same machine, releasing at different rates, are not doing the same thing to the ball — and that the difference is invisible in the reported data unless the angular rate is reported alongside the path.
+This is the practically important form of the result. It says that two players producing identical numbers on the same machine, releasing at different rates, are not doing the same thing to the ball. The difference stays invisible in the reported data unless the device reports the angular rate alongside the path.
 
 ### Case 2: Reproducing the Published Worked Example
 
-The openly published launch-monitor documentation states a figure for this effect: approximately **3° between the path of the head's centre of gravity and the path of the centre of the face** on a driver, with the face-centre path being the more out-to-in of the two, attributed to the centre of gravity sitting 25–50 mm behind the face.
+The openly published launch-monitor documentation states a figure for this effect: approximately **3° between the path of the head's center of gravity and the path of the center of the face** on a driver, with the face-center path the more out-to-in of the two. That documentation attributes the difference to the center of gravity sitting 25–50 mm behind the face.
 
 That figure is a useful audit, because it is the only vendor-published quantification of a reference-point bias we have found. Holding $d = 40$ mm and raising the about-shaft rate to 3,575 °/s, the tool returns
 
@@ -122,13 +122,13 @@ reproducing the published number exactly. Inverted, 3° at $d = 40$ mm implies $
 
 ### Case 3: The Speed Argument, Corrected
 
-A recurring argument on golf forums runs: a 35 mm offset rotating at 2,000 °/s produces about 1.22 m/s of extra velocity at the face, and since 1.22 is small next to a clubhead speed of 120, the effect is "about 1% and therefore negligible."
+A recurring argument on golf forums runs as follows. A 35 mm offset rotating at 2,000 °/s produces about 1.22 m/s of extra velocity at the face; since 1.22 is small next to a clubhead speed of 120, the effect is "about 1% and therefore negligible."
 
 Every number in that sentence is right and the conclusion is wrong twice over.
 
 **The unit slip.** 1.22 m/s is 2.73 mph, not 1.22 mph. Compared against 120 mph the fraction is 2.3%, not 1%.
 
-**The category error, which is the real one.** That velocity is very nearly *perpendicular* to the direction of travel. Adding a perpendicular component of magnitude $u$ to a velocity of magnitude $v$ changes the speed by $\sqrt{v^2+u^2} - v \approx u^2/2v$, which for these numbers is under a hundredth of a mile per hour — genuinely negligible, as claimed. But it rotates the direction by
+**The category error, which is the real one.** That velocity is nearly *perpendicular* to the direction of travel. Adding a perpendicular component of magnitude $u$ to a velocity of magnitude $v$ changes the speed by $\sqrt{v^2+u^2} - v \approx u^2/2v$, which for these numbers is under a hundredth of a mile per hour — genuinely negligible, as claimed. But it rotates the direction by
 
 $$
 \arctan\!\left(\frac{u}{v}\right) = 1.30°
@@ -148,14 +148,14 @@ Three separate mechanisms operate, and they do not point the same way.
 | Face rotation during contact | Draw side | ~0.5–2° |
 | Timing sensitivity | Neither — variance | Dominant |
 
-The second cancels part of the first, and the third dwarfs both. Since $d(\text{face angle})/dt = \omega$ by definition, a delivery at 2,100 °/s converts one millisecond of timing error into 2.1° of face angle. Face angle carries the large majority of horizontal launch direction on a driver, so closure rate is best understood as the **gain** of the release: a high-closure pattern will square the face reliably, and it converts small timing errors into large directional ones.
+The second cancels part of the first, and the third dwarfs both. Since $d(\text{face angle})/dt = \omega$ by definition, a delivery at 2,100 °/s converts one millisecond of timing error into 2.1° of face angle. Face angle carries the large majority of horizontal launch direction on a driver, so closure rate is best understood as the **gain** of the release. A high-closure pattern will square the face reliably, and it converts small timing errors into large directional ones.
 
-And the population-level evidence is a null result. Across 70 tour professionals with driving-accuracy statistics, handle twist velocity correlated with driving accuracy at $r = -.14$ — two percent of the variance — and a high-twist group did not differ significantly from a low-twist group on accuracy ([Cheetham 2014](https://www.philcheetham.com/media/Phillip-Cheetham-Doctoral-Dissertation-2014.pdf)). The coaching consensus since 1968 has held that faster face rotation is harder to time and therefore less accurate. The arithmetic behind that consensus is sound; the measurement does not support it, presumably because players self-organise their timing precision around their own release rate.
+And the population-level evidence is a null result. Across 70 tour professionals with driving-accuracy statistics, handle twist velocity correlated with driving accuracy at $r = -.14$ — two percent of the variance — and a high-twist group did not differ significantly from a low-twist group on accuracy ([Cheetham 2014](https://www.philcheetham.com/media/Phillip-Cheetham-Doctoral-Dissertation-2014.pdf)). The coaching consensus since 1968 has held that faster face rotation is harder to time and therefore less accurate. The arithmetic behind that consensus is sound; the measurement does not support it, presumably because players self-organize their timing precision around their own release rate.
 
 ::: {.callout-important}
 ## Where the Reference-Point Offset Does Bite
 
-In free play, a golfer calibrates to ball flight over years, not to a number, and the mechanisms above partly cancel. But a player coached **to a measured target** — "get your path to zero" on a device referencing the geometric centre — is a different case. A fast-closing player who achieves a reported zero is delivering a true impact-point path one to three degrees left of zero, and is therefore being trained toward a fade-biased delivery *by the measurement convention rather than by their swing*.
+In free play, a golfer calibrates to ball flight over years, not to a number, and the mechanisms above partly cancel. But a player coached **to a measured target** — "get your path to zero" on a device referencing the geometric center — is a different case. A fast-closing player who achieves a reported zero is delivering a true impact-point path one to three degrees left of zero, and is therefore being trained toward a fade-biased delivery *by the measurement convention rather than by their swing*.
 
 The correction is not complicated: state the reference point, and report the angular rate alongside the path so that the size of the discrepancy is visible on the swing in question.
 :::
@@ -164,9 +164,9 @@ The correction is not complicated: state the reference point, and report the ang
 
 The dossier discipline behind this article is worth making explicit, because the topic is unusually contaminated.
 
-**Closure rate is four quantities sharing one name.** Published values span roughly 200 to 3,900 °/s, and that spread is not measurement disagreement — it is the difference between rotation about the shaft's long axis, rotation of the face relative to the target line, rotation of the face relative to the instantaneous path, and speed-normalised rates in degrees per foot. Any number quoted without its frame is unusable, and the reconciling relation above is what converts between the first two.
+**Closure rate is four quantities sharing one name.** Published values span roughly 200 to 3,900 °/s, and that spread is not measurement disagreement. It is the difference between rotation about the shaft's long axis, rotation of the face relative to the target line, rotation of the face relative to the instantaneous path, and speed-normalized rates in degrees per foot. Any number quoted without its frame is unusable, and the reconciling relation above is what converts between the first two.
 
-**Speed-normalised rates are the honest comparison unit.** Reporting closure in degrees per foot of clubhead travel is exactly $\omega/v$, which by the derivation above is $1/R_{\text{ISA}}$ — independently confirming that the dimensionally correct predictor is the ratio, not the angular rate alone. The tool reports both.
+**Speed-normalized rates are the honest comparison unit.** Reporting closure in degrees per foot of clubhead travel is exactly $\omega/v$, which by the derivation above is $1/R_{\text{ISA}}$ — independently confirming that the dimensionally correct predictor is the ratio, not the angular rate alone. The tool reports both.
 
 **The tour kinematics come from one primary source, read directly.** Every tour figure used here is from the doctoral dissertation cited below, extracted from the primary document. This is not fussiness: an automated summary of that same dissertation, obtained during earlier research for this site, returned entirely fabricated figures — a wrong sample size, an implausible closure rate, and a strong positive correlation with accuracy that inverted the study's actual null result. Any figure attributed to that work through a secondary summary should be distrusted, and only the values recorded in the dossier are used here.
 
@@ -177,7 +177,7 @@ The dossier discipline behind this article is worth making explicit, because the
 - [Impact Mechanics and Ball Flight](impact-mechanics-and-ball-flight.qmd) — the full treatment of the collision, gear effect, the ball flight laws, and closure rate in its mechanical context.
 - [Launch Monitor Technology](technology-launch-monitors.qmd) — how radar and photometric devices measure what they measure, and why clubface orientation is inferred rather than observed on radar systems.
 - [Launch Monitor Vendor Reference](launch-monitor-vendor-reference.qmd) — the catalogue of published vendor definitions, including which reference point each system uses and where the definitions are mutually incompatible.
-- [The Physics of the Rolling Putt](putting-roll-models.qmd) — the delivered-direction sensitivity taken to its extreme: at putting speeds spin consequences of face–path mismatch vanish, leaving start-line direction as almost the entire delivery, where a degree of error is a missed three-metre putt.
+- [The Physics of the Rolling Putt](putting-roll-models.qmd) — the delivered-direction sensitivity taken to its extreme: at putting speeds spin consequences of face–path mismatch vanish, leaving start-line direction as almost the entire delivery, where a degree of error is a missed three-meter putt.
 
 ## References
 

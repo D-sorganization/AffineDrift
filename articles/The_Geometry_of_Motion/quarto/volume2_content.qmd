@@ -38,10 +38,10 @@ This is not merely a philosophical reframing. It changes the mathematics. It cha
 what we optimize. It changes how we define stability. And it changes what "success"
 means in a controlled system.
 
-The purpose of this book is to develop control theory from this trajectory-first
-perspective, to show that the classical setpoint framework is a special (and often
-misleading) case of a much richer theory, and to build the mathematical tools needed
-to design controllers for systems whose purpose is to *move*.
+This book develops control theory from that trajectory-first perspective. It treats
+the classical setpoint framework as a special---and often misleading---case of a
+richer theory, and it builds the mathematical tools needed to design controllers for
+systems whose purpose is to *move*.
 
 
 ::: {.content-visible when-format="pdf"}
@@ -157,7 +157,7 @@ control objective is fundamentally different:
   $\norm{\bm{d}(t)} \leq \delta$.
 
 
-A setpoint is simply the degenerate case where $\traj^*(t) = \state^*$ for all $t$
+A setpoint is the degenerate case where $\traj^*(t) = \state^*$ for all $t$
 and $T \to \infty$. The trajectory-tracking framework *contains* the setpoint
 framework, but not vice versa.
 
@@ -285,8 +285,8 @@ The controller has two separate tasks:
 2. **Timing control**: regulate $\dot{s}$ to achieve the desired
         speed profile along the path.
 
-This decomposition is not naturally represented by a simple setpoint framework,
-where time and space are usually fused together.
+A setpoint framework does not represent this decomposition naturally, because it
+fuses time and space together.
 
 
 ### Transverse Dynamics and Orbital Stability
@@ -307,7 +307,7 @@ to the *nearest point on the trajectory*.
   is the **projection phase**, giving the "closest point on the reference."
 
 
-This leads to a decomposition of the state into two components:
+This splits the state into two components:
 - The **tangential component**: where the system is *along* the
   trajectory (measured by $s$).
 - The **transverse component**: how far the system is *from* the
@@ -508,8 +508,8 @@ only the *deviations* from this feedforward signal:
 \end{equation}
 For the golf swing, empirical studies indicate the feedforward component accounts for approximately 90\% of
 the total joint torques [@Winter2009]. The feedback controller provides the remaining 10\% of
-correction to handle physical disturbances. A control design that treats everything as feedback is asking the
-feedback loop to do disproportionately more work than necessary, ignoring the baseline deterministic dynamics of the swing.
+correction to handle physical disturbances. A control design that treats everything as feedback asks the
+feedback loop to do far more work than necessary. It ignores the baseline deterministic dynamics of the swing.
 
 
 ### Underactuation Creates Geometry, Not Just Constraints
@@ -523,9 +523,9 @@ creates *geometric structure* that we can exploit.
 The set of states reachable from a given configuration through passive dynamics
 forms a submanifold of the state space. A well-designed trajectory *rides along*
 this manifold, using the passive dynamics to generate motion that active torques
-alone could not produce. This is how the golf swing works: the wrist hinge releases
-passively, and the centrifugal acceleration of the downswing *automatically*
-squares the clubface through the double pendulum effect.
+alone could not produce. This is how the golf swing works in a double-pendulum model:
+the wrist hinge releases passively, and the centrifugal acceleration of the downswing
+squares the clubface without a dedicated wrist torque.
 
 ::: {.proposition}
   For a mechanical system with $n$ degrees of freedom and $m < n$ actuators, the
@@ -589,10 +589,9 @@ increasingly sophisticated layers:
 ## A New Language for Control
 
 
-Before proceeding, let us establish the conceptual vocabulary that will replace
-the classical language throughout this book:
+This book replaces the classical vocabulary with a trajectory-centered one:
 
-| ** | ** |
+| **Classical Term** | **Trajectory-First Term** |
 | --- | --- |
 | Setpoint / reference | Reference trajectory $\traj^*(s)$ |
 | Error $\bm{e}(t) = \state - \state^*$ | Transverse deviation $d_\perp(\state, \traj^*)$ |
@@ -668,9 +667,9 @@ These intrinsic properties determine how difficult the trajectory is to track,
 how much control authority is needed to stay on course, and where the system
 is most vulnerable to disturbances.
 
-The reader may wonder: *why not simply work in coordinates?* The answer is
-that coordinate-based descriptions mix up properties of the *curve* with
-properties of the *parameterization*. A slow practice swing and a full-speed
+Why not work in coordinates? Because coordinate-based descriptions mix up
+properties of the *curve* with properties of the *parameterization*.
+A slow practice swing and a full-speed
 swing may trace a similar path in configuration space, but they do not trace
 the same curve in full state space because the velocity components are
 different. The geometric tools we develop here allow us to say precisely which
@@ -704,8 +703,8 @@ which claims require the full state trajectory.
   slow down).
 
 
-The critical point is that many different parameterizations describe the same
-geometric curve. If $\traj(\lambda)$ is a parameterized curve and
+Many different parameterizations describe the same geometric curve.
+If $\traj(\lambda)$ is a parameterized curve and
 $\lambda = \phi(\mu)$ is a smooth, monotonically increasing reparameterization,
 then $\tilde{\traj}(\mu) = \traj(\phi(\mu))$ traces the same set of points in
 $\Reals^n$, but at different "speeds."
@@ -1004,9 +1003,8 @@ For the familiar case $n = 3$:
 
 
 The power of the moving frame lies in how it evolves along the curve. The
-derivatives of the frame vectors with respect to arc length are expressed
-entirely in terms of the frame itself and a set of scalar functions called
-**generalized curvatures**.
+arc-length derivatives of the frame vectors can be written using only the frame
+itself and a set of scalar functions called **generalized curvatures**.
 
 ::: {#thm-frenet_serret}
 **Frenet--Serret Equations**
@@ -1136,16 +1134,19 @@ The acceleration decomposes into:
   configuration space has a tight reversal---a region of high curvature
   $\kappa$.
 
-  Using $a_\perp = \kappa v^2$, and noting that mid-downswing
-  $v \approx 25$\,m/s with a conceptual reversal curvature $\kappa \approx 2$\,rad/m
-  (estimated as a representative value from elite motion capture data [@Lephart2007]), the centripetal acceleration demand is
+  Mid-downswing, $v \approx 25$\,m/s, with a conceptual reversal curvature
+  $\kappa \approx 2$\,rad/m estimated as a representative value from elite motion
+  capture data [@Lephart2007]. Using $a_\perp = \kappa v^2$, the centripetal
+  acceleration demand is
   \begin{equation}
     a_\perp \approx 2 \times 25^2 = 1250\;\text{m/s}^2 \approx 127\;g.
   \end{equation}
-  (Note that these specific kinematics are subject to large variance and act here as an illustrative upper bound). This enormous demand is met not by muscular torque alone, but by the
-  *passive coupling* in the kinematic chain [@Neumann2010]---the very underactuation
-  that the setpoint framework treats as a constraint. The geometry of the
-  trajectory creates the inter-segmental forces needed to execute it.
+  (These specific kinematics are subject to large variance and act here as an
+  illustrative upper bound.) Muscular torque alone does not meet a demand of this
+  size; in the model, the *passive coupling* in the kinematic chain supplies the
+  rest [@Neumann2010]---the underactuation that the setpoint framework treats as a
+  constraint. The geometry of the trajectory creates the inter-segmental forces
+  needed to execute it.
 :::
 
 
@@ -1187,9 +1188,9 @@ relevant primarily in highly articulated systems.
   geometrically congruent---they are the same shape, possibly translated
   and rotated.
 
-  This has a striking implication for motor control: if a golfer can reproduce
-  the curvature signature of their swing, the spatial path is automatically
-  reproduced, regardless of timing.
+  This has an implication for motor control: a golfer who reproduces the
+  curvature signature of a swing reproduces its spatial path up to a rigid
+  motion, whatever the timing.
 :::
 
 
@@ -1305,10 +1306,10 @@ control problem:
   allows. The timing law must respect this limit, typically by slowing down
   through high-curvature regions and accelerating through straight sections.
 
-  This is precisely what golfers do instinctively. The "pause at the top"---the
-  brief deceleration between backswing and downswing---is not aesthetic
-  affectation. It is the timing law respecting the curvature speed limit at
-  the point of maximum path curvature.
+  This offers one reading of what golfers do at the top of the swing. The
+  "pause at the top"---the brief deceleration between backswing and
+  downswing---need not be aesthetic affectation. Under the model it is the timing
+  law respecting the curvature speed limit at the point of maximum path curvature.
 :::
 
 
@@ -1377,7 +1378,7 @@ the nearest point on the reference), and $\xi_2, \ldots, \xi_n$ are the
 These coordinates have a powerful property: the reference trajectory itself
 corresponds to $\bm{\xi} = \bm{0}$, and the trajectory-tracking problem
 becomes the problem of *regulating $\bm{\xi}$* to zero while $s^*$
-advances}. This converts the tracking problem into a regulation problem, but in
+advances. This converts the tracking problem into a regulation problem, but in
 the moving frame rather than a fixed frame.
 
 
@@ -1402,7 +1403,7 @@ dynamics. The dominant effect is a **curvature-induced coupling**:
   the geometric coupling between the curve's shape and the transverse stability.
 :::
 
-This result has a profound implication: *the stability of trajectory
+This result has a practical implication: *the stability of trajectory
 tracking depends on the geometry of the trajectory.* A trajectory with low
 curvature is inherently easier to stabilize than one with high curvature,
 even if the underlying system dynamics are identical. The curvature modifies
@@ -1482,9 +1483,9 @@ book:
 | temporal speed planning |
 
 
-The key takeaway is that a trajectory is not just "a function of time." It is a
-geometric object with intrinsic structure, and this structure directly determines
-the difficulty and requirements of controlling it. In Chapter 3, we will see that
+A trajectory is not just "a function of time." It is a geometric object with
+intrinsic structure, and that structure determines how hard the trajectory is to
+control and what the controller must supply. In Chapter 3, we will see that
 the state spaces of mechanical systems are not flat $\Reals^n$---they are curved
 manifolds with their own geometry. The interplay between the geometry of the
 *curve* and the geometry of the *space* will produce the richest and
@@ -1542,8 +1543,8 @@ an artifact of forcing a non-Euclidean space ($\SOthree$) into Euclidean
 coordinates ($\Reals^3$). The Apollo guidance system's three-gimbal
 inertial platform had a built-in gimbal-lock caution region that crews
 were trained to avoid; this was a known design constraint of the IMU,
-not a specific Apollo~13 operational event. Every modern spacecraft avoids
-Euler angles for precisely this reason.
+not a specific Apollo~13 operational event. Modern spacecraft avoid
+Euler angles for this reason.
 
 The lesson for control: **if you use the wrong coordinates, your
 controller will have singularities that the physical system does not.**
@@ -1582,10 +1583,9 @@ Abraham \& Marsden~(1978).
       ($C^\infty$) functions from $\Reals^n$ to $\Reals^n$.
 
 
-The key intuition is: a manifold is a space where you can *locally* use
-coordinates, but no single coordinate system works *globally*. You need
-an atlas of overlapping charts, like a road atlas needs multiple pages to cover
-a country.
+A manifold is a space where you can use coordinates *locally*, but where no
+single coordinate system works *globally*. You need an atlas of overlapping
+charts, the way a road atlas needs multiple pages to cover a country.
 
 ::: {#exm-circle_manifold}
 **The Circle $\Sone$**
@@ -1938,7 +1938,7 @@ for control are immediate:
 4. **Parallel transport replaces vector addition.** To compare
     tangent vectors (velocities, errors) at different points on the trajectory,
     we must *transport* them along the manifold using the connection.
-    Simply subtracting velocity vectors at different times is mathematically
+    Subtracting velocity vectors at different times is mathematically
     meaningless.
 
 
@@ -2031,7 +2031,7 @@ For mechanical systems, nature provides a canonical Riemannian metric: the
   $\bm{G}$.
 
 
-The remarkable fact is that the geodesic equation \eqref{eq:geodesic} is
+The geodesic equation \eqref{eq:geodesic} is
 *exactly* the equation of motion for the unforced mechanical system
 $\bm{M}(\bm{q})\ddot{\bm{q}} + \bm{C}(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} = \bm{0}$.
 The Coriolis and centrifugal terms are precisely the Christoffel symbol terms.
@@ -2143,7 +2143,7 @@ natural dynamics.
   acceleration "unhinges" the club), $\kappa_g$ is *less* than the
   Euclidean $\kappa$. The passive dynamics are doing work for free.
 
-  This is the geometric explanation for the "free speed" of the golf swing:
+  This gives a geometric account of the "free speed" of the golf swing:
   a well-designed trajectory aligns with the manifold's geodesics during the
   speed-critical phase, exploiting the natural dynamics rather than fighting
   them.
@@ -2310,8 +2310,8 @@ on manifold-valued configuration spaces.
 | PD: $-k_p\bm{e} - k_d\dot{\bm{e}}$ | $-k_p\log(\cdot)^\vee - k_d(\text{parallel transport})$ |
 
 
-The central message of this chapter is that the configuration spaces of
-mechanical systems have geometry, and this geometry matters for control.
+The configuration spaces of mechanical systems have geometry, and that
+geometry matters for control.
 Working in $\Reals^n$ when the true space is $\SOthree \times \Torus^k$
 introduces artificial singularities, incorrect error metrics, and
 controllers that fail when the system moves far from a nominal configuration.
@@ -2391,7 +2391,7 @@ encoded in the manifold's Riemannian geometry.
 
 
 The classical Lyapunov framework asks a simple question: *does the state
-converge to an equilibrium?* We demonstrated in Chapter 1 that this is the
+converge to an equilibrium?* We argued in Chapter 1 that this is the
 wrong question for systems whose purpose is to move. But the problem goes
 deeper than philosophical framing---Lyapunov stability is *structurally
 incapable* of analyzing trajectory-tracking systems.
@@ -2552,7 +2552,7 @@ the orbit matter.
   The limit cycle is the simplest example of a system whose purpose is to
   move: the "target" is not a point but an orbit, and stability means
   the orbit attracts nearby trajectories. Walking, running, and heartbeats
-  are all limit cycles. The golf swing is a transient trajectory (not
+  are all modeled as limit cycles. The golf swing is a transient trajectory (not
   periodic), but the same stability concepts apply over the finite interval
   $[0, T]$.
 :::
@@ -3183,11 +3183,11 @@ problem into a linear, lower-dimensional problem that inherits all the powerful
 tools of LTV control theory. The Floquet/Poincar\'e framework provides both
 analytical insight and numerical algorithms for assessing stability.
 
-The key insight for the golf swing is that orbital stability---not Lyapunov
-stability---is the correct framework. The swing is designed so that its
-passive transverse dynamics create a natural funnel toward impact, and the
-transverse LQR controller tightens this funnel using phase-varying gains
-that match the demands of each phase of the motion.
+For the golf swing, orbital stability---not Lyapunov stability---is the
+appropriate framework. In the models of this chapter, the passive transverse
+dynamics can contract toward impact. A transverse LQR controller then tightens
+the resulting funnel, using phase-varying gains matched to the demands of each
+phase of the motion.
 
 In Chapter 5, we will see how underactuation constrains the transverse dynamics,
 creating geometric structure that can be *exploited* rather than merely
@@ -3257,11 +3257,11 @@ tolerated.
 ## The Loss of Control Authority
 
 
-In classical robotics, the goal is often full actuation: one motor for every degree of freedom. If a robot has six joints, it has six motors. This fully actuated paradigm allows the system to follow essentially any smooth trajectory in the configuration space, subject only to actuator saturation limits. The control problem is algebraically simple because the mapping from torques to joint accelerations is invertible.
+In classical robotics, the goal is often full actuation: one motor for every degree of freedom. If a robot has six joints, it has six motors. This fully actuated paradigm allows the system to follow almost any smooth trajectory in the configuration space, subject only to actuator saturation limits. The control problem is algebraically simple because the mapping from torques to joint accelerations is invertible.
 
 But nature does not build fully actuated systems, and neither do athletes.
 
-When a gymnast swings on a high bar, their center of mass rotates around the bar, but they have no motor at the bar---that "joint" is a passive pin constraint. When a human walks, the foot acting as the pivot is unactuated during the single-support phase; we cannot create torque from a point contact. And crucially for our running example, when a golfer releases the club during the downswing, the wrist joint acts as a free hinge. The club rapidly accelerates to over 100 miles per hour, *driven entirely by the passive physics* of the arms pulling the grip, not by muscular torque applied at the wrist.
+When a gymnast swings on a high bar, their center of mass rotates around the bar, but they have no motor at the bar---that "joint" is a passive pin constraint. When a human walks, the foot acting as the pivot is unactuated during the single-support phase; we cannot create torque from a point contact. And crucially for our running example, a standard model of the golf downswing treats the wrist as a free hinge once the golfer releases the club. In that model the club accelerates to over 100 miles per hour, *driven by the passive physics* of the arms pulling the grip rather than by muscular torque applied at the wrist.
 
 
   Consider a mechanical system with $n$ degrees of freedom (DOF) and configuration coordinates $\bm{q} \in \configspace \subseteq \Reals^n$. The equations of motion take the standard manipulator form:
@@ -3273,7 +3273,7 @@ When a gymnast swings on a high bar, their center of mass rotates around the bar
   The system is **underactuated** if $m < n$, meaning there are fewer actuators than degrees of freedom. In this case, the matrix $\Bmat$ is not full rank (it maps a lower-dimensional control space into the $n$-dimensional configuration space).
 
 
-If we lack the authority to command arbitrary accelerations, the classical setpoint perspective sees this as a profound failing. A setpoint controller wants to cancel the nonlinearities, feedback-linearize the system, and dictate the exact motion. Underactuation prevents this brute-force cancellation. 
+If we lack the authority to command arbitrary accelerations, the classical setpoint perspective sees this as a failing. A setpoint controller wants to cancel the nonlinearities, feedback-linearize the system, and dictate the exact motion. Underactuation prevents this brute-force cancellation. 
 
 However, from the trajectory-first perspective developed in Chapter 1, underactuation is not merely a restriction---it is a geometric feature. The *passive dynamics* (the unactuated portions of the dynamics) define a manifold of feasible trajectories. We don't fight the physics; we ride it. 
 
@@ -3308,7 +3308,7 @@ Equation \eqref{eq:pend_unactuated} is the **unactuated dynamics** or **passive 
   As the hands approach the bottom of the swing arc, the arms decelerate ($\ddot{\theta}_1 < 0$). This negative acceleration, transferred through the $M_{21}$ coupling, can accelerate the club forward. Simultaneously, the large arm velocity ($\dot{\theta}_1$) makes the centrifugal contribution in $C_2$ large enough to push the club toward alignment with the arms ($\theta_2 \to \theta_1$) in the model. This supports a passive-release hypothesis for the simplified system; it does not show that measured wrist torque is identically zero or that real golfers never add muscular wrist action.
 
 
-Let's look at the unactuated row algebraically to see this whipping action:
+The unactuated row shows this whipping action algebraically:
 \begin{equation}
   \ddot{\theta}_2 = -M_{22}^{-1} \bigl( M_{21}\ddot{\theta}_1 + C_2(\bm{q}, \dot{\bm{q}}) + g_2(\bm{q}) \bigr).
 \end{equation}
@@ -3473,7 +3473,7 @@ Underactuation forces a shift from "forcing" a system to an equilibrium, to "orc
 ## The Moving Target Problem
 
 
-In Chapter 1, we fundamentally reframed our control objective from "reaching a destination" to "tracking a trajectory." Up to this point, we have assumed that this optimal reference trajectory $\traj^*(t)$ is given to us by an oracle. This chapter answers the obvious next question: *Where does this reference come from?*
+In Chapter 1, we reframed our control objective from "reaching a destination" to "tracking a trajectory." Up to this point, we have assumed that this optimal reference trajectory $\traj^*(t)$ is given to us by an oracle. This chapter answers the obvious next question: *Where does this reference come from?*
 
 For systems whose purpose is to move---like our running example of the golf swing---the optimal trajectory is not arbitrary. We are not just trying to go from point A to point B while minimizing energy. We are trying to fulfill what we term the **Moving Target Objective**: optimizing the kinematics (velocity, pose, acceleration) of a system precisely at the moment it intersects a target manifold (e.g., the golf ball). 
 
@@ -3493,7 +3493,7 @@ Crucially, *the exact clock time that impact occurs does not matter*. A golfer h
   \end{align}
 
 
-In the golf downswing, the terminal cost $\phi(\state(t_f))$ might be negative clubhead speed (to maximize speed), the integral cost $L$ might penalize excessive joint torques to ensure repeatability, and the terminal manifold constraint $\psi(\state(t_f)) = \bm{0}$ forces the clubhead to be geometrically located at the ball with a squared face. Notice that $t_f$ is a *free parameter* in the optimization.
+In the golf downswing, the terminal cost $\phi(\state(t_f))$ might be negative clubhead speed (to maximize speed), and the integral cost $L$ might penalize excessive joint torques to ensure repeatability. The terminal manifold constraint $\psi(\state(t_f)) = \bm{0}$ forces the clubhead to be geometrically located at the ball with a squared face. Notice that $t_f$ is a *free parameter* in the optimization.
 
 
 ## Transcribing the Continuous Problem
@@ -3524,7 +3524,7 @@ where $\bm{\Phi}$ represents the numerical integrator step. Multi-shooting is ex
 
 Direct Collocation takes this a step further. We represent both the state trajectory and the control signal as piecewise polynomials (e.g., cubic splines for state, linear splines for control). The decision variables are the coefficients of these polynomials, typically located at discrete **collocation points**.
 
-Instead of using a numerical integrator, we enforce the differential equation algebraicaly at the collocation points:
+Instead of using a numerical integrator, we enforce the differential equation algebraically at the collocation points:
 \begin{equation}
   \dot{\tilde{\state}}(t_c) - \bm{f}(\tilde{\state}(t_c), \tilde{\control}(t_c)) = \bm{0} \qquad \text{(Collocation constraint)}
 \end{equation}
@@ -3549,7 +3549,7 @@ When optimizing for a golf swing, direct collocation handles this underactuation
 
   Consider our planar double pendulum model from Chapter 5. The solver is given the task to maximize $\dot{\theta}_2(t_f)$ (club speed). 
   
-  **Initial Guess:** If we seed the NLP solver with a naive guess (e.g., constant shoulder torque), the club speed will be pitifully low.
+  **Initial Guess:** If we seed the NLP solver with a naive guess (e.g., constant shoulder torque), the club speed will be low.
   
   **The optimized result in this model:** The solver may select a positive $u_1$ phase to accelerate the arms and then reverse $u_1$ before $t_f$ if that sequence improves the terminal objective under the imposed constraints. In that case, the solution is exploiting inertial coupling through terms such as $M_{21}\ddot{\theta}_1$. This is a model result, not evidence that every human swing uses the same torque pattern.
 :::
@@ -3585,7 +3585,7 @@ The optimizer can then trade peak performance against sensitivity to noise. In a
 | Moving Target OCP | Finding a trajectory that optimizes terminal kinematics when intersecting a spatial manifold, without prescribing the clock time. |
 | Multi-Shooting | Discretizing the time domain into segments, using numerical integrators to enforce dynamics constraints between nodes. |
 | Direct Collocation | Representing the entire trajectory as splines and enforcing dynamics algebraically at discrete points arrayed along the trajectory. |
-| Passive Exploitation | Solvers naturally optimize underactuated topologies by weaponizing coupling matrices ($M_{21}, C_2$). |
+| Passive Exploitation | Solvers optimize underactuated topologies by exploiting the coupling matrices ($M_{21}, C_2$). |
 | Stochastic Robustness | Augmenting the OCP with expected variance to ensure the resulting trajectory can be consistently executed by noisy nonlinear plants. |
 
 
@@ -3652,9 +3652,9 @@ If the derivative of the boundary function points inward everywhere on the bound
 ## Sums-of-Squares (SOS) Programming
 
 
-Proving that $\dot{V} < 0$ on the boundary $V=1$ for a general nonlinear function $\bm{f}$ is famously difficult. We have an infinite number of states on the boundary to check! We circumvent this by restricting our dynamics $\bm{f}$ algorithms to polynomials (via Taylor expansion or substitution) and leveraging **Sums-of-Squares (SOS) Programming** [@Boyd1994; @MajumdarTedrake2017].
+Proving that $\dot{V} < 0$ on the boundary $V=1$ for a general nonlinear function $\bm{f}$ is famously difficult. We have an infinite number of states on the boundary to check! We circumvent this by restricting our dynamics $\bm{f}$ to polynomials (via Taylor expansion or substitution) and leveraging **Sums-of-Squares (SOS) Programming** [@Boyd1994; @MajumdarTedrake2017].
 
-A polynomial $p(x)$ is a Sum of Squares if it can be written as $p(x) = \sum_{i} q_i(x)^2$ for some polynomials $q_i(x)$. If a polynomial is SOS, it is globally non-negative. Testing if a polynomial is SOS turns out to be equivalent to solving a Semidefinite Program (SDP)—a convex optimization problem that can be solved very efficiently.
+A polynomial $p(x)$ is a Sum of Squares if it can be written as $p(x) = \sum_{i} q_i(x)^2$ for some polynomials $q_i(x)$. If a polynomial is SOS, it is globally non-negative. Testing if a polynomial is SOS turns out to be equivalent to solving a Semidefinite Program (SDP)—a convex optimization problem that can be solved efficiently.
 
 We can reframe Theorem \ref{thm:funnel_invariance} using the S-procedure. To guarantee that $\dot{V}(\state, t) < 0$ whenever $V(\state, t) = 1$, we require:
 \begin{equation}
@@ -3704,7 +3704,7 @@ If the robot hits an unmodeled friction patch and slows down, the reference traj
 
 Instead of parameterizing our optimal trajectory as $\traj^*(t)$, we parameterize it as a function of the phase: $\traj^*(s)$. The phase $s \in [0, 1]$ represents the percentage of motion completed. For a walking robot, $s$ could be the forward position of the hip. For a golf swing, $s$ could be the angular position of the shoulder relative to the ball. The reference trajectory is now a spatial curve with a separately modeled timing law.
 
-This construction is publication-safe only after the phase variable's domain, monotonicity condition, and reset behavior are specified. This is the same practical issue that appears in maneuver regulation, transverse linearization, and hybrid zero dynamics [@HauserHindman1995; @WesterveltGrizzle2007; @Shiriaev2010].
+This construction is defensible only after the phase variable's domain, monotonicity condition, and reset behavior are specified. This is the same practical issue that appears in maneuver regulation, transverse linearization, and hybrid zero dynamics [@HauserHindman1995; @WesterveltGrizzle2007; @Shiriaev2010].
 
 
   A phase variable $s(\state)$ is a continuously differentiable scalar function of the state $\state$ such that its time derivative is strictly positive along all feasible trajectories inside the nominal funnel:
@@ -3733,15 +3733,15 @@ As $y \to 0$, the system converges toward the virtual constraints. Crucially, th
 ## Hybrid Zero Dynamics
 
 
-When the virtual constraints are perfectly satisfied ($y = 0$), the entire complexity of the $n$-dimensional state space collapses down into a highly reduced dynamical system that evolves strictly along the manifold $\mathcal{Z}$. This is the **Zero Dynamics** of the system.
+When the virtual constraints are satisfied exactly ($y = 0$), the $n$-dimensional state space collapses into a much smaller dynamical system that evolves strictly along the manifold $\mathcal{Z}$. This is the **Zero Dynamics** of the system.
 
-For systems that undergo discrete impacts (a foot hitting the ground, or a golf club striking a ball), the system evolves via continuous differential equations until an impact surface is triggered, followed by an instantaneous jump map (a reset) dictated by conservation of momentum.
+For systems that undergo discrete impacts (a foot hitting the ground, or a golf club striking a ball), the system evolves via continuous differential equations until an impact surface is triggered. An instantaneous jump map---a reset dictated by conservation of momentum---then applies.
 
 
   A control architecture achieves Hybrid Zero Dynamics if the invariant manifold $\mathcal{Z}$ (the zero dynamics surface) is invariant not just under the continuous flow of the differential equations, but also invariant under the discrete impact map. That is, an impact starting on the manifold $\mathcal{Z}$ must immediately map to a new state that is also on $\mathcal{Z}$.
 
 
-By enforcing HZD, we can design rhythmic walking gaits that are astonishingly robust. If the robot trips, its phase slows down, but the virtual constraints remain active, keeping the limbs on the correct spatial path until the next footfall resets the sequence. The temporal sequence arises naturally from the interplay of gravity and momentum.
+By enforcing HZD, we can design rhythmic walking gaits that are robust. If the robot trips, its phase slows down, but the virtual constraints remain active, keeping the limbs on the correct spatial path until the next footfall resets the sequence. The temporal sequence arises naturally from the interplay of gravity and momentum.
 
 
 ## Application: The Golf Downswing
@@ -3761,17 +3761,17 @@ By structuring a model through virtual constraints, the analysis can separate sp
 ## Signal-Dependent Noise
 
 
-When a roboticist specifies a torque of $50\text{ Nm}$, the motor delivers $50\text{ Nm}$ with a tiny, constant variance. Biological actuators do not work this way. Human muscles generate force by recruiting discrete motor units. As higher forces are required, larger, more fast-twitch oriented motor units are recruited. This physiological reality manifests as a profound control challenge: **motor noise is proportional to the command signal**.
+When a roboticist specifies a torque of $50\text{ Nm}$, the motor delivers $50\text{ Nm}$ with a tiny, constant variance. Biological actuators do not work this way. Human muscles generate force by recruiting discrete motor units. As higher forces are required, larger, more fast-twitch oriented motor units are recruited. This physiology creates a control challenge: **motor noise is proportional to the command signal**.
 
 
-  A control input $\control(t)$ applied by a biological system is actually realized as a stochastic variable $\tilde{\control}(t)$:
+  A control input $\control(t)$ applied by a biological system is realized as a stochastic variable $\tilde{\control}(t)$:
   \begin{equation}
     \tilde{\control}(t) = \control(t) + \bm{W} \control(t) \cdot \bm{\epsilon}(t)
   \end{equation}
-  where $\bm{W}$ is a scaling matrix representing the coefficient of variation, and $\bm{\epsilon}(t) \sim \mathcal{N}(0, I)$ is white noise. That is, the variance of the applied force grows squarely with the magnitude of the ordered force: $\text{Var}(\tilde{u}) = c u^2$.
+  where $\bm{W}$ is a scaling matrix representing the coefficient of variation, and $\bm{\epsilon}(t) \sim \mathcal{N}(0, I)$ is white noise. That is, the variance of the applied force grows with the square of the ordered force: $\text{Var}(\tilde{u}) = c u^2$.
 
 
-This complicates deterministic optimal control. If a computed trajectory requires very large muscle commands, signal-dependent noise can increase endpoint variance. The magnitude of that effect depends on the noise coefficient, the controller, and the sensitivity of the trajectory.
+This complicates deterministic optimal control. If a computed trajectory requires large muscle commands, signal-dependent noise can increase endpoint variance. The magnitude of that effect depends on the noise coefficient, the controller, and the sensitivity of the trajectory.
 
 
 ## Minimum Variance Theory of Human Movement
@@ -3793,7 +3793,7 @@ Under signal-dependent noise, reducing sudden spikes in actuator force can reduc
 
 Fitts's Law captures a speed-accuracy tradeoff in targeted movement. In a golf model, a deterministic optimal-control solution may maximize clubhead speed by requesting large input torques.
 
-However, if we introduce the Stochastic OCP (via Covariance Steering) from Chapter 6 and apply the realistic premise of SDN, the optimizer faces a profound tradeoff.
+However, if we introduce the Stochastic OCP (via Covariance Steering) from Chapter 6 and apply the realistic premise of SDN, the optimizer faces a tradeoff.
 
 Applying maximum $u_1$ torque during the downswing can inject substantial variance into the kinematic state if the noise model scales with command magnitude. The unactuated club ($\theta_2$) may still gain speed through zero dynamics, but its phase progression can become more uncertain.
 
@@ -3811,9 +3811,9 @@ In such a model, a stochastic optimizer may reduce peak requested torque if the 
 
 Trajectory optimization (Chapter 6) computes a reference motion strictly from a mathematical model. However, dynamic models of humans—and even robots—are invariably flawed. Frictional forces are unmodeled, inertias are estimated, and actuators possess hidden dynamics. If you execute a computed reference $\traj^*(t)$ open-loop, the physical system will likely fail to strike the moving target due to these discrepancies.
 
-**Iterative Learning Control (ILC)** resolves this by leveraging the repetitive nature of tasks like a golf swing. ILC exploits the premise that while models are inaccurate, *the unmodeled dynamics are highly deterministic across repeated trials*, provided that initial states are repeatable and disturbances are bounded. (Standard ILC convergence conditions require stable, repetitive exogenous disturbances [@Sastry1999] and fail if parameters drift arbitrarily).
+**Iterative Learning Control (ILC)** resolves this by leveraging the repetitive nature of tasks like a golf swing. ILC exploits the premise that while models are inaccurate, *the unmodeled dynamics are highly deterministic across repeated trials*, provided that initial states are repeatable and disturbances are bounded. (Standard ILC convergence conditions require stable, repetitive exogenous disturbances [@Sastry1999] and fail if parameters drift arbitrarily.)
 
-If a robot under-swings by $5$ cm on the first attempt, the controller records this terminal error and updates the feedforward command $\control_{\text{ff}}$ for the *second* attempt. Over repeated trials, the system learns the inverse dynamics of the true physical plant without ever explicitly identifying the model parameters, acting as a robust convergence mechanism.
+If a robot under-swings by $5$ cm on the first attempt, the controller records this terminal error and updates the feedforward command $\control_{\text{ff}}$ for the *second* attempt. Over repeated trials, the system learns the inverse dynamics of the true physical plant without ever explicitly identifying the model parameters.
 
 
   Let $j$ denote the trial index. The feedforward command for trial $j+1$ is updated based on the command and the *transverse error* $\bm{\xi}$ from trial $j$:
@@ -3836,7 +3836,7 @@ Instead of computing the transverse LQR gains $\bm{K}_\perp(t)$ from an analytic
 Reinforcement learning (RL), including policy-gradient methods, can sample many simulated swings and update policy parameters to maximize expected reward terms such as clubhead speed and face orientation at impact. If the simulator, reward, and constraints match the chapter assumptions, a trained policy may recover behaviors similar to the earlier control arguments:
 1. It abandons rigid time-tracking and autonomously discovers phase-variable mapping.
 2. It exploits the underactuated double-pendulum whipping motion to gain speed.
-3. It artificially widens its "funnel" during the transition phase, realizing that overly tight feedback control here merely amplifies motor noise and spoils the impact constraints.
+3. It widens its "funnel" during the transition phase, where tight feedback would amplify motor noise and degrade the impact constraints.
 
 
 ## Trajectory Libraries
@@ -3846,7 +3846,7 @@ A singular optimal trajectory $\traj^*$ and its corresponding funnel $\mathcal{F
 
 Instead of re-running a large NLP optimization for every scenario, engineered controllers can maintain **Trajectory Libraries**. A library consists of several distinct, pre-computed trajectories and their corresponding local funnels. The analogy to biological movement planning is suggestive rather than established by this chapter.
 
-When faced with a new task (e.g., striking the ball on an uneven lie), the system searches its library for the closest matching funnel. By interpolating between established funnels using techniques like LQR-Trees [@Tedrake2009] or simple spatial blending, the system can instantly generate a stable, feasible motion without any online optimization.
+When faced with a new task (e.g., striking the ball on an uneven lie), the system searches its library for the closest matching funnel. By interpolating between established funnels using techniques like LQR-Trees [@Tedrake2009] or simple spatial blending, the system can generate a stable, feasible motion without online optimization.
 
 
 # Case Study: The Complete Golf Swing

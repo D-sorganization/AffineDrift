@@ -8,7 +8,7 @@ title: "Superposition: From Linear to Affine"
 ::: {.callout-note}
 
 At any single instant, the forces acting on a mechanical system---gravity, inertia,
-motor torques, contact forces---add together simply, like items on a receipt. The total
+motor torques, contact forces---add together like items on a receipt. The total
 acceleration is the sum of individual contributions. This chapter proves that statement
 rigorously in three parallel formalisms (Newton--Euler, Lagrangian, screw theory) and
 carefully delineates what does *not* superpose: trajectories over time.
@@ -22,7 +22,7 @@ meaning: if two causes each produce an effect, then both causes acting together 
 the *sum* of those effects.
 
 Drop a pebble in a pond: ripples spread out. Drop two pebbles: each creates its own
-ripples, and where they overlap, the water height is simply the sum of the two
+ripples, and where they overlap, the water height is the sum of the two
 individual wave heights. That is superposition. It works because the wave equation
 is linear.
 
@@ -251,8 +251,8 @@ yields $H(\q)\uvec$, which is linear in $\uvec$.
 ## Intuition
 
 The superposition theorem says: *at any frozen instant, the acceleration produced
-by each force source adds linearly*. This is a direct consequence of Newton's second law
-being linear in forces, combined with the linearity of inverting the mass matrix.
+by each force source adds linearly*. It follows directly from two facts: Newton's second law
+is linear in forces, and inverting the mass matrix is a linear operation.
 :::
 
 
@@ -363,7 +363,7 @@ M(\q)\ddot{\q} + C(\q,\dot{\q})\dot{\q} + \vec{g}(\q) = B(\q,\dot{\q})\uvec.
 \label{eq:ch3:lagrange}
 \end{equation}
 
-The key observation is that generalized forces are *linear in physical forces*. If the
+Generalized forces are *linear in physical forces*. If the
 physical force $\vec{f}_j$ acts at point $j$, the associated generalized force is
 \begin{equation}
 Q_k = \sum_j \vec{f}_j \cdot \frac{\partial\vec{r}_j}{\partial q_k}.
@@ -431,7 +431,7 @@ m_2 g\frac{\ell_2}{2}\cos(q_1+q_2)
 = \begin{bmatrix}\tau_1 \\ \tau_2\end{bmatrix}.
 \end{equation}
 
-This clearly shows: (1) the mass matrix $M(\q)$ is configuration-dependent, (2) gravity
+This shows: (1) the mass matrix $M(\q)$ is configuration-dependent, (2) gravity
 and Coriolis/centrifugal terms depend on state, and (3) the torques $\tau_i$ enter linearly
 and can be inverted via $M(\q)^{-1}$.
 
@@ -499,9 +499,9 @@ map. The linearity in $\uvec$ is inherited from three independent facts:
 ## Energy Perspective and Power Superposition
 
 
-An alternative and complementary view of superposition emerges from energy and power
-considerations. While the previous section focused on instantaneous accelerations, the
-energy framework provides deeper insight into how control inputs interact with the system.
+Energy and power give an alternative, complementary view of superposition.
+While the previous section focused on instantaneous accelerations, the
+energy framework shows more deeply how control inputs interact with the system.
 
 
 ### Power and the Input Channels
@@ -523,7 +523,7 @@ P_{\text{total}} = \uvec^\T \dot{\q} = \sum_{i=1}^p (\uvec^{(i)})^\T \dot{\q} = 
 \end{equation}
 
 This is a *linear superposition of power*: the total power delivered is exactly the sum of
-powers from each input channel. This holds instantaneously at any moment in time.
+powers from each input channel. It holds at every instant.
 
 
 ### Energy Flow and Acceleration Contributions
@@ -541,7 +541,7 @@ Taking its time derivative:
 \label{eq:ch3:energy-rate}
 \end{equation}
 
-The second term $\frac{1}{2}\dot{\q}^\T \dot M(\q)\,\dot{\q}$ accounts for the fact that the mass
+The second term $\frac{1}{2}\dot{\q}^\T \dot M(\q)\,\dot{\q}$ appears because the mass
 matrix itself varies with configuration. Using the equation of motion
 \begin{equation}
 M(\q)\ddot{\q} = \uvec - C(\q,\dot{\q})\dot{\q} - \vec{g}(\q),
@@ -560,7 +560,7 @@ Substituting back:
 
 The term $\dot{\q}^\T \uvec = P_{\text{total}}$ is the input power. The other terms represent
 energy dissipation or conversion due to Coriolis effects, gravity, and time variation of the
-inertia. This shows that input power superposition directly translates to the linearity of
+inertia. Input power superposition therefore translates directly into linearity of the
 acceleration mapping.
 
 
@@ -578,13 +578,13 @@ from the control effort:
 P^{(\text{grav})} + P^{(\text{control})} = \dot{\q}^\T \vec{g}(\q) + P^{(\text{control})}.
 \end{equation}
 
-This decomposition is exact and enables independent analysis of each channel.
+This decomposition is exact and lets us analyze each channel independently.
 
 
 ## Constraint Forces and the Control-Affine DAE
 
 
-In the presence of holonomic constraints, the equations of motion take the form of a
+In the presence of holonomic constraints, the equations of motion become a
 differential-algebraic equation (DAE). Understanding how constraints interact with the
 control-affine structure is essential for systems with kinematic constraints (e.g., wheels
 rolling without slipping, closed kinematic chains).
@@ -799,8 +799,8 @@ trajectories to diverge.
 ## Virtual Work Principle and Generalized Forces
 
 
-The virtual work principle is a classical foundation for deriving the equations of motion
-and provides deep insight into why generalized forces (and hence the control-affine structure)
+The virtual work principle is a classical foundation for deriving the equations of motion,
+and it explains why generalized forces (and hence the control-affine structure)
 must be linear in physical forces.
 
 
@@ -844,15 +844,15 @@ Q(\uvec) := \sum_{i=1}^N \mat{J}_i(\q)^\T\vec{f}_i.
 ### Linearity of Generalized Forces
 
 
-The crucial observation is that $Q(\uvec)$ is a *linear map* from the physical forces
+$Q(\uvec)$ is a *linear map* from the physical forces
 $\{\vec{f}_i\}$ to the generalized force space:
 \begin{equation}
 Q(c_1\uvec^{(1)} + c_2\uvec^{(2)}) = c_1 Q(\uvec^{(1)}) + c_2 Q(\uvec^{(2)}).
 \label{eq:ch3:generalized-linearity}
 \end{equation}
 
-This linearity is guaranteed by the linearity of the Jacobian operators $\mat{J}_i(\q)$ and
-the linearity of summation. It does *not* depend on the system being undamped or frictionless---only
+Two facts guarantee this linearity: the Jacobian operators $\mat{J}_i(\q)$ are linear, and
+summation is linear. It does *not* depend on the system being undamped or frictionless---only
 on geometry and the definition of generalized forces.
 
 
@@ -898,7 +898,7 @@ provides confidence that the superposition principle is exact and universal.
 ## Expanded Pendulum Example With Numerical Values
 
 
-We now provide a comprehensive analysis of the pendulum with concrete numerical parameters,
+We now analyze the pendulum in detail with concrete numerical parameters,
 demonstrating the decomposition principle and gravity compensation.
 
 
@@ -1019,7 +1019,7 @@ Checking superposition:
 \ddot q^{(1)} + \ddot q^{(2)} = -1.905 + (-3.405) = -5.310 \text{ rad/s}^2.
 \end{equation}
 
-Hmm, these don't match! But wait---the question is about superposition of *inputs*, not
+These do not match---but the claim concerns superposition of *inputs*, not of total
 accelerations. The correct statement is: the acceleration produced by input $\tau^{(1)} + \tau^{(2)}$
 equals the sum of accelerations produced by $\tau^{(1)}$ and $\tau^{(2)}$ *relative to zero input*.
 
@@ -1068,7 +1068,7 @@ Starting from $(q_0, \dot q_0) = (0, 0)$ with applied torque $\tau = 5$ N\textpe
 : Pendulum trajectory under $\tau = 5$ N\textperiodcentered{}m. Drift acceleration increases in magnitude as $q$ grows, reflecting the stronger gravitational resistance at larger angles. {#tbl-ch3_pendulum-traj}
 
 
-The table shows clearly how the drift (gravity) grows as the pendulum angle increases, while
+The table shows how the drift (gravity) grows as the pendulum angle increases, while
 the input acceleration remains constant. This illustrates the exact decomposition enabled by
 the control-affine structure.
 
@@ -1077,7 +1077,7 @@ the control-affine structure.
 
 
 The control-affine structure of mechanical systems is intimately related to passivity theory,
-which provides a powerful framework for understanding energy flow and designing stabilizing
+a powerful framework for understanding energy flow and designing stabilizing
 controllers.
 
 
@@ -1511,8 +1511,8 @@ and hence bounded trajectories (under bounded inputs).
 
 Passive systems are contracting in the energy metric under specific conditions:
 if $R(\x) \succ 0$ (strictly dissipative), then the Hamiltonian satisfies
-$\dot{H} \leq -\alpha H$ for some $\alpha > 0$ along unforced trajectories ($\uvec = 0$),
-which is precisely exponential contraction in the energy-weighted norm. The contraction
+$\dot{H} \leq -\alpha H$ for some $\alpha > 0$ along unforced trajectories ($\uvec = 0$).
+That is precisely exponential contraction in the energy-weighted norm. The contraction
 metric is $\mat{M} = \frac{\partial^2 H}{\partial \x^2}$ (the Hessian of the Hamiltonian),
 and the contraction rate is determined by the dissipation matrix $R$.
 

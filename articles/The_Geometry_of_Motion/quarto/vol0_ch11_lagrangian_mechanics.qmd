@@ -28,7 +28,7 @@ In the Newtonian framework (utilized powerfully by the Recursive Newton-Euler al
 
 While Newton's equations are spectacular for computational algorithms evaluating rigid bodies link-by-link, they suffer from a fatal flaw when deriving mathematical models by hand: **Constraint Forces**.
 
-If a bead slides down a curved wire, or a pendulum swings on a rigid rod, Newton demands that you calculate the exact, microscopic physical force the wire exerts on the bead, or the tension the rod pulls on the bob, just to ensure they don't break. For a 15-DOF mechanism, solving for 15 unknown internal constraint forces pulling against each other is mathematically agonizing.
+If a bead slides down a curved wire, Newton demands that you calculate the exact, microscopic physical force the wire exerts on the bead. If a pendulum swings on a rigid rod, he demands the tension the rod pulls on the bob. Either calculation exists only to confirm that the parts don't break. For a 15-DOF mechanism, solving for 15 unknown internal constraint forces pulling against each other is mathematically agonizing.
 
 
 ## The Principle of Least Action
@@ -53,7 +53,7 @@ The physical trajectory of a system is the one for which the *action*---the time
 ## The Lagrangian ($\mathcal{L}$) and the Euler-Lagrange Equations
 
 
-Lagrange defined a single, massive scalar function—the **Lagrangian** ($\mathcal{L}$)—which is simply the total Kinetic Energy of the entire system minus its total Potential Energy:
+Lagrange defined a single scalar function—the **Lagrangian** ($\mathcal{L}$)—equal to the total Kinetic Energy of the entire system minus its total Potential Energy:
 \begin{equation}
    \mathcal{L}(\bm{q}, \dot{\bm{q}}) = T(\bm{q}, \dot{\bm{q}}) - V(\bm{q})
 \end{equation}
@@ -62,18 +62,18 @@ Where $\bm{q}$ are the generalized coordinates (the motor angles) we defined bac
 
 Because the Lagrangian is built on generalized coordinates, it completely ignores the "Constraint Forces". The equations naturally assume the metal rod cannot stretch; you never have to calculate its tension.
 
-To extract the exact Newtonian equations of motion from this single scalar function $\mathcal{L}$, we pass it through the magnificent **Euler-Lagrange Equation**:
+To extract the exact Newtonian equations of motion from this single scalar function $\mathcal{L}$, we pass it through the **Euler-Lagrange Equation**:
 \begin{equation}
    \frac{d}{dt} \left( \frac{\partial \mathcal{L}}{\partial \dot{q}_i} \right) - \frac{\partial \mathcal{L}}{\partial q_i} = \tau_i
 \end{equation}
 
-For every single joint coordinate $i$, this equation operates mechanically on the energy field. The time derivative of the momentum (first term) minus the spatial gradient of the energy (second term) perfectly equals the external Torque ($\tau_i$) that must be applied by the motor!
+For every joint coordinate $i$, this equation operates mechanically on the energy field. The time derivative of the momentum (first term) minus the spatial gradient of the energy (second term) equals the external Torque ($\tau_i$) that the motor must apply.
 
 
 ## Deriving the Standard Form
 
 
-When you apply the Euler-Lagrange equation to the Kinetic Energy $T = \frac{1}{2}\dot{\bm{q}}^T M(\bm{q})\dot{\bm{q}}$ of a deeply connected robotic chain, the calculus organically unpacks into three vastly distinct physical phenomena that constitute the standard equation of motion:
+When you apply the Euler-Lagrange equation to the Kinetic Energy $T = \frac{1}{2}\dot{\bm{q}}^T M(\bm{q})\dot{\bm{q}}$ of a deeply connected robotic chain, the calculus unpacks into three distinct physical effects that constitute the standard equation of motion:
 
 \begin{equation}
    M(\bm{q})\ddot{\bm{q}} + C(\bm{q}, \dot{\bm{q}})\dot{\bm{q}} + \frac{\partial V}{\partial \bm{q}} = \bm{\tau}
@@ -82,19 +82,19 @@ When you apply the Euler-Lagrange equation to the Kinetic Energy $T = \frac{1}{2
 
 ### 1. The Mass Matrix ($M(\bm{q})$)
 
-The strict mass/inertia of the configuration. This is exactly what the Articulated Body Algorithm avoids inverting.
+This term holds the mass and inertia of the current configuration. This is exactly what the Articulated Body Algorithm avoids inverting.
 
 
 ### 2. The Coriolis and Centripetal Matrix ($C(\bm{q}, \dot{\bm{q}})$)
 
 This matrix $C$ naturally "falls out" of the calculus derivative! Because the joints of a robot spin, the coordinate frames themselves are accelerating.
 *   **Centripetal Forces:** Proportional to $\dot{q}_i^2$. They pull the arm outward as a joint spins.
-*   **Coriolis Forces:** Proportional to $\dot{q}_i \dot{q}_j$, where $i \neq j$. If your torso is spinning violently, and you attempt to punch your arm straight out, the Coriolis force violently yanks your fist to the side. 
+*   **Coriolis Forces:** Proportional to $\dot{q}_i \dot{q}_j$, where $i \neq j$. If your torso is spinning violently, and you attempt to punch your arm straight out, the Coriolis force yanks your fist to the side.
 
 
 ### 3. The Gravity Vector ($\frac{\partial V}{\partial \bm{q}}$)
 
-The spatial derivative of the Potential Energy naturally yields the exact vector of gravitational torques dragging down on every single joint. It is often written cleanly as $G(\bm{q})$.
+The spatial derivative of the Potential Energy yields the exact vector of gravitational torques dragging down on every joint. It is often written cleanly as $G(\bm{q})$.
 
 
 ## Why Both Formulations Exist

@@ -530,7 +530,7 @@ $$
 \mathbf{Q} = \alpha \mathbf{I}, \quad \mathbf{R} = \beta \mathbf{I}
 $$ {#eq-scalar-weights}
 
-and adjusting $\alpha/\beta$ ratio. Larger $\alpha/\beta$ → faster convergence (higher $\lambda$).
+and adjusting the $\alpha/\beta$ ratio. Larger $\alpha/\beta$ → faster convergence (higher $\lambda$).
 
 ### Method 2: Contraction Rate Constraint
 
@@ -564,7 +564,7 @@ $$ {#eq-double-integrator-gain}
 
 Closed-loop eigenvalues: $\{-\tfrac{3}{2} \pm \tfrac{\sqrt{7}}{2}j\}$, implying $\lambda_{\min} = \tfrac{3}{2} = 1.5$.
 
-**To increase** $\lambda$: Increase $\mathbf{Q}/\mathbf{R}$ ratio. E.g., $\mathbf{Q} = \text{diag}(64, 4)$ gives higher contraction rate.
+**To increase** $\lambda$: Increase the $\mathbf{Q}/\mathbf{R}$ ratio. E.g., $\mathbf{Q} = \text{diag}(64, 4)$ gives higher contraction rate.
 
 ---
 
@@ -787,7 +787,7 @@ $$
 \dot{\boldsymbol{\Sigma}}_{\mathbf{x}} = \mathbf{A}\boldsymbol{\Sigma}_{\mathbf{x}} + \boldsymbol{\Sigma}_{\mathbf{x}} \mathbf{A}^\top + \mathbf{G}\boldsymbol{\Sigma}\mathbf{G}^\top
 \qquad \text{(Lyapunov / covariance ODE)}
 $$
-Noise enters the *covariance* evolution, not the Riccati. The **quadratic-in-$\mathbf{S}$ noise term** shown below appears in **risk-sensitive** control [Jacobson 1973](https://doi.org/10.1109/TAC.1973.1100280); [Whittle 1981](https://doi.org/10.2307/1426756)) under the exponential-of-integral (LEQG) cost criterion, not under the standard quadratic expectation cost.
+Noise enters the *covariance* evolution, not the Riccati. The **quadratic-in-$\mathbf{S}$ noise term** shown below appears in **risk-sensitive** control ([Jacobson 1973](https://doi.org/10.1109/TAC.1973.1100280); [Whittle 1981](https://doi.org/10.2307/1426756)) under the exponential-of-integral (LEQG) cost criterion, not under the standard quadratic expectation cost.
 :::
 
 **Proposed (heuristic) formulation.** A **stochastic contraction metric** $\mathbf{S}(t)$ for the mean-field dynamics satisfying:
@@ -797,7 +797,7 @@ $$ {#eq-stochastic-riccati-conjectural}
 
 The extra $\tfrac{1}{2}\mathbf{S}\mathbf{G}\boldsymbol{\Sigma}\mathbf{G}^\top\mathbf{S}$ term is imported from risk-sensitive control --- where it arises from the LEQG derivation of Jacobson (1973) and Whittle (1981) --- and is offered here by analogy with contraction-theoretic robustness bounds. A rigorous derivation from the stochastic Lyapunov / contraction framework (via Itô's lemma on $\mathbf{x}^\top\mathbf{S}\mathbf{x}$, with a carefully chosen pseudo-Lyapunov rate) is not provided in this article and is left as an open problem; it is plausible but not established.
 
-The qualitative interpretation that survives this caveat: noise terms tend to **oppose** contraction --- the CNS must work harder to maintain stability in the presence of variability --- regardless of which Riccati/Lyapunov pair is used. That qualitative claim follows already from the standard stochastic-LQR covariance ODE above.
+The qualitative interpretation that survives this caveat: noise terms tend to **oppose** contraction --- the CNS must work harder to maintain stability in the presence of variability --- regardless of which Riccati/Lyapunov pair is used. That qualitative claim already follows from the standard stochastic-LQR covariance ODE above.
 
 ## Golf Swing Stability Margins
 
@@ -1040,7 +1040,7 @@ with $\mathbf{Q}_T = \text{diag}(100, 100, 10, 10)$, $\mathbf{Q} = \text{diag}(1
 
 **Success** = reaching goal region $\|\mathbf{x}_T - \mathbf{x}_{\text{goal}}\| < 0.1$.
 
-**Conclusion**: Contraction-DDP has **significantly larger basin of attraction**.
+**Conclusion**: Contraction-DDP has a **significantly larger basin of attraction**.
 
 ### Results: Convergence Rate
 
@@ -1056,7 +1056,7 @@ $$ {#eq-exponential-fit}
 
 **Observations**:
 1. Contraction-DDP achieves near-target rate (2.0 Hz) on average
-2. Much lower variance (more consistent)
+2. Contraction-DDP shows much lower variance (more consistent)
 
 ## Basin of Attraction Analysis
 
@@ -1072,7 +1072,7 @@ $$ {#eq-basin-definition}
 2. For each grid point, simulate closed-loop with both controllers
 3. Check if trajectory reaches goal
 
-**Visualization**: Project 4D basin onto $(x, \theta)$ plane by marginalizing over $v$, $\omega$.
+**Visualization**: Project the 4D basin onto the $(x, \theta)$ plane by marginalizing over $v$, $\omega$.
 
 ### Results
 
@@ -1595,7 +1595,7 @@ Plot saved as 'contraction_ddp_comparison.png'
 ```
 
 **Observations**:
-1. Contraction-DDP requires more iterations (18 vs 12) due to additional constraint
+1. Contraction-DDP requires more iterations (18 vs 12) because of the additional constraint
 2. Final trajectories are smoother for contraction version
 3. Control effort is comparable
 
@@ -1651,7 +1651,8 @@ The code snippets above are self-contained and illustrative; each can be run dir
 with `numpy`, `scipy`, and (for the autodiff examples) `jax`. There is no separate
 companion repository.
 
-Includes:
+These examples include:
+
 - JAX implementation of Contraction-DDP
 - CVXPY solvers for metric optimization
 - Benchmark problems (cartpole, pendulum, robot arm)

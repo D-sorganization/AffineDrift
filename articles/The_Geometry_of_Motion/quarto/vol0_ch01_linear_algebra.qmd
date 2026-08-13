@@ -12,7 +12,7 @@ description: "If I had to explain the single most important idea in applied math
 
 If I had to explain the single most important idea in applied mathematics to a first-year student, I would ask them this: **how would you describe a complicated motion using only simple pieces?** A robot arm with 15 joints doesn't move as one incomprehensible blob—it moves as a cascade of independent rotations, each contributing to the final position. A human throwing a baseball doesn't rotate one giant "throwing muscle"—the shoulder rotates, then the elbow, then the wrist, each adding their own angular velocity on top of the last. The miracle of linear algebra is that you can describe any complicated motion as a combination of simple ones. That is what vectors and matrices *are*—the science of combining simple things to understand complicated things.
 
-Let me put this even more simply. If you have ever mixed paint colors, you have done linear algebra. Red plus blue makes purple. Twice as much red makes a redder purple. The "space" of all possible colors you can mix from a set of base colors is a vector space. The base colors are your basis vectors. The proportions are your coefficients. That is literally all a vector space is: a collection of things you can scale and add together, where the results behave sensibly.
+Let me put this even more simply. If you have ever mixed paint colors, you have done linear algebra. Red plus blue makes purple. Twice as much red makes a redder purple. The "space" of all possible colors you can mix from a set of base colors is a vector space. The base colors are your basis vectors. The proportions are your coefficients. That is all a vector space is: a collection of things you can scale and add together, where the results behave sensibly.
 
 Now, the vectors in this book will not be colors---they will be velocities, forces, and accelerations of mechanical systems. But the principle is identical: complicated motions are built from simple components, combined by addition and scaling. If you understand mixing paint, you understand the core idea of linear algebra.
 
@@ -28,7 +28,7 @@ A **matrix** $M$ is a 2D grid of numbers. If a vector represents a point, a matr
    M = \begin{bmatrix} a_1 & b_1 & c_1 \\ a_2 & b_2 & c_2 \\ a_3 & b_3 & c_3 \end{bmatrix} \in \Reals^{3 \times 3}
 \end{equation}
 
-When we multiply a matrix by a vector ($M\bm{v}$), the matrix literally reshapes the vector. Throughout this book, when we rotate a robot arm, we are physically applying a matrix to the vectors extending along its bones.
+When we multiply a matrix by a vector ($M\bm{v}$), the matrix reshapes the vector. Throughout this book, when we rotate a robot arm, we are physically applying a matrix to the vectors extending along its bones.
 
 
 ## The Dot Product and Cross Product
@@ -43,12 +43,12 @@ The dot product (or inner product) is a scalar (a single number). It measures ho
 \begin{equation}
    \bm{a} \cdot \bm{b} = a_x b_x + a_y b_y + a_z b_z = \norm{\bm{a}}\norm{\bm{b}}\cos(\theta)
 \end{equation}
-If two vectors are perfectly perpendicular ($90^\circ$), their dot product is exactly 0. In control theory, we use dot products to compute kinetic energy ($E = \frac{1}{2}\bm{v}^T M \bm{v}$) and to project forces mathematically onto specific mechanical joints.
+If two vectors are perfectly perpendicular ($90^\circ$), their dot product is exactly 0. In control theory, we use dot products to compute kinetic energy ($E = \frac{1}{2}\bm{v}^T M \bm{v}$) and to project forces onto specific mechanical joints.
 
 
 ### The Cross Product
 
-The cross product is a vector. It takes two vectors and generates a brand new vector that is perfectly perpendicular to both of them.
+The cross product is a vector. It takes two vectors and generates a new vector perpendicular to both of them.
 \begin{equation}
    \bm{a} \times \bm{b} = \begin{bmatrix} a_y b_z - a_z b_y \\ a_z b_x - a_x b_z \\ a_x b_y - a_y b_x \end{bmatrix}
 \end{equation}
@@ -71,9 +71,9 @@ Here is a physical picture that makes eigenvalues unforgettable. Imagine you are
 
 For a rotating gyroscope, the eigenvector of the angular momentum is the spin axis---the one direction that does not precess. For a vibrating guitar string, the eigenvectors are the harmonic modes---the shapes the string naturally wants to vibrate in. Eigenvalues and eigenvectors are not abstract mathematical curiosities; they are the skeleton of every physical system.
 
-Why do we care?
+Two readings of the same equation show why this matters.
 If $M$ represents the mass and inertia of a car, its eigenvectors tell us the "Principal Axes"—the natural axes where the car is easiest and hardest to spin.
-If $M$ represents a control system's dynamics matrix ($A$), the eigenvalues completely dictate if the system will explode out of control ($\lambda > 0$) or safely stabilize back to resting ($\lambda < 0$). Eigenvalues are the fundamental heartbeat of linear control theory.
+If $M$ represents a control system's dynamics matrix ($A$), the eigenvalues dictate whether the system explodes out of control ($\lambda > 0$) or settles back to rest ($\lambda < 0$). Eigenvalues are the fundamental heartbeat of linear control theory.
 
 ::: {.callout-tip}
 ## Key Insight: Eigenvalues and Stability

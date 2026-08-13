@@ -4,7 +4,7 @@ description: "Passive stabilization is not about making the system rigid. It is 
 
 # Passive Stabilization in Parallel Loops {#sec-09b_passive_stabilization}
 
-In @sec-parallel_mechanisms, we established that the golf swing is a serial-to-parallel hybrid mechanism: serial segments connected by parallel constraints (the closed kinematic chains formed by the pelvis-torso loop, shoulder girdle closure, and ground contact loop). Those constraints generate forces---the loop Jacobian couples joint motions, the ground reaction forces close the chain, and the X-factor represents an over-constrained constraint on rotation.
+In @sec-parallel_mechanisms, we established that the golf swing is a serial-to-parallel hybrid mechanism: serial segments connected by parallel constraints. Those constraints are the closed kinematic chains formed by the pelvis-torso loop, the shoulder girdle closure, and the ground contact loop. Each generates forces---the loop Jacobian couples joint motions, the ground reaction forces close the chain, and the X-factor represents an over-constrained constraint on rotation.
 
 This chapter asks a fundamental question: *Given these constraints, what is the body's stabilization strategy?*
 
@@ -119,7 +119,7 @@ $$
 K_\text{eff} = K_0 + \Delta K_{\text{cocontraction}},
 $$
 
-where $K_0$ is the baseline intrinsic stiffness (from elasticity) and $\Delta K_{\text{cocontraction}}$ is the added stiffness from reflex feedback. The total stiffness can be written in terms of the co-contraction level $\alpha \in [0, 1]$:
+where $K_0$ is the baseline intrinsic stiffness (from elasticity) and $\Delta K_{\text{cocontraction}}$ is the added stiffness from reflex feedback. The total stiffness can be written as a function of the co-contraction level $\alpha \in [0, 1]$:
 
 $$
 K_\text{eff}(\alpha) = (1 - \alpha) K_0 + \alpha K_{\text{max}},
@@ -163,7 +163,7 @@ where $\phi$ is the relative angle between agonist and antagonist moment arms, a
 
 ### Force-Length and Force-Velocity Relationships as Passive Stabilizers
 
-The force-length relationship of muscle (the ascending and descending limbs of the tension curve) and the force-velocity relationship (the hyperbolic relationship between force and shortening velocity) are inherent mechanical properties that do not require active neural control. They automatically stabilize the system:
+The force-length and force-velocity relationships of muscle are inherent mechanical properties that need no active neural control. The first is the ascending and descending limbs of the tension curve; the second is the hyperbolic relation between force and shortening velocity. Both stabilize the system automatically:
 
 1. **Force-Length Stability**: If a muscle is stretched beyond its optimal length, passive tension increases (due to titin and collagen in the sarcomere). This resists further stretching. Conversely, if the muscle is shortened below its optimal length, it cannot generate force. This creates a "zone of comfort" around the optimal length where stability is highest.
 
@@ -173,7 +173,7 @@ Together, these properties create a *natural attractiveness* to a certain operat
 
 ### Fascial Pre-Tension and Biotensegrity
 
-Beyond individual muscles, the fascia (connective tissue surrounding muscles, organs, and entire body regions) can store and distribute elastic potential energy. The biotensegrity model, proposed by Levin and popularized by practitioners of movement, suggests that the body is not a machine of rigid links connected by hinges, but rather a tensioned network where compression elements (bones) are suspended in a web of tension (muscles, fascia, ligaments).
+Beyond individual muscles, the fascia (connective tissue surrounding muscles, organs, and entire body regions) can store and distribute elastic potential energy. The biotensegrity model, proposed by Levin and popularized by movement practitioners, rejects the picture of the body as a machine of rigid links connected by hinges. It suggests instead a tensioned network, in which compression elements (bones) hang suspended in a web of tension (muscles, fascia, ligaments).
 
 ::: {.callout-warning}
 ## Fascial Networks as Passive Stabilization
@@ -237,7 +237,7 @@ A motor task that involves stable attractors requires less active control and me
 
 As the body moves through a swing, it undergoes phase transitions between different stabilization modes. Early in the backswing, the address attractor is strong: the body is stiff and stable. As the backswing progresses and the golfer builds pre-tension, the old attractor weakens and a new attractor (the top of the swing) forms. At the transition point, the control mode switches: the system transitions from one attractor to another.
 
-This phase transition can be understood mathematically as a bifurcation. The stiffness parameter (controlled by co-contraction level $\alpha$) changes, and the eigenvalues of the linearized dynamics cross the imaginary axis, indicating a loss of stability in one mode and the emergence of stability in another.
+This phase transition can be understood mathematically as a bifurcation. The stiffness parameter (controlled by co-contraction level $\alpha$) changes, and the eigenvalues of the linearized dynamics cross the imaginary axis. One mode loses stability as another gains it.
 
 Across the swing the joint stiffness $K(\alpha)$ moves through three phases separated by two
 transitions. The body holds the address position with substantial stiffness, maintaining the
@@ -388,7 +388,7 @@ If we increase $K$ too much (high co-contraction), the bandwidth increases, but 
 
 ### The Phase Transition Under Loading
 
-Consider what happens when the system experiences a large external load (e.g., the impact forces at ball strike). The constraint force $\bm{F}_c$ becomes very large, and the loop closure constraint $\phi(\bm{q}) = 0$ becomes critical. If the system is over-stiffened, the constraint forces are distributed rigidly across the joints, and the load is borne entirely by the muscles (metabolically expensive) or by structural damage (injury).
+Consider what happens when the system experiences a large external load (e.g., the impact forces at ball strike). The constraint force $\bm{F}_c$ grows large, and the loop closure constraint $\phi(\bm{q}) = 0$ becomes critical. If the system is over-stiffened, the constraint forces distribute rigidly across the joints, and the load is borne entirely by the muscles (metabolically expensive) or by structural damage (injury).
 
 If the system is moderately stiffened with good compliance, the load is distributed through multiple DOF, and elastic elements absorb energy (less metabolic cost, less injury risk).
 
@@ -410,7 +410,7 @@ $$
 
 where $P$ is the solution to the algebraic Riccati equation.
 
-The key insight is that the optimal control gain depends on the ratio $Q / R$. If $Q$ is large (task error is very costly), the control effort is high. If $R$ is large (metabolic cost is high), the control effort is low. An over-stiffened system effectively increases $R$ (metabolic cost of the co-contraction) without necessarily reducing $Q$ (task error).
+The key insight is that the optimal control gain depends on the ratio $Q / R$. If $Q$ is large (task error is costly), the control effort is high. If $R$ is large (metabolic cost is high), the control effort is low. An over-stiffened system effectively increases $R$ (metabolic cost of the co-contraction) without necessarily reducing $Q$ (task error).
 
 ::: {.callout-warning}
 ## The Optimal Stiffness Is Task and Context Dependent
@@ -487,9 +487,9 @@ This is the critical phase transition. The nervous system switches from actively
 **Strategy**:
 
 - Rapid decrease in co-contraction ($\alpha$ drops from 1.0 to 0.2--0.4) as the muscles relax and allow elastic recoil.
-- The primary motion is driven by drift: elastic recoil of muscles and tendons, gravity, and Coriolis forces. The DCR is very high.
+- The primary motion is driven by drift: elastic recoil of muscles and tendons, gravity, and Coriolis forces. The DCR is at its highest here.
 - The attractor at the top of the swing destabilizes and repels the system toward impact position.
-- The sequence is driven by the proximodistal progression: hip rotation initiates the motion (highest inertia, lowest stiffness), which pulls on the torso, which accelerates the shoulder, which drives the arm, which accelerates the club. Each link is momentarily locked (high stiffness) before passing the motion to the next link.
+- The proximodistal progression drives the sequence: hip rotation initiates the motion (highest inertia, lowest stiffness) and pulls on the torso. The torso accelerates the shoulder, the shoulder drives the arm, and the arm accelerates the club. Each link is momentarily locked (high stiffness) before passing the motion to the next link.
 
 The downswing should feel effortless because the drift field is favorable. The golfer is not "muscling" the club; the body is releasing stored energy in a coordinated sequence.
 
@@ -500,7 +500,7 @@ The downswing should feel effortless because the drift field is favorable. The g
 **Strategy**:
 
 - Very high co-contraction at the wrist and forearm ($\alpha \approx 0.9$) to absorb the impact forces through the stiffened joints and the elastic properties of muscle.
-- The ground reaction forces (closing the kinematic loop) are very large at impact. High wrist stiffness is essential to prevent excessive wrist motion and to transmit the force cleanly to the club.
+- The ground reaction forces (closing the kinematic loop) are largest at impact. High wrist stiffness is essential to prevent excessive wrist motion and to transmit the force cleanly to the club.
 - The larger joints (shoulder, hip) can be more relaxed ($\alpha \approx 0.4 - 0.6$) because they are farther from the impact point and experience lower stresses.
 - Post-impact, the body dissipates energy through controlled deceleration (high damping) and elastic recoil.
 
@@ -699,7 +699,7 @@ Key takeaways:
 
 The practical implication: Improving the golf swing is not about practicing harder (higher control inputs). It is about *building a better landscape*. This means improving posture (to create favorable initial attractors), pre-tensioning strategically (to store elastic energy efficiently), and trusting the body's natural dynamics to drive the swing.
 
-## Passive Stabilization in Parallel Loops
+## Chapter Exercises: Passive Stabilization
 
 **Exercise 1: Conceptual: Attractor Stability**
 Consider a golfer at address. The posture creates an attractor with potential energy $V(\theta) = \frac{1}{2} K \theta^2$, where $\theta$ is a small deviation from ideal posture and $K$ is the "postural stiffness."
@@ -734,11 +734,11 @@ Suppose the muscle uses impedance control: $\tau = K_c (\theta_d - \theta)$, whe
 **Exercise 3: Conceptual: Drift Field and ZTCF**
 Consider the golf downswing. The drift field (due to gravity, elastic recoil, and Coriolis forces) points roughly toward the impact position. The control inputs (muscle activation) fine-tune the trajectory.
 
-(a) If the ZTCF (zero-torque counterfactual) is very close to the desired trajectory, is the DCR high or low? What does this mean for muscular effort?
+(a) If the ZTCF (zero-torque counterfactual) is close to the desired trajectory, is the DCR high or low? What does this mean for muscular effort?
 
 (b) If the ZTCF is far from the desired trajectory (e.g., because pre-tension is inadequate), is the DCR high or low? What is the metabolic cost?
 
-(c) Why do elite golfers appear to swing effortlessly? Explain in terms of the drift field.
+(c) Why do elite golfers appear to swing effortlessly? Explain using the drift field.
 
 **Exercise 4: Computational: Optimize Stiffness During Downswing**
 Consider a simplified two-joint model of the golf downswing: hip rotation ($\theta_1$) and shoulder rotation ($\theta_2$). The desired motion is:
@@ -763,7 +763,7 @@ where $M_1 = 0.5, M_2 = 0.1 \, \mathrm{kg}\cdot\mathrm{m}^2$, $D_i = 0.5$ (Ns/ra
 
 The task cost is $Q = I$ (penalize error equally), and the control cost is $R = I$. The co-contraction cost is $w(\alpha) = 10 \alpha^2$ (quadratic in co-contraction level).
 
-(a) Set up the LQR problem for a fixed $\alpha$. What is the optimal control $u_i^*$ in terms of $\alpha$?
+(a) Set up the LQR problem for a fixed $\alpha$. What is the optimal control $u_i^*$ as a function of $\alpha$?
 
 (b) For which values of $\alpha$ (say, $\alpha \in [0, 1]$ discretized in steps of 0.1) is the total cost minimized?
 
