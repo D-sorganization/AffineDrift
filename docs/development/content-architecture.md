@@ -27,6 +27,7 @@ The theoretical material on tangent hyperplanes, contraction, and golf swing dyn
 
 | Topic                     | Canonical Source                                    | Other Forms                                                                         |
 | ------------------------- | --------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| Control-affine terminology | `NOTATION.md`                                      | Explanations in articles, textbooks, schemas, and executable model contracts        |
 | Core affine theory        | `articles/theory-part*.qmd`                         | `articles/affine-nature-golf-swing.qmd` (comprehensive version)                     |
 | Tangent hyperplane series | `articles/tangent-hyperplane-articles/`             | `articles/tangent-hyperplane-contraction/` (more structured)                        |
 | GoM textbook              | `articles/The_Geometry_of_Motion/Volume_*/` (LaTeX) | `articles/The_Geometry_of_Motion/quarto/` (website mirror)                          |
@@ -34,6 +35,12 @@ The theoretical material on tangent hyperplanes, contraction, and golf swing dyn
 
 ## Content Relationship Notes
 
+- **`NOTATION.md`**: The normative semantic authority for ZTCF, ZVCF, DCR,
+  DgCR, drift, control, and the site-wide $f(x)$, $G(x)$, $g(q)$, and $u$
+  convention. Articles and textbooks may derive or specialize these objects,
+  but may not redefine them. Executable repositories may add coordinates,
+  units, tolerances, retained-plant inventories, and provenance while
+  preserving the canonical mathematical type and boundary.
 - **`articles/theory-part1.qmd` through `theory-part5.qmd`**: The primary 5-part theoretical series. Each part builds on the previous. `affine-nature-golf-swing.qmd` is a more comprehensive single-document version.
 - **`articles/tangent-hyperplane-articles/`**: Contains the published tangent hyperplane articles. The `Advanced/` subdirectory has the primary series (Contraction_Tangent_Unification, Hybrid_Tangent, Residual-Aware_Control). The `Drafts_Original_Articles/` subdirectory is legacy content superseded by the THC textbook.
 - **`articles/tangent-hyperplane-contraction/`**: The structured textbook version (8 chapters + index). More pedagogically organized than the individual articles in `tangent-hyperplane-articles/`. These are website-rendered chapters.
