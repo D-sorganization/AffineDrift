@@ -65,7 +65,7 @@ Before we write a single equation, let's ask a simple question. When a golfer sw
       <div class="laymans-item">
         <h3>The Core Question</h3>
         <p>
-          When watching a golf swing in slow motion, you see the club moving incredibly fast. But here's the puzzle: how much of that movement is the golfer actively creating, and how much is just physics (momentum, gravity) doing its thing?
+          When watching a golf swing in slow motion, you can see how fast the club moves. But here's the puzzle: how much of that movement is the golfer actively creating, and how much is just physics (momentum, gravity) doing its thing?
         </p>
         <div class="analogy">
           Imagine you're on a skateboard going downhill. Part of your speed comes from you pushing (active effort), and part comes from gravity pulling you down (passive physics). This article builds the math to separate these two in a golf swing.
@@ -75,7 +75,7 @@ Before we write a single equation, let's ask a simple question. When a golfer sw
       <div class="laymans-item">
         <h3>What is a "State"?</h3>
         <p>
-          The "state" is a complete snapshot of the golfer-club system at any moment—it includes where every joint is positioned and how fast everything is moving. Think of it as pausing a video and noting every detail about the pose and motion.
+          The "state" is a complete snapshot of the golfer-club system at any moment—it includes where every joint is and how fast everything is moving. Think of it as pausing a video and noting every detail about the pose and motion.
         </p>
         <div class="key-takeaway">
           If you know the current state and all future muscle efforts, you can predict exactly how the swing will unfold. The state contains all the "memory" of the swing so far.
@@ -85,7 +85,7 @@ Before we write a single equation, let's ask a simple question. When a golfer sw
       <div class="laymans-item">
         <h3>The Modeling Simplifications</h3>
         <p>
-          To make the math tractable, this framework makes some simplifying assumptions: body parts are treated as rigid (not squishy), the club shaft can bend but in predictable ways, and we ignore air resistance. These are standard engineering approximations.
+          To make the math tractable, this framework assumes that body parts are rigid (not squishy), that the club shaft bends in predictable ways, and that we can ignore air resistance. These are standard engineering approximations.
         </p>
         <div class="analogy">
           It's like how weather models don't track every raindrop—they simplify to make predictions possible while still being accurate enough to be useful.
@@ -130,7 +130,7 @@ Before we write a single equation, let's ask a simple question. When a golfer sw
           Critics suggest that emphasizing the "Drift" component implies that the resulting motion is "free" energy. However, the golfer must expend significant effort early in the swing to <em>create</em> the kinematic state where drift becomes dominant. By separating "Drift" from "Input" at the moment of release, the analysis might undervalue the active work done to set up the passive dynamics.
         </p>
         <div class="author-response">
-          <strong>Our Response:</strong> This is a crucial distinction. The decomposition does not claim drift is "free" in a metabolic sense; it claims it is "passive" in a <em>causal</em> sense at the moment of analysis. The golfer's skill lies precisely in <em>actively</em> positioning the system (the setup) so that the <em>passive</em> drift field naturally generates the desired high-speed release. The framework highlights this "effort-to-ease" transition, rather than obscuring it.
+          <strong>Our Response:</strong> This is a crucial distinction. The decomposition does not claim drift is "free" in a metabolic sense; it claims it is "passive" in a <em>causal</em> sense at the moment of analysis. The golfer's skill lies in <em>actively</em> positioning the system (the setup) so that the <em>passive</em> drift field generates the desired high-speed release. The framework highlights this "effort-to-ease" transition, rather than obscuring it.
         </div>
       </div>
 
@@ -143,7 +143,7 @@ Before we write a single equation, let's ask a simple question. When a golfer sw
           Why introduce the complexity of affine control theory and Lie brackets? Standard inverse dynamics already calculates the net moments required for a motion. Critics argue that decomposing these moments into $f(x)$ and $g(x)u$ adds mathematical overhead without changing the fundamental physics of $F=ma$.
         </p>
         <div class="author-response">
-          <strong>Our Response:</strong> Standard inverse dynamics provides the <em>sum</em> of forces required, but it is causally ambiguous: it cannot distinguish between a force required to <em>overcome</em> inertia and a force required to <em>exploit</em> it. The affine structure is the only mathematical framework that rigorously separates the system's "Inertial Memory" (Drift) from the player's "Current Agency" (Input). Without this separation, we cannot formulate the counterfactuals (e.g., "What if I stopped pushing?") that are essential for understanding control strategy.
+          <strong>Our Response:</strong> Standard inverse dynamics provides the <em>sum</em> of forces required, but it is causally ambiguous: it cannot distinguish between a force required to <em>overcome</em> inertia and a force required to <em>exploit</em> it. The affine structure rigorously separates the system's "Inertial Memory" (Drift) from the player's "Current Agency" (Input). Without this separation, we cannot formulate the counterfactuals (e.g., "What if I stopped pushing?") that are essential for understanding control strategy.
         </div>
       </div>
 
@@ -630,7 +630,7 @@ Within these constraints, the affine decomposition is exact. Outside them, causa
       <p class="resource-description">
         The canonical introduction to "Drift-Dominated" systems. Prof. Tedrake (MIT) defines the
         standard form $\dot{x} = f(x) + g(x)u$ and explains how to exploit passive dynamics
-        rather than canceling them—the core philosophy of the Affine Drift framework.
+        rather than canceling them—the core philosophy of the AffineDrift framework.
       </p>
       <div class="resource-details" style="font-size: 0.9em; margin-top: 1rem;">
         <strong>Prerequisites:</strong>
@@ -713,7 +713,7 @@ Within these constraints, the affine decomposition is exact. Outside them, causa
       <div class="laymans-item">
         <h3>The "Shadow Swing" (ZTCF)</h3>
         <p>
-          We introduce a concept called the <strong>Zero Torque Counterfactual (ZTCF)</strong>. This is a fancy name for a simple question: "What would happen if the golfer suddenly stopped trying?"
+          We introduce the <strong>Zero Torque Counterfactual (ZTCF)</strong>. This is a fancy name for a simple question: "What would happen if the golfer suddenly stopped trying?"
         </p>
         <p>
           If you let go of the steering wheel on the highway, the car doesn't stop instantly—it drifts. Similarly, if a golfer stopped applying force mid-swing, the club would keep moving due to momentum. The ZTCF calculates this "drift" path.
@@ -732,7 +732,7 @@ Within these constraints, the affine decomposition is exact. Outside them, causa
           It mathematically "freezes" the swing to measure the static loads—gravity and the springiness of the bent shaft—ignoring the speed.
         </p>
         <div class="key-takeaway">
-          By comparing the actual swing to these two baselines (Drift and Static Load), we can figure out exactly how much "extra" work the golfer is doing to bend the shaft or speed up the club.
+          By comparing the actual swing to these two baselines (Drift and Static Load), we can figure out how much "extra" work the golfer is doing to bend the shaft or speed up the club.
         </div>
       </div>
 
