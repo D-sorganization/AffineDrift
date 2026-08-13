@@ -6,9 +6,8 @@ Last updated: 2026-08-13
 
 ## Current Work
 
-Follow-up branch `fix/physics-golf-ztcf-macro`, PR
-[#3846](https://github.com/D-sorganization/AffineDrift/pull/3846), repairs the one post-merge
-publication failure from the definitional-integrity migration: The Physics of
+Follow-up PR [#3846](https://github.com/D-sorganization/AffineDrift/pull/3846)
+repaired the one post-merge publication failure from the definitional-integrity migration: The Physics of
 Golf used an undefined uppercase `\ZTCF` command instead of its declared
 `\ztcf` macro. The same pass removes residual no-muscle interpretations,
 recasts ground-reaction residuals as non-identifying model diagnostics, and
