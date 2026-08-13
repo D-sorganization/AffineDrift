@@ -61,24 +61,24 @@ format:
 ## Novelty Status
 
 - **Established (textbook):** Drift invariance properties in control-affine systems; force classification by causal origin in multibody dynamics.
-- **Novel application:** The force taxonomy applied to the golf swing context; classification of interaction and constraint forces within the drift/input framework.
+- **Novel application:** The force taxonomy applied to the golf swing context; classification of interaction and constraint forces within the drift--input framework.
 - **Terminology:** The specific taxonomy labels are the authors' applied framing; the underlying mechanics is standard.
 :::
 
 ## Drift Invariance and Input Constraints
 
-Recall the control-affine form $\dot{x} = f(x) + g(x)u$ established in Part 1, where $f$ encodes drift and $g$ encodes control directions [@isidori1995nonlinear]. In Part II we constructed two counterfactual baselines: the **ZTCF** (integrating the drift field $f(x)$ to expose velocity-dependent drift; see [canonical ZTCF definitions](zero-torque-counterfactual.html#sec-ztcf-canonical)) and the **ZVCF** (freezing velocity to isolate configuration loads). Both tools rely on the subtraction $\tau_{\text{input}} = \tau_{\text{total}} - \tau_{\text{drift}}$.
+Recall the control-affine form $\dot{x} = f(x) + g(x)u$ established in Part 1, where $f$ encodes drift and $g$ encodes control directions [@isidori1995nonlinear]. In Part 2 we constructed two counterfactual baselines: the **Zero Torque Counterfactual (ZTCF)**, which integrates the drift field $f(x)$ to expose velocity-dependent drift (see [canonical ZTCF definitions](zero-torque-counterfactual.html#sec-ztcf-canonical)), and the **Zero Velocity Counterfactual (ZVCF)**, which freezes velocity to isolate configuration loads. Both tools rely on the subtraction $\tau_{\text{input}} = \tau_{\text{total}} - \tau_{\text{drift}}$.
 
 ::: {.callout-important}
 ## Critical Assumption: Parameter Identification and Causality
-When passive parameters (segment inertias, shaft stiffness, damping) are identified from active motion data, they may implicitly capture the effective impedance of the active system—that is, the joint stiffness when muscles are co-contracting. In this case, the "Drift" term $f(x)$ represents the dynamics of the **Effective Plant** conditioned on the task, not purely passive mechanics. All drift decompositions inherit this assumption: the passive parameters are treated as fixed for the duration of the swing, even though physiologically they may vary with activation. This does not invalidate the framework; it clarifies what the counterfactuals actually compute. The ZTCF simulates what would happen if the golfer ceased *driving* the motion while maintaining the structural *impedance* required for the swing—not a flaccid collapse.
+When passive parameters (segment inertias, shaft stiffness, damping) are identified from active motion data, they may implicitly capture the effective impedance of the active system—that is, the joint stiffness when muscles are co-contracting. In this case, the "Drift" term $f(x)$ represents the dynamics of the **Effective Plant** conditioned on the task, not purely passive mechanics. All drift decompositions inherit this assumption: the passive parameters are treated as fixed for the duration of the swing, even though physiologically they may vary with activation. This does not invalidate the framework; it clarifies what the counterfactuals compute. The ZTCF simulates what would happen if the golfer ceased *driving* the motion while maintaining the structural *impedance* required for the swing—not a flaccid collapse.
 :::
 
-In Part II, we defined the Zero Torque Counterfactual (ZTCF) and Zero Velocity Counterfactual (ZVCF) as tools to isolate passive dynamics from active input. These constructions rely on the algebraic separation of the equations of motion into a drift term $f(x)$ and an input term $g(x)u$.
+In Part 2, we defined the ZTCF and ZVCF as tools to isolate passive dynamics from active input. These constructions rely on the algebraic separation of the equations of motion into a drift term $f(x)$ and an input term $g(x)u$.
 
 However, the validity of this separation is not self-evident. A skeptic might ask: *Is this separation real?* Does the act of applying force implicitly change the passive nature of the system? For our counterfactuals to be valid scientific controls, the "control group" (the drift) must be immune to the "treatment" (the input).
 
-These constructions rely on a fundamental premise: that the 'passive' dynamics of the system are robust to the application of 'active' force. If the act of applying torque fundamentally altered the nature of the drift field $f(x)$—for instance, by implicitly modifying the effective inertia or stiffness matrix—then our baselines would be moving targets, dependent on the very variable we seek to isolate.
+If applying torque altered the drift field $f(x)$—by implicitly modifying the effective inertia or stiffness matrix—then our baselines would be moving targets, dependent on the very variable we seek to isolate.
 
 For the subtraction $\tau_{\text{input}} = \tau_{\text{total}} - \tau_{\text{drift}}$ to be causally meaningful, the term being subtracted ($\tau_{\text{drift}}$) must be independent of the term being isolated ($\tau_{\text{input}}$). This independence condition is not trivial. In many biological systems, active contraction changes the stiffness of the muscles, thereby altering the "plant" itself. However, by modeling the system at the skeletal level (generalized torques driving rigid bodies and a flexible shaft), we can formally prove that the drift vector field is structurally independent of the input vector field.
 
@@ -112,7 +112,7 @@ $$
 \nabla_u f(x) \equiv 0.
 $$
 
-*Proof.* Recall the definition of $f(x)$ derived in Part I:
+*Proof.* Recall the definition of $f(x)$ derived in Part 1:
 $$
 f(x) = \begin{bmatrix} \dot{q} \\ [a_{\text{drift}}(x)]_{1:n} \\ \dot{\eta} \\ [a_{\text{drift}}(x)]_{n+1:n+m} \end{bmatrix},
 \qquad
@@ -271,7 +271,7 @@ Having established that the drift field is a stable, invariant reference frame, 
 
 ## Force and Torque Taxonomy via the Affine Mapping
 
-We can now synthesize the **Control-Affine Form** (Part I), the **Counterfactual Baselines** (Part II), and the **Drift Invariance** property (Section 1) into a unified *Force Taxonomy*.
+We can now synthesize the **Control-Affine Form** (Part 1), the **Counterfactual Baselines** (Part 2), and the **Drift Invariance** property (Section 1) into a unified *Force Taxonomy*.
 
 This taxonomy classifies the generalized forces acting within the golfer--club--shaft system. It is purely mechanical and applies directly to any control-affine multibody model of the form
 

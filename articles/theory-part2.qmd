@@ -240,7 +240,7 @@ To make this concrete, consider a hypothetical snapshot during mid-downswing. Su
 
 $$\tau_{\text{input}} = \tau_{\text{total}} - \tau_{\text{drift}} = 100 - 85 = 15 \text{ Nm}.$$
 
-This tells us something striking: the golfer is applying only 15 Nm of active torque, while passive momentum, gravity, and elastic shaft forces are contributing 85 Nm—*85%* of the mechanical load. This is the essence of "surfing on momentum." The golfer's muscles are not driving the downswing; they are *steering* it. The drift dominates. In the takeaway, this ratio would be reversed: the golfer might apply 60 Nm of active torque against only 10 Nm of drift, because the system has less momentum and requires more muscular steering. This shift from "steering a momentum-driven system" to "actively powering the early motion" is invisible in raw inverse dynamics but transparent in the drift--input decomposition.
+In this illustrative snapshot, the golfer applies only 15 Nm of active torque, while passive momentum, gravity, and elastic shaft forces contribute 85 Nm—*85%* of the mechanical load. This is the essence of "surfing on momentum." At this instant the muscles are not driving the downswing; they are *steering* it. The drift dominates. In the takeaway, this ratio would be reversed: the golfer might apply 60 Nm of active torque against only 10 Nm of drift, because the system has less momentum and requires more muscular steering. This shift from "steering a momentum-driven system" to "actively powering the early motion" is invisible in raw inverse dynamics but transparent in the drift--input decomposition.
 
 ## Scope and Limitations
 
@@ -287,14 +287,14 @@ where $\lambda_{\max}^{\mathrm{sym}}(A) := \lambda_{\max}\!\left(\tfrac{1}{2}(A 
 | 100 ms | $e^{1.5} \approx 4.5\times$ | $e^{3.0} \approx 20\times$ |
 | 250 ms | $e^{3.75} \approx 42\times$ | $e^{7.5} \approx 1800\times$ |
 
-**Practical conclusion.** ZTCF is quantitatively trustworthy for horizons on the order of **20--50 ms** from the branch point under typical release-phase Jacobians; at 100 ms, initial-state uncertainty is already amplified by roughly $5\times$--$20\times$ and the trajectory should be used only for qualitative insight; across the full 250 ms downswing the exponential envelope is large enough that quantitative ZTCF claims are not defensible without error bars propagated from the state uncertainty. The exact $\bar\lambda$ for a given model should be recomputed by integrating the variational equation along the specific trajectory of interest; the numbers above are order-of-magnitude, not universal.
+**Practical conclusion.** ZTCF is quantitatively trustworthy for horizons on the order of **20--50 ms** from the branch point under typical release-phase Jacobians. At 100 ms, initial-state uncertainty is already amplified by roughly $5\times$--$20\times$, so the trajectory should be used only for qualitative insight. Across the full 250 ms downswing the exponential envelope is large enough that quantitative ZTCF claims are not defensible without error bars propagated from the state uncertainty. The exact $\bar\lambda$ for a given model should be recomputed by integrating the variational equation along the specific trajectory of interest; the numbers above are order-of-magnitude, not universal.
 :::
 
 ### Decomposing the Drift
 
 The ZTCF successfully removes the golfer from the equation, but it leaves behind a complex web of passive forces. A swinging club is burdened by both its position (gravity, elasticity) and its speed (centrifugal force, inertia). The ZTCF tells us the *total* passive tendency, but it lumps these distinct physical phenomena together.
 
-To truly diagnose the mechanical load, we need a sharper instrument—a **frozen-coefficient decomposition** that can separate the "static" weight of the club from the "dynamic" weight of its motion. This motivates the **Zero Velocity Counterfactual**.
+To diagnose the mechanical load, we need a sharper instrument—one that freezes the system's velocities to separate the "static" weight of the club from the "dynamic" weight of its motion. This motivates the **Zero Velocity Counterfactual**.
 
 ## Zero Velocity Counterfactual (ZVCF)
 
@@ -418,9 +418,9 @@ The ZVCF isolates configuration-dependent forces—gravity and elastic stiffness
 
 ZVCF therefore complements ZTCF in building a full picture of drift forces across both configuration and velocity dimensions.
 
-We have now constructed two powerful counterfactual baselines: the ZTCF to isolate passive momentum history, and the ZVCF to isolate passive configuration loads. However, the validity of these diagnostic tools relies on a subtle but critical mathematical condition. For the subtraction $\tau_{\text{input}} = \tau_{\text{total}} - \tau_{\text{drift}}$ to be causally meaningful, the term being subtracted ($\tau_{\text{drift}}$) must be independent of the term being isolated ($\tau_{\text{input}}$). If the act of applying torque fundamentally altered the passive dynamics of the system—changing the effective inertia or stiffness—our baselines would be invalid.
+We have now constructed two counterfactual baselines: the ZTCF to isolate passive momentum history, and the ZVCF to isolate passive configuration loads. However, the validity of these diagnostic tools relies on a subtle but critical mathematical condition. For the subtraction $\tau_{\text{input}} = \tau_{\text{total}} - \tau_{\text{drift}}$ to be causally meaningful, the term being subtracted ($\tau_{\text{drift}}$) must be independent of the term being isolated ($\tau_{\text{input}}$). If the act of applying torque fundamentally altered the passive dynamics of the system—changing the effective inertia or stiffness—our baselines would be invalid.
 
-But is this separation scientifically valid? A skeptic might argue that in a biological system, the "passive" plant changes when the "active" input changes (e.g., via stiffness modulation). To defend our counterfactuals, we must prove the property of *Drift Invariance*—showing that the passive drift field is structurally immune to the active input. This is the subject of the next part of this series.
+But is this separation scientifically valid? A skeptic might argue that in a biological system, the "passive" plant changes when the "active" input changes (e.g., via stiffness modulation). To defend our counterfactuals, we must prove the property of *Drift Invariance*—showing that the passive drift field is structurally immune to the active input. Part 3 supplies that proof and builds the force taxonomy that rests on it.
 
 
 ## Related Articles
@@ -430,6 +430,8 @@ But is this separation scientifically valid? A skeptic might argue that in a bio
 
 - **[Part 1: Affine Control Interpretation of the Golf Swing](theory-part1.html)** — Foundational derivation of the control-affine model and drift/input decomposition
 - **[Part 3: Drift Invariance and Force Taxonomy](theory-part3.html)** — Proof that drift is input-independent; force classification
+- **[Part 4: Mathematical Derivations](theory-part4.html)** — Block matrix proofs, modal approximation, and pendulum examples
+- **[Part 5: Numerical Consistency Check](theory-part5.html)** — Simulink validation of the ZTCF and ZVCF computations
 - **[Drift–Control Ratio](controllability-drift-ratio.html)** — Analysis of ZTCF dominance over the downswing using the DCR
 - **[ZTCF Identifiability Critique](../critiques/ztcf_identifiability.html)** — Detailed critique of practical observability of the ZTCF from real swing data
 - **[Sources of Nonlinearity](sources-of-nonlinearity.html)** — Catalog of biological and mechanical nonlinearities that fall outside the affine model scope

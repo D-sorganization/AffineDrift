@@ -14,7 +14,7 @@ categories:
 
 A clubhead is a rigid body of finite size, and at impact it is rotating hard. Every point on a rotating rigid body moves in a *different direction* at the same instant. So the sentence "the club path was 2° in-to-out" is incomplete until it says **which point** — and every commercial device answers that question differently, without the answer appearing on the screen.
 
-The point that matters to the ball is the impact point on the face. The point most radar devices report is the geometric centre of the head, which on a driver sits 25–50 mm behind the face. Those two points do not travel in the same direction, and the size of the disagreement is not a small correction: it is **one to three degrees at tour closure rates**, on a parameter whose entire practical range is about ten degrees.
+The point that matters to the ball is the impact point on the face. The point most radar devices report is the geometric center of the head, which on a driver sits 25–50 mm behind the face. Those two points do not travel in the same direction, and the size of the disagreement is not a small correction: it is **one to three degrees at tour closure rates**, on a parameter whose entire practical range is about ten degrees.
 
 ::: {.callout-tip icon=false}
 ## Compute It for Any Delivery: The Rate of Closure Impact Explorer
@@ -24,7 +24,7 @@ The point that matters to the ball is the impact point on the face. The point mo
 Enter a clubhead speed, an in-plane rotation rate, an about-shaft rotation rate, a lie angle, a reference-point separation and a strike location; the tool applies $\mathbf{v}_P = \mathbf{v}_{\text{ref}} + \boldsymbol{\omega}\times\mathbf{r}$ and reports the path and attack-angle difference between the two points, alongside every closure metric the literature uses. Source and test suite: [D-sorganization/rate-of-closure-explorer](https://github.com/D-sorganization/rate-of-closure-explorer).
 :::
 
-Two further claims are developed below, and both matter more than the headline number. First, the effect is a **dispersion** term rather than a systematic bias for a player in free play — the measured evidence at tour level does not support the intuition that fast face rotation costs accuracy. Second, the popular framing that rotation "adds a few percent to clubhead speed" is a **category error**: the rotational contribution at the face is very nearly perpendicular to the direction of travel, so it changes the direction of the velocity, not its magnitude.
+Two further claims are developed below, and both matter more than the headline number. First, the effect is a **dispersion** term rather than a systematic bias for a player in free play — the measured evidence at tour level does not support the intuition that fast face rotation costs accuracy. Second, the popular framing that rotation "adds a few percent to clubhead speed" is a **category error**: the rotational contribution at the face is nearly perpendicular to the direction of travel, so it changes the direction of the velocity, not its magnitude.
 
 ## Conventions Used Here
 
@@ -33,7 +33,7 @@ The frame is the one used throughout this site's launch-monitor material, and st
 - Right-handed frame for a right-handed golfer: $x$ along the target line, $y$ vertically up, $z$ to the right of the target line looking down it.
 - Club path is **positive for in-to-out**; attack angle positive for hitting up; face angle positive for open.
 - Club-delivery quantities are evaluated at **maximum compression**, ball quantities at separation.
-- The reported reference point is the **geometric centre** of the head, abbreviated GC; the openly published figure is that GC sits within a few millimetres of the centre of gravity on a driver.
+- The reported reference point is the **geometric center** of the head, abbreviated GC; the openly published figure is that GC sits within a few millimeters of the center of gravity on a driver.
 
 Anywhere below that a quantity depends on the reference point — and the point of the article is that most of them do — the point is named.
 
@@ -46,7 +46,7 @@ $$
 \qquad \mathbf{r} = \mathbf{p}_P - \mathbf{p}_{\text{ref}}
 $$
 
-This is the whole phenomenon. The clubhead's angular velocity $\boldsymbol{\omega}$ near impact is large — a driver head is turning through hundreds of degrees in the last few hundredths of a second — and $\mathbf{r}$, the vector from the tracked reference point to the impact point, is a few centimetres. Their cross product is a velocity of order 1 m/s, added to a translation of order 50 m/s, and mostly at right angles to it. The result is a small rotation of the velocity direction: about a degree, sometimes three.
+This is the whole phenomenon. The clubhead's angular velocity $\boldsymbol{\omega}$ near impact is large — a driver head is turning through hundreds of degrees in the last few hundredths of a second — and $\mathbf{r}$, the vector from the tracked reference point to the impact point, is a few centimeters. Their cross product is a velocity of order 1 m/s, added to a translation of order 50 m/s, and mostly at right angles to it. The result is a small rotation of the velocity direction: about a degree, sometimes three.
 
 Take $\mathbf{r}$ of magnitude $d$ and $\boldsymbol{\omega}$ of magnitude $\omega$ perpendicular to it. The velocity difference has magnitude $\omega d$, so the angular difference in travel direction is
 
@@ -66,7 +66,7 @@ Three consequences follow immediately.
 
 **The effect does not scale with swing speed.** If a player who swings faster also closes the face proportionally faster, then $\omega = kv$ and $\Delta\theta = kd$, independent of $v$ entirely. What enlarges the offset is a face rotating quickly *relative to* the head's travel — a tight, late release that pulls the screw axis in toward the head. The dimensionally correct predictor is $\omega/v$, in units of inverse length, which is $1/R_{\text{ISA}}$.
 
-**It is smaller for irons.** The centre of gravity sits much closer to the face, so $d$ shrinks and the offset shrinks with it, roughly in proportion. The published vendor position that non-driver clubs are far less sensitive to reference-point choice is exactly this term.
+**It is smaller for irons.** The center of gravity sits much closer to the face, so $d$ shrinks and the offset shrinks with it, roughly in proportion. The published vendor position that non-driver clubs are far less sensitive to reference-point choice is exactly this term.
 
 **Attack angle moves too.** The same cross product has a vertical component. On a driver the arc term tilts the face-centre velocity upward relative to the geometric centre while the closure term contributes a smaller downward component; the net is of order a degree shallower at the face.
 

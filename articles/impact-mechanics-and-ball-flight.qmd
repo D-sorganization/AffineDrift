@@ -555,7 +555,7 @@ The USGA and R&A do not use a wind tunnel, and their reasons are on the record i
 
 > One of the problems associated with using a wind tunnel to obtain measurements of the aerodynamic lift and drag of a golf ball is that the wind tunnel provides a very limited height over which a golf ball may be dropped into a horizontal flow of air within the wind tunnel. [...] There are air flow disruptions from the mechanisms used to support a golf ball within a flow of air and there are dynamic imbalances of the balls. In addition, force measurement assumptions have to be made.
 
-Frank Thomas, the USGA's Technical Director when the range was built, puts it more bluntly: firing a spinning ball through still air *"has proven to produce far more accurate and reliable data than trying to support a spinning ball in a laminar stream of air in a wind tunnel."*
+Frank Thomas, the USGA's Technical Director when the range was built, puts it more bluntly. Firing a spinning ball through still air *"has proven to produce far more accurate and reliable data than trying to support a spinning ball in a laminar stream of air in a wind tunnel."*
 
 **The method.** A launcher fires the ball through a series of ballistic light screens over roughly 65 feet — nine vertical screens giving nine timed positions, plus angled screens for vertical position. A **Newton–Raphson search on an overdetermined system** then finds the values of $V_0$, $\theta_0$, $C_D$ and $C_L$ that best fit the measured coordinates. Launch conditions span 220–250 ft/s, 8–25°, and 20–60 rev/s.
 
@@ -574,9 +574,9 @@ This is the cleanest example of the inverse-fitting philosophy in V.3: rather th
 ::: {.callout-warning}
 ## Why Trajectory-Fitted and Wind-Tunnel Coefficients Disagree — And Why It Matters
 
-Inverse-fitted coefficients absorb **every** modelling error in the integrator that produced them: the spin-decay law, the air properties, the launch measurement. Ported into a different integrator with a different spin-decay law, **they are no longer guaranteed correct.**
+Inverse-fitted coefficients absorb **every** modeling error in the integrator that produced them: the spin-decay law, the air properties, the launch measurement. Ported into a different integrator with a different spin-decay law, **they are no longer guaranteed correct.**
 
-The tunnel side has its own problems: support hardware sits in the near wake that sets pressure drag; tunnel turbulence shifts the critical Reynolds number between facilities; a tunnel holds $\omega$ fixed and samples the $(Re, S)$ plane on a grid while a real trajectory traces a *curve* through it with $S$ sweeping upward.
+The tunnel side has its own problems. Support hardware sits in the near wake that sets pressure drag, and tunnel turbulence shifts the critical Reynolds number between facilities. A tunnel also holds $\omega$ fixed and samples the $(Re, S)$ plane on a grid, while a real trajectory traces a *curve* through it with $S$ sweeping upward.
 
 The practical consequence: any model-versus-model comparison that does not control for integrator and spin-decay mismatch will largely be measuring integrator mismatch. **We could not find a published head-to-head comparison that does control for it — and that absence is itself a finding.**
 :::
@@ -612,13 +612,13 @@ m\frac{d\mathbf{V}}{dt} = -\tfrac12\rho A C_D|\mathbf{V}|\mathbf{V} + \tfrac12\r
 \qquad \hat{\mathbf{n}} = \frac{\boldsymbol\omega\times\mathbf{V}}{|\boldsymbol\omega\times\mathbf{V}|}
 $$
 
-Two conventions bite here. Some authors write the Magnus term with an **unnormalised** $\boldsymbol\omega \times \mathbf{V}$, folding $|\omega||V|\sin\theta$ into the coefficient; mixing conventions gives badly wrong answers. And spin must be integrated as a **coupled state**, not applied as a post-hoc correction, since both $C_L$ and $C_D$ depend on $S(t)$.
+Two conventions bite here. Some authors write the Magnus term with an **unnormalized** $\boldsymbol\omega \times \mathbf{V}$, folding $|\omega||V|\sin\theta$ into the coefficient; mixing conventions gives badly wrong answers. And spin must be integrated as a **coupled state**, not applied as a post-hoc correction, since both $C_L$ and $C_D$ depend on $S(t)$.
 
 On atmospherics:
 
 **Humidity increases carry, slightly.** Humid air is *less* dense, because water's molar mass (18) is below air's (29). The "heavy humid air" of golf folklore has the sign backwards. The effect is small.
 
-**Temperature acts through three independent mechanisms** that are routinely conflated: air density (cold is denser, more drag), ball COR (a cold ball is stiffer with lower restitution), and kinematic viscosity shifting $Re$ by about 20% across 0–30 °C. They are additive and only the first is usually modelled.
+**Temperature acts through three independent mechanisms** that are routinely conflated: air density (cold is denser, more drag), ball COR (a cold ball is stiffer with lower restitution), and kinematic viscosity shifting $Re$ by about 20% across 0–30 °C. They are additive and only the first is usually modeled.
 
 **A headwind costs more than an equal tailwind gains.** Wind enters through relative velocity in *both* force terms, so the effect is quadratic — and a headwind additionally raises the spin ratio, lifting both $C_L$ and $C_D$.
 
@@ -634,11 +634,11 @@ Three independent estimates converge:
 | Lyu et al. 2018, from stated $C_D$ uncertainty | ≈ 10 yd per 0.01 (carry only) |
 | Direct numerical integration (ours: 71.5 m/s, 11°, 2,700 rpm) | ≈ 7.4 yd per 0.01 |
 
-Working numbers: **about 8 yards per 0.01 in $C_D$**, and about 3 yards per 0.01 in $C_L$ for carry (5 for total distance). Two asymmetries matter. **Drag is roughly twice as potent per unit coefficient as lift.** And the two errors propagate differently across player populations — the distance effect of a $C_D$ error correlates strongly with clubhead speed ($R^2 = 0.96$) while a $C_L$ error does not ($R^2 = 0.14$), so a lift-coefficient error shifts everybody by about the same amount while a drag error punishes fast swingers most.
+Working numbers: **about 8 yards per 0.01 in $C_D$**, and about 3 yards per 0.01 in $C_L$ for carry (5 for total distance). Two asymmetries matter. **Drag is roughly twice as potent per unit coefficient as lift.** The two errors also propagate differently across player populations. The distance effect of a $C_D$ error correlates strongly with clubhead speed ($R^2 = 0.96$) while a $C_L$ error does not ($R^2 = 0.14$), so a lift-coefficient error shifts everybody by about the same amount while a drag error punishes fast swingers most.
 
-Now apply that. The measured $C_D$ minimum in Bearman and Harvey's 1976 data is 0.23; a 2010 free-flight measurement on a production ball gives 0.17. That difference of 0.06 is worth **more than 40 yards** if the two datasets are naively swapped — though the comparison is badly confounded, since it is a 2.5× scale model from 1976 against a modern production ball, and the ball itself changed enormously in between.
+Now apply that. The measured $C_D$ minimum in Bearman and Harvey's 1976 data is 0.23; a 2010 free-flight measurement on a production ball gives 0.17. That difference of 0.06 is worth **more than 40 yards** if the two datasets are naively swapped. The comparison is badly confounded, though: it sets a 2.5× scale model from 1976 against a modern production ball, and the ball itself changed enormously in between.
 
-The honest scale of genuine ball-to-ball variation is better measured directly: 13 production balls fired at identical release conditions produced a **carry spread of 18 metres**, from an average coefficient difference of only 0.02. Cost was not correlated with distance — the two longest were a low-cost and a mid-cost ball.
+The honest scale of genuine ball-to-ball variation is better measured directly: 13 production balls fired at identical release conditions produced a **carry spread of 18 meters**, from an average coefficient difference of only 0.02. Cost was not correlated with distance — the two longest were a low-cost and a mid-cost ball.
 
 ::: {.callout-important}
 ## The Head-to-Head Comparison Does Not Exist
@@ -647,14 +647,14 @@ We searched for a published paper implementing two or more of the canonical mode
 
 What exists instead is each group critiquing the others' *method*, and enough overlapping coefficient data to infer that the disagreement is large. Given that a 0.01 coefficient difference is worth roughly eight yards, and published datasets differ by several times that, this is a conspicuous hole in a field with substantial commercial and regulatory stakes.
 
-The nearest thing to a validation benchmark is a 2023 study fitting 90,000 radar-measured shots, which found that abandoning the common spin-ratio-only parameterisation in favour of one retaining Reynolds dependence **reduced mean landing-position error by 28%** (6.95 to 4.75 yards). Its authors are appropriately careful: the improved coefficients may not be physical, and they recommend wind-tunnel work to check. But the direction of the result supports the Reynolds-dependent camp.
+The nearest thing to a validation benchmark is a 2023 study fitting 90,000 radar-measured shots, which found that abandoning the common spin-ratio-only parameterization in favor of one retaining Reynolds dependence **reduced mean landing-position error by 28%** (6.95 to 4.75 yards). Its authors are appropriately careful: the improved coefficients may not be physical, and they recommend wind-tunnel work to check. But the direction of the result supports the Reynolds-dependent camp.
 :::
 
 **One extrapolation hazard worth naming.** Models whose lift coefficient is fitted as monotonically increasing in spin ratio get the **sign of lift wrong** below about $Re = 7 \times 10^4$, where measurements show $C_L$ going negative — the reverse Magnus effect, reaching $C_L = -0.10$ to $-0.15$ depending on dimple geometry. This is not exotic: it is the regime a wedge shot or a headwind-shortened flight ends in. The USGA's own fitting procedure flags it, noting that when the regression quality drops "the ball probably exhibits negative lift." Any simulator integrating a monotonic $C_L(S)$ to the end of flight is out of range at the point where it matters for short-game accuracy.
 
 ### V.7 Orientation: The Asymmetry the Rules Exist to Police {#sec-orientation}
 
-A golf ball is not aerodynamically axisymmetric. It has a moulding parting line and a dimple pattern with discrete symmetry, so its coefficients depend on **how the pattern is oriented relative to the spin axis**. Two conventions matter: **poles-horizontal (PH)**, with the axis of rotation normal to the parting line, and **pole-over-pole (PP)**, orthogonal to it.
+A golf ball is not aerodynamically axisymmetric. It has a molding parting line and a dimple pattern with discrete symmetry, so its coefficients depend on **how the pattern is oriented relative to the spin axis**. Two conventions matter: **poles-horizontal (PH)**, with the axis of rotation normal to the parting line, and **pole-over-pole (PP)**, orthogonal to it.
 
 ::: {.callout-important}
 ## A Correction: We Said This Data Didn't Exist
@@ -680,7 +680,7 @@ The consequences in flight are tabulated too. At 168.4 mph and 3,500 rpm the pri
 
 Recall from §V.3c that a ball is non-conforming if the mean carry difference between the two orientations exceeds **4.0 yards**.
 
-Set that against the patent's measured **3.8-yard** difference for a prior-art ball, and the regulation stops looking arbitrary. The tolerance sits just above what an ordinary, non-optimised, conforming ball actually exhibits — tight enough to catch a ball engineered for asymmetry, loose enough not to fail the incumbent field on manufacturing reality.
+Set that against the patent's measured **3.8-yard** difference for a prior-art ball, and the regulation stops looking arbitrary. The tolerance sits just above what an ordinary, non-optimized, conforming ball actually exhibits — tight enough to catch a ball engineered for asymmetry, loose enough not to fail the incumbent field on manufacturing reality.
 
 The direction is consistent for icosahedral patterns, which the patents describe as tending to "fly slightly lower and longer in the poles-horizontal position." Note the 168.4 mph rows follow that; the lower-speed rows invert the distance ordering, so the effect is launch-condition dependent and not a fixed offset.
 :::
@@ -689,7 +689,7 @@ A second Acushnet filing, [US8550941B2](https://patents.google.com/patent/US8550
 
 Two things are worth noting about the state of this evidence. The original Polara patent — the ball that provoked the symmetry rule in the first place — contains **no measured data at all**, only qualitative claims. And the contrast with baseball is instructive: the seam-shifted wake has a published, peer-reviewed particle-image-velocimetry study. **The golf equivalent does not exist in the open literature.** For a sport whose governing bodies test every ball in two orientations as a matter of routine, that is a conspicuous asymmetry between what is measured and what is published.
 
-**On dimple depth**, the picture from Japanese wind-tunnel work is more interesting than "shallower is better." Shallow dimples give higher lift at speed — but below about 30 m/s a shallow-dimpled ball's lift **collapses**, because the boundary layer relaminarises as relative velocity falls. A real drive drops below 30 m/s just after apex, so the shallow ball loses exactly where it needs lift most. The published fix is to intersperse *tiny* dimples between the large shallow ones, which removes the low-speed collapse.
+**On dimple depth**, the picture from Japanese wind-tunnel work is more interesting than "shallower is better." Shallow dimples give higher lift at speed — but below about 30 m/s a shallow-dimpled ball's lift **collapses**, because the boundary layer relaminarizes as relative velocity falls. A real drive drops below 30 m/s just after apex, so the shallow ball loses exactly where it needs lift most. The published fix is to intersperse *tiny* dimples between the large shallow ones, which removes the low-speed collapse.
 
 ⚠️ Those two studies publish their coefficients **as figures only**, so the low-speed collapse is reported as direction and mechanism rather than numbers.
 
@@ -715,7 +715,7 @@ Closure rate — the speed at which the clubface rotates from open to closed thr
 ::: {.callout-tip icon=false}
 ## Run These Numbers Yourself
 
-The measurement side of this section — how far the impact point's path differs from the reported reference-point path for a given delivery — is treated separately in [The Reference-Point Problem in Club Delivery Data](reference-point-problem.qmd), with an interactive tool that computes it for any combination of speed, rotation rate, lie angle and strike location.
+The measurement side of this section is treated separately in [The Reference-Point Problem in Club Delivery Data](reference-point-problem.qmd): how far the impact point's path differs from the reported reference-point path for a given delivery. That page carries an interactive tool that computes the difference for any combination of speed, rotation rate, lie angle and strike location.
 :::
 
 ### VI.1 The Elegant Form: A Ratio of Two Lengths
@@ -732,12 +732,12 @@ $$
 \boxed{\;\Delta\theta \;\approx\; \frac{d}{R_{\text{ISA}}}\;}
 $$
 
-**The path difference between two points on the clubhead is the ratio of their separation to the distance from the instantaneous screw axis.** This is the cleanest statement available of the whole reference-point problem, and it says something useful: the offset is governed by *where the club is instantaneously rotating about*, which is a property of release technique, not of speed as such.
+**The path difference between two points on the clubhead is the ratio of their separation to the distance from the instantaneous screw axis.** This is the cleanest statement available of the whole reference-point problem: the offset is governed by *where the club is instantaneously rotating about*, which is a property of release technique, not of speed as such.
 
 ::: {.callout-note}
 ## A Consistency Check
 
-TrackMan reports roughly 3° between the CG path and the face-centre path for a driver. With $d \approx 40$ mm that implies $R_{\text{ISA}} \approx 0.77$ m. Pure rotation about the hands would put $R \approx 1.6$ m and give only $\approx 1.4°$. So the instantaneous axis sits at about half the hub distance — the closure rotation pulls it in, and contributes roughly as much as the swing arc does.
+TrackMan reports roughly 3° between the CG path and the face-center path for a driver. With $d \approx 40$ mm that implies $R_{\text{ISA}} \approx 0.77$ m. Pure rotation about the hands would put $R \approx 1.6$ m and give only $\approx 1.4°$. So the instantaneous axis sits at about half the hub distance — the closure rotation pulls it in, and contributes roughly as much as the swing arc does.
 :::
 
 ### VI.2 Does Swing Speed Amplify the Effect?
@@ -766,9 +766,9 @@ Taking $d = 40$ mm and a driver at 50 m/s (112 mph):
 | 3000 °/s | 52.4 | 2.4° | 0.95 m |
 | 4000 °/s | 69.8 | 3.2° | 0.72 m |
 
-For irons the centre of gravity sits much closer to the face, so $d$ and therefore the offset both shrink — consistent with the vendor statement that non-drivers are far less sensitive to the choice of reference point.
+For irons the center of gravity sits much closer to the face, so $d$ and therefore the offset both shrink — consistent with the vendor statement that non-drivers are far less sensitive to the choice of reference point.
 
-The same $\boldsymbol{\omega}\times\mathbf{r}$ acts vertically. The arc contribution tilts the face-centre velocity **upward** relative to the CG (the face centre sits ahead of the CG on an arc that is turning up through its low point), while closure about a shaft leaning toward the golfer contributes a smaller downward term. The net for a driver is of order **0.7–0.8° shallower** attack angle at the face centre than at the geometric centre.
+The same $\boldsymbol{\omega}\times\mathbf{r}$ acts vertically. The arc contribution tilts the face-center velocity **upward** relative to the CG (the face center sits ahead of the CG on an arc that is turning up through its low point), while closure about a shaft leaning toward the golfer contributes a smaller downward term. The net for a driver is of order **0.7–0.8° shallower** attack angle at the face center than at the geometric center.
 
 ### VI.4 The Face Keeps Closing During Contact
 
@@ -802,7 +802,7 @@ so closure rate *is* the gain from timing error to face-angle error:
 | 3000 °/s | 3.0° | 15° |
 | 4000 °/s | 4.0° | 20° |
 
-Since face angle carries roughly three quarters of horizontal launch direction on a driver (see @sec-weighting — *not* the 85% usually quoted), and each degree of face-to-path tilts the spin axis by about four degrees on a driver, this is by a wide margin the largest consequence of closure rate. A high-closure release is a **high-gain system**: it will square the face, and it converts small timing errors into large directional ones.
+Face angle carries roughly three quarters of horizontal launch direction on a driver (see @sec-weighting — *not* the 85% usually quoted), and each degree of face-to-path tilts the spin axis by about four degrees on a driver. This is by a wide margin the largest consequence of closure rate. A high-closure release is a **high-gain system**: it will square the face, and it converts small timing errors into large directional ones.
 
 An independent check on the magnitude comes from the launch-monitor validation literature, where the same rate appears as a *measurement* problem rather than a coaching one. [Leach et al. (2017)](https://doi.org/10.1016/j.measurement.2017.08.009) note that **"the face angle of a driver closes at a rate of 2.9°/ms immediately prior to impact"** — 2,900 °/s, the same order as the clubhead closing velocities in VI.8, arrived at from a completely different direction. Their concern is that *"the point in time at which the measurement is taken will significantly affect the output"*, and only one vendor specifies that instant (see the [Vendor Reference](launch-monitor-vendor-reference.qmd)). The player's timing problem and the instrument's timing problem are the same derivative.
 
@@ -829,7 +829,7 @@ Sasho MacKenzie reaches the same conclusion independently: *"there is currently 
 
 The timing arithmetic is not wrong — 1° of face angle really is about half a millisecond at 2,100 °/s, and face angle really does dominate launch direction. What is wrong is the assumption that timing precision is a fixed quantity a player brings to whatever technique they use.
 
-**Players self-organise their timing precision around their own release.** A fast-closing action is a high-gain system, and the golfers who use one have evidently learned to drive it with correspondingly tighter timing — or they would not be on tour. The gain and the precision co-adapt, and what survives is the product.
+**Players self-organize their timing precision around their own release.** A fast-closing action is a high-gain system, and the golfers who use one have evidently learned to drive it with correspondingly tighter timing — or they would not be on tour. The gain and the precision co-adapt, and what survives is the product.
 
 This is a genuine and instructive failure of a physically correct argument. The mechanism is real; the population-level prediction it implies is not observed. Any treatment that presents the sensitivity table above *without* this section is presenting half of a refuted argument.
 :::
