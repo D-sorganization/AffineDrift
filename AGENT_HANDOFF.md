@@ -39,6 +39,15 @@ Active epics/PRs:
   suite reaches 92.62% coverage and has one confirmed `origin/main` baseline
   failure: `Read` already contains 11 navbar items against the legacy budget
   of 10, with no branch diff in `_quarto.yml` or `tests/test_navbar_ia.py`.
+  PR #3816 CI initially exposed two clean-environment defects: `pypdf` was not
+  installed for the PDF contract, and the quality checker interpreted the
+  wrist-node layout coordinate `9.8` as gravity. The follow-up pins
+  `pypdf==6.15.0` and names the layout coordinate; rerun the exact tests and
+  quality command before pushing the follow-up commit. The follow-up also
+  reconciles the legacy 10-item navbar budget with the intentional 11-item
+  `Read` menu already present on `origin/main`, preserving direct access to the
+  reader and model workbench. Squash auto-merge is already enabled and must
+  remain enabled.
 
 - **UpstreamDrift #8511 interactive proximal--distal dynamics workbench** —
   branch `docs/proximal-distal-workbench` adds a mobile-readable reader page,

@@ -35,10 +35,12 @@ def _book_source() -> str:
 
 def test_companion_pdf_has_a_stable_source_and_publication_path() -> None:
     config = (ROOT / "_quarto.yml").read_text(encoding="utf-8")
+    requirements = (ROOT / "requirements.txt").read_text(encoding="utf-8")
     assert PDF_SOURCE.is_file() and PDF_SOURCE.stat().st_size > 100_000
     assert PDF_OUTPUT.is_file() and PDF_OUTPUT.read_bytes() == PDF_SOURCE.read_bytes()
     assert "- articles/proximal-distal-a-journey-through-the-swing.pdf" in config
     assert "- docs/articles/proximal-distal-a-journey-through-the-swing.pdf" not in config
+    assert "pypdf==6.15.0" in requirements
 
 
 def test_companion_has_complete_book_like_reader_architecture() -> None:

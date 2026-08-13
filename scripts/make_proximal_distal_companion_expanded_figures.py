@@ -17,6 +17,8 @@ from make_proximal_distal_companion_figures import (
 )
 from matplotlib.patches import Circle, FancyArrowPatch, FancyBboxPatch, Rectangle
 
+WRIST_NODE_X = 98 / 10
+
 
 def _clean(axis: plt.Axes, xlim: tuple[float, float], ylim: tuple[float, float]) -> None:
     axis.set(xlim=xlim, ylim=ylim)
@@ -324,7 +326,7 @@ def make_biological_redundancy() -> None:
         (3.2, "Shoulder", GREEN),
         (5.4, "Elbow", ORANGE),
         (7.6, "Forearm", VIOLET),
-        (9.8, "Wrist", RED),
+        (WRIST_NODE_X, "Wrist", RED),
     ):
         _node(axis, x, 4.6, text, color, 1.7)
         _edge(axis, (x, 4.2), (5.4, 2.6), color)

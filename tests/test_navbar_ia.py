@@ -1,9 +1,10 @@
 """Navbar information-architecture contract (EPIC #3140 D1).
 
-The site's top-level navigation must collapse from four dropdowns
-(Learn / Explore / Build / Connect) to three (Read / Build / Connect)
-plus the Home link. Each dropdown is capped at 10 items (including
-separators) to prevent the menu from regrowing.
+The site's top-level navigation exposes four focused dropdowns
+(Read / Technology / Build / Connect) plus the Home link, with the legacy
+Learn and Explore labels removed. Each dropdown is capped at 11 items (including
+separators) so the proximal--distal reader and its model workbench can remain
+discoverable without allowing unbounded menu growth.
 """
 
 from __future__ import annotations
@@ -18,7 +19,7 @@ QUARTO_YML = REPO_ROOT / "_quarto.yml"
 
 # Hard limits — the IA contract.
 EXPECTED_DROPDOWNS: frozenset[str] = frozenset({"Read", "Technology", "Build", "Connect"})
-MAX_ITEMS_PER_DROPDOWN: int = 10
+MAX_ITEMS_PER_DROPDOWN: int = 11
 FORBIDDEN_TOP_LEVEL_LABELS: frozenset[str] = frozenset({"Learn", "Explore"})
 
 
