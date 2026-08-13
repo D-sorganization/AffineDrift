@@ -350,6 +350,201 @@ valuable information. The phrase may have been a useful personal cue without
 being a literal mechanism. Cues and mechanisms can coexist, but they should not
 borrow each other's evidence.
 
+### A Full Conversation From First Impression to Testable Claim
+
+The framework becomes easier to use when we slow down and follow one claim all
+the way through it. Imagine that a golfer watches a slow-motion swing and says,
+“The arms stopped, so their energy must have gone into the club.” That sentence
+feels persuasive because two visible events occur together: the hands appear to
+slow and the clubhead appears to speed up. It is a reasonable observation. It is
+not yet a complete mechanical explanation.
+
+The curious golfer should begin by saying what was actually seen. Which point
+on the hands was tracked? Was “speed” a linear speed in the laboratory frame,
+an angular speed about the shoulder, or an angular speed relative to the club?
+Did the apparent slowing happen before, during, or after the clubhead speed-up?
+How much did the club's direction change? A camera view can make a point look
+slow because it moves partly toward the camera. Even excellent motion capture
+needs a coordinate convention before “slowing” has one stable meaning.
+
+Now the skeptical reviewer asks what “their energy” means. The arms have
+translational kinetic energy, rotational kinetic energy, gravitational
+potential energy, elastic energy in tissues, and interactions with the torso,
+hands, and club. Those accounts are not little colored parcels that can be
+watched crossing a joint. A segment can lose kinetic energy while muscles add
+positive work, because an even larger amount leaves through joint reactions. It
+can also gain kinetic energy while its net joint moment does negative power,
+because other links and constraints contribute more. The correct ledger needs
+the declared system boundary and every power crossing it.
+
+For a first model, use the planar double pendulum. It is small enough that every
+term can be inspected. Reproduce the observed arm and club state at one instant,
+then calculate the full acceleration. Next set the selected arm or wrist moment
+to zero without changing the state and calculate again. The difference is the
+instantaneous influence of that intervention under the model. Repeat the
+comparison over the interval and integrate power if the question concerns work.
+This does not prove that a human chose the modeled control, but it turns “the
+arms gave energy to the club” into a calculation that can be checked.
+
+The first negative control is equally important. Keep the measured motion but
+change the coordinate representation, or calculate the energy balance about a
+different convenient point, and verify that physical totals transform as they
+should. Refine the timestep and solver tolerance. Reverse a moment arm whose
+sign is known. Remove gravity. If an alleged transfer appears only at one
+timestep or changes sign under an equivalent coordinate convention, the result
+is an implementation artifact rather than a robust mechanism.
+
+Suppose the double-pendulum result survives. The claim has earned one rung, not
+the entire ladder. Add the two-hand constraint model. The club now receives a
+resultant force, a force-generated couple from the separation of the hands, and
+any directly represented grip moment. Ask whether the late negative couple is
+still present and whether it closes the club's moment balance. Collapse the hand
+points together as a geometric negative control. The force-generated couple
+must vanish when its lever arm vanishes. If it does not, either the calculation
+or the interpretation is wrong.
+
+Next replace the rigid club with a flexible shaft. Some power can now enter
+strain energy rather than immediate rigid-body motion. A negative handle moment
+might reduce club angular speed in one short interval while loading the shaft
+for a later return. It might instead remove energy that damping never returns.
+Only a strain-energy and dissipation ledger can distinguish those stories. The
+casual phrase “the shaft kicked” becomes several measurable questions: when did
+the shaft store energy, how much returned before impact, in which bending or
+torsional mode, and how sensitive was the result to stiffness and damping?
+
+Then let the base move. Prescribing the shoulder path can hide the reaction
+loads and work needed to create it. A moving-base model asks whether the same
+distal effect survives when the torso and support are allowed to respond.
+Finally move into three dimensions, where a moment that looks negative about
+one planar axis may coexist with positive work about another axis. At every
+rung, the reviewer asks the same question: did the mechanism survive, change
+meaning, or disappear when a previously hidden degree of freedom became
+available?
+
+Human evidence enters after the model has produced distinct predictions. If
+two candidate strategies generate nearly identical club motion but different
+bilateral grip couples, measure the grip wrenches. If they predict different
+shaft histories, measure strain. If they predict a directionally persistent
+arm channel and a reversing wrist channel, estimate joint moments with the
+internal hand wrench constrained rather than guessed. EMG can help establish
+activation timing, but it cannot by itself supply the missing hand force or
+joint moment. The measurement package should be chosen because it separates
+the explanations, not because the instrument happens to be available.
+
+At this point the original sentence can be rewritten carefully: “During this
+interval, the measured hand point slowed in the laboratory frame while the
+clubhead accelerated. In the declared linked-segment model, arm-club constraint
+reactions and the measured net grip wrench produced positive power on the club,
+while the modeled arm system lost kinetic energy. The energy balance closed
+within the stated residual, and the result survived the listed timestep,
+coordinate, and model-fidelity checks.” That sentence is longer than the
+slogan, but every phrase earns a specific piece of evidence.
+
+The conclusion can still fail. The measured internal wrench may contradict the
+inverse-dynamics allocation. Shaft strain may show that energy returned after
+the useful impact window. A participant may create the same outcome with a
+different sequence. The result may vanish when shoulder motion is no longer
+prescribed. Those are not embarrassments. They identify exactly where a simple
+story stopped working and where a better one must begin.
+
+### A Full Conversation About “Keeping the System Loaded”
+
+Consider a second familiar claim: “Keep tension in the system through the
+transition so there is no slack.” The curious golfer may be describing a very
+real sensation of connectedness. Perhaps grip pressure remains steady, the arms
+feel organized against the torso, and the club changes direction without a
+little uncontrolled wobble. That sensation is valuable as a report. It still
+contains several possible mechanisms.
+
+The reviewer replaces “tension” with candidate measurements. Is there a
+nonzero resultant grip force, a nonzero differential hand couple, forearm
+muscle activation, scapular-muscle activation, shaft strain, tendon force, or
+high tangent stiffness about a joint? These variables can move independently.
+Two opposing muscle groups can raise stiffness while their net joint moment
+stays near zero. Two hand forces can create a large couple with a small
+resultant force. A shaft can remain strained while the hands briefly reduce
+their active moment. “Loaded” therefore needs both a location and a quantity.
+
+Now compare the two preparation extremes developed earlier. In the first,
+arm-and-shoulder channels create more of the backswing push--pull tendency while
+the wrists resist and regulate the club. The broad channel directions persist
+into early downswing. In the second, wrist moments create more of the backswing
+turning tendency while the arms resist; around transition the arms take over as
+the positive driver and the wrists oppose release. The visible club path can be
+matched even though the internal allocation and history differ.
+
+In the declared dead-zone model, persistent direction has an advantage because
+it does not cross the modeled unloaded zone. Complete role reversal must travel
+through that zone before torque rebuilds. This is a useful conditional result,
+not proof that a human wrist contains backlash. Set the dead zone to zero and
+the advantage largely disappears. That negative control tells us precisely
+what produced the simulated difference.
+
+A biological system can preserve readiness during a net reversal without
+literal continuous torque. Antagonistic preactivation may keep short-range
+stiffness high. Tendon or shaft strain may preserve a loaded elastic state.
+Contact forces may remain nonzero while their moment about a selected axis
+changes sign. Conversely, a person may report continuous effort while the
+task-relevant force mode briefly approaches zero. Feel and mechanics may be
+related, but their mapping must be calibrated rather than assumed.
+
+The two strategies also have costs that a peak-speed-only model will miss.
+Persistent co-contraction can raise joint compression, metabolic cost, fatigue,
+and sensitivity to unwanted high-frequency loading. A role reversal can use
+different muscle groups, exploit changing leverage, and permit useful
+reorientation. Some compliance can store energy, absorb disturbances, and
+protect tissue. Too much compliance or a true contact gap can delay force rise.
+There is no reason to expect one point on this tradeoff surface to be best for
+every participant and every objective.
+
+A decisive experiment therefore matches the visible task while manipulating
+allocation. Measure bilateral grip wrenches, grip pressure, wrist and shaft
+kinematics, shaft strain, transition-aligned force rise, and suitable forearm
+and shoulder-girdle EMG. Estimate tangent stiffness with an ethical bounded
+perturbation or system-identification method. Compare not only clubhead speed
+but face and path variability, peak joint demand, repeatability, and response
+to a small disturbance. Hold participants out when selecting a strategy so the
+test does not turn a group average into a universal prescription.
+
+Interpret the outcomes in stages. If the instructions do not change measured
+allocation, the manipulation failed. If allocation changes but the predicted
+gap or stiffness difference does not, the dead-zone explanation weakens. If
+the mediator changes but performance does not, the mechanism may be real yet
+unimportant for the task. If performance changes without the predicted
+mediator, another pathway deserves attention. If participants split into
+repeatable subgroups, the scientifically useful result may be a conditional
+map rather than a winner.
+
+The careful practical translation is modest: a golfer and coach can distinguish
+continuous engagement from maximum effort and can ask which measurable mode a
+cue is intended to change. They should not infer that more tension is always
+better, that wrists should be passive, or that one scapular action uniquely
+creates the club couple. The framework earns better questions and experiments;
+it does not yet earn a universal body instruction.
+
+### How to Carry the Method Into a New Question
+
+When a new swing explanation appears, first write the observation without a
+causal verb. Next define the system boundary, coordinate frame, interval, and
+quantity. Draw the smallest model that contains the proposed mechanism and a
+negative control capable of removing it. Record the state before applying the
+counterfactual so that history is not silently reset. Close force, moment,
+power, and energy balances at the level required by the claim.
+
+Then name at least one serious alternative. Increase model fidelity only where
+that alternative exploits something the smaller model omitted. Derive
+predictions that differ in measurable variables, including an internal variable
+when external motion is not identifying. Specify the residual, sensitivity,
+and participant-held-out criteria before looking for a preferred result.
+
+Finally, translate the result twice. The scientific translation states the
+model, intervention, observable, uncertainty, and falsifier. The ordinary
+translation uses a concrete picture and says where that picture breaks. If the
+two translations disagree, revise them until neither borrows certainty from
+the other. That repeated movement between intuition and audit is how an
+accessible explanation can remain genuinely scientific rather than merely
+simple.
+
 ### Chapter Checkpoint
 
 The curious golfer asks questions that matter. The skeptical reviewer makes
