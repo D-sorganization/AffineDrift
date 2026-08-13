@@ -95,7 +95,6 @@ AffineDrift/
 - [API Reference](docs/api-reference.md): public API for all `src/` modules.
 - [Testing Guide](docs/development/testing-guide.md): test patterns, fixtures, and conventions.
 - [Code Style Guide](docs/development/code-style-guide.md): Python, JavaScript, CSS, and Quarto standards.
-- [Writing Style Guide](docs/development/writing-style-guide.md): prose standards for every rendered page — sentence economy, claim discipline, terminology, and the CI constraints on prose edits.
 - [Git Workflow Guide](docs/development/git-workflow-guide.md): branch strategy, commits, and PR process.
 - [Performance Tuning Guide](docs/development/performance-tuning-guide.md): profiling and NumPy optimization.
 - [Security Guidelines](docs/development/security-guidelines.md): secrets, input validation, SAST.

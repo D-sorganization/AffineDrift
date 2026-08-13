@@ -24,7 +24,7 @@ The point is worth stating carefully because the models themselves are highly co
 
 And yet, despite all this complexity, the stated model class still gives a clean bookkeeping separation between passive dynamics and applied inputs. The separation is not a statement about every physical effect in a real mechanism; it is a structural property of the equations once the coordinates, constraints, and actuator model have been specified.
 
-What is more, this clean separation survives across several standard derivation languages. One can write the equations using energy methods, force balance on individual bodies, spatial screws, task-space coordinates, or differential-geometric notation. The notation and assumptions differ, but you can still recover the same bookkeeping split between passive dynamics and applied inputs within the stated model class.
+What is more, this clean separation survives across several standard derivation languages. One can write the equations using energy methods, force balance on individual bodies, spatial screws, task-space coordinates, or differential-geometric notation. The notation and assumptions differ, but the same bookkeeping split between passive dynamics and applied inputs can still be recovered within the stated model class.
 
 This article is about that separation---what it is, why it works, how to compute it, and what it reveals about the structure of mechanical systems.
 
@@ -58,7 +58,7 @@ The current carries them. That is all. The kayaker moves exactly as the river di
 
 We call this the **Zero Torque Counterfactual**, or **ZTCF**: what the system would do, at this instant, with zero input. It is a snapshot---a photograph of the physics at one moment---not a prediction of the future. One moment later the kayaker has drifted to a new spot with a different current, and the answer changes.
 
-But right now, right here, the ZTCF tells you exactly what the physics is contributing. And the difference between what is happening and the ZTCF tells you exactly what the controller is contributing.
+But right now, right here, the ZTCF tells you exactly what the physics is contributing. And the difference between what is actually happening and the ZTCF tells you exactly what the controller is contributing.
 
 ## Three Principles
 
@@ -94,12 +94,12 @@ The equations in this article are classical. The Euler--Lagrange equations, Newt
 
 ## How This Article Is Organized
 
-We build the ideas *by concept*, not by formalism. First, we establish the vocabulary of motion in everyday language (@sec-core-concepts). Then we introduce our running example---a double pendulum---so we have something concrete to compute with (@sec-double-pendulum). Next, we develop the drift--control decomposition thoroughly in one framework (@sec-drift-control), and then show what happens when the system is constrained (@sec-constrained). With the core ideas in place, we show how they appear in four other standard frameworks (@sec-other-frameworks) and compare the frameworks side by side (@sec-cross-formalism). The closing sections uncover what the compact equations hide (@sec-hidden-loads), connect to symmetry and conservation (@sec-symmetry), and end with practical guidance (@sec-practical).
+We build the ideas *by concept*, not by formalism. First, we establish the vocabulary of motion in everyday language (@sec-core-concepts). Then we introduce our running example---a double pendulum---so we have something concrete to compute with (@sec-double-pendulum). Next, we develop the drift--control decomposition thoroughly in one framework (@sec-drift-control), and then show what happens when the system is constrained (@sec-constrained). With the core ideas in place, we show how they appear in four other standard frameworks (@sec-other-frameworks), compare the frameworks side by side (@sec-cross-formalism), uncover what the compact equations hide (@sec-hidden-loads), connect to symmetry and conservation (@sec-symmetry), and close with practical guidance (@sec-practical).
 
 
 # The Language of Motion {#sec-core-concepts}
 
-Before we write a single equation, let's make sure we share a common language. This article explains every technical term in plain words first. The math is a tool for making the ideas precise---but the ideas come first.
+Before we write a single equation, let's make sure we share a common language. Every technical term in this article will be explained in plain words first. The math is a tool for making the ideas precise---but the ideas come first.
 
 ## Configuration: Where Is Everything?
 
@@ -135,7 +135,7 @@ This is a deep fact. In Newtonian mechanics, the future is completely determined
 
 In the world of generalized coordinates, a **generalized force** (or **generalized effort**) is whatever causes a generalized coordinate to accelerate. For a rotational joint, the generalized force is a torque. For a translational joint, it is a linear force. We use $\tau$ for the vector of all generalized efforts.
 
-Three kinds of pushes act on any mechanical system:
+There are really three kinds of pushes acting on any mechanical system:
 
 **Control effort** ($\tau$ or $u$): the forces you apply on purpose, through motors, actuators, or muscles. These are the paddle strokes---the things you choose.
 
@@ -145,7 +145,7 @@ Three kinds of pushes act on any mechanical system:
 
 ## The Mass Matrix: How Heavy Does It Feel?
 
-Here is a question that sounds simple but runs deep: "If I push on this joint, how much does it accelerate?"
+Here is a question that sounds simple but is actually deep: "If I push on this joint, how much does it accelerate?"
 
 For a single particle, the answer is just $a = F/m$---divide the force by the mass. But for a coupled multibody system, the answer depends on *which direction* you push, *what the current configuration is*, and *how the masses of all the other bodies couple to this joint*.
 
@@ -310,7 +310,7 @@ Notice that the input gain depends on the configuration. The same motor torque p
 
 ## The Zero Torque Counterfactual (ZTCF)
 
-The ZTCF is the drift evaluated at a specific moment in time:
+The ZTCF is simply the drift evaluated at a specific moment in time:
 
 $$
 \ddot{q}_{\text{ZTCF},t} \coloneqq -M^{-1}\bigl(q(t)\bigr)\bigl[C\bigl(q(t),\dot{q}(t)\bigr)\dot{q}(t) + g\bigl(q(t)\bigr)\bigr]
@@ -334,7 +334,7 @@ $$
 \dot{q}(t) = \dot{q}(t_0) + \int_{t_0}^{t} \ddot{q}(\sigma)\,d\sigma
 $$
 
-So what appears as "drift" right now is the accumulated legacy of all past inputs, all past gravitational pulls, all past Coriolis interactions.
+So what appears as "drift" right now is really the accumulated legacy of all past inputs, all past gravitational pulls, all past Coriolis interactions.
 
 Think of a savings account. The interest earned this month depends on the current balance, not on how the balance was accumulated. A high balance earns high interest whether it came from salary, inheritance, or a lottery win. Similarly, a high velocity produces large drift accelerations regardless of whether that velocity came from motors, gravity, or a push.
 
@@ -456,11 +456,11 @@ $$
 J_c(q)\ddot{q} + \dot{J}_c(q,\dot{q})\dot{q} = 0
 $$ {#eq-cel-constraint}
 
-The new term $J_c^T\lambda$ is the **generalized constraint force**---the guardrail's push, expressed in generalized coordinates. The multiplier $\lambda$ tells you the *magnitude* of the push. You do not prescribe it---the requirement that the constraint equation hold determines it. The constraint force is *whatever it needs to be* to keep the system on the constraint surface.
+The new term $J_c^T\lambda$ is the **generalized constraint force**---the guardrail's push, expressed in generalized coordinates. The multiplier $\lambda$ tells you the *magnitude* of the push. It is not prescribed---it is determined by requiring that the constraint equation is satisfied. The constraint force is *whatever it needs to be* to keep the system on the constraint surface.
 
 ## The Drift--Control Split Survives
 
-Here is the important point: the drift--control decomposition **still works** when constraints are present. It operates within the constrained dynamics.
+Here is the important point: the drift--control decomposition **still works** when constraints are present. It simply operates within the constrained dynamics.
 
 Setting $\tau = 0$, the **constrained drift** is:
 
@@ -526,7 +526,7 @@ The constraint extracts energy from some coordinates and injects it into others,
 
 This is the mechanism behind whip-crack dynamics, where kinetic energy migrates from the arm (proximal segments) to the tip (distal segments) through the joint reaction forces. The constraint forces can be enormous---many times larger than any applied torque---and they are invisible in the compact generalized-coordinate formulation.
 
-**A note on interpretation:** Per-coordinate power decompositions are useful diagnostic tools, but they depend on the choice of generalized coordinates. Only the total power balance is coordinate-invariant. Treat these decompositions as bookkeeping aids, not as absolute physical partitions.
+**A note on interpretation:** Per-coordinate power decompositions are useful diagnostic tools, but they depend on the choice of generalized coordinates. Only the total power balance is coordinate-invariant. These decompositions should be treated as bookkeeping aids, not as absolute physical partitions.
 
 ## Double-Pendulum: Endpoint on a Circle
 
@@ -657,7 +657,7 @@ The wrench balance for each body involves the **coadjoint map** $\text{ad}_{\mat
 
 ### Drift--Control in Screw Coordinates
 
-The ZTCF is evaluated exactly as before: freeze the state and set actuation to zero. The resulting joint-level drift acceleration is the same number as from Euler--Lagrange; the screw formulation expresses the spatial accelerations and wrenches in its own language.
+The ZTCF is evaluated exactly as before: freeze the state and set actuation to zero. The resulting joint-level drift acceleration is the same number as from Euler--Lagrange; the screw formulation simply expresses the spatial accelerations and wrenches in its own language.
 
 ### Double-Pendulum Instance
 
@@ -685,7 +685,7 @@ The space Jacobian is $J_s = [S_1 \;\; \text{Ad}_{e^{\hat{S}_1\theta_1}}S_2]$, w
 
 ### What Operational-Space Analysis Uniquely Reveals
 
-Every framework we have seen so far reasons about *joints*. Operational-space analysis asks a different question entirely: **"What does the world look like from the endpoint's perspective?"**
+Every framework we have seen so far thinks in terms of *joints*. Operational-space analysis asks a different question entirely: **"What does the world look like from the endpoint's perspective?"**
 
 When you drive a car, you think about where the car is going---speed, heading, lane position---not about individual tire rotations and engine RPM. Operational-space analysis is the driver's perspective: it translates between "what I want the task point to do" and "what the joints need to do to make that happen."
 
@@ -703,7 +703,7 @@ where:
 - $\mu(q, \dot{q}) = \Lambda(JM^{-1}C\dot{q} - \dot{J}\dot{q})$ is the task-space Coriolis/centripetal term.
 - $p(q) = \Lambda J M^{-1}g$ is the task-space gravity term.
 
-**An important subtlety:** We write $\Lambda$, $\mu$, and $p$ as if they are task-space primitives, but they are *induced from joint-space dynamics* through the Jacobian and mass matrix. They depend on the full joint configuration $q$, not just the task coordinates.
+**An important subtlety:** We write $\Lambda$, $\mu$, and $p$ as if they are task-space primitives, but they are actually *induced from joint-space dynamics* through the Jacobian and mass matrix. They depend on the full joint configuration $q$, not just the task coordinates.
 
 The mapping between task-space forces and joint torques follows virtual work: $\tau = J^T F$. In redundant systems (more joints than task dimensions), the reverse---going from joint torques to task-space effects---is not unique, because multiple joint-torque combinations can produce the same task-space force while differing in what they do in the null space.
 
@@ -994,4 +994,4 @@ And we saw that the underlying physics does not care which mathematical language
 
 The double pendulum---two links, two joints, two masses---was rich enough to illustrate every one of these ideas. The same principles extend to larger rigid-body models, including systems with many bodies, closed kinematic loops, and complex constraint topologies, provided the assumptions behind the mass matrix, constraints, and input map remain valid. The equations get bigger, but the structural question is the same.
 
-The river analogy is useful only if you keep its limits visible: current and paddling separate cleanly in the model, the train follows the modeled track, and the coordinate map should not change the physical prediction it represents.
+The river analogy is useful only if its limits are kept visible: current and paddling separate cleanly in the model, the train follows the modeled track, and the coordinate map should not change the physical prediction it represents.

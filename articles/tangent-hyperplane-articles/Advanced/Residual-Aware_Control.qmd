@@ -486,7 +486,7 @@ def adaptive_timestep_ddp(
 ::: {.callout-warning}
 ## Status of the Adaptive DDP Claim
 
-This article does **not** prove a new convergence theorem for Adaptive DDP. The intended claim is narrower. Suppose the residual estimator is valid, the regridded discretization stays inside the regime covered by standard DDP assumptions, and the solver tolerances are handled carefully. Under those conditions one expects behavior similar to standard DDP on a better-chosen mesh. Establishing that result rigorously would require a dedicated proof that is outside the scope of this article.
+This article does **not** prove a new convergence theorem for Adaptive DDP. The intended claim is narrower: if the residual estimator is valid, the regridded discretization remains inside the regime covered by standard DDP assumptions, and the solver tolerances are handled carefully, one expects behavior similar to standard DDP on a better-chosen mesh. Establishing that result rigorously would require a dedicated proof that is outside the scope of this article.
 :::
 
 **Practical reading:** The adaptive rule should be treated as an algorithmic proposal motivated by residual control, not as a proved convergence result in its current form.
@@ -669,7 +669,7 @@ def residual_tube_mpc(
 ::: {.callout-note}
 ## Standard Tube-MPC Logic With a Residual-Derived Radius
 
-Suppose the nominal trajectory satisfies the tightened constraints, and the feedback controller does in fact maintain $\|x(t) - \bar{x}(t)\| \leq \delta_{\max}(t)$. The usual tube-MPC containment argument then implies that the true trajectory remains inside the original constraint set $x(t) \in \mathcal{X}$.
+If the nominal trajectory satisfies tightened constraints and $\|x(t) - \bar{x}(t)\| \leq \delta_{\max}(t)$ is in fact maintained by the feedback controller, then the usual tube-MPC containment argument implies that the true trajectory remains inside the original constraint set $x(t) \in \mathcal{X}$.
 :::
 
 **What is new here:** not the logic of tube MPC itself, but the proposal to size $\delta_{\max}(t)$ from residual-derived quantities. The burden of proof therefore shifts to whether those residual-derived bounds are valid for the system and operating region at hand.
@@ -848,7 +848,7 @@ This is a **discrete jump**, not smooth dynamics → linearization completely fa
 | Fall rate | 15% (3/20 trials) | 5% (1/20 trials) |
 | Energy per step | 12.5 J | 11.2 J |
 
-**Interpretation:** In this simulated controller-switching example, residual monitoring acts as an early warning signal for departures from the nominal smooth model. That signal can then trigger a different control mode. The table is scenario-specific and should not be read as a benchmark guarantee.
+**Interpretation:** In this simulated controller-switching example, residual monitoring acts as an early warning signal for departures from the nominal smooth model and can be used to trigger a different control mode. The table is scenario-specific and should not be read as a benchmark guarantee.
 
 ---
 
@@ -1371,7 +1371,7 @@ Speedup vs fine:      2.45×
 **Don't use when:**
 
 ❌ System is nearly linear everywhere (residuals always small → overhead not worth it)
-❌ You have **unlimited computation** and can afford fine uniform discretization
+❌ You have **unlimited computation** and can afford very fine uniform discretization
 ❌ Dynamics are **non-smooth** (impacts, switches) → use hybrid methods instead
 
 ### Choosing $\epsilon_r$ (Residual Tolerance)
@@ -1431,7 +1431,7 @@ def diagnose_residual_adaptive_controller(x_traj, u_traj, t_traj, dynamics, para
 
 ## Summary
 
-This article developed a framework for **residual-aware control**, transforming linearization residuals from "errors to minimize" into "signals to exploit."
+This article developed a comprehensive framework for **residual-aware control**, transforming linearization residuals from "errors to minimize" into "signals to exploit."
 
 **Key results:**
 
@@ -1440,7 +1440,7 @@ This article developed a framework for **residual-aware control**, transforming 
    - Curvature-dependent timestep DDP (Algorithm 2.1)
    - Residual-triggered LQR ↔ MPC switching
    - Geometric tube MPC (Algorithm 2.2)
-3. **Worked examples and simulations**: quadrotor, humanoid, and golf-motivated scenarios showing how residual estimates can inform grid selection, controller switching, and trajectory optimization
+3. **Worked examples and simulations**: quadrotor, humanoid, and golf-motivated scenarios showing how residual estimates can be used in grid selection, controller switching, and trajectory optimization
 
 **Impact:**
 

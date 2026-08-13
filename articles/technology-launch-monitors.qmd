@@ -35,10 +35,10 @@ categories: [technology, measurement, golf, kinematics]
       <div class="laymans-item">
         <h3>The clubface problem</h3>
         <p>
-          Here is the awkward part. At impact, a conventional rear-mounted sensor has a poor direct view of the face plane. Radar-led systems can estimate orientation from visible club motion and scattering signatures, or infer it from the resulting ball motion, but that is different from directly imaging a marked face. Collision-based inference is especially vulnerable when an off-center strike introduces gear effect that the simplified model does not observe.
+          Here is the awkward part. At impact, a conventional rear-mounted sensor has a poor direct view of the face plane. Radar-led systems can estimate orientation from visible club motion and scattering signatures, or infer it from the resulting ball motion, but that is different from directly imaging a marked face. Collision-based inference is especially vulnerable when an off-centre strike introduces gear effect that the simplified model does not observe.
         </p>
         <div class="analogy">
-          <strong>Reading a car crash from the skid marks:</strong> You can infer a great deal about how a collision happened from the tire marks and the final resting positions — and a good investigator will usually be right. But that is reconstruction, not observation, and it fails in exactly the unusual cases you most wanted to understand. Radar-derived face angle is the skid-mark reconstruction of golf.
+          <strong>Reading a car crash from the skid marks:</strong> You can infer a great deal about how a collision happened from the tyre marks and the final resting positions — and a good investigator will usually be right. But that is reconstruction, not observation, and it fails in exactly the unusual cases you most wanted to understand. Radar-derived face angle is the skid-mark reconstruction of golf.
         </div>
       </div>
 
@@ -55,9 +55,9 @@ categories: [technology, measurement, golf, kinematics]
 
 ## Why This Article Exists
 
-Launch monitors are now the primary measurement instrument in applied golf biomechanics. They set the numbers coaches teach to, the numbers club fitters optimize, and increasingly the numbers researchers report. Yet the published understanding of *how* they work — and, more importantly, of which reported quantities are observations and which are model outputs — remains thin outside the manufacturers themselves.
+Launch monitors are now the primary measurement instrument in applied golf biomechanics. They set the numbers coaches teach to, the numbers club fitters optimise, and increasingly the numbers researchers report. Yet the published understanding of *how* they work — and, more importantly, of which reported quantities are observations and which are model outputs — remains thin outside the manufacturers themselves.
 
-This article summarizes the measurement principles of the two dominant architectures and maps each reported parameter onto a hierarchy of directness. It then develops a specific technical proposal: that formulating clubhead motion in **screw (twist) coordinates** offers a principled route to better club data, including several ways to determine clubface orientation that do not depend on inverting an impact model.
+This article summarises the measurement principles of the two dominant architectures, maps each reported parameter onto a hierarchy of directness, and then develops a specific technical proposal: that formulating clubhead motion in **screw (twist) coordinates** offers a principled route to better club data, including several ways to determine clubface orientation that do not depend on inverting an impact model.
 
 The treatment here is deliberately consistent with the geometric framing used elsewhere on this site. A force plate measures a **wrench**; a motion-capture system measures a **twist**; the two are dual objects in the same six-dimensional algebra. A launch monitor, it turns out, measures projections of a twist — and reasoning about it in those terms clarifies both what current devices can do and where the headroom lies.
 
@@ -93,9 +93,9 @@ $$
 f_{d,\text{feature}}(t) = \frac{2}{\lambda}\bigl(v_r - r\,\omega \sin \omega t\bigr)
 $$
 
-so the received spectrum shows the main translational line flanked by **equally spaced harmonic sidebands** at multiples of the spin frequency. Measuring the comb spacing gives spin rate directly. This is the method disclosed in TrackMan's foundational patent ([US 8,845,442](https://patents.google.com/patent/US8845442B2/en)) and successfully litigated in Europe; FlightScope's engineered alternative ([US 9,868,044](https://patents.google.com/patent/US9868044B2/en)) instead exploits the ball's behavior as a *dielectric lens* that magnifies far-side surface features, extracting spin from phase-demodulated pulse periodicity.
+so the received spectrum shows the main translational line flanked by **equally spaced harmonic sidebands** at multiples of the spin frequency. Measuring the comb spacing gives spin rate directly. This is the method disclosed in TrackMan's foundational patent ([US 8,845,442](https://patents.google.com/patent/US8845442B2/en)) and successfully litigated in Europe; FlightScope's engineered alternative ([US 9,868,044](https://patents.google.com/patent/US9868044B2/en)) instead exploits the ball's behaviour as a *dielectric lens* that magnifies far-side surface features, extracting spin from phase-demodulated pulse periodicity.
 
-**Spin axis**, by contrast, is not directly measured on most radar units. It is recovered by inverting the aerodynamics: from the differentiated three-dimensional track, total acceleration decomposes as $\mathbf{A} = \mathbf{g} + \mathbf{D} + \mathbf{L}$, drag is the component of $(\mathbf{A}-\mathbf{g})$ along the airspeed vector, and the residual Magnus lift must be perpendicular to the spin axis. Stacking the orthogonality constraint $\mathbf{L}\cdot\hat{\boldsymbol{\omega}} = 0$ over many trajectory points gives an overdetermined linear system for the axis. This works well outdoors with seconds of observed flight; indoors, with two to six meters of flight before a screen, the curvature signal is small and the axis becomes an estimate.
+**Spin axis**, by contrast, is not directly measured on most radar units. It is recovered by inverting the aerodynamics: from the differentiated three-dimensional track, total acceleration decomposes as $\mathbf{A} = \mathbf{g} + \mathbf{D} + \mathbf{L}$, drag is the component of $(\mathbf{A}-\mathbf{g})$ along the airspeed vector, and the residual Magnus lift must be perpendicular to the spin axis. Stacking the orthogonality constraint $\mathbf{L}\cdot\hat{\boldsymbol{\omega}} = 0$ over many trajectory points gives an overdetermined linear system for the axis. This works well outdoors with seconds of observed flight; indoors, with two to six metres of flight before a screen, the curvature signal is small and the axis becomes an estimate.
 
 ### Photometric (Camera) Systems
 
@@ -115,11 +115,11 @@ The mirror-image limitation applies: everything downrange of the small capture v
 
 ### The Convergence
 
-Several major vendors have adopted hybrid sensing. TrackMan added cameras to radar; FlightScope added camera fusion tracking; SkyTrak added radar to a camera system; Rapsodo pairs radar with impact cameras reading marked balls. These systems combine complementary strengths: radar can observe more of the downrange trajectory, while cameras can resolve the short impact window and angular detail. High-end camera-only systems remain commercially important, so hybridization is a strong market trend rather than a universal conclusion.
+Several major vendors have adopted hybrid sensing. TrackMan added cameras to radar; FlightScope added camera fusion tracking; SkyTrak added radar to a camera system; Rapsodo pairs radar with impact cameras reading marked balls. These systems combine complementary strengths: radar can observe more of the downrange trajectory, while cameras can resolve the short impact window and angular detail. High-end camera-only systems remain commercially important, so hybridisation is a strong market trend rather than a universal conclusion.
 
 ## Part II: The Directness Hierarchy
 
-The organizing idea of this article is that every reported parameter sits somewhere on a spectrum from *measured* to *modeled*, and parameters farther toward the modeled end generally require more care in cross-device comparison.
+The organising idea of this article is that every reported parameter sits somewhere on a spectrum from *measured* to *modelled*, and parameters farther toward the modelled end generally require more care in cross-device comparison.
 
 | Parameter | Radar (outdoor) | Radar (indoor) | Camera | Hybrid (typical) |
 |---|---|---|---|---|
@@ -127,7 +127,7 @@ The organizing idea of this article is that every reported parameter sits somewh
 | Launch angles | Measured | Measured | Measured | Measured |
 | Spin rate | Measured or estimated | Measured / estimated | Measured or estimated | Measured or estimated |
 | Spin axis | Measured or derived | Estimated | Measured or estimated | Measured or estimated |
-| Carry | Measured when full flight is tracked | Modeled | Modeled | Measured outdoors / modeled indoors |
+| Carry | Measured when full flight is tracked | Modelled | Modelled | Measured outdoors / modelled indoors |
 | Club speed | Measured or reconstructed | Measured or reconstructed | Measured or reconstructed | Measured or reconstructed |
 | Club path, attack angle | Measured or reconstructed | Measured or reconstructed | Measured or reconstructed | Measured or reconstructed |
 | **Face angle** | **Usually derived** | **Usually derived** | Measured or reconstructed | Measured or inferred |
@@ -138,9 +138,9 @@ This table describes common implementations, not guarantees attached to a sensor
 
 Two entries deserve emphasis.
 
-**Club speed is reference-point dependent.** A clubhead is an extended body whose parts move at different speeds — the toe of a driver travels up to about 7 mph faster than the heel. TrackMan defines club speed at the *geometric center* of the head and reconstructs that point from the radar return; a naive processor locks onto the strongest or fastest scatterer, typically toe glint, and reports several mph high. This is a *definitional* variance, not sensor noise, and it accounts for a great deal of the chronic club-speed disagreement between brands.
+**Club speed is reference-point dependent.** A clubhead is an extended body whose parts move at different speeds — the toe of a driver travels up to about 7 mph faster than the heel. TrackMan defines club speed at the *geometric centre* of the head and reconstructs that point from the radar return; a naive processor locks onto the strongest or fastest scatterer, typically toe glint, and reports several mph high. This is a *definitional* variance, not sensor noise, and it accounts for a great deal of the chronic club-speed disagreement between brands.
 
-**So is club path — and by more than most people realize.** This deserves its own treatment, below.
+**So is club path — and by more than most people realise.** This deserves its own treatment, below.
 
 ## Part IIb: Which Point on the Clubhead Is "the Path"?
 
@@ -154,7 +154,7 @@ $$
 
 The consequence is that *there is no such thing as "the" club path*. There is a velocity field over the head, and a path number is that field evaluated at some chosen point. Change the point, change the number.
 
-This is not a small correction for a driver, because the two candidate reference points are far apart. **The center of gravity sits roughly 25–50 mm behind the clubface**, and the geometric center — which is what radar systems actually track — is typically within about 6 mm of the CG.
+This is not a small correction for a driver, because the two candidate reference points are far apart. **The centre of gravity sits roughly 25–50 mm behind the clubface**, and the geometric centre — which is what radar systems actually track — is typically within about 6 mm of the CG.
 
 ### The Two Conventions, and the Gap Between Them
 
@@ -162,46 +162,46 @@ The industry has split, and the split runs along the sensing modality:
 
 | System type | Path reference | Why |
 |---|---|---|
-| Radar (TrackMan) | **Geometric center / CG** | The radar reconstructs the head's silhouette from behind; the geometric center is what it can locate |
-| Optical with face fiducials (Foresight-class) | **Center of the clubface** | The reflective markers are on the face, so that is what is tracked |
+| Radar (TrackMan) | **Geometric centre / CG** | The radar reconstructs the head's silhouette from behind; the geometric centre is what it can locate |
+| Optical with face fiducials (Foresight-class) | **Centre of the clubface** | The reflective markers are on the face, so that is what is tracked |
 
-TrackMan states the resulting discrepancy explicitly, and the number is large. **"For a driver, the difference between the path of the club head's center of gravity (CoG) and the path of the center of the club face is approximately 3 degrees (center of club face path being more outside-in)"** ([TrackMan club data definitions](https://www.trackman.com/blog/golf/club-data-definitions)).
+TrackMan states the resulting discrepancy explicitly, and the number is large: **"For a driver, the difference between the path of the club head's center of gravity (CoG) and the path of the center of the club face is approximately 3 degrees (center of club face path being more outside-in)"** ([TrackMan club data definitions](https://www.trackman.com/blog/golf/club-data-definitions)).
 
-The same page explains why optical systems land on the other convention — *"Optical-based launch monitors almost always measure Club Speed, Attack Angle and Club Path relative to the center of the club face, since this is where the reflective markers are positioned"*. It closes with a warning that deserves wider circulation: *"Often, the numbers measured (or calculated) aren't comparable."*
+The same page explains why optical systems land on the other convention --- *"Optical-based launch monitors almost always measure Club Speed, Attack Angle and Club Path relative to the center of the club face, since this is where the reflective markers are positioned"* --- and closes with a warning that deserves wider circulation: *"Often, the numbers measured (or calculated) aren't comparable."*
 
-A full catalogue of which vendor uses which convention, with sources, is in the [Launch Monitor Vendor Reference](launch-monitor-vendor-reference.qmd). The short version: FlightScope publishes a geometric-center definition, and older Uneekor sticker guides do likewise, although Uneekor's 2026 Club AI material complicates that description. Foresight's putting glossary names the face center, and GEARS ships both reference points for speed without publishing a corresponding path convention.
+A full catalogue of which vendor uses which convention, with sources, is in the [Launch Monitor Vendor Reference](launch-monitor-vendor-reference.qmd). The short version is that FlightScope publishes a geometric-centre definition; older Uneekor sticker guides do likewise, although Uneekor's 2026 Club AI material complicates that description; Foresight's putting glossary names the face centre; and GEARS ships both reference points for speed, but does not publish a corresponding path convention.
 
 Three degrees. For a driver, on the same swing, a radar and a camera system can legitimately report club paths three degrees apart — and neither is malfunctioning. They are answering different questions.
 
 TrackMan also notes the club dependence: "For non-drivers, the physical distance between CoG and the center of the club face is much smaller, which makes the parameters less sensitive to the point on the club face that is being used." So the discrepancy is largest for the driver and shrinks toward the short irons.
 
-### Why the Face Center Is Further "Left", and Shallower
+### Why the Face Centre Is Further "Left", and Shallower
 
 The vendor attributes the effect to the CG sitting behind the face, which is the necessary condition but not the whole mechanism: **separation alone does nothing without rotation.** The velocity difference is $\boldsymbol{\omega}\times\mathbf{r}$, so it exists only because the head is turning, and it scales with how fast it is turning. Two rotations contribute, and both push the same way horizontally:
 
-**The swing arc.** Viewed from above, the clubhead traverses an arc that curves leftward through impact. A point displaced *forward along that arc* — which is what the face center is, relative to the CG — has its velocity vector rotated further around the arc, and therefore points further left.
+**The swing arc.** Viewed from above, the clubhead traverses an arc that curves leftward through impact. A point displaced *forward along that arc* — which is what the face centre is, relative to the CG — has its velocity vector rotated further around the arc, and therefore points further left.
 
-**Face closure.** The head is also rotating about the shaft axis as the face closes. Viewed from above, that is a counter-clockwise rotation for a right-handed golfer, and a point in front of the center of rotation swings leftward under it.
+**Face closure.** The head is also rotating about the shaft axis as the face closes. Viewed from above, that is a counter-clockwise rotation for a right-handed golfer, and a point in front of the centre of rotation swings leftward under it.
 
-The same geometry acts in the vertical plane, and this is where the effect is less discussed. Because the face center sits *ahead* of the CG along the arc, and the arc is turning upward through the bottom, the face center's velocity is tilted slightly more upward than the CG's. **The face-center path is therefore not only further left but also shallower** — a higher, less negative attack angle. Taking a swing radius of about 1.6 m and a 40 mm offset, the arc contribution alone is of order a degree, partially offset by the closure term, which tilts slightly downward for a shaft leaning toward the golfer.
+The same geometry acts in the vertical plane, and this is where the effect is less discussed. Because the face centre sits *ahead* of the CG along the arc, and the arc is turning upward through the bottom, the face centre's velocity is tilted slightly more upward than the CG's. **The face-centre path is therefore not only further left but also shallower** — a higher, less negative attack angle. Taking a swing radius of about 1.6 m and a 40 mm offset, the arc contribution alone is of order a degree, partially offset by the closure term, which tilts slightly downward for a shaft leaning toward the golfer.
 
-So the intuition that the contact point traces a path both *further left and shallower* than the geometric center is correct, and the horizontal component of it is vendor-quantified at about 3° for a driver.
+So the intuition that the contact point traces a path both *further left and shallower* than the geometric centre is correct, and the horizontal component of it is vendor-quantified at about 3° for a driver.
 
 ::: {.callout-important}
 ## The Mechanism Matters for Interpretation
 
-Because the offset is $\boldsymbol{\omega}\times\mathbf{r}$, it is **not a fixed constant**. It scales with the rate of closure and with the tightness of the arc. Two golfers whose radar-reported path is identical, but who release at different rates, do not have the same face-center path. A number that is a biased proxy would be tolerable; a number whose bias varies with technique is a harder thing to coach against.
+Because the offset is $\boldsymbol{\omega}\times\mathbf{r}$, it is **not a fixed constant**. It scales with the rate of closure and with the tightness of the arc. Two golfers whose radar-reported path is identical, but who release at different rates, do not have the same face-centre path. A number that is a biased proxy would be tolerable; a number whose bias varies with technique is a harder thing to coach against.
 :::
 
 ### Does This "Build in a Slice"?
 
-The tempting conclusion runs like this. The ball is struck by the face, and the face center's path is 3° more out-to-in. So a golfer delivering a "zero path" on radar is really delivering 3° out-to-in, with a fade built into the number they are chasing. The argument is worth taking seriously, and it is half right.
+The tempting conclusion is that since the ball is struck by the face, and the face centre's path is 3° more out-to-in, then a golfer delivering a "zero path" on radar is really delivering 3° out-to-in and has a fade built into the number they are chasing. The argument is worth taking seriously, and it is half right.
 
-**What is right:** the collision genuinely responds to the motion of the material point on the face at the contact location. The friction that drags launch direction away from the face normal and generates the spin-axis tilt acts on the tangential relative velocity *at the contact patch* — which is the face-point velocity, not the CG velocity. And because face-to-path is the difference between an orientation and a velocity direction, an offset in the path term propagates one-for-one into face-to-path. Under the face-center convention, a delivery reported as zero-zero on radar has a face-to-path of roughly +3° — face open to path — which is a fade signature.
+**What is right:** the collision genuinely responds to the motion of the material point on the face at the contact location. The friction that drags launch direction away from the face normal and generates the spin-axis tilt acts on the tangential relative velocity *at the contact patch* — which is the face-point velocity, not the CG velocity. And because face-to-path is the difference between an orientation and a velocity direction, an offset in the path term propagates one-for-one into face-to-path. Under the face-centre convention, a delivery reported as zero-zero on radar has a face-to-path of roughly +3° — face open to path — which is a fade signature.
 
 **What complicates it:** three things.
 
-First, **TrackMan's own face-to-path is already a hybrid quantity.** Face angle and dynamic loft are evaluated at the impact location, while path and attack angle are evaluated at the geometric center. So the reported face-to-path is an orientation at one point minus a velocity direction at another. That is not a physically clean angle under either convention, and it is a strange thing to have become the industry's central diagnostic number.
+First, **TrackMan's own face-to-path is already a hybrid quantity.** Face angle and dynamic loft are evaluated at the impact location, while path and attack angle are evaluated at the geometric centre. So the reported face-to-path is an orientation at one point minus a velocity direction at another. That is not a physically clean angle under either convention, and it is a strange thing to have become the industry's central diagnostic number.
 
 Second, **the D-plane weightings are empirical fits to whichever convention the vendor uses.** The face-to-path split for launch direction was calibrated against radar's CG path. A systematic offset between conventions is therefore partly absorbed into the fitted coefficients and intercepts rather than showing up as prediction error. This is why a golfer delivering zero-zero on a TrackMan does not, in practice, watch the ball slice.
 
@@ -221,13 +221,13 @@ $$
 \varphi_{\text{launch}} \approx w_f\,\varphi_f + (1-w_f)\,\varphi_p
 $$
 
-The weight $w_f$ is usually quoted as 0.85 for a driver and 0.75 for a wedge, on TrackMan's authority — its *Ten Fundamentals* states that "face angle accounts for roughly 85% of the initial direction" for a driver and around 75% for irons. **The only peer-reviewed measurement disagrees.** [Wood, Henrikson & Broadie (2018)](https://doi.org/10.3390/proceedings2060249) measured 1,575 shots from 157 golfers with Vicon at 720 fps, filtered to centered strikes. They report horizontal weights of **0.76 ± 0.08 for a driver, 0.69 for a 7-iron, and 0.61 for a wedge**, with a robot test returning 0.63 for the 7-iron.
+The weight $w_f$ is usually quoted as 0.85 for a driver and 0.75 for a wedge, on TrackMan's authority — its *Ten Fundamentals* states that "face angle accounts for roughly 85% of the initial direction" for a driver and around 75% for irons. **The only peer-reviewed measurement disagrees.** [Wood, Henrikson & Broadie (2018)](https://doi.org/10.3390/proceedings2060249) — 157 golfers, 1,575 shots, Vicon at 720 fps, filtered to centred strikes — gives horizontal weights of **0.76 ± 0.08 for a driver, 0.69 for a 7-iron, and 0.61 for a wedge**, with a robot test returning 0.63 for the 7-iron.
 
 Note that TrackMan makes the *same* 85% claim for the vertical plane (dynamic loft to launch angle), and there the measurement agrees closely: 83% ± 8%. So the disagreement is specific to the horizontal plane, and it is a genuine vendor-versus-measurement conflict rather than a units mix-up. Nor are these separate per-club constants: the weight declines monotonically with spin loft along a single curve, and the club enters only through its obliqueness.
 
-Inverting this relation to recover $\varphi_f$ from measured launch direction and path is exactly what radar units do, and it has three structural consequences. First, because $1/w_f \approx 1.3$ rather than 1.15, any systematic bias in measured launch direction is amplified by about **30%** in the reported face angle — roughly twice the sensitivity the conventional weighting implies. Second, the model is blind to **gear effect**: an off-center strike torques the head about its center of gravity, and the resulting spin-axis tilt is misattributed to face-to-path. Third, the mechanism setting $w_f$ is itself contested — TrackMan attributes the driver's higher weight to a smoother, lower-friction titanium face, while PING's tangential-compliance model reproduces the loft dependence at constant friction and finds the friction hypothesis has the wrong sign below about 20° of incidence. A coefficient whose mechanism is unsettled is a coefficient worth reporting alongside its provenance.
+Inverting this relation to recover $\varphi_f$ from measured launch direction and path is exactly what radar units do, and it has three structural consequences. First, because $1/w_f \approx 1.3$ rather than 1.15, any systematic bias in measured launch direction is amplified by about **30%** in the reported face angle — roughly twice the sensitivity the conventional weighting implies. Second, the model is blind to **gear effect**: an off-centre strike torques the head about its centre of gravity, and the resulting spin-axis tilt is misattributed to face-to-path. Third, the mechanism setting $w_f$ is itself contested — TrackMan attributes the driver's higher weight to a smoother, lower-friction titanium face, while PING's tangential-compliance model reproduces the loft dependence at constant friction and finds the friction hypothesis has the wrong sign below about 20° of incidence. A coefficient whose mechanism is unsettled is a coefficient worth reporting alongside its provenance.
 
-This is the physical claim behind the skeptical position: at impact the face normal points away from a conventional rear-mounted sensor, and the metal head prevents a direct view through to the face plane. Rear-looking systems therefore estimate face orientation from visible geometry, scattering signatures, complementary cameras or the resulting ball motion; that is not the same as directly imaging the hidden face plane.
+This is the physical claim behind the sceptical position: at impact the face normal points away from a conventional rear-mounted sensor, and the metal head prevents a direct view through to the face plane. Rear-looking systems therefore estimate face orientation from visible geometry, scattering signatures, complementary cameras or the resulting ball motion; that is not the same as directly imaging the hidden face plane.
 
 ## Part III: The Screw-Theoretic Reformulation
 
@@ -247,15 +247,15 @@ $$
 h = \frac{\boldsymbol{\omega}\cdot\mathbf{v}_O}{\lVert\boldsymbol{\omega}\rVert^2}
 $$
 
-Now consider what a radar detection actually reports. For a scattering center at known position (from range and monopulse angle), the measured radial velocity along the line of sight $\hat{\mathbf{u}}_i$ is
+Now consider what a radar detection actually reports. For a scattering centre at known position (from range and monopulse angle), the measured radial velocity along the line of sight $\hat{\mathbf{u}}_i$ is
 
 $$
 \dot d_i \;=\; \hat{\mathbf{u}}_i \cdot \mathbf{v}_O \;+\; (\mathbf{r}_i \times \hat{\mathbf{u}}_i)\cdot\boldsymbol{\omega}
 $$
 
-This is the **reciprocal product** of the sight line, treated as a Plücker line, with the twist — and it is *exactly linear* in the six twist coordinates. Each correctly associated detection contributes one row of a linear system. Weighted least squares is therefore a natural computational form, but a covariance is meaningful only after the observation geometry, noise correlation, data association and systematic errors have been modeled and the observable subspace has been identified.
+This is the **reciprocal product** of the sight line, treated as a Plücker line, with the twist — and it is *exactly linear* in the six twist coordinates. Each correctly associated detection contributes one row of a linear system. Weighted least squares is therefore a natural computational form, but a covariance is meaningful only after the observation geometry, noise correlation, data association and systematic errors have been modelled and the observable subspace has been identified.
 
-That is not an aesthetic observation. It means the sensor's native observable is already a linear functional of the object we want, so the observable components can be estimated without a nonlinear rigid-body parameterization. The six-degree-of-freedom problem is nevertheless generally rank-deficient in one frame and must be solved over time with regularization or smoothing. Camera systems enter the same framework from the other side: a tracked face gives a pose in $SE(3)$ per frame, and the matrix logarithm of the frame-to-frame relative pose is a finite twist. One representation serves both modalities.
+That is not an aesthetic observation. It means the sensor's native observable is already a linear functional of the object we want, so the observable components can be estimated without a nonlinear rigid-body parameterisation. The six-degree-of-freedom problem is nevertheless generally rank-deficient in one frame and must be solved over time with regularisation or smoothing. Camera systems enter the same framework from the other side: a tracked face gives a pose in $SE(3)$ per frame, and the matrix logarithm of the frame-to-frame relative pose is a finite twist. One representation serves both modalities.
 
 ### What This Buys Immediately
 
@@ -267,7 +267,7 @@ Estimating the twist rather than tracking a point yields, as pure projections of
 - **Swing plane, rigorously defined** — the orientation and trajectory of the ISA, rather than a fitted arc through a tracked point.
 - **Propagated uncertainty** on reported parameters, provided the estimator includes conditioning, temporal correlation and systematic-error terms rather than relying on the formal least-squares covariance alone.
 
-Applied to the *swing* rather than the club, the same machinery is not new. Vena and colleagues used instantaneous screw axis theory on optical motion capture to show that at least 71% of marker velocity during the downswing is attributable to rotation about the segment's ISA. They also showed that ISA smoothness distinguishes skilled from novice golfers ([Part 1](https://link.springer.com/article/10.1007/s12283-010-0058-8), [Part 2](https://link.springer.com/article/10.1007/s12283-010-0059-7)). The narrower research opportunity proposed here is a validated, clubhead-specific six-degree-of-freedom twist estimator built from associated range-angle-Doppler scattering centers. A comprehensive prior-art search would be required before claiming novelty.
+Applied to the *swing* rather than the club, the same machinery is not new: Vena and colleagues used instantaneous screw axis theory on optical motion capture to show that at least 71% of marker velocity during the downswing is attributable to rotation about the segment's ISA, and that ISA smoothness distinguishes skilled from novice golfers ([Part 1](https://link.springer.com/article/10.1007/s12283-010-0058-8), [Part 2](https://link.springer.com/article/10.1007/s12283-010-0059-7)). The narrower research opportunity proposed here is a validated, clubhead-specific six-degree-of-freedom twist estimator built from associated range-angle-Doppler scattering centres. A comprehensive prior-art search would be required before claiming novelty.
 
 ### The Anchor-and-Propagate Principle
 
@@ -302,7 +302,7 @@ With the anchor-and-propagate principle in hand, the face problem decomposes int
 | **Passive RF tags** | Three-tag pose | Radar | Novel |
 | **Rotational ISAR** | Head-frame scatterer map | Radar | Long-term |
 | On-club IMU | Body-frame angular velocity | Inertial | Fusion upgrade |
-| Polarimetric normal | Normal-dependent polarization | Radar | Exploratory |
+| Polarimetric normal | Normal-dependent polarisation | Radar | Exploratory |
 | Well-posed inversion | Launch + *measured* impact location | Model | Status-quo upgrade |
 
 Three of these deserve description, because they are both elegant and physically well-founded.
@@ -328,7 +328,7 @@ Intellectual honesty requires a boundary here, because the naive version of this
 3. **Explicit reference-point transforms** — retaining the physical reference dependence of club data while making the chosen convention visible and convertible.
 4. **The anchor-and-propagate principle** — converting the face problem from "observe the poorly visible face plane at impact" into "fix the face once, estimate and integrate angular velocity."
 5. **Candidate measurands** — radar-derived shaft-axis angular velocity, ISA-defined swing plane, ISA pitch and smoothness as skill metrics, gear-effect recoil, and — on the ball side — true roll percentage in putting. Each still requires an observability analysis and validation against a suitable reference.
-6. **Design mathematics** — sensor placement and chirp budgeting chosen by maximizing the smallest singular value of the measurement matrix over the swing window, rather than by folklore.
+6. **Design mathematics** — sensor placement and chirp budgeting chosen by maximising the smallest singular value of the measurement matrix over the swing window, rather than by folklore.
 
 The honest summary: the same hardware information, extracted into better-defined, reference-point-declared and uncertainty-qualified quantities, plus candidate measurands that require validation before they can be claimed as improvements over current commercial outputs.
 
@@ -336,21 +336,21 @@ The honest summary: the same hardware information, extracted into better-defined
 
 Anyone implementing this should know where it goes wrong.
 
-**Observability is poor per frame.** A clubhead viewed from a single vantage two meters away spans about 10 cm with nearly parallel sight lines, yielding perhaps two to four resolvable range-Doppler cells. The six-degree-of-freedom system is rank-deficient in any single frame: you observe bulk radial velocity well, one or two combinations moderately, and the rest poorly. The correct response is to *never* invert the weak directions per frame — truncate the singular value decomposition and defer those components to a trajectory smoother that aggregates across frames, where changing sight-line geometry resolves the deficiency.
+**Observability is poor per frame.** A clubhead viewed from a single vantage two metres away spans about 10 cm with nearly parallel sight lines, yielding perhaps two to four resolvable range-Doppler cells. The six-degree-of-freedom system is rank-deficient in any single frame: you observe bulk radial velocity well, one or two combinations moderately, and the rest poorly. The correct response is to *never* invert the weak directions per frame — truncate the singular value decomposition and defer those components to a trajectory smoother that aggregates across frames, where changing sight-line geometry resolves the deficiency.
 
-**Scattering centers migrate.** Specular glints wander across a curved metal crown as aspect changes, violating the fixed-scatterer assumption at the centimeter level. A practical estimator needs robust outlier handling, and its fitted covariance must be calibrated against empirical residuals rather than accepted at face value.
+**Scattering centres migrate.** Specular glints wander across a curved metal crown as aspect changes, violating the fixed-scatterer assumption at the centimetre level. A practical estimator needs robust outlier handling, and its fitted covariance must be calibrated against empirical residuals rather than accepted at face value.
 
 **Rigidity ends at contact.** The rigid-body model holds beautifully before impact and fails during it — roughly 500 microseconds of gross deformation. Fit up to the last pre-impact observation and evaluate at the impact instant, which mirrors how club-delivery parameters are defined anyway.
 
-**Physically motivated priors help, but must be validated.** The downswing is close to a pure rotation about a hub near the hands, so penalizing large screw pitch and constraining the ISA to pass near a broad region around the hands both regularize the weakly observed components. These should be weak enough to be overruled by data, and validated on a pendulum rig where the true twist is analytically known.
+**Physically motivated priors help, but must be validated.** The downswing is close to a pure rotation about a hub near the hands, so penalising large screw pitch and constraining the ISA to pass near a broad region around the hands both regularise the weakly observed components. These should be weak enough to be overruled by data, and validated on a pendulum rig where the true twist is analytically known.
 
 ## Conclusion
 
-The directly observed content of a launch monitor is smaller than its output table suggests, and the gap is filled by reconstruction and physical or statistical models. In the traceable benchmark study reviewed here, ball parameters agreed more closely with the reference than club parameters; that result should not be universalized to every current model or setup. Club data remains a mixture of observation, convention and inference, so cross-device comparison requires explicit definitions and device-specific evidence.
+The directly observed content of a launch monitor is smaller than its output table suggests, and the gap is filled by reconstruction and physical or statistical models. In the traceable benchmark study reviewed here, ball parameters agreed more closely with the reference than club parameters; that result should not be universalised to every current model or setup. Club data remains a mixture of observation, convention and inference, so cross-device comparison requires explicit definitions and device-specific evidence.
 
 Screw theory does not conjure information that the sensors did not collect. What it does is give the estimation problem its natural shape: a single twist trajectory that all sensors constrain and all parameters project from, with linear measurement models, explicit conditioning, propagated uncertainty and a declared reference-point convention. Most importantly, it supplies the propagation machinery for testing whether a pre-impact face-orientation anchor can reduce dependence on impact-model inversion. The mechanisms catalogued here are candidate engineering approaches, not demonstrated performance gains.
 
-For an instrument-building program, that reframing is the practical contribution: it says where to spend engineering effort, what to measure and when, and — perhaps most valuable of all — how to report each number alongside an honest statement of how well it is actually known.
+For an instrument-building programme, that reframing is the practical contribution: it says where to spend engineering effort, what to measure and when, and — perhaps most valuable of all — how to report each number alongside an honest statement of how well it is actually known.
 
 ## References and Further Reading
 
@@ -365,7 +365,7 @@ For an instrument-building program, that reframing is the practical contribution
 
 **Manufacturer technical documentation**
 
-- TrackMan. [Club data definitions](https://www.trackman.com/blog/golf/club-data-definitions) and [What is club speed?](https://www.trackman.com/blog/golf/what-is-club-speed) — the geometric-center reference convention.
+- TrackMan. [Club data definitions](https://www.trackman.com/blog/golf/club-data-definitions) and [What is club speed?](https://www.trackman.com/blog/golf/what-is-club-speed) — the geometric-centre reference convention.
 - TrackMan. [Two radars, one camera, zero doubt](https://www.trackman.com/blog/golf/two-radars-one-camera-zero-doubt) — optically enhanced radar tracking.
 - TrackMan. [TrackMan 4 and TrackMan iO technical specifications](https://www.trackman.com/golf/launch-monitors/tech-specs) — current sensor architecture, including the 24 GHz TrackMan iO radar and high-speed cameras.
 - TrackMan News #5 (2009). [Ball Flight Laws](https://www.yumpu.com/en/document/view/11652756/trackman-ball-flight-laws) — the D-plane and the face/path launch weighting.

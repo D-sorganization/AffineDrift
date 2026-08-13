@@ -9,9 +9,9 @@ description: "Two rigid rods: - Link 1 (upper arm): length , mass , moment of in
 
 A full model of the human body has 40+ degrees of freedom. Your spine bends. Your hips rotate. Your knees flex. Your ankles adjust. Even just the arm has many possible movements.
 
-Yet the golf swing has a surprising structure. Most of the action happens in two places: shoulder rotation and elbow bend. The torso twists, yes, but it rotates about a fixed vertical axis. The hips move, but mostly to stabilize. The wrist cocks and releases, but its effect on the clubhead is small compared to the arm's rotation.
+Yet the golf swing has a surprising structure: most of the action happens in two places: shoulder rotation and elbow bend. The torso twists, yes, but it rotates about a fixed vertical axis. The hips move, but mostly to stabilize. The wrist cocks and releases, but its effect on the clubhead is small compared to the arm's rotation.
 
-So we model the arm as a double pendulum: two rigid links hinged together, hanging from a fixed point (the shoulder). This is a radical simplification. But here is what makes it useful: much of the essential physics of the golf swing shows up in this simple model. And because it is simple, we can **solve it** --- find exact equations, compute forces, and understand the dynamics in full.
+So we model the arm as a double pendulum: two rigid links hinged together, hanging from a fixed point (the shoulder). This is a radical simplification. But here is what makes it useful: many of the essential physics of the golf swing show up in this simple model. And because it is simple, we can **solve it** --- find exact equations, compute forces, and understand the dynamics in full.
 
 Once you understand the double pendulum, adding complexity (more joints, torso rotation, etc.) is straightforward.
 
@@ -166,7 +166,7 @@ Kinetic energy is motion's "fuel." In a golf swing, you store energy during the 
 
 By the time the club reaches impact, all that stored energy has been converted to the motion of the club.
 
-The Lagrangian formalism (which we'll use next) exploits a variational principle: nature minimizes the action, $\int (T - V) dt$. By tracking $T$, we can derive the forces without writing down force balances explicitly.
+The Lagrangian formalism (which we'll use next) exploits the fact that nature minimizes the action, $\int (T - V) dt$. By tracking $T$, we can derive the forces without writing down force balances explicitly.
 
 :::
 
@@ -403,7 +403,7 @@ $$
 
 ## Numerical Example: A Realistic Golf Swing
 
-Let's plug in numbers and see what the forces are.
+Let's plug in numbers and see what the forces actually are.
 
 ### At Impact
 
@@ -498,7 +498,7 @@ Motion is chaotic if small changes in initial conditions lead to drastically dif
 
 For the golf swing, this has profound implications. Two golfers with nearly identical swings at the top (same angles and velocities) might produce wildly different impact conditions if the equations of motion are chaotic.
 
-In the absence of control ($\bm{\tau} = 0$), the double pendulum exhibits chaos only in certain regimes. But once you add muscular control ($\bm{\tau} \neq 0$), the picture becomes complex. Small errors in muscle activation can compound.
+Actually, in the absence of control ($\bm{\tau} = 0$), the double pendulum exhibits chaos only in certain regimes. But once you add muscular control ($\bm{\tau} \neq 0$), the picture becomes complex. Small errors in muscle activation can compound.
 
 This is why consistency is hard. It's not just about executing a "swing shape"—it's about executing precise **forces** at precise times.
 

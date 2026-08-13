@@ -106,7 +106,7 @@ format:
 ## 1. Introduction
 
 Golf impact presents an apparent paradox.
-Elite players simultaneously produce **large forces at the hands and clubhead** while maintaining **remarkably stable clubface orientation** during the most violent phase of the swing. Traditional explanations often appeal to vague notions of “firm wrists,” “holding angles,” or “releasing late,” none of which clearly explain *how* force amplification and stability coexist in a highly redundant, flexible, biological system.
+Elite players simultaneously produce **very large forces at the hands and clubhead** while maintaining **remarkably stable clubface orientation** during the most violent phase of the swing. Traditional explanations often appeal to vague notions of “firm wrists,” “holding angles,” or “releasing late,” none of which clearly explain *how* force amplification and stability coexist in a highly redundant, flexible, biological system.
 
 This article proposes a more precise interpretation:
 **near impact, skilled golfers intentionally collapse portions of the constraint Jacobian of the golfer–club system**, selectively reducing mobility in destabilizing directions while preserving mobility in force-productive directions.
@@ -441,13 +441,13 @@ Understanding it requires moving beyond kinematics alone—and taking constraint
 ## 12. Synthesis: The AffineDrift Context
 
 **The "Effective Plant" and Drift Invariance**
-This constraint shaping mechanism offers a **quasi-static resolution** to the "Input-Dependent Boundary Conditions" critique (detailed in Part 3 Limitations). By treating the high-impedance state as a temporary "Effective Plant," we can analyze the impact dynamics *as if* they evolved on a restricted manifold, acknowledging that the transition to this state is itself input-driven. While the Affine Control framework assumes a separation of passive drift ($f(x)$) and active input ($g(x)u$), constraint collapse illustrates how input $u$ modifies the *effective* topology of the system. By stiffening the constraint Jacobian $J_c$, the golfer temporarily alters the manifold on which the drift dynamics evolve, creating a transient "effective plant" without violating the causal independence of the underlying Lagrangian mechanics.
+This constraint shaping mechanism offers a **quasi-static resolution** to the "Input-Dependent Boundary Conditions" critique (detailed in Part 3 Limitations). By treating the high-impedance state as a temporary "Effective Plant," we can analyze the impact dynamics *as if* they evolved on a restricted manifold, acknowledging that the transition to this state is itself input-driven. While the Affine Control framework assumes a separation of passive drift ($f(x)$) and active input ($g(x)u$), constraint collapse illustrates how input $u$ modifies the *effective* topology of the system. By stiffening the constraint Jacobian $J_c$, the golfer temporarily alters the manifold on which the drift dynamics evolve, essentially creating a transient "effective plant" without violating the causal independence of the underlying Lagrangian mechanics.
 
 ::: {.callout-important}
 ## Limitation: The Stiffness Pulse Paradox
 We must strictly qualify this "Effective Plant" argument. The "Stiffness Pulse" described in Section 6 implies a rapid time-variation of the impedance parameters $\dot{K} \neq 0$ during the counterfactual integration window. This violates the strict **Drift Invariance** condition ($\nabla_u f(x) = 0$) because the drift field parameters are changing in correlation with the input strategy. Consequently, the ZTCF in this regime should be interpreted as a **Parametric Counterfactual** ("What if torque ceased but the impedance schedule continued?") rather than a purely passive mechanical baseline.
 
-*Forward reference:* a rigorous treatment of switched or input-dependent control-affine systems --- where $M_{\eta\eta}(u)$ and $K(u)$ enter the drift coefficient itself, rather than as additive inputs --- requires the framework of switched/hybrid affine systems or bilinear control. That treatment is **deferred to a future volume** (tentatively *Geometry of Motion*, Vol. II, Ch. on hybrid/switched dynamics). The parametric-counterfactual reading here is the best one-shot approximation available within the strictly control-affine setting.
+*Forward reference:* a rigorous treatment of switched or input-dependent control-affine systems --- where $M_{\eta\eta}(u)$ and $K(u)$ enter the drift coefficient itself, rather than as additive inputs --- requires the framework of switched/hybrid affine systems or bilinear control, and is **deferred to a future volume** (tentatively *Geometry of Motion*, Vol. II, Ch. on hybrid/switched dynamics). The parametric-counterfactual reading here is the best one-shot approximation available within the strictly control-affine setting.
 :::
 
 **Steering the Zero-Torque Counterfactual (ZTCF)**

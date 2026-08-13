@@ -25,7 +25,7 @@ If a robot moves its arm to a new location, how do we mathematically calculate t
 \end{equation}
 This destroys our hope of treating control as a clean, unified geometry. 
 
-To unify translation and rotation into a single algebraic operation, mathematicians embed the $3 \times 3$ matrix and the $1 \times 3$ vector into a $4 \times 4$ matrix.
+To unify translation and rotation into a single, flawless algebraic operation, mathematicians embed the $3 \times 3$ matrix and the $1 \times 3$ vector into a magnificent $4 \times 4$ matrix.
 
 
 ::: {.callout-note}
@@ -39,7 +39,7 @@ To unify translation and rotation into a single algebraic operation, mathematici
 :::
 
 
-This transforms $\bm{x}_{mapped} = R\bm{x} + p$ into a single multiplication $\bm{x}_{new} = T \times \bm{x}_{old}$ by defining points as $\bm{x}_{homo} = [x, y, z, 1]^T$.
+This transforms $\bm{x}_{mapped} = R\bm{x} + p$ into entirely unified multiplication $\bm{x}_{new} = T \times \bm{x}_{old}$ by defining points as $\bm{x}_{homo} = [x, y, z, 1]^T$. 
 
 This is the central nervous system of physics simulations: MuJoCo, game engines (Unreal), and modern control theory map everything back to these $4 \times 4$ coordinates. 
 
@@ -49,7 +49,7 @@ This is the central nervous system of physics simulations: MuJoCo, game engines 
 
 If $T \in \SE$ defines the complete layout of a rigid body in space, what is the *velocity* of that body as it moves? 
 
-Just as translation and rotation were unified into $T$, linear velocity $v \in \Reals^3$ and angular velocity $\omega \in \Reals^3$ are unified into a 6-dimensional **Spatial Velocity** vector.
+Just as translation and rotation were unified into $T$, linear velocity $v \in \Reals^3$ and singular angular velocity $\omega \in \Reals^3$ are unified into a 6-dimensional **Spatial Velocity** vector.
 
 According to French mathematician Michel Chasles (1830), any **finite displacement** of a rigid body—mapping one pose to another—can be realized as a rotation about, plus a translation along, a **single, specific screw axis** in space. The closely related *instantaneous* statement—that the velocity field of a rigid body at any instant is a rotation about an axis plus a translation along it (an instantaneous twist)—is the Mozzi–Cauchy / Poinsot theorem. The two are distinct: Chasles concerns the finite-displacement screw, while the velocity discussion below concerns the instantaneous twist; they coincide only in the infinitesimal limit.
 
@@ -58,12 +58,12 @@ According to French mathematician Michel Chasles (1830), any **finite displaceme
 
   Think of a literal screw going into wood. As the screw turns along an axis (pitching rotation), it simultaneously plunges forward along that precise identical axis (linear translation). 
   
-  Mathematically, a chaotic tumbling body is just spinning around a single invisible straight line in space (Rotation) while simultaneously sliding down that same line (Translation).
+  Mathematically, a chaotic tumbling body is just spinning around a single invisible straight line in space (Rotation) while simultaneously sliding down that very same line (Translation).
 
 :::
 
 
-A **Screw Axis** $\screw$ contains the full geometric map of this line. Specifically, it is defined by:
+A **Screw Axis** $\screw$ contains the full geometric map of this line. Specifically it is defined by:
 1. An origin point $q$ in Space that the line passes through.
 2. A direction unit vector $\hat{\bm{s}}$ defining the line.
 3. The *Pitch* $h$, which defines the ratio of translation speed to rotation speed (how "steep" the threads of the virtual screw are).
@@ -78,7 +78,7 @@ If the Screw Axis $\screw$ is the geometric "thread," the **Twist** $\twist \in 
    \twist = \begin{bmatrix} \omega \\ v \end{bmatrix} = \screw \dot{\theta} 
 \end{equation}
 
-Where $\dot{\theta}$ is the speed the body moves along the Screw. A Twist unifies angular $\omega$ and linear $v$ velocity into a single variable. It maps the derivative (speed) of the Configuration Space map $\configspace$ we created earlier.
+Where $\dot{\theta}$ is the speed the body moves along the Screw. A Twist completely unifies angular $\omega$ and linear $v$ velocity into a single variable. This perfectly maps the derivative (speed) of the Configuration Space map $\configspace$ we created earlier.
 
 
 ### The Spatial Wrench ($\wrench$)
@@ -92,8 +92,8 @@ Torques ($m \in \Reals^3$) and linear pushes ($f \in \Reals^3$) are merged into 
    \wrench = \begin{bmatrix} m \\ f \end{bmatrix} \in \Reals^6
 \end{equation}
 
-When modeling the physics engines throughout *Tangent-Space Methods*, every mechanical coupling, robotic joint, actuator limit, and contact force is calculated exclusively using $6D$ Spatial Twists and Wrenches operating in $\se$, the space of screw motions.
+When modeling the physics engines throughout *Tangent-Space Methods*, every mechanical coupling, robotic joint, actuator limit, and contact force is calculated exclusively using $6D$ Spatial Twists and Wrenches operating in $\se$.
 
-We now possess the mathematical primer needed to leave the stationary world behind, map the configuration of physical bodies via $SE(3)$, understand their rotation matrices, and track their trajectories as 6D vectors. The fundamental mathematics is established.
+We now finally possess the mathematical primer necessary to leave the stationary world behind, map the configuration of physical bodies flawlessly via $SE(3)$, understand their rotational matrices, and track their trajectories as infinitesimally precise 6D vectors. The fundamental mathematics are established.
 
 We may now proceed to Volume I: The Geometry of those spaces.

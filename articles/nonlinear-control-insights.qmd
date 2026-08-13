@@ -21,11 +21,11 @@ $$
 \dot{x} = f(x) + G(x)u.
 $$
 
-Here, $f(x)$ is the **drift**---the autonomous dynamics arising from gravity, momentum, elastic energy, and Coriolis/centrifugal coupling. And $G(x)u$ is the **input**---the torques the golfer actively generates through muscular contraction. The key structural property is that these two contributions are *additively separable*: the drift field and the input field combine linearly in the state derivative. This additive structure mathematically justifies the **Skeletal Baseline** and validates the Zero Torque Counterfactual (ZTCF) as the system's natural trajectory from which all active deviation must be produced.
+Here, $f(x)$ is the **drift**---the autonomous dynamics arising from gravity, momentum, elastic energy, and Coriolis/centrifugal coupling. And $G(x)u$ is the **input**---the torques the golfer actively generates through muscular contraction. The key structural property is that these two contributions are *additively separable*: the drift field and the input field combine linearly in the state derivative. This additive structure provides the mathematical justification for the **Skeletal Baseline** and validates the Zero Torque Counterfactual (ZTCF) as the system's natural trajectory from which all active deviation must be produced.
 
 This control-theoretic perspective transforms how we understand the swing. In traditional biomechanics, we measure a total force and ask: "How hard did the golfer work?" In the control-affine framework, we ask a more powerful question: "How much of this force is the golfer supplying, and how much is the system providing for free?"
 
-With that structure in place, we now draw on nonlinear control theory to see what the decomposition of total forces into drift and input components implies about the control problem a golfer faces. This section expands significantly on classical insights from nonlinear systems, control geometry, and optimal control to interpret the swing as a drift-dominated dynamic maneuver that integrates complex mechanical coupling, underactuation, and state-dependent torque effectiveness.
+Having established this structure and the decomposition of total forces into drift and input components, we now draw on nonlinear control theory to understand what this structure implies about the nature of the control problem faced by a golfer. This section expands significantly on classical insights from nonlinear systems, control geometry, and optimal control to interpret the swing as a drift-dominated dynamic maneuver that integrates complex mechanical coupling, underactuation, and state-dependent torque effectiveness.
 
 ::: {.callout-note}
 ## Implicit Assumption: Drift Invariance
@@ -50,7 +50,7 @@ In the context of the AffineDrift framework, this causality is what allows the *
 
 ### Underactuation and Drift Dominance
 
-Underactuated systems have fewer control inputs than degrees of freedom, as the human--club system does. Movements such as swinging, throwing, and dynamic manipulation rely heavily on exploiting passive dynamics rather than directly imposing motion. Nonlinear control theory clarifies that in such systems, the drift field is generally large, and inputs primarily shape rather than dictate the motion.
+Underactuated systems are characterized by fewer control inputs than degrees of freedom, which is the case for the human--club system. Movements such as swinging, throwing, and dynamic manipulation rely heavily on exploiting passive dynamics rather than directly imposing motion. Nonlinear control theory clarifies that in such systems, the drift field is generally large, and inputs primarily shape rather than dictate the motion.
 
 This implies that a golfer cannot directly impose an arbitrary acceleration on the club or body segments. Instead, they influence the geometry, energy distribution, and coordination among segments, effectively steering the system's underlying passive dynamics toward a desired terminal state.
 
@@ -60,7 +60,7 @@ A legitimate concern is whether the Zero Torque Counterfactual (ZTCF) is unique.
 
 In our formulation, the ZTCF is **mathematically unique** and **mechanically unambiguous**. Here's why:
 
-1. **Actuated joints are physically identified.** The ZTCF corresponds to setting all generalized torques at the actuated joints to zero while preserving the constraint structure. The actuated joints are not abstract mathematical concepts; they correspond to anatomical joints where muscles cross (e.g., shoulder, elbow, wrist, hip, knee). The biomechanics of the system fixes this set, not our choice of variables.
+1. **Actuated joints are physically identified.** The ZTCF corresponds to setting all generalized torques at the actuated joints to zero while preserving the constraint structure. The actuated joints are not abstract mathematical concepts; they correspond to anatomical joints where muscles cross (e.g., shoulder, elbow, wrist, hip, knee). This set is fixed by the biomechanics of the system, not by our choice of variables.
 
 2. **The constraint structure is fixed by mechanism topology.** The kinematic chain of the human body—how segments are connected, which joints are free and which are constrained—is fixed by anatomy. The resulting drift field $f(x)$ is uniquely determined by the Lagrangian and dissipation function applied to this topology.
 
@@ -94,7 +94,7 @@ The ZTCF is **geometrically intrinsic**: it is the geodesic of the kinetic energ
 
 ### State-Dependent Effectiveness of Torques
 
-In affine nonlinear systems, the input matrix $G(x)$ encodes the influence of control inputs, and it varies with configuration and velocity. Thus, the same applied torque can have drastically different effects depending on posture, joint angles, shaft deflection, or motion history. This state-dependent input effectiveness is central to nonlinear control and directly relevant to analyzing and interpreting the dynamics of the golf swing.
+In affine nonlinear systems, the influence of control inputs is encoded in the input matrix $G(x)$, which varies with configuration and velocity. Thus, the same applied torque can have drastically different effects depending on posture, joint angles, shaft deflection, or motion history. This state-dependent input effectiveness is central to nonlinear control and directly relevant to analyzing and interpreting the dynamics of the golf swing.
 
 ### The Golf Swing as an Optimal Control Problem
 
@@ -111,7 +111,7 @@ Nonlinear optimal control predicts that in underactuated systems with strong dri
 
 ### Inertial Energy Transfer: The "Sequencing" Mechanism and Inertial Harvesting
 
-The off-diagonal terms of the mass matrix ($M_{ij}$) and the velocity-dependent Coriolis forces ($C(q,\dot{q})$) rigorously explain the proximal-to-distal transfer of energy that coaching calls "sequencing." This section develops the mechanism and gives concrete magnitudes.
+While often described in coaching as "sequencing," the proximal-to-distal transfer of energy is rigorously explained by the off-diagonal terms of the mass matrix ($M_{ij}$) and the velocity-dependent Coriolis forces ($C(q,\dot{q})$). This section develops the mechanism rigorously and provides concrete magnitudes.
 
 #### The Mass Matrix Coupling Mechanism
 
@@ -199,7 +199,7 @@ The control-affine structure facilitates physics-aware machine learning:
 
 ### Reachability at Impact
 
-Reachability analysis can identify which combinations of clubhead speed and orientation are dynamically feasible. It clarifies the constraints that the system's nonlinear dynamics impose.
+Reachability analysis can identify which combinations of clubhead speed and orientation are dynamically feasible. This is important for understanding the constraints imposed by the nonlinear dynamics of the system.
 
 ### Minimal-Effort Torque Synthesis
 

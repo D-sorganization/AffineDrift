@@ -12,9 +12,9 @@ format:
 
 ## Abstract
 
-Strokes gained has transformed golf analytics by decomposing scores into contributions from different parts of the game relative to a benchmark player. However, the same feature that makes strokes gained powerful—the use of a common population baseline—also limits its interpretability for *individual* performance changes and practice priorities.
+Strokes gained has transformed golf analytics by decomposing scores into contributions from different parts of the game relative to a benchmark player. However, the same feature that makes strokes gained powerful—the use of a common population baseline—also limits its interpretability when we start talking about *individual* performance changes and practice priorities.  
 
-This article shows, using a formal statistical and mathematical framework, why “if I improve my strokes gained putting by 0.5 per round, I’ll score 0.5 shots better per round” is generally false. Strokes gained is defined with respect to an *average* player’s expected performance surface, not the individual golfer’s. A player’s skill profile may differ from the benchmark: unusually poor from short range, say, or unusually strong with wedges. For that player, the mapping from a mechanical or tactical change—leaving putts closer, for instance—to actual scoring impact can diverge substantially from what the strokes-gained tables suggest.
+This article shows, using a formal statistical and mathematical framework, why “if I improve my strokes gained putting by 0.5 per round, I’ll score 0.5 shots better per round” is generally false. Strokes gained is defined with respect to an *average* player’s expected performance surface, not the individual golfer’s. When a player’s skill profile differs from the benchmark (e.g., unusually poor from short range, unusually strong with wedges), the mapping from a mechanical or tactical change (like leaving putts closer) to actual scoring impact can diverge substantially from what the strokes-gained tables suggest.  
 
 We formalize this using conditional expectations, derivatives of expected strokes with respect to state variables (distance, lie, etc.), and the distinction between population-level and individual-level response surfaces. A simple putting example shows that a poor short putter can gain *more* actual strokes than a good short putter from the same improvement in first-putt proximity—even though the standard strokes-gained metric values the two changes identically. The same logic extends to driving, approach shots, and the short game.  
 
@@ -78,7 +78,7 @@ The interpretation:
 
 - $J_{\text{ref}}(d_i, c_i)$: how many strokes the benchmark player needs from where you started.
 - $J_{\text{ref}}(d_{i+1}, c_{i+1})$: how many strokes the benchmark player needs from where your ball ended up.
-- The difference minus the one stroke you played is how many strokes you gained (positive) or lost (negative) relative to the benchmark.
+- The difference minus the one stroke you actually played is how many strokes you gained (positive) or lost (negative) relative to the benchmark.
 
 Strokes gained over any collection of shots (e.g., a hole, a round, a season, a category such as “putting”) is just the sum of the individual $g_i$. The telescoping sum identity shows that for a hole:
 
@@ -102,7 +102,7 @@ $$
 
 where $\mu$ denotes the shot strategy (club, target, etc.) and $(D', C')$ is the random next state.
 
-Under this view, the strokes-gained value of a realized shot outcome is the difference between what the dynamic program *expected* and what actually happened, again measured in strokes. That’s elegant—and, for population-level analysis, effective. The trouble starts when we implicitly assume that $J_{\text{ref}}$ is also the correct value function for each individual golfer.
+Under this view, the strokes-gained value of a realized shot outcome is the difference between what the dynamic program *expected* and what actually happened, again measured in strokes. That’s elegant—and, for population-level analysis, very effective. The trouble starts when we implicitly assume that $J_{\text{ref}}$ is also the correct value function for each individual golfer.
 
 ---
 
@@ -144,7 +144,7 @@ $$
 
 and that the way $J_i$ changes with $d$, $c$, etc. is also similar to the reference player. For elite professionals this approximation is tolerable in aggregate; for ordinary golfers whose skill profile differs markedly from the benchmark, it introduces systematic error.
 
-The next section makes that mismatch precise and shows how it distorts the interpretation of strokes-gained improvements for individuals.
+What follows is a more precise description of how that mismatch creates problems when interpreting strokes-gained improvements for individuals.
 
 ---
 
@@ -160,7 +160,7 @@ $$
 
 for the benchmark and individual value functions, respectively.
 
-If a training intervention or strategy change causes the player to leave their first putt, on average, $\Delta x < 0$ meters closer to the hole, then (for small $\Delta x$) the change in the benchmark expectation is approximately
+If a training intervention or strategy change causes the player to leave their first putt, on average, $\Delta x < 0$ metres closer to the hole, then (for small $\Delta x$) the change in the benchmark expectation is approximately
 
 $$
 \Delta J_{\text{ref}} \approx \frac{\partial J_{\text{ref}}}{\partial x}(x)\, \Delta x,
@@ -213,7 +213,7 @@ Let’s make this more explicit with a toy model that still captures the real is
 
 ### 5.1 Simple Two-Putt Model
 
-Suppose from some short-putt distance $x$ (say 1–3 meters), the reference population has one-putt probability $p_{\text{ref}}(x)$, so that:
+Suppose from some short-putt distance $x$ (say 1–3 metres), the reference population has one-putt probability $p_{\text{ref}}(x)$, so that:
 
 - Probability of holing in one: $p_{\text{ref}}(x)$.
 - Probability of holing in two: $1 - p_{\text{ref}}(x)$ (we ignore three-putts at this distance for simplicity).
@@ -232,7 +232,7 @@ $$
 \frac{\partial J_{\text{ref}}}{\partial x}(x) = - \frac{\partial p_{\text{ref}}}{\partial x}(x).
 $$
 
-So the local value (per meter) of getting closer is controlled by how fast make probability increases as you move in.
+So the local value (per metre) of getting closer is controlled by how fast make probability increases as you move in.
 
 Now consider two golfers, both facing putts from distance $x$:
 
@@ -322,7 +322,7 @@ To interpret this as “Golfer A gains X strokes per round from being 10 yards l
 1. A and B are **equally skilled at approach play and putting**, so that their individual value functions $J_A$ and $J_B$ match $J_{\text{ref}}$ at those distances.
 2. A and B have similarly shaped **dispersion patterns** (fairway vs rough, hazards, etc.), or you explicitly account for different lie distributions.
 
-If Golfer A is substantially better from long irons than the reference player, and Golfer B is worse, the actual marginal value of moving both of them 10 yards closer is not the same as the benchmark calculation. The reference curve is computing something like an **average treatment effect** (ATE) of distance across the population; the coach cares about a **conditional individual treatment effect** (CITE) for the specific golfer.
+If Golfer A is substantially better from long irons than the reference player, and Golfer B is worse, the actual marginal value of moving both of them 10 yards closer is not the same as the benchmark calculation. The reference curve is computing something like an **average treatment effect** (ATE) of distance across the population; the coach really cares about a **conditional individual treatment effect** (CITE) for the specific golfer.
 
 ### 6.2 Approach Play and Wedge Distance Optimization
 
@@ -452,7 +452,7 @@ Strokes gained is outstanding for:
 - **Comparisons within a peer group**: ranking players against each other within the same dataset and course conditions.
 - **Tracking relative changes over time**: seeing whether a player’s performance in a given facet is improving or declining relative to the same benchmark.
 
-For these uses, the population basis of $J_{\text{ref}}$ is a feature, not a bug.
+For these uses, the fact that $J_{\text{ref}}$ is population-based is a feature, not a bug.
 
 ### 9.2 Be Explicit When Making *Causal* Statements
 
@@ -482,7 +482,7 @@ The reference $J_{\text{ref}}$ integrates over these interactions *on average*; 
 
 Strokes gained is, mathematically, a value function for an **average player** in a specified reference population. It assigns a score to each shot by comparing the realized state transition to what that average player would experience. For comparing players and decomposing performance, this is extremely powerful.
 
-That same machinery, however, is often used to infer the **individual causal impact** of changes in technique, practice, or strategy. Doing so leaves an important assumption unstated: that the individual golfer’s conditional expectation surface $J_i$ looks enough like the benchmark $J_{\text{ref}}$ that the gradients and local changes calculated from $J_{\text{ref}}$ are good proxies for those of $J_i$.
+However, when that same machinery is used to infer the **individual causal impact** of changes in technique, practice, or strategy, an important assumption is often left unstated: that the individual golfer’s conditional expectation surface $J_i$ looks enough like the benchmark $J_{\text{ref}}$ that the gradients and local changes calculated from $J_{\text{ref}}$ are good proxies for those of $J_i$.
 
 In reality:
 
@@ -500,9 +500,7 @@ Or, less formally: the “average player” that strokes gained is based on is a
 
 ## Connection to the AffineDrift Framework
 
-Understanding these statistical limitations motivates the physics-based approach taken throughout AffineDrift. Rather than relying on population averages and regression-based value functions, the control-affine framework models each golfer's *individual dynamics*—their unique drift field, their specific input capabilities, the geometry and inertial properties that make their swing biomechanically distinct. By decomposing measured forces and kinematics into passive drift and active input contributions, we can characterize what each golfer's body can do, independent of how that performance maps to scoring via population benchmarks. This mechanistic insight—knowing the constraints, capabilities, and natural tendencies of an individual's system—offers something strokes-gained statistics do not attempt: a causal model of the golfer's motion that does not depend on population averages.
-
-Strokes gained is an excellent descriptive and comparative tool; the AffineDrift framework serves a complementary but different purpose. While strokes gained asks “how is this player performing relative to others?”, AffineDrift asks “how does this player's unique body move, and why?” The latter is the foundation for principled, individualized coaching and equipment design.
+Understanding these statistical limitations motivates the physics-based approach taken throughout AffineDrift. Rather than relying on population averages and regression-based value functions, the control-affine framework models each golfer's *individual dynamics*—their unique drift field, their specific input capabilities, the geometry and inertial properties that make their swing biomechanically distinct. By decomposing measured forces and kinematics into passive drift and active input contributions, we can characterize what each golfer's body can do, independent of how that performance maps to scoring via population benchmarks. This mechanistic insight—knowing the constraints, capabilities, and natural tendencies of an individual's system—provides something that strokes-gained statistics do not attempt to provide: a causal model of the golfer's motion that does not depend on population averages. Strokes gained is an excellent descriptive and comparative tool; the AffineDrift framework serves a complementary but different purpose. While strokes gained asks “how is this player performing relative to others?”, AffineDrift asks “how does this player's unique body move, and why?” The latter is the foundation for principled, individualized coaching and equipment design.
 
 <section class="laymans-terms">
   <h2>

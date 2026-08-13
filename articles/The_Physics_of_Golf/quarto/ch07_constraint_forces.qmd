@@ -8,7 +8,7 @@ description: "Now here's the key insight: to enforce a constraint, the joint mus
 ::: {.callout-tip}
 ## Why Constraint Forces Matter Most
 
-You learned in @sec-zero_torque_counterfactual that the modeled downswing is largely passive—gravity and Coriolis drive much of the acceleration. But @sec-zero_torque_counterfactual left a critical question unanswered:
+You learned in @sec-zero_torque_counterfactual that the downswing is passive—gravity and Coriolis drive acceleration. But @sec-zero_torque_counterfactual left a critical question unanswered:
 
 **How does the arm's momentum become the club's momentum?**
 
@@ -39,7 +39,7 @@ $$
 
 For a golf swing, examples include:
 - **Joint connection:** The wrist connects the arm to the club. This means the endpoint of the arm coincides with the base of the club: $\bm{\Phi}_{\text{wrist}}(\bm{q}) = \bm{x}_{\text{arm}}(\bm{q}) - \bm{x}_{\text{club}}(\bm{q}) = \mathbf{0}$.
-- **Grip constraint:** Your hand is fixed on the grip, so the grip point cannot move relative to your palm: $\bm{\Phi}_{\text{grip}}(\bm{q}) = \bm{x}_{\text{grip}} - \text{const} = \mathbf{0}$. Screw theory was built to describe exactly this kind of wrench-bearing static coupling [@crane2022screw_theory].
+- **Grip constraint:** Your hand is fixed on the grip, so the grip point cannot move relative to your palm: $\bm{\Phi}_{\text{grip}}(\bm{q}) = \bm{x}_{\text{grip}} - \text{const} = \mathbf{0}$, which is the kind of wrench-bearing static coupling formal screw theory was built to describe [@crane2022screw_theory].
 - **Ground contact:** Your feet are in contact with the ground: $z_{\text{feet}} = 0$ (vertical position is fixed).
 
 :::
@@ -49,7 +49,7 @@ A constraint is a rule that limits where your body can go. The elbow joint is a 
 
 Now here's the key insight: to enforce a constraint, the joint must *push*. If your arm wants to fly away from your shoulder due to centrifugal effects, the elbow joint must push inward to prevent it. That push is the constraint force.
 
-And here's the paradox: this push does zero net work. Why? Because the push acts along the direction of the constraint. The forearm can't move away from the shoulder; the constraint prevents it. A force along that forbidden direction never moves the endpoint, so it does zero net work.
+And here's the paradox: this push does zero net work. Why? Because the push acts along the direction of the constraint. The forearm can't move away from the shoulder (the constraint prevents it), so the constraint force that acts in that direction doesn't actually move the endpoint—it's doing work, but zero net work, because the constrained motion is zero.
 
 Yet this zero-net-work force *does* redirect energy between segments.
 
@@ -68,7 +68,7 @@ If there are $n_c$ constraint equations and $n$ configuration variables, then $\
 
 **Example: Wrist Constraint Jacobian**
 
-For a double pendulum (shoulder and elbow), suppose the wrist constraint enforces that the endpoint of the arm is at a fixed angle relative to the global frame. This is a simplification: imagine the wrist locked at a specific orientation.
+For a double pendulum (shoulder and elbow), suppose the wrist constraint enforces that the endpoint of the arm is at a fixed angle relative to the global frame (simplified—imagine the wrist is locked at a specific orientation).
 
 The constraint might be:
 
@@ -414,7 +414,7 @@ Here's why:
 2. The shoulder constraint (the joint connecting arm to torso) prevents the arm from flying away radially. Instead, it couples the arm's motion to the torso's rotation.
 3. This coupling creates a constraint force, which acts on the arm. This force is what *actually* accelerates the arm—not a muscular torque, but a constraint force arising from the torso's inertia.
 4. Similarly, the wrist constraint couples the club to the arm. The arm's inertia, via the constraint force, accelerates the club.
-5. By the time the chain reaches the club, the constraint force is enormous (hundreds of Newtons), far exceeding what any muscle can produce.
+5. By the time the club reaches the club, the constraint force is enormous (hundreds of Newtons), far exceeding what any muscle can produce.
 
 This is why the kinetic chain works: it's not about muscular effort cascading down from the hips. It's about *mechanical coupling*—constraints that efficiently redirect the momentum of proximal segments to distal segments.
 
@@ -448,9 +448,9 @@ During the downswing:
 
 The grip force arises *automatically* from the constraint, without explicit muscular effort to "grip harder." It's a consequence of the kinematics and inertias.
 
-However, the golfer *can* modulate the grip force by changing muscle tension or by allowing some slip. A gentle grip (low force) allows some flexibility; a firm grip (high force) enforces the constraint tightly. This modulation is a control knob.
+However—and this is important—the golfer *can* modulate the grip force by changing muscle tension or by allowing some slip. A gentle grip (low force) allows some flexibility; a firm grip (high force) enforces the constraint tightly. This modulation is a control knob.
 
-**Insight:** The large grip forces in a golf swing (often 100+ N at late downswing) are not evidence of muscular effort. They're evidence of massive inertial forces being channeled through the constraint. Muscles hold the constraint in place; they do not drive the acceleration.
+**Insight:** The large grip forces in a golf swing (often 100+ N at late downswing) are not evidence of muscular effort. They're evidence of massive inertial forces being channeled through the constraint. Muscles are simply holding the constraint in place, not driving the acceleration.
 
 **Example: Ground Reaction Forces and the Closed Kinematic Chain**
 
@@ -485,7 +485,7 @@ But first, @sec-triple_pendulum extends the double pendulum to a triple pendulum
 ## Chapter Exercises: Constraint Forces
 
 {Conceptual}
-Take a grip force of 100 N. This is an illustrative value: actual grip forces vary with swing speed and technique, and approximately 50--150 N is a typical estimated range [@Hume2005]. Explain in plain language: why can such a force do zero net work on the system, yet transfer energy from the arm to the club?
+Explain in plain language: Why can a grip force of 100 N (an illustrative value; actual grip forces vary with swing speed and technique; approximately 50--150 N is a typical estimated range [@Hume2005]) do zero net work on the system, yet transfer energy from the arm to the club?
 
 (Hint: Think about the direction of the grip force and the direction of motion. Are they parallel or perpendicular?)
 

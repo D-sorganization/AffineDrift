@@ -64,7 +64,7 @@ $$
 f(x̄ + \delta x, ū + \delta u) = f(x̄, ū) + Jf|_{(x̄,ū)} \begin{pmatrix} \delta x \\ \delta u \end{pmatrix} + \frac{1}{2} H \begin{pmatrix} \delta x^2 \\ \delta u^2 \end{pmatrix} + \text{higher order}
 $$
 
-where $H$ represents the Hessian tensor of $f$. These second derivatives capture the curvature, and they propagate through the dynamics to create the quadratic residual.
+where $H$ represents the Hessian tensor of $f$. The curvature is captured by these second derivatives, and they propagate through the dynamics to create the quadratic residual.
 
 ## Practical Implication: A Scaling Law
 
@@ -77,11 +77,11 @@ This tells you exactly how far you can trust linearization:
 - If your perturbation is 1 cm and the residual is 0.1 mm, then doubling to 2 cm makes the residual 0.4 mm (still small).
 - But if your perturbation grows to 10 cm, the residual balloons to 10 mm (now significant).
 
-This quadratic scaling encodes the **margin before breakdown**. You can use it to set error tolerances, determine when to re-linearize, and decide if a linear approximation is good enough for your application.
+The **margin before breakdown** is encoded in this quadratic scaling. You can use it to set error tolerances, determine when to re-linearize, and decide if a linear approximation is good enough for your application.
 
 ## Residuals in DDP/iLQR
 
-In iterative linear-quadratic methods, the iteration scheme handles residuals implicitly:
+In iterative linear-quadratic methods, residuals are implicitly handled by the iteration scheme:
 
 1. You linearize at the current trajectory.
 2. You solve LQR and integrate the nonlinear system forward.

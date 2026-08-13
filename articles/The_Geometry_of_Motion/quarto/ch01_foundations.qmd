@@ -20,8 +20,8 @@ very definition of what "smooth" means.
 
 
 Nonlinear dynamics are often described as systems in which superposition does not apply.
-Students learn early that linear systems let solutions combine---if
-$\x_1(t)$ and $\x_2(t)$ are solutions, then so is $\alpha\x_1(t)+\beta\x_2(t)$---while nonlinear
+Students learn early that while linear systems permit the combination of solutions---if
+$\x_1(t)$ and $\x_2(t)$ are solutions, then so is $\alpha\x_1(t)+\beta\x_2(t)$---nonlinear
 systems deny this convenience. The narrative typically stops there, leaving the impression
 that nonlinearity and superposition are fundamentally incompatible.
 
@@ -31,7 +31,7 @@ that is a genuine vector space, and within that vector space, superposition hold
 Not approximately. Not "for small enough perturbations." *Exactly*, by the axioms
 of linear algebra.
 
-This book takes that geometric fact seriously and traces its consequences
+The purpose of this book is to take that geometric fact seriously and trace its consequences
 through contraction theory, optimal control, and the practical decomposition of complex
 motions into interpretable components.
 
@@ -96,10 +96,10 @@ write the function as $y = f(x)$ or in any other smooth parameterization.
 
 Bernhard Riemann's 1854 paper *Über die Hypothesen, welche der Geometrie zu Grunde
 liegen* (On the Hypotheses Which Lie at the Foundations of Geometry) was the pivotal moment.
-Riemann observed that Newton and Leibniz had constructed a local approximation
-(the tangent line) at each point of a curve. The same construction yields a local vector
-space (the tangent space) at each point of any smooth manifold, even if the manifold itself
-is curved, high-dimensional, or not embedded in Euclidean space.
+Riemann observed that just as Newton and Leibniz could construct a local approximation
+(the tangent line) at each point of a curve, one could construct a local vector space
+(the tangent space) at each point of any smooth manifold, even if the manifold itself were
+curved, high-dimensional, or not embedded in Euclidean space.
 
 Riemann's innovation---and its modern development by Élie Cartan, Hermann Weyl, and
 others---fundamentally separated two ideas:
@@ -130,8 +130,8 @@ mathematical situation.
 ### The Conceptual Shift
 
 
-Recognizing that linearization is *exact* at the infinitesimal level, not an
-approximation, took careful attention to the definition of the Fr\'echet derivative.
+The recognition that linearization is *exact* at the infinitesimal level, not an
+approximation, came from careful attention to the definition of the Fr\'echet derivative.
 If we define smoothness via the condition
 \begin{equation}
 f(\bar{\x} + \dx) = f(\bar{\x}) + \mat{A}\,\dx + o(\norm{\dx}),
@@ -283,7 +283,7 @@ However, the converse is false: a function can have all Gâteaux derivatives in 
 all directions; the remainder $o(\norm{\dx})$ must be small relative to $\norm{\dx}$ for
 *all* perturbations $\dx$, not just along specific rays.
 
-In this book we always assume Fréchet differentiability (part of the $C^1$
+For the purposes of this book, we always assume Fréchet differentiability (part of the $C^1$
 assumption), which ensures the robust infinitesimal linearization on which all subsequent
 theory depends.
 
@@ -481,9 +481,9 @@ coordinate chart varies along the trajectory. For a time-independent coordinate
 change, $\dot{\mat{T}}=0$ and the transformation is a similarity transform, so
 the eigenvalues of $\mat{A}$ are unchanged. For a time-dependent coordinate
 change, the instantaneous eigenvalues of $\mat{A}_z$ need not match those of
-$\mat{A}$. Invariant claims must then rest on the underlying geometric
-dynamics instead: stability conclusions, Lyapunov exponents, or contraction
-rates.
+$\mat{A}$; invariant statements must instead be made about the underlying
+geometric dynamics, such as stability conclusions, Lyapunov exponents, or
+contraction rates.
 
 
 ## Residuals: Geometry, Not Error
@@ -793,7 +793,7 @@ to the manifold curvature). This is formalized by the Christoffel symbols $\Gamm
 measure how basis vectors change as you move along the manifold.
 
 For our nonlinear dynamics, an analogous concept applies: as the reference trajectory $\bar{\x}(t)$
-evolves, the linearized dynamics at successive points are not directly comparable; they must be
+evolves, the linearized dynamics at successive points are not simply comparable; they must be
 "transported" via the state transition matrix $\Phi(t, t_1)$. The transport is exact (no
 approximation), but it encodes the manifold's curvature.
 
@@ -994,9 +994,10 @@ that are both conceptually clear and computationally efficient.
 ## Preview: Why These Ideas Matter for the Golf Swing
 
 
-The foundations of this chapter connect directly to the book's primary application domain:
-the biomechanics of the golf swing. This preview is deliberately non-technical; the full
-mathematical treatment appears in Chapter~\ref{ch:applications}.
+Before proceeding to the formal theory, it is worth previewing how the foundations of this
+chapter connect to the book's primary application domain: the biomechanics of the golf swing.
+This preview is deliberately non-technical; the full mathematical treatment appears in
+Chapter~\ref{ch:applications}.
 
 
 ::: {.callout-note}

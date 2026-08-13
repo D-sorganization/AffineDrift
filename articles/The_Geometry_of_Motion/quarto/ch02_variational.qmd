@@ -142,8 +142,8 @@ and drop all $O(\|\dx\|^2)$ terms:
 \end{equation}
 
 The $R_f(\dx)$ and $O(\|\dx\|^2)$ terms represent curvature of the vector field. They vanish
-in the limit $\|\dx\|\to 0$, making them negligible for infinitesimal perturbations. The
-term $\frac{\partial G}{\partial \x}(\dx\otimes\bar{\uvec})$ is linear in $\dx$ (when $\bar{\uvec}$
+in the limit $\|\dx\|\to 0$, making them negligible for infinitesimal perturbations. Note that
+the term $\frac{\partial G}{\partial \x}(\dx\otimes\bar{\uvec})$ is linear in $\dx$ (when $\bar{\uvec}$
 is fixed along the nominal trajectory), so it is retained.
 
 #### Compact Matrix Form
@@ -180,8 +180,8 @@ evolution of infinitesimal perturbations.
 
 The error incurred by dropping the $O(\|\dx\|^2)$ terms in the derivation is the residual.
 For initial conditions with $\|\dx(t_0)\| \ll 1$, this residual remains small (growing only
-quadratically with $\|\dx\|$) over a finite time interval. This is what precisely justifies
-using linearization to study local stability and design feedback control.
+quadratically with $\|\dx\|$) over a finite time interval. This is the precise justification
+for using linearization to study local stability and design feedback control.
 :::
 
 
@@ -192,7 +192,7 @@ using linearization to study local stability and design feedback control.
 The variational equation~\eqref{eq:ch2:variational} is a *linear, time-varying*
 system that lives in the tangent space along $\bar{\x}(t)$. It describes how infinitesimal
 perturbations propagate. The matrices $\mat{A}(t)$ and $\mat{B}(t)$ change as the
-nominal trajectory evolves, because the tangent space itself moves with
+nominal trajectory evolves, reflecting the fact that the tangent space itself moves with
 the base point. Notice that $\mat{A}$ depends on the nominal input $\bar{\uvec}(t)$: different
 reference inputs generate different tangent-space dynamics!
 :::
@@ -417,7 +417,7 @@ on any finite interval $[t_0,T]$, and the sum satisfies the ODE~\eqref{eq:ch2:st
 ::: {.callout-note title="Remark"}
 The Peano-Baker series highlights a crucial feature: even though $[\mat{A}(t_1),\mat{A}(t_2)]
 \neq 0$ in general (the matrices do not commute), the series still provides the exact solution.
-Summing over all orderings accounts for the non-commutativity. This is in stark
+The summation over all orderings effectively accounts for non-commutativity. This is in stark
 contrast to the *Magnus expansion* from perturbation theory, which organizes the series
 differently to emphasize commutators.
 :::
@@ -519,8 +519,8 @@ We discuss remedies in Section~\ref{sec:ch2:stability}.
 
 
 When both initial perturbations $\dx(t_0) \neq 0$ and control perturbations $\du(t) \neq 0$ are present,
-the **variation of constants** formula (also called the Duhamel formula) gives the complete
-solution of the variational equation:
+the complete solution of the variational equation is given by the **variation of constants** (also called
+Duhamel formula):
 
 \begin{equation}
 \boxed{
@@ -947,8 +947,8 @@ incorporated into machine learning infrastructure.
 ## Liouville's Formula and Phase Space Volume
 
 
-Liouville's formula (Theorem~\ref{thm:ch2:liouville}) has a beautiful geometric interpretation:
-it governs how phase-space volumes evolve.
+Liouville's formula (Theorem~\ref{thm:ch2:liouville}) has a beautiful geometric interpretation related
+to the evolution of phase-space volumes.
 
 
 ### Interpretation via Divergence
@@ -1013,9 +1013,9 @@ time scales). We discuss the challenges and remedies.
 A system is *stiff* if the Jacobian $\mat{A}(t)$ has eigenvalues with vastly different magnitudes
 or real parts. For example, if $\lambda_1 = -1$ and $\lambda_2 = -1000$, the stiffness ratio is $1000:1$.
 
-For such systems, naive numerical integration with explicit methods (RK4) becomes extremely slow. The step
-size must be tiny to resolve the fastest mode (with $\lambda_2$), even though the slower mode
-(with $\lambda_1$) dominates the solution. Implicit methods (BDF, Rosenbrock) handle stiffness better but can
+For such systems, naive numerical integration with explicit methods (RK4) becomes extremely slow: the step
+size must be tiny to resolve the fastest mode (with $\lambda_2$), even though the solution is dominated
+by the slower mode (with $\lambda_1$). Implicit methods (BDF, Rosenbrock) handle stiffness better but can
 still suffer from conditioning issues when computing the STM.
 
 Consider the STM: if a column $\Phi_{\cdot,j}(t,t_0)$ corresponds to an initial condition along an
@@ -1065,7 +1065,7 @@ to restart the integration from a recent checkpoint or use higher precision arit
 Best practices for stable STM computation:
 1. Use automatic differentiation to compute $\mat{A}(t)$ accurately.
 2. For stiff systems, use implicit integrators (BDF or Rosenbrock) rather than explicit ones.
-3. For long integration times, use QR-based propagation to maintain stability.
+3. For very long integration times, use QR-based propagation to maintain stability.
 4. Monitor singular values of $\Phi$ and switch to higher precision if needed.
 5. When $\det(\Phi)$ becomes very small or very large, verify against Liouville's formula.
 :::
@@ -1215,8 +1215,8 @@ leading to superlinear (quadratic) convergence.
 
 ::: {.callout-note title="Remark"}
 This quadratic convergence is one of the key advantages of locally optimal methods like DDP and SQP over
-open-loop trajectory optimization methods that do not re-linearize. Once inside a neighborhood of the
-optimum, they refine a solution quickly.
+open-loop trajectory optimization methods that do not re-linearize: they can refine a solution very quickly
+once they are in a neighborhood of the optimum.
 :::
 
 
@@ -1245,7 +1245,7 @@ integrator preserves *none* of these. Over long simulations, this manifests as:
 
 For short simulations (a single golf downswing at 0.5 s), these effects are typically
 negligible. For repeated simulations, parameter sweeps, or optimization loops that
-iterate many times, accumulated drift can corrupt the results.
+iterate many times, accumulation of drift can corrupt the results.
 
 
 ### Symplectic Integrators

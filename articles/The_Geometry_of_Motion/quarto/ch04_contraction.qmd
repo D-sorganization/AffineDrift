@@ -32,8 +32,8 @@ unforgiving and require constant, precise correction.
 This chapter develops the mathematics to distinguish funnels from hilltops, and
 everything in between. The key tool is a **metric**---a local ruler that measures
 distances between trajectories. If that ruler says distances are shrinking, the
-system is contracting. The beauty of the approach: finding the right ruler
-*proves* the system is stable, without simulating every possible starting
+system is contracting. The beauty of the approach is that finding the right ruler
+*proves* the system is stable, without having to simulate every possible starting
 condition.
 :::
 
@@ -63,8 +63,8 @@ and it provides the certificate we need.
 ### The Lohmiller--Slotine Framework (1998)
 
 
-**Lohmiller and Slotine** formalized the modern contraction theory for nonlinear systems
-in 1998 [@LohmillerSlotine1998]. Their key insight: study how *tangent
+The modern contraction theory for nonlinear systems was formalized by **Lohmiller and
+Slotine** in 1998 [@LohmillerSlotine1998]. Their key insight was to study how *tangent
 vectors* between trajectories evolve under the flow. If all such vectors shrink in a
 suitably chosen metric, then the geodesic distance between any two trajectories shrinks
 exponentially.
@@ -98,7 +98,7 @@ of the system's Jacobian is uniformly negative definite, all nearby solutions co
 to a single trajectory.
 
 Although Demidovich did not use the language of Riemannian metrics or contraction, his
-condition is a special case of modern contraction theory: it corresponds to
+condition is in fact a special case of modern contraction theory: it corresponds to
 contraction in the *Euclidean metric* (identity matrix). The modern framework
 generalizes Demidovich's insight by relaxing the constant-metric requirement, allowing
 the "ruler" to change with position and time.
@@ -110,11 +110,11 @@ the "ruler" to change with position and time.
 Contraction theory has since become a cornerstone of:
 - **Incremental stability and synchronization**: studying how coupled oscillators,
   networked systems, and consensus algorithms achieve agreement.
-- **Control design**: synthesizing feedback laws that guarantee contraction, yielding
-  robust and verifiable controllers.
-- **Learning-based control**: verifying neural network controllers via metric
+- **Control design**: synthesis of feedback laws that guarantee contraction, leading
+  to robust and verifiable controllers.
+- **Learning-based control**: verification of neural network controllers via metric
   composition and convex optimization.
-- **Robotics and autonomous systems**: designing feedback laws that tolerate
+- **Robotics and autonomous systems**: design of feedback laws that are tolerant to
   perturbations and external disturbances.
 
 
@@ -332,7 +332,7 @@ Taking square roots yields \eqref{eq:ch4:euclidean-decay}. \qed
 ::: {.callout-note title="Remark"}
 The proof relies on three essential ingredients: (i) the variational equation governing
 tangent vectors, (ii) the metric-dependent Lyapunov function capturing shrinking, and
-(iii) the metric bounds translating between geodesic and Euclidean distance.
+(iii) the metric bounds providing translation between geodesic and Euclidean distance.
 The contraction condition ensures all three work together.
 :::
 
@@ -440,13 +440,13 @@ For this to satisfy the contraction condition with rate $\lambda$:
 
 The off-diagonal elements require $1 \leq 0$, which is false. This means $\mat{M} = \mat{I}$
 does not certify contraction at rate $2\lambda$ for any $\lambda > 0$ (the LMI is infeasible
-for the off-diagonal structure), but the system is still contracting---one must use a
+for the off-diagonal structure), but the system is still contracting—one must use a
 non-identity metric $\mat{M}$.
 
 For reference, the symmetric part $\sym(\mat{A}) = \tfrac{1}{2}(\mat{A}^\T + \mat{A})$ has
 eigenvalues approximately $-1.79$ and $-3.21$, confirming $\lambda_{\max}(\sym(\mat{A})) \approx -1.79$.
 The contraction rate with the identity metric (ignoring the off-diagonal constraint) would
-be $\lambda = |\lambda_{\max}(\sym(\mat{A}))| = 1.79$ rad/s directly---**no additional
+be $\lambda = |\lambda_{\max}(\sym(\mat{A}))| = 1.79$ rad/s directly—**no additional
 factor of $1/2$** is needed, since $\sym(\mat{A}) = \tfrac{1}{2}(\mat{A}+\mat{A}^\T)$
 already incorporates the scaling.
 
@@ -566,7 +566,7 @@ Pre- and post-multiply \eqref{eq:ch4:CCM-nonlinear} by $\mat{W}$ and use $\mat{M
 \mat{W}(\mat{A}^\T\mat{M} + \mat{M}\mat{A} + \dot{\mat{M}})\mat{W} &\preceq -2\lambda\mat{W}\mat{M}\mat{W} = -2\lambda\mat{W}.
 \end{align}
 
-After expanding and simplifying (using $\mat{M} = \mat{W}^{-1}$ and
+After expanding and simplifying (using the fact that $\mat{M} = \mat{W}^{-1}$ and
 $\dot{\mat{M}} = -\mat{W}^{-1}\dot{\mat{W}}\mat{W}^{-1}$), the condition becomes:
 
 \begin{equation}
@@ -703,9 +703,9 @@ $V_k = \dx_k^\T \mat{M}_k \dx_k$ satisfies $V_{k+1} \leq \rho^2 V_k$ by the cond
 ### Connection to Riccati Analysis
 
 
-For linear discrete-time systems, the discrete contraction metric relates to
-the solution of a discrete-time algebraic Riccati equation (DARE), which
-Chapter~\ref{ch:riccati} treats in detail. Both frameworks certify stability and convergence,
+For linear discrete-time systems, the discrete contraction metric can be related to
+the solution of a discrete-time algebraic Riccati equation (DARE), which is studied
+in detail in Chapter~\ref{ch:riccati}. Both frameworks certify stability and convergence,
 but contraction provides tighter guarantees on trajectory convergence rates.
 
 ::: {.callout-note title="Remark"}
@@ -742,8 +742,8 @@ We search for a metric of the form
 \mat{M}(x_1) = \begin{bmatrix} m_1(x_1) & 0 \\ 0 & m_2(x_1) \end{bmatrix},
 \label{eq:ch4:vdp-metric-ansatz}
 \end{equation}
-where $m_1, m_2 > 0$ are smooth functions. The special structure of the Van der Pol system
-motivates the diagonal ansatz (position and velocity are somewhat decoupled).
+where $m_1, m_2 > 0$ are smooth functions. The diagonal structure is motivated by the
+special structure of the Van der Pol system (position and velocity are somewhat decoupled).
 
 The contraction condition $\mat{A}^\T\mat{M} + \mat{M}\mat{A} + \dot{\mat{M}} \preceq -2\lambda\mat{M}$
 becomes element-wise:
@@ -919,7 +919,7 @@ contraction guarantees not only ISS but also trajectory synchronization.
 ### Unified Perspective
 
 
-Table~\ref{tbl:ch4:lyapunov-contraction} compares Lyapunov
+Table~\ref{tbl:ch4:lyapunov-contraction} provides a comprehensive comparison of Lyapunov
 stability, Lyapunov asymptotic stability, incremental stability, and contraction.
 
 
@@ -964,7 +964,7 @@ same rate---a scenario that contraction explicitly rules out.
 ## Contraction in Biomechanical Systems
 
 
-The theory of contraction metrics applies naturally and powerfully to the
+The theory of contraction metrics finds a natural and powerful application in the
 biomechanics of human movement. This section previews how the formal machinery developed
 above connects to the analysis and design of coordinated multisegment motions, with
 particular attention to the golf swing.
@@ -1000,8 +1000,8 @@ operate at different time scales:
 A novice golfer co-contracts many muscles simultaneously, creating a stiff (high $\lambda$)
 but energetically expensive controller. An expert golfer selectively stiffens only the
 joints that need contraction at each phase, creating a time-varying metric
-$\mat{M}(\x(t))$ that is optimally adapted to the swing dynamics. Moving from
-novice to expert means, in part, learning the optimal contraction metric.
+$\mat{M}(\x(t))$ that is optimally adapted to the swing dynamics. The transition from
+novice to expert is, in part, the learning of the optimal contraction metric.
 :::
 
 
