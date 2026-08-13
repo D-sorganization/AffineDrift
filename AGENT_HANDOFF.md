@@ -211,6 +211,13 @@ Active epics/PRs:
 
 ## In-Flight Branches
 
+- `research/shoulder-velocity-drift-transfer` — active AffineDrift #3817 under
+  UpstreamDrift epic #8551. Adds the 90-case phase-resolved proximal-link
+  velocity study, two matched-velocity counterfactuals, three generated vector
+  figures, explicit braking/power falsifiers, and the Tools #4406 PyQt Drift
+  Transfer workflow. Do not describe the reduced coordinate as anatomical
+  shoulder or thorax velocity. Final evidence pin must use the protected
+  UpstreamDrift merge commit before numerical claims are declared immutable.
 - `research/hand-path-force-attribution-8470` (this branch) — consumer-side
   schema, validator, tests, pinned evidence, and article/theory integration for
   epic #8458. Exact upstream pin: `69eb7e9db32ccd17e45824619315b1d04b400c27`.

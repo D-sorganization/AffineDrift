@@ -201,3 +201,11 @@ def test_expanded_companion_pdf_is_at_least_as_long_as_the_technical_monograph()
         if annotation.get_object().get("/A", {}).get("/URI")
     )
     assert uri_count >= 60
+
+
+def test_workbench_exposes_drift_transfer_diagnostics() -> None:
+    text = WORKBENCH.read_text(encoding="utf-8")
+
+    assert "Drift Transfer" in text
+    assert "Negative Grip Work" in text
+    assert "proximal-link angular velocity" in text

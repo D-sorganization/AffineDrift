@@ -39,6 +39,7 @@ before you change the model.
 | Guided Experiment | What to Vary | What to Inspect |
 | --- | --- | --- |
 | Passive Transfer in a Two-Link Chain | Proximal drive and distal torque | Distal acceleration, interaction torque, power, and energy closure |
+| Phase-Resolved Proximal Velocity | Analysis-window start and end | Drift/control grip work, Negative Grip Work, peak force, distal energy gain, and whether the conclusion changes across phase |
 | Distal-Torque Onset Comparison | Wrist-command onset | Late club speed, actuator work, and sensitivity to the timing grid |
 | Three-Link Cascade | Segment geometry and timing | Whether the transfer pattern survives an intermediate segment |
 | Two-Hand Force and Equivalent-Couple Mechanism | Hand separation and reaction directions | Net club moment, individual forces, and zero-moment-arm control |
@@ -81,6 +82,14 @@ cd Tools/src/pendulum_simulator
 python -m pip install -e .
 python -m double_pendulum_golf
 ```
+
+After a double-pendulum run, open the docked **Analysis** panel and select the
+**Drift Transfer** tab. Choose the start and end of the phase to inspect. The
+tab reports distal energy gain, drift and control grip work, Negative Grip
+Work, wrist-control work, peak grip force, and peak distal speed, while plotting
+the power and speed histories. Its displayed proximal-link angular velocity is
+not an anatomical shoulder or torso measurement. Other model tiers remain
+unavailable in this tab until their force-allocation contracts are qualified.
 
 ### React/Tauri Interface
 

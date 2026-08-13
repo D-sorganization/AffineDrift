@@ -80,6 +80,26 @@ def test_article_cites_primary_hand_path_study() -> None:
     assert "average force along the hand path" in text
 
 
+def test_article_exposes_phase_resolved_proximal_velocity_falsifier() -> None:
+    text = ARTICLE.read_text(encoding="utf-8")
+
+    required = (
+        "# Proximal Velocity and Drift-Mediated Transfer",
+        "Preserve Relative Club Rate",
+        "Preserve Absolute Club Rate",
+        "negative grip power",
+        "not an anatomical shoulder",
+        "fig_shoulder_velocity_drift_power.svg",
+        "fig_shoulder_velocity_braking_map.svg",
+        "fig_shoulder_velocity_phase_sensitivity.svg",
+        "fig_shoulder_velocity_strategy_associations.svg",
+        "fig_shoulder_velocity_strategy_grid.svg",
+        "fig_shoulder_velocity_strategy_pareto.svg",
+    )
+    for phrase in required:
+        assert phrase in text
+
+
 def test_article_citations_are_represented_in_reader_bibliography() -> None:
     article_text = ARTICLE.read_text(encoding="utf-8")
     bibliography_text = ARTICLE_BIBLIOGRAPHY.read_text(encoding="utf-8")

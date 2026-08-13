@@ -134,7 +134,12 @@ As White [@white2006] and Miura [@miura2001] demonstrated, the dominant distal e
 $$
 P_{\text{joint}} = \mathbf{F}_{\text{wrist}} \cdot \mathbf{v}_{\text{wrist}}.
 $$
-This mechanism requires a high proximal speed $\dot{\theta}_1$ to establish a strong centripetal acceleration field ($L_1 \dot{\theta}_1^2$). Driving the wrist early truncates $\dot{\theta}_1$, destroying the centrifugal field needed for parametric amplification.
+Proximal speed $\dot{\theta}_1$ contributes to the centripetal acceleration
+field ($L_1 \dot{\theta}_1^2$), but high speed alone does not guarantee positive
+transfer. Force direction, hand velocity, club orientation, relative club rate,
+and swing phase determine the sign of interface power. The phase-resolved test
+below replaces the earlier unconditional statement with an explicit
+state-matched counterfactual.
 
 # Empirical Evidence in Golfers {#sec-evidence}
 
@@ -187,6 +192,97 @@ two-hand loading can produce the same net wrench. Physiological interpretation
 requires independent measurements or an explicitly declared actuator-cost
 model.
 :::
+
+# Proximal Velocity and Drift-Mediated Transfer {#sec-proximal-velocity-transfer}
+
+The motivating observation is that releasing while the proximal system moves
+rapidly can appear to produce less grip braking and a cleaner outward fling.
+The reduced model can test a narrow form of that proposal. Its
+$\dot{\theta}_1$ coordinate is proximal-link angular velocity. It is not an anatomical shoulder
+or thorax measurement. Drift means the achieved-state
+acceleration contribution when modeled controls are zeroed; it is not a claim
+that a human motion is passive.
+
+Changing proximal rate is not a unique intervention, so the study registers
+two velocity contracts:
+
+- **Preserve Relative Club Rate:** hold $\dot q_2-\dot q_1$ fixed. The club is
+  co-transported with the proximal link.
+- **Preserve Absolute Club Rate:** hold laboratory-frame $\dot q_2$ fixed. The
+  relative rate changes as proximal velocity changes.
+
+Five swing phases and nine proximal rates are evaluated under each contract,
+for 90 exact pointwise cases. Configuration and torque are matched within a
+phase. Reaction force is independently reconstructed for total, drift, and
+control contributions, with componentwise closure required before reporting
+power.
+
+![Drift Grip Power Depends on Phase and the Matched-Velocity Contract.](figures/proximal_distal_energy_transfer/fig_shoulder_velocity_drift_power.svg){#fig-site-shoulder-velocity-power alt="Two panels show drift grip power against proximal-link angular velocity for five swing phases under relative-rate and absolute-rate matching; late positive slopes coexist with adverse earlier slopes."}
+
+The result rejects a phase-independent benefit. With relative rate held, the
+drift-power slope is $-8.25$ W/(rad/s) in mid-downswing, then $+65.06$ in
+delivery and $+283.74$ before impact. With absolute club rate held, the delivery
+slope reverses to $-5.96$ W/(rad/s), while the pre-impact slope remains strongly
+positive at $+184.58$ W/(rad/s). Thus high proximal speed helps most reliably
+in the late reference state, and the delivery conclusion depends on relative
+motion.
+
+![High Proximal Speed Does Not Uniformly Remove Grip Braking.](figures/proximal_distal_energy_transfer/fig_shoulder_velocity_braking_map.svg){#fig-site-shoulder-velocity-braking alt="A scatter plot maps total grip-force power against clubhead speed; shaded negative power identifies braking states in mid-downswing and in one delivery counterfactual."}
+
+The operational braking measure is negative grip power
+$P_G=\mathbf F_G\cdot\mathbf v_G$ and its time integral, not force magnitude.
+Mid-downswing reaches $-148.8$ W under relative-rate matching and $-296.5$ W
+under absolute-rate matching. Delivery has no negative sample under
+relative-rate matching but reaches $-130.2$ W under absolute-rate matching.
+A large force perpendicular to grip velocity can transfer little power; a
+smaller opposing force can remove energy.
+
+![The Local Drift-Power Sensitivity Changes Sign Across Swing Phases.](figures/proximal_distal_energy_transfer/fig_shoulder_velocity_phase_sensitivity.svg){#fig-site-shoulder-velocity-sensitivity alt="A five-by-two heat map shows signed drift-power slopes; early and mid phases are near zero or negative, while pre-impact is strongly positive under both matching rules."}
+
+A trajectory-level grid then varies proximal-drive cut time, post-cut proximal
+torque, and wrist-release time. Only 26 of 60 programs reach club vertical
+inside the registered delivery window. Among those valid trials, greater
+proximal-link velocity at release correlates with **lower** impact speed
+($r=-0.692$) and greater negative grip work ($r=+0.943$). A descriptive
+standardized regression that includes release time, proximal-drive cut time,
+and post-cut torque retains a negative release-velocity coefficient
+($\beta=-0.514$). These are coupled model associations, not causal estimates,
+but they directly reject the idea that waiting for a higher proximal-link rate
+is sufficient.
+
+![Higher Release Velocity Is Not a Standalone Benefit in the Trajectory Grid.](figures/proximal_distal_energy_transfer/fig_shoulder_velocity_strategy_associations.svg){#fig-site-shoulder-strategy-associations alt="Two scatter plots show that valid trajectories with higher proximal-link rate at release tend to have lower impact speed and greater post-release negative grip work; color identifies release time."}
+
+![Only 26 of 60 Programs Reach the Registered Impact Window.](figures/proximal_distal_energy_transfer/fig_shoulder_velocity_strategy_grid.svg){#fig-site-shoulder-strategy-grid alt="Three timing heat maps compare post-cut proximal torque levels; each cell reports impact speed or X when the club does not reach vertical in the registered delivery window."}
+
+The fastest valid program reaches 38.85 m/s with 6.11 J of negative grip work
+and a 315.39 N peak grip force. No sampled program is best on speed, braking
+work, and peak force simultaneously. Several nominal programs are identical
+because their proximal-drive cuts occur after impact; they remain visible for
+auditability.
+
+![Speed, Braking Work, and Peak Grip Force Remain in Tension.](figures/proximal_distal_energy_transfer/fig_shoulder_velocity_strategy_pareto.svg){#fig-site-shoulder-strategy-pareto alt="Impact speed is plotted against negative grip work, marker size scales with peak grip force, and open red markers identify programs that are nondominated across all three objectives."}
+
+The supported strategy is conditional: build proximal speed before favorable
+geometry, enter delivery with compatible relative club motion, reduce direct
+distal opposition only when drift power is positive, and optimize club speed
+together with negative grip work, peak grip force, face/path behavior, and
+timing robustness. Torso speed is a state and possible control target, not the
+objective itself. A rapidly rotating torso may coexist with positive transfer,
+but the fixed-hub model cannot establish its causal benefit.
+
+A qualified two-hand extension must retain torso or hub angular motion,
+common- and differential-mode hand velocities, grip separation, bilateral
+forces, direct wrist moments, arm geometry, hand-path curvature, club relative
+rate, and shaft deformation. The current fixed-shoulder two-arm and translating
+base tiers do not answer the rotating-torso question. A forward rotating-base,
+two-hand model and synchronized human kinematics plus bilateral grip wrenches
+are required to test it.
+
+This hypothesis is weakened if the late positive slope disappears under small
+parameter or configuration perturbations, if negative grip work or peak force
+dominates the speed gain, if matching distal laboratory-frame state removes the
+effect, or if a two-hand model attributes the gain to direct wrist work rather
+than interaction-force transport.
 
 # The Timing Question and Counterfactual Framework {#sec-timing-framework}
 
