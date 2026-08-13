@@ -21,7 +21,7 @@ $$
 \dot{\bm{x}} = f(\bm{x}) + G(\bm{x})\bm{u}(t)
 $$ {#eq-ch24_control_affine}
 
-The state vector $\bm{x}$ contains all joint angles and angular velocities. The drift term $f(\bm{x})$ represents gravity and centrifugal effects---the physics does for free. The control term $G(\bm{x})\bm{u}(t)$ represents what the muscles can accomplish. The control input $\bm{u}(t)$ is the vector of muscle torques, subject to physical bounds: $|\bm{u}| \leq \bm{u}_{\mathrm{max}}$.
+The state vector $\bm{x}$ contains all joint angles and angular velocities. The drift term $f(\bm{x})$ represents gravity and centrifugal effects---what the physics does for free. The control term $G(\bm{x})\bm{u}(t)$ represents what the muscles can accomplish. The control input $\bm{u}(t)$ is the vector of muscle torques, subject to physical bounds: $|\bm{u}| \leq \bm{u}_{\mathrm{max}}$.
 
 The brain's problem: compute $\bm{u}(t)$ as a function of time to produce a desired motion that puts the ball at the target.
 
@@ -102,7 +102,7 @@ Why? The timescales don't work out. Suppose a visual feedback signal detected an
 
 Proprioceptive feedback is faster (30--50 ms) [@Kandel2013; @enoka2002neuromechanics] but still problematic in this illustrative timing budget. A proprioceptive error signal arrives in time for maybe one correction cycle. The elite golfer likely does not rely heavily on this. Instead, the swing is executed predominantly as a *ballistic* movement---once it starts, it unfolds largely according to a pre-planned motor program, with only minimal real-time adjustments.
 
-This realization has significant implications. It suggests that the brain does its most important work *before* the swing starts: encoding the initial conditions, setting muscle stiffness, and preparing the motor program. The execution phase is largely pre-programmed, though not perfectly deterministic.
+This suggests that the brain does its most important work *before* the swing starts: encoding the initial conditions, setting muscle stiffness, and preparing the motor program. The execution phase is largely pre-programmed, though not perfectly deterministic.
 
 ## Internal Models: The Brain's Simulator
 
